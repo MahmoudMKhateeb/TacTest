@@ -11722,6 +11722,602 @@ export class TokenAuthServiceProxy {
 }
 
 @Injectable()
+export class TrucksServiceProxy {
+    private http: HttpClient;
+    private baseUrl: string;
+    protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
+
+    constructor(@Inject(HttpClient) http: HttpClient, @Optional() @Inject(API_BASE_URL) baseUrl?: string) {
+        this.http = http;
+        this.baseUrl = baseUrl ? baseUrl : "";
+    }
+
+    /**
+     * @param filter (optional) 
+     * @param plateNumberFilter (optional) 
+     * @param modelNameFilter (optional) 
+     * @param modelYearFilter (optional) 
+     * @param licenseNumberFilter (optional) 
+     * @param maxLicenseExpirationDateFilter (optional) 
+     * @param minLicenseExpirationDateFilter (optional) 
+     * @param isAttachableFilter (optional) 
+     * @param trucksTypeDisplayNameFilter (optional) 
+     * @param truckStatusDisplayNameFilter (optional) 
+     * @param userNameFilter (optional) 
+     * @param userName2Filter (optional) 
+     * @param sorting (optional) 
+     * @param skipCount (optional) 
+     * @param maxResultCount (optional) 
+     * @return Success
+     */
+    getAll(filter: string | null | undefined, plateNumberFilter: string | null | undefined, modelNameFilter: string | null | undefined, modelYearFilter: string | null | undefined, licenseNumberFilter: string | null | undefined, maxLicenseExpirationDateFilter: moment.Moment | null | undefined, minLicenseExpirationDateFilter: moment.Moment | null | undefined, isAttachableFilter: number | undefined, trucksTypeDisplayNameFilter: string | null | undefined, truckStatusDisplayNameFilter: string | null | undefined, userNameFilter: string | null | undefined, userName2Filter: string | null | undefined, sorting: string | null | undefined, skipCount: number | undefined, maxResultCount: number | undefined): Observable<PagedResultDtoOfGetTruckForViewDto> {
+        let url_ = this.baseUrl + "/api/services/app/Trucks/GetAll?";
+        if (filter !== undefined)
+            url_ += "Filter=" + encodeURIComponent("" + filter) + "&"; 
+        if (plateNumberFilter !== undefined)
+            url_ += "PlateNumberFilter=" + encodeURIComponent("" + plateNumberFilter) + "&"; 
+        if (modelNameFilter !== undefined)
+            url_ += "ModelNameFilter=" + encodeURIComponent("" + modelNameFilter) + "&"; 
+        if (modelYearFilter !== undefined)
+            url_ += "ModelYearFilter=" + encodeURIComponent("" + modelYearFilter) + "&"; 
+        if (licenseNumberFilter !== undefined)
+            url_ += "LicenseNumberFilter=" + encodeURIComponent("" + licenseNumberFilter) + "&"; 
+        if (maxLicenseExpirationDateFilter !== undefined)
+            url_ += "MaxLicenseExpirationDateFilter=" + encodeURIComponent(maxLicenseExpirationDateFilter ? "" + maxLicenseExpirationDateFilter.toJSON() : "") + "&"; 
+        if (minLicenseExpirationDateFilter !== undefined)
+            url_ += "MinLicenseExpirationDateFilter=" + encodeURIComponent(minLicenseExpirationDateFilter ? "" + minLicenseExpirationDateFilter.toJSON() : "") + "&"; 
+        if (isAttachableFilter === null)
+            throw new Error("The parameter 'isAttachableFilter' cannot be null.");
+        else if (isAttachableFilter !== undefined)
+            url_ += "IsAttachableFilter=" + encodeURIComponent("" + isAttachableFilter) + "&"; 
+        if (trucksTypeDisplayNameFilter !== undefined)
+            url_ += "TrucksTypeDisplayNameFilter=" + encodeURIComponent("" + trucksTypeDisplayNameFilter) + "&"; 
+        if (truckStatusDisplayNameFilter !== undefined)
+            url_ += "TruckStatusDisplayNameFilter=" + encodeURIComponent("" + truckStatusDisplayNameFilter) + "&"; 
+        if (userNameFilter !== undefined)
+            url_ += "UserNameFilter=" + encodeURIComponent("" + userNameFilter) + "&"; 
+        if (userName2Filter !== undefined)
+            url_ += "UserName2Filter=" + encodeURIComponent("" + userName2Filter) + "&"; 
+        if (sorting !== undefined)
+            url_ += "Sorting=" + encodeURIComponent("" + sorting) + "&"; 
+        if (skipCount === null)
+            throw new Error("The parameter 'skipCount' cannot be null.");
+        else if (skipCount !== undefined)
+            url_ += "SkipCount=" + encodeURIComponent("" + skipCount) + "&"; 
+        if (maxResultCount === null)
+            throw new Error("The parameter 'maxResultCount' cannot be null.");
+        else if (maxResultCount !== undefined)
+            url_ += "MaxResultCount=" + encodeURIComponent("" + maxResultCount) + "&"; 
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",			
+            headers: new HttpHeaders({
+                "Accept": "text/plain"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGetAll(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGetAll(<any>response_);
+                } catch (e) {
+                    return <Observable<PagedResultDtoOfGetTruckForViewDto>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<PagedResultDtoOfGetTruckForViewDto>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processGetAll(response: HttpResponseBase): Observable<PagedResultDtoOfGetTruckForViewDto> {
+        const status = response.status;
+        const responseBlob = 
+            response instanceof HttpResponse ? response.body : 
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }};
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = PagedResultDtoOfGetTruckForViewDto.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<PagedResultDtoOfGetTruckForViewDto>(<any>null);
+    }
+
+    /**
+     * @param id (optional) 
+     * @return Success
+     */
+    getTruckForView(id: string | undefined): Observable<GetTruckForViewDto> {
+        let url_ = this.baseUrl + "/api/services/app/Trucks/GetTruckForView?";
+        if (id === null)
+            throw new Error("The parameter 'id' cannot be null.");
+        else if (id !== undefined)
+            url_ += "id=" + encodeURIComponent("" + id) + "&"; 
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",			
+            headers: new HttpHeaders({
+                "Accept": "text/plain"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGetTruckForView(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGetTruckForView(<any>response_);
+                } catch (e) {
+                    return <Observable<GetTruckForViewDto>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<GetTruckForViewDto>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processGetTruckForView(response: HttpResponseBase): Observable<GetTruckForViewDto> {
+        const status = response.status;
+        const responseBlob = 
+            response instanceof HttpResponse ? response.body : 
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }};
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = GetTruckForViewDto.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<GetTruckForViewDto>(<any>null);
+    }
+
+    /**
+     * @param id (optional) 
+     * @return Success
+     */
+    getTruckForEdit(id: string | undefined): Observable<GetTruckForEditOutput> {
+        let url_ = this.baseUrl + "/api/services/app/Trucks/GetTruckForEdit?";
+        if (id === null)
+            throw new Error("The parameter 'id' cannot be null.");
+        else if (id !== undefined)
+            url_ += "Id=" + encodeURIComponent("" + id) + "&"; 
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",			
+            headers: new HttpHeaders({
+                "Accept": "text/plain"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGetTruckForEdit(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGetTruckForEdit(<any>response_);
+                } catch (e) {
+                    return <Observable<GetTruckForEditOutput>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<GetTruckForEditOutput>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processGetTruckForEdit(response: HttpResponseBase): Observable<GetTruckForEditOutput> {
+        const status = response.status;
+        const responseBlob = 
+            response instanceof HttpResponse ? response.body : 
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }};
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = GetTruckForEditOutput.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<GetTruckForEditOutput>(<any>null);
+    }
+
+    /**
+     * @param body (optional) 
+     * @return Success
+     */
+    createOrEdit(body: CreateOrEditTruckDto | undefined): Observable<void> {
+        let url_ = this.baseUrl + "/api/services/app/Trucks/CreateOrEdit";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(body);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",			
+            headers: new HttpHeaders({
+                "Content-Type": "application/json-patch+json", 
+            })
+        };
+
+        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processCreateOrEdit(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processCreateOrEdit(<any>response_);
+                } catch (e) {
+                    return <Observable<void>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<void>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processCreateOrEdit(response: HttpResponseBase): Observable<void> {
+        const status = response.status;
+        const responseBlob = 
+            response instanceof HttpResponse ? response.body : 
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }};
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return _observableOf<void>(<any>null);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<void>(<any>null);
+    }
+
+    /**
+     * @param id (optional) 
+     * @return Success
+     */
+    delete(id: string | undefined): Observable<void> {
+        let url_ = this.baseUrl + "/api/services/app/Trucks/Delete?";
+        if (id === null)
+            throw new Error("The parameter 'id' cannot be null.");
+        else if (id !== undefined)
+            url_ += "Id=" + encodeURIComponent("" + id) + "&"; 
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",			
+            headers: new HttpHeaders({
+            })
+        };
+
+        return this.http.request("delete", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processDelete(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processDelete(<any>response_);
+                } catch (e) {
+                    return <Observable<void>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<void>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processDelete(response: HttpResponseBase): Observable<void> {
+        const status = response.status;
+        const responseBlob = 
+            response instanceof HttpResponse ? response.body : 
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }};
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return _observableOf<void>(<any>null);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<void>(<any>null);
+    }
+
+    /**
+     * @param filter (optional) 
+     * @param plateNumberFilter (optional) 
+     * @param modelNameFilter (optional) 
+     * @param modelYearFilter (optional) 
+     * @param licenseNumberFilter (optional) 
+     * @param maxLicenseExpirationDateFilter (optional) 
+     * @param minLicenseExpirationDateFilter (optional) 
+     * @param isAttachableFilter (optional) 
+     * @param trucksTypeDisplayNameFilter (optional) 
+     * @param truckStatusDisplayNameFilter (optional) 
+     * @param userNameFilter (optional) 
+     * @param userName2Filter (optional) 
+     * @return Success
+     */
+    getTrucksToExcel(filter: string | null | undefined, plateNumberFilter: string | null | undefined, modelNameFilter: string | null | undefined, modelYearFilter: string | null | undefined, licenseNumberFilter: string | null | undefined, maxLicenseExpirationDateFilter: moment.Moment | null | undefined, minLicenseExpirationDateFilter: moment.Moment | null | undefined, isAttachableFilter: number | undefined, trucksTypeDisplayNameFilter: string | null | undefined, truckStatusDisplayNameFilter: string | null | undefined, userNameFilter: string | null | undefined, userName2Filter: string | null | undefined): Observable<FileDto> {
+        let url_ = this.baseUrl + "/api/services/app/Trucks/GetTrucksToExcel?";
+        if (filter !== undefined)
+            url_ += "Filter=" + encodeURIComponent("" + filter) + "&"; 
+        if (plateNumberFilter !== undefined)
+            url_ += "PlateNumberFilter=" + encodeURIComponent("" + plateNumberFilter) + "&"; 
+        if (modelNameFilter !== undefined)
+            url_ += "ModelNameFilter=" + encodeURIComponent("" + modelNameFilter) + "&"; 
+        if (modelYearFilter !== undefined)
+            url_ += "ModelYearFilter=" + encodeURIComponent("" + modelYearFilter) + "&"; 
+        if (licenseNumberFilter !== undefined)
+            url_ += "LicenseNumberFilter=" + encodeURIComponent("" + licenseNumberFilter) + "&"; 
+        if (maxLicenseExpirationDateFilter !== undefined)
+            url_ += "MaxLicenseExpirationDateFilter=" + encodeURIComponent(maxLicenseExpirationDateFilter ? "" + maxLicenseExpirationDateFilter.toJSON() : "") + "&"; 
+        if (minLicenseExpirationDateFilter !== undefined)
+            url_ += "MinLicenseExpirationDateFilter=" + encodeURIComponent(minLicenseExpirationDateFilter ? "" + minLicenseExpirationDateFilter.toJSON() : "") + "&"; 
+        if (isAttachableFilter === null)
+            throw new Error("The parameter 'isAttachableFilter' cannot be null.");
+        else if (isAttachableFilter !== undefined)
+            url_ += "IsAttachableFilter=" + encodeURIComponent("" + isAttachableFilter) + "&"; 
+        if (trucksTypeDisplayNameFilter !== undefined)
+            url_ += "TrucksTypeDisplayNameFilter=" + encodeURIComponent("" + trucksTypeDisplayNameFilter) + "&"; 
+        if (truckStatusDisplayNameFilter !== undefined)
+            url_ += "TruckStatusDisplayNameFilter=" + encodeURIComponent("" + truckStatusDisplayNameFilter) + "&"; 
+        if (userNameFilter !== undefined)
+            url_ += "UserNameFilter=" + encodeURIComponent("" + userNameFilter) + "&"; 
+        if (userName2Filter !== undefined)
+            url_ += "UserName2Filter=" + encodeURIComponent("" + userName2Filter) + "&"; 
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",			
+            headers: new HttpHeaders({
+                "Accept": "text/plain"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGetTrucksToExcel(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGetTrucksToExcel(<any>response_);
+                } catch (e) {
+                    return <Observable<FileDto>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<FileDto>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processGetTrucksToExcel(response: HttpResponseBase): Observable<FileDto> {
+        const status = response.status;
+        const responseBlob = 
+            response instanceof HttpResponse ? response.body : 
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }};
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = FileDto.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<FileDto>(<any>null);
+    }
+
+    /**
+     * @return Success
+     */
+    getAllTrucksTypeForTableDropdown(): Observable<TruckTrucksTypeLookupTableDto[]> {
+        let url_ = this.baseUrl + "/api/services/app/Trucks/GetAllTrucksTypeForTableDropdown";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",			
+            headers: new HttpHeaders({
+                "Accept": "text/plain"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGetAllTrucksTypeForTableDropdown(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGetAllTrucksTypeForTableDropdown(<any>response_);
+                } catch (e) {
+                    return <Observable<TruckTrucksTypeLookupTableDto[]>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<TruckTrucksTypeLookupTableDto[]>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processGetAllTrucksTypeForTableDropdown(response: HttpResponseBase): Observable<TruckTrucksTypeLookupTableDto[]> {
+        const status = response.status;
+        const responseBlob = 
+            response instanceof HttpResponse ? response.body : 
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }};
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            if (Array.isArray(resultData200)) {
+                result200 = [] as any;
+                for (let item of resultData200)
+                    result200!.push(TruckTrucksTypeLookupTableDto.fromJS(item));
+            }
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<TruckTrucksTypeLookupTableDto[]>(<any>null);
+    }
+
+    /**
+     * @return Success
+     */
+    getAllTruckStatusForTableDropdown(): Observable<TruckTruckStatusLookupTableDto[]> {
+        let url_ = this.baseUrl + "/api/services/app/Trucks/GetAllTruckStatusForTableDropdown";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",			
+            headers: new HttpHeaders({
+                "Accept": "text/plain"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGetAllTruckStatusForTableDropdown(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGetAllTruckStatusForTableDropdown(<any>response_);
+                } catch (e) {
+                    return <Observable<TruckTruckStatusLookupTableDto[]>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<TruckTruckStatusLookupTableDto[]>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processGetAllTruckStatusForTableDropdown(response: HttpResponseBase): Observable<TruckTruckStatusLookupTableDto[]> {
+        const status = response.status;
+        const responseBlob = 
+            response instanceof HttpResponse ? response.body : 
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }};
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            if (Array.isArray(resultData200)) {
+                result200 = [] as any;
+                for (let item of resultData200)
+                    result200!.push(TruckTruckStatusLookupTableDto.fromJS(item));
+            }
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<TruckTruckStatusLookupTableDto[]>(<any>null);
+    }
+
+    /**
+     * @param filter (optional) 
+     * @param sorting (optional) 
+     * @param skipCount (optional) 
+     * @param maxResultCount (optional) 
+     * @return Success
+     */
+    getAllUserForLookupTable(filter: string | null | undefined, sorting: string | null | undefined, skipCount: number | undefined, maxResultCount: number | undefined): Observable<PagedResultDtoOfTruckUserLookupTableDto> {
+        let url_ = this.baseUrl + "/api/services/app/Trucks/GetAllUserForLookupTable?";
+        if (filter !== undefined)
+            url_ += "Filter=" + encodeURIComponent("" + filter) + "&"; 
+        if (sorting !== undefined)
+            url_ += "Sorting=" + encodeURIComponent("" + sorting) + "&"; 
+        if (skipCount === null)
+            throw new Error("The parameter 'skipCount' cannot be null.");
+        else if (skipCount !== undefined)
+            url_ += "SkipCount=" + encodeURIComponent("" + skipCount) + "&"; 
+        if (maxResultCount === null)
+            throw new Error("The parameter 'maxResultCount' cannot be null.");
+        else if (maxResultCount !== undefined)
+            url_ += "MaxResultCount=" + encodeURIComponent("" + maxResultCount) + "&"; 
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",			
+            headers: new HttpHeaders({
+                "Accept": "text/plain"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGetAllUserForLookupTable(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGetAllUserForLookupTable(<any>response_);
+                } catch (e) {
+                    return <Observable<PagedResultDtoOfTruckUserLookupTableDto>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<PagedResultDtoOfTruckUserLookupTableDto>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processGetAllUserForLookupTable(response: HttpResponseBase): Observable<PagedResultDtoOfTruckUserLookupTableDto> {
+        const status = response.status;
+        const responseBlob = 
+            response instanceof HttpResponse ? response.body : 
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }};
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = PagedResultDtoOfTruckUserLookupTableDto.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<PagedResultDtoOfTruckUserLookupTableDto>(<any>null);
+    }
+}
+
+@Injectable()
 export class TruckStatusesServiceProxy {
     private http: HttpClient;
     private baseUrl: string;
@@ -26150,6 +26746,486 @@ export interface IExternalAuthenticateResultModel {
     returnUrl: string | undefined;
     refreshToken: string | undefined;
     refreshTokenExpireInSeconds: number;
+}
+
+export class TruckDto implements ITruckDto {
+    plateNumber!: string | undefined;
+    modelName!: string | undefined;
+    modelYear!: string | undefined;
+    licenseNumber!: string | undefined;
+    licenseExpirationDate!: moment.Moment;
+    isAttachable!: boolean;
+    note!: string | undefined;
+    trucksTypeId!: string;
+    truckStatusId!: string;
+    driver1UserId!: number | undefined;
+    driver2UserId!: number | undefined;
+    id!: string;
+
+    constructor(data?: ITruckDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.plateNumber = _data["plateNumber"];
+            this.modelName = _data["modelName"];
+            this.modelYear = _data["modelYear"];
+            this.licenseNumber = _data["licenseNumber"];
+            this.licenseExpirationDate = _data["licenseExpirationDate"] ? moment(_data["licenseExpirationDate"].toString()) : <any>undefined;
+            this.isAttachable = _data["isAttachable"];
+            this.note = _data["note"];
+            this.trucksTypeId = _data["trucksTypeId"];
+            this.truckStatusId = _data["truckStatusId"];
+            this.driver1UserId = _data["driver1UserId"];
+            this.driver2UserId = _data["driver2UserId"];
+            this.id = _data["id"];
+        }
+    }
+
+    static fromJS(data: any): TruckDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new TruckDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["plateNumber"] = this.plateNumber;
+        data["modelName"] = this.modelName;
+        data["modelYear"] = this.modelYear;
+        data["licenseNumber"] = this.licenseNumber;
+        data["licenseExpirationDate"] = this.licenseExpirationDate ? this.licenseExpirationDate.toISOString() : <any>undefined;
+        data["isAttachable"] = this.isAttachable;
+        data["note"] = this.note;
+        data["trucksTypeId"] = this.trucksTypeId;
+        data["truckStatusId"] = this.truckStatusId;
+        data["driver1UserId"] = this.driver1UserId;
+        data["driver2UserId"] = this.driver2UserId;
+        data["id"] = this.id;
+        return data; 
+    }
+}
+
+export interface ITruckDto {
+    plateNumber: string | undefined;
+    modelName: string | undefined;
+    modelYear: string | undefined;
+    licenseNumber: string | undefined;
+    licenseExpirationDate: moment.Moment;
+    isAttachable: boolean;
+    note: string | undefined;
+    trucksTypeId: string;
+    truckStatusId: string;
+    driver1UserId: number | undefined;
+    driver2UserId: number | undefined;
+    id: string;
+}
+
+export class GetTruckForViewDto implements IGetTruckForViewDto {
+    truck!: TruckDto;
+    trucksTypeDisplayName!: string | undefined;
+    truckStatusDisplayName!: string | undefined;
+    userName!: string | undefined;
+    userName2!: string | undefined;
+
+    constructor(data?: IGetTruckForViewDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.truck = _data["truck"] ? TruckDto.fromJS(_data["truck"]) : <any>undefined;
+            this.trucksTypeDisplayName = _data["trucksTypeDisplayName"];
+            this.truckStatusDisplayName = _data["truckStatusDisplayName"];
+            this.userName = _data["userName"];
+            this.userName2 = _data["userName2"];
+        }
+    }
+
+    static fromJS(data: any): GetTruckForViewDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new GetTruckForViewDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["truck"] = this.truck ? this.truck.toJSON() : <any>undefined;
+        data["trucksTypeDisplayName"] = this.trucksTypeDisplayName;
+        data["truckStatusDisplayName"] = this.truckStatusDisplayName;
+        data["userName"] = this.userName;
+        data["userName2"] = this.userName2;
+        return data; 
+    }
+}
+
+export interface IGetTruckForViewDto {
+    truck: TruckDto;
+    trucksTypeDisplayName: string | undefined;
+    truckStatusDisplayName: string | undefined;
+    userName: string | undefined;
+    userName2: string | undefined;
+}
+
+export class PagedResultDtoOfGetTruckForViewDto implements IPagedResultDtoOfGetTruckForViewDto {
+    totalCount!: number;
+    items!: GetTruckForViewDto[] | undefined;
+
+    constructor(data?: IPagedResultDtoOfGetTruckForViewDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.totalCount = _data["totalCount"];
+            if (Array.isArray(_data["items"])) {
+                this.items = [] as any;
+                for (let item of _data["items"])
+                    this.items!.push(GetTruckForViewDto.fromJS(item));
+            }
+        }
+    }
+
+    static fromJS(data: any): PagedResultDtoOfGetTruckForViewDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new PagedResultDtoOfGetTruckForViewDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["totalCount"] = this.totalCount;
+        if (Array.isArray(this.items)) {
+            data["items"] = [];
+            for (let item of this.items)
+                data["items"].push(item.toJSON());
+        }
+        return data; 
+    }
+}
+
+export interface IPagedResultDtoOfGetTruckForViewDto {
+    totalCount: number;
+    items: GetTruckForViewDto[] | undefined;
+}
+
+export class CreateOrEditTruckDto implements ICreateOrEditTruckDto {
+    plateNumber!: string;
+    modelName!: string;
+    modelYear!: string;
+    licenseNumber!: string;
+    licenseExpirationDate!: moment.Moment;
+    isAttachable!: boolean;
+    note!: string | undefined;
+    trucksTypeId!: string;
+    truckStatusId!: string;
+    driver1UserId!: number | undefined;
+    driver2UserId!: number | undefined;
+    id!: string | undefined;
+
+    constructor(data?: ICreateOrEditTruckDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.plateNumber = _data["plateNumber"];
+            this.modelName = _data["modelName"];
+            this.modelYear = _data["modelYear"];
+            this.licenseNumber = _data["licenseNumber"];
+            this.licenseExpirationDate = _data["licenseExpirationDate"] ? moment(_data["licenseExpirationDate"].toString()) : <any>undefined;
+            this.isAttachable = _data["isAttachable"];
+            this.note = _data["note"];
+            this.trucksTypeId = _data["trucksTypeId"];
+            this.truckStatusId = _data["truckStatusId"];
+            this.driver1UserId = _data["driver1UserId"];
+            this.driver2UserId = _data["driver2UserId"];
+            this.id = _data["id"];
+        }
+    }
+
+    static fromJS(data: any): CreateOrEditTruckDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new CreateOrEditTruckDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["plateNumber"] = this.plateNumber;
+        data["modelName"] = this.modelName;
+        data["modelYear"] = this.modelYear;
+        data["licenseNumber"] = this.licenseNumber;
+        data["licenseExpirationDate"] = this.licenseExpirationDate ? this.licenseExpirationDate.toISOString() : <any>undefined;
+        data["isAttachable"] = this.isAttachable;
+        data["note"] = this.note;
+        data["trucksTypeId"] = this.trucksTypeId;
+        data["truckStatusId"] = this.truckStatusId;
+        data["driver1UserId"] = this.driver1UserId;
+        data["driver2UserId"] = this.driver2UserId;
+        data["id"] = this.id;
+        return data; 
+    }
+}
+
+export interface ICreateOrEditTruckDto {
+    plateNumber: string;
+    modelName: string;
+    modelYear: string;
+    licenseNumber: string;
+    licenseExpirationDate: moment.Moment;
+    isAttachable: boolean;
+    note: string | undefined;
+    trucksTypeId: string;
+    truckStatusId: string;
+    driver1UserId: number | undefined;
+    driver2UserId: number | undefined;
+    id: string | undefined;
+}
+
+export class GetTruckForEditOutput implements IGetTruckForEditOutput {
+    truck!: CreateOrEditTruckDto;
+    trucksTypeDisplayName!: string | undefined;
+    truckStatusDisplayName!: string | undefined;
+    userName!: string | undefined;
+    userName2!: string | undefined;
+
+    constructor(data?: IGetTruckForEditOutput) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.truck = _data["truck"] ? CreateOrEditTruckDto.fromJS(_data["truck"]) : <any>undefined;
+            this.trucksTypeDisplayName = _data["trucksTypeDisplayName"];
+            this.truckStatusDisplayName = _data["truckStatusDisplayName"];
+            this.userName = _data["userName"];
+            this.userName2 = _data["userName2"];
+        }
+    }
+
+    static fromJS(data: any): GetTruckForEditOutput {
+        data = typeof data === 'object' ? data : {};
+        let result = new GetTruckForEditOutput();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["truck"] = this.truck ? this.truck.toJSON() : <any>undefined;
+        data["trucksTypeDisplayName"] = this.trucksTypeDisplayName;
+        data["truckStatusDisplayName"] = this.truckStatusDisplayName;
+        data["userName"] = this.userName;
+        data["userName2"] = this.userName2;
+        return data; 
+    }
+}
+
+export interface IGetTruckForEditOutput {
+    truck: CreateOrEditTruckDto;
+    trucksTypeDisplayName: string | undefined;
+    truckStatusDisplayName: string | undefined;
+    userName: string | undefined;
+    userName2: string | undefined;
+}
+
+export class TruckTrucksTypeLookupTableDto implements ITruckTrucksTypeLookupTableDto {
+    id!: string | undefined;
+    displayName!: string | undefined;
+
+    constructor(data?: ITruckTrucksTypeLookupTableDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.id = _data["id"];
+            this.displayName = _data["displayName"];
+        }
+    }
+
+    static fromJS(data: any): TruckTrucksTypeLookupTableDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new TruckTrucksTypeLookupTableDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
+        data["displayName"] = this.displayName;
+        return data; 
+    }
+}
+
+export interface ITruckTrucksTypeLookupTableDto {
+    id: string | undefined;
+    displayName: string | undefined;
+}
+
+export class TruckTruckStatusLookupTableDto implements ITruckTruckStatusLookupTableDto {
+    id!: string | undefined;
+    displayName!: string | undefined;
+
+    constructor(data?: ITruckTruckStatusLookupTableDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.id = _data["id"];
+            this.displayName = _data["displayName"];
+        }
+    }
+
+    static fromJS(data: any): TruckTruckStatusLookupTableDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new TruckTruckStatusLookupTableDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
+        data["displayName"] = this.displayName;
+        return data; 
+    }
+}
+
+export interface ITruckTruckStatusLookupTableDto {
+    id: string | undefined;
+    displayName: string | undefined;
+}
+
+export class TruckUserLookupTableDto implements ITruckUserLookupTableDto {
+    id!: number;
+    displayName!: string | undefined;
+
+    constructor(data?: ITruckUserLookupTableDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.id = _data["id"];
+            this.displayName = _data["displayName"];
+        }
+    }
+
+    static fromJS(data: any): TruckUserLookupTableDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new TruckUserLookupTableDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
+        data["displayName"] = this.displayName;
+        return data; 
+    }
+}
+
+export interface ITruckUserLookupTableDto {
+    id: number;
+    displayName: string | undefined;
+}
+
+export class PagedResultDtoOfTruckUserLookupTableDto implements IPagedResultDtoOfTruckUserLookupTableDto {
+    totalCount!: number;
+    items!: TruckUserLookupTableDto[] | undefined;
+
+    constructor(data?: IPagedResultDtoOfTruckUserLookupTableDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.totalCount = _data["totalCount"];
+            if (Array.isArray(_data["items"])) {
+                this.items = [] as any;
+                for (let item of _data["items"])
+                    this.items!.push(TruckUserLookupTableDto.fromJS(item));
+            }
+        }
+    }
+
+    static fromJS(data: any): PagedResultDtoOfTruckUserLookupTableDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new PagedResultDtoOfTruckUserLookupTableDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["totalCount"] = this.totalCount;
+        if (Array.isArray(this.items)) {
+            data["items"] = [];
+            for (let item of this.items)
+                data["items"].push(item.toJSON());
+        }
+        return data; 
+    }
+}
+
+export interface IPagedResultDtoOfTruckUserLookupTableDto {
+    totalCount: number;
+    items: TruckUserLookupTableDto[] | undefined;
 }
 
 export class TruckStatusDto implements ITruckStatusDto {

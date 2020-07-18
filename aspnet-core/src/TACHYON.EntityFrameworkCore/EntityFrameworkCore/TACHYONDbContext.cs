@@ -19,6 +19,8 @@ namespace TACHYON.EntityFrameworkCore
 {
     public class TACHYONDbContext : AbpZeroDbContext<Tenant, Role, User, TACHYONDbContext>, IAbpPersistedGrantDbContext
     {
+        public virtual DbSet<Truck> Trucks { get; set; }
+
         public virtual DbSet<TrucksType> TrucksTypes { get; set; }
 
         public virtual DbSet<TruckStatus> TruckStatuses { get; set; }
@@ -55,7 +57,12 @@ namespace TACHYON.EntityFrameworkCore
 
            
            
-            modelBuilder.Entity<TrucksType>(t =>
+           
+            modelBuilder.Entity<Truck>(t =>
+            {
+                t.HasIndex(e => new { e.TenantId });
+            });
+ modelBuilder.Entity<TrucksType>(t =>
             {
                 t.HasIndex(e => new { e.TenantId });
             });

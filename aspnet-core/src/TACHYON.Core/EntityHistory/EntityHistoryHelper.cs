@@ -20,6 +20,7 @@ namespace TACHYON.EntityHistory
 
         public static readonly Type[] TenantSideTrackedTypes =
         {
+            typeof(Truck),
             typeof(TrucksType),
             typeof(TruckStatus),
             typeof(OrganizationUnit), typeof(Role)

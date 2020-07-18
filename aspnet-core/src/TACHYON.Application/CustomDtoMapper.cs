@@ -51,6 +51,8 @@ namespace TACHYON
     {
         public static void CreateMappings(IMapperConfigurationExpression configuration)
         {
+            configuration.CreateMap<CreateOrEditTruckDto, Truck>().ReverseMap();
+            configuration.CreateMap<TruckDto, Truck>().ReverseMap();
             configuration.CreateMap<CreateOrEditTrucksTypeDto, TrucksType>().ReverseMap();
             configuration.CreateMap<TrucksTypeDto, TrucksType>().ReverseMap();
             configuration.CreateMap<CreateOrEditTruckStatusDto, TruckStatus>().ReverseMap();

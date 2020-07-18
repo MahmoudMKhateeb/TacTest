@@ -1,6 +1,26 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <localizationDictionary culture="en">
-  <texts>    <text name="TrucksTypes">Trucks types</text>
+  <texts>    <text name="Truck">Truck</text>
+    <text name="TACHYON.Trucks.Truck">Truck</text>
+    <text name="PlateNumber">Plate number</text>
+    <text name="ModelName">Model name</text>
+    <text name="ModelYear">Model year</text>
+    <text name="LicenseNumber">License number</text>
+    <text name="LicenseExpirationDate">License expiration date</text>
+    <text name="IsAttachable">Is attachable</text>
+    <text name="NotIsAttachable">Not is attachable</text>
+    <text name="Note">Note</text>
+    <text name="TrucksHeaderInfo">Trucks header info</text>
+    <text name="CreateNewTruck">Create new truck</text>
+    <text name="EditTruck">Edit truck</text>
+    <text name="DeleteTruck">Delete truck</text>
+    <text name="TrucksTypeDisplayName">Trucks type display name</text>
+    <text name="PickTrucksType">Pick trucks type</text>
+    <text name="TruckStatusDisplayName">Truck status display name</text>
+    <text name="PickTruckStatus">Pick truck status</text>
+    <text name="PickUser">Pick user</text>
+    <text name="LicenseExpirationDateRange">License expiration date range</text>
+    <text name="TrucksTypes">Trucks types</text>
     <text name="TrucksType">Trucks type</text>
     <text name="TACHYON.TrucksTypes.TrucksType">TrucksType</text>
     <text name="TrucksTypesHeaderInfo">Trucks types header info</text>
