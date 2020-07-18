@@ -1,4 +1,5 @@
-﻿using TACHYON.Trucks;
+﻿using TACHYON.Trucks.TrucksTypes;
+using TACHYON.Trucks;
 using Abp.IdentityServer4;
 using Abp.Organizations;
 using Abp.Zero.EntityFrameworkCore;
@@ -18,6 +19,8 @@ namespace TACHYON.EntityFrameworkCore
 {
     public class TACHYONDbContext : AbpZeroDbContext<Tenant, Role, User, TACHYONDbContext>, IAbpPersistedGrantDbContext
     {
+        public virtual DbSet<TrucksType> TrucksTypes { get; set; }
+
         public virtual DbSet<TruckStatus> TruckStatuses { get; set; }
 
         /* Define an IDbSet for each entity of the application */
@@ -51,7 +54,12 @@ namespace TACHYON.EntityFrameworkCore
             base.OnModelCreating(modelBuilder);
 
            
-            modelBuilder.Entity<TruckStatus>(t =>
+           
+            modelBuilder.Entity<TrucksType>(t =>
+            {
+                t.HasIndex(e => new { e.TenantId });
+            });
+ modelBuilder.Entity<TruckStatus>(t =>
             {
                 t.HasIndex(e => new { e.TenantId });
             });
