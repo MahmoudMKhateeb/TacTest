@@ -307,26 +307,16 @@ namespace TACHYON.Trucks
         [AbpAuthorize(AppPermissions.Pages_Trucks)]
         public async Task<List<TruckTrucksTypeLookupTableDto>> GetAllTrucksTypeForTableDropdown()
         {
-            List<TruckTrucksTypeLookupTableDto> hostTrucksTypes;
             using (CurrentUnitOfWork.DisableFilter(AbpDataFilters.MayHaveTenant))
             {
-                hostTrucksTypes = await _lookup_trucksTypeRepository.GetAll()
-                    .Where(x => !x.TenantId.HasValue)
-                    .Select(trucksType => new TruckTrucksTypeLookupTableDto
-                    {
-                        Id = trucksType.Id.ToString(),
-                        DisplayName = trucksType == null || trucksType.DisplayName == null ? "" : trucksType.DisplayName.ToString()
-                    }).ToListAsync();
+                return await _lookup_trucksTypeRepository.GetAll()
+                     .Where(x => !x.TenantId.HasValue || x.TenantId == AbpSession.TenantId)
+                     .Select(trucksType => new TruckTrucksTypeLookupTableDto
+                     {
+                         Id = trucksType.Id.ToString(),
+                         DisplayName = trucksType == null || trucksType.DisplayName == null ? "" : trucksType.DisplayName.ToString()
+                     }).ToListAsync();
             }
-
-            var tenantTrucksTypes = await _lookup_trucksTypeRepository.GetAll()
-                .Select(trucksType => new TruckTrucksTypeLookupTableDto
-                {
-                    Id = trucksType.Id.ToString(),
-                    DisplayName = trucksType == null || trucksType.DisplayName == null ? "" : trucksType.DisplayName.ToString()
-                }).ToListAsync();
-
-            return tenantTrucksTypes.Concat(hostTrucksTypes).ToList();
         }
 
         [AbpAuthorize(AppPermissions.Pages_Trucks)]
