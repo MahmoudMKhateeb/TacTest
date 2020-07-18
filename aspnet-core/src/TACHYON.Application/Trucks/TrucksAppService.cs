@@ -22,6 +22,7 @@ using Abp.Application.Services.Dto;
 using TACHYON.Authorization;
 using Abp.Extensions;
 using Abp.Authorization;
+using Abp.Domain.Uow;
 using Abp.Runtime.Session;
 using Microsoft.EntityFrameworkCore;
 using TACHYON.Features;
@@ -306,12 +307,26 @@ namespace TACHYON.Trucks
         [AbpAuthorize(AppPermissions.Pages_Trucks)]
         public async Task<List<TruckTrucksTypeLookupTableDto>> GetAllTrucksTypeForTableDropdown()
         {
-            return await _lookup_trucksTypeRepository.GetAll()
+            List<TruckTrucksTypeLookupTableDto> hostTrucksTypes;
+            using (CurrentUnitOfWork.DisableFilter(AbpDataFilters.MayHaveTenant))
+            {
+                hostTrucksTypes = await _lookup_trucksTypeRepository.GetAll()
+                    .Where(x => !x.TenantId.HasValue)
+                    .Select(trucksType => new TruckTrucksTypeLookupTableDto
+                    {
+                        Id = trucksType.Id.ToString(),
+                        DisplayName = trucksType == null || trucksType.DisplayName == null ? "" : trucksType.DisplayName.ToString()
+                    }).ToListAsync();
+            }
+
+            var tenantTrucksTypes = await _lookup_trucksTypeRepository.GetAll()
                 .Select(trucksType => new TruckTrucksTypeLookupTableDto
                 {
                     Id = trucksType.Id.ToString(),
                     DisplayName = trucksType == null || trucksType.DisplayName == null ? "" : trucksType.DisplayName.ToString()
                 }).ToListAsync();
+
+            return tenantTrucksTypes.Concat(hostTrucksTypes).ToList();
         }
 
         [AbpAuthorize(AppPermissions.Pages_Trucks)]
