@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System;
+using System.ComponentModel.DataAnnotations;
 using Abp.Auditing;
 using Abp.Authorization.Users;
 using Abp.Domain.Entities;
@@ -46,5 +47,17 @@ namespace TACHYON.Authorization.Users.Dto
 
         public virtual bool IsLockoutEnabled { get; set; }
 
+
+        #region Tachyon details
+        public virtual bool IsDriver { get; set; }
+
+        public virtual string Address { get; set; }
+        public virtual string Nationality { get; set; }
+        public virtual string DrivingLicenseNumber { get; set; }
+        public virtual DateTime DrivingLicenseIssuingDate { get; set; }
+        public virtual DateTime DrivingLicenseExpiryDate { get; set; }
+        public virtual string ExperienceField { get; set; }
+
+        #endregion
     }
 }

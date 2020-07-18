@@ -42,7 +42,10 @@
                                 <label for="PhoneNumber">{{"PhoneNumber" | localize}}</label>
                                 <input id="PhoneNumber" type="text" name="PhoneNumber" class="form-control" [(ngModel)]="user.phoneNumber" maxlength="32">
                             </div>
-
+                            <div class="form-group">
+                                <label for="Nationality">{{"Nationality" | localize}}</label>
+                                <input id="Nationality" type="text" name="Nationality" class="form-control" [(ngModel)]="user.nationality" maxlength="64">
+                            </div>
                             <div class="form-group">
                                 <label for="UserName">{{"UserName" | localize}} *</label>
                                 <input id="UserName" #userNameInput="ngModel" type="text" [disabled]="!canChangeUserName" name="UserName" class="form-control" [(ngModel)]="user.userName" required maxlength="256">
@@ -144,6 +147,31 @@
                         </tab>
                         <tab class="pt-5" heading="{{'OrganizationUnits' | localize}}">
                             <organization-unit-tree [cascadeSelectEnabled]="false" #organizationUnitTree></organization-unit-tree>
+                        </tab>
+                        <tab class="pt-5" heading="{{'DriverDetails' | localize}}">
+                            <div class="checkbox-inline form-group">
+                                <label for="IsDriver" class="checkbox">
+                                    <input id="IsDriver" type="checkbox" name="IsDriver" [(ngModel)]="user.isDriver">
+                                    {{"IsDriver" | localize}}
+                                    <span></span>
+                                </label>
+                            </div>
+                            <div class="form-group" *ngIf="user.isDriver">
+                                <label for="DrivingLicenseNumber">{{"DrivingLicenseNumber" | localize}}</label>
+                                <input id="DrivingLicenseNumber" type="text" name="DrivingLicenseNumber" class="form-control" [(ngModel)]="user.drivingLicenseNumber" maxlength="64">
+                            </div>
+                            <div class="form-group" *ngIf="user.isDriver">
+                                <label for="DrivingLicenseIssuingDate">{{"DrivingLicenseIssuingDate" | localize}}</label>
+                                <input id="DrivingLicenseIssuingDate" type="date" name="DrivingLicenseNumber" class="form-control" [(ngModel)]="user.drivingLicenseIssuingDate" maxlength="64">
+                            </div>
+                            <div class="form-group" *ngIf="user.isDriver">
+                                <label for="DrivingLicenseExpiryDate">{{"DrivingLicenseExpiryDate" | localize}}</label>
+                                <input id="DrivingLicenseExpiryDate" type="date" name="DrivingLicenseNumber" class="form-control" [(ngModel)]="user.drivingLicenseExpiryDate" maxlength="64">
+                            </div>
+                            <div class="form-group" *ngIf="user.isDriver">
+                                <label for="ExperienceField">{{"ExperienceField" | localize}}</label>
+                                <input id="ExperienceField" type="text" name="DrivingLicenseNumber" class="form-control" [(ngModel)]="user.experienceField" maxlength="256">
+                            </div>
                         </tab>
                     </tabset>
                 </div>

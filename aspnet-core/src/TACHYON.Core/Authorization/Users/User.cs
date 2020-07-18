@@ -25,6 +25,14 @@ namespace TACHYON.Authorization.Users
         public List<UserOrganizationUnit> OrganizationUnits { get; set; }
 
         //Can add application specific user properties here
+        public virtual bool IsDriver { get; set; }
+
+        public virtual string Address { get; set; }
+        public virtual string Nationality { get; set; }
+        public virtual string DrivingLicenseNumber { get; set; }
+        public virtual DateTime DrivingLicenseIssuingDate { get; set; }
+        public virtual DateTime DrivingLicenseExpiryDate { get; set; }
+        public virtual string ExperienceField { get; set; }
 
         public User()
         {

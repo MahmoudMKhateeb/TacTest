@@ -25740,6 +25740,13 @@ export class UserEditDto implements IUserEditDto {
     shouldChangePasswordOnNextLogin!: boolean;
     isTwoFactorEnabled!: boolean;
     isLockoutEnabled!: boolean;
+    isDriver!: boolean;
+    address!: string | undefined;
+    nationality!: string | undefined;
+    drivingLicenseNumber!: string | undefined;
+    drivingLicenseIssuingDate!: moment.Moment;
+    drivingLicenseExpiryDate!: moment.Moment;
+    experienceField!: string | undefined;
 
     constructor(data?: IUserEditDto) {
         if (data) {
@@ -25763,6 +25770,13 @@ export class UserEditDto implements IUserEditDto {
             this.shouldChangePasswordOnNextLogin = _data["shouldChangePasswordOnNextLogin"];
             this.isTwoFactorEnabled = _data["isTwoFactorEnabled"];
             this.isLockoutEnabled = _data["isLockoutEnabled"];
+            this.isDriver = _data["isDriver"];
+            this.address = _data["address"];
+            this.nationality = _data["nationality"];
+            this.drivingLicenseNumber = _data["drivingLicenseNumber"];
+            this.drivingLicenseIssuingDate = _data["drivingLicenseIssuingDate"] ? moment(_data["drivingLicenseIssuingDate"].toString()) : <any>undefined;
+            this.drivingLicenseExpiryDate = _data["drivingLicenseExpiryDate"] ? moment(_data["drivingLicenseExpiryDate"].toString()) : <any>undefined;
+            this.experienceField = _data["experienceField"];
         }
     }
 
@@ -25786,6 +25800,13 @@ export class UserEditDto implements IUserEditDto {
         data["shouldChangePasswordOnNextLogin"] = this.shouldChangePasswordOnNextLogin;
         data["isTwoFactorEnabled"] = this.isTwoFactorEnabled;
         data["isLockoutEnabled"] = this.isLockoutEnabled;
+        data["isDriver"] = this.isDriver;
+        data["address"] = this.address;
+        data["nationality"] = this.nationality;
+        data["drivingLicenseNumber"] = this.drivingLicenseNumber;
+        data["drivingLicenseIssuingDate"] = this.drivingLicenseIssuingDate ? this.drivingLicenseIssuingDate.toISOString() : <any>undefined;
+        data["drivingLicenseExpiryDate"] = this.drivingLicenseExpiryDate ? this.drivingLicenseExpiryDate.toISOString() : <any>undefined;
+        data["experienceField"] = this.experienceField;
         return data; 
     }
 }
@@ -25802,6 +25823,13 @@ export interface IUserEditDto {
     shouldChangePasswordOnNextLogin: boolean;
     isTwoFactorEnabled: boolean;
     isLockoutEnabled: boolean;
+    isDriver: boolean;
+    address: string | undefined;
+    nationality: string | undefined;
+    drivingLicenseNumber: string | undefined;
+    drivingLicenseIssuingDate: moment.Moment;
+    drivingLicenseExpiryDate: moment.Moment;
+    experienceField: string | undefined;
 }
 
 export class UserRoleDto implements IUserRoleDto {
