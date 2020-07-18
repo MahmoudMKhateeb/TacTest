@@ -13,6 +13,9 @@
 
         public const string Shipper = "App.Shipper";
         public const string Carrier = "App.Carrier";
+        public const string Broker = "App.Broker";
+        public const string Receiver = "App.Receiver";
+
 
         #endregion
 

@@ -23,30 +23,30 @@ namespace TACHYON.Features
 
             #region ######## Example Features - You can delete them #########
 
-            context.Create("TestTenantScopeFeature", "false", L("TestTenantScopeFeature"), scope: FeatureScopes.Tenant);
-            context.Create("TestEditionScopeFeature", "false", L("TestEditionScopeFeature"), scope: FeatureScopes.Edition);
+            //context.Create("TestTenantScopeFeature", "false", L("TestTenantScopeFeature"), scope: FeatureScopes.Tenant);
+            //context.Create("TestEditionScopeFeature", "false", L("TestEditionScopeFeature"), scope: FeatureScopes.Edition);
 
-            context.Create(
-                AppFeatures.TestCheckFeature,
-                defaultValue: "false",
-                displayName: L("TestCheckFeature"),
-                inputType: new CheckboxInputType()
-            )[FeatureMetadata.CustomFeatureKey] = new FeatureMetadata
-            {
-                IsVisibleOnPricingTable = true,
-                TextHtmlColor = value => value == "true" ? "#5cb85c" : "#d9534f"
-            };
+            //context.Create(
+            //    AppFeatures.TestCheckFeature,
+            //    defaultValue: "false",
+            //    displayName: L("TestCheckFeature"),
+            //    inputType: new CheckboxInputType()
+            //)[FeatureMetadata.CustomFeatureKey] = new FeatureMetadata
+            //{
+            //    IsVisibleOnPricingTable = true,
+            //    TextHtmlColor = value => value == "true" ? "#5cb85c" : "#d9534f"
+            //};
 
-            context.Create(
-                AppFeatures.TestCheckFeature2,
-                defaultValue: "true",
-                displayName: L("TestCheckFeature2"),
-                inputType: new CheckboxInputType()
-            )[FeatureMetadata.CustomFeatureKey] = new FeatureMetadata
-            {
-                IsVisibleOnPricingTable = true,
-                TextHtmlColor = value => value == "true" ? "#5cb85c" : "#d9534f"
-            };
+            //context.Create(
+            //    AppFeatures.TestCheckFeature2,
+            //    defaultValue: "true",
+            //    displayName: L("TestCheckFeature2"),
+            //    inputType: new CheckboxInputType()
+            //)[FeatureMetadata.CustomFeatureKey] = new FeatureMetadata
+            //{
+            //    IsVisibleOnPricingTable = true,
+            //    TextHtmlColor = value => value == "true" ? "#5cb85c" : "#d9534f"
+            //};
 
             #endregion
 
@@ -58,15 +58,47 @@ namespace TACHYON.Features
                 displayName: L("ShipperFeature"),// todo add localization here
 
                 inputType: new CheckboxInputType()
-            );
+            )[FeatureMetadata.CustomFeatureKey] = new FeatureMetadata
+            {
+                IsVisibleOnPricingTable = true,
+                TextHtmlColor = value => value == "true" ? "#c300ff" : "#d9534f"
+            };
 
-            
+
             var carrierFeature = context.Create(
                 AppFeatures.Carrier,
                 defaultValue: "false",
                 displayName: L("CarrierFeature"),// todo add localization here
                 inputType: new CheckboxInputType()
-            );
+             )[FeatureMetadata.CustomFeatureKey] = new FeatureMetadata
+             {
+                 IsVisibleOnPricingTable = true,
+                 TextHtmlColor = value => value == "true" ? "#c300ff" : "#d9534f"
+             };
+
+            var broker = context.Create(
+               AppFeatures.Broker,
+               defaultValue: "false",
+               displayName: L("BrokerFeature"),// todo add localization here
+
+               inputType: new CheckboxInputType()
+           )[FeatureMetadata.CustomFeatureKey] = new FeatureMetadata
+           {
+               IsVisibleOnPricingTable = true,
+               TextHtmlColor = value => value == "true" ? "#c300ff" : "#d9534f"
+           };
+
+            var receiver = context.Create(
+              AppFeatures.Receiver,
+              defaultValue: "false",
+              displayName: L("ReceiverFeature"),// todo add localization here
+
+              inputType: new CheckboxInputType()
+          )[FeatureMetadata.CustomFeatureKey] = new FeatureMetadata
+          {
+              IsVisibleOnPricingTable = true,
+              TextHtmlColor = value => value == "true" ? "#c300ff" : "#d9534f"
+          };
 
             #endregion
 
