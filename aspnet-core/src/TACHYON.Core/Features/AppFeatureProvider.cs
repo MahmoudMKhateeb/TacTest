@@ -50,6 +50,26 @@ namespace TACHYON.Features
 
             #endregion
 
+            #region ######## Tachyon features #########
+
+            var shipperFeature = context.Create(
+                AppFeatures.Shipper,
+                defaultValue: "false",
+                displayName: L("ShipperFeature"),// todo add localization here
+
+                inputType: new CheckboxInputType()
+            );
+
+            
+            var carrierFeature = context.Create(
+                AppFeatures.Carrier,
+                defaultValue: "false",
+                displayName: L("CarrierFeature"),// todo add localization here
+                inputType: new CheckboxInputType()
+            );
+
+            #endregion
+
             var chatFeature = context.Create(
                 AppFeatures.ChatFeature,
                 defaultValue: "false",

@@ -8,5 +8,13 @@
         public const string TenantToHostChatFeature = "App.ChatFeature.TenantToHost";
         public const string TestCheckFeature = "App.TestCheckFeature";
         public const string TestCheckFeature2 = "App.TestCheckFeature2";
+
+        #region ######## Tachyon features #########
+
+        public const string Shipper = "App.Shipper";
+        public const string Carrier = "App.Carrier";
+
+        #endregion
+
     }
 }
