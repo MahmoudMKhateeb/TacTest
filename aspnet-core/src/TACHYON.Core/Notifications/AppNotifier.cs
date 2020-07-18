@@ -18,13 +18,29 @@ namespace TACHYON.Notifications
             _notificationPublisher = notificationPublisher;
         }
 
+        #region Tachyon Notifications
+
+        public async Task AssignDriverToTruck(UserIdentifier argsUser, Guid truckId)
+        {
+            var notificationData = new LocalizableMessageNotificationData(
+                new LocalizableString(
+                    L("AssignDriverToTruckNotificationMessage"),
+                    TACHYONConsts.LocalizationSourceName
+                )
+            );
+
+            notificationData["truckId"] = truckId;
+            await _notificationPublisher.PublishAsync(AppNotificationNames.AssignDriverToTruck, notificationData, userIds: new[] { argsUser });
+        }
+
+        #endregion
         public async Task WelcomeToTheApplicationAsync(User user)
         {
             await _notificationPublisher.PublishAsync(
                 AppNotificationNames.WelcomeToTheApplication,
                 new MessageNotificationData(L("WelcomeToTheApplicationNotificationMessage")),
                 severity: NotificationSeverity.Success,
-                userIds: new[] {user.ToUserIdentifier()}
+                userIds: new[] { user.ToUserIdentifier() }
             );
         }
 
@@ -41,7 +57,7 @@ namespace TACHYON.Notifications
             notificationData["emailAddress"] = user.EmailAddress;
 
             await _notificationPublisher.PublishAsync(AppNotificationNames.NewUserRegistered, notificationData,
-                tenantIds: new[] {user.TenantId});
+                tenantIds: new[] { user.TenantId });
         }
 
         public async Task NewTenantRegisteredAsync(Tenant tenant)
@@ -69,7 +85,7 @@ namespace TACHYON.Notifications
             notificationData["binaryObjectId"] = binaryObjectId;
 
             await _notificationPublisher.PublishAsync(AppNotificationNames.GdprDataPrepared, notificationData,
-                userIds: new[] {user});
+                userIds: new[] { user });
         }
 
         //This is for test purposes
@@ -80,7 +96,7 @@ namespace TACHYON.Notifications
                 AppNotificationNames.SimpleMessage,
                 new MessageNotificationData(message),
                 severity: severity,
-                userIds: new[] {user}
+                userIds: new[] { user }
             );
         }
 
@@ -106,7 +122,7 @@ namespace TACHYON.Notifications
             }
 
             await _notificationPublisher.PublishAsync(notificationName, notificationData, severity: severity,
-                userIds: new[] {user});
+                userIds: new[] { user });
         }
 
         public Task TenantsMovedToEdition(UserIdentifier user, string sourceEditionName, string targetEditionName)
@@ -131,11 +147,11 @@ namespace TACHYON.Notifications
 
         public Task SomeUsersCouldntBeImported(UserIdentifier user, string fileToken, string fileType, string fileName)
         {
-            return SendNotificationAsync(AppNotificationNames.DownloadInvalidImportUsers, user, 
+            return SendNotificationAsync(AppNotificationNames.DownloadInvalidImportUsers, user,
                 new LocalizableString(
                     "ClickToSeeInvalidUsers",
                     TACHYONConsts.LocalizationSourceName
-                ), 
+                ),
                 new Dictionary<string, object>
                 {
                     { "fileToken", fileToken },

@@ -11,6 +11,12 @@ namespace TACHYON.Notifications
 {
     public interface IAppNotifier
     {
+
+        #region Tachyon notifications
+
+        Task AssignDriverToTruck(UserIdentifier argsUser, Guid truckId);
+
+        #endregion
         Task WelcomeToTheApplicationAsync(User user);
 
         Task NewUserRegisteredAsync(User user);

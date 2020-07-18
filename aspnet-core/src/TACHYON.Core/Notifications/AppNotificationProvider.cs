@@ -1,7 +1,9 @@
-﻿using Abp.Authorization;
+﻿using Abp.Application.Features;
+using Abp.Authorization;
 using Abp.Localization;
 using Abp.Notifications;
 using TACHYON.Authorization;
+using TACHYON.Features;
 
 namespace TACHYON.Notifications
 {
@@ -24,6 +26,18 @@ namespace TACHYON.Notifications
                     permissionDependency: new SimplePermissionDependency(AppPermissions.Pages_Tenants)
                     )
                 );
+
+            #region Tychon notifications
+
+            context.Manager.Add(
+               new NotificationDefinition(
+                   AppNotificationNames.AssignDriverToTruck,
+                   displayName: L("AssignDriverToTruckNotificationDefinition"),
+                   featureDependency: new SimpleFeatureDependency(AppFeatures.Carrier)
+                   )
+               );
+
+            #endregion
         }
 
         private static ILocalizableString L(string name)
