@@ -1,4 +1,5 @@
-﻿using System;
+﻿using TACHYON.Trucks;
+using System;
 using System.Linq;
 using Abp.Organizations;
 using TACHYON.Authorization.Roles;
@@ -17,6 +18,7 @@ namespace TACHYON.EntityHistory
 
         public static readonly Type[] TenantSideTrackedTypes =
         {
+            typeof(TruckStatus),
             typeof(OrganizationUnit), typeof(Role)
         };
 

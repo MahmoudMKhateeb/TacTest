@@ -16,7 +16,7 @@
 					"type" : "bool",
 					"content" : "                    <div class=\"col-6 mb-3\">
                         <h6>{{l(\"{{Property_Name_Here}}\")}} :</h6>
-                        <div *ngIf=\"item.{{entity_Name_Here}}.{{property_Name_Here}}\" class=\"text-left\"><i class=\"fa fa-check-circle kt--font-success\"
+                        <div *ngIf=\"item.{{entity_Name_Here}}.{{property_Name_Here}}\" class=\"text-left\"><i class=\"fa fa-check-circle {{Font_Success_Class_Here}}\"
                                 title=\"True\"></i></div>
                         <div *ngIf=\"!item.{{entity_Name_Here}}.{{property_Name_Here}}\" class=\"text-left\"><i class=\"fa fa-times-circle\" title=\"False\"></i></div>
                     </div>"
@@ -60,6 +60,16 @@
 			"placeholder": "{{Enum_Localization_Before_060600}}",
 			"condition": "{{Project_Version_Here}} < 060600",
 			"content": "'Enum_{{Property_Type_Here}}' + "
-		}
+		},
+        {
+            "placeholder": "{{Font_Success_Class_Here}}",
+            "condition": "{{Project_Version_Here}} < 090000",
+            "content": "kt--font-success"
+        },
+        {
+            "placeholder": "{{Font_Success_Class_Here}}",
+            "condition": "{{Project_Version_Here}} >= 090000",
+            "content": "text-success"
+        }
 	]
 }

@@ -83,7 +83,7 @@
 			"content": ",
 						render: function ({{property_Name_Here}}) {
 							if ({{property_Name_Here}}) {
-								return '<div class=\"text-center\"><i class=\"fa fa-check kt--font-success\" title=\"True\"></i></div>';
+								return '<div class=\"text-center\"><i class=\"fa fa-check {{Font_Success_Class_Here}}\" title=\"True\"></i></div>';
 							}
 							return '<div class=\"text-center\"><i class=\"fa fa-times-circle\" title=\"False\"></i></div>';
 					}
@@ -215,6 +215,16 @@
 			"placeholder": "{{Edit_Button_OnClick_Here}}",
 			"condition": "{{Is_Non_Modal_CRUD_Page}} == false",
 			"content": "_createOrEditModal.open({ id: data.record.{{entity_Name_Here}}.id });"
-		}
+		},
+        {
+            "placeholder": "{{Font_Success_Class_Here}}",
+            "condition": "{{Project_Version_Here}} < 090000",
+            "content": "kt--font-success"
+        },
+        {
+            "placeholder": "{{Font_Success_Class_Here}}",
+            "condition": "{{Project_Version_Here}} >= 090000",
+            "content": "text-success"
+        }
 	]
 }

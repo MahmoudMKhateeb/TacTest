@@ -239,6 +239,19 @@ import { {{Entity_Name_Here}}{{NP_Foreign_Entity_Name_Here}}LookupTableModalComp
 			"placeholder": "{{Import_Modal_Directive_Here}}",
 			"condition": "{{Project_Version_Here}} >= 080500",
 			"content": "import { ModalDirective } from 'ngx-bootstrap/modal';"
-		}
+		},
+		{
+            "placeholder": "{{Import_Breadcrumb_Here}}",
+            "condition": "{{Project_Version_Here}} >= 090000",
+            "content": "import { BreadcrumbItem } from '@app/shared/common/sub-header/sub-header.component';"
+        },
+        {
+            "placeholder": "{{Breadcrumb_Definitions_Here}}",
+            "condition": "{{Project_Version_Here}} >= 090000",
+            "content": "breadcrumbs: BreadcrumbItem[]= [
+                        new BreadcrumbItem(this.l(\"{{Entity_Name_Here}}\"),\"/app/{{menu_Position_Here}}/{{namespace_Relative_Here}}/{{entity_Name_Plural_Here}}\"),
+                        new BreadcrumbItem(this.l('Entity_Name_Plural_Here') + '' + this.l('Details')),
+                    ];"
+        }
 	]
 }

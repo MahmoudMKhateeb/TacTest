@@ -7,9 +7,9 @@ import * as moment from 'moment';{{NP_Looped_Lookup_Component_Import_Here}}
 import { ActivatedRoute, Router } from '@angular/router';
 import { appModuleAnimation } from '@shared/animations/routerTransition';
 import {Observable} from "@node_modules/rxjs";
+{{Import_Breadcrumb_Here}}
 
 @Component({
-    selector: 'createOrEdit{{Entity_Name_Here}}',
     templateUrl: './create-or-edit-{{entity_Name_Here}}.component.html',
     animations: [appModuleAnimation()]
 })
@@ -21,6 +21,7 @@ export class CreateOrEdit{{Entity_Name_Here}}Component extends AppComponentBase 
 {{Property_Nullable_Datetime_Dec_Looped_Template_Here}}
 {{NP_Looped_Display_Declaration_Here}}
 {{NP_Looped_Dropdown_Property_Here}}
+{{Breadcrumb_Definitions_Here}}
     constructor(
         injector: Injector,
         private _activatedRoute: ActivatedRoute,        

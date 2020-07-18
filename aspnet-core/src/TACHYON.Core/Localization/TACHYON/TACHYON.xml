@@ -1,6 +1,23 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <localizationDictionary culture="en">
   <texts>
+    <text name="Trucks">Trucks</text>
+    <text name="TruckStatus">Truck status</text>
+    <text name="TACHYON.Trucks.TruckStatus">TruckStatus</text>
+    <text name="DisplayName">Display name</text>
+    <text name="TruckStatusesHeaderInfo">Truck statuses header info</text>
+    <text name="CreateNewTruckStatus">Create new truck status</text>
+    <text name="EditTruckStatus">Edit truck status</text>
+    <text name="DeleteTruckStatus">Delete truck status</text>
+    <text name="TruckStatuses">Truck statuses</text>
+    <text name="{0}IsRequired">{0} is required.</text>
+    <text name="View">View</text>
+    <text name="Details">Details</text>
+    <text name="Pick">Pick</text>
+    <text name="True">True</text>
+    <text name="False">False</text>
+    <text name="MinValue">Min</text>
+    <text name="MaxValue">Max</text>
     <text name="HomePage">Home page</text>
     <text name="AboutUs">About us</text>
     <text name="Administration">Administration</text>

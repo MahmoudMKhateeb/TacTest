@@ -9,9 +9,9 @@
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
-                    <div class="kt-portlet">
-                        <div class="kt-portlet__body">
-                            <form class="kt-form" autocomplete="off">
+                    <div class="{{Portlet_Class_Here}}{{Card_Class_Here}}">
+                        <div class="{{Portlet_Body_Here}}{{Card_Body_Here}}">
+                            <form class="{{Form_Class_Here}}" autocomplete="off">
                                 <div>
                                     <div class="row align-items-center mb-4">
                                         <div class="col-xl-12">

@@ -13,10 +13,10 @@
 
 
 
-<div class="{{Container_Class_Here}}{{Container_Class_V2_Here}}">
-    <div class="kt-portlet">
-        <div class="kt-portlet__body">
-            <div class="kt-form">
+<div class="{{Container_Class_Here}}{{Container_Class_V2_Here}}{{Container_Class_V3_Here}}">
+    <div class="{{Portlet_Class_Here}}{{Card_Class_Here}}">
+        <div class="{{Portlet_Body_Class_Here}}{{Card_Body_Class_Here}}">
+            <div class="{{Form_Class_Here}}">
                 <div class="row align-items-center mb-4">
                     <div class="col-xl-12">
                         <div class="kt-group align-items-center">

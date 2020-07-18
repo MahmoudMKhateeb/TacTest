@@ -1,3 +1,5 @@
+﻿using TACHYON.Trucks.Dtos;
+using TACHYON.Trucks;
 using Abp.Application.Editions;
 using Abp.Application.Features;
 using Abp.Auditing;
@@ -47,6 +49,8 @@ namespace TACHYON
     {
         public static void CreateMappings(IMapperConfigurationExpression configuration)
         {
+            configuration.CreateMap<CreateOrEditTruckStatusDto, TruckStatus>().ReverseMap();
+            configuration.CreateMap<TruckStatusDto, TruckStatus>().ReverseMap();
             //Inputs
             configuration.CreateMap<CheckboxInputType, FeatureInputTypeDto>();
             configuration.CreateMap<SingleLineStringInputType, FeatureInputTypeDto>();
