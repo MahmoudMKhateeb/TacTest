@@ -12,6 +12,7 @@ using System.Linq.Dynamic.Core;
 using Abp.Linq.Extensions;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Abp.Application.Features;
 using Abp.Domain.Repositories;
 using TACHYON.Trucks.Exporting;
 using TACHYON.Trucks.Dtos;
@@ -21,10 +22,12 @@ using TACHYON.Authorization;
 using Abp.Extensions;
 using Abp.Authorization;
 using Microsoft.EntityFrameworkCore;
+using TACHYON.Features;
 
 namespace TACHYON.Trucks
 {
 	[AbpAuthorize(AppPermissions.Pages_Trucks)]
+    [RequiresFeature(AppFeatures.Shipper)]
     public class TrucksAppService : TACHYONAppServiceBase, ITrucksAppService
     {
 		 private readonly IRepository<Truck, Guid> _truckRepository;
