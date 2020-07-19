@@ -1,6 +1,13 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <localizationDictionary culture="en">
-  <texts>    <text name="Truck">Truck</text>
+  <texts>    <text name="TrailerTypes">Trailer types</text>
+    <text name="TrailerType">Trailer type</text>
+    <text name="TACHYON.TrailerTypes.TrailerType">TrailerType</text>
+    <text name="TrailerTypesHeaderInfo">Trailer types header info</text>
+    <text name="CreateNewTrailerType">Create new trailer type</text>
+    <text name="EditTrailerType">Edit trailer type</text>
+    <text name="DeleteTrailerType">Delete trailer type</text>
+    <text name="Truck">Truck</text>
     <text name="TACHYON.Trucks.Truck">Truck</text>
     <text name="PlateNumber">Plate number</text>
     <text name="ModelName">Model name</text>

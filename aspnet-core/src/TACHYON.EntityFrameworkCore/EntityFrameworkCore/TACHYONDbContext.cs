@@ -1,4 +1,5 @@
-﻿using TACHYON.Trucks.TrucksTypes;
+﻿using TACHYON.Trailers.TrailerTypes;
+using TACHYON.Trucks.TrucksTypes;
 using TACHYON.Trucks;
 using Abp.IdentityServer4;
 using Abp.Organizations;
@@ -19,6 +20,8 @@ namespace TACHYON.EntityFrameworkCore
 {
     public class TACHYONDbContext : AbpZeroDbContext<Tenant, Role, User, TACHYONDbContext>, IAbpPersistedGrantDbContext
     {
+        public virtual DbSet<TrailerType> TrailerTypes { get; set; }
+
         public virtual DbSet<Truck> Trucks { get; set; }
 
         public virtual DbSet<TrucksType> TrucksTypes { get; set; }

@@ -2,6 +2,10 @@
 import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { AppCommonModule } from '@app/shared/common/app-common.module';
+import { TrailerTypesComponent } from './trailerTypes/trailerTypes/trailerTypes.component';
+import { ViewTrailerTypeModalComponent } from './trailerTypes/trailerTypes/view-trailerType-modal.component';
+import { CreateOrEditTrailerTypeModalComponent } from './trailerTypes/trailerTypes/create-or-edit-trailerType-modal.component';
+
 import { TrucksComponent } from './trucks/trucks/trucks.component';
 import { ViewTruckModalComponent } from './trucks/trucks/view-truck-modal.component';
 import { CreateOrEditTruckModalComponent } from './trucks/trucks/create-or-edit-truck-modal.component';
@@ -55,6 +59,10 @@ NgxBootstrapDatePickerConfigService.registerNgxBootstrapDatePickerLocales();
         PopoverModule.forRoot()
     ],
     declarations: [
+		TrailerTypesComponent,
+
+		ViewTrailerTypeModalComponent,
+		CreateOrEditTrailerTypeModalComponent,
 		TrucksComponent,
 
 		ViewTruckModalComponent,
