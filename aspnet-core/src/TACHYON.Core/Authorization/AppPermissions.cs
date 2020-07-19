@@ -6,6 +6,11 @@
     /// </summary>
     public static class AppPermissions
     {
+        public const string Pages_PayloadMaxWeights = "Pages.PayloadMaxWeights";
+        public const string Pages_PayloadMaxWeights_Create = "Pages.PayloadMaxWeights.Create";
+        public const string Pages_PayloadMaxWeights_Edit = "Pages.PayloadMaxWeights.Edit";
+        public const string Pages_PayloadMaxWeights_Delete = "Pages.PayloadMaxWeights.Delete";
+
         public const string Pages_TrailerTypes = "Pages.TrailerTypes";
         public const string Pages_TrailerTypes_Create = "Pages.TrailerTypes.Create";
         public const string Pages_TrailerTypes_Edit = "Pages.TrailerTypes.Edit";

@@ -1,6 +1,14 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <localizationDictionary culture="en">
-  <texts>    <text name="TrailerTypes">Trailer types</text>
+  <texts>    <text name="PayloadMaxWeight">Payload max weight</text>
+    <text name="TACHYON.PayloadMaxWeight.PayloadMaxWeight">PayloadMaxWeight</text>
+    <text name="MaxWeight">Max weight</text>
+    <text name="PayloadMaxWeightsHeaderInfo">Payload max weights header info</text>
+    <text name="CreateNewPayloadMaxWeight">Create new payload max weight</text>
+    <text name="EditPayloadMaxWeight">Edit payload max weight</text>
+    <text name="DeletePayloadMaxWeight">Delete payload max weight</text>
+    <text name="PayloadMaxWeights">Payload max weights</text>
+    <text name="TrailerTypes">Trailer types</text>
     <text name="TrailerType">Trailer type</text>
     <text name="TACHYON.TrailerTypes.TrailerType">TrailerType</text>
     <text name="TrailerTypesHeaderInfo">Trailer types header info</text>

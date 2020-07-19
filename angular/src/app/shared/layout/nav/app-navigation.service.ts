@@ -29,6 +29,8 @@ export class AppNavigationService {
             new AppMenuItem('Trucks', 'Pages.Trucks', 'flaticon-more', '/app/main/trucks/trucks', undefined, undefined, undefined, undefined, () => this._featureCheckerService.isEnabled('App.Carrier')),
             
             new AppMenuItem('TrailerTypes', 'Pages.TrailerTypes', 'flaticon-more', '/app/main/trailerTypes/trailerTypes'),
+            
+            new AppMenuItem('PayloadMaxWeights', 'Pages.PayloadMaxWeights', 'flaticon-more', '/app/main/payloadMaxWeight/payloadMaxWeights'),
              new AppMenuItem('Administration', '', 'flaticon-interface-8', '', [], [
                 new AppMenuItem('OrganizationUnits', 'Pages.Administration.OrganizationUnits', 'flaticon-map', '/app/admin/organization-units'),
                 new AppMenuItem('Roles', 'Pages.Administration.Roles', 'flaticon-suitcase', '/app/admin/roles'),
