@@ -1,4 +1,6 @@
-﻿using TACHYON.Trailers.PayloadMaxWeight.Dtos;
+﻿using TACHYON.Trailers.TrailerStatuses.Dtos;
+using TACHYON.Trailers.TrailerStatuses;
+using TACHYON.Trailers.PayloadMaxWeight.Dtos;
 using TACHYON.Trailers.PayloadMaxWeight;
 using TACHYON.Trailers.TrailerTypes.Dtos;
 using TACHYON.Trailers.TrailerTypes;
@@ -55,6 +57,8 @@ namespace TACHYON
     {
         public static void CreateMappings(IMapperConfigurationExpression configuration)
         {
+            configuration.CreateMap<CreateOrEditTrailerStatusDto, TrailerStatus>().ReverseMap();
+            configuration.CreateMap<TrailerStatusDto, TrailerStatus>().ReverseMap();
             configuration.CreateMap<CreateOrEditPayloadMaxWeightDto, Trailers.PayloadMaxWeight.PayloadMaxWeight>().ReverseMap();
             configuration.CreateMap<PayloadMaxWeightDto, Trailers.PayloadMaxWeight.PayloadMaxWeight>().ReverseMap();
             configuration.CreateMap<CreateOrEditTrailerTypeDto, TrailerType>().ReverseMap();

@@ -1,4 +1,5 @@
-﻿using TACHYON.Trailers.PayloadMaxWeight;
+﻿using TACHYON.Trailers.TrailerStatuses;
+using TACHYON.Trailers.PayloadMaxWeight;
 using TACHYON.Trailers.TrailerTypes;
 using TACHYON.Trucks.TrucksTypes;
 using TACHYON.Trucks;
@@ -21,6 +22,8 @@ namespace TACHYON.EntityFrameworkCore
 {
     public class TACHYONDbContext : AbpZeroDbContext<Tenant, Role, User, TACHYONDbContext>, IAbpPersistedGrantDbContext
     {
+        public virtual DbSet<TrailerStatus> TrailerStatuses { get; set; }
+
         public virtual DbSet<Trailers.PayloadMaxWeight.PayloadMaxWeight> PayloadMaxWeights { get; set; }
 
         public virtual DbSet<TrailerType> TrailerTypes { get; set; }

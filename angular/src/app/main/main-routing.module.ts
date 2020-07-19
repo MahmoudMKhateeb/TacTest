@@ -1,5 +1,6 @@
 ﻿import { NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
+import { TrailerStatusesComponent } from './trailerStatuses/trailerStatuses/trailerStatuses.component';
 import { PayloadMaxWeightsComponent } from './payloadMaxWeight/payloadMaxWeights/payloadMaxWeights.component';
 import { TrailerTypesComponent } from './trailerTypes/trailerTypes/trailerTypes.component';
 import { TrucksComponent } from './trucks/trucks/trucks.component';
@@ -12,6 +13,7 @@ import { DashboardComponent } from './dashboard/dashboard.component';
             {
                 path: '',
                 children: [
+                    { path: 'trailerStatuses/trailerStatuses', component: TrailerStatusesComponent, data: { permission: 'Pages.TrailerStatuses' }  },
                     { path: 'payloadMaxWeight/payloadMaxWeights', component: PayloadMaxWeightsComponent, data: { permission: 'Pages.PayloadMaxWeights' }  },
                     { path: 'trailerTypes/trailerTypes', component: TrailerTypesComponent, data: { permission: 'Pages.TrailerTypes' }  },
                     { path: 'trucks/trucks', component: TrucksComponent, data: { permission: 'Pages.Trucks' }  },
