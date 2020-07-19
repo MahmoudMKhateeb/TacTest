@@ -1,11 +1,9 @@
-﻿using System;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using Abp.Domain.Entities.Auditing;
-using Abp.Domain.Entities;
 using Abp.Auditing;
+using Abp.Domain.Entities.Auditing;
 
-namespace TACHYON.Trailers.PayloadMaxWeight
+namespace TACHYON.Trailers.PayloadMaxWeights
 {
 	[Table("PayloadMaxWeights")]
     [Audited]

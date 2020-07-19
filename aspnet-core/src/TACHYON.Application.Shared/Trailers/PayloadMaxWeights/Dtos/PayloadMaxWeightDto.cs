@@ -1,8 +1,6 @@
-﻿
-using System;
-using Abp.Application.Services.Dto;
+﻿using Abp.Application.Services.Dto;
 
-namespace TACHYON.Trailers.PayloadMaxWeight.Dtos
+namespace TACHYON.Trailers.PayloadMaxWeights.Dtos
 {
     public class PayloadMaxWeightDto : EntityDto
     {

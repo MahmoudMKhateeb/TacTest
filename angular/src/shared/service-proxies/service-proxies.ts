@@ -12089,6 +12089,699 @@ export class TokenAuthServiceProxy {
 }
 
 @Injectable()
+export class TrailersServiceProxy {
+    private http: HttpClient;
+    private baseUrl: string;
+    protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
+
+    constructor(@Inject(HttpClient) http: HttpClient, @Optional() @Inject(API_BASE_URL) baseUrl?: string) {
+        this.http = http;
+        this.baseUrl = baseUrl ? baseUrl : "";
+    }
+
+    /**
+     * @param filter (optional) 
+     * @param trailerCodeFilter (optional) 
+     * @param plateNumberFilter (optional) 
+     * @param modelFilter (optional) 
+     * @param yearFilter (optional) 
+     * @param maxWidthFilter (optional) 
+     * @param minWidthFilter (optional) 
+     * @param maxHeightFilter (optional) 
+     * @param minHeightFilter (optional) 
+     * @param maxLengthFilter (optional) 
+     * @param minLengthFilter (optional) 
+     * @param isLiftgateFilter (optional) 
+     * @param isReeferFilter (optional) 
+     * @param isVentedFilter (optional) 
+     * @param isRollDoorFilter (optional) 
+     * @param trailerStatusDisplayNameFilter (optional) 
+     * @param trailerTypeDisplayNameFilter (optional) 
+     * @param payloadMaxWeightDisplayNameFilter (optional) 
+     * @param truckPlateNumberFilter (optional) 
+     * @param sorting (optional) 
+     * @param skipCount (optional) 
+     * @param maxResultCount (optional) 
+     * @return Success
+     */
+    getAll(filter: string | null | undefined, trailerCodeFilter: string | null | undefined, plateNumberFilter: string | null | undefined, modelFilter: string | null | undefined, yearFilter: string | null | undefined, maxWidthFilter: number | null | undefined, minWidthFilter: number | null | undefined, maxHeightFilter: number | null | undefined, minHeightFilter: number | null | undefined, maxLengthFilter: number | null | undefined, minLengthFilter: number | null | undefined, isLiftgateFilter: number | undefined, isReeferFilter: number | undefined, isVentedFilter: number | undefined, isRollDoorFilter: number | undefined, trailerStatusDisplayNameFilter: string | null | undefined, trailerTypeDisplayNameFilter: string | null | undefined, payloadMaxWeightDisplayNameFilter: string | null | undefined, truckPlateNumberFilter: string | null | undefined, sorting: string | null | undefined, skipCount: number | undefined, maxResultCount: number | undefined): Observable<PagedResultDtoOfGetTrailerForViewDto> {
+        let url_ = this.baseUrl + "/api/services/app/Trailers/GetAll?";
+        if (filter !== undefined)
+            url_ += "Filter=" + encodeURIComponent("" + filter) + "&"; 
+        if (trailerCodeFilter !== undefined)
+            url_ += "TrailerCodeFilter=" + encodeURIComponent("" + trailerCodeFilter) + "&"; 
+        if (plateNumberFilter !== undefined)
+            url_ += "PlateNumberFilter=" + encodeURIComponent("" + plateNumberFilter) + "&"; 
+        if (modelFilter !== undefined)
+            url_ += "ModelFilter=" + encodeURIComponent("" + modelFilter) + "&"; 
+        if (yearFilter !== undefined)
+            url_ += "YearFilter=" + encodeURIComponent("" + yearFilter) + "&"; 
+        if (maxWidthFilter !== undefined)
+            url_ += "MaxWidthFilter=" + encodeURIComponent("" + maxWidthFilter) + "&"; 
+        if (minWidthFilter !== undefined)
+            url_ += "MinWidthFilter=" + encodeURIComponent("" + minWidthFilter) + "&"; 
+        if (maxHeightFilter !== undefined)
+            url_ += "MaxHeightFilter=" + encodeURIComponent("" + maxHeightFilter) + "&"; 
+        if (minHeightFilter !== undefined)
+            url_ += "MinHeightFilter=" + encodeURIComponent("" + minHeightFilter) + "&"; 
+        if (maxLengthFilter !== undefined)
+            url_ += "MaxLengthFilter=" + encodeURIComponent("" + maxLengthFilter) + "&"; 
+        if (minLengthFilter !== undefined)
+            url_ += "MinLengthFilter=" + encodeURIComponent("" + minLengthFilter) + "&"; 
+        if (isLiftgateFilter === null)
+            throw new Error("The parameter 'isLiftgateFilter' cannot be null.");
+        else if (isLiftgateFilter !== undefined)
+            url_ += "IsLiftgateFilter=" + encodeURIComponent("" + isLiftgateFilter) + "&"; 
+        if (isReeferFilter === null)
+            throw new Error("The parameter 'isReeferFilter' cannot be null.");
+        else if (isReeferFilter !== undefined)
+            url_ += "IsReeferFilter=" + encodeURIComponent("" + isReeferFilter) + "&"; 
+        if (isVentedFilter === null)
+            throw new Error("The parameter 'isVentedFilter' cannot be null.");
+        else if (isVentedFilter !== undefined)
+            url_ += "IsVentedFilter=" + encodeURIComponent("" + isVentedFilter) + "&"; 
+        if (isRollDoorFilter === null)
+            throw new Error("The parameter 'isRollDoorFilter' cannot be null.");
+        else if (isRollDoorFilter !== undefined)
+            url_ += "IsRollDoorFilter=" + encodeURIComponent("" + isRollDoorFilter) + "&"; 
+        if (trailerStatusDisplayNameFilter !== undefined)
+            url_ += "TrailerStatusDisplayNameFilter=" + encodeURIComponent("" + trailerStatusDisplayNameFilter) + "&"; 
+        if (trailerTypeDisplayNameFilter !== undefined)
+            url_ += "TrailerTypeDisplayNameFilter=" + encodeURIComponent("" + trailerTypeDisplayNameFilter) + "&"; 
+        if (payloadMaxWeightDisplayNameFilter !== undefined)
+            url_ += "PayloadMaxWeightDisplayNameFilter=" + encodeURIComponent("" + payloadMaxWeightDisplayNameFilter) + "&"; 
+        if (truckPlateNumberFilter !== undefined)
+            url_ += "TruckPlateNumberFilter=" + encodeURIComponent("" + truckPlateNumberFilter) + "&"; 
+        if (sorting !== undefined)
+            url_ += "Sorting=" + encodeURIComponent("" + sorting) + "&"; 
+        if (skipCount === null)
+            throw new Error("The parameter 'skipCount' cannot be null.");
+        else if (skipCount !== undefined)
+            url_ += "SkipCount=" + encodeURIComponent("" + skipCount) + "&"; 
+        if (maxResultCount === null)
+            throw new Error("The parameter 'maxResultCount' cannot be null.");
+        else if (maxResultCount !== undefined)
+            url_ += "MaxResultCount=" + encodeURIComponent("" + maxResultCount) + "&"; 
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",			
+            headers: new HttpHeaders({
+                "Accept": "text/plain"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGetAll(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGetAll(<any>response_);
+                } catch (e) {
+                    return <Observable<PagedResultDtoOfGetTrailerForViewDto>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<PagedResultDtoOfGetTrailerForViewDto>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processGetAll(response: HttpResponseBase): Observable<PagedResultDtoOfGetTrailerForViewDto> {
+        const status = response.status;
+        const responseBlob = 
+            response instanceof HttpResponse ? response.body : 
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }};
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = PagedResultDtoOfGetTrailerForViewDto.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<PagedResultDtoOfGetTrailerForViewDto>(<any>null);
+    }
+
+    /**
+     * @param id (optional) 
+     * @return Success
+     */
+    getTrailerForView(id: number | undefined): Observable<GetTrailerForViewDto> {
+        let url_ = this.baseUrl + "/api/services/app/Trailers/GetTrailerForView?";
+        if (id === null)
+            throw new Error("The parameter 'id' cannot be null.");
+        else if (id !== undefined)
+            url_ += "id=" + encodeURIComponent("" + id) + "&"; 
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",			
+            headers: new HttpHeaders({
+                "Accept": "text/plain"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGetTrailerForView(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGetTrailerForView(<any>response_);
+                } catch (e) {
+                    return <Observable<GetTrailerForViewDto>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<GetTrailerForViewDto>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processGetTrailerForView(response: HttpResponseBase): Observable<GetTrailerForViewDto> {
+        const status = response.status;
+        const responseBlob = 
+            response instanceof HttpResponse ? response.body : 
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }};
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = GetTrailerForViewDto.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<GetTrailerForViewDto>(<any>null);
+    }
+
+    /**
+     * @param id (optional) 
+     * @return Success
+     */
+    getTrailerForEdit(id: number | undefined): Observable<GetTrailerForEditOutput> {
+        let url_ = this.baseUrl + "/api/services/app/Trailers/GetTrailerForEdit?";
+        if (id === null)
+            throw new Error("The parameter 'id' cannot be null.");
+        else if (id !== undefined)
+            url_ += "Id=" + encodeURIComponent("" + id) + "&"; 
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",			
+            headers: new HttpHeaders({
+                "Accept": "text/plain"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGetTrailerForEdit(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGetTrailerForEdit(<any>response_);
+                } catch (e) {
+                    return <Observable<GetTrailerForEditOutput>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<GetTrailerForEditOutput>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processGetTrailerForEdit(response: HttpResponseBase): Observable<GetTrailerForEditOutput> {
+        const status = response.status;
+        const responseBlob = 
+            response instanceof HttpResponse ? response.body : 
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }};
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = GetTrailerForEditOutput.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<GetTrailerForEditOutput>(<any>null);
+    }
+
+    /**
+     * @param body (optional) 
+     * @return Success
+     */
+    createOrEdit(body: CreateOrEditTrailerDto | undefined): Observable<void> {
+        let url_ = this.baseUrl + "/api/services/app/Trailers/CreateOrEdit";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(body);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",			
+            headers: new HttpHeaders({
+                "Content-Type": "application/json-patch+json", 
+            })
+        };
+
+        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processCreateOrEdit(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processCreateOrEdit(<any>response_);
+                } catch (e) {
+                    return <Observable<void>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<void>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processCreateOrEdit(response: HttpResponseBase): Observable<void> {
+        const status = response.status;
+        const responseBlob = 
+            response instanceof HttpResponse ? response.body : 
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }};
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return _observableOf<void>(<any>null);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<void>(<any>null);
+    }
+
+    /**
+     * @param id (optional) 
+     * @return Success
+     */
+    delete(id: number | undefined): Observable<void> {
+        let url_ = this.baseUrl + "/api/services/app/Trailers/Delete?";
+        if (id === null)
+            throw new Error("The parameter 'id' cannot be null.");
+        else if (id !== undefined)
+            url_ += "Id=" + encodeURIComponent("" + id) + "&"; 
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",			
+            headers: new HttpHeaders({
+            })
+        };
+
+        return this.http.request("delete", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processDelete(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processDelete(<any>response_);
+                } catch (e) {
+                    return <Observable<void>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<void>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processDelete(response: HttpResponseBase): Observable<void> {
+        const status = response.status;
+        const responseBlob = 
+            response instanceof HttpResponse ? response.body : 
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }};
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return _observableOf<void>(<any>null);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<void>(<any>null);
+    }
+
+    /**
+     * @param filter (optional) 
+     * @param trailerCodeFilter (optional) 
+     * @param plateNumberFilter (optional) 
+     * @param modelFilter (optional) 
+     * @param yearFilter (optional) 
+     * @param maxWidthFilter (optional) 
+     * @param minWidthFilter (optional) 
+     * @param maxHeightFilter (optional) 
+     * @param minHeightFilter (optional) 
+     * @param maxLengthFilter (optional) 
+     * @param minLengthFilter (optional) 
+     * @param isLiftgateFilter (optional) 
+     * @param isReeferFilter (optional) 
+     * @param isVentedFilter (optional) 
+     * @param isRollDoorFilter (optional) 
+     * @param trailerStatusDisplayNameFilter (optional) 
+     * @param trailerTypeDisplayNameFilter (optional) 
+     * @param payloadMaxWeightDisplayNameFilter (optional) 
+     * @param truckPlateNumberFilter (optional) 
+     * @return Success
+     */
+    getTrailersToExcel(filter: string | null | undefined, trailerCodeFilter: string | null | undefined, plateNumberFilter: string | null | undefined, modelFilter: string | null | undefined, yearFilter: string | null | undefined, maxWidthFilter: number | null | undefined, minWidthFilter: number | null | undefined, maxHeightFilter: number | null | undefined, minHeightFilter: number | null | undefined, maxLengthFilter: number | null | undefined, minLengthFilter: number | null | undefined, isLiftgateFilter: number | undefined, isReeferFilter: number | undefined, isVentedFilter: number | undefined, isRollDoorFilter: number | undefined, trailerStatusDisplayNameFilter: string | null | undefined, trailerTypeDisplayNameFilter: string | null | undefined, payloadMaxWeightDisplayNameFilter: string | null | undefined, truckPlateNumberFilter: string | null | undefined): Observable<FileDto> {
+        let url_ = this.baseUrl + "/api/services/app/Trailers/GetTrailersToExcel?";
+        if (filter !== undefined)
+            url_ += "Filter=" + encodeURIComponent("" + filter) + "&"; 
+        if (trailerCodeFilter !== undefined)
+            url_ += "TrailerCodeFilter=" + encodeURIComponent("" + trailerCodeFilter) + "&"; 
+        if (plateNumberFilter !== undefined)
+            url_ += "PlateNumberFilter=" + encodeURIComponent("" + plateNumberFilter) + "&"; 
+        if (modelFilter !== undefined)
+            url_ += "ModelFilter=" + encodeURIComponent("" + modelFilter) + "&"; 
+        if (yearFilter !== undefined)
+            url_ += "YearFilter=" + encodeURIComponent("" + yearFilter) + "&"; 
+        if (maxWidthFilter !== undefined)
+            url_ += "MaxWidthFilter=" + encodeURIComponent("" + maxWidthFilter) + "&"; 
+        if (minWidthFilter !== undefined)
+            url_ += "MinWidthFilter=" + encodeURIComponent("" + minWidthFilter) + "&"; 
+        if (maxHeightFilter !== undefined)
+            url_ += "MaxHeightFilter=" + encodeURIComponent("" + maxHeightFilter) + "&"; 
+        if (minHeightFilter !== undefined)
+            url_ += "MinHeightFilter=" + encodeURIComponent("" + minHeightFilter) + "&"; 
+        if (maxLengthFilter !== undefined)
+            url_ += "MaxLengthFilter=" + encodeURIComponent("" + maxLengthFilter) + "&"; 
+        if (minLengthFilter !== undefined)
+            url_ += "MinLengthFilter=" + encodeURIComponent("" + minLengthFilter) + "&"; 
+        if (isLiftgateFilter === null)
+            throw new Error("The parameter 'isLiftgateFilter' cannot be null.");
+        else if (isLiftgateFilter !== undefined)
+            url_ += "IsLiftgateFilter=" + encodeURIComponent("" + isLiftgateFilter) + "&"; 
+        if (isReeferFilter === null)
+            throw new Error("The parameter 'isReeferFilter' cannot be null.");
+        else if (isReeferFilter !== undefined)
+            url_ += "IsReeferFilter=" + encodeURIComponent("" + isReeferFilter) + "&"; 
+        if (isVentedFilter === null)
+            throw new Error("The parameter 'isVentedFilter' cannot be null.");
+        else if (isVentedFilter !== undefined)
+            url_ += "IsVentedFilter=" + encodeURIComponent("" + isVentedFilter) + "&"; 
+        if (isRollDoorFilter === null)
+            throw new Error("The parameter 'isRollDoorFilter' cannot be null.");
+        else if (isRollDoorFilter !== undefined)
+            url_ += "IsRollDoorFilter=" + encodeURIComponent("" + isRollDoorFilter) + "&"; 
+        if (trailerStatusDisplayNameFilter !== undefined)
+            url_ += "TrailerStatusDisplayNameFilter=" + encodeURIComponent("" + trailerStatusDisplayNameFilter) + "&"; 
+        if (trailerTypeDisplayNameFilter !== undefined)
+            url_ += "TrailerTypeDisplayNameFilter=" + encodeURIComponent("" + trailerTypeDisplayNameFilter) + "&"; 
+        if (payloadMaxWeightDisplayNameFilter !== undefined)
+            url_ += "PayloadMaxWeightDisplayNameFilter=" + encodeURIComponent("" + payloadMaxWeightDisplayNameFilter) + "&"; 
+        if (truckPlateNumberFilter !== undefined)
+            url_ += "TruckPlateNumberFilter=" + encodeURIComponent("" + truckPlateNumberFilter) + "&"; 
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",			
+            headers: new HttpHeaders({
+                "Accept": "text/plain"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGetTrailersToExcel(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGetTrailersToExcel(<any>response_);
+                } catch (e) {
+                    return <Observable<FileDto>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<FileDto>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processGetTrailersToExcel(response: HttpResponseBase): Observable<FileDto> {
+        const status = response.status;
+        const responseBlob = 
+            response instanceof HttpResponse ? response.body : 
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }};
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = FileDto.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<FileDto>(<any>null);
+    }
+
+    /**
+     * @return Success
+     */
+    getAllTrailerStatusForTableDropdown(): Observable<TrailerTrailerStatusLookupTableDto[]> {
+        let url_ = this.baseUrl + "/api/services/app/Trailers/GetAllTrailerStatusForTableDropdown";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",			
+            headers: new HttpHeaders({
+                "Accept": "text/plain"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGetAllTrailerStatusForTableDropdown(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGetAllTrailerStatusForTableDropdown(<any>response_);
+                } catch (e) {
+                    return <Observable<TrailerTrailerStatusLookupTableDto[]>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<TrailerTrailerStatusLookupTableDto[]>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processGetAllTrailerStatusForTableDropdown(response: HttpResponseBase): Observable<TrailerTrailerStatusLookupTableDto[]> {
+        const status = response.status;
+        const responseBlob = 
+            response instanceof HttpResponse ? response.body : 
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }};
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            if (Array.isArray(resultData200)) {
+                result200 = [] as any;
+                for (let item of resultData200)
+                    result200!.push(TrailerTrailerStatusLookupTableDto.fromJS(item));
+            }
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<TrailerTrailerStatusLookupTableDto[]>(<any>null);
+    }
+
+    /**
+     * @return Success
+     */
+    getAllTrailerTypeForTableDropdown(): Observable<TrailerTrailerTypeLookupTableDto[]> {
+        let url_ = this.baseUrl + "/api/services/app/Trailers/GetAllTrailerTypeForTableDropdown";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",			
+            headers: new HttpHeaders({
+                "Accept": "text/plain"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGetAllTrailerTypeForTableDropdown(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGetAllTrailerTypeForTableDropdown(<any>response_);
+                } catch (e) {
+                    return <Observable<TrailerTrailerTypeLookupTableDto[]>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<TrailerTrailerTypeLookupTableDto[]>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processGetAllTrailerTypeForTableDropdown(response: HttpResponseBase): Observable<TrailerTrailerTypeLookupTableDto[]> {
+        const status = response.status;
+        const responseBlob = 
+            response instanceof HttpResponse ? response.body : 
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }};
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            if (Array.isArray(resultData200)) {
+                result200 = [] as any;
+                for (let item of resultData200)
+                    result200!.push(TrailerTrailerTypeLookupTableDto.fromJS(item));
+            }
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<TrailerTrailerTypeLookupTableDto[]>(<any>null);
+    }
+
+    /**
+     * @return Success
+     */
+    getAllPayloadMaxWeightForTableDropdown(): Observable<TrailerPayloadMaxWeightLookupTableDto[]> {
+        let url_ = this.baseUrl + "/api/services/app/Trailers/GetAllPayloadMaxWeightForTableDropdown";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",			
+            headers: new HttpHeaders({
+                "Accept": "text/plain"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGetAllPayloadMaxWeightForTableDropdown(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGetAllPayloadMaxWeightForTableDropdown(<any>response_);
+                } catch (e) {
+                    return <Observable<TrailerPayloadMaxWeightLookupTableDto[]>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<TrailerPayloadMaxWeightLookupTableDto[]>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processGetAllPayloadMaxWeightForTableDropdown(response: HttpResponseBase): Observable<TrailerPayloadMaxWeightLookupTableDto[]> {
+        const status = response.status;
+        const responseBlob = 
+            response instanceof HttpResponse ? response.body : 
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }};
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            if (Array.isArray(resultData200)) {
+                result200 = [] as any;
+                for (let item of resultData200)
+                    result200!.push(TrailerPayloadMaxWeightLookupTableDto.fromJS(item));
+            }
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<TrailerPayloadMaxWeightLookupTableDto[]>(<any>null);
+    }
+
+    /**
+     * @return Success
+     */
+    getAllTruckForTableDropdown(): Observable<TrailerTruckLookupTableDto[]> {
+        let url_ = this.baseUrl + "/api/services/app/Trailers/GetAllTruckForTableDropdown";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",			
+            headers: new HttpHeaders({
+                "Accept": "text/plain"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGetAllTruckForTableDropdown(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGetAllTruckForTableDropdown(<any>response_);
+                } catch (e) {
+                    return <Observable<TrailerTruckLookupTableDto[]>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<TrailerTruckLookupTableDto[]>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processGetAllTruckForTableDropdown(response: HttpResponseBase): Observable<TrailerTruckLookupTableDto[]> {
+        const status = response.status;
+        const responseBlob = 
+            response instanceof HttpResponse ? response.body : 
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }};
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            if (Array.isArray(resultData200)) {
+                result200 = [] as any;
+                for (let item of resultData200)
+                    result200!.push(TrailerTruckLookupTableDto.fromJS(item));
+            }
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<TrailerTruckLookupTableDto[]>(<any>null);
+    }
+}
+
+@Injectable()
 export class TrailerStatusesServiceProxy {
     private http: HttpClient;
     private baseUrl: string;
@@ -28031,6 +28724,510 @@ export interface IExternalAuthenticateResultModel {
     returnUrl: string | undefined;
     refreshToken: string | undefined;
     refreshTokenExpireInSeconds: number;
+}
+
+export class TrailerDto implements ITrailerDto {
+    trailerCode!: string | undefined;
+    plateNumber!: string | undefined;
+    model!: string | undefined;
+    year!: string | undefined;
+    width!: number;
+    height!: number;
+    length!: number;
+    isLiftgate!: boolean;
+    isReefer!: boolean;
+    isVented!: boolean;
+    isRollDoor!: boolean;
+    trailerStatusId!: number;
+    trailerTypeId!: number;
+    payloadMaxWeightId!: number;
+    hookedTruckId!: string | undefined;
+    id!: number;
+
+    constructor(data?: ITrailerDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.trailerCode = _data["trailerCode"];
+            this.plateNumber = _data["plateNumber"];
+            this.model = _data["model"];
+            this.year = _data["year"];
+            this.width = _data["width"];
+            this.height = _data["height"];
+            this.length = _data["length"];
+            this.isLiftgate = _data["isLiftgate"];
+            this.isReefer = _data["isReefer"];
+            this.isVented = _data["isVented"];
+            this.isRollDoor = _data["isRollDoor"];
+            this.trailerStatusId = _data["trailerStatusId"];
+            this.trailerTypeId = _data["trailerTypeId"];
+            this.payloadMaxWeightId = _data["payloadMaxWeightId"];
+            this.hookedTruckId = _data["hookedTruckId"];
+            this.id = _data["id"];
+        }
+    }
+
+    static fromJS(data: any): TrailerDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new TrailerDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["trailerCode"] = this.trailerCode;
+        data["plateNumber"] = this.plateNumber;
+        data["model"] = this.model;
+        data["year"] = this.year;
+        data["width"] = this.width;
+        data["height"] = this.height;
+        data["length"] = this.length;
+        data["isLiftgate"] = this.isLiftgate;
+        data["isReefer"] = this.isReefer;
+        data["isVented"] = this.isVented;
+        data["isRollDoor"] = this.isRollDoor;
+        data["trailerStatusId"] = this.trailerStatusId;
+        data["trailerTypeId"] = this.trailerTypeId;
+        data["payloadMaxWeightId"] = this.payloadMaxWeightId;
+        data["hookedTruckId"] = this.hookedTruckId;
+        data["id"] = this.id;
+        return data; 
+    }
+}
+
+export interface ITrailerDto {
+    trailerCode: string | undefined;
+    plateNumber: string | undefined;
+    model: string | undefined;
+    year: string | undefined;
+    width: number;
+    height: number;
+    length: number;
+    isLiftgate: boolean;
+    isReefer: boolean;
+    isVented: boolean;
+    isRollDoor: boolean;
+    trailerStatusId: number;
+    trailerTypeId: number;
+    payloadMaxWeightId: number;
+    hookedTruckId: string | undefined;
+    id: number;
+}
+
+export class GetTrailerForViewDto implements IGetTrailerForViewDto {
+    trailer!: TrailerDto;
+    trailerStatusDisplayName!: string | undefined;
+    trailerTypeDisplayName!: string | undefined;
+    payloadMaxWeightDisplayName!: string | undefined;
+    truckPlateNumber!: string | undefined;
+
+    constructor(data?: IGetTrailerForViewDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.trailer = _data["trailer"] ? TrailerDto.fromJS(_data["trailer"]) : <any>undefined;
+            this.trailerStatusDisplayName = _data["trailerStatusDisplayName"];
+            this.trailerTypeDisplayName = _data["trailerTypeDisplayName"];
+            this.payloadMaxWeightDisplayName = _data["payloadMaxWeightDisplayName"];
+            this.truckPlateNumber = _data["truckPlateNumber"];
+        }
+    }
+
+    static fromJS(data: any): GetTrailerForViewDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new GetTrailerForViewDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["trailer"] = this.trailer ? this.trailer.toJSON() : <any>undefined;
+        data["trailerStatusDisplayName"] = this.trailerStatusDisplayName;
+        data["trailerTypeDisplayName"] = this.trailerTypeDisplayName;
+        data["payloadMaxWeightDisplayName"] = this.payloadMaxWeightDisplayName;
+        data["truckPlateNumber"] = this.truckPlateNumber;
+        return data; 
+    }
+}
+
+export interface IGetTrailerForViewDto {
+    trailer: TrailerDto;
+    trailerStatusDisplayName: string | undefined;
+    trailerTypeDisplayName: string | undefined;
+    payloadMaxWeightDisplayName: string | undefined;
+    truckPlateNumber: string | undefined;
+}
+
+export class PagedResultDtoOfGetTrailerForViewDto implements IPagedResultDtoOfGetTrailerForViewDto {
+    totalCount!: number;
+    items!: GetTrailerForViewDto[] | undefined;
+
+    constructor(data?: IPagedResultDtoOfGetTrailerForViewDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.totalCount = _data["totalCount"];
+            if (Array.isArray(_data["items"])) {
+                this.items = [] as any;
+                for (let item of _data["items"])
+                    this.items!.push(GetTrailerForViewDto.fromJS(item));
+            }
+        }
+    }
+
+    static fromJS(data: any): PagedResultDtoOfGetTrailerForViewDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new PagedResultDtoOfGetTrailerForViewDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["totalCount"] = this.totalCount;
+        if (Array.isArray(this.items)) {
+            data["items"] = [];
+            for (let item of this.items)
+                data["items"].push(item.toJSON());
+        }
+        return data; 
+    }
+}
+
+export interface IPagedResultDtoOfGetTrailerForViewDto {
+    totalCount: number;
+    items: GetTrailerForViewDto[] | undefined;
+}
+
+export class CreateOrEditTrailerDto implements ICreateOrEditTrailerDto {
+    trailerCode!: string;
+    plateNumber!: string;
+    model!: string;
+    year!: string;
+    width!: number;
+    height!: number;
+    length!: number;
+    isLiftgate!: boolean;
+    isReefer!: boolean;
+    isVented!: boolean;
+    isRollDoor!: boolean;
+    trailerStatusId!: number;
+    trailerTypeId!: number;
+    payloadMaxWeightId!: number;
+    hookedTruckId!: string | undefined;
+    id!: number | undefined;
+
+    constructor(data?: ICreateOrEditTrailerDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.trailerCode = _data["trailerCode"];
+            this.plateNumber = _data["plateNumber"];
+            this.model = _data["model"];
+            this.year = _data["year"];
+            this.width = _data["width"];
+            this.height = _data["height"];
+            this.length = _data["length"];
+            this.isLiftgate = _data["isLiftgate"];
+            this.isReefer = _data["isReefer"];
+            this.isVented = _data["isVented"];
+            this.isRollDoor = _data["isRollDoor"];
+            this.trailerStatusId = _data["trailerStatusId"];
+            this.trailerTypeId = _data["trailerTypeId"];
+            this.payloadMaxWeightId = _data["payloadMaxWeightId"];
+            this.hookedTruckId = _data["hookedTruckId"];
+            this.id = _data["id"];
+        }
+    }
+
+    static fromJS(data: any): CreateOrEditTrailerDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new CreateOrEditTrailerDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["trailerCode"] = this.trailerCode;
+        data["plateNumber"] = this.plateNumber;
+        data["model"] = this.model;
+        data["year"] = this.year;
+        data["width"] = this.width;
+        data["height"] = this.height;
+        data["length"] = this.length;
+        data["isLiftgate"] = this.isLiftgate;
+        data["isReefer"] = this.isReefer;
+        data["isVented"] = this.isVented;
+        data["isRollDoor"] = this.isRollDoor;
+        data["trailerStatusId"] = this.trailerStatusId;
+        data["trailerTypeId"] = this.trailerTypeId;
+        data["payloadMaxWeightId"] = this.payloadMaxWeightId;
+        data["hookedTruckId"] = this.hookedTruckId;
+        data["id"] = this.id;
+        return data; 
+    }
+}
+
+export interface ICreateOrEditTrailerDto {
+    trailerCode: string;
+    plateNumber: string;
+    model: string;
+    year: string;
+    width: number;
+    height: number;
+    length: number;
+    isLiftgate: boolean;
+    isReefer: boolean;
+    isVented: boolean;
+    isRollDoor: boolean;
+    trailerStatusId: number;
+    trailerTypeId: number;
+    payloadMaxWeightId: number;
+    hookedTruckId: string | undefined;
+    id: number | undefined;
+}
+
+export class GetTrailerForEditOutput implements IGetTrailerForEditOutput {
+    trailer!: CreateOrEditTrailerDto;
+    trailerStatusDisplayName!: string | undefined;
+    trailerTypeDisplayName!: string | undefined;
+    payloadMaxWeightDisplayName!: string | undefined;
+    truckPlateNumber!: string | undefined;
+
+    constructor(data?: IGetTrailerForEditOutput) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.trailer = _data["trailer"] ? CreateOrEditTrailerDto.fromJS(_data["trailer"]) : <any>undefined;
+            this.trailerStatusDisplayName = _data["trailerStatusDisplayName"];
+            this.trailerTypeDisplayName = _data["trailerTypeDisplayName"];
+            this.payloadMaxWeightDisplayName = _data["payloadMaxWeightDisplayName"];
+            this.truckPlateNumber = _data["truckPlateNumber"];
+        }
+    }
+
+    static fromJS(data: any): GetTrailerForEditOutput {
+        data = typeof data === 'object' ? data : {};
+        let result = new GetTrailerForEditOutput();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["trailer"] = this.trailer ? this.trailer.toJSON() : <any>undefined;
+        data["trailerStatusDisplayName"] = this.trailerStatusDisplayName;
+        data["trailerTypeDisplayName"] = this.trailerTypeDisplayName;
+        data["payloadMaxWeightDisplayName"] = this.payloadMaxWeightDisplayName;
+        data["truckPlateNumber"] = this.truckPlateNumber;
+        return data; 
+    }
+}
+
+export interface IGetTrailerForEditOutput {
+    trailer: CreateOrEditTrailerDto;
+    trailerStatusDisplayName: string | undefined;
+    trailerTypeDisplayName: string | undefined;
+    payloadMaxWeightDisplayName: string | undefined;
+    truckPlateNumber: string | undefined;
+}
+
+export class TrailerTrailerStatusLookupTableDto implements ITrailerTrailerStatusLookupTableDto {
+    id!: number;
+    displayName!: string | undefined;
+
+    constructor(data?: ITrailerTrailerStatusLookupTableDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.id = _data["id"];
+            this.displayName = _data["displayName"];
+        }
+    }
+
+    static fromJS(data: any): TrailerTrailerStatusLookupTableDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new TrailerTrailerStatusLookupTableDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
+        data["displayName"] = this.displayName;
+        return data; 
+    }
+}
+
+export interface ITrailerTrailerStatusLookupTableDto {
+    id: number;
+    displayName: string | undefined;
+}
+
+export class TrailerTrailerTypeLookupTableDto implements ITrailerTrailerTypeLookupTableDto {
+    id!: number;
+    displayName!: string | undefined;
+
+    constructor(data?: ITrailerTrailerTypeLookupTableDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.id = _data["id"];
+            this.displayName = _data["displayName"];
+        }
+    }
+
+    static fromJS(data: any): TrailerTrailerTypeLookupTableDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new TrailerTrailerTypeLookupTableDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
+        data["displayName"] = this.displayName;
+        return data; 
+    }
+}
+
+export interface ITrailerTrailerTypeLookupTableDto {
+    id: number;
+    displayName: string | undefined;
+}
+
+export class TrailerPayloadMaxWeightLookupTableDto implements ITrailerPayloadMaxWeightLookupTableDto {
+    id!: number;
+    displayName!: string | undefined;
+
+    constructor(data?: ITrailerPayloadMaxWeightLookupTableDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.id = _data["id"];
+            this.displayName = _data["displayName"];
+        }
+    }
+
+    static fromJS(data: any): TrailerPayloadMaxWeightLookupTableDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new TrailerPayloadMaxWeightLookupTableDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
+        data["displayName"] = this.displayName;
+        return data; 
+    }
+}
+
+export interface ITrailerPayloadMaxWeightLookupTableDto {
+    id: number;
+    displayName: string | undefined;
+}
+
+export class TrailerTruckLookupTableDto implements ITrailerTruckLookupTableDto {
+    id!: string | undefined;
+    displayName!: string | undefined;
+
+    constructor(data?: ITrailerTruckLookupTableDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.id = _data["id"];
+            this.displayName = _data["displayName"];
+        }
+    }
+
+    static fromJS(data: any): TrailerTruckLookupTableDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new TrailerTruckLookupTableDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
+        data["displayName"] = this.displayName;
+        return data; 
+    }
+}
+
+export interface ITrailerTruckLookupTableDto {
+    id: string | undefined;
+    displayName: string | undefined;
 }
 
 export class TrailerStatusDto implements ITrailerStatusDto {

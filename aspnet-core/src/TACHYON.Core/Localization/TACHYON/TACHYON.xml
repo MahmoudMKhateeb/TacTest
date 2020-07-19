@@ -1,6 +1,35 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <localizationDictionary culture="en">
-  <texts>    <text name="TrailerStatuses">Trailer statuses</text>
+  <texts>    <text name="Trailers">Trailers</text>
+    <text name="Trailer">Trailer</text>
+    <text name="TACHYON.Trailers.Trailer">Trailer</text>
+    <text name="TrailerCode">Trailer code</text>
+    <text name="Model">Model</text>
+    <text name="Year">Year</text>
+    <text name="Width">Width</text>
+    <text name="Height">Height</text>
+    <text name="Length">Length</text>
+    <text name="IsLiftgate">Is liftgate</text>
+    <text name="NotIsLiftgate">Not is liftgate</text>
+    <text name="IsReefer">Is reefer</text>
+    <text name="NotIsReefer">Not is reefer</text>
+    <text name="IsVented">Is vented</text>
+    <text name="NotIsVented">Not is vented</text>
+    <text name="IsRollDoor">Is roll door</text>
+    <text name="NotIsRollDoor">Not is roll door</text>
+    <text name="TrailersHeaderInfo">Trailers header info</text>
+    <text name="CreateNewTrailer">Create new trailer</text>
+    <text name="EditTrailer">Edit trailer</text>
+    <text name="DeleteTrailer">Delete trailer</text>
+    <text name="TrailerStatusDisplayName">Trailer status display name</text>
+    <text name="PickTrailerStatus">Pick trailer status</text>
+    <text name="TrailerTypeDisplayName">Trailer type display name</text>
+    <text name="PickTrailerType">Pick trailer type</text>
+    <text name="PayloadMaxWeightDisplayName">Payload max weight display name</text>
+    <text name="PickPayloadMaxWeight">Pick payload max weight</text>
+    <text name="TruckPlateNumber">Truck plate number</text>
+    <text name="PickTruck">Pick truck</text>
+    <text name="TrailerStatuses">Trailer statuses</text>
     <text name="TrailerStatus">Trailer status</text>
     <text name="TACHYON.TrailerStatuses.TrailerStatus">TrailerStatus</text>
     <text name="TrailerStatusesHeaderInfo">Trailer statuses header info</text>

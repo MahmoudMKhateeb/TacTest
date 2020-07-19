@@ -1,22 +1,17 @@
-﻿
-
-using System;
-using System.Linq;
+﻿using System.Linq;
 using System.Linq.Dynamic.Core;
-using Abp.Linq.Extensions;
-using System.Collections.Generic;
 using System.Threading.Tasks;
-using Abp.Domain.Repositories;
-using TACHYON.Trailers.PayloadMaxWeight.Exporting;
-using TACHYON.Trailers.PayloadMaxWeight.Dtos;
-using TACHYON.Dto;
 using Abp.Application.Services.Dto;
-using TACHYON.Authorization;
-using Abp.Extensions;
 using Abp.Authorization;
+using Abp.Domain.Repositories;
+using Abp.Linq.Extensions;
 using Microsoft.EntityFrameworkCore;
+using TACHYON.Authorization;
+using TACHYON.Dto;
+using TACHYON.Trailers.PayloadMaxWeights.Dtos;
+using TACHYON.Trailers.PayloadMaxWeights.Exporting;
 
-namespace TACHYON.Trailers.PayloadMaxWeight
+namespace TACHYON.Trailers.PayloadMaxWeights
 {
 	[AbpAuthorize(AppPermissions.Pages_PayloadMaxWeights)]
     public class PayloadMaxWeightsAppService : TACHYONAppServiceBase, IPayloadMaxWeightsAppService

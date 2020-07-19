@@ -1,8 +1,8 @@
 ﻿using System.Collections.Generic;
-using TACHYON.Trailers.PayloadMaxWeight.Dtos;
 using TACHYON.Dto;
+using TACHYON.Trailers.PayloadMaxWeights.Dtos;
 
-namespace TACHYON.Trailers.PayloadMaxWeight.Exporting
+namespace TACHYON.Trailers.PayloadMaxWeights.Exporting
 {
     public interface IPayloadMaxWeightsExcelExporter
     {

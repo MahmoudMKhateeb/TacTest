@@ -1,5 +1,5 @@
-﻿using TACHYON.Trailers.TrailerStatuses;
-using TACHYON.Trailers.PayloadMaxWeight;
+﻿using TACHYON.Trailers;
+using TACHYON.Trailers.TrailerStatuses;
 using TACHYON.Trailers.TrailerTypes;
 using TACHYON.Trucks.TrucksTypes;
 using TACHYON.Trucks;
@@ -17,14 +17,17 @@ using TACHYON.MultiTenancy;
 using TACHYON.MultiTenancy.Accounting;
 using TACHYON.MultiTenancy.Payments;
 using TACHYON.Storage;
+using TACHYON.Trailers.PayloadMaxWeights;
 
 namespace TACHYON.EntityFrameworkCore
 {
     public class TACHYONDbContext : AbpZeroDbContext<Tenant, Role, User, TACHYONDbContext>, IAbpPersistedGrantDbContext
     {
+        public virtual DbSet<Trailer> Trailers { get; set; }
+
         public virtual DbSet<TrailerStatus> TrailerStatuses { get; set; }
 
-        public virtual DbSet<Trailers.PayloadMaxWeight.PayloadMaxWeight> PayloadMaxWeights { get; set; }
+        public virtual DbSet<PayloadMaxWeight> PayloadMaxWeights { get; set; }
 
         public virtual DbSet<TrailerType> TrailerTypes { get; set; }
 
@@ -64,25 +67,30 @@ namespace TACHYON.EntityFrameworkCore
         {
             base.OnModelCreating(modelBuilder);
 
+
+
+
            
-           
-           
-            modelBuilder.Entity<Truck>(t =>
+            modelBuilder.Entity<Trailer>(t =>
             {
                 t.HasIndex(e => new { e.TenantId });
             });
- modelBuilder.Entity<TrucksType>(t =>
+ modelBuilder.Entity<Truck>(t =>
             {
                 t.HasIndex(e => new { e.TenantId });
             });
- modelBuilder.Entity<TruckStatus>(t =>
-            {
-                t.HasIndex(e => new { e.TenantId });
-            });
- modelBuilder.Entity<BinaryObject>(b =>
-            {
-                b.HasIndex(e => new { e.TenantId });
-            });
+            modelBuilder.Entity<TrucksType>(t =>
+                       {
+                           t.HasIndex(e => new { e.TenantId });
+                       });
+            modelBuilder.Entity<TruckStatus>(t =>
+                       {
+                           t.HasIndex(e => new { e.TenantId });
+                       });
+            modelBuilder.Entity<BinaryObject>(b =>
+                       {
+                           b.HasIndex(e => new { e.TenantId });
+                       });
 
             modelBuilder.Entity<ChatMessage>(b =>
             {

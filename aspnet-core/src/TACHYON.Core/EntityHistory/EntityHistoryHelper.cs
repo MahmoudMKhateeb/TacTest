@@ -1,5 +1,5 @@
-﻿using TACHYON.Trailers.TrailerStatuses;
-using TACHYON.Trailers.PayloadMaxWeight;
+﻿using TACHYON.Trailers;
+using TACHYON.Trailers.TrailerStatuses;
 using TACHYON.Trailers.TrailerTypes;
 using TACHYON.Trucks.TrucksTypes;
 using TACHYON.Trucks;
@@ -8,6 +8,7 @@ using System.Linq;
 using Abp.Organizations;
 using TACHYON.Authorization.Roles;
 using TACHYON.MultiTenancy;
+using TACHYON.Trailers.PayloadMaxWeights;
 
 namespace TACHYON.EntityHistory
 {
@@ -26,6 +27,7 @@ namespace TACHYON.EntityHistory
 
         public static readonly Type[] TenantSideTrackedTypes =
         {
+            typeof(Trailer),
             typeof(Truck),
             typeof(TrucksType),
             typeof(TruckStatus),

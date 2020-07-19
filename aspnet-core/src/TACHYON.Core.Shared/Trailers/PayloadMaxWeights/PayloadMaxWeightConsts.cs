@@ -1,4 +1,4 @@
-﻿namespace TACHYON.Trailers.PayloadMaxWeight
+﻿namespace TACHYON.Trailers.PayloadMaxWeights
 {
     public class PayloadMaxWeightConsts
     {

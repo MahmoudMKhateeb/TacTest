@@ -1,6 +1,6 @@
 ﻿using Abp.Application.Services.Dto;
 
-namespace TACHYON.Trailers.PayloadMaxWeight.Dtos
+namespace TACHYON.Trailers.Dtos
 {
     public class GetAllForLookupTableInput : PagedAndSortedResultRequestDto
     {

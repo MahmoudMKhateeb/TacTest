@@ -1,4 +1,4 @@
-﻿namespace TACHYON.Trailers.PayloadMaxWeight.Dtos
+﻿namespace TACHYON.Trailers.PayloadMaxWeights.Dtos
 {
     public class GetPayloadMaxWeightForViewDto
     {

@@ -2,11 +2,11 @@
 using Abp.Runtime.Session;
 using Abp.Timing.Timezone;
 using TACHYON.DataExporting.Excel.NPOI;
-using TACHYON.Trailers.PayloadMaxWeight.Dtos;
 using TACHYON.Dto;
 using TACHYON.Storage;
+using TACHYON.Trailers.PayloadMaxWeights.Dtos;
 
-namespace TACHYON.Trailers.PayloadMaxWeight.Exporting
+namespace TACHYON.Trailers.PayloadMaxWeights.Exporting
 {
     public class PayloadMaxWeightsExcelExporter : NpoiExcelExporterBase, IPayloadMaxWeightsExcelExporter
     {

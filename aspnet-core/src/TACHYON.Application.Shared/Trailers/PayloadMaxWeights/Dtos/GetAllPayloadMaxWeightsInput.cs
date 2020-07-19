@@ -1,9 +1,8 @@
 ﻿using Abp.Application.Services.Dto;
-using System;
 
-namespace TACHYON.Trailers.PayloadMaxWeight.Dtos
+namespace TACHYON.Trailers.PayloadMaxWeights.Dtos
 {
-    public class GetAllPayloadMaxWeightsForExcelInput
+    public class GetAllPayloadMaxWeightsInput : PagedAndSortedResultRequestDto
     {
 		public string Filter { get; set; }
 
