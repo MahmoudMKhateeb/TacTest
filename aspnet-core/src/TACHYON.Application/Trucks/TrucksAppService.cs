@@ -101,7 +101,9 @@ namespace TACHYON.Trucks
                                  LicenseExpirationDate = o.LicenseExpirationDate,
                                  IsAttachable = o.IsAttachable,
                                  Note = o.Note,
-                                 Id = o.Id
+                                 Id = o.Id,
+                                 RentPrice = o.RentPrice,
+                                 RentDuration = o.RentDuration
                              },
                              TrucksTypeDisplayName = s1 == null || s1.DisplayName == null ? "" : s1.DisplayName.ToString(),
                              TruckStatusDisplayName = s2 == null || s2.DisplayName == null ? "" : s2.DisplayName.ToString(),

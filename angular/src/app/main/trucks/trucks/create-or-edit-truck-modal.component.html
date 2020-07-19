@@ -12,7 +12,7 @@
                     </button>
                 </div>
                 <div class="modal-body">
-                 
+
 
 					<div class="form-group m-form__group">
 						<label for="TrucksTypeDisplayName">{{l("TrucksType")}}</label>
@@ -21,7 +21,7 @@
 							<option *ngFor="let item of allTrucksTypes" value="{{item.id}}">{{item.displayName}}</option>
 						</select>
 					</div>
-					 
+
 					<div class="form-group m-form__group">
 						<label for="TruckStatusDisplayName">{{l("TruckStatus")}}</label>
 						<select name="truck.truckStatusId" [(ngModel)]="truck.truckStatusId" class="form-control" required>
@@ -29,11 +29,12 @@
 							<option *ngFor="let item of allTruckStatuss" value="{{item.id}}">{{item.displayName}}</option>
 						</select>
 					</div>
-					 
+
 					<div class="form-group m-form__group">
                         <label for="UserName">{{l("User")}}</label>
                         <div class="input-group">
-                            <input class="form-control" id="UserName" name="userName" [(ngModel)]="userName" type="text" disabled>     
+                            <input [(ngModel)]="userName" class="form-control" disabled id="UserName" name="userName"
+                                   type="text">
                             <div class="input-group-append">
                                 <button class="btn btn-primary blue" (click)="openSelectUserModal()" type="button"><i class="fa fa-search"></i> {{l("Pick")}}</button>
                             </div> <div class="input-group-prepend">
@@ -42,11 +43,12 @@
                         </div>
                     </div>
                     <input class="form-control" name="truck.driver1UserId" [(ngModel)]="truck.driver1UserId" type="text"  hidden>
-		 
-					<div class="form-group m-form__group">
+
+                    <div class="form-group m-form__group">
                         <label for="UserName2">{{l("User")}}</label>
                         <div class="input-group">
-                            <input class="form-control" id="UserName2" name="userName2" [(ngModel)]="userName2" type="text" disabled>     
+                            <input [(ngModel)]="userName2" class="form-control" disabled id="UserName2"
+                                   name="userName2" type="text">
                             <div class="input-group-append">
                                 <button class="btn btn-primary blue" (click)="openSelectUserModal2()" type="button"><i class="fa fa-search"></i> {{l("Pick")}}</button>
                             </div> <div class="input-group-prepend">
@@ -55,46 +57,60 @@
                         </div>
                     </div>
                     <input class="form-control" name="truck.driver2UserId" [(ngModel)]="truck.driver2UserId" type="text"  hidden>
-		 
 
-								<div class="form-group">
+
+                    <div class="form-group">
 									<label for="Truck_PlateNumber">{{l("PlateNumber")}} *</label>
 									<input type="text" id="Truck_PlateNumber" class="form-control" [(ngModel)]="truck.plateNumber" name="PlateNumber"   minlength="0"  maxlength="64"  required/>
 								</div>
-					
-								<div class="form-group">
+
+                    <div class="form-group">
 									<label for="Truck_ModelName">{{l("ModelName")}} *</label>
 									<input type="text" id="Truck_ModelName" class="form-control" [(ngModel)]="truck.modelName" name="ModelName"   minlength="0"  maxlength="64"  required/>
 								</div>
-					
-								<div class="form-group">
+
+                    <div class="form-group">
 									<label for="Truck_ModelYear">{{l("ModelYear")}} *</label>
 									<input type="text" id="Truck_ModelYear" class="form-control" [(ngModel)]="truck.modelYear" name="ModelYear"   minlength="0"  maxlength="64"  required/>
 								</div>
-					
-								<div class="form-group">
+
+                    <div class="form-group">
 									<label for="Truck_LicenseNumber">{{l("LicenseNumber")}} *</label>
 									<input type="text" id="Truck_LicenseNumber" class="form-control" [(ngModel)]="truck.licenseNumber" name="LicenseNumber"   minlength="0"  maxlength="256"  required/>
 								</div>
-					
-								<div class="form-group">
+
+                    <div class="form-group">
 									<label for="Truck_LicenseExpirationDate">{{l("LicenseExpirationDate")}}</label>
-									 <input required class="form-control m-input" type="datetime" bsDatepicker datePickerMomentModifier [(date)]="truck.licenseExpirationDate" id="Truck_LicenseExpirationDate" name="Truck_LicenseExpirationDate">
-								</div>
-					
-								<br/><div class="m-checkbox-list">
-									<label for="Truck_IsAttachable" class="kt-checkbox">
-										<input id="Truck_IsAttachable" type="checkbox" name="IsAttachable" [(ngModel)]="truck.isAttachable"> 
-										{{l("IsAttachable")}}
-										<span></span>
-									</label>
-								</div>
-					
-								<div class="form-group">
-									<label for="Truck_Note">{{l("Note")}}</label>
-									<input type="text" id="Truck_Note" class="form-control" [(ngModel)]="truck.note" name="Note"   minlength="0"  maxlength="256" />
-								</div>
-					
+                        <input [(date)]="truck.licenseExpirationDate" bsDatepicker class="form-control m-input" datePickerMomentModifier
+                               id="Truck_LicenseExpirationDate" name="Truck_LicenseExpirationDate"
+                               required type="datetime">
+                    </div>
+
+                    <br/>
+                    <div class="m-checkbox-list">
+                        <label class="kt-checkbox" for="Truck_IsAttachable">
+                            <input [(ngModel)]="truck.isAttachable" id="Truck_IsAttachable" name="IsAttachable"
+                                   type="checkbox">
+                            {{l("IsAttachable")}}
+                            <span></span>
+                        </label>
+                    </div>
+                    <div class="form-group">
+                        <label for="Truck_RentPrice">{{l("RentPrice")}}</label>
+                        <input [(ngModel)]="truck.rentPrice" class="form-control" id="Truck_RentPrice" maxlength="256"
+                               minlength="0" name="rentPrice" type="text"/>
+                    </div>
+                    <div class="form-group">
+                        <label for="Truck_RentDuration">{{l("RentDuration")}}</label>
+                        <input [(ngModel)]="truck.rentDuration" class="form-control" id="Truck_RentDuration" maxlength="256"
+                               minlength="0" name="rentDuration" type="text"/>
+                    </div>
+                    <div class="form-group">
+                        <label for="Truck_Note">{{l("Note")}}</label>
+                        <input [(ngModel)]="truck.note" class="form-control" id="Truck_Note" maxlength="256" minlength="0"
+                               name="Note" type="text"/>
+                    </div>
+
 
                 </div>
                 <div class="modal-footer">
@@ -106,5 +122,5 @@
     </div>
 <truckUserLookupTableModal #truckUserLookupTableModal (modalSave)="getNewDriver1UserId()"></truckUserLookupTableModal>
 		 <truckUserLookupTableModal #truckUserLookupTableModal2 (modalSave)="getNewDriver2UserId()"></truckUserLookupTableModal>
-		 
+
 </div>

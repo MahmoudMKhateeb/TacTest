@@ -29642,6 +29642,8 @@ export class TruckDto implements ITruckDto {
     truckStatusId!: string;
     driver1UserId!: number | undefined;
     driver2UserId!: number | undefined;
+    rentPrice!: number | undefined;
+    rentDuration!: number | undefined;
     id!: string;
 
     constructor(data?: ITruckDto) {
@@ -29666,6 +29668,8 @@ export class TruckDto implements ITruckDto {
             this.truckStatusId = _data["truckStatusId"];
             this.driver1UserId = _data["driver1UserId"];
             this.driver2UserId = _data["driver2UserId"];
+            this.rentPrice = _data["rentPrice"];
+            this.rentDuration = _data["rentDuration"];
             this.id = _data["id"];
         }
     }
@@ -29690,6 +29694,8 @@ export class TruckDto implements ITruckDto {
         data["truckStatusId"] = this.truckStatusId;
         data["driver1UserId"] = this.driver1UserId;
         data["driver2UserId"] = this.driver2UserId;
+        data["rentPrice"] = this.rentPrice;
+        data["rentDuration"] = this.rentDuration;
         data["id"] = this.id;
         return data; 
     }
@@ -29707,6 +29713,8 @@ export interface ITruckDto {
     truckStatusId: string;
     driver1UserId: number | undefined;
     driver2UserId: number | undefined;
+    rentPrice: number | undefined;
+    rentDuration: number | undefined;
     id: string;
 }
 
@@ -29822,6 +29830,8 @@ export class CreateOrEditTruckDto implements ICreateOrEditTruckDto {
     truckStatusId!: string;
     driver1UserId!: number | undefined;
     driver2UserId!: number | undefined;
+    rentPrice!: number | undefined;
+    rentDuration!: number | undefined;
     id!: string | undefined;
 
     constructor(data?: ICreateOrEditTruckDto) {
@@ -29846,6 +29856,8 @@ export class CreateOrEditTruckDto implements ICreateOrEditTruckDto {
             this.truckStatusId = _data["truckStatusId"];
             this.driver1UserId = _data["driver1UserId"];
             this.driver2UserId = _data["driver2UserId"];
+            this.rentPrice = _data["rentPrice"];
+            this.rentDuration = _data["rentDuration"];
             this.id = _data["id"];
         }
     }
@@ -29870,6 +29882,8 @@ export class CreateOrEditTruckDto implements ICreateOrEditTruckDto {
         data["truckStatusId"] = this.truckStatusId;
         data["driver1UserId"] = this.driver1UserId;
         data["driver2UserId"] = this.driver2UserId;
+        data["rentPrice"] = this.rentPrice;
+        data["rentDuration"] = this.rentDuration;
         data["id"] = this.id;
         return data; 
     }
@@ -29887,6 +29901,8 @@ export interface ICreateOrEditTruckDto {
     truckStatusId: string;
     driver1UserId: number | undefined;
     driver2UserId: number | undefined;
+    rentPrice: number | undefined;
+    rentDuration: number | undefined;
     id: string | undefined;
 }
 
