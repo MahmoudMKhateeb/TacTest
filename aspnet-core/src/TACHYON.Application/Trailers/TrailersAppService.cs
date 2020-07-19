@@ -13,6 +13,7 @@ using System.Linq.Dynamic.Core;
 using Abp.Linq.Extensions;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Abp.Application.Features;
 using Abp.Domain.Repositories;
 using TACHYON.Trailers.Exporting;
 using TACHYON.Trailers.Dtos;
@@ -22,11 +23,14 @@ using TACHYON.Authorization;
 using Abp.Extensions;
 using Abp.Authorization;
 using Microsoft.EntityFrameworkCore;
+using TACHYON.Features;
 using TACHYON.Trailers.PayloadMaxWeights;
 
 namespace TACHYON.Trailers
 {
     [AbpAuthorize(AppPermissions.Pages_Trailers)]
+    [RequiresFeature(AppFeatures.Carrier)]
+
     public class TrailersAppService : TACHYONAppServiceBase, ITrailersAppService
     {
         private readonly IRepository<Trailer, long> _trailerRepository;
