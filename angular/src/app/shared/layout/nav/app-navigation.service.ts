@@ -32,7 +32,7 @@ export class AppNavigationService {
 
             new AppMenuItem('PayloadMaxWeights', 'Pages.PayloadMaxWeights', 'flaticon-more', '/app/main/payloadMaxWeight/payloadMaxWeights'),
 
-            new AppMenuItem('TrailerStatuses', 'Pages.TrailerStatuses', 'flaticon-more', '/app/main/trailerStatuses/trailerStatuses'),
+            new AppMenuItem('TrailerStatuses', 'Pages.TrailerStatuses', 'flaticon-more', '/app/main/trailerStatuses/trailerStatuses', undefined, undefined, undefined, undefined, () => this._featureCheckerService.isEnabled('App.Carrier')),
 
             new AppMenuItem('Trailers', 'Pages.Trailers', 'flaticon-more', '/app/main/trailers/trailers', undefined, undefined, undefined, undefined, () => this._featureCheckerService.isEnabled('App.Carrier')),
              new AppMenuItem('Administration', '', 'flaticon-interface-8', '', [], [
