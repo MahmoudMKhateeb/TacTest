@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using TACHYON.EntityFrameworkCore;
 
 namespace TACHYON.Migrations
 {
     [DbContext(typeof(TACHYONDbContext))]
-    partial class TACHYONDbContextModelSnapshot : ModelSnapshot
+    [Migration("20200719092817_Add_Trailers_Tables")]
+    partial class Add_Trailers_Tables
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -2088,9 +2090,6 @@ namespace TACHYON.Migrations
                         .HasColumnType("nvarchar(256)")
                         .HasMaxLength(256);
 
-                    b.Property<int>("TenantId")
-                        .HasColumnType("int");
-
                     b.Property<string>("TrailerCode")
                         .IsRequired()
                         .HasColumnType("nvarchar(256)")
@@ -2115,8 +2114,6 @@ namespace TACHYON.Migrations
                     b.HasIndex("HookedTruckId");
 
                     b.HasIndex("PayloadMaxWeightId");
-
-                    b.HasIndex("TenantId");
 
                     b.HasIndex("TrailerStatusId");
 

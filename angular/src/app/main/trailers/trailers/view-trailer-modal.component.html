@@ -1,0 +1,90 @@
+﻿<div bsModal #createOrEditModal="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="createOrEditModal" aria-hidden="true" [config]="{backdrop: 'static'}">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">
+                    <span>{{l("Details")}}</span>
+                </h4>
+                <button type="button" class="close" (click)="close()" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+
+                <div class="row">
+                    <div class="col-6 mb-3">
+                        <h6>{{l("TrailerCode")}} :</h6>
+                        {{ item.trailer.trailerCode }}
+                    </div>
+                    <div class="col-6 mb-3">
+                        <h6>{{l("PlateNumber")}} :</h6>
+                        {{ item.trailer.plateNumber }}
+                    </div>
+                    <div class="col-6 mb-3">
+                        <h6>{{l("Model")}} :</h6>
+                        {{ item.trailer.model }}
+                    </div>
+                    <div class="col-6 mb-3">
+                        <h6>{{l("Year")}} :</h6>
+                        {{ item.trailer.year }}
+                    </div>
+                    <div class="col-6 mb-3">
+                        <h6>{{l("Width")}} :</h6>
+                        {{ item.trailer.width }}
+                    </div>
+                    <div class="col-6 mb-3">
+                        <h6>{{l("Height")}} :</h6>
+                        {{ item.trailer.height }}
+                    </div>
+                    <div class="col-6 mb-3">
+                        <h6>{{l("Length")}} :</h6>
+                        {{ item.trailer.length }}
+                    </div>
+                    <div class="col-6 mb-3">
+                        <h6>{{l("IsLiftgate")}} :</h6>
+                        <div *ngIf="item.trailer.isLiftgate" class="text-left"><i class="fa fa-check-circle text-success"
+                                title="True"></i></div>
+                        <div *ngIf="!item.trailer.isLiftgate" class="text-left"><i class="fa fa-times-circle" title="False"></i></div>
+                    </div>                    <div class="col-6 mb-3">
+                        <h6>{{l("IsReefer")}} :</h6>
+                        <div *ngIf="item.trailer.isReefer" class="text-left"><i class="fa fa-check-circle text-success"
+                                title="True"></i></div>
+                        <div *ngIf="!item.trailer.isReefer" class="text-left"><i class="fa fa-times-circle" title="False"></i></div>
+                    </div>                    <div class="col-6 mb-3">
+                        <h6>{{l("IsVented")}} :</h6>
+                        <div *ngIf="item.trailer.isVented" class="text-left"><i class="fa fa-check-circle text-success"
+                                title="True"></i></div>
+                        <div *ngIf="!item.trailer.isVented" class="text-left"><i class="fa fa-times-circle" title="False"></i></div>
+                    </div>                    <div class="col-6 mb-3">
+                        <h6>{{l("IsRollDoor")}} :</h6>
+                        <div *ngIf="item.trailer.isRollDoor" class="text-left"><i class="fa fa-check-circle text-success"
+                                title="True"></i></div>
+                        <div *ngIf="!item.trailer.isRollDoor" class="text-left"><i class="fa fa-times-circle" title="False"></i></div>
+                    </div>
+                    <div class="col-6 mb-3">
+                        <h6>({{l("TrailerStatus")}}) {{l("DisplayName")}} :</h6>
+                        {{item.trailerStatusDisplayName}}
+                    </div>
+                    <div class="col-6 mb-3">
+                        <h6>({{l("TrailerType")}}) {{l("DisplayName")}} :</h6>
+                        {{item.trailerTypeDisplayName}}
+                    </div>
+                    <div class="col-6 mb-3">
+                        <h6>({{l("PayloadMaxWeight")}}) {{l("DisplayName")}} :</h6>
+                        {{item.payloadMaxWeightDisplayName}}
+                    </div>
+                    <div class="col-6 mb-3">
+                        <h6>({{l("Truck")}}) {{l("PlateNumber")}} :</h6>
+                        {{item.truckPlateNumber}}
+                    </div>
+
+                </div>
+
+            </div>
+            <div class="modal-footer">
+                <button [disabled]="saving" type="button" class="btn btn-primary blue" (click)="close()">{{l("Close")}}</button>
+            </div>
+        </div>
+    </div>
+
+</div>

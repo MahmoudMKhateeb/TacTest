@@ -1,0 +1,354 @@
+﻿<div [@routerTransition]>
+  
+  <div class="content d-flex flex-column flex-column-fluid">
+   <sub-header [title]="'Trailers' | localize" [description]="'TrailersHeaderInfo' | localize">
+             <div role="actions">
+                 <button (click)="exportToExcel()" class="btn btn-outline-success"><i class="fa fa-file-excel"></i> {{l("ExportToExcel")}}</button>
+                
+                 <button *ngIf="isGranted('Pages.Trailers.Create')" (click)="createTrailer()" 
+                                        class="btn btn-primary blue"><i class="fa fa-plus"></i> {{l("CreateNewTrailer")}}</button>
+             </div>
+            </sub-header>
+    
+    <div [class]="containerClass">
+        <div class="card card-custom gutter-b">
+            <div class="card-body">
+                <form class="form" autocomplete="off">
+                    <div>
+                        <div class="row align-items-center">
+                            <div class="col-xl-12">
+                                <div class="form-group m-form__group align-items-center">
+                                    <div class="input-group">
+                                        <input [(ngModel)]="filterText" name="filterText" autoFocus class="form-control m-input" [placeholder]="l('SearchWithThreeDot')" type="text">
+                                        <span class="input-group-btn">
+                                            <button (click)="getTrailers()" class="btn btn-primary" type="submit"><i class="flaticon-search-1"></i></button>
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+						 <div class="row" [hidden]="!advancedFiltersAreShown">
+						 	<div class="col-md-12">
+						         <div class="kt-separator kt-separator--border-dashed"></div>
+						     </div>
+
+
+							<div class="col-md-3">
+								<div class="form-group">
+									<label for="TrailerCodeFilter">{{l("TrailerCode")}}</label>
+									<input type="text" class="form-control" id="TrailerCodeFilter" name="trailerCodeFilter" [(ngModel)]="trailerCodeFilter">
+								</div>
+                            </div>
+							<div class="col-md-3">
+								<div class="form-group">
+									<label for="PlateNumberFilter">{{l("PlateNumber")}}</label>
+									<input type="text" class="form-control" id="PlateNumberFilter" name="plateNumberFilter" [(ngModel)]="plateNumberFilter">
+								</div>
+                            </div>
+							<div class="col-md-3">
+								<div class="form-group">
+									<label for="ModelFilter">{{l("Model")}}</label>
+									<input type="text" class="form-control" id="ModelFilter" name="modelFilter" [(ngModel)]="modelFilter">
+								</div>
+                            </div>
+							<div class="col-md-3">
+								<div class="form-group">
+									<label for="YearFilter">{{l("Year")}}</label>
+									<input type="text" class="form-control" id="YearFilter" name="yearFilter" [(ngModel)]="yearFilter">
+								</div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="form-group">
+									<label for="MinWidthFilter">{{l("MinMax")}} {{l("Width")}}</label>
+									<div class="input-group">
+                                        <input type="number" class="form-control" id="MinWidthFilter" [(ngModel)]="minWidthFilter" placeholder="{{l('MinValue')}}" name="minWidthFilter" />
+                                        <input type="number" class="form-control" [(ngModel)]="maxWidthFilter" placeholder="{{l('MaxValue')}}" name="maxWidthFilter" />
+									</div>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="form-group">
+									<label for="MinHeightFilter">{{l("MinMax")}} {{l("Height")}}</label>
+									<div class="input-group">
+                                        <input type="number" class="form-control" id="MinHeightFilter" [(ngModel)]="minHeightFilter" placeholder="{{l('MinValue')}}" name="minHeightFilter" />
+                                        <input type="number" class="form-control" [(ngModel)]="maxHeightFilter" placeholder="{{l('MaxValue')}}" name="maxHeightFilter" />
+									</div>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="form-group">
+									<label for="MinLengthFilter">{{l("MinMax")}} {{l("Length")}}</label>
+									<div class="input-group">
+                                        <input type="number" class="form-control" id="MinLengthFilter" [(ngModel)]="minLengthFilter" placeholder="{{l('MinValue')}}" name="minLengthFilter" />
+                                        <input type="number" class="form-control" [(ngModel)]="maxLengthFilter" placeholder="{{l('MaxValue')}}" name="maxLengthFilter" />
+									</div>
+                                </div>
+                            </div>	
+							<div class="col-md-3">
+								<label for="IsLiftgateFilterSelect">{{l("IsLiftgate")}}</label>
+								<select class="form-control" name="IsLiftgateFilter" id="IsLiftgateFilterSelect" [(ngModel)]="isLiftgateFilter">
+								<option value="-1">{{l("All")}}</option>
+								<option value="0">{{l("False")}}</option>
+								<option value="1">{{l("True")}}</option>
+								</select>
+                            </div>	
+							<div class="col-md-3">
+								<label for="IsReeferFilterSelect">{{l("IsReefer")}}</label>
+								<select class="form-control" name="IsReeferFilter" id="IsReeferFilterSelect" [(ngModel)]="isReeferFilter">
+								<option value="-1">{{l("All")}}</option>
+								<option value="0">{{l("False")}}</option>
+								<option value="1">{{l("True")}}</option>
+								</select>
+                            </div>	
+							<div class="col-md-3">
+								<label for="IsVentedFilterSelect">{{l("IsVented")}}</label>
+								<select class="form-control" name="IsVentedFilter" id="IsVentedFilterSelect" [(ngModel)]="isVentedFilter">
+								<option value="-1">{{l("All")}}</option>
+								<option value="0">{{l("False")}}</option>
+								<option value="1">{{l("True")}}</option>
+								</select>
+                            </div>	
+							<div class="col-md-3">
+								<label for="IsRollDoorFilterSelect">{{l("IsRollDoor")}}</label>
+								<select class="form-control" name="IsRollDoorFilter" id="IsRollDoorFilterSelect" [(ngModel)]="isRollDoorFilter">
+								<option value="-1">{{l("All")}}</option>
+								<option value="0">{{l("False")}}</option>
+								<option value="1">{{l("True")}}</option>
+								</select>
+                            </div>
+							<div class="col-md-3">
+								<div class="form-group">
+									<label for="TrailerStatusDisplayNameFilter">({{l("TrailerStatus")}}) {{l("DisplayName")}}</label>
+									<input type="text" class="form-control" id="TrailerStatusDisplayNameFilter" name="trailerStatusDisplayNameFilter" [(ngModel)]="trailerStatusDisplayNameFilter">
+                                </div>
+                            </div>
+							<div class="col-md-3">
+								<div class="form-group">
+									<label for="TrailerTypeDisplayNameFilter">({{l("TrailerType")}}) {{l("DisplayName")}}</label>
+									<input type="text" class="form-control" id="TrailerTypeDisplayNameFilter" name="trailerTypeDisplayNameFilter" [(ngModel)]="trailerTypeDisplayNameFilter">
+                                </div>
+                            </div>
+							<div class="col-md-3">
+								<div class="form-group">
+									<label for="PayloadMaxWeightDisplayNameFilter">({{l("PayloadMaxWeight")}}) {{l("DisplayName")}}</label>
+									<input type="text" class="form-control" id="PayloadMaxWeightDisplayNameFilter" name="payloadMaxWeightDisplayNameFilter" [(ngModel)]="payloadMaxWeightDisplayNameFilter">
+                                </div>
+                            </div>
+							<div class="col-md-3">
+								<div class="form-group">
+									<label for="TruckPlateNumberFilter">({{l("Truck")}}) {{l("PlateNumber")}}</label>
+									<input type="text" class="form-control" id="TruckPlateNumberFilter" name="truckPlateNumberFilter" [(ngModel)]="truckPlateNumberFilter">
+                                </div>
+                            </div>
+
+                        </div>
+                        <div class="row mb-2">
+                            <div class="col-sm-12">
+                                <span class="clickable-item text-muted" *ngIf="!advancedFiltersAreShown" (click)="advancedFiltersAreShown=!advancedFiltersAreShown"><i class="fa fa-angle-down"></i> {{l("ShowAdvancedFilters")}}</span>
+                                <span class="clickable-item text-muted" *ngIf="advancedFiltersAreShown" (click)="advancedFiltersAreShown=!advancedFiltersAreShown"><i class="fa fa-angle-up"></i> {{l("HideAdvancedFilters")}}</span>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+
+                <div class="row align-items-center">
+                    <!--<Primeng-Datatable-Start>-->
+                    <div class="primeng-datatable-container col-12"
+                         [busyIf]="primengTableHelper.isLoading">
+                        <p-table #dataTable
+                                     (onLazyLoad)="getTrailers($event)"
+                                     [value]="primengTableHelper.records"
+                                     rows="{{primengTableHelper.defaultRecordsCountPerPage}}"
+                                     [paginator]="false"
+                                     [lazy]="true"
+                                     [scrollable]="true"
+                                     ScrollWidth="100%"
+                                     [responsive]="primengTableHelper.isResponsive"
+                                     [resizableColumns]="primengTableHelper.resizableColumns">
+                            <ng-template pTemplate="header">
+                                <tr>
+                                    <th style="width: 130px" [hidden]="!isGrantedAny('Pages.Trailers.Edit', 'Pages.Trailers.Delete')">{{l('Actions')}}</th>
+                                    <th style="width: 150px" pSortableColumn="trailerStatusFk.displayName">
+                                        {{l('DisplayName')}}
+                                        <p-sortIcon field="trailerStatusDisplayName"></p-sortIcon>
+                                    </th>
+                                    <th style="width: 150px" pSortableColumn="trailerTypeFk.displayName">
+                                        {{l('DisplayName')}}
+                                        <p-sortIcon field="trailerTypeDisplayName"></p-sortIcon>
+                                    </th>
+                                    <th style="width: 150px" pSortableColumn="payloadMaxWeightFk.displayName">
+                                        {{l('DisplayName')}}
+                                        <p-sortIcon field="payloadMaxWeightDisplayName"></p-sortIcon>
+                                    </th>
+                                    <th style="width: 150px" pSortableColumn="hookedTruckFk.plateNumber">
+                                        {{l('PlateNumber')}}
+                                        <p-sortIcon field="truckPlateNumber"></p-sortIcon>
+                                    </th>
+                                    <th style="width: 150px" pSortableColumn="trailerCode">
+                                        {{l('TrailerCode')}}
+                                        <p-sortIcon field="trailer.trailerCode"></p-sortIcon>
+                                    </th>
+                                    <th style="width: 150px" pSortableColumn="plateNumber">
+                                        {{l('PlateNumber')}}
+                                        <p-sortIcon field="trailer.plateNumber"></p-sortIcon>
+                                    </th>
+                                    <th style="width: 150px" pSortableColumn="model">
+                                        {{l('Model')}}
+                                        <p-sortIcon field="trailer.model"></p-sortIcon>
+                                    </th>
+                                    <th style="width: 150px" pSortableColumn="year">
+                                        {{l('Year')}}
+                                        <p-sortIcon field="trailer.year"></p-sortIcon>
+                                    </th>
+                                    <th style="width: 150px" pSortableColumn="width">
+                                        {{l('Width')}}
+                                        <p-sortIcon field="trailer.width"></p-sortIcon>
+                                    </th>
+                                    <th style="width: 150px" pSortableColumn="height">
+                                        {{l('Height')}}
+                                        <p-sortIcon field="trailer.height"></p-sortIcon>
+                                    </th>
+                                    <th style="width: 150px" pSortableColumn="length">
+                                        {{l('Length')}}
+                                        <p-sortIcon field="trailer.length"></p-sortIcon>
+                                    </th>
+                                    <th style="width: 150px" pSortableColumn="isLiftgate">
+                                        {{l('IsLiftgate')}}
+                                        <p-sortIcon field="trailer.isLiftgate"></p-sortIcon>
+                                    </th>
+                                    <th style="width: 150px" pSortableColumn="isReefer">
+                                        {{l('IsReefer')}}
+                                        <p-sortIcon field="trailer.isReefer"></p-sortIcon>
+                                    </th>
+                                    <th style="width: 150px" pSortableColumn="isVented">
+                                        {{l('IsVented')}}
+                                        <p-sortIcon field="trailer.isVented"></p-sortIcon>
+                                    </th>
+                                    <th style="width: 150px" pSortableColumn="isRollDoor">
+                                        {{l('IsRollDoor')}}
+                                        <p-sortIcon field="trailer.isRollDoor"></p-sortIcon>
+                                    </th>
+
+                                </tr>
+                            </ng-template>                           
+							<ng-template pTemplate="body" let-record="$implicit">
+                                <tr>
+                                    <td style="width: 130px"
+                                        [hidden]="!isGrantedAny('Pages.Trailers.Edit', 'Pages.Trailers.Delete')">
+                                       <div class="btn-group dropdown" dropdown container="body">
+                                            <button class="dropdown-toggle btn btn-sm btn-primary" dropdownToggle>
+                                                <i class="fa fa-cog"></i><span class="caret"></span> {{l("Actions")}}
+                                            </button>
+												<ul class="dropdown-menu"  *dropdownMenu>
+												<li>
+													<a href="javascript:;" class="dropdown-item"
+														(click)="viewTrailerModal.show(record)">{{l('View')}}</a>
+												</li>
+												<li>
+                                                <a href="javascript:;" *ngIf="permission.isGranted('Pages.Trailers.Edit')" class="dropdown-item"
+														(click)="createOrEditTrailerModal.show(record.trailer.id)">{{l('Edit')}}</a>												
+                                                </li>
+												<li>
+											        <a class="dropdown-item" href="javascript:;" *ngIf="permission.isGranted('Pages.Trailers.Delete')"
+														(click)="deleteTrailer(record.trailer)">{{l('Delete')}}</a>
+												</li>
+                                                <li>
+                                                    <a href="javascript:;" *ngIf="entityHistoryEnabled"
+                                                       (click)="showHistory(record.trailer)">{{l('History')}}</a>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </td>
+                                    <td style="width:150px">
+												<span class="ui-column-title"> {{l('DisplayName')}}</span>
+												{{record.trailerStatusDisplayName}}
+											</td>
+                                    <td style="width:150px">
+												<span class="ui-column-title"> {{l('DisplayName')}}</span>
+												{{record.trailerTypeDisplayName}}
+											</td>
+                                    <td style="width:150px">
+												<span class="ui-column-title"> {{l('DisplayName')}}</span>
+												{{record.payloadMaxWeightDisplayName}}
+											</td>
+                                    <td style="width:150px">
+												<span class="ui-column-title"> {{l('PlateNumber')}}</span>
+												{{record.truckPlateNumber}}
+											</td>
+                                    <td style="width:150px">
+											<span class="ui-column-title"> {{l('TrailerCode')}}</span>
+											{{record.trailer.trailerCode}}
+										</td>
+                                    <td style="width:150px">
+											<span class="ui-column-title"> {{l('PlateNumber')}}</span>
+											{{record.trailer.plateNumber}}
+										</td>
+                                    <td style="width:150px">
+											<span class="ui-column-title"> {{l('Model')}}</span>
+											{{record.trailer.model}}
+										</td>
+                                    <td style="width:150px">
+											<span class="ui-column-title"> {{l('Year')}}</span>
+											{{record.trailer.year}}
+										</td>
+                                    <td style="width:150px">
+											<span class="ui-column-title"> {{l('Width')}}</span>
+											{{record.trailer.width}}
+										</td>
+                                    <td style="width:150px">
+											<span class="ui-column-title"> {{l('Height')}}</span>
+											{{record.trailer.height}}
+										</td>
+                                    <td style="width:150px">
+											<span class="ui-column-title"> {{l('Length')}}</span>
+											{{record.trailer.length}}
+										</td>
+                                    <td style="width:150px">
+										<span class="ui-column-title"> {{l('IsLiftgate')}}</span>
+                                        <div *ngIf="record.trailer.isLiftgate" class="text-center"><i class="fa fa-check-circle text-success" title="True"></i></div>
+										<div *ngIf="!record.trailer.isLiftgate" class="text-center"><i class="fa fa-times-circle" title="False"></i></div>
+                                    </td>
+                                    <td style="width:150px">
+										<span class="ui-column-title"> {{l('IsReefer')}}</span>
+                                        <div *ngIf="record.trailer.isReefer" class="text-center"><i class="fa fa-check-circle text-success" title="True"></i></div>
+										<div *ngIf="!record.trailer.isReefer" class="text-center"><i class="fa fa-times-circle" title="False"></i></div>
+                                    </td>
+                                    <td style="width:150px">
+										<span class="ui-column-title"> {{l('IsVented')}}</span>
+                                        <div *ngIf="record.trailer.isVented" class="text-center"><i class="fa fa-check-circle text-success" title="True"></i></div>
+										<div *ngIf="!record.trailer.isVented" class="text-center"><i class="fa fa-times-circle" title="False"></i></div>
+                                    </td>
+                                    <td style="width:150px">
+										<span class="ui-column-title"> {{l('IsRollDoor')}}</span>
+                                        <div *ngIf="record.trailer.isRollDoor" class="text-center"><i class="fa fa-check-circle text-success" title="True"></i></div>
+										<div *ngIf="!record.trailer.isRollDoor" class="text-center"><i class="fa fa-times-circle" title="False"></i></div>
+                                    </td>
+
+                                </tr>
+                            </ng-template>
+                        </p-table>
+						<div class="primeng-no-data" *ngIf="primengTableHelper.totalRecordsCount == 0">
+                            {{l('NoData')}}
+                        </div>
+                        <div class="primeng-paging-container">
+                            <p-paginator [rows]="primengTableHelper.defaultRecordsCountPerPage"
+                                         #paginator
+                                         (onPageChange)="getTrailers($event)"
+                                         [totalRecords]="primengTableHelper.totalRecordsCount"
+                                         [rowsPerPageOptions]="primengTableHelper.predefinedRecordsCountPerPage">
+                            </p-paginator>
+                            <span class="total-records-count">
+                                {{l('TotalRecordsCount', primengTableHelper.totalRecordsCount)}}
+                            </span>
+                        </div>
+                    </div>
+                    <!--<Primeng-Datatable-End>-->
+                </div>
+            </div>
+        </div>
+    </div>
+    <createOrEditTrailerModal #createOrEditTrailerModal (modalSave)="getTrailers()"></createOrEditTrailerModal>    
+    <viewTrailerModal #viewTrailerModal></viewTrailerModal>
+     <entityTypeHistoryModal #entityTypeHistoryModal></entityTypeHistoryModal>
+  </div>
+</div>

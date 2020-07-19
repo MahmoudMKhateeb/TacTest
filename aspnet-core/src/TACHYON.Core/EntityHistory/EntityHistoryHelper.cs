@@ -1,4 +1,5 @@
-﻿using TACHYON.Trailers.TrailerStatuses;
+﻿using TACHYON.Trailers;
+using TACHYON.Trailers.TrailerStatuses;
 using TACHYON.Trailers.TrailerTypes;
 using TACHYON.Trucks.TrucksTypes;
 using TACHYON.Trucks;
@@ -26,6 +27,7 @@ namespace TACHYON.EntityHistory
 
         public static readonly Type[] TenantSideTrackedTypes =
         {
+            typeof(Trailer),
             typeof(Truck),
             typeof(TrucksType),
             typeof(TruckStatus),
