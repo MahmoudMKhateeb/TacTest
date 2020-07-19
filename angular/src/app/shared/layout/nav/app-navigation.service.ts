@@ -32,14 +32,14 @@ export class AppNavigationService {
 
             new AppMenuItem('PayloadMaxWeights', 'Pages.PayloadMaxWeights', 'flaticon-more', '/app/main/payloadMaxWeight/payloadMaxWeights'),
 
-            new AppMenuItem('TrailerStatuses', 'Pages.TrailerStatuses', 'flaticon-more', '/app/main/trailerStatuses/trailerStatuses', undefined, undefined, undefined, undefined, () => this._featureCheckerService.isEnabled('App.Carrier')),
+            new AppMenuItem('TrailerStatuses', 'Pages.TrailerStatuses', 'flaticon-more', '/app/main/trailerStatuses/trailerStatuses'),
 
             new AppMenuItem('Trailers', 'Pages.Trailers', 'flaticon-more', '/app/main/trailers/trailers', undefined, undefined, undefined, undefined, () => this._featureCheckerService.isEnabled('App.Carrier')),
              new AppMenuItem('Administration', '', 'flaticon-interface-8', '', [], [
                 new AppMenuItem('OrganizationUnits', 'Pages.Administration.OrganizationUnits', 'flaticon-map', '/app/admin/organization-units'),
                 new AppMenuItem('Roles', 'Pages.Administration.Roles', 'flaticon-suitcase', '/app/admin/roles'),
                 new AppMenuItem('Users', 'Pages.Administration.Users', 'flaticon-users', '/app/admin/users'),
-            new AppMenuItem('TruckStatuses', 'Pages.Administration.TruckStatuses', 'flaticon-more', '/app/admin/trucks/truckStatuses'),
+            new AppMenuItem('TruckStatuses', 'Pages.Administration.TruckStatuses', 'flaticon-more', '/app/admin/trucks/truckStatuses', undefined, undefined, undefined, undefined, () => this._featureCheckerService.isEnabled('App.Carrier')),
 
                 new AppMenuItem('Languages', 'Pages.Administration.Languages', 'flaticon-tabs', '/app/admin/languages', ['/app/admin/languages/{name}/texts']),
                 new AppMenuItem('AuditLogs', 'Pages.Administration.AuditLogs', 'flaticon-folder-1', '/app/admin/auditLogs'),
