@@ -1,12 +1,10 @@
-﻿using System;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using Abp.Application.Services;
 using Abp.Application.Services.Dto;
-using TACHYON.Trailers.PayloadMaxWeight.Dtos;
 using TACHYON.Dto;
+using TACHYON.Trailers.PayloadMaxWeights.Dtos;
 
-
-namespace TACHYON.Trailers.PayloadMaxWeight
+namespace TACHYON.Trailers.PayloadMaxWeights
 {
     public interface IPayloadMaxWeightsAppService : IApplicationService 
     {

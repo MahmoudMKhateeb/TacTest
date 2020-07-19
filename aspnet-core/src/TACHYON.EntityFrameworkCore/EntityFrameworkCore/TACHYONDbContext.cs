@@ -1,5 +1,4 @@
 ﻿using TACHYON.Trailers.TrailerStatuses;
-using TACHYON.Trailers.PayloadMaxWeight;
 using TACHYON.Trailers.TrailerTypes;
 using TACHYON.Trucks.TrucksTypes;
 using TACHYON.Trucks;
@@ -17,6 +16,7 @@ using TACHYON.MultiTenancy;
 using TACHYON.MultiTenancy.Accounting;
 using TACHYON.MultiTenancy.Payments;
 using TACHYON.Storage;
+using TACHYON.Trailers.PayloadMaxWeights;
 
 namespace TACHYON.EntityFrameworkCore
 {
@@ -24,7 +24,7 @@ namespace TACHYON.EntityFrameworkCore
     {
         public virtual DbSet<TrailerStatus> TrailerStatuses { get; set; }
 
-        public virtual DbSet<Trailers.PayloadMaxWeight.PayloadMaxWeight> PayloadMaxWeights { get; set; }
+        public virtual DbSet<PayloadMaxWeight> PayloadMaxWeights { get; set; }
 
         public virtual DbSet<TrailerType> TrailerTypes { get; set; }
 
