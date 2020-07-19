@@ -9,9 +9,8 @@ namespace TACHYON.Trucks.TrucksTypes
 {
 	[Table("TrucksTypes")]
     [Audited]
-    public class TrucksType : FullAuditedEntity<Guid> , IMayHaveTenant
+    public class TrucksType : FullAuditedEntity<Guid> 
     {
-			public int? TenantId { get; set; }
 			
 
 		[Required]

@@ -310,12 +310,11 @@ namespace TACHYON.Trucks
             using (CurrentUnitOfWork.DisableFilter(AbpDataFilters.MayHaveTenant))
             {
                 return await _lookup_trucksTypeRepository.GetAll()
-                     .Where(x => !x.TenantId.HasValue || x.TenantId == AbpSession.TenantId)
-                     .Select(trucksType => new TruckTrucksTypeLookupTableDto
-                     {
-                         Id = trucksType.Id.ToString(),
-                         DisplayName = trucksType == null || trucksType.DisplayName == null ? "" : trucksType.DisplayName.ToString()
-                     }).ToListAsync();
+                   .Select(trucksType => new TruckTrucksTypeLookupTableDto
+                   {
+                       Id = trucksType.Id.ToString(),
+                       DisplayName = trucksType == null || trucksType.DisplayName == null ? "" : trucksType.DisplayName.ToString()
+                   }).ToListAsync();
             }
         }
 
