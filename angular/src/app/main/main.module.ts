@@ -2,6 +2,10 @@
 import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { AppCommonModule } from '@app/shared/common/app-common.module';
+import { GoodCategoriesComponent } from './goodCategories/goodCategories/goodCategories.component';
+import { ViewGoodCategoryModalComponent } from './goodCategories/goodCategories/view-goodCategory-modal.component';
+import { CreateOrEditGoodCategoryModalComponent } from './goodCategories/goodCategories/create-or-edit-goodCategory-modal.component';
+
 import { TrailersComponent } from './trailers/trailers/trailers.component';
 import { ViewTrailerModalComponent } from './trailers/trailers/view-trailer-modal.component';
 import { CreateOrEditTrailerModalComponent } from './trailers/trailers/create-or-edit-trailer-modal.component';
@@ -72,6 +76,10 @@ NgxBootstrapDatePickerConfigService.registerNgxBootstrapDatePickerLocales();
         PopoverModule.forRoot(), ImageCropperModule
     ],
     declarations: [
+		GoodCategoriesComponent,
+
+		ViewGoodCategoryModalComponent,
+		CreateOrEditGoodCategoryModalComponent,
 		TrailersComponent,
 
 		ViewTrailerModalComponent,

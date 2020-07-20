@@ -1,5 +1,6 @@
 ﻿import { NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
+import { GoodCategoriesComponent } from './goodCategories/goodCategories/goodCategories.component';
 import { TrailersComponent } from './trailers/trailers/trailers.component';
 import { TrailerStatusesComponent } from './trailerStatuses/trailerStatuses/trailerStatuses.component';
 import { PayloadMaxWeightsComponent } from './payloadMaxWeight/payloadMaxWeights/payloadMaxWeights.component';
@@ -14,6 +15,7 @@ import { DashboardComponent } from './dashboard/dashboard.component';
             {
                 path: '',
                 children: [
+                    { path: 'goodCategories/goodCategories', component: GoodCategoriesComponent, data: { permission: 'Pages.GoodCategories' }  },
                     { path: 'trailers/trailers', component: TrailersComponent, data: { permission: 'Pages.Trailers' }  },
                     { path: 'trailerStatuses/trailerStatuses', component: TrailerStatusesComponent, data: { permission: 'Pages.TrailerStatuses' }  },
                     { path: 'payloadMaxWeight/payloadMaxWeights', component: PayloadMaxWeightsComponent, data: { permission: 'Pages.PayloadMaxWeights' }  },

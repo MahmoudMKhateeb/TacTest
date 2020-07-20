@@ -6,6 +6,11 @@
     /// </summary>
     public static class AppPermissions
     {
+        public const string Pages_GoodCategories = "Pages.GoodCategories";
+        public const string Pages_GoodCategories_Create = "Pages.GoodCategories.Create";
+        public const string Pages_GoodCategories_Edit = "Pages.GoodCategories.Edit";
+        public const string Pages_GoodCategories_Delete = "Pages.GoodCategories.Delete";
+
         public const string Pages_Trailers = "Pages.Trailers";
         public const string Pages_Trailers_Create = "Pages.Trailers.Create";
         public const string Pages_Trailers_Edit = "Pages.Trailers.Edit";

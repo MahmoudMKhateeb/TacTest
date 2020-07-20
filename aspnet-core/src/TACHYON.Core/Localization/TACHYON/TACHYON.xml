@@ -1,6 +1,13 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <localizationDictionary culture="en">
-  <texts>    <text name="Trailers">Trailers</text>
+  <texts>    <text name="GoodCategories">Good categories</text>
+    <text name="GoodCategory">Good category</text>
+    <text name="TACHYON.GoodCategories.GoodCategory">GoodCategory</text>
+    <text name="GoodCategoriesHeaderInfo">Good categories header info</text>
+    <text name="CreateNewGoodCategory">Create new good category</text>
+    <text name="EditGoodCategory">Edit good category</text>
+    <text name="DeleteGoodCategory">Delete good category</text>
+    <text name="Trailers">Trailers</text>
     <text name="Trailer">Trailer</text>
     <text name="TACHYON.Trailers.Trailer">Trailer</text>
     <text name="TrailerCode">Trailer code</text>

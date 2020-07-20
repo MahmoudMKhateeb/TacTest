@@ -1,4 +1,5 @@
-﻿using TACHYON.Trailers;
+﻿using TACHYON.Goods.GoodCategories;
+using TACHYON.Trailers;
 using TACHYON.Trailers.TrailerStatuses;
 using TACHYON.Trailers.TrailerTypes;
 using TACHYON.Trucks.TrucksTypes;
@@ -18,6 +19,7 @@ namespace TACHYON.EntityHistory
 
         public static readonly Type[] HostSideTrackedTypes =
         {
+            typeof(GoodCategory),
             typeof(TrailerStatus),
             typeof(PayloadMaxWeight),
             typeof(TrailerType),
