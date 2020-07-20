@@ -13,133 +13,158 @@
                 </div>
                 <div class="modal-body">
 
-                    <div class="col-sm-3 text-center mb-5 mt-5">
-                        <img src="{{truck.profilePictureUrl}}" width="128" height="128" class="img-thumbnail img-rounded" />
-                    </div>
-
-
-					<div class="form-group m-form__group">
-						<label for="TrucksTypeDisplayName">{{l("TrucksType")}}</label>
-						<select name="truck.trucksTypeId" [(ngModel)]="truck.trucksTypeId" class="form-control" required>
-							<option value="">{{l("SelectATrucksType")}}</option>
-							<option *ngFor="let item of allTrucksTypes" value="{{item.id}}">{{item.displayName}}</option>
-						</select>
-					</div>
-
-					<div class="form-group m-form__group">
-						<label for="TruckStatusDisplayName">{{l("TruckStatus")}}</label>
-						<select name="truck.truckStatusId" [(ngModel)]="truck.truckStatusId" class="form-control" required>
-							<option value="">{{l("SelectATruckStatus")}}</option>
-							<option *ngFor="let item of allTruckStatuss" value="{{item.id}}">{{item.displayName}}</option>
-						</select>
-					</div>
-
-					<div class="form-group m-form__group">
-                        <label for="UserName">{{l("User")}}</label>
-                        <div class="input-group">
-                            <input [(ngModel)]="userName" class="form-control" disabled id="UserName" name="userName"
-                                   type="text">
-                            <div class="input-group-append">
-                                <button class="btn btn-primary blue" (click)="openSelectUserModal()" type="button"><i class="fa fa-search"></i> {{l("Pick")}}</button>
-                            </div> <div class="input-group-prepend">
-                                <button class="btn btn-danger btn-icon" type="button" (click)="setDriver1UserIdNull()"><i class="fa fa-times"></i></button>
+                    <div class="row">
+                        <div class="col-sm-3 text-center mb-5 mt-5">
+                            <img class="img-thumbnail img-rounded" height="128" src="{{truck.profilePictureUrl}}"
+                                 width="128"/>
+                        </div>
+                        <div class="col-sm-9">
+                            <div class="form-group m-form__group">
+                                <label for="TrucksTypeDisplayName">{{l("TrucksType")}}</label>
+                                <select [(ngModel)]="truck.trucksTypeId" class="form-control" name="truck.trucksTypeId"
+                                        required>
+                                    <option value="">{{l("SelectATrucksType")}}</option>
+                                    <option *ngFor="let item of allTrucksTypes"
+                                            value="{{item.id}}">{{item.displayName}}</option>
+                                </select>
+                            </div>
+                            <div class="form-group m-form__group">
+                                <label for="TruckStatusDisplayName">{{l("TruckStatus")}}</label>
+                                <select [(ngModel)]="truck.truckStatusId" class="form-control"
+                                        name="truck.truckStatusId" required>
+                                    <option value="">{{l("SelectATruckStatus")}}</option>
+                                    <option *ngFor="let item of allTruckStatuss"
+                                            value="{{item.id}}">{{item.displayName}}</option>
+                                </select>
                             </div>
                         </div>
-                    </div>
-                    <input class="form-control" name="truck.driver1UserId" [(ngModel)]="truck.driver1UserId" type="text"  hidden>
 
-                    <div class="form-group m-form__group">
-                        <label for="UserName2">{{l("User")}}</label>
-                        <div class="input-group">
-                            <input [(ngModel)]="userName2" class="form-control" disabled id="UserName2"
-                                   name="userName2" type="text">
-                            <div class="input-group-append">
-                                <button class="btn btn-primary blue" (click)="openSelectUserModal2()" type="button"><i class="fa fa-search"></i> {{l("Pick")}}</button>
-                            </div> <div class="input-group-prepend">
-                                <button class="btn btn-danger btn-icon" type="button" (click)="setDriver2UserIdNull()"><i class="fa fa-times"></i></button>
+                    </div>
+
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group m-form__group ">
+                                <label for="UserName">{{l("User")}}</label>
+                                <div class="input-group">
+                                    <input [(ngModel)]="userName" class="form-control" disabled id="UserName"
+                                           name="userName"
+                                           type="text">
+                                    <div class="input-group-append">
+                                        <button (click)="openSelectUserModal()" class="btn btn-primary blue"
+                                                type="button"><i class="fa fa-search"></i> {{l("Pick")}}</button>
+                                    </div>
+                                    <div class="input-group-prepend">
+                                        <button (click)="setDriver1UserIdNull()" class="btn btn-danger btn-icon"
+                                                type="button"><i class="fa fa-times"></i></button>
+                                    </div>
+                                </div>
                             </div>
+                            <input [(ngModel)]="truck.driver1UserId" class="form-control" hidden
+                                   name="truck.driver1UserId" type="text">
+
                         </div>
-                    </div>
-                    <input class="form-control" name="truck.driver2UserId" [(ngModel)]="truck.driver2UserId" type="text"  hidden>
-
-
-                    <div class="form-group">
-									<label for="Truck_PlateNumber">{{l("PlateNumber")}} *</label>
-									<input type="text" id="Truck_PlateNumber" class="form-control" [(ngModel)]="truck.plateNumber" name="PlateNumber"   minlength="0"  maxlength="64"  required/>
-								</div>
-
-                    <div class="form-group">
-									<label for="Truck_ModelName">{{l("ModelName")}} *</label>
-									<input type="text" id="Truck_ModelName" class="form-control" [(ngModel)]="truck.modelName" name="ModelName"   minlength="0"  maxlength="64"  required/>
-								</div>
-
-                    <div class="form-group">
-									<label for="Truck_ModelYear">{{l("ModelYear")}} *</label>
-									<input type="text" id="Truck_ModelYear" class="form-control" [(ngModel)]="truck.modelYear" name="ModelYear"   minlength="0"  maxlength="64"  required/>
-								</div>
-
-                    <div class="form-group">
-									<label for="Truck_LicenseNumber">{{l("LicenseNumber")}} *</label>
-									<input type="text" id="Truck_LicenseNumber" class="form-control" [(ngModel)]="truck.licenseNumber" name="LicenseNumber"   minlength="0"  maxlength="256"  required/>
-								</div>
-
-                    <div class="form-group">
-									<label for="Truck_LicenseExpirationDate">{{l("LicenseExpirationDate")}}</label>
-                        <input [(date)]="truck.licenseExpirationDate" bsDatepicker class="form-control m-input" datePickerMomentModifier
-                               id="Truck_LicenseExpirationDate" name="Truck_LicenseExpirationDate"
-                               required type="datetime">
-                    </div>
-
-                    <br/>
-                    <div class="m-checkbox-list">
-                        <label class="kt-checkbox" for="Truck_IsAttachable">
-                            <input [(ngModel)]="truck.isAttachable" id="Truck_IsAttachable" name="IsAttachable"
-                                   type="checkbox">
-                            {{l("IsAttachable")}}
-                            <span></span>
-                        </label>
-                    </div>
-                    <div class="form-group">
-                        <label for="Truck_RentPrice">{{l("RentPrice")}}</label>
-                        <input [(ngModel)]="truck.rentPrice" class="form-control" id="Truck_RentPrice" maxlength="256"
-                               minlength="0" name="rentPrice" type="text"/>
-                    </div>
-                    <div class="form-group">
-                        <label for="Truck_RentDuration">{{l("RentDuration")}}</label>
-                        <input [(ngModel)]="truck.rentDuration" class="form-control" id="Truck_RentDuration" maxlength="256"
-                               minlength="0" name="rentDuration" type="text"/>
-                    </div>
-                    <div class="form-group">
-                        <label for="Truck_Note">{{l("Note")}}</label>
-                        <input [(ngModel)]="truck.note" class="form-control" id="Truck_Note" maxlength="256" minlength="0"
-                               name="Note" type="text"/>
-                    </div>
-
-
-
-
-
-
-
-                            <div class="form-group">
-                                <input type="file" (change)="fileChangeEvent($event)"  />
-                                <span class="help-block m-b-none" >{{"ProfilePicture_Change_Info" | localize:maxProfilPictureBytesUserFriendlyValue}}</span>
+                        <div class="col-md-6">
+                            <div class="form-group m-form__group">
+                                <label for="UserName2">{{l("User")}}</label>
+                                <div class="input-group">
+                                    <input [(ngModel)]="userName2" class="form-control" disabled id="UserName2"
+                                           name="userName2" type="text">
+                                    <div class="input-group-append">
+                                        <button (click)="openSelectUserModal2()" class="btn btn-primary blue"
+                                                type="button"><i class="fa fa-search"></i> {{l("Pick")}}</button>
+                                    </div>
+                                    <div class="input-group-prepend">
+                                        <button (click)="setDriver2UserIdNull()" class="btn btn-danger btn-icon"
+                                                type="button"><i class="fa fa-times"></i></button>
+                                    </div>
+                                </div>
                             </div>
-                            <image-cropper
-                                [imageChangedEvent]="imageChangedEvent"
-                                [maintainAspectRatio]="true"
-                                [aspectRatio]="4 / 4"
-                                [resizeToWidth]="128"
-                                format="png"
-                                (imageCropped)="imageCroppedFile($event)"
-                            ></image-cropper>
-x
+                            <input [(ngModel)]="truck.driver2UserId" class="form-control" hidden
+                                   name="truck.driver2UserId" type="text">
+
+                        </div>
+                        <div class="form-group col-md-6">
+                            <label for="Truck_PlateNumber">{{l("PlateNumber")}} *</label>
+                            <input [(ngModel)]="truck.plateNumber" class="form-control" id="Truck_PlateNumber"
+                                   maxlength="64" minlength="0" name="PlateNumber" required
+                                   type="text"/>
+                        </div>
+                        <div class="form-group  col-md-6">
+                            <label for="Truck_LicenseNumber">{{l("LicenseNumber")}} *</label>
+                            <input [(ngModel)]="truck.licenseNumber" class="form-control" id="Truck_LicenseNumber"
+                                   maxlength="256" minlength="0" name="LicenseNumber" required
+                                   type="text"/>
+                        </div>
+
+                        <div class="form-group col-md-6">
+                            <label for="Truck_ModelName">{{l("ModelName")}} *</label>
+                            <input [(ngModel)]="truck.modelName" class="form-control" id="Truck_ModelName" maxlength="64"
+                                   minlength="0" name="ModelName" required type="text"/>
+                        </div>
 
 
+                        <div class="form-group  col-md-6">
+                            <label for="Truck_ModelYear">{{l("ModelYear")}} *</label>
+                            <input [(ngModel)]="truck.modelYear" class="form-control" id="Truck_ModelYear" maxlength="64"
+                                   minlength="0" name="ModelYear" required type="text"/>
+                        </div>
 
 
+                        <div class="form-group  col-md-6">
+                            <label for="Truck_LicenseExpirationDate">{{l("LicenseExpirationDate")}}</label>
+                            <input [(date)]="truck.licenseExpirationDate" bsDatepicker class="form-control m-input"
+                                   datePickerMomentModifier
+                                   id="Truck_LicenseExpirationDate" name="Truck_LicenseExpirationDate"
+                                   required type="datetime">
+                        </div>
 
 
+                        <div class="m-checkbox-list col-md-6">
+                            <br/>
+                            <br/>
+                            <label class="kt-checkbox" for="Truck_IsAttachable">
+                                <input [(ngModel)]="truck.isAttachable" id="Truck_IsAttachable" name="IsAttachable"
+                                       type="checkbox">
+                                {{l("IsAttachable")}}
+                                <span></span>
+                            </label>
+                        </div>
+                        <div class="form-group  col-md-6">
+                            <label for="Truck_RentPrice">{{l("RentPrice")}}</label>
+                            <input [(ngModel)]="truck.rentPrice" class="form-control" id="Truck_RentPrice"
+                                   maxlength="256"
+                                   minlength="0" name="rentPrice" type="text"/>
+                        </div>
+                        <div class="form-group  col-md-6">
+                            <label for="Truck_RentDuration">{{l("RentDuration")}}</label>
+                            <input [(ngModel)]="truck.rentDuration" class="form-control" id="Truck_RentDuration"
+                                   maxlength="256"
+                                   minlength="0" name="rentDuration" type="text"/>
+                        </div>
+                        <div class="form-group  col-md-12">
+                            <label for="Truck_Note">{{l("Note")}}</label>
+                            <input [(ngModel)]="truck.note" class="form-control" id="Truck_Note" maxlength="256"
+                                   minlength="0"
+                                   name="Note" type="text"/>
+                        </div>
+
+
+                        <div class="form-group  col-md-12 ">
+                            <input (change)="fileChangeEvent($event)" type="file"/>
+                            <span
+                                class="help-block m-b-none">{{"ProfilePicture_Change_Info" | localize:maxProfilPictureBytesUserFriendlyValue}}</span>
+                        </div>
+                        <image-cropper
+                            (imageCropped)="imageCroppedFile($event)"
+                            [aspectRatio]="4 / 4"
+                            [imageChangedEvent]="imageChangedEvent"
+                            [maintainAspectRatio]="true"
+                            [resizeToWidth]="128"
+                            format="png"
+                        ></image-cropper>
+
+                    </div>
 
 
                 </div>
