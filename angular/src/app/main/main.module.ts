@@ -2,6 +2,10 @@
 import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { AppCommonModule } from '@app/shared/common/app-common.module';
+import { RoutTypesComponent } from './routTypes/routTypes/routTypes.component';
+import { ViewRoutTypeModalComponent } from './routTypes/routTypes/view-routType-modal.component';
+import { CreateOrEditRoutTypeModalComponent } from './routTypes/routTypes/create-or-edit-routType-modal.component';
+
 import { GoodCategoriesComponent } from './goodCategories/goodCategories/goodCategories.component';
 import { ViewGoodCategoryModalComponent } from './goodCategories/goodCategories/view-goodCategory-modal.component';
 import { CreateOrEditGoodCategoryModalComponent } from './goodCategories/goodCategories/create-or-edit-goodCategory-modal.component';
@@ -76,6 +80,10 @@ NgxBootstrapDatePickerConfigService.registerNgxBootstrapDatePickerLocales();
         PopoverModule.forRoot(), ImageCropperModule
     ],
     declarations: [
+		RoutTypesComponent,
+
+		ViewRoutTypeModalComponent,
+		CreateOrEditRoutTypeModalComponent,
 		GoodCategoriesComponent,
 
 		ViewGoodCategoryModalComponent,

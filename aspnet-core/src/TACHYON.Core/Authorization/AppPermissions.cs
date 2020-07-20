@@ -6,6 +6,11 @@
     /// </summary>
     public static class AppPermissions
     {
+        public const string Pages_RoutTypes = "Pages.RoutTypes";
+        public const string Pages_RoutTypes_Create = "Pages.RoutTypes.Create";
+        public const string Pages_RoutTypes_Edit = "Pages.RoutTypes.Edit";
+        public const string Pages_RoutTypes_Delete = "Pages.RoutTypes.Delete";
+
         public const string Pages_GoodCategories = "Pages.GoodCategories";
         public const string Pages_GoodCategories_Create = "Pages.GoodCategories.Create";
         public const string Pages_GoodCategories_Edit = "Pages.GoodCategories.Edit";

@@ -1,6 +1,14 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <localizationDictionary culture="en">
-  <texts>    <text name="GoodCategories">Good categories</text>
+  <texts>    <text name="RoutTypes">Rout types</text>
+    <text name="RoutType">Rout type</text>
+    <text name="TACHYON.RoutTypes.RoutType">RoutType</text>
+    <text name="Description">Description</text>
+    <text name="RoutTypesHeaderInfo">Rout types header info</text>
+    <text name="CreateNewRoutType">Create new rout type</text>
+    <text name="EditRoutType">Edit rout type</text>
+    <text name="DeleteRoutType">Delete rout type</text>
+    <text name="GoodCategories">Good categories</text>
     <text name="GoodCategory">Good category</text>
     <text name="TACHYON.GoodCategories.GoodCategory">GoodCategory</text>
     <text name="GoodCategoriesHeaderInfo">Good categories header info</text>

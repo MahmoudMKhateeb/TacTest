@@ -1,4 +1,5 @@
-﻿using TACHYON.Goods.GoodCategories;
+﻿using TACHYON.Routs.RoutTypes;
+using TACHYON.Goods.GoodCategories;
 using TACHYON.Trailers;
 using TACHYON.Trailers.TrailerStatuses;
 using TACHYON.Trailers.TrailerTypes;
@@ -24,6 +25,8 @@ namespace TACHYON.EntityFrameworkCore
 {
     public class TACHYONDbContext : AbpZeroDbContext<Tenant, Role, User, TACHYONDbContext>, IAbpPersistedGrantDbContext
     {
+        public virtual DbSet<RoutType> RoutTypes { get; set; }
+
         public virtual DbSet<GoodCategory> GoodCategories { get; set; }
 
         public virtual DbSet<Trailer> Trailers { get; set; }

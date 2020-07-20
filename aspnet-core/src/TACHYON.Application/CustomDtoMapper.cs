@@ -1,4 +1,6 @@
-﻿using TACHYON.Goods.GoodCategories.Dtos;
+﻿using TACHYON.Routs.RoutTypes.Dtos;
+using TACHYON.Routs.RoutTypes;
+using TACHYON.Goods.GoodCategories.Dtos;
 using TACHYON.Goods.GoodCategories;
 using TACHYON.Trailers.Dtos;
 using TACHYON.Trailers;
@@ -61,6 +63,8 @@ namespace TACHYON
     {
         public static void CreateMappings(IMapperConfigurationExpression configuration)
         {
+            configuration.CreateMap<CreateOrEditRoutTypeDto, RoutType>().ReverseMap();
+            configuration.CreateMap<RoutTypeDto, RoutType>().ReverseMap();
             configuration.CreateMap<CreateOrEditGoodCategoryDto, GoodCategory>().ReverseMap();
             configuration.CreateMap<GoodCategoryDto, GoodCategory>().ReverseMap();
             configuration.CreateMap<CreateOrEditTrailerDto, Trailer>().ReverseMap();

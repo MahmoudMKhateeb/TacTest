@@ -37,6 +37,8 @@ export class AppNavigationService {
             new AppMenuItem('Trailers', 'Pages.Trailers', 'flaticon-more', '/app/main/trailers/trailers', undefined, undefined, undefined, undefined, () => this._featureCheckerService.isEnabled('App.Carrier')),
             
             new AppMenuItem('GoodCategories', 'Pages.GoodCategories', 'flaticon-more', '/app/main/goodCategories/goodCategories'),
+            
+            new AppMenuItem('RoutTypes', 'Pages.RoutTypes', 'flaticon-more', '/app/main/routTypes/routTypes'),
              new AppMenuItem('Administration', '', 'flaticon-interface-8', '', [], [
                 new AppMenuItem('OrganizationUnits', 'Pages.Administration.OrganizationUnits', 'flaticon-map', '/app/admin/organization-units'),
                 new AppMenuItem('Roles', 'Pages.Administration.Roles', 'flaticon-suitcase', '/app/admin/roles'),
