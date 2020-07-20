@@ -14085,6 +14085,62 @@ export class TrucksServiceProxy {
         }
         return _observableOf<PagedResultDtoOfTruckUserLookupTableDto>(<any>null);
     }
+
+    /**
+     * @param body (optional) 
+     * @return Success
+     */
+    addOrUpdateTruckPicture(body: UpdateTruckPictureInput | undefined): Observable<string> {
+        let url_ = this.baseUrl + "/api/services/app/Trucks/AddOrUpdateTruckPicture";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(body);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",			
+            headers: new HttpHeaders({
+                "Content-Type": "application/json-patch+json", 
+                "Accept": "text/plain"
+            })
+        };
+
+        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processAddOrUpdateTruckPicture(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processAddOrUpdateTruckPicture(<any>response_);
+                } catch (e) {
+                    return <Observable<string>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<string>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processAddOrUpdateTruckPicture(response: HttpResponseBase): Observable<string> {
+        const status = response.status;
+        const responseBlob = 
+            response instanceof HttpResponse ? response.body : 
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }};
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = resultData200 !== undefined ? resultData200 : <any>null;
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<string>(<any>null);
+    }
 }
 
 @Injectable()
@@ -29818,6 +29874,58 @@ export interface IPagedResultDtoOfGetTruckForViewDto {
     items: GetTruckForViewDto[] | undefined;
 }
 
+export class UpdateTruckPictureInput implements IUpdateTruckPictureInput {
+    fileToken!: string | undefined;
+    x!: number;
+    y!: number;
+    width!: number;
+    height!: number;
+
+    constructor(data?: IUpdateTruckPictureInput) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.fileToken = _data["fileToken"];
+            this.x = _data["x"];
+            this.y = _data["y"];
+            this.width = _data["width"];
+            this.height = _data["height"];
+        }
+    }
+
+    static fromJS(data: any): UpdateTruckPictureInput {
+        data = typeof data === 'object' ? data : {};
+        let result = new UpdateTruckPictureInput();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["fileToken"] = this.fileToken;
+        data["x"] = this.x;
+        data["y"] = this.y;
+        data["width"] = this.width;
+        data["height"] = this.height;
+        return data; 
+    }
+}
+
+export interface IUpdateTruckPictureInput {
+    fileToken: string | undefined;
+    x: number;
+    y: number;
+    width: number;
+    height: number;
+}
+
 export class CreateOrEditTruckDto implements ICreateOrEditTruckDto {
     plateNumber!: string;
     modelName!: string;
@@ -29832,6 +29940,7 @@ export class CreateOrEditTruckDto implements ICreateOrEditTruckDto {
     driver2UserId!: number | undefined;
     rentPrice!: number | undefined;
     rentDuration!: number | undefined;
+    updateTruckPictureInput!: UpdateTruckPictureInput;
     id!: string | undefined;
 
     constructor(data?: ICreateOrEditTruckDto) {
@@ -29858,6 +29967,7 @@ export class CreateOrEditTruckDto implements ICreateOrEditTruckDto {
             this.driver2UserId = _data["driver2UserId"];
             this.rentPrice = _data["rentPrice"];
             this.rentDuration = _data["rentDuration"];
+            this.updateTruckPictureInput = _data["updateTruckPictureInput"] ? UpdateTruckPictureInput.fromJS(_data["updateTruckPictureInput"]) : <any>undefined;
             this.id = _data["id"];
         }
     }
@@ -29884,6 +29994,7 @@ export class CreateOrEditTruckDto implements ICreateOrEditTruckDto {
         data["driver2UserId"] = this.driver2UserId;
         data["rentPrice"] = this.rentPrice;
         data["rentDuration"] = this.rentDuration;
+        data["updateTruckPictureInput"] = this.updateTruckPictureInput ? this.updateTruckPictureInput.toJSON() : <any>undefined;
         data["id"] = this.id;
         return data; 
     }
@@ -29903,6 +30014,7 @@ export interface ICreateOrEditTruckDto {
     driver2UserId: number | undefined;
     rentPrice: number | undefined;
     rentDuration: number | undefined;
+    updateTruckPictureInput: UpdateTruckPictureInput;
     id: string | undefined;
 }
 

@@ -112,6 +112,32 @@
                     </div>
 
 
+
+
+
+
+
+                            <div class="form-group">
+                                <input type="file" (change)="fileChangeEvent($event)"  />
+                                <span class="help-block m-b-none" >{{"ProfilePicture_Change_Info" | localize:maxProfilPictureBytesUserFriendlyValue}}</span>
+                            </div>
+                            <image-cropper
+                                [imageChangedEvent]="imageChangedEvent"
+                                [maintainAspectRatio]="true"
+                                [aspectRatio]="4 / 4"
+                                [resizeToWidth]="128"
+                                format="png"
+                                (imageCropped)="imageCroppedFile($event)"
+                            ></image-cropper>
+x
+
+
+
+
+
+
+
+
                 </div>
                 <div class="modal-footer">
                     <button [disabled]="saving" type="button" class="btn btn-default" (click)="close()">{{l("Cancel")}}</button>
