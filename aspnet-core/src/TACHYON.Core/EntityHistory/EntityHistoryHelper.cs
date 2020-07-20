@@ -1,4 +1,5 @@
-﻿using TACHYON.Routs.RoutTypes;
+﻿using TACHYON.Cities;
+using TACHYON.Routs.RoutTypes;
 using TACHYON.Goods.GoodCategories;
 using TACHYON.Trailers;
 using TACHYON.Trailers.TrailerStatuses;
@@ -20,6 +21,7 @@ namespace TACHYON.EntityHistory
 
         public static readonly Type[] HostSideTrackedTypes =
         {
+            typeof(City),
             typeof(RoutType),
             typeof(GoodCategory),
             typeof(TrailerStatus),

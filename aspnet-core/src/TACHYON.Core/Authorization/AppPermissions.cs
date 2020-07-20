@@ -6,6 +6,11 @@
     /// </summary>
     public static class AppPermissions
     {
+        public const string Pages_Cities = "Pages.Cities";
+        public const string Pages_Cities_Create = "Pages.Cities.Create";
+        public const string Pages_Cities_Edit = "Pages.Cities.Edit";
+        public const string Pages_Cities_Delete = "Pages.Cities.Delete";
+
         public const string Pages_Counties = "Pages.Counties";
         public const string Pages_Counties_Create = "Pages.Counties.Create";
         public const string Pages_Counties_Edit = "Pages.Counties.Edit";

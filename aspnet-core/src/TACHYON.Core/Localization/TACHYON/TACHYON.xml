@@ -1,6 +1,17 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <localizationDictionary culture="en">
-  <texts>    <text name="Countries">Countries</text>
+  <texts>    <text name="Cities">Cities</text>
+    <text name="City">City</text>
+    <text name="TACHYON.Cities.City">City</text>
+    <text name="Latitude">Latitude</text>
+    <text name="Longitude">Longitude</text>
+    <text name="CitiesHeaderInfo">Cities header info</text>
+    <text name="CreateNewCity">Create new city</text>
+    <text name="EditCity">Edit city</text>
+    <text name="DeleteCity">Delete city</text>
+    <text name="CountyDisplayName">County display name</text>
+    <text name="PickCounty">Pick county</text>
+    <text name="Countries">Countries</text>
     <text name="County">County</text>
     <text name="TACHYON.Countries.County">County</text>
     <text name="CountiesHeaderInfo">Counties header info</text>

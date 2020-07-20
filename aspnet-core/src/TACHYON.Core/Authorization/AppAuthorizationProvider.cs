@@ -30,6 +30,13 @@ namespace TACHYON.Authorization
 
             var pages = context.GetPermissionOrNull(AppPermissions.Pages) ?? context.CreatePermission(AppPermissions.Pages, L("Pages"));
 
+            var cities = pages.CreateChildPermission(AppPermissions.Pages_Cities, L("Cities"), multiTenancySides: MultiTenancySides.Host);
+            cities.CreateChildPermission(AppPermissions.Pages_Cities_Create, L("CreateNewCity"), multiTenancySides: MultiTenancySides.Host);
+            cities.CreateChildPermission(AppPermissions.Pages_Cities_Edit, L("EditCity"), multiTenancySides: MultiTenancySides.Host);
+            cities.CreateChildPermission(AppPermissions.Pages_Cities_Delete, L("DeleteCity"), multiTenancySides: MultiTenancySides.Host);
+
+
+
             var counties = pages.CreateChildPermission(AppPermissions.Pages_Counties, L("Counties"), multiTenancySides: MultiTenancySides.Host);
             counties.CreateChildPermission(AppPermissions.Pages_Counties_Create, L("CreateNewCounty"), multiTenancySides: MultiTenancySides.Host);
             counties.CreateChildPermission(AppPermissions.Pages_Counties_Edit, L("EditCounty"), multiTenancySides: MultiTenancySides.Host);
