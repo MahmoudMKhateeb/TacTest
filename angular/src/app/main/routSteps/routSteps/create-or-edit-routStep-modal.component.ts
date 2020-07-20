@@ -1,4 +1,4 @@
-﻿import { Component, ViewChild, Injector, Output, EventEmitter} from '@angular/core';
+﻿import {Component, ViewChild, Injector, Output, EventEmitter, Input} from '@angular/core';
 import { ModalDirective } from 'ngx-bootstrap/modal';
 import { finalize } from 'rxjs/operators';
 import { RoutStepsServiceProxy, CreateOrEditRoutStepDto ,RoutStepCityLookupTableDto
@@ -16,6 +16,8 @@ export class CreateOrEditRoutStepModalComponent extends AppComponentBase {
     @ViewChild('createOrEditModal', { static: true }) modal: ModalDirective;
 
     @Output() modalSave: EventEmitter<any> = new EventEmitter<any>();
+    @Input() routeId: any;
+
 
     active = false;
     saving = false;
@@ -28,7 +30,7 @@ export class CreateOrEditRoutStepModalComponent extends AppComponentBase {
 
 	allCitys: RoutStepCityLookupTableDto[];
 						allRoutes: RoutStepRouteLookupTableDto[];
-					
+
     constructor(
         injector: Injector,
         private _routStepsServiceProxy: RoutStepsServiceProxy
@@ -36,14 +38,15 @@ export class CreateOrEditRoutStepModalComponent extends AppComponentBase {
         super(injector);
     }
 
-    show(routStepId?: number): void {
+    show(routStepId?: number ): void {
+
+        this.routStep.routeId = this.routeId;
 
         if (!routStepId) {
             this.routStep = new CreateOrEditRoutStepDto();
             this.routStep.id = routStepId;
             this.cityDisplayName = '';
             this.cityDisplayName2 = '';
-            this.routeDisplayName = '';
 
             this.active = true;
             this.modal.show();
@@ -53,28 +56,27 @@ export class CreateOrEditRoutStepModalComponent extends AppComponentBase {
 
                 this.cityDisplayName = result.cityDisplayName;
                 this.cityDisplayName2 = result.cityDisplayName2;
-                this.routeDisplayName = result.routeDisplayName;
 
                 this.active = true;
                 this.modal.show();
             });
         }
-        this._routStepsServiceProxy.getAllCityForTableDropdown().subscribe(result => {						
+        this._routStepsServiceProxy.getAllCityForTableDropdown().subscribe(result => {
 						this.allCitys = result;
 					});
-					this._routStepsServiceProxy.getAllCityForTableDropdown().subscribe(result => {						
+					this._routStepsServiceProxy.getAllCityForTableDropdown().subscribe(result => {
 						this.allCitys = result;
 					});
-					this._routStepsServiceProxy.getAllRouteForTableDropdown().subscribe(result => {						
+					this._routStepsServiceProxy.getAllRouteForTableDropdown().subscribe(result => {
 						this.allRoutes = result;
 					});
-					
+
     }
 
     save(): void {
             this.saving = true;
+            this.routStep.routeId = this.routeId;
 
-			
             this._routStepsServiceProxy.createOrEdit(this.routStep)
              .pipe(finalize(() => { this.saving = false;}))
              .subscribe(() => {

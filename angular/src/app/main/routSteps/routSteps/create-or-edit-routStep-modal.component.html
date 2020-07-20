@@ -12,7 +12,7 @@
                     </button>
                 </div>
                 <div class="modal-body">
-                 
+
 
 					<div class="form-group m-form__group">
 						<label for="CityDisplayName">{{l("City")}}</label>
@@ -21,7 +21,7 @@
 							<option *ngFor="let item of allCitys" value="{{item.id}}">{{item.displayName}}</option>
 						</select>
 					</div>
-					 
+
 					<div class="form-group m-form__group">
 						<label for="CityDisplayName2">{{l("City")}}</label>
 						<select name="routStep.destinationCityId" [(ngModel)]="routStep.destinationCityId" class="form-control" >
@@ -29,36 +29,30 @@
 							<option *ngFor="let item of allCitys" value="{{item.id}}">{{item.displayName}}</option>
 						</select>
 					</div>
-					 
-					<div class="form-group m-form__group">
-						<label for="RouteDisplayName">{{l("Route")}}</label>
-						<select name="routStep.routeId" [(ngModel)]="routStep.routeId" class="form-control" required>
-							<option value="">{{l("SelectARoute")}}</option>
-							<option *ngFor="let item of allRoutes" value="{{item.id}}">{{item.displayName}}</option>
-						</select>
-					</div>
-					 
+
+
+
 
 								<div class="form-group">
 									<label for="RoutStep_DisplayName">{{l("DisplayName")}}</label>
 									<input type="text" id="RoutStep_DisplayName" class="form-control" [(ngModel)]="routStep.displayName" name="DisplayName"   minlength="0"  maxlength="256" />
 								</div>
-					
+
 								<div class="form-group">
 									<label for="RoutStep_Latitude">{{l("Latitude")}}</label>
 									<input type="text" id="RoutStep_Latitude" class="form-control" [(ngModel)]="routStep.latitude" name="Latitude"   minlength="0"  maxlength="256" />
 								</div>
-					
+
 								<div class="form-group">
 									<label for="RoutStep_Longitude">{{l("Longitude")}}</label>
 									<input type="text" id="RoutStep_Longitude" class="form-control" [(ngModel)]="routStep.longitude" name="Longitude"   minlength="0"  maxlength="256" />
 								</div>
-					
+
 								<div class="form-group">
 									<label for="RoutStep_Order">{{l("Order")}}</label>
 									<input type="number" id="RoutStep_Order" class="form-control" [(ngModel)]="routStep.order" name="Order"  min="1"  max="50"/>
 								</div>
-					
+
 
                 </div>
                 <div class="modal-footer">
