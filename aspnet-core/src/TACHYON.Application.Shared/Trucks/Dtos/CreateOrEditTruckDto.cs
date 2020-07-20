@@ -50,6 +50,7 @@ namespace TACHYON.Trucks.Dtos
 
         public int? RentDuration { get; set; }
 
+        public UpdateTruckPictureInput UpdateTruckPictureInput { get; set; }
 
     }
 }

@@ -11,6 +11,8 @@ using System.Linq;
 using System.Linq.Dynamic.Core;
 using Abp.Linq.Extensions;
 using System.Collections.Generic;
+using System.Drawing;
+using System.IO;
 using System.Threading.Tasks;
 using Abp;
 using Abp.Application.Features;
@@ -24,9 +26,14 @@ using Abp.Extensions;
 using Abp.Authorization;
 using Abp.Domain.Uow;
 using Abp.Runtime.Session;
+using Abp.UI;
+using IdentityServer4.Extensions;
 using Microsoft.EntityFrameworkCore;
+using TACHYON.Authorization.Users.Profile.Dto;
+using TACHYON.Configuration;
 using TACHYON.Features;
 using TACHYON.Notifications;
+using TACHYON.Storage;
 
 namespace TACHYON.Trucks
 {
@@ -34,15 +41,20 @@ namespace TACHYON.Trucks
     [RequiresFeature(AppFeatures.Carrier)]
     public class TrucksAppService : TACHYONAppServiceBase, ITrucksAppService
     {
+        private const int MaxTruckPictureBytes = 5242880; //5MB
         private readonly IRepository<Truck, Guid> _truckRepository;
         private readonly ITrucksExcelExporter _trucksExcelExporter;
         private readonly IRepository<TrucksType, Guid> _lookup_trucksTypeRepository;
         private readonly IRepository<TruckStatus, Guid> _lookup_truckStatusRepository;
         private readonly IRepository<User, long> _lookup_userRepository;
         private readonly IAppNotifier _appNotifier;
+        private readonly ITempFileCacheManager _tempFileCacheManager;
+        private readonly IBinaryObjectManager _binaryObjectManager;
 
 
-        public TrucksAppService(IRepository<Truck, Guid> truckRepository, ITrucksExcelExporter trucksExcelExporter, IRepository<TrucksType, Guid> lookup_trucksTypeRepository, IRepository<TruckStatus, Guid> lookup_truckStatusRepository, IRepository<User, long> lookup_userRepository, IAppNotifier appNotifier)
+
+
+        public TrucksAppService(IRepository<Truck, Guid> truckRepository, ITrucksExcelExporter trucksExcelExporter, IRepository<TrucksType, Guid> lookup_trucksTypeRepository, IRepository<TruckStatus, Guid> lookup_truckStatusRepository, IRepository<User, long> lookup_userRepository, IAppNotifier appNotifier, ITempFileCacheManager tempFileCacheManager, IBinaryObjectManager binaryObjectManager)
         {
             _truckRepository = truckRepository;
             _trucksExcelExporter = trucksExcelExporter;
@@ -50,6 +62,8 @@ namespace TACHYON.Trucks
             _lookup_truckStatusRepository = lookup_truckStatusRepository;
             _lookup_userRepository = lookup_userRepository;
             _appNotifier = appNotifier;
+            _tempFileCacheManager = tempFileCacheManager;
+            _binaryObjectManager = binaryObjectManager;
         }
 
         public async Task<PagedResultDto<GetTruckForViewDto>> GetAll(GetAllTrucksInput input)
@@ -220,6 +234,11 @@ namespace TACHYON.Trucks
             {
                 await _appNotifier.AssignDriverToTruck(new UserIdentifier(AbpSession.TenantId, input.Driver2UserId.Value), truckId);
             }
+
+            if (!input.UpdateTruckPictureInput.FileToken.IsNullOrEmpty())
+            {
+                truck.PictureId = await AddOrUpdateTruckPicture(input.UpdateTruckPictureInput);
+            }
         }
 
         [AbpAuthorize(AppPermissions.Pages_Trucks_Edit)]
@@ -229,14 +248,24 @@ namespace TACHYON.Trucks
             if (input.Driver1UserId.HasValue && input.Driver1UserId != truck.Driver1UserId)
             {
                 await _appNotifier.AssignDriverToTruck(new UserIdentifier(AbpSession.TenantId, input.Driver1UserId.Value), truck.Id);
-
             }
+
             if (input.Driver2UserId.HasValue && input.Driver2UserId != truck.Driver2UserId)
             {
                 await _appNotifier.AssignDriverToTruck(new UserIdentifier(AbpSession.TenantId, input.Driver2UserId.Value), truck.Id);
-
             }
+
             ObjectMapper.Map(input, truck);
+
+            if (!input.UpdateTruckPictureInput.FileToken.IsNullOrEmpty())
+            {
+                if (truck.PictureId.HasValue)
+                {
+                    await _binaryObjectManager.DeleteAsync(truck.PictureId.Value);
+                }
+
+                truck.PictureId = await AddOrUpdateTruckPicture(input.UpdateTruckPictureInput);
+            }
 
         }
 
@@ -361,5 +390,55 @@ namespace TACHYON.Trucks
                 lookupTableDtoList
             );
         }
+
+        public async Task<Guid> AddOrUpdateTruckPicture(UpdateTruckPictureInput input)
+        {
+            byte[] byteArray;
+
+            var imageBytes = _tempFileCacheManager.GetFile(input.FileToken);
+
+            if (imageBytes == null)
+            {
+                throw new UserFriendlyException("There is no such image file with the token: " + input.FileToken);
+            }
+
+            using (var bmpImage = new Bitmap(new MemoryStream(imageBytes)))
+            {
+                var width = (input.Width == 0 || input.Width > bmpImage.Width) ? bmpImage.Width : input.Width;
+                var height = (input.Height == 0 || input.Height > bmpImage.Height) ? bmpImage.Height : input.Height;
+                var bmCrop = bmpImage.Clone(new Rectangle(input.X, input.Y, width, height), bmpImage.PixelFormat);
+
+                using (var stream = new MemoryStream())
+                {
+                    bmCrop.Save(stream, bmpImage.RawFormat);
+                    byteArray = stream.ToArray();
+                }
+            }
+
+            if (byteArray.Length > MaxTruckPictureBytes)
+            {
+                throw new UserFriendlyException(L("ResizedProfilePicture_Warn_SizeLimit",
+                    AppConsts.ResizedMaxProfilPictureBytesUserFriendlyValue));
+            }
+
+            var storedFile = new BinaryObject(AbpSession.TenantId, byteArray);
+            await _binaryObjectManager.SaveAsync(storedFile);
+
+            return storedFile.Id;
+        }
+
+        [AbpAllowAnonymous]
+        public async Task<string> GetPictureContentForTruck(Guid truckId)
+        {
+            var truck = await _truckRepository.GetAsync(truckId);
+            if (truck.PictureId == null)
+            {
+                return "";
+            }
+
+            var file = await _binaryObjectManager.GetOrNullAsync(truck.PictureId.Value);
+            return file == null ? "" : Convert.ToBase64String(file.Bytes);
+        }
+
     }
 }
