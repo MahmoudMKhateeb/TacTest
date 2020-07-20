@@ -2,6 +2,10 @@
 import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { AppCommonModule } from '@app/shared/common/app-common.module';
+import { CountiesComponent } from './countries/counties/counties.component';
+import { ViewCountyModalComponent } from './countries/counties/view-county-modal.component';
+import { CreateOrEditCountyModalComponent } from './countries/counties/create-or-edit-county-modal.component';
+
 import { RoutTypesComponent } from './routTypes/routTypes/routTypes.component';
 import { ViewRoutTypeModalComponent } from './routTypes/routTypes/view-routType-modal.component';
 import { CreateOrEditRoutTypeModalComponent } from './routTypes/routTypes/create-or-edit-routType-modal.component';
@@ -80,6 +84,10 @@ NgxBootstrapDatePickerConfigService.registerNgxBootstrapDatePickerLocales();
         PopoverModule.forRoot(), ImageCropperModule
     ],
     declarations: [
+		CountiesComponent,
+
+		ViewCountyModalComponent,
+		CreateOrEditCountyModalComponent,
 		RoutTypesComponent,
 
 		ViewRoutTypeModalComponent,

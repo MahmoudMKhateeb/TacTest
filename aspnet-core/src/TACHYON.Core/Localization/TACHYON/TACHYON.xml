@@ -1,6 +1,14 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <localizationDictionary culture="en">
-  <texts>    <text name="RoutTypes">Rout types</text>
+  <texts>    <text name="Countries">Countries</text>
+    <text name="County">County</text>
+    <text name="TACHYON.Countries.County">County</text>
+    <text name="CountiesHeaderInfo">Counties header info</text>
+    <text name="CreateNewCounty">Create new county</text>
+    <text name="EditCounty">Edit county</text>
+    <text name="DeleteCounty">Delete county</text>
+    <text name="Counties">Counties</text>
+    <text name="RoutTypes">Rout types</text>
     <text name="RoutType">Rout type</text>
     <text name="TACHYON.RoutTypes.RoutType">RoutType</text>
     <text name="Description">Description</text>

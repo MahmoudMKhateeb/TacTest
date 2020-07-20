@@ -1,4 +1,5 @@
-﻿using TACHYON.Routs.RoutTypes;
+﻿using TACHYON.Countries;
+using TACHYON.Routs.RoutTypes;
 using TACHYON.Goods.GoodCategories;
 using TACHYON.Trailers;
 using TACHYON.Trailers.TrailerStatuses;
@@ -25,6 +26,8 @@ namespace TACHYON.EntityFrameworkCore
 {
     public class TACHYONDbContext : AbpZeroDbContext<Tenant, Role, User, TACHYONDbContext>, IAbpPersistedGrantDbContext
     {
+        public virtual DbSet<County> Counties { get; set; }
+
         public virtual DbSet<RoutType> RoutTypes { get; set; }
 
         public virtual DbSet<GoodCategory> GoodCategories { get; set; }
