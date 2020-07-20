@@ -1,5 +1,8 @@
 ﻿import { NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
+import { RoutesComponent } from './routs/routes/routes.component';
+import { CreateOrEditRouteComponent } from './routs/routes/create-or-edit-route.component';
+import { ViewRouteComponent } from './routs/routes/view-route.component';
 import { CitiesComponent } from './cities/cities/cities.component';
 import { CountiesComponent } from './countries/counties/counties.component';
 import { RoutTypesComponent } from './routTypes/routTypes/routTypes.component';
@@ -18,6 +21,9 @@ import { DashboardComponent } from './dashboard/dashboard.component';
             {
                 path: '',
                 children: [
+                    { path: 'routs/routes', component: RoutesComponent, data: { permission: 'Pages.Routes' }  },
+                    { path: 'routs/routes/createOrEdit', component: CreateOrEditRouteComponent, data: { permission: 'Pages.Routes.Create' }  },
+                    { path: 'routs/routes/view', component: ViewRouteComponent, data: { permission: 'Pages.Routes' }  },
                     { path: 'cities/cities', component: CitiesComponent, data: { permission: 'Pages.Cities' }  },
                     { path: 'countries/counties', component: CountiesComponent, data: { permission: 'Pages.Counties' }  },
                     { path: 'routTypes/routTypes', component: RoutTypesComponent, data: { permission: 'Pages.RoutTypes' }  },

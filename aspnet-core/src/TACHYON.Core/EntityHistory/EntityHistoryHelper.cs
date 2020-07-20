@@ -1,4 +1,5 @@
-﻿using TACHYON.Cities;
+﻿using TACHYON.Routs;
+using TACHYON.Cities;
 using TACHYON.Routs.RoutTypes;
 using TACHYON.Goods.GoodCategories;
 using TACHYON.Trailers;
@@ -33,6 +34,7 @@ namespace TACHYON.EntityHistory
 
         public static readonly Type[] TenantSideTrackedTypes =
         {
+            typeof(Route),
             typeof(Trailer),
             typeof(Truck),
             typeof(TrucksType),

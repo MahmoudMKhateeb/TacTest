@@ -1,4 +1,5 @@
-﻿using TACHYON.Cities;
+﻿using TACHYON.Routs;
+using TACHYON.Cities;
 using TACHYON.Countries;
 using TACHYON.Routs.RoutTypes;
 using TACHYON.Goods.GoodCategories;
@@ -27,6 +28,8 @@ namespace TACHYON.EntityFrameworkCore
 {
     public class TACHYONDbContext : AbpZeroDbContext<Tenant, Role, User, TACHYONDbContext>, IAbpPersistedGrantDbContext
     {
+        public virtual DbSet<Route> Routes { get; set; }
+
         public virtual DbSet<City> Cities { get; set; }
 
         public virtual DbSet<County> Counties { get; set; }
@@ -83,7 +86,12 @@ namespace TACHYON.EntityFrameworkCore
 
 
            
-            modelBuilder.Entity<Trailer>(t =>
+           
+            modelBuilder.Entity<Route>(r =>
+            {
+                r.HasIndex(e => new { e.TenantId });
+            });
+ modelBuilder.Entity<Trailer>(t =>
             {
                 t.HasIndex(e => new { e.TenantId });
             });

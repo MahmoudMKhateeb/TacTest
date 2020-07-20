@@ -2,6 +2,10 @@
 import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { AppCommonModule } from '@app/shared/common/app-common.module';
+import { RoutesComponent } from './routs/routes/routes.component';
+import { ViewRouteComponent } from './routs/routes/view-route.component';
+import { CreateOrEditRouteComponent } from './routs/routes/create-or-edit-route.component';
+
 import { CitiesComponent } from './cities/cities/cities.component';
 import { ViewCityModalComponent } from './cities/cities/view-city-modal.component';
 import { CreateOrEditCityModalComponent } from './cities/cities/create-or-edit-city-modal.component';
@@ -88,6 +92,10 @@ NgxBootstrapDatePickerConfigService.registerNgxBootstrapDatePickerLocales();
         PopoverModule.forRoot(), ImageCropperModule
     ],
     declarations: [
+		RoutesComponent,
+
+		ViewRouteComponent,
+		CreateOrEditRouteComponent,
 		CitiesComponent,
 
 		ViewCityModalComponent,

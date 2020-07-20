@@ -1,4 +1,6 @@
-﻿using TACHYON.Cities.Dtos;
+﻿using TACHYON.Routs.Dtos;
+using TACHYON.Routs;
+using TACHYON.Cities.Dtos;
 using TACHYON.Cities;
 using TACHYON.Countries.Dtos;
 using TACHYON.Countries;
@@ -67,6 +69,8 @@ namespace TACHYON
     {
         public static void CreateMappings(IMapperConfigurationExpression configuration)
         {
+            configuration.CreateMap<CreateOrEditRouteDto, Route>().ReverseMap();
+            configuration.CreateMap<RouteDto, Route>().ReverseMap();
             configuration.CreateMap<CreateOrEditCityDto, City>().ReverseMap();
             configuration.CreateMap<CityDto, City>().ReverseMap();
             configuration.CreateMap<CreateOrEditCountyDto, County>().ReverseMap();

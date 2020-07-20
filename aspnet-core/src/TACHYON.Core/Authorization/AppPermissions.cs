@@ -6,6 +6,11 @@
     /// </summary>
     public static class AppPermissions
     {
+        public const string Pages_Routes = "Pages.Routes";
+        public const string Pages_Routes_Create = "Pages.Routes.Create";
+        public const string Pages_Routes_Edit = "Pages.Routes.Edit";
+        public const string Pages_Routes_Delete = "Pages.Routes.Delete";
+
         public const string Pages_Cities = "Pages.Cities";
         public const string Pages_Cities_Create = "Pages.Cities.Create";
         public const string Pages_Cities_Edit = "Pages.Cities.Edit";

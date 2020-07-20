@@ -1,0 +1,31 @@
+﻿<div [@routerTransition]>
+  
+  <div class="content d-flex flex-column flex-column-fluid">
+  
+                 <sub-header [title]="('Routes' | localize) +' '+ ('Details' | localize)" [breadcrumbs]="breadcrumbs">
+                 </sub-header>
+             
+    <div [class]="containerClass">
+        <div class="card card-custom gutter-b">
+            <div class="card-body">
+                <div class="row align-items-center">
+                                     <div class="col-6 mb-3">
+                        <h6>{{l("DisplayName")}} :</h6>
+                        {{ item.route.displayName }}
+                    </div>
+                    <div class="col-6 mb-3">
+                        <h6>{{l("Description")}} :</h6>
+                        {{ item.route.description }}
+                    </div>
+
+                                     <div class="col-6 mb-3">
+                        <h6>({{l("RoutType")}}) {{l("DisplayName")}} :</h6>
+                        {{item.routTypeDisplayName}}
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+  </div>
+</div>

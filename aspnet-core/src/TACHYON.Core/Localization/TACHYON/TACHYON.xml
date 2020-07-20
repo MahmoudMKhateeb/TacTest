@@ -1,6 +1,16 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <localizationDictionary culture="en">
-  <texts>    <text name="Cities">Cities</text>
+  <texts>    <text name="Routs">Routs</text>
+    <text name="Route">Route</text>
+    <text name="TACHYON.Routs.Route">Route</text>
+    <text name="RoutesHeaderInfo">Routes header info</text>
+    <text name="CreateNewRoute">Create new route</text>
+    <text name="EditRoute">Edit route</text>
+    <text name="DeleteRoute">Delete route</text>
+    <text name="Routes">Routes</text>
+    <text name="RoutTypeDisplayName">Rout type display name</text>
+    <text name="PickRoutType">Pick rout type</text>
+    <text name="Cities">Cities</text>
     <text name="City">City</text>
     <text name="TACHYON.Cities.City">City</text>
     <text name="Latitude">Latitude</text>
