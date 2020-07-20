@@ -244,7 +244,7 @@ namespace TACHYON.Trucks
         [AbpAuthorize(AppPermissions.Pages_Trucks_Edit)]
         protected virtual async Task Update(CreateOrEditTruckDto input)
         {
-            var truck = await _truckRepository.FirstOrDefaultAsync((Guid) input.Id);
+            var truck = await _truckRepository.FirstOrDefaultAsync((Guid)input.Id);
             if (input.Driver1UserId.HasValue && input.Driver1UserId != truck.Driver1UserId)
             {
                 await _appNotifier.AssignDriverToTruck(new UserIdentifier(AbpSession.TenantId, input.Driver1UserId.Value), truck.Id);
@@ -425,6 +425,19 @@ namespace TACHYON.Trucks
             await _binaryObjectManager.SaveAsync(storedFile);
 
             return storedFile.Id;
+        }
+
+        [AbpAllowAnonymous]
+        public async Task<string> GetPictureContentForTruck(Guid truckId)
+        {
+            var truck = await _truckRepository.GetAsync(truckId);
+            if (truck.PictureId == null)
+            {
+                return "";
+            }
+
+            var file = await _binaryObjectManager.GetOrNullAsync(truck.PictureId.Value);
+            return file == null ? "" : Convert.ToBase64String(file.Bytes);
         }
 
     }

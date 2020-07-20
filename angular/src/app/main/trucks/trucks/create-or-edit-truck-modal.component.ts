@@ -15,6 +15,7 @@ import {base64ToFile, ImageCroppedEvent} from '@node_modules/ngx-image-cropper';
 import {FileItem, FileUploader, FileUploaderOptions} from '@node_modules/ng2-file-upload';
 import {IAjaxResponse, TokenService} from '@node_modules/abp-ng2-module';
 import {AppConsts} from '@shared/AppConsts';
+import {LocalStorageService} from '@shared/utils/local-storage.service';
 
 @Component({
     selector: 'createOrEditTruckModal',
@@ -48,13 +49,14 @@ export class CreateOrEditTruckModalComponent extends AppComponentBase {
     private _uploaderOptions: FileUploaderOptions = {};
 
     profilePicture: string;
-
+    pictureUrl: string;
 
 
     constructor(
         injector: Injector,
         private _trucksServiceProxy: TrucksServiceProxy,
-        private _tokenService: TokenService
+        private _tokenService: TokenService,
+        private _localStorageService: LocalStorageService
     ) {
         super(injector);
     }
@@ -80,6 +82,7 @@ export class CreateOrEditTruckModalComponent extends AppComponentBase {
                 this.truckStatusDisplayName = result.truckStatusDisplayName;
                 this.userName = result.userName;
                 this.userName2 = result.userName2;
+                this.getTruckPictureUrl(this.truck);
 
                 this.active = true;
                 this.modal.show();
@@ -215,18 +218,11 @@ export class CreateOrEditTruckModalComponent extends AppComponentBase {
     }
 
 
-    getTruckPicture(truckId: number): void {
-        if (!truckId) {
-            this.profilePicture = this.appRootUrl() + 'assets/common/images/default-profile-picture.png';
-            return;
-        }
-
-        this._profileService.getProfilePictureByUser(truckId).subscribe(result => {
-            if (result && result.profilePicture) {
-                this.profilePicture = 'data:image/jpeg;base64,' + result.profilePicture;
-            } else {
-                this.profilePicture = this.appRootUrl() + 'assets/common/images/default-profile-picture.png';
-            }
+    getTruckPictureUrl(truck: CreateOrEditTruckDto): void {
+console.log('getTruckPictureUrl');
+        this._localStorageService.getItem(AppConsts.authorization.encrptedAuthTokenName, function (err, value) {
+            let profilePictureUrl = AppConsts.remoteServiceBaseUrl + '/Helper/GetTruckPictureByTruckId?truckId=' + truck.id + '&' + AppConsts.authorization.encrptedAuthTokenName + '=' + encodeURIComponent(value.token);
+            (truck as any).profilePictureUrl = profilePictureUrl;
         });
     }
 
