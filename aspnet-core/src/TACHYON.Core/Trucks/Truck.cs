@@ -66,6 +66,9 @@ namespace TACHYON.Trucks
 
         public int? RentDuration  { get; set; }
 
+        public virtual Guid? PictureId { get; set; }
+
+
 
     }
 }
