@@ -1,0 +1,224 @@
+﻿<div [@routerTransition]>
+  
+  <div class="content d-flex flex-column flex-column-fluid">
+   <sub-header [title]="'RoutSteps' | localize" [description]="'RoutStepsHeaderInfo' | localize">
+             <div role="actions">
+                 <button (click)="exportToExcel()" class="btn btn-outline-success"><i class="fa fa-file-excel"></i> {{l("ExportToExcel")}}</button>
+                
+                 <button *ngIf="isGranted('Pages.RoutSteps.Create')" (click)="createRoutStep()" 
+                                        class="btn btn-primary blue"><i class="fa fa-plus"></i> {{l("CreateNewRoutStep")}}</button>
+             </div>
+            </sub-header>
+    
+    <div [class]="containerClass">
+        <div class="card card-custom gutter-b">
+            <div class="card-body">
+                <form class="form" autocomplete="off">
+                    <div>
+                        <div class="row align-items-center">
+                            <div class="col-xl-12">
+                                <div class="form-group m-form__group align-items-center">
+                                    <div class="input-group">
+                                        <input [(ngModel)]="filterText" name="filterText" autoFocus class="form-control m-input" [placeholder]="l('SearchWithThreeDot')" type="text">
+                                        <span class="input-group-btn">
+                                            <button (click)="getRoutSteps()" class="btn btn-primary" type="submit"><i class="flaticon-search-1"></i></button>
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+						 <div class="row" [hidden]="!advancedFiltersAreShown">
+						 	<div class="col-md-12">
+						         <div class="kt-separator kt-separator--border-dashed"></div>
+						     </div>
+
+
+							<div class="col-md-3">
+								<div class="form-group">
+									<label for="DisplayNameFilter">{{l("DisplayName")}}</label>
+									<input type="text" class="form-control" id="DisplayNameFilter" name="displayNameFilter" [(ngModel)]="displayNameFilter">
+								</div>
+                            </div>
+							<div class="col-md-3">
+								<div class="form-group">
+									<label for="LatitudeFilter">{{l("Latitude")}}</label>
+									<input type="text" class="form-control" id="LatitudeFilter" name="latitudeFilter" [(ngModel)]="latitudeFilter">
+								</div>
+                            </div>
+							<div class="col-md-3">
+								<div class="form-group">
+									<label for="LongitudeFilter">{{l("Longitude")}}</label>
+									<input type="text" class="form-control" id="LongitudeFilter" name="longitudeFilter" [(ngModel)]="longitudeFilter">
+								</div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="form-group">
+									<label for="MinOrderFilter">{{l("MinMax")}} {{l("Order")}}</label>
+									<div class="input-group">
+                                        <input type="number" class="form-control" id="MinOrderFilter" [(ngModel)]="minOrderFilter" placeholder="{{l('MinValue')}}" name="minOrderFilter" />
+                                        <input type="number" class="form-control" [(ngModel)]="maxOrderFilter" placeholder="{{l('MaxValue')}}" name="maxOrderFilter" />
+									</div>
+                                </div>
+                            </div>
+							<div class="col-md-3">
+								<div class="form-group">
+									<label for="CityDisplayNameFilter">({{l("City")}}) {{l("DisplayName")}}</label>
+									<input type="text" class="form-control" id="CityDisplayNameFilter" name="cityDisplayNameFilter" [(ngModel)]="cityDisplayNameFilter">
+                                </div>
+                            </div>
+							<div class="col-md-3">
+								<div class="form-group">
+									<label for="CityDisplayName2Filter">({{l("City2")}}) {{l("DisplayName")}}</label>
+									<input type="text" class="form-control" id="CityDisplayName2Filter" name="cityDisplayName2Filter" [(ngModel)]="cityDisplayName2Filter">
+                                </div>
+                            </div>
+							<div class="col-md-3">
+								<div class="form-group">
+									<label for="RouteDisplayNameFilter">({{l("Route")}}) {{l("DisplayName")}}</label>
+									<input type="text" class="form-control" id="RouteDisplayNameFilter" name="routeDisplayNameFilter" [(ngModel)]="routeDisplayNameFilter">
+                                </div>
+                            </div>
+
+                        </div>
+                        <div class="row mb-2">
+                            <div class="col-sm-12">
+                                <span class="clickable-item text-muted" *ngIf="!advancedFiltersAreShown" (click)="advancedFiltersAreShown=!advancedFiltersAreShown"><i class="fa fa-angle-down"></i> {{l("ShowAdvancedFilters")}}</span>
+                                <span class="clickable-item text-muted" *ngIf="advancedFiltersAreShown" (click)="advancedFiltersAreShown=!advancedFiltersAreShown"><i class="fa fa-angle-up"></i> {{l("HideAdvancedFilters")}}</span>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+
+                <div class="row align-items-center">
+                    <!--<Primeng-Datatable-Start>-->
+                    <div class="primeng-datatable-container col-12"
+                         [busyIf]="primengTableHelper.isLoading">
+                        <p-table #dataTable
+                                     (onLazyLoad)="getRoutSteps($event)"
+                                     [value]="primengTableHelper.records"
+                                     rows="{{primengTableHelper.defaultRecordsCountPerPage}}"
+                                     [paginator]="false"
+                                     [lazy]="true"
+                                     [scrollable]="true"
+                                     ScrollWidth="100%"
+                                     [responsive]="primengTableHelper.isResponsive"
+                                     [resizableColumns]="primengTableHelper.resizableColumns">
+                            <ng-template pTemplate="header">
+                                <tr>
+                                    <th style="width: 130px" [hidden]="!isGrantedAny('Pages.RoutSteps.Edit', 'Pages.RoutSteps.Delete')">{{l('Actions')}}</th>
+                                    <th style="width: 150px" pSortableColumn="originCityFk.displayName">
+                                        {{l('DisplayName')}}
+                                        <p-sortIcon field="cityDisplayName"></p-sortIcon>
+                                    </th>
+                                    <th style="width: 150px" pSortableColumn="destinationCityFk.displayName">
+                                        {{l('DisplayName')}}
+                                        <p-sortIcon field="cityDisplayName2"></p-sortIcon>
+                                    </th>
+                                    <th style="width: 150px" pSortableColumn="routeFk.displayName">
+                                        {{l('DisplayName')}}
+                                        <p-sortIcon field="routeDisplayName"></p-sortIcon>
+                                    </th>
+                                    <th style="width: 150px" pSortableColumn="displayName">
+                                        {{l('DisplayName')}}
+                                        <p-sortIcon field="routStep.displayName"></p-sortIcon>
+                                    </th>
+                                    <th style="width: 150px" pSortableColumn="latitude">
+                                        {{l('Latitude')}}
+                                        <p-sortIcon field="routStep.latitude"></p-sortIcon>
+                                    </th>
+                                    <th style="width: 150px" pSortableColumn="longitude">
+                                        {{l('Longitude')}}
+                                        <p-sortIcon field="routStep.longitude"></p-sortIcon>
+                                    </th>
+                                    <th style="width: 150px" pSortableColumn="order">
+                                        {{l('Order')}}
+                                        <p-sortIcon field="routStep.order"></p-sortIcon>
+                                    </th>
+
+                                </tr>
+                            </ng-template>                           
+							<ng-template pTemplate="body" let-record="$implicit">
+                                <tr>
+                                    <td style="width: 130px"
+                                        [hidden]="!isGrantedAny('Pages.RoutSteps.Edit', 'Pages.RoutSteps.Delete')">
+                                       <div class="btn-group dropdown" dropdown container="body">
+                                            <button class="dropdown-toggle btn btn-sm btn-primary" dropdownToggle>
+                                                <i class="fa fa-cog"></i><span class="caret"></span> {{l("Actions")}}
+                                            </button>
+												<ul class="dropdown-menu"  *dropdownMenu>
+												<li>
+													<a href="javascript:;" class="dropdown-item"
+														(click)="viewRoutStepModal.show(record)">{{l('View')}}</a>
+												</li>
+												<li>
+                                                <a href="javascript:;" *ngIf="permission.isGranted('Pages.RoutSteps.Edit')" class="dropdown-item"
+														(click)="createOrEditRoutStepModal.show(record.routStep.id)">{{l('Edit')}}</a>												
+                                                </li>
+												<li>
+											        <a class="dropdown-item" href="javascript:;" *ngIf="permission.isGranted('Pages.RoutSteps.Delete')"
+														(click)="deleteRoutStep(record.routStep)">{{l('Delete')}}</a>
+												</li>
+                                                <li>
+                                                    <a href="javascript:;" *ngIf="entityHistoryEnabled"
+                                                       (click)="showHistory(record.routStep)">{{l('History')}}</a>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </td>
+                                    <td style="width:150px">
+												<span class="ui-column-title"> {{l('DisplayName')}}</span>
+												{{record.cityDisplayName}}
+											</td>
+                                    <td style="width:150px">
+												<span class="ui-column-title"> {{l('DisplayName')}}</span>
+												{{record.cityDisplayName2}}
+											</td>
+                                    <td style="width:150px">
+												<span class="ui-column-title"> {{l('DisplayName')}}</span>
+												{{record.routeDisplayName}}
+											</td>
+                                    <td style="width:150px">
+											<span class="ui-column-title"> {{l('DisplayName')}}</span>
+											{{record.routStep.displayName}}
+										</td>
+                                    <td style="width:150px">
+											<span class="ui-column-title"> {{l('Latitude')}}</span>
+											{{record.routStep.latitude}}
+										</td>
+                                    <td style="width:150px">
+											<span class="ui-column-title"> {{l('Longitude')}}</span>
+											{{record.routStep.longitude}}
+										</td>
+                                    <td style="width:150px">
+											<span class="ui-column-title"> {{l('Order')}}</span>
+											{{record.routStep.order}}
+										</td>
+
+                                </tr>
+                            </ng-template>
+                        </p-table>
+						<div class="primeng-no-data" *ngIf="primengTableHelper.totalRecordsCount == 0">
+                            {{l('NoData')}}
+                        </div>
+                        <div class="primeng-paging-container">
+                            <p-paginator [rows]="primengTableHelper.defaultRecordsCountPerPage"
+                                         #paginator
+                                         (onPageChange)="getRoutSteps($event)"
+                                         [totalRecords]="primengTableHelper.totalRecordsCount"
+                                         [rowsPerPageOptions]="primengTableHelper.predefinedRecordsCountPerPage">
+                            </p-paginator>
+                            <span class="total-records-count">
+                                {{l('TotalRecordsCount', primengTableHelper.totalRecordsCount)}}
+                            </span>
+                        </div>
+                    </div>
+                    <!--<Primeng-Datatable-End>-->
+                </div>
+            </div>
+        </div>
+    </div>
+    <createOrEditRoutStepModal #createOrEditRoutStepModal (modalSave)="getRoutSteps()"></createOrEditRoutStepModal>    
+    <viewRoutStepModal #viewRoutStepModal></viewRoutStepModal>
+     <entityTypeHistoryModal #entityTypeHistoryModal></entityTypeHistoryModal>
+  </div>
+</div>

@@ -1,6 +1,18 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <localizationDictionary culture="en">
-  <texts>    <text name="Routs">Routs</text>
+  <texts>    <text name="RoutSteps">Rout steps</text>
+    <text name="RoutStep">Rout step</text>
+    <text name="TACHYON.RoutSteps.RoutStep">RoutStep</text>
+    <text name="Order">Order</text>
+    <text name="RoutStepsHeaderInfo">Rout steps header info</text>
+    <text name="CreateNewRoutStep">Create new rout step</text>
+    <text name="EditRoutStep">Edit rout step</text>
+    <text name="DeleteRoutStep">Delete rout step</text>
+    <text name="CityDisplayName">City display name</text>
+    <text name="PickCity">Pick city</text>
+    <text name="RouteDisplayName">Route display name</text>
+    <text name="PickRoute">Pick route</text>
+    <text name="Routs">Routs</text>
     <text name="Route">Route</text>
     <text name="TACHYON.Routs.Route">Route</text>
     <text name="RoutesHeaderInfo">Routes header info</text>
