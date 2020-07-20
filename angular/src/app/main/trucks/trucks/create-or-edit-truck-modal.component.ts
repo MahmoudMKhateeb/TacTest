@@ -49,7 +49,6 @@ export class CreateOrEditTruckModalComponent extends AppComponentBase {
     private _uploaderOptions: FileUploaderOptions = {};
 
     profilePicture: string;
-    pictureUrl: string;
 
 
     constructor(
@@ -82,7 +81,7 @@ export class CreateOrEditTruckModalComponent extends AppComponentBase {
                 this.truckStatusDisplayName = result.truckStatusDisplayName;
                 this.userName = result.userName;
                 this.userName2 = result.userName2;
-                this.getTruckPictureUrl(this.truck);
+                this.getTruckPictureUrl( this.truck.id);
 
                 this.active = true;
                 this.modal.show();
@@ -218,12 +217,12 @@ export class CreateOrEditTruckModalComponent extends AppComponentBase {
     }
 
 
-    getTruckPictureUrl(truck: CreateOrEditTruckDto): void {
-console.log('getTruckPictureUrl');
+    getTruckPictureUrl( truckId: string): void {
+        let self = this;
         this._localStorageService.getItem(AppConsts.authorization.encrptedAuthTokenName, function (err, value) {
-            let profilePictureUrl = AppConsts.remoteServiceBaseUrl + '/Helper/GetTruckPictureByTruckId?truckId=' + truck.id + '&' + AppConsts.authorization.encrptedAuthTokenName + '=' + encodeURIComponent(value.token);
-            (truck as any).profilePictureUrl = profilePictureUrl;
+            self.profilePicture = AppConsts.remoteServiceBaseUrl + '/Helper/GetTruckPictureByTruckId?truckId=' + truckId + '&' + AppConsts.authorization.encrptedAuthTokenName + '=' + encodeURIComponent(value.token);
         });
+
     }
 
 }
