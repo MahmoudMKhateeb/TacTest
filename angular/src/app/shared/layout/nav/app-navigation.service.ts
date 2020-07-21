@@ -35,18 +35,17 @@ export class AppNavigationService {
             new AppMenuItem('TrailerStatuses', 'Pages.TrailerStatuses', 'flaticon-more', '/app/main/trailerStatuses/trailerStatuses'),
 
             new AppMenuItem('Trailers', 'Pages.Trailers', 'flaticon-more', '/app/main/trailers/trailers', undefined, undefined, undefined, undefined, () => this._featureCheckerService.isEnabled('App.Carrier')),
-            
+
             new AppMenuItem('GoodCategories', 'Pages.GoodCategories', 'flaticon-more', '/app/main/goodCategories/goodCategories'),
-            
+
             new AppMenuItem('RoutTypes', 'Pages.RoutTypes', 'flaticon-more', '/app/main/routTypes/routTypes'),
-            
+
             new AppMenuItem('Counties', 'Pages.Counties', 'flaticon-more', '/app/main/countries/counties'),
-            
+
             new AppMenuItem('Cities', 'Pages.Cities', 'flaticon-more', '/app/main/cities/cities'),
-            
+
             new AppMenuItem('Routes', 'Pages.Routes', 'flaticon-more', '/app/main/routs/routes'),
-            
-            new AppMenuItem('RoutSteps', 'Pages.RoutSteps', 'flaticon-more', '/app/main/routSteps/routSteps'),
+
              new AppMenuItem('Administration', '', 'flaticon-interface-8', '', [], [
                 new AppMenuItem('OrganizationUnits', 'Pages.Administration.OrganizationUnits', 'flaticon-map', '/app/admin/organization-units'),
                 new AppMenuItem('Roles', 'Pages.Administration.Roles', 'flaticon-suitcase', '/app/admin/roles'),
