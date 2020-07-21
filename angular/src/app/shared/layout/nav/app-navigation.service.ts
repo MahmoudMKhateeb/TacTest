@@ -44,9 +44,9 @@ export class AppNavigationService {
 
             new AppMenuItem('Cities', 'Pages.Cities', 'flaticon-more', '/app/main/cities/cities'),
 
-            new AppMenuItem('Routes', 'Pages.Routes', 'flaticon-more', '/app/main/routs/routes'),
+            new AppMenuItem('Routes', 'Pages.Routes', 'flaticon-more', '/app/main/routs/routes', undefined, undefined, undefined, undefined, () => this._featureCheckerService.isEnabled('App.Carrier')),
 
-            
+
             new AppMenuItem('Offers', 'Pages.Offers', 'flaticon-more', '/app/main/offers/offers'),
              new AppMenuItem('Administration', '', 'flaticon-interface-8', '', [], [
                 new AppMenuItem('OrganizationUnits', 'Pages.Administration.OrganizationUnits', 'flaticon-map', '/app/admin/organization-units'),
