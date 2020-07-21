@@ -1,5 +1,8 @@
 ﻿import { NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
+import { ShippingRequestsComponent } from './shippingRequests/shippingRequests/shippingRequests.component';
+import { CreateOrEditShippingRequestComponent } from './shippingRequests/shippingRequests/create-or-edit-shippingRequest.component';
+import { ViewShippingRequestComponent } from './shippingRequests/shippingRequests/view-shippingRequest.component';
 import { GoodsDetailsComponent } from './goodsDetails/goodsDetails/goodsDetails.component';
 import { OffersComponent } from './offers/offers/offers.component';
 import { RoutStepsComponent } from './routSteps/routSteps/routSteps.component';
@@ -24,6 +27,9 @@ import { DashboardComponent } from './dashboard/dashboard.component';
             {
                 path: '',
                 children: [
+                    { path: 'shippingRequests/shippingRequests', component: ShippingRequestsComponent, data: { permission: 'Pages.ShippingRequests' }  },
+                    { path: 'shippingRequests/shippingRequests/createOrEdit', component: CreateOrEditShippingRequestComponent, data: { permission: 'Pages.ShippingRequests.Create' }  },
+                    { path: 'shippingRequests/shippingRequests/view', component: ViewShippingRequestComponent, data: { permission: 'Pages.ShippingRequests' }  },
                     { path: 'goodsDetails/goodsDetails', component: GoodsDetailsComponent, data: { permission: 'Pages.GoodsDetails' }  },
                     { path: 'offers/offers', component: OffersComponent, data: { permission: 'Pages.Offers' }  },
                     { path: 'routSteps/routSteps', component: RoutStepsComponent, data: { permission: 'Pages.RoutSteps' }  },

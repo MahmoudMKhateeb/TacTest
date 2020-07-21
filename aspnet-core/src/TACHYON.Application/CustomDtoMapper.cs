@@ -1,4 +1,32 @@
-﻿using Abp.Application.Editions;
+﻿using TACHYON.Shipping.ShippingRequests.Dtos;
+using TACHYON.Shipping.ShippingRequests;
+using TACHYON.Goods.GoodsDetails.Dtos;
+using TACHYON.Goods.GoodsDetails;
+using TACHYON.Offers.Dtos;
+using TACHYON.Offers;
+using TACHYON.Routs.RoutSteps.Dtos;
+using TACHYON.Routs.RoutSteps;
+using TACHYON.Routs.Dtos;
+using TACHYON.Routs;
+using TACHYON.Cities.Dtos;
+using TACHYON.Cities;
+using TACHYON.Countries.Dtos;
+using TACHYON.Countries;
+using TACHYON.Routs.RoutTypes.Dtos;
+using TACHYON.Routs.RoutTypes;
+using TACHYON.Goods.GoodCategories.Dtos;
+using TACHYON.Goods.GoodCategories;
+using TACHYON.Trailers.Dtos;
+using TACHYON.Trailers;
+using TACHYON.Trailers.TrailerStatuses.Dtos;
+using TACHYON.Trailers.TrailerStatuses;
+using TACHYON.Trailers.TrailerTypes.Dtos;
+using TACHYON.Trailers.TrailerTypes;
+using TACHYON.Trucks.TrucksTypes.Dtos;
+using TACHYON.Trucks.TrucksTypes;
+using TACHYON.Trucks.Dtos;
+using TACHYON.Trucks;
+using Abp.Application.Editions;
 using Abp.Application.Features;
 using Abp.Auditing;
 using Abp.Authorization;
@@ -75,6 +103,8 @@ namespace TACHYON
     {
         public static void CreateMappings(IMapperConfigurationExpression configuration)
         {
+            configuration.CreateMap<CreateOrEditShippingRequestDto, ShippingRequest>().ReverseMap();
+            configuration.CreateMap<ShippingRequestDto, ShippingRequest>().ReverseMap();
             configuration.CreateMap<CreateOrEditGoodsDetailDto, GoodsDetail>().ReverseMap();
             configuration.CreateMap<GoodsDetailDto, GoodsDetail>().ReverseMap();
             configuration.CreateMap<CreateOrEditOfferDto, Offer>().ReverseMap();

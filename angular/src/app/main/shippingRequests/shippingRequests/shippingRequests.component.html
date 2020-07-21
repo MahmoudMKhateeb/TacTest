@@ -1,0 +1,196 @@
+﻿<div [@routerTransition]>
+  
+  <div class="content d-flex flex-column flex-column-fluid">
+   <sub-header [title]="'ShippingRequests' | localize" [description]="'ShippingRequestsHeaderInfo' | localize">
+             <div role="actions">
+                 <button (click)="exportToExcel()" class="btn btn-outline-success"><i class="fa fa-file-excel"></i> {{l("ExportToExcel")}}</button>
+                
+                 <button *ngIf="isGranted('Pages.ShippingRequests.Create')" (click)="createShippingRequest()" 
+                                        class="btn btn-primary blue"><i class="fa fa-plus"></i> {{l("CreateNewShippingRequest")}}</button>
+             </div>
+            </sub-header>
+    
+    <div [class]="containerClass">
+        <div class="card card-custom gutter-b">
+            <div class="card-body">
+                <form class="form" autocomplete="off">
+                    <div>
+                        <div class="row align-items-center">
+                            <div class="col-xl-12">
+                                <div class="form-group m-form__group align-items-center">
+                                    <div class="input-group">
+                                        <input [(ngModel)]="filterText" name="filterText" autoFocus class="form-control m-input" [placeholder]="l('SearchWithThreeDot')" type="text">
+                                        <span class="input-group-btn">
+                                            <button (click)="getShippingRequests()" class="btn btn-primary" type="submit"><i class="flaticon-search-1"></i></button>
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+						 <div class="row" [hidden]="!advancedFiltersAreShown">
+						 	<div class="col-md-12">
+						         <div class="kt-separator kt-separator--border-dashed"></div>
+						     </div>
+
+
+                            <div class="col-md-3">
+                                <div class="form-group">
+									<label for="MinVasFilter">{{l("MinMax")}} {{l("Vas")}}</label>
+									<div class="input-group">
+                                        <input type="number" class="form-control" id="MinVasFilter" [(ngModel)]="minVasFilter" placeholder="{{l('MinValue')}}" name="minVasFilter" />
+                                        <input type="number" class="form-control" [(ngModel)]="maxVasFilter" placeholder="{{l('MaxValue')}}" name="maxVasFilter" />
+									</div>
+                                </div>
+                            </div>
+							<div class="col-md-3">
+								<div class="form-group">
+									<label for="TrucksTypeDisplayNameFilter">({{l("TrucksType")}}) {{l("DisplayName")}}</label>
+									<input type="text" class="form-control" id="TrucksTypeDisplayNameFilter" name="trucksTypeDisplayNameFilter" [(ngModel)]="trucksTypeDisplayNameFilter">
+                                </div>
+                            </div>
+							<div class="col-md-3">
+								<div class="form-group">
+									<label for="TrailerTypeDisplayNameFilter">({{l("TrailerType")}}) {{l("DisplayName")}}</label>
+									<input type="text" class="form-control" id="TrailerTypeDisplayNameFilter" name="trailerTypeDisplayNameFilter" [(ngModel)]="trailerTypeDisplayNameFilter">
+                                </div>
+                            </div>
+							<div class="col-md-3">
+								<div class="form-group">
+									<label for="GoodsDetailNameFilter">({{l("GoodsDetail")}}) {{l("Name")}}</label>
+									<input type="text" class="form-control" id="GoodsDetailNameFilter" name="goodsDetailNameFilter" [(ngModel)]="goodsDetailNameFilter">
+                                </div>
+                            </div>
+							<div class="col-md-3">
+								<div class="form-group">
+									<label for="RouteDisplayNameFilter">({{l("Route")}}) {{l("DisplayName")}}</label>
+									<input type="text" class="form-control" id="RouteDisplayNameFilter" name="routeDisplayNameFilter" [(ngModel)]="routeDisplayNameFilter">
+                                </div>
+                            </div>
+
+                        </div>
+                        <div class="row mb-2">
+                            <div class="col-sm-12">
+                                <span class="clickable-item text-muted" *ngIf="!advancedFiltersAreShown" (click)="advancedFiltersAreShown=!advancedFiltersAreShown"><i class="fa fa-angle-down"></i> {{l("ShowAdvancedFilters")}}</span>
+                                <span class="clickable-item text-muted" *ngIf="advancedFiltersAreShown" (click)="advancedFiltersAreShown=!advancedFiltersAreShown"><i class="fa fa-angle-up"></i> {{l("HideAdvancedFilters")}}</span>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+
+                <div class="row align-items-center">
+                    <!--<Primeng-Datatable-Start>-->
+                    <div class="primeng-datatable-container col-12"
+                         [busyIf]="primengTableHelper.isLoading">
+                        <p-table #dataTable
+                                     (onLazyLoad)="getShippingRequests($event)"
+                                     [value]="primengTableHelper.records"
+                                     rows="{{primengTableHelper.defaultRecordsCountPerPage}}"
+                                     [paginator]="false"
+                                     [lazy]="true"
+                                     [scrollable]="true"
+                                     ScrollWidth="100%"
+                                     [responsive]="primengTableHelper.isResponsive"
+                                     [resizableColumns]="primengTableHelper.resizableColumns">
+                            <ng-template pTemplate="header">
+                                <tr>
+                                    <th style="width: 130px" [hidden]="!isGrantedAny('Pages.ShippingRequests.Edit', 'Pages.ShippingRequests.Delete')">{{l('Actions')}}</th>
+                                    <th style="width: 150px" pSortableColumn="trucksTypeFk.displayName">
+                                        {{l('DisplayName')}}
+                                        <p-sortIcon field="trucksTypeDisplayName"></p-sortIcon>
+                                    </th>
+                                    <th style="width: 150px" pSortableColumn="trailerTypeFk.displayName">
+                                        {{l('DisplayName')}}
+                                        <p-sortIcon field="trailerTypeDisplayName"></p-sortIcon>
+                                    </th>
+                                    <th style="width: 150px" pSortableColumn="goodsDetailFk.name">
+                                        {{l('Name')}}
+                                        <p-sortIcon field="goodsDetailName"></p-sortIcon>
+                                    </th>
+                                    <th style="width: 150px" pSortableColumn="routeFk.displayName">
+                                        {{l('DisplayName')}}
+                                        <p-sortIcon field="routeDisplayName"></p-sortIcon>
+                                    </th>
+                                    <th style="width: 150px" pSortableColumn="vas">
+                                        {{l('Vas')}}
+                                        <p-sortIcon field="shippingRequest.vas"></p-sortIcon>
+                                    </th>
+
+                                </tr>
+                            </ng-template>                           
+							<ng-template pTemplate="body" let-record="$implicit">
+                                <tr>
+                                    <td style="width: 130px"
+                                        [hidden]="!isGrantedAny('Pages.ShippingRequests.Edit', 'Pages.ShippingRequests.Delete')">
+                                       <div class="btn-group dropdown" dropdown container="body">
+                                            <button class="dropdown-toggle btn btn-sm btn-primary" dropdownToggle>
+                                                <i class="fa fa-cog"></i><span class="caret"></span> {{l("Actions")}}
+                                            </button>
+												<ul class="dropdown-menu"  *dropdownMenu>
+										    <li>
+                                                <a *ngIf="permission.isGranted('Pages.ShippingRequests.Edit')" class="dropdown-item"
+			[routerLink]="['/app/main/shippingRequests/shippingRequests/view']" [queryParams]="{id: record.shippingRequest.id}">
+  {{l('View')}}	
+</a>
+                                            </li>
+												<li>
+                                                 <a *ngIf="permission.isGranted('Pages.ShippingRequests.Edit')" class="dropdown-item"
+			[routerLink]="['/app/main/shippingRequests/shippingRequests/createOrEdit']" [queryParams]="{id: record.shippingRequest.id}">
+  {{l('Edit')}}	
+</a>												
+                                                </li>
+												<li>
+											        <a class="dropdown-item" href="javascript:;" *ngIf="permission.isGranted('Pages.ShippingRequests.Delete')"
+														(click)="deleteShippingRequest(record.shippingRequest)">{{l('Delete')}}</a>
+												</li>
+                                            </ul>
+                                        </div>
+                                    </td>
+                                    <td style="width:150px">
+												<span class="ui-column-title"> {{l('DisplayName')}}</span>
+												{{record.trucksTypeDisplayName}}
+											</td>
+                                    <td style="width:150px">
+												<span class="ui-column-title"> {{l('DisplayName')}}</span>
+												{{record.trailerTypeDisplayName}}
+											</td>
+                                    <td style="width:150px">
+												<span class="ui-column-title"> {{l('Name')}}</span>
+												{{record.goodsDetailName}}
+											</td>
+                                    <td style="width:150px">
+												<span class="ui-column-title"> {{l('DisplayName')}}</span>
+												{{record.routeDisplayName}}
+											</td>
+                                    <td style="width:150px">
+											<span class="ui-column-title"> {{l('Vas')}}</span>
+											{{record.shippingRequest.vas}}
+										</td>
+
+                                </tr>
+                            </ng-template>
+                        </p-table>
+						<div class="primeng-no-data" *ngIf="primengTableHelper.totalRecordsCount == 0">
+                            {{l('NoData')}}
+                        </div>
+                        <div class="primeng-paging-container">
+                            <p-paginator [rows]="primengTableHelper.defaultRecordsCountPerPage"
+                                         #paginator
+                                         (onPageChange)="getShippingRequests($event)"
+                                         [totalRecords]="primengTableHelper.totalRecordsCount"
+                                         [rowsPerPageOptions]="primengTableHelper.predefinedRecordsCountPerPage">
+                            </p-paginator>
+                            <span class="total-records-count">
+                                {{l('TotalRecordsCount', primengTableHelper.totalRecordsCount)}}
+                            </span>
+                        </div>
+                    </div>
+                    <!--<Primeng-Datatable-End>-->
+                </div>
+            </div>
+        </div>
+    </div>
+        
+    
+    
+  </div>
+</div>

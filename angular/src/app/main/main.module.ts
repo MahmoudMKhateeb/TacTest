@@ -2,6 +2,10 @@
 import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { AppCommonModule } from '@app/shared/common/app-common.module';
+import { ShippingRequestsComponent } from './shippingRequests/shippingRequests/shippingRequests.component';
+import { ViewShippingRequestComponent } from './shippingRequests/shippingRequests/view-shippingRequest.component';
+import { CreateOrEditShippingRequestComponent } from './shippingRequests/shippingRequests/create-or-edit-shippingRequest.component';
+
 import { GoodsDetailsComponent } from './goodsDetails/goodsDetails/goodsDetails.component';
 import { ViewGoodsDetailModalComponent } from './goodsDetails/goodsDetails/view-goodsDetail-modal.component';
 import { CreateOrEditGoodsDetailModalComponent } from './goodsDetails/goodsDetails/create-or-edit-goodsDetail-modal.component';
@@ -104,6 +108,10 @@ NgxBootstrapDatePickerConfigService.registerNgxBootstrapDatePickerLocales();
         PopoverModule.forRoot(), ImageCropperModule
     ],
     declarations: [
+		ShippingRequestsComponent,
+
+		ViewShippingRequestComponent,
+		CreateOrEditShippingRequestComponent,
 		GoodsDetailsComponent,
 
 		ViewGoodsDetailModalComponent,

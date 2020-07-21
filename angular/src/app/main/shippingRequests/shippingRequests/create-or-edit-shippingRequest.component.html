@@ -1,0 +1,67 @@
+﻿<div [@routerTransition]>
+  
+  <div class="content d-flex flex-column flex-column-fluid">
+  <sub-header [title]="('ShippingRequests' | localize) +' '+ ('Details' | localize)" [breadcrumbs]="breadcrumbs">
+            </sub-header>
+            
+    
+    <div [class]="containerClass">
+        <div class="card card-custom gutter-b">
+            <div class="card-body">              
+                
+					<div class="form-group m-form__group">
+						<label for="TrucksTypeDisplayName">{{l("TrucksType")}}</label>
+						<select name="shippingRequest.trucksTypeId" [(ngModel)]="shippingRequest.trucksTypeId" class="form-control" >
+							<option value="">{{l("SelectATrucksType")}}</option>
+							<option *ngFor="let item of allTrucksTypes" value="{{item.id}}">{{item.displayName}}</option>
+						</select>
+					</div>
+					 
+					<div class="form-group m-form__group">
+						<label for="TrailerTypeDisplayName">{{l("TrailerType")}}</label>
+						<select name="shippingRequest.trailerTypeId" [(ngModel)]="shippingRequest.trailerTypeId" class="form-control" >
+							<option value="">{{l("SelectATrailerType")}}</option>
+							<option *ngFor="let item of allTrailerTypes" value="{{item.id}}">{{item.displayName}}</option>
+						</select>
+					</div>
+					 
+					<div class="form-group m-form__group">
+						<label for="GoodsDetailName">{{l("GoodsDetail")}}</label>
+						<select name="shippingRequest.goodsDetailId" [(ngModel)]="shippingRequest.goodsDetailId" class="form-control" >
+							<option value="">{{l("SelectAGoodsDetail")}}</option>
+							<option *ngFor="let item of allGoodsDetails" value="{{item.id}}">{{item.displayName}}</option>
+						</select>
+					</div>
+					 
+					<div class="form-group m-form__group">
+						<label for="RouteDisplayName">{{l("Route")}}</label>
+						<select name="shippingRequest.routeId" [(ngModel)]="shippingRequest.routeId" class="form-control" >
+							<option value="">{{l("SelectARoute")}}</option>
+							<option *ngFor="let item of allRoutes" value="{{item.id}}">{{item.displayName}}</option>
+						</select>
+					</div>
+					 
+                
+								<div class="form-group">
+									<label for="ShippingRequest_Vas">{{l("Vas")}}</label>
+									<input type="number" id="ShippingRequest_Vas" class="form-control" [(ngModel)]="shippingRequest.vas" name="Vas"  />
+								</div>
+					
+            </div>
+              <div class="card-footer">
+				<div class="col-lg-12">
+					<button (click)="save()" class="btn btn-primary blue float-right"
+                        [buttonBusy]="saving" [busyText]="l('SavingWithThreeDot')"><i class="fa fa-save"></i> 
+                        <span>{{l("Save")}}</span>
+                    </button>
+                    <button *ngIf="!this.shippingRequest.id" (click)="saveAndNew()" class="btn btn-primary blue float-right"
+                        [buttonBusy]="saving" [busyText]="l('SavingWithThreeDot')"><i class="fa fa-save"></i> 
+                        <span>{{l("SaveAndNew")}}</span>
+                    </button>
+				</div>
+		    </div>
+        </div>
+    </div>
+  </div>
+  
+</div>
