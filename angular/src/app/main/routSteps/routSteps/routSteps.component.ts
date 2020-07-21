@@ -1,4 +1,4 @@
-﻿import { Component, Injector, ViewEncapsulation, ViewChild } from '@angular/core';
+﻿import {Component, Injector, ViewEncapsulation, ViewChild, Input} from '@angular/core';
 import { ActivatedRoute , Router} from '@angular/router';
 import { RoutStepsServiceProxy, RoutStepDto  } from '@shared/service-proxies/service-proxies';
 import { NotifyService } from 'abp-ng2-module';
@@ -17,17 +17,20 @@ import * as _ from 'lodash';
 import * as moment from 'moment';
 
 @Component({
+    selector: 'routSteps',
     templateUrl: './routSteps.component.html',
     encapsulation: ViewEncapsulation.None,
     animations: [appModuleAnimation()]
 })
 export class RoutStepsComponent extends AppComponentBase {
-    
-    
+
+    @Input() routeId: any;
+
+
     @ViewChild('entityTypeHistoryModal', { static: true }) entityTypeHistoryModal: EntityTypeHistoryModalComponent;
     @ViewChild('createOrEditRoutStepModal', { static: true }) createOrEditRoutStepModal: CreateOrEditRoutStepModalComponent;
-    @ViewChild('viewRoutStepModalComponent', { static: true }) viewRoutStepModal: ViewRoutStepModalComponent;   
-    
+    @ViewChild('viewRoutStepModalComponent', { static: true }) viewRoutStepModal: ViewRoutStepModalComponent;
+
     @ViewChild('dataTable', { static: true }) dataTable: Table;
     @ViewChild('paginator', { static: true }) paginator: Paginator;
 
@@ -86,6 +89,7 @@ export class RoutStepsComponent extends AppComponentBase {
             this.cityDisplayNameFilter,
             this.cityDisplayName2Filter,
             this.routeDisplayNameFilter,
+            this.routeId,
             this.primengTableHelper.getSorting(this.dataTable),
             this.primengTableHelper.getSkipCount(this.paginator, event),
             this.primengTableHelper.getMaxResultCount(this.paginator, event)
@@ -101,7 +105,7 @@ export class RoutStepsComponent extends AppComponentBase {
     }
 
     createRoutStep(): void {
-        this.createOrEditRoutStepModal.show();        
+        this.createOrEditRoutStepModal.show();
     }
 
 
