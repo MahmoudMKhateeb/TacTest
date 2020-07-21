@@ -89,6 +89,7 @@ export class RoutStepsComponent extends AppComponentBase {
             this.cityDisplayNameFilter,
             this.cityDisplayName2Filter,
             this.routeDisplayNameFilter,
+            this.routeId,
             this.primengTableHelper.getSorting(this.dataTable),
             this.primengTableHelper.getSkipCount(this.paginator, event),
             this.primengTableHelper.getMaxResultCount(this.paginator, event)

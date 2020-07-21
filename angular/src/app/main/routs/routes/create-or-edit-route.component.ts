@@ -66,7 +66,7 @@ breadcrumbs: BreadcrumbItem[] = [
 
     }
 
-    private saveInternal(): Observable<void> {
+    private saveInternal(): Observable<number> {
             this.saving = true;
 
 
@@ -78,16 +78,13 @@ breadcrumbs: BreadcrumbItem[] = [
     }
 
     save(): void {
-        this.saveInternal().subscribe(x => {
-             this._router.navigate( ['/app/main/routs/routes']);
+        this.saveInternal().subscribe(routeId => {
+             this._router.navigate( ['/app/main/routs/routes/createOrEdit'], { queryParams: { id: routeId }, skipLocationChange: false, replaceUrl: true });
+        this.routeId = routeId;
         });
     }
 
-    saveAndNew(): void {
-        this.saveInternal().subscribe(x => {
-            this.route = new CreateOrEditRouteDto();
-        });
-    }
+
 
 
 
