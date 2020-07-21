@@ -48,6 +48,8 @@ export class AppNavigationService {
 
 
             new AppMenuItem('Offers', 'Pages.Offers', 'flaticon-more', '/app/main/offers/offers'),
+            
+            new AppMenuItem('GoodsDetails', 'Pages.GoodsDetails', 'flaticon-more', '/app/main/goodsDetails/goodsDetails'),
              new AppMenuItem('Administration', '', 'flaticon-interface-8', '', [], [
                 new AppMenuItem('OrganizationUnits', 'Pages.Administration.OrganizationUnits', 'flaticon-map', '/app/admin/organization-units'),
                 new AppMenuItem('Roles', 'Pages.Administration.Roles', 'flaticon-suitcase', '/app/admin/roles'),

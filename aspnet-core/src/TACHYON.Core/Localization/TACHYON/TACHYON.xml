@@ -1,6 +1,19 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <localizationDictionary culture="en">
-  <texts>    <text name="Offers">Offers</text>
+  <texts>    <text name="GoodsDetails">Goods details</text>
+    <text name="GoodsDetail">Goods detail</text>
+    <text name="TACHYON.GoodsDetails.GoodsDetail">GoodsDetail</text>
+    <text name="Quantity">Quantity</text>
+    <text name="Weight">Weight</text>
+    <text name="Dimentions">Dimentions</text>
+    <text name="IsDangerousGood">Is dangerous good</text>
+    <text name="NotIsDangerousGood">Not is dangerous good</text>
+    <text name="DangerousGoodsCode">Dangerous goods code</text>
+    <text name="GoodsDetailsHeaderInfo">Goods details header info</text>
+    <text name="CreateNewGoodsDetail">Create new goods detail</text>
+    <text name="EditGoodsDetail">Edit goods detail</text>
+    <text name="DeleteGoodsDetail">Delete goods detail</text>
+    <text name="Offers">Offers</text>
     <text name="Offer">Offer</text>
     <text name="TACHYON.Offers.Offer">Offer</text>
     <text name="OffersHeaderInfo">Offers header info</text>

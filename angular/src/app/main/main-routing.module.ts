@@ -1,5 +1,6 @@
 ﻿import { NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
+import { GoodsDetailsComponent } from './goodsDetails/goodsDetails/goodsDetails.component';
 import { OffersComponent } from './offers/offers/offers.component';
 import { RoutStepsComponent } from './routSteps/routSteps/routSteps.component';
 import { RoutesComponent } from './routs/routes/routes.component';
@@ -23,6 +24,7 @@ import { DashboardComponent } from './dashboard/dashboard.component';
             {
                 path: '',
                 children: [
+                    { path: 'goodsDetails/goodsDetails', component: GoodsDetailsComponent, data: { permission: 'Pages.GoodsDetails' }  },
                     { path: 'offers/offers', component: OffersComponent, data: { permission: 'Pages.Offers' }  },
                     { path: 'routSteps/routSteps', component: RoutStepsComponent, data: { permission: 'Pages.RoutSteps' }  },
                     { path: 'routs/routes', component: RoutesComponent, data: { permission: 'Pages.Routes' }  },

@@ -1,0 +1,74 @@
+﻿<div bsModal #createOrEditModal="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="createOrEditModal" aria-hidden="true" [config]="{backdrop: 'static'}">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <form *ngIf="active" #goodsDetailForm="ngForm" novalidate (ngSubmit)="save()" autocomplete="off">
+                <div class="modal-header">
+                    <h4 class="modal-title">
+                        <span *ngIf="goodsDetail.id">{{l("EditGoodsDetail")}}</span>
+                        <span *ngIf="!goodsDetail.id">{{l("CreateNewGoodsDetail")}}</span>
+                    </h4>
+                    <button type="button" class="close" (click)="close()" aria-label="Close" [disabled]="saving">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                 
+
+					<div class="form-group m-form__group">
+						<label for="GoodCategoryDisplayName">{{l("GoodCategory")}}</label>
+						<select name="goodsDetail.goodCategoryId" [(ngModel)]="goodsDetail.goodCategoryId" class="form-control" >
+							<option value="">{{l("SelectAGoodCategory")}}</option>
+							<option *ngFor="let item of allGoodCategorys" value="{{item.id}}">{{item.displayName}}</option>
+						</select>
+					</div>
+					 
+
+								<div class="form-group">
+									<label for="GoodsDetail_Name">{{l("Name")}} *</label>
+									<input type="text" id="GoodsDetail_Name" class="form-control" [(ngModel)]="goodsDetail.name" name="Name"   minlength="0"  maxlength="256"  required/>
+								</div>
+					
+								<div class="form-group">
+									<label for="GoodsDetail_Description">{{l("Description")}}</label>
+									<input type="text" id="GoodsDetail_Description" class="form-control" [(ngModel)]="goodsDetail.description" name="Description"   minlength="0"  maxlength="256" />
+								</div>
+					
+								<div class="form-group">
+									<label for="GoodsDetail_Quantity">{{l("Quantity")}}</label>
+									<input type="text" id="GoodsDetail_Quantity" class="form-control" [(ngModel)]="goodsDetail.quantity" name="Quantity"   minlength="0"  maxlength="128" />
+								</div>
+					
+								<div class="form-group">
+									<label for="GoodsDetail_Weight">{{l("Weight")}}</label>
+									<input type="text" id="GoodsDetail_Weight" class="form-control" [(ngModel)]="goodsDetail.weight" name="Weight"   minlength="0"  maxlength="64" />
+								</div>
+					
+								<div class="form-group">
+									<label for="GoodsDetail_Dimentions">{{l("Dimentions")}}</label>
+									<input type="text" id="GoodsDetail_Dimentions" class="form-control" [(ngModel)]="goodsDetail.dimentions" name="Dimentions"   minlength="0"  maxlength="128" />
+								</div>
+					
+								<br/><div class="m-checkbox-list">
+									<label for="GoodsDetail_IsDangerousGood" class="kt-checkbox">
+										<input id="GoodsDetail_IsDangerousGood" type="checkbox" name="IsDangerousGood" [(ngModel)]="goodsDetail.isDangerousGood"> 
+										{{l("IsDangerousGood")}}
+										<span></span>
+									</label>
+								</div>
+					
+								<div class="form-group">
+									<label for="GoodsDetail_DangerousGoodsCode">{{l("DangerousGoodsCode")}}</label>
+									<input type="text" id="GoodsDetail_DangerousGoodsCode" class="form-control" [(ngModel)]="goodsDetail.dangerousGoodsCode" name="DangerousGoodsCode"   minlength="0"  maxlength="64" />
+								</div>
+					
+
+                </div>
+                <div class="modal-footer">
+                    <button [disabled]="saving" type="button" class="btn btn-default" (click)="close()">{{l("Cancel")}}</button>
+                    <button type="submit" class="btn btn-primary blue" [disabled]="!goodsDetailForm.form.valid" [buttonBusy]="saving" [busyText]="l('SavingWithThreeDot')"><i class="fa fa-save"></i> <span>{{l("Save")}}</span></button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+</div>

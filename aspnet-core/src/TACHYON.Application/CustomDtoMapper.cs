@@ -1,4 +1,6 @@
-﻿using TACHYON.Offers.Dtos;
+﻿using TACHYON.Goods.GoodsDetails.Dtos;
+using TACHYON.Goods.GoodsDetails;
+using TACHYON.Offers.Dtos;
 using TACHYON.Offers;
 using TACHYON.Routs.RoutSteps.Dtos;
 using TACHYON.Routs.RoutSteps;
@@ -73,6 +75,8 @@ namespace TACHYON
     {
         public static void CreateMappings(IMapperConfigurationExpression configuration)
         {
+            configuration.CreateMap<CreateOrEditGoodsDetailDto, GoodsDetail>().ReverseMap();
+            configuration.CreateMap<GoodsDetailDto, GoodsDetail>().ReverseMap();
             configuration.CreateMap<CreateOrEditOfferDto, Offer>().ReverseMap();
             configuration.CreateMap<OfferDto, Offer>().ReverseMap();
             configuration.CreateMap<CreateOrEditRoutStepDto, RoutStep>().ReverseMap();

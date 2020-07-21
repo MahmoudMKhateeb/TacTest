@@ -1,4 +1,5 @@
-﻿using TACHYON.Offers;
+﻿using TACHYON.Goods.GoodsDetails;
+using TACHYON.Offers;
 using TACHYON.Routs.RoutSteps;
 using TACHYON.Routs;
 using TACHYON.Cities;
@@ -30,6 +31,8 @@ namespace TACHYON.EntityFrameworkCore
 {
     public class TACHYONDbContext : AbpZeroDbContext<Tenant, Role, User, TACHYONDbContext>, IAbpPersistedGrantDbContext
     {
+        public virtual DbSet<GoodsDetail> GoodsDetails { get; set; }
+
         public virtual DbSet<Offer> Offers { get; set; }
 
         public virtual DbSet<RoutStep> RoutSteps { get; set; }
@@ -95,7 +98,12 @@ namespace TACHYON.EntityFrameworkCore
            
            
            
-            modelBuilder.Entity<Offer>(o =>
+           
+            modelBuilder.Entity<GoodsDetail>(g =>
+            {
+                g.HasIndex(e => new { e.TenantId });
+            });
+ modelBuilder.Entity<Offer>(o =>
             {
                 o.HasIndex(e => new { e.TenantId });
             });
