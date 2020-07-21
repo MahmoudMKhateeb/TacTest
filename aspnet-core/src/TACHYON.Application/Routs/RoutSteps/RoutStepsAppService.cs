@@ -55,9 +55,11 @@ namespace TACHYON.Routs.RoutSteps
 						.WhereIf(input.MaxOrderFilter != null, e => e.Order <= input.MaxOrderFilter)
 						.WhereIf(!string.IsNullOrWhiteSpace(input.CityDisplayNameFilter), e => e.OriginCityFk != null && e.OriginCityFk.DisplayName == input.CityDisplayNameFilter)
 						.WhereIf(!string.IsNullOrWhiteSpace(input.CityDisplayName2Filter), e => e.DestinationCityFk != null && e.DestinationCityFk.DisplayName == input.CityDisplayName2Filter)
-						.WhereIf(!string.IsNullOrWhiteSpace(input.RouteDisplayNameFilter), e => e.RouteFk != null && e.RouteFk.DisplayName == input.RouteDisplayNameFilter);
+						.WhereIf(!string.IsNullOrWhiteSpace(input.RouteDisplayNameFilter), e => e.RouteFk != null && e.RouteFk.DisplayName == input.RouteDisplayNameFilter)
+						.WhereIf(input.RouteId.HasValue, e => e.RouteFk != null && e.RouteFk.Id == input.RouteId);
 
-			var pagedAndFilteredRoutSteps = filteredRoutSteps
+
+            var pagedAndFilteredRoutSteps = filteredRoutSteps
                 .OrderBy(input.Sorting ?? "id asc")
                 .PageBy(input);
 

@@ -17,7 +17,7 @@ namespace TACHYON.Routs
 
 		Task<GetRouteForEditOutput> GetRouteForEdit(EntityDto input);
 
-		Task CreateOrEdit(CreateOrEditRouteDto input);
+		Task<int> CreateOrEdit(CreateOrEditRouteDto input);
 
 		Task Delete(EntityDto input);
 

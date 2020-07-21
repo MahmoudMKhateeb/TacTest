@@ -102,18 +102,19 @@ namespace TACHYON.Routs
             return output;
          }
 
-		 public async Task CreateOrEdit(CreateOrEditRouteDto input)
+		 public async Task<int> CreateOrEdit(CreateOrEditRouteDto input)
          {
             if(input.Id == null){
-				await Create(input);
+			return	await Create(input);
 			}
 			else{
 				await Update(input);
-			}
+                return input.Id.Value;
+            }
          }
 
 		 [AbpAuthorize(AppPermissions.Pages_Routes_Create)]
-		 protected virtual async Task Create(CreateOrEditRouteDto input)
+		 protected virtual async Task<int> Create(CreateOrEditRouteDto input)
          {
             var route = ObjectMapper.Map<Route>(input);
 
@@ -124,7 +125,7 @@ namespace TACHYON.Routs
 			}
 		
 
-            await _routeRepository.InsertAsync(route);
+          return  await _routeRepository.InsertAndGetIdAsync(route);
          }
 
 		 [AbpAuthorize(AppPermissions.Pages_Routes_Edit)]
