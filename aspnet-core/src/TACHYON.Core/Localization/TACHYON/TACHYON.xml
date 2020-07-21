@@ -1,6 +1,15 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <localizationDictionary culture="en">
-  <texts>    <text name="RoutSteps">Rout steps</text>
+  <texts>    <text name="Offers">Offers</text>
+    <text name="Offer">Offer</text>
+    <text name="TACHYON.Offers.Offer">Offer</text>
+    <text name="OffersHeaderInfo">Offers header info</text>
+    <text name="CreateNewOffer">Create new offer</text>
+    <text name="EditOffer">Edit offer</text>
+    <text name="DeleteOffer">Delete offer</text>
+    <text name="GoodCategoryDisplayName">Good category display name</text>
+    <text name="PickGoodCategory">Pick good category</text>
+    <text name="RoutSteps">Rout steps</text>
     <text name="RoutStep">Rout step</text>
     <text name="TACHYON.RoutSteps.RoutStep">RoutStep</text>
     <text name="Order">Order</text>

@@ -1,5 +1,6 @@
 ﻿import { NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
+import { OffersComponent } from './offers/offers/offers.component';
 import { RoutStepsComponent } from './routSteps/routSteps/routSteps.component';
 import { RoutesComponent } from './routs/routes/routes.component';
 import { CreateOrEditRouteComponent } from './routs/routes/create-or-edit-route.component';
@@ -22,6 +23,7 @@ import { DashboardComponent } from './dashboard/dashboard.component';
             {
                 path: '',
                 children: [
+                    { path: 'offers/offers', component: OffersComponent, data: { permission: 'Pages.Offers' }  },
                     { path: 'routSteps/routSteps', component: RoutStepsComponent, data: { permission: 'Pages.RoutSteps' }  },
                     { path: 'routs/routes', component: RoutesComponent, data: { permission: 'Pages.Routes' }  },
                     { path: 'routs/routes/createOrEdit', component: CreateOrEditRouteComponent, data: { permission: 'Pages.Routes.Create' }  },
