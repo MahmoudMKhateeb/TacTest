@@ -7543,6 +7543,623 @@ export class NotificationServiceProxy {
 }
 
 @Injectable()
+export class OffersServiceProxy {
+    private http: HttpClient;
+    private baseUrl: string;
+    protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
+
+    constructor(@Inject(HttpClient) http: HttpClient, @Optional() @Inject(API_BASE_URL) baseUrl?: string) {
+        this.http = http;
+        this.baseUrl = baseUrl ? baseUrl : "";
+    }
+
+    /**
+     * @param filter (optional) 
+     * @param displayNameFilter (optional) 
+     * @param descriptionFilter (optional) 
+     * @param maxPriceFilter (optional) 
+     * @param minPriceFilter (optional) 
+     * @param trucksTypeDisplayNameFilter (optional) 
+     * @param trailerTypeDisplayNameFilter (optional) 
+     * @param goodCategoryDisplayNameFilter (optional) 
+     * @param routeDisplayNameFilter (optional) 
+     * @param sorting (optional) 
+     * @param skipCount (optional) 
+     * @param maxResultCount (optional) 
+     * @return Success
+     */
+    getAll(filter: string | null | undefined, displayNameFilter: string | null | undefined, descriptionFilter: string | null | undefined, maxPriceFilter: number | null | undefined, minPriceFilter: number | null | undefined, trucksTypeDisplayNameFilter: string | null | undefined, trailerTypeDisplayNameFilter: string | null | undefined, goodCategoryDisplayNameFilter: string | null | undefined, routeDisplayNameFilter: string | null | undefined, sorting: string | null | undefined, skipCount: number | undefined, maxResultCount: number | undefined): Observable<PagedResultDtoOfGetOfferForViewDto> {
+        let url_ = this.baseUrl + "/api/services/app/Offers/GetAll?";
+        if (filter !== undefined)
+            url_ += "Filter=" + encodeURIComponent("" + filter) + "&"; 
+        if (displayNameFilter !== undefined)
+            url_ += "DisplayNameFilter=" + encodeURIComponent("" + displayNameFilter) + "&"; 
+        if (descriptionFilter !== undefined)
+            url_ += "DescriptionFilter=" + encodeURIComponent("" + descriptionFilter) + "&"; 
+        if (maxPriceFilter !== undefined)
+            url_ += "MaxPriceFilter=" + encodeURIComponent("" + maxPriceFilter) + "&"; 
+        if (minPriceFilter !== undefined)
+            url_ += "MinPriceFilter=" + encodeURIComponent("" + minPriceFilter) + "&"; 
+        if (trucksTypeDisplayNameFilter !== undefined)
+            url_ += "TrucksTypeDisplayNameFilter=" + encodeURIComponent("" + trucksTypeDisplayNameFilter) + "&"; 
+        if (trailerTypeDisplayNameFilter !== undefined)
+            url_ += "TrailerTypeDisplayNameFilter=" + encodeURIComponent("" + trailerTypeDisplayNameFilter) + "&"; 
+        if (goodCategoryDisplayNameFilter !== undefined)
+            url_ += "GoodCategoryDisplayNameFilter=" + encodeURIComponent("" + goodCategoryDisplayNameFilter) + "&"; 
+        if (routeDisplayNameFilter !== undefined)
+            url_ += "RouteDisplayNameFilter=" + encodeURIComponent("" + routeDisplayNameFilter) + "&"; 
+        if (sorting !== undefined)
+            url_ += "Sorting=" + encodeURIComponent("" + sorting) + "&"; 
+        if (skipCount === null)
+            throw new Error("The parameter 'skipCount' cannot be null.");
+        else if (skipCount !== undefined)
+            url_ += "SkipCount=" + encodeURIComponent("" + skipCount) + "&"; 
+        if (maxResultCount === null)
+            throw new Error("The parameter 'maxResultCount' cannot be null.");
+        else if (maxResultCount !== undefined)
+            url_ += "MaxResultCount=" + encodeURIComponent("" + maxResultCount) + "&"; 
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",			
+            headers: new HttpHeaders({
+                "Accept": "text/plain"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGetAll(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGetAll(<any>response_);
+                } catch (e) {
+                    return <Observable<PagedResultDtoOfGetOfferForViewDto>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<PagedResultDtoOfGetOfferForViewDto>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processGetAll(response: HttpResponseBase): Observable<PagedResultDtoOfGetOfferForViewDto> {
+        const status = response.status;
+        const responseBlob = 
+            response instanceof HttpResponse ? response.body : 
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }};
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = PagedResultDtoOfGetOfferForViewDto.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<PagedResultDtoOfGetOfferForViewDto>(<any>null);
+    }
+
+    /**
+     * @param id (optional) 
+     * @return Success
+     */
+    getOfferForView(id: number | undefined): Observable<GetOfferForViewDto> {
+        let url_ = this.baseUrl + "/api/services/app/Offers/GetOfferForView?";
+        if (id === null)
+            throw new Error("The parameter 'id' cannot be null.");
+        else if (id !== undefined)
+            url_ += "id=" + encodeURIComponent("" + id) + "&"; 
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",			
+            headers: new HttpHeaders({
+                "Accept": "text/plain"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGetOfferForView(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGetOfferForView(<any>response_);
+                } catch (e) {
+                    return <Observable<GetOfferForViewDto>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<GetOfferForViewDto>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processGetOfferForView(response: HttpResponseBase): Observable<GetOfferForViewDto> {
+        const status = response.status;
+        const responseBlob = 
+            response instanceof HttpResponse ? response.body : 
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }};
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = GetOfferForViewDto.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<GetOfferForViewDto>(<any>null);
+    }
+
+    /**
+     * @param id (optional) 
+     * @return Success
+     */
+    getOfferForEdit(id: number | undefined): Observable<GetOfferForEditOutput> {
+        let url_ = this.baseUrl + "/api/services/app/Offers/GetOfferForEdit?";
+        if (id === null)
+            throw new Error("The parameter 'id' cannot be null.");
+        else if (id !== undefined)
+            url_ += "Id=" + encodeURIComponent("" + id) + "&"; 
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",			
+            headers: new HttpHeaders({
+                "Accept": "text/plain"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGetOfferForEdit(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGetOfferForEdit(<any>response_);
+                } catch (e) {
+                    return <Observable<GetOfferForEditOutput>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<GetOfferForEditOutput>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processGetOfferForEdit(response: HttpResponseBase): Observable<GetOfferForEditOutput> {
+        const status = response.status;
+        const responseBlob = 
+            response instanceof HttpResponse ? response.body : 
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }};
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = GetOfferForEditOutput.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<GetOfferForEditOutput>(<any>null);
+    }
+
+    /**
+     * @param body (optional) 
+     * @return Success
+     */
+    createOrEdit(body: CreateOrEditOfferDto | undefined): Observable<void> {
+        let url_ = this.baseUrl + "/api/services/app/Offers/CreateOrEdit";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(body);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",			
+            headers: new HttpHeaders({
+                "Content-Type": "application/json-patch+json", 
+            })
+        };
+
+        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processCreateOrEdit(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processCreateOrEdit(<any>response_);
+                } catch (e) {
+                    return <Observable<void>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<void>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processCreateOrEdit(response: HttpResponseBase): Observable<void> {
+        const status = response.status;
+        const responseBlob = 
+            response instanceof HttpResponse ? response.body : 
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }};
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return _observableOf<void>(<any>null);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<void>(<any>null);
+    }
+
+    /**
+     * @param id (optional) 
+     * @return Success
+     */
+    delete(id: number | undefined): Observable<void> {
+        let url_ = this.baseUrl + "/api/services/app/Offers/Delete?";
+        if (id === null)
+            throw new Error("The parameter 'id' cannot be null.");
+        else if (id !== undefined)
+            url_ += "Id=" + encodeURIComponent("" + id) + "&"; 
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",			
+            headers: new HttpHeaders({
+            })
+        };
+
+        return this.http.request("delete", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processDelete(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processDelete(<any>response_);
+                } catch (e) {
+                    return <Observable<void>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<void>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processDelete(response: HttpResponseBase): Observable<void> {
+        const status = response.status;
+        const responseBlob = 
+            response instanceof HttpResponse ? response.body : 
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }};
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return _observableOf<void>(<any>null);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<void>(<any>null);
+    }
+
+    /**
+     * @param filter (optional) 
+     * @param displayNameFilter (optional) 
+     * @param descriptionFilter (optional) 
+     * @param maxPriceFilter (optional) 
+     * @param minPriceFilter (optional) 
+     * @param trucksTypeDisplayNameFilter (optional) 
+     * @param trailerTypeDisplayNameFilter (optional) 
+     * @param goodCategoryDisplayNameFilter (optional) 
+     * @param routeDisplayNameFilter (optional) 
+     * @return Success
+     */
+    getOffersToExcel(filter: string | null | undefined, displayNameFilter: string | null | undefined, descriptionFilter: string | null | undefined, maxPriceFilter: number | null | undefined, minPriceFilter: number | null | undefined, trucksTypeDisplayNameFilter: string | null | undefined, trailerTypeDisplayNameFilter: string | null | undefined, goodCategoryDisplayNameFilter: string | null | undefined, routeDisplayNameFilter: string | null | undefined): Observable<FileDto> {
+        let url_ = this.baseUrl + "/api/services/app/Offers/GetOffersToExcel?";
+        if (filter !== undefined)
+            url_ += "Filter=" + encodeURIComponent("" + filter) + "&"; 
+        if (displayNameFilter !== undefined)
+            url_ += "DisplayNameFilter=" + encodeURIComponent("" + displayNameFilter) + "&"; 
+        if (descriptionFilter !== undefined)
+            url_ += "DescriptionFilter=" + encodeURIComponent("" + descriptionFilter) + "&"; 
+        if (maxPriceFilter !== undefined)
+            url_ += "MaxPriceFilter=" + encodeURIComponent("" + maxPriceFilter) + "&"; 
+        if (minPriceFilter !== undefined)
+            url_ += "MinPriceFilter=" + encodeURIComponent("" + minPriceFilter) + "&"; 
+        if (trucksTypeDisplayNameFilter !== undefined)
+            url_ += "TrucksTypeDisplayNameFilter=" + encodeURIComponent("" + trucksTypeDisplayNameFilter) + "&"; 
+        if (trailerTypeDisplayNameFilter !== undefined)
+            url_ += "TrailerTypeDisplayNameFilter=" + encodeURIComponent("" + trailerTypeDisplayNameFilter) + "&"; 
+        if (goodCategoryDisplayNameFilter !== undefined)
+            url_ += "GoodCategoryDisplayNameFilter=" + encodeURIComponent("" + goodCategoryDisplayNameFilter) + "&"; 
+        if (routeDisplayNameFilter !== undefined)
+            url_ += "RouteDisplayNameFilter=" + encodeURIComponent("" + routeDisplayNameFilter) + "&"; 
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",			
+            headers: new HttpHeaders({
+                "Accept": "text/plain"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGetOffersToExcel(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGetOffersToExcel(<any>response_);
+                } catch (e) {
+                    return <Observable<FileDto>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<FileDto>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processGetOffersToExcel(response: HttpResponseBase): Observable<FileDto> {
+        const status = response.status;
+        const responseBlob = 
+            response instanceof HttpResponse ? response.body : 
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }};
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = FileDto.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<FileDto>(<any>null);
+    }
+
+    /**
+     * @return Success
+     */
+    getAllTrucksTypeForTableDropdown(): Observable<OfferTrucksTypeLookupTableDto[]> {
+        let url_ = this.baseUrl + "/api/services/app/Offers/GetAllTrucksTypeForTableDropdown";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",			
+            headers: new HttpHeaders({
+                "Accept": "text/plain"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGetAllTrucksTypeForTableDropdown(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGetAllTrucksTypeForTableDropdown(<any>response_);
+                } catch (e) {
+                    return <Observable<OfferTrucksTypeLookupTableDto[]>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<OfferTrucksTypeLookupTableDto[]>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processGetAllTrucksTypeForTableDropdown(response: HttpResponseBase): Observable<OfferTrucksTypeLookupTableDto[]> {
+        const status = response.status;
+        const responseBlob = 
+            response instanceof HttpResponse ? response.body : 
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }};
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            if (Array.isArray(resultData200)) {
+                result200 = [] as any;
+                for (let item of resultData200)
+                    result200!.push(OfferTrucksTypeLookupTableDto.fromJS(item));
+            }
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<OfferTrucksTypeLookupTableDto[]>(<any>null);
+    }
+
+    /**
+     * @return Success
+     */
+    getAllTrailerTypeForTableDropdown(): Observable<OfferTrailerTypeLookupTableDto[]> {
+        let url_ = this.baseUrl + "/api/services/app/Offers/GetAllTrailerTypeForTableDropdown";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",			
+            headers: new HttpHeaders({
+                "Accept": "text/plain"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGetAllTrailerTypeForTableDropdown(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGetAllTrailerTypeForTableDropdown(<any>response_);
+                } catch (e) {
+                    return <Observable<OfferTrailerTypeLookupTableDto[]>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<OfferTrailerTypeLookupTableDto[]>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processGetAllTrailerTypeForTableDropdown(response: HttpResponseBase): Observable<OfferTrailerTypeLookupTableDto[]> {
+        const status = response.status;
+        const responseBlob = 
+            response instanceof HttpResponse ? response.body : 
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }};
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            if (Array.isArray(resultData200)) {
+                result200 = [] as any;
+                for (let item of resultData200)
+                    result200!.push(OfferTrailerTypeLookupTableDto.fromJS(item));
+            }
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<OfferTrailerTypeLookupTableDto[]>(<any>null);
+    }
+
+    /**
+     * @return Success
+     */
+    getAllGoodCategoryForTableDropdown(): Observable<OfferGoodCategoryLookupTableDto[]> {
+        let url_ = this.baseUrl + "/api/services/app/Offers/GetAllGoodCategoryForTableDropdown";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",			
+            headers: new HttpHeaders({
+                "Accept": "text/plain"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGetAllGoodCategoryForTableDropdown(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGetAllGoodCategoryForTableDropdown(<any>response_);
+                } catch (e) {
+                    return <Observable<OfferGoodCategoryLookupTableDto[]>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<OfferGoodCategoryLookupTableDto[]>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processGetAllGoodCategoryForTableDropdown(response: HttpResponseBase): Observable<OfferGoodCategoryLookupTableDto[]> {
+        const status = response.status;
+        const responseBlob = 
+            response instanceof HttpResponse ? response.body : 
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }};
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            if (Array.isArray(resultData200)) {
+                result200 = [] as any;
+                for (let item of resultData200)
+                    result200!.push(OfferGoodCategoryLookupTableDto.fromJS(item));
+            }
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<OfferGoodCategoryLookupTableDto[]>(<any>null);
+    }
+
+    /**
+     * @return Success
+     */
+    getAllRouteForTableDropdown(): Observable<OfferRouteLookupTableDto[]> {
+        let url_ = this.baseUrl + "/api/services/app/Offers/GetAllRouteForTableDropdown";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",			
+            headers: new HttpHeaders({
+                "Accept": "text/plain"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGetAllRouteForTableDropdown(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGetAllRouteForTableDropdown(<any>response_);
+                } catch (e) {
+                    return <Observable<OfferRouteLookupTableDto[]>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<OfferRouteLookupTableDto[]>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processGetAllRouteForTableDropdown(response: HttpResponseBase): Observable<OfferRouteLookupTableDto[]> {
+        const status = response.status;
+        const responseBlob = 
+            response instanceof HttpResponse ? response.body : 
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }};
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            if (Array.isArray(resultData200)) {
+                result200 = [] as any;
+                for (let item of resultData200)
+                    result200!.push(OfferRouteLookupTableDto.fromJS(item));
+            }
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<OfferRouteLookupTableDto[]>(<any>null);
+    }
+}
+
+@Injectable()
 export class OrganizationUnitServiceProxy {
     private http: HttpClient;
     private baseUrl: string;
@@ -26724,6 +27341,446 @@ export class UpdateNotificationSettingsInput implements IUpdateNotificationSetti
 export interface IUpdateNotificationSettingsInput {
     receiveNotifications: boolean;
     notifications: NotificationSubscriptionDto[] | undefined;
+}
+
+export class OfferDto implements IOfferDto {
+    displayName!: string | undefined;
+    description!: string | undefined;
+    price!: number;
+    trucksTypeId!: string;
+    trailerTypeId!: number;
+    goodCategoryId!: number | undefined;
+    routeId!: number;
+    id!: number;
+
+    constructor(data?: IOfferDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.displayName = _data["displayName"];
+            this.description = _data["description"];
+            this.price = _data["price"];
+            this.trucksTypeId = _data["trucksTypeId"];
+            this.trailerTypeId = _data["trailerTypeId"];
+            this.goodCategoryId = _data["goodCategoryId"];
+            this.routeId = _data["routeId"];
+            this.id = _data["id"];
+        }
+    }
+
+    static fromJS(data: any): OfferDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new OfferDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["displayName"] = this.displayName;
+        data["description"] = this.description;
+        data["price"] = this.price;
+        data["trucksTypeId"] = this.trucksTypeId;
+        data["trailerTypeId"] = this.trailerTypeId;
+        data["goodCategoryId"] = this.goodCategoryId;
+        data["routeId"] = this.routeId;
+        data["id"] = this.id;
+        return data; 
+    }
+}
+
+export interface IOfferDto {
+    displayName: string | undefined;
+    description: string | undefined;
+    price: number;
+    trucksTypeId: string;
+    trailerTypeId: number;
+    goodCategoryId: number | undefined;
+    routeId: number;
+    id: number;
+}
+
+export class GetOfferForViewDto implements IGetOfferForViewDto {
+    offer!: OfferDto;
+    trucksTypeDisplayName!: string | undefined;
+    trailerTypeDisplayName!: string | undefined;
+    goodCategoryDisplayName!: string | undefined;
+    routeDisplayName!: string | undefined;
+
+    constructor(data?: IGetOfferForViewDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.offer = _data["offer"] ? OfferDto.fromJS(_data["offer"]) : <any>undefined;
+            this.trucksTypeDisplayName = _data["trucksTypeDisplayName"];
+            this.trailerTypeDisplayName = _data["trailerTypeDisplayName"];
+            this.goodCategoryDisplayName = _data["goodCategoryDisplayName"];
+            this.routeDisplayName = _data["routeDisplayName"];
+        }
+    }
+
+    static fromJS(data: any): GetOfferForViewDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new GetOfferForViewDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["offer"] = this.offer ? this.offer.toJSON() : <any>undefined;
+        data["trucksTypeDisplayName"] = this.trucksTypeDisplayName;
+        data["trailerTypeDisplayName"] = this.trailerTypeDisplayName;
+        data["goodCategoryDisplayName"] = this.goodCategoryDisplayName;
+        data["routeDisplayName"] = this.routeDisplayName;
+        return data; 
+    }
+}
+
+export interface IGetOfferForViewDto {
+    offer: OfferDto;
+    trucksTypeDisplayName: string | undefined;
+    trailerTypeDisplayName: string | undefined;
+    goodCategoryDisplayName: string | undefined;
+    routeDisplayName: string | undefined;
+}
+
+export class PagedResultDtoOfGetOfferForViewDto implements IPagedResultDtoOfGetOfferForViewDto {
+    totalCount!: number;
+    items!: GetOfferForViewDto[] | undefined;
+
+    constructor(data?: IPagedResultDtoOfGetOfferForViewDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.totalCount = _data["totalCount"];
+            if (Array.isArray(_data["items"])) {
+                this.items = [] as any;
+                for (let item of _data["items"])
+                    this.items!.push(GetOfferForViewDto.fromJS(item));
+            }
+        }
+    }
+
+    static fromJS(data: any): PagedResultDtoOfGetOfferForViewDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new PagedResultDtoOfGetOfferForViewDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["totalCount"] = this.totalCount;
+        if (Array.isArray(this.items)) {
+            data["items"] = [];
+            for (let item of this.items)
+                data["items"].push(item.toJSON());
+        }
+        return data; 
+    }
+}
+
+export interface IPagedResultDtoOfGetOfferForViewDto {
+    totalCount: number;
+    items: GetOfferForViewDto[] | undefined;
+}
+
+export class CreateOrEditOfferDto implements ICreateOrEditOfferDto {
+    displayName!: string | undefined;
+    description!: string | undefined;
+    price!: number;
+    trucksTypeId!: string;
+    trailerTypeId!: number;
+    goodCategoryId!: number | undefined;
+    routeId!: number;
+    id!: number | undefined;
+
+    constructor(data?: ICreateOrEditOfferDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.displayName = _data["displayName"];
+            this.description = _data["description"];
+            this.price = _data["price"];
+            this.trucksTypeId = _data["trucksTypeId"];
+            this.trailerTypeId = _data["trailerTypeId"];
+            this.goodCategoryId = _data["goodCategoryId"];
+            this.routeId = _data["routeId"];
+            this.id = _data["id"];
+        }
+    }
+
+    static fromJS(data: any): CreateOrEditOfferDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new CreateOrEditOfferDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["displayName"] = this.displayName;
+        data["description"] = this.description;
+        data["price"] = this.price;
+        data["trucksTypeId"] = this.trucksTypeId;
+        data["trailerTypeId"] = this.trailerTypeId;
+        data["goodCategoryId"] = this.goodCategoryId;
+        data["routeId"] = this.routeId;
+        data["id"] = this.id;
+        return data; 
+    }
+}
+
+export interface ICreateOrEditOfferDto {
+    displayName: string | undefined;
+    description: string | undefined;
+    price: number;
+    trucksTypeId: string;
+    trailerTypeId: number;
+    goodCategoryId: number | undefined;
+    routeId: number;
+    id: number | undefined;
+}
+
+export class GetOfferForEditOutput implements IGetOfferForEditOutput {
+    offer!: CreateOrEditOfferDto;
+    trucksTypeDisplayName!: string | undefined;
+    trailerTypeDisplayName!: string | undefined;
+    goodCategoryDisplayName!: string | undefined;
+    routeDisplayName!: string | undefined;
+
+    constructor(data?: IGetOfferForEditOutput) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.offer = _data["offer"] ? CreateOrEditOfferDto.fromJS(_data["offer"]) : <any>undefined;
+            this.trucksTypeDisplayName = _data["trucksTypeDisplayName"];
+            this.trailerTypeDisplayName = _data["trailerTypeDisplayName"];
+            this.goodCategoryDisplayName = _data["goodCategoryDisplayName"];
+            this.routeDisplayName = _data["routeDisplayName"];
+        }
+    }
+
+    static fromJS(data: any): GetOfferForEditOutput {
+        data = typeof data === 'object' ? data : {};
+        let result = new GetOfferForEditOutput();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["offer"] = this.offer ? this.offer.toJSON() : <any>undefined;
+        data["trucksTypeDisplayName"] = this.trucksTypeDisplayName;
+        data["trailerTypeDisplayName"] = this.trailerTypeDisplayName;
+        data["goodCategoryDisplayName"] = this.goodCategoryDisplayName;
+        data["routeDisplayName"] = this.routeDisplayName;
+        return data; 
+    }
+}
+
+export interface IGetOfferForEditOutput {
+    offer: CreateOrEditOfferDto;
+    trucksTypeDisplayName: string | undefined;
+    trailerTypeDisplayName: string | undefined;
+    goodCategoryDisplayName: string | undefined;
+    routeDisplayName: string | undefined;
+}
+
+export class OfferTrucksTypeLookupTableDto implements IOfferTrucksTypeLookupTableDto {
+    id!: string | undefined;
+    displayName!: string | undefined;
+
+    constructor(data?: IOfferTrucksTypeLookupTableDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.id = _data["id"];
+            this.displayName = _data["displayName"];
+        }
+    }
+
+    static fromJS(data: any): OfferTrucksTypeLookupTableDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new OfferTrucksTypeLookupTableDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
+        data["displayName"] = this.displayName;
+        return data; 
+    }
+}
+
+export interface IOfferTrucksTypeLookupTableDto {
+    id: string | undefined;
+    displayName: string | undefined;
+}
+
+export class OfferTrailerTypeLookupTableDto implements IOfferTrailerTypeLookupTableDto {
+    id!: number;
+    displayName!: string | undefined;
+
+    constructor(data?: IOfferTrailerTypeLookupTableDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.id = _data["id"];
+            this.displayName = _data["displayName"];
+        }
+    }
+
+    static fromJS(data: any): OfferTrailerTypeLookupTableDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new OfferTrailerTypeLookupTableDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
+        data["displayName"] = this.displayName;
+        return data; 
+    }
+}
+
+export interface IOfferTrailerTypeLookupTableDto {
+    id: number;
+    displayName: string | undefined;
+}
+
+export class OfferGoodCategoryLookupTableDto implements IOfferGoodCategoryLookupTableDto {
+    id!: number;
+    displayName!: string | undefined;
+
+    constructor(data?: IOfferGoodCategoryLookupTableDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.id = _data["id"];
+            this.displayName = _data["displayName"];
+        }
+    }
+
+    static fromJS(data: any): OfferGoodCategoryLookupTableDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new OfferGoodCategoryLookupTableDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
+        data["displayName"] = this.displayName;
+        return data; 
+    }
+}
+
+export interface IOfferGoodCategoryLookupTableDto {
+    id: number;
+    displayName: string | undefined;
+}
+
+export class OfferRouteLookupTableDto implements IOfferRouteLookupTableDto {
+    id!: number;
+    displayName!: string | undefined;
+
+    constructor(data?: IOfferRouteLookupTableDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.id = _data["id"];
+            this.displayName = _data["displayName"];
+        }
+    }
+
+    static fromJS(data: any): OfferRouteLookupTableDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new OfferRouteLookupTableDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
+        data["displayName"] = this.displayName;
+        return data; 
+    }
+}
+
+export interface IOfferRouteLookupTableDto {
+    id: number;
+    displayName: string | undefined;
 }
 
 export class OrganizationUnitDto implements IOrganizationUnitDto {
