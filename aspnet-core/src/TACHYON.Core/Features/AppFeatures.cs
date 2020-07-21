@@ -15,9 +15,9 @@
         public const string Carrier = "App.Carrier";
         public const string Broker = "App.Broker";
         public const string Receiver = "App.Receiver";
-
-
+        public const string TachyonDealer = "App.TachyonDealer";
         #endregion
+
 
     }
 }

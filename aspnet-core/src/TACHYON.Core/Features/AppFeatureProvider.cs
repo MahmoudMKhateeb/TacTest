@@ -11,9 +11,9 @@ namespace TACHYON.Features
         {
             context.Create(
                 AppFeatures.MaxUserCount,
-                defaultValue: "0", //0 = unlimited
-                displayName: L("MaximumUserCount"),
-                description: L("MaximumUserCount_Description"),
+                "0", //0 = unlimited
+                L("MaximumUserCount"),
+                L("MaximumUserCount_Description"),
                 inputType: new SingleLineStringInputType(new NumericValueValidator(0, int.MaxValue))
             )[FeatureMetadata.CustomFeatureKey] = new FeatureMetadata
             {
@@ -49,14 +49,13 @@ namespace TACHYON.Features
             //};
 
             #endregion
-
+            //---Y
             #region ######## Tachyon features #########
 
             var shipperFeature = context.Create(
                 AppFeatures.Shipper,
-                defaultValue: "false",
-                displayName: L("ShipperFeature"),// todo add localization here
-
+                "false",
+                L("ShipperFeature"), // todo add localization here
                 inputType: new CheckboxInputType()
             )[FeatureMetadata.CustomFeatureKey] = new FeatureMetadata
             {
@@ -67,59 +66,65 @@ namespace TACHYON.Features
 
             var carrierFeature = context.Create(
                 AppFeatures.Carrier,
-                defaultValue: "false",
-                displayName: L("CarrierFeature"),// todo add localization here
+                "false",
+                L("CarrierFeature"), // todo add localization here
                 inputType: new CheckboxInputType()
-             )[FeatureMetadata.CustomFeatureKey] = new FeatureMetadata
-             {
-                 IsVisibleOnPricingTable = true,
-                 TextHtmlColor = value => value == "true" ? "#c300ff" : "#d9534f"
-             };
+            )[FeatureMetadata.CustomFeatureKey] = new FeatureMetadata
+            {
+                IsVisibleOnPricingTable = true,
+                TextHtmlColor = value => value == "true" ? "#c300ff" : "#d9534f"
+            };
 
             var broker = context.Create(
-               AppFeatures.Broker,
-               defaultValue: "false",
-               displayName: L("BrokerFeature"),// todo add localization here
-
-               inputType: new CheckboxInputType()
-           )[FeatureMetadata.CustomFeatureKey] = new FeatureMetadata
-           {
-               IsVisibleOnPricingTable = true,
-               TextHtmlColor = value => value == "true" ? "#c300ff" : "#d9534f"
-           };
+                AppFeatures.Broker,
+                "false",
+                L("BrokerFeature"), // todo add localization here
+                inputType: new CheckboxInputType()
+            )[FeatureMetadata.CustomFeatureKey] = new FeatureMetadata
+            {
+                IsVisibleOnPricingTable = true,
+                TextHtmlColor = value => value == "true" ? "#c300ff" : "#d9534f"
+            };
 
             var receiver = context.Create(
-              AppFeatures.Receiver,
-              defaultValue: "false",
-              displayName: L("ReceiverFeature"),// todo add localization here
+                AppFeatures.Receiver,
+                "false",
+                L("ReceiverFeature"), // todo add localization here
+                inputType: new CheckboxInputType()
+            )[FeatureMetadata.CustomFeatureKey] = new FeatureMetadata
+            {
+                IsVisibleOnPricingTable = true,
+                TextHtmlColor = value => value == "true" ? "#c300ff" : "#d9534f"
+            };
 
-              inputType: new CheckboxInputType()
-          )[FeatureMetadata.CustomFeatureKey] = new FeatureMetadata
-          {
-              IsVisibleOnPricingTable = true,
-              TextHtmlColor = value => value == "true" ? "#c300ff" : "#d9534f"
-          };
+            var tachyonDealer = context.Create(
+                AppFeatures.TachyonDealer,
+                "false",
+                L("TachyonDealerFeature"), // todo add localization here
+                inputType: new CheckboxInputType()
+            );
+
 
             #endregion
-
+            //---Y
             var chatFeature = context.Create(
                 AppFeatures.ChatFeature,
-                defaultValue: "false",
-                displayName: L("ChatFeature"),
+                "false",
+                L("ChatFeature"),
                 inputType: new CheckboxInputType()
             );
 
             chatFeature.CreateChildFeature(
                 AppFeatures.TenantToTenantChatFeature,
-                defaultValue: "false",
-                displayName: L("TenantToTenantChatFeature"),
+                "false",
+                L("TenantToTenantChatFeature"),
                 inputType: new CheckboxInputType()
             );
 
             chatFeature.CreateChildFeature(
                 AppFeatures.TenantToHostChatFeature,
-                defaultValue: "false",
-                displayName: L("TenantToHostChatFeature"),
+                "false",
+                L("TenantToHostChatFeature"),
                 inputType: new CheckboxInputType()
             );
         }
