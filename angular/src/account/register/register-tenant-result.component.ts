@@ -7,33 +7,32 @@ import { RegisterTenantOutput } from '@shared/service-proxies/service-proxies';
 import { TenantRegistrationHelperService } from './tenant-registration-helper.service';
 
 @Component({
-    templateUrl: './register-tenant-result.component.html',
-    animations: [accountModuleAnimation()]
+  templateUrl: './register-tenant-result.component.html',
+  animations: [accountModuleAnimation()],
 })
 export class RegisterTenantResultComponent extends AppComponentBase implements OnInit {
+  model: RegisterTenantOutput = new RegisterTenantOutput();
+  tenantUrl: string;
 
-    model: RegisterTenantOutput = new RegisterTenantOutput();
-    tenantUrl: string;
+  saving = false;
 
-    saving = false;
+  constructor(
+    injector: Injector,
+    private _router: Router,
+    private _appUrlService: AppUrlService,
+    private _tenantRegistrationHelper: TenantRegistrationHelperService
+  ) {
+    super(injector);
+  }
 
-    constructor(
-        injector: Injector,
-        private _router: Router,
-        private _appUrlService: AppUrlService,
-        private _tenantRegistrationHelper: TenantRegistrationHelperService
-    ) {
-        super(injector);
+  ngOnInit() {
+    if (!this._tenantRegistrationHelper.registrationResult) {
+      this._router.navigate(['account/login']);
+      return;
     }
 
-    ngOnInit() {
-        if (!this._tenantRegistrationHelper.registrationResult) {
-            this._router.navigate(['account/login']);
-            return;
-        }
-
-        this.model = this._tenantRegistrationHelper.registrationResult;
-        abp.multiTenancy.setTenantIdCookie(this.model.tenantId);
-        this.tenantUrl = this._appUrlService.getAppRootUrlOfTenant(this.model.tenancyName);
-    }
+    this.model = this._tenantRegistrationHelper.registrationResult;
+    abp.multiTenancy.setTenantIdCookie(this.model.tenantId);
+    this.tenantUrl = this._appUrlService.getAppRootUrlOfTenant(this.model.tenancyName);
+  }
 }

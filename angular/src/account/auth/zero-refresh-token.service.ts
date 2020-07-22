@@ -6,14 +6,14 @@ import { AppConsts } from '@shared/AppConsts';
 import { LocalStorageService } from '@shared/utils/local-storage.service';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class ZeroRefreshTokenService implements RefreshTokenService {
   constructor(
     private _tokenAuthService: TokenAuthServiceProxy,
     private _tokenService: TokenService,
     private _localStorageService: LocalStorageService
-  ) { }
+  ) {}
 
   tryAuthWithRefreshToken(): Observable<boolean> {
     let refreshTokenObservable = new Subject<boolean>();
@@ -23,28 +23,26 @@ export class ZeroRefreshTokenService implements RefreshTokenService {
       return of(false);
     }
 
-    this._tokenAuthService.refreshToken(token)
-      .subscribe(
-        (tokenResult: RefreshTokenResult) => {
-          if (tokenResult && tokenResult.accessToken) {
-            let tokenExpireDate = (new Date(new Date().getTime() + 1000 * tokenResult.expireInSeconds));
-            this._tokenService.setToken(tokenResult.accessToken, tokenExpireDate);
+    this._tokenAuthService.refreshToken(token).subscribe(
+      (tokenResult: RefreshTokenResult) => {
+        if (tokenResult && tokenResult.accessToken) {
+          let tokenExpireDate = new Date(new Date().getTime() + 1000 * tokenResult.expireInSeconds);
+          this._tokenService.setToken(tokenResult.accessToken, tokenExpireDate);
 
-            this._localStorageService.setItem(AppConsts.authorization.encrptedAuthTokenName,
-              {
-                  token: tokenResult.encryptedAccessToken,
-                  expireDate: tokenExpireDate
-              });
+          this._localStorageService.setItem(AppConsts.authorization.encrptedAuthTokenName, {
+            token: tokenResult.encryptedAccessToken,
+            expireDate: tokenExpireDate,
+          });
 
-            refreshTokenObservable.next(true);
-          } else {
-            refreshTokenObservable.next(false);
-          }
-        },
-        (error: any) => {
+          refreshTokenObservable.next(true);
+        } else {
           refreshTokenObservable.next(false);
         }
-      );
+      },
+      (error: any) => {
+        refreshTokenObservable.next(false);
+      }
+    );
     return refreshTokenObservable;
   }
 }

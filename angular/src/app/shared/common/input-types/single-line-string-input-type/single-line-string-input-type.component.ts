@@ -4,14 +4,12 @@ import { InputTypeComponentBase } from '../input-type-component-base';
 @Component({
   selector: 'app-single-line-string-input-type',
   templateUrl: './single-line-string-input-type.component.html',
-  styleUrls: ['./single-line-string-input-type.component.css']
+  styleUrls: ['./single-line-string-input-type.component.css'],
 })
 export class SingleLineStringInputTypeComponent extends InputTypeComponentBase implements OnInit {
   selectedValue: string;
 
-  constructor(
-    injector: Injector,
-  ) {
+  constructor(injector: Injector) {
     super(injector);
   }
 

@@ -6,17 +6,15 @@ import { WidgetComponentBase } from '../widget-component-base';
 @Component({
   selector: 'app-widget-subscription-expiring-tenants',
   templateUrl: './widget-subscription-expiring-tenants.component.html',
-  styleUrls: ['./widget-subscription-expiring-tenants.component.css']
+  styleUrls: ['./widget-subscription-expiring-tenants.component.css'],
 })
 export class WidgetSubscriptionExpiringTenantsComponent extends WidgetComponentBase implements OnInit {
-
   @ViewChild('ExpiringTenantsTable', { static: true }) expiringTenantsTable: Table;
 
   dataLoading = true;
   expiringTenantsData: GetExpiringTenantsOutput;
 
-  constructor(injector: Injector,
-    private _hostDashboardServiceProxy: HostDashboardServiceProxy) {
+  constructor(injector: Injector, private _hostDashboardServiceProxy: HostDashboardServiceProxy) {
     super(injector);
   }
 
@@ -32,7 +30,8 @@ export class WidgetSubscriptionExpiringTenantsComponent extends WidgetComponentB
   }
 
   gotoAllExpiringTenants(): void {
-    const url = abp.appPath +
+    const url =
+      abp.appPath +
       'app/admin/tenants?' +
       'subscriptionEndDateStart=' +
       encodeURIComponent(this.expiringTenantsData.subscriptionEndDateStart.format()) +

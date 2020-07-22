@@ -12,7 +12,7 @@ class RegionalStatsTable extends DashboardChartBase {
     { name: '2', value: '#f4516c' },
     { name: '3', value: '#34bfa3' },
     { name: '4', value: '#ffb822' },
-    { name: '5', value: '#00c5dc' }
+    { name: '5', value: '#00c5dc' },
   ];
 
   curve: any = curveBasis;
@@ -33,43 +33,38 @@ class RegionalStatsTable extends DashboardChartBase {
       for (let i = 0; i < stat.change.length; i++) {
         series.push({
           name: i + 1,
-          value: stat.change[i]
+          value: stat.change[i],
         });
       }
 
       stat.changeData = [
         {
-          'name': j + 1,
-          'series': series
-        }
+          name: j + 1,
+          series: series,
+        },
       ];
-
     }
   }
 
   reload() {
     this.showLoading();
-    this._dashboardService
-      .getRegionalStats()
-      .subscribe(result => {
-        this.stats = result.stats;
-        this.formatData();
-        this.hideLoading();
-      });
+    this._dashboardService.getRegionalStats().subscribe((result) => {
+      this.stats = result.stats;
+      this.formatData();
+      this.hideLoading();
+    });
   }
 }
 
 @Component({
   selector: 'app-widget-regional-stats',
   templateUrl: './widget-regional-stats.component.html',
-  styleUrls: ['./widget-regional-stats.component.css']
+  styleUrls: ['./widget-regional-stats.component.css'],
 })
 export class WidgetRegionalStatsComponent extends WidgetComponentBase implements OnInit {
-
   regionalStatsTable: RegionalStatsTable;
 
-  constructor(injector: Injector,
-    private _dashboardService: TenantDashboardServiceProxy) {
+  constructor(injector: Injector, private _dashboardService: TenantDashboardServiceProxy) {
     super(injector);
     this.regionalStatsTable = new RegionalStatsTable(this._dashboardService);
   }

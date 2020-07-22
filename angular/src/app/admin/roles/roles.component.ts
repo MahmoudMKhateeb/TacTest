@@ -9,73 +9,69 @@ import * as _ from 'lodash';
 import { finalize } from 'rxjs/operators';
 import { PermissionTreeModalComponent } from '../shared/permission-tree-modal.component';
 @Component({
-    templateUrl: './roles.component.html',
-    animations: [appModuleAnimation()]
+  templateUrl: './roles.component.html',
+  animations: [appModuleAnimation()],
 })
 export class RolesComponent extends AppComponentBase implements OnInit {
+  @ViewChild('createOrEditRoleModal', { static: true }) createOrEditRoleModal: CreateOrEditRoleModalComponent;
+  @ViewChild('entityTypeHistoryModal', { static: true }) entityTypeHistoryModal: EntityTypeHistoryModalComponent;
+  @ViewChild('dataTable', { static: true }) dataTable: Table;
+  @ViewChild('permissionFilterTreeModal', { static: true }) permissionFilterTreeModal: PermissionTreeModalComponent;
 
-    @ViewChild('createOrEditRoleModal', { static: true }) createOrEditRoleModal: CreateOrEditRoleModalComponent;
-    @ViewChild('entityTypeHistoryModal', { static: true }) entityTypeHistoryModal: EntityTypeHistoryModalComponent;
-    @ViewChild('dataTable', { static: true }) dataTable: Table;
-    @ViewChild('permissionFilterTreeModal', { static: true }) permissionFilterTreeModal: PermissionTreeModalComponent;
+  _entityTypeFullName = 'TACHYON.Authorization.Roles.Role';
+  entityHistoryEnabled = false;
 
-    _entityTypeFullName = 'TACHYON.Authorization.Roles.Role';
-    entityHistoryEnabled = false;
+  constructor(injector: Injector, private _roleService: RoleServiceProxy) {
+    super(injector);
+  }
 
-    constructor(
-        injector: Injector,
-        private _roleService: RoleServiceProxy
-    ) {
-        super(injector);
-    }
+  ngOnInit(): void {
+    this.setIsEntityHistoryEnabled();
+  }
 
-    ngOnInit(): void {
-        this.setIsEntityHistoryEnabled();
-    }
+  private setIsEntityHistoryEnabled(): void {
+    let customSettings = (abp as any).custom;
+    this.entityHistoryEnabled =
+      customSettings.EntityHistory &&
+      customSettings.EntityHistory.isEnabled &&
+      _.filter(customSettings.EntityHistory.enabledEntities, (entityType) => entityType === this._entityTypeFullName).length === 1;
+  }
 
-    private setIsEntityHistoryEnabled(): void {
-        let customSettings = (abp as any).custom;
-        this.entityHistoryEnabled = customSettings.EntityHistory && customSettings.EntityHistory.isEnabled && _.filter(customSettings.EntityHistory.enabledEntities, entityType => entityType === this._entityTypeFullName).length === 1;
-    }
+  getRoles(): void {
+    this.primengTableHelper.showLoadingIndicator();
+    let selectedPermissions = this.permissionFilterTreeModal.getSelectedPermissions();
 
-    getRoles(): void {
-        this.primengTableHelper.showLoadingIndicator();
-        let selectedPermissions = this.permissionFilterTreeModal.getSelectedPermissions();
+    this._roleService
+      .getRoles(selectedPermissions)
+      .pipe(finalize(() => this.primengTableHelper.hideLoadingIndicator()))
+      .subscribe((result) => {
+        this.primengTableHelper.records = result.items;
+        this.primengTableHelper.totalRecordsCount = result.items.length;
+        this.primengTableHelper.hideLoadingIndicator();
+      });
+  }
 
-        this._roleService.getRoles(selectedPermissions)
-            .pipe(finalize(() => this.primengTableHelper.hideLoadingIndicator()))
-            .subscribe(result => {
-                this.primengTableHelper.records = result.items;
-                this.primengTableHelper.totalRecordsCount = result.items.length;
-                this.primengTableHelper.hideLoadingIndicator();
-            });
-    }
+  createRole(): void {
+    this.createOrEditRoleModal.show();
+  }
 
-    createRole(): void {
-        this.createOrEditRoleModal.show();
-    }
+  showHistory(role: RoleListDto): void {
+    this.entityTypeHistoryModal.show({
+      entityId: role.id.toString(),
+      entityTypeFullName: this._entityTypeFullName,
+      entityTypeDescription: role.displayName,
+    });
+  }
 
-    showHistory(role: RoleListDto): void {
-        this.entityTypeHistoryModal.show({
-            entityId: role.id.toString(),
-            entityTypeFullName: this._entityTypeFullName,
-            entityTypeDescription: role.displayName
+  deleteRole(role: RoleListDto): void {
+    let self = this;
+    self.message.confirm(self.l('RoleDeleteWarningMessage', role.displayName), this.l('AreYouSure'), (isConfirmed) => {
+      if (isConfirmed) {
+        this._roleService.deleteRole(role.id).subscribe(() => {
+          this.getRoles();
+          abp.notify.success(this.l('SuccessfullyDeleted'));
         });
-    }
-
-    deleteRole(role: RoleListDto): void {
-        let self = this;
-        self.message.confirm(
-            self.l('RoleDeleteWarningMessage', role.displayName),
-            this.l('AreYouSure'),
-            isConfirmed => {
-                if (isConfirmed) {
-                    this._roleService.deleteRole(role.id).subscribe(() => {
-                        this.getRoles();
-                        abp.notify.success(this.l('SuccessfullyDeleted'));
-                    });
-                }
-            }
-        );
-    }
+      }
+    });
+  }
 }

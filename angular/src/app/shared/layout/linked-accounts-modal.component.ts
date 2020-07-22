@@ -11,86 +11,84 @@ import { LinkAccountModalComponent } from './link-account-modal.component';
 import { finalize } from 'rxjs/operators';
 
 @Component({
-    selector: 'linkedAccountsModal',
-    templateUrl: './linked-accounts-modal.component.html'
+  selector: 'linkedAccountsModal',
+  templateUrl: './linked-accounts-modal.component.html',
 })
 export class LinkedAccountsModalComponent extends AppComponentBase {
+  @ViewChild('linkedAccountsModal', { static: true }) modal: ModalDirective;
+  @ViewChild('linkAccountModal', { static: true }) linkAccountModal: LinkAccountModalComponent;
+  @ViewChild('dataTable', { static: true }) dataTable: Table;
+  @ViewChild('paginator', { static: true }) paginator: Paginator;
 
-    @ViewChild('linkedAccountsModal', {static: true}) modal: ModalDirective;
-    @ViewChild('linkAccountModal', {static: true}) linkAccountModal: LinkAccountModalComponent;
-    @ViewChild('dataTable', {static: true}) dataTable: Table;
-    @ViewChild('paginator', {static: true}) paginator: Paginator;
+  @Output() modalClose: EventEmitter<any> = new EventEmitter<any>();
 
-    @Output() modalClose: EventEmitter<any> = new EventEmitter<any>();
+  constructor(
+    injector: Injector,
+    private abpMultiTenancyService: AbpMultiTenancyService,
+    private _userLinkService: UserLinkServiceProxy,
+    private _linkedAccountService: LinkedAccountService
+  ) {
+    super(injector);
+  }
 
-    constructor(
-        injector: Injector,
-        private abpMultiTenancyService: AbpMultiTenancyService,
-        private _userLinkService: UserLinkServiceProxy,
-        private _linkedAccountService: LinkedAccountService
-    ) {
-        super(injector);
+  getLinkedUsers(event?: LazyLoadEvent) {
+    this.primengTableHelper.showLoadingIndicator();
+
+    this._userLinkService
+      .getLinkedUsers(
+        this.primengTableHelper.getMaxResultCount(this.paginator, event),
+        this.primengTableHelper.getSkipCount(this.paginator, event),
+        this.primengTableHelper.getSorting(this.dataTable)
+      )
+      .pipe(finalize(() => this.primengTableHelper.hideLoadingIndicator()))
+      .subscribe((result) => {
+        this.primengTableHelper.totalRecordsCount = result.totalCount;
+        this.primengTableHelper.records = result.items;
+        this.primengTableHelper.hideLoadingIndicator();
+      });
+  }
+
+  getShownLinkedUserName(linkedUser: LinkedUserDto): string {
+    if (!this.abpMultiTenancyService.isEnabled) {
+      return linkedUser.username;
     }
 
-    getLinkedUsers(event?: LazyLoadEvent) {
-        this.primengTableHelper.showLoadingIndicator();
+    return (linkedUser.tenantId ? linkedUser.tenancyName : '.') + '\\' + linkedUser.username;
+  }
 
-        this._userLinkService.getLinkedUsers(
-            this.primengTableHelper.getMaxResultCount(this.paginator, event),
-            this.primengTableHelper.getSkipCount(this.paginator, event),
-            this.primengTableHelper.getSorting(this.dataTable)
-        ).pipe(finalize(() => this.primengTableHelper.hideLoadingIndicator())).subscribe(result => {
-            this.primengTableHelper.totalRecordsCount = result.totalCount;
-            this.primengTableHelper.records = result.items;
-            this.primengTableHelper.hideLoadingIndicator();
+  deleteLinkedUser(linkedUser: LinkedUserDto): void {
+    this.message.confirm(this.l('LinkedUserDeleteWarningMessage', linkedUser.username), this.l('AreYouSure'), (isConfirmed) => {
+      if (isConfirmed) {
+        const unlinkUserInput = new UnlinkUserInput();
+        unlinkUserInput.userId = linkedUser.id;
+        unlinkUserInput.tenantId = linkedUser.tenantId;
+
+        this._userLinkService.unlinkUser(unlinkUserInput).subscribe(() => {
+          this.reloadPage();
+          this.notify.success(this.l('SuccessfullyUnlinked'));
         });
-    }
+      }
+    });
+  }
 
-    getShownLinkedUserName(linkedUser: LinkedUserDto): string {
-        if (!this.abpMultiTenancyService.isEnabled) {
-            return linkedUser.username;
-        }
+  reloadPage(): void {
+    this.paginator.changePage(this.paginator.getPage());
+  }
 
-        return (linkedUser.tenantId ? linkedUser.tenancyName : '.') + '\\' + linkedUser.username;
-    }
+  manageLinkedAccounts(): void {
+    this.linkAccountModal.show();
+  }
 
-    deleteLinkedUser(linkedUser: LinkedUserDto): void {
-        this.message.confirm(
-            this.l('LinkedUserDeleteWarningMessage', linkedUser.username),
-            this.l('AreYouSure'),
-            isConfirmed => {
-                if (isConfirmed) {
-                    const unlinkUserInput = new UnlinkUserInput();
-                    unlinkUserInput.userId = linkedUser.id;
-                    unlinkUserInput.tenantId = linkedUser.tenantId;
+  switchToUser(linkedUser: LinkedUserDto): void {
+    this._linkedAccountService.switchToAccount(linkedUser.id, linkedUser.tenantId);
+  }
 
-                    this._userLinkService.unlinkUser(unlinkUserInput).subscribe(() => {
-                        this.reloadPage();
-                        this.notify.success(this.l('SuccessfullyUnlinked'));
-                    });
-                }
-            }
-        );
-    }
+  show(): void {
+    this.modal.show();
+  }
 
-    reloadPage(): void {
-        this.paginator.changePage(this.paginator.getPage());
-    }
-
-    manageLinkedAccounts(): void {
-        this.linkAccountModal.show();
-    }
-
-    switchToUser(linkedUser: LinkedUserDto): void {
-        this._linkedAccountService.switchToAccount(linkedUser.id, linkedUser.tenantId);
-    }
-
-    show(): void {
-        this.modal.show();
-    }
-
-    close(): void {
-        this.modal.hide();
-        this.modalClose.emit(null);
-    }
+  close(): void {
+    this.modal.hide();
+    this.modalClose.emit(null);
+  }
 }

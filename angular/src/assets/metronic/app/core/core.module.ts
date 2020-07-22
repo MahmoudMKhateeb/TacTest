@@ -8,25 +8,23 @@ import { LayoutRefService } from './_base/layout/services/layout-ref.service';
 import { ScrollTopDirective } from './_base/layout/directives/scroll-top.directive';
 
 @NgModule({
-    imports: [CommonModule],
-    declarations: [
-        // directives
-        MenuDirective,
-        OffcanvasDirective,
-        HeaderDirective,
-        ToggleDirective,
-        ScrollTopDirective
-    ],
-    exports: [
-        // directives
-        MenuDirective,
-        OffcanvasDirective,
-        HeaderDirective,
-        ToggleDirective,
-        ScrollTopDirective
-    ],
-    providers: [
-        LayoutRefService
-    ]
+  imports: [CommonModule],
+  declarations: [
+    // directives
+    MenuDirective,
+    OffcanvasDirective,
+    HeaderDirective,
+    ToggleDirective,
+    ScrollTopDirective,
+  ],
+  exports: [
+    // directives
+    MenuDirective,
+    OffcanvasDirective,
+    HeaderDirective,
+    ToggleDirective,
+    ScrollTopDirective,
+  ],
+  providers: [LayoutRefService],
 })
-export class CoreModule { }
+export class CoreModule {}

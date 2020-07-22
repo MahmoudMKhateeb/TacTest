@@ -8,31 +8,28 @@ import { AppComponent } from './app.component';
 import { LOCALE_ID } from '@angular/core';
 
 export function getRemoteServiceBaseUrl(): string {
-    return 'https://localhost:44301';
+  return 'https://localhost:44301';
 }
 
 describe('App: TACHYON', () => {
+  // Remove freezeui loading animation
+  (window as any).FreezeUI = function () {};
+  (window as any).UnFreezeUI = function () {};
 
-    // Remove freezeui loading animation
-    (window as any).FreezeUI = function () { };
-    (window as any).UnFreezeUI = function () { };
+  beforeEach(async(() => {
+    TestBed.configureTestingModule({
+      imports: [RootModule],
+      providers: [
+        { provide: API_BASE_URL, useValue: getRemoteServiceBaseUrl() },
+        { provide: APP_BASE_HREF, useValue: '/' },
+        { provide: LOCALE_ID, useValue: 'en' },
+      ],
+    }).compileComponents();
+  }));
 
-    beforeEach(async(() => {
-        TestBed.configureTestingModule({
-            imports: [
-                RootModule
-            ],
-            providers: [
-                { provide: API_BASE_URL, useValue: getRemoteServiceBaseUrl() },
-                { provide: APP_BASE_HREF, useValue: '/' },
-                { provide: LOCALE_ID, useValue: 'en' }
-            ]
-        }).compileComponents();
-    }));
-
-    it('should create the app', async(() => {
-        const fixture = TestBed.createComponent(AppComponent);
-        const app = fixture.debugElement.componentInstance;
-        expect(app).toBeTruthy();
-    }));
+  it('should create the app', async(() => {
+    const fixture = TestBed.createComponent(AppComponent);
+    const app = fixture.debugElement.componentInstance;
+    expect(app).toBeTruthy();
+  }));
 });

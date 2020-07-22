@@ -42,58 +42,51 @@ import { SessionLockScreenComponent } from './login/session-lock-screen.componen
 import { AppBsModalModule } from '@shared/common/appBsModal/app-bs-modal.module';
 
 export function getRecaptchaLanguage(): string {
-    return new LocaleMappingService().map('recaptcha', abp.localization.currentLanguage.name);
+  return new LocaleMappingService().map('recaptcha', abp.localization.currentLanguage.name);
 }
 
 @NgModule({
-    imports: [
-        CommonModule,
-        FormsModule,
-        HttpClientModule,
-        HttpClientJsonpModule,
-        NgxCaptchaModule,
-        ModalModule.forRoot(),
-        TACHYONCommonModule,
-        UtilsModule,
-        ServiceProxyModule,
-        AccountRoutingModule,
-        OAuthModule.forRoot(),
-        PasswordModule,
-        AppBsModalModule
-    ],
-    declarations: [
-        AccountComponent,
-        TenantChangeComponent,
-        TenantChangeModalComponent,
-        LoginComponent,
-        RegisterComponent,
-        RegisterTenantComponent,
-        RegisterTenantResultComponent,
-        SelectEditionComponent,
-        ForgotPasswordComponent,
-        ResetPasswordComponent,
-        EmailActivationComponent,
-        ConfirmEmailComponent,
-        SendTwoFactorCodeComponent,
-        ValidateTwoFactorCodeComponent,
-        LanguageSwitchComponent,
-        BuyEditionComponent,
-        UpgradeEditionComponent,
-        ExtendEditionComponent,
-        PayPalPurchaseComponent,
-        StripePurchaseComponent,
-        StripePaymentResultComponent,
-        StripeCancelPaymentComponent,
-        PaymentCompletedComponent,
-        SessionLockScreenComponent
-    ],
-    providers: [
-        LoginService,
-        TenantRegistrationHelperService,
-        PaymentHelperService,
-        AccountRouteGuard
-    ]
+  imports: [
+    CommonModule,
+    FormsModule,
+    HttpClientModule,
+    HttpClientJsonpModule,
+    NgxCaptchaModule,
+    ModalModule.forRoot(),
+    TACHYONCommonModule,
+    UtilsModule,
+    ServiceProxyModule,
+    AccountRoutingModule,
+    OAuthModule.forRoot(),
+    PasswordModule,
+    AppBsModalModule,
+  ],
+  declarations: [
+    AccountComponent,
+    TenantChangeComponent,
+    TenantChangeModalComponent,
+    LoginComponent,
+    RegisterComponent,
+    RegisterTenantComponent,
+    RegisterTenantResultComponent,
+    SelectEditionComponent,
+    ForgotPasswordComponent,
+    ResetPasswordComponent,
+    EmailActivationComponent,
+    ConfirmEmailComponent,
+    SendTwoFactorCodeComponent,
+    ValidateTwoFactorCodeComponent,
+    LanguageSwitchComponent,
+    BuyEditionComponent,
+    UpgradeEditionComponent,
+    ExtendEditionComponent,
+    PayPalPurchaseComponent,
+    StripePurchaseComponent,
+    StripePaymentResultComponent,
+    StripeCancelPaymentComponent,
+    PaymentCompletedComponent,
+    SessionLockScreenComponent,
+  ],
+  providers: [LoginService, TenantRegistrationHelperService, PaymentHelperService, AccountRouteGuard],
 })
-export class AccountModule {
-
-}
+export class AccountModule {}

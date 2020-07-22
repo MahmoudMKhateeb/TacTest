@@ -3,11 +3,11 @@ import * as moment from 'moment';
 
 @Pipe({ name: 'momentFromNow' })
 export class MomentFromNowPipe implements PipeTransform {
-    transform(value: moment.MomentInput) {
-        if (!value) {
-            return '';
-        }
-
-        return moment(value).fromNow();
+  transform(value: moment.MomentInput) {
+    if (!value) {
+      return '';
     }
+
+    return moment(value).fromNow();
+  }
 }

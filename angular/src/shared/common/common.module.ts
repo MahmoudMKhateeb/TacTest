@@ -6,20 +6,13 @@ import { AppSessionService } from './session/app-session.service';
 import { CookieConsentService } from './session/cookie-consent.service';
 
 @NgModule({
-    imports: [
-        CommonModule
-    ]
+  imports: [CommonModule],
 })
 export class TACHYONCommonModule {
-    static forRoot(): ModuleWithProviders<CommonModule> {
-        return {
-            ngModule: CommonModule,
-            providers: [
-                AppUiCustomizationService,
-                CookieConsentService,
-                AppSessionService,
-                AppUrlService
-            ]
-        };
-    }
+  static forRoot(): ModuleWithProviders<CommonModule> {
+    return {
+      ngModule: CommonModule,
+      providers: [AppUiCustomizationService, CookieConsentService, AppSessionService, AppUrlService],
+    };
+  }
 }

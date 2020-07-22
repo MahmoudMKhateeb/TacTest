@@ -6,10 +6,9 @@ import { WidgetComponentBase } from '../widget-component-base';
 @Component({
   selector: 'app-widget-host-top-stats',
   templateUrl: './widget-host-top-stats.component.html',
-  styleUrls: ['./widget-host-top-stats.component.css']
+  styleUrls: ['./widget-host-top-stats.component.css'],
 })
 export class WidgetHostTopStatsComponent extends WidgetComponentBase implements OnInit, OnDestroy {
-
   public countoNewSubscriptionAmount = 0;
   public countoNewTenantsCount = 0;
   public countoDashboardPlaceholder1 = 0;
@@ -18,10 +17,7 @@ export class WidgetHostTopStatsComponent extends WidgetComponentBase implements 
   selectedDateRange: moment.Moment[] = [moment().add(-7, 'days').startOf('day'), moment().endOf('day')];
   loading = true;
   topStatsData: TopStatsData;
-  constructor(
-    injector: Injector,
-    private _hostDashboardServiceProxy: HostDashboardServiceProxy) {
-
+  constructor(injector: Injector, private _hostDashboardServiceProxy: HostDashboardServiceProxy) {
     super(injector);
   }
 
@@ -35,7 +31,7 @@ export class WidgetHostTopStatsComponent extends WidgetComponentBase implements 
       this.topStatsData = data;
       this.loading = false;
     });
-  }
+  };
 
   onDateRangeFilterChange = (dateRange) => {
     if (!dateRange || dateRange.length !== 2 || (this.selectedDateRange[0] === dateRange[0] && this.selectedDateRange[1] === dateRange[1])) {
@@ -45,7 +41,7 @@ export class WidgetHostTopStatsComponent extends WidgetComponentBase implements 
     this.selectedDateRange[0] = dateRange[0];
     this.selectedDateRange[1] = dateRange[1];
     this.runDelayed(this.loadHostTopStatsData);
-  }
+  };
 
   subDateRangeFilter() {
     abp.event.on('app.dashboardFilters.dateRangePicker.onDateChange', this.onDateRangeFilterChange);

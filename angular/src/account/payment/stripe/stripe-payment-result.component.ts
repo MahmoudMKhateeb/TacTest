@@ -6,16 +6,16 @@ import { AbpSessionService } from 'abp-ng2-module';
 
 @Component({
   selector: 'stripe-payment-result',
-  templateUrl: './stripe-payment-result.component.html'
+  templateUrl: './stripe-payment-result.component.html',
 })
 export class StripePaymentResultComponent extends AppComponentBase implements OnInit {
-
   constructor(
     _injector: Injector,
     private _stripePaymentService: StripePaymentServiceProxy,
     private _activatedRoute: ActivatedRoute,
     private _router: Router,
-    private _sessionService: AbpSessionService) {
+    private _sessionService: AbpSessionService
+  ) {
     super(_injector);
   }
   sessionId: string;
@@ -26,27 +26,26 @@ export class StripePaymentResultComponent extends AppComponentBase implements On
 
   ngOnInit() {
     this.sessionId = this._activatedRoute.snapshot.queryParams['sessionId'];
-    this._stripePaymentService.getPayment(this.sessionId)
-      .subscribe(payment => {
-        if (this._sessionService.tenantId !== payment.tenantId) {
-          this._router.navigate(['']);
-        }
+    this._stripePaymentService.getPayment(this.sessionId).subscribe((payment) => {
+      if (this._sessionService.tenantId !== payment.tenantId) {
+        this._router.navigate(['']);
+      }
 
-        this.paymentId = payment.id;
-        this.getPaymentResult();
-      });
+      this.paymentId = payment.id;
+      this.getPaymentResult();
+    });
   }
 
   getPaymentResult(): void {
     this._stripePaymentService.getPaymentResult(this.paymentId).subscribe(
-      paymentResult => {
+      (paymentResult) => {
         if (paymentResult.paymentDone) {
           this._router.navigate(['account/payment-completed']);
         } else {
           this.controlAgain();
         }
       },
-      err => {
+      (err) => {
         this.controlAgain();
       }
     );
@@ -58,8 +57,8 @@ export class StripePaymentResultComponent extends AppComponentBase implements On
     }
 
     setTimeout(() => {
-            this.getPaymentResult();
-        }, this.controlTimeout);
+      this.getPaymentResult();
+    }, this.controlTimeout);
     this.controlTimeout *= 2;
     this.maxControlCount--;
   }

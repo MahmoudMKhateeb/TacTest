@@ -8,35 +8,31 @@ import { AppConsts } from '@shared/AppConsts';
 import { ToggleOptions } from '@metronic/app/core/_base/layout/directives/toggle.directive';
 
 @Component({
-    templateUrl: './default-layout.component.html',
-    selector: 'default-layout',
-    animations: [appModuleAnimation()]
+  templateUrl: './default-layout.component.html',
+  selector: 'default-layout',
+  animations: [appModuleAnimation()],
 })
 export class DefaultLayoutComponent extends ThemesLayoutBaseComponent implements OnInit {
+  menuCanvasOptions: OffcanvasOptions = {
+    baseClass: 'aside',
+    overlay: true,
+    closeBy: 'kt_aside_close_btn',
+    toggleBy: 'kt_aside_mobile_toggle',
+  };
 
-    menuCanvasOptions: OffcanvasOptions = {
-        baseClass: 'aside',
-        overlay: true,
-        closeBy: 'kt_aside_close_btn',
-        toggleBy: 'kt_aside_mobile_toggle'
-    };
+  userMenuToggleOptions: ToggleOptions = {
+    target: this.document.body,
+    targetState: 'topbar-mobile-on',
+    toggleState: 'active',
+  };
 
-    userMenuToggleOptions: ToggleOptions = {
-        target: this.document.body,
-        targetState: 'topbar-mobile-on',
-        toggleState: 'active'
-    };
+  remoteServiceBaseUrl: string = AppConsts.remoteServiceBaseUrl;
 
-    remoteServiceBaseUrl: string = AppConsts.remoteServiceBaseUrl;
+  constructor(injector: Injector, @Inject(DOCUMENT) private document: Document) {
+    super(injector);
+  }
 
-    constructor(
-        injector: Injector,
-        @Inject(DOCUMENT) private document: Document
-    ) {
-        super(injector);
-    }
-
-    ngOnInit() {
-        this.installationMode = UrlHelper.isInstallUrl(location.href);
-    }
+  ngOnInit() {
+    this.installationMode = UrlHelper.isInstallUrl(location.href);
+  }
 }

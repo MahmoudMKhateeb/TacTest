@@ -1,127 +1,169 @@
-﻿<div bsModal #createOrEditModal="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="createOrEditModal" aria-hidden="true" [config]="{backdrop: 'static'}">
-    <div class="modal-dialog modal-lg">
-        <div class="modal-content">
-            <form *ngIf="active" #trailerForm="ngForm" novalidate (ngSubmit)="save()" autocomplete="off">
-                <div class="modal-header">
-                    <h4 class="modal-title">
-                        <span *ngIf="trailer.id">{{l("EditTrailer")}}</span>
-                        <span *ngIf="!trailer.id">{{l("CreateNewTrailer")}}</span>
-                    </h4>
-                    <button type="button" class="close" (click)="close()" aria-label="Close" [disabled]="saving">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                 
-
-					<div class="form-group m-form__group">
-						<label for="TrailerStatusDisplayName">{{l("TrailerStatus")}}</label>
-						<select name="trailer.trailerStatusId" [(ngModel)]="trailer.trailerStatusId" class="form-control" required>
-							<option value="">{{l("SelectATrailerStatus")}}</option>
-							<option *ngFor="let item of allTrailerStatuss" value="{{item.id}}">{{item.displayName}}</option>
-						</select>
-					</div>
-					 
-					<div class="form-group m-form__group">
-						<label for="TrailerTypeDisplayName">{{l("TrailerType")}}</label>
-						<select name="trailer.trailerTypeId" [(ngModel)]="trailer.trailerTypeId" class="form-control" required>
-							<option value="">{{l("SelectATrailerType")}}</option>
-							<option *ngFor="let item of allTrailerTypes" value="{{item.id}}">{{item.displayName}}</option>
-						</select>
-					</div>
-					 
-					<div class="form-group m-form__group">
-						<label for="PayloadMaxWeightDisplayName">{{l("PayloadMaxWeight")}}</label>
-						<select name="trailer.payloadMaxWeightId" [(ngModel)]="trailer.payloadMaxWeightId" class="form-control" required>
-							<option value="">{{l("SelectAPayloadMaxWeight")}}</option>
-							<option *ngFor="let item of allPayloadMaxWeights" value="{{item.id}}">{{item.displayName}}</option>
-						</select>
-					</div>
-					 
-					<div class="form-group m-form__group">
-						<label for="TruckPlateNumber">{{l("Truck")}}</label>
-						<select name="trailer.hookedTruckId" [(ngModel)]="trailer.hookedTruckId" class="form-control" >
-							<option value="">{{l("SelectATruck")}}</option>
-							<option *ngFor="let item of allTrucks" value="{{item.id}}">{{item.displayName}}</option>
-						</select>
-					</div>
-					 
-
-								<div class="form-group">
-									<label for="Trailer_TrailerCode">{{l("TrailerCode")}} *</label>
-									<input type="text" id="Trailer_TrailerCode" class="form-control" [(ngModel)]="trailer.trailerCode" name="TrailerCode"   minlength="0"  maxlength="256"  required/>
-								</div>
-					
-								<div class="form-group">
-									<label for="Trailer_PlateNumber">{{l("PlateNumber")}} *</label>
-									<input type="text" id="Trailer_PlateNumber" class="form-control" [(ngModel)]="trailer.plateNumber" name="PlateNumber"   minlength="0"  maxlength="256"  required/>
-								</div>
-					
-								<div class="form-group">
-									<label for="Trailer_Model">{{l("Model")}} *</label>
-									<input type="text" id="Trailer_Model" class="form-control" [(ngModel)]="trailer.model" name="Model"   minlength="0"  maxlength="64"  required/>
-								</div>
-					
-								<div class="form-group">
-									<label for="Trailer_Year">{{l("Year")}} *</label>
-									<input type="text" id="Trailer_Year" class="form-control" [(ngModel)]="trailer.year" name="Year"   minlength="0"  maxlength="64"  required/>
-								</div>
-					
-								<div class="form-group">
-									<label for="Trailer_Width">{{l("Width")}}</label>
-									<input type="number" id="Trailer_Width" class="form-control" [(ngModel)]="trailer.width" name="Width"  />
-								</div>
-					
-								<div class="form-group">
-									<label for="Trailer_Height">{{l("Height")}}</label>
-									<input type="number" id="Trailer_Height" class="form-control" [(ngModel)]="trailer.height" name="Height"  />
-								</div>
-					
-								<div class="form-group">
-									<label for="Trailer_Length">{{l("Length")}}</label>
-									<input type="number" id="Trailer_Length" class="form-control" [(ngModel)]="trailer.length" name="Length"  />
-								</div>
-					
-								<br/><div class="m-checkbox-list">
-									<label for="Trailer_IsLiftgate" class="kt-checkbox">
-										<input id="Trailer_IsLiftgate" type="checkbox" name="IsLiftgate" [(ngModel)]="trailer.isLiftgate"> 
-										{{l("IsLiftgate")}}
-										<span></span>
-									</label>
-								</div>
-					
-								<br/><div class="m-checkbox-list">
-									<label for="Trailer_IsReefer" class="kt-checkbox">
-										<input id="Trailer_IsReefer" type="checkbox" name="IsReefer" [(ngModel)]="trailer.isReefer"> 
-										{{l("IsReefer")}}
-										<span></span>
-									</label>
-								</div>
-					
-								<br/><div class="m-checkbox-list">
-									<label for="Trailer_IsVented" class="kt-checkbox">
-										<input id="Trailer_IsVented" type="checkbox" name="IsVented" [(ngModel)]="trailer.isVented"> 
-										{{l("IsVented")}}
-										<span></span>
-									</label>
-								</div>
-					
-								<br/><div class="m-checkbox-list">
-									<label for="Trailer_IsRollDoor" class="kt-checkbox">
-										<input id="Trailer_IsRollDoor" type="checkbox" name="IsRollDoor" [(ngModel)]="trailer.isRollDoor"> 
-										{{l("IsRollDoor")}}
-										<span></span>
-									</label>
-								</div>
-					
-
-                </div>
-                <div class="modal-footer">
-                    <button [disabled]="saving" type="button" class="btn btn-default" (click)="close()">{{l("Cancel")}}</button>
-                    <button type="submit" class="btn btn-primary blue" [disabled]="!trailerForm.form.valid" [buttonBusy]="saving" [busyText]="l('SavingWithThreeDot')"><i class="fa fa-save"></i> <span>{{l("Save")}}</span></button>
-                </div>
-            </form>
+﻿<div
+  bsModal
+  #createOrEditModal="bs-modal"
+  class="modal fade"
+  tabindex="-1"
+  role="dialog"
+  aria-labelledby="createOrEditModal"
+  aria-hidden="true"
+  [config]="{ backdrop: 'static' }"
+>
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <form *ngIf="active" #trailerForm="ngForm" novalidate (ngSubmit)="save()" autocomplete="off">
+        <div class="modal-header">
+          <h4 class="modal-title">
+            <span *ngIf="trailer.id">{{ l('EditTrailer') }}</span>
+            <span *ngIf="!trailer.id">{{ l('CreateNewTrailer') }}</span>
+          </h4>
+          <button type="button" class="close" (click)="close()" aria-label="Close" [disabled]="saving">
+            <span aria-hidden="true">&times;</span>
+          </button>
         </div>
-    </div>
+        <div class="modal-body">
+          <div class="form-group m-form__group">
+            <label for="TrailerStatusDisplayName">{{ l('TrailerStatus') }}</label>
+            <select name="trailer.trailerStatusId" [(ngModel)]="trailer.trailerStatusId" class="form-control" required>
+              <option value="">{{ l('SelectATrailerStatus') }}</option>
+              <option *ngFor="let item of allTrailerStatuss" value="{{ item.id }}">{{ item.displayName }}</option>
+            </select>
+          </div>
 
+          <div class="form-group m-form__group">
+            <label for="TrailerTypeDisplayName">{{ l('TrailerType') }}</label>
+            <select name="trailer.trailerTypeId" [(ngModel)]="trailer.trailerTypeId" class="form-control" required>
+              <option value="">{{ l('SelectATrailerType') }}</option>
+              <option *ngFor="let item of allTrailerTypes" value="{{ item.id }}">{{ item.displayName }}</option>
+            </select>
+          </div>
+
+          <div class="form-group m-form__group">
+            <label for="PayloadMaxWeightDisplayName">{{ l('PayloadMaxWeight') }}</label>
+            <select name="trailer.payloadMaxWeightId" [(ngModel)]="trailer.payloadMaxWeightId" class="form-control" required>
+              <option value="">{{ l('SelectAPayloadMaxWeight') }}</option>
+              <option *ngFor="let item of allPayloadMaxWeights" value="{{ item.id }}">{{ item.displayName }}</option>
+            </select>
+          </div>
+
+          <div class="form-group m-form__group">
+            <label for="TruckPlateNumber">{{ l('Truck') }}</label>
+            <select name="trailer.hookedTruckId" [(ngModel)]="trailer.hookedTruckId" class="form-control">
+              <option value="">{{ l('SelectATruck') }}</option>
+              <option *ngFor="let item of allTrucks" value="{{ item.id }}">{{ item.displayName }}</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="Trailer_TrailerCode">{{ l('TrailerCode') }} *</label>
+            <input
+              type="text"
+              id="Trailer_TrailerCode"
+              class="form-control"
+              [(ngModel)]="trailer.trailerCode"
+              name="TrailerCode"
+              minlength="0"
+              maxlength="256"
+              required
+            />
+          </div>
+
+          <div class="form-group">
+            <label for="Trailer_PlateNumber">{{ l('PlateNumber') }} *</label>
+            <input
+              type="text"
+              id="Trailer_PlateNumber"
+              class="form-control"
+              [(ngModel)]="trailer.plateNumber"
+              name="PlateNumber"
+              minlength="0"
+              maxlength="256"
+              required
+            />
+          </div>
+
+          <div class="form-group">
+            <label for="Trailer_Model">{{ l('Model') }} *</label>
+            <input
+              type="text"
+              id="Trailer_Model"
+              class="form-control"
+              [(ngModel)]="trailer.model"
+              name="Model"
+              minlength="0"
+              maxlength="64"
+              required
+            />
+          </div>
+
+          <div class="form-group">
+            <label for="Trailer_Year">{{ l('Year') }} *</label>
+            <input type="text" id="Trailer_Year" class="form-control" [(ngModel)]="trailer.year" name="Year" minlength="0" maxlength="64" required />
+          </div>
+
+          <div class="form-group">
+            <label for="Trailer_Width">{{ l('Width') }}</label>
+            <input type="number" id="Trailer_Width" class="form-control" [(ngModel)]="trailer.width" name="Width" />
+          </div>
+
+          <div class="form-group">
+            <label for="Trailer_Height">{{ l('Height') }}</label>
+            <input type="number" id="Trailer_Height" class="form-control" [(ngModel)]="trailer.height" name="Height" />
+          </div>
+
+          <div class="form-group">
+            <label for="Trailer_Length">{{ l('Length') }}</label>
+            <input type="number" id="Trailer_Length" class="form-control" [(ngModel)]="trailer.length" name="Length" />
+          </div>
+
+          <br />
+          <div class="m-checkbox-list">
+            <label for="Trailer_IsLiftgate" class="kt-checkbox">
+              <input id="Trailer_IsLiftgate" type="checkbox" name="IsLiftgate" [(ngModel)]="trailer.isLiftgate" />
+              {{ l('IsLiftgate') }}
+              <span></span>
+            </label>
+          </div>
+
+          <br />
+          <div class="m-checkbox-list">
+            <label for="Trailer_IsReefer" class="kt-checkbox">
+              <input id="Trailer_IsReefer" type="checkbox" name="IsReefer" [(ngModel)]="trailer.isReefer" />
+              {{ l('IsReefer') }}
+              <span></span>
+            </label>
+          </div>
+
+          <br />
+          <div class="m-checkbox-list">
+            <label for="Trailer_IsVented" class="kt-checkbox">
+              <input id="Trailer_IsVented" type="checkbox" name="IsVented" [(ngModel)]="trailer.isVented" />
+              {{ l('IsVented') }}
+              <span></span>
+            </label>
+          </div>
+
+          <br />
+          <div class="m-checkbox-list">
+            <label for="Trailer_IsRollDoor" class="kt-checkbox">
+              <input id="Trailer_IsRollDoor" type="checkbox" name="IsRollDoor" [(ngModel)]="trailer.isRollDoor" />
+              {{ l('IsRollDoor') }}
+              <span></span>
+            </label>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button [disabled]="saving" type="button" class="btn btn-default" (click)="close()">{{ l('Cancel') }}</button>
+          <button
+            type="submit"
+            class="btn btn-primary blue"
+            [disabled]="!trailerForm.form.valid"
+            [buttonBusy]="saving"
+            [busyText]="l('SavingWithThreeDot')"
+          >
+            <i class="fa fa-save"></i> <span>{{ l('Save') }}</span>
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
 </div>

@@ -7,16 +7,12 @@ import { CreateOrEditDynamicParameterModalComponent } from './create-or-edit-dyn
 
 @Component({
   templateUrl: './dynamic-parameter.component.html',
-  animations: [appModuleAnimation()]
+  animations: [appModuleAnimation()],
 })
 export class DynamicParameterComponent extends AppComponentBase {
   @ViewChild('createOrEditDynamicParameter', { static: true }) createOrEditDynamicParameterModal: CreateOrEditDynamicParameterModalComponent;
 
-  constructor(
-    injector: Injector,
-    private _dynamicParameterService: DynamicParameterServiceProxy,
-    private _router: Router
-  ) {
+  constructor(injector: Injector, private _dynamicParameterService: DynamicParameterServiceProxy, private _router: Router) {
     super(injector);
   }
 
@@ -36,12 +32,11 @@ export class DynamicParameterComponent extends AppComponentBase {
   }
 
   goToDetail(id: string): void {
-    this._router.navigate(['app/admin/dynamic-parameter-detail'],
-      {
-        queryParams: {
-          id: id,
-        }
-      });
+    this._router.navigate(['app/admin/dynamic-parameter-detail'], {
+      queryParams: {
+        id: id,
+      },
+    });
   }
 
   addNewDynamicParameter(): void {

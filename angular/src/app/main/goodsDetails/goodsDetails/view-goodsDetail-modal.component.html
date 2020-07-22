@@ -1,64 +1,64 @@
-﻿<div #createOrEditModal="bs-modal" [config]="{backdrop: 'static'}" aria-hidden="true" aria-labelledby="createOrEditModal" bsModal
-     class="modal fade" role="dialog" tabindex="-1">
-    <div class="modal-dialog modal-lg">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h4 class="modal-title">
-                    <span>{{l("Details")}}</span>
-                </h4>
-                <button (click)="close()" aria-label="Close" class="close" type="button">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body">
+﻿<div
+  #createOrEditModal="bs-modal"
+  [config]="{ backdrop: 'static' }"
+  aria-hidden="true"
+  aria-labelledby="createOrEditModal"
+  bsModal
+  class="modal fade"
+  role="dialog"
+  tabindex="-1"
+>
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title">
+          <span>{{ l('Details') }}</span>
+        </h4>
+        <button (click)="close()" aria-label="Close" class="close" type="button">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="row">
+          <div class="col-6 mb-3">
+            <h6>{{ l('Name') }} :</h6>
+            {{ item.goodsDetail.name }}
+          </div>
+          <div class="col-6 mb-3">
+            <h6>{{ l('Description') }} :</h6>
+            {{ item.goodsDetail.description }}
+          </div>
+          <div class="col-6 mb-3">
+            <h6>{{ l('Quantity') }} :</h6>
+            {{ item.goodsDetail.quantity }}
+          </div>
+          <div class="col-6 mb-3">
+            <h6>{{ l('Weight') }} :</h6>
+            {{ item.goodsDetail.weight }}
+          </div>
+          <div class="col-6 mb-3">
+            <h6>{{ l('Dimentions') }} :</h6>
+            {{ item.goodsDetail.dimentions }}
+          </div>
+          <div class="col-6 mb-3">
+            <h6>{{ l('IsDangerousGood') }} :</h6>
+            <div *ngIf="item.goodsDetail.isDangerousGood" class="text-left"><i class="fa fa-check-circle text-success" title="True"></i></div>
+            <div *ngIf="!item.goodsDetail.isDangerousGood" class="text-left"><i class="fa fa-times-circle" title="False"></i></div>
+          </div>
+          <div class="col-6 mb-3">
+            <h6>{{ l('DangerousGoodsCode') }} :</h6>
+            {{ item.goodsDetail.dangerousGoodsCode }}
+          </div>
 
-                <div class="row">
-                    <div class="col-6 mb-3">
-                        <h6>{{l("Name")}} :</h6>
-                        {{ item.goodsDetail.name }}
-                    </div>
-                    <div class="col-6 mb-3">
-                        <h6>{{l("Description")}} :</h6>
-                        {{ item.goodsDetail.description }}
-                    </div>
-                    <div class="col-6 mb-3">
-                        <h6>{{l("Quantity")}} :</h6>
-                        {{ item.goodsDetail.quantity }}
-                    </div>
-                    <div class="col-6 mb-3">
-                        <h6>{{l("Weight")}} :</h6>
-                        {{ item.goodsDetail.weight }}
-                    </div>
-                    <div class="col-6 mb-3">
-                        <h6>{{l("Dimentions")}} :</h6>
-                        {{ item.goodsDetail.dimentions }}
-                    </div>
-                    <div class="col-6 mb-3">
-                        <h6>{{l("IsDangerousGood")}} :</h6>
-                        <div *ngIf="item.goodsDetail.isDangerousGood" class="text-left"><i
-                            class="fa fa-check-circle text-success"
-                            title="True"></i></div>
-                        <div *ngIf="!item.goodsDetail.isDangerousGood" class="text-left"><i class="fa fa-times-circle"
-                                                                                            title="False"></i></div>
-                    </div>
-                    <div class="col-6 mb-3">
-                        <h6>{{l("DangerousGoodsCode")}} :</h6>
-                        {{ item.goodsDetail.dangerousGoodsCode }}
-                    </div>
-
-                    <div class="col-6 mb-3">
-                        <h6>({{l("GoodCategory")}}) {{l("DisplayName")}} :</h6>
-                        {{item.goodCategoryDisplayName}}
-                    </div>
-
-                </div>
-
-            </div>
-            <div class="modal-footer">
-                <button (click)="close()" [disabled]="saving" class="btn btn-primary blue"
-                        type="button">{{l("Close")}}</button>
-            </div>
+          <div class="col-6 mb-3">
+            <h6>({{ l('GoodCategory') }}) {{ l('DisplayName') }} :</h6>
+            {{ item.goodCategoryDisplayName }}
+          </div>
         </div>
+      </div>
+      <div class="modal-footer">
+        <button (click)="close()" [disabled]="saving" class="btn btn-primary blue" type="button">{{ l('Close') }}</button>
+      </div>
     </div>
-
+  </div>
 </div>

@@ -12,7 +12,7 @@ export interface ToggleOptions {
  */
 @Directive({
   selector: '[ktToggle]',
-  exportAs: 'ktToggle'
+  exportAs: 'ktToggle',
 })
 export class ToggleDirective implements AfterViewInit {
   // Public properties
@@ -23,8 +23,7 @@ export class ToggleDirective implements AfterViewInit {
    * Directive constructor
    * @param el: ElementRef
    */
-  constructor(private el: ElementRef) {
-  }
+  constructor(private el: ElementRef) {}
 
   /**
    * @ Lifecycle sequences => https://angular.io/guide/lifecycle-hooks

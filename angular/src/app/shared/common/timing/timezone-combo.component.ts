@@ -4,59 +4,56 @@ import { SettingScopes, NameValueDto, TimingServiceProxy } from '@shared/service
 import { ControlValueAccessor, FormControl, NG_VALUE_ACCESSOR } from '@angular/forms';
 
 @Component({
-    selector: 'timezone-combo',
-    template:
-    `
-    <select class="form-control" [formControl]="selectedTimeZone">
-        <option *ngFor="let timeZone of timeZones" [value]="timeZone.value">{{timeZone.name}}</option>
-    </select>`,
-    providers: [{
-        provide: NG_VALUE_ACCESSOR,
-        useExisting: forwardRef(() => TimeZoneComboComponent),
-        multi: true,
-    }]
+  selector: 'timezone-combo',
+  template: ` <select class="form-control" [formControl]="selectedTimeZone">
+    <option *ngFor="let timeZone of timeZones" [value]="timeZone.value">{{ timeZone.name }}</option>
+  </select>`,
+  providers: [
+    {
+      provide: NG_VALUE_ACCESSOR,
+      useExisting: forwardRef(() => TimeZoneComboComponent),
+      multi: true,
+    },
+  ],
 })
 export class TimeZoneComboComponent extends AppComponentBase implements OnInit, ControlValueAccessor {
+  @Input() defaultTimezoneScope: SettingScopes;
 
-    @Input() defaultTimezoneScope: SettingScopes;
+  timeZones: NameValueDto[] = [];
+  selectedTimeZone = new FormControl('');
 
-    timeZones: NameValueDto[] = [];
-    selectedTimeZone = new FormControl('');
+  onTouched: any = () => {};
 
-    onTouched: any = () => { };
+  constructor(private _timingService: TimingServiceProxy, injector: Injector) {
+    super(injector);
+  }
 
-    constructor(
-        private _timingService: TimingServiceProxy,
-        injector: Injector) {
-        super(injector);
+  ngOnInit(): void {
+    let self = this;
+    self._timingService.getTimezones(self.defaultTimezoneScope).subscribe((result) => {
+      self.timeZones = result.items;
+    });
+  }
+
+  writeValue(obj: any): void {
+    if (this.selectedTimeZone) {
+      this.selectedTimeZone.setValue(obj);
     }
+  }
 
-    ngOnInit(): void {
-        let self = this;
-        self._timingService.getTimezones(self.defaultTimezoneScope).subscribe(result => {
-            self.timeZones = result.items;
-        });
-    }
+  registerOnChange(fn: any): void {
+    this.selectedTimeZone.valueChanges.subscribe(fn);
+  }
 
-    writeValue(obj: any): void {
-        if (this.selectedTimeZone) {
-            this.selectedTimeZone.setValue(obj);
-        }
-    }
+  registerOnTouched(fn: any): void {
+    this.onTouched = fn;
+  }
 
-    registerOnChange(fn: any): void {
-        this.selectedTimeZone.valueChanges.subscribe(fn);
+  setDisabledState?(isDisabled: boolean): void {
+    if (isDisabled) {
+      this.selectedTimeZone.disable();
+    } else {
+      this.selectedTimeZone.enable();
     }
-
-    registerOnTouched(fn: any): void {
-        this.onTouched = fn;
-    }
-
-    setDisabledState?(isDisabled: boolean): void {
-        if (isDisabled) {
-            this.selectedTimeZone.disable();
-        } else {
-            this.selectedTimeZone.enable();
-        }
-    }
+  }
 }

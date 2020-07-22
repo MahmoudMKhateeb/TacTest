@@ -6,15 +6,12 @@ import { appModuleAnimation } from '@shared/animations/routerTransition';
 
 @Component({
   templateUrl: './entity-dynamic-parameter.component.html',
-  animations: [appModuleAnimation()]
+  animations: [appModuleAnimation()],
 })
 export class EntityDynamicParameterComponent extends AppComponentBase {
   @ViewChild('createEntityDynamicParameterModal') createEntityDynamicParameterModal: CreateEntityDynamicParameterModalComponent;
 
-  constructor(
-    injector: Injector,
-    private _entityDynamicParameterService: EntityDynamicParameterServiceProxy
-  ) {
+  constructor(injector: Injector, private _entityDynamicParameterService: EntityDynamicParameterServiceProxy) {
     super(injector);
   }
 
@@ -38,17 +35,13 @@ export class EntityDynamicParameterComponent extends AppComponentBase {
   }
 
   deleteEntityDynamicParameter(id: number): void {
-    this.message.confirm(
-      this.l('DeleteDynamicParameterMessage'),
-      this.l('AreYouSure'),
-      isConfirmed => {
-        if (isConfirmed) {
-          this._entityDynamicParameterService.delete(id).subscribe(() => {
-            abp.notify.success(this.l('SuccessfullyDeleted'));
-            this.getEntityDynamicParameters();
-          });
-        }
+    this.message.confirm(this.l('DeleteDynamicParameterMessage'), this.l('AreYouSure'), (isConfirmed) => {
+      if (isConfirmed) {
+        this._entityDynamicParameterService.delete(id).subscribe(() => {
+          abp.notify.success(this.l('SuccessfullyDeleted'));
+          this.getEntityDynamicParameters();
+        });
       }
-    );
+    });
   }
 }

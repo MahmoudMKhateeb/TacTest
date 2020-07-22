@@ -5,51 +5,52 @@ import { ModalDirective } from 'ngx-bootstrap/modal';
 import { finalize } from 'rxjs/operators';
 
 @Component({
-    selector: 'linkAccountModal',
-    templateUrl: './link-account-modal.component.html'
+  selector: 'linkAccountModal',
+  templateUrl: './link-account-modal.component.html',
 })
 export class LinkAccountModalComponent extends AppComponentBase {
+  @ViewChild('linkAccountModal', { static: true }) modal: ModalDirective;
 
-    @ViewChild('linkAccountModal', {static: true}) modal: ModalDirective;
+  @Output() modalSave: EventEmitter<any> = new EventEmitter<any>();
 
-    @Output() modalSave: EventEmitter<any> = new EventEmitter<any>();
+  active = false;
+  saving = false;
 
-    active = false;
-    saving = false;
+  linkUser: LinkToUserInput = new LinkToUserInput();
 
-    linkUser: LinkToUserInput = new LinkToUserInput();
+  constructor(injector: Injector, private _userLinkService: UserLinkServiceProxy) {
+    super(injector);
+  }
 
-    constructor(
-        injector: Injector,
-        private _userLinkService: UserLinkServiceProxy
-    ) {
-        super(injector);
-    }
+  show(): void {
+    this.active = true;
+    this.linkUser = new LinkToUserInput();
+    this.linkUser.tenancyName = this.appSession.tenancyName;
+    this.modal.show();
+  }
 
-    show(): void {
-        this.active = true;
-        this.linkUser = new LinkToUserInput();
-        this.linkUser.tenancyName = this.appSession.tenancyName;
-        this.modal.show();
-    }
+  onShown(): void {
+    document.getElementById('TenancyName').focus();
+  }
 
-    onShown(): void {
-        document.getElementById('TenancyName').focus();
-    }
+  save(): void {
+    this.saving = true;
+    this._userLinkService
+      .linkToUser(this.linkUser)
+      .pipe(
+        finalize(() => {
+          this.saving = false;
+        })
+      )
+      .subscribe(() => {
+        this.notify.info(this.l('SavedSuccessfully'));
+        this.close();
+        this.modalSave.emit(null);
+      });
+  }
 
-    save(): void {
-        this.saving = true;
-        this._userLinkService.linkToUser(this.linkUser)
-            .pipe(finalize(() => { this.saving = false; }))
-            .subscribe(() => {
-                this.notify.info(this.l('SavedSuccessfully'));
-                this.close();
-                this.modalSave.emit(null);
-            });
-    }
-
-    close(): void {
-        this.active = false;
-        this.modal.hide();
-    }
+  close(): void {
+    this.active = false;
+    this.modal.hide();
+  }
 }

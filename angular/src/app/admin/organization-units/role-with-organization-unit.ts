@@ -1,4 +1,4 @@
 export interface IRoleWithOrganizationUnit {
-    roleId: number;
-    ouId: number;
+  roleId: number;
+  ouId: number;
 }

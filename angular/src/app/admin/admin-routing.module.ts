@@ -26,57 +26,79 @@ import { DynamicParameterDetailComponent } from './dynamic-entity-parameters/dyn
 import { EntityDynamicParameterComponent } from './dynamic-entity-parameters/entity-dynamic-parameter/entity-dynamic-parameter.component';
 import { EntityDynamicParameterValueComponent } from './dynamic-entity-parameters/entity-dynamic-parameter/entity-dynamic-parameter-value/entity-dynamic-parameter-value.component';
 
-
 @NgModule({
-    imports: [
-        RouterModule.forChild([
-            {
-                path: '',
-                children: [
-                    { path: 'trucks/truckStatuses', component: TruckStatusesComponent, data: { permission: 'Pages.Administration.TruckStatuses' }  },
-                    { path: 'users', component: UsersComponent, data: { permission: 'Pages.Administration.Users' } },
-                    { path: 'roles', component: RolesComponent, data: { permission: 'Pages.Administration.Roles' } },
-                    { path: 'auditLogs', component: AuditLogsComponent, data: { permission: 'Pages.Administration.AuditLogs' } },
-                    { path: 'maintenance', component: MaintenanceComponent, data: { permission: 'Pages.Administration.Host.Maintenance' } },
-                    { path: 'hostSettings', component: HostSettingsComponent, data: { permission: 'Pages.Administration.Host.Settings' } },
-                    { path: 'editions', component: EditionsComponent, data: { permission: 'Pages.Editions' } },
-                    { path: 'languages', component: LanguagesComponent, data: { permission: 'Pages.Administration.Languages' } },
-                    { path: 'languages/:name/texts', component: LanguageTextsComponent, data: { permission: 'Pages.Administration.Languages.ChangeTexts' } },
-                    { path: 'tenants', component: TenantsComponent, data: { permission: 'Pages.Tenants' } },
-                    { path: 'organization-units', component: OrganizationUnitsComponent, data: { permission: 'Pages.Administration.OrganizationUnits' } },
-                    { path: 'subscription-management', component: SubscriptionManagementComponent, data: { permission: 'Pages.Administration.Tenant.SubscriptionManagement' } },
-                    { path: 'invoice/:paymentId', component: InvoiceComponent, data: { permission: 'Pages.Administration.Tenant.SubscriptionManagement' } },
-                    { path: 'tenantSettings', component: TenantSettingsComponent, data: { permission: 'Pages.Administration.Tenant.Settings' } },
-                    { path: 'hostDashboard', component: HostDashboardComponent, data: { permission: 'Pages.Administration.Host.Dashboard' } },
-                    { path: 'demo-ui-components', component: DemoUiComponentsComponent, data: { permission: 'Pages.DemoUiComponents' } },
-                    { path: 'install', component: InstallComponent },
-                    { path: 'ui-customization', component: UiCustomizationComponent },
-                    { path: 'webhook-subscriptions', component: WebhookSubscriptionComponent, data: { permission: 'Pages.Administration.WebhookSubscription' } },
-                    { path: 'webhook-subscriptions-detail', component: WebhookSubscriptionDetailComponent, data: { permission: 'Pages.Administration.WebhookSubscription.Detail' } },
-                    { path: 'webhook-event-detail', component: WebhookEventDetailComponent, data: { permission: 'Pages.Administration.WebhookSubscription.Detail' } },
-                    { path: 'dynamic-parameter', component: DynamicParameterComponent, data: { permission: 'Pages.Administration.DynamicParameters' } },
-                    { path: 'dynamic-parameter-detail', component: DynamicParameterDetailComponent, data: { permission: 'Pages.Administration.DynamicParameters' } },
-                    { path: 'entity-dynamic-parameter', component: EntityDynamicParameterComponent, data: { permission: 'Pages.Administration.EntityDynamicParameters' } },
-                    { path: 'entity-dynamic-parameter-value/manage-all/:entityFullName/:rowId', component: EntityDynamicParameterValueComponent, data: { permission: 'Pages.Administration.EntityDynamicParameters' } },
-                    { path: '', redirectTo: 'hostDashboard', pathMatch: 'full' },
-                    { path: '**', redirectTo: 'hostDashboard' }
-                ]
-            }
-        ])
-    ],
-    exports: [
-        RouterModule
-    ]
+  imports: [
+    RouterModule.forChild([
+      {
+        path: '',
+        children: [
+          { path: 'trucks/truckStatuses', component: TruckStatusesComponent, data: { permission: 'Pages.Administration.TruckStatuses' } },
+          { path: 'users', component: UsersComponent, data: { permission: 'Pages.Administration.Users' } },
+          { path: 'roles', component: RolesComponent, data: { permission: 'Pages.Administration.Roles' } },
+          { path: 'auditLogs', component: AuditLogsComponent, data: { permission: 'Pages.Administration.AuditLogs' } },
+          { path: 'maintenance', component: MaintenanceComponent, data: { permission: 'Pages.Administration.Host.Maintenance' } },
+          { path: 'hostSettings', component: HostSettingsComponent, data: { permission: 'Pages.Administration.Host.Settings' } },
+          { path: 'editions', component: EditionsComponent, data: { permission: 'Pages.Editions' } },
+          { path: 'languages', component: LanguagesComponent, data: { permission: 'Pages.Administration.Languages' } },
+          { path: 'languages/:name/texts', component: LanguageTextsComponent, data: { permission: 'Pages.Administration.Languages.ChangeTexts' } },
+          { path: 'tenants', component: TenantsComponent, data: { permission: 'Pages.Tenants' } },
+          { path: 'organization-units', component: OrganizationUnitsComponent, data: { permission: 'Pages.Administration.OrganizationUnits' } },
+          {
+            path: 'subscription-management',
+            component: SubscriptionManagementComponent,
+            data: { permission: 'Pages.Administration.Tenant.SubscriptionManagement' },
+          },
+          { path: 'invoice/:paymentId', component: InvoiceComponent, data: { permission: 'Pages.Administration.Tenant.SubscriptionManagement' } },
+          { path: 'tenantSettings', component: TenantSettingsComponent, data: { permission: 'Pages.Administration.Tenant.Settings' } },
+          { path: 'hostDashboard', component: HostDashboardComponent, data: { permission: 'Pages.Administration.Host.Dashboard' } },
+          { path: 'demo-ui-components', component: DemoUiComponentsComponent, data: { permission: 'Pages.DemoUiComponents' } },
+          { path: 'install', component: InstallComponent },
+          { path: 'ui-customization', component: UiCustomizationComponent },
+          {
+            path: 'webhook-subscriptions',
+            component: WebhookSubscriptionComponent,
+            data: { permission: 'Pages.Administration.WebhookSubscription' },
+          },
+          {
+            path: 'webhook-subscriptions-detail',
+            component: WebhookSubscriptionDetailComponent,
+            data: { permission: 'Pages.Administration.WebhookSubscription.Detail' },
+          },
+          {
+            path: 'webhook-event-detail',
+            component: WebhookEventDetailComponent,
+            data: { permission: 'Pages.Administration.WebhookSubscription.Detail' },
+          },
+          { path: 'dynamic-parameter', component: DynamicParameterComponent, data: { permission: 'Pages.Administration.DynamicParameters' } },
+          {
+            path: 'dynamic-parameter-detail',
+            component: DynamicParameterDetailComponent,
+            data: { permission: 'Pages.Administration.DynamicParameters' },
+          },
+          {
+            path: 'entity-dynamic-parameter',
+            component: EntityDynamicParameterComponent,
+            data: { permission: 'Pages.Administration.EntityDynamicParameters' },
+          },
+          {
+            path: 'entity-dynamic-parameter-value/manage-all/:entityFullName/:rowId',
+            component: EntityDynamicParameterValueComponent,
+            data: { permission: 'Pages.Administration.EntityDynamicParameters' },
+          },
+          { path: '', redirectTo: 'hostDashboard', pathMatch: 'full' },
+          { path: '**', redirectTo: 'hostDashboard' },
+        ],
+      },
+    ]),
+  ],
+  exports: [RouterModule],
 })
 export class AdminRoutingModule {
-
-    constructor(
-        private router: Router
-    ) {
-        router.events.subscribe((event) => {
-            if (event instanceof NavigationEnd) {
-                window.scroll(0, 0);
-            }
-        });
-    }
+  constructor(private router: Router) {
+    router.events.subscribe((event) => {
+      if (event instanceof NavigationEnd) {
+        window.scroll(0, 0);
+      }
+    });
+  }
 }

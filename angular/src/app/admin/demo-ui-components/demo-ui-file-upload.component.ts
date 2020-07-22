@@ -5,32 +5,27 @@ import { AppComponentBase } from '@shared/common/app-component-base';
 import { DemoUiComponentsServiceProxy } from '@shared/service-proxies/service-proxies';
 
 @Component({
-    selector: 'demo-ui-file-upload',
-    templateUrl: './demo-ui-file-upload.component.html',
-    animations: [appModuleAnimation()]
+  selector: 'demo-ui-file-upload',
+  templateUrl: './demo-ui-file-upload.component.html',
+  animations: [appModuleAnimation()],
 })
-
 export class DemoUiFileUploadComponent extends AppComponentBase {
+  uploadUrl: string;
+  uploadedFiles: any[] = [];
 
-    uploadUrl: string;
-    uploadedFiles: any[] = [];
+  constructor(injector: Injector, private demoUiComponentsService: DemoUiComponentsServiceProxy) {
+    super(injector);
+    this.uploadUrl = AppConsts.remoteServiceBaseUrl + '/DemoUiComponents/UploadFiles';
+  }
 
-    constructor(
-        injector: Injector,
-        private demoUiComponentsService: DemoUiComponentsServiceProxy
-    ) {
-        super(injector);
-        this.uploadUrl = AppConsts.remoteServiceBaseUrl + '/DemoUiComponents/UploadFiles';
+  // upload completed event
+  onUpload(event): void {
+    for (const file of event.files) {
+      this.uploadedFiles.push(file);
     }
+  }
 
-    // upload completed event
-    onUpload(event): void {
-        for (const file of event.files) {
-            this.uploadedFiles.push(file);
-        }
-    }
-
-    onBeforeSend(event): void {
-        event.xhr.setRequestHeader('Authorization', 'Bearer ' + abp.auth.getToken());
-    }
+  onBeforeSend(event): void {
+    event.xhr.setRequestHeader('Authorization', 'Bearer ' + abp.auth.getToken());
+  }
 }

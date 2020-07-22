@@ -5,17 +5,20 @@ import { DashboardChartBase } from '../dashboard-chart-base';
 import { WidgetComponentBase } from '../widget-component-base';
 
 class SalesSummaryChart extends DashboardChartBase {
-  totalSales = 0; totalSalesCounter = 0;
-  revenue = 0; revenuesCounter = 0;
-  expenses = 0; expensesCounter = 0;
-  growth = 0; growthCounter = 0;
+  totalSales = 0;
+  totalSalesCounter = 0;
+  revenue = 0;
+  revenuesCounter = 0;
+  expenses = 0;
+  expensesCounter = 0;
+  growth = 0;
+  growthCounter = 0;
 
   selectedDatePeriod: SalesSummaryDatePeriod;
 
   data = [];
 
-  constructor(
-    private _dashboardService: TenantDashboardServiceProxy) {
+  constructor(private _dashboardService: TenantDashboardServiceProxy) {
     super();
   }
 
@@ -37,26 +40,26 @@ class SalesSummaryChart extends DashboardChartBase {
     let profit = [];
 
     _.forEach(items, (item) => {
-
       sales.push({
-        'name': item['period'],
-        'value': item['sales']
+        name: item['period'],
+        value: item['sales'],
       });
 
       profit.push({
-        'name': item['period'],
-        'value': item['profit']
+        name: item['period'],
+        value: item['profit'],
       });
     });
 
     this.data = [
       {
-        'name': 'Sales',
-        'series': sales
-      }, {
-        'name': 'Profit',
-        'series': profit
-      }
+        name: 'Sales',
+        series: sales,
+      },
+      {
+        name: 'Profit',
+        series: profit,
+      },
     ];
   }
 
@@ -69,28 +72,23 @@ class SalesSummaryChart extends DashboardChartBase {
     this.selectedDatePeriod = datePeriod;
 
     this.showLoading();
-    this._dashboardService
-      .getSalesSummary(datePeriod)
-      .subscribe(result => {
-        this.setChartData(result.salesSummary);
-        this.hideLoading();
-      });
+    this._dashboardService.getSalesSummary(datePeriod).subscribe((result) => {
+      this.setChartData(result.salesSummary);
+      this.hideLoading();
+    });
   }
 }
-
 
 @Component({
   selector: 'app-widget-sales-summary',
   templateUrl: './widget-sales-summary.component.html',
-  styleUrls: ['./widget-sales-summary.component.css']
+  styleUrls: ['./widget-sales-summary.component.css'],
 })
 export class WidgetSalesSummaryComponent extends WidgetComponentBase implements OnInit, OnDestroy {
-
   salesSummaryChart: SalesSummaryChart;
   appSalesSummaryDateInterval = SalesSummaryDatePeriod;
 
-  constructor(injector: Injector,
-    private _tenantDashboardServiceProxy: TenantDashboardServiceProxy) {
+  constructor(injector: Injector, private _tenantDashboardServiceProxy: TenantDashboardServiceProxy) {
     super(injector);
     this.salesSummaryChart = new SalesSummaryChart(this._tenantDashboardServiceProxy);
   }
@@ -107,7 +105,7 @@ export class WidgetSalesSummaryComponent extends WidgetComponentBase implements 
     this.runDelayed(() => {
       this.salesSummaryChart.reload(SalesSummaryDatePeriod.Daily);
     });
-  }
+  };
 
   subDateRangeFilter() {
     abp.event.on('app.dashboardFilters.dateRangePicker.onDateChange', this.onDateRangeFilterChange);

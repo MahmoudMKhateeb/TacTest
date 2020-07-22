@@ -6,30 +6,30 @@ import { AccountServiceProxy, SendEmailActivationLinkInput } from '@shared/servi
 import { finalize } from 'rxjs/operators';
 
 @Component({
-    templateUrl: './email-activation.component.html',
-    animations: [accountModuleAnimation()]
+  templateUrl: './email-activation.component.html',
+  animations: [accountModuleAnimation()],
 })
 export class EmailActivationComponent extends AppComponentBase {
+  model: SendEmailActivationLinkInput = new SendEmailActivationLinkInput();
+  saving = false;
 
-    model: SendEmailActivationLinkInput = new SendEmailActivationLinkInput();
-    saving = false;
+  constructor(injector: Injector, private _accountService: AccountServiceProxy, private _router: Router) {
+    super(injector);
+  }
 
-    constructor (
-        injector: Injector,
-        private _accountService: AccountServiceProxy,
-        private _router: Router
-        ) {
-        super(injector);
-    }
-
-    save(): void {
-        this.saving = true;
-        this._accountService.sendEmailActivationLink(this.model)
-            .pipe(finalize(() => { this.saving = false; }))
-            .subscribe(() => {
-                this.message.success(this.l('ActivationMailSentMessage'), this.l('MailSent')).then(() => {
-                    this._router.navigate(['account/login']);
-                });
-            });
-    }
+  save(): void {
+    this.saving = true;
+    this._accountService
+      .sendEmailActivationLink(this.model)
+      .pipe(
+        finalize(() => {
+          this.saving = false;
+        })
+      )
+      .subscribe(() => {
+        this.message.success(this.l('ActivationMailSentMessage'), this.l('MailSent')).then(() => {
+          this._router.navigate(['account/login']);
+        });
+      });
+  }
 }

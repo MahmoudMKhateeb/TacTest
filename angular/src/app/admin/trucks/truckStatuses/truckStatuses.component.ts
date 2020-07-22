@@ -1,6 +1,6 @@
 ﻿import { Component, Injector, ViewEncapsulation, ViewChild } from '@angular/core';
-import { ActivatedRoute , Router} from '@angular/router';
-import { TruckStatusesServiceProxy, TruckStatusDto  } from '@shared/service-proxies/service-proxies';
+import { ActivatedRoute, Router } from '@angular/router';
+import { TruckStatusesServiceProxy, TruckStatusDto } from '@shared/service-proxies/service-proxies';
 import { NotifyService } from 'abp-ng2-module';
 import { AppComponentBase } from '@shared/common/app-component-base';
 import { TokenAuthServiceProxy } from '@shared/service-proxies/service-proxies';
@@ -17,99 +17,97 @@ import * as _ from 'lodash';
 import * as moment from 'moment';
 
 @Component({
-    templateUrl: './truckStatuses.component.html',
-    encapsulation: ViewEncapsulation.None,
-    animations: [appModuleAnimation()]
+  templateUrl: './truckStatuses.component.html',
+  encapsulation: ViewEncapsulation.None,
+  animations: [appModuleAnimation()],
 })
 export class TruckStatusesComponent extends AppComponentBase {
-    
-    
-    @ViewChild('entityTypeHistoryModal', { static: true }) entityTypeHistoryModal: EntityTypeHistoryModalComponent;
-    @ViewChild('createOrEditTruckStatusModal', { static: true }) createOrEditTruckStatusModal: CreateOrEditTruckStatusModalComponent;
-    @ViewChild('viewTruckStatusModalComponent', { static: true }) viewTruckStatusModal: ViewTruckStatusModalComponent;   
-    
-    @ViewChild('dataTable', { static: true }) dataTable: Table;
-    @ViewChild('paginator', { static: true }) paginator: Paginator;
+  @ViewChild('entityTypeHistoryModal', { static: true }) entityTypeHistoryModal: EntityTypeHistoryModalComponent;
+  @ViewChild('createOrEditTruckStatusModal', { static: true }) createOrEditTruckStatusModal: CreateOrEditTruckStatusModalComponent;
+  @ViewChild('viewTruckStatusModalComponent', { static: true }) viewTruckStatusModal: ViewTruckStatusModalComponent;
 
-    advancedFiltersAreShown = false;
-    filterText = '';
-    displayNameFilter = '';
+  @ViewChild('dataTable', { static: true }) dataTable: Table;
+  @ViewChild('paginator', { static: true }) paginator: Paginator;
 
+  advancedFiltersAreShown = false;
+  filterText = '';
+  displayNameFilter = '';
 
-    _entityTypeFullName = 'TACHYON.Trucks.TruckStatus';
-    entityHistoryEnabled = false;
+  _entityTypeFullName = 'TACHYON.Trucks.TruckStatus';
+  entityHistoryEnabled = false;
 
-    constructor(
-        injector: Injector,
-        private _truckStatusesServiceProxy: TruckStatusesServiceProxy,
-        private _notifyService: NotifyService,
-        private _tokenAuth: TokenAuthServiceProxy,
-        private _activatedRoute: ActivatedRoute,
-        private _fileDownloadService: FileDownloadService
-    ) {
-        super(injector);
+  constructor(
+    injector: Injector,
+    private _truckStatusesServiceProxy: TruckStatusesServiceProxy,
+    private _notifyService: NotifyService,
+    private _tokenAuth: TokenAuthServiceProxy,
+    private _activatedRoute: ActivatedRoute,
+    private _fileDownloadService: FileDownloadService
+  ) {
+    super(injector);
+  }
+
+  ngOnInit(): void {
+    this.entityHistoryEnabled = this.setIsEntityHistoryEnabled();
+  }
+
+  private setIsEntityHistoryEnabled(): boolean {
+    let customSettings = (abp as any).custom;
+    return (
+      this.isGrantedAny('Pages.Administration.AuditLogs') &&
+      customSettings.EntityHistory &&
+      customSettings.EntityHistory.isEnabled &&
+      _.filter(customSettings.EntityHistory.enabledEntities, (entityType) => entityType === this._entityTypeFullName).length === 1
+    );
+  }
+
+  getTruckStatuses(event?: LazyLoadEvent) {
+    if (this.primengTableHelper.shouldResetPaging(event)) {
+      this.paginator.changePage(0);
+      return;
     }
 
-    ngOnInit(): void {
-        this.entityHistoryEnabled = this.setIsEntityHistoryEnabled();
-    }
+    this.primengTableHelper.showLoadingIndicator();
 
-    private setIsEntityHistoryEnabled(): boolean {
-        let customSettings = (abp as any).custom;
-        return this.isGrantedAny('Pages.Administration.AuditLogs') && customSettings.EntityHistory && customSettings.EntityHistory.isEnabled && _.filter(customSettings.EntityHistory.enabledEntities, entityType => entityType === this._entityTypeFullName).length === 1;
-    }
+    this._truckStatusesServiceProxy
+      .getAll(
+        this.filterText,
+        this.displayNameFilter,
+        this.primengTableHelper.getSorting(this.dataTable),
+        this.primengTableHelper.getSkipCount(this.paginator, event),
+        this.primengTableHelper.getMaxResultCount(this.paginator, event)
+      )
+      .subscribe((result) => {
+        this.primengTableHelper.totalRecordsCount = result.totalCount;
+        this.primengTableHelper.records = result.items;
+        this.primengTableHelper.hideLoadingIndicator();
+      });
+  }
 
-    getTruckStatuses(event?: LazyLoadEvent) {
-        if (this.primengTableHelper.shouldResetPaging(event)) {
-            this.paginator.changePage(0);
-            return;
-        }
+  reloadPage(): void {
+    this.paginator.changePage(this.paginator.getPage());
+  }
 
-        this.primengTableHelper.showLoadingIndicator();
+  createTruckStatus(): void {
+    this.createOrEditTruckStatusModal.show();
+  }
 
-        this._truckStatusesServiceProxy.getAll(
-            this.filterText,
-            this.displayNameFilter,
-            this.primengTableHelper.getSorting(this.dataTable),
-            this.primengTableHelper.getSkipCount(this.paginator, event),
-            this.primengTableHelper.getMaxResultCount(this.paginator, event)
-        ).subscribe(result => {
-            this.primengTableHelper.totalRecordsCount = result.totalCount;
-            this.primengTableHelper.records = result.items;
-            this.primengTableHelper.hideLoadingIndicator();
+  showHistory(truckStatus: TruckStatusDto): void {
+    this.entityTypeHistoryModal.show({
+      entityId: truckStatus.id.toString(),
+      entityTypeFullName: this._entityTypeFullName,
+      entityTypeDescription: '',
+    });
+  }
+
+  deleteTruckStatus(truckStatus: TruckStatusDto): void {
+    this.message.confirm('', this.l('AreYouSure'), (isConfirmed) => {
+      if (isConfirmed) {
+        this._truckStatusesServiceProxy.delete(truckStatus.id).subscribe(() => {
+          this.reloadPage();
+          this.notify.success(this.l('SuccessfullyDeleted'));
         });
-    }
-
-    reloadPage(): void {
-        this.paginator.changePage(this.paginator.getPage());
-    }
-
-    createTruckStatus(): void {
-        this.createOrEditTruckStatusModal.show();        
-    }
-
-
-    showHistory(truckStatus: TruckStatusDto): void {
-        this.entityTypeHistoryModal.show({
-            entityId: truckStatus.id.toString(),
-            entityTypeFullName: this._entityTypeFullName,
-            entityTypeDescription: ''
-        });
-    }
-
-    deleteTruckStatus(truckStatus: TruckStatusDto): void {
-        this.message.confirm(
-            '',
-            this.l('AreYouSure'),
-            (isConfirmed) => {
-                if (isConfirmed) {
-                    this._truckStatusesServiceProxy.delete(truckStatus.id)
-                        .subscribe(() => {
-                            this.reloadPage();
-                            this.notify.success(this.l('SuccessfullyDeleted'));
-                        });
-                }
-            }
-        );
-    }
+      }
+    });
+  }
 }

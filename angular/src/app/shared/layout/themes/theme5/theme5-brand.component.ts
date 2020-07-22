@@ -6,22 +6,18 @@ import { AppComponentBase } from '@shared/common/app-component-base';
 import { DOCUMENT } from '@angular/common';
 
 @Component({
-    templateUrl: './theme5-brand.component.html',
-    selector: 'theme5-brand',
-    encapsulation: ViewEncapsulation.None
+  templateUrl: './theme5-brand.component.html',
+  selector: 'theme5-brand',
+  encapsulation: ViewEncapsulation.None,
 })
 export class Theme5BrandComponent extends AppComponentBase {
+  remoteServiceBaseUrl: string = AppConsts.remoteServiceBaseUrl;
 
-    remoteServiceBaseUrl: string = AppConsts.remoteServiceBaseUrl;
+  constructor(injector: Injector, @Inject(DOCUMENT) private document: Document) {
+    super(injector);
+  }
 
-    constructor(
-        injector: Injector,
-        @Inject(DOCUMENT) private document: Document
-    ) {
-        super(injector);
-    }
-
-    clickTopbarToggle(): void {
-        this.document.body.classList.toggle('m-topbar--on');
-    }
+  clickTopbarToggle(): void {
+    this.document.body.classList.toggle('m-topbar--on');
+  }
 }

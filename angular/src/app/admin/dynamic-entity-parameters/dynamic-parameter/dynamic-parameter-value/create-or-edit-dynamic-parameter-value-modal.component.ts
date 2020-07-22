@@ -7,7 +7,7 @@ import { Observable } from 'rxjs';
 @Component({
   selector: 'create-or-edit-dynamic-parameter-value-modal',
   templateUrl: './create-or-edit-dynamic-parameter-value-modal.component.html',
-  styleUrls: ['./create-or-edit-dynamic-parameter-value-modal.component.css']
+  styleUrls: ['./create-or-edit-dynamic-parameter-value-modal.component.css'],
 })
 export class CreateOrEditDynamicParameterValueModalComponent extends AppComponentBase {
   @Output() modalSave: EventEmitter<any> = new EventEmitter<any>();
@@ -16,10 +16,7 @@ export class CreateOrEditDynamicParameterValueModalComponent extends AppComponen
   dynamicParameterValue: DynamicParameterValueDto;
   saving = false;
 
-  constructor(
-    injector: Injector,
-    private _dynamicParameterValueAppService: DynamicParameterValueServiceProxy
-  ) {
+  constructor(injector: Injector, private _dynamicParameterValueAppService: DynamicParameterValueServiceProxy) {
     super(injector);
   }
 
@@ -32,17 +29,16 @@ export class CreateOrEditDynamicParameterValueModalComponent extends AppComponen
     }
 
     this.showMainSpinner();
-    this._dynamicParameterValueAppService.get(dynamicParameterValueId)
-      .subscribe(
-        (data) => {
-          this.dynamicParameterValue = data;
-          this.hideMainSpinner();
-          this.modal.show();
-        },
-        (err) => {
-          this.hideMainSpinner();
-        }
-      );
+    this._dynamicParameterValueAppService.get(dynamicParameterValueId).subscribe(
+      (data) => {
+        this.dynamicParameterValue = data;
+        this.hideMainSpinner();
+        this.modal.show();
+      },
+      (err) => {
+        this.hideMainSpinner();
+      }
+    );
   }
 
   save(): void {
@@ -55,16 +51,19 @@ export class CreateOrEditDynamicParameterValueModalComponent extends AppComponen
       observable = this._dynamicParameterValueAppService.update(this.dynamicParameterValue);
     }
 
-    observable.subscribe(() => {
-      this.notify.info(this.l('SavedSuccessfully'));
-      this.hideMainSpinner();
-      this.modalSave.emit(null);
-      this.modal.hide();
-      this.saving = false;
-    }, (e) => {
-      this.hideMainSpinner();
-      this.saving = false;
-    });
+    observable.subscribe(
+      () => {
+        this.notify.info(this.l('SavedSuccessfully'));
+        this.hideMainSpinner();
+        this.modalSave.emit(null);
+        this.modal.hide();
+        this.saving = false;
+      },
+      (e) => {
+        this.hideMainSpinner();
+        this.saving = false;
+      }
+    );
   }
 
   close(): void {

@@ -4,36 +4,32 @@ import { GetTrailerStatusForViewDto, TrailerStatusDto } from '@shared/service-pr
 import { AppComponentBase } from '@shared/common/app-component-base';
 
 @Component({
-    selector: 'viewTrailerStatusModal',
-    templateUrl: './view-trailerStatus-modal.component.html'
+  selector: 'viewTrailerStatusModal',
+  templateUrl: './view-trailerStatus-modal.component.html',
 })
 export class ViewTrailerStatusModalComponent extends AppComponentBase {
+  @ViewChild('createOrEditModal', { static: true }) modal: ModalDirective;
+  @Output() modalSave: EventEmitter<any> = new EventEmitter<any>();
 
-    @ViewChild('createOrEditModal', { static: true }) modal: ModalDirective;
-    @Output() modalSave: EventEmitter<any> = new EventEmitter<any>();
+  active = false;
+  saving = false;
 
-    active = false;
-    saving = false;
+  item: GetTrailerStatusForViewDto;
 
-    item: GetTrailerStatusForViewDto;
+  constructor(injector: Injector) {
+    super(injector);
+    this.item = new GetTrailerStatusForViewDto();
+    this.item.trailerStatus = new TrailerStatusDto();
+  }
 
+  show(item: GetTrailerStatusForViewDto): void {
+    this.item = item;
+    this.active = true;
+    this.modal.show();
+  }
 
-    constructor(
-        injector: Injector
-    ) {
-        super(injector);
-        this.item = new GetTrailerStatusForViewDto();
-        this.item.trailerStatus = new TrailerStatusDto();
-    }
-
-    show(item: GetTrailerStatusForViewDto): void {
-        this.item = item;
-        this.active = true;
-        this.modal.show();
-    }
-
-    close(): void {
-        this.active = false;
-        this.modal.hide();
-    }
+  close(): void {
+    this.active = false;
+    this.modal.hide();
+  }
 }

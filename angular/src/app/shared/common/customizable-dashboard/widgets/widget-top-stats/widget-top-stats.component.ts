@@ -3,18 +3,24 @@ import { TenantDashboardServiceProxy } from '@shared/service-proxies/service-pro
 import { DashboardChartBase } from '../dashboard-chart-base';
 import { WidgetComponentBase } from '../widget-component-base';
 
-
 class DashboardTopStats extends DashboardChartBase {
+  totalProfit = 0;
+  totalProfitCounter = 0;
+  newFeedbacks = 0;
+  newFeedbacksCounter = 0;
+  newOrders = 0;
+  newOrdersCounter = 0;
+  newUsers = 0;
+  newUsersCounter = 0;
 
-  totalProfit = 0; totalProfitCounter = 0;
-  newFeedbacks = 0; newFeedbacksCounter = 0;
-  newOrders = 0; newOrdersCounter = 0;
-  newUsers = 0; newUsersCounter = 0;
-
-  totalProfitChange = 76; totalProfitChangeCounter = 0;
-  newFeedbacksChange = 85; newFeedbacksChangeCounter = 0;
-  newOrdersChange = 45; newOrdersChangeCounter = 0;
-  newUsersChange = 57; newUsersChangeCounter = 0;
+  totalProfitChange = 76;
+  totalProfitChangeCounter = 0;
+  newFeedbacksChange = 85;
+  newFeedbacksChangeCounter = 0;
+  newOrdersChange = 45;
+  newOrdersChangeCounter = 0;
+  newUsersChange = 57;
+  newUsersChangeCounter = 0;
 
   init(totalProfit, newFeedbacks, newOrders, newUsers) {
     this.totalProfit = totalProfit;
@@ -28,15 +34,12 @@ class DashboardTopStats extends DashboardChartBase {
 @Component({
   selector: 'app-widget-top-stats',
   templateUrl: './widget-top-stats.component.html',
-  styleUrls: ['./widget-top-stats.component.css']
+  styleUrls: ['./widget-top-stats.component.css'],
 })
 export class WidgetTopStatsComponent extends WidgetComponentBase implements OnInit {
-
   dashboardTopStats: DashboardTopStats;
 
-  constructor(injector: Injector,
-    private _tenantDashboardServiceProxy: TenantDashboardServiceProxy
-  ) {
+  constructor(injector: Injector, private _tenantDashboardServiceProxy: TenantDashboardServiceProxy) {
     super(injector);
     this.dashboardTopStats = new DashboardTopStats();
   }

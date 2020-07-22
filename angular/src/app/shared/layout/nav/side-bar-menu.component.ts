@@ -1,14 +1,5 @@
 import { PermissionCheckerService } from 'abp-ng2-module';
-import {
-    Injector,
-    ElementRef,
-    Component,
-    OnInit,
-    ViewEncapsulation,
-    Inject,
-    Renderer2,
-    AfterViewInit,
-} from '@angular/core';
+import { Injector, ElementRef, Component, OnInit, ViewEncapsulation, Inject, Renderer2, AfterViewInit } from '@angular/core';
 import { AppComponentBase } from '@shared/common/app-component-base';
 import { AppMenu } from './app-menu';
 import { AppNavigationService } from './app-navigation.service';
@@ -19,225 +10,195 @@ import { FormattedStringValueExtracter } from '@shared/helpers/FormattedStringVa
 import * as objectPath from 'object-path';
 
 @Component({
-    templateUrl: './side-bar-menu.component.html',
-    selector: 'side-bar-menu',
-    encapsulation: ViewEncapsulation.None,
+  templateUrl: './side-bar-menu.component.html',
+  selector: 'side-bar-menu',
+  encapsulation: ViewEncapsulation.None,
 })
-export class SideBarMenuComponent extends AppComponentBase
-    implements OnInit, AfterViewInit {
-    menu: AppMenu = null;
+export class SideBarMenuComponent extends AppComponentBase implements OnInit, AfterViewInit {
+  menu: AppMenu = null;
 
-    currentRouteUrl = '';
-    insideTm: any;
-    outsideTm: any;
+  currentRouteUrl = '';
+  insideTm: any;
+  outsideTm: any;
 
-    menuOptions: MenuOptions = {
-        submenu: {
-            desktop: {
-                default: 'dropdown',
-            },
-            tablet: 'accordion',
-            mobile: 'accordion',
-        },
+  menuOptions: MenuOptions = {
+    submenu: {
+      desktop: {
+        default: 'dropdown',
+      },
+      tablet: 'accordion',
+      mobile: 'accordion',
+    },
 
-        accordion: {
-            expandAll: false,
-        }
-    };
+    accordion: {
+      expandAll: false,
+    },
+  };
 
-    constructor(
-        injector: Injector,
-        private el: ElementRef,
-        private router: Router,
-        public permission: PermissionCheckerService,
-        private _appNavigationService: AppNavigationService,
-        private render: Renderer2
-    ) {
-        super(injector);
+  constructor(
+    injector: Injector,
+    private el: ElementRef,
+    private router: Router,
+    public permission: PermissionCheckerService,
+    private _appNavigationService: AppNavigationService,
+    private render: Renderer2
+  ) {
+    super(injector);
+  }
+
+  ngOnInit() {
+    this.menu = this._appNavigationService.getMenu();
+
+    this.currentRouteUrl = this.router.url.split(/[?#]/)[0];
+
+    this.router.events
+      .pipe(filter((event) => event instanceof NavigationEnd))
+      .subscribe((event) => (this.currentRouteUrl = this.router.url.split(/[?#]/)[0]));
+  }
+
+  ngAfterViewInit(): void {
+    this.scrollToCurrentMenuElement();
+  }
+
+  showMenuItem(menuItem): boolean {
+    return this._appNavigationService.showMenuItem(menuItem);
+  }
+
+  isMenuItemIsActive(item): boolean {
+    if (item.items.length) {
+      return this.isMenuRootItemIsActive(item);
     }
 
-    ngOnInit() {
-        this.menu = this._appNavigationService.getMenu();
-
-        this.currentRouteUrl = this.router.url.split(/[?#]/)[0];
-
-        this.router.events
-            .pipe(filter((event) => event instanceof NavigationEnd))
-            .subscribe(
-                (event) =>
-                    (this.currentRouteUrl = this.router.url.split(/[?#]/)[0])
-            );
+    if (!item.route) {
+      return false;
     }
 
-    ngAfterViewInit(): void {
-        this.scrollToCurrentMenuElement();
+    let urlTree = this.router.parseUrl(this.currentRouteUrl.replace(/\/$/, ''));
+    let urlString = '/' + urlTree.root.children.primary.segments.map((segment) => segment.path).join('/');
+    let exactMatch = urlString === item.route.replace(/\/$/, '');
+    if (!exactMatch && item.routeTemplates) {
+      for (let i = 0; i < item.routeTemplates.length; i++) {
+        let result = new FormattedStringValueExtracter().Extract(urlString, item.routeTemplates[i]);
+        if (result.IsMatch) {
+          return true;
+        }
+      }
+    }
+    return exactMatch;
+  }
+
+  isMenuRootItemIsActive(item): boolean {
+    let result = false;
+
+    for (const subItem of item.items) {
+      result = this.isMenuItemIsActive(subItem);
+      if (result) {
+        return true;
+      }
     }
 
-    showMenuItem(menuItem): boolean {
-        return this._appNavigationService.showMenuItem(menuItem);
+    return false;
+  }
+
+  /**
+   * Use for fixed left aside menu, to show menu on mouseenter event.
+   * @param e Event
+   */
+  mouseEnter(e: Event) {
+    if (!this.currentTheme.baseSettings.menu.allowAsideMinimizing) {
+      return;
     }
 
-    isMenuItemIsActive(item): boolean {
-        if (item.items.length) {
-            return this.isMenuRootItemIsActive(item);
-        }
+    // check if the left aside menu is fixed
+    if (document.body.classList.contains('kt-aside--fixed')) {
+      if (this.outsideTm) {
+        clearTimeout(this.outsideTm);
+        this.outsideTm = null;
+      }
 
-        if (!item.route) {
-            return false;
+      this.insideTm = setTimeout(() => {
+        // if the left aside menu is minimized
+        if (document.body.classList.contains('kt-aside--minimize') && KTUtil.isInResponsiveRange('desktop')) {
+          // show the left aside menu
+          this.render.removeClass(document.body, 'kt-aside--minimize');
+          this.render.addClass(document.body, 'kt-aside--minimize-hover');
         }
+      }, 50);
+    }
+  }
 
-        let urlTree = this.router.parseUrl(
-            this.currentRouteUrl.replace(/\/$/, '')
-        );
-        let urlString =
-            '/' +
-            urlTree.root.children.primary.segments
-                .map((segment) => segment.path)
-                .join('/');
-        let exactMatch = urlString === item.route.replace(/\/$/, '');
-        if (!exactMatch && item.routeTemplates) {
-            for (let i = 0; i < item.routeTemplates.length; i++) {
-                let result = new FormattedStringValueExtracter().Extract(
-                    urlString,
-                    item.routeTemplates[i]
-                );
-                if (result.IsMatch) {
-                    return true;
-                }
-            }
-        }
-        return exactMatch;
+  /**
+   * Use for fixed left aside menu, to show menu on mouseenter event.
+   * @param e Event
+   */
+  mouseLeave(e: Event) {
+    if (!this.currentTheme.baseSettings.menu.allowAsideMinimizing) {
+      return;
     }
 
-    isMenuRootItemIsActive(item): boolean {
-        let result = false;
+    if (document.body.classList.contains('kt-aside--fixed')) {
+      if (this.insideTm) {
+        clearTimeout(this.insideTm);
+        this.insideTm = null;
+      }
 
-        for (const subItem of item.items) {
-            result = this.isMenuItemIsActive(subItem);
-            if (result) {
-                return true;
-            }
+      this.outsideTm = setTimeout(() => {
+        // if the left aside menu is expand
+        if (document.body.classList.contains('kt-aside--minimize-hover') && KTUtil.isInResponsiveRange('desktop')) {
+          // hide back the left aside menu
+          this.render.removeClass(document.body, 'kt-aside--minimize-hover');
+          this.render.addClass(document.body, 'kt-aside--minimize');
         }
+      }, 100);
+    }
+  }
 
-        return false;
+  scrollToCurrentMenuElement(): void {
+    const path = location.pathname;
+    const menuItem = document.querySelector("a[href='" + path + "']");
+    if (menuItem) {
+      menuItem.scrollIntoView({ block: 'center' });
+    }
+  }
+
+  getItemAttrSubmenuToggle(item) {
+    let toggle = 'hover';
+    if (objectPath.get(item, 'toggle') === 'click') {
+      toggle = 'click';
+    } else if (objectPath.get(item, 'submenu.type') === 'tabs') {
+      toggle = 'tabs';
+    } else {
+      // submenu toggle default to 'hover'
     }
 
-    /**
-     * Use for fixed left aside menu, to show menu on mouseenter event.
-     * @param e Event
-     */
-    mouseEnter(e: Event) {
-        if (!this.currentTheme.baseSettings.menu.allowAsideMinimizing) {
-            return;
-        }
+    return toggle;
+  }
 
-        // check if the left aside menu is fixed
-        if (document.body.classList.contains('kt-aside--fixed')) {
-            if (this.outsideTm) {
-                clearTimeout(this.outsideTm);
-                this.outsideTm = null;
-            }
+  getItemCssClasses(item) {
+    let classes = 'menu-item';
 
-            this.insideTm = setTimeout(() => {
-                // if the left aside menu is minimized
-                if (
-                    document.body.classList.contains('kt-aside--minimize') &&
-                    KTUtil.isInResponsiveRange('desktop')
-                ) {
-                    // show the left aside menu
-                    this.render.removeClass(
-                        document.body,
-                        'kt-aside--minimize'
-                    );
-                    this.render.addClass(
-                        document.body,
-                        'kt-aside--minimize-hover'
-                    );
-                }
-            }, 50);
-        }
+    if (objectPath.get(item, 'submenu')) {
+      classes += ' menu-item-submenu';
     }
 
-    /**
-     * Use for fixed left aside menu, to show menu on mouseenter event.
-     * @param e Event
-     */
-    mouseLeave(e: Event) {
-        if (!this.currentTheme.baseSettings.menu.allowAsideMinimizing) {
-            return;
-        }
-
-        if (document.body.classList.contains('kt-aside--fixed')) {
-            if (this.insideTm) {
-                clearTimeout(this.insideTm);
-                this.insideTm = null;
-            }
-
-            this.outsideTm = setTimeout(() => {
-                // if the left aside menu is expand
-                if (
-                    document.body.classList.contains(
-                        'kt-aside--minimize-hover'
-                    ) &&
-                    KTUtil.isInResponsiveRange('desktop')
-                ) {
-                    // hide back the left aside menu
-                    this.render.removeClass(
-                        document.body,
-                        'kt-aside--minimize-hover'
-                    );
-                    this.render.addClass(document.body, 'kt-aside--minimize');
-                }
-            }, 100);
-        }
+    if (!item.items && this.isMenuItemIsActive(item)) {
+      classes += ' menu-item-active menu-item-here';
     }
 
-    scrollToCurrentMenuElement(): void {
-        const path = location.pathname;
-        const menuItem = document.querySelector('a[href=\'' + path + '\']');
-        if (menuItem) {
-            menuItem.scrollIntoView({ block: 'center' });
-        }
+    if (item.items && this.isMenuItemIsActive(item)) {
+      classes += ' menu-item-open menu-item-here';
     }
 
-    getItemAttrSubmenuToggle(item) {
-        let toggle = 'hover';
-        if (objectPath.get(item, 'toggle') === 'click') {
-            toggle = 'click';
-        } else if (objectPath.get(item, 'submenu.type') === 'tabs') {
-            toggle = 'tabs';
-        } else {
-            // submenu toggle default to 'hover'
-        }
-
-        return toggle;
+    // custom class for menu item
+    const customClass = objectPath.get(item, 'custom-class');
+    if (customClass) {
+      classes += ' ' + customClass;
     }
 
-    getItemCssClasses(item) {
-        let classes = 'menu-item';
-
-        if (objectPath.get(item, 'submenu')) {
-            classes += ' menu-item-submenu';
-        }
-
-        if (!item.items && this.isMenuItemIsActive(item)) {
-            classes += ' menu-item-active menu-item-here';
-        }
-
-        if (item.items && this.isMenuItemIsActive(item)) {
-            classes += ' menu-item-open menu-item-here';
-        }
-
-        // custom class for menu item
-        const customClass = objectPath.get(item, 'custom-class');
-        if (customClass) {
-            classes += ' ' + customClass;
-        }
-
-        if (objectPath.get(item, 'icon-only')) {
-            classes += ' menu-item-icon-only';
-        }
-
-        return classes;
+    if (objectPath.get(item, 'icon-only')) {
+      classes += ' menu-item-icon-only';
     }
+
+    return classes;
+  }
 }

@@ -5,64 +5,52 @@ import { AccountServiceProxy, ImpersonateInput, ImpersonateOutput, DelegatedImpe
 
 @Injectable()
 export class ImpersonationService {
+  constructor(private _accountService: AccountServiceProxy, private _appUrlService: AppUrlService, private _authService: AppAuthService) {}
 
-    constructor(
-        private _accountService: AccountServiceProxy,
-        private _appUrlService: AppUrlService,
-        private _authService: AppAuthService
-    ) {
+  impersonate(userId: number, tenantId?: number): void {
+    const input = new ImpersonateInput();
+    input.userId = userId;
+    input.tenantId = tenantId;
 
-    }
+    this._accountService.impersonate(input).subscribe((result: ImpersonateOutput) => {
+      this._authService.logout(false);
 
-    impersonate(userId: number, tenantId?: number): void {
+      let targetUrl = this._appUrlService.getAppRootUrlOfTenant(result.tenancyName) + '?impersonationToken=' + result.impersonationToken;
+      if (input.tenantId) {
+        targetUrl = targetUrl + '&tenantId=' + input.tenantId;
+      }
 
-        const input = new ImpersonateInput();
-        input.userId = userId;
-        input.tenantId = tenantId;
+      location.href = targetUrl;
+    });
+  }
 
-        this._accountService.impersonate(input)
-            .subscribe((result: ImpersonateOutput) => {
-                this._authService.logout(false);
+  delegatedImpersonate(userDelegationId: number, tenantId?: number): void {
+    const input = new DelegatedImpersonateInput();
+    input.userDelegationId = userDelegationId;
 
-                let targetUrl = this._appUrlService.getAppRootUrlOfTenant(result.tenancyName) + '?impersonationToken=' + result.impersonationToken;
-                if (input.tenantId) {
-                    targetUrl = targetUrl + '&tenantId=' + input.tenantId;
-                }
+    this._accountService.delegatedImpersonate(input).subscribe((result: ImpersonateOutput) => {
+      this._authService.logout(false);
 
-                location.href = targetUrl;
-            });
-    }
+      let targetUrl = this._appUrlService.getAppRootUrlOfTenant(result.tenancyName) + '?impersonationToken=' + result.impersonationToken;
+      targetUrl = targetUrl + '&userDelegationId=' + userDelegationId;
+      if (tenantId) {
+        targetUrl = targetUrl + '&tenantId=' + tenantId;
+      }
 
-    delegatedImpersonate(userDelegationId: number, tenantId?: number): void {
+      location.href = targetUrl;
+    });
+  }
 
-        const input = new DelegatedImpersonateInput();
-        input.userDelegationId = userDelegationId;
+  backToImpersonator(): void {
+    this._accountService.backToImpersonator().subscribe((result: ImpersonateOutput) => {
+      this._authService.logout(false);
 
-        this._accountService.delegatedImpersonate(input)
-            .subscribe((result: ImpersonateOutput) => {
-                this._authService.logout(false);
+      let targetUrl = this._appUrlService.getAppRootUrlOfTenant(result.tenancyName) + '?impersonationToken=' + result.impersonationToken;
+      if (abp.session.impersonatorTenantId) {
+        targetUrl = targetUrl + '&tenantId=' + abp.session.impersonatorTenantId;
+      }
 
-                let targetUrl = this._appUrlService.getAppRootUrlOfTenant(result.tenancyName) + '?impersonationToken=' + result.impersonationToken;
-                targetUrl = targetUrl + '&userDelegationId=' + userDelegationId;
-                if (tenantId) {
-                    targetUrl = targetUrl + '&tenantId=' + tenantId;
-                }
-
-                location.href = targetUrl;
-            });
-    }
-
-    backToImpersonator(): void {
-        this._accountService.backToImpersonator()
-            .subscribe((result: ImpersonateOutput) => {
-                this._authService.logout(false);
-
-                let targetUrl = this._appUrlService.getAppRootUrlOfTenant(result.tenancyName) + '?impersonationToken=' + result.impersonationToken;
-                if (abp.session.impersonatorTenantId) {
-                    targetUrl = targetUrl + '&tenantId=' + abp.session.impersonatorTenantId;
-                }
-
-                location.href = targetUrl;
-            });
-    }
+      location.href = targetUrl;
+    });
+  }
 }

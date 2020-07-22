@@ -16,14 +16,13 @@ import { FilterDateRangePickerComponent } from './filters/filter-date-range-pick
 import { WidgetTopStatsComponent } from './widgets/widget-top-stats/widget-top-stats.component';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class DashboardViewConfigurationService {
   public WidgetViewDefinitions: WidgetViewDefinition[] = [];
   public widgetFilterDefinitions: WidgetFilterViewDefinition[] = [];
 
-  constructor(
-  ) {
+  constructor() {
     this.initializeConfiguration();
   }
 
@@ -32,72 +31,37 @@ export class DashboardViewConfigurationService {
       DashboardCustomizationConst.filters.filterDateRangePicker,
       FilterDateRangePickerComponent
     );
-     //add your filters here
+    //add your filters here
     this.widgetFilterDefinitions.push(filterDateRangePicker);
 
-    let generalStats = new WidgetViewDefinition(
-      DashboardCustomizationConst.widgets.tenant.generalStats,
-      WidgetGeneralStatsComponent,
-      6,
-      4
-    );
+    let generalStats = new WidgetViewDefinition(DashboardCustomizationConst.widgets.tenant.generalStats, WidgetGeneralStatsComponent, 6, 4);
 
-    let dailySales = new WidgetViewDefinition(
-      DashboardCustomizationConst.widgets.tenant.dailySales,
-      WidgetDailySalesComponent,
-    );
+    let dailySales = new WidgetViewDefinition(DashboardCustomizationConst.widgets.tenant.dailySales, WidgetDailySalesComponent);
 
-    let profitShare = new WidgetViewDefinition(
-      DashboardCustomizationConst.widgets.tenant.profitShare,
-      WidgetProfitShareComponent
-    );
+    let profitShare = new WidgetViewDefinition(DashboardCustomizationConst.widgets.tenant.profitShare, WidgetProfitShareComponent);
 
-    let memberActivity = new WidgetViewDefinition(
-      DashboardCustomizationConst.widgets.tenant.memberActivity,
-      WidgetMemberActivityComponent,
-    );
+    let memberActivity = new WidgetViewDefinition(DashboardCustomizationConst.widgets.tenant.memberActivity, WidgetMemberActivityComponent);
 
-    let regionalStats = new WidgetViewDefinition(
-      DashboardCustomizationConst.widgets.tenant.regionalStats,
-      WidgetRegionalStatsComponent
-    );
+    let regionalStats = new WidgetViewDefinition(DashboardCustomizationConst.widgets.tenant.regionalStats, WidgetRegionalStatsComponent);
 
-    let salesSummary = new WidgetViewDefinition(
-      DashboardCustomizationConst.widgets.tenant.salesSummary,
-      WidgetSalesSummaryComponent,
-    );
+    let salesSummary = new WidgetViewDefinition(DashboardCustomizationConst.widgets.tenant.salesSummary, WidgetSalesSummaryComponent);
 
-    let topStats = new WidgetViewDefinition(
-      DashboardCustomizationConst.widgets.tenant.topStats,
-      WidgetTopStatsComponent,
-    );
+    let topStats = new WidgetViewDefinition(DashboardCustomizationConst.widgets.tenant.topStats, WidgetTopStatsComponent);
     //add your tenant side widgets here
 
-    let incomeStatistics = new WidgetViewDefinition(
-      DashboardCustomizationConst.widgets.host.incomeStatistics,
-      WidgetIncomeStatisticsComponent,
-    );
+    let incomeStatistics = new WidgetViewDefinition(DashboardCustomizationConst.widgets.host.incomeStatistics, WidgetIncomeStatisticsComponent);
 
-    let editionStatistics = new WidgetViewDefinition(
-      DashboardCustomizationConst.widgets.host.editionStatistics,
-      WidgetEditionStatisticsComponent,
-    );
+    let editionStatistics = new WidgetViewDefinition(DashboardCustomizationConst.widgets.host.editionStatistics, WidgetEditionStatisticsComponent);
 
-    let recentTenants = new WidgetViewDefinition(
-      DashboardCustomizationConst.widgets.host.recentTenants,
-      WidgetRecentTenantsComponent,
-    );
+    let recentTenants = new WidgetViewDefinition(DashboardCustomizationConst.widgets.host.recentTenants, WidgetRecentTenantsComponent);
 
     let subscriptionExpiringTenants = new WidgetViewDefinition(
       DashboardCustomizationConst.widgets.host.subscriptionExpiringTenants,
       WidgetSubscriptionExpiringTenantsComponent
     );
 
-    let hostTopStats = new WidgetViewDefinition(
-      DashboardCustomizationConst.widgets.host.topStats,
-      WidgetHostTopStatsComponent,
-    );
-   //add your host side widgets here
+    let hostTopStats = new WidgetViewDefinition(DashboardCustomizationConst.widgets.host.topStats, WidgetHostTopStatsComponent);
+    //add your host side widgets here
 
     this.WidgetViewDefinitions.push(generalStats);
     this.WidgetViewDefinitions.push(dailySales);

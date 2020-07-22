@@ -4,14 +4,12 @@ import { InputTypeComponentBase } from '../input-type-component-base';
 @Component({
   selector: 'app-combobox-input-type',
   templateUrl: './combobox-input-type.component.html',
-  styleUrls: ['./combobox-input-type.component.css']
+  styleUrls: ['./combobox-input-type.component.css'],
 })
 export class ComboboxInputTypeComponent extends InputTypeComponentBase implements OnInit {
   selectedValue: string;
 
-  constructor(
-    injector: Injector,
-  ) {
+  constructor(injector: Injector) {
     super(injector);
   }
 

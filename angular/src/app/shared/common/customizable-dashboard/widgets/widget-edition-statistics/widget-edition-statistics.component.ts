@@ -7,10 +7,9 @@ import { WidgetComponentBase } from '../widget-component-base';
 @Component({
   selector: 'app-widget-edition-statistics',
   templateUrl: './widget-edition-statistics.component.html',
-  styleUrls: ['./widget-edition-statistics.component.css']
+  styleUrls: ['./widget-edition-statistics.component.css'],
 })
 export class WidgetEditionStatisticsComponent extends WidgetComponentBase implements OnInit, OnDestroy {
-
   @ViewChild('EditionStatisticsChart', { static: true }) editionStatisticsChart: ElementRef;
 
   selectedDateRange: moment.Moment[] = [moment().add(-7, 'days').startOf('day'), moment().endOf('day')];
@@ -18,9 +17,7 @@ export class WidgetEditionStatisticsComponent extends WidgetComponentBase implem
   editionStatisticsHasData = false;
   editionStatisticsData;
 
-  constructor(
-    injector: Injector,
-    private _hostDashboardServiceProxy: HostDashboardServiceProxy) {
+  constructor(injector: Injector, private _hostDashboardServiceProxy: HostDashboardServiceProxy) {
     super(injector);
   }
 
@@ -30,12 +27,13 @@ export class WidgetEditionStatisticsComponent extends WidgetComponentBase implem
   }
 
   showChart = () => {
-    this._hostDashboardServiceProxy.getEditionTenantStatistics(this.selectedDateRange[0], this.selectedDateRange[1])
+    this._hostDashboardServiceProxy
+      .getEditionTenantStatistics(this.selectedDateRange[0], this.selectedDateRange[1])
       .subscribe((editionTenantStatistics) => {
         this.editionStatisticsData = this.normalizeEditionStatisticsData(editionTenantStatistics);
-        this.editionStatisticsHasData = _.filter(this.editionStatisticsData, data => data.value > 0).length > 0;
+        this.editionStatisticsHasData = _.filter(this.editionStatisticsData, (data) => data.value > 0).length > 0;
       });
-  }
+  };
 
   normalizeEditionStatisticsData(data: GetEditionTenantStatisticsOutput): Array<any> {
     if (!data || !data.editionStatistics || data.editionStatistics.length === 0) {
@@ -47,7 +45,7 @@ export class WidgetEditionStatisticsComponent extends WidgetComponentBase implem
     for (let i = 0; i < data.editionStatistics.length; i++) {
       chartData[i] = {
         name: data.editionStatistics[i].label,
-        value: data.editionStatistics[i].value
+        value: data.editionStatistics[i].value,
       };
     }
 
@@ -62,7 +60,7 @@ export class WidgetEditionStatisticsComponent extends WidgetComponentBase implem
     this.selectedDateRange[0] = dateRange[0];
     this.selectedDateRange[1] = dateRange[1];
     this.runDelayed(this.showChart);
-  }
+  };
 
   subDateRangeFilter() {
     abp.event.on('app.dashboardFilters.dateRangePicker.onDateChange', this.onDateRangeFilterChange);

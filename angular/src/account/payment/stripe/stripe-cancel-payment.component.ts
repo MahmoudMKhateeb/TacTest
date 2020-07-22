@@ -3,11 +3,10 @@ import { AppComponentBase } from '@shared/common/app-component-base';
 
 @Component({
   selector: 'stripe-cancel-payment',
-  templateUrl: './stripe-cancel-payment.component.html'
+  templateUrl: './stripe-cancel-payment.component.html',
 })
 export class StripeCancelPaymentComponent extends AppComponentBase {
-  constructor(
-    _injector: Injector) {
+  constructor(_injector: Injector) {
     super(_injector);
   }
 }

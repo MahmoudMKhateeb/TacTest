@@ -7,54 +7,50 @@ import { LoginService } from './login.service';
 import { finalize } from 'rxjs/operators';
 
 @Component({
-    templateUrl: './send-two-factor-code.component.html',
-    animations: [accountModuleAnimation()]
+  templateUrl: './send-two-factor-code.component.html',
+  animations: [accountModuleAnimation()],
 })
 export class SendTwoFactorCodeComponent extends AppComponentBase implements CanActivate, OnInit {
-    selectedTwoFactorProvider: string;
-    submitting = false;
+  selectedTwoFactorProvider: string;
+  submitting = false;
 
-    constructor(
-        injector: Injector,
-        public loginService: LoginService,
-        private _tokenAuthService: TokenAuthServiceProxy,
-        private _router: Router
+  constructor(injector: Injector, public loginService: LoginService, private _tokenAuthService: TokenAuthServiceProxy, private _router: Router) {
+    super(injector);
+  }
+
+  canActivate(): boolean {
+    if (
+      this.loginService.authenticateModel &&
+      this.loginService.authenticateResult &&
+      this.loginService.authenticateResult.twoFactorAuthProviders &&
+      this.loginService.authenticateResult.twoFactorAuthProviders.length
     ) {
-        super(injector);
+      return true;
     }
 
-    canActivate(): boolean {
-        if (this.loginService.authenticateModel &&
-            this.loginService.authenticateResult &&
-            this.loginService.authenticateResult.twoFactorAuthProviders &&
-            this.loginService.authenticateResult.twoFactorAuthProviders.length
-        ) {
-            return true;
-        }
+    return false;
+  }
 
-        return false;
+  ngOnInit(): void {
+    if (!this.canActivate()) {
+      this._router.navigate(['account/login']);
+      return;
     }
 
-    ngOnInit(): void {
-        if (!this.canActivate()) {
-            this._router.navigate(['account/login']);
-            return;
-        }
+    this.selectedTwoFactorProvider = this.loginService.authenticateResult.twoFactorAuthProviders[0];
+  }
 
-        this.selectedTwoFactorProvider = this.loginService.authenticateResult.twoFactorAuthProviders[0];
-    }
+  submit(): void {
+    const model = new SendTwoFactorAuthCodeModel();
+    model.userId = this.loginService.authenticateResult.userId;
+    model.provider = this.selectedTwoFactorProvider;
 
-    submit(): void {
-        const model = new SendTwoFactorAuthCodeModel();
-        model.userId = this.loginService.authenticateResult.userId;
-        model.provider = this.selectedTwoFactorProvider;
-
-        this.submitting = true;
-        this._tokenAuthService
-            .sendTwoFactorAuthCode(model)
-            .pipe(finalize(() => this.submitting = false))
-            .subscribe(() => {
-                this._router.navigate(['account/verify-code']);
-            });
-    }
+    this.submitting = true;
+    this._tokenAuthService
+      .sendTwoFactorAuthCode(model)
+      .pipe(finalize(() => (this.submitting = false)))
+      .subscribe(() => {
+        this._router.navigate(['account/verify-code']);
+      });
+  }
 }

@@ -3,12 +3,9 @@ import { AbstractControl, NG_VALIDATORS, Validator } from '@angular/forms';
 
 @Directive({
   selector: '[requireDigit],[requireLowercase],[requireNonAlphanumeric],[requireUppercase],[requiredLength]',
-  providers: [
-    { provide: NG_VALIDATORS, useExisting: forwardRef(() => PasswordComplexityValidator), multi: true }
-  ]
+  providers: [{ provide: NG_VALIDATORS, useExisting: forwardRef(() => PasswordComplexityValidator), multi: true }],
 })
 export class PasswordComplexityValidator implements Validator {
-
   @Input('requireDigit') requireDigit: boolean;
   @Input('requireUppercase') requireUppercase: boolean;
   @Input('requireLowercase') requireLowercase: boolean;

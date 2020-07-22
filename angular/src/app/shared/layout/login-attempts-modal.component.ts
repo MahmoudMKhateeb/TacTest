@@ -6,52 +6,47 @@ import * as moment from 'moment';
 import { ModalDirective } from 'ngx-bootstrap/modal';
 
 @Component({
-    selector: 'loginAttemptsModal',
-    templateUrl: './login-attempts-modal.component.html'
+  selector: 'loginAttemptsModal',
+  templateUrl: './login-attempts-modal.component.html',
 })
 export class LoginAttemptsModalComponent extends AppComponentBase {
+  @ViewChild('loginAttemptsModal', { static: true }) modal: ModalDirective;
 
-    @ViewChild('loginAttemptsModal', {static: true}) modal: ModalDirective;
+  userLoginAttempts: UserLoginAttemptDto[];
+  profilePicture = AppConsts.appBaseUrl + '/assets/common/images/default-profile-picture.png';
+  defaultProfilePicture = AppConsts.appBaseUrl + '/assets/common/images/default-profile-picture.png';
 
-    userLoginAttempts: UserLoginAttemptDto[];
-    profilePicture = AppConsts.appBaseUrl + '/assets/common/images/default-profile-picture.png';
-    defaultProfilePicture = AppConsts.appBaseUrl + '/assets/common/images/default-profile-picture.png';
+  constructor(injector: Injector, private _userLoginService: UserLoginServiceProxy, private _profileService: ProfileServiceProxy) {
+    super(injector);
+  }
 
-    constructor(
-        injector: Injector,
-        private _userLoginService: UserLoginServiceProxy,
-        private _profileService: ProfileServiceProxy
-    ) {
-        super(injector);
-    }
+  show(): void {
+    this._userLoginService.getRecentUserLoginAttempts().subscribe((result) => {
+      this.userLoginAttempts = result.items;
+      this._profileService.getProfilePicture().subscribe((result) => {
+        if (result && result.profilePicture) {
+          this.profilePicture = 'data:image/jpeg;base64,' + result.profilePicture;
+        }
+        this.modal.show();
+      });
+    });
+  }
 
-    show(): void {
-        this._userLoginService.getRecentUserLoginAttempts().subscribe(result => {
-            this.userLoginAttempts = result.items;
-            this._profileService.getProfilePicture().subscribe(result => {
-                if (result && result.profilePicture) {
-                    this.profilePicture = 'data:image/jpeg;base64,' + result.profilePicture;
-                }
-                this.modal.show();
-            });
-        });
-    }
+  close(): void {
+    this.modal.hide();
+  }
 
-    close(): void {
-        this.modal.hide();
-    }
+  setProfilePictureClass(userLoginAttemptResult: string): any {
+    const classes = {
+      label: true,
+      'label-success': userLoginAttemptResult === 'Success',
+      'label-danger': userLoginAttemptResult !== 'Success',
+    };
 
-    setProfilePictureClass(userLoginAttemptResult: string): any {
-        const classes = {
-            label: true,
-            'label-success': userLoginAttemptResult === 'Success',
-            'label-danger': userLoginAttemptResult !== 'Success'
-        };
+    return classes;
+  }
 
-        return classes;
-    }
-
-    getLoginAttemptTime(userLoginAttempt: UserLoginAttemptDto): string {
-        return moment(userLoginAttempt.creationTime).fromNow() + ' (' + moment(userLoginAttempt.creationTime).format('YYYY-MM-DD hh:mm:ss') + ')';
-    }
+  getLoginAttemptTime(userLoginAttempt: UserLoginAttemptDto): string {
+    return moment(userLoginAttempt.creationTime).fromNow() + ' (' + moment(userLoginAttempt.creationTime).format('YYYY-MM-DD hh:mm:ss') + ')';
+  }
 }

@@ -1,9 +1,7 @@
 import { FlatFeatureDto, NameValueDto } from '@shared/service-proxies/service-proxies';
 
 export interface FeatureTreeEditModel {
+  features: FlatFeatureDto[];
 
-    features: FlatFeatureDto[];
-
-    featureValues: NameValueDto[];
-
+  featureValues: NameValueDto[];
 }

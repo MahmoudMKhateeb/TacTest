@@ -1,75 +1,76 @@
-import {Component, Injector, Input} from '@angular/core';
-import {AppComponentBase} from '@shared/common/app-component-base';
+import { Component, Injector, Input } from '@angular/core';
+import { AppComponentBase } from '@shared/common/app-component-base';
 import * as _ from 'lodash';
 
 @Component({
-    selector: 'key-value-list-manager',
-    templateUrl: './key-value-list-manager.component.html',
-    styleUrls: ['./key-value-list-manager.component.css']
+  selector: 'key-value-list-manager',
+  templateUrl: './key-value-list-manager.component.html',
+  styleUrls: ['./key-value-list-manager.component.css'],
 })
 export class KeyValueListManagerComponent extends AppComponentBase {
-    @Input() header: string;
-    @Input() keyPlaceHolder: string;
-    @Input() valuePlaceHolder: string;
-    @Input() items: { key: string, value: string }[];
+  @Input() header: string;
+  @Input() keyPlaceHolder: string;
+  @Input() valuePlaceHolder: string;
+  @Input() items: { key: string; value: string }[];
 
-    addOrEditKey = '';
-    addOrEditValue = '';
+  addOrEditKey = '';
+  addOrEditValue = '';
 
-    isEdit = false;
+  isEdit = false;
 
-    constructor(injector: Injector) {
-        super(injector);
-        if (!this.items) {
-            this.items = [];
-        }
-
-        if (!this.keyPlaceHolder) {
-            this.l('Key');
-        }
-
-        if (!this.valuePlaceHolder) {
-            this.l('Value');
-        }
+  constructor(injector: Injector) {
+    super(injector);
+    if (!this.items) {
+      this.items = [];
     }
 
-    onKeyChange() {
-        this.isEdit = _.findIndex(this.items, item => item.key === this.addOrEditKey) !== -1;
+    if (!this.keyPlaceHolder) {
+      this.l('Key');
     }
 
-    openItemEdit(keyValueItem: { key: string; value: string }) {
-        this.addOrEditKey = keyValueItem.key;
-        this.addOrEditValue = keyValueItem.value;
+    if (!this.valuePlaceHolder) {
+      this.l('Value');
+    }
+  }
 
-        this.isEdit = true;
+  onKeyChange() {
+    this.isEdit = _.findIndex(this.items, (item) => item.key === this.addOrEditKey) !== -1;
+  }
+
+  openItemEdit(keyValueItem: { key: string; value: string }) {
+    this.addOrEditKey = keyValueItem.key;
+    this.addOrEditValue = keyValueItem.value;
+
+    this.isEdit = true;
+  }
+
+  removeItem(keyValueItem: { key: string; value: string }) {
+    _.remove(this.items, (item) => item.key === keyValueItem.key);
+  }
+
+  addOrEdit() {
+    if (!this.addOrEditKey || !this.addOrEditValue) {
+      return;
     }
 
-    removeItem(keyValueItem: { key: string; value: string }) {
-        _.remove(this.items, (item) => item.key === keyValueItem.key);
+    let newItem = {
+      key: this.addOrEditKey,
+      value: this.addOrEditValue,
+    };
+
+    let indexOfItemInArray = _.findIndex(this.items, (item) => item.key === newItem.key);
+    if (indexOfItemInArray !== -1) {
+      //edit
+      this.items.splice(indexOfItemInArray, 1, newItem);
+    } else {
+      this.items.push(newItem);
     }
 
-    addOrEdit() {
-        if (!this.addOrEditKey || !this.addOrEditValue) {
-            return;
-        }
+    this.addOrEditKey = '';
+    this.addOrEditValue = '';
+  }
 
-        let newItem = {
-            key: this.addOrEditKey,
-            value: this.addOrEditValue
-        };
-
-        let indexOfItemInArray = _.findIndex(this.items, item => item.key === newItem.key);
-        if (indexOfItemInArray !== -1) {//edit
-            this.items.splice(indexOfItemInArray, 1, newItem);
-        } else {
-            this.items.push(newItem);
-        }
-
-        this.addOrEditKey = '';
-        this.addOrEditValue = '';
-    }
-
-    getItems(): { key: string, value: string }[] {
-        return this.items;
-    }
+  getItems(): { key: string; value: string }[] {
+    return this.items;
+  }
 }

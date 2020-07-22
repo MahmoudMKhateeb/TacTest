@@ -18,7 +18,7 @@ export class InputTypeConfigurationDefinition {
 }
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class InputTypeConfigurationService {
   InputTypeConfigurationDefinitions: InputTypeConfigurationDefinition[];
@@ -28,29 +28,13 @@ export class InputTypeConfigurationService {
   }
 
   private initialize(): void {
-    let singleLineStringInputType = new InputTypeConfigurationDefinition(
-      'SINGLE_LINE_STRING',
-      SingleLineStringInputTypeComponent,
-      false
-    );
+    let singleLineStringInputType = new InputTypeConfigurationDefinition('SINGLE_LINE_STRING', SingleLineStringInputTypeComponent, false);
 
-    let checkboxInputType = new InputTypeConfigurationDefinition(
-      'CHECKBOX',
-      CheckboxInputTypeComponent,
-      false
-    );
+    let checkboxInputType = new InputTypeConfigurationDefinition('CHECKBOX', CheckboxInputTypeComponent, false);
 
-    let comboboxInputType = new InputTypeConfigurationDefinition(
-      'COMBOBOX',
-      ComboboxInputTypeComponent,
-      true
-    );
+    let comboboxInputType = new InputTypeConfigurationDefinition('COMBOBOX', ComboboxInputTypeComponent, true);
 
-    let multipleselectComboBoxInputType = new InputTypeConfigurationDefinition(
-      'MULTISELECTCOMBOBOX',
-      MultipleSelectComboboxInputTypeComponent,
-      true
-    );
+    let multipleselectComboBoxInputType = new InputTypeConfigurationDefinition('MULTISELECTCOMBOBOX', MultipleSelectComboboxInputTypeComponent, true);
 
     this.InputTypeConfigurationDefinitions = [];
     this.InputTypeConfigurationDefinitions.push(singleLineStringInputType);
@@ -60,7 +44,7 @@ export class InputTypeConfigurationService {
   }
 
   getByName(name: string): InputTypeConfigurationDefinition {
-    let definition = this.InputTypeConfigurationDefinitions.filter(definition => definition.name === name);
+    let definition = this.InputTypeConfigurationDefinitions.filter((definition) => definition.name === name);
     if (definition && definition.length === 1) {
       return definition[0];
     }
@@ -71,4 +55,3 @@ export class InputTypeConfigurationService {
     return this.getByName(inputType.name);
   }
 }
-

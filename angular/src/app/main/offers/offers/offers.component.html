@@ -1,220 +1,277 @@
 ﻿<div [@routerTransition]>
-  
   <div class="content d-flex flex-column flex-column-fluid">
-   <sub-header [title]="'Offers' | localize" [description]="'OffersHeaderInfo' | localize">
-             <div role="actions">
-                 <button (click)="exportToExcel()" class="btn btn-outline-success"><i class="fa fa-file-excel"></i> {{l("ExportToExcel")}}</button>
-                
-                 <button *ngIf="isGranted('Pages.Offers.Create')" (click)="createOffer()" 
-                                        class="btn btn-primary blue"><i class="fa fa-plus"></i> {{l("CreateNewOffer")}}</button>
-             </div>
-            </sub-header>
-    
+    <sub-header [title]="'Offers' | localize" [description]="'OffersHeaderInfo' | localize">
+      <div role="actions">
+        <button (click)="exportToExcel()" class="btn btn-outline-success"><i class="fa fa-file-excel"></i> {{ l('ExportToExcel') }}</button>
+
+        <button *ngIf="isGranted('Pages.Offers.Create')" (click)="createOffer()" class="btn btn-primary blue">
+          <i class="fa fa-plus"></i> {{ l('CreateNewOffer') }}
+        </button>
+      </div>
+    </sub-header>
+
     <div [class]="containerClass">
-        <div class="card card-custom gutter-b">
-            <div class="card-body">
-                <form class="form" autocomplete="off">
-                    <div>
-                        <div class="row align-items-center">
-                            <div class="col-xl-12">
-                                <div class="form-group m-form__group align-items-center">
-                                    <div class="input-group">
-                                        <input [(ngModel)]="filterText" name="filterText" autoFocus class="form-control m-input" [placeholder]="l('SearchWithThreeDot')" type="text">
-                                        <span class="input-group-btn">
-                                            <button (click)="getOffers()" class="btn btn-primary" type="submit"><i class="flaticon-search-1"></i></button>
-                                        </span>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-						 <div class="row" [hidden]="!advancedFiltersAreShown">
-						 	<div class="col-md-12">
-						         <div class="kt-separator kt-separator--border-dashed"></div>
-						     </div>
-
-
-							<div class="col-md-3">
-								<div class="form-group">
-									<label for="DisplayNameFilter">{{l("DisplayName")}}</label>
-									<input type="text" class="form-control" id="DisplayNameFilter" name="displayNameFilter" [(ngModel)]="displayNameFilter">
-								</div>
-                            </div>
-							<div class="col-md-3">
-								<div class="form-group">
-									<label for="DescriptionFilter">{{l("Description")}}</label>
-									<input type="text" class="form-control" id="DescriptionFilter" name="descriptionFilter" [(ngModel)]="descriptionFilter">
-								</div>
-                            </div>
-                            <div class="col-md-3">
-                                <div class="form-group">
-									<label for="MinPriceFilter">{{l("MinMax")}} {{l("Price")}}</label>
-									<div class="input-group">
-                                        <input type="number" class="form-control" id="MinPriceFilter" [(ngModel)]="minPriceFilter" placeholder="{{l('MinValue')}}" name="minPriceFilter" />
-                                        <input type="number" class="form-control" [(ngModel)]="maxPriceFilter" placeholder="{{l('MaxValue')}}" name="maxPriceFilter" />
-									</div>
-                                </div>
-                            </div>
-							<div class="col-md-3">
-								<div class="form-group">
-									<label for="TrucksTypeDisplayNameFilter">({{l("TrucksType")}}) {{l("DisplayName")}}</label>
-									<input type="text" class="form-control" id="TrucksTypeDisplayNameFilter" name="trucksTypeDisplayNameFilter" [(ngModel)]="trucksTypeDisplayNameFilter">
-                                </div>
-                            </div>
-							<div class="col-md-3">
-								<div class="form-group">
-									<label for="TrailerTypeDisplayNameFilter">({{l("TrailerType")}}) {{l("DisplayName")}}</label>
-									<input type="text" class="form-control" id="TrailerTypeDisplayNameFilter" name="trailerTypeDisplayNameFilter" [(ngModel)]="trailerTypeDisplayNameFilter">
-                                </div>
-                            </div>
-							<div class="col-md-3">
-								<div class="form-group">
-									<label for="GoodCategoryDisplayNameFilter">({{l("GoodCategory")}}) {{l("DisplayName")}}</label>
-									<input type="text" class="form-control" id="GoodCategoryDisplayNameFilter" name="goodCategoryDisplayNameFilter" [(ngModel)]="goodCategoryDisplayNameFilter">
-                                </div>
-                            </div>
-							<div class="col-md-3">
-								<div class="form-group">
-									<label for="RouteDisplayNameFilter">({{l("Route")}}) {{l("DisplayName")}}</label>
-									<input type="text" class="form-control" id="RouteDisplayNameFilter" name="routeDisplayNameFilter" [(ngModel)]="routeDisplayNameFilter">
-                                </div>
-                            </div>
-
-                        </div>
-                        <div class="row mb-2">
-                            <div class="col-sm-12">
-                                <span class="clickable-item text-muted" *ngIf="!advancedFiltersAreShown" (click)="advancedFiltersAreShown=!advancedFiltersAreShown"><i class="fa fa-angle-down"></i> {{l("ShowAdvancedFilters")}}</span>
-                                <span class="clickable-item text-muted" *ngIf="advancedFiltersAreShown" (click)="advancedFiltersAreShown=!advancedFiltersAreShown"><i class="fa fa-angle-up"></i> {{l("HideAdvancedFilters")}}</span>
-                            </div>
-                        </div>
+      <div class="card card-custom gutter-b">
+        <div class="card-body">
+          <form class="form" autocomplete="off">
+            <div>
+              <div class="row align-items-center">
+                <div class="col-xl-12">
+                  <div class="form-group m-form__group align-items-center">
+                    <div class="input-group">
+                      <input
+                        [(ngModel)]="filterText"
+                        name="filterText"
+                        autoFocus
+                        class="form-control m-input"
+                        [placeholder]="l('SearchWithThreeDot')"
+                        type="text"
+                      />
+                      <span class="input-group-btn">
+                        <button (click)="getOffers()" class="btn btn-primary" type="submit"><i class="flaticon-search-1"></i></button>
+                      </span>
                     </div>
-                </form>
-
-                <div class="row align-items-center">
-                    <!--<Primeng-Datatable-Start>-->
-                    <div class="primeng-datatable-container col-12"
-                         [busyIf]="primengTableHelper.isLoading">
-                        <p-table #dataTable
-                                     (onLazyLoad)="getOffers($event)"
-                                     [value]="primengTableHelper.records"
-                                     rows="{{primengTableHelper.defaultRecordsCountPerPage}}"
-                                     [paginator]="false"
-                                     [lazy]="true"
-                                     [scrollable]="true"
-                                     ScrollWidth="100%"
-                                     [responsive]="primengTableHelper.isResponsive"
-                                     [resizableColumns]="primengTableHelper.resizableColumns">
-                            <ng-template pTemplate="header">
-                                <tr>
-                                    <th style="width: 130px" [hidden]="!isGrantedAny('Pages.Offers.Edit', 'Pages.Offers.Delete')">{{l('Actions')}}</th>
-                                    <th style="width: 150px" pSortableColumn="trucksTypeFk.displayName">
-                                        {{l('DisplayName')}}
-                                        <p-sortIcon field="trucksTypeDisplayName"></p-sortIcon>
-                                    </th>
-                                    <th style="width: 150px" pSortableColumn="trailerTypeFk.displayName">
-                                        {{l('DisplayName')}}
-                                        <p-sortIcon field="trailerTypeDisplayName"></p-sortIcon>
-                                    </th>
-                                    <th style="width: 150px" pSortableColumn="goodCategoryFk.displayName">
-                                        {{l('DisplayName')}}
-                                        <p-sortIcon field="goodCategoryDisplayName"></p-sortIcon>
-                                    </th>
-                                    <th style="width: 150px" pSortableColumn="routeFk.displayName">
-                                        {{l('DisplayName')}}
-                                        <p-sortIcon field="routeDisplayName"></p-sortIcon>
-                                    </th>
-                                    <th style="width: 150px" pSortableColumn="displayName">
-                                        {{l('DisplayName')}}
-                                        <p-sortIcon field="offer.displayName"></p-sortIcon>
-                                    </th>
-                                    <th style="width: 150px" pSortableColumn="description">
-                                        {{l('Description')}}
-                                        <p-sortIcon field="offer.description"></p-sortIcon>
-                                    </th>
-                                    <th style="width: 150px" pSortableColumn="price">
-                                        {{l('Price')}}
-                                        <p-sortIcon field="offer.price"></p-sortIcon>
-                                    </th>
-
-                                </tr>
-                            </ng-template>                           
-							<ng-template pTemplate="body" let-record="$implicit">
-                                <tr>
-                                    <td style="width: 130px"
-                                        [hidden]="!isGrantedAny('Pages.Offers.Edit', 'Pages.Offers.Delete')">
-                                       <div class="btn-group dropdown" dropdown container="body">
-                                            <button class="dropdown-toggle btn btn-sm btn-primary" dropdownToggle>
-                                                <i class="fa fa-cog"></i><span class="caret"></span> {{l("Actions")}}
-                                            </button>
-												<ul class="dropdown-menu"  *dropdownMenu>
-												<li>
-													<a href="javascript:;" class="dropdown-item"
-														(click)="viewOfferModal.show(record)">{{l('View')}}</a>
-												</li>
-												<li>
-                                                <a href="javascript:;" *ngIf="permission.isGranted('Pages.Offers.Edit')" class="dropdown-item"
-														(click)="createOrEditOfferModal.show(record.offer.id)">{{l('Edit')}}</a>												
-                                                </li>
-												<li>
-											        <a class="dropdown-item" href="javascript:;" *ngIf="permission.isGranted('Pages.Offers.Delete')"
-														(click)="deleteOffer(record.offer)">{{l('Delete')}}</a>
-												</li>
-                                            </ul>
-                                        </div>
-                                    </td>
-                                    <td style="width:150px">
-												<span class="ui-column-title"> {{l('DisplayName')}}</span>
-												{{record.trucksTypeDisplayName}}
-											</td>
-                                    <td style="width:150px">
-												<span class="ui-column-title"> {{l('DisplayName')}}</span>
-												{{record.trailerTypeDisplayName}}
-											</td>
-                                    <td style="width:150px">
-												<span class="ui-column-title"> {{l('DisplayName')}}</span>
-												{{record.goodCategoryDisplayName}}
-											</td>
-                                    <td style="width:150px">
-												<span class="ui-column-title"> {{l('DisplayName')}}</span>
-												{{record.routeDisplayName}}
-											</td>
-                                    <td style="width:150px">
-											<span class="ui-column-title"> {{l('DisplayName')}}</span>
-											{{record.offer.displayName}}
-										</td>
-                                    <td style="width:150px">
-											<span class="ui-column-title"> {{l('Description')}}</span>
-											{{record.offer.description}}
-										</td>
-                                    <td style="width:150px">
-											<span class="ui-column-title"> {{l('Price')}}</span>
-											{{record.offer.price}}
-										</td>
-
-                                </tr>
-                            </ng-template>
-                        </p-table>
-						<div class="primeng-no-data" *ngIf="primengTableHelper.totalRecordsCount == 0">
-                            {{l('NoData')}}
-                        </div>
-                        <div class="primeng-paging-container">
-                            <p-paginator [rows]="primengTableHelper.defaultRecordsCountPerPage"
-                                         #paginator
-                                         (onPageChange)="getOffers($event)"
-                                         [totalRecords]="primengTableHelper.totalRecordsCount"
-                                         [rowsPerPageOptions]="primengTableHelper.predefinedRecordsCountPerPage">
-                            </p-paginator>
-                            <span class="total-records-count">
-                                {{l('TotalRecordsCount', primengTableHelper.totalRecordsCount)}}
-                            </span>
-                        </div>
-                    </div>
-                    <!--<Primeng-Datatable-End>-->
+                  </div>
                 </div>
+              </div>
+              <div class="row" [hidden]="!advancedFiltersAreShown">
+                <div class="col-md-12">
+                  <div class="kt-separator kt-separator--border-dashed"></div>
+                </div>
+
+                <div class="col-md-3">
+                  <div class="form-group">
+                    <label for="DisplayNameFilter">{{ l('DisplayName') }}</label>
+                    <input type="text" class="form-control" id="DisplayNameFilter" name="displayNameFilter" [(ngModel)]="displayNameFilter" />
+                  </div>
+                </div>
+                <div class="col-md-3">
+                  <div class="form-group">
+                    <label for="DescriptionFilter">{{ l('Description') }}</label>
+                    <input type="text" class="form-control" id="DescriptionFilter" name="descriptionFilter" [(ngModel)]="descriptionFilter" />
+                  </div>
+                </div>
+                <div class="col-md-3">
+                  <div class="form-group">
+                    <label for="MinPriceFilter">{{ l('MinMax') }} {{ l('Price') }}</label>
+                    <div class="input-group">
+                      <input
+                        type="number"
+                        class="form-control"
+                        id="MinPriceFilter"
+                        [(ngModel)]="minPriceFilter"
+                        placeholder="{{ l('MinValue') }}"
+                        name="minPriceFilter"
+                      />
+                      <input
+                        type="number"
+                        class="form-control"
+                        [(ngModel)]="maxPriceFilter"
+                        placeholder="{{ l('MaxValue') }}"
+                        name="maxPriceFilter"
+                      />
+                    </div>
+                  </div>
+                </div>
+                <div class="col-md-3">
+                  <div class="form-group">
+                    <label for="TrucksTypeDisplayNameFilter">({{ l('TrucksType') }}) {{ l('DisplayName') }}</label>
+                    <input
+                      type="text"
+                      class="form-control"
+                      id="TrucksTypeDisplayNameFilter"
+                      name="trucksTypeDisplayNameFilter"
+                      [(ngModel)]="trucksTypeDisplayNameFilter"
+                    />
+                  </div>
+                </div>
+                <div class="col-md-3">
+                  <div class="form-group">
+                    <label for="TrailerTypeDisplayNameFilter">({{ l('TrailerType') }}) {{ l('DisplayName') }}</label>
+                    <input
+                      type="text"
+                      class="form-control"
+                      id="TrailerTypeDisplayNameFilter"
+                      name="trailerTypeDisplayNameFilter"
+                      [(ngModel)]="trailerTypeDisplayNameFilter"
+                    />
+                  </div>
+                </div>
+                <div class="col-md-3">
+                  <div class="form-group">
+                    <label for="GoodCategoryDisplayNameFilter">({{ l('GoodCategory') }}) {{ l('DisplayName') }}</label>
+                    <input
+                      type="text"
+                      class="form-control"
+                      id="GoodCategoryDisplayNameFilter"
+                      name="goodCategoryDisplayNameFilter"
+                      [(ngModel)]="goodCategoryDisplayNameFilter"
+                    />
+                  </div>
+                </div>
+                <div class="col-md-3">
+                  <div class="form-group">
+                    <label for="RouteDisplayNameFilter">({{ l('Route') }}) {{ l('DisplayName') }}</label>
+                    <input
+                      type="text"
+                      class="form-control"
+                      id="RouteDisplayNameFilter"
+                      name="routeDisplayNameFilter"
+                      [(ngModel)]="routeDisplayNameFilter"
+                    />
+                  </div>
+                </div>
+              </div>
+              <div class="row mb-2">
+                <div class="col-sm-12">
+                  <span
+                    class="clickable-item text-muted"
+                    *ngIf="!advancedFiltersAreShown"
+                    (click)="advancedFiltersAreShown = !advancedFiltersAreShown"
+                    ><i class="fa fa-angle-down"></i> {{ l('ShowAdvancedFilters') }}</span
+                  >
+                  <span class="clickable-item text-muted" *ngIf="advancedFiltersAreShown" (click)="advancedFiltersAreShown = !advancedFiltersAreShown"
+                    ><i class="fa fa-angle-up"></i> {{ l('HideAdvancedFilters') }}</span
+                  >
+                </div>
+              </div>
             </div>
+          </form>
+
+          <div class="row align-items-center">
+            <!--<Primeng-Datatable-Start>-->
+            <div class="primeng-datatable-container col-12" [busyIf]="primengTableHelper.isLoading">
+              <p-table
+                #dataTable
+                (onLazyLoad)="getOffers($event)"
+                [value]="primengTableHelper.records"
+                rows="{{ primengTableHelper.defaultRecordsCountPerPage }}"
+                [paginator]="false"
+                [lazy]="true"
+                [scrollable]="true"
+                ScrollWidth="100%"
+                [responsive]="primengTableHelper.isResponsive"
+                [resizableColumns]="primengTableHelper.resizableColumns"
+              >
+                <ng-template pTemplate="header">
+                  <tr>
+                    <th style="width: 130px;" [hidden]="!isGrantedAny('Pages.Offers.Edit', 'Pages.Offers.Delete')">{{ l('Actions') }}</th>
+                    <th style="width: 150px;" pSortableColumn="trucksTypeFk.displayName">
+                      {{ l('DisplayName') }}
+                      <p-sortIcon field="trucksTypeDisplayName"></p-sortIcon>
+                    </th>
+                    <th style="width: 150px;" pSortableColumn="trailerTypeFk.displayName">
+                      {{ l('DisplayName') }}
+                      <p-sortIcon field="trailerTypeDisplayName"></p-sortIcon>
+                    </th>
+                    <th style="width: 150px;" pSortableColumn="goodCategoryFk.displayName">
+                      {{ l('DisplayName') }}
+                      <p-sortIcon field="goodCategoryDisplayName"></p-sortIcon>
+                    </th>
+                    <th style="width: 150px;" pSortableColumn="routeFk.displayName">
+                      {{ l('DisplayName') }}
+                      <p-sortIcon field="routeDisplayName"></p-sortIcon>
+                    </th>
+                    <th style="width: 150px;" pSortableColumn="displayName">
+                      {{ l('DisplayName') }}
+                      <p-sortIcon field="offer.displayName"></p-sortIcon>
+                    </th>
+                    <th style="width: 150px;" pSortableColumn="description">
+                      {{ l('Description') }}
+                      <p-sortIcon field="offer.description"></p-sortIcon>
+                    </th>
+                    <th style="width: 150px;" pSortableColumn="price">
+                      {{ l('Price') }}
+                      <p-sortIcon field="offer.price"></p-sortIcon>
+                    </th>
+                  </tr>
+                </ng-template>
+                <ng-template pTemplate="body" let-record="$implicit">
+                  <tr>
+                    <td style="width: 130px;" [hidden]="!isGrantedAny('Pages.Offers.Edit', 'Pages.Offers.Delete')">
+                      <div class="btn-group dropdown" dropdown container="body">
+                        <button class="dropdown-toggle btn btn-sm btn-primary" dropdownToggle>
+                          <i class="fa fa-cog"></i><span class="caret"></span> {{ l('Actions') }}
+                        </button>
+                        <ul class="dropdown-menu" *dropdownMenu>
+                          <li>
+                            <a href="javascript:;" class="dropdown-item" (click)="viewOfferModal.show(record)">{{ l('View') }}</a>
+                          </li>
+                          <li>
+                            <a
+                              href="javascript:;"
+                              *ngIf="permission.isGranted('Pages.Offers.Edit')"
+                              class="dropdown-item"
+                              (click)="createOrEditOfferModal.show(record.offer.id)"
+                              >{{ l('Edit') }}</a
+                            >
+                          </li>
+                          <li>
+                            <a
+                              class="dropdown-item"
+                              href="javascript:;"
+                              *ngIf="permission.isGranted('Pages.Offers.Delete')"
+                              (click)="deleteOffer(record.offer)"
+                              >{{ l('Delete') }}</a
+                            >
+                          </li>
+                        </ul>
+                      </div>
+                    </td>
+                    <td style="width: 150px;">
+                      <span class="ui-column-title"> {{ l('DisplayName') }}</span>
+                      {{ record.trucksTypeDisplayName }}
+                    </td>
+                    <td style="width: 150px;">
+                      <span class="ui-column-title"> {{ l('DisplayName') }}</span>
+                      {{ record.trailerTypeDisplayName }}
+                    </td>
+                    <td style="width: 150px;">
+                      <span class="ui-column-title"> {{ l('DisplayName') }}</span>
+                      {{ record.goodCategoryDisplayName }}
+                    </td>
+                    <td style="width: 150px;">
+                      <span class="ui-column-title"> {{ l('DisplayName') }}</span>
+                      {{ record.routeDisplayName }}
+                    </td>
+                    <td style="width: 150px;">
+                      <span class="ui-column-title"> {{ l('DisplayName') }}</span>
+                      {{ record.offer.displayName }}
+                    </td>
+                    <td style="width: 150px;">
+                      <span class="ui-column-title"> {{ l('Description') }}</span>
+                      {{ record.offer.description }}
+                    </td>
+                    <td style="width: 150px;">
+                      <span class="ui-column-title"> {{ l('Price') }}</span>
+                      {{ record.offer.price }}
+                    </td>
+                  </tr>
+                </ng-template>
+              </p-table>
+              <div class="primeng-no-data" *ngIf="primengTableHelper.totalRecordsCount == 0">
+                {{ l('NoData') }}
+              </div>
+              <div class="primeng-paging-container">
+                <p-paginator
+                  [rows]="primengTableHelper.defaultRecordsCountPerPage"
+                  #paginator
+                  (onPageChange)="getOffers($event)"
+                  [totalRecords]="primengTableHelper.totalRecordsCount"
+                  [rowsPerPageOptions]="primengTableHelper.predefinedRecordsCountPerPage"
+                >
+                </p-paginator>
+                <span class="total-records-count">
+                  {{ l('TotalRecordsCount', primengTableHelper.totalRecordsCount) }}
+                </span>
+              </div>
+            </div>
+            <!--<Primeng-Datatable-End>-->
+          </div>
         </div>
+      </div>
     </div>
-    <createOrEditOfferModal #createOrEditOfferModal (modalSave)="getOffers()"></createOrEditOfferModal>    
+    <createOrEditOfferModal #createOrEditOfferModal (modalSave)="getOffers()"></createOrEditOfferModal>
     <viewOfferModal #viewOfferModal></viewOfferModal>
-    
   </div>
 </div>
