@@ -1,6 +1,6 @@
-﻿using System.Threading.Tasks;
-using Abp.Net.Mail;
+﻿using Abp.Net.Mail;
 using Microsoft.Extensions.Configuration;
+using System.Threading.Tasks;
 using TACHYON.Configuration.Dto;
 using TACHYON.Configuration.Host.Dto;
 
@@ -12,7 +12,7 @@ namespace TACHYON.Configuration
         private readonly IAppConfigurationAccessor _configurationAccessor;
 
         protected SettingsAppServiceBase(
-            IEmailSender emailSender, 
+            IEmailSender emailSender,
             IAppConfigurationAccessor configurationAccessor)
         {
             _emailSender = emailSender;
@@ -57,12 +57,12 @@ namespace TACHYON.Configuration
             {
                 dto.EnabledSocialLoginSettings.Add("Microsoft");
             }
-            
+
             if (IsSocialLoginEnabled("WsFederation"))
             {
                 dto.EnabledSocialLoginSettings.Add("WsFederation");
             }
-            
+
             if (IsSocialLoginEnabled("OpenId"))
             {
                 dto.EnabledSocialLoginSettings.Add("OpenId");

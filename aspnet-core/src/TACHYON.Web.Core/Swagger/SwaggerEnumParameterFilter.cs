@@ -1,10 +1,10 @@
-using System;
-using System.Collections;
-using System.Linq;
 using Abp.Collections.Extensions;
 using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore.SwaggerGen;
+using System;
+using System.Collections;
+using System.Linq;
 
 namespace TACHYON.Web.Swagger
 {
@@ -52,7 +52,7 @@ namespace TACHYON.Web.Swagger
             }
 
             parameter.Schema = schema;
-            
+
             var enumNames = new OpenApiArray();
             enumNames.AddRange(Enum.GetNames(type).Select(_ => new OpenApiString(_)));
             schema.Extensions.Add("x-enumNames", enumNames);

@@ -1,5 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
-using Abp;
+﻿using Abp;
+using System.ComponentModel.DataAnnotations;
 
 namespace TACHYON.Authorization.Accounts.Dto
 {

@@ -1,13 +1,13 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Abp;
+﻿using Abp;
 using Abp.Authorization.Users;
 using Abp.Dependency;
 using Abp.Domain.Repositories;
 using Abp.Domain.Uow;
 using Abp.ObjectMapping;
 using Microsoft.EntityFrameworkCore;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 using TACHYON.Chat;
 using TACHYON.Chat.Dto;
 using TACHYON.Chat.Exporting;
@@ -104,7 +104,7 @@ namespace TACHYON.Gdpr
                     .Where(message => message.UserId == userId && message.TenantId == tenantId)
                     .ToListAsync()
                 )
-                .GroupBy(message => new {message.TargetTenantId, message.TargetUserId})
+                .GroupBy(message => new { message.TargetTenantId, message.TargetUserId })
                 .Select(messageGrouped => new
                 {
                     TargetTenantId = messageGrouped.Key.TargetTenantId,

@@ -3,8 +3,8 @@
     public class PayloadMaxWeightConsts
     {
 
-		public const int MinDisplayNameLength = 0;
-		public const int MaxDisplayNameLength = 64;
-						
+        public const int MinDisplayNameLength = 0;
+        public const int MaxDisplayNameLength = 64;
+
     }
 }

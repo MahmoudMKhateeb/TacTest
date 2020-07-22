@@ -1,7 +1,7 @@
-﻿using System;
-using System.Threading.Tasks;
-using Abp;
+﻿using Abp;
 using Abp.Domain.Services;
+using System;
+using System.Threading.Tasks;
 
 namespace TACHYON.Chat
 {

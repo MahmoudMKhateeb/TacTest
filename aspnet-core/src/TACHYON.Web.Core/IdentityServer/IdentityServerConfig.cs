@@ -1,7 +1,7 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using IdentityServer4.Models;
+﻿using IdentityServer4.Models;
 using Microsoft.Extensions.Configuration;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace TACHYON.Web.IdentityServer
 {

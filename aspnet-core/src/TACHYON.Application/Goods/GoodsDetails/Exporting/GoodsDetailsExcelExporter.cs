@@ -1,9 +1,9 @@
-﻿using System.Collections.Generic;
-using Abp.Runtime.Session;
+﻿using Abp.Runtime.Session;
 using Abp.Timing.Timezone;
+using System.Collections.Generic;
 using TACHYON.DataExporting.Excel.NPOI;
-using TACHYON.Goods.GoodsDetails.Dtos;
 using TACHYON.Dto;
+using TACHYON.Goods.GoodsDetails.Dtos;
 using TACHYON.Storage;
 
 namespace TACHYON.Goods.GoodsDetails.Exporting
@@ -17,8 +17,8 @@ namespace TACHYON.Goods.GoodsDetails.Exporting
         public GoodsDetailsExcelExporter(
             ITimeZoneConverter timeZoneConverter,
             IAbpSession abpSession,
-			ITempFileCacheManager tempFileCacheManager) :  
-	base(tempFileCacheManager)
+            ITempFileCacheManager tempFileCacheManager) :
+    base(tempFileCacheManager)
         {
             _timeZoneConverter = timeZoneConverter;
             _abpSession = abpSession;
@@ -30,7 +30,7 @@ namespace TACHYON.Goods.GoodsDetails.Exporting
                 "GoodsDetails.xlsx",
                 excelPackage =>
                 {
-                    
+
                     var sheet = excelPackage.CreateSheet(L("GoodsDetails"));
 
                     AddHeader(
@@ -57,8 +57,8 @@ namespace TACHYON.Goods.GoodsDetails.Exporting
                         _ => _.GoodCategoryDisplayName
                         );
 
-					
-					
+
+
                 });
         }
     }

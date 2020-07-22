@@ -1,7 +1,7 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using Abp.Application.Services.Dto;
+﻿using Abp.Application.Services.Dto;
 using Abp.Authorization;
+using System.Collections.Generic;
+using System.Linq;
 using TACHYON.Authorization.Permissions.Dto;
 
 namespace TACHYON.Authorization.Permissions

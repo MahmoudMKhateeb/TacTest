@@ -1,19 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.IdentityModel.Tokens.Jwt;
-using System.Linq;
-using System.Security.Claims;
-using System.Text;
-using System.Threading.Tasks;
-using Abp;
+﻿using Abp;
 using Abp.AspNetCore.Mvc.Authorization;
 using Abp.AspNetZeroCore.Web.Authentication.External;
 using Abp.Authorization;
 using Abp.Authorization.Users;
-using Abp.MultiTenancy;
 using Abp.Configuration;
 using Abp.Extensions;
+using Abp.MultiTenancy;
 using Abp.Net.Mail;
 using Abp.Notifications;
 using Abp.Runtime.Caching;
@@ -27,25 +19,33 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
+using System;
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.IdentityModel.Tokens.Jwt;
+using System.Linq;
+using System.Security.Claims;
+using System.Text;
+using System.Threading.Tasks;
 using TACHYON.Authentication.TwoFactor.Google;
 using TACHYON.Authorization;
 using TACHYON.Authorization.Accounts.Dto;
-using TACHYON.Authorization.Users;
-using TACHYON.MultiTenancy;
-using TACHYON.Web.Authentication.JwtBearer;
-using TACHYON.Web.Authentication.TwoFactor;
-using TACHYON.Web.Models.TokenAuth;
+using TACHYON.Authorization.Delegation;
 using TACHYON.Authorization.Impersonation;
 using TACHYON.Authorization.Roles;
+using TACHYON.Authorization.Users;
 using TACHYON.Configuration;
 using TACHYON.Debugging;
 using TACHYON.Identity;
+using TACHYON.MultiTenancy;
 using TACHYON.Net.Sms;
 using TACHYON.Notifications;
 using TACHYON.Security.Recaptcha;
 using TACHYON.Web.Authentication.External;
+using TACHYON.Web.Authentication.JwtBearer;
+using TACHYON.Web.Authentication.TwoFactor;
 using TACHYON.Web.Common;
-using TACHYON.Authorization.Delegation;
+using TACHYON.Web.Models.TokenAuth;
 
 namespace TACHYON.Web.Controllers
 {
@@ -99,7 +99,7 @@ namespace TACHYON.Web.Controllers
             ExternalLoginInfoManagerFactory externalLoginInfoManagerFactory,
             ISettingManager settingManager,
             IJwtSecurityStampHandler securityStampHandler,
-            AbpUserClaimsPrincipalFactory<User, Role> claimsPrincipalFactory, 
+            AbpUserClaimsPrincipalFactory<User, Role> claimsPrincipalFactory,
             IUserDelegationManager userDelegationManager)
         {
             _logInManager = logInManager;
@@ -341,7 +341,7 @@ namespace TACHYON.Web.Controllers
             {
                 throw new UserFriendlyException("User delegation error...");
             }
-        
+
             var expiration = userDelegation.EndTime.Subtract(Clock.Now);
             var accessToken = CreateAccessToken(await CreateJwtClaims(result.Identity, result.User, expiration), expiration);
 

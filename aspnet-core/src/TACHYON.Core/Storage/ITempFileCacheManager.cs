@@ -2,7 +2,7 @@
 
 namespace TACHYON.Storage
 {
-    public interface ITempFileCacheManager: ITransientDependency
+    public interface ITempFileCacheManager : ITransientDependency
     {
         void SetFile(string token, byte[] content);
 

@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
-using TACHYON.Goods.GoodCategories.Dtos;
 using TACHYON.Dto;
+using TACHYON.Goods.GoodCategories.Dtos;
 
 namespace TACHYON.Goods.GoodCategories.Exporting
 {

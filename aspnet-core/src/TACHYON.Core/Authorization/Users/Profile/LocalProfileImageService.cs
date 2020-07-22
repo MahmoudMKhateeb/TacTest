@@ -1,8 +1,8 @@
 ﻿
-using System;
-using System.Threading.Tasks;
 using Abp;
 using Abp.Dependency;
+using System;
+using System.Threading.Tasks;
 using TACHYON.Storage;
 
 namespace TACHYON.Authorization.Users.Profile
@@ -11,7 +11,7 @@ namespace TACHYON.Authorization.Users.Profile
     {
         private readonly IBinaryObjectManager _binaryObjectManager;
         private readonly UserManager _userManager;
-        
+
         public LocalProfileImageService(
             IBinaryObjectManager binaryObjectManager,
             UserManager userManager)
@@ -19,7 +19,7 @@ namespace TACHYON.Authorization.Users.Profile
             _binaryObjectManager = binaryObjectManager;
             _userManager = userManager;
         }
-        
+
         public async Task<string> GetProfilePictureContentForUser(UserIdentifier userIdentifier)
         {
             var user = await _userManager.GetUserAsync(userIdentifier);
@@ -27,7 +27,7 @@ namespace TACHYON.Authorization.Users.Profile
             {
                 return "";
             }
-            
+
             var file = await _binaryObjectManager.GetOrNullAsync(user.ProfilePictureId.Value);
             return file == null ? "" : Convert.ToBase64String(file.Bytes);
         }

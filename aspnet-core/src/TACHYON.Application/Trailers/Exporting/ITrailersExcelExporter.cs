@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
-using TACHYON.Trailers.Dtos;
 using TACHYON.Dto;
+using TACHYON.Trailers.Dtos;
 
 namespace TACHYON.Trailers.Exporting
 {

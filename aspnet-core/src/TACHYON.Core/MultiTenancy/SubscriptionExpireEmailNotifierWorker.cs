@@ -1,12 +1,12 @@
-﻿using System;
-using System.Diagnostics;
-using Abp.Configuration;
+﻿using Abp.Configuration;
 using Abp.Dependency;
 using Abp.Domain.Repositories;
 using Abp.Threading;
 using Abp.Threading.BackgroundWorkers;
 using Abp.Threading.Timers;
 using Abp.Timing;
+using System;
+using System.Diagnostics;
 using TACHYON.Authorization.Users;
 using TACHYON.Configuration;
 
@@ -15,7 +15,7 @@ namespace TACHYON.MultiTenancy
     public class SubscriptionExpireEmailNotifierWorker : PeriodicBackgroundWorkerBase, ISingletonDependency
     {
         private const int CheckPeriodAsMilliseconds = 1 * 60 * 60 * 1000 * 24; //1 day
-        
+
         private readonly IRepository<Tenant> _tenantRepository;
         private readonly UserEmailer _userEmailer;
 

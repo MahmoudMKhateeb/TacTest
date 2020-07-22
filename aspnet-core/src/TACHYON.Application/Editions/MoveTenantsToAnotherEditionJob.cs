@@ -1,12 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using Abp.BackgroundJobs;
+﻿using Abp.BackgroundJobs;
 using Abp.Dependency;
 using Abp.Domain.Repositories;
 using Abp.Domain.Uow;
 using Abp.Events.Bus;
 using Abp.Threading;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 using TACHYON.MultiTenancy;
 using TACHYON.Notifications;
 

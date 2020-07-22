@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using Abp.AspNetZeroCore;
+﻿using Abp.AspNetZeroCore;
 using Abp.AspNetZeroCore.Web.Authentication.External;
 using Abp.AspNetZeroCore.Web.Authentication.External.Facebook;
 using Abp.AspNetZeroCore.Web.Authentication.External.Google;
@@ -13,6 +12,7 @@ using Abp.Reflection.Extensions;
 using Abp.Threading.BackgroundWorkers;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
+using System.Collections.Generic;
 using TACHYON.Auditing;
 using TACHYON.Configuration;
 using TACHYON.EntityFrameworkCore;
@@ -110,7 +110,7 @@ namespace TACHYON.Web.Startup
                 {
                     var jsonClaimMappings = new List<JsonClaimMap>();
                     _appConfiguration.GetSection("Authentication:WsFederation:ClaimsMapping").Bind(jsonClaimMappings);
-                    
+
                     externalAuthConfiguration.ExternalLoginInfoProviders.Add(
                         new WsFederationExternalLoginInfoProvider(
                             _appConfiguration["Authentication:WsFederation:ClientId"],

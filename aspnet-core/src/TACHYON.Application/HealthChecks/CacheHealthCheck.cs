@@ -1,8 +1,8 @@
-﻿using System;
+﻿using Abp.Runtime.Caching;
+using Microsoft.Extensions.Diagnostics.HealthChecks;
+using System;
 using System.Threading;
 using System.Threading.Tasks;
-using Abp.Runtime.Caching;
-using Microsoft.Extensions.Diagnostics.HealthChecks;
 
 namespace TACHYON.HealthChecks
 {
@@ -26,7 +26,7 @@ namespace TACHYON.HealthChecks
                 var testKey = "Test-" + Guid.NewGuid();
 
                 await cacheManager.SetAsync(testKey, "123");
-                
+
                 await cacheManager.GetOrDefaultAsync(testKey);
 
                 return HealthCheckResult.Healthy("The cache check is healthy. (If you are using Redis, Redis is also checked)");

@@ -1,6 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using Abp.Dependency;
+using System.Collections.Generic;
 using System.Linq;
-using Abp.Dependency;
 
 namespace TACHYON.MultiTenancy.Payments
 {

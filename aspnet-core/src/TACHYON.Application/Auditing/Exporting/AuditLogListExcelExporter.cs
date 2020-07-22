@@ -1,13 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using Abp.Extensions;
+﻿using Abp.Extensions;
 using Abp.Runtime.Session;
 using Abp.Timing.Timezone;
+using NPOI.SS.UserModel;
+using System;
+using System.Collections.Generic;
 using TACHYON.Auditing.Dto;
 using TACHYON.DataExporting.Excel.NPOI;
 using TACHYON.Dto;
 using TACHYON.Storage;
-using NPOI.SS.UserModel;
 
 namespace TACHYON.Auditing.Exporting
 {
@@ -15,7 +15,7 @@ namespace TACHYON.Auditing.Exporting
     {
         private readonly ITimeZoneConverter _timeZoneConverter;
         private readonly IAbpSession _abpSession;
-        
+
         public AuditLogListExcelExporter(
             ITimeZoneConverter timeZoneConverter,
             IAbpSession abpSession,
@@ -61,20 +61,20 @@ namespace TACHYON.Auditing.Exporting
                         _ => _.BrowserInfo,
                         _ => _.Exception.IsNullOrEmpty() ? L("Success") : _.Exception
                         );
-                    
+
                     for (var i = 1; i <= auditLogListDtos.Count; i++)
                     {
                         //Formatting cells
                         SetCellDataFormat(sheet.GetRow(i).Cells[0], "yyyy-mm-dd hh:mm:ss");
                     }
-                    
+
                     for (var i = 0; i < 10; i++)
                     {
                         if (i.IsIn(4, 9)) //Don't AutoFit Parameters and Exception
                         {
                             continue;
                         }
-                        
+
                         sheet.AutoSizeColumn(i);
                     }
                 });
@@ -109,7 +109,7 @@ namespace TACHYON.Auditing.Exporting
                         //Formatting cells
                         SetCellDataFormat(sheet.GetRow(i).Cells[3], "yyyy-mm-dd hh:mm:ss");
                     }
-                    
+
                     for (var i = 0; i < 4; i++)
                     {
                         sheet.AutoSizeColumn(i);

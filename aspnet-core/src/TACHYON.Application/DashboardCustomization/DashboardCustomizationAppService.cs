@@ -1,14 +1,14 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Abp.Authorization;
+﻿using Abp.Authorization;
 using Abp.MultiTenancy;
 using Abp.Runtime.Session;
 using Abp.UI;
+using Newtonsoft.Json;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 using TACHYON.Configuration;
 using TACHYON.DashboardCustomization.Definitions;
 using TACHYON.DashboardCustomization.Dto;
-using Newtonsoft.Json;
 
 namespace TACHYON.DashboardCustomization
 {
@@ -144,7 +144,7 @@ namespace TACHYON.DashboardCustomization
                     ).ToList()
             );
         }
-        
+
         public List<WidgetOutput> GetAllWidgetDefinitions(GetDashboardInput input)
         {
             var dashboardDefinition = _dashboardConfiguration.DashboardDefinitions.FirstOrDefault(d => d.Name == input.DashboardName);

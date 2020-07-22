@@ -1,7 +1,7 @@
-﻿using System.Collections.Generic;
-using System.Threading.Tasks;
-using Abp;
+﻿using Abp;
 using Abp.RealTime;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 using TACHYON.Friendships;
 
 namespace TACHYON.Chat

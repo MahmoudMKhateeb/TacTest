@@ -1,6 +1,6 @@
-﻿using System;
-using Abp.Application.Services.Dto;
+﻿using Abp.Application.Services.Dto;
 using Abp.Timing;
+using System;
 using TACHYON.MultiTenancy.Payments;
 
 namespace TACHYON.Sessions.Dto

@@ -1,39 +1,39 @@
-﻿using System;
-using System.Threading.Tasks;
-using Abp.Application.Services;
+﻿using Abp.Application.Services;
 using Abp.Application.Services.Dto;
-using TACHYON.Offers.Dtos;
+using System;
+using System.Collections.Generic;
+using System.Collections.Generic;
+using System.Collections.Generic;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 using TACHYON.Dto;
-using System.Collections.Generic;
-using System.Collections.Generic;
-using System.Collections.Generic;
-using System.Collections.Generic;
+using TACHYON.Offers.Dtos;
 
 
 namespace TACHYON.Offers
 {
-    public interface IOffersAppService : IApplicationService 
+    public interface IOffersAppService : IApplicationService
     {
         Task<PagedResultDto<GetOfferForViewDto>> GetAll(GetAllOffersInput input);
 
         Task<GetOfferForViewDto> GetOfferForView(int id);
 
-		Task<GetOfferForEditOutput> GetOfferForEdit(EntityDto input);
+        Task<GetOfferForEditOutput> GetOfferForEdit(EntityDto input);
 
-		Task CreateOrEdit(CreateOrEditOfferDto input);
+        Task CreateOrEdit(CreateOrEditOfferDto input);
 
-		Task Delete(EntityDto input);
+        Task Delete(EntityDto input);
 
-		Task<FileDto> GetOffersToExcel(GetAllOffersForExcelInput input);
+        Task<FileDto> GetOffersToExcel(GetAllOffersForExcelInput input);
 
-		
-		Task<List<OfferTrucksTypeLookupTableDto>> GetAllTrucksTypeForTableDropdown();
-		
-		Task<List<OfferTrailerTypeLookupTableDto>> GetAllTrailerTypeForTableDropdown();
-		
-		Task<List<OfferGoodCategoryLookupTableDto>> GetAllGoodCategoryForTableDropdown();
-		
-		Task<List<OfferRouteLookupTableDto>> GetAllRouteForTableDropdown();
-		
+
+        Task<List<OfferTrucksTypeLookupTableDto>> GetAllTrucksTypeForTableDropdown();
+
+        Task<List<OfferTrailerTypeLookupTableDto>> GetAllTrailerTypeForTableDropdown();
+
+        Task<List<OfferGoodCategoryLookupTableDto>> GetAllGoodCategoryForTableDropdown();
+
+        Task<List<OfferRouteLookupTableDto>> GetAllRouteForTableDropdown();
+
     }
 }

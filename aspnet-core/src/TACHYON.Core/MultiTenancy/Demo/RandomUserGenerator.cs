@@ -1,7 +1,7 @@
-using System.Collections.Generic;
 using Abp;
 using Abp.Dependency;
 using Microsoft.AspNetCore.Identity;
+using System.Collections.Generic;
 using TACHYON.Authorization.Users;
 
 namespace TACHYON.MultiTenancy.Demo
@@ -106,7 +106,7 @@ namespace TACHYON.MultiTenancy.Demo
 
         private User CreateUser(int? tenantId, string nameSurname)
         {
-            var user =  new User
+            var user = new User
             {
                 TenantId = tenantId,
                 UserName = GenerateUsername(nameSurname),

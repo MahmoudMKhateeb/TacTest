@@ -1,14 +1,14 @@
-﻿using System;
-using Abp.Application.Services.Dto;
+﻿using Abp.Application.Services.Dto;
+using System;
 using System.ComponentModel.DataAnnotations;
 
 namespace TACHYON.Cities.Dtos
 {
     public class GetCityForEditOutput
     {
-		public CreateOrEditCityDto City { get; set; }
+        public CreateOrEditCityDto City { get; set; }
 
-		public string CountyDisplayName { get; set;}
+        public string CountyDisplayName { get; set; }
 
 
     }

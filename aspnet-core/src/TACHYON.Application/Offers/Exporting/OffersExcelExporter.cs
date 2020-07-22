@@ -1,9 +1,9 @@
-﻿using System.Collections.Generic;
-using Abp.Runtime.Session;
+﻿using Abp.Runtime.Session;
 using Abp.Timing.Timezone;
+using System.Collections.Generic;
 using TACHYON.DataExporting.Excel.NPOI;
-using TACHYON.Offers.Dtos;
 using TACHYON.Dto;
+using TACHYON.Offers.Dtos;
 using TACHYON.Storage;
 
 namespace TACHYON.Offers.Exporting
@@ -17,8 +17,8 @@ namespace TACHYON.Offers.Exporting
         public OffersExcelExporter(
             ITimeZoneConverter timeZoneConverter,
             IAbpSession abpSession,
-			ITempFileCacheManager tempFileCacheManager) :  
-	base(tempFileCacheManager)
+            ITempFileCacheManager tempFileCacheManager) :
+    base(tempFileCacheManager)
         {
             _timeZoneConverter = timeZoneConverter;
             _abpSession = abpSession;
@@ -30,7 +30,7 @@ namespace TACHYON.Offers.Exporting
                 "Offers.xlsx",
                 excelPackage =>
                 {
-                    
+
                     var sheet = excelPackage.CreateSheet(L("Offers"));
 
                     AddHeader(
@@ -55,8 +55,8 @@ namespace TACHYON.Offers.Exporting
                         _ => _.RouteDisplayName
                         );
 
-					
-					
+
+
                 });
         }
     }

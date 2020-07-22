@@ -1,6 +1,6 @@
-﻿using System.Threading.Tasks;
-using Abp;
+﻿using Abp;
 using Abp.Dependency;
+using System.Threading.Tasks;
 using TACHYON.Configuration.Dto;
 using TACHYON.UiCustomization.Dto;
 

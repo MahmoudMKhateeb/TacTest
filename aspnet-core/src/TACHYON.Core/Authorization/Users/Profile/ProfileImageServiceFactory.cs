@@ -1,7 +1,7 @@
-﻿using System.Threading.Tasks;
-using Abp;
+﻿using Abp;
 using Abp.Configuration;
 using Abp.Dependency;
+using System.Threading.Tasks;
 using TACHYON.Configuration;
 
 namespace TACHYON.Authorization.Users.Profile

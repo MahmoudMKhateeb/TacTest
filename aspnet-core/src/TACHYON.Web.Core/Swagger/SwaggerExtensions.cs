@@ -1,10 +1,10 @@
-﻿using System;
-using System.Linq;
-using System.Text;
-using Abp.Extensions;
+﻿using Abp.Extensions;
 using Microsoft.Extensions.DependencyInjection;
 using Swashbuckle.AspNetCore.SwaggerGen;
 using Swashbuckle.AspNetCore.SwaggerUI;
+using System;
+using System.Linq;
+using System.Text;
 
 namespace TACHYON.Web.Swagger
 {

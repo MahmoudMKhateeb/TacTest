@@ -1,10 +1,10 @@
-﻿using System.Collections.Generic;
-using Abp.Runtime.Session;
+﻿using Abp.Runtime.Session;
 using Abp.Timing.Timezone;
+using System.Collections.Generic;
 using TACHYON.DataExporting.Excel.NPOI;
-using TACHYON.Trucks.Dtos;
 using TACHYON.Dto;
 using TACHYON.Storage;
+using TACHYON.Trucks.Dtos;
 
 namespace TACHYON.Trucks.Exporting
 {
@@ -17,8 +17,8 @@ namespace TACHYON.Trucks.Exporting
         public TrucksExcelExporter(
             ITimeZoneConverter timeZoneConverter,
             IAbpSession abpSession,
-			ITempFileCacheManager tempFileCacheManager) :  
-	base(tempFileCacheManager)
+            ITempFileCacheManager tempFileCacheManager) :
+    base(tempFileCacheManager)
         {
             _timeZoneConverter = timeZoneConverter;
             _abpSession = abpSession;
@@ -30,7 +30,7 @@ namespace TACHYON.Trucks.Exporting
                 "Trucks.xlsx",
                 excelPackage =>
                 {
-                    
+
                     var sheet = excelPackage.CreateSheet(L("Trucks"));
 
                     AddHeader(
@@ -63,8 +63,8 @@ namespace TACHYON.Trucks.Exporting
                         _ => _.UserName2
                         );
 
-					
-					for (var i = 1; i <= trucks.Count; i++)
+
+                    for (var i = 1; i <= trucks.Count; i++)
                     {
                         SetCellDataFormat(sheet.GetRow(i).Cells[5], "yyyy-mm-dd");
                     }

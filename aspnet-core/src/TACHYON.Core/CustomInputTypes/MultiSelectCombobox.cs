@@ -1,5 +1,5 @@
-﻿using System;
-using Abp.UI.Inputs;
+﻿using Abp.UI.Inputs;
+using System;
 
 namespace TACHYON.CustomInputTypes
 {

@@ -1,10 +1,10 @@
-using System;
 using Abp.AspNetCore.Mvc.Controllers;
 using Abp.Configuration.Startup;
 using Abp.IdentityFramework;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.DependencyInjection;
+using System;
 
 namespace TACHYON.Web.Controllers
 {

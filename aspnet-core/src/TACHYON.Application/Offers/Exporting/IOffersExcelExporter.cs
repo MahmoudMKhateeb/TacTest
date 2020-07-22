@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
-using TACHYON.Offers.Dtos;
 using TACHYON.Dto;
+using TACHYON.Offers.Dtos;
 
 namespace TACHYON.Offers.Exporting
 {

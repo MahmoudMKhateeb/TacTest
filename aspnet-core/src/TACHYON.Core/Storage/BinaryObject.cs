@@ -1,8 +1,8 @@
-﻿using System;
+﻿using Abp;
+using Abp.Domain.Entities;
+using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using Abp;
-using Abp.Domain.Entities;
 
 namespace TACHYON.Storage
 {

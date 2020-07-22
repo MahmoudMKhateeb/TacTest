@@ -2,9 +2,9 @@
 {
     public class GetCityForViewDto
     {
-		public CityDto City { get; set; }
+        public CityDto City { get; set; }
 
-		public string CountyDisplayName { get; set;}
+        public string CountyDisplayName { get; set; }
 
 
     }

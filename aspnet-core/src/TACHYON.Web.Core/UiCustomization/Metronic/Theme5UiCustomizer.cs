@@ -1,6 +1,6 @@
-﻿using System.Threading.Tasks;
-using Abp;
+﻿using Abp;
 using Abp.Configuration;
+using System.Threading.Tasks;
 using TACHYON.Configuration;
 using TACHYON.Configuration.Dto;
 using TACHYON.UiCustomization;
@@ -46,7 +46,7 @@ namespace TACHYON.Web.UiCustomization.Metronic
 
             settings.BaseSettings.SubHeader.TitleStlye = "subheader-title text-dark font-weight-bold my-2 mr-3";
             settings.BaseSettings.SubHeader.ContainerStyle = "subheader py-3 py-lg-8  subheader-transparent ";
-            
+
             settings.IsLeftMenuUsed = false;
             settings.IsTopMenuUsed = true;
             settings.IsTabMenuUsed = false;

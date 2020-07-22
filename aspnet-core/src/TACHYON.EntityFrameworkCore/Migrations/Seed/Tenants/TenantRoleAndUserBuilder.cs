@@ -1,5 +1,4 @@
-﻿using System.Linq;
-using Abp;
+﻿using Abp;
 using Abp.Authorization;
 using Abp.Authorization.Roles;
 using Abp.Authorization.Users;
@@ -8,6 +7,7 @@ using Abp.Notifications;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
+using System.Linq;
 using TACHYON.Authorization;
 using TACHYON.Authorization.Roles;
 using TACHYON.Authorization.Users;

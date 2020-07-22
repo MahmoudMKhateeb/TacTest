@@ -17,7 +17,7 @@ namespace TACHYON.Authorization.Users
             IRepository<UserLogin, long> userLoginRepository,
             IRepository<UserRole, long> userRoleRepository,
             IRepository<Role> roleRepository,
-            IAsyncQueryableExecuter asyncQueryableExecuter, 
+            IAsyncQueryableExecuter asyncQueryableExecuter,
             IUnitOfWorkManager unitOfWorkManager,
             IRepository<UserClaim, long> userClaimRepository,
             IRepository<UserPermissionSetting, long> userPermissionSettingRepository,

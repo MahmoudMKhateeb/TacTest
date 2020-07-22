@@ -1,13 +1,13 @@
-﻿using TACHYON.Trucks.TrucksTypes;
-using TACHYON.Trucks;
-using TACHYON.Authorization.Users;
-using TACHYON.Authorization.Users;
+﻿using Abp.Auditing;
+using Abp.Domain.Entities;
+using Abp.Domain.Entities.Auditing;
 using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using Abp.Domain.Entities.Auditing;
-using Abp.Domain.Entities;
-using Abp.Auditing;
+using TACHYON.Authorization.Users;
+using TACHYON.Authorization.Users;
+using TACHYON.Trucks;
+using TACHYON.Trucks.TrucksTypes;
 
 namespace TACHYON.Trucks
 {
@@ -64,7 +64,7 @@ namespace TACHYON.Trucks
 
         public int? RentPrice { get; set; }
 
-        public int? RentDuration  { get; set; }
+        public int? RentDuration { get; set; }
 
         public virtual Guid? PictureId { get; set; }
 

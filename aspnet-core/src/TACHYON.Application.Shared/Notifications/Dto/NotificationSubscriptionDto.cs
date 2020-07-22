@@ -1,5 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
-using Abp.Notifications;
+﻿using Abp.Notifications;
+using System.ComponentModel.DataAnnotations;
 
 namespace TACHYON.Notifications.Dto
 {

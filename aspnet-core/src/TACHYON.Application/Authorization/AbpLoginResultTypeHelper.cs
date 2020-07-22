@@ -1,6 +1,6 @@
-﻿using System;
-using Abp.Authorization;
+﻿using Abp.Authorization;
 using Abp.Dependency;
+using System;
 
 namespace TACHYON.Authorization
 {

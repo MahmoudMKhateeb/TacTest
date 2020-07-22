@@ -2,7 +2,7 @@
 
 namespace TACHYON.MultiTenancy.Payments.Dto
 {
-    public class SubscriptionPaymentListDto: AuditedEntityDto
+    public class SubscriptionPaymentListDto : AuditedEntityDto
     {
         public string Gateway { get; set; }
 

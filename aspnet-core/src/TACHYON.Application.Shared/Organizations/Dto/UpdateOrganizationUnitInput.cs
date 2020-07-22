@@ -1,5 +1,5 @@
-using System.ComponentModel.DataAnnotations;
 using Abp.Organizations;
+using System.ComponentModel.DataAnnotations;
 
 namespace TACHYON.Organizations.Dto
 {

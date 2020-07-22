@@ -1,5 +1,5 @@
-﻿using System.Globalization;
-using Abp.Dependency;
+﻿using Abp.Dependency;
+using System.Globalization;
 
 namespace TACHYON.Localization
 {

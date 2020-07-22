@@ -2,7 +2,7 @@
 
 namespace TACHYON.MultiTenancy.Payments
 {
-    public interface IPaymentGatewayConfiguration: ITransientDependency
+    public interface IPaymentGatewayConfiguration : ITransientDependency
     {
         bool IsActive { get; }
 

@@ -1,14 +1,14 @@
+using Abp.Application.Services;
+using Abp.UI;
+using Stripe;
+using Stripe.Checkout;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using Abp.Application.Services;
-using Abp.UI;
 using TACHYON.Editions;
 using TACHYON.MultiTenancy.Payments.Dto;
 using TACHYON.MultiTenancy.Payments.Stripe;
 using TACHYON.MultiTenancy.Payments.Stripe.Dto;
-using Stripe;
-using Stripe.Checkout;
 
 namespace TACHYON.MultiTenancy.Payments
 {
@@ -39,10 +39,10 @@ namespace TACHYON.MultiTenancy.Payments
         public async Task ConfirmPayment(StripeConfirmPaymentInput input)
         {
             var paymentId = await _subscriptionPaymentExtensionDataRepository.GetPaymentIdOrNullAsync(
-                StripeGatewayManager.StripeSessionIdSubscriptionPaymentExtensionDataKey, 
+                StripeGatewayManager.StripeSessionIdSubscriptionPaymentExtensionDataKey,
                 input.StripeSessionId
             );
-            
+
             if (!paymentId.HasValue)
             {
                 throw new ApplicationException($"Cannot find any payment with sessionId {input.StripeSessionId}");

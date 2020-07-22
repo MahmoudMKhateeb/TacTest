@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Abp.Authorization;
+﻿using Abp.Authorization;
 using Abp.Authorization.Roles;
 using Abp.Domain.Repositories;
 using Abp.Domain.Uow;
@@ -13,6 +9,10 @@ using Abp.UI;
 using Abp.Zero.Configuration;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Logging;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 using TACHYON.Authorization.Users;
 
 namespace TACHYON.Authorization.Roles
@@ -24,7 +24,7 @@ namespace TACHYON.Authorization.Roles
     public class RoleManager : AbpRoleManager<Role, User>
     {
         private readonly ILocalizationManager _localizationManager;
-        
+
         public RoleManager(
             RoleStore store,
             IEnumerable<IRoleValidator<Role>> roleValidators,

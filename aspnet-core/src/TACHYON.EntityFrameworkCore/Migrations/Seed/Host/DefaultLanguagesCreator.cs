@@ -1,7 +1,7 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using Abp.Localization;
+﻿using Abp.Localization;
 using Microsoft.EntityFrameworkCore;
+using System.Collections.Generic;
+using System.Linq;
 using TACHYON.EntityFrameworkCore;
 
 namespace TACHYON.Migrations.Seed.Host

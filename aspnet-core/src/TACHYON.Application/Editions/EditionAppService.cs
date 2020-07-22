@@ -1,7 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Abp;
+﻿using Abp;
 using Abp.Application.Editions;
 using Abp.Application.Features;
 using Abp.Application.Services.Dto;
@@ -12,6 +9,9 @@ using Abp.Domain.Repositories;
 using Abp.Runtime.Session;
 using Abp.UI;
 using Microsoft.EntityFrameworkCore;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 using TACHYON.Authorization;
 using TACHYON.Editions.Dto;
 using TACHYON.MultiTenancy;
@@ -129,7 +129,7 @@ namespace TACHYON.Editions
             });
         }
 
-        [AbpAuthorize(AppPermissions.Pages_Editions,AppPermissions.Pages_Tenants)]
+        [AbpAuthorize(AppPermissions.Pages_Editions, AppPermissions.Pages_Tenants)]
         public async Task<List<SubscribableEditionComboboxItemDto>> GetEditionComboboxItems(int? selectedEditionId = null, bool addAllItem = false, bool onlyFreeItems = false)
         {
             var editions = await _editionManager.Editions.ToListAsync();

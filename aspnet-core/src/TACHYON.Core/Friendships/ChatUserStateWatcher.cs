@@ -1,8 +1,8 @@
-﻿using System.Linq;
-using Abp;
+﻿using Abp;
 using Abp.Dependency;
 using Abp.RealTime;
 using Abp.Threading;
+using System.Linq;
 using TACHYON.Chat;
 using TACHYON.Friendships.Cache;
 

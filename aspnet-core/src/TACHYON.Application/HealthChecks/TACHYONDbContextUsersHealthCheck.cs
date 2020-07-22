@@ -1,10 +1,10 @@
-﻿using System;
-using System.Threading;
-using System.Threading.Tasks;
-using Abp.Domain.Uow;
+﻿using Abp.Domain.Uow;
 using Abp.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
+using System;
+using System.Threading;
+using System.Threading.Tasks;
 using TACHYON.EntityFrameworkCore;
 
 namespace TACHYON.HealthChecks

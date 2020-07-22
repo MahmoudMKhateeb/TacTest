@@ -1,11 +1,11 @@
-using System.Threading.Tasks;
 using Abp.Application.Services;
+using System.Threading.Tasks;
 using TACHYON.Editions.Dto;
 using TACHYON.MultiTenancy.Dto;
 
 namespace TACHYON.MultiTenancy
 {
-    public interface ITenantRegistrationAppService: IApplicationService
+    public interface ITenantRegistrationAppService : IApplicationService
     {
         Task<RegisterTenantOutput> RegisterTenant(RegisterTenantInput input);
 

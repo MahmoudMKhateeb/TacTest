@@ -1,5 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
-using Abp.Localization;
+﻿using Abp.Localization;
+using System.ComponentModel.DataAnnotations;
 
 namespace TACHYON.Localization.Dto
 {

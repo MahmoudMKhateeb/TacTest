@@ -1,10 +1,10 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Mvc;
+using Stripe;
+using System;
 using System.IO;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
 using TACHYON.MultiTenancy.Payments.Stripe;
 using TACHYON.MultiTenancy.Payments.Stripe.Dto;
-using Stripe;
 
 namespace TACHYON.Web.Controllers
 {

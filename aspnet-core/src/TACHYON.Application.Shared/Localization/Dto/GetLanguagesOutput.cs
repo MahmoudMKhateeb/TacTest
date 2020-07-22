@@ -1,5 +1,5 @@
-using System.Collections.Generic;
 using Abp.Application.Services.Dto;
+using System.Collections.Generic;
 
 namespace TACHYON.Localization.Dto
 {
@@ -9,7 +9,7 @@ namespace TACHYON.Localization.Dto
 
         public GetLanguagesOutput()
         {
-            
+
         }
 
         public GetLanguagesOutput(IReadOnlyList<ApplicationLanguageListDto> items, string defaultLanguageName)

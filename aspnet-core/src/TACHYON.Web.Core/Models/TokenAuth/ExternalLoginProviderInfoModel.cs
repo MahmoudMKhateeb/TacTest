@@ -1,6 +1,6 @@
-﻿using System.Collections.Generic;
-using Abp.AspNetZeroCore.Web.Authentication.External;
+﻿using Abp.AspNetZeroCore.Web.Authentication.External;
 using Abp.AutoMapper;
+using System.Collections.Generic;
 
 namespace TACHYON.Web.Models.TokenAuth
 {

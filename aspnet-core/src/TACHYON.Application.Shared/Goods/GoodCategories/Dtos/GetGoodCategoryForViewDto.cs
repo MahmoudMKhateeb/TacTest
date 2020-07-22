@@ -2,7 +2,7 @@
 {
     public class GetGoodCategoryForViewDto
     {
-		public GoodCategoryDto GoodCategory { get; set; }
+        public GoodCategoryDto GoodCategory { get; set; }
 
 
     }

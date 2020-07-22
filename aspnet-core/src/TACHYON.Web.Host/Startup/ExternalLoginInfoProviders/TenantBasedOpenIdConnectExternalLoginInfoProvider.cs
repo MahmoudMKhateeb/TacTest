@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using Abp.AspNetZeroCore.Web.Authentication.External;
+﻿using Abp.AspNetZeroCore.Web.Authentication.External;
 using Abp.AspNetZeroCore.Web.Authentication.External.Microsoft;
 using Abp.AspNetZeroCore.Web.Authentication.External.OpenIdConnect;
 using Abp.Configuration;
@@ -8,6 +7,7 @@ using Abp.Extensions;
 using Abp.Json;
 using Abp.Runtime.Caching;
 using Abp.Runtime.Session;
+using System.Collections.Generic;
 using TACHYON.Authentication;
 using TACHYON.Configuration;
 

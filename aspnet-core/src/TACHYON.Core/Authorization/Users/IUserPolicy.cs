@@ -1,5 +1,5 @@
-﻿using System.Threading.Tasks;
-using Abp.Domain.Policies;
+﻿using Abp.Domain.Policies;
+using System.Threading.Tasks;
 
 namespace TACHYON.Authorization.Users
 {

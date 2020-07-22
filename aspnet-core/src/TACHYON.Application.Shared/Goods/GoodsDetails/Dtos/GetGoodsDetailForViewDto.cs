@@ -2,9 +2,9 @@
 {
     public class GetGoodsDetailForViewDto
     {
-		public GoodsDetailDto GoodsDetail { get; set; }
+        public GoodsDetailDto GoodsDetail { get; set; }
 
-		public string GoodCategoryDisplayName { get; set;}
+        public string GoodCategoryDisplayName { get; set; }
 
 
     }

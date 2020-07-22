@@ -1,12 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using Abp;
+﻿using Abp;
 using Abp.Application.Services;
+using System;
+using System.Collections.Generic;
 using TACHYON.DemoUiComponents.Dto;
 
 namespace TACHYON.DemoUiComponents
 {
-    public interface IDemoUiComponentsAppService: IApplicationService
+    public interface IDemoUiComponentsAppService : IApplicationService
     {
         DateToStringOutput SendAndGetDate(DateTime? date);
 

@@ -1,6 +1,3 @@
-using System.Collections.Generic;
-using System.Globalization;
-using System.Threading.Tasks;
 using Abp.Authorization;
 using Abp.Collections.Extensions;
 using Abp.Configuration;
@@ -13,6 +10,9 @@ using Abp.Runtime.Session;
 using Abp.Timing;
 using Abp.Zero.Configuration;
 using Abp.Zero.Ldap.Configuration;
+using System.Collections.Generic;
+using System.Globalization;
+using System.Threading.Tasks;
 using TACHYON.Authentication;
 using TACHYON.Authorization;
 using TACHYON.Configuration.Dto;
@@ -267,10 +267,10 @@ namespace TACHYON.Configuration.Tenants
             var googleSettings = await SettingManager.GetSettingValueForTenantAsync(AppSettings.ExternalLoginProvider.Tenant.Google, AbpSession.GetTenantId());
             var twitterSettings = await SettingManager.GetSettingValueForTenantAsync(AppSettings.ExternalLoginProvider.Tenant.Twitter, AbpSession.GetTenantId());
             var microsoftSettings = await SettingManager.GetSettingValueForTenantAsync(AppSettings.ExternalLoginProvider.Tenant.Microsoft, AbpSession.GetTenantId());
-            
+
             var openIdConnectSettings = await SettingManager.GetSettingValueForTenantAsync(AppSettings.ExternalLoginProvider.Tenant.OpenIdConnect, AbpSession.GetTenantId());
             var openIdConnectMappedClaims = await SettingManager.GetSettingValueAsync(AppSettings.ExternalLoginProvider.OpenIdConnectMappedClaims);
-            
+
             var wsFederationSettings = await SettingManager.GetSettingValueForTenantAsync(AppSettings.ExternalLoginProvider.Tenant.WsFederation, AbpSession.GetTenantId());
             var wsFederationMappedClaims = await SettingManager.GetSettingValueAsync(AppSettings.ExternalLoginProvider.WsFederationMappedClaims);
 
@@ -288,19 +288,19 @@ namespace TACHYON.Configuration.Tenants
                 Microsoft = microsoftSettings.IsNullOrWhiteSpace()
                     ? new MicrosoftExternalLoginProviderSettings()
                     : microsoftSettings.FromJsonString<MicrosoftExternalLoginProviderSettings>(),
-                
+
                 OpenIdConnect = openIdConnectSettings.IsNullOrWhiteSpace()
                     ? new OpenIdConnectExternalLoginProviderSettings()
                     : openIdConnectSettings.FromJsonString<OpenIdConnectExternalLoginProviderSettings>(),
                 OpenIdConnectClaimsMapping = openIdConnectMappedClaims.IsNullOrWhiteSpace()
-                    ? new List<JsonClaimMapDto>() 
+                    ? new List<JsonClaimMapDto>()
                     : openIdConnectMappedClaims.FromJsonString<List<JsonClaimMapDto>>(),
-                
+
                 WsFederation = wsFederationSettings.IsNullOrWhiteSpace()
                     ? new WsFederationExternalLoginProviderSettings()
                     : wsFederationSettings.FromJsonString<WsFederationExternalLoginProviderSettings>(),
                 WsFederationClaimsMapping = wsFederationMappedClaims.IsNullOrWhiteSpace()
-                    ? new List<JsonClaimMapDto>() 
+                    ? new List<JsonClaimMapDto>()
                     : wsFederationMappedClaims.FromJsonString<List<JsonClaimMapDto>>()
             };
         }
@@ -415,43 +415,43 @@ namespace TACHYON.Configuration.Tenants
                 AppSettings.UserManagement.AllowSelfRegistration,
                 settings.AllowSelfRegistration.ToString().ToLowerInvariant()
             );
-            
+
             await SettingManager.ChangeSettingForTenantAsync(
                 AbpSession.GetTenantId(),
                 AppSettings.UserManagement.IsNewRegisteredUserActiveByDefault,
                 settings.IsNewRegisteredUserActiveByDefault.ToString().ToLowerInvariant()
             );
-            
+
             await SettingManager.ChangeSettingForTenantAsync(
                 AbpSession.GetTenantId(),
                 AbpZeroSettingNames.UserManagement.IsEmailConfirmationRequiredForLogin,
                 settings.IsEmailConfirmationRequiredForLogin.ToString().ToLowerInvariant()
             );
-            
+
             await SettingManager.ChangeSettingForTenantAsync(
                 AbpSession.GetTenantId(),
                 AppSettings.UserManagement.UseCaptchaOnRegistration,
                 settings.UseCaptchaOnRegistration.ToString().ToLowerInvariant()
             );
-            
+
             await SettingManager.ChangeSettingForTenantAsync(
                 AbpSession.GetTenantId(),
                 AppSettings.UserManagement.UseCaptchaOnLogin,
                 settings.UseCaptchaOnLogin.ToString().ToLowerInvariant()
             );
-            
+
             await SettingManager.ChangeSettingForTenantAsync(
                 AbpSession.GetTenantId(),
                 AppSettings.UserManagement.IsCookieConsentEnabled,
                 settings.IsCookieConsentEnabled.ToString().ToLowerInvariant()
             );
-            
+
             await SettingManager.ChangeSettingForTenantAsync(
                 AbpSession.GetTenantId(),
                 AppSettings.UserManagement.AllowUsingGravatarProfilePicture,
                 settings.AllowUsingGravatarProfilePicture.ToString().ToLowerInvariant()
             );
-            
+
             await UpdateUserManagementSessionTimeOutSettingsAsync(settings.SessionTimeOutSettings);
         }
 
@@ -589,7 +589,7 @@ namespace TACHYON.Configuration.Tenants
                 AppSettings.ExternalLoginProvider.Tenant.Microsoft,
                 input.Microsoft == null || !input.Microsoft.IsValid() ? "" : input.Microsoft.ToJsonString()
             );
-            
+
             await SettingManager.ChangeSettingForTenantAsync(
                 AbpSession.GetTenantId(),
                 AppSettings.ExternalLoginProvider.Tenant.OpenIdConnect,
@@ -605,13 +605,13 @@ namespace TACHYON.Configuration.Tenants
             {
                 openIdConnectMappedClaimsValue = input.OpenIdConnectClaimsMapping.ToJsonString();
             }
-            
+
             await SettingManager.ChangeSettingForTenantAsync(
                 AbpSession.GetTenantId(),
                 AppSettings.ExternalLoginProvider.OpenIdConnectMappedClaims,
                 openIdConnectMappedClaimsValue
             );
-            
+
             await SettingManager.ChangeSettingForTenantAsync(
                 AbpSession.GetTenantId(),
                 AppSettings.ExternalLoginProvider.Tenant.WsFederation,
@@ -627,13 +627,13 @@ namespace TACHYON.Configuration.Tenants
             {
                 wsFederationMappedClaimsValue = input.WsFederationClaimsMapping.ToJsonString();
             }
-            
+
             await SettingManager.ChangeSettingForTenantAsync(
                 AbpSession.GetTenantId(),
                 AppSettings.ExternalLoginProvider.WsFederationMappedClaims,
                 wsFederationMappedClaimsValue
             );
-            
+
             ExternalLoginOptionsCacheManager.ClearCache();
         }
 

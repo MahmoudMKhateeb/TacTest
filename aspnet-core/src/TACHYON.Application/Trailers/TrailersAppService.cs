@@ -1,30 +1,28 @@
-﻿using TACHYON.Trailers.TrailerStatuses;
-using System.Collections.Generic;
-using TACHYON.Trailers.TrailerTypes;
-using System.Collections.Generic;
-using System.Collections.Generic;
-using TACHYON.Trucks;
-using System.Collections.Generic;
-
-
+﻿using Abp.Application.Features;
+using Abp.Application.Services.Dto;
+using Abp.Authorization;
+using Abp.Domain.Repositories;
+using Abp.Extensions;
+using Abp.Linq.Extensions;
+using Microsoft.EntityFrameworkCore;
 using System;
+using System.Collections.Generic;
+using System.Collections.Generic;
+using System.Collections.Generic;
+using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Dynamic.Core;
-using Abp.Linq.Extensions;
-using System.Collections.Generic;
 using System.Threading.Tasks;
-using Abp.Application.Features;
-using Abp.Domain.Repositories;
-using TACHYON.Trailers.Exporting;
-using TACHYON.Trailers.Dtos;
-using TACHYON.Dto;
-using Abp.Application.Services.Dto;
 using TACHYON.Authorization;
-using Abp.Extensions;
-using Abp.Authorization;
-using Microsoft.EntityFrameworkCore;
+using TACHYON.Dto;
 using TACHYON.Features;
+using TACHYON.Trailers.Dtos;
+using TACHYON.Trailers.Exporting;
 using TACHYON.Trailers.PayloadMaxWeights;
+using TACHYON.Trailers.TrailerStatuses;
+using TACHYON.Trailers.TrailerTypes;
+using TACHYON.Trucks;
 
 namespace TACHYON.Trailers
 {

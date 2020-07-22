@@ -1,11 +1,11 @@
-﻿using System;
-using System.Threading.Tasks;
-using Abp.Application.Services;
+﻿using Abp.Application.Services;
 using Abp.Application.Services.Dto;
-using TACHYON.Trucks.Dtos;
+using System;
+using System.Collections.Generic;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 using TACHYON.Dto;
-using System.Collections.Generic;
-using System.Collections.Generic;
+using TACHYON.Trucks.Dtos;
 
 
 namespace TACHYON.Trucks

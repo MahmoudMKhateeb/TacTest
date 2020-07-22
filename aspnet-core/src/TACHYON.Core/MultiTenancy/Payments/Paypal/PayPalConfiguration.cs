@@ -23,7 +23,7 @@ namespace TACHYON.MultiTenancy.Payments.Paypal
         public bool IsActive => _appConfiguration["Payment:PayPal:IsActive"].To<bool>();
 
         public bool SupportsRecurringPayments => false;
-        
+
         public PayPalPaymentGatewayConfiguration(IAppConfigurationAccessor configurationAccessor)
         {
             _appConfiguration = configurationAccessor.Configuration;

@@ -1,6 +1,6 @@
+using Abp.MultiTenancy;
 using System.Collections.Generic;
 using System.Linq;
-using Abp.MultiTenancy;
 using TACHYON.Authorization;
 
 namespace TACHYON.DashboardCustomization.Definitions
@@ -52,7 +52,7 @@ namespace TACHYON.DashboardCustomization.Definitions
                 TACHYONDashboardCustomizationConsts.Widgets.Tenant.GeneralStats,
                 "WidgetGeneralStats",
                 side: MultiTenancySides.Tenant,
-                permissions: tenantWidgetsDefaultPermission.Concat(new List<string>{ AppPermissions.Pages_Administration_AuditLogs }).ToList());
+                permissions: tenantWidgetsDefaultPermission.Concat(new List<string> { AppPermissions.Pages_Administration_AuditLogs }).ToList());
 
             var profitShare = new WidgetDefinition(
                 TACHYONDashboardCustomizationConsts.Widgets.Tenant.ProfitShare,

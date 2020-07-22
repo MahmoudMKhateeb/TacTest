@@ -1,16 +1,16 @@
-using System;
-using System.Threading.Tasks;
 using Abp.Dependency;
 using Abp.UI;
 using PayPalCheckoutSdk.Core;
 using PayPalCheckoutSdk.Orders;
+using System;
+using System.Threading.Tasks;
 
 namespace TACHYON.MultiTenancy.Payments.Paypal
 {
     public class PayPalGatewayManager : TACHYONServiceBase, ITransientDependency
     {
         private readonly PayPalHttpClient _client;
-        
+
         public PayPalGatewayManager(PayPalPaymentGatewayConfiguration configuration)
         {
             var environment = GetEnvironment(configuration);

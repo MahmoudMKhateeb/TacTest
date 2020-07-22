@@ -1,7 +1,7 @@
-﻿using System.Threading.Tasks;
-using Abp;
+﻿using Abp;
 using Abp.Configuration;
 using Abp.Extensions;
+using System.Threading.Tasks;
 
 namespace TACHYON.Web.UiCustomization.Metronic
 {

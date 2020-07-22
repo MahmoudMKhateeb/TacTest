@@ -4,8 +4,8 @@ namespace TACHYON.Trailers.Dtos
 {
     public class TrailerPayloadMaxWeightLookupTableDto
     {
-		public int Id { get; set; }
+        public int Id { get; set; }
 
-		public string DisplayName { get; set; }
+        public string DisplayName { get; set; }
     }
 }

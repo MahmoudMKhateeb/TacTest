@@ -1,8 +1,8 @@
-﻿using System;
-using Abp.IdentityServer4;
+﻿using Abp.IdentityServer4;
 using IdentityServer4.Configuration;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using System;
 using TACHYON.Authorization.Users;
 using TACHYON.EntityFrameworkCore;
 

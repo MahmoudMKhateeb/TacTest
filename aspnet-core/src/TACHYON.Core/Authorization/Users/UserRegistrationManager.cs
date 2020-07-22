@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Abp.Authorization.Users;
+﻿using Abp.Authorization.Users;
 using Abp.Configuration;
 using Abp.IdentityFramework;
 using Abp.Linq;
@@ -10,6 +6,10 @@ using Abp.Notifications;
 using Abp.Runtime.Session;
 using Abp.UI;
 using Microsoft.AspNetCore.Identity;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 using TACHYON.Authorization.Roles;
 using TACHYON.Configuration;
 using TACHYON.Debugging;
@@ -30,7 +30,7 @@ namespace TACHYON.Authorization.Users
         private readonly INotificationSubscriptionManager _notificationSubscriptionManager;
         private readonly IAppNotifier _appNotifier;
         private readonly IUserPolicy _userPolicy;
-        
+
 
         public UserRegistrationManager(
             TenantManager tenantManager,

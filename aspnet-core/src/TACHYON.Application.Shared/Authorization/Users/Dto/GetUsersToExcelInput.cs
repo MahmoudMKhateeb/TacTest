@@ -1,9 +1,9 @@
-﻿using System.Collections.Generic;
-using Abp.Runtime.Validation;
+﻿using Abp.Runtime.Validation;
+using System.Collections.Generic;
 
 namespace TACHYON.Authorization.Users.Dto
 {
-    public class GetUsersToExcelInput: IShouldNormalize, IGetUsersInput
+    public class GetUsersToExcelInput : IShouldNormalize, IGetUsersInput
     {
         public string Filter { get; set; }
 

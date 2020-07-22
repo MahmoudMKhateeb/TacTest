@@ -1,6 +1,6 @@
-﻿using System.Linq;
-using Abp.MultiTenancy;
+﻿using Abp.MultiTenancy;
 using Microsoft.EntityFrameworkCore;
+using System.Linq;
 using TACHYON.Editions;
 using TACHYON.EntityFrameworkCore;
 

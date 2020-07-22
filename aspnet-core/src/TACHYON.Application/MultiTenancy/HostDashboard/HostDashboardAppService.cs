@@ -1,12 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Abp.Auditing;
+﻿using Abp.Auditing;
 using Abp.Authorization;
 using Abp.Domain.Repositories;
 using Abp.Timing;
 using Microsoft.EntityFrameworkCore;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 using TACHYON.Authorization;
 using TACHYON.MultiTenancy.HostDashboard.Dto;
 using TACHYON.MultiTenancy.Payments;
@@ -84,7 +84,7 @@ namespace TACHYON.MultiTenancy.HostDashboard
         {
             return new GetIncomeStatisticsDataOutput(
                 await _incomeStatisticsService.GetIncomeStatisticsData(
-                    input.StartDate, 
+                    input.StartDate,
                     input.EndDate,
                     input.IncomeStatisticsDateInterval)
             );
@@ -119,7 +119,7 @@ namespace TACHYON.MultiTenancy.HostDashboard
 
         private decimal GetNewSubscriptionAmount(DateTime startDate, DateTime endDate)
         {
-            return  _subscriptionPaymentRepository.GetAll()
+            return _subscriptionPaymentRepository.GetAll()
                   .Where(s => s.CreationTime >= startDate &&
                               s.CreationTime <= endDate &&
                               s.Status == SubscriptionPaymentStatus.Paid)

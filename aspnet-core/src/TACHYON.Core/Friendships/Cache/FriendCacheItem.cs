@@ -1,5 +1,5 @@
-﻿using System;
-using Abp.AutoMapper;
+﻿using Abp.AutoMapper;
+using System;
 
 namespace TACHYON.Friendships.Cache
 {

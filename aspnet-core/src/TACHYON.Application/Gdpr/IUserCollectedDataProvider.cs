@@ -1,6 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using Abp;
+using System.Collections.Generic;
 using System.Threading.Tasks;
-using Abp;
 using TACHYON.Dto;
 
 namespace TACHYON.Gdpr

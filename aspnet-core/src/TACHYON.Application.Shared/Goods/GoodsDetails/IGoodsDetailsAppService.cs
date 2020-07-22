@@ -1,30 +1,30 @@
-﻿using System;
-using System.Threading.Tasks;
-using Abp.Application.Services;
+﻿using Abp.Application.Services;
 using Abp.Application.Services.Dto;
-using TACHYON.Goods.GoodsDetails.Dtos;
-using TACHYON.Dto;
+using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
+using TACHYON.Dto;
+using TACHYON.Goods.GoodsDetails.Dtos;
 
 
 namespace TACHYON.Goods.GoodsDetails
 {
-    public interface IGoodsDetailsAppService : IApplicationService 
+    public interface IGoodsDetailsAppService : IApplicationService
     {
         Task<PagedResultDto<GetGoodsDetailForViewDto>> GetAll(GetAllGoodsDetailsInput input);
 
         Task<GetGoodsDetailForViewDto> GetGoodsDetailForView(long id);
 
-		Task<GetGoodsDetailForEditOutput> GetGoodsDetailForEdit(EntityDto<long> input);
+        Task<GetGoodsDetailForEditOutput> GetGoodsDetailForEdit(EntityDto<long> input);
 
-		Task CreateOrEdit(CreateOrEditGoodsDetailDto input);
+        Task CreateOrEdit(CreateOrEditGoodsDetailDto input);
 
-		Task Delete(EntityDto<long> input);
+        Task Delete(EntityDto<long> input);
 
-		Task<FileDto> GetGoodsDetailsToExcel(GetAllGoodsDetailsForExcelInput input);
+        Task<FileDto> GetGoodsDetailsToExcel(GetAllGoodsDetailsForExcelInput input);
 
-		
-		Task<List<GoodsDetailGoodCategoryLookupTableDto>> GetAllGoodCategoryForTableDropdown();
-		
+
+        Task<List<GoodsDetailGoodCategoryLookupTableDto>> GetAllGoodCategoryForTableDropdown();
+
     }
 }

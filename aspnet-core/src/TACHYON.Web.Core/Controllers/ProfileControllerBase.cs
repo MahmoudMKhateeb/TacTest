@@ -1,9 +1,3 @@
-using System;
-using System.Drawing;
-using System.Drawing.Imaging;
-using System.IO;
-using System.Linq;
-using System.Threading.Tasks;
 using Abp.AspNetZeroCore.Net;
 using Abp.Extensions;
 using Abp.IO.Extensions;
@@ -11,6 +5,12 @@ using Abp.UI;
 using Abp.Web.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System;
+using System.Drawing;
+using System.Drawing.Imaging;
+using System.IO;
+using System.Linq;
+using System.Threading.Tasks;
 using TACHYON.Authorization.Users.Profile;
 using TACHYON.Authorization.Users.Profile.Dto;
 using TACHYON.Dto;
@@ -23,11 +23,11 @@ namespace TACHYON.Web.Controllers
     {
         private readonly ITempFileCacheManager _tempFileCacheManager;
         private readonly IProfileAppService _profileAppService;
-        
+
         private const int MaxProfilePictureSize = 5242880; //5MB
 
         protected ProfileControllerBase(
-            ITempFileCacheManager tempFileCacheManager, 
+            ITempFileCacheManager tempFileCacheManager,
             IProfileAppService profileAppService)
         {
             _tempFileCacheManager = tempFileCacheManager;
@@ -98,7 +98,7 @@ namespace TACHYON.Web.Controllers
 
             return File(Convert.FromBase64String(output.ProfilePicture), MimeTypeNames.ImageJpeg);
         }
-        
+
         protected FileResult GetDefaultProfilePictureInternal()
         {
             return File(Path.Combine("Common", "Images", "default-profile-picture.png"), MimeTypeNames.ImagePng);

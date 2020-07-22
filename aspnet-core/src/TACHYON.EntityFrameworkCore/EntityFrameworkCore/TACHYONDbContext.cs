@@ -1,17 +1,4 @@
-﻿using TACHYON.Goods.GoodsDetails;
-using TACHYON.Offers;
-using TACHYON.Routs.RoutSteps;
-using TACHYON.Routs;
-using TACHYON.Cities;
-using TACHYON.Countries;
-using TACHYON.Routs.RoutTypes;
-using TACHYON.Goods.GoodCategories;
-using TACHYON.Trailers;
-using TACHYON.Trailers.TrailerStatuses;
-using TACHYON.Trailers.TrailerTypes;
-using TACHYON.Trucks.TrucksTypes;
-using TACHYON.Trucks;
-using Abp.IdentityServer4;
+﻿using Abp.IdentityServer4;
 using Abp.Organizations;
 using Abp.Zero.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
@@ -19,13 +6,26 @@ using TACHYON.Authorization.Delegation;
 using TACHYON.Authorization.Roles;
 using TACHYON.Authorization.Users;
 using TACHYON.Chat;
+using TACHYON.Cities;
+using TACHYON.Countries;
 using TACHYON.Editions;
 using TACHYON.Friendships;
+using TACHYON.Goods.GoodCategories;
+using TACHYON.Goods.GoodsDetails;
 using TACHYON.MultiTenancy;
 using TACHYON.MultiTenancy.Accounting;
 using TACHYON.MultiTenancy.Payments;
+using TACHYON.Offers;
+using TACHYON.Routs;
+using TACHYON.Routs.RoutSteps;
+using TACHYON.Routs.RoutTypes;
 using TACHYON.Storage;
+using TACHYON.Trailers;
 using TACHYON.Trailers.PayloadMaxWeights;
+using TACHYON.Trailers.TrailerStatuses;
+using TACHYON.Trailers.TrailerTypes;
+using TACHYON.Trucks;
+using TACHYON.Trucks.TrucksTypes;
 
 namespace TACHYON.EntityFrameworkCore
 {
@@ -94,35 +94,35 @@ namespace TACHYON.EntityFrameworkCore
 
 
 
-           
-           
-           
-           
-           
+
+
+
+
+
             modelBuilder.Entity<GoodsDetail>(g =>
             {
                 g.HasIndex(e => new { e.TenantId });
             });
- modelBuilder.Entity<Offer>(o =>
-            {
-                o.HasIndex(e => new { e.TenantId });
-            });
- modelBuilder.Entity<RoutStep>(r =>
-            {
-                r.HasIndex(e => new { e.TenantId });
-            });
- modelBuilder.Entity<Route>(r =>
-            {
-                r.HasIndex(e => new { e.TenantId });
-            });
- modelBuilder.Entity<Trailer>(t =>
-            {
-                t.HasIndex(e => new { e.TenantId });
-            });
- modelBuilder.Entity<Truck>(t =>
-            {
-                t.HasIndex(e => new { e.TenantId });
-            });
+            modelBuilder.Entity<Offer>(o =>
+                       {
+                           o.HasIndex(e => new { e.TenantId });
+                       });
+            modelBuilder.Entity<RoutStep>(r =>
+                       {
+                           r.HasIndex(e => new { e.TenantId });
+                       });
+            modelBuilder.Entity<Route>(r =>
+                       {
+                           r.HasIndex(e => new { e.TenantId });
+                       });
+            modelBuilder.Entity<Trailer>(t =>
+                       {
+                           t.HasIndex(e => new { e.TenantId });
+                       });
+            modelBuilder.Entity<Truck>(t =>
+                       {
+                           t.HasIndex(e => new { e.TenantId });
+                       });
 
             modelBuilder.Entity<TruckStatus>(t =>
                        {

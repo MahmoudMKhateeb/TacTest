@@ -1,7 +1,7 @@
 ﻿using Abp.AspNetCore.Mvc.Authorization;
+using Abp.BackgroundJobs;
 using TACHYON.Authorization;
 using TACHYON.Storage;
-using Abp.BackgroundJobs;
 
 namespace TACHYON.Web.Controllers
 {

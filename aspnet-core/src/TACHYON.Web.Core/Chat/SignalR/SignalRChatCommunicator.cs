@@ -1,11 +1,11 @@
-﻿using System.Collections.Generic;
-using System.Threading.Tasks;
-using Abp;
+﻿using Abp;
 using Abp.Dependency;
 using Abp.ObjectMapping;
 using Abp.RealTime;
 using Castle.Core.Logging;
 using Microsoft.AspNetCore.SignalR;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 using TACHYON.Chat;
 using TACHYON.Chat.Dto;
 using TACHYON.Friendships;
