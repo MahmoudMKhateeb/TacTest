@@ -1,6 +1,6 @@
-using System.Threading.Tasks;
 using Abp;
 using Abp.Authorization.Users;
+using System.Threading.Tasks;
 using TACHYON.Authorization.Impersonation;
 
 namespace TACHYON.Authorization.Users

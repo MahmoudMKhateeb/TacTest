@@ -1,9 +1,9 @@
-﻿using System;
+﻿using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.EntityFrameworkCore;
 using TACHYON.MultiTenancy.HostDashboard.Dto;
 using TACHYON.MultiTenancy.Payments;
 
@@ -32,10 +32,10 @@ namespace TACHYON.MultiTenancy.HostDashboard
                 .ToListAsync())
                 .GroupBy(s => new DateTime(s.CreationTime.Year, s.CreationTime.Month, s.CreationTime.Day))
                 .Select(s => new IncomeStastistic
-                 {
-                     Date = s.Key.Date,
-                     Amount = s.Sum(c => c.Amount)
-                 })
+                {
+                    Date = s.Key.Date,
+                    Amount = s.Sum(c => c.Amount)
+                })
                 .ToList();
 
             FillGapsInDailyIncomeStatistics(dailyRecords, startDate, endDate);

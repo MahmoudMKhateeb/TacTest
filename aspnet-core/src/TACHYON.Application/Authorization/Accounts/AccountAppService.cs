@@ -1,15 +1,17 @@
-﻿using System;
-using System.Threading.Tasks;
-using System.Web;
-using Abp.Authorization;
+﻿using Abp.Authorization;
 using Abp.Configuration;
+using Abp.Domain.Repositories;
 using Abp.Extensions;
 using Abp.Runtime.Security;
 using Abp.Runtime.Session;
 using Abp.UI;
 using Abp.Zero.Configuration;
 using Microsoft.AspNetCore.Identity;
+using System;
+using System.Threading.Tasks;
+using System.Web;
 using TACHYON.Authorization.Accounts.Dto;
+using TACHYON.Authorization.Delegation;
 using TACHYON.Authorization.Impersonation;
 using TACHYON.Authorization.Users;
 using TACHYON.Configuration;
@@ -17,8 +19,6 @@ using TACHYON.Debugging;
 using TACHYON.MultiTenancy;
 using TACHYON.Security.Recaptcha;
 using TACHYON.Url;
-using TACHYON.Authorization.Delegation;
-using Abp.Domain.Repositories;
 
 
 namespace TACHYON.Authorization.Accounts
@@ -43,7 +43,7 @@ namespace TACHYON.Authorization.Accounts
             IImpersonationManager impersonationManager,
             IUserLinkManager userLinkManager,
             IPasswordHasher<User> passwordHasher,
-            IWebUrlService webUrlService, 
+            IWebUrlService webUrlService,
             IUserDelegationManager userDelegationManager)
         {
             _userEmailer = userEmailer;

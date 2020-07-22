@@ -1,5 +1,5 @@
-using System.ComponentModel.DataAnnotations;
 using Abp.Authorization.Users;
+using System.ComponentModel.DataAnnotations;
 
 namespace TACHYON.Web.Models.TokenAuth
 {

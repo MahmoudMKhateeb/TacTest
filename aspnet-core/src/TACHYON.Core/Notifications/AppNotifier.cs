@@ -1,9 +1,9 @@
-using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
 using Abp;
 using Abp.Localization;
 using Abp.Notifications;
+using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 using TACHYON.Authorization.Users;
 using TACHYON.MultiTenancy;
 

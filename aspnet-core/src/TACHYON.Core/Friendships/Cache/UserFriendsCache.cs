@@ -1,13 +1,13 @@
 using Abp;
-using Abp.Domain.Repositories;
-using Abp.Runtime.Caching;
-using TACHYON.Chat;
-using System.Linq;
 using Abp.Dependency;
+using Abp.Domain.Repositories;
 using Abp.Domain.Uow;
 using Abp.MultiTenancy;
+using Abp.Runtime.Caching;
 using Abp.Threading;
+using System.Linq;
 using TACHYON.Authorization.Users;
+using TACHYON.Chat;
 
 namespace TACHYON.Friendships.Cache
 {

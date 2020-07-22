@@ -1,5 +1,5 @@
-﻿using System.Threading.Tasks;
-using Abp.Application.Services.Dto;
+﻿using Abp.Application.Services.Dto;
+using System.Threading.Tasks;
 using TACHYON.MultiTenancy.Accounting.Dto;
 
 namespace TACHYON.MultiTenancy.Accounting

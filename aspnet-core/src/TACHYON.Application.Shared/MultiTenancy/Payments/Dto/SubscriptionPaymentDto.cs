@@ -30,7 +30,7 @@ namespace TACHYON.MultiTenancy.Payments.Dto
         public SubscriptionPaymentStatus Status { get; set; }
 
         public bool IsRecurring { get; set; }
-        
+
         public string ExternalPaymentId { get; set; }
 
         public string SuccessUrl { get; set; }

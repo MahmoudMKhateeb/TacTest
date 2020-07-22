@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Globalization;
-using System.Security.Claims;
-using System.Threading.Tasks;
-using Abp;
+﻿using Abp;
 using Abp.Authorization.Users;
 using Abp.Domain.Repositories;
 using Abp.Domain.Uow;
@@ -11,6 +6,11 @@ using Abp.Runtime.Caching;
 using Abp.Runtime.Security;
 using Abp.Runtime.Session;
 using Abp.UI;
+using System;
+using System.Collections.Generic;
+using System.Globalization;
+using System.Security.Claims;
+using System.Threading.Tasks;
 using TACHYON.Authorization.Impersonation;
 
 namespace TACHYON.Authorization.Users
@@ -26,7 +26,7 @@ namespace TACHYON.Authorization.Users
 
         public UserLinkManager(
             IRepository<UserAccount, long> userAccountRepository,
-            ICacheManager cacheManager, 
+            ICacheManager cacheManager,
             UserManager userManager,
             UserClaimsPrincipalFactory principalFactory)
         {

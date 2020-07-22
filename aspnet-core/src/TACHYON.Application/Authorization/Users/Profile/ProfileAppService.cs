@@ -1,7 +1,3 @@
-using System;
-using System.Drawing;
-using System.IO;
-using System.Threading.Tasks;
 using Abp;
 using Abp.Auditing;
 using Abp.Authorization;
@@ -15,6 +11,10 @@ using Abp.Timing;
 using Abp.UI;
 using Abp.Zero.Configuration;
 using Microsoft.AspNetCore.Identity;
+using System;
+using System.Drawing;
+using System.IO;
+using System.Threading.Tasks;
 using TACHYON.Authentication.TwoFactor.Google;
 using TACHYON.Authorization.Users.Dto;
 using TACHYON.Authorization.Users.Profile.Cache;
@@ -117,7 +117,7 @@ namespace TACHYON.Authorization.Users.Profile
         {
             var code = RandomHelper.GetRandom(100000, 999999).ToString();
             var cacheKey = AbpSession.ToUserIdentifier().ToString();
-            var cacheItem = new SmsVerificationCodeCacheItem {Code = code};
+            var cacheItem = new SmsVerificationCodeCacheItem { Code = code };
 
             _cacheManager.GetSmsVerificationCodeCache().Set(
                 cacheKey,
@@ -295,7 +295,7 @@ namespace TACHYON.Authorization.Users.Profile
                 var profilePictureContent = await profileImageService.Object.GetProfilePictureContentForUser(
                     AbpSession.ToUserIdentifier()
                 );
-                
+
                 return new GetProfilePictureOutput(profilePictureContent);
             }
         }
@@ -308,7 +308,7 @@ namespace TACHYON.Authorization.Users.Profile
             {
                 return new GetProfilePictureOutput(string.Empty);
             }
-            
+
             var userIdentifier = new UserIdentifier(AbpSession.TenantId, user.Id);
             using (var profileImageService = await _profileImageServiceFactory.Get(userIdentifier))
             {
@@ -330,7 +330,7 @@ namespace TACHYON.Authorization.Users.Profile
                 return new GetProfilePictureOutput(string.Empty);
             }
 
-            
+
             using (var profileImageService = await _profileImageServiceFactory.Get(friendUserIdentifier))
             {
                 var image = await profileImageService.Object.GetProfilePictureContentForUser(friendUserIdentifier);

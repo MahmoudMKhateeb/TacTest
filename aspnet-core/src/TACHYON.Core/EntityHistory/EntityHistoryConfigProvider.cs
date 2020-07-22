@@ -1,7 +1,7 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using Abp.Configuration;
+﻿using Abp.Configuration;
 using Abp.Configuration.Startup;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace TACHYON.EntityHistory
 {

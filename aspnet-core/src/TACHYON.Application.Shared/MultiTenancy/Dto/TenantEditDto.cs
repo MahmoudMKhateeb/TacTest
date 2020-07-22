@@ -1,8 +1,8 @@
-﻿using System;
-using System.ComponentModel.DataAnnotations;
-using Abp.Application.Services.Dto;
+﻿using Abp.Application.Services.Dto;
 using Abp.Auditing;
 using Abp.MultiTenancy;
+using System;
+using System.ComponentModel.DataAnnotations;
 
 namespace TACHYON.MultiTenancy.Dto
 {

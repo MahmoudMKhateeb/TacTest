@@ -1,6 +1,6 @@
-﻿using System;
-using Abp.Extensions;
+﻿using Abp.Extensions;
 using Abp.Runtime.Validation;
+using System;
 using TACHYON.Common;
 using TACHYON.Dto;
 
@@ -35,16 +35,16 @@ namespace TACHYON.Auditing.Dto
 
             Sorting = DtoSortingHelper.ReplaceSorting(Sorting, s =>
             {
-	            if (s.IndexOf("UserName", StringComparison.OrdinalIgnoreCase) >= 0)
-	            {
-		            s = "User." + s;
-	            }
-	            else
-	            {
-		            s = "AuditLog." + s;
-	            }
+                if (s.IndexOf("UserName", StringComparison.OrdinalIgnoreCase) >= 0)
+                {
+                    s = "User." + s;
+                }
+                else
+                {
+                    s = "AuditLog." + s;
+                }
 
-	            return s;
+                return s;
             });
         }
     }

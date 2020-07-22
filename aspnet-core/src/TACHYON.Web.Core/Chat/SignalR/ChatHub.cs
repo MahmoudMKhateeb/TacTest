@@ -1,6 +1,4 @@
-﻿using System;
-using System.Threading.Tasks;
-using Abp;
+﻿using Abp;
 using Abp.AspNetCore.SignalR.Hubs;
 using Abp.Localization;
 using Abp.RealTime;
@@ -8,6 +6,8 @@ using Abp.Runtime.Session;
 using Abp.UI;
 using Castle.Core.Logging;
 using Castle.Windsor;
+using System;
+using System.Threading.Tasks;
 using TACHYON.Chat;
 
 namespace TACHYON.Web.Chat.SignalR

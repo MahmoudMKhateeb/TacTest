@@ -13,7 +13,7 @@ namespace TACHYON.MultiTenancy.Payments
 
         public PayPalPaymentAppService(
             PayPalGatewayManager payPalGatewayManager,
-            ISubscriptionPaymentRepository subscriptionPaymentRepository, 
+            ISubscriptionPaymentRepository subscriptionPaymentRepository,
             PayPalPaymentGatewayConfiguration payPalPaymentGatewayConfiguration)
         {
             _payPalGatewayManager = payPalGatewayManager;

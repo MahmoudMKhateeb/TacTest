@@ -1,5 +1,5 @@
-﻿using System.Threading.Tasks;
-using Abp.Dependency;
+﻿using Abp.Dependency;
+using System.Threading.Tasks;
 using TACHYON.Identity;
 using Twilio;
 using Twilio.Rest.Api.V2010.Account;
@@ -9,7 +9,7 @@ namespace TACHYON.Net.Sms
     public class TwilioSmsSender : ISmsSender, ITransientDependency
     {
         private TwilioSmsSenderConfiguration _twilioSmsSenderConfiguration;
-        
+
         public TwilioSmsSender(TwilioSmsSenderConfiguration twilioSmsSenderConfiguration)
         {
             _twilioSmsSenderConfiguration = twilioSmsSenderConfiguration;

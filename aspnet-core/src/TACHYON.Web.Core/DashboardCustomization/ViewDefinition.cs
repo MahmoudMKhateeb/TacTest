@@ -6,10 +6,10 @@
 
         public string ViewFile { get; protected set; }
 
-        public string JavascriptFile { get; protected set;}
+        public string JavascriptFile { get; protected set; }
 
-        public string CssFile { get; protected set;}
-        
+        public string CssFile { get; protected set; }
+
         public ViewDefinition(
             string id,
             string viewFile,

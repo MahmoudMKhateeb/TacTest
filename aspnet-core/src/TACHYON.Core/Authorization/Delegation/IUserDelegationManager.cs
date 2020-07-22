@@ -1,6 +1,6 @@
-﻿using System.Threading.Tasks;
-using Abp;
+﻿using Abp;
 using Abp.Domain.Services;
+using System.Threading.Tasks;
 
 namespace TACHYON.Authorization.Delegation
 {

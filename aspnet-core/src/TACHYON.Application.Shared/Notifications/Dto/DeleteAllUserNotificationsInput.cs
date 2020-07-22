@@ -1,5 +1,5 @@
-﻿using System;
-using Abp.Notifications;
+﻿using Abp.Notifications;
+using System;
 
 namespace TACHYON.Notifications.Dto
 {

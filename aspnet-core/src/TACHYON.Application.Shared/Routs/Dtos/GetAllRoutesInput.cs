@@ -5,13 +5,13 @@ namespace TACHYON.Routs.Dtos
 {
     public class GetAllRoutesInput : PagedAndSortedResultRequestDto
     {
-		public string Filter { get; set; }
+        public string Filter { get; set; }
 
-		public string DisplayNameFilter { get; set; }
+        public string DisplayNameFilter { get; set; }
 
 
-		 public string RoutTypeDisplayNameFilter { get; set; }
+        public string RoutTypeDisplayNameFilter { get; set; }
 
-		 
+
     }
 }

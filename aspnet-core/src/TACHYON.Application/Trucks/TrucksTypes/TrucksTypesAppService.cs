@@ -1,19 +1,19 @@
 ﻿
 
+using Abp.Application.Services.Dto;
+using Abp.Authorization;
+using Abp.Domain.Repositories;
+using Abp.Extensions;
+using Abp.Linq.Extensions;
+using Microsoft.EntityFrameworkCore;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Dynamic.Core;
-using Abp.Linq.Extensions;
-using System.Collections.Generic;
 using System.Threading.Tasks;
-using Abp.Domain.Repositories;
-using TACHYON.Trucks.TrucksTypes.Dtos;
-using TACHYON.Dto;
-using Abp.Application.Services.Dto;
 using TACHYON.Authorization;
-using Abp.Extensions;
-using Abp.Authorization;
-using Microsoft.EntityFrameworkCore;
+using TACHYON.Dto;
+using TACHYON.Trucks.TrucksTypes.Dtos;
 
 namespace TACHYON.Trucks.TrucksTypes
 {

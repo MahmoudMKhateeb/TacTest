@@ -2,7 +2,7 @@
 {
     public class GetRoutTypeForViewDto
     {
-		public RoutTypeDto RoutType { get; set; }
+        public RoutTypeDto RoutType { get; set; }
 
 
     }

@@ -30,7 +30,7 @@ namespace TACHYON.EntityFrameworkCore
 
             try
             {
-                using (var uow =_unitOfWorkManager.Begin())
+                using (var uow = _unitOfWorkManager.Begin())
                 {
                     // Switching to host is necessary for single tenant mode.
                     using (_unitOfWorkManager.Current.SetTenantId(null))

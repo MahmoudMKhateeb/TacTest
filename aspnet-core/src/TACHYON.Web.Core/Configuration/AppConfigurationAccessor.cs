@@ -5,7 +5,7 @@ using TACHYON.Configuration;
 
 namespace TACHYON.Web.Configuration
 {
-    public class AppConfigurationAccessor: IAppConfigurationAccessor, ISingletonDependency
+    public class AppConfigurationAccessor : IAppConfigurationAccessor, ISingletonDependency
     {
         public IConfigurationRoot Configuration { get; }
 

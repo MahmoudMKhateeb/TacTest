@@ -1,9 +1,9 @@
-﻿using System.Collections.Generic;
+﻿using Abp.AspNetZeroCore.Net;
+using Abp.Authorization;
+using System.Collections.Generic;
 using System.IO;
 using System.IO.Compression;
 using System.Linq;
-using Abp.AspNetZeroCore.Net;
-using Abp.Authorization;
 using TACHYON.Authorization;
 using TACHYON.Dto;
 using TACHYON.IO;
@@ -77,7 +77,7 @@ namespace TACHYON.Logging
 
             //Create the zip file
             var zipFileDto = new FileDto("WebSiteLogs.zip", MimeTypeNames.ApplicationZip);
-            
+
             using (var outputZipFileStream = new MemoryStream())
             {
                 using (var zipStream = new ZipArchive(outputZipFileStream, ZipArchiveMode.Create))
@@ -101,7 +101,7 @@ namespace TACHYON.Logging
 
             return zipFileDto;
         }
-        
+
         private List<FileInfo> GetAllLogFiles()
         {
             var directory = new DirectoryInfo(_appFolders.WebLogsFolder);

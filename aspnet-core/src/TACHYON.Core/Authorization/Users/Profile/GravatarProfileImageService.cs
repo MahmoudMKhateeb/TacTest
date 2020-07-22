@@ -1,12 +1,12 @@
-﻿using System;
+﻿using Abp;
+using Abp.Dependency;
+using Abp.Extensions;
+using Abp.Runtime.Session;
+using System;
 using System.Net.Http;
 using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
-using Abp;
-using Abp.Dependency;
-using Abp.Extensions;
-using Abp.Runtime.Session;
 
 namespace TACHYON.Authorization.Users.Profile
 {
@@ -35,7 +35,7 @@ namespace TACHYON.Authorization.Users.Profile
                 }
             }
         }
-        
+
         private static string GetMd5Hash(string input)
         {
             // Convert the input string to a byte array and compute the hash.

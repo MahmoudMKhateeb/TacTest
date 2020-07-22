@@ -1,7 +1,7 @@
-﻿using System.Threading.Tasks;
-using Abp.Configuration;
+﻿using Abp.Configuration;
 using Abp.Dependency;
 using Abp.Zero.Configuration;
+using System.Threading.Tasks;
 
 namespace TACHYON.Security
 {

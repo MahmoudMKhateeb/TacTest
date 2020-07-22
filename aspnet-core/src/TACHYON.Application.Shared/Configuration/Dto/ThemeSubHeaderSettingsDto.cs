@@ -12,7 +12,7 @@ namespace TACHYON.Configuration.Dto
         public int SubheaderSize { get; set; }
 
         public string TitleStlye { get; set; }
-        
+
         public string ContainerStyle { get; set; }
 
         public ThemeSubHeaderSettingsDto()

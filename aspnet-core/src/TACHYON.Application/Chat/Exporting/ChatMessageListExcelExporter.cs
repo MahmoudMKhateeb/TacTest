@@ -1,9 +1,9 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using Abp;
 using Abp.Runtime.Session;
 using Abp.Timing.Timezone;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 using TACHYON.Chat.Dto;
 using TACHYON.DataExporting.Excel.NPOI;
 using TACHYON.Dto;
@@ -60,7 +60,7 @@ namespace TACHYON.Chat.Exporting
                         //Formatting cells
                         SetCellDataFormat(sheet.GetRow(i).Cells[4], "yyyy-mm-dd hh:mm:ss");
                     }
-                    
+
                     for (var i = 0; i < 5; i++)
                     {
                         sheet.AutoSizeColumn(i);

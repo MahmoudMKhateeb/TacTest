@@ -11,7 +11,7 @@ namespace TACHYON.Web.Authentication.TwoFactor
 
         public TwoFactorCodeCacheItem()
         {
-            
+
         }
 
         public TwoFactorCodeCacheItem(string code)

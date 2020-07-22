@@ -1,9 +1,9 @@
-﻿using System.Linq;
-using Abp.Configuration;
+﻿using Abp.Configuration;
 using Abp.Localization;
 using Abp.MultiTenancy;
 using Abp.Net.Mail;
 using Microsoft.EntityFrameworkCore;
+using System.Linq;
 using TACHYON.EntityFrameworkCore;
 
 namespace TACHYON.Migrations.Seed.Host

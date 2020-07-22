@@ -1,7 +1,7 @@
-using System.Threading.Tasks;
 using Abp.Dependency;
 using Abp.UI;
 using Microsoft.AspNetCore.Identity;
+using System.Threading.Tasks;
 using TACHYON.Authorization.Users;
 
 namespace TACHYON.Authentication.TwoFactor.Google

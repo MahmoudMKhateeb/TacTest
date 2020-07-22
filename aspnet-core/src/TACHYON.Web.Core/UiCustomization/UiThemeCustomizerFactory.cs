@@ -1,7 +1,7 @@
-﻿using System;
-using System.Threading.Tasks;
-using Abp.Configuration;
+﻿using Abp.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using System;
+using System.Threading.Tasks;
 using TACHYON.Configuration;
 using TACHYON.UiCustomization;
 using TACHYON.Web.UiCustomization.Metronic;
@@ -49,7 +49,7 @@ namespace TACHYON.Web.UiCustomization
             {
                 return _serviceProvider.GetService<Theme4UiCustomizer>();
             }
-            
+
             if (theme.Equals(AppConsts.Theme5, StringComparison.InvariantCultureIgnoreCase))
             {
                 return _serviceProvider.GetService<Theme5UiCustomizer>();

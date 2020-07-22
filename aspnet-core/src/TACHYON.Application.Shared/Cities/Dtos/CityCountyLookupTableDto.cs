@@ -4,8 +4,8 @@ namespace TACHYON.Cities.Dtos
 {
     public class CityCountyLookupTableDto
     {
-		public int Id { get; set; }
+        public int Id { get; set; }
 
-		public string DisplayName { get; set; }
+        public string DisplayName { get; set; }
     }
 }

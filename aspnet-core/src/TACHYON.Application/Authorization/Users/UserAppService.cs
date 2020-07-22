@@ -1,15 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Diagnostics;
-using System.Linq;
-using System.Linq.Dynamic.Core;
-using System.Threading.Tasks;
-using Abp.Application.Services.Dto;
-using Abp.Configuration;
+﻿using Abp.Application.Services.Dto;
 using Abp.Authorization;
 using Abp.Authorization.Roles;
 using Abp.Authorization.Users;
+using Abp.Configuration;
 using Abp.Domain.Repositories;
 using Abp.Extensions;
 using Abp.Linq.Extensions;
@@ -20,6 +13,13 @@ using Abp.UI;
 using Abp.Zero.Configuration;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using System;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Diagnostics;
+using System.Linq;
+using System.Linq.Dynamic.Core;
+using System.Threading.Tasks;
 using TACHYON.Authorization.Permissions;
 using TACHYON.Authorization.Permissions.Dto;
 using TACHYON.Authorization.Roles;
@@ -27,8 +27,8 @@ using TACHYON.Authorization.Users.Dto;
 using TACHYON.Authorization.Users.Exporting;
 using TACHYON.Dto;
 using TACHYON.Notifications;
-using TACHYON.Url;
 using TACHYON.Organizations.Dto;
+using TACHYON.Url;
 
 namespace TACHYON.Authorization.Users
 {
@@ -271,7 +271,7 @@ namespace TACHYON.Authorization.Users
             Debug.Assert(input.User.Id != null, "input.User.Id should be set.");
 
             var user = await UserManager.FindByIdAsync(input.User.Id.Value.ToString());
-            
+
             //Update user properties
             ObjectMapper.Map(input.User, user); //Passwords is not mapped (see mapping configuration)
 

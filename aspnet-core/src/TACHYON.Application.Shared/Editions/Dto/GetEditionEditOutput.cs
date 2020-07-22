@@ -1,5 +1,5 @@
-﻿using System.Collections.Generic;
-using Abp.Application.Services.Dto;
+﻿using Abp.Application.Services.Dto;
+using System.Collections.Generic;
 
 namespace TACHYON.Editions.Dto
 {

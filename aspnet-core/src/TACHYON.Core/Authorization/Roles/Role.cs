@@ -12,7 +12,7 @@ namespace TACHYON.Authorization.Roles
 
         public Role()
         {
-            
+
         }
 
         public Role(int? tenantId, string displayName)

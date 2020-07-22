@@ -1,8 +1,8 @@
-﻿using System;
+﻿using NPOI.SS.UserModel;
+using NPOI.XSSF.UserModel;
+using System;
 using System.Collections.Generic;
 using System.IO;
-using NPOI.SS.UserModel;
-using NPOI.XSSF.UserModel;
 
 namespace TACHYON.DataExporting.Excel.NPOI
 {

@@ -1,7 +1,7 @@
-﻿using System;
-using System.ComponentModel.DataAnnotations;
-using Abp.Extensions;
+﻿using Abp.Extensions;
 using Abp.Runtime.Validation;
+using System;
+using System.ComponentModel.DataAnnotations;
 
 namespace TACHYON.Trucks.Dtos
 {

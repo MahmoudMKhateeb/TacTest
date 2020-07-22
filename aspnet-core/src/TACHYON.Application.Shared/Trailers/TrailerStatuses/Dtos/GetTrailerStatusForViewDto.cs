@@ -2,7 +2,7 @@
 {
     public class GetTrailerStatusForViewDto
     {
-		public TrailerStatusDto TrailerStatus { get; set; }
+        public TrailerStatusDto TrailerStatus { get; set; }
 
 
     }

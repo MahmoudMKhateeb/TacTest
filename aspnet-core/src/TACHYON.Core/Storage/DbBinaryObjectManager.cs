@@ -1,7 +1,7 @@
-﻿using System;
-using System.Threading.Tasks;
-using Abp.Dependency;
+﻿using Abp.Dependency;
 using Abp.Domain.Repositories;
+using System;
+using System.Threading.Tasks;
 
 namespace TACHYON.Storage
 {

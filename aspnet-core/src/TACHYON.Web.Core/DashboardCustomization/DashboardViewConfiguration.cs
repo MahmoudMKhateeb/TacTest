@@ -23,7 +23,7 @@ namespace TACHYON.Web.DashboardCustomization
                     jsAndCssFileRoot + "DateRangeFilter/DateRangeFilter.min.js",
                     jsAndCssFileRoot + "DateRangeFilter/DateRangeFilter.min.css")
             );
-            
+
             //add your filters iew definitions here
             #endregion
 
@@ -51,7 +51,7 @@ namespace TACHYON.Web.DashboardCustomization
                     viewFileRoot + "ProfitShare.cshtml",
                     jsAndCssFileRoot + "ProfitShare/ProfitShare.min.js",
                     jsAndCssFileRoot + "ProfitShare/ProfitShare.min.css"));
-  
+
             WidgetViewDefinitions.Add(TACHYONDashboardCustomizationConsts.Widgets.Tenant.MemberActivity,
                 new WidgetViewDefinition(
                     TACHYONDashboardCustomizationConsts.Widgets.Tenant.MemberActivity,

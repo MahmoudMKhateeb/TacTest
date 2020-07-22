@@ -1,17 +1,17 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Globalization;
-using System.Linq;
-using System.Linq.Dynamic.Core;
-using System.Threading.Tasks;
-using Abp.Application.Services.Dto;
+﻿using Abp.Application.Services.Dto;
 using Abp.Authorization;
 using Abp.Domain.Repositories;
 using Abp.Extensions;
 using Abp.Localization;
 using Abp.MultiTenancy;
 using Abp.UI;
+using System;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.Globalization;
+using System.Linq;
+using System.Linq.Dynamic.Core;
+using System.Threading.Tasks;
 using TACHYON.Authorization;
 using TACHYON.Localization.Dto;
 
@@ -139,7 +139,7 @@ namespace TACHYON.Localization
                 targetCulture, allStrings.Select(x => x.Name).ToList());
 
             var languageTexts = allStrings.Select((t, i) => new LanguageTextListDto
-                {Key = t.Name, BaseValue = baseValues[i], TargetValue = targetValues[i]}).AsQueryable();
+            { Key = t.Name, BaseValue = baseValues[i], TargetValue = targetValues[i] }).AsQueryable();
 
             //Filters
             if (input.TargetValueFilter == "EMPTY")

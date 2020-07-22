@@ -1,6 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using Abp.Application.Services.Dto;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using Abp.Application.Services.Dto;
 
 namespace TACHYON.Editions.Dto
 {

@@ -1,10 +1,10 @@
-﻿using System.Collections.Generic;
-using Abp.Runtime.Session;
+﻿using Abp.Runtime.Session;
 using Abp.Timing.Timezone;
+using System.Collections.Generic;
 using TACHYON.DataExporting.Excel.NPOI;
-using TACHYON.Trailers.TrailerTypes.Dtos;
 using TACHYON.Dto;
 using TACHYON.Storage;
+using TACHYON.Trailers.TrailerTypes.Dtos;
 
 namespace TACHYON.Trailers.TrailerTypes.Exporting
 {
@@ -17,8 +17,8 @@ namespace TACHYON.Trailers.TrailerTypes.Exporting
         public TrailerTypesExcelExporter(
             ITimeZoneConverter timeZoneConverter,
             IAbpSession abpSession,
-			ITempFileCacheManager tempFileCacheManager) :  
-	base(tempFileCacheManager)
+            ITempFileCacheManager tempFileCacheManager) :
+    base(tempFileCacheManager)
         {
             _timeZoneConverter = timeZoneConverter;
             _abpSession = abpSession;
@@ -30,7 +30,7 @@ namespace TACHYON.Trailers.TrailerTypes.Exporting
                 "TrailerTypes.xlsx",
                 excelPackage =>
                 {
-                    
+
                     var sheet = excelPackage.CreateSheet(L("TrailerTypes"));
 
                     AddHeader(
@@ -43,8 +43,8 @@ namespace TACHYON.Trailers.TrailerTypes.Exporting
                         _ => _.TrailerType.DisplayName
                         );
 
-					
-					
+
+
                 });
         }
     }

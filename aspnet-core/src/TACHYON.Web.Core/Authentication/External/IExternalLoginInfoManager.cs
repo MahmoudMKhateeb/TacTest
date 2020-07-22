@@ -1,8 +1,8 @@
-﻿using System.Collections.Generic;
-using System.Security.Claims;
-using Abp.AspNetZeroCore.Web.Authentication.External;
+﻿using Abp.AspNetZeroCore.Web.Authentication.External;
 using Abp.Dependency;
 using Microsoft.AspNetCore.Identity;
+using System.Collections.Generic;
+using System.Security.Claims;
 
 namespace TACHYON.Web.Authentication.External
 {

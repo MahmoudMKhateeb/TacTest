@@ -1,6 +1,6 @@
-﻿using System;
+﻿using Abp.Domain.Entities;
+using System;
 using System.ComponentModel.DataAnnotations.Schema;
-using Abp.Domain.Entities;
 
 namespace TACHYON.MultiTenancy.Accounting
 {

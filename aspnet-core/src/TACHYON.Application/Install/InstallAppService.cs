@@ -1,7 +1,3 @@
-using System.Globalization;
-using System.IO;
-using System.Linq;
-using System.Threading.Tasks;
 using Abp;
 using Abp.Auditing;
 using Abp.Authorization;
@@ -13,6 +9,12 @@ using Abp.UI;
 using Abp.Zero.EntityFrameworkCore;
 using Castle.Core.Internal;
 using Microsoft.Extensions.Configuration;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
+using System.Globalization;
+using System.IO;
+using System.Linq;
+using System.Threading.Tasks;
 using TACHYON.Authorization;
 using TACHYON.Authorization.Users;
 using TACHYON.Configuration;
@@ -23,8 +25,6 @@ using TACHYON.Identity;
 using TACHYON.Install.Dto;
 using TACHYON.Migrations.Seed;
 using TACHYON.Migrations.Seed.Host;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
 
 namespace TACHYON.Install
 {

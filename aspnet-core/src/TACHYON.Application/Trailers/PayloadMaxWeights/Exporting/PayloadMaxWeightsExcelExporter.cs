@@ -1,6 +1,6 @@
-﻿using System.Collections.Generic;
-using Abp.Runtime.Session;
+﻿using Abp.Runtime.Session;
 using Abp.Timing.Timezone;
+using System.Collections.Generic;
 using TACHYON.DataExporting.Excel.NPOI;
 using TACHYON.Dto;
 using TACHYON.Storage;
@@ -17,8 +17,8 @@ namespace TACHYON.Trailers.PayloadMaxWeights.Exporting
         public PayloadMaxWeightsExcelExporter(
             ITimeZoneConverter timeZoneConverter,
             IAbpSession abpSession,
-			ITempFileCacheManager tempFileCacheManager) :  
-	base(tempFileCacheManager)
+            ITempFileCacheManager tempFileCacheManager) :
+    base(tempFileCacheManager)
         {
             _timeZoneConverter = timeZoneConverter;
             _abpSession = abpSession;
@@ -30,7 +30,7 @@ namespace TACHYON.Trailers.PayloadMaxWeights.Exporting
                 "PayloadMaxWeights.xlsx",
                 excelPackage =>
                 {
-                    
+
                     var sheet = excelPackage.CreateSheet(L("PayloadMaxWeights"));
 
                     AddHeader(
@@ -45,8 +45,8 @@ namespace TACHYON.Trailers.PayloadMaxWeights.Exporting
                         _ => _.PayloadMaxWeight.MaxWeight
                         );
 
-					
-					
+
+
                 });
         }
     }

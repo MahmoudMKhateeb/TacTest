@@ -1,13 +1,13 @@
-﻿using System.IO;
-using System.Linq;
-using Abp;
+﻿using Abp;
 using Abp.Dependency;
 using Abp.UI;
 using Castle.Core.Logging;
 using Microsoft.AspNetCore.Hosting;
-using TACHYON.Configuration;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using System.IO;
+using System.Linq;
+using TACHYON.Configuration;
 
 namespace TACHYON.Web.Configuration
 {
@@ -59,7 +59,7 @@ namespace TACHYON.Web.Configuration
 
             foreach (var objectName in objectNames)
             {
-                jobj = (JObject) jobj[objectName];
+                jobj = (JObject)jobj[objectName];
                 if (jobj == null)
                 {
                     Logger.Error($"Key {key} does not exist!");

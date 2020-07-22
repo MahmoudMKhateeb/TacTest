@@ -1,9 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using Abp.Auditing;
+﻿using Abp.Auditing;
 using Abp.Authorization.Users;
 using Abp.Extensions;
 using Abp.Timing;
+using System;
+using System.Collections.Generic;
 
 namespace TACHYON.Authorization.Users
 {

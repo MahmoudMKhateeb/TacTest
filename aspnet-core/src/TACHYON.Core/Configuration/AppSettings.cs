@@ -12,7 +12,8 @@ namespace TACHYON.Configuration
             public const string BillingAddress = "App.HostManagement.BillingAddress";
         }
 
-        public static class DashboardCustomization {
+        public static class DashboardCustomization
+        {
             public const string Configuration = "App.DashboardCustomization.Configuration";
         }
 

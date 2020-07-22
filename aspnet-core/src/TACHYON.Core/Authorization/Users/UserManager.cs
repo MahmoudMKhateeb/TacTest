@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Abp;
+﻿using Abp;
 using Abp.Authorization;
 using Abp.Authorization.Users;
 using Abp.Configuration;
@@ -17,6 +13,10 @@ using Abp.Zero.Configuration;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 using TACHYON.Authorization.Roles;
 using TACHYON.Security;
 
@@ -50,7 +50,7 @@ namespace TACHYON.Authorization.Users
             IRepository<OrganizationUnit, long> organizationUnitRepository,
             IRepository<UserOrganizationUnit, long> userOrganizationUnitRepository,
             IOrganizationUnitSettings organizationUnitSettings,
-            ISettingManager settingManager, 
+            ISettingManager settingManager,
             ILocalizationManager localizationManager)
             : base(
                   roleManager,

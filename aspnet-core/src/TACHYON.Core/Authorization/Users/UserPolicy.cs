@@ -1,8 +1,8 @@
-﻿using System.Threading.Tasks;
-using Abp.Application.Features;
+﻿using Abp.Application.Features;
 using Abp.Domain.Repositories;
 using Abp.Extensions;
 using Abp.UI;
+using System.Threading.Tasks;
 using TACHYON.Features;
 
 namespace TACHYON.Authorization.Users
@@ -12,7 +12,7 @@ namespace TACHYON.Authorization.Users
         private readonly IFeatureChecker _featureChecker;
         private readonly IRepository<User, long> _userRepository;
 
-        public UserPolicy(IFeatureChecker featureChecker,IRepository<User, long> userRepository)
+        public UserPolicy(IFeatureChecker featureChecker, IRepository<User, long> userRepository)
         {
             _featureChecker = featureChecker;
             _userRepository = userRepository;

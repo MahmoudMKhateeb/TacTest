@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using Abp.Auditing;
+﻿using Abp.Auditing;
 using Abp.Dependency;
 using Abp.Domain.Repositories;
 using Abp.Domain.Uow;
@@ -11,6 +8,9 @@ using Abp.Threading;
 using Abp.Threading.BackgroundWorkers;
 using Abp.Threading.Timers;
 using Abp.Timing;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 using TACHYON.MultiTenancy;
 
 namespace TACHYON.Auditing

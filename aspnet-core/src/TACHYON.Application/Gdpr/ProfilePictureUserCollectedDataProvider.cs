@@ -1,8 +1,8 @@
-﻿using System.Collections.Generic;
-using System.Threading.Tasks;
-using Abp;
+﻿using Abp;
 using Abp.AspNetZeroCore.Net;
 using Abp.Dependency;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 using TACHYON.Authorization.Users;
 using TACHYON.Dto;
 using TACHYON.Storage;
@@ -43,7 +43,7 @@ namespace TACHYON.Gdpr
             var file = new FileDto("ProfilePicture.png", MimeTypeNames.ImagePng);
             _tempFileCacheManager.SetFile(file.FileToken, profilePicture.Bytes);
 
-            return new List<FileDto> {file};
+            return new List<FileDto> { file };
         }
     }
 }

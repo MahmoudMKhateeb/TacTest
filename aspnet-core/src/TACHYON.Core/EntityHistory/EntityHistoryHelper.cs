@@ -1,19 +1,19 @@
-﻿using TACHYON.Routs.RoutSteps;
-using TACHYON.Routs;
-using TACHYON.Cities;
-using TACHYON.Routs.RoutTypes;
-using TACHYON.Goods.GoodCategories;
-using TACHYON.Trailers;
-using TACHYON.Trailers.TrailerStatuses;
-using TACHYON.Trailers.TrailerTypes;
-using TACHYON.Trucks.TrucksTypes;
-using TACHYON.Trucks;
+﻿using Abp.Organizations;
 using System;
 using System.Linq;
-using Abp.Organizations;
 using TACHYON.Authorization.Roles;
+using TACHYON.Cities;
+using TACHYON.Goods.GoodCategories;
 using TACHYON.MultiTenancy;
+using TACHYON.Routs;
+using TACHYON.Routs.RoutSteps;
+using TACHYON.Routs.RoutTypes;
+using TACHYON.Trailers;
 using TACHYON.Trailers.PayloadMaxWeights;
+using TACHYON.Trailers.TrailerStatuses;
+using TACHYON.Trailers.TrailerTypes;
+using TACHYON.Trucks;
+using TACHYON.Trucks.TrucksTypes;
 
 namespace TACHYON.EntityHistory
 {

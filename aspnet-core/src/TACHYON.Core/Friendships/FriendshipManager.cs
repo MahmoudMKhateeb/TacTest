@@ -1,9 +1,9 @@
-﻿using System;
-using System.Threading.Tasks;
-using Abp;
+﻿using Abp;
 using Abp.Domain.Repositories;
 using Abp.Domain.Uow;
 using Abp.UI;
+using System;
+using System.Threading.Tasks;
 
 namespace TACHYON.Friendships
 {
@@ -28,7 +28,7 @@ namespace TACHYON.Friendships
             using (CurrentUnitOfWork.SetTenantId(friendship.TenantId))
             {
                 _friendshipRepository.Insert(friendship);
-               await CurrentUnitOfWork.SaveChangesAsync();
+                await CurrentUnitOfWork.SaveChangesAsync();
             }
         }
 

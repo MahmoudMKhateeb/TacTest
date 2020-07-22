@@ -1,7 +1,7 @@
-﻿using System;
-using System.ComponentModel.DataAnnotations;
-using Abp.MultiTenancy;
+﻿using Abp.MultiTenancy;
 using Abp.Timing;
+using System;
+using System.ComponentModel.DataAnnotations;
 using TACHYON.Authorization.Users;
 using TACHYON.Editions;
 using TACHYON.MultiTenancy.Payments;

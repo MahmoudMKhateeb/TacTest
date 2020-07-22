@@ -1,6 +1,6 @@
 ﻿
-using System;
 using Abp.Application.Services.Dto;
+using System;
 
 namespace TACHYON.Trucks.Dtos
 {

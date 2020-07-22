@@ -1,17 +1,17 @@
-﻿using System;
+﻿using Abp.Auditing;
+using Abp.Runtime.Session;
+using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Abp.Auditing;
-using Abp.Runtime.Session;
-using Microsoft.EntityFrameworkCore;
+using TACHYON.Authorization.Delegation;
+using TACHYON.Authorization.Users;
 using TACHYON.Editions;
 using TACHYON.MultiTenancy.Payments;
 using TACHYON.Sessions.Dto;
 using TACHYON.UiCustomization;
-using TACHYON.Authorization.Delegation;
-using TACHYON.Authorization.Users;
 
 namespace TACHYON.Sessions
 {
@@ -59,7 +59,7 @@ namespace TACHYON.Sessions
                         .Include(t => t.Edition)
                         .FirstAsync(t => t.Id == AbpSession.GetTenantId()));
             }
-            
+
             if (AbpSession.ImpersonatorTenantId.HasValue)
             {
                 output.ImpersonatorTenant = ObjectMapper
@@ -73,7 +73,7 @@ namespace TACHYON.Sessions
             {
                 output.User = ObjectMapper.Map<UserLoginInfoDto>(await GetCurrentUserAsync());
             }
-            
+
             if (AbpSession.ImpersonatorUserId.HasValue)
             {
                 output.ImpersonatorUser = ObjectMapper.Map<UserLoginInfoDto>(await GetImpersonatorUserAsync());
@@ -161,7 +161,7 @@ namespace TACHYON.Sessions
                     : ""
             };
         }
-        
+
         protected virtual async Task<User> GetImpersonatorUserAsync()
         {
             using (CurrentUnitOfWork.SetTenantId(AbpSession.ImpersonatorTenantId))

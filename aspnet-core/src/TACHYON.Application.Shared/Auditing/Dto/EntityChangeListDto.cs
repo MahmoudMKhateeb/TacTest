@@ -1,6 +1,6 @@
-﻿using System;
-using Abp.Application.Services.Dto;
+﻿using Abp.Application.Services.Dto;
 using Abp.Events.Bus.Entities;
+using System;
 
 namespace TACHYON.Auditing.Dto
 {

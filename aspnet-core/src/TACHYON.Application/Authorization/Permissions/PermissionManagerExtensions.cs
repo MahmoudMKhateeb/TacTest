@@ -1,8 +1,8 @@
+using Abp.Authorization;
+using Abp.Runtime.Validation;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
-using Abp.Authorization;
-using Abp.Runtime.Validation;
 
 namespace TACHYON.Authorization.Permissions
 {
@@ -31,9 +31,9 @@ namespace TACHYON.Authorization.Permissions
             if (undefinedPermissionNames.Count > 0)
             {
                 throw new AbpValidationException($"There are {undefinedPermissionNames.Count} undefined permission names.")
-                      {
-                          ValidationErrors = undefinedPermissionNames.Select(permissionName => new ValidationResult("Undefined permission: " + permissionName)).ToList()
-                      };
+                {
+                    ValidationErrors = undefinedPermissionNames.Select(permissionName => new ValidationResult("Undefined permission: " + permissionName)).ToList()
+                };
             }
 
             return permissions;

@@ -1,5 +1,5 @@
-﻿using System.Threading.Tasks;
-using Abp.Authorization.Users;
+﻿using Abp.Authorization.Users;
+using System.Threading.Tasks;
 using TACHYON.Authorization.Users;
 
 namespace TACHYON.Authorization

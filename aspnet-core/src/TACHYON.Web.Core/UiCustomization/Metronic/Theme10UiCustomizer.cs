@@ -1,6 +1,6 @@
-﻿using System.Threading.Tasks;
-using Abp;
+﻿using Abp;
 using Abp.Configuration;
+using System.Threading.Tasks;
 using TACHYON.Configuration;
 using TACHYON.Configuration.Dto;
 using TACHYON.UiCustomization;
@@ -53,7 +53,7 @@ namespace TACHYON.Web.UiCustomization.Metronic
         public async Task UpdateUserUiManagementSettingsAsync(UserIdentifier user, ThemeSettingsDto settings)
         {
             await SettingManager.ChangeSettingForUserAsync(user, AppSettings.UiManagement.Theme, ThemeName);
-            
+
             await ChangeSettingForUserAsync(user, AppSettings.UiManagement.Header.DesktopFixedHeader, settings.Header.DesktopFixedHeader.ToString());
             await ChangeSettingForUserAsync(user, AppSettings.UiManagement.Header.MobileFixedHeader, settings.Header.MobileFixedHeader.ToString());
             await ChangeSettingForUserAsync(user, AppSettings.UiManagement.SearchActive, settings.Menu.SearchActive.ToString());
@@ -71,7 +71,7 @@ namespace TACHYON.Web.UiCustomization.Metronic
         public async Task UpdateApplicationUiManagementSettingsAsync(ThemeSettingsDto settings)
         {
             await SettingManager.ChangeSettingForApplicationAsync(AppSettings.UiManagement.Theme, ThemeName);
-            
+
             await ChangeSettingForApplicationAsync(AppSettings.UiManagement.Header.DesktopFixedHeader, settings.Header.DesktopFixedHeader.ToString());
             await ChangeSettingForApplicationAsync(AppSettings.UiManagement.Header.MobileFixedHeader, settings.Header.MobileFixedHeader.ToString());
             await ChangeSettingForApplicationAsync(AppSettings.UiManagement.SearchActive, settings.Menu.SearchActive.ToString());

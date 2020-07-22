@@ -1,8 +1,8 @@
-﻿using System;
+﻿using Abp.AspNetCore.Mvc.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using System;
 using System.Net;
 using System.Threading.Tasks;
-using Abp.AspNetCore.Mvc.Authorization;
-using Microsoft.AspNetCore.Mvc;
 using TACHYON.Chat;
 using TACHYON.Storage;
 
@@ -11,7 +11,7 @@ namespace TACHYON.Web.Controllers
     [AbpMvcAuthorize]
     public class ChatController : ChatControllerBase
     {
-        public ChatController(IBinaryObjectManager binaryObjectManager, IChatMessageManager chatMessageManager) : 
+        public ChatController(IBinaryObjectManager binaryObjectManager, IChatMessageManager chatMessageManager) :
             base(binaryObjectManager, chatMessageManager)
         {
         }

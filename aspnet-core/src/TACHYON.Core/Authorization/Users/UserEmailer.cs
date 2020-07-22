@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Threading.Tasks;
-using Abp.Authorization.Users;
+﻿using Abp.Authorization.Users;
 using Abp.Configuration;
 using Abp.Dependency;
 using Abp.Domain.Repositories;
@@ -10,13 +6,17 @@ using Abp.Domain.Uow;
 using Abp.Extensions;
 using Abp.Localization;
 using Abp.Net.Mail;
+using Abp.Runtime.Security;
+using System;
+using System.Collections.Generic;
+using System.Net.Mail;
+using System.Text;
+using System.Threading.Tasks;
+using System.Web;
 using TACHYON.Chat;
 using TACHYON.Editions;
 using TACHYON.Localization;
 using TACHYON.MultiTenancy;
-using System.Net.Mail;
-using System.Web;
-using Abp.Runtime.Security;
 using TACHYON.Net.Emailing;
 
 namespace TACHYON.Authorization.Users

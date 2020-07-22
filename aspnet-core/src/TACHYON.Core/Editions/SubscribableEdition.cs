@@ -1,6 +1,6 @@
-﻿using System;
+﻿using Abp.Application.Editions;
+using System;
 using System.ComponentModel.DataAnnotations.Schema;
-using Abp.Application.Editions;
 using TACHYON.MultiTenancy.Payments;
 
 namespace TACHYON.Editions

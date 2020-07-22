@@ -1,10 +1,10 @@
-﻿using System;
-using Abp.AspNetCore.Mvc.Controllers;
+﻿using Abp.AspNetCore.Mvc.Controllers;
 using Abp.Auditing;
 using Abp.Web.Models;
 using Abp.Web.Mvc.Models;
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
+using System;
 
 namespace TACHYON.Web.Controllers
 {
@@ -44,7 +44,7 @@ namespace TACHYON.Web.Controllers
                 )
             );
         }
-        
+
         public ActionResult E403()
         {
             return View("Error403");

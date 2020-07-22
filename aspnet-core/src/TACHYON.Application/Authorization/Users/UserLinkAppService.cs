@@ -1,8 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Linq.Dynamic.Core;
-using System.Threading.Tasks;
 using Abp.Application.Services.Dto;
 using Abp.Auditing;
 using Abp.Authorization;
@@ -11,6 +6,11 @@ using Abp.Domain.Repositories;
 using Abp.Runtime.Session;
 using Abp.UI;
 using Microsoft.EntityFrameworkCore;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Linq.Dynamic.Core;
+using System.Threading.Tasks;
 using TACHYON.Authorization.Users.Dto;
 using TACHYON.MultiTenancy;
 
@@ -72,7 +72,7 @@ namespace TACHYON.Authorization.Users
             var query = CreateLinkedUsersQuery(currentUserAccount, input.Sorting);
 
             var totalCount = await query.CountAsync();
-            
+
             var linkedUsers = await query
                 .Skip(input.SkipCount)
                 .Take(input.MaxResultCount)

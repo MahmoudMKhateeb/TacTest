@@ -1,6 +1,6 @@
-﻿using System;
-using Abp.Extensions;
+﻿using Abp.Extensions;
 using Abp.UI;
+using System;
 
 namespace TACHYON.Authentication
 {

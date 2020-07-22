@@ -1,7 +1,7 @@
 ﻿#nullable enable
+using Abp.Extensions;
 using Newtonsoft.Json;
 using System;
-using Abp.Extensions;
 
 namespace TACHYON
 {

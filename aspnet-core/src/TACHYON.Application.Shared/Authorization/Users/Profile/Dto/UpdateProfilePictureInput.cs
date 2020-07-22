@@ -1,7 +1,7 @@
-using System;
-using System.ComponentModel.DataAnnotations;
 using Abp.Extensions;
 using Abp.Runtime.Validation;
+using System;
+using System.ComponentModel.DataAnnotations;
 
 namespace TACHYON.Authorization.Users.Profile.Dto
 {
@@ -17,7 +17,7 @@ namespace TACHYON.Authorization.Users.Profile.Dto
         public int Width { get; set; }
 
         public int Height { get; set; }
-        
+
         public bool UseGravatarProfilePicture { get; set; }
         public void AddValidationErrors(CustomValidationContext context)
         {

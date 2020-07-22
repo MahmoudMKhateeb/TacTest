@@ -1,17 +1,17 @@
-using System;
 using Abp.Application.Services.Dto;
 using Abp.Events.Bus.Entities;
+using System;
 
 namespace TACHYON.Auditing.Dto
 {
-    public class EntityChangeDto:EntityDto<long>
+    public class EntityChangeDto : EntityDto<long>
     {
         public DateTime ChangeTime { get; set; }
 
         public EntityChangeType ChangeType { get; set; }
 
         public long EntityChangeSetId { get; set; }
-        
+
         public string EntityId { get; set; }
 
         public string EntityTypeFullName { get; set; }

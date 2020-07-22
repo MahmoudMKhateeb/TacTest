@@ -1,7 +1,4 @@
-﻿using System;
-using System.IO;
-using System.Text;
-using Abp.AspNetCore;
+﻿using Abp.AspNetCore;
 using Abp.AspNetCore.Configuration;
 using Abp.AspNetCore.SignalR;
 using Abp.AspNetZeroCore.Licensing;
@@ -20,6 +17,9 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.ApplicationParts;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
+using System;
+using System.IO;
+using System.Text;
 using TACHYON.Chat;
 using TACHYON.Configuration;
 using TACHYON.EntityFrameworkCore;

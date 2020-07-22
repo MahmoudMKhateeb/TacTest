@@ -4,8 +4,8 @@ namespace TACHYON.Routs.RoutSteps.Dtos
 {
     public class RoutStepCityLookupTableDto
     {
-		public int Id { get; set; }
+        public int Id { get; set; }
 
-		public string DisplayName { get; set; }
+        public string DisplayName { get; set; }
     }
 }

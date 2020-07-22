@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
-using TACHYON.Goods.GoodsDetails.Dtos;
 using TACHYON.Dto;
+using TACHYON.Goods.GoodsDetails.Dtos;
 
 namespace TACHYON.Goods.GoodsDetails.Exporting
 {

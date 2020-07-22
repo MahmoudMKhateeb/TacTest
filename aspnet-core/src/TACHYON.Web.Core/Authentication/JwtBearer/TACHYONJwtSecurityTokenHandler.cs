@@ -1,20 +1,20 @@
-﻿using System;
-using System.IdentityModel.Tokens.Jwt;
-using System.Linq;
-using System.Security.Claims;
-using System.Threading.Tasks;
-using Abp;
-using Abp.UI;
+﻿using Abp;
 using Abp.Dependency;
 using Abp.Domain.Uow;
 using Abp.Extensions;
 using Abp.Runtime.Caching;
-using Abp.Threading;
 using Abp.Runtime.Security;
+using Abp.Threading;
+using Abp.UI;
 using Microsoft.IdentityModel.Tokens;
-using TACHYON.Authorization.Users;
-using TACHYON.Authorization.Delegation;
+using System;
+using System.IdentityModel.Tokens.Jwt;
+using System.Linq;
+using System.Security.Claims;
+using System.Threading.Tasks;
 using TACHYON.Authorization;
+using TACHYON.Authorization.Delegation;
+using TACHYON.Authorization.Users;
 
 namespace TACHYON.Web.Authentication.JwtBearer
 {

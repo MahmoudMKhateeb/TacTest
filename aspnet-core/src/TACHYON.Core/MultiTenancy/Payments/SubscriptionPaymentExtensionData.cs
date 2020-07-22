@@ -1,6 +1,6 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
-using Abp.Domain.Entities;
+﻿using Abp.Domain.Entities;
 using Abp.MultiTenancy;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace TACHYON.MultiTenancy.Payments
 {

@@ -24,7 +24,7 @@ namespace TACHYON.Identity
             IUnitOfWorkManager unitOfWorkManager,
             ISettingManager settingManager,
             IAuthenticationSchemeProvider schemes,
-            IUserConfirmation<User> userConfirmation) 
+            IUserConfirmation<User> userConfirmation)
             : base(userManager, contextAccessor, claimsFactory, optionsAccessor, logger, unitOfWorkManager, settingManager, schemes, userConfirmation)
         {
         }

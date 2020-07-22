@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using Abp.AspNetZeroCore.Web.Authentication.External;
+﻿using Abp.AspNetZeroCore.Web.Authentication.External;
 using Abp.AspNetZeroCore.Web.Authentication.External.Google;
 using Abp.Configuration;
 using Abp.Dependency;
@@ -7,6 +6,7 @@ using Abp.Extensions;
 using Abp.Json;
 using Abp.Runtime.Caching;
 using Abp.Runtime.Session;
+using System.Collections.Generic;
 using TACHYON.Authentication;
 using TACHYON.Configuration;
 

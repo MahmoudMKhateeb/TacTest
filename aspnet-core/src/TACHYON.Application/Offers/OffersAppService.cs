@@ -1,31 +1,29 @@
-﻿using TACHYON.Trucks.TrucksTypes;
-using System.Collections.Generic;
-using TACHYON.Trailers.TrailerTypes;
-using System.Collections.Generic;
-using TACHYON.Goods.GoodCategories;
-using System.Collections.Generic;
-using TACHYON.Routs;
-using System.Collections.Generic;
-
-
+﻿using Abp.Application.Features;
+using Abp.Application.Services.Dto;
+using Abp.Authorization;
+using Abp.Domain.Repositories;
+using Abp.Domain.Uow;
+using Abp.Extensions;
+using Abp.Linq.Extensions;
+using Microsoft.EntityFrameworkCore;
 using System;
+using System.Collections.Generic;
+using System.Collections.Generic;
+using System.Collections.Generic;
+using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Dynamic.Core;
-using Abp.Linq.Extensions;
-using System.Collections.Generic;
 using System.Threading.Tasks;
-using Abp.Application.Features;
-using Abp.Domain.Repositories;
-using TACHYON.Offers.Exporting;
-using TACHYON.Offers.Dtos;
-using TACHYON.Dto;
-using Abp.Application.Services.Dto;
 using TACHYON.Authorization;
-using Abp.Extensions;
-using Abp.Authorization;
-using Abp.Domain.Uow;
-using Microsoft.EntityFrameworkCore;
+using TACHYON.Dto;
 using TACHYON.Features;
+using TACHYON.Goods.GoodCategories;
+using TACHYON.Offers.Dtos;
+using TACHYON.Offers.Exporting;
+using TACHYON.Routs;
+using TACHYON.Trailers.TrailerTypes;
+using TACHYON.Trucks.TrucksTypes;
 
 namespace TACHYON.Offers
 {

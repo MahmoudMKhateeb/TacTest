@@ -1,10 +1,10 @@
-﻿using System.Threading;
-using System.Threading.Tasks;
-using Abp;
+﻿using Abp;
 using Abp.Authorization.Roles;
 using Abp.Domain.Repositories;
 using Abp.Domain.Uow;
 using JetBrains.Annotations;
+using System.Threading;
+using System.Threading.Tasks;
 using TACHYON.Authorization.Users;
 
 namespace TACHYON.Authorization.Roles

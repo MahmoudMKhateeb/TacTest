@@ -1,5 +1,5 @@
-using System.ComponentModel.DataAnnotations;
 using Abp.Auditing;
+using System.ComponentModel.DataAnnotations;
 
 namespace TACHYON.Authorization.Users.Profile.Dto
 {

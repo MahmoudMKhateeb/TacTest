@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Abp.Authorization;
+﻿using Abp.Authorization;
 using Abp.Runtime.Security;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
@@ -13,6 +8,11 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Logging;
 using Microsoft.IdentityModel.Tokens;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 using TACHYON.Configuration;
 using TACHYON.Web.Authentication.JwtBearer;
 
@@ -23,7 +23,7 @@ namespace TACHYON.Web.Startup
         public static void Configure(IServiceCollection services, IConfiguration configuration)
         {
             var authenticationBuilder = services.AddAuthentication();
-            
+
             if (bool.Parse(configuration["Authentication:JwtBearer:IsEnabled"]))
             {
                 authenticationBuilder.AddJwtBearer(options =>
@@ -102,10 +102,10 @@ namespace TACHYON.Web.Startup
                 {
                     return Task.CompletedTask;
                 }
-                    
-                return SetToken(context, false);  
+
+                return SetToken(context, false);
             }
-            
+
             return Task.CompletedTask;
         }
 

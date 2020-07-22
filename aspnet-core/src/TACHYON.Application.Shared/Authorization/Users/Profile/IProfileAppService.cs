@@ -1,6 +1,6 @@
-﻿using System;
+﻿using Abp.Application.Services;
+using System;
 using System.Threading.Tasks;
-using Abp.Application.Services;
 using TACHYON.Authorization.Users.Dto;
 using TACHYON.Authorization.Users.Profile.Dto;
 using TACHYON.Dto;
@@ -22,7 +22,7 @@ namespace TACHYON.Authorization.Users.Profile
         Task<GetProfilePictureOutput> GetProfilePicture();
 
         Task<GetProfilePictureOutput> GetProfilePictureByUser(long userId);
-        
+
         Task<GetProfilePictureOutput> GetProfilePictureByUserName(string username);
 
         Task<GetProfilePictureOutput> GetFriendProfilePicture(GetFriendProfilePictureInput input);

@@ -16,7 +16,7 @@ namespace TACHYON.Authorization.Users.Profile.Dto
 
         public UploadProfilePictureOutput()
         {
-            
+
         }
 
         public UploadProfilePictureOutput(ErrorInfo error)

@@ -1,7 +1,7 @@
-﻿using System.ComponentModel.DataAnnotations;
-using Abp.Auditing;
+﻿using Abp.Auditing;
 using Abp.Authorization.Users;
 using Abp.MultiTenancy;
+using System.ComponentModel.DataAnnotations;
 using TACHYON.MultiTenancy.Payments;
 using TACHYON.MultiTenancy.Payments.Dto;
 
