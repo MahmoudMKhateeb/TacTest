@@ -40,10 +40,16 @@ namespace TACHYON.Routs.RoutSteps
         [ForeignKey("DestinationCityId")]
         public City DestinationCityFk { get; set; }
 
-        public virtual int RouteId { get; set; }
+        public virtual int? RouteId { get; set; }
 
         [ForeignKey("RouteId")]
         public Route RouteFk { get; set; }
+
+        public virtual int? ShippingRequestId { get; set; }
+
+        [ForeignKey("ShippingRequestId")]
+        public Route ShippingRequestFk { get; set; }
+
 
     }
 }
