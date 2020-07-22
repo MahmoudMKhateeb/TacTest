@@ -7,6 +7,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 using TACHYON.Cities;
 using TACHYON.Cities;
 using TACHYON.Routs;
+using TACHYON.Shipping.ShippingRequests;
 
 namespace TACHYON.Routs.RoutSteps
 {
@@ -45,10 +46,10 @@ namespace TACHYON.Routs.RoutSteps
         [ForeignKey("RouteId")]
         public Route RouteFk { get; set; }
 
-        public virtual int? ShippingRequestId { get; set; }
+        public virtual long? ShippingRequestId { get; set; }
 
         [ForeignKey("ShippingRequestId")]
-        public Route ShippingRequestFk { get; set; }
+        public ShippingRequest ShippingRequestFk { get; set; }
 
 
     }

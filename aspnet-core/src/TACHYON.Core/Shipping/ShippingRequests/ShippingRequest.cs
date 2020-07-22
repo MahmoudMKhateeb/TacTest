@@ -1,10 +1,12 @@
 ﻿using Abp.Domain.Entities;
 using Abp.Domain.Entities.Auditing;
 using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using TACHYON.Goods.GoodsDetails;
 using TACHYON.Routs;
+using TACHYON.Routs.RoutSteps;
 using TACHYON.Trailers.TrailerTypes;
 using TACHYON.Trucks.TrucksTypes;
 
@@ -38,6 +40,8 @@ namespace TACHYON.Shipping.ShippingRequests
 
         [ForeignKey("RouteId")]
         public Route RouteFk { get; set; }
+
+        public ICollection<RoutStep> RoutSteps { get; set; }
 
     }
 }
