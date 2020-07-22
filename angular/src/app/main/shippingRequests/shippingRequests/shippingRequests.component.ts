@@ -1,18 +1,19 @@
-﻿import { Component, Injector, ViewEncapsulation, ViewChild } from '@angular/core';
-import { ActivatedRoute , Router} from '@angular/router';
-import { ShippingRequestsServiceProxy, ShippingRequestDto  } from '@shared/service-proxies/service-proxies';
-import { NotifyService } from 'abp-ng2-module';
-import { AppComponentBase } from '@shared/common/app-component-base';
-import { TokenAuthServiceProxy } from '@shared/service-proxies/service-proxies';
+﻿import {Component, Injector, ViewChild, ViewEncapsulation} from '@angular/core';
+import {ActivatedRoute, Router} from '@angular/router';
+import {
+    ShippingRequestDto,
+    ShippingRequestsServiceProxy,
+    TokenAuthServiceProxy
+} from '@shared/service-proxies/service-proxies';
+import {NotifyService} from 'abp-ng2-module';
+import {AppComponentBase} from '@shared/common/app-component-base';
 
 
-import { appModuleAnimation } from '@shared/animations/routerTransition';
-import { Table } from 'primeng/table';
-import { Paginator } from 'primeng/paginator';
-import { LazyLoadEvent } from 'primeng/public_api';
-import { FileDownloadService } from '@shared/utils/file-download.service';
-import * as _ from 'lodash';
-import * as moment from 'moment';
+import {appModuleAnimation} from '@shared/animations/routerTransition';
+import {Table} from 'primeng/table';
+import {Paginator} from 'primeng/paginator';
+import {LazyLoadEvent} from 'primeng/public_api';
+import {FileDownloadService} from '@shared/utils/file-download.service';
 
 @Component({
     templateUrl: './shippingRequests.component.html',
@@ -20,25 +21,21 @@ import * as moment from 'moment';
     animations: [appModuleAnimation()]
 })
 export class ShippingRequestsComponent extends AppComponentBase {
-    
-    
-       
-    
-    @ViewChild('dataTable', { static: true }) dataTable: Table;
-    @ViewChild('paginator', { static: true }) paginator: Paginator;
+
+
+    @ViewChild('dataTable', {static: true}) dataTable: Table;
+    @ViewChild('paginator', {static: true}) paginator: Paginator;
 
     advancedFiltersAreShown = false;
     filterText = '';
-    maxVasFilter : number;
-		maxVasFilterEmpty : number;
-		minVasFilter : number;
-		minVasFilterEmpty : number;
-        trucksTypeDisplayNameFilter = '';
-        trailerTypeDisplayNameFilter = '';
-        goodsDetailNameFilter = '';
-        routeDisplayNameFilter = '';
-
-
+    maxVasFilter: number;
+    maxVasFilterEmpty: number;
+    minVasFilter: number;
+    minVasFilterEmpty: number;
+    trucksTypeDisplayNameFilter = '';
+    trailerTypeDisplayNameFilter = '';
+    goodsDetailNameFilter = '';
+    routeDisplayNameFilter = '';
 
 
     constructor(
@@ -48,7 +45,7 @@ export class ShippingRequestsComponent extends AppComponentBase {
         private _tokenAuth: TokenAuthServiceProxy,
         private _activatedRoute: ActivatedRoute,
         private _fileDownloadService: FileDownloadService,
-			private _router: Router
+        private _router: Router
     ) {
         super(injector);
     }
@@ -63,8 +60,8 @@ export class ShippingRequestsComponent extends AppComponentBase {
 
         this._shippingRequestsServiceProxy.getAll(
             this.filterText,
-            this.maxVasFilter == null ? this.maxVasFilterEmpty: this.maxVasFilter,
-            this.minVasFilter == null ? this.minVasFilterEmpty: this.minVasFilter,
+            this.maxVasFilter == null ? this.maxVasFilterEmpty : this.maxVasFilter,
+            this.minVasFilter == null ? this.minVasFilterEmpty : this.minVasFilter,
             this.trucksTypeDisplayNameFilter,
             this.trailerTypeDisplayNameFilter,
             this.goodsDetailNameFilter,
@@ -84,7 +81,7 @@ export class ShippingRequestsComponent extends AppComponentBase {
     }
 
     createShippingRequest(): void {
-        this._router.navigate(['/app/main/shippingRequests/shippingRequests/createOrEdit']);        
+        this._router.navigate(['/app/main/shippingRequests/shippingRequests/createOrEdit']);
     }
 
 
@@ -106,16 +103,16 @@ export class ShippingRequestsComponent extends AppComponentBase {
 
     exportToExcel(): void {
         this._shippingRequestsServiceProxy.getShippingRequestsToExcel(
-        this.filterText,
-            this.maxVasFilter == null ? this.maxVasFilterEmpty: this.maxVasFilter,
-            this.minVasFilter == null ? this.minVasFilterEmpty: this.minVasFilter,
+            this.filterText,
+            this.maxVasFilter == null ? this.maxVasFilterEmpty : this.maxVasFilter,
+            this.minVasFilter == null ? this.minVasFilterEmpty : this.minVasFilter,
             this.trucksTypeDisplayNameFilter,
             this.trailerTypeDisplayNameFilter,
             this.goodsDetailNameFilter,
             this.routeDisplayNameFilter,
         )
-        .subscribe(result => {
-            this._fileDownloadService.downloadTempFile(result);
-         });
+            .subscribe(result => {
+                this._fileDownloadService.downloadTempFile(result);
+            });
     }
 }

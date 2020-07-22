@@ -1,39 +1,39 @@
 ﻿<div [@routerTransition]>
-  
-  <div class="content d-flex flex-column flex-column-fluid">
-  
-                 <sub-header [title]="('ShippingRequests' | localize) +' '+ ('Details' | localize)" [breadcrumbs]="breadcrumbs">
-                 </sub-header>
-             
-    <div [class]="containerClass">
-        <div class="card card-custom gutter-b">
-            <div class="card-body">
-                <div class="row align-items-center">
-                                     <div class="col-6 mb-3">
-                        <h6>{{l("Vas")}} :</h6>
-                        {{ item.shippingRequest.vas }}
-                    </div>
 
-                                     <div class="col-6 mb-3">
-                        <h6>({{l("TrucksType")}}) {{l("DisplayName")}} :</h6>
-                        {{item.trucksTypeDisplayName}}
-                    </div>
-                    <div class="col-6 mb-3">
-                        <h6>({{l("TrailerType")}}) {{l("DisplayName")}} :</h6>
-                        {{item.trailerTypeDisplayName}}
-                    </div>
-                    <div class="col-6 mb-3">
-                        <h6>({{l("GoodsDetail")}}) {{l("Name")}} :</h6>
-                        {{item.goodsDetailName}}
-                    </div>
-                    <div class="col-6 mb-3">
-                        <h6>({{l("Route")}}) {{l("DisplayName")}} :</h6>
-                        {{item.routeDisplayName}}
-                    </div>
+    <div class="content d-flex flex-column flex-column-fluid">
 
+        <sub-header [breadcrumbs]="breadcrumbs" [title]="('ShippingRequests' | localize) +' '+ ('Details' | localize)">
+        </sub-header>
+
+        <div [class]="containerClass">
+            <div class="card card-custom gutter-b">
+                <div class="card-body">
+                    <div class="row align-items-center">
+                        <div class="col-6 mb-3">
+                            <h6>{{l("Vas")}} :</h6>
+                            {{ item.shippingRequest.vas }}
+                        </div>
+
+                        <div class="col-6 mb-3">
+                            <h6>({{l("TrucksType")}}) {{l("DisplayName")}} :</h6>
+                            {{item.trucksTypeDisplayName}}
+                        </div>
+                        <div class="col-6 mb-3">
+                            <h6>({{l("TrailerType")}}) {{l("DisplayName")}} :</h6>
+                            {{item.trailerTypeDisplayName}}
+                        </div>
+                        <div class="col-6 mb-3">
+                            <h6>({{l("GoodsDetail")}}) {{l("Name")}} :</h6>
+                            {{item.goodsDetailName}}
+                        </div>
+                        <div class="col-6 mb-3">
+                            <h6>({{l("Route")}}) {{l("DisplayName")}} :</h6>
+                            {{item.routeDisplayName}}
+                        </div>
+
+                    </div>
                 </div>
             </div>
         </div>
     </div>
-  </div>
 </div>

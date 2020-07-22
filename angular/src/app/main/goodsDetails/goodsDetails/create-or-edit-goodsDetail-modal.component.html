@@ -1,71 +1,86 @@
-﻿<div bsModal #createOrEditModal="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="createOrEditModal" aria-hidden="true" [config]="{backdrop: 'static'}">
+﻿<div #createOrEditModal="bs-modal" [config]="{backdrop: 'static'}" aria-hidden="true" aria-labelledby="createOrEditModal" bsModal
+     class="modal fade" role="dialog" tabindex="-1">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
-            <form *ngIf="active" #goodsDetailForm="ngForm" novalidate (ngSubmit)="save()" autocomplete="off">
+            <form #goodsDetailForm="ngForm" (ngSubmit)="save()" *ngIf="active" autocomplete="off" novalidate>
                 <div class="modal-header">
                     <h4 class="modal-title">
                         <span *ngIf="goodsDetail.id">{{l("EditGoodsDetail")}}</span>
                         <span *ngIf="!goodsDetail.id">{{l("CreateNewGoodsDetail")}}</span>
                     </h4>
-                    <button type="button" class="close" (click)="close()" aria-label="Close" [disabled]="saving">
+                    <button (click)="close()" [disabled]="saving" aria-label="Close" class="close" type="button">
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
                 <div class="modal-body">
-                 
 
-					<div class="form-group m-form__group">
-						<label for="GoodCategoryDisplayName">{{l("GoodCategory")}}</label>
-						<select name="goodsDetail.goodCategoryId" [(ngModel)]="goodsDetail.goodCategoryId" class="form-control" >
-							<option value="">{{l("SelectAGoodCategory")}}</option>
-							<option *ngFor="let item of allGoodCategorys" value="{{item.id}}">{{item.displayName}}</option>
-						</select>
-					</div>
-					 
 
-								<div class="form-group">
-									<label for="GoodsDetail_Name">{{l("Name")}} *</label>
-									<input type="text" id="GoodsDetail_Name" class="form-control" [(ngModel)]="goodsDetail.name" name="Name"   minlength="0"  maxlength="256"  required/>
-								</div>
-					
-								<div class="form-group">
-									<label for="GoodsDetail_Description">{{l("Description")}}</label>
-									<input type="text" id="GoodsDetail_Description" class="form-control" [(ngModel)]="goodsDetail.description" name="Description"   minlength="0"  maxlength="256" />
-								</div>
-					
-								<div class="form-group">
-									<label for="GoodsDetail_Quantity">{{l("Quantity")}}</label>
-									<input type="text" id="GoodsDetail_Quantity" class="form-control" [(ngModel)]="goodsDetail.quantity" name="Quantity"   minlength="0"  maxlength="128" />
-								</div>
-					
-								<div class="form-group">
-									<label for="GoodsDetail_Weight">{{l("Weight")}}</label>
-									<input type="text" id="GoodsDetail_Weight" class="form-control" [(ngModel)]="goodsDetail.weight" name="Weight"   minlength="0"  maxlength="64" />
-								</div>
-					
-								<div class="form-group">
-									<label for="GoodsDetail_Dimentions">{{l("Dimentions")}}</label>
-									<input type="text" id="GoodsDetail_Dimentions" class="form-control" [(ngModel)]="goodsDetail.dimentions" name="Dimentions"   minlength="0"  maxlength="128" />
-								</div>
-					
-								<br/><div class="m-checkbox-list">
-									<label for="GoodsDetail_IsDangerousGood" class="kt-checkbox">
-										<input id="GoodsDetail_IsDangerousGood" type="checkbox" name="IsDangerousGood" [(ngModel)]="goodsDetail.isDangerousGood"> 
-										{{l("IsDangerousGood")}}
-										<span></span>
-									</label>
-								</div>
-					
-								<div class="form-group">
-									<label for="GoodsDetail_DangerousGoodsCode">{{l("DangerousGoodsCode")}}</label>
-									<input type="text" id="GoodsDetail_DangerousGoodsCode" class="form-control" [(ngModel)]="goodsDetail.dangerousGoodsCode" name="DangerousGoodsCode"   minlength="0"  maxlength="64" />
-								</div>
-					
+                    <div class="form-group m-form__group">
+                        <label for="GoodCategoryDisplayName">{{l("GoodCategory")}}</label>
+                        <select [(ngModel)]="goodsDetail.goodCategoryId" class="form-control"
+                                name="goodsDetail.goodCategoryId">
+                            <option value="">{{l("SelectAGoodCategory")}}</option>
+                            <option *ngFor="let item of allGoodCategorys"
+                                    value="{{item.id}}">{{item.displayName}}</option>
+                        </select>
+                    </div>
+
+
+                    <div class="form-group">
+                        <label for="GoodsDetail_Name">{{l("Name")}} *</label>
+                        <input [(ngModel)]="goodsDetail.name" class="form-control" id="GoodsDetail_Name" maxlength="256"
+                               minlength="0" name="Name" required type="text"/>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="GoodsDetail_Description">{{l("Description")}}</label>
+                        <input [(ngModel)]="goodsDetail.description" class="form-control" id="GoodsDetail_Description"
+                               maxlength="256" minlength="0" name="Description" type="text"/>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="GoodsDetail_Quantity">{{l("Quantity")}}</label>
+                        <input [(ngModel)]="goodsDetail.quantity" class="form-control" id="GoodsDetail_Quantity"
+                               maxlength="128" minlength="0" name="Quantity" type="text"/>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="GoodsDetail_Weight">{{l("Weight")}}</label>
+                        <input [(ngModel)]="goodsDetail.weight" class="form-control" id="GoodsDetail_Weight" maxlength="64"
+                               minlength="0" name="Weight" type="text"/>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="GoodsDetail_Dimentions">{{l("Dimentions")}}</label>
+                        <input [(ngModel)]="goodsDetail.dimentions" class="form-control" id="GoodsDetail_Dimentions"
+                               maxlength="128" minlength="0" name="Dimentions" type="text"/>
+                    </div>
+
+                    <br/>
+                    <div class="m-checkbox-list">
+                        <label class="kt-checkbox" for="GoodsDetail_IsDangerousGood">
+                            <input [(ngModel)]="goodsDetail.isDangerousGood" id="GoodsDetail_IsDangerousGood" name="IsDangerousGood"
+                                   type="checkbox">
+                            {{l("IsDangerousGood")}}
+                            <span></span>
+                        </label>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="GoodsDetail_DangerousGoodsCode">{{l("DangerousGoodsCode")}}</label>
+                        <input [(ngModel)]="goodsDetail.dangerousGoodsCode" class="form-control" id="GoodsDetail_DangerousGoodsCode"
+                               maxlength="64" minlength="0" name="DangerousGoodsCode"
+                               type="text"/>
+                    </div>
+
 
                 </div>
                 <div class="modal-footer">
-                    <button [disabled]="saving" type="button" class="btn btn-default" (click)="close()">{{l("Cancel")}}</button>
-                    <button type="submit" class="btn btn-primary blue" [disabled]="!goodsDetailForm.form.valid" [buttonBusy]="saving" [busyText]="l('SavingWithThreeDot')"><i class="fa fa-save"></i> <span>{{l("Save")}}</span></button>
+                    <button (click)="close()" [disabled]="saving" class="btn btn-default"
+                            type="button">{{l("Cancel")}}</button>
+                    <button [busyText]="l('SavingWithThreeDot')" [buttonBusy]="saving" [disabled]="!goodsDetailForm.form.valid"
+                            class="btn btn-primary blue" type="submit"><i class="fa fa-save"></i>
+                        <span>{{l("Save")}}</span></button>
                 </div>
             </form>
         </div>

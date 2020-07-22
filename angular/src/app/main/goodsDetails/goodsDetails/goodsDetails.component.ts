@@ -1,19 +1,16 @@
-﻿import { Component, Injector, ViewEncapsulation, ViewChild } from '@angular/core';
-import { ActivatedRoute , Router} from '@angular/router';
-import { GoodsDetailsServiceProxy, GoodsDetailDto  } from '@shared/service-proxies/service-proxies';
-import { NotifyService } from 'abp-ng2-module';
-import { AppComponentBase } from '@shared/common/app-component-base';
-import { TokenAuthServiceProxy } from '@shared/service-proxies/service-proxies';
-import { CreateOrEditGoodsDetailModalComponent } from './create-or-edit-goodsDetail-modal.component';
+﻿import {Component, Injector, ViewChild, ViewEncapsulation} from '@angular/core';
+import {ActivatedRoute} from '@angular/router';
+import {GoodsDetailDto, GoodsDetailsServiceProxy, TokenAuthServiceProxy} from '@shared/service-proxies/service-proxies';
+import {NotifyService} from 'abp-ng2-module';
+import {AppComponentBase} from '@shared/common/app-component-base';
+import {CreateOrEditGoodsDetailModalComponent} from './create-or-edit-goodsDetail-modal.component';
 
-import { ViewGoodsDetailModalComponent } from './view-goodsDetail-modal.component';
-import { appModuleAnimation } from '@shared/animations/routerTransition';
-import { Table } from 'primeng/table';
-import { Paginator } from 'primeng/paginator';
-import { LazyLoadEvent } from 'primeng/public_api';
-import { FileDownloadService } from '@shared/utils/file-download.service';
-import * as _ from 'lodash';
-import * as moment from 'moment';
+import {ViewGoodsDetailModalComponent} from './view-goodsDetail-modal.component';
+import {appModuleAnimation} from '@shared/animations/routerTransition';
+import {Table} from 'primeng/table';
+import {Paginator} from 'primeng/paginator';
+import {LazyLoadEvent} from 'primeng/public_api';
+import {FileDownloadService} from '@shared/utils/file-download.service';
 
 @Component({
     templateUrl: './goodsDetails.component.html',
@@ -21,13 +18,13 @@ import * as moment from 'moment';
     animations: [appModuleAnimation()]
 })
 export class GoodsDetailsComponent extends AppComponentBase {
-    
-    
-    @ViewChild('createOrEditGoodsDetailModal', { static: true }) createOrEditGoodsDetailModal: CreateOrEditGoodsDetailModalComponent;
-    @ViewChild('viewGoodsDetailModalComponent', { static: true }) viewGoodsDetailModal: ViewGoodsDetailModalComponent;   
-    
-    @ViewChild('dataTable', { static: true }) dataTable: Table;
-    @ViewChild('paginator', { static: true }) paginator: Paginator;
+
+
+    @ViewChild('createOrEditGoodsDetailModal', {static: true}) createOrEditGoodsDetailModal: CreateOrEditGoodsDetailModalComponent;
+    @ViewChild('viewGoodsDetailModalComponent', {static: true}) viewGoodsDetailModal: ViewGoodsDetailModalComponent;
+
+    @ViewChild('dataTable', {static: true}) dataTable: Table;
+    @ViewChild('paginator', {static: true}) paginator: Paginator;
 
     advancedFiltersAreShown = false;
     filterText = '';
@@ -38,9 +35,7 @@ export class GoodsDetailsComponent extends AppComponentBase {
     dimentionsFilter = '';
     isDangerousGoodFilter = -1;
     dangerousGoodsCodeFilter = '';
-        goodCategoryDisplayNameFilter = '';
-
-
+    goodCategoryDisplayNameFilter = '';
 
 
     constructor(
@@ -87,7 +82,7 @@ export class GoodsDetailsComponent extends AppComponentBase {
     }
 
     createGoodsDetail(): void {
-        this.createOrEditGoodsDetailModal.show();        
+        this.createOrEditGoodsDetailModal.show();
     }
 
 
@@ -109,7 +104,7 @@ export class GoodsDetailsComponent extends AppComponentBase {
 
     exportToExcel(): void {
         this._goodsDetailsServiceProxy.getGoodsDetailsToExcel(
-        this.filterText,
+            this.filterText,
             this.nameFilter,
             this.descriptionFilter,
             this.quantityFilter,
@@ -119,8 +114,8 @@ export class GoodsDetailsComponent extends AppComponentBase {
             this.dangerousGoodsCodeFilter,
             this.goodCategoryDisplayNameFilter,
         )
-        .subscribe(result => {
-            this._fileDownloadService.downloadTempFile(result);
-         });
+            .subscribe(result => {
+                this._fileDownloadService.downloadTempFile(result);
+            });
     }
 }
