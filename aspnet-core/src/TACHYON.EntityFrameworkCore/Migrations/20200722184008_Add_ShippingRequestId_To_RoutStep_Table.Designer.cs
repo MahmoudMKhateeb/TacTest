@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using TACHYON.EntityFrameworkCore;
 
 namespace TACHYON.Migrations
 {
     [DbContext(typeof(TACHYONDbContext))]
-    partial class TACHYONDbContextModelSnapshot : ModelSnapshot
+    [Migration("20200722184008_Add_ShippingRequestId_To_RoutStep_Table")]
+    partial class Add_ShippingRequestId_To_RoutStep_Table
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -2293,8 +2295,8 @@ namespace TACHYON.Migrations
                     b.Property<int?>("RouteId")
                         .HasColumnType("int");
 
-                    b.Property<long?>("ShippingRequestId")
-                        .HasColumnType("bigint");
+                    b.Property<int?>("ShippingRequestId")
+                        .HasColumnType("int");
 
                     b.Property<int>("TenantId")
                         .HasColumnType("int");
@@ -3198,8 +3200,8 @@ namespace TACHYON.Migrations
                         .WithMany()
                         .HasForeignKey("RouteId");
 
-                    b.HasOne("TACHYON.Shipping.ShippingRequests.ShippingRequest", "ShippingRequestFk")
-                        .WithMany("RoutSteps")
+                    b.HasOne("TACHYON.Routs.Route", "ShippingRequestFk")
+                        .WithMany()
                         .HasForeignKey("ShippingRequestId");
                 });
 

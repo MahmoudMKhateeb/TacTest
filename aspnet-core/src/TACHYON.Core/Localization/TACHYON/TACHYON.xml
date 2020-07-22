@@ -1,6 +1,16 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <localizationDictionary culture="en">
-  <texts>    <text name="GoodsDetails">Goods details</text>
+  <texts>    <text name="ShippingRequests">Shipping requests</text>
+    <text name="ShippingRequest">Shipping request</text>
+    <text name="TACHYON.ShippingRequests.ShippingRequest">ShippingRequest</text>
+    <text name="Vas">Vas</text>
+    <text name="ShippingRequestsHeaderInfo">Shipping requests header info</text>
+    <text name="CreateNewShippingRequest">Create new shipping request</text>
+    <text name="EditShippingRequest">Edit shipping request</text>
+    <text name="DeleteShippingRequest">Delete shipping request</text>
+    <text name="GoodsDetailName">Goods detail name</text>
+    <text name="PickGoodsDetail">Pick goods detail</text>
+    <text name="GoodsDetails">Goods details</text>
     <text name="GoodsDetail">Goods detail</text>
     <text name="TACHYON.GoodsDetails.GoodsDetail">GoodsDetail</text>
     <text name="Quantity">Quantity</text>

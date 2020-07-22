@@ -1,10 +1,12 @@
-﻿import { Component, ViewChild, Injector, Output, EventEmitter} from '@angular/core';
-import { ModalDirective } from 'ngx-bootstrap/modal';
-import { finalize } from 'rxjs/operators';
-import { GoodsDetailsServiceProxy, CreateOrEditGoodsDetailDto ,GoodsDetailGoodCategoryLookupTableDto
-					} from '@shared/service-proxies/service-proxies';
-import { AppComponentBase } from '@shared/common/app-component-base';
-import * as moment from 'moment';
+﻿import {Component, EventEmitter, Injector, Output, ViewChild} from '@angular/core';
+import {ModalDirective} from 'ngx-bootstrap/modal';
+import {finalize} from 'rxjs/operators';
+import {
+    CreateOrEditGoodsDetailDto,
+    GoodsDetailGoodCategoryLookupTableDto,
+    GoodsDetailsServiceProxy
+} from '@shared/service-proxies/service-proxies';
+import {AppComponentBase} from '@shared/common/app-component-base';
 
 @Component({
     selector: 'createOrEditGoodsDetailModal',
@@ -12,7 +14,7 @@ import * as moment from 'moment';
 })
 export class CreateOrEditGoodsDetailModalComponent extends AppComponentBase {
 
-    @ViewChild('createOrEditModal', { static: true }) modal: ModalDirective;
+    @ViewChild('createOrEditModal', {static: true}) modal: ModalDirective;
 
     @Output() modalSave: EventEmitter<any> = new EventEmitter<any>();
 
@@ -23,8 +25,8 @@ export class CreateOrEditGoodsDetailModalComponent extends AppComponentBase {
 
     goodCategoryDisplayName = '';
 
-	allGoodCategorys: GoodsDetailGoodCategoryLookupTableDto[];
-					
+    allGoodCategorys: GoodsDetailGoodCategoryLookupTableDto[];
+
     constructor(
         injector: Injector,
         private _goodsDetailsServiceProxy: GoodsDetailsServiceProxy
@@ -51,29 +53,26 @@ export class CreateOrEditGoodsDetailModalComponent extends AppComponentBase {
                 this.modal.show();
             });
         }
-        this._goodsDetailsServiceProxy.getAllGoodCategoryForTableDropdown().subscribe(result => {						
-						this.allGoodCategorys = result;
-					});
-					
+        this._goodsDetailsServiceProxy.getAllGoodCategoryForTableDropdown().subscribe(result => {
+            this.allGoodCategorys = result;
+        });
+
     }
 
     save(): void {
-            this.saving = true;
+        this.saving = true;
 
-			
-            this._goodsDetailsServiceProxy.createOrEdit(this.goodsDetail)
-             .pipe(finalize(() => { this.saving = false;}))
-             .subscribe(() => {
+
+        this._goodsDetailsServiceProxy.createOrEdit(this.goodsDetail)
+            .pipe(finalize(() => {
+                this.saving = false;
+            }))
+            .subscribe(() => {
                 this.notify.info(this.l('SavedSuccessfully'));
                 this.close();
                 this.modalSave.emit(null);
-             });
+            });
     }
-
-
-
-
-
 
 
     close(): void {

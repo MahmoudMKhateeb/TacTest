@@ -1,0 +1,249 @@
+﻿<div [@routerTransition]>
+
+    <div class="content d-flex flex-column flex-column-fluid">
+        <sub-header [breadcrumbs]="breadcrumbs" [title]="('ShippingRequests' | localize) +' '+ ('Details' | localize)">
+        </sub-header>
+
+
+        <div [class]="containerClass">
+            <div class="card card-custom gutter-b">
+                <div class="card-body">
+
+                    <div class="form-group m-form__group">
+                        <label for="TrucksTypeDisplayName">{{l("TrucksType")}}</label>
+                        <select [(ngModel)]="shippingRequest.trucksTypeId" class="form-control"
+                                name="shippingRequest.trucksTypeId">
+                            <option value="">{{l("SelectATrucksType")}}</option>
+                            <option *ngFor="let item of allTrucksTypes"
+                                    value="{{item.id}}">{{item.displayName}}</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group m-form__group">
+                        <label for="TrailerTypeDisplayName">{{l("TrailerType")}}</label>
+                        <select [(ngModel)]="shippingRequest.trailerTypeId" class="form-control"
+                                name="shippingRequest.trailerTypeId">
+                            <option value="">{{l("SelectATrailerType")}}</option>
+                            <option *ngFor="let item of allTrailerTypes"
+                                    value="{{item.id}}">{{item.displayName}}</option>
+                        </select>
+                    </div>
+
+
+                    <div class="form-group m-form__group">
+                        <label for="RouteDisplayName">{{l("Route")}}</label>
+                        <select [(ngModel)]="shippingRequest.routeId" class="form-control"
+                                name="shippingRequest.routeId">
+                            <option value="">{{l("SelectARoute")}}</option>
+                            <option *ngFor="let item of allRoutes" value="{{item.id}}">{{item.displayName}}</option>
+                        </select>
+                    </div>
+
+
+                    <div class="form-group">
+                        <label for="ShippingRequest_Vas">{{l("Vas")}}</label>
+                        <input [(ngModel)]="shippingRequest.vas" class="form-control" id="ShippingRequest_Vas"
+                               name="Vas" type="number"/>
+                    </div>
+
+
+                    <hr>
+
+                    <div class="form-group m-form__group">
+                        <label for="GoodCategoryDisplayName">{{l("GoodCategory")}}</label>
+                        <select [(ngModel)]="shippingRequest.createOrEditGoodsDetailDto.goodCategoryId"
+                                class="form-control"
+                                name="createOrEditGoodsDetailDto.goodCategoryId">
+                            <option value="">{{l("SelectAGoodCategory")}}</option>
+                            <option *ngFor="let item of allGoodCategorys"
+                                    value="{{item.id}}">{{item.displayName}}</option>
+                        </select>
+                    </div>
+
+
+                    <div class="form-group">
+                        <label for="GoodsDetail_Name">{{l("Name")}} *</label>
+                        <input [(ngModel)]="shippingRequest.createOrEditGoodsDetailDto.name" class="form-control"
+                               id="GoodsDetail_Name" maxlength="256"
+                               minlength="0" name="createOrEditGoodsDetailDto.Name" required type="text"/>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="GoodsDetail_Description">{{l("Description")}}</label>
+                        <input [(ngModel)]="shippingRequest.createOrEditGoodsDetailDto.description" class="form-control"
+                               id="GoodsDetail_Description"
+                               maxlength="256" minlength="0" name="createOrEditGoodsDetailDto.Description" type="text"/>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="GoodsDetail_Quantity">{{l("Quantity")}}</label>
+                        <input [(ngModel)]="shippingRequest.createOrEditGoodsDetailDto.quantity" class="form-control"
+                               id="GoodsDetail_Quantity"
+                               maxlength="128" minlength="0" name="createOrEditGoodsDetailDto.Quantity" type="text"/>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="GoodsDetail_Weight">{{l("Weight")}}</label>
+                        <input [(ngModel)]="shippingRequest.createOrEditGoodsDetailDto.weight" class="form-control"
+                               id="GoodsDetail_Weight" maxlength="64"
+                               minlength="0" name="createOrEditGoodsDetailDto.Weight" type="text"/>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="GoodsDetail_Dimentions">{{l("Dimentions")}}</label>
+                        <input [(ngModel)]="shippingRequest.createOrEditGoodsDetailDto.dimentions" class="form-control"
+                               id="GoodsDetail_Dimentions"
+                               maxlength="128" minlength="0" name="createOrEditGoodsDetailDto.Dimentions" type="text"/>
+                    </div>
+
+                    <br/>
+                    <div class="m-checkbox-list">
+                        <label class="kt-checkbox" for="GoodsDetail_IsDangerousGood">
+                            <input [(ngModel)]="shippingRequest.createOrEditGoodsDetailDto.isDangerousGood"
+                                   id="GoodsDetail_IsDangerousGood" name="createOrEditGoodsDetailDto.IsDangerousGood"
+                                   type="checkbox">
+                            {{l("IsDangerousGood")}}
+                            <span></span>
+                        </label>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="GoodsDetail_DangerousGoodsCode">{{l("DangerousGoodsCode")}}</label>
+                        <input [(ngModel)]="shippingRequest.createOrEditGoodsDetailDto.dangerousGoodsCode"
+                               class="form-control" id="GoodsDetail_DangerousGoodsCode"
+                               maxlength="64" minlength="0" name="createOrEditGoodsDetailDto.DangerousGoodsCode"
+                               type="text"/>
+                    </div>
+
+                    <hr>
+
+                    <button (click)="openModal(template)" class="btn btn-primary" type="button">Create template modal </button>
+
+
+
+
+
+
+
+
+
+
+                    <div class="row align-items-center">
+                        <!--<Primeng-Datatable-Start>-->
+                        <p-table [value]="createOrEditRoutStepDtoList">
+                            <ng-template pTemplate="header">
+                                <tr>
+                                    <th>latitude</th>
+                                    <th>longitude</th>
+                                    <th>order</th>
+                                    <th>originCityId</th>
+                                    <th>destinationCityId</th>
+                                </tr>
+                            </ng-template>
+                            <ng-template pTemplate="body" let-item>
+                                <tr>
+                                    <td>{{item.latitude}}</td>
+                                    <td>{{item.longitude}}</td>
+                                    <td>{{item.order}}</td>
+                                    <td>{{item.originCityId}}</td>
+                                    <td>{{item.destinationCityId}}</td>
+                                </tr>
+                            </ng-template>
+                        </p-table>
+                        <!--<Primeng-Datatable-End>-->
+                    </div>
+
+
+
+
+
+
+
+
+
+
+                </div>
+                <div class="card-footer">
+                    <div class="col-lg-12">
+                        <button (click)="save()" [busyText]="l('SavingWithThreeDot')"
+                                [buttonBusy]="saving" class="btn btn-primary blue float-right"><i
+                            class="fa fa-save"></i>
+                            <span>{{l("Save")}}</span>
+                        </button>
+                        <button (click)="saveAndNew()" *ngIf="!this.shippingRequest.id"
+                                [busyText]="l('SavingWithThreeDot')"
+                                [buttonBusy]="saving" class="btn btn-primary blue float-right"><i
+                            class="fa fa-save"></i>
+                            <span>{{l("SaveAndNew")}}</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+
+<ng-template #template>
+    <form *ngIf="active" #routStepForm="ngForm" novalidate (ngSubmit)="addRouteStep()" autocomplete="off">
+        <div class="modal-header">
+            <h4 class="modal-title">
+<!--                <span *ngIf="routStep.id">{{l("EditRoutStep")}}</span>-->
+<!--                <span *ngIf="!routStep.id">{{l("CreateNewRoutStep")}}</span>-->
+            </h4>
+            <button type="button" class="close" (click)="modalRef.hide()" aria-label="Close" [disabled]="saving">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+        <div class="modal-body">
+
+
+            <div class="form-group m-form__group">
+                <label for="CityDisplayName">{{l("City")}}</label>
+                <select name="routStep.originCityId" [(ngModel)]="routStep.originCityId" class="form-control" >
+                    <option value="">{{l("SelectACity")}}</option>
+                    <option *ngFor="let item of allCitys" value="{{item.id}}">{{item.displayName}}</option>
+                </select>
+            </div>
+
+            <div class="form-group m-form__group">
+                <label for="CityDisplayName2">{{l("City")}}</label>
+                <select name="routStep.destinationCityId" [(ngModel)]="routStep.destinationCityId" class="form-control" >
+                    <option value="">{{l("SelectACity")}}</option>
+                    <option *ngFor="let item of allCitys" value="{{item.id}}">{{item.displayName}}</option>
+                </select>
+            </div>
+
+
+
+
+            <div class="form-group">
+                <label for="RoutStep_DisplayName">{{l("DisplayName")}}</label>
+                <input type="text" id="RoutStep_DisplayName" class="form-control" [(ngModel)]="routStep.displayName" name="DisplayName"   minlength="0"  maxlength="256" />
+            </div>
+
+            <div class="form-group">
+                <label for="RoutStep_Latitude">{{l("Latitude")}}</label>
+                <input type="text" id="RoutStep_Latitude" class="form-control" [(ngModel)]="routStep.latitude" name="Latitude"   minlength="0"  maxlength="256" />
+            </div>
+
+            <div class="form-group">
+                <label for="RoutStep_Longitude">{{l("Longitude")}}</label>
+                <input type="text" id="RoutStep_Longitude" class="form-control" [(ngModel)]="routStep.longitude" name="Longitude"   minlength="0"  maxlength="256" />
+            </div>
+
+            <div class="form-group">
+                <label for="RoutStep_Order">{{l("Order")}}</label>
+                <input type="number" id="RoutStep_Order" class="form-control" [(ngModel)]="routStep.order" name="Order"  min="1"  max="50"/>
+            </div>
+
+
+        </div>
+        <div class="modal-footer">
+            <button [disabled]="saving" type="button" class="btn btn-default" (click)="modalRef.hide()">{{l("Cancel")}}</button>
+            <button type="submit" class="btn btn-primary blue" [disabled]="!routStepForm.form.valid" [buttonBusy]="saving" [busyText]="l('SavingWithThreeDot')"><i class="fa fa-save"></i> <span>{{l("Save")}}</span></button>
+        </div>
+    </form>
+
+</ng-template>

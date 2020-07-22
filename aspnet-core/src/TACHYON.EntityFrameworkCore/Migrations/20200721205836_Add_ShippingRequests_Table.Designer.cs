@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using TACHYON.EntityFrameworkCore;
 
 namespace TACHYON.Migrations
 {
     [DbContext(typeof(TACHYONDbContext))]
-    partial class TACHYONDbContextModelSnapshot : ModelSnapshot
+    [Migration("20200721205836_Add_ShippingRequests_Table")]
+    partial class Add_ShippingRequests_Table
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -2290,11 +2292,8 @@ namespace TACHYON.Migrations
                     b.Property<int?>("OriginCityId")
                         .HasColumnType("int");
 
-                    b.Property<int?>("RouteId")
+                    b.Property<int>("RouteId")
                         .HasColumnType("int");
-
-                    b.Property<long?>("ShippingRequestId")
-                        .HasColumnType("bigint");
 
                     b.Property<int>("TenantId")
                         .HasColumnType("int");
@@ -2306,8 +2305,6 @@ namespace TACHYON.Migrations
                     b.HasIndex("OriginCityId");
 
                     b.HasIndex("RouteId");
-
-                    b.HasIndex("ShippingRequestId");
 
                     b.HasIndex("TenantId");
 
@@ -3196,11 +3193,9 @@ namespace TACHYON.Migrations
 
                     b.HasOne("TACHYON.Routs.Route", "RouteFk")
                         .WithMany()
-                        .HasForeignKey("RouteId");
-
-                    b.HasOne("TACHYON.Shipping.ShippingRequests.ShippingRequest", "ShippingRequestFk")
-                        .WithMany("RoutSteps")
-                        .HasForeignKey("ShippingRequestId");
+                        .HasForeignKey("RouteId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("TACHYON.Routs.Route", b =>

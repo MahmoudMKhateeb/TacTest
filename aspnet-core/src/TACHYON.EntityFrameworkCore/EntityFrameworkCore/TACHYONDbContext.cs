@@ -7,30 +7,46 @@ using TACHYON.Authorization.Roles;
 using TACHYON.Authorization.Users;
 using TACHYON.Chat;
 using TACHYON.Cities;
+using TACHYON.Cities;
+using TACHYON.Countries;
 using TACHYON.Countries;
 using TACHYON.Editions;
 using TACHYON.Friendships;
 using TACHYON.Goods.GoodCategories;
+using TACHYON.Goods.GoodCategories;
+using TACHYON.Goods.GoodsDetails;
 using TACHYON.Goods.GoodsDetails;
 using TACHYON.MultiTenancy;
 using TACHYON.MultiTenancy.Accounting;
 using TACHYON.MultiTenancy.Payments;
 using TACHYON.Offers;
+using TACHYON.Offers;
+using TACHYON.Routs;
 using TACHYON.Routs;
 using TACHYON.Routs.RoutSteps;
+using TACHYON.Routs.RoutSteps;
 using TACHYON.Routs.RoutTypes;
+using TACHYON.Routs.RoutTypes;
+using TACHYON.Shipping.ShippingRequests;
 using TACHYON.Storage;
+using TACHYON.Trailers;
 using TACHYON.Trailers;
 using TACHYON.Trailers.PayloadMaxWeights;
 using TACHYON.Trailers.TrailerStatuses;
+using TACHYON.Trailers.TrailerStatuses;
+using TACHYON.Trailers.TrailerTypes;
 using TACHYON.Trailers.TrailerTypes;
 using TACHYON.Trucks;
+using TACHYON.Trucks;
+using TACHYON.Trucks.TrucksTypes;
 using TACHYON.Trucks.TrucksTypes;
 
 namespace TACHYON.EntityFrameworkCore
 {
     public class TACHYONDbContext : AbpZeroDbContext<Tenant, Role, User, TACHYONDbContext>, IAbpPersistedGrantDbContext
     {
+        public virtual DbSet<ShippingRequest> ShippingRequests { get; set; }
+
         public virtual DbSet<GoodsDetail> GoodsDetails { get; set; }
 
         public virtual DbSet<Offer> Offers { get; set; }
@@ -99,10 +115,15 @@ namespace TACHYON.EntityFrameworkCore
 
 
 
-            modelBuilder.Entity<GoodsDetail>(g =>
+
+            modelBuilder.Entity<ShippingRequest>(s =>
             {
-                g.HasIndex(e => new { e.TenantId });
+                s.HasIndex(e => new { e.TenantId });
             });
+            modelBuilder.Entity<GoodsDetail>(g =>
+                       {
+                           g.HasIndex(e => new { e.TenantId });
+                       });
             modelBuilder.Entity<Offer>(o =>
                        {
                            o.HasIndex(e => new { e.TenantId });
