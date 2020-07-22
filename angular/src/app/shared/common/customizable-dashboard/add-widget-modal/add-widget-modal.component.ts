@@ -6,10 +6,9 @@ import { ModalDirective } from 'ngx-bootstrap/modal';
 @Component({
   selector: 'add-widget-modal',
   templateUrl: './add-widget-modal.component.html',
-  styleUrls: ['./add-widget-modal.component.css']
+  styleUrls: ['./add-widget-modal.component.css'],
 })
 export class AddWidgetModalComponent extends AppComponentBase {
-
   @Output() onClose = new EventEmitter();
   @ViewChild('addWidgetModal', { static: true }) modal: ModalDirective;
 
@@ -17,8 +16,7 @@ export class AddWidgetModalComponent extends AppComponentBase {
   saving = false;
   selectedWidgetId: string;
 
-  constructor(
-    injector: Injector) {
+  constructor(injector: Injector) {
     super(injector);
   }
 

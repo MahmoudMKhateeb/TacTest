@@ -1,9 +1,7 @@
 import { FlatPermissionDto } from '@shared/service-proxies/service-proxies';
 
 export interface PermissionTreeEditModel {
+  permissions: FlatPermissionDto[];
 
-    permissions: FlatPermissionDto[];
-
-    grantedPermissionNames: string[];
-
+  grantedPermissionNames: string[];
 }

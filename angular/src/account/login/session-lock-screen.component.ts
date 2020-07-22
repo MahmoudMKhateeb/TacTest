@@ -10,7 +10,7 @@ import { AppConsts } from '@shared/AppConsts';
   selector: 'app-session-lock-screen',
   templateUrl: './session-lock-screen.component.html',
   styleUrls: ['session-lock-screen.component.less'],
-  animations: [accountModuleAnimation()]
+  animations: [accountModuleAnimation()],
 })
 export class SessionLockScreenComponent extends AppComponentBase {
   recaptchaSiteKey: string = AppConsts.recaptchaSiteKey;
@@ -22,7 +22,8 @@ export class SessionLockScreenComponent extends AppComponentBase {
     injector: Injector,
     private _profileService: ProfileServiceProxy,
     private _reCaptchaV3Service: ReCaptchaV3Service,
-    public loginService: LoginService) {
+    public loginService: LoginService
+  ) {
     super(injector);
     this.getLastUserInfo();
   }
@@ -41,21 +42,21 @@ export class SessionLockScreenComponent extends AppComponentBase {
     this.userInfo = {
       userName: userInfo.userName,
       tenant: userInfo.tenant,
-      profilePicture: ''
+      profilePicture: '',
     };
 
-    this._profileService.getProfilePictureByUserName(userInfo.userName)
-        .subscribe(
-          (data) => {
-            if (data.profilePicture) {
-              this.userInfo.profilePicture = 'data:image/jpeg;base64,' + data.profilePicture;
-            } else {
-              this.userInfo.profilePicture = AppConsts.appBaseUrl + '/assets/common/images/default-profile-picture.png';
-            }
-          },
-          () => {
-            this.userInfo.profilePicture = AppConsts.appBaseUrl + '/assets/common/images/default-profile-picture.png';
-          });
+    this._profileService.getProfilePictureByUserName(userInfo.userName).subscribe(
+      (data) => {
+        if (data.profilePicture) {
+          this.userInfo.profilePicture = 'data:image/jpeg;base64,' + data.profilePicture;
+        } else {
+          this.userInfo.profilePicture = AppConsts.appBaseUrl + '/assets/common/images/default-profile-picture.png';
+        }
+      },
+      () => {
+        this.userInfo.profilePicture = AppConsts.appBaseUrl + '/assets/common/images/default-profile-picture.png';
+      }
+    );
   }
 
   login(): void {
@@ -71,7 +72,6 @@ export class SessionLockScreenComponent extends AppComponentBase {
         null,
         token
       );
-
     };
 
     if (this.useCaptcha) {

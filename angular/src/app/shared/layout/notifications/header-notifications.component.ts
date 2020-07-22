@@ -6,101 +6,100 @@ import * as _ from 'lodash';
 import { UrlHelper } from '@shared/helpers/UrlHelper';
 
 @Component({
-    templateUrl: './header-notifications.component.html',
-    selector: 'header-notifications',
-    encapsulation: ViewEncapsulation.None
+  templateUrl: './header-notifications.component.html',
+  selector: 'header-notifications',
+  encapsulation: ViewEncapsulation.None,
 })
 export class HeaderNotificationsComponent extends AppComponentBase implements OnInit {
+  notifications: IFormattedUserNotification[] = [];
+  unreadNotificationCount = 0;
+  @Input() isDropup = false;
+  @Input() customStyle = 'btn btn-icon btn-dropdown btn-clean btn-lg mr-1';
 
-    notifications: IFormattedUserNotification[] = [];
-    unreadNotificationCount = 0;
-    @Input() isDropup = false;
-    @Input() customStyle = 'btn btn-icon btn-dropdown btn-clean btn-lg mr-1';
+  constructor(
+    injector: Injector,
+    private _notificationService: NotificationServiceProxy,
+    private _userNotificationHelper: UserNotificationHelper,
+    public _zone: NgZone
+  ) {
+    super(injector);
+  }
 
-    constructor(
-        injector: Injector,
-        private _notificationService: NotificationServiceProxy,
-        private _userNotificationHelper: UserNotificationHelper,
-        public _zone: NgZone
-    ) {
-        super(injector);
+  ngOnInit(): void {
+    this.loadNotifications();
+    this.registerToEvents();
+  }
+
+  loadNotifications(): void {
+    if (UrlHelper.isInstallUrl(location.href)) {
+      return;
     }
 
-    ngOnInit(): void {
-        this.loadNotifications();
-        this.registerToEvents();
+    this._notificationService.getUserNotifications(undefined, undefined, undefined, 3, 0).subscribe((result) => {
+      this.unreadNotificationCount = result.unreadCount;
+      this.notifications = [];
+      _.forEach(result.items, (item: UserNotification) => {
+        this.notifications.push(this._userNotificationHelper.format(<any>item));
+      });
+    });
+  }
+
+  registerToEvents() {
+    let self = this;
+
+    function onNotificationReceived(userNotification) {
+      self._userNotificationHelper.show(userNotification);
+      self.loadNotifications();
     }
 
-    loadNotifications(): void {
-        if (UrlHelper.isInstallUrl(location.href)) {
-            return;
+    abp.event.on('abp.notifications.received', (userNotification) => {
+      self._zone.run(() => {
+        onNotificationReceived(userNotification);
+      });
+    });
+
+    function onNotificationsRefresh() {
+      self.loadNotifications();
+    }
+
+    abp.event.on('app.notifications.refresh', () => {
+      self._zone.run(() => {
+        onNotificationsRefresh();
+      });
+    });
+
+    function onNotificationsRead(userNotificationId) {
+      for (let i = 0; i < self.notifications.length; i++) {
+        if (self.notifications[i].userNotificationId === userNotificationId) {
+          self.notifications[i].state = 'READ';
         }
+      }
 
-        this._notificationService.getUserNotifications(undefined, undefined, undefined, 3, 0).subscribe(result => {
-            this.unreadNotificationCount = result.unreadCount;
-            this.notifications = [];
-            _.forEach(result.items, (item: UserNotification) => {
-                this.notifications.push(this._userNotificationHelper.format(<any>item));
-            });
-        });
+      self.unreadNotificationCount -= 1;
     }
 
-    registerToEvents() {
-        let self = this;
+    abp.event.on('app.notifications.read', (userNotificationId) => {
+      self._zone.run(() => {
+        onNotificationsRead(userNotificationId);
+      });
+    });
+  }
 
-        function onNotificationReceived(userNotification) {
-            self._userNotificationHelper.show(userNotification);
-            self.loadNotifications();
-        }
+  setAllNotificationsAsRead(): void {
+    this._userNotificationHelper.setAllAsRead();
+  }
 
-        abp.event.on('abp.notifications.received', userNotification => {
-            self._zone.run(() => {
-                onNotificationReceived(userNotification);
-            });
-        });
+  openNotificationSettingsModal(): void {
+    this._userNotificationHelper.openSettingsModal();
+  }
 
-        function onNotificationsRefresh() {
-            self.loadNotifications();
-        }
+  setNotificationAsRead(userNotification: IFormattedUserNotification): void {
+    this._userNotificationHelper.setAsRead(userNotification.userNotificationId);
+  }
 
-        abp.event.on('app.notifications.refresh', () => {
-            self._zone.run(() => {
-                onNotificationsRefresh();
-            });
-        });
-
-        function onNotificationsRead(userNotificationId) {
-            for (let i = 0; i < self.notifications.length; i++) {
-                if (self.notifications[i].userNotificationId === userNotificationId) {
-                    self.notifications[i].state = 'READ';
-                }
-            }
-
-            self.unreadNotificationCount -= 1;
-        }
-
-        abp.event.on('app.notifications.read', userNotificationId => {
-            self._zone.run(() => {
-                onNotificationsRead(userNotificationId);
-            });
-        });
+  gotoUrl(url): void {
+    if (url) {
+      location.href = url;
     }
-
-    setAllNotificationsAsRead(): void {
-        this._userNotificationHelper.setAllAsRead();
-    }
-
-    openNotificationSettingsModal(): void {
-        this._userNotificationHelper.openSettingsModal();
-    }
-
-    setNotificationAsRead(userNotification: IFormattedUserNotification): void {
-        this._userNotificationHelper.setAsRead(userNotification.userNotificationId);
-    }
-
-    gotoUrl(url): void {
-        if (url) {
-            location.href = url;
-        }
-    }
+  }
 }

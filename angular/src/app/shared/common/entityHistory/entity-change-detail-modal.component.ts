@@ -5,58 +5,54 @@ import * as moment from 'moment';
 import { ModalDirective } from 'ngx-bootstrap/modal';
 
 @Component({
-    selector: 'entityChangeDetailModal',
-    templateUrl: './entity-change-detail-modal.component.html'
+  selector: 'entityChangeDetailModal',
+  templateUrl: './entity-change-detail-modal.component.html',
 })
 export class EntityChangeDetailModalComponent extends AppComponentBase {
+  @ViewChild('entityChangeDetailModal', { static: true }) modal: ModalDirective;
 
-    @ViewChild('entityChangeDetailModal', {static: true}) modal: ModalDirective;
+  active = false;
+  entityPropertyChanges: EntityPropertyChangeDto[];
+  entityChange: EntityChangeListDto;
 
-    active = false;
-    entityPropertyChanges: EntityPropertyChangeDto[];
-    entityChange: EntityChangeListDto;
+  constructor(injector: Injector, private _auditLogService: AuditLogServiceProxy) {
+    super(injector);
+  }
 
-    constructor(
-        injector: Injector,
-        private _auditLogService: AuditLogServiceProxy
-    ) {
-        super(injector);
+  getPropertyChangeValue(propertyChangeValue, propertyTypeFullName) {
+    if (!propertyChangeValue) {
+      return propertyChangeValue;
+    }
+    propertyChangeValue = propertyChangeValue.replace(/^['"]+/g, '').replace(/['"]+$/g, '');
+    if (this.isDate(propertyChangeValue, propertyTypeFullName)) {
+      return moment(propertyChangeValue).format('YYYY-MM-DD HH:mm:ss');
     }
 
-    getPropertyChangeValue(propertyChangeValue, propertyTypeFullName) {
-        if (!propertyChangeValue) {
-            return propertyChangeValue;
-        }
-        propertyChangeValue = propertyChangeValue.replace(/^['"]+/g, '').replace(/['"]+$/g, '');
-        if (this.isDate(propertyChangeValue, propertyTypeFullName)) {
-            return moment(propertyChangeValue).format('YYYY-MM-DD HH:mm:ss');
-        }
-
-        if (propertyChangeValue === 'null') {
-            return '';
-        }
-
-        return propertyChangeValue;
+    if (propertyChangeValue === 'null') {
+      return '';
     }
 
-    isDate(date, propertyTypeFullName): boolean {
-        return propertyTypeFullName.includes('DateTime') && !isNaN(Date.parse(date).valueOf());
-    }
+    return propertyChangeValue;
+  }
 
-    show(record: EntityChangeListDto): void {
-        const self = this;
-        self.active = true;
-        self.entityChange = record;
+  isDate(date, propertyTypeFullName): boolean {
+    return propertyTypeFullName.includes('DateTime') && !isNaN(Date.parse(date).valueOf());
+  }
 
-        this._auditLogService.getEntityPropertyChanges(record.id).subscribe((result) => {
-            self.entityPropertyChanges = result;
-        });
+  show(record: EntityChangeListDto): void {
+    const self = this;
+    self.active = true;
+    self.entityChange = record;
 
-        self.modal.show();
-    }
+    this._auditLogService.getEntityPropertyChanges(record.id).subscribe((result) => {
+      self.entityPropertyChanges = result;
+    });
 
-    close(): void {
-        this.active = false;
-        this.modal.hide();
-    }
+    self.modal.show();
+  }
+
+  close(): void {
+    this.active = false;
+    this.modal.hide();
+  }
 }

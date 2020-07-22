@@ -9,47 +9,42 @@ import { OffcanvasOptions } from '@metronic/app/core/_base/layout/directives/off
 import { ToggleOptions } from '@metronic/app/core/_base/layout/directives/toggle.directive';
 
 @Component({
-    templateUrl: './theme2-layout.component.html',
-    selector: 'theme2-layout',
-    animations: [appModuleAnimation()]
+  templateUrl: './theme2-layout.component.html',
+  selector: 'theme2-layout',
+  animations: [appModuleAnimation()],
 })
 export class Theme2LayoutComponent extends ThemesLayoutBaseComponent implements OnInit, AfterViewInit {
+  @ViewChild('ktHeader', { static: true }) ktHeader: ElementRef;
 
-    @ViewChild('ktHeader', {static: true}) ktHeader: ElementRef;
+  menuCanvasOptions: OffcanvasOptions = {
+    baseClass: 'aside',
+    overlay: true,
+    closeBy: 'kt_aside_close_btn',
+    toggleBy: 'kt_header_mobile_toggle',
+  };
 
-    menuCanvasOptions: OffcanvasOptions = {
-        baseClass: 'aside',
-        overlay: true,
-        closeBy: 'kt_aside_close_btn',
-        toggleBy: 'kt_header_mobile_toggle'
-    };
+  userMenuToggleOptions: ToggleOptions = {
+    target: this.document.body,
+    targetState: 'topbar-mobile-on',
+    toggleState: 'active',
+  };
 
-    userMenuToggleOptions: ToggleOptions = {
-        target: this.document.body,
-        targetState: 'topbar-mobile-on',
-        toggleState: 'active'
-    };
+  constructor(injector: Injector, private layoutRefService: LayoutRefService, @Inject(DOCUMENT) private document: Document) {
+    super(injector);
+  }
 
-    constructor(
-        injector: Injector,
-        private layoutRefService: LayoutRefService,
-        @Inject(DOCUMENT) private document: Document
-    ) {
-        super(injector);
-    }
+  remoteServiceBaseUrl: string = AppConsts.remoteServiceBaseUrl;
 
-    remoteServiceBaseUrl: string = AppConsts.remoteServiceBaseUrl;
+  ngOnInit() {
+    this.installationMode = UrlHelper.isInstallUrl(location.href);
+  }
 
-    ngOnInit() {
-        this.installationMode = UrlHelper.isInstallUrl(location.href);
-    }
+  ngAfterViewInit(): void {
+    this.layoutRefService.addElement('header', this.ktHeader.nativeElement);
+  }
 
-    ngAfterViewInit(): void {
-        this.layoutRefService.addElement('header', this.ktHeader.nativeElement);
-    }
-
-    toggleLeftAside(): void {
-        this.document.body.classList.toggle('header-menu-wrapper-on');
-        this.document.getElementById('kt_header_menu_wrapper').classList.toggle('header-menu-wrapper-on');
-    }
+  toggleLeftAside(): void {
+    this.document.body.classList.toggle('header-menu-wrapper-on');
+    this.document.getElementById('kt_header_menu_wrapper').classList.toggle('header-menu-wrapper-on');
+  }
 }

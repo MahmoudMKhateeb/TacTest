@@ -4,27 +4,21 @@ import { AppComponentBase } from '@shared/common/app-component-base';
 import { DemoUiComponentsServiceProxy } from '@shared/service-proxies/service-proxies';
 
 @Component({
-    selector: 'demo-ui-editor',
-    templateUrl: './demo-ui-editor.component.html',
-    animations: [appModuleAnimation()]
+  selector: 'demo-ui-editor',
+  templateUrl: './demo-ui-editor.component.html',
+  animations: [appModuleAnimation()],
 })
-
 export class DemoUiEditorComponent extends AppComponentBase {
+  htmlEditorInput: string;
 
-    htmlEditorInput: string;
+  constructor(injector: Injector, private demoUiComponentsService: DemoUiComponentsServiceProxy) {
+    super(injector);
+  }
 
-    constructor(
-        injector: Injector,
-        private demoUiComponentsService: DemoUiComponentsServiceProxy
-    ) {
-        super(injector);
-    }
-
-    // input mask - post
-    submitValue(): void {
-        this.demoUiComponentsService.sendAndGetValue(this.htmlEditorInput)
-            .subscribe(data => {
-                this.message.info(data.output, this.l('PostedValue'), { isHtml: true });
-            });
-    }
+  // input mask - post
+  submitValue(): void {
+    this.demoUiComponentsService.sendAndGetValue(this.htmlEditorInput).subscribe((data) => {
+      this.message.info(data.output, this.l('PostedValue'), { isHtml: true });
+    });
+  }
 }

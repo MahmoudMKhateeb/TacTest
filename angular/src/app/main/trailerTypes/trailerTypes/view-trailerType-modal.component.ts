@@ -4,36 +4,32 @@ import { GetTrailerTypeForViewDto, TrailerTypeDto } from '@shared/service-proxie
 import { AppComponentBase } from '@shared/common/app-component-base';
 
 @Component({
-    selector: 'viewTrailerTypeModal',
-    templateUrl: './view-trailerType-modal.component.html'
+  selector: 'viewTrailerTypeModal',
+  templateUrl: './view-trailerType-modal.component.html',
 })
 export class ViewTrailerTypeModalComponent extends AppComponentBase {
+  @ViewChild('createOrEditModal', { static: true }) modal: ModalDirective;
+  @Output() modalSave: EventEmitter<any> = new EventEmitter<any>();
 
-    @ViewChild('createOrEditModal', { static: true }) modal: ModalDirective;
-    @Output() modalSave: EventEmitter<any> = new EventEmitter<any>();
+  active = false;
+  saving = false;
 
-    active = false;
-    saving = false;
+  item: GetTrailerTypeForViewDto;
 
-    item: GetTrailerTypeForViewDto;
+  constructor(injector: Injector) {
+    super(injector);
+    this.item = new GetTrailerTypeForViewDto();
+    this.item.trailerType = new TrailerTypeDto();
+  }
 
+  show(item: GetTrailerTypeForViewDto): void {
+    this.item = item;
+    this.active = true;
+    this.modal.show();
+  }
 
-    constructor(
-        injector: Injector
-    ) {
-        super(injector);
-        this.item = new GetTrailerTypeForViewDto();
-        this.item.trailerType = new TrailerTypeDto();
-    }
-
-    show(item: GetTrailerTypeForViewDto): void {
-        this.item = item;
-        this.active = true;
-        this.modal.show();
-    }
-
-    close(): void {
-        this.active = false;
-        this.modal.hide();
-    }
+  close(): void {
+    this.active = false;
+    this.modal.hide();
+  }
 }

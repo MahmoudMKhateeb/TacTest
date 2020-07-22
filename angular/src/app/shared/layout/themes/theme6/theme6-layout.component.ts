@@ -7,28 +7,24 @@ import { ToggleOptions } from '@metronic/app/core/_base/layout/directives/toggle
 import { DOCUMENT } from '@angular/common';
 
 @Component({
-    templateUrl: './theme6-layout.component.html',
-    selector: 'theme6-layout',
-    animations: [appModuleAnimation()]
+  templateUrl: './theme6-layout.component.html',
+  selector: 'theme6-layout',
+  animations: [appModuleAnimation()],
 })
 export class Theme6LayoutComponent extends ThemesLayoutBaseComponent implements OnInit {
+  userMenuToggleOptions: ToggleOptions = {
+    target: 'kt_aside',
+    targetState: 'aside-on',
+    toggleState: 'active',
+  };
 
-    userMenuToggleOptions: ToggleOptions = {
-        target: 'kt_aside',
-        targetState: 'aside-on',
-        toggleState: 'active'
-    };
+  remoteServiceBaseUrl: string = AppConsts.remoteServiceBaseUrl;
 
-    remoteServiceBaseUrl: string = AppConsts.remoteServiceBaseUrl;
+  constructor(injector: Injector, @Inject(DOCUMENT) private document: Document) {
+    super(injector);
+  }
 
-    constructor(
-        injector: Injector,
-        @Inject(DOCUMENT) private document: Document
-    ) {
-        super(injector);
-    }
-
-    ngOnInit() {
-        this.installationMode = UrlHelper.isInstallUrl(location.href);
-    }
+  ngOnInit() {
+    this.installationMode = UrlHelper.isInstallUrl(location.href);
+  }
 }

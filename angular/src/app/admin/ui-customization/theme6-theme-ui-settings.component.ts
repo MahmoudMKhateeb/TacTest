@@ -4,42 +4,38 @@ import { AppComponentBase } from '@shared/common/app-component-base';
 import { ThemeSettingsDto, UiCustomizationSettingsServiceProxy } from '@shared/service-proxies/service-proxies';
 
 @Component({
-    templateUrl: './theme6-theme-ui-settings.component.html',
-    animations: [appModuleAnimation()],
-    selector: 'theme6-theme-ui-settings'
+  templateUrl: './theme6-theme-ui-settings.component.html',
+  animations: [appModuleAnimation()],
+  selector: 'theme6-theme-ui-settings',
 })
 export class Theme6ThemeUiSettingsComponent extends AppComponentBase {
+  @Input() settings: ThemeSettingsDto;
 
-    @Input() settings: ThemeSettingsDto;
+  constructor(injector: Injector, private _uiCustomizationService: UiCustomizationSettingsServiceProxy) {
+    super(injector);
+  }
 
-    constructor(
-        injector: Injector,
-        private _uiCustomizationService: UiCustomizationSettingsServiceProxy
-    ) {
-        super(injector);
-    }
+  getCustomizedSetting(settings: ThemeSettingsDto) {
+    settings.theme = 'theme6';
 
-    getCustomizedSetting(settings: ThemeSettingsDto) {
-        settings.theme = 'theme6';
+    return settings;
+  }
 
-        return settings;
-    }
+  updateDefaultUiManagementSettings(): void {
+    this._uiCustomizationService.updateDefaultUiManagementSettings(this.getCustomizedSetting(this.settings)).subscribe(() => {
+      window.location.reload();
+    });
+  }
 
-    updateDefaultUiManagementSettings(): void {
-        this._uiCustomizationService.updateDefaultUiManagementSettings(this.getCustomizedSetting(this.settings)).subscribe(() => {
-            window.location.reload();
-        });
-    }
+  updateUiManagementSettings(): void {
+    this._uiCustomizationService.updateUiManagementSettings(this.getCustomizedSetting(this.settings)).subscribe(() => {
+      window.location.reload();
+    });
+  }
 
-    updateUiManagementSettings(): void {
-        this._uiCustomizationService.updateUiManagementSettings(this.getCustomizedSetting(this.settings)).subscribe(() => {
-            window.location.reload();
-        });
-    }
-
-    useSystemDefaultSettings(): void {
-        this._uiCustomizationService.useSystemDefaultSettings().subscribe(() => {
-            window.location.reload();
-        });
-    }
+  useSystemDefaultSettings(): void {
+    this._uiCustomizationService.useSystemDefaultSettings().subscribe(() => {
+      window.location.reload();
+    });
+  }
 }

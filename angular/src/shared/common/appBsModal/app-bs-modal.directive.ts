@@ -3,7 +3,7 @@ import { ModalDirective } from 'ngx-bootstrap/modal';
 
 @Directive({
   selector: '[appBsModal]',
-  exportAs: 'bs-modal'
+  exportAs: 'bs-modal',
 })
 export class AppBsModalDirective extends ModalDirective {
   showElement(): void {

@@ -23,8 +23,7 @@ export class HeaderDirective implements AfterViewInit {
    * Directive Constructor
    * @param el: ElementRef
    */
-  constructor(private el: ElementRef) {
-  }
+  constructor(private el: ElementRef) {}
 
   /**
    * @ Lifecycle sequences => https://angular.io/guide/lifecycle-hooks
@@ -46,22 +45,22 @@ export class HeaderDirective implements AfterViewInit {
     this.options = {
       classic: {
         desktop: true,
-        mobile: false
+        mobile: false,
       },
     };
 
     if (this.el.nativeElement.getAttribute('data-header-minimize') === '1') {
       objectPath.set(this.options, 'minimize', {
         desktop: {
-          on: 'header-minimize'
+          on: 'header-minimize',
         },
         mobile: {
-          on: 'header-minimize'
-        }
+          on: 'header-minimize',
+        },
       });
       objectPath.set(this.options, 'offset', {
         desktop: 200,
-        mobile: 150
+        mobile: 150,
       });
     }
   }

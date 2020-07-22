@@ -4,36 +4,32 @@ import { GetPayloadMaxWeightForViewDto, PayloadMaxWeightDto } from '@shared/serv
 import { AppComponentBase } from '@shared/common/app-component-base';
 
 @Component({
-    selector: 'viewPayloadMaxWeightModal',
-    templateUrl: './view-payloadMaxWeight-modal.component.html'
+  selector: 'viewPayloadMaxWeightModal',
+  templateUrl: './view-payloadMaxWeight-modal.component.html',
 })
 export class ViewPayloadMaxWeightModalComponent extends AppComponentBase {
+  @ViewChild('createOrEditModal', { static: true }) modal: ModalDirective;
+  @Output() modalSave: EventEmitter<any> = new EventEmitter<any>();
 
-    @ViewChild('createOrEditModal', { static: true }) modal: ModalDirective;
-    @Output() modalSave: EventEmitter<any> = new EventEmitter<any>();
+  active = false;
+  saving = false;
 
-    active = false;
-    saving = false;
+  item: GetPayloadMaxWeightForViewDto;
 
-    item: GetPayloadMaxWeightForViewDto;
+  constructor(injector: Injector) {
+    super(injector);
+    this.item = new GetPayloadMaxWeightForViewDto();
+    this.item.payloadMaxWeight = new PayloadMaxWeightDto();
+  }
 
+  show(item: GetPayloadMaxWeightForViewDto): void {
+    this.item = item;
+    this.active = true;
+    this.modal.show();
+  }
 
-    constructor(
-        injector: Injector
-    ) {
-        super(injector);
-        this.item = new GetPayloadMaxWeightForViewDto();
-        this.item.payloadMaxWeight = new PayloadMaxWeightDto();
-    }
-
-    show(item: GetPayloadMaxWeightForViewDto): void {
-        this.item = item;
-        this.active = true;
-        this.modal.show();
-    }
-
-    close(): void {
-        this.active = false;
-        this.modal.hide();
-    }
+  close(): void {
+    this.active = false;
+    this.modal.hide();
+  }
 }

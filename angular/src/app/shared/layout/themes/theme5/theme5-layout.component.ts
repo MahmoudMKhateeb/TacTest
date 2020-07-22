@@ -9,41 +9,36 @@ import { ToggleOptions } from '@metronic/app/core/_base/layout/directives/toggle
 import { OffcanvasOptions } from '@metronic/app/core/_base/layout/directives/offcanvas.directive';
 
 @Component({
-    templateUrl: './theme5-layout.component.html',
-    selector: 'theme5-layout',
-    animations: [appModuleAnimation()]
+  templateUrl: './theme5-layout.component.html',
+  selector: 'theme5-layout',
+  animations: [appModuleAnimation()],
 })
 export class Theme5LayoutComponent extends ThemesLayoutBaseComponent implements OnInit, AfterViewInit {
+  @ViewChild('ktHeader', { static: true }) ktHeader: ElementRef;
 
-    @ViewChild('ktHeader', { static: true }) ktHeader: ElementRef;
+  remoteServiceBaseUrl: string = AppConsts.remoteServiceBaseUrl;
+  asideToggler;
 
-    remoteServiceBaseUrl: string = AppConsts.remoteServiceBaseUrl;
-    asideToggler;
+  userMenuToggleOptions: ToggleOptions = {
+    target: this.document.body,
+    targetState: 'topbar-mobile-on',
+    toggleState: 'active',
+  };
 
-    userMenuToggleOptions: ToggleOptions = {
-        target: this.document.body,
-        targetState: 'topbar-mobile-on',
-        toggleState: 'active'
-    };
+  constructor(injector: Injector, private layoutRefService: LayoutRefService, @Inject(DOCUMENT) private document: Document) {
+    super(injector);
+  }
 
-    constructor(
-        injector: Injector,
-        private layoutRefService: LayoutRefService,
-        @Inject(DOCUMENT) private document: Document
-    ) {
-        super(injector);
-    }
+  ngOnInit() {
+    this.installationMode = UrlHelper.isInstallUrl(location.href);
+  }
 
-    ngOnInit() {
-        this.installationMode = UrlHelper.isInstallUrl(location.href);
-    }
-
-    ngAfterViewInit(): void {
-        this.layoutRefService.addElement('header', this.ktHeader.nativeElement);
-        this.asideToggler = new KTOffcanvas(this.document.getElementById('kt_aside'), {
-            overlay: true,
-            baseClass: 'aside',
-            toggleBy: ['kt_aside_toggle', 'kt_aside_tablet_and_mobile_toggle']
-        });
-    }
+  ngAfterViewInit(): void {
+    this.layoutRefService.addElement('header', this.ktHeader.nativeElement);
+    this.asideToggler = new KTOffcanvas(this.document.getElementById('kt_aside'), {
+      overlay: true,
+      baseClass: 'aside',
+      toggleBy: ['kt_aside_toggle', 'kt_aside_tablet_and_mobile_toggle'],
+    });
+  }
 }

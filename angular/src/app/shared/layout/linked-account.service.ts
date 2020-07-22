@@ -5,29 +5,20 @@ import { AccountServiceProxy, SwitchToLinkedAccountInput, SwitchToLinkedAccountO
 
 @Injectable()
 export class LinkedAccountService {
+  constructor(private _accountService: AccountServiceProxy, private _appUrlService: AppUrlService, private _authService: AppAuthService) {}
 
-    constructor(
-        private _accountService: AccountServiceProxy,
-        private _appUrlService: AppUrlService,
-        private _authService: AppAuthService
-    ) {
+  switchToAccount(userId: number, tenantId?: number): void {
+    const input = new SwitchToLinkedAccountInput();
+    input.targetUserId = userId;
+    input.targetTenantId = tenantId;
 
-    }
+    this._accountService.switchToLinkedAccount(input).subscribe((result: SwitchToLinkedAccountOutput) => {
+      let targetUrl = this._appUrlService.getAppRootUrlOfTenant(result.tenancyName) + '?switchAccountToken=' + result.switchAccountToken;
+      if (input.targetTenantId) {
+        targetUrl = targetUrl + '&tenantId=' + input.targetTenantId;
+      }
 
-    switchToAccount(userId: number, tenantId?: number): void {
-
-        const input = new SwitchToLinkedAccountInput();
-        input.targetUserId = userId;
-        input.targetTenantId = tenantId;
-
-        this._accountService.switchToLinkedAccount(input)
-            .subscribe((result: SwitchToLinkedAccountOutput) => {
-                let targetUrl = this._appUrlService.getAppRootUrlOfTenant(result.tenancyName) + '?switchAccountToken=' + result.switchAccountToken;
-                if (input.targetTenantId) {
-                    targetUrl = targetUrl + '&tenantId=' + input.targetTenantId;
-                }
-
-                this._authService.logout(true, targetUrl);
-            });
-    }
+      this._authService.logout(true, targetUrl);
+    });
+  }
 }

@@ -1,11 +1,15 @@
 export abstract class DashboardChartBase {
-    loading = true;
+  loading = true;
 
-    showLoading() {
-        setTimeout(() => { this.loading = true; });
-    }
+  showLoading() {
+    setTimeout(() => {
+      this.loading = true;
+    });
+  }
 
-    hideLoading() {
-        setTimeout(() => { this.loading = false; });
-    }
+  hideLoading() {
+    setTimeout(() => {
+      this.loading = false;
+    });
+  }
 }

@@ -1,6 +1,6 @@
 ﻿import { Component, Injector, ViewEncapsulation, ViewChild } from '@angular/core';
-import { ActivatedRoute , Router} from '@angular/router';
-import { GoodCategoriesServiceProxy, GoodCategoryDto  } from '@shared/service-proxies/service-proxies';
+import { ActivatedRoute, Router } from '@angular/router';
+import { GoodCategoriesServiceProxy, GoodCategoryDto } from '@shared/service-proxies/service-proxies';
 import { NotifyService } from 'abp-ng2-module';
 import { AppComponentBase } from '@shared/common/app-component-base';
 import { TokenAuthServiceProxy } from '@shared/service-proxies/service-proxies';
@@ -17,109 +17,103 @@ import * as _ from 'lodash';
 import * as moment from 'moment';
 
 @Component({
-    templateUrl: './goodCategories.component.html',
-    encapsulation: ViewEncapsulation.None,
-    animations: [appModuleAnimation()]
+  templateUrl: './goodCategories.component.html',
+  encapsulation: ViewEncapsulation.None,
+  animations: [appModuleAnimation()],
 })
 export class GoodCategoriesComponent extends AppComponentBase {
-    
-    
-    @ViewChild('entityTypeHistoryModal', { static: true }) entityTypeHistoryModal: EntityTypeHistoryModalComponent;
-    @ViewChild('createOrEditGoodCategoryModal', { static: true }) createOrEditGoodCategoryModal: CreateOrEditGoodCategoryModalComponent;
-    @ViewChild('viewGoodCategoryModalComponent', { static: true }) viewGoodCategoryModal: ViewGoodCategoryModalComponent;   
-    
-    @ViewChild('dataTable', { static: true }) dataTable: Table;
-    @ViewChild('paginator', { static: true }) paginator: Paginator;
+  @ViewChild('entityTypeHistoryModal', { static: true }) entityTypeHistoryModal: EntityTypeHistoryModalComponent;
+  @ViewChild('createOrEditGoodCategoryModal', { static: true }) createOrEditGoodCategoryModal: CreateOrEditGoodCategoryModalComponent;
+  @ViewChild('viewGoodCategoryModalComponent', { static: true }) viewGoodCategoryModal: ViewGoodCategoryModalComponent;
 
-    advancedFiltersAreShown = false;
-    filterText = '';
-    displayNameFilter = '';
+  @ViewChild('dataTable', { static: true }) dataTable: Table;
+  @ViewChild('paginator', { static: true }) paginator: Paginator;
 
+  advancedFiltersAreShown = false;
+  filterText = '';
+  displayNameFilter = '';
 
-    _entityTypeFullName = 'TACHYON.Goods.GoodCategories.GoodCategory';
-    entityHistoryEnabled = false;
+  _entityTypeFullName = 'TACHYON.Goods.GoodCategories.GoodCategory';
+  entityHistoryEnabled = false;
 
-    constructor(
-        injector: Injector,
-        private _goodCategoriesServiceProxy: GoodCategoriesServiceProxy,
-        private _notifyService: NotifyService,
-        private _tokenAuth: TokenAuthServiceProxy,
-        private _activatedRoute: ActivatedRoute,
-        private _fileDownloadService: FileDownloadService
-    ) {
-        super(injector);
+  constructor(
+    injector: Injector,
+    private _goodCategoriesServiceProxy: GoodCategoriesServiceProxy,
+    private _notifyService: NotifyService,
+    private _tokenAuth: TokenAuthServiceProxy,
+    private _activatedRoute: ActivatedRoute,
+    private _fileDownloadService: FileDownloadService
+  ) {
+    super(injector);
+  }
+
+  ngOnInit(): void {
+    this.entityHistoryEnabled = this.setIsEntityHistoryEnabled();
+  }
+
+  private setIsEntityHistoryEnabled(): boolean {
+    let customSettings = (abp as any).custom;
+    return (
+      this.isGrantedAny('Pages.Administration.AuditLogs') &&
+      customSettings.EntityHistory &&
+      customSettings.EntityHistory.isEnabled &&
+      _.filter(customSettings.EntityHistory.enabledEntities, (entityType) => entityType === this._entityTypeFullName).length === 1
+    );
+  }
+
+  getGoodCategories(event?: LazyLoadEvent) {
+    if (this.primengTableHelper.shouldResetPaging(event)) {
+      this.paginator.changePage(0);
+      return;
     }
 
-    ngOnInit(): void {
-        this.entityHistoryEnabled = this.setIsEntityHistoryEnabled();
-    }
+    this.primengTableHelper.showLoadingIndicator();
 
-    private setIsEntityHistoryEnabled(): boolean {
-        let customSettings = (abp as any).custom;
-        return this.isGrantedAny('Pages.Administration.AuditLogs') && customSettings.EntityHistory && customSettings.EntityHistory.isEnabled && _.filter(customSettings.EntityHistory.enabledEntities, entityType => entityType === this._entityTypeFullName).length === 1;
-    }
-
-    getGoodCategories(event?: LazyLoadEvent) {
-        if (this.primengTableHelper.shouldResetPaging(event)) {
-            this.paginator.changePage(0);
-            return;
-        }
-
-        this.primengTableHelper.showLoadingIndicator();
-
-        this._goodCategoriesServiceProxy.getAll(
-            this.filterText,
-            this.displayNameFilter,
-            this.primengTableHelper.getSorting(this.dataTable),
-            this.primengTableHelper.getSkipCount(this.paginator, event),
-            this.primengTableHelper.getMaxResultCount(this.paginator, event)
-        ).subscribe(result => {
-            this.primengTableHelper.totalRecordsCount = result.totalCount;
-            this.primengTableHelper.records = result.items;
-            this.primengTableHelper.hideLoadingIndicator();
-        });
-    }
-
-    reloadPage(): void {
-        this.paginator.changePage(this.paginator.getPage());
-    }
-
-    createGoodCategory(): void {
-        this.createOrEditGoodCategoryModal.show();        
-    }
-
-
-    showHistory(goodCategory: GoodCategoryDto): void {
-        this.entityTypeHistoryModal.show({
-            entityId: goodCategory.id.toString(),
-            entityTypeFullName: this._entityTypeFullName,
-            entityTypeDescription: ''
-        });
-    }
-
-    deleteGoodCategory(goodCategory: GoodCategoryDto): void {
-        this.message.confirm(
-            '',
-            this.l('AreYouSure'),
-            (isConfirmed) => {
-                if (isConfirmed) {
-                    this._goodCategoriesServiceProxy.delete(goodCategory.id)
-                        .subscribe(() => {
-                            this.reloadPage();
-                            this.notify.success(this.l('SuccessfullyDeleted'));
-                        });
-                }
-            }
-        );
-    }
-
-    exportToExcel(): void {
-        this._goodCategoriesServiceProxy.getGoodCategoriesToExcel(
+    this._goodCategoriesServiceProxy
+      .getAll(
         this.filterText,
-            this.displayNameFilter,
-        )
-        .subscribe(result => {
-            this._fileDownloadService.downloadTempFile(result);
-         });
-    }
+        this.displayNameFilter,
+        this.primengTableHelper.getSorting(this.dataTable),
+        this.primengTableHelper.getSkipCount(this.paginator, event),
+        this.primengTableHelper.getMaxResultCount(this.paginator, event)
+      )
+      .subscribe((result) => {
+        this.primengTableHelper.totalRecordsCount = result.totalCount;
+        this.primengTableHelper.records = result.items;
+        this.primengTableHelper.hideLoadingIndicator();
+      });
+  }
+
+  reloadPage(): void {
+    this.paginator.changePage(this.paginator.getPage());
+  }
+
+  createGoodCategory(): void {
+    this.createOrEditGoodCategoryModal.show();
+  }
+
+  showHistory(goodCategory: GoodCategoryDto): void {
+    this.entityTypeHistoryModal.show({
+      entityId: goodCategory.id.toString(),
+      entityTypeFullName: this._entityTypeFullName,
+      entityTypeDescription: '',
+    });
+  }
+
+  deleteGoodCategory(goodCategory: GoodCategoryDto): void {
+    this.message.confirm('', this.l('AreYouSure'), (isConfirmed) => {
+      if (isConfirmed) {
+        this._goodCategoriesServiceProxy.delete(goodCategory.id).subscribe(() => {
+          this.reloadPage();
+          this.notify.success(this.l('SuccessfullyDeleted'));
+        });
+      }
+    });
+  }
+
+  exportToExcel(): void {
+    this._goodCategoriesServiceProxy.getGoodCategoriesToExcel(this.filterText, this.displayNameFilter).subscribe((result) => {
+      this._fileDownloadService.downloadTempFile(result);
+    });
+  }
 }

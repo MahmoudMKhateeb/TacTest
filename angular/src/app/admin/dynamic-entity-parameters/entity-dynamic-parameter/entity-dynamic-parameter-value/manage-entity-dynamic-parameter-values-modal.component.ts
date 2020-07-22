@@ -5,7 +5,7 @@ import { EntityDynamicParameterValueManagerComponent } from './entity-dynamic-pa
 
 @Component({
   selector: 'manage-entity-dynamic-parameter-values-modal',
-  templateUrl: './manage-entity-dynamic-parameter-values-modal.component.html'
+  templateUrl: './manage-entity-dynamic-parameter-values-modal.component.html',
 })
 export class ManageEntityDynamicParameterValuesModalComponent extends AppComponentBase {
   @ViewChild('entityDynamicParameterValueManager', { static: false }) entityDynamicParameterValueManager: EntityDynamicParameterValueManagerComponent;
@@ -16,9 +16,7 @@ export class ManageEntityDynamicParameterValuesModalComponent extends AppCompone
 
   initialized = false;
 
-  constructor(
-    _injector: Injector,
-  ) {
+  constructor(_injector: Injector) {
     super(_injector);
   }
 
@@ -31,7 +29,6 @@ export class ManageEntityDynamicParameterValuesModalComponent extends AppCompone
   }
 
   show(entityFullName: string, entityId: string) {
-
     this.entityFullName = entityFullName;
     this.entityId = entityId;
 

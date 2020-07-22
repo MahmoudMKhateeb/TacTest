@@ -13,53 +13,53 @@ import { Theme4ThemeAssetContributor } from '@app/shared/layout/themes/theme4/Th
 import { Theme3ThemeAssetContributor } from '@app/shared/layout/themes/theme3/Theme3ThemeAssetContributor';
 
 export class ThemeAssetContributorFactory {
-    static getCurrent(): IThemeAssetContributor {
-        let theme = ThemeHelper.getTheme();
+  static getCurrent(): IThemeAssetContributor {
+    let theme = ThemeHelper.getTheme();
 
-        if (theme === 'default') {
-            return new DefaultThemeAssetContributor();
-        }
-
-        if (theme === 'theme2') {
-            return new Theme2ThemeAssetContributor();
-        }
-
-        if (theme === 'theme3') {
-            return new Theme3ThemeAssetContributor();
-        }
-
-        if (theme === 'theme4') {
-            return new Theme4ThemeAssetContributor();
-        }
-
-        if (theme === 'theme5') {
-            return new Theme5ThemeAssetContributor();
-        }
-
-        if (theme === 'theme6') {
-            return new Theme6ThemeAssetContributor();
-        }
-
-        if (theme === 'theme7') {
-            return new Theme7ThemeAssetContributor();
-        }
-
-        if (theme === 'theme8') {
-            return new Theme8ThemeAssetContributor();
-        }
-
-        if (theme === 'theme9') {
-            return new Theme9ThemeAssetContributor();
-        }
-
-        if (theme === 'theme10') {
-            return new Theme10ThemeAssetContributor();
-        }
-
-        if (theme === 'theme11') {
-            return new Theme11ThemeAssetContributor();
-        }
-
-        return null;
+    if (theme === 'default') {
+      return new DefaultThemeAssetContributor();
     }
+
+    if (theme === 'theme2') {
+      return new Theme2ThemeAssetContributor();
+    }
+
+    if (theme === 'theme3') {
+      return new Theme3ThemeAssetContributor();
+    }
+
+    if (theme === 'theme4') {
+      return new Theme4ThemeAssetContributor();
+    }
+
+    if (theme === 'theme5') {
+      return new Theme5ThemeAssetContributor();
+    }
+
+    if (theme === 'theme6') {
+      return new Theme6ThemeAssetContributor();
+    }
+
+    if (theme === 'theme7') {
+      return new Theme7ThemeAssetContributor();
+    }
+
+    if (theme === 'theme8') {
+      return new Theme8ThemeAssetContributor();
+    }
+
+    if (theme === 'theme9') {
+      return new Theme9ThemeAssetContributor();
+    }
+
+    if (theme === 'theme10') {
+      return new Theme10ThemeAssetContributor();
+    }
+
+    if (theme === 'theme11') {
+      return new Theme11ThemeAssetContributor();
+    }
+
+    return null;
+  }
 }

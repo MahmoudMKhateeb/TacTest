@@ -9,72 +9,67 @@ import { CreateNewUserDelegationModalComponent } from './create-new-user-delegat
 import { finalize } from 'rxjs/operators';
 
 @Component({
-    selector: 'userDelegationsModal',
-    templateUrl: './user-delegations-modal.component.html'
+  selector: 'userDelegationsModal',
+  templateUrl: './user-delegations-modal.component.html',
 })
 export class UserDelegationsModalComponent extends AppComponentBase {
+  @ViewChild('userDelegationsModal', { static: true }) modal: ModalDirective;
+  @ViewChild('createNewUserDelegation', { static: true }) createNewUserDelegation: CreateNewUserDelegationModalComponent;
+  @ViewChild('dataTable', { static: true }) dataTable: Table;
+  @ViewChild('paginator', { static: true }) paginator: Paginator;
 
-    @ViewChild('userDelegationsModal', { static: true }) modal: ModalDirective;
-    @ViewChild('createNewUserDelegation', { static: true }) createNewUserDelegation: CreateNewUserDelegationModalComponent;
-    @ViewChild('dataTable', { static: true }) dataTable: Table;
-    @ViewChild('paginator', { static: true }) paginator: Paginator;
+  @Output() modalClose: EventEmitter<any> = new EventEmitter<any>();
 
-    @Output() modalClose: EventEmitter<any> = new EventEmitter<any>();
+  constructor(injector: Injector, private _userDelegationService: UserDelegationServiceProxy) {
+    super(injector);
+  }
 
-    constructor(
-        injector: Injector,
-        private _userDelegationService: UserDelegationServiceProxy
-    ) {
-        super(injector);
-    }
+  getUserDelegations(event?: LazyLoadEvent) {
+    this.primengTableHelper.showLoadingIndicator();
 
-    getUserDelegations(event?: LazyLoadEvent) {
-        this.primengTableHelper.showLoadingIndicator();
+    this._userDelegationService
+      .getDelegatedUsers(
+        this.primengTableHelper.getMaxResultCount(this.paginator, event),
+        this.primengTableHelper.getSkipCount(this.paginator, event),
+        this.primengTableHelper.getSorting(this.dataTable)
+      )
+      .pipe(finalize(() => this.primengTableHelper.hideLoadingIndicator()))
+      .subscribe((result) => {
+        this.primengTableHelper.totalRecordsCount = result.totalCount;
+        this.primengTableHelper.records = result.items;
+        this.primengTableHelper.hideLoadingIndicator();
+      });
+  }
 
-        this._userDelegationService.getDelegatedUsers(
-            this.primengTableHelper.getMaxResultCount(this.paginator, event),
-            this.primengTableHelper.getSkipCount(this.paginator, event),
-            this.primengTableHelper.getSorting(this.dataTable)
-        ).pipe(finalize(() => this.primengTableHelper.hideLoadingIndicator())).subscribe(result => {
-            this.primengTableHelper.totalRecordsCount = result.totalCount;
-            this.primengTableHelper.records = result.items;
-            this.primengTableHelper.hideLoadingIndicator();
+  deleteUserDelegation(userDelegation: UserDelegationDto): void {
+    this.message.confirm(this.l('UserDelegationDeleteWarningMessage', userDelegation.username), this.l('AreYouSure'), (isConfirmed) => {
+      if (isConfirmed) {
+        this._userDelegationService.removeDelegation(userDelegation.id).subscribe(() => {
+          this.reloadPage();
+          this.notify.success(this.l('SuccessfullyDeleted'));
         });
-    }
+      }
+    });
+  }
 
-    deleteUserDelegation(userDelegation: UserDelegationDto): void {
-        this.message.confirm(
-            this.l('UserDelegationDeleteWarningMessage', userDelegation.username),
-            this.l('AreYouSure'),
-            isConfirmed => {
-                if (isConfirmed) {
-                    this._userDelegationService.removeDelegation(userDelegation.id).subscribe(() => {
-                        this.reloadPage();
-                        this.notify.success(this.l('SuccessfullyDeleted'));
-                    });
-                }
-            }
-        );
-    }
+  reloadPage(): void {
+    this.paginator.changePage(this.paginator.getPage());
+  }
 
-    reloadPage(): void {
-        this.paginator.changePage(this.paginator.getPage());
-    }
+  manageUserDelegations(): void {
+    this.createNewUserDelegation.show();
+  }
 
-    manageUserDelegations(): void {
-        this.createNewUserDelegation.show();
-    }
+  show(): void {
+    this.modal.show();
+  }
 
-    show(): void {
-        this.modal.show();
-    }
+  onShown(): void {
+    this.getUserDelegations(null);
+  }
 
-    onShown(): void {
-        this.getUserDelegations(null);
-    }
-
-    close(): void {
-        this.modal.hide();
-        this.modalClose.emit(null);
-    }
+  close(): void {
+    this.modal.hide();
+    this.modalClose.emit(null);
+  }
 }

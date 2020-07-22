@@ -3,30 +3,30 @@ import { OnDestroy, Injector } from '@angular/core';
 import { timer, Subscription } from 'rxjs';
 
 export abstract class WidgetComponentBase extends AppComponentBase implements OnDestroy {
-    delay = 300;
-    timer: Subscription;
+  delay = 300;
+  timer: Subscription;
 
-    constructor(injector: Injector) {
-        super(injector);
+  constructor(injector: Injector) {
+    super(injector);
+  }
+
+  /**
+   * Run methods delayed. If runDelay called multiple time before its delay, only run last called.
+   * @param method Method to call
+   */
+  runDelayed(method: () => void) {
+    if (this.timer && !this.timer.closed) {
+      this.timer.unsubscribe();
     }
 
-    /**
-     * Run methods delayed. If runDelay called multiple time before its delay, only run last called.
-     * @param method Method to call
-     */
-    runDelayed(method: () => void) {
-        if (this.timer && !this.timer.closed) {
-            this.timer.unsubscribe();
-        }
+    this.timer = timer(this.delay).subscribe(() => {
+      method();
+    });
+  }
 
-        this.timer = timer(this.delay).subscribe(() => {
-            method();
-        });
+  ngOnDestroy(): void {
+    if (this.timer && !this.timer.closed) {
+      this.timer.unsubscribe();
     }
-
-    ngOnDestroy(): void {
-        if (this.timer && !this.timer.closed) {
-            this.timer.unsubscribe();
-        }
-    }
+  }
 }

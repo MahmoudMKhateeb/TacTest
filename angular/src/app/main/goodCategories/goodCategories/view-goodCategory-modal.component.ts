@@ -4,36 +4,32 @@ import { GetGoodCategoryForViewDto, GoodCategoryDto } from '@shared/service-prox
 import { AppComponentBase } from '@shared/common/app-component-base';
 
 @Component({
-    selector: 'viewGoodCategoryModal',
-    templateUrl: './view-goodCategory-modal.component.html'
+  selector: 'viewGoodCategoryModal',
+  templateUrl: './view-goodCategory-modal.component.html',
 })
 export class ViewGoodCategoryModalComponent extends AppComponentBase {
+  @ViewChild('createOrEditModal', { static: true }) modal: ModalDirective;
+  @Output() modalSave: EventEmitter<any> = new EventEmitter<any>();
 
-    @ViewChild('createOrEditModal', { static: true }) modal: ModalDirective;
-    @Output() modalSave: EventEmitter<any> = new EventEmitter<any>();
+  active = false;
+  saving = false;
 
-    active = false;
-    saving = false;
+  item: GetGoodCategoryForViewDto;
 
-    item: GetGoodCategoryForViewDto;
+  constructor(injector: Injector) {
+    super(injector);
+    this.item = new GetGoodCategoryForViewDto();
+    this.item.goodCategory = new GoodCategoryDto();
+  }
 
+  show(item: GetGoodCategoryForViewDto): void {
+    this.item = item;
+    this.active = true;
+    this.modal.show();
+  }
 
-    constructor(
-        injector: Injector
-    ) {
-        super(injector);
-        this.item = new GetGoodCategoryForViewDto();
-        this.item.goodCategory = new GoodCategoryDto();
-    }
-
-    show(item: GetGoodCategoryForViewDto): void {
-        this.item = item;
-        this.active = true;
-        this.modal.show();
-    }
-
-    close(): void {
-        this.active = false;
-        this.modal.hide();
-    }
+  close(): void {
+    this.active = false;
+    this.modal.hide();
+  }
 }

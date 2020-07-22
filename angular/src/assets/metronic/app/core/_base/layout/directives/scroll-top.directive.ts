@@ -10,7 +10,7 @@ export interface ScrollTopOptions {
  * Scroll to top
  */
 @Directive({
-  selector: '[ktScrollTop]'
+  selector: '[ktScrollTop]',
 })
 export class ScrollTopDirective implements AfterViewInit {
   // Public properties
@@ -22,8 +22,7 @@ export class ScrollTopDirective implements AfterViewInit {
    * Directive Constructor
    * @param el: ElementRef
    */
-  constructor(private el: ElementRef) {
-  }
+  constructor(private el: ElementRef) {}
 
   /**
    * @ Lifecycle sequences => https://angular.io/guide/lifecycle-hooks

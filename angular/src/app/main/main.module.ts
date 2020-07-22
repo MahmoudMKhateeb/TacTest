@@ -64,7 +64,8 @@ import { CreateOrEditTrucksTypeModalComponent } from './trucksTypes/trucksTypes/
 import { AutoCompleteModule } from 'primeng/autocomplete';
 import { PaginatorModule } from 'primeng/paginator';
 import { EditorModule } from 'primeng/editor';
-import { InputMaskModule } from 'primeng/inputmask';import { FileUploadModule } from 'primeng/fileupload';
+import { InputMaskModule } from 'primeng/inputmask';
+import { FileUploadModule } from 'primeng/fileupload';
 import { TableModule } from 'primeng/table';
 
 import { UtilsModule } from '@shared/utils/utils.module';
@@ -81,100 +82,102 @@ import { NgxChartsModule } from '@swimlane/ngx-charts';
 import { BsDatepickerConfig, BsDaterangepickerConfig, BsLocaleService } from 'ngx-bootstrap/datepicker';
 import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
 import { NgxBootstrapDatePickerConfigService } from 'assets/ngx-bootstrap/ngx-bootstrap-datepicker-config.service';
-import {ImageCropperModule} from '@node_modules/ngx-image-cropper';
+import { ImageCropperModule } from '@node_modules/ngx-image-cropper';
 
 NgxBootstrapDatePickerConfigService.registerNgxBootstrapDatePickerLocales();
 
 @NgModule({
-    imports: [
-        FileUploadModule,
-        AutoCompleteModule,
-        PaginatorModule,
-        EditorModule,
-        InputMaskModule, TableModule,
+  imports: [
+    FileUploadModule,
+    AutoCompleteModule,
+    PaginatorModule,
+    EditorModule,
+    InputMaskModule,
+    TableModule,
 
-        CommonModule,
-        FormsModule,
-        ModalModule,
-        TabsModule,
-        TooltipModule,
-        AppCommonModule,
-        UtilsModule,
-        MainRoutingModule,
-        CountoModule,
-        NgxChartsModule,
-        BsDatepickerModule.forRoot(),
-        BsDropdownModule.forRoot(),
-        PopoverModule.forRoot(), ImageCropperModule
-    ],
-    declarations: [
-		ShippingRequestsComponent,
+    CommonModule,
+    FormsModule,
+    ModalModule,
+    TabsModule,
+    TooltipModule,
+    AppCommonModule,
+    UtilsModule,
+    MainRoutingModule,
+    CountoModule,
+    NgxChartsModule,
+    BsDatepickerModule.forRoot(),
+    BsDropdownModule.forRoot(),
+    PopoverModule.forRoot(),
+    ImageCropperModule,
+  ],
+  declarations: [
+    ShippingRequestsComponent,
 
-		ViewShippingRequestComponent,
-		CreateOrEditShippingRequestComponent,
-		GoodsDetailsComponent,
+    ViewShippingRequestComponent,
+    CreateOrEditShippingRequestComponent,
+    GoodsDetailsComponent,
 
-		ViewGoodsDetailModalComponent,
-		CreateOrEditGoodsDetailModalComponent,
-		OffersComponent,
+    ViewGoodsDetailModalComponent,
+    CreateOrEditGoodsDetailModalComponent,
+    OffersComponent,
 
-		ViewOfferModalComponent,
-		CreateOrEditOfferModalComponent,
-		RoutStepsComponent,
+    ViewOfferModalComponent,
+    CreateOrEditOfferModalComponent,
+    RoutStepsComponent,
 
-		ViewRoutStepModalComponent,
-		CreateOrEditRoutStepModalComponent,
-		RoutesComponent,
+    ViewRoutStepModalComponent,
+    CreateOrEditRoutStepModalComponent,
+    RoutesComponent,
 
-		ViewRouteComponent,
-		CreateOrEditRouteComponent,
-		CitiesComponent,
+    ViewRouteComponent,
+    CreateOrEditRouteComponent,
+    CitiesComponent,
 
-		ViewCityModalComponent,
-		CreateOrEditCityModalComponent,
-		CountiesComponent,
+    ViewCityModalComponent,
+    CreateOrEditCityModalComponent,
+    CountiesComponent,
 
-		ViewCountyModalComponent,
-		CreateOrEditCountyModalComponent,
-		RoutTypesComponent,
+    ViewCountyModalComponent,
+    CreateOrEditCountyModalComponent,
+    RoutTypesComponent,
 
-		ViewRoutTypeModalComponent,
-		CreateOrEditRoutTypeModalComponent,
-		GoodCategoriesComponent,
+    ViewRoutTypeModalComponent,
+    CreateOrEditRoutTypeModalComponent,
+    GoodCategoriesComponent,
 
-		ViewGoodCategoryModalComponent,
-		CreateOrEditGoodCategoryModalComponent,
-		TrailersComponent,
+    ViewGoodCategoryModalComponent,
+    CreateOrEditGoodCategoryModalComponent,
+    TrailersComponent,
 
-		ViewTrailerModalComponent,
-		CreateOrEditTrailerModalComponent,
-		TrailerStatusesComponent,
+    ViewTrailerModalComponent,
+    CreateOrEditTrailerModalComponent,
+    TrailerStatusesComponent,
 
-		ViewTrailerStatusModalComponent,
-		CreateOrEditTrailerStatusModalComponent,
-		PayloadMaxWeightsComponent,
+    ViewTrailerStatusModalComponent,
+    CreateOrEditTrailerStatusModalComponent,
+    PayloadMaxWeightsComponent,
 
-		ViewPayloadMaxWeightModalComponent,
-		CreateOrEditPayloadMaxWeightModalComponent,
-		TrailerTypesComponent,
+    ViewPayloadMaxWeightModalComponent,
+    CreateOrEditPayloadMaxWeightModalComponent,
+    TrailerTypesComponent,
 
-		ViewTrailerTypeModalComponent,
-		CreateOrEditTrailerTypeModalComponent,
-		TrucksComponent,
+    ViewTrailerTypeModalComponent,
+    CreateOrEditTrailerTypeModalComponent,
+    TrucksComponent,
 
-		ViewTruckModalComponent,
-		CreateOrEditTruckModalComponent,
+    ViewTruckModalComponent,
+    CreateOrEditTruckModalComponent,
     TruckUserLookupTableModalComponent,
-		TrucksTypesComponent,
+    TrucksTypesComponent,
 
-		ViewTrucksTypeModalComponent,
-		CreateOrEditTrucksTypeModalComponent,
-        DashboardComponent
-    ],
-    providers: [
-        { provide: BsDatepickerConfig, useFactory: NgxBootstrapDatePickerConfigService.getDatepickerConfig },
-        { provide: BsDaterangepickerConfig, useFactory: NgxBootstrapDatePickerConfigService.getDaterangepickerConfig },
-        { provide: BsLocaleService, useFactory: NgxBootstrapDatePickerConfigService.getDatepickerLocale }
-    ]
+    ViewTrucksTypeModalComponent,
+    CreateOrEditTrucksTypeModalComponent,
+    DashboardComponent,
+  ],
+  providers: [
+    { provide: BsDatepickerConfig, useFactory: NgxBootstrapDatePickerConfigService.getDatepickerConfig },
+    { provide: BsDaterangepickerConfig, useFactory: NgxBootstrapDatePickerConfigService.getDaterangepickerConfig },
+    { provide: BsLocaleService, useFactory: NgxBootstrapDatePickerConfigService.getDatepickerLocale },
+  ],
 })
-export class MainModule { }
+export class MainModule {}

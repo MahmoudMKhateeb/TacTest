@@ -1,6 +1,12 @@
 import { Component, OnInit, Injector, Input, EventEmitter, Output } from '@angular/core';
 import { AppComponentBase } from '@shared/common/app-component-base';
-import { EntityDynamicParameterValueServiceProxy, GetAllEntityDynamicParameterValuesOutputItem, CleanValuesInput, InsertOrUpdateAllValuesInput, InsertOrUpdateAllValuesInputItem } from '@shared/service-proxies/service-proxies';
+import {
+  EntityDynamicParameterValueServiceProxy,
+  GetAllEntityDynamicParameterValuesOutputItem,
+  CleanValuesInput,
+  InsertOrUpdateAllValuesInput,
+  InsertOrUpdateAllValuesInputItem,
+} from '@shared/service-proxies/service-proxies';
 import { InputTypeConfigurationDefinition, InputTypeConfigurationService } from '@app/shared/common/input-types/input-type-configuration.service';
 import { InputTypeComponentBase } from '@app/shared/common/input-types/input-type-component-base';
 
@@ -17,7 +23,7 @@ export class EntityDynamicParameterValueViewItem {
 
 @Component({
   selector: 'entity-dynamic-parameter-value-manager',
-  templateUrl: './entity-dynamic-parameter-value-manager.component.html'
+  templateUrl: './entity-dynamic-parameter-value-manager.component.html',
 })
 export class EntityDynamicParameterValueManagerComponent extends AppComponentBase implements OnInit {
   @Input() entityFullName: string;
@@ -41,56 +47,56 @@ export class EntityDynamicParameterValueManagerComponent extends AppComponentBas
 
   initialize(): void {
     this.initialized = false;
-    this._entityDynamicParameterValueService
-      .getAllEntityDynamicParameterValues(this.entityFullName, this.entityId)
-      .subscribe(
-        (data) => {
-          if (data.items) {
-            this.items = data.items.map((item) => {
-              let definition = this._inputTypeConfigurationService.getByInputType(item.inputType);
+    this._entityDynamicParameterValueService.getAllEntityDynamicParameterValues(this.entityFullName, this.entityId).subscribe(
+      (data) => {
+        if (data.items) {
+          this.items = data.items.map((item) => {
+            let definition = this._inputTypeConfigurationService.getByInputType(item.inputType);
 
-              let viewItem = new EntityDynamicParameterValueViewItem(item, definition);
+            let viewItem = new EntityDynamicParameterValueViewItem(item, definition);
 
-              const componentInstanceCallback = (instance: InputTypeComponentBase) => {
-                viewItem.componentInstance = instance;
-              };
+            const componentInstanceCallback = (instance: InputTypeComponentBase) => {
+              viewItem.componentInstance = instance;
+            };
 
-              let injector = Injector.create(
-                [
-                  { provide: 'selectedValues', useValue: item.selectedValues },
-                  { provide: 'allValues', useValue: item.allValuesInputTypeHas },
-                  { provide: 'componentInstance', useValue: componentInstanceCallback },
-                ], this._injector);
+            let injector = Injector.create(
+              [
+                { provide: 'selectedValues', useValue: item.selectedValues },
+                { provide: 'allValues', useValue: item.allValuesInputTypeHas },
+                { provide: 'componentInstance', useValue: componentInstanceCallback },
+              ],
+              this._injector
+            );
 
-              viewItem.injector = injector;
-              return viewItem;
-            });
-          }
-          this.initialized = true;
-          this.hideMainSpinner();
-        },
-        (err) => {
-          this.hideMainSpinner();
+            viewItem.injector = injector;
+            return viewItem;
+          });
         }
-      );
+        this.initialized = true;
+        this.hideMainSpinner();
+      },
+      (err) => {
+        this.hideMainSpinner();
+      }
+    );
   }
 
   deleteAllValuesOfEntityDynamicParameterId(item: EntityDynamicParameterValueViewItem): void {
-    this.message.confirm(
-      this.l('DeleteEntityDynamicParameterValueMessage', item.data.parameterName),
-      this.l('AreYouSure'),
-      isConfirmed => {
-        if (isConfirmed) {
-          this._entityDynamicParameterValueService.cleanValues(new CleanValuesInput({
-            entityDynamicParameterId: item.data.entityDynamicParameterId,
-            entityId: this.entityId
-          })).subscribe(() => {
+    this.message.confirm(this.l('DeleteEntityDynamicParameterValueMessage', item.data.parameterName), this.l('AreYouSure'), (isConfirmed) => {
+      if (isConfirmed) {
+        this._entityDynamicParameterValueService
+          .cleanValues(
+            new CleanValuesInput({
+              entityDynamicParameterId: item.data.entityDynamicParameterId,
+              entityId: this.entityId,
+            })
+          )
+          .subscribe(() => {
             abp.notify.success(this.l('SuccessfullyDeleted'));
             this.initialize();
           });
-        }
       }
-    );
+    });
   }
 
   saveAll(): void {
@@ -105,7 +111,7 @@ export class EntityDynamicParameterValueManagerComponent extends AppComponentBas
         new InsertOrUpdateAllValuesInputItem({
           entityDynamicParameterId: element.data.entityDynamicParameterId,
           entityId: this.entityId,
-          values: element.componentInstance.getSelectedValues()
+          values: element.componentInstance.getSelectedValues(),
         })
       );
     }
@@ -113,7 +119,7 @@ export class EntityDynamicParameterValueManagerComponent extends AppComponentBas
     this._entityDynamicParameterValueService
       .insertOrUpdateAllValues(
         new InsertOrUpdateAllValuesInput({
-          items: newItems
+          items: newItems,
         })
       )
       .subscribe(

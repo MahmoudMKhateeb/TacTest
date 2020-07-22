@@ -9,26 +9,23 @@ import { Router } from '@angular/router';
 @Component({
   templateUrl: './webhook-subscription.component.html',
   styleUrls: ['./webhook-subscription.component.css'],
-  animations: [appModuleAnimation()]
+  animations: [appModuleAnimation()],
 })
 export class WebhookSubscriptionComponent extends AppComponentBase {
+  @ViewChild('createOrEditWebhookSubscriptionModal', { static: true })
+  createOrEditWebhookSubscriptionModal: CreateOrEditWebhookSubscriptionModalComponent;
 
-  @ViewChild('createOrEditWebhookSubscriptionModal', { static: true }) createOrEditWebhookSubscriptionModal: CreateOrEditWebhookSubscriptionModalComponent;
-
-  constructor(
-    injector: Injector,
-    private _webhookSubscriptionService: WebhookSubscriptionServiceProxy,
-    private _router: Router
-  ) {
+  constructor(injector: Injector, private _webhookSubscriptionService: WebhookSubscriptionServiceProxy, private _router: Router) {
     super(injector);
   }
 
   getSubscriptions(event?: any): void {
     this.primengTableHelper.showLoadingIndicator();
 
-    this._webhookSubscriptionService.getAllSubscriptions()
+    this._webhookSubscriptionService
+      .getAllSubscriptions()
       .pipe(finalize(() => this.primengTableHelper.hideLoadingIndicator()))
-      .subscribe(result => {
+      .subscribe((result) => {
         this.primengTableHelper.totalRecordsCount = result.items.length;
         this.primengTableHelper.records = result.items;
         this.primengTableHelper.hideLoadingIndicator();
@@ -40,11 +37,10 @@ export class WebhookSubscriptionComponent extends AppComponentBase {
   }
 
   goToSubscriptionDetail(subscriptionId: string): void {
-    this._router.navigate(['app/admin/webhook-subscriptions-detail'],
-      {
-        queryParams: {
-          id: subscriptionId,
-        }
-      });
+    this._router.navigate(['app/admin/webhook-subscriptions-detail'], {
+      queryParams: {
+        id: subscriptionId,
+      },
+    });
   }
 }

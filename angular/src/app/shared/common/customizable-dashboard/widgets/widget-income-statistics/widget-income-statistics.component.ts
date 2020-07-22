@@ -7,10 +7,9 @@ import { WidgetComponentBase } from '../widget-component-base';
 @Component({
   selector: 'app-widget-income-statistics',
   templateUrl: './widget-income-statistics.component.html',
-  styleUrls: ['./widget-income-statistics.component.css']
+  styleUrls: ['./widget-income-statistics.component.css'],
 })
 export class WidgetIncomeStatisticsComponent extends WidgetComponentBase implements OnInit, OnDestroy {
-
   selectedIncomeStatisticsDateInterval = ChartDateInterval.Daily;
   loadingIncomeStatistics = true;
 
@@ -19,9 +18,7 @@ export class WidgetIncomeStatisticsComponent extends WidgetComponentBase impleme
   incomeStatisticsHasData = false;
   appIncomeStatisticsDateInterval = ChartDateInterval;
 
-  constructor(injector: Injector,
-    private _hostDashboardServiceProxy: HostDashboardServiceProxy
-  ) {
+  constructor(injector: Injector, private _hostDashboardServiceProxy: HostDashboardServiceProxy) {
     super(injector);
   }
 
@@ -41,30 +38,30 @@ export class WidgetIncomeStatisticsComponent extends WidgetComponentBase impleme
 
   loadIncomeStatisticsData = () => {
     this.loadingIncomeStatistics = true;
-    this._hostDashboardServiceProxy.getIncomeStatistics(
-      this.selectedIncomeStatisticsDateInterval,
-      moment(this.selectedDateRange[0]),
-      moment(this.selectedDateRange[1]))
-      .subscribe(result => {
+    this._hostDashboardServiceProxy
+      .getIncomeStatistics(this.selectedIncomeStatisticsDateInterval, moment(this.selectedDateRange[0]), moment(this.selectedDateRange[1]))
+      .subscribe((result) => {
         this.incomeStatisticsData = this.normalizeIncomeStatisticsData(result.incomeStatistics);
-        this.incomeStatisticsHasData = _.filter(this.incomeStatisticsData[0].series, data => data.value > 0).length > 0;
+        this.incomeStatisticsHasData = _.filter(this.incomeStatisticsData[0].series, (data) => data.value > 0).length > 0;
         this.loadingIncomeStatistics = false;
       });
-  }
+  };
 
   normalizeIncomeStatisticsData(data): any {
     const chartData = [];
     for (let i = 0; i < data.length; i++) {
       chartData.push({
-        'name': moment(moment(data[i].date).utc().valueOf()).format('L'),
-        'value': data[i].amount
+        name: moment(moment(data[i].date).utc().valueOf()).format('L'),
+        value: data[i].amount,
       });
     }
 
-    return [{
-      name: '',
-      series: chartData
-    }];
+    return [
+      {
+        name: '',
+        series: chartData,
+      },
+    ];
   }
 
   onDateRangeFilterChange = (dateRange) => {
@@ -75,7 +72,7 @@ export class WidgetIncomeStatisticsComponent extends WidgetComponentBase impleme
     this.selectedDateRange[0] = dateRange[0];
     this.selectedDateRange[1] = dateRange[1];
     this.runDelayed(this.loadIncomeStatisticsData);
-  }
+  };
 
   subDateRangeFilter() {
     abp.event.on('app.dashboardFilters.dateRangePicker.onDateChange', this.onDateRangeFilterChange);

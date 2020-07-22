@@ -6,7 +6,7 @@ import { EntityDynamicParameterValueManagerComponent } from './entity-dynamic-pa
 
 @Component({
   templateUrl: './entity-dynamic-parameter-value.component.html',
-  animations: [appModuleAnimation()]
+  animations: [appModuleAnimation()],
 })
 export class EntityDynamicParameterValueComponent extends AppComponentBase implements OnInit {
   @ViewChild('entityDynamicParameterValueManager', { static: false }) entityDynamicParameterValueManager: EntityDynamicParameterValueManagerComponent;
@@ -15,21 +15,16 @@ export class EntityDynamicParameterValueComponent extends AppComponentBase imple
   entityId: string;
 
   initialized = false;
-  constructor(
-    _injector: Injector,
-    private _activatedRoute: ActivatedRoute
-  ) {
+  constructor(_injector: Injector, private _activatedRoute: ActivatedRoute) {
     super(_injector);
   }
 
   ngOnInit() {
-    this._activatedRoute.params
-      .subscribe(
-        (params: Params) => {
-          this.entityFullName = params['entityFullName'];
-          this.entityId = params['rowId'];
-          this.initialized = true;
-        });
+    this._activatedRoute.params.subscribe((params: Params) => {
+      this.entityFullName = params['entityFullName'];
+      this.entityId = params['rowId'];
+      this.initialized = true;
+    });
   }
 
   saveAll(): void {

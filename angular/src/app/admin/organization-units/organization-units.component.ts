@@ -7,25 +7,22 @@ import { OrganizationUnitRolesComponent } from './organization-unit-roles.compon
 import { IBasicOrganizationUnitInfo } from './basic-organization-unit-info';
 
 @Component({
-    templateUrl: './organization-units.component.html',
-    animations: [appModuleAnimation()]
+  templateUrl: './organization-units.component.html',
+  animations: [appModuleAnimation()],
 })
 export class OrganizationUnitsComponent extends AppComponentBase {
+  @ViewChild('ouMembers', { static: true }) ouMembers: OrganizationUnitMembersComponent;
+  @ViewChild('ouRoles', { static: true }) ouRoles: OrganizationUnitRolesComponent;
+  @ViewChild('ouTree', { static: true }) ouTree: OrganizationTreeComponent;
+  organizationUnit: IBasicOrganizationUnitInfo = null;
 
-    @ViewChild('ouMembers', {static: true}) ouMembers: OrganizationUnitMembersComponent;
-    @ViewChild('ouRoles', {static: true}) ouRoles: OrganizationUnitRolesComponent;
-    @ViewChild('ouTree', {static: true}) ouTree: OrganizationTreeComponent;
-    organizationUnit: IBasicOrganizationUnitInfo = null;
+  constructor(injector: Injector) {
+    super(injector);
+  }
 
-    constructor(
-        injector: Injector
-    ) {
-        super(injector);
-    }
-
-    ouSelected(event: any): void {
-        this.organizationUnit = event;
-        this.ouMembers.organizationUnit = event;
-        this.ouRoles.organizationUnit = event;
-    }
+  ouSelected(event: any): void {
+    this.organizationUnit = event;
+    this.ouMembers.organizationUnit = event;
+    this.ouRoles.organizationUnit = event;
+  }
 }

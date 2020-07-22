@@ -1,93 +1,93 @@
 import { ChangeDetectorRef, Component, ElementRef, EventEmitter, Injector, Output, ViewChild } from '@angular/core';
 import { AppComponentBase } from '@shared/common/app-component-base';
-import { CreateOrganizationUnitInput, OrganizationUnitDto, OrganizationUnitServiceProxy, UpdateOrganizationUnitInput } from '@shared/service-proxies/service-proxies';
+import {
+  CreateOrganizationUnitInput,
+  OrganizationUnitDto,
+  OrganizationUnitServiceProxy,
+  UpdateOrganizationUnitInput,
+} from '@shared/service-proxies/service-proxies';
 import { ModalDirective } from 'ngx-bootstrap/modal';
 import { finalize } from 'rxjs/operators';
 
 export interface IOrganizationUnitOnEdit {
-    id?: number;
-    parentId?: number;
-    displayName?: string;
+  id?: number;
+  parentId?: number;
+  displayName?: string;
 }
 
 @Component({
-    selector: 'createOrEditOrganizationUnitModal',
-    templateUrl: './create-or-edit-unit-modal.component.html'
+  selector: 'createOrEditOrganizationUnitModal',
+  templateUrl: './create-or-edit-unit-modal.component.html',
 })
 export class CreateOrEditUnitModalComponent extends AppComponentBase {
+  @ViewChild('createOrEditModal', { static: true }) modal: ModalDirective;
+  @ViewChild('organizationUnitDisplayName', { static: true }) organizationUnitDisplayNameInput: ElementRef;
 
-    @ViewChild('createOrEditModal', {static: true}) modal: ModalDirective;
-    @ViewChild('organizationUnitDisplayName', {static: true}) organizationUnitDisplayNameInput: ElementRef;
+  @Output() unitCreated: EventEmitter<OrganizationUnitDto> = new EventEmitter<OrganizationUnitDto>();
+  @Output() unitUpdated: EventEmitter<OrganizationUnitDto> = new EventEmitter<OrganizationUnitDto>();
 
-    @Output() unitCreated: EventEmitter<OrganizationUnitDto> = new EventEmitter<OrganizationUnitDto>();
-    @Output() unitUpdated: EventEmitter<OrganizationUnitDto> = new EventEmitter<OrganizationUnitDto>();
+  active = false;
+  saving = false;
 
-    active = false;
-    saving = false;
+  organizationUnit: IOrganizationUnitOnEdit = {};
 
-    organizationUnit: IOrganizationUnitOnEdit = {};
+  constructor(injector: Injector, private _organizationUnitService: OrganizationUnitServiceProxy, private _changeDetector: ChangeDetectorRef) {
+    super(injector);
+  }
 
-    constructor(
-        injector: Injector,
-        private _organizationUnitService: OrganizationUnitServiceProxy,
-        private _changeDetector: ChangeDetectorRef
-    ) {
-        super(injector);
+  onShown(): void {
+    document.getElementById('OrganizationUnitDisplayName').focus();
+  }
+
+  show(organizationUnit: IOrganizationUnitOnEdit): void {
+    this.organizationUnit = organizationUnit;
+    this.active = true;
+    this.modal.show();
+    this._changeDetector.detectChanges();
+  }
+
+  save(): void {
+    if (!this.organizationUnit.id) {
+      this.createUnit();
+    } else {
+      this.updateUnit();
     }
+  }
 
-    onShown(): void {
-        document.getElementById('OrganizationUnitDisplayName').focus();
-    }
+  createUnit() {
+    const createInput = new CreateOrganizationUnitInput();
+    createInput.parentId = this.organizationUnit.parentId;
+    createInput.displayName = this.organizationUnit.displayName;
 
-    show(organizationUnit: IOrganizationUnitOnEdit): void {
-        this.organizationUnit = organizationUnit;
-        this.active = true;
-        this.modal.show();
-        this._changeDetector.detectChanges();
-    }
+    this.saving = true;
+    this._organizationUnitService
+      .createOrganizationUnit(createInput)
+      .pipe(finalize(() => (this.saving = false)))
+      .subscribe((result: OrganizationUnitDto) => {
+        this.notify.info(this.l('SavedSuccessfully'));
+        this.close();
+        this.unitCreated.emit(result);
+      });
+  }
 
-    save(): void {
-        if (!this.organizationUnit.id) {
-            this.createUnit();
-        } else {
-            this.updateUnit();
-        }
-    }
+  updateUnit() {
+    const updateInput = new UpdateOrganizationUnitInput();
+    updateInput.id = this.organizationUnit.id;
+    updateInput.displayName = this.organizationUnit.displayName;
 
-    createUnit() {
-        const createInput = new CreateOrganizationUnitInput();
-        createInput.parentId = this.organizationUnit.parentId;
-        createInput.displayName = this.organizationUnit.displayName;
+    this.saving = true;
+    this._organizationUnitService
+      .updateOrganizationUnit(updateInput)
+      .pipe(finalize(() => (this.saving = false)))
+      .subscribe((result: OrganizationUnitDto) => {
+        this.notify.info(this.l('SavedSuccessfully'));
+        this.close();
+        this.unitUpdated.emit(result);
+      });
+  }
 
-        this.saving = true;
-        this._organizationUnitService
-            .createOrganizationUnit(createInput)
-            .pipe(finalize(() => this.saving = false))
-            .subscribe((result: OrganizationUnitDto) => {
-                this.notify.info(this.l('SavedSuccessfully'));
-                this.close();
-                this.unitCreated.emit(result);
-            });
-    }
-
-    updateUnit() {
-        const updateInput = new UpdateOrganizationUnitInput();
-        updateInput.id = this.organizationUnit.id;
-        updateInput.displayName = this.organizationUnit.displayName;
-
-        this.saving = true;
-        this._organizationUnitService
-            .updateOrganizationUnit(updateInput)
-            .pipe(finalize(() => this.saving = false))
-            .subscribe((result: OrganizationUnitDto) => {
-                this.notify.info(this.l('SavedSuccessfully'));
-                this.close();
-                this.unitUpdated.emit(result);
-            });
-    }
-
-    close(): void {
-        this.modal.hide();
-        this.active = false;
-    }
+  close(): void {
+    this.modal.hide();
+    this.active = false;
+  }
 }

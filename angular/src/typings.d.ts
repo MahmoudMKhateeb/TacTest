@@ -19,9 +19,9 @@ declare var KTScrolltop: any; // Related to Metronic
 declare var StripeCheckout: any;
 
 declare namespace abp {
-    namespace ui {
-        function setBusy(elm?: any, text?: any, optionsOrPromise?: any): void;
-    }
+  namespace ui {
+    function setBusy(elm?: any, text?: any, optionsOrPromise?: any): void;
+  }
 }
 
 /**

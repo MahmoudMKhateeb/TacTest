@@ -7,10 +7,9 @@ import { LocalStorageService } from '@shared/utils/local-storage.service';
 
 @Component({
   selector: 'session-timeout',
-  template: '<session-timeout-modal></session-timeout-modal>'
+  template: '<session-timeout-modal></session-timeout-modal>',
 })
 export class SessionTimeoutComponent extends AppComponentBase implements AfterViewInit, OnDestroy {
-
   @ViewChild(SessionTimeoutModalComponent)
   private sessionTimeOutModal: SessionTimeoutModalComponent;
 
@@ -23,56 +22,65 @@ export class SessionTimeoutComponent extends AppComponentBase implements AfterVi
   private notifierIsOpened = false;
   private subscriptions: Subscription[] = [];
 
-  constructor(
-    injector: Injector,
-    private _localStorageService: LocalStorageService
-  ) {
+  constructor(injector: Injector, private _localStorageService: LocalStorageService) {
     super(injector);
   }
 
   ngAfterViewInit() {
     this.bindActions();
     this.writeToStorage(); // initialize store
-    this.subscriptions.push(timer(1000, 1000).subscribe(() => {
-      this.control();
-    }));
+    this.subscriptions.push(
+      timer(1000, 1000).subscribe(() => {
+        this.control();
+      })
+    );
   }
 
   ngOnDestroy(): void {
     this.destroy$.next();
-    this.subscriptions.forEach(subscription => subscription.unsubscribe());
+    this.subscriptions.forEach((subscription) => subscription.unsubscribe());
   }
 
   private bindActions(): void {
-    this.subscriptions.push(fromEvent(window, 'mousemove')
-      .pipe(takeUntil(this.destroy$), debounceTime(350))
-      .subscribe(() => {
-        this.setUserActivity();
-      }));
+    this.subscriptions.push(
+      fromEvent(window, 'mousemove')
+        .pipe(takeUntil(this.destroy$), debounceTime(350))
+        .subscribe(() => {
+          this.setUserActivity();
+        })
+    );
 
-    this.subscriptions.push(fromEvent(window, 'mousedown')
-      .pipe(takeUntil(this.destroy$), debounceTime(350))
-      .subscribe(() => {
-        this.setUserActivity();
-      }));
+    this.subscriptions.push(
+      fromEvent(window, 'mousedown')
+        .pipe(takeUntil(this.destroy$), debounceTime(350))
+        .subscribe(() => {
+          this.setUserActivity();
+        })
+    );
 
-    this.subscriptions.push(fromEvent(window, 'click')
-      .pipe(takeUntil(this.destroy$), debounceTime(350))
-      .subscribe(() => {
-        this.setUserActivity();
-      }));
+    this.subscriptions.push(
+      fromEvent(window, 'click')
+        .pipe(takeUntil(this.destroy$), debounceTime(350))
+        .subscribe(() => {
+          this.setUserActivity();
+        })
+    );
 
-    this.subscriptions.push(fromEvent(window, 'scroll')
-      .pipe(takeUntil(this.destroy$), debounceTime(350))
-      .subscribe(() => {
-        this.setUserActivity();
-      }));
+    this.subscriptions.push(
+      fromEvent(window, 'scroll')
+        .pipe(takeUntil(this.destroy$), debounceTime(350))
+        .subscribe(() => {
+          this.setUserActivity();
+        })
+    );
 
-    this.subscriptions.push(fromEvent(window, 'keypress')
-      .pipe(takeUntil(this.destroy$), debounceTime(350))
-      .subscribe(() => {
-        this.setUserActivity();
-      }));
+    this.subscriptions.push(
+      fromEvent(window, 'keypress')
+        .pipe(takeUntil(this.destroy$), debounceTime(350))
+        .subscribe(() => {
+          this.setUserActivity();
+        })
+    );
   }
 
   private setUserActivity(): void {

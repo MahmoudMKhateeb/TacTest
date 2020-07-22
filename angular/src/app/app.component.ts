@@ -16,91 +16,86 @@ import { NotificationSettingsModalComponent } from '@app/shared/layout/notificat
 import { UserNotificationHelper } from '@app/shared/layout/notifications/UserNotificationHelper';
 
 @Component({
-    templateUrl: './app.component.html',
-    styleUrls: ['./app.component.less']
+  templateUrl: './app.component.html',
+  styleUrls: ['./app.component.less'],
 })
 export class AppComponent extends AppComponentBase implements OnInit {
+  subscriptionStartType = SubscriptionStartType;
+  theme: string;
+  installationMode = true;
 
-    subscriptionStartType = SubscriptionStartType;
-    theme: string;
-    installationMode = true;
+  @ViewChild('loginAttemptsModal', { static: true }) loginAttemptsModal: LoginAttemptsModalComponent;
+  @ViewChild('linkedAccountsModal') linkedAccountsModal: LinkedAccountsModalComponent;
+  @ViewChild('userDelegationsModal', { static: true }) userDelegationsModal: UserDelegationsModalComponent;
+  @ViewChild('changePasswordModal', { static: true }) changePasswordModal: ChangePasswordModalComponent;
+  @ViewChild('changeProfilePictureModal', { static: true }) changeProfilePictureModal: ChangeProfilePictureModalComponent;
+  @ViewChild('mySettingsModal', { static: true }) mySettingsModal: MySettingsModalComponent;
+  @ViewChild('notificationSettingsModal', { static: true }) notificationSettingsModal: NotificationSettingsModalComponent;
+  @ViewChild('chatBarComponent') chatBarComponent;
+  isQuickThemeSelectEnabled: boolean = this.setting.getBoolean('App.UserManagement.IsQuickThemeSelectEnabled');
+  IsSessionTimeOutEnabled: boolean = this.setting.getBoolean('App.UserManagement.SessionTimeOut.IsEnabled') && this.appSession.userId != null;
 
-    @ViewChild('loginAttemptsModal', {static: true}) loginAttemptsModal: LoginAttemptsModalComponent;
-    @ViewChild('linkedAccountsModal') linkedAccountsModal: LinkedAccountsModalComponent;
-    @ViewChild('userDelegationsModal', {static: true}) userDelegationsModal: UserDelegationsModalComponent;
-    @ViewChild('changePasswordModal', {static: true}) changePasswordModal: ChangePasswordModalComponent;
-    @ViewChild('changeProfilePictureModal', {static: true}) changeProfilePictureModal: ChangeProfilePictureModalComponent;
-    @ViewChild('mySettingsModal', {static: true}) mySettingsModal: MySettingsModalComponent;
-    @ViewChild('notificationSettingsModal', {static: true}) notificationSettingsModal: NotificationSettingsModalComponent;
-    @ViewChild('chatBarComponent') chatBarComponent;
-    isQuickThemeSelectEnabled: boolean = this.setting.getBoolean('App.UserManagement.IsQuickThemeSelectEnabled');
-    IsSessionTimeOutEnabled: boolean = this.setting.getBoolean('App.UserManagement.SessionTimeOut.IsEnabled') && this.appSession.userId != null;
+  public constructor(injector: Injector, private _chatSignalrService: ChatSignalrService, private _userNotificationHelper: UserNotificationHelper) {
+    super(injector);
+  }
 
-    public constructor(
-        injector: Injector,
-        private _chatSignalrService: ChatSignalrService,
-        private _userNotificationHelper: UserNotificationHelper
-    ) {
-        super(injector);
+  ngOnInit(): void {
+    this._userNotificationHelper.settingsModal = this.notificationSettingsModal;
+    this.theme = abp.setting.get('App.UiManagement.Theme').toLocaleLowerCase();
+    this.installationMode = UrlHelper.isInstallUrl(location.href);
+
+    this.registerModalOpenEvents();
+
+    if (this.appSession.application) {
+      SignalRHelper.initSignalR(() => {
+        this._chatSignalrService.init();
+      });
+    }
+  }
+
+  subscriptionStatusBarVisible(): boolean {
+    return this.appSession.tenantId > 0 && (this.appSession.tenant.isInTrialPeriod || this.subscriptionIsExpiringSoon());
+  }
+
+  subscriptionIsExpiringSoon(): boolean {
+    if (this.appSession.tenant.subscriptionEndDateUtc) {
+      return moment().utc().add(AppConsts.subscriptionExpireNootifyDayCount, 'days') >= moment(this.appSession.tenant.subscriptionEndDateUtc);
     }
 
-    ngOnInit(): void {
-        this._userNotificationHelper.settingsModal = this.notificationSettingsModal;
-        this.theme = abp.setting.get('App.UiManagement.Theme').toLocaleLowerCase();
-        this.installationMode = UrlHelper.isInstallUrl(location.href);
+    return false;
+  }
 
-        this.registerModalOpenEvents();
+  registerModalOpenEvents(): void {
+    abp.event.on('app.show.loginAttemptsModal', () => {
+      this.loginAttemptsModal.show();
+    });
 
-        if (this.appSession.application) {
-            SignalRHelper.initSignalR(() => { this._chatSignalrService.init(); });
-        }
-    }
+    abp.event.on('app.show.linkedAccountsModal', () => {
+      this.linkedAccountsModal.show();
+    });
 
-    subscriptionStatusBarVisible(): boolean {
-        return this.appSession.tenantId > 0 &&
-            (this.appSession.tenant.isInTrialPeriod ||
-                this.subscriptionIsExpiringSoon());
-    }
+    abp.event.on('app.show.userDelegationsModal', () => {
+      this.userDelegationsModal.show();
+    });
 
-    subscriptionIsExpiringSoon(): boolean {
-        if (this.appSession.tenant.subscriptionEndDateUtc) {
-            return moment().utc().add(AppConsts.subscriptionExpireNootifyDayCount, 'days') >= moment(this.appSession.tenant.subscriptionEndDateUtc);
-        }
+    abp.event.on('app.show.changePasswordModal', () => {
+      this.changePasswordModal.show();
+    });
 
-        return false;
-    }
+    abp.event.on('app.show.changeProfilePictureModal', () => {
+      this.changeProfilePictureModal.show();
+    });
 
-    registerModalOpenEvents(): void {
-        abp.event.on('app.show.loginAttemptsModal', () => {
-            this.loginAttemptsModal.show();
-        });
+    abp.event.on('app.show.mySettingsModal', () => {
+      this.mySettingsModal.show();
+    });
+  }
 
-        abp.event.on('app.show.linkedAccountsModal', () => {
-            this.linkedAccountsModal.show();
-        });
+  getRecentlyLinkedUsers(): void {
+    abp.event.trigger('app.getRecentlyLinkedUsers');
+  }
 
-        abp.event.on('app.show.userDelegationsModal', () => {
-            this.userDelegationsModal.show();
-        });
-
-        abp.event.on('app.show.changePasswordModal', () => {
-            this.changePasswordModal.show();
-        });
-
-        abp.event.on('app.show.changeProfilePictureModal', () => {
-            this.changeProfilePictureModal.show();
-        });
-
-        abp.event.on('app.show.mySettingsModal', () => {
-            this.mySettingsModal.show();
-        });
-    }
-
-    getRecentlyLinkedUsers(): void {
-        abp.event.trigger('app.getRecentlyLinkedUsers');
-    }
-
-    onMySettingsModalSaved(): void {
-        abp.event.trigger('app.onMySettingsModalSaved');
-    }
+  onMySettingsModalSaved(): void {
+    abp.event.trigger('app.onMySettingsModalSaved');
+  }
 }

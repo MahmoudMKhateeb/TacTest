@@ -5,10 +5,9 @@ import * as moment from 'moment';
 @Component({
   selector: 'app-filter-date-range-picker',
   templateUrl: './filter-date-range-picker.component.html',
-  styleUrls: ['./filter-date-range-picker.component.css']
+  styleUrls: ['./filter-date-range-picker.component.css'],
 })
 export class FilterDateRangePickerComponent extends AppComponentBase {
-
   date: Date;
   selectedDateRange: moment.Moment[] = [moment().add(-7, 'days').startOf('day'), moment().endOf('day')];
   constructor(injector: Injector) {

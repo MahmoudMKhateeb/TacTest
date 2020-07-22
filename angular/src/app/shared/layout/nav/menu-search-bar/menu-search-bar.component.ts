@@ -7,10 +7,9 @@ import { Router } from '@angular/router';
 @Component({
   selector: 'menu-search-bar',
   templateUrl: './menu-search-bar.component.html',
-  styleUrls: ['./menu-search-bar.component.css']
+  styleUrls: ['./menu-search-bar.component.css'],
 })
 export class MenuSearchBarComponent extends AppComponentBase {
-
   allMenuItems: any[];
 
   searchMenuResults: NameValueOfString[];
@@ -19,11 +18,7 @@ export class MenuSearchBarComponent extends AppComponentBase {
 
   selected: '';
 
-  constructor(
-    injector: Injector,
-    private _appNavigationService: AppNavigationService,
-    private router: Router) {
-
+  constructor(injector: Injector, private _appNavigationService: AppNavigationService, private router: Router) {
     super(injector);
     this.initializeMenuSearch();
   }
@@ -33,25 +28,27 @@ export class MenuSearchBarComponent extends AppComponentBase {
   }
 
   private getAllMenuItems() {
-    return this._appNavigationService.getAllMenuItems().filter(item => this.showMenuItem(item) && item.route).map(menuItem => {
-      return {
-        name: this.l(menuItem.name),
-        route: menuItem.route
-      };
-    });
+    return this._appNavigationService
+      .getAllMenuItems()
+      .filter((item) => this.showMenuItem(item) && item.route)
+      .map((menuItem) => {
+        return {
+          name: this.l(menuItem.name),
+          route: menuItem.route,
+        };
+      });
   }
 
   searchMenuItem(event) {
     this.searchMenuResults = this.allMenuItems
-      .filter(item =>
-        item.name.toLowerCase().includes(event.query.toLowerCase()) ||
-        item.route.toLowerCase().includes(event.query.toLowerCase())
-      )
-      .map(menuItem =>
-        new NameValueOfString({
-          name: menuItem.name,
-          value: menuItem.route
-        }));
+      .filter((item) => item.name.toLowerCase().includes(event.query.toLowerCase()) || item.route.toLowerCase().includes(event.query.toLowerCase()))
+      .map(
+        (menuItem) =>
+          new NameValueOfString({
+            name: menuItem.name,
+            value: menuItem.route,
+          })
+      );
   }
 
   selectMenuItem(event) {

@@ -10,51 +10,44 @@ import { MoveTenantsToAnotherEditionModalComponent } from './move-tenants-to-ano
 import { finalize } from 'rxjs/operators';
 
 @Component({
-    templateUrl: './editions.component.html',
-    animations: [appModuleAnimation()]
+  templateUrl: './editions.component.html',
+  animations: [appModuleAnimation()],
 })
 export class EditionsComponent extends AppComponentBase {
+  @ViewChild('createEditionModal', { static: true }) createEditionModal: CreateEditionModalComponent;
+  @ViewChild('editEditionModal', { static: true }) editEditionModal: EditEditionModalComponent;
+  @ViewChild('moveTenantsToAnotherEditionModal', { static: true }) moveTenantsToAnotherEditionModal: MoveTenantsToAnotherEditionModalComponent;
+  @ViewChild('dataTable', { static: true }) dataTable: Table;
+  @ViewChild('paginator', { static: true }) paginator: Paginator;
 
-    @ViewChild('createEditionModal', {static: true}) createEditionModal: CreateEditionModalComponent;
-    @ViewChild('editEditionModal', {static: true}) editEditionModal: EditEditionModalComponent;
-    @ViewChild('moveTenantsToAnotherEditionModal', {static: true}) moveTenantsToAnotherEditionModal: MoveTenantsToAnotherEditionModalComponent;
-    @ViewChild('dataTable', {static: true}) dataTable: Table;
-    @ViewChild('paginator', {static: true}) paginator: Paginator;
+  constructor(injector: Injector, private _editionService: EditionServiceProxy) {
+    super(injector);
+  }
 
-    constructor(
-        injector: Injector,
-        private _editionService: EditionServiceProxy
-    ) {
-        super(injector);
-    }
+  getEditions(): void {
+    this.primengTableHelper.showLoadingIndicator();
+    this._editionService
+      .getEditions()
+      .pipe(finalize(() => this.primengTableHelper.hideLoadingIndicator()))
+      .subscribe((result) => {
+        this.primengTableHelper.totalRecordsCount = result.items.length;
+        this.primengTableHelper.records = result.items;
+        this.primengTableHelper.hideLoadingIndicator();
+      });
+  }
 
-    getEditions(): void {
-        this.primengTableHelper.showLoadingIndicator();
-        this._editionService.getEditions()
-            .pipe(finalize(() => this.primengTableHelper.hideLoadingIndicator()))
-            .subscribe(result => {
-                this.primengTableHelper.totalRecordsCount = result.items.length;
-                this.primengTableHelper.records = result.items;
-                this.primengTableHelper.hideLoadingIndicator();
-            });
-    }
+  createEdition(): void {
+    this.createEditionModal.show();
+  }
 
-    createEdition(): void {
-        this.createEditionModal.show();
-    }
-
-    deleteEdition(edition: EditionListDto): void {
-        this.message.confirm(
-            this.l('EditionDeleteWarningMessage', edition.displayName),
-            this.l('AreYouSure'),
-            isConfirmed => {
-                if (isConfirmed) {
-                    this._editionService.deleteEdition(edition.id).subscribe(() => {
-                        this.getEditions();
-                        this.notify.success(this.l('SuccessfullyDeleted'));
-                    });
-                }
-            }
-        );
-    }
+  deleteEdition(edition: EditionListDto): void {
+    this.message.confirm(this.l('EditionDeleteWarningMessage', edition.displayName), this.l('AreYouSure'), (isConfirmed) => {
+      if (isConfirmed) {
+        this._editionService.deleteEdition(edition.id).subscribe(() => {
+          this.getEditions();
+          this.notify.success(this.l('SuccessfullyDeleted'));
+        });
+      }
+    });
+  }
 }

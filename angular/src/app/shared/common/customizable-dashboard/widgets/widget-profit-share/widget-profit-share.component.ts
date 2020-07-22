@@ -4,15 +4,12 @@ import { DashboardChartBase } from '../dashboard-chart-base';
 import { WidgetComponentBase } from '../widget-component-base';
 
 class ProfitSharePieChart extends DashboardChartBase {
-
   chartData: any[] = [];
   scheme: any = {
     name: 'custom',
     selectable: true,
     group: 'Ordinal',
-    domain: [
-      '#00c5dc', '#ffb822', '#716aca'
-    ]
+    domain: ['#00c5dc', '#ffb822', '#716aca'],
   };
 
   constructor(private _dashboardService: TenantDashboardServiceProxy) {
@@ -20,12 +17,11 @@ class ProfitSharePieChart extends DashboardChartBase {
   }
 
   init(data: number[]) {
-
     let formattedData = [];
     for (let i = 0; i < data.length; i++) {
       formattedData.push({
-        'name': this.getChartItemName(i),
-        'value': data[i]
+        name: this.getChartItemName(i),
+        value: data[i],
       });
     }
 
@@ -50,7 +46,7 @@ class ProfitSharePieChart extends DashboardChartBase {
 
   reload() {
     this.showLoading();
-    this._dashboardService.getProfitShare().subscribe(data => {
+    this._dashboardService.getProfitShare().subscribe((data) => {
       this.init(data.profitShares);
       this.hideLoading();
     });
@@ -60,14 +56,12 @@ class ProfitSharePieChart extends DashboardChartBase {
 @Component({
   selector: 'app-widget-profit-share',
   templateUrl: './widget-profit-share.component.html',
-  styleUrls: ['./widget-profit-share.component.css']
+  styleUrls: ['./widget-profit-share.component.css'],
 })
 export class WidgetProfitShareComponent extends WidgetComponentBase implements OnInit {
-
   profitSharePieChart: ProfitSharePieChart;
 
-  constructor(injector: Injector,
-    private _dashboardService: TenantDashboardServiceProxy) {
+  constructor(injector: Injector, private _dashboardService: TenantDashboardServiceProxy) {
     super(injector);
     this.profitSharePieChart = new ProfitSharePieChart(this._dashboardService);
   }

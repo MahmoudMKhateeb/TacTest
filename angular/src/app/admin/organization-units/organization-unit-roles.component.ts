@@ -11,117 +11,111 @@ import { IRolesWithOrganizationUnit } from './roles-with-organization-unit';
 import { finalize } from 'rxjs/operators';
 
 @Component({
-    selector: 'organization-unit-roles',
-    templateUrl: './organization-unit-roles.component.html'
+  selector: 'organization-unit-roles',
+  templateUrl: './organization-unit-roles.component.html',
 })
 export class OrganizationUnitRolesComponent extends AppComponentBase implements OnInit {
+  @Output() roleRemoved = new EventEmitter<IRoleWithOrganizationUnit>();
+  @Output() rolesAdded = new EventEmitter<IRolesWithOrganizationUnit>();
 
-    @Output() roleRemoved = new EventEmitter<IRoleWithOrganizationUnit>();
-    @Output() rolesAdded = new EventEmitter<IRolesWithOrganizationUnit>();
+  @ViewChild('addRoleModal', { static: true }) addRoleModal: AddRoleModalComponent;
+  @ViewChild('dataTable', { static: true }) dataTable: Table;
+  @ViewChild('paginator', { static: true }) paginator: Paginator;
 
-    @ViewChild('addRoleModal', {static: true}) addRoleModal: AddRoleModalComponent;
-    @ViewChild('dataTable', {static: true}) dataTable: Table;
-    @ViewChild('paginator', {static: true}) paginator: Paginator;
+  private _organizationUnit: IBasicOrganizationUnitInfo = null;
 
-    private _organizationUnit: IBasicOrganizationUnitInfo = null;
+  constructor(injector: Injector, private _changeDetector: ChangeDetectorRef, private _organizationUnitService: OrganizationUnitServiceProxy) {
+    super(injector);
+  }
 
-    constructor(
-        injector: Injector,
-        private _changeDetector: ChangeDetectorRef,
-        private _organizationUnitService: OrganizationUnitServiceProxy
-    ) {
-        super(injector);
+  get organizationUnit(): IBasicOrganizationUnitInfo {
+    return this._organizationUnit;
+  }
+
+  set organizationUnit(ou: IBasicOrganizationUnitInfo) {
+    if (!ou) {
+      this._organizationUnit = null;
+      return;
     }
 
-    get organizationUnit(): IBasicOrganizationUnitInfo {
-        return this._organizationUnit;
+    if (this._organizationUnit === ou) {
+      return;
     }
 
-    set organizationUnit(ou: IBasicOrganizationUnitInfo) {
-        if (!ou) {
-            this._organizationUnit = null;
-            return;
-        }
+    this._organizationUnit = ou;
+    this.addRoleModal.organizationUnitId = ou.id;
+    if (ou) {
+      this.refreshRoles();
+    }
+  }
 
-        if (this._organizationUnit === ou) {
-            return;
-        }
+  ngOnInit(): void {}
 
-        this._organizationUnit = ou;
-        this.addRoleModal.organizationUnitId = ou.id;
-        if (ou) {
+  getOrganizationUnitRoles(event?: LazyLoadEvent) {
+    if (!this._organizationUnit) {
+      return;
+    }
+
+    if (this.primengTableHelper.shouldResetPaging(event)) {
+      this.paginator.changePage(0);
+
+      return;
+    }
+
+    this.primengTableHelper.showLoadingIndicator();
+    this._organizationUnitService
+      .getOrganizationUnitRoles(
+        this._organizationUnit.id,
+        this.primengTableHelper.getSorting(this.dataTable),
+        this.primengTableHelper.getMaxResultCount(this.paginator, event),
+        this.primengTableHelper.getSkipCount(this.paginator, event)
+      )
+      .pipe(finalize(() => this.primengTableHelper.hideLoadingIndicator()))
+      .subscribe((result) => {
+        this.primengTableHelper.totalRecordsCount = result.totalCount;
+        this.primengTableHelper.records = result.items;
+        this.primengTableHelper.hideLoadingIndicator();
+      });
+  }
+
+  reloadPage(): void {
+    this.paginator.changePage(this.paginator.getPage());
+  }
+
+  refreshRoles(): void {
+    this.reloadPage();
+  }
+
+  openAddRoleModal(): void {
+    this.addRoleModal.show();
+  }
+
+  removeRole(role: OrganizationUnitRoleListDto): void {
+    this.message.confirm(
+      this.l('RemoveRoleFromOuWarningMessage', role.displayName, this.organizationUnit.displayName),
+      this.l('AreYouSure'),
+      (isConfirmed) => {
+        if (isConfirmed) {
+          this._organizationUnitService.removeRoleFromOrganizationUnit(role.id, this.organizationUnit.id).subscribe(() => {
+            this.notify.success(this.l('SuccessfullyRemoved'));
+            this.roleRemoved.emit({
+              roleId: role.id,
+              ouId: this.organizationUnit.id,
+            });
+
             this.refreshRoles();
+          });
         }
-    }
+      }
+    );
+  }
 
-    ngOnInit(): void {
+  addRoles(data: any): void {
+    this.rolesAdded.emit({
+      roleIds: data.roleIds,
+      ouId: data.ouId,
+    });
 
-    }
-
-    getOrganizationUnitRoles(event?: LazyLoadEvent) {
-        if (!this._organizationUnit) {
-            return;
-        }
-
-        if (this.primengTableHelper.shouldResetPaging(event)) {
-            this.paginator.changePage(0);
-
-            return;
-        }
-
-        this.primengTableHelper.showLoadingIndicator();
-        this._organizationUnitService.getOrganizationUnitRoles(
-            this._organizationUnit.id,
-            this.primengTableHelper.getSorting(this.dataTable),
-            this.primengTableHelper.getMaxResultCount(this.paginator, event),
-            this.primengTableHelper.getSkipCount(this.paginator, event)
-        ).pipe(finalize(() => this.primengTableHelper.hideLoadingIndicator())).subscribe(result => {
-            this.primengTableHelper.totalRecordsCount = result.totalCount;
-            this.primengTableHelper.records = result.items;
-            this.primengTableHelper.hideLoadingIndicator();
-        });
-    }
-
-    reloadPage(): void {
-        this.paginator.changePage(this.paginator.getPage());
-    }
-
-    refreshRoles(): void {
-        this.reloadPage();
-    }
-
-    openAddRoleModal(): void {
-        this.addRoleModal.show();
-    }
-
-    removeRole(role: OrganizationUnitRoleListDto): void {
-        this.message.confirm(
-            this.l('RemoveRoleFromOuWarningMessage', role.displayName, this.organizationUnit.displayName),
-            this.l('AreYouSure'),
-            isConfirmed => {
-                if (isConfirmed) {
-                    this._organizationUnitService
-                        .removeRoleFromOrganizationUnit(role.id, this.organizationUnit.id)
-                        .subscribe(() => {
-                            this.notify.success(this.l('SuccessfullyRemoved'));
-                            this.roleRemoved.emit({
-                                roleId: role.id,
-                                ouId: this.organizationUnit.id
-                            });
-
-                            this.refreshRoles();
-                        });
-                }
-            }
-        );
-    }
-
-    addRoles(data: any): void {
-        this.rolesAdded.emit({
-            roleIds: data.roleIds,
-            ouId: data.ouId
-        });
-
-        this.refreshRoles();
-    }
+    this.refreshRoles();
+  }
 }
