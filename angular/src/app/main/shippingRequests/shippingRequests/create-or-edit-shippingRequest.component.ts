@@ -1,7 +1,12 @@
-﻿import {Component, Injector, OnInit} from '@angular/core';
+﻿import {Component, Injector, OnInit, TemplateRef} from '@angular/core';
 import {finalize} from 'rxjs/operators';
 import {
+    CreateOrEditGoodsDetailDto,
+    CreateOrEditRoutStepDto,
     CreateOrEditShippingRequestDto,
+    GoodsDetailGoodCategoryLookupTableDto,
+    GoodsDetailsServiceProxy,
+    RoutStepCityLookupTableDto, RoutStepsServiceProxy,
     ShippingRequestGoodsDetailLookupTableDto,
     ShippingRequestRouteLookupTableDto,
     ShippingRequestsServiceProxy,
@@ -13,6 +18,7 @@ import {ActivatedRoute, Router} from '@angular/router';
 import {appModuleAnimation} from '@shared/animations/routerTransition';
 import {Observable} from '@node_modules/rxjs';
 import {BreadcrumbItem} from '@app/shared/common/sub-header/sub-header.component';
+import {BsModalRef, BsModalService} from '@node_modules/ngx-bootstrap/modal';
 
 @Component({
     templateUrl: './create-or-edit-shippingRequest.component.html',
@@ -33,20 +39,32 @@ export class CreateOrEditShippingRequestComponent extends AppComponentBase imple
     allTrailerTypes: ShippingRequestTrailerTypeLookupTableDto[];
     allGoodsDetails: ShippingRequestGoodsDetailLookupTableDto[];
     allRoutes: ShippingRequestRouteLookupTableDto[];
+    allGoodCategorys: GoodsDetailGoodCategoryLookupTableDto[];
 
     breadcrumbs: BreadcrumbItem[] = [
         new BreadcrumbItem(this.l('ShippingRequest'), '/app/main/shippingRequests/shippingRequests'),
         new BreadcrumbItem(this.l('Entity_Name_Plural_Here') + '' + this.l('Details')),
     ];
-
+    modalRef: BsModalRef;
+    routStep: CreateOrEditRoutStepDto = new CreateOrEditRoutStepDto();
+    allCitys: RoutStepCityLookupTableDto[];
+    createOrEditRoutStepDtoList: CreateOrEditRoutStepDto[] = [];
     constructor(
         injector: Injector,
         private _activatedRoute: ActivatedRoute,
         private _shippingRequestsServiceProxy: ShippingRequestsServiceProxy,
-        private _router: Router
+        private _router: Router,
+        private _goodsDetailsServiceProxy: GoodsDetailsServiceProxy,
+        private modalService: BsModalService,
+        private _routStepsServiceProxy: RoutStepsServiceProxy
     ) {
         super(injector);
     }
+
+    openModal(template: TemplateRef<any>) {
+        this.modalRef = this.modalService.show(template);
+    }
+
 
     ngOnInit(): void {
         this.show(this._activatedRoute.snapshot.queryParams['id']);
@@ -56,6 +74,7 @@ export class CreateOrEditShippingRequestComponent extends AppComponentBase imple
 
         if (!shippingRequestId) {
             this.shippingRequest = new CreateOrEditShippingRequestDto();
+            this.shippingRequest.createOrEditGoodsDetailDto = new CreateOrEditGoodsDetailDto();
             this.shippingRequest.id = shippingRequestId;
             this.trucksTypeDisplayName = '';
             this.trailerTypeDisplayName = '';
@@ -87,7 +106,20 @@ export class CreateOrEditShippingRequestComponent extends AppComponentBase imple
         this._shippingRequestsServiceProxy.getAllRouteForTableDropdown().subscribe(result => {
             this.allRoutes = result;
         });
+        this._goodsDetailsServiceProxy.getAllGoodCategoryForTableDropdown().subscribe(result => {
+            this.allGoodCategorys = result;
+        });
+        this._routStepsServiceProxy.getAllCityForTableDropdown().subscribe(result => {
+            this.allCitys = result;
+        });
 
+    }
+
+    addRouteStep(): void {
+        const item = this.routStep ;
+            this.createOrEditRoutStepDtoList.push(this.routStep);
+        this.routStep = new CreateOrEditRoutStepDto();
+        this.modalRef.hide();
     }
 
     save(): void {
@@ -104,7 +136,7 @@ export class CreateOrEditShippingRequestComponent extends AppComponentBase imple
 
     private saveInternal(): Observable<void> {
         this.saving = true;
-
+        this.shippingRequest.createOrEditRoutStepDtoList = this.createOrEditRoutStepDtoList;
 
         return this._shippingRequestsServiceProxy.createOrEdit(this.shippingRequest)
             .pipe(finalize(() => {

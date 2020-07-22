@@ -28,7 +28,9 @@ namespace TACHYON.Routs.RoutSteps.Dtos
 
         public int? DestinationCityId { get; set; }
 
-        public int RouteId { get; set; }
+        public int? RouteId { get; set; }
+
+        public int? ShippingRequestId { get; set; }
 
 
     }

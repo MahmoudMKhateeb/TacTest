@@ -1,7 +1,9 @@
 ﻿
 using Abp.Application.Services.Dto;
 using System;
-using System.ComponentModel.DataAnnotations;
+using System.Collections.Generic;
+using TACHYON.Goods.GoodsDetails.Dtos;
+using TACHYON.Routs.RoutSteps.Dtos;
 
 namespace TACHYON.Shipping.ShippingRequests.Dtos
 {
@@ -15,10 +17,11 @@ namespace TACHYON.Shipping.ShippingRequests.Dtos
 
         public int? TrailerTypeId { get; set; }
 
-        public long? GoodsDetailId { get; set; }
-
         public int? RouteId { get; set; }
 
+        public CreateOrEditGoodsDetailDto CreateOrEditGoodsDetailDto { get; set; }
+
+        public List<CreateOrEditRoutStepDto> CreateOrEditRoutStepDtoList { get; set; }
 
     }
 }

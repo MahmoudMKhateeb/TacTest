@@ -8,10 +8,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Dynamic.Core;
 using System.Threading.Tasks;
+using NUglify.Helpers;
 using TACHYON.Authorization;
 using TACHYON.Dto;
 using TACHYON.Goods.GoodsDetails;
 using TACHYON.Routs;
+using TACHYON.Routs.RoutSteps;
 using TACHYON.Shipping.ShippingRequests.Dtos;
 using TACHYON.Shipping.ShippingRequests.Exporting;
 using TACHYON.Trailers.TrailerTypes;
@@ -147,12 +149,6 @@ namespace TACHYON.Shipping.ShippingRequests
                 output.TrailerTypeDisplayName = _lookupTrailerType?.DisplayName?.ToString();
             }
 
-            if (output.ShippingRequest.GoodsDetailId != null)
-            {
-                var _lookupGoodsDetail = await _lookup_goodsDetailRepository.FirstOrDefaultAsync((long)output.ShippingRequest.GoodsDetailId);
-                output.GoodsDetailName = _lookupGoodsDetail?.Name?.ToString();
-            }
-
             if (output.ShippingRequest.RouteId != null)
             {
                 var _lookupRoute = await _lookup_routeRepository.FirstOrDefaultAsync((int)output.ShippingRequest.RouteId);
@@ -178,11 +174,15 @@ namespace TACHYON.Shipping.ShippingRequests
         protected virtual async Task Create(CreateOrEditShippingRequestDto input)
         {
             var shippingRequest = ObjectMapper.Map<ShippingRequest>(input);
+            shippingRequest.GoodsDetailFk = ObjectMapper.Map<GoodsDetail>(input.CreateOrEditGoodsDetailDto);
+            shippingRequest.RoutSteps = ObjectMapper.Map<List<RoutStep>>(input.CreateOrEditRoutStepDtoList);
 
 
             if (AbpSession.TenantId != null)
             {
                 shippingRequest.TenantId = (int)AbpSession.TenantId;
+                shippingRequest.GoodsDetailFk.TenantId = (int)AbpSession.TenantId;
+                shippingRequest.RoutSteps.ForEach(x=> x.TenantId = (int)AbpSession.TenantId);
             }
 
 
