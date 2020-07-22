@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
-using TACHYON.Shipping.ShippingRequests.Dtos;
 using TACHYON.Dto;
+using TACHYON.Shipping.ShippingRequests.Dtos;
 
 namespace TACHYON.Shipping.ShippingRequests.Exporting
 {

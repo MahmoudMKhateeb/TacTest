@@ -4,8 +4,8 @@ namespace TACHYON.Shipping.ShippingRequests.Dtos
 {
     public class ShippingRequestGoodsDetailLookupTableDto
     {
-		public long Id { get; set; }
+        public long Id { get; set; }
 
-		public string DisplayName { get; set; }
+        public string DisplayName { get; set; }
     }
 }
