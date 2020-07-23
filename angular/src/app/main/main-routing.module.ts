@@ -34,7 +34,6 @@ import { DashboardComponent } from './dashboard/dashboard.component';
             data: { permission: 'Pages.ShippingRequests.Create' },
           },
           { path: 'shippingRequests/shippingRequests/view', component: ViewShippingRequestComponent, data: { permission: 'Pages.ShippingRequests' } },
-          { path: 'goodsDetails/goodsDetails', component: GoodsDetailsComponent, data: { permission: 'Pages.GoodsDetails' } },
           { path: 'offers/offers', component: OffersComponent, data: { permission: 'Pages.Offers' } },
           { path: 'routSteps/routSteps', component: RoutStepsComponent, data: { permission: 'Pages.RoutSteps' } },
           { path: 'routs/routes', component: RoutesComponent, data: { permission: 'Pages.Routes' } },

@@ -51,8 +51,6 @@ export class AppNavigationService {
 
       new AppMenuItem('Offers', 'Pages.Offers', 'flaticon-more', '/app/main/offers/offers'),
 
-      new AppMenuItem('GoodsDetails', 'Pages.GoodsDetails', 'flaticon-more', '/app/main/goodsDetails/goodsDetails'),
-
       new AppMenuItem('ShippingRequests', 'Pages.ShippingRequests', 'flaticon-more', '/app/main/shippingRequests/shippingRequests'),
       new AppMenuItem(
         'Administration',
