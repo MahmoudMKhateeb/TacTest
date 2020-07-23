@@ -36,6 +36,7 @@ export class AppNavigationService {
       new AppMenuItem('Trailers', 'Pages.Trailers', 'flaticon-more', '/app/main/trailers/trailers', undefined, undefined, undefined, undefined, () =>
         this._featureCheckerService.isEnabled('App.Carrier')
       ),
+      new AppMenuItem('DocumentTypes', 'Pages.DocumentTypes', 'flaticon-more', '/app/main/documentTypes/documentTypes'),
 
       new AppMenuItem('GoodCategories', 'Pages.GoodCategories', 'flaticon-more', '/app/main/goodCategories/goodCategories'),
 
