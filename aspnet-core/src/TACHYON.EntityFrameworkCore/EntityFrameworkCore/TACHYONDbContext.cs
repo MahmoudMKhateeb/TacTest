@@ -10,6 +10,7 @@ using TACHYON.Cities;
 using TACHYON.Cities;
 using TACHYON.Countries;
 using TACHYON.Countries;
+using TACHYON.Documents.DocumentTypes;
 using TACHYON.Editions;
 using TACHYON.Friendships;
 using TACHYON.Goods.GoodCategories;
@@ -45,6 +46,8 @@ namespace TACHYON.EntityFrameworkCore
 {
     public class TACHYONDbContext : AbpZeroDbContext<Tenant, Role, User, TACHYONDbContext>, IAbpPersistedGrantDbContext
     {
+        public virtual DbSet<DocumentType> DocumentTypes { get; set; }
+
         public virtual DbSet<ShippingRequest> ShippingRequests { get; set; }
 
         public virtual DbSet<GoodsDetail> GoodsDetails { get; set; }

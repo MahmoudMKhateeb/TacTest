@@ -1,6 +1,20 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <localizationDictionary culture="en">
-  <texts>    <text name="ShippingRequests">Shipping requests</text>
+  <texts>    <text name="DocumentTypes">Document types</text>
+    <text name="DocumentType">Document type</text>
+    <text name="TACHYON.DocumentTypes.DocumentType">DocumentType</text>
+    <text name="IsRequired">Is required</text>
+    <text name="NotIsRequired">Not is required</text>
+    <text name="ExpirationDate">Expiration date</text>
+    <text name="HasExpirationDate">Has expiration date</text>
+    <text name="NotHasExpirationDate">Not has expiration date</text>
+    <text name="RequiredFrom">Required from</text>
+    <text name="DocumentTypesHeaderInfo">Document types header info</text>
+    <text name="CreateNewDocumentType">Create new document type</text>
+    <text name="EditDocumentType">Edit document type</text>
+    <text name="DeleteDocumentType">Delete document type</text>
+    <text name="ExpirationDateRange">Expiration date range</text>
+    <text name="ShippingRequests">Shipping requests</text>
     <text name="ShippingRequest">Shipping request</text>
     <text name="TACHYON.ShippingRequests.ShippingRequest">ShippingRequest</text>
     <text name="Vas">Vas</text>
