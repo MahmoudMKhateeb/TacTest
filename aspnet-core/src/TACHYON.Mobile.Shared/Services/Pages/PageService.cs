@@ -1,6 +1,6 @@
+using Abp.Dependency;
 using System;
 using System.Threading.Tasks;
-using Abp.Dependency;
 using TACHYON.Core.Dependency;
 using TACHYON.ViewModels.Base;
 using Xamarin.Forms;

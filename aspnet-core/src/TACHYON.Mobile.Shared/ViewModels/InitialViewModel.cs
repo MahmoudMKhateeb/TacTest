@@ -1,8 +1,8 @@
-﻿using System.Collections.Generic;
+﻿using MvvmHelpers;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Input;
-using MvvmHelpers;
 using TACHYON.ApiClient;
 using TACHYON.Core.Threading;
 using TACHYON.Models.NavigationMenu;
@@ -29,7 +29,7 @@ namespace TACHYON.ViewModels
         }
 
         public ICommand PageAppearingCommand => AsyncCommand.Create(SetInitialPageAsync);
-        
+
         public InitialViewModel(IMenuProvider menuProvider, IApplicationContext appContext)
         {
             _menuProvider = menuProvider;

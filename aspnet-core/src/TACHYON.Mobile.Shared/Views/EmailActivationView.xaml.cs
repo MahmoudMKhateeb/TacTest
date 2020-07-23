@@ -2,11 +2,11 @@
 
 namespace TACHYON.Views
 {
-	public partial class EmailActivationView : ContentPage, IXamarinView
+    public partial class EmailActivationView : ContentPage, IXamarinView
     {
-		public EmailActivationView()
-		{
-			InitializeComponent ();
-		}
-	}
+        public EmailActivationView()
+        {
+            InitializeComponent();
+        }
+    }
 }

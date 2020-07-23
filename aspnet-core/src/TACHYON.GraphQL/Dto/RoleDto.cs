@@ -1,5 +1,5 @@
-﻿using System;
-using Abp.AutoMapper;
+﻿using Abp.AutoMapper;
+using System;
 using TACHYON.Authorization.Roles;
 
 namespace TACHYON.Dto

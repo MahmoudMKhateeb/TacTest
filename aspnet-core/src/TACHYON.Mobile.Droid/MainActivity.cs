@@ -1,12 +1,12 @@
-﻿using System;
-using System.Threading.Tasks;
-using Android.App;
+﻿using Android.App;
 using Android.Content.PM;
 using Android.OS;
 using Android.Views;
 using ImageCircle.Forms.Plugin.Droid;
-using TACHYON.Core.Exception;
 using Plugin.Permissions;
+using System;
+using System.Threading.Tasks;
+using TACHYON.Core.Exception;
 using CachedImageRenderer = FFImageLoading.Forms.Platform.CachedImageRenderer;
 
 namespace TACHYON
@@ -32,7 +32,7 @@ namespace TACHYON
 
             AppDomain.CurrentDomain.UnhandledException += CurrentDomainOnUnhandledException;
             TaskScheduler.UnobservedTaskException += TaskSchedulerOnUnobservedTaskException;
- 
+
             global::Xamarin.Forms.Forms.Init(this, bundle);
 
             ImageCircleRenderer.Init();
@@ -61,4 +61,3 @@ namespace TACHYON
         }
     }
 }
-

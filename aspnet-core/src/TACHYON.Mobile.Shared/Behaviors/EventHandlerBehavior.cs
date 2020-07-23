@@ -1,6 +1,6 @@
-﻿using System;
+﻿using JetBrains.Annotations;
+using System;
 using System.Reflection;
-using JetBrains.Annotations;
 using Xamarin.Forms;
 using Xamarin.Forms.Internals;
 
@@ -20,7 +20,7 @@ namespace TACHYON.Behaviors
 
         public string EventName
         {
-            get { return (string) GetValue(EventNameProperty); }
+            get { return (string)GetValue(EventNameProperty); }
             set { SetValue(EventNameProperty, value); }
         }
 
@@ -28,7 +28,7 @@ namespace TACHYON.Behaviors
         {
             get
             {
-                var actionCollection = (ActionCollection) GetValue(ActionsProperty);
+                var actionCollection = (ActionCollection)GetValue(ActionsProperty);
                 if (actionCollection == null)
                 {
                     actionCollection = new ActionCollection();
@@ -37,7 +37,7 @@ namespace TACHYON.Behaviors
                 return actionCollection;
             }
         }
-        
+
         protected override void OnAttachedTo(VisualElement bindable)
         {
             base.OnAttachedTo(bindable);
@@ -100,21 +100,21 @@ namespace TACHYON.Behaviors
             foreach (var bindable in Actions)
             {
                 bindable.BindingContext = BindingContext;
-                var action = (IAction) bindable;
+                var action = (IAction)bindable;
                 action.Execute(sender, eventArgs);
             }
         }
 
         private static void OnEventNameChanged(BindableObject bindable, object oldValue, object newValue)
         {
-            var behavior = (EventHandlerBehavior) bindable;
+            var behavior = (EventHandlerBehavior)bindable;
             if (behavior.AssociatedObject == null)
             {
                 return;
             }
 
-            var oldEventName = (string) oldValue;
-            var newEventName = (string) newValue;
+            var oldEventName = (string)oldValue;
+            var newEventName = (string)newValue;
 
             behavior.DeregisterEvent(oldEventName);
             behavior.RegisterEvent(newEventName);

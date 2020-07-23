@@ -1,8 +1,8 @@
-﻿using System.Linq;
+﻿using Abp.Localization;
+using MvvmHelpers;
+using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Input;
-using Abp.Localization;
-using MvvmHelpers;
 using TACHYON.ApiClient;
 using TACHYON.Authorization.Users.Dto;
 using TACHYON.Authorization.Users.Profile;

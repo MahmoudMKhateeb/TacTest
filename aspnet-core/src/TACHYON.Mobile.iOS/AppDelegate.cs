@@ -1,14 +1,14 @@
-﻿using System;
+﻿using Flurl.Http;
+using Foundation;
+using ImageCircle.Forms.Plugin.iOS;
+using System;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using Flurl.Http;
-using Foundation;
-using ImageCircle.Forms.Plugin.iOS;
+using TACHYON.ApiClient;
 using TACHYON.Core;
 using TACHYON.Core.Exception;
 using UIKit;
-using TACHYON.ApiClient;
 using CachedImageRenderer = FFImageLoading.Forms.Platform.CachedImageRenderer;
 
 namespace TACHYON

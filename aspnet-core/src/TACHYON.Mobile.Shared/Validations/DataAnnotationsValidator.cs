@@ -1,8 +1,8 @@
 ﻿using System;
-using TACHYON.Localization;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Reflection;
+using TACHYON.Localization;
 
 namespace TACHYON.Validations
 {

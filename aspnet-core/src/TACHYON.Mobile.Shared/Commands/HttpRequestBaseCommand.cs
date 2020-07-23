@@ -1,7 +1,7 @@
-﻿using System;
+﻿using Abp.Extensions;
+using System;
 using System.Threading.Tasks;
 using System.Windows.Input;
-using Abp.Extensions;
 using TACHYON.Core.Threading;
 
 namespace TACHYON.Commands

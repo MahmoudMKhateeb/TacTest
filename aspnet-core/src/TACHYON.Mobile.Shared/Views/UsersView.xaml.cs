@@ -13,7 +13,7 @@ namespace TACHYON.Views
 
         public async void ListView_OnItemAppearing(object sender, ItemVisibilityEventArgs e)
         {
-            await ((UsersViewModel) BindingContext).LoadMoreUserIfNeedsAsync(e.Item as UserListModel);
+            await ((UsersViewModel)BindingContext).LoadMoreUserIfNeedsAsync(e.Item as UserListModel);
         }
     }
 }

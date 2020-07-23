@@ -1,8 +1,8 @@
-﻿using System;
+﻿using Abp.AutoMapper;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
-using Abp.AutoMapper;
 using TACHYON.Authorization.Users.Dto;
 using Xamarin.Forms;
 
@@ -39,7 +39,7 @@ namespace TACHYON.Models.Users
                 SetAsAssignedForMemberedOrganizationUnits();
                 RaisePropertyChanged(nameof(OrganizationUnits));
             }
-        } 
+        }
 
         public event PropertyChangedEventHandler PropertyChanged;
 

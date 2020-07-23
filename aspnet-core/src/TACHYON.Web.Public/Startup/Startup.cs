@@ -1,5 +1,4 @@
-﻿using System;
-using Abp.AspNetCore;
+﻿using Abp.AspNetCore;
 using Abp.AspNetCore.SignalR.Hubs;
 using Abp.Castle.Logging.Log4Net;
 using Castle.Facilities.Logging;
@@ -14,6 +13,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using System;
 using TACHYON.Configuration;
 using TACHYON.Identity;
 using TACHYON.Web.HealthCheck;

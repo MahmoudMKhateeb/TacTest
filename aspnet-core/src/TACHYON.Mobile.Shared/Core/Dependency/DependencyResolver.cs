@@ -1,5 +1,5 @@
-﻿using System;
-using Abp.Dependency;
+﻿using Abp.Dependency;
+using System;
 
 namespace TACHYON.Core.Dependency
 {

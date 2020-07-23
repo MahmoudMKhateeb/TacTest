@@ -1,6 +1,6 @@
-﻿using System;
+﻿using Abp.Timing.Timezone;
+using System;
 using System.Globalization;
-using Abp.Timing.Timezone;
 using TACHYON.ApiClient;
 using TACHYON.Core.Dependency;
 using Xamarin.Forms;

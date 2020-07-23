@@ -54,7 +54,7 @@
 
         /* ADMINISTRATION > AUDIT LOGS */
         public const string AuditLogs = "Pages.Administration.AuditLogs";
-      
+
         /* ADMINISTRATION > MAITENANCE */
         public const string HostMaintenance = "Pages.Administration.Host.Maintenance";
 

@@ -1,12 +1,12 @@
-﻿using System.Linq;
-using System.Threading.Tasks;
-using Abp.Application.Navigation;
+﻿using Abp.Application.Navigation;
 using Abp.Configuration;
 using Abp.Configuration.Startup;
 using Abp.Extensions;
 using Abp.Localization;
 using Abp.Runtime.Session;
 using Microsoft.AspNetCore.Mvc;
+using System.Linq;
+using System.Threading.Tasks;
 using TACHYON.Configuration;
 using TACHYON.MultiTenancy;
 using TACHYON.Url;
@@ -27,13 +27,13 @@ namespace TACHYON.Web.Public.Views.Shared.Components.Header
         private readonly TenantManager _tenantManager;
 
         public HeaderViewComponent(
-            IUserNavigationManager userNavigationManager, 
+            IUserNavigationManager userNavigationManager,
             IMultiTenancyConfig multiTenancyConfig,
             IAbpSession abpSession,
-            ILanguageManager languageManager, 
-            ISettingManager settingManager, 
+            ILanguageManager languageManager,
+            ISettingManager settingManager,
             IPerRequestSessionCache sessionCache,
-            IWebUrlService webUrlService, 
+            IWebUrlService webUrlService,
             TenantManager tenantManager)
         {
             _userNavigationManager = userNavigationManager;

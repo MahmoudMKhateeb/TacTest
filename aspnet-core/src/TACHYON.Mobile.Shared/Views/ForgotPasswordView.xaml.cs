@@ -2,11 +2,11 @@
 
 namespace TACHYON.Views
 {
-	public partial class ForgotPasswordView : ContentPage, IXamarinView
+    public partial class ForgotPasswordView : ContentPage, IXamarinView
     {
-		public ForgotPasswordView()
-		{
-			InitializeComponent ();
-		}
-	}
+        public ForgotPasswordView()
+        {
+            InitializeComponent();
+        }
+    }
 }

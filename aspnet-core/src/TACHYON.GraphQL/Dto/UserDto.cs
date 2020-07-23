@@ -1,10 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using Abp.Application.Services.Dto;
+﻿using Abp.Application.Services.Dto;
 using Abp.AutoMapper;
 using Abp.Domain.Entities;
 using Abp.Domain.Entities.Auditing;
 using Abp.Organizations;
+using System;
+using System.Collections.Generic;
 using TACHYON.Authorization.Roles;
 
 namespace TACHYON.Dto

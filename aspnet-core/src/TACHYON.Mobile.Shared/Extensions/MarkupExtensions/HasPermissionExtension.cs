@@ -11,7 +11,7 @@ namespace TACHYON.Extensions.MarkupExtensions
     public class HasPermissionExtension : IMarkupExtension
     {
         public string Text { get; set; }
-        
+
         public object ProvideValue(IServiceProvider serviceProvider)
         {
             if (ApplicationBootstrapper.AbpBootstrapper == null || Text == null)

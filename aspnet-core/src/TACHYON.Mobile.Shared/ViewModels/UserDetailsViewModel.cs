@@ -1,9 +1,9 @@
-﻿using System.Collections.Generic;
+﻿using Abp.Application.Services.Dto;
+using Acr.UserDialogs;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Input;
-using Abp.Application.Services.Dto;
-using Acr.UserDialogs;
 using TACHYON.Authorization.Users;
 using TACHYON.Authorization.Users.Dto;
 using TACHYON.Controls;
@@ -302,5 +302,5 @@ namespace TACHYON.ViewModels
         }
     }
 
-    
+
 }

@@ -1,6 +1,6 @@
-﻿using System.Reflection;
+﻿using Abp.Dependency;
+using System.Reflection;
 using System.Resources;
-using Abp.Dependency;
 
 namespace TACHYON.Localization
 {
@@ -11,8 +11,8 @@ namespace TACHYON.Localization
         public static string Localize(string key)
         {
             return GetValue(key) ?? key;
-        } 
-        
+        }
+
         private static string GetValue(string key)
         {
             var locale = IocManager.Instance.Resolve<ILocale>();
