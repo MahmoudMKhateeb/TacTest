@@ -52,7 +52,7 @@ namespace TACHYON.Offers
         public async Task<PagedResultDto<GetOfferForViewDto>> GetAll(GetAllOffersInput input)
         {
 
-            if (await FeatureChecker.IsEnabledAsync(AppFeatures.TachyonDealer))
+            if (await FeatureChecker.IsEnabledAsync(AppFeatures.TachyonDealer) || await FeatureChecker.IsEnabledAsync(AppFeatures.Broker))
             {
                 using (CurrentUnitOfWork.DisableFilter(AbpDataFilters.MustHaveTenant))
                 {

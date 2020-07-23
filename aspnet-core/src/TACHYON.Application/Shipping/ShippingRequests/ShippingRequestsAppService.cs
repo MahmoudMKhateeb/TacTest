@@ -48,7 +48,7 @@ namespace TACHYON.Shipping.ShippingRequests
         public async Task<PagedResultDto<GetShippingRequestForViewDto>> GetAll(GetAllShippingRequestsInput input)
         {
 
-            if (await FeatureChecker.IsEnabledAsync(AppFeatures.Broker))
+            if (await FeatureChecker.IsEnabledAsync(AppFeatures.TachyonDealer) || await FeatureChecker.IsEnabledAsync(AppFeatures.Broker))
             {
                 using (CurrentUnitOfWork.DisableFilter(AbpDataFilters.MustHaveTenant))
                 {
