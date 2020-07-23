@@ -1,0 +1,137 @@
+﻿<div
+  bsModal
+  #createOrEditModal="bs-modal"
+  class="modal fade"
+  tabindex="-1"
+  role="dialog"
+  aria-labelledby="createOrEditModal"
+  aria-hidden="true"
+  [config]="{ backdrop: 'static' }"
+>
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <form *ngIf="active" #documentFileForm="ngForm" novalidate (ngSubmit)="save()" autocomplete="off">
+        <div class="modal-header">
+          <h4 class="modal-title">
+            <span *ngIf="documentFile.id">{{ l('EditDocumentFile') }}</span>
+            <span *ngIf="!documentFile.id">{{ l('CreateNewDocumentFile') }}</span>
+          </h4>
+          <button type="button" class="close" (click)="close()" aria-label="Close" [disabled]="saving">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <div class="form-group m-form__group">
+            <label for="DocumentTypeDisplayName">{{ l('DocumentType') }}</label>
+            <select name="documentFile.documentTypeId" [(ngModel)]="documentFile.documentTypeId" class="form-control" required>
+              <option value="">{{ l('SelectADocumentType') }}</option>
+              <option *ngFor="let item of allDocumentTypes" value="{{ item.id }}">{{ item.displayName }}</option>
+            </select>
+          </div>
+
+          <div class="form-group m-form__group">
+            <label for="TruckPlateNumber">{{ l('Truck') }}</label>
+            <select name="documentFile.truckId" [(ngModel)]="documentFile.truckId" class="form-control">
+              <option value="">{{ l('SelectATruck') }}</option>
+              <option *ngFor="let item of allTrucks" value="{{ item.id }}">{{ item.displayName }}</option>
+            </select>
+          </div>
+
+          <div class="form-group m-form__group">
+            <label for="TrailerTrailerCode">{{ l('Trailer') }}</label>
+            <select name="documentFile.trailerId" [(ngModel)]="documentFile.trailerId" class="form-control">
+              <option value="">{{ l('SelectATrailer') }}</option>
+              <option *ngFor="let item of allTrailers" value="{{ item.id }}">{{ item.displayName }}</option>
+            </select>
+          </div>
+
+          <div class="form-group m-form__group">
+            <label for="UserName">{{ l('User') }}</label>
+            <select name="documentFile.userId" [(ngModel)]="documentFile.userId" class="form-control">
+              <option value="">{{ l('SelectAUser') }}</option>
+              <option *ngFor="let item of allUsers" value="{{ item.id }}">{{ item.displayName }}</option>
+            </select>
+          </div>
+
+          <div class="form-group m-form__group">
+            <label for="RoutStepDisplayName">{{ l('RoutStep') }}</label>
+            <select name="documentFile.routStepId" [(ngModel)]="documentFile.routStepId" class="form-control">
+              <option value="">{{ l('SelectARoutStep') }}</option>
+              <option *ngFor="let item of allRoutSteps" value="{{ item.id }}">{{ item.displayName }}</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="DocumentFile_Name">{{ l('Name') }} *</label>
+            <input
+              type="text"
+              id="DocumentFile_Name"
+              class="form-control"
+              [(ngModel)]="documentFile.name"
+              name="Name"
+              minlength="0"
+              maxlength="100"
+              required
+            />
+          </div>
+
+          <div class="form-group">
+            <label for="DocumentFile_Extn">{{ l('Extn') }} *</label>
+            <input
+              type="text"
+              id="DocumentFile_Extn"
+              class="form-control"
+              [(ngModel)]="documentFile.extn"
+              name="Extn"
+              minlength="0"
+              maxlength="5"
+              required
+            />
+          </div>
+
+          <div class="form-group">
+            <label for="DocumentFile_BinaryObjectId">{{ l('BinaryObjectId') }}</label>
+            <input
+              type="text"
+              id="DocumentFile_BinaryObjectId"
+              class="form-control"
+              [(ngModel)]="documentFile.binaryObjectId"
+              name="BinaryObjectId"
+            />
+          </div>
+
+          <div class="form-group">
+            <label for="DocumentFile_ExpirationDate">{{ l('ExpirationDate') }}</label>
+            <input
+              required
+              class="form-control m-input"
+              type="datetime"
+              bsDatepicker
+              datePickerMomentModifier
+              [(date)]="documentFile.expirationDate"
+              id="DocumentFile_ExpirationDate"
+              name="DocumentFile_ExpirationDate"
+            />
+          </div>
+
+          <div class="form-group">
+            <label for="DocumentFile_IsAccepted">{{ l('IsAccepted') }}</label>
+            <input type="text" id="DocumentFile_IsAccepted" class="form-control" [(ngModel)]="documentFile.isAccepted" name="IsAccepted" />
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button [disabled]="saving" type="button" class="btn btn-default" (click)="close()">{{ l('Cancel') }}</button>
+          <button
+            type="submit"
+            class="btn btn-primary blue"
+            [disabled]="!documentFileForm.form.valid"
+            [buttonBusy]="saving"
+            [busyText]="l('SavingWithThreeDot')"
+          >
+            <i class="fa fa-save"></i> <span>{{ l('Save') }}</span>
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,71 @@
+﻿<div
+  bsModal
+  #createOrEditModal="bs-modal"
+  class="modal fade"
+  tabindex="-1"
+  role="dialog"
+  aria-labelledby="createOrEditModal"
+  aria-hidden="true"
+  [config]="{ backdrop: 'static' }"
+>
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title">
+          <span>{{ l('Details') }}</span>
+        </h4>
+        <button type="button" class="close" (click)="close()" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="row">
+          <div class="col-6 mb-3">
+            <h6>{{ l('Name') }} :</h6>
+            {{ item.documentFile.name }}
+          </div>
+          <div class="col-6 mb-3">
+            <h6>{{ l('Extn') }} :</h6>
+            {{ item.documentFile.extn }}
+          </div>
+          <div class="col-6 mb-3">
+            <h6>{{ l('BinaryObjectId') }} :</h6>
+            {{ item.documentFile.binaryObjectId }}
+          </div>
+          <div class="col-6 mb-3">
+            <h6>{{ l('ExpirationDate') }} :</h6>
+            {{ item.documentFile.expirationDate | momentFormat: 'YYYY-MM-DD HH:mm:ss' }}
+          </div>
+          <div class="col-6 mb-3">
+            <h6>{{ l('IsAccepted') }} :</h6>
+            {{ item.documentFile.isAccepted }}
+          </div>
+
+          <div class="col-6 mb-3">
+            <h6>({{ l('DocumentType') }}) {{ l('DisplayName') }} :</h6>
+            {{ item.documentTypeDisplayName }}
+          </div>
+          <div class="col-6 mb-3">
+            <h6>({{ l('Truck') }}) {{ l('PlateNumber') }} :</h6>
+            {{ item.truckPlateNumber }}
+          </div>
+          <div class="col-6 mb-3">
+            <h6>({{ l('Trailer') }}) {{ l('TrailerCode') }} :</h6>
+            {{ item.trailerTrailerCode }}
+          </div>
+          <div class="col-6 mb-3">
+            <h6>({{ l('User') }}) {{ l('Name') }} :</h6>
+            {{ item.userName }}
+          </div>
+          <div class="col-6 mb-3">
+            <h6>({{ l('RoutStep') }}) {{ l('DisplayName') }} :</h6>
+            {{ item.routStepDisplayName }}
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button [disabled]="saving" type="button" class="btn btn-primary blue" (click)="close()">{{ l('Close') }}</button>
+      </div>
+    </div>
+  </div>
+</div>

@@ -32,6 +32,8 @@ using TACHYON.Countries;
 using TACHYON.Countries;
 using TACHYON.Countries.Dtos;
 using TACHYON.Countries.Dtos;
+using TACHYON.Documents.DocumentFiles;
+using TACHYON.Documents.DocumentFiles.Dtos;
 using TACHYON.Documents.DocumentTypes;
 using TACHYON.Documents.DocumentTypes.Dtos;
 using TACHYON.DynamicEntityParameters.Dto;
@@ -105,6 +107,8 @@ namespace TACHYON
     {
         public static void CreateMappings(IMapperConfigurationExpression configuration)
         {
+            configuration.CreateMap<CreateOrEditDocumentFileDto, DocumentFile>().ReverseMap();
+            configuration.CreateMap<DocumentFileDto, DocumentFile>().ReverseMap();
             configuration.CreateMap<CreateOrEditDocumentTypeDto, DocumentType>().ReverseMap();
             configuration.CreateMap<DocumentTypeDto, DocumentType>().ReverseMap();
             configuration.CreateMap<CreateOrEditShippingRequestDto, ShippingRequest>().ReverseMap();

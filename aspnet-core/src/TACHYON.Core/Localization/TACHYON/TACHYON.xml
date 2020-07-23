@@ -1,6 +1,22 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <localizationDictionary culture="en">
-  <texts>    <text name="DocumentTypes">Document types</text>
+  <texts>    <text name="DocumentFiles">Document files</text>
+    <text name="DocumentFile">Document file</text>
+    <text name="TACHYON.DocumentFiles.DocumentFile">DocumentFile</text>
+    <text name="Extn">Extn</text>
+    <text name="BinaryObjectId">Binary object id</text>
+    <text name="IsAccepted">Is accepted</text>
+    <text name="DocumentFilesHeaderInfo">Document files header info</text>
+    <text name="CreateNewDocumentFile">Create new document file</text>
+    <text name="EditDocumentFile">Edit document file</text>
+    <text name="DeleteDocumentFile">Delete document file</text>
+    <text name="DocumentTypeDisplayName">Document type display name</text>
+    <text name="PickDocumentType">Pick document type</text>
+    <text name="TrailerTrailerCode">Trailer trailer code</text>
+    <text name="PickTrailer">Pick trailer</text>
+    <text name="RoutStepDisplayName">Rout step display name</text>
+    <text name="PickRoutStep">Pick rout step</text>
+    <text name="DocumentTypes">Document types</text>
     <text name="DocumentType">Document type</text>
     <text name="TACHYON.DocumentTypes.DocumentType">DocumentType</text>
     <text name="IsRequired">Is required</text>

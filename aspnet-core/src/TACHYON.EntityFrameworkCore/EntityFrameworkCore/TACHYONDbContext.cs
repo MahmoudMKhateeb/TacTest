@@ -10,6 +10,7 @@ using TACHYON.Cities;
 using TACHYON.Cities;
 using TACHYON.Countries;
 using TACHYON.Countries;
+using TACHYON.Documents.DocumentFiles;
 using TACHYON.Documents.DocumentTypes;
 using TACHYON.Editions;
 using TACHYON.Friendships;
@@ -46,6 +47,8 @@ namespace TACHYON.EntityFrameworkCore
 {
     public class TACHYONDbContext : AbpZeroDbContext<Tenant, Role, User, TACHYONDbContext>, IAbpPersistedGrantDbContext
     {
+        public virtual DbSet<DocumentFile> DocumentFiles { get; set; }
+
         public virtual DbSet<DocumentType> DocumentTypes { get; set; }
 
         public virtual DbSet<ShippingRequest> ShippingRequests { get; set; }
@@ -119,10 +122,15 @@ namespace TACHYON.EntityFrameworkCore
 
 
 
-            modelBuilder.Entity<ShippingRequest>(s =>
+
+            modelBuilder.Entity<DocumentFile>(d =>
             {
-                s.HasIndex(e => new { e.TenantId });
+                d.HasIndex(e => new { e.TenantId });
             });
+            modelBuilder.Entity<ShippingRequest>(s =>
+                       {
+                           s.HasIndex(e => new { e.TenantId });
+                       });
             modelBuilder.Entity<GoodsDetail>(g =>
                        {
                            g.HasIndex(e => new { e.TenantId });

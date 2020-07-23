@@ -2,6 +2,10 @@
 import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { AppCommonModule } from '@app/shared/common/app-common.module';
+import { DocumentFilesComponent } from './documentFiles/documentFiles/documentFiles.component';
+import { ViewDocumentFileModalComponent } from './documentFiles/documentFiles/view-documentFile-modal.component';
+import { CreateOrEditDocumentFileModalComponent } from './documentFiles/documentFiles/create-or-edit-documentFile-modal.component';
+
 import { DocumentTypesComponent } from './documentTypes/documentTypes/documentTypes.component';
 import { ViewDocumentTypeModalComponent } from './documentTypes/documentTypes/view-documentType-modal.component';
 import { CreateOrEditDocumentTypeModalComponent } from './documentTypes/documentTypes/create-or-edit-documentType-modal.component';
@@ -115,6 +119,10 @@ NgxBootstrapDatePickerConfigService.registerNgxBootstrapDatePickerLocales();
     ImageCropperModule,
   ],
   declarations: [
+    DocumentFilesComponent,
+
+    ViewDocumentFileModalComponent,
+    CreateOrEditDocumentFileModalComponent,
     DocumentTypesComponent,
 
     ViewDocumentTypeModalComponent,
