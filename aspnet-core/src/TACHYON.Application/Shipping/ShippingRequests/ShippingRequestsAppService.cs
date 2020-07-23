@@ -1,16 +1,18 @@
 ﻿using Abp.Application.Services.Dto;
 using Abp.Authorization;
 using Abp.Domain.Repositories;
+using Abp.Domain.Uow;
 using Abp.Linq.Extensions;
 using Microsoft.EntityFrameworkCore;
+using NUglify.Helpers;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Dynamic.Core;
 using System.Threading.Tasks;
-using NUglify.Helpers;
 using TACHYON.Authorization;
 using TACHYON.Dto;
+using TACHYON.Features;
 using TACHYON.Goods.GoodsDetails;
 using TACHYON.Routs;
 using TACHYON.Routs.RoutSteps;
@@ -46,18 +48,34 @@ namespace TACHYON.Shipping.ShippingRequests
         public async Task<PagedResultDto<GetShippingRequestForViewDto>> GetAll(GetAllShippingRequestsInput input)
         {
 
+            if (await FeatureChecker.IsEnabledAsync(AppFeatures.Broker))
+            {
+                using (CurrentUnitOfWork.DisableFilter(AbpDataFilters.MustHaveTenant))
+                {
+                    return await GetAllPagedResultDto(input);
+                }
+            }
+            else
+            {
+                return await GetAllPagedResultDto(input);
+
+            }
+        }
+
+        protected virtual async Task<PagedResultDto<GetShippingRequestForViewDto>> GetAllPagedResultDto(GetAllShippingRequestsInput input)
+        {
             var filteredShippingRequests = _shippingRequestRepository.GetAll()
-                        .Include(e => e.TrucksTypeFk)
-                        .Include(e => e.TrailerTypeFk)
-                        .Include(e => e.GoodsDetailFk)
-                        .Include(e => e.RouteFk)
-                        .WhereIf(!string.IsNullOrWhiteSpace(input.Filter), e => false)
-                        .WhereIf(input.MinVasFilter != null, e => e.Vas >= input.MinVasFilter)
-                        .WhereIf(input.MaxVasFilter != null, e => e.Vas <= input.MaxVasFilter)
-                        .WhereIf(!string.IsNullOrWhiteSpace(input.TrucksTypeDisplayNameFilter), e => e.TrucksTypeFk != null && e.TrucksTypeFk.DisplayName == input.TrucksTypeDisplayNameFilter)
-                        .WhereIf(!string.IsNullOrWhiteSpace(input.TrailerTypeDisplayNameFilter), e => e.TrailerTypeFk != null && e.TrailerTypeFk.DisplayName == input.TrailerTypeDisplayNameFilter)
-                        .WhereIf(!string.IsNullOrWhiteSpace(input.GoodsDetailNameFilter), e => e.GoodsDetailFk != null && e.GoodsDetailFk.Name == input.GoodsDetailNameFilter)
-                        .WhereIf(!string.IsNullOrWhiteSpace(input.RouteDisplayNameFilter), e => e.RouteFk != null && e.RouteFk.DisplayName == input.RouteDisplayNameFilter);
+                       .Include(e => e.TrucksTypeFk)
+                       .Include(e => e.TrailerTypeFk)
+                       .Include(e => e.GoodsDetailFk)
+                       .Include(e => e.RouteFk)
+                       .WhereIf(!string.IsNullOrWhiteSpace(input.Filter), e => false)
+                       .WhereIf(input.MinVasFilter != null, e => e.Vas >= input.MinVasFilter)
+                       .WhereIf(input.MaxVasFilter != null, e => e.Vas <= input.MaxVasFilter)
+                       .WhereIf(!string.IsNullOrWhiteSpace(input.TrucksTypeDisplayNameFilter), e => e.TrucksTypeFk != null && e.TrucksTypeFk.DisplayName == input.TrucksTypeDisplayNameFilter)
+                       .WhereIf(!string.IsNullOrWhiteSpace(input.TrailerTypeDisplayNameFilter), e => e.TrailerTypeFk != null && e.TrailerTypeFk.DisplayName == input.TrailerTypeDisplayNameFilter)
+                       .WhereIf(!string.IsNullOrWhiteSpace(input.GoodsDetailNameFilter), e => e.GoodsDetailFk != null && e.GoodsDetailFk.Name == input.GoodsDetailNameFilter)
+                       .WhereIf(!string.IsNullOrWhiteSpace(input.RouteDisplayNameFilter), e => e.RouteFk != null && e.RouteFk.DisplayName == input.RouteDisplayNameFilter);
 
             var pagedAndFilteredShippingRequests = filteredShippingRequests
                 .OrderBy(input.Sorting ?? "id asc")
@@ -182,7 +200,7 @@ namespace TACHYON.Shipping.ShippingRequests
             {
                 shippingRequest.TenantId = (int)AbpSession.TenantId;
                 shippingRequest.GoodsDetailFk.TenantId = (int)AbpSession.TenantId;
-                shippingRequest.RoutSteps.ForEach(x=> x.TenantId = (int)AbpSession.TenantId);
+                shippingRequest.RoutSteps.ForEach(x => x.TenantId = (int)AbpSession.TenantId);
             }
 
 
