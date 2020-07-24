@@ -29592,6 +29592,41 @@ export interface IPagedResultDtoOfGetDocumentFileForViewDto {
   items: GetDocumentFileForViewDto[] | undefined;
 }
 
+export class UpdateDocumentFileInput implements IUpdateDocumentFileInput {
+  fileToken!: string | undefined;
+
+  constructor(data?: IUpdateDocumentFileInput) {
+    if (data) {
+      for (var property in data) {
+        if (data.hasOwnProperty(property)) (<any>this)[property] = (<any>data)[property];
+      }
+    }
+  }
+
+  init(_data?: any) {
+    if (_data) {
+      this.fileToken = _data['fileToken'];
+    }
+  }
+
+  static fromJS(data: any): UpdateDocumentFileInput {
+    data = typeof data === 'object' ? data : {};
+    let result = new UpdateDocumentFileInput();
+    result.init(data);
+    return result;
+  }
+
+  toJSON(data?: any) {
+    data = typeof data === 'object' ? data : {};
+    data['fileToken'] = this.fileToken;
+    return data;
+  }
+}
+
+export interface IUpdateDocumentFileInput {
+  fileToken: string | undefined;
+}
+
 export class CreateOrEditDocumentFileDto implements ICreateOrEditDocumentFileDto {
   name!: string;
   extn!: string;
@@ -29603,6 +29638,7 @@ export class CreateOrEditDocumentFileDto implements ICreateOrEditDocumentFileDto
   trailerId!: number | undefined;
   userId!: number | undefined;
   routStepId!: number | undefined;
+  updateDocumentFileInput!: UpdateDocumentFileInput;
   id!: string | undefined;
 
   constructor(data?: ICreateOrEditDocumentFileDto) {
@@ -29625,6 +29661,9 @@ export class CreateOrEditDocumentFileDto implements ICreateOrEditDocumentFileDto
       this.trailerId = _data['trailerId'];
       this.userId = _data['userId'];
       this.routStepId = _data['routStepId'];
+      this.updateDocumentFileInput = _data['updateDocumentFileInput']
+        ? UpdateDocumentFileInput.fromJS(_data['updateDocumentFileInput'])
+        : <any>undefined;
       this.id = _data['id'];
     }
   }
@@ -29648,6 +29687,7 @@ export class CreateOrEditDocumentFileDto implements ICreateOrEditDocumentFileDto
     data['trailerId'] = this.trailerId;
     data['userId'] = this.userId;
     data['routStepId'] = this.routStepId;
+    data['updateDocumentFileInput'] = this.updateDocumentFileInput ? this.updateDocumentFileInput.toJSON() : <any>undefined;
     data['id'] = this.id;
     return data;
   }
@@ -29664,6 +29704,7 @@ export interface ICreateOrEditDocumentFileDto {
   trailerId: number | undefined;
   userId: number | undefined;
   routStepId: number | undefined;
+  updateDocumentFileInput: UpdateDocumentFileInput;
   id: string | undefined;
 }
 

@@ -3,13 +3,9 @@ using Abp.Authorization;
 using Abp.Domain.Repositories;
 using Abp.Extensions;
 using Abp.Linq.Extensions;
+using Abp.UI;
 using Microsoft.EntityFrameworkCore;
 using System;
-using System.Collections.Generic;
-using System.Collections.Generic;
-using System.Collections.Generic;
-using System.Collections.Generic;
-using System.Collections.Generic;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Dynamic.Core;
@@ -21,6 +17,7 @@ using TACHYON.Documents.DocumentFiles.Exporting;
 using TACHYON.Documents.DocumentTypes;
 using TACHYON.Dto;
 using TACHYON.Routs.RoutSteps;
+using TACHYON.Storage;
 using TACHYON.Trailers;
 using TACHYON.Trucks;
 
@@ -29,6 +26,7 @@ namespace TACHYON.Documents.DocumentFiles
     [AbpAuthorize(AppPermissions.Pages_DocumentFiles)]
     public class DocumentFilesAppService : TACHYONAppServiceBase, IDocumentFilesAppService
     {
+        private const int MaxDocumentFileBytes = 5242880; //5MB
         private readonly IRepository<DocumentFile, Guid> _documentFileRepository;
         private readonly IDocumentFilesExcelExporter _documentFilesExcelExporter;
         private readonly IRepository<DocumentType, long> _lookup_documentTypeRepository;
@@ -36,9 +34,12 @@ namespace TACHYON.Documents.DocumentFiles
         private readonly IRepository<Trailer, long> _lookup_trailerRepository;
         private readonly IRepository<User, long> _lookup_userRepository;
         private readonly IRepository<RoutStep, long> _lookup_routStepRepository;
+        private readonly ITempFileCacheManager _tempFileCacheManager;
+        private readonly IBinaryObjectManager _binaryObjectManager;
 
 
-        public DocumentFilesAppService(IRepository<DocumentFile, Guid> documentFileRepository, IDocumentFilesExcelExporter documentFilesExcelExporter, IRepository<DocumentType, long> lookup_documentTypeRepository, IRepository<Truck, Guid> lookup_truckRepository, IRepository<Trailer, long> lookup_trailerRepository, IRepository<User, long> lookup_userRepository, IRepository<RoutStep, long> lookup_routStepRepository)
+
+        public DocumentFilesAppService(IRepository<DocumentFile, Guid> documentFileRepository, IDocumentFilesExcelExporter documentFilesExcelExporter, IRepository<DocumentType, long> lookup_documentTypeRepository, IRepository<Truck, Guid> lookup_truckRepository, IRepository<Trailer, long> lookup_trailerRepository, IRepository<User, long> lookup_userRepository, IRepository<RoutStep, long> lookup_routStepRepository, ITempFileCacheManager tempFileCacheManager, IBinaryObjectManager binaryObjectManager)
         {
             _documentFileRepository = documentFileRepository;
             _documentFilesExcelExporter = documentFilesExcelExporter;
@@ -47,7 +48,8 @@ namespace TACHYON.Documents.DocumentFiles
             _lookup_trailerRepository = lookup_trailerRepository;
             _lookup_userRepository = lookup_userRepository;
             _lookup_routStepRepository = lookup_routStepRepository;
-
+            _tempFileCacheManager = tempFileCacheManager;
+            _binaryObjectManager = binaryObjectManager;
         }
 
         public async Task<PagedResultDto<GetDocumentFileForViewDto>> GetAll(GetAllDocumentFilesInput input)
@@ -220,6 +222,10 @@ namespace TACHYON.Documents.DocumentFiles
                 documentFile.TenantId = (int?)AbpSession.TenantId;
             }
 
+            if (!input.UpdateDocumentFileInput.FileToken.IsNullOrEmpty())
+            {
+                documentFile.BinaryObjectId = await AddOrUpdateDocumentFile(input.UpdateDocumentFileInput);
+            }
 
             await _documentFileRepository.InsertAsync(documentFile);
         }
@@ -229,6 +235,12 @@ namespace TACHYON.Documents.DocumentFiles
         {
             var documentFile = await _documentFileRepository.FirstOrDefaultAsync((Guid)input.Id);
             ObjectMapper.Map(input, documentFile);
+
+            if (!input.UpdateDocumentFileInput.FileToken.IsNullOrEmpty())
+            {
+                await _binaryObjectManager.DeleteAsync(input.BinaryObjectId);
+                documentFile.BinaryObjectId = await AddOrUpdateDocumentFile(input.UpdateDocumentFileInput);
+            }
         }
 
         [AbpAuthorize(AppPermissions.Pages_DocumentFiles_Delete)]
@@ -354,6 +366,29 @@ namespace TACHYON.Documents.DocumentFiles
                     DisplayName = routStep == null || routStep.DisplayName == null ? "" : routStep.DisplayName.ToString()
                 }).ToListAsync();
         }
+
+        protected virtual async Task<Guid> AddOrUpdateDocumentFile(UpdateDocumentFileInput input)
+        {
+
+            var fileBytes = _tempFileCacheManager.GetFile(input.FileToken);
+
+            if (fileBytes == null)
+            {
+                throw new UserFriendlyException("There is no such document file with the token: " + input.FileToken);
+            }
+
+            if (fileBytes.Length > MaxDocumentFileBytes)
+            {
+                throw new UserFriendlyException(L("DocumentFile_Warn_SizeLimit", AppConsts.MaxDocumentFileBytesUserFriendlyValue));
+
+            }
+
+            var storedFile = new BinaryObject(AbpSession.TenantId, fileBytes);
+            await _binaryObjectManager.SaveAsync(storedFile);
+
+            return storedFile.Id;
+        }
+
 
     }
 }

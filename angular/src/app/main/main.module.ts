@@ -73,7 +73,6 @@ import { AutoCompleteModule } from 'primeng/autocomplete';
 import { PaginatorModule } from 'primeng/paginator';
 import { EditorModule } from 'primeng/editor';
 import { InputMaskModule } from 'primeng/inputmask';
-import { FileUploadModule } from 'primeng/fileupload';
 import { TableModule } from 'primeng/table';
 
 import { UtilsModule } from '@shared/utils/utils.module';
@@ -96,7 +95,6 @@ NgxBootstrapDatePickerConfigService.registerNgxBootstrapDatePickerLocales();
 
 @NgModule({
   imports: [
-    FileUploadModule,
     AutoCompleteModule,
     PaginatorModule,
     EditorModule,
