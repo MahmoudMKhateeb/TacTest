@@ -1,10 +1,10 @@
-﻿using System;
+﻿using Abp.Dependency;
+using System;
 using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Threading;
 using System.Threading.Tasks;
-using Abp.Dependency;
 
 namespace TACHYON.ApiClient
 {
@@ -28,7 +28,7 @@ namespace TACHYON.ApiClient
         {
             var response = await base.SendAsync(request, cancellationToken);
 
-            if (response.StatusCode == HttpStatusCode.Unauthorized && 
+            if (response.StatusCode == HttpStatusCode.Unauthorized &&
                 HasBearerAuthorizationHeader(request))
             {
                 return await HandleUnauthorizedResponse(request, response, cancellationToken);

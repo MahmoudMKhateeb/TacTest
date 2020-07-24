@@ -1,7 +1,7 @@
-﻿using System;
-using System.Linq;
-using GraphQL.Language.AST;
+﻿using GraphQL.Language.AST;
 using GraphQL.Types;
+using System;
+using System.Linq;
 
 namespace TACHYON.Core.Extensions
 {

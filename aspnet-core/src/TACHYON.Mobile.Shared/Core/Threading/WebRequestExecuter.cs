@@ -1,14 +1,14 @@
-﻿using System;
-using System.Diagnostics;
-using System.Threading.Tasks;
-using Abp.Runtime.Validation;
+﻿using Abp.Runtime.Validation;
 using Abp.UI;
 using Acr.UserDialogs;
 using Flurl.Http;
-using TACHYON.Extensions;
-using TACHYON.Localization.Resources;
 using Plugin.Connectivity;
+using System;
+using System.Diagnostics;
+using System.Threading.Tasks;
+using TACHYON.Extensions;
 using TACHYON.Localization;
+using TACHYON.Localization.Resources;
 
 namespace TACHYON.Core.Threading
 {

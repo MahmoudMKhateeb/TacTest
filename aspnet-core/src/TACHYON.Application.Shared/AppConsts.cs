@@ -7,6 +7,12 @@ namespace TACHYON
     /// </summary>
     public class AppConsts
     {
+        #region Tachyon consts
+
+        public const int MaxDocumentFileBytesUserFriendlyValue = 5;
+
+        #endregion
+
         /// <summary>
         /// Default page size for paged requests.
         /// </summary>

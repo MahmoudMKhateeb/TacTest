@@ -1,5 +1,5 @@
-﻿using System.ComponentModel;
-using Abp.AutoMapper;
+﻿using Abp.AutoMapper;
+using System.ComponentModel;
 using TACHYON.MultiTenancy.Dto;
 
 namespace TACHYON.Models.Tenants

@@ -2,11 +2,11 @@
 
 namespace TACHYON.Views
 {
-	public partial class TenantDetailsView : ContentPage, IXamarinView
+    public partial class TenantDetailsView : ContentPage, IXamarinView
     {
-		public TenantDetailsView ()
-		{
-			InitializeComponent ();
-		}
-	}
+        public TenantDetailsView()
+        {
+            InitializeComponent();
+        }
+    }
 }

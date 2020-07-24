@@ -13,7 +13,7 @@ namespace TACHYON.Localization
     ///   http://www.csharp-examples.net/culture-names/
     /// You should always test all the locales implemented in your application.
     /// </remarks>
-    public interface ILocale 
+    public interface ILocale
     {
         ///	<summary>
         /// This method must evaluate platform-specific locale settings

@@ -2,11 +2,11 @@
 
 namespace TACHYON.Controls
 {
-	public partial class Divider : ContentView
-	{
-		public Divider ()
-		{
-			InitializeComponent ();
-		}
-	}
+    public partial class Divider : ContentView
+    {
+        public Divider()
+        {
+            InitializeComponent();
+        }
+    }
 }

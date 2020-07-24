@@ -4006,6 +4006,1297 @@ export class DemoUiComponentsServiceProxy {
 }
 
 @Injectable()
+export class DocumentFilesServiceProxy {
+  private http: HttpClient;
+  private baseUrl: string;
+  protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
+
+  constructor(@Inject(HttpClient) http: HttpClient, @Optional() @Inject(API_BASE_URL) baseUrl?: string) {
+    this.http = http;
+    this.baseUrl = baseUrl ? baseUrl : '';
+  }
+
+  /**
+   * @param filter (optional)
+   * @param nameFilter (optional)
+   * @param extnFilter (optional)
+   * @param binaryObjectIdFilter (optional)
+   * @param maxExpirationDateFilter (optional)
+   * @param minExpirationDateFilter (optional)
+   * @param isAcceptedFilter (optional)
+   * @param documentTypeDisplayNameFilter (optional)
+   * @param truckPlateNumberFilter (optional)
+   * @param trailerTrailerCodeFilter (optional)
+   * @param userNameFilter (optional)
+   * @param routStepDisplayNameFilter (optional)
+   * @param sorting (optional)
+   * @param skipCount (optional)
+   * @param maxResultCount (optional)
+   * @return Success
+   */
+  getAll(
+    filter: string | null | undefined,
+    nameFilter: string | null | undefined,
+    extnFilter: string | null | undefined,
+    binaryObjectIdFilter: string | null | undefined,
+    maxExpirationDateFilter: moment.Moment | null | undefined,
+    minExpirationDateFilter: moment.Moment | null | undefined,
+    isAcceptedFilter: string | null | undefined,
+    documentTypeDisplayNameFilter: string | null | undefined,
+    truckPlateNumberFilter: string | null | undefined,
+    trailerTrailerCodeFilter: string | null | undefined,
+    userNameFilter: string | null | undefined,
+    routStepDisplayNameFilter: string | null | undefined,
+    sorting: string | null | undefined,
+    skipCount: number | undefined,
+    maxResultCount: number | undefined
+  ): Observable<PagedResultDtoOfGetDocumentFileForViewDto> {
+    let url_ = this.baseUrl + '/api/services/app/DocumentFiles/GetAll?';
+    if (filter !== undefined) url_ += 'Filter=' + encodeURIComponent('' + filter) + '&';
+    if (nameFilter !== undefined) url_ += 'NameFilter=' + encodeURIComponent('' + nameFilter) + '&';
+    if (extnFilter !== undefined) url_ += 'ExtnFilter=' + encodeURIComponent('' + extnFilter) + '&';
+    if (binaryObjectIdFilter !== undefined) url_ += 'BinaryObjectIdFilter=' + encodeURIComponent('' + binaryObjectIdFilter) + '&';
+    if (maxExpirationDateFilter !== undefined)
+      url_ += 'MaxExpirationDateFilter=' + encodeURIComponent(maxExpirationDateFilter ? '' + maxExpirationDateFilter.toJSON() : '') + '&';
+    if (minExpirationDateFilter !== undefined)
+      url_ += 'MinExpirationDateFilter=' + encodeURIComponent(minExpirationDateFilter ? '' + minExpirationDateFilter.toJSON() : '') + '&';
+    if (isAcceptedFilter !== undefined) url_ += 'IsAcceptedFilter=' + encodeURIComponent('' + isAcceptedFilter) + '&';
+    if (documentTypeDisplayNameFilter !== undefined)
+      url_ += 'DocumentTypeDisplayNameFilter=' + encodeURIComponent('' + documentTypeDisplayNameFilter) + '&';
+    if (truckPlateNumberFilter !== undefined) url_ += 'TruckPlateNumberFilter=' + encodeURIComponent('' + truckPlateNumberFilter) + '&';
+    if (trailerTrailerCodeFilter !== undefined) url_ += 'TrailerTrailerCodeFilter=' + encodeURIComponent('' + trailerTrailerCodeFilter) + '&';
+    if (userNameFilter !== undefined) url_ += 'UserNameFilter=' + encodeURIComponent('' + userNameFilter) + '&';
+    if (routStepDisplayNameFilter !== undefined) url_ += 'RoutStepDisplayNameFilter=' + encodeURIComponent('' + routStepDisplayNameFilter) + '&';
+    if (sorting !== undefined) url_ += 'Sorting=' + encodeURIComponent('' + sorting) + '&';
+    if (skipCount === null) throw new Error("The parameter 'skipCount' cannot be null.");
+    else if (skipCount !== undefined) url_ += 'SkipCount=' + encodeURIComponent('' + skipCount) + '&';
+    if (maxResultCount === null) throw new Error("The parameter 'maxResultCount' cannot be null.");
+    else if (maxResultCount !== undefined) url_ += 'MaxResultCount=' + encodeURIComponent('' + maxResultCount) + '&';
+    url_ = url_.replace(/[?&]$/, '');
+
+    let options_: any = {
+      observe: 'response',
+      responseType: 'blob',
+      headers: new HttpHeaders({
+        Accept: 'text/plain',
+      }),
+    };
+
+    return this.http
+      .request('get', url_, options_)
+      .pipe(
+        _observableMergeMap((response_: any) => {
+          return this.processGetAll(response_);
+        })
+      )
+      .pipe(
+        _observableCatch((response_: any) => {
+          if (response_ instanceof HttpResponseBase) {
+            try {
+              return this.processGetAll(<any>response_);
+            } catch (e) {
+              return <Observable<PagedResultDtoOfGetDocumentFileForViewDto>>(<any>_observableThrow(e));
+            }
+          } else return <Observable<PagedResultDtoOfGetDocumentFileForViewDto>>(<any>_observableThrow(response_));
+        })
+      );
+  }
+
+  protected processGetAll(response: HttpResponseBase): Observable<PagedResultDtoOfGetDocumentFileForViewDto> {
+    const status = response.status;
+    const responseBlob = response instanceof HttpResponse ? response.body : (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+    let _headers: any = {};
+    if (response.headers) {
+      for (let key of response.headers.keys()) {
+        _headers[key] = response.headers.get(key);
+      }
+    }
+    if (status === 200) {
+      return blobToText(responseBlob).pipe(
+        _observableMergeMap((_responseText) => {
+          let result200: any = null;
+          let resultData200 = _responseText === '' ? null : JSON.parse(_responseText, this.jsonParseReviver);
+          result200 = PagedResultDtoOfGetDocumentFileForViewDto.fromJS(resultData200);
+          return _observableOf(result200);
+        })
+      );
+    } else if (status !== 200 && status !== 204) {
+      return blobToText(responseBlob).pipe(
+        _observableMergeMap((_responseText) => {
+          return throwException('An unexpected server error occurred.', status, _responseText, _headers);
+        })
+      );
+    }
+    return _observableOf<PagedResultDtoOfGetDocumentFileForViewDto>(<any>null);
+  }
+
+  /**
+   * @param id (optional)
+   * @return Success
+   */
+  getDocumentFileForView(id: string | undefined): Observable<GetDocumentFileForViewDto> {
+    let url_ = this.baseUrl + '/api/services/app/DocumentFiles/GetDocumentFileForView?';
+    if (id === null) throw new Error("The parameter 'id' cannot be null.");
+    else if (id !== undefined) url_ += 'id=' + encodeURIComponent('' + id) + '&';
+    url_ = url_.replace(/[?&]$/, '');
+
+    let options_: any = {
+      observe: 'response',
+      responseType: 'blob',
+      headers: new HttpHeaders({
+        Accept: 'text/plain',
+      }),
+    };
+
+    return this.http
+      .request('get', url_, options_)
+      .pipe(
+        _observableMergeMap((response_: any) => {
+          return this.processGetDocumentFileForView(response_);
+        })
+      )
+      .pipe(
+        _observableCatch((response_: any) => {
+          if (response_ instanceof HttpResponseBase) {
+            try {
+              return this.processGetDocumentFileForView(<any>response_);
+            } catch (e) {
+              return <Observable<GetDocumentFileForViewDto>>(<any>_observableThrow(e));
+            }
+          } else return <Observable<GetDocumentFileForViewDto>>(<any>_observableThrow(response_));
+        })
+      );
+  }
+
+  protected processGetDocumentFileForView(response: HttpResponseBase): Observable<GetDocumentFileForViewDto> {
+    const status = response.status;
+    const responseBlob = response instanceof HttpResponse ? response.body : (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+    let _headers: any = {};
+    if (response.headers) {
+      for (let key of response.headers.keys()) {
+        _headers[key] = response.headers.get(key);
+      }
+    }
+    if (status === 200) {
+      return blobToText(responseBlob).pipe(
+        _observableMergeMap((_responseText) => {
+          let result200: any = null;
+          let resultData200 = _responseText === '' ? null : JSON.parse(_responseText, this.jsonParseReviver);
+          result200 = GetDocumentFileForViewDto.fromJS(resultData200);
+          return _observableOf(result200);
+        })
+      );
+    } else if (status !== 200 && status !== 204) {
+      return blobToText(responseBlob).pipe(
+        _observableMergeMap((_responseText) => {
+          return throwException('An unexpected server error occurred.', status, _responseText, _headers);
+        })
+      );
+    }
+    return _observableOf<GetDocumentFileForViewDto>(<any>null);
+  }
+
+  /**
+   * @param id (optional)
+   * @return Success
+   */
+  getDocumentFileForEdit(id: string | undefined): Observable<GetDocumentFileForEditOutput> {
+    let url_ = this.baseUrl + '/api/services/app/DocumentFiles/GetDocumentFileForEdit?';
+    if (id === null) throw new Error("The parameter 'id' cannot be null.");
+    else if (id !== undefined) url_ += 'Id=' + encodeURIComponent('' + id) + '&';
+    url_ = url_.replace(/[?&]$/, '');
+
+    let options_: any = {
+      observe: 'response',
+      responseType: 'blob',
+      headers: new HttpHeaders({
+        Accept: 'text/plain',
+      }),
+    };
+
+    return this.http
+      .request('get', url_, options_)
+      .pipe(
+        _observableMergeMap((response_: any) => {
+          return this.processGetDocumentFileForEdit(response_);
+        })
+      )
+      .pipe(
+        _observableCatch((response_: any) => {
+          if (response_ instanceof HttpResponseBase) {
+            try {
+              return this.processGetDocumentFileForEdit(<any>response_);
+            } catch (e) {
+              return <Observable<GetDocumentFileForEditOutput>>(<any>_observableThrow(e));
+            }
+          } else return <Observable<GetDocumentFileForEditOutput>>(<any>_observableThrow(response_));
+        })
+      );
+  }
+
+  protected processGetDocumentFileForEdit(response: HttpResponseBase): Observable<GetDocumentFileForEditOutput> {
+    const status = response.status;
+    const responseBlob = response instanceof HttpResponse ? response.body : (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+    let _headers: any = {};
+    if (response.headers) {
+      for (let key of response.headers.keys()) {
+        _headers[key] = response.headers.get(key);
+      }
+    }
+    if (status === 200) {
+      return blobToText(responseBlob).pipe(
+        _observableMergeMap((_responseText) => {
+          let result200: any = null;
+          let resultData200 = _responseText === '' ? null : JSON.parse(_responseText, this.jsonParseReviver);
+          result200 = GetDocumentFileForEditOutput.fromJS(resultData200);
+          return _observableOf(result200);
+        })
+      );
+    } else if (status !== 200 && status !== 204) {
+      return blobToText(responseBlob).pipe(
+        _observableMergeMap((_responseText) => {
+          return throwException('An unexpected server error occurred.', status, _responseText, _headers);
+        })
+      );
+    }
+    return _observableOf<GetDocumentFileForEditOutput>(<any>null);
+  }
+
+  /**
+   * @param body (optional)
+   * @return Success
+   */
+  createOrEdit(body: CreateOrEditDocumentFileDto | undefined): Observable<void> {
+    let url_ = this.baseUrl + '/api/services/app/DocumentFiles/CreateOrEdit';
+    url_ = url_.replace(/[?&]$/, '');
+
+    const content_ = JSON.stringify(body);
+
+    let options_: any = {
+      body: content_,
+      observe: 'response',
+      responseType: 'blob',
+      headers: new HttpHeaders({
+        'Content-Type': 'application/json-patch+json',
+      }),
+    };
+
+    return this.http
+      .request('post', url_, options_)
+      .pipe(
+        _observableMergeMap((response_: any) => {
+          return this.processCreateOrEdit(response_);
+        })
+      )
+      .pipe(
+        _observableCatch((response_: any) => {
+          if (response_ instanceof HttpResponseBase) {
+            try {
+              return this.processCreateOrEdit(<any>response_);
+            } catch (e) {
+              return <Observable<void>>(<any>_observableThrow(e));
+            }
+          } else return <Observable<void>>(<any>_observableThrow(response_));
+        })
+      );
+  }
+
+  protected processCreateOrEdit(response: HttpResponseBase): Observable<void> {
+    const status = response.status;
+    const responseBlob = response instanceof HttpResponse ? response.body : (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+    let _headers: any = {};
+    if (response.headers) {
+      for (let key of response.headers.keys()) {
+        _headers[key] = response.headers.get(key);
+      }
+    }
+    if (status === 200) {
+      return blobToText(responseBlob).pipe(
+        _observableMergeMap((_responseText) => {
+          return _observableOf<void>(<any>null);
+        })
+      );
+    } else if (status !== 200 && status !== 204) {
+      return blobToText(responseBlob).pipe(
+        _observableMergeMap((_responseText) => {
+          return throwException('An unexpected server error occurred.', status, _responseText, _headers);
+        })
+      );
+    }
+    return _observableOf<void>(<any>null);
+  }
+
+  /**
+   * @param id (optional)
+   * @return Success
+   */
+  delete(id: string | undefined): Observable<void> {
+    let url_ = this.baseUrl + '/api/services/app/DocumentFiles/Delete?';
+    if (id === null) throw new Error("The parameter 'id' cannot be null.");
+    else if (id !== undefined) url_ += 'Id=' + encodeURIComponent('' + id) + '&';
+    url_ = url_.replace(/[?&]$/, '');
+
+    let options_: any = {
+      observe: 'response',
+      responseType: 'blob',
+      headers: new HttpHeaders({}),
+    };
+
+    return this.http
+      .request('delete', url_, options_)
+      .pipe(
+        _observableMergeMap((response_: any) => {
+          return this.processDelete(response_);
+        })
+      )
+      .pipe(
+        _observableCatch((response_: any) => {
+          if (response_ instanceof HttpResponseBase) {
+            try {
+              return this.processDelete(<any>response_);
+            } catch (e) {
+              return <Observable<void>>(<any>_observableThrow(e));
+            }
+          } else return <Observable<void>>(<any>_observableThrow(response_));
+        })
+      );
+  }
+
+  protected processDelete(response: HttpResponseBase): Observable<void> {
+    const status = response.status;
+    const responseBlob = response instanceof HttpResponse ? response.body : (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+    let _headers: any = {};
+    if (response.headers) {
+      for (let key of response.headers.keys()) {
+        _headers[key] = response.headers.get(key);
+      }
+    }
+    if (status === 200) {
+      return blobToText(responseBlob).pipe(
+        _observableMergeMap((_responseText) => {
+          return _observableOf<void>(<any>null);
+        })
+      );
+    } else if (status !== 200 && status !== 204) {
+      return blobToText(responseBlob).pipe(
+        _observableMergeMap((_responseText) => {
+          return throwException('An unexpected server error occurred.', status, _responseText, _headers);
+        })
+      );
+    }
+    return _observableOf<void>(<any>null);
+  }
+
+  /**
+   * @param filter (optional)
+   * @param nameFilter (optional)
+   * @param extnFilter (optional)
+   * @param binaryObjectIdFilter (optional)
+   * @param maxExpirationDateFilter (optional)
+   * @param minExpirationDateFilter (optional)
+   * @param isAcceptedFilter (optional)
+   * @param documentTypeDisplayNameFilter (optional)
+   * @param truckPlateNumberFilter (optional)
+   * @param trailerTrailerCodeFilter (optional)
+   * @param userNameFilter (optional)
+   * @param routStepDisplayNameFilter (optional)
+   * @return Success
+   */
+  getDocumentFilesToExcel(
+    filter: string | null | undefined,
+    nameFilter: string | null | undefined,
+    extnFilter: string | null | undefined,
+    binaryObjectIdFilter: string | null | undefined,
+    maxExpirationDateFilter: moment.Moment | null | undefined,
+    minExpirationDateFilter: moment.Moment | null | undefined,
+    isAcceptedFilter: string | null | undefined,
+    documentTypeDisplayNameFilter: string | null | undefined,
+    truckPlateNumberFilter: string | null | undefined,
+    trailerTrailerCodeFilter: string | null | undefined,
+    userNameFilter: string | null | undefined,
+    routStepDisplayNameFilter: string | null | undefined
+  ): Observable<FileDto> {
+    let url_ = this.baseUrl + '/api/services/app/DocumentFiles/GetDocumentFilesToExcel?';
+    if (filter !== undefined) url_ += 'Filter=' + encodeURIComponent('' + filter) + '&';
+    if (nameFilter !== undefined) url_ += 'NameFilter=' + encodeURIComponent('' + nameFilter) + '&';
+    if (extnFilter !== undefined) url_ += 'ExtnFilter=' + encodeURIComponent('' + extnFilter) + '&';
+    if (binaryObjectIdFilter !== undefined) url_ += 'BinaryObjectIdFilter=' + encodeURIComponent('' + binaryObjectIdFilter) + '&';
+    if (maxExpirationDateFilter !== undefined)
+      url_ += 'MaxExpirationDateFilter=' + encodeURIComponent(maxExpirationDateFilter ? '' + maxExpirationDateFilter.toJSON() : '') + '&';
+    if (minExpirationDateFilter !== undefined)
+      url_ += 'MinExpirationDateFilter=' + encodeURIComponent(minExpirationDateFilter ? '' + minExpirationDateFilter.toJSON() : '') + '&';
+    if (isAcceptedFilter !== undefined) url_ += 'IsAcceptedFilter=' + encodeURIComponent('' + isAcceptedFilter) + '&';
+    if (documentTypeDisplayNameFilter !== undefined)
+      url_ += 'DocumentTypeDisplayNameFilter=' + encodeURIComponent('' + documentTypeDisplayNameFilter) + '&';
+    if (truckPlateNumberFilter !== undefined) url_ += 'TruckPlateNumberFilter=' + encodeURIComponent('' + truckPlateNumberFilter) + '&';
+    if (trailerTrailerCodeFilter !== undefined) url_ += 'TrailerTrailerCodeFilter=' + encodeURIComponent('' + trailerTrailerCodeFilter) + '&';
+    if (userNameFilter !== undefined) url_ += 'UserNameFilter=' + encodeURIComponent('' + userNameFilter) + '&';
+    if (routStepDisplayNameFilter !== undefined) url_ += 'RoutStepDisplayNameFilter=' + encodeURIComponent('' + routStepDisplayNameFilter) + '&';
+    url_ = url_.replace(/[?&]$/, '');
+
+    let options_: any = {
+      observe: 'response',
+      responseType: 'blob',
+      headers: new HttpHeaders({
+        Accept: 'text/plain',
+      }),
+    };
+
+    return this.http
+      .request('get', url_, options_)
+      .pipe(
+        _observableMergeMap((response_: any) => {
+          return this.processGetDocumentFilesToExcel(response_);
+        })
+      )
+      .pipe(
+        _observableCatch((response_: any) => {
+          if (response_ instanceof HttpResponseBase) {
+            try {
+              return this.processGetDocumentFilesToExcel(<any>response_);
+            } catch (e) {
+              return <Observable<FileDto>>(<any>_observableThrow(e));
+            }
+          } else return <Observable<FileDto>>(<any>_observableThrow(response_));
+        })
+      );
+  }
+
+  protected processGetDocumentFilesToExcel(response: HttpResponseBase): Observable<FileDto> {
+    const status = response.status;
+    const responseBlob = response instanceof HttpResponse ? response.body : (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+    let _headers: any = {};
+    if (response.headers) {
+      for (let key of response.headers.keys()) {
+        _headers[key] = response.headers.get(key);
+      }
+    }
+    if (status === 200) {
+      return blobToText(responseBlob).pipe(
+        _observableMergeMap((_responseText) => {
+          let result200: any = null;
+          let resultData200 = _responseText === '' ? null : JSON.parse(_responseText, this.jsonParseReviver);
+          result200 = FileDto.fromJS(resultData200);
+          return _observableOf(result200);
+        })
+      );
+    } else if (status !== 200 && status !== 204) {
+      return blobToText(responseBlob).pipe(
+        _observableMergeMap((_responseText) => {
+          return throwException('An unexpected server error occurred.', status, _responseText, _headers);
+        })
+      );
+    }
+    return _observableOf<FileDto>(<any>null);
+  }
+
+  /**
+   * @return Success
+   */
+  getAllDocumentTypeForTableDropdown(): Observable<DocumentFileDocumentTypeLookupTableDto[]> {
+    let url_ = this.baseUrl + '/api/services/app/DocumentFiles/GetAllDocumentTypeForTableDropdown';
+    url_ = url_.replace(/[?&]$/, '');
+
+    let options_: any = {
+      observe: 'response',
+      responseType: 'blob',
+      headers: new HttpHeaders({
+        Accept: 'text/plain',
+      }),
+    };
+
+    return this.http
+      .request('get', url_, options_)
+      .pipe(
+        _observableMergeMap((response_: any) => {
+          return this.processGetAllDocumentTypeForTableDropdown(response_);
+        })
+      )
+      .pipe(
+        _observableCatch((response_: any) => {
+          if (response_ instanceof HttpResponseBase) {
+            try {
+              return this.processGetAllDocumentTypeForTableDropdown(<any>response_);
+            } catch (e) {
+              return <Observable<DocumentFileDocumentTypeLookupTableDto[]>>(<any>_observableThrow(e));
+            }
+          } else return <Observable<DocumentFileDocumentTypeLookupTableDto[]>>(<any>_observableThrow(response_));
+        })
+      );
+  }
+
+  protected processGetAllDocumentTypeForTableDropdown(response: HttpResponseBase): Observable<DocumentFileDocumentTypeLookupTableDto[]> {
+    const status = response.status;
+    const responseBlob = response instanceof HttpResponse ? response.body : (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+    let _headers: any = {};
+    if (response.headers) {
+      for (let key of response.headers.keys()) {
+        _headers[key] = response.headers.get(key);
+      }
+    }
+    if (status === 200) {
+      return blobToText(responseBlob).pipe(
+        _observableMergeMap((_responseText) => {
+          let result200: any = null;
+          let resultData200 = _responseText === '' ? null : JSON.parse(_responseText, this.jsonParseReviver);
+          if (Array.isArray(resultData200)) {
+            result200 = [] as any;
+            for (let item of resultData200) result200!.push(DocumentFileDocumentTypeLookupTableDto.fromJS(item));
+          }
+          return _observableOf(result200);
+        })
+      );
+    } else if (status !== 200 && status !== 204) {
+      return blobToText(responseBlob).pipe(
+        _observableMergeMap((_responseText) => {
+          return throwException('An unexpected server error occurred.', status, _responseText, _headers);
+        })
+      );
+    }
+    return _observableOf<DocumentFileDocumentTypeLookupTableDto[]>(<any>null);
+  }
+
+  /**
+   * @return Success
+   */
+  getAllTruckForTableDropdown(): Observable<DocumentFileTruckLookupTableDto[]> {
+    let url_ = this.baseUrl + '/api/services/app/DocumentFiles/GetAllTruckForTableDropdown';
+    url_ = url_.replace(/[?&]$/, '');
+
+    let options_: any = {
+      observe: 'response',
+      responseType: 'blob',
+      headers: new HttpHeaders({
+        Accept: 'text/plain',
+      }),
+    };
+
+    return this.http
+      .request('get', url_, options_)
+      .pipe(
+        _observableMergeMap((response_: any) => {
+          return this.processGetAllTruckForTableDropdown(response_);
+        })
+      )
+      .pipe(
+        _observableCatch((response_: any) => {
+          if (response_ instanceof HttpResponseBase) {
+            try {
+              return this.processGetAllTruckForTableDropdown(<any>response_);
+            } catch (e) {
+              return <Observable<DocumentFileTruckLookupTableDto[]>>(<any>_observableThrow(e));
+            }
+          } else return <Observable<DocumentFileTruckLookupTableDto[]>>(<any>_observableThrow(response_));
+        })
+      );
+  }
+
+  protected processGetAllTruckForTableDropdown(response: HttpResponseBase): Observable<DocumentFileTruckLookupTableDto[]> {
+    const status = response.status;
+    const responseBlob = response instanceof HttpResponse ? response.body : (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+    let _headers: any = {};
+    if (response.headers) {
+      for (let key of response.headers.keys()) {
+        _headers[key] = response.headers.get(key);
+      }
+    }
+    if (status === 200) {
+      return blobToText(responseBlob).pipe(
+        _observableMergeMap((_responseText) => {
+          let result200: any = null;
+          let resultData200 = _responseText === '' ? null : JSON.parse(_responseText, this.jsonParseReviver);
+          if (Array.isArray(resultData200)) {
+            result200 = [] as any;
+            for (let item of resultData200) result200!.push(DocumentFileTruckLookupTableDto.fromJS(item));
+          }
+          return _observableOf(result200);
+        })
+      );
+    } else if (status !== 200 && status !== 204) {
+      return blobToText(responseBlob).pipe(
+        _observableMergeMap((_responseText) => {
+          return throwException('An unexpected server error occurred.', status, _responseText, _headers);
+        })
+      );
+    }
+    return _observableOf<DocumentFileTruckLookupTableDto[]>(<any>null);
+  }
+
+  /**
+   * @return Success
+   */
+  getAllTrailerForTableDropdown(): Observable<DocumentFileTrailerLookupTableDto[]> {
+    let url_ = this.baseUrl + '/api/services/app/DocumentFiles/GetAllTrailerForTableDropdown';
+    url_ = url_.replace(/[?&]$/, '');
+
+    let options_: any = {
+      observe: 'response',
+      responseType: 'blob',
+      headers: new HttpHeaders({
+        Accept: 'text/plain',
+      }),
+    };
+
+    return this.http
+      .request('get', url_, options_)
+      .pipe(
+        _observableMergeMap((response_: any) => {
+          return this.processGetAllTrailerForTableDropdown(response_);
+        })
+      )
+      .pipe(
+        _observableCatch((response_: any) => {
+          if (response_ instanceof HttpResponseBase) {
+            try {
+              return this.processGetAllTrailerForTableDropdown(<any>response_);
+            } catch (e) {
+              return <Observable<DocumentFileTrailerLookupTableDto[]>>(<any>_observableThrow(e));
+            }
+          } else return <Observable<DocumentFileTrailerLookupTableDto[]>>(<any>_observableThrow(response_));
+        })
+      );
+  }
+
+  protected processGetAllTrailerForTableDropdown(response: HttpResponseBase): Observable<DocumentFileTrailerLookupTableDto[]> {
+    const status = response.status;
+    const responseBlob = response instanceof HttpResponse ? response.body : (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+    let _headers: any = {};
+    if (response.headers) {
+      for (let key of response.headers.keys()) {
+        _headers[key] = response.headers.get(key);
+      }
+    }
+    if (status === 200) {
+      return blobToText(responseBlob).pipe(
+        _observableMergeMap((_responseText) => {
+          let result200: any = null;
+          let resultData200 = _responseText === '' ? null : JSON.parse(_responseText, this.jsonParseReviver);
+          if (Array.isArray(resultData200)) {
+            result200 = [] as any;
+            for (let item of resultData200) result200!.push(DocumentFileTrailerLookupTableDto.fromJS(item));
+          }
+          return _observableOf(result200);
+        })
+      );
+    } else if (status !== 200 && status !== 204) {
+      return blobToText(responseBlob).pipe(
+        _observableMergeMap((_responseText) => {
+          return throwException('An unexpected server error occurred.', status, _responseText, _headers);
+        })
+      );
+    }
+    return _observableOf<DocumentFileTrailerLookupTableDto[]>(<any>null);
+  }
+
+  /**
+   * @return Success
+   */
+  getAllUserForTableDropdown(): Observable<DocumentFileUserLookupTableDto[]> {
+    let url_ = this.baseUrl + '/api/services/app/DocumentFiles/GetAllUserForTableDropdown';
+    url_ = url_.replace(/[?&]$/, '');
+
+    let options_: any = {
+      observe: 'response',
+      responseType: 'blob',
+      headers: new HttpHeaders({
+        Accept: 'text/plain',
+      }),
+    };
+
+    return this.http
+      .request('get', url_, options_)
+      .pipe(
+        _observableMergeMap((response_: any) => {
+          return this.processGetAllUserForTableDropdown(response_);
+        })
+      )
+      .pipe(
+        _observableCatch((response_: any) => {
+          if (response_ instanceof HttpResponseBase) {
+            try {
+              return this.processGetAllUserForTableDropdown(<any>response_);
+            } catch (e) {
+              return <Observable<DocumentFileUserLookupTableDto[]>>(<any>_observableThrow(e));
+            }
+          } else return <Observable<DocumentFileUserLookupTableDto[]>>(<any>_observableThrow(response_));
+        })
+      );
+  }
+
+  protected processGetAllUserForTableDropdown(response: HttpResponseBase): Observable<DocumentFileUserLookupTableDto[]> {
+    const status = response.status;
+    const responseBlob = response instanceof HttpResponse ? response.body : (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+    let _headers: any = {};
+    if (response.headers) {
+      for (let key of response.headers.keys()) {
+        _headers[key] = response.headers.get(key);
+      }
+    }
+    if (status === 200) {
+      return blobToText(responseBlob).pipe(
+        _observableMergeMap((_responseText) => {
+          let result200: any = null;
+          let resultData200 = _responseText === '' ? null : JSON.parse(_responseText, this.jsonParseReviver);
+          if (Array.isArray(resultData200)) {
+            result200 = [] as any;
+            for (let item of resultData200) result200!.push(DocumentFileUserLookupTableDto.fromJS(item));
+          }
+          return _observableOf(result200);
+        })
+      );
+    } else if (status !== 200 && status !== 204) {
+      return blobToText(responseBlob).pipe(
+        _observableMergeMap((_responseText) => {
+          return throwException('An unexpected server error occurred.', status, _responseText, _headers);
+        })
+      );
+    }
+    return _observableOf<DocumentFileUserLookupTableDto[]>(<any>null);
+  }
+
+  /**
+   * @return Success
+   */
+  getAllRoutStepForTableDropdown(): Observable<DocumentFileRoutStepLookupTableDto[]> {
+    let url_ = this.baseUrl + '/api/services/app/DocumentFiles/GetAllRoutStepForTableDropdown';
+    url_ = url_.replace(/[?&]$/, '');
+
+    let options_: any = {
+      observe: 'response',
+      responseType: 'blob',
+      headers: new HttpHeaders({
+        Accept: 'text/plain',
+      }),
+    };
+
+    return this.http
+      .request('get', url_, options_)
+      .pipe(
+        _observableMergeMap((response_: any) => {
+          return this.processGetAllRoutStepForTableDropdown(response_);
+        })
+      )
+      .pipe(
+        _observableCatch((response_: any) => {
+          if (response_ instanceof HttpResponseBase) {
+            try {
+              return this.processGetAllRoutStepForTableDropdown(<any>response_);
+            } catch (e) {
+              return <Observable<DocumentFileRoutStepLookupTableDto[]>>(<any>_observableThrow(e));
+            }
+          } else return <Observable<DocumentFileRoutStepLookupTableDto[]>>(<any>_observableThrow(response_));
+        })
+      );
+  }
+
+  protected processGetAllRoutStepForTableDropdown(response: HttpResponseBase): Observable<DocumentFileRoutStepLookupTableDto[]> {
+    const status = response.status;
+    const responseBlob = response instanceof HttpResponse ? response.body : (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+    let _headers: any = {};
+    if (response.headers) {
+      for (let key of response.headers.keys()) {
+        _headers[key] = response.headers.get(key);
+      }
+    }
+    if (status === 200) {
+      return blobToText(responseBlob).pipe(
+        _observableMergeMap((_responseText) => {
+          let result200: any = null;
+          let resultData200 = _responseText === '' ? null : JSON.parse(_responseText, this.jsonParseReviver);
+          if (Array.isArray(resultData200)) {
+            result200 = [] as any;
+            for (let item of resultData200) result200!.push(DocumentFileRoutStepLookupTableDto.fromJS(item));
+          }
+          return _observableOf(result200);
+        })
+      );
+    } else if (status !== 200 && status !== 204) {
+      return blobToText(responseBlob).pipe(
+        _observableMergeMap((_responseText) => {
+          return throwException('An unexpected server error occurred.', status, _responseText, _headers);
+        })
+      );
+    }
+    return _observableOf<DocumentFileRoutStepLookupTableDto[]>(<any>null);
+  }
+}
+
+@Injectable()
+export class DocumentTypesServiceProxy {
+  private http: HttpClient;
+  private baseUrl: string;
+  protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
+
+  constructor(@Inject(HttpClient) http: HttpClient, @Optional() @Inject(API_BASE_URL) baseUrl?: string) {
+    this.http = http;
+    this.baseUrl = baseUrl ? baseUrl : '';
+  }
+
+  /**
+   * @param filter (optional)
+   * @param displayNameFilter (optional)
+   * @param isRequiredFilter (optional)
+   * @param maxExpirationDateFilter (optional)
+   * @param minExpirationDateFilter (optional)
+   * @param hasExpirationDateFilter (optional)
+   * @param requiredFromFilter (optional)
+   * @param sorting (optional)
+   * @param skipCount (optional)
+   * @param maxResultCount (optional)
+   * @return Success
+   */
+  getAll(
+    filter: string | null | undefined,
+    displayNameFilter: string | null | undefined,
+    isRequiredFilter: number | undefined,
+    maxExpirationDateFilter: moment.Moment | null | undefined,
+    minExpirationDateFilter: moment.Moment | null | undefined,
+    hasExpirationDateFilter: number | undefined,
+    requiredFromFilter: string | null | undefined,
+    sorting: string | null | undefined,
+    skipCount: number | undefined,
+    maxResultCount: number | undefined
+  ): Observable<PagedResultDtoOfGetDocumentTypeForViewDto> {
+    let url_ = this.baseUrl + '/api/services/app/DocumentTypes/GetAll?';
+    if (filter !== undefined) url_ += 'Filter=' + encodeURIComponent('' + filter) + '&';
+    if (displayNameFilter !== undefined) url_ += 'DisplayNameFilter=' + encodeURIComponent('' + displayNameFilter) + '&';
+    if (isRequiredFilter === null) throw new Error("The parameter 'isRequiredFilter' cannot be null.");
+    else if (isRequiredFilter !== undefined) url_ += 'IsRequiredFilter=' + encodeURIComponent('' + isRequiredFilter) + '&';
+    if (maxExpirationDateFilter !== undefined)
+      url_ += 'MaxExpirationDateFilter=' + encodeURIComponent(maxExpirationDateFilter ? '' + maxExpirationDateFilter.toJSON() : '') + '&';
+    if (minExpirationDateFilter !== undefined)
+      url_ += 'MinExpirationDateFilter=' + encodeURIComponent(minExpirationDateFilter ? '' + minExpirationDateFilter.toJSON() : '') + '&';
+    if (hasExpirationDateFilter === null) throw new Error("The parameter 'hasExpirationDateFilter' cannot be null.");
+    else if (hasExpirationDateFilter !== undefined) url_ += 'HasExpirationDateFilter=' + encodeURIComponent('' + hasExpirationDateFilter) + '&';
+    if (requiredFromFilter !== undefined) url_ += 'RequiredFromFilter=' + encodeURIComponent('' + requiredFromFilter) + '&';
+    if (sorting !== undefined) url_ += 'Sorting=' + encodeURIComponent('' + sorting) + '&';
+    if (skipCount === null) throw new Error("The parameter 'skipCount' cannot be null.");
+    else if (skipCount !== undefined) url_ += 'SkipCount=' + encodeURIComponent('' + skipCount) + '&';
+    if (maxResultCount === null) throw new Error("The parameter 'maxResultCount' cannot be null.");
+    else if (maxResultCount !== undefined) url_ += 'MaxResultCount=' + encodeURIComponent('' + maxResultCount) + '&';
+    url_ = url_.replace(/[?&]$/, '');
+
+    let options_: any = {
+      observe: 'response',
+      responseType: 'blob',
+      headers: new HttpHeaders({
+        Accept: 'text/plain',
+      }),
+    };
+
+    return this.http
+      .request('get', url_, options_)
+      .pipe(
+        _observableMergeMap((response_: any) => {
+          return this.processGetAll(response_);
+        })
+      )
+      .pipe(
+        _observableCatch((response_: any) => {
+          if (response_ instanceof HttpResponseBase) {
+            try {
+              return this.processGetAll(<any>response_);
+            } catch (e) {
+              return <Observable<PagedResultDtoOfGetDocumentTypeForViewDto>>(<any>_observableThrow(e));
+            }
+          } else return <Observable<PagedResultDtoOfGetDocumentTypeForViewDto>>(<any>_observableThrow(response_));
+        })
+      );
+  }
+
+  protected processGetAll(response: HttpResponseBase): Observable<PagedResultDtoOfGetDocumentTypeForViewDto> {
+    const status = response.status;
+    const responseBlob = response instanceof HttpResponse ? response.body : (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+    let _headers: any = {};
+    if (response.headers) {
+      for (let key of response.headers.keys()) {
+        _headers[key] = response.headers.get(key);
+      }
+    }
+    if (status === 200) {
+      return blobToText(responseBlob).pipe(
+        _observableMergeMap((_responseText) => {
+          let result200: any = null;
+          let resultData200 = _responseText === '' ? null : JSON.parse(_responseText, this.jsonParseReviver);
+          result200 = PagedResultDtoOfGetDocumentTypeForViewDto.fromJS(resultData200);
+          return _observableOf(result200);
+        })
+      );
+    } else if (status !== 200 && status !== 204) {
+      return blobToText(responseBlob).pipe(
+        _observableMergeMap((_responseText) => {
+          return throwException('An unexpected server error occurred.', status, _responseText, _headers);
+        })
+      );
+    }
+    return _observableOf<PagedResultDtoOfGetDocumentTypeForViewDto>(<any>null);
+  }
+
+  /**
+   * @param id (optional)
+   * @return Success
+   */
+  getDocumentTypeForView(id: number | undefined): Observable<GetDocumentTypeForViewDto> {
+    let url_ = this.baseUrl + '/api/services/app/DocumentTypes/GetDocumentTypeForView?';
+    if (id === null) throw new Error("The parameter 'id' cannot be null.");
+    else if (id !== undefined) url_ += 'id=' + encodeURIComponent('' + id) + '&';
+    url_ = url_.replace(/[?&]$/, '');
+
+    let options_: any = {
+      observe: 'response',
+      responseType: 'blob',
+      headers: new HttpHeaders({
+        Accept: 'text/plain',
+      }),
+    };
+
+    return this.http
+      .request('get', url_, options_)
+      .pipe(
+        _observableMergeMap((response_: any) => {
+          return this.processGetDocumentTypeForView(response_);
+        })
+      )
+      .pipe(
+        _observableCatch((response_: any) => {
+          if (response_ instanceof HttpResponseBase) {
+            try {
+              return this.processGetDocumentTypeForView(<any>response_);
+            } catch (e) {
+              return <Observable<GetDocumentTypeForViewDto>>(<any>_observableThrow(e));
+            }
+          } else return <Observable<GetDocumentTypeForViewDto>>(<any>_observableThrow(response_));
+        })
+      );
+  }
+
+  protected processGetDocumentTypeForView(response: HttpResponseBase): Observable<GetDocumentTypeForViewDto> {
+    const status = response.status;
+    const responseBlob = response instanceof HttpResponse ? response.body : (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+    let _headers: any = {};
+    if (response.headers) {
+      for (let key of response.headers.keys()) {
+        _headers[key] = response.headers.get(key);
+      }
+    }
+    if (status === 200) {
+      return blobToText(responseBlob).pipe(
+        _observableMergeMap((_responseText) => {
+          let result200: any = null;
+          let resultData200 = _responseText === '' ? null : JSON.parse(_responseText, this.jsonParseReviver);
+          result200 = GetDocumentTypeForViewDto.fromJS(resultData200);
+          return _observableOf(result200);
+        })
+      );
+    } else if (status !== 200 && status !== 204) {
+      return blobToText(responseBlob).pipe(
+        _observableMergeMap((_responseText) => {
+          return throwException('An unexpected server error occurred.', status, _responseText, _headers);
+        })
+      );
+    }
+    return _observableOf<GetDocumentTypeForViewDto>(<any>null);
+  }
+
+  /**
+   * @param id (optional)
+   * @return Success
+   */
+  getDocumentTypeForEdit(id: number | undefined): Observable<GetDocumentTypeForEditOutput> {
+    let url_ = this.baseUrl + '/api/services/app/DocumentTypes/GetDocumentTypeForEdit?';
+    if (id === null) throw new Error("The parameter 'id' cannot be null.");
+    else if (id !== undefined) url_ += 'Id=' + encodeURIComponent('' + id) + '&';
+    url_ = url_.replace(/[?&]$/, '');
+
+    let options_: any = {
+      observe: 'response',
+      responseType: 'blob',
+      headers: new HttpHeaders({
+        Accept: 'text/plain',
+      }),
+    };
+
+    return this.http
+      .request('get', url_, options_)
+      .pipe(
+        _observableMergeMap((response_: any) => {
+          return this.processGetDocumentTypeForEdit(response_);
+        })
+      )
+      .pipe(
+        _observableCatch((response_: any) => {
+          if (response_ instanceof HttpResponseBase) {
+            try {
+              return this.processGetDocumentTypeForEdit(<any>response_);
+            } catch (e) {
+              return <Observable<GetDocumentTypeForEditOutput>>(<any>_observableThrow(e));
+            }
+          } else return <Observable<GetDocumentTypeForEditOutput>>(<any>_observableThrow(response_));
+        })
+      );
+  }
+
+  protected processGetDocumentTypeForEdit(response: HttpResponseBase): Observable<GetDocumentTypeForEditOutput> {
+    const status = response.status;
+    const responseBlob = response instanceof HttpResponse ? response.body : (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+    let _headers: any = {};
+    if (response.headers) {
+      for (let key of response.headers.keys()) {
+        _headers[key] = response.headers.get(key);
+      }
+    }
+    if (status === 200) {
+      return blobToText(responseBlob).pipe(
+        _observableMergeMap((_responseText) => {
+          let result200: any = null;
+          let resultData200 = _responseText === '' ? null : JSON.parse(_responseText, this.jsonParseReviver);
+          result200 = GetDocumentTypeForEditOutput.fromJS(resultData200);
+          return _observableOf(result200);
+        })
+      );
+    } else if (status !== 200 && status !== 204) {
+      return blobToText(responseBlob).pipe(
+        _observableMergeMap((_responseText) => {
+          return throwException('An unexpected server error occurred.', status, _responseText, _headers);
+        })
+      );
+    }
+    return _observableOf<GetDocumentTypeForEditOutput>(<any>null);
+  }
+
+  /**
+   * @param body (optional)
+   * @return Success
+   */
+  createOrEdit(body: CreateOrEditDocumentTypeDto | undefined): Observable<void> {
+    let url_ = this.baseUrl + '/api/services/app/DocumentTypes/CreateOrEdit';
+    url_ = url_.replace(/[?&]$/, '');
+
+    const content_ = JSON.stringify(body);
+
+    let options_: any = {
+      body: content_,
+      observe: 'response',
+      responseType: 'blob',
+      headers: new HttpHeaders({
+        'Content-Type': 'application/json-patch+json',
+      }),
+    };
+
+    return this.http
+      .request('post', url_, options_)
+      .pipe(
+        _observableMergeMap((response_: any) => {
+          return this.processCreateOrEdit(response_);
+        })
+      )
+      .pipe(
+        _observableCatch((response_: any) => {
+          if (response_ instanceof HttpResponseBase) {
+            try {
+              return this.processCreateOrEdit(<any>response_);
+            } catch (e) {
+              return <Observable<void>>(<any>_observableThrow(e));
+            }
+          } else return <Observable<void>>(<any>_observableThrow(response_));
+        })
+      );
+  }
+
+  protected processCreateOrEdit(response: HttpResponseBase): Observable<void> {
+    const status = response.status;
+    const responseBlob = response instanceof HttpResponse ? response.body : (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+    let _headers: any = {};
+    if (response.headers) {
+      for (let key of response.headers.keys()) {
+        _headers[key] = response.headers.get(key);
+      }
+    }
+    if (status === 200) {
+      return blobToText(responseBlob).pipe(
+        _observableMergeMap((_responseText) => {
+          return _observableOf<void>(<any>null);
+        })
+      );
+    } else if (status !== 200 && status !== 204) {
+      return blobToText(responseBlob).pipe(
+        _observableMergeMap((_responseText) => {
+          return throwException('An unexpected server error occurred.', status, _responseText, _headers);
+        })
+      );
+    }
+    return _observableOf<void>(<any>null);
+  }
+
+  /**
+   * @param id (optional)
+   * @return Success
+   */
+  delete(id: number | undefined): Observable<void> {
+    let url_ = this.baseUrl + '/api/services/app/DocumentTypes/Delete?';
+    if (id === null) throw new Error("The parameter 'id' cannot be null.");
+    else if (id !== undefined) url_ += 'Id=' + encodeURIComponent('' + id) + '&';
+    url_ = url_.replace(/[?&]$/, '');
+
+    let options_: any = {
+      observe: 'response',
+      responseType: 'blob',
+      headers: new HttpHeaders({}),
+    };
+
+    return this.http
+      .request('delete', url_, options_)
+      .pipe(
+        _observableMergeMap((response_: any) => {
+          return this.processDelete(response_);
+        })
+      )
+      .pipe(
+        _observableCatch((response_: any) => {
+          if (response_ instanceof HttpResponseBase) {
+            try {
+              return this.processDelete(<any>response_);
+            } catch (e) {
+              return <Observable<void>>(<any>_observableThrow(e));
+            }
+          } else return <Observable<void>>(<any>_observableThrow(response_));
+        })
+      );
+  }
+
+  protected processDelete(response: HttpResponseBase): Observable<void> {
+    const status = response.status;
+    const responseBlob = response instanceof HttpResponse ? response.body : (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+    let _headers: any = {};
+    if (response.headers) {
+      for (let key of response.headers.keys()) {
+        _headers[key] = response.headers.get(key);
+      }
+    }
+    if (status === 200) {
+      return blobToText(responseBlob).pipe(
+        _observableMergeMap((_responseText) => {
+          return _observableOf<void>(<any>null);
+        })
+      );
+    } else if (status !== 200 && status !== 204) {
+      return blobToText(responseBlob).pipe(
+        _observableMergeMap((_responseText) => {
+          return throwException('An unexpected server error occurred.', status, _responseText, _headers);
+        })
+      );
+    }
+    return _observableOf<void>(<any>null);
+  }
+
+  /**
+   * @param filter (optional)
+   * @param displayNameFilter (optional)
+   * @param isRequiredFilter (optional)
+   * @param maxExpirationDateFilter (optional)
+   * @param minExpirationDateFilter (optional)
+   * @param hasExpirationDateFilter (optional)
+   * @param requiredFromFilter (optional)
+   * @return Success
+   */
+  getDocumentTypesToExcel(
+    filter: string | null | undefined,
+    displayNameFilter: string | null | undefined,
+    isRequiredFilter: number | undefined,
+    maxExpirationDateFilter: moment.Moment | null | undefined,
+    minExpirationDateFilter: moment.Moment | null | undefined,
+    hasExpirationDateFilter: number | undefined,
+    requiredFromFilter: string | null | undefined
+  ): Observable<FileDto> {
+    let url_ = this.baseUrl + '/api/services/app/DocumentTypes/GetDocumentTypesToExcel?';
+    if (filter !== undefined) url_ += 'Filter=' + encodeURIComponent('' + filter) + '&';
+    if (displayNameFilter !== undefined) url_ += 'DisplayNameFilter=' + encodeURIComponent('' + displayNameFilter) + '&';
+    if (isRequiredFilter === null) throw new Error("The parameter 'isRequiredFilter' cannot be null.");
+    else if (isRequiredFilter !== undefined) url_ += 'IsRequiredFilter=' + encodeURIComponent('' + isRequiredFilter) + '&';
+    if (maxExpirationDateFilter !== undefined)
+      url_ += 'MaxExpirationDateFilter=' + encodeURIComponent(maxExpirationDateFilter ? '' + maxExpirationDateFilter.toJSON() : '') + '&';
+    if (minExpirationDateFilter !== undefined)
+      url_ += 'MinExpirationDateFilter=' + encodeURIComponent(minExpirationDateFilter ? '' + minExpirationDateFilter.toJSON() : '') + '&';
+    if (hasExpirationDateFilter === null) throw new Error("The parameter 'hasExpirationDateFilter' cannot be null.");
+    else if (hasExpirationDateFilter !== undefined) url_ += 'HasExpirationDateFilter=' + encodeURIComponent('' + hasExpirationDateFilter) + '&';
+    if (requiredFromFilter !== undefined) url_ += 'RequiredFromFilter=' + encodeURIComponent('' + requiredFromFilter) + '&';
+    url_ = url_.replace(/[?&]$/, '');
+
+    let options_: any = {
+      observe: 'response',
+      responseType: 'blob',
+      headers: new HttpHeaders({
+        Accept: 'text/plain',
+      }),
+    };
+
+    return this.http
+      .request('get', url_, options_)
+      .pipe(
+        _observableMergeMap((response_: any) => {
+          return this.processGetDocumentTypesToExcel(response_);
+        })
+      )
+      .pipe(
+        _observableCatch((response_: any) => {
+          if (response_ instanceof HttpResponseBase) {
+            try {
+              return this.processGetDocumentTypesToExcel(<any>response_);
+            } catch (e) {
+              return <Observable<FileDto>>(<any>_observableThrow(e));
+            }
+          } else return <Observable<FileDto>>(<any>_observableThrow(response_));
+        })
+      );
+  }
+
+  protected processGetDocumentTypesToExcel(response: HttpResponseBase): Observable<FileDto> {
+    const status = response.status;
+    const responseBlob = response instanceof HttpResponse ? response.body : (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+    let _headers: any = {};
+    if (response.headers) {
+      for (let key of response.headers.keys()) {
+        _headers[key] = response.headers.get(key);
+      }
+    }
+    if (status === 200) {
+      return blobToText(responseBlob).pipe(
+        _observableMergeMap((_responseText) => {
+          let result200: any = null;
+          let resultData200 = _responseText === '' ? null : JSON.parse(_responseText, this.jsonParseReviver);
+          result200 = FileDto.fromJS(resultData200);
+          return _observableOf(result200);
+        })
+      );
+    } else if (status !== 200 && status !== 204) {
+      return blobToText(responseBlob).pipe(
+        _observableMergeMap((_responseText) => {
+          return throwException('An unexpected server error occurred.', status, _responseText, _headers);
+        })
+      );
+    }
+    return _observableOf<FileDto>(<any>null);
+  }
+}
+
+@Injectable()
 export class DynamicEntityParameterDefinitionServiceProxy {
   private http: HttpClient;
   private baseUrl: string;
@@ -7140,6 +8431,545 @@ export class GoodCategoriesServiceProxy {
       );
     }
     return _observableOf<FileDto>(<any>null);
+  }
+}
+
+@Injectable()
+export class GoodsDetailsServiceProxy {
+  private http: HttpClient;
+  private baseUrl: string;
+  protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
+
+  constructor(@Inject(HttpClient) http: HttpClient, @Optional() @Inject(API_BASE_URL) baseUrl?: string) {
+    this.http = http;
+    this.baseUrl = baseUrl ? baseUrl : '';
+  }
+
+  /**
+   * @param filter (optional)
+   * @param nameFilter (optional)
+   * @param descriptionFilter (optional)
+   * @param quantityFilter (optional)
+   * @param weightFilter (optional)
+   * @param dimentionsFilter (optional)
+   * @param isDangerousGoodFilter (optional)
+   * @param dangerousGoodsCodeFilter (optional)
+   * @param goodCategoryDisplayNameFilter (optional)
+   * @param sorting (optional)
+   * @param skipCount (optional)
+   * @param maxResultCount (optional)
+   * @return Success
+   */
+  getAll(
+    filter: string | null | undefined,
+    nameFilter: string | null | undefined,
+    descriptionFilter: string | null | undefined,
+    quantityFilter: string | null | undefined,
+    weightFilter: string | null | undefined,
+    dimentionsFilter: string | null | undefined,
+    isDangerousGoodFilter: number | undefined,
+    dangerousGoodsCodeFilter: string | null | undefined,
+    goodCategoryDisplayNameFilter: string | null | undefined,
+    sorting: string | null | undefined,
+    skipCount: number | undefined,
+    maxResultCount: number | undefined
+  ): Observable<PagedResultDtoOfGetGoodsDetailForViewDto> {
+    let url_ = this.baseUrl + '/api/services/app/GoodsDetails/GetAll?';
+    if (filter !== undefined) url_ += 'Filter=' + encodeURIComponent('' + filter) + '&';
+    if (nameFilter !== undefined) url_ += 'NameFilter=' + encodeURIComponent('' + nameFilter) + '&';
+    if (descriptionFilter !== undefined) url_ += 'DescriptionFilter=' + encodeURIComponent('' + descriptionFilter) + '&';
+    if (quantityFilter !== undefined) url_ += 'QuantityFilter=' + encodeURIComponent('' + quantityFilter) + '&';
+    if (weightFilter !== undefined) url_ += 'WeightFilter=' + encodeURIComponent('' + weightFilter) + '&';
+    if (dimentionsFilter !== undefined) url_ += 'DimentionsFilter=' + encodeURIComponent('' + dimentionsFilter) + '&';
+    if (isDangerousGoodFilter === null) throw new Error("The parameter 'isDangerousGoodFilter' cannot be null.");
+    else if (isDangerousGoodFilter !== undefined) url_ += 'IsDangerousGoodFilter=' + encodeURIComponent('' + isDangerousGoodFilter) + '&';
+    if (dangerousGoodsCodeFilter !== undefined) url_ += 'DangerousGoodsCodeFilter=' + encodeURIComponent('' + dangerousGoodsCodeFilter) + '&';
+    if (goodCategoryDisplayNameFilter !== undefined)
+      url_ += 'GoodCategoryDisplayNameFilter=' + encodeURIComponent('' + goodCategoryDisplayNameFilter) + '&';
+    if (sorting !== undefined) url_ += 'Sorting=' + encodeURIComponent('' + sorting) + '&';
+    if (skipCount === null) throw new Error("The parameter 'skipCount' cannot be null.");
+    else if (skipCount !== undefined) url_ += 'SkipCount=' + encodeURIComponent('' + skipCount) + '&';
+    if (maxResultCount === null) throw new Error("The parameter 'maxResultCount' cannot be null.");
+    else if (maxResultCount !== undefined) url_ += 'MaxResultCount=' + encodeURIComponent('' + maxResultCount) + '&';
+    url_ = url_.replace(/[?&]$/, '');
+
+    let options_: any = {
+      observe: 'response',
+      responseType: 'blob',
+      headers: new HttpHeaders({
+        Accept: 'text/plain',
+      }),
+    };
+
+    return this.http
+      .request('get', url_, options_)
+      .pipe(
+        _observableMergeMap((response_: any) => {
+          return this.processGetAll(response_);
+        })
+      )
+      .pipe(
+        _observableCatch((response_: any) => {
+          if (response_ instanceof HttpResponseBase) {
+            try {
+              return this.processGetAll(<any>response_);
+            } catch (e) {
+              return <Observable<PagedResultDtoOfGetGoodsDetailForViewDto>>(<any>_observableThrow(e));
+            }
+          } else return <Observable<PagedResultDtoOfGetGoodsDetailForViewDto>>(<any>_observableThrow(response_));
+        })
+      );
+  }
+
+  protected processGetAll(response: HttpResponseBase): Observable<PagedResultDtoOfGetGoodsDetailForViewDto> {
+    const status = response.status;
+    const responseBlob = response instanceof HttpResponse ? response.body : (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+    let _headers: any = {};
+    if (response.headers) {
+      for (let key of response.headers.keys()) {
+        _headers[key] = response.headers.get(key);
+      }
+    }
+    if (status === 200) {
+      return blobToText(responseBlob).pipe(
+        _observableMergeMap((_responseText) => {
+          let result200: any = null;
+          let resultData200 = _responseText === '' ? null : JSON.parse(_responseText, this.jsonParseReviver);
+          result200 = PagedResultDtoOfGetGoodsDetailForViewDto.fromJS(resultData200);
+          return _observableOf(result200);
+        })
+      );
+    } else if (status !== 200 && status !== 204) {
+      return blobToText(responseBlob).pipe(
+        _observableMergeMap((_responseText) => {
+          return throwException('An unexpected server error occurred.', status, _responseText, _headers);
+        })
+      );
+    }
+    return _observableOf<PagedResultDtoOfGetGoodsDetailForViewDto>(<any>null);
+  }
+
+  /**
+   * @param id (optional)
+   * @return Success
+   */
+  getGoodsDetailForView(id: number | undefined): Observable<GetGoodsDetailForViewDto> {
+    let url_ = this.baseUrl + '/api/services/app/GoodsDetails/GetGoodsDetailForView?';
+    if (id === null) throw new Error("The parameter 'id' cannot be null.");
+    else if (id !== undefined) url_ += 'id=' + encodeURIComponent('' + id) + '&';
+    url_ = url_.replace(/[?&]$/, '');
+
+    let options_: any = {
+      observe: 'response',
+      responseType: 'blob',
+      headers: new HttpHeaders({
+        Accept: 'text/plain',
+      }),
+    };
+
+    return this.http
+      .request('get', url_, options_)
+      .pipe(
+        _observableMergeMap((response_: any) => {
+          return this.processGetGoodsDetailForView(response_);
+        })
+      )
+      .pipe(
+        _observableCatch((response_: any) => {
+          if (response_ instanceof HttpResponseBase) {
+            try {
+              return this.processGetGoodsDetailForView(<any>response_);
+            } catch (e) {
+              return <Observable<GetGoodsDetailForViewDto>>(<any>_observableThrow(e));
+            }
+          } else return <Observable<GetGoodsDetailForViewDto>>(<any>_observableThrow(response_));
+        })
+      );
+  }
+
+  protected processGetGoodsDetailForView(response: HttpResponseBase): Observable<GetGoodsDetailForViewDto> {
+    const status = response.status;
+    const responseBlob = response instanceof HttpResponse ? response.body : (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+    let _headers: any = {};
+    if (response.headers) {
+      for (let key of response.headers.keys()) {
+        _headers[key] = response.headers.get(key);
+      }
+    }
+    if (status === 200) {
+      return blobToText(responseBlob).pipe(
+        _observableMergeMap((_responseText) => {
+          let result200: any = null;
+          let resultData200 = _responseText === '' ? null : JSON.parse(_responseText, this.jsonParseReviver);
+          result200 = GetGoodsDetailForViewDto.fromJS(resultData200);
+          return _observableOf(result200);
+        })
+      );
+    } else if (status !== 200 && status !== 204) {
+      return blobToText(responseBlob).pipe(
+        _observableMergeMap((_responseText) => {
+          return throwException('An unexpected server error occurred.', status, _responseText, _headers);
+        })
+      );
+    }
+    return _observableOf<GetGoodsDetailForViewDto>(<any>null);
+  }
+
+  /**
+   * @param id (optional)
+   * @return Success
+   */
+  getGoodsDetailForEdit(id: number | undefined): Observable<GetGoodsDetailForEditOutput> {
+    let url_ = this.baseUrl + '/api/services/app/GoodsDetails/GetGoodsDetailForEdit?';
+    if (id === null) throw new Error("The parameter 'id' cannot be null.");
+    else if (id !== undefined) url_ += 'Id=' + encodeURIComponent('' + id) + '&';
+    url_ = url_.replace(/[?&]$/, '');
+
+    let options_: any = {
+      observe: 'response',
+      responseType: 'blob',
+      headers: new HttpHeaders({
+        Accept: 'text/plain',
+      }),
+    };
+
+    return this.http
+      .request('get', url_, options_)
+      .pipe(
+        _observableMergeMap((response_: any) => {
+          return this.processGetGoodsDetailForEdit(response_);
+        })
+      )
+      .pipe(
+        _observableCatch((response_: any) => {
+          if (response_ instanceof HttpResponseBase) {
+            try {
+              return this.processGetGoodsDetailForEdit(<any>response_);
+            } catch (e) {
+              return <Observable<GetGoodsDetailForEditOutput>>(<any>_observableThrow(e));
+            }
+          } else return <Observable<GetGoodsDetailForEditOutput>>(<any>_observableThrow(response_));
+        })
+      );
+  }
+
+  protected processGetGoodsDetailForEdit(response: HttpResponseBase): Observable<GetGoodsDetailForEditOutput> {
+    const status = response.status;
+    const responseBlob = response instanceof HttpResponse ? response.body : (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+    let _headers: any = {};
+    if (response.headers) {
+      for (let key of response.headers.keys()) {
+        _headers[key] = response.headers.get(key);
+      }
+    }
+    if (status === 200) {
+      return blobToText(responseBlob).pipe(
+        _observableMergeMap((_responseText) => {
+          let result200: any = null;
+          let resultData200 = _responseText === '' ? null : JSON.parse(_responseText, this.jsonParseReviver);
+          result200 = GetGoodsDetailForEditOutput.fromJS(resultData200);
+          return _observableOf(result200);
+        })
+      );
+    } else if (status !== 200 && status !== 204) {
+      return blobToText(responseBlob).pipe(
+        _observableMergeMap((_responseText) => {
+          return throwException('An unexpected server error occurred.', status, _responseText, _headers);
+        })
+      );
+    }
+    return _observableOf<GetGoodsDetailForEditOutput>(<any>null);
+  }
+
+  /**
+   * @param body (optional)
+   * @return Success
+   */
+  createOrEdit(body: CreateOrEditGoodsDetailDto | undefined): Observable<void> {
+    let url_ = this.baseUrl + '/api/services/app/GoodsDetails/CreateOrEdit';
+    url_ = url_.replace(/[?&]$/, '');
+
+    const content_ = JSON.stringify(body);
+
+    let options_: any = {
+      body: content_,
+      observe: 'response',
+      responseType: 'blob',
+      headers: new HttpHeaders({
+        'Content-Type': 'application/json-patch+json',
+      }),
+    };
+
+    return this.http
+      .request('post', url_, options_)
+      .pipe(
+        _observableMergeMap((response_: any) => {
+          return this.processCreateOrEdit(response_);
+        })
+      )
+      .pipe(
+        _observableCatch((response_: any) => {
+          if (response_ instanceof HttpResponseBase) {
+            try {
+              return this.processCreateOrEdit(<any>response_);
+            } catch (e) {
+              return <Observable<void>>(<any>_observableThrow(e));
+            }
+          } else return <Observable<void>>(<any>_observableThrow(response_));
+        })
+      );
+  }
+
+  protected processCreateOrEdit(response: HttpResponseBase): Observable<void> {
+    const status = response.status;
+    const responseBlob = response instanceof HttpResponse ? response.body : (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+    let _headers: any = {};
+    if (response.headers) {
+      for (let key of response.headers.keys()) {
+        _headers[key] = response.headers.get(key);
+      }
+    }
+    if (status === 200) {
+      return blobToText(responseBlob).pipe(
+        _observableMergeMap((_responseText) => {
+          return _observableOf<void>(<any>null);
+        })
+      );
+    } else if (status !== 200 && status !== 204) {
+      return blobToText(responseBlob).pipe(
+        _observableMergeMap((_responseText) => {
+          return throwException('An unexpected server error occurred.', status, _responseText, _headers);
+        })
+      );
+    }
+    return _observableOf<void>(<any>null);
+  }
+
+  /**
+   * @param id (optional)
+   * @return Success
+   */
+  delete(id: number | undefined): Observable<void> {
+    let url_ = this.baseUrl + '/api/services/app/GoodsDetails/Delete?';
+    if (id === null) throw new Error("The parameter 'id' cannot be null.");
+    else if (id !== undefined) url_ += 'Id=' + encodeURIComponent('' + id) + '&';
+    url_ = url_.replace(/[?&]$/, '');
+
+    let options_: any = {
+      observe: 'response',
+      responseType: 'blob',
+      headers: new HttpHeaders({}),
+    };
+
+    return this.http
+      .request('delete', url_, options_)
+      .pipe(
+        _observableMergeMap((response_: any) => {
+          return this.processDelete(response_);
+        })
+      )
+      .pipe(
+        _observableCatch((response_: any) => {
+          if (response_ instanceof HttpResponseBase) {
+            try {
+              return this.processDelete(<any>response_);
+            } catch (e) {
+              return <Observable<void>>(<any>_observableThrow(e));
+            }
+          } else return <Observable<void>>(<any>_observableThrow(response_));
+        })
+      );
+  }
+
+  protected processDelete(response: HttpResponseBase): Observable<void> {
+    const status = response.status;
+    const responseBlob = response instanceof HttpResponse ? response.body : (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+    let _headers: any = {};
+    if (response.headers) {
+      for (let key of response.headers.keys()) {
+        _headers[key] = response.headers.get(key);
+      }
+    }
+    if (status === 200) {
+      return blobToText(responseBlob).pipe(
+        _observableMergeMap((_responseText) => {
+          return _observableOf<void>(<any>null);
+        })
+      );
+    } else if (status !== 200 && status !== 204) {
+      return blobToText(responseBlob).pipe(
+        _observableMergeMap((_responseText) => {
+          return throwException('An unexpected server error occurred.', status, _responseText, _headers);
+        })
+      );
+    }
+    return _observableOf<void>(<any>null);
+  }
+
+  /**
+   * @param filter (optional)
+   * @param nameFilter (optional)
+   * @param descriptionFilter (optional)
+   * @param quantityFilter (optional)
+   * @param weightFilter (optional)
+   * @param dimentionsFilter (optional)
+   * @param isDangerousGoodFilter (optional)
+   * @param dangerousGoodsCodeFilter (optional)
+   * @param goodCategoryDisplayNameFilter (optional)
+   * @return Success
+   */
+  getGoodsDetailsToExcel(
+    filter: string | null | undefined,
+    nameFilter: string | null | undefined,
+    descriptionFilter: string | null | undefined,
+    quantityFilter: string | null | undefined,
+    weightFilter: string | null | undefined,
+    dimentionsFilter: string | null | undefined,
+    isDangerousGoodFilter: number | undefined,
+    dangerousGoodsCodeFilter: string | null | undefined,
+    goodCategoryDisplayNameFilter: string | null | undefined
+  ): Observable<FileDto> {
+    let url_ = this.baseUrl + '/api/services/app/GoodsDetails/GetGoodsDetailsToExcel?';
+    if (filter !== undefined) url_ += 'Filter=' + encodeURIComponent('' + filter) + '&';
+    if (nameFilter !== undefined) url_ += 'NameFilter=' + encodeURIComponent('' + nameFilter) + '&';
+    if (descriptionFilter !== undefined) url_ += 'DescriptionFilter=' + encodeURIComponent('' + descriptionFilter) + '&';
+    if (quantityFilter !== undefined) url_ += 'QuantityFilter=' + encodeURIComponent('' + quantityFilter) + '&';
+    if (weightFilter !== undefined) url_ += 'WeightFilter=' + encodeURIComponent('' + weightFilter) + '&';
+    if (dimentionsFilter !== undefined) url_ += 'DimentionsFilter=' + encodeURIComponent('' + dimentionsFilter) + '&';
+    if (isDangerousGoodFilter === null) throw new Error("The parameter 'isDangerousGoodFilter' cannot be null.");
+    else if (isDangerousGoodFilter !== undefined) url_ += 'IsDangerousGoodFilter=' + encodeURIComponent('' + isDangerousGoodFilter) + '&';
+    if (dangerousGoodsCodeFilter !== undefined) url_ += 'DangerousGoodsCodeFilter=' + encodeURIComponent('' + dangerousGoodsCodeFilter) + '&';
+    if (goodCategoryDisplayNameFilter !== undefined)
+      url_ += 'GoodCategoryDisplayNameFilter=' + encodeURIComponent('' + goodCategoryDisplayNameFilter) + '&';
+    url_ = url_.replace(/[?&]$/, '');
+
+    let options_: any = {
+      observe: 'response',
+      responseType: 'blob',
+      headers: new HttpHeaders({
+        Accept: 'text/plain',
+      }),
+    };
+
+    return this.http
+      .request('get', url_, options_)
+      .pipe(
+        _observableMergeMap((response_: any) => {
+          return this.processGetGoodsDetailsToExcel(response_);
+        })
+      )
+      .pipe(
+        _observableCatch((response_: any) => {
+          if (response_ instanceof HttpResponseBase) {
+            try {
+              return this.processGetGoodsDetailsToExcel(<any>response_);
+            } catch (e) {
+              return <Observable<FileDto>>(<any>_observableThrow(e));
+            }
+          } else return <Observable<FileDto>>(<any>_observableThrow(response_));
+        })
+      );
+  }
+
+  protected processGetGoodsDetailsToExcel(response: HttpResponseBase): Observable<FileDto> {
+    const status = response.status;
+    const responseBlob = response instanceof HttpResponse ? response.body : (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+    let _headers: any = {};
+    if (response.headers) {
+      for (let key of response.headers.keys()) {
+        _headers[key] = response.headers.get(key);
+      }
+    }
+    if (status === 200) {
+      return blobToText(responseBlob).pipe(
+        _observableMergeMap((_responseText) => {
+          let result200: any = null;
+          let resultData200 = _responseText === '' ? null : JSON.parse(_responseText, this.jsonParseReviver);
+          result200 = FileDto.fromJS(resultData200);
+          return _observableOf(result200);
+        })
+      );
+    } else if (status !== 200 && status !== 204) {
+      return blobToText(responseBlob).pipe(
+        _observableMergeMap((_responseText) => {
+          return throwException('An unexpected server error occurred.', status, _responseText, _headers);
+        })
+      );
+    }
+    return _observableOf<FileDto>(<any>null);
+  }
+
+  /**
+   * @return Success
+   */
+  getAllGoodCategoryForTableDropdown(): Observable<GoodsDetailGoodCategoryLookupTableDto[]> {
+    let url_ = this.baseUrl + '/api/services/app/GoodsDetails/GetAllGoodCategoryForTableDropdown';
+    url_ = url_.replace(/[?&]$/, '');
+
+    let options_: any = {
+      observe: 'response',
+      responseType: 'blob',
+      headers: new HttpHeaders({
+        Accept: 'text/plain',
+      }),
+    };
+
+    return this.http
+      .request('get', url_, options_)
+      .pipe(
+        _observableMergeMap((response_: any) => {
+          return this.processGetAllGoodCategoryForTableDropdown(response_);
+        })
+      )
+      .pipe(
+        _observableCatch((response_: any) => {
+          if (response_ instanceof HttpResponseBase) {
+            try {
+              return this.processGetAllGoodCategoryForTableDropdown(<any>response_);
+            } catch (e) {
+              return <Observable<GoodsDetailGoodCategoryLookupTableDto[]>>(<any>_observableThrow(e));
+            }
+          } else return <Observable<GoodsDetailGoodCategoryLookupTableDto[]>>(<any>_observableThrow(response_));
+        })
+      );
+  }
+
+  protected processGetAllGoodCategoryForTableDropdown(response: HttpResponseBase): Observable<GoodsDetailGoodCategoryLookupTableDto[]> {
+    const status = response.status;
+    const responseBlob = response instanceof HttpResponse ? response.body : (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+    let _headers: any = {};
+    if (response.headers) {
+      for (let key of response.headers.keys()) {
+        _headers[key] = response.headers.get(key);
+      }
+    }
+    if (status === 200) {
+      return blobToText(responseBlob).pipe(
+        _observableMergeMap((_responseText) => {
+          let result200: any = null;
+          let resultData200 = _responseText === '' ? null : JSON.parse(_responseText, this.jsonParseReviver);
+          if (Array.isArray(resultData200)) {
+            result200 = [] as any;
+            for (let item of resultData200) result200!.push(GoodsDetailGoodCategoryLookupTableDto.fromJS(item));
+          }
+          return _observableOf(result200);
+        })
+      );
+    } else if (status !== 200 && status !== 204) {
+      return blobToText(responseBlob).pipe(
+        _observableMergeMap((_responseText) => {
+          return throwException('An unexpected server error occurred.', status, _responseText, _headers);
+        })
+      );
+    }
+    return _observableOf<GoodsDetailGoodCategoryLookupTableDto[]>(<any>null);
   }
 }
 
@@ -15296,6 +17126,734 @@ export class SessionServiceProxy {
       );
     }
     return _observableOf<UpdateUserSignInTokenOutput>(<any>null);
+  }
+}
+
+@Injectable()
+export class ShippingRequestsServiceProxy {
+  private http: HttpClient;
+  private baseUrl: string;
+  protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
+
+  constructor(@Inject(HttpClient) http: HttpClient, @Optional() @Inject(API_BASE_URL) baseUrl?: string) {
+    this.http = http;
+    this.baseUrl = baseUrl ? baseUrl : '';
+  }
+
+  /**
+   * @param filter (optional)
+   * @param maxVasFilter (optional)
+   * @param minVasFilter (optional)
+   * @param trucksTypeDisplayNameFilter (optional)
+   * @param trailerTypeDisplayNameFilter (optional)
+   * @param goodsDetailNameFilter (optional)
+   * @param routeDisplayNameFilter (optional)
+   * @param sorting (optional)
+   * @param skipCount (optional)
+   * @param maxResultCount (optional)
+   * @return Success
+   */
+  getAll(
+    filter: string | null | undefined,
+    maxVasFilter: number | null | undefined,
+    minVasFilter: number | null | undefined,
+    trucksTypeDisplayNameFilter: string | null | undefined,
+    trailerTypeDisplayNameFilter: string | null | undefined,
+    goodsDetailNameFilter: string | null | undefined,
+    routeDisplayNameFilter: string | null | undefined,
+    sorting: string | null | undefined,
+    skipCount: number | undefined,
+    maxResultCount: number | undefined
+  ): Observable<PagedResultDtoOfGetShippingRequestForViewDto> {
+    let url_ = this.baseUrl + '/api/services/app/ShippingRequests/GetAll?';
+    if (filter !== undefined) url_ += 'Filter=' + encodeURIComponent('' + filter) + '&';
+    if (maxVasFilter !== undefined) url_ += 'MaxVasFilter=' + encodeURIComponent('' + maxVasFilter) + '&';
+    if (minVasFilter !== undefined) url_ += 'MinVasFilter=' + encodeURIComponent('' + minVasFilter) + '&';
+    if (trucksTypeDisplayNameFilter !== undefined)
+      url_ += 'TrucksTypeDisplayNameFilter=' + encodeURIComponent('' + trucksTypeDisplayNameFilter) + '&';
+    if (trailerTypeDisplayNameFilter !== undefined)
+      url_ += 'TrailerTypeDisplayNameFilter=' + encodeURIComponent('' + trailerTypeDisplayNameFilter) + '&';
+    if (goodsDetailNameFilter !== undefined) url_ += 'GoodsDetailNameFilter=' + encodeURIComponent('' + goodsDetailNameFilter) + '&';
+    if (routeDisplayNameFilter !== undefined) url_ += 'RouteDisplayNameFilter=' + encodeURIComponent('' + routeDisplayNameFilter) + '&';
+    if (sorting !== undefined) url_ += 'Sorting=' + encodeURIComponent('' + sorting) + '&';
+    if (skipCount === null) throw new Error("The parameter 'skipCount' cannot be null.");
+    else if (skipCount !== undefined) url_ += 'SkipCount=' + encodeURIComponent('' + skipCount) + '&';
+    if (maxResultCount === null) throw new Error("The parameter 'maxResultCount' cannot be null.");
+    else if (maxResultCount !== undefined) url_ += 'MaxResultCount=' + encodeURIComponent('' + maxResultCount) + '&';
+    url_ = url_.replace(/[?&]$/, '');
+
+    let options_: any = {
+      observe: 'response',
+      responseType: 'blob',
+      headers: new HttpHeaders({
+        Accept: 'text/plain',
+      }),
+    };
+
+    return this.http
+      .request('get', url_, options_)
+      .pipe(
+        _observableMergeMap((response_: any) => {
+          return this.processGetAll(response_);
+        })
+      )
+      .pipe(
+        _observableCatch((response_: any) => {
+          if (response_ instanceof HttpResponseBase) {
+            try {
+              return this.processGetAll(<any>response_);
+            } catch (e) {
+              return <Observable<PagedResultDtoOfGetShippingRequestForViewDto>>(<any>_observableThrow(e));
+            }
+          } else return <Observable<PagedResultDtoOfGetShippingRequestForViewDto>>(<any>_observableThrow(response_));
+        })
+      );
+  }
+
+  protected processGetAll(response: HttpResponseBase): Observable<PagedResultDtoOfGetShippingRequestForViewDto> {
+    const status = response.status;
+    const responseBlob = response instanceof HttpResponse ? response.body : (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+    let _headers: any = {};
+    if (response.headers) {
+      for (let key of response.headers.keys()) {
+        _headers[key] = response.headers.get(key);
+      }
+    }
+    if (status === 200) {
+      return blobToText(responseBlob).pipe(
+        _observableMergeMap((_responseText) => {
+          let result200: any = null;
+          let resultData200 = _responseText === '' ? null : JSON.parse(_responseText, this.jsonParseReviver);
+          result200 = PagedResultDtoOfGetShippingRequestForViewDto.fromJS(resultData200);
+          return _observableOf(result200);
+        })
+      );
+    } else if (status !== 200 && status !== 204) {
+      return blobToText(responseBlob).pipe(
+        _observableMergeMap((_responseText) => {
+          return throwException('An unexpected server error occurred.', status, _responseText, _headers);
+        })
+      );
+    }
+    return _observableOf<PagedResultDtoOfGetShippingRequestForViewDto>(<any>null);
+  }
+
+  /**
+   * @param id (optional)
+   * @return Success
+   */
+  getShippingRequestForView(id: number | undefined): Observable<GetShippingRequestForViewDto> {
+    let url_ = this.baseUrl + '/api/services/app/ShippingRequests/GetShippingRequestForView?';
+    if (id === null) throw new Error("The parameter 'id' cannot be null.");
+    else if (id !== undefined) url_ += 'id=' + encodeURIComponent('' + id) + '&';
+    url_ = url_.replace(/[?&]$/, '');
+
+    let options_: any = {
+      observe: 'response',
+      responseType: 'blob',
+      headers: new HttpHeaders({
+        Accept: 'text/plain',
+      }),
+    };
+
+    return this.http
+      .request('get', url_, options_)
+      .pipe(
+        _observableMergeMap((response_: any) => {
+          return this.processGetShippingRequestForView(response_);
+        })
+      )
+      .pipe(
+        _observableCatch((response_: any) => {
+          if (response_ instanceof HttpResponseBase) {
+            try {
+              return this.processGetShippingRequestForView(<any>response_);
+            } catch (e) {
+              return <Observable<GetShippingRequestForViewDto>>(<any>_observableThrow(e));
+            }
+          } else return <Observable<GetShippingRequestForViewDto>>(<any>_observableThrow(response_));
+        })
+      );
+  }
+
+  protected processGetShippingRequestForView(response: HttpResponseBase): Observable<GetShippingRequestForViewDto> {
+    const status = response.status;
+    const responseBlob = response instanceof HttpResponse ? response.body : (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+    let _headers: any = {};
+    if (response.headers) {
+      for (let key of response.headers.keys()) {
+        _headers[key] = response.headers.get(key);
+      }
+    }
+    if (status === 200) {
+      return blobToText(responseBlob).pipe(
+        _observableMergeMap((_responseText) => {
+          let result200: any = null;
+          let resultData200 = _responseText === '' ? null : JSON.parse(_responseText, this.jsonParseReviver);
+          result200 = GetShippingRequestForViewDto.fromJS(resultData200);
+          return _observableOf(result200);
+        })
+      );
+    } else if (status !== 200 && status !== 204) {
+      return blobToText(responseBlob).pipe(
+        _observableMergeMap((_responseText) => {
+          return throwException('An unexpected server error occurred.', status, _responseText, _headers);
+        })
+      );
+    }
+    return _observableOf<GetShippingRequestForViewDto>(<any>null);
+  }
+
+  /**
+   * @param id (optional)
+   * @return Success
+   */
+  getShippingRequestForEdit(id: number | undefined): Observable<GetShippingRequestForEditOutput> {
+    let url_ = this.baseUrl + '/api/services/app/ShippingRequests/GetShippingRequestForEdit?';
+    if (id === null) throw new Error("The parameter 'id' cannot be null.");
+    else if (id !== undefined) url_ += 'Id=' + encodeURIComponent('' + id) + '&';
+    url_ = url_.replace(/[?&]$/, '');
+
+    let options_: any = {
+      observe: 'response',
+      responseType: 'blob',
+      headers: new HttpHeaders({
+        Accept: 'text/plain',
+      }),
+    };
+
+    return this.http
+      .request('get', url_, options_)
+      .pipe(
+        _observableMergeMap((response_: any) => {
+          return this.processGetShippingRequestForEdit(response_);
+        })
+      )
+      .pipe(
+        _observableCatch((response_: any) => {
+          if (response_ instanceof HttpResponseBase) {
+            try {
+              return this.processGetShippingRequestForEdit(<any>response_);
+            } catch (e) {
+              return <Observable<GetShippingRequestForEditOutput>>(<any>_observableThrow(e));
+            }
+          } else return <Observable<GetShippingRequestForEditOutput>>(<any>_observableThrow(response_));
+        })
+      );
+  }
+
+  protected processGetShippingRequestForEdit(response: HttpResponseBase): Observable<GetShippingRequestForEditOutput> {
+    const status = response.status;
+    const responseBlob = response instanceof HttpResponse ? response.body : (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+    let _headers: any = {};
+    if (response.headers) {
+      for (let key of response.headers.keys()) {
+        _headers[key] = response.headers.get(key);
+      }
+    }
+    if (status === 200) {
+      return blobToText(responseBlob).pipe(
+        _observableMergeMap((_responseText) => {
+          let result200: any = null;
+          let resultData200 = _responseText === '' ? null : JSON.parse(_responseText, this.jsonParseReviver);
+          result200 = GetShippingRequestForEditOutput.fromJS(resultData200);
+          return _observableOf(result200);
+        })
+      );
+    } else if (status !== 200 && status !== 204) {
+      return blobToText(responseBlob).pipe(
+        _observableMergeMap((_responseText) => {
+          return throwException('An unexpected server error occurred.', status, _responseText, _headers);
+        })
+      );
+    }
+    return _observableOf<GetShippingRequestForEditOutput>(<any>null);
+  }
+
+  /**
+   * @param body (optional)
+   * @return Success
+   */
+  createOrEdit(body: CreateOrEditShippingRequestDto | undefined): Observable<void> {
+    let url_ = this.baseUrl + '/api/services/app/ShippingRequests/CreateOrEdit';
+    url_ = url_.replace(/[?&]$/, '');
+
+    const content_ = JSON.stringify(body);
+
+    let options_: any = {
+      body: content_,
+      observe: 'response',
+      responseType: 'blob',
+      headers: new HttpHeaders({
+        'Content-Type': 'application/json-patch+json',
+      }),
+    };
+
+    return this.http
+      .request('post', url_, options_)
+      .pipe(
+        _observableMergeMap((response_: any) => {
+          return this.processCreateOrEdit(response_);
+        })
+      )
+      .pipe(
+        _observableCatch((response_: any) => {
+          if (response_ instanceof HttpResponseBase) {
+            try {
+              return this.processCreateOrEdit(<any>response_);
+            } catch (e) {
+              return <Observable<void>>(<any>_observableThrow(e));
+            }
+          } else return <Observable<void>>(<any>_observableThrow(response_));
+        })
+      );
+  }
+
+  protected processCreateOrEdit(response: HttpResponseBase): Observable<void> {
+    const status = response.status;
+    const responseBlob = response instanceof HttpResponse ? response.body : (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+    let _headers: any = {};
+    if (response.headers) {
+      for (let key of response.headers.keys()) {
+        _headers[key] = response.headers.get(key);
+      }
+    }
+    if (status === 200) {
+      return blobToText(responseBlob).pipe(
+        _observableMergeMap((_responseText) => {
+          return _observableOf<void>(<any>null);
+        })
+      );
+    } else if (status !== 200 && status !== 204) {
+      return blobToText(responseBlob).pipe(
+        _observableMergeMap((_responseText) => {
+          return throwException('An unexpected server error occurred.', status, _responseText, _headers);
+        })
+      );
+    }
+    return _observableOf<void>(<any>null);
+  }
+
+  /**
+   * @param id (optional)
+   * @return Success
+   */
+  delete(id: number | undefined): Observable<void> {
+    let url_ = this.baseUrl + '/api/services/app/ShippingRequests/Delete?';
+    if (id === null) throw new Error("The parameter 'id' cannot be null.");
+    else if (id !== undefined) url_ += 'Id=' + encodeURIComponent('' + id) + '&';
+    url_ = url_.replace(/[?&]$/, '');
+
+    let options_: any = {
+      observe: 'response',
+      responseType: 'blob',
+      headers: new HttpHeaders({}),
+    };
+
+    return this.http
+      .request('delete', url_, options_)
+      .pipe(
+        _observableMergeMap((response_: any) => {
+          return this.processDelete(response_);
+        })
+      )
+      .pipe(
+        _observableCatch((response_: any) => {
+          if (response_ instanceof HttpResponseBase) {
+            try {
+              return this.processDelete(<any>response_);
+            } catch (e) {
+              return <Observable<void>>(<any>_observableThrow(e));
+            }
+          } else return <Observable<void>>(<any>_observableThrow(response_));
+        })
+      );
+  }
+
+  protected processDelete(response: HttpResponseBase): Observable<void> {
+    const status = response.status;
+    const responseBlob = response instanceof HttpResponse ? response.body : (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+    let _headers: any = {};
+    if (response.headers) {
+      for (let key of response.headers.keys()) {
+        _headers[key] = response.headers.get(key);
+      }
+    }
+    if (status === 200) {
+      return blobToText(responseBlob).pipe(
+        _observableMergeMap((_responseText) => {
+          return _observableOf<void>(<any>null);
+        })
+      );
+    } else if (status !== 200 && status !== 204) {
+      return blobToText(responseBlob).pipe(
+        _observableMergeMap((_responseText) => {
+          return throwException('An unexpected server error occurred.', status, _responseText, _headers);
+        })
+      );
+    }
+    return _observableOf<void>(<any>null);
+  }
+
+  /**
+   * @param filter (optional)
+   * @param maxVasFilter (optional)
+   * @param minVasFilter (optional)
+   * @param trucksTypeDisplayNameFilter (optional)
+   * @param trailerTypeDisplayNameFilter (optional)
+   * @param goodsDetailNameFilter (optional)
+   * @param routeDisplayNameFilter (optional)
+   * @return Success
+   */
+  getShippingRequestsToExcel(
+    filter: string | null | undefined,
+    maxVasFilter: number | null | undefined,
+    minVasFilter: number | null | undefined,
+    trucksTypeDisplayNameFilter: string | null | undefined,
+    trailerTypeDisplayNameFilter: string | null | undefined,
+    goodsDetailNameFilter: string | null | undefined,
+    routeDisplayNameFilter: string | null | undefined
+  ): Observable<FileDto> {
+    let url_ = this.baseUrl + '/api/services/app/ShippingRequests/GetShippingRequestsToExcel?';
+    if (filter !== undefined) url_ += 'Filter=' + encodeURIComponent('' + filter) + '&';
+    if (maxVasFilter !== undefined) url_ += 'MaxVasFilter=' + encodeURIComponent('' + maxVasFilter) + '&';
+    if (minVasFilter !== undefined) url_ += 'MinVasFilter=' + encodeURIComponent('' + minVasFilter) + '&';
+    if (trucksTypeDisplayNameFilter !== undefined)
+      url_ += 'TrucksTypeDisplayNameFilter=' + encodeURIComponent('' + trucksTypeDisplayNameFilter) + '&';
+    if (trailerTypeDisplayNameFilter !== undefined)
+      url_ += 'TrailerTypeDisplayNameFilter=' + encodeURIComponent('' + trailerTypeDisplayNameFilter) + '&';
+    if (goodsDetailNameFilter !== undefined) url_ += 'GoodsDetailNameFilter=' + encodeURIComponent('' + goodsDetailNameFilter) + '&';
+    if (routeDisplayNameFilter !== undefined) url_ += 'RouteDisplayNameFilter=' + encodeURIComponent('' + routeDisplayNameFilter) + '&';
+    url_ = url_.replace(/[?&]$/, '');
+
+    let options_: any = {
+      observe: 'response',
+      responseType: 'blob',
+      headers: new HttpHeaders({
+        Accept: 'text/plain',
+      }),
+    };
+
+    return this.http
+      .request('get', url_, options_)
+      .pipe(
+        _observableMergeMap((response_: any) => {
+          return this.processGetShippingRequestsToExcel(response_);
+        })
+      )
+      .pipe(
+        _observableCatch((response_: any) => {
+          if (response_ instanceof HttpResponseBase) {
+            try {
+              return this.processGetShippingRequestsToExcel(<any>response_);
+            } catch (e) {
+              return <Observable<FileDto>>(<any>_observableThrow(e));
+            }
+          } else return <Observable<FileDto>>(<any>_observableThrow(response_));
+        })
+      );
+  }
+
+  protected processGetShippingRequestsToExcel(response: HttpResponseBase): Observable<FileDto> {
+    const status = response.status;
+    const responseBlob = response instanceof HttpResponse ? response.body : (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+    let _headers: any = {};
+    if (response.headers) {
+      for (let key of response.headers.keys()) {
+        _headers[key] = response.headers.get(key);
+      }
+    }
+    if (status === 200) {
+      return blobToText(responseBlob).pipe(
+        _observableMergeMap((_responseText) => {
+          let result200: any = null;
+          let resultData200 = _responseText === '' ? null : JSON.parse(_responseText, this.jsonParseReviver);
+          result200 = FileDto.fromJS(resultData200);
+          return _observableOf(result200);
+        })
+      );
+    } else if (status !== 200 && status !== 204) {
+      return blobToText(responseBlob).pipe(
+        _observableMergeMap((_responseText) => {
+          return throwException('An unexpected server error occurred.', status, _responseText, _headers);
+        })
+      );
+    }
+    return _observableOf<FileDto>(<any>null);
+  }
+
+  /**
+   * @return Success
+   */
+  getAllTrucksTypeForTableDropdown(): Observable<ShippingRequestTrucksTypeLookupTableDto[]> {
+    let url_ = this.baseUrl + '/api/services/app/ShippingRequests/GetAllTrucksTypeForTableDropdown';
+    url_ = url_.replace(/[?&]$/, '');
+
+    let options_: any = {
+      observe: 'response',
+      responseType: 'blob',
+      headers: new HttpHeaders({
+        Accept: 'text/plain',
+      }),
+    };
+
+    return this.http
+      .request('get', url_, options_)
+      .pipe(
+        _observableMergeMap((response_: any) => {
+          return this.processGetAllTrucksTypeForTableDropdown(response_);
+        })
+      )
+      .pipe(
+        _observableCatch((response_: any) => {
+          if (response_ instanceof HttpResponseBase) {
+            try {
+              return this.processGetAllTrucksTypeForTableDropdown(<any>response_);
+            } catch (e) {
+              return <Observable<ShippingRequestTrucksTypeLookupTableDto[]>>(<any>_observableThrow(e));
+            }
+          } else return <Observable<ShippingRequestTrucksTypeLookupTableDto[]>>(<any>_observableThrow(response_));
+        })
+      );
+  }
+
+  protected processGetAllTrucksTypeForTableDropdown(response: HttpResponseBase): Observable<ShippingRequestTrucksTypeLookupTableDto[]> {
+    const status = response.status;
+    const responseBlob = response instanceof HttpResponse ? response.body : (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+    let _headers: any = {};
+    if (response.headers) {
+      for (let key of response.headers.keys()) {
+        _headers[key] = response.headers.get(key);
+      }
+    }
+    if (status === 200) {
+      return blobToText(responseBlob).pipe(
+        _observableMergeMap((_responseText) => {
+          let result200: any = null;
+          let resultData200 = _responseText === '' ? null : JSON.parse(_responseText, this.jsonParseReviver);
+          if (Array.isArray(resultData200)) {
+            result200 = [] as any;
+            for (let item of resultData200) result200!.push(ShippingRequestTrucksTypeLookupTableDto.fromJS(item));
+          }
+          return _observableOf(result200);
+        })
+      );
+    } else if (status !== 200 && status !== 204) {
+      return blobToText(responseBlob).pipe(
+        _observableMergeMap((_responseText) => {
+          return throwException('An unexpected server error occurred.', status, _responseText, _headers);
+        })
+      );
+    }
+    return _observableOf<ShippingRequestTrucksTypeLookupTableDto[]>(<any>null);
+  }
+
+  /**
+   * @return Success
+   */
+  getAllTrailerTypeForTableDropdown(): Observable<ShippingRequestTrailerTypeLookupTableDto[]> {
+    let url_ = this.baseUrl + '/api/services/app/ShippingRequests/GetAllTrailerTypeForTableDropdown';
+    url_ = url_.replace(/[?&]$/, '');
+
+    let options_: any = {
+      observe: 'response',
+      responseType: 'blob',
+      headers: new HttpHeaders({
+        Accept: 'text/plain',
+      }),
+    };
+
+    return this.http
+      .request('get', url_, options_)
+      .pipe(
+        _observableMergeMap((response_: any) => {
+          return this.processGetAllTrailerTypeForTableDropdown(response_);
+        })
+      )
+      .pipe(
+        _observableCatch((response_: any) => {
+          if (response_ instanceof HttpResponseBase) {
+            try {
+              return this.processGetAllTrailerTypeForTableDropdown(<any>response_);
+            } catch (e) {
+              return <Observable<ShippingRequestTrailerTypeLookupTableDto[]>>(<any>_observableThrow(e));
+            }
+          } else return <Observable<ShippingRequestTrailerTypeLookupTableDto[]>>(<any>_observableThrow(response_));
+        })
+      );
+  }
+
+  protected processGetAllTrailerTypeForTableDropdown(response: HttpResponseBase): Observable<ShippingRequestTrailerTypeLookupTableDto[]> {
+    const status = response.status;
+    const responseBlob = response instanceof HttpResponse ? response.body : (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+    let _headers: any = {};
+    if (response.headers) {
+      for (let key of response.headers.keys()) {
+        _headers[key] = response.headers.get(key);
+      }
+    }
+    if (status === 200) {
+      return blobToText(responseBlob).pipe(
+        _observableMergeMap((_responseText) => {
+          let result200: any = null;
+          let resultData200 = _responseText === '' ? null : JSON.parse(_responseText, this.jsonParseReviver);
+          if (Array.isArray(resultData200)) {
+            result200 = [] as any;
+            for (let item of resultData200) result200!.push(ShippingRequestTrailerTypeLookupTableDto.fromJS(item));
+          }
+          return _observableOf(result200);
+        })
+      );
+    } else if (status !== 200 && status !== 204) {
+      return blobToText(responseBlob).pipe(
+        _observableMergeMap((_responseText) => {
+          return throwException('An unexpected server error occurred.', status, _responseText, _headers);
+        })
+      );
+    }
+    return _observableOf<ShippingRequestTrailerTypeLookupTableDto[]>(<any>null);
+  }
+
+  /**
+   * @return Success
+   */
+  getAllGoodsDetailForTableDropdown(): Observable<ShippingRequestGoodsDetailLookupTableDto[]> {
+    let url_ = this.baseUrl + '/api/services/app/ShippingRequests/GetAllGoodsDetailForTableDropdown';
+    url_ = url_.replace(/[?&]$/, '');
+
+    let options_: any = {
+      observe: 'response',
+      responseType: 'blob',
+      headers: new HttpHeaders({
+        Accept: 'text/plain',
+      }),
+    };
+
+    return this.http
+      .request('get', url_, options_)
+      .pipe(
+        _observableMergeMap((response_: any) => {
+          return this.processGetAllGoodsDetailForTableDropdown(response_);
+        })
+      )
+      .pipe(
+        _observableCatch((response_: any) => {
+          if (response_ instanceof HttpResponseBase) {
+            try {
+              return this.processGetAllGoodsDetailForTableDropdown(<any>response_);
+            } catch (e) {
+              return <Observable<ShippingRequestGoodsDetailLookupTableDto[]>>(<any>_observableThrow(e));
+            }
+          } else return <Observable<ShippingRequestGoodsDetailLookupTableDto[]>>(<any>_observableThrow(response_));
+        })
+      );
+  }
+
+  protected processGetAllGoodsDetailForTableDropdown(response: HttpResponseBase): Observable<ShippingRequestGoodsDetailLookupTableDto[]> {
+    const status = response.status;
+    const responseBlob = response instanceof HttpResponse ? response.body : (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+    let _headers: any = {};
+    if (response.headers) {
+      for (let key of response.headers.keys()) {
+        _headers[key] = response.headers.get(key);
+      }
+    }
+    if (status === 200) {
+      return blobToText(responseBlob).pipe(
+        _observableMergeMap((_responseText) => {
+          let result200: any = null;
+          let resultData200 = _responseText === '' ? null : JSON.parse(_responseText, this.jsonParseReviver);
+          if (Array.isArray(resultData200)) {
+            result200 = [] as any;
+            for (let item of resultData200) result200!.push(ShippingRequestGoodsDetailLookupTableDto.fromJS(item));
+          }
+          return _observableOf(result200);
+        })
+      );
+    } else if (status !== 200 && status !== 204) {
+      return blobToText(responseBlob).pipe(
+        _observableMergeMap((_responseText) => {
+          return throwException('An unexpected server error occurred.', status, _responseText, _headers);
+        })
+      );
+    }
+    return _observableOf<ShippingRequestGoodsDetailLookupTableDto[]>(<any>null);
+  }
+
+  /**
+   * @return Success
+   */
+  getAllRouteForTableDropdown(): Observable<ShippingRequestRouteLookupTableDto[]> {
+    let url_ = this.baseUrl + '/api/services/app/ShippingRequests/GetAllRouteForTableDropdown';
+    url_ = url_.replace(/[?&]$/, '');
+
+    let options_: any = {
+      observe: 'response',
+      responseType: 'blob',
+      headers: new HttpHeaders({
+        Accept: 'text/plain',
+      }),
+    };
+
+    return this.http
+      .request('get', url_, options_)
+      .pipe(
+        _observableMergeMap((response_: any) => {
+          return this.processGetAllRouteForTableDropdown(response_);
+        })
+      )
+      .pipe(
+        _observableCatch((response_: any) => {
+          if (response_ instanceof HttpResponseBase) {
+            try {
+              return this.processGetAllRouteForTableDropdown(<any>response_);
+            } catch (e) {
+              return <Observable<ShippingRequestRouteLookupTableDto[]>>(<any>_observableThrow(e));
+            }
+          } else return <Observable<ShippingRequestRouteLookupTableDto[]>>(<any>_observableThrow(response_));
+        })
+      );
+  }
+
+  protected processGetAllRouteForTableDropdown(response: HttpResponseBase): Observable<ShippingRequestRouteLookupTableDto[]> {
+    const status = response.status;
+    const responseBlob = response instanceof HttpResponse ? response.body : (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+    let _headers: any = {};
+    if (response.headers) {
+      for (let key of response.headers.keys()) {
+        _headers[key] = response.headers.get(key);
+      }
+    }
+    if (status === 200) {
+      return blobToText(responseBlob).pipe(
+        _observableMergeMap((_responseText) => {
+          let result200: any = null;
+          let resultData200 = _responseText === '' ? null : JSON.parse(_responseText, this.jsonParseReviver);
+          if (Array.isArray(resultData200)) {
+            result200 = [] as any;
+            for (let item of resultData200) result200!.push(ShippingRequestRouteLookupTableDto.fromJS(item));
+          }
+          return _observableOf(result200);
+        })
+      );
+    } else if (status !== 200 && status !== 204) {
+      return blobToText(responseBlob).pipe(
+        _observableMergeMap((_responseText) => {
+          return throwException('An unexpected server error occurred.', status, _responseText, _headers);
+        })
+      );
+    }
+    return _observableOf<ShippingRequestRouteLookupTableDto[]>(<any>null);
   }
 }
 
@@ -26859,6 +29417,772 @@ export interface IStringOutput {
   output: string | undefined;
 }
 
+export class DocumentFileDto implements IDocumentFileDto {
+  name!: string | undefined;
+  extn!: string | undefined;
+  binaryObjectId!: string;
+  expirationDate!: moment.Moment;
+  isAccepted!: string | undefined;
+  documentTypeId!: number;
+  truckId!: string | undefined;
+  trailerId!: number | undefined;
+  userId!: number | undefined;
+  routStepId!: number | undefined;
+  id!: string;
+
+  constructor(data?: IDocumentFileDto) {
+    if (data) {
+      for (var property in data) {
+        if (data.hasOwnProperty(property)) (<any>this)[property] = (<any>data)[property];
+      }
+    }
+  }
+
+  init(_data?: any) {
+    if (_data) {
+      this.name = _data['name'];
+      this.extn = _data['extn'];
+      this.binaryObjectId = _data['binaryObjectId'];
+      this.expirationDate = _data['expirationDate'] ? moment(_data['expirationDate'].toString()) : <any>undefined;
+      this.isAccepted = _data['isAccepted'];
+      this.documentTypeId = _data['documentTypeId'];
+      this.truckId = _data['truckId'];
+      this.trailerId = _data['trailerId'];
+      this.userId = _data['userId'];
+      this.routStepId = _data['routStepId'];
+      this.id = _data['id'];
+    }
+  }
+
+  static fromJS(data: any): DocumentFileDto {
+    data = typeof data === 'object' ? data : {};
+    let result = new DocumentFileDto();
+    result.init(data);
+    return result;
+  }
+
+  toJSON(data?: any) {
+    data = typeof data === 'object' ? data : {};
+    data['name'] = this.name;
+    data['extn'] = this.extn;
+    data['binaryObjectId'] = this.binaryObjectId;
+    data['expirationDate'] = this.expirationDate ? this.expirationDate.toISOString() : <any>undefined;
+    data['isAccepted'] = this.isAccepted;
+    data['documentTypeId'] = this.documentTypeId;
+    data['truckId'] = this.truckId;
+    data['trailerId'] = this.trailerId;
+    data['userId'] = this.userId;
+    data['routStepId'] = this.routStepId;
+    data['id'] = this.id;
+    return data;
+  }
+}
+
+export interface IDocumentFileDto {
+  name: string | undefined;
+  extn: string | undefined;
+  binaryObjectId: string;
+  expirationDate: moment.Moment;
+  isAccepted: string | undefined;
+  documentTypeId: number;
+  truckId: string | undefined;
+  trailerId: number | undefined;
+  userId: number | undefined;
+  routStepId: number | undefined;
+  id: string;
+}
+
+export class GetDocumentFileForViewDto implements IGetDocumentFileForViewDto {
+  documentFile!: DocumentFileDto;
+  documentTypeDisplayName!: string | undefined;
+  truckPlateNumber!: string | undefined;
+  trailerTrailerCode!: string | undefined;
+  userName!: string | undefined;
+  routStepDisplayName!: string | undefined;
+
+  constructor(data?: IGetDocumentFileForViewDto) {
+    if (data) {
+      for (var property in data) {
+        if (data.hasOwnProperty(property)) (<any>this)[property] = (<any>data)[property];
+      }
+    }
+  }
+
+  init(_data?: any) {
+    if (_data) {
+      this.documentFile = _data['documentFile'] ? DocumentFileDto.fromJS(_data['documentFile']) : <any>undefined;
+      this.documentTypeDisplayName = _data['documentTypeDisplayName'];
+      this.truckPlateNumber = _data['truckPlateNumber'];
+      this.trailerTrailerCode = _data['trailerTrailerCode'];
+      this.userName = _data['userName'];
+      this.routStepDisplayName = _data['routStepDisplayName'];
+    }
+  }
+
+  static fromJS(data: any): GetDocumentFileForViewDto {
+    data = typeof data === 'object' ? data : {};
+    let result = new GetDocumentFileForViewDto();
+    result.init(data);
+    return result;
+  }
+
+  toJSON(data?: any) {
+    data = typeof data === 'object' ? data : {};
+    data['documentFile'] = this.documentFile ? this.documentFile.toJSON() : <any>undefined;
+    data['documentTypeDisplayName'] = this.documentTypeDisplayName;
+    data['truckPlateNumber'] = this.truckPlateNumber;
+    data['trailerTrailerCode'] = this.trailerTrailerCode;
+    data['userName'] = this.userName;
+    data['routStepDisplayName'] = this.routStepDisplayName;
+    return data;
+  }
+}
+
+export interface IGetDocumentFileForViewDto {
+  documentFile: DocumentFileDto;
+  documentTypeDisplayName: string | undefined;
+  truckPlateNumber: string | undefined;
+  trailerTrailerCode: string | undefined;
+  userName: string | undefined;
+  routStepDisplayName: string | undefined;
+}
+
+export class PagedResultDtoOfGetDocumentFileForViewDto implements IPagedResultDtoOfGetDocumentFileForViewDto {
+  totalCount!: number;
+  items!: GetDocumentFileForViewDto[] | undefined;
+
+  constructor(data?: IPagedResultDtoOfGetDocumentFileForViewDto) {
+    if (data) {
+      for (var property in data) {
+        if (data.hasOwnProperty(property)) (<any>this)[property] = (<any>data)[property];
+      }
+    }
+  }
+
+  init(_data?: any) {
+    if (_data) {
+      this.totalCount = _data['totalCount'];
+      if (Array.isArray(_data['items'])) {
+        this.items = [] as any;
+        for (let item of _data['items']) this.items!.push(GetDocumentFileForViewDto.fromJS(item));
+      }
+    }
+  }
+
+  static fromJS(data: any): PagedResultDtoOfGetDocumentFileForViewDto {
+    data = typeof data === 'object' ? data : {};
+    let result = new PagedResultDtoOfGetDocumentFileForViewDto();
+    result.init(data);
+    return result;
+  }
+
+  toJSON(data?: any) {
+    data = typeof data === 'object' ? data : {};
+    data['totalCount'] = this.totalCount;
+    if (Array.isArray(this.items)) {
+      data['items'] = [];
+      for (let item of this.items) data['items'].push(item.toJSON());
+    }
+    return data;
+  }
+}
+
+export interface IPagedResultDtoOfGetDocumentFileForViewDto {
+  totalCount: number;
+  items: GetDocumentFileForViewDto[] | undefined;
+}
+
+export class UpdateDocumentFileInput implements IUpdateDocumentFileInput {
+  fileToken!: string | undefined;
+
+  constructor(data?: IUpdateDocumentFileInput) {
+    if (data) {
+      for (var property in data) {
+        if (data.hasOwnProperty(property)) (<any>this)[property] = (<any>data)[property];
+      }
+    }
+  }
+
+  init(_data?: any) {
+    if (_data) {
+      this.fileToken = _data['fileToken'];
+    }
+  }
+
+  static fromJS(data: any): UpdateDocumentFileInput {
+    data = typeof data === 'object' ? data : {};
+    let result = new UpdateDocumentFileInput();
+    result.init(data);
+    return result;
+  }
+
+  toJSON(data?: any) {
+    data = typeof data === 'object' ? data : {};
+    data['fileToken'] = this.fileToken;
+    return data;
+  }
+}
+
+export interface IUpdateDocumentFileInput {
+  fileToken: string | undefined;
+}
+
+export class CreateOrEditDocumentFileDto implements ICreateOrEditDocumentFileDto {
+  name!: string;
+  extn!: string;
+  binaryObjectId!: string;
+  expirationDate!: moment.Moment;
+  isAccepted!: string | undefined;
+  documentTypeId!: number;
+  truckId!: string | undefined;
+  trailerId!: number | undefined;
+  userId!: number | undefined;
+  routStepId!: number | undefined;
+  updateDocumentFileInput!: UpdateDocumentFileInput;
+  id!: string | undefined;
+
+  constructor(data?: ICreateOrEditDocumentFileDto) {
+    if (data) {
+      for (var property in data) {
+        if (data.hasOwnProperty(property)) (<any>this)[property] = (<any>data)[property];
+      }
+    }
+  }
+
+  init(_data?: any) {
+    if (_data) {
+      this.name = _data['name'];
+      this.extn = _data['extn'];
+      this.binaryObjectId = _data['binaryObjectId'];
+      this.expirationDate = _data['expirationDate'] ? moment(_data['expirationDate'].toString()) : <any>undefined;
+      this.isAccepted = _data['isAccepted'];
+      this.documentTypeId = _data['documentTypeId'];
+      this.truckId = _data['truckId'];
+      this.trailerId = _data['trailerId'];
+      this.userId = _data['userId'];
+      this.routStepId = _data['routStepId'];
+      this.updateDocumentFileInput = _data['updateDocumentFileInput']
+        ? UpdateDocumentFileInput.fromJS(_data['updateDocumentFileInput'])
+        : <any>undefined;
+      this.id = _data['id'];
+    }
+  }
+
+  static fromJS(data: any): CreateOrEditDocumentFileDto {
+    data = typeof data === 'object' ? data : {};
+    let result = new CreateOrEditDocumentFileDto();
+    result.init(data);
+    return result;
+  }
+
+  toJSON(data?: any) {
+    data = typeof data === 'object' ? data : {};
+    data['name'] = this.name;
+    data['extn'] = this.extn;
+    data['binaryObjectId'] = this.binaryObjectId;
+    data['expirationDate'] = this.expirationDate ? this.expirationDate.toISOString() : <any>undefined;
+    data['isAccepted'] = this.isAccepted;
+    data['documentTypeId'] = this.documentTypeId;
+    data['truckId'] = this.truckId;
+    data['trailerId'] = this.trailerId;
+    data['userId'] = this.userId;
+    data['routStepId'] = this.routStepId;
+    data['updateDocumentFileInput'] = this.updateDocumentFileInput ? this.updateDocumentFileInput.toJSON() : <any>undefined;
+    data['id'] = this.id;
+    return data;
+  }
+}
+
+export interface ICreateOrEditDocumentFileDto {
+  name: string;
+  extn: string;
+  binaryObjectId: string;
+  expirationDate: moment.Moment;
+  isAccepted: string | undefined;
+  documentTypeId: number;
+  truckId: string | undefined;
+  trailerId: number | undefined;
+  userId: number | undefined;
+  routStepId: number | undefined;
+  updateDocumentFileInput: UpdateDocumentFileInput;
+  id: string | undefined;
+}
+
+export class GetDocumentFileForEditOutput implements IGetDocumentFileForEditOutput {
+  documentFile!: CreateOrEditDocumentFileDto;
+  documentTypeDisplayName!: string | undefined;
+  truckPlateNumber!: string | undefined;
+  trailerTrailerCode!: string | undefined;
+  userName!: string | undefined;
+  routStepDisplayName!: string | undefined;
+
+  constructor(data?: IGetDocumentFileForEditOutput) {
+    if (data) {
+      for (var property in data) {
+        if (data.hasOwnProperty(property)) (<any>this)[property] = (<any>data)[property];
+      }
+    }
+  }
+
+  init(_data?: any) {
+    if (_data) {
+      this.documentFile = _data['documentFile'] ? CreateOrEditDocumentFileDto.fromJS(_data['documentFile']) : <any>undefined;
+      this.documentTypeDisplayName = _data['documentTypeDisplayName'];
+      this.truckPlateNumber = _data['truckPlateNumber'];
+      this.trailerTrailerCode = _data['trailerTrailerCode'];
+      this.userName = _data['userName'];
+      this.routStepDisplayName = _data['routStepDisplayName'];
+    }
+  }
+
+  static fromJS(data: any): GetDocumentFileForEditOutput {
+    data = typeof data === 'object' ? data : {};
+    let result = new GetDocumentFileForEditOutput();
+    result.init(data);
+    return result;
+  }
+
+  toJSON(data?: any) {
+    data = typeof data === 'object' ? data : {};
+    data['documentFile'] = this.documentFile ? this.documentFile.toJSON() : <any>undefined;
+    data['documentTypeDisplayName'] = this.documentTypeDisplayName;
+    data['truckPlateNumber'] = this.truckPlateNumber;
+    data['trailerTrailerCode'] = this.trailerTrailerCode;
+    data['userName'] = this.userName;
+    data['routStepDisplayName'] = this.routStepDisplayName;
+    return data;
+  }
+}
+
+export interface IGetDocumentFileForEditOutput {
+  documentFile: CreateOrEditDocumentFileDto;
+  documentTypeDisplayName: string | undefined;
+  truckPlateNumber: string | undefined;
+  trailerTrailerCode: string | undefined;
+  userName: string | undefined;
+  routStepDisplayName: string | undefined;
+}
+
+export class DocumentFileDocumentTypeLookupTableDto implements IDocumentFileDocumentTypeLookupTableDto {
+  id!: number;
+  displayName!: string | undefined;
+
+  constructor(data?: IDocumentFileDocumentTypeLookupTableDto) {
+    if (data) {
+      for (var property in data) {
+        if (data.hasOwnProperty(property)) (<any>this)[property] = (<any>data)[property];
+      }
+    }
+  }
+
+  init(_data?: any) {
+    if (_data) {
+      this.id = _data['id'];
+      this.displayName = _data['displayName'];
+    }
+  }
+
+  static fromJS(data: any): DocumentFileDocumentTypeLookupTableDto {
+    data = typeof data === 'object' ? data : {};
+    let result = new DocumentFileDocumentTypeLookupTableDto();
+    result.init(data);
+    return result;
+  }
+
+  toJSON(data?: any) {
+    data = typeof data === 'object' ? data : {};
+    data['id'] = this.id;
+    data['displayName'] = this.displayName;
+    return data;
+  }
+}
+
+export interface IDocumentFileDocumentTypeLookupTableDto {
+  id: number;
+  displayName: string | undefined;
+}
+
+export class DocumentFileTruckLookupTableDto implements IDocumentFileTruckLookupTableDto {
+  id!: string | undefined;
+  displayName!: string | undefined;
+
+  constructor(data?: IDocumentFileTruckLookupTableDto) {
+    if (data) {
+      for (var property in data) {
+        if (data.hasOwnProperty(property)) (<any>this)[property] = (<any>data)[property];
+      }
+    }
+  }
+
+  init(_data?: any) {
+    if (_data) {
+      this.id = _data['id'];
+      this.displayName = _data['displayName'];
+    }
+  }
+
+  static fromJS(data: any): DocumentFileTruckLookupTableDto {
+    data = typeof data === 'object' ? data : {};
+    let result = new DocumentFileTruckLookupTableDto();
+    result.init(data);
+    return result;
+  }
+
+  toJSON(data?: any) {
+    data = typeof data === 'object' ? data : {};
+    data['id'] = this.id;
+    data['displayName'] = this.displayName;
+    return data;
+  }
+}
+
+export interface IDocumentFileTruckLookupTableDto {
+  id: string | undefined;
+  displayName: string | undefined;
+}
+
+export class DocumentFileTrailerLookupTableDto implements IDocumentFileTrailerLookupTableDto {
+  id!: number;
+  displayName!: string | undefined;
+
+  constructor(data?: IDocumentFileTrailerLookupTableDto) {
+    if (data) {
+      for (var property in data) {
+        if (data.hasOwnProperty(property)) (<any>this)[property] = (<any>data)[property];
+      }
+    }
+  }
+
+  init(_data?: any) {
+    if (_data) {
+      this.id = _data['id'];
+      this.displayName = _data['displayName'];
+    }
+  }
+
+  static fromJS(data: any): DocumentFileTrailerLookupTableDto {
+    data = typeof data === 'object' ? data : {};
+    let result = new DocumentFileTrailerLookupTableDto();
+    result.init(data);
+    return result;
+  }
+
+  toJSON(data?: any) {
+    data = typeof data === 'object' ? data : {};
+    data['id'] = this.id;
+    data['displayName'] = this.displayName;
+    return data;
+  }
+}
+
+export interface IDocumentFileTrailerLookupTableDto {
+  id: number;
+  displayName: string | undefined;
+}
+
+export class DocumentFileUserLookupTableDto implements IDocumentFileUserLookupTableDto {
+  id!: number;
+  displayName!: string | undefined;
+
+  constructor(data?: IDocumentFileUserLookupTableDto) {
+    if (data) {
+      for (var property in data) {
+        if (data.hasOwnProperty(property)) (<any>this)[property] = (<any>data)[property];
+      }
+    }
+  }
+
+  init(_data?: any) {
+    if (_data) {
+      this.id = _data['id'];
+      this.displayName = _data['displayName'];
+    }
+  }
+
+  static fromJS(data: any): DocumentFileUserLookupTableDto {
+    data = typeof data === 'object' ? data : {};
+    let result = new DocumentFileUserLookupTableDto();
+    result.init(data);
+    return result;
+  }
+
+  toJSON(data?: any) {
+    data = typeof data === 'object' ? data : {};
+    data['id'] = this.id;
+    data['displayName'] = this.displayName;
+    return data;
+  }
+}
+
+export interface IDocumentFileUserLookupTableDto {
+  id: number;
+  displayName: string | undefined;
+}
+
+export class DocumentFileRoutStepLookupTableDto implements IDocumentFileRoutStepLookupTableDto {
+  id!: number;
+  displayName!: string | undefined;
+
+  constructor(data?: IDocumentFileRoutStepLookupTableDto) {
+    if (data) {
+      for (var property in data) {
+        if (data.hasOwnProperty(property)) (<any>this)[property] = (<any>data)[property];
+      }
+    }
+  }
+
+  init(_data?: any) {
+    if (_data) {
+      this.id = _data['id'];
+      this.displayName = _data['displayName'];
+    }
+  }
+
+  static fromJS(data: any): DocumentFileRoutStepLookupTableDto {
+    data = typeof data === 'object' ? data : {};
+    let result = new DocumentFileRoutStepLookupTableDto();
+    result.init(data);
+    return result;
+  }
+
+  toJSON(data?: any) {
+    data = typeof data === 'object' ? data : {};
+    data['id'] = this.id;
+    data['displayName'] = this.displayName;
+    return data;
+  }
+}
+
+export interface IDocumentFileRoutStepLookupTableDto {
+  id: number;
+  displayName: string | undefined;
+}
+
+export class DocumentTypeDto implements IDocumentTypeDto {
+  displayName!: string | undefined;
+  isRequired!: boolean;
+  expirationDate!: moment.Moment;
+  hasExpirationDate!: boolean;
+  requiredFrom!: string | undefined;
+  id!: number;
+
+  constructor(data?: IDocumentTypeDto) {
+    if (data) {
+      for (var property in data) {
+        if (data.hasOwnProperty(property)) (<any>this)[property] = (<any>data)[property];
+      }
+    }
+  }
+
+  init(_data?: any) {
+    if (_data) {
+      this.displayName = _data['displayName'];
+      this.isRequired = _data['isRequired'];
+      this.expirationDate = _data['expirationDate'] ? moment(_data['expirationDate'].toString()) : <any>undefined;
+      this.hasExpirationDate = _data['hasExpirationDate'];
+      this.requiredFrom = _data['requiredFrom'];
+      this.id = _data['id'];
+    }
+  }
+
+  static fromJS(data: any): DocumentTypeDto {
+    data = typeof data === 'object' ? data : {};
+    let result = new DocumentTypeDto();
+    result.init(data);
+    return result;
+  }
+
+  toJSON(data?: any) {
+    data = typeof data === 'object' ? data : {};
+    data['displayName'] = this.displayName;
+    data['isRequired'] = this.isRequired;
+    data['expirationDate'] = this.expirationDate ? this.expirationDate.toISOString() : <any>undefined;
+    data['hasExpirationDate'] = this.hasExpirationDate;
+    data['requiredFrom'] = this.requiredFrom;
+    data['id'] = this.id;
+    return data;
+  }
+}
+
+export interface IDocumentTypeDto {
+  displayName: string | undefined;
+  isRequired: boolean;
+  expirationDate: moment.Moment;
+  hasExpirationDate: boolean;
+  requiredFrom: string | undefined;
+  id: number;
+}
+
+export class GetDocumentTypeForViewDto implements IGetDocumentTypeForViewDto {
+  documentType!: DocumentTypeDto;
+
+  constructor(data?: IGetDocumentTypeForViewDto) {
+    if (data) {
+      for (var property in data) {
+        if (data.hasOwnProperty(property)) (<any>this)[property] = (<any>data)[property];
+      }
+    }
+  }
+
+  init(_data?: any) {
+    if (_data) {
+      this.documentType = _data['documentType'] ? DocumentTypeDto.fromJS(_data['documentType']) : <any>undefined;
+    }
+  }
+
+  static fromJS(data: any): GetDocumentTypeForViewDto {
+    data = typeof data === 'object' ? data : {};
+    let result = new GetDocumentTypeForViewDto();
+    result.init(data);
+    return result;
+  }
+
+  toJSON(data?: any) {
+    data = typeof data === 'object' ? data : {};
+    data['documentType'] = this.documentType ? this.documentType.toJSON() : <any>undefined;
+    return data;
+  }
+}
+
+export interface IGetDocumentTypeForViewDto {
+  documentType: DocumentTypeDto;
+}
+
+export class PagedResultDtoOfGetDocumentTypeForViewDto implements IPagedResultDtoOfGetDocumentTypeForViewDto {
+  totalCount!: number;
+  items!: GetDocumentTypeForViewDto[] | undefined;
+
+  constructor(data?: IPagedResultDtoOfGetDocumentTypeForViewDto) {
+    if (data) {
+      for (var property in data) {
+        if (data.hasOwnProperty(property)) (<any>this)[property] = (<any>data)[property];
+      }
+    }
+  }
+
+  init(_data?: any) {
+    if (_data) {
+      this.totalCount = _data['totalCount'];
+      if (Array.isArray(_data['items'])) {
+        this.items = [] as any;
+        for (let item of _data['items']) this.items!.push(GetDocumentTypeForViewDto.fromJS(item));
+      }
+    }
+  }
+
+  static fromJS(data: any): PagedResultDtoOfGetDocumentTypeForViewDto {
+    data = typeof data === 'object' ? data : {};
+    let result = new PagedResultDtoOfGetDocumentTypeForViewDto();
+    result.init(data);
+    return result;
+  }
+
+  toJSON(data?: any) {
+    data = typeof data === 'object' ? data : {};
+    data['totalCount'] = this.totalCount;
+    if (Array.isArray(this.items)) {
+      data['items'] = [];
+      for (let item of this.items) data['items'].push(item.toJSON());
+    }
+    return data;
+  }
+}
+
+export interface IPagedResultDtoOfGetDocumentTypeForViewDto {
+  totalCount: number;
+  items: GetDocumentTypeForViewDto[] | undefined;
+}
+
+export class CreateOrEditDocumentTypeDto implements ICreateOrEditDocumentTypeDto {
+  displayName!: string;
+  isRequired!: boolean;
+  expirationDate!: moment.Moment;
+  hasExpirationDate!: boolean;
+  requiredFrom!: string | undefined;
+  id!: number | undefined;
+
+  constructor(data?: ICreateOrEditDocumentTypeDto) {
+    if (data) {
+      for (var property in data) {
+        if (data.hasOwnProperty(property)) (<any>this)[property] = (<any>data)[property];
+      }
+    }
+  }
+
+  init(_data?: any) {
+    if (_data) {
+      this.displayName = _data['displayName'];
+      this.isRequired = _data['isRequired'];
+      this.expirationDate = _data['expirationDate'] ? moment(_data['expirationDate'].toString()) : <any>undefined;
+      this.hasExpirationDate = _data['hasExpirationDate'];
+      this.requiredFrom = _data['requiredFrom'];
+      this.id = _data['id'];
+    }
+  }
+
+  static fromJS(data: any): CreateOrEditDocumentTypeDto {
+    data = typeof data === 'object' ? data : {};
+    let result = new CreateOrEditDocumentTypeDto();
+    result.init(data);
+    return result;
+  }
+
+  toJSON(data?: any) {
+    data = typeof data === 'object' ? data : {};
+    data['displayName'] = this.displayName;
+    data['isRequired'] = this.isRequired;
+    data['expirationDate'] = this.expirationDate ? this.expirationDate.toISOString() : <any>undefined;
+    data['hasExpirationDate'] = this.hasExpirationDate;
+    data['requiredFrom'] = this.requiredFrom;
+    data['id'] = this.id;
+    return data;
+  }
+}
+
+export interface ICreateOrEditDocumentTypeDto {
+  displayName: string;
+  isRequired: boolean;
+  expirationDate: moment.Moment;
+  hasExpirationDate: boolean;
+  requiredFrom: string | undefined;
+  id: number | undefined;
+}
+
+export class GetDocumentTypeForEditOutput implements IGetDocumentTypeForEditOutput {
+  documentType!: CreateOrEditDocumentTypeDto;
+
+  constructor(data?: IGetDocumentTypeForEditOutput) {
+    if (data) {
+      for (var property in data) {
+        if (data.hasOwnProperty(property)) (<any>this)[property] = (<any>data)[property];
+      }
+    }
+  }
+
+  init(_data?: any) {
+    if (_data) {
+      this.documentType = _data['documentType'] ? CreateOrEditDocumentTypeDto.fromJS(_data['documentType']) : <any>undefined;
+    }
+  }
+
+  static fromJS(data: any): GetDocumentTypeForEditOutput {
+    data = typeof data === 'object' ? data : {};
+    let result = new GetDocumentTypeForEditOutput();
+    result.init(data);
+    return result;
+  }
+
+  toJSON(data?: any) {
+    data = typeof data === 'object' ? data : {};
+    data['documentType'] = this.documentType ? this.documentType.toJSON() : <any>undefined;
+    return data;
+  }
+}
+
+export interface IGetDocumentTypeForEditOutput {
+  documentType: CreateOrEditDocumentTypeDto;
+}
+
 export class DynamicParameterDto implements IDynamicParameterDto {
   parameterName!: string | undefined;
   inputType!: string | undefined;
@@ -28546,6 +31870,302 @@ export class GetGoodCategoryForEditOutput implements IGetGoodCategoryForEditOutp
 
 export interface IGetGoodCategoryForEditOutput {
   goodCategory: CreateOrEditGoodCategoryDto;
+}
+
+export class GoodsDetailDto implements IGoodsDetailDto {
+  name!: string | undefined;
+  description!: string | undefined;
+  quantity!: string | undefined;
+  weight!: string | undefined;
+  dimentions!: string | undefined;
+  isDangerousGood!: boolean;
+  dangerousGoodsCode!: string | undefined;
+  goodCategoryId!: number | undefined;
+  id!: number;
+
+  constructor(data?: IGoodsDetailDto) {
+    if (data) {
+      for (var property in data) {
+        if (data.hasOwnProperty(property)) (<any>this)[property] = (<any>data)[property];
+      }
+    }
+  }
+
+  init(_data?: any) {
+    if (_data) {
+      this.name = _data['name'];
+      this.description = _data['description'];
+      this.quantity = _data['quantity'];
+      this.weight = _data['weight'];
+      this.dimentions = _data['dimentions'];
+      this.isDangerousGood = _data['isDangerousGood'];
+      this.dangerousGoodsCode = _data['dangerousGoodsCode'];
+      this.goodCategoryId = _data['goodCategoryId'];
+      this.id = _data['id'];
+    }
+  }
+
+  static fromJS(data: any): GoodsDetailDto {
+    data = typeof data === 'object' ? data : {};
+    let result = new GoodsDetailDto();
+    result.init(data);
+    return result;
+  }
+
+  toJSON(data?: any) {
+    data = typeof data === 'object' ? data : {};
+    data['name'] = this.name;
+    data['description'] = this.description;
+    data['quantity'] = this.quantity;
+    data['weight'] = this.weight;
+    data['dimentions'] = this.dimentions;
+    data['isDangerousGood'] = this.isDangerousGood;
+    data['dangerousGoodsCode'] = this.dangerousGoodsCode;
+    data['goodCategoryId'] = this.goodCategoryId;
+    data['id'] = this.id;
+    return data;
+  }
+}
+
+export interface IGoodsDetailDto {
+  name: string | undefined;
+  description: string | undefined;
+  quantity: string | undefined;
+  weight: string | undefined;
+  dimentions: string | undefined;
+  isDangerousGood: boolean;
+  dangerousGoodsCode: string | undefined;
+  goodCategoryId: number | undefined;
+  id: number;
+}
+
+export class GetGoodsDetailForViewDto implements IGetGoodsDetailForViewDto {
+  goodsDetail!: GoodsDetailDto;
+  goodCategoryDisplayName!: string | undefined;
+
+  constructor(data?: IGetGoodsDetailForViewDto) {
+    if (data) {
+      for (var property in data) {
+        if (data.hasOwnProperty(property)) (<any>this)[property] = (<any>data)[property];
+      }
+    }
+  }
+
+  init(_data?: any) {
+    if (_data) {
+      this.goodsDetail = _data['goodsDetail'] ? GoodsDetailDto.fromJS(_data['goodsDetail']) : <any>undefined;
+      this.goodCategoryDisplayName = _data['goodCategoryDisplayName'];
+    }
+  }
+
+  static fromJS(data: any): GetGoodsDetailForViewDto {
+    data = typeof data === 'object' ? data : {};
+    let result = new GetGoodsDetailForViewDto();
+    result.init(data);
+    return result;
+  }
+
+  toJSON(data?: any) {
+    data = typeof data === 'object' ? data : {};
+    data['goodsDetail'] = this.goodsDetail ? this.goodsDetail.toJSON() : <any>undefined;
+    data['goodCategoryDisplayName'] = this.goodCategoryDisplayName;
+    return data;
+  }
+}
+
+export interface IGetGoodsDetailForViewDto {
+  goodsDetail: GoodsDetailDto;
+  goodCategoryDisplayName: string | undefined;
+}
+
+export class PagedResultDtoOfGetGoodsDetailForViewDto implements IPagedResultDtoOfGetGoodsDetailForViewDto {
+  totalCount!: number;
+  items!: GetGoodsDetailForViewDto[] | undefined;
+
+  constructor(data?: IPagedResultDtoOfGetGoodsDetailForViewDto) {
+    if (data) {
+      for (var property in data) {
+        if (data.hasOwnProperty(property)) (<any>this)[property] = (<any>data)[property];
+      }
+    }
+  }
+
+  init(_data?: any) {
+    if (_data) {
+      this.totalCount = _data['totalCount'];
+      if (Array.isArray(_data['items'])) {
+        this.items = [] as any;
+        for (let item of _data['items']) this.items!.push(GetGoodsDetailForViewDto.fromJS(item));
+      }
+    }
+  }
+
+  static fromJS(data: any): PagedResultDtoOfGetGoodsDetailForViewDto {
+    data = typeof data === 'object' ? data : {};
+    let result = new PagedResultDtoOfGetGoodsDetailForViewDto();
+    result.init(data);
+    return result;
+  }
+
+  toJSON(data?: any) {
+    data = typeof data === 'object' ? data : {};
+    data['totalCount'] = this.totalCount;
+    if (Array.isArray(this.items)) {
+      data['items'] = [];
+      for (let item of this.items) data['items'].push(item.toJSON());
+    }
+    return data;
+  }
+}
+
+export interface IPagedResultDtoOfGetGoodsDetailForViewDto {
+  totalCount: number;
+  items: GetGoodsDetailForViewDto[] | undefined;
+}
+
+export class CreateOrEditGoodsDetailDto implements ICreateOrEditGoodsDetailDto {
+  name!: string;
+  description!: string | undefined;
+  quantity!: string | undefined;
+  weight!: string | undefined;
+  dimentions!: string | undefined;
+  isDangerousGood!: boolean;
+  dangerousGoodsCode!: string | undefined;
+  goodCategoryId!: number | undefined;
+  id!: number | undefined;
+
+  constructor(data?: ICreateOrEditGoodsDetailDto) {
+    if (data) {
+      for (var property in data) {
+        if (data.hasOwnProperty(property)) (<any>this)[property] = (<any>data)[property];
+      }
+    }
+  }
+
+  init(_data?: any) {
+    if (_data) {
+      this.name = _data['name'];
+      this.description = _data['description'];
+      this.quantity = _data['quantity'];
+      this.weight = _data['weight'];
+      this.dimentions = _data['dimentions'];
+      this.isDangerousGood = _data['isDangerousGood'];
+      this.dangerousGoodsCode = _data['dangerousGoodsCode'];
+      this.goodCategoryId = _data['goodCategoryId'];
+      this.id = _data['id'];
+    }
+  }
+
+  static fromJS(data: any): CreateOrEditGoodsDetailDto {
+    data = typeof data === 'object' ? data : {};
+    let result = new CreateOrEditGoodsDetailDto();
+    result.init(data);
+    return result;
+  }
+
+  toJSON(data?: any) {
+    data = typeof data === 'object' ? data : {};
+    data['name'] = this.name;
+    data['description'] = this.description;
+    data['quantity'] = this.quantity;
+    data['weight'] = this.weight;
+    data['dimentions'] = this.dimentions;
+    data['isDangerousGood'] = this.isDangerousGood;
+    data['dangerousGoodsCode'] = this.dangerousGoodsCode;
+    data['goodCategoryId'] = this.goodCategoryId;
+    data['id'] = this.id;
+    return data;
+  }
+}
+
+export interface ICreateOrEditGoodsDetailDto {
+  name: string;
+  description: string | undefined;
+  quantity: string | undefined;
+  weight: string | undefined;
+  dimentions: string | undefined;
+  isDangerousGood: boolean;
+  dangerousGoodsCode: string | undefined;
+  goodCategoryId: number | undefined;
+  id: number | undefined;
+}
+
+export class GetGoodsDetailForEditOutput implements IGetGoodsDetailForEditOutput {
+  goodsDetail!: CreateOrEditGoodsDetailDto;
+  goodCategoryDisplayName!: string | undefined;
+
+  constructor(data?: IGetGoodsDetailForEditOutput) {
+    if (data) {
+      for (var property in data) {
+        if (data.hasOwnProperty(property)) (<any>this)[property] = (<any>data)[property];
+      }
+    }
+  }
+
+  init(_data?: any) {
+    if (_data) {
+      this.goodsDetail = _data['goodsDetail'] ? CreateOrEditGoodsDetailDto.fromJS(_data['goodsDetail']) : <any>undefined;
+      this.goodCategoryDisplayName = _data['goodCategoryDisplayName'];
+    }
+  }
+
+  static fromJS(data: any): GetGoodsDetailForEditOutput {
+    data = typeof data === 'object' ? data : {};
+    let result = new GetGoodsDetailForEditOutput();
+    result.init(data);
+    return result;
+  }
+
+  toJSON(data?: any) {
+    data = typeof data === 'object' ? data : {};
+    data['goodsDetail'] = this.goodsDetail ? this.goodsDetail.toJSON() : <any>undefined;
+    data['goodCategoryDisplayName'] = this.goodCategoryDisplayName;
+    return data;
+  }
+}
+
+export interface IGetGoodsDetailForEditOutput {
+  goodsDetail: CreateOrEditGoodsDetailDto;
+  goodCategoryDisplayName: string | undefined;
+}
+
+export class GoodsDetailGoodCategoryLookupTableDto implements IGoodsDetailGoodCategoryLookupTableDto {
+  id!: number;
+  displayName!: string | undefined;
+
+  constructor(data?: IGoodsDetailGoodCategoryLookupTableDto) {
+    if (data) {
+      for (var property in data) {
+        if (data.hasOwnProperty(property)) (<any>this)[property] = (<any>data)[property];
+      }
+    }
+  }
+
+  init(_data?: any) {
+    if (_data) {
+      this.id = _data['id'];
+      this.displayName = _data['displayName'];
+    }
+  }
+
+  static fromJS(data: any): GoodsDetailGoodCategoryLookupTableDto {
+    data = typeof data === 'object' ? data : {};
+    let result = new GoodsDetailGoodCategoryLookupTableDto();
+    result.init(data);
+    return result;
+  }
+
+  toJSON(data?: any) {
+    data = typeof data === 'object' ? data : {};
+    data['id'] = this.id;
+    data['displayName'] = this.displayName;
+    return data;
+  }
+}
+
+export interface IGoodsDetailGoodCategoryLookupTableDto {
+  id: number;
+  displayName: string | undefined;
 }
 
 export class TopStatsData implements ITopStatsData {
@@ -34233,7 +37853,8 @@ export class CreateOrEditRoutStepDto implements ICreateOrEditRoutStepDto {
   order!: number;
   originCityId!: number | undefined;
   destinationCityId!: number | undefined;
-  routeId!: number;
+  routeId!: number | undefined;
+  shippingRequestId!: number | undefined;
   id!: number | undefined;
 
   constructor(data?: ICreateOrEditRoutStepDto) {
@@ -34253,6 +37874,7 @@ export class CreateOrEditRoutStepDto implements ICreateOrEditRoutStepDto {
       this.originCityId = _data['originCityId'];
       this.destinationCityId = _data['destinationCityId'];
       this.routeId = _data['routeId'];
+      this.shippingRequestId = _data['shippingRequestId'];
       this.id = _data['id'];
     }
   }
@@ -34273,6 +37895,7 @@ export class CreateOrEditRoutStepDto implements ICreateOrEditRoutStepDto {
     data['originCityId'] = this.originCityId;
     data['destinationCityId'] = this.destinationCityId;
     data['routeId'] = this.routeId;
+    data['shippingRequestId'] = this.shippingRequestId;
     data['id'] = this.id;
     return data;
   }
@@ -34285,7 +37908,8 @@ export interface ICreateOrEditRoutStepDto {
   order: number;
   originCityId: number | undefined;
   destinationCityId: number | undefined;
-  routeId: number;
+  routeId: number | undefined;
+  shippingRequestId: number | undefined;
   id: number | undefined;
 }
 
@@ -35324,6 +38948,431 @@ export interface IUpdateUserSignInTokenOutput {
   signInToken: string | undefined;
   encodedUserId: string | undefined;
   encodedTenantId: string | undefined;
+}
+
+export class ShippingRequestDto implements IShippingRequestDto {
+  vas!: number;
+  trucksTypeId!: string | undefined;
+  trailerTypeId!: number | undefined;
+  goodsDetailId!: number | undefined;
+  routeId!: number | undefined;
+  id!: number;
+
+  constructor(data?: IShippingRequestDto) {
+    if (data) {
+      for (var property in data) {
+        if (data.hasOwnProperty(property)) (<any>this)[property] = (<any>data)[property];
+      }
+    }
+  }
+
+  init(_data?: any) {
+    if (_data) {
+      this.vas = _data['vas'];
+      this.trucksTypeId = _data['trucksTypeId'];
+      this.trailerTypeId = _data['trailerTypeId'];
+      this.goodsDetailId = _data['goodsDetailId'];
+      this.routeId = _data['routeId'];
+      this.id = _data['id'];
+    }
+  }
+
+  static fromJS(data: any): ShippingRequestDto {
+    data = typeof data === 'object' ? data : {};
+    let result = new ShippingRequestDto();
+    result.init(data);
+    return result;
+  }
+
+  toJSON(data?: any) {
+    data = typeof data === 'object' ? data : {};
+    data['vas'] = this.vas;
+    data['trucksTypeId'] = this.trucksTypeId;
+    data['trailerTypeId'] = this.trailerTypeId;
+    data['goodsDetailId'] = this.goodsDetailId;
+    data['routeId'] = this.routeId;
+    data['id'] = this.id;
+    return data;
+  }
+}
+
+export interface IShippingRequestDto {
+  vas: number;
+  trucksTypeId: string | undefined;
+  trailerTypeId: number | undefined;
+  goodsDetailId: number | undefined;
+  routeId: number | undefined;
+  id: number;
+}
+
+export class GetShippingRequestForViewDto implements IGetShippingRequestForViewDto {
+  shippingRequest!: ShippingRequestDto;
+  trucksTypeDisplayName!: string | undefined;
+  trailerTypeDisplayName!: string | undefined;
+  goodsDetailName!: string | undefined;
+  routeDisplayName!: string | undefined;
+
+  constructor(data?: IGetShippingRequestForViewDto) {
+    if (data) {
+      for (var property in data) {
+        if (data.hasOwnProperty(property)) (<any>this)[property] = (<any>data)[property];
+      }
+    }
+  }
+
+  init(_data?: any) {
+    if (_data) {
+      this.shippingRequest = _data['shippingRequest'] ? ShippingRequestDto.fromJS(_data['shippingRequest']) : <any>undefined;
+      this.trucksTypeDisplayName = _data['trucksTypeDisplayName'];
+      this.trailerTypeDisplayName = _data['trailerTypeDisplayName'];
+      this.goodsDetailName = _data['goodsDetailName'];
+      this.routeDisplayName = _data['routeDisplayName'];
+    }
+  }
+
+  static fromJS(data: any): GetShippingRequestForViewDto {
+    data = typeof data === 'object' ? data : {};
+    let result = new GetShippingRequestForViewDto();
+    result.init(data);
+    return result;
+  }
+
+  toJSON(data?: any) {
+    data = typeof data === 'object' ? data : {};
+    data['shippingRequest'] = this.shippingRequest ? this.shippingRequest.toJSON() : <any>undefined;
+    data['trucksTypeDisplayName'] = this.trucksTypeDisplayName;
+    data['trailerTypeDisplayName'] = this.trailerTypeDisplayName;
+    data['goodsDetailName'] = this.goodsDetailName;
+    data['routeDisplayName'] = this.routeDisplayName;
+    return data;
+  }
+}
+
+export interface IGetShippingRequestForViewDto {
+  shippingRequest: ShippingRequestDto;
+  trucksTypeDisplayName: string | undefined;
+  trailerTypeDisplayName: string | undefined;
+  goodsDetailName: string | undefined;
+  routeDisplayName: string | undefined;
+}
+
+export class PagedResultDtoOfGetShippingRequestForViewDto implements IPagedResultDtoOfGetShippingRequestForViewDto {
+  totalCount!: number;
+  items!: GetShippingRequestForViewDto[] | undefined;
+
+  constructor(data?: IPagedResultDtoOfGetShippingRequestForViewDto) {
+    if (data) {
+      for (var property in data) {
+        if (data.hasOwnProperty(property)) (<any>this)[property] = (<any>data)[property];
+      }
+    }
+  }
+
+  init(_data?: any) {
+    if (_data) {
+      this.totalCount = _data['totalCount'];
+      if (Array.isArray(_data['items'])) {
+        this.items = [] as any;
+        for (let item of _data['items']) this.items!.push(GetShippingRequestForViewDto.fromJS(item));
+      }
+    }
+  }
+
+  static fromJS(data: any): PagedResultDtoOfGetShippingRequestForViewDto {
+    data = typeof data === 'object' ? data : {};
+    let result = new PagedResultDtoOfGetShippingRequestForViewDto();
+    result.init(data);
+    return result;
+  }
+
+  toJSON(data?: any) {
+    data = typeof data === 'object' ? data : {};
+    data['totalCount'] = this.totalCount;
+    if (Array.isArray(this.items)) {
+      data['items'] = [];
+      for (let item of this.items) data['items'].push(item.toJSON());
+    }
+    return data;
+  }
+}
+
+export interface IPagedResultDtoOfGetShippingRequestForViewDto {
+  totalCount: number;
+  items: GetShippingRequestForViewDto[] | undefined;
+}
+
+export class CreateOrEditShippingRequestDto implements ICreateOrEditShippingRequestDto {
+  vas!: number;
+  trucksTypeId!: string | undefined;
+  trailerTypeId!: number | undefined;
+  routeId!: number | undefined;
+  createOrEditGoodsDetailDto!: CreateOrEditGoodsDetailDto;
+  createOrEditRoutStepDtoList!: CreateOrEditRoutStepDto[] | undefined;
+  id!: number | undefined;
+
+  constructor(data?: ICreateOrEditShippingRequestDto) {
+    if (data) {
+      for (var property in data) {
+        if (data.hasOwnProperty(property)) (<any>this)[property] = (<any>data)[property];
+      }
+    }
+  }
+
+  init(_data?: any) {
+    if (_data) {
+      this.vas = _data['vas'];
+      this.trucksTypeId = _data['trucksTypeId'];
+      this.trailerTypeId = _data['trailerTypeId'];
+      this.routeId = _data['routeId'];
+      this.createOrEditGoodsDetailDto = _data['createOrEditGoodsDetailDto']
+        ? CreateOrEditGoodsDetailDto.fromJS(_data['createOrEditGoodsDetailDto'])
+        : <any>undefined;
+      if (Array.isArray(_data['createOrEditRoutStepDtoList'])) {
+        this.createOrEditRoutStepDtoList = [] as any;
+        for (let item of _data['createOrEditRoutStepDtoList']) this.createOrEditRoutStepDtoList!.push(CreateOrEditRoutStepDto.fromJS(item));
+      }
+      this.id = _data['id'];
+    }
+  }
+
+  static fromJS(data: any): CreateOrEditShippingRequestDto {
+    data = typeof data === 'object' ? data : {};
+    let result = new CreateOrEditShippingRequestDto();
+    result.init(data);
+    return result;
+  }
+
+  toJSON(data?: any) {
+    data = typeof data === 'object' ? data : {};
+    data['vas'] = this.vas;
+    data['trucksTypeId'] = this.trucksTypeId;
+    data['trailerTypeId'] = this.trailerTypeId;
+    data['routeId'] = this.routeId;
+    data['createOrEditGoodsDetailDto'] = this.createOrEditGoodsDetailDto ? this.createOrEditGoodsDetailDto.toJSON() : <any>undefined;
+    if (Array.isArray(this.createOrEditRoutStepDtoList)) {
+      data['createOrEditRoutStepDtoList'] = [];
+      for (let item of this.createOrEditRoutStepDtoList) data['createOrEditRoutStepDtoList'].push(item.toJSON());
+    }
+    data['id'] = this.id;
+    return data;
+  }
+}
+
+export interface ICreateOrEditShippingRequestDto {
+  vas: number;
+  trucksTypeId: string | undefined;
+  trailerTypeId: number | undefined;
+  routeId: number | undefined;
+  createOrEditGoodsDetailDto: CreateOrEditGoodsDetailDto;
+  createOrEditRoutStepDtoList: CreateOrEditRoutStepDto[] | undefined;
+  id: number | undefined;
+}
+
+export class GetShippingRequestForEditOutput implements IGetShippingRequestForEditOutput {
+  shippingRequest!: CreateOrEditShippingRequestDto;
+  trucksTypeDisplayName!: string | undefined;
+  trailerTypeDisplayName!: string | undefined;
+  goodsDetailName!: string | undefined;
+  routeDisplayName!: string | undefined;
+
+  constructor(data?: IGetShippingRequestForEditOutput) {
+    if (data) {
+      for (var property in data) {
+        if (data.hasOwnProperty(property)) (<any>this)[property] = (<any>data)[property];
+      }
+    }
+  }
+
+  init(_data?: any) {
+    if (_data) {
+      this.shippingRequest = _data['shippingRequest'] ? CreateOrEditShippingRequestDto.fromJS(_data['shippingRequest']) : <any>undefined;
+      this.trucksTypeDisplayName = _data['trucksTypeDisplayName'];
+      this.trailerTypeDisplayName = _data['trailerTypeDisplayName'];
+      this.goodsDetailName = _data['goodsDetailName'];
+      this.routeDisplayName = _data['routeDisplayName'];
+    }
+  }
+
+  static fromJS(data: any): GetShippingRequestForEditOutput {
+    data = typeof data === 'object' ? data : {};
+    let result = new GetShippingRequestForEditOutput();
+    result.init(data);
+    return result;
+  }
+
+  toJSON(data?: any) {
+    data = typeof data === 'object' ? data : {};
+    data['shippingRequest'] = this.shippingRequest ? this.shippingRequest.toJSON() : <any>undefined;
+    data['trucksTypeDisplayName'] = this.trucksTypeDisplayName;
+    data['trailerTypeDisplayName'] = this.trailerTypeDisplayName;
+    data['goodsDetailName'] = this.goodsDetailName;
+    data['routeDisplayName'] = this.routeDisplayName;
+    return data;
+  }
+}
+
+export interface IGetShippingRequestForEditOutput {
+  shippingRequest: CreateOrEditShippingRequestDto;
+  trucksTypeDisplayName: string | undefined;
+  trailerTypeDisplayName: string | undefined;
+  goodsDetailName: string | undefined;
+  routeDisplayName: string | undefined;
+}
+
+export class ShippingRequestTrucksTypeLookupTableDto implements IShippingRequestTrucksTypeLookupTableDto {
+  id!: string | undefined;
+  displayName!: string | undefined;
+
+  constructor(data?: IShippingRequestTrucksTypeLookupTableDto) {
+    if (data) {
+      for (var property in data) {
+        if (data.hasOwnProperty(property)) (<any>this)[property] = (<any>data)[property];
+      }
+    }
+  }
+
+  init(_data?: any) {
+    if (_data) {
+      this.id = _data['id'];
+      this.displayName = _data['displayName'];
+    }
+  }
+
+  static fromJS(data: any): ShippingRequestTrucksTypeLookupTableDto {
+    data = typeof data === 'object' ? data : {};
+    let result = new ShippingRequestTrucksTypeLookupTableDto();
+    result.init(data);
+    return result;
+  }
+
+  toJSON(data?: any) {
+    data = typeof data === 'object' ? data : {};
+    data['id'] = this.id;
+    data['displayName'] = this.displayName;
+    return data;
+  }
+}
+
+export interface IShippingRequestTrucksTypeLookupTableDto {
+  id: string | undefined;
+  displayName: string | undefined;
+}
+
+export class ShippingRequestTrailerTypeLookupTableDto implements IShippingRequestTrailerTypeLookupTableDto {
+  id!: number;
+  displayName!: string | undefined;
+
+  constructor(data?: IShippingRequestTrailerTypeLookupTableDto) {
+    if (data) {
+      for (var property in data) {
+        if (data.hasOwnProperty(property)) (<any>this)[property] = (<any>data)[property];
+      }
+    }
+  }
+
+  init(_data?: any) {
+    if (_data) {
+      this.id = _data['id'];
+      this.displayName = _data['displayName'];
+    }
+  }
+
+  static fromJS(data: any): ShippingRequestTrailerTypeLookupTableDto {
+    data = typeof data === 'object' ? data : {};
+    let result = new ShippingRequestTrailerTypeLookupTableDto();
+    result.init(data);
+    return result;
+  }
+
+  toJSON(data?: any) {
+    data = typeof data === 'object' ? data : {};
+    data['id'] = this.id;
+    data['displayName'] = this.displayName;
+    return data;
+  }
+}
+
+export interface IShippingRequestTrailerTypeLookupTableDto {
+  id: number;
+  displayName: string | undefined;
+}
+
+export class ShippingRequestGoodsDetailLookupTableDto implements IShippingRequestGoodsDetailLookupTableDto {
+  id!: number;
+  displayName!: string | undefined;
+
+  constructor(data?: IShippingRequestGoodsDetailLookupTableDto) {
+    if (data) {
+      for (var property in data) {
+        if (data.hasOwnProperty(property)) (<any>this)[property] = (<any>data)[property];
+      }
+    }
+  }
+
+  init(_data?: any) {
+    if (_data) {
+      this.id = _data['id'];
+      this.displayName = _data['displayName'];
+    }
+  }
+
+  static fromJS(data: any): ShippingRequestGoodsDetailLookupTableDto {
+    data = typeof data === 'object' ? data : {};
+    let result = new ShippingRequestGoodsDetailLookupTableDto();
+    result.init(data);
+    return result;
+  }
+
+  toJSON(data?: any) {
+    data = typeof data === 'object' ? data : {};
+    data['id'] = this.id;
+    data['displayName'] = this.displayName;
+    return data;
+  }
+}
+
+export interface IShippingRequestGoodsDetailLookupTableDto {
+  id: number;
+  displayName: string | undefined;
+}
+
+export class ShippingRequestRouteLookupTableDto implements IShippingRequestRouteLookupTableDto {
+  id!: number;
+  displayName!: string | undefined;
+
+  constructor(data?: IShippingRequestRouteLookupTableDto) {
+    if (data) {
+      for (var property in data) {
+        if (data.hasOwnProperty(property)) (<any>this)[property] = (<any>data)[property];
+      }
+    }
+  }
+
+  init(_data?: any) {
+    if (_data) {
+      this.id = _data['id'];
+      this.displayName = _data['displayName'];
+    }
+  }
+
+  static fromJS(data: any): ShippingRequestRouteLookupTableDto {
+    data = typeof data === 'object' ? data : {};
+    let result = new ShippingRequestRouteLookupTableDto();
+    result.init(data);
+    return result;
+  }
+
+  toJSON(data?: any) {
+    data = typeof data === 'object' ? data : {};
+    data['id'] = this.id;
+    data['displayName'] = this.displayName;
+    return data;
+  }
+}
+
+export interface IShippingRequestRouteLookupTableDto {
+  id: number;
+  displayName: string | undefined;
 }
 
 export class StripeConfigurationDto implements IStripeConfigurationDto {

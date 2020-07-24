@@ -2,6 +2,14 @@
 import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { AppCommonModule } from '@app/shared/common/app-common.module';
+import { DocumentFilesComponent } from './documentFiles/documentFiles/documentFiles.component';
+import { ViewDocumentFileModalComponent } from './documentFiles/documentFiles/view-documentFile-modal.component';
+import { CreateOrEditDocumentFileModalComponent } from './documentFiles/documentFiles/create-or-edit-documentFile-modal.component';
+
+import { DocumentTypesComponent } from './documentTypes/documentTypes/documentTypes.component';
+import { ViewDocumentTypeModalComponent } from './documentTypes/documentTypes/view-documentType-modal.component';
+import { CreateOrEditDocumentTypeModalComponent } from './documentTypes/documentTypes/create-or-edit-documentType-modal.component';
+
 import { ShippingRequestsComponent } from './shippingRequests/shippingRequests/shippingRequests.component';
 import { ViewShippingRequestComponent } from './shippingRequests/shippingRequests/view-shippingRequest.component';
 import { CreateOrEditShippingRequestComponent } from './shippingRequests/shippingRequests/create-or-edit-shippingRequest.component';
@@ -65,7 +73,6 @@ import { AutoCompleteModule } from 'primeng/autocomplete';
 import { PaginatorModule } from 'primeng/paginator';
 import { EditorModule } from 'primeng/editor';
 import { InputMaskModule } from 'primeng/inputmask';
-import { FileUploadModule } from 'primeng/fileupload';
 import { TableModule } from 'primeng/table';
 
 import { UtilsModule } from '@shared/utils/utils.module';
@@ -88,7 +95,6 @@ NgxBootstrapDatePickerConfigService.registerNgxBootstrapDatePickerLocales();
 
 @NgModule({
   imports: [
-    FileUploadModule,
     AutoCompleteModule,
     PaginatorModule,
     EditorModule,
@@ -111,6 +117,14 @@ NgxBootstrapDatePickerConfigService.registerNgxBootstrapDatePickerLocales();
     ImageCropperModule,
   ],
   declarations: [
+    DocumentFilesComponent,
+
+    ViewDocumentFileModalComponent,
+    CreateOrEditDocumentFileModalComponent,
+    DocumentTypesComponent,
+
+    ViewDocumentTypeModalComponent,
+    CreateOrEditDocumentTypeModalComponent,
     ShippingRequestsComponent,
 
     ViewShippingRequestComponent,

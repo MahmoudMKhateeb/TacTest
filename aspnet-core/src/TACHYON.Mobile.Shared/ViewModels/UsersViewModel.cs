@@ -1,4 +1,5 @@
-﻿using System;
+﻿using MvvmHelpers;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -10,13 +11,12 @@ using TACHYON.Authorization.Users.Profile;
 using TACHYON.Commands;
 using TACHYON.Core.Threading;
 using TACHYON.Extensions;
-using TACHYON.Models.Users;
-using TACHYON.ViewModels.Base;
-using Xamarin.Forms;
-using MvvmHelpers;
 using TACHYON.Localization;
+using TACHYON.Models.Users;
 using TACHYON.UI.Assets;
+using TACHYON.ViewModels.Base;
 using TACHYON.Views;
+using Xamarin.Forms;
 
 namespace TACHYON.ViewModels
 {

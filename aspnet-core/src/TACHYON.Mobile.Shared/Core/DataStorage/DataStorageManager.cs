@@ -1,10 +1,10 @@
-﻿using System;
-using System.Threading.Tasks;
-using Abp.Dependency;
+﻿using Abp.Dependency;
 using Abp.Runtime.Security;
-using TACHYON.Core.Runtime;
 using Newtonsoft.Json;
 using Plugin.Settings;
+using System;
+using System.Threading.Tasks;
+using TACHYON.Core.Runtime;
 
 namespace TACHYON.Core.DataStorage
 {
@@ -86,7 +86,7 @@ namespace TACHYON.Core.DataStorage
                 StoreObject(key, value);
             }
 
-              await Task.CompletedTask;
+            await Task.CompletedTask;
         }
 
         public void RemoveIfExists(string key)

@@ -2,11 +2,11 @@
 
 namespace TACHYON.Views
 {
-	public partial class ChangePasswordView : ContentPage, IXamarinView
+    public partial class ChangePasswordView : ContentPage, IXamarinView
     {
-		public ChangePasswordView()
-		{
-			InitializeComponent ();
-		}
-	}
+        public ChangePasswordView()
+        {
+            InitializeComponent();
+        }
+    }
 }

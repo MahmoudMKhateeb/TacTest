@@ -1,6 +1,6 @@
-﻿using System.Threading.Tasks;
-using Abp.Dependency;
+﻿using Abp.Dependency;
 using Abp.ObjectMapping;
+using System.Threading.Tasks;
 using TACHYON.ApiClient;
 using TACHYON.ApiClient.Models;
 using TACHYON.Core.DataStorage;

@@ -1,7 +1,7 @@
-﻿using System;
-using System.Threading.Tasks;
-using Abp.Dependency;
+﻿using Abp.Dependency;
 using Abp.Web.Models.AbpUserConfiguration;
+using System;
+using System.Threading.Tasks;
 using TACHYON.ApiClient;
 
 namespace TACHYON.Configuration
@@ -61,7 +61,7 @@ namespace TACHYON.Configuration
         private async Task<AbpUserConfigurationDto> RefreshAccessTokenAndSendRequestAgain()
         {
             var newAccessToken = await _tokenManager.RefreshTokenAsync();
-            
+
             if (OnAccessTokenRefresh != null)
             {
                 await OnAccessTokenRefresh(newAccessToken);

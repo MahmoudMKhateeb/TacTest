@@ -4,6 +4,6 @@ namespace TACHYON.ViewModels
 {
     public class _SampleViewModel : XamarinViewModel
     {
-        
+
     }
 }

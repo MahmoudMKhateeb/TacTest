@@ -8,7 +8,7 @@
 
         public SelectableItem()
         {
-            
+
         }
 
         public SelectableItem(bool isSelected, T item)

@@ -1,6 +1,6 @@
-﻿using System;
+﻿using Abp.AutoMapper;
+using System;
 using System.Collections.Generic;
-using Abp.AutoMapper;
 using TACHYON.ApiClient.Models;
 
 namespace TACHYON.Models.Common

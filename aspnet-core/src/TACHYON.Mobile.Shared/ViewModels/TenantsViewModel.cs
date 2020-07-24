@@ -1,8 +1,8 @@
-﻿using System.Collections.Generic;
+﻿using MvvmHelpers;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Input;
-using MvvmHelpers;
 using TACHYON.Commands;
 using TACHYON.Core.Threading;
 using TACHYON.Extensions;

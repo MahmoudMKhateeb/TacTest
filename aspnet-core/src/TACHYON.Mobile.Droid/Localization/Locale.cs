@@ -1,7 +1,7 @@
-﻿using System;
+﻿using Abp.Dependency;
+using System;
 using System.Globalization;
 using System.Threading;
-using Abp.Dependency;
 
 namespace TACHYON.Localization
 {

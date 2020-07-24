@@ -1792,6 +1792,138 @@ namespace TACHYON.Migrations
                     b.ToTable("Counties");
                 });
 
+            modelBuilder.Entity("TACHYON.Documents.DocumentFiles.DocumentFile", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("BinaryObjectId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("CreationTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<long?>("CreatorUserId")
+                        .HasColumnType("bigint");
+
+                    b.Property<long?>("DeleterUserId")
+                        .HasColumnType("bigint");
+
+                    b.Property<DateTime?>("DeletionTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<long>("DocumentTypeId")
+                        .HasColumnType("bigint");
+
+                    b.Property<DateTime>("ExpirationDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Extn")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(100)")
+                        .HasMaxLength(100);
+
+                    b.Property<string>("IsAccepted")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<DateTime?>("LastModificationTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<long?>("LastModifierUserId")
+                        .HasColumnType("bigint");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(100)")
+                        .HasMaxLength(100);
+
+                    b.Property<long?>("RoutStepId")
+                        .HasColumnType("bigint");
+
+                    b.Property<int?>("TenantId")
+                        .HasColumnType("int");
+
+                    b.Property<long?>("TrailerId")
+                        .HasColumnType("bigint");
+
+                    b.Property<Guid?>("TruckId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<long?>("UserId")
+                        .HasColumnType("bigint");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("DocumentTypeId");
+
+                    b.HasIndex("RoutStepId");
+
+                    b.HasIndex("TenantId");
+
+                    b.HasIndex("TrailerId");
+
+                    b.HasIndex("TruckId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("DocumentFiles");
+                });
+
+            modelBuilder.Entity("TACHYON.Documents.DocumentTypes.DocumentType", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<DateTime>("CreationTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<long?>("CreatorUserId")
+                        .HasColumnType("bigint");
+
+                    b.Property<long?>("DeleterUserId")
+                        .HasColumnType("bigint");
+
+                    b.Property<DateTime?>("DeletionTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("DisplayName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(256)")
+                        .HasMaxLength(256);
+
+                    b.Property<DateTime>("ExpirationDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<bool>("HasExpirationDate")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsRequired")
+                        .HasColumnType("bit");
+
+                    b.Property<DateTime?>("LastModificationTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<long?>("LastModifierUserId")
+                        .HasColumnType("bigint");
+
+                    b.Property<string>("RequiredFrom")
+                        .HasColumnType("nvarchar(128)")
+                        .HasMaxLength(128);
+
+                    b.HasKey("Id");
+
+                    b.ToTable("DocumentTypes");
+                });
+
             modelBuilder.Entity("TACHYON.Friendships.Friendship", b =>
                 {
                     b.Property<long>("Id")
@@ -3122,6 +3254,31 @@ namespace TACHYON.Migrations
                         .HasForeignKey("CountyId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("TACHYON.Documents.DocumentFiles.DocumentFile", b =>
+                {
+                    b.HasOne("TACHYON.Documents.DocumentTypes.DocumentType", "DocumentTypeFk")
+                        .WithMany()
+                        .HasForeignKey("DocumentTypeId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("TACHYON.Routs.RoutSteps.RoutStep", "RoutStepFk")
+                        .WithMany()
+                        .HasForeignKey("RoutStepId");
+
+                    b.HasOne("TACHYON.Trailers.Trailer", "TrailerFk")
+                        .WithMany()
+                        .HasForeignKey("TrailerId");
+
+                    b.HasOne("TACHYON.Trucks.Truck", "TruckFk")
+                        .WithMany()
+                        .HasForeignKey("TruckId");
+
+                    b.HasOne("TACHYON.Authorization.Users.User", "UserFk")
+                        .WithMany()
+                        .HasForeignKey("UserId");
                 });
 
             modelBuilder.Entity("TACHYON.Goods.GoodsDetails.GoodsDetail", b =>

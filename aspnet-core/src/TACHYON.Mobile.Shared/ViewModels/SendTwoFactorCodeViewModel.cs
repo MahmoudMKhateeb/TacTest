@@ -1,8 +1,8 @@
-﻿using System.Collections.Generic;
+﻿using Acr.UserDialogs;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Input;
-using Acr.UserDialogs;
 using TACHYON.ApiClient.Models;
 using TACHYON.Authorization.Accounts;
 using TACHYON.Commands;

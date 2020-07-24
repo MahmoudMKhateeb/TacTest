@@ -1,5 +1,5 @@
-﻿using System.ComponentModel;
-using Abp.AutoMapper;
+﻿using Abp.AutoMapper;
+using System.ComponentModel;
 using TACHYON.Authorization.Users.Dto;
 using Xamarin.Forms;
 

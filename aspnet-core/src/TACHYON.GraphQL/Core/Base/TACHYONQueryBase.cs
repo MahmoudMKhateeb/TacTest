@@ -1,18 +1,18 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Abp.Authorization;
+﻿using Abp.Authorization;
 using Abp.Dependency;
 using Abp.Domain.Uow;
 using AutoMapper;
 using GraphQL.Resolvers;
 using GraphQL.Types;
 using Microsoft.EntityFrameworkCore;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace TACHYON.Core.Base
 {
-    public abstract class TACHYONQueryBase<TField,TResult> : ITransientDependency
+    public abstract class TACHYONQueryBase<TField, TResult> : ITransientDependency
     {
         public IPermissionChecker PermissionChecker { protected get; set; }
 

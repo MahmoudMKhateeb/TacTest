@@ -42,13 +42,13 @@ namespace TACHYON.Authorization.Users.Profile
         public async Task<GetProfilePictureOutput> GetProfilePictureByUser(long userId)
         {
             return await ApiClient.GetAsync<GetProfilePictureOutput>(GetEndpoint(nameof(GetProfilePictureByUser)),
-                new {userId = userId});
+                new { userId = userId });
         }
 
         public async Task<GetProfilePictureOutput> GetProfilePictureByUserName(string username)
         {
             return await ApiClient.GetAsync<GetProfilePictureOutput>(GetEndpoint(nameof(GetProfilePictureByUserName)),
-                new {username = username});
+                new { username = username });
         }
 
         public async Task<GetProfilePictureOutput> GetFriendProfilePicture(GetFriendProfilePictureInput input)
@@ -62,7 +62,7 @@ namespace TACHYON.Authorization.Users.Profile
         public async Task<GetProfilePictureOutput> GetProfilePictureById(Guid profilePictureId)
         {
             return await ApiClient.GetAsync<GetProfilePictureOutput>(GetEndpoint(nameof(GetProfilePictureById)),
-                new {profilePictureId = profilePictureId});
+                new { profilePictureId = profilePictureId });
         }
 
         public async Task ChangeLanguage(ChangeUserLanguageDto input)

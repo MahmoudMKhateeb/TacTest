@@ -1,7 +1,7 @@
-﻿using System.IO;
-using Android.Content;
+﻿using Android.Content;
 using Android.Graphics;
 using Com.Theartofdev.Edmodo.Cropper;
+using System.IO;
 using TACHYON.Controls;
 using TACHYON.Renderer;
 using Xamarin.Forms;
@@ -136,4 +136,3 @@ namespace TACHYON.Renderer
         }
     }
 }
-

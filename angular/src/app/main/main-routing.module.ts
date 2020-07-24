@@ -1,5 +1,7 @@
 ﻿import { NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
+import { DocumentFilesComponent } from './documentFiles/documentFiles/documentFiles.component';
+import { DocumentTypesComponent } from './documentTypes/documentTypes/documentTypes.component';
 import { ShippingRequestsComponent } from './shippingRequests/shippingRequests/shippingRequests.component';
 import { CreateOrEditShippingRequestComponent } from './shippingRequests/shippingRequests/create-or-edit-shippingRequest.component';
 import { ViewShippingRequestComponent } from './shippingRequests/shippingRequests/view-shippingRequest.component';
@@ -27,6 +29,8 @@ import { DashboardComponent } from './dashboard/dashboard.component';
       {
         path: '',
         children: [
+          { path: 'documentFiles/documentFiles', component: DocumentFilesComponent, data: { permission: 'Pages.DocumentFiles' } },
+          { path: 'documentTypes/documentTypes', component: DocumentTypesComponent, data: { permission: 'Pages.DocumentTypes' } },
           { path: 'shippingRequests/shippingRequests', component: ShippingRequestsComponent, data: { permission: 'Pages.ShippingRequests' } },
           {
             path: 'shippingRequests/shippingRequests/createOrEdit',

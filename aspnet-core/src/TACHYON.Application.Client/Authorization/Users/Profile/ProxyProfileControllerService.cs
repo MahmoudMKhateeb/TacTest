@@ -1,6 +1,6 @@
-﻿using System;
+﻿using Flurl.Http.Content;
+using System;
 using System.Threading.Tasks;
-using Flurl.Http.Content;
 using TACHYON.Authorization.Users.Profile.Dto;
 
 namespace TACHYON.Authorization.Users.Profile

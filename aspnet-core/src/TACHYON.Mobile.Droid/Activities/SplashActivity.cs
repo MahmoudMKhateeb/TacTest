@@ -1,15 +1,15 @@
-﻿using System.Threading.Tasks;
-using Acr.UserDialogs;
+﻿using Acr.UserDialogs;
 using Android.App;
 using Android.Content;
 using Android.OS;
 using Android.Support.V7.App;
 using Flurl.Http;
+using Plugin.Connectivity;
+using System.Threading.Tasks;
 using TACHYON.ApiClient;
 using TACHYON.Core;
 using TACHYON.Localization.Resources;
 using TACHYON.ViewModels.Base;
-using Plugin.Connectivity;
 using Process = Android.OS.Process;
 
 namespace TACHYON.Activities

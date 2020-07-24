@@ -2,11 +2,11 @@
 
 namespace TACHYON.Views
 {
-	public partial class ProfilePictureView : ContentPage, IXamarinView
+    public partial class ProfilePictureView : ContentPage, IXamarinView
     {
-		public ProfilePictureView ()
-		{
-			InitializeComponent ();
-		}
-	}
+        public ProfilePictureView()
+        {
+            InitializeComponent();
+        }
+    }
 }

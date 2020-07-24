@@ -1,11 +1,11 @@
-﻿using System;
-using System.Linq;
-using System.Threading.Tasks;
-using System.Windows.Input;
-using Abp.Application.Services.Dto;
+﻿using Abp.Application.Services.Dto;
 using Abp.Runtime.Security;
 using Acr.UserDialogs;
 using MvvmHelpers;
+using System;
+using System.Linq;
+using System.Threading.Tasks;
+using System.Windows.Input;
 using TACHYON.Common;
 using TACHYON.Core.Exception;
 using TACHYON.Core.Threading;
@@ -17,9 +17,9 @@ using TACHYON.MultiTenancy;
 using TACHYON.MultiTenancy.Dto;
 using TACHYON.Services.Permission;
 using TACHYON.UI;
+using TACHYON.Validations;
 using TACHYON.ViewModels.Base;
 using Xamarin.Forms;
-using TACHYON.Validations;
 
 namespace TACHYON.ViewModels
 {

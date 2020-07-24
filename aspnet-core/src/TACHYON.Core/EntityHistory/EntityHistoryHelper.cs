@@ -3,6 +3,7 @@ using System;
 using System.Linq;
 using TACHYON.Authorization.Roles;
 using TACHYON.Cities;
+using TACHYON.Documents.DocumentFiles;
 using TACHYON.Goods.GoodCategories;
 using TACHYON.MultiTenancy;
 using TACHYON.Routs;
@@ -23,6 +24,7 @@ namespace TACHYON.EntityHistory
 
         public static readonly Type[] HostSideTrackedTypes =
         {
+            typeof(DocumentFile),
             typeof(City),
             typeof(RoutType),
             typeof(GoodCategory),
@@ -35,6 +37,7 @@ namespace TACHYON.EntityHistory
 
         public static readonly Type[] TenantSideTrackedTypes =
         {
+            typeof(DocumentFile),
             typeof(RoutStep),
             typeof(Route),
             typeof(Trailer),

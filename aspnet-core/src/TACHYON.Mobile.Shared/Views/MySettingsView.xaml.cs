@@ -2,11 +2,11 @@
 
 namespace TACHYON.Views
 {
-	public partial class MySettingsView : ContentPage, IXamarinView
+    public partial class MySettingsView : ContentPage, IXamarinView
     {
-		public MySettingsView()
-		{
-			InitializeComponent ();
-		}
-	}
+        public MySettingsView()
+        {
+            InitializeComponent();
+        }
+    }
 }

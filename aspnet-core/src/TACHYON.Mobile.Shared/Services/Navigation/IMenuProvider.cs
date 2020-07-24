@@ -1,5 +1,5 @@
-using System.Collections.Generic;
 using MvvmHelpers;
+using System.Collections.Generic;
 using TACHYON.Models.NavigationMenu;
 
 namespace TACHYON.Services.Navigation

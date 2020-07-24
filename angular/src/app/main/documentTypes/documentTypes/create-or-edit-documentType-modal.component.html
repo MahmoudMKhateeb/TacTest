@@ -1,0 +1,98 @@
+﻿<div
+  bsModal
+  #createOrEditModal="bs-modal"
+  class="modal fade"
+  tabindex="-1"
+  role="dialog"
+  aria-labelledby="createOrEditModal"
+  aria-hidden="true"
+  [config]="{ backdrop: 'static' }"
+>
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <form *ngIf="active" #documentTypeForm="ngForm" novalidate (ngSubmit)="save()" autocomplete="off">
+        <div class="modal-header">
+          <h4 class="modal-title">
+            <span *ngIf="documentType.id">{{ l('EditDocumentType') }}</span>
+            <span *ngIf="!documentType.id">{{ l('CreateNewDocumentType') }}</span>
+          </h4>
+          <button type="button" class="close" (click)="close()" aria-label="Close" [disabled]="saving">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <div class="form-group">
+            <label for="DocumentType_DisplayName">{{ l('DisplayName') }} *</label>
+            <input
+              type="text"
+              id="DocumentType_DisplayName"
+              class="form-control"
+              [(ngModel)]="documentType.displayName"
+              name="DisplayName"
+              minlength="0"
+              maxlength="256"
+              required
+            />
+          </div>
+
+          <br />
+          <div class="m-checkbox-list">
+            <label for="DocumentType_IsRequired" class="kt-checkbox">
+              <input id="DocumentType_IsRequired" type="checkbox" name="IsRequired" [(ngModel)]="documentType.isRequired" />
+              {{ l('IsRequired') }}
+              <span></span>
+            </label>
+          </div>
+
+          <div class="form-group">
+            <label for="DocumentType_ExpirationDate">{{ l('ExpirationDate') }}</label>
+            <input
+              required
+              class="form-control m-input"
+              type="datetime"
+              bsDatepicker
+              datePickerMomentModifier
+              [(date)]="documentType.expirationDate"
+              id="DocumentType_ExpirationDate"
+              name="DocumentType_ExpirationDate"
+            />
+          </div>
+
+          <br />
+          <div class="m-checkbox-list">
+            <label for="DocumentType_HasExpirationDate" class="kt-checkbox">
+              <input id="DocumentType_HasExpirationDate" type="checkbox" name="HasExpirationDate" [(ngModel)]="documentType.hasExpirationDate" />
+              {{ l('HasExpirationDate') }}
+              <span></span>
+            </label>
+          </div>
+
+          <div class="form-group">
+            <label for="DocumentType_RequiredFrom">{{ l('RequiredFrom') }}</label>
+            <input
+              type="text"
+              id="DocumentType_RequiredFrom"
+              class="form-control"
+              [(ngModel)]="documentType.requiredFrom"
+              name="RequiredFrom"
+              minlength="0"
+              maxlength="128"
+            />
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button [disabled]="saving" type="button" class="btn btn-default" (click)="close()">{{ l('Cancel') }}</button>
+          <button
+            type="submit"
+            class="btn btn-primary blue"
+            [disabled]="!documentTypeForm.form.valid"
+            [buttonBusy]="saving"
+            [busyText]="l('SavingWithThreeDot')"
+          >
+            <i class="fa fa-save"></i> <span>{{ l('Save') }}</span>
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

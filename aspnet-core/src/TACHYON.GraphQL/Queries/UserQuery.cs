@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Linq.Dynamic.Core;
-using System.Threading.Tasks;
-using Abp.Application.Services.Dto;
+﻿using Abp.Application.Services.Dto;
 using Abp.Authorization;
 using Abp.Authorization.Users;
 using Abp.Collections.Extensions;
@@ -12,13 +7,18 @@ using Abp.Linq.Extensions;
 using Abp.Organizations;
 using GraphQL.Types;
 using Microsoft.EntityFrameworkCore;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Linq.Dynamic.Core;
+using System.Threading.Tasks;
 using TACHYON.Authorization;
 using TACHYON.Authorization.Roles;
 using TACHYON.Authorization.Users;
 using TACHYON.Core.Base;
+using TACHYON.Core.Extensions;
 using TACHYON.Dto;
 using TACHYON.Types;
-using TACHYON.Core.Extensions;
 
 namespace TACHYON.Queries
 {

@@ -1,6 +1,6 @@
-﻿using System;
+﻿using Abp.Extensions;
+using System;
 using System.Windows.Input;
-using Abp.Extensions;
 using Xamarin.Forms;
 
 namespace TACHYON.Core.Threading

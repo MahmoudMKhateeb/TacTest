@@ -1,6 +1,6 @@
-﻿using System.Threading.Tasks;
+﻿using Acr.UserDialogs;
+using System.Threading.Tasks;
 using System.Windows.Input;
-using Acr.UserDialogs;
 using TACHYON.Authorization.Users.Profile;
 using TACHYON.Authorization.Users.Profile.Dto;
 using TACHYON.Core.Threading;
