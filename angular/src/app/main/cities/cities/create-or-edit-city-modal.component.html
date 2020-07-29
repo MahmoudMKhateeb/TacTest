@@ -22,6 +22,12 @@
         </div>
         <div class="modal-body">
           <div class="form-group m-form__group">
+            <agm-map [latitude]="Number(city.latitude)" [longitude]="Number(city.longitude)" [zoom]="zoom" (mapClick)="mapClicked($event)">
+              <agm-marker [latitude]="Number(city.latitude)" [longitude]="Number(city.longitude)" [markerDraggable]="true"></agm-marker>
+            </agm-map>
+          </div>
+
+          <div class="form-group m-form__group">
             <label for="CountyDisplayName">{{ l('County') }}</label>
             <select name="city.countyId" [(ngModel)]="city.countyId" class="form-control" required>
               <option value="">{{ l('SelectACounty') }}</option>
@@ -46,16 +52,6 @@
           <div class="form-group">
             <label for="City_Code">{{ l('Code') }}</label>
             <input type="text" id="City_Code" class="form-control" [(ngModel)]="city.code" name="Code" minlength="0" maxlength="64" />
-          </div>
-
-          <div class="form-group">
-            <label for="City_Latitude">{{ l('Latitude') }}</label>
-            <input type="text" id="City_Latitude" class="form-control" [(ngModel)]="city.latitude" name="Latitude" minlength="0" maxlength="256" />
-          </div>
-
-          <div class="form-group">
-            <label for="City_Longitude">{{ l('Longitude') }}</label>
-            <input type="text" id="City_Longitude" class="form-control" [(ngModel)]="city.longitude" name="Longitude" minlength="0" maxlength="256" />
           </div>
         </div>
         <div class="modal-footer">
