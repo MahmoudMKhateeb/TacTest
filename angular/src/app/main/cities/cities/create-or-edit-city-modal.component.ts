@@ -7,6 +7,13 @@ import * as moment from 'moment';
 
 @Component({
   selector: 'createOrEditCityModal',
+  styles: [
+    `
+      agm-map {
+        height: 300px;
+      }
+    `,
+  ],
   templateUrl: './create-or-edit-city-modal.component.html',
 })
 export class CreateOrEditCityModalComponent extends AppComponentBase {
@@ -22,6 +29,7 @@ export class CreateOrEditCityModalComponent extends AppComponentBase {
   countyDisplayName = '';
 
   allCountys: CityCountyLookupTableDto[];
+  zoom = 8;
 
   constructor(injector: Injector, private _citiesServiceProxy: CitiesServiceProxy) {
     super(injector);
@@ -70,5 +78,11 @@ export class CreateOrEditCityModalComponent extends AppComponentBase {
   close(): void {
     this.active = false;
     this.modal.hide();
+  }
+  mapClicked($event: MouseEvent) {
+    // @ts-ignore
+    this.city.latitude = $event.coords.lat.toString();
+    // @ts-ignore
+    this.city.longitude = $event.coords.lng.toString();
   }
 }

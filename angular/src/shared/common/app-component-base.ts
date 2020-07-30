@@ -121,4 +121,8 @@ export abstract class AppComponentBase {
   hideMainSpinner(text?: string): void {
     this.spinnerService.hide();
   }
+
+  Number(string: string) {
+    return Number(string);
+  }
 }

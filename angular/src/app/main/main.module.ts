@@ -90,6 +90,7 @@ import { BsDatepickerConfig, BsDaterangepickerConfig, BsLocaleService } from 'ng
 import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
 import { NgxBootstrapDatePickerConfigService } from 'assets/ngx-bootstrap/ngx-bootstrap-datepicker-config.service';
 import { ImageCropperModule } from '@node_modules/ngx-image-cropper';
+import { AgmCoreModule } from '@node_modules/@agm/core';
 
 NgxBootstrapDatePickerConfigService.registerNgxBootstrapDatePickerLocales();
 
@@ -115,6 +116,10 @@ NgxBootstrapDatePickerConfigService.registerNgxBootstrapDatePickerLocales();
     BsDropdownModule.forRoot(),
     PopoverModule.forRoot(),
     ImageCropperModule,
+    AgmCoreModule.forRoot({
+      apiKey: 'AIzaSyDKKZqDW_xX5azTqBV2oXSb6P3nwCAzOpw',
+      libraries: ['places'],
+    }),
   ],
   declarations: [
     DocumentFilesComponent,

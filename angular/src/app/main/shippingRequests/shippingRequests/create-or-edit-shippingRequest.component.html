@@ -143,7 +143,119 @@
 
           <hr />
 
-          <button (click)="openModal(template)" class="btn btn-primary" type="button">Create template modal</button>
+          <button (click)="openModal()" class="btn btn-primary" type="button">add route step</button>
+
+          <div
+            class="modal fade"
+            bsModal
+            #staticModal="bs-modal"
+            [config]="{ backdrop: 'static' }"
+            tabindex="-1"
+            role="dialog"
+            aria-labelledby="dialog-static-name"
+          >
+            <div class="modal-dialog modal-xl">
+              <div class="modal-content">
+                <form *ngIf="active" #routStepForm="ngForm" novalidate (ngSubmit)="addRouteStep()" autocomplete="off">
+                  <div class="modal-header">
+                    <h4 class="modal-title">
+                      <!--                <span *ngIf="routStep.id">{{l("EditRoutStep")}}</span>-->
+                      <!--                <span *ngIf="!routStep.id">{{l("CreateNewRoutStep")}}</span>-->
+                      {{ l('CreateNewRoutStep') }}
+                    </h4>
+                    <button type="button" class="close" (click)="staticModal.hide()" aria-label="Close" [disabled]="saving">
+                      <span aria-hidden="true">&times;</span>
+                    </button>
+                  </div>
+                  <div class="modal-body">
+                    <div class="row">
+                      <div class="col-md-6">
+                        <div class="form-group m-form__group">
+                          <label for="CityDisplayName">{{ l('City') }}</label>
+                          <select name="routStep.originCityId" [(ngModel)]="routStep.originCityId" class="form-control">
+                            <option value="">{{ l('SelectACity') }}</option>
+                            <option *ngFor="let item of allCitys" value="{{ item.id }}">{{ item.displayName }}</option>
+                          </select>
+                        </div>
+
+                        <div class="form-group m-form__group">
+                          <label for="CityDisplayName2">{{ l('City') }}</label>
+                          <select name="routStep.destinationCityId" [(ngModel)]="routStep.destinationCityId" class="form-control">
+                            <option value="">{{ l('SelectACity') }}</option>
+                            <option *ngFor="let item of allCitys" value="{{ item.id }}">{{ item.displayName }}</option>
+                          </select>
+                        </div>
+
+                        <div class="form-group">
+                          <label for="RoutStep_DisplayName">{{ l('DisplayName') }}</label>
+                          <input
+                            type="text"
+                            id="RoutStep_DisplayName"
+                            class="form-control"
+                            [(ngModel)]="routStep.displayName"
+                            name="DisplayName"
+                            minlength="0"
+                            maxlength="256"
+                          />
+                        </div>
+
+                        <div class="form-group">
+                          <label for="RoutStep_Order">{{ l('Order') }}</label>
+                          <input type="number" id="RoutStep_Order" class="form-control" [(ngModel)]="routStep.order" name="Order" min="1" max="50" />
+                        </div>
+                      </div>
+                      <div class="col-md-6">
+                        <div class="row">
+                          <div class="col-md-12">
+                            <div class="form-group">
+                              <label>Enter address</label>
+                              <input
+                                type="text"
+                                class="form-control"
+                                (keydown.enter)="$event.preventDefault()"
+                                placeholder="Search Nearest Location"
+                                autocorrect="off"
+                                autocapitalize="off"
+                                spellcheck="off"
+                                type="text"
+                                #search
+                              />
+                            </div>
+                          </div>
+                          <div class="col-md-12 no-float">
+                            <agm-map
+                              [latitude]="Number(routStep.latitude)"
+                              [longitude]="Number(routStep.longitude)"
+                              [zoom]="zoom"
+                              (mapClick)="mapClicked($event)"
+                            >
+                              <agm-marker
+                                [latitude]="Number(routStep.latitude)"
+                                [longitude]="Number(routStep.longitude)"
+                                [markerDraggable]="true"
+                              ></agm-marker>
+                            </agm-map>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="modal-footer">
+                    <button [disabled]="saving" type="button" class="btn btn-default" (click)="staticModal.hide()">{{ l('Cancel') }}</button>
+                    <button
+                      type="submit"
+                      class="btn btn-primary blue"
+                      [disabled]="!routStepForm.form.valid"
+                      [buttonBusy]="saving"
+                      [busyText]="l('SavingWithThreeDot')"
+                    >
+                      <i class="fa fa-save"></i> <span>{{ l('Save') }}</span>
+                    </button>
+                  </div>
+                </form>
+              </div>
+            </div>
+          </div>
 
           <div class="row align-items-center">
             <!--<Primeng-Datatable-Start>-->
@@ -192,90 +304,3 @@
     </div>
   </div>
 </div>
-
-<ng-template #template>
-  <form *ngIf="active" #routStepForm="ngForm" novalidate (ngSubmit)="addRouteStep()" autocomplete="off">
-    <div class="modal-header">
-      <h4 class="modal-title">
-        <!--                <span *ngIf="routStep.id">{{l("EditRoutStep")}}</span>-->
-        <!--                <span *ngIf="!routStep.id">{{l("CreateNewRoutStep")}}</span>-->
-      </h4>
-      <button type="button" class="close" (click)="modalRef.hide()" aria-label="Close" [disabled]="saving">
-        <span aria-hidden="true">&times;</span>
-      </button>
-    </div>
-    <div class="modal-body">
-      <div class="form-group m-form__group">
-        <label for="CityDisplayName">{{ l('City') }}</label>
-        <select name="routStep.originCityId" [(ngModel)]="routStep.originCityId" class="form-control">
-          <option value="">{{ l('SelectACity') }}</option>
-          <option *ngFor="let item of allCitys" value="{{ item.id }}">{{ item.displayName }}</option>
-        </select>
-      </div>
-
-      <div class="form-group m-form__group">
-        <label for="CityDisplayName2">{{ l('City') }}</label>
-        <select name="routStep.destinationCityId" [(ngModel)]="routStep.destinationCityId" class="form-control">
-          <option value="">{{ l('SelectACity') }}</option>
-          <option *ngFor="let item of allCitys" value="{{ item.id }}">{{ item.displayName }}</option>
-        </select>
-      </div>
-
-      <div class="form-group">
-        <label for="RoutStep_DisplayName">{{ l('DisplayName') }}</label>
-        <input
-          type="text"
-          id="RoutStep_DisplayName"
-          class="form-control"
-          [(ngModel)]="routStep.displayName"
-          name="DisplayName"
-          minlength="0"
-          maxlength="256"
-        />
-      </div>
-
-      <div class="form-group">
-        <label for="RoutStep_Latitude">{{ l('Latitude') }}</label>
-        <input
-          type="text"
-          id="RoutStep_Latitude"
-          class="form-control"
-          [(ngModel)]="routStep.latitude"
-          name="Latitude"
-          minlength="0"
-          maxlength="256"
-        />
-      </div>
-
-      <div class="form-group">
-        <label for="RoutStep_Longitude">{{ l('Longitude') }}</label>
-        <input
-          type="text"
-          id="RoutStep_Longitude"
-          class="form-control"
-          [(ngModel)]="routStep.longitude"
-          name="Longitude"
-          minlength="0"
-          maxlength="256"
-        />
-      </div>
-
-      <div class="form-group">
-        <label for="RoutStep_Order">{{ l('Order') }}</label>
-        <input type="number" id="RoutStep_Order" class="form-control" [(ngModel)]="routStep.order" name="Order" min="1" max="50" />
-      </div>
-    </div>
-    <div class="modal-footer">
-      <button [disabled]="saving" type="button" class="btn btn-default" (click)="modalRef.hide()">{{ l('Cancel') }}</button>
-      <button
-        type="submit"
-        class="btn btn-primary blue"
-        [disabled]="!routStepForm.form.valid"
-        [buttonBusy]="saving"
-        [busyText]="l('SavingWithThreeDot')"
-      >
-        <i class="fa fa-save"></i> <span>{{ l('Save') }}</span>
-      </button>
-    </div>
-  </form>
-</ng-template>
