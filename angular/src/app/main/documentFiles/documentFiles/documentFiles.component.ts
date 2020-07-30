@@ -151,4 +151,10 @@ export class DocumentFilesComponent extends AppComponentBase {
         this._fileDownloadService.downloadTempFile(result);
       });
   }
+
+  downloadDocument(documentFile: DocumentFileDto) {
+    this._documentFilesServiceProxy.getDocumentFileDto(documentFile.id).subscribe((result) => {
+      this._fileDownloadService.downloadTempFile(result);
+    });
+  }
 }

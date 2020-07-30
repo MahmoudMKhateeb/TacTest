@@ -389,6 +389,19 @@ namespace TACHYON.Documents.DocumentFiles
             return storedFile.Id;
         }
 
+        [AbpAllowAnonymous]
+        public async Task<FileDto> GetDocumentFileDto(Guid documentFileId)
+        {
+            var documentFile = await _documentFileRepository.GetAsync(documentFileId);
+
+            var binaryObject = await _binaryObjectManager.GetOrNullAsync(documentFile.BinaryObjectId);
+
+            var file = new FileDto(documentFile.Name, documentFile.Extn);
+
+            _tempFileCacheManager.SetFile(file.FileToken, binaryObject.Bytes);
+
+            return file;
+        }
 
     }
 }
