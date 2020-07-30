@@ -1,4 +1,4 @@
-﻿import { Component, Injector, OnInit, TemplateRef } from '@angular/core';
+﻿import { Component, ElementRef, Injector, NgZone, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import { finalize } from 'rxjs/operators';
 import {
   CreateOrEditGoodsDetailDto,
@@ -19,10 +19,19 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { appModuleAnimation } from '@shared/animations/routerTransition';
 import { Observable } from '@node_modules/rxjs';
 import { BreadcrumbItem } from '@app/shared/common/sub-header/sub-header.component';
-import { BsModalRef, BsModalService } from '@node_modules/ngx-bootstrap/modal';
+import { BsModalRef, BsModalService, ModalDirective } from '@node_modules/ngx-bootstrap/modal';
+import { MapsAPILoader } from '@node_modules/@agm/core';
 
 @Component({
   templateUrl: './create-or-edit-shippingRequest.component.html',
+  styles: [
+    `
+      agm-map {
+        height: 410px;
+      }
+    `,
+  ],
+
   animations: [appModuleAnimation()],
 })
 export class CreateOrEditShippingRequestComponent extends AppComponentBase implements OnInit {
@@ -46,28 +55,58 @@ export class CreateOrEditShippingRequestComponent extends AppComponentBase imple
     new BreadcrumbItem(this.l('ShippingRequest'), '/app/main/shippingRequests/shippingRequests'),
     new BreadcrumbItem(this.l('Entity_Name_Plural_Here') + '' + this.l('Details')),
   ];
-  modalRef: BsModalRef;
   routStep: CreateOrEditRoutStepDto = new CreateOrEditRoutStepDto();
   allCitys: RoutStepCityLookupTableDto[];
   createOrEditRoutStepDtoList: CreateOrEditRoutStepDto[] = [];
+  zoom = 5;
+  @ViewChild('search') public searchElementRef: ElementRef;
+  @ViewChild('staticModal') public staticModal: ModalDirective;
+  private geoCoder;
+
   constructor(
     injector: Injector,
     private _activatedRoute: ActivatedRoute,
     private _shippingRequestsServiceProxy: ShippingRequestsServiceProxy,
     private _router: Router,
     private _goodsDetailsServiceProxy: GoodsDetailsServiceProxy,
-    private modalService: BsModalService,
-    private _routStepsServiceProxy: RoutStepsServiceProxy
+    private _routStepsServiceProxy: RoutStepsServiceProxy,
+    private mapsAPILoader: MapsAPILoader,
+    private ngZone: NgZone
   ) {
     super(injector);
   }
 
-  openModal(template: TemplateRef<any>) {
-    this.modalRef = this.modalService.show(template);
+  openModal() {
+    this.routStep.latitude = '24.67911662122269';
+    this.routStep.longitude = '46.6355543345471';
+    this.zoom = 5;
+    this.staticModal.show();
   }
 
   ngOnInit(): void {
     this.show(this._activatedRoute.snapshot.queryParams['id']);
+    //load Places Autocomplete
+    this.mapsAPILoader.load().then(() => {
+      this.geoCoder = new google.maps.Geocoder();
+
+      let autocomplete = new google.maps.places.Autocomplete(this.searchElementRef.nativeElement);
+      autocomplete.addListener('place_changed', () => {
+        this.ngZone.run(() => {
+          //get the place result
+          let place: google.maps.places.PlaceResult = autocomplete.getPlace();
+
+          //verify result
+          if (place.geometry === undefined || place.geometry === null) {
+            return;
+          }
+
+          //set latitude, longitude and zoom
+          this.routStep.latitude = place.geometry.location.lat().toString();
+          this.routStep.longitude = place.geometry.location.lng().toString();
+          this.zoom = 12;
+        });
+      });
+    });
   }
 
   show(shippingRequestId?: number): void {
@@ -117,7 +156,7 @@ export class CreateOrEditShippingRequestComponent extends AppComponentBase imple
     const item = this.routStep;
     this.createOrEditRoutStepDtoList.push(this.routStep);
     this.routStep = new CreateOrEditRoutStepDto();
-    this.modalRef.hide();
+    this.staticModal.hide();
   }
 
   save(): void {
@@ -142,5 +181,31 @@ export class CreateOrEditShippingRequestComponent extends AppComponentBase imple
         this.notify.info(this.l('SavedSuccessfully'));
       })
     );
+  }
+
+  mapClicked($event: MouseEvent) {
+    // @ts-ignore
+    this.routStep.latitude = $event.coords.lat.toString();
+    // @ts-ignore
+    this.routStep.longitude = $event.coords.lng.toString();
+    // @ts-ignore
+    this.getAddress($event.coords.lat, $event.coords.lng);
+  }
+
+  getAddress(latitude, longitude) {
+    this.geoCoder.geocode({ location: { lat: latitude, lng: longitude } }, (results, status) => {
+      console.log(results);
+      console.log(status);
+      if (status === 'OK') {
+        if (results[0]) {
+          this.zoom = 12;
+          //this.address = results[0].formatted_address;
+        } else {
+          window.alert('No results found');
+        }
+      } else {
+        window.alert('Geocoder failed due to: ' + status);
+      }
+    });
   }
 }

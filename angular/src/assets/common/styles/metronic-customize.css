@@ -4,24 +4,23 @@ quick-theme-selection,
 language-switch-dropdown,
 header-notifications,
 chat-toggle-button,
-user-menu{
-    display: flex;
+user-menu {
+  display: flex;
 }
 
 #notificationIcon,
-#chatIconUnRead{
-    position: relative;
+#chatIconUnRead {
+  position: relative;
 }
 
 .theme-selection-link {
-    cursor: pointer;
+  cursor: pointer;
 }
 
 .dropdown-language .navi-link i.famfamfam-flags {
-    display: inline-block;
+  display: inline-block;
 }
 
-
-header-notifications .dropdown-menu{
-    max-width: 400px;
+header-notifications .dropdown-menu {
+  max-width: 400px;
 }
