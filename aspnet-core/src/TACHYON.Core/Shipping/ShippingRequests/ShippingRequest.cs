@@ -38,6 +38,10 @@ namespace TACHYON.Shipping.ShippingRequests
 
         public virtual int? RouteId { get; set; }
 
+        public virtual bool IsBid { get; set; }
+
+        public virtual bool IsTachyonDeal { get; set; }
+
         [ForeignKey("RouteId")]
         public Route RouteFk { get; set; }
 
