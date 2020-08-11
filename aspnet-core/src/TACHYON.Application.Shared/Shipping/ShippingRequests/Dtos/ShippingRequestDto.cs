@@ -17,6 +17,9 @@ namespace TACHYON.Shipping.ShippingRequests.Dtos
 
         public int? RouteId { get; set; }
 
+        public  bool IsBid { get; set; }
+
+        public  bool IsTachyonDeal { get; set; }
 
     }
 }

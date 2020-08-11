@@ -23,5 +23,11 @@ namespace TACHYON.Shipping.ShippingRequests.Dtos
 
         public List<CreateOrEditRoutStepDto> CreateOrEditRoutStepDtoList { get; set; }
 
+        public virtual bool IsBid { get; set; }
+
+        public virtual bool IsTachyonDeal { get; set; }
+
+
+
     }
 }

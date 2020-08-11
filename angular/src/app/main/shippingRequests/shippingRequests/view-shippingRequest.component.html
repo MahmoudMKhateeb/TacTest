@@ -27,6 +27,14 @@
               <h6>({{ l('Route') }}) {{ l('DisplayName') }} :</h6>
               {{ item.routeDisplayName }}
             </div>
+            <div class="col-6 mb-3">
+              <h6>{{ l('isBid') }} :</h6>
+              {{ item.shippingRequest.isBid }}
+            </div>
+            <div class="col-6 mb-3">
+              <h6>{{ l('isTachyonDeal') }} :</h6>
+              {{ item.shippingRequest.isTachyonDeal }}
+            </div>
           </div>
         </div>
       </div>

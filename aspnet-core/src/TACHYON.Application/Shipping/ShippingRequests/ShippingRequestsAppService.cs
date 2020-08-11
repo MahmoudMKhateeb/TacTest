@@ -1,4 +1,5 @@
-﻿using Abp.Application.Services.Dto;
+﻿using Abp.Application.Features;
+using Abp.Application.Services.Dto;
 using Abp.Authorization;
 using Abp.Domain.Repositories;
 using Abp.Domain.Uow;
@@ -47,11 +48,12 @@ namespace TACHYON.Shipping.ShippingRequests
 
         public async Task<PagedResultDto<GetShippingRequestForViewDto>> GetAll(GetAllShippingRequestsInput input)
         {
-
+            // todo ask mohammed about brocker here ..
             if (await FeatureChecker.IsEnabledAsync(AppFeatures.TachyonDealer) || await FeatureChecker.IsEnabledAsync(AppFeatures.Broker))
             {
                 using (CurrentUnitOfWork.DisableFilter(AbpDataFilters.MustHaveTenant))
                 {
+                    input.IsTachyonDeal = true;
                     return await GetAllPagedResultDto(input);
                 }
             }
@@ -65,17 +67,18 @@ namespace TACHYON.Shipping.ShippingRequests
         protected virtual async Task<PagedResultDto<GetShippingRequestForViewDto>> GetAllPagedResultDto(GetAllShippingRequestsInput input)
         {
             var filteredShippingRequests = _shippingRequestRepository.GetAll()
-                       .Include(e => e.TrucksTypeFk)
-                       .Include(e => e.TrailerTypeFk)
-                       .Include(e => e.GoodsDetailFk)
-                       .Include(e => e.RouteFk)
-                       .WhereIf(!string.IsNullOrWhiteSpace(input.Filter), e => false)
-                       .WhereIf(input.MinVasFilter != null, e => e.Vas >= input.MinVasFilter)
-                       .WhereIf(input.MaxVasFilter != null, e => e.Vas <= input.MaxVasFilter)
-                       .WhereIf(!string.IsNullOrWhiteSpace(input.TrucksTypeDisplayNameFilter), e => e.TrucksTypeFk != null && e.TrucksTypeFk.DisplayName == input.TrucksTypeDisplayNameFilter)
-                       .WhereIf(!string.IsNullOrWhiteSpace(input.TrailerTypeDisplayNameFilter), e => e.TrailerTypeFk != null && e.TrailerTypeFk.DisplayName == input.TrailerTypeDisplayNameFilter)
-                       .WhereIf(!string.IsNullOrWhiteSpace(input.GoodsDetailNameFilter), e => e.GoodsDetailFk != null && e.GoodsDetailFk.Name == input.GoodsDetailNameFilter)
-                       .WhereIf(!string.IsNullOrWhiteSpace(input.RouteDisplayNameFilter), e => e.RouteFk != null && e.RouteFk.DisplayName == input.RouteDisplayNameFilter);
+                .Include(e => e.TrucksTypeFk)
+                .Include(e => e.TrailerTypeFk)
+                .Include(e => e.GoodsDetailFk)
+                .Include(e => e.RouteFk)
+                .WhereIf(!string.IsNullOrWhiteSpace(input.Filter), e => false)
+                .WhereIf(input.MinVasFilter != null, e => e.Vas >= input.MinVasFilter)
+                .WhereIf(input.MaxVasFilter != null, e => e.Vas <= input.MaxVasFilter)
+                .WhereIf(!string.IsNullOrWhiteSpace(input.TrucksTypeDisplayNameFilter), e => e.TrucksTypeFk != null && e.TrucksTypeFk.DisplayName == input.TrucksTypeDisplayNameFilter)
+                .WhereIf(!string.IsNullOrWhiteSpace(input.TrailerTypeDisplayNameFilter), e => e.TrailerTypeFk != null && e.TrailerTypeFk.DisplayName == input.TrailerTypeDisplayNameFilter)
+                .WhereIf(!string.IsNullOrWhiteSpace(input.GoodsDetailNameFilter), e => e.GoodsDetailFk != null && e.GoodsDetailFk.Name == input.GoodsDetailNameFilter)
+                .WhereIf(!string.IsNullOrWhiteSpace(input.RouteDisplayNameFilter), e => e.RouteFk != null && e.RouteFk.DisplayName == input.RouteDisplayNameFilter)
+                .WhereIf(input.IsTachyonDeal.HasValue, e => e.IsTachyonDeal == input.IsTachyonDeal.Value);
 
             var pagedAndFilteredShippingRequests = filteredShippingRequests
                 .OrderBy(input.Sorting ?? "id asc")
@@ -99,7 +102,9 @@ namespace TACHYON.Shipping.ShippingRequests
                                        ShippingRequest = new ShippingRequestDto
                                        {
                                            Vas = o.Vas,
-                                           Id = o.Id
+                                           Id = o.Id,
+                                           IsBid = o.IsBid,
+                                           IsTachyonDeal = o.IsTachyonDeal
                                        },
                                        TrucksTypeDisplayName = s1 == null || s1.DisplayName == null ? "" : s1.DisplayName.ToString(),
                                        TrailerTypeDisplayName = s2 == null || s2.DisplayName == null ? "" : s2.DisplayName.ToString(),
@@ -153,7 +158,10 @@ namespace TACHYON.Shipping.ShippingRequests
         {
             var shippingRequest = await _shippingRequestRepository.FirstOrDefaultAsync(input.Id);
 
-            var output = new GetShippingRequestForEditOutput { ShippingRequest = ObjectMapper.Map<CreateOrEditShippingRequestDto>(shippingRequest) };
+            var output = new GetShippingRequestForEditOutput
+            {
+                ShippingRequest = ObjectMapper.Map<CreateOrEditShippingRequestDto>(shippingRequest)
+            };
 
             if (output.ShippingRequest.TrucksTypeId != null)
             {
@@ -176,6 +184,7 @@ namespace TACHYON.Shipping.ShippingRequests
             return output;
         }
 
+        [RequiresFeature(AppFeatures.ShippingRequest)]
         public async Task CreateOrEdit(CreateOrEditShippingRequestDto input)
         {
             if (input.Id == null)
@@ -215,6 +224,7 @@ namespace TACHYON.Shipping.ShippingRequests
         }
 
         [AbpAuthorize(AppPermissions.Pages_ShippingRequests_Delete)]
+        [RequiresFeature(AppFeatures.ShippingRequest)]
         public async Task Delete(EntityDto<long> input)
         {
             await _shippingRequestRepository.DeleteAsync(input.Id);

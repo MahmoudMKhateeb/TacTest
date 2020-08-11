@@ -160,6 +160,14 @@
                       {{ l('Vas') }}
                       <p-sortIcon field="shippingRequest.vas"></p-sortIcon>
                     </th>
+                    <th pSortableColumn="isBid" style="width: 150px;">
+                      {{ l('isBid') }}
+                      <p-sortIcon field="isBid"></p-sortIcon>
+                    </th>
+                    <th pSortableColumn="isTachyonDeal" style="width: 150px;">
+                      {{ l('isTachyonDeal') }}
+                      <p-sortIcon field="isTachyonDeal"></p-sortIcon>
+                    </th>
                   </tr>
                 </ng-template>
                 <ng-template let-record="$implicit" pTemplate="body">
@@ -221,6 +229,14 @@
                     <td style="width: 150px;">
                       <span class="ui-column-title"> {{ l('Vas') }}</span>
                       {{ record.shippingRequest.vas }}
+                    </td>
+                    <td style="width: 150px;">
+                      <span class="ui-column-title"> {{ l('isBid') }}</span>
+                      {{ record.shippingRequest.isBid }}
+                    </td>
+                    <td style="width: 150px;">
+                      <span class="ui-column-title"> {{ l('isTachyonDeal') }}</span>
+                      {{ record.shippingRequest.isTachyonDeal }}
                     </td>
                   </tr>
                 </ng-template>
