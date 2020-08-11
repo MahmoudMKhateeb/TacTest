@@ -104,6 +104,17 @@ namespace TACHYON.Features
                 inputType: new CheckboxInputType()
             );
 
+            var shippingRequest = context.Create(
+                AppFeatures.ShippingRequest,
+                "false",
+                L("shippingRequest"), // todo add localization here
+                inputType: new CheckboxInputType()
+            )[FeatureMetadata.CustomFeatureKey] = new FeatureMetadata
+            {
+                IsVisibleOnPricingTable = true,
+                TextHtmlColor = value => value == "true" ? "#c300ff" : "#d9534f"
+            };
+
 
             #endregion
             //---Y

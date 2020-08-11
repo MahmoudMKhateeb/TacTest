@@ -19,6 +19,10 @@ namespace TACHYON.Shipping.ShippingRequests.Dtos
 
         public string RouteDisplayNameFilter { get; set; }
 
+        public  bool? IsBid { get; set; }
+
+        public  bool? IsTachyonDeal { get; set; }
+
 
     }
 }

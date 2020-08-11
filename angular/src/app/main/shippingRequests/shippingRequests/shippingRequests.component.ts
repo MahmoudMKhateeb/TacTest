@@ -29,6 +29,8 @@ export class ShippingRequestsComponent extends AppComponentBase {
   trailerTypeDisplayNameFilter = '';
   goodsDetailNameFilter = '';
   routeDisplayNameFilter = '';
+  isBid = undefined;
+  isTachyonDeal = undefined;
 
   constructor(
     injector: Injector,
@@ -59,6 +61,8 @@ export class ShippingRequestsComponent extends AppComponentBase {
         this.trailerTypeDisplayNameFilter,
         this.goodsDetailNameFilter,
         this.routeDisplayNameFilter,
+        this.isBid,
+        this.isTachyonDeal,
         this.primengTableHelper.getSorting(this.dataTable),
         this.primengTableHelper.getSkipCount(this.paginator, event),
         this.primengTableHelper.getMaxResultCount(this.paginator, event)

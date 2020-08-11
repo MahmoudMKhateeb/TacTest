@@ -53,7 +53,20 @@ export class AppNavigationService {
 
       new AppMenuItem('Offers', 'Pages.Offers', 'flaticon-more', '/app/main/offers/offers'),
 
-      new AppMenuItem('ShippingRequests', 'Pages.ShippingRequests', 'flaticon-more', '/app/main/shippingRequests/shippingRequests'),
+      new AppMenuItem(
+        'ShippingRequests',
+        'Pages.ShippingRequests',
+        'flaticon-more',
+        '/app/main/shippingRequests/shippingRequests',
+        undefined,
+        undefined,
+        undefined,
+        undefined,
+        () =>
+          this._featureCheckerService.isEnabled('App.shippingRequest') ||
+          this._featureCheckerService.isEnabled('App.TachyonDealer') ||
+          this._featureCheckerService.isEnabled('App.Broker')
+      ),
       new AppMenuItem(
         'Administration',
         '',

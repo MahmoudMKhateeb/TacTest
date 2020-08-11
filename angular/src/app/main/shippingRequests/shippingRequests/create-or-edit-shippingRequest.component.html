@@ -141,6 +141,21 @@
             />
           </div>
 
+          <div class="m-checkbox-list">
+            <label class="kt-checkbox" for="isBid">
+              <input [(ngModel)]="shippingRequest.isBid" id="isBid" name="isBid" type="checkbox" />
+              {{ l('isBid') }}
+              <span></span>
+            </label>
+          </div>
+          <div class="m-checkbox-list">
+            <label class="kt-checkbox" for="isTachyonDeal">
+              <input [(ngModel)]="shippingRequest.isTachyonDeal" id="isTachyonDeal" name="isTachyonDeal" type="checkbox" />
+              {{ l('isTachyonDeal') }}
+              <span></span>
+            </label>
+          </div>
+
           <hr />
 
           <button (click)="openModal()" class="btn btn-primary" type="button">add route step</button>
