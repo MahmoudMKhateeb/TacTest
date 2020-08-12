@@ -115,6 +115,13 @@ namespace TACHYON.Features
                 TextHtmlColor = value => value == "true" ? "#c300ff" : "#d9534f"
             };
 
+            var OffersMarketPlace = context.Create(
+                AppFeatures.OffersMarketPlace,
+                "false",
+                L("OffersMarketPlace"), // todo add localization here
+                inputType: new CheckboxInputType()
+            )[FeatureMetadata.CustomFeatureKey] = new FeatureMetadata {IsVisibleOnPricingTable = true, TextHtmlColor = value => value == "true" ? "#c300ff" : "#d9534f"};
+
 
             #endregion
             //---Y
