@@ -20,5 +20,3 @@ aspnet-core/src/TACHYON.Web.Mvc/healthchecksdb
 *.pfx
 
 aspnet-core/AspNetZeroRadTool/
-
-angular/src/shared/service-proxies/service-proxies.ts
