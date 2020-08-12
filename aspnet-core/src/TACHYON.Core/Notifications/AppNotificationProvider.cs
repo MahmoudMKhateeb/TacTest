@@ -37,6 +37,14 @@ namespace TACHYON.Notifications
                    )
                );
 
+            context.Manager.Add(
+                new NotificationDefinition(
+                    AppNotificationNames.UpdateShippingRequestPrice,
+                    displayName: L("UpdateShippingRequestPriceNotificationDefinition"),
+                    featureDependency: new SimpleFeatureDependency(AppFeatures.Shipper)
+                )
+            );
+
             #endregion
         }
 
