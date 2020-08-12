@@ -11,10 +11,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Dynamic.Core;
 using System.Threading.Tasks;
+using Abp;
 using TACHYON.Authorization;
 using TACHYON.Dto;
 using TACHYON.Features;
 using TACHYON.Goods.GoodsDetails;
+using TACHYON.Notifications;
 using TACHYON.Routs;
 using TACHYON.Routs.RoutSteps;
 using TACHYON.Shipping.ShippingRequests.Dtos;
@@ -33,9 +35,11 @@ namespace TACHYON.Shipping.ShippingRequests
         private readonly IRepository<TrailerType, int> _lookup_trailerTypeRepository;
         private readonly IRepository<GoodsDetail, long> _lookup_goodsDetailRepository;
         private readonly IRepository<Route, int> _lookup_routeRepository;
+        private readonly IAppNotifier _appNotifier;
 
 
-        public ShippingRequestsAppService(IRepository<ShippingRequest, long> shippingRequestRepository, IShippingRequestsExcelExporter shippingRequestsExcelExporter, IRepository<TrucksType, Guid> lookup_trucksTypeRepository, IRepository<TrailerType, int> lookup_trailerTypeRepository, IRepository<GoodsDetail, long> lookup_goodsDetailRepository, IRepository<Route, int> lookup_routeRepository)
+
+        public ShippingRequestsAppService(IRepository<ShippingRequest, long> shippingRequestRepository, IShippingRequestsExcelExporter shippingRequestsExcelExporter, IRepository<TrucksType, Guid> lookup_trucksTypeRepository, IRepository<TrailerType, int> lookup_trailerTypeRepository, IRepository<GoodsDetail, long> lookup_goodsDetailRepository, IRepository<Route, int> lookup_routeRepository, IAppNotifier appNotifier)
         {
             _shippingRequestRepository = shippingRequestRepository;
             _shippingRequestsExcelExporter = shippingRequestsExcelExporter;
@@ -43,7 +47,7 @@ namespace TACHYON.Shipping.ShippingRequests
             _lookup_trailerTypeRepository = lookup_trailerTypeRepository;
             _lookup_goodsDetailRepository = lookup_goodsDetailRepository;
             _lookup_routeRepository = lookup_routeRepository;
-
+            _appNotifier = appNotifier;
         }
 
         public async Task<PagedResultDto<GetShippingRequestForViewDto>> GetAll(GetAllShippingRequestsInput input)
@@ -221,6 +225,19 @@ namespace TACHYON.Shipping.ShippingRequests
         {
             var shippingRequest = await _shippingRequestRepository.FirstOrDefaultAsync((long)input.Id);
             ObjectMapper.Map(input, shippingRequest);
+        }
+
+        
+        [RequiresFeature(AppFeatures.TachyonDealer)]
+        public async Task UpdatePrice(UpdatePriceInput input)
+        {
+            using (CurrentUnitOfWork.DisableFilter(AbpDataFilters.MustHaveTenant))
+            {
+                var shippingRequest = await _shippingRequestRepository.FirstOrDefaultAsync(input.Id);
+                shippingRequest.Price = input.Price;
+
+                await _appNotifier.UpdateShippingRequestPrice(new UserIdentifier(shippingRequest.TenantId, shippingRequest.CreatorUserId.Value), input.Id, input.Price);
+            }
         }
 
         [AbpAuthorize(AppPermissions.Pages_ShippingRequests_Delete)]
