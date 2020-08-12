@@ -17,6 +17,7 @@
         public const string Receiver = "App.Receiver";
         public const string TachyonDealer = "App.TachyonDealer";
         public const string ShippingRequest = "App.shippingRequest";
+        public const string OffersMarketPlace = "App.OffersMarketPlace";
 
         #endregion
 

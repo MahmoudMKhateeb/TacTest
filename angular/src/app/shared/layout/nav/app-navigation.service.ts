@@ -51,7 +51,17 @@ export class AppNavigationService {
         this._featureCheckerService.isEnabled('App.Carrier')
       ),
 
-      new AppMenuItem('Offers', 'Pages.Offers', 'flaticon-more', '/app/main/offers/offers'),
+      new AppMenuItem(
+        'Offers MarketPlace',
+        'Pages.Offers',
+        'flaticon-more',
+        '/app/main/offers/offers',
+        undefined,
+        undefined,
+        undefined,
+        undefined,
+        () => this._featureCheckerService.isEnabled('App.Carrier') || this._featureCheckerService.isEnabled('App.OffersMarketPlace')
+      ),
 
       new AppMenuItem(
         'ShippingRequests',
