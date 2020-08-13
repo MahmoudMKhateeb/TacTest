@@ -47,5 +47,7 @@ namespace TACHYON.Shipping.ShippingRequests
 
         public ICollection<RoutStep> RoutSteps { get; set; }
 
+        public decimal? Price { get; set; }
+
     }
 }

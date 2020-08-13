@@ -17,7 +17,7 @@ namespace TACHYON.Notifications
         #region Tychon notifications
 
         public const string AssignDriverToTruck = "App.AssignDriverToTruck";
-
+        public const string UpdateShippingRequestPrice = "App.UpdateShippingRequestPrice";
         #endregion
 
     }

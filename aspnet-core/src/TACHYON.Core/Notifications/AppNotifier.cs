@@ -33,6 +33,20 @@ namespace TACHYON.Notifications
             await _notificationPublisher.PublishAsync(AppNotificationNames.AssignDriverToTruck, notificationData, userIds: new[] { argsUser });
         }
 
+
+        public async Task UpdateShippingRequestPrice(UserIdentifier argsUser, long shippingRequestId , decimal price )
+        {
+            var notificationData = new LocalizableMessageNotificationData(
+                new LocalizableString(
+                    L("UpdateShippingRequestPriceNotificationMessage"),
+                    TACHYONConsts.LocalizationSourceName
+                )
+            );
+
+            notificationData["shippingRequestId"] = shippingRequestId;
+            notificationData["price"] = price;
+            await _notificationPublisher.PublishAsync(AppNotificationNames.UpdateShippingRequestPrice, notificationData, userIds: new[] { argsUser });
+        }
         #endregion
         public async Task WelcomeToTheApplicationAsync(User user)
         {
