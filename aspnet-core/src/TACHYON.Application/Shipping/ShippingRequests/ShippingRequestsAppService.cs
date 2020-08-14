@@ -275,6 +275,15 @@ namespace TACHYON.Shipping.ShippingRequests
             }
         }
 
+        public async Task AcceptShippingRequestPrice(AcceptShippingRequestPriceInput input)
+        {
+
+            var shippingRequest = await _shippingRequestRepository.FirstOrDefaultAsync(input.Id);
+            shippingRequest.IsAccepted = input.Accept;
+
+            // todo sohaila : send notification to TD
+        }
+
         [AbpAuthorize(AppPermissions.Pages_ShippingRequests_Delete)]
         [RequiresFeature(AppFeatures.ShippingRequest)]
         public async Task Delete(EntityDto<long> input)
