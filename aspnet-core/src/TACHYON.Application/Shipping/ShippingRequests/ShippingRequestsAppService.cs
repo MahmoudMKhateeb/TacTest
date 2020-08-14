@@ -52,8 +52,7 @@ namespace TACHYON.Shipping.ShippingRequests
 
         public async Task<PagedResultDto<GetShippingRequestForViewDto>> GetAll(GetAllShippingRequestsInput input)
         {
-            // todo ask mohammed about brocker here ..
-            if (await FeatureChecker.IsEnabledAsync(AppFeatures.TachyonDealer) || await FeatureChecker.IsEnabledAsync(AppFeatures.Broker))
+            if (await IsEnabledAsync(AppFeatures.TachyonDealer))
             {
                 using (CurrentUnitOfWork.DisableFilter(AbpDataFilters.MustHaveTenant))
                 {
@@ -126,6 +125,51 @@ namespace TACHYON.Shipping.ShippingRequests
 
         public async Task<GetShippingRequestForViewDto> GetShippingRequestForView(long id)
         {
+            ShippingRequest shippingRequest;
+
+            if (await IsEnabledAsync(AppFeatures.TachyonDealer))
+            {
+                using (CurrentUnitOfWork.DisableFilter(AbpDataFilters.MustHaveTenant))
+                {
+                    return await _GetShippingRequestForView(id);
+
+                }
+            }
+            else
+            {
+                return await _GetShippingRequestForView(id);
+            }
+
+            var output = new GetShippingRequestForViewDto { ShippingRequest = ObjectMapper.Map<ShippingRequestDto>(shippingRequest) };
+
+            if (output.ShippingRequest.TrucksTypeId != null)
+            {
+                var _lookupTrucksType = await _lookup_trucksTypeRepository.FirstOrDefaultAsync((Guid)output.ShippingRequest.TrucksTypeId);
+                output.TrucksTypeDisplayName = _lookupTrucksType?.DisplayName?.ToString();
+            }
+
+            if (output.ShippingRequest.TrailerTypeId != null)
+            {
+                var _lookupTrailerType = await _lookup_trailerTypeRepository.FirstOrDefaultAsync((int)output.ShippingRequest.TrailerTypeId);
+                output.TrailerTypeDisplayName = _lookupTrailerType?.DisplayName?.ToString();
+            }
+
+            if (output.ShippingRequest.GoodsDetailId != null)
+            {
+                var _lookupGoodsDetail = await _lookup_goodsDetailRepository.FirstOrDefaultAsync((long)output.ShippingRequest.GoodsDetailId);
+                output.GoodsDetailName = _lookupGoodsDetail?.Name?.ToString();
+            }
+
+            if (output.ShippingRequest.RouteId != null)
+            {
+                var _lookupRoute = await _lookup_routeRepository.FirstOrDefaultAsync((int)output.ShippingRequest.RouteId);
+                output.RouteDisplayName = _lookupRoute?.DisplayName?.ToString();
+            }
+
+            return output;
+        }
+        protected virtual async Task<GetShippingRequestForViewDto> _GetShippingRequestForView(long id)
+        {
             var shippingRequest = await _shippingRequestRepository.GetAsync(id);
 
             var output = new GetShippingRequestForViewDto { ShippingRequest = ObjectMapper.Map<ShippingRequestDto>(shippingRequest) };
@@ -160,7 +204,24 @@ namespace TACHYON.Shipping.ShippingRequests
         [AbpAuthorize(AppPermissions.Pages_ShippingRequests_Edit)]
         public async Task<GetShippingRequestForEditOutput> GetShippingRequestForEdit(EntityDto<long> input)
         {
-            var shippingRequest = await _shippingRequestRepository.FirstOrDefaultAsync(input.Id);
+            ShippingRequest shippingRequest;
+
+            if (await IsEnabledAsync(AppFeatures.TachyonDealer))
+            {
+                using (CurrentUnitOfWork.DisableFilter(AbpDataFilters.MustHaveTenant))
+                {
+                    return await _GetShippingRequestForEdit(input);
+                }
+            }
+            else
+            {
+                return await _GetShippingRequestForEdit(input);
+            }
+
+        }
+        protected virtual async Task<GetShippingRequestForEditOutput> _GetShippingRequestForEdit(EntityDto<long> input)
+        {
+            var shippingRequest = await _shippingRequestRepository.GetAsync(input.Id);
 
             var output = new GetShippingRequestForEditOutput
             {
@@ -227,7 +288,7 @@ namespace TACHYON.Shipping.ShippingRequests
             ObjectMapper.Map(input, shippingRequest);
         }
 
-        
+
         [RequiresFeature(AppFeatures.TachyonDealer)]
         public async Task UpdatePrice(UpdatePriceInput input)
         {
