@@ -91,6 +91,7 @@ import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
 import { NgxBootstrapDatePickerConfigService } from 'assets/ngx-bootstrap/ngx-bootstrap-datepicker-config.service';
 import { ImageCropperModule } from '@node_modules/ngx-image-cropper';
 import { AgmCoreModule } from '@node_modules/@agm/core';
+import { UpdatePriceShippingRequestModalComponent } from './shippingRequests/shippingRequests/update-price-shipping-request-modal/update-price-shipping-request-modal.component';
 
 NgxBootstrapDatePickerConfigService.registerNgxBootstrapDatePickerLocales();
 
@@ -192,6 +193,7 @@ NgxBootstrapDatePickerConfigService.registerNgxBootstrapDatePickerLocales();
     ViewTrucksTypeModalComponent,
     CreateOrEditTrucksTypeModalComponent,
     DashboardComponent,
+    UpdatePriceShippingRequestModalComponent,
   ],
   providers: [
     { provide: BsDatepickerConfig, useFactory: NgxBootstrapDatePickerConfigService.getDatepickerConfig },

@@ -168,6 +168,10 @@
                       {{ l('isTachyonDeal') }}
                       <p-sortIcon field="isTachyonDeal"></p-sortIcon>
                     </th>
+                    <th pSortableColumn="price" style="width: 150px;">
+                      {{ l('price') }}
+                      <p-sortIcon field="price"></p-sortIcon>
+                    </th>
                   </tr>
                 </ng-template>
                 <ng-template let-record="$implicit" pTemplate="body">
@@ -190,13 +194,22 @@
                           </li>
                           <li>
                             <a
-                              *ngIf="permission.isGranted('Pages.ShippingRequests.Edit')"
+                              *ngIf="permission.isGranted('Pages.ShippingRequests.Edit') && feature.isEnabled('App.shippingRequest')"
                               [queryParams]="{ id: record.shippingRequest.id }"
                               [routerLink]="['/app/main/shippingRequests/shippingRequests/createOrEdit']"
                               class="dropdown-item"
                             >
                               {{ l('Edit') }}
                             </a>
+                          </li>
+                          <li>
+                            <a
+                              href="javascript:;"
+                              *ngIf="feature.isEnabled('App.TachyonDealer')"
+                              class="dropdown-item"
+                              (click)="UpdatePriceShippingRequestModal.show(record.shippingRequest.id)"
+                              >{{ l('UpdatePrice') }}</a
+                            >
                           </li>
                           <li>
                             <a
@@ -238,6 +251,10 @@
                       <span class="ui-column-title"> {{ l('isTachyonDeal') }}</span>
                       {{ record.shippingRequest.isTachyonDeal }}
                     </td>
+                    <td style="width: 150px;">
+                      <span class="ui-column-title"> {{ l('price') }}</span>
+                      {{ record.shippingRequest.price }}
+                    </td>
                   </tr>
                 </ng-template>
               </p-table>
@@ -263,5 +280,6 @@
         </div>
       </div>
     </div>
+    <app-update-price-shipping-request-modal #UpdatePriceShippingRequestModal></app-update-price-shipping-request-modal>
   </div>
 </div>
