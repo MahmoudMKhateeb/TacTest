@@ -107,7 +107,8 @@ namespace TACHYON.Shipping.ShippingRequests
                                            Vas = o.Vas,
                                            Id = o.Id,
                                            IsBid = o.IsBid,
-                                           IsTachyonDeal = o.IsTachyonDeal
+                                           IsTachyonDeal = o.IsTachyonDeal,
+                                           Price = o.Price
                                        },
                                        TrucksTypeDisplayName = s1 == null || s1.DisplayName == null ? "" : s1.DisplayName.ToString(),
                                        TrailerTypeDisplayName = s2 == null || s2.DisplayName == null ? "" : s2.DisplayName.ToString(),

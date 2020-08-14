@@ -21,5 +21,6 @@ namespace TACHYON.Shipping.ShippingRequests.Dtos
 
         public  bool IsTachyonDeal { get; set; }
 
+        public decimal? Price { get; set; }
     }
 }
