@@ -141,33 +141,6 @@ namespace TACHYON.Shipping.ShippingRequests
                 return await _GetShippingRequestForView(id);
             }
 
-            var output = new GetShippingRequestForViewDto { ShippingRequest = ObjectMapper.Map<ShippingRequestDto>(shippingRequest) };
-
-            if (output.ShippingRequest.TrucksTypeId != null)
-            {
-                var _lookupTrucksType = await _lookup_trucksTypeRepository.FirstOrDefaultAsync((Guid)output.ShippingRequest.TrucksTypeId);
-                output.TrucksTypeDisplayName = _lookupTrucksType?.DisplayName?.ToString();
-            }
-
-            if (output.ShippingRequest.TrailerTypeId != null)
-            {
-                var _lookupTrailerType = await _lookup_trailerTypeRepository.FirstOrDefaultAsync((int)output.ShippingRequest.TrailerTypeId);
-                output.TrailerTypeDisplayName = _lookupTrailerType?.DisplayName?.ToString();
-            }
-
-            if (output.ShippingRequest.GoodsDetailId != null)
-            {
-                var _lookupGoodsDetail = await _lookup_goodsDetailRepository.FirstOrDefaultAsync((long)output.ShippingRequest.GoodsDetailId);
-                output.GoodsDetailName = _lookupGoodsDetail?.Name?.ToString();
-            }
-
-            if (output.ShippingRequest.RouteId != null)
-            {
-                var _lookupRoute = await _lookup_routeRepository.FirstOrDefaultAsync((int)output.ShippingRequest.RouteId);
-                output.RouteDisplayName = _lookupRoute?.DisplayName?.ToString();
-            }
-
-            return output;
         }
         protected virtual async Task<GetShippingRequestForViewDto> _GetShippingRequestForView(long id)
         {
