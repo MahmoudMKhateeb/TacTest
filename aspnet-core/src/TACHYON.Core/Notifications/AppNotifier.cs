@@ -47,6 +47,20 @@ namespace TACHYON.Notifications
             notificationData["price"] = price;
             await _notificationPublisher.PublishAsync(AppNotificationNames.UpdateShippingRequestPrice, notificationData, userIds: new[] { argsUser });
         }
+
+        public async Task AcceptShippingRequestPrice(UserIdentifier argsUser, long shippingRequestId, bool isAccepted)
+        {
+            var notificationData = new LocalizableMessageNotificationData(
+                new LocalizableString(
+                    L("AcceptShippingRequestPriceNotificationMessage"),
+                    TACHYONConsts.LocalizationSourceName
+                )
+            );
+
+            notificationData["shippingRequestId"] = shippingRequestId;
+            notificationData["isAccepted"] = isAccepted;
+            await _notificationPublisher.PublishAsync(AppNotificationNames.AcceptShippingRequestPrice, notificationData, userIds: new[] { argsUser });
+        }
         #endregion
         public async Task WelcomeToTheApplicationAsync(User user)
         {
