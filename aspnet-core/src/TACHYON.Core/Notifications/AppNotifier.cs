@@ -3,6 +3,7 @@ using Abp.Localization;
 using Abp.Notifications;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using TACHYON.Authorization.Users;
 using TACHYON.MultiTenancy;
@@ -12,10 +13,13 @@ namespace TACHYON.Notifications
     public class AppNotifier : TACHYONDomainServiceBase, IAppNotifier
     {
         private readonly INotificationPublisher _notificationPublisher;
+        private readonly INotificationSubscriptionManager _notificationSubscriptionManager;
 
-        public AppNotifier(INotificationPublisher notificationPublisher)
+
+        public AppNotifier(INotificationPublisher notificationPublisher, INotificationSubscriptionManager notificationSubscriptionManager)
         {
             _notificationPublisher = notificationPublisher;
+            _notificationSubscriptionManager = notificationSubscriptionManager;
         }
 
         #region Tachyon Notifications
@@ -34,7 +38,7 @@ namespace TACHYON.Notifications
         }
 
 
-        public async Task UpdateShippingRequestPrice(UserIdentifier argsUser, long shippingRequestId , decimal price )
+        public async Task UpdateShippingRequestPrice(UserIdentifier argsUser, long shippingRequestId, decimal price)
         {
             var notificationData = new LocalizableMessageNotificationData(
                 new LocalizableString(
@@ -48,8 +52,11 @@ namespace TACHYON.Notifications
             await _notificationPublisher.PublishAsync(AppNotificationNames.UpdateShippingRequestPrice, notificationData, userIds: new[] { argsUser });
         }
 
-        public async Task AcceptShippingRequestPrice(UserIdentifier argsUser, long shippingRequestId, bool isAccepted)
+        public async Task AcceptShippingRequestPrice( long shippingRequestId, bool isAccepted)
         {
+            var subscriptions = await _notificationSubscriptionManager.GetSubscriptionsAsync(AppNotificationNames.AcceptShippingRequestPrice);
+            var userIds = subscriptions.Select(subscription => new UserIdentifier(subscription.TenantId, subscription.UserId)).ToArray();
+
             var notificationData = new LocalizableMessageNotificationData(
                 new LocalizableString(
                     L("AcceptShippingRequestPriceNotificationMessage"),
@@ -59,7 +66,7 @@ namespace TACHYON.Notifications
 
             notificationData["shippingRequestId"] = shippingRequestId;
             notificationData["isAccepted"] = isAccepted;
-            await _notificationPublisher.PublishAsync(AppNotificationNames.AcceptShippingRequestPrice, notificationData, userIds: new[] { argsUser });
+            await _notificationPublisher.PublishAsync(AppNotificationNames.AcceptShippingRequestPrice, notificationData, userIds: userIds);
         }
         #endregion
         public async Task WelcomeToTheApplicationAsync(User user)
