@@ -23,6 +23,7 @@ using TACHYON.Shipping.ShippingRequests.Dtos;
 using TACHYON.Shipping.ShippingRequests.Exporting;
 using TACHYON.Trailers.TrailerTypes;
 using TACHYON.Trucks.TrucksTypes;
+using Abp.Notifications;
 
 namespace TACHYON.Shipping.ShippingRequests
 {
@@ -36,10 +37,11 @@ namespace TACHYON.Shipping.ShippingRequests
         private readonly IRepository<GoodsDetail, long> _lookup_goodsDetailRepository;
         private readonly IRepository<Route, int> _lookup_routeRepository;
         private readonly IAppNotifier _appNotifier;
+        private readonly INotificationSubscriptionManager _notificationSubscriptionManager;
 
 
 
-        public ShippingRequestsAppService(IRepository<ShippingRequest, long> shippingRequestRepository, IShippingRequestsExcelExporter shippingRequestsExcelExporter, IRepository<TrucksType, Guid> lookup_trucksTypeRepository, IRepository<TrailerType, int> lookup_trailerTypeRepository, IRepository<GoodsDetail, long> lookup_goodsDetailRepository, IRepository<Route, int> lookup_routeRepository, IAppNotifier appNotifier)
+        public ShippingRequestsAppService(IRepository<ShippingRequest, long> shippingRequestRepository, IShippingRequestsExcelExporter shippingRequestsExcelExporter, IRepository<TrucksType, Guid> lookup_trucksTypeRepository, IRepository<TrailerType, int> lookup_trailerTypeRepository, IRepository<GoodsDetail, long> lookup_goodsDetailRepository, IRepository<Route, int> lookup_routeRepository, IAppNotifier appNotifier, INotificationSubscriptionManager notificationSubscriptionManager)
         {
             _shippingRequestRepository = shippingRequestRepository;
             _shippingRequestsExcelExporter = shippingRequestsExcelExporter;
@@ -48,6 +50,7 @@ namespace TACHYON.Shipping.ShippingRequests
             _lookup_goodsDetailRepository = lookup_goodsDetailRepository;
             _lookup_routeRepository = lookup_routeRepository;
             _appNotifier = appNotifier;
+            _notificationSubscriptionManager = notificationSubscriptionManager;
         }
 
         public async Task<PagedResultDto<GetShippingRequestForViewDto>> GetAll(GetAllShippingRequestsInput input)
@@ -281,7 +284,11 @@ namespace TACHYON.Shipping.ShippingRequests
             var shippingRequest = await _shippingRequestRepository.FirstOrDefaultAsync(input.Id);
             shippingRequest.IsAccepted = input.Accept;
 
-            // todo sohaila : send notification to TD
+            var subscriptions = await _notificationSubscriptionManager.GetSubscriptionsAsync(AppNotificationNames.AcceptShippingRequestPrice);
+            foreach (var subscription in subscriptions)
+            {
+                await _appNotifier.AcceptShippingRequestPrice(new UserIdentifier(subscription.TenantId, subscription.UserId), input.Id, input.Accept);
+            }
         }
 
         [AbpAuthorize(AppPermissions.Pages_ShippingRequests_Delete)]
