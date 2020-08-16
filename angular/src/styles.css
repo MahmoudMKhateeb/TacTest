@@ -161,3 +161,9 @@ ngx-spinner .loading-text {
 .pac-container {
   z-index: 1051 !important;
 }
+
+.table-success,
+.table-success > th,
+.table-success > td {
+  background-color: #bfefed !important;
+}

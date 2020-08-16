@@ -16,7 +16,7 @@ namespace TACHYON.Notifications
 
         Task AssignDriverToTruck(UserIdentifier argsUser, Guid truckId);
         Task UpdateShippingRequestPrice(UserIdentifier argsUser, long shippingRequestId, decimal price);
-
+        Task AcceptShippingRequestPrice(long shippingRequestId, bool isAccepted);
         #endregion
         Task WelcomeToTheApplicationAsync(User user);
 

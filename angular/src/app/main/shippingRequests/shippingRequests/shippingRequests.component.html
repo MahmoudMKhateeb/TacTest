@@ -175,7 +175,7 @@
                   </tr>
                 </ng-template>
                 <ng-template let-record="$implicit" pTemplate="body">
-                  <tr>
+                  <tr [ngClass]="record.shippingRequest.price > 0 ? 'table-success' : ''">
                     <td [hidden]="!isGrantedAny('Pages.ShippingRequests.Edit', 'Pages.ShippingRequests.Delete')" style="width: 130px;">
                       <div class="btn-group dropdown" container="body" dropdown>
                         <button class="dropdown-toggle btn btn-sm btn-primary" dropdownToggle>
@@ -280,6 +280,6 @@
         </div>
       </div>
     </div>
-    <app-update-price-shipping-request-modal #UpdatePriceShippingRequestModal></app-update-price-shipping-request-modal>
+    <app-update-price-shipping-request-modal (modalSave)="reloadPage()" #UpdatePriceShippingRequestModal></app-update-price-shipping-request-modal>
   </div>
 </div>
