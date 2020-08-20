@@ -172,6 +172,14 @@
                       {{ l('price') }}
                       <p-sortIcon field="price"></p-sortIcon>
                     </th>
+                    <th pSortableColumn="isPriceAccepted" style="width: 150px;">
+                      {{ l('isPriceAccepted') }}
+                      <p-sortIcon field="isPriceAccepted"></p-sortIcon>
+                    </th>
+                    <th pSortableColumn="isRejected" style="width: 150px;">
+                      {{ l('isRejected') }}
+                      <p-sortIcon field="isRejected"></p-sortIcon>
+                    </th>
                   </tr>
                 </ng-template>
                 <ng-template let-record="$implicit" pTemplate="body">
@@ -250,6 +258,14 @@
                     <td style="width: 150px;">
                       <span class="ui-column-title"> {{ l('price') }}</span>
                       {{ record.shippingRequest.price }}
+                    </td>
+                    <td style="width: 150px;">
+                      <span class="ui-column-title"> {{ l('isPriceAccepted') }}</span>
+                      {{ record.shippingRequest.isPriceAccepted }}
+                    </td>
+                    <td style="width: 150px;">
+                      <span class="ui-column-title"> {{ l('isRejected') }}</span>
+                      {{ record.shippingRequest.isRejected }}
                     </td>
                   </tr>
                 </ng-template>

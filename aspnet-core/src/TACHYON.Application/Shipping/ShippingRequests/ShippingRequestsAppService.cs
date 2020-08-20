@@ -109,7 +109,9 @@ namespace TACHYON.Shipping.ShippingRequests
                                            Id = o.Id,
                                            IsBid = o.IsBid,
                                            IsTachyonDeal = o.IsTachyonDeal,
-                                           Price = o.Price
+                                           Price = o.Price,
+                                           IsRejected = o.IsRejected,
+                                           IsPriceAccepted = o.IsPriceAccepted
                                        },
                                        TrucksTypeDisplayName = s1 == null || s1.DisplayName == null ? "" : s1.DisplayName.ToString(),
                                        TrailerTypeDisplayName = s2 == null || s2.DisplayName == null ? "" : s2.DisplayName.ToString(),
