@@ -50,6 +50,8 @@ namespace TACHYON.Shipping.ShippingRequests
         public decimal? Price { get; set; }
 
         public bool? IsPriceAccepted { get; set; }
+        public bool? IsRejected { get; set; }
+
 
     }
 }

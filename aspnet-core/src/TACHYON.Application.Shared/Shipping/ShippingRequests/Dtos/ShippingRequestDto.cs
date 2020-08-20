@@ -23,6 +23,8 @@ namespace TACHYON.Shipping.ShippingRequests.Dtos
 
         public decimal? Price { get; set; }
         public bool? IsPriceAccepted { get; set; }
+        public bool? IsRejected { get; set; }
+
 
     }
 }

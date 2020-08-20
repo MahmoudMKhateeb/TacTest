@@ -25,6 +25,7 @@ using TACHYON.Shipping.ShippingRequests.Exporting;
 using TACHYON.Trailers.TrailerTypes;
 using TACHYON.Trucks.TrucksTypes;
 using Abp.Notifications;
+using Abp.UI;
 
 namespace TACHYON.Shipping.ShippingRequests
 {
@@ -109,7 +110,9 @@ namespace TACHYON.Shipping.ShippingRequests
                                            Id = o.Id,
                                            IsBid = o.IsBid,
                                            IsTachyonDeal = o.IsTachyonDeal,
-                                           Price = o.Price
+                                           Price = o.Price,
+                                           IsRejected = o.IsRejected,
+                                           IsPriceAccepted = o.IsPriceAccepted
                                        },
                                        TrucksTypeDisplayName = s1 == null || s1.DisplayName == null ? "" : s1.DisplayName.ToString(),
                                        TrailerTypeDisplayName = s2 == null || s2.DisplayName == null ? "" : s2.DisplayName.ToString(),
@@ -270,6 +273,10 @@ namespace TACHYON.Shipping.ShippingRequests
             using (CurrentUnitOfWork.DisableFilter(AbpDataFilters.MustHaveTenant))
             {
                 var shippingRequest = await _shippingRequestRepository.FirstOrDefaultAsync(input.Id);
+                if ((shippingRequest.IsRejected != null && shippingRequest.IsRejected.Value) || (shippingRequest.IsPriceAccepted != null && shippingRequest.IsPriceAccepted.Value))
+                {
+                    throw new UserFriendlyException(L("cant update price for rejected request"));
+                }
                 shippingRequest.Price = input.Price;
 
                 await _appNotifier.UpdateShippingRequestPrice(new UserIdentifier(shippingRequest.TenantId, shippingRequest.CreatorUserId.Value), input.Id, input.Price);
@@ -280,10 +287,30 @@ namespace TACHYON.Shipping.ShippingRequests
         {
 
             var shippingRequest = await _shippingRequestRepository.FirstOrDefaultAsync(input.Id);
+            if (shippingRequest.IsRejected.HasValue && shippingRequest.IsRejected.Value)
+            {
+                throw new UserFriendlyException(L("Cant accept or reject price for rejected request"));
+            }
             shippingRequest.IsPriceAccepted = input.IsPriceAccepted;
 
 
             await _appNotifier.AcceptShippingRequestPrice(input.Id, input.IsPriceAccepted);
+        }
+
+        [RequiresFeature(AppFeatures.TachyonDealer)]
+        public async Task RejectShippingRequest(long id)
+        {
+            using (CurrentUnitOfWork.DisableFilter(AbpDataFilters.MustHaveTenant))
+            {
+                var shippingRequest = await _shippingRequestRepository.FirstOrDefaultAsync(id);
+                if (shippingRequest.IsPriceAccepted.HasValue && shippingRequest.IsPriceAccepted.Value)
+                {
+                    throw new UserFriendlyException(L("Cant reject accepted price request"));
+                }
+                shippingRequest.IsRejected = true;
+
+                await _appNotifier.RejectShippingRequest(new UserIdentifier(shippingRequest.TenantId, shippingRequest.CreatorUserId.Value), id);
+            }
         }
 
         [AbpAuthorize(AppPermissions.Pages_ShippingRequests_Delete)]

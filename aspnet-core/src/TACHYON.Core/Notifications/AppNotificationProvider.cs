@@ -53,6 +53,14 @@ namespace TACHYON.Notifications
               )
           );
 
+            context.Manager.Add(
+                new NotificationDefinition(
+                    AppNotificationNames.RejectShippingRequest,
+                    displayName: L("RejectShippingRequestNotificationDefinition"),
+                    featureDependency: new SimpleFeatureDependency(AppFeatures.Shipper)
+                )
+            );
+
             #endregion
         }
 
