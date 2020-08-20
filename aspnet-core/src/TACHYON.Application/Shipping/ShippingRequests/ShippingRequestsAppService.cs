@@ -294,7 +294,7 @@ namespace TACHYON.Shipping.ShippingRequests
                 var shippingRequest = await _shippingRequestRepository.FirstOrDefaultAsync(id);
                 shippingRequest.IsRejected = true;
 
-                //todo send notification to shipper 
+                await _appNotifier.RejectShippingRequest(new UserIdentifier(shippingRequest.TenantId, shippingRequest.CreatorUserId.Value), id);
             }
         }
 
