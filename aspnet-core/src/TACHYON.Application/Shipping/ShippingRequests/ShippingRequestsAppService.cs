@@ -25,6 +25,7 @@ using TACHYON.Shipping.ShippingRequests.Exporting;
 using TACHYON.Trailers.TrailerTypes;
 using TACHYON.Trucks.TrucksTypes;
 using Abp.Notifications;
+using Abp.UI;
 
 namespace TACHYON.Shipping.ShippingRequests
 {
@@ -272,6 +273,10 @@ namespace TACHYON.Shipping.ShippingRequests
             using (CurrentUnitOfWork.DisableFilter(AbpDataFilters.MustHaveTenant))
             {
                 var shippingRequest = await _shippingRequestRepository.FirstOrDefaultAsync(input.Id);
+                if ((shippingRequest.IsRejected != null && shippingRequest.IsRejected.Value) || (shippingRequest.IsPriceAccepted != null && shippingRequest.IsPriceAccepted.Value))
+                {
+                    throw new UserFriendlyException(L("cant update price for rejected request"));
+                }
                 shippingRequest.Price = input.Price;
 
                 await _appNotifier.UpdateShippingRequestPrice(new UserIdentifier(shippingRequest.TenantId, shippingRequest.CreatorUserId.Value), input.Id, input.Price);
@@ -282,6 +287,10 @@ namespace TACHYON.Shipping.ShippingRequests
         {
 
             var shippingRequest = await _shippingRequestRepository.FirstOrDefaultAsync(input.Id);
+            if (shippingRequest.IsRejected.HasValue && shippingRequest.IsRejected.Value)
+            {
+                throw new UserFriendlyException(L("Cant accept or reject price for rejected request"));
+            }
             shippingRequest.IsPriceAccepted = input.IsPriceAccepted;
 
 
@@ -289,11 +298,15 @@ namespace TACHYON.Shipping.ShippingRequests
         }
 
         [RequiresFeature(AppFeatures.TachyonDealer)]
-        public async Task RejectShippingRequest(long id )
+        public async Task RejectShippingRequest(long id)
         {
             using (CurrentUnitOfWork.DisableFilter(AbpDataFilters.MustHaveTenant))
             {
                 var shippingRequest = await _shippingRequestRepository.FirstOrDefaultAsync(id);
+                if (shippingRequest.IsPriceAccepted.HasValue && shippingRequest.IsPriceAccepted.Value)
+                {
+                    throw new UserFriendlyException(L("Cant reject accepted price request"));
+                }
                 shippingRequest.IsRejected = true;
 
                 await _appNotifier.RejectShippingRequest(new UserIdentifier(shippingRequest.TenantId, shippingRequest.CreatorUserId.Value), id);

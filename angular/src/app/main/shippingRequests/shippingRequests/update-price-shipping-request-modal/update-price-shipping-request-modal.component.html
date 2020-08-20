@@ -75,7 +75,12 @@
           <div class="modal-footer">
             <button [disabled]="saving" type="button" class="btn btn-default" (click)="close()">{{ l('Cancel') }}</button>
             <button
-              [disabled]="!feature.isEnabled('App.Shipper') || item.shippingRequest.isPriceAccepted || item.shippingRequest.price <= 0"
+              [disabled]="
+                !feature.isEnabled('App.Shipper') ||
+                item.shippingRequest.isPriceAccepted ||
+                item.shippingRequest.price <= 0 ||
+                item.shippingRequest.isRejected
+              "
               type="button"
               class="btn btn-success"
               (click)="acceptPrice()"
