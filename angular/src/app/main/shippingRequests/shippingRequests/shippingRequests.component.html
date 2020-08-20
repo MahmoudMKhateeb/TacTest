@@ -203,13 +203,9 @@
                             </a>
                           </li>
                           <li>
-                            <a
-                              href="javascript:;"
-                              *ngIf="feature.isEnabled('App.TachyonDealer')"
-                              class="dropdown-item"
-                              (click)="UpdatePriceShippingRequestModal.show(record.shippingRequest.id)"
-                              >{{ l('UpdatePrice') }}</a
-                            >
+                            <a href="javascript:;" class="dropdown-item" (click)="UpdatePriceShippingRequestModal.show(record.shippingRequest.id)">{{
+                              l('Response')
+                            }}</a>
                           </li>
                           <li>
                             <a

@@ -46,18 +46,40 @@
               <h6>{{ l('isTachyonDeal') }} :</h6>
               {{ item.shippingRequest.isTachyonDeal }}
             </div>
+            <div class="col-6 mb-3">
+              <h6>{{ l('isPriceAccepted') }} :</h6>
+              {{ item.shippingRequest.isPriceAccepted }}
+            </div>
           </div>
           <div class="row">
             <div class="col-md-6">
               <div class="form-group">
                 <label for="Price">{{ l('Price') }} *</label>
-                <input type="number" id="Price" class="form-control" [(ngModel)]="updatePriceInput.price" name="Price" minlength="0" required />
+                <input
+                  [disabled]="!feature.isEnabled('App.TachyonDealer')"
+                  type="number"
+                  id="Price"
+                  class="form-control"
+                  [(ngModel)]="updatePriceInput.price"
+                  name="Price"
+                  minlength="0"
+                  required
+                />
               </div>
             </div>
           </div>
           <div class="modal-footer">
             <button [disabled]="saving" type="button" class="btn btn-default" (click)="close()">{{ l('Cancel') }}</button>
             <button
+              [disabled]="!feature.isEnabled('App.Shipper') || item.shippingRequest.isPriceAccepted || item.shippingRequest.price <= 0"
+              type="button"
+              class="btn btn-success"
+              (click)="acceptPrice()"
+            >
+              {{ l('AcceptPrice') }}
+            </button>
+            <button
+              *ngIf="feature.isEnabled('App.TachyonDealer')"
               type="submit"
               class="btn btn-primary blue"
               [disabled]="!UpdatePriceForm.form.valid"
