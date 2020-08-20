@@ -81,4 +81,20 @@ export class UpdatePriceShippingRequestModalComponent extends AppComponentBase {
         this.modalSave.emit(null);
       });
   }
+
+  Reject() {
+    this.acceptShippingRequestPriceInput.isPriceAccepted = true;
+    this._shippingRequestsServiceProxy
+      .rejectShippingRequest(this.item.shippingRequest.id)
+      .pipe(
+        finalize(() => {
+          this.saving = false;
+        })
+      )
+      .subscribe(() => {
+        this.notify.info(this.l('SavedSuccessfully'));
+        this.close();
+        this.modalSave.emit(null);
+      });
+  }
 }
