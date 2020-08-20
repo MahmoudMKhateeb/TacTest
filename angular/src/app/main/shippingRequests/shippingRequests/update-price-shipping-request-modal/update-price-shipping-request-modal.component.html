@@ -50,6 +50,10 @@
               <h6>{{ l('isPriceAccepted') }} :</h6>
               {{ item.shippingRequest.isPriceAccepted }}
             </div>
+            <div class="col-6 mb-3">
+              <h6>{{ l('isRejected') }} :</h6>
+              {{ item.shippingRequest.isRejected }}
+            </div>
           </div>
           <div class="row">
             <div class="col-md-6">
@@ -77,6 +81,14 @@
               (click)="acceptPrice()"
             >
               {{ l('AcceptPrice') }}
+            </button>
+            <button
+              [disabled]="!feature.isEnabled('App.TachyonDealer') || item.shippingRequest.isRejected"
+              type="button"
+              class="btn btn-warning"
+              (click)="Reject()"
+            >
+              {{ l('Reject') }}
             </button>
             <button
               *ngIf="feature.isEnabled('App.TachyonDealer')"
