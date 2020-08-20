@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using TACHYON.Goods.GoodsDetails;
+using TACHYON.MultiTenancy;
 using TACHYON.Routs;
 using TACHYON.Routs.RoutSteps;
 using TACHYON.Trailers.TrailerTypes;
@@ -53,8 +54,14 @@ namespace TACHYON.Shipping.ShippingRequests
         public bool? IsRejected { get; set; }
 
         public long? FatherShippingRequestId { get; set; }
-        
+
         [ForeignKey("FatherShippingRequestId")]
         public ShippingRequest FatherShippingRequestFk { get; set; }
+
+        int? CarrierTenantId { get; set; }
+
+        [ForeignKey("CarrierTenantId")]
+        public Tenant CarrierTenantFk { get; set; }
+
     }
 }
