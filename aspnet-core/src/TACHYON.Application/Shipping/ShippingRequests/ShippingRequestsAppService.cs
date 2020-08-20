@@ -286,6 +286,18 @@ namespace TACHYON.Shipping.ShippingRequests
             await _appNotifier.AcceptShippingRequestPrice(input.Id, input.IsPriceAccepted);
         }
 
+        [RequiresFeature(AppFeatures.TachyonDealer)]
+        public async Task RejectShippingRequest(long id )
+        {
+            using (CurrentUnitOfWork.DisableFilter(AbpDataFilters.MustHaveTenant))
+            {
+                var shippingRequest = await _shippingRequestRepository.FirstOrDefaultAsync(id);
+                shippingRequest.IsRejected = true;
+
+                //todo send notification to shipper 
+            }
+        }
+
         [AbpAuthorize(AppPermissions.Pages_ShippingRequests_Delete)]
         [RequiresFeature(AppFeatures.ShippingRequest)]
         public async Task Delete(EntityDto<long> input)
