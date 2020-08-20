@@ -52,6 +52,9 @@ namespace TACHYON.Shipping.ShippingRequests
         public bool? IsPriceAccepted { get; set; }
         public bool? IsRejected { get; set; }
 
-
+        public long? FatherShippingRequestId { get; set; }
+        
+        [ForeignKey("FatherShippingRequestId")]
+        public ShippingRequest FatherShippingRequestFk { get; set; }
     }
 }
