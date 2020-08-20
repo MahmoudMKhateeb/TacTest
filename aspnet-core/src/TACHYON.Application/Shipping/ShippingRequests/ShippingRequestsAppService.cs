@@ -276,14 +276,14 @@ namespace TACHYON.Shipping.ShippingRequests
             }
         }
 
-        public async Task AcceptShippingRequestPrice(AcceptShippingRequestPriceInput input)
+        public async Task AcceptOrRejectShippingRequestPrice(AcceptShippingRequestPriceInput input)
         {
 
             var shippingRequest = await _shippingRequestRepository.FirstOrDefaultAsync(input.Id);
-            shippingRequest.IsAccepted = input.Accept;
+            shippingRequest.IsPriceAccepted = input.IsPriceAccepted;
 
 
-            await _appNotifier.AcceptShippingRequestPrice(input.Id, input.Accept);
+            await _appNotifier.AcceptShippingRequestPrice(input.Id, input.IsPriceAccepted);
         }
 
         [AbpAuthorize(AppPermissions.Pages_ShippingRequests_Delete)]
