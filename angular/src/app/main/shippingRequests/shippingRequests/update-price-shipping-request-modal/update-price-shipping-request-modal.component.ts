@@ -2,6 +2,7 @@ import { Component, EventEmitter, Injector, OnInit, Output, ViewChild } from '@a
 import { AppComponentBase } from '@shared/common/app-component-base';
 import { ModalDirective } from '@node_modules/ngx-bootstrap/modal';
 import {
+  AcceptShippingRequestPriceInput,
   CreateOrEditGoodCategoryDto,
   GetShippingRequestForViewDto,
   GoodCategoriesServiceProxy,
@@ -23,11 +24,13 @@ export class UpdatePriceShippingRequestModalComponent extends AppComponentBase {
   saving = false;
   item: GetShippingRequestForViewDto;
   updatePriceInput: UpdatePriceInput;
+  acceptShippingRequestPriceInput: AcceptShippingRequestPriceInput;
 
   constructor(injector: Injector, private _shippingRequestsServiceProxy: ShippingRequestsServiceProxy) {
     super(injector);
     this.item = new GetShippingRequestForViewDto();
     this.updatePriceInput = new UpdatePriceInput();
+    this.acceptShippingRequestPriceInput = new AcceptShippingRequestPriceInput();
   }
 
   show(shippingRequestId: number): void {
@@ -35,6 +38,7 @@ export class UpdatePriceShippingRequestModalComponent extends AppComponentBase {
       this.item = result;
       this.updatePriceInput.price = result.shippingRequest.price;
       this.updatePriceInput.id = result.shippingRequest.id;
+      this.acceptShippingRequestPriceInput.id = result.shippingRequest.id;
       this.active = true;
       this.modal.show();
     });
@@ -60,5 +64,21 @@ export class UpdatePriceShippingRequestModalComponent extends AppComponentBase {
   close(): void {
     this.active = false;
     this.modal.hide();
+  }
+
+  acceptPrice() {
+    this.acceptShippingRequestPriceInput.isPriceAccepted = true;
+    this._shippingRequestsServiceProxy
+      .acceptOrRejectShippingRequestPrice(this.acceptShippingRequestPriceInput)
+      .pipe(
+        finalize(() => {
+          this.saving = false;
+        })
+      )
+      .subscribe(() => {
+        this.notify.info(this.l('SavedSuccessfully'));
+        this.close();
+        this.modalSave.emit(null);
+      });
   }
 }

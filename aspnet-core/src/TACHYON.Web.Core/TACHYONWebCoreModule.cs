@@ -93,6 +93,10 @@ namespace TACHYON.Web
             //    options.ConnectionString = _appConfiguration["Abp:RedisCache:ConnectionString"];
             //    options.DatabaseId = _appConfiguration.GetValue<int>("Abp:RedisCache:DatabaseId");
             //});
+
+            //Send All Exceptions To Clients
+            Configuration.Modules.AbpWebCommon().SendAllExceptionsToClients = true;
+
         }
 
         private void ConfigureTokenAuth()

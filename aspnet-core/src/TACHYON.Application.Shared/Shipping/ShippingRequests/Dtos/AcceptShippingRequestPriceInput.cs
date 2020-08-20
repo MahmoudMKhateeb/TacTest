@@ -3,6 +3,6 @@
     public class AcceptShippingRequestPriceInput
     {
         public long Id { get; set; }
-        public bool Accept { get; set; }
+        public bool IsPriceAccepted { get; set; }
     }
 }

@@ -49,7 +49,7 @@ namespace TACHYON.Shipping.ShippingRequests
 
         public decimal? Price { get; set; }
 
-        public bool? IsAccepted { get; set; }
+        public bool? IsPriceAccepted { get; set; }
 
     }
 }
