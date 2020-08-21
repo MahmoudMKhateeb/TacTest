@@ -303,16 +303,6 @@
               <i class="fa fa-save"></i>
               <span>{{ l('Save') }}</span>
             </button>
-            <button
-              (click)="saveAndNew()"
-              *ngIf="!this.shippingRequest.id"
-              [busyText]="l('SavingWithThreeDot')"
-              [buttonBusy]="saving"
-              class="btn btn-primary blue float-right"
-            >
-              <i class="fa fa-save"></i>
-              <span>{{ l('SaveAndNew') }}</span>
-            </button>
           </div>
         </div>
       </div>

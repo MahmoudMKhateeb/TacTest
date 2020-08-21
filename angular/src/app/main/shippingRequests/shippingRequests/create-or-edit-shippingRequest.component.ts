@@ -165,12 +165,6 @@ export class CreateOrEditShippingRequestComponent extends AppComponentBase imple
     });
   }
 
-  saveAndNew(): void {
-    this.saveInternal().subscribe((x) => {
-      this.shippingRequest = new CreateOrEditShippingRequestDto();
-    });
-  }
-
   private saveInternal(): Observable<void> {
     this.saving = true;
     this.shippingRequest.createOrEditRoutStepDtoList = this.createOrEditRoutStepDtoList;
