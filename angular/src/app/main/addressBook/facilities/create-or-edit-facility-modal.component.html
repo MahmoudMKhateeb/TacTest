@@ -1,0 +1,93 @@
+﻿<div
+  bsModal
+  #createOrEditModal="bs-modal"
+  class="modal fade"
+  tabindex="-1"
+  role="dialog"
+  aria-labelledby="createOrEditModal"
+  aria-hidden="true"
+  [config]="{ backdrop: 'static' }"
+>
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <form *ngIf="active" #facilityForm="ngForm" novalidate (ngSubmit)="save()" autocomplete="off">
+        <div class="modal-header">
+          <h4 class="modal-title">
+            <span *ngIf="facility.id">{{ l('EditFacility') }}</span>
+            <span *ngIf="!facility.id">{{ l('CreateNewFacility') }}</span>
+          </h4>
+          <button type="button" class="close" (click)="close()" aria-label="Close" [disabled]="saving">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <div class="form-group m-form__group">
+            <label for="CountyDisplayName">{{ l('County') }}</label>
+            <select name="facility.countyId" [(ngModel)]="facility.countyId" class="form-control" required>
+              <option value="">{{ l('SelectACounty') }}</option>
+              <option *ngFor="let item of allCountys" value="{{ item.id }}">{{ item.displayName }}</option>
+            </select>
+          </div>
+
+          <div class="form-group m-form__group">
+            <label for="CityDisplayName">{{ l('City') }}</label>
+            <select name="facility.cityId" [(ngModel)]="facility.cityId" class="form-control" required>
+              <option value="">{{ l('SelectACity') }}</option>
+              <option *ngFor="let item of allCitys" value="{{ item.id }}">{{ item.displayName }}</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="Facility_Name">{{ l('Name') }} *</label>
+            <input
+              type="text"
+              id="Facility_Name"
+              class="form-control"
+              [(ngModel)]="facility.name"
+              name="Name"
+              minlength="0"
+              maxlength="256"
+              required
+            />
+          </div>
+
+          <div class="form-group">
+            <label for="Facility_Adress">{{ l('Adress') }} *</label>
+            <input
+              type="text"
+              id="Facility_Adress"
+              class="form-control"
+              [(ngModel)]="facility.adress"
+              name="Adress"
+              minlength="0"
+              maxlength="256"
+              required
+            />
+          </div>
+
+          <div class="form-group">
+            <label for="Facility_Longitude">{{ l('Longitude') }}</label>
+            <input type="number" id="Facility_Longitude" class="form-control" [(ngModel)]="facility.longitude" name="Longitude" />
+          </div>
+
+          <div class="form-group">
+            <label for="Facility_Latitude">{{ l('Latitude') }}</label>
+            <input type="number" id="Facility_Latitude" class="form-control" [(ngModel)]="facility.latitude" name="Latitude" />
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button [disabled]="saving" type="button" class="btn btn-default" (click)="close()">{{ l('Cancel') }}</button>
+          <button
+            type="submit"
+            class="btn btn-primary blue"
+            [disabled]="!facilityForm.form.valid"
+            [buttonBusy]="saving"
+            [busyText]="l('SavingWithThreeDot')"
+          >
+            <i class="fa fa-save"></i> <span>{{ l('Save') }}</span>
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

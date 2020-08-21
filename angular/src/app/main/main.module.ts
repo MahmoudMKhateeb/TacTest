@@ -2,6 +2,11 @@
 import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { AppCommonModule } from '@app/shared/common/app-common.module';
+import { FacilitiesComponent } from './addressBook/facilities/facilities.component';
+import { ViewFacilityModalComponent } from './addressBook/facilities/view-facility-modal.component';
+import { CreateOrEditFacilityModalComponent } from './addressBook/facilities/create-or-edit-facility-modal.component';
+import { FileUploadModule } from 'primeng/fileupload';
+
 import { DocumentFilesComponent } from './documentFiles/documentFiles/documentFiles.component';
 import { ViewDocumentFileModalComponent } from './documentFiles/documentFiles/view-documentFile-modal.component';
 import { CreateOrEditDocumentFileModalComponent } from './documentFiles/documentFiles/create-or-edit-documentFile-modal.component';
@@ -97,6 +102,8 @@ NgxBootstrapDatePickerConfigService.registerNgxBootstrapDatePickerLocales();
 
 @NgModule({
   imports: [
+    FileUploadModule,
+
     AutoCompleteModule,
     PaginatorModule,
     EditorModule,
@@ -123,6 +130,10 @@ NgxBootstrapDatePickerConfigService.registerNgxBootstrapDatePickerLocales();
     }),
   ],
   declarations: [
+    FacilitiesComponent,
+
+    ViewFacilityModalComponent,
+    CreateOrEditFacilityModalComponent,
     DocumentFilesComponent,
 
     ViewDocumentFileModalComponent,

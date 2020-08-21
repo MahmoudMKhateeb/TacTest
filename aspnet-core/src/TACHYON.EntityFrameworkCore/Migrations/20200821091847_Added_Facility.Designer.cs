@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using TACHYON.EntityFrameworkCore;
 
 namespace TACHYON.Migrations
 {
     [DbContext(typeof(TACHYONDbContext))]
-    partial class TACHYONDbContextModelSnapshot : ModelSnapshot
+    [Migration("20200821091847_Added_Facility")]
+    partial class Added_Facility
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -2419,8 +2421,8 @@ namespace TACHYON.Migrations
                     b.Property<int>("TrailerTypeId")
                         .HasColumnType("int");
 
-                    b.Property<long>("TrucksTypeId")
-                        .HasColumnType("bigint");
+                    b.Property<Guid>("TrucksTypeId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.HasKey("Id");
 
@@ -2611,9 +2613,6 @@ namespace TACHYON.Migrations
                         .HasColumnType("bigint")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<int?>("CarrierTenantId")
-                        .HasColumnType("int");
-
                     b.Property<DateTime>("CreationTime")
                         .HasColumnType("datetime2");
 
@@ -2625,9 +2624,6 @@ namespace TACHYON.Migrations
 
                     b.Property<DateTime?>("DeletionTime")
                         .HasColumnType("datetime2");
-
-                    b.Property<long?>("FatherShippingRequestId")
-                        .HasColumnType("bigint");
 
                     b.Property<long?>("GoodsDetailId")
                         .HasColumnType("bigint");
@@ -2665,17 +2661,13 @@ namespace TACHYON.Migrations
                     b.Property<int?>("TrailerTypeId")
                         .HasColumnType("int");
 
-                    b.Property<long?>("TrucksTypeId")
-                        .HasColumnType("bigint");
+                    b.Property<Guid?>("TrucksTypeId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<decimal>("Vas")
                         .HasColumnType("decimal(18,2)");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("CarrierTenantId");
-
-                    b.HasIndex("FatherShippingRequestId");
 
                     b.HasIndex("GoodsDetailId");
 
@@ -3001,11 +2993,11 @@ namespace TACHYON.Migrations
                     b.Property<int>("TenantId")
                         .HasColumnType("int");
 
-                    b.Property<long>("TruckStatusId")
-                        .HasColumnType("bigint");
+                    b.Property<Guid>("TruckStatusId")
+                        .HasColumnType("uniqueidentifier");
 
-                    b.Property<long>("TrucksTypeId")
-                        .HasColumnType("bigint");
+                    b.Property<Guid>("TrucksTypeId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.HasKey("Id");
 
@@ -3024,10 +3016,9 @@ namespace TACHYON.Migrations
 
             modelBuilder.Entity("TACHYON.Trucks.TruckStatus", b =>
                 {
-                    b.Property<long>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<DateTime>("CreationTime")
                         .HasColumnType("datetime2");
@@ -3067,10 +3058,9 @@ namespace TACHYON.Migrations
 
             modelBuilder.Entity("TACHYON.Trucks.TrucksTypes.TrucksType", b =>
                 {
-                    b.Property<long>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<DateTime>("CreationTime")
                         .HasColumnType("datetime2");
@@ -3475,14 +3465,6 @@ namespace TACHYON.Migrations
 
             modelBuilder.Entity("TACHYON.Shipping.ShippingRequests.ShippingRequest", b =>
                 {
-                    b.HasOne("TACHYON.MultiTenancy.Tenant", "CarrierTenantFk")
-                        .WithMany()
-                        .HasForeignKey("CarrierTenantId");
-
-                    b.HasOne("TACHYON.Shipping.ShippingRequests.ShippingRequest", "FatherShippingRequestFk")
-                        .WithMany()
-                        .HasForeignKey("FatherShippingRequestId");
-
                     b.HasOne("TACHYON.Goods.GoodsDetails.GoodsDetail", "GoodsDetailFk")
                         .WithMany()
                         .HasForeignKey("GoodsDetailId");

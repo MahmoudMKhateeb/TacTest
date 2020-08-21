@@ -30,6 +30,13 @@ namespace TACHYON.Authorization
 
             var pages = context.GetPermissionOrNull(AppPermissions.Pages) ?? context.CreatePermission(AppPermissions.Pages, L("Pages"));
 
+            var facilities = pages.CreateChildPermission(AppPermissions.Pages_Facilities, L("Facilities"));
+            facilities.CreateChildPermission(AppPermissions.Pages_Facilities_Create, L("CreateNewFacility"));
+            facilities.CreateChildPermission(AppPermissions.Pages_Facilities_Edit, L("EditFacility"));
+            facilities.CreateChildPermission(AppPermissions.Pages_Facilities_Delete, L("DeleteFacility"));
+
+
+
             var documentFiles = pages.CreateChildPermission(AppPermissions.Pages_DocumentFiles, L("DocumentFiles"));
             documentFiles.CreateChildPermission(AppPermissions.Pages_DocumentFiles_Create, L("CreateNewDocumentFile"));
             documentFiles.CreateChildPermission(AppPermissions.Pages_DocumentFiles_Edit, L("EditDocumentFile"));

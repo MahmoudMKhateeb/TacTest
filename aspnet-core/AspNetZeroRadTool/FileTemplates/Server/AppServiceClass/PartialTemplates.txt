@@ -42,7 +42,7 @@
 					{
 					"type" : "bool",
 					"content" : "
-						.WhereIf(input.{{Property_Name_Here}}Filter > -1,  e => (input.{{Property_Name_Here}}Filter == 1 && e.{{Property_Name_Here}}) || (input.{{Property_Name_Here}}Filter == 0 && !e.{{Property_Name_Here}}) )"
+						.WhereIf(input.{{Property_Name_Here}}Filter.HasValue && input.{{Property_Name_Here}}Filter > -1,  e => (input.{{Property_Name_Here}}Filter == 1 && e.{{Property_Name_Here}}) || (input.{{Property_Name_Here}}Filter == 0 && !e.{{Property_Name_Here}}) )"
 					},
 					{
 					"type" : "default",

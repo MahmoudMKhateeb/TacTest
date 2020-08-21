@@ -1,5 +1,6 @@
 ﻿import { NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
+import { FacilitiesComponent } from './addressBook/facilities/facilities.component';
 import { DocumentFilesComponent } from './documentFiles/documentFiles/documentFiles.component';
 import { DocumentTypesComponent } from './documentTypes/documentTypes/documentTypes.component';
 import { ShippingRequestsComponent } from './shippingRequests/shippingRequests/shippingRequests.component';
@@ -29,6 +30,7 @@ import { DashboardComponent } from './dashboard/dashboard.component';
       {
         path: '',
         children: [
+          { path: 'addressBook/facilities', component: FacilitiesComponent, data: { permission: 'Pages.Facilities' } },
           { path: 'documentFiles/documentFiles', component: DocumentFilesComponent, data: { permission: 'Pages.DocumentFiles' } },
           { path: 'documentTypes/documentTypes', component: DocumentTypesComponent, data: { permission: 'Pages.DocumentTypes' } },
           { path: 'shippingRequests/shippingRequests', component: ShippingRequestsComponent, data: { permission: 'Pages.ShippingRequests' } },
