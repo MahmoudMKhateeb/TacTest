@@ -26,7 +26,8 @@ namespace TACHYON.Shipping.ShippingRequests.Dtos
         public virtual bool IsBid { get; set; }
 
         public virtual bool IsTachyonDeal { get; set; }
-
+        public long? FatherShippingRequestId { get; set; }
+        int? CarrierTenantId { get; set; }
 
 
     }
