@@ -32,13 +32,13 @@ namespace TACHYON.Offers
     {
         private readonly IRepository<Offer> _offerRepository;
         private readonly IOffersExcelExporter _offersExcelExporter;
-        private readonly IRepository<TrucksType, Guid> _lookup_trucksTypeRepository;
+        private readonly IRepository<TrucksType, long> _lookup_trucksTypeRepository;
         private readonly IRepository<TrailerType, int> _lookup_trailerTypeRepository;
         private readonly IRepository<GoodCategory, int> _lookup_goodCategoryRepository;
         private readonly IRepository<Route, int> _lookup_routeRepository;
 
 
-        public OffersAppService(IRepository<Offer> offerRepository, IOffersExcelExporter offersExcelExporter, IRepository<TrucksType, Guid> lookup_trucksTypeRepository, IRepository<TrailerType, int> lookup_trailerTypeRepository, IRepository<GoodCategory, int> lookup_goodCategoryRepository, IRepository<Route, int> lookup_routeRepository)
+        public OffersAppService(IRepository<Offer> offerRepository, IOffersExcelExporter offersExcelExporter, IRepository<TrucksType, long> lookup_trucksTypeRepository, IRepository<TrailerType, int> lookup_trailerTypeRepository, IRepository<GoodCategory, int> lookup_goodCategoryRepository, IRepository<Route, int> lookup_routeRepository)
         {
             _offerRepository = offerRepository;
             _offersExcelExporter = offersExcelExporter;
@@ -131,7 +131,7 @@ namespace TACHYON.Offers
 
             if (output.Offer.TrucksTypeId != null)
             {
-                var _lookupTrucksType = await _lookup_trucksTypeRepository.FirstOrDefaultAsync((Guid)output.Offer.TrucksTypeId);
+                var _lookupTrucksType = await _lookup_trucksTypeRepository.FirstOrDefaultAsync(output.Offer.TrucksTypeId);
                 output.TrucksTypeDisplayName = _lookupTrucksType?.DisplayName?.ToString();
             }
 
@@ -166,7 +166,7 @@ namespace TACHYON.Offers
 
             if (output.Offer.TrucksTypeId != null)
             {
-                var _lookupTrucksType = await _lookup_trucksTypeRepository.FirstOrDefaultAsync((Guid)output.Offer.TrucksTypeId);
+                var _lookupTrucksType = await _lookup_trucksTypeRepository.FirstOrDefaultAsync(output.Offer.TrucksTypeId);
                 output.TrucksTypeDisplayName = _lookupTrucksType?.DisplayName?.ToString();
             }
 

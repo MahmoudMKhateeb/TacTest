@@ -21,7 +21,7 @@ namespace TACHYON.Trucks.Dtos
         public string Note { get; set; }
 
 
-        public Guid TrucksTypeId { get; set; }
+        public long TrucksTypeId { get; set; }
 
         public Guid TruckStatusId { get; set; }
 

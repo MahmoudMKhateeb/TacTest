@@ -42,7 +42,7 @@ namespace TACHYON.Trucks
         public virtual string Note { get; set; }
 
 
-        public virtual Guid TrucksTypeId { get; set; }
+        public virtual long TrucksTypeId { get; set; }
 
         [ForeignKey("TrucksTypeId")]
         public TrucksType TrucksTypeFk { get; set; }

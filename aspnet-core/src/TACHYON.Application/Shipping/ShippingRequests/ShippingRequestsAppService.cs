@@ -26,6 +26,7 @@ using TACHYON.Trailers.TrailerTypes;
 using TACHYON.Trucks.TrucksTypes;
 using Abp.Notifications;
 using Abp.UI;
+using TACHYON.Goods.GoodsDetails.Dtos;
 
 namespace TACHYON.Shipping.ShippingRequests
 {
@@ -34,14 +35,14 @@ namespace TACHYON.Shipping.ShippingRequests
     {
         private readonly IRepository<ShippingRequest, long> _shippingRequestRepository;
         private readonly IShippingRequestsExcelExporter _shippingRequestsExcelExporter;
-        private readonly IRepository<TrucksType, Guid> _lookup_trucksTypeRepository;
+        private readonly IRepository<TrucksType, long> _lookup_trucksTypeRepository;
         private readonly IRepository<TrailerType, int> _lookup_trailerTypeRepository;
         private readonly IRepository<GoodsDetail, long> _lookup_goodsDetailRepository;
         private readonly IRepository<Route, int> _lookup_routeRepository;
         private readonly IAppNotifier _appNotifier;
 
 
-        public ShippingRequestsAppService(IRepository<ShippingRequest, long> shippingRequestRepository, IShippingRequestsExcelExporter shippingRequestsExcelExporter, IRepository<TrucksType, Guid> lookup_trucksTypeRepository, IRepository<TrailerType, int> lookup_trailerTypeRepository, IRepository<GoodsDetail, long> lookup_goodsDetailRepository, IRepository<Route, int> lookup_routeRepository, IAppNotifier appNotifier)
+        public ShippingRequestsAppService(IRepository<ShippingRequest, long> shippingRequestRepository, IShippingRequestsExcelExporter shippingRequestsExcelExporter, IRepository<TrucksType, long> lookup_trucksTypeRepository, IRepository<TrailerType, int> lookup_trailerTypeRepository, IRepository<GoodsDetail, long> lookup_goodsDetailRepository, IRepository<Route, int> lookup_routeRepository, IAppNotifier appNotifier)
         {
             _shippingRequestRepository = shippingRequestRepository;
             _shippingRequestsExcelExporter = shippingRequestsExcelExporter;
@@ -154,7 +155,7 @@ namespace TACHYON.Shipping.ShippingRequests
 
             if (output.ShippingRequest.TrucksTypeId != null)
             {
-                var _lookupTrucksType = await _lookup_trucksTypeRepository.FirstOrDefaultAsync((Guid)output.ShippingRequest.TrucksTypeId);
+                var _lookupTrucksType = await _lookup_trucksTypeRepository.FirstOrDefaultAsync(output.ShippingRequest.TrucksTypeId.Value);
                 output.TrucksTypeDisplayName = _lookupTrucksType?.DisplayName?.ToString();
             }
 
@@ -208,7 +209,7 @@ namespace TACHYON.Shipping.ShippingRequests
 
             if (output.ShippingRequest.TrucksTypeId != null)
             {
-                var _lookupTrucksType = await _lookup_trucksTypeRepository.FirstOrDefaultAsync((Guid)output.ShippingRequest.TrucksTypeId);
+                var _lookupTrucksType = await _lookup_trucksTypeRepository.FirstOrDefaultAsync(output.ShippingRequest.TrucksTypeId.Value);
                 output.TrucksTypeDisplayName = _lookupTrucksType?.DisplayName?.ToString();
             }
 
@@ -222,6 +223,12 @@ namespace TACHYON.Shipping.ShippingRequests
             {
                 var _lookupRoute = await _lookup_routeRepository.FirstOrDefaultAsync((int)output.ShippingRequest.RouteId);
                 output.RouteDisplayName = _lookupRoute?.DisplayName?.ToString();
+            }
+
+            if (output.ShippingRequest.GoodsDetailId != null)
+            {
+                var _lookupRoute = await _lookup_goodsDetailRepository.FirstOrDefaultAsync((int)output.ShippingRequest.GoodsDetailId);
+                output.ShippingRequest.CreateOrEditGoodsDetailDto = ObjectMapper.Map<CreateOrEditGoodsDetailDto>(_lookupRoute);
             }
 
             return output;
@@ -394,12 +401,18 @@ namespace TACHYON.Shipping.ShippingRequests
         [AbpAuthorize(AppPermissions.Pages_ShippingRequests)]
         public async Task<List<ShippingRequestGoodsDetailLookupTableDto>> GetAllGoodsDetailForTableDropdown()
         {
-            return await _lookup_goodsDetailRepository.GetAll()
-                .Select(goodsDetail => new ShippingRequestGoodsDetailLookupTableDto
-                {
-                    Id = goodsDetail.Id,
-                    DisplayName = goodsDetail == null || goodsDetail.Name == null ? "" : goodsDetail.Name.ToString()
-                }).ToListAsync();
+            //todo i am not sure about disabling this filter here
+            using (CurrentUnitOfWork.DisableFilter(AbpDataFilters.MustHaveTenant))
+            {
+
+                return await _lookup_goodsDetailRepository.GetAll()
+                    .Select(goodsDetail => new ShippingRequestGoodsDetailLookupTableDto
+                    {
+                        Id = goodsDetail.Id,
+                        DisplayName = goodsDetail == null || goodsDetail.Name == null ? "" : goodsDetail.Name.ToString()
+                    }).ToListAsync();
+            }
+
         }
 
         [AbpAuthorize(AppPermissions.Pages_ShippingRequests)]

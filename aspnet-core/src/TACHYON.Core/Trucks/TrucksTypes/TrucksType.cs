@@ -9,7 +9,7 @@ namespace TACHYON.Trucks.TrucksTypes
 {
     [Table("TrucksTypes")]
     [Audited]
-    public class TrucksType : FullAuditedEntity<Guid>
+    public class TrucksType : FullAuditedEntity<long>
     {
 
 

@@ -12,13 +12,13 @@ namespace TACHYON.Trucks.TrucksTypes
     {
         Task<PagedResultDto<GetTrucksTypeForViewDto>> GetAll(GetAllTrucksTypesInput input);
 
-        Task<GetTrucksTypeForViewDto> GetTrucksTypeForView(Guid id);
+        Task<GetTrucksTypeForViewDto> GetTrucksTypeForView(long id);
 
-        Task<GetTrucksTypeForEditOutput> GetTrucksTypeForEdit(EntityDto<Guid> input);
+        Task<GetTrucksTypeForEditOutput> GetTrucksTypeForEdit(EntityDto<long> input);
 
         Task CreateOrEdit(CreateOrEditTrucksTypeDto input);
 
-        Task Delete(EntityDto<Guid> input);
+        Task Delete(EntityDto<long> input);
 
 
     }

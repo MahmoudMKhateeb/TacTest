@@ -22,7 +22,7 @@ namespace TACHYON.Shipping.ShippingRequests
         public virtual decimal Vas { get; set; }
 
 
-        public virtual Guid? TrucksTypeId { get; set; }
+        public virtual long? TrucksTypeId { get; set; }
 
         [ForeignKey("TrucksTypeId")]
         public TrucksType TrucksTypeFk { get; set; }

@@ -20,10 +20,10 @@ namespace TACHYON.Trucks.TrucksTypes
     [AbpAuthorize(AppPermissions.Pages_TrucksTypes)]
     public class TrucksTypesAppService : TACHYONAppServiceBase, ITrucksTypesAppService
     {
-        private readonly IRepository<TrucksType, Guid> _trucksTypeRepository;
+        private readonly IRepository<TrucksType, long> _trucksTypeRepository;
 
 
-        public TrucksTypesAppService(IRepository<TrucksType, Guid> trucksTypeRepository)
+        public TrucksTypesAppService(IRepository<TrucksType, long> trucksTypeRepository)
         {
             _trucksTypeRepository = trucksTypeRepository;
 
@@ -58,7 +58,7 @@ namespace TACHYON.Trucks.TrucksTypes
             );
         }
 
-        public async Task<GetTrucksTypeForViewDto> GetTrucksTypeForView(Guid id)
+        public async Task<GetTrucksTypeForViewDto> GetTrucksTypeForView(long id)
         {
             var trucksType = await _trucksTypeRepository.GetAsync(id);
 
@@ -68,7 +68,7 @@ namespace TACHYON.Trucks.TrucksTypes
         }
 
         [AbpAuthorize(AppPermissions.Pages_TrucksTypes_Edit)]
-        public async Task<GetTrucksTypeForEditOutput> GetTrucksTypeForEdit(EntityDto<Guid> input)
+        public async Task<GetTrucksTypeForEditOutput> GetTrucksTypeForEdit(EntityDto<long> input)
         {
             var trucksType = await _trucksTypeRepository.FirstOrDefaultAsync(input.Id);
 
@@ -99,12 +99,12 @@ namespace TACHYON.Trucks.TrucksTypes
         [AbpAuthorize(AppPermissions.Pages_TrucksTypes_Edit)]
         protected virtual async Task Update(CreateOrEditTrucksTypeDto input)
         {
-            var trucksType = await _trucksTypeRepository.FirstOrDefaultAsync((Guid)input.Id);
+            var trucksType = await _trucksTypeRepository.FirstOrDefaultAsync(input.Id.Value);
             ObjectMapper.Map(input, trucksType);
         }
 
         [AbpAuthorize(AppPermissions.Pages_TrucksTypes_Delete)]
-        public async Task Delete(EntityDto<Guid> input)
+        public async Task Delete(EntityDto<long> input)
         {
             await _trucksTypeRepository.DeleteAsync(input.Id);
         }
