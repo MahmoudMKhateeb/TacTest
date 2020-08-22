@@ -23,10 +23,10 @@ namespace TACHYON.Trucks
     [RequiresFeature(AppFeatures.Carrier)]
     public class TruckStatusesAppService : TACHYONAppServiceBase, ITruckStatusesAppService
     {
-        private readonly IRepository<TruckStatus, Guid> _truckStatusRepository;
+        private readonly IRepository<TruckStatus, long> _truckStatusRepository;
 
 
-        public TruckStatusesAppService(IRepository<TruckStatus, Guid> truckStatusRepository)
+        public TruckStatusesAppService(IRepository<TruckStatus, long> truckStatusRepository)
         {
             _truckStatusRepository = truckStatusRepository;
 
@@ -61,7 +61,7 @@ namespace TACHYON.Trucks
             );
         }
 
-        public async Task<GetTruckStatusForViewDto> GetTruckStatusForView(Guid id)
+        public async Task<GetTruckStatusForViewDto> GetTruckStatusForView(long id)
         {
             var truckStatus = await _truckStatusRepository.GetAsync(id);
 
@@ -71,7 +71,7 @@ namespace TACHYON.Trucks
         }
 
         [AbpAuthorize(AppPermissions.Pages_Administration_TruckStatuses_Edit)]
-        public async Task<GetTruckStatusForEditOutput> GetTruckStatusForEdit(EntityDto<Guid> input)
+        public async Task<GetTruckStatusForEditOutput> GetTruckStatusForEdit(EntityDto<long> input)
         {
             var truckStatus = await _truckStatusRepository.FirstOrDefaultAsync(input.Id);
 
@@ -110,12 +110,12 @@ namespace TACHYON.Trucks
         [AbpAuthorize(AppPermissions.Pages_Administration_TruckStatuses_Edit)]
         protected virtual async Task Update(CreateOrEditTruckStatusDto input)
         {
-            var truckStatus = await _truckStatusRepository.FirstOrDefaultAsync((Guid)input.Id);
+            var truckStatus = await _truckStatusRepository.FirstOrDefaultAsync((long)input.Id);
             ObjectMapper.Map(input, truckStatus);
         }
 
         [AbpAuthorize(AppPermissions.Pages_Administration_TruckStatuses_Delete)]
-        public async Task Delete(EntityDto<Guid> input)
+        public async Task Delete(EntityDto<long> input)
         {
             await _truckStatusRepository.DeleteAsync(input.Id);
         }

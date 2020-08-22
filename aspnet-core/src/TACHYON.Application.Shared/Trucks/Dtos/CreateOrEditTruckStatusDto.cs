@@ -5,7 +5,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace TACHYON.Trucks.Dtos
 {
-    public class CreateOrEditTruckStatusDto : EntityDto<Guid?>
+    public class CreateOrEditTruckStatusDto : EntityDto<long?>
     {
 
         [Required]

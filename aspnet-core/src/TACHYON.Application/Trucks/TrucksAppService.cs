@@ -43,7 +43,7 @@ namespace TACHYON.Trucks
         private readonly IRepository<Truck, Guid> _truckRepository;
         private readonly ITrucksExcelExporter _trucksExcelExporter;
         private readonly IRepository<TrucksType, long> _lookup_trucksTypeRepository;
-        private readonly IRepository<TruckStatus, Guid> _lookup_truckStatusRepository;
+        private readonly IRepository<TruckStatus, long> _lookup_truckStatusRepository;
         private readonly IRepository<User, long> _lookup_userRepository;
         private readonly IAppNotifier _appNotifier;
         private readonly ITempFileCacheManager _tempFileCacheManager;
@@ -52,7 +52,7 @@ namespace TACHYON.Trucks
 
 
 
-        public TrucksAppService(IRepository<Truck, Guid> truckRepository, ITrucksExcelExporter trucksExcelExporter, IRepository<TrucksType, long> lookup_trucksTypeRepository, IRepository<TruckStatus, Guid> lookup_truckStatusRepository, IRepository<User, long> lookup_userRepository, IAppNotifier appNotifier, ITempFileCacheManager tempFileCacheManager, IBinaryObjectManager binaryObjectManager)
+        public TrucksAppService(IRepository<Truck, Guid> truckRepository, ITrucksExcelExporter trucksExcelExporter, IRepository<TrucksType, long> lookup_trucksTypeRepository, IRepository<TruckStatus, long> lookup_truckStatusRepository, IRepository<User, long> lookup_userRepository, IAppNotifier appNotifier, ITempFileCacheManager tempFileCacheManager, IBinaryObjectManager binaryObjectManager)
         {
             _truckRepository = truckRepository;
             _trucksExcelExporter = trucksExcelExporter;
@@ -145,7 +145,7 @@ namespace TACHYON.Trucks
 
             if (output.Truck.TruckStatusId != null)
             {
-                var _lookupTruckStatus = await _lookup_truckStatusRepository.FirstOrDefaultAsync((Guid)output.Truck.TruckStatusId);
+                var _lookupTruckStatus = await _lookup_truckStatusRepository.FirstOrDefaultAsync(output.Truck.TruckStatusId);
                 output.TruckStatusDisplayName = _lookupTruckStatus?.DisplayName?.ToString();
             }
 
@@ -179,7 +179,7 @@ namespace TACHYON.Trucks
 
             if (output.Truck.TruckStatusId != null)
             {
-                var _lookupTruckStatus = await _lookup_truckStatusRepository.FirstOrDefaultAsync((Guid)output.Truck.TruckStatusId);
+                var _lookupTruckStatus = await _lookup_truckStatusRepository.FirstOrDefaultAsync(output.Truck.TruckStatusId);
                 output.TruckStatusDisplayName = _lookupTruckStatus?.DisplayName?.ToString();
             }
 
