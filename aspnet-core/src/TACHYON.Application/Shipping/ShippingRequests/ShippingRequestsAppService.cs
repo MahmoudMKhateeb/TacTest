@@ -27,6 +27,7 @@ using TACHYON.Trucks.TrucksTypes;
 using Abp.Notifications;
 using Abp.UI;
 using TACHYON.Goods.GoodsDetails.Dtos;
+using TACHYON.Routs.RoutSteps.Dtos;
 
 namespace TACHYON.Shipping.ShippingRequests
 {
@@ -39,10 +40,11 @@ namespace TACHYON.Shipping.ShippingRequests
         private readonly IRepository<TrailerType, int> _lookup_trailerTypeRepository;
         private readonly IRepository<GoodsDetail, long> _lookup_goodsDetailRepository;
         private readonly IRepository<Route, int> _lookup_routeRepository;
+        private readonly IRepository<RoutStep, long> _routStepRepository;
         private readonly IAppNotifier _appNotifier;
 
 
-        public ShippingRequestsAppService(IRepository<ShippingRequest, long> shippingRequestRepository, IShippingRequestsExcelExporter shippingRequestsExcelExporter, IRepository<TrucksType, long> lookup_trucksTypeRepository, IRepository<TrailerType, int> lookup_trailerTypeRepository, IRepository<GoodsDetail, long> lookup_goodsDetailRepository, IRepository<Route, int> lookup_routeRepository, IAppNotifier appNotifier)
+        public ShippingRequestsAppService(IRepository<ShippingRequest, long> shippingRequestRepository, IShippingRequestsExcelExporter shippingRequestsExcelExporter, IRepository<TrucksType, long> lookup_trucksTypeRepository, IRepository<TrailerType, int> lookup_trailerTypeRepository, IRepository<GoodsDetail, long> lookup_goodsDetailRepository, IRepository<Route, int> lookup_routeRepository, IAppNotifier appNotifier, IRepository<RoutStep, long> routStepRepository)
         {
             _shippingRequestRepository = shippingRequestRepository;
             _shippingRequestsExcelExporter = shippingRequestsExcelExporter;
@@ -51,6 +53,7 @@ namespace TACHYON.Shipping.ShippingRequests
             _lookup_goodsDetailRepository = lookup_goodsDetailRepository;
             _lookup_routeRepository = lookup_routeRepository;
             _appNotifier = appNotifier;
+            _routStepRepository = routStepRepository;
         }
 
         public async Task<PagedResultDto<GetShippingRequestForViewDto>> GetAll(GetAllShippingRequestsInput input)
@@ -227,9 +230,12 @@ namespace TACHYON.Shipping.ShippingRequests
 
             if (output.ShippingRequest.GoodsDetailId != null)
             {
-                var _lookupRoute = await _lookup_goodsDetailRepository.FirstOrDefaultAsync((int)output.ShippingRequest.GoodsDetailId);
-                output.ShippingRequest.CreateOrEditGoodsDetailDto = ObjectMapper.Map<CreateOrEditGoodsDetailDto>(_lookupRoute);
+                var _lookupGoodsDetails = await _lookup_goodsDetailRepository.FirstOrDefaultAsync((int)output.ShippingRequest.GoodsDetailId);
+                output.ShippingRequest.CreateOrEditGoodsDetailDto = ObjectMapper.Map<CreateOrEditGoodsDetailDto>(_lookupGoodsDetails);
             }
+
+            var _lookupRoutStep = await _routStepRepository.GetAll().Where(x => x.ShippingRequestId == output.ShippingRequest.Id).ToListAsync();
+            output.ShippingRequest.CreateOrEditRoutStepDtoList = ObjectMapper.Map<List<CreateOrEditRoutStepDto>>(_lookupRoutStep);
 
             return output;
         }
