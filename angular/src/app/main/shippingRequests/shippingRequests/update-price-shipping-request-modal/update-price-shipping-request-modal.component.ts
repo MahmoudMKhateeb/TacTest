@@ -10,6 +10,7 @@ import {
   UpdatePriceInput,
 } from '@shared/service-proxies/service-proxies';
 import { finalize } from '@node_modules/rxjs/operators';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-update-price-shipping-request-modal',
@@ -25,6 +26,7 @@ export class UpdatePriceShippingRequestModalComponent extends AppComponentBase {
   item: GetShippingRequestForViewDto;
   updatePriceInput: UpdatePriceInput;
   acceptShippingRequestPriceInput: AcceptShippingRequestPriceInput;
+  private _router: Router;
 
   constructor(injector: Injector, private _shippingRequestsServiceProxy: ShippingRequestsServiceProxy) {
     super(injector);
@@ -96,5 +98,9 @@ export class UpdatePriceShippingRequestModalComponent extends AppComponentBase {
         this.close();
         this.modalSave.emit(null);
       });
+  }
+
+  clone() {
+    this._router.navigate(['/app/main/shippingRequests/shippingRequests?id']);
   }
 }

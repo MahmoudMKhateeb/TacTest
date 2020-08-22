@@ -7,6 +7,7 @@
         <div class="card-body">
           <div class="form-group m-form__group">
             <label for="TrucksTypeDisplayName">{{ l('TrucksType') }}</label>
+            {{ shippingRequest.trucksTypeId }}
             <select [(ngModel)]="shippingRequest.trucksTypeId" class="form-control" name="shippingRequest.trucksTypeId">
               <option value="">{{ l('SelectATrucksType') }}</option>
               <option *ngFor="let item of allTrucksTypes" value="{{ item.id }}">{{ item.displayName }}</option>
@@ -21,13 +22,13 @@
             </select>
           </div>
 
-          <div class="form-group m-form__group">
-            <label for="RouteDisplayName">{{ l('Route') }}</label>
-            <select [(ngModel)]="shippingRequest.routeId" class="form-control" name="shippingRequest.routeId">
-              <option value="">{{ l('SelectARoute') }}</option>
-              <option *ngFor="let item of allRoutes" value="{{ item.id }}">{{ item.displayName }}</option>
-            </select>
-          </div>
+          <!--          <div class="form-group m-form__group">-->
+          <!--            <label for="RouteDisplayName">{{ l('Route') }}</label>-->
+          <!--            <select [(ngModel)]="shippingRequest.routeId" class="form-control" name="shippingRequest.routeId">-->
+          <!--              <option value="">{{ l('SelectARoute') }}</option>-->
+          <!--              <option *ngFor="let item of allRoutes" value="{{ item.id }}">{{ item.displayName }}</option>-->
+          <!--            </select>-->
+          <!--          </div>-->
 
           <div class="form-group">
             <label for="ShippingRequest_Vas">{{ l('Vas') }}</label>
@@ -309,3 +310,4 @@
     </div>
   </div>
 </div>
+ّ

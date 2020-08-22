@@ -74,6 +74,7 @@ export class CreateOrEditShippingRequestComponent extends AppComponentBase imple
     private ngZone: NgZone
   ) {
     super(injector);
+    this.shippingRequest.createOrEditGoodsDetailDto = new CreateOrEditGoodsDetailDto();
   }
 
   openModal() {
@@ -86,29 +87,8 @@ export class CreateOrEditShippingRequestComponent extends AppComponentBase imple
   ngOnInit(): void {
     this.show(this._activatedRoute.snapshot.queryParams['id']);
     //load Places Autocomplete
-    this.mapsAPILoader.load().then(() => {
-      this.geoCoder = new google.maps.Geocoder();
-
-      let autocomplete = new google.maps.places.Autocomplete(this.searchElementRef.nativeElement);
-      autocomplete.addListener('place_changed', () => {
-        this.ngZone.run(() => {
-          //get the place result
-          let place: google.maps.places.PlaceResult = autocomplete.getPlace();
-
-          //verify result
-          if (place.geometry === undefined || place.geometry === null) {
-            return;
-          }
-
-          //set latitude, longitude and zoom
-          this.routStep.latitude = place.geometry.location.lat().toString();
-          this.routStep.longitude = place.geometry.location.lng().toString();
-          this.zoom = 12;
-        });
-      });
-    });
+    this.loadMapApi();
   }
-
   show(shippingRequestId?: number): void {
     if (!shippingRequestId) {
       this.shippingRequest = new CreateOrEditShippingRequestDto();
@@ -128,7 +108,7 @@ export class CreateOrEditShippingRequestComponent extends AppComponentBase imple
         this.trailerTypeDisplayName = result.trailerTypeDisplayName;
         this.goodsDetailName = result.goodsDetailName;
         this.routeDisplayName = result.routeDisplayName;
-
+        this.createOrEditRoutStepDtoList = result.shippingRequest.createOrEditRoutStepDtoList;
         this.active = true;
       });
     }
@@ -160,6 +140,12 @@ export class CreateOrEditShippingRequestComponent extends AppComponentBase imple
   }
 
   save(): void {
+    //if cloned request we will create it
+    console.log(this._activatedRoute.snapshot.queryParams['clone']);
+    if (this._activatedRoute.snapshot.queryParams['clone'] === true) {
+      console.log('cloned request');
+      this.shippingRequest.id = undefined;
+    }
     this.saveInternal().subscribe((x) => {
       this._router.navigate(['/app/main/shippingRequests/shippingRequests']);
     });
@@ -175,6 +161,30 @@ export class CreateOrEditShippingRequestComponent extends AppComponentBase imple
         this.notify.info(this.l('SavedSuccessfully'));
       })
     );
+  }
+
+  loadMapApi() {
+    this.mapsAPILoader.load().then(() => {
+      this.geoCoder = new google.maps.Geocoder();
+
+      let autocomplete = new google.maps.places.Autocomplete(this.searchElementRef.nativeElement);
+      autocomplete.addListener('place_changed', () => {
+        this.ngZone.run(() => {
+          //get the place result
+          let place: google.maps.places.PlaceResult = autocomplete.getPlace();
+
+          //verify result
+          if (place.geometry === undefined || place.geometry === null) {
+            return;
+          }
+
+          //set latitude, longitude and zoom
+          this.routStep.latitude = place.geometry.location.lat().toString();
+          this.routStep.longitude = place.geometry.location.lng().toString();
+          this.zoom = 12;
+        });
+      });
+    });
   }
 
   mapClicked($event: MouseEvent) {

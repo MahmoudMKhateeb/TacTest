@@ -105,6 +105,15 @@
             >
               <i class="fa fa-save"></i> <span>{{ l('Save') }}</span>
             </button>
+
+            <a
+              *ngIf="feature.isEnabled('App.TachyonDealer')"
+              [queryParams]="{ id: item.shippingRequest.id, clone: true }"
+              [routerLink]="['/app/main/shippingRequests/shippingRequests/createOrEdit']"
+              class="btn btn-primary blue"
+            >
+              {{ l('Clone') }}
+            </a>
           </div>
         </div>
       </form>
