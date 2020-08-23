@@ -1,6 +1,7 @@
 ﻿import { Component, ElementRef, Injector, NgZone, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import { finalize } from 'rxjs/operators';
 import {
+  CarriersForDropDownDto,
   CreateOrEditGoodsDetailDto,
   CreateOrEditRoutStepDto,
   CreateOrEditShippingRequestDto,
@@ -50,6 +51,7 @@ export class CreateOrEditShippingRequestComponent extends AppComponentBase imple
   allGoodsDetails: ShippingRequestGoodsDetailLookupTableDto[];
   allRoutes: ShippingRequestRouteLookupTableDto[];
   allGoodCategorys: GoodsDetailGoodCategoryLookupTableDto[];
+  allCarrierTenants: CarriersForDropDownDto[];
 
   breadcrumbs: BreadcrumbItem[] = [
     new BreadcrumbItem(this.l('ShippingRequest'), '/app/main/shippingRequests/shippingRequests'),
@@ -127,6 +129,9 @@ export class CreateOrEditShippingRequestComponent extends AppComponentBase imple
     this._goodsDetailsServiceProxy.getAllGoodCategoryForTableDropdown().subscribe((result) => {
       this.allGoodCategorys = result;
     });
+    this._shippingRequestsServiceProxy.getAllCarriersForDropDown().subscribe((result) => {
+      this.allCarrierTenants = result;
+    });
     this._routStepsServiceProxy.getAllCityForTableDropdown().subscribe((result) => {
       this.allCitys = result;
     });
@@ -142,9 +147,14 @@ export class CreateOrEditShippingRequestComponent extends AppComponentBase imple
   save(): void {
     //if cloned request we will create it
     console.log(this._activatedRoute.snapshot.queryParams['clone']);
-    if (this._activatedRoute.snapshot.queryParams['clone'] === true) {
+    if (this._activatedRoute.snapshot.queryParams['clone']) {
       console.log('cloned request');
       this.shippingRequest.id = undefined;
+      this.shippingRequest.goodsDetailId = undefined;
+      this.shippingRequest.createOrEditGoodsDetailDto.id = undefined;
+      this.shippingRequest.createOrEditRoutStepDtoList.forEach((x) => (x.id = undefined));
+      this.shippingRequest.fatherShippingRequestId = this._activatedRoute.snapshot.queryParams['id'];
+      this.shippingRequest.isTachyonDeal = false;
     }
     this.saveInternal().subscribe((x) => {
       this._router.navigate(['/app/main/shippingRequests/shippingRequests']);

@@ -58,7 +58,7 @@ namespace TACHYON.Shipping.ShippingRequests
         [ForeignKey("FatherShippingRequestId")]
         public ShippingRequest FatherShippingRequestFk { get; set; }
 
-        int? CarrierTenantId { get; set; }
+       public int? CarrierTenantId { get; set; }
 
         [ForeignKey("CarrierTenantId")]
         public Tenant CarrierTenantFk { get; set; }

@@ -115,18 +115,6 @@
             />
           </div>
 
-          <div class="form-group col-md-6 m-form__group">
-            <label for="carrierTenantDisplayName">{{ l('carrierTenantDisplayName') }}</label>
-            <select
-              [(ngModel)]="shippingRequest.createOrEditGoodsDetailDto.goodCategoryId"
-              class="form-control"
-              name="createOrEditGoodsDetailDto.goodCategoryId"
-            >
-              <option value="">{{ l('SelectAGoodCategory') }}</option>
-              <option *ngFor="let item of allGoodCategorys" value="{{ item.id }}">{{ item.displayName }}</option>
-            </select>
-          </div>
-
           <br />
           <div class="m-checkbox-list col-md-6">
             <label class="kt-checkbox kt-" for="GoodsDetail_IsDangerousGood">
@@ -166,6 +154,14 @@
               type="text"
             />
           </div>
+          <div class="form-group col-md-6 m-form__group">
+            <label for="carrierTenantDisplayName">{{ l('carrierTenantDisplayName') }}</label>
+            <select [(ngModel)]="shippingRequest.carrierTenantId" class="form-control" name="carrierTenantId">
+              <option value="">{{ l('SelectAGoodCategory') }}</option>
+              <option *ngFor="let item of allCarrierTenants" value="{{ item.id }}">{{ item.displayName }}</option>
+            </select>
+          </div>
+
           <div class="col-md-6">
             <button (click)="openModal()" class="btn btn-primary" type="button">add route step</button>
           </div>

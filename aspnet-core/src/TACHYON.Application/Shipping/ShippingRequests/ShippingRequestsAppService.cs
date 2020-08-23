@@ -27,6 +27,7 @@ using TACHYON.Trucks.TrucksTypes;
 using Abp.Notifications;
 using Abp.UI;
 using TACHYON.Goods.GoodsDetails.Dtos;
+using TACHYON.MultiTenancy;
 using TACHYON.Routs.RoutSteps.Dtos;
 
 namespace TACHYON.Shipping.ShippingRequests
@@ -42,9 +43,10 @@ namespace TACHYON.Shipping.ShippingRequests
         private readonly IRepository<Route, int> _lookup_routeRepository;
         private readonly IRepository<RoutStep, long> _routStepRepository;
         private readonly IAppNotifier _appNotifier;
+        private readonly IRepository<Tenant> _tenantRepository;
 
 
-        public ShippingRequestsAppService(IRepository<ShippingRequest, long> shippingRequestRepository, IShippingRequestsExcelExporter shippingRequestsExcelExporter, IRepository<TrucksType, long> lookup_trucksTypeRepository, IRepository<TrailerType, int> lookup_trailerTypeRepository, IRepository<GoodsDetail, long> lookup_goodsDetailRepository, IRepository<Route, int> lookup_routeRepository, IAppNotifier appNotifier, IRepository<RoutStep, long> routStepRepository)
+        public ShippingRequestsAppService(IRepository<ShippingRequest, long> shippingRequestRepository, IShippingRequestsExcelExporter shippingRequestsExcelExporter, IRepository<TrucksType, long> lookup_trucksTypeRepository, IRepository<TrailerType, int> lookup_trailerTypeRepository, IRepository<GoodsDetail, long> lookup_goodsDetailRepository, IRepository<Route, int> lookup_routeRepository, IAppNotifier appNotifier, IRepository<RoutStep, long> routStepRepository, IRepository<Tenant> tenantRepository)
         {
             _shippingRequestRepository = shippingRequestRepository;
             _shippingRequestsExcelExporter = shippingRequestsExcelExporter;
@@ -54,6 +56,7 @@ namespace TACHYON.Shipping.ShippingRequests
             _lookup_routeRepository = lookup_routeRepository;
             _appNotifier = appNotifier;
             _routStepRepository = routStepRepository;
+            _tenantRepository = tenantRepository;
         }
 
         public async Task<PagedResultDto<GetShippingRequestForViewDto>> GetAll(GetAllShippingRequestsInput input)
@@ -432,5 +435,16 @@ namespace TACHYON.Shipping.ShippingRequests
                 }).ToListAsync();
         }
 
+        public async Task<List<CarriersForDropDownDto>> GetAllCarriersForDropDownAsync()
+        {
+
+            return await _tenantRepository.GetAll()
+                .Where(x=> x.Edition.Name == AppConsts.CarrierEditionName)
+                 .Select(x => new CarriersForDropDownDto
+                 {
+                     Id = x.Id,
+                     DisplayName = x.TenancyName
+                 }).ToListAsync();
+        }
     }
 }
