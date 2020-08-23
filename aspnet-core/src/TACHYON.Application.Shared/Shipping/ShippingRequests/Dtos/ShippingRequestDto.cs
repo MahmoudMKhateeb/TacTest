@@ -9,7 +9,7 @@ namespace TACHYON.Shipping.ShippingRequests.Dtos
         public decimal Vas { get; set; }
 
 
-        public Guid? TrucksTypeId { get; set; }
+        public long? TrucksTypeId { get; set; }
 
         public int? TrailerTypeId { get; set; }
 

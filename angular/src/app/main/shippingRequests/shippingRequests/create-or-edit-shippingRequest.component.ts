@@ -1,6 +1,7 @@
 ﻿import { Component, ElementRef, Injector, NgZone, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import { finalize } from 'rxjs/operators';
 import {
+  CarriersForDropDownDto,
   CreateOrEditGoodsDetailDto,
   CreateOrEditRoutStepDto,
   CreateOrEditShippingRequestDto,
@@ -50,6 +51,7 @@ export class CreateOrEditShippingRequestComponent extends AppComponentBase imple
   allGoodsDetails: ShippingRequestGoodsDetailLookupTableDto[];
   allRoutes: ShippingRequestRouteLookupTableDto[];
   allGoodCategorys: GoodsDetailGoodCategoryLookupTableDto[];
+  allCarrierTenants: CarriersForDropDownDto[];
 
   breadcrumbs: BreadcrumbItem[] = [
     new BreadcrumbItem(this.l('ShippingRequest'), '/app/main/shippingRequests/shippingRequests'),
@@ -74,6 +76,7 @@ export class CreateOrEditShippingRequestComponent extends AppComponentBase imple
     private ngZone: NgZone
   ) {
     super(injector);
+    this.shippingRequest.createOrEditGoodsDetailDto = new CreateOrEditGoodsDetailDto();
   }
 
   openModal() {
@@ -86,6 +89,91 @@ export class CreateOrEditShippingRequestComponent extends AppComponentBase imple
   ngOnInit(): void {
     this.show(this._activatedRoute.snapshot.queryParams['id']);
     //load Places Autocomplete
+    this.loadMapApi();
+  }
+  show(shippingRequestId?: number): void {
+    if (!shippingRequestId) {
+      this.shippingRequest = new CreateOrEditShippingRequestDto();
+      this.shippingRequest.createOrEditGoodsDetailDto = new CreateOrEditGoodsDetailDto();
+      this.shippingRequest.id = shippingRequestId;
+      this.trucksTypeDisplayName = '';
+      this.trailerTypeDisplayName = '';
+      this.goodsDetailName = '';
+      this.routeDisplayName = '';
+
+      this.active = true;
+    } else {
+      this._shippingRequestsServiceProxy.getShippingRequestForEdit(shippingRequestId).subscribe((result) => {
+        this.shippingRequest = result.shippingRequest;
+
+        this.trucksTypeDisplayName = result.trucksTypeDisplayName;
+        this.trailerTypeDisplayName = result.trailerTypeDisplayName;
+        this.goodsDetailName = result.goodsDetailName;
+        this.routeDisplayName = result.routeDisplayName;
+        this.createOrEditRoutStepDtoList = result.shippingRequest.createOrEditRoutStepDtoList;
+        this.active = true;
+      });
+    }
+    this._shippingRequestsServiceProxy.getAllTrucksTypeForTableDropdown().subscribe((result) => {
+      this.allTrucksTypes = result;
+    });
+    this._shippingRequestsServiceProxy.getAllTrailerTypeForTableDropdown().subscribe((result) => {
+      this.allTrailerTypes = result;
+    });
+    this._shippingRequestsServiceProxy.getAllGoodsDetailForTableDropdown().subscribe((result) => {
+      this.allGoodsDetails = result;
+    });
+    this._shippingRequestsServiceProxy.getAllRouteForTableDropdown().subscribe((result) => {
+      this.allRoutes = result;
+    });
+    this._goodsDetailsServiceProxy.getAllGoodCategoryForTableDropdown().subscribe((result) => {
+      this.allGoodCategorys = result;
+    });
+    this._shippingRequestsServiceProxy.getAllCarriersForDropDown().subscribe((result) => {
+      this.allCarrierTenants = result;
+    });
+    this._routStepsServiceProxy.getAllCityForTableDropdown().subscribe((result) => {
+      this.allCitys = result;
+    });
+  }
+
+  addRouteStep(): void {
+    const item = this.routStep;
+    this.createOrEditRoutStepDtoList.push(this.routStep);
+    this.routStep = new CreateOrEditRoutStepDto();
+    this.staticModal.hide();
+  }
+
+  save(): void {
+    //if cloned request we will create it
+    console.log(this._activatedRoute.snapshot.queryParams['clone']);
+    if (this._activatedRoute.snapshot.queryParams['clone']) {
+      console.log('cloned request');
+      this.shippingRequest.id = undefined;
+      this.shippingRequest.goodsDetailId = undefined;
+      this.shippingRequest.createOrEditGoodsDetailDto.id = undefined;
+      this.shippingRequest.createOrEditRoutStepDtoList.forEach((x) => (x.id = undefined));
+      this.shippingRequest.fatherShippingRequestId = this._activatedRoute.snapshot.queryParams['id'];
+      this.shippingRequest.isTachyonDeal = false;
+    }
+    this.saveInternal().subscribe((x) => {
+      this._router.navigate(['/app/main/shippingRequests/shippingRequests']);
+    });
+  }
+
+  private saveInternal(): Observable<void> {
+    this.saving = true;
+    this.shippingRequest.createOrEditRoutStepDtoList = this.createOrEditRoutStepDtoList;
+
+    return this._shippingRequestsServiceProxy.createOrEdit(this.shippingRequest).pipe(
+      finalize(() => {
+        this.saving = false;
+        this.notify.info(this.l('SavedSuccessfully'));
+      })
+    );
+  }
+
+  loadMapApi() {
     this.mapsAPILoader.load().then(() => {
       this.geoCoder = new google.maps.Geocoder();
 
@@ -107,80 +195,6 @@ export class CreateOrEditShippingRequestComponent extends AppComponentBase imple
         });
       });
     });
-  }
-
-  show(shippingRequestId?: number): void {
-    if (!shippingRequestId) {
-      this.shippingRequest = new CreateOrEditShippingRequestDto();
-      this.shippingRequest.createOrEditGoodsDetailDto = new CreateOrEditGoodsDetailDto();
-      this.shippingRequest.id = shippingRequestId;
-      this.trucksTypeDisplayName = '';
-      this.trailerTypeDisplayName = '';
-      this.goodsDetailName = '';
-      this.routeDisplayName = '';
-
-      this.active = true;
-    } else {
-      this._shippingRequestsServiceProxy.getShippingRequestForEdit(shippingRequestId).subscribe((result) => {
-        this.shippingRequest = result.shippingRequest;
-
-        this.trucksTypeDisplayName = result.trucksTypeDisplayName;
-        this.trailerTypeDisplayName = result.trailerTypeDisplayName;
-        this.goodsDetailName = result.goodsDetailName;
-        this.routeDisplayName = result.routeDisplayName;
-
-        this.active = true;
-      });
-    }
-    this._shippingRequestsServiceProxy.getAllTrucksTypeForTableDropdown().subscribe((result) => {
-      this.allTrucksTypes = result;
-    });
-    this._shippingRequestsServiceProxy.getAllTrailerTypeForTableDropdown().subscribe((result) => {
-      this.allTrailerTypes = result;
-    });
-    this._shippingRequestsServiceProxy.getAllGoodsDetailForTableDropdown().subscribe((result) => {
-      this.allGoodsDetails = result;
-    });
-    this._shippingRequestsServiceProxy.getAllRouteForTableDropdown().subscribe((result) => {
-      this.allRoutes = result;
-    });
-    this._goodsDetailsServiceProxy.getAllGoodCategoryForTableDropdown().subscribe((result) => {
-      this.allGoodCategorys = result;
-    });
-    this._routStepsServiceProxy.getAllCityForTableDropdown().subscribe((result) => {
-      this.allCitys = result;
-    });
-  }
-
-  addRouteStep(): void {
-    const item = this.routStep;
-    this.createOrEditRoutStepDtoList.push(this.routStep);
-    this.routStep = new CreateOrEditRoutStepDto();
-    this.staticModal.hide();
-  }
-
-  save(): void {
-    this.saveInternal().subscribe((x) => {
-      this._router.navigate(['/app/main/shippingRequests/shippingRequests']);
-    });
-  }
-
-  saveAndNew(): void {
-    this.saveInternal().subscribe((x) => {
-      this.shippingRequest = new CreateOrEditShippingRequestDto();
-    });
-  }
-
-  private saveInternal(): Observable<void> {
-    this.saving = true;
-    this.shippingRequest.createOrEditRoutStepDtoList = this.createOrEditRoutStepDtoList;
-
-    return this._shippingRequestsServiceProxy.createOrEdit(this.shippingRequest).pipe(
-      finalize(() => {
-        this.saving = false;
-        this.notify.info(this.l('SavedSuccessfully'));
-      })
-    );
   }
 
   mapClicked($event: MouseEvent) {

@@ -25,7 +25,7 @@ namespace TACHYON.Offers
         public virtual decimal Price { get; set; }
 
 
-        public virtual Guid TrucksTypeId { get; set; }
+        public virtual long TrucksTypeId { get; set; }
 
         [ForeignKey("TrucksTypeId")]
         public TrucksType TrucksTypeFk { get; set; }

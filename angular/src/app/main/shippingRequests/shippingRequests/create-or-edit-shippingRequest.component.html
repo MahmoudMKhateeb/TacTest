@@ -4,16 +4,17 @@
 
     <div [class]="containerClass">
       <div class="card card-custom gutter-b">
-        <div class="card-body">
-          <div class="form-group m-form__group">
+        <div class="card-body row">
+          <div class="form-group col-md-6 m-form__group">
             <label for="TrucksTypeDisplayName">{{ l('TrucksType') }}</label>
+            {{ shippingRequest.trucksTypeId }}
             <select [(ngModel)]="shippingRequest.trucksTypeId" class="form-control" name="shippingRequest.trucksTypeId">
               <option value="">{{ l('SelectATrucksType') }}</option>
               <option *ngFor="let item of allTrucksTypes" value="{{ item.id }}">{{ item.displayName }}</option>
             </select>
           </div>
 
-          <div class="form-group m-form__group">
+          <div class="form-group col-md-6 m-form__group">
             <label for="TrailerTypeDisplayName">{{ l('TrailerType') }}</label>
             <select [(ngModel)]="shippingRequest.trailerTypeId" class="form-control" name="shippingRequest.trailerTypeId">
               <option value="">{{ l('SelectATrailerType') }}</option>
@@ -21,22 +22,22 @@
             </select>
           </div>
 
-          <div class="form-group m-form__group">
-            <label for="RouteDisplayName">{{ l('Route') }}</label>
-            <select [(ngModel)]="shippingRequest.routeId" class="form-control" name="shippingRequest.routeId">
-              <option value="">{{ l('SelectARoute') }}</option>
-              <option *ngFor="let item of allRoutes" value="{{ item.id }}">{{ item.displayName }}</option>
-            </select>
-          </div>
+          <!--          <div class="form-group col-md-6 m-form__group">-->
+          <!--            <label for="RouteDisplayName">{{ l('Route') }}</label>-->
+          <!--            <select [(ngModel)]="shippingRequest.routeId" class="form-control" name="shippingRequest.routeId">-->
+          <!--              <option value="">{{ l('SelectARoute') }}</option>-->
+          <!--              <option *ngFor="let item of allRoutes" value="{{ item.id }}">{{ item.displayName }}</option>-->
+          <!--            </select>-->
+          <!--          </div>-->
 
-          <div class="form-group">
+          <div class="form-group col-md-6">
             <label for="ShippingRequest_Vas">{{ l('Vas') }}</label>
             <input [(ngModel)]="shippingRequest.vas" class="form-control" id="ShippingRequest_Vas" name="Vas" type="number" />
           </div>
 
           <hr />
 
-          <div class="form-group m-form__group">
+          <div class="form-group col-md-6 m-form__group">
             <label for="GoodCategoryDisplayName">{{ l('GoodCategory') }}</label>
             <select
               [(ngModel)]="shippingRequest.createOrEditGoodsDetailDto.goodCategoryId"
@@ -48,7 +49,7 @@
             </select>
           </div>
 
-          <div class="form-group">
+          <div class="form-group col-md-6">
             <label for="GoodsDetail_Name">{{ l('Name') }} *</label>
             <input
               [(ngModel)]="shippingRequest.createOrEditGoodsDetailDto.name"
@@ -62,7 +63,7 @@
             />
           </div>
 
-          <div class="form-group">
+          <div class="form-group col-md-6">
             <label for="GoodsDetail_Description">{{ l('Description') }}</label>
             <input
               [(ngModel)]="shippingRequest.createOrEditGoodsDetailDto.description"
@@ -75,7 +76,7 @@
             />
           </div>
 
-          <div class="form-group">
+          <div class="form-group col-md-6">
             <label for="GoodsDetail_Quantity">{{ l('Quantity') }}</label>
             <input
               [(ngModel)]="shippingRequest.createOrEditGoodsDetailDto.quantity"
@@ -88,7 +89,7 @@
             />
           </div>
 
-          <div class="form-group">
+          <div class="form-group col-md-6">
             <label for="GoodsDetail_Weight">{{ l('Weight') }}</label>
             <input
               [(ngModel)]="shippingRequest.createOrEditGoodsDetailDto.weight"
@@ -101,7 +102,7 @@
             />
           </div>
 
-          <div class="form-group">
+          <div class="form-group col-md-6">
             <label for="GoodsDetail_Dimentions">{{ l('Dimentions') }}</label>
             <input
               [(ngModel)]="shippingRequest.createOrEditGoodsDetailDto.dimentions"
@@ -115,8 +116,8 @@
           </div>
 
           <br />
-          <div class="m-checkbox-list">
-            <label class="kt-checkbox" for="GoodsDetail_IsDangerousGood">
+          <div class="m-checkbox-list col-md-6">
+            <label class="kt-checkbox kt-" for="GoodsDetail_IsDangerousGood">
               <input
                 [(ngModel)]="shippingRequest.createOrEditGoodsDetailDto.isDangerousGood"
                 id="GoodsDetail_IsDangerousGood"
@@ -126,9 +127,22 @@
               {{ l('IsDangerousGood') }}
               <span></span>
             </label>
+            &nbsp;
+            <label class="kt-checkbox" for="isBid">
+              <input [(ngModel)]="shippingRequest.isBid" id="isBid" name="isBid" type="checkbox" />
+              {{ l('isBid') }}
+              <span></span>
+            </label>
+            &nbsp;
+            <label class="kt-checkbox" for="isTachyonDeal">
+              <input [(ngModel)]="shippingRequest.isTachyonDeal" id="isTachyonDeal" name="isTachyonDeal" type="checkbox" />
+              {{ l('isTachyonDeal') }}
+              <span></span>
+            </label>
+            &nbsp;
           </div>
 
-          <div class="form-group">
+          <div class="form-group col-md-6">
             <label for="GoodsDetail_DangerousGoodsCode">{{ l('DangerousGoodsCode') }}</label>
             <input
               [(ngModel)]="shippingRequest.createOrEditGoodsDetailDto.dangerousGoodsCode"
@@ -140,25 +154,17 @@
               type="text"
             />
           </div>
-
-          <div class="m-checkbox-list">
-            <label class="kt-checkbox" for="isBid">
-              <input [(ngModel)]="shippingRequest.isBid" id="isBid" name="isBid" type="checkbox" />
-              {{ l('isBid') }}
-              <span></span>
-            </label>
-          </div>
-          <div class="m-checkbox-list">
-            <label class="kt-checkbox" for="isTachyonDeal">
-              <input [(ngModel)]="shippingRequest.isTachyonDeal" id="isTachyonDeal" name="isTachyonDeal" type="checkbox" />
-              {{ l('isTachyonDeal') }}
-              <span></span>
-            </label>
+          <div class="form-group col-md-6 m-form__group">
+            <label for="carrierTenantDisplayName">{{ l('carrierTenantDisplayName') }}</label>
+            <select [(ngModel)]="shippingRequest.carrierTenantId" class="form-control" name="carrierTenantId">
+              <option value="">{{ l('SelectAGoodCategory') }}</option>
+              <option *ngFor="let item of allCarrierTenants" value="{{ item.id }}">{{ item.displayName }}</option>
+            </select>
           </div>
 
-          <hr />
-
-          <button (click)="openModal()" class="btn btn-primary" type="button">add route step</button>
+          <div class="col-md-6">
+            <button (click)="openModal()" class="btn btn-primary" type="button">add route step</button>
+          </div>
 
           <div
             class="modal fade"
@@ -185,7 +191,7 @@
                   <div class="modal-body">
                     <div class="row">
                       <div class="col-md-6">
-                        <div class="form-group m-form__group">
+                        <div class="form-group col-md-6 m-form__group">
                           <label for="CityDisplayName">{{ l('City') }}</label>
                           <select name="routStep.originCityId" [(ngModel)]="routStep.originCityId" class="form-control">
                             <option value="">{{ l('SelectACity') }}</option>
@@ -193,7 +199,7 @@
                           </select>
                         </div>
 
-                        <div class="form-group m-form__group">
+                        <div class="form-group col-md-6 m-form__group">
                           <label for="CityDisplayName2">{{ l('City') }}</label>
                           <select name="routStep.destinationCityId" [(ngModel)]="routStep.destinationCityId" class="form-control">
                             <option value="">{{ l('SelectACity') }}</option>
@@ -201,7 +207,7 @@
                           </select>
                         </div>
 
-                        <div class="form-group">
+                        <div class="form-group col-md-6">
                           <label for="RoutStep_DisplayName">{{ l('DisplayName') }}</label>
                           <input
                             type="text"
@@ -214,7 +220,7 @@
                           />
                         </div>
 
-                        <div class="form-group">
+                        <div class="form-group col-md-6">
                           <label for="RoutStep_Order">{{ l('Order') }}</label>
                           <input type="number" id="RoutStep_Order" class="form-control" [(ngModel)]="routStep.order" name="Order" min="1" max="50" />
                         </div>
@@ -222,7 +228,7 @@
                       <div class="col-md-6">
                         <div class="row">
                           <div class="col-md-12">
-                            <div class="form-group">
+                            <div class="form-group col-md-6">
                               <label>Enter address</label>
                               <input
                                 type="text"
@@ -271,31 +277,6 @@
               </div>
             </div>
           </div>
-
-          <div class="row align-items-center">
-            <!--<Primeng-Datatable-Start>-->
-            <p-table [value]="createOrEditRoutStepDtoList">
-              <ng-template pTemplate="header">
-                <tr>
-                  <th>latitude</th>
-                  <th>longitude</th>
-                  <th>order</th>
-                  <th>originCityId</th>
-                  <th>destinationCityId</th>
-                </tr>
-              </ng-template>
-              <ng-template pTemplate="body" let-item>
-                <tr>
-                  <td>{{ item.latitude }}</td>
-                  <td>{{ item.longitude }}</td>
-                  <td>{{ item.order }}</td>
-                  <td>{{ item.originCityId }}</td>
-                  <td>{{ item.destinationCityId }}</td>
-                </tr>
-              </ng-template>
-            </p-table>
-            <!--<Primeng-Datatable-End>-->
-          </div>
         </div>
         <div class="card-footer">
           <div class="col-lg-12">
@@ -303,19 +284,55 @@
               <i class="fa fa-save"></i>
               <span>{{ l('Save') }}</span>
             </button>
-            <button
-              (click)="saveAndNew()"
-              *ngIf="!this.shippingRequest.id"
-              [busyText]="l('SavingWithThreeDot')"
-              [buttonBusy]="saving"
-              class="btn btn-primary blue float-right"
-            >
-              <i class="fa fa-save"></i>
-              <span>{{ l('SaveAndNew') }}</span>
-            </button>
           </div>
+        </div>
+      </div>
+      <div class="row">
+        <div *ngFor="let item of createOrEditRoutStepDtoList" class="col-md-6">
+          <div class="card card-custom">
+            <div class="card-header">
+              <div class="card-title">
+                <h3 class="card-label">{{ l('Route Step') }} #{{ item.order }} <small> </small></h3>
+              </div>
+            </div>
+            <div class="card-body">
+              <div class="row">
+                <div class="col-6 mb-3">
+                  <h6>{{ l('DisplayName') }} :</h6>
+                  {{ item.displayName }}
+                </div>
+                <div class="col-6 mb-3">
+                  <h6>{{ l('Latitude') }} :</h6>
+                  {{ item.latitude }}
+                </div>
+                <div class="col-6 mb-3">
+                  <h6>{{ l('Longitude') }} :</h6>
+                  {{ item.longitude }}
+                </div>
+                <div class="col-6 mb-3">
+                  <h6>{{ l('Order') }} :</h6>
+                  {{ item.order }}
+                </div>
+
+                <!--            <div class="col-6 mb-3">-->
+                <!--              <h6>({{ l('City') }}) {{ l('DisplayName') }} :</h6>-->
+                <!--              {{ item.cityDisplayName }}-->
+                <!--            </div>-->
+                <!--            <div class="col-6 mb-3">-->
+                <!--              <h6>({{ l('City') }}) {{ l('DisplayName') }} :</h6>-->
+                <!--              {{ item.cityDisplayName2 }}-->
+                <!--            </div>-->
+                <!--            <div class="col-6 mb-3">-->
+                <!--              <h6>({{ l('Route') }}) {{ l('DisplayName') }} :</h6>-->
+                <!--              {{ item.routeDisplayName }}-->
+                <!--            </div>-->
+              </div>
+            </div>
+          </div>
+          <br />
         </div>
       </div>
     </div>
   </div>
 </div>
+ّ

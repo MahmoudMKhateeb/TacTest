@@ -13,7 +13,7 @@ namespace TACHYON.Shipping.ShippingRequests.Dtos
         public decimal Vas { get; set; }
 
 
-        public Guid? TrucksTypeId { get; set; }
+        public long? TrucksTypeId { get; set; }
 
         public int? TrailerTypeId { get; set; }
 
@@ -26,6 +26,9 @@ namespace TACHYON.Shipping.ShippingRequests.Dtos
         public virtual bool IsBid { get; set; }
 
         public virtual bool IsTachyonDeal { get; set; }
+        public long? FatherShippingRequestId { get; set; }
+        public int? CarrierTenantId { get; set; }
+        public long? GoodsDetailId { get; set; }
 
 
 

@@ -23,7 +23,7 @@ export class CreateOrEditTrucksTypeModalComponent extends AppComponentBase {
     super(injector);
   }
 
-  show(trucksTypeId?: string): void {
+  show(trucksTypeId?: number): void {
     if (!trucksTypeId) {
       this.trucksType = new CreateOrEditTrucksTypeDto();
       this.trucksType.id = trucksTypeId;

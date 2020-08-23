@@ -2355,8 +2355,8 @@ namespace TACHYON.Migrations
                     b.Property<int>("TrailerTypeId")
                         .HasColumnType("int");
 
-                    b.Property<Guid>("TrucksTypeId")
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<long>("TrucksTypeId")
+                        .HasColumnType("bigint");
 
                     b.HasKey("Id");
 
@@ -2547,6 +2547,9 @@ namespace TACHYON.Migrations
                         .HasColumnType("bigint")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
+                    b.Property<int?>("CarrierTenantId")
+                        .HasColumnType("int");
+
                     b.Property<DateTime>("CreationTime")
                         .HasColumnType("datetime2");
 
@@ -2558,6 +2561,9 @@ namespace TACHYON.Migrations
 
                     b.Property<DateTime?>("DeletionTime")
                         .HasColumnType("datetime2");
+
+                    b.Property<long?>("FatherShippingRequestId")
+                        .HasColumnType("bigint");
 
                     b.Property<long?>("GoodsDetailId")
                         .HasColumnType("bigint");
@@ -2595,13 +2601,17 @@ namespace TACHYON.Migrations
                     b.Property<int?>("TrailerTypeId")
                         .HasColumnType("int");
 
-                    b.Property<Guid?>("TrucksTypeId")
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<long?>("TrucksTypeId")
+                        .HasColumnType("bigint");
 
                     b.Property<decimal>("Vas")
                         .HasColumnType("decimal(18,2)");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("CarrierTenantId");
+
+                    b.HasIndex("FatherShippingRequestId");
 
                     b.HasIndex("GoodsDetailId");
 
@@ -2927,11 +2937,11 @@ namespace TACHYON.Migrations
                     b.Property<int>("TenantId")
                         .HasColumnType("int");
 
-                    b.Property<Guid>("TruckStatusId")
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<long>("TruckStatusId")
+                        .HasColumnType("bigint");
 
-                    b.Property<Guid>("TrucksTypeId")
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<long>("TrucksTypeId")
+                        .HasColumnType("bigint");
 
                     b.HasKey("Id");
 
@@ -2950,9 +2960,10 @@ namespace TACHYON.Migrations
 
             modelBuilder.Entity("TACHYON.Trucks.TruckStatus", b =>
                 {
-                    b.Property<Guid>("Id")
+                    b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("bigint")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<DateTime>("CreationTime")
                         .HasColumnType("datetime2");
@@ -2992,9 +3003,10 @@ namespace TACHYON.Migrations
 
             modelBuilder.Entity("TACHYON.Trucks.TrucksTypes.TrucksType", b =>
                 {
-                    b.Property<Guid>("Id")
+                    b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("bigint")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<DateTime>("CreationTime")
                         .HasColumnType("datetime2");
@@ -3384,6 +3396,14 @@ namespace TACHYON.Migrations
 
             modelBuilder.Entity("TACHYON.Shipping.ShippingRequests.ShippingRequest", b =>
                 {
+                    b.HasOne("TACHYON.MultiTenancy.Tenant", "CarrierTenantFk")
+                        .WithMany()
+                        .HasForeignKey("CarrierTenantId");
+
+                    b.HasOne("TACHYON.Shipping.ShippingRequests.ShippingRequest", "FatherShippingRequestFk")
+                        .WithMany()
+                        .HasForeignKey("FatherShippingRequestId");
+
                     b.HasOne("TACHYON.Goods.GoodsDetails.GoodsDetail", "GoodsDetailFk")
                         .WithMany()
                         .HasForeignKey("GoodsDetailId");

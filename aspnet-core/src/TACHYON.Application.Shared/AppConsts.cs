@@ -55,5 +55,7 @@ namespace TACHYON
         public static TimeSpan RefreshTokenExpiration = TimeSpan.FromDays(365);
 
         public const string DateTimeOffsetFormat = "yyyy-MM-ddTHH:mm:sszzz";
+
+        public const String CarrierEditionName = "276f922a4a6d4f45a680acc7841a8539";
     }
 }

@@ -26,6 +26,9 @@ using TACHYON.Trailers.TrailerTypes;
 using TACHYON.Trucks.TrucksTypes;
 using Abp.Notifications;
 using Abp.UI;
+using TACHYON.Goods.GoodsDetails.Dtos;
+using TACHYON.MultiTenancy;
+using TACHYON.Routs.RoutSteps.Dtos;
 
 namespace TACHYON.Shipping.ShippingRequests
 {
@@ -34,14 +37,16 @@ namespace TACHYON.Shipping.ShippingRequests
     {
         private readonly IRepository<ShippingRequest, long> _shippingRequestRepository;
         private readonly IShippingRequestsExcelExporter _shippingRequestsExcelExporter;
-        private readonly IRepository<TrucksType, Guid> _lookup_trucksTypeRepository;
+        private readonly IRepository<TrucksType, long> _lookup_trucksTypeRepository;
         private readonly IRepository<TrailerType, int> _lookup_trailerTypeRepository;
         private readonly IRepository<GoodsDetail, long> _lookup_goodsDetailRepository;
         private readonly IRepository<Route, int> _lookup_routeRepository;
+        private readonly IRepository<RoutStep, long> _routStepRepository;
         private readonly IAppNotifier _appNotifier;
+        private readonly IRepository<Tenant> _tenantRepository;
 
 
-        public ShippingRequestsAppService(IRepository<ShippingRequest, long> shippingRequestRepository, IShippingRequestsExcelExporter shippingRequestsExcelExporter, IRepository<TrucksType, Guid> lookup_trucksTypeRepository, IRepository<TrailerType, int> lookup_trailerTypeRepository, IRepository<GoodsDetail, long> lookup_goodsDetailRepository, IRepository<Route, int> lookup_routeRepository, IAppNotifier appNotifier)
+        public ShippingRequestsAppService(IRepository<ShippingRequest, long> shippingRequestRepository, IShippingRequestsExcelExporter shippingRequestsExcelExporter, IRepository<TrucksType, long> lookup_trucksTypeRepository, IRepository<TrailerType, int> lookup_trailerTypeRepository, IRepository<GoodsDetail, long> lookup_goodsDetailRepository, IRepository<Route, int> lookup_routeRepository, IAppNotifier appNotifier, IRepository<RoutStep, long> routStepRepository, IRepository<Tenant> tenantRepository)
         {
             _shippingRequestRepository = shippingRequestRepository;
             _shippingRequestsExcelExporter = shippingRequestsExcelExporter;
@@ -50,6 +55,8 @@ namespace TACHYON.Shipping.ShippingRequests
             _lookup_goodsDetailRepository = lookup_goodsDetailRepository;
             _lookup_routeRepository = lookup_routeRepository;
             _appNotifier = appNotifier;
+            _routStepRepository = routStepRepository;
+            _tenantRepository = tenantRepository;
         }
 
         public async Task<PagedResultDto<GetShippingRequestForViewDto>> GetAll(GetAllShippingRequestsInput input)
@@ -154,7 +161,7 @@ namespace TACHYON.Shipping.ShippingRequests
 
             if (output.ShippingRequest.TrucksTypeId != null)
             {
-                var _lookupTrucksType = await _lookup_trucksTypeRepository.FirstOrDefaultAsync((Guid)output.ShippingRequest.TrucksTypeId);
+                var _lookupTrucksType = await _lookup_trucksTypeRepository.FirstOrDefaultAsync(output.ShippingRequest.TrucksTypeId.Value);
                 output.TrucksTypeDisplayName = _lookupTrucksType?.DisplayName?.ToString();
             }
 
@@ -208,7 +215,7 @@ namespace TACHYON.Shipping.ShippingRequests
 
             if (output.ShippingRequest.TrucksTypeId != null)
             {
-                var _lookupTrucksType = await _lookup_trucksTypeRepository.FirstOrDefaultAsync((Guid)output.ShippingRequest.TrucksTypeId);
+                var _lookupTrucksType = await _lookup_trucksTypeRepository.FirstOrDefaultAsync(output.ShippingRequest.TrucksTypeId.Value);
                 output.TrucksTypeDisplayName = _lookupTrucksType?.DisplayName?.ToString();
             }
 
@@ -223,6 +230,15 @@ namespace TACHYON.Shipping.ShippingRequests
                 var _lookupRoute = await _lookup_routeRepository.FirstOrDefaultAsync((int)output.ShippingRequest.RouteId);
                 output.RouteDisplayName = _lookupRoute?.DisplayName?.ToString();
             }
+
+            if (output.ShippingRequest.GoodsDetailId != null)
+            {
+                var _lookupGoodsDetails = await _lookup_goodsDetailRepository.FirstOrDefaultAsync((int)output.ShippingRequest.GoodsDetailId);
+                output.ShippingRequest.CreateOrEditGoodsDetailDto = ObjectMapper.Map<CreateOrEditGoodsDetailDto>(_lookupGoodsDetails);
+            }
+
+            var _lookupRoutStep = await _routStepRepository.GetAll().Where(x => x.ShippingRequestId == output.ShippingRequest.Id).ToListAsync();
+            output.ShippingRequest.CreateOrEditRoutStepDtoList = ObjectMapper.Map<List<CreateOrEditRoutStepDto>>(_lookupRoutStep);
 
             return output;
         }
@@ -394,12 +410,18 @@ namespace TACHYON.Shipping.ShippingRequests
         [AbpAuthorize(AppPermissions.Pages_ShippingRequests)]
         public async Task<List<ShippingRequestGoodsDetailLookupTableDto>> GetAllGoodsDetailForTableDropdown()
         {
-            return await _lookup_goodsDetailRepository.GetAll()
-                .Select(goodsDetail => new ShippingRequestGoodsDetailLookupTableDto
-                {
-                    Id = goodsDetail.Id,
-                    DisplayName = goodsDetail == null || goodsDetail.Name == null ? "" : goodsDetail.Name.ToString()
-                }).ToListAsync();
+            //todo i am not sure about disabling this filter here
+            using (CurrentUnitOfWork.DisableFilter(AbpDataFilters.MustHaveTenant))
+            {
+
+                return await _lookup_goodsDetailRepository.GetAll()
+                    .Select(goodsDetail => new ShippingRequestGoodsDetailLookupTableDto
+                    {
+                        Id = goodsDetail.Id,
+                        DisplayName = goodsDetail == null || goodsDetail.Name == null ? "" : goodsDetail.Name.ToString()
+                    }).ToListAsync();
+            }
+
         }
 
         [AbpAuthorize(AppPermissions.Pages_ShippingRequests)]
@@ -413,5 +435,16 @@ namespace TACHYON.Shipping.ShippingRequests
                 }).ToListAsync();
         }
 
+        public async Task<List<CarriersForDropDownDto>> GetAllCarriersForDropDownAsync()
+        {
+
+            return await _tenantRepository.GetAll()
+                .Where(x=> x.Edition.Name == AppConsts.CarrierEditionName)
+                 .Select(x => new CarriersForDropDownDto
+                 {
+                     Id = x.Id,
+                     DisplayName = x.TenancyName
+                 }).ToListAsync();
+        }
     }
 }

@@ -12,13 +12,13 @@ namespace TACHYON.Trucks
     {
         Task<PagedResultDto<GetTruckStatusForViewDto>> GetAll(GetAllTruckStatusesInput input);
 
-        Task<GetTruckStatusForViewDto> GetTruckStatusForView(Guid id);
+        Task<GetTruckStatusForViewDto> GetTruckStatusForView(long id);
 
-        Task<GetTruckStatusForEditOutput> GetTruckStatusForEdit(EntityDto<Guid> input);
+        Task<GetTruckStatusForEditOutput> GetTruckStatusForEdit(EntityDto<long> input);
 
         Task CreateOrEdit(CreateOrEditTruckStatusDto input);
 
-        Task Delete(EntityDto<Guid> input);
+        Task Delete(EntityDto<long> input);
 
 
     }
