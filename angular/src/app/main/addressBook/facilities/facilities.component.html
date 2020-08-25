@@ -1,0 +1,267 @@
+﻿<div [@routerTransition]>
+  <div class="content d-flex flex-column flex-column-fluid">
+    <sub-header [title]="'Facilities' | localize" [description]="'FacilitiesHeaderInfo' | localize">
+      <div role="actions">
+        <button (click)="exportToExcel()" class="btn btn-outline-success"><i class="fa fa-file-excel"></i> {{ l('ExportToExcel') }}</button>
+
+        <button *ngIf="isGranted('Pages.Facilities.Create')" (click)="createFacility()" class="btn btn-primary blue">
+          <i class="fa fa-plus"></i> {{ l('CreateNewFacility') }}
+        </button>
+      </div>
+    </sub-header>
+
+    <div [class]="containerClass">
+      <div class="card card-custom gutter-b">
+        <div class="card-body">
+          <form class="form" autocomplete="off">
+            <div>
+              <div class="row align-items-center">
+                <div class="col-xl-12">
+                  <div class="form-group m-form__group align-items-center">
+                    <div class="input-group">
+                      <input
+                        [(ngModel)]="filterText"
+                        name="filterText"
+                        autoFocus
+                        class="form-control m-input"
+                        [placeholder]="l('SearchWithThreeDot')"
+                        type="text"
+                      />
+                      <span class="input-group-btn">
+                        <button (click)="getFacilities()" class="btn btn-primary" type="submit"><i class="flaticon-search-1"></i></button>
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="row" [hidden]="!advancedFiltersAreShown">
+                <div class="col-md-12">
+                  <div class="kt-separator kt-separator--border-dashed"></div>
+                </div>
+
+                <div class="col-md-3">
+                  <div class="form-group">
+                    <label for="NameFilter">{{ l('Name') }}</label>
+                    <input type="text" class="form-control" id="NameFilter" name="nameFilter" [(ngModel)]="nameFilter" />
+                  </div>
+                </div>
+                <div class="col-md-3">
+                  <div class="form-group">
+                    <label for="AdressFilter">{{ l('Adress') }}</label>
+                    <input type="text" class="form-control" id="AdressFilter" name="adressFilter" [(ngModel)]="adressFilter" />
+                  </div>
+                </div>
+                <div class="col-md-3">
+                  <div class="form-group">
+                    <label for="MinLongitudeFilter">{{ l('MinMax') }} {{ l('Longitude') }}</label>
+                    <div class="input-group">
+                      <input
+                        type="number"
+                        class="form-control"
+                        id="MinLongitudeFilter"
+                        [(ngModel)]="minLongitudeFilter"
+                        placeholder="{{ l('MinValue') }}"
+                        name="minLongitudeFilter"
+                      />
+                      <input
+                        type="number"
+                        class="form-control"
+                        [(ngModel)]="maxLongitudeFilter"
+                        placeholder="{{ l('MaxValue') }}"
+                        name="maxLongitudeFilter"
+                      />
+                    </div>
+                  </div>
+                </div>
+                <div class="col-md-3">
+                  <div class="form-group">
+                    <label for="MinLatitudeFilter">{{ l('MinMax') }} {{ l('Latitude') }}</label>
+                    <div class="input-group">
+                      <input
+                        type="number"
+                        class="form-control"
+                        id="MinLatitudeFilter"
+                        [(ngModel)]="minLatitudeFilter"
+                        placeholder="{{ l('MinValue') }}"
+                        name="minLatitudeFilter"
+                      />
+                      <input
+                        type="number"
+                        class="form-control"
+                        [(ngModel)]="maxLatitudeFilter"
+                        placeholder="{{ l('MaxValue') }}"
+                        name="maxLatitudeFilter"
+                      />
+                    </div>
+                  </div>
+                </div>
+                <div class="col-md-3">
+                  <div class="form-group">
+                    <label for="CountyDisplayNameFilter">({{ l('County') }}) {{ l('DisplayName') }}</label>
+                    <input
+                      type="text"
+                      class="form-control"
+                      id="CountyDisplayNameFilter"
+                      name="countyDisplayNameFilter"
+                      [(ngModel)]="countyDisplayNameFilter"
+                    />
+                  </div>
+                </div>
+                <div class="col-md-3">
+                  <div class="form-group">
+                    <label for="CityDisplayNameFilter">({{ l('City') }}) {{ l('DisplayName') }}</label>
+                    <input
+                      type="text"
+                      class="form-control"
+                      id="CityDisplayNameFilter"
+                      name="cityDisplayNameFilter"
+                      [(ngModel)]="cityDisplayNameFilter"
+                    />
+                  </div>
+                </div>
+              </div>
+              <div class="row mb-2">
+                <div class="col-sm-12">
+                  <span
+                    class="clickable-item text-muted"
+                    *ngIf="!advancedFiltersAreShown"
+                    (click)="advancedFiltersAreShown = !advancedFiltersAreShown"
+                    ><i class="fa fa-angle-down"></i> {{ l('ShowAdvancedFilters') }}</span
+                  >
+                  <span class="clickable-item text-muted" *ngIf="advancedFiltersAreShown" (click)="advancedFiltersAreShown = !advancedFiltersAreShown"
+                    ><i class="fa fa-angle-up"></i> {{ l('HideAdvancedFilters') }}</span
+                  >
+                </div>
+              </div>
+            </div>
+          </form>
+
+          <div class="row align-items-center">
+            <!--<Primeng-Datatable-Start>-->
+            <div class="primeng-datatable-container col-12" [busyIf]="primengTableHelper.isLoading">
+              <p-table
+                #dataTable
+                (onLazyLoad)="getFacilities($event)"
+                [value]="primengTableHelper.records"
+                rows="{{ primengTableHelper.defaultRecordsCountPerPage }}"
+                [paginator]="false"
+                [lazy]="true"
+                [scrollable]="true"
+                ScrollWidth="100%"
+                [responsive]="primengTableHelper.isResponsive"
+                [resizableColumns]="primengTableHelper.resizableColumns"
+              >
+                <ng-template pTemplate="header">
+                  <tr>
+                    <th style="width: 130px;" [hidden]="!isGrantedAny('Pages.Facilities.Edit', 'Pages.Facilities.Delete')">{{ l('Actions') }}</th>
+                    <th style="width: 150px;" pSortableColumn="countyFk.displayName">
+                      {{ l('DisplayName') }}
+                      <p-sortIcon field="countyDisplayName"></p-sortIcon>
+                    </th>
+                    <th style="width: 150px;" pSortableColumn="cityFk.displayName">
+                      {{ l('DisplayName') }}
+                      <p-sortIcon field="cityDisplayName"></p-sortIcon>
+                    </th>
+                    <th style="width: 150px;" pSortableColumn="name">
+                      {{ l('Name') }}
+                      <p-sortIcon field="facility.name"></p-sortIcon>
+                    </th>
+                    <th style="width: 150px;" pSortableColumn="adress">
+                      {{ l('Adress') }}
+                      <p-sortIcon field="facility.adress"></p-sortIcon>
+                    </th>
+                    <th style="width: 150px;" pSortableColumn="longitude">
+                      {{ l('Longitude') }}
+                      <p-sortIcon field="facility.longitude"></p-sortIcon>
+                    </th>
+                    <th style="width: 150px;" pSortableColumn="latitude">
+                      {{ l('Latitude') }}
+                      <p-sortIcon field="facility.latitude"></p-sortIcon>
+                    </th>
+                  </tr>
+                </ng-template>
+                <ng-template pTemplate="body" let-record="$implicit">
+                  <tr>
+                    <td style="width: 130px;" [hidden]="!isGrantedAny('Pages.Facilities.Edit', 'Pages.Facilities.Delete')">
+                      <div class="btn-group dropdown" dropdown container="body">
+                        <button class="dropdown-toggle btn btn-sm btn-primary" dropdownToggle>
+                          <i class="fa fa-cog"></i><span class="caret"></span> {{ l('Actions') }}
+                        </button>
+                        <ul class="dropdown-menu" *dropdownMenu>
+                          <li>
+                            <a href="javascript:;" class="dropdown-item" (click)="viewFacilityModal.show(record)">{{ l('View') }}</a>
+                          </li>
+                          <li>
+                            <a
+                              href="javascript:;"
+                              *ngIf="permission.isGranted('Pages.Facilities.Edit')"
+                              class="dropdown-item"
+                              (click)="createOrEditFacilityModal.show(record.facility.id)"
+                              >{{ l('Edit') }}</a
+                            >
+                          </li>
+                          <li>
+                            <a
+                              class="dropdown-item"
+                              href="javascript:;"
+                              *ngIf="permission.isGranted('Pages.Facilities.Delete')"
+                              (click)="deleteFacility(record.facility)"
+                              >{{ l('Delete') }}</a
+                            >
+                          </li>
+                        </ul>
+                      </div>
+                    </td>
+                    <td style="width: 150px;">
+                      <span class="ui-column-title"> {{ l('DisplayName') }}</span>
+                      {{ record.countyDisplayName }}
+                    </td>
+                    <td style="width: 150px;">
+                      <span class="ui-column-title"> {{ l('DisplayName') }}</span>
+                      {{ record.cityDisplayName }}
+                    </td>
+                    <td style="width: 150px;">
+                      <span class="ui-column-title"> {{ l('Name') }}</span>
+                      {{ record.facility.name }}
+                    </td>
+                    <td style="width: 150px;">
+                      <span class="ui-column-title"> {{ l('Adress') }}</span>
+                      {{ record.facility.adress }}
+                    </td>
+                    <td style="width: 150px;">
+                      <span class="ui-column-title"> {{ l('Longitude') }}</span>
+                      {{ record.facility.longitude }}
+                    </td>
+                    <td style="width: 150px;">
+                      <span class="ui-column-title"> {{ l('Latitude') }}</span>
+                      {{ record.facility.latitude }}
+                    </td>
+                  </tr>
+                </ng-template>
+              </p-table>
+              <div class="primeng-no-data" *ngIf="primengTableHelper.totalRecordsCount == 0">
+                {{ l('NoData') }}
+              </div>
+              <div class="primeng-paging-container">
+                <p-paginator
+                  [rows]="primengTableHelper.defaultRecordsCountPerPage"
+                  #paginator
+                  (onPageChange)="getFacilities($event)"
+                  [totalRecords]="primengTableHelper.totalRecordsCount"
+                  [rowsPerPageOptions]="primengTableHelper.predefinedRecordsCountPerPage"
+                >
+                </p-paginator>
+                <span class="total-records-count">
+                  {{ l('TotalRecordsCount', primengTableHelper.totalRecordsCount) }}
+                </span>
+              </div>
+            </div>
+            <!--<Primeng-Datatable-End>-->
+          </div>
+        </div>
+      </div>
+    </div>
+    <createOrEditFacilityModal #createOrEditFacilityModal (modalSave)="getFacilities()"></createOrEditFacilityModal>
+    <viewFacilityModal #viewFacilityModal></viewFacilityModal>
+  </div>
+</div>

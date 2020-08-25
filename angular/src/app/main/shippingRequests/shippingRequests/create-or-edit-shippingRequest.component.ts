@@ -5,6 +5,7 @@ import {
   CreateOrEditGoodsDetailDto,
   CreateOrEditRoutStepDto,
   CreateOrEditShippingRequestDto,
+  FacilityForDropdownDto,
   GoodsDetailGoodCategoryLookupTableDto,
   GoodsDetailsServiceProxy,
   RoutStepCityLookupTableDto,
@@ -22,6 +23,7 @@ import { Observable } from '@node_modules/rxjs';
 import { BreadcrumbItem } from '@app/shared/common/sub-header/sub-header.component';
 import { BsModalRef, BsModalService, ModalDirective } from '@node_modules/ngx-bootstrap/modal';
 import { MapsAPILoader } from '@node_modules/@agm/core';
+import { CreateOrEditFacilityModalComponent } from '@app/main/addressBook/facilities/create-or-edit-facility-modal.component';
 
 @Component({
   templateUrl: './create-or-edit-shippingRequest.component.html',
@@ -36,6 +38,8 @@ import { MapsAPILoader } from '@node_modules/@agm/core';
   animations: [appModuleAnimation()],
 })
 export class CreateOrEditShippingRequestComponent extends AppComponentBase implements OnInit {
+  @ViewChild('createOrEditFacilityModal', { static: true }) createOrEditFacilityModal: CreateOrEditFacilityModalComponent;
+
   active = false;
   saving = false;
 
@@ -59,6 +63,8 @@ export class CreateOrEditShippingRequestComponent extends AppComponentBase imple
   ];
   routStep: CreateOrEditRoutStepDto = new CreateOrEditRoutStepDto();
   allCitys: RoutStepCityLookupTableDto[];
+  allFacilities: FacilityForDropdownDto[];
+
   createOrEditRoutStepDtoList: CreateOrEditRoutStepDto[] = [];
   zoom = 5;
   @ViewChild('search') public searchElementRef: ElementRef;
@@ -135,6 +141,7 @@ export class CreateOrEditShippingRequestComponent extends AppComponentBase imple
     this._routStepsServiceProxy.getAllCityForTableDropdown().subscribe((result) => {
       this.allCitys = result;
     });
+    this.refreshFacilities();
   }
 
   addRouteStep(): void {
@@ -221,5 +228,14 @@ export class CreateOrEditShippingRequestComponent extends AppComponentBase imple
         window.alert('Geocoder failed due to: ' + status);
       }
     });
+  }
+
+  refreshFacilities() {
+    this._routStepsServiceProxy.getAllFacilitiesForDropdown().subscribe((result) => {
+      this.allFacilities = result;
+    });
+  }
+  createFacility(): void {
+    this.createOrEditFacilityModal.show();
   }
 }

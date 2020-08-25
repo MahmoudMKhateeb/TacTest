@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using TACHYON.EntityFrameworkCore;
 
 namespace TACHYON.Migrations
 {
     [DbContext(typeof(TACHYONDbContext))]
-    partial class TACHYONDbContextModelSnapshot : ModelSnapshot
+    [Migration("20200824012007_add SourceFacilityId & DestinationFacilityId to RoutSteps table")]
+    partial class addSourceFacilityIdDestinationFacilityIdtoRoutStepstable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -2459,7 +2461,7 @@ namespace TACHYON.Migrations
                     b.Property<int?>("DestinationCityId")
                         .HasColumnType("int");
 
-                    b.Property<long?>("DestinationFacilityId")
+                    b.Property<long>("DestinationFacilityId")
                         .HasColumnType("bigint");
 
                     b.Property<string>("DisplayName")
@@ -2495,7 +2497,7 @@ namespace TACHYON.Migrations
                     b.Property<long?>("ShippingRequestId")
                         .HasColumnType("bigint");
 
-                    b.Property<long?>("SourceFacilityId")
+                    b.Property<long>("SourceFacilityId")
                         .HasColumnType("bigint");
 
                     b.Property<int>("TenantId")
@@ -3465,7 +3467,9 @@ namespace TACHYON.Migrations
 
                     b.HasOne("TACHYON.AddressBook.Facility", "DestinationFacilityFk")
                         .WithMany()
-                        .HasForeignKey("DestinationFacilityId");
+                        .HasForeignKey("DestinationFacilityId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("TACHYON.Cities.City", "OriginCityFk")
                         .WithMany()
@@ -3481,7 +3485,9 @@ namespace TACHYON.Migrations
 
                     b.HasOne("TACHYON.AddressBook.Facility", "SourceFacilityFk")
                         .WithMany()
-                        .HasForeignKey("SourceFacilityId");
+                        .HasForeignKey("SourceFacilityId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("TACHYON.Routs.Route", b =>

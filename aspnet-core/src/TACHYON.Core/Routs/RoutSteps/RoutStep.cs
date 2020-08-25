@@ -4,6 +4,7 @@ using Abp.Domain.Entities.Auditing;
 using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using TACHYON.AddressBook;
 using TACHYON.Cities;
 using TACHYON.Cities;
 using TACHYON.Routs;
@@ -50,6 +51,16 @@ namespace TACHYON.Routs.RoutSteps
 
         [ForeignKey("ShippingRequestId")]
         public ShippingRequest ShippingRequestFk { get; set; }
+
+        public long? SourceFacilityId { get; set; }
+
+        public long? DestinationFacilityId { get; set; }
+
+        [ForeignKey("SourceFacilityId")]
+        public Facility SourceFacilityFk { get; set; }
+
+        [ForeignKey("DestinationFacilityId")]
+        public Facility DestinationFacilityFk { get; set; }
 
 
     }

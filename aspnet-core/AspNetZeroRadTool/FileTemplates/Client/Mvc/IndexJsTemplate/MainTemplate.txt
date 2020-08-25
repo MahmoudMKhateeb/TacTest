@@ -42,8 +42,16 @@
             },
             columnDefs: [
                 {
+                    className: 'control responsive',
+                    orderable: false,
+                    render: function () {
+                        return '';
+                    },
+                    targets: 0
+                },
+                {
                     width: 120,
-                    targets: 0,
+                    targets: 1,
                     data: null,
                     orderable: false,
                     autoWidth: false,

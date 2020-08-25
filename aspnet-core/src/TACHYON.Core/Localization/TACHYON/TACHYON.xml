@@ -1,6 +1,15 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <localizationDictionary culture="en">
-  <texts>    <text name="DocumentFiles">Document files</text>
+  <texts>    <text name="AddressBook">Address book</text>
+    <text name="Facility">Facility</text>
+    <text name="TACHYON.AddressBook.Facility">Facility</text>
+    <text name="Adress">Adress</text>
+    <text name="FacilitiesHeaderInfo">Facilities header info</text>
+    <text name="CreateNewFacility">Create new facility</text>
+    <text name="EditFacility">Edit facility</text>
+    <text name="DeleteFacility">Delete facility</text>
+    <text name="Facilities">Facilities</text>
+    <text name="DocumentFiles">Document files</text>
     <text name="DocumentFile">Document file</text>
     <text name="TACHYON.DocumentFiles.DocumentFile">DocumentFile</text>
     <text name="Extn">Extn</text>

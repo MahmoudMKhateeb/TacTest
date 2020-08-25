@@ -1,4 +1,5 @@
-﻿using Abp.IdentityServer4;
+﻿using TACHYON.AddressBook;
+using Abp.IdentityServer4;
 using Abp.Organizations;
 using Abp.Zero.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
@@ -47,6 +48,8 @@ namespace TACHYON.EntityFrameworkCore
 {
     public class TACHYONDbContext : AbpZeroDbContext<Tenant, Role, User, TACHYONDbContext>, IAbpPersistedGrantDbContext
     {
+        public virtual DbSet<Facility> Facilities { get; set; }
+
         public virtual DbSet<DocumentFile> DocumentFiles { get; set; }
 
         public virtual DbSet<DocumentType> DocumentTypes { get; set; }
@@ -123,7 +126,12 @@ namespace TACHYON.EntityFrameworkCore
 
 
 
-            modelBuilder.Entity<DocumentFile>(d =>
+           
+            modelBuilder.Entity<Facility>(f =>
+            {
+                f.HasIndex(e => new { e.TenantId });
+            });
+ modelBuilder.Entity<DocumentFile>(d =>
             {
                 d.HasIndex(e => new { e.TenantId });
             });

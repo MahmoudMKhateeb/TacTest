@@ -11,6 +11,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Dynamic.Core;
 using System.Threading.Tasks;
+using TACHYON.AddressBook;
 using TACHYON.Authorization;
 using TACHYON.Cities;
 using TACHYON.Dto;
@@ -20,6 +21,7 @@ using TACHYON.Routs.RoutSteps.Exporting;
 
 namespace TACHYON.Routs.RoutSteps
 {
+
     [AbpAuthorize(AppPermissions.Pages_RoutSteps)]
     public class RoutStepsAppService : TACHYONAppServiceBase, IRoutStepsAppService
     {
@@ -27,15 +29,17 @@ namespace TACHYON.Routs.RoutSteps
         private readonly IRoutStepsExcelExporter _routStepsExcelExporter;
         private readonly IRepository<City, int> _lookup_cityRepository;
         private readonly IRepository<Route, int> _lookup_routeRepository;
+        private readonly IRepository<Facility, long> _lookup_FacilityRepository;
 
 
-        public RoutStepsAppService(IRepository<RoutStep, long> routStepRepository, IRoutStepsExcelExporter routStepsExcelExporter, IRepository<City, int> lookup_cityRepository, IRepository<Route, int> lookup_routeRepository)
+
+        public RoutStepsAppService(IRepository<RoutStep, long> routStepRepository, IRoutStepsExcelExporter routStepsExcelExporter, IRepository<City, int> lookup_cityRepository, IRepository<Route, int> lookup_routeRepository, IRepository<Facility, long> lookupFacilityRepository)
         {
             _routStepRepository = routStepRepository;
             _routStepsExcelExporter = routStepsExcelExporter;
             _lookup_cityRepository = lookup_cityRepository;
             _lookup_routeRepository = lookup_routeRepository;
-
+            _lookup_FacilityRepository = lookupFacilityRepository;
         }
 
         public async Task<PagedResultDto<GetRoutStepForViewDto>> GetAll(GetAllRoutStepsInput input)
@@ -258,6 +262,13 @@ namespace TACHYON.Routs.RoutSteps
                     Id = route.Id,
                     DisplayName = route == null || route.DisplayName == null ? "" : route.DisplayName.ToString()
                 }).ToListAsync();
+        }
+
+
+        public async Task<List<FacilityForDropdownDto>> GetAllFacilitiesForDropdown()
+        {
+            return await _lookup_FacilityRepository.GetAll()
+                .Select(x => new FacilityForDropdownDto { Id = x.Id, DisplayName = x.Name }).ToListAsync();
         }
 
     }
