@@ -24,16 +24,7 @@ namespace TACHYON.Shipping.ShippingRequests
 
         Task Delete(EntityDto<long> input);
 
-        Task<FileDto> GetShippingRequestsToExcel(GetAllShippingRequestsForExcelInput input);
-
-
-        Task<List<ShippingRequestTrucksTypeLookupTableDto>> GetAllTrucksTypeForTableDropdown();
-
-        Task<List<ShippingRequestTrailerTypeLookupTableDto>> GetAllTrailerTypeForTableDropdown();
-
-        Task<List<ShippingRequestGoodsDetailLookupTableDto>> GetAllGoodsDetailForTableDropdown();
-
-        Task<List<ShippingRequestRouteLookupTableDto>> GetAllRouteForTableDropdown();
+        //Task<FileDto> GetShippingRequestsToExcel(GetAllShippingRequestsForExcelInput input);
 
     }
 }

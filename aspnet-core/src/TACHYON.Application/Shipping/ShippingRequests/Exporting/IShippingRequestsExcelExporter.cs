@@ -6,6 +6,6 @@ namespace TACHYON.Shipping.ShippingRequests.Exporting
 {
     public interface IShippingRequestsExcelExporter
     {
-        FileDto ExportToFile(List<GetShippingRequestForViewDto> shippingRequests);
+        //FileDto ExportToFile(List<GetShippingRequestForViewDto> shippingRequests);
     }
 }
