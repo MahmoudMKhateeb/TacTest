@@ -2,6 +2,7 @@
 using Abp.Application.Services.Dto;
 using System;
 using System.ComponentModel.DataAnnotations;
+using TACHYON.Goods.GoodsDetails.Dtos;
 
 namespace TACHYON.Routs.RoutSteps.Dtos
 {
@@ -23,7 +24,6 @@ namespace TACHYON.Routs.RoutSteps.Dtos
         [Range(RoutStepConsts.MinOrderValue, RoutStepConsts.MaxOrderValue)]
         public int Order { get; set; }
 
-
         public int? OriginCityId { get; set; }
 
         public int? DestinationCityId { get; set; }
@@ -35,6 +35,16 @@ namespace TACHYON.Routs.RoutSteps.Dtos
         public long? SourceFacilityId { get; set; }
 
         public long? DestinationFacilityId { get; set; }
+
+        public long? GoodsDetailId { get; set; }
+        public long? TrucksTypeId { get; set; }
+
+        public int? TrailerTypeId { get; set; }
+        public CreateOrEditGoodsDetailDto CreateOrEditGoodsDetailDto { get; set; }
+
+
+
+
 
 
     }

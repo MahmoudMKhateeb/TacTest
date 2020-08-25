@@ -15,5 +15,12 @@ namespace TACHYON.Routs.RoutSteps.Dtos
         public string RouteDisplayName { get; set; }
 
 
+        public string TrucksTypeDisplayName { get; set; }
+
+        public string TrailerTypeDisplayName { get; set; }
+
+        public string GoodsDetailName { get; set; }
+
+
     }
 }
