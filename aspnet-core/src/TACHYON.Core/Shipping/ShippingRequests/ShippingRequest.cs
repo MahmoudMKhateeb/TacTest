@@ -21,29 +21,11 @@ namespace TACHYON.Shipping.ShippingRequests
 
         public virtual decimal Vas { get; set; }
 
-
-        public virtual long? TrucksTypeId { get; set; }
-
-        [ForeignKey("TrucksTypeId")]
-        public TrucksType TrucksTypeFk { get; set; }
-
-        public virtual int? TrailerTypeId { get; set; }
-
-        [ForeignKey("TrailerTypeId")]
-        public TrailerType TrailerTypeFk { get; set; }
-
-        public virtual long? GoodsDetailId { get; set; }
-
-        [ForeignKey("GoodsDetailId")]
-        public GoodsDetail GoodsDetailFk { get; set; }
-
-        public virtual int? RouteId { get; set; }
-
         public virtual bool IsBid { get; set; }
 
         public virtual bool IsTachyonDeal { get; set; }
 
-        [ForeignKey("RouteId")]
+        [ForeignKey("RouteId")] 
         public Route RouteFk { get; set; }
 
         public ICollection<RoutStep> RoutSteps { get; set; }
@@ -58,10 +40,9 @@ namespace TACHYON.Shipping.ShippingRequests
         [ForeignKey("FatherShippingRequestId")]
         public ShippingRequest FatherShippingRequestFk { get; set; }
 
-       public int? CarrierTenantId { get; set; }
+        public int? CarrierTenantId { get; set; }
 
-        [ForeignKey("CarrierTenantId")]
+        [ForeignKey("CarrierTenantId")] 
         public Tenant CarrierTenantFk { get; set; }
-
     }
 }

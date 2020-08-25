@@ -7,8 +7,11 @@ using System.ComponentModel.DataAnnotations.Schema;
 using TACHYON.AddressBook;
 using TACHYON.Cities;
 using TACHYON.Cities;
+using TACHYON.Goods.GoodsDetails;
 using TACHYON.Routs;
 using TACHYON.Shipping.ShippingRequests;
+using TACHYON.Trailers.TrailerTypes;
+using TACHYON.Trucks.TrucksTypes;
 
 namespace TACHYON.Routs.RoutSteps
 {
@@ -61,6 +64,22 @@ namespace TACHYON.Routs.RoutSteps
 
         [ForeignKey("DestinationFacilityId")]
         public Facility DestinationFacilityFk { get; set; }
+
+        public virtual long? TrucksTypeId { get; set; }
+
+        [ForeignKey("TrucksTypeId")]
+        public TrucksType TrucksTypeFk { get; set; }
+
+        public virtual int? TrailerTypeId { get; set; }
+
+        [ForeignKey("TrailerTypeId")]
+        public TrailerType TrailerTypeFk { get; set; }
+
+        public virtual long? GoodsDetailId { get; set; }
+
+        [ForeignKey("GoodsDetailId")]
+        public GoodsDetail GoodsDetailFk { get; set; }
+
 
 
     }
