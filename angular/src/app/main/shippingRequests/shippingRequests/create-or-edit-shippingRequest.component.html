@@ -191,7 +191,25 @@
                   <div class="modal-body">
                     <div class="row">
                       <div class="col-md-6">
-                        <div class="form-group col-md-6 m-form__group">
+                        <div class="form-group m-form__group">
+                          <label for="destinationFacilityName">{{ l('destinationFacilityName') }}</label>
+                          <select name="routStep.destinationFacilityId" [(ngModel)]="routStep.destinationFacilityId" class="form-control">
+                            <option value="">{{ l('SelectAFacility') }}</option>
+                            <option *ngFor="let item of allFacilities" value="{{ item.id }}">{{ item.displayName }}</option>
+                          </select>
+                          <button
+                            type="button"
+                            class="btn btn-primary blue"
+                            [disabled]="saving"
+                            [buttonBusy]="saving"
+                            (click)="createFacility()"
+                            [busyText]="l('SavingWithThreeDot')"
+                          >
+                            <i class="fa fa-plus"></i> <span>{{ l('createFacility') }}</span>
+                          </button>
+                        </div>
+
+                        <div class="form-group m-form__group">
                           <label for="CityDisplayName">{{ l('City') }}</label>
                           <select name="routStep.originCityId" [(ngModel)]="routStep.originCityId" class="form-control">
                             <option value="">{{ l('SelectACity') }}</option>
@@ -199,7 +217,7 @@
                           </select>
                         </div>
 
-                        <div class="form-group col-md-6 m-form__group">
+                        <div class="form-group m-form__group">
                           <label for="CityDisplayName2">{{ l('City') }}</label>
                           <select name="routStep.destinationCityId" [(ngModel)]="routStep.destinationCityId" class="form-control">
                             <option value="">{{ l('SelectACity') }}</option>
@@ -207,7 +225,7 @@
                           </select>
                         </div>
 
-                        <div class="form-group col-md-6">
+                        <div class="form-group">
                           <label for="RoutStep_DisplayName">{{ l('DisplayName') }}</label>
                           <input
                             type="text"
@@ -220,7 +238,7 @@
                           />
                         </div>
 
-                        <div class="form-group col-md-6">
+                        <div class="form-group">
                           <label for="RoutStep_Order">{{ l('Order') }}</label>
                           <input type="number" id="RoutStep_Order" class="form-control" [(ngModel)]="routStep.order" name="Order" min="1" max="50" />
                         </div>
@@ -335,4 +353,4 @@
     </div>
   </div>
 </div>
-ّ
+<createOrEditFacilityModal #createOrEditFacilityModal (modalSave)="refreshFacilities()"></createOrEditFacilityModal>

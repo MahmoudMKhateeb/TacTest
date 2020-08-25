@@ -52,9 +52,9 @@ namespace TACHYON.Routs.RoutSteps
         [ForeignKey("ShippingRequestId")]
         public ShippingRequest ShippingRequestFk { get; set; }
 
-        public long SourceFacilityId { get; set; }
+        public long? SourceFacilityId { get; set; }
 
-        public long DestinationFacilityId { get; set; }
+        public long? DestinationFacilityId { get; set; }
 
         [ForeignKey("SourceFacilityId")]
         public Facility SourceFacilityFk { get; set; }

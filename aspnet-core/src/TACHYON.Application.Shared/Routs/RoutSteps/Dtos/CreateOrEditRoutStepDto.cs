@@ -32,6 +32,10 @@ namespace TACHYON.Routs.RoutSteps.Dtos
 
         public int? ShippingRequestId { get; set; }
 
+        public long? SourceFacilityId { get; set; }
+
+        public long? DestinationFacilityId { get; set; }
+
 
     }
 }
