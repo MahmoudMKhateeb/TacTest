@@ -10,11 +10,8 @@ import {
   GoodsDetailsServiceProxy,
   RoutStepCityLookupTableDto,
   RoutStepsServiceProxy,
-  ShippingRequestGoodsDetailLookupTableDto,
-  ShippingRequestRouteLookupTableDto,
+  SelectItemDto,
   ShippingRequestsServiceProxy,
-  ShippingRequestTrailerTypeLookupTableDto,
-  ShippingRequestTrucksTypeLookupTableDto,
 } from '@shared/service-proxies/service-proxies';
 import { AppComponentBase } from '@shared/common/app-component-base';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -30,7 +27,7 @@ import { CreateOrEditFacilityModalComponent } from '@app/main/addressBook/facili
   styles: [
     `
       agm-map {
-        height: 410px;
+        height: 300px;
       }
     `,
   ],
@@ -45,17 +42,12 @@ export class CreateOrEditShippingRequestComponent extends AppComponentBase imple
 
   shippingRequest: CreateOrEditShippingRequestDto = new CreateOrEditShippingRequestDto();
 
-  trucksTypeDisplayName = '';
-  trailerTypeDisplayName = '';
-  goodsDetailName = '';
-  routeDisplayName = '';
-
-  allTrucksTypes: ShippingRequestTrucksTypeLookupTableDto[];
-  allTrailerTypes: ShippingRequestTrailerTypeLookupTableDto[];
-  allGoodsDetails: ShippingRequestGoodsDetailLookupTableDto[];
-  allRoutes: ShippingRequestRouteLookupTableDto[];
   allGoodCategorys: GoodsDetailGoodCategoryLookupTableDto[];
   allCarrierTenants: CarriersForDropDownDto[];
+
+  allTrucksTypes: SelectItemDto[];
+  allTrailerTypes: SelectItemDto[];
+  allGoodsDetails: SelectItemDto[];
 
   breadcrumbs: BreadcrumbItem[] = [
     new BreadcrumbItem(this.l('ShippingRequest'), '/app/main/shippingRequests/shippingRequests'),
@@ -82,10 +74,12 @@ export class CreateOrEditShippingRequestComponent extends AppComponentBase imple
     private ngZone: NgZone
   ) {
     super(injector);
-    this.shippingRequest.createOrEditGoodsDetailDto = new CreateOrEditGoodsDetailDto();
+    this.routStep.createOrEditGoodsDetailDto = new CreateOrEditGoodsDetailDto();
   }
 
   openModal() {
+    //load Places Autocomplete
+    this.loadMapApi();
     this.routStep.latitude = '24.67911662122269';
     this.routStep.longitude = '46.6355543345471';
     this.zoom = 5;
@@ -94,44 +88,23 @@ export class CreateOrEditShippingRequestComponent extends AppComponentBase imple
 
   ngOnInit(): void {
     this.show(this._activatedRoute.snapshot.queryParams['id']);
-    //load Places Autocomplete
-    this.loadMapApi();
   }
   show(shippingRequestId?: number): void {
     if (!shippingRequestId) {
       this.shippingRequest = new CreateOrEditShippingRequestDto();
-      this.shippingRequest.createOrEditGoodsDetailDto = new CreateOrEditGoodsDetailDto();
+      this.routStep.createOrEditGoodsDetailDto = new CreateOrEditGoodsDetailDto();
       this.shippingRequest.id = shippingRequestId;
-      this.trucksTypeDisplayName = '';
-      this.trailerTypeDisplayName = '';
-      this.goodsDetailName = '';
-      this.routeDisplayName = '';
 
       this.active = true;
     } else {
       this._shippingRequestsServiceProxy.getShippingRequestForEdit(shippingRequestId).subscribe((result) => {
         this.shippingRequest = result.shippingRequest;
 
-        this.trucksTypeDisplayName = result.trucksTypeDisplayName;
-        this.trailerTypeDisplayName = result.trailerTypeDisplayName;
-        this.goodsDetailName = result.goodsDetailName;
-        this.routeDisplayName = result.routeDisplayName;
         this.createOrEditRoutStepDtoList = result.shippingRequest.createOrEditRoutStepDtoList;
         this.active = true;
       });
     }
-    this._shippingRequestsServiceProxy.getAllTrucksTypeForTableDropdown().subscribe((result) => {
-      this.allTrucksTypes = result;
-    });
-    this._shippingRequestsServiceProxy.getAllTrailerTypeForTableDropdown().subscribe((result) => {
-      this.allTrailerTypes = result;
-    });
-    this._shippingRequestsServiceProxy.getAllGoodsDetailForTableDropdown().subscribe((result) => {
-      this.allGoodsDetails = result;
-    });
-    this._shippingRequestsServiceProxy.getAllRouteForTableDropdown().subscribe((result) => {
-      this.allRoutes = result;
-    });
+
     this._goodsDetailsServiceProxy.getAllGoodCategoryForTableDropdown().subscribe((result) => {
       this.allGoodCategorys = result;
     });
@@ -140,6 +113,15 @@ export class CreateOrEditShippingRequestComponent extends AppComponentBase imple
     });
     this._routStepsServiceProxy.getAllCityForTableDropdown().subscribe((result) => {
       this.allCitys = result;
+    });
+    this._routStepsServiceProxy.getAllTrucksTypeForTableDropdown().subscribe((result) => {
+      this.allTrucksTypes = result;
+    });
+    this._routStepsServiceProxy.getAllTrailerTypeForTableDropdown().subscribe((result) => {
+      this.allTrailerTypes = result;
+    });
+    this._routStepsServiceProxy.getAllGoodsDetailForTableDropdown().subscribe((result) => {
+      this.allGoodsDetails = result;
     });
     this.refreshFacilities();
   }
@@ -157,8 +139,8 @@ export class CreateOrEditShippingRequestComponent extends AppComponentBase imple
     if (this._activatedRoute.snapshot.queryParams['clone']) {
       console.log('cloned request');
       this.shippingRequest.id = undefined;
-      this.shippingRequest.goodsDetailId = undefined;
-      this.shippingRequest.createOrEditGoodsDetailDto.id = undefined;
+      // this.shippingRequest.goodsDetailId = undefined;
+      // this.shippingRequest.createOrEditGoodsDetailDto.id = undefined;
       this.shippingRequest.createOrEditRoutStepDtoList.forEach((x) => (x.id = undefined));
       this.shippingRequest.fatherShippingRequestId = this._activatedRoute.snapshot.queryParams['id'];
       this.shippingRequest.isTachyonDeal = false;

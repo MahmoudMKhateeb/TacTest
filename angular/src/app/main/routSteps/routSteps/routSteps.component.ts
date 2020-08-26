@@ -44,6 +44,9 @@ export class RoutStepsComponent extends AppComponentBase {
   cityDisplayNameFilter = '';
   cityDisplayName2Filter = '';
   routeDisplayNameFilter = '';
+  trucksTypeDisplayNameFilter = '';
+  trailerTypeDisplayNameFilter = '';
+  goodsDetailNameFilter = '';
 
   _entityTypeFullName = 'TACHYON.Routs.RoutSteps.RoutStep';
   entityHistoryEnabled = false;
@@ -93,6 +96,9 @@ export class RoutStepsComponent extends AppComponentBase {
         this.cityDisplayName2Filter,
         this.routeDisplayNameFilter,
         this.routeId,
+        this.trucksTypeDisplayNameFilter,
+        this.trailerTypeDisplayNameFilter,
+        this.goodsDetailNameFilter,
         this.primengTableHelper.getSorting(this.dataTable),
         this.primengTableHelper.getSkipCount(this.paginator, event),
         this.primengTableHelper.getMaxResultCount(this.paginator, event)
