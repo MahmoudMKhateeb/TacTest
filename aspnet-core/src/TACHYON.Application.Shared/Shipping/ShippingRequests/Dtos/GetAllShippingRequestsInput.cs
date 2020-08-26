@@ -10,8 +10,6 @@ namespace TACHYON.Shipping.ShippingRequests.Dtos
         public decimal? MaxVasFilter { get; set; }
         public decimal? MinVasFilter { get; set; }
 
-        public string RouteDisplayNameFilter { get; set; }
-
         public  bool? IsBid { get; set; }
 
         public  bool? IsTachyonDeal { get; set; }

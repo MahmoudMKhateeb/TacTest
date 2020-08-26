@@ -83,7 +83,6 @@ namespace TACHYON.Shipping.ShippingRequests
                 .WhereIf(!string.IsNullOrWhiteSpace(input.Filter), e => false)
                 .WhereIf(input.MinVasFilter != null, e => e.Vas >= input.MinVasFilter)
                 .WhereIf(input.MaxVasFilter != null, e => e.Vas <= input.MaxVasFilter)
-                .WhereIf(!string.IsNullOrWhiteSpace(input.RouteDisplayNameFilter), e => e.RouteFk != null && e.RouteFk.DisplayName == input.RouteDisplayNameFilter)
                 .WhereIf(input.IsTachyonDeal.HasValue, e => e.IsTachyonDeal == input.IsTachyonDeal.Value);
 
             var pagedAndFilteredShippingRequests = filteredShippingRequests
