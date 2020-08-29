@@ -9,6 +9,7 @@ using TACHYON.Authorization.Users;
 using TACHYON.Cities;
 using TACHYON.Cities;
 using TACHYON.Goods.GoodsDetails;
+using TACHYON.PickingTypes;
 using TACHYON.Routs;
 using TACHYON.Shipping.ShippingRequests;
 using TACHYON.Trailers;
@@ -97,6 +98,10 @@ namespace TACHYON.Routs.RoutSteps
         public long AssignedTrailerId { get; set; }
         [ForeignKey("AssignedTrailerId")]
         public Trailer AssignedTrailersFk { get; set; }
+
+        public int PickingTypeId { get; set; }
+        [ForeignKey("PickingTypeId")]
+        public PickingType PickingTypeFk { get; set; }
 
     }
 }
