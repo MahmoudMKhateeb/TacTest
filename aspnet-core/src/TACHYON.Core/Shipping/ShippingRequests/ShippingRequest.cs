@@ -51,5 +51,16 @@ namespace TACHYON.Shipping.ShippingRequests
         public bool StageThreeFinish { get; set; }
 
 
+        public virtual long? TrucksTypeId { get; set; }
+
+        [ForeignKey("TrucksTypeId")]
+        public TrucksType TrucksTypeFk { get; set; }
+
+        public virtual int? TrailerTypeId { get; set; }
+
+        [ForeignKey("TrailerTypeId")]
+        public TrailerType TrailerTypeFk { get; set; }
+
+
     }
 }
