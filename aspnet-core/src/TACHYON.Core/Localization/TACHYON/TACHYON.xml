@@ -7,6 +7,13 @@
     <text name="CreateNewPort">Create new port</text>
     <text name="EditPort">Edit port</text>
     <text name="DeletePort">Delete port</text>
+    <text name="PickingTypes">Picking types</text>
+    <text name="PickingType">Picking type</text>
+    <text name="TACHYON.PickingTypes.PickingType">PickingType</text>
+    <text name="PickingTypesHeaderInfo">Picking types header info</text>
+    <text name="CreateNewPickingType">Create new picking type</text>
+    <text name="EditPickingType">Edit picking type</text>
+    <text name="DeletePickingType">Delete picking type</text>
     <text name="UnitOfMeasures">Unit of measures</text>
     <text name="UnitOfMeasure">Unit of measure</text>
     <text name="TACHYON.UnitOfMeasures.UnitOfMeasure">UnitOfMeasure</text>

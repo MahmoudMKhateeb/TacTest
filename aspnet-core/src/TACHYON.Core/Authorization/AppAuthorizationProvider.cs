@@ -37,6 +37,13 @@ namespace TACHYON.Authorization
 
 
 
+            var pickingTypes = pages.CreateChildPermission(AppPermissions.Pages_PickingTypes, L("PickingTypes"), multiTenancySides: MultiTenancySides.Host);
+            pickingTypes.CreateChildPermission(AppPermissions.Pages_PickingTypes_Create, L("CreateNewPickingType"), multiTenancySides: MultiTenancySides.Host);
+            pickingTypes.CreateChildPermission(AppPermissions.Pages_PickingTypes_Edit, L("EditPickingType"), multiTenancySides: MultiTenancySides.Host);
+            pickingTypes.CreateChildPermission(AppPermissions.Pages_PickingTypes_Delete, L("DeletePickingType"), multiTenancySides: MultiTenancySides.Host);
+
+
+
             var facilities = pages.CreateChildPermission(AppPermissions.Pages_Facilities, L("Facilities"));
             facilities.CreateChildPermission(AppPermissions.Pages_Facilities_Create, L("CreateNewFacility"));
             facilities.CreateChildPermission(AppPermissions.Pages_Facilities_Edit, L("EditFacility"));

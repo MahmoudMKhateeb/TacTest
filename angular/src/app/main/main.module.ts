@@ -6,6 +6,10 @@ import { PortsComponent } from './ports/ports/ports.component';
 import { ViewPortModalComponent } from './ports/ports/view-port-modal.component';
 import { CreateOrEditPortModalComponent } from './ports/ports/create-or-edit-port-modal.component';
 
+import { PickingTypesComponent } from './pickingTypes/pickingTypes/pickingTypes.component';
+import { ViewPickingTypeModalComponent } from './pickingTypes/pickingTypes/view-pickingType-modal.component';
+import { CreateOrEditPickingTypeModalComponent } from './pickingTypes/pickingTypes/create-or-edit-pickingType-modal.component';
+
 import { FacilitiesComponent } from './addressBook/facilities/facilities.component';
 import { ViewFacilityModalComponent } from './addressBook/facilities/view-facility-modal.component';
 import { CreateOrEditFacilityModalComponent } from './addressBook/facilities/create-or-edit-facility-modal.component';
@@ -138,6 +142,10 @@ NgxBootstrapDatePickerConfigService.registerNgxBootstrapDatePickerLocales();
 
     ViewPortModalComponent,
     CreateOrEditPortModalComponent,
+    PickingTypesComponent,
+
+    ViewPickingTypeModalComponent,
+    CreateOrEditPickingTypeModalComponent,
     FacilitiesComponent,
 
     ViewFacilityModalComponent,

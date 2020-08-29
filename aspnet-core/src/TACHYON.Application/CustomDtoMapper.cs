@@ -1,4 +1,6 @@
-﻿using TACHYON.AddressBook.Ports.Dtos;
+﻿using TACHYON.PickingTypes.Dtos;
+using TACHYON.PickingTypes;
+using TACHYON.AddressBook.Ports.Dtos;
 using TACHYON.AddressBook.Ports;
 using TACHYON.UnitOfMeasures.Dtos;
 using TACHYON.UnitOfMeasures;
@@ -113,6 +115,8 @@ namespace TACHYON
     {
         public static void CreateMappings(IMapperConfigurationExpression configuration)
         {
+            configuration.CreateMap<CreateOrEditPickingTypeDto, PickingType>().ReverseMap();
+            configuration.CreateMap<PickingTypeDto, PickingType>().ReverseMap();
             configuration.CreateMap<CreateOrEditPortDto, Port>().ReverseMap();
             configuration.CreateMap<PortDto, Port>().ReverseMap();
             configuration.CreateMap<CreateOrEditUnitOfMeasureDto, UnitOfMeasure>().ReverseMap();

@@ -11,6 +11,11 @@
         public const string Pages_Ports_Edit = "Pages.Ports.Edit";
         public const string Pages_Ports_Delete = "Pages.Ports.Delete";
 
+        public const string Pages_PickingTypes = "Pages.PickingTypes";
+        public const string Pages_PickingTypes_Create = "Pages.PickingTypes.Create";
+        public const string Pages_PickingTypes_Edit = "Pages.PickingTypes.Edit";
+        public const string Pages_PickingTypes_Delete = "Pages.PickingTypes.Delete";
+
         public const string Pages_Administration_UnitOfMeasures = "Pages.Administration.UnitOfMeasures";
         public const string Pages_Administration_UnitOfMeasures_Create = "Pages.Administration.UnitOfMeasures.Create";
         public const string Pages_Administration_UnitOfMeasures_Edit = "Pages.Administration.UnitOfMeasures.Edit";

@@ -1,4 +1,5 @@
 ﻿using TACHYON.AddressBook.Ports;
+using TACHYON.PickingTypes;
 using TACHYON.UnitOfMeasures;
 using TACHYON.AddressBook;
 using Abp.IdentityServer4;
@@ -51,6 +52,8 @@ namespace TACHYON.EntityFrameworkCore
     public class TACHYONDbContext : AbpZeroDbContext<Tenant, Role, User, TACHYONDbContext>, IAbpPersistedGrantDbContext
     {
         public virtual DbSet<Port> Ports { get; set; }
+
+        public virtual DbSet<PickingType> PickingTypes { get; set; }
 
         public virtual DbSet<UnitOfMeasure> UnitOfMeasures { get; set; }
 

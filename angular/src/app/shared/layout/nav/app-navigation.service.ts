@@ -1,4 +1,6 @@
-﻿import { PermissionCheckerService } from 'abp-ng2-module';
+﻿
+            new AppMenuItem('PickingTypes', 'Pages.PickingTypes', 'flaticon-more', '/app/main/pickingTypes/pickingTypes'),
+            import { PermissionCheckerService } from 'abp-ng2-module';
 import { AppSessionService } from '@shared/common/session/app-session.service';
 
 import { Injectable } from '@angular/core';
