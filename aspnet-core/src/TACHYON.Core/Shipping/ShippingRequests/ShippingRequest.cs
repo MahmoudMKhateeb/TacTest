@@ -17,15 +17,14 @@ namespace TACHYON.Shipping.ShippingRequests
     public class ShippingRequest : FullAuditedEntity<long>, IMustHaveTenant
     {
         public int TenantId { get; set; }
-
-
+        public int RouteId { get; set; }
         public virtual decimal Vas { get; set; }
 
         public virtual bool IsBid { get; set; }
 
         public virtual bool IsTachyonDeal { get; set; }
 
-        [ForeignKey("RouteId")] 
+        [ForeignKey("RouteId")]
         public Route RouteFk { get; set; }
 
         public ICollection<RoutStep> RoutSteps { get; set; }
@@ -42,7 +41,15 @@ namespace TACHYON.Shipping.ShippingRequests
 
         public int? CarrierTenantId { get; set; }
 
-        [ForeignKey("CarrierTenantId")] 
+        [ForeignKey("CarrierTenantId")]
         public Tenant CarrierTenantFk { get; set; }
+
+        public int NumberOfDrops { get; set; }
+
+        public bool StageOneFinish { get; set; }
+        public bool StageTowFinish { get; set; }
+        public bool StageThreeFinish { get; set; }
+
+
     }
 }
