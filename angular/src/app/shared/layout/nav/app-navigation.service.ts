@@ -1,6 +1,4 @@
-﻿
-            new AppMenuItem('PickingTypes', 'Pages.PickingTypes', 'flaticon-more', '/app/main/pickingTypes/pickingTypes'),
-            import { PermissionCheckerService } from 'abp-ng2-module';
+﻿import { PermissionCheckerService } from 'abp-ng2-module';
 import { AppSessionService } from '@shared/common/session/app-session.service';
 
 import { Injectable } from '@angular/core';
@@ -25,6 +23,7 @@ export class AppNavigationService {
       new AppMenuItem('Facilities', 'Pages.Facilities', 'flaticon-more', '/app/main/addressBook/facilities'),
 
       new AppMenuItem('TrucksTypes', 'Pages.TrucksTypes', 'flaticon-more', '/app/main/trucksTypes/trucksTypes'),
+      new AppMenuItem('PickingTypes', 'Pages.PickingTypes', 'flaticon-more', '/app/main/pickingTypes/pickingTypes'),
 
       new AppMenuItem('Trucks', 'Pages.Trucks', 'flaticon-more', '/app/main/trucks/trucks', undefined, undefined, undefined, undefined, () =>
         this._featureCheckerService.isEnabled('App.Carrier')
