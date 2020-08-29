@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using TACHYON.Goods.GoodCategories;
 using TACHYON.Goods.GoodsDetails;
 using TACHYON.MultiTenancy;
 using TACHYON.Routs;
@@ -61,6 +62,8 @@ namespace TACHYON.Shipping.ShippingRequests
         [ForeignKey("TrailerTypeId")]
         public TrailerType TrailerTypeFk { get; set; }
 
-
+        public int GoodCategoryId { get; set; }
+        [ForeignKey("GoodCategoryId")]
+        public GoodCategory GoodCategoryFk { get; set; }
     }
 }
