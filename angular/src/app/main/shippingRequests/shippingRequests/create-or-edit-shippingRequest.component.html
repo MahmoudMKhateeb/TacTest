@@ -9,6 +9,14 @@
             <label for="ShippingRequest_Vas">{{ l('Vas') }}</label>
             <input [(ngModel)]="shippingRequest.vas" class="form-control" id="ShippingRequest_Vas" name="Vas" type="number" />
           </div>
+          <div class="form-group col-md-6 m-form__group">
+            <label for="carrierTenantDisplayName">{{ l('carrierTenantDisplayName') }}</label>
+            <select [(ngModel)]="shippingRequest.carrierTenantId" class="form-control" name="carrierTenantId">
+              <option value="">{{ l('SelectAGoodCategory') }}</option>
+              <option *ngFor="let item of allCarrierTenants" value="{{ item.id }}">{{ item.displayName }}</option>
+            </select>
+          </div>
+
           <div class="m-checkbox-list col-md-6">
             &nbsp;
             <label class="kt-checkbox" for="isBid">
@@ -160,14 +168,6 @@
               <select [(ngModel)]="routStep.trucksTypeId" class="form-control" name="shippingRequest.trucksTypeId">
                 <option value="">{{ l('SelectATrucksType') }}</option>
                 <option *ngFor="let item of allTrucksTypes" value="{{ item.id }}">{{ item.displayName }}</option>
-              </select>
-            </div>
-
-            <div class="form-group col-md-6 m-form__group">
-              <label for="carrierTenantDisplayName">{{ l('carrierTenantDisplayName') }}</label>
-              <select [(ngModel)]="shippingRequest.carrierTenantId" class="form-control" name="carrierTenantId">
-                <option value="">{{ l('SelectAGoodCategory') }}</option>
-                <option *ngFor="let item of allCarrierTenants" value="{{ item.id }}">{{ item.displayName }}</option>
               </select>
             </div>
 
