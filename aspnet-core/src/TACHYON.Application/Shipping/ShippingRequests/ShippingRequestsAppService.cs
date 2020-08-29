@@ -26,9 +26,11 @@ using TACHYON.Trailers.TrailerTypes;
 using TACHYON.Trucks.TrucksTypes;
 using Abp.Notifications;
 using Abp.UI;
+using TACHYON.Goods.GoodCategories;
 using TACHYON.Goods.GoodsDetails.Dtos;
 using TACHYON.MultiTenancy;
 using TACHYON.Routs.RoutSteps.Dtos;
+using TACHYON.Routs.RoutTypes;
 
 namespace TACHYON.Shipping.ShippingRequests
 {
@@ -42,14 +44,22 @@ namespace TACHYON.Shipping.ShippingRequests
         private readonly IRepository<RoutStep, long> _routStepRepository;
         private readonly IAppNotifier _appNotifier;
         private readonly IRepository<Tenant> _tenantRepository;
+        private readonly IRepository<TrucksType, long> _lookup_trucksTypeRepository;
+        private readonly IRepository<TrailerType, int> _lookup_trailerTypeRepository;
+        private readonly IRepository<RoutType, int> _lookup_routTypeRepository;
+        private readonly IRepository<GoodCategory, int> _lookup_goodCategoryRepository;
 
-        public ShippingRequestsAppService(IRepository<ShippingRequest,
-            long> shippingRequestRepository,
+        public ShippingRequestsAppService(
+            IRepository<ShippingRequest, long> shippingRequestRepository,
             IShippingRequestsExcelExporter shippingRequestsExcelExporter,
             IRepository<Route, int> lookup_routeRepository,
             IAppNotifier appNotifier,
             IRepository<RoutStep, long> routStepRepository,
-            IRepository<Tenant> tenantRepository)
+            IRepository<Tenant> tenantRepository,
+            IRepository<TrucksType, long> lookupTrucksTypeRepository,
+            IRepository<TrailerType, int> lookupTrailerTypeRepository,
+            IRepository<RoutType, int> lookupRoutTypeRepository,
+            IRepository<GoodCategory, int> lookupGoodCategoryRepository)
         {
             _shippingRequestRepository = shippingRequestRepository;
             _shippingRequestsExcelExporter = shippingRequestsExcelExporter;
@@ -57,6 +67,10 @@ namespace TACHYON.Shipping.ShippingRequests
             _appNotifier = appNotifier;
             _routStepRepository = routStepRepository;
             _tenantRepository = tenantRepository;
+            _lookup_trucksTypeRepository = lookupTrucksTypeRepository;
+            _lookup_trailerTypeRepository = lookupTrailerTypeRepository;
+            _lookup_routTypeRepository = lookupRoutTypeRepository;
+            _lookup_goodCategoryRepository = lookupGoodCategoryRepository;
         }
 
         public async Task<PagedResultDto<GetShippingRequestForViewDto>> GetAll(GetAllShippingRequestsInput input)
@@ -192,12 +206,14 @@ namespace TACHYON.Shipping.ShippingRequests
         {
             var shippingRequest = ObjectMapper.Map<ShippingRequest>(input);
             shippingRequest.RoutSteps = ObjectMapper.Map<List<RoutStep>>(input.CreateOrEditRoutStepDtoList);
+            shippingRequest.RouteFk = ObjectMapper.Map<Route>(input.CreateOrEditRouteDto);
 
 
             if (AbpSession.TenantId != null)
             {
                 shippingRequest.TenantId = (int)AbpSession.TenantId;
                 shippingRequest.RoutSteps.ForEach(x => x.TenantId = (int)AbpSession.TenantId);
+                shippingRequest.RouteFk.TenantId = (int)AbpSession.TenantId;
             }
 
 
@@ -321,12 +337,55 @@ namespace TACHYON.Shipping.ShippingRequests
         {
 
             return await _tenantRepository.GetAll()
-                .Where(x=> x.Edition.Name == AppConsts.CarrierEditionName)
+                .Where(x => x.Edition.Name == AppConsts.CarrierEditionName)
                  .Select(x => new CarriersForDropDownDto
                  {
                      Id = x.Id,
                      DisplayName = x.TenancyName
                  }).ToListAsync();
         }
+
+        [AbpAuthorize(AppPermissions.Pages_ShippingRequests)]
+        public async Task<List<SelectItemDto>> GetAllTrucksTypeForTableDropdown()
+        {
+            return await _lookup_trucksTypeRepository.GetAll()
+                .Select(trucksType => new SelectItemDto
+                {
+                    Id = trucksType.Id.ToString(),
+                    DisplayName = trucksType == null || trucksType.DisplayName == null ? "" : trucksType.DisplayName.ToString()
+                }).ToListAsync();
+        }
+
+        [AbpAuthorize(AppPermissions.Pages_ShippingRequests)]
+        public async Task<List<SelectItemDto>> GetAllTrailerTypeForTableDropdown()
+        {
+            return await _lookup_trailerTypeRepository.GetAll()
+                .Select(trailerType => new SelectItemDto
+                {
+                    Id = trailerType.Id.ToString(),
+                    DisplayName = trailerType == null || trailerType.DisplayName == null ? "" : trailerType.DisplayName.ToString()
+                }).ToListAsync();
+        }
+
+        public async Task<List<SelectItemDto>> GetAllRouteTypeForTableDropdown()
+        {
+            return await _lookup_routTypeRepository.GetAll()
+                .Select(x => new SelectItemDto
+                {
+                    Id = x.Id.ToString(),
+                    DisplayName = x == null || x.DisplayName == null ? "" : x.DisplayName.ToString()
+                }).ToListAsync();
+        }
+
+        public async Task<List<SelectItemDto>> GetAllGoodCategoriesForTableDropdown()
+        {
+            return await _lookup_goodCategoryRepository.GetAll()
+                .Select(x => new SelectItemDto
+                {
+                    Id = x.Id.ToString(),
+                    DisplayName = x == null || x.DisplayName == null ? "" : x.DisplayName.ToString()
+                }).ToListAsync();
+        }
+
     }
 }
