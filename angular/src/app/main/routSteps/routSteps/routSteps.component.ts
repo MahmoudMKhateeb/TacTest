@@ -1,4 +1,4 @@
-﻿import { Component, Injector, ViewEncapsulation, ViewChild, Input } from '@angular/core';
+﻿import { Component, Injector, ViewEncapsulation, ViewChild, Input, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { RoutStepsServiceProxy, RoutStepDto } from '@shared/service-proxies/service-proxies';
 import { NotifyService } from 'abp-ng2-module';
@@ -22,7 +22,7 @@ import * as moment from 'moment';
   encapsulation: ViewEncapsulation.None,
   animations: [appModuleAnimation()],
 })
-export class RoutStepsComponent extends AppComponentBase {
+export class RoutStepsComponent extends AppComponentBase implements OnInit {
   @Input() routeId: any;
 
   @ViewChild('entityTypeHistoryModal', { static: true }) entityTypeHistoryModal: EntityTypeHistoryModalComponent;
@@ -43,7 +43,6 @@ export class RoutStepsComponent extends AppComponentBase {
   minOrderFilterEmpty: number;
   cityDisplayNameFilter = '';
   cityDisplayName2Filter = '';
-  routeDisplayNameFilter = '';
   trucksTypeDisplayNameFilter = '';
   trailerTypeDisplayNameFilter = '';
   goodsDetailNameFilter = '';
@@ -94,8 +93,6 @@ export class RoutStepsComponent extends AppComponentBase {
         this.minOrderFilter == null ? this.minOrderFilterEmpty : this.minOrderFilter,
         this.cityDisplayNameFilter,
         this.cityDisplayName2Filter,
-        this.routeDisplayNameFilter,
-        this.routeId,
         this.trucksTypeDisplayNameFilter,
         this.trailerTypeDisplayNameFilter,
         this.goodsDetailNameFilter,
@@ -137,21 +134,21 @@ export class RoutStepsComponent extends AppComponentBase {
     });
   }
 
-  exportToExcel(): void {
-    this._routStepsServiceProxy
-      .getRoutStepsToExcel(
-        this.filterText,
-        this.displayNameFilter,
-        this.latitudeFilter,
-        this.longitudeFilter,
-        this.maxOrderFilter == null ? this.maxOrderFilterEmpty : this.maxOrderFilter,
-        this.minOrderFilter == null ? this.minOrderFilterEmpty : this.minOrderFilter,
-        this.cityDisplayNameFilter,
-        this.cityDisplayName2Filter,
-        this.routeDisplayNameFilter
-      )
-      .subscribe((result) => {
-        this._fileDownloadService.downloadTempFile(result);
-      });
-  }
+  // exportToExcel(): void {
+  //   this._routStepsServiceProxy
+  //     .getRoutStepsToExcel(
+  //       this.filterText,
+  //       this.displayNameFilter,
+  //       this.latitudeFilter,
+  //       this.longitudeFilter,
+  //       this.maxOrderFilter == null ? this.maxOrderFilterEmpty : this.maxOrderFilter,
+  //       this.minOrderFilter == null ? this.minOrderFilterEmpty : this.minOrderFilter,
+  //       this.cityDisplayNameFilter,
+  //       this.cityDisplayName2Filter,
+  //       this.routeDisplayNameFilter
+  //     )
+  //     .subscribe((result) => {
+  //       this._fileDownloadService.downloadTempFile(result);
+  //     });
+  // }
 }
