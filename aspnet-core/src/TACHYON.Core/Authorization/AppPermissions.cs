@@ -6,6 +6,11 @@
     /// </summary>
     public static class AppPermissions
     {
+        public const string Pages_Administration_UnitOfMeasures = "Pages.Administration.UnitOfMeasures";
+        public const string Pages_Administration_UnitOfMeasures_Create = "Pages.Administration.UnitOfMeasures.Create";
+        public const string Pages_Administration_UnitOfMeasures_Edit = "Pages.Administration.UnitOfMeasures.Edit";
+        public const string Pages_Administration_UnitOfMeasures_Delete = "Pages.Administration.UnitOfMeasures.Delete";
+
         public const string Pages_Facilities = "Pages.Facilities";
         public const string Pages_Facilities_Create = "Pages.Facilities.Create";
         public const string Pages_Facilities_Edit = "Pages.Facilities.Edit";

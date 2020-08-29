@@ -1,5 +1,6 @@
 ﻿import { NgModule } from '@angular/core';
 import { NavigationEnd, Router, RouterModule } from '@angular/router';
+import { UnitOfMeasuresComponent } from './unitOfMeasures/unitOfMeasures/unitOfMeasures.component';
 import { TruckStatusesComponent } from './trucks/truckStatuses/truckStatuses.component';
 import { AuditLogsComponent } from './audit-logs/audit-logs.component';
 import { HostDashboardComponent } from './dashboard/host-dashboard.component';
@@ -32,6 +33,7 @@ import { EntityDynamicParameterValueComponent } from './dynamic-entity-parameter
       {
         path: '',
         children: [
+          { path: 'unitOfMeasures/unitOfMeasures', component: UnitOfMeasuresComponent, data: { permission: 'Pages.Administration.UnitOfMeasures' } },
           { path: 'trucks/truckStatuses', component: TruckStatusesComponent, data: { permission: 'Pages.Administration.TruckStatuses' } },
           { path: 'users', component: UsersComponent, data: { permission: 'Pages.Administration.Users' } },
           { path: 'roles', component: RolesComponent, data: { permission: 'Pages.Administration.Roles' } },

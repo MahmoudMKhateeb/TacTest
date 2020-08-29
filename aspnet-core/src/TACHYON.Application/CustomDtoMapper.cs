@@ -1,4 +1,6 @@
-﻿using TACHYON.AddressBook.Dtos;
+﻿using TACHYON.UnitOfMeasures.Dtos;
+using TACHYON.UnitOfMeasures;
+using TACHYON.AddressBook.Dtos;
 using TACHYON.AddressBook;
 using Abp.Application.Editions;
 using Abp.Application.Features;
@@ -109,6 +111,8 @@ namespace TACHYON
     {
         public static void CreateMappings(IMapperConfigurationExpression configuration)
         {
+            configuration.CreateMap<CreateOrEditUnitOfMeasureDto, UnitOfMeasure>().ReverseMap();
+            configuration.CreateMap<UnitOfMeasureDto, UnitOfMeasure>().ReverseMap();
             configuration.CreateMap<CreateOrEditFacilityDto, Facility>().ReverseMap();
             configuration.CreateMap<FacilityDto, Facility>().ReverseMap();
             configuration.CreateMap<CreateOrEditDocumentFileDto, DocumentFile>().ReverseMap();

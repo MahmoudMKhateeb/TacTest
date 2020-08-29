@@ -1,6 +1,13 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <localizationDictionary culture="en">
-  <texts>    <text name="AddressBook">Address book</text>
+  <texts>    <text name="UnitOfMeasures">Unit of measures</text>
+    <text name="UnitOfMeasure">Unit of measure</text>
+    <text name="TACHYON.UnitOfMeasures.UnitOfMeasure">UnitOfMeasure</text>
+    <text name="UnitOfMeasuresHeaderInfo">Unit of measures header info</text>
+    <text name="CreateNewUnitOfMeasure">Create new unit of measure</text>
+    <text name="EditUnitOfMeasure">Edit unit of measure</text>
+    <text name="DeleteUnitOfMeasure">Delete unit of measure</text>
+    <text name="AddressBook">Address book</text>
     <text name="Facility">Facility</text>
     <text name="TACHYON.AddressBook.Facility">Facility</text>
     <text name="Adress">Adress</text>

@@ -159,6 +159,13 @@ namespace TACHYON.Authorization
 
             var administration = pages.CreateChildPermission(AppPermissions.Pages_Administration, L("Administration"));
 
+            var unitOfMeasures = administration.CreateChildPermission(AppPermissions.Pages_Administration_UnitOfMeasures, L("UnitOfMeasures"), multiTenancySides: MultiTenancySides.Host);
+            unitOfMeasures.CreateChildPermission(AppPermissions.Pages_Administration_UnitOfMeasures_Create, L("CreateNewUnitOfMeasure"), multiTenancySides: MultiTenancySides.Host);
+            unitOfMeasures.CreateChildPermission(AppPermissions.Pages_Administration_UnitOfMeasures_Edit, L("EditUnitOfMeasure"), multiTenancySides: MultiTenancySides.Host);
+            unitOfMeasures.CreateChildPermission(AppPermissions.Pages_Administration_UnitOfMeasures_Delete, L("DeleteUnitOfMeasure"), multiTenancySides: MultiTenancySides.Host);
+
+
+
             var truckStatuses = administration.CreateChildPermission(AppPermissions.Pages_Administration_TruckStatuses, L("TruckStatuses"), multiTenancySides: MultiTenancySides.Tenant);
             truckStatuses.CreateChildPermission(AppPermissions.Pages_Administration_TruckStatuses_Create, L("CreateNewTruckStatus"), multiTenancySides: MultiTenancySides.Tenant);
             truckStatuses.CreateChildPermission(AppPermissions.Pages_Administration_TruckStatuses_Edit, L("EditTruckStatus"), multiTenancySides: MultiTenancySides.Tenant);
