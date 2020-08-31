@@ -274,7 +274,10 @@ namespace TACHYON.Shipping.ShippingRequests
                 throw new UserFriendlyException(L("Cant accept or reject price for rejected request"));
             }
             shippingRequest.IsPriceAccepted = input.IsPriceAccepted;
-
+            if (shippingRequest.IsPriceAccepted.Value)
+            {
+                shippingRequest.StageOneFinish = true;
+            }
 
             await _appNotifier.AcceptShippingRequestPrice(input.Id, input.IsPriceAccepted);
         }
