@@ -1,4 +1,5 @@
-﻿using TACHYON.UnitOfMeasures;
+﻿using TACHYON.AddressBook.Ports;
+using TACHYON.UnitOfMeasures;
 using TACHYON.AddressBook;
 using Abp.IdentityServer4;
 using Abp.Organizations;
@@ -49,6 +50,8 @@ namespace TACHYON.EntityFrameworkCore
 {
     public class TACHYONDbContext : AbpZeroDbContext<Tenant, Role, User, TACHYONDbContext>, IAbpPersistedGrantDbContext
     {
+        public virtual DbSet<Port> Ports { get; set; }
+
         public virtual DbSet<UnitOfMeasure> UnitOfMeasures { get; set; }
 
         public virtual DbSet<Facility> Facilities { get; set; }

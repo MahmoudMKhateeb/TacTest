@@ -47,6 +47,7 @@ export class AppNavigationService {
       new AppMenuItem('Counties', 'Pages.Counties', 'flaticon-more', '/app/main/countries/counties'),
 
       new AppMenuItem('Cities', 'Pages.Cities', 'flaticon-more', '/app/main/cities/cities'),
+      new AppMenuItem('Ports', 'Pages.Ports', 'flaticon-more', '/app/main/ports/ports'),
 
       new AppMenuItem('Routes', 'Pages.Routes', 'flaticon-more', '/app/main/routs/routes', undefined, undefined, undefined, undefined, () =>
         this._featureCheckerService.isEnabled('App.Carrier')

@@ -2,6 +2,10 @@
 import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { AppCommonModule } from '@app/shared/common/app-common.module';
+import { PortsComponent } from './ports/ports/ports.component';
+import { ViewPortModalComponent } from './ports/ports/view-port-modal.component';
+import { CreateOrEditPortModalComponent } from './ports/ports/create-or-edit-port-modal.component';
+
 import { FacilitiesComponent } from './addressBook/facilities/facilities.component';
 import { ViewFacilityModalComponent } from './addressBook/facilities/view-facility-modal.component';
 import { CreateOrEditFacilityModalComponent } from './addressBook/facilities/create-or-edit-facility-modal.component';
@@ -130,6 +134,10 @@ NgxBootstrapDatePickerConfigService.registerNgxBootstrapDatePickerLocales();
     }),
   ],
   declarations: [
+    PortsComponent,
+
+    ViewPortModalComponent,
+    CreateOrEditPortModalComponent,
     FacilitiesComponent,
 
     ViewFacilityModalComponent,

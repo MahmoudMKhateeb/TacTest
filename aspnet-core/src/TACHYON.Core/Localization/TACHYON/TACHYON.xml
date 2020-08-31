@@ -1,6 +1,13 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <localizationDictionary culture="en">
-  <texts>    <text name="UnitOfMeasures">Unit of measures</text>
+  <texts>    <text name="Ports">Ports</text>
+    <text name="Port">Port</text>
+    <text name="TACHYON.Ports.Port">Port</text>
+    <text name="PortsHeaderInfo">Ports header info</text>
+    <text name="CreateNewPort">Create new port</text>
+    <text name="EditPort">Edit port</text>
+    <text name="DeletePort">Delete port</text>
+    <text name="UnitOfMeasures">Unit of measures</text>
     <text name="UnitOfMeasure">Unit of measure</text>
     <text name="TACHYON.UnitOfMeasures.UnitOfMeasure">UnitOfMeasure</text>
     <text name="UnitOfMeasuresHeaderInfo">Unit of measures header info</text>
