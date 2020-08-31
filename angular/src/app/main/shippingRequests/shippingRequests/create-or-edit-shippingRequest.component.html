@@ -1,4 +1,5 @@
-﻿<div [@routerTransition]>
+﻿<!--suppress XmlInvalidId -->
+<div [@routerTransition]>
   <div class="content d-flex flex-column flex-column-fluid">
     <sub-header [breadcrumbs]="breadcrumbs" [title]="('ShippingRequests' | localize) + ' ' + ('Details' | localize)"> </sub-header>
 
@@ -80,26 +81,26 @@
             </div>
 
             <div class="form-group col-md-6 m-form__group">
-              <label for="RoutOriginFacilityDisplayName">{{ l('OriginFacility') }}</label>
+              <label for="RoutOriginPortDisplayName">{{ l('OriginPort') }}</label>
               <select
-                name="shippingRequest.createOrEditRouteDto.originFacilityId"
-                [(ngModel)]="shippingRequest.createOrEditRouteDto.originFacilityId"
+                name="shippingRequest.createOrEditRouteDto.originPortIdId"
+                [(ngModel)]="shippingRequest.createOrEditRouteDto.originPortId"
                 class="form-control"
               >
-                <option value="">{{ l('SelectOriginFacility') }}</option>
-                <option *ngFor="let item of allHostFacilities" value="{{ item.id }}">{{ item.displayName }}</option>
+                <option value="">{{ l('SelectOriginPort') }}</option>
+                <option *ngFor="let item of allPorts" value="{{ item.id }}">{{ item.displayName }}</option>
               </select>
             </div>
 
             <div class="form-group col-md-6 m-form__group">
-              <label for="RoutDestinationFacilityDisplayName">{{ l('destinationFacility') }}</label>
+              <label for="RoutDestinationPortDisplayName">{{ l('destinationPort') }}</label>
               <select
-                name="shippingRequest.createOrEditRouteDto.destinationFacilityId"
-                [(ngModel)]="shippingRequest.createOrEditRouteDto.destinationFacilityId"
+                name="shippingRequest.createOrEditRouteDto.destinationPortId"
+                [(ngModel)]="shippingRequest.createOrEditRouteDto.destinationPortId"
                 class="form-control"
               >
-                <option value="">{{ l('SelectDestinationFacility') }}</option>
-                <option *ngFor="let item of allHostFacilities" value="{{ item.id }}">{{ item.displayName }}</option>
+                <option value="">{{ l('SelectDestinationPort') }}</option>
+                <option *ngFor="let item of allPorts" value="{{ item.id }}">{{ item.displayName }}</option>
               </select>
             </div>
           </div>

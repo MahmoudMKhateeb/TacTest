@@ -27,12 +27,14 @@ using TACHYON.Trucks.TrucksTypes;
 using Abp.Notifications;
 using Abp.UI;
 using TACHYON.AddressBook;
+using TACHYON.AddressBook.Ports;
 using TACHYON.Goods.GoodCategories;
 using TACHYON.Goods.GoodsDetails.Dtos;
 using TACHYON.MultiTenancy;
 using TACHYON.Routs.Dtos;
 using TACHYON.Routs.RoutSteps.Dtos;
 using TACHYON.Routs.RoutTypes;
+using Twilio.Http;
 
 namespace TACHYON.Shipping.ShippingRequests
 {
@@ -51,6 +53,8 @@ namespace TACHYON.Shipping.ShippingRequests
         private readonly IRepository<RoutType, int> _lookup_routTypeRepository;
         private readonly IRepository<GoodCategory, int> _lookup_goodCategoryRepository;
         private readonly IRepository<Facility, long> _lookup_FacilityRepository;
+        private readonly IRepository<Port, long> _lookup_PortRepository;
+
 
 
         public ShippingRequestsAppService(
@@ -63,7 +67,9 @@ namespace TACHYON.Shipping.ShippingRequests
             IRepository<TrucksType, long> lookupTrucksTypeRepository,
             IRepository<TrailerType, int> lookupTrailerTypeRepository,
             IRepository<RoutType, int> lookupRoutTypeRepository,
-            IRepository<GoodCategory, int> lookupGoodCategoryRepository, IRepository<Facility, long> lookupFacilityRepository)
+            IRepository<GoodCategory, int> lookupGoodCategoryRepository,
+            IRepository<Facility, long> lookupFacilityRepository,
+            IRepository<Port, long> lookupPortRepository)
         {
             _shippingRequestRepository = shippingRequestRepository;
             _shippingRequestsExcelExporter = shippingRequestsExcelExporter;
@@ -76,6 +82,7 @@ namespace TACHYON.Shipping.ShippingRequests
             _lookup_routTypeRepository = lookupRoutTypeRepository;
             _lookup_goodCategoryRepository = lookupGoodCategoryRepository;
             _lookup_FacilityRepository = lookupFacilityRepository;
+            _lookup_PortRepository = lookupPortRepository;
         }
 
         public async Task<PagedResultDto<GetShippingRequestForViewDto>> GetAll(GetAllShippingRequestsInput input)
@@ -179,8 +186,6 @@ namespace TACHYON.Shipping.ShippingRequests
         }
         protected virtual GetShippingRequestForEditOutput _GetShippingRequestForEdit(EntityDto<long> input)
         {
-            //todo add ports module host
-            //todo avoid in vases
             var shippingRequest = _shippingRequestRepository
                 .GetAll()
                 .Include(x => x.RouteFk)
@@ -213,9 +218,6 @@ namespace TACHYON.Shipping.ShippingRequests
         protected virtual async Task Create(CreateOrEditShippingRequestDto input)
         {
             var shippingRequest = ObjectMapper.Map<ShippingRequest>(input);
-            //shippingRequest.RoutSteps = ObjectMapper.Map<List<RoutStep>>(input.CreateOrEditRoutStepDtoList);
-            //shippingRequest.RouteFk = ObjectMapper.Map<Route>(input.CreateOrEditRouteDto);
-
 
             if (AbpSession.TenantId != null)
             {
@@ -231,7 +233,10 @@ namespace TACHYON.Shipping.ShippingRequests
         [AbpAuthorize(AppPermissions.Pages_ShippingRequests_Edit)]
         protected virtual async Task Update(CreateOrEditShippingRequestDto input)
         {
-            var shippingRequest = await _shippingRequestRepository.FirstOrDefaultAsync((long)input.Id);
+            var shippingRequest = await _shippingRequestRepository
+                .GetAllIncluding(x => x.RouteFk)
+                .Include(x => x.RoutSteps)
+                .FirstOrDefaultAsync(x => x.Id == (long)input.Id);
             ObjectMapper.Map(input, shippingRequest);
         }
 
@@ -395,19 +400,15 @@ namespace TACHYON.Shipping.ShippingRequests
                 }).ToListAsync();
         }
 
-        public async Task<List<SelectItemDto>> GetAllHostFacilitiesForDropdown()
+        public async Task<List<SelectItemDto>> GetAllPortsForDropdown()
         {
-            using (CurrentUnitOfWork.DisableFilter(AbpDataFilters.MayHaveTenant))
-            {
-                return await _lookup_FacilityRepository.GetAll()
-                    .Where(x => !x.TenantId.HasValue)
-                    .Select(x => new SelectItemDto
-                    {
-                        Id = x.Id.ToString(),
-                        DisplayName = x.Name
-                    })
-                    .ToListAsync();
-            }
+            return await _lookup_PortRepository.GetAll()
+                .Select(x => new SelectItemDto
+                {
+                    Id = x.Id.ToString(),
+                    DisplayName = x.Name
+                })
+                .ToListAsync();
         }
 
     }

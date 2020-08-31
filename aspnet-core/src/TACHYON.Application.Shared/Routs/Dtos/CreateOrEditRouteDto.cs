@@ -22,9 +22,9 @@ namespace TACHYON.Routs.Dtos
 
         public virtual int? DestinationCityId { get; set; }
 
-        public virtual long? OriginFacilityId { get; set; }
+        public virtual long? OriginPortId { get; set; }
 
 
-        public virtual long? DestinationFacilityId { get; set; }
+        public virtual long? DestinationPortId { get; set; }
     }
 }

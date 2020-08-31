@@ -59,7 +59,7 @@ export class CreateOrEditShippingRequestComponent extends AppComponentBase imple
   routStep: CreateOrEditRoutStepDto = new CreateOrEditRoutStepDto();
   allCitys: RoutStepCityLookupTableDto[];
   allFacilities: FacilityForDropdownDto[];
-  allHostFacilities: SelectItemDto[];
+  allPorts: SelectItemDto[];
   createOrEditRoutStepDtoList: CreateOrEditRoutStepDto[] = [];
 
   zoom = 5;
@@ -227,8 +227,8 @@ export class CreateOrEditShippingRequestComponent extends AppComponentBase imple
     this._routesServiceProxy.getAllRoutTypeForTableDropdown().subscribe((result) => {
       this.allRoutTypes = result;
     });
-    this._shippingRequestsServiceProxy.getAllHostFacilitiesForDropdown().subscribe((result) => {
-      this.allHostFacilities = result;
+    this._shippingRequestsServiceProxy.getAllPortsForDropdown().subscribe((result) => {
+      this.allPorts = result;
     });
   }
 }

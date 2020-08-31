@@ -5,6 +5,7 @@ using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using TACHYON.AddressBook;
+using TACHYON.AddressBook.Ports;
 using TACHYON.Cities;
 using TACHYON.Routs.RoutTypes;
 
@@ -38,15 +39,15 @@ namespace TACHYON.Routs
 
         [ForeignKey("DestinationCityId")]
         public City DestinationCityFk { get; set; }
-        public virtual long? OriginFacilityId { get; set; }
+        public virtual long? OriginPortId { get; set; }
 
-        [ForeignKey("OriginFacilityId")]
-        public Facility OriginFacilityFk { get; set; }
+        [ForeignKey("OriginPortId")]
+        public Port OriginPortFk { get; set; }
 
-        public virtual long? DestinationFacilityId { get; set; }
+        public virtual long? DestinationPortId { get; set; }
 
-        [ForeignKey("DestinationFacilityId")]
-        public Facility DestinationFacilityFk { get; set; }
+        [ForeignKey("DestinationPortId")]
+        public Port DestinationPortFk { get; set; }
 
     }
 }
