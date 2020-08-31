@@ -204,6 +204,14 @@ namespace TACHYON.Shipping.ShippingRequests
         [RequiresFeature(AppFeatures.ShippingRequest)]
         public async Task CreateOrEdit(CreateOrEditShippingRequestDto input)
         {
+            if (input.IsTachyonDeal)
+            {
+                if (!await IsEnabledAsync(AppFeatures.SendTachyonDealShippingRequest))
+                {
+                    throw new UserFriendlyException(L("feature SendTachyonDealShippingRequest not enabled"));
+                }
+            }
+
             if (input.Id == null)
             {
                 await Create(input);

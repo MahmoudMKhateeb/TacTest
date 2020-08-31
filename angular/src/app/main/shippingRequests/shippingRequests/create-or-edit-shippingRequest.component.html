@@ -125,7 +125,7 @@
                 <span></span>
               </label>
               &nbsp;
-              <label class="kt-checkbox" for="isTachyonDeal">
+              <label *ngIf="feature.isEnabled('App.SendTachyonDealShippingRequest')" class="kt-checkbox" for="isTachyonDeal">
                 <input [(ngModel)]="shippingRequest.isTachyonDeal" id="isTachyonDeal" name="isTachyonDeal" type="checkbox" />
                 {{ l('isTachyonDeal') }}
                 <span></span>
