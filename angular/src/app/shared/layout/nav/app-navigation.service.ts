@@ -1,4 +1,6 @@
-﻿import { PermissionCheckerService } from 'abp-ng2-module';
+﻿
+            new AppMenuItem('Ports', 'Pages.Ports', 'flaticon-more', '/app/main/ports/ports'),
+            import { PermissionCheckerService } from 'abp-ng2-module';
 import { AppSessionService } from '@shared/common/session/app-session.service';
 
 import { Injectable } from '@angular/core';

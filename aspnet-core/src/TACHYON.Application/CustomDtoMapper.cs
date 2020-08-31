@@ -1,4 +1,6 @@
-﻿using TACHYON.UnitOfMeasures.Dtos;
+﻿using TACHYON.AddressBook.Ports.Dtos;
+using TACHYON.AddressBook.Ports;
+using TACHYON.UnitOfMeasures.Dtos;
 using TACHYON.UnitOfMeasures;
 using TACHYON.AddressBook.Dtos;
 using TACHYON.AddressBook;
@@ -111,6 +113,8 @@ namespace TACHYON
     {
         public static void CreateMappings(IMapperConfigurationExpression configuration)
         {
+            configuration.CreateMap<CreateOrEditPortDto, Port>().ReverseMap();
+            configuration.CreateMap<PortDto, Port>().ReverseMap();
             configuration.CreateMap<CreateOrEditUnitOfMeasureDto, UnitOfMeasure>().ReverseMap();
             configuration.CreateMap<UnitOfMeasureDto, UnitOfMeasure>().ReverseMap();
             configuration.CreateMap<CreateOrEditFacilityDto, Facility>().ReverseMap();

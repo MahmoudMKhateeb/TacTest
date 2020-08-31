@@ -6,6 +6,11 @@
     /// </summary>
     public static class AppPermissions
     {
+        public const string Pages_Ports = "Pages.Ports";
+        public const string Pages_Ports_Create = "Pages.Ports.Create";
+        public const string Pages_Ports_Edit = "Pages.Ports.Edit";
+        public const string Pages_Ports_Delete = "Pages.Ports.Delete";
+
         public const string Pages_Administration_UnitOfMeasures = "Pages.Administration.UnitOfMeasures";
         public const string Pages_Administration_UnitOfMeasures_Create = "Pages.Administration.UnitOfMeasures.Create";
         public const string Pages_Administration_UnitOfMeasures_Edit = "Pages.Administration.UnitOfMeasures.Edit";
