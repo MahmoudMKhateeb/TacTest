@@ -45,6 +45,10 @@ namespace TACHYON.Shipping.ShippingRequests
         [ForeignKey("CarrierTenantId")]
         public Tenant CarrierTenantFk { get; set; }
 
+
+        /// <summary>
+        /// if rout type == milk run 
+        /// </summary>
         public int NumberOfDrops { get; set; }
 
         public bool StageOneFinish { get; set; }

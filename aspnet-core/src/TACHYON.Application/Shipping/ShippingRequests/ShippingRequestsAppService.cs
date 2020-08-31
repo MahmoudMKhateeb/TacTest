@@ -26,9 +26,11 @@ using TACHYON.Trailers.TrailerTypes;
 using TACHYON.Trucks.TrucksTypes;
 using Abp.Notifications;
 using Abp.UI;
+using TACHYON.AddressBook;
 using TACHYON.Goods.GoodCategories;
 using TACHYON.Goods.GoodsDetails.Dtos;
 using TACHYON.MultiTenancy;
+using TACHYON.Routs.Dtos;
 using TACHYON.Routs.RoutSteps.Dtos;
 using TACHYON.Routs.RoutTypes;
 
@@ -48,6 +50,8 @@ namespace TACHYON.Shipping.ShippingRequests
         private readonly IRepository<TrailerType, int> _lookup_trailerTypeRepository;
         private readonly IRepository<RoutType, int> _lookup_routTypeRepository;
         private readonly IRepository<GoodCategory, int> _lookup_goodCategoryRepository;
+        private readonly IRepository<Facility, long> _lookup_FacilityRepository;
+
 
         public ShippingRequestsAppService(
             IRepository<ShippingRequest, long> shippingRequestRepository,
@@ -59,7 +63,7 @@ namespace TACHYON.Shipping.ShippingRequests
             IRepository<TrucksType, long> lookupTrucksTypeRepository,
             IRepository<TrailerType, int> lookupTrailerTypeRepository,
             IRepository<RoutType, int> lookupRoutTypeRepository,
-            IRepository<GoodCategory, int> lookupGoodCategoryRepository)
+            IRepository<GoodCategory, int> lookupGoodCategoryRepository, IRepository<Facility, long> lookupFacilityRepository)
         {
             _shippingRequestRepository = shippingRequestRepository;
             _shippingRequestsExcelExporter = shippingRequestsExcelExporter;
@@ -71,6 +75,7 @@ namespace TACHYON.Shipping.ShippingRequests
             _lookup_trailerTypeRepository = lookupTrailerTypeRepository;
             _lookup_routTypeRepository = lookupRoutTypeRepository;
             _lookup_goodCategoryRepository = lookupGoodCategoryRepository;
+            _lookup_FacilityRepository = lookupFacilityRepository;
         }
 
         public async Task<PagedResultDto<GetShippingRequestForViewDto>> GetAll(GetAllShippingRequestsInput input)
@@ -163,29 +168,32 @@ namespace TACHYON.Shipping.ShippingRequests
             {
                 using (CurrentUnitOfWork.DisableFilter(AbpDataFilters.MustHaveTenant))
                 {
-                    return await _GetShippingRequestForEdit(input);
+                    return _GetShippingRequestForEdit(input);
                 }
             }
             else
             {
-                return await _GetShippingRequestForEdit(input);
+                return _GetShippingRequestForEdit(input);
             }
 
         }
-        protected virtual async Task<GetShippingRequestForEditOutput> _GetShippingRequestForEdit(EntityDto<long> input)
+        protected virtual GetShippingRequestForEditOutput _GetShippingRequestForEdit(EntityDto<long> input)
         {
-            var shippingRequest = await _shippingRequestRepository.GetAsync(input.Id);
+            //todo add ports module host
+            //todo avoid in vases
+            var shippingRequest = _shippingRequestRepository
+                .GetAll()
+                .Include(x => x.RouteFk)
+                .Include(x => x.RoutSteps)
+                .Single(x => x.Id == input.Id);
 
             var output = new GetShippingRequestForEditOutput
             {
                 ShippingRequest = ObjectMapper.Map<CreateOrEditShippingRequestDto>(shippingRequest)
             };
 
-            var _lookupRoutStep = await _routStepRepository.GetAll().Where(x => x.ShippingRequestId == output.ShippingRequest.Id).ToListAsync();
-
-            output.ShippingRequest.CreateOrEditRoutStepDtoList = ObjectMapper.Map<List<CreateOrEditRoutStepDto>>(_lookupRoutStep);
-
             return output;
+
         }
 
         [RequiresFeature(AppFeatures.ShippingRequest)]
@@ -205,8 +213,8 @@ namespace TACHYON.Shipping.ShippingRequests
         protected virtual async Task Create(CreateOrEditShippingRequestDto input)
         {
             var shippingRequest = ObjectMapper.Map<ShippingRequest>(input);
-            shippingRequest.RoutSteps = ObjectMapper.Map<List<RoutStep>>(input.CreateOrEditRoutStepDtoList);
-            shippingRequest.RouteFk = ObjectMapper.Map<Route>(input.CreateOrEditRouteDto);
+            //shippingRequest.RoutSteps = ObjectMapper.Map<List<RoutStep>>(input.CreateOrEditRoutStepDtoList);
+            //shippingRequest.RouteFk = ObjectMapper.Map<Route>(input.CreateOrEditRouteDto);
 
 
             if (AbpSession.TenantId != null)
@@ -385,6 +393,21 @@ namespace TACHYON.Shipping.ShippingRequests
                     Id = x.Id.ToString(),
                     DisplayName = x == null || x.DisplayName == null ? "" : x.DisplayName.ToString()
                 }).ToListAsync();
+        }
+
+        public async Task<List<SelectItemDto>> GetAllHostFacilitiesForDropdown()
+        {
+            using (CurrentUnitOfWork.DisableFilter(AbpDataFilters.MayHaveTenant))
+            {
+                return await _lookup_FacilityRepository.GetAll()
+                    .Where(x => !x.TenantId.HasValue)
+                    .Select(x => new SelectItemDto
+                    {
+                        Id = x.Id.ToString(),
+                        DisplayName = x.Name
+                    })
+                    .ToListAsync();
+            }
         }
 
     }

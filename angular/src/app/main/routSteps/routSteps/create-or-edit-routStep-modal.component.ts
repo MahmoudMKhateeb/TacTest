@@ -36,7 +36,6 @@ export class CreateOrEditRoutStepModalComponent extends AppComponentBase {
   routeDisplayName = '';
 
   allCitys: RoutStepCityLookupTableDto[];
-  allRoutes: RoutStepRouteLookupTableDto[];
   allTrucksTypes: SelectItemDto[];
   allTrailerTypes: SelectItemDto[];
   allGoodsDetails: SelectItemDto[];
@@ -47,8 +46,6 @@ export class CreateOrEditRoutStepModalComponent extends AppComponentBase {
   }
 
   show(routStepId?: number): void {
-    this.routStep.routeId = this.routeId;
-
     if (!routStepId) {
       this.routStep = new CreateOrEditRoutStepDto();
       this.routStep.createOrEditGoodsDetailDto = new CreateOrEditGoodsDetailDto();
@@ -83,10 +80,6 @@ export class CreateOrEditRoutStepModalComponent extends AppComponentBase {
     this._routStepsServiceProxy.getAllCityForTableDropdown().subscribe((result) => {
       this.allCitys = result;
     });
-    this._routStepsServiceProxy.getAllRouteForTableDropdown().subscribe((result) => {
-      this.allRoutes = result;
-    });
-
     this._routStepsServiceProxy.getAllTrucksTypeForTableDropdown().subscribe((result) => {
       this.allTrucksTypes = result;
     });
@@ -100,7 +93,6 @@ export class CreateOrEditRoutStepModalComponent extends AppComponentBase {
 
   save(): void {
     this.saving = true;
-    this.routStep.routeId = this.routeId;
 
     this._routStepsServiceProxy
       .createOrEdit(this.routStep)

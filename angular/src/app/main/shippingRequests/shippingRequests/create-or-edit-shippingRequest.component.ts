@@ -3,11 +3,14 @@ import { finalize } from 'rxjs/operators';
 import {
   CarriersForDropDownDto,
   CreateOrEditGoodsDetailDto,
+  CreateOrEditRouteDto,
   CreateOrEditRoutStepDto,
   CreateOrEditShippingRequestDto,
   FacilityForDropdownDto,
   GoodsDetailGoodCategoryLookupTableDto,
   GoodsDetailsServiceProxy,
+  RouteRoutTypeLookupTableDto,
+  RoutesServiceProxy,
   RoutStepCityLookupTableDto,
   RoutStepsServiceProxy,
   SelectItemDto,
@@ -35,32 +38,31 @@ import { CreateOrEditFacilityModalComponent } from '@app/main/addressBook/facili
   animations: [appModuleAnimation()],
 })
 export class CreateOrEditShippingRequestComponent extends AppComponentBase implements OnInit {
-  @ViewChild('createOrEditFacilityModal', { static: true }) createOrEditFacilityModal: CreateOrEditFacilityModalComponent;
-
-  active = false;
-  saving = false;
-
-  shippingRequest: CreateOrEditShippingRequestDto = new CreateOrEditShippingRequestDto();
-
-  allGoodCategorys: GoodsDetailGoodCategoryLookupTableDto[];
-  allCarrierTenants: CarriersForDropDownDto[];
-
-  allTrucksTypes: SelectItemDto[];
-  allTrailerTypes: SelectItemDto[];
-  allGoodsDetails: SelectItemDto[];
-
   breadcrumbs: BreadcrumbItem[] = [
     new BreadcrumbItem(this.l('ShippingRequest'), '/app/main/shippingRequests/shippingRequests'),
     new BreadcrumbItem(this.l('Entity_Name_Plural_Here') + '' + this.l('Details')),
   ];
+
+  @ViewChild('createOrEditFacilityModal', { static: true }) createOrEditFacilityModal: CreateOrEditFacilityModalComponent;
+  @ViewChild('search') public searchElementRef: ElementRef;
+  @ViewChild('staticModal') public staticModal: ModalDirective;
+  active = false;
+  saving = false;
+
+  shippingRequest: CreateOrEditShippingRequestDto = new CreateOrEditShippingRequestDto();
+  allGoodCategorys: GoodsDetailGoodCategoryLookupTableDto[];
+  allCarrierTenants: CarriersForDropDownDto[];
+  allTrucksTypes: SelectItemDto[];
+  allTrailerTypes: SelectItemDto[];
+  allGoodsDetails: SelectItemDto[];
+  allRoutTypes: RouteRoutTypeLookupTableDto[];
   routStep: CreateOrEditRoutStepDto = new CreateOrEditRoutStepDto();
   allCitys: RoutStepCityLookupTableDto[];
   allFacilities: FacilityForDropdownDto[];
-
+  allHostFacilities: SelectItemDto[];
   createOrEditRoutStepDtoList: CreateOrEditRoutStepDto[] = [];
+
   zoom = 5;
-  @ViewChild('search') public searchElementRef: ElementRef;
-  @ViewChild('staticModal') public staticModal: ModalDirective;
   private geoCoder;
 
   constructor(
@@ -71,10 +73,10 @@ export class CreateOrEditShippingRequestComponent extends AppComponentBase imple
     private _goodsDetailsServiceProxy: GoodsDetailsServiceProxy,
     private _routStepsServiceProxy: RoutStepsServiceProxy,
     private mapsAPILoader: MapsAPILoader,
-    private ngZone: NgZone
+    private ngZone: NgZone,
+    private _routesServiceProxy: RoutesServiceProxy
   ) {
     super(injector);
-    this.routStep.createOrEditGoodsDetailDto = new CreateOrEditGoodsDetailDto();
   }
 
   openModal() {
@@ -87,42 +89,24 @@ export class CreateOrEditShippingRequestComponent extends AppComponentBase imple
   }
 
   ngOnInit(): void {
+    this.shippingRequest.createOrEditRouteDto = new CreateOrEditRouteDto();
+    this.routStep.createOrEditGoodsDetailDto = new CreateOrEditGoodsDetailDto();
     this.show(this._activatedRoute.snapshot.queryParams['id']);
   }
+
   show(shippingRequestId?: number): void {
     if (!shippingRequestId) {
-      this.shippingRequest = new CreateOrEditShippingRequestDto();
-      this.routStep.createOrEditGoodsDetailDto = new CreateOrEditGoodsDetailDto();
       this.shippingRequest.id = shippingRequestId;
-
       this.active = true;
     } else {
       this._shippingRequestsServiceProxy.getShippingRequestForEdit(shippingRequestId).subscribe((result) => {
         this.shippingRequest = result.shippingRequest;
-
+        //this.shippingRequest.createOrEditRouteDto = result.shippingRequest.createOrEditRouteDto;
         this.createOrEditRoutStepDtoList = result.shippingRequest.createOrEditRoutStepDtoList;
         this.active = true;
       });
     }
-
-    this._goodsDetailsServiceProxy.getAllGoodCategoryForTableDropdown().subscribe((result) => {
-      this.allGoodCategorys = result;
-    });
-    this._shippingRequestsServiceProxy.getAllCarriersForDropDown().subscribe((result) => {
-      this.allCarrierTenants = result;
-    });
-    this._routStepsServiceProxy.getAllCityForTableDropdown().subscribe((result) => {
-      this.allCitys = result;
-    });
-    this._routStepsServiceProxy.getAllTrucksTypeForTableDropdown().subscribe((result) => {
-      this.allTrucksTypes = result;
-    });
-    this._routStepsServiceProxy.getAllTrailerTypeForTableDropdown().subscribe((result) => {
-      this.allTrailerTypes = result;
-    });
-    this._routStepsServiceProxy.getAllGoodsDetailForTableDropdown().subscribe((result) => {
-      this.allGoodsDetails = result;
-    });
+    this.loadAllDropDownLists();
     this.refreshFacilities();
   }
 
@@ -219,5 +203,32 @@ export class CreateOrEditShippingRequestComponent extends AppComponentBase imple
   }
   createFacility(): void {
     this.createOrEditFacilityModal.show();
+  }
+
+  loadAllDropDownLists(): void {
+    this._goodsDetailsServiceProxy.getAllGoodCategoryForTableDropdown().subscribe((result) => {
+      this.allGoodCategorys = result;
+    });
+    this._shippingRequestsServiceProxy.getAllCarriersForDropDown().subscribe((result) => {
+      this.allCarrierTenants = result;
+    });
+    this._routStepsServiceProxy.getAllCityForTableDropdown().subscribe((result) => {
+      this.allCitys = result;
+    });
+    this._routStepsServiceProxy.getAllTrucksTypeForTableDropdown().subscribe((result) => {
+      this.allTrucksTypes = result;
+    });
+    this._routStepsServiceProxy.getAllTrailerTypeForTableDropdown().subscribe((result) => {
+      this.allTrailerTypes = result;
+    });
+    this._routStepsServiceProxy.getAllGoodsDetailForTableDropdown().subscribe((result) => {
+      this.allGoodsDetails = result;
+    });
+    this._routesServiceProxy.getAllRoutTypeForTableDropdown().subscribe((result) => {
+      this.allRoutTypes = result;
+    });
+    this._shippingRequestsServiceProxy.getAllHostFacilitiesForDropdown().subscribe((result) => {
+      this.allHostFacilities = result;
+    });
   }
 }

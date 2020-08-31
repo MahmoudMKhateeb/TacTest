@@ -4,37 +4,137 @@
 
     <div [class]="containerClass">
       <div class="card card-custom gutter-b">
-        <div class="card-body row">
-          <div class="form-group col-md-6">
-            <label for="ShippingRequest_Vas">{{ l('Vas') }}</label>
-            <input [(ngModel)]="shippingRequest.vas" class="form-control" id="ShippingRequest_Vas" name="Vas" type="number" />
-          </div>
-          <div class="form-group col-md-6 m-form__group">
-            <label for="carrierTenantDisplayName">{{ l('carrierTenantDisplayName') }}</label>
-            <select [(ngModel)]="shippingRequest.carrierTenantId" class="form-control" name="carrierTenantId">
-              <option value="">{{ l('SelectAGoodCategory') }}</option>
-              <option *ngFor="let item of allCarrierTenants" value="{{ item.id }}">{{ item.displayName }}</option>
-            </select>
-          </div>
+        <div class="card-body">
+          <div class="row">
+            <div class="form-group col-md-6 m-form__group">
+              <label for="TrucksTypeDisplayName">{{ l('TrucksType') }}</label>
+              <select [(ngModel)]="shippingRequest.trucksTypeId" class="form-control" name="shippingRequest.trucksTypeId">
+                <option value="">{{ l('SelectATrucksType') }}</option>
+                <option *ngFor="let item of allTrucksTypes" value="{{ item.id }}">{{ item.displayName }}</option>
+              </select>
+            </div>
 
-          <div class="m-checkbox-list col-md-6">
-            &nbsp;
-            <label class="kt-checkbox" for="isBid">
-              <input [(ngModel)]="shippingRequest.isBid" id="isBid" name="isBid" type="checkbox" />
-              {{ l('isBid') }}
-              <span></span>
-            </label>
-            &nbsp;
-            <label class="kt-checkbox" for="isTachyonDeal">
-              <input [(ngModel)]="shippingRequest.isTachyonDeal" id="isTachyonDeal" name="isTachyonDeal" type="checkbox" />
-              {{ l('isTachyonDeal') }}
-              <span></span>
-            </label>
-            &nbsp;
-          </div>
+            <div class="form-group col-md-6 m-form__group">
+              <label for="TrailerTypeDisplayName">{{ l('TrailerType') }}</label>
+              <select [(ngModel)]="shippingRequest.trailerTypeId" class="form-control" name="shippingRequest.trailerTypeId">
+                <option value="">{{ l('SelectATrailerType') }}</option>
+                <option *ngFor="let item of allTrailerTypes" value="{{ item.id }}">{{ item.displayName }}</option>
+              </select>
+            </div>
+            <div class="form-group col-md-6 m-form__group">
+              <label for="GoodCategoryDisplayName">{{ l('GoodCategory') }}</label>
+              <select [(ngModel)]="shippingRequest.goodCategoryId" class="form-control" name="goodCategoryId">
+                <option value="">{{ l('SelectAGoodCategory') }}</option>
+                <option *ngFor="let item of allGoodCategorys" value="{{ item.id }}">{{ item.displayName }}</option>
+              </select>
+            </div>
 
-          <div class="col-md-6">
-            <button (click)="openModal()" class="btn btn-primary" type="button">add route step</button>
+            <div class="form-group col-md-6 m-form__group">
+              <label for="RoutTypeDisplayName">{{ l('RoutType') }}</label>
+              <select
+                name="shippingRequest.createOrEditRouteDto.routTypeId"
+                [(ngModel)]="shippingRequest.createOrEditRouteDto.routTypeId"
+                class="form-control"
+              >
+                <option value="">{{ l('SelectARoutType') }}</option>
+                <option *ngFor="let item of allRoutTypes" value="{{ item.id }}">{{ item.displayName }}</option>
+              </select>
+            </div>
+
+            <div *ngIf="shippingRequest.createOrEditRouteDto.routTypeId == 3" class="form-group col-md-6">
+              <label for="shippingRequest.numberOfDrops">{{ l('numberOfDrops') }}</label>
+              <input
+                [(ngModel)]="shippingRequest.numberOfDrops"
+                class="form-control"
+                id="shippingRequest.numberOfDrops"
+                name="numberOfDrops"
+                type="number"
+                minlength="0"
+              />
+              <span class="form-text text-muted">{{ l('IfMilkRunFillNumberOfDropsHintMsg') }}</span>
+            </div>
+          </div>
+          <div class="row">
+            <div class="form-group col-md-6 m-form__group">
+              <label for="RoutOriginCityDisplayName">{{ l('originCity') }}</label>
+              <select
+                name="shippingRequest.createOrEditRouteDto.originCityId"
+                [(ngModel)]="shippingRequest.createOrEditRouteDto.originCityId"
+                class="form-control"
+              >
+                <option value="">{{ l('SelectOriginCity') }}</option>
+                <option *ngFor="let item of allCitys" value="{{ item.id }}">{{ item.displayName }}</option>
+              </select>
+            </div>
+
+            <div class="form-group col-md-6 m-form__group">
+              <label for="RoutDestinationCityDisplayName">{{ l('destinationCity') }}</label>
+              <select
+                name="shippingRequest.createOrEditRouteDto.destinationCityId"
+                [(ngModel)]="shippingRequest.createOrEditRouteDto.destinationCityId"
+                class="form-control"
+              >
+                <option value="">{{ l('SelectDestinationCity') }}</option>
+                <option *ngFor="let item of allCitys" value="{{ item.id }}">{{ item.displayName }}</option>
+              </select>
+            </div>
+
+            <div class="form-group col-md-6 m-form__group">
+              <label for="RoutOriginFacilityDisplayName">{{ l('OriginFacility') }}</label>
+              <select
+                name="shippingRequest.createOrEditRouteDto.originFacilityId"
+                [(ngModel)]="shippingRequest.createOrEditRouteDto.originFacilityId"
+                class="form-control"
+              >
+                <option value="">{{ l('SelectOriginFacility') }}</option>
+                <option *ngFor="let item of allHostFacilities" value="{{ item.id }}">{{ item.displayName }}</option>
+              </select>
+            </div>
+
+            <div class="form-group col-md-6 m-form__group">
+              <label for="RoutDestinationFacilityDisplayName">{{ l('destinationFacility') }}</label>
+              <select
+                name="shippingRequest.createOrEditRouteDto.destinationFacilityId"
+                [(ngModel)]="shippingRequest.createOrEditRouteDto.destinationFacilityId"
+                class="form-control"
+              >
+                <option value="">{{ l('SelectDestinationFacility') }}</option>
+                <option *ngFor="let item of allHostFacilities" value="{{ item.id }}">{{ item.displayName }}</option>
+              </select>
+            </div>
+          </div>
+          <div class="row">
+            <div class="form-group col-md-6">
+              <label for="ShippingRequest_Vas">{{ l('Vas') }}</label>
+              <input [(ngModel)]="shippingRequest.vas" class="form-control" id="ShippingRequest_Vas" name="Vas" type="number" />
+            </div>
+            <!--          <div class="form-group col-md-6 m-form__group">-->
+            <!--            <label for="carrierTenantDisplayName">{{ l('carrierTenantDisplayName') }}</label>-->
+            <!--            <select [(ngModel)]="shippingRequest.carrierTenantId" class="form-control" name="carrierTenantId">-->
+            <!--              <option value="">{{ l('SelectCarrierTenantDisplayName') }}</option>-->
+            <!--              <option *ngFor="let item of allCarrierTenants" value="{{ item.id }}">{{ item.displayName }}</option>-->
+            <!--            </select>-->
+            <!--          </div>-->
+
+            <div class="m-checkbox-list col-md-6">
+              &nbsp;
+              <label class="kt-checkbox" for="isBid">
+                <input [(ngModel)]="shippingRequest.isBid" id="isBid" name="isBid" type="checkbox" />
+                {{ l('isBid') }}
+                <span></span>
+              </label>
+              &nbsp;
+              <label class="kt-checkbox" for="isTachyonDeal">
+                <input [(ngModel)]="shippingRequest.isTachyonDeal" id="isTachyonDeal" name="isTachyonDeal" type="checkbox" />
+                {{ l('isTachyonDeal') }}
+                <span></span>
+              </label>
+              &nbsp;
+            </div>
+
+            <div *ngIf="shippingRequest.stageOneFinish" class="col-md-6">
+              <button (click)="openModal()" class="btn btn-primary" type="button">add route step</button>
+            </div>
           </div>
         </div>
         <div class="card-footer">

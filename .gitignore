@@ -20,3 +20,4 @@ aspnet-core/src/TACHYON.Web.Mvc/healthchecksdb
 *.pfx
 
 aspnet-core/AspNetZeroRadTool/
+/aspnet-core/TACHYON.Web.favdoc

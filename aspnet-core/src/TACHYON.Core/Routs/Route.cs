@@ -17,7 +17,6 @@ namespace TACHYON.Routs
         public int TenantId { get; set; }
 
 
-        [Required]
         [StringLength(RouteConsts.MaxDisplayNameLength, MinimumLength = RouteConsts.MinDisplayNameLength)]
         public virtual string DisplayName { get; set; }
 

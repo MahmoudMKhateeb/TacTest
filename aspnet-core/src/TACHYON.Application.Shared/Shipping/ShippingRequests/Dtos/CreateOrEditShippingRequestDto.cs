@@ -34,6 +34,12 @@ namespace TACHYON.Shipping.ShippingRequests.Dtos
 
         public int? GoodCategoryId { get; set; }
 
+        public int? NumberOfDrops { get; set; }
+        public bool StageOneFinish { get; set; }
+        public bool StageTowFinish { get; set; }
+        public bool StageThreeFinish { get; set; }
+
+
         //Route
         public CreateOrEditRouteDto CreateOrEditRouteDto { get; set; }
 

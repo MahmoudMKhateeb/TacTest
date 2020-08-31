@@ -8,7 +8,6 @@ namespace TACHYON.Routs.Dtos
     public class CreateOrEditRouteDto : EntityDto<int?>
     {
 
-        [Required]
         [StringLength(RouteConsts.MaxDisplayNameLength, MinimumLength = RouteConsts.MinDisplayNameLength)]
         public string DisplayName { get; set; }
 
