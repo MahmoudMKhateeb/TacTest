@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace TACHYON.Migrations
 {
-    public partial class mvpmigration : Migration
+    public partial class MVBrefresh : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -132,6 +132,26 @@ namespace TACHYON.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "PickingTypes",
+                columns: table => new
+                {
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    CreationTime = table.Column<DateTime>(nullable: false),
+                    CreatorUserId = table.Column<long>(nullable: true),
+                    LastModificationTime = table.Column<DateTime>(nullable: true),
+                    LastModifierUserId = table.Column<long>(nullable: true),
+                    IsDeleted = table.Column<bool>(nullable: false),
+                    DeleterUserId = table.Column<long>(nullable: true),
+                    DeletionTime = table.Column<DateTime>(nullable: true),
+                    DisplayName = table.Column<string>(maxLength: 256, nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_PickingTypes", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "RoutTypes",
                 columns: table => new
                 {
@@ -234,6 +254,26 @@ namespace TACHYON.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "UnitOfMeasures",
+                columns: table => new
+                {
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    CreationTime = table.Column<DateTime>(nullable: false),
+                    CreatorUserId = table.Column<long>(nullable: true),
+                    LastModificationTime = table.Column<DateTime>(nullable: true),
+                    LastModifierUserId = table.Column<long>(nullable: true),
+                    IsDeleted = table.Column<bool>(nullable: false),
+                    DeleterUserId = table.Column<long>(nullable: true),
+                    DeletionTime = table.Column<DateTime>(nullable: true),
+                    DisplayName = table.Column<string>(maxLength: 256, nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_UnitOfMeasures", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Cities",
                 columns: table => new
                 {
@@ -261,69 +301,6 @@ namespace TACHYON.Migrations
                         principalTable: "Counties",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "GoodsDetails",
-                columns: table => new
-                {
-                    Id = table.Column<long>(nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    CreationTime = table.Column<DateTime>(nullable: false),
-                    CreatorUserId = table.Column<long>(nullable: true),
-                    LastModificationTime = table.Column<DateTime>(nullable: true),
-                    LastModifierUserId = table.Column<long>(nullable: true),
-                    IsDeleted = table.Column<bool>(nullable: false),
-                    DeleterUserId = table.Column<long>(nullable: true),
-                    DeletionTime = table.Column<DateTime>(nullable: true),
-                    TenantId = table.Column<int>(nullable: false),
-                    Name = table.Column<string>(maxLength: 256, nullable: false),
-                    Description = table.Column<string>(maxLength: 256, nullable: true),
-                    Quantity = table.Column<string>(maxLength: 128, nullable: true),
-                    Weight = table.Column<string>(maxLength: 64, nullable: true),
-                    Dimentions = table.Column<string>(maxLength: 128, nullable: true),
-                    IsDangerousGood = table.Column<bool>(nullable: false),
-                    DangerousGoodsCode = table.Column<string>(maxLength: 64, nullable: true),
-                    GoodCategoryId = table.Column<int>(nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_GoodsDetails", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_GoodsDetails_GoodCategories_GoodCategoryId",
-                        column: x => x.GoodCategoryId,
-                        principalTable: "GoodCategories",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Routes",
-                columns: table => new
-                {
-                    Id = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    CreationTime = table.Column<DateTime>(nullable: false),
-                    CreatorUserId = table.Column<long>(nullable: true),
-                    LastModificationTime = table.Column<DateTime>(nullable: true),
-                    LastModifierUserId = table.Column<long>(nullable: true),
-                    IsDeleted = table.Column<bool>(nullable: false),
-                    DeleterUserId = table.Column<long>(nullable: true),
-                    DeletionTime = table.Column<DateTime>(nullable: true),
-                    TenantId = table.Column<int>(nullable: false),
-                    DisplayName = table.Column<string>(maxLength: 256, nullable: false),
-                    Description = table.Column<string>(maxLength: 512, nullable: true),
-                    RoutTypeId = table.Column<int>(nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Routes", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Routes_RoutTypes_RoutTypeId",
-                        column: x => x.RoutTypeId,
-                        principalTable: "RoutTypes",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
@@ -381,6 +358,231 @@ namespace TACHYON.Migrations
                         principalTable: "TrucksTypes",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "GoodsDetails",
+                columns: table => new
+                {
+                    Id = table.Column<long>(nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    CreationTime = table.Column<DateTime>(nullable: false),
+                    CreatorUserId = table.Column<long>(nullable: true),
+                    LastModificationTime = table.Column<DateTime>(nullable: true),
+                    LastModifierUserId = table.Column<long>(nullable: true),
+                    IsDeleted = table.Column<bool>(nullable: false),
+                    DeleterUserId = table.Column<long>(nullable: true),
+                    DeletionTime = table.Column<DateTime>(nullable: true),
+                    TenantId = table.Column<int>(nullable: false),
+                    Name = table.Column<string>(maxLength: 256, nullable: false),
+                    Description = table.Column<string>(maxLength: 256, nullable: true),
+                    Quantity = table.Column<string>(maxLength: 128, nullable: true),
+                    Weight = table.Column<string>(maxLength: 64, nullable: true),
+                    Dimentions = table.Column<string>(maxLength: 128, nullable: true),
+                    IsDangerousGood = table.Column<bool>(nullable: false),
+                    DangerousGoodsCode = table.Column<string>(maxLength: 64, nullable: true),
+                    GoodCategoryId = table.Column<int>(nullable: true),
+                    UnitOfMeasureId = table.Column<int>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_GoodsDetails", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_GoodsDetails_GoodCategories_GoodCategoryId",
+                        column: x => x.GoodCategoryId,
+                        principalTable: "GoodCategories",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_GoodsDetails_UnitOfMeasures_UnitOfMeasureId",
+                        column: x => x.UnitOfMeasureId,
+                        principalTable: "UnitOfMeasures",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Facilities",
+                columns: table => new
+                {
+                    Id = table.Column<long>(nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    CreationTime = table.Column<DateTime>(nullable: false),
+                    CreatorUserId = table.Column<long>(nullable: true),
+                    LastModificationTime = table.Column<DateTime>(nullable: true),
+                    LastModifierUserId = table.Column<long>(nullable: true),
+                    IsDeleted = table.Column<bool>(nullable: false),
+                    DeleterUserId = table.Column<long>(nullable: true),
+                    DeletionTime = table.Column<DateTime>(nullable: true),
+                    Name = table.Column<string>(maxLength: 256, nullable: false),
+                    Adress = table.Column<string>(maxLength: 256, nullable: false),
+                    Longitude = table.Column<decimal>(nullable: false),
+                    Latitude = table.Column<decimal>(nullable: false),
+                    CityId = table.Column<int>(nullable: false),
+                    TenantId = table.Column<int>(nullable: true),
+                    CountyId = table.Column<int>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Facilities", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Facilities_Cities_CityId",
+                        column: x => x.CityId,
+                        principalTable: "Cities",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_Facilities_Counties_CountyId",
+                        column: x => x.CountyId,
+                        principalTable: "Counties",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Ports",
+                columns: table => new
+                {
+                    Id = table.Column<long>(nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    CreationTime = table.Column<DateTime>(nullable: false),
+                    CreatorUserId = table.Column<long>(nullable: true),
+                    LastModificationTime = table.Column<DateTime>(nullable: true),
+                    LastModifierUserId = table.Column<long>(nullable: true),
+                    IsDeleted = table.Column<bool>(nullable: false),
+                    DeleterUserId = table.Column<long>(nullable: true),
+                    DeletionTime = table.Column<DateTime>(nullable: true),
+                    Name = table.Column<string>(maxLength: 256, nullable: false),
+                    Adress = table.Column<string>(maxLength: 256, nullable: false),
+                    Longitude = table.Column<decimal>(nullable: false),
+                    Latitude = table.Column<decimal>(nullable: false),
+                    CityId = table.Column<int>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Ports", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Ports_Cities_CityId",
+                        column: x => x.CityId,
+                        principalTable: "Cities",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Trailers",
+                columns: table => new
+                {
+                    Id = table.Column<long>(nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    CreationTime = table.Column<DateTime>(nullable: false),
+                    CreatorUserId = table.Column<long>(nullable: true),
+                    LastModificationTime = table.Column<DateTime>(nullable: true),
+                    LastModifierUserId = table.Column<long>(nullable: true),
+                    IsDeleted = table.Column<bool>(nullable: false),
+                    DeleterUserId = table.Column<long>(nullable: true),
+                    DeletionTime = table.Column<DateTime>(nullable: true),
+                    TenantId = table.Column<int>(nullable: false),
+                    TrailerCode = table.Column<string>(maxLength: 256, nullable: false),
+                    PlateNumber = table.Column<string>(maxLength: 256, nullable: false),
+                    Model = table.Column<string>(maxLength: 64, nullable: false),
+                    Year = table.Column<string>(maxLength: 64, nullable: false),
+                    Width = table.Column<int>(nullable: false),
+                    Height = table.Column<int>(nullable: false),
+                    Length = table.Column<int>(nullable: false),
+                    IsLiftgate = table.Column<bool>(nullable: false),
+                    IsReefer = table.Column<bool>(nullable: false),
+                    IsVented = table.Column<bool>(nullable: false),
+                    IsRollDoor = table.Column<bool>(nullable: false),
+                    TrailerStatusId = table.Column<int>(nullable: false),
+                    TrailerTypeId = table.Column<int>(nullable: false),
+                    PayloadMaxWeightId = table.Column<int>(nullable: false),
+                    HookedTruckId = table.Column<Guid>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Trailers", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Trailers_Trucks_HookedTruckId",
+                        column: x => x.HookedTruckId,
+                        principalTable: "Trucks",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_Trailers_PayloadMaxWeights_PayloadMaxWeightId",
+                        column: x => x.PayloadMaxWeightId,
+                        principalTable: "PayloadMaxWeights",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Trailers_TrailerStatuses_TrailerStatusId",
+                        column: x => x.TrailerStatusId,
+                        principalTable: "TrailerStatuses",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Trailers_TrailerTypes_TrailerTypeId",
+                        column: x => x.TrailerTypeId,
+                        principalTable: "TrailerTypes",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Routes",
+                columns: table => new
+                {
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    CreationTime = table.Column<DateTime>(nullable: false),
+                    CreatorUserId = table.Column<long>(nullable: true),
+                    LastModificationTime = table.Column<DateTime>(nullable: true),
+                    LastModifierUserId = table.Column<long>(nullable: true),
+                    IsDeleted = table.Column<bool>(nullable: false),
+                    DeleterUserId = table.Column<long>(nullable: true),
+                    DeletionTime = table.Column<DateTime>(nullable: true),
+                    TenantId = table.Column<int>(nullable: false),
+                    DisplayName = table.Column<string>(maxLength: 256, nullable: true),
+                    Description = table.Column<string>(maxLength: 512, nullable: true),
+                    RoutTypeId = table.Column<int>(nullable: true),
+                    OriginCityId = table.Column<int>(nullable: true),
+                    DestinationCityId = table.Column<int>(nullable: true),
+                    OriginPortId = table.Column<long>(nullable: true),
+                    DestinationPortId = table.Column<long>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Routes", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Routes_Cities_DestinationCityId",
+                        column: x => x.DestinationCityId,
+                        principalTable: "Cities",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_Routes_Ports_DestinationPortId",
+                        column: x => x.DestinationPortId,
+                        principalTable: "Ports",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_Routes_Cities_OriginCityId",
+                        column: x => x.OriginCityId,
+                        principalTable: "Cities",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_Routes_Ports_OriginPortId",
+                        column: x => x.OriginPortId,
+                        principalTable: "Ports",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_Routes_RoutTypes_RoutTypeId",
+                        column: x => x.RoutTypeId,
+                        principalTable: "RoutTypes",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
@@ -448,18 +650,22 @@ namespace TACHYON.Migrations
                     DeleterUserId = table.Column<long>(nullable: true),
                     DeletionTime = table.Column<DateTime>(nullable: true),
                     TenantId = table.Column<int>(nullable: false),
+                    RouteId = table.Column<int>(nullable: false),
                     Vas = table.Column<decimal>(nullable: false),
-                    TrucksTypeId = table.Column<long>(nullable: true),
-                    TrailerTypeId = table.Column<int>(nullable: true),
-                    GoodsDetailId = table.Column<long>(nullable: true),
-                    RouteId = table.Column<int>(nullable: true),
                     IsBid = table.Column<bool>(nullable: false),
                     IsTachyonDeal = table.Column<bool>(nullable: false),
                     Price = table.Column<decimal>(nullable: true),
                     IsPriceAccepted = table.Column<bool>(nullable: true),
                     IsRejected = table.Column<bool>(nullable: true),
                     FatherShippingRequestId = table.Column<long>(nullable: true),
-                    CarrierTenantId = table.Column<int>(nullable: true)
+                    CarrierTenantId = table.Column<int>(nullable: true),
+                    NumberOfDrops = table.Column<int>(nullable: false),
+                    StageOneFinish = table.Column<bool>(nullable: false),
+                    StageTowFinish = table.Column<bool>(nullable: false),
+                    StageThreeFinish = table.Column<bool>(nullable: false),
+                    TrucksTypeId = table.Column<long>(nullable: true),
+                    TrailerTypeId = table.Column<int>(nullable: true),
+                    GoodCategoryId = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
                 {
@@ -477,17 +683,17 @@ namespace TACHYON.Migrations
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
-                        name: "FK_ShippingRequests_GoodsDetails_GoodsDetailId",
-                        column: x => x.GoodsDetailId,
-                        principalTable: "GoodsDetails",
+                        name: "FK_ShippingRequests_GoodCategories_GoodCategoryId",
+                        column: x => x.GoodCategoryId,
+                        principalTable: "GoodCategories",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_ShippingRequests_Routes_RouteId",
                         column: x => x.RouteId,
                         principalTable: "Routes",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_ShippingRequests_TrailerTypes_TrailerTypeId",
                         column: x => x.TrailerTypeId,
@@ -500,65 +706,6 @@ namespace TACHYON.Migrations
                         principalTable: "TrucksTypes",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Trailers",
-                columns: table => new
-                {
-                    Id = table.Column<long>(nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    CreationTime = table.Column<DateTime>(nullable: false),
-                    CreatorUserId = table.Column<long>(nullable: true),
-                    LastModificationTime = table.Column<DateTime>(nullable: true),
-                    LastModifierUserId = table.Column<long>(nullable: true),
-                    IsDeleted = table.Column<bool>(nullable: false),
-                    DeleterUserId = table.Column<long>(nullable: true),
-                    DeletionTime = table.Column<DateTime>(nullable: true),
-                    TenantId = table.Column<int>(nullable: false),
-                    TrailerCode = table.Column<string>(maxLength: 256, nullable: false),
-                    PlateNumber = table.Column<string>(maxLength: 256, nullable: false),
-                    Model = table.Column<string>(maxLength: 64, nullable: false),
-                    Year = table.Column<string>(maxLength: 64, nullable: false),
-                    Width = table.Column<int>(nullable: false),
-                    Height = table.Column<int>(nullable: false),
-                    Length = table.Column<int>(nullable: false),
-                    IsLiftgate = table.Column<bool>(nullable: false),
-                    IsReefer = table.Column<bool>(nullable: false),
-                    IsVented = table.Column<bool>(nullable: false),
-                    IsRollDoor = table.Column<bool>(nullable: false),
-                    TrailerStatusId = table.Column<int>(nullable: false),
-                    TrailerTypeId = table.Column<int>(nullable: false),
-                    PayloadMaxWeightId = table.Column<int>(nullable: false),
-                    HookedTruckId = table.Column<Guid>(nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Trailers", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Trailers_Trucks_HookedTruckId",
-                        column: x => x.HookedTruckId,
-                        principalTable: "Trucks",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
-                        name: "FK_Trailers_PayloadMaxWeights_PayloadMaxWeightId",
-                        column: x => x.PayloadMaxWeightId,
-                        principalTable: "PayloadMaxWeights",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_Trailers_TrailerStatuses_TrailerStatusId",
-                        column: x => x.TrailerStatusId,
-                        principalTable: "TrailerStatuses",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_Trailers_TrailerTypes_TrailerTypeId",
-                        column: x => x.TrailerTypeId,
-                        principalTable: "TrailerTypes",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -581,16 +728,54 @@ namespace TACHYON.Migrations
                     Order = table.Column<int>(nullable: false),
                     OriginCityId = table.Column<int>(nullable: true),
                     DestinationCityId = table.Column<int>(nullable: true),
-                    RouteId = table.Column<int>(nullable: true),
-                    ShippingRequestId = table.Column<long>(nullable: true)
+                    ShippingRequestId = table.Column<long>(nullable: true),
+                    SourceFacilityId = table.Column<long>(nullable: true),
+                    DestinationFacilityId = table.Column<long>(nullable: true),
+                    TrucksTypeId = table.Column<long>(nullable: true),
+                    TrailerTypeId = table.Column<int>(nullable: true),
+                    GoodsDetailId = table.Column<long>(nullable: true),
+                    AssignedDriverUserId = table.Column<long>(nullable: false),
+                    AssignedTruckId = table.Column<Guid>(nullable: false),
+                    AssignedTrailerId = table.Column<long>(nullable: false),
+                    PickingTypeId = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_RoutSteps", x => x.Id);
                     table.ForeignKey(
+                        name: "FK_RoutSteps_AbpUsers_AssignedDriverUserId",
+                        column: x => x.AssignedDriverUserId,
+                        principalTable: "AbpUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_RoutSteps_Trailers_AssignedTrailerId",
+                        column: x => x.AssignedTrailerId,
+                        principalTable: "Trailers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_RoutSteps_Trucks_AssignedTruckId",
+                        column: x => x.AssignedTruckId,
+                        principalTable: "Trucks",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
                         name: "FK_RoutSteps_Cities_DestinationCityId",
                         column: x => x.DestinationCityId,
                         principalTable: "Cities",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_RoutSteps_Facilities_DestinationFacilityId",
+                        column: x => x.DestinationFacilityId,
+                        principalTable: "Facilities",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_RoutSteps_GoodsDetails_GoodsDetailId",
+                        column: x => x.GoodsDetailId,
+                        principalTable: "GoodsDetails",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
@@ -600,15 +785,33 @@ namespace TACHYON.Migrations
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
-                        name: "FK_RoutSteps_Routes_RouteId",
-                        column: x => x.RouteId,
-                        principalTable: "Routes",
+                        name: "FK_RoutSteps_PickingTypes_PickingTypeId",
+                        column: x => x.PickingTypeId,
+                        principalTable: "PickingTypes",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_RoutSteps_ShippingRequests_ShippingRequestId",
                         column: x => x.ShippingRequestId,
                         principalTable: "ShippingRequests",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_RoutSteps_Facilities_SourceFacilityId",
+                        column: x => x.SourceFacilityId,
+                        principalTable: "Facilities",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_RoutSteps_TrailerTypes_TrailerTypeId",
+                        column: x => x.TrailerTypeId,
+                        principalTable: "TrailerTypes",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_RoutSteps_TrucksTypes_TrucksTypeId",
+                        column: x => x.TrucksTypeId,
+                        principalTable: "TrucksTypes",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                 });
@@ -708,6 +911,21 @@ namespace TACHYON.Migrations
                 column: "UserId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Facilities_CityId",
+                table: "Facilities",
+                column: "CityId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Facilities_CountyId",
+                table: "Facilities",
+                column: "CountyId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Facilities_TenantId",
+                table: "Facilities",
+                column: "TenantId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_GoodsDetails_GoodCategoryId",
                 table: "GoodsDetails",
                 column: "GoodCategoryId");
@@ -716,6 +934,11 @@ namespace TACHYON.Migrations
                 name: "IX_GoodsDetails_TenantId",
                 table: "GoodsDetails",
                 column: "TenantId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_GoodsDetails_UnitOfMeasureId",
+                table: "GoodsDetails",
+                column: "UnitOfMeasureId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Offers_GoodCategoryId",
@@ -743,6 +966,31 @@ namespace TACHYON.Migrations
                 column: "TrucksTypeId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Ports_CityId",
+                table: "Ports",
+                column: "CityId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Routes_DestinationCityId",
+                table: "Routes",
+                column: "DestinationCityId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Routes_DestinationPortId",
+                table: "Routes",
+                column: "DestinationPortId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Routes_OriginCityId",
+                table: "Routes",
+                column: "OriginCityId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Routes_OriginPortId",
+                table: "Routes",
+                column: "OriginPortId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Routes_RoutTypeId",
                 table: "Routes",
                 column: "RoutTypeId");
@@ -753,9 +1001,34 @@ namespace TACHYON.Migrations
                 column: "TenantId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_RoutSteps_AssignedDriverUserId",
+                table: "RoutSteps",
+                column: "AssignedDriverUserId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_RoutSteps_AssignedTrailerId",
+                table: "RoutSteps",
+                column: "AssignedTrailerId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_RoutSteps_AssignedTruckId",
+                table: "RoutSteps",
+                column: "AssignedTruckId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_RoutSteps_DestinationCityId",
                 table: "RoutSteps",
                 column: "DestinationCityId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_RoutSteps_DestinationFacilityId",
+                table: "RoutSteps",
+                column: "DestinationFacilityId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_RoutSteps_GoodsDetailId",
+                table: "RoutSteps",
+                column: "GoodsDetailId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_RoutSteps_OriginCityId",
@@ -763,9 +1036,9 @@ namespace TACHYON.Migrations
                 column: "OriginCityId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_RoutSteps_RouteId",
+                name: "IX_RoutSteps_PickingTypeId",
                 table: "RoutSteps",
-                column: "RouteId");
+                column: "PickingTypeId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_RoutSteps_ShippingRequestId",
@@ -773,9 +1046,24 @@ namespace TACHYON.Migrations
                 column: "ShippingRequestId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_RoutSteps_SourceFacilityId",
+                table: "RoutSteps",
+                column: "SourceFacilityId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_RoutSteps_TenantId",
                 table: "RoutSteps",
                 column: "TenantId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_RoutSteps_TrailerTypeId",
+                table: "RoutSteps",
+                column: "TrailerTypeId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_RoutSteps_TrucksTypeId",
+                table: "RoutSteps",
+                column: "TrucksTypeId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_ShippingRequests_CarrierTenantId",
@@ -788,9 +1076,9 @@ namespace TACHYON.Migrations
                 column: "FatherShippingRequestId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_ShippingRequests_GoodsDetailId",
+                name: "IX_ShippingRequests_GoodCategoryId",
                 table: "ShippingRequests",
-                column: "GoodsDetailId");
+                column: "GoodCategoryId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_ShippingRequests_RouteId",
@@ -886,7 +1174,13 @@ namespace TACHYON.Migrations
                 name: "Trailers");
 
             migrationBuilder.DropTable(
-                name: "Cities");
+                name: "Facilities");
+
+            migrationBuilder.DropTable(
+                name: "GoodsDetails");
+
+            migrationBuilder.DropTable(
+                name: "PickingTypes");
 
             migrationBuilder.DropTable(
                 name: "ShippingRequests");
@@ -901,10 +1195,10 @@ namespace TACHYON.Migrations
                 name: "TrailerStatuses");
 
             migrationBuilder.DropTable(
-                name: "Counties");
+                name: "UnitOfMeasures");
 
             migrationBuilder.DropTable(
-                name: "GoodsDetails");
+                name: "GoodCategories");
 
             migrationBuilder.DropTable(
                 name: "Routes");
@@ -919,10 +1213,16 @@ namespace TACHYON.Migrations
                 name: "TrucksTypes");
 
             migrationBuilder.DropTable(
-                name: "GoodCategories");
+                name: "Ports");
 
             migrationBuilder.DropTable(
                 name: "RoutTypes");
+
+            migrationBuilder.DropTable(
+                name: "Cities");
+
+            migrationBuilder.DropTable(
+                name: "Counties");
 
             migrationBuilder.DropColumn(
                 name: "Address",
