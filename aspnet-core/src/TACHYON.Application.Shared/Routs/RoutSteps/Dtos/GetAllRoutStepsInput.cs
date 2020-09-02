@@ -16,16 +16,16 @@ namespace TACHYON.Routs.RoutSteps.Dtos
         public int? MaxOrderFilter { get; set; }
         public int? MinOrderFilter { get; set; }
 
-
         public string CityDisplayNameFilter { get; set; }
 
         public string CityDisplayName2Filter { get; set; }
 
-        public string RouteDisplayNameFilter { get; set; }
 
-        public long? RouteId { get; set; }
+        public string TrucksTypeDisplayNameFilter { get; set; }
 
+        public string TrailerTypeDisplayNameFilter { get; set; }
 
+        public string GoodsDetailNameFilter { get; set; }
 
     }
 }

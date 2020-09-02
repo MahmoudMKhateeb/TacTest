@@ -24,40 +24,40 @@ namespace TACHYON.Routs.RoutSteps.Exporting
             _abpSession = abpSession;
         }
 
-        public FileDto ExportToFile(List<GetRoutStepForViewDto> routSteps)
-        {
-            return CreateExcelPackage(
-                "RoutSteps.xlsx",
-                excelPackage =>
-                {
+        //public FileDto ExportToFile(List<GetRoutStepForViewDto> routSteps)
+        //{
+        //    return CreateExcelPackage(
+        //        "RoutSteps.xlsx",
+        //        excelPackage =>
+        //        {
 
-                    var sheet = excelPackage.CreateSheet(L("RoutSteps"));
+        //            var sheet = excelPackage.CreateSheet(L("RoutSteps"));
 
-                    AddHeader(
-                        sheet,
-                        L("DisplayName"),
-                        L("Latitude"),
-                        L("Longitude"),
-                        L("Order"),
-                        (L("City")) + L("DisplayName"),
-                        (L("City")) + L("DisplayName"),
-                        (L("Route")) + L("DisplayName")
-                        );
+        //            AddHeader(
+        //                sheet,
+        //                L("DisplayName"),
+        //                L("Latitude"),
+        //                L("Longitude"),
+        //                L("Order"),
+        //                (L("City")) + L("DisplayName"),
+        //                (L("City")) + L("DisplayName"),
+        //                (L("Route")) + L("DisplayName")
+        //                );
 
-                    AddObjects(
-                        sheet, 2, routSteps,
-                        _ => _.RoutStep.DisplayName,
-                        _ => _.RoutStep.Latitude,
-                        _ => _.RoutStep.Longitude,
-                        _ => _.RoutStep.Order,
-                        _ => _.CityDisplayName,
-                        _ => _.CityDisplayName2,
-                        _ => _.RouteDisplayName
-                        );
+        //            AddObjects(
+        //                sheet, 2, routSteps,
+        //                _ => _.RoutStep.DisplayName,
+        //                _ => _.RoutStep.Latitude,
+        //                _ => _.RoutStep.Longitude,
+        //                _ => _.RoutStep.Order,
+        //                _ => _.CityDisplayName,
+        //                _ => _.CityDisplayName2,
+        //                _ => _.RouteDisplayName
+        //                );
 
 
 
-                });
-        }
+        //        });
+        //}
     }
 }

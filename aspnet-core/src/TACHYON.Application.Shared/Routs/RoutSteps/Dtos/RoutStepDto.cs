@@ -19,7 +19,12 @@ namespace TACHYON.Routs.RoutSteps.Dtos
 
         public int? DestinationCityId { get; set; }
 
-        public int RouteId { get; set; }
+
+        public long? TrucksTypeId { get; set; }
+
+        public int? TrailerTypeId { get; set; }
+
+        public long? GoodsDetailId { get; set; }
 
 
     }

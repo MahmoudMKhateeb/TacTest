@@ -6,6 +6,6 @@ namespace TACHYON.Routs.RoutSteps.Exporting
 {
     public interface IRoutStepsExcelExporter
     {
-        FileDto ExportToFile(List<GetRoutStepForViewDto> routSteps);
+        //FileDto ExportToFile(List<GetRoutStepForViewDto> routSteps);
     }
 }

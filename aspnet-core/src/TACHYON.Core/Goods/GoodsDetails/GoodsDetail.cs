@@ -4,6 +4,7 @@ using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using TACHYON.Goods.GoodCategories;
+using TACHYON.UnitOfMeasures;
 
 namespace TACHYON.Goods.GoodsDetails
 {
@@ -39,6 +40,10 @@ namespace TACHYON.Goods.GoodsDetails
 
         [ForeignKey("GoodCategoryId")]
         public GoodCategory GoodCategoryFk { get; set; }
+
+        public int UnitOfMeasureId { get; set; }
+        [ForeignKey("UnitOfMeasureId")]
+        public UnitOfMeasure UnitOfMeasureFk { get; set; }
 
     }
 }

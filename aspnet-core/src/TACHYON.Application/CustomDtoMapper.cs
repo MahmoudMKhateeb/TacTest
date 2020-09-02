@@ -1,4 +1,6 @@
-﻿using TACHYON.AddressBook.Ports.Dtos;
+﻿using TACHYON.PickingTypes.Dtos;
+using TACHYON.PickingTypes;
+using TACHYON.AddressBook.Ports.Dtos;
 using TACHYON.AddressBook.Ports;
 using TACHYON.UnitOfMeasures.Dtos;
 using TACHYON.UnitOfMeasures;
@@ -113,6 +115,8 @@ namespace TACHYON
     {
         public static void CreateMappings(IMapperConfigurationExpression configuration)
         {
+            configuration.CreateMap<CreateOrEditPickingTypeDto, PickingType>().ReverseMap();
+            configuration.CreateMap<PickingTypeDto, PickingType>().ReverseMap();
             configuration.CreateMap<CreateOrEditPortDto, Port>().ReverseMap();
             configuration.CreateMap<PortDto, Port>().ReverseMap();
             configuration.CreateMap<CreateOrEditUnitOfMeasureDto, UnitOfMeasure>().ReverseMap();
@@ -123,7 +127,10 @@ namespace TACHYON
             configuration.CreateMap<DocumentFileDto, DocumentFile>().ReverseMap();
             configuration.CreateMap<CreateOrEditDocumentTypeDto, DocumentType>().ReverseMap();
             configuration.CreateMap<DocumentTypeDto, DocumentType>().ReverseMap();
-            configuration.CreateMap<CreateOrEditShippingRequestDto, ShippingRequest>().ReverseMap();
+            configuration.CreateMap<CreateOrEditShippingRequestDto, ShippingRequest>()
+            .ForMember(dst => dst.RouteFk,opt => opt.MapFrom(src => src.CreateOrEditRouteDto))
+            .ForMember(dst => dst.RoutSteps, opt => opt.MapFrom(src => src.CreateOrEditRoutStepDtoList))
+            .ReverseMap();
             configuration.CreateMap<ShippingRequestDto, ShippingRequest>().ReverseMap();
             configuration.CreateMap<CreateOrEditGoodsDetailDto, GoodsDetail>().ReverseMap();
             configuration.CreateMap<GoodsDetailDto, GoodsDetail>().ReverseMap();

@@ -23,7 +23,7 @@ namespace TACHYON.Routs.RoutSteps
 
         Task Delete(EntityDto<long> input);
 
-        Task<FileDto> GetRoutStepsToExcel(GetAllRoutStepsForExcelInput input);
+        //Task<FileDto> GetRoutStepsToExcel(GetAllRoutStepsForExcelInput input);
 
 
         Task<List<RoutStepCityLookupTableDto>> GetAllCityForTableDropdown();

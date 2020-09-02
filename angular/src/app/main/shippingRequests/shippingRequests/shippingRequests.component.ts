@@ -25,10 +25,10 @@ export class ShippingRequestsComponent extends AppComponentBase {
   maxVasFilterEmpty: number;
   minVasFilter: number;
   minVasFilterEmpty: number;
-  trucksTypeDisplayNameFilter = '';
-  trailerTypeDisplayNameFilter = '';
-  goodsDetailNameFilter = '';
-  routeDisplayNameFilter = '';
+  // trucksTypeDisplayNameFilter = '';
+  // trailerTypeDisplayNameFilter = '';
+  // goodsDetailNameFilter = '';
+  // routeDisplayNameFilter = '';
   isBid = undefined;
   isTachyonDeal = undefined;
 
@@ -57,10 +57,6 @@ export class ShippingRequestsComponent extends AppComponentBase {
         this.filterText,
         this.maxVasFilter == null ? this.maxVasFilterEmpty : this.maxVasFilter,
         this.minVasFilter == null ? this.minVasFilterEmpty : this.minVasFilter,
-        this.trucksTypeDisplayNameFilter,
-        this.trailerTypeDisplayNameFilter,
-        this.goodsDetailNameFilter,
-        this.routeDisplayNameFilter,
         this.isBid,
         this.isTachyonDeal,
         this.primengTableHelper.getSorting(this.dataTable),
@@ -93,19 +89,19 @@ export class ShippingRequestsComponent extends AppComponentBase {
     });
   }
 
-  exportToExcel(): void {
-    this._shippingRequestsServiceProxy
-      .getShippingRequestsToExcel(
-        this.filterText,
-        this.maxVasFilter == null ? this.maxVasFilterEmpty : this.maxVasFilter,
-        this.minVasFilter == null ? this.minVasFilterEmpty : this.minVasFilter,
-        this.trucksTypeDisplayNameFilter,
-        this.trailerTypeDisplayNameFilter,
-        this.goodsDetailNameFilter,
-        this.routeDisplayNameFilter
-      )
-      .subscribe((result) => {
-        this._fileDownloadService.downloadTempFile(result);
-      });
-  }
+  // exportToExcel(): void {
+  //   this._shippingRequestsServiceProxy
+  //     .getShippingRequestsToExcel(
+  //       this.filterText,
+  //       this.maxVasFilter == null ? this.maxVasFilterEmpty : this.maxVasFilter,
+  //       this.minVasFilter == null ? this.minVasFilterEmpty : this.minVasFilter,
+  //       this.trucksTypeDisplayNameFilter,
+  //       this.trailerTypeDisplayNameFilter,
+  //       this.goodsDetailNameFilter,
+  //       this.routeDisplayNameFilter
+  //     )
+  //     .subscribe((result) => {
+  //       this._fileDownloadService.downloadTempFile(result);
+  //     });
+  // }
 }

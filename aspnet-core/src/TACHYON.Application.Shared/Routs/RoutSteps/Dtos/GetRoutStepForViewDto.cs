@@ -8,7 +8,11 @@
 
         public string CityDisplayName2 { get; set; }
 
-        public string RouteDisplayName { get; set; }
+        public string TrucksTypeDisplayName { get; set; }
+
+        public string TrailerTypeDisplayName { get; set; }
+
+        public string GoodsDetailName { get; set; }
 
 
     }

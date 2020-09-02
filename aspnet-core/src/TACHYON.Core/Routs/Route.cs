@@ -4,6 +4,9 @@ using Abp.Domain.Entities.Auditing;
 using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using TACHYON.AddressBook;
+using TACHYON.AddressBook.Ports;
+using TACHYON.Cities;
 using TACHYON.Routs.RoutTypes;
 
 namespace TACHYON.Routs
@@ -15,7 +18,6 @@ namespace TACHYON.Routs
         public int TenantId { get; set; }
 
 
-        [Required]
         [StringLength(RouteConsts.MaxDisplayNameLength, MinimumLength = RouteConsts.MinDisplayNameLength)]
         public virtual string DisplayName { get; set; }
 
@@ -27,6 +29,25 @@ namespace TACHYON.Routs
 
         [ForeignKey("RoutTypeId")]
         public RoutType RoutTypeFk { get; set; }
+
+        public virtual int? OriginCityId { get; set; }
+
+        [ForeignKey("OriginCityId")]
+        public City OriginCityFk { get; set; }
+
+        public virtual int? DestinationCityId { get; set; }
+
+        [ForeignKey("DestinationCityId")]
+        public City DestinationCityFk { get; set; }
+        public virtual long? OriginPortId { get; set; }
+
+        [ForeignKey("OriginPortId")]
+        public Port OriginPortFk { get; set; }
+
+        public virtual long? DestinationPortId { get; set; }
+
+        [ForeignKey("DestinationPortId")]
+        public Port DestinationPortFk { get; set; }
 
     }
 }

@@ -6,6 +6,8 @@ import {
   CreateOrEditRoutStepDto,
   RoutStepCityLookupTableDto,
   RoutStepRouteLookupTableDto,
+  CreateOrEditGoodsDetailDto,
+  SelectItemDto,
 } from '@shared/service-proxies/service-proxies';
 import { AppComponentBase } from '@shared/common/app-component-base';
 import * as moment from 'moment';
@@ -25,31 +27,45 @@ export class CreateOrEditRoutStepModalComponent extends AppComponentBase {
 
   routStep: CreateOrEditRoutStepDto = new CreateOrEditRoutStepDto();
 
+  trucksTypeDisplayName = '';
+  trailerTypeDisplayName = '';
+  goodsDetailName = '';
+
   cityDisplayName = '';
   cityDisplayName2 = '';
   routeDisplayName = '';
 
   allCitys: RoutStepCityLookupTableDto[];
-  allRoutes: RoutStepRouteLookupTableDto[];
+  allTrucksTypes: SelectItemDto[];
+  allTrailerTypes: SelectItemDto[];
+  allGoodsDetails: SelectItemDto[];
 
   constructor(injector: Injector, private _routStepsServiceProxy: RoutStepsServiceProxy) {
     super(injector);
+    this.routStep.createOrEditGoodsDetailDto = new CreateOrEditGoodsDetailDto();
   }
 
   show(routStepId?: number): void {
-    this.routStep.routeId = this.routeId;
-
     if (!routStepId) {
       this.routStep = new CreateOrEditRoutStepDto();
+      this.routStep.createOrEditGoodsDetailDto = new CreateOrEditGoodsDetailDto();
+
       this.routStep.id = routStepId;
       this.cityDisplayName = '';
       this.cityDisplayName2 = '';
-
+      this.trucksTypeDisplayName = '';
+      this.trailerTypeDisplayName = '';
+      this.goodsDetailName = '';
+      this.routeDisplayName = '';
       this.active = true;
       this.modal.show();
     } else {
       this._routStepsServiceProxy.getRoutStepForEdit(routStepId).subscribe((result) => {
         this.routStep = result.routStep;
+        this.trucksTypeDisplayName = result.trucksTypeDisplayName;
+        this.trailerTypeDisplayName = result.trailerTypeDisplayName;
+        this.goodsDetailName = result.goodsDetailName;
+        this.routeDisplayName = result.routeDisplayName;
 
         this.cityDisplayName = result.cityDisplayName;
         this.cityDisplayName2 = result.cityDisplayName2;
@@ -64,14 +80,19 @@ export class CreateOrEditRoutStepModalComponent extends AppComponentBase {
     this._routStepsServiceProxy.getAllCityForTableDropdown().subscribe((result) => {
       this.allCitys = result;
     });
-    this._routStepsServiceProxy.getAllRouteForTableDropdown().subscribe((result) => {
-      this.allRoutes = result;
+    this._routStepsServiceProxy.getAllTrucksTypeForTableDropdown().subscribe((result) => {
+      this.allTrucksTypes = result;
+    });
+    this._routStepsServiceProxy.getAllTrailerTypeForTableDropdown().subscribe((result) => {
+      this.allTrailerTypes = result;
+    });
+    this._routStepsServiceProxy.getAllGoodsDetailForTableDropdown().subscribe((result) => {
+      this.allGoodsDetails = result;
     });
   }
 
   save(): void {
     this.saving = true;
-    this.routStep.routeId = this.routeId;
 
     this._routStepsServiceProxy
       .createOrEdit(this.routStep)

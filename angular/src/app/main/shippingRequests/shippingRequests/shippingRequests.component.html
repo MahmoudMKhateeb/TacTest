@@ -2,7 +2,7 @@
   <div class="content d-flex flex-column flex-column-fluid">
     <sub-header [description]="'ShippingRequestsHeaderInfo' | localize" [title]="'ShippingRequests' | localize">
       <div role="actions">
-        <button (click)="exportToExcel()" class="btn btn-outline-success"><i class="fa fa-file-excel"></i> {{ l('ExportToExcel') }}</button>
+        <!--        <button (click)="exportToExcel()" class="btn btn-outline-success"><i class="fa fa-file-excel"></i> {{ l('ExportToExcel') }}</button>-->
 
         <button (click)="createShippingRequest()" *ngIf="isGranted('Pages.ShippingRequests.Create')" class="btn btn-primary blue">
           <i class="fa fa-plus"></i> {{ l('CreateNewShippingRequest') }}
@@ -55,54 +55,54 @@
                     </div>
                   </div>
                 </div>
-                <div class="col-md-3">
-                  <div class="form-group">
-                    <label for="TrucksTypeDisplayNameFilter">({{ l('TrucksType') }} ) {{ l('DisplayName') }}</label>
-                    <input
-                      [(ngModel)]="trucksTypeDisplayNameFilter"
-                      class="form-control"
-                      id="TrucksTypeDisplayNameFilter"
-                      name="trucksTypeDisplayNameFilter"
-                      type="text"
-                    />
-                  </div>
-                </div>
-                <div class="col-md-3">
-                  <div class="form-group">
-                    <label for="TrailerTypeDisplayNameFilter">({{ l('TrailerType') }} ) {{ l('DisplayName') }}</label>
-                    <input
-                      [(ngModel)]="trailerTypeDisplayNameFilter"
-                      class="form-control"
-                      id="TrailerTypeDisplayNameFilter"
-                      name="trailerTypeDisplayNameFilter"
-                      type="text"
-                    />
-                  </div>
-                </div>
-                <div class="col-md-3">
-                  <div class="form-group">
-                    <label for="GoodsDetailNameFilter">({{ l('GoodsDetail') }}) {{ l('Name') }}</label>
-                    <input
-                      [(ngModel)]="goodsDetailNameFilter"
-                      class="form-control"
-                      id="GoodsDetailNameFilter"
-                      name="goodsDetailNameFilter"
-                      type="text"
-                    />
-                  </div>
-                </div>
-                <div class="col-md-3">
-                  <div class="form-group">
-                    <label for="RouteDisplayNameFilter">({{ l('Route') }} ) {{ l('DisplayName') }}</label>
-                    <input
-                      [(ngModel)]="routeDisplayNameFilter"
-                      class="form-control"
-                      id="RouteDisplayNameFilter"
-                      name="routeDisplayNameFilter"
-                      type="text"
-                    />
-                  </div>
-                </div>
+                <!--                <div class="col-md-3">-->
+                <!--                  <div class="form-group">-->
+                <!--                    <label for="TrucksTypeDisplayNameFilter">({{ l('TrucksType') }} ) {{ l('DisplayName') }}</label>-->
+                <!--                    <input-->
+                <!--                      [(ngModel)]="trucksTypeDisplayNameFilter"-->
+                <!--                      class="form-control"-->
+                <!--                      id="TrucksTypeDisplayNameFilter"-->
+                <!--                      name="trucksTypeDisplayNameFilter"-->
+                <!--                      type="text"-->
+                <!--                    />-->
+                <!--                  </div>-->
+                <!--                </div>-->
+                <!--                <div class="col-md-3">-->
+                <!--                  <div class="form-group">-->
+                <!--                    <label for="TrailerTypeDisplayNameFilter">({{ l('TrailerType') }} ) {{ l('DisplayName') }}</label>-->
+                <!--                    <input-->
+                <!--                      [(ngModel)]="trailerTypeDisplayNameFilter"-->
+                <!--                      class="form-control"-->
+                <!--                      id="TrailerTypeDisplayNameFilter"-->
+                <!--                      name="trailerTypeDisplayNameFilter"-->
+                <!--                      type="text"-->
+                <!--                    />-->
+                <!--                  </div>-->
+                <!--                </div>-->
+                <!--                <div class="col-md-3">-->
+                <!--                  <div class="form-group">-->
+                <!--                    <label for="GoodsDetailNameFilter">({{ l('GoodsDetail') }}) {{ l('Name') }}</label>-->
+                <!--                    <input-->
+                <!--                      [(ngModel)]="goodsDetailNameFilter"-->
+                <!--                      class="form-control"-->
+                <!--                      id="GoodsDetailNameFilter"-->
+                <!--                      name="goodsDetailNameFilter"-->
+                <!--                      type="text"-->
+                <!--                    />-->
+                <!--                  </div>-->
+                <!--                </div>-->
+                <!--                <div class="col-md-3">-->
+                <!--                  <div class="form-group">-->
+                <!--                    <label for="RouteDisplayNameFilter">({{ l('Route') }} ) {{ l('DisplayName') }}</label>-->
+                <!--                    <input-->
+                <!--                      [(ngModel)]="routeDisplayNameFilter"-->
+                <!--                      class="form-control"-->
+                <!--                      id="RouteDisplayNameFilter"-->
+                <!--                      name="routeDisplayNameFilter"-->
+                <!--                      type="text"-->
+                <!--                    />-->
+                <!--                  </div>-->
+                <!--                </div>-->
               </div>
               <div class="row mb-2">
                 <div class="col-sm-12">

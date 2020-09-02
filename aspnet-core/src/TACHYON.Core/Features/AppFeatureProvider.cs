@@ -120,7 +120,19 @@ namespace TACHYON.Features
                 "false",
                 L("OffersMarketPlace"), // todo add localization here
                 inputType: new CheckboxInputType()
-            )[FeatureMetadata.CustomFeatureKey] = new FeatureMetadata {IsVisibleOnPricingTable = true, TextHtmlColor = value => value == "true" ? "#c300ff" : "#d9534f"};
+            )[FeatureMetadata.CustomFeatureKey] = new FeatureMetadata { IsVisibleOnPricingTable = true, TextHtmlColor = value => value == "true" ? "#c300ff" : "#d9534f" };
+
+
+            var sendTachyonDealShippingRequest = context.Create(
+            AppFeatures.SendTachyonDealShippingRequest,
+            "false",
+            L("SendTachyonDealShippingRequest"), // todo add localization here
+            inputType: new CheckboxInputType()
+            )[FeatureMetadata.CustomFeatureKey] = new FeatureMetadata
+            {
+                IsVisibleOnPricingTable = false,
+                TextHtmlColor = value => value == "true" ? "#c300ff" : "#d9534f"
+            };
 
 
             #endregion

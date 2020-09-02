@@ -24,36 +24,36 @@ namespace TACHYON.Shipping.ShippingRequests.Exporting
             _abpSession = abpSession;
         }
 
-        public FileDto ExportToFile(List<GetShippingRequestForViewDto> shippingRequests)
-        {
-            return CreateExcelPackage(
-                "ShippingRequests.xlsx",
-                excelPackage =>
-                {
+        //public FileDto ExportToFile(List<GetShippingRequestForViewDto> shippingRequests)
+        //{
+        //    return CreateExcelPackage(
+        //        "ShippingRequests.xlsx",
+        //        excelPackage =>
+        //        {
 
-                    var sheet = excelPackage.CreateSheet(L("ShippingRequests"));
+        //            var sheet = excelPackage.CreateSheet(L("ShippingRequests"));
 
-                    AddHeader(
-                        sheet,
-                        L("Vas"),
-                        (L("TrucksType")) + L("DisplayName"),
-                        (L("TrailerType")) + L("DisplayName"),
-                        (L("GoodsDetail")) + L("Name"),
-                        (L("Route")) + L("DisplayName")
-                        );
+        //            AddHeader(
+        //                sheet,
+        //                L("Vas"),
+        //                (L("TrucksType")) + L("DisplayName"),
+        //                (L("TrailerType")) + L("DisplayName"),
+        //                (L("GoodsDetail")) + L("Name"),
+        //                (L("Route")) + L("DisplayName")
+        //                );
 
-                    AddObjects(
-                        sheet, 2, shippingRequests,
-                        _ => _.ShippingRequest.Vas,
-                        _ => _.TrucksTypeDisplayName,
-                        _ => _.TrailerTypeDisplayName,
-                        _ => _.GoodsDetailName,
-                        _ => _.RouteDisplayName
-                        );
+        //            AddObjects(
+        //                sheet, 2, shippingRequests,
+        //                _ => _.ShippingRequest.Vas,
+        //                _ => _.TrucksTypeDisplayName,
+        //                _ => _.TrailerTypeDisplayName,
+        //                _ => _.GoodsDetailName,
+        //                _ => _.RouteDisplayName
+        //                );
 
 
 
-                });
-        }
+        //        });
+        //}
     }
 }
