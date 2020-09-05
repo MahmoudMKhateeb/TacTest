@@ -83,20 +83,20 @@ namespace TACHYON.Shipping.ShippingRequests
         /// <summary>
         /// assigned Driver
         /// </summary>
-        public long AssignedDriverUserId { get; set; }
+        public long? AssignedDriverUserId { get; set; }
         [ForeignKey("AssignedDriverUserId")]
         public User AssignedDriverUserFk { get; set; }
         /// <summary>
         /// assigned Truck
         /// </summary>
-        public Guid AssignedTruckId { get; set; }
+        public Guid? AssignedTruckId { get; set; }
         [ForeignKey("AssignedTruckId")]
         public Truck AssignedTruckFk { get; set; }
 
         /// <summary>
         /// assigned Trailer
         /// </summary>
-        public long AssignedTrailerId { get; set; }
+        public long? AssignedTrailerId { get; set; }
         [ForeignKey("AssignedTrailerId")]
         public Trailer AssignedTrailersFk { get; set; }
     }
