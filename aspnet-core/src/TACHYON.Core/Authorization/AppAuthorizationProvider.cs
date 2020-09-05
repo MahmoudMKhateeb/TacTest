@@ -173,6 +173,13 @@ namespace TACHYON.Authorization
 
             var administration = pages.CreateChildPermission(AppPermissions.Pages_Administration, L("Administration"));
 
+            var shippingRequestStatuses = administration.CreateChildPermission(AppPermissions.Pages_Administration_ShippingRequestStatuses, L("ShippingRequestStatuses"), multiTenancySides: MultiTenancySides.Host);
+            shippingRequestStatuses.CreateChildPermission(AppPermissions.Pages_Administration_ShippingRequestStatuses_Create, L("CreateNewShippingRequestStatus"), multiTenancySides: MultiTenancySides.Host);
+            shippingRequestStatuses.CreateChildPermission(AppPermissions.Pages_Administration_ShippingRequestStatuses_Edit, L("EditShippingRequestStatus"), multiTenancySides: MultiTenancySides.Host);
+            shippingRequestStatuses.CreateChildPermission(AppPermissions.Pages_Administration_ShippingRequestStatuses_Delete, L("DeleteShippingRequestStatus"), multiTenancySides: MultiTenancySides.Host);
+
+
+
             var unitOfMeasures = administration.CreateChildPermission(AppPermissions.Pages_Administration_UnitOfMeasures, L("UnitOfMeasures"), multiTenancySides: MultiTenancySides.Host);
             unitOfMeasures.CreateChildPermission(AppPermissions.Pages_Administration_UnitOfMeasures_Create, L("CreateNewUnitOfMeasure"), multiTenancySides: MultiTenancySides.Host);
             unitOfMeasures.CreateChildPermission(AppPermissions.Pages_Administration_UnitOfMeasures_Edit, L("EditUnitOfMeasure"), multiTenancySides: MultiTenancySides.Host);

@@ -1,6 +1,13 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <localizationDictionary culture="en">
-  <texts>    <text name="Ports">Ports</text>
+  <texts>    <text name="ShippingRequestStatuses">Shipping request statuses</text>
+    <text name="ShippingRequestStatus">Shipping request status</text>
+    <text name="TACHYON.ShippingRequestStatuses.ShippingRequestStatus">ShippingRequestStatus</text>
+    <text name="ShippingRequestStatusesHeaderInfo">Shipping request statuses header info</text>
+    <text name="CreateNewShippingRequestStatus">Create new shipping request status</text>
+    <text name="EditShippingRequestStatus">Edit shipping request status</text>
+    <text name="DeleteShippingRequestStatus">Delete shipping request status</text>
+    <text name="Ports">Ports</text>
     <text name="Port">Port</text>
     <text name="TACHYON.Ports.Port">Port</text>
     <text name="PortsHeaderInfo">Ports header info</text>

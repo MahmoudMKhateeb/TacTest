@@ -6,6 +6,11 @@
     /// </summary>
     public static class AppPermissions
     {
+        public const string Pages_Administration_ShippingRequestStatuses = "Pages.Administration.ShippingRequestStatuses";
+        public const string Pages_Administration_ShippingRequestStatuses_Create = "Pages.Administration.ShippingRequestStatuses.Create";
+        public const string Pages_Administration_ShippingRequestStatuses_Edit = "Pages.Administration.ShippingRequestStatuses.Edit";
+        public const string Pages_Administration_ShippingRequestStatuses_Delete = "Pages.Administration.ShippingRequestStatuses.Delete";
+
         public const string Pages_Ports = "Pages.Ports";
         public const string Pages_Ports_Create = "Pages.Ports.Create";
         public const string Pages_Ports_Edit = "Pages.Ports.Edit";

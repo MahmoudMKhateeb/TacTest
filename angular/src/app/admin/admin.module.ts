@@ -2,6 +2,10 @@
 import { NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { AppCommonModule } from '@app/shared/common/app-common.module';
+import { ShippingRequestStatusesComponent } from './shippingRequestStatuses/shippingRequestStatuses/shippingRequestStatuses.component';
+import { ViewShippingRequestStatusModalComponent } from './shippingRequestStatuses/shippingRequestStatuses/view-shippingRequestStatus-modal.component';
+import { CreateOrEditShippingRequestStatusModalComponent } from './shippingRequestStatuses/shippingRequestStatuses/create-or-edit-shippingRequestStatus-modal.component';
+
 import { UnitOfMeasuresComponent } from './unitOfMeasures/unitOfMeasures/unitOfMeasures.component';
 import { ViewUnitOfMeasureModalComponent } from './unitOfMeasures/unitOfMeasures/view-unitOfMeasure-modal.component';
 import { CreateOrEditUnitOfMeasureModalComponent } from './unitOfMeasures/unitOfMeasures/create-or-edit-unitOfMeasure-modal.component';
@@ -151,6 +155,10 @@ const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
     AppBsModalModule,
   ],
   declarations: [
+		ShippingRequestStatusesComponent,
+
+		ViewShippingRequestStatusModalComponent,
+		CreateOrEditShippingRequestStatusModalComponent,
     UnitOfMeasuresComponent,
 
     ViewUnitOfMeasureModalComponent,

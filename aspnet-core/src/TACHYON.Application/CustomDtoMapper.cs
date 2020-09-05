@@ -1,4 +1,6 @@
-﻿using TACHYON.PickingTypes.Dtos;
+﻿using TACHYON.Shipping.ShippingRequestStatuses.Dtos;
+using TACHYON.Shipping.ShippingRequestStatuses;
+using TACHYON.PickingTypes.Dtos;
 using TACHYON.PickingTypes;
 using TACHYON.AddressBook.Ports.Dtos;
 using TACHYON.AddressBook.Ports;
@@ -115,6 +117,8 @@ namespace TACHYON
     {
         public static void CreateMappings(IMapperConfigurationExpression configuration)
         {
+            configuration.CreateMap<CreateOrEditShippingRequestStatusDto, ShippingRequestStatus>().ReverseMap();
+            configuration.CreateMap<ShippingRequestStatusDto, ShippingRequestStatus>().ReverseMap();
             configuration.CreateMap<CreateOrEditPickingTypeDto, PickingType>().ReverseMap();
             configuration.CreateMap<PickingTypeDto, PickingType>().ReverseMap();
             configuration.CreateMap<CreateOrEditPortDto, Port>().ReverseMap();
