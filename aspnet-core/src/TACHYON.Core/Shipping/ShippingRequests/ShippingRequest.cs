@@ -9,6 +9,7 @@ using TACHYON.Goods.GoodsDetails;
 using TACHYON.MultiTenancy;
 using TACHYON.Routs;
 using TACHYON.Routs.RoutSteps;
+using TACHYON.Shipping.ShippingRequestStatuses;
 using TACHYON.Trailers.TrailerTypes;
 using TACHYON.Trucks.TrucksTypes;
 
@@ -69,5 +70,8 @@ namespace TACHYON.Shipping.ShippingRequests
         public int GoodCategoryId { get; set; }
         [ForeignKey("GoodCategoryId")]
         public GoodCategory GoodCategoryFk { get; set; }
+        public int ShippingRequestStatusId { get; set; }
+        [ForeignKey("ShippingRequestStatusId")]
+        public ShippingRequestStatus ShippingRequestStatusFk { get; set; }
     }
 }
