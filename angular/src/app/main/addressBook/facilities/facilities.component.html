@@ -154,10 +154,6 @@
                 <ng-template pTemplate="header">
                   <tr>
                     <th style="width: 130px;" [hidden]="!isGrantedAny('Pages.Facilities.Edit', 'Pages.Facilities.Delete')">{{ l('Actions') }}</th>
-                    <th style="width: 150px;" pSortableColumn="countyFk.displayName">
-                      {{ l('DisplayName') }}
-                      <p-sortIcon field="countyDisplayName"></p-sortIcon>
-                    </th>
                     <th style="width: 150px;" pSortableColumn="cityFk.displayName">
                       {{ l('DisplayName') }}
                       <p-sortIcon field="cityDisplayName"></p-sortIcon>
@@ -211,10 +207,6 @@
                           </li>
                         </ul>
                       </div>
-                    </td>
-                    <td style="width: 150px;">
-                      <span class="ui-column-title"> {{ l('DisplayName') }}</span>
-                      {{ record.countyDisplayName }}
                     </td>
                     <td style="width: 150px;">
                       <span class="ui-column-title"> {{ l('DisplayName') }}</span>

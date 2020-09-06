@@ -8,8 +8,6 @@ namespace TACHYON.AddressBook.Dtos
     {
 		public CreateOrEditFacilityDto Facility { get; set; }
 
-		public string CountyDisplayName { get; set;}
-
 		public string CityDisplayName { get; set;}
 
 

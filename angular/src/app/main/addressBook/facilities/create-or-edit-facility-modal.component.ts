@@ -1,12 +1,7 @@
 ﻿import { Component, ViewChild, Injector, Output, EventEmitter } from '@angular/core';
 import { ModalDirective } from 'ngx-bootstrap/modal';
 import { finalize } from 'rxjs/operators';
-import {
-  FacilitiesServiceProxy,
-  CreateOrEditFacilityDto,
-  FacilityCountyLookupTableDto,
-  FacilityCityLookupTableDto,
-} from '@shared/service-proxies/service-proxies';
+import { FacilitiesServiceProxy, CreateOrEditFacilityDto, FacilityCityLookupTableDto } from '@shared/service-proxies/service-proxies';
 import { AppComponentBase } from '@shared/common/app-component-base';
 import * as moment from 'moment';
 
@@ -27,7 +22,6 @@ export class CreateOrEditFacilityModalComponent extends AppComponentBase {
   countyDisplayName = '';
   cityDisplayName = '';
 
-  allCountys: FacilityCountyLookupTableDto[];
   allCitys: FacilityCityLookupTableDto[];
 
   constructor(injector: Injector, private _facilitiesServiceProxy: FacilitiesServiceProxy) {
@@ -47,16 +41,12 @@ export class CreateOrEditFacilityModalComponent extends AppComponentBase {
       this._facilitiesServiceProxy.getFacilityForEdit(facilityId).subscribe((result) => {
         this.facility = result.facility;
 
-        this.countyDisplayName = result.countyDisplayName;
         this.cityDisplayName = result.cityDisplayName;
 
         this.active = true;
         this.modal.show();
       });
     }
-    this._facilitiesServiceProxy.getAllCountyForTableDropdown().subscribe((result) => {
-      this.allCountys = result;
-    });
     this._facilitiesServiceProxy.getAllCityForTableDropdown().subscribe((result) => {
       this.allCitys = result;
     });
