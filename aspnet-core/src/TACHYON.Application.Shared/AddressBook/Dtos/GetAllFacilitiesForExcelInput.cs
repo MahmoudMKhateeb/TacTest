@@ -18,7 +18,6 @@ namespace TACHYON.AddressBook.Dtos
 		public decimal? MinLatitudeFilter { get; set; }
 
 
-		 public string CountyDisplayNameFilter { get; set; }
 
 		 		 public string CityDisplayNameFilter { get; set; }
 

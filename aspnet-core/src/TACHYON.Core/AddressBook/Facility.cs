@@ -13,12 +13,5 @@ namespace TACHYON.AddressBook
     {
         public int? TenantId { get; set; }
 
-        //todo remove country from here
-        public virtual int CountyId { get; set; }
-
-        [ForeignKey("CountyId")]
-        public County CountyFk { get; set; }
-
-
     }
 }

@@ -24,7 +24,6 @@ namespace TACHYON.AddressBook.Dtos
 		public decimal Latitude { get; set; }
 		
 		
-		 public int CountyId { get; set; }
 		 
 		 		 public int CityId { get; set; }
 		 

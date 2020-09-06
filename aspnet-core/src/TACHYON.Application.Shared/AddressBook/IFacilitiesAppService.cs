@@ -25,8 +25,6 @@ namespace TACHYON.AddressBook
 		Task<FileDto> GetFacilitiesToExcel(GetAllFacilitiesForExcelInput input);
 
 		
-		Task<List<FacilityCountyLookupTableDto>> GetAllCountyForTableDropdown();
-		
 		Task<List<FacilityCityLookupTableDto>> GetAllCityForTableDropdown();
 		
     }
