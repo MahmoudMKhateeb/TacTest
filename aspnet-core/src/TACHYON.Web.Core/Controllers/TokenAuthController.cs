@@ -75,6 +75,7 @@ namespace TACHYON.Web.Controllers
         private readonly ISettingManager _settingManager;
         private readonly IJwtSecurityStampHandler _securityStampHandler;
         private readonly AbpUserClaimsPrincipalFactory<User, Role> _claimsPrincipalFactory;
+        private readonly TenantManager _tenantManager;
         public IRecaptchaValidator RecaptchaValidator { get; set; }
         private readonly IUserDelegationManager _userDelegationManager;
 
@@ -100,7 +101,7 @@ namespace TACHYON.Web.Controllers
             ISettingManager settingManager,
             IJwtSecurityStampHandler securityStampHandler,
             AbpUserClaimsPrincipalFactory<User, Role> claimsPrincipalFactory,
-            IUserDelegationManager userDelegationManager)
+            IUserDelegationManager userDelegationManager, TenantManager tenantManager)
         {
             _logInManager = logInManager;
             _tenantCache = tenantCache;
@@ -125,21 +126,56 @@ namespace TACHYON.Web.Controllers
             _claimsPrincipalFactory = claimsPrincipalFactory;
             RecaptchaValidator = NullRecaptchaValidator.Instance;
             _userDelegationManager = userDelegationManager;
+            _tenantManager = tenantManager;
         }
 
         [HttpPost]
         public async Task<AuthenticateResultModel> Authenticate([FromBody] AuthenticateModel model)
         {
+
+
             if (UseCaptchaOnLogin())
             {
                 await ValidateReCaptcha(model.CaptchaResponse);
             }
 
+            string tenancyName = null;
+
+            if (model.UsePhoneNumberForSignIn != null && model.UsePhoneNumberForSignIn.Value)
+            {
+                //get username by mobile
+                var user = await _userManager.GetUserByMobileNumberAsync(model.UserNameOrEmailAddress);
+                if (user == null)
+                {
+                    throw new AbpAuthorizationException(L("InvalidMobileNumber"));
+                }
+
+                model.UserNameOrEmailAddress = user.UserName;
+
+                //  get tenantId from UserName
+
+                if (user.TenantId != null)
+                {
+                    tenancyName = _tenantManager.GetById(user.TenantId.Value).TenancyName;
+                }
+            }
+            else
+            {
+                tenancyName = GetTenancyNameOrNull();
+            }
+
+
+
+
+            // chick 2 factor auth
+
+
             var loginResult = await GetLoginResultAsync(
                 model.UserNameOrEmailAddress,
                 model.Password,
-                GetTenancyNameOrNull()
+                tenancyName
             );
+
 
             var returnUrl = model.ReturnUrl;
 
@@ -643,6 +679,7 @@ namespace TACHYON.Web.Controllers
 
             return _tenantCache.GetOrNull(AbpSession.TenantId.Value)?.TenancyName;
         }
+
 
         private async Task<AbpLoginResult<Tenant, User>> GetLoginResultAsync(string usernameOrEmailAddress, string password, string tenancyName)
         {

@@ -17,6 +17,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 using TACHYON.Authorization.Roles;
 using TACHYON.Security;
 
@@ -32,6 +33,7 @@ namespace TACHYON.Authorization.Users
         private readonly IUnitOfWorkManager _unitOfWorkManager;
         private readonly ILocalizationManager _localizationManager;
         private readonly ISettingManager _settingManager;
+        private readonly IRepository<User, long> _userRepository;
 
         public UserManager(
             UserStore userStore,
@@ -51,7 +53,7 @@ namespace TACHYON.Authorization.Users
             IRepository<UserOrganizationUnit, long> userOrganizationUnitRepository,
             IOrganizationUnitSettings organizationUnitSettings,
             ISettingManager settingManager,
-            ILocalizationManager localizationManager)
+            ILocalizationManager localizationManager, IRepository<User, long> userRepository)
             : base(
                   roleManager,
                   userStore,
@@ -74,6 +76,7 @@ namespace TACHYON.Authorization.Users
             _unitOfWorkManager = unitOfWorkManager;
             _settingManager = settingManager;
             _localizationManager = localizationManager;
+            _userRepository = userRepository;
         }
 
         [UnitOfWork]
@@ -196,6 +199,16 @@ namespace TACHYON.Authorization.Users
         private new string L(string name)
         {
             return _localizationManager.GetString(TACHYONConsts.LocalizationSourceName, name);
+        }
+
+        public async Task<User> GetUserByPhoneNumberAsync(string mobileNumber)
+        {
+
+            using (_unitOfWorkManager.Current.DisableFilter(AbpDataFilters.MayHaveTenant))
+            {
+                return await _userRepository.GetAll().FirstOrDefaultAsync(x => x.PhoneNumber == mobileNumber);
+            }
+
         }
     }
 }
