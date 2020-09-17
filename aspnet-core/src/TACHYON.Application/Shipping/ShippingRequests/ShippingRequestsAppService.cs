@@ -25,6 +25,7 @@ using TACHYON.Shipping.ShippingRequests.Exporting;
 using TACHYON.Trailers.TrailerTypes;
 using TACHYON.Trucks.TrucksTypes;
 using Abp.Notifications;
+using Abp.Runtime.Session;
 using Abp.UI;
 using TACHYON.AddressBook;
 using TACHYON.AddressBook.Ports;
@@ -234,6 +235,7 @@ namespace TACHYON.Shipping.ShippingRequests
                 shippingRequest.RouteFk.TenantId = (int)AbpSession.TenantId;
             }
 
+            shippingRequest.ShippingRequestStatusId = 1;
 
             await _shippingRequestRepository.InsertAsync(shippingRequest);
         }
@@ -303,6 +305,20 @@ namespace TACHYON.Shipping.ShippingRequests
         public async Task Delete(EntityDto<long> input)
         {
             await _shippingRequestRepository.DeleteAsync(input.Id);
+        }
+
+        //g-#409
+        //todo @suhila add driver permission here
+        public async Task ShippingRequestChangeStatus(ShippingRequestChangeStatusInput input)
+        {
+            var shippingRequest = await _shippingRequestRepository.FirstOrDefaultAsync(input.Id);
+
+            if (shippingRequest.AssignedDriverUserId != AbpSession.GetUserId())
+            {
+                throw new UserFriendlyException(L("the driver is not assigned to Shipping Request message"));
+            }
+
+            shippingRequest.ShippingRequestStatusId = input.ShippingRequestStatusId;
         }
 
 
