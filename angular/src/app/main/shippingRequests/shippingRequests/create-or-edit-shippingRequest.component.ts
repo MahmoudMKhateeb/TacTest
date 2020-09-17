@@ -2,10 +2,12 @@
 import { finalize } from 'rxjs/operators';
 import {
   CarriersForDropDownDto,
+  CreateOrEditFacilityDto,
   CreateOrEditGoodsDetailDto,
   CreateOrEditRouteDto,
   CreateOrEditRoutStepDto,
   CreateOrEditShippingRequestDto,
+  FacilitiesServiceProxy,
   FacilityForDropdownDto,
   GoodsDetailGoodCategoryLookupTableDto,
   GoodsDetailsServiceProxy,
@@ -43,9 +45,9 @@ export class CreateOrEditShippingRequestComponent extends AppComponentBase imple
     new BreadcrumbItem(this.l('Entity_Name_Plural_Here') + '' + this.l('Details')),
   ];
 
-  @ViewChild('createOrEditFacilityModal', { static: true }) createOrEditFacilityModal: CreateOrEditFacilityModalComponent;
   @ViewChild('search') public searchElementRef: ElementRef;
   @ViewChild('staticModal') public staticModal: ModalDirective;
+  @ViewChild('createFacilityModal') public createFacilityModal: ModalDirective;
   active = false;
   saving = false;
 
@@ -61,6 +63,7 @@ export class CreateOrEditShippingRequestComponent extends AppComponentBase imple
   allFacilities: FacilityForDropdownDto[];
   allPorts: SelectItemDto[];
   createOrEditRoutStepDtoList: CreateOrEditRoutStepDto[] = [];
+  facility: CreateOrEditFacilityDto = new CreateOrEditFacilityDto();
 
   zoom = 5;
   private geoCoder;
@@ -74,18 +77,28 @@ export class CreateOrEditShippingRequestComponent extends AppComponentBase imple
     private _routStepsServiceProxy: RoutStepsServiceProxy,
     private mapsAPILoader: MapsAPILoader,
     private ngZone: NgZone,
-    private _routesServiceProxy: RoutesServiceProxy
+    private _routesServiceProxy: RoutesServiceProxy,
+    private _facilitiesServiceProxy: FacilitiesServiceProxy
   ) {
     super(injector);
   }
 
   openModal() {
     //load Places Autocomplete
-    this.loadMapApi();
-    this.routStep.latitude = '24.67911662122269';
-    this.routStep.longitude = '46.6355543345471';
-    this.zoom = 5;
+    // this.loadMapApi();
+    // this.facility.latitude = 24.67911662122269;
+    // this.facility.longitude = 46.6355543345471;
+    // this.zoom = 5;
     this.staticModal.show();
+  }
+
+  openCreateFacilityModal() {
+    //load Places Autocomplete
+    this.loadMapApi();
+    this.facility.latitude = 24.67911662122269;
+    this.facility.longitude = 46.6355543345471;
+    this.zoom = 5;
+    this.createFacilityModal.show();
   }
 
   ngOnInit(): void {
@@ -162,8 +175,8 @@ export class CreateOrEditShippingRequestComponent extends AppComponentBase imple
           }
 
           //set latitude, longitude and zoom
-          this.routStep.latitude = place.geometry.location.lat().toString();
-          this.routStep.longitude = place.geometry.location.lng().toString();
+          this.facility.latitude = place.geometry.location.lat();
+          this.facility.longitude = place.geometry.location.lng();
           this.zoom = 12;
         });
       });
@@ -172,9 +185,9 @@ export class CreateOrEditShippingRequestComponent extends AppComponentBase imple
 
   mapClicked($event: MouseEvent) {
     // @ts-ignore
-    this.routStep.latitude = $event.coords.lat.toString();
+    this.facility.latitude = $event.coords.lat;
     // @ts-ignore
-    this.routStep.longitude = $event.coords.lng.toString();
+    this.facility.longitude = $event.coords.lng;
     // @ts-ignore
     this.getAddress($event.coords.lat, $event.coords.lng);
   }
@@ -200,9 +213,6 @@ export class CreateOrEditShippingRequestComponent extends AppComponentBase imple
     this._routStepsServiceProxy.getAllFacilitiesForDropdown().subscribe((result) => {
       this.allFacilities = result;
     });
-  }
-  createFacility(): void {
-    this.createOrEditFacilityModal.show();
   }
 
   loadAllDropDownLists(): void {
@@ -230,5 +240,22 @@ export class CreateOrEditShippingRequestComponent extends AppComponentBase imple
     this._shippingRequestsServiceProxy.getAllPortsForDropdown().subscribe((result) => {
       this.allPorts = result;
     });
+  }
+
+  createFacility() {
+    this.saving = true;
+
+    this._facilitiesServiceProxy
+      .createOrEdit(this.facility)
+      .pipe(
+        finalize(() => {
+          this.saving = false;
+        })
+      )
+      .subscribe(() => {
+        this.notify.info(this.l('SavedSuccessfully'));
+        this.createFacilityModal.hide();
+        this.refreshFacilities();
+      });
   }
 }
