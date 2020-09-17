@@ -144,7 +144,7 @@ namespace TACHYON.Web.Controllers
             if (model.UsePhoneNumberForSignIn != null && model.UsePhoneNumberForSignIn.Value)
             {
                 //get username by mobile
-                var user = await _userManager.GetUserByMobileNumberAsync(model.UserNameOrEmailAddress);
+                var user = await _userManager.GetUserByPhoneNumberAsync(model.UserNameOrEmailAddress);
                 if (user == null)
                 {
                     throw new AbpAuthorizationException(L("InvalidMobileNumber"));
