@@ -70,7 +70,6 @@ export class FacilitiesComponent extends AppComponentBase {
         this.minLongitudeFilter == null ? this.minLongitudeFilterEmpty : this.minLongitudeFilter,
         this.maxLatitudeFilter == null ? this.maxLatitudeFilterEmpty : this.maxLatitudeFilter,
         this.minLatitudeFilter == null ? this.minLatitudeFilterEmpty : this.minLatitudeFilter,
-        this.countyDisplayNameFilter,
         this.cityDisplayNameFilter,
         this.primengTableHelper.getSorting(this.dataTable),
         this.primengTableHelper.getSkipCount(this.paginator, event),
@@ -112,7 +111,6 @@ export class FacilitiesComponent extends AppComponentBase {
         this.minLongitudeFilter == null ? this.minLongitudeFilterEmpty : this.minLongitudeFilter,
         this.maxLatitudeFilter == null ? this.maxLatitudeFilterEmpty : this.maxLatitudeFilter,
         this.minLatitudeFilter == null ? this.minLatitudeFilterEmpty : this.minLatitudeFilter,
-        this.countyDisplayNameFilter,
         this.cityDisplayNameFilter
       )
       .subscribe((result) => {

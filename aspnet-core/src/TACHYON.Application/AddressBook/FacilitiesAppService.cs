@@ -27,15 +27,13 @@ namespace TACHYON.AddressBook
     {
         private readonly IRepository<Facility, long> _facilityRepository;
         private readonly IFacilitiesExcelExporter _facilitiesExcelExporter;
-        private readonly IRepository<County, int> _lookup_countyRepository;
         private readonly IRepository<City, int> _lookup_cityRepository;
 
 
-        public FacilitiesAppService(IRepository<Facility, long> facilityRepository, IFacilitiesExcelExporter facilitiesExcelExporter, IRepository<County, int> lookup_countyRepository, IRepository<City, int> lookup_cityRepository)
+        public FacilitiesAppService(IRepository<Facility, long> facilityRepository, IFacilitiesExcelExporter facilitiesExcelExporter, IRepository<City, int> lookup_cityRepository)
         {
             _facilityRepository = facilityRepository;
             _facilitiesExcelExporter = facilitiesExcelExporter;
-            _lookup_countyRepository = lookup_countyRepository;
             _lookup_cityRepository = lookup_cityRepository;
 
         }
@@ -44,7 +42,6 @@ namespace TACHYON.AddressBook
         {
 
             var filteredFacilities = _facilityRepository.GetAll()
-                        .Include(e => e.CountyFk)
                         .Include(e => e.CityFk)
                         .WhereIf(!string.IsNullOrWhiteSpace(input.Filter), e => false || e.Name.Contains(input.Filter) || e.Adress.Contains(input.Filter))
                         .WhereIf(!string.IsNullOrWhiteSpace(input.NameFilter), e => e.Name == input.NameFilter)
@@ -53,7 +50,6 @@ namespace TACHYON.AddressBook
                         .WhereIf(input.MaxLongitudeFilter != null, e => e.Longitude <= input.MaxLongitudeFilter)
                         .WhereIf(input.MinLatitudeFilter != null, e => e.Latitude >= input.MinLatitudeFilter)
                         .WhereIf(input.MaxLatitudeFilter != null, e => e.Latitude <= input.MaxLatitudeFilter)
-                        .WhereIf(!string.IsNullOrWhiteSpace(input.CountyDisplayNameFilter), e => e.CountyFk != null && e.CountyFk.DisplayName == input.CountyDisplayNameFilter)
                         .WhereIf(!string.IsNullOrWhiteSpace(input.CityDisplayNameFilter), e => e.CityFk != null && e.CityFk.DisplayName == input.CityDisplayNameFilter);
 
             var pagedAndFilteredFacilities = filteredFacilities
@@ -61,9 +57,6 @@ namespace TACHYON.AddressBook
                 .PageBy(input);
 
             var facilities = from o in pagedAndFilteredFacilities
-                             join o1 in _lookup_countyRepository.GetAll() on o.CountyId equals o1.Id into j1
-                             from s1 in j1.DefaultIfEmpty()
-
                              join o2 in _lookup_cityRepository.GetAll() on o.CityId equals o2.Id into j2
                              from s2 in j2.DefaultIfEmpty()
 
@@ -77,7 +70,6 @@ namespace TACHYON.AddressBook
                                      Latitude = o.Latitude,
                                      Id = o.Id
                                  },
-                                 CountyDisplayName = s1 == null || s1.DisplayName == null ? "" : s1.DisplayName.ToString(),
                                  CityDisplayName = s2 == null || s2.DisplayName == null ? "" : s2.DisplayName.ToString()
                              };
 
@@ -95,11 +87,6 @@ namespace TACHYON.AddressBook
 
             var output = new GetFacilityForViewDto { Facility = ObjectMapper.Map<FacilityDto>(facility) };
 
-            if (output.Facility.CountyId != null)
-            {
-                var _lookupCounty = await _lookup_countyRepository.FirstOrDefaultAsync((int)output.Facility.CountyId);
-                output.CountyDisplayName = _lookupCounty?.DisplayName?.ToString();
-            }
 
             if (output.Facility.CityId != null)
             {
@@ -117,11 +104,6 @@ namespace TACHYON.AddressBook
 
             var output = new GetFacilityForEditOutput { Facility = ObjectMapper.Map<CreateOrEditFacilityDto>(facility) };
 
-            if (output.Facility.CountyId != null)
-            {
-                var _lookupCounty = await _lookup_countyRepository.FirstOrDefaultAsync((int)output.Facility.CountyId);
-                output.CountyDisplayName = _lookupCounty?.DisplayName?.ToString();
-            }
 
             if (output.Facility.CityId != null)
             {
@@ -176,7 +158,6 @@ namespace TACHYON.AddressBook
         {
 
             var filteredFacilities = _facilityRepository.GetAll()
-                        .Include(e => e.CountyFk)
                         .Include(e => e.CityFk)
                         .WhereIf(!string.IsNullOrWhiteSpace(input.Filter), e => false || e.Name.Contains(input.Filter) || e.Adress.Contains(input.Filter))
                         .WhereIf(!string.IsNullOrWhiteSpace(input.NameFilter), e => e.Name == input.NameFilter)
@@ -185,13 +166,9 @@ namespace TACHYON.AddressBook
                         .WhereIf(input.MaxLongitudeFilter != null, e => e.Longitude <= input.MaxLongitudeFilter)
                         .WhereIf(input.MinLatitudeFilter != null, e => e.Latitude >= input.MinLatitudeFilter)
                         .WhereIf(input.MaxLatitudeFilter != null, e => e.Latitude <= input.MaxLatitudeFilter)
-                        .WhereIf(!string.IsNullOrWhiteSpace(input.CountyDisplayNameFilter), e => e.CountyFk != null && e.CountyFk.DisplayName == input.CountyDisplayNameFilter)
                         .WhereIf(!string.IsNullOrWhiteSpace(input.CityDisplayNameFilter), e => e.CityFk != null && e.CityFk.DisplayName == input.CityDisplayNameFilter);
 
             var query = (from o in filteredFacilities
-                         join o1 in _lookup_countyRepository.GetAll() on o.CountyId equals o1.Id into j1
-                         from s1 in j1.DefaultIfEmpty()
-
                          join o2 in _lookup_cityRepository.GetAll() on o.CityId equals o2.Id into j2
                          from s2 in j2.DefaultIfEmpty()
 
@@ -205,7 +182,6 @@ namespace TACHYON.AddressBook
                                  Latitude = o.Latitude,
                                  Id = o.Id
                              },
-                             CountyDisplayName = s1 == null || s1.DisplayName == null ? "" : s1.DisplayName.ToString(),
                              CityDisplayName = s2 == null || s2.DisplayName == null ? "" : s2.DisplayName.ToString()
                          });
 
@@ -213,18 +189,6 @@ namespace TACHYON.AddressBook
             var facilityListDtos = await query.ToListAsync();
 
             return _facilitiesExcelExporter.ExportToFile(facilityListDtos);
-        }
-
-
-        [AbpAuthorize(AppPermissions.Pages_Facilities)]
-        public async Task<List<FacilityCountyLookupTableDto>> GetAllCountyForTableDropdown()
-        {
-            return await _lookup_countyRepository.GetAll()
-                .Select(county => new FacilityCountyLookupTableDto
-                {
-                    Id = county.Id,
-                    DisplayName = county == null || county.DisplayName == null ? "" : county.DisplayName.ToString()
-                }).ToListAsync();
         }
 
         [AbpAuthorize(AppPermissions.Pages_Facilities)]

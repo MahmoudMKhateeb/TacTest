@@ -27,5 +27,7 @@ namespace TACHYON.Web.Models.TokenAuth
 
         [DisableAuditing]
         public string CaptchaResponse { get; set; }
+
+        public bool? UsePhoneNumberForSignIn { get; set; } 
     }
 }

@@ -4,12 +4,16 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using TACHYON.Authorization.Users;
 using TACHYON.Goods.GoodCategories;
 using TACHYON.Goods.GoodsDetails;
 using TACHYON.MultiTenancy;
 using TACHYON.Routs;
 using TACHYON.Routs.RoutSteps;
+using TACHYON.Shipping.ShippingRequestStatuses;
+using TACHYON.Trailers;
 using TACHYON.Trailers.TrailerTypes;
+using TACHYON.Trucks;
 using TACHYON.Trucks.TrucksTypes;
 
 namespace TACHYON.Shipping.ShippingRequests
@@ -69,5 +73,31 @@ namespace TACHYON.Shipping.ShippingRequests
         public int GoodCategoryId { get; set; }
         [ForeignKey("GoodCategoryId")]
         public GoodCategory GoodCategoryFk { get; set; }
+
+        // g-#409
+        public int ShippingRequestStatusId { get; set; }
+        [ForeignKey("ShippingRequestStatusId")]
+        public ShippingRequestStatus ShippingRequestStatusFk { get; set; }
+
+
+        /// <summary>
+        /// assigned Driver
+        /// </summary>
+        public long? AssignedDriverUserId { get; set; }
+        [ForeignKey("AssignedDriverUserId")]
+        public User AssignedDriverUserFk { get; set; }
+        /// <summary>
+        /// assigned Truck
+        /// </summary>
+        public Guid? AssignedTruckId { get; set; }
+        [ForeignKey("AssignedTruckId")]
+        public Truck AssignedTruckFk { get; set; }
+
+        /// <summary>
+        /// assigned Trailer
+        /// </summary>
+        public long? AssignedTrailerId { get; set; }
+        [ForeignKey("AssignedTrailerId")]
+        public Trailer AssignedTrailersFk { get; set; }
     }
 }

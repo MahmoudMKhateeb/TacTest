@@ -39,7 +39,6 @@ namespace TACHYON.AddressBook.Exporting
                         L("Adress"),
                         L("Longitude"),
                         L("Latitude"),
-                        (L("County")) + L("DisplayName"),
                         (L("City")) + L("DisplayName")
                         );
 
@@ -49,7 +48,6 @@ namespace TACHYON.AddressBook.Exporting
                         _ => _.Facility.Adress,
                         _ => _.Facility.Longitude,
                         _ => _.Facility.Latitude,
-                        _ => _.CountyDisplayName,
                         _ => _.CityDisplayName
                         );
 

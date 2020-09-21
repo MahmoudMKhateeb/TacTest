@@ -1,4 +1,5 @@
-﻿using TACHYON.AddressBook.Ports;
+﻿using TACHYON.Shipping.ShippingRequestStatuses;
+using TACHYON.AddressBook.Ports;
 using TACHYON.PickingTypes;
 using TACHYON.UnitOfMeasures;
 using TACHYON.AddressBook;
@@ -51,6 +52,8 @@ namespace TACHYON.EntityFrameworkCore
 {
     public class TACHYONDbContext : AbpZeroDbContext<Tenant, Role, User, TACHYONDbContext>, IAbpPersistedGrantDbContext
     {
+        public virtual DbSet<ShippingRequestStatus> ShippingRequestStatuses { get; set; }
+
         public virtual DbSet<Port> Ports { get; set; }
 
         public virtual DbSet<PickingType> PickingTypes { get; set; }
