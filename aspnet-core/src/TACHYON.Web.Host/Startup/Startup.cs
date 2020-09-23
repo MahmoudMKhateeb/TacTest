@@ -74,22 +74,11 @@ namespace TACHYON.Web.Startup
                 {
                     //App:CorsOrigins in appsettings.json can contain more than one address with splitted by comma.
                     builder
-                        //.WithOrigins(
-                        //    // App:CorsOrigins in appsettings.json can contain more than one address separated by comma.
-                        //    _appConfiguration["App:CorsOrigins"]
-                        //        .Split(",", StringSplitOptions.RemoveEmptyEntries)
-                        //        .Select(o => o.RemovePostFix("/"))
-                        //        .ToArray()
-                        //)
-                        //.SetIsOriginAllowedToAllowWildcardSubdomains()
-                        //.SetIsOriginAllowed((host) => true)
-                        //.AllowAnyHeader()
-                        //.AllowAnyMethod()
-                        //.AllowCredentials();
-                        .AllowAnyOrigin()
-                .AllowAnyMethod()
-                .AllowAnyHeader()
-                .AllowCredentials();
+                        .AllowAnyMethod()
+                        .AllowAnyHeader()
+                        .SetIsOriginAllowed(origin => true) // allow any origin
+                        .AllowCredentials(); // allow credentials
+
                 });
             });
 
@@ -185,7 +174,7 @@ namespace TACHYON.Web.Startup
             app.UseAbp(options =>
             {
                 options.UseAbpRequestLocalization = false; //used below: UseAbpRequestLocalization
-            });
+    });
 
             if (env.IsDevelopment())
             {
