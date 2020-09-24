@@ -21,9 +21,6 @@ namespace TACHYON.Documents.DocumentTypes
 
         public virtual bool HasExpirationDate { get; set; }
 
-        [StringLength(DocumentTypeConsts.MaxRequiredFromLength, MinimumLength = DocumentTypeConsts.MinRequiredFromLength)]
-        public virtual string RequiredFrom { get; set; }
-
         public int DocumentsEntityId { get; set; }
 
         [ForeignKey("DocumentsEntityId")]

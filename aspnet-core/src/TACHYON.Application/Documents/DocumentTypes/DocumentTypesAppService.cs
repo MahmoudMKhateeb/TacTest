@@ -36,13 +36,13 @@ namespace TACHYON.Documents.DocumentTypes
         {
 
             var filteredDocumentTypes = _documentTypeRepository.GetAll()
-                        .WhereIf(!string.IsNullOrWhiteSpace(input.Filter), e => false || e.DisplayName.Contains(input.Filter) || e.RequiredFrom.Contains(input.Filter))
+                        .WhereIf(!string.IsNullOrWhiteSpace(input.Filter), e => false || e.DisplayName.Contains(input.Filter) || e.DocumentsEntityFk.DisplayName.Contains(input.Filter))
                         .WhereIf(!string.IsNullOrWhiteSpace(input.DisplayNameFilter), e => e.DisplayName == input.DisplayNameFilter)
                         .WhereIf(input.IsRequiredFilter > -1, e => (input.IsRequiredFilter == 1 && e.IsRequired) || (input.IsRequiredFilter == 0 && !e.IsRequired))
                         .WhereIf(input.MinExpirationDateFilter != null, e => e.ExpirationDate >= input.MinExpirationDateFilter)
                         .WhereIf(input.MaxExpirationDateFilter != null, e => e.ExpirationDate <= input.MaxExpirationDateFilter)
                         .WhereIf(input.HasExpirationDateFilter > -1, e => (input.HasExpirationDateFilter == 1 && e.HasExpirationDate) || (input.HasExpirationDateFilter == 0 && !e.HasExpirationDate))
-                        .WhereIf(!string.IsNullOrWhiteSpace(input.RequiredFromFilter), e => e.RequiredFrom == input.RequiredFromFilter);
+                        .WhereIf(!string.IsNullOrWhiteSpace(input.RequiredFromFilter), e => e.DocumentsEntityFk.DisplayName == input.RequiredFromFilter);
 
             var pagedAndFilteredDocumentTypes = filteredDocumentTypes
                 .OrderBy(input.Sorting ?? "id asc")
@@ -57,7 +57,7 @@ namespace TACHYON.Documents.DocumentTypes
                                         IsRequired = o.IsRequired,
                                         ExpirationDate = o.ExpirationDate,
                                         HasExpirationDate = o.HasExpirationDate,
-                                        RequiredFrom = o.RequiredFrom,
+                                        RequiredFrom = o.DocumentsEntityFk.DisplayName,
                                         Id = o.Id
                                     }
                                 };
@@ -128,13 +128,13 @@ namespace TACHYON.Documents.DocumentTypes
         {
 
             var filteredDocumentTypes = _documentTypeRepository.GetAll()
-                        .WhereIf(!string.IsNullOrWhiteSpace(input.Filter), e => false || e.DisplayName.Contains(input.Filter) || e.RequiredFrom.Contains(input.Filter))
+                        .WhereIf(!string.IsNullOrWhiteSpace(input.Filter), e => false || e.DisplayName.Contains(input.Filter) || e.DocumentsEntityFk.DisplayName.Contains(input.Filter))
                         .WhereIf(!string.IsNullOrWhiteSpace(input.DisplayNameFilter), e => e.DisplayName == input.DisplayNameFilter)
                         .WhereIf(input.IsRequiredFilter > -1, e => (input.IsRequiredFilter == 1 && e.IsRequired) || (input.IsRequiredFilter == 0 && !e.IsRequired))
                         .WhereIf(input.MinExpirationDateFilter != null, e => e.ExpirationDate >= input.MinExpirationDateFilter)
                         .WhereIf(input.MaxExpirationDateFilter != null, e => e.ExpirationDate <= input.MaxExpirationDateFilter)
                         .WhereIf(input.HasExpirationDateFilter > -1, e => (input.HasExpirationDateFilter == 1 && e.HasExpirationDate) || (input.HasExpirationDateFilter == 0 && !e.HasExpirationDate))
-                        .WhereIf(!string.IsNullOrWhiteSpace(input.RequiredFromFilter), e => e.RequiredFrom == input.RequiredFromFilter);
+                        .WhereIf(!string.IsNullOrWhiteSpace(input.RequiredFromFilter), e => e.DocumentsEntityFk.DisplayName == input.RequiredFromFilter);
 
             var query = (from o in filteredDocumentTypes
                          select new GetDocumentTypeForViewDto()
@@ -145,7 +145,7 @@ namespace TACHYON.Documents.DocumentTypes
                                  IsRequired = o.IsRequired,
                                  ExpirationDate = o.ExpirationDate,
                                  HasExpirationDate = o.HasExpirationDate,
-                                 RequiredFrom = o.RequiredFrom,
+                                 RequiredFrom = o.DocumentsEntityFk.DisplayName,
                                  Id = o.Id
                              }
                          });

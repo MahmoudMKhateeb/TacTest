@@ -22,8 +22,7 @@ namespace TACHYON.Documents.DocumentTypes.Dtos
         public bool HasExpirationDate { get; set; }
 
 
-        [StringLength(DocumentTypeConsts.MaxRequiredFromLength, MinimumLength = DocumentTypeConsts.MinRequiredFromLength)]
-        public string RequiredFrom { get; set; }
+        public int DocumentsEntityId { get; set; }
 
 
 
