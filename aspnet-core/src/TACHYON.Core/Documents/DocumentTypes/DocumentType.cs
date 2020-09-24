@@ -3,6 +3,7 @@ using Abp.Domain.Entities.Auditing;
 using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using TACHYON.Documents.DocumentsEntities;
 
 namespace TACHYON.Documents.DocumentTypes
 {
@@ -22,6 +23,11 @@ namespace TACHYON.Documents.DocumentTypes
 
         [StringLength(DocumentTypeConsts.MaxRequiredFromLength, MinimumLength = DocumentTypeConsts.MinRequiredFromLength)]
         public virtual string RequiredFrom { get; set; }
+
+        public int DocumentsEntityId { get; set; }
+
+        [ForeignKey("DocumentsEntityId")]
+        public DocumentsEntity DocumentsEntityFk { get; set; }
 
 
     }
