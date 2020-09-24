@@ -30,6 +30,13 @@ namespace TACHYON.Authorization
 
             var pages = context.GetPermissionOrNull(AppPermissions.Pages) ?? context.CreatePermission(AppPermissions.Pages, L("Pages"));
 
+            var documentsEntities = pages.CreateChildPermission(AppPermissions.Pages_DocumentsEntities, L("DocumentsEntities"), multiTenancySides: MultiTenancySides.Host);
+            documentsEntities.CreateChildPermission(AppPermissions.Pages_DocumentsEntities_Create, L("CreateNewDocumentsEntity"), multiTenancySides: MultiTenancySides.Host);
+            documentsEntities.CreateChildPermission(AppPermissions.Pages_DocumentsEntities_Edit, L("EditDocumentsEntity"), multiTenancySides: MultiTenancySides.Host);
+            documentsEntities.CreateChildPermission(AppPermissions.Pages_DocumentsEntities_Delete, L("DeleteDocumentsEntity"), multiTenancySides: MultiTenancySides.Host);
+
+
+
             var ports = pages.CreateChildPermission(AppPermissions.Pages_Ports, L("Ports"), multiTenancySides: MultiTenancySides.Host);
             ports.CreateChildPermission(AppPermissions.Pages_Ports_Create, L("CreateNewPort"), multiTenancySides: MultiTenancySides.Host);
             ports.CreateChildPermission(AppPermissions.Pages_Ports_Edit, L("EditPort"), multiTenancySides: MultiTenancySides.Host);

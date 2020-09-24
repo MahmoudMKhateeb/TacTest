@@ -1,5 +1,6 @@
 ﻿import { NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
+import { DocumentsEntitiesComponent } from './documentsEntities/documentsEntities/documentsEntities.component';
 import { PickingTypesComponent } from './pickingTypes/pickingTypes/pickingTypes.component';
 import { PortsComponent } from './ports/ports/ports.component';
 import { FacilitiesComponent } from './addressBook/facilities/facilities.component';
@@ -32,6 +33,7 @@ import { DashboardComponent } from './dashboard/dashboard.component';
       {
         path: '',
         children: [
+          { path: 'documentsEntities/documentsEntities', component: DocumentsEntitiesComponent, data: { permission: 'Pages.DocumentsEntities' } },
           { path: 'ports/ports', component: PortsComponent, data: { permission: 'Pages.Ports' } },
           { path: 'pickingTypes/pickingTypes', component: PickingTypesComponent, data: { permission: 'Pages.PickingTypes' } },
           { path: 'addressBook/facilities', component: FacilitiesComponent, data: { permission: 'Pages.Facilities' } },

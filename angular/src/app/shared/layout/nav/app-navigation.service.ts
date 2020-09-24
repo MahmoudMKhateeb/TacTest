@@ -28,6 +28,8 @@ export class AppNavigationService {
       new AppMenuItem('Trucks', 'Pages.Trucks', 'flaticon-more', '/app/main/trucks/trucks', undefined, undefined, undefined, undefined, () =>
         this._featureCheckerService.isEnabled('App.Carrier')
       ),
+      new AppMenuItem('DocumentsEntities', 'Pages.DocumentsEntities', 'flaticon-more', '/app/main/documentsEntities/documentsEntities'),
+
       new AppMenuItem('DocumentFiles', 'Pages.DocumentFiles', 'flaticon-more', '/app/main/documentFiles/documentFiles'),
 
       new AppMenuItem('TrailerTypes', 'Pages.TrailerTypes', 'flaticon-more', '/app/main/trailerTypes/trailerTypes'),
@@ -90,8 +92,13 @@ export class AppNavigationService {
           new AppMenuItem('OrganizationUnits', 'Pages.Administration.OrganizationUnits', 'flaticon-map', '/app/admin/organization-units'),
           new AppMenuItem('Roles', 'Pages.Administration.Roles', 'flaticon-suitcase', '/app/admin/roles'),
           new AppMenuItem('Users', 'Pages.Administration.Users', 'flaticon-users', '/app/admin/users'),
-            new AppMenuItem('ShippingRequestStatuses', 'Pages.Administration.ShippingRequestStatuses', 'flaticon-more', '/app/admin/shippingRequestStatuses/shippingRequestStatuses'),
-            
+          new AppMenuItem(
+            'ShippingRequestStatuses',
+            'Pages.Administration.ShippingRequestStatuses',
+            'flaticon-more',
+            '/app/admin/shippingRequestStatuses/shippingRequestStatuses'
+          ),
+
           new AppMenuItem('UnitOfMeasures', 'Pages.Administration.UnitOfMeasures', 'flaticon-more', '/app/admin/unitOfMeasures/unitOfMeasures'),
 
           new AppMenuItem(
