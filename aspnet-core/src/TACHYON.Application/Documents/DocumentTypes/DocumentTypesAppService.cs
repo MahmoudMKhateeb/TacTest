@@ -12,6 +12,7 @@ using System.Linq;
 using System.Linq.Dynamic.Core;
 using System.Threading.Tasks;
 using TACHYON.Authorization;
+using TACHYON.Documents.DocumentsEntities;
 using TACHYON.Documents.DocumentTypes.Dtos;
 using TACHYON.Documents.DocumentTypes.Exporting;
 using TACHYON.Dto;
@@ -23,13 +24,14 @@ namespace TACHYON.Documents.DocumentTypes
     {
         private readonly IRepository<DocumentType, long> _documentTypeRepository;
         private readonly IDocumentTypesExcelExporter _documentTypesExcelExporter;
+        private readonly IRepository<DocumentsEntity, int> _documentsEntityRepository;
 
 
-        public DocumentTypesAppService(IRepository<DocumentType, long> documentTypeRepository, IDocumentTypesExcelExporter documentTypesExcelExporter)
+        public DocumentTypesAppService(IRepository<DocumentType, long> documentTypeRepository, IDocumentTypesExcelExporter documentTypesExcelExporter, IRepository<DocumentsEntity, int> documentsEntityRepository)
         {
             _documentTypeRepository = documentTypeRepository;
             _documentTypesExcelExporter = documentTypesExcelExporter;
-
+            _documentsEntityRepository = documentsEntityRepository;
         }
 
         public async Task<PagedResultDto<GetDocumentTypeForViewDto>> GetAll(GetAllDocumentTypesInput input)
@@ -154,6 +156,17 @@ namespace TACHYON.Documents.DocumentTypes
             var documentTypeListDtos = await query.ToListAsync();
 
             return _documentTypesExcelExporter.ExportToFile(documentTypeListDtos);
+        }
+
+        public async Task<List<SelectItemDto>> GetAllDocumentsEntitiesForTableDropdown()
+        {
+            return await _documentsEntityRepository.GetAll()
+                .Select(x => new SelectItemDto
+                {
+                    Id = x.Id.ToString(),
+                    DisplayName = x == null || x.DisplayName == null ? "" : x.DisplayName.ToString()
+                }).ToListAsync();
+
         }
 
 
