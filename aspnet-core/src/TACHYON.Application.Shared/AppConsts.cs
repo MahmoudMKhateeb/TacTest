@@ -11,6 +11,12 @@ namespace TACHYON
 
         public const int MaxDocumentFileBytesUserFriendlyValue = 5;
 
+        /// <summary>
+        /// for documentType Required from entity
+        /// 
+        /// </summary>
+        public const string TruckDocumentsEntityName = "Truck";
+
         #endregion
 
         /// <summary>

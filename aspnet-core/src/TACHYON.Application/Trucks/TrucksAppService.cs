@@ -24,6 +24,9 @@ using TACHYON.Authorization.Users;
 using TACHYON.Authorization.Users;
 using TACHYON.Authorization.Users.Profile.Dto;
 using TACHYON.Configuration;
+using TACHYON.Documents.DocumentFiles;
+using TACHYON.Documents.DocumentFiles.Dtos;
+using TACHYON.Documents.DocumentTypes;
 using TACHYON.Dto;
 using TACHYON.Features;
 using TACHYON.Notifications;
@@ -32,6 +35,7 @@ using TACHYON.Trucks;
 using TACHYON.Trucks.Dtos;
 using TACHYON.Trucks.Exporting;
 using TACHYON.Trucks.TrucksTypes;
+using GetAllForLookupTableInput = TACHYON.Trucks.Dtos.GetAllForLookupTableInput;
 
 namespace TACHYON.Trucks
 {
@@ -48,11 +52,13 @@ namespace TACHYON.Trucks
         private readonly IAppNotifier _appNotifier;
         private readonly ITempFileCacheManager _tempFileCacheManager;
         private readonly IBinaryObjectManager _binaryObjectManager;
+        private readonly IRepository<DocumentType, long> _documentTypeRepository;
+        private readonly DocumentFilesAppService _documentFilesAppService;
 
 
 
 
-        public TrucksAppService(IRepository<Truck, Guid> truckRepository, ITrucksExcelExporter trucksExcelExporter, IRepository<TrucksType, long> lookup_trucksTypeRepository, IRepository<TruckStatus, long> lookup_truckStatusRepository, IRepository<User, long> lookup_userRepository, IAppNotifier appNotifier, ITempFileCacheManager tempFileCacheManager, IBinaryObjectManager binaryObjectManager)
+        public TrucksAppService(IRepository<Truck, Guid> truckRepository, ITrucksExcelExporter trucksExcelExporter, IRepository<TrucksType, long> lookup_trucksTypeRepository, IRepository<TruckStatus, long> lookup_truckStatusRepository, IRepository<User, long> lookup_userRepository, IAppNotifier appNotifier, ITempFileCacheManager tempFileCacheManager, IBinaryObjectManager binaryObjectManager, IRepository<DocumentType, long> documentTypeRepository, DocumentFilesAppService documentFilesAppService)
         {
             _truckRepository = truckRepository;
             _trucksExcelExporter = trucksExcelExporter;
@@ -62,6 +68,8 @@ namespace TACHYON.Trucks
             _appNotifier = appNotifier;
             _tempFileCacheManager = tempFileCacheManager;
             _binaryObjectManager = binaryObjectManager;
+            _documentTypeRepository = documentTypeRepository;
+            _documentFilesAppService = documentFilesAppService;
         }
 
         public async Task<PagedResultDto<GetTruckForViewDto>> GetAll(GetAllTrucksInput input)
@@ -221,6 +229,23 @@ namespace TACHYON.Trucks
                 truck.TenantId = (int)AbpSession.TenantId;
             }
 
+            var requiredDocs = await GetRequiredDocumentFileListForCreateOrEdit();
+            if (requiredDocs.Count > 0)
+            {
+                foreach (var item in requiredDocs)
+                {
+                    var doc = input.CreateOrEditDocumentFileDtos
+                        .FirstOrDefault(x => x.DocumentTypeId == item.DocumentTypeId);
+
+                    if (doc.UpdateDocumentFileInput.FileToken.IsNullOrEmpty())
+                    {
+                        throw new UserFriendlyException(L("document missing msg :" + item.Name));
+                    }
+
+                    doc.Name = item.Name;
+                }
+            }
+
 
             var truckId = await _truckRepository.InsertAndGetIdAsync(truck);
             if (input.Driver1UserId != null)
@@ -233,10 +258,21 @@ namespace TACHYON.Trucks
                 await _appNotifier.AssignDriverToTruck(new UserIdentifier(AbpSession.TenantId, input.Driver2UserId.Value), truckId);
             }
 
-            if (!input.UpdateTruckPictureInput.FileToken.IsNullOrEmpty())
+            if (input.UpdateTruckPictureInput != null && !input.UpdateTruckPictureInput.FileToken.IsNullOrEmpty())
             {
                 truck.PictureId = await AddOrUpdateTruckPicture(input.UpdateTruckPictureInput);
             }
+
+
+            foreach (var item in input.CreateOrEditDocumentFileDtos)
+            {
+                item.TruckId = truckId;
+                item.Name = item.Name + "_" + truckId.ToString();
+                await _documentFilesAppService.CreateOrEdit(item);
+            }
+
+
+
         }
 
         [AbpAuthorize(AppPermissions.Pages_Trucks_Edit)]
@@ -264,6 +300,26 @@ namespace TACHYON.Trucks
 
                 truck.PictureId = await AddOrUpdateTruckPicture(input.UpdateTruckPictureInput);
             }
+
+        }
+
+
+        /// <summary>
+        /// get list of required documents types to use in create truck
+        /// </summary>
+        /// <returns></returns>
+        public async Task<List<CreateOrEditDocumentFileDto>> GetRequiredDocumentFileListForCreateOrEdit()
+        {
+            return await _documentTypeRepository.GetAll()
+                 .Where(x => x.DocumentsEntityFk.DisplayName == AppConsts.TruckDocumentsEntityName)
+                 .Select(x => new CreateOrEditDocumentFileDto
+                 {
+                     DocumentTypeId = x.Id,
+                     Name = x.DisplayName,
+                     IsRequired = x.IsRequired,
+                     HasExpirationDate = x.HasExpirationDate
+                 })
+                 .ToListAsync();
 
         }
 

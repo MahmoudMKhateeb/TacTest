@@ -38,7 +38,7 @@ namespace TACHYON.Documents.DocumentFiles.Dtos
         public long? RoutStepId { get; set; }
 
         public UpdateDocumentFileInput UpdateDocumentFileInput { get; set; }
-
-
+        public bool IsRequired { get; set; }
+        public bool HasExpirationDate { get; set; }
     }
 }
