@@ -45,7 +45,6 @@ export class CreateOrEditDocumentFileModalComponent extends AppComponentBase {
   allRoutSteps: DocumentFileRoutStepLookupTableDto[];
 
   public uploader: FileUploader;
-  public maxDocumentFileBytesUserFriendlyValue = 5;
   private _uploaderOptions: FileUploaderOptions = {};
 
   constructor(injector: Injector, private _documentFilesServiceProxy: DocumentFilesServiceProxy, private _tokenService: TokenService) {
