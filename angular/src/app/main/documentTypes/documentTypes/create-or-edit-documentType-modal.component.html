@@ -67,17 +67,31 @@
             </label>
           </div>
 
-          <div class="form-group">
-            <label for="DocumentType_RequiredFrom">{{ l('RequiredFrom') }}</label>
-            <input
-              type="text"
-              id="DocumentType_RequiredFrom"
+          <!--          <div class="form-group">-->
+          <!--            <label for="DocumentType_RequiredFrom">{{ l('RequiredFrom') }}</label>-->
+          <!--            <input-->
+          <!--              type="text"-->
+          <!--              id="DocumentType_RequiredFrom"-->
+          <!--              class="form-control"-->
+          <!--              [(ngModel)]="documentType.documentsEntityId"-->
+          <!--              name="RequiredFrom"-->
+          <!--              minlength="0"-->
+          <!--              maxlength="128"-->
+          <!--            />-->
+          <!--          </div>-->
+
+          <div class="form-group m-form__group">
+            <label for="documentType.documentsEntityId">{{ l('documentsEntity') }}</label>
+            <select
+              id="documentType.documentsEntityId"
+              name="documentType.documentsEntityId"
+              [(ngModel)]="documentType.documentsEntityId"
               class="form-control"
-              [(ngModel)]="documentType.requiredFrom"
-              name="RequiredFrom"
-              minlength="0"
-              maxlength="128"
-            />
+              required
+            >
+              <option value="">{{ l('SelectDocumentsEntity') }}</option>
+              <option *ngFor="let item of allDocumentsEntities" value="{{ item.id }}">{{ item.displayName }}</option>
+            </select>
           </div>
         </div>
         <div class="modal-footer">

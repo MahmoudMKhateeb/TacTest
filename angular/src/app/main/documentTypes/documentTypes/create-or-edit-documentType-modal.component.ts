@@ -18,6 +18,7 @@ export class CreateOrEditDocumentTypeModalComponent extends AppComponentBase {
   saving = false;
 
   documentType: CreateOrEditDocumentTypeDto = new CreateOrEditDocumentTypeDto();
+  allDocumentsEntities: any;
 
   constructor(injector: Injector, private _documentTypesServiceProxy: DocumentTypesServiceProxy) {
     super(injector);
@@ -39,6 +40,9 @@ export class CreateOrEditDocumentTypeModalComponent extends AppComponentBase {
         this.modal.show();
       });
     }
+    this._documentTypesServiceProxy.getAllDocumentsEntitiesForTableDropdown().subscribe((result) => {
+      this.allDocumentsEntities = result;
+    });
   }
 
   save(): void {
