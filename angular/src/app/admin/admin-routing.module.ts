@@ -1,4 +1,4 @@
-﻿import { NgModule } from '@angular/core';
+import { NgModule } from '@angular/core';
 import { NavigationEnd, Router, RouterModule } from '@angular/router';
 import { ShippingRequestStatusesComponent } from './shippingRequestStatuses/shippingRequestStatuses/shippingRequestStatuses.component';
 import { UnitOfMeasuresComponent } from './unitOfMeasures/unitOfMeasures/unitOfMeasures.component';
@@ -27,6 +27,7 @@ import { DynamicParameterComponent } from './dynamic-entity-parameters/dynamic-p
 import { DynamicParameterDetailComponent } from './dynamic-entity-parameters/dynamic-parameter/dynamic-parameter-detail.component';
 import { EntityDynamicParameterComponent } from './dynamic-entity-parameters/entity-dynamic-parameter/entity-dynamic-parameter.component';
 import { EntityDynamicParameterValueComponent } from './dynamic-entity-parameters/entity-dynamic-parameter/entity-dynamic-parameter-value/entity-dynamic-parameter-value.component';
+import { RequiredDocumentFilesComponent } from '@app/admin/required-document-files/required-document-files.component';
 
 @NgModule({
   imports: [
@@ -34,7 +35,11 @@ import { EntityDynamicParameterValueComponent } from './dynamic-entity-parameter
       {
         path: '',
         children: [
-                    { path: 'shippingRequestStatuses/shippingRequestStatuses', component: ShippingRequestStatusesComponent, data: { permission: 'Pages.Administration.ShippingRequestStatuses' }  },
+          {
+            path: 'shippingRequestStatuses/shippingRequestStatuses',
+            component: ShippingRequestStatusesComponent,
+            data: { permission: 'Pages.Administration.ShippingRequestStatuses' },
+          },
           { path: 'unitOfMeasures/unitOfMeasures', component: UnitOfMeasuresComponent, data: { permission: 'Pages.Administration.UnitOfMeasures' } },
           { path: 'trucks/truckStatuses', component: TruckStatusesComponent, data: { permission: 'Pages.Administration.TruckStatuses' } },
           { path: 'users', component: UsersComponent, data: { permission: 'Pages.Administration.Users' } },
@@ -54,6 +59,7 @@ import { EntityDynamicParameterValueComponent } from './dynamic-entity-parameter
           },
           { path: 'invoice/:paymentId', component: InvoiceComponent, data: { permission: 'Pages.Administration.Tenant.SubscriptionManagement' } },
           { path: 'tenantSettings', component: TenantSettingsComponent, data: { permission: 'Pages.Administration.Tenant.Settings' } },
+          { path: 'tenantRequiredDocuments', component: RequiredDocumentFilesComponent },
           { path: 'hostDashboard', component: HostDashboardComponent, data: { permission: 'Pages.Administration.Host.Dashboard' } },
           { path: 'demo-ui-components', component: DemoUiComponentsComponent, data: { permission: 'Pages.DemoUiComponents' } },
           { path: 'install', component: InstallComponent },

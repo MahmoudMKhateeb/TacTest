@@ -1,7 +1,12 @@
 ﻿import { Component, ViewChild, Injector, Output, EventEmitter } from '@angular/core';
 import { ModalDirective } from 'ngx-bootstrap/modal';
 import { finalize } from 'rxjs/operators';
-import { DocumentTypesServiceProxy, CreateOrEditDocumentTypeDto } from '@shared/service-proxies/service-proxies';
+import {
+  DocumentTypesServiceProxy,
+  CreateOrEditDocumentTypeDto,
+  DocumentFilesServiceProxy,
+  SelectItemDto,
+} from '@shared/service-proxies/service-proxies';
 import { AppComponentBase } from '@shared/common/app-component-base';
 import * as moment from 'moment';
 
@@ -18,9 +23,15 @@ export class CreateOrEditDocumentTypeModalComponent extends AppComponentBase {
   saving = false;
 
   documentType: CreateOrEditDocumentTypeDto = new CreateOrEditDocumentTypeDto();
-  allDocumentsEntities: any;
+  allDocumentsEntities: SelectItemDto[];
 
-  constructor(injector: Injector, private _documentTypesServiceProxy: DocumentTypesServiceProxy) {
+  editions: SelectItemDto[];
+
+  constructor(
+    injector: Injector,
+    private _documentTypesServiceProxy: DocumentTypesServiceProxy,
+    private _documentFilesServiceProxy: DocumentFilesServiceProxy
+  ) {
     super(injector);
   }
 
@@ -42,6 +53,9 @@ export class CreateOrEditDocumentTypeModalComponent extends AppComponentBase {
     }
     this._documentTypesServiceProxy.getAllDocumentsEntitiesForTableDropdown().subscribe((result) => {
       this.allDocumentsEntities = result;
+    });
+    this._documentFilesServiceProxy.getAllEditionsForDropdown().subscribe((result) => {
+      this.editions = result;
     });
   }
 
@@ -65,5 +79,9 @@ export class CreateOrEditDocumentTypeModalComponent extends AppComponentBase {
   close(): void {
     this.active = false;
     this.modal.hide();
+  }
+
+  getTenantSelectItemValue(): string {
+    return this.allDocumentsEntities.find((x) => x.displayName === ' Tenant').id;
   }
 }

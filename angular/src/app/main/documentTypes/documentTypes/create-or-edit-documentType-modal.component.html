@@ -47,7 +47,6 @@
           <div class="form-group">
             <label for="DocumentType_ExpirationDate">{{ l('ExpirationDate') }}</label>
             <input
-              required
               class="form-control m-input"
               type="datetime"
               bsDatepicker
@@ -91,6 +90,13 @@
             >
               <option value="">{{ l('SelectDocumentsEntity') }}</option>
               <option *ngFor="let item of allDocumentsEntities" value="{{ item.id }}">{{ item.displayName }}</option>
+            </select>
+          </div>
+          <div *ngIf="documentType.documentsEntityId.toString() == getTenantSelectItemValue()" class="form-group m-form__group">
+            <label for="documentType.editionId">{{ l('edition') }}</label>
+            <select id="documentType.editionId" name="documentType.editionId" [(ngModel)]="documentType.editionId" class="form-control">
+              <option value="">{{ l('Selectedition') }}</option>
+              <option *ngFor="let item of editions" value="{{ item.id }}">{{ item.displayName }}</option>
             </select>
           </div>
         </div>

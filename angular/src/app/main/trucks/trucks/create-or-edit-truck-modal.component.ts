@@ -5,6 +5,7 @@ import { finalize } from 'rxjs/operators';
 import {
   CreateOrEditDocumentFileDto,
   CreateOrEditTruckDto,
+  DocumentFilesServiceProxy,
   TrucksServiceProxy,
   TruckTruckStatusLookupTableDto,
   TruckTrucksTypeLookupTableDto,
@@ -72,7 +73,8 @@ export class CreateOrEditTruckModalComponent extends AppComponentBase {
     injector: Injector,
     private _trucksServiceProxy: TrucksServiceProxy,
     private _tokenService: TokenService,
-    private _localStorageService: LocalStorageService
+    private _localStorageService: LocalStorageService,
+    private _documentFilesServiceProxy: DocumentFilesServiceProxy
   ) {
     super(injector);
   }
@@ -88,7 +90,7 @@ export class CreateOrEditTruckModalComponent extends AppComponentBase {
       this.userName2 = '';
 
       //RequiredDocuments
-      this._trucksServiceProxy.getRequiredDocumentFileListForCreateOrEdit().subscribe((result) => {
+      this._documentFilesServiceProxy.getTruckRequiredDocumentFileList().subscribe((result) => {
         this.truck.createOrEditDocumentFileDtos = result;
       });
 
