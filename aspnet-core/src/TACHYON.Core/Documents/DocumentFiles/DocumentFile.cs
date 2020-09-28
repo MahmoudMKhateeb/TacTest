@@ -4,6 +4,8 @@ using Abp.Domain.Entities.Auditing;
 using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using Abp.Application.Editions;
+using Abp.Application.Features;
 using TACHYON.Authorization.Users;
 using TACHYON.Documents.DocumentTypes;
 using TACHYON.Routs.RoutSteps;
@@ -58,6 +60,7 @@ namespace TACHYON.Documents.DocumentFiles
 
         [ForeignKey("RoutStepId")]
         public RoutStep RoutStepFk { get; set; }
+
 
     }
 }

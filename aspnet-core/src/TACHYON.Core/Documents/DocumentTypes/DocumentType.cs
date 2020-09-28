@@ -3,6 +3,7 @@ using Abp.Domain.Entities.Auditing;
 using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using Abp.Application.Editions;
 using TACHYON.Documents.DocumentsEntities;
 
 namespace TACHYON.Documents.DocumentTypes
@@ -26,6 +27,13 @@ namespace TACHYON.Documents.DocumentTypes
         [ForeignKey("DocumentsEntityId")]
         public DocumentsEntity DocumentsEntityFk { get; set; }
 
+        /// <summary>
+        /// To specify this file is required from any Edition
+        /// </summary>
+        public int? EditionId { get; set; }
+
+        [ForeignKey("EditionId")]
+        public Edition EditionFk { get; set; }
 
     }
 }

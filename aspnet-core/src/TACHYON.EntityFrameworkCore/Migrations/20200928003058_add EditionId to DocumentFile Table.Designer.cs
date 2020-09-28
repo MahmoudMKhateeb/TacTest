@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using TACHYON.EntityFrameworkCore;
 
 namespace TACHYON.Migrations
 {
     [DbContext(typeof(TACHYONDbContext))]
-    partial class TACHYONDbContextModelSnapshot : ModelSnapshot
+    [Migration("20200928003058_add EditionId to DocumentFile Table")]
+    partial class addEditionIdtoDocumentFileTable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -1929,6 +1931,9 @@ namespace TACHYON.Migrations
                     b.Property<long>("DocumentTypeId")
                         .HasColumnType("bigint");
 
+                    b.Property<int?>("EditionId")
+                        .HasColumnType("int");
+
                     b.Property<DateTime>("ExpirationDate")
                         .HasColumnType("datetime2");
 
@@ -1973,6 +1978,8 @@ namespace TACHYON.Migrations
 
                     b.HasIndex("DocumentTypeId");
 
+                    b.HasIndex("EditionId");
+
                     b.HasIndex("RoutStepId");
 
                     b.HasIndex("TenantId");
@@ -2013,9 +2020,6 @@ namespace TACHYON.Migrations
                     b.Property<int>("DocumentsEntityId")
                         .HasColumnType("int");
 
-                    b.Property<int?>("EditionId")
-                        .HasColumnType("int");
-
                     b.Property<DateTime>("ExpirationDate")
                         .HasColumnType("datetime2");
 
@@ -2037,8 +2041,6 @@ namespace TACHYON.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("DocumentsEntityId");
-
-                    b.HasIndex("EditionId");
 
                     b.ToTable("DocumentTypes");
                 });
@@ -3676,6 +3678,10 @@ namespace TACHYON.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("Abp.Application.Editions.Edition", "EditionFk")
+                        .WithMany()
+                        .HasForeignKey("EditionId");
+
                     b.HasOne("TACHYON.Routs.RoutSteps.RoutStep", "RoutStepFk")
                         .WithMany()
                         .HasForeignKey("RoutStepId");
@@ -3700,10 +3706,6 @@ namespace TACHYON.Migrations
                         .HasForeignKey("DocumentsEntityId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.HasOne("Abp.Application.Editions.Edition", "EditionFk")
-                        .WithMany()
-                        .HasForeignKey("EditionId");
                 });
 
             modelBuilder.Entity("TACHYON.Goods.GoodsDetails.GoodsDetail", b =>
