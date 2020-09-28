@@ -52,13 +52,12 @@ namespace TACHYON.Trucks
         private readonly IAppNotifier _appNotifier;
         private readonly ITempFileCacheManager _tempFileCacheManager;
         private readonly IBinaryObjectManager _binaryObjectManager;
-        private readonly IRepository<DocumentType, long> _documentTypeRepository;
         private readonly DocumentFilesAppService _documentFilesAppService;
 
 
 
 
-        public TrucksAppService(IRepository<Truck, Guid> truckRepository, ITrucksExcelExporter trucksExcelExporter, IRepository<TrucksType, long> lookup_trucksTypeRepository, IRepository<TruckStatus, long> lookup_truckStatusRepository, IRepository<User, long> lookup_userRepository, IAppNotifier appNotifier, ITempFileCacheManager tempFileCacheManager, IBinaryObjectManager binaryObjectManager, IRepository<DocumentType, long> documentTypeRepository, DocumentFilesAppService documentFilesAppService)
+        public TrucksAppService(IRepository<Truck, Guid> truckRepository, ITrucksExcelExporter trucksExcelExporter, IRepository<TrucksType, long> lookup_trucksTypeRepository, IRepository<TruckStatus, long> lookup_truckStatusRepository, IRepository<User, long> lookup_userRepository, IAppNotifier appNotifier, ITempFileCacheManager tempFileCacheManager, IBinaryObjectManager binaryObjectManager, DocumentFilesAppService documentFilesAppService)
         {
             _truckRepository = truckRepository;
             _trucksExcelExporter = trucksExcelExporter;
@@ -68,7 +67,6 @@ namespace TACHYON.Trucks
             _appNotifier = appNotifier;
             _tempFileCacheManager = tempFileCacheManager;
             _binaryObjectManager = binaryObjectManager;
-            _documentTypeRepository = documentTypeRepository;
             _documentFilesAppService = documentFilesAppService;
         }
 
@@ -229,7 +227,7 @@ namespace TACHYON.Trucks
                 truck.TenantId = (int)AbpSession.TenantId;
             }
 
-            var requiredDocs = await GetRequiredDocumentFileListForCreateOrEdit();
+            var requiredDocs = await _documentFilesAppService.GetTruckRequiredDocumentFileList();
             if (requiredDocs.Count > 0)
             {
                 foreach (var item in requiredDocs)
@@ -300,26 +298,6 @@ namespace TACHYON.Trucks
 
                 truck.PictureId = await AddOrUpdateTruckPicture(input.UpdateTruckPictureInput);
             }
-
-        }
-
-
-        /// <summary>
-        /// get list of required documents types to use in create truck
-        /// </summary>
-        /// <returns></returns>
-        public async Task<List<CreateOrEditDocumentFileDto>> GetRequiredDocumentFileListForCreateOrEdit()
-        {
-            return await _documentTypeRepository.GetAll()
-                 .Where(x => x.DocumentsEntityFk.DisplayName == AppConsts.TruckDocumentsEntityName)
-                 .Select(x => new CreateOrEditDocumentFileDto
-                 {
-                     DocumentTypeId = x.Id,
-                     Name = x.DisplayName,
-                     IsRequired = x.IsRequired,
-                     HasExpirationDate = x.HasExpirationDate
-                 })
-                 .ToListAsync();
 
         }
 

@@ -13,9 +13,9 @@ namespace TACHYON
 
         /// <summary>
         /// for documentType Required from entity
-        /// 
         /// </summary>
         public const string TruckDocumentsEntityName = "Truck";
+        public const string CarrierDocumentsEntityName = "Carrier";
 
         #endregion
 

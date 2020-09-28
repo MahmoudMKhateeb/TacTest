@@ -24,6 +24,7 @@ namespace TACHYON.Documents.DocumentTypes.Dtos
 
         public int DocumentsEntityId { get; set; }
 
+        public int? EditionId { get; set; }
 
 
     }

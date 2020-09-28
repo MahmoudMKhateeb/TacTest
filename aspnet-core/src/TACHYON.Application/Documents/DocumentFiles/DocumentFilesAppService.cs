@@ -10,12 +10,15 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Dynamic.Core;
 using System.Threading.Tasks;
+using Abp.Application.Editions;
+using Abp.Runtime.Session;
 using TACHYON.Authorization;
 using TACHYON.Authorization.Users;
 using TACHYON.Documents.DocumentFiles.Dtos;
 using TACHYON.Documents.DocumentFiles.Exporting;
 using TACHYON.Documents.DocumentTypes;
 using TACHYON.Dto;
+using TACHYON.Editions;
 using TACHYON.Routs.RoutSteps;
 using TACHYON.Storage;
 using TACHYON.Trailers;
@@ -36,10 +39,14 @@ namespace TACHYON.Documents.DocumentFiles
         private readonly IRepository<RoutStep, long> _lookup_routStepRepository;
         private readonly ITempFileCacheManager _tempFileCacheManager;
         private readonly IBinaryObjectManager _binaryObjectManager;
+        private readonly IRepository<DocumentType, long> _documentTypeRepository;
+        private readonly IRepository<Edition, int> _editionRepository;
 
 
 
-        public DocumentFilesAppService(IRepository<DocumentFile, Guid> documentFileRepository, IDocumentFilesExcelExporter documentFilesExcelExporter, IRepository<DocumentType, long> lookup_documentTypeRepository, IRepository<Truck, Guid> lookup_truckRepository, IRepository<Trailer, long> lookup_trailerRepository, IRepository<User, long> lookup_userRepository, IRepository<RoutStep, long> lookup_routStepRepository, ITempFileCacheManager tempFileCacheManager, IBinaryObjectManager binaryObjectManager)
+
+
+        public DocumentFilesAppService(IRepository<DocumentFile, Guid> documentFileRepository, IDocumentFilesExcelExporter documentFilesExcelExporter, IRepository<DocumentType, long> lookup_documentTypeRepository, IRepository<Truck, Guid> lookup_truckRepository, IRepository<Trailer, long> lookup_trailerRepository, IRepository<User, long> lookup_userRepository, IRepository<RoutStep, long> lookup_routStepRepository, ITempFileCacheManager tempFileCacheManager, IBinaryObjectManager binaryObjectManager, IRepository<Edition, int> editionRepository)
         {
             _documentFileRepository = documentFileRepository;
             _documentFilesExcelExporter = documentFilesExcelExporter;
@@ -50,6 +57,7 @@ namespace TACHYON.Documents.DocumentFiles
             _lookup_routStepRepository = lookup_routStepRepository;
             _tempFileCacheManager = tempFileCacheManager;
             _binaryObjectManager = binaryObjectManager;
+            _editionRepository = editionRepository;
         }
 
         public async Task<PagedResultDto<GetDocumentFileForViewDto>> GetAll(GetAllDocumentFilesInput input)
@@ -402,6 +410,91 @@ namespace TACHYON.Documents.DocumentFiles
 
             return file;
         }
+
+
+        /// <summary>
+        /// truck required documents list template
+        /// </summary>
+        /// <returns></returns>
+        public async Task<List<CreateOrEditDocumentFileDto>> GetTruckRequiredDocumentFileList()
+        {
+            return await GetRequiredDocumentFileListForCreateOrEdit(AppConsts.TruckDocumentsEntityName);
+        }
+
+        /// <summary>
+        /// get list of required documents by documentType-entity-name truck, carrier, shipper, driver etc.
+        /// </summary>
+        /// <param name="documentsEntityName">documentType-entity-name can be found in  <see cref="AppConsts"/>  </param>
+        /// <returns>list of <see cref="CreateOrEditDocumentFileDto"/> with empty <see cref="UpdateDocumentFileInput"/> ready to fill with uploaded FileToken </returns>
+        private async Task<List<CreateOrEditDocumentFileDto>> GetRequiredDocumentFileListForCreateOrEdit(string documentsEntityName)
+        {
+            return await _documentTypeRepository.GetAll()
+                 .Where(x => x.DocumentsEntityFk.DisplayName == documentsEntityName)
+                 .Select(x => new CreateOrEditDocumentFileDto
+                 {
+                     DocumentTypeId = x.Id,
+                     Name = x.DisplayName,
+                     IsRequired = x.IsRequired,
+                     HasExpirationDate = x.HasExpirationDate
+                 })
+                 .ToListAsync();
+
+        }
+
+        /// <summary>
+        /// tenant required documents list
+        /// </summary>
+        /// <returns></returns>
+        public async Task<List<CreateOrEditDocumentFileDto>> GetTenantRequiredDocumentFileList()
+        {
+
+            var editionId = GetCurrentTenant().EditionId;
+
+
+            return await _documentTypeRepository.GetAll()
+                 .Where(x => x.EditionId == editionId)
+                 .Select(x => new CreateOrEditDocumentFileDto
+                 {
+                     DocumentTypeId = x.Id,
+                     Name = x.DisplayName,
+                     IsRequired = x.IsRequired,
+                     HasExpirationDate = x.HasExpirationDate
+                 })
+                 .ToListAsync();
+
+        }
+
+        public async Task AddTenantRequiredDocuments(List<CreateOrEditDocumentFileDto> input, string documentsEntityName)
+        {
+            var requiredDocs = await GetTenantRequiredDocumentFileList();
+            if (requiredDocs.Count > 0)
+            {
+                foreach (var item in requiredDocs)
+                {
+                    var doc = input.FirstOrDefault(x => x.DocumentTypeId == item.DocumentTypeId);
+
+                    if (doc.UpdateDocumentFileInput.FileToken.IsNullOrEmpty())
+                    {
+                        throw new UserFriendlyException(L("document missing msg :" + item.Name));
+                    }
+
+                    doc.Name = item.Name;
+                }
+            }
+
+            foreach (var item in input)
+            {
+                item.Name = item.Name + "_" + AbpSession.GetTenantId();
+                await Create(item);
+            }
+        }
+
+        public async Task<List<SelectItemDto>> getAllEditionsForDropdown()
+        {
+            return await _editionRepository.GetAll()
+                .Select(x => new SelectItemDto() { DisplayName = x.DisplayName, Id = x.Id.ToString() }).ToListAsync();
+        }
+
 
     }
 }
