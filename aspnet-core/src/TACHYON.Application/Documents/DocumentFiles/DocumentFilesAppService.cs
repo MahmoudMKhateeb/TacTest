@@ -46,7 +46,7 @@ namespace TACHYON.Documents.DocumentFiles
 
 
 
-        public DocumentFilesAppService(IRepository<DocumentFile, Guid> documentFileRepository, IDocumentFilesExcelExporter documentFilesExcelExporter, IRepository<DocumentType, long> lookup_documentTypeRepository, IRepository<Truck, Guid> lookup_truckRepository, IRepository<Trailer, long> lookup_trailerRepository, IRepository<User, long> lookup_userRepository, IRepository<RoutStep, long> lookup_routStepRepository, ITempFileCacheManager tempFileCacheManager, IBinaryObjectManager binaryObjectManager, IRepository<Edition, int> editionRepository)
+        public DocumentFilesAppService(IRepository<DocumentFile, Guid> documentFileRepository, IDocumentFilesExcelExporter documentFilesExcelExporter, IRepository<DocumentType, long> lookup_documentTypeRepository, IRepository<Truck, Guid> lookup_truckRepository, IRepository<Trailer, long> lookup_trailerRepository, IRepository<User, long> lookup_userRepository, IRepository<RoutStep, long> lookup_routStepRepository, ITempFileCacheManager tempFileCacheManager, IBinaryObjectManager binaryObjectManager, IRepository<Edition, int> editionRepository, IRepository<DocumentType, long> documentTypeRepository)
         {
             _documentFileRepository = documentFileRepository;
             _documentFilesExcelExporter = documentFilesExcelExporter;
@@ -58,6 +58,7 @@ namespace TACHYON.Documents.DocumentFiles
             _tempFileCacheManager = tempFileCacheManager;
             _binaryObjectManager = binaryObjectManager;
             _editionRepository = editionRepository;
+            _documentTypeRepository = documentTypeRepository;
         }
 
         public async Task<PagedResultDto<GetDocumentFileForViewDto>> GetAll(GetAllDocumentFilesInput input)
