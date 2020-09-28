@@ -26,6 +26,7 @@ export class CreateOrEditDocumentTypeModalComponent extends AppComponentBase {
   allDocumentsEntities: SelectItemDto[];
 
   editions: SelectItemDto[];
+  tenantOptionSelected = false;
 
   constructor(
     injector: Injector,
@@ -81,7 +82,12 @@ export class CreateOrEditDocumentTypeModalComponent extends AppComponentBase {
     this.modal.hide();
   }
 
-  getTenantSelectItemValue(): string {
-    return this.allDocumentsEntities.find((x) => x.displayName === ' Tenant').id;
+  documentsEntityDropDownOnChange($event) {
+    if ($event.target.options[$event.target.options.selectedIndex].text === 'Tenant') {
+      this.tenantOptionSelected = true;
+    } else {
+      this.tenantOptionSelected = false;
+      this.documentType.editionId = undefined;
+    }
   }
 }
