@@ -4,9 +4,50 @@
 
     <div [class]="containerClass">
       <div class="card card-custom gutter-b">
-        <div class="card-body">
-          <div class="row align-items-center"></div>
-        </div>
+        <form *ngIf="active" #TenantRequiredDocumentsForm="ngForm" novalidate (ngSubmit)="save()" autocomplete="off">
+          <div class="card-body">
+            <div *ngFor="let item of createOrEditDocumentFileDtos; index as i" class="row">
+              <div class="form-group col-md-6">
+                <label>{{ item.name }}</label>
+                <div class="custom-file">
+                  <input (change)="DocFileChangeEvent($event, item)" type="file" class="custom-file-input" [required]="item.isRequired" />
+                  <label class="custom-file-label" [for]="item.name">{{ item.name }}</label>
+                </div>
+              </div>
+              <div *ngIf="item.hasExpirationDate" class="form-group col-md-6">
+                <label>{{ l('expiration date') }}</label>
+                <input
+                  name="editQuoteCardForm{{ i }}"
+                  id="editQuoteCardForm{{ i }}"
+                  bsDatepicker
+                  class="form-control m-input"
+                  datePickerMomentModifier
+                  required
+                  type="datetime"
+                  requiredField="true"
+                  [(ngModel)]="item.expirationDate"
+                />
+              </div>
+            </div>
+            <div class="row">
+              <label>{{ docProgressFileName }}</label>
+              <div class="col-md-12">
+                <p-progressBar [value]="docProgress" [style]="{ height: '6px', width: '100' }"></p-progressBar>
+              </div>
+            </div>
+          </div>
+          <div class="card-footer">
+            <button
+              type="submit"
+              class="btn btn-primary blue"
+              [disabled]="!TenantRequiredDocumentsForm.form.valid"
+              [buttonBusy]="saving"
+              [busyText]="l('SavingWithThreeDot')"
+            >
+              <i class="fa fa-save"></i> <span>{{ l('Save') }}</span>
+            </button>
+          </div>
+        </form>
       </div>
     </div>
   </div>
