@@ -11,6 +11,7 @@ using System.Linq;
 using System.Linq.Dynamic.Core;
 using System.Threading.Tasks;
 using Abp.Application.Editions;
+using Abp.Domain.Uow;
 using Abp.Runtime.Session;
 using TACHYON.Authorization;
 using TACHYON.Authorization.Users;
@@ -70,6 +71,8 @@ namespace TACHYON.Documents.DocumentFiles
                         .Include(e => e.TrailerFk)
                         .Include(e => e.UserFk)
                         .Include(e => e.RoutStepFk)
+                        .WhereIf(!AbpSession.TenantId.HasValue, e => e.DocumentTypeFk.DocumentsEntityFk.DisplayName == AppConsts.TenantDocumentsEntityName)
+                        .WhereIf(AbpSession.TenantId.HasValue, e => e.DocumentTypeFk.DocumentsEntityFk.DisplayName != AppConsts.TenantDocumentsEntityName)
                         .WhereIf(!string.IsNullOrWhiteSpace(input.Filter), e => false || e.Name.Contains(input.Filter) || e.Extn.Contains(input.Filter) || e.IsAccepted.Contains(input.Filter))
                         .WhereIf(!string.IsNullOrWhiteSpace(input.NameFilter), e => e.Name == input.NameFilter)
                         .WhereIf(!string.IsNullOrWhiteSpace(input.ExtnFilter), e => e.Extn == input.ExtnFilter)
@@ -123,11 +126,24 @@ namespace TACHYON.Documents.DocumentFiles
 
             var totalCount = await filteredDocumentFiles.CountAsync();
 
-            return new PagedResultDto<GetDocumentFileForViewDto>(
-                totalCount,
-                await documentFiles.ToListAsync()
-            );
+            if (AbpSession.TenantId.HasValue)
+            {
+                return new PagedResultDto<GetDocumentFileForViewDto>(
+                    totalCount,
+                    await documentFiles.ToListAsync()
+                );
+            }
+
+            using (CurrentUnitOfWork.DisableFilter(AbpDataFilters.MayHaveTenant))
+            {
+                return new PagedResultDto<GetDocumentFileForViewDto>(
+                    totalCount,
+                    await documentFiles.ToListAsync()
+                );
+            }
+
         }
+
 
         public async Task<GetDocumentFileForViewDto> GetDocumentFileForView(Guid id)
         {
