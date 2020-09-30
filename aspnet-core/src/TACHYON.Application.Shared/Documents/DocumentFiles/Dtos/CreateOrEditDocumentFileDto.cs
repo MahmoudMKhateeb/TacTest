@@ -24,7 +24,8 @@ namespace TACHYON.Documents.DocumentFiles.Dtos
         public DateTime ExpirationDate { get; set; }
 
 
-        public string IsAccepted { get; set; }
+        public virtual bool IsAccepted { get; set; }
+        public virtual bool IsRejected { get; set; }
 
 
         public long DocumentTypeId { get; set; }

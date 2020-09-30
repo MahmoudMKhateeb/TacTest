@@ -36,7 +36,7 @@ export class DocumentFilesComponent extends AppComponentBase {
   binaryObjectIdFilter = '';
   maxExpirationDateFilter: moment.Moment;
   minExpirationDateFilter: moment.Moment;
-  isAcceptedFilter = '';
+  isAcceptedFilter = false;
   documentTypeDisplayNameFilter = '';
   truckPlateNumberFilter = '';
   trailerTrailerCodeFilter = '';

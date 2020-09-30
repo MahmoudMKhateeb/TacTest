@@ -33,7 +33,8 @@ namespace TACHYON.Documents.DocumentFiles
 
         public virtual DateTime ExpirationDate { get; set; }
 
-        public virtual string IsAccepted { get; set; }
+        public virtual bool IsAccepted { get; set; }
+        public virtual bool IsRejected { get; set; }
 
 
         public virtual long DocumentTypeId { get; set; }

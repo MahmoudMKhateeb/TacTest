@@ -73,13 +73,13 @@ namespace TACHYON.Documents.DocumentFiles
                         .Include(e => e.RoutStepFk)
                         .WhereIf(!AbpSession.TenantId.HasValue, e => e.DocumentTypeFk.DocumentsEntityFk.DisplayName == AppConsts.TenantDocumentsEntityName)
                         .WhereIf(AbpSession.TenantId.HasValue, e => e.DocumentTypeFk.DocumentsEntityFk.DisplayName != AppConsts.TenantDocumentsEntityName)
-                        .WhereIf(!string.IsNullOrWhiteSpace(input.Filter), e => false || e.Name.Contains(input.Filter) || e.Extn.Contains(input.Filter) || e.IsAccepted.Contains(input.Filter))
+                        .WhereIf(!string.IsNullOrWhiteSpace(input.Filter), e => false || e.Name.Contains(input.Filter) || e.Extn.Contains(input.Filter))
                         .WhereIf(!string.IsNullOrWhiteSpace(input.NameFilter), e => e.Name == input.NameFilter)
                         .WhereIf(!string.IsNullOrWhiteSpace(input.ExtnFilter), e => e.Extn == input.ExtnFilter)
                         .WhereIf(!string.IsNullOrWhiteSpace(input.BinaryObjectIdFilter.ToString()), e => e.BinaryObjectId.ToString() == input.BinaryObjectIdFilter.ToString())
                         .WhereIf(input.MinExpirationDateFilter != null, e => e.ExpirationDate >= input.MinExpirationDateFilter)
                         .WhereIf(input.MaxExpirationDateFilter != null, e => e.ExpirationDate <= input.MaxExpirationDateFilter)
-                        .WhereIf(!string.IsNullOrWhiteSpace(input.IsAcceptedFilter), e => e.IsAccepted == input.IsAcceptedFilter)
+                        .WhereIf(input.IsAcceptedFilter.HasValue, e => e.IsAccepted == input.IsAcceptedFilter.Value)
                         .WhereIf(!string.IsNullOrWhiteSpace(input.DocumentTypeDisplayNameFilter), e => e.DocumentTypeFk != null && e.DocumentTypeFk.DisplayName == input.DocumentTypeDisplayNameFilter)
                         .WhereIf(!string.IsNullOrWhiteSpace(input.TruckPlateNumberFilter), e => e.TruckFk != null && e.TruckFk.PlateNumber == input.TruckPlateNumberFilter)
                         .WhereIf(!string.IsNullOrWhiteSpace(input.TrailerTrailerCodeFilter), e => e.TrailerFk != null && e.TrailerFk.TrailerCode == input.TrailerTrailerCodeFilter)
@@ -187,6 +187,22 @@ namespace TACHYON.Documents.DocumentFiles
         [AbpAuthorize(AppPermissions.Pages_DocumentFiles_Edit)]
         public async Task<GetDocumentFileForEditOutput> GetDocumentFileForEdit(EntityDto<Guid> input)
         {
+            if (AbpSession.TenantId.HasValue)
+            {
+                return await _GetDocumentFileForEdit(input);
+            }
+
+            using (CurrentUnitOfWork.DisableFilter(AbpDataFilters.MustHaveTenant, AbpDataFilters.MayHaveTenant))
+            {
+                return await _GetDocumentFileForEdit(input);
+            }
+
+        }
+
+
+        private async Task<GetDocumentFileForEditOutput> _GetDocumentFileForEdit(EntityDto<Guid> input)
+        {
+
             var documentFile = await _documentFileRepository.FirstOrDefaultAsync(input.Id);
 
             var output = new GetDocumentFileForEditOutput { DocumentFile = ObjectMapper.Map<CreateOrEditDocumentFileDto>(documentFile) };
@@ -224,8 +240,14 @@ namespace TACHYON.Documents.DocumentFiles
             return output;
         }
 
+
         public async Task CreateOrEdit(CreateOrEditDocumentFileDto input)
         {
+            //todo convert this to custom validation
+            if (input.IsAccepted && input.IsRejected)
+            {
+                throw new UserFriendlyException(L("document cant be accepted and rejected at same time "));
+            }
             if (input.Id == null)
             {
                 await Create(input);
@@ -258,19 +280,25 @@ namespace TACHYON.Documents.DocumentFiles
         [AbpAuthorize(AppPermissions.Pages_DocumentFiles_Edit)]
         protected virtual async Task Update(CreateOrEditDocumentFileDto input)
         {
-            var documentFile = await _documentFileRepository.FirstOrDefaultAsync((Guid)input.Id);
-            ObjectMapper.Map(input, documentFile);
+            //host can update tenants documents 
+            DisableTenancyFiltersIfHost();
 
-            if (!input.UpdateDocumentFileInput.FileToken.IsNullOrEmpty())
+            DocumentFile documentFile = await _documentFileRepository.FirstOrDefaultAsync((Guid)input.Id);
+         
+
+            if (input.UpdateDocumentFileInput != null && !input.UpdateDocumentFileInput.FileToken.IsNullOrEmpty())
             {
                 await _binaryObjectManager.DeleteAsync(input.BinaryObjectId);
                 documentFile.BinaryObjectId = await AddOrUpdateDocumentFile(input.UpdateDocumentFileInput);
             }
+            ObjectMapper.Map(input, documentFile);
+
         }
 
         [AbpAuthorize(AppPermissions.Pages_DocumentFiles_Delete)]
         public async Task Delete(EntityDto<Guid> input)
         {
+            DisableTenancyFiltersIfHost();
             await _documentFileRepository.DeleteAsync(input.Id);
         }
 
@@ -283,13 +311,13 @@ namespace TACHYON.Documents.DocumentFiles
                         .Include(e => e.TrailerFk)
                         .Include(e => e.UserFk)
                         .Include(e => e.RoutStepFk)
-                        .WhereIf(!string.IsNullOrWhiteSpace(input.Filter), e => false || e.Name.Contains(input.Filter) || e.Extn.Contains(input.Filter) || e.IsAccepted.Contains(input.Filter))
+                        .WhereIf(!string.IsNullOrWhiteSpace(input.Filter), e => false || e.Name.Contains(input.Filter) || e.Extn.Contains(input.Filter))
                         .WhereIf(!string.IsNullOrWhiteSpace(input.NameFilter), e => e.Name == input.NameFilter)
                         .WhereIf(!string.IsNullOrWhiteSpace(input.ExtnFilter), e => e.Extn == input.ExtnFilter)
                         .WhereIf(!string.IsNullOrWhiteSpace(input.BinaryObjectIdFilter.ToString()), e => e.BinaryObjectId.ToString() == input.BinaryObjectIdFilter.ToString())
                         .WhereIf(input.MinExpirationDateFilter != null, e => e.ExpirationDate >= input.MinExpirationDateFilter)
                         .WhereIf(input.MaxExpirationDateFilter != null, e => e.ExpirationDate <= input.MaxExpirationDateFilter)
-                        .WhereIf(!string.IsNullOrWhiteSpace(input.IsAcceptedFilter), e => e.IsAccepted == input.IsAcceptedFilter)
+                        .WhereIf(input.IsAcceptedFilter.HasValue, e => e.IsAccepted == input.IsAcceptedFilter.Value)
                         .WhereIf(!string.IsNullOrWhiteSpace(input.DocumentTypeDisplayNameFilter), e => e.DocumentTypeFk != null && e.DocumentTypeFk.DisplayName == input.DocumentTypeDisplayNameFilter)
                         .WhereIf(!string.IsNullOrWhiteSpace(input.TruckPlateNumberFilter), e => e.TruckFk != null && e.TruckFk.PlateNumber == input.TruckPlateNumberFilter)
                         .WhereIf(!string.IsNullOrWhiteSpace(input.TrailerTrailerCodeFilter), e => e.TrailerFk != null && e.TrailerFk.TrailerCode == input.TrailerTrailerCodeFilter)
@@ -417,6 +445,7 @@ namespace TACHYON.Documents.DocumentFiles
         [AbpAllowAnonymous]
         public async Task<FileDto> GetDocumentFileDto(Guid documentFileId)
         {
+            DisableTenancyFiltersIfHost();
             var documentFile = await _documentFileRepository.GetAsync(documentFileId);
 
             var binaryObject = await _binaryObjectManager.GetOrNullAsync(documentFile.BinaryObjectId);
@@ -511,7 +540,5 @@ namespace TACHYON.Documents.DocumentFiles
             return await _editionRepository.GetAll()
                 .Select(x => new SelectItemDto() { DisplayName = x.DisplayName, Id = x.Id.ToString() }).ToListAsync();
         }
-
-
     }
 }
