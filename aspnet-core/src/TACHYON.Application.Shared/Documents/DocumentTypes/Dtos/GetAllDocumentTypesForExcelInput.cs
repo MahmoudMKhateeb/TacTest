@@ -11,8 +11,6 @@ namespace TACHYON.Documents.DocumentTypes.Dtos
 
         public int IsRequiredFilter { get; set; }
 
-        public DateTime? MaxExpirationDateFilter { get; set; }
-        public DateTime? MinExpirationDateFilter { get; set; }
 
         public int HasExpirationDateFilter { get; set; }
 

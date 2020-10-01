@@ -41,8 +41,6 @@ namespace TACHYON.Documents.DocumentTypes
                         .WhereIf(!string.IsNullOrWhiteSpace(input.Filter), e => false || e.DisplayName.Contains(input.Filter) || e.DocumentsEntityFk.DisplayName.Contains(input.Filter))
                         .WhereIf(!string.IsNullOrWhiteSpace(input.DisplayNameFilter), e => e.DisplayName == input.DisplayNameFilter)
                         .WhereIf(input.IsRequiredFilter > -1, e => (input.IsRequiredFilter == 1 && e.IsRequired) || (input.IsRequiredFilter == 0 && !e.IsRequired))
-                        .WhereIf(input.MinExpirationDateFilter != null, e => e.ExpirationDate >= input.MinExpirationDateFilter)
-                        .WhereIf(input.MaxExpirationDateFilter != null, e => e.ExpirationDate <= input.MaxExpirationDateFilter)
                         .WhereIf(input.HasExpirationDateFilter > -1, e => (input.HasExpirationDateFilter == 1 && e.HasExpirationDate) || (input.HasExpirationDateFilter == 0 && !e.HasExpirationDate))
                         .WhereIf(!string.IsNullOrWhiteSpace(input.RequiredFromFilter), e => e.DocumentsEntityFk.DisplayName == input.RequiredFromFilter);
 
@@ -57,7 +55,6 @@ namespace TACHYON.Documents.DocumentTypes
                                     {
                                         DisplayName = o.DisplayName,
                                         IsRequired = o.IsRequired,
-                                        ExpirationDate = o.ExpirationDate,
                                         HasExpirationDate = o.HasExpirationDate,
                                         RequiredFrom = o.DocumentsEntityFk.DisplayName,
                                         Id = o.Id
@@ -133,8 +130,6 @@ namespace TACHYON.Documents.DocumentTypes
                         .WhereIf(!string.IsNullOrWhiteSpace(input.Filter), e => false || e.DisplayName.Contains(input.Filter) || e.DocumentsEntityFk.DisplayName.Contains(input.Filter))
                         .WhereIf(!string.IsNullOrWhiteSpace(input.DisplayNameFilter), e => e.DisplayName == input.DisplayNameFilter)
                         .WhereIf(input.IsRequiredFilter > -1, e => (input.IsRequiredFilter == 1 && e.IsRequired) || (input.IsRequiredFilter == 0 && !e.IsRequired))
-                        .WhereIf(input.MinExpirationDateFilter != null, e => e.ExpirationDate >= input.MinExpirationDateFilter)
-                        .WhereIf(input.MaxExpirationDateFilter != null, e => e.ExpirationDate <= input.MaxExpirationDateFilter)
                         .WhereIf(input.HasExpirationDateFilter > -1, e => (input.HasExpirationDateFilter == 1 && e.HasExpirationDate) || (input.HasExpirationDateFilter == 0 && !e.HasExpirationDate))
                         .WhereIf(!string.IsNullOrWhiteSpace(input.RequiredFromFilter), e => e.DocumentsEntityFk.DisplayName == input.RequiredFromFilter);
 
@@ -145,7 +140,6 @@ namespace TACHYON.Documents.DocumentTypes
                              {
                                  DisplayName = o.DisplayName,
                                  IsRequired = o.IsRequired,
-                                 ExpirationDate = o.ExpirationDate,
                                  HasExpirationDate = o.HasExpirationDate,
                                  RequiredFrom = o.DocumentsEntityFk.DisplayName,
                                  Id = o.Id

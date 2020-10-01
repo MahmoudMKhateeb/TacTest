@@ -16,9 +16,6 @@ namespace TACHYON.Documents.DocumentTypes.Dtos
         public bool IsRequired { get; set; }
 
 
-        public DateTime ExpirationDate { get; set; }
-
-
         public bool HasExpirationDate { get; set; }
 
 

@@ -18,8 +18,6 @@ namespace TACHYON.Documents.DocumentTypes
 
         public virtual bool IsRequired { get; set; }
 
-        public virtual DateTime ExpirationDate { get; set; }
-
         public virtual bool HasExpirationDate { get; set; }
 
         public int DocumentsEntityId { get; set; }
@@ -34,6 +32,10 @@ namespace TACHYON.Documents.DocumentTypes
 
         [ForeignKey("EditionId")]
         public Edition EditionFk { get; set; }
+
+        public bool HasNumber { get; set; }
+
+        public bool HasNotes { get; set; }
 
     }
 }

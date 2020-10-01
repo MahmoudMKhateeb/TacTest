@@ -15,12 +15,12 @@
                     (change)="DocFileChangeEvent($event, item)"
                     type="file"
                     class="custom-file-input"
-                    [required]="item.isRequired"
+                    [required]="item.documentTypeDto.isRequired"
                   />
                   <label class="custom-file-label" [for]="item.name">{{ l('select file') }}</label>
                 </div>
               </div>
-              <div *ngIf="item.hasExpirationDate" class="form-group col-md-6">
+              <div *ngIf="item.documentTypeDto.hasExpirationDate" class="form-group col-md-6">
                 <label>{{ l('expiration date') }}</label>
                 <input
                   name="expirationDate{{ i }}"
@@ -28,7 +28,7 @@
                   bsDatepicker
                   class="form-control m-input"
                   datePickerMomentModifier
-                  [required]="item.isRequired && !item.isAccepted"
+                  [required]="item.documentTypeDto.isRequired && !item.isAccepted"
                   type="datetime"
                   [(ngModel)]="item.expirationDate"
                   [disabled]="item.isAccepted"

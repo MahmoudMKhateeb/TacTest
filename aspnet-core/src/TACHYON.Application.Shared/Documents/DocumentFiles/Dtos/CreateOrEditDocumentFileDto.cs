@@ -2,6 +2,7 @@
 using Abp.Application.Services.Dto;
 using System;
 using System.ComponentModel.DataAnnotations;
+using TACHYON.Documents.DocumentTypes.Dtos;
 
 namespace TACHYON.Documents.DocumentFiles.Dtos
 {
@@ -21,7 +22,7 @@ namespace TACHYON.Documents.DocumentFiles.Dtos
         public Guid BinaryObjectId { get; set; }
 
 
-        public DateTime ExpirationDate { get; set; }
+        public DateTime? ExpirationDate { get; set; }
 
 
         public virtual bool IsAccepted { get; set; }
@@ -29,6 +30,7 @@ namespace TACHYON.Documents.DocumentFiles.Dtos
 
 
         public long DocumentTypeId { get; set; }
+        public DocumentTypeDto DocumentTypeDto { get; set; }
 
         public Guid? TruckId { get; set; }
 
@@ -39,12 +41,8 @@ namespace TACHYON.Documents.DocumentFiles.Dtos
         public long? RoutStepId { get; set; }
 
         public UpdateDocumentFileInput UpdateDocumentFileInput { get; set; }
-        public bool IsRequired { get; set; }
-        public bool HasExpirationDate { get; set; }
-        public bool HasNumber { get; set; }
         public int? Number { get; set; }
 
-        public bool HasNotes { get; set; }
         public string Notes { get; set; }
 
 

@@ -40,7 +40,7 @@ export class CreateOrEditDocumentTypeModalComponent extends AppComponentBase {
     if (!documentTypeId) {
       this.documentType = new CreateOrEditDocumentTypeDto();
       this.documentType.id = documentTypeId;
-      this.documentType.expirationDate = moment().startOf('day');
+      //this.documentType.expirationDate = moment().startOf('day');
 
       this.active = true;
       this.modal.show();

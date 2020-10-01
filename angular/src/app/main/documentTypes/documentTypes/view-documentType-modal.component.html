@@ -30,10 +30,6 @@
             <div *ngIf="!item.documentType.isRequired" class="text-left"><i class="fa fa-times-circle" title="False"></i></div>
           </div>
           <div class="col-6 mb-3">
-            <h6>{{ l('ExpirationDate') }} :</h6>
-            {{ item.documentType.expirationDate | momentFormat: 'YYYY-MM-DD HH:mm:ss' }}
-          </div>
-          <div class="col-6 mb-3">
             <h6>{{ l('HasExpirationDate') }} :</h6>
             <div *ngIf="item.documentType.hasExpirationDate" class="text-left"><i class="fa fa-check-circle text-success" title="True"></i></div>
             <div *ngIf="!item.documentType.hasExpirationDate" class="text-left"><i class="fa fa-times-circle" title="False"></i></div>

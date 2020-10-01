@@ -91,7 +91,7 @@ export class RequiredDocumentFilesComponent extends AppComponentBase implements 
     this.DocsUploader.onCompleteAll = () => {
       // create truck req.
       this._documentFilesServiceProxy
-        .addTenantRequiredDocuments('', this.createOrEditDocumentFileDtos)
+        .addTenantRequiredDocuments(this.createOrEditDocumentFileDtos)
         .pipe(
           finalize(() => {
             this.saving = false;

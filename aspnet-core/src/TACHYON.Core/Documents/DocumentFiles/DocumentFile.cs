@@ -62,10 +62,8 @@ namespace TACHYON.Documents.DocumentFiles
         [ForeignKey("RoutStepId")]
         public RoutStep RoutStepFk { get; set; }
 
-        public bool HasNumber { get; set; }
         public int? Number { get; set; }
 
-        public bool HasNotes { get; set; }
         public string Notes { get; set; }
 
 

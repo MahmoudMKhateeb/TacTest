@@ -54,32 +54,6 @@
                   </select>
                 </div>
                 <div class="col-md-3">
-                  <div class="form-group">
-                    <label for="MinExpirationDateFilter">{{ l('ExpirationDateRange') }}</label>
-                    <div class="input-group">
-                      <input
-                        class="form-control m-input"
-                        id="MinExpirationDateFilter"
-                        name="MinExpirationDateFilter"
-                        type="datetime"
-                        bsDatepicker
-                        placeholder="{{ l('MinValue') }}"
-                        [(ngModel)]="minExpirationDateFilter"
-                      />
-                      <span style="line-height: 40px; padding: 0 15px 0 15px;"> &mdash; </span>
-                      <input
-                        class="form-control m-input"
-                        id="MaxExpirationDateFilter"
-                        name="MaxExpirationDateFilter"
-                        type="datetime"
-                        bsDatepicker
-                        placeholder="{{ l('MaxValue') }}"
-                        [(ngModel)]="maxExpirationDateFilter"
-                      />
-                    </div>
-                  </div>
-                </div>
-                <div class="col-md-3">
                   <label for="HasExpirationDateFilterSelect">{{ l('HasExpirationDate') }}</label>
                   <select
                     class="form-control"

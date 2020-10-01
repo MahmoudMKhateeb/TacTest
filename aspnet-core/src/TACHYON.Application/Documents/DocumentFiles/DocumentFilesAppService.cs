@@ -18,6 +18,7 @@ using TACHYON.Authorization.Users;
 using TACHYON.Documents.DocumentFiles.Dtos;
 using TACHYON.Documents.DocumentFiles.Exporting;
 using TACHYON.Documents.DocumentTypes;
+using TACHYON.Documents.DocumentTypes.Dtos;
 using TACHYON.Dto;
 using TACHYON.Routs.RoutSteps;
 using TACHYON.Storage;
@@ -87,33 +88,33 @@ namespace TACHYON.Documents.DocumentFiles
                 .PageBy(input);
 
             var documentFiles = from o in pagedAndFilteredDocumentFiles
-                join o1 in _lookupDocumentTypeRepository.GetAll() on o.DocumentTypeId equals o1.Id into j1
-                from s1 in j1.DefaultIfEmpty()
-                join o2 in _lookupTruckRepository.GetAll() on o.TruckId equals o2.Id into j2
-                from s2 in j2.DefaultIfEmpty()
-                join o3 in _lookupTrailerRepository.GetAll() on o.TrailerId equals o3.Id into j3
-                from s3 in j3.DefaultIfEmpty()
-                join o4 in _lookupUserRepository.GetAll() on o.UserId equals o4.Id into j4
-                from s4 in j4.DefaultIfEmpty()
-                join o5 in _lookupRoutStepRepository.GetAll() on o.RoutStepId equals o5.Id into j5
-                from s5 in j5.DefaultIfEmpty()
-                select new GetDocumentFileForViewDto
-                {
-                    DocumentFile = new DocumentFileDto
-                    {
-                        Name = o.Name,
-                        Extn = o.Extn,
-                        BinaryObjectId = o.BinaryObjectId,
-                        ExpirationDate = o.ExpirationDate,
-                        IsAccepted = o.IsAccepted,
-                        Id = o.Id
-                    },
-                    DocumentTypeDisplayName = s1 == null || s1.DisplayName == null ? "" : s1.DisplayName,
-                    TruckPlateNumber = s2 == null || s2.PlateNumber == null ? "" : s2.PlateNumber,
-                    TrailerTrailerCode = s3 == null || s3.TrailerCode == null ? "" : s3.TrailerCode,
-                    UserName = s4 == null || s4.Name == null ? "" : s4.Name,
-                    RoutStepDisplayName = s5 == null || s5.DisplayName == null ? "" : s5.DisplayName.ToString()
-                };
+                                join o1 in _lookupDocumentTypeRepository.GetAll() on o.DocumentTypeId equals o1.Id into j1
+                                from s1 in j1.DefaultIfEmpty()
+                                join o2 in _lookupTruckRepository.GetAll() on o.TruckId equals o2.Id into j2
+                                from s2 in j2.DefaultIfEmpty()
+                                join o3 in _lookupTrailerRepository.GetAll() on o.TrailerId equals o3.Id into j3
+                                from s3 in j3.DefaultIfEmpty()
+                                join o4 in _lookupUserRepository.GetAll() on o.UserId equals o4.Id into j4
+                                from s4 in j4.DefaultIfEmpty()
+                                join o5 in _lookupRoutStepRepository.GetAll() on o.RoutStepId equals o5.Id into j5
+                                from s5 in j5.DefaultIfEmpty()
+                                select new GetDocumentFileForViewDto
+                                {
+                                    DocumentFile = new DocumentFileDto
+                                    {
+                                        Name = o.Name,
+                                        Extn = o.Extn,
+                                        BinaryObjectId = o.BinaryObjectId,
+                                        ExpirationDate = o.ExpirationDate,
+                                        IsAccepted = o.IsAccepted,
+                                        Id = o.Id
+                                    },
+                                    DocumentTypeDisplayName = s1 == null || s1.DisplayName == null ? "" : s1.DisplayName,
+                                    TruckPlateNumber = s2 == null || s2.PlateNumber == null ? "" : s2.PlateNumber,
+                                    TrailerTrailerCode = s3 == null || s3.TrailerCode == null ? "" : s3.TrailerCode,
+                                    UserName = s4 == null || s4.Name == null ? "" : s4.Name,
+                                    RoutStepDisplayName = s5 == null || s5.DisplayName == null ? "" : s5.DisplayName.ToString()
+                                };
 
             var totalCount = await filteredDocumentFiles.CountAsync();
 
@@ -139,7 +140,7 @@ namespace TACHYON.Documents.DocumentFiles
         {
             var documentFile = await _documentFileRepository.GetAsync(id);
 
-            var output = new GetDocumentFileForViewDto {DocumentFile = ObjectMapper.Map<DocumentFileDto>(documentFile)};
+            var output = new GetDocumentFileForViewDto { DocumentFile = ObjectMapper.Map<DocumentFileDto>(documentFile) };
 
             {
                 var lookupDocumentType = await _lookupDocumentTypeRepository.FirstOrDefaultAsync(output.DocumentFile.DocumentTypeId);
@@ -235,33 +236,33 @@ namespace TACHYON.Documents.DocumentFiles
                 .WhereIf(!string.IsNullOrWhiteSpace(input.RoutStepDisplayNameFilter), e => e.RoutStepFk != null && e.RoutStepFk.DisplayName == input.RoutStepDisplayNameFilter);
 
             var query = from o in filteredDocumentFiles
-                join o1 in _lookupDocumentTypeRepository.GetAll() on o.DocumentTypeId equals o1.Id into j1
-                from s1 in j1.DefaultIfEmpty()
-                join o2 in _lookupTruckRepository.GetAll() on o.TruckId equals o2.Id into j2
-                from s2 in j2.DefaultIfEmpty()
-                join o3 in _lookupTrailerRepository.GetAll() on o.TrailerId equals o3.Id into j3
-                from s3 in j3.DefaultIfEmpty()
-                join o4 in _lookupUserRepository.GetAll() on o.UserId equals o4.Id into j4
-                from s4 in j4.DefaultIfEmpty()
-                join o5 in _lookupRoutStepRepository.GetAll() on o.RoutStepId equals o5.Id into j5
-                from s5 in j5.DefaultIfEmpty()
-                select new GetDocumentFileForViewDto
-                {
-                    DocumentFile = new DocumentFileDto
-                    {
-                        Name = o.Name,
-                        Extn = o.Extn,
-                        BinaryObjectId = o.BinaryObjectId,
-                        ExpirationDate = o.ExpirationDate,
-                        IsAccepted = o.IsAccepted,
-                        Id = o.Id
-                    },
-                    DocumentTypeDisplayName = s1 == null || s1.DisplayName == null ? "" : s1.DisplayName,
-                    TruckPlateNumber = s2 == null || s2.PlateNumber == null ? "" : s2.PlateNumber,
-                    TrailerTrailerCode = s3 == null || s3.TrailerCode == null ? "" : s3.TrailerCode,
-                    UserName = s4 == null || s4.Name == null ? "" : s4.Name,
-                    RoutStepDisplayName = s5 == null || s5.DisplayName == null ? "" : s5.DisplayName.ToString()
-                };
+                        join o1 in _lookupDocumentTypeRepository.GetAll() on o.DocumentTypeId equals o1.Id into j1
+                        from s1 in j1.DefaultIfEmpty()
+                        join o2 in _lookupTruckRepository.GetAll() on o.TruckId equals o2.Id into j2
+                        from s2 in j2.DefaultIfEmpty()
+                        join o3 in _lookupTrailerRepository.GetAll() on o.TrailerId equals o3.Id into j3
+                        from s3 in j3.DefaultIfEmpty()
+                        join o4 in _lookupUserRepository.GetAll() on o.UserId equals o4.Id into j4
+                        from s4 in j4.DefaultIfEmpty()
+                        join o5 in _lookupRoutStepRepository.GetAll() on o.RoutStepId equals o5.Id into j5
+                        from s5 in j5.DefaultIfEmpty()
+                        select new GetDocumentFileForViewDto
+                        {
+                            DocumentFile = new DocumentFileDto
+                            {
+                                Name = o.Name,
+                                Extn = o.Extn,
+                                BinaryObjectId = o.BinaryObjectId,
+                                ExpirationDate = o.ExpirationDate,
+                                IsAccepted = o.IsAccepted,
+                                Id = o.Id
+                            },
+                            DocumentTypeDisplayName = s1 == null || s1.DisplayName == null ? "" : s1.DisplayName,
+                            TruckPlateNumber = s2 == null || s2.PlateNumber == null ? "" : s2.PlateNumber,
+                            TrailerTrailerCode = s3 == null || s3.TrailerCode == null ? "" : s3.TrailerCode,
+                            UserName = s4 == null || s4.Name == null ? "" : s4.Name,
+                            RoutStepDisplayName = s5 == null || s5.DisplayName == null ? "" : s5.DisplayName.ToString()
+                        };
 
 
             var documentFileListDtos = await query.ToListAsync();
@@ -274,35 +275,35 @@ namespace TACHYON.Documents.DocumentFiles
         public async Task<List<DocumentFileDocumentTypeLookupTableDto>> GetAllDocumentTypeForTableDropdown()
         {
             return await _lookupDocumentTypeRepository.GetAll()
-                .Select(documentType => new DocumentFileDocumentTypeLookupTableDto {Id = documentType.Id, DisplayName = documentType == null || documentType.DisplayName == null ? "" : documentType.DisplayName.ToString()}).ToListAsync();
+                .Select(documentType => new DocumentFileDocumentTypeLookupTableDto { Id = documentType.Id, DisplayName = documentType == null || documentType.DisplayName == null ? "" : documentType.DisplayName.ToString() }).ToListAsync();
         }
 
         [AbpAuthorize(AppPermissions.Pages_DocumentFiles)]
         public async Task<List<DocumentFileTruckLookupTableDto>> GetAllTruckForTableDropdown()
         {
             return await _lookupTruckRepository.GetAll()
-                .Select(truck => new DocumentFileTruckLookupTableDto {Id = truck.Id.ToString(), DisplayName = truck == null || truck.PlateNumber == null ? "" : truck.PlateNumber.ToString()}).ToListAsync();
+                .Select(truck => new DocumentFileTruckLookupTableDto { Id = truck.Id.ToString(), DisplayName = truck == null || truck.PlateNumber == null ? "" : truck.PlateNumber.ToString() }).ToListAsync();
         }
 
         [AbpAuthorize(AppPermissions.Pages_DocumentFiles)]
         public async Task<List<DocumentFileTrailerLookupTableDto>> GetAllTrailerForTableDropdown()
         {
             return await _lookupTrailerRepository.GetAll()
-                .Select(trailer => new DocumentFileTrailerLookupTableDto {Id = trailer.Id, DisplayName = trailer == null || trailer.TrailerCode == null ? "" : trailer.TrailerCode.ToString()}).ToListAsync();
+                .Select(trailer => new DocumentFileTrailerLookupTableDto { Id = trailer.Id, DisplayName = trailer == null || trailer.TrailerCode == null ? "" : trailer.TrailerCode.ToString() }).ToListAsync();
         }
 
         [AbpAuthorize(AppPermissions.Pages_DocumentFiles)]
         public async Task<List<DocumentFileUserLookupTableDto>> GetAllUserForTableDropdown()
         {
             return await _lookupUserRepository.GetAll()
-                .Select(user => new DocumentFileUserLookupTableDto {Id = user.Id, DisplayName = user == null || user.Name == null ? "" : user.Name.ToString()}).ToListAsync();
+                .Select(user => new DocumentFileUserLookupTableDto { Id = user.Id, DisplayName = user == null || user.Name == null ? "" : user.Name.ToString() }).ToListAsync();
         }
 
         [AbpAuthorize(AppPermissions.Pages_DocumentFiles)]
         public async Task<List<DocumentFileRoutStepLookupTableDto>> GetAllRoutStepForTableDropdown()
         {
             return await _lookupRoutStepRepository.GetAll()
-                .Select(routStep => new DocumentFileRoutStepLookupTableDto {Id = routStep.Id, DisplayName = routStep == null || routStep.DisplayName == null ? "" : routStep.DisplayName.ToString()}).ToListAsync();
+                .Select(routStep => new DocumentFileRoutStepLookupTableDto { Id = routStep.Id, DisplayName = routStep == null || routStep.DisplayName == null ? "" : routStep.DisplayName.ToString() }).ToListAsync();
         }
 
         /// <summary>
@@ -344,7 +345,7 @@ namespace TACHYON.Documents.DocumentFiles
             return await _GetTenantRequiredDocumentFileList();
         }
 
-        public async Task AddTenantRequiredDocuments(List<CreateOrEditDocumentFileDto> input, string documentsEntityName)
+        public async Task AddTenantRequiredDocuments(List<CreateOrEditDocumentFileDto> input)
         {
             var requiredDocs = await _GetTenantRequiredDocumentFileList();
             if (requiredDocs.Count > 0)
@@ -372,7 +373,7 @@ namespace TACHYON.Documents.DocumentFiles
         public async Task<List<SelectItemDto>> GetAllEditionsForDropdown()
         {
             return await _editionRepository.GetAll()
-                .Select(x => new SelectItemDto {DisplayName = x.DisplayName, Id = x.Id.ToString()}).ToListAsync();
+                .Select(x => new SelectItemDto { DisplayName = x.DisplayName, Id = x.Id.ToString() }).ToListAsync();
         }
 
         [AbpAuthorize(AppPermissions.Pages_DocumentFiles_Create)]
@@ -388,7 +389,7 @@ namespace TACHYON.Documents.DocumentFiles
 
             if (!input.UpdateDocumentFileInput.FileToken.IsNullOrEmpty())
             {
-                documentFile.BinaryObjectId = await AddOrUpdateDocumentFile(input.UpdateDocumentFileInput);
+                documentFile.BinaryObjectId = await SaveDocumentFileBinaryObject(input.UpdateDocumentFileInput);
             }
 
             await _documentFileRepository.InsertAsync(documentFile);
@@ -406,13 +407,18 @@ namespace TACHYON.Documents.DocumentFiles
             if (input.UpdateDocumentFileInput != null && !input.UpdateDocumentFileInput.FileToken.IsNullOrEmpty())
             {
                 await _binaryObjectManager.DeleteAsync(input.BinaryObjectId);
-                documentFile.BinaryObjectId = await AddOrUpdateDocumentFile(input.UpdateDocumentFileInput);
+                documentFile.BinaryObjectId = await SaveDocumentFileBinaryObject(input.UpdateDocumentFileInput);
             }
 
             ObjectMapper.Map(input, documentFile);
         }
 
-        protected virtual async Task<Guid> AddOrUpdateDocumentFile(UpdateDocumentFileInput input)
+        /// <summary>
+        /// convert file from temp-cache to binary-file and save it to database
+        /// </summary>
+        /// <param name="input"></param>
+        /// <returns></returns>
+        private async Task<Guid> SaveDocumentFileBinaryObject(UpdateDocumentFileInput input)
         {
             var fileBytes = _tempFileCacheManager.GetFile(input.FileToken);
 
@@ -436,11 +442,12 @@ namespace TACHYON.Documents.DocumentFiles
         {
             var editionId = GetCurrentTenant().EditionId;
 
-
-            return await _documentTypeRepository.GetAll()
+            var list = await _documentTypeRepository.GetAll()
                 .Where(x => x.EditionId == editionId)
-                .Select(x => new CreateOrEditDocumentFileDto {DocumentTypeId = x.Id, Name = x.DisplayName, IsRequired = x.IsRequired, HasExpirationDate = x.HasExpirationDate})
                 .ToListAsync();
+
+            return list.Select(x => new CreateOrEditDocumentFileDto { DocumentTypeDto = ObjectMapper.Map<DocumentTypeDto>(x) }).ToList();
+
         }
 
 
@@ -448,7 +455,7 @@ namespace TACHYON.Documents.DocumentFiles
         {
             var documentFile = await _documentFileRepository.FirstOrDefaultAsync(input.Id);
 
-            var output = new GetDocumentFileForEditOutput {DocumentFile = ObjectMapper.Map<CreateOrEditDocumentFileDto>(documentFile)};
+            var output = new GetDocumentFileForEditOutput { DocumentFile = ObjectMapper.Map<CreateOrEditDocumentFileDto>(documentFile) };
 
             {
                 var lookupDocumentType = await _lookupDocumentTypeRepository.FirstOrDefaultAsync(output.DocumentFile.DocumentTypeId);
@@ -492,10 +499,11 @@ namespace TACHYON.Documents.DocumentFiles
         /// </returns>
         private async Task<List<CreateOrEditDocumentFileDto>> GetRequiredDocumentFileListForCreateOrEdit(string documentsEntityName)
         {
-            return await _documentTypeRepository.GetAll()
+            var list = await _documentTypeRepository.GetAll()
                 .Where(x => x.DocumentsEntityFk.DisplayName == documentsEntityName)
-                .Select(x => new CreateOrEditDocumentFileDto {DocumentTypeId = x.Id, Name = x.DisplayName, IsRequired = x.IsRequired, HasExpirationDate = x.HasExpirationDate})
                 .ToListAsync();
+
+            return list.Select(x => new CreateOrEditDocumentFileDto { DocumentTypeDto = ObjectMapper.Map<DocumentTypeDto>(x) }).ToList();
         }
     }
 }
