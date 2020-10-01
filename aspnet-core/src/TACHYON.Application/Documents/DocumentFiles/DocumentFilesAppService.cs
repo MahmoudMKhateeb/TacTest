@@ -305,6 +305,11 @@ namespace TACHYON.Documents.DocumentFiles
                 .Select(routStep => new DocumentFileRoutStepLookupTableDto {Id = routStep.Id, DisplayName = routStep == null || routStep.DisplayName == null ? "" : routStep.DisplayName.ToString()}).ToListAsync();
         }
 
+        /// <summary>
+        ///     to download the file
+        /// </summary>
+        /// <param name="documentFileId"></param>
+        /// <returns>FileDto to send to download controller</returns>
         [AbpAllowAnonymous]
         public async Task<FileDto> GetDocumentFileDto(Guid documentFileId)
         {
@@ -336,18 +341,12 @@ namespace TACHYON.Documents.DocumentFiles
         /// <returns></returns>
         public async Task<List<CreateOrEditDocumentFileDto>> GetTenantRequiredDocumentFileList()
         {
-            var editionId = GetCurrentTenant().EditionId;
-
-
-            return await _documentTypeRepository.GetAll()
-                .Where(x => x.EditionId == editionId)
-                .Select(x => new CreateOrEditDocumentFileDto {DocumentTypeId = x.Id, Name = x.DisplayName, IsRequired = x.IsRequired, HasExpirationDate = x.HasExpirationDate})
-                .ToListAsync();
+            return await _GetTenantRequiredDocumentFileList();
         }
 
         public async Task AddTenantRequiredDocuments(List<CreateOrEditDocumentFileDto> input, string documentsEntityName)
         {
-            var requiredDocs = await GetTenantRequiredDocumentFileList();
+            var requiredDocs = await _GetTenantRequiredDocumentFileList();
             if (requiredDocs.Count > 0)
             {
                 foreach (var item in requiredDocs)
@@ -431,6 +430,17 @@ namespace TACHYON.Documents.DocumentFiles
             await _binaryObjectManager.SaveAsync(storedFile);
 
             return storedFile.Id;
+        }
+
+        private async Task<List<CreateOrEditDocumentFileDto>> _GetTenantRequiredDocumentFileList()
+        {
+            var editionId = GetCurrentTenant().EditionId;
+
+
+            return await _documentTypeRepository.GetAll()
+                .Where(x => x.EditionId == editionId)
+                .Select(x => new CreateOrEditDocumentFileDto {DocumentTypeId = x.Id, Name = x.DisplayName, IsRequired = x.IsRequired, HasExpirationDate = x.HasExpirationDate})
+                .ToListAsync();
         }
 
 

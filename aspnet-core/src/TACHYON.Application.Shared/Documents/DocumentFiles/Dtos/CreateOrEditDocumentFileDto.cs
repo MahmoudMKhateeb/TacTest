@@ -41,6 +41,11 @@ namespace TACHYON.Documents.DocumentFiles.Dtos
         public UpdateDocumentFileInput UpdateDocumentFileInput { get; set; }
         public bool IsRequired { get; set; }
         public bool HasExpirationDate { get; set; }
+        public bool HasNumber { get; set; }
+        public int? Number { get; set; }
+
+        public bool HasNotes { get; set; }
+        public string Notes { get; set; }
 
 
     }

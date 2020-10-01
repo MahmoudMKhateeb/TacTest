@@ -16,7 +16,6 @@ namespace TACHYON.Documents.DocumentFiles.Dtos
 
         public bool IsAccepted { get; set; }
 
-
         public long DocumentTypeId { get; set; }
 
         public Guid? TruckId { get; set; }
@@ -26,6 +25,9 @@ namespace TACHYON.Documents.DocumentFiles.Dtos
         public long? UserId { get; set; }
 
         public long? RoutStepId { get; set; }
+
+        public int? Number { get; set; }
+        public string Notes { get; set; }
 
 
     }
