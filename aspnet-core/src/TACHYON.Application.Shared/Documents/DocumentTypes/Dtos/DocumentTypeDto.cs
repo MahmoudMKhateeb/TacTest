@@ -14,6 +14,10 @@ namespace TACHYON.Documents.DocumentTypes.Dtos
 
         public string RequiredFrom { get; set; }
 
+        public bool HasNumber { get; set; }
+
+        public bool HasNotes { get; set; }
+
 
 
     }

@@ -7,8 +7,8 @@
         <form *ngIf="active" #TenantRequiredDocumentsForm="ngForm" novalidate (ngSubmit)="save()" autocomplete="off">
           <div class="card-body">
             <div *ngFor="let item of createOrEditDocumentFileDtos; index as i" class="row">
-              <div class="form-group col-md-6">
-                <label>{{ item.name }}</label>
+              <div class="form-group col-md-3">
+                <label>{{ item.documentTypeDto.displayName }}</label>
                 <div class="custom-file">
                   <input
                     [disabled]="item.isAccepted"
@@ -17,10 +17,10 @@
                     class="custom-file-input"
                     [required]="item.documentTypeDto.isRequired"
                   />
-                  <label class="custom-file-label" [for]="item.name">{{ l('select file') }}</label>
+                  <label class="custom-file-label" [for]="item.documentTypeDto.displayName">{{ l('select file') }}</label>
                 </div>
               </div>
-              <div *ngIf="item.documentTypeDto.hasExpirationDate" class="form-group col-md-6">
+              <div *ngIf="item.documentTypeDto.hasExpirationDate" class="form-group col-md-3">
                 <label>{{ l('expiration date') }}</label>
                 <input
                   name="expirationDate{{ i }}"
@@ -34,7 +34,20 @@
                   [disabled]="item.isAccepted"
                 />
               </div>
+              <div *ngIf="item.documentTypeDto.hasNumber" class="form-group col-md-3">
+                <label>{{ l('number') }}</label>
+                <input
+                  name="number{{ i }}"
+                  id="number{{ i }}"
+                  class="form-control m-input"
+                  [required]="item.documentTypeDto.hasNumber && !item.isAccepted"
+                  type="text"
+                  [(ngModel)]="item.number"
+                  [disabled]="item.isAccepted"
+                />
+              </div>
             </div>
+
             <div class="row">
               <label>{{ docProgressFileName }}</label>
               <div class="col-md-12">

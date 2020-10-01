@@ -78,6 +78,7 @@ export class RequiredDocumentFilesComponent extends AppComponentBase implements 
         this.createOrEditDocumentFileDtos.find(
           (x) => x.name === item.file.name && x.extn === item.file.type
         ).updateDocumentFileInput = new UpdateDocumentFileInput({ fileToken: resp.result.fileToken });
+        console.log(this.createOrEditDocumentFileDtos);
       } else {
         this.message.error(resp.error.message);
       }
@@ -122,6 +123,7 @@ export class RequiredDocumentFilesComponent extends AppComponentBase implements 
 
     item.extn = event.target.files[0].type;
     item.name = event.target.files[0].name;
+    console.log(item);
   }
 
   guid(): string {

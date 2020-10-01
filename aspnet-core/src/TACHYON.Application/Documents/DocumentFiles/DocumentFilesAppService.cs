@@ -446,7 +446,7 @@ namespace TACHYON.Documents.DocumentFiles
                 .Where(x => x.EditionId == editionId)
                 .ToListAsync();
 
-            return list.Select(x => new CreateOrEditDocumentFileDto { DocumentTypeDto = ObjectMapper.Map<DocumentTypeDto>(x) }).ToList();
+            return list.Select(x => new CreateOrEditDocumentFileDto { DocumentTypeId = x.Id, DocumentTypeDto = ObjectMapper.Map<DocumentTypeDto>(x) }).ToList();
 
         }
 
@@ -503,7 +503,7 @@ namespace TACHYON.Documents.DocumentFiles
                 .Where(x => x.DocumentsEntityFk.DisplayName == documentsEntityName)
                 .ToListAsync();
 
-            return list.Select(x => new CreateOrEditDocumentFileDto { DocumentTypeDto = ObjectMapper.Map<DocumentTypeDto>(x) }).ToList();
+            return list.Select(x => new CreateOrEditDocumentFileDto {DocumentTypeId = x.Id, DocumentTypeDto = ObjectMapper.Map<DocumentTypeDto>(x) }).ToList();
         }
     }
 }

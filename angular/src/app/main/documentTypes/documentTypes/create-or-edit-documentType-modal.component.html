@@ -52,20 +52,23 @@
               <span></span>
             </label>
           </div>
-
-          <!--          <div class="form-group">-->
-          <!--            <label for="DocumentType_RequiredFrom">{{ l('RequiredFrom') }}</label>-->
-          <!--            <input-->
-          <!--              type="text"-->
-          <!--              id="DocumentType_RequiredFrom"-->
-          <!--              class="form-control"-->
-          <!--              [(ngModel)]="documentType.documentsEntityId"-->
-          <!--              name="RequiredFrom"-->
-          <!--              minlength="0"-->
-          <!--              maxlength="128"-->
-          <!--            />-->
-          <!--          </div>-->
-
+          <br />
+          <div class="m-checkbox-list">
+            <label for="DocumentType_HasNumber" class="kt-checkbox">
+              <input id="DocumentType_HasNumber" type="checkbox" name="HasNumber" [(ngModel)]="documentType.hasNumber" />
+              {{ l('HasNumber') }}
+              <span></span>
+            </label>
+          </div>
+          <br />
+          <div class="m-checkbox-list">
+            <label for="DocumentType_HasNotes" class="kt-checkbox">
+              <input id="DocumentType_HasNotes" type="checkbox" name="HasNotes" [(ngModel)]="documentType.hasNotes" />
+              {{ l('HasNotes') }}
+              <span></span>
+            </label>
+          </div>
+          <br />
           <div class="form-group m-form__group">
             <label for="documentType.documentsEntityId">{{ l('documentsEntity') }}</label>
             <select
