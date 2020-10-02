@@ -367,6 +367,7 @@ namespace TACHYON.Documents.DocumentFiles
                 item.Name = item.DocumentTypeDto.DisplayName + "_" + AbpSession.GetTenantId();
                 await Create(item);
             }
+            //todo add notifications to host
         }
 
         public async Task<List<SelectItemDto>> GetAllEditionsForDropdown()
@@ -502,7 +503,44 @@ namespace TACHYON.Documents.DocumentFiles
                 .Where(x => x.DocumentsEntityFk.DisplayName == documentsEntityName)
                 .ToListAsync();
 
-            return list.Select(x => new CreateOrEditDocumentFileDto {DocumentTypeId = x.Id, DocumentTypeDto = ObjectMapper.Map<DocumentTypeDto>(x) }).ToList();
+            return list.Select(x => new CreateOrEditDocumentFileDto { DocumentTypeId = x.Id, DocumentTypeDto = ObjectMapper.Map<DocumentTypeDto>(x) }).ToList();
         }
+
+        public async Task<CheckTenantRequiredDocumentFilesOutput> CheckTenantRequiredDocumentFiles()
+        {
+            var existedList = await _documentFileRepository.GetAll()
+               .Where(x => x.ExpirationDate > DateTime.Now || x.ExpirationDate == null || !x.DocumentTypeFk.HasExpirationDate)
+               .Where(x => x.DocumentTypeFk.IsRequired)
+               .Where(x => !x.IsRejected)
+               .Where(x => x.IsAccepted)
+               .ToListAsync();
+
+            var reqList = await _GetTenantRequiredDocumentFileList();
+
+            var outPut = new CheckTenantRequiredDocumentFilesOutput
+            {
+                MissingDocumentFilesCount = 0,
+                HasMissingDocuments = false
+            };
+
+
+            if (reqList.ToList().Count > 0)
+            {
+                foreach (var item in reqList)
+                {
+                    var doc = existedList.FirstOrDefault(x => x.DocumentTypeId == item.DocumentTypeId);
+                    if (doc == null)
+                    {
+                        outPut.HasMissingDocuments = true;
+                        outPut.MissingDocumentFilesCount++;
+
+                    } 
+                }
+            }
+            return outPut;
+
+        }
+
+
     }
 }
