@@ -359,13 +359,12 @@ namespace TACHYON.Documents.DocumentFiles
                         throw new UserFriendlyException(L("document missing msg :" + item.Name));
                     }
 
-                    doc.Name = item.Name;
                 }
             }
 
             foreach (var item in input)
             {
-                item.Name = item.Name + "_" + AbpSession.GetTenantId();
+                item.Name = item.DocumentTypeDto.DisplayName + "_" + AbpSession.GetTenantId();
                 await Create(item);
             }
         }

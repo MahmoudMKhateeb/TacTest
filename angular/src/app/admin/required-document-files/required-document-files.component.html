@@ -46,6 +46,18 @@
                   [disabled]="item.isAccepted"
                 />
               </div>
+              <div *ngIf="item.documentTypeDto.hasNotes" class="form-group col-md-3">
+                <label>{{ l('note') }}</label>
+                <input
+                  name="note{{ i }}"
+                  id="note{{ i }}"
+                  class="form-control m-input"
+                  [required]="item.documentTypeDto.hasNotes && !item.isAccepted"
+                  type="text"
+                  [(ngModel)]="item.notes"
+                  [disabled]="item.isAccepted"
+                />
+              </div>
             </div>
 
             <div class="row">
