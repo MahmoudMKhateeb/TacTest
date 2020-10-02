@@ -184,4 +184,12 @@ export class CreateOrEditDocumentFileModalComponent extends AppComponentBase {
 
     return s4() + s4() + '-' + s4() + '-' + s4() + '-' + s4() + '-' + s4() + s4() + s4();
   }
+
+  isAcceptedChange() {
+    this.documentFile.isRejected = !this.documentFile.isAccepted;
+  }
+
+  isRejectedChange() {
+    this.documentFile.isAccepted = !this.documentFile.isRejected;
+  }
 }
