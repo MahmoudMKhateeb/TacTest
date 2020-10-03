@@ -15,6 +15,8 @@ using TACHYON.Authorization;
 using TACHYON.Documents.DocumentsEntities;
 using TACHYON.Documents.DocumentTypes.Dtos;
 using TACHYON.Documents.DocumentTypes.Exporting;
+using TACHYON.Documents.DocumentTypeTranslations;
+using TACHYON.Documents.DocumentTypeTranslations.Dtos;
 using TACHYON.Dto;
 
 namespace TACHYON.Documents.DocumentTypes

@@ -7,11 +7,12 @@ using Abp.Application.Editions;
 using TACHYON.Documents.DocumentsEntities;
 using System.Collections.Generic;
 using Abp.AutoMapper;
+using TACHYON.Documents.DocumentTypeTranslations;
 
 namespace TACHYON.Documents.DocumentTypes
 {
     /// <summary>
-    /// Multi-Lingual entity <see cref="DocumentTypeTranslation"/>
+    /// Multi-Lingual entity <see cref="DocumentTypeTranslationOld"/>
     /// </summary>
     [Table("DocumentTypes")]
     public class DocumentType : FullAuditedEntity<long>, IMultiLingualEntity<DocumentTypeTranslation>

@@ -1,4 +1,6 @@
-﻿using TACHYON.Documents.DocumentsEntities.Dtos;
+﻿using TACHYON.Documents.DocumentTypeTranslations.Dtos;
+using TACHYON.Documents.DocumentTypeTranslations;
+using TACHYON.Documents.DocumentsEntities.Dtos;
 using TACHYON.Documents.DocumentsEntities;
 using TACHYON.Shipping.ShippingRequestStatuses.Dtos;
 using TACHYON.Shipping.ShippingRequestStatuses;
@@ -120,6 +122,8 @@ namespace TACHYON
     {
         public static void CreateMappings(IMapperConfigurationExpression configuration)
         {
+            configuration.CreateMap<CreateOrEditDocumentTypeTranslationDto, DocumentTypeTranslation>().ReverseMap();
+            configuration.CreateMap<DocumentTypeTranslationDto, DocumentTypeTranslation>().ReverseMap();
             configuration.CreateMap<CreateOrEditDocumentsEntityDto, DocumentsEntity>().ReverseMap();
             configuration.CreateMap<DocumentsEntityDto, DocumentsEntity>().ReverseMap();
             configuration.CreateMap<CreateOrEditShippingRequestStatusDto, ShippingRequestStatus>().ReverseMap();

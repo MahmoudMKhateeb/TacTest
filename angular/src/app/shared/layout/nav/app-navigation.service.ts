@@ -16,6 +16,13 @@ export class AppNavigationService {
 
   getMenu(): AppMenu {
     return new AppMenu('MainMenu', 'MainMenu', [
+      new AppMenuItem(
+        'DocumentTypeTranslations',
+        'Pages.DocumentTypeTranslations',
+        'flaticon-more',
+        '/app/main/documentTypeTranslations/documentTypeTranslations'
+      ),
+
       new AppMenuItem('Dashboard', 'Pages.Administration.Host.Dashboard', 'flaticon-line-graph', '/app/admin/hostDashboard'),
       new AppMenuItem('Dashboard', 'Pages.Tenant.Dashboard', 'flaticon-line-graph', '/app/main/dashboard'),
       new AppMenuItem('Tenants', 'Pages.Tenants', 'flaticon-list-3', '/app/admin/tenants'),

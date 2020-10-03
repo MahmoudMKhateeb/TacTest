@@ -1,4 +1,5 @@
-﻿using TACHYON.Documents.DocumentsEntities;
+﻿using TACHYON.Documents.DocumentTypeTranslations;
+using TACHYON.Documents.DocumentsEntities;
 using TACHYON.Shipping.ShippingRequestStatuses;
 using TACHYON.AddressBook.Ports;
 using TACHYON.PickingTypes;
@@ -53,7 +54,7 @@ namespace TACHYON.EntityFrameworkCore
 {
     public class TACHYONDbContext : AbpZeroDbContext<Tenant, Role, User, TACHYONDbContext>, IAbpPersistedGrantDbContext
     {
-        public virtual DbSet<DocumentTypeTranslation> DocumentTypeTranslationsEntities { get; set; }
+        public virtual DbSet<DocumentTypeTranslation> DocumentTypeTranslations { get; set; }
 
         public virtual DbSet<DocumentsEntity> DocumentsEntities { get; set; }
 
