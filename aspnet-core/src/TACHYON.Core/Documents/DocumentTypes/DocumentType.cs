@@ -5,11 +5,16 @@ using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using Abp.Application.Editions;
 using TACHYON.Documents.DocumentsEntities;
+using System.Collections.Generic;
+using Abp.AutoMapper;
 
 namespace TACHYON.Documents.DocumentTypes
 {
+    /// <summary>
+    /// Multi-Lingual entity <see cref="DocumentTypeTranslation"/>
+    /// </summary>
     [Table("DocumentTypes")]
-    public class DocumentType : FullAuditedEntity<long>
+    public class DocumentType : FullAuditedEntity<long>, IMultiLingualEntity<DocumentTypeTranslation>
     {
 
         [Required]
@@ -37,5 +42,6 @@ namespace TACHYON.Documents.DocumentTypes
 
         public bool HasNotes { get; set; }
 
+        public ICollection<DocumentTypeTranslation> Translations { get; set; }
     }
 }

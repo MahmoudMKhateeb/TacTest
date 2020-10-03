@@ -6,6 +6,16 @@ namespace TACHYON.Documents.DocumentTypes.Dtos
 {
     public class DocumentTypeDto : EntityDto<long>
     {
+        /// <summary>
+        /// multiLingual field mapped from DocumentTypeTranslation.Name
+        /// </summary>
+        public string Name { get; set; }
+        /// <summary>
+        /// from DocumentTypeTranslation.Language
+        /// </summary>
+        public string Language { get; set; }
+
+
         public string DisplayName { get; set; }
 
         public bool IsRequired { get; set; }

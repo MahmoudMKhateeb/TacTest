@@ -1,4 +1,5 @@
 ﻿using Abp.AutoMapper;
+using Abp.Configuration;
 using Abp.Modules;
 using Abp.Reflection.Extensions;
 using TACHYON.Authorization;
@@ -21,6 +22,15 @@ namespace TACHYON
 
             //Adding custom AutoMapper configuration
             Configuration.Modules.AbpAutoMapper().Configurators.Add(CustomDtoMapper.CreateMappings);
+
+            //Adding multiLingual Mapping configuration 
+            Configuration.Modules.AbpAutoMapper().Configurators.Add(configuration =>
+            {
+                CustomDtoMapper.CreateMultiLingualMappings(configuration, new MultiLingualMapContext(
+                    IocManager.Resolve<ISettingManager>()
+                ));
+            });
+
         }
 
         public override void Initialize()

@@ -25,19 +25,22 @@ namespace TACHYON.Documents.DocumentTypes
         private readonly IRepository<DocumentType, long> _documentTypeRepository;
         private readonly IDocumentTypesExcelExporter _documentTypesExcelExporter;
         private readonly IRepository<DocumentsEntity, int> _documentsEntityRepository;
+        private readonly IRepository<DocumentTypeTranslation> _documentTypeTranslationRepository;
 
 
-        public DocumentTypesAppService(IRepository<DocumentType, long> documentTypeRepository, IDocumentTypesExcelExporter documentTypesExcelExporter, IRepository<DocumentsEntity, int> documentsEntityRepository)
+        public DocumentTypesAppService(IRepository<DocumentType, long> documentTypeRepository, IDocumentTypesExcelExporter documentTypesExcelExporter, IRepository<DocumentsEntity, int> documentsEntityRepository, IRepository<DocumentTypeTranslation> documentTypeTranslationRepository)
         {
             _documentTypeRepository = documentTypeRepository;
             _documentTypesExcelExporter = documentTypesExcelExporter;
             _documentsEntityRepository = documentsEntityRepository;
+            _documentTypeTranslationRepository = documentTypeTranslationRepository;
         }
 
         public async Task<PagedResultDto<GetDocumentTypeForViewDto>> GetAll(GetAllDocumentTypesInput input)
         {
 
             var filteredDocumentTypes = _documentTypeRepository.GetAll()
+                        .Include(e => e.Translations)
                         .WhereIf(!string.IsNullOrWhiteSpace(input.Filter), e => false || e.DisplayName.Contains(input.Filter) || e.DocumentsEntityFk.DisplayName.Contains(input.Filter))
                         .WhereIf(!string.IsNullOrWhiteSpace(input.DisplayNameFilter), e => e.DisplayName == input.DisplayNameFilter)
                         .WhereIf(input.IsRequiredFilter > -1, e => (input.IsRequiredFilter == 1 && e.IsRequired) || (input.IsRequiredFilter == 0 && !e.IsRequired))
@@ -48,25 +51,17 @@ namespace TACHYON.Documents.DocumentTypes
                 .OrderBy(input.Sorting ?? "id asc")
                 .PageBy(input);
 
-            var documentTypes = from o in pagedAndFilteredDocumentTypes
+            var documentTypeList = await pagedAndFilteredDocumentTypes.ToListAsync();
+
+            var documentTypes = from o in documentTypeList
                                 select new GetDocumentTypeForViewDto()
                                 {
-                                    DocumentType = new DocumentTypeDto
-                                    {
-                                        DisplayName = o.DisplayName,
-                                        IsRequired = o.IsRequired,
-                                        HasExpirationDate = o.HasExpirationDate,
-                                        RequiredFrom = o.DocumentsEntityFk.DisplayName,
-                                        Id = o.Id
-                                    }
+                                    DocumentType = ObjectMapper.Map<DocumentTypeDto>(o)
                                 };
 
             var totalCount = await filteredDocumentTypes.CountAsync();
 
-            return new PagedResultDto<GetDocumentTypeForViewDto>(
-                totalCount,
-                await documentTypes.ToListAsync()
-            );
+            return new PagedResultDto<GetDocumentTypeForViewDto>(totalCount, documentTypes.ToList());
         }
 
         public async Task<GetDocumentTypeForViewDto> GetDocumentTypeForView(long id)
@@ -163,6 +158,22 @@ namespace TACHYON.Documents.DocumentTypes
 
         }
 
+        public async Task Translate(long documentTypeId, DocumentTypeTranslationDto input)
+        {
+            var translation = await _documentTypeTranslationRepository.GetAll()
+                .FirstOrDefaultAsync(pt => pt.CoreId == documentTypeId && pt.Language == input.Language);
 
+            if (translation == null)
+            {
+                var newTranslation = ObjectMapper.Map<DocumentTypeTranslation>(input);
+                newTranslation.CoreId = documentTypeId;
+
+                await _documentTypeTranslationRepository.InsertAsync(newTranslation);
+            }
+            else
+            {
+                ObjectMapper.Map(input, translation);
+            }
+        }
     }
 }

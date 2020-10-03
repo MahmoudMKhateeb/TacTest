@@ -15,6 +15,7 @@ using Abp.Application.Features;
 using Abp.Auditing;
 using Abp.Authorization;
 using Abp.Authorization.Users;
+using Abp.AutoMapper;
 using Abp.DynamicEntityParameters;
 using Abp.EntityHistory;
 using Abp.Localization;
@@ -134,9 +135,9 @@ namespace TACHYON
             configuration.CreateMap<CreateOrEditDocumentFileDto, DocumentFile>().ReverseMap();
             configuration.CreateMap<DocumentFileDto, DocumentFile>().ReverseMap();
             configuration.CreateMap<CreateOrEditDocumentTypeDto, DocumentType>().ReverseMap();
-            configuration.CreateMap<DocumentTypeDto, DocumentType>().ReverseMap();
+            //configuration.CreateMap<DocumentTypeDto, DocumentType>().ReverseMap();
             configuration.CreateMap<CreateOrEditShippingRequestDto, ShippingRequest>()
-            .ForMember(dst => dst.RouteFk,opt => opt.MapFrom(src => src.CreateOrEditRouteDto))
+            .ForMember(dst => dst.RouteFk, opt => opt.MapFrom(src => src.CreateOrEditRouteDto))
             .ForMember(dst => dst.RoutSteps, opt => opt.MapFrom(src => src.CreateOrEditRoutStepDtoList))
             .ReverseMap();
             configuration.CreateMap<ShippingRequestDto, ShippingRequest>().ReverseMap();
@@ -284,6 +285,16 @@ namespace TACHYON
 
 
             /* ADD YOUR OWN CUSTOM AUTOMAPPER MAPPINGS HERE */
+        }
+
+        /// <summary>
+        /// MultiLingualMapping configuration 
+        /// </summary>
+        /// <param name="configuration"></param>
+        /// <param name="context"></param>
+        public static void CreateMultiLingualMappings(IMapperConfigurationExpression configuration, MultiLingualMapContext context)
+        {
+            configuration.CreateMultiLingualMap<DocumentType, long, DocumentTypeTranslation, DocumentTypeDto>(context);
         }
     }
 }

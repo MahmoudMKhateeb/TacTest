@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using TACHYON.EntityFrameworkCore;
 
 namespace TACHYON.Migrations
 {
     [DbContext(typeof(TACHYONDbContext))]
-    partial class TACHYONDbContextModelSnapshot : ModelSnapshot
+    [Migration("20201002220809_Add DocumentTypeTranslations Table")]
+    partial class AddDocumentTypeTranslationsTable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -2062,7 +2064,10 @@ namespace TACHYON.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<long>("CoreId")
+                    b.Property<int>("CoreId")
+                        .HasColumnType("int");
+
+                    b.Property<long?>("CoreId1")
                         .HasColumnType("bigint");
 
                     b.Property<string>("Language")
@@ -2075,7 +2080,7 @@ namespace TACHYON.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("CoreId");
+                    b.HasIndex("CoreId1");
 
                     b.ToTable("DocumentTypeTranslations");
                 });
@@ -3747,9 +3752,7 @@ namespace TACHYON.Migrations
                 {
                     b.HasOne("TACHYON.Documents.DocumentTypes.DocumentType", "Core")
                         .WithMany("Translations")
-                        .HasForeignKey("CoreId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("CoreId1");
                 });
 
             modelBuilder.Entity("TACHYON.Goods.GoodsDetails.GoodsDetail", b =>
