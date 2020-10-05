@@ -8,7 +8,7 @@
           <div class="card-body">
             <div *ngFor="let item of createOrEditDocumentFileDtos; index as i" class="row">
               <div class="form-group col-md-3">
-                <label>{{ item.documentTypeDto.displayName }}</label>
+                <label>{{ item.documentTypeDto.name }}</label>
                 <div class="custom-file">
                   <input
                     [disabled]="item.isAccepted"

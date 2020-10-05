@@ -443,6 +443,7 @@ namespace TACHYON.Documents.DocumentFiles
             var editionId = GetCurrentTenant().EditionId;
 
             var list = await _documentTypeRepository.GetAll()
+                .Include(x=> x.Translations)
                 .Where(x => x.EditionId == editionId)
                 .ToListAsync();
 
@@ -506,6 +507,7 @@ namespace TACHYON.Documents.DocumentFiles
             return list.Select(x => new CreateOrEditDocumentFileDto { DocumentTypeId = x.Id, DocumentTypeDto = ObjectMapper.Map<DocumentTypeDto>(x) }).ToList();
         }
 
+        [AbpAllowAnonymous]
         public async Task<CheckTenantRequiredDocumentFilesOutput> CheckTenantRequiredDocumentFiles()
         {
             var existedList = await _documentFileRepository.GetAll()
