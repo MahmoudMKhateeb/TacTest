@@ -31,7 +31,7 @@ export class CreateOrEditDocumentTypeTranslationModalComponent extends AppCompon
     super(injector);
   }
 
-  show(documentTypeTranslationId?: number): void {
+  show(documentTypeTranslationId?: number, documentTypeId?: number): void {
     if (!documentTypeTranslationId) {
       this.documentTypeTranslation = new CreateOrEditDocumentTypeTranslationDto();
       this.documentTypeTranslation.id = documentTypeTranslationId;
@@ -49,6 +49,10 @@ export class CreateOrEditDocumentTypeTranslationModalComponent extends AppCompon
         this.modal.show();
       });
     }
+    if (documentTypeId) {
+      this.documentTypeTranslation.coreId = documentTypeId;
+    }
+
     this._documentTypeTranslationsServiceProxy.getAllDocumentTypeForTableDropdown().subscribe((result) => {
       this.allDocumentTypes = result;
     });

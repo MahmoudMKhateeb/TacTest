@@ -1,24 +1,46 @@
-﻿import { Component, ViewChild, Injector, Output, EventEmitter } from '@angular/core';
+﻿import { Component, ViewChild, ViewEncapsulation, Injector, Output, EventEmitter, ChangeDetectorRef } from '@angular/core';
 import { ModalDirective } from 'ngx-bootstrap/modal';
+import { appModuleAnimation } from '@shared/animations/routerTransition';
+
 import { finalize } from 'rxjs/operators';
 import {
   DocumentTypesServiceProxy,
   CreateOrEditDocumentTypeDto,
   DocumentFilesServiceProxy,
   SelectItemDto,
+  DocumentTypeTranslationsServiceProxy,
+  DocumentTypeTranslationDto,
+  TokenAuthServiceProxy,
 } from '@shared/service-proxies/service-proxies';
 import { AppComponentBase } from '@shared/common/app-component-base';
 import * as moment from 'moment';
+import { CreateOrEditDocumentTypeTranslationModalComponent } from '@app/main/documentTypeTranslations/documentTypeTranslations/create-or-edit-documentTypeTranslation-modal.component';
+import { LazyLoadEvent } from '@node_modules/primeng/public_api';
+import { Paginator } from '@node_modules/primeng/paginator';
+import { Table } from '@node_modules/primeng/table';
+import { NotifyService } from '@node_modules/abp-ng2-module';
+import { ActivatedRoute } from '@angular/router';
+import { FileDownloadService } from '@shared/utils/file-download.service';
 
 @Component({
   selector: 'createOrEditDocumentTypeModal',
   templateUrl: './create-or-edit-documentType-modal.component.html',
+  encapsulation: ViewEncapsulation.None,
+
+  animations: [appModuleAnimation()],
 })
 export class CreateOrEditDocumentTypeModalComponent extends AppComponentBase {
   @ViewChild('createOrEditModal', { static: true }) modal: ModalDirective;
-
+  @ViewChild('paginator', { static: false }) paginator: Paginator;
+  @ViewChild('dataTable', { static: false }) dataTable: Table;
+  createOrEditDocumentTypeTranslationModal: CreateOrEditDocumentTypeTranslationModalComponent;
   @Output() modalSave: EventEmitter<any> = new EventEmitter<any>();
 
+  advancedFiltersAreShown = false;
+  filterText = '';
+  nameFilter = '';
+  languageFilter = '';
+  documentTypeDisplayNameFilter = '';
   active = false;
   saving = false;
 
@@ -31,7 +53,14 @@ export class CreateOrEditDocumentTypeModalComponent extends AppComponentBase {
   constructor(
     injector: Injector,
     private _documentTypesServiceProxy: DocumentTypesServiceProxy,
-    private _documentFilesServiceProxy: DocumentFilesServiceProxy
+    private _documentTypeTranslationsServiceProxy: DocumentTypeTranslationsServiceProxy,
+    private _documentFilesServiceProxy: DocumentFilesServiceProxy,
+
+    private _notifyService: NotifyService,
+    private _tokenAuth: TokenAuthServiceProxy,
+    private _activatedRoute: ActivatedRoute,
+    private _fileDownloadService: FileDownloadService,
+    private changeDetectorRef: ChangeDetectorRef
   ) {
     super(injector);
   }
@@ -77,8 +106,14 @@ export class CreateOrEditDocumentTypeModalComponent extends AppComponentBase {
       });
   }
 
+  createDocumentTypeTranslation(): void {
+    this.createOrEditDocumentTypeTranslationModal.show();
+  }
+
   close(): void {
     this.active = false;
+    this.documentType = new CreateOrEditDocumentTypeDto();
+    this.primengTableHelper.records = null;
     this.modal.hide();
   }
 
@@ -89,5 +124,49 @@ export class CreateOrEditDocumentTypeModalComponent extends AppComponentBase {
       this.tenantOptionSelected = false;
       this.documentType.editionId = undefined;
     }
+  }
+
+  getDocumentTypeTranslations(event?: LazyLoadEvent) {
+    if (this.documentType.id) {
+      this.changeDetectorRef.detectChanges();
+      if (this.primengTableHelper.shouldResetPaging(event)) {
+        this.paginator.changePage(0);
+        return;
+      }
+
+      this.primengTableHelper.showLoadingIndicator();
+
+      this._documentTypeTranslationsServiceProxy
+        .getAll(
+          this.filterText,
+          this.nameFilter,
+          this.languageFilter,
+          this.documentType.displayName,
+          this.primengTableHelper.getSorting(this.dataTable),
+          this.primengTableHelper.getSkipCount(this.paginator, event),
+          this.primengTableHelper.getMaxResultCount(this.paginator, event)
+        )
+        .subscribe((result) => {
+          this.primengTableHelper.totalRecordsCount = result.totalCount;
+          this.primengTableHelper.records = result.items;
+          this.primengTableHelper.hideLoadingIndicator();
+        });
+    } else {
+    }
+  }
+  reloadPage(): void {
+    this.changeDetectorRef.detectChanges();
+    this.paginator.changePage(this.paginator.getPage());
+  }
+
+  deleteDocumentTypeTranslation(documentTypeTranslation: DocumentTypeTranslationDto): void {
+    this.message.confirm('', this.l('AreYouSure'), (isConfirmed) => {
+      if (isConfirmed) {
+        this._documentTypeTranslationsServiceProxy.delete(documentTypeTranslation.id).subscribe(() => {
+          this.reloadPage();
+          this.notify.success(this.l('SuccessfullyDeleted'));
+        });
+      }
+    });
   }
 }
