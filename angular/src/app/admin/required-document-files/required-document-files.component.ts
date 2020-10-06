@@ -40,7 +40,7 @@ export class RequiredDocumentFilesComponent extends AppComponentBase implements 
 
   constructor(injector: Injector, private _documentFilesServiceProxy: DocumentFilesServiceProxy, private _tokenService: TokenService) {
     super(injector);
-    this._documentFilesServiceProxy.getTenantRequiredDocumentFileList().subscribe((result) => {
+    this._documentFilesServiceProxy.getTenantRequiredDocumentFilesTemplateForCreate().subscribe((result) => {
       result.forEach((x) => (x.expirationDate = null));
       this.createOrEditDocumentFileDtos = result;
       this.active = true;
@@ -92,7 +92,7 @@ export class RequiredDocumentFilesComponent extends AppComponentBase implements 
     this.DocsUploader.onCompleteAll = () => {
       // create truck req.
       this._documentFilesServiceProxy
-        .addTenantRequiredDocuments(this.createOrEditDocumentFileDtos)
+        .addTenantRequiredDocumentFiles(this.createOrEditDocumentFileDtos)
         .pipe(
           finalize(() => {
             this.saving = false;

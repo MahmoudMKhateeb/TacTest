@@ -227,7 +227,7 @@ namespace TACHYON.Trucks
                 truck.TenantId = (int)AbpSession.TenantId;
             }
 
-            var requiredDocs = await _documentFilesAppService.GetTruckRequiredDocumentFileList();
+            var requiredDocs = await _documentFilesAppService.GetTruckRequiredDocumentFiles();
             if (requiredDocs.Count > 0)
             {
                 foreach (var item in requiredDocs)

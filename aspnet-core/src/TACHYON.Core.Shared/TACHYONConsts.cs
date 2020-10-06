@@ -22,5 +22,10 @@
         //For example, you use Stripe and PayPal. Let say that stripe accepts min 5$ and PayPal accepts min 3$. If your payment amount is 4$.
         // User will prefer to use a payment method with the highest accept value which is a Stripe in this case.
         public const decimal MinimumUpgradePaymentAmount = 1M;
+
+        #region Tachyon consts
+        public const int MaxDocumentFileBytesUserFriendlyValue = 5;
+        #endregion
+
     }
 }

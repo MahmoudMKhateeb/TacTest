@@ -90,7 +90,7 @@ export class CreateOrEditTruckModalComponent extends AppComponentBase {
       this.userName2 = '';
 
       //RequiredDocuments
-      this._documentFilesServiceProxy.getTruckRequiredDocumentFileList().subscribe((result) => {
+      this._documentFilesServiceProxy.getTruckRequiredDocumentFiles().subscribe((result) => {
         this.truck.createOrEditDocumentFileDtos = result;
       });
 

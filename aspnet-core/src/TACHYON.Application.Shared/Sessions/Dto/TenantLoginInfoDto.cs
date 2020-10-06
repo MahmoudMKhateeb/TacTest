@@ -1,6 +1,9 @@
 ﻿using Abp.Application.Services.Dto;
 using Abp.Timing;
 using System;
+using System.Collections.Generic;
+using System.Linq;
+using TACHYON.Documents.DocumentTypes.Dtos;
 using TACHYON.MultiTenancy.Payments;
 
 namespace TACHYON.Sessions.Dto
@@ -32,7 +35,12 @@ namespace TACHYON.Sessions.Dto
         public string SubscriptionDateString { get; set; }
 
         public string CreationTimeString { get; set; }
+        public List<DocumentTypeDto> MissingRequiredDocumentTypes { get; set; }
 
+        public bool IsMissingRequiredDocumentFiles()
+        {
+            return MissingRequiredDocumentTypes.Any();
+        }
         public bool IsInTrial()
         {
             return IsInTrialPeriod;

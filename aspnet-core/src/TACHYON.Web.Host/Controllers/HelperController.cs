@@ -53,7 +53,7 @@ namespace TACHYON.Web.Controllers
 
                 if (File.Length > MaxDocumentFilePictureSize)
                 {
-                    throw new UserFriendlyException(L("DocumentFile_Warn_SizeLimit", AppConsts.MaxDocumentFileBytesUserFriendlyValue));
+                    throw new UserFriendlyException(L("DocumentFile_Warn_SizeLimit", TACHYONConsts.MaxDocumentFileBytesUserFriendlyValue));
                 }
 
                 byte[] fileBytes;

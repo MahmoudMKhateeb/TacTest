@@ -30,10 +30,9 @@ namespace TACHYON.Documents.DocumentFiles
     [AbpAuthorize(AppPermissions.Pages_DocumentFiles)]
     public class DocumentFilesAppService : TACHYONAppServiceBase, IDocumentFilesAppService
     {
-        private const int MaxDocumentFileBytes = 5242880; //5MB
 
 
-        public DocumentFilesAppService(IRepository<DocumentFile, Guid> documentFileRepository, IDocumentFilesExcelExporter documentFilesExcelExporter, IRepository<DocumentType, long> lookupDocumentTypeRepository, IRepository<Truck, Guid> lookupTruckRepository, IRepository<Trailer, long> lookupTrailerRepository, IRepository<User, long> lookupUserRepository, IRepository<RoutStep, long> lookupRoutStepRepository, ITempFileCacheManager tempFileCacheManager, IBinaryObjectManager binaryObjectManager, IRepository<Edition, int> editionRepository, IRepository<DocumentType, long> documentTypeRepository)
+        public DocumentFilesAppService(IRepository<DocumentFile, Guid> documentFileRepository, IDocumentFilesExcelExporter documentFilesExcelExporter, IRepository<DocumentType, long> lookupDocumentTypeRepository, IRepository<Truck, Guid> lookupTruckRepository, IRepository<Trailer, long> lookupTrailerRepository, IRepository<User, long> lookupUserRepository, IRepository<RoutStep, long> lookupRoutStepRepository, ITempFileCacheManager tempFileCacheManager, IBinaryObjectManager binaryObjectManager, IRepository<Edition, int> editionRepository, IRepository<DocumentType, long> documentTypeRepository, DocumentFilesManager documentFilesManager)
         {
             _documentFileRepository = documentFileRepository;
             _documentFilesExcelExporter = documentFilesExcelExporter;
@@ -46,6 +45,7 @@ namespace TACHYON.Documents.DocumentFiles
             _binaryObjectManager = binaryObjectManager;
             _editionRepository = editionRepository;
             _documentTypeRepository = documentTypeRepository;
+            _documentFilesManager = documentFilesManager;
         }
 
         private readonly IRepository<DocumentFile, Guid> _documentFileRepository;
@@ -59,6 +59,7 @@ namespace TACHYON.Documents.DocumentFiles
         private readonly IBinaryObjectManager _binaryObjectManager;
         private readonly IRepository<DocumentType, long> _documentTypeRepository;
         private readonly IRepository<Edition, int> _editionRepository;
+        private readonly DocumentFilesManager _documentFilesManager;
 
         public async Task<PagedResultDto<GetDocumentFileForViewDto>> GetAll(GetAllDocumentFilesInput input)
         {
@@ -331,32 +332,37 @@ namespace TACHYON.Documents.DocumentFiles
         ///     truck required documents list template
         /// </summary>
         /// <returns></returns>
-        public async Task<List<CreateOrEditDocumentFileDto>> GetTruckRequiredDocumentFileList()
+        public async Task<List<CreateOrEditDocumentFileDto>> GetTruckRequiredDocumentFiles()
         {
             return await GetRequiredDocumentFileListForCreateOrEdit(AppConsts.TruckDocumentsEntityName);
         }
 
         /// <summary>
-        ///     tenant required documents list
+        /// tenant required documents files list as a template to fill later in create
         /// </summary>
         /// <returns></returns>
-        public async Task<List<CreateOrEditDocumentFileDto>> GetTenantRequiredDocumentFileList()
+        public async Task<List<CreateOrEditDocumentFileDto>> GetTenantRequiredDocumentFilesTemplateForCreate()
         {
-            return await _GetTenantRequiredDocumentFileList();
+            var list = await _documentFilesManager.GetAllTenantMissingRequiredDocumentTypesListAsync(AbpSession.GetTenantId());
+            return list.Select(x => new CreateOrEditDocumentFileDto
+            {
+                DocumentTypeId = x.Id,
+                DocumentTypeDto = ObjectMapper.Map<DocumentTypeDto>(x)
+            }).ToList();
         }
 
-        public async Task AddTenantRequiredDocuments(List<CreateOrEditDocumentFileDto> input)
+        public async Task AddTenantRequiredDocumentFiles(List<CreateOrEditDocumentFileDto> input)
         {
-            var requiredDocs = await _GetTenantRequiredDocumentFileList();
-            if (requiredDocs.Count > 0)
+            var requiredDocumentTypes = await _documentFilesManager.GetAllTenantMissingRequiredDocumentTypesListAsync(AbpSession.GetTenantId());
+            if (requiredDocumentTypes.Count > 0)
             {
-                foreach (var item in requiredDocs)
+                foreach (var documentType in requiredDocumentTypes)
                 {
-                    var doc = input.FirstOrDefault(x => x.DocumentTypeId == item.DocumentTypeId);
+                    var doc = input.FirstOrDefault(x => x.DocumentTypeId == documentType.Id);
 
                     if (doc.UpdateDocumentFileInput.FileToken.IsNullOrEmpty())
                     {
-                        throw new UserFriendlyException(L("document missing msg :" + item.Name));
+                        throw new UserFriendlyException(L("document missing msg :" + documentType.DisplayName));
                     }
 
                 }
@@ -364,7 +370,6 @@ namespace TACHYON.Documents.DocumentFiles
 
             foreach (var item in input)
             {
-                item.Name = item.DocumentTypeDto.DisplayName + "_" + AbpSession.GetTenantId();
                 await Create(item);
             }
             //todo add notifications to host
@@ -379,6 +384,9 @@ namespace TACHYON.Documents.DocumentFiles
         [AbpAuthorize(AppPermissions.Pages_DocumentFiles_Create)]
         protected virtual async Task Create(CreateOrEditDocumentFileDto input)
         {
+            input.Name = input.DocumentTypeDto.DisplayName + "_" + AbpSession.GetTenantId();
+
+
             var documentFile = ObjectMapper.Map<DocumentFile>(input);
 
 
@@ -389,7 +397,7 @@ namespace TACHYON.Documents.DocumentFiles
 
             if (!input.UpdateDocumentFileInput.FileToken.IsNullOrEmpty())
             {
-                documentFile.BinaryObjectId = await SaveDocumentFileBinaryObject(input.UpdateDocumentFileInput);
+                documentFile.BinaryObjectId = await _documentFilesManager.SaveDocumentFileBinaryObject(input.UpdateDocumentFileInput.FileToken, AbpSession.TenantId);
             }
 
             await _documentFileRepository.InsertAsync(documentFile);
@@ -407,50 +415,11 @@ namespace TACHYON.Documents.DocumentFiles
             if (input.UpdateDocumentFileInput != null && !input.UpdateDocumentFileInput.FileToken.IsNullOrEmpty())
             {
                 await _binaryObjectManager.DeleteAsync(input.BinaryObjectId);
-                documentFile.BinaryObjectId = await SaveDocumentFileBinaryObject(input.UpdateDocumentFileInput);
+                documentFile.BinaryObjectId = await _documentFilesManager.SaveDocumentFileBinaryObject(input.UpdateDocumentFileInput.FileToken, AbpSession.TenantId);
             }
 
             ObjectMapper.Map(input, documentFile);
         }
-
-        /// <summary>
-        /// convert file from temp-cache to binary-file and save it to database
-        /// </summary>
-        /// <param name="input"></param>
-        /// <returns></returns>
-        private async Task<Guid> SaveDocumentFileBinaryObject(UpdateDocumentFileInput input)
-        {
-            var fileBytes = _tempFileCacheManager.GetFile(input.FileToken);
-
-            if (fileBytes == null)
-            {
-                throw new UserFriendlyException("There is no such document file with the token: " + input.FileToken);
-            }
-
-            if (fileBytes.Length > MaxDocumentFileBytes)
-            {
-                throw new UserFriendlyException(L("DocumentFile_Warn_SizeLimit", AppConsts.MaxDocumentFileBytesUserFriendlyValue));
-            }
-
-            var storedFile = new BinaryObject(AbpSession.TenantId, fileBytes);
-            await _binaryObjectManager.SaveAsync(storedFile);
-
-            return storedFile.Id;
-        }
-
-        private async Task<List<CreateOrEditDocumentFileDto>> _GetTenantRequiredDocumentFileList()
-        {
-            var editionId = GetCurrentTenant().EditionId;
-
-            var list = await _documentTypeRepository.GetAll()
-                .Include(x=> x.Translations)
-                .Where(x => x.EditionId == editionId)
-                .ToListAsync();
-
-            return list.Select(x => new CreateOrEditDocumentFileDto { DocumentTypeId = x.Id, DocumentTypeDto = ObjectMapper.Map<DocumentTypeDto>(x) }).ToList();
-
-        }
-
 
         private async Task<GetDocumentFileForEditOutput> _GetDocumentFileForEdit(EntityDto<Guid> input)
         {
@@ -507,41 +476,6 @@ namespace TACHYON.Documents.DocumentFiles
             return list.Select(x => new CreateOrEditDocumentFileDto { DocumentTypeId = x.Id, DocumentTypeDto = ObjectMapper.Map<DocumentTypeDto>(x) }).ToList();
         }
 
-        [AbpAllowAnonymous]
-        public async Task<CheckTenantRequiredDocumentFilesOutput> CheckTenantRequiredDocumentFiles()
-        {
-            var existedList = await _documentFileRepository.GetAll()
-               .Where(x => x.ExpirationDate > DateTime.Now || x.ExpirationDate == null || !x.DocumentTypeFk.HasExpirationDate)
-               .Where(x => x.DocumentTypeFk.IsRequired)
-               .Where(x => !x.IsRejected)
-               .Where(x => x.IsAccepted)
-               .ToListAsync();
-
-            var reqList = await _GetTenantRequiredDocumentFileList();
-
-            var outPut = new CheckTenantRequiredDocumentFilesOutput
-            {
-                MissingDocumentFilesCount = 0,
-                HasMissingDocuments = false
-            };
-
-
-            if (reqList.ToList().Count > 0)
-            {
-                foreach (var item in reqList)
-                {
-                    var doc = existedList.FirstOrDefault(x => x.DocumentTypeId == item.DocumentTypeId);
-                    if (doc == null)
-                    {
-                        outPut.HasMissingDocuments = true;
-                        outPut.MissingDocumentFilesCount++;
-
-                    } 
-                }
-            }
-            return outPut;
-
-        }
 
 
     }
