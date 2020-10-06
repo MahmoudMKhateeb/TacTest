@@ -1,13 +1,15 @@
-import { PermissionCheckerService, RefreshTokenService } from 'abp-ng2-module';
 import { Injectable } from '@angular/core';
-import { ActivatedRouteSnapshot, CanActivate, CanActivateChild, CanLoad, Router, RouterStateSnapshot } from '@angular/router';
-import { AppSessionService } from '@shared/common/session/app-session.service';
+import { CanActivate, ActivatedRouteSnapshot, RouterStateSnapshot, UrlTree, Router, CanActivateChild, CanLoad } from '@angular/router';
+import { Observable } from 'rxjs';
 import { UrlHelper } from '@shared/helpers/UrlHelper';
-import { Observable } from '@node_modules/rxjs/internal/Observable';
-import { of, Subject } from 'rxjs';
+import { of, Subject } from '@node_modules/rxjs';
+import { PermissionCheckerService, RefreshTokenService } from '@node_modules/abp-ng2-module';
+import { AppSessionService } from '@shared/common/session/app-session.service';
 
-@Injectable()
-export class AppRouteGuard implements CanActivate, CanActivateChild, CanLoad {
+@Injectable({
+  providedIn: 'root',
+})
+export class RequiredDocumentsGuard implements CanActivate, CanActivateChild, CanLoad {
   constructor(
     private _permissionChecker: PermissionCheckerService,
     private _router: Router,
@@ -16,6 +18,7 @@ export class AppRouteGuard implements CanActivate, CanActivateChild, CanLoad {
   ) {}
 
   canActivateInternal(data: any, state: RouterStateSnapshot): Observable<boolean> {
+    console.log('canActivateInternal data', data['permission']);
     if (UrlHelper.isInstallUrl(location.href)) {
       return of(true);
     }
@@ -41,15 +44,6 @@ export class AppRouteGuard implements CanActivate, CanActivateChild, CanLoad {
           this._router.navigate(['/account/login']);
         }
       );
-      return sessionObservable;
-    }
-
-    if (this._sessionService.isTenantHasMissingRequiredDocuments()) {
-      console.log('this._sessionService.tenant.missingRequiredDocumentTypes.length data', data['permission']);
-      let sessionObservable = new Subject<any>();
-      sessionObservable.next(false);
-      sessionObservable.complete();
-      this._router.navigate(['/tenantRequiredDocuments/tenantRequiredDocuments']);
       return sessionObservable;
     }
 

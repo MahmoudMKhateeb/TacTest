@@ -4,6 +4,8 @@ import { AppComponent } from './app.component';
 import { AppRouteGuard } from './shared/common/auth/auth-route-guard';
 import { NotificationsComponent } from './shared/layout/notifications/notifications.component';
 import { NgxSpinnerService } from 'ngx-spinner';
+import { RequiredDocumentFilesComponent } from '@app/admin/required-document-files/required-document-files.component';
+import { RequiredDocumentsGuard } from '@app/shared/common/required-documents/required-documents.guard';
 
 @NgModule({
   imports: [
@@ -37,6 +39,14 @@ import { NgxSpinnerService } from 'ngx-spinner';
             redirectTo: 'notifications',
           },
         ],
+      },
+      {
+        path: 'tenantRequiredDocuments',
+        component: AppComponent,
+        canActivate: [RequiredDocumentsGuard],
+        canActivateChild: [RequiredDocumentsGuard],
+        canLoad: [RequiredDocumentsGuard],
+        children: [{ path: 'tenantRequiredDocuments', component: RequiredDocumentFilesComponent, data: { permission: 'Pages.DocumentFiles' } }],
       },
     ]),
   ],
