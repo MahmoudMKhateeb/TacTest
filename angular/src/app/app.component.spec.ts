@@ -1,5 +1,5 @@
 /* tslint:disable:no-unused-variable */
-
+// @ts-nocheck
 import { APP_BASE_HREF } from '@angular/common';
 import { TestBed, async } from '@angular/core/testing';
 import { API_BASE_URL } from '@shared/service-proxies/service-proxies';
