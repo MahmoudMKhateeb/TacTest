@@ -170,4 +170,11 @@ export class CreateOrEditDocumentTypeModalComponent extends AppComponentBase {
       }
     });
   }
+
+  hasNumberCheckBoxChange() {
+    if (this.documentType.hasNumber) {
+      this.documentType.numberMaxDigits = undefined;
+      this.documentType.numberMinDigits = undefined;
+    }
+  }
 }

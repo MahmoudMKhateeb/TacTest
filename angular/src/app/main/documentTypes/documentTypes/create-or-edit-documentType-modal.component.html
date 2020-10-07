@@ -21,60 +21,179 @@
           </button>
         </div>
         <div class="modal-body">
-          <div class="form-group">
-            <label for="DocumentType_DisplayName">{{ l('DisplayName') }} *</label>
-            <input
-              type="text"
-              id="DocumentType_DisplayName"
-              class="form-control"
-              [(ngModel)]="documentType.displayName"
-              name="DisplayName"
-              minlength="0"
-              maxlength="256"
-              required
-            />
-          </div>
+          <div class="row margin-bottom-15">
+            <div class="col">
+              <label for="DocumentType_DisplayName">{{ l('DisplayName') }} *</label>
+              <input
+                type="text"
+                id="DocumentType_DisplayName"
+                class="form-control"
+                [(ngModel)]="documentType.displayName"
+                name="DisplayName"
+                minlength="0"
+                maxlength="256"
+                required
+              />
+            </div>
 
-          <div class="form-group m-form__group">
-            <label for="documentType.documentsEntityId">{{ l('documentsEntity') }}</label>
-            <select
-              id="documentType.documentsEntityId"
-              name="documentType.documentsEntityId"
-              [(ngModel)]="documentType.documentsEntityId"
-              class="form-control"
-              required
-              (change)="documentsEntityDropDownOnChange($event)"
-            >
-              <option value="">{{ l('SelectDocumentsEntity') }}</option>
-              <option *ngFor="let item of allDocumentsEntities" value="{{ item.id }}">{{ item.displayName }}</option>
-            </select>
-          </div>
-          <div class="form-group">
-            <div class="checkbox-inline">
-              <label for="DocumentType_IsRequired" class="checkbox">
-                <input id="DocumentType_IsRequired" type="checkbox" name="IsRequired" [(ngModel)]="documentType.isRequired" />
-                {{ l('IsRequired') }}
-                <span></span>
-              </label>
-
-              <label for="DocumentType_HasExpirationDate" class="checkbox">
-                <input id="DocumentType_HasExpirationDate" type="checkbox" name="HasExpirationDate" [(ngModel)]="documentType.hasExpirationDate" />
-                {{ l('HasExpirationDate') }}
-                <span></span>
-              </label>
-              <label for="DocumentType_HasNumber" class="checkbox">
-                <input id="DocumentType_HasNumber" type="checkbox" name="HasNumber" [(ngModel)]="documentType.hasNumber" />
-                {{ l('HasNumber') }}
-                <span></span>
-              </label>
-              <label for="DocumentType_HasNotes" class="checkbox">
-                <input id="DocumentType_HasNotes" type="checkbox" name="HasNotes" [(ngModel)]="documentType.hasNotes" />
-                {{ l('HasNotes') }}
-                <span></span>
-              </label>
+            <div class="col">
+              <label for="documentType.documentsEntityId">{{ l('documentsEntity') }}</label>
+              <select
+                id="documentType.documentsEntityId"
+                name="documentType.documentsEntityId"
+                [(ngModel)]="documentType.documentsEntityId"
+                class="form-control"
+                required
+                (change)="documentsEntityDropDownOnChange($event)"
+              >
+                <option value="">{{ l('SelectDocumentsEntity') }}</option>
+                <option *ngFor="let item of allDocumentsEntities" value="{{ item.id }}">{{ item.displayName }}</option>
+              </select>
             </div>
           </div>
+          <div class="row margin-bottom-15">
+            <div class="col">
+              <label for="DocumentType_expirationAlertDays">{{ l('ExpirationAlertDays') }} *</label>
+              <input
+                type="number"
+                id="DocumentType_expirationAlertDays"
+                class="form-control"
+                [(ngModel)]="documentType.expirationAlertDays"
+                name="expirationAlertDays"
+                min="0"
+                required
+              />
+            </div>
+            <div class="col">
+              <label for="DocumentType_inActiveToleranceDays">{{ l('InActiveToleranceDays') }} *</label>
+              <input
+                type="number"
+                id="DocumentType_inActiveToleranceDays"
+                class="form-control"
+                [(ngModel)]="documentType.inActiveToleranceDays"
+                name="inActiveToleranceDays"
+                min="0"
+                required
+              />
+            </div>
+          </div>
+          <div class="row margin-bottom-15">
+            <div class="col-6">
+              <label for="DocumentType_SpecialConstant">{{ l('SpecialConstant') }} *</label>
+              <input
+                type="text"
+                id="DocumentType_SpecialConstant"
+                class="form-control"
+                [(ngModel)]="documentType.specialConstant"
+                name="specialConstant"
+                min="0"
+                required
+              />
+            </div>
+          </div>
+          <div class="form-group form">
+            <div class="form-group row">
+              <label for="DocumentType_IsRequired" class="col-3 col-form-label">{{ l('IsRequired') }}</label>
+              <div class="col-3">
+                <span class="switch switch-sm switch-icon">
+                  <label>
+                    <input id="DocumentType_IsRequired" type="checkbox" name="IsRequired" [(ngModel)]="documentType.isRequired" />
+                    <span></span>
+                  </label>
+                </span>
+              </div>
 
+              <label for="DocumentType_HasNumber" class="col-3 col-form-label">{{ l('HasNumber') }}</label>
+              <div class="col-3">
+                <span class="switch switch-sm switch-icon">
+                  <label>
+                    <input
+                      id="DocumentType_HasNumber"
+                      type="checkbox"
+                      (change)="hasNumberCheckBoxChange()"
+                      name="hasNumber"
+                      [(ngModel)]="documentType.hasNumber"
+                    />
+                    <span></span>
+                  </label>
+                </span>
+              </div>
+
+              <div *ngIf="documentType.hasNumber" class="col-6 margin-bottom-10">
+                <!--                <label for="DocumentType_numberMinDigits">{{ l('NumberMinDigits') }} *</label>-->
+                <input
+                  type="number"
+                  id="DocumentType_numberMinDigits"
+                  class="form-control"
+                  placeholder="{{ l('NumberMinDigits') }}"
+                  [(ngModel)]="documentType.numberMinDigits"
+                  name="numberMinDigits"
+                  min="0"
+                  required
+                />
+              </div>
+              <div *ngIf="documentType.hasNumber" class="col-6 margin-bottom-10">
+                <!--                <label for="DocumentType_numberMaxDigits">{{ l('NumberMaxDigits') }} *</label>-->
+                <input
+                  type="number"
+                  id="DocumentType_numberMaxDigits"
+                  class="form-control"
+                  placeholder="{{ l('NumberMaxDigits') }}"
+                  [(ngModel)]="documentType.numberMaxDigits"
+                  name="numberMaxDigits"
+                  min="0"
+                  required
+                />
+              </div>
+              <label for="DocumentType_HasExpirationDate" class="col-3 col-form-label">{{ l('HasExpirationDate') }}</label>
+              <div class="col-3">
+                <span class="switch switch-sm switch-icon">
+                  <label>
+                    <input
+                      id="DocumentType_HasExpirationDate"
+                      type="checkbox"
+                      name="HasExpirationDate"
+                      [(ngModel)]="documentType.hasExpirationDate"
+                    />
+                    <span></span>
+                  </label>
+                </span>
+              </div>
+              <label for="DocumentType_HasNotes" class="col-3 col-form-label">{{ l('HasNotes') }}</label>
+              <div class="col-3">
+                <span class="switch switch-sm switch-icon">
+                  <label>
+                    <input id="DocumentType_HasNotes" type="checkbox" name="HasNotes" [(ngModel)]="documentType.hasNotes" />
+                    <span></span>
+                  </label>
+                </span>
+              </div>
+
+              <label for="DocumentType_IsNumberUnique" class="col-3 col-form-label">{{ l('IsNumberUnique') }}</label>
+              <div class="col-3">
+                <span class="switch switch-sm switch-icon">
+                  <label>
+                    <input id="DocumentType_IsNumberUnique" type="checkbox" name="IsNumberUnique" [(ngModel)]="documentType.isNumberUnique" />
+                    <span></span>
+                  </label>
+                </span>
+              </div>
+              <label for="DocumentType_InActiveAccountExpired" class="col-3 col-form-label">{{ l('InActiveAccountExpired') }}</label>
+              <div class="col-3">
+                <span class="switch switch-sm switch-icon">
+                  <label>
+                    <input
+                      id="DocumentType_InActiveAccountExpired"
+                      type="checkbox"
+                      name="InActiveAccountExpired"
+                      [(ngModel)]="documentType.inActiveAccountExpired"
+                    />
+                    <span></span>
+                  </label>
+                </span>
+              </div>
+            </div>
+          </div>
           <div *ngIf="tenantOptionSelected" class="form-group m-form__group">
             <label for="documentType.editionId">{{ l('edition') }}</label>
             <select id="documentType.editionId" name="documentType.editionId" [(ngModel)]="documentType.editionId" class="form-control">
