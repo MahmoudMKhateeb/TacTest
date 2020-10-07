@@ -1,13 +1,10 @@
-﻿
+﻿using System.ComponentModel.DataAnnotations;
 using Abp.Application.Services.Dto;
-using System;
-using System.ComponentModel.DataAnnotations;
 
 namespace TACHYON.Documents.DocumentTypes.Dtos
 {
     public class CreateOrEditDocumentTypeDto : EntityDto<long?>
     {
-
         [Required]
         [StringLength(DocumentTypeConsts.MaxDisplayNameLength, MinimumLength = DocumentTypeConsts.MinDisplayNameLength)]
         public string DisplayName { get; set; }
@@ -15,9 +12,7 @@ namespace TACHYON.Documents.DocumentTypes.Dtos
 
         public bool IsRequired { get; set; }
 
-
         public bool HasExpirationDate { get; set; }
-
 
         public int DocumentsEntityId { get; set; }
 
@@ -25,8 +20,12 @@ namespace TACHYON.Documents.DocumentTypes.Dtos
         public bool HasNumber { get; set; }
 
         public bool HasNotes { get; set; }
-
-
-
+        public bool IsNumberUnique { get; set; }
+        public bool HasSpecialConstant { get; set; }
+        public int NumberMinDigits { get; set; }
+        public int NumberMaxDigits { get; set; }
+        public int ExpirationAlertDays { get; set; }
+        public bool InActiveAccountExpired { get; set; }
+        public int InActiveToleranceDays { get; set; }
     }
 }

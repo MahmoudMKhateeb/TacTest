@@ -35,7 +35,7 @@ namespace TACHYON.Documents
 
 
         /// <summary>
-        ///     list of missing required documents types from tenant
+        ///list of missing required documents types from tenant
         /// </summary>
         /// <param name="tenantId"></param>
         /// <returns></returns>
@@ -46,9 +46,9 @@ namespace TACHYON.Documents
             var reqList = await GetAllTenantRequiredDocumentTypesListAsync(tenantId);
 
 
-            if (reqList.ToList().Count > 0)
+            if (reqList != null && reqList.Any())
             {
-                foreach (var item in reqList)
+                foreach (var item in reqList.ToList())
                 {
                     if (existedList.Any(x => x.DocumentTypeId == item.Id))
                     {
@@ -90,10 +90,10 @@ namespace TACHYON.Documents
             {
                 return await _documentFileRepository.GetAll()
                     .Where(x => x.TenantId == tenantId)
-                    .Where(x => x.ExpirationDate > DateTime.Now || x.ExpirationDate == null || !x.DocumentTypeFk.HasExpirationDate)
-                    .Where(x => x.DocumentTypeFk.IsRequired)
-                    .Where(x => !x.IsRejected)
-                    .Where(x => x.IsAccepted)
+                    //.Where(x => x.ExpirationDate > DateTime.Now || x.ExpirationDate == null || !x.DocumentTypeFk.HasExpirationDate)
+                    //.Where(x => x.DocumentTypeFk.IsRequired)
+                    //.Where(x => !x.IsRejected)
+                    //.Where(x => x.IsAccepted)
                     .ToListAsync();
             }
         }

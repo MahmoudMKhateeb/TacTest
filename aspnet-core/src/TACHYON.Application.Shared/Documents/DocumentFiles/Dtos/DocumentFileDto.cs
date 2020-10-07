@@ -29,6 +29,7 @@ namespace TACHYON.Documents.DocumentFiles.Dtos
         public int? Number { get; set; }
         public string Notes { get; set; }
 
+        public string SpecialConstant { get; set; }
 
     }
 }

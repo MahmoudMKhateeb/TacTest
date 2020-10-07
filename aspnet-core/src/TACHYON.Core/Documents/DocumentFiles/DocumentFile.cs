@@ -66,7 +66,7 @@ namespace TACHYON.Documents.DocumentFiles
 
         public string Notes { get; set; }
 
-
+        public string SpecialConstant { get; set; }
 
     }
 }
