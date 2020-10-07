@@ -107,6 +107,7 @@ export class CreateOrEditDocumentTypeModalComponent extends AppComponentBase {
   }
 
   createDocumentTypeTranslation(): void {
+    // this.createOrEditDocumentTypeTranslationModal.
     this.createOrEditDocumentTypeTranslationModal.show();
   }
 

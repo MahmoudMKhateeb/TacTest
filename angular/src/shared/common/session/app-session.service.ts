@@ -131,6 +131,9 @@ export class AppSessionService {
   }
 
   isTenantHasMissingRequiredDocuments(): boolean {
-    return this.tenant.missingRequiredDocumentTypes.length > 0;
+    if (this.tenant) {
+      return this.tenant.missingRequiredDocumentTypes.length > 0;
+    }
+    return false;
   }
 }
