@@ -52,28 +52,28 @@ namespace TACHYON.Documents.DocumentTypes
         /// <summary>
         /// to use in filtering or queries or we can use it as a tag
         /// </summary>
-        public bool HasSpecialConstant { get; set; }
+        public string SpecialConstant { get; set; }
 
         /// <summary>
         /// to set min length validation for number <see cref="DocumentFile.Number"/>
         /// </summary>
-        public int NumberMinDigits { get; set; }
+        public int? NumberMinDigits { get; set; }
 
         /// <summary>
         /// to set max length validation for number <see cref="DocumentFile.Number"/>
         /// </summary>
-        public int NumberMaxDigits { get; set; }
+        public int? NumberMaxDigits { get; set; }
 
         /// <summary>
         /// days prior to the expiration date user notified
         /// </summary>
-        public int ExpirationAlertDays { get; set; }
+        public int? ExpirationAlertDays { get; set; }
         public bool InActiveAccountExpired { get; set; }
 
         /// <summary>
         /// tolerance active account Days after expiration date
         /// </summary>
-        public int InActiveToleranceDays { get; set; }
+        public int? InActiveToleranceDays { get; set; }
 
         public bool HasHijriExpirationDate { get; set; }
 

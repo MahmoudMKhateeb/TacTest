@@ -65,8 +65,8 @@ namespace TACHYON.Documents.DocumentFiles
         public int? Number { get; set; }
 
         public string Notes { get; set; }
+        public string HijriExpirationDate { get; set; }
 
-        public string SpecialConstant { get; set; }
 
     }
 }

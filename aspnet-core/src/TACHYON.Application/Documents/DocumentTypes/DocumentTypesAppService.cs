@@ -43,6 +43,8 @@ namespace TACHYON.Documents.DocumentTypes
 
             var filteredDocumentTypes = _documentTypeRepository.GetAll()
                         .Include(e => e.Translations)
+                        .Include(x=> x.DocumentsEntityFk)
+                        .Include(x=> x.EditionFk)
                         .WhereIf(!string.IsNullOrWhiteSpace(input.Filter), e => false || e.DisplayName.Contains(input.Filter) || e.DocumentsEntityFk.DisplayName.Contains(input.Filter))
                         .WhereIf(!string.IsNullOrWhiteSpace(input.DisplayNameFilter), e => e.DisplayName == input.DisplayNameFilter)
                         .WhereIf(input.IsRequiredFilter > -1, e => (input.IsRequiredFilter == 1 && e.IsRequired) || (input.IsRequiredFilter == 0 && !e.IsRequired))

@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using TACHYON.EntityFrameworkCore;
 
 namespace TACHYON.Migrations
 {
     [DbContext(typeof(TACHYONDbContext))]
-    partial class TACHYONDbContextModelSnapshot : ModelSnapshot
+    [Migration("20201007081203_ add HasHijriExpirationDate DocumentTypes tabl")]
+    partial class addHasHijriExpirationDateDocumentTypestabl
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -1937,9 +1939,6 @@ namespace TACHYON.Migrations
                         .HasColumnType("nvarchar(100)")
                         .HasMaxLength(100);
 
-                    b.Property<string>("HijriExpirationDate")
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<bool>("IsAccepted")
                         .HasColumnType("bit");
 
@@ -1968,6 +1967,9 @@ namespace TACHYON.Migrations
 
                     b.Property<long?>("RoutStepId")
                         .HasColumnType("bigint");
+
+                    b.Property<string>("SpecialConstant")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<int?>("TenantId")
                         .HasColumnType("int");
@@ -2069,6 +2071,9 @@ namespace TACHYON.Migrations
                     b.Property<bool>("HasNumber")
                         .HasColumnType("bit");
 
+                    b.Property<bool>("HasSpecialConstant")
+                        .HasColumnType("bit");
+
                     b.Property<bool>("InActiveAccountExpired")
                         .HasColumnType("bit");
 
@@ -2095,9 +2100,6 @@ namespace TACHYON.Migrations
 
                     b.Property<int?>("NumberMinDigits")
                         .HasColumnType("int");
-
-                    b.Property<string>("SpecialConstant")
-                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 

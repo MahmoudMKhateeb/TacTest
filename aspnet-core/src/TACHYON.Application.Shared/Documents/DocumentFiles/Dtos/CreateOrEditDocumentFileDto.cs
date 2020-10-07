@@ -1,12 +1,32 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
 using Abp.Application.Services.Dto;
+using Abp.Runtime.Validation;
 using TACHYON.Documents.DocumentTypes.Dtos;
 
 namespace TACHYON.Documents.DocumentFiles.Dtos
 {
-    public class CreateOrEditDocumentFileDto : EntityDto<Guid?>
+    public class CreateOrEditDocumentFileDto : EntityDto<Guid?>, ICustomValidate
     {
+        public void AddValidationErrors(CustomValidationContext context)
+        {
+            if (!DocumentTypeDto.HasNumber)
+            {
+                return;
+            }
+
+            if (DocumentTypeDto.NumberMaxDigits.HasValue && Number.ToString().Length > DocumentTypeDto.NumberMaxDigits)
+            {
+                context.Results.Add(new ValidationResult("Number digits must be less than or equal " + DocumentTypeDto.NumberMaxDigits));
+            }
+
+            if (DocumentTypeDto.NumberMinDigits.HasValue && Number.ToString().Length < DocumentTypeDto.NumberMinDigits)
+            {
+                context.Results.Add(new ValidationResult("Number digits must be greater than or equal " + DocumentTypeDto.NumberMinDigits));
+            }
+
+        }
+
         public DocumentTypeDto DocumentTypeDto { get; set; }
         public UpdateDocumentFileInput UpdateDocumentFileInput { get; set; }
 
@@ -38,7 +58,8 @@ namespace TACHYON.Documents.DocumentFiles.Dtos
         public int? Number { get; set; }
 
         public string Notes { get; set; }
-        public string SpecialConstant { get; set; }
+        public string HijriExpirationDate { get; set; }
+
 
     }
 }

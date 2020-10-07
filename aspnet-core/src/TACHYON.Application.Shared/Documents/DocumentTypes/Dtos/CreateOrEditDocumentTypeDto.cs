@@ -21,11 +21,14 @@ namespace TACHYON.Documents.DocumentTypes.Dtos
 
         public bool HasNotes { get; set; }
         public bool IsNumberUnique { get; set; }
-        public bool HasSpecialConstant { get; set; }
-        public int NumberMinDigits { get; set; }
-        public int NumberMaxDigits { get; set; }
-        public int ExpirationAlertDays { get; set; }
+        public string SpecialConstant { get; set; }
+        public int? NumberMinDigits { get; set; }
+        public int? NumberMaxDigits { get; set; }
+        public int? ExpirationAlertDays { get; set; }
         public bool InActiveAccountExpired { get; set; }
-        public int InActiveToleranceDays { get; set; }
+        public int? InActiveToleranceDays { get; set; }
+        public bool HasHijriExpirationDate { get; set; }
+
+
     }
 }

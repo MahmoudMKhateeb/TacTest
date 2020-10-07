@@ -386,6 +386,14 @@ namespace TACHYON.Documents.DocumentFiles
         {
             input.Name = input.DocumentTypeDto.DisplayName + "_" + AbpSession.GetTenantId();
 
+            if (input.DocumentTypeDto.IsNumberUnique)
+            {
+                var count = await _documentFileRepository.CountAsync(x => x.Number == input.Number && x.DocumentTypeId == input.DocumentTypeId);
+                if (count > 0)
+                {
+                    throw new UserFriendlyException(L("document number should be unique message"));
+                }
+            }
 
             var documentFile = ObjectMapper.Map<DocumentFile>(input);
 
