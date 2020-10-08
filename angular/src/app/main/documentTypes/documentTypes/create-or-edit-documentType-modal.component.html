@@ -51,35 +51,10 @@
               </select>
             </div>
           </div>
-          <div class="row margin-bottom-15">
-            <div class="col">
-              <label for="DocumentType_expirationAlertDays">{{ l('ExpirationAlertDays') }} *</label>
-              <input
-                type="number"
-                id="DocumentType_expirationAlertDays"
-                class="form-control"
-                [(ngModel)]="documentType.expirationAlertDays"
-                name="expirationAlertDays"
-                min="0"
-                required
-              />
-            </div>
-            <div class="col">
-              <label for="DocumentType_inActiveToleranceDays">{{ l('InActiveToleranceDays') }} *</label>
-              <input
-                type="number"
-                id="DocumentType_inActiveToleranceDays"
-                class="form-control"
-                [(ngModel)]="documentType.inActiveToleranceDays"
-                name="inActiveToleranceDays"
-                min="0"
-                required
-              />
-            </div>
-          </div>
+
           <div class="row margin-bottom-15">
             <div class="col-6">
-              <label for="DocumentType_SpecialConstant">{{ l('SpecialConstant') }} *</label>
+              <label for="DocumentType_SpecialConstant">{{ l('SpecialConstant') }}</label>
               <input
                 type="text"
                 id="DocumentType_SpecialConstant"
@@ -87,13 +62,12 @@
                 [(ngModel)]="documentType.specialConstant"
                 name="specialConstant"
                 min="0"
-                required
               />
             </div>
           </div>
           <div class="form-group form">
             <div class="form-group row">
-              <label for="DocumentType_IsRequired" class="col-3 col-form-label">{{ l('IsRequired') }}</label>
+              <label for="DocumentType_IsRequired" class="col-3 col-form-label">{{ l('IsRequired') }} *</label>
               <div class="col-3">
                 <span class="switch switch-sm switch-icon">
                   <label>
@@ -120,7 +94,6 @@
               </div>
 
               <div *ngIf="documentType.hasNumber" class="col-6 margin-bottom-10">
-                <!--                <label for="DocumentType_numberMinDigits">{{ l('NumberMinDigits') }} *</label>-->
                 <input
                   type="number"
                   id="DocumentType_numberMinDigits"
@@ -129,11 +102,9 @@
                   [(ngModel)]="documentType.numberMinDigits"
                   name="numberMinDigits"
                   min="0"
-                  required
                 />
               </div>
               <div *ngIf="documentType.hasNumber" class="col-6 margin-bottom-10">
-                <!--                <label for="DocumentType_numberMaxDigits">{{ l('NumberMaxDigits') }} *</label>-->
                 <input
                   type="number"
                   id="DocumentType_numberMaxDigits"
@@ -142,7 +113,6 @@
                   [(ngModel)]="documentType.numberMaxDigits"
                   name="numberMaxDigits"
                   min="0"
-                  required
                 />
               </div>
               <label for="DocumentType_HasExpirationDate" class="col-3 col-form-label">{{ l('HasExpirationDate') }}</label>
@@ -152,6 +122,7 @@
                     <input
                       id="DocumentType_HasExpirationDate"
                       type="checkbox"
+                      (change)="HasExpDateCheckBoxChange()"
                       name="HasExpirationDate"
                       [(ngModel)]="documentType.hasExpirationDate"
                     />
@@ -167,6 +138,28 @@
                     <span></span>
                   </label>
                 </span>
+              </div>
+              <div *ngIf="documentType.hasExpirationDate" class="col-6 margin-bottom-10">
+                <input
+                  type="number"
+                  id="DocumentType_expirationAlertDays"
+                  class="form-control"
+                  placeholder="{{ l('ExpirationAlertDays') }}"
+                  [(ngModel)]="documentType.expirationAlertDays"
+                  name="expirationAlertDays"
+                  min="0"
+                />
+              </div>
+              <div *ngIf="documentType.hasExpirationDate" class="col-6 margin-bottom-10">
+                <input
+                  type="number"
+                  id="DocumentType_inActiveToleranceDays"
+                  class="form-control"
+                  placeholder="{{ l('InActiveToleranceDays') }}"
+                  [(ngModel)]="documentType.inActiveToleranceDays"
+                  name="inActiveToleranceDays"
+                  min="0"
+                />
               </div>
 
               <label for="DocumentType_IsNumberUnique" class="col-3 col-form-label">{{ l('IsNumberUnique') }}</label>
@@ -192,6 +185,21 @@
                   </label>
                 </span>
               </div>
+
+              <label for="DocumentType_HasHijriExpirationDate" class="col-3 col-form-label">{{ l('hasHijriExpirationDate') }}</label>
+              <div class="col-3">
+                <span class="switch switch-sm switch-icon">
+                  <label>
+                    <input
+                      id="DocumentType_HasHijriExpirationDate"
+                      type="checkbox"
+                      name="hasHijriExpirationDate"
+                      [(ngModel)]="documentType.hasHijriExpirationDate"
+                    />
+                    <span></span>
+                  </label>
+                </span>
+              </div>
             </div>
           </div>
           <div *ngIf="tenantOptionSelected" class="form-group m-form__group">
@@ -201,7 +209,6 @@
               <option *ngFor="let item of editions" value="{{ item.id }}">{{ item.displayName }}</option>
             </select>
           </div>
-          <!--  M. - Start of addLocalization Table -->
           <div class="separator separator-dashed my-10"></div>
           <div class="row a lign-items-center">
             <!--<Primeng-Datatable-Start>-->
@@ -313,8 +320,6 @@
             (modalSave)="getDocumentTypeTranslations()"
           ></createOrEditDocumentTypeTranslationModal>
           <viewDocumentTypeTranslationModal #viewDocumentTypeTranslationModal></viewDocumentTypeTranslationModal>
-
-          <!--M. - end of addLocalication Table -->
         </div>
 
         <div class="modal-footer">
