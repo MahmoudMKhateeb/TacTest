@@ -22,10 +22,10 @@
         </div>
         <div class="modal-body">
           <div class="row">
-            <div class="col-sm-3 text-center mb-5 mt-5">
+            <div *ngIf="truck.id" class="col-sm-3 text-center mb-5 mt-5">
               <img class="img-thumbnail img-rounded" height="128" src="{{ profilePicture }}" width="128" />
             </div>
-            <div class="col-sm-9">
+            <div class="col">
               <div class="form-group m-form__group">
                 <label for="TrucksTypeDisplayName">{{ l('TrucksType') }}</label>
                 <select [(ngModel)]="truck.trucksTypeId" class="form-control" name="truck.trucksTypeId" required>
