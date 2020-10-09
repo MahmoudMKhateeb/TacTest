@@ -6,6 +6,11 @@
     /// </summary>
     public static class AppPermissions
     {
+        public const string Pages_TransportTypes = "Pages.TransportTypes";
+        public const string Pages_TransportTypes_Create = "Pages.TransportTypes.Create";
+        public const string Pages_TransportTypes_Edit = "Pages.TransportTypes.Edit";
+        public const string Pages_TransportTypes_Delete = "Pages.TransportTypes.Delete";
+
         public const string Pages_DocumentTypeTranslations = "Pages.DocumentTypeTranslations";
         public const string Pages_DocumentTypeTranslations_Create = "Pages.DocumentTypeTranslations.Create";
         public const string Pages_DocumentTypeTranslations_Edit = "Pages.DocumentTypeTranslations.Edit";

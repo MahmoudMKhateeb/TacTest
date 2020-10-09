@@ -1,6 +1,13 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <localizationDictionary culture="en">
-  <texts>    <text name="DocumentTypeTranslations">Document type translations</text>
+  <texts>    <text name="TransportTypes">Transport types</text>
+    <text name="TransportType">Transport type</text>
+    <text name="TACHYON.TransportTypes.TransportType">TransportType</text>
+    <text name="TransportTypesHeaderInfo">Transport types header info</text>
+    <text name="CreateNewTransportType">Create new transport type</text>
+    <text name="EditTransportType">Edit transport type</text>
+    <text name="DeleteTransportType">Delete transport type</text>
+    <text name="DocumentTypeTranslations">Document type translations</text>
     <text name="DocumentTypeTranslation">Document type translation</text>
     <text name="TACHYON.DocumentTypeTranslations.DocumentTypeTranslation">DocumentTypeTranslation</text>
     <text name="DocumentTypeTranslationsHeaderInfo">Document type translations header info</text>

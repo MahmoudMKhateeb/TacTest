@@ -2,6 +2,10 @@
 import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { AppCommonModule } from '@app/shared/common/app-common.module';
+import { TransportTypesComponent } from './transportTypes/transportTypes/transportTypes.component';
+import { ViewTransportTypeModalComponent } from './transportTypes/transportTypes/view-transportType-modal.component';
+import { CreateOrEditTransportTypeModalComponent } from './transportTypes/transportTypes/create-or-edit-transportType-modal.component';
+
 import { DocumentTypeTranslationsComponent } from './documentTypeTranslations/documentTypeTranslations/documentTypeTranslations.component';
 import { ViewDocumentTypeTranslationModalComponent } from './documentTypeTranslations/documentTypeTranslations/view-documentTypeTranslation-modal.component';
 import { CreateOrEditDocumentTypeTranslationModalComponent } from './documentTypeTranslations/documentTypeTranslations/create-or-edit-documentTypeTranslation-modal.component';
@@ -146,6 +150,10 @@ NgxBootstrapDatePickerConfigService.registerNgxBootstrapDatePickerLocales();
     }),
   ],
   declarations: [
+    TransportTypesComponent,
+
+    ViewTransportTypeModalComponent,
+    CreateOrEditTransportTypeModalComponent,
     DocumentTypeTranslationsComponent,
 
     ViewDocumentTypeTranslationModalComponent,
