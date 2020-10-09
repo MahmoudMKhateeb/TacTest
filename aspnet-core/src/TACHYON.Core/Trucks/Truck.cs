@@ -30,11 +30,11 @@ namespace TACHYON.Trucks
         [StringLength(TruckConsts.MaxModelYearLength, MinimumLength = TruckConsts.MinModelYearLength)]
         public virtual string ModelYear { get; set; }
 
-        [Required]
-        [StringLength(TruckConsts.MaxLicenseNumberLength, MinimumLength = TruckConsts.MinLicenseNumberLength)]
-        public virtual string LicenseNumber { get; set; }
+        //[Required]
+        //[StringLength(TruckConsts.MaxLicenseNumberLength, MinimumLength = TruckConsts.MinLicenseNumberLength)]
+        //public virtual string LicenseNumber { get; set; }
 
-        public virtual DateTime LicenseExpirationDate { get; set; }
+        //public virtual DateTime LicenseExpirationDate { get; set; }
 
         public virtual bool IsAttachable { get; set; }
 
@@ -57,14 +57,14 @@ namespace TACHYON.Trucks
         [ForeignKey("Driver1UserId")]
         public User Driver1UserFk { get; set; }
 
-        public virtual long? Driver2UserId { get; set; }
+        //public virtual long? Driver2UserId { get; set; }
 
-        [ForeignKey("Driver2UserId")]
-        public User Driver2UserFk { get; set; }
+        //[ForeignKey("Driver2UserId")]
+        //public User Driver2UserFk { get; set; }
 
-        public int? RentPrice { get; set; }
+        //public int? RentPrice { get; set; }
 
-        public int? RentDuration { get; set; }
+        //public int? RentDuration { get; set; }
 
         public virtual Guid? PictureId { get; set; }
 

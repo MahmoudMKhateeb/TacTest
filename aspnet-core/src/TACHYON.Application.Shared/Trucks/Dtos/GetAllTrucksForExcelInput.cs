@@ -13,10 +13,10 @@ namespace TACHYON.Trucks.Dtos
 
         public string ModelYearFilter { get; set; }
 
-        public string LicenseNumberFilter { get; set; }
+        //public string LicenseNumberFilter { get; set; }
 
-        public DateTime? MaxLicenseExpirationDateFilter { get; set; }
-        public DateTime? MinLicenseExpirationDateFilter { get; set; }
+        //public DateTime? MaxLicenseExpirationDateFilter { get; set; }
+        //public DateTime? MinLicenseExpirationDateFilter { get; set; }
 
         public int IsAttachableFilter { get; set; }
 
@@ -27,7 +27,7 @@ namespace TACHYON.Trucks.Dtos
 
         public string UserNameFilter { get; set; }
 
-        public string UserName2Filter { get; set; }
+        //public string UserName2Filter { get; set; }
 
 
     }

@@ -38,13 +38,10 @@ namespace TACHYON.Trucks.Exporting
                         L("PlateNumber"),
                         L("ModelName"),
                         L("ModelYear"),
-                        L("LicenseNumber"),
-                        L("LicenseExpirationDate"),
                         L("IsAttachable"),
                         L("Note"),
                         (L("TrucksType")) + L("DisplayName"),
                         (L("TruckStatus")) + L("DisplayName"),
-                        (L("User")) + L("Name"),
                         (L("User")) + L("Name")
                         );
 
@@ -53,14 +50,11 @@ namespace TACHYON.Trucks.Exporting
                         _ => _.Truck.PlateNumber,
                         _ => _.Truck.ModelName,
                         _ => _.Truck.ModelYear,
-                        _ => _.Truck.LicenseNumber,
-                        _ => _timeZoneConverter.Convert(_.Truck.LicenseExpirationDate, _abpSession.TenantId, _abpSession.GetUserId()),
                         _ => _.Truck.IsAttachable,
                         _ => _.Truck.Note,
                         _ => _.TrucksTypeDisplayName,
                         _ => _.TruckStatusDisplayName,
-                        _ => _.UserName,
-                        _ => _.UserName2
+                        _ => _.UserName
                         );
 
 
