@@ -15,12 +15,12 @@ namespace TACHYON.Documents.DocumentFiles.Dtos
                 return;
             }
 
-            if (DocumentTypeDto.NumberMaxDigits.HasValue && Number.ToString().Length > DocumentTypeDto.NumberMaxDigits)
+            if (DocumentTypeDto.NumberMaxDigits !=0 && Number.ToString().Length > DocumentTypeDto.NumberMaxDigits)
             {
                 context.Results.Add(new ValidationResult("Number digits must be less than or equal " + DocumentTypeDto.NumberMaxDigits));
             }
 
-            if (DocumentTypeDto.NumberMinDigits.HasValue && Number.ToString().Length < DocumentTypeDto.NumberMinDigits)
+            if (DocumentTypeDto.NumberMinDigits!=0 && Number.ToString().Length < DocumentTypeDto.NumberMinDigits)
             {
                 context.Results.Add(new ValidationResult("Number digits must be greater than or equal " + DocumentTypeDto.NumberMinDigits));
             }

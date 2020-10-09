@@ -17,11 +17,11 @@
                     class="custom-file-input"
                     [required]="item.documentTypeDto.isRequired"
                   />
-                  <label class="custom-file-label" [for]="item.documentTypeDto.displayName">{{ l('select file') }}</label>
+                  <label class="custom-file-label" [for]="item.documentTypeDto.displayName"> {{ item.name ? item.name : l('select file') }}</label>
                 </div>
               </div>
               <div *ngIf="item.documentTypeDto.hasExpirationDate" class="form-group col-md-3">
-                <label>{{ l('expiration date') }}</label>
+                <label>{{ l('expiration date') }} <span class="text-danger">*</span></label>
                 <input
                   name="expirationDate{{ i }}"
                   id="expirationDate{{ i }}"
@@ -35,16 +35,25 @@
                 />
               </div>
               <div *ngIf="item.documentTypeDto.hasNumber" class="form-group col-md-3">
-                <label>{{ l('number') }}</label>
+                <label
+                  >{{ l('number') }}
+                  <span class="text-danger">*</span>
+                </label>
                 <input
                   name="number{{ i }}"
                   id="number{{ i }}"
                   class="form-control m-input"
-                  [required]="item.documentTypeDto.hasNumber && !item.isAccepted"
+                  required
+                  [maxLength]="item.documentTypeDto.numberMaxDigits == 0 ? 50 : item.documentTypeDto.numberMaxDigits"
+                  [minLength]="item.documentTypeDto.numberMinDigits"
                   type="text"
                   [(ngModel)]="item.number"
                   [disabled]="item.isAccepted"
                 />
+                <span class="form-text text-muted"
+                  >{{ l('minDigits:') }} {{ item.documentTypeDto.numberMinDigits }} {{ l('maxDigits:') }}
+                  {{ item.documentTypeDto.numberMaxDigits == 0 ? 50 : item.documentTypeDto.numberMaxDigits }}
+                </span>
               </div>
               <div *ngIf="item.documentTypeDto.hasNotes" class="form-group col-md-3">
                 <label>{{ l('note') }}</label>
