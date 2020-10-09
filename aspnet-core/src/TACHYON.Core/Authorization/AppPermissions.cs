@@ -6,6 +6,16 @@
     /// </summary>
     public static class AppPermissions
     {
+        public const string Pages_DocumentTypeTranslations = "Pages.DocumentTypeTranslations";
+        public const string Pages_DocumentTypeTranslations_Create = "Pages.DocumentTypeTranslations.Create";
+        public const string Pages_DocumentTypeTranslations_Edit = "Pages.DocumentTypeTranslations.Edit";
+        public const string Pages_DocumentTypeTranslations_Delete = "Pages.DocumentTypeTranslations.Delete";
+
+        public const string Pages_DocumentsEntities = "Pages.DocumentsEntities";
+        public const string Pages_DocumentsEntities_Create = "Pages.DocumentsEntities.Create";
+        public const string Pages_DocumentsEntities_Edit = "Pages.DocumentsEntities.Edit";
+        public const string Pages_DocumentsEntities_Delete = "Pages.DocumentsEntities.Delete";
+
         public const string Pages_Administration_ShippingRequestStatuses = "Pages.Administration.ShippingRequestStatuses";
         public const string Pages_Administration_ShippingRequestStatuses_Create = "Pages.Administration.ShippingRequestStatuses.Create";
         public const string Pages_Administration_ShippingRequestStatuses_Edit = "Pages.Administration.ShippingRequestStatuses.Edit";

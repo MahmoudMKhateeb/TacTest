@@ -4,6 +4,8 @@ using Abp.Domain.Entities.Auditing;
 using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using Abp.Application.Editions;
+using Abp.Application.Features;
 using TACHYON.Authorization.Users;
 using TACHYON.Documents.DocumentTypes;
 using TACHYON.Routs.RoutSteps;
@@ -31,7 +33,8 @@ namespace TACHYON.Documents.DocumentFiles
 
         public virtual DateTime ExpirationDate { get; set; }
 
-        public virtual string IsAccepted { get; set; }
+        public virtual bool IsAccepted { get; set; }
+        public virtual bool IsRejected { get; set; }
 
 
         public virtual long DocumentTypeId { get; set; }
@@ -58,6 +61,12 @@ namespace TACHYON.Documents.DocumentFiles
 
         [ForeignKey("RoutStepId")]
         public RoutStep RoutStepFk { get; set; }
+
+        public int? Number { get; set; }
+
+        public string Notes { get; set; }
+        public string HijriExpirationDate { get; set; }
+
 
     }
 }

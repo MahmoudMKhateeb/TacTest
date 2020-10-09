@@ -1,4 +1,4 @@
-﻿import { NgModule } from '@angular/core';
+import { NgModule } from '@angular/core';
 import { NavigationEnd, Router, RouterModule } from '@angular/router';
 import { ShippingRequestStatusesComponent } from './shippingRequestStatuses/shippingRequestStatuses/shippingRequestStatuses.component';
 import { UnitOfMeasuresComponent } from './unitOfMeasures/unitOfMeasures/unitOfMeasures.component';
@@ -34,7 +34,11 @@ import { EntityDynamicParameterValueComponent } from './dynamic-entity-parameter
       {
         path: '',
         children: [
-                    { path: 'shippingRequestStatuses/shippingRequestStatuses', component: ShippingRequestStatusesComponent, data: { permission: 'Pages.Administration.ShippingRequestStatuses' }  },
+          {
+            path: 'shippingRequestStatuses/shippingRequestStatuses',
+            component: ShippingRequestStatusesComponent,
+            data: { permission: 'Pages.Administration.ShippingRequestStatuses' },
+          },
           { path: 'unitOfMeasures/unitOfMeasures', component: UnitOfMeasuresComponent, data: { permission: 'Pages.Administration.UnitOfMeasures' } },
           { path: 'trucks/truckStatuses', component: TruckStatusesComponent, data: { permission: 'Pages.Administration.TruckStatuses' } },
           { path: 'users', component: UsersComponent, data: { permission: 'Pages.Administration.Users' } },

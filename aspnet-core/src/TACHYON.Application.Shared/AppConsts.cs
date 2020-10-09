@@ -9,7 +9,12 @@ namespace TACHYON
     {
         #region Tachyon consts
 
-        public const int MaxDocumentFileBytesUserFriendlyValue = 5;
+
+        /// <summary>
+        /// for documentType Required from entity
+        /// </summary>
+        public const string TruckDocumentsEntityName = "Truck";
+        public const string TenantDocumentsEntityName = "Tenant";
 
         #endregion
 

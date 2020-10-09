@@ -1,6 +1,20 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <localizationDictionary culture="en">
-  <texts>    <text name="ShippingRequestStatuses">Shipping request statuses</text>
+  <texts>    <text name="DocumentTypeTranslations">Document type translations</text>
+    <text name="DocumentTypeTranslation">Document type translation</text>
+    <text name="TACHYON.DocumentTypeTranslations.DocumentTypeTranslation">DocumentTypeTranslation</text>
+    <text name="DocumentTypeTranslationsHeaderInfo">Document type translations header info</text>
+    <text name="CreateNewDocumentTypeTranslation">Create new document type translation</text>
+    <text name="EditDocumentTypeTranslation">Edit document type translation</text>
+    <text name="DeleteDocumentTypeTranslation">Delete document type translation</text>
+    <text name="DocumentsEntities">Documents entities</text>
+    <text name="DocumentsEntity">Documents entity</text>
+    <text name="TACHYON.DocumentsEntities.DocumentsEntity">DocumentsEntity</text>
+    <text name="DocumentsEntitiesHeaderInfo">Documents entities header info</text>
+    <text name="CreateNewDocumentsEntity">Create new documents entity</text>
+    <text name="EditDocumentsEntity">Edit documents entity</text>
+    <text name="DeleteDocumentsEntity">Delete documents entity</text>
+    <text name="ShippingRequestStatuses">Shipping request statuses</text>
     <text name="ShippingRequestStatus">Shipping request status</text>
     <text name="TACHYON.ShippingRequestStatuses.ShippingRequestStatus">ShippingRequestStatus</text>
     <text name="ShippingRequestStatusesHeaderInfo">Shipping request statuses header info</text>

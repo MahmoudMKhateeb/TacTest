@@ -129,4 +129,11 @@ export class AppSessionService {
   get impersonatorTenantId(): number {
     return this.impersonatorTenant ? this.impersonatorTenant.id : null;
   }
+
+  isTenantHasMissingRequiredDocuments(): boolean {
+    if (this.tenant) {
+      return this.tenant.missingRequiredDocumentTypes.length > 0;
+    }
+    return false;
+  }
 }

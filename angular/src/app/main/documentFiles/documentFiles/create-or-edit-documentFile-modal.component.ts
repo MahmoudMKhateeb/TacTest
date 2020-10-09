@@ -45,8 +45,9 @@ export class CreateOrEditDocumentFileModalComponent extends AppComponentBase {
   allRoutSteps: DocumentFileRoutStepLookupTableDto[];
 
   public uploader: FileUploader;
-  public maxDocumentFileBytesUserFriendlyValue = 5;
   private _uploaderOptions: FileUploaderOptions = {};
+
+  fileToken: string;
 
   constructor(injector: Injector, private _documentFilesServiceProxy: DocumentFilesServiceProxy, private _tokenService: TokenService) {
     super(injector);
@@ -99,7 +100,26 @@ export class CreateOrEditDocumentFileModalComponent extends AppComponentBase {
 
   save(): void {
     this.saving = true;
-    this.uploader.uploadAll();
+    if (this.uploader.queue.length > 0) {
+      this.uploader.uploadAll();
+
+      this.documentFile.updateDocumentFileInput = new UpdateDocumentFileInput();
+      this.documentFile.updateDocumentFileInput.fileToken = this.fileToken;
+    }
+
+    this._documentFilesServiceProxy
+      .createOrEdit(this.documentFile)
+      .pipe(
+        finalize(() => {
+          this.saving = false;
+        })
+      )
+      .subscribe(() => {
+        this.saving = false;
+        this.notify.info(this.l('SavedSuccessfully'));
+        this.close();
+        this.modalSave.emit(null);
+      });
   }
 
   close(): void {
@@ -126,25 +146,8 @@ export class CreateOrEditDocumentFileModalComponent extends AppComponentBase {
 
     this.uploader.onSuccessItem = (item, response, status) => {
       const resp = <IAjaxResponse>JSON.parse(response);
-      console.log(resp);
       if (resp.success) {
-        console.log(resp);
-        this.documentFile.updateDocumentFileInput = new UpdateDocumentFileInput();
-        this.documentFile.updateDocumentFileInput.fileToken = resp.result.fileToken;
-
-        this._documentFilesServiceProxy
-          .createOrEdit(this.documentFile)
-          .pipe(
-            finalize(() => {
-              this.saving = false;
-            })
-          )
-          .subscribe(() => {
-            this.saving = false;
-            this.notify.info(this.l('SavedSuccessfully'));
-            this.close();
-            this.modalSave.emit(null);
-          });
+        this.fileToken = resp.result.fileToken;
       } else {
         this.message.error(resp.error.message);
       }
@@ -180,5 +183,13 @@ export class CreateOrEditDocumentFileModalComponent extends AppComponentBase {
     }
 
     return s4() + s4() + '-' + s4() + '-' + s4() + '-' + s4() + '-' + s4() + s4() + s4();
+  }
+
+  isAcceptedChange() {
+    this.documentFile.isRejected = !this.documentFile.isAccepted;
+  }
+
+  isRejectedChange() {
+    this.documentFile.isAccepted = !this.documentFile.isRejected;
   }
 }

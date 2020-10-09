@@ -21,65 +21,307 @@
           </button>
         </div>
         <div class="modal-body">
-          <div class="form-group">
-            <label for="DocumentType_DisplayName">{{ l('DisplayName') }} *</label>
-            <input
-              type="text"
-              id="DocumentType_DisplayName"
-              class="form-control"
-              [(ngModel)]="documentType.displayName"
-              name="DisplayName"
-              minlength="0"
-              maxlength="256"
-              required
-            />
+          <div class="row margin-bottom-15">
+            <div class="col">
+              <label for="DocumentType_DisplayName">{{ l('DisplayName') }} *</label>
+              <input
+                type="text"
+                id="DocumentType_DisplayName"
+                class="form-control"
+                [(ngModel)]="documentType.displayName"
+                name="DisplayName"
+                minlength="0"
+                maxlength="256"
+                required
+              />
+            </div>
+
+            <div class="col">
+              <label for="documentType.documentsEntityId">{{ l('documentsEntity') }}</label>
+              <select
+                id="documentType.documentsEntityId"
+                name="documentType.documentsEntityId"
+                [(ngModel)]="documentType.documentsEntityId"
+                class="form-control"
+                required
+                (change)="documentsEntityDropDownOnChange($event)"
+              >
+                <option value="">{{ l('SelectDocumentsEntity') }}</option>
+                <option *ngFor="let item of allDocumentsEntities" value="{{ item.id }}">{{ item.displayName }}</option>
+              </select>
+            </div>
           </div>
 
-          <br />
-          <div class="m-checkbox-list">
-            <label for="DocumentType_IsRequired" class="kt-checkbox">
-              <input id="DocumentType_IsRequired" type="checkbox" name="IsRequired" [(ngModel)]="documentType.isRequired" />
-              {{ l('IsRequired') }}
-              <span></span>
-            </label>
+          <div class="row margin-bottom-15">
+            <div class="col-6">
+              <label for="DocumentType_SpecialConstant">{{ l('SpecialConstant') }}</label>
+              <input
+                type="text"
+                id="DocumentType_SpecialConstant"
+                class="form-control"
+                [(ngModel)]="documentType.specialConstant"
+                name="specialConstant"
+                min="0"
+              />
+            </div>
           </div>
+          <div class="form-group form">
+            <div class="form-group row">
+              <label for="DocumentType_IsRequired" class="col-3 col-form-label">{{ l('IsRequired') }} *</label>
+              <div class="col-3">
+                <span class="switch switch-sm switch-icon">
+                  <label>
+                    <input id="DocumentType_IsRequired" type="checkbox" name="IsRequired" [(ngModel)]="documentType.isRequired" />
+                    <span></span>
+                  </label>
+                </span>
+              </div>
 
-          <div class="form-group">
-            <label for="DocumentType_ExpirationDate">{{ l('ExpirationDate') }}</label>
-            <input
-              required
-              class="form-control m-input"
-              type="datetime"
-              bsDatepicker
-              datePickerMomentModifier
-              [(date)]="documentType.expirationDate"
-              id="DocumentType_ExpirationDate"
-              name="DocumentType_ExpirationDate"
-            />
-          </div>
+              <label for="DocumentType_HasNumber" class="col-3 col-form-label">{{ l('HasNumber') }}</label>
+              <div class="col-3">
+                <span class="switch switch-sm switch-icon">
+                  <label>
+                    <input
+                      id="DocumentType_HasNumber"
+                      type="checkbox"
+                      (change)="hasNumberCheckBoxChange()"
+                      name="hasNumber"
+                      [(ngModel)]="documentType.hasNumber"
+                    />
+                    <span></span>
+                  </label>
+                </span>
+              </div>
 
-          <br />
-          <div class="m-checkbox-list">
-            <label for="DocumentType_HasExpirationDate" class="kt-checkbox">
-              <input id="DocumentType_HasExpirationDate" type="checkbox" name="HasExpirationDate" [(ngModel)]="documentType.hasExpirationDate" />
-              {{ l('HasExpirationDate') }}
-              <span></span>
-            </label>
-          </div>
+              <div *ngIf="documentType.hasNumber" class="col-6 margin-bottom-10">
+                <input
+                  type="number"
+                  id="DocumentType_numberMinDigits"
+                  class="form-control"
+                  placeholder="{{ l('NumberMinDigits') }}"
+                  [(ngModel)]="documentType.numberMinDigits"
+                  name="numberMinDigits"
+                  min="0"
+                />
+              </div>
+              <div *ngIf="documentType.hasNumber" class="col-6 margin-bottom-10">
+                <input
+                  type="number"
+                  id="DocumentType_numberMaxDigits"
+                  class="form-control"
+                  placeholder="{{ l('NumberMaxDigits') }}"
+                  [(ngModel)]="documentType.numberMaxDigits"
+                  name="numberMaxDigits"
+                  min="0"
+                />
+              </div>
+              <label for="DocumentType_HasExpirationDate" class="col-3 col-form-label">{{ l('HasExpirationDate') }}</label>
+              <div class="col-3">
+                <span class="switch switch-sm switch-icon">
+                  <label>
+                    <input
+                      id="DocumentType_HasExpirationDate"
+                      type="checkbox"
+                      (change)="HasExpDateCheckBoxChange()"
+                      name="HasExpirationDate"
+                      [(ngModel)]="documentType.hasExpirationDate"
+                    />
+                    <span></span>
+                  </label>
+                </span>
+              </div>
+              <label for="DocumentType_HasNotes" class="col-3 col-form-label">{{ l('HasNotes') }}</label>
+              <div class="col-3">
+                <span class="switch switch-sm switch-icon">
+                  <label>
+                    <input id="DocumentType_HasNotes" type="checkbox" name="HasNotes" [(ngModel)]="documentType.hasNotes" />
+                    <span></span>
+                  </label>
+                </span>
+              </div>
+              <div *ngIf="documentType.hasExpirationDate" class="col-6 margin-bottom-10">
+                <input
+                  type="number"
+                  id="DocumentType_expirationAlertDays"
+                  class="form-control"
+                  placeholder="{{ l('ExpirationAlertDays') }}"
+                  [(ngModel)]="documentType.expirationAlertDays"
+                  name="expirationAlertDays"
+                  min="0"
+                />
+              </div>
+              <div *ngIf="documentType.hasExpirationDate" class="col-6 margin-bottom-10">
+                <input
+                  type="number"
+                  id="DocumentType_inActiveToleranceDays"
+                  class="form-control"
+                  placeholder="{{ l('InActiveToleranceDays') }}"
+                  [(ngModel)]="documentType.inActiveToleranceDays"
+                  name="inActiveToleranceDays"
+                  min="0"
+                />
+              </div>
 
-          <div class="form-group">
-            <label for="DocumentType_RequiredFrom">{{ l('RequiredFrom') }}</label>
-            <input
-              type="text"
-              id="DocumentType_RequiredFrom"
-              class="form-control"
-              [(ngModel)]="documentType.requiredFrom"
-              name="RequiredFrom"
-              minlength="0"
-              maxlength="128"
-            />
+              <label for="DocumentType_IsNumberUnique" class="col-3 col-form-label">{{ l('IsNumberUnique') }}</label>
+              <div class="col-3">
+                <span class="switch switch-sm switch-icon">
+                  <label>
+                    <input id="DocumentType_IsNumberUnique" type="checkbox" name="IsNumberUnique" [(ngModel)]="documentType.isNumberUnique" />
+                    <span></span>
+                  </label>
+                </span>
+              </div>
+              <label for="DocumentType_InActiveAccountExpired" class="col-3 col-form-label">{{ l('InActiveAccountExpired') }}</label>
+              <div class="col-3">
+                <span class="switch switch-sm switch-icon">
+                  <label>
+                    <input
+                      id="DocumentType_InActiveAccountExpired"
+                      type="checkbox"
+                      name="InActiveAccountExpired"
+                      [(ngModel)]="documentType.inActiveAccountExpired"
+                    />
+                    <span></span>
+                  </label>
+                </span>
+              </div>
+
+              <label for="DocumentType_HasHijriExpirationDate" class="col-3 col-form-label">{{ l('hasHijriExpirationDate') }}</label>
+              <div class="col-3">
+                <span class="switch switch-sm switch-icon">
+                  <label>
+                    <input
+                      id="DocumentType_HasHijriExpirationDate"
+                      type="checkbox"
+                      name="hasHijriExpirationDate"
+                      [(ngModel)]="documentType.hasHijriExpirationDate"
+                    />
+                    <span></span>
+                  </label>
+                </span>
+              </div>
+            </div>
           </div>
+          <div *ngIf="tenantOptionSelected" class="form-group m-form__group">
+            <label for="documentType.editionId">{{ l('edition') }}</label>
+            <select id="documentType.editionId" name="documentType.editionId" [(ngModel)]="documentType.editionId" class="form-control">
+              <option value="">{{ l('Selectedition') }}</option>
+              <option *ngFor="let item of editions" value="{{ item.id }}">{{ item.displayName }}</option>
+            </select>
+          </div>
+          <div class="separator separator-dashed my-10"></div>
+          <div class="row a lign-items-center">
+            <!--<Primeng-Datatable-Start>-->
+
+            <div class="primeng-datatable-container col-12" [busyIf]="primengTableHelper.isLoading">
+              <button
+                *ngIf="isGranted('Pages.DocumentTypeTranslations.Create')"
+                type="button"
+                class="btn btn-primary blue margin-bottom-15"
+                (click)="createOrEditDocumentTypeTranslationModal.show(null, documentType.id)"
+                value="creat translation"
+              >
+                <i class="fa fa-plus"></i> {{ l('CreateNewDocumentTypeTranslation') }}
+              </button>
+              <br />
+              <p-table
+                #dataTable
+                (onLazyLoad)="getDocumentTypeTranslations($event)"
+                [value]="primengTableHelper.records"
+                rows="{{ primengTableHelper.defaultRecordsCountPerPage }}"
+                [paginator]="false"
+                [lazy]="true"
+                [scrollable]="true"
+                ScrollWidth="100%"
+                [responsive]="primengTableHelper.isResponsive"
+                [resizableColumns]="primengTableHelper.resizableColumns"
+              >
+                <ng-template pTemplate="header">
+                  <tr>
+                    <th
+                      style="width: 130px;"
+                      [hidden]="!isGrantedAny('Pages.DocumentTypeTranslations.Edit', 'Pages.DocumentTypeTranslations.Delete')"
+                    >
+                      {{ l('Actions') }}
+                    </th>
+                    <th style="width: 150px;" pSortableColumn="coreFk.displayName">
+                      {{ l('DisplayName') }}
+                      <p-sortIcon field="documentTypeDisplayName"></p-sortIcon>
+                    </th>
+                    <th style="width: 150px;" pSortableColumn="name">
+                      {{ l('Name') }}
+                      <p-sortIcon field="documentTypeTranslation.name"></p-sortIcon>
+                    </th>
+                    <th style="width: 150px;" pSortableColumn="language">
+                      {{ l('Language') }}
+                      <p-sortIcon field="documentTypeTranslation.language"></p-sortIcon>
+                    </th>
+                  </tr>
+                </ng-template>
+                <ng-template pTemplate="body" let-record="$implicit" let-i="rowIndex">
+                  <tr>
+                    <td
+                      style="width: 130px;"
+                      [hidden]="!isGrantedAny('Pages.DocumentTypeTranslations.Edit', 'Pages.DocumentTypeTranslations.Delete')"
+                    >
+                      <a
+                        href="javascript:"
+                        class="btn btn-icon btn-danger"
+                        (click)="deleteDocumentTypeTranslation(record.documentTypeTranslation)"
+                        *ngIf="permission.isGranted('Pages.DocumentTypeTranslations.Delete')"
+                      >
+                        <i class="flaticon-delete"></i>
+                      </a>
+                      <a
+                        href="javascript:"
+                        class="btn btn-icon btn-primary"
+                        (click)="createOrEditDocumentTypeTranslationModal.show(record.documentTypeTranslation.id)"
+                        *ngIf="permission.isGranted('Pages.DocumentTypeTranslations.Edit')"
+                      >
+                        <i class="flaticon2-pen"></i>
+                      </a>
+                    </td>
+                    <td style="width: 150px;">
+                      <span class="ui-column-title"> {{ l('DisplayName') }}</span>
+                      {{ record.documentTypeDisplayName }}
+                    </td>
+                    <td style="width: 150px;">
+                      <span class="ui-column-title"> {{ l('Name') }}</span>
+                      {{ record.documentTypeTranslation.name }}
+                    </td>
+                    <td style="width: 150px;">
+                      <span class="ui-column-title"> {{ l('Language') }}</span>
+                      {{ record.documentTypeTranslation.language }}
+                    </td>
+                  </tr>
+                </ng-template>
+              </p-table>
+              <div class="primeng-no-data" *ngIf="primengTableHelper.totalRecordsCount == 0">
+                {{ l('NoData') }}
+              </div>
+              <div class="primeng-paging-container">
+                <p-paginator
+                  [rows]="primengTableHelper.defaultRecordsCountPerPage"
+                  #paginator
+                  (onPageChange)="getDocumentTypeTranslations($event)"
+                  [totalRecords]="primengTableHelper.totalRecordsCount"
+                  [rowsPerPageOptions]="primengTableHelper.predefinedRecordsCountPerPage"
+                >
+                </p-paginator>
+                <span class="total-records-count">
+                  {{ l('TotalRecordsCount', primengTableHelper.totalRecordsCount) }}
+                </span>
+              </div>
+            </div>
+            <!--<Primeng-Datatable-End>-->
+          </div>
+          <createOrEditDocumentTypeTranslationModal
+            #createOrEditDocumentTypeTranslationModal
+            (modalSave)="getDocumentTypeTranslations()"
+          ></createOrEditDocumentTypeTranslationModal>
+          <viewDocumentTypeTranslationModal #viewDocumentTypeTranslationModal></viewDocumentTypeTranslationModal>
         </div>
+
         <div class="modal-footer">
           <button [disabled]="saving" type="button" class="btn btn-default" (click)="close()">{{ l('Cancel') }}</button>
           <button

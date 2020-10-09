@@ -8,6 +8,9 @@ using System.Text;
 using System.Threading.Tasks;
 using TACHYON.Authorization.Delegation;
 using TACHYON.Authorization.Users;
+using TACHYON.Documents;
+using TACHYON.Documents.DocumentTypes;
+using TACHYON.Documents.DocumentTypes.Dtos;
 using TACHYON.Editions;
 using TACHYON.MultiTenancy.Payments;
 using TACHYON.Sessions.Dto;
@@ -20,15 +23,17 @@ namespace TACHYON.Sessions
         private readonly IUiThemeCustomizerFactory _uiThemeCustomizerFactory;
         private readonly ISubscriptionPaymentRepository _subscriptionPaymentRepository;
         private readonly IUserDelegationConfiguration _userDelegationConfiguration;
+        private readonly DocumentFilesManager _documentFilesManager;
 
         public SessionAppService(
             IUiThemeCustomizerFactory uiThemeCustomizerFactory,
             ISubscriptionPaymentRepository subscriptionPaymentRepository,
-            IUserDelegationConfiguration userDelegationConfiguration)
+            IUserDelegationConfiguration userDelegationConfiguration, DocumentFilesManager documentFilesManager)
         {
             _uiThemeCustomizerFactory = uiThemeCustomizerFactory;
             _subscriptionPaymentRepository = subscriptionPaymentRepository;
             _userDelegationConfiguration = userDelegationConfiguration;
+            _documentFilesManager = documentFilesManager;
         }
 
         [DisableAuditing]
@@ -91,6 +96,12 @@ namespace TACHYON.Sessions
                 {
                     output.Tenant.Edition.IsHighestEdition = IsEditionHighest(output.Tenant.Edition.Id, lastPayment.GetPaymentPeriodType());
                 }
+
+                output.Tenant.MissingRequiredDocumentTypes = ObjectMapper
+                    .Map<List<DocumentTypeDto>>(
+                        await _documentFilesManager.GetAllTenantMissingRequiredDocumentTypesListAsync(output.Tenant.Id)
+                    );
+
             }
 
             output.Tenant.SubscriptionDateString = GetTenantSubscriptionDateString(output);

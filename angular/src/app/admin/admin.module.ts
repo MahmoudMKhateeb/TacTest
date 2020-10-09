@@ -117,6 +117,7 @@ import { CreateEntityDynamicParameterModalComponent } from './dynamic-entity-par
 import { EntityDynamicParameterValueComponent } from './dynamic-entity-parameters/entity-dynamic-parameter/entity-dynamic-parameter-value/entity-dynamic-parameter-value.component';
 import { ManageEntityDynamicParameterValuesModalComponent } from './dynamic-entity-parameters/entity-dynamic-parameter/entity-dynamic-parameter-value/manage-entity-dynamic-parameter-values-modal.component';
 import { EntityDynamicParameterValueManagerComponent } from './dynamic-entity-parameters/entity-dynamic-parameter/entity-dynamic-parameter-value/entity-dynamic-parameter-value-manager/entity-dynamic-parameter-value-manager.component';
+import { RequiredDocumentFilesComponent } from './required-document-files/required-document-files.component';
 
 const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
   // suppressScrollX: true
@@ -155,10 +156,10 @@ const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
     AppBsModalModule,
   ],
   declarations: [
-		ShippingRequestStatusesComponent,
+    ShippingRequestStatusesComponent,
 
-		ViewShippingRequestStatusModalComponent,
-		CreateOrEditShippingRequestStatusModalComponent,
+    ViewShippingRequestStatusModalComponent,
+    CreateOrEditShippingRequestStatusModalComponent,
     UnitOfMeasuresComponent,
 
     ViewUnitOfMeasureModalComponent,
@@ -240,6 +241,7 @@ const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
     EntityDynamicParameterValueComponent,
     ManageEntityDynamicParameterValuesModalComponent,
     EntityDynamicParameterValueManagerComponent,
+    RequiredDocumentFilesComponent,
   ],
   exports: [AddMemberModalComponent, AddRoleModalComponent],
   providers: [

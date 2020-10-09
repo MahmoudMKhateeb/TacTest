@@ -1,7 +1,9 @@
 ﻿
 using Abp.Application.Services.Dto;
 using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using TACHYON.Documents.DocumentFiles.Dtos;
 
 namespace TACHYON.Trucks.Dtos
 {
@@ -51,6 +53,8 @@ namespace TACHYON.Trucks.Dtos
         public int? RentDuration { get; set; }
 
         public UpdateTruckPictureInput UpdateTruckPictureInput { get; set; }
+
+        public List<CreateOrEditDocumentFileDto> CreateOrEditDocumentFileDtos { get; set; }
 
     }
 }

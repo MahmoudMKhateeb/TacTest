@@ -31,8 +31,6 @@ export class DocumentTypesComponent extends AppComponentBase {
   filterText = '';
   displayNameFilter = '';
   isRequiredFilter = -1;
-  maxExpirationDateFilter: moment.Moment;
-  minExpirationDateFilter: moment.Moment;
   hasExpirationDateFilter = -1;
   requiredFromFilter = '';
 
@@ -60,8 +58,6 @@ export class DocumentTypesComponent extends AppComponentBase {
         this.filterText,
         this.displayNameFilter,
         this.isRequiredFilter,
-        this.maxExpirationDateFilter,
-        this.minExpirationDateFilter,
         this.hasExpirationDateFilter,
         this.requiredFromFilter,
         this.primengTableHelper.getSorting(this.dataTable),
@@ -96,15 +92,7 @@ export class DocumentTypesComponent extends AppComponentBase {
 
   exportToExcel(): void {
     this._documentTypesServiceProxy
-      .getDocumentTypesToExcel(
-        this.filterText,
-        this.displayNameFilter,
-        this.isRequiredFilter,
-        this.maxExpirationDateFilter,
-        this.minExpirationDateFilter,
-        this.hasExpirationDateFilter,
-        this.requiredFromFilter
-      )
+      .getDocumentTypesToExcel(this.filterText, this.displayNameFilter, this.isRequiredFilter, this.hasExpirationDateFilter, this.requiredFromFilter)
       .subscribe((result) => {
         this._fileDownloadService.downloadTempFile(result);
       });

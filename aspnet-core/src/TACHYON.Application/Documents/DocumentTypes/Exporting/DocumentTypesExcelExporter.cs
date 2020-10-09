@@ -37,7 +37,6 @@ namespace TACHYON.Documents.DocumentTypes.Exporting
                         sheet,
                         L("DisplayName"),
                         L("IsRequired"),
-                        L("ExpirationDate"),
                         L("HasExpirationDate"),
                         L("RequiredFrom")
                         );
@@ -46,7 +45,6 @@ namespace TACHYON.Documents.DocumentTypes.Exporting
                         sheet, 2, documentTypes,
                         _ => _.DocumentType.DisplayName,
                         _ => _.DocumentType.IsRequired,
-                        _ => _timeZoneConverter.Convert(_.DocumentType.ExpirationDate, _abpSession.TenantId, _abpSession.GetUserId()),
                         _ => _.DocumentType.HasExpirationDate,
                         _ => _.DocumentType.RequiredFrom
                         );

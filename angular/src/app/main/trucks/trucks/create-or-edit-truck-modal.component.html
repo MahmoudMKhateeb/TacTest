@@ -198,6 +198,40 @@
               format="png"
             ></image-cropper>
           </div>
+
+          <div *ngFor="let item of truck.createOrEditDocumentFileDtos" class="row">
+            <div class="form-group col-md-6">
+              <label>File Browser</label>
+              <div class="custom-file">
+                <input (change)="DocFileChangeEvent($event, item)" type="file" class="custom-file-input" [id]="item.name" />
+                <label class="custom-file-label" [for]="item.name">{{ item.name }}</label>
+              </div>
+            </div>
+            <div class="form-group col-md-6">
+              <label>{{ l('expiration date') }}</label>
+              <input
+                [(date)]="item.expirationDate"
+                bsDatepicker
+                class="form-control m-input"
+                datePickerMomentModifier
+                [id]="item.name"
+                [name]="item.name"
+                required
+                type="datetime"
+              />
+            </div>
+
+            <!--            <div class="form-group col-md-6">-->
+            <!--              <span class="help-block m-b-none">{{ item.name }}</span>-->
+            <!--              <input (change)="DocFileChangeEvent($event, item)" type="file" />-->
+            <!--            </div>-->
+          </div>
+          <div class="row">
+            <label>{{ docProgressFileName }}</label>
+            <div class="col-md-12">
+              <p-progressBar [value]="docProgress" [style]="{ height: '6px', width: '100' }"></p-progressBar>
+            </div>
+          </div>
         </div>
         <div class="modal-footer">
           <button [disabled]="saving" type="button" class="btn btn-default" (click)="close()">{{ l('Cancel') }}</button>

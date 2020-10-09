@@ -1,4 +1,8 @@
-﻿using TACHYON.Shipping.ShippingRequestStatuses.Dtos;
+﻿using TACHYON.Documents.DocumentTypeTranslations.Dtos;
+using TACHYON.Documents.DocumentTypeTranslations;
+using TACHYON.Documents.DocumentsEntities.Dtos;
+using TACHYON.Documents.DocumentsEntities;
+using TACHYON.Shipping.ShippingRequestStatuses.Dtos;
 using TACHYON.Shipping.ShippingRequestStatuses;
 using TACHYON.PickingTypes.Dtos;
 using TACHYON.PickingTypes;
@@ -13,6 +17,7 @@ using Abp.Application.Features;
 using Abp.Auditing;
 using Abp.Authorization;
 using Abp.Authorization.Users;
+using Abp.AutoMapper;
 using Abp.DynamicEntityParameters;
 using Abp.EntityHistory;
 using Abp.Localization;
@@ -117,6 +122,10 @@ namespace TACHYON
     {
         public static void CreateMappings(IMapperConfigurationExpression configuration)
         {
+            configuration.CreateMap<CreateOrEditDocumentTypeTranslationDto, DocumentTypeTranslation>().ReverseMap();
+            configuration.CreateMap<DocumentTypeTranslationDto, DocumentTypeTranslation>().ReverseMap();
+            configuration.CreateMap<CreateOrEditDocumentsEntityDto, DocumentsEntity>().ReverseMap();
+            configuration.CreateMap<DocumentsEntityDto, DocumentsEntity>().ReverseMap();
             configuration.CreateMap<CreateOrEditShippingRequestStatusDto, ShippingRequestStatus>().ReverseMap();
             configuration.CreateMap<ShippingRequestStatusDto, ShippingRequestStatus>().ReverseMap();
             configuration.CreateMap<CreateOrEditPickingTypeDto, PickingType>().ReverseMap();
@@ -130,11 +139,14 @@ namespace TACHYON
             configuration.CreateMap<CreateOrEditDocumentFileDto, DocumentFile>().ReverseMap();
             configuration.CreateMap<DocumentFileDto, DocumentFile>().ReverseMap();
             configuration.CreateMap<CreateOrEditDocumentTypeDto, DocumentType>().ReverseMap();
-            configuration.CreateMap<DocumentTypeDto, DocumentType>().ReverseMap();
+            //configuration.CreateMap<DocumentTypeDto, DocumentType>()
+            //    .ForPath(dst => dst.DocumentsEntityFk.DisplayName, opt => opt.MapFrom(src => src.RequiredFrom))
+            //    .ForPath(dst => dst.EditionFk.DisplayName, opt => opt.MapFrom(src => src.Edition))
+            //    .ReverseMap();
             configuration.CreateMap<CreateOrEditShippingRequestDto, ShippingRequest>()
-            .ForMember(dst => dst.RouteFk,opt => opt.MapFrom(src => src.CreateOrEditRouteDto))
-            .ForMember(dst => dst.RoutSteps, opt => opt.MapFrom(src => src.CreateOrEditRoutStepDtoList))
-            .ReverseMap();
+                .ForMember(dst => dst.RouteFk, opt => opt.MapFrom(src => src.CreateOrEditRouteDto))
+                .ForMember(dst => dst.RoutSteps, opt => opt.MapFrom(src => src.CreateOrEditRoutStepDtoList))
+                .ReverseMap();
             configuration.CreateMap<ShippingRequestDto, ShippingRequest>().ReverseMap();
             configuration.CreateMap<CreateOrEditGoodsDetailDto, GoodsDetail>().ReverseMap();
             configuration.CreateMap<GoodsDetailDto, GoodsDetail>().ReverseMap();
@@ -280,6 +292,19 @@ namespace TACHYON
 
 
             /* ADD YOUR OWN CUSTOM AUTOMAPPER MAPPINGS HERE */
+        }
+
+        /// <summary>
+        /// MultiLingualMapping configuration 
+        /// </summary>
+        /// <param name="configuration"></param>
+        /// <param name="context"></param>
+        public static void CreateMultiLingualMappings(IMapperConfigurationExpression configuration, MultiLingualMapContext context)
+        {
+            configuration.CreateMultiLingualMap<DocumentType, long, DocumentTypeTranslation, DocumentTypeDto>(context)
+                .EntityMap.ForMember(dst => dst.RequiredFrom, opt => opt.MapFrom(src => src.DocumentsEntityFk.DisplayName))
+                .ForMember(dst => dst.Edition, opt => opt.MapFrom(src => src.EditionFk.DisplayName))
+                .ReverseMap();
         }
     }
 }

@@ -1,34 +1,52 @@
-﻿
-using Abp.Application.Services.Dto;
-using System;
+﻿using System;
 using System.ComponentModel.DataAnnotations;
+using Abp.Application.Services.Dto;
+using Abp.Runtime.Validation;
+using TACHYON.Documents.DocumentTypes.Dtos;
 
 namespace TACHYON.Documents.DocumentFiles.Dtos
 {
-    public class CreateOrEditDocumentFileDto : EntityDto<Guid?>
+    public class CreateOrEditDocumentFileDto : EntityDto<Guid?>, ICustomValidate
     {
+        public void AddValidationErrors(CustomValidationContext context)
+        {
+            if (!DocumentTypeDto.HasNumber)
+            {
+                return;
+            }
+
+            if (DocumentTypeDto.NumberMaxDigits !=0 && Number.ToString().Length > DocumentTypeDto.NumberMaxDigits)
+            {
+                context.Results.Add(new ValidationResult("Number digits must be less than or equal " + DocumentTypeDto.NumberMaxDigits));
+            }
+
+            if (DocumentTypeDto.NumberMinDigits!=0 && Number.ToString().Length < DocumentTypeDto.NumberMinDigits)
+            {
+                context.Results.Add(new ValidationResult("Number digits must be greater than or equal " + DocumentTypeDto.NumberMinDigits));
+            }
+
+        }
+
+        public DocumentTypeDto DocumentTypeDto { get; set; }
+        public UpdateDocumentFileInput UpdateDocumentFileInput { get; set; }
 
         [Required]
         [StringLength(DocumentFileConsts.MaxNameLength, MinimumLength = DocumentFileConsts.MinNameLength)]
         public string Name { get; set; }
 
-
         [Required]
         [StringLength(DocumentFileConsts.MaxExtnLength, MinimumLength = DocumentFileConsts.MinExtnLength)]
         public string Extn { get; set; }
 
-
         public Guid BinaryObjectId { get; set; }
 
+        public DateTime? ExpirationDate { get; set; }
 
-        public DateTime ExpirationDate { get; set; }
+        public virtual bool IsAccepted { get; set; }
 
-
-        public string IsAccepted { get; set; }
-
+        public virtual bool IsRejected { get; set; }
 
         public long DocumentTypeId { get; set; }
-
         public Guid? TruckId { get; set; }
 
         public long? TrailerId { get; set; }
@@ -37,7 +55,10 @@ namespace TACHYON.Documents.DocumentFiles.Dtos
 
         public long? RoutStepId { get; set; }
 
-        public UpdateDocumentFileInput UpdateDocumentFileInput { get; set; }
+        public int? Number { get; set; }
+
+        public string Notes { get; set; }
+        public string HijriExpirationDate { get; set; }
 
 
     }

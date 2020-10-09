@@ -75,7 +75,27 @@
 
           <div class="form-group">
             <label for="DocumentFile_IsAccepted">{{ l('IsAccepted') }}</label>
-            <input type="text" id="DocumentFile_IsAccepted" class="form-control" [(ngModel)]="documentFile.isAccepted" name="IsAccepted" />
+            &nbsp;
+            <input
+              (change)="isAcceptedChange()"
+              type="checkbox"
+              id="DocumentFile_IsAccepted"
+              class=""
+              [(ngModel)]="documentFile.isAccepted"
+              name="IsAccepted"
+            />
+          </div>
+          <div class="form-group">
+            <label for="DocumentFile_IsRejected">{{ l('IsRejected') }}</label>
+            &nbsp;
+            <input
+              (change)="isRejectedChange()"
+              type="checkbox"
+              id="DocumentFile_IsRejected"
+              class=""
+              [(ngModel)]="documentFile.isRejected"
+              name="IsRejected"
+            />
           </div>
         </div>
         <div class="modal-footer">

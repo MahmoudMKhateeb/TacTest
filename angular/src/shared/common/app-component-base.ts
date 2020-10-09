@@ -33,7 +33,10 @@ export abstract class AppComponentBase {
   appUrlService: AppUrlService;
   spinnerService: NgxSpinnerService;
   private ngxSpinnerTextService: NgxSpinnerTextService;
-
+  /**
+   * max file size that  user can upload
+   */
+  public maxDocumentFileBytesUserFriendlyValue = 4;
   constructor(injector: Injector) {
     this.localization = injector.get(LocalizationService);
     this.permission = injector.get(PermissionCheckerService);

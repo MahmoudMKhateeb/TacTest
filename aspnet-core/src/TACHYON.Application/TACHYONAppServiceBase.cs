@@ -6,6 +6,7 @@ using Abp.Threading;
 using Microsoft.AspNetCore.Identity;
 using System;
 using System.Threading.Tasks;
+using Abp.Domain.Uow;
 using TACHYON.Authorization.Users;
 using TACHYON.MultiTenancy;
 
@@ -60,6 +61,14 @@ namespace TACHYON
         protected virtual void CheckErrors(IdentityResult identityResult)
         {
             identityResult.CheckErrors(LocalizationManager);
+        }
+
+        protected virtual void DisableTenancyFiltersIfHost()
+        {
+            if (!AbpSession.TenantId.HasValue)
+            {
+                CurrentUnitOfWork.DisableFilter(AbpDataFilters.MustHaveTenant, AbpDataFilters.MayHaveTenant);
+            }
         }
     }
 }
