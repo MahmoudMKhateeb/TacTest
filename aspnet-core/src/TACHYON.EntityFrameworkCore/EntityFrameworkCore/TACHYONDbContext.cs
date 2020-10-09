@@ -1,4 +1,5 @@
-﻿using TACHYON.Trucks.TruckCategories.TransportSubtypes;
+﻿using TACHYON.Trucks.TruckCategories.TruckSubtypes;
+using TACHYON.Trucks.TruckCategories.TransportSubtypes;
 using TACHYON.Trucks.TruckCategories.TransportTypes;
 using TACHYON.Documents.DocumentTypeTranslations;
 using TACHYON.Documents.DocumentsEntities;
@@ -56,6 +57,8 @@ namespace TACHYON.EntityFrameworkCore
 {
     public class TACHYONDbContext : AbpZeroDbContext<Tenant, Role, User, TACHYONDbContext>, IAbpPersistedGrantDbContext
     {
+        public virtual DbSet<TruckSubtype> TruckSubtypes { get; set; }
+
         public virtual DbSet<TransportSubtype> TransportSubtypes { get; set; }
 
         public virtual DbSet<TransportType> TransportTypes { get; set; }

@@ -2,6 +2,10 @@
 import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { AppCommonModule } from '@app/shared/common/app-common.module';
+import { TruckSubtypesComponent } from './truckSubtypes/truckSubtypes/truckSubtypes.component';
+import { ViewTruckSubtypeModalComponent } from './truckSubtypes/truckSubtypes/view-truckSubtype-modal.component';
+import { CreateOrEditTruckSubtypeModalComponent } from './truckSubtypes/truckSubtypes/create-or-edit-truckSubtype-modal.component';
+
 import { TransportSubtypesComponent } from './transportSubtypes/transportSubtypes/transportSubtypes.component';
 import { ViewTransportSubtypeModalComponent } from './transportSubtypes/transportSubtypes/view-transportSubtype-modal.component';
 import { CreateOrEditTransportSubtypeModalComponent } from './transportSubtypes/transportSubtypes/create-or-edit-transportSubtype-modal.component';
@@ -154,6 +158,10 @@ NgxBootstrapDatePickerConfigService.registerNgxBootstrapDatePickerLocales();
     }),
   ],
   declarations: [
+    TruckSubtypesComponent,
+
+    ViewTruckSubtypeModalComponent,
+    CreateOrEditTruckSubtypeModalComponent,
     TransportSubtypesComponent,
 
     ViewTransportSubtypeModalComponent,

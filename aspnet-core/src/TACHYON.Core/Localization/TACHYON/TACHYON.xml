@@ -1,6 +1,13 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <localizationDictionary culture="en">
-  <texts>    <text name="TransportSubtypes">Transport subtypes</text>
+  <texts>    <text name="TruckSubtypes">Truck subtypes</text>
+    <text name="TruckSubtype">Truck subtype</text>
+    <text name="TACHYON.TruckSubtypes.TruckSubtype">TruckSubtype</text>
+    <text name="TruckSubtypesHeaderInfo">Truck subtypes header info</text>
+    <text name="CreateNewTruckSubtype">Create new truck subtype</text>
+    <text name="EditTruckSubtype">Edit truck subtype</text>
+    <text name="DeleteTruckSubtype">Delete truck subtype</text>
+    <text name="TransportSubtypes">Transport subtypes</text>
     <text name="TransportSubtype">Transport subtype</text>
     <text name="TACHYON.TransportSubtypes.TransportSubtype">TransportSubtype</text>
     <text name="TransportSubtypesHeaderInfo">Transport subtypes header info</text>

@@ -1,5 +1,6 @@
 ﻿import { NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
+import { TruckSubtypesComponent } from './truckSubtypes/truckSubtypes/truckSubtypes.component';
 import { TransportSubtypesComponent } from './transportSubtypes/transportSubtypes/transportSubtypes.component';
 import { TransportTypesComponent } from './transportTypes/transportTypes/transportTypes.component';
 import { DocumentTypeTranslationsComponent } from './documentTypeTranslations/documentTypeTranslations/documentTypeTranslations.component';
@@ -36,6 +37,7 @@ import { DashboardComponent } from './dashboard/dashboard.component';
       {
         path: '',
         children: [
+          { path: 'truckSubtypes/truckSubtypes', component: TruckSubtypesComponent, data: { permission: 'Pages.TruckSubtypes' } },
           { path: 'transportSubtypes/transportSubtypes', component: TransportSubtypesComponent, data: { permission: 'Pages.TransportSubtypes' } },
           { path: 'transportTypes/transportTypes', component: TransportTypesComponent, data: { permission: 'Pages.TransportTypes' } },
           {
