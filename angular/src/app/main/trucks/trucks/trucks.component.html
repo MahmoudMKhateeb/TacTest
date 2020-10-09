@@ -58,38 +58,6 @@
                   </div>
                 </div>
                 <div class="col-md-3">
-                  <div class="form-group">
-                    <label for="LicenseNumberFilter">{{ l('LicenseNumber') }}</label>
-                    <input type="text" class="form-control" id="LicenseNumberFilter" name="licenseNumberFilter" [(ngModel)]="licenseNumberFilter" />
-                  </div>
-                </div>
-                <div class="col-md-3">
-                  <div class="form-group">
-                    <label for="MinLicenseExpirationDateFilter">{{ l('LicenseExpirationDateRange') }}</label>
-                    <div class="input-group">
-                      <input
-                        class="form-control m-input"
-                        id="MinLicenseExpirationDateFilter"
-                        name="MinLicenseExpirationDateFilter"
-                        type="datetime"
-                        bsDatepicker
-                        placeholder="{{ l('MinValue') }}"
-                        [(ngModel)]="minLicenseExpirationDateFilter"
-                      />
-                      <span style="line-height: 40px; padding: 0 15px 0 15px;"> &mdash; </span>
-                      <input
-                        class="form-control m-input"
-                        id="MaxLicenseExpirationDateFilter"
-                        name="MaxLicenseExpirationDateFilter"
-                        type="datetime"
-                        bsDatepicker
-                        placeholder="{{ l('MaxValue') }}"
-                        [(ngModel)]="maxLicenseExpirationDateFilter"
-                      />
-                    </div>
-                  </div>
-                </div>
-                <div class="col-md-3">
                   <label for="IsAttachableFilterSelect">{{ l('IsAttachable') }}</label>
                   <select class="form-control" name="IsAttachableFilter" id="IsAttachableFilterSelect" [(ngModel)]="isAttachableFilter">
                     <option value="-1">{{ l('All') }}</option>
@@ -125,12 +93,6 @@
                   <div class="form-group">
                     <label for="UserNameFilter">({{ l('User') }}) {{ l('Name') }}</label>
                     <input type="text" class="form-control" id="UserNameFilter" name="userNameFilter" [(ngModel)]="userNameFilter" />
-                  </div>
-                </div>
-                <div class="col-md-3">
-                  <div class="form-group">
-                    <label for="UserName2Filter">({{ l('User2') }}) {{ l('Name') }}</label>
-                    <input type="text" class="form-control" id="UserName2Filter" name="userName2Filter" [(ngModel)]="userName2Filter" />
                   </div>
                 </div>
               </div>

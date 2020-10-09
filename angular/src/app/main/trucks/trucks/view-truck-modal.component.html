@@ -33,14 +33,6 @@
             {{ item.truck.modelYear }}
           </div>
           <div class="col-6 mb-3">
-            <h6>{{ l('LicenseNumber') }} :</h6>
-            {{ item.truck.licenseNumber }}
-          </div>
-          <div class="col-6 mb-3">
-            <h6>{{ l('LicenseExpirationDate') }} :</h6>
-            {{ item.truck.licenseExpirationDate | momentFormat: 'YYYY-MM-DD HH:mm:ss' }}
-          </div>
-          <div class="col-6 mb-3">
             <h6>{{ l('IsAttachable') }} :</h6>
             <div *ngIf="item.truck.isAttachable" class="text-left"><i class="fa fa-check-circle text-success" title="True"></i></div>
             <div *ngIf="!item.truck.isAttachable" class="text-left"><i class="fa fa-times-circle" title="False"></i></div>
@@ -61,19 +53,6 @@
           <div class="col-6 mb-3">
             <h6>({{ l('User') }}) {{ l('Name') }} :</h6>
             {{ item.userName }}
-          </div>
-          <div class="col-6 mb-3">
-            <h6>({{ l('User') }}) {{ l('Name') }} :</h6>
-            {{ item.userName2 }}
-          </div>
-          <div class="col-6 mb-3">
-            <h6>({{ l('RentPrice') }}) {{ l('RentPrice') }} :</h6>
-            {{ item.truck.rentPrice }}
-          </div>
-
-          <div class="col-6 mb-3">
-            <h6>({{ l('RentDuration') }}) {{ l('RentDuration') }} :</h6>
-            {{ item.truck.rentDuration }}
           </div>
         </div>
       </div>
