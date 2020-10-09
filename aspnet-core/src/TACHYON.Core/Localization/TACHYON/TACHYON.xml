@@ -1,6 +1,16 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <localizationDictionary culture="en">
-  <texts>    <text name="TruckSubtypes">Truck subtypes</text>
+  <texts>    <text name="TruckCapacities">Truck capacities</text>
+    <text name="Capacity">Capacity</text>
+    <text name="TACHYON.TruckCapacities.Capacity">Capacity</text>
+    <text name="CapacitiesHeaderInfo">Capacities header info</text>
+    <text name="CreateNewCapacity">Create new capacity</text>
+    <text name="EditCapacity">Edit capacity</text>
+    <text name="DeleteCapacity">Delete capacity</text>
+    <text name="Capacities">Capacities</text>
+    <text name="TruckSubtypeDisplayName">Truck subtype display name</text>
+    <text name="PickTruckSubtype">Pick truck subtype</text>
+    <text name="TruckSubtypes">Truck subtypes</text>
     <text name="TruckSubtype">Truck subtype</text>
     <text name="TACHYON.TruckSubtypes.TruckSubtype">TruckSubtype</text>
     <text name="TruckSubtypesHeaderInfo">Truck subtypes header info</text>

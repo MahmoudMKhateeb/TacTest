@@ -6,6 +6,11 @@
     /// </summary>
     public static class AppPermissions
     {
+        public const string Pages_Capacities = "Pages.Capacities";
+        public const string Pages_Capacities_Create = "Pages.Capacities.Create";
+        public const string Pages_Capacities_Edit = "Pages.Capacities.Edit";
+        public const string Pages_Capacities_Delete = "Pages.Capacities.Delete";
+
         public const string Pages_TruckSubtypes = "Pages.TruckSubtypes";
         public const string Pages_TruckSubtypes_Create = "Pages.TruckSubtypes.Create";
         public const string Pages_TruckSubtypes_Edit = "Pages.TruckSubtypes.Edit";

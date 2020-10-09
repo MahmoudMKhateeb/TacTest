@@ -2,6 +2,10 @@
 import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { AppCommonModule } from '@app/shared/common/app-common.module';
+import { CapacitiesComponent } from './truckCapacities/capacities/capacities.component';
+import { ViewCapacityModalComponent } from './truckCapacities/capacities/view-capacity-modal.component';
+import { CreateOrEditCapacityModalComponent } from './truckCapacities/capacities/create-or-edit-capacity-modal.component';
+
 import { TruckSubtypesComponent } from './truckSubtypes/truckSubtypes/truckSubtypes.component';
 import { ViewTruckSubtypeModalComponent } from './truckSubtypes/truckSubtypes/view-truckSubtype-modal.component';
 import { CreateOrEditTruckSubtypeModalComponent } from './truckSubtypes/truckSubtypes/create-or-edit-truckSubtype-modal.component';
@@ -158,6 +162,10 @@ NgxBootstrapDatePickerConfigService.registerNgxBootstrapDatePickerLocales();
     }),
   ],
   declarations: [
+    CapacitiesComponent,
+
+    ViewCapacityModalComponent,
+    CreateOrEditCapacityModalComponent,
     TruckSubtypesComponent,
 
     ViewTruckSubtypeModalComponent,

@@ -30,6 +30,13 @@ namespace TACHYON.Authorization
 
             var pages = context.GetPermissionOrNull(AppPermissions.Pages) ?? context.CreatePermission(AppPermissions.Pages, L("Pages"));
 
+            var capacities = pages.CreateChildPermission(AppPermissions.Pages_Capacities, L("Capacities"), multiTenancySides: MultiTenancySides.Host);
+            capacities.CreateChildPermission(AppPermissions.Pages_Capacities_Create, L("CreateNewCapacity"), multiTenancySides: MultiTenancySides.Host);
+            capacities.CreateChildPermission(AppPermissions.Pages_Capacities_Edit, L("EditCapacity"), multiTenancySides: MultiTenancySides.Host);
+            capacities.CreateChildPermission(AppPermissions.Pages_Capacities_Delete, L("DeleteCapacity"), multiTenancySides: MultiTenancySides.Host);
+
+
+
             var truckSubtypes = pages.CreateChildPermission(AppPermissions.Pages_TruckSubtypes, L("TruckSubtypes"), multiTenancySides: MultiTenancySides.Host);
             truckSubtypes.CreateChildPermission(AppPermissions.Pages_TruckSubtypes_Create, L("CreateNewTruckSubtype"), multiTenancySides: MultiTenancySides.Host);
             truckSubtypes.CreateChildPermission(AppPermissions.Pages_TruckSubtypes_Edit, L("EditTruckSubtype"), multiTenancySides: MultiTenancySides.Host);
