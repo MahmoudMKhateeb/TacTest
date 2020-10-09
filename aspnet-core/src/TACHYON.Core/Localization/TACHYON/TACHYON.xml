@@ -1,6 +1,15 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <localizationDictionary culture="en">
-  <texts>    <text name="TransportTypes">Transport types</text>
+  <texts>    <text name="TransportSubtypes">Transport subtypes</text>
+    <text name="TransportSubtype">Transport subtype</text>
+    <text name="TACHYON.TransportSubtypes.TransportSubtype">TransportSubtype</text>
+    <text name="TransportSubtypesHeaderInfo">Transport subtypes header info</text>
+    <text name="CreateNewTransportSubtype">Create new transport subtype</text>
+    <text name="EditTransportSubtype">Edit transport subtype</text>
+    <text name="DeleteTransportSubtype">Delete transport subtype</text>
+    <text name="TransportTypeDisplayName">Transport type display name</text>
+    <text name="PickTransportType">Pick transport type</text>
+    <text name="TransportTypes">Transport types</text>
     <text name="TransportType">Transport type</text>
     <text name="TACHYON.TransportTypes.TransportType">TransportType</text>
     <text name="TransportTypesHeaderInfo">Transport types header info</text>
