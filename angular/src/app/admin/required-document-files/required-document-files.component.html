@@ -7,7 +7,7 @@
         <form *ngIf="active" #TenantRequiredDocumentsForm="ngForm" novalidate (ngSubmit)="save()" autocomplete="off">
           <div class="card-body">
             <div *ngFor="let item of createOrEditDocumentFileDtos; index as i" class="row">
-              <div class="form-group col-md-3">
+              <div class="form-group col-md-2">
                 <label>{{ item.documentTypeDto.name }}</label>
                 <div class="custom-file">
                   <input
@@ -20,7 +20,7 @@
                   <label class="custom-file-label" [for]="item.documentTypeDto.displayName"> {{ item.name ? item.name : l('select file') }}</label>
                 </div>
               </div>
-              <div *ngIf="item.documentTypeDto.hasExpirationDate" class="form-group col-md-3">
+              <div *ngIf="item.documentTypeDto.hasExpirationDate" class="form-group col-md-2">
                 <label>{{ l('expiration date') }} <span class="text-danger">*</span></label>
                 <input
                   name="expirationDate{{ i }}"
@@ -34,7 +34,7 @@
                   [disabled]="item.isAccepted"
                 />
               </div>
-              <div *ngIf="item.documentTypeDto.hasNumber" class="form-group col-md-3">
+              <div *ngIf="item.documentTypeDto.hasNumber" class="form-group col-md-2">
                 <label
                   >{{ l('number') }}
                   <span class="text-danger">*</span>
@@ -55,7 +55,7 @@
                   {{ item.documentTypeDto.numberMaxDigits == 0 ? 50 : item.documentTypeDto.numberMaxDigits }}
                 </span>
               </div>
-              <div *ngIf="item.documentTypeDto.hasNotes" class="form-group col-md-3">
+              <div *ngIf="item.documentTypeDto.hasNotes" class="form-group col-md-2">
                 <label>{{ l('note') }}</label>
                 <input
                   name="note{{ i }}"
@@ -66,6 +66,17 @@
                   [(ngModel)]="item.notes"
                   [disabled]="item.isAccepted"
                 />
+              </div>
+
+              <div *ngIf="item.documentTypeDto.hasExpirationDate" class="form-group col-md-3">
+                <hijri-gregorian-datepicker
+                  [label]="l('hijri Expiration Date')"
+                  class="m-input"
+                  [isRequired]="true"
+                  [selectedDateType]="selectedDateType"
+                  (selectedDateChange)="selectedDateChange($event, item)"
+                >
+                </hijri-gregorian-datepicker>
               </div>
             </div>
 

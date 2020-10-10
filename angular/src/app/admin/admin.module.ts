@@ -118,6 +118,7 @@ import { EntityDynamicParameterValueComponent } from './dynamic-entity-parameter
 import { ManageEntityDynamicParameterValuesModalComponent } from './dynamic-entity-parameters/entity-dynamic-parameter/entity-dynamic-parameter-value/manage-entity-dynamic-parameter-values-modal.component';
 import { EntityDynamicParameterValueManagerComponent } from './dynamic-entity-parameters/entity-dynamic-parameter/entity-dynamic-parameter-value/entity-dynamic-parameter-value-manager/entity-dynamic-parameter-value-manager.component';
 import { RequiredDocumentFilesComponent } from './required-document-files/required-document-files.component';
+import { DateFormatterService, NgxHijriGregorianDatepickerModule } from '@node_modules/ngx-hijri-gregorian-datepicker';
 
 const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
   // suppressScrollX: true
@@ -154,6 +155,7 @@ const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
     PerfectScrollbarModule,
     DropdownModule,
     AppBsModalModule,
+    NgxHijriGregorianDatepickerModule,
   ],
   declarations: [
     ShippingRequestStatusesComponent,
