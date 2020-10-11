@@ -158,10 +158,8 @@ export class RequiredDocumentFilesComponent extends AppComponentBase implements 
   selectedDateChange($event: NgbDateStruct, item: CreateOrEditDocumentFileDto) {
     if ($event != null && $event.year < 2000) {
       const incomingDate = this.dateFormatterService.ToGregorian($event);
-      console.log(incomingDate);
       item.expirationDate = moment(incomingDate.month + '-' + incomingDate.day + '-' + incomingDate.year, 'MM/DD/YYYY');
     } else if ($event != null && $event.year > 2000) {
-      // item.expirationDate = moment($event.month + '-' + $event.day + '-' + $event.year)._i;
     }
   }
 }
