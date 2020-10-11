@@ -1,0 +1,64 @@
+<div class="form-group" provideParentForm>
+  <label class="requiredInput" *ngIf="showLabel" for="input-birth-Date">{{ label }} </label>
+
+  <div class="input-group">
+    <input
+      class="form-control"
+      [placeholder]="placeHolder ? placeHolder : 'd/M/yyyy'"
+      [name]="label"
+      *ngIf="selectedDateType == DateType.Gregorian"
+      [(ngModel)]="selectedDate"
+      ngbDatepicker
+      (click)="d.toggle()"
+      (dateSelect)="dateSelected()"
+      autocomplete="off"
+      [readonly]="readonly"
+      [minDate]="minGreg"
+      [maxDate]="maxGreg"
+      [required]="isRequired"
+      [disabled]="disabled"
+      [footerTemplate]="footerTemplate"
+      #d="ngbDatepicker"
+    />
+
+    <ng-template #footerTemplate>
+      <hr class="my-0" />
+      <button class="btn btn-secondary btn-sm m-2 float-right" type="button" (click)="close()">Close</button>
+      <button class="btn btn-primary btn-sm m-2 float-left" type="button" (click)="clear()">Clear</button>
+    </ng-template>
+
+    <hijri-date-picker
+      *ngIf="selectedDateType == DateType.Hijri"
+      [(selectedDate)]="selectedDate"
+      (selectedDateChange)="dateSelected()"
+      [readonly]="readonly"
+      [min]="minHijri"
+      [max]="maxHijri"
+      style="flex: 1 1 auto;"
+      [name]="label"
+      [isRequired]="isRequired"
+      [placeHolder]="placeHolder"
+      [disabled]="disabled"
+    >
+    </hijri-date-picker>
+
+    <div class="input-group-append">
+      <button
+        class="btn btn-sm {{ selectedDateType == DateType.Hijri ? 'btn-primary focus active' : 'btn-outline-primary' }}"
+        (click)="hijriClick()"
+        [disabled]="disabled"
+        type="button"
+      >
+        {{ hijriLabel ? hijriLabel : 'Hijri' }}
+      </button>
+      <button
+        class="btn btn-sm {{ selectedDateType == DateType.Gregorian ? 'btn-primary focus active' : 'btn-outline-primary' }}"
+        (click)="gregClick()"
+        [disabled]="disabled"
+        type="button"
+      >
+        {{ GregLabel ? GregLabel : 'Gregorian' }}
+      </button>
+    </div>
+  </div>
+</div>
