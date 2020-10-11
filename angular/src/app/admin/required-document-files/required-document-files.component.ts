@@ -1,4 +1,4 @@
-import { Component, Injector, OnInit } from '@angular/core';
+import { Component, Injector, OnInit, ViewChild } from '@angular/core';
 import { AppComponentBase } from '@shared/common/app-component-base';
 import { FileItem, FileUploader, FileUploaderOptions } from '@node_modules/ng2-file-upload';
 import { AppConsts } from '@shared/AppConsts';
@@ -6,16 +6,25 @@ import { IAjaxResponse, TokenService } from '@node_modules/abp-ng2-module';
 import { CreateOrEditDocumentFileDto, DocumentFilesServiceProxy, UpdateDocumentFileInput } from '@shared/service-proxies/service-proxies';
 import { finalize } from '@node_modules/rxjs/operators';
 import { appModuleAnimation } from '@shared/animations/routerTransition';
+
 import * as moment from '@node_modules/moment';
+import { NgbDate, NgbDateStruct } from '@node_modules/@ng-bootstrap/ng-bootstrap';
+import { DateFormatterService } from '@app/admin/required-document-files/hijri-gregorian-datepicker/date-formatter.service';
+import { DateType } from '@app/admin/required-document-files/hijri-gregorian-datepicker/consts';
 
 @Component({
   selector: 'app-required-document-files',
   templateUrl: './required-document-files.component.html',
   animations: [appModuleAnimation()],
+  providers: [DateFormatterService],
 })
 export class RequiredDocumentFilesComponent extends AppComponentBase implements OnInit {
   active = false;
   saving = false;
+  GregValue: moment.Moment;
+
+  selectedDateTypeHijri = DateType.Hijri; // or DateType.Gregorian
+  selectedDateTypeGregorian = DateType.Gregorian; // or DateType.Gregorian
 
   /**
    * required documents fileUploader
@@ -37,9 +46,14 @@ export class RequiredDocumentFilesComponent extends AppComponentBase implements 
   private _DocsUploaderOptions: FileUploaderOptions = {};
 
   createOrEditDocumentFileDtos: CreateOrEditDocumentFileDto[];
-
-  constructor(injector: Injector, private _documentFilesServiceProxy: DocumentFilesServiceProxy, private _tokenService: TokenService) {
+  constructor(
+    injector: Injector,
+    private _documentFilesServiceProxy: DocumentFilesServiceProxy,
+    private _tokenService: TokenService,
+    private dateFormatterService: DateFormatterService
+  ) {
     super(injector);
+
     this._documentFilesServiceProxy.getTenantRequiredDocumentFilesTemplateForCreate().subscribe((result) => {
       result.forEach((x) => (x.expirationDate = null));
       this.createOrEditDocumentFileDtos = result;
@@ -139,5 +153,13 @@ export class RequiredDocumentFilesComponent extends AppComponentBase implements 
   save(): void {
     this.saving = true;
     this.DocsUploader.uploadAll();
+  }
+
+  selectedDateChange($event: NgbDateStruct, item: CreateOrEditDocumentFileDto) {
+    if ($event != null && $event.year < 2000) {
+      const incomingDate = this.dateFormatterService.ToGregorian($event);
+      item.expirationDate = moment(incomingDate.month + '-' + incomingDate.day + '-' + incomingDate.year, 'MM/DD/YYYY');
+    } else if ($event != null && $event.year > 2000) {
+    }
   }
 }

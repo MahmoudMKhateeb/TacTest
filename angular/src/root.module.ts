@@ -33,6 +33,7 @@ import { CookieConsentService } from '@shared/common/session/cookie-consent.serv
 import { NgxBootstrapDatePickerConfigService } from 'assets/ngx-bootstrap/ngx-bootstrap-datepicker-config.service';
 import { LocaleMappingService } from '@shared/locale-mapping.service';
 import { NgxSpinnerModule, NgxSpinnerService } from 'ngx-spinner';
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 
 export function appInitializerFactory(injector: Injector, platformLocation: PlatformLocation) {
   return () => {
@@ -251,6 +252,7 @@ function handleLogoutRequest(authService: AppAuthService) {
     HttpClientModule,
     RootRoutingModule,
     NgxSpinnerModule,
+    NgbModule,
   ],
   declarations: [RootComponent],
   providers: [
