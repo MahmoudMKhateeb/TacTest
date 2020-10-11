@@ -34,6 +34,10 @@ using TACHYON.Storage;
 using TACHYON.Trucks;
 using TACHYON.Trucks.Dtos;
 using TACHYON.Trucks.Exporting;
+using TACHYON.Trucks.TruckCategories.TransportSubtypes;
+using TACHYON.Trucks.TruckCategories.TransportTypes;
+using TACHYON.Trucks.TruckCategories.TruckCapacities;
+using TACHYON.Trucks.TruckCategories.TruckSubtypes;
 using TACHYON.Trucks.TrucksTypes;
 using GetAllForLookupTableInput = TACHYON.Trucks.Dtos.GetAllForLookupTableInput;
 
@@ -53,11 +57,15 @@ namespace TACHYON.Trucks
         private readonly ITempFileCacheManager _tempFileCacheManager;
         private readonly IBinaryObjectManager _binaryObjectManager;
         private readonly DocumentFilesAppService _documentFilesAppService;
+        private readonly IRepository<TransportType, int> _transportTypeRepository;
+        private readonly IRepository<TransportSubtype, int> _transportSubtypeRepository;
+        private readonly IRepository<TruckSubtype, int> _truckSubtypeRepository;
+        private readonly IRepository<Capacity, int> _capacityRepository;
 
 
 
 
-        public TrucksAppService(IRepository<Truck, Guid> truckRepository, ITrucksExcelExporter trucksExcelExporter, IRepository<TrucksType, long> lookup_trucksTypeRepository, IRepository<TruckStatus, long> lookup_truckStatusRepository, IRepository<User, long> lookup_userRepository, IAppNotifier appNotifier, ITempFileCacheManager tempFileCacheManager, IBinaryObjectManager binaryObjectManager, DocumentFilesAppService documentFilesAppService)
+        public TrucksAppService(IRepository<Truck, Guid> truckRepository, ITrucksExcelExporter trucksExcelExporter, IRepository<TrucksType, long> lookup_trucksTypeRepository, IRepository<TruckStatus, long> lookup_truckStatusRepository, IRepository<User, long> lookup_userRepository, IAppNotifier appNotifier, ITempFileCacheManager tempFileCacheManager, IBinaryObjectManager binaryObjectManager, DocumentFilesAppService documentFilesAppService, IRepository<TransportType, int> transportTypeRepository, IRepository<TransportSubtype, int> transportSubtypeRepository, IRepository<Capacity, int> capacityRepository, IRepository<TruckSubtype, int> truckSubtypeRepository)
         {
             _truckRepository = truckRepository;
             _trucksExcelExporter = trucksExcelExporter;
@@ -68,6 +76,10 @@ namespace TACHYON.Trucks
             _tempFileCacheManager = tempFileCacheManager;
             _binaryObjectManager = binaryObjectManager;
             _documentFilesAppService = documentFilesAppService;
+            _transportTypeRepository = transportTypeRepository;
+            _transportSubtypeRepository = transportSubtypeRepository;
+            _capacityRepository = capacityRepository;
+            _truckSubtypeRepository = truckSubtypeRepository;
         }
 
         public async Task<PagedResultDto<GetTruckForViewDto>> GetAll(GetAllTrucksInput input)
@@ -432,5 +444,57 @@ namespace TACHYON.Trucks
             return file == null ? "" : Convert.ToBase64String(file.Bytes);
         }
 
+
+        #region Truck Categories
+        public async Task<List<SelectItemDto>> GetAllTransportTypesForDropdown()
+        {
+            return await _transportTypeRepository.GetAll().Select(x => new SelectItemDto()
+            {
+                Id = x.Id.ToString(),
+                DisplayName = x.DisplayName
+            }).ToListAsync();
+        }
+        public async Task<List<SelectItemDto>> GetAllTransportSubtypesByTransportTypeIdForDropdown(int transportTypeId)
+        {
+            return await _transportSubtypeRepository.GetAll()
+                .Where(x => x.TransportTypeId == transportTypeId)
+                .Select(x => new SelectItemDto()
+                {
+                    Id = x.Id.ToString(),
+                    DisplayName = x.DisplayName
+                }).ToListAsync();
+        }
+        public async Task<List<SelectItemDto>> GetAllTruckTypesByTransportSubtypeIdForDropdown(int transportSubtypeId)
+        {
+            return await _lookup_trucksTypeRepository.GetAll()
+                .Where(x => x.TransportSubtypeId == transportSubtypeId)
+                .Select(x => new SelectItemDto()
+                {
+                    Id = x.Id.ToString(),
+                    DisplayName = x.DisplayName
+                }).ToListAsync();
+        }
+        public async Task<List<SelectItemDto>> GetAllTruckSubTypesByTruckTypeIdForDropdown(int truckTypeId)
+        {
+            return await _truckSubtypeRepository.GetAll()
+                .Where(x => x.TrucksTypeId == truckTypeId)
+                .Select(x => new SelectItemDto()
+                {
+                    Id = x.Id.ToString(),
+                    DisplayName = x.DisplayName
+                }).ToListAsync();
+        }
+        public async Task<List<SelectItemDto>> GetAllTuckCapacitiesByTuckSubTypeIdForDropdown(int truckSubTypeId)
+        {
+            return await _capacityRepository.GetAll()
+                .Where(x => x.TruckSubtypeId == truckSubTypeId)
+                .Select(x => new SelectItemDto()
+                {
+                    Id = x.Id.ToString(),
+                    DisplayName = x.DisplayName
+                }).ToListAsync();
+        }
+
+        #endregion
     }
 }
