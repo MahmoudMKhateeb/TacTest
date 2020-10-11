@@ -1,0 +1,61 @@
+﻿<div
+  bsModal
+  #createOrEditModal="bs-modal"
+  class="modal fade"
+  tabindex="-1"
+  role="dialog"
+  aria-labelledby="createOrEditModal"
+  aria-hidden="true"
+  [config]="{ backdrop: 'static' }"
+>
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <form *ngIf="active" #truckSubtypeForm="ngForm" novalidate (ngSubmit)="save()" autocomplete="off">
+        <div class="modal-header">
+          <h4 class="modal-title">
+            <span *ngIf="truckSubtype.id">{{ l('EditTruckSubtype') }}</span>
+            <span *ngIf="!truckSubtype.id">{{ l('CreateNewTruckSubtype') }}</span>
+          </h4>
+          <button type="button" class="close" (click)="close()" aria-label="Close" [disabled]="saving">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <div class="form-group m-form__group">
+            <label for="TrucksTypeDisplayName">{{ l('TrucksType') }}</label>
+            <select name="truckSubtype.trucksTypeId" [(ngModel)]="truckSubtype.trucksTypeId" class="form-control">
+              <option value="">{{ l('SelectATrucksType') }}</option>
+              <option *ngFor="let item of allTrucksTypes" value="{{ item.id }}">{{ item.displayName }}</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="TruckSubtype_DisplayName">{{ l('DisplayName') }} *</label>
+            <input
+              type="text"
+              id="TruckSubtype_DisplayName"
+              class="form-control"
+              [(ngModel)]="truckSubtype.displayName"
+              name="DisplayName"
+              minlength="0"
+              maxlength="256"
+              required
+            />
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button [disabled]="saving" type="button" class="btn btn-default" (click)="close()">{{ l('Cancel') }}</button>
+          <button
+            type="submit"
+            class="btn btn-primary blue"
+            [disabled]="!truckSubtypeForm.form.valid"
+            [buttonBusy]="saving"
+            [busyText]="l('SavingWithThreeDot')"
+          >
+            <i class="fa fa-save"></i> <span>{{ l('Save') }}</span>
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

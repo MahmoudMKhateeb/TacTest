@@ -34,14 +34,10 @@ export class TrucksComponent extends AppComponentBase {
   plateNumberFilter = '';
   modelNameFilter = '';
   modelYearFilter = '';
-  licenseNumberFilter = '';
-  maxLicenseExpirationDateFilter: moment.Moment;
-  minLicenseExpirationDateFilter: moment.Moment;
   isAttachableFilter = -1;
   trucksTypeDisplayNameFilter = '';
   truckStatusDisplayNameFilter = '';
   userNameFilter = '';
-  userName2Filter = '';
 
   _entityTypeFullName = 'TACHYON.Trucks.Truck';
   entityHistoryEnabled = false;
@@ -85,14 +81,10 @@ export class TrucksComponent extends AppComponentBase {
         this.plateNumberFilter,
         this.modelNameFilter,
         this.modelYearFilter,
-        this.licenseNumberFilter,
-        this.maxLicenseExpirationDateFilter,
-        this.minLicenseExpirationDateFilter,
         this.isAttachableFilter,
         this.trucksTypeDisplayNameFilter,
         this.truckStatusDisplayNameFilter,
         this.userNameFilter,
-        this.userName2Filter,
         this.primengTableHelper.getSorting(this.dataTable),
         this.primengTableHelper.getSkipCount(this.paginator, event),
         this.primengTableHelper.getMaxResultCount(this.paginator, event)
@@ -138,14 +130,10 @@ export class TrucksComponent extends AppComponentBase {
         this.plateNumberFilter,
         this.modelNameFilter,
         this.modelYearFilter,
-        this.licenseNumberFilter,
-        this.maxLicenseExpirationDateFilter,
-        this.minLicenseExpirationDateFilter,
         this.isAttachableFilter,
         this.trucksTypeDisplayNameFilter,
         this.truckStatusDisplayNameFilter,
-        this.userNameFilter,
-        this.userName2Filter
+        this.userNameFilter
       )
       .subscribe((result) => {
         this._fileDownloadService.downloadTempFile(result);

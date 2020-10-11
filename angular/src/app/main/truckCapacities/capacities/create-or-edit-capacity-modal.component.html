@@ -1,0 +1,61 @@
+﻿<div
+  bsModal
+  #createOrEditModal="bs-modal"
+  class="modal fade"
+  tabindex="-1"
+  role="dialog"
+  aria-labelledby="createOrEditModal"
+  aria-hidden="true"
+  [config]="{ backdrop: 'static' }"
+>
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <form *ngIf="active" #capacityForm="ngForm" novalidate (ngSubmit)="save()" autocomplete="off">
+        <div class="modal-header">
+          <h4 class="modal-title">
+            <span *ngIf="capacity.id">{{ l('EditCapacity') }}</span>
+            <span *ngIf="!capacity.id">{{ l('CreateNewCapacity') }}</span>
+          </h4>
+          <button type="button" class="close" (click)="close()" aria-label="Close" [disabled]="saving">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <div class="form-group m-form__group">
+            <label for="TruckSubtypeDisplayName">{{ l('TruckSubtype') }}</label>
+            <select name="capacity.truckSubtypeId" [(ngModel)]="capacity.truckSubtypeId" class="form-control" required>
+              <option value="">{{ l('SelectATruckSubtype') }}</option>
+              <option *ngFor="let item of allTruckSubtypes" value="{{ item.id }}">{{ item.displayName }}</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="Capacity_DisplayName">{{ l('DisplayName') }} *</label>
+            <input
+              type="text"
+              id="Capacity_DisplayName"
+              class="form-control"
+              [(ngModel)]="capacity.displayName"
+              name="DisplayName"
+              minlength="0"
+              maxlength="256"
+              required
+            />
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button [disabled]="saving" type="button" class="btn btn-default" (click)="close()">{{ l('Cancel') }}</button>
+          <button
+            type="submit"
+            class="btn btn-primary blue"
+            [disabled]="!capacityForm.form.valid"
+            [buttonBusy]="saving"
+            [busyText]="l('SavingWithThreeDot')"
+          >
+            <i class="fa fa-save"></i> <span>{{ l('Save') }}</span>
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

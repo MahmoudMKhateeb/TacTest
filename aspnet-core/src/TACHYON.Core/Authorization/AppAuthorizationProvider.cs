@@ -30,6 +30,34 @@ namespace TACHYON.Authorization
 
             var pages = context.GetPermissionOrNull(AppPermissions.Pages) ?? context.CreatePermission(AppPermissions.Pages, L("Pages"));
 
+            var capacities = pages.CreateChildPermission(AppPermissions.Pages_Capacities, L("Capacities"), multiTenancySides: MultiTenancySides.Host);
+            capacities.CreateChildPermission(AppPermissions.Pages_Capacities_Create, L("CreateNewCapacity"), multiTenancySides: MultiTenancySides.Host);
+            capacities.CreateChildPermission(AppPermissions.Pages_Capacities_Edit, L("EditCapacity"), multiTenancySides: MultiTenancySides.Host);
+            capacities.CreateChildPermission(AppPermissions.Pages_Capacities_Delete, L("DeleteCapacity"), multiTenancySides: MultiTenancySides.Host);
+
+
+
+            var truckSubtypes = pages.CreateChildPermission(AppPermissions.Pages_TruckSubtypes, L("TruckSubtypes"), multiTenancySides: MultiTenancySides.Host);
+            truckSubtypes.CreateChildPermission(AppPermissions.Pages_TruckSubtypes_Create, L("CreateNewTruckSubtype"), multiTenancySides: MultiTenancySides.Host);
+            truckSubtypes.CreateChildPermission(AppPermissions.Pages_TruckSubtypes_Edit, L("EditTruckSubtype"), multiTenancySides: MultiTenancySides.Host);
+            truckSubtypes.CreateChildPermission(AppPermissions.Pages_TruckSubtypes_Delete, L("DeleteTruckSubtype"), multiTenancySides: MultiTenancySides.Host);
+
+
+
+            var transportSubtypes = pages.CreateChildPermission(AppPermissions.Pages_TransportSubtypes, L("TransportSubtypes"), multiTenancySides: MultiTenancySides.Host);
+            transportSubtypes.CreateChildPermission(AppPermissions.Pages_TransportSubtypes_Create, L("CreateNewTransportSubtype"), multiTenancySides: MultiTenancySides.Host);
+            transportSubtypes.CreateChildPermission(AppPermissions.Pages_TransportSubtypes_Edit, L("EditTransportSubtype"), multiTenancySides: MultiTenancySides.Host);
+            transportSubtypes.CreateChildPermission(AppPermissions.Pages_TransportSubtypes_Delete, L("DeleteTransportSubtype"), multiTenancySides: MultiTenancySides.Host);
+
+
+
+            var transportTypes = pages.CreateChildPermission(AppPermissions.Pages_TransportTypes, L("TransportTypes"), multiTenancySides: MultiTenancySides.Host);
+            transportTypes.CreateChildPermission(AppPermissions.Pages_TransportTypes_Create, L("CreateNewTransportType"), multiTenancySides: MultiTenancySides.Host);
+            transportTypes.CreateChildPermission(AppPermissions.Pages_TransportTypes_Edit, L("EditTransportType"), multiTenancySides: MultiTenancySides.Host);
+            transportTypes.CreateChildPermission(AppPermissions.Pages_TransportTypes_Delete, L("DeleteTransportType"), multiTenancySides: MultiTenancySides.Host);
+
+
+
             var documentTypeTranslations = pages.CreateChildPermission(AppPermissions.Pages_DocumentTypeTranslations, L("DocumentTypeTranslations"), multiTenancySides: MultiTenancySides.Host);
             documentTypeTranslations.CreateChildPermission(AppPermissions.Pages_DocumentTypeTranslations_Create, L("CreateNewDocumentTypeTranslation"), multiTenancySides: MultiTenancySides.Host);
             documentTypeTranslations.CreateChildPermission(AppPermissions.Pages_DocumentTypeTranslations_Edit, L("EditDocumentTypeTranslation"), multiTenancySides: MultiTenancySides.Host);

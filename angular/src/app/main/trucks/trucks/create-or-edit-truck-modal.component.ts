@@ -83,7 +83,6 @@ export class CreateOrEditTruckModalComponent extends AppComponentBase {
     if (!truckId) {
       this.truck = new CreateOrEditTruckDto();
       this.truck.id = truckId;
-      this.truck.licenseExpirationDate = moment().startOf('day');
       this.trucksTypeDisplayName = '';
       this.truckStatusDisplayName = '';
       this.userName = '';
@@ -103,7 +102,6 @@ export class CreateOrEditTruckModalComponent extends AppComponentBase {
         this.trucksTypeDisplayName = result.trucksTypeDisplayName;
         this.truckStatusDisplayName = result.truckStatusDisplayName;
         this.userName = result.userName;
-        this.userName2 = result.userName2;
         this.getTruckPictureUrl(this.truck.id);
 
         this.active = true;
@@ -140,7 +138,6 @@ export class CreateOrEditTruckModalComponent extends AppComponentBase {
   }
 
   openSelectUserModal2() {
-    this.truckUserLookupTableModal2.id = this.truck.driver2UserId;
     this.truckUserLookupTableModal2.displayName = this.userName;
     this.truckUserLookupTableModal2.show();
   }
@@ -150,18 +147,12 @@ export class CreateOrEditTruckModalComponent extends AppComponentBase {
     this.userName = '';
   }
 
-  setDriver2UserIdNull() {
-    this.truck.driver2UserId = null;
-    this.userName2 = '';
-  }
-
   getNewDriver1UserId() {
     this.truck.driver1UserId = this.truckUserLookupTableModal.id;
     this.userName = this.truckUserLookupTableModal.displayName;
   }
 
   getNewDriver2UserId() {
-    this.truck.driver2UserId = this.truckUserLookupTableModal2.id;
     this.userName2 = this.truckUserLookupTableModal2.displayName;
   }
 
