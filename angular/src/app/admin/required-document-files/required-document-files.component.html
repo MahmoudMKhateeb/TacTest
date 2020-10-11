@@ -29,8 +29,7 @@
                   class="form-control m-input"
                   datePickerMomentModifier
                   [required]="item.documentTypeDto.isRequired && !item.isAccepted"
-                  type="datetime"
-                  [(ngModel)]="item.expirationDate"
+                  [(date)]="item.expirationDate"
                   [disabled]="item.isAccepted"
                 />
               </div>
@@ -68,15 +67,16 @@
                 />
               </div>
 
-              <div *ngIf="item.documentTypeDto.hasExpirationDate" class="form-group col-md-3">
-                <hijri-gregorian-datepicker
-                  [label]="l('hijri Expiration Date')"
+              <div *ngIf="item.documentTypeDto.hasExpirationDate" class="form-group col-md-4">
+                <hijri-gregorian-datepicker-test
+                  [label]="l('ExpirationDate')"
                   class="m-input"
                   [isRequired]="true"
-                  [selectedDateType]="selectedDateType"
+                  [readonly]="true"
+                  [selectedDateType]="item.documentTypeDto.hasHijriExpirationDate ? selectedDateTypeHijri : selectedDateTypeGregorian"
                   (selectedDateChange)="selectedDateChange($event, item)"
                 >
-                </hijri-gregorian-datepicker>
+                </hijri-gregorian-datepicker-test>
               </div>
             </div>
 

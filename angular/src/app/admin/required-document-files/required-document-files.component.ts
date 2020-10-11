@@ -7,9 +7,10 @@ import { CreateOrEditDocumentFileDto, DocumentFilesServiceProxy, UpdateDocumentF
 import { finalize } from '@node_modules/rxjs/operators';
 import { appModuleAnimation } from '@shared/animations/routerTransition';
 
-import * as moment from '@node_modules/moment-hijri';
-import { DateFormatterService, DateType } from '@node_modules/ngx-hijri-gregorian-datepicker';
+import * as moment from '@node_modules/moment';
 import { NgbDate, NgbDateStruct } from '@node_modules/@ng-bootstrap/ng-bootstrap';
+import { DateFormatterService } from '@app/admin/required-document-files/hijri-gregorian-datepicker/date-formatter.service';
+import { DateType } from '@app/admin/required-document-files/hijri-gregorian-datepicker/consts';
 
 @Component({
   selector: 'app-required-document-files',
@@ -20,10 +21,10 @@ import { NgbDate, NgbDateStruct } from '@node_modules/@ng-bootstrap/ng-bootstrap
 export class RequiredDocumentFilesComponent extends AppComponentBase implements OnInit {
   active = false;
   saving = false;
-  date: NgbDate;
-  dateString: string;
+  GregValue: moment.Moment;
 
-  selectedDateType = DateType.Hijri; // or DateType.Gregorian
+  selectedDateTypeHijri = DateType.Hijri; // or DateType.Gregorian
+  selectedDateTypeGregorian = DateType.Gregorian; // or DateType.Gregorian
 
   /**
    * required documents fileUploader
@@ -53,7 +54,6 @@ export class RequiredDocumentFilesComponent extends AppComponentBase implements 
   ) {
     super(injector);
 
-    //this.date = this.dateFormatterService.GetTodayGregorian();
     this._documentFilesServiceProxy.getTenantRequiredDocumentFilesTemplateForCreate().subscribe((result) => {
       result.forEach((x) => (x.expirationDate = null));
       this.createOrEditDocumentFileDtos = result;
@@ -157,17 +157,11 @@ export class RequiredDocumentFilesComponent extends AppComponentBase implements 
 
   selectedDateChange($event: NgbDateStruct, item: CreateOrEditDocumentFileDto) {
     if ($event != null && $event.year < 2000) {
-      //const gDate = this.dateFormatterService.ToGregorianDate($event);
-      let DateString = this.dateFormatterService.ToString($event);
-      let ConvertedHijri = moment(DateString, 'iYYYY/iMM/iD HH:mm').format('MM/DD/YYYY');
-      console.log('My Date Hijri ' + DateString);
-      console.log('My Date Melady ' + ConvertedHijri);
-
-      console.log(' Date String ' + this.dateString);
-      console.log('Selected Date Type ' + this.selectedDateType);
-      //  console.log(gDate.year + '-' + gDate.month + '-' + gDate.day);
-      item.expirationDate = ConvertedHijri;
-      //item.hijriExpirationDate = $event.year + '-' + $event.month + '-' + $event.day;
+      const incomingDate = this.dateFormatterService.ToGregorian($event);
+      console.log(incomingDate);
+      item.expirationDate = moment(incomingDate.month + '-' + incomingDate.day + '-' + incomingDate.year, 'MM/DD/YYYY');
+    } else if ($event != null && $event.year > 2000) {
+      // item.expirationDate = moment($event.month + '-' + $event.day + '-' + $event.year)._i;
     }
   }
 }
