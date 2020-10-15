@@ -77,24 +77,34 @@
               <span></span>
             </label>
           </div>
-
           <div [hidden]="isUnlimited || !isSubscriptionFieldsVisible" class="form-group" [ngClass]="{ 'has-error': !subscriptionEndDateUtcIsValid }">
-            <label for="SubscriptionEndDateUtc">{{ 'SubscriptionEndDateUtc' | localize }}</label>
-            <input
-              id="SubscriptionEndDateUtc"
-              type="datetime"
-              #SubscriptionEndDateUtc
-              name="SubscriptionEndDateUtc"
-              class="form-control"
-              bsDatepicker
-              datePickerMomentModifier
-              (dateChange)="subscriptionEndDateChange($event)"
-              [(date)]="tenant.subscriptionEndDateUtc"
-              [bsConfig]="{ adaptivePosition: true }"
-              [required]="!isUnlimited"
-            />
+            <div class="col-md-6">
+              <label for="SubscriptionEndDateUtc">{{ 'SubscriptionEndDateUtc' | localize }}</label>
+              <div class="input-group date">
+                <input
+                  type="datetime"
+                  id="SubscriptionEndDateUtc"
+                  #SubscriptionEndDateUtc
+                  name="SubscriptionEndDateUtc"
+                  class="form-control"
+                  bsDatepicker
+                  datePickerMomentModifier
+                  (dateChange)="subscriptionEndDateChange($event)"
+                  [(date)]="tenant.subscriptionEndDateUtc"
+                  [bsConfig]="{ adaptivePosition: true }"
+                  [required]="!isUnlimited"
+                  class="form-control"
+                  readonly
+                  placeholder="Select date"
+                />
+                <div class="input-group-append">
+                  <span class="input-group-text">
+                    <i class="la la-calendar-check-o"></i>
+                  </span>
+                </div>
+              </div>
+            </div>
           </div>
-
           <div [hidden]="isUnlimited || !isSubscriptionFieldsVisible" class="checkbox-list margin-bottom-15">
             <label class="checkbox">
               <input
