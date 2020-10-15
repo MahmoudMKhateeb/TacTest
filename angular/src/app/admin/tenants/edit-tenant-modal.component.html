@@ -64,7 +64,7 @@
             </select>
           </div>
 
-          <div [hidden]="!isSubscriptionFieldsVisible" class="checkbox-list">
+          <div [hidden]="!isSubscriptionFieldsVisible" class="checkbox-list margin-bottom-15">
             <label class="checkbox">
               <input
                 id="CreateTenant_IsUnlimited"
@@ -95,7 +95,7 @@
             />
           </div>
 
-          <div [hidden]="isUnlimited || !isSubscriptionFieldsVisible" class="checkbox-list">
+          <div [hidden]="isUnlimited || !isSubscriptionFieldsVisible" class="checkbox-list margin-bottom-15">
             <label class="checkbox">
               <input
                 id="CreateTenant_IsInTrialPeriod"
@@ -109,7 +109,7 @@
             </label>
           </div>
 
-          <div class="checkbox-list">
+          <div class="checkbox-list margin-bottom-15">
             <label class="checkbox">
               <input id="EditTenant_IsActive" type="checkbox" name="IsActive" [(ngModel)]="tenant.isActive" />
               {{ 'Active' | localize }}
