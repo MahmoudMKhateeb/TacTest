@@ -6,6 +6,8 @@ import {
   CreateOrEditDocumentFileDto,
   CreateOrEditTruckDto,
   DocumentFilesServiceProxy,
+  SelectItemDto,
+  TransportSubtypeTransportTypeLookupTableDto,
   TrucksServiceProxy,
   TruckTruckStatusLookupTableDto,
   TruckTrucksTypeLookupTableDto,
@@ -20,6 +22,7 @@ import { FileItem, FileUploader, FileUploaderOptions } from '@node_modules/ng2-f
 import { IAjaxResponse, TokenService } from '@node_modules/abp-ng2-module';
 import { AppConsts } from '@shared/AppConsts';
 import { LocalStorageService } from '@shared/utils/local-storage.service';
+import { defaultFormatUtc } from '@node_modules/moment';
 
 @Component({
   selector: 'createOrEditTruckModal',
@@ -44,6 +47,11 @@ export class CreateOrEditTruckModalComponent extends AppComponentBase {
 
   allTrucksTypes: TruckTrucksTypeLookupTableDto[];
   allTruckStatuss: TruckTruckStatusLookupTableDto[];
+  allTransportTypes: SelectItemDto[];
+  allTransportSubTypes: SelectItemDto[];
+  allTruckTypesByTransportSubtype: SelectItemDto[];
+  allTruckSubTypesByTruckTypeId: SelectItemDto[];
+  allTrucksCapByTruckSubTypeId: SelectItemDto[];
 
   imageChangedEvent: any = '';
   public maxProfilPictureBytesUserFriendlyValue = 5;
@@ -114,9 +122,9 @@ export class CreateOrEditTruckModalComponent extends AppComponentBase {
     this._trucksServiceProxy.getAllTruckStatusForTableDropdown().subscribe((result) => {
       this.allTruckStatuss = result;
     });
-
+    this.GetTransportDropDownList();
     this.initializeModal();
-  }
+  } //end of show
 
   initializeModal(): void {
     this.active = true;
@@ -321,5 +329,68 @@ export class CreateOrEditTruckModalComponent extends AppComponentBase {
 
     item.extn = event.target.files[0].type;
     item.name = event.target.files[0].name;
+  }
+
+  ClearAllTransPortDropDowns() {
+    this.allTransportTypes = null;
+    this.allTransportSubTypes = null;
+    this.allTruckTypesByTransportSubtype = null;
+    this.allTruckSubTypesByTruckTypeId = null;
+    this.allTrucksCapByTruckSubTypeId = null;
+  }
+
+  GetTransportDropDownList(mode?, Parameter?: number) {
+    switch (mode) {
+      case 0:
+        if (Parameter > 0) {
+          this._trucksServiceProxy.getAllTransportSubtypesByTransportTypeIdForDropdown(Parameter).subscribe((result) => {
+            this.allTransportSubTypes = result;
+          });
+        } else {
+          this.allTransportSubTypes = null;
+          this.allTruckTypesByTransportSubtype = null;
+          this.allTruckSubTypesByTruckTypeId = null;
+          this.allTrucksCapByTruckSubTypeId = null;
+        }
+        break;
+      case 1:
+        if (Parameter > 0) {
+          this._trucksServiceProxy.getAllTruckTypesByTransportSubtypeIdForDropdown(Parameter).subscribe((result) => {
+            this.allTruckTypesByTransportSubtype = result;
+          });
+        } else {
+          this.allTruckTypesByTransportSubtype = null;
+          this.allTruckSubTypesByTruckTypeId = null;
+          this.allTrucksCapByTruckSubTypeId = null;
+        }
+        break;
+      case 2:
+        if (Parameter > 0) {
+          this._trucksServiceProxy.getAllTruckSubTypesByTruckTypeIdForDropdown(Parameter).subscribe((result) => {
+            this.allTruckSubTypesByTruckTypeId = result;
+          });
+        } else {
+          this.allTruckSubTypesByTruckTypeId = null;
+          this.allTrucksCapByTruckSubTypeId = null;
+        }
+        break;
+      case 3:
+        if (Parameter > 0) {
+          this._trucksServiceProxy.getAllTuckCapacitiesByTuckSubTypeIdForDropdown(Parameter).subscribe((result) => {
+            this.allTrucksCapByTruckSubTypeId = result;
+          });
+        } else {
+          this.allTrucksCapByTruckSubTypeId = null;
+        }
+        break;
+      default:
+        this.ClearAllTransPortDropDowns();
+        if (!this.truck.transportTypeId) {
+          this._trucksServiceProxy.getAllTransportTypesForDropdown().subscribe((result) => {
+            this.allTransportTypes = result;
+          });
+        }
+        break;
+    }
   }
 }
