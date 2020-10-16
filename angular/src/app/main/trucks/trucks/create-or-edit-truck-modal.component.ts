@@ -339,9 +339,9 @@ export class CreateOrEditTruckModalComponent extends AppComponentBase {
     this.allTrucksCapByTruckSubTypeId = null;
   }
 
-  GetTransportDropDownList(mode?, Parameter?: number) {
+  GetTransportDropDownList(mode?: string, Parameter?: number) {
     switch (mode) {
-      case 0:
+      case 'GetAllTransportSubTypes':
         if (Parameter > 0) {
           this._trucksServiceProxy.getAllTransportSubtypesByTransportTypeIdForDropdown(Parameter).subscribe((result) => {
             this.allTransportSubTypes = result;
@@ -353,7 +353,7 @@ export class CreateOrEditTruckModalComponent extends AppComponentBase {
           this.allTrucksCapByTruckSubTypeId = null;
         }
         break;
-      case 1:
+      case 'GetAllTruckTypesByTransportSubTypes':
         if (Parameter > 0) {
           this._trucksServiceProxy.getAllTruckTypesByTransportSubtypeIdForDropdown(Parameter).subscribe((result) => {
             this.allTruckTypesByTransportSubtype = result;
@@ -364,7 +364,7 @@ export class CreateOrEditTruckModalComponent extends AppComponentBase {
           this.allTrucksCapByTruckSubTypeId = null;
         }
         break;
-      case 2:
+      case 'GetAllTruckSubTypesByTruckTypeId':
         if (Parameter > 0) {
           this._trucksServiceProxy.getAllTruckSubTypesByTruckTypeIdForDropdown(Parameter).subscribe((result) => {
             this.allTruckSubTypesByTruckTypeId = result;
@@ -374,7 +374,7 @@ export class CreateOrEditTruckModalComponent extends AppComponentBase {
           this.allTrucksCapByTruckSubTypeId = null;
         }
         break;
-      case 3:
+      case 'GetAllCapByTruckSybTypeId':
         if (Parameter > 0) {
           this._trucksServiceProxy.getAllTuckCapacitiesByTuckSubTypeIdForDropdown(Parameter).subscribe((result) => {
             this.allTrucksCapByTruckSubTypeId = result;

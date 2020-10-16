@@ -41,7 +41,7 @@
                   [(ngModel)]="truck.transportTypeId"
                   class="form-control"
                   name="truck.transportTypeId"
-                  (change)="GetTransportDropDownList(0, truck.transportTypeId)"
+                  (change)="GetTransportDropDownList('GetAllTransportSubTypes', truck.transportTypeId)"
                   required
                 >
                   <option>{{ l('SelectATransportType') }}</option>
@@ -58,7 +58,7 @@
                   [(ngModel)]="truck.transportSubtypeId"
                   class="form-control"
                   name="truck.transportSubtypeId"
-                  (change)="GetTransportDropDownList(1, truck.transportSubtypeId)"
+                  (change)="GetTransportDropDownList('GetAllTruckTypesByTransportSubTypes', truck.transportSubtypeId)"
                   [disabled]="allTransportSubTypes ? null : true"
                   required
                 >
@@ -74,7 +74,7 @@
                   [(ngModel)]="truck.trucksTypeId"
                   class="form-control"
                   name="truck.trucksTypeId"
-                  (change)="GetTransportDropDownList(2, truck.trucksTypeId)"
+                  (change)="GetTransportDropDownList('GetAllTruckSubTypesByTruckTypeId', truck.trucksTypeId)"
                   [disabled]="allTruckTypesByTransportSubtype ? null : true"
                   required
                 >
@@ -92,7 +92,7 @@
                   [(ngModel)]="truck.truckSubtypeId"
                   class="form-control"
                   name="truck.truckSubtypeId"
-                  (change)="GetTransportDropDownList(3, truck.truckSubtypeId)"
+                  (change)="GetTransportDropDownList('GetAllCapByTruckSybTypeId', truck.truckSubtypeId)"
                   [disabled]="allTruckSubTypesByTruckTypeId ? null : true"
                   required
                 >
