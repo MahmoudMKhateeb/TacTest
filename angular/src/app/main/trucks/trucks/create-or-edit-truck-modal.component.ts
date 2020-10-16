@@ -339,11 +339,11 @@ export class CreateOrEditTruckModalComponent extends AppComponentBase {
     this.allTrucksCapByTruckSubTypeId = null;
   }
 
-  GetTransportDropDownList(mode?: string, Parameter?: number) {
+  GetTransportDropDownList(mode?: string, value?: number) {
     switch (mode) {
       case 'GetAllTransportSubTypes':
-        if (Parameter > 0) {
-          this._trucksServiceProxy.getAllTransportSubtypesByTransportTypeIdForDropdown(Parameter).subscribe((result) => {
+        if (value > 0) {
+          this._trucksServiceProxy.getAllTransportSubtypesByTransportTypeIdForDropdown(value).subscribe((result) => {
             this.allTransportSubTypes = result;
           });
         } else {
@@ -354,8 +354,8 @@ export class CreateOrEditTruckModalComponent extends AppComponentBase {
         }
         break;
       case 'GetAllTruckTypesByTransportSubTypes':
-        if (Parameter > 0) {
-          this._trucksServiceProxy.getAllTruckTypesByTransportSubtypeIdForDropdown(Parameter).subscribe((result) => {
+        if (value > 0) {
+          this._trucksServiceProxy.getAllTruckTypesByTransportSubtypeIdForDropdown(value).subscribe((result) => {
             this.allTruckTypesByTransportSubtype = result;
           });
         } else {
@@ -365,8 +365,8 @@ export class CreateOrEditTruckModalComponent extends AppComponentBase {
         }
         break;
       case 'GetAllTruckSubTypesByTruckTypeId':
-        if (Parameter > 0) {
-          this._trucksServiceProxy.getAllTruckSubTypesByTruckTypeIdForDropdown(Parameter).subscribe((result) => {
+        if (value > 0) {
+          this._trucksServiceProxy.getAllTruckSubTypesByTruckTypeIdForDropdown(value).subscribe((result) => {
             this.allTruckSubTypesByTruckTypeId = result;
           });
         } else {
@@ -375,8 +375,8 @@ export class CreateOrEditTruckModalComponent extends AppComponentBase {
         }
         break;
       case 'GetAllCapByTruckSybTypeId':
-        if (Parameter > 0) {
-          this._trucksServiceProxy.getAllTuckCapacitiesByTuckSubTypeIdForDropdown(Parameter).subscribe((result) => {
+        if (value > 0) {
+          this._trucksServiceProxy.getAllTuckCapacitiesByTuckSubTypeIdForDropdown(value).subscribe((result) => {
             this.allTrucksCapByTruckSubTypeId = result;
           });
         } else {
