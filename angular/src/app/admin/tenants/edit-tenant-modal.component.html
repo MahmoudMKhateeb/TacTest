@@ -64,7 +64,7 @@
             </select>
           </div>
 
-          <div [hidden]="!isSubscriptionFieldsVisible" class="checkbox-list">
+          <div [hidden]="!isSubscriptionFieldsVisible" class="checkbox-list margin-bottom-15">
             <label class="checkbox">
               <input
                 id="CreateTenant_IsUnlimited"
@@ -77,25 +77,33 @@
               <span></span>
             </label>
           </div>
-
           <div [hidden]="isUnlimited || !isSubscriptionFieldsVisible" class="form-group" [ngClass]="{ 'has-error': !subscriptionEndDateUtcIsValid }">
             <label for="SubscriptionEndDateUtc">{{ 'SubscriptionEndDateUtc' | localize }}</label>
-            <input
-              id="SubscriptionEndDateUtc"
-              type="datetime"
-              #SubscriptionEndDateUtc
-              name="SubscriptionEndDateUtc"
-              class="form-control"
-              bsDatepicker
-              datePickerMomentModifier
-              (dateChange)="subscriptionEndDateChange($event)"
-              [(date)]="tenant.subscriptionEndDateUtc"
-              [bsConfig]="{ adaptivePosition: true }"
-              [required]="!isUnlimited"
-            />
+            <div class="input-group date">
+              <input
+                type="datetime"
+                id="SubscriptionEndDateUtc"
+                #SubscriptionEndDateUtc
+                name="SubscriptionEndDateUtc"
+                class="form-control"
+                bsDatepicker
+                datePickerMomentModifier
+                (dateChange)="subscriptionEndDateChange($event)"
+                [(date)]="tenant.subscriptionEndDateUtc"
+                [bsConfig]="{ adaptivePosition: true }"
+                [required]="!isUnlimited"
+                class="form-control"
+                readonly
+                placeholder="Select date"
+              />
+              <div class="input-group-append">
+                <span class="input-group-text">
+                  <i class="la la-calendar-check-o"></i>
+                </span>
+              </div>
+            </div>
           </div>
-
-          <div [hidden]="isUnlimited || !isSubscriptionFieldsVisible" class="checkbox-list">
+          <div [hidden]="isUnlimited || !isSubscriptionFieldsVisible" class="checkbox-list margin-bottom-15">
             <label class="checkbox">
               <input
                 id="CreateTenant_IsInTrialPeriod"
@@ -109,7 +117,7 @@
             </label>
           </div>
 
-          <div class="checkbox-list">
+          <div class="checkbox-list margin-bottom-15">
             <label class="checkbox">
               <input id="EditTenant_IsActive" type="checkbox" name="IsActive" [(ngModel)]="tenant.isActive" />
               {{ 'Active' | localize }}
