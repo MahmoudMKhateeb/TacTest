@@ -226,8 +226,9 @@
     <text name="CreateNewTrucksType">Create new trucks type</text>
     <text name="EditTrucksType">Edit trucks type</text>
     <text name="DeleteTrucksType">Delete trucks type</text>
+	  <text name="TrucksTypeDuplicateName">There is already a truck type with name : {0}</text>
 
-    <text name="Trucks">Trucks</text>
+	  <text name="Trucks">Trucks</text>
     <text name="TruckStatus">Truck status</text>
     <text name="TACHYON.Trucks.TruckStatus">TruckStatus</text>
     <text name="DisplayName">Display name</text>
