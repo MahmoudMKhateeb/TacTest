@@ -120,7 +120,10 @@
                       {{ 'TenantName' | localize }}
                       <p-sortIcon field="name"></p-sortIcon>
                     </th>
-                    <th>{{ 'Edition' | localize }}</th>
+                    <th pSortableColumn="edition">
+                      {{ 'Edition' | localize }}
+                      <p-sortIcon field="edition"></p-sortIcon>
+                    </th>
                     <th pSortableColumn="subscriptionEndDateUtc">
                       {{ 'SubscriptionEndDateUtc' | localize }}
                       <p-sortIcon field="subscriptionEndDateUtc"></p-sortIcon>
