@@ -16,51 +16,161 @@ export class AppNavigationService {
 
   getMenu(): AppMenu {
     return new AppMenu('MainMenu', 'MainMenu', [
-      new AppMenuItem(
-        'DocumentTypeTranslations',
-        'Pages.DocumentTypeTranslations',
-        'flaticon-more',
-        '/app/main/documentTypeTranslations/documentTypeTranslations'
-      ),
-      new AppMenuItem('Capacities', 'Pages.Capacities', 'flaticon-more', '/app/main/truckCapacities/capacities'),
-      new AppMenuItem('TruckSubtypes', 'Pages.TruckSubtypes', 'flaticon-more', '/app/main/truckSubtypes/truckSubtypes'),
-      new AppMenuItem('TransportSubtypes', 'Pages.TransportSubtypes', 'flaticon-more', '/app/main/transportSubtypes/transportSubtypes'),
-      new AppMenuItem('TransportTypes', 'Pages.TransportTypes', 'flaticon-more', '/app/main/transportTypes/transportTypes'),
       new AppMenuItem('Dashboard', 'Pages.Administration.Host.Dashboard', 'flaticon-line-graph', '/app/admin/hostDashboard'),
       new AppMenuItem('Dashboard', 'Pages.Tenant.Dashboard', 'flaticon-line-graph', '/app/main/dashboard'),
-      new AppMenuItem('Tenants', 'Pages.Tenants', 'flaticon-list-3', '/app/admin/tenants'),
-      new AppMenuItem('Editions', 'Pages.Editions', 'flaticon-app', '/app/admin/editions'),
-      new AppMenuItem('Facilities', 'Pages.Facilities', 'flaticon-more', '/app/main/addressBook/facilities'),
 
-      new AppMenuItem('TrucksTypes', 'Pages.TrucksTypes', 'flaticon-more', '/app/main/trucksTypes/trucksTypes'),
-      new AppMenuItem('PickingTypes', 'Pages.PickingTypes', 'flaticon-more', '/app/main/pickingTypes/pickingTypes'),
-
-      new AppMenuItem('Trucks', 'Pages.Trucks', 'flaticon-more', '/app/main/trucks/trucks', undefined, undefined, undefined, undefined, () =>
-        this._featureCheckerService.isEnabled('App.Carrier')
+      //Shipper
+      new AppMenuItem(
+        'Requests',
+        '',
+        'flaticon-interface-8',
+        '',
+        [],
+        [
+          new AppMenuItem(
+            'ShippingRequests',
+            'Pages.ShippingRequests',
+            'flaticon-more',
+            '/app/main/shippingRequests/shippingRequests',
+            undefined,
+            undefined,
+            undefined,
+            undefined,
+            () =>
+              this._featureCheckerService.isEnabled('App.shippingRequest') ||
+              this._featureCheckerService.isEnabled('App.TachyonDealer') ||
+              this._featureCheckerService.isEnabled('App.Broker')
+          ),
+        ]
       ),
-      new AppMenuItem('DocumentsEntities', 'Pages.DocumentsEntities', 'flaticon-more', '/app/main/documentsEntities/documentsEntities'),
 
-      new AppMenuItem('DocumentFiles', 'Pages.DocumentFiles', 'flaticon-more', '/app/main/documentFiles/documentFiles'),
-
-      new AppMenuItem('TrailerTypes', 'Pages.TrailerTypes', 'flaticon-more', '/app/main/trailerTypes/trailerTypes'),
-
-      new AppMenuItem('PayloadMaxWeights', 'Pages.PayloadMaxWeights', 'flaticon-more', '/app/main/payloadMaxWeight/payloadMaxWeights'),
-
-      new AppMenuItem('TrailerStatuses', 'Pages.TrailerStatuses', 'flaticon-more', '/app/main/trailerStatuses/trailerStatuses'),
-
-      new AppMenuItem('Trailers', 'Pages.Trailers', 'flaticon-more', '/app/main/trailers/trailers', undefined, undefined, undefined, undefined, () =>
-        this._featureCheckerService.isEnabled('App.Carrier')
+      //Host
+      new AppMenuItem(
+        'Shipment Settings',
+        '',
+        'flaticon-interface-8',
+        '',
+        [],
+        [
+          new AppMenuItem('Facilities', 'Pages.Facilities', 'flaticon-more', '/app/main/addressBook/facilities'),
+          new AppMenuItem('RoutTypes', 'Pages.RoutTypes', 'flaticon-more', '/app/main/routTypes/routTypes'),
+          new AppMenuItem('Counties', 'Pages.Counties', 'flaticon-more', '/app/main/countries/counties'),
+          new AppMenuItem('Cities', 'Pages.Cities', 'flaticon-more', '/app/main/cities/cities'),
+          new AppMenuItem('Ports', 'Pages.Ports', 'flaticon-more', '/app/main/ports/ports'),
+        ]
       ),
-      new AppMenuItem('DocumentTypes', 'Pages.DocumentTypes', 'flaticon-more', '/app/main/documentTypes/documentTypes'),
+      // Carrier
+      new AppMenuItem(
+        'TMS Settings',
+        '',
+        'flaticon-interface-8',
+        '',
+        [],
+        [
+          new AppMenuItem('Trucks', 'Pages.Trucks', 'flaticon-more', '/app/main/trucks/trucks', undefined, undefined, undefined, undefined, () =>
+            this._featureCheckerService.isEnabled('App.Carrier')
+          ),
+          new AppMenuItem(
+            'Trailers',
+            'Pages.Trailers',
+            'flaticon-more',
+            '/app/main/trailers/trailers',
+            undefined,
+            undefined,
+            undefined,
+            undefined,
+            () => this._featureCheckerService.isEnabled('App.Carrier')
+          ),
+        ]
+      ),
+      //Host
+      new AppMenuItem(
+        'Documents',
+        '',
+        'flaticon-interface-8',
+        '',
+        [],
+        [
+          new AppMenuItem('Document Management ', 'Pages.DocumentTypes', 'flaticon-more', '/app/main/documentTypes/documentTypes'),
+          new AppMenuItem('DocumentsEntities', 'Pages.DocumentsEntities', 'flaticon-more', '/app/main/documentsEntities/documentsEntities'),
+          new AppMenuItem('Submitted Documents', 'Pages.DocumentFiles', 'flaticon-more', '/app/main/documentFiles/documentFiles'),
+          new AppMenuItem(
+            'DocumentTypeTranslations',
+            'Pages.DocumentTypeTranslations',
+            'flaticon-more',
+            '/app/main/documentTypeTranslations/documentTypeTranslations'
+          ),
+          new AppMenuItem('TenantRequiredDocuments', '', 'flaticon-settings', '/app/admin/tenantRequiredDocuments'),
+        ]
+      ),
 
-      new AppMenuItem('GoodCategories', 'Pages.GoodCategories', 'flaticon-more', '/app/main/goodCategories/goodCategories'),
+      //Host
+      new AppMenuItem(
+        'TMS Settings',
+        '',
+        'flaticon-interface-8',
+        '',
+        [],
+        [
+          new AppMenuItem(
+            'Truck Types',
+            '',
+            'flaticon-interface-8',
+            '',
+            [],
+            [
+              new AppMenuItem('Capacities', 'Pages.Capacities', 'flaticon-more', '/app/main/truckCapacities/capacities'),
+              new AppMenuItem('TruckSubtypes', 'Pages.TruckSubtypes', 'flaticon-more', '/app/main/truckSubtypes/truckSubtypes'),
+              new AppMenuItem('TransportSubtypes', 'Pages.TransportSubtypes', 'flaticon-more', '/app/main/transportSubtypes/transportSubtypes'),
+              new AppMenuItem('TransportTypes', 'Pages.TransportTypes', 'flaticon-more', '/app/main/transportTypes/transportTypes'),
+            ]
+          ),
+          new AppMenuItem('TrucksTypes', 'Pages.TrucksTypes', 'flaticon-more', '/app/main/trucksTypes/trucksTypes'),
+          new AppMenuItem('PickingTypes', 'Pages.PickingTypes', 'flaticon-more', '/app/main/pickingTypes/pickingTypes'),
+          new AppMenuItem('TrailerTypes', 'Pages.TrailerTypes', 'flaticon-more', '/app/main/trailerTypes/trailerTypes'),
+          new AppMenuItem('PayloadMaxWeights', 'Pages.PayloadMaxWeights', 'flaticon-more', '/app/main/payloadMaxWeight/payloadMaxWeights'),
+          new AppMenuItem('TrailerStatuses', 'Pages.TrailerStatuses', 'flaticon-more', '/app/main/trailerStatuses/trailerStatuses'),
+          new AppMenuItem('GoodCategories', 'Pages.GoodCategories', 'flaticon-more', '/app/main/goodCategories/goodCategories'),
+          new AppMenuItem('UnitOfMeasures', 'Pages.Administration.UnitOfMeasures', 'flaticon-more', '/app/admin/unitOfMeasures/unitOfMeasures'),
+          new AppMenuItem(
+            'TruckStatuses',
+            'Pages.Administration.TruckStatuses',
+            'flaticon-more',
+            '/app/admin/trucks/truckStatuses',
+            undefined,
+            undefined,
+            undefined,
+            undefined,
+            () => this._featureCheckerService.isEnabled('App.Carrier')
+          ),
+        ]
+      ),
 
-      new AppMenuItem('RoutTypes', 'Pages.RoutTypes', 'flaticon-more', '/app/main/routTypes/routTypes'),
+      // Host
+      new AppMenuItem(
+        'Administration',
+        '',
+        'flaticon-interface-8',
+        '',
+        [],
+        [
+          new AppMenuItem('Tenants', 'Pages.Tenants', 'flaticon-list-3', '/app/admin/tenants'),
+          new AppMenuItem('Editions', 'Pages.Editions', 'flaticon-app', '/app/admin/editions'),
+        ]
+      ),
 
-      new AppMenuItem('Counties', 'Pages.Counties', 'flaticon-more', '/app/main/countries/counties'),
-
-      new AppMenuItem('Cities', 'Pages.Cities', 'flaticon-more', '/app/main/cities/cities'),
-      new AppMenuItem('Ports', 'Pages.Ports', 'flaticon-more', '/app/main/ports/ports'),
+      // Host
+      new AppMenuItem(
+        'User Management',
+        '',
+        'flaticon-interface-8',
+        '',
+        [],
+        [
+          new AppMenuItem('Roles', 'Pages.Administration.Roles', 'flaticon-suitcase', '/app/admin/roles'),
+          new AppMenuItem('Users', 'Pages.Administration.Users', 'flaticon-users', '/app/admin/users'),
+        ]
+      ),
 
       new AppMenuItem('Routes', 'Pages.Routes', 'flaticon-more', '/app/main/routs/routes', undefined, undefined, undefined, undefined, () =>
         this._featureCheckerService.isEnabled('App.Carrier')
@@ -79,48 +189,19 @@ export class AppNavigationService {
       ),
 
       new AppMenuItem(
-        'ShippingRequests',
-        'Pages.ShippingRequests',
-        'flaticon-more',
-        '/app/main/shippingRequests/shippingRequests',
-        undefined,
-        undefined,
-        undefined,
-        undefined,
-        () =>
-          this._featureCheckerService.isEnabled('App.shippingRequest') ||
-          this._featureCheckerService.isEnabled('App.TachyonDealer') ||
-          this._featureCheckerService.isEnabled('App.Broker')
-      ),
-      new AppMenuItem(
-        'Administration',
+        'Settings',
         '',
         'flaticon-interface-8',
         '',
         [],
         [
           new AppMenuItem('OrganizationUnits', 'Pages.Administration.OrganizationUnits', 'flaticon-map', '/app/admin/organization-units'),
-          new AppMenuItem('Roles', 'Pages.Administration.Roles', 'flaticon-suitcase', '/app/admin/roles'),
-          new AppMenuItem('Users', 'Pages.Administration.Users', 'flaticon-users', '/app/admin/users'),
+
           new AppMenuItem(
             'ShippingRequestStatuses',
             'Pages.Administration.ShippingRequestStatuses',
             'flaticon-more',
             '/app/admin/shippingRequestStatuses/shippingRequestStatuses'
-          ),
-
-          new AppMenuItem('UnitOfMeasures', 'Pages.Administration.UnitOfMeasures', 'flaticon-more', '/app/admin/unitOfMeasures/unitOfMeasures'),
-
-          new AppMenuItem(
-            'TruckStatuses',
-            'Pages.Administration.TruckStatuses',
-            'flaticon-more',
-            '/app/admin/trucks/truckStatuses',
-            undefined,
-            undefined,
-            undefined,
-            undefined,
-            () => this._featureCheckerService.isEnabled('App.Carrier')
           ),
 
           new AppMenuItem('Languages', 'Pages.Administration.Languages', 'flaticon-tabs', '/app/admin/languages', [
@@ -149,7 +230,6 @@ export class AppNavigationService {
           ),
           new AppMenuItem('Settings', 'Pages.Administration.Host.Settings', 'flaticon-settings', '/app/admin/hostSettings'),
           new AppMenuItem('Settings', 'Pages.Administration.Tenant.Settings', 'flaticon-settings', '/app/admin/tenantSettings'),
-          new AppMenuItem('TenantRequiredDocuments', '', 'flaticon-settings', '/app/admin/tenantRequiredDocuments'),
         ]
       ),
       new AppMenuItem('DemoUiComponents', 'Pages.DemoUiComponents', 'flaticon-shapes', '/app/admin/demo-ui-components'),
