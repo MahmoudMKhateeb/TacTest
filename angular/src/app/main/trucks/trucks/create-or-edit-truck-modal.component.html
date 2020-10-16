@@ -22,9 +22,9 @@
         </div>
         <div class="modal-body">
           <div class="row">
-            <div *ngIf="truck.id" class="col-sm-3 text-center mb-5 mt-5">
-              <img class="img-thumbnail img-rounded" height="128" src="{{ profilePicture }}" width="128" />
-            </div>
+            <!--            <div *ngIf="truck.id && profilePicture != ''" class="col-md-6 text-center">-->
+            <!--              <img class="img-thumbnail img-rounded" height="128" src="{{ profilePicture }}" width="128" />-->
+            <!--            </div>-->
             <div class="col-md-6">
               <div class="form-group m-form__group">
                 <label for="TruckStatusDisplayName">{{ l('TruckStatus') }}</label>
@@ -191,18 +191,18 @@
               <input [(ngModel)]="truck.note" class="form-control" id="Truck_Note" maxlength="256" minlength="0" name="Note" type="text" />
             </div>
 
-            <div class="form-group col-md-12">
-              <input (change)="fileChangeEvent($event)" type="file" />
-              <span class="help-block m-b-none">{{ 'ProfilePicture_Change_Info' | localize: maxProfilPictureBytesUserFriendlyValue }}</span>
-            </div>
-            <image-cropper
-              (imageCropped)="imageCroppedFile($event)"
-              [aspectRatio]="4 / 4"
-              [imageChangedEvent]="imageChangedEvent"
-              [maintainAspectRatio]="true"
-              [resizeToWidth]="128"
-              format="png"
-            ></image-cropper>
+            <!--            <div class="form-group col-md-12">-->
+            <!--              <input (change)="fileChangeEvent($event)" type="file" />-->
+            <!--              <span class="help-block m-b-none">{{ 'ProfilePicture_Change_Info' | localize: maxProfilPictureBytesUserFriendlyValue }}</span>-->
+            <!--            </div>-->
+            <!--            <image-cropper-->
+            <!--              (imageCropped)="imageCroppedFile($event)"-->
+            <!--              [aspectRatio]="4 / 4"-->
+            <!--              [imageChangedEvent]="imageChangedEvent"-->
+            <!--              [maintainAspectRatio]="true"-->
+            <!--              [resizeToWidth]="128"-->
+            <!--              format="png"-->
+            <!--            ></image-cropper>-->
           </div>
           <div *ngFor="let item of truck.createOrEditDocumentFileDtos; index as i" class="row">
             <div class="form-group col-md-2">
@@ -265,45 +265,18 @@
               />
             </div>
 
-            <!--                <div *ngIf="item.documentTypeDto.hasExpirationDate" class="form-group col-md-4">-->
-            <!--                    <hijri-gregorian-datepicker-test-->
-            <!--                        [label]="l('ExpirationDate')"-->
-            <!--                        class="m-input"-->
-            <!--                        [isRequired]="true"-->
-            <!--                        [readonly]="true"-->
-            <!--                        [selectedDateType]="item.documentTypeDto.hasHijriExpirationDate ? selectedDateTypeHijri : selectedDateTypeGregorian"-->
-            <!--                        (selectedDateChange)="selectedDateChange($event, item)"-->
-            <!--                    >-->
-            <!--                    </hijri-gregorian-datepicker-test>-->
-            <!--                </div>-->
+            <div *ngIf="item.documentTypeDto.hasExpirationDate" class="form-group col-md-4">
+              <hijri-gregorian-datepicker-test
+                [label]="l('ExpirationDate')"
+                class="m-input"
+                [isRequired]="true"
+                [readonly]="true"
+                [selectedDateType]="item.documentTypeDto.hasHijriExpirationDate ? selectedDateTypeHijri : selectedDateTypeGregorian"
+                (selectedDateChange)="selectedDateChange($event, item)"
+              >
+              </hijri-gregorian-datepicker-test>
+            </div>
           </div>
-
-          <!--          <div *ngFor="let item of truck.createOrEditDocumentFileDtos" class="row">-->
-          <!--            <div class="form-group col-md-6">-->
-          <!--              <label>File Browser</label>-->
-          <!--              <div class="custom-file">-->
-          <!--                <input (change)="DocFileChangeEvent($event, item)" type="file" class="custom-file-input" [id]="item.name" />-->
-          <!--                <label class="custom-file-label" [for]="item.name">{{ item.name }}</label>-->
-          <!--              </div>-->
-          <!--            </div>-->
-          <!--            <div class="form-group col-md-6">-->
-          <!--              <label>{{ l('expiration date') }}</label>-->
-          <!--              <input-->
-          <!--                [(date)]="item.expirationDate"-->
-          <!--                bsDatepicker-->
-          <!--                class="form-control m-input"-->
-          <!--                datePickerMomentModifier-->
-          <!--                [id]="item.name"-->
-          <!--                [name]="item.name"-->
-          <!--                required-->
-          <!--                type="datetime"-->
-          <!--              />-->
-          <!--            </div>-->
-          <!--            &lt;!&ndash;            <div class="form-group col-md-6">&ndash;&gt;-->
-          <!--            &lt;!&ndash;              <span class="help-block m-b-none">{{ item.name }}</span>&ndash;&gt;-->
-          <!--            &lt;!&ndash;              <input (change)="DocFileChangeEvent($event, item)" type="file" />&ndash;&gt;-->
-          <!--            &lt;!&ndash;            </div>&ndash;&gt;-->
-          <!--          </div>-->
           <div class="row">
             <label>{{ docProgressFileName }}</label>
             <div class="col-md-12">

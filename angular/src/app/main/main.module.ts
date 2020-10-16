@@ -129,6 +129,7 @@ import { NgxBootstrapDatePickerConfigService } from 'assets/ngx-bootstrap/ngx-bo
 import { ImageCropperModule } from '@node_modules/ngx-image-cropper';
 import { AgmCoreModule } from '@node_modules/@agm/core';
 import { UpdatePriceShippingRequestModalComponent } from './shippingRequests/shippingRequests/update-price-shipping-request-modal/update-price-shipping-request-modal.component';
+import { AdminModule } from '@app/admin/admin.module';
 
 NgxBootstrapDatePickerConfigService.registerNgxBootstrapDatePickerLocales();
 
@@ -160,6 +161,7 @@ NgxBootstrapDatePickerConfigService.registerNgxBootstrapDatePickerLocales();
       apiKey: 'AIzaSyDKKZqDW_xX5azTqBV2oXSb6P3nwCAzOpw',
       libraries: ['places'],
     }),
+    AdminModule,
   ],
   declarations: [
     CapacitiesComponent,
