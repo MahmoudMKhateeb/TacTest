@@ -8,7 +8,7 @@
   aria-hidden="true"
   [config]="{ backdrop: 'static' }"
 >
-  <div class="modal-dialog modal-lg">
+  <div class="modal-dialog modal-lg" style="max-width: 90% !important;">
     <div class="modal-content">
       <form *ngIf="active" #truckForm="ngForm" novalidate (ngSubmit)="save()" autocomplete="off">
         <div class="modal-header">
@@ -204,33 +204,106 @@
               format="png"
             ></image-cropper>
           </div>
-
-          <div *ngFor="let item of truck.createOrEditDocumentFileDtos" class="row">
-            <div class="form-group col-md-6">
-              <label>File Browser</label>
+          <div *ngFor="let item of truck.createOrEditDocumentFileDtos; index as i" class="row">
+            <div class="form-group col-md-2">
+              <label>{{ item.documentTypeDto.displayName }}</label>
               <div class="custom-file">
-                <input (change)="DocFileChangeEvent($event, item)" type="file" class="custom-file-input" [id]="item.name" />
-                <label class="custom-file-label" [for]="item.name">{{ item.name }}</label>
+                <input
+                  [disabled]="item.isAccepted"
+                  (change)="DocFileChangeEvent($event, item)"
+                  type="file"
+                  class="custom-file-input"
+                  [required]="item.documentTypeDto.isRequired"
+                />
+                <label class="custom-file-label" [for]="item.documentTypeDto.displayName"> {{ item.name ? item.name : l('select file') }}</label>
               </div>
             </div>
-            <div class="form-group col-md-6">
-              <label>{{ l('expiration date') }}</label>
+            <div *ngIf="item.documentTypeDto.hasExpirationDate" class="form-group col-md-2">
+              <label>{{ l('expiration date') }} <span class="text-danger">*</span></label>
               <input
-                [(date)]="item.expirationDate"
+                name="expirationDate{{ i }}"
+                id="expirationDate{{ i }}"
                 bsDatepicker
                 class="form-control m-input"
                 datePickerMomentModifier
-                [id]="item.name"
-                [name]="item.name"
-                required
-                type="datetime"
+                [required]="item.documentTypeDto.isRequired && !item.isAccepted"
+                [(date)]="item.expirationDate"
+                [disabled]="item.isAccepted"
               />
             </div>
-            <!--            <div class="form-group col-md-6">-->
-            <!--              <span class="help-block m-b-none">{{ item.name }}</span>-->
-            <!--              <input (change)="DocFileChangeEvent($event, item)" type="file" />-->
-            <!--            </div>-->
+            <div *ngIf="item.documentTypeDto.hasNumber" class="form-group col-md-2">
+              <label
+                >{{ l('number') }}
+                <span class="text-danger">*</span>
+              </label>
+              <input
+                name="number{{ i }}"
+                id="number{{ i }}"
+                class="form-control m-input"
+                required
+                [maxLength]="item.documentTypeDto.numberMaxDigits == 0 ? 50 : item.documentTypeDto.numberMaxDigits"
+                [minLength]="item.documentTypeDto.numberMinDigits"
+                type="text"
+                [(ngModel)]="item.number"
+                [disabled]="item.isAccepted"
+              />
+              <span class="form-text text-muted"
+                >{{ l('minDigits:') }} {{ item.documentTypeDto.numberMinDigits }} {{ l('maxDigits:') }}
+                {{ item.documentTypeDto.numberMaxDigits == 0 ? 50 : item.documentTypeDto.numberMaxDigits }}
+              </span>
+            </div>
+            <div *ngIf="item.documentTypeDto.hasNotes" class="form-group col-md-2">
+              <label>{{ l('note') }}</label>
+              <input
+                name="note{{ i }}"
+                id="note{{ i }}"
+                class="form-control m-input"
+                [required]="item.documentTypeDto.hasNotes && !item.isAccepted"
+                type="text"
+                [(ngModel)]="item.notes"
+                [disabled]="item.isAccepted"
+              />
+            </div>
+
+            <!--                <div *ngIf="item.documentTypeDto.hasExpirationDate" class="form-group col-md-4">-->
+            <!--                    <hijri-gregorian-datepicker-test-->
+            <!--                        [label]="l('ExpirationDate')"-->
+            <!--                        class="m-input"-->
+            <!--                        [isRequired]="true"-->
+            <!--                        [readonly]="true"-->
+            <!--                        [selectedDateType]="item.documentTypeDto.hasHijriExpirationDate ? selectedDateTypeHijri : selectedDateTypeGregorian"-->
+            <!--                        (selectedDateChange)="selectedDateChange($event, item)"-->
+            <!--                    >-->
+            <!--                    </hijri-gregorian-datepicker-test>-->
+            <!--                </div>-->
           </div>
+
+          <!--          <div *ngFor="let item of truck.createOrEditDocumentFileDtos" class="row">-->
+          <!--            <div class="form-group col-md-6">-->
+          <!--              <label>File Browser</label>-->
+          <!--              <div class="custom-file">-->
+          <!--                <input (change)="DocFileChangeEvent($event, item)" type="file" class="custom-file-input" [id]="item.name" />-->
+          <!--                <label class="custom-file-label" [for]="item.name">{{ item.name }}</label>-->
+          <!--              </div>-->
+          <!--            </div>-->
+          <!--            <div class="form-group col-md-6">-->
+          <!--              <label>{{ l('expiration date') }}</label>-->
+          <!--              <input-->
+          <!--                [(date)]="item.expirationDate"-->
+          <!--                bsDatepicker-->
+          <!--                class="form-control m-input"-->
+          <!--                datePickerMomentModifier-->
+          <!--                [id]="item.name"-->
+          <!--                [name]="item.name"-->
+          <!--                required-->
+          <!--                type="datetime"-->
+          <!--              />-->
+          <!--            </div>-->
+          <!--            &lt;!&ndash;            <div class="form-group col-md-6">&ndash;&gt;-->
+          <!--            &lt;!&ndash;              <span class="help-block m-b-none">{{ item.name }}</span>&ndash;&gt;-->
+          <!--            &lt;!&ndash;              <input (change)="DocFileChangeEvent($event, item)" type="file" />&ndash;&gt;-->
+          <!--            &lt;!&ndash;            </div>&ndash;&gt;-->
+          <!--          </div>-->
           <div class="row">
             <label>{{ docProgressFileName }}</label>
             <div class="col-md-12">
