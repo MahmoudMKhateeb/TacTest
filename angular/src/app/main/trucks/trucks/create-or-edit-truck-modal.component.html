@@ -25,14 +25,7 @@
             <div *ngIf="truck.id" class="col-sm-3 text-center mb-5 mt-5">
               <img class="img-thumbnail img-rounded" height="128" src="{{ profilePicture }}" width="128" />
             </div>
-            <div class="col">
-              <div class="form-group m-form__group">
-                <label for="TrucksTypeDisplayName">{{ l('TrucksType') }}</label>
-                <select [(ngModel)]="truck.trucksTypeId" class="form-control" name="truck.trucksTypeId" required>
-                  <option value="">{{ l('SelectATrucksType') }}</option>
-                  <option *ngFor="let item of allTrucksTypes" value="{{ item.id }}">{{ item.displayName }}</option>
-                </select>
-              </div>
+            <div class="col-md-6">
               <div class="form-group m-form__group">
                 <label for="TruckStatusDisplayName">{{ l('TruckStatus') }}</label>
                 <select [(ngModel)]="truck.truckStatusId" class="form-control" name="truck.truckStatusId" required>
@@ -41,8 +34,89 @@
                 </select>
               </div>
             </div>
+            <div class="col-md-6">
+              <div class="form-group m-form__group">
+                <label for="transportTypeDisplayName">{{ l('TransportType') }}</label>
+                <select
+                  [(ngModel)]="truck.transportTypeId"
+                  class="form-control"
+                  name="truck.transportTypeId"
+                  (change)="GetTransportDropDownList('GetAllTransportSubTypes', truck.transportTypeId)"
+                  required
+                >
+                  <option>{{ l('SelectATransportType') }}</option>
+                  <option *ngFor="let item of allTransportTypes" value="{{ item.id }}">{{ item.displayName }}</option>
+                </select>
+              </div>
+            </div>
           </div>
-
+          <div class="row">
+            <div class="col-md-6">
+              <div class="form-group m-form__group">
+                <label for="allTransportSubTypes">{{ l('TransportSubTypes') }}</label>
+                <select
+                  [(ngModel)]="truck.transportSubtypeId"
+                  class="form-control"
+                  name="truck.transportSubtypeId"
+                  (change)="GetTransportDropDownList('GetAllTruckTypesByTransportSubTypes', truck.transportSubtypeId)"
+                  [disabled]="allTransportSubTypes ? null : true"
+                  required
+                >
+                  <option value="0">{{ l('SelectATransportSubType') }}</option>
+                  <option *ngFor="let item of allTransportSubTypes" value="{{ item.id }}">{{ item.displayName }}</option>
+                </select>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="form-group m-form__group">
+                <label for="allTruckTypesByTransportSubtype">{{ l('TruckType') }}</label>
+                <select
+                  [(ngModel)]="truck.trucksTypeId"
+                  class="form-control"
+                  name="truck.trucksTypeId"
+                  (change)="GetTransportDropDownList('GetAllTruckSubTypesByTruckTypeId', truck.trucksTypeId)"
+                  [disabled]="allTruckTypesByTransportSubtype ? null : true"
+                  required
+                >
+                  <option value="0">{{ l('SelectTruckTypeByTransportSubtype') }}</option>
+                  <option *ngFor="let item of allTruckTypesByTransportSubtype" value="{{ item.id }}">{{ item.displayName }}</option>
+                </select>
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-6">
+              <div class="form-group m-form__group">
+                <label for="allTruckSubTypesByTruckTypeIdDisplayName">{{ l('TruckSubType') }}</label>
+                <select
+                  [(ngModel)]="truck.truckSubtypeId"
+                  class="form-control"
+                  name="truck.truckSubtypeId"
+                  (change)="GetTransportDropDownList('GetAllCapByTruckSybTypeId', truck.truckSubtypeId)"
+                  [disabled]="allTruckSubTypesByTruckTypeId ? null : true"
+                  required
+                >
+                  <option value="0">{{ l('SelectTruckSubType') }}</option>
+                  <option *ngFor="let item of allTruckSubTypesByTruckTypeId" value="{{ item.id }}">{{ item.displayName }}</option>
+                </select>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="form-group m-form__group">
+                <label for="truck.capacityId">{{ l('Capacity') }}</label>
+                <select
+                  [(ngModel)]="truck.capacityId"
+                  class="form-control"
+                  name="truck.capacityId"
+                  [disabled]="allTrucksCapByTruckSubTypeId ? null : true"
+                  required
+                >
+                  <option value="0">{{ l('SelectTruckCapByTruckSubType') }}</option>
+                  <option *ngFor="let item of allTrucksCapByTruckSubTypeId" value="{{ item.id }}">{{ item.displayName }}</option>
+                </select>
+              </div>
+            </div>
+          </div>
           <div class="row">
             <div class="col-md-6">
               <div class="form-group m-form__group">
@@ -152,7 +226,6 @@
                 type="datetime"
               />
             </div>
-
             <!--            <div class="form-group col-md-6">-->
             <!--              <span class="help-block m-b-none">{{ item.name }}</span>-->
             <!--              <input (change)="DocFileChangeEvent($event, item)" type="file" />-->
