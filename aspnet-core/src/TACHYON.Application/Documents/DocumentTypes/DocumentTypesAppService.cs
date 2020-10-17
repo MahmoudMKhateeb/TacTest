@@ -5,6 +5,7 @@ using Abp.Authorization;
 using Abp.Domain.Repositories;
 using Abp.Extensions;
 using Abp.Linq.Extensions;
+using Abp.UI;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -91,6 +92,12 @@ namespace TACHYON.Documents.DocumentTypes
 
         public async Task CreateOrEdit(CreateOrEditDocumentTypeDto input)
         {
+            var IsDuplicateDocumentType = await _documentTypeRepository.FirstOrDefaultAsync(x=>(x.DisplayName).Trim().ToLower() == (input.DisplayName).Trim().ToLower());
+            if (IsDuplicateDocumentType !=null)
+            {
+                throw new UserFriendlyException(string.Format(L("DuplicateDocumentTypeName"),input.DisplayName));
+            }
+
             if (input.Id == null)
             {
                 await Create(input);

@@ -41,6 +41,7 @@
     <text name="EditDocumentFile">Edit document file</text>
     <text name="DeleteDocumentFile">Delete document file</text>
     <text name="DocumentTypeDisplayName">Document type display name</text>
+    <text name="DuplicateDocumentTypeName">There is already document type with the name: {0}</text>
     <text name="PickDocumentType">Pick document type</text>
     <text name="TrailerTrailerCode">Trailer trailer code</text>
     <text name="PickTrailer">Pick trailer</text>
