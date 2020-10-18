@@ -22,7 +22,7 @@
         </div>
         <div class="modal-body">
           <div class="form-group col-md-12">
-            <input (change)="fileChangeEvent($event)" type="file" />
+            <input (change)="fileChangeEvent($event)" type="file" /><br />
             <span class="help-block m-b-none">{{ 'DocumentFile_Change_Info' | localize: maxDocumentFileBytesUserFriendlyValue }}</span>
           </div>
           <!--            <input type="file" ng2FileSelect [uploader]="uploader" />-->
