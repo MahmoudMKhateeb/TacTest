@@ -41,9 +41,12 @@
         <input [(ngModel)]="loginService.rememberMe" type="checkbox" name="rememberMe" value="true" />{{ 'RememberMe' | localize }}
         <span></span>
       </label>
-      <a routerLink="/account/forgot-password" id="forget-password" class="text-primary font-size-h6 font-weight-bolder text-hover-primary">{{
-        'ForgotPassword' | localize
-      }}</a>
+      <a
+        routerLink="/account/forgot-password"
+        id="forget-password"
+        class="text-login-links font-size-h6 font-weight-bolder .text-login-links-hover"
+        >{{ 'ForgotPassword' | localize }}</a
+      >
     </div>
 
     <div class="pb-lg-0 pb-5">
@@ -85,12 +88,12 @@
     </span>
   </div>
   <span *ngIf="isSelfRegistrationAllowed">
-    <a routerLink="/account/register">{{ 'CreateAnAccount' | localize }}</a>
+    <a class="text-login-links" routerLink="/account/register">{{ 'CreateAnAccount' | localize }}</a>
     <span> | </span>
   </span>
   <span *ngIf="!multiTenancySideIsTeanant && isTenantSelfRegistrationAllowed">
-    <a routerLink="/account/select-edition">{{ 'NewTenant' | localize }}</a>
+    <a class="text-login-links" routerLink="/account/select-edition">{{ 'NewTenant' | localize }}</a>
     <span> | </span>
   </span>
-  <a routerLink="/account/email-activation" id="email-activation-btn">{{ 'EmailActivation' | localize }}</a>
+  <a class="text-login-links" routerLink="/account/email-activation" id="email-activation-btn">{{ 'EmailActivation' | localize }}</a>
 </div>

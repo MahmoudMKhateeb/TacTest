@@ -2,7 +2,7 @@
   <div class="content d-flex flex-column flex-column-fluid">
     <sub-header [title]="'Capacities' | localize" [description]="'CapacitiesHeaderInfo' | localize">
       <div role="actions">
-        <button *ngIf="isGranted('Pages.Capacities.Create')" (click)="createCapacity()" class="btn btn-primary blue">
+        <button *ngIf="isGranted('Pages.Capacities.Create')" (click)="createCapacity()" class="btn btn-save blue">
           <i class="fa fa-plus"></i> {{ l('CreateNewCapacity') }}
         </button>
       </div>

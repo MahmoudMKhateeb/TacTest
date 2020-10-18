@@ -50,7 +50,8 @@
                   [disabled]="item.isAccepted"
                 />
                 <span class="form-text text-muted"
-                  >{{ l('minDigits:') }} {{ item.documentTypeDto.numberMinDigits }} {{ l('maxDigits:') }}
+                  >{{ l('minDigits:') }} {{ item.documentTypeDto.numberMinDigits }}
+                  {{ l('maxDigits:') }}
                   {{ item.documentTypeDto.numberMaxDigits == 0 ? 50 : item.documentTypeDto.numberMaxDigits }}
                 </span>
               </div>
@@ -90,7 +91,7 @@
           <div class="card-footer">
             <button
               type="submit"
-              class="btn btn-primary blue"
+              class="btn btn-save blue"
               [disabled]="!TenantRequiredDocumentsForm.form.valid"
               [buttonBusy]="saving"
               [busyText]="l('SavingWithThreeDot')"

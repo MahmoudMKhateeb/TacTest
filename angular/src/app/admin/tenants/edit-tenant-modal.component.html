@@ -133,7 +133,7 @@
             type="submit"
             [buttonBusy]="saving"
             [busyText]="l('SavingWithThreeDot')"
-            class="btn btn-primary font-weight-bold"
+            class="btn btn-save font-weight-bold"
             [disabled]="!tenantEditForm.form.valid || saving || !subscriptionEndDateUtcIsValid"
           >
             <i class="fa fa-save"></i> <span>{{ 'Save' | localize }}</span>

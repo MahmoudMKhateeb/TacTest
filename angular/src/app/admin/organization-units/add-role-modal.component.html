@@ -95,7 +95,7 @@
       <div class="modal-footer">
         <button [disabled]="saving" type="button" class="btn btn-light-primary font-weight-bold" (click)="close()">{{ 'Cancel' | localize }}</button>
         <button
-          class="btn btn-primary font-weight-bold"
+          class="btn btn-save font-weight-bold"
           (click)="addRolesToOrganizationUnit()"
           [buttonBusy]="saving"
           [busyText]="l('SavingWithThreeDot')"

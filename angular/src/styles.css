@@ -1,4 +1,12 @@
 /* You can add global styles to this file, and also import other style files */
+
+/* fonts */
+
+/* en */
+@import url(//db.onlinewebfonts.com/c/33f225b8f5f7d6b34a0926f58f96c1e9?family=Open + Sans + Semibold);
+/* ar */
+@import url(//db.onlinewebfonts.com/c/aaff40b5e8234dc862e4df217e40cf1e?family=GE + SS + Two + Bold);
+
 .margin-left-5 {
   margin-left: 5px !important;
 }
@@ -171,3 +179,225 @@ ngx-spinner .loading-text {
 .table-success > td {
   background-color: #bfefed !important;
 }
+
+.btn.btn-primary:hover:not(.btn-text):not(:disabled):not(.disabled),
+.btn.btn-primary:focus:not(.btn-text),
+.btn.btn-primary.focus:not(.btn-text) {
+  background-color: #df515a !important;
+  border-color: #df515a !important;
+}
+
+.btn.btn-primary {
+  background-color: #d82631 !important;
+  border-color: #d82631 !important;
+}
+
+.btn.btn-save {
+  background-color: #2dc401 !important;
+  border-color: #2dc401 !important;
+}
+.btn {
+  color: #ffffff !important;
+}
+
+.fa-save:before {
+  content: '\f0c7';
+  color: #ffffff !important;
+}
+.btn.btn-light-primary {
+  color: #3699ff;
+  background-color: #df515a6e !important;
+  border-color: transparent;
+}
+
+.btn.btn-light-primary:hover:not(.btn-text):not(:disabled):not(.disabled),
+.btn.btn-light-primary:focus:not(.btn-text),
+.btn.btn-light-primary.focus:not(.btn-text) {
+  color: #ffffff;
+  background-color: #df515a !important;
+  border-color: transparent;
+}
+
+.nav .show > .nav-link,
+.nav .nav-link:hover:not(.disabled),
+.nav .nav-link.active {
+  -webkit-transition: color 0.15s ease, background-color 0.15s ease, border-color 0.15s ease, -webkit-box-shadow 0.15s ease;
+  transition: color 0.15s ease, background-color 0.15s ease, border-color 0.15s ease, -webkit-box-shadow 0.15s ease;
+  transition: color 0.15s ease, background-color 0.15s ease, border-color 0.15s ease, box-shadow 0.15s ease;
+  transition: color 0.15s ease, background-color 0.15s ease, border-color 0.15s ease, box-shadow 0.15s ease, -webkit-box-shadow 0.15s ease;
+  color: #d82631 !important;
+}
+
+.btn.btn-default {
+  color: #3699ff;
+  background-color: #df515a6e !important;
+  border-color: transparent;
+}
+
+.btn.btn-default:hover:not(.btn-text):not(:disabled):not(.disabled),
+.btn.btn-default:focus:not(.btn-text),
+.btn.btn-default.focus:not(.btn-text) {
+  color: #ffffff;
+  background-color: #df515a !important;
+  border-color: transparent;
+}
+
+body .ui-paginator .ui-paginator-pages .ui-paginator-page.ui-state-active {
+  background-color: #d82631 !important;
+  color: #ffffff;
+}
+
+.symbol.symbol-light-success .symbol-label {
+  background-color: #df515a6e !important;
+  color: #e009166e !important;
+}
+
+.flaticon-alarm:before {
+  content: '\f197' !important;
+  color: #df515a6e !important;
+}
+.flaticon-chat-2:before {
+  content: '\f1dc' !important;
+  color: #df515a6e !important;
+}
+
+a.text-hover-primary:hover,
+.text-hover-primary:hover {
+  -webkit-transition: color 0.15s ease, background-color 0.15s ease, border-color 0.15s ease, -webkit-box-shadow 0.15s ease;
+  transition: color 0.15s ease, background-color 0.15s ease, border-color 0.15s ease, -webkit-box-shadow 0.15s ease;
+  transition: color 0.15s ease, background-color 0.15s ease, border-color 0.15s ease, box-shadow 0.15s ease;
+  transition: color 0.15s ease, background-color 0.15s ease, border-color 0.15s ease, box-shadow 0.15s ease, -webkit-box-shadow 0.15s ease;
+  color: #d82631 !important;
+}
+
+.navi .navi-item .navi-link:hover .navi-text {
+  color: #d82631 !important;
+}
+.aside-menu
+  .menu-nav
+  > .menu-item:not(.menu-item-parent):not(.menu-item-open):not(.menu-item-here):not(.menu-item-active):hover
+  > .menu-heading
+  .menu-text,
+.aside-menu
+  .menu-nav
+  > .menu-item:not(.menu-item-parent):not(.menu-item-open):not(.menu-item-here):not(.menu-item-active):hover
+  > .menu-link
+  .menu-text {
+  color: #d82631 !important;
+}
+
+.aside-menu .menu-nav > .menu-item.menu-item-here > .menu-heading .menu-text,
+.aside-menu .menu-nav > .menu-item.menu-item-here > .menu-link .menu-text {
+  color: #d82631 !important;
+}
+
+.aside-menu .menu-nav > .menu-item.menu-item-open > .menu-heading .menu-text,
+.aside-menu .menu-nav > .menu-item.menu-item-open > .menu-link .menu-text {
+  color: #d82631 !important;
+}
+.btn.btn-outline-success {
+  color: #1bc5bd !important;
+}
+.btn.btn-outline-success:hover:not(.btn-text):not(:disabled):not(.disabled),
+.btn.btn-outline-success:focus:not(.btn-text),
+.btn.btn-outline-success.focus:not(.btn-text) {
+  color: #ffffff !important;
+}
+.aside-menu
+  .menu-nav
+  > .menu-item
+  .menu-submenu
+  .menu-item:not(.menu-item-parent):not(.menu-item-open):not(.menu-item-here):not(.menu-item-active):hover
+  > .menu-heading
+  .menu-text,
+.aside-menu
+  .menu-nav
+  > .menu-item
+  .menu-submenu
+  .menu-item:not(.menu-item-parent):not(.menu-item-open):not(.menu-item-here):not(.menu-item-active):hover
+  > .menu-link
+  .menu-text {
+  color: #d82631 !important;
+}
+.aside-menu .menu-nav > .menu-item .menu-submenu .menu-item.menu-item-open > .menu-heading .menu-text,
+.aside-menu .menu-nav > .menu-item .menu-submenu .menu-item.menu-item-open > .menu-link .menu-text {
+  color: #d82631 !important;
+}
+
+.aside-menu .menu-nav > .menu-item .menu-submenu .menu-item.menu-item-open > .menu-heading .menu-arrow,
+.aside-menu .menu-nav > .menu-item .menu-submenu .menu-item.menu-item-open > .menu-link .menu-arrow {
+  color: #d82631 !important;
+}
+
+.aside-menu .menu-nav > .menu-item.menu-item-here > .menu-heading .menu-arrow,
+.aside-menu .menu-nav > .menu-item.menu-item-here > .menu-link .menu-arrow {
+  color: #d82631 !important;
+}
+
+.checkbox > input:checked ~ span {
+  background-color: #d82631 !important;
+}
+
+.btn.btn-success {
+  color: #ffffff !important;
+  background-color: #d82631 !important;
+  border-color: #d82631 !important;
+}
+
+.text-primary {
+  color: #d82631 !important;
+}
+
+a.text-hover-primary:hover,
+.text-hover-primary:hover {
+  -webkit-transition: color 0.15s ease, background-color 0.15s ease, border-color 0.15s ease, -webkit-box-shadow 0.15s ease;
+  transition: color 0.15s ease, background-color 0.15s ease, border-color 0.15s ease, -webkit-box-shadow 0.15s ease;
+  transition: color 0.15s ease, background-color 0.15s ease, border-color 0.15s ease, box-shadow 0.15s ease;
+  transition: color 0.15s ease, background-color 0.15s ease, border-color 0.15s ease, box-shadow 0.15s ease, -webkit-box-shadow 0.15s ease;
+  color: #d82631 !important;
+}
+.text-login-links {
+  color: #d82631 !important;
+}
+
+.text-login-links-hover {
+  color: #df515a !important;
+}
+
+@font-face {
+  font-family: 'Open Sans Semibold';
+  src: url('//db.onlinewebfonts.com/t/33f225b8f5f7d6b34a0926f58f96c1e9.eot');
+  src: url('//db.onlinewebfonts.com/t/33f225b8f5f7d6b34a0926f58f96c1e9.eot?#iefix') format('embedded-opentype'),
+    url('//db.onlinewebfonts.com/t/33f225b8f5f7d6b34a0926f58f96c1e9.woff2') format('woff2'),
+    url('//db.onlinewebfonts.com/t/33f225b8f5f7d6b34a0926f58f96c1e9.woff') format('woff'),
+    url('//db.onlinewebfonts.com/t/33f225b8f5f7d6b34a0926f58f96c1e9.ttf') format('truetype'),
+    url('//db.onlinewebfonts.com/t/33f225b8f5f7d6b34a0926f58f96c1e9.svg#Open Sans Semibold') format('svg');
+}
+.aside-menu .menu-nav {
+  margin: 0;
+  list-style: none;
+  padding: 15px 0;
+  font-family: 'Open Sans Semibold';
+}
+
+.py-4 {
+  font-family: 'Open Sans Semibold' !important;
+}
+.text-dark {
+  font-family: 'Open Sans Semibold' !important;
+}
+.text-muted {
+  font-family: 'Open Sans Semibold' !important;
+}
+body {
+  font-family: 'Open Sans Semibold', Helvetica, 'sans-serif' !important;
+}
+
+@font-face {
+  font-family: 'GEFlow';
+  src: url(./assets/metronic/vendors/global/fonts/TachyonFonts/GE-Flow-Regular.ttf) format('truetype');
+  src: url('./assets/metronic/vendors/global/fonts/TachyonFonts/GE-Flow-Regular.ttf') format('truetype');
+}
+/* body {
+  font-family: 'GEFlow', Helvetica, 'sans-serif' !important;
+} */

@@ -63,7 +63,7 @@
                   required
                 >
                   <option value="0">{{ l('SelectATransportSubType') }}</option>
-                  <option *ngFor="let item of allTransportSubTypes" value="{{ item.id }}">{{ item.displayName }}</option>
+                  <option *ngFor="let item of allTransportSubTypes" value="{{ item.id }}">{{ item.displayName }} </option>
                 </select>
               </div>
             </div>
@@ -79,7 +79,7 @@
                   required
                 >
                   <option value="0">{{ l('SelectTruckTypeByTransportSubtype') }}</option>
-                  <option *ngFor="let item of allTruckTypesByTransportSubtype" value="{{ item.id }}">{{ item.displayName }}</option>
+                  <option *ngFor="let item of allTruckTypesByTransportSubtype" value="{{ item.id }}"> {{ item.displayName }}</option>
                 </select>
               </div>
             </div>
@@ -97,7 +97,7 @@
                   required
                 >
                   <option value="0">{{ l('SelectTruckSubType') }}</option>
-                  <option *ngFor="let item of allTruckSubTypesByTruckTypeId" value="{{ item.id }}">{{ item.displayName }}</option>
+                  <option *ngFor="let item of allTruckSubTypesByTruckTypeId" value="{{ item.id }}"> {{ item.displayName }}</option>
                 </select>
               </div>
             </div>
@@ -112,7 +112,7 @@
                   required
                 >
                   <option value="0">{{ l('SelectTruckCapByTruckSubType') }}</option>
-                  <option *ngFor="let item of allTrucksCapByTruckSubTypeId" value="{{ item.id }}">{{ item.displayName }}</option>
+                  <option *ngFor="let item of allTrucksCapByTruckSubTypeId" value="{{ item.id }}">{{ item.displayName }} </option>
                 </select>
               </div>
             </div>
@@ -202,7 +202,8 @@
               [maintainAspectRatio]="true"
               [resizeToWidth]="128"
               format="png"
-            ></image-cropper>
+            >
+            </image-cropper>
           </div>
 
           <div *ngFor="let item of truck.createOrEditDocumentFileDtos" class="row">
@@ -242,7 +243,7 @@
           <button [disabled]="saving" type="button" class="btn btn-default" (click)="close()">{{ l('Cancel') }}</button>
           <button
             type="submit"
-            class="btn btn-primary blue"
+            class="btn btn-save blue"
             [disabled]="!truckForm.form.valid"
             [buttonBusy]="saving"
             [busyText]="l('SavingWithThreeDot')"
@@ -254,5 +255,5 @@
     </div>
   </div>
   <truckUserLookupTableModal #truckUserLookupTableModal (modalSave)="getNewDriver1UserId()"></truckUserLookupTableModal>
-  <truckUserLookupTableModal #truckUserLookupTableModal2 (modalSave)="getNewDriver2UserId()"></truckUserLookupTableModal>
+  <truckUserLookupTableModal #truckUserLookupTableModal2 (modalSave)="getNewDriver2UserId()"> </truckUserLookupTableModal>
 </div>

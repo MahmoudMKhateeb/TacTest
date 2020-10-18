@@ -1,33 +1,53 @@
-﻿<div bsModal #createOrEditModal="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="createOrEditModal" aria-hidden="true" [config]="{backdrop: 'static'}">
-    <div class="modal-dialog modal-lg">
-        <div class="modal-content">
-            <form *ngIf="active" #shippingRequestStatusForm="ngForm" novalidate (ngSubmit)="save()" autocomplete="off">
-                <div class="modal-header">
-                    <h4 class="modal-title">
-                        <span *ngIf="shippingRequestStatus.id">{{l("EditShippingRequestStatus")}}</span>
-                        <span *ngIf="!shippingRequestStatus.id">{{l("CreateNewShippingRequestStatus")}}</span>
-                    </h4>
-                    <button type="button" class="close" (click)="close()" aria-label="Close" [disabled]="saving">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                 
-
-
-								<div class="form-group">
-									<label for="ShippingRequestStatus_DisplayName">{{l("DisplayName")}} *</label>
-									<input type="text" id="ShippingRequestStatus_DisplayName" class="form-control" [(ngModel)]="shippingRequestStatus.displayName" name="DisplayName"   minlength="0"  maxlength="256"  required/>
-								</div>
-					
-
-                </div>
-                <div class="modal-footer">
-                    <button [disabled]="saving" type="button" class="btn btn-default" (click)="close()">{{l("Cancel")}}</button>
-                    <button type="submit" class="btn btn-primary blue" [disabled]="!shippingRequestStatusForm.form.valid" [buttonBusy]="saving" [busyText]="l('SavingWithThreeDot')"><i class="fa fa-save"></i> <span>{{l("Save")}}</span></button>
-                </div>
-            </form>
+﻿<div
+  bsModal
+  #createOrEditModal="bs-modal"
+  class="modal fade"
+  tabindex="-1"
+  role="dialog"
+  aria-labelledby="createOrEditModal"
+  aria-hidden="true"
+  [config]="{ backdrop: 'static' }"
+>
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <form *ngIf="active" #shippingRequestStatusForm="ngForm" novalidate (ngSubmit)="save()" autocomplete="off">
+        <div class="modal-header">
+          <h4 class="modal-title">
+            <span *ngIf="shippingRequestStatus.id">{{ l('EditShippingRequestStatus') }}</span>
+            <span *ngIf="!shippingRequestStatus.id">{{ l('CreateNewShippingRequestStatus') }}</span>
+          </h4>
+          <button type="button" class="close" (click)="close()" aria-label="Close" [disabled]="saving">
+            <span aria-hidden="true">&times;</span>
+          </button>
         </div>
+        <div class="modal-body">
+          <div class="form-group">
+            <label for="ShippingRequestStatus_DisplayName">{{ l('DisplayName') }} *</label>
+            <input
+              type="text"
+              id="ShippingRequestStatus_DisplayName"
+              class="form-control"
+              [(ngModel)]="shippingRequestStatus.displayName"
+              name="DisplayName"
+              minlength="0"
+              maxlength="256"
+              required
+            />
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button [disabled]="saving" type="button" class="btn btn-default" (click)="close()">{{ l('Cancel') }}</button>
+          <button
+            type="submit"
+            class="btn btn-save blue"
+            [disabled]="!shippingRequestStatusForm.form.valid"
+            [buttonBusy]="saving"
+            [busyText]="l('SavingWithThreeDot')"
+          >
+            <i class="fa fa-save"></i> <span>{{ l('Save') }}</span>
+          </button>
+        </div>
+      </form>
     </div>
-
+  </div>
 </div>
