@@ -157,5 +157,14 @@ namespace TACHYON.Shipping.ShippingRequests
         public Capacity CapacityFk { get; set; }
 
         #endregion
+
+        #region Bids Data
+        public DateTime? BidStartDate { get; set; }
+        public DateTime? BidEndDate { get; set; }
+        public bool? isCancledBid { get; set; }
+        public bool? IsClosedBid{get; set;}
+
+
+        #endregion
     }
 }
