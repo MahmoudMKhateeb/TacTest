@@ -86,6 +86,7 @@
               #SubscriptionEndDateUtc
               name="SubscriptionEndDateUtc"
               class="form-control"
+              [minDate]="today"
               bsDatepicker
               datePickerMomentModifier
               (dateChange)="subscriptionEndDateChange($event)"
