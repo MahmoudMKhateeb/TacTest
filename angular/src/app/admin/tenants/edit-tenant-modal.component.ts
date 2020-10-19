@@ -21,7 +21,7 @@ export class EditTenantModalComponent extends AppComponentBase {
   @ViewChild('SubscriptionEndDateUtc') subscriptionEndDateUtc: ElementRef;
 
   @Output() modalSave: EventEmitter<any> = new EventEmitter<any>();
-
+  today = new Date();
   active = false;
   saving = false;
   isUnlimited = false;
