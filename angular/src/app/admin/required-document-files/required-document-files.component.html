@@ -1,7 +1,6 @@
 <div [@routerTransition]>
   <div class="content d-flex flex-column flex-column-fluid">
     <sub-header [title]="'TenantRequiredDocuments' | localize" [description]="'TenantRequiredDocumentsHeaderInfo' | localize"> </sub-header>
-
     <div [class]="containerClass">
       <div class="card card-custom gutter-b">
         <form *ngIf="active" #TenantRequiredDocumentsForm="ngForm" novalidate (ngSubmit)="save()" autocomplete="off">
@@ -11,13 +10,16 @@
                 <label>{{ item.documentTypeDto.name }}</label>
                 <div class="custom-file">
                   <input
-                    [disabled]="item.isAccepted"
-                    (change)="DocFileChangeEvent($event, item)"
+                    [id]="item.documentTypeDto.displayName"
                     type="file"
                     class="custom-file-input"
                     [required]="item.documentTypeDto.isRequired"
+                    [disabled]="item.isAccepted"
+                    (change)="DocFileChangeEvent($event, item)"
                   />
-                  <label class="custom-file-label" [for]="item.documentTypeDto.displayName"> {{ item.name ? item.name : l('select file') }}</label>
+                  <label [for]="item.documentTypeDto.displayName" class="custom-file-label text-truncate">{{
+                    item.name ? item.name : l('select file')
+                  }}</label>
                 </div>
               </div>
               <div *ngIf="item.documentTypeDto.hasExpirationDate" class="form-group col-md-2">
