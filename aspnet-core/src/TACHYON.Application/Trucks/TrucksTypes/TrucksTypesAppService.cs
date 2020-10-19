@@ -5,6 +5,7 @@ using Abp.Authorization;
 using Abp.Domain.Repositories;
 using Abp.Extensions;
 using Abp.Linq.Extensions;
+using Abp.UI;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -92,13 +93,27 @@ namespace TACHYON.Trucks.TrucksTypes
         [AbpAuthorize(AppPermissions.Pages_TrucksTypes_Create)]
         protected virtual async Task Create(CreateOrEditTrucksTypeDto input)
         {
-            var trucksType = ObjectMapper.Map<TrucksType>(input);
+          var isDuplicateUserName =  await _trucksTypeRepository.FirstOrDefaultAsync(x =>( x.DisplayName).Trim().ToLower() == (input.DisplayName).Trim().ToLower());
+
+            if (isDuplicateUserName != null)
+            {
+                throw new UserFriendlyException(string.Format(L("TrucksTypeDuplicateName"), input.DisplayName));
+            }
+
+             var trucksType = ObjectMapper.Map<TrucksType>(input);
             await _trucksTypeRepository.InsertAsync(trucksType);
         }
 
         [AbpAuthorize(AppPermissions.Pages_TrucksTypes_Edit)]
         protected virtual async Task Update(CreateOrEditTrucksTypeDto input)
         {
+            var isDuplicateUserName = await _trucksTypeRepository.FirstOrDefaultAsync(x => x.DisplayName == input.DisplayName);
+
+            if (isDuplicateUserName != null)
+            {
+                throw new UserFriendlyException(string.Format(L("TrucksTypeDuplicateName"), input.DisplayName));
+            }
+
             var trucksType = await _trucksTypeRepository.FirstOrDefaultAsync(input.Id.Value);
             ObjectMapper.Map(input, trucksType);
         }
