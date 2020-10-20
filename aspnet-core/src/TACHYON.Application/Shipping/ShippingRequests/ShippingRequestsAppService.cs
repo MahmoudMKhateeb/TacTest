@@ -35,6 +35,8 @@ using TACHYON.MultiTenancy;
 using TACHYON.Routs.Dtos;
 using TACHYON.Routs.RoutSteps.Dtos;
 using TACHYON.Routs.RoutTypes;
+using TACHYON.Shipping.ShippingRequestBids;
+using TACHYON.Shipping.ShippingRequestBids.Dtos;
 using Twilio.Http;
 
 namespace TACHYON.Shipping.ShippingRequests
@@ -55,6 +57,7 @@ namespace TACHYON.Shipping.ShippingRequests
         private readonly IRepository<GoodCategory, int> _lookup_goodCategoryRepository;
         private readonly IRepository<Facility, long> _lookup_FacilityRepository;
         private readonly IRepository<Port, long> _lookup_PortRepository;
+        private readonly IRepository<ShippingRequestBid, long> _shippingRequestBidRepository;
 
 
 
@@ -70,7 +73,7 @@ namespace TACHYON.Shipping.ShippingRequests
             IRepository<RoutType, int> lookupRoutTypeRepository,
             IRepository<GoodCategory, int> lookupGoodCategoryRepository,
             IRepository<Facility, long> lookupFacilityRepository,
-            IRepository<Port, long> lookupPortRepository)
+            IRepository<Port, long> lookupPortRepository, IRepository<ShippingRequestBid, long> shippingRequestBidRepository)
         {
             _shippingRequestRepository = shippingRequestRepository;
             _shippingRequestsExcelExporter = shippingRequestsExcelExporter;
@@ -84,6 +87,7 @@ namespace TACHYON.Shipping.ShippingRequests
             _lookup_goodCategoryRepository = lookupGoodCategoryRepository;
             _lookup_FacilityRepository = lookupFacilityRepository;
             _lookup_PortRepository = lookupPortRepository;
+            _shippingRequestBidRepository = shippingRequestBidRepository;
         }
 
         public async Task<PagedResultDto<GetShippingRequestForViewDto>> GetAll(GetAllShippingRequestsInput input)
@@ -161,8 +165,19 @@ namespace TACHYON.Shipping.ShippingRequests
         protected virtual async Task<GetShippingRequestForViewDto> _GetShippingRequestForView(long id)
         {
             var shippingRequest = await _shippingRequestRepository.GetAsync(id);
+            List<ShippingRequestBid> shippingRequestBidsList;
 
-            var output = new GetShippingRequestForViewDto { ShippingRequest = ObjectMapper.Map<ShippingRequestDto>(shippingRequest) };
+            using (CurrentUnitOfWork.DisableFilter(AbpDataFilters.MustHaveTenant))
+            {
+                shippingRequestBidsList = await _shippingRequestBidRepository.GetAll()
+                    .Where(x => x.ShippingRequestId == id).ToListAsync();
+            }
+
+            var output = new GetShippingRequestForViewDto
+            {
+                ShippingRequest = ObjectMapper.Map<ShippingRequestDto>(shippingRequest),
+                ShippingRequestBidDtoList = ObjectMapper.Map<List<ShippingRequestBidsDto>>(shippingRequestBidsList)
+            };
 
             return output;
         }
