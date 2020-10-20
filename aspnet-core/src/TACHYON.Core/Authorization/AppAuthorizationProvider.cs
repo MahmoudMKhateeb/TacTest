@@ -113,6 +113,11 @@ namespace TACHYON.Authorization
             shippingRequests.CreateChildPermission(AppPermissions.Pages_ShippingRequests_Delete, L("DeleteShippingRequest"), multiTenancySides: MultiTenancySides.Tenant);
 
 
+            var ShippingRequestBis = pages.CreateChildPermission(AppPermissions.Pages_ShippingRequestBids, L("ShippingRerquestBids"), multiTenancySides: MultiTenancySides.Tenant);
+            ShippingRequestBis.CreateChildPermission(AppPermissions.Pages_ShippingRequestBids_Create, L("CreateNewShippingRequestBid"), multiTenancySides: MultiTenancySides.Tenant);
+            ShippingRequestBis.CreateChildPermission(AppPermissions.Pages_ShippingRequestBids_Edit, L("EditNewShippingRequestBid"), multiTenancySides: MultiTenancySides.Tenant);
+            ShippingRequestBis.CreateChildPermission(AppPermissions.Pages_ShippingRequestBids_Delete, L("DeleteNewShippingRequestBid"), multiTenancySides: MultiTenancySides.Tenant);
+
 
             var goodsDetails = pages.CreateChildPermission(AppPermissions.Pages_GoodsDetails, L("GoodsDetails"), multiTenancySides: MultiTenancySides.Tenant);
             goodsDetails.CreateChildPermission(AppPermissions.Pages_GoodsDetails_Create, L("CreateNewGoodsDetail"), multiTenancySides: MultiTenancySides.Tenant);

@@ -6,6 +6,7 @@ using TACHYON.Documents.DocumentTypeTranslations;
 using TACHYON.Documents.DocumentsEntities;
 using TACHYON.Shipping.ShippingRequestStatuses;
 using TACHYON.AddressBook.Ports;
+using TACHYON.Shipping.ShippingRequestBids;
 using TACHYON.PickingTypes;
 using TACHYON.UnitOfMeasures;
 using TACHYON.AddressBook;
@@ -135,6 +136,7 @@ namespace TACHYON.EntityFrameworkCore
         public virtual DbSet<SubscriptionPaymentExtensionData> SubscriptionPaymentExtensionDatas { get; set; }
 
         public virtual DbSet<UserDelegation> UserDelegations { get; set; }
+        public virtual DbSet<ShippingRequestBids> ShippingRequestBids { get; set; }
 
         public TACHYONDbContext(DbContextOptions<TACHYONDbContext> options)
             : base(options)

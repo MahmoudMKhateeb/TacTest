@@ -1,0 +1,15 @@
+﻿using Abp.Application.Services;
+using System;
+using System.Collections.Generic;
+using System.Text;
+using TACHYON.Shipping.ShippingRequestBids.Dtos;
+using Abp.Application.Services.Dto;
+using System.Threading.Tasks;
+
+namespace TACHYON.Shipping.ShippingRequestBids
+{
+    public interface IShippingRequestBidsAppService:IApplicationService
+    {
+        Task<PagedResultDto<GetShippingRequestBidsForViewDto>> GetAllBids(GetAllShippingRequestBidsInput input);
+    }
+}
