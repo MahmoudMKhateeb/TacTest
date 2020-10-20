@@ -59,30 +59,7 @@ export class AppNavigationService {
           new AppMenuItem('Ports', 'Pages.Ports', 'flaticon-more', '/app/main/ports/ports'),
         ]
       ),
-      // Carrier
-      new AppMenuItem(
-        'TMS Settings',
-        '',
-        'flaticon-interface-8',
-        '',
-        [],
-        [
-          new AppMenuItem('Trucks', 'Pages.Trucks', 'flaticon-more', '/app/main/trucks/trucks', undefined, undefined, undefined, undefined, () =>
-            this._featureCheckerService.isEnabled('App.Carrier')
-          ),
-          new AppMenuItem(
-            'Trailers',
-            'Pages.Trailers',
-            'flaticon-more',
-            '/app/main/trailers/trailers',
-            undefined,
-            undefined,
-            undefined,
-            undefined,
-            () => this._featureCheckerService.isEnabled('App.Carrier')
-          ),
-        ]
-      ),
+
       //Host
       new AppMenuItem(
         'Documents',
@@ -112,6 +89,20 @@ export class AppNavigationService {
         '',
         [],
         [
+          new AppMenuItem('Trucks', 'Pages.Trucks', 'flaticon-more', '/app/main/trucks/trucks', undefined, undefined, undefined, undefined, () =>
+            this._featureCheckerService.isEnabled('App.Carrier')
+          ),
+          new AppMenuItem(
+            'Trailers',
+            'Pages.Trailers',
+            'flaticon-more',
+            '/app/main/trailers/trailers',
+            undefined,
+            undefined,
+            undefined,
+            undefined,
+            () => this._featureCheckerService.isEnabled('App.Carrier')
+          ),
           new AppMenuItem(
             'Truck Types',
             '',
