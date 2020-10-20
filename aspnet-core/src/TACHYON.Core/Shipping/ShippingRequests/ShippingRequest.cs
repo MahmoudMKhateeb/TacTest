@@ -163,6 +163,7 @@ namespace TACHYON.Shipping.ShippingRequests
         public DateTime? BidEndDate { get; set; }
         public bool? isCancledBid { get; set; }
         public bool? IsClosedBid{get; set;}
+        public DateTime? CloseBidDate { get; set; }
 
 
         #endregion

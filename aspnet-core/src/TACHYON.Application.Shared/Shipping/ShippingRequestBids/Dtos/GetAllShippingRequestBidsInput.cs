@@ -11,7 +11,8 @@ namespace TACHYON.Shipping.ShippingRequestBids.Dtos
         public string Filter { get; set; }
         public double? MinPrice { get; set; }
         public double? MaxPrice { get; set; }
-        public int? ShipperId { get; set; }
-        public int? CarrierId { get; set; }
+
+        public long? ShippingRequestId { get; set; }
+
     }
 }

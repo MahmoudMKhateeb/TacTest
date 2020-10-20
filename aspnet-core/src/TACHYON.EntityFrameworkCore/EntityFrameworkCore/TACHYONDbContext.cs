@@ -136,7 +136,7 @@ namespace TACHYON.EntityFrameworkCore
         public virtual DbSet<SubscriptionPaymentExtensionData> SubscriptionPaymentExtensionDatas { get; set; }
 
         public virtual DbSet<UserDelegation> UserDelegations { get; set; }
-        public virtual DbSet<ShippingRequestBids> ShippingRequestBids { get; set; }
+        public virtual DbSet<ShippingRequestBid> ShippingRequestBids { get; set; }
 
         public TACHYONDbContext(DbContextOptions<TACHYONDbContext> options)
             : base(options)

@@ -10,7 +10,7 @@ using TACHYON.Shipping.ShippingRequests;
 namespace TACHYON.Shipping.ShippingRequestBids
 {
     [Table("ShippingRequestBids")]
-    public class ShippingRequestBids :FullAuditedEntity<long>,IMustHaveTenant
+    public class ShippingRequestBid :FullAuditedEntity<long>,IMustHaveTenant
     {
         public int TenantId { get; set; }
         public long ShippingRequestId { get; set; }
@@ -24,7 +24,7 @@ namespace TACHYON.Shipping.ShippingRequestBids
         public DateTime? AcceptedDate { get; set; }
 
 
-        public ShippingRequestBids()
+        public ShippingRequestBid()
         {
             this.IsCancled = false;
             this.IsAccepted = false;

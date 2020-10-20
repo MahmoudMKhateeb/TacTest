@@ -4,8 +4,8 @@ using Abp.Collections.Extensions;
 using Abp.Domain.Repositories;
 using Microsoft.EntityFrameworkCore;
 using System;
-using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Dynamic.Core;
 using System.Text;
 using System.Threading.Tasks;
 using TACHYON.Shipping.ShippingRequestBids.Dtos;
@@ -18,30 +18,29 @@ using TACHYON.Authorization;
 
 namespace TACHYON.Shipping.ShippingRequestBids
 {
-    public class ShippingRequestBidsAppService: TACHYONAppServiceBase, IShippingRequestBidsAppService
+    public class ShippingRequestBidsAppService : TACHYONAppServiceBase, IShippingRequestBidsAppService
     {
-        private readonly IRepository<ShippingRequestBids, long> _ShippingRequestBidsRepository;
-        private readonly IRepository<ShippingRequest, long> _ShippingRequestsRepository;
+        private readonly IRepository<ShippingRequestBid, long> _shippingRequestBidsRepository;
+        private readonly IRepository<ShippingRequest, long> _shippingRequestsRepository;
 
-        public ShippingRequestBidsAppService(IRepository<ShippingRequestBids,long> ShippingRequestBidsRepository ,
-            IRepository<ShippingRequest,long> ShippingRequestsRepository)
+        public ShippingRequestBidsAppService(IRepository<ShippingRequestBid, long> shippingRequestBidsRepository,
+            IRepository<ShippingRequest, long> shippingRequestsRepository)
         {
-            _ShippingRequestBidsRepository = ShippingRequestBidsRepository;
-            _ShippingRequestsRepository = ShippingRequestsRepository;
+            _shippingRequestBidsRepository = shippingRequestBidsRepository;
+            _shippingRequestsRepository = shippingRequestsRepository;
         }
 
-        public virtual  async Task<PagedResultDto<GetShippingRequestBidsForViewDto>> GetAllBids(GetAllShippingRequestBidsInput input)
+        public virtual async Task<PagedResultDto<GetShippingRequestBidsForViewDto>> GetAllBids(GetAllShippingRequestBidsInput input)
         {
-            var filterShippingRequestsBids = _ShippingRequestBidsRepository.GetAll()
-                  .Include(x => x.ShippingRequestFk)
-                .WhereIf(!string.IsNullOrWhiteSpace(input.Filter), e => false)
+            var filterShippingRequestsBids = _shippingRequestBidsRepository.GetAll()
+                //.WhereIf(!string.IsNullOrWhiteSpace(input.Filter), e => false)
                 .WhereIf(input.MinPrice != null, e => e.price >= input.MinPrice)
                 .WhereIf(input.MaxPrice != null, e => e.price <= input.MaxPrice)
-                .WhereIf(input.ShipperId != null, e => e.ShippingRequestFk.CreatorUserId == input.ShipperId && e.IsCancled==false)
-                .WhereIf(input.CarrierId != null, e => e.CreatorUserId == input.CarrierId);
+                .WhereIf(input.ShippingRequestId != null, e => e.ShippingRequestId == input.ShippingRequestId)
+                .Where(x => !x.IsCancled);
 
             var pagedAndFilteredShippingRequestsBids = filterShippingRequestsBids
-                //.OrderBy(input.Sorting ?? "id asc")
+                .OrderBy(input.Sorting ?? "id asc")
                 .PageBy(input);
 
             var shippingRequestBids = from o in pagedAndFilteredShippingRequestsBids
@@ -49,7 +48,7 @@ namespace TACHYON.Shipping.ShippingRequestBids
                                       {
                                           ShippingRequestBid = new ShippingRequestBidsDto
                                           {
-                                              Id=o.Id,
+                                              Id = o.Id,
                                               ShippingRequestId = o.ShippingRequestId,
                                               IsAccepted = o.IsAccepted,
                                               IsCancled = o.IsCancled,
@@ -57,24 +56,24 @@ namespace TACHYON.Shipping.ShippingRequestBids
                                           },
                                       };
 
-            var totalCount =await filterShippingRequestsBids.CountAsync();
+            var totalCount = await filterShippingRequestsBids.CountAsync();
 
-            return new PagedResultDto<GetShippingRequestBidsForViewDto>(totalCount, shippingRequestBids.ToList()) ;
+            return new PagedResultDto<GetShippingRequestBidsForViewDto>(totalCount, await shippingRequestBids.ToListAsync());
 
 
         }
 
-        public async Task StopShippingRequestBid(StopShippingRequestBidInput input)
+        public async Task CloseShippingRequestBid(StopShippingRequestBidInput input)
         {
-            var Bid =await _ShippingRequestsRepository.FirstOrDefaultAsync(input.ShippingRequestId);
-            if (Bid.IsClosedBid == true)
+            var bid = await _shippingRequestsRepository.FirstOrDefaultAsync(input.ShippingRequestId);
+            if (bid.IsClosedBid == true)
             {
-                throw new UserFriendlyException(L("The Bid is already Stopped"));
+                throw new UserFriendlyException(L("The Bid is already Closed message"));
             }
             else
             {
-                Bid.IsClosedBid = true;
-               // Bid.ClosedBidDate = Clock.Now;
+                bid.IsClosedBid = true;
+                bid.CloseBidDate = Clock.Now;
             }
         }
 

@@ -98,6 +98,8 @@ using TACHYON.Routs.RoutTypes;
 using TACHYON.Routs.RoutTypes.Dtos;
 using TACHYON.Routs.RoutTypes.Dtos;
 using TACHYON.Sessions.Dto;
+using TACHYON.Shipping.ShippingRequestBids;
+using TACHYON.Shipping.ShippingRequestBids.Dtos;
 using TACHYON.Shipping.ShippingRequests;
 using TACHYON.Shipping.ShippingRequests.Dtos;
 using TACHYON.Trailers;
@@ -166,6 +168,7 @@ namespace TACHYON
                 .ForMember(dst => dst.RouteFk, opt => opt.MapFrom(src => src.CreateOrEditRouteDto))
                 .ForMember(dst => dst.RoutSteps, opt => opt.MapFrom(src => src.CreateOrEditRoutStepDtoList))
                 .ReverseMap();
+            configuration.CreateMap<ShippingRequestBidsDto, ShippingRequestBid>().ReverseMap();
             configuration.CreateMap<ShippingRequestDto, ShippingRequest>().ReverseMap();
             configuration.CreateMap<CreateOrEditGoodsDetailDto, GoodsDetail>().ReverseMap();
             configuration.CreateMap<GoodsDetailDto, GoodsDetail>().ReverseMap();
