@@ -10,8 +10,8 @@ using TACHYON.EntityFrameworkCore;
 namespace TACHYON.Migrations
 {
     [DbContext(typeof(TACHYONDbContext))]
-    [Migration("20201020074632_ShippingRequestBidClassChanges")]
-    partial class ShippingRequestBidClassChanges
+    [Migration("20201020142609_add_CloseDate_ShippingRequest")]
+    partial class add_CloseDate_ShippingRequest
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -2866,7 +2866,7 @@ namespace TACHYON.Migrations
                     b.ToTable("Routes");
                 });
 
-            modelBuilder.Entity("TACHYON.Shipping.ShippingRequestBids.ShippingRequestBids", b =>
+            modelBuilder.Entity("TACHYON.Shipping.ShippingRequestBids.ShippingRequestBid", b =>
                 {
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
@@ -2990,6 +2990,9 @@ namespace TACHYON.Migrations
 
                     b.Property<int?>("CarrierTenantId")
                         .HasColumnType("int");
+
+                    b.Property<DateTime?>("CloseBidDate")
+                        .HasColumnType("datetime2");
 
                     b.Property<DateTime>("CreationTime")
                         .HasColumnType("datetime2");
@@ -4189,7 +4192,7 @@ namespace TACHYON.Migrations
                         .HasForeignKey("RoutTypeId");
                 });
 
-            modelBuilder.Entity("TACHYON.Shipping.ShippingRequestBids.ShippingRequestBids", b =>
+            modelBuilder.Entity("TACHYON.Shipping.ShippingRequestBids.ShippingRequestBid", b =>
                 {
                     b.HasOne("TACHYON.Shipping.ShippingRequests.ShippingRequest", "ShippingRequestFk")
                         .WithMany()

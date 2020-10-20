@@ -15,6 +15,8 @@ using Abp.UI;
 using Abp.Timing;
 using Abp.Authorization;
 using TACHYON.Authorization;
+using Abp.Application.Features;
+using TACHYON.Features;
 
 namespace TACHYON.Shipping.ShippingRequestBids
 {
@@ -78,22 +80,35 @@ namespace TACHYON.Shipping.ShippingRequestBids
         }
 
         [AbpAuthorize(AppPermissions.Pages_ShippingRequestBids)]
-        public void CreateOrEditShippingRequestBid(CreatOrEditShippingRequestBidDto input)
+        public async Task CreateOrEditShippingRequestBid(CreatOrEditShippingRequestBidDto input)
         {
             if (input.Id == null)
-                Create(input);
+                await Create(input);
             else
                 Edit(input);
         }
 
-        public void Create(CreatOrEditShippingRequestBidDto input)
+        [RequiresFeature(AppFeatures.Carrier)]
+        [AbpAuthorize(AppPermissions.Pages_ShippingRequestBids_Create)]
+        protected virtual async Task  Create(CreatOrEditShippingRequestBidDto input)
         {
+            var shippingRequestBid = ObjectMapper.Map<ShippingRequestBid>(input);
+            if (AbpSession.TenantId != null)
+            {
+                shippingRequestBid.TenantId = (int)AbpSession.TenantId;
+
+            }
+            await _shippingRequestBidsRepository.InsertAsync(shippingRequestBid);
 
         }
 
-        public void Edit(CreatOrEditShippingRequestBidDto input)
+        [RequiresFeature(AppFeatures.Carrier)]
+        [AbpAuthorize(AppPermissions.Pages_ShippingRequestBids_Edit)]
+        protected void Edit(CreatOrEditShippingRequestBidDto input)
         {
+            var item = _shippingRequestBidsRepository.FirstOrDefaultAsync((long)input.Id);
 
+             ObjectMapper.Map(input, item);
         }
     }
 }

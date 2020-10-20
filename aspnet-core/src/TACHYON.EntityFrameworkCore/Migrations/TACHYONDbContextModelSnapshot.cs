@@ -2867,7 +2867,7 @@ namespace TACHYON.Migrations
                     b.ToTable("Routes");
                 });
 
-            modelBuilder.Entity("TACHYON.Shipping.ShippingRequestBids.ShippingRequestBids", b =>
+            modelBuilder.Entity("TACHYON.Shipping.ShippingRequestBids.ShippingRequestBid", b =>
                 {
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
@@ -2904,9 +2904,6 @@ namespace TACHYON.Migrations
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
 
-                    b.Property<bool>("IsStopped")
-                        .HasColumnType("bit");
-
                     b.Property<DateTime?>("LastModificationTime")
                         .HasColumnType("datetime2");
 
@@ -2915,9 +2912,6 @@ namespace TACHYON.Migrations
 
                     b.Property<long>("ShippingRequestId")
                         .HasColumnType("bigint");
-
-                    b.Property<DateTime?>("StoppedDate")
-                        .HasColumnType("datetime2");
 
                     b.Property<int>("TenantId")
                         .HasColumnType("int");
@@ -2997,6 +2991,9 @@ namespace TACHYON.Migrations
 
                     b.Property<int?>("CarrierTenantId")
                         .HasColumnType("int");
+
+                    b.Property<DateTime?>("CloseBidDate")
+                        .HasColumnType("datetime2");
 
                     b.Property<DateTime>("CreationTime")
                         .HasColumnType("datetime2");
@@ -4191,7 +4188,7 @@ namespace TACHYON.Migrations
                         .HasForeignKey("RoutTypeId");
                 });
 
-            modelBuilder.Entity("TACHYON.Shipping.ShippingRequestBids.ShippingRequestBids", b =>
+            modelBuilder.Entity("TACHYON.Shipping.ShippingRequestBids.ShippingRequestBid", b =>
                 {
                     b.HasOne("TACHYON.Shipping.ShippingRequests.ShippingRequest", "ShippingRequestFk")
                         .WithMany()
