@@ -110,6 +110,7 @@ export class EditTenantModalComponent extends AppComponentBase {
   }
 
   close(): void {
+    this.editions = [];
     this.active = false;
     this.modal.hide();
   }
