@@ -17,9 +17,14 @@ using Abp.Authorization;
 using TACHYON.Authorization;
 using Abp.Application.Features;
 using TACHYON.Features;
+using Org.BouncyCastle.Math.EC.Rfc7748;
+using System.Collections.Generic;
+using Abp.Domain.Uow;
+using NUglify.Helpers;
 
 namespace TACHYON.Shipping.ShippingRequestBids
 {
+    [AbpAuthorize(AppPermissions.Pages_ShippingRequestBids)]
     public class ShippingRequestBidsAppService : TACHYONAppServiceBase, IShippingRequestBidsAppService
     {
         private readonly IRepository<ShippingRequestBid, long> _shippingRequestBidsRepository;
@@ -79,7 +84,7 @@ namespace TACHYON.Shipping.ShippingRequestBids
             }
         }
 
-        [AbpAuthorize(AppPermissions.Pages_ShippingRequestBids)]
+       // [AbpAuthorize(AppPermissions.Pages_ShippingRequestBids)]
         public async Task CreateOrEditShippingRequestBid(CreatOrEditShippingRequestBidDto input)
         {
             if (input.Id == null)
@@ -109,6 +114,42 @@ namespace TACHYON.Shipping.ShippingRequestBids
             var item = _shippingRequestBidsRepository.FirstOrDefaultAsync((long)input.Id);
 
              ObjectMapper.Map(input, item);
+        }
+
+        //shipper accept carrier bid request #539
+        [RequiresFeature(AppFeatures.Shipper)]
+      //  [AbpAuthorize(AppPermissions.Pages_ShippingRequestBids)]
+        public async Task AcceptBid(ShippingRequestBidInput input)
+        {
+            var bid =await _shippingRequestBidsRepository.FirstOrDefaultAsync(input.ShippingRequestBidId);
+            if (bid != null)
+            {
+                bid.IsAccepted = true;
+                //Reject the other bids of this shipping request
+                var otherBids = _shippingRequestBidsRepository.GetAll().Where(x => x.ShippingRequestId == bid.ShippingRequestId && x.Id != bid.Id);
+                foreach(var item in otherBids)
+                {
+                    item.IsAccepted = false;
+                }
+            }
+            else
+            {
+                throw new UserFriendlyException(L("Bid Is not exist message"));
+            }
+        }
+
+        //#541
+        [RequiresFeature(AppFeatures.Carrier)]
+        public async Task<List<ViewCarrierBidsOutput>> ViewAllCarrierOngoingBids()
+        {
+            using (CurrentUnitOfWork.DisableFilter(AbpDataFilters.MustHaveTenant))
+            {
+                var bids = await _shippingRequestsRepository.GetAll()
+                .Where(x=> x.ShippingRequestBids != null &&
+                x.ShippingRequestBids.Any(y=>y.TenantId==AbpSession.TenantId))
+                .ToListAsync();
+                return ObjectMapper.Map<List<ViewCarrierBidsOutput>>(bids);
+            }
         }
     }
 }

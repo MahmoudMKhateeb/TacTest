@@ -10,6 +10,7 @@ using TACHYON.Goods.GoodsDetails;
 using TACHYON.MultiTenancy;
 using TACHYON.Routs;
 using TACHYON.Routs.RoutSteps;
+using TACHYON.Shipping.ShippingRequestBids;
 using TACHYON.Shipping.ShippingRequestStatuses;
 using TACHYON.Trailers;
 using TACHYON.Trailers.TrailerTypes;
@@ -162,10 +163,10 @@ namespace TACHYON.Shipping.ShippingRequests
         public DateTime? BidStartDate { get; set; }
         public DateTime? BidEndDate { get; set; }
         public bool? isCancledBid { get; set; }
-        public bool? IsClosedBid{get; set;}
+        public bool? IsClosedBid { get; set; }
         public DateTime? CloseBidDate { get; set; }
 
-
+        public ICollection<ShippingRequestBid> ShippingRequestBids { get; set;}
         #endregion
     }
 }
