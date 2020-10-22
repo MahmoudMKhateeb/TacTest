@@ -471,37 +471,39 @@ export class CreateOrEditTruckModalComponent extends AppComponentBase {
   }
 
   getDocumentFiles(event?: LazyLoadEvent) {
-    this.changeDetectorRef.detectChanges();
-    if (this.primengTableHelper.shouldResetPaging(event)) {
-      this.paginator.changePage(0);
-      return;
+    if (this.truck.id) {
+      this.changeDetectorRef.detectChanges();
+      if (this.primengTableHelper.shouldResetPaging(event)) {
+        this.paginator.changePage(0);
+        return;
+      }
+
+      this.primengTableHelper.showLoadingIndicator();
+
+      this._documentFilesServiceProxy
+        .getAll(
+          this.filterText,
+          this.nameFilter,
+          this.extnFilter,
+          this.binaryObjectIdFilter,
+          this.maxExpirationDateFilter,
+          this.minExpirationDateFilter,
+          this.isAcceptedFilter,
+          this.documentTypeDisplayNameFilter,
+          this.truckPlateNumberFilter,
+          this.trailerTrailerCodeFilter,
+          this.userNameFilter,
+          this.routStepDisplayNameFilter,
+          this.primengTableHelper.getSorting(this.dataTable),
+          this.primengTableHelper.getSkipCount(this.paginator, event),
+          this.primengTableHelper.getMaxResultCount(this.paginator, event)
+        )
+        .subscribe((result) => {
+          this.primengTableHelper.totalRecordsCount = result.totalCount;
+          this.primengTableHelper.records = result.items;
+          this.primengTableHelper.hideLoadingIndicator();
+        });
     }
-
-    this.primengTableHelper.showLoadingIndicator();
-
-    this._documentFilesServiceProxy
-      .getAll(
-        this.filterText,
-        this.nameFilter,
-        this.extnFilter,
-        this.binaryObjectIdFilter,
-        this.maxExpirationDateFilter,
-        this.minExpirationDateFilter,
-        this.isAcceptedFilter,
-        this.documentTypeDisplayNameFilter,
-        this.truckPlateNumberFilter,
-        this.trailerTrailerCodeFilter,
-        this.userNameFilter,
-        this.routStepDisplayNameFilter,
-        this.primengTableHelper.getSorting(this.dataTable),
-        this.primengTableHelper.getSkipCount(this.paginator, event),
-        this.primengTableHelper.getMaxResultCount(this.paginator, event)
-      )
-      .subscribe((result) => {
-        this.primengTableHelper.totalRecordsCount = result.totalCount;
-        this.primengTableHelper.records = result.items;
-        this.primengTableHelper.hideLoadingIndicator();
-      });
   }
 
   reloadPage(): void {

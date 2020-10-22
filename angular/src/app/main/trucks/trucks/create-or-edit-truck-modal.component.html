@@ -190,372 +190,175 @@
               <label for="Truck_Note">{{ l('Note') }}</label>
               <input [(ngModel)]="truck.note" class="form-control" id="Truck_Note" maxlength="256" minlength="0" name="Note" type="text" />
             </div>
-
-            <div class="form-group" *ngIf="ModalIsEdit">
-              //start of my table div 196
-              <div>
-                <div class="content d-flex flex-column flex-column-fluid">
-                  <sub-header [title]="'DocumentFiles' | localize" [description]="'DocumentFilesHeaderInfo' | localize">
-                    <div role="actions">
-                      <button (click)="exportToExcel()" class="btn btn-outline-success">
-                        <i class="fa fa-file-excel"></i> {{ l('ExportToExcel') }}
-                      </button>
-
-                      <button *ngIf="isGranted('Pages.DocumentFiles.Create')" (click)="createDocumentFile()" class="btn btn-primary blue">
-                        <i class="fa fa-plus"></i> {{ l('CreateNewDocumentFile') }}
-                      </button>
-                    </div>
-                  </sub-header>
-
-                  <div [class]="containerClass">
-                    <div class="card card-custom gutter-b">
-                      <div class="card-body">
-                        <form class="form" autocomplete="off">
-                          <div>
-                            <div class="row align-items-center">
-                              <div class="col-xl-12">
-                                <div class="form-group m-form__group align-items-center">
-                                  <div class="input-group">
-                                    <input
-                                      [(ngModel)]="filterText"
-                                      name="filterText"
-                                      autoFocus
-                                      class="form-control m-input"
-                                      [placeholder]="l('SearchWithThreeDot')"
-                                      type="text"
-                                    />
-                                    <span class="input-group-btn">
-                                      <button (click)="getDocumentFiles()" class="btn btn-primary" type="submit">
-                                        <i class="flaticon-search-1"></i>
-                                      </button>
-                                    </span>
-                                  </div>
-                                </div>
-                              </div>
-                            </div>
-                            <div class="row" [hidden]="!advancedFiltersAreShown">
-                              <div class="col-md-12">
-                                <div class="kt-separator kt-separator--border-dashed"></div>
-                              </div>
-
-                              <div class="col-md-3">
-                                <div class="form-group">
-                                  <label for="NameFilter">{{ l('Name') }}</label>
-                                  <input type="text" class="form-control" id="NameFilter" name="nameFilter" [(ngModel)]="nameFilter" />
-                                </div>
-                              </div>
-                              <div class="col-md-3">
-                                <div class="form-group">
-                                  <label for="ExtnFilter">{{ l('Extn') }}</label>
-                                  <input type="text" class="form-control" id="ExtnFilter" name="extnFilter" [(ngModel)]="extnFilter" />
-                                </div>
-                              </div>
-                              <div class="col-md-3">
-                                <div class="form-group">
-                                  <label for="BinaryObjectIdFilter">{{ l('BinaryObjectId') }}</label>
-                                  <input
-                                    type="text"
-                                    class="form-control"
-                                    id="BinaryObjectIdFilter"
-                                    name="binaryObjectIdFilter"
-                                    [(ngModel)]="binaryObjectIdFilter"
-                                  />
-                                </div>
-                              </div>
-                              <div class="col-md-3">
-                                <div class="form-group">
-                                  <label for="MinExpirationDateFilter">{{ l('ExpirationDateRange') }}</label>
-                                  <div class="input-group">
-                                    <input
-                                      class="form-control m-input"
-                                      id="MinExpirationDateFilter"
-                                      name="MinExpirationDateFilter"
-                                      type="datetime"
-                                      bsDatepicker
-                                      placeholder="{{ l('MinValue') }}"
-                                      [(ngModel)]="minExpirationDateFilter"
-                                    />
-                                    <span style="line-height: 40px; padding: 0 15px 0 15px;"> &mdash; </span>
-                                    <input
-                                      class="form-control m-input"
-                                      id="MaxExpirationDateFilter"
-                                      name="MaxExpirationDateFilter"
-                                      type="datetime"
-                                      bsDatepicker
-                                      placeholder="{{ l('MaxValue') }}"
-                                      [(ngModel)]="maxExpirationDateFilter"
-                                    />
-                                  </div>
-                                </div>
-                              </div>
-                              <div class="col-md-3">
-                                <div class="form-group">
-                                  <label for="IsAcceptedFilter">{{ l('IsAccepted') }}</label>
-                                  <input
-                                    type="text"
-                                    class="form-control"
-                                    id="IsAcceptedFilter"
-                                    name="isAcceptedFilter"
-                                    [(ngModel)]="isAcceptedFilter"
-                                  />
-                                </div>
-                              </div>
-                              <div class="col-md-3">
-                                <div class="form-group">
-                                  <label for="DocumentTypeDisplayNameFilter">({{ l('DocumentType') }}) {{ l('DisplayName') }}</label>
-                                  <input
-                                    type="text"
-                                    class="form-control"
-                                    id="DocumentTypeDisplayNameFilter"
-                                    name="documentTypeDisplayNameFilter"
-                                    [(ngModel)]="documentTypeDisplayNameFilter"
-                                  />
-                                </div>
-                              </div>
-                              <div class="col-md-3">
-                                <div class="form-group">
-                                  <label for="TruckPlateNumberFilter">({{ l('Truck') }}) {{ l('PlateNumber') }}</label>
-                                  <input
-                                    type="text"
-                                    class="form-control"
-                                    id="TruckPlateNumberFilter"
-                                    name="truckPlateNumberFilter"
-                                    [(ngModel)]="truckPlateNumberFilter"
-                                  />
-                                </div>
-                              </div>
-                              <div class="col-md-3">
-                                <div class="form-group">
-                                  <label for="TrailerTrailerCodeFilter">({{ l('Trailer') }}) {{ l('TrailerCode') }}</label>
-                                  <input
-                                    type="text"
-                                    class="form-control"
-                                    id="TrailerTrailerCodeFilter"
-                                    name="trailerTrailerCodeFilter"
-                                    [(ngModel)]="trailerTrailerCodeFilter"
-                                  />
-                                </div>
-                              </div>
-                              <div class="col-md-3">
-                                <div class="form-group">
-                                  <label for="UserNameFilter">({{ l('User') }}) {{ l('Name') }}</label>
-                                  <input type="text" class="form-control" id="UserNameFilter" name="userNameFilter" [(ngModel)]="userNameFilter" />
-                                </div>
-                              </div>
-                              <div class="col-md-3">
-                                <div class="form-group">
-                                  <label for="RoutStepDisplayNameFilter">({{ l('RoutStep') }}) {{ l('DisplayName') }}</label>
-                                  <input
-                                    type="text"
-                                    class="form-control"
-                                    id="RoutStepDisplayNameFilter"
-                                    name="routStepDisplayNameFilter"
-                                    [(ngModel)]="routStepDisplayNameFilter"
-                                  />
-                                </div>
-                              </div>
-                            </div>
-                            <div class="row mb-2">
-                              <div class="col-sm-12">
-                                <span
-                                  class="clickable-item text-muted"
-                                  *ngIf="!advancedFiltersAreShown"
-                                  (click)="advancedFiltersAreShown = !advancedFiltersAreShown"
-                                  ><i class="fa fa-angle-down"></i> {{ l('ShowAdvancedFilters') }}</span
-                                >
-                                <span
-                                  class="clickable-item text-muted"
-                                  *ngIf="advancedFiltersAreShown"
-                                  (click)="advancedFiltersAreShown = !advancedFiltersAreShown"
-                                  ><i class="fa fa-angle-up"></i> {{ l('HideAdvancedFilters') }}</span
-                                >
-                              </div>
-                            </div>
-                          </div>
-                        </form>
-
-                        <div class="row align-items-center">
-                          <!--<Primeng-Datatable-Start>-->
-                          <div class="primeng-datatable-container col-12" [busyIf]="primengTableHelper.isLoading">
-                            <p-table
-                              #dataTable
-                              (onLazyLoad)="getDocumentFiles($event)"
-                              [value]="primengTableHelper.records"
-                              rows="{{ primengTableHelper.defaultRecordsCountPerPage }}"
-                              [paginator]="false"
-                              [lazy]="true"
-                              [scrollable]="true"
-                              ScrollWidth="100%"
-                              [responsive]="primengTableHelper.isResponsive"
-                              [resizableColumns]="primengTableHelper.resizableColumns"
-                            >
-                              <ng-template pTemplate="header">
-                                <tr>
-                                  <th style="width: 130px;" [hidden]="!isGrantedAny('Pages.DocumentFiles.Edit', 'Pages.DocumentFiles.Delete')">
-                                    {{ l('Actions') }}
-                                  </th>
-                                  <th style="width: 150px;" pSortableColumn="documentTypeFk.displayName">
-                                    {{ l('DisplayName') }}
-                                    <p-sortIcon field="documentTypeDisplayName"></p-sortIcon>
-                                  </th>
-                                  <th style="width: 150px;" pSortableColumn="truckFk.plateNumber">
-                                    {{ l('PlateNumber') }}
-                                    <p-sortIcon field="truckPlateNumber"></p-sortIcon>
-                                  </th>
-                                  <th style="width: 150px;" pSortableColumn="trailerFk.trailerCode">
-                                    {{ l('TrailerCode') }}
-                                    <p-sortIcon field="trailerTrailerCode"></p-sortIcon>
-                                  </th>
-                                  <th style="width: 150px;" pSortableColumn="userFk.name">
-                                    {{ l('Name') }}
-                                    <p-sortIcon field="userName"></p-sortIcon>
-                                  </th>
-                                  <th style="width: 150px;" pSortableColumn="routStepFk.displayName">
-                                    {{ l('DisplayName') }}
-                                    <p-sortIcon field="routStepDisplayName"></p-sortIcon>
-                                  </th>
-                                  <th style="width: 150px;" pSortableColumn="name">
-                                    {{ l('Name') }}
-                                    <p-sortIcon field="documentFile.name"></p-sortIcon>
-                                  </th>
-                                  <th style="width: 150px;" pSortableColumn="extn">
-                                    {{ l('Extn') }}
-                                    <p-sortIcon field="documentFile.extn"></p-sortIcon>
-                                  </th>
-                                  <th style="width: 150px;" pSortableColumn="binaryObjectId">
-                                    {{ l('BinaryObjectId') }}
-                                    <p-sortIcon field="documentFile.binaryObjectId"></p-sortIcon>
-                                  </th>
-                                  <th style="width: 150px;" pSortableColumn="expirationDate">
-                                    {{ l('ExpirationDate') }}
-                                    <p-sortIcon field="documentFile.expirationDate"></p-sortIcon>
-                                  </th>
-                                  <th style="width: 150px;" pSortableColumn="isAccepted">
-                                    {{ l('IsAccepted') }}
-                                    <p-sortIcon field="documentFile.isAccepted"></p-sortIcon>
-                                  </th>
-                                </tr>
-                              </ng-template>
-                              <ng-template pTemplate="body" let-record="$implicit">
-                                <tr>
-                                  <td style="width: 130px;" [hidden]="!isGrantedAny('Pages.DocumentFiles.Edit', 'Pages.DocumentFiles.Delete')">
-                                    <div class="btn-group dropdown" dropdown container="body">
-                                      <button class="dropdown-toggle btn btn-sm btn-primary" dropdownToggle>
-                                        <i class="fa fa-cog"></i><span class="caret"></span> {{ l('Actions') }}
-                                      </button>
-                                      <ul class="dropdown-menu" *dropdownMenu>
-                                        <li>
-                                          <a href="javascript:;" class="dropdown-item" (click)="viewDocumentFileModal.show(record)">{{
-                                            l('View')
-                                          }}</a>
-                                        </li>
-                                        <li>
-                                          <a
-                                            href="javascript:;"
-                                            *ngIf="permission.isGranted('Pages.DocumentFiles.Edit')"
-                                            class="dropdown-item"
-                                            (click)="createOrEditDocumentFileModal.show(record.documentFile.id)"
-                                            >{{ l('Edit') }}</a
-                                          >
-                                        </li>
-                                        <li>
-                                          <a
-                                            class="dropdown-item"
-                                            href="javascript:;"
-                                            *ngIf="permission.isGranted('Pages.DocumentFiles.Delete')"
-                                            (click)="deleteDocumentFile(record.documentFile)"
-                                            >{{ l('Delete') }}</a
-                                          >
-                                        </li>
-                                        <li>
-                                          <a class="dropdown-item" href="javascript:;" (click)="downloadDocument(record.documentFile)">{{
-                                            l('Download')
-                                          }}</a>
-                                        </li>
-                                        <li>
-                                          <a href="javascript:;" *ngIf="entityHistoryEnabled" (click)="showHistory(record.documentFile)">{{
-                                            l('History')
-                                          }}</a>
-                                        </li>
-                                      </ul>
-                                    </div>
-                                  </td>
-                                  <td style="width: 150px;">
-                                    <span class="ui-column-title"> {{ l('DisplayName') }}</span>
-                                    {{ record.documentTypeDisplayName }}
-                                  </td>
-                                  <td style="width: 150px;">
-                                    <span class="ui-column-title"> {{ l('PlateNumber') }}</span>
-                                    {{ record.truckPlateNumber }}
-                                  </td>
-                                  <td style="width: 150px;">
-                                    <span class="ui-column-title"> {{ l('TrailerCode') }}</span>
-                                    {{ record.trailerTrailerCode }}
-                                  </td>
-                                  <td style="width: 150px;">
-                                    <span class="ui-column-title"> {{ l('Name') }}</span>
-                                    {{ record.userName }}
-                                  </td>
-                                  <td style="width: 150px;">
-                                    <span class="ui-column-title"> {{ l('DisplayName') }}</span>
-                                    {{ record.routStepDisplayName }}
-                                  </td>
-                                  <td style="width: 150px;">
-                                    <span class="ui-column-title"> {{ l('Name') }}</span>
-                                    {{ record.documentFile.name }}
-                                  </td>
-                                  <td style="width: 150px;">
-                                    <span class="ui-column-title"> {{ l('Extn') }}</span>
-                                    {{ record.documentFile.extn }}
-                                  </td>
-                                  <td style="width: 150px;">
-                                    <span class="ui-column-title"> {{ l('BinaryObjectId') }}</span>
-                                    {{ record.documentFile.binaryObjectId }}
-                                  </td>
-                                  <td style="width: 150px;">
-                                    <span class="ui-column-title"> {{ l('ExpirationDate') }}</span>
-                                    <span *ngIf="record.documentFile.expirationDate">
-                                      {{ record.documentFile.expirationDate | momentFormat: 'L' }}
-                                    </span>
-                                    <span *ngIf="!record.documentFile.expirationDate">-</span>
-                                  </td>
-                                  <td style="width: 150px;">
-                                    <span class="ui-column-title"> {{ l('IsAccepted') }}</span>
-                                    {{ record.documentFile.isAccepted }}
-                                  </td>
-                                </tr>
-                              </ng-template>
-                            </p-table>
-                            <div class="primeng-no-data" *ngIf="primengTableHelper.totalRecordsCount == 0">
-                              {{ l('NoData') }}
-                            </div>
-                            <div class="primeng-paging-container">
-                              <p-paginator
-                                [rows]="primengTableHelper.defaultRecordsCountPerPage"
-                                #paginator
-                                (onPageChange)="getDocumentFiles($event)"
-                                [totalRecords]="primengTableHelper.totalRecordsCount"
-                                [rowsPerPageOptions]="primengTableHelper.predefinedRecordsCountPerPage"
+            <div class="col-md-12 align-items-center">
+              <!--<Primeng-Datatable-Start>-->
+              <div class="primeng-datatable-container col-12" [busyIf]="primengTableHelper.isLoading">
+                <p-table
+                  #dataTable
+                  (onLazyLoad)="getDocumentFiles($event)"
+                  [value]="primengTableHelper.records"
+                  rows="{{ primengTableHelper.defaultRecordsCountPerPage }}"
+                  [paginator]="false"
+                  [lazy]="true"
+                  [scrollable]="true"
+                  ScrollWidth="100%"
+                  [responsive]="primengTableHelper.isResponsive"
+                  [resizableColumns]="primengTableHelper.resizableColumns"
+                >
+                  <ng-template pTemplate="header">
+                    <tr>
+                      <th style="width: 130px;" [hidden]="!isGrantedAny('Pages.DocumentFiles.Edit', 'Pages.DocumentFiles.Delete')">
+                        {{ l('Actions') }}
+                      </th>
+                      <th style="width: 150px;" pSortableColumn="documentTypeFk.displayName">
+                        {{ l('DisplayName') }}
+                        <p-sortIcon field="documentTypeDisplayName"></p-sortIcon>
+                      </th>
+                      <th style="width: 150px;" pSortableColumn="truckFk.plateNumber">
+                        {{ l('PlateNumber') }}
+                        <p-sortIcon field="truckPlateNumber"></p-sortIcon>
+                      </th>
+                      <th style="width: 150px;" pSortableColumn="trailerFk.trailerCode">
+                        {{ l('TrailerCode') }}
+                        <p-sortIcon field="trailerTrailerCode"></p-sortIcon>
+                      </th>
+                      <th style="width: 150px;" pSortableColumn="userFk.name">
+                        {{ l('Name') }}
+                        <p-sortIcon field="userName"></p-sortIcon>
+                      </th>
+                      <th style="width: 150px;" pSortableColumn="routStepFk.displayName">
+                        {{ l('DisplayName') }}
+                        <p-sortIcon field="routStepDisplayName"></p-sortIcon>
+                      </th>
+                      <th style="width: 150px;" pSortableColumn="name">
+                        {{ l('Name') }}
+                        <p-sortIcon field="documentFile.name"></p-sortIcon>
+                      </th>
+                      <th style="width: 150px;" pSortableColumn="extn">
+                        {{ l('Extn') }}
+                        <p-sortIcon field="documentFile.extn"></p-sortIcon>
+                      </th>
+                      <th style="width: 150px;" pSortableColumn="binaryObjectId">
+                        {{ l('BinaryObjectId') }}
+                        <p-sortIcon field="documentFile.binaryObjectId"></p-sortIcon>
+                      </th>
+                      <th style="width: 150px;" pSortableColumn="expirationDate">
+                        {{ l('ExpirationDate') }}
+                        <p-sortIcon field="documentFile.expirationDate"></p-sortIcon>
+                      </th>
+                      <th style="width: 150px;" pSortableColumn="isAccepted">
+                        {{ l('IsAccepted') }}
+                        <p-sortIcon field="documentFile.isAccepted"></p-sortIcon>
+                      </th>
+                    </tr>
+                  </ng-template>
+                  <ng-template pTemplate="body" let-record="$implicit">
+                    <tr>
+                      <td style="width: 130px;" [hidden]="!isGrantedAny('Pages.DocumentFiles.Edit', 'Pages.DocumentFiles.Delete')">
+                        <div class="btn-group dropdown" dropdown container="body">
+                          <button class="dropdown-toggle btn btn-sm btn-primary" dropdownToggle>
+                            <i class="fa fa-cog"></i><span class="caret"></span> {{ l('Actions') }}
+                          </button>
+                          <ul class="dropdown-menu" *dropdownMenu>
+                            <li>
+                              <a href="javascript:;" class="dropdown-item" (click)="viewDocumentFileModal.show(record)">{{ l('View') }}</a>
+                            </li>
+                            <li>
+                              <a
+                                href="javascript:;"
+                                *ngIf="permission.isGranted('Pages.DocumentFiles.Edit')"
+                                class="dropdown-item"
+                                (click)="createOrEditDocumentFileModal.show(record.documentFile.id)"
+                                >{{ l('Edit') }}</a
                               >
-                              </p-paginator>
-                              <span class="total-records-count">
-                                {{ l('TotalRecordsCount', primengTableHelper.totalRecordsCount) }}
-                              </span>
-                            </div>
-                          </div>
-                          <!--<Primeng-Datatable-End>-->
+                            </li>
+                            <li>
+                              <a
+                                class="dropdown-item"
+                                href="javascript:;"
+                                *ngIf="permission.isGranted('Pages.DocumentFiles.Delete')"
+                                (click)="deleteDocumentFile(record.documentFile)"
+                                >{{ l('Delete') }}</a
+                              >
+                            </li>
+                            <li>
+                              <a class="dropdown-item" href="javascript:;" (click)="downloadDocument(record.documentFile)">{{ l('Download') }}</a>
+                            </li>
+                            <li>
+                              <a href="javascript:;" *ngIf="entityHistoryEnabled" (click)="showHistory(record.documentFile)">{{ l('History') }}</a>
+                            </li>
+                          </ul>
                         </div>
-                      </div>
-                    </div>
-                  </div>
-                  <createOrEditDocumentFileModal #createOrEditDocumentFileModal (modalSave)="getDocumentFiles()"></createOrEditDocumentFileModal>
-                  <viewDocumentFileModal #viewDocumentFileModal></viewDocumentFileModal>
-                  <entityTypeHistoryModal #entityTypeHistoryModal></entityTypeHistoryModal>
+                      </td>
+                      <td style="width: 150px;">
+                        <span class="ui-column-title"> {{ l('DisplayName') }}</span>
+                        {{ record.documentTypeDisplayName }}
+                      </td>
+                      <td style="width: 150px;">
+                        <span class="ui-column-title"> {{ l('PlateNumber') }}</span>
+                        {{ record.truckPlateNumber }}
+                      </td>
+                      <td style="width: 150px;">
+                        <span class="ui-column-title"> {{ l('TrailerCode') }}</span>
+                        {{ record.trailerTrailerCode }}
+                      </td>
+                      <td style="width: 150px;">
+                        <span class="ui-column-title"> {{ l('Name') }}</span>
+                        {{ record.userName }}
+                      </td>
+                      <td style="width: 150px;">
+                        <span class="ui-column-title"> {{ l('DisplayName') }}</span>
+                        {{ record.routStepDisplayName }}
+                      </td>
+                      <td style="width: 150px;">
+                        <span class="ui-column-title"> {{ l('Name') }}</span>
+                        {{ record.documentFile.name }}
+                      </td>
+                      <td style="width: 150px;">
+                        <span class="ui-column-title"> {{ l('Extn') }}</span>
+                        {{ record.documentFile.extn }}
+                      </td>
+                      <td style="width: 150px;">
+                        <span class="ui-column-title"> {{ l('BinaryObjectId') }}</span>
+                        {{ record.documentFile.binaryObjectId }}
+                      </td>
+                      <td style="width: 150px;">
+                        <span class="ui-column-title"> {{ l('ExpirationDate') }}</span>
+                        <span *ngIf="record.documentFile.expirationDate">
+                          {{ record.documentFile.expirationDate | momentFormat: 'L' }}
+                        </span>
+                        <span *ngIf="!record.documentFile.expirationDate">-</span>
+                      </td>
+                      <td style="width: 150px;">
+                        <span class="ui-column-title"> {{ l('IsAccepted') }}</span>
+                        {{ record.documentFile.isAccepted }}
+                      </td>
+                    </tr>
+                  </ng-template>
+                </p-table>
+                <div class="primeng-no-data" *ngIf="primengTableHelper.totalRecordsCount == 0">
+                  {{ l('NoData') }}
+                </div>
+                <div class="primeng-paging-container">
+                  <p-paginator
+                    [rows]="primengTableHelper.defaultRecordsCountPerPage"
+                    #paginator
+                    (onPageChange)="getDocumentFiles($event)"
+                    [totalRecords]="primengTableHelper.totalRecordsCount"
+                    [rowsPerPageOptions]="primengTableHelper.predefinedRecordsCountPerPage"
+                  >
+                  </p-paginator>
+                  <span class="total-records-count">
+                    {{ l('TotalRecordsCount', primengTableHelper.totalRecordsCount) }}
+                  </span>
                 </div>
               </div>
-
-              //end of my table-div
+              <!--<Primeng-Datatable-End>-->
             </div>
+
+            <createOrEditDocumentFileModal #createOrEditDocumentFileModal (modalSave)="getDocumentFiles()"></createOrEditDocumentFileModal>
+            <viewDocumentFileModal #viewDocumentFileModal></viewDocumentFileModal>
+            <entityTypeHistoryModal #entityTypeHistoryModal></entityTypeHistoryModal>
 
             <!--            <div class="form-group col-md-12">-->
             <!--              <input (change)="fileChangeEvent($event)" type="file" />-->
