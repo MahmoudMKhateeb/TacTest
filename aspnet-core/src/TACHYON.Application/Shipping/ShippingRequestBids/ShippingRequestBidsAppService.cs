@@ -37,6 +37,7 @@ namespace TACHYON.Shipping.ShippingRequestBids
             _shippingRequestsRepository = shippingRequestsRepository;
         }
 
+        //#542 This is for carrier
         public virtual async Task<PagedResultDto<GetShippingRequestBidsForViewDto>> GetAllBids(GetAllShippingRequestBidsInput input)
         {
             var filterShippingRequestsBids = _shippingRequestBidsRepository.GetAll()
@@ -93,6 +94,7 @@ namespace TACHYON.Shipping.ShippingRequestBids
                 Edit(input);
         }
 
+            //#538
         [RequiresFeature(AppFeatures.Carrier)]
         [AbpAuthorize(AppPermissions.Pages_ShippingRequestBids_Create)]
         protected virtual async Task  Create(CreatOrEditShippingRequestBidDto input)
@@ -149,6 +151,49 @@ namespace TACHYON.Shipping.ShippingRequestBids
                 x.ShippingRequestBids.Any(y=>y.TenantId==AbpSession.TenantId))
                 .ToListAsync();
                 return ObjectMapper.Map<List<ViewCarrierBidsOutput>>(bids);
+            }
+        }
+
+        [RequiresFeature(AppFeatures.Carrier)]
+        public async Task CancleBidRequest(ShippingRequestBidInput input)
+        {
+            var bid =await _shippingRequestBidsRepository.FirstOrDefaultAsync(input.ShippingRequestBidId);
+            if (bid.IsCancled != true)
+            {
+                throw new UserFriendlyException(L("The bid is already cancled message"));
+            }
+            bid.IsCancled = true;
+            bid.CanceledDate = Clock.Now;
+        }
+
+        //#537
+        public async Task<PagedResultDto<ViewShipperBidsReqDetailsOutputDto>> ViewShipperBidsReqDetails(PagedAndSortedResultRequestDto input)
+        {
+            using (CurrentUnitOfWork.DisableFilter(AbpDataFilters.MustHaveTenant))
+            {
+                var filterShippingRequestsBids = _shippingRequestsRepository.GetAll()
+                   .Where(x => x.isCancledBid!=true);
+
+                var pagedAndFilteredShippingRequestsBids = filterShippingRequestsBids
+                .OrderBy(input.Sorting ?? "id asc")
+                .PageBy(input);
+
+                var shippingRequestBids = from o in pagedAndFilteredShippingRequestsBids
+                                          select new ViewShipperBidsReqDetailsOutputDto()
+                                          {
+                                              viewShipperBidsReqDetailsOutput = new ViewShipperBidsReqDetailsOutput
+                                              {
+                                                  Id = o.Id,
+                                                  EndBidDate = o.BidEndDate ,
+                                                  IsOngoingBid = o.IsClosedBid !=true ? true: false,
+                                                  ShipperName=o.CarrierTenantFk.Edition.DisplayName
+                                              },
+                                          };
+
+                var totalCount = await filterShippingRequestsBids.CountAsync();
+
+                return new PagedResultDto<ViewShipperBidsReqDetailsOutputDto>(totalCount, await shippingRequestBids.ToListAsync());
+
             }
         }
     }
