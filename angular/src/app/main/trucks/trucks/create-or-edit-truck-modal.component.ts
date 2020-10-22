@@ -1,10 +1,11 @@
 ﻿/* tslint:disable:member-ordering */
-import { Component, EventEmitter, Injector, Output, ViewChild } from '@angular/core';
+import { Component, EventEmitter, Injector, Output, ViewChild, ChangeDetectorRef } from '@angular/core';
 import { ModalDirective } from 'ngx-bootstrap/modal';
 import { finalize } from 'rxjs/operators';
 import {
   CreateOrEditDocumentFileDto,
   CreateOrEditTruckDto,
+  DocumentFileDto,
   DocumentFilesServiceProxy,
   SelectItemDto,
   TransportSubtypeTransportTypeLookupTableDto,
@@ -23,20 +24,53 @@ import { IAjaxResponse, TokenService } from '@node_modules/abp-ng2-module';
 import { AppConsts } from '@shared/AppConsts';
 import { LocalStorageService } from '@shared/utils/local-storage.service';
 import { defaultFormatUtc } from '@node_modules/moment';
+import { DateType } from '@app/admin/required-document-files/hijri-gregorian-datepicker/consts';
+import { NgbDateStruct } from '@node_modules/@ng-bootstrap/ng-bootstrap';
+import { DateFormatterService } from '@app/admin/required-document-files/hijri-gregorian-datepicker/date-formatter.service';
+import * as _ from 'lodash';
+import { LazyLoadEvent } from '@node_modules/primeng/public_api';
+import { Paginator } from '@node_modules/primeng/paginator';
+import { Table } from '@node_modules/primeng/table';
+import { CreateOrEditDocumentFileModalComponent } from '@app/main/documentFiles/documentFiles/create-or-edit-documentFile-modal.component';
+import { FileDownloadService } from '@shared/utils/file-download.service';
+import { EntityTypeHistoryModalComponent } from '@app/shared/common/entityHistory/entity-type-history-modal.component';
 
 @Component({
   selector: 'createOrEditTruckModal',
   templateUrl: './create-or-edit-truck-modal.component.html',
+  providers: [DateFormatterService],
 })
 export class CreateOrEditTruckModalComponent extends AppComponentBase {
   @ViewChild('createOrEditModal', { static: true }) modal: ModalDirective;
   @ViewChild('truckUserLookupTableModal', { static: true }) truckUserLookupTableModal: TruckUserLookupTableModalComponent;
   @ViewChild('truckUserLookupTableModal2', { static: true }) truckUserLookupTableModal2: TruckUserLookupTableModalComponent;
 
+  @ViewChild('createOrEditDocumentFileModal', { static: true }) createOrEditDocumentFileModal: CreateOrEditDocumentFileModalComponent;
+  @ViewChild('paginator', { static: true }) paginator: Paginator;
+  @ViewChild('dataTable', { static: true }) dataTable: Table;
+  @ViewChild('entityTypeHistoryModal', { static: true }) entityTypeHistoryModal: EntityTypeHistoryModalComponent;
+
   @Output() modalSave: EventEmitter<any> = new EventEmitter<any>();
 
   active = false;
   saving = false;
+  ModalIsEdit = null;
+  advancedFiltersAreShown = false;
+  filterText = '';
+  nameFilter = '';
+  extnFilter = '';
+  binaryObjectIdFilter = '';
+  maxExpirationDateFilter: moment.Moment;
+  minExpirationDateFilter: moment.Moment;
+  isAcceptedFilter = false;
+  documentTypeDisplayNameFilter = '';
+  truckPlateNumberFilter = '';
+  trailerTrailerCodeFilter = '';
+  userNameFilter = '';
+  routStepDisplayNameFilter = '';
+  _entityTypeFullName = 'TACHYON.Documents.DocumentFiles.DocumentFile';
+  entityHistoryEnabled = false;
+  testCond = null;
 
   truck: CreateOrEditTruckDto = new CreateOrEditTruckDto();
 
@@ -57,7 +91,7 @@ export class CreateOrEditTruckModalComponent extends AppComponentBase {
   public maxProfilPictureBytesUserFriendlyValue = 5;
   public uploader: FileUploader;
   public temporaryPictureUrl: string;
-  profilePicture: string;
+  profilePicture = '';
   /**
    * required documents fileUploader
    */
@@ -77,12 +111,18 @@ export class CreateOrEditTruckModalComponent extends AppComponentBase {
    */
   private _DocsUploaderOptions: FileUploaderOptions = {};
 
+  selectedDateTypeHijri = DateType.Hijri; // or DateType.Gregorian
+  selectedDateTypeGregorian = DateType.Gregorian; // or DateType.Gregorian
+
   constructor(
     injector: Injector,
     private _trucksServiceProxy: TrucksServiceProxy,
     private _tokenService: TokenService,
     private _localStorageService: LocalStorageService,
-    private _documentFilesServiceProxy: DocumentFilesServiceProxy
+    private _documentFilesServiceProxy: DocumentFilesServiceProxy,
+    private dateFormatterService: DateFormatterService,
+    private _fileDownloadService: FileDownloadService,
+    private changeDetectorRef: ChangeDetectorRef
   ) {
     super(injector);
   }
@@ -100,10 +140,11 @@ export class CreateOrEditTruckModalComponent extends AppComponentBase {
       this._documentFilesServiceProxy.getTruckRequiredDocumentFiles().subscribe((result) => {
         this.truck.createOrEditDocumentFileDtos = result;
       });
-
+      this.ModalIsEdit = false;
       this.active = true;
       this.modal.show();
     } else {
+      this.ModalIsEdit = true;
       this._trucksServiceProxy.getTruckForEdit(truckId).subscribe((result) => {
         this.truck = result.truck;
 
@@ -112,13 +153,29 @@ export class CreateOrEditTruckModalComponent extends AppComponentBase {
         this.userName = result.userName;
         this.getTruckPictureUrl(this.truck.id);
 
+        // dropDowns
+        this._trucksServiceProxy.getAllTransportTypesForDropdown().subscribe((result) => {
+          this.allTransportTypes = result;
+        });
+        this._trucksServiceProxy.getAllTransportSubtypesByTransportTypeIdForDropdown(this.truck.transportTypeId).subscribe((result) => {
+          this.allTransportSubTypes = result;
+        });
+        this._trucksServiceProxy.getAllTruckTypesByTransportSubtypeIdForDropdown(this.truck.transportSubtypeId).subscribe((result) => {
+          this.allTruckTypesByTransportSubtype = result;
+        });
+        this._trucksServiceProxy.getAllTruckSubTypesByTruckTypeIdForDropdown(this.truck.trucksTypeId).subscribe((result) => {
+          this.allTruckSubTypesByTruckTypeId = result;
+        });
+        this._trucksServiceProxy.getAllTuckCapacitiesByTuckSubTypeIdForDropdown(this.truck.truckSubtypeId).subscribe((result) => {
+          this.allTrucksCapByTruckSubTypeId = result;
+        });
+
+        //dropDowns
+
         this.active = true;
         this.modal.show();
       });
     }
-    this._trucksServiceProxy.getAllTrucksTypeForTableDropdown().subscribe((result) => {
-      this.allTrucksTypes = result;
-    });
     this._trucksServiceProxy.getAllTruckStatusForTableDropdown().subscribe((result) => {
       this.allTruckStatuss = result;
     });
@@ -392,5 +449,116 @@ export class CreateOrEditTruckModalComponent extends AppComponentBase {
         }
         break;
     }
+  }
+
+  selectedDateChange($event: NgbDateStruct, item: CreateOrEditDocumentFileDto) {
+    if ($event != null && $event.year < 2000) {
+      const incomingDate = this.dateFormatterService.ToGregorian($event);
+      item.expirationDate = moment(incomingDate.month + '-' + incomingDate.day + '-' + incomingDate.year, 'MM/DD/YYYY');
+    } else if ($event != null && $event.year > 2000) {
+    }
+  }
+
+  //document files methods
+  private setIsEntityHistoryEnabled(): boolean {
+    let customSettings = (abp as any).custom;
+    return (
+      this.isGrantedAny('Pages.Administration.AuditLogs') &&
+      customSettings.EntityHistory &&
+      customSettings.EntityHistory.isEnabled &&
+      _.filter(customSettings.EntityHistory.enabledEntities, (entityType) => entityType === this._entityTypeFullName).length === 1
+    );
+  }
+
+  getDocumentFiles(event?: LazyLoadEvent) {
+    if (this.truck.id) {
+      this.changeDetectorRef.detectChanges();
+      if (this.primengTableHelper.shouldResetPaging(event)) {
+        this.paginator.changePage(0);
+        return;
+      }
+
+      this.primengTableHelper.showLoadingIndicator();
+
+      this._documentFilesServiceProxy
+        .getAll(
+          this.filterText,
+          this.nameFilter,
+          this.extnFilter,
+          this.binaryObjectIdFilter,
+          this.maxExpirationDateFilter,
+          this.minExpirationDateFilter,
+          this.isAcceptedFilter,
+          this.documentTypeDisplayNameFilter,
+          this.truckPlateNumberFilter,
+          this.trailerTrailerCodeFilter,
+          this.userNameFilter,
+          this.routStepDisplayNameFilter,
+          this.primengTableHelper.getSorting(this.dataTable),
+          this.primengTableHelper.getSkipCount(this.paginator, event),
+          this.primengTableHelper.getMaxResultCount(this.paginator, event)
+        )
+        .subscribe((result) => {
+          this.primengTableHelper.totalRecordsCount = result.totalCount;
+          this.primengTableHelper.records = result.items;
+          this.primengTableHelper.hideLoadingIndicator();
+        });
+    }
+  }
+
+  reloadPage(): void {
+    this.changeDetectorRef.detectChanges();
+
+    this.paginator.changePage(this.paginator.getPage());
+  }
+
+  createDocumentFile(): void {
+    this.createOrEditDocumentFileModal.show();
+  }
+
+  showHistory(documentFile: DocumentFileDto): void {
+    this.entityTypeHistoryModal.show({
+      entityId: documentFile.id.toString(),
+      entityTypeFullName: this._entityTypeFullName,
+      entityTypeDescription: '',
+    });
+  }
+
+  deleteDocumentFile(documentFile: DocumentFileDto): void {
+    this.message.confirm('', this.l('AreYouSure'), (isConfirmed) => {
+      if (isConfirmed) {
+        this._documentFilesServiceProxy.delete(documentFile.id).subscribe(() => {
+          this.reloadPage();
+          this.notify.success(this.l('SuccessfullyDeleted'));
+        });
+      }
+    });
+  }
+
+  exportToExcel(): void {
+    this._documentFilesServiceProxy
+      .getDocumentFilesToExcel(
+        this.filterText,
+        this.nameFilter,
+        this.extnFilter,
+        this.binaryObjectIdFilter,
+        this.maxExpirationDateFilter,
+        this.minExpirationDateFilter,
+        this.isAcceptedFilter,
+        this.documentTypeDisplayNameFilter,
+        this.truckPlateNumberFilter,
+        this.trailerTrailerCodeFilter,
+        this.userNameFilter,
+        this.routStepDisplayNameFilter
+      )
+      .subscribe((result) => {
+        this._fileDownloadService.downloadTempFile(result);
+      });
+  }
+
+  downloadDocument(documentFile: DocumentFileDto) {
+    this._documentFilesServiceProxy.getDocumentFileDto(documentFile.id).subscribe((result) => {
+      this._fileDownloadService.downloadTempFile(result);
+    });
   }
 }

@@ -249,7 +249,7 @@ const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
     HijriGregorianDatepickerComponent,
     HijriDatepickerComponent,
   ],
-  exports: [AddMemberModalComponent, AddRoleModalComponent],
+  exports: [AddMemberModalComponent, AddRoleModalComponent, HijriGregorianDatepickerComponent],
   providers: [
     ImpersonationService,
     TreeDragDropService,
