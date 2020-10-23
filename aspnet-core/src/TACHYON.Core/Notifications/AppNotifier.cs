@@ -81,6 +81,21 @@ namespace TACHYON.Notifications
             notificationData["shippingRequestId"] = shippingRequestId;
             await _notificationPublisher.PublishAsync(AppNotificationNames.RejectShippingRequest, notificationData, userIds: new[] { argsUser } );
         }
+        public Task SomeTrucksCouldntBeImported(UserIdentifier user, string fileToken, string fileType, string fileName)
+        {
+            return SendNotificationAsync(AppNotificationNames.DownloadInvalidImportUsers, user,
+                new LocalizableString(
+                    "ClickToSeeInvalidTrucks",
+                    TACHYONConsts.LocalizationSourceName
+                ),
+                new Dictionary<string, object>
+                {
+                    { "fileToken", fileToken },
+                    { "fileType", fileType },
+                    { "fileName", fileName }
+                });
+        }
+
         #endregion
         public async Task WelcomeToTheApplicationAsync(User user)
         {
