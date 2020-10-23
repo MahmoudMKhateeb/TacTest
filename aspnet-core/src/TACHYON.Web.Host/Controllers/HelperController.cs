@@ -7,10 +7,16 @@ using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
+using Abp.AspNetCore.Mvc.Authorization;
+using Abp.BackgroundJobs;
+using Abp.Runtime.Session;
+using TACHYON.Authorization;
 using TACHYON.Documents.DocumentFiles.Dtos;
 using TACHYON.Dto;
 using TACHYON.Storage;
 using TACHYON.Trucks;
+using TACHYON.Trucks.Dtos;
+using TACHYON.Trucks.Importing.Dto;
 
 namespace TACHYON.Web.Controllers
 {
@@ -19,13 +25,18 @@ namespace TACHYON.Web.Controllers
     {
         private readonly ITrucksAppService _trucksAppService;
         private readonly ITempFileCacheManager _tempFileCacheManager;
+        private readonly IBinaryObjectManager BinaryObjectManager;
+        protected readonly IBackgroundJobManager BackgroundJobManager;
+
         private const int MaxDocumentFilePictureSize = 5242880; //5MB
 
 
-        public HelperController(ITrucksAppService trucksAppService, ITempFileCacheManager tempFileCacheManager)
+        public HelperController(ITrucksAppService trucksAppService, ITempFileCacheManager tempFileCacheManager, IBinaryObjectManager binaryObjectManager, IBackgroundJobManager backgroundJobManager)
         {
             _trucksAppService = trucksAppService;
             _tempFileCacheManager = tempFileCacheManager;
+            BinaryObjectManager = binaryObjectManager;
+            BackgroundJobManager = backgroundJobManager;
         }
 
         public async Task<FileResult> GetTruckPictureByTruckId(Guid truckId)
@@ -77,6 +88,50 @@ namespace TACHYON.Web.Controllers
             catch (UserFriendlyException ex)
             {
                 return new UploadDocumentFileOutput(new ErrorInfo(ex.Message));
+            }
+        }
+
+        [HttpPost]
+        [AbpMvcAuthorize(AppPermissions.Pages_Administration_TruckStatuses_Create)]
+        public async Task<JsonResult> ImportTrucksFromExcel()
+        {
+            try
+            {
+                var file = Request.Form.Files.First();
+
+                if (file == null)
+                {
+                    throw new UserFriendlyException(L("File_Empty_Error"));
+                }
+
+                if (file.Length > 1048576 * 100) //100 MB
+                {
+                    throw new UserFriendlyException(L("File_SizeLimit_Error"));
+                }
+
+                byte[] fileBytes;
+                using (var stream = file.OpenReadStream())
+                {
+                    fileBytes = stream.GetAllBytes();
+                }
+
+                var tenantId = AbpSession.TenantId;
+                var fileObject = new BinaryObject(tenantId, fileBytes);
+
+                await BinaryObjectManager.SaveAsync(fileObject);
+
+                await BackgroundJobManager.EnqueueAsync<ImportTrucksToExcelJob, ImportTrucksFromExcelJobArgs>(new ImportTrucksFromExcelJobArgs
+                {
+                    TenantId = tenantId,
+                    BinaryObjectId = fileObject.Id,
+                    User = AbpSession.ToUserIdentifier()
+                });
+
+                return Json(new AjaxResponse(new { }));
+            }
+            catch (UserFriendlyException ex)
+            {
+                return Json(new AjaxResponse(new ErrorInfo(ex.Message)));
             }
         }
 
