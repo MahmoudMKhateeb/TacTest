@@ -18,6 +18,9 @@ namespace TACHYON.Notifications
         Task UpdateShippingRequestPrice(UserIdentifier argsUser, long shippingRequestId, decimal price);
         Task AcceptShippingRequestPrice(long shippingRequestId, bool isAccepted);
         Task RejectShippingRequest(UserIdentifier argsUser, long shippingRequestId);
+
+        Task SomeTrucksCouldntBeImported(UserIdentifier user, string fileToken, string fileType, string fileName);
+
         #endregion
         Task WelcomeToTheApplicationAsync(User user);
 

@@ -118,6 +118,7 @@ using TACHYON.Trucks;
 using TACHYON.Trucks;
 using TACHYON.Trucks.Dtos;
 using TACHYON.Trucks.Dtos;
+using TACHYON.Trucks.Importing.Dto;
 using TACHYON.Trucks.TrucksTypes;
 using TACHYON.Trucks.TrucksTypes;
 using TACHYON.Trucks.TrucksTypes.Dtos;
@@ -189,6 +190,7 @@ namespace TACHYON
             configuration.CreateMap<CreateOrEditTrailerTypeDto, TrailerType>().ReverseMap();
             configuration.CreateMap<TrailerTypeDto, TrailerType>().ReverseMap();
             configuration.CreateMap<CreateOrEditTruckDto, Truck>().ReverseMap();
+            configuration.CreateMap<ImportTruckDto, Truck>().ReverseMap();
             configuration.CreateMap<TruckDto, Truck>().ReverseMap();
             configuration.CreateMap<CreateOrEditTrucksTypeDto, TrucksType>().ReverseMap();
             configuration.CreateMap<TrucksTypeDto, TrucksType>().ReverseMap();

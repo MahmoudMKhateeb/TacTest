@@ -15,6 +15,10 @@ import { FileDownloadService } from '@shared/utils/file-download.service';
 import { EntityTypeHistoryModalComponent } from '@app/shared/common/entityHistory/entity-type-history-modal.component';
 import * as _ from 'lodash';
 import * as moment from 'moment';
+import { finalize } from '@node_modules/rxjs/operators';
+import { AppConsts } from '@shared/AppConsts';
+import { HttpClient } from '@angular/common/http';
+import { FileUpload } from '@node_modules/primeng/fileupload';
 
 @Component({
   templateUrl: './trucks.component.html',
@@ -28,6 +32,7 @@ export class TrucksComponent extends AppComponentBase {
 
   @ViewChild('dataTable', { static: true }) dataTable: Table;
   @ViewChild('paginator', { static: true }) paginator: Paginator;
+  @ViewChild('ExcelFileUpload', { static: false }) excelFileUpload: FileUpload;
 
   advancedFiltersAreShown = false;
   filterText = '';
@@ -42,15 +47,19 @@ export class TrucksComponent extends AppComponentBase {
   _entityTypeFullName = 'TACHYON.Trucks.Truck';
   entityHistoryEnabled = false;
 
+  uploadUrl: string;
+
   constructor(
     injector: Injector,
     private _trucksServiceProxy: TrucksServiceProxy,
     private _notifyService: NotifyService,
     private _tokenAuth: TokenAuthServiceProxy,
     private _activatedRoute: ActivatedRoute,
-    private _fileDownloadService: FileDownloadService
+    private _fileDownloadService: FileDownloadService,
+    private _httpClient: HttpClient
   ) {
     super(injector);
+    this.uploadUrl = AppConsts.remoteServiceBaseUrl + '/Helper/ImportTrucksFromExcel';
   }
 
   ngOnInit(): void {
@@ -138,5 +147,26 @@ export class TrucksComponent extends AppComponentBase {
       .subscribe((result) => {
         this._fileDownloadService.downloadTempFile(result);
       });
+  }
+
+  uploadExcel(data: { files: File }): void {
+    const formData: FormData = new FormData();
+    const file = data.files[0];
+    formData.append('file', file, file.name);
+
+    this._httpClient
+      .post<any>(this.uploadUrl, formData)
+      .pipe(finalize(() => this.excelFileUpload.clear()))
+      .subscribe((response) => {
+        if (response.success) {
+          this.notify.success(this.l('ImportUsersProcessStart'));
+        } else if (response.error != null) {
+          this.notify.error(this.l('ImportUsersUploadFailed'));
+        }
+      });
+  }
+
+  onUploadExcelError(): void {
+    this.notify.error(this.l('ImportUsersUploadFailed'));
   }
 }
