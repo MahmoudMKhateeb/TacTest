@@ -152,6 +152,7 @@ namespace TACHYON.Trucks.Importing.Dto
             }
             else
             {
+
                 await _appNotifier.SendMessageAsync(
                     args.User,
                     new LocalizableString("AllTrucksSuccessfullyImportedFromExcel", TACHYONConsts.LocalizationSourceName),

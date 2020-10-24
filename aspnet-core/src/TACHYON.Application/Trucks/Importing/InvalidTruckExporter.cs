@@ -19,7 +19,7 @@ namespace TACHYON.Trucks.Importing
                 "InvalidTruckImportList.xlsx",
                 excelPackage =>
                 {
-                    var sheet = excelPackage.CreateSheet(L("InvalidTruckImports"));
+                    var sheet = excelPackage.CreateSheet("InvalidTruckImports");
 
                     AddHeader(
                         sheet,

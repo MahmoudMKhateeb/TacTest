@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Abp.Localization;
@@ -35,7 +36,18 @@ namespace TACHYON.Trucks.Importing
 
             try
             {
-                truck.ModelName = GetRequiredValueFromRowOrNull(worksheet, row, 0, nameof(truck.ModelName), exceptionMessage);
+                truck.PlateNumber = GetRequiredValueFromRowOrNull(worksheet, row, 0, nameof(truck.PlateNumber), exceptionMessage);
+                truck.ModelName = GetRequiredValueFromRowOrNull(worksheet, row, 1, nameof(truck.ModelName), exceptionMessage);
+                truck.ModelYear = GetRequiredValueFromRowOrNull(worksheet, row, 2, nameof(truck.ModelYear), exceptionMessage);
+                truck.IsAttachable = Convert.ToBoolean(GetRequiredValueFromRowOrNull(worksheet, row, 3, nameof(truck.IsAttachable), exceptionMessage));
+                truck.Note = GetRequiredValueFromRowOrNull(worksheet, row, 4, nameof(truck.Note), exceptionMessage);
+                truck.TruckStatusId = Convert.ToInt64(GetRequiredValueFromRowOrNull(worksheet, row, 5, nameof(truck.TruckStatusId), exceptionMessage));
+                truck.Driver1UserId = Convert.ToInt64(GetRequiredValueFromRowOrNull(worksheet, row, 6, nameof(truck.Driver1UserId), exceptionMessage));
+                truck.TransportTypeId = Convert.ToInt32(GetRequiredValueFromRowOrNull(worksheet, row, 7, nameof(truck.TransportTypeId), exceptionMessage));
+                truck.TransportSubtypeId = Convert.ToInt32(GetRequiredValueFromRowOrNull(worksheet, row, 8, nameof(truck.TransportSubtypeId), exceptionMessage));
+                truck.TrucksTypeId = Convert.ToInt32(GetRequiredValueFromRowOrNull(worksheet, row, 9, nameof(truck.TrucksTypeId), exceptionMessage));
+                truck.TruckSubtypeId = Convert.ToInt32(GetRequiredValueFromRowOrNull(worksheet, row, 10, nameof(truck.TruckSubtypeId), exceptionMessage));
+                truck.CapacityId = Convert.ToInt32(GetRequiredValueFromRowOrNull(worksheet, row, 11, nameof(truck.CapacityId), exceptionMessage));
 
             }
             catch (System.Exception exception)
@@ -48,6 +60,8 @@ namespace TACHYON.Trucks.Importing
 
         private string GetRequiredValueFromRowOrNull(ISheet worksheet, int row, int column, string columnName, StringBuilder exceptionMessage)
         {
+            var cell = worksheet.GetRow(row).Cells[column];
+            cell.SetCellType(CellType.String);
             var cellValue = worksheet.GetRow(row).Cells[column].StringCellValue;
             if (cellValue != null && !string.IsNullOrWhiteSpace(cellValue))
             {
@@ -77,7 +91,9 @@ namespace TACHYON.Trucks.Importing
         private bool IsRowEmpty(ISheet worksheet, int row)
         {
             var cell = worksheet.GetRow(row)?.Cells.FirstOrDefault();
-            return cell == null || string.IsNullOrWhiteSpace(cell.StringCellValue);
+            cell.SetCellType(CellType.String);
+            var result = cell == null || string.IsNullOrWhiteSpace(cell.StringCellValue);
+            return result;
         }
     }
 }
