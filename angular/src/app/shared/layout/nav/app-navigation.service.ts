@@ -102,6 +102,7 @@ export class AppNavigationService {
           new AppMenuItem('OrganizationUnits', 'Pages.Administration.OrganizationUnits', 'flaticon-map', '/app/admin/organization-units'),
           new AppMenuItem('Roles', 'Pages.Administration.Roles', 'flaticon-suitcase', '/app/admin/roles'),
           new AppMenuItem('Users', 'Pages.Administration.Users', 'flaticon-users', '/app/admin/users'),
+          new AppMenuItem('Drivers', 'Pages.Administration.Users', 'flaticon-users', '/app/admin/drivers'),
           new AppMenuItem(
             'ShippingRequestStatuses',
             'Pages.Administration.ShippingRequestStatuses',

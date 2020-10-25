@@ -1,4 +1,4 @@
-import { AfterViewChecked, Component, ElementRef, EventEmitter, Injector, Output, ViewChild } from '@angular/core';
+import { AfterViewChecked, Component, ElementRef, EventEmitter, Injector, Input, Output, ViewChild } from '@angular/core';
 import { AppConsts } from '@shared/AppConsts';
 import { AppComponentBase } from '@shared/common/app-component-base';
 import {
@@ -26,6 +26,7 @@ export class CreateOrEditUserModalComponent extends AppComponentBase {
   @ViewChild('organizationUnitTree') organizationUnitTree: OrganizationUnitsTreeComponent;
 
   @Output() modalSave: EventEmitter<any> = new EventEmitter<any>();
+  @Input() creatDriver: boolean;
 
   active = false;
   saving = false;
@@ -58,6 +59,7 @@ export class CreateOrEditUserModalComponent extends AppComponentBase {
 
     this._userService.getUserForEdit(userId).subscribe((userResult) => {
       this.user = userResult.user;
+      this.user.isDriver = this.creatDriver;
       this.roles = userResult.roles;
       this.canChangeUserName = this.user.userName !== AppConsts.userManagement.defaultAdminUserName;
 
