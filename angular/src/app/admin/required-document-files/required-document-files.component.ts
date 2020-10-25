@@ -8,7 +8,7 @@ import { finalize } from '@node_modules/rxjs/operators';
 import { appModuleAnimation } from '@shared/animations/routerTransition';
 
 import * as moment from '@node_modules/moment';
-import { NgbDate, NgbDateStruct } from '@node_modules/@ng-bootstrap/ng-bootstrap';
+import { NgbDateStruct } from '@node_modules/@ng-bootstrap/ng-bootstrap';
 import { DateFormatterService } from '@app/admin/required-document-files/hijri-gregorian-datepicker/date-formatter.service';
 import { DateType } from '@app/admin/required-document-files/hijri-gregorian-datepicker/consts';
 
@@ -157,9 +157,11 @@ export class RequiredDocumentFilesComponent extends AppComponentBase implements 
 
   selectedDateChange($event: NgbDateStruct, item: CreateOrEditDocumentFileDto) {
     if ($event != null && $event.year < 2000) {
+      this.dateFormatterService.SetFormat('YYYY/MM/DD', 'iYYYY/iMM/iDD');
       const incomingDate = this.dateFormatterService.ToGregorian($event);
-      item.expirationDate = moment(incomingDate.month + '-' + incomingDate.day + '-' + incomingDate.year, 'MM/DD/YYYY');
+      item.expirationDate = moment(incomingDate.month + '/' + incomingDate.day + '/' + incomingDate.year, 'MM/DD/YYYY');
     } else if ($event != null && $event.year > 2000) {
+      item.expirationDate = moment($event.month + '/' + $event.day + '/' + $event.year, 'MM/DD/YYYY');
     }
   }
 }

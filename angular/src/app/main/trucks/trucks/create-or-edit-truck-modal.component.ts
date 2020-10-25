@@ -16,14 +16,12 @@ import {
   UpdateTruckPictureInput,
 } from '@shared/service-proxies/service-proxies';
 import { AppComponentBase } from '@shared/common/app-component-base';
-import * as moment from 'moment';
 import { TruckUserLookupTableModalComponent } from './truck-user-lookup-table-modal.component';
 import { base64ToFile, ImageCroppedEvent } from '@node_modules/ngx-image-cropper';
 import { FileItem, FileUploader, FileUploaderOptions } from '@node_modules/ng2-file-upload';
 import { IAjaxResponse, TokenService } from '@node_modules/abp-ng2-module';
 import { AppConsts } from '@shared/AppConsts';
 import { LocalStorageService } from '@shared/utils/local-storage.service';
-import { defaultFormatUtc } from '@node_modules/moment';
 import { DateType } from '@app/admin/required-document-files/hijri-gregorian-datepicker/consts';
 import { NgbDateStruct } from '@node_modules/@ng-bootstrap/ng-bootstrap';
 import { DateFormatterService } from '@app/admin/required-document-files/hijri-gregorian-datepicker/date-formatter.service';
@@ -34,6 +32,7 @@ import { Table } from '@node_modules/primeng/table';
 import { CreateOrEditDocumentFileModalComponent } from '@app/main/documentFiles/documentFiles/create-or-edit-documentFile-modal.component';
 import { FileDownloadService } from '@shared/utils/file-download.service';
 import { EntityTypeHistoryModalComponent } from '@app/shared/common/entityHistory/entity-type-history-modal.component';
+import * as moment from '@node_modules/moment';
 
 @Component({
   selector: 'createOrEditTruckModal',
@@ -451,14 +450,6 @@ export class CreateOrEditTruckModalComponent extends AppComponentBase {
     }
   }
 
-  selectedDateChange($event: NgbDateStruct, item: CreateOrEditDocumentFileDto) {
-    if ($event != null && $event.year < 2000) {
-      const incomingDate = this.dateFormatterService.ToGregorian($event);
-      item.expirationDate = moment(incomingDate.month + '-' + incomingDate.day + '-' + incomingDate.year, 'MM/DD/YYYY');
-    } else if ($event != null && $event.year > 2000) {
-    }
-  }
-
   //document files methods
   private setIsEntityHistoryEnabled(): boolean {
     let customSettings = (abp as any).custom;
@@ -560,5 +551,14 @@ export class CreateOrEditTruckModalComponent extends AppComponentBase {
     this._documentFilesServiceProxy.getDocumentFileDto(documentFile.id).subscribe((result) => {
       this._fileDownloadService.downloadTempFile(result);
     });
+  }
+  selectedDateChange($event: NgbDateStruct, item: CreateOrEditDocumentFileDto) {
+    if ($event != null && $event.year < 2000) {
+      this.dateFormatterService.SetFormat('DD/MM/YYYY', 'iDD/iMM/iYYYY');
+      const incomingDate = this.dateFormatterService.ToGregorian($event);
+      item.expirationDate = moment(incomingDate.month + '/' + incomingDate.day + '/' + incomingDate.year, 'MM/DD/YYYY');
+    } else if ($event != null && $event.year > 2000) {
+      item.expirationDate = moment($event.month + '/' + $event.day + '/' + $event.year, 'MM/DD/YYYY');
+    }
   }
 }
