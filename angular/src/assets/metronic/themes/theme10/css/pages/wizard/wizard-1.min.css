@@ -23,62 +23,62 @@
   margin-right: 3.5rem;
 }
 .wizard.wizard-1 .wizard-nav .wizard-steps .wizard-step .wizard-label .wizard-icon {
-  color: #B5B5C3;
+  color: #b5b5c3;
   font-size: 3.75rem;
 }
 .wizard.wizard-1 .wizard-nav .wizard-steps .wizard-step .wizard-label .wizard-icon svg g [fill] {
   -webkit-transition: fill 0.3s ease;
   transition: fill 0.3s ease;
-  fill: #B5B5C3;
+  fill: #b5b5c3;
 }
 .wizard.wizard-1 .wizard-nav .wizard-steps .wizard-step .wizard-label .wizard-icon svg:hover g [fill] {
   -webkit-transition: fill 0.3s ease;
   transition: fill 0.3s ease;
 }
 .wizard.wizard-1 .wizard-nav .wizard-steps .wizard-step .wizard-label .wizard-title {
-  color: #80808F;
+  color: #7e8299;
   font-size: 1.1rem;
   font-weight: 500;
   margin-top: 0.75rem;
 }
 .wizard.wizard-1 .wizard-nav .wizard-steps .wizard-step .wizard-arrow {
-  color: #80808F;
+  color: #7e8299;
   font-size: 1.25rem;
 }
 .wizard.wizard-1 .wizard-nav .wizard-steps .wizard-step .wizard-arrow.last {
   display: none;
 }
-.wizard.wizard-1 .wizard-nav .wizard-steps .wizard-step[data-wizard-state="done"] .wizard-label .wizard-icon,
-.wizard.wizard-1 .wizard-nav .wizard-steps .wizard-step[data-wizard-state="current"] .wizard-label .wizard-icon {
+.wizard.wizard-1 .wizard-nav .wizard-steps .wizard-step[data-wizard-state='done'] .wizard-label .wizard-icon,
+.wizard.wizard-1 .wizard-nav .wizard-steps .wizard-step[data-wizard-state='current'] .wizard-label .wizard-icon {
   color: #663259;
 }
-.wizard.wizard-1 .wizard-nav .wizard-steps .wizard-step[data-wizard-state="done"] .wizard-label .wizard-icon svg g [fill],
-.wizard.wizard-1 .wizard-nav .wizard-steps .wizard-step[data-wizard-state="current"] .wizard-label .wizard-icon svg g [fill] {
+.wizard.wizard-1 .wizard-nav .wizard-steps .wizard-step[data-wizard-state='done'] .wizard-label .wizard-icon svg g [fill],
+.wizard.wizard-1 .wizard-nav .wizard-steps .wizard-step[data-wizard-state='current'] .wizard-label .wizard-icon svg g [fill] {
   -webkit-transition: fill 0.3s ease;
   transition: fill 0.3s ease;
   fill: #663259;
 }
-.wizard.wizard-1 .wizard-nav .wizard-steps .wizard-step[data-wizard-state="done"] .wizard-label .wizard-icon svg:hover g [fill],
-.wizard.wizard-1 .wizard-nav .wizard-steps .wizard-step[data-wizard-state="current"] .wizard-label .wizard-icon svg:hover g [fill] {
+.wizard.wizard-1 .wizard-nav .wizard-steps .wizard-step[data-wizard-state='done'] .wizard-label .wizard-icon svg:hover g [fill],
+.wizard.wizard-1 .wizard-nav .wizard-steps .wizard-step[data-wizard-state='current'] .wizard-label .wizard-icon svg:hover g [fill] {
   -webkit-transition: fill 0.3s ease;
   transition: fill 0.3s ease;
 }
-.wizard.wizard-1 .wizard-nav .wizard-steps .wizard-step[data-wizard-state="done"] .wizard-label .wizard-title,
-.wizard.wizard-1 .wizard-nav .wizard-steps .wizard-step[data-wizard-state="current"] .wizard-label .wizard-title {
+.wizard.wizard-1 .wizard-nav .wizard-steps .wizard-step[data-wizard-state='done'] .wizard-label .wizard-title,
+.wizard.wizard-1 .wizard-nav .wizard-steps .wizard-step[data-wizard-state='current'] .wizard-label .wizard-title {
   color: #663259;
 }
-.wizard.wizard-1 .wizard-nav .wizard-steps .wizard-step[data-wizard-state="done"] .wizard-arrow,
-.wizard.wizard-1 .wizard-nav .wizard-steps .wizard-step[data-wizard-state="current"] .wizard-arrow {
+.wizard.wizard-1 .wizard-nav .wizard-steps .wizard-step[data-wizard-state='done'] .wizard-arrow,
+.wizard.wizard-1 .wizard-nav .wizard-steps .wizard-step[data-wizard-state='current'] .wizard-arrow {
   color: #663259;
 }
-.wizard.wizard-1 .wizard-nav .wizard-steps .wizard-step[data-wizard-state="done"] .wizard-arrow svg g [fill],
-.wizard.wizard-1 .wizard-nav .wizard-steps .wizard-step[data-wizard-state="current"] .wizard-arrow svg g [fill] {
+.wizard.wizard-1 .wizard-nav .wizard-steps .wizard-step[data-wizard-state='done'] .wizard-arrow svg g [fill],
+.wizard.wizard-1 .wizard-nav .wizard-steps .wizard-step[data-wizard-state='current'] .wizard-arrow svg g [fill] {
   -webkit-transition: fill 0.3s ease;
   transition: fill 0.3s ease;
   fill: #663259;
 }
-.wizard.wizard-1 .wizard-nav .wizard-steps .wizard-step[data-wizard-state="done"] .wizard-arrow svg:hover g [fill],
-.wizard.wizard-1 .wizard-nav .wizard-steps .wizard-step[data-wizard-state="current"] .wizard-arrow svg:hover g [fill] {
+.wizard.wizard-1 .wizard-nav .wizard-steps .wizard-step[data-wizard-state='done'] .wizard-arrow svg:hover g [fill],
+.wizard.wizard-1 .wizard-nav .wizard-steps .wizard-step[data-wizard-state='current'] .wizard-arrow svg:hover g [fill] {
   -webkit-transition: fill 0.3s ease;
   transition: fill 0.3s ease;
 }
