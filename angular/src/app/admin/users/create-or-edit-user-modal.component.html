@@ -13,9 +13,13 @@
     <div class="modal-content">
       <form *ngIf="active" #userForm="ngForm" novalidate (ngSubmit)="save()">
         <div class="modal-header">
-          <h4 class="modal-title">
+          <h4 *ngIf="!creatDriver" class="modal-title">
             <span *ngIf="user.id">{{ 'EditUser' | localize }}: {{ user.userName }}</span>
             <span *ngIf="!user.id">{{ 'CreateNewUser' | localize }}</span>
+          </h4>
+          <h4 *ngIf="creatDriver" class="modal-title">
+            <span *ngIf="user.id">{{ 'EditDriver' | localize }}: {{ user.userName }}</span>
+            <span *ngIf="!user.id">{{ 'CreateNewDriver' | localize }}</span>
           </h4>
           <button type="button" class="close" (click)="close()" [attr.aria-label]="l('Close')" [disabled]="saving">
             <span aria-hidden="true">&times;</span>
@@ -227,7 +231,7 @@
                 </label>
               </div>
             </tab>
-            <tab class="pt-5" heading="{{ 'Roles' | localize }}">
+            <tab *ngIf="!creatDriver" class="pt-5" heading="{{ 'Roles' | localize }}">
               <ng-template tabHeading>
                 <span class="label label-success label-inline assigned-role-count">{{ getAssignedRoleCount() }}</span>
               </ng-template>
@@ -246,17 +250,10 @@
                 </label>
               </div>
             </tab>
-            <tab class="pt-5" heading="{{ 'OrganizationUnits' | localize }}">
+            <tab *ngIf="!creatDriver" class="pt-5" heading="{{ 'OrganizationUnits' | localize }}">
               <organization-unit-tree [cascadeSelectEnabled]="false" #organizationUnitTree></organization-unit-tree>
             </tab>
-            <tab class="pt-5" heading="{{ 'DriverDetails' | localize }}">
-              <div class="checkbox-inline form-group">
-                <label for="IsDriver" class="checkbox">
-                  <input id="IsDriver" type="checkbox" name="IsDriver" [(ngModel)]="user.isDriver" />
-                  {{ 'IsDriver' | localize }}
-                  <span></span>
-                </label>
-              </div>
+            <tab *ngIf="creatDriver" class="pt-5" heading="{{ 'DriverDetails' | localize }}">
               <div class="form-group" *ngIf="user.isDriver">
                 <label for="DrivingLicenseNumber">{{ 'DrivingLicenseNumber' | localize }}</label>
                 <input

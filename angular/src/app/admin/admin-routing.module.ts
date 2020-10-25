@@ -27,6 +27,7 @@ import { DynamicParameterComponent } from './dynamic-entity-parameters/dynamic-p
 import { DynamicParameterDetailComponent } from './dynamic-entity-parameters/dynamic-parameter/dynamic-parameter-detail.component';
 import { EntityDynamicParameterComponent } from './dynamic-entity-parameters/entity-dynamic-parameter/entity-dynamic-parameter.component';
 import { EntityDynamicParameterValueComponent } from './dynamic-entity-parameters/entity-dynamic-parameter/entity-dynamic-parameter-value/entity-dynamic-parameter-value.component';
+import { DriversComponent } from '@app/admin/users/drivers/drivers.component';
 
 @NgModule({
   imports: [
@@ -42,6 +43,7 @@ import { EntityDynamicParameterValueComponent } from './dynamic-entity-parameter
           { path: 'unitOfMeasures/unitOfMeasures', component: UnitOfMeasuresComponent, data: { permission: 'Pages.Administration.UnitOfMeasures' } },
           { path: 'trucks/truckStatuses', component: TruckStatusesComponent, data: { permission: 'Pages.Administration.TruckStatuses' } },
           { path: 'users', component: UsersComponent, data: { permission: 'Pages.Administration.Users' } },
+          { path: 'drivers', component: DriversComponent, data: { permission: 'Pages.Administration.Users' } },
           { path: 'roles', component: RolesComponent, data: { permission: 'Pages.Administration.Roles' } },
           { path: 'auditLogs', component: AuditLogsComponent, data: { permission: 'Pages.Administration.AuditLogs' } },
           { path: 'maintenance', component: MaintenanceComponent, data: { permission: 'Pages.Administration.Host.Maintenance' } },

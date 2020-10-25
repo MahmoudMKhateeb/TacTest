@@ -41,15 +41,16 @@ export class UsersComponent extends AppComponentBase implements AfterViewInit {
   filterText = '';
   role = '';
   onlyLockedUsers = false;
+  onlyDrivers = false;
 
   constructor(
     injector: Injector,
     public _impersonationService: ImpersonationService,
-    private _userServiceProxy: UserServiceProxy,
-    private _fileDownloadService: FileDownloadService,
-    private _activatedRoute: ActivatedRoute,
-    private _httpClient: HttpClient,
-    private _localStorageService: LocalStorageService
+    public _userServiceProxy: UserServiceProxy,
+    public _fileDownloadService: FileDownloadService,
+    public _activatedRoute: ActivatedRoute,
+    public _httpClient: HttpClient,
+    public _localStorageService: LocalStorageService
   ) {
     super(injector);
     this.filterText = this._activatedRoute.snapshot.queryParams['filterText'] || '';
@@ -75,6 +76,7 @@ export class UsersComponent extends AppComponentBase implements AfterViewInit {
         this.permissionFilterTreeModal.getSelectedPermissions(),
         this.role !== '' ? parseInt(this.role) : undefined,
         this.onlyLockedUsers,
+        this.onlyDrivers,
         this.primengTableHelper.getSorting(this.dataTable),
         this.primengTableHelper.getMaxResultCount(this.paginator, event),
         this.primengTableHelper.getSkipCount(this.paginator, event)
@@ -119,6 +121,7 @@ export class UsersComponent extends AppComponentBase implements AfterViewInit {
         this.permissionFilterTreeModal.getSelectedPermissions(),
         this.role !== '' ? parseInt(this.role) : undefined,
         this.onlyLockedUsers,
+        this.onlyDrivers,
         this.primengTableHelper.getSorting(this.dataTable)
       )
       .subscribe((result) => {

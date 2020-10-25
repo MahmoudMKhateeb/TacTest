@@ -13,5 +13,7 @@ namespace TACHYON.Authorization.Users.Dto
         int? Role { get; set; }
 
         bool OnlyLockedUsers { get; set; }
+
+        bool OnlyDrivers { get; set; }
     }
 }

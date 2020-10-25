@@ -413,6 +413,7 @@ namespace TACHYON.Authorization.Users
             var query = UserManager.Users
                 .WhereIf(input.Role.HasValue, u => u.Roles.Any(r => r.RoleId == input.Role.Value))
                 .WhereIf(input.OnlyLockedUsers, u => u.LockoutEndDateUtc.HasValue && u.LockoutEndDateUtc.Value > DateTime.UtcNow)
+                .WhereIf(input.OnlyDrivers,u=> u.IsDriver)
                 .WhereIf(
                     !input.Filter.IsNullOrWhiteSpace(),
                     u =>
