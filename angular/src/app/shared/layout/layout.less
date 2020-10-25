@@ -62,18 +62,29 @@ li.nav-item {
 }
 
 .active-user-delegations {
-  &:hover {
-    div,
-    span {
-      cursor: default !important;
+    &:hover {
+        div,
+        span {
+            cursor: default !important;
+        }
+
+        .kt-header__topbar-icon--brand {
+            background-color: transparent !important;
+        }
     }
 
     .kt-header__topbar-icon--brand {
       background-color: transparent !important;
     }
-  }
+
 
   .kt-header__topbar-icon--brand {
     width: 200px !important;
   }
+}
+
+html[dir="rtl"] {
+    .btn + .btn {
+        margin-right: 5px;
+    }
 }

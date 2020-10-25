@@ -37,7 +37,7 @@
   -webkit-box-direction: normal;
   -ms-flex-direction: column;
   flex-direction: column;
-  color: #B5B5C3;
+  color: #b5b5c3;
   padding: 2rem 0.5rem;
 }
 .wizard.wizard-3 .wizard-nav .wizard-steps .wizard-step .wizard-label .wizard-title {
@@ -54,11 +54,11 @@
 .wizard.wizard-3 .wizard-nav .wizard-steps .wizard-step .wizard-label .wizard-bar {
   height: 4px;
   width: 100%;
-  background-color: #ECF0F3;
+  background-color: #ebedf3;
   position: relative;
 }
 .wizard.wizard-3 .wizard-nav .wizard-steps .wizard-step .wizard-label .wizard-bar:after {
-  content: " ";
+  content: ' ';
   position: absolute;
   top: 0;
   left: 0;
@@ -70,12 +70,12 @@
   transition: color 0.15s ease, background-color 0.15s ease, border-color 0.15s ease, box-shadow 0.15s ease;
   transition: color 0.15s ease, background-color 0.15s ease, border-color 0.15s ease, box-shadow 0.15s ease, -webkit-box-shadow 0.15s ease;
 }
-.wizard.wizard-3 .wizard-nav .wizard-steps .wizard-step[data-wizard-state="current"] .wizard-label {
-  color: #3699FF;
+.wizard.wizard-3 .wizard-nav .wizard-steps .wizard-step[data-wizard-state='current'] .wizard-label {
+  color: #3699ff;
 }
-.wizard.wizard-3 .wizard-nav .wizard-steps .wizard-step[data-wizard-state="current"] .wizard-label .wizard-bar:after {
+.wizard.wizard-3 .wizard-nav .wizard-steps .wizard-step[data-wizard-state='current'] .wizard-label .wizard-bar:after {
   width: 100%;
-  background-color: #3699FF;
+  background-color: #3699ff;
 }
 @media (max-width: 991.98px) {
   .wizard.wizard-3 .wizard-nav .wizard-steps {
