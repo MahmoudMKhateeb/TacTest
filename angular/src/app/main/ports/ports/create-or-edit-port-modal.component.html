@@ -53,7 +53,7 @@
           <button [disabled]="saving" type="button" class="btn btn-default" (click)="close()">{{ l('Cancel') }}</button>
           <button
             type="submit"
-            class="btn btn-primary blue"
+            class="btn btn-save blue"
             [disabled]="!portForm.form.valid"
             [buttonBusy]="saving"
             [busyText]="l('SavingWithThreeDot')"

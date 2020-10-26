@@ -138,7 +138,9 @@
               </div>
               <div [hidden]="setRandomPassword || userForm.form.valid || userForm.form.pristine">
                 <ul class="help-block text-danger" *ngIf="userForm.controls['Password'] && userForm.controls['Password'].errors">
-                  <li [hidden]="!userForm.controls['Password'].errors.requireDigit">{{ 'PasswordComplexity_RequireDigit_Hint' | localize }}</li>
+                  <li [hidden]="!userForm.controls['Password'].errors.requireDigit">
+                    {{ 'PasswordComplexity_RequireDigit_Hint' | localize }}
+                  </li>
                   <li [hidden]="!userForm.controls['Password'].errors.requireLowercase">
                     {{ 'PasswordComplexity_RequireLowercase_Hint' | localize }}
                   </li>
@@ -178,7 +180,9 @@
               </div>
               <div [hidden]="setRandomPassword || userForm.form.valid || userForm.form.pristine">
                 <ul class="help-block text-danger" *ngIf="userForm.controls['PasswordRepeat'] && userForm.controls['PasswordRepeat'].errors">
-                  <li [hidden]="!userForm.controls['PasswordRepeat'].errors.requireDigit">{{ 'PasswordComplexity_RequireDigit_Hint' | localize }}</li>
+                  <li [hidden]="!userForm.controls['PasswordRepeat'].errors.requireDigit">
+                    {{ 'PasswordComplexity_RequireDigit_Hint' | localize }}
+                  </li>
                   <li [hidden]="!userForm.controls['PasswordRepeat'].errors.requireLowercase">
                     {{ 'PasswordComplexity_RequireLowercase_Hint' | localize }}
                   </li>
@@ -307,7 +311,7 @@
           </button>
           <button
             type="submit"
-            class="btn btn-primary font-weight-bold"
+            class="btn btn-save font-weight-bold"
             [disabled]="!userForm.form.valid"
             [buttonBusy]="saving"
             [busyText]="l('SavingWithThreeDot')"
