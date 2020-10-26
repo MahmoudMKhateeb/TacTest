@@ -102,6 +102,7 @@
                   [(ngModel)]="documentType.numberMinDigits"
                   name="numberMinDigits"
                   min="0"
+                  (keypress)="numberOnly($event)"
                 />
               </div>
               <div *ngIf="documentType.hasNumber" class="col-6 margin-bottom-10">
@@ -113,6 +114,7 @@
                   [(ngModel)]="documentType.numberMaxDigits"
                   name="numberMaxDigits"
                   min="0"
+                  (keypress)="numberOnly($event)"
                 />
               </div>
               <label for="DocumentType_HasExpirationDate" class="col-3 col-form-label">{{ l('HasExpirationDate') }}</label>
@@ -148,6 +150,7 @@
                   [(ngModel)]="documentType.expirationAlertDays"
                   name="expirationAlertDays"
                   min="0"
+                  (keypress)="numberOnly($event)"
                 />
               </div>
               <div *ngIf="documentType.hasExpirationDate" class="col-6 margin-bottom-10">
@@ -159,6 +162,7 @@
                   [(ngModel)]="documentType.inActiveToleranceDays"
                   name="inActiveToleranceDays"
                   min="0"
+                  (keypress)="numberOnly($event)"
                 />
               </div>
 
