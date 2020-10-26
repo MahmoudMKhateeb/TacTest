@@ -184,11 +184,4 @@ export class CreateOrEditDocumentTypeModalComponent extends AppComponentBase {
       this.documentType.inActiveToleranceDays = undefined;
     }
   }
-
-  numberOnly($event: KeyboardEvent) {
-    if ($event.key === 'e' || $event.key === 'E') {
-      return false;
-    }
-    return true;
-  }
 }

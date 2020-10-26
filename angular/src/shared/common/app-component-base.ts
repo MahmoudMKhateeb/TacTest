@@ -128,4 +128,12 @@ export abstract class AppComponentBase {
   Number(string: string) {
     return Number(string);
   }
+
+  /**
+   * we can use this to validate "e" letter in numbers input onKeyPressEvent
+   * @param $event
+   */
+  numberOnly($event: KeyboardEvent) {
+    return !($event.key === 'e' || $event.key === 'E');
+  }
 }
