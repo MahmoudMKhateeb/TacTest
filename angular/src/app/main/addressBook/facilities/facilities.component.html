@@ -47,7 +47,7 @@
                 </div>
                 <div class="col-md-3">
                   <div class="form-group">
-                    <label for="AdressFilter">{{ l('Adress') }}</label>
+                    <label for="AdressFilter">{{ l('Address') }}</label>
                     <input type="text" class="form-control" id="AdressFilter" name="adressFilter" [(ngModel)]="adressFilter" />
                   </div>
                 </div>
@@ -163,7 +163,7 @@
                       <p-sortIcon field="facility.name"></p-sortIcon>
                     </th>
                     <th style="width: 150px;" pSortableColumn="adress">
-                      {{ l('Adress') }}
+                      {{ l('Address') }}
                       <p-sortIcon field="facility.adress"></p-sortIcon>
                     </th>
                     <th style="width: 150px;" pSortableColumn="longitude">
@@ -217,7 +217,7 @@
                       {{ record.facility.name }}
                     </td>
                     <td style="width: 150px;">
-                      <span class="ui-column-title"> {{ l('Adress') }}</span>
+                      <span class="ui-column-title"> {{ l('Address') }}</span>
                       {{ record.facility.adress }}
                     </td>
                     <td style="width: 150px;">
