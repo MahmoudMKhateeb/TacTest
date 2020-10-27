@@ -38,6 +38,7 @@ using TACHYON.Routs.RoutTypes;
 using TACHYON.Shipping.ShippingRequestBids;
 using TACHYON.Shipping.ShippingRequestBids.Dtos;
 using Twilio.Http;
+using Abp.Timing;
 
 namespace TACHYON.Shipping.ShippingRequests
 {
@@ -248,6 +249,9 @@ namespace TACHYON.Shipping.ShippingRequests
                 shippingRequest.TenantId = (int)AbpSession.TenantId;
                 shippingRequest.RoutSteps.ForEach(x => x.TenantId = (int)AbpSession.TenantId);
                 shippingRequest.RouteFk.TenantId = (int)AbpSession.TenantId;
+                //insert Bid status auto
+                if (input.IsBid)
+                    shippingRequest.ShippingRequestStatusId = input.BidStartDate.Value.Date == Clock.Now.Date ? TACHYONConsts.OnGoing : TACHYONConsts.StandBy;
             }
 
             shippingRequest.ShippingRequestStatusId = 1;

@@ -11,6 +11,7 @@ namespace TACHYON.Shipping.ShippingRequestBids.Dtos
         public DateTime? EndBidDate { get; set; }
         public bool IsOngoingBid { get; set; }
         public string ShipperName { get; set; }
+        public string ShippingRequestBidStatusName { get; set; }
 
     }
 }

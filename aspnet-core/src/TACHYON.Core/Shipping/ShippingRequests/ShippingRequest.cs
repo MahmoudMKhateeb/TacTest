@@ -1,5 +1,6 @@
 ﻿using Abp.Domain.Entities;
 using Abp.Domain.Entities.Auditing;
+using Microsoft.Win32.SafeHandles;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -11,6 +12,7 @@ using TACHYON.MultiTenancy;
 using TACHYON.Routs;
 using TACHYON.Routs.RoutSteps;
 using TACHYON.Shipping.ShippingRequestBids;
+using TACHYON.Shipping.ShippingRequestBidStatuses;
 using TACHYON.Shipping.ShippingRequestStatuses;
 using TACHYON.Trailers;
 using TACHYON.Trailers.TrailerTypes;
@@ -162,8 +164,10 @@ namespace TACHYON.Shipping.ShippingRequests
         #region Bids Data
         public DateTime? BidStartDate { get; set; }
         public DateTime? BidEndDate { get; set; }
-        public bool? isCancledBid { get; set; }
-        public bool? IsClosedBid { get; set; }
+        //public bool? isCancledBid { get; set; }
+        //public bool? IsClosedBid { get; set; }
+        [ForeignKey("ShippingRequestBidStatusId")]
+        public ShippingRequestBidStatus ShippingRequestBidStatusFK { get; set; }
         public DateTime? CloseBidDate { get; set; }
 
         public ICollection<ShippingRequestBid> ShippingRequestBids { get; set;}

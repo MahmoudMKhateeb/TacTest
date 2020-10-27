@@ -20,13 +20,16 @@ namespace TACHYON.Shipping.ShippingRequestBids
         public bool IsCancled { get; set; }
         public DateTime? CanceledDate { get; set; }
         public string CancledReason { get; set; }
-        public bool? IsAccepted { get; set; }
+        public bool IsAccepted { get; set; }
+        public bool IsRejected { get; set; }
         public DateTime? AcceptedDate { get; set; }
 
 
         public ShippingRequestBid()
         {
             this.IsCancled = false;
+            this.IsAccepted = false;
+            this.IsRejected = false;
         }
 
     }

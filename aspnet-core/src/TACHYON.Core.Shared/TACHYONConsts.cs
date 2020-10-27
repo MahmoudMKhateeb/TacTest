@@ -16,6 +16,15 @@
 
         public const string AbpApiClientUserAgent = "AbpApiClient";
 
+        //BidStatus consts
+        public const int StandBy = 1;
+
+        public const int OnGoing = 2;
+
+        public const int Closed = 3;
+
+        public const int Canceled = 4;
+
         // Note:
         // Minimum accepted payment amount. If a payment amount is less then that minimum value payment progress will continue without charging payment
         // Even though we can use multiple payment methods, users always can go and use the highest accepted payment amount.
