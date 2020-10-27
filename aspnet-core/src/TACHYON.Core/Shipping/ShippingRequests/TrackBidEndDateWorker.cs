@@ -7,8 +7,10 @@ using Abp.Timing;
 using Org.BouncyCastle.Math.EC.Rfc7748;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Linq.Dynamic.Core;
 using System.Text;
+using Microsoft.EntityFrameworkCore;
 using TACHYON.Authorization.Users;
 
 namespace TACHYON.Shipping.ShippingRequests
@@ -18,15 +20,13 @@ namespace TACHYON.Shipping.ShippingRequests
         private const int CheckPeriodAsMilliseconds = 1 * 60 * 60 * 1000 * 24; //1 day
 
         private readonly IRepository<ShippingRequest, long> _shippingRequestRepository;
-        private readonly UserEmailer _userEmailer;
 
         public TrackBidEndDateWorker(
             AbpTimer timer,
-            IRepository<ShippingRequest, long> shippingRequestRepository,
-            UserEmailer userEmailer) : base(timer)
+            IRepository<ShippingRequest, long> shippingRequestRepository
+            ) : base(timer)
         {
             shippingRequestRepository = _shippingRequestRepository;
-            userEmailer = _userEmailer;
             Timer.Period = CheckPeriodAsMilliseconds;
             Timer.RunOnStart = true;
         }
@@ -36,15 +36,23 @@ namespace TACHYON.Shipping.ShippingRequests
         {
             using (CurrentUnitOfWork.DisableFilter(AbpDataFilters.MustHaveTenant))
             {
-                var ExpiresBids = _shippingRequestRepository.GetAllList(u => u.BidEndDate < Clock.Now && u.BidEndDate != null && u.IsClosedBid == false);
+                var expiresBids = _shippingRequestRepository.GetAll()
+                    .Where(u => u.BidEndDate != null)
+                    .Where(u => u.IsClosedBid == false)
+                    .Where(u => u.BidEndDate.Value.Date == Clock.Now.Date)
+                    .ToList();
 
-                foreach(var item in ExpiresBids)
+
+                foreach (var item in expiresBids)
                 {
                     item.IsClosedBid = true;
                     item.CloseBidDate = Clock.Now;
                     Logger.Info(item + " Expired End Bid date, the bid is closed.");
                 }
-                    
+
+                //todo add notification here 
+
+
             }
         }
     }

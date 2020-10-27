@@ -85,7 +85,6 @@ namespace TACHYON.Shipping.ShippingRequestBids
             }
         }
 
-       // [AbpAuthorize(AppPermissions.Pages_ShippingRequestBids)]
         public async Task CreateOrEditShippingRequestBid(CreatOrEditShippingRequestBidDto input)
         {
             if (input.Id == null)
@@ -94,7 +93,7 @@ namespace TACHYON.Shipping.ShippingRequestBids
                 Edit(input);
         }
 
-            //#538
+        //#538
         [RequiresFeature(AppFeatures.Carrier)]
         [AbpAuthorize(AppPermissions.Pages_ShippingRequestBids_Create)]
         protected virtual async Task  Create(CreatOrEditShippingRequestBidDto input)
@@ -120,7 +119,6 @@ namespace TACHYON.Shipping.ShippingRequestBids
 
         //shipper accept carrier bid request #539
         [RequiresFeature(AppFeatures.Shipper)]
-      //  [AbpAuthorize(AppPermissions.Pages_ShippingRequestBids)]
         public async Task AcceptBid(ShippingRequestBidInput input)
         {
             var bid =await _shippingRequestBidsRepository.FirstOrDefaultAsync(input.ShippingRequestBidId);
@@ -128,7 +126,8 @@ namespace TACHYON.Shipping.ShippingRequestBids
             {
                 bid.IsAccepted = true;
                 //Reject the other bids of this shipping request
-                var otherBids = _shippingRequestBidsRepository.GetAll().Where(x => x.ShippingRequestId == bid.ShippingRequestId && x.Id != bid.Id);
+                var otherBids = _shippingRequestBidsRepository.GetAll()
+                    .Where(x => x.ShippingRequestId == bid.ShippingRequestId && x.Id != bid.Id);
                 foreach(var item in otherBids)
                 {
                     item.IsAccepted = false;
@@ -142,25 +141,27 @@ namespace TACHYON.Shipping.ShippingRequestBids
 
         //#541
         [RequiresFeature(AppFeatures.Carrier)]
-        public async Task<List<ViewCarrierBidsOutput>> ViewAllCarrierOngoingBids()
+        public async Task<List<ViewCarrierBidsOutput>> ViewAllCarrierBids()
         {
             using (CurrentUnitOfWork.DisableFilter(AbpDataFilters.MustHaveTenant))
             {
-                var bids = await _shippingRequestsRepository.GetAll()
-                .Where(x=> x.ShippingRequestBids != null &&
-                x.ShippingRequestBids.Any(y=>y.TenantId==AbpSession.TenantId))
-                .ToListAsync();
-                return ObjectMapper.Map<List<ViewCarrierBidsOutput>>(bids);
+                var shippingRequests = _shippingRequestBidsRepository.GetAll()
+                    .Where(x=> x.TenantId == AbpSession.TenantId)
+                    .Select(x=> x.ShippingRequestFk).
+                    ToListAsync();
+
+
+                return ObjectMapper.Map<List<ViewCarrierBidsOutput>>(shippingRequests);
             }
         }
 
         [RequiresFeature(AppFeatures.Carrier)]
-        public async Task CancleBidRequest(ShippingRequestBidInput input)
+        public async Task CanceleBidRequest(ShippingRequestBidInput input)
         {
             var bid =await _shippingRequestBidsRepository.FirstOrDefaultAsync(input.ShippingRequestBidId);
             if (bid.IsCancled != true)
             {
-                throw new UserFriendlyException(L("The bid is already cancled message"));
+                throw new UserFriendlyException(L("The bid is already canceled message"));
             }
             bid.IsCancled = true;
             bid.CanceledDate = Clock.Now;
