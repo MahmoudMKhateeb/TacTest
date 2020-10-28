@@ -337,6 +337,11 @@ namespace TACHYON.Documents.DocumentFiles
             return await GetRequiredDocumentFileListForCreateOrEdit(AppConsts.TruckDocumentsEntityName);
         }
 
+        public async Task<List<CreateOrEditDocumentFileDto>> GetDriverRequiredDocumentFiles()
+        {
+            return await GetRequiredDocumentFileListForCreateOrEdit(AppConsts.DriverDocumentsEntityName);
+        }
+
         /// <summary>
         /// tenant required documents files list as a template to fill later in create
         /// </summary>

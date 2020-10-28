@@ -15,6 +15,8 @@ namespace TACHYON
         /// </summary>
         public const string TruckDocumentsEntityName = "Truck";
         public const string TenantDocumentsEntityName = "Tenant";
+        public const string DriverDocumentsEntityName = "Driver";
+
 
         #endregion
 

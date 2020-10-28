@@ -53,9 +53,6 @@ namespace TACHYON.Authorization.Users.Dto
 
         public virtual string Address { get; set; }
         public virtual string Nationality { get; set; }
-        public virtual string DrivingLicenseNumber { get; set; }
-        public virtual DateTime DrivingLicenseIssuingDate { get; set; }
-        public virtual DateTime DrivingLicenseExpiryDate { get; set; }
         public virtual string ExperienceField { get; set; }
 
         #endregion

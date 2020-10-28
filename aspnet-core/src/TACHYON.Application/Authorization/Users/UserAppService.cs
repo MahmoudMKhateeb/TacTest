@@ -25,6 +25,7 @@ using TACHYON.Authorization.Permissions.Dto;
 using TACHYON.Authorization.Roles;
 using TACHYON.Authorization.Users.Dto;
 using TACHYON.Authorization.Users.Exporting;
+using TACHYON.Documents.DocumentFiles;
 using TACHYON.Dto;
 using TACHYON.Notifications;
 using TACHYON.Organizations.Dto;
@@ -54,6 +55,8 @@ namespace TACHYON.Authorization.Users
         private readonly UserManager _userManager;
         private readonly IRepository<UserOrganizationUnit, long> _userOrganizationUnitRepository;
         private readonly IRepository<OrganizationUnitRole, long> _organizationUnitRoleRepository;
+        private readonly DocumentFilesAppService _documentFilesAppService;
+
 
         public UserAppService(
             RoleManager roleManager,
@@ -72,7 +75,7 @@ namespace TACHYON.Authorization.Users
             IRoleManagementConfig roleManagementConfig,
             UserManager userManager,
             IRepository<UserOrganizationUnit, long> userOrganizationUnitRepository,
-            IRepository<OrganizationUnitRole, long> organizationUnitRoleRepository)
+            IRepository<OrganizationUnitRole, long> organizationUnitRoleRepository, DocumentFilesAppService documentFilesAppService)
         {
             _roleManager = roleManager;
             _userEmailer = userEmailer;
@@ -90,6 +93,7 @@ namespace TACHYON.Authorization.Users
             _userManager = userManager;
             _userOrganizationUnitRepository = userOrganizationUnitRepository;
             _organizationUnitRoleRepository = organizationUnitRoleRepository;
+            _documentFilesAppService = documentFilesAppService;
             _roleRepository = roleRepository;
 
             AppUrlService = NullAppUrlService.Instance;
@@ -317,6 +321,29 @@ namespace TACHYON.Authorization.Users
             var user = ObjectMapper.Map<User>(input.User); //Passwords is not mapped (see mapping configuration)
             user.TenantId = AbpSession.TenantId;
 
+            //required Docs
+            if (input.User.IsDriver)
+            {
+                //get requiredDocs
+                var requiredDocs = await _documentFilesAppService.GetDriverRequiredDocumentFiles();
+                if (requiredDocs.Count > 0)
+                {
+                    foreach (var item in requiredDocs)
+                    {
+                        var doc = input.CreateOrEditDocumentFileDtos.FirstOrDefault(x => x.DocumentTypeId == item.DocumentTypeId);
+
+                        if (doc.UpdateDocumentFileInput.FileToken.IsNullOrEmpty())
+                        {
+                            throw new UserFriendlyException(L("document missing msg :" + item.Name));
+                        }
+
+                        doc.Name = item.Name;
+                    }
+                }
+
+            }
+
+
             //Set password
             if (input.SetRandomPassword)
             {
@@ -348,6 +375,15 @@ namespace TACHYON.Authorization.Users
             CheckErrors(await UserManager.CreateAsync(user));
             await CurrentUnitOfWork.SaveChangesAsync(); //To get new user's Id.
 
+            //save docs
+            foreach (var item in input.CreateOrEditDocumentFileDtos)
+            {
+                item.UserId = user.Id;
+                item.Name = item.Name + "_" + user.Id.ToString();
+                await _documentFilesAppService.CreateOrEdit(item);
+            }
+
+
             //Notifications
             await _notificationSubscriptionManager.SubscribeToAllAvailableNotificationsAsync(user.ToUserIdentifier());
             await _appNotifier.WelcomeToTheApplicationAsync(user);
@@ -365,6 +401,7 @@ namespace TACHYON.Authorization.Users
                     input.User.Password
                 );
             }
+
         }
 
         private async Task FillRoleNames(IReadOnlyCollection<UserListDto> userListDtos)

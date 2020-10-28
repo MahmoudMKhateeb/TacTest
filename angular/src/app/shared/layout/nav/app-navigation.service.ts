@@ -89,6 +89,7 @@ export class AppNavigationService {
         '',
         [],
         [
+          new AppMenuItem('Drivers', 'Pages.Administration.Users', 'flaticon-users', '/app/admin/drivers'),
           new AppMenuItem('Trucks', 'Pages.Trucks', 'flaticon-more', '/app/main/trucks/trucks', undefined, undefined, undefined, undefined, () =>
             this._featureCheckerService.isEnabled('App.Carrier')
           ),
@@ -187,7 +188,6 @@ export class AppNavigationService {
         [],
         [
           new AppMenuItem('OrganizationUnits', 'Pages.Administration.OrganizationUnits', 'flaticon-map', '/app/admin/organization-units'),
-          new AppMenuItem('Drivers', 'Pages.Administration.Users', 'flaticon-users', '/app/admin/drivers'),
           new AppMenuItem(
             'ShippingRequestStatuses',
             'Pages.Administration.ShippingRequestStatuses',
