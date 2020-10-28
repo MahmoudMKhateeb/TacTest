@@ -123,6 +123,7 @@ import { HijriDatepickerComponent } from '@app/admin/required-document-files/hij
 import { NgbDateParserFormatter, NgbModule } from '@node_modules/@ng-bootstrap/ng-bootstrap';
 import { CustomNgbDateParserFormatter } from '@app/admin/required-document-files/hijri-gregorian-datepicker/CustomNgbDateParserFormatter';
 import { DriversComponent } from './users/drivers/drivers.component';
+import { CreateOrEditDriverModalComponent } from '@app/admin/users/drivers/create-or-edit-driver-modal.component';
 const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
   // suppressScrollX: true
 };
@@ -250,6 +251,7 @@ const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
     HijriGregorianDatepickerComponent,
     HijriDatepickerComponent,
     DriversComponent,
+    CreateOrEditDriverModalComponent,
   ],
   exports: [AddMemberModalComponent, AddRoleModalComponent, HijriGregorianDatepickerComponent],
   providers: [

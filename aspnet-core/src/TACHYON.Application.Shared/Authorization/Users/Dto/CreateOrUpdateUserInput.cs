@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using TACHYON.Documents.DocumentFiles.Dtos;
 
 namespace TACHYON.Authorization.Users.Dto
 {
@@ -21,5 +22,7 @@ namespace TACHYON.Authorization.Users.Dto
         {
             OrganizationUnits = new List<long>();
         }
+        public List<CreateOrEditDocumentFileDto> CreateOrEditDocumentFileDtos { get; set; }
+
     }
 }
