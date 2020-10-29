@@ -65,7 +65,7 @@
             <option selected value="-2">{{ l('Select A Country') }}</option>
             <option *ngFor="let country of allCountries" value="{{ country.id }}">{{ country.displayName }}</option>
           </select>
-          <span class="form-text text-danger" *ngIf="countrySelect.value == -2 && countrySelect.touched">City is required</span>
+          <span class="form-text text-danger" *ngIf="countrySelect.value == -2 && countrySelect.touched">Country is required</span>
           <!-- <validation-messages [formCtrl]="nameInput"></validation-messages> -->
         </div>
       </div>
