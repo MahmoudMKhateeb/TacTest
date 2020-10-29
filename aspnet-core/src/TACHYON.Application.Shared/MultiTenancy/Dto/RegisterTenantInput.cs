@@ -32,5 +32,9 @@ namespace TACHYON.MultiTenancy.Dto
         public SubscriptionStartType SubscriptionStartType { get; set; }
 
         public int? EditionId { get; set; }
+
+        public virtual string Address { get; set; }
+        public virtual int CountryId { get; set; }
+        public virtual int CityId { get; set; }
     }
 }

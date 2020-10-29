@@ -3,7 +3,7 @@ import { Router } from '@angular/router';
 import { accountModuleAnimation } from '@shared/animations/routerTransition';
 import { AppComponentBase } from '@shared/common/app-component-base';
 import { AppUrlService } from '@shared/common/nav/app-url.service';
-import { RegisterTenantOutput } from '@shared/service-proxies/service-proxies';
+import { RegisterTenantOutput, TenantCityLookupTableDto, TenantCountryLookupTableDto } from '@shared/service-proxies/service-proxies';
 import { TenantRegistrationHelperService } from './tenant-registration-helper.service';
 
 @Component({
@@ -13,9 +13,7 @@ import { TenantRegistrationHelperService } from './tenant-registration-helper.se
 export class RegisterTenantResultComponent extends AppComponentBase implements OnInit {
   model: RegisterTenantOutput = new RegisterTenantOutput();
   tenantUrl: string;
-
   saving = false;
-
   constructor(
     injector: Injector,
     private _router: Router,
