@@ -17,6 +17,16 @@ namespace TACHYON.MultiTenancy.Dto
         [StringLength(TenantConsts.MaxNameLength)]
         public string Name { get; set; }
 
+
+        [Required]
+        public virtual string Address { get; set; }
+        [Required]
+        public virtual int CountryId { get; set; }
+        [Required]
+        public virtual int CityId { get; set; }
+
+
+
         [Required]
         [EmailAddress]
         [StringLength(AbpUserBase.MaxEmailAddressLength)]

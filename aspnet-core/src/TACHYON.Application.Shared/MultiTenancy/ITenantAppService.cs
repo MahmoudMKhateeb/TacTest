@@ -1,5 +1,6 @@
 ﻿using Abp.Application.Services;
 using Abp.Application.Services.Dto;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using TACHYON.MultiTenancy.Dto;
 
@@ -24,5 +25,8 @@ namespace TACHYON.MultiTenancy
         Task ResetTenantSpecificFeatures(EntityDto input);
 
         Task UnlockTenantAdmin(EntityDto input);
+        Task<List<TenantCityLookupTableDto>> GetAllCitiesForTableDropdown(int input);
+        Task<List<TenantCountryLookupTableDto>> GetAllCountryForTableDropdown();
+
     }
 }

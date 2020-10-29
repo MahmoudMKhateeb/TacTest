@@ -87,13 +87,13 @@
       {{ 'NotAMemberYet' | localize }}
     </span>
   </div>
-  <span *ngIf="isSelfRegistrationAllowed">
+  <!-- <span *ngIf="isSelfRegistrationAllowed">
     <a class="text-login-links" routerLink="/account/register">{{ 'CreateAnAccount' | localize }}</a>
     <span> | </span>
-  </span>
+  </span> -->
   <span *ngIf="!multiTenancySideIsTeanant && isTenantSelfRegistrationAllowed">
     <a class="text-login-links" routerLink="/account/select-edition">{{ 'NewTenant' | localize }}</a>
-    <span> | </span>
+    <!-- <span> | </span> -->
   </span>
-  <a class="text-login-links" routerLink="/account/email-activation" id="email-activation-btn">{{ 'EmailActivation' | localize }}</a>
+  <!-- <a class="text-login-links" routerLink="/account/email-activation" id="email-activation-btn">{{ 'EmailActivation' | localize }}</a> -->
 </div>

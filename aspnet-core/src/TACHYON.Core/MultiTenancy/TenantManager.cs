@@ -81,6 +81,9 @@ namespace TACHYON.MultiTenancy
         public async Task<int> CreateWithAdminUserAsync(
             string tenancyName,
             string name,
+            string address,
+            int cityId,
+            int countryId,
             string adminPassword,
             string adminEmailAddress,
             string connectionString,
@@ -107,6 +110,9 @@ namespace TACHYON.MultiTenancy
                 //Create tenant
                 var tenant = new Tenant(tenancyName, name)
                 {
+                    Address = address,
+                    CityId = cityId,
+                    CountryId = countryId,
                     IsActive = isActive,
                     EditionId = editionId,
                     SubscriptionEndDateUtc = subscriptionEndDate?.ToUniversalTime(),

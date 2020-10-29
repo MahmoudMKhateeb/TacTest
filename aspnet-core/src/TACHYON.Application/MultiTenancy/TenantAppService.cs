@@ -3,6 +3,7 @@ using Abp.Application.Features;
 using Abp.Application.Services.Dto;
 using Abp.Authorization;
 using Abp.Authorization.Users;
+using Abp.Domain.Repositories;
 using Abp.Domain.Uow;
 using Abp.Events.Bus;
 using Abp.Extensions;
@@ -14,6 +15,9 @@ using System.Linq;
 using System.Linq.Dynamic.Core;
 using System.Threading.Tasks;
 using TACHYON.Authorization;
+using TACHYON.Cities;
+using TACHYON.Cities.Dtos;
+using TACHYON.Countries;
 using TACHYON.Editions.Dto;
 using TACHYON.MultiTenancy.Dto;
 using TACHYON.Url;
@@ -26,10 +30,16 @@ namespace TACHYON.MultiTenancy
         public IAppUrlService AppUrlService { get; set; }
         public IEventBus EventBus { get; set; }
 
-        public TenantAppService()
+        private readonly IRepository<County, int> _lookup_countryRepository;
+        private readonly IRepository<City, int> _lookup_cityRepository;
+
+
+        public TenantAppService(IRepository<County, int> lookup_countryRepository, IRepository<City, int> lookup_cityRepository)
         {
             AppUrlService = NullAppUrlService.Instance;
             EventBus = NullEventBus.Instance;
+            _lookup_countryRepository = lookup_countryRepository;
+            _lookup_cityRepository = lookup_cityRepository;
         }
 
         public async Task<PagedResultDto<TenantListDto>> GetTenants(GetTenantsInput input)
@@ -58,6 +68,9 @@ namespace TACHYON.MultiTenancy
         {
             await TenantManager.CreateWithAdminUserAsync(input.TenancyName,
                 input.Name,
+                input.Address,
+                input.CountryId,
+                input.CityId,
                 input.AdminPassword,
                 input.AdminEmailAddress,
                 input.ConnectionString,
@@ -146,6 +159,27 @@ namespace TACHYON.MultiTenancy
                     tenantAdmin.Unlock();
                 }
             }
+        }
+
+        public async Task<List<TenantCountryLookupTableDto>> GetAllCountryForTableDropdown()
+        {
+            return await _lookup_countryRepository.GetAll()
+                .Select(country => new TenantCountryLookupTableDto
+                {
+                    Id = country.Id,
+                    DisplayName = country == null || country.DisplayName == null ? "" : country.DisplayName.ToString()
+                }).ToListAsync();
+        }
+
+
+        public async Task<List<TenantCityLookupTableDto>> GetAllCitiesForTableDropdown(int input)
+        {
+            return await _lookup_cityRepository.GetAll().Where(c=>c.CountyFk.Id == input)
+                .Select(county => new TenantCityLookupTableDto
+                {
+                    Id = county.Id,
+                    DisplayName = county == null || county.DisplayName == null ? "" : county.DisplayName.ToString()
+                }).ToListAsync();
         }
     }
 }
