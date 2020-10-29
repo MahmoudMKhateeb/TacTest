@@ -19,46 +19,46 @@ export class AppNavigationService {
       new AppMenuItem('Dashboard', 'Pages.Administration.Host.Dashboard', 'flaticon-line-graph', '/app/admin/hostDashboard'),
       new AppMenuItem('Dashboard', 'Pages.Tenant.Dashboard', 'flaticon-line-graph', '/app/main/dashboard'),
 
-      //Shipper
-      new AppMenuItem(
-        'Requests',
-        '',
-        'flaticon-interface-8',
-        '',
-        [],
-        [
-          new AppMenuItem(
-            'ShippingRequests',
-            'Pages.ShippingRequests',
-            'flaticon-more',
-            '/app/main/shippingRequests/shippingRequests',
-            undefined,
-            undefined,
-            undefined,
-            undefined,
-            () =>
-              this._featureCheckerService.isEnabled('App.shippingRequest') ||
-              this._featureCheckerService.isEnabled('App.TachyonDealer') ||
-              this._featureCheckerService.isEnabled('App.Broker')
-          ),
-        ]
-      ),
+      // //Shipper
+      // new AppMenuItem(
+      //   'Requests',
+      //   '',
+      //   'flaticon-interface-8',
+      //   '',
+      //   [],
+      //   [
+      //     new AppMenuItem(
+      //       'ShippingRequests',
+      //       'Pages.ShippingRequests',
+      //       'flaticon-more',
+      //       '/app/main/shippingRequests/shippingRequests',
+      //       undefined,
+      //       undefined,
+      //       undefined,
+      //       undefined,
+      //       () =>
+      //         this._featureCheckerService.isEnabled('App.shippingRequest') ||
+      //         this._featureCheckerService.isEnabled('App.TachyonDealer') ||
+      //         this._featureCheckerService.isEnabled('App.Broker')
+      //     ),
+      //   ]
+      // ),
 
-      //Host
-      new AppMenuItem(
-        'Shipment Settings',
-        '',
-        'flaticon-interface-8',
-        '',
-        [],
-        [
-          new AppMenuItem('Facilities', 'Pages.Facilities', 'flaticon-more', '/app/main/addressBook/facilities'),
-          new AppMenuItem('RoutTypes', 'Pages.RoutTypes', 'flaticon-more', '/app/main/routTypes/routTypes'),
-          new AppMenuItem('Counties', 'Pages.Counties', 'flaticon-more', '/app/main/countries/counties'),
-          new AppMenuItem('Cities', 'Pages.Cities', 'flaticon-more', '/app/main/cities/cities'),
-          new AppMenuItem('Ports', 'Pages.Ports', 'flaticon-more', '/app/main/ports/ports'),
-        ]
-      ),
+      // //Host
+      // new AppMenuItem(
+      //   'Shipment Settings',
+      //   '',
+      //   'flaticon-interface-8',
+      //   '',
+      //   [],
+      //   [
+      //     new AppMenuItem('Facilities', 'Pages.Facilities', 'flaticon-more', '/app/main/addressBook/facilities'),
+      //     new AppMenuItem('RoutTypes', 'Pages.RoutTypes', 'flaticon-more', '/app/main/routTypes/routTypes'),
+      //     new AppMenuItem('Counties', 'Pages.Counties', 'flaticon-more', '/app/main/countries/counties'),
+      //     new AppMenuItem('Cities', 'Pages.Cities', 'flaticon-more', '/app/main/cities/cities'),
+      //     new AppMenuItem('Ports', 'Pages.Ports', 'flaticon-more', '/app/main/ports/ports'),
+      //   ]
+      // ),
 
       //Host
       new AppMenuItem(
@@ -77,7 +77,7 @@ export class AppNavigationService {
             'flaticon-more',
             '/app/main/documentTypeTranslations/documentTypeTranslations'
           ),
-          new AppMenuItem('TenantRequiredDocuments', '', 'flaticon-settings', '/app/admin/tenantRequiredDocuments'),
+          // new AppMenuItem('TenantRequiredDocuments', '', 'flaticon-settings', '/app/admin/tenantRequiredDocuments'),
         ]
       ),
 
@@ -93,17 +93,17 @@ export class AppNavigationService {
           new AppMenuItem('Trucks', 'Pages.Trucks', 'flaticon-more', '/app/main/trucks/trucks', undefined, undefined, undefined, undefined, () =>
             this._featureCheckerService.isEnabled('App.Carrier')
           ),
-          new AppMenuItem(
-            'Trailers',
-            'Pages.Trailers',
-            'flaticon-more',
-            '/app/main/trailers/trailers',
-            undefined,
-            undefined,
-            undefined,
-            undefined,
-            () => this._featureCheckerService.isEnabled('App.Carrier')
-          ),
+          // new AppMenuItem(
+          //   'Trailers',
+          //   'Pages.Trailers',
+          //   'flaticon-more',
+          //   '/app/main/trailers/trailers',
+          //   undefined,
+          //   undefined,
+          //   undefined,
+          //   undefined,
+          //   () => this._featureCheckerService.isEnabled('App.Carrier')
+          // ),
           new AppMenuItem(
             'Truck Types',
             '',
@@ -124,17 +124,17 @@ export class AppNavigationService {
           new AppMenuItem('TrailerStatuses', 'Pages.TrailerStatuses', 'flaticon-more', '/app/main/trailerStatuses/trailerStatuses'),
           new AppMenuItem('GoodCategories', 'Pages.GoodCategories', 'flaticon-more', '/app/main/goodCategories/goodCategories'),
           new AppMenuItem('UnitOfMeasures', 'Pages.Administration.UnitOfMeasures', 'flaticon-more', '/app/admin/unitOfMeasures/unitOfMeasures'),
-          new AppMenuItem(
-            'TruckStatuses',
-            'Pages.Administration.TruckStatuses',
-            'flaticon-more',
-            '/app/admin/trucks/truckStatuses',
-            undefined,
-            undefined,
-            undefined,
-            undefined,
-            () => this._featureCheckerService.isEnabled('App.Carrier')
-          ),
+          // new AppMenuItem(
+          //   'TruckStatuses',
+          //   'Pages.Administration.TruckStatuses',
+          //   'flaticon-more',
+          //   '/app/admin/trucks/truckStatuses',
+          //   undefined,
+          //   undefined,
+          //   undefined,
+          //   undefined,
+          //   () => this._featureCheckerService.isEnabled('App.Carrier')
+          // ),
         ]
       ),
 
@@ -187,43 +187,43 @@ export class AppNavigationService {
         '',
         [],
         [
-          new AppMenuItem('OrganizationUnits', 'Pages.Administration.OrganizationUnits', 'flaticon-map', '/app/admin/organization-units'),
-          new AppMenuItem(
-            'ShippingRequestStatuses',
-            'Pages.Administration.ShippingRequestStatuses',
-            'flaticon-more',
-            '/app/admin/shippingRequestStatuses/shippingRequestStatuses'
-          ),
+          // new AppMenuItem('OrganizationUnits', 'Pages.Administration.OrganizationUnits', 'flaticon-map', '/app/admin/organization-units'),
+          //  new AppMenuItem(
+          //    'ShippingRequestStatuses',
+          //    'Pages.Administration.ShippingRequestStatuses',
+          //    'flaticon-more',
+          //    '/app/admin/shippingRequestStatuses/shippingRequestStatuses'
+          //  ),
 
           new AppMenuItem('Languages', 'Pages.Administration.Languages', 'flaticon-tabs', '/app/admin/languages', [
             '/app/admin/languages/{name}/texts',
           ]),
-          new AppMenuItem('AuditLogs', 'Pages.Administration.AuditLogs', 'flaticon-folder-1', '/app/admin/auditLogs'),
+          // new AppMenuItem('AuditLogs', 'Pages.Administration.AuditLogs', 'flaticon-folder-1', '/app/admin/auditLogs'),
           new AppMenuItem('Maintenance', 'Pages.Administration.Host.Maintenance', 'flaticon-lock', '/app/admin/maintenance'),
-          new AppMenuItem(
-            'Subscription',
-            'Pages.Administration.Tenant.SubscriptionManagement',
-            'flaticon-refresh',
-            '/app/admin/subscription-management'
-          ),
-          new AppMenuItem('VisualSettings', 'Pages.Administration.UiCustomization', 'flaticon-medical', '/app/admin/ui-customization'),
-          new AppMenuItem('WebhookSubscriptions', 'Pages.Administration.WebhookSubscription', 'flaticon2-world', '/app/admin/webhook-subscriptions'),
-          new AppMenuItem(
-            'DynamicParameters',
-            '',
-            'flaticon-interface-8',
-            '',
-            [],
-            [
-              new AppMenuItem('Definitions', 'Pages.Administration.DynamicParameters', '', '/app/admin/dynamic-parameter'),
-              new AppMenuItem('EntityDynamicParameters', 'Pages.Administration.EntityDynamicParameters', '', '/app/admin/entity-dynamic-parameter'),
-            ]
-          ),
+          // new AppMenuItem(
+          //   'Subscription',
+          //   'Pages.Administration.Tenant.SubscriptionManagement',
+          //   'flaticon-refresh',
+          //   '/app/admin/subscription-management'
+          // ),
+          // new AppMenuItem('VisualSettings', 'Pages.Administration.UiCustomization', 'flaticon-medical', '/app/admin/ui-customization'),
+          // new AppMenuItem('WebhookSubscriptions', 'Pages.Administration.WebhookSubscription', 'flaticon2-world', '/app/admin/webhook-subscriptions'),
+          //  new AppMenuItem(
+          //    'DynamicParameters',
+          //    '',
+          //    'flaticon-interface-8',
+          //    '',
+          //    [],
+          //    [
+          //      new AppMenuItem('Definitions', 'Pages.Administration.DynamicParameters', '', '/app/admin/dynamic-parameter'),
+          //      new AppMenuItem('EntityDynamicParameters', 'Pages.Administration.EntityDynamicParameters', '', '/app/admin/entity-dynamic-parameter'),
+          //    ]
+          //  ),
           new AppMenuItem('Settings', 'Pages.Administration.Host.Settings', 'flaticon-settings', '/app/admin/hostSettings'),
           new AppMenuItem('Settings', 'Pages.Administration.Tenant.Settings', 'flaticon-settings', '/app/admin/tenantSettings'),
         ]
       ),
-      new AppMenuItem('DemoUiComponents', 'Pages.DemoUiComponents', 'flaticon-shapes', '/app/admin/demo-ui-components'),
+      //new AppMenuItem('DemoUiComponents', 'Pages.DemoUiComponents', 'flaticon-shapes', '/app/admin/demo-ui-components'),
     ]);
   }
 
