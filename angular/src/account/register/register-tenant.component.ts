@@ -13,6 +13,9 @@ import {
   SubscriptionPaymentGatewayType,
   SubscriptionStartType,
   EditionPaymentType,
+  TenantCountryLookupTableDto,
+  TenantCityLookupTableDto,
+  TenantServiceProxy,
 } from '@shared/service-proxies/service-proxies';
 import { RegisterTenantModel } from './register-tenant.model';
 import { TenantRegistrationHelperService } from './tenant-registration-helper.service';
@@ -33,8 +36,10 @@ export class RegisterTenantComponent extends AppComponentBase implements OnInit,
   subscriptionPaymentGateway = SubscriptionPaymentGatewayType;
   paymentId = '';
   recaptchaSiteKey: string = AppConsts.recaptchaSiteKey;
-
+  allCountries: TenantCountryLookupTableDto[];
+  allCities: TenantCityLookupTableDto[];
   saving = false;
+  isCountySelected = false;
 
   constructor(
     injector: Injector,
@@ -65,6 +70,9 @@ export class RegisterTenantComponent extends AppComponentBase implements OnInit,
     this._profileService.getPasswordComplexitySetting().subscribe((result) => {
       this.passwordComplexitySetting = result.setting;
     });
+    this.GetAllCountries();
+    this.model.cityId = -2;
+    this.model.countryId = -2;
   }
 
   ngAfterViewInit() {
@@ -80,6 +88,9 @@ export class RegisterTenantComponent extends AppComponentBase implements OnInit,
   }
 
   save(): void {
+    if (this.model.countryId != -2 || this.model.cityId != -2) {
+      alert('please make sure you enter all the required information!');
+    }
     let recaptchaCallback = (token: string) => {
       this.saving = true;
       this.model.captchaResponse = token;
@@ -115,5 +126,23 @@ export class RegisterTenantComponent extends AppComponentBase implements OnInit,
     } else {
       recaptchaCallback(null);
     }
+  }
+
+  CountryChanged(event) {
+    if (event.target.value == -2) {
+      this.isCountySelected = false;
+    } else {
+      this.isCountySelected = true;
+    }
+
+    this._tenantRegistrationService.getAllCitiesForTableDropdown(event.target.value).subscribe((result) => {
+      this.allCities = result;
+    });
+  }
+
+  GetAllCountries() {
+    this._tenantRegistrationService.getAllCountryForTableDropdown().subscribe((result) => {
+      this.allCountries = result;
+    });
   }
 }

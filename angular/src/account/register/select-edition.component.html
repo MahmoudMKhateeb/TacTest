@@ -56,9 +56,11 @@
                 >
               </h4>
 
-              <p class="mb-4 d-flex flex-column">
+              <!-- each EROR tag Here is just a comment made like this to get commentedout easear-->
+
+              <!-- <p class="mb-4 d-flex flex-column">
                 <span *ngFor="let feature of editionsSelectOutput.allFeatures">
-                  <!--Checbox Feature-->
+                  <Checbox Feature>
                   <span
                     *ngIf="isTrueFalseFeature(feature) && featureEnabledForEdition(feature, editionWithFeatures)"
                     class="text-success text-center"
@@ -70,16 +72,16 @@
                     <i class="far fa-times-circle text-muted"></i>
                     {{ feature.displayName }}
                   </span>
-                  <!--Checbox Feature-->
+                  <Checbox Feature>
 
-                  <!--Not Checbox Feature-->
+                  <!Not Checbox Feature>
                   <span *ngIf="!isTrueFalseFeature(feature)" class="text-success text-center">
                     <i class="far fa-check-circle text-success"></i>
                     {{ feature.displayName }}:{{ getFeatureValueForEdition(feature, editionWithFeatures) }}
                   </span>
-                  <!--Not Checbox Feature-->
+                  <!Not Checbox Feature>
                 </span>
-              </p>
+              </p> -->
 
               <button
                 class="btn btn-warning btn-pill btn-brand btn-wide btn-uppercase btn-bolder btn-sm mx-2"

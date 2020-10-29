@@ -7,6 +7,8 @@ import {
   ProfileServiceProxy,
   TenantServiceProxy,
   SubscribableEditionComboboxItemDto,
+  TenantCountryLookupTableDto,
+  TenantCityLookupTableDto,
 } from '@shared/service-proxies/service-proxies';
 import * as _ from 'lodash';
 import { ModalDirective } from 'ngx-bootstrap/modal';
@@ -23,15 +25,18 @@ export class CreateTenantModalComponent extends AppComponentBase {
 
   active = false;
   saving = false;
-  setRandomPassword = true;
+  setRandomPassword = false;
   useHostDb = true;
   editions: SubscribableEditionComboboxItemDto[] = [];
-  tenant: CreateTenantInput;
+  tenant: CreateTenantInput = new CreateTenantInput();
   passwordComplexitySetting: PasswordComplexitySetting = new PasswordComplexitySetting();
   isUnlimited = false;
   isSubscriptionFieldsVisible = false;
   isSelectedEditionFree = false;
   tenantAdminPasswordRepeat = '';
+  allCountries: TenantCountryLookupTableDto[];
+  allCities: TenantCityLookupTableDto[];
+  isCountySelected = false;
 
   constructor(
     injector: Injector,
@@ -60,7 +65,7 @@ export class CreateTenantModalComponent extends AppComponentBase {
     this.tenant = new CreateTenantInput();
     this.tenant.isActive = true;
     this.tenant.shouldChangePasswordOnNextLogin = true;
-    this.tenant.sendActivationEmail = true;
+    this.tenant.sendActivationEmail = false;
     this.tenant.editionId = 0;
     this.tenant.isInTrialPeriod = false;
 
@@ -81,6 +86,9 @@ export class CreateTenantModalComponent extends AppComponentBase {
         }
       });
     });
+    this.GetAllCountries();
+    this.tenant.cityId = -2;
+    this.tenant.countryId = -2;
   }
 
   getEditionValue(item): number {
@@ -176,5 +184,23 @@ export class CreateTenantModalComponent extends AppComponentBase {
     if (this.isUnlimited) {
       this.tenant.isInTrialPeriod = false;
     }
+  }
+
+  CountryChanged(event) {
+    if (event.target.value == -2) {
+      this.isCountySelected = false;
+    } else {
+      this.isCountySelected = true;
+    }
+
+    this._tenantService.getAllCitiesForTableDropdown(event.target.value).subscribe((result) => {
+      this.allCities = result;
+    });
+  }
+
+  GetAllCountries() {
+    this._tenantService.getAllCountryForTableDropdown().subscribe((result) => {
+      this.allCountries = result;
+    });
   }
 }

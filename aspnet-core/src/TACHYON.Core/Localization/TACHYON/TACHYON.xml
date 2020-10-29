@@ -311,7 +311,7 @@
     <text name="TenantIsNotActive">Tenant {0} is not active.</text>
     <text name="UserIsNotActiveAndCanNotLogin">User {0} is not active and can not log in.</text>
     <text name="PleaseEnterLoginInformation">Please enter login information</text>
-    <text name="TenancyName">Tenancy name</text>
+    <text name="TenancyName">Company Unique Name</text>
     <text name="UserNameOrEmail">User name or email</text>
     <text name="Password">Password</text>
     <text name="RememberMe">Remember me</text>
@@ -361,7 +361,7 @@
     <text name="TenantsHeaderInfo">Manage your tenants.</text>
     <text name="CreateNewTenant">Create new tenant</text>
     <text name="TenancyCodeName">Tenancy code name</text>
-    <text name="TenantName">Tenant name</text>
+    <text name="TenantName">Company name</text>
     <text name="TenantDeleteWarningMessage">Tenant {0} will be deleted.</text>
     <text name="AdminEmailAddress">admin email</text>
     <text name="AdminPassword">admin password</text>
@@ -453,7 +453,7 @@
     <text name="Dashboard">Dashboard</text>
     <text name="DashboardHeaderInfo">statistics and reports</text>
     <text name="GoToApplication">Go to application</text>
-    <text name="TenantInformations">Tenant information</text>
+    <text name="TenantInformations">Company information</text>
     <text name="PersonalInformations">Personal information</text>
     <text name="AccountSettings">Account settings</text>
     <text name="Captha_Hint">Please prove you are not a robot</text>
@@ -663,12 +663,12 @@
     <text name="AllowTenantsToRegisterThemselves_Hint">If you disable this, tenants will only be added by admin using tenant management page.</text>
     <text name="NewRegisteredTenantsIsActiveByDefault">New registered tenants are active by default.</text>
     <text name="NewRegisteredTenantsIsActiveByDefault_Hint">If you disable this, new tenants will not be active (and can not login) until admin manually activates the account.</text>
-    <text name="TenantSignUp">Tenant SignUp</text>
+    <text name="TenantSignUp">Company SignUp</text>
     <text name="NewTenantRegisteredNotificationDefinition">On a new tenant registered to the application.</text>
     <text name="NewTenantRegisteredNotificationMessage">A new tenant registered to the application. Tenancy name: {tenancyName}.</text>
     <text name="LoginAttempts">Login attempts</text>
     <text name="Failed">Failed</text>
-    <text name="NewTenant">New tenant</text>
+    <text name="NewTenant">New Company</text>
     <text name="ResizedProfilePicture_Warn_SizeLimit">Resized picture size must be smaller than {0}KB. Please resize down and try again.</text>
     <text name="RegisterFormUserNameInvalidMessage">Please do not enter an email address for username.</text>
     <text name="UseHostDatabase">Use host database</text>
@@ -760,7 +760,7 @@
     <text name="CurrentTenant">Current tenant</text>
     <text name="NotSelected">Not selected</text>
     <text name="Change">Change</text>
-    <text name="ChangeTenant">Switch tenant</text>
+    <text name="ChangeTenant">Switch Company</text>
     <text name="UnknownTenantId{0}">Unknown tenant id: {0}</text>
     <text name="TenantIdIsNotActive{0}">Inactive tenant id: {0}</text>
     <text name="TimeoutPleaseTryAgain">Timeout! Please try again.</text>
@@ -1195,7 +1195,7 @@
     <text name="UiCustomization_HeaderMinimizeType_Menu">Menu</text>
     <text name="UiCustomization_HeaderMenuArrows">Menu arrows</text>
     <text name="InvalidPattern">Invalid</text>
-    <text name="SwitchToTenant">Switch to tenant</text>
+    <text name="SwitchToTenant">Switch to Company</text>
     <text name="TenancyNameRequired">Tenancy name is required!</text>
     <text name="EnterTenancyName">Enter tenancy name...</text>
     <text name="SwitchToTheTenant">Switch to the tenant</text>

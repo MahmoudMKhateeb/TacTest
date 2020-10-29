@@ -3,16 +3,20 @@ using Abp.Application.Services.Dto;
 using Abp.Authorization.Users;
 using Abp.Configuration;
 using Abp.Configuration.Startup;
+using Abp.Domain.Repositories;
 using Abp.Localization;
 using Abp.Runtime.Session;
 using Abp.Timing;
 using Abp.UI;
 using Abp.Zero.Configuration;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using TACHYON.Cities;
 using TACHYON.Configuration;
+using TACHYON.Countries;
 using TACHYON.Debugging;
 using TACHYON.Editions;
 using TACHYON.Editions.Dto;
@@ -37,6 +41,8 @@ namespace TACHYON.MultiTenancy
         private readonly ILocalizationContext _localizationContext;
         private readonly TenantManager _tenantManager;
         private readonly ISubscriptionPaymentRepository _subscriptionPaymentRepository;
+        private readonly IRepository<County, int> _lookup_countryRepository;
+        private readonly IRepository<City, int> _lookup_cityRepository;
 
         public TenantRegistrationAppService(
             IMultiTenancyConfig multiTenancyConfig,
@@ -45,6 +51,8 @@ namespace TACHYON.MultiTenancy
             IAppNotifier appNotifier,
             ILocalizationContext localizationContext,
             TenantManager tenantManager,
+            IRepository<County, int> lookup_countryRepository, 
+            IRepository<City, int> lookup_cityRepository,
             ISubscriptionPaymentRepository subscriptionPaymentRepository)
         {
             _multiTenancyConfig = multiTenancyConfig;
@@ -54,6 +62,8 @@ namespace TACHYON.MultiTenancy
             _localizationContext = localizationContext;
             _tenantManager = tenantManager;
             _subscriptionPaymentRepository = subscriptionPaymentRepository;
+            _lookup_countryRepository = lookup_countryRepository;
+            _lookup_cityRepository = lookup_cityRepository;
 
             AppUrlService = NullAppUrlService.Instance;
         }
@@ -101,6 +111,9 @@ namespace TACHYON.MultiTenancy
                 var tenantId = await _tenantManager.CreateWithAdminUserAsync(
                     input.TenancyName,
                     input.Name,
+                    input.Address,
+                    input.CityId,
+                    input.CountryId,
                     input.AdminPassword,
                     input.AdminEmailAddress,
                     null,
@@ -283,6 +296,28 @@ namespace TACHYON.MultiTenancy
                     }
                     break;
             }
+        }
+
+
+        public async Task<List<TenantCountryLookupTableDto>> GetAllCountryForTableDropdown()
+        {
+            return await _lookup_countryRepository.GetAll()
+                .Select(country => new TenantCountryLookupTableDto
+                {
+                    Id = country.Id,
+                    DisplayName = country == null || country.DisplayName == null ? "" : country.DisplayName.ToString()
+                }).ToListAsync();
+        }
+
+
+        public async Task<List<TenantCityLookupTableDto>> GetAllCitiesForTableDropdown(int input)
+        {
+            return await _lookup_cityRepository.GetAll().Where(c => c.CountyFk.Id == input)
+                .Select(county => new TenantCityLookupTableDto
+                {
+                    Id = county.Id,
+                    DisplayName = county == null || county.DisplayName == null ? "" : county.DisplayName.ToString()
+                }).ToListAsync();
         }
     }
 }

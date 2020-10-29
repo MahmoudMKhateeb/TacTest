@@ -19,6 +19,13 @@ namespace TACHYON.MultiTenancy
 
         //Can add application specific tenant properties here
 
+        public virtual string Address { get; set; }
+        public virtual int CountryId { get; set; }
+        public virtual int CityId { get; set; }
+        public virtual string UserTitle { get; set; }
+
+
+
         public DateTime? SubscriptionEndDateUtc { get; set; }
 
         public bool IsInTrialPeriod { get; set; }
