@@ -239,13 +239,31 @@
                           <li>
                             <a href="javascript:;" class="dropdown-item" (click)="viewDocumentFileModal.show(record)">{{ l('View') }}</a>
                           </li>
+                          <!--                          <li>-->
+                          <!--                            <a-->
+                          <!--                              href="javascript:;"-->
+                          <!--                              *ngIf="permission.isGranted('Pages.DocumentFiles.Edit')"-->
+                          <!--                              class="dropdown-item"-->
+                          <!--                              (click)="createOrEditDocumentFileModal.show(record.documentFile.id)"-->
+                          <!--                              >{{ l('Edit') }}</a-->
+                          <!--                            >-->
+                          <!--                          </li>-->
                           <li>
                             <a
                               href="javascript:;"
                               *ngIf="permission.isGranted('Pages.DocumentFiles.Edit')"
                               class="dropdown-item"
-                              (click)="createOrEditDocumentFileModal.show(record.documentFile.id)"
-                              >{{ l('Edit') }}</a
+                              (click)="acceptDocumentFile(record.documentFile.id)"
+                              >{{ l('Accept') }}</a
+                            >
+                          </li>
+                          <li>
+                            <a
+                              href="javascript:;"
+                              *ngIf="permission.isGranted('Pages.DocumentFiles.Edit')"
+                              class="dropdown-item"
+                              (click)="rejectDocumentFile(record.documentFile.id)"
+                              >{{ l('Reject') }}</a
                             >
                           </li>
                           <li>
