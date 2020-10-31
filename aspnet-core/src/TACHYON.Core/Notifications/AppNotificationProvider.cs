@@ -63,6 +63,21 @@ namespace TACHYON.Notifications
 
             context.Manager.Add(
                 new NotificationDefinition(
+                    AppNotificationNames.AcceptShippingRequestBid,
+                    displayName: L("AcceptShippingRequestBidNotificationDefinition"),
+                    featureDependency: new SimpleFeatureDependency(AppFeatures.Carrier)
+                    )
+                );
+
+            context.Manager.Add(
+                new NotificationDefinition(
+                    AppNotificationNames.ShippingRequestAsBidWithSameTruck,
+                    displayName: L("ShippingRequestAsBidWithSameTruckNotificationDefinition"),
+                    featureDependency: new SimpleFeatureDependency(AppFeatures.Carrier)
+                    )
+                );
+            context.Manager.Add(
+                new NotificationDefinition(
                     AppNotificationNames.DocumentFileBeforExpiration,
                     displayName: L("DocumentFileBeforExpirationNotificationDefinition")
                 )

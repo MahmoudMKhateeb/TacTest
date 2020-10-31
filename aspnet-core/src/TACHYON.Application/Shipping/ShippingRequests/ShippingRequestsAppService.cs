@@ -269,27 +269,29 @@ namespace TACHYON.Shipping.ShippingRequests
             {
                 //Notify Carrier with the same Truck type
                 if (shippingRequest.ShippingRequestStatusId == TACHYONConsts.OnGoing)
-                    await GetCarriersByTruckTypeArray(shippingRequest.TrucksTypeId, shippingRequest.Id);
+                    await _appNotifier.CreateShippingRequestAsBid(GetCarriersByTruckTypeArray(shippingRequest.TrucksTypeId), shippingRequest.Id);
             }
         }
 
-        protected async Task GetCarriersByTruckTypeArray(long trucksTypeId,long shippingRequestId)
+        protected UserIdentifier[] GetCarriersByTruckTypeArray(long trucksTypeId)
         {
             using (CurrentUnitOfWork.DisableFilter(AbpDataFilters.MustHaveTenant))
             {
-                //var carriersList = await _truckRepository.GetAll()
-                //    .Where(x => x.TrucksTypeId == trucksTypeId)
-                //    .Select(x=>new UserIdentifier {TenantId=x.TenantId ,  UserId=x.CreatorUserId})
-                //    .Distinct()
-                //    .ToListAsync();
-                var carriersList =await _truckRepository.GetAll()
+                var carriersList = _truckRepository.GetAll()
                     .Where(x => x.TrucksTypeId == trucksTypeId)
                     .Distinct()
-                    .ToListAsync();
-                foreach(var item in carriersList)
-                {
-                    await _appNotifier.CreateShippingRequestAsBid(new UserIdentifier(item.TenantId, item.CreatorUserId.Value), shippingRequestId);
-                }
+                    .Select(x => new UserIdentifier (x.TenantId, x.CreatorUserId.Value ))
+                    .ToArray();
+
+                return carriersList;
+                //var carriersList =await _truckRepository.GetAll()
+                //    .Where(x => x.TrucksTypeId == trucksTypeId)
+                //    .Distinct()
+                //    .ToListAsync();
+                //foreach(var item in carriersList)
+                //{
+                //    await _appNotifier.CreateShippingRequestAsBid(new UserIdentifier(item.TenantId, item.CreatorUserId.Value), shippingRequestId);
+                //}
             }
         }
 

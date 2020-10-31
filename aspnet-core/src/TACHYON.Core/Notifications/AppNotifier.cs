@@ -114,7 +114,7 @@ namespace TACHYON.Notifications
 
         }
 
-        public async Task CreateShippingRequestAsBid(UserIdentifier argsUser, long shippingRequestId)
+        public async Task CreateShippingRequestAsBid(UserIdentifier[] argsUser, long shippingRequestId)
         {
             var notificationData = new LocalizableMessageNotificationData(
                 new LocalizableString(
@@ -125,7 +125,7 @@ namespace TACHYON.Notifications
             notificationData["shippingRequestId"] = shippingRequestId;
             await _notificationPublisher.PublishAsync(AppNotificationNames.ShippingRequestAsBidWithSameTruck,
                 notificationData,
-                userIds: new[] { argsUser });
+                userIds: argsUser );
         }
         /// <summary>
         /// For documentFiles befor file expiration date 
