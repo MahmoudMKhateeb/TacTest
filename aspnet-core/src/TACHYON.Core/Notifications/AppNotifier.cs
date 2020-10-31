@@ -97,6 +97,36 @@ namespace TACHYON.Notifications
                 });
         }
 
+
+        public async Task AcceptShippingRequestBid(UserIdentifier argsUser, long shippingRequestBidId)
+        {
+            var notificationData = new LocalizableMessageNotificationData(
+                new LocalizableString(
+                    L("AcceptShippingRequestNotificationMessage"),
+                    TACHYONConsts.LocalizationSourceName
+                    )
+                );
+            notificationData["shippingRequestBidId"] = shippingRequestBidId;
+            await _notificationPublisher.PublishAsync(AppNotificationNames.AcceptShippingRequestBid,
+                notificationData, 
+                severity:NotificationSeverity.Success,
+                userIds: new[] { argsUser });
+
+        }
+
+        public async Task CreateShippingRequestAsBid(UserIdentifier argsUser, long shippingRequestId)
+        {
+            var notificationData = new LocalizableMessageNotificationData(
+                new LocalizableString(
+                    L("ShippingRequestAsBidWithSameTruckNotificationMessage"),
+                    TACHYONConsts.LocalizationSourceName
+                    )
+                );
+            notificationData["shippingRequestId"] = shippingRequestId;
+            await _notificationPublisher.PublishAsync(AppNotificationNames.ShippingRequestAsBidWithSameTruck,
+                notificationData,
+                userIds: new[] { argsUser });
+        }
         /// <summary>
         /// For documentFiles befor file expiration date 
         /// </summary>

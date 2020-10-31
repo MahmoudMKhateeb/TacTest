@@ -39,6 +39,7 @@ using TACHYON.Shipping.ShippingRequestBids;
 using TACHYON.Shipping.ShippingRequestBids.Dtos;
 using Twilio.Http;
 using Abp.Timing;
+using TACHYON.Trucks;
 
 namespace TACHYON.Shipping.ShippingRequests
 {
@@ -53,6 +54,7 @@ namespace TACHYON.Shipping.ShippingRequests
         private readonly IAppNotifier _appNotifier;
         private readonly IRepository<Tenant> _tenantRepository;
         private readonly IRepository<TrucksType, long> _lookup_trucksTypeRepository;
+        private readonly IRepository<Truck, Guid> _truckRepository;
         private readonly IRepository<TrailerType, int> _lookup_trailerTypeRepository;
         private readonly IRepository<RoutType, int> _lookup_routTypeRepository;
         private readonly IRepository<GoodCategory, int> _lookup_goodCategoryRepository;
@@ -70,6 +72,7 @@ namespace TACHYON.Shipping.ShippingRequests
             IRepository<RoutStep, long> routStepRepository,
             IRepository<Tenant> tenantRepository,
             IRepository<TrucksType, long> lookupTrucksTypeRepository,
+            IRepository<Truck,Guid> truckRepository,
             IRepository<TrailerType, int> lookupTrailerTypeRepository,
             IRepository<RoutType, int> lookupRoutTypeRepository,
             IRepository<GoodCategory, int> lookupGoodCategoryRepository,
@@ -83,6 +86,7 @@ namespace TACHYON.Shipping.ShippingRequests
             _routStepRepository = routStepRepository;
             _tenantRepository = tenantRepository;
             _lookup_trucksTypeRepository = lookupTrucksTypeRepository;
+            _truckRepository = truckRepository;
             _lookup_trailerTypeRepository = lookupTrailerTypeRepository;
             _lookup_routTypeRepository = lookupRoutTypeRepository;
             _lookup_goodCategoryRepository = lookupGoodCategoryRepository;
@@ -251,12 +255,42 @@ namespace TACHYON.Shipping.ShippingRequests
                 shippingRequest.RouteFk.TenantId = (int)AbpSession.TenantId;
                 //insert Bid status auto
                 if (input.IsBid)
+                {
                     shippingRequest.ShippingRequestStatusId = input.BidStartDate.Value.Date == Clock.Now.Date ? TACHYONConsts.OnGoing : TACHYONConsts.StandBy;
+
+                }
             }
 
             shippingRequest.ShippingRequestStatusId = 1;
 
             await _shippingRequestRepository.InsertAsync(shippingRequest);
+
+            if (shippingRequest.IsBid)
+            {
+                //Notify Carrier with the same Truck type
+                if (shippingRequest.ShippingRequestStatusId == TACHYONConsts.OnGoing)
+                    await GetCarriersByTruckTypeArray(shippingRequest.TrucksTypeId, shippingRequest.Id);
+            }
+        }
+
+        protected async Task GetCarriersByTruckTypeArray(long trucksTypeId,long shippingRequestId)
+        {
+            using (CurrentUnitOfWork.DisableFilter(AbpDataFilters.MustHaveTenant))
+            {
+                //var carriersList = await _truckRepository.GetAll()
+                //    .Where(x => x.TrucksTypeId == trucksTypeId)
+                //    .Select(x=>new UserIdentifier {TenantId=x.TenantId ,  UserId=x.CreatorUserId})
+                //    .Distinct()
+                //    .ToListAsync();
+                var carriersList =await _truckRepository.GetAll()
+                    .Where(x => x.TrucksTypeId == trucksTypeId)
+                    .Distinct()
+                    .ToListAsync();
+                foreach(var item in carriersList)
+                {
+                    await _appNotifier.CreateShippingRequestAsBid(new UserIdentifier(item.TenantId, item.CreatorUserId.Value), shippingRequestId);
+                }
+            }
         }
 
         [AbpAuthorize(AppPermissions.Pages_ShippingRequests_Edit)]

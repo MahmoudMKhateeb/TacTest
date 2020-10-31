@@ -21,6 +21,9 @@ using Org.BouncyCastle.Math.EC.Rfc7748;
 using System.Collections.Generic;
 using Abp.Domain.Uow;
 using NUglify.Helpers;
+using Stripe;
+using TACHYON.Notifications;
+using Abp;
 
 namespace TACHYON.Shipping.ShippingRequestBids
 {
@@ -29,12 +32,15 @@ namespace TACHYON.Shipping.ShippingRequestBids
     {
         private readonly IRepository<ShippingRequestBid, long> _shippingRequestBidsRepository;
         private readonly IRepository<ShippingRequest, long> _shippingRequestsRepository;
+        private readonly IAppNotifier _appNotifier;
 
         public ShippingRequestBidsAppService(IRepository<ShippingRequestBid, long> shippingRequestBidsRepository,
-            IRepository<ShippingRequest, long> shippingRequestsRepository)
+            IRepository<ShippingRequest, long> shippingRequestsRepository,
+            IAppNotifier appNotifier)
         {
             _shippingRequestBidsRepository = shippingRequestBidsRepository;
             _shippingRequestsRepository = shippingRequestsRepository;
+            _appNotifier = appNotifier;
         }
 
         //#542 This is for carrier
@@ -125,6 +131,10 @@ namespace TACHYON.Shipping.ShippingRequestBids
             if (bid != null)
             {
                 bid.IsAccepted = true;
+
+                //#540 notification to carrier told bid acception 
+                await _appNotifier.AcceptShippingRequestBid(new UserIdentifier(bid.TenantId, bid.CreatorUserId.Value), bid.Id);
+
                 //Reject the other bids of this shipping request
                 var otherBids = _shippingRequestBidsRepository.GetAll()
                     .Where(x => x.ShippingRequestId == bid.ShippingRequestId && x.Id != bid.Id);

@@ -24,6 +24,8 @@ namespace TACHYON.Notifications
          Task TenantDocumentFileUpdate(DocumentFile documentFile);
 
 
+        Task AcceptShippingRequestBid(UserIdentifier argsUser, long shippingRequestBidId);
+        Task CreateShippingRequestAsBid(UserIdentifier argsUser, long shippingRequestId);
         #endregion
         Task WelcomeToTheApplicationAsync(User user);
 
