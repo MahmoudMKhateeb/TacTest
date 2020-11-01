@@ -489,7 +489,27 @@ namespace TACHYON.Documents.DocumentFiles
             return list.Select(x => new CreateOrEditDocumentFileDto { DocumentTypeId = x.Id, DocumentTypeDto = ObjectMapper.Map<DocumentTypeDto>(x) }).ToList();
         }
 
+        public void Accept(Guid id)
+        {
+            DisableTenancyFiltersIfHost();
 
+            var documentFile = _documentFileRepository.FirstOrDefault(id);
+            documentFile.IsAccepted = true;
+            documentFile.IsRejected = false;
+
+            //todo send notification to the tenant
+        }
+
+        public void Reject(Guid id)
+        {
+            DisableTenancyFiltersIfHost();
+
+            var documentFile = _documentFileRepository.FirstOrDefault(id);
+            documentFile.IsAccepted = false;
+            documentFile.IsRejected = true;
+
+            //todo send notification to the tenant
+        }
 
     }
 }

@@ -157,4 +157,17 @@ export class DocumentFilesComponent extends AppComponentBase {
       this._fileDownloadService.downloadTempFile(result);
     });
   }
+  acceptDocumentFile(id: string) {
+    this._documentFilesServiceProxy.accept(id).subscribe(() => {
+      this.reloadPage();
+      this.notify.success(this.l('SuccessfullyAccepted'));
+    });
+  }
+
+  rejectDocumentFile(id: string) {
+    this._documentFilesServiceProxy.reject(id).subscribe(() => {
+      this.reloadPage();
+      this.notify.success(this.l('SuccessfullyRejected'));
+    });
+  }
 }
