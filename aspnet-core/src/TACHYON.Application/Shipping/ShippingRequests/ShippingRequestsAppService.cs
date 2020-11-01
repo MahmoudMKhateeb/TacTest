@@ -61,7 +61,7 @@ namespace TACHYON.Shipping.ShippingRequests
         private readonly IRepository<Facility, long> _lookup_FacilityRepository;
         private readonly IRepository<Port, long> _lookup_PortRepository;
         private readonly IRepository<ShippingRequestBid, long> _shippingRequestBidRepository;
-
+        private readonly BidDomainService _bidDomainService;
 
 
         public ShippingRequestsAppService(
@@ -77,7 +77,9 @@ namespace TACHYON.Shipping.ShippingRequests
             IRepository<RoutType, int> lookupRoutTypeRepository,
             IRepository<GoodCategory, int> lookupGoodCategoryRepository,
             IRepository<Facility, long> lookupFacilityRepository,
-            IRepository<Port, long> lookupPortRepository, IRepository<ShippingRequestBid, long> shippingRequestBidRepository)
+            IRepository<Port, long> lookupPortRepository, IRepository<ShippingRequestBid, long> shippingRequestBidRepository,
+            BidDomainService bidDomainService
+            )
         {
             _shippingRequestRepository = shippingRequestRepository;
             _shippingRequestsExcelExporter = shippingRequestsExcelExporter;
@@ -93,6 +95,7 @@ namespace TACHYON.Shipping.ShippingRequests
             _lookup_FacilityRepository = lookupFacilityRepository;
             _lookup_PortRepository = lookupPortRepository;
             _shippingRequestBidRepository = shippingRequestBidRepository;
+            _bidDomainService = bidDomainService;
         }
 
         public async Task<PagedResultDto<GetShippingRequestForViewDto>> GetAll(GetAllShippingRequestsInput input)
@@ -269,32 +272,11 @@ namespace TACHYON.Shipping.ShippingRequests
             {
                 //Notify Carrier with the same Truck type
                 if (shippingRequest.ShippingRequestStatusId == TACHYONConsts.OnGoing)
-                    await _appNotifier.CreateShippingRequestAsBid(GetCarriersByTruckTypeArray(shippingRequest.TrucksTypeId), shippingRequest.Id);
+                    await _appNotifier.CreateShippingRequestAsBid(_bidDomainService.GetCarriersByTruckTypeArray(shippingRequest.TrucksTypeId), shippingRequest.Id);
             }
         }
 
-        protected UserIdentifier[] GetCarriersByTruckTypeArray(long trucksTypeId)
-        {
-            using (CurrentUnitOfWork.DisableFilter(AbpDataFilters.MustHaveTenant))
-            {
-                var carriersList = _truckRepository.GetAll()
-                    .Where(x => x.TrucksTypeId == trucksTypeId)
-                    .Distinct()
-                    .Select(x => new UserIdentifier (x.TenantId, x.CreatorUserId.Value ))
-                    .ToArray();
-
-                return carriersList;
-                //var carriersList =await _truckRepository.GetAll()
-                //    .Where(x => x.TrucksTypeId == trucksTypeId)
-                //    .Distinct()
-                //    .ToListAsync();
-                //foreach(var item in carriersList)
-                //{
-                //    await _appNotifier.CreateShippingRequestAsBid(new UserIdentifier(item.TenantId, item.CreatorUserId.Value), shippingRequestId);
-                //}
-            }
-        }
-
+       
         [AbpAuthorize(AppPermissions.Pages_ShippingRequests_Edit)]
         protected virtual async Task Update(CreateOrEditShippingRequestDto input)
         {

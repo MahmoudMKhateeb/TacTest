@@ -54,6 +54,7 @@ using TACHYON.Trucks;
 using TACHYON.Trucks;
 using TACHYON.Trucks.TrucksTypes;
 using TACHYON.Trucks.TrucksTypes;
+using TACHYON.Shipping.ShippingRequestBidStatuses;
 
 namespace TACHYON.EntityFrameworkCore
 {
@@ -137,6 +138,7 @@ namespace TACHYON.EntityFrameworkCore
 
         public virtual DbSet<UserDelegation> UserDelegations { get; set; }
         public virtual DbSet<ShippingRequestBid> ShippingRequestBids { get; set; }
+        public virtual DbSet<ShippingRequestBidStatus> ShippingRequestBidStatuses { get; set; }
 
         public TACHYONDbContext(DbContextOptions<TACHYONDbContext> options)
             : base(options)

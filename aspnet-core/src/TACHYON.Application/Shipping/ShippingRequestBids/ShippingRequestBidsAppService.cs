@@ -84,12 +84,17 @@ namespace TACHYON.Shipping.ShippingRequestBids
             {
                 throw new UserFriendlyException(L("The Bid is already Closed message"));
             }
+            if (bid.ShippingRequestStatusId != TACHYONConsts.OnGoing)
+            {
+                throw new UserFriendlyException(L("The Bid must be Ongoing message"));
+            }
             else
             {
                 bid.ShippingRequestStatusId = TACHYONConsts.Closed;
                 bid.CloseBidDate = Clock.Now;
             }
         }
+
 
         public async Task CreateOrEditShippingRequestBid(CreatOrEditShippingRequestBidDto input)
         {
@@ -104,14 +109,24 @@ namespace TACHYON.Shipping.ShippingRequestBids
         [AbpAuthorize(AppPermissions.Pages_ShippingRequestBids_Create)]
         protected virtual async Task  Create(CreatOrEditShippingRequestBidDto input)
         {
-            var shippingRequestBid = ObjectMapper.Map<ShippingRequestBid>(input);
-            if (AbpSession.TenantId != null)
+            var exist =await _shippingRequestBidsRepository.FirstOrDefaultAsync(x => x.TenantId == AbpSession.TenantId
+              && x.ShippingRequestId == input.ShippingRequestId);
+
+            if (exist != null)
             {
-                shippingRequestBid.TenantId = (int)AbpSession.TenantId;
-
+                throw new UserFriendlyException(L("You have already Bid to this shipping before message"));
             }
-            await _shippingRequestBidsRepository.InsertAsync(shippingRequestBid);
+            else
+            {
 
+                var shippingRequestBid = ObjectMapper.Map<ShippingRequestBid>(input);
+                if (AbpSession.TenantId != null)
+                {
+                    shippingRequestBid.TenantId = (int)AbpSession.TenantId;
+
+                }
+                await _shippingRequestBidsRepository.InsertAsync(shippingRequestBid);
+            }
         }
 
         [RequiresFeature(AppFeatures.Carrier)]
@@ -142,6 +157,13 @@ namespace TACHYON.Shipping.ShippingRequestBids
                 {
                     item.IsRejected = true;
                 }
+
+                //update shippingRequest final price
+                var shippingRequestItem = _shippingRequestsRepository.FirstOrDefault(bid.ShippingRequestId);
+                shippingRequestItem.Price = Convert.ToDecimal(bid.price);
+                shippingRequestItem.ShippingRequestStatusId = TACHYONConsts.Closed;
+                shippingRequestItem.CloseBidDate = Clock.Now;
+
             }
             else
             {

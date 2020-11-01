@@ -12,6 +12,7 @@ using System.Linq.Dynamic.Core;
 using System.Text;
 using Microsoft.EntityFrameworkCore;
 using TACHYON.Authorization.Users;
+using TACHYON.Notifications;
 
 namespace TACHYON.Shipping.ShippingRequests
 {
@@ -20,15 +21,19 @@ namespace TACHYON.Shipping.ShippingRequests
         private const int CheckPeriodAsMilliseconds = 1 * 60 * 60 * 1000 * 24; //1 day
 
         private readonly IRepository<ShippingRequest, long> _shippingRequestRepository;
+        private readonly IAppNotifier _appNotifier;
+
 
         public TrackBidEndDateWorker(
             AbpTimer timer,
-            IRepository<ShippingRequest, long> shippingRequestRepository
+            IRepository<ShippingRequest, long> shippingRequestRepository,
+            IAppNotifier appNotifier
             ) : base(timer)
         {
             _shippingRequestRepository = shippingRequestRepository;
             Timer.Period = CheckPeriodAsMilliseconds;
             Timer.RunOnStart = true;
+            _appNotifier = appNotifier;
         }
 
         //#544
@@ -65,6 +70,8 @@ namespace TACHYON.Shipping.ShippingRequests
                 {
                     item.ShippingRequestStatusId = TACHYONConsts.OnGoing;
                     Logger.Info(item + " The bid is already started.");
+                    //_appNotifier.CreateShippingRequestAsBid(GetCarriersByTruckTypeArray(shippingRequest.TrucksTypeId), shippingRequest.Id);
+
                 }
                 //todo add notification here 
             }
