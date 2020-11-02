@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using Abp.Timing;
 using TACHYON.Authorization.Users;
 using TACHYON.Goods.GoodCategories;
 using TACHYON.Goods.GoodsDetails;
@@ -164,13 +165,26 @@ namespace TACHYON.Shipping.ShippingRequests
         #region Bids Data
         public DateTime? BidStartDate { get; set; }
         public DateTime? BidEndDate { get; set; }
-        //public bool? isCancledBid { get; set; }
-        //public bool? IsClosedBid { get; set; }
+
+        public int ShippingRequestBidStatusId { get; set; }
+
         [ForeignKey("ShippingRequestBidStatusId")]
         public ShippingRequestBidStatus ShippingRequestBidStatusFK { get; set; }
         public DateTime? CloseBidDate { get; set; }
 
-        public ICollection<ShippingRequestBid> ShippingRequestBids { get; set;}
+        public ICollection<ShippingRequestBid> ShippingRequestBids { get; set; }
         #endregion
+
+        public void Close()
+        {
+            ShippingRequestBidStatusId = TACHYONConsts.ShippingRequestStatusClosed;
+            CloseBidDate = Clock.Now;
+        }
+
+        public void Start()
+        {
+            ShippingRequestBidStatusId = TACHYONConsts.ShippingRequestStatusOnGoing;
+            BidStartDate = Clock.Now;
+        }
     }
 }

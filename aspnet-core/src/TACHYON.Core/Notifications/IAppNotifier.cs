@@ -25,7 +25,7 @@ namespace TACHYON.Notifications
 
 
         Task AcceptShippingRequestBid(UserIdentifier argsUser, long shippingRequestBidId);
-        Task CreateShippingRequestAsBid(UserIdentifier[] argsUser, long shippingRequestId);
+        Task ShippingRequestAsBidWithSameTruckAsync(UserIdentifier[] argsUser, long shippingRequestId);
         #endregion
         Task WelcomeToTheApplicationAsync(User user);
 

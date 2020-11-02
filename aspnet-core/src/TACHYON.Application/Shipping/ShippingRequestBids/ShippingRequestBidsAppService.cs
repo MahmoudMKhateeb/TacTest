@@ -80,17 +80,17 @@ namespace TACHYON.Shipping.ShippingRequestBids
         public async Task CloseShippingRequestBid(StopShippingRequestBidInput input)
         {
             var bid = await _shippingRequestsRepository.FirstOrDefaultAsync(input.ShippingRequestId);
-            if (bid.ShippingRequestStatusId == TACHYONConsts.Closed)
+            if (bid.ShippingRequestStatusId == TACHYONConsts.ShippingRequestStatusClosed)
             {
                 throw new UserFriendlyException(L("The Bid is already Closed message"));
             }
-            if (bid.ShippingRequestStatusId != TACHYONConsts.OnGoing)
+            if (bid.ShippingRequestStatusId != TACHYONConsts.ShippingRequestStatusOnGoing)
             {
                 throw new UserFriendlyException(L("The Bid must be Ongoing message"));
             }
             else
             {
-                bid.ShippingRequestStatusId = TACHYONConsts.Closed;
+                bid.ShippingRequestStatusId = TACHYONConsts.ShippingRequestStatusClosed;
                 bid.CloseBidDate = Clock.Now;
             }
         }
@@ -107,10 +107,10 @@ namespace TACHYON.Shipping.ShippingRequestBids
         //#538
         [RequiresFeature(AppFeatures.Carrier)]
         [AbpAuthorize(AppPermissions.Pages_ShippingRequestBids_Create)]
-        protected virtual async Task  Create(CreatOrEditShippingRequestBidDto input)
+        protected virtual async Task Create(CreatOrEditShippingRequestBidDto input)
         {
-            var exist =await _shippingRequestBidsRepository.FirstOrDefaultAsync(x => x.TenantId == AbpSession.TenantId
-              && x.ShippingRequestId == input.ShippingRequestId);
+            var exist = await _shippingRequestBidsRepository.FirstOrDefaultAsync(x => x.TenantId == AbpSession.TenantId
+               && x.ShippingRequestId == input.ShippingRequestId);
 
             if (exist != null)
             {
@@ -135,25 +135,27 @@ namespace TACHYON.Shipping.ShippingRequestBids
         {
             var item = _shippingRequestBidsRepository.FirstOrDefaultAsync((long)input.Id);
 
-             ObjectMapper.Map(input, item);
+            ObjectMapper.Map(input, item);
         }
 
         //shipper accept carrier bid request #539
         [RequiresFeature(AppFeatures.Shipper)]
         public async Task AcceptBid(ShippingRequestBidInput input)
         {
-            var bid =await _shippingRequestBidsRepository.FirstOrDefaultAsync(input.ShippingRequestBidId);
+            var bid = await _shippingRequestBidsRepository.FirstOrDefaultAsync(input.ShippingRequestBidId);
             if (bid != null)
             {
                 bid.IsAccepted = true;
 
-                //#540 notification to carrier told bid acception 
-                await _appNotifier.AcceptShippingRequestBid(new UserIdentifier(bid.TenantId, bid.CreatorUserId.Value), bid.Id);
+                //#540 notification to carrier told bid accepted
+
+                await _appNotifier.AcceptShippingRequestBid(new UserIdentifier(bid.TenantId, bid.CreatorUserId.Value), bid.ShippingRequestId);
 
                 //Reject the other bids of this shipping request
                 var otherBids = _shippingRequestBidsRepository.GetAll()
-                    .Where(x => x.ShippingRequestId == bid.ShippingRequestId && x.Id != bid.Id);
-                foreach(var item in otherBids)
+                    .Where(x => x.ShippingRequestId == bid.ShippingRequestId)
+                    .Where(x => x.Id != bid.Id);
+                foreach (var item in otherBids)
                 {
                     item.IsRejected = true;
                 }
@@ -161,8 +163,7 @@ namespace TACHYON.Shipping.ShippingRequestBids
                 //update shippingRequest final price
                 var shippingRequestItem = _shippingRequestsRepository.FirstOrDefault(bid.ShippingRequestId);
                 shippingRequestItem.Price = Convert.ToDecimal(bid.price);
-                shippingRequestItem.ShippingRequestStatusId = TACHYONConsts.Closed;
-                shippingRequestItem.CloseBidDate = Clock.Now;
+                shippingRequestItem.Close();
 
             }
             else
@@ -177,10 +178,10 @@ namespace TACHYON.Shipping.ShippingRequestBids
         {
             using (CurrentUnitOfWork.DisableFilter(AbpDataFilters.MustHaveTenant))
             {
-                var shippingRequests =await _shippingRequestBidsRepository.GetAll()
-                    .Include(x=>x.ShippingRequestFk)
-                    .Where(x=> x.TenantId == AbpSession.TenantId)
-                    .Select(x=> x.ShippingRequestFk).
+                var shippingRequests = await _shippingRequestBidsRepository.GetAll()
+                    .Include(x => x.ShippingRequestFk)
+                    .Where(x => x.TenantId == AbpSession.TenantId)
+                    .Select(x => x.ShippingRequestFk).
                     ToListAsync();
 
 
@@ -189,12 +190,12 @@ namespace TACHYON.Shipping.ShippingRequestBids
         }
 
         [RequiresFeature(AppFeatures.Carrier)]
-        public async Task CanceleBidRequest(ShippingRequestBidInput input)
+        public async Task CancelBidRequest(ShippingRequestBidInput input)
         {
-            var bid =await _shippingRequestBidsRepository.FirstOrDefaultAsync(input.ShippingRequestBidId);
+            var bid = await _shippingRequestBidsRepository.FirstOrDefaultAsync(input.ShippingRequestBidId);
             if (bid.IsCancled != true)
             {
-                throw new UserFriendlyException(L("The bid is already canceled message"));
+                throw new UserFriendlyException(L("bid is already canceled message"));
             }
             bid.IsCancled = true;
             bid.CanceledDate = Clock.Now;
@@ -206,8 +207,8 @@ namespace TACHYON.Shipping.ShippingRequestBids
             using (CurrentUnitOfWork.DisableFilter(AbpDataFilters.MustHaveTenant))
             {
                 var filterShippingRequestsBids = _shippingRequestsRepository.GetAll()
-                    .Include(x=>x.ShippingRequestStatusFk)
-                   .Where(x => x.ShippingRequestStatusId!=TACHYONConsts.Canceled);
+                    .Include(x => x.ShippingRequestStatusFk)
+                   .Where(x => x.ShippingRequestStatusId != TACHYONConsts.ShippingRequestStatusCanceled);
 
                 var pagedAndFilteredShippingRequestsBids = filterShippingRequestsBids
                 .OrderBy(input.Sorting ?? "id asc")
@@ -219,10 +220,10 @@ namespace TACHYON.Shipping.ShippingRequestBids
                                               viewShipperBidsReqDetailsOutput = new ViewShipperBidsReqDetailsOutput
                                               {
                                                   Id = o.Id,
-                                                  EndBidDate = o.BidEndDate ,
-                                                  IsOngoingBid = o.ShippingRequestStatusId ==TACHYONConsts.OnGoing ? true: false,
-                                                  ShippingRequestBidStatusName=o.ShippingRequestStatusFk.DisplayName,
-                                                  ShipperName=o.CarrierTenantFk.Edition.DisplayName
+                                                  EndBidDate = o.BidEndDate,
+                                                  IsOngoingBid = o.ShippingRequestStatusId == TACHYONConsts.ShippingRequestStatusOnGoing ? true : false,
+                                                  ShippingRequestBidStatusName = o.ShippingRequestStatusFk.DisplayName,
+                                                  ShipperName = o.CarrierTenantFk.Edition.DisplayName
                                               },
                                           };
 

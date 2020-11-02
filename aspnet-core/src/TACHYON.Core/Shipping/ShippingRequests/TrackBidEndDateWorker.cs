@@ -10,6 +10,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Dynamic.Core;
 using System.Text;
+using System.Threading.Tasks;
+using Abp;
 using Microsoft.EntityFrameworkCore;
 using TACHYON.Authorization.Users;
 using TACHYON.Notifications;
@@ -47,16 +49,15 @@ namespace TACHYON.Shipping.ShippingRequests
             {
                 var expiresBids = _shippingRequestRepository.GetAll()
                     .Where(u => u.BidEndDate != null)
-                    .Where(u => u.ShippingRequestStatusId == TACHYONConsts.Closed)
+                    .Where(u => u.ShippingRequestStatusId == TACHYONConsts.ShippingRequestStatusClosed)
                     .Where(u => u.BidEndDate.Value.Date == Clock.Now.Date)
                     .ToList();
 
 
                 foreach (var item in expiresBids)
                 {
-                    item.ShippingRequestStatusId = TACHYONConsts.Closed;
+                    item.ShippingRequestStatusId = TACHYONConsts.ShippingRequestStatusClosed;
                     item.CloseBidDate = Clock.Now;
-                    Logger.Info(item + " Expired End Bid date, the bid is closed.");
                 }
 
                 //todo add notification here 
@@ -66,18 +67,20 @@ namespace TACHYON.Shipping.ShippingRequests
                 //Open standBy Bids
                 var onGoingBids = _shippingRequestRepository.GetAll()
                         .Where(x => x.BidStartDate != null)
-                        .Where(x => x.ShippingRequestStatusId == TACHYONConsts.StandBy)
+                        .Where(x => x.ShippingRequestStatusId == TACHYONConsts.ShippingRequestStatusStandBy)
                         .Where(x => x.BidStartDate.Value.Date == Clock.Now.Date)
                         .ToList();
 
-                foreach(var item in onGoingBids)
+                foreach (var item in onGoingBids)
                 {
-                    item.ShippingRequestStatusId = TACHYONConsts.OnGoing;
-                    Logger.Info(item + " The bid is already started.");
-                    _appNotifier.CreateShippingRequestAsBid(_bidDomainService.GetCarriersByTruckTypeArray(item.TrucksTypeId), item.Id);
+                    item.ShippingRequestStatusId = TACHYONConsts.ShippingRequestStatusOnGoing;
+                    var users = Task.Run<UserIdentifier[]>(async () => await _bidDomainService.GetCarriersByTruckTypeArrayAsync(item.TrucksTypeId)).Result;
+                    // to carrier
+                    _appNotifier.ShippingRequestAsBidWithSameTruckAsync(users, item.Id);
+                      //todo add notification here to shipper
 
                 }
-                //todo add notification here 
+               
             }
         }
     }

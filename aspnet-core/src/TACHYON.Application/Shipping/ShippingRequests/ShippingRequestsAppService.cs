@@ -72,7 +72,7 @@ namespace TACHYON.Shipping.ShippingRequests
             IRepository<RoutStep, long> routStepRepository,
             IRepository<Tenant> tenantRepository,
             IRepository<TrucksType, long> lookupTrucksTypeRepository,
-            IRepository<Truck,Guid> truckRepository,
+            IRepository<Truck, Guid> truckRepository,
             IRepository<TrailerType, int> lookupTrailerTypeRepository,
             IRepository<RoutType, int> lookupRoutTypeRepository,
             IRepository<GoodCategory, int> lookupGoodCategoryRepository,
@@ -256,27 +256,36 @@ namespace TACHYON.Shipping.ShippingRequests
                 shippingRequest.TenantId = (int)AbpSession.TenantId;
                 shippingRequest.RoutSteps.ForEach(x => x.TenantId = (int)AbpSession.TenantId);
                 shippingRequest.RouteFk.TenantId = (int)AbpSession.TenantId;
-                //insert Bid status auto
+
+                // Bid start-date
+                if (!input.BidStartDate.HasValue)
+                {
+                    input.BidStartDate = Clock.Now.Date;
+                }
+                // Bid status
                 if (input.IsBid)
                 {
-                    shippingRequest.ShippingRequestStatusId = input.BidStartDate.Value.Date == Clock.Now.Date ? TACHYONConsts.OnGoing : TACHYONConsts.StandBy;
+                    shippingRequest.ShippingRequestStatusId = input.BidStartDate.Value.Date == Clock.Now.Date ? TACHYONConsts.ShippingRequestStatusOnGoing : TACHYONConsts.ShippingRequestStatusStandBy;
 
                 }
             }
 
-            shippingRequest.ShippingRequestStatusId = 1;
 
             await _shippingRequestRepository.InsertAsync(shippingRequest);
 
             if (shippingRequest.IsBid)
             {
                 //Notify Carrier with the same Truck type
-                if (shippingRequest.ShippingRequestStatusId == TACHYONConsts.OnGoing)
-                    await _appNotifier.CreateShippingRequestAsBid(_bidDomainService.GetCarriersByTruckTypeArray(shippingRequest.TrucksTypeId), shippingRequest.Id);
+                if (shippingRequest.ShippingRequestStatusId == TACHYONConsts.ShippingRequestStatusOnGoing)
+                {
+                    var users = await _bidDomainService.GetCarriersByTruckTypeArrayAsync(shippingRequest.TrucksTypeId);
+                    await _appNotifier.ShippingRequestAsBidWithSameTruckAsync(users, shippingRequest.Id);
+
+                }
             }
         }
 
-       
+
         [AbpAuthorize(AppPermissions.Pages_ShippingRequests_Edit)]
         protected virtual async Task Update(CreateOrEditShippingRequestDto input)
         {

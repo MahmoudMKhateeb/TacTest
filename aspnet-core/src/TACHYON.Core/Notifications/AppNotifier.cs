@@ -98,7 +98,7 @@ namespace TACHYON.Notifications
         }
 
 
-        public async Task AcceptShippingRequestBid(UserIdentifier argsUser, long shippingRequestBidId)
+        public async Task AcceptShippingRequestBid(UserIdentifier argsUser, long shippingRequestId)
         {
             var notificationData = new LocalizableMessageNotificationData(
                 new LocalizableString(
@@ -106,7 +106,7 @@ namespace TACHYON.Notifications
                     TACHYONConsts.LocalizationSourceName
                     )
                 );
-            notificationData["shippingRequestBidId"] = shippingRequestBidId;
+            notificationData["shippingRequestId"] = shippingRequestId;
             await _notificationPublisher.PublishAsync(AppNotificationNames.AcceptShippingRequestBid,
                 notificationData, 
                 severity:NotificationSeverity.Success,
@@ -114,7 +114,7 @@ namespace TACHYON.Notifications
 
         }
 
-        public async Task CreateShippingRequestAsBid(UserIdentifier[] argsUser, long shippingRequestId)
+        public async Task ShippingRequestAsBidWithSameTruckAsync(UserIdentifier[] argsUser, long shippingRequestId)
         {
             var notificationData = new LocalizableMessageNotificationData(
                 new LocalizableString(

@@ -5,6 +5,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 using TACHYON.Trucks;
 
 namespace TACHYON.Shipping.ShippingRequestBids
@@ -18,15 +20,21 @@ namespace TACHYON.Shipping.ShippingRequestBids
             _truckRepository = truckRepository;
         }
 
-        public UserIdentifier[] GetCarriersByTruckTypeArray(long trucksTypeId)
+
+        /// <summary>
+        /// get all carriers who have this tucks filter
+        /// </summary>
+        /// <param name="trucksTypeId"></param>
+        /// <returns></returns>
+        public async Task<UserIdentifier[]> GetCarriersByTruckTypeArrayAsync(long trucksTypeId)
         {
             using (CurrentUnitOfWork.DisableFilter(AbpDataFilters.MustHaveTenant))
             {
-                var carriersList = _truckRepository.GetAll()
+                var carriersList = await _truckRepository.GetAll()
                     .Where(x => x.TrucksTypeId == trucksTypeId)
                     .Select(x => new UserIdentifier(x.TenantId, x.CreatorUserId.Value))
                     .Distinct()
-                    .ToArray();
+                    .ToArrayAsync();
 
                 return carriersList;
             }

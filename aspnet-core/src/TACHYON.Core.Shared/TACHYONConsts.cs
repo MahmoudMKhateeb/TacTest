@@ -17,13 +17,13 @@
         public const string AbpApiClientUserAgent = "AbpApiClient";
 
         //BidStatus consts
-        public const int StandBy = 1;
+        public const int ShippingRequestStatusStandBy = 1;
 
-        public const int OnGoing = 2;
+        public const int ShippingRequestStatusOnGoing = 2;
 
-        public const int Closed = 3;
+        public const int ShippingRequestStatusClosed = 3;
 
-        public const int Canceled = 4;
+        public const int ShippingRequestStatusCanceled = 4;
 
         // Note:
         // Minimum accepted payment amount. If a payment amount is less then that minimum value payment progress will continue without charging payment

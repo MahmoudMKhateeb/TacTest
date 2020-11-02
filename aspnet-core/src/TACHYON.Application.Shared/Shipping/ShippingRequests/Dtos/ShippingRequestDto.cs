@@ -15,5 +15,7 @@ namespace TACHYON.Shipping.ShippingRequests.Dtos
         public bool? IsRejected { get; set; }
 
 
+
+
     }
 }
