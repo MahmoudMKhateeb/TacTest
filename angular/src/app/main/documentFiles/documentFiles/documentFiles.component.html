@@ -2,16 +2,23 @@
   <div class="content d-flex flex-column flex-column-fluid">
     <sub-header [title]="'DocumentFiles' | localize" [description]="'DocumentFilesHeaderInfo' | localize">
       <div role="actions">
-        <button (click)="exportToExcel()" class="btn btn-outline-success"><i class="fa fa-file-excel"></i> {{ l('ExportToExcel') }}</button>
+        <!-- <button (click)="exportToExcel()" class="btn btn-outline-success"><i class="fa fa-file-excel"></i> {{ l('ExportToExcel') }}</button> -->
 
         <button *ngIf="isGranted('Pages.DocumentFiles.Create')" (click)="createDocumentFile()" class="btn btn-primary blue">
           <i class="fa fa-plus"></i> {{ l('CreateNewDocumentFile') }}
         </button>
       </div>
     </sub-header>
-
     <div [class]="containerClass">
       <div class="card card-custom gutter-b">
+        <div *ngIf="entityType != 'Tenant' && isHost" class="card-header">
+          <div class="row">
+            <label>Entity Type</label>
+            <select [(ngModel)]="entityType" (change)="SwitchEntityType($event.target.value)" class="form-control form-control-lg">
+              <option *ngFor="let entityType of entityTypesList" [value]="entityType.displayName">{{ entityType.displayName }}</option>
+            </select>
+          </div>
+        </div>
         <div class="card-body">
           <form class="form" autocomplete="off">
             <div>
@@ -39,19 +46,31 @@
                   <div class="kt-separator kt-separator--border-dashed"></div>
                 </div>
 
-                <div class="col-md-3">
+                <!-- <div class="col-md-3">
                   <div class="form-group">
                     <label for="NameFilter">{{ l('Name') }}</label>
                     <input type="text" class="form-control" id="NameFilter" name="nameFilter" [(ngModel)]="nameFilter" />
                   </div>
-                </div>
+                </div> -->
                 <div class="col-md-3">
+                  <div class="form-group">
+                    <label for="DocumentTypeDisplayNameFilter">{{ l('Document Name') }} </label>
+                    <input
+                      type="text"
+                      class="form-control"
+                      id="DocumentTypeDisplayNameFilter"
+                      name="documentTypeDisplayNameFilter"
+                      [(ngModel)]="documentTypeDisplayNameFilter"
+                    />
+                  </div>
+                </div>
+                <!-- <div class="col-md-3">
                   <div class="form-group">
                     <label for="ExtnFilter">{{ l('Extn') }}</label>
                     <input type="text" class="form-control" id="ExtnFilter" name="extnFilter" [(ngModel)]="extnFilter" />
                   </div>
-                </div>
-                <div class="col-md-3">
+                </div> -->
+                <!-- <div class="col-md-3">
                   <div class="form-group">
                     <label for="BinaryObjectIdFilter">{{ l('BinaryObjectId') }}</label>
                     <input
@@ -62,7 +81,7 @@
                       [(ngModel)]="binaryObjectIdFilter"
                     />
                   </div>
-                </div>
+                </div> -->
                 <div class="col-md-3">
                   <div class="form-group">
                     <label for="MinExpirationDateFilter">{{ l('ExpirationDateRange') }}</label>
@@ -89,27 +108,16 @@
                     </div>
                   </div>
                 </div>
-                <div class="col-md-3">
+                <!-- <div *ngIf="entityType == 'Tenant'" class="col-md-3">
                   <div class="form-group">
                     <label for="IsAcceptedFilter">{{ l('IsAccepted') }}</label>
-                    <input type="text" class="form-control" id="IsAcceptedFilter" name="isAcceptedFilter" [(ngModel)]="isAcceptedFilter" />
+                    <input type="checkbox" class="form-control" id="IsAcceptedFilter" name="isAcceptedFilter" [(ngModel)]="isAcceptedFilter" />
                   </div>
-                </div>
+                </div> -->
+
                 <div class="col-md-3">
-                  <div class="form-group">
-                    <label for="DocumentTypeDisplayNameFilter">({{ l('DocumentType') }}) {{ l('DisplayName') }}</label>
-                    <input
-                      type="text"
-                      class="form-control"
-                      id="DocumentTypeDisplayNameFilter"
-                      name="documentTypeDisplayNameFilter"
-                      [(ngModel)]="documentTypeDisplayNameFilter"
-                    />
-                  </div>
-                </div>
-                <div class="col-md-3">
-                  <div class="form-group">
-                    <label for="TruckPlateNumberFilter">({{ l('Truck') }}) {{ l('PlateNumber') }}</label>
+                  <div *ngIf="entityType == 'Truck'" class="form-group">
+                    <label for="TruckPlateNumberFilter">{{ l('Truck ID') }} </label>
                     <input
                       type="text"
                       class="form-control"
@@ -120,8 +128,8 @@
                   </div>
                 </div>
                 <div class="col-md-3">
-                  <div class="form-group">
-                    <label for="TrailerTrailerCodeFilter">({{ l('Trailer') }}) {{ l('TrailerCode') }}</label>
+                  <div *ngIf="entityType == 'Trailer'" class="form-group">
+                    <label for="TrailerTrailerCodeFilter">({{ l('Trailer ID') }}) </label>
                     <input
                       type="text"
                       class="form-control"
@@ -132,13 +140,13 @@
                   </div>
                 </div>
                 <div class="col-md-3">
-                  <div class="form-group">
-                    <label for="UserNameFilter">({{ l('User') }}) {{ l('Name') }}</label>
+                  <div *ngIf="entityType == 'Driver'" class="form-group">
+                    <label for="UserNameFilter">({{ l('Driver') }}) {{ l('Name') }}</label>
                     <input type="text" class="form-control" id="UserNameFilter" name="userNameFilter" [(ngModel)]="userNameFilter" />
                   </div>
                 </div>
                 <div class="col-md-3">
-                  <div class="form-group">
+                  <!-- <div class="form-group">
                     <label for="RoutStepDisplayNameFilter">({{ l('RoutStep') }}) {{ l('DisplayName') }}</label>
                     <input
                       type="text"
@@ -147,7 +155,7 @@
                       name="routStepDisplayNameFilter"
                       [(ngModel)]="routStepDisplayNameFilter"
                     />
-                  </div>
+                  </div> -->
                 </div>
               </div>
               <div class="row mb-2">
@@ -187,42 +195,44 @@
                       {{ l('Actions') }}
                     </th>
                     <th style="width: 150px;" pSortableColumn="documentTypeFk.displayName">
-                      {{ l('DisplayName') }}
+                      {{ l('DocumentName') }}
                       <p-sortIcon field="documentTypeDisplayName"></p-sortIcon>
                     </th>
-                    <th style="width: 150px;" pSortableColumn="truckFk.plateNumber">
-                      {{ l('PlateNumber') }}
-                      <p-sortIcon field="truckPlateNumber"></p-sortIcon>
+                    <th *ngIf="entityType == 'Tenant'" style="width: 150px;" pSortableColumn="documentTypeFk.SubmitterTenatTenancyName">
+                      {{ l('SubmitterTenant') }}
+                      <p-sortIcon field="SubmitterTenatTenancyName"></p-sortIcon>
                     </th>
-                    <th style="width: 150px;" pSortableColumn="trailerFk.trailerCode">
+
+                    <!-- <th style="width: 150px;" pSortableColumn="documentTypeFk.DocumentsEntityFk.displayName">
+                      {{ l('Entity') }}
+                      <p-sortIcon field="Entity"></p-sortIcon>
+                    </th> -->
+                    <th *ngIf="entityType == 'Truck'" style="width: 150px;" pSortableColumn="truckFk.trukId">
+                      {{ l('Truck ID') }}
+                      <p-sortIcon field="truckId"></p-sortIcon>
+                    </th>
+                    <th *ngIf="entityType == 'Trailer'" style="width: 150px;" pSortableColumn="trailerFk.trailerCode">
                       {{ l('TrailerCode') }}
                       <p-sortIcon field="trailerTrailerCode"></p-sortIcon>
                     </th>
-                    <th style="width: 150px;" pSortableColumn="userFk.name">
-                      {{ l('Name') }}
+                    <th *ngIf="entityType == 'Driver'" style="width: 150px;" pSortableColumn="userFk.name">
+                      {{ l('DriverName') }}
                       <p-sortIcon field="userName"></p-sortIcon>
                     </th>
-                    <th style="width: 150px;" pSortableColumn="routStepFk.displayName">
-                      {{ l('DisplayName') }}
-                      <p-sortIcon field="routStepDisplayName"></p-sortIcon>
-                    </th>
-                    <th style="width: 150px;" pSortableColumn="name">
-                      {{ l('Name') }}
-                      <p-sortIcon field="documentFile.name"></p-sortIcon>
+
+                    <th style="width: 150px;" pSortableColumn="documentTypeFk.number">
+                      {{ l('Number') }}
+                      <p-sortIcon field="Number"></p-sortIcon>
                     </th>
                     <th style="width: 150px;" pSortableColumn="extn">
                       {{ l('Extn') }}
                       <p-sortIcon field="documentFile.extn"></p-sortIcon>
                     </th>
-                    <th style="width: 150px;" pSortableColumn="binaryObjectId">
-                      {{ l('BinaryObjectId') }}
-                      <p-sortIcon field="documentFile.binaryObjectId"></p-sortIcon>
-                    </th>
                     <th style="width: 150px;" pSortableColumn="expirationDate">
                       {{ l('ExpirationDate') }}
                       <p-sortIcon field="documentFile.expirationDate"></p-sortIcon>
                     </th>
-                    <th style="width: 150px;" pSortableColumn="isAccepted">
+                    <th *ngIf="entityType == 'Tenant'" style="width: 150px;" pSortableColumn="isAccepted">
                       {{ l('IsAccepted') }}
                       <p-sortIcon field="documentFile.isAccepted"></p-sortIcon>
                     </th>
@@ -266,48 +276,56 @@
                         </ul>
                       </div>
                     </td>
+
                     <td style="width: 150px;">
-                      <span class="ui-column-title"> {{ l('DisplayName') }}</span>
                       {{ record.documentTypeDisplayName }}
                     </td>
-                    <td style="width: 150px;">
-                      <span class="ui-column-title"> {{ l('PlateNumber') }}</span>
-                      {{ record.truckPlateNumber }}
+
+                    <td *ngIf="entityType == 'Tenant'" style="width: 150px;">
+                      {{ record.submitterTenatTenancyName }}
                     </td>
-                    <td style="width: 150px;">
-                      <span class="ui-column-title"> {{ l('TrailerCode') }}</span>
+
+                    <!-- <td  style="width: 150px;">
+                      {{ record.documentEntityDisplayName }}
+                    </td> -->
+
+                    <td *ngIf="entityType == 'Truck'" style="width: 150px;">
+                      {{ record.truckId == '' ? 'None' : record.truckId }}
+                    </td>
+                    <td *ngIf="entityType == 'Trailer'" style="width: 150px;">
                       {{ record.trailerTrailerCode }}
                     </td>
-                    <td style="width: 150px;">
-                      <span class="ui-column-title"> {{ l('Name') }}</span>
+                    <td *ngIf="entityType == 'Driver'" style="width: 150px;">
                       {{ record.userName }}
                     </td>
                     <td style="width: 150px;">
+                      {{ record.hasNumber ? record.number : '--' }}
+                    </td>
+                    <!-- <td style="width: 150px;">
                       <span class="ui-column-title"> {{ l('DisplayName') }}</span>
                       {{ record.routStepDisplayName }}
-                    </td>
-                    <td style="width: 150px;">
+                    </td> -->
+                    <!-- <td style="width: 150px;">
                       <span class="ui-column-title"> {{ l('Name') }}</span>
                       {{ record.documentFile.name }}
-                    </td>
+                    </td> -->
                     <td style="width: 150px;">
-                      <span class="ui-column-title"> {{ l('Extn') }}</span>
                       {{ record.documentFile.extn }}
                     </td>
-                    <td style="width: 150px;">
+                    <!-- <td style="width: 150px;">
                       <span class="ui-column-title"> {{ l('BinaryObjectId') }}</span>
                       {{ record.documentFile.binaryObjectId }}
-                    </td>
+                    </td> -->
                     <td style="width: 150px;">
-                      <span class="ui-column-title"> {{ l('ExpirationDate') }}</span>
-                      <span *ngIf="record.documentFile.expirationDate">
+                      <span *ngIf="record.hasDate">
                         {{ record.documentFile.expirationDate | momentFormat: 'L' }}
                       </span>
-                      <span *ngIf="!record.documentFile.expirationDate">-</span>
+                      <span *ngIf="!record.hasDate">--</span>
                     </td>
-                    <td style="width: 150px;">
-                      <span class="ui-column-title"> {{ l('IsAccepted') }}</span>
-                      {{ record.documentFile.isAccepted }}
+
+                    <td *ngIf="entityType == 'Tenant'" style="width: 150px;">
+                      <i *ngIf="record.documentFile.isAccepted" class="fa fa-check-circle text-success" title="True"></i>
+                      <i *ngIf="!record.documentFile.isAccepted" class="fa fa-times-circle" title="False"></i>
                     </td>
                   </tr>
                 </ng-template>

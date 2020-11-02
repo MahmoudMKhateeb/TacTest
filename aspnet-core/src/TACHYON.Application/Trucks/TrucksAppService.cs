@@ -271,15 +271,15 @@ namespace TACHYON.Trucks
 
             ObjectMapper.Map(input, truck);
 
-            if (!input.UpdateTruckPictureInput.FileToken.IsNullOrEmpty())
-            {
-                if (truck.PictureId.HasValue)
-                {
-                    await _binaryObjectManager.DeleteAsync(truck.PictureId.Value);
-                }
+            //if (!input.UpdateTruckPictureInput.FileToken.IsNullOrEmpty())
+            //{
+            //    if (truck.PictureId.HasValue)
+            //    {
+            //        await _binaryObjectManager.DeleteAsync(truck.PictureId.Value);
+            //    }
 
-                truck.PictureId = await AddOrUpdateTruckPicture(input.UpdateTruckPictureInput);
-            }
+            //    truck.PictureId = await AddOrUpdateTruckPicture(input.UpdateTruckPictureInput);
+            //}
 
         }
 

@@ -246,6 +246,11 @@
                             >
                           </li>
                           <li>
+                            <a href="javascript:;" class="dropdown-item" (click)="viewOrEditEntityDocumentsModal.show(record.truck.id, 'Truck')">{{
+                              l('View Documents')
+                            }}</a>
+                          </li>
+                          <li>
                             <a
                               class="dropdown-item"
                               href="javascript:;"
@@ -343,6 +348,7 @@
     </div>
     <createOrEditTruckModal #createOrEditTruckModal (modalSave)="getTrucks()"></createOrEditTruckModal>
     <viewTruckModal #viewTruckModal></viewTruckModal>
+    <viewOrEditEntityDocumentsModal #viewOrEditEntityDocumentsModal></viewOrEditEntityDocumentsModal>
     <entityTypeHistoryModal #entityTypeHistoryModal></entityTypeHistoryModal>
   </div>
 </div>

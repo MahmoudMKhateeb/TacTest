@@ -1,6 +1,6 @@
 ﻿import { Component, Injector, ViewEncapsulation, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { DocumentFilesServiceProxy, DocumentFileDto } from '@shared/service-proxies/service-proxies';
+import { DocumentFilesServiceProxy, DocumentFileDto, GetDocumentEntitiesLookupForDocumentFilesDto } from '@shared/service-proxies/service-proxies';
 import { NotifyService } from 'abp-ng2-module';
 import { AppComponentBase } from '@shared/common/app-component-base';
 import { TokenAuthServiceProxy } from '@shared/service-proxies/service-proxies';
@@ -41,7 +41,11 @@ export class DocumentFilesComponent extends AppComponentBase {
   truckPlateNumberFilter = '';
   trailerTrailerCodeFilter = '';
   userNameFilter = '';
+  isHost = false;
   routStepDisplayNameFilter = '';
+
+  entityType = '';
+  entityTypesList: GetDocumentEntitiesLookupForDocumentFilesDto[] = [];
 
   _entityTypeFullName = 'TACHYON.Documents.DocumentFiles.DocumentFile';
   entityHistoryEnabled = false;
@@ -58,6 +62,19 @@ export class DocumentFilesComponent extends AppComponentBase {
   }
 
   ngOnInit(): void {
+    this._documentFilesServiceProxy.getIsCurrentTenantHost().subscribe((res) => {
+      if (res) {
+        this.entityType = 'Tenant';
+      } else {
+        this.isHost = false;
+        this.entityType = 'Truck';
+      }
+    });
+
+    this._documentFilesServiceProxy.getDocumentEntitiesForDocumentFile().subscribe((res) => {
+      this.entityTypesList = res;
+    });
+
     this.entityHistoryEnabled = this.setIsEntityHistoryEnabled();
   }
 
@@ -78,21 +95,21 @@ export class DocumentFilesComponent extends AppComponentBase {
     }
 
     this.primengTableHelper.showLoadingIndicator();
-
     this._documentFilesServiceProxy
       .getAll(
         this.filterText,
-        this.nameFilter,
-        this.extnFilter,
-        this.binaryObjectIdFilter,
+        // this.nameFilter,
+        // this.extnFilter,
+        // this.binaryObjectIdFilter,
         this.maxExpirationDateFilter,
         this.minExpirationDateFilter,
-        this.isAcceptedFilter,
+        // this.isAcceptedFilter,
         this.documentTypeDisplayNameFilter,
+        this.entityType,
         this.truckPlateNumberFilter,
         this.trailerTrailerCodeFilter,
         this.userNameFilter,
-        this.routStepDisplayNameFilter,
+        // this.routStepDisplayNameFilter,
         this.primengTableHelper.getSorting(this.dataTable),
         this.primengTableHelper.getSkipCount(this.paginator, event),
         this.primengTableHelper.getMaxResultCount(this.paginator, event)
@@ -131,30 +148,35 @@ export class DocumentFilesComponent extends AppComponentBase {
     });
   }
 
-  exportToExcel(): void {
-    this._documentFilesServiceProxy
-      .getDocumentFilesToExcel(
-        this.filterText,
-        this.nameFilter,
-        this.extnFilter,
-        this.binaryObjectIdFilter,
-        this.maxExpirationDateFilter,
-        this.minExpirationDateFilter,
-        this.isAcceptedFilter,
-        this.documentTypeDisplayNameFilter,
-        this.truckPlateNumberFilter,
-        this.trailerTrailerCodeFilter,
-        this.userNameFilter,
-        this.routStepDisplayNameFilter
-      )
-      .subscribe((result) => {
-        this._fileDownloadService.downloadTempFile(result);
-      });
-  }
+  // exportToExcel(): void {
+  //   this._documentFilesServiceProxy
+  //     .getDocumentFilesToExcel(
+  //       this.filterText,
+  //       this.nameFilter,
+  //       this.extnFilter,
+  //       this.binaryObjectIdFilter,
+  //       this.maxExpirationDateFilter,
+  //       this.minExpirationDateFilter,
+  //       this.isAcceptedFilter,
+  //       this.documentTypeDisplayNameFilter,
+  //       this.truckPlateNumberFilter,
+  //       this.trailerTrailerCodeFilter,
+  //       this.userNameFilter,
+  //       this.routStepDisplayNameFilter
+  //     )
+  //     .subscribe((result) => {
+  //       this._fileDownloadService.downloadTempFile(result);
+  //     });
+  // }
 
   downloadDocument(documentFile: DocumentFileDto) {
     this._documentFilesServiceProxy.getDocumentFileDto(documentFile.id).subscribe((result) => {
       this._fileDownloadService.downloadTempFile(result);
     });
+  }
+
+  SwitchEntityType(type) {
+    this.entityType = type;
+    this.getDocumentFiles();
   }
 }

@@ -1,5 +1,5 @@
 ﻿/* tslint:disable:member-ordering */
-import { Component, EventEmitter, Injector, Output, ViewChild, ChangeDetectorRef } from '@angular/core';
+import { Component, EventEmitter, Injector, Output, ViewChild, ChangeDetectorRef, QueryList } from '@angular/core';
 import { ModalDirective } from 'ngx-bootstrap/modal';
 import { finalize } from 'rxjs/operators';
 import {
@@ -33,6 +33,8 @@ import { CreateOrEditDocumentFileModalComponent } from '@app/main/documentFiles/
 import { FileDownloadService } from '@shared/utils/file-download.service';
 import { EntityTypeHistoryModalComponent } from '@app/shared/common/entityHistory/entity-type-history-modal.component';
 import * as moment from '@node_modules/moment';
+import { ViewChildren } from '@angular/core';
+import { ViewOrEditEntityDocumentsModalComponent } from '@app/main/documentFiles/documentFiles/documentFilesViewComponents/view-or-edit-entity-documents-modal.componant';
 
 @Component({
   selector: 'createOrEditTruckModal',
@@ -45,12 +47,26 @@ export class CreateOrEditTruckModalComponent extends AppComponentBase {
   @ViewChild('truckUserLookupTableModal2', { static: true }) truckUserLookupTableModal2: TruckUserLookupTableModalComponent;
 
   @ViewChild('createOrEditDocumentFileModal', { static: true }) createOrEditDocumentFileModal: CreateOrEditDocumentFileModalComponent;
-  @ViewChild('paginator', { static: true }) paginator: Paginator;
-  @ViewChild('dataTable', { static: true }) dataTable: Table;
+  // @ViewChild('paginator', { static: true }) paginator: Paginator;
+  // @ViewChild('dataTable', { static: true }) dataTable: Table;
   @ViewChild('entityTypeHistoryModal', { static: true }) entityTypeHistoryModal: EntityTypeHistoryModalComponent;
 
   @Output() modalSave: EventEmitter<any> = new EventEmitter<any>();
 
+  @ViewChildren('dataTable') TableComponent: QueryList<Table>;
+  @ViewChildren('paginator') PaginatorComponent: QueryList<Paginator>;
+  private dataTable: Table;
+  private paginator: Paginator;
+  public ngAfterViewInit(): void {
+    this.TableComponent.changes.subscribe((tComps: QueryList<Table>) => {
+      this.dataTable = tComps.first;
+      // console.log(tComps.first);
+    });
+    this.PaginatorComponent.changes.subscribe((pComps: QueryList<Paginator>) => {
+      this.paginator = pComps.first;
+      // console.log(pComps.first);
+    });
+  }
   active = false;
   saving = false;
   ModalIsEdit = null;
@@ -170,6 +186,7 @@ export class CreateOrEditTruckModalComponent extends AppComponentBase {
         });
 
         //dropDowns
+        console.log(this.truck.id);
 
         this.active = true;
         this.modal.show();
@@ -189,8 +206,26 @@ export class CreateOrEditTruckModalComponent extends AppComponentBase {
     this.initDocsUploader();
   }
 
+  updateTrucDetails() {
+    this._trucksServiceProxy
+      .createOrEdit(this.truck)
+      .pipe(
+        finalize(() => {
+          this.saving = false;
+        })
+      )
+      .subscribe(() => {
+        this.notify.info(this.l('SavedSuccessfully'));
+        this.close();
+        this.modalSave.emit(null);
+      });
+  }
+
   save(): void {
     this.saving = true;
+    if (this.truck.id) {
+      this.updateTrucDetails();
+    }
     // this.uploader.uploadAll();
     this.DocsUploader.uploadAll();
   }
@@ -461,42 +496,6 @@ export class CreateOrEditTruckModalComponent extends AppComponentBase {
     );
   }
 
-  getDocumentFiles(event?: LazyLoadEvent) {
-    if (this.truck.id) {
-      this.changeDetectorRef.detectChanges();
-      if (this.primengTableHelper.shouldResetPaging(event)) {
-        this.paginator.changePage(0);
-        return;
-      }
-
-      this.primengTableHelper.showLoadingIndicator();
-
-      this._documentFilesServiceProxy
-        .getAll(
-          this.filterText,
-          this.nameFilter,
-          this.extnFilter,
-          this.binaryObjectIdFilter,
-          this.maxExpirationDateFilter,
-          this.minExpirationDateFilter,
-          this.isAcceptedFilter,
-          this.documentTypeDisplayNameFilter,
-          this.truckPlateNumberFilter,
-          this.trailerTrailerCodeFilter,
-          this.userNameFilter,
-          this.routStepDisplayNameFilter,
-          this.primengTableHelper.getSorting(this.dataTable),
-          this.primengTableHelper.getSkipCount(this.paginator, event),
-          this.primengTableHelper.getMaxResultCount(this.paginator, event)
-        )
-        .subscribe((result) => {
-          this.primengTableHelper.totalRecordsCount = result.totalCount;
-          this.primengTableHelper.records = result.items;
-          this.primengTableHelper.hideLoadingIndicator();
-        });
-    }
-  }
-
   reloadPage(): void {
     this.changeDetectorRef.detectChanges();
 
@@ -515,37 +514,26 @@ export class CreateOrEditTruckModalComponent extends AppComponentBase {
     });
   }
 
-  deleteDocumentFile(documentFile: DocumentFileDto): void {
-    this.message.confirm('', this.l('AreYouSure'), (isConfirmed) => {
-      if (isConfirmed) {
-        this._documentFilesServiceProxy.delete(documentFile.id).subscribe(() => {
-          this.reloadPage();
-          this.notify.success(this.l('SuccessfullyDeleted'));
-        });
-      }
-    });
-  }
-
-  exportToExcel(): void {
-    this._documentFilesServiceProxy
-      .getDocumentFilesToExcel(
-        this.filterText,
-        this.nameFilter,
-        this.extnFilter,
-        this.binaryObjectIdFilter,
-        this.maxExpirationDateFilter,
-        this.minExpirationDateFilter,
-        this.isAcceptedFilter,
-        this.documentTypeDisplayNameFilter,
-        this.truckPlateNumberFilter,
-        this.trailerTrailerCodeFilter,
-        this.userNameFilter,
-        this.routStepDisplayNameFilter
-      )
-      .subscribe((result) => {
-        this._fileDownloadService.downloadTempFile(result);
-      });
-  }
+  // exportToExcel(): void {
+  //   this._documentFilesServiceProxy
+  //     .getDocumentFilesToExcel(
+  //       this.filterText,
+  //       this.nameFilter,
+  //       this.extnFilter,
+  //       this.binaryObjectIdFilter,
+  //       this.maxExpirationDateFilter,
+  //       this.minExpirationDateFilter,
+  //       this.isAcceptedFilter,
+  //       this.documentTypeDisplayNameFilter,
+  //       this.truckPlateNumberFilter,
+  //       this.trailerTrailerCodeFilter,
+  //       this.userNameFilter,
+  //       this.routStepDisplayNameFilter
+  //     )
+  //     .subscribe((result) => {
+  //       this._fileDownloadService.downloadTempFile(result);
+  //     });
+  // }
   downloadDocument(documentFile: DocumentFileDto) {
     this._documentFilesServiceProxy.getDocumentFileDto(documentFile.id).subscribe((result) => {
       this._fileDownloadService.downloadTempFile(result);

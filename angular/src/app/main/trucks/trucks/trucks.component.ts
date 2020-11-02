@@ -19,6 +19,7 @@ import { finalize } from '@node_modules/rxjs/operators';
 import { AppConsts } from '@shared/AppConsts';
 import { HttpClient } from '@angular/common/http';
 import { FileUpload } from '@node_modules/primeng/fileupload';
+import { ViewOrEditEntityDocumentsModalComponent } from '@app/main/documentFiles/documentFiles/documentFilesViewComponents/view-or-edit-entity-documents-modal.componant';
 
 @Component({
   templateUrl: './trucks.component.html',
@@ -29,6 +30,7 @@ export class TrucksComponent extends AppComponentBase {
   @ViewChild('entityTypeHistoryModal', { static: true }) entityTypeHistoryModal: EntityTypeHistoryModalComponent;
   @ViewChild('createOrEditTruckModal', { static: true }) createOrEditTruckModal: CreateOrEditTruckModalComponent;
   @ViewChild('viewTruckModalComponent', { static: true }) viewTruckModal: ViewTruckModalComponent;
+  @ViewChild('viewOrEditEntityDocumentsModal', { static: true }) viewOrEditEntityDocumentsModal: ViewOrEditEntityDocumentsModalComponent;
 
   @ViewChild('dataTable', { static: true }) dataTable: Table;
   @ViewChild('paginator', { static: true }) paginator: Paginator;
@@ -107,6 +109,10 @@ export class TrucksComponent extends AppComponentBase {
 
   reloadPage(): void {
     this.paginator.changePage(this.paginator.getPage());
+  }
+
+  showTruckDocuments(truckId) {
+    this.viewOrEditEntityDocumentsModal.show(truckId, 'Truck');
   }
 
   createTruck(): void {
