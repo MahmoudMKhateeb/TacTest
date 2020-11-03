@@ -16,9 +16,9 @@ namespace TACHYON.Documents.DocumentFiles
 
         Task<GetDocumentFileForViewDto> GetDocumentFileForView(Guid id);
 
-        Task<GetDocumentFileForEditOutput> GetDocumentFileForEdit(EntityDto<Guid> input);
+        Task<DocumentFileForEditDto> GetDocumentFileForEdit(EntityDto<Guid> input);
 
-        Task CreateOrEdit(CreateOrEditDocumentFileDto input);
+        Task CreateDocument(CreateOrEditDocumentFileDto input);
 
         Task Delete(EntityDto<Guid> input);
 

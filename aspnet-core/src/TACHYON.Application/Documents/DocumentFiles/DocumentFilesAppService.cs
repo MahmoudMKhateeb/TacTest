@@ -194,7 +194,7 @@ namespace TACHYON.Documents.DocumentFiles
         }
 
         [AbpAuthorize(AppPermissions.Pages_DocumentFiles_Edit)]
-        public async Task<GetDocumentFileForEditOutput> GetDocumentFileForEdit(EntityDto<Guid> input)
+        public async Task<DocumentFileForEditDto> GetDocumentFileForEdit(EntityDto<Guid> input)
         {
             if (AbpSession.TenantId.HasValue)
             {
@@ -208,22 +208,20 @@ namespace TACHYON.Documents.DocumentFiles
         }
 
 
-        public async Task CreateOrEdit(CreateOrEditDocumentFileDto input)
+        public async Task CreateDocument(CreateOrEditDocumentFileDto input)
         {
             //todo convert this to custom validation
             if (input.IsAccepted && input.IsRejected)
             {
                 throw new UserFriendlyException(L("document cant be accepted and rejected at same time "));
             }
-
-            if (input.Id == null)
-            {
                 await Create(input);
-            }
-            else
-            {
-                await Update(input);
-            }
+            
+        }     
+        public async Task UpdateDocument(DocumentFileForEditDto input)
+        {
+
+               await Update(input);
         }
 
         [AbpAuthorize(AppPermissions.Pages_DocumentFiles_Delete)]
@@ -435,57 +433,60 @@ namespace TACHYON.Documents.DocumentFiles
         }
 
         [AbpAuthorize(AppPermissions.Pages_DocumentFiles_Edit)]
-        protected virtual async Task Update(CreateOrEditDocumentFileDto input)
+        protected virtual async Task Update(DocumentFileForEditDto input)
         {
             //host can update tenants documents 
             DisableTenancyFiltersIfHost();
 
             DocumentFile documentFile = await _documentFileRepository.FirstOrDefaultAsync((Guid)input.Id);
 
-
             if (input.UpdateDocumentFileInput != null && !input.UpdateDocumentFileInput.FileToken.IsNullOrEmpty())
             {
-                await _binaryObjectManager.DeleteAsync(input.BinaryObjectId);
+                await _binaryObjectManager.DeleteAsync(documentFile.BinaryObjectId);
                 documentFile.BinaryObjectId = await _documentFilesManager.SaveDocumentFileBinaryObject(input.UpdateDocumentFileInput.FileToken, AbpSession.TenantId);
             }
 
-            ObjectMapper.Map(input, documentFile);
+            //ObjectMapper.Map(input, documentFile);
+
+            documentFile.Extn = input.Extn;
+            if (input.HasNumber)
+            {
+            documentFile.Number = input.Number;
+            }
+            if (input.HasNotes)
+            {
+            documentFile.Notes = input.Notes;
+            }
+            if (input.HasExpirationDate)
+            {
+            documentFile.ExpirationDate =  input.ExpirationDate ;
+            }
         }
 
-        private async Task<GetDocumentFileForEditOutput> _GetDocumentFileForEdit(EntityDto<Guid> input)
+        private async Task<DocumentFileForEditDto> _GetDocumentFileForEdit(EntityDto<Guid> input)
         {
-            var documentFile = await _documentFileRepository.FirstOrDefaultAsync(input.Id);
+            var output = await _documentFileRepository.GetAll().Where(doc=>doc.Id==input.Id)
+                .Include(a => a.DocumentTypeFk)
+                .Select(res => new DocumentFileForEditDto
+                {
+                    //document type data
+                    DocumentTypeDisplayName= res.DocumentTypeFk==null?null: res.DocumentTypeFk.DisplayName,
+                    HasExpirationDate = res.DocumentTypeFk == null ? false : res.DocumentTypeFk.HasExpirationDate,
+                    HasHijriExpirationDate= res.DocumentTypeFk==null?false: res.DocumentTypeFk.HasHijriExpirationDate,
+                    HasNotes = res.DocumentTypeFk == null ? false : res.DocumentTypeFk.HasNotes,
+                    HasNumber= res.DocumentTypeFk == null ? false : res.DocumentTypeFk.HasNumber,
+                    IsNumberUnique= res.DocumentTypeFk == null ? false : res.DocumentTypeFk.IsNumberUnique,
+                    NumberMinDigits = res.DocumentTypeFk == null ? null : res.DocumentTypeFk.NumberMinDigits,
+                    NumberMaxDigits= res.DocumentTypeFk == null ? null : res.DocumentTypeFk.NumberMaxDigits,
 
-            var output = new GetDocumentFileForEditOutput { DocumentFile = ObjectMapper.Map<CreateOrEditDocumentFileDto>(documentFile) };
+                    //document data
+                    Id= res.Id,
+                    ExpirationDate =res.ExpirationDate,
+                    Extn= res.Extn,
+                    Notes= res.Notes,
+                    Number = res.Number
 
-            {
-                var lookupDocumentType = await _lookupDocumentTypeRepository.FirstOrDefaultAsync(output.DocumentFile.DocumentTypeId);
-                output.DocumentTypeDisplayName = lookupDocumentType?.DisplayName;
-            }
-
-            if (output.DocumentFile.TruckId != null)
-            {
-                var lookupTruck = await _lookupTruckRepository.FirstOrDefaultAsync((Guid)output.DocumentFile.TruckId);
-                output.TruckPlateNumber = lookupTruck?.PlateNumber;
-            }
-
-            if (output.DocumentFile.TrailerId != null)
-            {
-                var lookupTrailer = await _lookupTrailerRepository.FirstOrDefaultAsync((long)output.DocumentFile.TrailerId);
-                output.TrailerTrailerCode = lookupTrailer?.TrailerCode;
-            }
-
-            if (output.DocumentFile.UserId != null)
-            {
-                var lookupUser = await _lookupUserRepository.FirstOrDefaultAsync((long)output.DocumentFile.UserId);
-                output.UserName = lookupUser?.Name;
-            }
-
-            if (output.DocumentFile.RoutStepId != null)
-            {
-                var lookupRoutStep = await _lookupRoutStepRepository.FirstOrDefaultAsync((long)output.DocumentFile.RoutStepId);
-                output.RoutStepDisplayName = lookupRoutStep?.DisplayName;
-            }
+                }).FirstOrDefaultAsync();
 
             return output;
         }

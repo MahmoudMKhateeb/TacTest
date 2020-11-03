@@ -83,6 +83,9 @@
                           >
                         </li>
                         <li>
+                          <a class="dropdown-item" href="javascript:;" (click)="downloadDocument(record.documentFile)">{{ l('Download') }}</a>
+                        </li>
+                        <li>
                           <a
                             class="dropdown-item"
                             href="javascript:;"
@@ -91,9 +94,7 @@
                             >{{ l('Delete') }}</a
                           >
                         </li>
-                        <li>
-                          <a class="dropdown-item" href="javascript:;" (click)="downloadDocument(record.documentFile)">{{ l('Download') }}</a>
-                        </li>
+
                         <!-- <li>
                     <a href="javascript:;" *ngIf="entityHistoryEnabled" (click)="showHistory(record.documentFile)">{{ l('History') }}</a>
                   </li> -->

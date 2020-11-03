@@ -10,94 +10,109 @@
 >
   <div class="modal-dialog modal-lg">
     <div class="modal-content">
-      <form *ngIf="active" #documentFileForm="ngForm" novalidate (ngSubmit)="save()" autocomplete="off">
+      <form *ngIf="active" #documentFileForm="ngForm" (ngSubmit)="save()" novalidate autocomplete="off">
         <div class="modal-header">
           <h4 class="modal-title">
-            <span *ngIf="documentFile.id">{{ l('EditDocumentFile') }}</span>
-            <span *ngIf="!documentFile.id">{{ l('CreateNewDocumentFile') }}</span>
+            <span>{{ l('EditDocumentFile') }}</span>
+            <!-- <span *ngIf="!documentFile.id">{{ l('CreateNewDocumentFile') }}</span> -->
           </h4>
           <button type="button" class="close" (click)="close()" aria-label="Close" [disabled]="saving">
             <span aria-hidden="true">&times;</span>
           </button>
         </div>
         <div class="modal-body">
+          <label for="DocumentType"> Edit : {{ documentFile.documentTypeDisplayName }}</label>
+          <hr />
+
           <div class="form-group col-md-12">
-            <input (change)="fileChangeEvent($event)" type="file" /><br />
-            <span class="help-block m-b-none">{{ 'DocumentFile_Change_Info' | localize: maxDocumentFileBytesUserFriendlyValue }}</span>
-          </div>
-          <!--            <input type="file" ng2FileSelect [uploader]="uploader" />-->
-
-          <div class="form-group m-form__group">
-            <label for="DocumentTypeDisplayName">{{ l('DocumentType') }}</label>
-            <select name="documentFile.documentTypeId" [(ngModel)]="documentFile.documentTypeId" class="form-control" required>
-              <option value="">{{ l('SelectADocumentType') }}</option>
-              <option *ngFor="let item of allDocumentTypes" value="{{ item.id }}">{{ item.displayName }}</option>
-            </select>
+            <label>{{ l('Choose File') }}</label>
+            <div class="custom-file">
+              <input (change)="DocFileChangeEvent($event, documentFile)" type="file" class="custom-file-input" required />
+              <label class="custom-file-label text-truncate" [for]="documentFile.name">
+                {{ documentFile.name ? documentFile.name : l('select file') }}</label
+              >
+            </div>
           </div>
 
-          <div class="form-group m-form__group">
-            <label for="TruckPlateNumber">{{ l('Truck') }}</label>
-            <select name="documentFile.truckId" [(ngModel)]="documentFile.truckId" class="form-control">
-              <option value="">{{ l('SelectATruck') }}</option>
-              <option *ngFor="let item of allTrucks" value="{{ item.id }}">{{ item.displayName }}</option>
-            </select>
+          <div class="row">
+            <div *ngIf="documentFile.hasNumber" class="form-group col-md-6">
+              <label for="DocumentNumber">{{ l('Number') }} </label>
+              <input
+                [pattern]="numberpattern"
+                type="text"
+                class="form-control"
+                id="DocumentNumber"
+                [maxLength]="documentFile.numberMaxDigits"
+                [minLength]="documentFile.numberMinDigits"
+                name="documentNumber"
+                required
+                [(ngModel)]="documentFile.number"
+              />
+              <span class="form-text text-muted"
+                >{{ l('minDigits:') }} {{ documentFile.numberMinDigits }} {{ l('maxDigits:') }}
+                {{ documentFile.numberMaxDigits }}
+              </span>
+            </div>
+
+            <div *ngIf="documentFile.hasExpirationDate && !documentFile.hasHijriExpirationDate" class="form-group col-md-6">
+              <label for="DocumentExpireDate">{{ l('Expiration Date') }} </label>
+              <input
+                type="datetime"
+                placeholder="{{ l('Expiration Date') }}"
+                bsDatepicker
+                class="form-control"
+                id="DocumentExpireDate"
+                name="documentExpireDate"
+                required
+                [(ngModel)]="documentFile.expirationDate"
+              />
+              <span style="line-height: 40px; padding: 0 15px 0 15px;"> &mdash; </span>
+            </div>
+
+            <div *ngIf="documentFile.hasExpirationDate && documentFile.hasHijriExpirationDate" class="form-group col-md-6">
+              <label for="DocumentExpireDate">{{ l('Expiration Date') }} </label>
+              <hijri-gregorian-datepicker-test
+                [label]="l('ExpirationDate')"
+                class="m-input"
+                [isRequired]="true"
+                [readonly]="true"
+                [selectedDateType]="selectedDateTypeHijri"
+                (selectedDateChange)="selectedDateChange($event, documentFile)"
+              >
+              </hijri-gregorian-datepicker-test>
+              <span style="line-height: 40px; padding: 0 15px 0 15px;"> &mdash; </span>
+            </div>
           </div>
 
-          <div class="form-group m-form__group">
-            <label for="TrailerTrailerCode">{{ l('Trailer') }}</label>
-            <select name="documentFile.trailerId" [(ngModel)]="documentFile.trailerId" class="form-control">
-              <option value="">{{ l('SelectATrailer') }}</option>
-              <option *ngFor="let item of allTrailers" value="{{ item.id }}">{{ item.displayName }}</option>
-            </select>
+          <div class="row">
+            <div *ngIf="documentFile.hasNotes" class="form-group col-md-12">
+              <label for="Note">{{ l('Note') }} </label>
+              <textarea
+                type="text"
+                placeholder="{{ l('Note') }}"
+                cols="12"
+                rows="4"
+                style="resize: none;"
+                class="form-control"
+                id="DocumentExpireDate"
+                [maxLength]="500"
+                [minLength]="0"
+                name="documentExpireDate"
+                required
+                [(ngModel)]="documentFile.notes"
+              >
+              </textarea>
+            </div>
           </div>
 
-          <div class="form-group m-form__group">
-            <label for="UserName">{{ l('User') }}</label>
-            <select name="documentFile.userId" [(ngModel)]="documentFile.userId" class="form-control">
-              <option value="">{{ l('SelectAUser') }}</option>
-              <option *ngFor="let item of allUsers" value="{{ item.id }}">{{ item.displayName }}</option>
-            </select>
-          </div>
-
-          <div class="form-group">
-            <label for="DocumentFile_ExpirationDate">{{ l('ExpirationDate') }}</label>
-            <input
-              required
-              class="form-control m-input"
-              type="datetime"
-              bsDatepicker
-              datePickerMomentModifier
-              [(date)]="documentFile.expirationDate"
-              id="DocumentFile_ExpirationDate"
-              name="DocumentFile_ExpirationDate"
-            />
-          </div>
-
-          <div class="form-group">
-            <label for="DocumentFile_IsAccepted">{{ l('IsAccepted') }}</label>
-            &nbsp;
-            <input
-              (change)="isAcceptedChange()"
-              type="checkbox"
-              id="DocumentFile_IsAccepted"
-              class=""
-              [(ngModel)]="documentFile.isAccepted"
-              name="IsAccepted"
-            />
-          </div>
-          <div class="form-group">
-            <label for="DocumentFile_IsRejected">{{ l('IsRejected') }}</label>
-            &nbsp;
-            <input
-              (change)="isRejectedChange()"
-              type="checkbox"
-              id="DocumentFile_IsRejected"
-              class=""
-              [(ngModel)]="documentFile.isRejected"
-              name="IsRejected"
-            />
+          <div class="row">
+            <label>{{ docProgressFileName }}</label>
+            <div class="col-md-12">
+              <p-progressBar [value]="docProgress" [style]="{ height: '6px', width: '100' }"></p-progressBar>
+            </div>
           </div>
         </div>
+
         <div class="modal-footer">
           <button [disabled]="saving" type="button" class="btn btn-default" (click)="close()">{{ l('Cancel') }}</button>
           <button
