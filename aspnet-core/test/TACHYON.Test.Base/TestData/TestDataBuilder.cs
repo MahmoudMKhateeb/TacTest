@@ -18,6 +18,7 @@ namespace TACHYON.Test.Base.TestData
             new TestOrganizationUnitsBuilder(_context, _tenantId).Create();
             new TestSubscriptionPaymentBuilder(_context, _tenantId).Create();
             new TestEditionsBuilder(_context).Create();
+            new TestCountriesAndCitiesBuilder(_context).Create();
 
             _context.SaveChanges();
         }
