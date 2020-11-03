@@ -1,13 +1,17 @@
 ﻿using System;
 using System.Linq;
+using System.Linq.Dynamic.Core;
 using System.Threading.Tasks;
 using Abp.Timing;
+using Microsoft.EntityFrameworkCore;
 using TACHYON.Editions;
 using TACHYON.MultiTenancy;
 using TACHYON.MultiTenancy.Dto;
 using TACHYON.MultiTenancy.Payments;
 using TACHYON.MultiTenancy.Payments.Dto;
 using Shouldly;
+using TACHYON.Cities;
+using TACHYON.Countries;
 using Xunit;
 
 namespace TACHYON.Tests.MultiTenancy
@@ -442,6 +446,9 @@ namespace TACHYON.Tests.MultiTenancy
             var currentEditionId = (await _editionManager.FindByNameAsync("CurrentEdition")).Id;
             var targetEditionId = (await _editionManager.FindByNameAsync("TargetEdition")).Id;
 
+            var city = GetCity("Maka");
+            var country = GetCountry("SA");
+
             // Create tenant
             await _tenantAppService.CreateTenant(
                 new CreateTenantInput
@@ -452,7 +459,10 @@ namespace TACHYON.Tests.MultiTenancy
                     AdminPassword = "123qwe",
                     IsActive = true,
                     EditionId = currentEditionId,
-                    SubscriptionEndDateUtc = subscriptionEndDate
+                    SubscriptionEndDateUtc = subscriptionEndDate,
+                    Address = "test address",
+                    CityId = city.Id,
+                    CountryId = country.Id
                 });
 
             //Assert
@@ -481,6 +491,17 @@ namespace TACHYON.Tests.MultiTenancy
             tenant.EditionId.ShouldBe(targetEditionId);
             tenant.SubscriptionEndDateUtc.ShouldNotBe(null);
             tenant.SubscriptionEndDateUtc?.Date.ShouldBe(updatedSubscriptionEndDate.ToUniversalTime().Date);
+        }
+
+        private City GetCity(string displayName)
+        {
+            return UsingDbContext(context => context.Cities.Single(p => p.DisplayName == displayName));
+        }
+
+
+        private County GetCountry(string displayName)
+        {
+            return UsingDbContext(context => context.Counties.Single(p => p.DisplayName == displayName));
         }
     }
 }
