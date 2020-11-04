@@ -210,5 +210,16 @@ namespace TACHYON.Authorization.Users
             }
 
         }
+
+        public async Task<User> GetUserByEmailAsync(string emailAddress)
+        {
+
+            using (_unitOfWorkManager.Current.DisableFilter(AbpDataFilters.MayHaveTenant))
+            {
+                return await _userRepository.GetAll().SingleAsync(x => x.EmailAddress == emailAddress);
+            }
+
+        }
+
     }
 }
