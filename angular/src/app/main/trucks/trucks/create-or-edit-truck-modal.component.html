@@ -27,16 +27,16 @@
             <!--            </div>-->
             <div class="col-md-6">
               <div class="form-group m-form__group">
-                <label for="TruckStatusDisplayName">{{ l('TruckStatus') }}</label>
+                <label for="TruckStatusDisplayName">{{ l('Truck Status') }}</label>
                 <select [(ngModel)]="truck.truckStatusId" class="form-control" name="truck.truckStatusId" required>
-                  <option value="">{{ l('SelectATruckStatus') }}</option>
+                  <option value="">{{ l('Select a Truck Status') }}</option>
                   <option *ngFor="let item of allTruckStatuss" value="{{ item.id }}">{{ item.displayName }}</option>
                 </select>
               </div>
             </div>
             <div class="col-md-6">
               <div class="form-group m-form__group">
-                <label for="transportTypeDisplayName">{{ l('TransportType') }}</label>
+                <label for="transportTypeDisplayName">{{ l('Transport Type') }}</label>
                 <select
                   [(ngModel)]="truck.transportTypeId"
                   class="form-control"
@@ -44,7 +44,7 @@
                   (change)="GetTransportDropDownList('GetAllTransportSubTypes', truck.transportTypeId)"
                   required
                 >
-                  <option>{{ l('SelectATransportType') }}</option>
+                  <option>{{ l('Select a Transport Type') }}</option>
                   <option *ngFor="let item of allTransportTypes" value="{{ item.id }}">{{ item.displayName }}</option>
                 </select>
               </div>
@@ -53,7 +53,7 @@
           <div class="row">
             <div class="col-md-6">
               <div class="form-group m-form__group">
-                <label for="allTransportSubTypes">{{ l('TransportSubTypes') }}</label>
+                <label for="allTransportSubTypes">{{ l('Transport SubType') }}</label>
                 <select
                   [(ngModel)]="truck.transportSubtypeId"
                   class="form-control"
@@ -62,14 +62,14 @@
                   [disabled]="allTransportSubTypes ? null : true"
                   required
                 >
-                  <option value="0">{{ l('SelectATransportSubType') }}</option>
+                  <option value="0">{{ l('Select a TransportSubType') }}</option>
                   <option *ngFor="let item of allTransportSubTypes" value="{{ item.id }}">{{ item.displayName }} </option>
                 </select>
               </div>
             </div>
             <div class="col-md-6">
               <div class="form-group m-form__group">
-                <label for="allTruckTypesByTransportSubtype">{{ l('TruckType') }}</label>
+                <label for="allTruckTypesByTransportSubtype">{{ l('Truck Type') }}</label>
                 <select
                   [(ngModel)]="truck.trucksTypeId"
                   class="form-control"
@@ -87,7 +87,7 @@
           <div class="row">
             <div class="col-md-6">
               <div class="form-group m-form__group">
-                <label for="allTruckSubTypesByTruckTypeIdDisplayName">{{ l('TruckSubType') }}</label>
+                <label for="allTruckSubTypesByTruckTypeIdDisplayName">{{ l('Truck SubType') }}</label>
                 <select
                   [(ngModel)]="truck.truckSubtypeId"
                   class="form-control"
@@ -120,7 +120,7 @@
           <div class="row">
             <div class="col-md-6">
               <div class="form-group m-form__group">
-                <label for="UserName">{{ l('User') }}</label>
+                <label for="DriverName">{{ l('Driver') }}</label>
                 <div class="input-group">
                   <input [(ngModel)]="userName" class="form-control" disabled id="UserName" name="userName" type="text" />
                   <div class="input-group-append">
@@ -188,7 +188,18 @@
             <!--            </div>-->
             <div class="form-group col-md-12">
               <label for="Truck_Note">{{ l('Note') }}</label>
-              <input [(ngModel)]="truck.note" class="form-control" id="Truck_Note" maxlength="256" minlength="0" name="Note" type="text" />
+              <textarea
+                [(ngModel)]="truck.note"
+                class="form-control"
+                id="Truck_Note"
+                maxlength="256"
+                rows="4"
+                cols="12"
+                style="resize: none;"
+                minlength="0"
+                name="Note"
+                type="text"
+              ></textarea>
             </div>
 
             <!--            <div class="form-group col-md-12">-->
@@ -208,6 +219,8 @@
           <createOrEditDocumentFileModal #createOrEditDocumentFileModal></createOrEditDocumentFileModal>
           <viewDocumentFileModal #viewDocumentFileModal></viewDocumentFileModal>
           <entityTypeHistoryModal #entityTypeHistoryModal></entityTypeHistoryModal>
+          <hr />
+          <label *ngIf="!truck.id"><h3>Truck Documents</h3></label>
 
           <div *ngFor="let item of truck.createOrEditDocumentFileDtos; index as i" class="">
             <div class="card card-custom">
@@ -318,5 +331,5 @@
     </div>
   </div>
   <truckUserLookupTableModal #truckUserLookupTableModal (modalSave)="getNewDriver1UserId()"></truckUserLookupTableModal>
-  <truckUserLookupTableModal #truckUserLookupTableModal2 (modalSave)="getNewDriver2UserId()"> </truckUserLookupTableModal>
+  <!-- <truckUserLookupTableModal #truckUserLookupTableModal2 (modalSave)="getNewDriver2UserId()"> </truckUserLookupTableModal> -->
 </div>

@@ -380,7 +380,7 @@ namespace TACHYON.Authorization.Users
             {
                 item.UserId = user.Id;
                 item.Name = item.Name + "_" + user.Id.ToString();
-                await _documentFilesAppService.CreateOrEdit(item);
+                await _documentFilesAppService.CreateDocument(item);
             }
 
 

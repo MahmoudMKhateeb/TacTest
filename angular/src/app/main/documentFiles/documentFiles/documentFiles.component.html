@@ -1,14 +1,6 @@
 ﻿<div [@routerTransition]>
   <div class="content d-flex flex-column flex-column-fluid">
-    <sub-header [title]="'DocumentFiles' | localize" [description]="'DocumentFilesHeaderInfo' | localize">
-      <!-- <div role="actions">
-        <button (click)="exportToExcel()" class="btn btn-outline-success"><i class="fa fa-file-excel"></i> {{ l('ExportToExcel') }}</button>
-
-        <button *ngIf="isGranted('Pages.DocumentFiles.Create')" (click)="createDocumentFile()" class="btn btn-primary blue">
-          <i class="fa fa-plus"></i> {{ l('CreateNewDocumentFile') }}
-        </button>
-      </div> -->
-    </sub-header>
+    <sub-header [title]="'DocumentFiles' | localize" [description]="'DocumentFilesHeaderInfo' | localize"> </sub-header>
     <div [class]="containerClass">
       <div class="card card-custom gutter-b">
         <div *ngIf="!isHost" class="card-header">

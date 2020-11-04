@@ -186,7 +186,6 @@ export class CreateOrEditTruckModalComponent extends AppComponentBase {
         });
 
         //dropDowns
-        console.log(this.truck.id);
 
         this.active = true;
         this.modal.show();
@@ -381,7 +380,6 @@ export class CreateOrEditTruckModalComponent extends AppComponentBase {
 
     this.DocsUploader.onErrorItem = (item, response, status) => {
       const resp = <IAjaxResponse>JSON.parse(response);
-      console.log(resp);
     };
 
     this.DocsUploader.onCompleteAll = () => {

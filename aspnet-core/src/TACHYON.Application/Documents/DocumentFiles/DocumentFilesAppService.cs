@@ -77,7 +77,7 @@ namespace TACHYON.Documents.DocumentFiles
                 .Include(e => e.UserFk)
                 .Include(e => e.RoutStepFk)
                 .WhereIf(!AbpSession.TenantId.HasValue, e => e.DocumentTypeFk.DocumentsEntityFk.DisplayName == AppConsts.TenantDocumentsEntityName)
-                .WhereIf(AbpSession.TenantId.HasValue, e => e.DocumentTypeFk.DocumentsEntityFk.DisplayName != AppConsts.TenantDocumentsEntityName)
+                //.WhereIf(AbpSession.TenantId.HasValue, e => e.DocumentTypeFk.DocumentsEntityFk.DisplayName == AppConsts.TenantDocumentsEntityName)
                 .WhereIf(!string.IsNullOrWhiteSpace(input.Filter), e => false || e.Name.Contains(input.Filter) || e.Extn.Contains(input.Filter))
                 //.WhereIf(!string.IsNullOrWhiteSpace(input.NameFilter), e => e.Name == input.NameFilter)
                 //.WhereIf(!string.IsNullOrWhiteSpace(input.ExtnFilter), e => e.Extn == input.ExtnFilter)
@@ -136,10 +136,10 @@ namespace TACHYON.Documents.DocumentFiles
 
 
             if (AbpSession.TenantId.HasValue)
-            { var r = await documentFiles.ToListAsync();
+            { var result = await documentFiles.ToListAsync();
                 return new PagedResultDto<GetDocumentFileForViewDto>(
                     await filteredDocumentFiles.CountAsync(),
-                    r
+                   result
                 );
             }
 
@@ -511,7 +511,7 @@ namespace TACHYON.Documents.DocumentFiles
         public async Task<List<GetDocumentEntitiesLookupForDocumentFilesDto>> GetDocumentEntitiesForDocumentFile()
         {
 
-            var result = await _documentEntityRepository.GetAll().Where(a=>a.DisplayName!="Tenant").Select(res => new GetDocumentEntitiesLookupForDocumentFilesDto
+            var result = await _documentEntityRepository.GetAll().Select(res => new GetDocumentEntitiesLookupForDocumentFilesDto
             {
                 DisplayName = res.DisplayName
             }

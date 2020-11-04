@@ -171,58 +171,46 @@
                 <ng-template pTemplate="header">
                   <tr>
                     <th style="width: 130px;" [hidden]="!isGrantedAny('Pages.Trucks.Edit', 'Pages.Trucks.Delete')">{{ l('Actions') }}</th>
-                    <th style="width: 150px;" pSortableColumn="trucksTypeFk.displayName">
-                      {{ l('DisplayName') }}
-                      <p-sortIcon field="trucksTypeDisplayName"></p-sortIcon>
+                    <!-- <th style="width: 150px;" pSortableColumn="truck.plateNumber">
+                      {{ l('Plate Number') }}
+                      <p-sortIcon field="trucksId"></p-sortIcon>
+                    </th> -->
+                    <th style="width: 350px;" pSortableColumn="truck.id">
+                      {{ l('ID') }}
+                      <p-sortIcon field="trucksId"></p-sortIcon>
                     </th>
-                    <th style="width: 150px;" pSortableColumn="truckStatusFk.displayName">
-                      {{ l('DisplayName') }}
+                    <th style="width: 500px;" pSortableColumn="truckTypeFk.displayName">
+                      {{ l('Truck Type') }}
                       <p-sortIcon field="truckStatusDisplayName"></p-sortIcon>
                     </th>
+                    <th style="width: 150px;" pSortableColumn="truckStatusFk.status">
+                      {{ l('Status') }}
+                      <p-sortIcon field="truckStatus"></p-sortIcon>
+                    </th>
                     <th style="width: 150px;" pSortableColumn="driver1UserFk.name">
-                      {{ l('Name') }}
-                      <p-sortIcon field="userName"></p-sortIcon>
-                    </th>
-                    <th style="width: 150px;" pSortableColumn="driver2UserFk.name">
-                      {{ l('Name') }}
-                      <p-sortIcon field="userName2"></p-sortIcon>
-                    </th>
-                    <th style="width: 150px;" pSortableColumn="plateNumber">
-                      {{ l('PlateNumber') }}
-                      <p-sortIcon field="truck.plateNumber"></p-sortIcon>
+                      {{ l('Driver Name') }}
+                      <p-sortIcon field="driverName"></p-sortIcon>
                     </th>
                     <th style="width: 150px;" pSortableColumn="modelName">
-                      {{ l('ModelName') }}
+                      {{ l('Model Name') }}
                       <p-sortIcon field="truck.modelName"></p-sortIcon>
                     </th>
                     <th style="width: 150px;" pSortableColumn="modelYear">
-                      {{ l('ModelYear') }}
+                      {{ l('Model Year') }}
                       <p-sortIcon field="truck.modelYear"></p-sortIcon>
                     </th>
-                    <th style="width: 150px;" pSortableColumn="licenseNumber">
+                    <!-- <th style="width: 150px;" pSortableColumn="licenseNumber">
                       {{ l('LicenseNumber') }}
                       <p-sortIcon field="truck.licenseNumber"></p-sortIcon>
-                    </th>
-                    <th style="width: 150px;" pSortableColumn="licenseExpirationDate">
+                    </th> -->
+                    <!-- <th style="width: 150px;" pSortableColumn="licenseExpirationDate">
                       {{ l('LicenseExpirationDate') }}
                       <p-sortIcon field="truck.licenseExpirationDate"></p-sortIcon>
-                    </th>
-                    <th style="width: 150px;" pSortableColumn="isAttachable">
+                    </th> -->
+                    <!-- <th style="width: 150px;" pSortableColumn="isAttachable">
                       {{ l('IsAttachable') }}
                       <p-sortIcon field="truck.isAttachable"></p-sortIcon>
-                    </th>
-                    <th style="width: 150px;" pSortableColumn="note">
-                      {{ l('Note') }}
-                      <p-sortIcon field="truck.note"></p-sortIcon>
-                    </th>
-                    <th style="width: 150px;" pSortableColumn="rentPrice">
-                      {{ l('RentPrice') }}
-                      <p-sortIcon field="truck.rentPrice"></p-sortIcon>
-                    </th>
-                    <th style="width: 150px;" pSortableColumn="rentDuration">
-                      {{ l('RentDuration') }}
-                      <p-sortIcon field="truck.rentDuration"></p-sortIcon>
-                    </th>
+                    </th> -->
                   </tr>
                 </ng-template>
                 <ng-template pTemplate="body" let-record="$implicit">
@@ -265,26 +253,31 @@
                         </ul>
                       </div>
                     </td>
-                    <td style="width: 150px;">
-                      <span class="ui-column-title"> {{ l('DisplayName') }}</span>
+                    <!-- <td style="width: 150px;">
+                      <span class="ui-column-title"> {{ l('Plate Number') }}</span>
+                      {{ record.truck.plateNumber }}
+                    </td> -->
+                    <td style="width: 350px;">
+                      <span class="ui-column-title"> {{ l('ID') }}</span>
+                      {{ record.truck.id }}
+                    </td>
+                    <td style="width: 500px;">
+                      <span class="ui-column-title"> {{ l('Truck Type') }}</span>
                       {{ record.trucksTypeDisplayName }}
                     </td>
                     <td style="width: 150px;">
-                      <span class="ui-column-title"> {{ l('DisplayName') }}</span>
+                      <span class="ui-column-title"> {{ l('Status') }}</span>
                       {{ record.truckStatusDisplayName }}
                     </td>
                     <td style="width: 150px;">
-                      <span class="ui-column-title"> {{ l('Name') }}</span>
+                      <span class="ui-column-title"> {{ l('Driver') }}</span>
                       {{ record.userName }}
                     </td>
-                    <td style="width: 150px;">
+                    <!-- <td style="width: 150px;">
                       <span class="ui-column-title"> {{ l('Name') }}</span>
                       {{ record.userName2 }}
-                    </td>
-                    <td style="width: 150px;">
-                      <span class="ui-column-title"> {{ l('PlateNumber') }}</span>
-                      {{ record.truck.plateNumber }}
-                    </td>
+                    </td> -->
+
                     <td style="width: 150px;">
                       <span class="ui-column-title"> {{ l('ModelName') }}</span>
                       {{ record.truck.modelName }}
@@ -293,34 +286,23 @@
                       <span class="ui-column-title"> {{ l('ModelYear') }}</span>
                       {{ record.truck.modelYear }}
                     </td>
-                    <td style="width: 150px;">
-                      <span class="ui-column-title"> {{ l('LicenseNumber') }}</span>
-                      {{ record.truck.licenseNumber }}
-                    </td>
+                    <!-- 
                     <td style="width: 150px;">
                       <span class="ui-column-title"> {{ l('LicenseExpirationDate') }}</span>
                       <span *ngIf="record.truck.licenseExpirationDate">
                         {{ record.truck.licenseExpirationDate | momentFormat: 'L' }}
                       </span>
                       <span *ngIf="!record.truck.licenseExpirationDate">-</span>
-                    </td>
-                    <td style="width: 150px;">
+                    </td> -->
+                    <!-- <td style="width: 150px;">
                       <span class="ui-column-title"> {{ l('IsAttachable') }}</span>
                       <div *ngIf="record.truck.isAttachable" class="text-center"><i class="fa fa-check-circle text-success" title="True"></i></div>
                       <div *ngIf="!record.truck.isAttachable" class="text-center"><i class="fa fa-times-circle" title="False"></i></div>
-                    </td>
-                    <td style="width: 150px;">
+                    </td> -->
+                    <!-- <td style="width: 150px;">
                       <span class="ui-column-title"> {{ l('Note') }}</span>
                       {{ record.truck.note }}
-                    </td>
-                    <td style="width: 150px;">
-                      <span class="ui-column-title"> {{ l('RentPrice') }}</span>
-                      {{ record.truck.rentPrice }}
-                    </td>
-                    <td style="width: 150px;">
-                      <span class="ui-column-title"> {{ l('RentDuration') }}</span>
-                      {{ record.truck.rentDuration }}
-                    </td>
+                    </td> -->
                   </tr>
                 </ng-template>
               </p-table>
