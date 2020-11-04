@@ -25,6 +25,7 @@ import { DateType } from '@app/admin/required-document-files/hijri-gregorian-dat
 @Component({
   selector: 'createOrEditDocumentFileModal',
   templateUrl: './create-or-edit-documentFile-modal.component.html',
+  providers: [DateFormatterService],
 })
 export class CreateOrEditDocumentFileModalComponent extends AppComponentBase {
   @ViewChild('createOrEditModal', { static: true }) modal: ModalDirective;

@@ -41,10 +41,10 @@ export class DocumentFilesComponent extends AppComponentBase {
   truckPlateNumberFilter = '';
   trailerTrailerCodeFilter = '';
   userNameFilter = '';
-  isHost = false;
+  isHost = true;
   routStepDisplayNameFilter = '';
 
-  entityType = '';
+  entityType = 'Tenant';
   entityTypesList: GetDocumentEntitiesLookupForDocumentFilesDto[] = [];
 
   _entityTypeFullName = 'TACHYON.Documents.DocumentFiles.DocumentFile';
@@ -64,11 +64,11 @@ export class DocumentFilesComponent extends AppComponentBase {
   ngOnInit(): void {
     this._documentFilesServiceProxy.getIsCurrentTenantHost().subscribe((res) => {
       if (res) {
-        this.entityType = 'Tenant';
+        this.isHost = true;
       } else {
         this.isHost = false;
-        this.entityType = 'Truck';
       }
+      this.entityType = 'Tenant';
     });
 
     this._documentFilesServiceProxy.getDocumentEntitiesForDocumentFile().subscribe((res) => {

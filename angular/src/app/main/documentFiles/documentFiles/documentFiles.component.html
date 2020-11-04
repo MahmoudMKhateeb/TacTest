@@ -11,7 +11,7 @@
     </sub-header>
     <div [class]="containerClass">
       <div class="card card-custom gutter-b">
-        <div *ngIf="entityType != 'Tenant' && isHost" class="card-header">
+        <div *ngIf="!isHost" class="card-header">
           <div class="row">
             <label>Entity Type</label>
             <select [(ngModel)]="entityType" (change)="SwitchEntityType($event.target.value)" class="form-control form-control-lg">
@@ -198,7 +198,11 @@
                       {{ l('DocumentName') }}
                       <p-sortIcon field="documentTypeDisplayName"></p-sortIcon>
                     </th>
-                    <th *ngIf="entityType == 'Tenant'" style="width: 150px;" pSortableColumn="documentTypeFk.SubmitterTenatTenancyName">
+                    <th
+                      *ngIf="entityType == 'Tenant' && isHost == true"
+                      style="width: 150px;"
+                      pSortableColumn="documentTypeFk.SubmitterTenatTenancyName"
+                    >
                       {{ l('SubmitterTenant') }}
                       <p-sortIcon field="SubmitterTenatTenancyName"></p-sortIcon>
                     </th>
@@ -247,7 +251,9 @@
                         </button>
                         <ul class="dropdown-menu" *dropdownMenu>
                           <li>
-                            <a href="javascript:;" class="dropdown-item" (click)="viewDocumentFileModal.show(record)">{{ l('View') }}</a>
+                            <a href="javascript:;" class="dropdown-item" (click)="viewDocumentFileModal.show(record, entityType, isHost)">{{
+                              l('View')
+                            }}</a>
                           </li>
                           <li>
                             <a
@@ -281,7 +287,7 @@
                       {{ record.documentTypeDisplayName }}
                     </td>
 
-                    <td *ngIf="entityType == 'Tenant'" style="width: 150px;">
+                    <td *ngIf="entityType == 'Tenant' && isHost == true" style="width: 150px;">
                       {{ record.submitterTenatTenancyName }}
                     </td>
 

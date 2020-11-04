@@ -23,17 +23,17 @@
         <div class="modal-body">
           <label for="DocumentType"> Edit : {{ documentFile.documentTypeDisplayName }}</label>
           <hr />
-
-          <div class="form-group col-md-12">
-            <label>{{ l('Choose File') }}</label>
-            <div class="custom-file">
-              <input (change)="DocFileChangeEvent($event, documentFile)" type="file" class="custom-file-input" required />
-              <label class="custom-file-label text-truncate" [for]="documentFile.name">
-                {{ documentFile.name ? documentFile.name : l('select file') }}</label
-              >
+          <div class="row">
+            <div class="form-group col-md-12">
+              <label>{{ l('Choose File') }}</label>
+              <div class="custom-file">
+                <input (change)="DocFileChangeEvent($event, documentFile)" type="file" class="custom-file-input" required />
+                <label class="custom-file-label text-truncate" [for]="documentFile.name">
+                  {{ documentFile.name ? documentFile.name : l('select file') }}</label
+                >
+              </div>
             </div>
           </div>
-
           <div class="row">
             <div *ngIf="documentFile.hasNumber" class="form-group col-md-6">
               <label for="DocumentNumber">{{ l('Number') }} </label>
