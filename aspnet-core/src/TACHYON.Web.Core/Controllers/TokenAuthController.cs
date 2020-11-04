@@ -140,29 +140,40 @@ namespace TACHYON.Web.Controllers
             }
 
             string tenancyName = null;
+            User user;
 
             if (model.UsePhoneNumberForSignIn != null && model.UsePhoneNumberForSignIn.Value)
             {
                 //get username by mobile
-                var user = await _userManager.GetUserByPhoneNumberAsync(model.UserNameOrEmailAddress);
+                user = await _userManager.GetUserByPhoneNumberAsync(model.UserNameOrEmailAddress);
                 if (user == null)
                 {
                     throw new AbpAuthorizationException(L("InvalidMobileNumber"));
                 }
 
+            }
+            else // login by email
+            {
+                // get tenancyName by email
+                user = await _userManager.GetUserByEmailAsync(model.UserNameOrEmailAddress);
+                if (user == null)
+                {
+                    throw new AbpAuthorizationException(L("InvalidEmailAddress"));
+                }
+
                 model.UserNameOrEmailAddress = user.UserName;
 
-                //  get tenantId from UserName
+            }
 
-                if (user.TenantId != null)
-                {
-                    tenancyName = _tenantManager.GetById(user.TenantId.Value).TenancyName;
-                }
-            }
-            else
+            //  get tenantId from UserName
+
+            if (user.TenantId != null)
             {
-                tenancyName = GetTenancyNameOrNull();
+                tenancyName = _tenantManager.GetById(user.TenantId.Value).TenancyName;
             }
+            //tenancyName = GetTenancyNameOrNull();
+
+
 
 
 
