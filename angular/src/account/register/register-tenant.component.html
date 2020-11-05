@@ -1,7 +1,7 @@
 <div class="login-form" [@routerTransition]>
   <div class="pb-13 pt-lg-0 pt-5">
     <h3 class="font-weight-bolder text-dark font-size-h4 font-size-h1-lg">
-      {{ 'TenantSignUp' | localize }}
+      {{ 'Sign Up' | localize }}
     </h3>
   </div>
   <h4 *ngIf="model.edition" class="text-center">{{ 'Subscription' | localize }}: {{ model.edition.displayName }}</h4>
@@ -17,7 +17,7 @@
         <div class="form-group">
           <input
             #tenancyName="ngModel"
-            class="form-control form-control-solid h-auto py-7 px-6 rounded-lg font-size-h6"
+            class="form-control form-control-solid h-auto rounded-lg font-size-h6"
             autoFocus
             type="text"
             placeholder="{{ 'TenancyName' | localize }} *"
@@ -37,7 +37,7 @@
         <div class="form-group">
           <input
             #nameInput="ngModel"
-            class="form-control form-control-solid h-auto py-7 px-6 rounded-lg font-size-h6"
+            class="form-control form-control-solid h-auto rounded-lg font-size-h6"
             type="text"
             placeholder="Full legal name *"
             [(ngModel)]="model.name"
@@ -96,9 +96,9 @@
         <div class="form-group">
           <input
             #addressInput="ngModel"
-            class="form-control form-control-solid h-auto py-7 px-6 rounded-lg font-size-h6"
+            class="form-control form-control-solid h-auto rounded-lg font-size-h6"
             type="Address"
-            placeholder="Full Address *"
+            placeholder="City--State--Street Name--Zip  *"
             [(ngModel)]="model.address"
             name="Address"
             required
