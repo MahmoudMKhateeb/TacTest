@@ -12,6 +12,10 @@ namespace TACHYON.Shipping.ShippingRequestBids.Dtos
         public bool IsOngoingBid { get; set; }
         public string ShipperName { get; set; }
         public string ShippingRequestBidStatusName { get; set; }
+        public string TruckTypeDisplayName { get; set; }
+        public string GoodCategoryName { get; set; }
+        public int BidsNo { get; set; }
+        public double LastBidPrice { get; set; }
 
     }
 }

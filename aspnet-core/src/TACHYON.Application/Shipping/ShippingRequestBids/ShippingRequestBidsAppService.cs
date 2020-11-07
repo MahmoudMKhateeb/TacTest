@@ -223,7 +223,12 @@ namespace TACHYON.Shipping.ShippingRequestBids
                                                   EndBidDate = o.BidEndDate,
                                                   IsOngoingBid = o.ShippingRequestStatusId == TACHYONConsts.ShippingRequestStatusOnGoing ? true : false,
                                                   ShippingRequestBidStatusName = o.ShippingRequestStatusFk.DisplayName,
-                                                  ShipperName = o.CarrierTenantFk.Edition.DisplayName
+                                                  ShipperName = o.CarrierTenantFk.Edition.DisplayName,
+                                                  StartBidDate = o.BidStartDate,
+                                                  TruckTypeDisplayName=o.TransportSubtypeFk.DisplayName,
+                                                  GoodCategoryName=o.GoodCategoryFk.DisplayName,
+                                                  BidsNo=o.ShippingRequestBids.Count(),
+                                                  LastBidPrice=o.ShippingRequestBids.Where(x=>x.IsCancled==false).OrderByDescending(x=>x.Id).FirstOrDefault().price
                                               },
                                           };
 
