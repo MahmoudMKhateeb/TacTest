@@ -202,7 +202,7 @@ namespace TACHYON.Shipping.ShippingRequestBids
         }
 
         //#537
-        public async Task<PagedResultDto<ViewShipperBidsReqDetailsOutputDto>> ViewShipperBidsReqDetails(PagedAndSortedResultRequestDto input)
+        public async Task<PagedResultDto<ViewShipperBidsReqDetailsOutputDto>> GetShipperbidsRequestDetailsForView(PagedAndSortedResultRequestDto input)
         {
             using (CurrentUnitOfWork.DisableFilter(AbpDataFilters.MustHaveTenant))
             {
