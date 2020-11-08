@@ -282,7 +282,6 @@ export class CreateOrEditDriverModalComponent extends AppComponentBase {
 
     this.DocsUploader.onErrorItem = (item, response, status) => {
       const resp = <IAjaxResponse>JSON.parse(response);
-      console.log(resp);
     };
 
     this.DocsUploader.onCompleteAll = () => {

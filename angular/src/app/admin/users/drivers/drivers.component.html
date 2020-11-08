@@ -76,47 +76,6 @@
                   </div>
                 </div>
               </div>
-
-              <div class="row mb-4" [hidden]="!advancedFiltersAreShown">
-                <div [ngClass]="{ 'col-md-6': 'Pages.Administration.Roles' | permission, 'col-md-12': !('Pages.Administration.Roles' | permission) }">
-                  <div class="form-group">
-                    <permission-tree-modal #permissionFilterTreeModal (onModalclose)="getUsers()"> </permission-tree-modal>
-                  </div>
-                </div>
-                <div class="col-md-6" *ngIf="'Pages.Administration.Roles' | permission">
-                  <div class="form-group">
-                    <role-combo name="roleFilter" [(ngModel)]="role"></role-combo>
-                  </div>
-                </div>
-                <div class="col-md-6">
-                  <div class="checkbox-inline">
-                    <label for="UsersTable_OnlyLockedUsers" class="checkbox">
-                      <input id="UsersTable_OnlyLockedUsers" type="checkbox" name="OnlyLockedUsers" [(ngModel)]="onlyLockedUsers" />
-                      {{ 'OnlyLockedUsers' | localize }}
-                      <span></span>
-                    </label>
-                  </div>
-                </div>
-              </div>
-
-              <div class="row mb-4" *ngIf="advancedFiltersAreShown">
-                <div class="col-sm-12 text-right">
-                  <button class="btn btn-primary" (click)="getUsers()"><i class="fa fa-sync"></i> {{ 'Refresh' | localize }}</button>
-                </div>
-              </div>
-              <div class="row mb-4">
-                <div class="col-sm-12">
-                  <span
-                    class="clickable-item text-muted"
-                    *ngIf="!advancedFiltersAreShown"
-                    (click)="advancedFiltersAreShown = !advancedFiltersAreShown"
-                    ><i class="fa fa-angle-down"></i> {{ 'ShowAdvancedFilters' | localize }}</span
-                  >
-                  <span class="clickable-item text-muted" *ngIf="advancedFiltersAreShown" (click)="advancedFiltersAreShown = !advancedFiltersAreShown"
-                    ><i class="fa fa-angle-up"></i> {{ 'HideAdvancedFilters' | localize }}</span
-                  >
-                </div>
-              </div>
             </div>
           </form>
 
@@ -187,10 +146,18 @@
                       "
                     >
                       <div class="btn-group dropdown" dropdown container="body">
-                        <button dropdownToggle class="dropdown-toggle btn btn-sm btn-primary">
-                          <i class="fa fa-cog"></i><span class="caret"></span>
-                          {{ 'Actions' | localize }}
-                        </button>
+                        <div class="row">
+                          <i
+                            *ngIf="record.isMissingDocumentFiles"
+                            class="flaticon2-information text-warning"
+                            style="padding: 3px;"
+                            data-toggle="tooltip"
+                            title="Missing documents"
+                          ></i>
+                          <button class="dropdown-toggle btn btn-sm btn-primary" dropdownToggle>
+                            <i class="fa fa-cog"></i><span class="caret"></span> {{ l('Actions') }}
+                          </button>
+                        </div>
                         <ul class="dropdown-menu" *dropdownMenu>
                           <li>
                             <a href="javascript:;" class="dropdown-item" (click)="viewOrEditEntityDocumentsModal.show(record.id, 'Driver')">{{

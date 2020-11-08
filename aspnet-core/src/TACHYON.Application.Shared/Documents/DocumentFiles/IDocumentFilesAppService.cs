@@ -37,7 +37,7 @@ namespace TACHYON.Documents.DocumentFiles
 
         Task<FileDto> GetDocumentFileDto(Guid documentFileId);
 
-        Task<List<GetDocumentEntitiesLookupForDocumentFilesDto>> GetDocumentEntitiesForDocumentFile();
+        Task<List<GetDocumentEntitiesLookupDto>> GetDocumentEntitiesForDocumentFile();
         Task<List<CreateOrEditDocumentFileDto>> GetDriverRequiredDocumentFiles(string userId);
          Task<List<CreateOrEditDocumentFileDto>> GetTruckRequiredDocumentFiles(string truckId);
 

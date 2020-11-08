@@ -51,7 +51,7 @@
                 </div> -->
                 <div class="col-md-3">
                   <div class="form-group">
-                    <label for="DocumentTypeDisplayNameFilter">{{ l('Document Name') }} </label>
+                    <label for="DocumentTypeDisplayNameFilter">{{ l('DocumentName') }} </label>
                     <input
                       type="text"
                       class="form-control"
@@ -187,7 +187,7 @@
                     </th>
                     <th style="width: 150px;" pSortableColumn="documentTypeFk.displayName">
                       {{ l('DocumentName') }}
-                      <p-sortIcon field="documentTypeDisplayName"></p-sortIcon>
+                      <p-sortIcon field="documentFile.displayName"></p-sortIcon>
                     </th>
                     <th
                       *ngIf="entityType == 'Tenant' && isHost == true"
@@ -195,7 +195,7 @@
                       pSortableColumn="documentTypeFk.SubmitterTenatTenancyName"
                     >
                       {{ l('SubmitterTenant') }}
-                      <p-sortIcon field="SubmitterTenatTenancyName"></p-sortIcon>
+                      <p-sortIcon field="documentFile.submitterTenatTenancyName"></p-sortIcon>
                     </th>
 
                     <!-- <th style="width: 150px;" pSortableColumn="documentTypeFk.DocumentsEntityFk.displayName">
@@ -204,30 +204,30 @@
                     </th> -->
                     <th *ngIf="entityType == 'Truck'" style="width: 150px;" pSortableColumn="truckFk.trukId">
                       {{ l('Truck ID') }}
-                      <p-sortIcon field="truckId"></p-sortIcon>
+                      <p-sortIcon field="documentFile.truckId"></p-sortIcon>
                     </th>
                     <th *ngIf="entityType == 'Trailer'" style="width: 150px;" pSortableColumn="trailerFk.trailerCode">
                       {{ l('TrailerCode') }}
-                      <p-sortIcon field="trailerTrailerCode"></p-sortIcon>
+                      <p-sortIcon field="documentFile.trailerTrailerCode"></p-sortIcon>
                     </th>
                     <th *ngIf="entityType == 'Driver'" style="width: 150px;" pSortableColumn="userFk.name">
                       {{ l('DriverName') }}
-                      <p-sortIcon field="userName"></p-sortIcon>
+                      <p-sortIcon field="documentFile.userName"></p-sortIcon>
                     </th>
 
                     <th style="width: 150px;" pSortableColumn="documentTypeFk.number">
                       {{ l('Number') }}
-                      <p-sortIcon field="Number"></p-sortIcon>
+                      <p-sortIcon field="documentFile.number"></p-sortIcon>
                     </th>
-                    <th style="width: 150px;" pSortableColumn="extn">
+                    <th style="width: 150px;" pSortableColumn="documentTypeFk.extn">
                       {{ l('Extn') }}
                       <p-sortIcon field="documentFile.extn"></p-sortIcon>
                     </th>
-                    <th style="width: 150px;" pSortableColumn="expirationDate">
+                    <th style="width: 150px;" pSortableColumn="documentTypeFk.expirationDate">
                       {{ l('ExpirationDate') }}
                       <p-sortIcon field="documentFile.expirationDate"></p-sortIcon>
                     </th>
-                    <th *ngIf="entityType == 'Tenant'" style="width: 150px;" pSortableColumn="isAccepted">
+                    <th *ngIf="entityType == 'Tenant'" style="width: 150px;" pSortableColumn="documentTypeFk.isAccepted">
                       {{ l('IsAccepted') }}
                       <p-sortIcon field="documentFile.isAccepted"></p-sortIcon>
                     </th>

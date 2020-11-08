@@ -1,6 +1,6 @@
 ﻿import { Component, Injector, ViewEncapsulation, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { DocumentFilesServiceProxy, DocumentFileDto, GetDocumentEntitiesLookupForDocumentFilesDto } from '@shared/service-proxies/service-proxies';
+import { DocumentFilesServiceProxy, DocumentFileDto, GetDocumentEntitiesLookupDto } from '@shared/service-proxies/service-proxies';
 import { NotifyService } from 'abp-ng2-module';
 import { AppComponentBase } from '@shared/common/app-component-base';
 import { TokenAuthServiceProxy } from '@shared/service-proxies/service-proxies';
@@ -46,7 +46,7 @@ export class DocumentFilesComponent extends AppComponentBase {
   routStepDisplayNameFilter = '';
 
   entityType = 'Tenant';
-  entityTypesList: GetDocumentEntitiesLookupForDocumentFilesDto[] = [];
+  entityTypesList: GetDocumentEntitiesLookupDto[] = [];
 
   _entityTypeFullName = 'TACHYON.Documents.DocumentFiles.DocumentFile';
   entityHistoryEnabled = false;

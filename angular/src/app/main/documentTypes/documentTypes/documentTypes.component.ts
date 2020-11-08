@@ -1,6 +1,6 @@
 ﻿import { Component, Injector, ViewEncapsulation, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { DocumentTypesServiceProxy, DocumentTypeDto } from '@shared/service-proxies/service-proxies';
+import { DocumentTypesServiceProxy, DocumentTypeDto, GetDocumentEntitiesLookupDto } from '@shared/service-proxies/service-proxies';
 import { NotifyService } from 'abp-ng2-module';
 import { AppComponentBase } from '@shared/common/app-component-base';
 import { TokenAuthServiceProxy } from '@shared/service-proxies/service-proxies';
@@ -33,7 +33,7 @@ export class DocumentTypesComponent extends AppComponentBase {
   isRequiredFilter = -1;
   hasExpirationDateFilter = -1;
   requiredFromFilter = '';
-
+  entityList: GetDocumentEntitiesLookupDto[] = [];
   constructor(
     injector: Injector,
     private _documentTypesServiceProxy: DocumentTypesServiceProxy,
@@ -96,5 +96,11 @@ export class DocumentTypesComponent extends AppComponentBase {
       .subscribe((result) => {
         this._fileDownloadService.downloadTempFile(result);
       });
+  }
+
+  getDocumentsEntityLookUp() {
+    this._documentTypesServiceProxy.getDocumentEntitiesForDocumentType().subscribe((result) => {
+      this.entityList = result;
+    });
   }
 }

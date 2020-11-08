@@ -38,7 +38,10 @@
             </select>
           </div>
           <div *ngIf="!documentFile.id && allDocumentTypes.length == 1" style="width: 200px;">
-            <label>Create Document: {{ allDocumentTypes[0].documentTypeDto.displayName }}</label>
+            <label
+              >Create Document:
+              <h3>{{ allDocumentTypes[0].documentTypeDto.displayName }}</h3></label
+            >
           </div>
           <div class="row">
             <div class="form-group col-md-12">

@@ -50,7 +50,11 @@
                 <div class="col-md-3">
                   <div class="form-group">
                     <label for="LanguageFilter">{{ l('Language') }}</label>
-                    <input type="text" class="form-control" id="LanguageFilter" name="languageFilter" [(ngModel)]="languageFilter" />
+                    <select id="LanguageFilter" name="languageFilter" [(ngModel)]="languageFilter" class="form-control">
+                      <option *ngFor="let language of languages" value="{{ language.displayName }}">{{ language.displayName }}</option>
+                    </select>
+
+                    <!-- <input type="text" class="form-control" id="LanguageFilter" name="languageFilter" [(ngModel)]="languageFilter" /> -->
                   </div>
                 </div>
                 <div class="col-md-3">

@@ -25,8 +25,8 @@
             {{ item.truck.id }}
           </div>
           <div class="col-6 mb-3">
-            <h6>{{ l('Assigend Driver Name') }} :</h6>
-            {{ item.userName }}
+            <h6>{{ l('PlateNumber') }} :</h6>
+            {{ item.truck.plateNumber }}
           </div>
         </div>
 
@@ -54,6 +54,10 @@
         </div>
 
         <div class="row">
+          <div class="col-6 mb-3">
+            <h6>{{ l('Assigend Driver Name') }} :</h6>
+            {{ item.userName }}
+          </div>
           <div class="col-6 mb-3">
             <h6>{{ l('Truck Type') }} :</h6>
             {{ item.trucksTypeDisplayName }}

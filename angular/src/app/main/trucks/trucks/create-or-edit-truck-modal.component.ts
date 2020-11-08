@@ -87,7 +87,7 @@ export class CreateOrEditTruckModalComponent extends AppComponentBase {
   entityHistoryEnabled = false;
   testCond = null;
 
-  truck: CreateOrEditTruckDto = new CreateOrEditTruckDto();
+  truck: CreateOrEditTruckDto;
 
   trucksTypeDisplayName = '';
   truckStatusDisplayName = '';
@@ -170,7 +170,6 @@ export class CreateOrEditTruckModalComponent extends AppComponentBase {
       this.ModalIsEdit = true;
       this._trucksServiceProxy.getTruckForEdit(truckId).subscribe((result) => {
         this.truck = result.truck;
-        console.log(this.truck);
 
         if (this.truck.transportTypeId == null) {
           this.truck.transportTypeId = 0;
@@ -230,7 +229,7 @@ export class CreateOrEditTruckModalComponent extends AppComponentBase {
   initializeModal(): void {
     this.active = true;
     this.temporaryPictureUrl = '';
-    this.initFileUploader();
+    // this.initFileUploader();
     this.initDocsUploader();
   }
 
@@ -250,7 +249,7 @@ export class CreateOrEditTruckModalComponent extends AppComponentBase {
   }
 
   save(): void {
-    console.log(this.truck);
+    console.log('in save');
     this.saving = true;
     if (this.truck.id) {
       this.updateTrucDetails();
@@ -263,11 +262,6 @@ export class CreateOrEditTruckModalComponent extends AppComponentBase {
     this.truckUserLookupTableModal.id = this.truck.driver1UserId;
     this.truckUserLookupTableModal.displayName = this.userName;
     this.truckUserLookupTableModal.show();
-  }
-
-  openSelectUserModal2() {
-    this.truckUserLookupTableModal2.displayName = this.userName;
-    this.truckUserLookupTableModal2.show();
   }
 
   setDriver1UserIdNull() {
@@ -287,7 +281,7 @@ export class CreateOrEditTruckModalComponent extends AppComponentBase {
   close(): void {
     this.active = false;
     this.imageChangedEvent = '';
-    this.uploader.clearQueue();
+    // this.uploader.clearQueue();
     this.DocsUploader.clearQueue();
     this.docProgressFileName = null;
     // this.fileToken = '';
@@ -308,51 +302,6 @@ export class CreateOrEditTruckModalComponent extends AppComponentBase {
   imageCroppedFile(event: ImageCroppedEvent) {
     this.uploader.clearQueue();
     this.uploader.addToQueue([<File>base64ToFile(event.base64)]);
-  }
-
-  initFileUploader(): void {
-    this.uploader = new FileUploader({ url: AppConsts.remoteServiceBaseUrl + '/Profile/UploadProfilePicture' });
-    this._uploaderOptions.autoUpload = false;
-    this._uploaderOptions.authToken = 'Bearer ' + this._tokenService.getToken();
-    this._uploaderOptions.removeAfterUpload = true;
-    this.uploader.onAfterAddingFile = (file) => {
-      file.withCredentials = false;
-    };
-
-    this.uploader.onBuildItemForm = (fileItem: FileItem, form: any) => {
-      form.append('FileType', fileItem.file.type);
-      form.append('FileName', 'ProfilePicture');
-      form.append('FileToken', this.guid());
-    };
-
-    this.uploader.onSuccessItem = (item, response, status) => {
-      const resp = <IAjaxResponse>JSON.parse(response);
-      if (resp.success) {
-        //this.updateProfilePicture(resp.result.fileToken);
-        this.truck.updateTruckPictureInput = new UpdateTruckPictureInput();
-        this.truck.updateTruckPictureInput.fileToken = resp.result.fileToken;
-        this.truck.updateTruckPictureInput.x = 0;
-        this.truck.updateTruckPictureInput.y = 0;
-        this.truck.updateTruckPictureInput.width = 0;
-        this.truck.updateTruckPictureInput.height = 0;
-        this._trucksServiceProxy
-          .createOrEdit(this.truck)
-          .pipe(
-            finalize(() => {
-              this.saving = false;
-            })
-          )
-          .subscribe(() => {
-            this.notify.info(this.l('SavedSuccessfully'));
-            this.close();
-            this.modalSave.emit(null);
-          });
-      } else {
-        this.message.error(resp.error.message);
-      }
-    };
-
-    this.uploader.setOptions(this._uploaderOptions);
   }
 
   guid(): string {
@@ -396,15 +345,15 @@ export class CreateOrEditTruckModalComponent extends AppComponentBase {
       form.append('FileType', fileItem.file.type);
       form.append('FileName', fileItem.file.name);
       form.append('FileToken', this.guid());
+      console.log('onAfterAddingFile');
     };
 
     this.DocsUploader.onSuccessItem = (item, response, status) => {
       const resp = <IAjaxResponse>JSON.parse(response);
-      console.log('not working');
 
       if (resp.success) {
         //attach each fileToken to his CreateOrEditDocumentFileDto
-
+        console.log(resp.success);
         this.truck.createOrEditDocumentFileDtos.find(
           (x) => x.name === item.file.name && x.extn === item.file.type
         ).updateDocumentFileInput = new UpdateDocumentFileInput({ fileToken: resp.result.fileToken });
@@ -419,6 +368,8 @@ export class CreateOrEditTruckModalComponent extends AppComponentBase {
 
     this.DocsUploader.onCompleteAll = () => {
       // create truck req.
+      console.log('onCompleteAll doc');
+
       this._trucksServiceProxy
         .createOrEdit(this.truck)
         .pipe(

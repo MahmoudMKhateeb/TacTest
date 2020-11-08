@@ -20,6 +20,7 @@ import { AppConsts } from '@shared/AppConsts';
 import { HttpClient } from '@angular/common/http';
 import { FileUpload } from '@node_modules/primeng/fileupload';
 import { ViewOrEditEntityDocumentsModalComponent } from '@app/main/documentFiles/documentFiles/documentFilesViewComponents/view-or-edit-entity-documents-modal.componant';
+import { TruckUserLookupTableModalComponent } from './truck-user-lookup-table-modal.component';
 
 @Component({
   templateUrl: './trucks.component.html',
@@ -31,6 +32,7 @@ export class TrucksComponent extends AppComponentBase {
   @ViewChild('createOrEditTruckModal', { static: true }) createOrEditTruckModal: CreateOrEditTruckModalComponent;
   @ViewChild('viewTruckModalComponent', { static: true }) viewTruckModal: ViewTruckModalComponent;
   @ViewChild('viewOrEditEntityDocumentsModal', { static: true }) viewOrEditEntityDocumentsModal: ViewOrEditEntityDocumentsModalComponent;
+  @ViewChild('truckUserLookupTableModal', { static: true }) truckUserLookupTableModal: TruckUserLookupTableModalComponent;
 
   @ViewChild('dataTable', { static: true }) dataTable: Table;
   @ViewChild('paginator', { static: true }) paginator: Paginator;
@@ -174,5 +176,17 @@ export class TrucksComponent extends AppComponentBase {
 
   onUploadExcelError(): void {
     this.notify.error(this.l('ImportUsersUploadFailed'));
+  }
+
+  openSelectUserModal() {
+    this.truckUserLookupTableModal.id = null;
+    this.truckUserLookupTableModal.displayName = '';
+    this.truckUserLookupTableModal.show();
+  }
+  setDriver1UserIdNull() {
+    this.userNameFilter = '';
+  }
+  getNewDriver1UserId() {
+    this.userNameFilter = this.truckUserLookupTableModal.displayName;
   }
 }

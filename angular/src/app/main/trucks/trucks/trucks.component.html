@@ -95,20 +95,28 @@
                 <div class="col-md-3">
                   <div class="form-group">
                     <label for="ModelYearFilter">{{ l('ModelYear') }}</label>
-                    <input type="text" class="form-control" id="ModelYearFilter" name="modelYearFilter" [(ngModel)]="modelYearFilter" />
+                    <input
+                      type="datetime"
+                      bsDatepicker
+                      placeholder="{{ l('ModelYear') }}"
+                      class="form-control"
+                      id="ModelYearFilter"
+                      name="modelYearFilter"
+                      [(ngModel)]="modelYearFilter"
+                    />
                   </div>
                 </div>
-                <div class="col-md-3">
+                <!-- <div class="col-md-3">
                   <label for="IsAttachableFilterSelect">{{ l('IsAttachable') }}</label>
                   <select class="form-control" name="IsAttachableFilter" id="IsAttachableFilterSelect" [(ngModel)]="isAttachableFilter">
                     <option value="-1">{{ l('All') }}</option>
                     <option value="0">{{ l('False') }}</option>
                     <option value="1">{{ l('True') }}</option>
                   </select>
-                </div>
-                <div class="col-md-3">
+                </div> -->
+                <!-- <div class="col-md-3">
                   <div class="form-group">
-                    <label for="TrucksTypeDisplayNameFilter">({{ l('TrucksType') }}) {{ l('DisplayName') }}</label>
+                    <label for="TrucksTypeDisplayNameFilter">{{ l('TrucksType') }}</label>
                     <input
                       type="text"
                       class="form-control"
@@ -117,10 +125,10 @@
                       [(ngModel)]="trucksTypeDisplayNameFilter"
                     />
                   </div>
-                </div>
+                </div> -->
                 <div class="col-md-3">
                   <div class="form-group">
-                    <label for="TruckStatusDisplayNameFilter">({{ l('TruckStatus') }}) {{ l('DisplayName') }}</label>
+                    <label for="TruckStatusDisplayNameFilter">{{ l('TruckStatus') }}</label>
                     <input
                       type="text"
                       class="form-control"
@@ -132,8 +140,20 @@
                 </div>
                 <div class="col-md-3">
                   <div class="form-group">
-                    <label for="UserNameFilter">({{ l('User') }}) {{ l('Name') }}</label>
-                    <input type="text" class="form-control" id="UserNameFilter" name="userNameFilter" [(ngModel)]="userNameFilter" />
+                    <label for="UserNameFilter">{{ l('Driver') }}</label>
+
+                    <div class="input-group">
+                      <input [(ngModel)]="userNameFilter" class="form-control" disabled id="UserName" name="userName" type="text" />
+                      <div class="input-group-append">
+                        <button (click)="openSelectUserModal()" class="btn btn-primary blue" type="button">
+                          <i class="fa fa-search"></i> {{ l('Pick') }}
+                        </button>
+                      </div>
+                      <div class="input-group-prepend">
+                        <button (click)="setDriver1UserIdNull()" class="btn btn-danger btn-icon" type="button"><i class="fa fa-times"></i></button>
+                      </div>
+                    </div>
+                    <!-- <input type="text" class="form-control" id="UserNameFilter" name="userNameFilter" [(ngModel)]="userNameFilter" /> -->
                   </div>
                 </div>
               </div>
@@ -171,16 +191,16 @@
                 <ng-template pTemplate="header">
                   <tr>
                     <th style="width: 130px;" [hidden]="!isGrantedAny('Pages.Trucks.Edit', 'Pages.Trucks.Delete')">{{ l('Actions') }}</th>
-                    <!-- <th style="width: 150px;" pSortableColumn="truck.plateNumber">
-                      {{ l('Plate Number') }}
+                    <th style="width: 150px;" pSortableColumn="truck.plateNumber">
+                      {{ l('PlateNumber') }}
                       <p-sortIcon field="trucksId"></p-sortIcon>
-                    </th> -->
+                    </th>
                     <th style="width: 350px;" pSortableColumn="truck.id">
                       {{ l('ID') }}
                       <p-sortIcon field="trucksId"></p-sortIcon>
                     </th>
                     <th style="width: 500px;" pSortableColumn="truckTypeFk.displayName">
-                      {{ l('Truck Type') }}
+                      {{ l('TruckType') }}
                       <p-sortIcon field="truckStatusDisplayName"></p-sortIcon>
                     </th>
                     <th style="width: 150px;" pSortableColumn="truckStatusFk.status">
@@ -188,15 +208,15 @@
                       <p-sortIcon field="truckStatus"></p-sortIcon>
                     </th>
                     <th style="width: 150px;" pSortableColumn="driver1UserFk.name">
-                      {{ l('Driver Name') }}
+                      {{ l('DriverName') }}
                       <p-sortIcon field="driverName"></p-sortIcon>
                     </th>
                     <th style="width: 150px;" pSortableColumn="modelName">
-                      {{ l('Model Name') }}
+                      {{ l('ModelName') }}
                       <p-sortIcon field="truck.modelName"></p-sortIcon>
                     </th>
                     <th style="width: 150px;" pSortableColumn="modelYear">
-                      {{ l('Model Year') }}
+                      {{ l('ModelYear') }}
                       <p-sortIcon field="truck.modelYear"></p-sortIcon>
                     </th>
                     <!-- <th style="width: 150px;" pSortableColumn="licenseNumber">
@@ -264,16 +284,16 @@
                         </ul>
                       </div>
                     </td>
-                    <!-- <td style="width: 150px;">
-                      <span class="ui-column-title"> {{ l('Plate Number') }}</span>
+                    <td style="width: 150px;">
+                      <span class="ui-column-title"> {{ l('PlateNumber') }}</span>
                       {{ record.truck.plateNumber }}
-                    </td> -->
+                    </td>
                     <td style="width: 350px;">
                       <span class="ui-column-title"> {{ l('ID') }}</span>
                       {{ record.truck.id }}
                     </td>
                     <td style="width: 500px;">
-                      <span class="ui-column-title"> {{ l('Truck Type') }}</span>
+                      <span class="ui-column-title"> {{ l('TruckType') }}</span>
                       {{ record.trucksTypeDisplayName }}
                     </td>
                     <td style="width: 150px;">
@@ -343,5 +363,6 @@
     <viewTruckModal #viewTruckModal></viewTruckModal>
     <viewOrEditEntityDocumentsModal #viewOrEditEntityDocumentsModal></viewOrEditEntityDocumentsModal>
     <entityTypeHistoryModal #entityTypeHistoryModal></entityTypeHistoryModal>
+    <truckUserLookupTableModal #truckUserLookupTableModal (modalSave)="getNewDriver1UserId()"></truckUserLookupTableModal>
   </div>
 </div>

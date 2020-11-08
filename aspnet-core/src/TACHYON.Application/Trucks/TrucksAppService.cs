@@ -126,7 +126,7 @@ namespace TACHYON.Trucks
                          {
                              Truck = new TruckDto
                              {
-                                 //PlateNumber = s4==null? "" :s4.Number,
+                                 PlateNumber = o == null ? "" : o.PlateNumber,
                                  ModelName = o.ModelName,
                                  ModelYear = o.ModelYear,
                                  Note = o.Note,
@@ -239,17 +239,7 @@ namespace TACHYON.Trucks
 
             if (input.Id == null)
             {
-
-                try
-                {
                     await Create(input);
-                }
-                catch (Exception ex)
-                {
-
-                    throw;
-                }
-             
             }
             else
             {

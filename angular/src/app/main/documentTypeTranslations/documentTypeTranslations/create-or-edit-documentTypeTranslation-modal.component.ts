@@ -8,6 +8,7 @@ import {
 } from '@shared/service-proxies/service-proxies';
 import { AppComponentBase } from '@shared/common/app-component-base';
 import * as moment from 'moment';
+import * as _ from 'lodash';
 
 @Component({
   selector: 'createOrEditDocumentTypeTranslationModal',
@@ -26,9 +27,13 @@ export class CreateOrEditDocumentTypeTranslationModalComponent extends AppCompon
   documentTypeDisplayName = '';
 
   allDocumentTypes: DocumentTypeTranslationDocumentTypeLookupTableDto[];
+  currentLanguage: abp.localization.ILanguageInfo;
+  languages: abp.localization.ILanguageInfo[] = [];
 
   constructor(injector: Injector, private _documentTypeTranslationsServiceProxy: DocumentTypeTranslationsServiceProxy) {
     super(injector);
+    this.languages = _.filter(abp.localization.languages, (l) => (<any>l).isDisabled === false);
+    this.currentLanguage = abp.localization.currentLanguage;
   }
 
   show(documentTypeTranslationId?: number, documentTypeId?: number): void {
