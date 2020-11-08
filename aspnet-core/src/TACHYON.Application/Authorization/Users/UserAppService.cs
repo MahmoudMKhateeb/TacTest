@@ -325,7 +325,7 @@ namespace TACHYON.Authorization.Users
             if (input.User.IsDriver)
             {
                 //get requiredDocs
-                var requiredDocs = await _documentFilesAppService.GetDriverRequiredDocumentFiles();
+                var requiredDocs = await _documentFilesAppService.GetDriverRequiredDocumentFiles("");
                 if (requiredDocs.Count > 0)
                 {
                     foreach (var item in requiredDocs)
@@ -451,6 +451,7 @@ namespace TACHYON.Authorization.Users
                 .WhereIf(input.Role.HasValue, u => u.Roles.Any(r => r.RoleId == input.Role.Value))
                 .WhereIf(input.OnlyLockedUsers, u => u.LockoutEndDateUtc.HasValue && u.LockoutEndDateUtc.Value > DateTime.UtcNow)
                 .WhereIf(input.OnlyDrivers,u=> u.IsDriver)
+                .WhereIf(input.OnlyUsers,u=> u.IsDriver==false)
                 .WhereIf(
                     !input.Filter.IsNullOrWhiteSpace(),
                     u =>
@@ -488,6 +489,12 @@ namespace TACHYON.Authorization.Users
             }
 
             return query;
+        }
+
+        public async Task<bool> CheckIfUserNameValid(string userName)
+        {
+            var result = await _userManager.FindByNameAsync(userName);
+            return (result ==null);
         }
     }
 }

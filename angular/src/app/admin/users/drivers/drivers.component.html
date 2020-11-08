@@ -157,24 +157,9 @@
                       {{ 'UserName' | localize }}
                       <p-sortIcon field="username"></p-sortIcon>
                     </th>
-                    <th style="width: 150px;" pSortableColumn="name">
-                      {{ 'Name' | localize }}
-                      <p-sortIcon field="name"></p-sortIcon>
-                    </th>
-                    <th style="width: 150px;" pSortableColumn="surname">
-                      {{ 'Surname' | localize }}
-                      <p-sortIcon field="surname"></p-sortIcon>
-                    </th>
-                    <th style="width: 150px;">
-                      {{ 'Roles' | localize }}
-                    </th>
                     <th style="width: 250px;" pSortableColumn="emailAddress">
                       {{ 'EmailAddress' | localize }}
                       <p-sortIcon field="emailAddress"></p-sortIcon>
-                    </th>
-                    <th style="width: 200px;" pSortableColumn="isEmailConfirmed">
-                      {{ 'EmailConfirm' | localize }}
-                      <p-sortIcon field="isEmailConfirmed"></p-sortIcon>
                     </th>
                     <th style="width: 100px;" pSortableColumn="isActive">
                       {{ 'Active' | localize }}
@@ -208,13 +193,9 @@
                         </button>
                         <ul class="dropdown-menu" *dropdownMenu>
                           <li>
-                            <a
-                              href="javascript:;"
-                              class="dropdown-item"
-                              *ngIf="('Pages.Administration.Users.Impersonation' | permission) && record.id !== appSession.userId"
-                              (click)="_impersonationService.impersonate(record.id, appSession.tenantId)"
-                              >{{ 'LoginAsThisUser' | localize }}</a
-                            >
+                            <a href="javascript:;" class="dropdown-item" (click)="viewOrEditEntityDocumentsModal.show(record.id, 'Driver')">{{
+                              l('View Documents')
+                            }}</a>
                           </li>
                           <li>
                             <a
@@ -247,15 +228,6 @@
                             <a
                               href="javascript:;"
                               class="dropdown-item"
-                              *ngIf="'Pages.Administration.EntityDynamicParameterValue.Edit' | permission"
-                              (click)="showDynamicParameters(record)"
-                              >{{ 'DynamicParameters' | localize }}</a
-                            >
-                          </li>
-                          <li>
-                            <a
-                              href="javascript:;"
-                              class="dropdown-item"
                               *ngIf="'Pages.Administration.Users.Delete' | permission"
                               (click)="deleteUser(record)"
                               >{{ 'Delete' | localize }}</a
@@ -267,32 +239,15 @@
                     <td style="width: 150px;">
                       <span class="ui-column-title"> {{ 'UserName' | localize }}</span>
                       <span>
-                        <a [href]="record.profilePictureUrl" target="_blank">
+                        <!-- <a [href]="record.profilePictureUrl" target="_blank">
                           <img class="img-circle" [src]="record.profilePictureUrl" />
-                        </a>
+                        </a> -->
                         {{ record.userName }}
                       </span>
-                    </td>
-                    <td style="width: 150px;">
-                      <span class="ui-column-title"> {{ 'Name' | localize }}</span>
-                      {{ record.name }}
-                    </td>
-                    <td style="width: 150px;">
-                      <span class="ui-column-title"> {{ 'Surname' | localize }}</span>
-                      {{ record.surname }}
-                    </td>
-                    <td style="width: 150px;">
-                      <span class="ui-column-title"> {{ 'Roles' | localize }}</span>
-                      {{ getRolesAsString(record.roles) }}
                     </td>
                     <td style="width: 250px;">
                       <span class="ui-column-title"> {{ 'EmailAddress' | localize }}</span>
                       {{ record.emailAddress }}
-                    </td>
-                    <td style="width: 200px;">
-                      <span class="ui-column-title"> {{ 'EmailConfirm' | localize }}</span>
-                      <span class="label label-success label-inline" *ngIf="record.isEmailConfirmed">{{ 'Yes' | localize }}</span>
-                      <span class="label label-dark label-inline" *ngIf="!record.isEmailConfirmed">{{ 'No' | localize }}</span>
                     </td>
                     <td style="width: 100px;">
                       <span class="ui-column-title"> {{ 'Active' | localize }}</span>
@@ -328,9 +283,8 @@
         </div>
       </div>
     </div>
-
+    <viewOrEditEntityDocumentsModal #viewOrEditEntityDocumentsModal></viewOrEditEntityDocumentsModal>
     <createOrEditDriverModal [creatDriver]="true" #createOrEditUserModal (modalSave)="getUsers()"></createOrEditDriverModal>
     <editUserPermissionsModal #editUserPermissionsModal></editUserPermissionsModal>
-    <manage-entity-dynamic-parameter-values-modal #dynamicParametersModal> </manage-entity-dynamic-parameter-values-modal>
   </div>
 </div>

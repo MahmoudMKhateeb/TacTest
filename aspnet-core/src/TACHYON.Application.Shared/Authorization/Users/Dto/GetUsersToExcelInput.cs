@@ -13,6 +13,7 @@ namespace TACHYON.Authorization.Users.Dto
 
         public bool OnlyLockedUsers { get; set; }
         public bool OnlyDrivers { get; set; }
+        public bool OnlyUsers { get; set; }
 
         public string Sorting { get; set; }
 
