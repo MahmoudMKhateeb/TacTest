@@ -11,5 +11,12 @@ namespace TACHYON.Shipping.ShippingRequestBids
     public interface IShippingRequestBidsAppService:IApplicationService
     {
         Task<PagedResultDto<GetShippingRequestBidsForViewDto>> GetAllBids(GetAllShippingRequestBidsInput input);
+        Task CloseShippingRequestBid(StopShippingRequestBidInput input);
+        Task<long> CreateOrEditShippingRequestBid(CreatOrEditShippingRequestBidDto input);
+        Task AcceptBid(ShippingRequestBidInput input);
+        Task<List<ViewCarrierBidsOutput>> ViewAllCarrierBids();
+        Task CancelBidRequest(ShippingRequestBidInput input);
+        Task<PagedResultDto<ViewShipperBidsReqDetailsOutputDto>> GetShipperbidsRequestDetailsForView(PagedAndSortedResultRequestDto input);
+
     }
 }

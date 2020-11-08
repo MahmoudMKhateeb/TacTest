@@ -96,24 +96,23 @@ namespace TACHYON.Shipping.ShippingRequestBids
         }
 
 
-        public async Task CreateOrEditShippingRequestBid(CreatOrEditShippingRequestBidDto input)
+        public async Task<long> CreateOrEditShippingRequestBid(CreatOrEditShippingRequestBidDto input)
         {
             if (input.Id == null)
-                await Create(input);
+                return await Create(input);
             else
-                Edit(input);
+                return await Edit(input);
         }
 
         //#538
         [RequiresFeature(AppFeatures.Carrier)]
         [AbpAuthorize(AppPermissions.Pages_ShippingRequestBids_Create)]
-        protected virtual async Task Create(CreatOrEditShippingRequestBidDto input)
+        protected virtual async Task<long> Create(CreatOrEditShippingRequestBidDto input)
         {
-            var exist = await _shippingRequestBidsRepository.FirstOrDefaultAsync(x => x.TenantId == AbpSession.TenantId
-               && x.ShippingRequestId == input.ShippingRequestId);
+            var exist = CheckIfCarrierHasBidToSR(input.ShippingRequestId);
 
-            if (exist != null)
-            {
+            if (exist.Result == 0)
+            { 
                 throw new UserFriendlyException(L("You have already Bid to this shipping before message"));
             }
             else
@@ -126,16 +125,24 @@ namespace TACHYON.Shipping.ShippingRequestBids
 
                 }
                 await _shippingRequestBidsRepository.InsertAsync(shippingRequestBid);
+                return shippingRequestBid.Id;
             }
+        }
+
+        private async Task<int> CheckIfCarrierHasBidToSR(long ShippingRequestId)
+        {
+            return await _shippingRequestBidsRepository.CountAsync(x => x.TenantId == AbpSession.TenantId
+               && x.ShippingRequestId == ShippingRequestId);
         }
 
         [RequiresFeature(AppFeatures.Carrier)]
         [AbpAuthorize(AppPermissions.Pages_ShippingRequestBids_Edit)]
-        protected void Edit(CreatOrEditShippingRequestBidDto input)
+        protected async Task<long> Edit(CreatOrEditShippingRequestBidDto input)
         {
-            var item = _shippingRequestBidsRepository.FirstOrDefaultAsync((long)input.Id);
+            var item =await _shippingRequestBidsRepository.FirstOrDefaultAsync((long)input.Id);
 
             ObjectMapper.Map(input, item);
+            return item.Id;
         }
 
         //shipper accept carrier bid request #539
@@ -202,7 +209,7 @@ namespace TACHYON.Shipping.ShippingRequestBids
         }
 
         //#537
-        public async Task<PagedResultDto<ViewShipperBidsReqDetailsOutputDto>> GetShipperbidsRequestDetailsForView(PagedAndSortedResultRequestDto input)
+        public virtual async Task<PagedResultDto<ViewShipperBidsReqDetailsOutputDto>> GetShipperbidsRequestDetailsForView(PagedAndSortedResultRequestDto input)
         {
             using (CurrentUnitOfWork.DisableFilter(AbpDataFilters.MustHaveTenant))
             {
