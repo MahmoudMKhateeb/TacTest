@@ -26,6 +26,7 @@ using TACHYON.Authorization.Roles;
 using TACHYON.Authorization.Users.Dto;
 using TACHYON.Authorization.Users.Exporting;
 using TACHYON.Documents.DocumentFiles;
+using TACHYON.Documents.DocumentTypes;
 using TACHYON.Dto;
 using TACHYON.Notifications;
 using TACHYON.Organizations.Dto;
@@ -56,9 +57,12 @@ namespace TACHYON.Authorization.Users
         private readonly IRepository<UserOrganizationUnit, long> _userOrganizationUnitRepository;
         private readonly IRepository<OrganizationUnitRole, long> _organizationUnitRoleRepository;
         private readonly DocumentFilesAppService _documentFilesAppService;
-
-
+        private readonly IRepository<DocumentType, long> _documentTypeRepository;
+        private readonly IRepository<DocumentFile, Guid> _documentFileRepository;
         public UserAppService(
+
+            IRepository<DocumentFile, Guid> documentFileRepository,
+            IRepository<DocumentType, long> documentTypeRepository,
             RoleManager roleManager,
             IUserEmailer userEmailer,
             IUserListExcelExporter userListExcelExporter,
@@ -77,6 +81,8 @@ namespace TACHYON.Authorization.Users
             IRepository<UserOrganizationUnit, long> userOrganizationUnitRepository,
             IRepository<OrganizationUnitRole, long> organizationUnitRoleRepository, DocumentFilesAppService documentFilesAppService)
         {
+            _documentFileRepository = documentFileRepository;
+            _documentTypeRepository = documentTypeRepository;
             _roleManager = roleManager;
             _userEmailer = userEmailer;
             _userListExcelExporter = userListExcelExporter;
@@ -104,19 +110,49 @@ namespace TACHYON.Authorization.Users
             var query = GetUsersFilteredQuery(input);
 
             var userCount = await query.CountAsync();
+            var users = new List<User>();
+            var userListDtos=  new List<UserListDto>();
+            if (input.OnlyDrivers)
+            {
+                 var documentTypesCount = await _documentTypeRepository.GetAll().Include(ent => ent.DocumentsEntityFk)
+                 .Where(a => a.DocumentsEntityFk.DisplayName == AppConsts.DriverDocumentsEntityName).CountAsync();
 
-            var users = await query
+                userListDtos = await query.Select(u => new UserListDto () {
+                    IsMissingDocumentFiles = documentTypesCount != _documentFileRepository.GetAll().Where(t => t.UserId == u.Id).Count(),
+                    EmailAddress=u.EmailAddress,
+                    UserName=u.UserName,
+                    CreationTime= u.CreationTime,
+                    Id= u.Id,
+                    IsActive= u.IsActive,
+                    IsEmailConfirmed= u.IsEmailConfirmed,
+                    Name= u.Name,
+                    PhoneNumber= u.PhoneNumber,
+                    ProfilePictureId= u.ProfilePictureId,
+                    Surname= u.Surname
+                })
+                .OrderBy(input.Sorting)
+                .PageBy(input)
+                .ToListAsync();
+                await FillRoleNames(userListDtos);
+
+            }
+            else if(input.OnlyUsers)
+            {
+                users = await query
                 .OrderBy(input.Sorting)
                 .PageBy(input)
                 .ToListAsync();
 
-            var userListDtos = ObjectMapper.Map<List<UserListDto>>(users);
-            await FillRoleNames(userListDtos);
+                 userListDtos = ObjectMapper.Map<List<UserListDto>>(users);
+                await FillRoleNames(userListDtos);
 
+            }
             return new PagedResultDto<UserListDto>(
-                userCount,
-                userListDtos
-                );
+              userCount,
+              userListDtos
+              );
+
+
         }
 
         public async Task<FileDto> GetUsersToExcel(GetUsersToExcelInput input)

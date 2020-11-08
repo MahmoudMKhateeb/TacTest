@@ -1,12 +1,9 @@
 ﻿using TACHYON.Documents.DocumentTypes;
-					using System.Collections.Generic;
-
-
+using System.Collections.Generic;
 using System;
 using System.Linq;
 using System.Linq.Dynamic.Core;
 using Abp.Linq.Extensions;
-using System.Collections.Generic;
 using System.Threading.Tasks;
 using Abp.Domain.Repositories;
 using TACHYON.Documents.DocumentTypeTranslations.Exporting;

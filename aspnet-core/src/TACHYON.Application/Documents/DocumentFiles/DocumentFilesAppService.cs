@@ -620,10 +620,10 @@ namespace TACHYON.Documents.DocumentFiles
 
 
 
-        public async Task<List<GetDocumentEntitiesLookupForDocumentFilesDto>> GetDocumentEntitiesForDocumentFile()
+        public async Task<List<GetDocumentEntitiesLookupDto>> GetDocumentEntitiesForDocumentFile()
         {
 
-            var result = await _documentEntityRepository.GetAll().Select(res => new GetDocumentEntitiesLookupForDocumentFilesDto
+            var result = await _documentEntityRepository.GetAll().Select(res => new GetDocumentEntitiesLookupDto
             {
                 DisplayName = res.DisplayName
             }

@@ -14,6 +14,7 @@ using System.Linq.Dynamic.Core;
 using System.Threading.Tasks;
 using TACHYON.Authorization;
 using TACHYON.Documents.DocumentsEntities;
+using TACHYON.Documents.DocumentsEntities.Dtos;
 using TACHYON.Documents.DocumentTypes.Dtos;
 using TACHYON.Documents.DocumentTypes.Exporting;
 using TACHYON.Documents.DocumentTypeTranslations;
@@ -29,14 +30,16 @@ namespace TACHYON.Documents.DocumentTypes
         private readonly IDocumentTypesExcelExporter _documentTypesExcelExporter;
         private readonly IRepository<DocumentsEntity, int> _documentsEntityRepository;
         private readonly IRepository<DocumentTypeTranslation> _documentTypeTranslationRepository;
+        private readonly IRepository<DocumentsEntity, int> _documentEntityRepository;
 
 
-        public DocumentTypesAppService(IRepository<DocumentType, long> documentTypeRepository, IDocumentTypesExcelExporter documentTypesExcelExporter, IRepository<DocumentsEntity, int> documentsEntityRepository, IRepository<DocumentTypeTranslation> documentTypeTranslationRepository)
+        public DocumentTypesAppService(IRepository<DocumentsEntity, int> documentEntityRepository, IRepository<DocumentType, long> documentTypeRepository, IDocumentTypesExcelExporter documentTypesExcelExporter, IRepository<DocumentsEntity, int> documentsEntityRepository, IRepository<DocumentTypeTranslation> documentTypeTranslationRepository)
         {
             _documentTypeRepository = documentTypeRepository;
             _documentTypesExcelExporter = documentTypesExcelExporter;
             _documentsEntityRepository = documentsEntityRepository;
             _documentTypeTranslationRepository = documentTypeTranslationRepository;
+            _documentEntityRepository= documentEntityRepository;
         }
 
         public async Task<PagedResultDto<GetDocumentTypeForViewDto>> GetAll(GetAllDocumentTypesInput input)
@@ -49,6 +52,9 @@ namespace TACHYON.Documents.DocumentTypes
                         .WhereIf(!string.IsNullOrWhiteSpace(input.Filter), e => false || e.DisplayName.Contains(input.Filter) || e.DocumentsEntityFk.DisplayName.Contains(input.Filter))
                         .WhereIf(!string.IsNullOrWhiteSpace(input.DisplayNameFilter), e => e.DisplayName == input.DisplayNameFilter)
                         .WhereIf(input.IsRequiredFilter > -1, e => (input.IsRequiredFilter == 1 && e.IsRequired) || (input.IsRequiredFilter == 0 && !e.IsRequired))
+                        .WhereIf(input.HasExpirationDateFilter > -1, e => (input.HasExpirationDateFilter == 1 && e.HasExpirationDate) || (input.HasExpirationDateFilter == 0 && !e.HasExpirationDate))
+                        .WhereIf(input.HasExpirationDateFilter > -1, e => (input.HasExpirationDateFilter == 1 && e.HasExpirationDate) || (input.HasExpirationDateFilter == 0 && !e.HasExpirationDate))
+                        .WhereIf(input.HasExpirationDateFilter > -1, e => (input.HasExpirationDateFilter == 1 && e.HasExpirationDate) || (input.HasExpirationDateFilter == 0 && !e.HasExpirationDate))
                         .WhereIf(input.HasExpirationDateFilter > -1, e => (input.HasExpirationDateFilter == 1 && e.HasExpirationDate) || (input.HasExpirationDateFilter == 0 && !e.HasExpirationDate))
                         .WhereIf(!string.IsNullOrWhiteSpace(input.RequiredFromFilter), e => e.DocumentsEntityFk.DisplayName == input.RequiredFromFilter);
 
@@ -185,6 +191,20 @@ namespace TACHYON.Documents.DocumentTypes
             {
                 ObjectMapper.Map(input, translation);
             }
+        }
+
+
+
+        public async Task<List<GetDocumentEntitiesLookupDto>> GetDocumentEntitiesForDocumentType()
+        {
+
+            var result = await _documentEntityRepository.GetAll().Select(res => new GetDocumentEntitiesLookupDto
+            {
+                DisplayName = res.DisplayName,
+                id= res.Id
+            }
+            ).ToListAsync();
+            return result;
         }
     }
 }
