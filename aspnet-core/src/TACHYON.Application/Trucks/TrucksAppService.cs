@@ -51,6 +51,7 @@ namespace TACHYON.Trucks
         private readonly IRepository<TruckStatus, long> _lookup_truckStatusRepository;
         private readonly IRepository<User, long> _lookup_userRepository;
         private readonly IRepository<DocumentFile, Guid> _documentFileRepository;
+        private readonly IRepository<DocumentType, long> _documentTypeRepository;
         private readonly IAppNotifier _appNotifier;
         private readonly ITempFileCacheManager _tempFileCacheManager;
         private readonly IBinaryObjectManager _binaryObjectManager;
@@ -63,9 +64,10 @@ namespace TACHYON.Trucks
 
 
 
-        public TrucksAppService(IRepository<DocumentFile, Guid> documentFileRepository, IRepository<Truck, Guid> truckRepository, ITrucksExcelExporter trucksExcelExporter, IRepository<TrucksType, long> lookup_trucksTypeRepository, IRepository<TruckStatus, long> lookup_truckStatusRepository, IRepository<User, long> lookup_userRepository, IAppNotifier appNotifier, ITempFileCacheManager tempFileCacheManager, IBinaryObjectManager binaryObjectManager, DocumentFilesAppService documentFilesAppService, IRepository<TransportType, int> transportTypeRepository, IRepository<TransportSubtype, int> transportSubtypeRepository, IRepository<Capacity, int> capacityRepository, IRepository<TruckSubtype, int> truckSubtypeRepository)
+        public TrucksAppService(IRepository<DocumentType, long> documentTypeRepository, IRepository<DocumentFile, Guid> documentFileRepository, IRepository<Truck, Guid> truckRepository, ITrucksExcelExporter trucksExcelExporter, IRepository<TrucksType, long> lookup_trucksTypeRepository, IRepository<TruckStatus, long> lookup_truckStatusRepository, IRepository<User, long> lookup_userRepository, IAppNotifier appNotifier, ITempFileCacheManager tempFileCacheManager, IBinaryObjectManager binaryObjectManager, DocumentFilesAppService documentFilesAppService, IRepository<TransportType, int> transportTypeRepository, IRepository<TransportSubtype, int> transportSubtypeRepository, IRepository<Capacity, int> capacityRepository, IRepository<TruckSubtype, int> truckSubtypeRepository)
         {
             _documentFileRepository = documentFileRepository;
+            _documentTypeRepository = documentTypeRepository;
             _truckRepository = truckRepository;
             _trucksExcelExporter = trucksExcelExporter;
             _lookup_trucksTypeRepository = lookup_trucksTypeRepository;
@@ -106,6 +108,10 @@ namespace TACHYON.Trucks
                 .OrderBy(input.Sorting ?? "id asc")
                 .PageBy(input);
 
+            var documentTypesCount = await _documentTypeRepository.GetAll().Include(ent => ent.DocumentsEntityFk)
+                .Where(a => a.DocumentsEntityFk.DisplayName == AppConsts.TruckDocumentsEntityName).CountAsync();
+
+
             var trucks = from o in pagedAndFilteredTrucks
                          join o1 in _lookup_trucksTypeRepository.GetAll() on o.TrucksTypeId equals o1.Id into j1
                          from s1 in j1.DefaultIfEmpty()
@@ -115,10 +121,6 @@ namespace TACHYON.Trucks
 
                          join o3 in _lookup_userRepository.GetAll() on o.Driver1UserId equals o3.Id into j3
                          from s3 in j3.DefaultIfEmpty()
-
-                         //join o4 in _documentFileRepository.GetAll() on o.Id equals o4.TruckId into j4
-                         //from s4 in j4.DefaultIfEmpty()
-
 
                          select new GetTruckForViewDto()
                          {
@@ -138,6 +140,7 @@ namespace TACHYON.Trucks
                              (o.CapacityFk == null ?"": o.CapacityFk.DisplayName),                    
                              TruckStatusDisplayName = s2 == null || s2.DisplayName == null ? "" : s2.DisplayName.ToString(),
                              UserName = s3 == null || s3.Name == null ? "" : s3.Name.ToString(),
+                             IsMissingDocumentFiles =  documentTypesCount!= _documentFileRepository.GetAll().Where(t=>t.TruckId==o.Id).Count()
                          };
 
             var totalCount = await filteredTrucks.CountAsync();
@@ -185,13 +188,13 @@ namespace TACHYON.Trucks
 
             if (output.Truck.TrucksTypeId != null)
             {
-                var _lookupTrucksType = await _lookup_trucksTypeRepository.FirstOrDefaultAsync(output.Truck.TrucksTypeId);
+                var _lookupTrucksType = await _lookup_trucksTypeRepository.FirstOrDefaultAsync((long)output.Truck.TrucksTypeId);
                 output.TrucksTypeDisplayName = _lookupTrucksType?.DisplayName?.ToString();
             }
 
             if (output.Truck.TruckStatusId != null)
             {
-                var _lookupTruckStatus = await _lookup_truckStatusRepository.FirstOrDefaultAsync(output.Truck.TruckStatusId);
+                var _lookupTruckStatus = await _lookup_truckStatusRepository.FirstOrDefaultAsync((long) output.Truck.TruckStatusId);
                 output.TruckStatusDisplayName = _lookupTruckStatus?.DisplayName?.ToString();
             }
 
@@ -207,9 +210,46 @@ namespace TACHYON.Trucks
 
         public async Task CreateOrEdit(CreateOrEditTruckDto input)
         {
+            //check for zero values 
+            if (input.TransportTypeId==0)
+            {
+                input.TransportTypeId = null;
+            }
+            if (input.TransportSubtypeId==0)
+            {
+                input.TransportSubtypeId = null;
+            }
+            if (input.TrucksTypeId==0)
+            {
+                input.TrucksTypeId = null;
+            }
+            if (input.TruckSubtypeId==0) {
+                input.TruckSubtypeId = null;
+
+            }
+            if (input.CapacityId==0) {
+                input.CapacityId = null;
+            }
+            if (input.TruckStatusId==0)
+            {
+                input.TruckStatusId = null;
+            }
+
+
+
             if (input.Id == null)
             {
-                await Create(input);
+
+                try
+                {
+                    await Create(input);
+                }
+                catch (Exception ex)
+                {
+
+                    throw;
+                }
+             
             }
             else
             {
@@ -228,7 +268,7 @@ namespace TACHYON.Trucks
                 truck.TenantId = (int)AbpSession.TenantId;
             }
 
-            var requiredDocs = await _documentFilesAppService.GetTruckRequiredDocumentFiles();
+            var requiredDocs = await _documentFilesAppService.GetTruckRequiredDocumentFiles("");
             if (requiredDocs.Count > 0)
             {
                 foreach (var item in requiredDocs)
@@ -241,7 +281,7 @@ namespace TACHYON.Trucks
                         throw new UserFriendlyException(L("document missing msg :" + item.Name));
                     }
 
-                    doc.Name = item.Name;
+                    doc.Name = item.DocumentTypeDto.DisplayName;
                 }
             }
 
@@ -249,7 +289,16 @@ namespace TACHYON.Trucks
             var truckId = await _truckRepository.InsertAndGetIdAsync(truck);
             if (input.Driver1UserId != null)
             {
+                try
+                {
                 await _appNotifier.AssignDriverToTruck(new UserIdentifier(AbpSession.TenantId, input.Driver1UserId.Value), truckId);
+
+                }
+                catch (Exception ex)
+                {
+
+                    throw;
+                }
             }
 
 
@@ -395,7 +444,7 @@ namespace TACHYON.Trucks
                 lookupTableDtoList.Add(new TruckUserLookupTableDto
                 {
                     Id = user.Id,
-                    DisplayName = user.Name?.ToString()
+                    DisplayName = user.UserName?.ToString()
                 });
             }
 

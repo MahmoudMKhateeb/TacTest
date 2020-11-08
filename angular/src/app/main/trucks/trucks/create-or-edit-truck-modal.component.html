@@ -29,7 +29,7 @@
               <div class="form-group m-form__group">
                 <label for="TruckStatusDisplayName">{{ l('Truck Status') }}</label>
                 <select [(ngModel)]="truck.truckStatusId" class="form-control" name="truck.truckStatusId" required>
-                  <option value="">{{ l('Select a Truck Status') }}</option>
+                  <option value="0">{{ l('Select a Truck Status') }}</option>
                   <option *ngFor="let item of allTruckStatuss" value="{{ item.id }}">{{ item.displayName }}</option>
                 </select>
               </div>
@@ -44,7 +44,7 @@
                   (change)="GetTransportDropDownList('GetAllTransportSubTypes', truck.transportTypeId)"
                   required
                 >
-                  <option>{{ l('Select a Transport Type') }}</option>
+                  <option value="0">{{ l('Select a Transport Type') }}</option>
                   <option *ngFor="let item of allTransportTypes" value="{{ item.id }}">{{ item.displayName }}</option>
                 </select>
               </div>

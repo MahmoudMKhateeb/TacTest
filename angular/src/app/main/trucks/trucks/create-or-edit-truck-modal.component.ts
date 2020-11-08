@@ -145,6 +145,14 @@ export class CreateOrEditTruckModalComponent extends AppComponentBase {
   show(truckId?: string): void {
     if (!truckId) {
       this.truck = new CreateOrEditTruckDto();
+      //initlaize truck type values
+      this.truck.transportTypeId = 0;
+      this.truck.transportSubtypeId = 0;
+      this.truck.trucksTypeId = 0;
+      this.truck.truckSubtypeId = 0;
+      this.truck.truckStatusId = 0;
+      this.truck.capacityId = 0;
+
       this.truck.id = truckId;
       this.trucksTypeDisplayName = '';
       this.truckStatusDisplayName = '';
@@ -152,7 +160,7 @@ export class CreateOrEditTruckModalComponent extends AppComponentBase {
       this.userName2 = '';
 
       //RequiredDocuments
-      this._documentFilesServiceProxy.getTruckRequiredDocumentFiles().subscribe((result) => {
+      this._documentFilesServiceProxy.getTruckRequiredDocumentFiles('').subscribe((result) => {
         this.truck.createOrEditDocumentFileDtos = result;
       });
       this.ModalIsEdit = false;
@@ -162,6 +170,27 @@ export class CreateOrEditTruckModalComponent extends AppComponentBase {
       this.ModalIsEdit = true;
       this._trucksServiceProxy.getTruckForEdit(truckId).subscribe((result) => {
         this.truck = result.truck;
+        console.log(this.truck);
+
+        if (this.truck.transportTypeId == null) {
+          this.truck.transportTypeId = 0;
+        }
+        if (this.truck.transportSubtypeId == null) {
+          this.truck.transportSubtypeId = 0;
+        }
+
+        if (this.truck.trucksTypeId == null) {
+          this.truck.trucksTypeId = 0;
+        }
+        if (this.truck.truckSubtypeId == null) {
+          this.truck.truckSubtypeId = 0;
+        }
+        if (this.truck.capacityId == null) {
+          this.truck.capacityId = 0;
+        }
+        if (this.truck.truckStatusId == null) {
+          this.truck.truckStatusId = 0;
+        }
 
         this.trucksTypeDisplayName = result.trucksTypeDisplayName;
         this.truckStatusDisplayName = result.truckStatusDisplayName;
@@ -221,6 +250,7 @@ export class CreateOrEditTruckModalComponent extends AppComponentBase {
   }
 
   save(): void {
+    console.log(this.truck);
     this.saving = true;
     if (this.truck.id) {
       this.updateTrucDetails();
@@ -259,6 +289,9 @@ export class CreateOrEditTruckModalComponent extends AppComponentBase {
     this.imageChangedEvent = '';
     this.uploader.clearQueue();
     this.DocsUploader.clearQueue();
+    this.docProgressFileName = null;
+    // this.fileToken = '';
+    this.docProgress = null;
     this.modal.hide();
   }
 
@@ -367,9 +400,11 @@ export class CreateOrEditTruckModalComponent extends AppComponentBase {
 
     this.DocsUploader.onSuccessItem = (item, response, status) => {
       const resp = <IAjaxResponse>JSON.parse(response);
+      console.log('not working');
 
       if (resp.success) {
         //attach each fileToken to his CreateOrEditDocumentFileDto
+
         this.truck.createOrEditDocumentFileDtos.find(
           (x) => x.name === item.file.name && x.extn === item.file.type
         ).updateDocumentFileInput = new UpdateDocumentFileInput({ fileToken: resp.result.fileToken });
@@ -404,6 +439,7 @@ export class CreateOrEditTruckModalComponent extends AppComponentBase {
       this.docProgress = progress;
       this.docProgressFileName = fileItem.file.name;
     };
+    console.log('not working');
 
     this.DocsUploader.setOptions(this._DocsUploaderOptions);
   }
@@ -498,10 +534,6 @@ export class CreateOrEditTruckModalComponent extends AppComponentBase {
     this.changeDetectorRef.detectChanges();
 
     this.paginator.changePage(this.paginator.getPage());
-  }
-
-  createDocumentFile(): void {
-    this.createOrEditDocumentFileModal.show();
   }
 
   showHistory(documentFile: DocumentFileDto): void {

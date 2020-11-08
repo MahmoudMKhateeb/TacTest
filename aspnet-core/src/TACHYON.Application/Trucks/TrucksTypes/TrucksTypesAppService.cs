@@ -14,6 +14,8 @@ using System.Linq.Dynamic.Core;
 using System.Threading.Tasks;
 using TACHYON.Authorization;
 using TACHYON.Dto;
+using TACHYON.Trucks.TruckCategories.TransportSubtypes;
+using TACHYON.Trucks.TruckCategories.TransportSubtypes.Dtos;
 using TACHYON.Trucks.TrucksTypes.Dtos;
 
 namespace TACHYON.Trucks.TrucksTypes
@@ -23,10 +25,13 @@ namespace TACHYON.Trucks.TrucksTypes
     {
         private readonly IRepository<TrucksType, long> _trucksTypeRepository;
 
+        private readonly IRepository<TransportSubtype, int> _lookup_transportSubTypeRepository;
 
-        public TrucksTypesAppService(IRepository<TrucksType, long> trucksTypeRepository)
+        public TrucksTypesAppService(IRepository<TrucksType, long> trucksTypeRepository, IRepository<TransportSubtype> lookup_transportSubTypeRepository)
         {
             _trucksTypeRepository = trucksTypeRepository;
+            _lookup_transportSubTypeRepository = lookup_transportSubTypeRepository;
+
 
         }
 
@@ -122,6 +127,17 @@ namespace TACHYON.Trucks.TrucksTypes
         public async Task Delete(EntityDto<long> input)
         {
             await _trucksTypeRepository.DeleteAsync(input.Id);
+        }
+
+        [AbpAuthorize(AppPermissions.Pages_TrucksTypes)]
+        public async Task<List<TransportSubtypeTransportTypeLookupTableDto>> GetAllTransportSubTypeForTableDropdown()
+        {
+            return await _lookup_transportSubTypeRepository.GetAll()
+                .Select(transportType => new TransportSubtypeTransportTypeLookupTableDto
+                {
+                    Id = transportType.Id,
+                    DisplayName = transportType == null || transportType.DisplayName == null ? "" : transportType.DisplayName.ToString()
+                }).ToListAsync();
         }
     }
 }

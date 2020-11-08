@@ -39,7 +39,7 @@ namespace TACHYON.Trucks.Dtos
         [StringLength(TruckConsts.MaxNoteLength, MinimumLength = TruckConsts.MinNoteLength)]
         public string Note { get; set; }
 
-        public long TruckStatusId { get; set; }
+        public long? TruckStatusId { get; set; }
 
         public long? Driver1UserId { get; set; }
 
@@ -60,7 +60,7 @@ namespace TACHYON.Trucks.Dtos
 
         public virtual int? TransportSubtypeId { get; set; }
 
-        public virtual long TrucksTypeId { get; set; }
+        public virtual long? TrucksTypeId { get; set; }
 
 
         public virtual int? TruckSubtypeId { get; set; }

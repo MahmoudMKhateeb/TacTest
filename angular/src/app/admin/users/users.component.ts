@@ -42,7 +42,7 @@ export class UsersComponent extends AppComponentBase implements AfterViewInit {
   role = '';
   onlyLockedUsers = false;
   onlyDrivers = false;
-
+  onlyUsers = false;
   constructor(
     injector: Injector,
     public _impersonationService: ImpersonationService,
@@ -69,7 +69,7 @@ export class UsersComponent extends AppComponentBase implements AfterViewInit {
     }
 
     this.primengTableHelper.showLoadingIndicator();
-
+    this.onlyUsers = !this.onlyDrivers;
     this._userServiceProxy
       .getUsers(
         this.filterText,
@@ -77,6 +77,7 @@ export class UsersComponent extends AppComponentBase implements AfterViewInit {
         this.role !== '' ? parseInt(this.role) : undefined,
         this.onlyLockedUsers,
         this.onlyDrivers,
+        this.onlyUsers,
         this.primengTableHelper.getSorting(this.dataTable),
         this.primengTableHelper.getMaxResultCount(this.paginator, event),
         this.primengTableHelper.getSkipCount(this.paginator, event)
@@ -122,6 +123,7 @@ export class UsersComponent extends AppComponentBase implements AfterViewInit {
         this.role !== '' ? parseInt(this.role) : undefined,
         this.onlyLockedUsers,
         this.onlyDrivers,
+        this.onlyUsers,
         this.primengTableHelper.getSorting(this.dataTable)
       )
       .subscribe((result) => {

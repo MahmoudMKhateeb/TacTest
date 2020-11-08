@@ -2,6 +2,7 @@
 using Abp.Application.Services.Dto;
 using System;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace TACHYON.Trucks.TrucksTypes.Dtos
 {
@@ -13,6 +14,7 @@ namespace TACHYON.Trucks.TrucksTypes.Dtos
         public string DisplayName { get; set; }
 
 
+        public int? TransportSubtypeId { get; set; }
 
     }
 }
