@@ -37,5 +37,8 @@ namespace TACHYON.Notifications
         Task TenantsMovedToEdition(UserIdentifier user, string sourceEditionName, string targetEditionName);
 
         Task SomeUsersCouldntBeImported(UserIdentifier user, string fileToken, string fileType, string fileName);
+        Task DocumentFileBeforExpiration(UserIdentifier argsUser, Guid documentFileId, int expirationAlertDays);
+        Task DocumentFileExpiration(UserIdentifier argsUser, Guid documentFileId);
+
     }
 }

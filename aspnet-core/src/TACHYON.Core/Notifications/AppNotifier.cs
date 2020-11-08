@@ -52,7 +52,7 @@ namespace TACHYON.Notifications
             await _notificationPublisher.PublishAsync(AppNotificationNames.UpdateShippingRequestPrice, notificationData, userIds: new[] { argsUser });
         }
 
-        public async Task AcceptShippingRequestPrice( long shippingRequestId, bool isAccepted)
+        public async Task AcceptShippingRequestPrice(long shippingRequestId, bool isAccepted)
         {
             var subscriptions = await _notificationSubscriptionManager.GetSubscriptionsAsync(AppNotificationNames.AcceptShippingRequestPrice);
             var userIds = subscriptions.Select(subscription => new UserIdentifier(subscription.TenantId, subscription.UserId)).ToArray();
@@ -79,7 +79,7 @@ namespace TACHYON.Notifications
             );
 
             notificationData["shippingRequestId"] = shippingRequestId;
-            await _notificationPublisher.PublishAsync(AppNotificationNames.RejectShippingRequest, notificationData, userIds: new[] { argsUser } );
+            await _notificationPublisher.PublishAsync(AppNotificationNames.RejectShippingRequest, notificationData, userIds: new[] { argsUser });
         }
         public Task SomeTrucksCouldntBeImported(UserIdentifier user, string fileToken, string fileType, string fileName)
         {
@@ -96,6 +96,45 @@ namespace TACHYON.Notifications
                 });
         }
 
+        /// <summary>
+        /// For documentFiles befor file expiration date 
+        /// </summary>
+        /// <param name="argsUser"></param>
+        /// <param name="documentFileId"></param>
+        /// <param name="expirationAlertDays">number of days remaining befor expiration date</param>
+        /// <returns></returns>
+        public async Task DocumentFileBeforExpiration(UserIdentifier argsUser, Guid documentFileId, int expirationAlertDays)
+        {
+            var notificationData = new LocalizableMessageNotificationData(
+                new LocalizableString(
+                    L("DocumentFileBeforExpirationNotificationMessage"),
+                    TACHYONConsts.LocalizationSourceName
+                )
+            );
+
+            notificationData["documentFileId"] = documentFileId;
+            notificationData["expirationAlertDays"] = expirationAlertDays;
+            await _notificationPublisher.PublishAsync(AppNotificationNames.DocumentFileBeforExpiration, notificationData, userIds: new[] { argsUser });
+        }
+
+
+        /// <summary>
+        /// When document file expiration date 
+        /// </summary>
+        /// <param name="argsUser"></param>
+        /// <returns></returns>
+        public async Task DocumentFileExpiration(UserIdentifier argsUser, Guid documentFileId)
+        {
+            var notificationData = new LocalizableMessageNotificationData(
+                new LocalizableString(
+                    L("DocumentFileExpirationNotificationMessage"),
+                    TACHYONConsts.LocalizationSourceName
+                )
+            );
+
+            notificationData["documentFileId"] = documentFileId;
+            await _notificationPublisher.PublishAsync(AppNotificationNames.DocumentFileExpiration, notificationData, userIds: new[] { argsUser });
+        }
         #endregion
         public async Task WelcomeToTheApplicationAsync(User user)
         {
@@ -106,6 +145,7 @@ namespace TACHYON.Notifications
                 userIds: new[] { user.ToUserIdentifier() }
             );
         }
+
 
         public async Task NewUserRegisteredAsync(User user)
         {
