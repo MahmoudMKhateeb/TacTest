@@ -9,7 +9,8 @@ import {
   DocumentFileUserLookupTableDto,
   DocumentFileRoutStepLookupTableDto,
   UpdateDocumentFileInput,
-  DocumentFileForEditDto,
+  DocumentFileForCreateOrEditDto,
+  DocumentTypeDto,
 } from '@shared/service-proxies/service-proxies';
 import { AppComponentBase } from '@shared/common/app-component-base';
 import * as moment from 'moment';
@@ -35,21 +36,23 @@ export class CreateOrEditDocumentFileModalComponent extends AppComponentBase {
   active = false;
   saving = false;
 
-  documentFile: DocumentFileForEditDto = new DocumentFileForEditDto();
+  documentFile: DocumentFileForCreateOrEditDto = new DocumentFileForCreateOrEditDto();
 
   documentTypeDisplayName = '';
+  entityId = '';
+  entityType = '';
   // truckPlateNumber = '';
   // trailerTrailerCode = '';
   // userName = '';
   // routStepDisplayName = '';
   selectedDateTypeHijri = DateType.Hijri; // or DateType.Gregorian
-  allDocumentTypes: DocumentFileDocumentTypeLookupTableDto[];
+  allDocumentTypes: CreateOrEditDocumentFileDto[] = [];
   allTrucks: DocumentFileTruckLookupTableDto[];
   allTrailers: DocumentFileTrailerLookupTableDto[];
   allUsers: DocumentFileUserLookupTableDto[];
   allRoutSteps: DocumentFileRoutStepLookupTableDto[];
   public DocsUploader: FileUploader;
-  numberpattern = '^[^`|~|!|@|#|$|%|^|&|*|(|)|+|=|[|{|]|}|||\\|\'|<|,|>|?|/|"|;|:|]{1,}';
+  // numberpattern = '^[^`|~|!|@|#|$|%|^|&|*|(|)|+|=|[|{|]|}|||\\|\'|<|,|>|?|/|"|;|:|]{1,}';
   private _uploaderOptions: FileUploaderOptions = {};
 
   /**
@@ -67,7 +70,7 @@ export class CreateOrEditDocumentFileModalComponent extends AppComponentBase {
    */
   docProgressFileName: any;
   fileToken: string;
-
+  selectedDoctumentTypeDto: DocumentTypeDto = new DocumentTypeDto();
   constructor(
     injector: Injector,
     private dateFormatterService: DateFormatterService,
@@ -77,29 +80,26 @@ export class CreateOrEditDocumentFileModalComponent extends AppComponentBase {
     super(injector);
   }
 
-  show(documentFileId?: string): void {
-    // if (!documentFileId) {
-    //   this.documentFile = new CreateOrEditDocumentFileDto();
-    //   this.documentFile.id = documentFileId;
-    //   this.documentFile.expirationDate = moment().startOf('day');
-    //   this.documentTypeDisplayName = '';
-    //   this.truckPlateNumber = '';
-    //   this.trailerTrailerCode = '';
-    //   this.userName = '';
-    //   this.routStepDisplayName = '';
-
-    //   this.active = true;
-    //   this.modal.show();
-    // } else {
-    this._documentFilesServiceProxy.getDocumentFileForEdit(documentFileId).subscribe((result) => {
-      this.documentFile = result;
+  show(entityType: string, entityId: string, documentFileId?: string): void {
+    this.fileToken = '';
+    if (!documentFileId) {
+      this.entityId = entityId;
+      this.entityType = entityType;
+      this.documentFile = new DocumentFileForCreateOrEditDto();
+      this.documentFile.expirationDate = moment().startOf('day');
+      this.documentTypeDisplayName = '';
+      this.getRequiredDocumentFiles(entityType);
       this.active = true;
       this.modal.show();
-    });
-    // }
-    // this._documentFilesServiceProxy.getAllDocumentTypeForTableDropdown().subscribe((result) => {
-    //   this.allDocumentTypes = result;
-    // });
+    } else {
+      this._documentFilesServiceProxy.getDocumentFileForEdit(documentFileId).subscribe((result) => {
+        this.documentFile = result;
+        // this.selectedDoctumentTypeDto = this.documentFile.documentTypeDto;
+        this.active = true;
+        this.modal.show();
+      });
+    }
+
     // this._documentFilesServiceProxy.getAllTruckForTableDropdown().subscribe((result) => {
     //   this.allTrucks = result;
     // });
@@ -153,19 +153,23 @@ export class CreateOrEditDocumentFileModalComponent extends AppComponentBase {
     this.DocsUploader.onCompleteAll = () => {
       this.documentFile.updateDocumentFileInput = new UpdateDocumentFileInput();
       this.documentFile.updateDocumentFileInput.fileToken = this.fileToken;
-      this._documentFilesServiceProxy
-        .updateDocument(this.documentFile)
-        .pipe(
-          finalize(() => {
+      if (this.documentFile.id) {
+        this._documentFilesServiceProxy
+          .updateDocument(this.documentFile)
+          .pipe(
+            finalize(() => {
+              this.saving = false;
+            })
+          )
+          .subscribe(() => {
             this.saving = false;
-          })
-        )
-        .subscribe(() => {
-          this.saving = false;
-          this.notify.info(this.l('UpdatedSuccessfully'));
-          this.close();
-          this.modalSave.emit(null);
-        });
+            this.notify.info(this.l('UpdatedSuccessfully'));
+            this.close();
+            this.modalSave.emit(null);
+          });
+      } else if (!this.documentFile.id) {
+        this.createDocumentFile();
+      }
     };
 
     //for progressBar
@@ -181,7 +185,7 @@ export class CreateOrEditDocumentFileModalComponent extends AppComponentBase {
     this.saving = true;
     if (this.DocsUploader.queue.length > 0) {
       this.DocsUploader.uploadAll();
-    } else {
+    } else if (this.documentFile.id) {
       this._documentFilesServiceProxy
         .updateDocument(this.documentFile)
         .pipe(
@@ -195,12 +199,46 @@ export class CreateOrEditDocumentFileModalComponent extends AppComponentBase {
           this.close();
           this.modalSave.emit(null);
         });
+    } else if (!this.documentFile.id) {
+      this.createDocumentFile();
     }
+  }
+
+  createDocumentFile() {
+    var createDocumentFile = new CreateOrEditDocumentFileDto();
+
+    createDocumentFile.documentTypeDto = this.selectedDoctumentTypeDto;
+    createDocumentFile.name = this.documentFile.documentTypeDisplayName;
+    createDocumentFile.number = this.documentFile.number;
+    createDocumentFile.notes = this.documentFile.notes;
+    createDocumentFile.expirationDate = this.documentFile.expirationDate;
+    createDocumentFile.hijriExpirationDate = this.documentFile.hijriExpirationDate;
+    createDocumentFile.extn = this.documentFile.extn;
+    createDocumentFile.entityId = this.entityId;
+    createDocumentFile.entityType = this.entityType;
+    createDocumentFile.updateDocumentFileInput = this.documentFile.updateDocumentFileInput;
+    createDocumentFile.updateDocumentFileInput.fileToken = this.fileToken;
+    createDocumentFile.documentTypeId = this.documentFile.documentTypeId;
+
+    this._documentFilesServiceProxy
+      .createDocument(createDocumentFile)
+      .pipe(
+        finalize(() => {
+          this.saving = false;
+        })
+      )
+      .subscribe(() => {
+        this.saving = false;
+        this.notify.info(this.l('CreatedSuccessfully'));
+        this.close();
+        this.modalSave.emit(null);
+      });
   }
 
   close(): void {
     this.active = false;
     this.DocsUploader.clearQueue();
+    this.fileToken = '';
     this.docProgressFileName = null;
     this.docProgress = null;
     this.modal.hide();
@@ -216,7 +254,7 @@ export class CreateOrEditDocumentFileModalComponent extends AppComponentBase {
     return s4() + s4() + '-' + s4() + '-' + s4() + '-' + s4() + '-' + s4() + s4() + s4();
   }
 
-  selectedDateChange($event: NgbDateStruct, item: DocumentFileForEditDto) {
+  selectedDateChange($event: NgbDateStruct, item: DocumentFileForCreateOrEditDto) {
     if ($event != null && $event.year < 2000) {
       this.dateFormatterService.SetFormat('DD/MM/YYYY', 'iDD/iMM/iYYYY');
       const incomingDate = this.dateFormatterService.ToGregorian($event);
@@ -226,7 +264,7 @@ export class CreateOrEditDocumentFileModalComponent extends AppComponentBase {
     }
   }
 
-  DocFileChangeEvent(event: any, item: DocumentFileForEditDto): void {
+  DocFileChangeEvent(event: any, item: DocumentFileForCreateOrEditDto): void {
     if (event.target.files[0].size > 5242880) {
       //5MB
       this.message.warn(this.l('DocumentFile_Warn_SizeLimit', this.maxDocumentFileBytesUserFriendlyValue));
@@ -245,4 +283,35 @@ export class CreateOrEditDocumentFileModalComponent extends AppComponentBase {
   // isRejectedChange() {
   //   this.documentFile.isAccepted = !this.documentFile.isRejected;
   // }
+
+  chooseDocumentToBeCreated(documentType: DocumentTypeDto) {
+    // console.log(JSON.stringify(documentType));
+    // console.log(documentType);
+    // console.log(this.selectedDoctumentTypeDto);
+
+    this.documentFile.documentTypeDto = documentType;
+    this.documentFile.documentTypeDisplayName = documentType.displayName;
+    this.documentFile.documentTypeId = documentType.id;
+    this.documentFile.hasNotes = documentType.hasNotes;
+    this.documentFile.hasNumber = documentType.hasNumber;
+    this.documentFile.hasExpirationDate = documentType.hasExpirationDate;
+    this.documentFile.hasHijriExpirationDate = documentType.hasHijriExpirationDate;
+    this.documentFile.numberMaxDigits = documentType.numberMaxDigits;
+    this.documentFile.numberMinDigits = documentType.numberMinDigits;
+  }
+
+  getRequiredDocumentFiles(entityType) {
+    if (entityType == 'Truck') {
+      this._documentFilesServiceProxy.getTruckRequiredDocumentFiles(this.entityId).subscribe((result) => {
+        this.allDocumentTypes = result;
+        this.selectedDoctumentTypeDto = this.allDocumentTypes[0].documentTypeDto;
+        this.chooseDocumentToBeCreated(this.allDocumentTypes[0].documentTypeDto);
+      });
+    } else if (entityType == 'Driver') {
+      this._documentFilesServiceProxy.getDriverRequiredDocumentFiles(this.entityId).subscribe((result) => {
+        this.allDocumentTypes = result;
+        this.chooseDocumentToBeCreated(this.allDocumentTypes[0].documentTypeDto);
+      });
+    }
+  }
 }

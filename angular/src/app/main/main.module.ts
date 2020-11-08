@@ -130,7 +130,6 @@ import { ImageCropperModule } from '@node_modules/ngx-image-cropper';
 import { AgmCoreModule } from '@node_modules/@agm/core';
 import { UpdatePriceShippingRequestModalComponent } from './shippingRequests/shippingRequests/update-price-shipping-request-modal/update-price-shipping-request-modal.component';
 import { AdminModule } from '@app/admin/admin.module';
-import { ViewOrEditEntityDocumentsModalComponent } from './documentFiles/documentFiles/documentFilesViewComponents/view-or-edit-entity-documents-modal.componant';
 
 NgxBootstrapDatePickerConfigService.registerNgxBootstrapDatePickerLocales();
 
@@ -204,9 +203,7 @@ NgxBootstrapDatePickerConfigService.registerNgxBootstrapDatePickerLocales();
     DocumentFilesComponent,
 
     ViewDocumentFileModalComponent,
-    CreateOrEditDocumentFileModalComponent,
     DocumentTypesComponent,
-    ViewOrEditEntityDocumentsModalComponent,
 
     ViewDocumentTypeModalComponent,
     CreateOrEditDocumentTypeModalComponent,

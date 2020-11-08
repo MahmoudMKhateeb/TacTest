@@ -87,6 +87,11 @@ namespace TACHYON.Documents.DocumentFiles
                 //.WhereIf(input.IsAcceptedFilter.HasValue, e => e.IsAccepted == input.IsAcceptedFilter.Value)
                 .WhereIf(!string.IsNullOrWhiteSpace(input.DocumentTypeDisplayNameFilter), e => e.DocumentTypeFk != null && e.DocumentTypeFk.DisplayName == input.DocumentTypeDisplayNameFilter)
                 .WhereIf(input.TruckIdFilter != null, e => e.TruckFk.Id == input.TruckIdFilter)
+
+                .WhereIf(input.EntityIdFilter != null && input.DocumentEntityFilter == "Truck", e => e.TruckFk.Id == Guid.Parse( input.EntityIdFilter))
+                .WhereIf(input.EntityIdFilter != null && input.DocumentEntityFilter == "Driver", e => e.UserFk.Id == long.Parse(input.EntityIdFilter))
+                .WhereIf(input.EntityIdFilter != null && input.DocumentEntityFilter == "Trailer", e => e.TrailerFk.Id == long.Parse(input.EntityIdFilter))
+
                 //.WhereIf(!string.IsNullOrWhiteSpace(input.TruckIdFilter), e => e.TruckFk != null && e.TruckFk.Id == input.TruckIdFilter)
                 .WhereIf(!string.IsNullOrWhiteSpace(input.TrailerTrailerCodeFilter), e => e.TrailerFk != null && e.TrailerFk.TrailerCode == input.TrailerTrailerCodeFilter)
                 .WhereIf(!string.IsNullOrWhiteSpace(input.DocumentEntityFilter), e => e.DocumentTypeFk.DocumentsEntityFk.DisplayName != null && e.DocumentTypeFk.DocumentsEntityFk.DisplayName == input.DocumentEntityFilter)
@@ -130,7 +135,7 @@ namespace TACHYON.Documents.DocumentFiles
                                     DocumentTypeDisplayName = s1 == null || s1.DisplayName == null ? "" : s1.DisplayName,
                                     TruckId = (o.TruckFk == null ? (Guid?)null : o.TruckFk.Id).ToString(),
                                     TrailerTrailerCode = s3 == null || s3.TrailerCode == null ? "" : s3.TrailerCode,
-                                    UserName = s4 == null || s4.Name == null ? "" : s4.Name,
+                                    UserName = s4 == null || s4.Name == null ? "" : s4.UserName,
                                     RoutStepDisplayName = s5 == null || s5.DisplayName == null ? "" : s5.DisplayName.ToString()
                                 };
 
@@ -194,7 +199,7 @@ namespace TACHYON.Documents.DocumentFiles
         }
 
         [AbpAuthorize(AppPermissions.Pages_DocumentFiles_Edit)]
-        public async Task<DocumentFileForEditDto> GetDocumentFileForEdit(EntityDto<Guid> input)
+        public async Task<DocumentFileForCreateOrEditDto> GetDocumentFileForEdit(EntityDto<Guid> input)
         {
             if (AbpSession.TenantId.HasValue)
             {
@@ -210,15 +215,9 @@ namespace TACHYON.Documents.DocumentFiles
 
         public async Task CreateDocument(CreateOrEditDocumentFileDto input)
         {
-            //todo convert this to custom validation
-            if (input.IsAccepted && input.IsRejected)
-            {
-                throw new UserFriendlyException(L("document cant be accepted and rejected at same time "));
-            }
-                await Create(input);
-            
+                await Create(input);   
         }     
-        public async Task UpdateDocument(DocumentFileForEditDto input)
+        public async Task UpdateDocument(DocumentFileForCreateOrEditDto input)
         {
 
                await Update(input);
@@ -348,14 +347,14 @@ namespace TACHYON.Documents.DocumentFiles
         ///     truck required documents list template
         /// </summary>
         /// <returns></returns>
-        public async Task<List<CreateOrEditDocumentFileDto>> GetTruckRequiredDocumentFiles()
+        public async Task<List<CreateOrEditDocumentFileDto>> GetTruckRequiredDocumentFiles(string truckId )
         {
-            return await GetRequiredDocumentFileListForCreateOrEdit(AppConsts.TruckDocumentsEntityName);
+            return await GetRequiredDocumentFileListForCreateOrEdit(AppConsts.TruckDocumentsEntityName, truckId);
         }
 
-        public async Task<List<CreateOrEditDocumentFileDto>> GetDriverRequiredDocumentFiles()
+        public async Task<List<CreateOrEditDocumentFileDto>> GetDriverRequiredDocumentFiles(string userId)
         {
-            return await GetRequiredDocumentFileListForCreateOrEdit(AppConsts.DriverDocumentsEntityName);
+            return await GetRequiredDocumentFileListForCreateOrEdit(AppConsts.DriverDocumentsEntityName , userId);
         }
 
         /// <summary>
@@ -405,8 +404,9 @@ namespace TACHYON.Documents.DocumentFiles
         [AbpAuthorize(AppPermissions.Pages_DocumentFiles_Create)]
         protected virtual async Task Create(CreateOrEditDocumentFileDto input)
         {
-            input.Name = input.DocumentTypeDto.DisplayName + "_" + AbpSession.GetTenantId();
 
+            var documentFile = ObjectMapper.Map<DocumentFile>(input);
+            
             if (input.DocumentTypeDto.IsNumberUnique)
             {
                 var count = await _documentFileRepository.CountAsync(x => x.Number == input.Number && x.DocumentTypeId == input.DocumentTypeId);
@@ -415,25 +415,39 @@ namespace TACHYON.Documents.DocumentFiles
                     throw new UserFriendlyException(L("document number should be unique message"));
                 }
             }
+                documentFile.Name = input.DocumentTypeDto.DisplayName + "_" + AbpSession.GetTenantId();
 
-            var documentFile = ObjectMapper.Map<DocumentFile>(input);
+
+                if (AbpSession.TenantId != null)
+                {
+                    documentFile.TenantId = AbpSession.TenantId;
+                }
+            
 
 
-            if (AbpSession.TenantId != null)
+            if (input.EntityType == AppConsts.TruckDocumentsEntityName)
             {
-                documentFile.TenantId = AbpSession.TenantId;
+                documentFile.TruckId = Guid.Parse(input.EntityId);
             }
+
+            if (input.EntityType == AppConsts.DriverDocumentsEntityName)
+            {
+                documentFile.UserId = long.Parse(input.EntityId);
+            }
+
 
             if (!input.UpdateDocumentFileInput.FileToken.IsNullOrEmpty())
             {
                 documentFile.BinaryObjectId = await _documentFilesManager.SaveDocumentFileBinaryObject(input.UpdateDocumentFileInput.FileToken, AbpSession.TenantId);
             }
-
             await _documentFileRepository.InsertAsync(documentFile);
+
         }
 
+
+
         [AbpAuthorize(AppPermissions.Pages_DocumentFiles_Edit)]
-        protected virtual async Task Update(DocumentFileForEditDto input)
+        protected virtual async Task Update(DocumentFileForCreateOrEditDto input)
         {
             //host can update tenants documents 
             DisableTenancyFiltersIfHost();
@@ -463,11 +477,11 @@ namespace TACHYON.Documents.DocumentFiles
             }
         }
 
-        private async Task<DocumentFileForEditDto> _GetDocumentFileForEdit(EntityDto<Guid> input)
+        private async Task<DocumentFileForCreateOrEditDto> _GetDocumentFileForEdit(EntityDto<Guid> input)
         {
             var output = await _documentFileRepository.GetAll().Where(doc=>doc.Id==input.Id)
                 .Include(a => a.DocumentTypeFk)
-                .Select(res => new DocumentFileForEditDto
+                .Select(res => new DocumentFileForCreateOrEditDto
                 {
                     //document type data
                     DocumentTypeDisplayName= res.DocumentTypeFk==null?null: res.DocumentTypeFk.DisplayName,
@@ -499,14 +513,112 @@ namespace TACHYON.Documents.DocumentFiles
         ///     list of <see cref="CreateOrEditDocumentFileDto" /> with empty <see cref="UpdateDocumentFileInput" /> ready to
         ///     fill with uploaded FileToken
         /// </returns>
-        private async Task<List<CreateOrEditDocumentFileDto>> GetRequiredDocumentFileListForCreateOrEdit(string documentsEntityName)
+        private async Task<List<CreateOrEditDocumentFileDto>> GetRequiredDocumentFileListForCreateOrEdit(string documentsEntityName ,string entityId)
         {
-            var list = await _documentTypeRepository.GetAll()
+            var list = new List<DocumentType>();
+            if (entityId == null|| entityId =="") {
+                list = await _documentTypeRepository.GetAll()
                 .Where(x => x.DocumentsEntityFk.DisplayName == documentsEntityName)
                 .ToListAsync();
+            }
+ 
 
+            if (entityId!=null && entityId != "")
+            {
+                if(documentsEntityName == AppConsts.DriverDocumentsEntityName)
+                {
+                    var resultList = _documentTypeRepository.GetAll().Include(ent=>ent.DocumentsEntityFk)
+                        .Where(doc => doc.DocumentsEntityFk.DisplayName == AppConsts.DriverDocumentsEntityName);
+
+                   
+                    var query = from o in resultList
+                           join o1 in _documentFileRepository.GetAll().Where(a=>a.UserId == long.Parse(entityId) ) on o.Id equals o1.DocumentTypeId into j1
+                           from s1 in j1.DefaultIfEmpty()
+                           where  s1.UserId == null
+                                select new DocumentType{
+                                    DisplayName = o.DisplayName,
+                                    HasExpirationDate = o.HasExpirationDate,
+                                    Id = o.Id,
+                                    HasHijriExpirationDate = o.HasHijriExpirationDate,
+                                    HasNotes = o.HasNotes,
+                                    HasNumber = o.HasNumber,
+                                    IsNumberUnique = o.IsNumberUnique,
+                                    IsRequired = o.IsRequired,
+                                    NumberMaxDigits = o.NumberMaxDigits,
+                                    NumberMinDigits = o.NumberMinDigits
+                                };
+
+                    list = await query.ToListAsync();
+                }
+                else if (documentsEntityName == AppConsts.TruckDocumentsEntityName)
+                {
+                    var resultList = _documentTypeRepository.GetAll().Include(ent => ent.DocumentsEntityFk)
+                        .Where(doc => doc.DocumentsEntityFk.DisplayName == AppConsts.TruckDocumentsEntityName);
+
+                    var query = from o in resultList
+                                join o1 in _documentFileRepository.GetAll().Where(a => a.TruckId == Guid.Parse(entityId)) on o.Id equals o1.DocumentTypeId into j1
+                                from s1 in j1.DefaultIfEmpty()
+                                where s1.TruckId == null
+                                select new DocumentType {
+                                    DisplayName = o.DisplayName,
+                                    HasExpirationDate = o.HasExpirationDate,
+                                    Id = o.Id,
+                                    HasHijriExpirationDate = o.HasHijriExpirationDate,
+                                    HasNotes = o.HasNotes,
+                                    HasNumber = o.HasNumber,
+                                    IsNumberUnique = o.IsNumberUnique,
+                                    IsRequired = o.IsRequired,
+                                    NumberMaxDigits = o.NumberMaxDigits,
+                                    NumberMinDigits = o.NumberMinDigits
+                                };
+
+                    list = await query.ToListAsync();
+                }
+
+            }
             return list.Select(x => new CreateOrEditDocumentFileDto { DocumentTypeId = x.Id, DocumentTypeDto = ObjectMapper.Map<DocumentTypeDto>(x) }).ToList();
         }
+
+
+
+        /// <summary>
+        ///     check if the entity is missing document files and are needed to be upload them
+        /// </summary>
+        /// <returns>
+        /// true if the entity is missing document files
+        /// </returns>
+        public async Task<bool> CheckIfMissingDocumentFiles(string entityId, string entityType)
+        {
+            var result = false;
+            if (entityType == AppConsts.DriverDocumentsEntityName)
+            {
+                var documentTypes = await _documentTypeRepository.GetAll().Include(ent => ent.DocumentsEntityFk)
+                    .Where(doc => doc.DocumentsEntityFk.DisplayName == AppConsts.DriverDocumentsEntityName).CountAsync();
+
+                var submittedDocuments = await _documentFileRepository.GetAll().Where(t => t.UserId == long.Parse(entityId))
+                    .CountAsync();
+                result = documentTypes != submittedDocuments;
+            }
+
+
+            if (entityType == AppConsts.TruckDocumentsEntityName)
+            {
+                var documentTypes = await _documentTypeRepository.GetAll().Include(ent => ent.DocumentsEntityFk)
+                    .Where(doc => doc.DocumentsEntityFk.DisplayName == AppConsts.TruckDocumentsEntityName).CountAsync();
+
+                var submittedDocuments = await _documentFileRepository.GetAll().Where(t => t.TruckId == Guid.Parse(entityId))
+                    .CountAsync();
+                result = documentTypes != submittedDocuments;
+            }
+
+
+
+            return result;
+        }
+
+
+
+
 
         public async Task<List<GetDocumentEntitiesLookupForDocumentFilesDto>> GetDocumentEntitiesForDocumentFile()
         {

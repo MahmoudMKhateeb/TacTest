@@ -1,11 +1,33 @@
 ﻿using Abp.Application.Services.Dto;
+using Abp.Runtime.Validation;
 using System;
 using System.ComponentModel.DataAnnotations;
+using TACHYON.Documents.DocumentTypes.Dtos;
 
 namespace TACHYON.Documents.DocumentFiles.Dtos
 {
-    public class DocumentFileForEditDto : EntityDto<Guid?>
+    public class DocumentFileForCreateOrEditDto : EntityDto<Guid?>
     {
+
+        public void AddValidationErrors(CustomValidationContext context)
+        {
+            if (!DocumentTypeDto.HasNumber)
+            {
+                return;
+            }
+
+            if (DocumentTypeDto.NumberMaxDigits != 0 && Number.ToString().Length > DocumentTypeDto.NumberMaxDigits)
+            {
+                context.Results.Add(new ValidationResult("Number digits must be less than or equal " + DocumentTypeDto.NumberMaxDigits));
+            }
+
+            if (DocumentTypeDto.NumberMinDigits != 0 && Number.ToString().Length < DocumentTypeDto.NumberMinDigits)
+            {
+                context.Results.Add(new ValidationResult("Number digits must be greater than or equal " + DocumentTypeDto.NumberMinDigits));
+            }
+
+        }
+        public DocumentTypeDto DocumentTypeDto { get; set; }
 
 
         //document details
@@ -22,6 +44,8 @@ namespace TACHYON.Documents.DocumentFiles.Dtos
         public string Notes { get; set; }
 
         public DateTime ExpirationDate { get; set; }
+        public string HijriExpirationDate { get; set; }
+
 
         public string Extn { get; set; }
 
@@ -43,6 +67,7 @@ namespace TACHYON.Documents.DocumentFiles.Dtos
         //Entity ID is the id of the :truck, user,trailer, shipment or any other entity
 
         public string EntityId { get; set; }
+        public string EntityType { get; set; }
 
 
     }

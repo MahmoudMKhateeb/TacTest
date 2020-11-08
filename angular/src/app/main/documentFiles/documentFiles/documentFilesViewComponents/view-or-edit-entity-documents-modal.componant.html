@@ -17,6 +17,10 @@
         <button type="button" class="close" (click)="close()" aria-label="Close" [disabled]="saving">
           <span aria-hidden="true">&times;</span>
         </button>
+
+        <button *ngIf="isMissingDocumentFiles" (click)="createOrEditDocumentFileModal.show(entityType,entityId,null)" class="btn btn-primary blue">
+          <i class="fa fa-plus"></i> {{ l('Add Document') }}
+        </button>
       </div>
       <div class="modal-body">
         <div class="row align-items-center">
@@ -42,9 +46,13 @@
                     {{ l('Document Name') }}
                     <p-sortIcon field="documentTypeDisplayName"></p-sortIcon>
                   </th>
-                  <th style="width: 150px;" pSortableColumn="truckFk.truckId">
+                  <th *ngIf="entityType=='Truck'" style="width: 150px;" pSortableColumn="truckFk.truckId">
                     {{ l('Truck ID') }}
                     <p-sortIcon field="truckId"></p-sortIcon>
+                  </th>
+                  <th *ngIf="entityType=='Driver'" style="width: 150px;" pSortableColumn="userFk.userId">
+                    {{ l('Driver Name') }}
+                    <p-sortIcon field="userId"></p-sortIcon>
                   </th>
                   <th style="width: 150px;" pSortableColumn="extn">
                     {{ l('Extn') }}
@@ -78,7 +86,7 @@
                             href="javascript:;"
                             *ngIf="permission.isGranted('Pages.DocumentFiles.Edit')"
                             class="dropdown-item"
-                            (click)="createOrEditDocumentFileModal.show(record.documentFile.id)"
+                            (click)="createOrEditDocumentFileModal.show(entityType,entityId,record.documentFile.id)"
                             >{{ l('Edit') }}</a
                           >
                         </li>
@@ -105,9 +113,13 @@
                     <span class="ui-column-title"> {{ l('Document Name') }}</span>
                     {{ record.documentTypeDisplayName }}
                   </td>
-                  <td style="width: 150px;">
+                  <td *ngIf="entityType=='Truck'" style="width: 150px;">
                     <span class="ui-column-title"> {{ l('Truck ID') }}</span>
                     {{ record.truckId }}
+                  </td>
+                  <td *ngIf="entityType=='Driver'" style="width: 150px;">
+                    <span class="ui-column-title"> {{ l('Driver Name') }}</span>
+                    {{ record.userName }}
                   </td>
 
                   <td style="width: 150px;">

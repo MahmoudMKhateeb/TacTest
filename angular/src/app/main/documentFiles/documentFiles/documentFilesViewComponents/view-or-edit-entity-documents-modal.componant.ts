@@ -1,7 +1,13 @@
 /* tslint:disable:member-ordering */
 import { Component, EventEmitter, Injector, Output, ViewChild, ChangeDetectorRef, QueryList } from '@angular/core';
 import { ModalDirective } from 'ngx-bootstrap/modal';
-import { CreateOrEditTruckDto, DocumentFileDto, DocumentFilesServiceProxy, TrucksServiceProxy } from '@shared/service-proxies/service-proxies';
+import {
+  CreateOrEditDocumentFileDto,
+  CreateOrEditTruckDto,
+  DocumentFileDto,
+  DocumentFilesServiceProxy,
+  TrucksServiceProxy,
+} from '@shared/service-proxies/service-proxies';
 import { AppComponentBase } from '@shared/common/app-component-base';
 import { FileItem, FileUploader, FileUploaderOptions } from '@node_modules/ng2-file-upload';
 import { IAjaxResponse, TokenService } from '@node_modules/abp-ng2-module';
@@ -61,11 +67,10 @@ export class ViewOrEditEntityDocumentsModalComponent extends AppComponentBase {
   _entityTypeFullName = 'TACHYON.Documents.DocumentFiles.DocumentFile';
   entityHistoryEnabled = false;
   testCond = null;
-
-  truck: CreateOrEditTruckDto = new CreateOrEditTruckDto();
   entityType = '';
   entityId = '';
-
+  truckId = '';
+  isMissingDocumentFiles = false;
   imageChangedEvent: any = '';
   public maxProfilPictureBytesUserFriendlyValue = 5;
   public uploader: FileUploader;
@@ -86,8 +91,10 @@ export class ViewOrEditEntityDocumentsModalComponent extends AppComponentBase {
 
   show(entityId: string, entityType: string): void {
     // this.ModalIsEdit = true;
+
     this.entityType = entityType;
     this.entityId = entityId;
+    this.checkIfMissingDocumentFiles();
     this.active = true;
     this.modal.show();
   }
@@ -97,6 +104,7 @@ export class ViewOrEditEntityDocumentsModalComponent extends AppComponentBase {
       if (isConfirmed) {
         this._documentFilesServiceProxy.delete(documentFile.id).subscribe(() => {
           this.reloadPage();
+
           this.notify.success(this.l('SuccessfullyDeleted'));
         });
       }
@@ -116,15 +124,13 @@ export class ViewOrEditEntityDocumentsModalComponent extends AppComponentBase {
 
   reloadPage(): void {
     this.changeDetectorRef.detectChanges();
-
+    this.checkIfMissingDocumentFiles();
     this.paginator.changePage(this.paginator.getPage());
   }
 
   getDocumentFiles(event?: LazyLoadEvent) {
-    console.log();
-
     this.changeDetectorRef.detectChanges();
-
+    this.checkIfMissingDocumentFiles();
     this.changeDetectorRef.detectChanges();
     if (this.primengTableHelper.shouldResetPaging(event)) {
       this.paginator.changePage(0);
@@ -140,6 +146,7 @@ export class ViewOrEditEntityDocumentsModalComponent extends AppComponentBase {
         this.minExpirationDateFilter,
         this.documentTypeDisplayNameFilter,
         this.entityType,
+        this.truckId,
         this.entityId,
         this.trailerTrailerCodeFilter,
         this.userNameFilter,
@@ -152,5 +159,10 @@ export class ViewOrEditEntityDocumentsModalComponent extends AppComponentBase {
         this.primengTableHelper.records = result.items;
         this.primengTableHelper.hideLoadingIndicator();
       });
+  }
+  checkIfMissingDocumentFiles() {
+    this._documentFilesServiceProxy.checkIfMissingDocumentFiles(this.entityId, this.entityType).subscribe((res) => {
+      this.isMissingDocumentFiles = res;
+    });
   }
 }

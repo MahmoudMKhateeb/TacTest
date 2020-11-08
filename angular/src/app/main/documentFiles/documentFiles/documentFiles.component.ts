@@ -38,7 +38,8 @@ export class DocumentFilesComponent extends AppComponentBase {
   minExpirationDateFilter: moment.Moment;
   isAcceptedFilter = false;
   documentTypeDisplayNameFilter = '';
-  truckPlateNumberFilter = '';
+  truckIdFilter = '';
+  entityIdFilter = '';
   trailerTrailerCodeFilter = '';
   userNameFilter = '';
   isHost = true;
@@ -106,7 +107,8 @@ export class DocumentFilesComponent extends AppComponentBase {
         // this.isAcceptedFilter,
         this.documentTypeDisplayNameFilter,
         this.entityType,
-        this.truckPlateNumberFilter,
+        this.truckIdFilter,
+        this.entityIdFilter,
         this.trailerTrailerCodeFilter,
         this.userNameFilter,
         // this.routStepDisplayNameFilter,
@@ -125,9 +127,9 @@ export class DocumentFilesComponent extends AppComponentBase {
     this.paginator.changePage(this.paginator.getPage());
   }
 
-  createDocumentFile(): void {
-    this.createOrEditDocumentFileModal.show();
-  }
+  // createDocumentFile(): void {
+  //   this.createOrEditDocumentFileModal.show();
+  // }
 
   showHistory(documentFile: DocumentFileDto): void {
     this.entityTypeHistoryModal.show({

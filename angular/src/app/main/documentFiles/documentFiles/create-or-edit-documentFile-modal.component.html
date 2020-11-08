@@ -13,16 +13,33 @@
       <form *ngIf="active" #documentFileForm="ngForm" (ngSubmit)="save()" novalidate autocomplete="off">
         <div class="modal-header">
           <h4 class="modal-title">
-            <span>{{ l('EditDocumentFile') }}</span>
-            <!-- <span *ngIf="!documentFile.id">{{ l('CreateNewDocumentFile') }}</span> -->
+            <span *ngIf="documentFile.id">{{ l('EditDocumentFile') }}</span>
+            <span *ngIf="!documentFile.id">{{ l('CreateNewDocumentFile') }}</span>
           </h4>
           <button type="button" class="close" (click)="close()" aria-label="Close" [disabled]="saving">
             <span aria-hidden="true">&times;</span>
           </button>
         </div>
         <div class="modal-body">
-          <label for="DocumentType"> Edit : {{ documentFile.documentTypeDisplayName }}</label>
+          <label *ngIf="documentFile.id" for="DocumentType"> Edit : {{ documentFile.documentTypeDisplayName }}</label>
           <hr />
+          <div *ngIf="!documentFile.id && allDocumentTypes.length > 1" style="width: 200px;">
+            <label> Select Document</label>
+            <select
+              [(ngModel)]="selectedDoctumentTypeDto"
+              (ngModelChange)="chooseDocumentToBeCreated($event)"
+              name="selectedDoctumentTypeDto"
+              class="form-control form-control-lg custom-select mr-sm-2"
+              style="color: red;"
+            >
+              <option *ngFor="let documentType of allDocumentTypes" [ngValue]="documentType.documentTypeDto"
+                >{{ documentType.documentTypeDto.displayName }}
+              </option>
+            </select>
+          </div>
+          <div *ngIf="!documentFile.id && allDocumentTypes.length == 1" style="width: 200px;">
+            <label>Create Document: {{ allDocumentTypes[0].documentTypeDto.displayName }}</label>
+          </div>
           <div class="row">
             <div class="form-group col-md-12">
               <label>{{ l('Choose File') }}</label>
@@ -38,7 +55,6 @@
             <div *ngIf="documentFile.hasNumber" class="form-group col-md-6">
               <label for="DocumentNumber">{{ l('Number') }} </label>
               <input
-                [pattern]="numberpattern"
                 type="text"
                 class="form-control"
                 id="DocumentNumber"

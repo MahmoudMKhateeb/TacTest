@@ -7,12 +7,6 @@ namespace TACHYON.Documents.DocumentFiles.Dtos
     {
         public string Filter { get; set; }
 
-        //public string NameFilter { get; set; }
-
-        //public string ExtnFilter { get; set; }
-
-        //public Guid? BinaryObjectIdFilter { get; set; }
-
         public DateTime? MaxExpirationDateFilter { get; set; }
         public DateTime? MinExpirationDateFilter { get; set; }
 
@@ -23,6 +17,7 @@ namespace TACHYON.Documents.DocumentFiles.Dtos
 
         public string DocumentEntityFilter { get; set; }
         public Guid? TruckIdFilter { get; set; }
+        public string EntityIdFilter { get; set; }
 
         public string TrailerTrailerCodeFilter { get; set; }
 
