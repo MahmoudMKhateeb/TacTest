@@ -217,9 +217,20 @@
                   <tr>
                     <td style="width: 130px;" [hidden]="!isGrantedAny('Pages.Trucks.Edit', 'Pages.Trucks.Delete')">
                       <div class="btn-group dropdown" dropdown container="body">
-                        <button class="dropdown-toggle btn btn-sm btn-primary" dropdownToggle>
-                          <i class="fa fa-cog"></i><span class="caret"></span> {{ l('Actions') }}
-                        </button>
+                        <div class="row">
+                          <i
+                            *ngIf="record.isMissingDocumentFiles"
+                            class="flaticon2-information text-warning"
+                            style="padding: 3px;"
+                            data-toggle="tooltip"
+                            title="Missing documents"
+                          ></i>
+
+                          <button class="dropdown-toggle btn btn-sm btn-primary" dropdownToggle>
+                            <i class="fa fa-cog"></i><span class="caret"></span> {{ l('Actions') }}
+                          </button>
+                        </div>
+
                         <ul class="dropdown-menu" *dropdownMenu>
                           <li>
                             <a href="javascript:;" class="dropdown-item" (click)="viewTruckModal.show(record)">{{ l('View') }}</a>
