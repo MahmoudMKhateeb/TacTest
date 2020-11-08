@@ -15,6 +15,7 @@ using Microsoft.Extensions.Configuration;
 using System.Collections.Generic;
 using TACHYON.Auditing;
 using TACHYON.Configuration;
+using TACHYON.Documents;
 using TACHYON.EntityFrameworkCore;
 using TACHYON.MultiTenancy;
 using TACHYON.Web.Startup.ExternalLoginInfoProviders;
@@ -69,6 +70,7 @@ namespace TACHYON.Web.Startup
                 workManager.Add(IocManager.Resolve<ExpiredAuditLogDeleterWorker>());
             }
 
+            workManager.Add(IocManager.Resolve<ExpiredDocumentFileWorker>());
             ConfigureExternalAuthProviders();
         }
 

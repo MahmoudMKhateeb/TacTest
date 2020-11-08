@@ -61,6 +61,20 @@ namespace TACHYON.Notifications
                 )
             );
 
+            context.Manager.Add(
+                new NotificationDefinition(
+                    AppNotificationNames.DocumentFileBeforExpiration,
+                    displayName: L("DocumentFileBeforExpirationNotificationDefinition")
+                )
+            );
+
+            context.Manager.Add(
+                new NotificationDefinition(
+                    AppNotificationNames.DocumentFileExpiration,
+                    displayName: L("DocumentFileExpirationNotificationDefinition")
+                )
+            );
+
             #endregion
         }
 
