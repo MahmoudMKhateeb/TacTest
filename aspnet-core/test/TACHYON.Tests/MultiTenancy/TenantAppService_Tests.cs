@@ -10,6 +10,8 @@ using TACHYON.MultiTenancy.Dto;
 using TACHYON.Notifications;
 using TACHYON.Test.Base;
 using Shouldly;
+using TACHYON.Cities;
+using TACHYON.Countries;
 
 namespace TACHYON.Tests.MultiTenancy
 {
@@ -43,6 +45,9 @@ namespace TACHYON.Tests.MultiTenancy
             //CREATE --------------------------------
 
             //Act
+            var city = GetCity("Maka");
+            var country = GetCountry("SA");
+
             await _tenantAppService.CreateTenant(
                 new CreateTenantInput
                 {
@@ -50,7 +55,10 @@ namespace TACHYON.Tests.MultiTenancy
                     Name = "Tenant for test purpose",
                     AdminEmailAddress = "admin@testtenant.com",
                     AdminPassword = "123qwe",
-                    IsActive = true
+                    IsActive = true,
+                    CityId = city.Id,
+                    CountryId = country.Id,
+                    Address = "test tenant address"
                 });
 
             //Assert
@@ -58,7 +66,7 @@ namespace TACHYON.Tests.MultiTenancy
             tenant.ShouldNotBe(null);
             tenant.Name.ShouldBe("Tenant for test purpose");
             tenant.IsActive.ShouldBe(true);
-            
+
             var tenantId = tenant.Id;
 
             await UsingDbContextAsync(tenantId, async context =>
@@ -107,5 +115,17 @@ namespace TACHYON.Tests.MultiTenancy
             //Assert
             (await GetTenantOrNullAsync("testTenant")).IsDeleted.ShouldBe(true);
         }
+
+        private City GetCity(string displayName)
+        {
+            return UsingDbContext(context => context.Cities.Single(p => p.DisplayName == displayName));
+        }
+
+
+        private County GetCountry(string displayName)
+        {
+            return UsingDbContext(context => context.Counties.Single(p => p.DisplayName == displayName));
+        }
+
     }
 }

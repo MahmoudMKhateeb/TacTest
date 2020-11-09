@@ -20,6 +20,8 @@ namespace TACHYON.Notifications
         public const string UpdateShippingRequestPrice = "App.UpdateShippingRequestPrice";
         public const string AcceptShippingRequestPrice = "App.AcceptShippingRequestPrice";
         public const string RejectShippingRequest = "App.RejectShippingRequest";
+        public const string DocumentFileBeforExpiration = "App.DocumentFileBeforExpiration";
+        public const string DocumentFileExpiration = "App.DocumentFileExpiration";
         #endregion
 
     }

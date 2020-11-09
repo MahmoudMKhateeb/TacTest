@@ -12,11 +12,12 @@
         [(ngModel)]="loginService.authenticateModel.userNameOrEmailAddress"
         autoFocus
         class="form-control form-control-solid h-auto py-7 px-6 rounded-lg font-size-h6"
-        type="text"
+        type="email"
         autocomplete="new-password"
-        placeholder="{{ 'UserNameOrEmail' | localize }} *"
+        placeholder="{{ 'Email' | localize }} *"
         name="userNameOrEmailAddress"
         required
+        email="true"
       />
       <validation-messages [formCtrl]="userNameOrEmailAddressInput" *ngIf="!userNameOrEmailAddressInput.touched"> </validation-messages>
     </div>

@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Abp.Application.Services.Dto;
 using Abp.Localization;
@@ -12,6 +13,7 @@ using TACHYON.Editions.Dto;
 using TACHYON.Features;
 using TACHYON.Test.Base;
 using Shouldly;
+using TACHYON.Documents.DocumentFiles.Dtos;
 using Xunit;
 
 namespace TACHYON.Tests.Features
@@ -80,7 +82,8 @@ namespace TACHYON.Tests.Features
                         UserName = "johnnash",
                         Password = "123qwE*"
                     },
-                    AssignedRoleNames = new string[] { }
+                    AssignedRoleNames = new string[] { },
+                    CreateOrEditDocumentFileDtos = new List<CreateOrEditDocumentFileDto>()
                 });
 
             //Act

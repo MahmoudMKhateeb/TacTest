@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Abp.Collections.Extensions;
 using Abp.MultiTenancy;
@@ -7,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using TACHYON.Authorization.Roles;
 using TACHYON.Authorization.Users.Dto;
 using Shouldly;
+using TACHYON.Documents.DocumentFiles.Dtos;
 using Xunit;
 
 namespace TACHYON.Tests.Authorization.Users
@@ -72,7 +74,8 @@ namespace TACHYON.Tests.Authorization.Users
                         UserName = userName,
                         Password = "123qwE*"
                     },
-                    AssignedRoleNames = roleNames
+                    AssignedRoleNames = roleNames,
+                    CreateOrEditDocumentFileDtos = new List<CreateOrEditDocumentFileDto>()
                 });
 
             //Assert
