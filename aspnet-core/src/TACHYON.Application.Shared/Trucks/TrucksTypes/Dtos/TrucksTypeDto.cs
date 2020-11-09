@@ -1,12 +1,15 @@
 ﻿
 using Abp.Application.Services.Dto;
 using System;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace TACHYON.Trucks.TrucksTypes.Dtos
 {
     public class TrucksTypeDto : EntityDto<long>
     {
         public string DisplayName { get; set; }
+
+        public int? TransportSubtypeId { get; set; }
 
 
 

@@ -21,6 +21,13 @@
           </button>
         </div>
         <div class="modal-body">
+          <div class="form-group m-form__group">
+            <label for="TransportTypeDisplayName">{{ l('TransportType') }}</label>
+            <select name="transportSubtype.transportTypeId" [(ngModel)]="trucksType.transportSubtypeId" class="form-control">
+              <option value="">{{ l('SelectATransportType') }}</option>
+              <option *ngFor="let item of allTransportSubTypes" value="{{ item.id }}">{{ item.displayName }}</option>
+            </select>
+          </div>
           <div class="form-group">
             <label for="TrucksType_DisplayName">{{ l('DisplayName') }} *</label>
             <input

@@ -88,8 +88,9 @@ export class RegisterTenantComponent extends AppComponentBase implements OnInit,
   }
 
   save(): void {
-    if (this.model.countryId != -2 || this.model.cityId != -2) {
-      alert('please make sure you enter all the required information!');
+    if (this.model.countryId == -2 || this.model.cityId == -2) {
+      this.notify.error('please make sure you choose the country and the city!');
+      return;
     }
     let recaptchaCallback = (token: string) => {
       this.saving = true;
@@ -120,7 +121,7 @@ export class RegisterTenantComponent extends AppComponentBase implements OnInit,
     };
 
     if (this.useCaptcha) {
-      this._reCaptchaV3Service.execute(this.recaptchaSiteKey, 'register_tenant', (token) => {
+      this._reCaptchaV3Service.execute('6LeEZ-kUAAAAAGdgiM9BoWiRKBZOeULch73OlyZP', 'register_tenant', (token) => {
         recaptchaCallback(token);
       });
     } else {

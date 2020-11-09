@@ -82,7 +82,7 @@
 </div>
 
 <div class="mt-5">
-  <div>
+  <div *ngIf="!multiTenancySideIsTeanant && isTenantSelfRegistrationAllowed">
     <span>
       {{ 'NotAMemberYet' | localize }}
     </span>

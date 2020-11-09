@@ -1,6 +1,6 @@
 ﻿import { Component, Injector, ViewEncapsulation, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { DocumentFilesServiceProxy, DocumentFileDto } from '@shared/service-proxies/service-proxies';
+import { DocumentFilesServiceProxy, DocumentFileDto, GetDocumentEntitiesLookupDto } from '@shared/service-proxies/service-proxies';
 import { NotifyService } from 'abp-ng2-module';
 import { AppComponentBase } from '@shared/common/app-component-base';
 import { TokenAuthServiceProxy } from '@shared/service-proxies/service-proxies';
@@ -38,10 +38,15 @@ export class DocumentFilesComponent extends AppComponentBase {
   minExpirationDateFilter: moment.Moment;
   isAcceptedFilter = false;
   documentTypeDisplayNameFilter = '';
-  truckPlateNumberFilter = '';
+  truckIdFilter = '';
+  entityIdFilter = '';
   trailerTrailerCodeFilter = '';
   userNameFilter = '';
+  isHost = true;
   routStepDisplayNameFilter = '';
+
+  entityType = 'Tenant';
+  entityTypesList: GetDocumentEntitiesLookupDto[] = [];
 
   _entityTypeFullName = 'TACHYON.Documents.DocumentFiles.DocumentFile';
   entityHistoryEnabled = false;
@@ -58,6 +63,19 @@ export class DocumentFilesComponent extends AppComponentBase {
   }
 
   ngOnInit(): void {
+    this._documentFilesServiceProxy.getIsCurrentTenantHost().subscribe((res) => {
+      if (res) {
+        this.isHost = true;
+      } else {
+        this.isHost = false;
+      }
+      this.entityType = 'Tenant';
+    });
+
+    this._documentFilesServiceProxy.getDocumentEntitiesForDocumentFile().subscribe((res) => {
+      this.entityTypesList = res;
+    });
+
     this.entityHistoryEnabled = this.setIsEntityHistoryEnabled();
   }
 
@@ -78,21 +96,22 @@ export class DocumentFilesComponent extends AppComponentBase {
     }
 
     this.primengTableHelper.showLoadingIndicator();
-
     this._documentFilesServiceProxy
       .getAll(
         this.filterText,
-        this.nameFilter,
-        this.extnFilter,
-        this.binaryObjectIdFilter,
+        // this.nameFilter,
+        // this.extnFilter,
+        // this.binaryObjectIdFilter,
         this.maxExpirationDateFilter,
         this.minExpirationDateFilter,
-        this.isAcceptedFilter,
+        // this.isAcceptedFilter,
         this.documentTypeDisplayNameFilter,
-        this.truckPlateNumberFilter,
+        this.entityType,
+        this.truckIdFilter,
+        this.entityIdFilter,
         this.trailerTrailerCodeFilter,
         this.userNameFilter,
-        this.routStepDisplayNameFilter,
+        // this.routStepDisplayNameFilter,
         this.primengTableHelper.getSorting(this.dataTable),
         this.primengTableHelper.getSkipCount(this.paginator, event),
         this.primengTableHelper.getMaxResultCount(this.paginator, event)
@@ -108,9 +127,9 @@ export class DocumentFilesComponent extends AppComponentBase {
     this.paginator.changePage(this.paginator.getPage());
   }
 
-  createDocumentFile(): void {
-    this.createOrEditDocumentFileModal.show();
-  }
+  // createDocumentFile(): void {
+  //   this.createOrEditDocumentFileModal.show();
+  // }
 
   showHistory(documentFile: DocumentFileDto): void {
     this.entityTypeHistoryModal.show({
@@ -131,26 +150,26 @@ export class DocumentFilesComponent extends AppComponentBase {
     });
   }
 
-  exportToExcel(): void {
-    this._documentFilesServiceProxy
-      .getDocumentFilesToExcel(
-        this.filterText,
-        this.nameFilter,
-        this.extnFilter,
-        this.binaryObjectIdFilter,
-        this.maxExpirationDateFilter,
-        this.minExpirationDateFilter,
-        this.isAcceptedFilter,
-        this.documentTypeDisplayNameFilter,
-        this.truckPlateNumberFilter,
-        this.trailerTrailerCodeFilter,
-        this.userNameFilter,
-        this.routStepDisplayNameFilter
-      )
-      .subscribe((result) => {
-        this._fileDownloadService.downloadTempFile(result);
-      });
-  }
+  // exportToExcel(): void {
+  //   this._documentFilesServiceProxy
+  //     .getDocumentFilesToExcel(
+  //       this.filterText,
+  //       this.nameFilter,
+  //       this.extnFilter,
+  //       this.binaryObjectIdFilter,
+  //       this.maxExpirationDateFilter,
+  //       this.minExpirationDateFilter,
+  //       this.isAcceptedFilter,
+  //       this.documentTypeDisplayNameFilter,
+  //       this.truckPlateNumberFilter,
+  //       this.trailerTrailerCodeFilter,
+  //       this.userNameFilter,
+  //       this.routStepDisplayNameFilter
+  //     )
+  //     .subscribe((result) => {
+  //       this._fileDownloadService.downloadTempFile(result);
+  //     });
+  // }
 
   downloadDocument(documentFile: DocumentFileDto) {
     this._documentFilesServiceProxy.getDocumentFileDto(documentFile.id).subscribe((result) => {
@@ -169,5 +188,10 @@ export class DocumentFilesComponent extends AppComponentBase {
       this.reloadPage();
       this.notify.success(this.l('SuccessfullyRejected'));
     });
+  }
+
+  SwitchEntityType(type) {
+    this.entityType = type;
+    this.getDocumentFiles();
   }
 }

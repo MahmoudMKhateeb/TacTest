@@ -21,41 +21,57 @@
       <div class="modal-body">
         <div class="row">
           <div class="col-6 mb-3">
+            <h6>{{ l('ID') }} :</h6>
+            {{ item.truck.id }}
+          </div>
+          <div class="col-6 mb-3">
             <h6>{{ l('PlateNumber') }} :</h6>
             {{ item.truck.plateNumber }}
           </div>
-          <div class="col-6 mb-3">
-            <h6>{{ l('ModelName') }} :</h6>
-            {{ item.truck.modelName }}
-          </div>
+        </div>
+
+        <div class="row">
           <div class="col-6 mb-3">
             <h6>{{ l('ModelYear') }} :</h6>
             {{ item.truck.modelYear }}
           </div>
-          <div class="col-6 mb-3">
+          <!-- <div class="col-6 mb-3">
             <h6>{{ l('IsAttachable') }} :</h6>
             <div *ngIf="item.truck.isAttachable" class="text-left"><i class="fa fa-check-circle text-success" title="True"></i></div>
             <div *ngIf="!item.truck.isAttachable" class="text-left"><i class="fa fa-times-circle" title="False"></i></div>
+          </div> -->
+          <div class="col-6 mb-3">
+            <h6>{{ l('ModelName') }} :</h6>
+            {{ item.truck.modelName }}
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-6 mb-3">
+            <h6>{{ l('Truck Status') }} :</h6>
+            {{ item.truckStatusDisplayName }}
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-6 mb-3">
+            <h6>{{ l('Assigend Driver Name') }} :</h6>
+            {{ item.userName }}
           </div>
           <div class="col-6 mb-3">
+            <h6>{{ l('Truck Type') }} :</h6>
+            {{ item.trucksTypeDisplayName }}
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-12 mb-3">
             <h6>{{ l('Note') }} :</h6>
             {{ item.truck.note }}
           </div>
-
-          <div class="col-6 mb-3">
-            <h6>({{ l('TrucksType') }}) {{ l('DisplayName') }} :</h6>
-            {{ item.trucksTypeDisplayName }}
-          </div>
-          <div class="col-6 mb-3">
-            <h6>({{ l('TruckStatus') }}) {{ l('DisplayName') }} :</h6>
-            {{ item.truckStatusDisplayName }}
-          </div>
-          <div class="col-6 mb-3">
-            <h6>({{ l('User') }}) {{ l('Name') }} :</h6>
-            {{ item.userName }}
-          </div>
         </div>
       </div>
+
       <div class="modal-footer">
         <button [disabled]="saving" type="button" class="btn btn-primary blue" (click)="close()">{{ l('Close') }}</button>
       </div>

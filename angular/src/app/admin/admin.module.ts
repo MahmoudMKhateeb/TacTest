@@ -124,6 +124,8 @@ import { NgbDateParserFormatter, NgbModule } from '@node_modules/@ng-bootstrap/n
 import { CustomNgbDateParserFormatter } from '@app/admin/required-document-files/hijri-gregorian-datepicker/CustomNgbDateParserFormatter';
 import { DriversComponent } from './users/drivers/drivers.component';
 import { CreateOrEditDriverModalComponent } from '@app/admin/users/drivers/create-or-edit-driver-modal.component';
+import { ViewOrEditEntityDocumentsModalComponent } from '@app/main/documentFiles/documentFiles/documentFilesViewComponents/view-or-edit-entity-documents-modal.componant';
+import { CreateOrEditDocumentFileModalComponent } from '@app/main/documentFiles/documentFiles/create-or-edit-documentFile-modal.component';
 const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
   // suppressScrollX: true
 };
@@ -162,8 +164,9 @@ const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
     NgbModule,
   ],
   declarations: [
+    CreateOrEditDocumentFileModalComponent,
+    ViewOrEditEntityDocumentsModalComponent,
     ShippingRequestStatusesComponent,
-
     ViewShippingRequestStatusModalComponent,
     CreateOrEditShippingRequestStatusModalComponent,
     UnitOfMeasuresComponent,
@@ -253,7 +256,14 @@ const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
     DriversComponent,
     CreateOrEditDriverModalComponent,
   ],
-  exports: [AddMemberModalComponent, AddRoleModalComponent, HijriGregorianDatepickerComponent],
+
+  exports: [
+    AddMemberModalComponent,
+    AddRoleModalComponent,
+    HijriGregorianDatepickerComponent,
+    CreateOrEditDocumentFileModalComponent,
+    ViewOrEditEntityDocumentsModalComponent,
+  ],
   providers: [
     ImpersonationService,
     TreeDragDropService,

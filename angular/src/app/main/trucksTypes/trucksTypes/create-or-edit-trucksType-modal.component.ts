@@ -1,7 +1,12 @@
 ﻿import { Component, ViewChild, Injector, Output, EventEmitter } from '@angular/core';
 import { ModalDirective } from 'ngx-bootstrap/modal';
 import { finalize } from 'rxjs/operators';
-import { TrucksTypesServiceProxy, CreateOrEditTrucksTypeDto } from '@shared/service-proxies/service-proxies';
+import {
+  TrucksTypesServiceProxy,
+  CreateOrEditTrucksTypeDto,
+  TransportSubtypeTransportTypeLookupTableDto,
+  TransportSubtypesServiceProxy,
+} from '@shared/service-proxies/service-proxies';
 import { AppComponentBase } from '@shared/common/app-component-base';
 import * as moment from 'moment';
 
@@ -18,8 +23,12 @@ export class CreateOrEditTrucksTypeModalComponent extends AppComponentBase {
   saving = false;
 
   trucksType: CreateOrEditTrucksTypeDto = new CreateOrEditTrucksTypeDto();
-
-  constructor(injector: Injector, private _trucksTypesServiceProxy: TrucksTypesServiceProxy) {
+  allTransportSubTypes: TransportSubtypeTransportTypeLookupTableDto[];
+  constructor(
+    injector: Injector,
+    private _trucksTypesServiceProxy: TrucksTypesServiceProxy,
+    private _transportSubtypesServiceProxy: TransportSubtypesServiceProxy
+  ) {
     super(injector);
   }
 
@@ -38,6 +47,9 @@ export class CreateOrEditTrucksTypeModalComponent extends AppComponentBase {
         this.modal.show();
       });
     }
+    this._transportSubtypesServiceProxy.getAllTransportTypeForTableDropdown().subscribe((result) => {
+      this.allTransportSubTypes = result;
+    });
   }
 
   save(): void {

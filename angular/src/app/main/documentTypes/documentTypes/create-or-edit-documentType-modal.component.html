@@ -214,8 +214,7 @@
             </select>
           </div>
           <div class="separator separator-dashed my-10"></div>
-          <div class="row a lign-items-center">
-            <!--<Primeng-Datatable-Start>-->
+          <!-- <div class="row a lign-items-center">
 
             <div class="primeng-datatable-container col-12" [busyIf]="primengTableHelper.isLoading">
               <button
@@ -249,7 +248,7 @@
                       {{ l('Actions') }}
                     </th>
                     <th style="width: 150px;" pSortableColumn="coreFk.displayName">
-                      {{ l('DisplayName') }}
+                      {{ l('keyWord') }}
                       <p-sortIcon field="documentTypeDisplayName"></p-sortIcon>
                     </th>
                     <th style="width: 150px;" pSortableColumn="name">
@@ -317,13 +316,14 @@
                 </span>
               </div>
             </div>
-            <!--<Primeng-Datatable-End>-->
-          </div>
-          <createOrEditDocumentTypeTranslationModal
+
+          </div> -->
+          <!---->
+          <!-- <createOrEditDocumentTypeTranslationModal
             #createOrEditDocumentTypeTranslationModal
             (modalSave)="getDocumentTypeTranslations()"
           ></createOrEditDocumentTypeTranslationModal>
-          <viewDocumentTypeTranslationModal #viewDocumentTypeTranslationModal></viewDocumentTypeTranslationModal>
+          <viewDocumentTypeTranslationModal #viewDocumentTypeTranslationModal></viewDocumentTypeTranslationModal> -->
         </div>
 
         <div class="modal-footer">

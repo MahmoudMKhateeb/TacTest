@@ -37,22 +37,38 @@ namespace TACHYON.Documents.DocumentTypes.Exporting
                         sheet,
                         L("DisplayName"),
                         L("IsRequired"),
+                        L("RequiredFrom"),
+                        L("SpecialConstant"),
                         L("HasExpirationDate"),
-                        L("RequiredFrom")
+                        L("ExpirationAlertDays"),
+                        L("InActiveToleranceDays"),
+                        L("InActiveAccountExpired"),
+                        L("HasNumber"),
+                        L("IsNumberUnique"),
+                        L("HasHijriExpirationDate"),
+                        L("HasNotes")
                         );
 
                     AddObjects(
                         sheet, 2, documentTypes,
                         _ => _.DocumentType.DisplayName,
                         _ => _.DocumentType.IsRequired,
+                        _ => _.DocumentType.RequiredFrom,
+                        _ => _.DocumentType.SpecialConstant,
                         _ => _.DocumentType.HasExpirationDate,
-                        _ => _.DocumentType.RequiredFrom
+                        _ => _.DocumentType.ExpirationAlertDays,
+                        _ => _.DocumentType.InActiveToleranceDays,
+                        _ => _.DocumentType.InActiveAccountExpired,
+                        _ => _.DocumentType.HasNumber,
+                        _ => _.DocumentType.IsNumberUnique,
+                        _ => _.DocumentType.HasHijriExpirationDate,
+                        _ => _.DocumentType.HasNotes
                         );
 
 
                     for (var i = 1; i <= documentTypes.Count; i++)
                     {
-                        SetCellDataFormat(sheet.GetRow(i).Cells[3], "yyyy-mm-dd");
+                        //SetCellDataFormat(sheet.GetRow(i).Cells[3], "yyyy-mm-dd");
                     }
                     sheet.AutoSizeColumn(3);
                 });

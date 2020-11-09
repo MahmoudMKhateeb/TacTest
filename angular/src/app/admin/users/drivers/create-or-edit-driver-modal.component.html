@@ -18,8 +18,8 @@
             <span *ngIf="!user.id">{{ 'CreateNewUser' | localize }}</span>
           </h4>
           <h4 *ngIf="creatDriver" class="modal-title">
-            <span *ngIf="user.id">{{ 'EditDriver' | localize }}: {{ user.userName }}</span>
-            <span *ngIf="!user.id">{{ 'CreateNewDriver' | localize }}</span>
+            <span *ngIf="user.id">{{ 'Edit Driver' | localize }}: {{ user.userName }}</span>
+            <span *ngIf="!user.id">{{ 'Create New Driver' | localize }}</span>
           </h4>
           <button type="button" class="close" (click)="close()" [attr.aria-label]="l('Close')" [disabled]="saving">
             <span aria-hidden="true">&times;</span>
@@ -34,36 +34,69 @@
                 </div>
                 <div class="col-sm-9">
                   <div class="form-group">
-                    <label for="Name">{{ 'Name' | localize }} *</label>
-                    <input
-                      id="Name"
-                      #nameInput="ngModel"
-                      class="form-control"
-                      type="text"
-                      name="Name"
-                      [(ngModel)]="user.name"
-                      required
-                      maxlength="64"
-                    />
-                    <validation-messages [formCtrl]="nameInput"></validation-messages>
-                  </div>
+                    <label for="UserName">{{ 'UserName' | localize }} *</label>
+                    <div [class]="isWaintingUserNameValidation ? 'spinner spinner-primary spinner-left' : ''">
+                      <input
+                        (focusout)="CheckIfDriverUserNameIsValid(userNameInput.value)"
+                        id="UserName"
+                        #userNameInput="ngModel"
+                        type="text"
+                        [disabled]="!canChangeUserName"
+                        name="UserName"
+                        [class]="
+                          !userNameInput.touched || isWaintingUserNameValidation
+                            ? 'form-control'
+                            : isUserNameValid
+                            ? 'form-control is-valid'
+                            : 'form-control is-invalid'
+                        "
+                        [(ngModel)]="user.userName"
+                        required
+                        maxlength="256"
+                      />
+                    </div>
+                    <div *ngIf="isUserNameValid" class="valid-feedback">Success! You've done it.</div>
 
-                  <div class="form-group">
-                    <label for="Surname">{{ 'Surname' | localize }} *</label>
-                    <input
-                      id="Surname"
-                      #surnameInput="ngModel"
-                      type="text"
-                      name="Surname"
-                      class="form-control"
-                      [(ngModel)]="user.surname"
-                      required
-                      maxlength="64"
-                    />
-                    <validation-messages [formCtrl]="surnameInput"></validation-messages>
+                    <span class="help-block" *ngIf="!canChangeUserName">{{ 'CanNotChangeAdminUserName' | localize }}</span>
+                    <validation-messages [formCtrl]="userNameInput"></validation-messages>
+                  </div>
+                  <div class="row">
+                    <div class="col-6">
+                      <div class="form-group">
+                        <label for="Name">{{ 'Name' | localize }} *</label>
+                        <input
+                          id="Name"
+                          #nameInput="ngModel"
+                          class="form-control"
+                          type="text"
+                          name="Name"
+                          [(ngModel)]="user.name"
+                          required
+                          maxlength="64"
+                        />
+                        <validation-messages [formCtrl]="nameInput"></validation-messages>
+                      </div>
+                    </div>
+                    <div class="col-6">
+                      <div class="form-group">
+                        <label for="Surname">{{ 'Surname' | localize }} *</label>
+                        <input
+                          id="Surname"
+                          #surnameInput="ngModel"
+                          type="text"
+                          name="Surname"
+                          class="form-control"
+                          [(ngModel)]="user.surname"
+                          required
+                          maxlength="64"
+                        />
+                        <validation-messages [formCtrl]="surnameInput"></validation-messages>
+                      </div>
+                    </div>
                   </div>
                 </div>
               </div>
+
               <div class="form-group">
                 <label for="EmailAddress">{{ 'EmailAddress' | localize }} *</label>
                 <input
@@ -86,23 +119,32 @@
               </div>
               <div class="form-group">
                 <label for="Nationality">{{ 'Nationality' | localize }}</label>
+                <!-- <select [(ngModel)]="user.nationality" class="form-control form-control-lg custom-select mr-sm-2" style="color: red;">
+                  <option *ngFor="let nationality of nationalities" [value]="nationality.id">{{ nationality.name }}</option>
+                </select> -->
                 <input id="Nationality" type="text" name="Nationality" class="form-control" [(ngModel)]="user.nationality" maxlength="64" />
               </div>
-              <div class="form-group">
-                <label for="UserName">{{ 'UserName' | localize }} *</label>
-                <input
-                  id="UserName"
-                  #userNameInput="ngModel"
-                  type="text"
-                  [disabled]="!canChangeUserName"
-                  name="UserName"
-                  class="form-control"
-                  [(ngModel)]="user.userName"
-                  required
-                  maxlength="256"
-                />
-                <span class="help-block" *ngIf="!canChangeUserName">{{ 'CanNotChangeAdminUserName' | localize }}</span>
-                <validation-messages [formCtrl]="userNameInput"></validation-messages>
+
+              <div class="row">
+                <div class="col-6">
+                  <div class="form-group">
+                    <label for="Address">{{ 'Address' | localize }}</label>
+                    <input id="Address" type="text" name="Address" class="form-control" [(ngModel)]="user.address" maxlength="256" />
+                  </div>
+                </div>
+                <div class="col-6">
+                  <div class="form-group" *ngIf="user.isDriver">
+                    <label for="ExperienceField">{{ 'ExperienceField' | localize }}</label>
+                    <input
+                      id="ExperienceField"
+                      type="text"
+                      name="DrivingLicenseNumber"
+                      class="form-control"
+                      [(ngModel)]="user.experienceField"
+                      maxlength="256"
+                    />
+                  </div>
+                </div>
               </div>
 
               <div class="checkbox-inline">
@@ -209,13 +251,6 @@
                   {{ 'ShouldChangePasswordOnNextLogin' | localize }}
                   <span></span>
                 </label>
-
-                <label for="EditUser_SendActivationEmail" class="checkbox">
-                  <input id="EditUser_SendActivationEmail" type="checkbox" name="SendActivationEmail" [(ngModel)]="sendActivationEmail" />
-                  {{ 'SendActivationEmail' | localize }}
-                  <span></span>
-                </label>
-
                 <label for="EditUser_IsActive" class="checkbox">
                   <input id="EditUser_IsActive" type="checkbox" name="IsActive" [(ngModel)]="user.isActive" />
                   {{ 'Active' | localize }}
@@ -235,25 +270,7 @@
                 </label>
               </div>
             </tab>
-            <tab *ngIf="creatDriver" class="pt-5" heading="{{ 'DriverDetails' | localize }}">
-              <div class="form-group" *ngIf="user.isDriver">
-                <label for="Address">{{ 'Address' | localize }}</label>
-                <input id="Address" type="text" name="Address" class="form-control" [(ngModel)]="user.address" maxlength="256" />
-              </div>
-              <div class="form-group" *ngIf="user.isDriver">
-                <label for="ExperienceField">{{ 'ExperienceField' | localize }}</label>
-                <input
-                  id="ExperienceField"
-                  type="text"
-                  name="DrivingLicenseNumber"
-                  class="form-control"
-                  [(ngModel)]="user.experienceField"
-                  maxlength="256"
-                />
-              </div>
-            </tab>
-
-            <tab class="pt-5" heading="{{ 'DriverDocuments' | localize }}">
+            <tab *ngIf="!user.id" class="pt-5" heading="{{ 'DriverDocuments' | localize }}">
               <div *ngFor="let item of createOrEditDocumentFileDtos; index as i" class="">
                 <div class="card card-custom">
                   <div class="card-header">
@@ -267,7 +284,6 @@
                         <label>{{ l('File') }}</label>
                         <div class="custom-file">
                           <input
-                            [disabled]="item.isAccepted"
                             (change)="DocFileChangeEvent($event, item)"
                             type="file"
                             class="custom-file-input"
@@ -286,9 +302,8 @@
                           bsDatepicker
                           class="form-control m-input"
                           datePickerMomentModifier
-                          [required]="item.documentTypeDto.isRequired && !item.isAccepted"
+                          [required]="item.documentTypeDto.isRequired"
                           [(date)]="item.expirationDate"
-                          [disabled]="item.isAccepted"
                         />
                       </div>
                       <div *ngIf="item.documentTypeDto.hasNumber" class="form-group col-6">
@@ -305,7 +320,6 @@
                           [minLength]="item.documentTypeDto.numberMinDigits"
                           type="text"
                           [(ngModel)]="item.number"
-                          [disabled]="item.isAccepted"
                         />
                         <span class="form-text text-muted"
                           >{{ l('minDigits:') }} {{ item.documentTypeDto.numberMinDigits }} {{ l('maxDigits:') }}
@@ -318,10 +332,9 @@
                           name="note{{ i }}"
                           id="note{{ i }}"
                           class="form-control m-input"
-                          [required]="item.documentTypeDto.hasNotes && !item.isAccepted"
+                          [required]="item.documentTypeDto.hasNotes"
                           type="text"
                           [(ngModel)]="item.notes"
-                          [disabled]="item.isAccepted"
                         />
                       </div>
 
@@ -338,6 +351,8 @@
                       </div>
                     </div>
                   </div>
+
+                  <div *ngIf="createOrEditDocumentFileDtos.length - 1 != i" class="separator separator-dashed my-5"></div>
                 </div>
               </div>
             </tab>
