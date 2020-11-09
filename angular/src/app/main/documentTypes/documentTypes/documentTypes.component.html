@@ -138,7 +138,7 @@
                       {{ l('IsRequired') }}
                       <p-sortIcon field="documentType.isRequired"></p-sortIcon>
                     </th>
-                    <th style="width: 150px;" pSortableColumn="requiredFrom">
+                    <th style="width: 150px;" pSortableColumn="documentsEntityId">
                       {{ l('RequiredFrom') }}
                       <p-sortIcon field="documentType.requiredFrom"></p-sortIcon>
                     </th>
@@ -146,19 +146,19 @@
                       {{ l('SpecialConstant') }}
                       <p-sortIcon field="documentType.specialConstant"></p-sortIcon>
                     </th>
-                    <th style="width: 150px;" pSortableColumn="hasExpirationDate">
+                    <th style="width: 200px;" pSortableColumn="hasExpirationDate">
                       {{ l('HasExpirationDate') }}
                       <p-sortIcon field="documentType.hasExpirationDate"></p-sortIcon>
                     </th>
-                    <th style="width: 150px;" pSortableColumn="expirationAlertDays">
+                    <th style="width: 200px;" pSortableColumn="expirationAlertDays">
                       {{ l('ExpirationAlertDays') }}
                       <p-sortIcon field="documentType.expirationAlertDays"></p-sortIcon>
                     </th>
-                    <th style="width: 150px;" pSortableColumn="inActiveToleranceDays ">
+                    <th style="width: 200px;" pSortableColumn="inActiveToleranceDays ">
                       {{ l('InActiveToleranceDays') }}
                       <p-sortIcon field="documentType.inActiveToleranceDays"></p-sortIcon>
                     </th>
-                    <th style="width: 150px;" pSortableColumn="inActiveAccountExpired">
+                    <th style="width: 200px;" pSortableColumn="inActiveAccountExpired">
                       {{ l('InActiveAccountExpired') }}
                       <p-sortIcon field="documentType.inActiveAccountExpired"></p-sortIcon>
                     </th>
@@ -170,7 +170,7 @@
                       {{ l('IsNumberUnique') }}
                       <p-sortIcon field="documentType.isNumberUnique"></p-sortIcon>
                     </th>
-                    <th style="width: 150px;" pSortableColumn="hasHijriExpirationDate">
+                    <th style="width: 190px;" pSortableColumn="hasHijriExpirationDate">
                       {{ l('HasHijriExpirationDate') }}
                       <p-sortIcon field="documentType.hasHijriExpirationDate"></p-sortIcon>
                     </th>
@@ -235,23 +235,23 @@
                       {{ record.documentType.specialConstant }}
                     </td>
 
-                    <td style="width: 150px;">
+                    <td style="width: 200px;">
                       <span class="ui-column-title"> {{ l('HasExpirationDate') }}</span>
                       <div *ngIf="record.documentType.hasExpirationDate" class="text-center">
                         <i class="fa fa-check-circle text-success" title="True"></i>
                       </div>
                       <div *ngIf="!record.documentType.hasExpirationDate" class="text-center"><i class="fa fa-times-circle" title="False"></i></div>
                     </td>
-                    <td style="width: 150px;">
+                    <td style="width: 200px;">
                       <span class="ui-column-title"> {{ l('ExpirationAlertDays') }}</span>
-                      {{ record.documentType.expirationAlertDays }}
+                      {{ record.documentType.expirationAlertDays == null ? '-' : record.documentType.expirationAlertDays }}
                     </td>
 
-                    <td style="width: 150px;">
+                    <td style="width: 200px;">
                       <span class="ui-column-title"> {{ l('InActiveToleranceDays') }}</span>
-                      {{ record.documentType.inActiveToleranceDays }}
+                      {{ record.documentType.inActiveToleranceDays == null ? '-' : record.documentType.inActiveToleranceDays }}
                     </td>
-                    <td style="width: 150px;">
+                    <td style="width: 200px;">
                       <span class="ui-column-title"> {{ l('InActiveAccountExpired') }}</span>
                       <div *ngIf="record.documentType.inActiveAccountExpired" class="text-center">
                         <i class="fa fa-check-circle text-success" title="True"></i>
@@ -279,7 +279,7 @@
                       </div>
                     </td>
 
-                    <td style="width: 150px;">
+                    <td style="width: 190px;">
                       <span class="ui-column-title"> {{ l('HasHijriExpirationDate') }}</span>
                       <div *ngIf="record.documentType.hasHijriExpirationDate" class="text-center">
                         <i class="fa fa-check-circle text-success" title="True"></i>

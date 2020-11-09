@@ -4,14 +4,17 @@
       {{ 'Sign Up' | localize }}
     </h3>
   </div>
-  <h4 *ngIf="model.edition" class="text-center">{{ 'Subscription' | localize }}: {{ model.edition.displayName }}</h4>
+  <h4 *ngIf="model.edition" class="text-center">{{ 'I AM A' | localize }}: {{ model.edition.displayName }}</h4>
   <div class="separator separator-border-dashed"></div>
+  <hr />
+  <br />
 
   <form #registerForm="ngForm" role="form" novalidate (submit)="save()" class="login-form form mt-2">
-    <h5 class="mt-2">
+    <h5 style="text-align: center;" class="mt-2">
       {{ 'TenantInformations' | localize }}
+      <br />
     </h5>
-
+    <hr />
     <div class="row">
       <div class="col-6">
         <div class="form-group">
@@ -24,6 +27,7 @@
             [(ngModel)]="model.tenancyName"
             name="tenancyName"
             required
+            style="width: max-content;"
             maxlength="64"
             pattern="^[a-zA-Z][a-zA-Z0-9_-]{1,}$"
           />
@@ -96,7 +100,7 @@
         <div class="form-group">
           <input
             #addressInput="ngModel"
-            class="form-control form-control-solid h-auto rounded-lg font-size-h6"
+            class="form-control"
             type="Address"
             placeholder="City--State--Street Name--Zip  *"
             [(ngModel)]="model.address"
@@ -108,17 +112,18 @@
         </div>
       </div>
     </div>
-
-    <h5 class="mt-2">
+    <br />
+    <h5 style="text-align: center;" class="mt-2">
       {{ 'Admin user Account info' | localize }}
     </h5>
 
+    <hr />
     <div class="row">
       <div class="col-12">
         <div class="form-group">
           <input
             #adminEmailAddressInput="ngModel"
-            class="form-control form-control-solid h-auto py-7 px-6 rounded-lg font-size-h6"
+            class="form-control"
             type="email"
             placeholder="{{ 'AdminEmailAddress' | localize }} *"
             [(ngModel)]="model.adminEmailAddress"
@@ -213,7 +218,7 @@
               <li [hidden]="!PasswordRepeat.errors.requiredLength">
                 {{ 'PasswordComplexity_RequiredLength_Hint' | localize: passwordComplexitySetting.requiredLength }}
               </li>
-              <li [hidden]="PasswordRepeat.valid">{{ 'PasswordsDontMatch' | localize }}</li>
+              <li [hidden]="PasswordRepeat.valid && PasswordRepeat.touched">{{ 'PasswordsDontMatch' | localize }}</li>
             </ul>
           </div>
         </div>
