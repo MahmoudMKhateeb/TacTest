@@ -16,6 +16,7 @@ namespace TACHYON.Shipping.ShippingRequestBids.Dtos
         public string GoodCategoryName { get; set; }
         public int BidsNo { get; set; }
         public double LastBidPrice { get; set; }
+        public long FirstBidId { get; set; }
 
     }
 }

@@ -126,7 +126,7 @@ namespace TACHYON.Shipping.ShippingRequestBids
 
         //#538
         [RequiresFeature(AppFeatures.Carrier)]
-        //[AbpAuthorize(AppPermissions.Pages_ShippingRequestBids_Create)]
+        [AbpAuthorize(AppPermissions.Pages_ShippingRequestBids_Create)]
         protected virtual async Task<long> Create(CreatOrEditShippingRequestBidDto input)
         {
             var exist = CheckIfCarrierHasBidToSR(input.ShippingRequestId);
@@ -236,6 +236,8 @@ namespace TACHYON.Shipping.ShippingRequestBids
             {
                 throw new UserFriendlyException(L("bid is already canceled message"));
             }
+
+
             bid.IsCancled = true;
             bid.CanceledDate = Clock.Now;
 
@@ -288,7 +290,8 @@ namespace TACHYON.Shipping.ShippingRequestBids
                                               TruckTypeDisplayName = o.TransportSubtypeFk.DisplayName,
                                               GoodCategoryName = o.GoodCategoryFk.DisplayName,
                                               BidsNo = o.ShippingRequestBids.Count(),
-                                              LastBidPrice = o.ShippingRequestBids.Where(x => x.IsCancled == false).OrderByDescending(x => x.Id).FirstOrDefault().price
+                                              LastBidPrice = o.ShippingRequestBids.Where(x => x.IsCancled == false).OrderByDescending(x => x.Id).FirstOrDefault().price,
+                                              FirstBidId = o.ShippingRequestBids.FirstOrDefault().Id
                                           },
                                       };
 
