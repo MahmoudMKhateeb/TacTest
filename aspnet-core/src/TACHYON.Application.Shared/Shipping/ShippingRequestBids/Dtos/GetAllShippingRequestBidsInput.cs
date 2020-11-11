@@ -12,7 +12,7 @@ namespace TACHYON.Shipping.ShippingRequestBids.Dtos
         public double? MinPrice { get; set; }
         public double? MaxPrice { get; set; }
 
-        public long? ShippingRequestId { get; set; }
+        public long ShippingRequestId { get; set; }
 
     }
 }

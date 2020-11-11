@@ -60,7 +60,20 @@ namespace TACHYON.Notifications
                     featureDependency: new SimpleFeatureDependency(AppFeatures.Shipper)
                 )
             );
-
+            context.Manager.Add(
+                new NotificationDefinition(
+                    AppNotificationNames.CreateShippingRequestBid,
+                    displayName: L("CreateShippingRequestBidNotificationDefinition"),
+                    featureDependency: new SimpleFeatureDependency(AppFeatures.Carrier)
+                    )
+                );
+            context.Manager.Add(
+                new NotificationDefinition(
+                    AppNotificationNames.CancelShippingRequestBid,
+                    displayName: L("CancelShippingRequestBidNotificationDefinition"),
+                    featureDependency: new SimpleFeatureDependency(AppFeatures.Carrier)
+                    )
+                );
             context.Manager.Add(
                 new NotificationDefinition(
                     AppNotificationNames.AcceptShippingRequestBid,

@@ -4,6 +4,7 @@ using Abp.Notifications;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection.Emit;
 using System.Threading.Tasks;
 using TACHYON.Authorization.Users;
 using TACHYON.Documents.DocumentFiles;
@@ -96,8 +97,33 @@ namespace TACHYON.Notifications
                     { "fileName", fileName }
                 });
         }
-
-
+        public async Task CreateBidRequest(UserIdentifier argsUser, long shippingRequestId)
+        {
+            var notificationData = new LocalizableMessageNotificationData(
+                new LocalizableString(
+                    L("CreateBidRequestNotificationMessage"),
+                    TACHYONConsts.LocalizationSourceName
+                    )
+                );
+            notificationData["shippingRequestId"] = shippingRequestId;
+            await _notificationPublisher.PublishAsync(AppNotificationNames.CancelShippingRequestBid,
+                notificationData,
+                userIds: new[] { argsUser });
+        }
+        public async Task CancelBidRequest(UserIdentifier argsUser, long shippingRequestId,long shippingRequestBidId)
+        {
+            var notificationData = new LocalizableMessageNotificationData(
+                new LocalizableString(
+                    L("CancelBidRequestNotificationMessage"),
+                    TACHYONConsts.LocalizationSourceName
+                    )
+                );
+            notificationData["shippingRequestId"] = shippingRequestId;
+            notificationData["shippingRequestBidId"] = shippingRequestBidId;
+            await _notificationPublisher.PublishAsync(AppNotificationNames.CancelShippingRequestBid,
+                notificationData,
+                userIds: new[] { argsUser });
+        }
         public async Task AcceptShippingRequestBid(UserIdentifier argsUser, long shippingRequestId)
         {
             var notificationData = new LocalizableMessageNotificationData(
@@ -309,5 +335,7 @@ namespace TACHYON.Notifications
                     { "fileName", fileName }
                 });
         }
+
+
     }
 }

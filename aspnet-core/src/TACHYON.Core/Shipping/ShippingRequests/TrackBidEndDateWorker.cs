@@ -45,8 +45,8 @@ namespace TACHYON.Shipping.ShippingRequests
         //#544
         protected override void DoWork()
         {
-            using (CurrentUnitOfWork.DisableFilter(AbpDataFilters.MustHaveTenant))
-            {
+            //using (CurrentUnitOfWork.DisableFilter(AbpDataFilters.MustHaveTenant))
+            //{
                 var expiresBids = _shippingRequestRepository.GetAll()
                     .Where(u => u.BidEndDate != null)
                     .Where(u => u.ShippingRequestStatusId == TACHYONConsts.ShippingRequestStatusClosed)
@@ -81,7 +81,7 @@ namespace TACHYON.Shipping.ShippingRequests
 
                 }
                
-            }
+           // }
         }
     }
 }
