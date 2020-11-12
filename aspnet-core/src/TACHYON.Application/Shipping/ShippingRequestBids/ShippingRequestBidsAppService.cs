@@ -165,6 +165,10 @@ namespace TACHYON.Shipping.ShippingRequestBids
         protected async Task<long> Edit(CreatOrEditShippingRequestBidDto input)
         {
             var item = await _shippingRequestBidsRepository.FirstOrDefaultAsync((long)input.Id);
+            if (item.IsCancled != true)
+            {
+                throw new UserFriendlyException(L("can't edit canceled bid message"));
+            }
             ObjectMapper.Map(input, item);
             return item.Id;
         }
@@ -289,9 +293,11 @@ namespace TACHYON.Shipping.ShippingRequestBids
                                               StartBidDate = o.BidStartDate,
                                               TruckTypeDisplayName = o.TransportSubtypeFk.DisplayName,
                                               GoodCategoryName = o.GoodCategoryFk.DisplayName,
-                                              BidsNo = o.ShippingRequestBids.Count(),
+                                              BidsNo = o.ShippingRequestBids.Where(x=>x.IsCancled!=true).Count(),
                                               LastBidPrice = o.ShippingRequestBids.Where(x => x.IsCancled == false).OrderByDescending(x => x.Id).FirstOrDefault().price,
-                                              FirstBidId = o.ShippingRequestBids.FirstOrDefault().Id
+                                              FirstBidId = o.ShippingRequestBids.FirstOrDefault().Id,
+                                              OriginalCityName= o.RouteFk.OriginCityFk.DisplayName,
+                                              DestinationCityName=o.RouteFk.DestinationCityFk.DisplayName
                                           },
                                       };
 

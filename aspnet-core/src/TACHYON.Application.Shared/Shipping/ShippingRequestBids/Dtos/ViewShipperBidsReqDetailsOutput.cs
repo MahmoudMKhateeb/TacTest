@@ -17,6 +17,8 @@ namespace TACHYON.Shipping.ShippingRequestBids.Dtos
         public int BidsNo { get; set; }
         public double LastBidPrice { get; set; }
         public long FirstBidId { get; set; }
+        public string OriginalCityName { get; set; }
+        public string DestinationCityName { get; set; }
 
     }
 }
