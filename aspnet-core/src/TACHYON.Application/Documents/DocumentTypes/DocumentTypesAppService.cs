@@ -12,8 +12,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Dynamic.Core;
 using System.Threading.Tasks;
+using Abp.Application.Editions;
 using TACHYON.Authorization;
 using TACHYON.Documents.DocumentsEntities;
+using TACHYON.Documents.DocumentsEntities.Dtos;
 using TACHYON.Documents.DocumentTypes.Dtos;
 using TACHYON.Documents.DocumentTypes.Exporting;
 using TACHYON.Documents.DocumentTypeTranslations;
@@ -29,14 +31,19 @@ namespace TACHYON.Documents.DocumentTypes
         private readonly IDocumentTypesExcelExporter _documentTypesExcelExporter;
         private readonly IRepository<DocumentsEntity, int> _documentsEntityRepository;
         private readonly IRepository<DocumentTypeTranslation> _documentTypeTranslationRepository;
+        private readonly IRepository<DocumentsEntity, int> _documentEntityRepository;
+        private readonly IRepository<Edition, int> _editionRepository;
 
 
-        public DocumentTypesAppService(IRepository<DocumentType, long> documentTypeRepository, IDocumentTypesExcelExporter documentTypesExcelExporter, IRepository<DocumentsEntity, int> documentsEntityRepository, IRepository<DocumentTypeTranslation> documentTypeTranslationRepository)
+
+        public DocumentTypesAppService(IRepository<DocumentsEntity, int> documentEntityRepository, IRepository<DocumentType, long> documentTypeRepository, IDocumentTypesExcelExporter documentTypesExcelExporter, IRepository<DocumentsEntity, int> documentsEntityRepository, IRepository<DocumentTypeTranslation> documentTypeTranslationRepository, IRepository<Edition, int> editionRepository)
         {
             _documentTypeRepository = documentTypeRepository;
             _documentTypesExcelExporter = documentTypesExcelExporter;
             _documentsEntityRepository = documentsEntityRepository;
             _documentTypeTranslationRepository = documentTypeTranslationRepository;
+            _editionRepository = editionRepository;
+            _documentEntityRepository = documentEntityRepository;
         }
 
         public async Task<PagedResultDto<GetDocumentTypeForViewDto>> GetAll(GetAllDocumentTypesInput input)
@@ -44,13 +51,18 @@ namespace TACHYON.Documents.DocumentTypes
 
             var filteredDocumentTypes = _documentTypeRepository.GetAll()
                         .Include(e => e.Translations)
-                        .Include(x=> x.DocumentsEntityFk)
-                        .Include(x=> x.EditionFk)
+                        .Include(x => x.DocumentsEntityFk)
+                        .Include(x => x.EditionFk)
                         .WhereIf(!string.IsNullOrWhiteSpace(input.Filter), e => false || e.DisplayName.Contains(input.Filter) || e.DocumentsEntityFk.DisplayName.Contains(input.Filter))
                         .WhereIf(!string.IsNullOrWhiteSpace(input.DisplayNameFilter), e => e.DisplayName == input.DisplayNameFilter)
                         .WhereIf(input.IsRequiredFilter > -1, e => (input.IsRequiredFilter == 1 && e.IsRequired) || (input.IsRequiredFilter == 0 && !e.IsRequired))
                         .WhereIf(input.HasExpirationDateFilter > -1, e => (input.HasExpirationDateFilter == 1 && e.HasExpirationDate) || (input.HasExpirationDateFilter == 0 && !e.HasExpirationDate))
-                        .WhereIf(!string.IsNullOrWhiteSpace(input.RequiredFromFilter), e => e.DocumentsEntityFk.DisplayName == input.RequiredFromFilter);
+                        .WhereIf(input.HasExpirationDateFilter > -1, e => (input.HasExpirationDateFilter == 1 && e.HasExpirationDate) || (input.HasExpirationDateFilter == 0 && !e.HasExpirationDate))
+                        .WhereIf(input.HasExpirationDateFilter > -1, e => (input.HasExpirationDateFilter == 1 && e.HasExpirationDate) || (input.HasExpirationDateFilter == 0 && !e.HasExpirationDate))
+                        .WhereIf(input.HasExpirationDateFilter > -1, e => (input.HasExpirationDateFilter == 1 && e.HasExpirationDate) || (input.HasExpirationDateFilter == 0 && !e.HasExpirationDate))
+                        .WhereIf(input.RequiredFromFilter.HasValue, e => e.DocumentsEntityId == input.RequiredFromFilter)
+                        //not driver or truck --> search in editions
+                        .WhereIf(input.RequiredFromFilter.HasValue && input.RequiredFromFilter != 2 && input.RequiredFromFilter != 3, e => e.EditionId == input.RequiredFromFilter);
 
             var pagedAndFilteredDocumentTypes = filteredDocumentTypes
                 .OrderBy(input.Sorting ?? "id asc")
@@ -90,10 +102,10 @@ namespace TACHYON.Documents.DocumentTypes
 
         public async Task CreateOrEdit(CreateOrEditDocumentTypeDto input)
         {
-            var IsDuplicateDocumentType = await _documentTypeRepository.FirstOrDefaultAsync(x=>(x.DisplayName).Trim().ToLower() == (input.DisplayName).Trim().ToLower());
-            if (IsDuplicateDocumentType !=null)
+            var IsDuplicateDocumentType = await _documentTypeRepository.FirstOrDefaultAsync(x => (x.DisplayName).Trim().ToLower() == (input.DisplayName).Trim().ToLower());
+            if (IsDuplicateDocumentType != null)
             {
-                throw new UserFriendlyException(string.Format(L("DuplicateDocumentTypeName"),input.DisplayName));
+                throw new UserFriendlyException(string.Format(L("DuplicateDocumentTypeName"), input.DisplayName));
             }
 
             if (input.Id == null)
@@ -185,6 +197,31 @@ namespace TACHYON.Documents.DocumentTypes
             {
                 ObjectMapper.Map(input, translation);
             }
+        }
+
+
+
+
+        public async Task<List<SelectItemDto>> GetDocumentEntitiesForTableDropdown()
+        {
+            var editions = await _editionRepository.GetAll()
+                .Select(x => new SelectItemDto
+                {
+                    Id = x.Id.ToString(),
+                    DisplayName = x.DisplayName
+                }).ToListAsync();
+
+            var entities = await _documentEntityRepository
+                .GetAll()
+                .Where(x => x.Id != 1)
+                .Select(x => new SelectItemDto
+                {
+                    DisplayName = x.DisplayName,
+                    Id = x.Id.ToString()
+                }
+            ).ToListAsync();
+
+            return entities.Concat(editions).ToList();
         }
     }
 }

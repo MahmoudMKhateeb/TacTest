@@ -142,6 +142,7 @@ namespace TACHYON
             configuration.CreateMap<CreateOrEditDocumentTypeTranslationDto, DocumentTypeTranslation>().ReverseMap();
             configuration.CreateMap<DocumentTypeTranslationDto, DocumentTypeTranslation>().ReverseMap();
             configuration.CreateMap<CreateOrEditDocumentsEntityDto, DocumentsEntity>().ReverseMap();
+            configuration.CreateMap<DocumentFileForCreateOrEditDto, DocumentFile>().ReverseMap();
             configuration.CreateMap<DocumentsEntityDto, DocumentsEntity>().ReverseMap();
             configuration.CreateMap<CreateOrEditShippingRequestStatusDto, ShippingRequestStatus>().ReverseMap();
             configuration.CreateMap<ShippingRequestStatusDto, ShippingRequestStatus>().ReverseMap();

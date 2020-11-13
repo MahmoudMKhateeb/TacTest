@@ -203,7 +203,6 @@ NgxBootstrapDatePickerConfigService.registerNgxBootstrapDatePickerLocales();
     DocumentFilesComponent,
 
     ViewDocumentFileModalComponent,
-    CreateOrEditDocumentFileModalComponent,
     DocumentTypesComponent,
 
     ViewDocumentTypeModalComponent,

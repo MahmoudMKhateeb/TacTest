@@ -1,4 +1,4 @@
-import { Component, Injector, OnInit, ViewEncapsulation } from '@angular/core';
+import { Component, Injector, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
 import { UsersComponent } from '@app/admin/users/users.component';
 import { appModuleAnimation } from '@shared/animations/routerTransition';
 import { ImpersonationService } from '@app/admin/users/impersonation.service';
@@ -8,6 +8,7 @@ import { ActivatedRoute } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
 import { LocalStorageService } from '@shared/utils/local-storage.service';
 import { AppConsts } from '@shared/AppConsts';
+import { ViewOrEditEntityDocumentsModalComponent } from '@app/main/documentFiles/documentFiles/documentFilesViewComponents/view-or-edit-entity-documents-modal.componant';
 
 @Component({
   selector: 'app-drivers',
@@ -17,6 +18,8 @@ import { AppConsts } from '@shared/AppConsts';
   animations: [appModuleAnimation()],
 })
 export class DriversComponent extends UsersComponent {
+  @ViewChild('viewOrEditEntityDocumentsModal', { static: true }) viewOrEditEntityDocumentsModal: ViewOrEditEntityDocumentsModalComponent;
+
   constructor(
     injector: Injector,
     public _impersonationService: ImpersonationService,
@@ -28,5 +31,9 @@ export class DriversComponent extends UsersComponent {
   ) {
     super(injector, _impersonationService, _userServiceProxy, _fileDownloadService, _activatedRoute, _httpClient, _localStorageService);
     this.onlyDrivers = true;
+  }
+
+  showDriverkDocuments(driverId) {
+    this.viewOrEditEntityDocumentsModal.show(driverId, 'Driver');
   }
 }

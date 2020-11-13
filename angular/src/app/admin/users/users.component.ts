@@ -42,7 +42,7 @@ export class UsersComponent extends AppComponentBase implements AfterViewInit {
   role = '';
   onlyLockedUsers = false;
   onlyDrivers = false;
-
+  onlyUsers = false;
   constructor(
     injector: Injector,
     public _impersonationService: ImpersonationService,
@@ -69,14 +69,21 @@ export class UsersComponent extends AppComponentBase implements AfterViewInit {
     }
 
     this.primengTableHelper.showLoadingIndicator();
-
+    this.onlyUsers = !this.onlyDrivers;
+    var permissionsTree: string[] = [];
+    if (!this.onlyDrivers) {
+      permissionsTree = this.permissionFilterTreeModal.getSelectedPermissions();
+    } else {
+      permissionsTree = [];
+    }
     this._userServiceProxy
       .getUsers(
         this.filterText,
-        this.permissionFilterTreeModal.getSelectedPermissions(),
+        permissionsTree,
         this.role !== '' ? parseInt(this.role) : undefined,
         this.onlyLockedUsers,
         this.onlyDrivers,
+        this.onlyUsers,
         this.primengTableHelper.getSorting(this.dataTable),
         this.primengTableHelper.getMaxResultCount(this.paginator, event),
         this.primengTableHelper.getSkipCount(this.paginator, event)
@@ -115,13 +122,21 @@ export class UsersComponent extends AppComponentBase implements AfterViewInit {
   }
 
   exportToExcel(): void {
+    this.onlyUsers = !this.onlyDrivers;
+    var permissionsTree: string[] = [];
+    if (!this.onlyDrivers) {
+      permissionsTree = this.permissionFilterTreeModal.getSelectedPermissions();
+    } else {
+      permissionsTree = [];
+    }
     this._userServiceProxy
       .getUsersToExcel(
         this.filterText,
-        this.permissionFilterTreeModal.getSelectedPermissions(),
+        permissionsTree,
         this.role !== '' ? parseInt(this.role) : undefined,
         this.onlyLockedUsers,
         this.onlyDrivers,
+        this.onlyUsers,
         this.primengTableHelper.getSorting(this.dataTable)
       )
       .subscribe((result) => {

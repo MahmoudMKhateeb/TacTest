@@ -70,20 +70,22 @@ export class CreateOrEditDocumentTypeModalComponent extends AppComponentBase {
       this.documentType = new CreateOrEditDocumentTypeDto();
       this.documentType.id = documentTypeId;
       //this.documentType.expirationDate = moment().startOf('day');
-
+      this._documentTypesServiceProxy.getAllDocumentsEntitiesForTableDropdown().subscribe((result) => {
+        this.allDocumentsEntities = result;
+      });
       this.active = true;
       this.modal.show();
-    } else {
+    } else if (documentTypeId) {
       this._documentTypesServiceProxy.getDocumentTypeForEdit(documentTypeId).subscribe((result) => {
         this.documentType = result.documentType;
-
-        this.active = true;
-        this.modal.show();
+        this._documentTypesServiceProxy.getAllDocumentsEntitiesForTableDropdown().subscribe((result) => {
+          this.allDocumentsEntities = result;
+          this.active = true;
+          this.modal.show();
+        });
       });
     }
-    this._documentTypesServiceProxy.getAllDocumentsEntitiesForTableDropdown().subscribe((result) => {
-      this.allDocumentsEntities = result;
-    });
+
     this._documentFilesServiceProxy.getAllEditionsForDropdown().subscribe((result) => {
       this.editions = result;
     });

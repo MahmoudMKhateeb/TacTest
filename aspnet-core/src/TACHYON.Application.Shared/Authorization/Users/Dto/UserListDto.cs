@@ -25,6 +25,7 @@ namespace TACHYON.Authorization.Users.Dto
         public List<UserListRoleDto> Roles { get; set; }
 
         public bool IsActive { get; set; }
+        public bool IsMissingDocumentFiles { get; set; }
 
         public DateTime CreationTime { get; set; }
     }

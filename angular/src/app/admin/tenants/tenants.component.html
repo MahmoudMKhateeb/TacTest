@@ -147,7 +147,7 @@
                           {{ 'Actions' | localize }}
                         </button>
                         <ul class="dropdown-menu z-index-1000" *dropdownMenu>
-                          <li [class.disabled]="!record.isActive">
+                          <li *ngIf="record.editionDisplayName != null" [class.disabled]="!record.isActive">
                             <a
                               href="javascript:;"
                               class="dropdown-item"
@@ -202,7 +202,7 @@
                     </td>
                     <td>
                       <span class="ui-column-title">{{ 'Edition' | localize }}</span>
-                      {{ record.editionDisplayName }}
+                      {{ record.editionDisplayName == null ? 'None Chosen' : record.editionDisplayName }}
                     </td>
                     <td>
                       <span class="ui-column-title">{{ 'SubscriptionEndDateUtc' | localize }}</span>

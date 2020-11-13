@@ -55,7 +55,7 @@ namespace TACHYON.Documents.DocumentFiles.Exporting
                         _ => _timeZoneConverter.Convert(_.DocumentFile.ExpirationDate, _abpSession.TenantId, _abpSession.GetUserId()),
                         _ => _.DocumentFile.IsAccepted,
                         _ => _.DocumentTypeDisplayName,
-                        _ => _.TruckPlateNumber,
+                        _ => _.TruckId,
                         _ => _.TrailerTrailerCode,
                         _ => _.UserName,
                         _ => _.RoutStepDisplayName

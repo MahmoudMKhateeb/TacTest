@@ -126,6 +126,10 @@ export class CreateTenantModalComponent extends AppComponentBase {
   }
 
   save(): void {
+    if (this.tenant.countryId == -2 || this.tenant.cityId == -2) {
+      this.notify.error('please make sure you choose the country and the city!');
+      return;
+    }
     this.saving = true;
 
     if (this.setRandomPassword) {

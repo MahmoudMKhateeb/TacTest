@@ -16,7 +16,7 @@ namespace TACHYON.Trucks.Dtos
 
         //public DateTime LicenseExpirationDate { get; set; }
 
-        public bool IsAttachable { get; set; }
+        //public bool IsAttachable { get; set; }
 
         public string Note { get; set; }
 

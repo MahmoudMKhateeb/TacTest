@@ -30,33 +30,29 @@ namespace TACHYON.Authorization.Users.Exporting
         public FileDto ExportToFile(List<UserListDto> userListDtos)
         {
             return CreateExcelPackage(
-                "UserList.xlsx",
+                "DriverList.xlsx",
                 excelPackage =>
                 {
                     var sheet = excelPackage.CreateSheet(L("Users"));
 
                     AddHeader(
                         sheet,
-                        L("Name"),
-                        L("Surname"),
-                        L("UserName"),
+                        L("Full Name"),
                         L("PhoneNumber"),
                         L("EmailAddress"),
-                        L("EmailConfirm"),
-                        L("Roles"),
+                        //L("EmailConfirm"),
+                        //L("Roles"),
                         L("Active"),
                         L("CreationTime")
                         );
 
                     AddObjects(
                         sheet, 2, userListDtos,
-                        _ => _.Name,
-                        _ => _.Surname,
-                        _ => _.UserName,
+                        _ => _.Name +" "+_.Surname,
                         _ => _.PhoneNumber,
                         _ => _.EmailAddress,
-                        _ => _.IsEmailConfirmed,
-                        _ => _.Roles.Select(r => r.RoleName).JoinAsString(", "),
+                        //_ => _.IsEmailConfirmed,
+                        //_ => _.Roles.Select(r => r.RoleName).JoinAsString(", "),
                         _ => _.IsActive,
                         _ => _timeZoneConverter.Convert(_.CreationTime, _abpSession.TenantId, _abpSession.GetUserId())
                         );
@@ -64,10 +60,10 @@ namespace TACHYON.Authorization.Users.Exporting
                     for (var i = 1; i <= userListDtos.Count; i++)
                     {
                         //Formatting cells
-                        SetCellDataFormat(sheet.GetRow(i).Cells[8], "yyyy-mm-dd");
+                        SetCellDataFormat(sheet.GetRow(i).Cells[4], "yyyy-mm-dd");
                     }
 
-                    for (var i = 0; i < 9; i++)
+                    for (var i = 0; i < 5; i++)
                     {
                         sheet.AutoSizeColumn(i);
                     }

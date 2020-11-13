@@ -56,10 +56,13 @@ namespace TACHYON.Documents.DocumentFiles.Dtos
         public long? RoutStepId { get; set; }
 
         public string Number { get; set; }
-
         public string Notes { get; set; }
         public string HijriExpirationDate { get; set; }
 
+
+        //Entity ID is the id of the :truck, user,trailer, shipment or any other entity
+        public string EntityId { get; set; }
+        public string EntityType { get; set; }
 
     }
 }

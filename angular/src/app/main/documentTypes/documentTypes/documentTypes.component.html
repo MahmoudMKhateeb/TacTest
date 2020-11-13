@@ -69,7 +69,12 @@
                 <div class="col-md-3">
                   <div class="form-group">
                     <label for="RequiredFromFilter">{{ l('RequiredFrom') }}</label>
-                    <input type="text" class="form-control" id="RequiredFromFilter" name="requiredFromFilter" [(ngModel)]="requiredFromFilter" />
+                    <select class="form-control" name="requiredFromFilter" id="RequiredFromFilter" [(ngModel)]="requiredFromFilter">
+                      <option value="">{{ l('RequiredFrom') }}</option>
+                      <option *ngFor="let entity of entityList" [value]="entity.displayName">{{ entity.displayName }}</option>
+                    </select>
+                    <!-- <label for="RequiredFromFilter">{{ l('RequiredFrom') }}</label>
+                    <input type="text" class="form-control" id="RequiredFromFilter" name="requiredFromFilter" [(ngModel)]="requiredFromFilter" /> -->
                   </div>
                 </div>
               </div>
@@ -134,11 +139,7 @@
                       {{ l('IsRequired') }}
                       <p-sortIcon field="documentType.isRequired"></p-sortIcon>
                     </th>
-                    <th style="width: 150px;" pSortableColumn="hasExpirationDate">
-                      {{ l('HasExpirationDate') }}
-                      <p-sortIcon field="documentType.hasExpirationDate"></p-sortIcon>
-                    </th>
-                    <th style="width: 150px;" pSortableColumn="requiredFrom">
+                    <th style="width: 150px;" pSortableColumn="documentsEntityId">
                       {{ l('RequiredFrom') }}
                       <p-sortIcon field="documentType.requiredFrom"></p-sortIcon>
                     </th>
@@ -146,34 +147,37 @@
                       {{ l('SpecialConstant') }}
                       <p-sortIcon field="documentType.specialConstant"></p-sortIcon>
                     </th>
-                    <th style="width: 150px;" pSortableColumn="inActiveToleranceDays ">
-                      {{ l('InActiveToleranceDays') }}
-                      <p-sortIcon field="documentType.inActiveToleranceDays"></p-sortIcon>
+                    <th style="width: 200px;" pSortableColumn="hasExpirationDate">
+                      {{ l('HasExpirationDate') }}
+                      <p-sortIcon field="documentType.hasExpirationDate"></p-sortIcon>
                     </th>
-                    <th style="width: 150px;" pSortableColumn="expirationAlertDays">
+                    <th style="width: 200px;" pSortableColumn="expirationAlertDays">
                       {{ l('ExpirationAlertDays') }}
                       <p-sortIcon field="documentType.expirationAlertDays"></p-sortIcon>
                     </th>
-
-                    <th style="width: 150px;" pSortableColumn="IsNumberUnique">
-                      {{ l('IsNumberUnique') }}
-                      <p-sortIcon field="documentType.isNumberUnique"></p-sortIcon>
+                    <th style="width: 200px;" pSortableColumn="inActiveToleranceDays ">
+                      {{ l('InActiveToleranceDays') }}
+                      <p-sortIcon field="documentType.inActiveToleranceDays"></p-sortIcon>
                     </th>
-                    <th style="width: 150px;" pSortableColumn="hasHijriExpirationDate">
-                      {{ l('HasHijriExpirationDate') }}
-                      <p-sortIcon field="documentType.hasHijriExpirationDate"></p-sortIcon>
+                    <th style="width: 200px;" pSortableColumn="inActiveAccountExpired">
+                      {{ l('InActiveAccountExpired') }}
+                      <p-sortIcon field="documentType.inActiveAccountExpired"></p-sortIcon>
                     </th>
                     <th style="width: 150px;" pSortableColumn="hasNumber">
                       {{ l('HasNumber') }}
                       <p-sortIcon field="documentType.hasNumber"></p-sortIcon>
                     </th>
+                    <th style="width: 150px;" pSortableColumn="isNumberUnique">
+                      {{ l('IsNumberUnique') }}
+                      <p-sortIcon field="documentType.isNumberUnique"></p-sortIcon>
+                    </th>
+                    <th style="width: 190px;" pSortableColumn="hasHijriExpirationDate">
+                      {{ l('HasHijriExpirationDate') }}
+                      <p-sortIcon field="documentType.hasHijriExpirationDate"></p-sortIcon>
+                    </th>
                     <th style="width: 150px;" pSortableColumn="hasNotes">
                       {{ l('HasNotes') }}
                       <p-sortIcon field="documentType.hasNotes"></p-sortIcon>
-                    </th>
-                    <th style="width: 150px;" pSortableColumn="inActiveAccountExpired">
-                      {{ l('InActiveAccountExpired') }}
-                      <p-sortIcon field="documentType.inActiveAccountExpired"></p-sortIcon>
                     </th>
                   </tr>
                 </ng-template>
@@ -185,9 +189,9 @@
                           <i class="fa fa-cog"></i><span class="caret"></span> {{ l('Actions') }}
                         </button>
                         <ul class="dropdown-menu" *dropdownMenu>
-                          <li>
+                          <!-- <li>
                             <a href="javascript:;" class="dropdown-item" (click)="viewDocumentTypeModal.show(record)">{{ l('View') }}</a>
-                          </li>
+                          </li> -->
                           <li>
                             <a
                               href="javascript:;"
@@ -223,49 +227,40 @@
                       </div>
                     </td>
                     <td style="width: 150px;">
+                      <span class="ui-column-title"> {{ l('RequiredFrom') }}</span>
+                      {{ record.documentType.requiredFrom }}
+                    </td>
+
+                    <td style="width: 150px;">
+                      <span class="ui-column-title"> {{ l('SpecialConstant') }}</span>
+                      {{ record.documentType.specialConstant }}
+                    </td>
+
+                    <td style="width: 200px;">
                       <span class="ui-column-title"> {{ l('HasExpirationDate') }}</span>
                       <div *ngIf="record.documentType.hasExpirationDate" class="text-center">
                         <i class="fa fa-check-circle text-success" title="True"></i>
                       </div>
                       <div *ngIf="!record.documentType.hasExpirationDate" class="text-center"><i class="fa fa-times-circle" title="False"></i></div>
                     </td>
-                    <td style="width: 150px;">
-                      <span class="ui-column-title"> {{ l('RequiredFrom') }}</span>
-                      {{ record.documentType.requiredFrom }}
-                    </td>
-                    <td style="width: 150px;">
-                      <span class="ui-column-title"> {{ l('SpecialConstant') }}</span>
-                      {{ record.documentType.specialConstant }}
-                    </td>
-                    <td style="width: 150px;">
-                      <span class="ui-column-title"> {{ l('InActiveToleranceDays') }}</span>
-                      {{ record.documentType.inActiveToleranceDays }}
-                    </td>
-                    <td style="width: 150px;">
+                    <td style="width: 200px;">
                       <span class="ui-column-title"> {{ l('ExpirationAlertDays') }}</span>
-                      {{ record.documentType.expirationAlertDays }}
+                      {{ record.documentType.expirationAlertDays == null ? '-' : record.documentType.expirationAlertDays }}
                     </td>
 
-                    <td style="width: 150px;">
-                      <span class="ui-column-title"> {{ l('IsNumberUnique') }}</span>
-                      <div *ngIf="record.documentType.isNumberUnique" class="text-center">
+                    <td style="width: 200px;">
+                      <span class="ui-column-title"> {{ l('InActiveToleranceDays') }}</span>
+                      {{ record.documentType.inActiveToleranceDays == null ? '-' : record.documentType.inActiveToleranceDays }}
+                    </td>
+                    <td style="width: 200px;">
+                      <span class="ui-column-title"> {{ l('InActiveAccountExpired') }}</span>
+                      <div *ngIf="record.documentType.inActiveAccountExpired" class="text-center">
                         <i class="fa fa-check-circle text-success" title="True"></i>
                       </div>
-                      <div *ngIf="!record.documentType.isNumberUnique" class="text-center">
+                      <div *ngIf="!record.documentType.inActiveAccountExpired" class="text-center">
                         <i class="fa fa-times-circle" title="False"></i>
                       </div>
                     </td>
-
-                    <td style="width: 150px;">
-                      <span class="ui-column-title"> {{ l('HasHijriExpirationDate') }}</span>
-                      <div *ngIf="record.documentType.hasHijriExpirationDate" class="text-center">
-                        <i class="fa fa-check-circle text-success" title="True"></i>
-                      </div>
-                      <div *ngIf="!record.documentType.hasHijriExpirationDate" class="text-center">
-                        <i class="fa fa-times-circle" title="False"></i>
-                      </div>
-                    </td>
-
                     <td style="width: 150px;">
                       <span class="ui-column-title"> {{ l('HasNumber') }}</span>
                       <div *ngIf="record.documentType.hasNumber" class="text-center">
@@ -276,20 +271,31 @@
                       </div>
                     </td>
                     <td style="width: 150px;">
+                      <span class="ui-column-title"> {{ l('IsNumberUnique') }}</span>
+                      <div *ngIf="record.documentType.isNumberUnique" class="text-center">
+                        <i class="fa fa-check-circle text-success" title="True"></i>
+                      </div>
+                      <div *ngIf="!record.documentType.isNumberUnique" class="text-center">
+                        <i class="fa fa-times-circle" title="False"></i>
+                      </div>
+                    </td>
+
+                    <td style="width: 190px;">
+                      <span class="ui-column-title"> {{ l('HasHijriExpirationDate') }}</span>
+                      <div *ngIf="record.documentType.hasHijriExpirationDate" class="text-center">
+                        <i class="fa fa-check-circle text-success" title="True"></i>
+                      </div>
+                      <div *ngIf="!record.documentType.hasHijriExpirationDate" class="text-center">
+                        <i class="fa fa-times-circle" title="False"></i>
+                      </div>
+                    </td>
+
+                    <td style="width: 150px;">
                       <span class="ui-column-title"> {{ l('HasNotes') }}</span>
                       <div *ngIf="record.documentType.hasNotes" class="text-center">
                         <i class="fa fa-check-circle text-success" title="True"></i>
                       </div>
                       <div *ngIf="!record.documentType.hasNotes" class="text-center">
-                        <i class="fa fa-times-circle" title="False"></i>
-                      </div>
-                    </td>
-                    <td style="width: 150px;">
-                      <span class="ui-column-title"> {{ l('InActiveAccountExpired') }}</span>
-                      <div *ngIf="record.documentType.inActiveAccountExpired" class="text-center">
-                        <i class="fa fa-check-circle text-success" title="True"></i>
-                      </div>
-                      <div *ngIf="!record.documentType.inActiveAccountExpired" class="text-center">
                         <i class="fa fa-times-circle" title="False"></i>
                       </div>
                     </td>
@@ -319,6 +325,6 @@
       </div>
     </div>
     <createOrEditDocumentTypeModal #createOrEditDocumentTypeModal (modalSave)="getDocumentTypes()"></createOrEditDocumentTypeModal>
-    <viewDocumentTypeModal #viewDocumentTypeModal></viewDocumentTypeModal>
+    <!-- <viewDocumentTypeModal #viewDocumentTypeModal></viewDocumentTypeModal> -->
   </div>
 </div>

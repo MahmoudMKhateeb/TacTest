@@ -47,11 +47,12 @@ export class CreateOrEditDriverModalComponent extends AppComponentBase {
   user: UserEditDto = new UserEditDto();
   roles: UserRoleDto[];
   sendActivationEmail = true;
-  setRandomPassword = true;
+  setRandomPassword = false;
   passwordComplexityInfo = '';
   profilePicture: string;
   createOrEditDocumentFileDtos!: CreateOrEditDocumentFileDto[];
-
+  nationalities = [];
+  hasValidationErorr = false;
   /**
    * required documents fileUploader options
    * @private
@@ -77,7 +78,8 @@ export class CreateOrEditDriverModalComponent extends AppComponentBase {
   allOrganizationUnits: OrganizationUnitDto[];
   memberedOrganizationUnits: string[];
   userPasswordRepeat = '';
-
+  isUserNameValid = false;
+  isWaintingUserNameValidation = false;
   constructor(
     injector: Injector,
     private _userService: UserServiceProxy,
@@ -92,12 +94,11 @@ export class CreateOrEditDriverModalComponent extends AppComponentBase {
   show(userId?: number): void {
     if (!userId) {
       //RequiredDocuments
-      this._documentFilesServiceProxy.getDriverRequiredDocumentFiles().subscribe((result) => {
+      this._documentFilesServiceProxy.getDriverRequiredDocumentFiles('').subscribe((result) => {
         this.createOrEditDocumentFileDtos = result;
       });
-
       this.active = true;
-      this.setRandomPassword = true;
+      this.setRandomPassword = false;
       this.sendActivationEmail = true;
     }
 
@@ -130,6 +131,8 @@ export class CreateOrEditDriverModalComponent extends AppComponentBase {
     });
     this.initDocsUploader();
   }
+
+  getDriversNationalites() {}
 
   setPasswordComplexityInfo(): void {
     this.passwordComplexityInfo = '<ul>';
@@ -194,6 +197,7 @@ export class CreateOrEditDriverModalComponent extends AppComponentBase {
     input.assignedRoleNames = _.map(_.filter(this.roles, { isAssigned: true, inheritedFromOrganizationUnit: false }), (role) => role.roleName);
 
     //docs
+
     input.createOrEditDocumentFileDtos = this.createOrEditDocumentFileDtos;
 
     this.saving = true;
@@ -267,7 +271,6 @@ export class CreateOrEditDriverModalComponent extends AppComponentBase {
 
       if (resp.success) {
         //attach each fileToken to his CreateOrEditDocumentFileDto
-        console.log(item.file);
         this.createOrEditDocumentFileDtos.find(
           (x) => x.name === item.file.name && x.extn === item.file.type
         ).updateDocumentFileInput = new UpdateDocumentFileInput({ fileToken: resp.result.fileToken });
@@ -278,7 +281,6 @@ export class CreateOrEditDriverModalComponent extends AppComponentBase {
 
     this.DocsUploader.onErrorItem = (item, response, status) => {
       const resp = <IAjaxResponse>JSON.parse(response);
-      console.log(resp);
     };
 
     this.DocsUploader.onCompleteAll = () => {
@@ -302,5 +304,13 @@ export class CreateOrEditDriverModalComponent extends AppComponentBase {
     }
 
     return s4() + s4() + '-' + s4() + '-' + s4() + '-' + s4() + '-' + s4() + s4() + s4();
+  }
+
+  CheckIfDriverUserNameIsValid(userName: string) {
+    this.isWaintingUserNameValidation = true;
+    this._userService.checkIfUserNameValid(userName).subscribe((res) => {
+      this.isWaintingUserNameValidation = false;
+      this.isUserNameValid = res;
+    });
   }
 }

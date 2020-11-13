@@ -1,9 +1,8 @@
-﻿import { Component, Injector, ViewEncapsulation, ViewChild } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
-import { DocumentTypesServiceProxy, DocumentTypeDto } from '@shared/service-proxies/service-proxies';
+﻿import { Component, Injector, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
+import { DocumentTypeDto, DocumentTypesServiceProxy, SelectItemDto, TokenAuthServiceProxy } from '@shared/service-proxies/service-proxies';
 import { NotifyService } from 'abp-ng2-module';
 import { AppComponentBase } from '@shared/common/app-component-base';
-import { TokenAuthServiceProxy } from '@shared/service-proxies/service-proxies';
 import { CreateOrEditDocumentTypeModalComponent } from './create-or-edit-documentType-modal.component';
 
 import { ViewDocumentTypeModalComponent } from './view-documentType-modal.component';
@@ -12,15 +11,13 @@ import { Table } from 'primeng/table';
 import { Paginator } from 'primeng/paginator';
 import { LazyLoadEvent } from 'primeng/public_api';
 import { FileDownloadService } from '@shared/utils/file-download.service';
-import * as _ from 'lodash';
-import * as moment from 'moment';
 
 @Component({
   templateUrl: './documentTypes.component.html',
   encapsulation: ViewEncapsulation.None,
   animations: [appModuleAnimation()],
 })
-export class DocumentTypesComponent extends AppComponentBase {
+export class DocumentTypesComponent extends AppComponentBase implements OnInit {
   @ViewChild('createOrEditDocumentTypeModal', { static: true }) createOrEditDocumentTypeModal: CreateOrEditDocumentTypeModalComponent;
   @ViewChild('viewDocumentTypeModalComponent', { static: true }) viewDocumentTypeModal: ViewDocumentTypeModalComponent;
 
@@ -32,7 +29,8 @@ export class DocumentTypesComponent extends AppComponentBase {
   displayNameFilter = '';
   isRequiredFilter = -1;
   hasExpirationDateFilter = -1;
-  requiredFromFilter = '';
+  requiredFromFilter = -1;
+  entityList: SelectItemDto[] = [];
 
   constructor(
     injector: Injector,
@@ -43,6 +41,10 @@ export class DocumentTypesComponent extends AppComponentBase {
     private _fileDownloadService: FileDownloadService
   ) {
     super(injector);
+  }
+
+  ngOnInit(): void {
+    this.getDocumentsEntityLookUp();
   }
 
   getDocumentTypes(event?: LazyLoadEvent) {
@@ -92,9 +94,21 @@ export class DocumentTypesComponent extends AppComponentBase {
 
   exportToExcel(): void {
     this._documentTypesServiceProxy
-      .getDocumentTypesToExcel(this.filterText, this.displayNameFilter, this.isRequiredFilter, this.hasExpirationDateFilter, this.requiredFromFilter)
+      .getDocumentTypesToExcel(
+        this.filterText,
+        this.displayNameFilter,
+        this.isRequiredFilter,
+        this.hasExpirationDateFilter,
+        this.requiredFromFilter.toString()
+      )
       .subscribe((result) => {
         this._fileDownloadService.downloadTempFile(result);
       });
+  }
+
+  getDocumentsEntityLookUp() {
+    this._documentTypesServiceProxy.getDocumentEntitiesForTableDropdown().subscribe((result) => {
+      this.entityList = result;
+    });
   }
 }

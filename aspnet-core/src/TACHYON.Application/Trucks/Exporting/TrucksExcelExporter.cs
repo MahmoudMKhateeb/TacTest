@@ -50,7 +50,6 @@ namespace TACHYON.Trucks.Exporting
                         _ => _.Truck.PlateNumber,
                         _ => _.Truck.ModelName,
                         _ => _.Truck.ModelYear,
-                        _ => _.Truck.IsAttachable,
                         _ => _.Truck.Note,
                         _ => _.TrucksTypeDisplayName,
                         _ => _.TruckStatusDisplayName,

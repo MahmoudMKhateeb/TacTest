@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using TACHYON.Documents.DocumentFiles.Dtos;
+using TACHYON.Documents.DocumentsEntities.Dtos;
 using TACHYON.Dto;
 
 
@@ -21,7 +22,7 @@ namespace TACHYON.Documents.DocumentFiles
 
         Task Delete(EntityDto<Guid> input);
 
-        Task<FileDto> GetDocumentFilesToExcel(GetAllDocumentFilesForExcelInput input);
+        //Task<FileDto> GetDocumentFilesToExcel(GetAllDocumentFilesForExcelInput input);
 
 
         Task<List<DocumentFileDocumentTypeLookupTableDto>> GetAllDocumentTypeForTableDropdown();
@@ -35,5 +36,12 @@ namespace TACHYON.Documents.DocumentFiles
         Task<List<DocumentFileRoutStepLookupTableDto>> GetAllRoutStepForTableDropdown();
 
         Task<FileDto> GetDocumentFileDto(Guid documentFileId);
+
+        //Task<List<GetDocumentEntitiesLookupDto>> GetDocumentEntitiesForDocumentFile();
+        Task<List<CreateOrEditDocumentFileDto>> GetDriverRequiredDocumentFiles(string userId);
+        Task<List<CreateOrEditDocumentFileDto>> GetTruckRequiredDocumentFiles(string truckId);
+
+        //bool GetIsCurrentTenantHost();
+
     }
 }

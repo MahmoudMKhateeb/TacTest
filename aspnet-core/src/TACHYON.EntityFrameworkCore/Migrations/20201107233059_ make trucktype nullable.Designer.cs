@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using TACHYON.EntityFrameworkCore;
 
 namespace TACHYON.Migrations
 {
     [DbContext(typeof(TACHYONDbContext))]
-    partial class TACHYONDbContextModelSnapshot : ModelSnapshot
+    [Migration("20201107233059_ make trucktype nullable")]
+    partial class maketrucktypenullable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -3341,7 +3343,7 @@ namespace TACHYON.Migrations
                     b.Property<int?>("TransportTypeId")
                         .HasColumnType("int");
 
-                    b.Property<long?>("TruckStatusId")
+                    b.Property<long>("TruckStatusId")
                         .HasColumnType("bigint");
 
                     b.Property<int?>("TruckSubtypeId")
@@ -4227,7 +4229,9 @@ namespace TACHYON.Migrations
 
                     b.HasOne("TACHYON.Trucks.TruckStatus", "TruckStatusFk")
                         .WithMany()
-                        .HasForeignKey("TruckStatusId");
+                        .HasForeignKey("TruckStatusId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("TACHYON.Trucks.TruckCategories.TruckSubtypes.TruckSubtype", "TruckSubtypeFk")
                         .WithMany()
