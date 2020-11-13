@@ -1,12 +1,15 @@
 <div class="login-form" [@routerTransition]>
   <div class="pb-13 pt-lg-0 pt-5">
-    <h3 class="font-weight-bolder text-dark font-size-h4 font-size-h1-lg">
+    <h3 class="font-weight-bolder text-dark font-size-h1-xxl text-left text-red">
       {{ 'LogIn' | localize }}
     </h3>
   </div>
   <!--begin::Form-->
   <form #loginForm="ngForm" class="login-form form" method="post" method="post" (ngSubmit)="login()">
     <div class="form-group">
+      <div class="d-flex justify-content-between mt-n5">
+        <label class="font-size-h6 font-weight-bolder text-dark pt-5">{{ 'Email' | localize }} *</label>
+      </div>
       <input
         #userNameOrEmailAddressInput="ngModel"
         [(ngModel)]="loginService.authenticateModel.userNameOrEmailAddress"
@@ -14,7 +17,6 @@
         class="form-control form-control-solid h-auto py-7 px-6 rounded-lg font-size-h6"
         type="email"
         autocomplete="new-password"
-        placeholder="{{ 'Email' | localize }} *"
         name="userNameOrEmailAddress"
         required
         email="true"
@@ -23,13 +25,15 @@
     </div>
 
     <div class="form-group">
+      <div class="d-flex justify-content-between mt-n5">
+        <label class="font-size-h6 font-weight-bolder text-dark pt-5">{{ 'Password' | localize }} *</label>
+      </div>
       <input
         #passwordInput="ngModel"
         [(ngModel)]="loginService.authenticateModel.password"
         class="form-control form-control-solid h-auto py-7 px-6 rounded-lg font-size-h6"
         type="password"
         autocomplete="new-password"
-        placeholder="{{ 'Password' | localize }} *"
         name="password"
         required
         maxlength="32"
@@ -38,10 +42,12 @@
     </div>
 
     <div class="form-group d-flex justify-content-between mt-4">
-      <label class="checkbox checkbox-outline">
-        <input [(ngModel)]="loginService.rememberMe" type="checkbox" name="rememberMe" value="true" />{{ 'RememberMe' | localize }}
-        <span></span>
-      </label>
+      <div class="checkbox-inline">
+        <label class="checkbox m-0 font-weight-bold">
+          <input [(ngModel)]="loginService.rememberMe" type="checkbox" name="rememberMe" value="true" />
+          <span></span>{{ 'RememberMe' | localize }}</label
+        >
+      </div>
       <a
         routerLink="/account/forgot-password"
         id="forget-password"
