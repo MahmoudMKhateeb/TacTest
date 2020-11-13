@@ -13,7 +13,6 @@ import {
   CreateOrEditDocumentFileDto,
   DocumentFilesServiceProxy,
   UpdateDocumentFileInput,
-  DocumentFileForCreateOrEditDto,
 } from '@shared/service-proxies/service-proxies';
 import { ModalDirective } from 'ngx-bootstrap/modal';
 import { IOrganizationUnitsTreeComponentData, OrganizationUnitsTreeComponent } from '../../shared/organization-unit-tree.component';

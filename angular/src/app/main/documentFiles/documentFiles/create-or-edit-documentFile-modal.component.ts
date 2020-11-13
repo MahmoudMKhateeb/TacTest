@@ -1,23 +1,20 @@
-﻿import { Component, ViewChild, Injector, Output, EventEmitter } from '@angular/core';
+﻿import { Component, EventEmitter, Injector, Output, ViewChild } from '@angular/core';
 import { ModalDirective } from 'ngx-bootstrap/modal';
 import {
-  DocumentFilesServiceProxy,
   CreateOrEditDocumentFileDto,
-  DocumentFileDocumentTypeLookupTableDto,
-  DocumentFileTruckLookupTableDto,
-  DocumentFileTrailerLookupTableDto,
-  DocumentFileUserLookupTableDto,
   DocumentFileRoutStepLookupTableDto,
-  UpdateDocumentFileInput,
-  DocumentFileForCreateOrEditDto,
+  DocumentFilesServiceProxy,
+  DocumentFileTrailerLookupTableDto,
+  DocumentFileTruckLookupTableDto,
+  DocumentFileUserLookupTableDto,
   DocumentTypeDto,
+  UpdateDocumentFileInput,
 } from '@shared/service-proxies/service-proxies';
 import { AppComponentBase } from '@shared/common/app-component-base';
 import * as moment from 'moment';
-import { FileItem, FileSelectDirective, FileUploader, FileUploaderOptions } from '@node_modules/ng2-file-upload';
+import { FileItem, FileUploader, FileUploaderOptions } from '@node_modules/ng2-file-upload';
 import { AppConsts } from '@shared/AppConsts';
 import { IAjaxResponse, TokenService } from '@node_modules/abp-ng2-module';
-import { base64ToFile } from '@node_modules/ngx-image-cropper';
 import { finalize } from '@node_modules/rxjs/internal/operators';
 import { NgbDateStruct } from '@ng-bootstrap/ng-bootstrap';
 import { DateFormatterService } from '@app/admin/required-document-files/hijri-gregorian-datepicker/date-formatter.service';
@@ -29,38 +26,23 @@ import { DateType } from '@app/admin/required-document-files/hijri-gregorian-dat
   providers: [DateFormatterService],
 })
 export class CreateOrEditDocumentFileModalComponent extends AppComponentBase {
+  //region fields
   @ViewChild('createOrEditModal', { static: true }) modal: ModalDirective;
-
   @Output() modalSave: EventEmitter<any> = new EventEmitter<any>();
-
   active = false;
   saving = false;
 
-  documentFile: DocumentFileForCreateOrEditDto = new DocumentFileForCreateOrEditDto();
+  documentFile: CreateOrEditDocumentFileDto = new CreateOrEditDocumentFileDto();
 
   documentTypeDisplayName = '';
-  entityId = '';
-  entityType = '';
-  // truckPlateNumber = '';
-  // trailerTrailerCode = '';
-  // userName = '';
-  // routStepDisplayName = '';
+  documentEntity = '';
   selectedDateTypeHijri = DateType.Hijri; // or DateType.Gregorian
-  allDocumentTypes: CreateOrEditDocumentFileDto[] = [];
-  allTrucks: DocumentFileTruckLookupTableDto[];
-  allTrailers: DocumentFileTrailerLookupTableDto[];
-  allUsers: DocumentFileUserLookupTableDto[];
-  allRoutSteps: DocumentFileRoutStepLookupTableDto[];
+  CreateOrEditDocumentFileDtoList: CreateOrEditDocumentFileDto[] = [];
+  // allTrucks: DocumentFileTruckLookupTableDto[];
+  // allTrailers: DocumentFileTrailerLookupTableDto[];
+  // allUsers: DocumentFileUserLookupTableDto[];
+  // allRoutSteps: DocumentFileRoutStepLookupTableDto[];
   public DocsUploader: FileUploader;
-  // numberpattern = '^[^`|~|!|@|#|$|%|^|&|*|(|)|+|=|[|{|]|}|||\\|\'|<|,|>|?|/|"|;|:|]{1,}';
-  private _uploaderOptions: FileUploaderOptions = {};
-
-  /**
-   * required documents fileUploader options
-   * @private
-   */
-  private _DocsUploaderOptions: FileUploaderOptions = {};
-
   /**
    * DocFileUploader onProgressItem progress
    */
@@ -70,7 +52,17 @@ export class CreateOrEditDocumentFileModalComponent extends AppComponentBase {
    */
   docProgressFileName: any;
   fileToken: string;
-  selectedDoctumentTypeDto: DocumentTypeDto = new DocumentTypeDto();
+  // numberpattern = '^[^`|~|!|@|#|$|%|^|&|*|(|)|+|=|[|{|]|}|||\\|\'|<|,|>|?|/|"|;|:|]{1,}';
+  private _uploaderOptions: FileUploaderOptions = {};
+  /**
+   * required documents fileUploader options
+   * @private
+   */
+  private _DocsUploaderOptions: FileUploaderOptions = {};
+  private entityId: string;
+
+  //endregion
+
   constructor(
     injector: Injector,
     private dateFormatterService: DateFormatterService,
@@ -80,39 +72,31 @@ export class CreateOrEditDocumentFileModalComponent extends AppComponentBase {
     super(injector);
   }
 
-  show(entityType: string, entityId: string, documentFileId?: string): void {
+  /**
+   *
+   * @param entityId - is for the Id of entity truckId or driverId or TenantId
+   * @param documentEntity - if for the required document from entity type Driver or Truck or Tenant
+   * @param documentFileId - is for the documentFileId for edit
+   */
+  show(entityId: string, documentEntity: string, documentFileId: string): void {
+    this.documentFile = new CreateOrEditDocumentFileDto();
+    this.documentFile.documentTypeDto = new DocumentTypeDto();
     this.fileToken = '';
+    this.entityId = entityId;
+    this.documentEntity = documentEntity;
+    //create
     if (!documentFileId) {
-      this.entityId = entityId;
-      this.entityType = entityType;
-      this.documentFile = new DocumentFileForCreateOrEditDto();
-      this.documentFile.expirationDate = moment().startOf('day');
-      this.documentTypeDisplayName = '';
-      this.getRequiredDocumentFiles(entityType);
-      this.active = true;
-      this.modal.show();
-    } else {
+      this.getRequiredDocumentFiles(documentEntity);
+    }
+    //edit
+    // tslint:disable-next-line:one-line
+    else {
       this._documentFilesServiceProxy.getDocumentFileForEdit(documentFileId).subscribe((result) => {
-        this.documentFile = result;
-        // this.selectedDoctumentTypeDto = this.documentFile.documentTypeDto;
-        this.active = true;
-        this.modal.show();
+        this.documentFile = result.documentFile;
       });
     }
-
-    // this._documentFilesServiceProxy.getAllTruckForTableDropdown().subscribe((result) => {
-    //   this.allTrucks = result;
-    // });
-    // this._documentFilesServiceProxy.getAllTrailerForTableDropdown().subscribe((result) => {
-    //   this.allTrailers = result;
-    // });
-    // this._documentFilesServiceProxy.getAllUserForTableDropdown().subscribe((result) => {
-    //   this.allUsers = result;
-    // });
-    // this._documentFilesServiceProxy.getAllRoutStepForTableDropdown().subscribe((result) => {
-    //   this.allRoutSteps = result;
-    // });
-
+    this.active = true;
+    this.modal.show();
     this.initDocsUploader();
   }
 
@@ -155,7 +139,7 @@ export class CreateOrEditDocumentFileModalComponent extends AppComponentBase {
       this.documentFile.updateDocumentFileInput.fileToken = this.fileToken;
       if (this.documentFile.id) {
         this._documentFilesServiceProxy
-          .updateDocument(this.documentFile)
+          .createOrEdit(this.documentFile)
           .pipe(
             finalize(() => {
               this.saving = false;
@@ -184,10 +168,11 @@ export class CreateOrEditDocumentFileModalComponent extends AppComponentBase {
   save(): void {
     this.saving = true;
     if (this.DocsUploader.queue.length > 0) {
+      console.log('documentFile', this.documentFile);
       this.DocsUploader.uploadAll();
     } else if (this.documentFile.id) {
       this._documentFilesServiceProxy
-        .updateDocument(this.documentFile)
+        .createOrEdit(this.documentFile)
         .pipe(
           finalize(() => {
             this.saving = false;
@@ -205,23 +190,8 @@ export class CreateOrEditDocumentFileModalComponent extends AppComponentBase {
   }
 
   createDocumentFile() {
-    var createDocumentFile = new CreateOrEditDocumentFileDto();
-
-    createDocumentFile.documentTypeDto = this.selectedDoctumentTypeDto;
-    createDocumentFile.name = this.documentFile.documentTypeDisplayName;
-    createDocumentFile.number = this.documentFile.number;
-    createDocumentFile.notes = this.documentFile.notes;
-    createDocumentFile.expirationDate = this.documentFile.expirationDate;
-    createDocumentFile.hijriExpirationDate = this.documentFile.hijriExpirationDate;
-    createDocumentFile.extn = this.documentFile.extn;
-    createDocumentFile.entityId = this.entityId;
-    createDocumentFile.entityType = this.entityType;
-    createDocumentFile.updateDocumentFileInput = this.documentFile.updateDocumentFileInput;
-    createDocumentFile.updateDocumentFileInput.fileToken = this.fileToken;
-    createDocumentFile.documentTypeId = this.documentFile.documentTypeId;
-
     this._documentFilesServiceProxy
-      .createDocument(createDocumentFile)
+      .createOrEdit(this.documentFile)
       .pipe(
         finalize(() => {
           this.saving = false;
@@ -254,7 +224,7 @@ export class CreateOrEditDocumentFileModalComponent extends AppComponentBase {
     return s4() + s4() + '-' + s4() + '-' + s4() + '-' + s4() + '-' + s4() + s4() + s4();
   }
 
-  selectedDateChange($event: NgbDateStruct, item: DocumentFileForCreateOrEditDto) {
+  selectedDateChange($event: NgbDateStruct, item: CreateOrEditDocumentFileDto) {
     if ($event != null && $event.year < 2000) {
       this.dateFormatterService.SetFormat('DD/MM/YYYY', 'iDD/iMM/iYYYY');
       const incomingDate = this.dateFormatterService.ToGregorian($event);
@@ -264,7 +234,7 @@ export class CreateOrEditDocumentFileModalComponent extends AppComponentBase {
     }
   }
 
-  DocFileChangeEvent(event: any, item: DocumentFileForCreateOrEditDto): void {
+  DocFileChangeEvent(event: any, item: CreateOrEditDocumentFileDto): void {
     if (event.target.files[0].size > 5242880) {
       //5MB
       this.message.warn(this.l('DocumentFile_Warn_SizeLimit', this.maxDocumentFileBytesUserFriendlyValue));
@@ -276,42 +246,33 @@ export class CreateOrEditDocumentFileModalComponent extends AppComponentBase {
     item.name = event.target.files[0].name;
   }
 
-  // isAcceptedChange() {
-  //   this.documentFile.isRejected = !this.documentFile.isAccepted;
-  // }
-
-  // isRejectedChange() {
-  //   this.documentFile.isAccepted = !this.documentFile.isRejected;
-  // }
-
-  chooseDocumentToBeCreated(documentType: DocumentTypeDto) {
-    // console.log(JSON.stringify(documentType));
-    // console.log(documentType);
-    // console.log(this.selectedDoctumentTypeDto);
-
-    this.documentFile.documentTypeDto = documentType;
-    this.documentFile.documentTypeDisplayName = documentType.displayName;
-    this.documentFile.documentTypeId = documentType.id;
-    this.documentFile.hasNotes = documentType.hasNotes;
-    this.documentFile.hasNumber = documentType.hasNumber;
-    this.documentFile.hasExpirationDate = documentType.hasExpirationDate;
-    this.documentFile.hasHijriExpirationDate = documentType.hasHijriExpirationDate;
-    this.documentFile.numberMaxDigits = documentType.numberMaxDigits;
-    this.documentFile.numberMinDigits = documentType.numberMinDigits;
+  chooseDocumentToBeCreated(id: string) {
+    this.documentFile = this.CreateOrEditDocumentFileDtoList.find((x) => x.documentTypeDto.id == this.Number(id));
   }
 
   getRequiredDocumentFiles(entityType) {
-    if (entityType == 'Truck') {
+    if (entityType === 'Truck') {
       this._documentFilesServiceProxy.getTruckRequiredDocumentFiles(this.entityId).subscribe((result) => {
-        this.allDocumentTypes = result;
-        this.selectedDoctumentTypeDto = this.allDocumentTypes[0].documentTypeDto;
-        this.chooseDocumentToBeCreated(this.allDocumentTypes[0].documentTypeDto);
+        this.CreateOrEditDocumentFileDtoList = result;
+        this.documentFile = this.CreateOrEditDocumentFileDtoList[0];
+        this.initializeDocumentFile();
       });
-    } else if (entityType == 'Driver') {
+    } else if (entityType === 'Driver') {
       this._documentFilesServiceProxy.getDriverRequiredDocumentFiles(this.entityId).subscribe((result) => {
-        this.allDocumentTypes = result;
-        this.chooseDocumentToBeCreated(this.allDocumentTypes[0].documentTypeDto);
+        this.CreateOrEditDocumentFileDtoList = result;
+        this.documentFile = this.CreateOrEditDocumentFileDtoList[0];
+        this.initializeDocumentFile();
       });
     }
+  }
+
+  initializeDocumentFile() {
+    if (this.documentEntity === 'Truck') {
+      this.documentFile.truckId = this.entityId;
+    } else if (this.documentEntity === 'Driver') {
+      this.documentFile.userId = this.Number(this.entityId);
+    }
+    this.documentFile.expirationDate = moment().startOf('day');
+    this.documentTypeDisplayName = '';
   }
 }

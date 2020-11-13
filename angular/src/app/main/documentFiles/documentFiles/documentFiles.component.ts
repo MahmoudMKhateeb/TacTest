@@ -1,6 +1,6 @@
-﻿import { Component, Injector, ViewEncapsulation, ViewChild } from '@angular/core';
+﻿import { Component, Injector, ViewEncapsulation, ViewChild, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { DocumentFilesServiceProxy, DocumentFileDto, GetDocumentEntitiesLookupDto } from '@shared/service-proxies/service-proxies';
+import { DocumentFilesServiceProxy, DocumentFileDto, SelectItemDto } from '@shared/service-proxies/service-proxies';
 import { NotifyService } from 'abp-ng2-module';
 import { AppComponentBase } from '@shared/common/app-component-base';
 import { TokenAuthServiceProxy } from '@shared/service-proxies/service-proxies';
@@ -15,13 +15,14 @@ import { FileDownloadService } from '@shared/utils/file-download.service';
 import { EntityTypeHistoryModalComponent } from '@app/shared/common/entityHistory/entity-type-history-modal.component';
 import * as _ from 'lodash';
 import * as moment from 'moment';
+import session = abp.session;
 
 @Component({
   templateUrl: './documentFiles.component.html',
   encapsulation: ViewEncapsulation.None,
   animations: [appModuleAnimation()],
 })
-export class DocumentFilesComponent extends AppComponentBase {
+export class DocumentFilesComponent extends AppComponentBase implements OnInit {
   @ViewChild('entityTypeHistoryModal', { static: true }) entityTypeHistoryModal: EntityTypeHistoryModalComponent;
   @ViewChild('createOrEditDocumentFileModal', { static: true }) createOrEditDocumentFileModal: CreateOrEditDocumentFileModalComponent;
   @ViewChild('viewDocumentFileModalComponent', { static: true }) viewDocumentFileModal: ViewDocumentFileModalComponent;
@@ -46,7 +47,7 @@ export class DocumentFilesComponent extends AppComponentBase {
   routStepDisplayNameFilter = '';
 
   entityType = 'Tenant';
-  entityTypesList: GetDocumentEntitiesLookupDto[] = [];
+  entityTypesList: SelectItemDto[] = [];
 
   _entityTypeFullName = 'TACHYON.Documents.DocumentFiles.DocumentFile';
   entityHistoryEnabled = false;
@@ -63,16 +64,10 @@ export class DocumentFilesComponent extends AppComponentBase {
   }
 
   ngOnInit(): void {
-    this._documentFilesServiceProxy.getIsCurrentTenantHost().subscribe((res) => {
-      if (res) {
-        this.isHost = true;
-      } else {
-        this.isHost = false;
-      }
-      this.entityType = 'Tenant';
-    });
+    this.isHost = session.tenantId == null;
+    this.entityType = 'Tenant';
 
-    this._documentFilesServiceProxy.getDocumentEntitiesForDocumentFile().subscribe((res) => {
+    this._documentFilesServiceProxy.getDocumentEntitiesForTableDropdown().subscribe((res) => {
       this.entityTypesList = res;
     });
 

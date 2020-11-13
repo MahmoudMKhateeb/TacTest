@@ -302,7 +302,7 @@ namespace TACHYON.Trucks
             {
                 item.TruckId = truckId;
                 item.Name = item.Name + "_" + truckId.ToString();
-                await _documentFilesAppService.CreateDocument(item);
+                await _documentFilesAppService.CreateOrEdit(item);
             }
 
 

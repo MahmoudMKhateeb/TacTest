@@ -3,17 +3,21 @@
     <sub-header [title]="'DocumentFiles' | localize" [description]="'DocumentFilesHeaderInfo' | localize"> </sub-header>
     <div [class]="containerClass">
       <div class="card card-custom gutter-b">
-        <div *ngIf="!isHost" class="card-header" style="align-self: flex-end;">
-          <div style="width: 200px;">
-            <label>Entity Type</label>
-            <select
-              [(ngModel)]="entityType"
-              (change)="SwitchEntityType($event.target.value)"
-              class="form-control form-control-lg custom-select mr-sm-2"
-              style="color: red;"
-            >
-              <option *ngFor="let entityType of entityTypesList" [value]="entityType.displayName">{{ entityType.displayName }}</option>
-            </select>
+        <div class="card-header">
+          <div class="card-toolbar">
+            <div *ngIf="!isHost" style="align-self: flex-end;">
+              <div style="width: 200px;">
+                <label>Entity Type</label>
+                <select
+                  [(ngModel)]="entityType"
+                  (change)="SwitchEntityType($event.target.value)"
+                  class="form-control form-control-lg custom-select mr-sm-2"
+                  style="color: red;"
+                >
+                  <option *ngFor="let entityType of entityTypesList" [value]="entityType.displayName">{{ entityType.displayName }}</option>
+                </select>
+              </div>
+            </div>
           </div>
         </div>
         <div class="card-body">
@@ -112,14 +116,14 @@
                   </div>
                 </div> -->
 
-                <div class="col-md-3">
-                  <div *ngIf="entityType == 'Truck'" class="form-group">
+                <div *ngIf="entityType == 'Truck'" class="col-md-3">
+                  <div class="form-group">
                     <label for="TruckIdFilter">{{ l('Truck ID') }} </label>
                     <input type="text" class="form-control" id="TruckIdFilter" name="truckIdFilter" [(ngModel)]="truckIdFilter" />
                   </div>
                 </div>
-                <div class="col-md-3">
-                  <div *ngIf="entityType == 'Trailer'" class="form-group">
+                <div *ngIf="entityType == 'Trailer'" class="col-md-3">
+                  <div class="form-group">
                     <label for="TrailerTrailerCodeFilter">({{ l('Trailer ID') }}) </label>
                     <input
                       type="text"
@@ -130,9 +134,9 @@
                     />
                   </div>
                 </div>
-                <div class="col-md-3">
-                  <div *ngIf="entityType == 'Driver'" class="form-group">
-                    <label for="UserNameFilter">({{ l('Driver') }}) {{ l('Name') }}</label>
+                <div *ngIf="entityType == 'Driver'" class="col-md-3">
+                  <div class="form-group">
+                    <label for="UserNameFilter">{{ l('Driver') }} </label>
                     <input type="text" class="form-control" id="UserNameFilter" name="userNameFilter" [(ngModel)]="userNameFilter" />
                   </div>
                 </div>

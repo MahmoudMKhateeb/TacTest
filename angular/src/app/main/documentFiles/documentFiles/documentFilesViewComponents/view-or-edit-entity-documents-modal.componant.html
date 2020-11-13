@@ -12,13 +12,17 @@
     <div class="modal-content">
       <div class="modal-header">
         <h4 class="modal-title">
-          <span> {{ l(entityType) }} {{ l('Documents') }}</span>
+          <span> {{ l(documentEntityFilter) }} {{ l('Documents') }}</span>
         </h4>
         <button type="button" class="close" (click)="close()" aria-label="Close" [disabled]="saving">
           <span aria-hidden="true">&times;</span>
         </button>
 
-        <button *ngIf="isMissingDocumentFiles" (click)="createOrEditDocumentFileModal.show(entityType,entityId,null)" class="btn btn-primary blue">
+        <button
+          *ngIf="isMissingDocumentFiles"
+          (click)="createOrEditDocumentFileModal.show(entityIdFilter,documentEntityFilter,null)"
+          class="btn btn-primary blue"
+        >
           <i class="fa fa-plus"></i> {{ l('Add Document') }}
         </button>
       </div>
@@ -46,11 +50,11 @@
                     {{ l('Document Name') }}
                     <p-sortIcon field="documentTypeDisplayName"></p-sortIcon>
                   </th>
-                  <th *ngIf="entityType=='Truck'" style="width: 150px;" pSortableColumn="truckFk.truckId">
+                  <th *ngIf="documentEntityFilter=='Truck'" style="width: 150px;" pSortableColumn="truckFk.truckId">
                     {{ l('Truck ID') }}
                     <p-sortIcon field="truckId"></p-sortIcon>
                   </th>
-                  <th *ngIf="entityType=='Driver'" style="width: 150px;" pSortableColumn="userFk.userId">
+                  <th *ngIf="documentEntityFilter=='Driver'" style="width: 150px;" pSortableColumn="userFk.userId">
                     {{ l('Driver Name') }}
                     <p-sortIcon field="userId"></p-sortIcon>
                   </th>
@@ -86,7 +90,7 @@
                             href="javascript:;"
                             *ngIf="permission.isGranted('Pages.DocumentFiles.Edit')"
                             class="dropdown-item"
-                            (click)="createOrEditDocumentFileModal.show(entityType,entityId,record.documentFile.id)"
+                            (click)="createOrEditDocumentFileModal.show(entityIdFilter,documentEntityFilter,record.documentFile.id)"
                             >{{ l('Edit') }}</a
                           >
                         </li>
@@ -113,11 +117,11 @@
                     <span class="ui-column-title"> {{ l('Document Name') }}</span>
                     {{ record.documentTypeDisplayName }}
                   </td>
-                  <td *ngIf="entityType=='Truck'" style="width: 150px;">
+                  <td *ngIf="documentEntityFilter=='Truck'" style="width: 150px;">
                     <span class="ui-column-title"> {{ l('Truck ID') }}</span>
                     {{ record.truckId }}
                   </td>
-                  <td *ngIf="entityType=='Driver'" style="width: 150px;">
+                  <td *ngIf="documentEntityFilter=='Driver'" style="width: 150px;">
                     <span class="ui-column-title"> {{ l('Driver Name') }}</span>
                     {{ record.userName }}
                   </td>

@@ -16,9 +16,9 @@ namespace TACHYON.Documents.DocumentFiles
 
         Task<GetDocumentFileForViewDto> GetDocumentFileForView(Guid id);
 
-        Task<DocumentFileForCreateOrEditDto> GetDocumentFileForEdit(EntityDto<Guid> input);
+        Task<GetDocumentFileForEditOutput> GetDocumentFileForEdit(EntityDto<Guid> input);
 
-        Task CreateDocument(CreateOrEditDocumentFileDto input);
+        Task CreateOrEdit(CreateOrEditDocumentFileDto input);
 
         Task Delete(EntityDto<Guid> input);
 
@@ -37,11 +37,11 @@ namespace TACHYON.Documents.DocumentFiles
 
         Task<FileDto> GetDocumentFileDto(Guid documentFileId);
 
-        Task<List<GetDocumentEntitiesLookupDto>> GetDocumentEntitiesForDocumentFile();
+        //Task<List<GetDocumentEntitiesLookupDto>> GetDocumentEntitiesForDocumentFile();
         Task<List<CreateOrEditDocumentFileDto>> GetDriverRequiredDocumentFiles(string userId);
-         Task<List<CreateOrEditDocumentFileDto>> GetTruckRequiredDocumentFiles(string truckId);
+        Task<List<CreateOrEditDocumentFileDto>> GetTruckRequiredDocumentFiles(string truckId);
 
-        bool GetIsCurrentTenantHost();
+        //bool GetIsCurrentTenantHost();
 
     }
 }
