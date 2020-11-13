@@ -7,6 +7,7 @@ using Abp.Domain.Uow;
 using Abp.UI;
 using Microsoft.EntityFrameworkCore;
 using TACHYON.Documents.DocumentFiles;
+using TACHYON.Documents.DocumentFiles.Dtos;
 using TACHYON.Documents.DocumentTypes;
 using TACHYON.MultiTenancy;
 using TACHYON.Storage;
@@ -86,16 +87,18 @@ namespace TACHYON.Documents
         /// <returns></returns>
         public async Task<List<DocumentFile>> GetAllTenantActiveRequiredDocumentFilesListAsync(int tenantId)
         {
-            using (CurrentUnitOfWork.DisableFilter(AbpDataFilters.MayHaveTenant, AbpDataFilters.MustHaveTenant))
-            {
+            //using (CurrentUnitOfWork.DisableFilter(AbpDataFilters.MayHaveTenant, AbpDataFilters.MustHaveTenant))
+            //{
                 return await _documentFileRepository.GetAll()
-                    .Where(x => x.TenantId == tenantId)
+                      .Include(doc=>doc.DocumentTypeFk).ThenInclude(ddoc=>ddoc.DocumentsEntityFk)
+                      .Where(x=>x.DocumentTypeFk.DocumentsEntityFk.DisplayName== AppConsts.TenantDocumentsEntityName)
+                    //.Where(x => x.TenantId == tenantId)
                     //.Where(x => x.ExpirationDate > DateTime.Now || x.ExpirationDate == null || !x.DocumentTypeFk.HasExpirationDate)
                     //.Where(x => x.DocumentTypeFk.IsRequired)
                     //.Where(x => !x.IsRejected)
-                    //.Where(x => x.IsAccepted)
+                    //.Where(x => !x.IsAccepted)
                     .ToListAsync();
-            }
+            //}
         }
 
         /// <summary>
@@ -122,6 +125,25 @@ namespace TACHYON.Documents
             await _binaryObjectManager.SaveAsync(storedFile);
 
             return storedFile.Id;
+        }
+
+
+        public async Task<List<GetTenantSubmittedDocumnetForView>> GetAllSubmittedTenantDocumentsWithStatuses(int tenantId)
+        {
+            var docs = await _documentFileRepository.GetAll()
+                      .Include(doc => doc.DocumentTypeFk).ThenInclude(ddoc => ddoc.DocumentsEntityFk)
+                      .Where(x => x.DocumentTypeFk.DocumentsEntityFk.DisplayName == AppConsts.TenantDocumentsEntityName)
+                    .Where(d => d.TenantId == tenantId)
+                    .Select(x => new GetTenantSubmittedDocumnetForView()
+                    {
+                        Id = x.Id,
+                        Extn = x.Extn,
+                        IsAccepted = x.IsAccepted,
+                        IsRejected = x.IsRejected,
+                        Name = x.Name,
+                        LastModificationTime = x.LastModificationTime
+                    }).ToListAsync();
+            return docs;
         }
     }
 }

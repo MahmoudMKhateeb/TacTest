@@ -3,10 +3,17 @@ import { AppComponentBase } from '@shared/common/app-component-base';
 import { FileItem, FileUploader, FileUploaderOptions } from '@node_modules/ng2-file-upload';
 import { AppConsts } from '@shared/AppConsts';
 import { IAjaxResponse, TokenService } from '@node_modules/abp-ng2-module';
-import { CreateOrEditDocumentFileDto, DocumentFilesServiceProxy, UpdateDocumentFileInput } from '@shared/service-proxies/service-proxies';
+import {
+  CreateOrEditDocumentFileDto,
+  DocumentFilesServiceProxy,
+  DocumentTypeDto,
+  DocumentUniqueCheckOutput,
+  GetTenantSubmittedDocumnetForView,
+  UpdateDocumentFileInput,
+} from '@shared/service-proxies/service-proxies';
 import { finalize } from '@node_modules/rxjs/operators';
 import { appModuleAnimation } from '@shared/animations/routerTransition';
-
+import { Table } from 'primeng/table';
 import * as moment from '@node_modules/moment';
 import { NgbDateStruct } from '@node_modules/@ng-bootstrap/ng-bootstrap';
 import { DateFormatterService } from '@app/admin/required-document-files/hijri-gregorian-datepicker/date-formatter.service';
@@ -19,13 +26,18 @@ import { DateType } from '@app/admin/required-document-files/hijri-gregorian-dat
   providers: [DateFormatterService],
 })
 export class RequiredDocumentFilesComponent extends AppComponentBase implements OnInit {
+  @ViewChild('dataTable', { static: true }) dataTable: Table;
+
+  today = new Date();
   active = false;
   saving = false;
   GregValue: moment.Moment;
-
+  isFormSubmitted = false;
   selectedDateTypeHijri = DateType.Hijri; // or DateType.Gregorian
   selectedDateTypeGregorian = DateType.Gregorian; // or DateType.Gregorian
-
+  fileFormateIsInvalideIndexList: boolean[] = [];
+  uniqueNumberIsInvalideIndexList: boolean[] = [];
+  submittedDocumentsList: GetTenantSubmittedDocumnetForView[] = [];
   /**
    * required documents fileUploader
    */
@@ -53,12 +65,8 @@ export class RequiredDocumentFilesComponent extends AppComponentBase implements 
     private dateFormatterService: DateFormatterService
   ) {
     super(injector);
-
-    this._documentFilesServiceProxy.getTenantRequiredDocumentFilesTemplateForCreate().subscribe((result) => {
-      result.forEach((x) => (x.expirationDate = null));
-      this.createOrEditDocumentFileDtos = result;
-      this.active = true;
-    });
+    this.getTenantRrquiredDocuments();
+    this.getAllsubmittedDocumentsStatusList();
   }
 
   ngOnInit(): void {
@@ -92,7 +100,6 @@ export class RequiredDocumentFilesComponent extends AppComponentBase implements 
         this.createOrEditDocumentFileDtos.find(
           (x) => x.name === item.file.name && x.extn === item.file.type
         ).updateDocumentFileInput = new UpdateDocumentFileInput({ fileToken: resp.result.fileToken });
-        console.log(this.createOrEditDocumentFileDtos);
       } else {
         this.message.error(resp.error.message);
       }
@@ -100,11 +107,10 @@ export class RequiredDocumentFilesComponent extends AppComponentBase implements 
 
     this.DocsUploader.onErrorItem = (item, response, status) => {
       const resp = <IAjaxResponse>JSON.parse(response);
-      console.log(resp);
     };
 
     this.DocsUploader.onCompleteAll = () => {
-      // create truck req.
+      // create tenant req.
       this._documentFilesServiceProxy
         .addTenantRequiredDocumentFiles(this.createOrEditDocumentFileDtos)
         .pipe(
@@ -113,7 +119,9 @@ export class RequiredDocumentFilesComponent extends AppComponentBase implements 
           })
         )
         .subscribe(() => {
+          this.isFormSubmitted = true;
           this.saving = false;
+          this.reload();
           this.notify.info(this.l('SavedSuccessfully'));
         });
     };
@@ -127,17 +135,20 @@ export class RequiredDocumentFilesComponent extends AppComponentBase implements 
     this.DocsUploader.setOptions(this._DocsUploaderOptions);
   }
 
-  DocFileChangeEvent(event: any, item: CreateOrEditDocumentFileDto): void {
+  DocFileChangeEvent(event: any, item: CreateOrEditDocumentFileDto, index: number): void {
     if (event.target.files[0].size > 5242880) {
       //5MB
       this.message.warn(this.l('DocumentFile_Warn_SizeLimit', this.maxDocumentFileBytesUserFriendlyValue));
       return;
     }
-    this.DocsUploader.addToQueue(event.target.files);
-
     item.extn = event.target.files[0].type;
+    if (item.extn != 'image/jpeg' && item.extn != 'image/png') {
+      this.fileFormateIsInvalideIndexList[index] = true;
+      return;
+    }
+    this.fileFormateIsInvalideIndexList[index] = false;
     item.name = event.target.files[0].name;
-    console.log(item);
+    this.DocsUploader.addToQueue(event.target.files);
   }
 
   guid(): string {
@@ -163,5 +174,39 @@ export class RequiredDocumentFilesComponent extends AppComponentBase implements 
     } else if ($event != null && $event.year > 2000) {
       item.expirationDate = moment($event.month + '/' + $event.day + '/' + $event.year, 'MM/DD/YYYY');
     }
+  }
+
+  getAllsubmittedDocumentsStatusList() {
+    this._documentFilesServiceProxy.getAllTenantSubmittedTenantDocuments().subscribe((result) => {
+      if (result.length > 0) {
+        this.isFormSubmitted = true;
+        this.submittedDocumentsList = result;
+      }
+    });
+  }
+  getTenantRrquiredDocuments() {
+    this._documentFilesServiceProxy.getTenantRequiredDocumentFilesTemplateForCreate().subscribe((result) => {
+      result.forEach((x) => (x.expirationDate = null));
+      this.createOrEditDocumentFileDtos = result;
+      this.active = true;
+    });
+  }
+
+  reload() {
+    this.getTenantRrquiredDocuments();
+    this.getAllsubmittedDocumentsStatusList();
+  }
+
+  checkIfIsNumberUnique(documnetType: DocumentTypeDto, index, number) {
+    if (!documnetType.isNumberUnique) {
+      this.uniqueNumberIsInvalideIndexList[index] = false;
+      return;
+    }
+    let documnet = new DocumentUniqueCheckOutput();
+    documnet.number = number;
+    documnet.documentTypeId = documnetType.id.toString();
+    this._documentFilesServiceProxy.isDocumentTypeNumberUnique(documnet).subscribe((result) => {
+      this.uniqueNumberIsInvalideIndexList[index] = !result;
+    });
   }
 }

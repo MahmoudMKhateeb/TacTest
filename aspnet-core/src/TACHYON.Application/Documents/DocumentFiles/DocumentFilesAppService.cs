@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Dynamic.Core;
 using System.Threading.Tasks;
+using Abp;
 using Abp.Application.Editions;
 using Abp.Application.Services.Dto;
 using Abp.Authorization;
@@ -22,7 +23,6 @@ using TACHYON.Documents.DocumentsEntities.Dtos;
 using TACHYON.Documents.DocumentTypes;
 using TACHYON.Documents.DocumentTypes.Dtos;
 using TACHYON.Dto;
-using TACHYON.MultiTenancy;
 using TACHYON.Routs.RoutSteps;
 using TACHYON.Storage;
 using TACHYON.Trailers;
@@ -35,7 +35,7 @@ namespace TACHYON.Documents.DocumentFiles
     {
 
 
-        public DocumentFilesAppService(IRepository<DocumentsEntity, int> documentEntityRepository, IRepository<Tenant, int> lookupTenantRepository, IRepository<DocumentFile, Guid> documentFileRepository, IDocumentFilesExcelExporter documentFilesExcelExporter, IRepository<DocumentType, long> lookupDocumentTypeRepository, IRepository<Truck, Guid> lookupTruckRepository, IRepository<Trailer, long> lookupTrailerRepository, IRepository<User, long> lookupUserRepository, IRepository<RoutStep, long> lookupRoutStepRepository, ITempFileCacheManager tempFileCacheManager, IBinaryObjectManager binaryObjectManager, IRepository<Edition, int> editionRepository, IRepository<DocumentType, long> documentTypeRepository, DocumentFilesManager documentFilesManager)
+        public DocumentFilesAppService(IRepository<DocumentFile, Guid> documentFileRepository, IDocumentFilesExcelExporter documentFilesExcelExporter, IRepository<DocumentType, long> lookupDocumentTypeRepository, IRepository<Truck, Guid> lookupTruckRepository, IRepository<Trailer, long> lookupTrailerRepository, IRepository<User, long> lookupUserRepository, IRepository<RoutStep, long> lookupRoutStepRepository, ITempFileCacheManager tempFileCacheManager, IBinaryObjectManager binaryObjectManager, IRepository<Edition, int> editionRepository, IRepository<DocumentType, long> documentTypeRepository, DocumentFilesManager documentFilesManager)
         {
             _lookupTenantRepository = lookupTenantRepository;
             _documentFileRepository = documentFileRepository;
@@ -50,7 +50,6 @@ namespace TACHYON.Documents.DocumentFiles
             _editionRepository = editionRepository;
             _documentTypeRepository = documentTypeRepository;
             _documentFilesManager = documentFilesManager;
-            _documentEntityRepository = documentEntityRepository;
         }
 
         private readonly IRepository<Tenant, int> _lookupTenantRepository;
@@ -67,6 +66,7 @@ namespace TACHYON.Documents.DocumentFiles
         private readonly IRepository<DocumentsEntity, int> _documentEntityRepository;
         private readonly IRepository<Edition, int> _editionRepository;
         private readonly DocumentFilesManager _documentFilesManager;
+
         public async Task<PagedResultDto<GetDocumentFileForViewDto>> GetAll(GetAllDocumentFilesInput input)
         {
             var filteredDocumentFiles = _documentFileRepository.GetAll()
@@ -223,11 +223,26 @@ namespace TACHYON.Documents.DocumentFiles
 
             if (input.Id == null)
             {
+                var document = await _documentFileRepository.FirstOrDefaultAsync(doc => 
+                                                                  doc.DocumentTypeId==input.DocumentTypeId&&
+                                                                  doc.Number == input.Number &&
+                                                                  doc.DocumentTypeFk.IsNumberUnique == true);
+                if (document != null)
+                {
+                    throw new UserFriendlyException(L("DocumentNumberShouldBeUnique"));
+                }
                 await Create(input);
             }
             else
             {
-
+                var document = await _documentFileRepository.FirstOrDefaultAsync(doc => doc.Id != input.Id &&
+                                                                  doc.DocumentTypeId == input.DocumentTypeId &&
+                                                                  doc.Number == input.Number &&
+                                                                  doc.DocumentTypeFk.IsNumberUnique == true);
+                if (document != null)
+                {
+                    throw new UserFriendlyException(L("DocumentNumberShouldBeUnique"));
+                }
                 await Update(input);
             }
         }
@@ -589,18 +604,19 @@ namespace TACHYON.Documents.DocumentFiles
             return list.Select(x => new CreateOrEditDocumentFileDto { DocumentTypeId = x.Id, DocumentTypeDto = ObjectMapper.Map<DocumentTypeDto>(x) }).ToList();
         }
 
-        public void Accept(Guid id)
+        public  void Accept(Guid id)
         {
             DisableTenancyFiltersIfHost();
 
             var documentFile = _documentFileRepository.FirstOrDefault(id);
             documentFile.IsAccepted = true;
             documentFile.IsRejected = false;
+            //await _appNotifier.AcceptedSubmittedDocument(new UserIdentifier(documentFile.TenantId, AbpSession.UserId.Value), documentFile.Name);
 
             //todo send notification to the tenant
         }
 
-        public void Reject(Guid id)
+        public async void Reject(Guid id)
         {
             DisableTenancyFiltersIfHost();
 
@@ -608,9 +624,23 @@ namespace TACHYON.Documents.DocumentFiles
             documentFile.IsAccepted = false;
             documentFile.IsRejected = true;
 
+            //await _appNotifier.RejectedSubmittedDocument(new UserIdentifier(AbpSession.TenantId, AbpSession.UserId.Value), documentFile.Name);
+
             //todo send notification to the tenant
         }
+        public async Task<List<GetTenantSubmittedDocumnetForView>> GetAllTenantSubmittedTenantDocuments()
+        {
+            var documentFiles = await _documentFilesManager.GetAllSubmittedTenantDocumentsWithStatuses(AbpSession.GetTenantId());
 
+            return documentFiles;
+        }
+
+        public async Task<bool> IsDocumentTypeNumberUnique(DocumentUniqueCheckOutput input)
+        {
+            var result = await _documentFileRepository
+                .FirstOrDefaultAsync(x=>x.Number==input.Number &&x.DocumentTypeId== long.Parse(input.DocumentTypeId));
+            return result != null;
+        }
         /// <summary>
         ///     check if the entity is missing document files and are needed to be upload them
         /// </summary>

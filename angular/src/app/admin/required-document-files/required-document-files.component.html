@@ -2,100 +2,246 @@
   <div class="content d-flex flex-column flex-column-fluid">
     <sub-header [title]="'TenantRequiredDocuments' | localize" [description]="'TenantRequiredDocumentsHeaderInfo' | localize"> </sub-header>
     <div [class]="containerClass">
-      <div class="card card-custom gutter-b">
-        <form *ngIf="active" #TenantRequiredDocumentsForm="ngForm" novalidate (ngSubmit)="save()" autocomplete="off">
-          <div class="card-body">
-            <div *ngFor="let item of createOrEditDocumentFileDtos; index as i">
-              <div class="card card-custom">
-                <div class="card-header">
-                  <div class="card-title">
-                    <h3 class="card-title">{{ item.documentTypeDto.displayName }}</h3>
-                  </div>
-                </div>
-                <div class="card-body">
-                  <div class="row d-flex">
-                    <div class="form-group col-md-6">
-                      <label>{{ l('File') }}</label>
-                      <div class="custom-file">
-                        <input
-                          [id]="item.documentTypeDto.displayName"
-                          type="file"
-                          class="custom-file-input"
-                          [required]="item.documentTypeDto.isRequired"
-                          [disabled]="item.isAccepted"
-                          (change)="DocFileChangeEvent($event, item)"
-                        />
-                        <label [for]="item.documentTypeDto.displayName" class="custom-file-label text-truncate">{{
-                          item.name ? item.name : l('select file')
-                        }}</label>
+      <div *ngIf="active && isFormSubmitted" class="card card-custom gutter-b">
+        <div class="card-header">
+          <div class="card-title">
+            <h4 class="card-title">{{ l('SubmittedDocumnents') }}</h4>
+          </div>
+        </div>
+        <div class="card-body">
+          <div
+            style="text-align: center;"
+            *ngIf="isFormSubmitted && submittedDocumentsList.length != 0"
+            class="alert alert-white shadow-lg fade show mb-5 p-5"
+            role="alert"
+          >
+            <div class="alert-text">
+              Please wait untill we review your documents.
+            </div>
+          </div>
+
+          <div *ngIf="submittedDocumentsList.length > 0" class="row align-items-center">
+            <div class="primeng-datatable-container col-12" [busyIf]="primengTableHelper.isLoading">
+              <p-table
+                #dataTable
+                (onLazyLoad)="getAllsubmittedDocumentsStatusList()"
+                [value]="submittedDocumentsList"
+                [paginator]="false"
+                [lazy]="true"
+                [scrollable]="true"
+                ScrollWidth="100%"
+                [responsive]="primengTableHelper.isResponsive"
+                [resizableColumns]="primengTableHelper.resizableColumns"
+              >
+                <ng-template pTemplate="header">
+                  <tr>
+                    <th style="width: 130px;">{{ l('Actions') }}</th>
+                    <th style="width: 150px;">
+                      {{ l('Name') }}
+                    </th>
+                    <th style="width: 150px;">
+                      {{ l('Extn') }}
+                    </th>
+                    <!-- <th style="width: 150px;">
+                      {{ l('LastModificationTime') }}
+                    </th> -->
+                    <th style="width: 150px;">
+                      {{ l('Status') }}
+                    </th>
+                  </tr>
+                </ng-template>
+                <ng-template pTemplate="body" let-record="$implicit">
+                  <tr>
+                    <td style="width: 130px;">
+                      <div class="btn-group dropdown" dropdown container="body">
+                        <button class="dropdown-toggle btn btn-sm btn-primary" dropdownToggle>
+                          <i class="fa fa-cog"></i><span class="caret"></span> {{ l('Actions') }}
+                        </button>
+                        <ul class="dropdown-menu" *dropdownMenu>
+                          <!-- <li>
+                            <a href="javascript:;" class="dropdown-item">{{ l('View') }}</a>
+                          </li> -->
+                          <li>
+                            <a href="javascript:;" class="dropdown-item">{{ l('Edit') }}</a>
+                          </li>
+                          <li>
+                            <a class="dropdown-item" href="javascript:;">{{ l('Download') }}</a>
+                          </li>
+                          <li>
+                            <a class="dropdown-item" href="javascript:;">{{ l('Delete') }}</a>
+                          </li>
+                        </ul>
                       </div>
+                    </td>
+                    <td style="width: 150px;">
+                      <span class="ui-column-title"></span>
+                      {{ record.name }}
+                    </td>
+                    <td style="width: 150px;">
+                      <span class="ui-column-title"></span>
+                      {{ record.extn }}
+                    </td>
+                    <!-- <td style="width: 150px;">
+                      <span class="ui-column-title"> </span>
+                      {{ record.lastModificationTime == null ? '-' : (record.lastModificationTime | momentFormat: 'L') }}
+                    </td> -->
+                    <td style="width: 150px;">
+                      <span class="ui-column-title"></span>
+                      <div *ngIf="record.isAccepted">
+                        <span class="label label-lg font-weight-bold label-light-success label-inline">
+                          {{ l('Accepted') }}
+                        </span>
+                      </div>
+                      <div *ngIf="record.isRejected">
+                        <span class="label label-lg font-weight-bold label-light-danger label-inline">
+                          {{ l('Rejected') }}
+                        </span>
+                      </div>
+                      <div *ngIf="!record.isRejected && !record.isAccepted">
+                        <span class="label label-lg font-weight-bold label-light-primary label-inline">
+                          {{ l('InReview') }}
+                        </span>
+                      </div>
+                    </td>
+                  </tr>
+                </ng-template>
+              </p-table>
+              <div class="primeng-no-data" *ngIf="submittedDocumentsList.length == 0">
+                {{ l('NoData') }}
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card card-custom gutter-b  {{ saving == true ? 'overlay overlay-block' : '' }}">
+        <div
+          style="text-align: center;"
+          *ngIf="createOrEditDocumentFileDtos.length != 0"
+          class="alert alert-white shadow-lg fade show mb-5 p-5"
+          role="alert"
+        >
+          <div class="alert-text">
+            Please upload the following documents in order to finalize your registration process.
+          </div>
+        </div>
+
+        <form
+          *ngIf="active && createOrEditDocumentFileDtos.length > 0"
+          #TenantRequiredDocumentsForm="ngForm"
+          novalidate
+          (ngSubmit)="save()"
+          autocomplete="off"
+        >
+          <div class="card-body">
+            <div [class]="saving == true ? 'overlay-wrapper ' : ''">
+              <div *ngFor="let item of createOrEditDocumentFileDtos; index as i">
+                <div class="card card-custom">
+                  <div class="card-header">
+                    <div class="card-title">
+                      <h4 class="card-title">{{ item.documentTypeDto.displayName }}</h4>
                     </div>
-                    <div *ngIf="item.documentTypeDto.hasExpirationDate" class="form-group col-md-6">
-                      <label>{{ l('expiration date') }} <span class="text-danger">*</span></label>
-                      <input
-                        name="expirationDate{{ i }}"
-                        id="expirationDate{{ i }}"
-                        bsDatepicker
-                        class="form-control m-input"
-                        datePickerMomentModifier
-                        [required]="item.documentTypeDto.isRequired && !item.isAccepted"
-                        [(date)]="item.expirationDate"
-                        [disabled]="item.isAccepted"
-                      />
-                    </div>
-                    <div *ngIf="item.documentTypeDto.hasNumber" class="form-group col-md-6">
-                      <label
-                        >{{ l('number') }}
-                        <span class="text-danger">*</span>
-                      </label>
-                      <input
-                        name="number{{ i }}"
-                        id="number{{ i }}"
-                        class="form-control m-input"
-                        required
-                        [maxLength]="item.documentTypeDto.numberMaxDigits == 0 ? 50 : item.documentTypeDto.numberMaxDigits"
-                        [minLength]="item.documentTypeDto.numberMinDigits"
-                        type="text"
-                        [(ngModel)]="item.number"
-                        [disabled]="item.isAccepted"
-                      />
-                      <span class="form-text text-muted"
-                        >{{ l('minDigits:') }} {{ item.documentTypeDto.numberMinDigits }}
-                        {{ l('maxDigits:') }}
-                        {{ item.documentTypeDto.numberMaxDigits == 0 ? 50 : item.documentTypeDto.numberMaxDigits }}
-                      </span>
-                    </div>
-                    <div *ngIf="item.documentTypeDto.hasNotes" class="form-group col-md-6">
-                      <label>{{ l('note') }}</label>
-                      <input
-                        name="note{{ i }}"
-                        id="note{{ i }}"
-                        class="form-control m-input"
-                        [required]="item.documentTypeDto.hasNotes && !item.isAccepted"
-                        type="text"
-                        [(ngModel)]="item.notes"
-                        [disabled]="item.isAccepted"
-                      />
-                    </div>
-                    <div *ngIf="item.documentTypeDto.hasExpirationDate" class="form-group col-md-6">
-                      <hijri-gregorian-datepicker-test
-                        [label]="l('ExpirationDate')"
-                        class="m-input"
-                        [isRequired]="true"
-                        [readonly]="true"
-                        [selectedDateType]="item.documentTypeDto.hasHijriExpirationDate ? selectedDateTypeHijri : selectedDateTypeGregorian"
-                        (selectedDateChange)="selectedDateChange($event, item)"
-                      >
-                      </hijri-gregorian-datepicker-test>
+                  </div>
+                  <div class="card-body">
+                    <div class="row d-flex">
+                      <div class="form-group col-md-6">
+                        <label>{{ l('File') }}*</label>
+                        <div class="custom-file">
+                          <input
+                            accept="image/x-png,image/jpeg"
+                            [id]="item.documentTypeDto.displayName"
+                            type="file"
+                            class="custom-file-input"
+                            [required]="item.documentTypeDto.isRequired"
+                            [disabled]="saving"
+                            (change)="DocFileChangeEvent($event, item, i)"
+                          />
+                          <label [for]="item.documentTypeDto.displayName" class="custom-file-label text-truncate">{{
+                            item.name ? item.name : l('select file')
+                          }}</label>
+                        </div>
+                        <span class="form-text text-muted">{{ 'FileAllowedFormatesAre:.png,.jpeg' | localize }}</span>
+                        <div *ngIf="fileFormateIsInvalideIndexList[i]">
+                          <span class="form-text text-danger text-left">{{ 'PleaseChooseAvalidFormat' | localize }}</span>
+                        </div>
+                      </div>
+                      <div *ngIf="item.documentTypeDto.hasNumber" class="form-group col-md-6">
+                        <label
+                          >{{ item.documentTypeDto.displayName }} {{ l('number') }}
+                          <span class="text-danger">*</span>
+                        </label>
+                        <input
+                          (focusout)="checkIfIsNumberUnique(item.documentTypeDto, i, $event.target.value)"
+                          name="number{{ i }}"
+                          id="number{{ i }}"
+                          class="form-control m-input"
+                          required
+                          [maxLength]="
+                            item.documentTypeDto.numberMaxDigits == 0 || item.documentTypeDto.numberMaxDigits == null
+                              ? null
+                              : item.documentTypeDto.numberMaxDigits
+                          "
+                          [minLength]="
+                            item.documentTypeDto.numberMinDigits == 0 || item.documentTypeDto.numberMinDigits == null
+                              ? null
+                              : item.documentTypeDto.numberMinDigits
+                          "
+                          type="text"
+                          [(ngModel)]="item.number"
+                        />
+                        <span *ngIf="item.documentTypeDto.numberMinDigits || item.documentTypeDto.numberMinDigits" class="form-text text-muted"
+                          >{{ l('minDigits:') }} {{ item.documentTypeDto.numberMinDigits == 0 ? null : item.documentTypeDto.numberMinDigits }}
+                          {{ l('maxDigits:') }}
+                          {{ item.documentTypeDto.numberMaxDigits == 0 ? null : item.documentTypeDto.numberMaxDigits }}
+                        </span>
+                        <span *ngIf="item.documentTypeDto.isNumberUnique" class="form-text text-muted">{{ 'ShouldBeUnique' | localize }}</span>
+                        <div *ngIf="uniqueNumberIsInvalideIndexList[i]">
+                          <span class="form-text text-danger text-left">{{ 'PleaseEnterAUniqueNumber' | localize }}</span>
+                        </div>
+                      </div>
+                      <div *ngIf="item.documentTypeDto.hasExpirationDate" class="form-group col-md-6">
+                        <hijri-gregorian-datepicker-test
+                          [label]="l('ExpirationDate') + '*'"
+                          class="m-input"
+                          [isRequired]="true"
+                          [readonly]="true"
+                          [selectedDateType]="item.documentTypeDto.hasHijriExpirationDate ? selectedDateTypeHijri : selectedDateTypeGregorian"
+                          (selectedDateChange)="selectedDateChange($event, item)"
+                        >
+                        </hijri-gregorian-datepicker-test>
+                        <span *ngIf="item.documentTypeDto.hasHijriExpirationDate" class="form-text text-muted">{{
+                          'PleaseChooseTheHijriDate' | localize
+                        }}</span>
+                        <span *ngIf="!item.documentTypeDto.hasHijriExpirationDate" class="form-text text-muted"
+                          >{{ 'PleaseChooseTheDate' | localize }}
+                        </span>
+                      </div>
+                      <div *ngIf="item.documentTypeDto.hasNotes" class="form-group col-md-12">
+                        <label>{{ l('note') }}</label>
+                        <textarea
+                          style="resize: none;"
+                          name="note{{ i }}"
+                          id="note{{ i }}"
+                          class="form-control m-input"
+                          [required]="item.documentTypeDto.hasNotes && !item.isAccepted"
+                          type="text"
+                          rows="3"
+                          [(ngModel)]="item.notes"
+                          [disabled]="item.isAccepted"
+                        ></textarea>
+                      </div>
                     </div>
                   </div>
                 </div>
               </div>
+              <!--            <div class="form-group col-md-12">-->
+              <!--              <label>{{ docProgressFileName }}</label>-->
+              <!--              <p-progressBar [value]="docProgress" [style]="{ height: '6px', width: '100' }"></p-progressBar>-->
+              <!--            </div>-->
             </div>
-            <!--            <div class="form-group col-md-12">-->
-            <!--              <label>{{ docProgressFileName }}</label>-->
-            <!--              <p-progressBar [value]="docProgress" [style]="{ height: '6px', width: '100' }"></p-progressBar>-->
-            <!--            </div>-->
+            <div *ngIf="saving" class="overlay-layer bg-dark-o-10">
+              <div class="spinner spinner-primary-lg"></div>
+            </div>
           </div>
           <div class="card-footer">
             <button
