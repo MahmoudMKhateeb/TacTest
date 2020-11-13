@@ -44,7 +44,7 @@
         </div>
         <div class="login-form text-center p-7 position-relative overflow-hidden">
           <div class="pb-13 pt-lg-0 pt-5">
-            <a (click)="goToHome()" href="" class="text-center mb-10 this-is-the-logo" *ngIf="useFullWidthLayout()">
+            <a (click)="goToHome()" href="" class="text-center mb-10" *ngIf="useFullWidthLayout()">
               <img
                 *ngIf="!appSession.tenant || !appSession.tenant.logoId"
                 [src]="appRootUrl() + 'assets/common/images/app-logo-on-light.svg'"
