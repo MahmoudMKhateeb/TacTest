@@ -416,7 +416,7 @@ namespace TACHYON.Authorization.Users
             {
                 item.UserId = user.Id;
                 item.Name = item.Name + "_" + user.Id.ToString();
-                await _documentFilesAppService.CreateDocument(item);
+                await _documentFilesAppService.CreateOrEdit(item);
             }
 
 

@@ -21,30 +21,31 @@
           </button>
         </div>
         <div class="modal-body">
-          <label *ngIf="documentFile.id" for="DocumentType"> Edit : {{ documentFile.documentTypeDisplayName }}</label>
-          <hr />
-          <div *ngIf="!documentFile.id && allDocumentTypes.length > 1" style="width: 200px;">
-            <label> Select Document</label>
-            <select
-              [(ngModel)]="selectedDoctumentTypeDto"
-              (ngModelChange)="chooseDocumentToBeCreated($event)"
-              name="selectedDoctumentTypeDto"
-              class="form-control form-control-lg custom-select mr-sm-2"
-              style="color: red;"
-            >
-              <option *ngFor="let documentType of allDocumentTypes" [ngValue]="documentType.documentTypeDto"
-                >{{ documentType.documentTypeDto.displayName }}
-              </option>
-            </select>
-          </div>
-          <div *ngIf="!documentFile.id && allDocumentTypes.length == 1" style="width: 200px;">
-            <label
-              >Create Document:
-              <h3>{{ allDocumentTypes[0].documentTypeDto.displayName }}</h3></label
-            >
-          </div>
+          <!--          <div *ngIf="!documentFile.id && CreateOrEditDocumentFileDtoList.length == 1" style="width: 200px;">-->
+          <!--            <label-->
+          <!--              >Create Document:-->
+          <!--              <h3>{{ CreateOrEditDocumentFileDtoList[0].documentTypeDto.displayName }}</h3></label-->
+          <!--            >-->
+          <!--          </div>-->
+
           <div class="row">
-            <div class="form-group col-md-12">
+            <div *ngIf="!documentFile.id" class="form-group col-md-6">
+              <div>
+                <label> Select Document</label>
+                <select
+                  id="DocumentType"
+                  [(ngModel)]="documentFile.documentTypeId"
+                  (change)="chooseDocumentToBeCreated($event.target.value)"
+                  name="selectedDoctumentTypeDto"
+                  class="form-control"
+                >
+                  <option *ngFor="let docFile of CreateOrEditDocumentFileDtoList" [value]="docFile.documentTypeDto.id"
+                    >{{ docFile.documentTypeDto.displayName }}
+                  </option>
+                </select>
+              </div>
+            </div>
+            <div class="form-group col-md-6">
               <label>{{ l('Choose File') }}</label>
               <div class="custom-file">
                 <input (change)="DocFileChangeEvent($event, documentFile)" type="file" class="custom-file-input" required />
@@ -55,25 +56,28 @@
             </div>
           </div>
           <div class="row">
-            <div *ngIf="documentFile.hasNumber" class="form-group col-md-6">
+            <div *ngIf="documentFile.documentTypeDto.hasNumber" class="form-group col-md-6">
               <label for="DocumentNumber">{{ l('Number') }} </label>
               <input
                 type="text"
                 class="form-control"
                 id="DocumentNumber"
-                [maxLength]="documentFile.numberMaxDigits"
-                [minLength]="documentFile.numberMinDigits"
+                [maxLength]="documentFile.documentTypeDto.numberMaxDigits"
+                [minLength]="documentFile.documentTypeDto.numberMinDigits"
                 name="documentNumber"
                 required
                 [(ngModel)]="documentFile.number"
               />
               <span class="form-text text-muted"
-                >{{ l('minDigits:') }} {{ documentFile.numberMinDigits }} {{ l('maxDigits:') }}
-                {{ documentFile.numberMaxDigits }}
+                >{{ l('minDigits:') }} {{ documentFile.documentTypeDto.numberMinDigits }} {{ l('maxDigits:') }}
+                {{ documentFile.documentTypeDto.numberMaxDigits }}
               </span>
             </div>
 
-            <div *ngIf="documentFile.hasExpirationDate && !documentFile.hasHijriExpirationDate" class="form-group col-md-6">
+            <div
+              *ngIf="documentFile.documentTypeDto.hasExpirationDate && !documentFile.documentTypeDto.hasHijriExpirationDate"
+              class="form-group col-md-6"
+            >
               <label for="DocumentExpireDate">{{ l('Expiration Date') }} </label>
               <input
                 type="datetime"
@@ -88,8 +92,11 @@
               <span style="line-height: 40px; padding: 0 15px 0 15px;"> &mdash; </span>
             </div>
 
-            <div *ngIf="documentFile.hasExpirationDate && documentFile.hasHijriExpirationDate" class="form-group col-md-6">
-              <label for="DocumentExpireDate">{{ l('Expiration Date') }} </label>
+            <div
+              *ngIf="documentFile.documentTypeDto.hasExpirationDate && documentFile.documentTypeDto.hasHijriExpirationDate"
+              class="form-group col-md-6"
+            >
+              <!--              <label for="DocumentExpireDate">{{ l('Expiration Date') }} </label>-->
               <hijri-gregorian-datepicker-test
                 [label]="l('ExpirationDate')"
                 class="m-input"
@@ -99,12 +106,12 @@
                 (selectedDateChange)="selectedDateChange($event, documentFile)"
               >
               </hijri-gregorian-datepicker-test>
-              <span style="line-height: 40px; padding: 0 15px 0 15px;"> &mdash; </span>
+              <!--              <span style="line-height: 40px; padding: 0 15px 0 15px;"> &mdash; </span>-->
             </div>
           </div>
 
           <div class="row">
-            <div *ngIf="documentFile.hasNotes" class="form-group col-md-12">
+            <div *ngIf="documentFile.documentTypeDto.hasNotes" class="form-group col-md-12">
               <label for="Note">{{ l('Note') }} </label>
               <textarea
                 type="text"
@@ -113,7 +120,7 @@
                 rows="4"
                 style="resize: none;"
                 class="form-control"
-                id="DocumentExpireDate"
+                id="Note"
                 [maxLength]="500"
                 [minLength]="0"
                 name="documentExpireDate"

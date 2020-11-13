@@ -1,5 +1,5 @@
 /* tslint:disable:member-ordering */
-import { Component, EventEmitter, Injector, Output, ViewChild, ChangeDetectorRef, QueryList } from '@angular/core';
+import { Component, EventEmitter, Injector, Output, ViewChild, ChangeDetectorRef, QueryList, Inject, ChangeDetectionStrategy } from '@angular/core';
 import { ModalDirective } from 'ngx-bootstrap/modal';
 import {
   CreateOrEditDocumentFileDto,
@@ -36,18 +36,9 @@ export class ViewOrEditEntityDocumentsModalComponent extends AppComponentBase {
 
   @Output() modalSave: EventEmitter<any> = new EventEmitter<any>();
 
-  @ViewChildren('dataTable') TableComponent: QueryList<Table>;
-  @ViewChildren('paginator') PaginatorComponent: QueryList<Paginator>;
-  private dataTable: Table;
-  private paginator: Paginator;
-  public ngAfterViewInit(): void {
-    this.TableComponent.changes.subscribe((tComps: QueryList<Table>) => {
-      this.dataTable = tComps.first;
-    });
-    this.PaginatorComponent.changes.subscribe((pComps: QueryList<Paginator>) => {
-      this.paginator = pComps.first;
-    });
-  }
+  @ViewChild('paginator', { static: false }) paginator: Paginator;
+  @ViewChild('dataTable', { static: false }) dataTable: Table;
+
   active = false;
   saving = false;
   ModalIsEdit = null;
@@ -67,14 +58,14 @@ export class ViewOrEditEntityDocumentsModalComponent extends AppComponentBase {
   _entityTypeFullName = 'TACHYON.Documents.DocumentFiles.DocumentFile';
   entityHistoryEnabled = false;
   testCond = null;
-  entityType = '';
-  entityId = '';
-  truckId = '';
+  entityIdFilter = '';
+  truckIdFilter = '';
   isMissingDocumentFiles = false;
   imageChangedEvent: any = '';
   public maxProfilPictureBytesUserFriendlyValue = 5;
   public uploader: FileUploader;
   public temporaryPictureUrl: string;
+  public documentEntityFilter: string;
 
   constructor(
     injector: Injector,
@@ -89,11 +80,11 @@ export class ViewOrEditEntityDocumentsModalComponent extends AppComponentBase {
     super(injector);
   }
 
-  show(entityId: string, entityType: string): void {
+  show(id: string, documentEntityFilter: string): void {
     // this.ModalIsEdit = true;
 
-    this.entityType = entityType;
-    this.entityId = entityId;
+    this.entityIdFilter = id;
+    this.documentEntityFilter = documentEntityFilter;
     this.checkIfMissingDocumentFiles();
     this.active = true;
     this.modal.show();
@@ -129,7 +120,6 @@ export class ViewOrEditEntityDocumentsModalComponent extends AppComponentBase {
   }
 
   getDocumentFiles(event?: LazyLoadEvent) {
-    this.changeDetectorRef.detectChanges();
     this.checkIfMissingDocumentFiles();
     this.changeDetectorRef.detectChanges();
     if (this.primengTableHelper.shouldResetPaging(event)) {
@@ -145,9 +135,9 @@ export class ViewOrEditEntityDocumentsModalComponent extends AppComponentBase {
         this.maxExpirationDateFilter,
         this.minExpirationDateFilter,
         this.documentTypeDisplayNameFilter,
-        this.entityType,
-        this.truckId,
-        this.entityId,
+        this.documentEntityFilter,
+        this.truckIdFilter,
+        this.entityIdFilter,
         this.trailerTrailerCodeFilter,
         this.userNameFilter,
         this.primengTableHelper.getSorting(this.dataTable),
@@ -161,7 +151,7 @@ export class ViewOrEditEntityDocumentsModalComponent extends AppComponentBase {
       });
   }
   checkIfMissingDocumentFiles() {
-    this._documentFilesServiceProxy.checkIfMissingDocumentFiles(this.entityId, this.entityType).subscribe((res) => {
+    this._documentFilesServiceProxy.checkIfMissingDocumentFiles(this.entityIdFilter, this.documentEntityFilter).subscribe((res) => {
       this.isMissingDocumentFiles = res;
     });
   }
