@@ -65,8 +65,10 @@ export class RequiredDocumentFilesComponent extends AppComponentBase implements 
     private dateFormatterService: DateFormatterService
   ) {
     super(injector);
+
     this.getTenantRrquiredDocuments();
     this.getAllsubmittedDocumentsStatusList();
+    this.createOrEditDocumentFileDtos = [];
   }
 
   ngOnInit(): void {
@@ -177,7 +179,7 @@ export class RequiredDocumentFilesComponent extends AppComponentBase implements 
   }
 
   getAllsubmittedDocumentsStatusList() {
-    this._documentFilesServiceProxy.getAllTenantSubmittedTenantDocuments().subscribe((result) => {
+    this._documentFilesServiceProxy.getAllTenantSubmittedRequiredDocumentsWithStatuses().subscribe((result) => {
       if (result.length > 0) {
         this.isFormSubmitted = true;
         this.submittedDocumentsList = result;

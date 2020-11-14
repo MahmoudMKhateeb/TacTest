@@ -2,6 +2,13 @@
   <div class="content d-flex flex-column flex-column-fluid">
     <sub-header [title]="'TenantRequiredDocuments' | localize" [description]="'TenantRequiredDocumentsHeaderInfo' | localize"> </sub-header>
     <div [class]="containerClass">
+      <div *ngIf="isFormSubmitted && submittedDocumentsList.length != 0" class="alert alert-custom alert-light-warning" role="alert">
+        <div class="alert-icon">
+          <i class="flaticon-warning"></i>
+        </div>
+        <div class="alert-text">{{ l(' Please wait untill we review your documents.') }}</div>
+      </div>
+
       <div *ngIf="active && isFormSubmitted" class="card card-custom gutter-b">
         <div class="card-header">
           <div class="card-title">
@@ -9,17 +16,6 @@
           </div>
         </div>
         <div class="card-body">
-          <div
-            style="text-align: center;"
-            *ngIf="isFormSubmitted && submittedDocumentsList.length != 0"
-            class="alert alert-white shadow-lg fade show mb-5 p-5"
-            role="alert"
-          >
-            <div class="alert-text">
-              Please wait untill we review your documents.
-            </div>
-          </div>
-
           <div *ngIf="submittedDocumentsList.length > 0" class="row align-items-center">
             <div class="primeng-datatable-container col-12" [busyIf]="primengTableHelper.isLoading">
               <p-table
@@ -43,8 +39,8 @@
                       {{ l('Extn') }}
                     </th>
                     <!-- <th style="width: 150px;">
-                      {{ l('LastModificationTime') }}
-                    </th> -->
+                                      {{ l('LastModificationTime') }}
+                                    </th> -->
                     <th style="width: 150px;">
                       {{ l('Status') }}
                     </th>
@@ -59,8 +55,8 @@
                         </button>
                         <ul class="dropdown-menu" *dropdownMenu>
                           <!-- <li>
-                            <a href="javascript:;" class="dropdown-item">{{ l('View') }}</a>
-                          </li> -->
+                                                  <a href="javascript:;" class="dropdown-item">{{ l('View') }}</a>
+                                                </li> -->
                           <li>
                             <a href="javascript:;" class="dropdown-item">{{ l('Edit') }}</a>
                           </li>
@@ -82,9 +78,9 @@
                       {{ record.extn }}
                     </td>
                     <!-- <td style="width: 150px;">
-                      <span class="ui-column-title"> </span>
-                      {{ record.lastModificationTime == null ? '-' : (record.lastModificationTime | momentFormat: 'L') }}
-                    </td> -->
+                                      <span class="ui-column-title"> </span>
+                                      {{ record.lastModificationTime == null ? '-' : (record.lastModificationTime | momentFormat: 'L') }}
+                                    </td> -->
                     <td style="width: 150px;">
                       <span class="ui-column-title"></span>
                       <div *ngIf="record.isAccepted">
@@ -113,19 +109,14 @@
           </div>
         </div>
       </div>
+    </div>
+    <div [class]="containerClass">
+      <div *ngIf="createOrEditDocumentFileDtos.length != 0" class="alert alert-custom alert-light-danger" role="alert">
+        <div class="alert-icon"><i class="flaticon-warning"></i></div>
+        <div class="alert-text">{{ l('Please upload the following documents in order to finalize your registration process.') }}</div>
+      </div>
 
       <div class="card card-custom gutter-b  {{ saving == true ? 'overlay overlay-block' : '' }}">
-        <div
-          style="text-align: center;"
-          *ngIf="createOrEditDocumentFileDtos.length != 0"
-          class="alert alert-white shadow-lg fade show mb-5 p-5"
-          role="alert"
-        >
-          <div class="alert-text">
-            Please upload the following documents in order to finalize your registration process.
-          </div>
-        </div>
-
         <form
           *ngIf="active && createOrEditDocumentFileDtos.length > 0"
           #TenantRequiredDocumentsForm="ngForm"
@@ -209,12 +200,6 @@
                           (selectedDateChange)="selectedDateChange($event, item)"
                         >
                         </hijri-gregorian-datepicker-test>
-                        <span *ngIf="item.documentTypeDto.hasHijriExpirationDate" class="form-text text-muted">{{
-                          'PleaseChooseTheHijriDate' | localize
-                        }}</span>
-                        <span *ngIf="!item.documentTypeDto.hasHijriExpirationDate" class="form-text text-muted"
-                          >{{ 'PleaseChooseTheDate' | localize }}
-                        </span>
                       </div>
                       <div *ngIf="item.documentTypeDto.hasNotes" class="form-group col-md-12">
                         <label>{{ l('note') }}</label>

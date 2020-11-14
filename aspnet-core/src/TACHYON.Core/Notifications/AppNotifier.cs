@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using TACHYON.Authorization.Users;
+using TACHYON.Documents.DocumentFiles;
 using TACHYON.MultiTenancy;
 
 namespace TACHYON.Notifications
@@ -134,6 +135,22 @@ namespace TACHYON.Notifications
 
             notificationData["documentFileId"] = documentFileId;
             await _notificationPublisher.PublishAsync(AppNotificationNames.DocumentFileExpiration, notificationData, userIds: new[] { argsUser });
+        }
+
+
+        public async Task TenantDocumentFileUpdate( DocumentFile documentFile)
+        {
+            var notificationData = new LocalizableMessageNotificationData(
+                new LocalizableString(
+                    L("TenantDocumentFileUpdateNotificationMessage"),
+                    TACHYONConsts.LocalizationSourceName
+                )
+            );
+
+            notificationData["documentFileId"] = documentFile.Id;
+            notificationData["documentFileTenantId"] = documentFile.TenantId;
+
+            await _notificationPublisher.PublishAsync(AppNotificationNames.TenantDocumentFileUpdate, notificationData);
         }
         #endregion
         public async Task WelcomeToTheApplicationAsync(User user)

@@ -14,6 +14,6 @@ namespace TACHYON.Documents.DocumentFiles.Dtos
         public virtual bool IsAccepted { get; set; }
         public virtual bool IsRejected { get; set; }
         public DateTime? LastModificationTime { get; set; }
-
+        public DateTime ExpirationDate { get; set; }
     }
 }

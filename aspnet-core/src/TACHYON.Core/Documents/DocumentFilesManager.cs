@@ -36,12 +36,13 @@ namespace TACHYON.Documents
 
 
         /// <summary>
-        ///list of missing required documents types from tenant
+        /// list of missing required documents types from tenant
         /// </summary>
         /// <param name="tenantId"></param>
         /// <returns></returns>
         public async Task<List<DocumentType>> GetAllTenantMissingRequiredDocumentTypesListAsync(int tenantId)
         {
+            // list of Accepted and not Rejected and not expired documents
             var existedList = await GetAllTenantActiveRequiredDocumentFilesListAsync(tenantId);
 
             var reqList = await GetAllTenantRequiredDocumentTypesListAsync(tenantId);
@@ -63,7 +64,7 @@ namespace TACHYON.Documents
 
 
         /// <summary>
-        ///     list of all required documents types from tenant
+        ///   list of all required documents types from tenant
         /// </summary>
         /// <param name="tenantId"></param>
         /// <returns></returns>
@@ -81,24 +82,27 @@ namespace TACHYON.Documents
 
 
         /// <summary>
-        ///     list all tenant active document Files
+        /// list all tenant active document Files
         /// </summary>
         /// <param name="tenantId"></param>
-        /// <returns></returns>
+        /// <returns>
+        /// list of Accepted and not Rejected and not expired documentsFiles
+        /// </returns>
         public async Task<List<DocumentFile>> GetAllTenantActiveRequiredDocumentFilesListAsync(int tenantId)
         {
-            //using (CurrentUnitOfWork.DisableFilter(AbpDataFilters.MayHaveTenant, AbpDataFilters.MustHaveTenant))
-            //{
+            using (CurrentUnitOfWork.DisableFilter(AbpDataFilters.MayHaveTenant, AbpDataFilters.MustHaveTenant))
+            {
                 return await _documentFileRepository.GetAll()
-                      .Include(doc=>doc.DocumentTypeFk).ThenInclude(ddoc=>ddoc.DocumentsEntityFk)
-                      .Where(x=>x.DocumentTypeFk.DocumentsEntityFk.DisplayName== AppConsts.TenantDocumentsEntityName)
-                    //.Where(x => x.TenantId == tenantId)
-                    //.Where(x => x.ExpirationDate > DateTime.Now || x.ExpirationDate == null || !x.DocumentTypeFk.HasExpirationDate)
-                    //.Where(x => x.DocumentTypeFk.IsRequired)
-                    //.Where(x => !x.IsRejected)
-                    //.Where(x => !x.IsAccepted)
+                      .Include(doc => doc.DocumentTypeFk)
+                      .ThenInclude(doc => doc.DocumentsEntityFk)
+                      .Where(x => x.DocumentTypeFk.DocumentsEntityFk.DisplayName == AppConsts.TenantDocumentsEntityName)
+                    .Where(x => x.TenantId == tenantId)
+                    .Where(x => x.ExpirationDate > DateTime.Now || x.ExpirationDate == null || !x.DocumentTypeFk.HasExpirationDate)
+                    .Where(x => x.DocumentTypeFk.IsRequired)
+                    .Where(x => !x.IsRejected)
+                    .Where(x => x.IsAccepted)
                     .ToListAsync();
-            //}
+            }
         }
 
         /// <summary>
@@ -128,22 +132,6 @@ namespace TACHYON.Documents
         }
 
 
-        public async Task<List<GetTenantSubmittedDocumnetForView>> GetAllSubmittedTenantDocumentsWithStatuses(int tenantId)
-        {
-            var docs = await _documentFileRepository.GetAll()
-                      .Include(doc => doc.DocumentTypeFk).ThenInclude(ddoc => ddoc.DocumentsEntityFk)
-                      .Where(x => x.DocumentTypeFk.DocumentsEntityFk.DisplayName == AppConsts.TenantDocumentsEntityName)
-                    .Where(d => d.TenantId == tenantId)
-                    .Select(x => new GetTenantSubmittedDocumnetForView()
-                    {
-                        Id = x.Id,
-                        Extn = x.Extn,
-                        IsAccepted = x.IsAccepted,
-                        IsRejected = x.IsRejected,
-                        Name = x.Name,
-                        LastModificationTime = x.LastModificationTime
-                    }).ToListAsync();
-            return docs;
-        }
+        
     }
 }

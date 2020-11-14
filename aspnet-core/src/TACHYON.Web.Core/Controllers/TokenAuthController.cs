@@ -150,6 +150,7 @@ namespace TACHYON.Web.Controllers
                 {
                     throw new AbpAuthorizationException(L("InvalidMobileNumber"));
                 }
+                model.UserNameOrEmailAddress = user.UserName;
 
             }
             else // login by email
@@ -161,7 +162,7 @@ namespace TACHYON.Web.Controllers
                     throw new AbpAuthorizationException(L("InvalidEmailAddress"));
                 }
 
-                model.UserNameOrEmailAddress = user.UserName;
+
 
             }
 
