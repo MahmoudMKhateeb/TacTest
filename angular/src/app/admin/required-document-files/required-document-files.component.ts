@@ -1,10 +1,11 @@
-import { Component, Injector, OnInit, ViewChild } from '@angular/core';
+import { Component, ElementRef, Injector, OnInit, ViewChild } from '@angular/core';
 import { AppComponentBase } from '@shared/common/app-component-base';
 import { FileItem, FileUploader, FileUploaderOptions } from '@node_modules/ng2-file-upload';
 import { AppConsts } from '@shared/AppConsts';
 import { IAjaxResponse, TokenService } from '@node_modules/abp-ng2-module';
 import {
   CreateOrEditDocumentFileDto,
+  DocumentFileDto,
   DocumentFilesServiceProxy,
   DocumentTypeDto,
   DocumentUniqueCheckOutput,
@@ -18,6 +19,7 @@ import * as moment from '@node_modules/moment';
 import { NgbDateStruct } from '@node_modules/@ng-bootstrap/ng-bootstrap';
 import { DateFormatterService } from '@app/admin/required-document-files/hijri-gregorian-datepicker/date-formatter.service';
 import { DateType } from '@app/admin/required-document-files/hijri-gregorian-datepicker/consts';
+import { FileDownloadService } from '@shared/utils/file-download.service';
 
 @Component({
   selector: 'app-required-document-files',
@@ -27,8 +29,9 @@ import { DateType } from '@app/admin/required-document-files/hijri-gregorian-dat
 })
 export class RequiredDocumentFilesComponent extends AppComponentBase implements OnInit {
   @ViewChild('dataTable', { static: true }) dataTable: Table;
-
+  @ViewChild('requiredDocumentsCard') private myScrollContainer: ElementRef;
   today = new Date();
+  datePickerToday: NgbDateStruct = { day: this.today.getDay(), month: this.today.getMonth(), year: this.today.getFullYear() };
   active = false;
   saving = false;
   GregValue: moment.Moment;
@@ -37,6 +40,7 @@ export class RequiredDocumentFilesComponent extends AppComponentBase implements 
   selectedDateTypeGregorian = DateType.Gregorian; // or DateType.Gregorian
   fileFormateIsInvalideIndexList: boolean[] = [];
   uniqueNumberIsInvalideIndexList: boolean[] = [];
+  DateInvalideIndexList: boolean[] = [];
   submittedDocumentsList: GetTenantSubmittedDocumnetForView[] = [];
   /**
    * required documents fileUploader
@@ -62,7 +66,8 @@ export class RequiredDocumentFilesComponent extends AppComponentBase implements 
     injector: Injector,
     private _documentFilesServiceProxy: DocumentFilesServiceProxy,
     private _tokenService: TokenService,
-    private dateFormatterService: DateFormatterService
+    private dateFormatterService: DateFormatterService,
+    private _fileDownloadService: FileDownloadService
   ) {
     super(injector);
 
@@ -187,10 +192,13 @@ export class RequiredDocumentFilesComponent extends AppComponentBase implements 
     });
   }
   getTenantRrquiredDocuments() {
-    this._documentFilesServiceProxy.getTenantRequiredDocumentFilesTemplateForCreate().subscribe((result) => {
+    this._documentFilesServiceProxy.getTenentMissingDocuments().subscribe((result) => {
       result.forEach((x) => (x.expirationDate = null));
       this.createOrEditDocumentFileDtos = result;
       this.active = true;
+      if (this.createOrEditDocumentFileDtos.length > 0) {
+        this.scrollToRequiredDocumentsList();
+      }
     });
   }
 
@@ -209,6 +217,31 @@ export class RequiredDocumentFilesComponent extends AppComponentBase implements 
     documnet.documentTypeId = documnetType.id.toString();
     this._documentFilesServiceProxy.isDocumentTypeNumberUnique(documnet).subscribe((result) => {
       this.uniqueNumberIsInvalideIndexList[index] = !result;
+    });
+  }
+
+  downloadDocument(documentFile: DocumentFileDto) {
+    this._documentFilesServiceProxy.getDocumentFileDto(documentFile.id).subscribe((result) => {
+      this._fileDownloadService.downloadTempFile(result);
+    });
+  }
+
+  deleteDocumentFile(documentFile: DocumentFileDto): void {
+    this.message.confirm('', this.l('AreYouSure'), (isConfirmed) => {
+      if (isConfirmed) {
+        this._documentFilesServiceProxy.delete(documentFile.id).subscribe(() => {
+          this.reload();
+          this.notify.success(this.l('SuccessfullyDeleted'));
+        });
+      }
+    });
+  }
+
+  scrollToRequiredDocumentsList() {
+    this.myScrollContainer.nativeElement.scrollIntoView({
+      top: this.myScrollContainer.nativeElement.scrollHeight,
+      left: 0,
+      behavior: 'smooth',
     });
   }
 }

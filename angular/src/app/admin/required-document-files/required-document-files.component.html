@@ -38,9 +38,9 @@
                     <th style="width: 150px;">
                       {{ l('Extn') }}
                     </th>
-                    <!-- <th style="width: 150px;">
-                                      {{ l('LastModificationTime') }}
-                                    </th> -->
+                    <th style="width: 150px;">
+                      {{ l('ExpirationDate') }}
+                    </th>
                     <th style="width: 150px;">
                       {{ l('Status') }}
                     </th>
@@ -50,6 +50,13 @@
                   <tr>
                     <td style="width: 130px;">
                       <div class="btn-group dropdown" dropdown container="body">
+                        <i
+                          *ngIf="record.expirationDate < today"
+                          class="flaticon2-information text-warning"
+                          style="padding: 3px;"
+                          data-toggle="tooltip"
+                          title="DocumnetIsExpired"
+                        ></i>
                         <button class="dropdown-toggle btn btn-sm btn-primary" dropdownToggle>
                           <i class="fa fa-cog"></i><span class="caret"></span> {{ l('Actions') }}
                         </button>
@@ -58,13 +65,19 @@
                                                   <a href="javascript:;" class="dropdown-item">{{ l('View') }}</a>
                                                 </li> -->
                           <li>
-                            <a href="javascript:;" class="dropdown-item">{{ l('Edit') }}</a>
+                            <a
+                              href="javascript:;"
+                              class="dropdown-item"
+                              (click)="createOrEditDocumentFileModal.show(appSession.tenantId.toString(), 'Tenant', record.id)"
+                              >{{ l('Edit') }}</a
+                            >
+                          </li>
+
+                          <li>
+                            <a class="dropdown-item" href="javascript:;" (click)="downloadDocument(record)">{{ l('Download') }}</a>
                           </li>
                           <li>
-                            <a class="dropdown-item" href="javascript:;">{{ l('Download') }}</a>
-                          </li>
-                          <li>
-                            <a class="dropdown-item" href="javascript:;">{{ l('Delete') }}</a>
+                            <a class="dropdown-item" href="javascript:;" (click)="deleteDocumentFile(record)">{{ l('Delete') }}</a>
                           </li>
                         </ul>
                       </div>
@@ -77,25 +90,32 @@
                       <span class="ui-column-title"></span>
                       {{ record.extn }}
                     </td>
-                    <!-- <td style="width: 150px;">
-                                      <span class="ui-column-title"> </span>
-                                      {{ record.lastModificationTime == null ? '-' : (record.lastModificationTime | momentFormat: 'L') }}
-                                    </td> -->
+
+                    <td style="width: 150px;">
+                      <span class="ui-column-title"> </span>
+                      {{ record.expirationDate == null ? '-' : (record.expirationDate | momentFormat: 'L') }}
+                    </td>
+
                     <td style="width: 150px;">
                       <span class="ui-column-title"></span>
-                      <div *ngIf="record.isAccepted">
+                      <div *ngIf="record.isAccepted && record.expirationDate > today">
                         <span class="label label-lg font-weight-bold label-light-success label-inline">
                           {{ l('Accepted') }}
                         </span>
                       </div>
-                      <div *ngIf="record.isRejected">
+                      <div *ngIf="record.isRejected && record.expirationDate > today">
                         <span class="label label-lg font-weight-bold label-light-danger label-inline">
                           {{ l('Rejected') }}
                         </span>
                       </div>
-                      <div *ngIf="!record.isRejected && !record.isAccepted">
+                      <div *ngIf="!record.isRejected && !record.isAccepted && record.expirationDate > today">
                         <span class="label label-lg font-weight-bold label-light-primary label-inline">
                           {{ l('InReview') }}
+                        </span>
+                      </div>
+                      <div *ngIf="record.expirationDate < today">
+                        <span class="label label-lg font-weight-bold label-light-warning label-inline">
+                          {{ l('Expired') }}
                         </span>
                       </div>
                     </td>
@@ -110,7 +130,7 @@
         </div>
       </div>
     </div>
-    <div [class]="containerClass">
+    <div #requiredDocumentsCard [class]="containerClass">
       <div *ngIf="createOrEditDocumentFileDtos.length != 0" class="alert alert-custom alert-light-danger" role="alert">
         <div class="alert-icon"><i class="flaticon-warning"></i></div>
         <div class="alert-text">{{ l('Please upload the following documents in order to finalize your registration process.') }}</div>
@@ -169,12 +189,12 @@
                           required
                           [maxLength]="
                             item.documentTypeDto.numberMaxDigits == 0 || item.documentTypeDto.numberMaxDigits == null
-                              ? null
+                              ? 20
                               : item.documentTypeDto.numberMaxDigits
                           "
                           [minLength]="
                             item.documentTypeDto.numberMinDigits == 0 || item.documentTypeDto.numberMinDigits == null
-                              ? null
+                              ? 1
                               : item.documentTypeDto.numberMinDigits
                           "
                           type="text"
@@ -195,11 +215,17 @@
                           [label]="l('ExpirationDate') + '*'"
                           class="m-input"
                           [isRequired]="true"
+                          [selectedDate]="datePickerToday"
                           [readonly]="true"
+                          [minGreg]="datePickerToday"
+                          [minHijri]="datePickerToday"
                           [selectedDateType]="item.documentTypeDto.hasHijriExpirationDate ? selectedDateTypeHijri : selectedDateTypeGregorian"
                           (selectedDateChange)="selectedDateChange($event, item)"
                         >
                         </hijri-gregorian-datepicker-test>
+                        <div *ngIf="DateInvalideIndexList[i]">
+                          <span class="form-text text-danger text-left">{{ 'DateIsRequired' | localize }}</span>
+                        </div>
                       </div>
                       <div *ngIf="item.documentTypeDto.hasNotes" class="form-group col-md-12">
                         <label>{{ l('note') }}</label>
@@ -243,4 +269,5 @@
       </div>
     </div>
   </div>
+  <createOrEditDocumentFileModal #createOrEditDocumentFileModal (modalSave)="reload()"></createOrEditDocumentFileModal>
 </div>
