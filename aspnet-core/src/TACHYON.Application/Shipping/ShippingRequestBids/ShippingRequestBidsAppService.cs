@@ -177,38 +177,40 @@ namespace TACHYON.Shipping.ShippingRequestBids
         [RequiresFeature(AppFeatures.Shipper)]
         public async Task AcceptBid(ShippingRequestBidInput input)
         {
-            var bid = await _shippingRequestBidsRepository.GetAll().Include(y => y.ShippingRequestFk)
-                    .FirstOrDefaultAsync(x=>x.Id== input.ShippingRequestBidId);
-            if (bid != null)
+            using (CurrentUnitOfWork.DisableFilter(AbpDataFilters.MustHaveTenant))
             {
-                if(bid.ShippingRequestFk.ShippingRequestBidStatusId != TACHYONConsts.ShippingRequestStatusOnGoing)
+                var bid = await _shippingRequestBidsRepository.GetAll().Include(y => y.ShippingRequestFk)
+                    .FirstOrDefaultAsync(x => x.Id == input.ShippingRequestBidId);
+                if (bid != null)
                 {
-                    ThrowSRnotOngoingError();
+                    if (bid.ShippingRequestFk.ShippingRequestBidStatusId != TACHYONConsts.ShippingRequestStatusOnGoing)
+                    {
+                        ThrowSRnotOngoingError();
+                    }
+                    bid.IsAccepted = true;
+
+                    //#540 notification to carrier told bid accepted
+
+                    await _appNotifier.AcceptShippingRequestBid(new UserIdentifier(bid.TenantId, bid.CreatorUserId.Value), bid.ShippingRequestId);
+
+                    //Reject the other bids of this shipping request
+                    var otherBids = _shippingRequestBidsRepository.GetAll()
+                        .Where(x => x.ShippingRequestId == bid.ShippingRequestId)
+                        .Where(x => x.Id != bid.Id);
+                    foreach (var item in otherBids)
+                    {
+                        item.IsRejected = true;
+                    }
+
+                    //update shippingRequest final price
+                    var shippingRequestItem = _shippingRequestsRepository.FirstOrDefault(bid.ShippingRequestId);
+                    shippingRequestItem.Price = Convert.ToDecimal(bid.price);
+                    shippingRequestItem.Close();
                 }
-                bid.IsAccepted = true;
-
-                //#540 notification to carrier told bid accepted
-
-                await _appNotifier.AcceptShippingRequestBid(new UserIdentifier(bid.TenantId, bid.CreatorUserId.Value), bid.ShippingRequestId);
-
-                //Reject the other bids of this shipping request
-                var otherBids = _shippingRequestBidsRepository.GetAll()
-                    .Where(x => x.ShippingRequestId == bid.ShippingRequestId)
-                    .Where(x => x.Id != bid.Id);
-                foreach (var item in otherBids)
+                else
                 {
-                    item.IsRejected = true;
+                    throw new UserFriendlyException(L("Bid Is not exist message"));
                 }
-
-                //update shippingRequest final price
-                var shippingRequestItem = _shippingRequestsRepository.FirstOrDefault(bid.ShippingRequestId);
-                shippingRequestItem.Price = Convert.ToDecimal(bid.price);
-                shippingRequestItem.Close();
-
-            }
-            else
-            {
-                throw new UserFriendlyException(L("Bid Is not exist message"));
             }
         }
 
@@ -238,32 +240,40 @@ namespace TACHYON.Shipping.ShippingRequestBids
         {
             using (CurrentUnitOfWork.DisableFilter(AbpDataFilters.MustHaveTenant))
             {
-                var bid = await _shippingRequestBidsRepository.GetAll().Include(y=>y.ShippingRequestFk)
-                    .FirstOrDefaultAsync(x=>x.Id== input.ShippingRequestBidId);
-                //check if the bid is already canceled
-                if (bid.IsCancled)
+                var bid = await _shippingRequestBidsRepository.GetAll().Include(y => y.ShippingRequestFk)
+                    .FirstOrDefaultAsync(x => x.Id == input.ShippingRequestBidId);
+                if (bid != null)
                 {
-                    throw new UserFriendlyException(L("bid is already canceled message"));
+                    //check if the bid is already canceled
+                    if (bid.IsCancled)
+                    {
+                        throw new UserFriendlyException(L("bid is already canceled message"));
+                    }
+
+
+                    //Cancel Bid
+                    bid.IsCancled = true;
+                    bid.CanceledDate = Clock.Now;
+
+                    //Check if SR is not ongoing -- add cancel reason
+
+                    if (bid.ShippingRequestFk.ShippingRequestBidStatusId != TACHYONConsts.ShippingRequestStatusOnGoing)
+                    {
+                        bid.CancledReason = input.CancledReason;
+                    }
+
+                    //notification to shipper when Carrier cancel his bid in his SR
+                    await _appNotifier.CancelBidRequest(
+                        new UserIdentifier(bid.ShippingRequestFk.TenantId, bid.ShippingRequestFk.CreatorUserId.Value),
+                        bid.ShippingRequestId,
+                        bid.Id);
                 }
-
-              
-                //Cancel Bid
-                bid.IsCancled = true;
-                bid.CanceledDate = Clock.Now;
-
-                //Check if SR is not ongoing -- add cancel reason
-
-                if (bid.ShippingRequestFk.ShippingRequestBidStatusId != TACHYONConsts.ShippingRequestStatusOnGoing)
+                else
                 {
-                    bid.CancledReason = input.CancledReason;
+                    throw new UserFriendlyException(L("the bid is not exists message"));
                 }
-
-                //notification to shipper when Carrier cancel his bid in his SR
-                await _appNotifier.CancelBidRequest(
-                    new UserIdentifier(bid.ShippingRequestFk.TenantId, bid.ShippingRequestFk.CreatorUserId.Value),
-                    bid.ShippingRequestId,
-                    bid.Id);
             }
+            
         }
 
         //#542 Shipper can view all his bids requests with current status
