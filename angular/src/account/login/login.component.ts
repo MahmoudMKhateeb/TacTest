@@ -31,7 +31,8 @@ export class LoginComponent extends AppComponentBase implements OnInit {
   }
 
   get multiTenancySideIsTeanant(): boolean {
-    return this._sessionService.tenantId > 0;
+    // return this._sessionService.tenantId > 0;
+    return false;
   }
 
   get isTenantSelfRegistrationAllowed(): boolean {
