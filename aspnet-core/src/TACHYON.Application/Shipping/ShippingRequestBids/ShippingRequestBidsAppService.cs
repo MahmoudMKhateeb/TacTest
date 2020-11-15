@@ -26,6 +26,9 @@ using TACHYON.Notifications;
 using Abp;
 using System.Configuration;
 using Microsoft.Extensions.Logging;
+using TACHYON.MultiTenancy;
+using NPOI.SS.Formula.Functions;
+using TACHYON.Shipping.ShippingRequests.Dtos;
 
 namespace TACHYON.Shipping.ShippingRequestBids
 {
@@ -34,14 +37,17 @@ namespace TACHYON.Shipping.ShippingRequestBids
     {
         private readonly IRepository<ShippingRequestBid, long> _shippingRequestBidsRepository;
         private readonly IRepository<ShippingRequest, long> _shippingRequestsRepository;
+        private readonly IRepository<Tenant> _tenantsRepository;
         private readonly IAppNotifier _appNotifier;
 
         public ShippingRequestBidsAppService(IRepository<ShippingRequestBid, long> shippingRequestBidsRepository,
             IRepository<ShippingRequest, long> shippingRequestsRepository,
+            IRepository<Tenant> tenantsRepository,
             IAppNotifier appNotifier)
         {
             _shippingRequestBidsRepository = shippingRequestBidsRepository;
             _shippingRequestsRepository = shippingRequestsRepository;
+            _tenantsRepository = tenantsRepository;
             _appNotifier = appNotifier;
         }
 
@@ -165,10 +171,7 @@ namespace TACHYON.Shipping.ShippingRequestBids
         protected async Task<long> Edit(CreatOrEditShippingRequestBidDto input)
         {
             var item = await _shippingRequestBidsRepository.FirstOrDefaultAsync((long)input.Id);
-            if (item.IsCancled != true)
-            {
-                throw new UserFriendlyException(L("can't edit canceled bid message"));
-            }
+            
             ObjectMapper.Map(input, item);
             return item.Id;
         }
@@ -220,18 +223,26 @@ namespace TACHYON.Shipping.ShippingRequestBids
         }
         //#541
         [RequiresFeature(AppFeatures.Carrier)]
-        public async Task<List<ViewCarrierBidsOutput>> ViewAllCarrierBids()
+        public async Task<List<ViewCarrierBidsOutput>> GetAllCarrierBidsForView()
         {
             using (CurrentUnitOfWork.DisableFilter(AbpDataFilters.MustHaveTenant))
             {
-                var shippingRequests = await _shippingRequestBidsRepository.GetAll()
+                var shippingRequestBids = _shippingRequestBidsRepository.GetAll()
                     .Include(x => x.ShippingRequestFk)
-                    .Where(x => x.TenantId == AbpSession.TenantId)
-                    //.Select(x => x.ShippingRequestFk)
-                    .ToListAsync();
+                    .Where(x => x.TenantId == AbpSession.TenantId);
 
+                var tenants = _tenantsRepository.GetAll();
 
-                return ObjectMapper.Map<List<ViewCarrierBidsOutput>>(shippingRequests);
+                var list=  from o in shippingRequestBids
+                           join t in tenants on o.ShippingRequestFk.TenantId equals t.Id
+                       select new ViewCarrierBidsOutput()
+                       {
+                            ShipperTenancyName=t.Name,
+                            ShippingRequestBidDto= ObjectMapper.Map<ShippingRequestBidsDto>(o),
+                            ShippingRequestDto= ObjectMapper.Map<ShippingRequestDto>(o.ShippingRequestFk)
+                       };
+
+                return await list.ToListAsync();
             }
         }
 
@@ -305,7 +316,9 @@ namespace TACHYON.Shipping.ShippingRequestBids
             .OrderBy(input.Sorting ?? "id asc")
             .PageBy(input);
 
+            var tenants = _tenantsRepository.GetAll();
             var shippingRequestBids = from o in pagedAndFilteredShippingRequestsBids
+                                      join t in tenants on o.TenantId equals t.Id
                                       select new ViewShipperBidsReqDetailsOutputDto()
                                       {
                                           viewShipperBidsReqDetailsOutput = new ViewShipperBidsReqDetailsOutput
@@ -314,7 +327,7 @@ namespace TACHYON.Shipping.ShippingRequestBids
                                               EndBidDate = o.BidEndDate,
                                               IsOngoingBid = o.ShippingRequestBidStatusId == TACHYONConsts.ShippingRequestStatusOnGoing ? true : false,
                                               ShippingRequestBidStatusName = o.ShippingRequestBidStatusFK.DisplayName,
-                                              ShipperName = o.CarrierTenantFk.Edition.DisplayName,
+                                              ShipperName = t.Name,
                                               StartBidDate = o.BidStartDate,
                                               TruckTypeDisplayName = o.TransportSubtypeFk.DisplayName,
                                               GoodCategoryName = o.GoodCategoryFk.DisplayName,

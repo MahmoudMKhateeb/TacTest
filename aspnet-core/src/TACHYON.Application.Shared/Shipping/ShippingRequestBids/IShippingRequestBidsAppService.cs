@@ -14,7 +14,7 @@ namespace TACHYON.Shipping.ShippingRequestBids
         Task CancelShippingRequestBid(StopShippingRequestBidInput input);
         Task<long> CreateOrEditShippingRequestBid(CreatOrEditShippingRequestBidDto input);
         Task AcceptBid(ShippingRequestBidInput input);
-        Task<List<ViewCarrierBidsOutput>> ViewAllCarrierBids();
+        Task<List<ViewCarrierBidsOutput>> GetAllCarrierBidsForView();
         Task CancelBidRequest(ShippingRequestBidInput input);
         Task<PagedResultDto<ViewShipperBidsReqDetailsOutputDto>> GetShipperbidsRequestDetailsForView(PagedAndSortedResultRequestDto input);
         Task<PagedResultDto<ViewShipperBidsReqDetailsOutputDto>> GetAllbidsRequestDetailsForView(PagedAndSortedResultRequestDto input, GetAllBidsInput input2);

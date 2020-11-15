@@ -202,6 +202,10 @@ namespace TACHYON.EntityFrameworkCore
                        {
                            s.HasIndex(e => new { e.TenantId });
                        });
+            modelBuilder.Entity<ShippingRequestBid>(s =>
+            {
+                s.HasIndex(e => new { e.TenantId });
+            });
             modelBuilder.Entity<GoodsDetail>(g =>
                        {
                            g.HasIndex(e => new { e.TenantId });

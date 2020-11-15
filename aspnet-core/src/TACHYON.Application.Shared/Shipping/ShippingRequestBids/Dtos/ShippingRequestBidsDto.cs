@@ -11,6 +11,9 @@ namespace TACHYON.Shipping.ShippingRequestBids.Dtos
         public long ShippingRequestId { get; set; }
         public bool IsAccepted { get; set; }
         public bool IsRejected { get; set; }
+        public string CancledReason { get; set; }
+        public DateTime? AcceptedDate { get; set; }
+        public DateTime? CanceledDate { get; set; }
 
     }
 }

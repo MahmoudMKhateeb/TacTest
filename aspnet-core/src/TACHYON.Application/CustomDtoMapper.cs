@@ -170,9 +170,6 @@ namespace TACHYON
                 .ReverseMap();
             configuration.CreateMap<ShippingRequestBidsDto, ShippingRequestBid>().ReverseMap();
             configuration.CreateMap<CreatOrEditShippingRequestBidDto, ShippingRequestBid>().ReverseMap();
-            configuration.CreateMap<ViewCarrierBidsOutput, ShippingRequest>()
-                .ForMember(dst=>dst.ShippingRequestBids, opt=>opt.MapFrom(src=>src.ShippingRequestBidsListDto))
-                .ReverseMap();
             configuration.CreateMap<ShippingRequestDto, ShippingRequest>().ReverseMap();
             configuration.CreateMap<CreateOrEditGoodsDetailDto, GoodsDetail>().ReverseMap();
             configuration.CreateMap<GoodsDetailDto, GoodsDetail>().ReverseMap();

@@ -8,12 +8,16 @@ namespace TACHYON.Shipping.ShippingRequestBids.Dtos
 {
     public class ViewCarrierBidsOutput
     {
-        public List<ShippingRequestBidsDto> ShippingRequestBidsListDto { get; set; }
-        public double Price { get; set; }
-        public bool IsCancled { get; set; }
-        public bool? IsAccepted { get; set; }
-        public string CancledReason { get; set; }
-        public DateTime AcceptedDate { get; set; }
-        public DateTime CancledDate { get; set; }
+         public ShippingRequestBidsDto ShippingRequestBidDto { get; set; }
+        public ShippingRequestDto ShippingRequestDto { get; set; }
+        //public long ShippingRequestId { get; set; }
+        //public double price { get; set; }
+        //public bool IsCancled { get; set; }
+        //public bool IsAccepted { get; set; }
+        //public bool IsRejected { get; set; }
+        //public string CancledReason { get; set; }
+        //public DateTime? AcceptedDate { get; set; }
+        //public DateTime? CanceledDate { get; set; }
+        public string ShipperTenancyName { get; set; }
     }
 }
