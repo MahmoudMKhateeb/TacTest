@@ -40,7 +40,9 @@ export class RegisterTenantComponent extends AppComponentBase implements OnInit,
   allCities: TenantCityLookupTableDto[];
   saving = false;
   isCountySelected = false;
-
+  isCompanyNameAvailable = true;
+  isEmailAvailable = true;
+  isEmailValid = true;
   constructor(
     injector: Injector,
     private _tenantRegistrationService: TenantRegistrationServiceProxy,
@@ -88,6 +90,10 @@ export class RegisterTenantComponent extends AppComponentBase implements OnInit,
   }
 
   save(): void {
+    if (this.isEmailAvailable == false || this.isCompanyNameAvailable == false || this.isEmailValid == false) {
+      this.notify.error('PleaseMakeSureYouProvideValidDetails!');
+      return;
+    }
     if (this.model.countryId == -2 || this.model.cityId == -2) {
       this.notify.error('please make sure you choose the country and the city!');
       return;
@@ -144,6 +150,36 @@ export class RegisterTenantComponent extends AppComponentBase implements OnInit,
   GetAllCountries() {
     this._tenantRegistrationService.getAllCountryForTableDropdown().subscribe((result) => {
       this.allCountries = result;
+    });
+  }
+
+  removeWhiteSpacesFromEmail() {
+    console.log(this.model.adminEmailAddress);
+    // this.model.adminEmailAddress.trim();
+    console.log(this.model.adminEmailAddress);
+
+    var exp = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/g;
+
+    var result = exp.test(this.model.adminEmailAddress);
+
+    // console.log(result);
+
+    if (!result) {
+      this.isEmailValid = false;
+    } else {
+      this.isEmailValid = true;
+    }
+    this.checkIfIsEmailAvailable();
+  }
+
+  checkIfIsCompanyUniqueName() {
+    this._tenantRegistrationService.checkIfCompanyUniqueNameisAvailable(this.model.tenancyName).subscribe((result) => {
+      this.isCompanyNameAvailable = result;
+    });
+  }
+  checkIfIsEmailAvailable() {
+    this._tenantRegistrationService.checkIfEmailisAvailable(this.model.adminEmailAddress).subscribe((result) => {
+      this.isEmailAvailable = result;
     });
   }
 }
