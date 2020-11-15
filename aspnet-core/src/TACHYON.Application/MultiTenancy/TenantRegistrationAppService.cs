@@ -4,6 +4,7 @@ using Abp.Authorization.Users;
 using Abp.Configuration;
 using Abp.Configuration.Startup;
 using Abp.Domain.Repositories;
+using Abp.Domain.Uow;
 using Abp.Localization;
 using Abp.Runtime.Session;
 using Abp.Timing;
@@ -81,6 +82,14 @@ namespace TACHYON.MultiTenancy
 
             using (CurrentUnitOfWork.SetTenantId(null))
             {
+                var isMailValid = await CheckIfEmailisAvailable(input.AdminEmailAddress);
+                var isCompanyNameValid = CheckIfCompanyUniqueNameisAvailable(input.TenancyName);
+
+                if (!isCompanyNameValid || !isMailValid)
+                {
+                    throw new Exception("admin Email Or CompanyName Is Already Taken!");
+                }
+
                 CheckTenantRegistrationIsEnabled();
 
                 if (UseCaptchaOnRegistration())
@@ -318,6 +327,40 @@ namespace TACHYON.MultiTenancy
                     Id = county.Id,
                     DisplayName = county == null || county.DisplayName == null ? "" : county.DisplayName.ToString()
                 }).ToListAsync();
+        }
+
+
+
+        public bool CheckIfCompanyUniqueNameisAvailable(string CompanyName)
+        {
+            using (CurrentUnitOfWork.DisableFilter(AbpDataFilters.MayHaveTenant))
+            {
+                var result = _tenantManager.FindByTenancyName(CompanyName);
+                if (result == null)
+                {
+                    return true;
+                }
+                else
+                {
+                    return false;
+                }
+            }
+        }
+        public async Task<bool> CheckIfEmailisAvailable(string email)
+        {
+            using (CurrentUnitOfWork.DisableFilter(AbpDataFilters.MayHaveTenant))
+            {
+                var result =await UserManager.FindByEmailAsync(email);
+            if (result == null)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+            }
+
         }
     }
 }

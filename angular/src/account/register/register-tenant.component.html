@@ -20,10 +20,11 @@
         <div class="form-group">
           <input
             #tenancyName="ngModel"
-            class="form-control form-control-solid h-auto rounded-lg font-size-h6"
+            class="form-control"
             autoFocus
             type="text"
             placeholder="{{ 'TenancyName' | localize }} *"
+            (change)="checkIfIsCompanyUniqueName()"
             [(ngModel)]="model.tenancyName"
             name="tenancyName"
             required
@@ -31,8 +32,12 @@
             maxlength="64"
             pattern="^[a-zA-Z][a-zA-Z0-9_-]{1,}$"
           />
-          <div *ngIf="!tenancyName.valid && !tenancyName.pristine">
-            <span class="form-text text-danger text-left">{{ 'TenantName_Regex_Description' | localize }}</span>
+          <div>
+            <span class="form-text text-muted">{{ l('EnterCompanyUniqueName') }}</span>
+            <span *ngIf="!isCompanyNameAvailable" class="form-text text-danger text-left">{{ 'NameIsAlreadyTakenPleasev' | localize }}</span>
+            <span *ngIf="!tenancyName.valid && !tenancyName.pristine" class="form-text text-danger text-left">{{
+              'TenantName_Regex_Description' | localize
+            }}</span>
           </div>
         </div>
       </div>
@@ -41,7 +46,7 @@
         <div class="form-group">
           <input
             #nameInput="ngModel"
-            class="form-control form-control-solid h-auto rounded-lg font-size-h6"
+            class="form-control"
             type="text"
             placeholder="Full legal name *"
             [(ngModel)]="model.name"
@@ -49,6 +54,9 @@
             required
             maxlength="128"
           />
+          <div>
+            <span class="form-text text-muted">{{ l('EnterCompanyFullLegalName') }}</span>
+          </div>
           <validation-messages [formCtrl]="nameInput"></validation-messages>
         </div>
       </div>
@@ -60,16 +68,18 @@
           <select
             (change)="CountryChanged($event)"
             #countrySelect="ngModel"
-            class="dropdown-menu"
+            class="form-control form-control-lg custom-select mr-sm-2"
             name="tenant.countryId"
             [(ngModel)]="model.countryId"
-            class="form-control"
             required
           >
             <option selected value="-2">{{ l('Select A Country') }}</option>
             <option *ngFor="let country of allCountries" value="{{ country.id }}">{{ country.displayName }}</option>
           </select>
-          <span class="form-text text-danger" *ngIf="countrySelect.value == -2 && countrySelect.touched">Country is required</span>
+          <div>
+            <span class="form-text text-muted">{{ l('SelectACountry') }}</span>
+            <span class="form-text text-danger" *ngIf="countrySelect.value == -2 && countrySelect.touched">Country is required</span>
+          </div>
           <!-- <validation-messages [formCtrl]="nameInput"></validation-messages> -->
         </div>
       </div>
@@ -79,17 +89,19 @@
           <select
             [disabled]="!isCountySelected"
             #citySelect="ngModel"
-            class="dropdown-menu"
+            class="form-control form-control-lg custom-select mr-sm-2"
             name="tenant.cityId"
             [(ngModel)]="model.cityId"
-            class="form-control"
             required
           >
             <option value="-2">{{ l('Select A City') }}</option>
             <option *ngFor="let city of allCities" value="{{ city.id }}">{{ city.displayName }}</option>
             <option value="-1">{{ l('Other') }}</option>
           </select>
-          <span class="form-text text-danger" *ngIf="citySelect.value == -2 && citySelect.touched">City is required</span>
+          <div>
+            <span class="form-text text-muted">{{ l('SelectACity') }}</span>
+            <span class="form-text text-danger" *ngIf="citySelect.value == -2 && citySelect.touched">City is required</span>
+          </div>
           <!-- <validation-messages [formCtrl]="cityInput"></validation-messages> -->
         </div>
       </div>
@@ -108,7 +120,11 @@
             required
             maxlength="128"
           />
-          <validation-messages [formCtrl]="addressInput"></validation-messages>
+          <div>
+            <validation-messages [formCtrl]="addressInput"></validation-messages>
+            <span class="form-text text-muted">{{ l('PleaseFillTheAddress') }}</span>
+            <span class="form-text text-muted">{{ l('Format:City--State--Street Name--Zip') }}</span>
+          </div>
         </div>
       </div>
     </div>
@@ -116,7 +132,6 @@
     <h5 style="text-align: center;" class="mt-2">
       {{ 'Admin user Account info' | localize }}
     </h5>
-
     <hr />
     <div class="row">
       <div class="col-12">
@@ -129,12 +144,15 @@
             [(ngModel)]="model.adminEmailAddress"
             name="adminEmailAddress"
             required
+            (change)="removeWhiteSpacesFromEmail()"
             maxlength="256"
             email
           />
-          <span class="form-text text-danger">
-            <validation-messages [formCtrl]="adminEmailAddressInput"></validation-messages>
-          </span>
+          <div>
+            <span class="form-text text-muted">{{ l('EnterTheEmaiulAddress') }}</span>
+            <span *ngIf="!isEmailValid" class="form-text text-danger">{{ l('EmailAdressNotValid') }}</span>
+            <span *ngIf="!isEmailAvailable" class="form-text text-danger">{{ l('EmailAdressIsAlreadyTakenChooseAnotherOne') }}</span>
+          </div>
         </div>
       </div>
     </div>
@@ -145,7 +163,7 @@
           <input
             type="password"
             name="Password"
-            class="form-control form-control-solid h-auto py-7 px-6 rounded-lg font-size-h6"
+            class="form-control form-control-solid"
             [(ngModel)]="model.adminPassword"
             #Password="ngModel"
             placeholder="{{ 'AdminPassword' | localize }}"
@@ -188,7 +206,7 @@
           <input
             type="password"
             name="PasswordRepeat"
-            class="form-control form-control-solid h-auto py-7 px-6 rounded-lg font-size-h6"
+            class="form-control form-control-solid"
             [ngModel]="model.passwordRepeat"
             #PasswordRepeat="ngModel"
             placeholder="{{ 'PasswordRepeat' | localize }}"
@@ -218,7 +236,7 @@
               <li [hidden]="!PasswordRepeat.errors.requiredLength">
                 {{ 'PasswordComplexity_RequiredLength_Hint' | localize: passwordComplexitySetting.requiredLength }}
               </li>
-              <li [hidden]="PasswordRepeat.valid && PasswordRepeat.touched">{{ 'PasswordsDontMatch' | localize }}</li>
+              <li [hidden]="!PasswordRepeat.touched && !PasswordRepeat.valid">{{ 'PasswordsDontMatch' | localize }}</li>
             </ul>
           </div>
         </div>
@@ -237,7 +255,14 @@
       <button
         type="submit"
         class="btn btn-primary font-weight-bolder font-size-h6 px-8 py-4 my-3 mr-3"
-        [disabled]="!registerForm.form.valid || citySelect.value == -2 || countrySelect.value == -2"
+        [disabled]="
+          !isEmailValid ||
+          !isEmailAvailable ||
+          !isCompanyNameAvailable ||
+          !registerForm.form.valid ||
+          citySelect.value == -2 ||
+          countrySelect.value == -2
+        "
         [buttonBusy]="saving"
         [busyText]="l('SavingWithThreeDot')"
       >
