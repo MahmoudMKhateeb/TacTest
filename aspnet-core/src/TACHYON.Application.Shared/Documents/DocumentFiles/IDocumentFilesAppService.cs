@@ -37,6 +37,9 @@ namespace TACHYON.Documents.DocumentFiles
 
         Task<FileDto> GetDocumentFileDto(Guid documentFileId);
 
+        Task<bool> IsDocumentTypeNumberUnique(DocumentUniqueCheckOutput input);
+
+
         //Task<List<GetDocumentEntitiesLookupDto>> GetDocumentEntitiesForDocumentFile();
         Task<List<CreateOrEditDocumentFileDto>> GetDriverRequiredDocumentFiles(string userId);
         Task<List<CreateOrEditDocumentFileDto>> GetTruckRequiredDocumentFiles(string truckId);

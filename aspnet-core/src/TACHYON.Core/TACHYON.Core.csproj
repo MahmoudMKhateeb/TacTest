@@ -36,6 +36,7 @@
     <PackageReference Include="Twilio" Version="5.44.0" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\TACHYON.Application.Shared\TACHYON.Application.Shared.csproj" />
     <ProjectReference Include="..\TACHYON.Core.Shared\TACHYON.Core.Shared.csproj" />
   </ItemGroup>
 </Project>

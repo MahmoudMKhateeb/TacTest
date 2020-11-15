@@ -7,6 +7,7 @@ using Abp.Domain.Uow;
 using Abp.UI;
 using Microsoft.EntityFrameworkCore;
 using TACHYON.Documents.DocumentFiles;
+using TACHYON.Documents.DocumentFiles.Dtos;
 using TACHYON.Documents.DocumentTypes;
 using TACHYON.MultiTenancy;
 using TACHYON.Storage;
@@ -35,12 +36,13 @@ namespace TACHYON.Documents
 
 
         /// <summary>
-        ///list of missing required documents types from tenant
+        /// list of missing required documents types from tenant
         /// </summary>
         /// <param name="tenantId"></param>
         /// <returns></returns>
         public async Task<List<DocumentType>> GetAllTenantMissingRequiredDocumentTypesListAsync(int tenantId)
         {
+            // list of Accepted and not Rejected and not expired documents
             var existedList = await GetAllTenantActiveRequiredDocumentFilesListAsync(tenantId);
 
             var reqList = await GetAllTenantRequiredDocumentTypesListAsync(tenantId);
@@ -62,7 +64,7 @@ namespace TACHYON.Documents
 
 
         /// <summary>
-        ///     list of all required documents types from tenant
+        ///   list of all required documents types from tenant
         /// </summary>
         /// <param name="tenantId"></param>
         /// <returns></returns>
@@ -80,20 +82,25 @@ namespace TACHYON.Documents
 
 
         /// <summary>
-        ///     list all tenant active document Files
+        /// list all tenant active document Files
         /// </summary>
         /// <param name="tenantId"></param>
-        /// <returns></returns>
+        /// <returns>
+        /// list of Accepted and not Rejected and not expired documentsFiles
+        /// </returns>
         public async Task<List<DocumentFile>> GetAllTenantActiveRequiredDocumentFilesListAsync(int tenantId)
         {
             using (CurrentUnitOfWork.DisableFilter(AbpDataFilters.MayHaveTenant, AbpDataFilters.MustHaveTenant))
             {
                 return await _documentFileRepository.GetAll()
+                      .Include(doc => doc.DocumentTypeFk)
+                      .ThenInclude(doc => doc.DocumentsEntityFk)
+                      .Where(x => x.DocumentTypeFk.DocumentsEntityFk.DisplayName == AppConsts.TenantDocumentsEntityName)
                     .Where(x => x.TenantId == tenantId)
-                    //.Where(x => x.ExpirationDate > DateTime.Now || x.ExpirationDate == null || !x.DocumentTypeFk.HasExpirationDate)
-                    //.Where(x => x.DocumentTypeFk.IsRequired)
-                    //.Where(x => !x.IsRejected)
-                    //.Where(x => x.IsAccepted)
+                    .Where(x => x.ExpirationDate > DateTime.Now || x.ExpirationDate == null || !x.DocumentTypeFk.HasExpirationDate)
+                    .Where(x => x.DocumentTypeFk.IsRequired)
+                    .Where(x => !x.IsRejected)
+                    .Where(x => x.IsAccepted)
                     .ToListAsync();
             }
         }
@@ -123,5 +130,8 @@ namespace TACHYON.Documents
 
             return storedFile.Id;
         }
+
+
+        
     }
 }
