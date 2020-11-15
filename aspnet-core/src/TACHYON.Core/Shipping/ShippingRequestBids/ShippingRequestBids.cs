@@ -10,7 +10,7 @@ using TACHYON.Shipping.ShippingRequests;
 namespace TACHYON.Shipping.ShippingRequestBids
 {
     [Table("ShippingRequestBids")]
-    public class ShippingRequestBid :FullAuditedEntity<long>,IMustHaveTenant
+    public class ShippingRequestBid :FullAuditedEntity<long>,IMustHaveTenant,IHasIsCanceled
     {
         public int TenantId { get; set; }
         public long ShippingRequestId { get; set; }

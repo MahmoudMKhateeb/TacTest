@@ -4,8 +4,8 @@ using System.Text;
 
 namespace TACHYON.Shipping.ShippingRequestBids.Dtos
 {
-    public class ViewCarrierBidsInput
+    public class GetAllBidsInput
     {
-        public long CarrierUserId { get; set; }
+        public long? TruckTypeId { get; set; }
     }
 }

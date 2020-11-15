@@ -53,7 +53,7 @@ namespace TACHYON.Shipping.ShippingRequestBids
             {
                 var filterShippingRequestsBids = _shippingRequestBidsRepository.GetAll()
                     .Where(e => e.ShippingRequestId == input.ShippingRequestId)
-                    .Where(x => !x.IsCancled)
+                    //.Where(x => !x.IsCancled)
                     .WhereIf(input.MinPrice != null, e => e.price >= input.MinPrice)
                     .WhereIf(input.MaxPrice != null, e => e.price <= input.MaxPrice);
 
@@ -177,7 +177,8 @@ namespace TACHYON.Shipping.ShippingRequestBids
         [RequiresFeature(AppFeatures.Shipper)]
         public async Task AcceptBid(ShippingRequestBidInput input)
         {
-            var bid = await _shippingRequestBidsRepository.FirstOrDefaultAsync(input.ShippingRequestBidId);
+            var bid = await _shippingRequestBidsRepository.GetAll().Include(y => y.ShippingRequestFk)
+                    .FirstOrDefaultAsync(x=>x.Id== input.ShippingRequestBidId);
             if (bid != null)
             {
                 if(bid.ShippingRequestFk.ShippingRequestBidStatusId != TACHYONConsts.ShippingRequestStatusOnGoing)
@@ -235,46 +236,60 @@ namespace TACHYON.Shipping.ShippingRequestBids
         [RequiresFeature(AppFeatures.Carrier)]
         public async Task CancelBidRequest(ShippingRequestBidInput input)
         {
-            var bid = await _shippingRequestBidsRepository.FirstOrDefaultAsync(input.ShippingRequestBidId);
-            if (bid.IsCancled != true)
+            using (CurrentUnitOfWork.DisableFilter(AbpDataFilters.MustHaveTenant))
             {
-                throw new UserFriendlyException(L("bid is already canceled message"));
+                var bid = await _shippingRequestBidsRepository.GetAll().Include(y=>y.ShippingRequestFk)
+                    .FirstOrDefaultAsync(x=>x.Id== input.ShippingRequestBidId);
+                //check if the bid is already canceled
+                if (bid.IsCancled)
+                {
+                    throw new UserFriendlyException(L("bid is already canceled message"));
+                }
+
+              
+                //Cancel Bid
+                bid.IsCancled = true;
+                bid.CanceledDate = Clock.Now;
+
+                //Check if SR is not ongoing -- add cancel reason
+
+                if (bid.ShippingRequestFk.ShippingRequestBidStatusId != TACHYONConsts.ShippingRequestStatusOnGoing)
+                {
+                    bid.CancledReason = input.CancledReason;
+                }
+
+                //notification to shipper when Carrier cancel his bid in his SR
+                await _appNotifier.CancelBidRequest(
+                    new UserIdentifier(bid.ShippingRequestFk.TenantId, bid.ShippingRequestFk.CreatorUserId.Value),
+                    bid.ShippingRequestId,
+                    bid.Id);
             }
-
-
-            bid.IsCancled = true;
-            bid.CanceledDate = Clock.Now;
-
-            //notification to shipper when Carrier cancel his bid in his SR
-            await _appNotifier.CancelBidRequest(
-                new UserIdentifier(bid.ShippingRequestFk.TenantId, bid.ShippingRequestFk.CreatorUserId.Value), 
-                bid.ShippingRequestId,
-                bid.Id);
         }
 
         //#542 Shipper can view all his bids requests with current status
         [RequiresFeature(AppFeatures.Shipper)]
         public virtual async Task<PagedResultDto<ViewShipperBidsReqDetailsOutputDto>> GetShipperbidsRequestDetailsForView(PagedAndSortedResultRequestDto input)
         {
-            return await GetAllBids(input);
+            return await GetAllBids(input,null);
         }
 
         //#537 get All Shippers Shipping Requests to view for carrier
         [RequiresFeature(AppFeatures.Carrier)]
-        public virtual async Task<PagedResultDto<ViewShipperBidsReqDetailsOutputDto>> GetAllbidsRequestDetailsForView(PagedAndSortedResultRequestDto input)
+        public virtual async Task<PagedResultDto<ViewShipperBidsReqDetailsOutputDto>> GetAllbidsRequestDetailsForView(PagedAndSortedResultRequestDto input, GetAllBidsInput input2)
         {
             using (CurrentUnitOfWork.DisableFilter(AbpDataFilters.MustHaveTenant))
             {
-                return await GetAllBids(input);
+                return await GetAllBids(input,input2);
             }
         }
 
-        protected async Task<PagedResultDto<ViewShipperBidsReqDetailsOutputDto>> GetAllBids(PagedAndSortedResultRequestDto input)
+        protected async Task<PagedResultDto<ViewShipperBidsReqDetailsOutputDto>> GetAllBids(PagedAndSortedResultRequestDto input,GetAllBidsInput input2)
         {
             var filterShippingRequestsBids = _shippingRequestsRepository.GetAll()
                     .Include(x => x.ShippingRequestBidStatusFK)
                     .Where(x => x.IsBid == true)
-                   .Where(x => x.ShippingRequestBidStatusId != TACHYONConsts.ShippingRequestStatusCanceled);
+                    .WhereIf(input2.TruckTypeId != null, e => e.TrucksTypeId == input2.TruckTypeId);
+            // .Where(x => x.ShippingRequestBidStatusId != TACHYONConsts.ShippingRequestStatusCanceled);
 
             var pagedAndFilteredShippingRequestsBids = filterShippingRequestsBids
             .OrderBy(input.Sorting ?? "id asc")
@@ -293,8 +308,12 @@ namespace TACHYON.Shipping.ShippingRequestBids
                                               StartBidDate = o.BidStartDate,
                                               TruckTypeDisplayName = o.TransportSubtypeFk.DisplayName,
                                               GoodCategoryName = o.GoodCategoryFk.DisplayName,
-                                              BidsNo = o.ShippingRequestBids.Where(x=>x.IsCancled!=true).Count(),
-                                              LastBidPrice = o.ShippingRequestBids.Where(x => x.IsCancled == false).OrderByDescending(x => x.Id).FirstOrDefault().price,
+                                              BidsNo = o.ShippingRequestBids
+                                              //.Where(x=>x.IsCancled!=true)
+                                              .Count(),
+                                              LastBidPrice = o.ShippingRequestBids
+                                              //.Where(x => x.IsCancled == false)
+                                              .OrderByDescending(x => x.Id).FirstOrDefault().price,
                                               FirstBidId = o.ShippingRequestBids.FirstOrDefault().Id,
                                               OriginalCityName= o.RouteFk.OriginCityFk.DisplayName,
                                               DestinationCityName=o.RouteFk.DestinationCityFk.DisplayName
