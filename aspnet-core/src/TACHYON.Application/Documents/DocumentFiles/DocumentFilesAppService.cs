@@ -467,6 +467,7 @@ namespace TACHYON.Documents.DocumentFiles
             {
                 await _binaryObjectManager.DeleteAsync(documentFile.BinaryObjectId);
                 documentFile.BinaryObjectId = await _documentFilesManager.SaveDocumentFileBinaryObject(input.UpdateDocumentFileInput.FileToken, AbpSession.TenantId);
+                input.BinaryObjectId = documentFile.BinaryObjectId;
             }
 
             ObjectMapper.Map(input, documentFile);

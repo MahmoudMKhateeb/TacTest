@@ -31,9 +31,12 @@
                 [(ngModel)]="documentType.displayName"
                 name="DisplayName"
                 minlength="0"
+                (change)="isDocumentTypeNameAvaliable(documentType.displayName, documentType.id)"
                 maxlength="256"
                 required
               />
+              <span class="text-muted">{{ 'PleaseEnterDocumentType' | localize }}</span>
+              <span *ngIf="!documentNameisAvaliable" class="form-text text-danger text-left">{{ 'DocumentTypeNameIsAlreadyTaken' | localize }}</span>
             </div>
 
             <div class="col">
@@ -348,7 +351,7 @@
           <button
             type="submit"
             class="btn btn-save blue"
-            [disabled]="!documentTypeForm.form.valid"
+            [disabled]="!documentTypeForm.form.valid || !documentNameisAvaliable"
             [buttonBusy]="saving"
             [busyText]="l('SavingWithThreeDot')"
           >

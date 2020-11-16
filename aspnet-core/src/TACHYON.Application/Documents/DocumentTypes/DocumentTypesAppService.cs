@@ -110,7 +110,8 @@ namespace TACHYON.Documents.DocumentTypes
 
         public async Task CreateOrEdit(CreateOrEditDocumentTypeDto input)
         {
-            var IsDuplicateDocumentType = await _documentTypeRepository.FirstOrDefaultAsync(x => (x.DisplayName).Trim().ToLower() == (input.DisplayName).Trim().ToLower());
+            var IsDuplicateDocumentType = await _documentTypeRepository.FirstOrDefaultAsync(x => (x.DisplayName).Trim().ToLower() == (input.DisplayName).Trim().ToLower()
+            && x.Id != input.Id);
             if (IsDuplicateDocumentType != null)
             {
                 throw new UserFriendlyException(string.Format(L("DuplicateDocumentTypeName"), input.DisplayName));
@@ -231,5 +232,20 @@ namespace TACHYON.Documents.DocumentTypes
 
             return entities.Concat(editions).ToList();
         }
+
+        public bool IsDocuemntTypeNameAvaliable(string documentTypeName,int? id)
+        {
+            var result = _documentTypeRepository.FirstOrDefault(x => (x.DisplayName).Trim().ToLower() == (documentTypeName).Trim().ToLower()
+            &&x.Id!=id);
+
+            if (result == null)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }     
     }
 }

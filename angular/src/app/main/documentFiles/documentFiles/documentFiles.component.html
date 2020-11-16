@@ -42,130 +42,6 @@
                   </div>
                 </div>
               </div>
-              <div class="row" [hidden]="!advancedFiltersAreShown">
-                <div class="col-md-12">
-                  <div class="kt-separator kt-separator--border-dashed"></div>
-                </div>
-
-                <!-- <div class="col-md-3">
-                  <div class="form-group">
-                    <label for="NameFilter">{{ l('Name') }}</label>
-                    <input type="text" class="form-control" id="NameFilter" name="nameFilter" [(ngModel)]="nameFilter" />
-                  </div>
-                </div> -->
-                <div class="col-md-3">
-                  <div class="form-group">
-                    <label for="DocumentTypeDisplayNameFilter">{{ l('DocumentName') }} </label>
-                    <input
-                      type="text"
-                      class="form-control"
-                      id="DocumentTypeDisplayNameFilter"
-                      name="documentTypeDisplayNameFilter"
-                      [(ngModel)]="documentTypeDisplayNameFilter"
-                    />
-                  </div>
-                </div>
-                <!-- <div class="col-md-3">
-                  <div class="form-group">
-                    <label for="ExtnFilter">{{ l('Extn') }}</label>
-                    <input type="text" class="form-control" id="ExtnFilter" name="extnFilter" [(ngModel)]="extnFilter" />
-                  </div>
-                </div> -->
-                <!-- <div class="col-md-3">
-                  <div class="form-group">
-                    <label for="BinaryObjectIdFilter">{{ l('BinaryObjectId') }}</label>
-                    <input
-                      type="text"
-                      class="form-control"
-                      id="BinaryObjectIdFilter"
-                      name="binaryObjectIdFilter"
-                      [(ngModel)]="binaryObjectIdFilter"
-                    />
-                  </div>
-                </div> -->
-                <div class="col-md-3">
-                  <div class="form-group">
-                    <label for="MinExpirationDateFilter">{{ l('ExpirationDateRange') }}</label>
-                    <div class="input-group">
-                      <input
-                        class="form-control m-input"
-                        id="MinExpirationDateFilter"
-                        name="MinExpirationDateFilter"
-                        type="datetime"
-                        bsDatepicker
-                        placeholder="{{ l('MinValue') }}"
-                        [(ngModel)]="minExpirationDateFilter"
-                      />
-                      <span style="line-height: 40px; padding: 0 15px 0 15px;"> &mdash; </span>
-                      <input
-                        class="form-control m-input"
-                        id="MaxExpirationDateFilter"
-                        name="MaxExpirationDateFilter"
-                        type="datetime"
-                        bsDatepicker
-                        placeholder="{{ l('MaxValue') }}"
-                        [(ngModel)]="maxExpirationDateFilter"
-                      />
-                    </div>
-                  </div>
-                </div>
-                <!-- <div *ngIf="entityType == 'Tenant'" class="col-md-3">
-                  <div class="form-group">
-                    <label for="IsAcceptedFilter">{{ l('IsAccepted') }}</label>
-                    <input type="checkbox" class="form-control" id="IsAcceptedFilter" name="isAcceptedFilter" [(ngModel)]="isAcceptedFilter" />
-                  </div>
-                </div> -->
-
-                <div *ngIf="entityType == 'Truck'" class="col-md-3">
-                  <div class="form-group">
-                    <label for="TruckIdFilter">{{ l('Truck ID') }} </label>
-                    <input type="text" class="form-control" id="TruckIdFilter" name="truckIdFilter" [(ngModel)]="truckIdFilter" />
-                  </div>
-                </div>
-                <div *ngIf="entityType == 'Trailer'" class="col-md-3">
-                  <div class="form-group">
-                    <label for="TrailerTrailerCodeFilter">({{ l('Trailer ID') }}) </label>
-                    <input
-                      type="text"
-                      class="form-control"
-                      id="TrailerTrailerCodeFilter"
-                      name="trailerTrailerCodeFilter"
-                      [(ngModel)]="trailerTrailerCodeFilter"
-                    />
-                  </div>
-                </div>
-                <div *ngIf="entityType == 'Driver'" class="col-md-3">
-                  <div class="form-group">
-                    <label for="UserNameFilter">{{ l('Driver') }} </label>
-                    <input type="text" class="form-control" id="UserNameFilter" name="userNameFilter" [(ngModel)]="userNameFilter" />
-                  </div>
-                </div>
-                <div class="col-md-3">
-                  <!-- <div class="form-group">
-                    <label for="RoutStepDisplayNameFilter">({{ l('RoutStep') }}) {{ l('DisplayName') }}</label>
-                    <input
-                      type="text"
-                      class="form-control"
-                      id="RoutStepDisplayNameFilter"
-                      name="routStepDisplayNameFilter"
-                      [(ngModel)]="routStepDisplayNameFilter"
-                    />
-                  </div> -->
-                </div>
-              </div>
-              <div class="row mb-2">
-                <div class="col-sm-12">
-                  <span
-                    class="clickable-item text-muted"
-                    *ngIf="!advancedFiltersAreShown"
-                    (click)="advancedFiltersAreShown = !advancedFiltersAreShown"
-                    ><i class="fa fa-angle-down"></i> {{ l('ShowAdvancedFilters') }}</span
-                  >
-                  <span class="clickable-item text-muted" *ngIf="advancedFiltersAreShown" (click)="advancedFiltersAreShown = !advancedFiltersAreShown"
-                    ><i class="fa fa-angle-up"></i> {{ l('HideAdvancedFilters') }}</span
-                  >
-                </div>
-              </div>
             </div>
           </form>
 
@@ -189,20 +65,20 @@
                     <th style="width: 130px;" [hidden]="!isGrantedAny('Pages.DocumentFiles.Edit', 'Pages.DocumentFiles.Delete')">
                       {{ l('Actions') }}
                     </th>
-                    <th style="width: 150px;" pSortableColumn="displayName">
+                    <th style="width: 150px;" pSortableColumn="name">
                       {{ l('DocumentName') }}
-                      <p-sortIcon field="documentFile.displayName"></p-sortIcon>
+                      <p-sortIcon field="name"></p-sortIcon>
                     </th>
-                    <th *ngIf="entityType == 'Tenant' && isHost == true" style="width: 150px;" pSortableColumn="submitterTenatTenancyName">
+                    <th *ngIf="entityType == 'Tenant' && isHost == true" style="width: 150px;" pSortableColumn="documentTypeFk.editionFk.name">
                       {{ l('SubmitterTenant') }}
-                      <p-sortIcon field="documentFile.submitterTenatTenancyName"></p-sortIcon>
+                      <p-sortIcon field="documentTypeFk.editionFk.name"></p-sortIcon>
                     </th>
 
                     <!-- <th style="width: 150px;" pSortableColumn="documentTypeFk.DocumentsEntityFk.displayName">
                       {{ l('Entity') }}
                       <p-sortIcon field="Entity"></p-sortIcon>
                     </th> -->
-                    <th *ngIf="entityType == 'Truck'" style="width: 150px;" pSortableColumn="truckFk.trukId">
+                    <th *ngIf="entityType == 'Truck'" style="width: 150px;" pSortableColumn="truckFk.Id">
                       {{ l('Truck ID') }}
                       <p-sortIcon field="documentFile.truckId"></p-sortIcon>
                     </th>
@@ -243,7 +119,7 @@
                         <ul class="dropdown-menu" *dropdownMenu>
                           <li>
                             <a href="javascript:;" class="dropdown-item" (click)="viewDocumentFileModal.show(record, entityType, isHost)">{{
-                              l('View')
+                              l('ViewDetails')
                             }}</a>
                           </li>
                           <!--                          <li>-->
@@ -256,6 +132,9 @@
                           <!--                            >-->
                           <!--                          </li>-->
                           <li>
+                            <a class="dropdown-item" href="javascript:;" (click)="downloadDocument(record.documentFile)">{{ l('Download') }}</a>
+                          </li>
+                          <li>
                             <a
                               href="javascript:;"
                               *ngIf="permission.isGranted('Pages.DocumentFiles.Edit')"
@@ -267,7 +146,7 @@
                           <li>
                             <a
                               href="javascript:;"
-                              *ngIf="permission.isGranted('Pages.DocumentFiles.Edit')"
+                              *ngIf="!record.documentFile.isAccepted"
                               class="dropdown-item"
                               (click)="acceptDocumentFile(record.documentFile.id)"
                               >{{ l('Accept') }}</a
@@ -276,13 +155,13 @@
                           <li>
                             <a
                               href="javascript:;"
-                              *ngIf="permission.isGranted('Pages.DocumentFiles.Edit')"
+                              *ngIf="record.documentFile.isAccepted"
                               class="dropdown-item"
                               (click)="rejectDocumentFile(record.documentFile.id)"
                               >{{ l('Reject') }}</a
                             >
                           </li>
-                          <li>
+                          <!-- <li>
                             <a
                               class="dropdown-item"
                               href="javascript:;"
@@ -290,13 +169,11 @@
                               (click)="deleteDocumentFile(record.documentFile)"
                               >{{ l('Delete') }}</a
                             >
-                          </li>
-                          <li>
-                            <a class="dropdown-item" href="javascript:;" (click)="downloadDocument(record.documentFile)">{{ l('Download') }}</a>
-                          </li>
-                          <li>
+                          </li> -->
+
+                          <!-- <li>
                             <a href="javascript:;" *ngIf="entityHistoryEnabled" (click)="showHistory(record.documentFile)">{{ l('History') }}</a>
-                          </li>
+                          </li> -->
                         </ul>
                       </div>
                     </td>

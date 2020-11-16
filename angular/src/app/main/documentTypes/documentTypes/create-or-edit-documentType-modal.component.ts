@@ -43,7 +43,7 @@ export class CreateOrEditDocumentTypeModalComponent extends AppComponentBase {
   documentTypeDisplayNameFilter = '';
   active = false;
   saving = false;
-
+  documentNameisAvaliable = true;
   documentType: CreateOrEditDocumentTypeDto = new CreateOrEditDocumentTypeDto();
   allDocumentsEntities: SelectItemDto[];
 
@@ -207,5 +207,10 @@ export class CreateOrEditDocumentTypeModalComponent extends AppComponentBase {
       return false;
     }
     return true;
+  }
+  isDocumentTypeNameAvaliable(name: string, id) {
+    this._documentTypesServiceProxy.isDocuemntTypeNameAvaliable(name, id).subscribe((result) => {
+      this.documentNameisAvaliable = result;
+    });
   }
 }
