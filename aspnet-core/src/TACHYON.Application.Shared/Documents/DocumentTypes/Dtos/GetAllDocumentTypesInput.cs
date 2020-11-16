@@ -12,7 +12,7 @@ namespace TACHYON.Documents.DocumentTypes.Dtos
         public int IsRequiredFilter { get; set; }
         public int HasExpirationDateFilter { get; set; }
 
-        public int? RequiredFromFilter { get; set; }
+        public string RequiredFromFilter { get; set; }
 
 
 

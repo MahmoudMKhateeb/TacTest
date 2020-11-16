@@ -57,12 +57,18 @@ namespace TACHYON.Documents.DocumentTypes
                         .WhereIf(!string.IsNullOrWhiteSpace(input.DisplayNameFilter), e => e.DisplayName == input.DisplayNameFilter)
                         .WhereIf(input.IsRequiredFilter > -1, e => (input.IsRequiredFilter == 1 && e.IsRequired) || (input.IsRequiredFilter == 0 && !e.IsRequired))
                         .WhereIf(input.HasExpirationDateFilter > -1, e => (input.HasExpirationDateFilter == 1 && e.HasExpirationDate) || (input.HasExpirationDateFilter == 0 && !e.HasExpirationDate))
-                        .WhereIf(input.HasExpirationDateFilter > -1, e => (input.HasExpirationDateFilter == 1 && e.HasExpirationDate) || (input.HasExpirationDateFilter == 0 && !e.HasExpirationDate))
-                        .WhereIf(input.HasExpirationDateFilter > -1, e => (input.HasExpirationDateFilter == 1 && e.HasExpirationDate) || (input.HasExpirationDateFilter == 0 && !e.HasExpirationDate))
-                        .WhereIf(input.HasExpirationDateFilter > -1, e => (input.HasExpirationDateFilter == 1 && e.HasExpirationDate) || (input.HasExpirationDateFilter == 0 && !e.HasExpirationDate))
-                        .WhereIf(input.RequiredFromFilter.HasValue, e => e.DocumentsEntityId == input.RequiredFromFilter)
-                        //not driver or truck --> search in editions
-                        .WhereIf(input.RequiredFromFilter.HasValue && input.RequiredFromFilter != 2 && input.RequiredFromFilter != 3, e => e.EditionId == input.RequiredFromFilter);
+                        .WhereIf(!string.IsNullOrWhiteSpace(input.RequiredFromFilter)&& input.RequiredFromFilter == AppConsts.TruckDocumentsEntityName || input.RequiredFromFilter == AppConsts.DriverDocumentsEntityName, e => e.DocumentsEntityFk.DisplayName == input.RequiredFromFilter)
+                        //not driver or truck or tenant(general) --> search in editions
+                        .WhereIf(!string.IsNullOrWhiteSpace(input.RequiredFromFilter) 
+                        && input.RequiredFromFilter != AppConsts.TruckDocumentsEntityName 
+                        && input.RequiredFromFilter != AppConsts.DriverDocumentsEntityName
+                        && input.RequiredFromFilter != AppConsts.TenantDocumentsEntityName
+                        , e => e.EditionFk.DisplayName == input.RequiredFromFilter)
+                        //not tenants genral search
+                        .WhereIf(!string.IsNullOrWhiteSpace(input.RequiredFromFilter)
+                        && input.RequiredFromFilter != AppConsts.TruckDocumentsEntityName
+                        && input.RequiredFromFilter != AppConsts.DriverDocumentsEntityName
+                        , e =>  e.DocumentsEntityFk.DisplayName == input.RequiredFromFilter);
 
             var pagedAndFilteredDocumentTypes = filteredDocumentTypes
                 .OrderBy(input.Sorting ?? "id asc")
@@ -70,11 +76,13 @@ namespace TACHYON.Documents.DocumentTypes
 
             var documentTypeList = await pagedAndFilteredDocumentTypes.ToListAsync();
 
+    
             var documentTypes = from o in documentTypeList
                                 select new GetDocumentTypeForViewDto()
                                 {
                                     DocumentType = ObjectMapper.Map<DocumentTypeDto>(o)
                                 };
+
 
             var totalCount = await filteredDocumentTypes.CountAsync();
 
