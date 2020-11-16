@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.SqlTypes;
 using System.Linq;
 using System.Text;
 using Abp.Domain.Repositories;
@@ -8,6 +9,8 @@ using Abp.Localization;
 using Abp.Localization.Sources;
 using NPOI.SS.UserModel;
 using TACHYON.DataExporting.Excel.NPOI;
+using TACHYON.Documents.DocumentFiles.Dtos;
+using TACHYON.Documents.DocumentTypes;
 using TACHYON.Trucks.Importing.Dto;
 using TACHYON.Trucks.TruckCategories.TransportSubtypes;
 using TACHYON.Trucks.TruckCategories.TransportTypes;
@@ -23,6 +26,7 @@ namespace TACHYON.Trucks.Importing
         private readonly IRepository<TransportSubtype> _transportSubtypeRepository;
         private readonly IRepository<TrucksType, long> _trucksTypeRepository;
         private readonly IRepository<TruckSubtype> _truckSubtypeRepository;
+        private readonly IRepository<DocumentType, long> _documentTypeRepository;
 
         private List<TransportType> TransportTypes { get; set; }
         private List<TransportSubtype> TransportSubtypes { get; set; }
@@ -32,12 +36,13 @@ namespace TACHYON.Trucks.Importing
 
 
 
-        public TruckListExcelDataReader(ILocalizationManager localizationManager, IRepository<TransportType> transportTypeRepository, IRepository<TransportSubtype> transportSubtypeRepository, IRepository<TrucksType, long> trucksTypeRepository, IRepository<TruckSubtype> truckSubtypeRepository)
+        public TruckListExcelDataReader(ILocalizationManager localizationManager, IRepository<TransportType> transportTypeRepository, IRepository<TransportSubtype> transportSubtypeRepository, IRepository<TrucksType, long> trucksTypeRepository, IRepository<TruckSubtype> truckSubtypeRepository, IRepository<DocumentType, long> documentTypeRepository)
         {
             _transportTypeRepository = transportTypeRepository;
             _transportSubtypeRepository = transportSubtypeRepository;
             _trucksTypeRepository = trucksTypeRepository;
             _truckSubtypeRepository = truckSubtypeRepository;
+            _documentTypeRepository = documentTypeRepository;
             _localizationSource = localizationManager.GetSource(TACHYONConsts.LocalizationSourceName);
         }
 
@@ -55,9 +60,15 @@ namespace TACHYON.Trucks.Importing
 
             var exceptionMessage = new StringBuilder();
             var truck = new ImportTruckDto();
+            truck.ImportTruckDocumentFileDtos = new List<ImportTruckDocumentFileDto>();
+            var istimaraDocumentFileDto = new ImportTruckDocumentFileDto();
+            var istimaraDocumentType = _documentTypeRepository.FirstOrDefault(x => x.SpecialConstant.ToLower() == "TruckIstimara".ToLower());
+
 
             try
             {
+                truck.TruckStatusId = null;
+
                 //0
                 truck.PlateNumber = GetRequiredValueFromRowOrNull(worksheet, row, 0, "Plate NO*", exceptionMessage);
                 //1
@@ -78,6 +89,32 @@ namespace TACHYON.Trucks.Importing
                 truck.CapacityId = Convert.ToInt32(GetRequiredValueFromRowOrNull(worksheet, row, 8, "Capacity (Payload)*", exceptionMessage));
                 //9
                 truck.Note = GetRequiredValueFromRowOrNull(worksheet, row, 9, "Note", exceptionMessage);
+
+                //10
+                istimaraDocumentFileDto.Number = GetRequiredValueFromRowOrNull(worksheet, row, 10, " Istimara NO*", exceptionMessage);
+                //11
+                istimaraDocumentFileDto.HijriExpirationDate = GetRequiredValueFromRowOrNull(worksheet, row, 11, "Istimara Expiry  Date (Hijri)*", exceptionMessage);
+
+                //12
+                istimaraDocumentFileDto.ExpirationDate = DateTime.ParseExact(GetRequiredValueFromRowOrNull(worksheet, row, 12, "Istimara Expiry  Date (Gregorian)*", exceptionMessage), "dd/MM/yyyy", null).Date;
+                istimaraDocumentFileDto.DocumentTypeId = istimaraDocumentType.Id;
+                if (istimaraDocumentType.HasExpirationDate && istimaraDocumentFileDto.HijriExpirationDate.IsNullOrWhiteSpace())
+                {
+                    throw new Exception("Istimara Expiry  Date (Hijri) is required");
+                }
+
+                if (istimaraDocumentType.HasExpirationDate && istimaraDocumentFileDto.ExpirationDate == null)
+                {
+                    throw new Exception("Istimara Expiry  Date (Gregorian) is required");
+                }
+
+                istimaraDocumentFileDto.Name = "_";
+                istimaraDocumentFileDto.Extn = " ";
+
+                truck.ImportTruckDocumentFileDtos.Add(istimaraDocumentFileDto);
+
+
+
 
             }
             catch (System.Exception exception)

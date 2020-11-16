@@ -156,6 +156,7 @@ namespace TACHYON
             configuration.CreateMap<FacilityDto, Facility>().ReverseMap();
             configuration.CreateMap<CreateOrEditDocumentFileDto, DocumentFile>().ReverseMap();
             configuration.CreateMap<DocumentFileDto, DocumentFile>().ReverseMap();
+            configuration.CreateMap<ImportTruckDocumentFileDto, DocumentFile>().ReverseMap();
             configuration.CreateMap<CreateOrEditDocumentTypeDto, DocumentType>().ReverseMap();
             //configuration.CreateMap<DocumentTypeDto, DocumentType>()
             //    .ForPath(dst => dst.DocumentsEntityFk.DisplayName, opt => opt.MapFrom(src => src.RequiredFrom))
