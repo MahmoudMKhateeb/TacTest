@@ -31,22 +31,25 @@
                 [(ngModel)]="documentType.displayName"
                 name="DisplayName"
                 minlength="0"
+                (change)="isDocumentTypeNameAvaliable(documentType.displayName, documentType.id)"
                 maxlength="256"
                 required
               />
+              <span class="text-muted">{{ 'PleaseEnterDocumentType' | localize }}</span>
+              <span *ngIf="!documentNameisAvaliable" class="form-text text-danger text-left">{{ 'DocumentTypeNameIsAlreadyTaken' | localize }}</span>
             </div>
 
             <div class="col">
-              <label for="documentType.documentsEntityId">{{ l('documentsEntity') }}</label>
+              <label for="documentType.documentsEntityId">{{ l('DocumentsEntity') }}</label>
               <select
                 id="documentType.documentsEntityId"
                 name="documentType.documentsEntityId"
                 [(ngModel)]="documentType.documentsEntityId"
-                class="form-control"
+                class="form-control form-control-lg custom-select mr-sm-2"
                 required
                 (change)="documentsEntityDropDownOnChange($event)"
               >
-                <option value="">{{ l('SelectDocumentsEntity') }}</option>
+                <option value="{{ -1 }}">{{ l('SelectDocumentsEntity') }}</option>
                 <option *ngFor="let item of allDocumentsEntities" value="{{ item.id }}">{{ item.displayName }}</option>
               </select>
             </div>
@@ -67,8 +70,8 @@
           </div>
           <div class="form-group form">
             <div class="form-group row">
-              <label for="DocumentType_IsRequired" class="col-3 col-form-label">{{ l('IsRequired') }} *</label>
-              <div class="col-3">
+              <label for="DocumentType_IsRequired" class="col-4 col-form-label">{{ l('IsRequired') }} </label>
+              <div class="col-2">
                 <span class="switch switch-sm switch-icon">
                   <label>
                     <input id="DocumentType_IsRequired" type="checkbox" name="IsRequired" [(ngModel)]="documentType.isRequired" />
@@ -76,9 +79,11 @@
                   </label>
                 </span>
               </div>
+            </div>
 
-              <label for="DocumentType_HasNumber" class="col-3 col-form-label">{{ l('HasNumber') }}</label>
-              <div class="col-3">
+            <div class="form-group row">
+              <label for="DocumentType_HasNumber" class="col-4 col-form-label">{{ l('HasNumber') }}</label>
+              <div class="col-2">
                 <span class="switch switch-sm switch-icon">
                   <label>
                     <input
@@ -92,33 +97,47 @@
                   </label>
                 </span>
               </div>
+              <label for="DocumentType_IsNumberUnique" class="col-4 col-form-label">{{ l('IsNumberUnique') }}</label>
+              <div class="col-2">
+                <span class="switch switch-sm switch-icon">
+                  <label>
+                    <input id="DocumentType_IsNumberUnique" type="checkbox" name="IsNumberUnique" [(ngModel)]="documentType.isNumberUnique" />
+                    <span></span>
+                  </label>
+                </span>
+              </div>
 
               <div *ngIf="documentType.hasNumber" class="col-6 margin-bottom-10">
                 <input
                   type="number"
                   id="DocumentType_numberMinDigits"
                   class="form-control"
-                  placeholder="{{ l('NumberMinDigits') }}"
                   [(ngModel)]="documentType.numberMinDigits"
                   name="numberMinDigits"
                   min="0"
+                  required
                   (keypress)="numberOnly($event)"
+                  (change)="documentType.numberMinDigits = documentType.numberMinDigits == null ? 0 : documentType.numberMinDigits"
                 />
+                <span class="text-muted">{{ 'NumberMinDigits' | localize }}</span>
               </div>
+
               <div *ngIf="documentType.hasNumber" class="col-6 margin-bottom-10">
                 <input
                   type="number"
                   id="DocumentType_numberMaxDigits"
                   class="form-control"
-                  placeholder="{{ l('NumberMaxDigits') }}"
                   [(ngModel)]="documentType.numberMaxDigits"
                   name="numberMaxDigits"
                   min="0"
+                  required
                   (keypress)="numberOnly($event)"
+                  (change)="documentType.numberMaxDigits = documentType.numberMaxDigits == null ? 0 : documentType.numberMaxDigits"
                 />
+                <span class="text-muted">{{ 'NumberMaxDigits' | localize }}</span>
               </div>
-              <label for="DocumentType_HasExpirationDate" class="col-3 col-form-label">{{ l('HasExpirationDate') }}</label>
-              <div class="col-3">
+              <label for="DocumentType_HasExpirationDate" class="col-4 col-form-label">{{ l('HasExpirationDate') }}</label>
+              <div class="col-2">
                 <span class="switch switch-sm switch-icon">
                   <label>
                     <input
@@ -132,51 +151,52 @@
                   </label>
                 </span>
               </div>
-              <label for="DocumentType_HasNotes" class="col-3 col-form-label">{{ l('HasNotes') }}</label>
-              <div class="col-3">
+              <label for="DocumentType_HasHijriExpirationDate" class="col-4 col-form-label">{{ l('IsHijriExpirationDate') }}</label>
+              <div class="col-2">
                 <span class="switch switch-sm switch-icon">
                   <label>
-                    <input id="DocumentType_HasNotes" type="checkbox" name="HasNotes" [(ngModel)]="documentType.hasNotes" />
+                    <input
+                      id="DocumentType_HasHijriExpirationDate"
+                      type="checkbox"
+                      name="hasHijriExpirationDate"
+                      [(ngModel)]="documentType.hasHijriExpirationDate"
+                    />
                     <span></span>
                   </label>
                 </span>
               </div>
+
               <div *ngIf="documentType.hasExpirationDate" class="col-6 margin-bottom-10">
                 <input
                   type="number"
                   id="DocumentType_expirationAlertDays"
                   class="form-control"
-                  placeholder="{{ l('ExpirationAlertDays') }}"
                   [(ngModel)]="documentType.expirationAlertDays"
                   name="expirationAlertDays"
                   min="0"
+                  required
                   (keypress)="numberOnly($event)"
+                  (change)="documentType.expirationAlertDays = documentType.expirationAlertDays == null ? 0 : documentType.expirationAlertDays"
                 />
+                <span class="text-muted">{{ 'AlertDaysBeforExpiration' | localize }}:</span>
               </div>
               <div *ngIf="documentType.hasExpirationDate" class="col-6 margin-bottom-10">
                 <input
                   type="number"
                   id="DocumentType_inActiveToleranceDays"
                   class="form-control"
-                  placeholder="{{ l('InActiveToleranceDays') }}"
                   [(ngModel)]="documentType.inActiveToleranceDays"
                   name="inActiveToleranceDays"
                   min="0"
+                  required
                   (keypress)="numberOnly($event)"
+                  (change)="documentType.inActiveToleranceDays = documentType.inActiveToleranceDays == null ? 0 : documentType.inActiveToleranceDays"
                 />
+                <span class="text-muted">{{ 'ToleranceDaysBeforeDeactivateAfterExpiration' | localize }}:</span>
               </div>
 
-              <label for="DocumentType_IsNumberUnique" class="col-3 col-form-label">{{ l('IsNumberUnique') }}</label>
-              <div class="col-3">
-                <span class="switch switch-sm switch-icon">
-                  <label>
-                    <input id="DocumentType_IsNumberUnique" type="checkbox" name="IsNumberUnique" [(ngModel)]="documentType.isNumberUnique" />
-                    <span></span>
-                  </label>
-                </span>
-              </div>
-              <label for="DocumentType_InActiveAccountExpired" class="col-3 col-form-label">{{ l('InActiveAccountExpired') }}</label>
-              <div class="col-3">
+              <label for="DocumentType_InActiveAccountExpired" class="col-4 col-form-label">{{ l('DeactivateAccountUponexpiration') }}</label>
+              <div class="col-2">
                 <span class="switch switch-sm switch-icon">
                   <label>
                     <input
@@ -190,16 +210,11 @@
                 </span>
               </div>
 
-              <label for="DocumentType_HasHijriExpirationDate" class="col-3 col-form-label">{{ l('hasHijriExpirationDate') }}</label>
-              <div class="col-3">
+              <label for="DocumentType_HasNotes" class="col-4 col-form-label">{{ l('HasNotes') }}</label>
+              <div class="col-2">
                 <span class="switch switch-sm switch-icon">
                   <label>
-                    <input
-                      id="DocumentType_HasHijriExpirationDate"
-                      type="checkbox"
-                      name="hasHijriExpirationDate"
-                      [(ngModel)]="documentType.hasHijriExpirationDate"
-                    />
+                    <input id="DocumentType_HasNotes" type="checkbox" name="HasNotes" [(ngModel)]="documentType.hasNotes" />
                     <span></span>
                   </label>
                 </span>
@@ -207,9 +222,14 @@
             </div>
           </div>
           <div *ngIf="tenantOptionSelected" class="form-group m-form__group">
-            <label for="documentType.editionId">{{ l('edition') }}</label>
-            <select id="documentType.editionId" name="documentType.editionId" [(ngModel)]="documentType.editionId" class="form-control">
-              <option value="">{{ l('Selectedition') }}</option>
+            <label for="documentType.editionId">{{ l('Edition') }}</label>
+            <select
+              id="documentType.editionId"
+              name="documentType.editionId"
+              [(ngModel)]="documentType.editionId"
+              class="form-control form-control-lg custom-select mr-sm-2"
+            >
+              <option value="{{ -1 }}">{{ l('Selectedition') }}</option>
               <option *ngFor="let item of editions" value="{{ item.id }}">{{ item.displayName }}</option>
             </select>
           </div>
@@ -331,7 +351,7 @@
           <button
             type="submit"
             class="btn btn-save blue"
-            [disabled]="!documentTypeForm.form.valid"
+            [disabled]="!documentTypeForm.form.valid || !documentNameisAvaliable"
             [buttonBusy]="saving"
             [busyText]="l('SavingWithThreeDot')"
           >

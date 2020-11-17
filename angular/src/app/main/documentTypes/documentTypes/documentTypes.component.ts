@@ -29,7 +29,7 @@ export class DocumentTypesComponent extends AppComponentBase implements OnInit {
   displayNameFilter = '';
   isRequiredFilter = -1;
   hasExpirationDateFilter = -1;
-  requiredFromFilter = -1;
+  requiredFromFilter = '';
   entityList: SelectItemDto[] = [];
 
   constructor(

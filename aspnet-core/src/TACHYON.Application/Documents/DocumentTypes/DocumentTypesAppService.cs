@@ -50,19 +50,25 @@ namespace TACHYON.Documents.DocumentTypes
         {
 
             var filteredDocumentTypes = _documentTypeRepository.GetAll()
-                .Include(e => e.Translations)
-                .Include(x => x.DocumentsEntityFk)
-                .Include(x => x.EditionFk)
-                .WhereIf(!string.IsNullOrWhiteSpace(input.Filter), e => false || e.DisplayName.Contains(input.Filter) || e.DocumentsEntityFk.DisplayName.Contains(input.Filter))
-                .WhereIf(!string.IsNullOrWhiteSpace(input.DisplayNameFilter), e => e.DisplayName == input.DisplayNameFilter)
-                .WhereIf(input.IsRequiredFilter > -1, e => (input.IsRequiredFilter == 1 && e.IsRequired) || (input.IsRequiredFilter == 0 && !e.IsRequired))
-                .WhereIf(input.HasExpirationDateFilter > -1, e => (input.HasExpirationDateFilter == 1 && e.HasExpirationDate) || (input.HasExpirationDateFilter == 0 && !e.HasExpirationDate))
-                .WhereIf(input.HasExpirationDateFilter > -1, e => (input.HasExpirationDateFilter == 1 && e.HasExpirationDate) || (input.HasExpirationDateFilter == 0 && !e.HasExpirationDate))
-                .WhereIf(input.HasExpirationDateFilter > -1, e => (input.HasExpirationDateFilter == 1 && e.HasExpirationDate) || (input.HasExpirationDateFilter == 0 && !e.HasExpirationDate))
-                .WhereIf(input.HasExpirationDateFilter > -1, e => (input.HasExpirationDateFilter == 1 && e.HasExpirationDate) || (input.HasExpirationDateFilter == 0 && !e.HasExpirationDate))
-                .WhereIf(input.RequiredFromFilter.HasValue, e => e.DocumentsEntityId == input.RequiredFromFilter);
-                        //not driver or truck --> search in editions
-                       // .WhereIf(input.RequiredFromFilter.HasValue && input.RequiredFromFilter != 2 && input.RequiredFromFilter != 3, e => e.EditionId == input.RequiredFromFilter);
+                        .Include(e => e.Translations)
+                        .Include(x => x.DocumentsEntityFk)
+                        .Include(x => x.EditionFk)
+                        .WhereIf(!string.IsNullOrWhiteSpace(input.Filter), e => false || e.DisplayName.Contains(input.Filter) || e.DocumentsEntityFk.DisplayName.Contains(input.Filter))
+                        .WhereIf(!string.IsNullOrWhiteSpace(input.DisplayNameFilter), e => e.DisplayName == input.DisplayNameFilter)
+                        .WhereIf(input.IsRequiredFilter > -1, e => (input.IsRequiredFilter == 1 && e.IsRequired) || (input.IsRequiredFilter == 0 && !e.IsRequired))
+                        .WhereIf(input.HasExpirationDateFilter > -1, e => (input.HasExpirationDateFilter == 1 && e.HasExpirationDate) || (input.HasExpirationDateFilter == 0 && !e.HasExpirationDate))
+                        .WhereIf(!string.IsNullOrWhiteSpace(input.RequiredFromFilter)&& input.RequiredFromFilter == AppConsts.TruckDocumentsEntityName || input.RequiredFromFilter == AppConsts.DriverDocumentsEntityName, e => e.DocumentsEntityFk.DisplayName == input.RequiredFromFilter)
+                        //not driver or truck or tenant(general) --> search in editions
+                        .WhereIf(!string.IsNullOrWhiteSpace(input.RequiredFromFilter) 
+                        && input.RequiredFromFilter != AppConsts.TruckDocumentsEntityName 
+                        && input.RequiredFromFilter != AppConsts.DriverDocumentsEntityName
+                        && input.RequiredFromFilter != AppConsts.TenantDocumentsEntityName
+                        , e => e.EditionFk.DisplayName == input.RequiredFromFilter)
+                        //not tenants genral search
+                        .WhereIf(!string.IsNullOrWhiteSpace(input.RequiredFromFilter)
+                        && input.RequiredFromFilter != AppConsts.TruckDocumentsEntityName
+                        && input.RequiredFromFilter != AppConsts.DriverDocumentsEntityName
+                        , e =>  e.DocumentsEntityFk.DisplayName == input.RequiredFromFilter);
 
             var pagedAndFilteredDocumentTypes = filteredDocumentTypes
                 .OrderBy(input.Sorting ?? "id asc")
@@ -70,11 +76,13 @@ namespace TACHYON.Documents.DocumentTypes
 
             var documentTypeList = await pagedAndFilteredDocumentTypes.ToListAsync();
 
+    
             var documentTypes = from o in documentTypeList
                                 select new GetDocumentTypeForViewDto()
                                 {
                                     DocumentType = ObjectMapper.Map<DocumentTypeDto>(o)
                                 };
+
 
             var totalCount = await filteredDocumentTypes.CountAsync();
 
@@ -102,7 +110,8 @@ namespace TACHYON.Documents.DocumentTypes
 
         public async Task CreateOrEdit(CreateOrEditDocumentTypeDto input)
         {
-            var IsDuplicateDocumentType = await _documentTypeRepository.FirstOrDefaultAsync(x => (x.DisplayName).Trim().ToLower() == (input.DisplayName).Trim().ToLower());
+            var IsDuplicateDocumentType = await _documentTypeRepository.FirstOrDefaultAsync(x => (x.DisplayName).Trim().ToLower() == (input.DisplayName).Trim().ToLower()
+            && x.Id != input.Id);
             if (IsDuplicateDocumentType != null)
             {
                 throw new UserFriendlyException(string.Format(L("DuplicateDocumentTypeName"), input.DisplayName));
@@ -223,5 +232,20 @@ namespace TACHYON.Documents.DocumentTypes
 
             return entities.Concat(editions).ToList();
         }
+
+        public bool IsDocuemntTypeNameAvaliable(string documentTypeName,int? id)
+        {
+            var result = _documentTypeRepository.FirstOrDefault(x => (x.DisplayName).Trim().ToLower() == (documentTypeName).Trim().ToLower()
+            &&x.Id!=id);
+
+            if (result == null)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }     
     }
 }

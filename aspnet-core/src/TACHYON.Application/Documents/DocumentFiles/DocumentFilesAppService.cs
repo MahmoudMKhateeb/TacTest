@@ -473,16 +473,13 @@ namespace TACHYON.Documents.DocumentFiles
 
             if (input.UpdateDocumentFileInput != null && !input.UpdateDocumentFileInput.FileToken.IsNullOrEmpty())
             {
-                await _binaryObjectManager.DeleteAsync(documentFile.BinaryObjectId.Value);
-                documentFile.BinaryObjectId = await _documentFilesManager.SaveDocumentFileBinaryObject(input.UpdateDocumentFileInput.FileToken, AbpSession.TenantId);
+                await _binaryObjectManager.DeleteAsync(documentFile.BinaryObjectId);
+                input.BinaryObjectId = await _documentFilesManager.SaveDocumentFileBinaryObject(input.UpdateDocumentFileInput.FileToken, AbpSession.TenantId);
+
             }
 
             ObjectMapper.Map(input, documentFile);
 
-            if (documentFile.DocumentTypeFk.DocumentsEntityFk.DisplayName == AppConsts.TenantDocumentsEntityName)
-            {
-
-            }
 
             //ObjectMapper.Map(input.DocumentTypeDto, documentFile.DocumentTypeFk);
             //if (input.DocumentTypeDto.HasNumber)
