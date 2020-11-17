@@ -195,7 +195,7 @@ export class CreateOrEditDriverModalComponent extends AppComponentBase {
     input.setRandomPassword = this.setRandomPassword;
     input.sendActivationEmail = this.sendActivationEmail;
     input.assignedRoleNames = _.map(_.filter(this.roles, { isAssigned: true, inheritedFromOrganizationUnit: false }), (role) => role.roleName);
-
+    input.user.phoneNumber = input.user.userName;
     //docs
 
     input.createOrEditDocumentFileDtos = this.createOrEditDocumentFileDtos;
