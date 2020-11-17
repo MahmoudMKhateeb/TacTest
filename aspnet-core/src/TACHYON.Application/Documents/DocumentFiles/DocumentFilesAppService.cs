@@ -36,7 +36,7 @@ namespace TACHYON.Documents.DocumentFiles
     {
 
 
-        public DocumentFilesAppService(TenantManager tenantManager,IRepository<DocumentFile, Guid> documentFileRepository, IDocumentFilesExcelExporter documentFilesExcelExporter, IRepository<DocumentType, long> lookupDocumentTypeRepository, IRepository<Truck, Guid> lookupTruckRepository, IRepository<Trailer, long> lookupTrailerRepository, IRepository<User, long> lookupUserRepository, IRepository<RoutStep, long> lookupRoutStepRepository, ITempFileCacheManager tempFileCacheManager, IBinaryObjectManager binaryObjectManager, IRepository<Edition, int> editionRepository, IRepository<DocumentType, long> documentTypeRepository, DocumentFilesManager documentFilesManager, IRepository<Tenant, int> lookupTenantRepository)
+        public DocumentFilesAppService(TenantManager tenantManager,IRepository<DocumentFile, Guid> documentFileRepository, IDocumentFilesExcelExporter documentFilesExcelExporter, IRepository<DocumentType, long> lookupDocumentTypeRepository, IRepository<Truck, Guid> lookupTruckRepository, IRepository<Trailer, long> lookupTrailerRepository, IRepository<User, long> lookupUserRepository, IRepository<RoutStep, long> lookupRoutStepRepository, ITempFileCacheManager tempFileCacheManager, IBinaryObjectManager binaryObjectManager, IRepository<Edition, int> editionRepository, IRepository<DocumentType, long> documentTypeRepository, DocumentFilesManager documentFilesManager, IRepository<Tenant, int> lookupTenantRepository, IRepository<DocumentsEntity, int> documentEntityRepository)
         {
             _documentFileRepository = documentFileRepository;
             _documentFilesExcelExporter = documentFilesExcelExporter;
@@ -51,6 +51,7 @@ namespace TACHYON.Documents.DocumentFiles
             _documentTypeRepository = documentTypeRepository;
             _documentFilesManager = documentFilesManager;
             _lookupTenantRepository = lookupTenantRepository;
+            _documentEntityRepository = documentEntityRepository;
             _tenantManager = tenantManager;
         }
 
@@ -357,7 +358,7 @@ namespace TACHYON.Documents.DocumentFiles
             DisableTenancyFiltersIfHost();
             var documentFile = await _documentFileRepository.GetAsync(documentFileId);
 
-            var binaryObject = await _binaryObjectManager.GetOrNullAsync(documentFile.BinaryObjectId);
+            var binaryObject = await _binaryObjectManager.GetOrNullAsync(documentFile.BinaryObjectId.Value);
 
             var file = new FileDto(documentFile.Name, documentFile.Extn);
 
@@ -472,7 +473,7 @@ namespace TACHYON.Documents.DocumentFiles
 
             if (input.UpdateDocumentFileInput != null && !input.UpdateDocumentFileInput.FileToken.IsNullOrEmpty())
             {
-                await _binaryObjectManager.DeleteAsync(documentFile.BinaryObjectId);
+                await _binaryObjectManager.DeleteAsync(documentFile.BinaryObjectId.Value);
                 documentFile.BinaryObjectId = await _documentFilesManager.SaveDocumentFileBinaryObject(input.UpdateDocumentFileInput.FileToken, AbpSession.TenantId);
             }
 
@@ -740,17 +741,21 @@ namespace TACHYON.Documents.DocumentFiles
 
         public async Task<List<SelectItemDto>> GetDocumentEntitiesForTableDropdown()
         {
+            using (this.CurrentUnitOfWork.DisableFilter(AbpDataFilters.MayHaveTenant, AbpDataFilters.MustHaveTenant))
+            {
+                var entities = await _documentEntityRepository
+               .GetAll()
+               .Select(x => new SelectItemDto
+               {
+                   DisplayName = x.DisplayName,
+                   Id = x.Id.ToString()
+               }
+               ).ToListAsync();
 
-            var entities = await _documentEntityRepository
-                .GetAll()
-                .Select(x => new SelectItemDto
-                {
-                    DisplayName = x.DisplayName,
-                    Id = x.Id.ToString()
-                }
-                ).ToListAsync();
-
-            return entities;
+                return entities;
+            }
+          
+           
         }
 
         /// <summary>

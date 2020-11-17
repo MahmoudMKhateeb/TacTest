@@ -11,6 +11,8 @@
   <ItemGroup>
     <Compile Remove="Migrations\20200305145558_Add_Dynamic_Entity_Parameters.cs" />
     <Compile Remove="Migrations\20200305145558_Add_Dynamic_Entity_Parameters.Designer.cs" />
+    <Compile Remove="Migrations\20201116013205_BinaryObjectId nullable in DocumentFile .cs" />
+    <Compile Remove="Migrations\20201116013205_BinaryObjectId nullable in DocumentFile .Designer.cs" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="3.1.5" />

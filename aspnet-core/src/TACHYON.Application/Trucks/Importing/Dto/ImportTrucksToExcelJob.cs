@@ -14,6 +14,8 @@ using Abp.Threading;
 using Abp.UI;
 using Microsoft.AspNetCore.Identity;
 using TACHYON.Authorization.Roles;
+using TACHYON.Documents.DocumentFiles;
+using TACHYON.Documents.DocumentFiles.Dtos;
 using TACHYON.Notifications;
 using TACHYON.Storage;
 using TACHYON.Trucks.Dtos;
@@ -23,18 +25,19 @@ namespace TACHYON.Trucks.Importing.Dto
     public class ImportTrucksToExcelJob : BackgroundJob<ImportTrucksFromExcelJobArgs>, ITransientDependency
     {
         private readonly ITruckListExcelDataReader _truckListExcelDataReader;
-        private readonly IRepository<Truck,Guid> _truckRepository;
+        private readonly IRepository<Truck, Guid> _truckRepository;
         private readonly IInvalidTruckExporter _invalidTruckExporter;
         private readonly IAppNotifier _appNotifier;
         private readonly IBinaryObjectManager _binaryObjectManager;
         private readonly IObjectMapper _objectMapper;
         private readonly IUnitOfWorkManager _unitOfWorkManager;
+        private readonly IRepository<DocumentFile, Guid> _documentFileRepository;
 
         public ImportTrucksToExcelJob(
             IAppNotifier appNotifier,
             IBinaryObjectManager binaryObjectManager,
             IObjectMapper objectMapper,
-            IUnitOfWorkManager unitOfWorkManager, ITruckListExcelDataReader truckListExcelDataReader, IRepository<Truck, Guid> truckRepository, IInvalidTruckExporter invalidTruckExporter)
+            IUnitOfWorkManager unitOfWorkManager, ITruckListExcelDataReader truckListExcelDataReader, IRepository<Truck, Guid> truckRepository, IInvalidTruckExporter invalidTruckExporter, IRepository<DocumentFile, Guid> documentFileRepository)
         {
             _appNotifier = appNotifier;
             _binaryObjectManager = binaryObjectManager;
@@ -43,6 +46,7 @@ namespace TACHYON.Trucks.Importing.Dto
             _truckListExcelDataReader = truckListExcelDataReader;
             _truckRepository = truckRepository;
             _invalidTruckExporter = invalidTruckExporter;
+            _documentFileRepository = documentFileRepository;
         }
 
         public override void Execute(ImportTrucksFromExcelJobArgs args)
@@ -130,20 +134,35 @@ namespace TACHYON.Trucks.Importing.Dto
 
         private async Task CreateTruckAsync(ImportTruckDto input)
         {
-            var tenantId = CurrentUnitOfWork.GetTenantId();
-
-
-            var truck = _objectMapper.Map<Truck>(input);
-
-            if (tenantId.HasValue)
+            using (var uow = _unitOfWorkManager.Begin())
             {
-                truck.TenantId = tenantId.Value;
+                var tenantId = CurrentUnitOfWork.GetTenantId();
+
+
+                var truck = _objectMapper.Map<Truck>(input);
+
+                if (tenantId.HasValue)
+                {
+                    truck.TenantId = tenantId.Value;
+                }
+
+                truck = await _truckRepository.InsertAsync(truck);
+
+                foreach (var importTruckDocumentFileDto in input.ImportTruckDocumentFileDtos)
+                {
+                    importTruckDocumentFileDto.TruckId = truck.Id;
+                    var documentFile = _objectMapper.Map<DocumentFile>(importTruckDocumentFileDto);
+                    documentFile.TenantId = tenantId;
+                    await _documentFileRepository.InsertAsync(documentFile);
+                }
+                uow.Complete();
             }
 
-            await _truckRepository.InsertAsync(truck);
+  
+
         }
 
-        private async Task ProcessImportTrucksResultAsync(ImportTrucksFromExcelJobArgs args,List<ImportTruckDto> invalidTrucks)
+        private async Task ProcessImportTrucksResultAsync(ImportTrucksFromExcelJobArgs args, List<ImportTruckDto> invalidTrucks)
         {
             if (invalidTrucks.Any())
             {

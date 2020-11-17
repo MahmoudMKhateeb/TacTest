@@ -11,6 +11,11 @@ namespace TACHYON.Trucks.Importing.Dto
 {
     public class ImportTruckDto
     {
+        /// <summary>
+        /// is used for create truck required documents from excel data
+        /// </summary>
+        public List<ImportTruckDocumentFileDto> ImportTruckDocumentFileDtos { get; set; }
+
         public string PlateNumber { get; set; }
 
 
@@ -27,7 +32,7 @@ namespace TACHYON.Trucks.Importing.Dto
         [StringLength(TruckConsts.MaxNoteLength, MinimumLength = TruckConsts.MinNoteLength)]
         public string Note { get; set; }
 
-        public long TruckStatusId { get; set; }
+        public long? TruckStatusId { get; set; }
 
         public long? Driver1UserId { get; set; }
 
@@ -39,7 +44,7 @@ namespace TACHYON.Trucks.Importing.Dto
 
         public virtual int? TransportSubtypeId { get; set; }
 
-        public virtual long TrucksTypeId { get; set; }
+        public virtual long? TrucksTypeId { get; set; }
 
 
         public virtual int? TruckSubtypeId { get; set; }

@@ -71,7 +71,7 @@
                     <label for="RequiredFromFilter">{{ l('RequiredFrom') }}</label>
                     <select class="form-control" name="requiredFromFilter" id="RequiredFromFilter" [(ngModel)]="requiredFromFilter">
                       <option value="">{{ l('RequiredFrom') }}</option>
-                      <option *ngFor="let entity of entityList" [value]="entity.displayName">{{ entity.displayName }}</option>
+                      <option *ngFor="let entity of entityList" [value]="entity.id">{{ entity.displayName }}</option>
                     </select>
                     <!-- <label for="RequiredFromFilter">{{ l('RequiredFrom') }}</label>
                     <input type="text" class="form-control" id="RequiredFromFilter" name="requiredFromFilter" [(ngModel)]="requiredFromFilter" /> -->
