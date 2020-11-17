@@ -291,7 +291,11 @@ namespace TACHYON.Shipping.ShippingRequestBids
         [RequiresFeature(AppFeatures.Shipper)]
         public virtual async Task<PagedResultDto<ViewShipperBidsReqDetailsOutputDto>> GetShipperbidsRequestDetailsForView(PagedAndSortedResultRequestDto input)
         {
-            return await GetAllBids(input,null);
+            using (CurrentUnitOfWork.DisableFilter("IHasIsCanceled"))
+            {
+                return await GetAllBids(input, null);
+
+            }
         }
 
         //#537 get All Shippers Shipping Requests to view for carrier
