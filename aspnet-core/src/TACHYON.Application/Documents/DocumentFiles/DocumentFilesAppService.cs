@@ -466,13 +466,14 @@ namespace TACHYON.Documents.DocumentFiles
             if (input.UpdateDocumentFileInput != null && !input.UpdateDocumentFileInput.FileToken.IsNullOrEmpty())
             {
                 await _binaryObjectManager.DeleteAsync(documentFile.BinaryObjectId);
-                documentFile.BinaryObjectId = await _documentFilesManager.SaveDocumentFileBinaryObject(input.UpdateDocumentFileInput.FileToken, AbpSession.TenantId);
-                input.BinaryObjectId = documentFile.BinaryObjectId;
+                input.BinaryObjectId = await _documentFilesManager.SaveDocumentFileBinaryObject(input.UpdateDocumentFileInput.FileToken, AbpSession.TenantId);
+
             }
 
             ObjectMapper.Map(input, documentFile);
 
-            ObjectMapper.Map(input.DocumentTypeDto, documentFile.DocumentTypeFk);
+
+            //ObjectMapper.Map(input.DocumentTypeDto, documentFile.DocumentTypeFk);
             //if (input.DocumentTypeDto.HasNumber)
             //{
             //    documentFile.Number = input.Number;
@@ -578,11 +579,11 @@ namespace TACHYON.Documents.DocumentFiles
                                     IsRequired = o.IsRequired,
                                     NumberMaxDigits = o.NumberMaxDigits,
                                     NumberMinDigits = o.NumberMinDigits
-                                    
+
                                 };
 
                     list = await query.ToListAsync();
-                    return list.Select(x => new CreateOrEditDocumentFileDto { DocumentTypeId = x.Id, TruckId = Guid.Parse(entityId) , DocumentTypeDto = ObjectMapper.Map<DocumentTypeDto>(x) }).ToList();
+                    return list.Select(x => new CreateOrEditDocumentFileDto { DocumentTypeId = x.Id, TruckId = Guid.Parse(entityId), DocumentTypeDto = ObjectMapper.Map<DocumentTypeDto>(x) }).ToList();
 
                 }
 
