@@ -473,7 +473,7 @@ namespace TACHYON.Documents.DocumentFiles
 
             if (input.UpdateDocumentFileInput != null && !input.UpdateDocumentFileInput.FileToken.IsNullOrEmpty())
             {
-                await _binaryObjectManager.DeleteAsync(documentFile.BinaryObjectId);
+                await _binaryObjectManager.DeleteAsync(documentFile.BinaryObjectId.Value);
                 input.BinaryObjectId = await _documentFilesManager.SaveDocumentFileBinaryObject(input.UpdateDocumentFileInput.FileToken, AbpSession.TenantId);
 
             }
