@@ -61,9 +61,21 @@ namespace TACHYON.Trucks.Importing
             var exceptionMessage = new StringBuilder();
             var truck = new ImportTruckDto();
             truck.ImportTruckDocumentFileDtos = new List<ImportTruckDocumentFileDto>();
+
+
             var istimaraDocumentFileDto = new ImportTruckDocumentFileDto();
             var istimaraDocumentType = _documentTypeRepository.FirstOrDefault(x => x.SpecialConstant.ToLower() == "TruckIstimara".ToLower());
+            istimaraDocumentFileDto.DocumentTypeId = istimaraDocumentType.Id;
+            istimaraDocumentFileDto.Name = "_";
+            istimaraDocumentFileDto.Extn = " ";
 
+
+
+            var insuranceDocumentFileDto = new ImportTruckDocumentFileDto();
+            var insuranceDocumentType = _documentTypeRepository.FirstOrDefault(x => x.SpecialConstant.ToLower() == "TruckInsurance".ToLower());
+            insuranceDocumentFileDto.DocumentTypeId = insuranceDocumentType.Id;
+            insuranceDocumentFileDto.Name = "_";
+            insuranceDocumentFileDto.Extn = " ";
 
             try
             {
@@ -90,14 +102,13 @@ namespace TACHYON.Trucks.Importing
                 //9
                 truck.Note = GetRequiredValueFromRowOrNull(worksheet, row, 9, "Note", exceptionMessage);
 
+                //Istimara document
                 //10
                 istimaraDocumentFileDto.Number = GetRequiredValueFromRowOrNull(worksheet, row, 10, " Istimara NO*", exceptionMessage);
                 //11
                 istimaraDocumentFileDto.HijriExpirationDate = GetRequiredValueFromRowOrNull(worksheet, row, 11, "Istimara Expiry  Date (Hijri)*", exceptionMessage);
-
                 //12
                 istimaraDocumentFileDto.ExpirationDate = DateTime.ParseExact(GetRequiredValueFromRowOrNull(worksheet, row, 12, "Istimara Expiry  Date (Gregorian)*", exceptionMessage), "dd/MM/yyyy", null).Date;
-                istimaraDocumentFileDto.DocumentTypeId = istimaraDocumentType.Id;
                 if (istimaraDocumentType.HasExpirationDate && istimaraDocumentFileDto.HijriExpirationDate.IsNullOrWhiteSpace())
                 {
                     throw new Exception("Istimara Expiry  Date (Hijri) is required");
@@ -108,11 +119,28 @@ namespace TACHYON.Trucks.Importing
                     throw new Exception("Istimara Expiry  Date (Gregorian) is required");
                 }
 
-                istimaraDocumentFileDto.Name = "_";
-                istimaraDocumentFileDto.Extn = " ";
-
                 truck.ImportTruckDocumentFileDtos.Add(istimaraDocumentFileDto);
 
+
+                //Insurance document
+                //13
+                insuranceDocumentFileDto.Number = GetRequiredValueFromRowOrNull(worksheet, row, 13, "Insurance Policy NO*", exceptionMessage);
+                //14
+                insuranceDocumentFileDto.HijriExpirationDate = GetRequiredValueFromRowOrNull(worksheet, row, 14, "Insurance Expiry Date (Hijri)*", exceptionMessage);
+                //15
+                insuranceDocumentFileDto.ExpirationDate = DateTime.ParseExact(GetRequiredValueFromRowOrNull(worksheet, row, 15, "Insurance Expiry Date (Gregorian)*", exceptionMessage), "dd/MM/yyyy", null).Date;
+
+                if (insuranceDocumentType.HasExpirationDate && insuranceDocumentFileDto.HijriExpirationDate.IsNullOrWhiteSpace())
+                {
+                    throw new Exception("Insurance Expiry  Date (Hijri) is required");
+                }
+
+                if (insuranceDocumentType.HasExpirationDate && insuranceDocumentFileDto.ExpirationDate == null)
+                {
+                    throw new Exception("Insurance Expiry  Date (Gregorian) is required");
+                }
+
+                truck.ImportTruckDocumentFileDtos.Add(insuranceDocumentFileDto);
 
 
 
