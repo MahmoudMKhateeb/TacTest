@@ -95,6 +95,7 @@ export class ViewOrEditEntityDocumentsModalComponent extends AppComponentBase {
       if (isConfirmed) {
         this._documentFilesServiceProxy.delete(documentFile.id).subscribe(() => {
           this.reloadPage();
+          this.modalSave.emit(null);
 
           this.notify.success(this.l('SuccessfullyDeleted'));
         });
@@ -104,6 +105,7 @@ export class ViewOrEditEntityDocumentsModalComponent extends AppComponentBase {
 
   close(): void {
     this.active = false;
+    this.modalSave.emit(null);
     this.modal.hide();
   }
 

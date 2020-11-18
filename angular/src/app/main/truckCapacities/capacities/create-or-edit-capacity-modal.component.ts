@@ -31,6 +31,7 @@ export class CreateOrEditCapacityModalComponent extends AppComponentBase {
     if (!capacityId) {
       this.capacity = new CreateOrEditCapacityDto();
       this.capacity.id = capacityId;
+      this.capacity.truckSubtypeId = null;
       this.truckSubtypeDisplayName = '';
 
       this.active = true;
@@ -52,7 +53,10 @@ export class CreateOrEditCapacityModalComponent extends AppComponentBase {
 
   save(): void {
     this.saving = true;
-
+    if (this.capacity.truckSubtypeId == null) {
+      this.notify.error(this.l('PleaseChooseATruckSubType'));
+      return;
+    }
     this._capacitiesServiceProxy
       .createOrEdit(this.capacity)
       .pipe(

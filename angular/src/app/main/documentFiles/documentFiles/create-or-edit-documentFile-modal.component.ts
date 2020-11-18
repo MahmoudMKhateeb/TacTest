@@ -168,7 +168,7 @@ export class CreateOrEditDocumentFileModalComponent extends AppComponentBase {
   save(): void {
     this.saving = true;
     if (this.DocsUploader.queue.length > 0) {
-      console.log('documentFile', this.documentFile);
+      // console.log('documentFile', this.documentFile);
       this.DocsUploader.uploadAll();
     } else if (this.documentFile.id) {
       this._documentFilesServiceProxy
@@ -211,6 +211,7 @@ export class CreateOrEditDocumentFileModalComponent extends AppComponentBase {
     this.fileToken = '';
     this.docProgressFileName = null;
     this.docProgress = null;
+    this.modalSave.emit(null);
     this.modal.hide();
   }
 

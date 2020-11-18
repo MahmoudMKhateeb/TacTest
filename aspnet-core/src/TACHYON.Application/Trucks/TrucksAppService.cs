@@ -376,9 +376,15 @@ namespace TACHYON.Trucks
                                  Note = o.Note,
                                  Id = o.Id
                              },
-                             TrucksTypeDisplayName = s1 == null || s1.DisplayName == null ? "" : s1.DisplayName.ToString(),
+                             TrucksTypeDisplayName =
+                             (o.TransportTypeFk == null ? "" : o.TransportTypeFk.DisplayName) + " - " +
+                             (o.TransportSubtypeFk == null ? "" : o.TransportSubtypeFk.DisplayName) + " - " +
+                             (o.TrucksTypeFk == null ? "" : o.TrucksTypeFk.DisplayName) + " - " +
+                             (o.TruckSubtypeFk == null ? "" : o.TruckSubtypeFk.DisplayName) + " - " +
+                             (o.CapacityFk == null ? "" : o.CapacityFk.DisplayName),
                              TruckStatusDisplayName = s2 == null || s2.DisplayName == null ? "" : s2.DisplayName.ToString(),
                              UserName = s3 == null || s3.Name == null ? "" : s3.Name.ToString(),
+
                          });
 
 

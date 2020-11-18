@@ -35,6 +35,7 @@ export class CreateOrEditTruckSubtypeModalComponent extends AppComponentBase {
     if (!truckSubtypeId) {
       this.truckSubtype = new CreateOrEditTruckSubtypeDto();
       this.truckSubtype.id = truckSubtypeId;
+      this.truckSubtype.trucksTypeId = null;
       this.trucksTypeDisplayName = '';
 
       this.active = true;
@@ -56,7 +57,10 @@ export class CreateOrEditTruckSubtypeModalComponent extends AppComponentBase {
 
   save(): void {
     this.saving = true;
-
+    if (this.truckSubtype.trucksTypeId == -1) {
+      this.notify.error(this.l('PleaseChooseATruckType'));
+      return;
+    }
     this._truckSubtypesServiceProxy
       .createOrEdit(this.truckSubtype)
       .pipe(

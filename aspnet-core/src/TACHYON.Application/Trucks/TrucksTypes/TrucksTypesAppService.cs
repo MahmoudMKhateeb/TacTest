@@ -26,11 +26,13 @@ namespace TACHYON.Trucks.TrucksTypes
         private readonly IRepository<TrucksType, long> _trucksTypeRepository;
 
         private readonly IRepository<TransportSubtype, int> _lookup_transportSubTypeRepository;
+        private readonly IRepository<TransportSubtype> _transportSubtypeRepository;
 
-        public TrucksTypesAppService(IRepository<TrucksType, long> trucksTypeRepository, IRepository<TransportSubtype> lookup_transportSubTypeRepository)
+        public TrucksTypesAppService(IRepository<TransportSubtype> transportSubtypeRepository, IRepository<TrucksType, long> trucksTypeRepository, IRepository<TransportSubtype> lookup_transportSubTypeRepository)
         {
             _trucksTypeRepository = trucksTypeRepository;
             _lookup_transportSubTypeRepository = lookup_transportSubTypeRepository;
+            _transportSubtypeRepository = transportSubtypeRepository;
 
 
         }
@@ -47,13 +49,16 @@ namespace TACHYON.Trucks.TrucksTypes
                 .PageBy(input);
 
             var trucksTypes = from o in pagedAndFilteredTrucksTypes
+                              join o1 in _transportSubtypeRepository.GetAll() on o.TransportSubtypeId equals o1.Id into j1
+                              from s1 in j1.DefaultIfEmpty()
                               select new GetTrucksTypeForViewDto()
                               {
                                   TrucksType = new TrucksTypeDto
                                   {
                                       DisplayName = o.DisplayName,
                                       Id = o.Id
-                                  }
+                                  },
+                                 TransportSubtypeDisplayName = s1 == null || s1.DisplayName == null ? "" : s1.DisplayName.ToString()
                               };
 
             var totalCount = await filteredTrucksTypes.CountAsync();

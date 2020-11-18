@@ -36,32 +36,32 @@ namespace TACHYON.Trucks.Exporting
                     AddHeader(
                         sheet,
                         L("PlateNumber"),
+                        L("Driver"),
+                        L("TrucksType"),
                         L("ModelName"),
                         L("ModelYear"),
-                        L("IsAttachable"),
-                        L("Note"),
-                        (L("TrucksType")) + L("DisplayName"),
-                        (L("TruckStatus")) + L("DisplayName"),
-                        (L("User")) + L("Name")
+                        L("TruckStatus") ,
+                        L("Note")
                         );
 
                     AddObjects(
                         sheet, 2, trucks,
                         _ => _.Truck.PlateNumber,
+                        _ => _.UserName,
+                        _ => _.TrucksTypeDisplayName,
                         _ => _.Truck.ModelName,
                         _ => _.Truck.ModelYear,
-                        _ => _.Truck.Note,
-                        _ => _.TrucksTypeDisplayName,
                         _ => _.TruckStatusDisplayName,
-                        _ => _.UserName
+                        _ => _.Truck.Note
+
                         );
 
 
-                    for (var i = 1; i <= trucks.Count; i++)
-                    {
-                        SetCellDataFormat(sheet.GetRow(i).Cells[5], "yyyy-mm-dd");
-                    }
-                    sheet.AutoSizeColumn(5);
+                    //for (var i = 1; i <= trucks.Count; i++)
+                    //{
+                    //    SetCellDataFormat(sheet.GetRow(i).Cells[5], "yyyy-mm-dd");
+                    //}
+                    sheet.AutoSizeColumn(2);
                 });
         }
     }
