@@ -64,10 +64,10 @@ export class RegisterTenantComponent extends AppComponentBase implements OnInit,
     }
 
     //Prevent to create tenant in a tenant context
-    if (this.appSession.tenant != null) {
-      this._router.navigate(['account/login']);
-      return;
-    }
+    // if (this.appSession.tenant != null) {
+    //   this._router.navigate(['account/login']);
+    //   return;
+    // }
 
     this._profileService.getPasswordComplexitySetting().subscribe((result) => {
       this.passwordComplexitySetting = result.setting;

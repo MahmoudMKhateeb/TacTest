@@ -131,6 +131,7 @@ export class CreateOrEditTruckModalComponent extends AppComponentBase {
       this.trucksTypeDisplayName = '';
       this.userName = '';
       this.truck.modelYear = '2000';
+      this.truck.capacity = '1';
       this.truck.truckStatusId = null;
       this.truck.transportTypeId = null;
       this.truck.transportSubtypeId = null;

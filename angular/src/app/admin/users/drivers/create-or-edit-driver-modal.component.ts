@@ -13,6 +13,7 @@ import {
   CreateOrEditDocumentFileDto,
   DocumentFilesServiceProxy,
   UpdateDocumentFileInput,
+  SelectItemDto,
 } from '@shared/service-proxies/service-proxies';
 import { ModalDirective } from 'ngx-bootstrap/modal';
 import { IOrganizationUnitsTreeComponentData, OrganizationUnitsTreeComponent } from '../../shared/organization-unit-tree.component';
@@ -74,11 +75,11 @@ export class CreateOrEditDriverModalComponent extends AppComponentBase {
 
   selectedDateTypeHijri = DateType.Hijri; // or DateType.Gregorian
   selectedDateTypeGregorian = DateType.Gregorian; // or DateType.Gregorian
-
+  nationalites: SelectItemDto[] = [];
   allOrganizationUnits: OrganizationUnitDto[];
   memberedOrganizationUnits: string[];
   userPasswordRepeat = '';
-  isUserNameValid = false;
+  isPhoneNumberValid = true;
   isWaintingUserNameValidation = false;
   constructor(
     injector: Injector,
@@ -101,7 +102,7 @@ export class CreateOrEditDriverModalComponent extends AppComponentBase {
       this.setRandomPassword = true;
       this.sendActivationEmail = true;
     }
-
+    this.getDriverNationalites();
     this._userService.getUserForEdit(userId).subscribe((userResult) => {
       this.user = userResult.user;
       this.user.isDriver = this.creatDriver;
@@ -306,11 +307,25 @@ export class CreateOrEditDriverModalComponent extends AppComponentBase {
     return s4() + s4() + '-' + s4() + '-' + s4() + '-' + s4() + '-' + s4() + s4() + s4();
   }
 
-  CheckIfDriverUserNameIsValid(userName: string) {
+  // CheckIfDriverMobileNumberIsValid(mobileNumber: string) {
+  //   this.isWaintingUserNameValidation = true;
+  //   this._userService.checkIfPhoneNumberValid(mobileNumber, this.user.id).subscribe((res) => {
+  //     this.isWaintingUserNameValidation = false;
+  //     this.isPhoneNumberValid = res;
+  //   });
+  // }
+
+  getDriverNationalites() {
     this.isWaintingUserNameValidation = true;
-    this._userService.checkIfUserNameValid(userName).subscribe((res) => {
-      this.isWaintingUserNameValidation = false;
-      this.isUserNameValid = res;
+    this._userService.getDriverNationalites().subscribe((res) => {
+      this.nationalites = res;
     });
+  }
+  numberOnly(event): boolean {
+    const charCode = event.which ? event.which : event.keyCode;
+    if (charCode > 31 && (charCode < 48 || charCode > 57)) {
+      return false;
+    }
+    return true;
   }
 }

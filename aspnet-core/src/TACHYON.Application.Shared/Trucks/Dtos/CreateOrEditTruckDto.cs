@@ -32,7 +32,8 @@ namespace TACHYON.Trucks.Dtos
 
         //public DateTime LicenseExpirationDate { get; set; }
 
-
+        [Required]
+        public virtual string Capacity { get; set; }
         public bool IsAttachable { get; set; }
 
 
