@@ -528,9 +528,9 @@ namespace TACHYON.Authorization.Users
             return query;
         }
 
-        public async Task<bool> CheckIfPhoneNumberValid(string phoneNumber,string id)
+        public async Task<bool> CheckIfPhoneNumberValid(string phoneNumber,long? id)
         {
-            var result = await _userManager.Users.Where(x=>x.PhoneNumber== phoneNumber &&x.Id!= long.Parse(id)).FirstOrDefaultAsync();
+            var result = await _userManager.Users.Where(x=>x.PhoneNumber== phoneNumber && x.Id != id).FirstOrDefaultAsync();
             return (result ==null);
         }
 

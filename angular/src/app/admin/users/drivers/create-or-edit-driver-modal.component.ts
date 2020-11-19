@@ -79,7 +79,7 @@ export class CreateOrEditDriverModalComponent extends AppComponentBase {
   allOrganizationUnits: OrganizationUnitDto[];
   memberedOrganizationUnits: string[];
   userPasswordRepeat = '';
-  isPhoneNumberValid = false;
+  isPhoneNumberValid = true;
   isWaintingUserNameValidation = false;
   constructor(
     injector: Injector,
@@ -307,13 +307,13 @@ export class CreateOrEditDriverModalComponent extends AppComponentBase {
     return s4() + s4() + '-' + s4() + '-' + s4() + '-' + s4() + '-' + s4() + s4() + s4();
   }
 
-  CheckIfDriverMobileNumberIsValid(mobileNumber: string) {
-    this.isWaintingUserNameValidation = true;
-    this._userService.checkIfPhoneNumberValid(mobileNumber, this.user.id.toString()).subscribe((res) => {
-      this.isWaintingUserNameValidation = false;
-      this.isPhoneNumberValid = res;
-    });
-  }
+  // CheckIfDriverMobileNumberIsValid(mobileNumber: string) {
+  //   this.isWaintingUserNameValidation = true;
+  //   this._userService.checkIfPhoneNumberValid(mobileNumber, this.user.id).subscribe((res) => {
+  //     this.isWaintingUserNameValidation = false;
+  //     this.isPhoneNumberValid = res;
+  //   });
+  // }
 
   getDriverNationalites() {
     this.isWaintingUserNameValidation = true;
