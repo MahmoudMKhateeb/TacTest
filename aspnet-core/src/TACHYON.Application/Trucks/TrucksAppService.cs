@@ -131,6 +131,7 @@ namespace TACHYON.Trucks
                                  ModelYear = o.ModelYear,
                                  Note = o.Note,
                                  Id = o.Id,
+                                 Capacity=o.Capacity,
                              },
                              TrucksTypeDisplayName =
                              (o.TransportTypeFk == null ?"": o.TransportTypeFk.DisplayName) + " - "+
@@ -374,7 +375,8 @@ namespace TACHYON.Trucks
                                  ModelName = o.ModelName,
                                  ModelYear = o.ModelYear,
                                  Note = o.Note,
-                                 Id = o.Id
+                                 Id = o.Id,
+                                 Capacity=o.Capacity
                              },
                              TrucksTypeDisplayName =
                              (o.TransportTypeFk == null ? "" : o.TransportTypeFk.DisplayName) + " - " +

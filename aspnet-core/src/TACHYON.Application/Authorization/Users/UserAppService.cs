@@ -31,6 +31,7 @@ using TACHYON.Dto;
 using TACHYON.Notifications;
 using TACHYON.Organizations.Dto;
 using TACHYON.Url;
+using static TACHYON.Authorization.Users.Nationalites;
 
 namespace TACHYON.Authorization.Users
 {
@@ -527,10 +528,43 @@ namespace TACHYON.Authorization.Users
             return query;
         }
 
-        public async Task<bool> CheckIfUserNameValid(string userName)
+        public async Task<bool> CheckIfPhoneNumberValid(string phoneNumber,string id)
         {
-            var result = await _userManager.FindByNameAsync(userName);
+            var result = await _userManager.Users.Where(x=>x.PhoneNumber== phoneNumber &&x.Id!= long.Parse(id)).FirstOrDefaultAsync();
             return (result ==null);
+        }
+
+        public List<SelectItemDto> GetDriverNationalites()
+        {
+            var nationalites = new List<SelectItemDto>();
+
+            var nationality = new SelectItemDto();
+            nationality.DisplayName = "Afghanistan";
+            nationality.Id ="1";
+            nationalites.Add(nationality);
+            nationality.DisplayName = "Egypt";
+            nationality.Id = "2";
+            nationalites.Add(nationality);
+            nationality.DisplayName = "Ethiopia";
+            nationality.Id = "3";
+            nationalites.Add(nationality);
+            nationality.DisplayName = "Malawi";
+            nationality.Id = "4";
+            nationalites.Add(nationality);
+            nationality.DisplayName = "Pakistan";
+            nationality.Id = "5"; 
+            nationalites.Add(nationality);
+            nationality.DisplayName = "Philippines";
+            nationality.Id = "6";
+            nationalites.Add(nationality);
+            nationality.DisplayName = "SaudiArabia";
+            nationality.Id = "7";
+            nationalites.Add(nationality);
+            nationality.DisplayName = "Tajikistan";
+            nationality.Id = "8";
+            nationalites.Add(nationality);
+
+            return nationalites;       
         }
     }
 }

@@ -20,7 +20,7 @@ namespace TACHYON.Trucks.Dtos
 
         public string Note { get; set; }
 
-
+        public virtual string Capacity { get; set; }
         public long TrucksTypeId { get; set; }
 
         public long TruckStatusId { get; set; }

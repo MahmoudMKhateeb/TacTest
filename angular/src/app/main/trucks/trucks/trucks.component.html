@@ -219,6 +219,10 @@
                       {{ l('ModelYear') }}
                       <p-sortIcon field="truck.modelYear"></p-sortIcon>
                     </th>
+                    <th style="width: 150px;" pSortableColumn="capacity">
+                      {{ l('Capacity') }}
+                      <p-sortIcon field="truck.capacity"></p-sortIcon>
+                    </th>
                     <!-- <th style="width: 150px;" pSortableColumn="licenseNumber">
                       {{ l('LicenseNumber') }}
                       <p-sortIcon field="truck.licenseNumber"></p-sortIcon>
@@ -316,6 +320,10 @@
                     <td style="width: 150px;">
                       <span class="ui-column-title"> {{ l('ModelYear') }}</span>
                       {{ record.truck.modelYear }}
+                    </td>
+                    <td style="width: 150px;">
+                      <span class="ui-column-title"> {{ l('Capacity') }}</span>
+                      {{ record.truck.capacity }}
                     </td>
                     <!--
                     <td style="width: 150px;">

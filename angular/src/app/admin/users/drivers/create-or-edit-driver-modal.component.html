@@ -35,30 +35,35 @@
                 <div class="col-sm-9">
                   <div class="form-group">
                     <label for="UserName">{{ 'PhoneNumber' | localize }} *</label>
-                    <div [class]="isWaintingUserNameValidation ? 'spinner spinner-primary spinner-left' : ''">
-                      <input
-                        (focusout)="CheckIfDriverUserNameIsValid(userNameInput.value)"
-                        id="UserName"
-                        #userNameInput="ngModel"
-                        type="number"
-                        [disabled]="!canChangeUserName"
-                        name="UserName"
-                        [class]="
-                          !userNameInput.touched || isWaintingUserNameValidation
-                            ? 'form-control'
-                            : isUserNameValid
-                            ? 'form-control is-valid'
-                            : 'form-control is-invalid'
-                        "
-                        [(ngModel)]="user.userName"
-                        required
-                        maxlength="256"
-                      />
+                    <div>
+                      <div class="input-group">
+                        <div class="input-group-prepend"><span class="input-group-text">+966</span></div>
+                        <input
+                          (focusout)="CheckIfDriverMobileNumberIsValid(phoneNumberInput.value)"
+                          id="UserName"
+                          #phoneNumberInput="ngModel"
+                          (keypress)="numberOnly($event)"
+                          type="number"
+                          [disabled]="!canChangeUserName"
+                          name="UserName"
+                          [class]="
+                            !phoneNumberInput.touched || isWaintingUserNameValidation
+                              ? 'form-control'
+                              : isPhoneNumberValid
+                              ? 'form-control is-valid'
+                              : 'form-control is-invalid'
+                          "
+                          [(ngModel)]="user.userName"
+                          required
+                          pattern="^\d{9}"
+                          maxlength="9"
+                        />
+                        <span class="text-muted">{{ 'EnterMobileNumber' | localize }}</span>
+                      </div>
+                      <validation-messages [formCtrl]="phoneNumberInput"></validation-messages>
+                      <span *ngIf="!isPhoneNumberValid" class="text-danger">{{ 'AlreadyUsed' | localize }} </span>
                     </div>
-                    <div *ngIf="isUserNameValid" class="valid-feedback">Success! You've done it.</div>
-
                     <span class="help-block" *ngIf="!canChangeUserName">{{ 'CanNotChangeAdminUserName' | localize }}</span>
-                    <validation-messages [formCtrl]="userNameInput"></validation-messages>
                   </div>
                   <div class="row">
                     <div class="col-6">
@@ -118,11 +123,13 @@
               <!--                <input id="PhoneNumber" type="text" name="PhoneNumber" class="form-control" [(ngModel)]="user.phoneNumber" maxlength="32" />-->
               <!--              </div>-->
               <div class="form-group">
-                <label for="Nationality">{{ 'Nationality' | localize }}</label>
-                <!-- <select [(ngModel)]="user.nationality" class="form-control form-control-lg custom-select mr-sm-2" style="color: red;">
+                <label for="Nationality">{{ 'Nationality' | localize }}*</label>
+                <select [(ngModel)]="user.nationality" class="form-control form-control-lg custom-select mr-sm-2" style="color: red;">
+                  <option [ngValue]="null">{{ 'SelectNationality' | localize }}</option>
                   <option *ngFor="let nationality of nationalities" [value]="nationality.id">{{ nationality.name }}</option>
-                </select> -->
-                <input id="Nationality" type="text" name="Nationality" class="form-control" [(ngModel)]="user.nationality" maxlength="64" />
+                </select>
+                <span class="text-muted">{{ 'ChooseNationality' | localize }}</span>
+                <!-- <input id="Nationality" type="text" name="Nationality" class="form-control" [(ngModel)]="user.nationality" maxlength="64" /> -->
               </div>
 
               <div class="row">
