@@ -2,7 +2,7 @@
   <div class="content d-flex flex-column flex-column-fluid">
     <sub-header [title]="'Capacities' | localize" [description]="'CapacitiesHeaderInfo' | localize">
       <div role="actions">
-        <button *ngIf="isGranted('Pages.Capacities.Create')" (click)="createCapacity()" class="btn btn-save blue">
+        <button *ngIf="isGranted('Pages.Capacities.Create')" (click)="createCapacity()" class="btn btn-primary blue">
           <i class="fa fa-plus"></i> {{ l('CreateNewCapacity') }}
         </button>
       </div>
@@ -91,11 +91,11 @@
                   <tr>
                     <th style="width: 130px;" [hidden]="!isGrantedAny('Pages.Capacities.Edit', 'Pages.Capacities.Delete')">{{ l('Actions') }}</th>
                     <th style="width: 150px;" pSortableColumn="truckSubtypeFk.displayName">
-                      {{ l('DisplayName') }}
+                      {{ l('truckSubtype') }}
                       <p-sortIcon field="truckSubtypeDisplayName"></p-sortIcon>
                     </th>
                     <th style="width: 150px;" pSortableColumn="displayName">
-                      {{ l('DisplayName') }}
+                      {{ l('Capacity') }}
                       <p-sortIcon field="capacity.displayName"></p-sortIcon>
                     </th>
                   </tr>
