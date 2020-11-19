@@ -205,6 +205,31 @@
             <!--                <span></span>-->
             <!--              </label>-->
             <!--            </div>-->
+
+            <div class="form-group col-md-6">
+              <label for="Truck_Capacity">{{ l('Capacity') }}</label>
+              <div class="input-group">
+                <input
+                  [(ngModel)]="truck.capacity"
+                  class="form-control"
+                  id="Truck_Capacity"
+                  maxlength="4"
+                  placeholder="YYYY"
+                  minlength="0"
+                  min="0"
+                  name="Capacity"
+                  required
+                  type="number"
+                  (keydown)="numberOnly($event)"
+                />
+                <div class="input-group-append">
+                  <span class="input-group-text">{{ l('Tons') }}</span>
+                </div>
+              </div>
+              <span class="form-text text-muted">{{ l('EnterCapacity') }}</span>
+              <span class="form-text text-muted">{{ l('UseTheArrowKeysToChooseTheCapacity') }}</span>
+            </div>
+
             <div class="form-group col-md-12">
               <label for="Truck_Note">{{ l('Note') }}</label>
               <textarea

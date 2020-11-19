@@ -34,6 +34,9 @@ namespace TACHYON.Trucks
         [StringLength(TruckConsts.MaxModelYearLength, MinimumLength = TruckConsts.MinModelYearLength)]
         public virtual string ModelYear { get; set; }
 
+        [Required]
+        public virtual string Capacity { get; set; }
+
         //[Required]
         //[StringLength(TruckConsts.MaxLicenseNumberLength, MinimumLength = TruckConsts.MinLicenseNumberLength)]
         //public virtual string LicenseNumber { get; set; }
