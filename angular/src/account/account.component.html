@@ -44,26 +44,26 @@
         </div>
         <div class="login-form text-center p-7 position-relative overflow-hidden">
           <div class="pb-13 pt-lg-0 pt-5">
-            <a (click)="goToHome()" href="" class="text-center mb-10" *ngIf="useFullWidthLayout()">
-              <img
-                *ngIf="!appSession.tenant || !appSession.tenant.logoId"
-                [src]="appRootUrl() + 'assets/common/images/app-logo-on-light.svg'"
-                alt="logo"
-                class="max-h-70px"
-              />
-              <img
-                *ngIf="appSession.tenant && appSession.tenant.logoId"
-                [src]="
-                  remoteServiceBaseUrl +
-                  '/TenantCustomization/GetTenantLogo?skin=light&tenantId=' +
-                  appSession.tenant.id +
-                  '&id=' +
-                  appSession.tenant.logoId
-                "
-                alt="logo"
-                class="max-h-70px"
-              />
-            </a>
+            <!--            <a (click)="goToHome()" href="" class="text-center mb-10" *ngIf="useFullWidthLayout()">-->
+            <!--              <img-->
+            <!--                *ngIf="!appSession.tenant || !appSession.tenant.logoId"-->
+            <!--                [src]="appRootUrl() + 'assets/common/images/app-logo-on-light.svg'"-->
+            <!--                alt="logo"-->
+            <!--                class="max-h-70px"-->
+            <!--              />-->
+            <!--              <img-->
+            <!--                *ngIf="appSession.tenant && appSession.tenant.logoId"-->
+            <!--                [src]="-->
+            <!--                  remoteServiceBaseUrl +-->
+            <!--                  '/TenantCustomization/GetTenantLogo?skin=light&tenantId=' +-->
+            <!--                  appSession.tenant.id +-->
+            <!--                  '&id=' +-->
+            <!--                  appSession.tenant.logoId-->
+            <!--                "-->
+            <!--                alt="logo"-->
+            <!--                class="max-h-70px"-->
+            <!--              />-->
+            <!--            </a>-->
             <div *ngIf="showTenantChange()" class="login__signup-label tenant-change-box">
               <!--              <tenant-change></tenant-change>-->
             </div>

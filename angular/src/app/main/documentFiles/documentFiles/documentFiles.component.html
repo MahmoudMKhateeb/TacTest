@@ -137,7 +137,12 @@
                           <li>
                             <a
                               href="javascript:;"
-                              *ngIf="permission.isGranted('Pages.DocumentFiles.Edit')"
+                              *ngIf="
+                                permission.isGranted('Pages.DocumentFiles.Edit') &&
+                                record.documentEntityDisplayName != 'Tenant' &&
+                                !record.isAccepted &&
+                                !record.isRejected
+                              "
                               class="dropdown-item"
                               (click)="createOrEditDocumentFileModal.show(entityType, entityIdFilter, record.documentFile.id)"
                               >{{ l('Edit') }}</a
@@ -146,7 +151,7 @@
                           <li>
                             <a
                               href="javascript:;"
-                              *ngIf="!record.documentFile.isAccepted"
+                              *ngIf="!record.documentFile.isAccepted && isHost"
                               class="dropdown-item"
                               (click)="acceptDocumentFile(record.documentFile.id)"
                               >{{ l('Accept') }}</a
@@ -155,7 +160,7 @@
                           <li>
                             <a
                               href="javascript:;"
-                              *ngIf="record.documentFile.isAccepted"
+                              *ngIf="record.documentFile.isAccepted && isHost"
                               class="dropdown-item"
                               (click)="rejectDocumentFile(record.documentFile.id)"
                               >{{ l('Reject') }}</a

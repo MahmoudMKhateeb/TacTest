@@ -50,13 +50,13 @@
                   <tr>
                     <td style="width: 130px;">
                       <div class="btn-group dropdown" dropdown container="body">
-                        <i
-                          *ngIf="record.expirationDate < today"
-                          class="flaticon2-information text-warning"
-                          style="padding: 3px;"
-                          data-toggle="tooltip"
-                          title="DocumnetIsExpired"
-                        ></i>
+                        <!--                        <i-->
+                        <!--                          *ngIf="record.expirationDate < today"-->
+                        <!--                          class="flaticon2-information text-warning"-->
+                        <!--                          style="padding: 3px;"-->
+                        <!--                          data-toggle="tooltip"-->
+                        <!--                          title="DocumnetIsExpired"-->
+                        <!--                        ></i>-->
                         <button class="dropdown-toggle btn btn-sm btn-primary" dropdownToggle>
                           <i class="fa fa-cog"></i><span class="caret"></span> {{ l('Actions') }}
                         </button>
@@ -98,26 +98,26 @@
 
                     <td style="width: 150px;">
                       <span class="ui-column-title"></span>
-                      <div *ngIf="record.isAccepted && record.expirationDate > today">
+                      <div *ngIf="record.isAccepted && !record.isRejected">
                         <span class="label label-lg font-weight-bold label-light-success label-inline">
                           {{ l('Accepted') }}
                         </span>
                       </div>
-                      <div *ngIf="record.isRejected && record.expirationDate > today">
+                      <div *ngIf="record.isRejected && !record.isAccepted">
                         <span class="label label-lg font-weight-bold label-light-danger label-inline">
                           {{ l('Rejected') }}
                         </span>
                       </div>
-                      <div *ngIf="!record.isRejected && !record.isAccepted && record.expirationDate > today">
+                      <div *ngIf="!record.isRejected && !record.isAccepted">
                         <span class="label label-lg font-weight-bold label-light-primary label-inline">
                           {{ l('InReview') }}
                         </span>
                       </div>
-                      <div *ngIf="record.expirationDate < today">
-                        <span class="label label-lg font-weight-bold label-light-warning label-inline">
-                          {{ l('Expired') }}
-                        </span>
-                      </div>
+                      <!--                      <div *ngIf="record.expirationDate < today">-->
+                      <!--                        <span class="label label-lg font-weight-bold label-light-warning label-inline">-->
+                      <!--                          {{ l('Expired') }}-->
+                      <!--                        </span>-->
+                      <!--                      </div>-->
                     </td>
                   </tr>
                 </ng-template>

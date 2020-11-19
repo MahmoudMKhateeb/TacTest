@@ -18,7 +18,7 @@
               <i class="fa fa-download mr-2 mt-1" style="font-size: 1rem;"></i>
               {{ 'ExportToExcel' | localize }}
             </a>
-            <a href="javascript:;" *ngIf="'Pages.Administration.TruckStatuses.Create' | permission" class="no-padding">
+            <a href="javascript:;" *ngIf="'Pages.Trucks.Create' | permission" class="no-padding">
               <span class="fileinput-button">
                 <p-fileUpload
                   customUpload="true"
@@ -317,7 +317,7 @@
                       <span class="ui-column-title"> {{ l('ModelYear') }}</span>
                       {{ record.truck.modelYear }}
                     </td>
-                    <!-- 
+                    <!--
                     <td style="width: 150px;">
                       <span class="ui-column-title"> {{ l('LicenseExpirationDate') }}</span>
                       <span *ngIf="record.truck.licenseExpirationDate">
