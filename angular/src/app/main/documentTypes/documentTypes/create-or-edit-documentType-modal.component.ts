@@ -43,7 +43,7 @@ export class CreateOrEditDocumentTypeModalComponent extends AppComponentBase {
   documentTypeDisplayNameFilter = '';
   active = false;
   saving = false;
-
+  documentNameisAvaliable = true;
   documentType: CreateOrEditDocumentTypeDto = new CreateOrEditDocumentTypeDto();
   allDocumentsEntities: SelectItemDto[];
 
@@ -68,18 +68,33 @@ export class CreateOrEditDocumentTypeModalComponent extends AppComponentBase {
   show(documentTypeId?: number): void {
     if (!documentTypeId) {
       this.documentType = new CreateOrEditDocumentTypeDto();
+      this.documentType.documentsEntityId = -1;
+      this.documentType.editionId = -1;
       this.documentType.id = documentTypeId;
+      this.documentType.numberMaxDigits = 0;
+      this.documentType.numberMinDigits = 0;
+      this.documentType.expirationAlertDays = 0;
+      this.documentType.inActiveToleranceDays = 0;
       //this.documentType.expirationDate = moment().startOf('day');
       this._documentTypesServiceProxy.getAllDocumentsEntitiesForTableDropdown().subscribe((result) => {
         this.allDocumentsEntities = result;
+        this.documentType.documentsEntityId = -1;
+        this.documentType.editionId = -1;
       });
       this.active = true;
       this.modal.show();
     } else if (documentTypeId) {
       this._documentTypesServiceProxy.getDocumentTypeForEdit(documentTypeId).subscribe((result) => {
         this.documentType = result.documentType;
+        if (this.documentType.hasNumber || this.documentType.hasExpirationDate) {
+          this.documentType.numberMinDigits = this.documentType.numberMinDigits == null ? 0 : this.documentType.numberMinDigits;
+          this.documentType.numberMaxDigits = this.documentType.numberMaxDigits == null ? 0 : this.documentType.numberMaxDigits;
+          this.documentType.inActiveToleranceDays = this.documentType.inActiveToleranceDays == null ? 0 : this.documentType.inActiveToleranceDays;
+          this.documentType.expirationAlertDays = this.documentType.expirationAlertDays == null ? 0 : this.documentType.expirationAlertDays;
+        }
         this._documentTypesServiceProxy.getAllDocumentsEntitiesForTableDropdown().subscribe((result) => {
           this.allDocumentsEntities = result;
+          this.tenantOptionSelected = this.documentType.editionId != null;
           this.active = true;
           this.modal.show();
         });
@@ -175,15 +190,27 @@ export class CreateOrEditDocumentTypeModalComponent extends AppComponentBase {
 
   hasNumberCheckBoxChange() {
     if (!this.documentType.hasNumber) {
-      this.documentType.numberMaxDigits = undefined;
-      this.documentType.numberMinDigits = undefined;
+      this.documentType.numberMaxDigits = 0;
+      this.documentType.numberMinDigits = 0;
     }
   }
 
   HasExpDateCheckBoxChange() {
     if (!this.documentType.hasExpirationDate) {
-      this.documentType.expirationAlertDays = undefined;
-      this.documentType.inActiveToleranceDays = undefined;
+      this.documentType.expirationAlertDays = 0;
+      this.documentType.inActiveToleranceDays = 0;
     }
+  }
+  numberOnly(event): boolean {
+    const charCode = event.which ? event.which : event.keyCode;
+    if (charCode > 31 && (charCode < 48 || charCode > 57)) {
+      return false;
+    }
+    return true;
+  }
+  isDocumentTypeNameAvaliable(name: string, id) {
+    this._documentTypesServiceProxy.isDocuemntTypeNameAvaliable(name, id).subscribe((result) => {
+      this.documentNameisAvaliable = result;
+    });
   }
 }

@@ -1,4 +1,4 @@
-﻿import { Component, Injector, ViewEncapsulation, ViewChild } from '@angular/core';
+﻿import { Component, Injector, ViewEncapsulation, ViewChild, ChangeDetectorRef } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { TrucksServiceProxy, TruckDto } from '@shared/service-proxies/service-proxies';
 import { NotifyService } from 'abp-ng2-module';
@@ -31,7 +31,7 @@ export class TrucksComponent extends AppComponentBase {
   @ViewChild('entityTypeHistoryModal', { static: true }) entityTypeHistoryModal: EntityTypeHistoryModalComponent;
   @ViewChild('createOrEditTruckModal', { static: true }) createOrEditTruckModal: CreateOrEditTruckModalComponent;
   @ViewChild('viewTruckModalComponent', { static: true }) viewTruckModal: ViewTruckModalComponent;
-  @ViewChild('viewOrEditEntityDocumentsModal', { static: true }) viewOrEditEntityDocumentsModal: ViewOrEditEntityDocumentsModalComponent;
+  @ViewChild('viewOrEditEntityDocumentsModal', { static: false }) viewOrEditEntityDocumentsModal: ViewOrEditEntityDocumentsModalComponent;
   @ViewChild('truckUserLookupTableModal', { static: true }) truckUserLookupTableModal: TruckUserLookupTableModalComponent;
 
   @ViewChild('dataTable', { static: true }) dataTable: Table;
@@ -60,7 +60,8 @@ export class TrucksComponent extends AppComponentBase {
     private _tokenAuth: TokenAuthServiceProxy,
     private _activatedRoute: ActivatedRoute,
     private _fileDownloadService: FileDownloadService,
-    private _httpClient: HttpClient
+    private _httpClient: HttpClient,
+    private changeDetectorRef: ChangeDetectorRef
   ) {
     super(injector);
     this.uploadUrl = AppConsts.remoteServiceBaseUrl + '/Helper/ImportTrucksFromExcel';
@@ -81,6 +82,9 @@ export class TrucksComponent extends AppComponentBase {
   }
 
   getTrucks(event?: LazyLoadEvent) {
+    // this.reloadPage();
+
+    this.changeDetectorRef.detectChanges();
     if (this.primengTableHelper.shouldResetPaging(event)) {
       this.paginator.changePage(0);
       return;

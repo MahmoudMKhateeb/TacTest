@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Dynamic.Core;
 using System.Threading.Tasks;
+using Abp;
 using Abp.Application.Editions;
 using Abp.Application.Services.Dto;
 using Abp.Authorization;
@@ -35,9 +36,8 @@ namespace TACHYON.Documents.DocumentFiles
     {
 
 
-        public DocumentFilesAppService(IRepository<DocumentsEntity, int> documentEntityRepository, IRepository<Tenant, int> lookupTenantRepository, IRepository<DocumentFile, Guid> documentFileRepository, IDocumentFilesExcelExporter documentFilesExcelExporter, IRepository<DocumentType, long> lookupDocumentTypeRepository, IRepository<Truck, Guid> lookupTruckRepository, IRepository<Trailer, long> lookupTrailerRepository, IRepository<User, long> lookupUserRepository, IRepository<RoutStep, long> lookupRoutStepRepository, ITempFileCacheManager tempFileCacheManager, IBinaryObjectManager binaryObjectManager, IRepository<Edition, int> editionRepository, IRepository<DocumentType, long> documentTypeRepository, DocumentFilesManager documentFilesManager)
+        public DocumentFilesAppService(TenantManager tenantManager, IRepository<DocumentFile, Guid> documentFileRepository, IDocumentFilesExcelExporter documentFilesExcelExporter, IRepository<DocumentType, long> lookupDocumentTypeRepository, IRepository<Truck, Guid> lookupTruckRepository, IRepository<Trailer, long> lookupTrailerRepository, IRepository<User, long> lookupUserRepository, IRepository<RoutStep, long> lookupRoutStepRepository, ITempFileCacheManager tempFileCacheManager, IBinaryObjectManager binaryObjectManager, IRepository<Edition, int> editionRepository, IRepository<DocumentType, long> documentTypeRepository, DocumentFilesManager documentFilesManager, IRepository<Tenant, int> lookupTenantRepository, IRepository<DocumentsEntity, int> documentEntityRepository)
         {
-            _lookupTenantRepository = lookupTenantRepository;
             _documentFileRepository = documentFileRepository;
             _documentFilesExcelExporter = documentFilesExcelExporter;
             _lookupDocumentTypeRepository = lookupDocumentTypeRepository;
@@ -50,7 +50,9 @@ namespace TACHYON.Documents.DocumentFiles
             _editionRepository = editionRepository;
             _documentTypeRepository = documentTypeRepository;
             _documentFilesManager = documentFilesManager;
+            _lookupTenantRepository = lookupTenantRepository;
             _documentEntityRepository = documentEntityRepository;
+            _tenantManager = tenantManager;
         }
 
         private readonly IRepository<Tenant, int> _lookupTenantRepository;
@@ -67,6 +69,8 @@ namespace TACHYON.Documents.DocumentFiles
         private readonly IRepository<DocumentsEntity, int> _documentEntityRepository;
         private readonly IRepository<Edition, int> _editionRepository;
         private readonly DocumentFilesManager _documentFilesManager;
+        private readonly TenantManager _tenantManager;
+
         public async Task<PagedResultDto<GetDocumentFileForViewDto>> GetAll(GetAllDocumentFilesInput input)
         {
             var filteredDocumentFiles = _documentFileRepository.GetAll()
@@ -221,8 +225,20 @@ namespace TACHYON.Documents.DocumentFiles
                 throw new UserFriendlyException(L("document cant be accepted and rejected at same time "));
             }
 
+
+            //NumberUnique
+            var document = await _documentFileRepository.FirstOrDefaultAsync(doc => doc.Id != input.Id &&
+                                                         doc.DocumentTypeId == input.DocumentTypeId &&
+                                                         doc.Number == input.Number &&
+                                                         doc.DocumentTypeFk.IsNumberUnique == true);
+            if (document != null)
+            {
+                throw new UserFriendlyException(L("DocumentNumberShouldBeUnique"));
+            }
+
             if (input.Id == null)
             {
+
                 await Create(input);
             }
             else
@@ -342,7 +358,7 @@ namespace TACHYON.Documents.DocumentFiles
             DisableTenancyFiltersIfHost();
             var documentFile = await _documentFileRepository.GetAsync(documentFileId);
 
-            var binaryObject = await _binaryObjectManager.GetOrNullAsync(documentFile.BinaryObjectId);
+            var binaryObject = await _binaryObjectManager.GetOrNullAsync(documentFile.BinaryObjectId.Value);
 
             var file = new FileDto(documentFile.Name, documentFile.Extn);
 
@@ -366,32 +382,20 @@ namespace TACHYON.Documents.DocumentFiles
             return await GetRequiredDocumentFileListForCreateOrEdit(AppConsts.DriverDocumentsEntityName, userId);
         }
 
-        /// <summary>
-        /// tenant required documents files list as a template to fill later in create
-        /// </summary>
-        /// <returns></returns>
-        public async Task<List<CreateOrEditDocumentFileDto>> GetTenantRequiredDocumentFilesTemplateForCreate()
-        {
-            var list = await _documentFilesManager.GetAllTenantMissingRequiredDocumentTypesListAsync(AbpSession.GetTenantId());
-            return list.Select(x => new CreateOrEditDocumentFileDto
-            {
-                DocumentTypeId = x.Id,
-                DocumentTypeDto = ObjectMapper.Map<DocumentTypeDto>(x)
-            }).ToList();
-        }
+
 
         public async Task AddTenantRequiredDocumentFiles(List<CreateOrEditDocumentFileDto> input)
         {
-            var requiredDocumentTypes = await _documentFilesManager.GetAllTenantMissingRequiredDocumentTypesListAsync(AbpSession.GetTenantId());
+            var requiredDocumentTypes = await GetTenentMissingDocuments();
             if (requiredDocumentTypes.Count > 0)
             {
                 foreach (var documentType in requiredDocumentTypes)
                 {
-                    var doc = input.FirstOrDefault(x => x.DocumentTypeId == documentType.Id);
+                    var doc = input.FirstOrDefault(x => x.DocumentTypeId == documentType.DocumentTypeId);
 
                     if (doc.UpdateDocumentFileInput.FileToken.IsNullOrEmpty())
                     {
-                        throw new UserFriendlyException(L("document missing msg :" + documentType.DisplayName));
+                        throw new UserFriendlyException(L("document missing msg :" + documentType.DocumentTypeDto.DisplayName));
                     }
 
                 }
@@ -461,17 +465,26 @@ namespace TACHYON.Documents.DocumentFiles
             //host can update tenants documents 
             DisableTenancyFiltersIfHost();
 
-            DocumentFile documentFile = await _documentFileRepository.GetAsync((Guid)input.Id);
+            DocumentFile documentFile = await _documentFileRepository
+                .GetAll()
+                .Include(x => x.DocumentTypeFk)
+                .ThenInclude(x => x.DocumentsEntityFk)
+                .FirstOrDefaultAsync(x => x.Id == (Guid)input.Id);
 
             if (input.UpdateDocumentFileInput != null && !input.UpdateDocumentFileInput.FileToken.IsNullOrEmpty())
             {
-                await _binaryObjectManager.DeleteAsync(documentFile.BinaryObjectId);
-                documentFile.BinaryObjectId = await _documentFilesManager.SaveDocumentFileBinaryObject(input.UpdateDocumentFileInput.FileToken, AbpSession.TenantId);
+                if (documentFile.BinaryObjectId != null)
+                {
+                    await _binaryObjectManager.DeleteAsync(documentFile.BinaryObjectId.Value);
+                }
+
+                input.BinaryObjectId = await _documentFilesManager.SaveDocumentFileBinaryObject(input.UpdateDocumentFileInput.FileToken, AbpSession.TenantId);
             }
 
             ObjectMapper.Map(input, documentFile);
 
-            ObjectMapper.Map(input.DocumentTypeDto, documentFile.DocumentTypeFk);
+
+            //ObjectMapper.Map(input.DocumentTypeDto, documentFile.DocumentTypeFk);
             //if (input.DocumentTypeDto.HasNumber)
             //{
             //    documentFile.Number = input.Number;
@@ -518,74 +531,73 @@ namespace TACHYON.Documents.DocumentFiles
         private async Task<List<CreateOrEditDocumentFileDto>> GetRequiredDocumentFileListForCreateOrEdit(string documentsEntityName, string entityId)
         {
             var list = new List<DocumentType>();
-            if (entityId == null || entityId == "")
+            if (string.IsNullOrEmpty(entityId))
             {
                 list = await _documentTypeRepository.GetAll()
                 .Where(x => x.DocumentsEntityFk.DisplayName == documentsEntityName)
                 .ToListAsync();
+
+                return list.Select(x => new CreateOrEditDocumentFileDto { DocumentTypeId = x.Id, DocumentTypeDto = ObjectMapper.Map<DocumentTypeDto>(x) }).ToList();
             }
 
 
-            if (entityId != null && entityId != "")
+            if (documentsEntityName == AppConsts.DriverDocumentsEntityName)
             {
-                if (documentsEntityName == AppConsts.DriverDocumentsEntityName)
-                {
-                    var resultList = _documentTypeRepository.GetAll().Include(ent => ent.DocumentsEntityFk)
-                        .Where(doc => doc.DocumentsEntityFk.DisplayName == AppConsts.DriverDocumentsEntityName);
+                var resultList = _documentTypeRepository.GetAll().Include(ent => ent.DocumentsEntityFk)
+                    .Where(doc => doc.DocumentsEntityFk.DisplayName == AppConsts.DriverDocumentsEntityName);
 
 
-                    var query = from o in resultList
-                                join o1 in _documentFileRepository.GetAll().Where(a => a.UserId == long.Parse(entityId)) on o.Id equals o1.DocumentTypeId into j1
-                                from s1 in j1.DefaultIfEmpty()
-                                where s1.UserId == null
-                                select new DocumentType
-                                {
-                                    DisplayName = o.DisplayName,
-                                    HasExpirationDate = o.HasExpirationDate,
-                                    Id = o.Id,
-                                    HasHijriExpirationDate = o.HasHijriExpirationDate,
-                                    HasNotes = o.HasNotes,
-                                    HasNumber = o.HasNumber,
-                                    IsNumberUnique = o.IsNumberUnique,
-                                    IsRequired = o.IsRequired,
-                                    NumberMaxDigits = o.NumberMaxDigits,
-                                    NumberMinDigits = o.NumberMinDigits
-                                };
+                var query = from o in resultList
+                            join o1 in _documentFileRepository.GetAll().Where(a => a.UserId == long.Parse(entityId)) on o.Id equals o1.DocumentTypeId into j1
+                            from s1 in j1.DefaultIfEmpty()
+                            where s1.UserId == null
+                            select new DocumentType
+                            {
+                                DisplayName = o.DisplayName,
+                                HasExpirationDate = o.HasExpirationDate,
+                                Id = o.Id,
+                                HasHijriExpirationDate = o.HasHijriExpirationDate,
+                                HasNotes = o.HasNotes,
+                                HasNumber = o.HasNumber,
+                                IsNumberUnique = o.IsNumberUnique,
+                                IsRequired = o.IsRequired,
+                                NumberMaxDigits = o.NumberMaxDigits,
+                                NumberMinDigits = o.NumberMinDigits
+                            };
 
-                    list = await query.ToListAsync();
-                    return list.Select(x => new CreateOrEditDocumentFileDto { DocumentTypeId = x.Id, UserId = long.Parse(entityId), DocumentTypeDto = ObjectMapper.Map<DocumentTypeDto>(x) }).ToList();
-
-                }
-                else if (documentsEntityName == AppConsts.TruckDocumentsEntityName)
-                {
-                    var resultList = _documentTypeRepository.GetAll().Include(ent => ent.DocumentsEntityFk)
-                        .Where(doc => doc.DocumentsEntityFk.DisplayName == AppConsts.TruckDocumentsEntityName);
-
-                    var query = from o in resultList
-                                join o1 in _documentFileRepository.GetAll().Where(a => a.TruckId == Guid.Parse(entityId)) on o.Id equals o1.DocumentTypeId into j1
-                                from s1 in j1.DefaultIfEmpty()
-                                where s1.TruckId == null
-                                select new DocumentType
-                                {
-                                    DisplayName = o.DisplayName,
-                                    HasExpirationDate = o.HasExpirationDate,
-                                    Id = o.Id,
-                                    HasHijriExpirationDate = o.HasHijriExpirationDate,
-                                    HasNotes = o.HasNotes,
-                                    HasNumber = o.HasNumber,
-                                    IsNumberUnique = o.IsNumberUnique,
-                                    IsRequired = o.IsRequired,
-                                    NumberMaxDigits = o.NumberMaxDigits,
-                                    NumberMinDigits = o.NumberMinDigits
-                                    
-                                };
-
-                    list = await query.ToListAsync();
-                    return list.Select(x => new CreateOrEditDocumentFileDto { DocumentTypeId = x.Id, TruckId = Guid.Parse(entityId) , DocumentTypeDto = ObjectMapper.Map<DocumentTypeDto>(x) }).ToList();
-
-                }
+                list = await query.ToListAsync();
+                return list.Select(x => new CreateOrEditDocumentFileDto { DocumentTypeId = x.Id, UserId = long.Parse(entityId), DocumentTypeDto = ObjectMapper.Map<DocumentTypeDto>(x) }).ToList();
 
             }
+            else if (documentsEntityName == AppConsts.TruckDocumentsEntityName)
+            {
+                var resultList = _documentTypeRepository.GetAll().Include(ent => ent.DocumentsEntityFk)
+                    .Where(doc => doc.DocumentsEntityFk.DisplayName == AppConsts.TruckDocumentsEntityName);
+
+                var query = from o in resultList
+                            join o1 in _documentFileRepository.GetAll().Where(a => a.TruckId == Guid.Parse(entityId)) on o.Id equals o1.DocumentTypeId into j1
+                            from s1 in j1.DefaultIfEmpty()
+                            where s1.TruckId == null
+                            select new DocumentType
+                            {
+                                DisplayName = o.DisplayName,
+                                HasExpirationDate = o.HasExpirationDate,
+                                Id = o.Id,
+                                HasHijriExpirationDate = o.HasHijriExpirationDate,
+                                HasNotes = o.HasNotes,
+                                HasNumber = o.HasNumber,
+                                IsNumberUnique = o.IsNumberUnique,
+                                IsRequired = o.IsRequired,
+                                NumberMaxDigits = o.NumberMaxDigits,
+                                NumberMinDigits = o.NumberMinDigits
+
+                            };
+
+                list = await query.ToListAsync();
+                return list.Select(x => new CreateOrEditDocumentFileDto { DocumentTypeId = x.Id, TruckId = Guid.Parse(entityId), DocumentTypeDto = ObjectMapper.Map<DocumentTypeDto>(x) }).ToList();
+
+            }
+
             return list.Select(x => new CreateOrEditDocumentFileDto { DocumentTypeId = x.Id, DocumentTypeDto = ObjectMapper.Map<DocumentTypeDto>(x) }).ToList();
         }
 
@@ -596,11 +608,12 @@ namespace TACHYON.Documents.DocumentFiles
             var documentFile = _documentFileRepository.FirstOrDefault(id);
             documentFile.IsAccepted = true;
             documentFile.IsRejected = false;
+            //await _appNotifier.AcceptedSubmittedDocument(new UserIdentifier(documentFile.TenantId, AbpSession.UserId.Value), documentFile.Name);
 
             //todo send notification to the tenant
         }
 
-        public void Reject(Guid id)
+        public async void Reject(Guid id)
         {
             DisableTenancyFiltersIfHost();
 
@@ -608,15 +621,51 @@ namespace TACHYON.Documents.DocumentFiles
             documentFile.IsAccepted = false;
             documentFile.IsRejected = true;
 
+            //await _appNotifier.RejectedSubmittedDocument(new UserIdentifier(AbpSession.TenantId, AbpSession.UserId.Value), documentFile.Name);
+
             //todo send notification to the tenant
         }
 
+
+        /// <summary>
+        /// is for ...
+        /// </summary>
+        /// <returns></returns>
+        public async Task<List<GetTenantSubmittedDocumnetForView>> GetAllTenantSubmittedRequiredDocumentsWithStatuses()
+        {
+
+            var docs = await _documentFileRepository.GetAll()
+                     .Include(doc => doc.DocumentTypeFk)
+                     .ThenInclude(doc => doc.DocumentsEntityFk)
+                     .Where(x => x.DocumentTypeFk.DocumentsEntityFk.DisplayName == AppConsts.TenantDocumentsEntityName)
+                   //.Where(d => d.TenantId == AbpSession.GetTenantId())
+                   .Select(x => new GetTenantSubmittedDocumnetForView()
+                   {
+                       Id = x.Id,
+                       Extn = x.Extn,
+                       IsAccepted = x.IsAccepted,
+                       IsRejected = x.IsRejected,
+                       Name = x.DocumentTypeFk.DisplayName,
+                       //LastModificationTime = await  _binaryObjectManager.GetOrNullAsync(x.BinaryObjectId).Result.,
+                       ExpirationDate = x.ExpirationDate
+                   }).ToListAsync();
+            return docs;
+
+        }
+
+        public async Task<bool> IsDocumentTypeNumberUnique(DocumentUniqueCheckOutput input)
+        {
+            var result = await _documentFileRepository
+                .FirstOrDefaultAsync(x => x.Number == input.Number && x.DocumentTypeId == long.Parse(input.DocumentTypeId));
+            return result == null;
+        }
         /// <summary>
         ///     check if the entity is missing document files and are needed to be upload them
         /// </summary>
         /// <returns>
         /// true if the entity is missing document files
         /// </returns>
+
         public async Task<bool> CheckIfMissingDocumentFiles(string entityId, string entityType)
         {
             var result = false;
@@ -645,24 +694,67 @@ namespace TACHYON.Documents.DocumentFiles
 
             return result;
         }
+        public async Task<List<CreateOrEditDocumentFileDto>> GetTenantRequiredDocumentFilesTemplateForCreate()
+        {
+            var list = await _documentFilesManager.GetAllTenantMissingRequiredDocumentTypesListAsync(AbpSession.GetTenantId());
+            return list.Select(x => new CreateOrEditDocumentFileDto
+            {
+                DocumentTypeId = x.Id,
+                DocumentTypeDto = ObjectMapper.Map<DocumentTypeDto>(x)
+            }).ToList();
+        }
+
+        public async Task<List<CreateOrEditDocumentFileDto>> GetTenentMissingDocuments()
+        {
+            var tenant = _tenantManager.GetById(AbpSession.TenantId.Value);
+
+            var documentFiles = await _documentFileRepository.GetAll()
+                    .Include(doc => doc.DocumentTypeFk)
+                    .ThenInclude(doc => doc.DocumentsEntityFk)
+                    .Where(x => x.DocumentTypeFk.IsRequired)
+                    .ToListAsync();
+
+            var documentTypes = await _documentTypeRepository.GetAll()
+                 .Include(x => x.Translations)
+                 .Where(x => x.EditionId == tenant.EditionId)
+                 .ToListAsync();
 
 
+            if (documentTypes != null && documentTypes.Any())
+            {
+                foreach (var item in documentTypes.ToList())
+                {
+                    if (documentFiles.Any(x => x.DocumentTypeId == item.Id))
+                    {
+                        documentTypes.Remove(item);
+                    }
+                }
+            }
 
-
+            return documentTypes.Select(x => new CreateOrEditDocumentFileDto
+            {
+                DocumentTypeId = x.Id,
+                DocumentTypeDto = ObjectMapper.Map<DocumentTypeDto>(x)
+            }).ToList();
+        }
 
         public async Task<List<SelectItemDto>> GetDocumentEntitiesForTableDropdown()
         {
+            using (this.CurrentUnitOfWork.DisableFilter(AbpDataFilters.MayHaveTenant, AbpDataFilters.MustHaveTenant))
+            {
+                var entities = await _documentEntityRepository
+               .GetAll()
+               .Select(x => new SelectItemDto
+               {
+                   DisplayName = x.DisplayName,
+                   Id = x.Id.ToString()
+               }
+               ).ToListAsync();
 
-            var entities = await _documentEntityRepository
-                .GetAll()
-                .Select(x => new SelectItemDto
-                {
-                    DisplayName = x.DisplayName,
-                    Id = x.Id.ToString()
-                }
-                ).ToListAsync();
+                return entities;
+            }
 
-            return entities;
+
         }
 
         /// <summary>
@@ -673,6 +765,7 @@ namespace TACHYON.Documents.DocumentFiles
         //{
         //    return AbpSession.TenantId == null;
         //}
+
 
 
 

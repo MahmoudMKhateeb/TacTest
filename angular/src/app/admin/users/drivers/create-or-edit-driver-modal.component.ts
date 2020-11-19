@@ -47,7 +47,7 @@ export class CreateOrEditDriverModalComponent extends AppComponentBase {
   user: UserEditDto = new UserEditDto();
   roles: UserRoleDto[];
   sendActivationEmail = true;
-  setRandomPassword = false;
+  setRandomPassword = true;
   passwordComplexityInfo = '';
   profilePicture: string;
   createOrEditDocumentFileDtos!: CreateOrEditDocumentFileDto[];
@@ -98,7 +98,7 @@ export class CreateOrEditDriverModalComponent extends AppComponentBase {
         this.createOrEditDocumentFileDtos = result;
       });
       this.active = true;
-      this.setRandomPassword = false;
+      this.setRandomPassword = true;
       this.sendActivationEmail = true;
     }
 
@@ -117,7 +117,7 @@ export class CreateOrEditDriverModalComponent extends AppComponentBase {
         this.active = true;
 
         setTimeout(() => {
-          this.setRandomPassword = false;
+          this.setRandomPassword = true;
         }, 0);
 
         this.sendActivationEmail = false;
@@ -195,7 +195,7 @@ export class CreateOrEditDriverModalComponent extends AppComponentBase {
     input.setRandomPassword = this.setRandomPassword;
     input.sendActivationEmail = this.sendActivationEmail;
     input.assignedRoleNames = _.map(_.filter(this.roles, { isAssigned: true, inheritedFromOrganizationUnit: false }), (role) => role.roleName);
-
+    input.user.phoneNumber = input.user.userName;
     //docs
 
     input.createOrEditDocumentFileDtos = this.createOrEditDocumentFileDtos;

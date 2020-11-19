@@ -51,9 +51,9 @@ namespace TACHYON.Documents
                 {
                     //ExpirationAlertDays 
                     var expirationAlertDays = documentFile.DocumentTypeFk.ExpirationAlertDays;
-                    if (expirationAlertDays != null)
+                    if (expirationAlertDays != null && documentFile.ExpirationDate != null)
                     {
-                        var alertDate = documentFile.ExpirationDate.Date.Subtract(TimeSpan.FromDays(Convert.ToDouble(expirationAlertDays))).Date;
+                        var alertDate = documentFile.ExpirationDate.Value.Date.Subtract(TimeSpan.FromDays(Convert.ToDouble(expirationAlertDays))).Date;
                         if (alertDate == Clock.Now.Date)
                         {
 
@@ -63,7 +63,7 @@ namespace TACHYON.Documents
                         }
                     }
 
-                    if (documentFile.ExpirationDate.Date == DateTime.Now.Date)
+                    if (documentFile.ExpirationDate != null && documentFile.ExpirationDate.Value.Date == DateTime.Now.Date)
                     {
                         var user = new UserIdentifier(documentFile.TenantId, documentFile.CreatorUserId.Value);
                         _appNotifier.DocumentFileExpiration(user, documentFile.Id);

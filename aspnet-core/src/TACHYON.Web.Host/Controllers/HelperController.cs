@@ -92,7 +92,7 @@ namespace TACHYON.Web.Controllers
         }
 
         [HttpPost]
-        [AbpMvcAuthorize(AppPermissions.Pages_Administration_TruckStatuses_Create)]
+        [AbpMvcAuthorize(AppPermissions.Pages_Trucks_Create)]
         public async Task<JsonResult> ImportTrucksFromExcel()
         {
             try

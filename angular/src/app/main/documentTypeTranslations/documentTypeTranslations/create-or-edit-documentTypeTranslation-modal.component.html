@@ -24,7 +24,7 @@
           <div class="form-group m-form__group">
             <label for="DocumentTypeDisplayName">{{ l('DocumentType') }}</label>
             <select name="documentTypeTranslation.coreId" [(ngModel)]="documentTypeTranslation.coreId" class="form-control" required>
-              <option value="">{{ l('SelectADocumentType') }}</option>
+              <option value="{{ -1 }}">{{ l('SelectADocumentType') }}</option>
               <option *ngFor="let item of allDocumentTypes" value="{{ item.id }}">{{ item.displayName }}</option>
             </select>
           </div>

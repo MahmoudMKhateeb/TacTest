@@ -18,7 +18,7 @@
               <i class="fa fa-download mr-2 mt-1" style="font-size: 1rem;"></i>
               {{ 'ExportToExcel' | localize }}
             </a>
-            <a href="javascript:;" *ngIf="'Pages.Administration.TruckStatuses.Create' | permission" class="no-padding">
+            <a href="javascript:;" *ngIf="'Pages.Trucks.Create' | permission" class="no-padding">
               <span class="fileinput-button">
                 <p-fileUpload
                   customUpload="true"
@@ -75,7 +75,7 @@
                   </div>
                 </div>
               </div>
-              <div class="row" [hidden]="!advancedFiltersAreShown">
+              <!-- <div class="row" [hidden]="!advancedFiltersAreShown">
                 <div class="col-md-12">
                   <div class="kt-separator kt-separator--border-dashed"></div>
                 </div>
@@ -106,15 +106,15 @@
                     />
                   </div>
                 </div>
-                <!-- <div class="col-md-3">
+                <div class="col-md-3">
                   <label for="IsAttachableFilterSelect">{{ l('IsAttachable') }}</label>
                   <select class="form-control" name="IsAttachableFilter" id="IsAttachableFilterSelect" [(ngModel)]="isAttachableFilter">
                     <option value="-1">{{ l('All') }}</option>
                     <option value="0">{{ l('False') }}</option>
                     <option value="1">{{ l('True') }}</option>
                   </select>
-                </div> -->
-                <!-- <div class="col-md-3">
+                </div>
+                <div class="col-md-3">
                   <div class="form-group">
                     <label for="TrucksTypeDisplayNameFilter">{{ l('TrucksType') }}</label>
                     <input
@@ -125,7 +125,7 @@
                       [(ngModel)]="trucksTypeDisplayNameFilter"
                     />
                   </div>
-                </div> -->
+                </div>
                 <div class="col-md-3">
                   <div class="form-group">
                     <label for="TruckStatusDisplayNameFilter">{{ l('TruckStatus') }}</label>
@@ -153,7 +153,7 @@
                         <button (click)="setDriver1UserIdNull()" class="btn btn-danger btn-icon" type="button"><i class="fa fa-times"></i></button>
                       </div>
                     </div>
-                    <!-- <input type="text" class="form-control" id="UserNameFilter" name="userNameFilter" [(ngModel)]="userNameFilter" /> -->
+                    <input type="text" class="form-control" id="UserNameFilter" name="userNameFilter" [(ngModel)]="userNameFilter" />
                   </div>
                 </div>
               </div>
@@ -169,7 +169,7 @@
                     ><i class="fa fa-angle-up"></i> {{ l('HideAdvancedFilters') }}</span
                   >
                 </div>
-              </div>
+              </div> -->
             </div>
           </form>
 
@@ -191,19 +191,19 @@
                 <ng-template pTemplate="header">
                   <tr>
                     <th style="width: 130px;" [hidden]="!isGrantedAny('Pages.Trucks.Edit', 'Pages.Trucks.Delete')">{{ l('Actions') }}</th>
-                    <th style="width: 150px;" pSortableColumn="truck.plateNumber">
+                    <th style="width: 150px;" pSortableColumn="plateNumber">
                       {{ l('PlateNumber') }}
-                      <p-sortIcon field="trucksId"></p-sortIcon>
+                      <p-sortIcon field="plateNumber"></p-sortIcon>
                     </th>
-                    <th style="width: 350px;" pSortableColumn="truck.id">
+                    <!-- <th style="width: 350px;" pSortableColumn="id">
                       {{ l('ID') }}
-                      <p-sortIcon field="trucksId"></p-sortIcon>
-                    </th>
-                    <th style="width: 500px;" pSortableColumn="truckTypeFk.displayName">
+                      <p-sortIcon field="truckId"></p-sortIcon>
+                    </th> -->
+                    <th style="width: 500px;" pSortableColumn="trucksTypeFk.displayName">
                       {{ l('TruckType') }}
                       <p-sortIcon field="truckStatusDisplayName"></p-sortIcon>
                     </th>
-                    <th style="width: 150px;" pSortableColumn="truckStatusFk.status">
+                    <th style="width: 150px;" pSortableColumn="truckStatusFk.displayName">
                       {{ l('Status') }}
                       <p-sortIcon field="truckStatus"></p-sortIcon>
                     </th>
@@ -288,10 +288,10 @@
                       <span class="ui-column-title"> {{ l('PlateNumber') }}</span>
                       {{ record.truck.plateNumber }}
                     </td>
-                    <td style="width: 350px;">
+                    <!-- <td style="width: 350px;">
                       <span class="ui-column-title"> {{ l('ID') }}</span>
                       {{ record.truck.id }}
-                    </td>
+                    </td> -->
                     <td style="width: 500px;">
                       <span class="ui-column-title"> {{ l('TruckType') }}</span>
                       {{ record.trucksTypeDisplayName }}
@@ -317,7 +317,7 @@
                       <span class="ui-column-title"> {{ l('ModelYear') }}</span>
                       {{ record.truck.modelYear }}
                     </td>
-                    <!-- 
+                    <!--
                     <td style="width: 150px;">
                       <span class="ui-column-title"> {{ l('LicenseExpirationDate') }}</span>
                       <span *ngIf="record.truck.licenseExpirationDate">
@@ -361,7 +361,7 @@
     </div>
     <createOrEditTruckModal #createOrEditTruckModal (modalSave)="getTrucks()"></createOrEditTruckModal>
     <viewTruckModal #viewTruckModal></viewTruckModal>
-    <viewOrEditEntityDocumentsModal #viewOrEditEntityDocumentsModal></viewOrEditEntityDocumentsModal>
+    <viewOrEditEntityDocumentsModal #viewOrEditEntityDocumentsModal (modalSave)="getTrucks()"></viewOrEditEntityDocumentsModal>
     <entityTypeHistoryModal #entityTypeHistoryModal></entityTypeHistoryModal>
     <truckUserLookupTableModal #truckUserLookupTableModal (modalSave)="getNewDriver1UserId()"></truckUserLookupTableModal>
   </div>

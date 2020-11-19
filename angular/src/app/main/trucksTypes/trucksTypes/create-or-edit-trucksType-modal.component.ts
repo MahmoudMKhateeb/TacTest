@@ -9,6 +9,7 @@ import {
 } from '@shared/service-proxies/service-proxies';
 import { AppComponentBase } from '@shared/common/app-component-base';
 import * as moment from 'moment';
+import { THIS_EXPR } from '@angular/compiler/src/output/output_ast';
 
 @Component({
   selector: 'createOrEditTrucksTypeModal',
@@ -36,7 +37,7 @@ export class CreateOrEditTrucksTypeModalComponent extends AppComponentBase {
     if (!trucksTypeId) {
       this.trucksType = new CreateOrEditTrucksTypeDto();
       this.trucksType.id = trucksTypeId;
-
+      this.trucksType.transportSubtypeId = null;
       this.active = true;
       this.modal.show();
     } else {
@@ -54,7 +55,10 @@ export class CreateOrEditTrucksTypeModalComponent extends AppComponentBase {
 
   save(): void {
     this.saving = true;
-
+    if (this.trucksType.transportSubtypeId == -1) {
+      this.notify.error(this.l('PleaseChooseATransportSubType'));
+      return;
+    }
     this._trucksTypesServiceProxy
       .createOrEdit(this.trucksType)
       .pipe(

@@ -35,6 +35,7 @@ export class CreateOrEditTransportSubtypeModalComponent extends AppComponentBase
     if (!transportSubtypeId) {
       this.transportSubtype = new CreateOrEditTransportSubtypeDto();
       this.transportSubtype.id = transportSubtypeId;
+      this.transportSubtype.transportTypeId = null;
       this.transportTypeDisplayName = '';
 
       this.active = true;
@@ -56,7 +57,10 @@ export class CreateOrEditTransportSubtypeModalComponent extends AppComponentBase
 
   save(): void {
     this.saving = true;
-
+    if (this.transportSubtype.transportTypeId == null) {
+      this.notify.error(this.l('PleaseChooseATransportType'));
+      return;
+    }
     this._transportSubtypesServiceProxy
       .createOrEdit(this.transportSubtype)
       .pipe(

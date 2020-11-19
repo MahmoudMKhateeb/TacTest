@@ -22,11 +22,17 @@
         </div>
         <div class="modal-body">
           <div class="form-group m-form__group">
-            <label for="TruckSubtypeDisplayName">{{ l('TruckSubtype') }}</label>
-            <select name="capacity.truckSubtypeId" [(ngModel)]="capacity.truckSubtypeId" class="form-control" required>
-              <option value="">{{ l('SelectATruckSubtype') }}</option>
+            <label for="TruckSubtypeDisplayName">{{ l('TruckSubtype') }}*</label>
+            <select
+              name="capacity.truckSubtypeId"
+              [(ngModel)]="capacity.truckSubtypeId"
+              class="form-control form-control-lg custom-select mr-sm-2"
+              required
+            >
+              <option [ngValue]="null">{{ l('SelectATruckSubtype') }}</option>
               <option *ngFor="let item of allTruckSubtypes" value="{{ item.id }}">{{ item.displayName }}</option>
             </select>
+            <span class="form-text text-muted">{{ 'ChooseTruckSubType' | localize }}</span>
           </div>
 
           <div class="form-group">
@@ -41,14 +47,15 @@
               maxlength="256"
               required
             />
+            <span class="form-text text-muted">{{ 'EnterCapacity' | localize }}</span>
           </div>
         </div>
         <div class="modal-footer">
           <button [disabled]="saving" type="button" class="btn btn-default" (click)="close()">{{ l('Cancel') }}</button>
           <button
             type="submit"
-            class="btn btn-primary blue"
-            [disabled]="!capacityForm.form.valid"
+            class="btn btn-save blue"
+            [disabled]="!capacityForm.form.valid || capacity.truckSubtypeId == null"
             [buttonBusy]="saving"
             [busyText]="l('SavingWithThreeDot')"
           >

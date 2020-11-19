@@ -22,11 +22,16 @@
         </div>
         <div class="modal-body">
           <div class="form-group m-form__group">
-            <label for="TransportTypeDisplayName">{{ l('TransportType') }}</label>
-            <select name="transportSubtype.transportTypeId" [(ngModel)]="transportSubtype.transportTypeId" class="form-control">
-              <option value="">{{ l('SelectATransportType') }}</option>
+            <label for="TransportTypeDisplayName">{{ l('TransportType') }}*</label>
+            <select
+              name="transportSubtype.transportTypeId"
+              [(ngModel)]="transportSubtype.transportTypeId"
+              class="form-control form-control-lg custom-select mr-sm-2"
+            >
+              <option [ngValue]="null">{{ l('SelectATransportType') }}</option>
               <option *ngFor="let item of allTransportTypes" value="{{ item.id }}">{{ item.displayName }}</option>
             </select>
+            <span class="form-text text-muted">{{ 'ChooseTransportType' | localize }}</span>
           </div>
 
           <div class="form-group">
@@ -41,6 +46,7 @@
               maxlength="256"
               required
             />
+            <span class="form-text text-muted">{{ 'EnterTransportSubtype' | localize }}</span>
           </div>
         </div>
         <div class="modal-footer">
@@ -48,7 +54,7 @@
           <button
             type="submit"
             class="btn btn-save blue"
-            [disabled]="!transportSubtypeForm.form.valid"
+            [disabled]="!transportSubtypeForm.form.valid || transportSubtype.transportTypeId == null"
             [buttonBusy]="saving"
             [busyText]="l('SavingWithThreeDot')"
           >

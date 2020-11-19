@@ -216,7 +216,7 @@ namespace TACHYON.Authorization.Users
 
             using (_unitOfWorkManager.Current.DisableFilter(AbpDataFilters.MayHaveTenant))
             {
-                return await _userRepository.GetAll().SingleAsync(x => x.EmailAddress == emailAddress);
+                return await _userRepository.GetAll().FirstOrDefaultAsync(x => x.EmailAddress == emailAddress);
             }
 
         }

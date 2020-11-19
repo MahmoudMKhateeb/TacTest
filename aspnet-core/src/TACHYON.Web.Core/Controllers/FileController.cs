@@ -1,5 +1,6 @@
 ﻿using Abp.Auditing;
 using Microsoft.AspNetCore.Mvc;
+using MimeKit;
 using System;
 using System.Net;
 using System.Threading.Tasks;
@@ -26,11 +27,14 @@ namespace TACHYON.Web.Controllers
         public ActionResult DownloadTempFile(FileDto file)
         {
             var fileBytes = _tempFileCacheManager.GetFile(file.FileToken);
+
             if (fileBytes == null)
             {
                 return NotFound(L("RequestedFileDoesNotExists"));
             }
+             MimeTypes.TryGetExtension(file.FileType,out var exten);
 
+            file.FileName = file.FileName +"."+ exten;
             return File(fileBytes, file.FileType, file.FileName);
         }
 

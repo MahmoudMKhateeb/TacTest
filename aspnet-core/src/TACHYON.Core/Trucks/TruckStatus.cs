@@ -9,11 +9,9 @@ namespace TACHYON.Trucks
 {
     [Table("TruckStatuses")]
     [Audited]
-    public class TruckStatus : FullAuditedEntity<long>, IMustHaveTenant
+    public class TruckStatus : FullAuditedEntity<long>
     {
-        public int TenantId { get; set; }
-
-
+        
         [Required]
         [StringLength(TruckStatusConsts.MaxDisplayNameLength, MinimumLength = TruckStatusConsts.MinDisplayNameLength)]
         public virtual string DisplayName { get; set; }

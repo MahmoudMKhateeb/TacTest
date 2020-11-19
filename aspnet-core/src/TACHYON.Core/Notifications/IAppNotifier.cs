@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using TACHYON.Authorization.Users;
+using TACHYON.Documents.DocumentFiles;
 using TACHYON.MultiTenancy;
 
 namespace TACHYON.Notifications
@@ -20,6 +21,8 @@ namespace TACHYON.Notifications
         Task RejectShippingRequest(UserIdentifier argsUser, long shippingRequestId);
 
         Task SomeTrucksCouldntBeImported(UserIdentifier user, string fileToken, string fileType, string fileName);
+         Task TenantDocumentFileUpdate(DocumentFile documentFile);
+
 
         #endregion
         Task WelcomeToTheApplicationAsync(User user);
@@ -39,6 +42,5 @@ namespace TACHYON.Notifications
         Task SomeUsersCouldntBeImported(UserIdentifier user, string fileToken, string fileType, string fileName);
         Task DocumentFileBeforExpiration(UserIdentifier argsUser, Guid documentFileId, int expirationAlertDays);
         Task DocumentFileExpiration(UserIdentifier argsUser, Guid documentFileId);
-
     }
 }

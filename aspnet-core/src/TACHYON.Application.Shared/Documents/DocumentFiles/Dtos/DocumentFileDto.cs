@@ -10,9 +10,9 @@ namespace TACHYON.Documents.DocumentFiles.Dtos
 
         public string Extn { get; set; }
 
-        public Guid BinaryObjectId { get; set; }
+        public Guid? BinaryObjectId { get; set; }
 
-        public DateTime ExpirationDate { get; set; }
+        public DateTime? ExpirationDate { get; set; }
 
         public bool IsAccepted { get; set; }
 

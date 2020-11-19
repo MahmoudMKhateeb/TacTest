@@ -20,7 +20,6 @@ using TACHYON.Trucks.Dtos;
 namespace TACHYON.Trucks
 {
     [AbpAuthorize(AppPermissions.Pages_Administration_TruckStatuses)]
-    [RequiresFeature(AppFeatures.Carrier)]
     public class TruckStatusesAppService : TACHYONAppServiceBase, ITruckStatusesAppService
     {
         private readonly IRepository<TruckStatus, long> _truckStatusRepository;
@@ -96,13 +95,6 @@ namespace TACHYON.Trucks
         protected virtual async Task Create(CreateOrEditTruckStatusDto input)
         {
             var truckStatus = ObjectMapper.Map<TruckStatus>(input);
-
-
-            if (AbpSession.TenantId != null)
-            {
-                truckStatus.TenantId = (int)AbpSession.TenantId;
-            }
-
 
             await _truckStatusRepository.InsertAsync(truckStatus);
         }

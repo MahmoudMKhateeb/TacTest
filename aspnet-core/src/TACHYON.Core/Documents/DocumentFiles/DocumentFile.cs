@@ -29,9 +29,12 @@ namespace TACHYON.Documents.DocumentFiles
         [StringLength(DocumentFileConsts.MaxExtnLength, MinimumLength = DocumentFileConsts.MinExtnLength)]
         public virtual string Extn { get; set; }
 
-        public virtual Guid BinaryObjectId { get; set; }
+        /// <summary>
+        /// nullAble Because we use it in import-Trucks-from-excel action
+        /// </summary>
+        public virtual Guid? BinaryObjectId { get; set; }
 
-        public virtual DateTime ExpirationDate { get; set; }
+        public virtual DateTime? ExpirationDate { get; set; }
 
         public virtual bool IsAccepted { get; set; }
         public virtual bool IsRejected { get; set; }
