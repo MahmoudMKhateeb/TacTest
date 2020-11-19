@@ -194,10 +194,6 @@ namespace TACHYON.EntityFrameworkCore
                            t.HasIndex(e => new { e.TenantId });
                        });
 
-            modelBuilder.Entity<TruckStatus>(t =>
-                       {
-                           t.HasIndex(e => new { e.TenantId });
-                       });
             modelBuilder.Entity<BinaryObject>(b =>
                        {
                            b.HasIndex(e => new { e.TenantId });

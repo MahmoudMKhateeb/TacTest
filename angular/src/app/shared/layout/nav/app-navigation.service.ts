@@ -124,17 +124,7 @@ export class AppNavigationService {
           new AppMenuItem('TrailerStatuses', 'Pages.TrailerStatuses', 'flaticon-more', '/app/main/trailerStatuses/trailerStatuses'),
           new AppMenuItem('GoodCategories', 'Pages.GoodCategories', 'flaticon-more', '/app/main/goodCategories/goodCategories'),
           new AppMenuItem('UnitOfMeasures', 'Pages.Administration.UnitOfMeasures', 'flaticon-more', '/app/admin/unitOfMeasures/unitOfMeasures'),
-          // new AppMenuItem(
-          //   'TruckStatuses',
-          //   'Pages.Administration.TruckStatuses',
-          //   'flaticon-more',
-          //   '/app/admin/trucks/truckStatuses',
-          //   undefined,
-          //   undefined,
-          //   undefined,
-          //   undefined,
-          //   () => this._featureCheckerService.isEnabled('App.Carrier')
-          // ),
+          new AppMenuItem('TruckStatuses', 'Pages.Administration.TruckStatuses', 'flaticon-more', '/app/admin/trucks/truckStatuses'),
         ]
       ),
 
