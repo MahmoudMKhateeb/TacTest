@@ -256,7 +256,7 @@ namespace TACHYON.Shipping.ShippingRequests
                 shippingRequest.TenantId = (int)AbpSession.TenantId;
                 shippingRequest.RoutSteps.ForEach(x => x.TenantId = (int)AbpSession.TenantId);
                 shippingRequest.RouteFk.TenantId = (int)AbpSession.TenantId;
-
+                shippingRequest.ShippingRequestStatusId = TACHYONConsts.ShippingRequestStatusStandBy;
                 // Bid start-date
                 if (!input.BidStartDate.HasValue)
                 {
@@ -265,7 +265,7 @@ namespace TACHYON.Shipping.ShippingRequests
                 // Bid status
                 if (input.IsBid)
                 {
-                    shippingRequest.ShippingRequestStatusId = input.BidStartDate.Value.Date == Clock.Now.Date ? TACHYONConsts.ShippingRequestStatusOnGoing : TACHYONConsts.ShippingRequestStatusStandBy;
+                    shippingRequest.ShippingRequestBidStatusId = input.BidStartDate.Value.Date == Clock.Now.Date ? TACHYONConsts.ShippingRequestStatusOnGoing : TACHYONConsts.ShippingRequestStatusStandBy;
 
                 }
             }
@@ -276,7 +276,7 @@ namespace TACHYON.Shipping.ShippingRequests
             if (shippingRequest.IsBid)
             {
                 //Notify Carrier with the same Truck type
-                if (shippingRequest.ShippingRequestStatusId == TACHYONConsts.ShippingRequestStatusOnGoing)
+                if (shippingRequest.ShippingRequestBidStatusId == TACHYONConsts.ShippingRequestStatusOnGoing)
                 {
                     var users = await _bidDomainService.GetCarriersByTruckTypeArrayAsync(shippingRequest.TrucksTypeId);
                     await _appNotifier.ShippingRequestAsBidWithSameTruckAsync(users, shippingRequest.Id);

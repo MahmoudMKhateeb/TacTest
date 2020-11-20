@@ -29,6 +29,7 @@ using Microsoft.Extensions.Logging;
 using TACHYON.MultiTenancy;
 using NPOI.SS.Formula.Functions;
 using TACHYON.Shipping.ShippingRequests.Dtos;
+using TACHYON.Trucks;
 
 namespace TACHYON.Shipping.ShippingRequestBids
 {
@@ -38,16 +39,18 @@ namespace TACHYON.Shipping.ShippingRequestBids
         private readonly IRepository<ShippingRequestBid, long> _shippingRequestBidsRepository;
         private readonly IRepository<ShippingRequest, long> _shippingRequestsRepository;
         private readonly IRepository<Tenant> _tenantsRepository;
+        private readonly IRepository<Truck,Guid> _trucksRepository;
         private readonly IAppNotifier _appNotifier;
 
         public ShippingRequestBidsAppService(IRepository<ShippingRequestBid, long> shippingRequestBidsRepository,
             IRepository<ShippingRequest, long> shippingRequestsRepository,
-            IRepository<Tenant> tenantsRepository,
+            IRepository<Tenant> tenantsRepository, IRepository<Truck, Guid> trucksRepository,
             IAppNotifier appNotifier)
         {
             _shippingRequestBidsRepository = shippingRequestBidsRepository;
             _shippingRequestsRepository = shippingRequestsRepository;
             _tenantsRepository = tenantsRepository;
+            _trucksRepository = trucksRepository;
             _appNotifier = appNotifier;
         }
 
@@ -298,59 +301,82 @@ namespace TACHYON.Shipping.ShippingRequestBids
             }
         }
 
-        //#537 get All Shippers Shipping Requests to view for carrier
+        //#537 get All Shippers Shipping Requests to view for carrier in market place page
         [RequiresFeature(AppFeatures.Carrier)]
-        public virtual async Task<PagedResultDto<ViewShipperBidsReqDetailsOutputDto>> GetAllbidsRequestDetailsForView(PagedAndSortedResultRequestDto input, GetAllBidsInput input2)
+        public virtual async Task<PagedResultDto<ViewShipperBidsReqDetailsOutputDto>> GetAllMarketPlaceSRForCarrier(PagedAndSortedResultRequestDto input, GetAllBidsInput input2)
         {
             using (CurrentUnitOfWork.DisableFilter(AbpDataFilters.MustHaveTenant))
             {
-                return await GetAllBids(input,input2);
-            }
+                return await GetAllBids(input, input2);
+            }           
         }
 
-        protected async Task<PagedResultDto<ViewShipperBidsReqDetailsOutputDto>> GetAllBids(PagedAndSortedResultRequestDto input,GetAllBidsInput input2)
+        protected async Task<PagedResultDto<ViewShipperBidsReqDetailsOutputDto>> GetAllBids(PagedAndSortedResultRequestDto input, GetAllBidsInput input2)
         {
-            var filterShippingRequestsBids = _shippingRequestsRepository.GetAll()
+            
+                var filterShippingRequestsBids = _shippingRequestsRepository.GetAll()
                     .Include(x => x.ShippingRequestBidStatusFK)
                     .Where(x => x.IsBid == true)
-                    .WhereIf(input2.TruckTypeId != null, e => e.TrucksTypeId == input2.TruckTypeId);
-            // .Where(x => x.ShippingRequestBidStatusId != TACHYONConsts.ShippingRequestStatusCanceled);
+                    .WhereIf(input2.TruckTypeId != null, x => x.TrucksTypeId == input2.TruckTypeId)
+                    .WhereIf(input2.TruckSubTypeId != null, x => x.TruckSubtypeId != null && x.TruckSubtypeId == input2.TruckSubTypeId)
+                    .WhereIf(input2.TruckTypeId != null, x => x.TransportTypeId != null && x.TransportTypeId == input2.TransportType)
+                    .WhereIf(input2.TruckTypeId != null, x => x.TransportSubtypeId != null && x.TransportSubtypeId == input2.TransportSubType);
 
-            var pagedAndFilteredShippingRequestsBids = filterShippingRequestsBids
-            .OrderBy(input.Sorting ?? "id asc")
-            .PageBy(input);
 
-            var tenants = _tenantsRepository.GetAll();
-            var shippingRequestBids = from o in pagedAndFilteredShippingRequestsBids
-                                      join t in tenants on o.TenantId equals t.Id
-                                      select new ViewShipperBidsReqDetailsOutputDto()
-                                      {
-                                          viewShipperBidsReqDetailsOutput = new ViewShipperBidsReqDetailsOutput
+                //Get Shipping Requests that carrier bid to them only
+                if (input2.IsMyBidsOnly)
+                {
+                    filterShippingRequestsBids=filterShippingRequestsBids
+                    .Where(x => x.ShippingRequestBids.Any(x => x.TenantId == AbpSession.TenantId));
+                }
+
+                
+                if (input2.IsMatchingOnly)
+                {
+                //Get all Carrier trucktype list to filter with
+                var tenantTrucks = await _trucksRepository.GetAll()
+                    .Where(x => x.TenantId == AbpSession.TenantId)
+                    .Select(y => y.TrucksTypeId)
+                    .ToListAsync();
+
+                // select shipping requests that only matches Carrier truck type
+                filterShippingRequestsBids = filterShippingRequestsBids
+                    .Where(x => tenantTrucks.Contains(x.TrucksTypeId));
+                }  
+
+
+                var pagedAndFilteredShippingRequestsBids = filterShippingRequestsBids
+                    .OrderBy(input.Sorting ?? "id asc")
+                    .PageBy(input);
+
+                var tenants = _tenantsRepository.GetAll();
+                var shippingRequestBids = from o in pagedAndFilteredShippingRequestsBids
+                                          join t in tenants on o.TenantId equals t.Id
+                                          select new ViewShipperBidsReqDetailsOutputDto()
                                           {
-                                              Id = o.Id,
-                                              EndBidDate = o.BidEndDate,
-                                              IsOngoingBid = o.ShippingRequestBidStatusId == TACHYONConsts.ShippingRequestStatusOnGoing ? true : false,
-                                              ShippingRequestBidStatusName = o.ShippingRequestBidStatusFK.DisplayName,
-                                              ShipperName = t.Name,
-                                              StartBidDate = o.BidStartDate,
-                                              TruckTypeDisplayName = o.TransportSubtypeFk.DisplayName,
-                                              GoodCategoryName = o.GoodCategoryFk.DisplayName,
-                                              BidsNo = o.ShippingRequestBids
-                                              //.Where(x=>x.IsCancled!=true)
-                                              .Count(),
-                                              LastBidPrice = o.ShippingRequestBids
-                                              //.Where(x => x.IsCancled == false)
-                                              .OrderByDescending(x => x.Id).FirstOrDefault().price,
-                                              FirstBidId = o.ShippingRequestBids.FirstOrDefault().Id,
-                                              OriginalCityName= o.RouteFk.OriginCityFk.DisplayName,
-                                              DestinationCityName=o.RouteFk.DestinationCityFk.DisplayName
-                                          },
-                                      };
+                                              viewShipperBidsReqDetailsOutput = new ViewShipperBidsReqDetailsOutput
+                                              {
+                                                  Id = o.Id,
+                                                  EndBidDate = o.BidEndDate,
+                                                  IsOngoingBid = o.ShippingRequestBidStatusId == TACHYONConsts.ShippingRequestStatusOnGoing ? true : false,
+                                                  ShippingRequestBidStatusName = o.ShippingRequestBidStatusFK.DisplayName,
+                                                  ShipperName = t.Name,
+                                                  StartBidDate = o.BidStartDate,
+                                                  TruckTypeDisplayName = o.TransportSubtypeFk.DisplayName,
+                                                  GoodCategoryName = o.GoodCategoryFk.DisplayName,
+                                                  BidsNo = o.ShippingRequestBids.Count(),
+                                                  LastBidPrice = o.ShippingRequestBids
+                                                                .OrderByDescending(x => x.Id).FirstOrDefault().price,
+                                                  FirstBidId = o.ShippingRequestBids.FirstOrDefault().Id,
+                                                  OriginalCityName = o.RouteFk.OriginCityFk.DisplayName,
+                                                  DestinationCityName = o.RouteFk.DestinationCityFk.DisplayName
+                                              },
+                                          };
 
-            var totalCount = await filterShippingRequestsBids.CountAsync();
+                var totalCount = await filterShippingRequestsBids.CountAsync();
 
-            return new PagedResultDto<ViewShipperBidsReqDetailsOutputDto>(totalCount, await shippingRequestBids.ToListAsync());
-
+                return new PagedResultDto<ViewShipperBidsReqDetailsOutputDto>(totalCount, await shippingRequestBids.ToListAsync());
+            
         }
     }
 }
