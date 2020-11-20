@@ -270,7 +270,7 @@ namespace TACHYON.Shipping.ShippingRequests
                 }
             }
 
-
+            shippingRequest.CreatorUserId = AbpSession.UserId;
             await _shippingRequestRepository.InsertAsync(shippingRequest);
 
             if (shippingRequest.IsBid)

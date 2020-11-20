@@ -152,6 +152,7 @@ namespace TACHYON.Shipping.ShippingRequestBids
                     shippingRequestBid.TenantId = (int)AbpSession.TenantId;
 
                 }
+                shippingRequestBid.CreatorUserId = AbpSession.UserId;
                 await _shippingRequestBidsRepository.InsertAsync(shippingRequestBid);
 
                 //notification to shipper when Carrier create new bid in his SR
