@@ -258,15 +258,15 @@ namespace TACHYON.Shipping.ShippingRequests
                 shippingRequest.RouteFk.TenantId = (int)AbpSession.TenantId;
                 shippingRequest.ShippingRequestStatusId = TACHYONConsts.ShippingRequestStatusStandBy;
                 // Bid start-date
-                if (!input.BidStartDate.HasValue)
-                {
-                    input.BidStartDate = Clock.Now.Date;
-                }
+                
                 // Bid status
                 if (input.IsBid)
                 {
                     shippingRequest.ShippingRequestBidStatusId = input.BidStartDate.Value.Date == Clock.Now.Date ? TACHYONConsts.ShippingRequestStatusOnGoing : TACHYONConsts.ShippingRequestStatusStandBy;
-
+                    if (!input.BidStartDate.HasValue)
+                    {
+                        input.BidStartDate = Clock.Now.Date;
+                    }
                 }
             }
 

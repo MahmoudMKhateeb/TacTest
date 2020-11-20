@@ -166,7 +166,7 @@ namespace TACHYON.Shipping.ShippingRequests
         public DateTime? BidStartDate { get; set; }
         public DateTime? BidEndDate { get; set; }
 
-        public int ShippingRequestBidStatusId { get; set; }
+        public int? ShippingRequestBidStatusId { get; set; }
 
         [ForeignKey("ShippingRequestBidStatusId")]
         public ShippingRequestBidStatus ShippingRequestBidStatusFK { get; set; }
