@@ -122,15 +122,14 @@ namespace TACHYON.Shipping.ShippingRequestBids
                         ThrowSRnotOngoingError();
                         return 0;
                     }
-                    else
-                    {
-                        if (input.Id == null)
-                            return await Create(input);
-                        else
-                            return await Edit(input);
-                    }
                 }
             }
+            
+            if (input.Id == null)
+                return await Create(input);
+            else
+                return await Edit(input);
+            
         }
 
         //#538
@@ -152,7 +151,7 @@ namespace TACHYON.Shipping.ShippingRequestBids
                     shippingRequestBid.TenantId = (int)AbpSession.TenantId;
 
                 }
-                shippingRequestBid.CreatorUserId = AbpSession.UserId;
+              //  shippingRequestBid.CreatorUserId = AbpSession.UserId;
                 await _shippingRequestBidsRepository.InsertAsync(shippingRequestBid);
 
                 //notification to shipper when Carrier create new bid in his SR

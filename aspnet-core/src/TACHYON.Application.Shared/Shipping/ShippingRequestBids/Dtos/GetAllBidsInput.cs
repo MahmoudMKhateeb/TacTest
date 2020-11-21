@@ -12,5 +12,6 @@ namespace TACHYON.Shipping.ShippingRequestBids.Dtos
         public long? TruckSubTypeId { get; set; }
         public long? TransportType { get; set; }
         public long? TransportSubType { get; set; }
+        public int? CapacityId { get; set; }
     }
 }

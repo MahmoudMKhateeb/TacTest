@@ -260,17 +260,18 @@ namespace TACHYON.Shipping.ShippingRequests
                 // Bid start-date
                 
                 // Bid status
-                if (input.IsBid)
+                if (shippingRequest.IsBid)
                 {
-                    shippingRequest.ShippingRequestBidStatusId = input.BidStartDate.Value.Date == Clock.Now.Date ? TACHYONConsts.ShippingRequestStatusOnGoing : TACHYONConsts.ShippingRequestStatusStandBy;
-                    if (!input.BidStartDate.HasValue)
+                    if (!shippingRequest.BidStartDate.HasValue)
                     {
-                        input.BidStartDate = Clock.Now.Date;
+                        shippingRequest.BidStartDate = Clock.Now.Date;
                     }
+                    shippingRequest.ShippingRequestBidStatusId = shippingRequest.BidStartDate.Value.Date == Clock.Now.Date ? TACHYONConsts.ShippingRequestStatusOnGoing : TACHYONConsts.ShippingRequestStatusStandBy;
+                    
                 }
             }
 
-            shippingRequest.CreatorUserId = AbpSession.UserId;
+            //shippingRequest.CreatorUserId = AbpSession.UserId;
             await _shippingRequestRepository.InsertAsync(shippingRequest);
 
             if (shippingRequest.IsBid)
