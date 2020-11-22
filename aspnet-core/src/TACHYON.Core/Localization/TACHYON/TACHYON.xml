@@ -1,6 +1,37 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <localizationDictionary culture="en">
-  <texts>    <text name="TruckCapacities">Truck capacities</text>
+  <texts>	        <text name="SignUp">Sign up</text>       <text name="IAMA">I AM A</text>       <text name="CompanyInformation">Company Information</text>       <text name="CompanyUniqueName">Company Unique Name</text>
+	   <text name="CompanyUniqueName_Regex_Description">Company unique name must be at least 2 chars, starts with a letter and continue with letter, number, dash or underscore. and can not be in Arabic</text>
+      <text name="CompanyFullLeagalName">Company Full Leagal Name</text>	  <text name="Country">Country</text>
+	  <text name="City">City</text>
+	  <text name="Address">Address</text>
+	  <text name="Format">Format</text>
+	  <text name="AddressFormat">City--State--Street Name--Zip</text>
+	  <text name="AdminUserAccountInfo">Admin user Account info</text>
+      <text name="AdminEmailAddress">admin email</text>
+	  <text name="AdminPassword">admin password</text>
+      <text name="AdminPasswordRepeat">admin password (repeat)</text>    
+	  <text name="PleaseEnterYourNewPassword">Please enter your new password.</text>
+      <text name="weak">Weak</text>
+      <text name="medium">Medium</text>
+	  <text name="strong">Strong</text>	  <text name="PasswordComplexity_RequireDigit_Hint">Passwords must have at least one digit ('0'-'9').</text>
+ 	  <text name="PasswordComplexity_RequireLowercase_Hint">Passwords must have at least one lowercase ('a'-'z').</text>
+	  <text name="PasswordComplexity_RequireNonAlphanumeric_Hint">Passwords must have at least one non-alphanumeric character.</text>
+	  <text name="PasswordComplexity_RequireUppercase_Hint">Passwords must have at least one uppercase ('A'-'Z').</text>
+	  <text name="PasswordComplexity_RequiredLength_Hint">Passwords must be at least {0} characters.</text>
+      <text name="PasswordsDontMatch">Passwords do not match!</text>	  <text name="NewPasswordRepeat">New password (repeat)</text>
+	  <text name="PleaseMakeSureYouProvideValidDetails!">Please Make Sure You Provide Valid Details!</text>
+	  <text name="pleasemakesureyouchoosethecountryandthecity!">Please make sure you choose the country and the city!</text>
+	  <![CDATA[ Tachyon: Tenant Registration Page End]]>	   <![CDATA[ Tachyon:Common]]>       <text name="AlreadyTaken">Already Taken</text>
+       <text name="Enter">Enter</text>
+       <text name="Select">Select</text>
+       <text name="isRequired">is Required</text>
+	   <text name="NotValid">NotValid</text>
+	   <text name="Back">Back</text>	   <text name="SavingWithThreeDot">Saving...</text>
+       <text name="Submit">Submit</text>	   <text name="ThisFieldIsRequired">This field is required.</text>
+       <text name="PleaseEnterAtLeastNCharacter">Please enter at least {0} characters.</text>
+       <text name="PleaseEnterNoMoreThanNCharacter">Please enter no more than {0} characters.</text>	   <text name="InvalidEmailAddress">Invalid email address</text>
+       <text name="InvalidPattern">Invalid</text>	   <![CDATA[ Tachyon: Tenant Registration Page Start]]>	  <text name="TruckCapacities">Truck capacities</text>
     <text name="Capacity">Capacity</text>
     <text name="TACHYON.TruckCapacities.Capacity">Capacity</text>
     <text name="CapacitiesHeaderInfo">Capacities header info</text>
@@ -170,7 +201,6 @@
     <text name="RoutTypeDisplayName">Rout type display name</text>
     <text name="PickRoutType">Pick rout type</text>
     <text name="Cities">Cities</text>
-    <text name="City">City</text>
     <text name="TACHYON.Cities.City">City</text>
     <text name="Latitude">Latitude</text>
     <text name="Longitude">Longitude</text>
@@ -344,7 +374,6 @@
     <text name="LastLoginTime">Last login time</text>
     <text name="EditUser">Edit user</text>
     <text name="UserInformations">User information</text>
-    <text name="PasswordRepeat">Password (repeat)</text>
     <text name="SuccessfullyDeleted">Successfully deleted.</text>
     <text name="RoleDeleteWarningMessage">Role {0} will be deleted and unassigned from all assigned users.</text>
     <text name="UserDeleteWarningMessage">User {0} will be deleted.</text>
@@ -361,11 +390,7 @@
     <text name="TenantsHeaderInfo">Manage your tenants.</text>
     <text name="CreateNewTenant">Create new tenant</text>
     <text name="TenancyCodeName">Tenancy code name</text>
-    <text name="TenantName">Company name</text>
     <text name="TenantDeleteWarningMessage">Tenant {0} will be deleted.</text>
-    <text name="AdminEmailAddress">admin email</text>
-    <text name="AdminPassword">admin password</text>
-    <text name="AdminPasswordRepeat">admin password (repeat)</text>
     <text name="EditTenant">Edit tenant</text>
     <text name="ChangingPermissions">Changing permissions</text>
     <text name="EditingUser">Editing user</text>
@@ -380,7 +405,6 @@
     <text name="CreationTime">Creation time</text>
     <text name="SearchWithThreeDot">Search...</text>
     <text name="ResetSpecialPermissions">Reset special permissions</text>
-    <text name="SavingWithThreeDot">Saving...</text>
     <text name="Settings">Settings</text>
     <text name="SaveAll">Save all</text>
     <text name="SettingsHeaderInfo">Show and change application settings.</text>
@@ -408,10 +432,8 @@
     <text name="EmailActivation_Title">Welcome to TACHYON.</text>
     <text name="EmailActivation_SubTitle">This email is sent you to verify your email.</text>
     <text name="EmailActivation_ClickTheLinkBelowToVerifyYourEmail">Please click the link below to verify your email address:</text>
-    <text name="InvalidEmailAddress">Invalid email address</text>
     <text name="InvalidPasswordResetCode">Invalid password reset code</text>
     <text name="InvalidPasswordResetCode_Detail">Please be sure you entered this page by clicking the link sent to your email. If this does not solve the problem, you can re-try to request a new password reset link.</text>
-    <text name="PleaseEnterYourNewPassword">Please enter your new password.</text>
     <text name="UserEmailIsNotConfirmedAndCanNotLogin">Your email address is not confirmed. Please check your email and click the email confirmation link to activate your account. If you did not receive activation email, click the 'email confirmation' to request a new email.</text>
     <text name="LoginFailed">Login failed!</text>
     <text name="InvalidEmailConfirmationCode">Invalid email confirmation code</text>
@@ -425,7 +447,6 @@
     <text name="ChangePassword">Change password</text>
     <text name="CurrentPassword">Current password</text>
     <text name="NewPassword">New password</text>
-    <text name="NewPasswordRepeat">New password (repeat)</text>
     <text name="YourPasswordHasChangedSuccessfully">Your password has changed successfully.</text>
     <text name="SelfUserRegistrationIsDisabledMessage">You can not register to the system!</text>
     <text name="SelfUserRegistrationIsDisabledMessage_Detail">Self user registration is disabled. Please contact the system administrator to register.</text>
@@ -453,13 +474,11 @@
     <text name="Dashboard">Dashboard</text>
     <text name="DashboardHeaderInfo">statistics and reports</text>
     <text name="GoToApplication">Go to application</text>
-    <text name="TenantInformations">Company information</text>
     <text name="PersonalInformations">Personal information</text>
     <text name="AccountSettings">Account settings</text>
     <text name="Captha_Hint">Please prove you are not a robot</text>
-    <text name="Back">Back</text>
-    <text name="Submit">Submit</text>
-    <text name="SignUp">Sign up</text>
+
+    
     <text name="CaptchaCanNotBeEmpty">You must prove that you are not a robot.</text>
     <text name="IncorrectCaptchaAnswer">Unable to determine that you are not a robot.</text>
     <text name="FormIsNotValidMessage">Form is not valid. Please check and fix errors.</text>
@@ -593,7 +612,6 @@
     <text name="SelectAnItem">Select an item</text>
     <text name="NewOrganizationUnit">New organization unit</text>
     <text name="SelectAUser">Select a user</text>
-    <text name="Select">Select</text>
     <text name="UserIsAlreadyInTheOrganizationUnit">This user is already in the organization unit!</text>
     <text name="AddRootUnit">Add root unit</text>
     <text name="AddUser">Add user</text>
@@ -798,11 +816,6 @@
     <text name="EmailSecurityCodeBody">Your security code is: {0}</text>
     <text name="Sms">Sms</text>
     <text name="SmsSecurityCodeMessage">Your security code is: {0}</text>
-    <text name="PasswordComplexity_RequireDigit_Hint">Passwords must have at least one digit ('0'-'9').</text>
-    <text name="PasswordComplexity_RequireLowercase_Hint">Passwords must have at least one lowercase ('a'-'z').</text>
-    <text name="PasswordComplexity_RequireNonAlphanumeric_Hint">Passwords must have at least one non-alphanumeric character.</text>
-    <text name="PasswordComplexity_RequireUppercase_Hint">Passwords must have at least one uppercase ('A'-'Z').</text>
-    <text name="PasswordComplexity_RequiredLength_Hint">Passwords must be at least {0} characters.</text>
     <text name="PasswordComplexity_RequireDigit">Require digit</text>
     <text name="PasswordComplexity_RequireLowercase">Require lowercase</text>
     <text name="PasswordComplexity_RequireNonAlphanumeric">Require non-alphanumeric</text>
@@ -984,7 +997,6 @@
     <text name="Link">Link</text>
     <text name="Billing">Billing</text>
     <text name="LegalName">Legal Name</text>
-    <text name="Address">Address</text>
     <text name="Tax/VatNo">Tax/VatNo</text>
     <text name="Invoice">Invoice</text>
     <text name="TotalAmount">Total Amount</text>
@@ -1047,7 +1059,6 @@
     <text name="PickFromGallery">Pick from gallery</text>
     <text name="TakePhoto">Take a photo</text>
     <text name="Rotate">Rotate</text>
-    <text name="PasswordsDontMatch">Passwords do not match!</text>
     <text name="RequiredField">{0} field is required.</text>
     <text name="StringLengthDoesntMatch">The field {0} must be a minimum length of {1} and a maximum length of {2}.</text>
     <text name="LessThanMinStringLength">The field {0} must be a minimum length of {1}.</text>
@@ -1058,9 +1069,6 @@
     <text name="UiCustomization_Desktop">Desktop</text>
     <text name="TwoFactorLoginIsNotSupported">Two factor login is not currently supported!</text>
     <text name="LinkToCurrentPage">Link to current page</text>
-    <text name="ThisFieldIsRequired">This field is required.</text>
-    <text name="PleaseEnterAtLeastNCharacter">Please enter at least {0} characters.</text>
-    <text name="PleaseEnterNoMoreThanNCharacter">Please enter no more than {0} characters.</text>
     <text name="SelectTwoFactorProvider">Select two factor authentication provider</text>
     <text name="InvoiceInfoIsMissingOrNotCompleted">Invoice info is missing or not completed</text>
     <text name="InvoiceTo">Invoice to</text>
@@ -1194,7 +1202,6 @@
     <text name="UiCustomization_HeaderMinimizeType_Topbar">Topbar</text>
     <text name="UiCustomization_HeaderMinimizeType_Menu">Menu</text>
     <text name="UiCustomization_HeaderMenuArrows">Menu arrows</text>
-    <text name="InvalidPattern">Invalid</text>
     <text name="SwitchToTenant">Switch to Company</text>
     <text name="TenancyNameRequired">Tenancy name is required!</text>
     <text name="EnterTenancyName">Enter tenancy name...</text>
@@ -1252,10 +1259,7 @@
     <text name="PageNameCanNotBeEmpty">Page name cannot be empty.</text>
     <text name="ShowMenuSearchInput">Show search bar in the menu</text>
     <text name="veryWeak">Very Weak</text>
-    <text name="weak">Weak</text>
     <text name="normal">Normal</text>
-    <text name="medium">Medium</text>
-    <text name="strong">Strong</text>
     <text name="veryStrong">Very Strong</text>
     <text name="QuickNav">Quick Navigation</text>
     <text name="AutomaticBilling">Automatic Billing</text>
