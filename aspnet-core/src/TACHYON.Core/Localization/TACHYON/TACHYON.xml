@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <localizationDictionary culture="en">
-  <texts>    <text name="TruckCapacities">Truck capacities</text>
+  <texts>	  <![CDATA[Tachyon:Common Start]]>	  <text name="Name">Name</text>	  <text name="Actions">Actions</text>	  <text name="Edit">Edit</text>	  <text name="Delete">Delete</text>	  <text name="NoData">No Data</text>	  <text name="ShouldBeUnique">ShouldBeUnique</text>	  <text name="PleaseEnterAUniqueNumber">Please Enter A Unique Number</text>	  <text name="Note">Note</text>	  <text name="Save">Save</text>	  <![CDATA[Tachyon:Common End]]>	  <![CDATA[Tachyon:Documents Common Start]]>	  <text name="ExpirationDate">Expiration Date</text>	  <text name="Status">Status</text>	  <text name="Download">Download</text>	  <text name="File">File</text>	  <text name="SelectFile">Select file</text>	  <text name="ValidDocumentFilesMsg">FileAllowedFormatesAre:.png,.jpeg</text>	  <text name="PleaseChooseAvalidFormat">Please Choose Avalid Format</text>	  <text name="Number">Number</text>	  <text name="minDigits">minDigits</text>	  <text name="maxDigits">maxDigits</text>	  <text name="DateIsRequired">Date is Required</text>	  <![CDATA[Tachyon:Documents Common End]]	  	  	  <![CDATA[ Tachyon: Tenant document Upload Page Start]]>	  <text name="TenantRequiredDocuments">Tenant Required Documents</text>	  <text name="WaitingForReviewMsg">Please wait untill we review your documents!</text>	  <text name="SubmittedDocumnents">Submitted Documnents</text>	  <text name="Accepted">Accepted</text>	  <text name="Rejected">Rejected</text>	  <text name="InReview">In Review</text>	  <text name="UploadDocumentMsg">Please up load the following documents in order to finalize your registration process.</text>	  <![CDATA[ Tachyon: Tenant document Upload Page End]]>	<text name="TruckCapacities">Truck capacities</text>
     <text name="Capacity">Capacity</text>
     <text name="TACHYON.TruckCapacities.Capacity">Capacity</text>
     <text name="CapacitiesHeaderInfo">Capacities header info</text>
@@ -106,7 +106,6 @@
     <text name="TACHYON.DocumentTypes.DocumentType">DocumentType</text>
     <text name="IsRequired">Is required</text>
     <text name="NotIsRequired">Not is required</text>
-    <text name="ExpirationDate">Expiration date</text>
     <text name="HasExpirationDate">Has expiration date</text>
     <text name="NotHasExpirationDate">Not has expiration date</text>
     <text name="RequiredFrom">Required from</text>
@@ -263,7 +262,6 @@
     <text name="LicenseExpirationDate">License expiration date</text>
     <text name="IsAttachable">Is attachable</text>
     <text name="NotIsAttachable">Not is attachable</text>
-    <text name="Note">Note</text>
     <text name="TrucksHeaderInfo">Trucks header info</text>
     <text name="CreateNewTruck">Create new truck</text>
     <text name="EditTruck">Edit truck</text>
@@ -325,12 +323,9 @@
     <text name="CreateNewRole">Create new role</text>
     <text name="RoleProperties">Role properties</text>
     <text name="Permissions">Permissions</text>
-    <text name="Save">Save</text>
     <text name="Cancel">Cancel</text>
     <text name="RolesHeaderInfo">Use roles to group permissions.</text>
     <text name="Static">Static</text>
-    <text name="Actions">Actions</text>
-    <text name="Delete">Delete</text>
     <text name="SavedSuccessfully">Saved successfully.</text>
     <text name="AreYouSure">Are you sure?</text>
     <text name="YesDelete">Yes, delete!</text>
@@ -338,7 +333,6 @@
     <text name="UsersHeaderInfo">Manage users and permissions.</text>
     <text name="CreateNewUser">Create new user</text>
     <text name="UserName">User name</text>
-    <text name="Name">Name</text>
     <text name="Surname">Surname</text>
     <text name="EmailAddress">Email address</text>
     <text name="LastLoginTime">Last login time</text>
@@ -370,7 +364,6 @@
     <text name="ChangingPermissions">Changing permissions</text>
     <text name="EditingUser">Editing user</text>
     <text name="CreatingNewUser">Creating new user</text>
-    <text name="Edit">Edit</text>
     <text name="EditingTenant">Editing tenant</text>
     <text name="CreatingNewTenant">Creating new tenant</text>
     <text name="DeletingTenant">Deleting tenant</text>
@@ -520,14 +513,10 @@
     <text name="Apply">Apply</text>
     <text name="CustomRange">Custom range</text>
     <text name="DashboardNoteForMpaVersion">
-      <![CDATA[
-      See Demo for Multi-Page Application version with <strong>ASP.NET MVC</strong> and <strong>jQuery</strong>.
-      ]]>
+      <![CDATA[      See Demo for Multi-Page Application version with <strong>ASP.NET MVC</strong> and <strong>jQuery</strong>.      ]]>
     </text>
     <text name="DashboardNoteForSpaVersion">
-      <![CDATA[
-      Notice: There is also a <strong>Single-Page Application</strong> version built using ASP.NET MVC and <strong>AngularJs</strong>.
-      ]]>
+      <![CDATA[      Notice: There is also a <strong>Single-Page Application</strong> version built using ASP.NET MVC and <strong>AngularJs</strong>.      ]]>
     </text>
     <text name="SeeDemo">See demo</text>
     <text name="Edition">Edition</text>
@@ -703,14 +692,7 @@
     <text name="YouDontHaveAnyFriend">You don't have any friends. Write a username to above input box and click "Add Friend" button.</text>
     <text name="YouDontHaveAnyBlockedFriend">You don't have any blocked users. In order to block a friend, select a friend and select block from actions dropdown.</text>
     <text name="ChatUserSearch_Hint">
-      <![CDATA[
-      Write only username for same tenant users, <br>
-      <strong>[tenancyName]\[userName]</strong> for other tenant's users <br><br>
-      for example: <br>
-      .\admin -> for host admin <br>
-      Test\admin -> for test tenant's admin <br>
-      admin -> for your tenant's admin
-      ]]>
+      <![CDATA[      Write only username for same tenant users, <br>      <strong>[tenancyName]\[userName]</strong> for other tenant's users <br><br>      for example: <br>      .\admin -> for host admin <br>      Test\admin -> for test tenant's admin <br>      admin -> for your tenant's admin      ]]>
     </text>
     <text name="AddFriend">Add friend</text>
     <text name="TypeAMessageHere">Type a message here...</text>
@@ -779,7 +761,6 @@
     <text name="ApplicationLogo">Application Logo</text>
     <text name="CustomCSS">Custom CSS</text>
     <text name="Upload">Upload</text>
-    <text name="Download">Download</text>
     <text name="UploadLogo_Info">Select a JPG/JPEG/PNG/GIF file with a maximum of 30KB size and 139x35 pixel resolution.</text>
     <text name="UploadCSS_Info">Select a .css file with a maximum of 1MB size.</text>
     <text name="Browse">Browse</text>
@@ -827,7 +808,6 @@
     <text name="RecentTenants">Recent tenants</text>
     <text name="RecentTenantsHelpText">Last {1} customers registered in {0} days...</text>
     <text name="ExpiringTenantsHelpText">First {1} clients expiring in {0} days...</text>
-    <text name="NoData">No data</text>
     <text name="SubscriptionEndDate">Subscription end date</text>
     <text name="TenantNameOrTenancyCode">Tenant name / tenancy code</text>
     <text name="IncomeWithAmount">Income: {0}</text>
@@ -936,7 +916,6 @@
     <text name="PaymentHistory">Payment history</text>
     <text name="Gateway">Gateway</text>
     <text name="Amount">Amount</text>
-    <text name="Status">Status</text>
     <text name="Period">Period</text>
     <text name="DayCount">Day count</text>
     <text name="LastModificationTime">Last modification time</text>
@@ -969,7 +948,6 @@
     <text name="FileUpload">File Upload</text>
     <text name="PostedValue">Posted value</text>
     <text name="SelectDate">Select date</text>
-    <text name="SelectFile">Select file</text>
     <text name="UploadedFile">Uploaded file</text>
     <text name="PostedData">Posted data</text>
     <text name="Remove">Remove</text>
@@ -980,7 +958,6 @@
     </text>
     <text name="DemoUiComponents_Info_Metronic_Link_Text">Check Metronic theme for more UI components</text>
     <text name="Image">Image</text>
-    <text name="File">File</text>
     <text name="Link">Link</text>
     <text name="Billing">Billing</text>
     <text name="LegalName">Legal Name</text>

@@ -6,7 +6,7 @@
         <div class="alert-icon">
           <i class="flaticon-warning"></i>
         </div>
-        <div class="alert-text">{{ l(' Please wait untill we review your documents.') }}</div>
+        <div class="alert-text">{{ l('WaitingForReviewMsg') }}</div>
       </div>
 
       <div *ngIf="active && isFormSubmitted" class="card card-custom gutter-b">
@@ -133,7 +133,7 @@
     <div #requiredDocumentsCard [class]="containerClass">
       <div *ngIf="createOrEditDocumentFileDtos.length != 0" class="alert alert-custom alert-light-danger" role="alert">
         <div class="alert-icon"><i class="flaticon-warning"></i></div>
-        <div class="alert-text">{{ l('Please upload the following documents in order to finalize your registration process.') }}</div>
+        <div class="alert-text">{{ l('UploadDocumentMsg') }}</div>
       </div>
 
       <div class="card card-custom gutter-b  {{ saving == true ? 'overlay overlay-block' : '' }}">
@@ -168,17 +168,17 @@
                             (change)="DocFileChangeEvent($event, item, i)"
                           />
                           <label [for]="item.documentTypeDto.displayName" class="custom-file-label text-truncate">{{
-                            item.name ? item.name : l('select file')
+                            item.name ? item.name : l('selectfile')
                           }}</label>
                         </div>
-                        <span class="form-text text-muted">{{ 'FileAllowedFormatesAre:.png,.jpeg' | localize }}</span>
+                        <span class="form-text text-muted">{{ 'ValidDocumentFilesMsg' | localize }}</span>
                         <div *ngIf="fileFormateIsInvalideIndexList[i]">
                           <span class="form-text text-danger text-left">{{ 'PleaseChooseAvalidFormat' | localize }}</span>
                         </div>
                       </div>
                       <div *ngIf="item.documentTypeDto.hasNumber" class="form-group col-md-6">
                         <label
-                          >{{ item.documentTypeDto.displayName }} {{ l('number') }}
+                          >{{ item.documentTypeDto.displayName }} {{ l('Number') }}
                           <span class="text-danger">*</span>
                         </label>
                         <input
@@ -228,7 +228,7 @@
                         </div>
                       </div>
                       <div *ngIf="item.documentTypeDto.hasNotes" class="form-group col-md-12">
-                        <label>{{ l('note') }}</label>
+                        <label>{{ l('Note') }}</label>
                         <textarea
                           style="resize: none;"
                           name="note{{ i }}"

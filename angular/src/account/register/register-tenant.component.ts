@@ -64,10 +64,10 @@ export class RegisterTenantComponent extends AppComponentBase implements OnInit,
     }
 
     //Prevent to create tenant in a tenant context
-    if (this.appSession.tenant != null) {
-      this._router.navigate(['account/login']);
-      return;
-    }
+    // if (this.appSession.tenant != null) {
+    //   this._router.navigate(['account/login']);
+    //   return;
+    // }
 
     this._profileService.getPasswordComplexitySetting().subscribe((result) => {
       this.passwordComplexitySetting = result.setting;
@@ -95,7 +95,7 @@ export class RegisterTenantComponent extends AppComponentBase implements OnInit,
       return;
     }
     if (this.model.countryId == -2 || this.model.cityId == -2) {
-      this.notify.error('please make sure you choose the country and the city!');
+      this.notify.error('pleasemakesureyouchoosethecountryandthecity!');
       return;
     }
     let recaptchaCallback = (token: string) => {

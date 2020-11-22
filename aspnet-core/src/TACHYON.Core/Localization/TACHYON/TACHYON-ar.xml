@@ -1,7 +1,47 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <localizationDictionary culture="ar">
-  <texts>
-    <text name="HomePage">الرئيسية</text>
+  <texts>	  
+	  <![CDATA[Tachyon:Common Start]]>
+	  <text name="Name">الإسـم</text>
+	  <text name="Actions">إجراءات</text>
+	  <text name="Edit">تعديل</text>
+	  <text name="Delete">حـذف</text>
+	  <text name="NoData">لايوجد بيانات</text>
+	  <text name="ShouldBeUnique">يجب أن يكون فريد</text>
+	  <text name="PleaseEnterAUniqueNumber">الرجاء إدخال  رقم مميز</text>
+	  <text name="Note">تعليق</text>
+	  <text name="Save">حـفظ</text>
+	  <![CDATA[Tachyon:Common End]]>
+
+	  
+	  <![CDATA[Tachyon:Documents Common Start]]>
+	  <text name="ExpirationDate">تاريخ إنتهاء الصلاحية</text>
+	  <text name="Status">الحالة</text>
+	  <text name="Download">تحميل</text>
+	  <text name="File">ملف</text>
+	  <text name="SelectFile">حدد الملف</text>
+	  <text name="ValidDocumentFilesMsg">:الصياغات المسموح بها.png,.jpeg</text>
+	  <text name="PleaseChooseAvalidFormat"> الرجاء إختيار صياغة مسموح بها</text>
+	  <text name="Number">رقم</text>
+	  <text name="minDigits">أقل عدد من الخانات</text>
+	  <text name="maxDigits">أكبر عدد من الخانات</text>
+	  <text name="DateIsRequired">التاريخ مطلوب</text>
+	  <![CDATA[Tachyon:Documents Common End]]>
+	  
+	  <![CDATA[ Tachyon: Tenant document Upload Page Start]]>
+	  <text name="TenantRequiredDocuments">الملفات المطلوبة من الشركة</text>
+	  <text name="WaitingForReviewMsg"> الرجاء الإنتظار ريثما يتم مراجعة الملفات الخاصة بك</text>
+	  <text name="SubmittedDocumnents">الملقات التي تم تسليمها</text>
+	  <text name="Extn">Extn</text>
+	  <text name="Accepted">Accepted</text>
+	  <text name="Rejected">Rejected</text>
+	  <text name="InReview">In Review</text>
+	  <text name="UploadDocumentMsg">الرجاء تحميل الملفات الأتية لكي يتم  إنهاء عملية  تسجيل الدخول الخاصة بك في البرنامج</text>
+	  <![CDATA[ Tachyon: Tenant document Upload Page End]]>
+
+	  
+	  
+	  <text name="HomePage">الرئيسية</text>
     <text name="AboutUs">من نحن</text>
     <text name="Administration">الإدارة</text>
     <text name="Roles">الأدوار</text>
@@ -26,12 +66,9 @@
     <text name="CreateNewRole">إنشاء دور جديد</text>
     <text name="RoleProperties">خصائص الدور</text>
     <text name="Permissions">إذونات</text>
-    <text name="Save">حـفظ</text>
     <text name="Cancel">إغلاق</text>
     <text name="RolesHeaderInfo">إستخدم الأدوار لإنشاء مجموعة إذونات</text>
     <text name="Static">مـثبّت</text>
-    <text name="Actions">إجراءات</text>
-    <text name="Delete">حـذف</text>
     <text name="SavedSuccessfully">تم الحفظ بنجاح.</text>
     <text name="AreYouSure">هل أنت متأكد؟</text>
     <text name="YesDelete">نعم إحذف</text>
@@ -39,7 +76,6 @@
     <text name="UsersHeaderInfo">إدارة المستخدمين و الإذونات</text>
     <text name="CreateNewUser">إنشاء مستخدم جديد</text>
     <text name="UserName">اسم المستخدم</text>
-    <text name="Name">الإسـم</text>
     <text name="Surname">الإسم الأخير</text>
     <text name="EmailAddress">البريد الإلكتروني</text>
     <text name="LastLoginTime">آخر تسجيل الدخول</text>
@@ -71,7 +107,6 @@
     <text name="ChangingPermissions">تغيير الإذونات</text>
     <text name="EditingUser"> تحرير المستخدم </text>
     <text name="CreatingNewUser"> إنشاء مستخدم جديد</text>
-    <text name="Edit">تحرير</text>
     <text name="EditingTenant">تحرير العميل</text>
     <text name="CreatingNewTenant">إنشاء عميل الجديد</text>
     <text name="DeletingTenant">حذف العميل</text>
@@ -480,7 +515,6 @@
     <text name="ApplicationLogo">شعار التطبيق</text>
     <text name="CustomCSS">ملف Css خاص</text>
     <text name="Upload">رفع</text>
-    <text name="Download">تحميل</text>
     <text name="UploadLogo_Info">إختر ملف JPG / JPEG / PNG / GIF  بحجم 30 KB  كحد أقصى و 139X35  بكسل.</text>
     <text name="UploadCSS_Info">إختر ملف CSS بحجم MB 1  كحد أقصى.</text>
     <text name="Browse">تصفَح</text>
@@ -528,7 +562,6 @@
     <text name="RecentTenants">آخر العملاء</text>
     <text name="RecentTenantsHelpText">آخر {1} من العملاء المسجلين في {0} يوما ...</text>
     <text name="ExpiringTenantsHelpText">تنتهي صلاحية {1} من العملاء خلال {0} أيام ...</text>
-    <text name="NoData">لايوجد بيانات</text>
     <text name="SubscriptionEndDate">تاريخ انتهاء الاشتراك</text>
     <text name="TenantNameOrTenancyCode">إسم العميل \ كود العميل</text>
     <text name="IncomeWithAmount">الدخل: {0}</text>
@@ -637,7 +670,6 @@
     <text name="PaymentHistory">سجل الدفعات</text>
     <text name="Gateway">بوابة</text>
     <text name="Amount">قيمة</text>
-    <text name="Status">حالة</text>
     <text name="Period">فترة</text>
     <text name="DayCount">عدد الأيام</text>
     <text name="LastModificationTime">آخر وقت التعديل</text>
@@ -670,7 +702,6 @@
     <text name="FileUpload">تحميل الملف</text>
     <text name="PostedValue">القيمة المنشورة</text>
     <text name="SelectDate">حدد تاريخ</text>
-    <text name="SelectFile">حدد الملف</text>
     <text name="UploadedFile">الملف المحمَل</text>
     <text name="PostedData">البيانات المنشورة</text>
     <text name="Remove">إزالة</text>
@@ -681,7 +712,6 @@
     </text>
     <text name="DemoUiComponents_Info_Metronic_Link_Text">Check Metronic theme for more UI components</text>
     <text name="Image">صورة</text>
-    <text name="File">ملف</text>
     <text name="Link">رابط</text>
     <text name="Billing">فواتير</text>
     <text name="LegalName">الإسم القانوني</text>

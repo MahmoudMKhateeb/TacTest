@@ -1,6 +1,44 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <localizationDictionary culture="en-GB">
   <texts>
+	  <![CDATA[Tachyon:Common Start]]>
+	  <text name="Name">Name</text>
+	  <text name="Actions">Actions</text>
+	  <text name="Edit">Edit</text>
+	  <text name="Delete">Delete</text>
+	  <text name="NoData">No Data</text>
+	  <text name="ShouldBeUnique">ShouldBeUnique</text>
+	  <text name="PleaseEnterAUniqueNumber">Please Enter A Unique Number</text>
+	  <text name="Note">Note</text>
+	  <text name="Save">Save</text>
+	  <![CDATA[Tachyon:Common End]]>
+	  
+	  <![CDATA[Tachyon:Documents Common Start]]>
+	  <text name="ExpirationDate">Expiration Date</text>
+	  <text name="Status">Status</text>
+	  <text name="Download">Download</text>
+	  <text name="File">File</text>
+	  <text name="SelectFile">Select file</text>
+	  <text name="ValidDocumentFilesMsg">FileAllowedFormatesAre:.png,.jpeg</text>
+	  <text name="PleaseChooseAvalidFormat">Please Choose Avalid Format</text>
+	  <text name="Number">Number</text>
+	  <text name="minDigits">minDigits</text>
+	  <text name="maxDigits">maxDigits</text>
+	  <text name="DateIsRequired">Date is Required</text>
+	  <![CDATA[Tachyon:Documents Common End]]
+	  
+	  <![CDATA[ Tachyon: Tenant document Upload Page Start]]>
+	  <text name="TenantRequiredDocuments">Tenant Required Documents</text>
+	  <text name="WaitingForReviewMsg">Pleasewaituntillwereviewyourdocuments</text>
+	  <text name="SubmittedDocumnents">Submitted Documnents</text>
+	  <text name="Extn">Extn</text>
+	  <text name="Accepted">Accepted</text>
+	  <text name="Rejected">Rejected</text>
+	  <text name="InReview">In Review</text>
+	  <text name="UploadDocumentMsg">Please up load the following documents in order to finalize your registration process.</text>
+	  <![CDATA[ Tachyon: Tenant document Upload Page End]]>
+
+
     <text name="HomePage">Home page</text>
     <text name="AboutUs">About us</text>
     <text name="Administration">Administration</text>
@@ -12,7 +50,6 @@
     <text name="TenantIsNotActive">Tenant {0} is not active.</text>
     <text name="UserIsNotActiveAndCanNotLogin">User {0} is not active and can not log in.</text>
     <text name="PleaseEnterLoginInformation">Please enter login information</text>
-    <text name="TenancyName">Tenancy name</text>
     <text name="UserNameOrEmail">User name or email</text>
     <text name="Password">Password</text>
     <text name="RememberMe">Remember me</text>
@@ -26,12 +63,9 @@
     <text name="CreateNewRole">Create new role</text>
     <text name="RoleProperties">Role properties</text>
     <text name="Permissions">Permissions</text>
-    <text name="Save">Save</text>
     <text name="Cancel">Cancel</text>
     <text name="RolesHeaderInfo">Use roles to group permissions.</text>
     <text name="Static">Static</text>
-    <text name="Actions">Actions</text>
-    <text name="Delete">Delete</text>
     <text name="SavedSuccessfully">Saved successfully.</text>
     <text name="AreYouSure">Are you sure?</text>
     <text name="YesDelete">Yes, delete!</text>
@@ -39,13 +73,11 @@
     <text name="UsersHeaderInfo">Manage users and permissions.</text>
     <text name="CreateNewUser">Create new user</text>
     <text name="UserName">User name</text>
-    <text name="Name">Name</text>
     <text name="Surname">Surname</text>
     <text name="EmailAddress">Email address</text>
     <text name="LastLoginTime">Last login time</text>
     <text name="EditUser">Edit user</text>
     <text name="UserInformations">User information</text>
-    <text name="PasswordRepeat">Password (repeat)</text>
     <text name="SuccessfullyDeleted">Successfully deleted.</text>
     <text name="RoleDeleteWarningMessage">Role {0} will be deleted and unassigned from all assigned users.</text>
     <text name="UserDeleteWarningMessage">User {0} will be deleted.</text>
@@ -62,16 +94,11 @@
     <text name="TenantsHeaderInfo">Manage your tenants.</text>
     <text name="CreateNewTenant">Create new tenant</text>
     <text name="TenancyCodeName">Tenancy code name</text>
-    <text name="TenantName">Tenant name</text>
     <text name="TenantDeleteWarningMessage">Tenant {0} will be deleted.</text>
-    <text name="AdminEmailAddress">admin email</text>
-    <text name="AdminPassword">admin password</text>
-    <text name="AdminPasswordRepeat">admin password (repeat)</text>
     <text name="EditTenant">Edit tenant</text>
     <text name="ChangingPermissions">Changing permissions</text>
     <text name="EditingUser">Editing user</text>
     <text name="CreatingNewUser">Creating new user</text>
-    <text name="Edit">Edit</text>
     <text name="EditingTenant">Editing tenant</text>
     <text name="CreatingNewTenant">Creating new tenant</text>
     <text name="DeletingTenant">Deleting tenant</text>
@@ -81,7 +108,6 @@
     <text name="CreationTime">Creation time</text>
     <text name="SearchWithThreeDot">Search...</text>
     <text name="ResetSpecialPermissions">Reset special permissions</text>
-    <text name="SavingWithThreeDot">Saving...</text>
     <text name="Settings">Settings</text>
     <text name="SaveAll">Save all</text>
     <text name="SettingsHeaderInfo">Show and change application settings.</text>
@@ -109,10 +135,8 @@
     <text name="EmailActivation_Title">Welcome to TACHYON.</text>
     <text name="EmailActivation_SubTitle">This email is sent you to verify your email.</text>
     <text name="EmailActivation_ClickTheLinkBelowToVerifyYourEmail">Please click the link below to verify your email address:</text>
-    <text name="InvalidEmailAddress">Invalid email address</text>
     <text name="InvalidPasswordResetCode">Invalid password reset code</text>
     <text name="InvalidPasswordResetCode_Detail">Please be sure you entered this page by clicking the link sent to your email. If this does not solve the problem, you can re-try to request a new password reset link.</text>
-    <text name="PleaseEnterYourNewPassword">Please enter your new password.</text>
     <text name="UserEmailIsNotConfirmedAndCanNotLogin">Your email address is not confirmed. Please check your email and click the email confirmation link to activate your account. If you did not receive activation email, click the 'email confirmation' to request a new email.</text>
     <text name="LoginFailed">Login failed!</text>
     <text name="InvalidEmailConfirmationCode">Invalid email confirmation code</text>
@@ -126,7 +150,6 @@
     <text name="ChangePassword">Change password</text>
     <text name="CurrentPassword">Current password</text>
     <text name="NewPassword">New password</text>
-    <text name="NewPasswordRepeat">New password (repeat)</text>
     <text name="YourPasswordHasChangedSuccessfully">Your password has changed successfully.</text>
     <text name="SelfUserRegistrationIsDisabledMessage">You can not register to the system!</text>
     <text name="SelfUserRegistrationIsDisabledMessage_Detail">Self user registration is disabled. Please contact the system administrator to register.</text>
@@ -147,7 +170,6 @@
     <text name="TenantNameCanNotBeEmpty">Tenant name can not be empty</text>
     <text name="ExportToExcel">Export to excel</text>
     <text name="ChangeProfilePicture">Change profile picture</text>
-    <text name="TenantName_Regex_Description">Company name must be at least 2 chars, starts with a letter and continue with letter, number, dash or underscore.</text>
     <text name="ProfilePicture_Change_Info">You can select a JPG/JPEG/PNG file with a maximum {0}MB size.</text>
     <text name="ProfilePicture_Change_Error">Your profile picture could not be changed.</text>
     <text name="ProfilePicture_Warn_SizeLimit">Picture size must be smaller than {0}MB. Please select another file.</text>
@@ -155,13 +177,9 @@
     <text name="Dashboard">Dashboard</text>
     <text name="DashboardHeaderInfo">statistics and reports</text>
     <text name="GoToApplication">Go to application</text>
-    <text name="TenantInformations">Tenant information</text>
     <text name="PersonalInformations">Personal information</text>
     <text name="AccountSettings">Account settings</text>
     <text name="Captha_Hint">Please prove you are not a robot</text>
-    <text name="Back">Back</text>
-    <text name="Submit">Submit</text>
-    <text name="SignUp">Sign up</text>
     <text name="CaptchaCanNotBeEmpty">You must prove that you are not a robot.</text>
     <text name="IncorrectCaptchaAnswer">Unable to determine that you are not a robot.</text>
     <text name="FormIsNotValidMessage">Form is not valid. Please check and fix errors.</text>
@@ -295,7 +313,6 @@
     <text name="SelectAnItem">Select an item</text>
     <text name="NewOrganizationUnit">New organisation unit</text>
     <text name="SelectAUser">Select a user</text>
-    <text name="Select">Select</text>
     <text name="UserIsAlreadyInTheOrganizationUnit">This user is already in the organisation unit!</text>
     <text name="AddRootUnit">Add root unit</text>
     <text name="AddUser">Add user</text>
@@ -481,7 +498,6 @@
     <text name="ApplicationLogo">Application Logo</text>
     <text name="CustomCSS">Custom CSS</text>
     <text name="Upload">Upload</text>
-    <text name="Download">Download</text>
     <text name="UploadLogo_Info">Select a JPG/JPEG/PNG/GIF file with a maximum of 30KB size and 139x35 pixel resolution.</text>
     <text name="UploadCSS_Info">Select a .css file with a maximum of 1MB size.</text>
     <text name="Browse">Browse</text>
@@ -500,11 +516,6 @@
     <text name="EmailSecurityCodeBody">Your security code is: {0}</text>
     <text name="Sms">Sms</text>
     <text name="SmsSecurityCodeMessage">Your security code is: {0}</text>
-    <text name="PasswordComplexity_RequireDigit_Hint">Passwords must have at least one digit ('0'-'9').</text>
-    <text name="PasswordComplexity_RequireLowercase_Hint">Passwords must have at least one lowercase ('a'-'z').</text>
-    <text name="PasswordComplexity_RequireNonAlphanumeric_Hint">Passwords must have at least one non-alphanumeric character.</text>
-    <text name="PasswordComplexity_RequireUppercase_Hint">Passwords must have at least one uppercase ('A'-'Z').</text>
-    <text name="PasswordComplexity_RequiredLength_Hint">Passwords must be at least {0} characters.</text>
     <text name="PasswordComplexity_RequireDigit">Require digit</text>
     <text name="PasswordComplexity_RequireLowercase">Require lowercase</text>
     <text name="PasswordComplexity_RequireNonAlphanumeric">Require non-alphanumeric</text>
@@ -529,7 +540,6 @@
     <text name="RecentTenants">Recent tenants</text>
     <text name="RecentTenantsHelpText">Last {1} customers registered in {0} days...</text>
     <text name="ExpiringTenantsHelpText">First {1} clients expiring in {0} days...</text>
-    <text name="NoData">No data</text>
     <text name="SubscriptionEndDate">Subscription end date</text>
     <text name="TenantNameOrTenancyCode">Tenant name / tenancy code</text>
     <text name="IncomeWithAmount">Income: {0}</text>
@@ -638,7 +648,6 @@
     <text name="PaymentHistory">Payment history</text>
     <text name="Gateway">Gateway</text>
     <text name="Amount">Amount</text>
-    <text name="Status">Status</text>
     <text name="Period">Period</text>
     <text name="DayCount">Day count</text>
     <text name="LastModificationTime">Last modification time</text>
@@ -669,7 +678,6 @@
     <text name="FileUpload">File Upload</text>
     <text name="PostedValue">Posted value</text>
     <text name="SelectDate">Select date</text>
-    <text name="SelectFile">Select file</text>
     <text name="UploadedFile">Uploaded file</text>
     <text name="PostedData">Posted data</text>
     <text name="Remove">Remove</text>
@@ -680,11 +688,9 @@
     </text>
     <text name="DemoUiComponents_Info_Metronic_Link_Text">Check Metronic theme for more UI components</text>
     <text name="Image">Image</text>
-    <text name="File">File</text>
     <text name="Link">Link</text>
     <text name="Billing">Billing</text>
     <text name="LegalName">Legal Name</text>
-    <text name="Address">Address</text>
     <text name="Tax/VatNo">Tax/VatNo</text>
     <text name="Invoice">Invoice</text>
     <text name="TotalAmount">Total Amount</text>
@@ -747,7 +753,6 @@
     <text name="PickFromGallery">Pick from gallery</text>
     <text name="TakePhoto">Take a photo</text>
     <text name="Rotate">Rotate</text>
-    <text name="PasswordsDontMatch">Passwords do not match!</text>
     <text name="RequiredField">{0} field is required.</text>
     <text name="StringLengthDoesntMatch">The field {0} must be a minimum length of {1} and a maximum length of {2}.</text>
     <text name="LessThanMinStringLength">The field {0} must be a minimum length of {1}.</text>
@@ -758,9 +763,6 @@
     <text name="UiCustomization_Desktop">Desktop</text>
     <text name="TwoFactorLoginIsNotSupported">Two factor login is not currently supported!</text>
     <text name="LinkToCurrentPage">Link to current page</text>
-    <text name="ThisFieldIsRequired">This field is required.</text>
-    <text name="PleaseEnterAtLeastNCharacter">Please enter at least {0} characters.</text>
-    <text name="PleaseEnterNoMoreThanNCharacter">Please enter no more than {0} characters.</text>
     <text name="SelectTwoFactorProvider">Select two factor authentication provider</text>
     <text name="InvoiceInfoIsMissingOrNotCompleted">Invoice info is missing or not completed</text>
     <text name="InvoiceTo">Invoice to</text>
@@ -892,7 +894,6 @@
     <text name="UiCustomization_HeaderMinimizeType_Topbar">Topbar</text>
     <text name="UiCustomization_HeaderMinimizeType_Menu">Menu</text>
     <text name="UiCustomization_HeaderMenuArrows">Menu arrows</text>
-    <text name="InvalidPattern">Invalid</text>
     <text name="SwitchToTenant">Switch to tenant</text>
     <text name="TenancyNameRequired">Tenancy name is required!</text>
     <text name="EnterTenancyName">Enter tenancy name...</text>
@@ -920,10 +921,7 @@
     <text name="RoleIsInheritedFromOrganizationUnit">This role is inherited from one of users organisations</text>
     <text name="ShowMenuSearchInput">Show search bar in the menu</text>
     <text name="veryWeak">Very Weak</text>
-    <text name="weak">Weak</text>
     <text name="normal">Normal</text>
-    <text name="medium">Medium</text>
-    <text name="strong">Strong</text>
     <text name="veryStrong">Very Strong</text>
     <text name="QuickNav">Quick Nav</text>
   </texts>
