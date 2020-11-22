@@ -30,6 +30,7 @@ using TACHYON.MultiTenancy;
 using NPOI.SS.Formula.Functions;
 using TACHYON.Shipping.ShippingRequests.Dtos;
 using TACHYON.Trucks;
+using Abp.BackgroundJobs;
 
 namespace TACHYON.Shipping.ShippingRequestBids
 {
@@ -41,10 +42,12 @@ namespace TACHYON.Shipping.ShippingRequestBids
         private readonly IRepository<Tenant> _tenantsRepository;
         private readonly IRepository<Truck,Guid> _trucksRepository;
         private readonly IAppNotifier _appNotifier;
+        private readonly BackgroundJobManager _backgroundJobManager;
 
         public ShippingRequestBidsAppService(IRepository<ShippingRequestBid, long> shippingRequestBidsRepository,
             IRepository<ShippingRequest, long> shippingRequestsRepository,
             IRepository<Tenant> tenantsRepository, IRepository<Truck, Guid> trucksRepository,
+            BackgroundJobManager backgroundJobManager,
             IAppNotifier appNotifier)
         {
             _shippingRequestBidsRepository = shippingRequestBidsRepository;
@@ -182,12 +185,12 @@ namespace TACHYON.Shipping.ShippingRequestBids
 
         //shipper accept carrier bid request #539
         [RequiresFeature(AppFeatures.Shipper)]
-        public async Task AcceptBid(ShippingRequestBidInput input)
+        public async Task AcceptBid(long ShippingRequestBidId)
         {
             using (CurrentUnitOfWork.DisableFilter(AbpDataFilters.MustHaveTenant))
             {
                 var bid = await _shippingRequestBidsRepository.GetAll().Include(y => y.ShippingRequestFk)
-                    .FirstOrDefaultAsync(x => x.Id == input.ShippingRequestBidId);
+                    .FirstOrDefaultAsync(x => x.Id == ShippingRequestBidId);
                 if (bid != null)
                 {
                     if (bid.ShippingRequestFk.ShippingRequestBidStatusId != TACHYONConsts.ShippingRequestStatusOnGoing)
@@ -200,14 +203,22 @@ namespace TACHYON.Shipping.ShippingRequestBids
 
                     await _appNotifier.AcceptShippingRequestBid(new UserIdentifier(bid.TenantId, bid.CreatorUserId.Value), bid.ShippingRequestId);
 
-                    //Reject the other bids of this shipping request
-                    var otherBids = _shippingRequestBidsRepository.GetAll()
-                        .Where(x => x.ShippingRequestId == bid.ShippingRequestId)
-                        .Where(x => x.Id != bid.Id);
-                    foreach (var item in otherBids)
-                    {
-                        item.IsRejected = true;
-                    }
+                    //Reject the other bids of this shipping request by background job
+                    //var otherBids = _shippingRequestBidsRepository.GetAll()
+                    //    .Where(x => x.ShippingRequestId == bid.ShippingRequestId)
+                    //    .Where(x => x.Id != bid.Id);
+
+                    //foreach (var item in otherBids)
+                    //{
+                    //    item.IsRejected = true;
+                    //}
+
+                    await _backgroundJobManager.EnqueueAsync<RejectOtherBidsJob, RejectOtherBidsJobArgs>
+                        (new RejectOtherBidsJobArgs { 
+                        AcceptedBidId= bid.Id,
+                        ShippingReuquestId= bid.ShippingRequestId
+                        });
+                    
 
                     //update shippingRequest final price
                     var shippingRequestItem = _shippingRequestsRepository.FirstOrDefault(bid.ShippingRequestId);
