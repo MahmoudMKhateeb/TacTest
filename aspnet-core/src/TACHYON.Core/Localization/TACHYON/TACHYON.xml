@@ -20,9 +20,11 @@
 	  <text name="PasswordComplexity_RequireUppercase_Hint">Passwords must have at least one uppercase ('A'-'Z').</text>
 	  <text name="PasswordComplexity_RequiredLength_Hint">Passwords must be at least {0} characters.</text>
       <text name="PasswordsDontMatch">Passwords do not match!</text>	  <text name="NewPasswordRepeat">New password (repeat)</text>
+	  <text name="PasswordRepeat">password (repeat)</text>
 	  <text name="PleaseMakeSureYouProvideValidDetails!">Please Make Sure You Provide Valid Details!</text>
 	  <text name="pleasemakesureyouchoosethecountryandthecity!">Please make sure you choose the country and the city!</text>
-	  <![CDATA[ Tachyon: Tenant Registration Page End]]>	   <![CDATA[ Tachyon:Common]]>       <text name="AlreadyTaken">Already Taken</text>
+	  <text name="Carrier">Carrier</text>
+	  <![CDATA[ Tachyon: Tenant Registration Page End]]>	  <![CDATA[ Tachyon: Tenant login Page Start]]>	  <text name="NotAMemberYet">Not a member yet ?</text>	  <![CDATA[ Tachyon: Tenant login Page End]]>	  <![CDATA[ Tachyon:Common]]>       <text name="AlreadyTaken">Already Taken</text>
        <text name="Enter">Enter</text>
        <text name="Select">Select</text>
        <text name="isRequired">is Required</text>
@@ -1411,6 +1413,5 @@
     <text name="VisualSettings_Description">Change look of the application</text>
     <text name="DownloadCollectedData_Description">Download data belongs to your account</text>
     <text name="New">New</text>
-    <text name="NotAMemberYet">Not a member yet ?</text>
   </texts>
 </localizationDictionary>

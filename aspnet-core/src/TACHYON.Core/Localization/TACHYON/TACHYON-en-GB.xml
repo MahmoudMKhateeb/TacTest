@@ -28,6 +28,7 @@
 	  <text name="PasswordComplexity_RequiredLength_Hint">Passwords must be at least {0} characters.</text>
 	  <text name="PasswordsDontMatch">Passwords do not match!</text>
 	  <text name="NewPasswordRepeat">New password (repeat)</text>
+	  <text name="PasswordRepeat">password (repeat)</text>
 	  <text name="PleaseMakeSureYouProvideValidDetails">Please Make Sure You Provide Valid Details!</text>
 	  <text name="pleasemakesureyouchoosethecountryandthecity!">Please make sure you choose the country and the city!</text>
 

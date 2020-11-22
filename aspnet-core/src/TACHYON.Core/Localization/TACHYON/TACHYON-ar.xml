@@ -28,12 +28,23 @@
 	  <text name="PasswordComplexity_RequireUppercase_Hint">كلمة السر يجب ان تحتوي على الأفل على حرف كبير واحد('A'-'Z').</text>
 	  <text name="PasswordComplexity_RequiredLength_Hint">كلمة السر يجب ان تحتوي على الأفل على {0} عناصر.</text>
 	  <text name="PasswordsDontMatch">كلمة المرور غير مطابقة!</text>
+	  <text name="NewPasswordRepeat">كلمة المرور الجديدة (تكرار)</text>
+	  <text name="PasswordRepeat">كلمة المرور (تكرار)</text>
 	  <text name="PleaseMakeSureYouProvideValidDetails">Please Make Sure You Provide Valid Details!</text>
 	  <text name="pleasemakesureyouchoosethecountryandthecity!">Please make sure you choose the country and the city!</text>
+	  <text name="Carrier">ناقل</text>
 
-	  <![CDATA[ Tachyon: Tenant Registration Page End]]>
+	  <![CDATA[Tachyon: Tenant Registration Page End]]>
 
-	   <![CDATA[ Tachyon:Common Start]]>
+
+
+	  <![CDATA[ Tachyon: Tenant login Page Start]]>
+	  <text name="NotAMemberYet">Not a member yet ?</text>
+	  <![CDATA[ Tachyon: Tenant login Page End]]>
+	  
+	  
+	  
+	   <![CDATA[Tachyon:Common Start]]>
        <text name="AlreadyTaken">سبق إستخدامه</text>
        <text name="Enter">أدخل</text>
 	  <text name="Select">إختار</text>
@@ -46,7 +57,7 @@
       <text name="PleaseEnterAtLeastNCharacter">الرجاء إدخال {0} حرفا على الأقل.</text>
       <text name="PleaseEnterNoMoreThanNCharacter">الرجاء إدخال أكثر من {0} حرفا.</text>
 	  <text name="InvalidEmailAddress">البريدالالكتروني غير صحيح</text>
-	  <![CDATA[ TTachyon:Common End]]>
+	  <![CDATA[Tachyon:Common End]]>
 	  
 	  
 	  

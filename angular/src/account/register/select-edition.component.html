@@ -1,7 +1,9 @@
 <div [@routerTransition]>
   <div class="content d-flex flex-column flex-column-fluid">
     <div [class]="containerClass">
-      <span class="font-size-h1 d-block d-block font-weight-boldest py-2 pricing-title"> <h2>IAM A:</h2> </span>
+      <span class="font-size-h1 d-block d-block font-weight-boldest py-2 pricing-title">
+        <h2>{{ 'IAMA' | localize }}:</h2>
+      </span>
 
       <div class="card card-custom gutter-b shadow-lg">
         <div class="card-body">
@@ -40,7 +42,9 @@
                 </span>
               </div>
               <!--end::Icon-->
-              <span class="font-size-h1 d-block d-block font-weight-boldest py-2 pricing-title">{{ editionWithFeatures.edition.displayName }}</span>
+              <span class="font-size-h1 d-block d-block font-weight-boldest py-2 pricing-title">
+                {{ editionWithFeatures.edition.displayName | localize }}
+              </span>
               <h4
                 class="font-size-h6 d-block d-block font-weight-bold mb-7 pricing-subtitle"
                 style="min-height: 100px;"
