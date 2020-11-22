@@ -271,9 +271,9 @@ namespace TACHYON.Shipping.ShippingRequests
                 }
             }
 
-            //shippingRequest.CreatorUserId = AbpSession.UserId;
-            await _shippingRequestRepository.InsertAsync(shippingRequest);
+            await _shippingRequestRepository.InsertAndGetIdAsync(shippingRequest);
 
+            await CurrentUnitOfWork.SaveChangesAsync();
             if (shippingRequest.IsBid)
             {
                 //Notify Carrier with the same Truck type

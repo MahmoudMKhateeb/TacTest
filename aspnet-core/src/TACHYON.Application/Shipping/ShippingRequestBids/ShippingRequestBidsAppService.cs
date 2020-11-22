@@ -54,7 +54,7 @@ namespace TACHYON.Shipping.ShippingRequestBids
             _appNotifier = appNotifier;
         }
 
-        //This is for shipper to view SR bids.
+        //This is for shipper to view Shipping Request bids.
         [RequiresFeature(AppFeatures.Shipper)]
         public virtual async Task<PagedResultDto<GetShippingRequestBidsForViewDto>> GetAllBidsByShippingRequestIdPaging(GetAllShippingRequestBidsInput input)
         {
@@ -120,7 +120,7 @@ namespace TACHYON.Shipping.ShippingRequestBids
                     if (item.ShippingRequestBidStatusId != TACHYONConsts.ShippingRequestStatusOnGoing)
                     {
                         ThrowSRnotOngoingError();
-                        return 0;
+                       // return 0;
                     }
                 }
             }
@@ -151,10 +151,11 @@ namespace TACHYON.Shipping.ShippingRequestBids
                     shippingRequestBid.TenantId = (int)AbpSession.TenantId;
 
                 }
-              //  shippingRequestBid.CreatorUserId = AbpSession.UserId;
-                await _shippingRequestBidsRepository.InsertAsync(shippingRequestBid);
+                await _shippingRequestBidsRepository.InsertAndGetIdAsync(shippingRequestBid);
 
-                //notification to shipper when Carrier create new bid in his SR
+                await CurrentUnitOfWork.SaveChangesAsync();
+
+                //notification to shipper when Carrier create new bid in his Shipping Request
                 await _appNotifier.CreateBidRequest(
                     new UserIdentifier(shippingRequestBid.ShippingRequestFk.TenantId, shippingRequestBid.ShippingRequestFk.CreatorUserId.Value),
                     shippingRequestBid.Id);
@@ -269,14 +270,14 @@ namespace TACHYON.Shipping.ShippingRequestBids
                     bid.IsCancled = true;
                     bid.CanceledDate = Clock.Now;
 
-                    //Check if SR is not ongoing -- add cancel reason
+                    //Check if Shipping Request is not ongoing -- add cancel reason
 
                     if (bid.ShippingRequestFk.ShippingRequestBidStatusId != TACHYONConsts.ShippingRequestStatusOnGoing)
                     {
                         bid.CancledReason = input.CancledReason;
                     }
 
-                    //notification to shipper when Carrier cancel his bid in his SR
+                    //notification to shipper when Carrier cancel his bid in his Shipping Request
                     await _appNotifier.CancelBidRequest(
                         new UserIdentifier(bid.ShippingRequestFk.TenantId, bid.ShippingRequestFk.CreatorUserId.Value),
                         bid.ShippingRequestId,
