@@ -1,6 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
-<localizationDictionary culture="en">
-	  	<texts>	<![CDATA[ Tachyon: Document files Page Start]]>
+<localizationDictionary culture="en">	  	<texts>	<![CDATA[ Tachyon: Document files Page Start]]>
 	   <text name="DocumentFiles">Document Files</text>
 	   <text name="DocumentFilesHeaderInfo">DocumentFilesHeaderInfo</text>
 	   <text name="DocumentName">Document Name</text>
@@ -25,6 +24,10 @@
 	    <text name="Close">Close</text>
         <text name="ShowAdvancedFilters">Show advanced filters</text>
         <text name="HideAdvancedFilters">Hide advanced filters</text>
+        <text name="All">All</text>
+        <text name="True">True</text>
+        <text name="False">False</text>
+		 <text name="Edition">Edition</text>
 	  <![CDATA[Tachyon:Common End]]>
 	  <![CDATA[Tachyon:Documents Common Start]]>
 	     <text name="Documents">Documents</text>
@@ -38,6 +41,28 @@
 	  <text name="DocumentEntityName">Document Entity Name</text>
 	  <text name="DocumentsEntity">Documents Entity</text>
 	  <![CDATA[Tachyon:Document Entites Page End]]>
+		
+		
+	  <![CDATA[Tachyon:Document Types Page Start]]>
+	  <text name="DocumentTypes">Document Types</text>
+	  <text name="IsRequired">Is Required</text>
+	  <text name="DocumentTypesHeaderInfo">Document Types Header Info</text>
+	  <text name="NewDocumentType">New Document Type</text>
+	  <text name="HasExpirationDate">Has Expiration Date</text>
+	  <text name="RequiredFrom">Required From</text>
+	  <text name="SpecialConstant">Special Constant</text>
+	  <text name="ExpirationAlertDays">Expiration Alert Days</text>
+	  <text name="InActiveToleranceDays">InActive Tolerance Days</text>
+	  <text name="InActiveAccountExpired">InActive Account Expired</text>
+	  <text name="HasNumber">Has Number</text>
+	  <text name="IsNumberUnique">Is Number Unique</text>
+	  <text name="HasHijriExpirationDate">Has Hijri Expiration Date</text>
+	  <text name="HasNotes">Has Notes</text>
+	  <text name="Company">Company</text>
+	  <text name="DocumentType">DocumentType</text>
+	  <text name="ToleranceDaysBeforeDeactivateAfterExpiration">Tolerance Days Before Deactivate After Expiration</text>
+	  <text name="DeactivateAccountUponexpiration">Deactivate Account Upon expiration</text>
+	  <![CDATA[Tachyon:Document Types Page End]]>
 	  	      <text name="TruckCapacities">Truck capacities</text>
     <text name="Capacity">Capacity</text>
     <text name="TACHYON.TruckCapacities.Capacity">Capacity</text>
@@ -132,16 +157,10 @@
     <text name="PickTrailer">Pick trailer</text>
     <text name="RoutStepDisplayName">Rout step display name</text>
     <text name="PickRoutStep">Pick rout step</text>
-    <text name="DocumentTypes">Document types</text>
-    <text name="DocumentType">Document type</text>
     <text name="TACHYON.DocumentTypes.DocumentType">DocumentType</text>
-    <text name="IsRequired">Is required</text>
     <text name="NotIsRequired">Not is required</text>
     <text name="ExpirationDate">Expiration date</text>
-    <text name="HasExpirationDate">Has expiration date</text>
     <text name="NotHasExpirationDate">Not has expiration date</text>
-    <text name="RequiredFrom">Required from</text>
-    <text name="DocumentTypesHeaderInfo">Document types header info</text>
     <text name="CreateNewDocumentType">Create new document type</text>
     <text name="EditDocumentType">Edit document type</text>
     <text name="DeleteDocumentType">Delete document type</text>
@@ -325,8 +344,6 @@
     <text name="{0}IsRequired">{0} is required.</text>
     <text name="View">View</text>
     <text name="Pick">Pick</text>
-    <text name="True">True</text>
-    <text name="False">False</text>
     <text name="MinValue">Min</text>
     <text name="MaxValue">Max</text>
     <text name="HomePage">Home page</text>
@@ -526,7 +543,6 @@
     <text name="Xms">{0} ms</text>
     <text name="Refresh">Refresh</text>
     <text name="ErrorState">Error state</text>
-    <text name="All">All</text>
     <text name="HasError">Has error</text>
     <text name="AuditLogDetail">Audit log detail</text>
     <text name="Parameters">Parameters</text>
@@ -556,7 +572,6 @@
       ]]>
     </text>
     <text name="SeeDemo">See demo</text>
-    <text name="Edition">Edition</text>
     <text name="Editions">Editions</text>
     <text name="EditionsHeaderInfo">Manage editions and features of the application</text>
     <text name="CreateNewEdition">Create new edition</text>

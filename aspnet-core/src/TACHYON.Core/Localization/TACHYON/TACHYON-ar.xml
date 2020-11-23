@@ -1,7 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <localizationDictionary culture="ar">
-  <texts>
-	 
+  <texts> 
 	  	<![CDATA[ Tachyon: Document files Page Start]]>
 	        <text name="DocumentFiles">Document Files</text>
 	        <text name="DocumentFilesHeaderInfo">DocumentFilesHeaderInfo</text>
@@ -28,6 +27,10 @@
          <text name="Close">إغلاق</text>
 	     <text name="ShowAdvancedFilters">إظهار الفلاتر المتقدمة</text>
          <text name="HideAdvancedFilters">إخفاء الفلاتر المتقدمة</text>
+         <text name="All">الجميع</text>
+	     <text name="True">True</text>
+	     <text name="False">False</text>
+	     <text name="Edition">نسخة</text>
 	  <![CDATA[Tachyon:Common End]]>
 	  
 	  
@@ -42,6 +45,29 @@
 	  <text name="DocumentEntityName">Document Entity Name</text>
 	  <text name="DocumentsEntity">Documents Entity</text>
 	  <![CDATA[Tachyon:Document Entites Page End]]>
+	  
+	  
+	  
+	 <![CDATA[Tachyon:Document Types Page Start]]>
+	  <text name="DocumentTypes">Document Types</text>
+	  <text name="IsRequired">Is Required</text>
+	  <text name="DocumentTypesHeaderInfo">Document Types Header Info</text>
+	  <text name="NewDocumentType">New Document Type</text>
+	  <text name="HasExpirationDate">Has Expiration Date</text>
+	  <text name="RequiredFrom">Required From</text>
+	  <text name="SpecialConstant">Special Constant</text>
+	  <text name="ExpirationAlertDays">Expiration Alert Days</text>
+	  <text name="InActiveToleranceDays">InActive Tolerance Days</text>
+	  <text name="InActiveAccountExpired">InActive Account Expired</text>
+	  <text name="HasNumber">Has Number</text>
+	  <text name="IsNumberUnique">Is Number Unique</text>
+	  <text name="HasHijriExpirationDate">Has Hijri Expiration Date</text>
+	  <text name="HasNotes">Has Notes</text>
+	  <text name="Company">Company</text>
+	  <text name="DocumentType">DocumentType</text>
+	  <text name="ToleranceDaysBeforeDeactivateAfterExpiration">Tolerance Days Before Deactivate After Expiration</text>
+	  <text name="DeactivateAccountUponexpiration">Deactivate Account Upon expiration</text>
+	  <![CDATA[Tachyon:Document Types Page End]]>
 	  
     <text name="HomePage">الرئيسية</text>
     <text name="AboutUs">من نحن</text>
@@ -239,7 +265,6 @@
     <text name="Xms">{0} جزء ث.</text>
     <text name="Refresh">تحديث</text>
     <text name="ErrorState">حالة خطأ</text>
-    <text name="All">الجميع</text>
     <text name="HasError">يوجد خطأ</text>
     <text name="AuditLogDetail">تفاصيل سجل التدقيق</text>
     <text name="Parameters">المعلمات</text>
@@ -269,7 +294,6 @@
        ]]>
     </text>
     <text name="SeeDemo">مشاهدة الموقع التجريبي</text>
-    <text name="Edition">نسخة</text>
     <text name="Editions">النسخات</text>
     <text name="EditionsHeaderInfo">إدارة النسخات ومميزات النظام</text>
     <text name="CreateNewEdition">إنشاء نسخة جديدة</text>

@@ -26,8 +26,11 @@
 	  <text name="Cancel">Cancel</text>
 	  <text name="Close">Close</text>
 	  <text name="ShowAdvancedFilters">Show advanced filters</text>
-	  <text name="HideAdvancedFilters">Hide advanced filters</text>	  
-	  
+	  <text name="HideAdvancedFilters">Hide advanced filters</text>
+	  <text name="All">All</text>
+	  <text name="True">True</text>
+	  <text name="False">False</text>
+	  <text name="Edition">Edition</text>
 	  <![CDATA[Tachyon:Common End]]>
 	  
 	  <![CDATA[Tachyon:Documents Common Start]]>
@@ -42,6 +45,28 @@
 	  <text name="DocumentEntityName">Document Entity Name</text>
 	  <text name="DocumentsEntity">Documents Entity</text>
 	  <![CDATA[Tachyon:Document Entites Page End]]>
+
+
+	  <![CDATA[Tachyon:Document Types Page Start]]>
+	  <text name="DocumentTypes">Document Types</text>
+	  <text name="IsRequired">Is Required</text>
+	  <text name="DocumentTypesHeaderInfo">Document Types Header Info</text>
+	  <text name="NewDocumentType">New Document Type</text>
+	  <text name="HasExpirationDate">Has Expiration Date</text>
+	  <text name="RequiredFrom">Required From</text>
+	  <text name="SpecialConstant">Special Constant</text>
+	  <text name="ExpirationAlertDays">Expiration Alert Days</text>
+	  <text name="InActiveToleranceDays">InActive Tolerance Days</text>
+	  <text name="InActiveAccountExpired">InActive Account Expired</text>
+	  <text name="HasNumber">Has Number</text>
+	  <text name="IsNumberUnique">Is Number Unique</text>
+	  <text name="HasHijriExpirationDate">Has Hijri Expiration Date</text>
+	  <text name="HasNotes">Has Notes</text>
+	  <text name="Company">Company</text>
+	  <text name="DocumentType">DocumentType</text>
+	  <text name="ToleranceDaysBeforeDeactivateAfterExpiration">Tolerance Days Before Deactivate After Expiration</text>
+	  <text name="DeactivateAccountUponexpiration">Deactivate Account Upon expiration</text>
+	  <![CDATA[Tachyon:Document Types Page End]]>
 
 	  <text name="HomePage">Home page</text>
     <text name="AboutUs">About us</text>
@@ -240,7 +265,6 @@
     <text name="Xms">{0} ms</text>
     <text name="Refresh">Refresh</text>
     <text name="ErrorState">Error state</text>
-    <text name="All">All</text>
     <text name="HasError">Has error</text>
     <text name="AuditLogDetail">Audit log detail</text>
     <text name="Parameters">Parameters</text>
@@ -270,7 +294,6 @@
       ]]>
     </text>
     <text name="SeeDemo">See demo</text>
-    <text name="Edition">Edition</text>
     <text name="Editions">Editions</text>
     <text name="EditionsHeaderInfo">Manage editions and features of the application</text>
     <text name="CreateNewEdition">Create new edition</text>
