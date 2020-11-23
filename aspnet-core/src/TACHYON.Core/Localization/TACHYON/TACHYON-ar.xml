@@ -1,6 +1,39 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <localizationDictionary culture="ar">
-  <texts>
+  <texts>	  
+	  	<![CDATA[ Tachyon: Document files Page Start]]>
+	        <text name="DocumentFiles">Document Files</text>
+	        <text name="DocumentFilesHeaderInfo">DocumentFilesHeaderInfo</text>
+		    <text name="DocumentName">Document Name</text>
+	        <text name="SubmitterTenant">Submitter Tenant</text>
+	        <text name="TruckID">Truck ID</text>
+	        <text name="TrailerCode">Trailer Code</text>
+	        <text name="DriverName">Driver Name</text>
+            <text name="IsAccepted">Is Accepted</text>
+            <text name="Accept">Accept</text>
+            <text name="Accept">Reject</text>
+            <text name="DocumentFile">Document File</text>
+            <text name="NewDocumentFile">New Document File</text>
+	  	  <text name="AddDocument">Add Document</text>
+
+	   <![CDATA[ Tachyon: Document files Page End]]>
+	  
+	  <![CDATA[Tachyon:Common Start]]>
+         <text name="ViewDetails">View Details</text>
+	     <text name="TotalRecordsCount">Total Records Count</text>
+	     <text name="Create">Create</text>
+	  	 <text name="Cancel">Cancel</text>
+	  	 <text name="Close">Close</text>
+	  <![CDATA[Tachyon:Common End]]>
+	  
+	  
+	  	  <![CDATA[Tachyon:Documents Common Start]]>
+	     <text name="Documents">Documents</text>
+	  
+	  	  <![CDATA[Tachyon:Documents Common End]]>
+	  
+	  
+	  
     <text name="HomePage">الرئيسية</text>
     <text name="AboutUs">من نحن</text>
     <text name="Administration">الإدارة</text>
