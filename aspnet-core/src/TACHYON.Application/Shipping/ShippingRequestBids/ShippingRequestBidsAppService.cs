@@ -55,6 +55,7 @@ namespace TACHYON.Shipping.ShippingRequestBids
             _tenantsRepository = tenantsRepository;
             _trucksRepository = trucksRepository;
             _appNotifier = appNotifier;
+            _backgroundJobManager = backgroundJobManager;
         }
 
         //This is for shipper to view Shipping Request bids.
@@ -74,7 +75,9 @@ namespace TACHYON.Shipping.ShippingRequestBids
                     .OrderBy(input.Sorting ?? "id asc")
                     .PageBy(input);
 
+                var tenants = _tenantsRepository.GetAll();
                 var shippingRequestBids = from o in pagedAndFilteredShippingRequestsBids
+                                          join t in tenants on o.TenantId equals t.Id
                                           select new GetShippingRequestBidsForViewDto()
                                           {
                                               ShippingRequestBid = new ShippingRequestBidsDto
@@ -83,7 +86,9 @@ namespace TACHYON.Shipping.ShippingRequestBids
                                                   ShippingRequestId = o.ShippingRequestId,
                                                   IsAccepted = o.IsAccepted,
                                                   IsRejected=o.IsRejected,
-                                                  price = o.price
+                                                  price = o.price,
+                                                  CreationTime=o.CreationTime,
+                                                  CarrierName=t.TenancyName
                                               },
                                           };
 
@@ -325,15 +330,17 @@ namespace TACHYON.Shipping.ShippingRequestBids
 
         protected async Task<PagedResultDto<ViewShipperBidsReqDetailsOutputDto>> GetAllBids(PagedAndSortedResultRequestDto input, GetAllBidsInput input2)
         {
-            
-                var filterShippingRequestsBids = _shippingRequestsRepository.GetAll()
+            var tenants = _tenantsRepository.GetAll();
+
+            var tenantsNameList = tenants.Select(y => y.TenancyName).ToList();
+            var filterShippingRequestsBids = _shippingRequestsRepository.GetAll()
                     .Include(x => x.ShippingRequestBidStatusFK)
                     .Where(x => x.IsBid == true)
                     .WhereIf(input2.TruckTypeId != null, x => x.TrucksTypeId == input2.TruckTypeId)
                     .WhereIf(input2.TruckSubTypeId != null, x => x.TruckSubtypeId != null && x.TruckSubtypeId == input2.TruckSubTypeId)
                     .WhereIf(input2.TruckTypeId != null, x => x.TransportTypeId != null && x.TransportTypeId == input2.TransportType)
-                    .WhereIf(input2.TruckTypeId != null, x => x.TransportSubtypeId != null && x.TransportSubtypeId == input2.TransportSubType);
-
+                    .WhereIf(input2.TruckTypeId != null, x => x.TransportSubtypeId != null && x.TransportSubtypeId == input2.TransportSubType)
+                    .WhereIf(!string.IsNullOrWhiteSpace(input2.Filter),x=> tenantsNameList.Contains(input2.Filter));
 
                 //Get Shipping Requests that carrier bid to them only
                 if (input2.IsMyBidsOnly)
@@ -361,7 +368,7 @@ namespace TACHYON.Shipping.ShippingRequestBids
                     .OrderBy(input.Sorting ?? "id asc")
                     .PageBy(input);
 
-                var tenants = _tenantsRepository.GetAll();
+                
                 var shippingRequestBids = from o in pagedAndFilteredShippingRequestsBids
                                           join t in tenants on o.TenantId equals t.Id
                                           select new ViewShipperBidsReqDetailsOutputDto()

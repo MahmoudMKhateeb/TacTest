@@ -6,6 +6,7 @@ namespace TACHYON.Shipping.ShippingRequestBids.Dtos
 {
     public class GetAllBidsInput
     {
+        public string Filter { get; set; }
         public bool IsMatchingOnly { get; set; }
         public bool IsMyBidsOnly { get; set; }
         public long? TruckTypeId { get; set; }

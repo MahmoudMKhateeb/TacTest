@@ -97,7 +97,7 @@ namespace TACHYON.Notifications
                     { "fileName", fileName }
                 });
         }
-        public async Task CreateBidRequest(UserIdentifier argsUser, long shippingRequestId)
+        public async Task CreateBidRequest(UserIdentifier argsUser, long shippingRequestBidId)
         {
             var notificationData = new LocalizableMessageNotificationData(
                 new LocalizableString(
@@ -105,8 +105,8 @@ namespace TACHYON.Notifications
                     TACHYONConsts.LocalizationSourceName
                     )
                 );
-            notificationData["shippingRequestId"] = shippingRequestId;
-            await _notificationPublisher.PublishAsync(AppNotificationNames.CancelShippingRequestBid,
+            notificationData["shippingRequestBidId"] = shippingRequestBidId;
+            await _notificationPublisher.PublishAsync(AppNotificationNames.CreateShippingRequestBid,
                 notificationData,
                 userIds: new[] { argsUser });
         }

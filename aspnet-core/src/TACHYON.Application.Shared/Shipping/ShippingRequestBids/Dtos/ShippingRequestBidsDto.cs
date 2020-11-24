@@ -14,6 +14,7 @@ namespace TACHYON.Shipping.ShippingRequestBids.Dtos
         public string CancledReason { get; set; }
         public DateTime? AcceptedDate { get; set; }
         public DateTime? CanceledDate { get; set; }
-
+        public DateTime CreationTime { get; set; }
+        public string CarrierName { get; set; }
     }
 }
