@@ -40,6 +40,7 @@ using TACHYON.Shipping.ShippingRequestBids.Dtos;
 using Twilio.Http;
 using Abp.Timing;
 using TACHYON.Trucks;
+using NPOI.SS.Formula.Functions;
 
 namespace TACHYON.Shipping.ShippingRequests
 {
@@ -119,6 +120,7 @@ namespace TACHYON.Shipping.ShippingRequests
         {
             var filteredShippingRequests = _shippingRequestRepository.GetAll()
                 .Include(e => e.RouteFk)
+                .Include(e => e.ShippingRequestBids)
                 .WhereIf(!string.IsNullOrWhiteSpace(input.Filter), e => false)
                 .WhereIf(input.MinVasFilter != null, e => e.Vas >= input.MinVasFilter)
                 .WhereIf(input.MaxVasFilter != null, e => e.Vas <= input.MaxVasFilter)
@@ -128,8 +130,8 @@ namespace TACHYON.Shipping.ShippingRequests
                 .OrderBy(input.Sorting ?? "id asc")
                 .PageBy(input);
 
+            var tenants = _tenantRepository.GetAll();
             var shippingRequests = from o in pagedAndFilteredShippingRequests
-
                                    select new GetShippingRequestForViewDto()
                                    {
                                        ShippingRequest = new ShippingRequestDto
@@ -142,6 +144,20 @@ namespace TACHYON.Shipping.ShippingRequests
                                            IsRejected = o.IsRejected,
                                            IsPriceAccepted = o.IsPriceAccepted
                                        },
+                                       ShippingRequestBidDtoList = (from b in o.ShippingRequestBids
+                                                                    join t in tenants on b.TenantId equals t.Id
+                                                                    select new ShippingRequestBidsDto() {
+                                                                        CarrierName = t.TenancyName,
+                                                                        CanceledDate = b.CanceledDate,
+                                                                        AcceptedDate = b.AcceptedDate,
+                                                                        CancledReason = b.CancledReason,
+                                                                        CreationTime = b.CreationTime,
+                                                                        Id = b.Id,
+                                                                        IsAccepted = b.IsAccepted,
+                                                                        IsRejected = b.IsRejected,
+                                                                        price = b.price,
+                                                                        ShippingRequestId = b.ShippingRequestId
+                                                                    }).ToList() 
                                    };
 
             var totalCount = await filteredShippingRequests.CountAsync();
