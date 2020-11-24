@@ -100,6 +100,10 @@ export class LoginComponent extends AppComponentBase implements OnInit {
     this.loginService.externalAuthenticate(provider);
   }
 
+  goToHome(): void {
+    (window as any).location.href = '/';
+  }
+
   get useCaptcha(): boolean {
     return this.setting.getBoolean('App.UserManagement.UseCaptchaOnLogin');
   }
