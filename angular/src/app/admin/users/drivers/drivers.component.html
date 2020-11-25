@@ -46,7 +46,7 @@
         </div>
 
         <button (click)="createUser()" *ngIf="'Pages.Administration.Users.Create' | permission" class="btn btn-primary">
-          <i class="fa fa-plus"></i> {{ 'CreateNewDriver' | localize }}
+          <i class="fa fa-plus"></i> {{ 'Create' | localize }} {{ 'NewDriver' | localize }}
         </button>
       </div>
     </sub-header>
@@ -161,7 +161,7 @@
                         <ul class="dropdown-menu" *dropdownMenu>
                           <li>
                             <a href="javascript:;" class="dropdown-item" (click)="viewOrEditEntityDocumentsModal.show(record.id, 'Driver')">{{
-                              l('View Documents')
+                              l('ViewDocuments')
                             }}</a>
                           </li>
                           <li>
