@@ -10,6 +10,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Dynamic.Core;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Abp;
 using Abp.Collections.Extensions;
@@ -118,54 +119,42 @@ namespace TACHYON.Shipping.ShippingRequests
 
         protected virtual async Task<PagedResultDto<GetShippingRequestForViewDto>> GetAllPagedResultDto(GetAllShippingRequestsInput input)
         {
-            var filteredShippingRequests = _shippingRequestRepository.GetAll()
+            using (CurrentUnitOfWork.DisableFilter(AbpDataFilters.MustHaveTenant))
+            {
+                var filteredShippingRequests = _shippingRequestRepository.GetAll()
+                .Include(x => x.ShippingRequestBids)
+                .ThenInclude(b => b.Tenant)
                 .Include(e => e.RouteFk)
-                .Include(e => e.ShippingRequestBids)
+                //get only this shipper shippingRequest
+                .Where(x => x.TenantId == AbpSession.TenantId)
                 .WhereIf(!string.IsNullOrWhiteSpace(input.Filter), e => false)
                 .WhereIf(input.MinVasFilter != null, e => e.Vas >= input.MinVasFilter)
                 .WhereIf(input.MaxVasFilter != null, e => e.Vas <= input.MaxVasFilter)
                 .WhereIf(input.IsTachyonDeal.HasValue, e => e.IsTachyonDeal == input.IsTachyonDeal.Value);
 
-            var pagedAndFilteredShippingRequests = filteredShippingRequests
-                .OrderBy(input.Sorting ?? "id asc")
-                .PageBy(input);
 
-            var tenants = _tenantRepository.GetAll();
-            var shippingRequests = from o in pagedAndFilteredShippingRequests
-                                   select new GetShippingRequestForViewDto()
-                                   {
-                                       ShippingRequest = new ShippingRequestDto
-                                       {
-                                           Vas = o.Vas,
-                                           Id = o.Id,
-                                           IsBid = o.IsBid,
-                                           IsTachyonDeal = o.IsTachyonDeal,
-                                           Price = o.Price,
-                                           IsRejected = o.IsRejected,
-                                           IsPriceAccepted = o.IsPriceAccepted
-                                       },
-                                       ShippingRequestBidDtoList = (from b in o.ShippingRequestBids
-                                                                    join t in tenants on b.TenantId equals t.Id
-                                                                    select new ShippingRequestBidsDto() {
-                                                                        CarrierName = t.TenancyName,
-                                                                        CanceledDate = b.CanceledDate,
-                                                                        AcceptedDate = b.AcceptedDate,
-                                                                        CancledReason = b.CancledReason,
-                                                                        CreationTime = b.CreationTime,
-                                                                        Id = b.Id,
-                                                                        IsAccepted = b.IsAccepted,
-                                                                        IsRejected = b.IsRejected,
-                                                                        price = b.price,
-                                                                        ShippingRequestId = b.ShippingRequestId
-                                                                    }).ToList() 
-                                   };
+                //paging
+                var pagedAndFilteredShippingRequests = filteredShippingRequests
+                    .OrderBy(input.Sorting ?? "id asc")
+                    .PageBy(input);
 
-            var totalCount = await filteredShippingRequests.CountAsync();
 
-            return new PagedResultDto<GetShippingRequestForViewDto>(
-                totalCount,
-                await shippingRequests.ToListAsync()
-            );
+
+                // select result
+                var shippingRequests = (await pagedAndFilteredShippingRequests.ToListAsync())
+                    .Select(x =>
+                    new GetShippingRequestForViewDto
+                    {
+                        ShippingRequest = ObjectMapper.Map<ShippingRequestDto>(x),
+                        ShippingRequestBidDtoList = ObjectMapper.Map<List<ShippingRequestBidsDto>>(x.ShippingRequestBids)
+                    }
+                );
+
+
+                var totalCount = await filteredShippingRequests.CountAsync();
+
+                return new PagedResultDto<GetShippingRequestForViewDto>(0, shippingRequests.ToList());
+            }
         }
 
         public async Task<GetShippingRequestForViewDto> GetShippingRequestForView(long id)
@@ -274,7 +263,7 @@ namespace TACHYON.Shipping.ShippingRequests
                 shippingRequest.RouteFk.TenantId = (int)AbpSession.TenantId;
                 shippingRequest.ShippingRequestStatusId = TACHYONConsts.ShippingRequestStatusStandBy;
                 // Bid start-date
-                
+
                 // Bid status
                 if (shippingRequest.IsBid)
                 {
@@ -283,7 +272,7 @@ namespace TACHYON.Shipping.ShippingRequests
                         shippingRequest.BidStartDate = Clock.Now.Date;
                     }
                     shippingRequest.ShippingRequestBidStatusId = shippingRequest.BidStartDate.Value.Date == Clock.Now.Date ? TACHYONConsts.ShippingRequestStatusOnGoing : TACHYONConsts.ShippingRequestStatusStandBy;
-                    
+
                 }
             }
 

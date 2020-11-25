@@ -346,7 +346,7 @@ namespace TACHYON.Shipping.ShippingRequestBids
                 if (input2.IsMyBidsOnly)
                 {
                     filterShippingRequestsBids=filterShippingRequestsBids
-                    .Where(x => x.ShippingRequestBids.Any(x => x.TenantId == AbpSession.TenantId));
+                    .Where(x => x.ShippingRequestBids.Any(b => b.TenantId == AbpSession.TenantId));
                 }
 
                 

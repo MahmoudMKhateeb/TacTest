@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Text;
 using TACHYON.Authorization.Users;
+using TACHYON.MultiTenancy;
 using TACHYON.Shipping.ShippingRequests;
 
 namespace TACHYON.Shipping.ShippingRequestBids
@@ -13,6 +14,10 @@ namespace TACHYON.Shipping.ShippingRequestBids
     public class ShippingRequestBid :FullAuditedEntity<long>,IMustHaveTenant,IHasIsCanceled
     {
         public int TenantId { get; set; }
+
+        [ForeignKey("TenantId")]
+        public Tenant  Tenant { get; set; }
+
         public long ShippingRequestId { get; set; }
         [ForeignKey("ShippingRequestId")]
         public ShippingRequest ShippingRequestFk { get; set; }
