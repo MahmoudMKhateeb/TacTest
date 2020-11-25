@@ -1,36 +1,37 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <localizationDictionary culture="ar">
-  <texts> 
+  <texts>
 	  	<![CDATA[ Tachyon: Document files Page Start]]>
-	        <text name="DocumentFiles">Document Files</text>
+	        <text name="DocumentFiles">المستندات</text>
 	        <text name="DocumentFilesHeaderInfo">DocumentFilesHeaderInfo</text>
-		    <text name="DocumentName">Document Name</text>
-	        <text name="SubmitterTenant">Submitter Tenant</text>
-	        <text name="TruckID">Truck ID</text>
-	        <text name="TrailerCode">Trailer Code</text>
-	        <text name="DriverName">Driver Name</text>
-            <text name="IsAccepted">Is Accepted</text>
-            <text name="Accept">Accept</text>
-            <text name="Reject">Reject</text>
-            <text name="DocumentFile">Document File</text>
-            <text name="NewDocumentFile">New Document File</text>
-	  	  <text name="AddDocument">Add Document</text>
+		    <text name="DocumentName">أسم المستند</text>
+	        <text name="SubmitterTenant">الشركة التي قامت بالارسال </text>
+	        <text name="TruckID">الرقم المميز للشاحنة</text>
+	        <text name="TrailerCode">رقم المقطورة</text>
+	        <text name="DriverName">إسم السائق</text>
+            <text name="IsAccepted">تم قبوله</text>
+            <text name="Accept">قبول</text>
+            <text name="Reject">رفض</text>
+            <text name="DocumentFile">مستند</text>
+            <text name="NewDocumentFile">مستند جديد</text>
+	  	  <text name="AddDocument">إضافة مستند</text>
 
 	   <![CDATA[ Tachyon: Document files Page End]]>
 	  
 	  <![CDATA[Tachyon:Common Start]]>
-         <text name="ViewDetails">View Details</text>
-	  	  <text name="Details">View Details</text>
+         <text name="ViewDetails">مشاهدة التفاصيل</text>
+	  	  <text name="Details">التفاصيل</text>
          <text name="TotalRecordsCount">المجموع: {0}</text>
-	     <text name="Create">Create</text>
+	     <text name="Create">إنشاء</text>
          <text name="Cancel">إلغاء</text>
          <text name="Close">إغلاق</text>
 	     <text name="ShowAdvancedFilters">إظهار الفلاتر المتقدمة</text>
          <text name="HideAdvancedFilters">إخفاء الفلاتر المتقدمة</text>
          <text name="All">الجميع</text>
-	     <text name="True">True</text>
-	     <text name="False">False</text>
-	     <text name="Edition">نسخة</text>
+	     <text name="True">صحيح</text>
+	     <text name="False">خطأ</text>
+	     <text name="Edition">نوع الإشتراك</text>
+    	 <text name="Language">لغة</text>
 	  <![CDATA[Tachyon:Common End]]>
 	  
 	  
@@ -45,8 +46,12 @@
 	  <text name="DocumentEntityName">Document Entity Name</text>
 	  <text name="DocumentsEntity">Documents Entity</text>
 	  <![CDATA[Tachyon:Document Entites Page End]]>
-	  
-	  
+
+	  <![CDATA[ Tachyon: Document Translation Page Start]]>
+	  <text name="DocumentTypeTranslations">Document Type Translations</text>
+	  <text name="DocumentTypeTranslationsHeaderInfo">Document Type Translations Header Info</text>
+	  <text name="NewDocumentTypeTranslation">New Document Type Translation</text>
+	  <![CDATA[ Tachyon: Document Translation Page End]]>
 	  
 	 <![CDATA[Tachyon:Document Types Page Start]]>
 	  <text name="DocumentTypes">Document Types</text>
@@ -319,7 +324,6 @@
     <text name="DeletingLanguages">حذف اللغة</text>
     <text name="ChangingTexts">تغيير النصوص</text>
     <text name="SuccessfullySaved">تم الحـفظ بنجاح</text>
-    <text name="Language">لغة</text>
     <text name="Flag">علم</text>
     <text name="SetAsDefaultLanguage">تعيين اللغة الافتراضية</text>
     <text name="InvlalidLanguageCode">رمز اللغة غير صحيح</text>

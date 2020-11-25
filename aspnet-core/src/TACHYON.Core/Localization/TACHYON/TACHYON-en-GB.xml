@@ -31,6 +31,7 @@
 	  <text name="True">True</text>
 	  <text name="False">False</text>
 	  <text name="Edition">Edition</text>
+	  <text name="Language">Language</text>
 	  <![CDATA[Tachyon:Common End]]>
 	  
 	  <![CDATA[Tachyon:Documents Common Start]]>
@@ -67,7 +68,13 @@
 	  <text name="ToleranceDaysBeforeDeactivateAfterExpiration">Tolerance Days Before Deactivate After Expiration</text>
 	  <text name="DeactivateAccountUponexpiration">Deactivate Account Upon expiration</text>
 	  <![CDATA[Tachyon:Document Types Page End]]>
-
+	  
+	  <![CDATA[ Tachyon: Document Translation Page Start]]>
+	  <text name="DocumentTypeTranslations">Document Type Translations</text>
+	  <text name="DocumentTypeTranslationsHeaderInfo">Document Type Translations Header Info</text>
+	  <text name="NewDocumentTypeTranslation">New Document Type Translation</text>
+	  <![CDATA[ Tachyon: Document Translation Page End]]>
+	  
 	  <text name="HomePage">Home page</text>
     <text name="AboutUs">About us</text>
     <text name="Administration">Administration</text>
@@ -319,7 +326,6 @@
     <text name="DeletingLanguages">Deleting language</text>
     <text name="ChangingTexts">Changing texts</text>
     <text name="SuccessfullySaved">Successfully saved.</text>
-    <text name="Language">Language</text>
     <text name="Flag">Flag</text>
     <text name="SetAsDefaultLanguage">Set as default language</text>
     <text name="InvlalidLanguageCode">Invalid language code.</text>

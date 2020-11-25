@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
-<localizationDictionary culture="en">	  	<texts>	<![CDATA[ Tachyon: Document files Page Start]]>
+<localizationDictionary culture="en">	  	<texts>		<![CDATA[ Tachyon: Document files Page Start]]>
 	   <text name="DocumentFiles">Document Files</text>
 	   <text name="DocumentFilesHeaderInfo">DocumentFilesHeaderInfo</text>
 	   <text name="DocumentName">Document Name</text>
@@ -28,6 +28,7 @@
         <text name="True">True</text>
         <text name="False">False</text>
 		 <text name="Edition">Edition</text>
+		<text name="Language">Language</text>
 	  <![CDATA[Tachyon:Common End]]>
 	  <![CDATA[Tachyon:Documents Common Start]]>
 	     <text name="Documents">Documents</text>
@@ -63,7 +64,18 @@
 	  <text name="ToleranceDaysBeforeDeactivateAfterExpiration">Tolerance Days Before Deactivate After Expiration</text>
 	  <text name="DeactivateAccountUponexpiration">Deactivate Account Upon expiration</text>
 	  <![CDATA[Tachyon:Document Types Page End]]>
-	  	      <text name="TruckCapacities">Truck capacities</text>
+
+		
+
+		<![CDATA[ Tachyon: Document Translation Page Start]]>
+		<text name="DocumentTypeTranslations">Document Type Translations</text>
+		<text name="DocumentTypeTranslationsHeaderInfo">Document Type Translations Header Info</text>
+		<text name="NewDocumentTypeTranslation">New Document Type Translation</text>
+		<![CDATA[ Tachyon: Document Translation Page End]]>
+
+
+
+		<text name="TruckCapacities">Truck capacities</text>
     <text name="Capacity">Capacity</text>
     <text name="TACHYON.TruckCapacities.Capacity">Capacity</text>
     <text name="CapacitiesHeaderInfo">Capacities header info</text>
@@ -96,11 +108,8 @@
     <text name="CreateNewTransportType">Create new transport type</text>
     <text name="EditTransportType">Edit transport type</text>
     <text name="DeleteTransportType">Delete transport type</text>
-    <text name="DocumentTypeTranslations">Document type translations</text>
     <text name="DocumentTypeTranslation">Document type translation</text>
     <text name="TACHYON.DocumentTypeTranslations.DocumentTypeTranslation">DocumentTypeTranslation</text>
-    <text name="DocumentTypeTranslationsHeaderInfo">Document type translations header info</text>
-    <text name="CreateNewDocumentTypeTranslation">Create new document type translation</text>
     <text name="EditDocumentTypeTranslation">Edit document type translation</text>
     <text name="DeleteDocumentTypeTranslation">Delete document type translation</text>
     <text name="TACHYON.DocumentsEntities.DocumentsEntity">DocumentsEntity</text>
@@ -562,14 +571,10 @@
     <text name="Apply">Apply</text>
     <text name="CustomRange">Custom range</text>
     <text name="DashboardNoteForMpaVersion">
-      <![CDATA[
-      See Demo for Multi-Page Application version with <strong>ASP.NET MVC</strong> and <strong>jQuery</strong>.
-      ]]>
+      <![CDATA[      See Demo for Multi-Page Application version with <strong>ASP.NET MVC</strong> and <strong>jQuery</strong>.      ]]>
     </text>
     <text name="DashboardNoteForSpaVersion">
-      <![CDATA[
-      Notice: There is also a <strong>Single-Page Application</strong> version built using ASP.NET MVC and <strong>AngularJs</strong>.
-      ]]>
+      <![CDATA[      Notice: There is also a <strong>Single-Page Application</strong> version built using ASP.NET MVC and <strong>AngularJs</strong>.      ]]>
     </text>
     <text name="SeeDemo">See demo</text>
     <text name="Editions">Editions</text>
@@ -597,7 +602,7 @@
     <text name="DeletingLanguages">Deleting language</text>
     <text name="ChangingTexts">Changing texts</text>
     <text name="SuccessfullySaved">Successfully saved.</text>
-    <text name="Language">Language</text>
+   
     <text name="Flag">Flag</text>
     <text name="SetAsDefaultLanguage">Set as default language</text>
     <text name="InvlalidLanguageCode">Invalid language code.</text>
@@ -744,14 +749,7 @@
     <text name="YouDontHaveAnyFriend">You don't have any friends. Write a username to above input box and click "Add Friend" button.</text>
     <text name="YouDontHaveAnyBlockedFriend">You don't have any blocked users. In order to block a friend, select a friend and select block from actions dropdown.</text>
     <text name="ChatUserSearch_Hint">
-      <![CDATA[
-      Write only username for same tenant users, <br>
-      <strong>[tenancyName]\[userName]</strong> for other tenant's users <br><br>
-      for example: <br>
-      .\admin -> for host admin <br>
-      Test\admin -> for test tenant's admin <br>
-      admin -> for your tenant's admin
-      ]]>
+      <![CDATA[      Write only username for same tenant users, <br>      <strong>[tenancyName]\[userName]</strong> for other tenant's users <br><br>      for example: <br>      .\admin -> for host admin <br>      Test\admin -> for test tenant's admin <br>      admin -> for your tenant's admin      ]]>
     </text>
     <text name="AddFriend">Add friend</text>
     <text name="TypeAMessageHere">Type a message here...</text>
