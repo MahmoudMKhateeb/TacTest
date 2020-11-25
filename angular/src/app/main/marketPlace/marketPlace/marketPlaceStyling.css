@@ -26,20 +26,20 @@
   border-color: transparent !important;
 }
 
-.modal-body {
-  padding: 0px !important;
-  margin: 0px !important;
-  /*margin-top: 20px !important;*/
-  min-width: 400px !important;
-}
-.modal-dialog {
-  position: relative !important;
-  display: table !important;
-  overflow-y: auto !important;
-  overflow-x: auto !important;
-  width: auto !important;
-}
+/*.modal-body {*/
+/*  padding: 0px !important;*/
+/*  margin: 0px !important;*/
+/*  !*margin-top: 20px !important;*!*/
+/*  min-width: 400px !important;*/
+/*}*/
+/*.modal-dialog {*/
+/*  position: relative !important;*/
+/*  display: table !important;*/
+/*  overflow-y: auto !important;*/
+/*  overflow-x: auto !important;*/
+/*  width: auto !important;*/
+/*}*/
 
-.modal-footer {
-  margin-top: -10px !important;
-}
+/*.modal-footer {*/
+/*  margin-top: -10px !important;*/
+/*}*/

@@ -133,6 +133,7 @@ import { AdminModule } from '@app/admin/admin.module';
 
 import { MarketplaceComponent } from '@app/main/marketPlace/marketPlace/marketplace.component';
 import { ViewShippingRequestDetailsComponent } from '@app/main/marketPlace/marketPlace/ViewShippingRequestDetails.component';
+import { ViewAllCarrierBidsComponent } from '@app/main/marketPlace/marketPlace/ViewAllCarrierBids.component';
 
 NgxBootstrapDatePickerConfigService.registerNgxBootstrapDatePickerLocales();
 
@@ -276,6 +277,7 @@ NgxBootstrapDatePickerConfigService.registerNgxBootstrapDatePickerLocales();
 
     MarketplaceComponent,
     ViewShippingRequestDetailsComponent,
+    ViewAllCarrierBidsComponent,
   ],
   providers: [
     { provide: BsDatepickerConfig, useFactory: NgxBootstrapDatePickerConfigService.getDatepickerConfig },

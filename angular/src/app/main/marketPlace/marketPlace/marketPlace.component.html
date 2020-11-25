@@ -1,361 +1,182 @@
 <div [@routerTransition]>
-  <div class="content d-flex flex-column flex-column-fluid" id="kt_content">
+  <div class="content d-flex flex-column flex-column-fluid">
     <!--begin::Subheader-->
-    <sub-header [title]="'MarketPlace' | localize" [description]="'marketPlaceHeaderInfo' | localize"> </sub-header>
+    <sub-header [title]="'MarketPlace' | localize" [description]="'marketPlaceHeaderInfo' | localize">
+      <div role="actions">
+        <button class="btn btn-primary" (click)="ViewAllCarrierBidsModal.show()">
+          <i class="flaticon2-indent-dots"></i> {{ l('My Bidding History') }}
+        </button>
+      </div>
+    </sub-header>
     <!--end::Subheader-->
     <!--begin::Entry-->
     <div class="d-flex flex-column-fluid">
       <!--begin::Container-->
       <div class="container-fluid">
-        <div class="card card-custom gutter-b">
-          <div class="card-body">
-            <div class="d-flex">
-              <!--begin: Pic-->
-              <div class="flex-shrink-0 mr-7 mt-lg-0 mt-3">
-                <div class="symbol symbol-50 symbol-lg-120">
-                  <!--                  <img alt="Pic" src="/metronic/theme/html/demo1/dist/assets/media/project-logos/3.png" />-->
-                  <span class="font-size-h1 symbol-label font-weight-boldest">AD</span>
-                </div>
-                <div class="symbol symbol-50 symbol-lg-120 symbol-primary d-none">
-                  <span class="font-size-h3 symbol-label font-weight-boldest">JM</span>
-                </div>
-              </div>
-              <!--end: Pic-->
-              <!--begin: Info-->
-              <div class="flex-grow-1">
-                <!--begin: Title-->
-                <div class="d-flex align-items-center justify-content-between flex-wrap">
-                  <div class="mr-3">
-                    <!--begin::Name-->
-                    <a href="#" class="d-flex align-items-center text-dark text-hover-primary font-size-h5 font-weight-bold mr-3">
-                      Carrier Name <i class="flaticon2-correct text-success icon-md ml-2"></i
-                    ></a>
-                    <!--end::Name-->
-                    <!--begin::Contacts-->
-                    <div class="d-flex flex-wrap my-2">
-                      <a href="#" class="text-muted text-hover-primary font-weight-bold mr-lg-8 mr-5 mb-lg-0 mb-2">
-                        <span class="svg-icon svg-icon-md svg-icon-gray-500 mr-1">
-                          <!--begin::Svg Icon | path:/metronic/theme/html/demo1/dist/assets/media/svg/icons/Communication/Mail-notification.svg-->
-                          <svg
-                            xmlns="http://www.w3.org/2000/svg"
-                            xmlns:xlink="http://www.w3.org/1999/xlink"
-                            width="24px"
-                            height="24px"
-                            viewBox="0 0 24 24"
-                            version="1.1"
-                          >
-                            <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
-                              <rect x="0" y="0" width="24" height="24"></rect>
-                              <path
-                                d="M21,12.0829584 C20.6747915,12.0283988 20.3407122,12 20,12 C16.6862915,12 14,14.6862915 14,18 C14,18.3407122 14.0283988,18.6747915 14.0829584,19 L5,19 C3.8954305,19 3,18.1045695 3,17 L3,8 C3,6.8954305 3.8954305,6 5,6 L19,6 C20.1045695,6 21,6.8954305 21,8 L21,12.0829584 Z M18.1444251,7.83964668 L12,11.1481833 L5.85557487,7.83964668 C5.4908718,7.6432681 5.03602525,7.77972206 4.83964668,8.14442513 C4.6432681,8.5091282 4.77972206,8.96397475 5.14442513,9.16035332 L11.6444251,12.6603533 C11.8664074,12.7798822 12.1335926,12.7798822 12.3555749,12.6603533 L18.8555749,9.16035332 C19.2202779,8.96397475 19.3567319,8.5091282 19.1603533,8.14442513 C18.9639747,7.77972206 18.5091282,7.6432681 18.1444251,7.83964668 Z"
-                                fill="#000000"
-                              ></path>
-                              <circle fill="#000000" opacity="0.3" cx="19.5" cy="17.5" r="2.5"></circle>
-                            </g>
-                          </svg>
-                          <!--end::Svg Icon--> </span
-                        >carrier@mail.com</a
-                      >
-                      <a href="#" class="text-muted text-hover-primary font-weight-bold mr-lg-8 mr-5 mb-lg-0 mb-2">
-                        <span class="svg-icon svg-icon-md svg-icon-gray-500 mr-1">
-                          <!--begin::Svg Icon | path:/metronic/theme/html/demo1/dist/assets/media/svg/icons/General/Lock.svg-->
-                          <svg
-                            xmlns="http://www.w3.org/2000/svg"
-                            xmlns:xlink="http://www.w3.org/1999/xlink"
-                            width="24px"
-                            height="24px"
-                            viewBox="0 0 24 24"
-                            version="1.1"
-                          >
-                            <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
-                              <mask fill="white">
-                                <use xlink:href="#path-1"></use>
-                              </mask>
-                              <g></g>
-                              <path
-                                d="M7,10 L7,8 C7,5.23857625 9.23857625,3 12,3 C14.7614237,3 17,5.23857625 17,8 L17,10 L18,10 C19.1045695,10 20,10.8954305 20,12 L20,18 C20,19.1045695 19.1045695,20 18,20 L6,20 C4.8954305,20 4,19.1045695 4,18 L4,12 C4,10.8954305 4.8954305,10 6,10 L7,10 Z M12,5 C10.3431458,5 9,6.34314575 9,8 L9,10 L15,10 L15,8 C15,6.34314575 13.6568542,5 12,5 Z"
-                                fill="#000000"
-                              ></path>
-                            </g>
-                          </svg>
-                          <!--end::Svg Icon--> </span
-                        >PR Manager</a
-                      >
-                      <a href="#" class="text-muted text-hover-primary font-weight-bold">
-                        <span class="svg-icon svg-icon-md svg-icon-gray-500 mr-1">
-                          <!--begin::Svg Icon | path:/metronic/theme/html/demo1/dist/assets/media/svg/icons/Map/Marker2.svg-->
-                          <svg
-                            xmlns="http://www.w3.org/2000/svg"
-                            xmlns:xlink="http://www.w3.org/1999/xlink"
-                            width="24px"
-                            height="24px"
-                            viewBox="0 0 24 24"
-                            version="1.1"
-                          >
-                            <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
-                              <rect x="0" y="0" width="24" height="24"></rect>
-                              <path
-                                d="M9.82829464,16.6565893 C7.02541569,15.7427556 5,13.1079084 5,10 C5,6.13400675 8.13400675,3 12,3 C15.8659932,3 19,6.13400675 19,10 C19,13.1079084 16.9745843,15.7427556 14.1717054,16.6565893 L12,21 L9.82829464,16.6565893 Z M12,12 C13.1045695,12 14,11.1045695 14,10 C14,8.8954305 13.1045695,8 12,8 C10.8954305,8 10,8.8954305 10,10 C10,11.1045695 10.8954305,12 12,12 Z"
-                                fill="#000000"
-                              ></path>
-                            </g>
-                          </svg>
-                          <!--end::Svg Icon--> </span
-                        >Melbourne</a
-                      >
-                    </div>
-                    <!--end::Contacts-->
-                  </div>
-                  <div class="my-lg-0 my-1">
-                    <!--                    <a href="#" class="btn btn-sm btn-light-success font-weight-bolder text-uppercase mr-3">Reports</a>-->
-                    <a href="#" class="btn btn-sm btn-info font-weight-bolder text-uppercase">My Bidding History</a>
-                  </div>
-                </div>
-                <!--end: Title-->
-                <!--begin: Content-->
-                <div class="d-flex align-items-center flex-wrap justify-content-between">
-                  <div class="flex-grow-1 font-weight-bold text-dark-50 py-5 py-lg-2 mr-5">
-                    I distinguish three main text objectives could be merely to inform people. <br />A second could be persuade people. You want
-                    people to bay objective.
-                  </div>
-                </div>
-                <!--end: Content-->
-              </div>
-              <!--end: Info-->
-            </div>
-            <div class="separator separator-solid my-7"></div>
-            <!--begin: Items-->
-            <div class="d-flex align-items-center align-content-center flex-wrap">
-              <!--begin: Item-->
-              <div class="d-flex align-items-center flex-fill mr-5 my-1">
-                <span class="mr-4">
-                  <i class="flaticon-piggy-bank icon-2x text-muted font-weight-bold"></i>
-                </span>
-                <div class="d-flex flex-column text-dark-75">
-                  <span class="font-weight-bolder font-size-sm">Revenue</span>
-                  <span class="font-weight-bolder font-size-h5"> <span class="text-dark-50 font-weight-bold">$</span> {{ revenue }} </span>
-                </div>
-              </div>
-              <!--end: Item-->
-              <!--begin: Item-->
-              <div class="d-flex align-items-center flex-fill mr-5 my-1">
-                <span class="mr-4">
-                  <i class="flaticon-confetti icon-2x text-muted font-weight-bold"></i>
-                </span>
-                <div class="d-flex flex-column text-dark-75">
-                  <span class="font-weight-bolder font-size-sm">Expenses</span>
-                  <span class="font-weight-bolder font-size-h5"> <span class="text-dark-50 font-weight-bold">$</span> {{ expenses }} </span>
-                </div>
-              </div>
-              <!--end: Item-->
-              <!--begin: Item-->
-              <div class="d-flex align-items-center flex-fill mr-5 my-1">
-                <span class="mr-4">
-                  <i class="flaticon-pie-chart icon-2x text-muted font-weight-bold"></i>
-                </span>
-                <div class="d-flex flex-column text-dark-75">
-                  <span class="font-weight-bolder font-size-sm">Sales</span>
-                  <span class="font-weight-bolder font-size-h5"> <span class="text-dark-50 font-weight-bold">$</span> {{ totalSales }} </span>
-                </div>
-              </div>
-              <!--end: Item-->
-              <!--begin: Item-->
-              <div class="d-flex align-items-center flex-fill mr-5 my-1">
-                <span class="mr-4">
-                  <i class="flaticon-rocket icon-2x text-muted font-weight-bold"></i>
-                </span>
-                <div class="d-flex flex-column text-dark-75">
-                  <span class="font-weight-bolder font-size-sm">Growth</span>
-                  <span class="font-weight-bolder font-size-h5"> <span class="text-dark-50 font-weight-bold">$</span> {{ growth }} </span>
-                </div>
-              </div>
-              <!--end: Item-->
-              <!--begin: Item-->
-              <div class="d-flex align-items-center flex-fill mr-5 my-1">
-                <span class="mr-4">
-                  <i class="flaticon-chat-1 icon-2x text-muted font-weight-bold"></i>
-                </span>
-                <div class="d-flex flex-column">
-                  <span class="text-dark-75 font-weight-bolder font-size-sm">648 Comments</span>
-                  <a href="#" class="text-primary font-weight-bolder">View</a>
-                </div>
-              </div>
-              <!--end: Item-->
-            </div>
-            <!--begin: Items-->
-          </div>
-        </div>
-        <!--    begin::Table --card      -->
         <div class="card card-custom">
+          <!-- start::cardheader -->
+          <!-- end::cardHeader -->
           <!--begin::Body-->
           <div class="card-body">
-            <!--  Begin:: Search Form -->
-            <div class="col-lg-12 my-2">
-              <span class="clickable-item text-muted" *ngIf="!advancedFiltersAreShown" (click)="advancedFiltersAreShown = !advancedFiltersAreShown"
-                ><i class="fa fa-angle-down"></i> {{ l('ShowAdvancedFilters') }}</span
-              >
-              <span class="clickable-item text-muted" *ngIf="advancedFiltersAreShown" (click)="advancedFiltersAreShown = !advancedFiltersAreShown"
-                ><i class="fa fa-angle-up"></i> {{ l('HideAdvancedFilters') }}</span
-              >
-            </div>
-            <div class="mb-7">
-              <div class="row align-items-center" *ngIf="advancedFiltersAreShown">
-                <div class="col-lg-9 col-xl-8">
-                  <div class="row align-items-center">
-                    <div class="col-md-4 my-2 my-md-0">
-                      <div class="input-icon">
-                        <input type="text" class="form-control" placeholder="Search..." id="kt_datatable_search_query" />
-                        <span>
-                          <i class="flaticon2-search-1 text-muted"></i>
+            <!--  Start:advFiltters-->
+            <form class="form" autocomplete="off">
+              <div>
+                <div class="row align-items-center">
+                  <div class="col-xl-12">
+                    <div class="form-group m-form__group align-items-center">
+                      <div class="input-group">
+                        <input
+                          name="filterText"
+                          autoFocus
+                          class="form-control m-input"
+                          [(ngModel)]="filterText"
+                          [placeholder]="l('SearchWithThreeDot')"
+                          type="text"
+                        />
+                        <span class="input-group-btn">
+                          <button (click)="GetAllShippingRequests()" class="btn btn-primary" type="submit"><i class="flaticon-search-1"></i></button>
                         </span>
                       </div>
                     </div>
-                    <div class="col-md-4 my-2 my-md-0">
-                      <div class="d-flex align-items-center">
-                        <label class="mr-3 mb-0 d-none d-md-block">Status:</label>
-                        <div class="dropdown bootstrap-select form-control dropup">
-                          <select class="form-control" id="kt_datatable_search_status" tabindex="null">
-                            <option value="">All</option>
-                            <option value="1">Pending</option>
-                            <option value="2">Delivered</option>
-                            <option value="3">Canceled</option>
-                            <option value="4">Success</option>
-                            <option value="5">Info</option>
-                            <option value="6">Danger</option> </select
-                          ><button
-                            type="button"
-                            tabindex="-1"
-                            class="btn dropdown-toggle btn-light bs-placeholder"
-                            data-toggle="dropdown"
-                            role="combobox"
-                            aria-owns="bs-select-1"
-                            aria-haspopup="listbox"
-                            aria-expanded="false"
-                            data-id="kt_datatable_search_status"
-                            title="All"
-                          >
-                            <div class="filter-option">
-                              <div class="filter-option-inner"><div class="filter-option-inner-inner">All</div></div>
-                            </div>
-                          </button>
-                          <div class="dropdown-menu" style="max-height: 331.25px; overflow: hidden; min-height: 130px;">
-                            <div
-                              class="inner show"
-                              role="listbox"
-                              id="bs-select-1"
-                              tabindex="-1"
-                              aria-activedescendant="bs-select-1-0"
-                              style="max-height: 319.25px; overflow-y: auto; min-height: 118px;"
-                            >
-                              <ul class="dropdown-menu inner show" role="presentation" style="margin-top: 0px; margin-bottom: 0px;">
-                                <li class="selected active">
-                                  <a
-                                    role="option"
-                                    class="dropdown-item active selected"
-                                    id="bs-select-1-0"
-                                    tabindex="0"
-                                    aria-setsize="7"
-                                    aria-posinset="1"
-                                    aria-selected="true"
-                                    ><span class="text">All</span></a
-                                  >
-                                </li>
-                                <li>
-                                  <a role="option" class="dropdown-item" id="bs-select-1-1" tabindex="0" aria-setsize="7" aria-posinset="2"
-                                    ><span class="text">Pending</span></a
-                                  >
-                                </li>
-                                <li>
-                                  <a role="option" class="dropdown-item" id="bs-select-1-2" tabindex="0"><span class="text">Delivered</span></a>
-                                </li>
-                                <li>
-                                  <a role="option" class="dropdown-item" id="bs-select-1-3" tabindex="0"><span class="text">Canceled</span></a>
-                                </li>
-                                <li>
-                                  <a role="option" class="dropdown-item" id="bs-select-1-4" tabindex="0"><span class="text">Success</span></a>
-                                </li>
-                                <li>
-                                  <a role="option" class="dropdown-item" id="bs-select-1-5" tabindex="0"><span class="text">Info</span></a>
-                                </li>
-                                <li>
-                                  <a role="option" class="dropdown-item" id="bs-select-1-6" tabindex="0"><span class="text">Danger</span></a>
-                                </li>
-                              </ul>
-                            </div>
-                          </div>
+                  </div>
+                </div>
+                <div class="row justify-content-center" [hidden]="!advancedFiltersAreShown">
+                  <div class="col-md-4">
+                    <div class="form-group m-form__group">
+                      <label for="transportTypeDisplayName">{{ l('TransportType') }}</label>
+                      <select
+                        [(ngModel)]="TransportTypeFilter"
+                        class="form-control"
+                        name="truck.transportTypeId"
+                        (change)="GetTransportDropDownList('GetAllTransportSubTypes', TransportTypeFilter)"
+                        required
+                      >
+                        <option>{{ l('SelectATransportType') }}</option>
+                        <option *ngFor="let item of allTransportTypes" value="{{ item.id }}">{{ item.displayName }}</option>
+                      </select>
+                    </div>
+                  </div>
+                  <div class="col-md-4">
+                    <div class="form-group m-form__group">
+                      <label for="allTransportSubTypes">{{ l('TransportSubTypes') }}</label>
+                      <select
+                        [(ngModel)]="TruckSubTypeIdFilter"
+                        class="form-control"
+                        name="truck.transportSubtypeId"
+                        (change)="GetTransportDropDownList('GetAllTruckTypesByTransportSubTypes', TruckSubTypeIdFilter)"
+                        [disabled]="allTransportSubTypes ? null : true"
+                        required
+                      >
+                        <option value="0">{{ l('SelectATransportSubType') }}</option>
+                        <option *ngFor="let item of allTransportSubTypes" value="{{ item.id }}">{{ item.displayName }} </option>
+                      </select>
+                    </div>
+                  </div>
+                  <div class="col-md-4">
+                    <div class="form-group m-form__group">
+                      <label for="allTruckTypesByTransportSubtype">{{ l('TruckType') }}</label>
+                      <select
+                        [(ngModel)]="TruckTypeIdFilter"
+                        class="form-control"
+                        name="truck.trucksTypeId"
+                        (change)="GetTransportDropDownList('GetAllTruckSubTypesByTruckTypeId', TruckTypeIdFilter)"
+                        [disabled]="allTruckTypesByTransportSubtype ? null : true"
+                        required
+                      >
+                        <option value="0">{{ l('SelectTruckTypeByTransportSubtype') }}</option>
+                        <option *ngFor="let item of allTruckTypesByTransportSubtype" value="{{ item.id }}"> {{ item.displayName }}</option>
+                      </select>
+                    </div>
+                  </div>
+                  <div class="col-md-4">
+                    <div class="form-group m-form__group">
+                      <label for="allTruckSubTypesByTruckTypeIdDisplayName">{{ l('TruckSubType') }}</label>
+                      <select
+                        [(ngModel)]="TransportSubTypeFilter"
+                        class="form-control"
+                        name="truck.truckSubtypeId"
+                        (change)="GetTransportDropDownList('GetAllCapByTruckSybTypeId', TransportSubTypeFilter)"
+                        [disabled]="allTruckSubTypesByTruckTypeId ? null : true"
+                        required
+                      >
+                        <option value="0">{{ l('SelectTruckSubType') }}</option>
+                        <option *ngFor="let item of allTruckSubTypesByTruckTypeId" value="{{ item.id }}"> {{ item.displayName }}</option>
+                      </select>
+                    </div>
+                  </div>
+                  <div class="col-md-4">
+                    <div class="form-group m-form__group">
+                      <label for="truck.capacityId">{{ l('Capacity') }}</label>
+                      <select
+                        [(ngModel)]="CapacityIdFillter"
+                        class="form-control"
+                        name="truck.capacityId"
+                        [disabled]="allTrucksCapByTruckSubTypeId ? null : true"
+                        required
+                      >
+                        <option value="0">{{ l('SelectTruckCapByTruckSubType') }}</option>
+                        <option *ngFor="let item of allTrucksCapByTruckSubTypeId" value="{{ item.id }}">{{ item.displayName }} </option>
+                      </select>
+                    </div>
+                  </div>
+                  <div class="col-md-4 mt-5">
+                    <div class="row">
+                      <div class="col-md-6">
+                        <div class="form-group form-inline my-5">
+                          <label for="MatchingBidsOnly">{{ l('MatchingBidsOnly') }}</label>
+                          <span class="switch switch-sm switch-outline switch-icon switch-danger ml-2">
+                            <label>
+                              <input
+                                id="MatchingBidsOnly"
+                                type="checkbox"
+                                name="MatchingBidsOnly"
+                                [checked]="MatchingBidOnlyFilter"
+                                [(ngModel)]="MatchingBidOnlyFilter"
+                              />
+                              <span></span>
+                            </label>
+                          </span>
                         </div>
                       </div>
-                    </div>
-                    <div class="col-md-4 my-2 my-md-0">
-                      <div class="d-flex align-items-center">
-                        <label class="mr-3 mb-0 d-none d-md-block">Type:</label>
-                        <div class="dropdown bootstrap-select form-control">
-                          <select class="form-control" id="kt_datatable_search_type" tabindex="null">
-                            <option value="">All</option>
-                            <option value="1">Online</option>
-                            <option value="2">Retail</option>
-                            <option value="3">Direct</option> </select
-                          ><button
-                            type="button"
-                            tabindex="-1"
-                            class="btn dropdown-toggle btn-light bs-placeholder"
-                            data-toggle="dropdown"
-                            role="combobox"
-                            aria-owns="bs-select-2"
-                            aria-haspopup="listbox"
-                            aria-expanded="false"
-                            data-id="kt_datatable_search_type"
-                            title="All"
-                          >
-                            <div class="filter-option">
-                              <div class="filter-option-inner"><div class="filter-option-inner-inner">All</div></div>
-                            </div>
-                          </button>
-                          <div class="dropdown-menu" style="max-height: 268.75px; overflow: hidden; min-height: 130px;">
-                            <div
-                              class="inner show"
-                              role="listbox"
-                              id="bs-select-2"
-                              tabindex="-1"
-                              aria-activedescendant="bs-select-2-0"
-                              style="max-height: 256.75px; overflow-y: auto; min-height: 118px;"
-                            >
-                              <ul class="dropdown-menu inner show" role="presentation" style="margin-top: 0px; margin-bottom: 0px;">
-                                <li class="selected active">
-                                  <a
-                                    role="option"
-                                    class="dropdown-item active selected"
-                                    id="bs-select-2-0"
-                                    tabindex="0"
-                                    aria-setsize="4"
-                                    aria-posinset="1"
-                                    aria-selected="true"
-                                    ><span class="text">All</span></a
-                                  >
-                                </li>
-                                <li>
-                                  <a role="option" class="dropdown-item" id="bs-select-2-1" tabindex="0"><span class="text">Online</span></a>
-                                </li>
-                                <li>
-                                  <a role="option" class="dropdown-item" id="bs-select-2-2" tabindex="0"><span class="text">Retail</span></a>
-                                </li>
-                                <li>
-                                  <a role="option" class="dropdown-item" id="bs-select-2-3" tabindex="0"><span class="text">Direct</span></a>
-                                </li>
-                              </ul>
-                            </div>
-                          </div>
+                      <div class="col-md-6">
+                        <div class="form-group form-inline my-5">
+                          <label for="ShowOnlyMyBids">{{ l('ShowOnlyMyBids') }}</label>
+                          <span class="switch switch-sm switch-outline switch-icon switch-danger ml-2">
+                            <label>
+                              <input
+                                id="ShowOnlyMyBids"
+                                type="checkbox"
+                                name="ShowOnlyMyBids"
+                                [checked]="MyBidsOnlyFilter"
+                                [(ngModel)]="MyBidsOnlyFilter"
+                              />
+                              <span></span>
+                            </label>
+                          </span>
                         </div>
                       </div>
                     </div>
                   </div>
                 </div>
-                <div class="col-lg-3 col-xl-4 mt-5 mt-lg-0">
-                  <a href="#" class="btn btn-light-primary px-6 font-weight-bold">Search</a>
+                <div class="row mb-2">
+                  <div class="col-sm-12">
+                    <span
+                      class="clickable-item text-muted"
+                      *ngIf="!advancedFiltersAreShown"
+                      (click)="advancedFiltersAreShown = !advancedFiltersAreShown"
+                      ><i class="fa fa-angle-down"></i> {{ l('ShowAdvancedFilters') }}</span
+                    >
+                    <span
+                      class="clickable-item text-muted"
+                      *ngIf="advancedFiltersAreShown"
+                      (click)="advancedFiltersAreShown = !advancedFiltersAreShown"
+                      ><i class="fa fa-angle-up"></i> {{ l('HideAdvancedFilters') }}</span
+                    >
+                  </div>
                 </div>
               </div>
-            </div>
-            <!-- end:: Search Form-->
+            </form>
+            <!--  End::advFillters-->
             <!--begin: Datatable-->
             <div class="primeng-datatable-container col-12" [busyIf]="primengTableHelper.isLoading">
               <p-table
@@ -376,9 +197,9 @@
                       {{ l('id') }}
                       <p-sortIcon field="id"></p-sortIcon>
                     </th>
-                    <th style="width: 150px;" pSortableColumn="ShipperName">
-                      {{ l('ShipperName') }}
-                      <p-sortIcon field="ShipperName"></p-sortIcon>
+                    <th style="width: 150px;" pSortableColumn="shipperName">
+                      {{ l('shipperName') }}
+                      <p-sortIcon field="shipperName"></p-sortIcon>
                     </th>
                     <th style="width: 150px;" pSortableColumn="truckType">
                       {{ l('truckType') }}
@@ -400,10 +221,7 @@
                       {{ l('BiddingStatusName') }}
                       <p-sortIcon field="BiddingStatusName"></p-sortIcon>
                     </th>
-                    <th style="width: 150px;" pSortableColumn="BidsNumber">
-                      {{ l('BidsNumber') }}
-                      <p-sortIcon field="BidsNumber"></p-sortIcon>
-                    </th>
+
                     <th style="width: 150px;" pSortableColumn="LastBidPrice">
                       {{ l('LastBidPrice') }}
                       <p-sortIcon field="LastBidPrice"></p-sortIcon>
@@ -433,40 +251,41 @@
                       {{ record.viewShipperBidsReqDetailsOutput.goodCategoryName }}
                     </td>
                     <td style="width: 150px;">
-                      <span class="ui-column-title"> {{ l('startBidDate') }}</span>
-                      {{ record.viewShipperBidsReqDetailsOutput.startBidDate }}
+                      <span
+                        *ngIf="record.viewShipperBidsReqDetailsOutput.startBidDate"
+                        class="label label-xl font-weight-bold label-light-success label-inline"
+                        >{{ record.viewShipperBidsReqDetailsOutput.startBidDate | momentFormat: 'L' }}</span
+                      >
                     </td>
                     <td style="width: 150px;">
                       <span class="ui-column-title"> {{ l('endBidDate') }}</span>
                       {{ record.viewShipperBidsReqDetailsOutput.endBidDate }}
                     </td>
                     <td style="width: 150px;">
-                      <span class="label label-lg font-weight-bold label-light-success label-inline">{{
-                        record.viewShipperBidsReqDetailsOutput.shippingRequestBidStatusName
-                      }}</span>
+                      <span
+                        *ngIf="record.viewShipperBidsReqDetailsOutput.shippingRequestBidStatusName"
+                        class="label label-xl label-inline font-weight-bold"
+                        [class.label-light-danger]="record.viewShipperBidsReqDetailsOutput.shippingRequestBidStatusName == 'Ongoing'"
+                        [class.label-light-dark]="record.viewShipperBidsReqDetailsOutput.shippingRequestBidStatusName == 'Cancled'"
+                        [class.label-light-warning]="record.viewShipperBidsReqDetailsOutput.shippingRequestBidStatusName == 'Closed'"
+                        >{{ record.viewShipperBidsReqDetailsOutput.shippingRequestBidStatusName }}</span
+                      >
                     </td>
-                    <td style="width: 150px;">
-                      <span class="ui-column-title"> {{ l('bidsNo') }}</span>
-                      {{ record.viewShipperBidsReqDetailsOutput.bidsNo }}
-                    </td>
+
                     <td style="width: 150px;">
                       <span class="ui-column-title"> {{ l('lastBidPrice') }}</span>
                       {{ record.viewShipperBidsReqDetailsOutput.lastBidPrice }}
                     </td>
                     <td style="width: 150px;">
                       <button
-                        class="btn btn-sm btn-primary"
-                        *ngIf="record.viewShipperBidsReqDetailsOutput.bidsNo == 0 || record.viewShipperBidsReqDetailsOutput.bidsNo == null"
+                        class="btn btn-primary font-weight-bolder"
+                        [disabled]="
+                          record.viewShipperBidsReqDetailsOutput.shippingRequestBidStatusName == 'Cancled' ||
+                          record.viewShipperBidsReqDetailsOutput.shippingRequestBidStatusName == 'Closed'
+                        "
                         (click)="ViewShippingRequestDetailsModal.show(record.viewShipperBidsReqDetailsOutput)"
                       >
-                        {{ l('Place a Bid') }}
-                      </button>
-                      <button
-                        class="btn btn-sm btn-primary"
-                        *ngIf="record.viewShipperBidsReqDetailsOutput.bidsNo !== 0 || record.viewShipperBidsReqDetailsOutput.bidsNo !== null"
-                        (click)="ViewShippingRequestDetailsModal.show(record.viewShipperBidsReqDetailsOutput)"
-                      >
-                        {{ l('Edit My Bid') }}
+                        {{ l('Details') }}
                       </button>
                     </td>
                   </tr>
@@ -488,6 +307,8 @@
                   {{ l('TotalRecordsCount', primengTableHelper.totalRecordsCount) }}
                 </span>
               </div>
+              <ViewAllCarrierBidsModal #ViewAllCarrierBidsModal></ViewAllCarrierBidsModal>
+
               <ViewShippingRequestDetailsModal #ViewShippingRequestDetailsModal (modalSave)="reloadPage()"></ViewShippingRequestDetailsModal>
             </div>
             <!--end: Datatable-->

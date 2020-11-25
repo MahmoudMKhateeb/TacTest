@@ -3,41 +3,144 @@
     <sub-header [breadcrumbs]="breadcrumbs" [title]="('ShippingRequests' | localize) + ' ' + ('Details' | localize)"> </sub-header>
 
     <div [class]="containerClass">
-      <div class="card card-custom gutter-b">
-        <div class="card-body">
-          <div class="row align-items-center">
-            <div class="col-6 mb-3">
-              <h6>{{ l('Vas') }} :</h6>
-              {{ item.shippingRequest.vas }}
+      <section *ngIf="item.shippingRequest.isBid">
+        <div class="card card-custom gutter-b">
+          <div class="card-header flex-wrap border-0 pt-6 pb-0">
+            <div class="card-title">
+              <h3 class="card-label">
+                {{ l('Bids List') }}
+                <span class="d-block text-muted pt-2 font-size-sm"> {{ l('All Bids on Shipping Request') }}: {{ item.shippingRequest.id }} </span>
+              </h3>
             </div>
+            <div class="card-toolbar">
+              <!--begin::Button-->
 
-            <!--            <div class="col-6 mb-3">-->
-            <!--              <h6>({{ l('TrucksType') }}) {{ l('DisplayName') }} :</h6>-->
-            <!--              {{ item.trucksTypeDisplayName }}-->
-            <!--            </div>-->
-            <!--            <div class="col-6 mb-3">-->
-            <!--              <h6>({{ l('TrailerType') }}) {{ l('DisplayName') }} :</h6>-->
-            <!--              {{ item.trailerTypeDisplayName }}-->
-            <!--            </div>-->
-            <!--            <div class="col-6 mb-3">-->
-            <!--              <h6>({{ l('GoodsDetail') }}) {{ l('Name') }} :</h6>-->
-            <!--              {{ item.goodsDetailName }}-->
-            <!--            </div>-->
-            <!--            <div class="col-6 mb-3">-->
-            <!--              <h6>({{ l('Route') }}) {{ l('DisplayName') }} :</h6>-->
-            <!--              {{ item.routeDisplayName }}-->
-            <!--            </div>-->
-            <div class="col-6 mb-3">
-              <h6>{{ l('isBid') }} :</h6>
-              {{ item.shippingRequest.isBid }}
+              <button class="btn btn-primary" (click)="CancelShippingRequestBid(item.shippingRequest.id)">
+                <i class="flaticon-close"></i> {{ l('StopBiddingOnthisRequest') }}
+              </button>
+
+              <!--end::Button-->
             </div>
-            <div class="col-6 mb-3">
-              <h6>{{ l('isTachyonDeal') }} :</h6>
-              {{ item.shippingRequest.isTachyonDeal }}
+          </div>
+          <div class="card-body">
+            <div class="row align-items-center">
+              <!--<Primeng-Datatable-Start>-->
+              <div [busyIf]="primengTableHelper.isLoading" class="primeng-datatable-container col-12">
+                <p-table
+                  #dataTablechild
+                  (onLazyLoad)="getShippingRequestsBids($event)"
+                  ScrollWidth="100%"
+                  [lazy]="true"
+                  [paginator]="false"
+                  [resizableColumns]="primengTableHelper.resizableColumns"
+                  [responsive]="primengTableHelper.isResponsive"
+                  [scrollable]="true"
+                  [value]="primengTableHelper.records"
+                  rows="{{ primengTableHelper.defaultRecordsCountPerPage }}"
+                >
+                  <ng-template pTemplate="header">
+                    <tr>
+                      <th style="width: 130px;">
+                        {{ l('id') }}
+                      </th>
+                      <th pSortableColumn="trucksTypeFk.displayName" style="width: 150px;">
+                        {{ l('carrierName') }}
+                        <p-sortIcon field="trucksTypeDisplayName"></p-sortIcon>
+                      </th>
+                      <th pSortableColumn="trucksTypeFk.displayName" style="width: 150px;">
+                        {{ l('price') }}
+                        <p-sortIcon field="trucksTypeDisplayName"></p-sortIcon>
+                      </th>
+                      <th pSortableColumn="trailerTypeFk.displayName" style="width: 150px;">
+                        {{ l('Accepted') }}
+                        <p-sortIcon field="trailerTypeDisplayName"></p-sortIcon>
+                      </th>
+                      <th pSortableColumn="goodsDetailFk.name" style="width: 150px;">
+                        {{ l('Rejected') }}
+                        <p-sortIcon field="goodsDetailName"></p-sortIcon>
+                      </th>
+                      <th pSortableColumn="routeFk.displayName" style="width: 150px;">
+                        {{ l('cancledReason') }}
+                        <p-sortIcon field="routeDisplayName"></p-sortIcon>
+                      </th>
+                      <th pSortableColumn="vas" style="width: 150px;">
+                        {{ l('acceptedDate') }}
+                        <p-sortIcon field="shippingRequest.vas"></p-sortIcon>
+                      </th>
+                      <th pSortableColumn="isBid" style="width: 150px;">
+                        {{ l('canceledDate') }}
+                        <p-sortIcon field="isBid"></p-sortIcon>
+                      </th>
+                      <th style="width: 130px;">
+                        {{ l('Actions') }}
+                      </th>
+                    </tr>
+                  </ng-template>
+                  <ng-template let-record="$implicit" pTemplate="body">
+                    <tr [ngClass]="record.shippingRequestBid.isAccepted ? 'table-success' : ''">
+                      <td style="width: 150px;">
+                        <span class="ui-column-title"> {{ l('id') }}</span>
+                        {{ record.shippingRequestBid.id }}
+                      </td>
+                      <td style="width: 150px;">
+                        <span class="ui-column-title"> {{ l('carrierName') }}</span>
+                        {{ record.shippingRequestBid.carrierName }}
+                      </td>
+                      <td style="width: 150px;">
+                        <span class="ui-column-title"> {{ l('price') }}</span>
+                        {{ record.shippingRequestBid.price }}
+                      </td>
+                      <td style="width: 150px;">
+                        <span class="ui-column-title"> {{ l('isAccepted') }}</span>
+                        {{ record.shippingRequestBid.isAccepted }}
+                      </td>
+                      <td style="width: 150px;">
+                        <span class="ui-column-title"> {{ l('isRejected') }}</span>
+                        {{ record.shippingRequestBid.isRejected }}
+                      </td>
+                      <td style="width: 150px;">
+                        <span class="ui-column-title"> {{ l('cancledReason') }}</span>
+                        {{ record.shippingRequestBid.cancledReason }}
+                      </td>
+                      <td style="width: 150px;">
+                        <span class="ui-column-title"> {{ l('acceptedDate') }}</span>
+                        {{ record.shippingRequestBid.acceptedDate }}
+                      </td>
+                      <td style="width: 150px;">
+                        <span class="ui-column-title"> {{ l('canceledDate') }}</span>
+                        {{ record.shippingRequestBid.canceledDate }}
+                      </td>
+                      <td style="width: 150px;">
+                        <span class="ui-column-title"> {{ l('AcceptBid') }}</span>
+                        <button type="button" class="btn btn-outline-success mr-2" (click)="AcceptBidMeth(record.shippingRequestBid.id)">
+                          {{ l('AcceptBid') }}
+                        </button>
+                      </td>
+                    </tr>
+                  </ng-template>
+                </p-table>
+                <div *ngIf="primengTableHelper.totalRecordsCount == 0" class="primeng-no-data">
+                  {{ l('NoData') }}
+                </div>
+                <div class="primeng-paging-container">
+                  <p-paginator
+                    #paginatorchild
+                    (onPageChange)="getShippingRequestsBids($event)"
+                    [rowsPerPageOptions]="primengTableHelper.predefinedRecordsCountPerPage"
+                    [rows]="primengTableHelper.defaultRecordsCountPerPage"
+                    [totalRecords]="primengTableHelper.totalRecordsCount"
+                  >
+                  </p-paginator>
+                  <span class="total-records-count">
+                    {{ l('TotalRecordsCount', primengTableHelper.totalRecordsCount) }}
+                  </span>
+                </div>
+              </div>
+              <!--<Primeng-Datatable-End>-->
             </div>
           </div>
         </div>
-      </div>
+      </section>
     </div>
   </div>
 </div>
