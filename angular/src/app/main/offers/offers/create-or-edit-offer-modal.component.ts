@@ -42,6 +42,7 @@ export class CreateOrEditOfferModalComponent extends AppComponentBase {
 
   show(offerId?: number): void {
     if (!offerId) {
+      //create
       this.offer = new CreateOrEditOfferDto();
       this.offer.id = offerId;
       this.trucksTypeDisplayName = '';

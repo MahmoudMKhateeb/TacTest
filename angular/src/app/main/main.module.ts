@@ -131,6 +131,9 @@ import { AgmCoreModule } from '@node_modules/@agm/core';
 import { UpdatePriceShippingRequestModalComponent } from './shippingRequests/shippingRequests/update-price-shipping-request-modal/update-price-shipping-request-modal.component';
 import { AdminModule } from '@app/admin/admin.module';
 
+import { MarketplaceComponent } from '@app/main/marketPlace/marketPlace/marketplace.component';
+import { ViewShippingRequestDetailsComponent } from '@app/main/marketPlace/marketPlace/ViewShippingRequestDetails.component';
+
 NgxBootstrapDatePickerConfigService.registerNgxBootstrapDatePickerLocales();
 
 @NgModule({
@@ -270,6 +273,9 @@ NgxBootstrapDatePickerConfigService.registerNgxBootstrapDatePickerLocales();
     CreateOrEditTrucksTypeModalComponent,
     DashboardComponent,
     UpdatePriceShippingRequestModalComponent,
+
+    MarketplaceComponent,
+    ViewShippingRequestDetailsComponent,
   ],
   providers: [
     { provide: BsDatepickerConfig, useFactory: NgxBootstrapDatePickerConfigService.getDatepickerConfig },

@@ -1,0 +1,107 @@
+<div
+  bsModal
+  #createOrEditModal="bs-modal"
+  class="modal fade"
+  tabindex="-1"
+  role="dialog"
+  aria-labelledby="createOrEditModal"
+  aria-hidden="true"
+  [config]="{ backdrop: 'static' }"
+>
+  <div class="modal-dialog modal-dialog-centered modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <p class="modal-title">
+          <span>{{ l('Request Details') }}</span>
+        </p>
+      </div>
+      <div class="modal-body">
+        <div class="row">
+          <div class="col-xl-12">
+            <!--begin::Card-->
+            <div class="card card-custom gutter-b card-stretch">
+              <!--begin::Body-->
+              <div class="card-body text-center pt-4">
+                <!--begin::User-->
+                <div class="mt-7">
+                  <div class="symbol symbol-circle symbol-lg-90">
+                    <span class="font-size-h1 symbol-label font-weight-boldest">SH</span>
+                  </div>
+                </div>
+                <!--end::User-->
+                <!--begin::Name-->
+                <div class="my-4">
+                  <a href="#" class="text-dark font-weight-bold text-hover-primary font-size-h4">Fake Shipper Name</a>
+                </div>
+                <!--end::Name-->
+                <div class="mt-2 mb-2">
+                  <span class="btn btn-text btn-light-success btn-sm font-weight-bold">
+                    Status: {{ record.shippingRequestBidStatusName }}
+                  </span>
+                </div>
+                <!--begin::Label-->
+
+                <span class="btn btn-light-primary btn-sm font-weight-bold btn-upper btn-text"> Start Date: 12/11/2020</span>
+                <span class="btn btn-light-danger btn-sm font-weight-bold btn-upper btn-text"> End Date: 20/11/2020</span>
+
+                <!--end::Label-->
+                <!--           START::CONTENT       -->
+                <div class="my-5">
+                  <div class="d-flex justify-content-between align-items-center my-1">
+                    <span class="text-dark-75 font-weight-bolder mr-2">Truck Type</span>
+                    <a href="#" class="text-muted text-primary"> Fake Truck Type</a>
+                  </div>
+                  <div class="d-flex justify-content-between align-items-cente my-1">
+                    <span class="text-dark-75 font-weight-bolder mr-2">Good Type</span>
+                    <a href="#" class="text-muted text-hover-primary">Firnatures</a>
+                  </div>
+                  <div class="d-flex justify-content-between align-items-center my-1" *ngIf="record.bidsNo">
+                    <span class="text-dark-75 font-weight-bolder mr-2">Origin:</span>
+                    <span class="text-muted font-weight-bold">Jeddah</span>
+                  </div>
+                  <div class="d-flex justify-content-between align-items-center my-1" *ngIf="record.bidsNo">
+                    <span class="text-dark-75 font-weight-bolder mr-2">Destination</span>
+                    <span class="text-muted font-weight-bold">jizan</span>
+                  </div>
+                  <div class="d-flex justify-content-between align-items-center my-1" *ngIf="record.bidsNo">
+                    <span class="text-dark-75 font-weight-bolder mr-2">Bid Price:</span>
+                    <span class="text-muted font-weight-bold">{{ record.lastBidPrice }}</span>
+                  </div>
+
+                  <div class="d-flex justify-content-between align-items-center mt-8" *ngIf="record.bidsNo">
+                    <div class="input-group">
+                      <div class="input-group-prepend">
+                        <span class="input-group-text">$</span>
+                      </div>
+                      <input type="number" class="form-control" placeholder="Bid Amount" />
+                      <div class="input-group-append">
+                        <button class="btn btn-primary" type="button">update!</button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <!-- END::CONTENT -->
+                <!--                &lt;!&ndash;begin::Buttons&ndash;&gt;-->
+
+                <!--                <div class="mt-20">-->
+                <!--                  <a href="#" class="btn btn-primary font-weight-bolder btn-sm py-3 px-6 text-uppercase">Cancel My Bid</a>-->
+                <!--                  <a href="#" class="btn btn-primary font-weight-bolder btn-sm py-3 px-6 text-uppercase">Edit My Bid</a>-->
+                <!--                </div>-->
+                <!--                &lt;!&ndash;end::Buttons&ndash;&gt;-->
+              </div>
+              <!--end::Body-->
+            </div>
+            <!--end::Card-->
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <!--begin::Buttons-->
+        <a href="#" class="btn btn-primary font-weight-bolder btn-sm py-3 px-6 text-uppercase">Cancel My Bid</a>
+        <button [disabled]="saving" type="button" class="btn btn-primary" (click)="close()">{{ l('Close') }}</button>
+
+        <!--end::Buttons-->
+      </div>
+    </div>
+  </div>
+</div>

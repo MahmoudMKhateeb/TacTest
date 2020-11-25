@@ -31,6 +31,7 @@ import { TrailerTypesComponent } from './trailerTypes/trailerTypes/trailerTypes.
 import { TrucksComponent } from './trucks/trucks/trucks.component';
 import { TrucksTypesComponent } from './trucksTypes/trucksTypes/trucksTypes.component';
 import { DashboardComponent } from './dashboard/dashboard.component';
+import { MarketplaceComponent } from '@app/main/marketPlace/marketPlace/marketplace.component';
 
 @NgModule({
   imports: [
@@ -60,6 +61,7 @@ import { DashboardComponent } from './dashboard/dashboard.component';
             data: { permission: 'Pages.ShippingRequests.Create' },
           },
           { path: 'shippingRequests/shippingRequests/view', component: ViewShippingRequestComponent, data: { permission: 'Pages.ShippingRequests' } },
+          { path: 'marketPlace/marketPlace', component: MarketplaceComponent },
           { path: 'offers/offers', component: OffersComponent, data: { permission: 'Pages.Offers' } },
           { path: 'routSteps/routSteps', component: RoutStepsComponent, data: { permission: 'Pages.RoutSteps' } },
           { path: 'routs/routes', component: RoutesComponent, data: { permission: 'Pages.Routes' } },
