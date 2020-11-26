@@ -10,14 +10,14 @@ namespace TACHYON.Shipping.ShippingRequestBids
 {
     public interface IShippingRequestBidsAppService:IApplicationService
     {
-        Task<PagedResultDto<GetShippingRequestBidsForViewDto>> GetAllBidsByShippingRequestIdPaging(GetAllShippingRequestBidsInput input);
-        Task CancelShippingRequestBid(StopShippingRequestBidInput input);
-        Task<long> CreateOrEditShippingRequestBid(CreatOrEditShippingRequestBidDto input);
-        Task AcceptBid(long shippingRequestBidId);
-        Task<List<ViewCarrierBidsOutput>> GetAllCarrierBidsForView();
-        Task CancelBidRequest(ShippingRequestBidInput input);
-        Task<PagedResultDto<ViewShipperBidsReqDetailsOutputDto>> GetShipperbidsRequestDetailsForView(PagedAndSortedResultRequestDto input);
-        Task<PagedResultDto<ViewShipperBidsReqDetailsOutputDto>> GetAllMarketPlaceSRForCarrier(PagedAndSortedResultRequestDto input, GetAllBidsInput input2);
+        //Task<PagedResultDto<GetShippingRequestBidsForViewDto>> GetAll(GetAllShippingRequestBidsInput input);
+        //Task CancelShippingRequestBid(StopShippingRequestBidInput input);
+        //Task<long> CreateOrEditShippingRequestBid(CreatOrEditShippingRequestBidDto input);
+        //Task AcceptBid(long shippingRequestBidId);
+        //Task<List<ViewCarrierBidsOutput>> GetAllCarrierBidsForView();
+        //Task CancelBidRequest(CancelShippingRequestBidInput input);
+        //Task<PagedResultDto<ViewShipperBidsReqDetailsOutputDto>> GetShipperBidsRequestDetailsForView(PagedAndSortedResultRequestDto input);
+        //Task<PagedResultDto<ViewShipperBidsReqDetailsOutputDto>> GetAllMarketPlaceSRForCarrier(PagedAndSortedResultRequestDto input, GetAllBidsInput input2);
 
     }
 }

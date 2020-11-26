@@ -30,6 +30,8 @@ namespace TACHYON.Shipping.ShippingRequests
     public class ShippingRequest : FullAuditedEntity<long>, IMustHaveTenant
     {
         public int TenantId { get; set; }
+        [ForeignKey("TenantId")]
+        public Tenant Tenant { get; set; }
         public int RouteId { get; set; }
         public virtual decimal Vas { get; set; }
 

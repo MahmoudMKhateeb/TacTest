@@ -4,7 +4,7 @@ using System.Text;
 
 namespace TACHYON.Shipping.ShippingRequestBids.Dtos
 {
-    public class StopShippingRequestBidInput
+    public class CancelBidShippingRequestInput
     {
         public long ShippingRequestId { get; set; }
     }

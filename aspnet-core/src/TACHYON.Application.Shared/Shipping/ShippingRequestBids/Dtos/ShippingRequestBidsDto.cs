@@ -5,7 +5,7 @@ using System.Text;
 
 namespace TACHYON.Shipping.ShippingRequestBids.Dtos
 {
-    public class ShippingRequestBidsDto :EntityDto<long>
+    public class ShippingRequestBidDto :EntityDto<long>
     {
        public double price { get; set; }
         public long ShippingRequestId { get; set; }

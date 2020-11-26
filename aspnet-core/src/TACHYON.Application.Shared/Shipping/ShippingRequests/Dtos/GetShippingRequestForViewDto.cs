@@ -7,7 +7,7 @@ namespace TACHYON.Shipping.ShippingRequests.Dtos
     {
         public ShippingRequestDto ShippingRequest { get; set; }
 
-        public List<ShippingRequestBidsDto> ShippingRequestBidDtoList { get; set; }
+        public List<ShippingRequestBidDto> ShippingRequestBidDtoList { get; set; }
 
 
     }

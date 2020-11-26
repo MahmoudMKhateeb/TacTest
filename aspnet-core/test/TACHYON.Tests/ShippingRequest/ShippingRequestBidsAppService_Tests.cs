@@ -18,23 +18,23 @@ namespace TACHYON.Tests.ShippingRequest
             LoginAsTenant("shipper", "admin");
             _shippingRequestBidsAppService = Resolve<IShippingRequestBidsAppService>();
         }
-        [Fact]
-        public async Task CreateShouldNotWorkAsync()
-        {
+        //[Fact]
+        //public async Task CreateShouldNotWorkAsync()
+        //{
 
-            var id= _shippingRequestBidsAppService.GetShipperbidsRequestDetailsForView(
-                new Abp.Application.Services.Dto.PagedAndSortedResultRequestDto {
-                    SkipCount=5,Sorting=null,MaxResultCount=10 })
-                .Id;
-            var newBid=await _shippingRequestBidsAppService.CreateOrEditShippingRequestBid(
-                new CreatOrEditShippingRequestBidDto {
-                    price = 50, ShippingRequestId = id 
-                });
-            var againBid=await _shippingRequestBidsAppService.CreateOrEditShippingRequestBid(
-                new CreatOrEditShippingRequestBidDto { 
-                    price = 50, ShippingRequestId = id });
+        //    var id= _shippingRequestBidsAppService.GetShipperbidsRequestDetailsForView(
+        //        new Abp.Application.Services.Dto.PagedAndSortedResultRequestDto {
+        //            SkipCount=5,Sorting=null,MaxResultCount=10 })
+        //        .Id;
+        //    var newBid=await _shippingRequestBidsAppService.CreateOrEditShippingRequestBid(
+        //        new CreatOrEditShippingRequestBidDto {
+        //            price = 50, ShippingRequestId = id 
+        //        });
+        //    var againBid=await _shippingRequestBidsAppService.CreateOrEditShippingRequestBid(
+        //        new CreatOrEditShippingRequestBidDto { 
+        //            price = 50, ShippingRequestId = id });
 
-            Assert.Throws<UserFriendlyException>(()=>againBid);
-        }
+        //    Assert.Throws<UserFriendlyException>(()=>againBid);
+        //}
     }
 }
