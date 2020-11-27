@@ -1,13 +1,12 @@
-﻿import { Component, Injector, OnInit, ViewChild } from '@angular/core';
+﻿import { ChangeDetectorRef, Component, Injector, OnInit, ViewChild } from '@angular/core';
 import Swal from 'sweetalert2';
 
 import {
   GetShippingRequestForViewDto,
-  PagedResultDtoOfGetShippingRequestBidsForViewDto,
   ShippingRequestBidsServiceProxy,
   ShippingRequestDto,
   ShippingRequestsServiceProxy,
-  StopShippingRequestBidInput,
+  CancelBidShippingRequestInput,
 } from '@shared/service-proxies/service-proxies';
 import { AppComponentBase } from '@shared/common/app-component-base';
 import { ActivatedRoute, NavigationEnd, Router, RouterEvent } from '@angular/router';
@@ -22,13 +21,12 @@ import { filter } from '@node_modules/rxjs/internal/operators';
   animations: [appModuleAnimation()],
 })
 export class ViewShippingRequestComponent extends AppComponentBase implements OnInit {
-  @ViewChild('dataTablechild', { static: true }) dataTable: Table;
-  @ViewChild('paginatorchild', { static: true }) paginator: Paginator;
+  @ViewChild('dataTablechild', { static: false }) dataTable: Table;
+  @ViewChild('paginatorchild', { static: false }) paginator: Paginator;
   active = false;
   saving = false;
-  stopShippingRequestBody: StopShippingRequestBidInput = new StopShippingRequestBidInput();
+  CancelBidShippingRequest: CancelBidShippingRequestInput = new CancelBidShippingRequestInput();
   item: GetShippingRequestForViewDto;
-  private AllBids: PagedResultDtoOfGetShippingRequestBidsForViewDto;
   private activeShippingRequestId: number;
 
   breadcrumbs: BreadcrumbItem[] = [
@@ -42,7 +40,8 @@ export class ViewShippingRequestComponent extends AppComponentBase implements On
     private _router: Router,
 
     private _shippingRequestsServiceProxy: ShippingRequestsServiceProxy,
-    private _shippingRequestBidsServiceProxy: ShippingRequestBidsServiceProxy
+    private _shippingRequestBidsServiceProxy: ShippingRequestBidsServiceProxy,
+    private changeDetectorRef: ChangeDetectorRef
   ) {
     super(injector);
     this.item = new GetShippingRequestForViewDto();
@@ -70,6 +69,7 @@ export class ViewShippingRequestComponent extends AppComponentBase implements On
     this.paginator.changePage(this.paginator.getPage());
   }
   getShippingRequestsBids(event?: LazyLoadEvent) {
+    this.changeDetectorRef.detectChanges();
     if (this.primengTableHelper.shouldResetPaging(event)) {
       this.paginator.changePage(0);
       return;
@@ -77,7 +77,7 @@ export class ViewShippingRequestComponent extends AppComponentBase implements On
     this.primengTableHelper.showLoadingIndicator();
     console.log('bids Gotten');
     this._shippingRequestBidsServiceProxy
-      .getAllBidsByShippingRequestIdPaging(
+      .getAllShippingRequestBids(
         null,
         0,
         10000,
@@ -104,8 +104,8 @@ export class ViewShippingRequestComponent extends AppComponentBase implements On
       cancelButtonText: 'No',
     }).then((result) => {
       if (result.value) {
-        this._shippingRequestBidsServiceProxy.acceptBid(id).subscribe(() => {
-          Swal.fire('Accepted!', 'You Successfully Accepted the bid request.', 'success');
+        this._shippingRequestBidsServiceProxy.acceptShippingRequestBid(id).subscribe(() => {
+          Swal.fire('Accepted!', 'YouSuccessfullyAcceptedthebidrequest.', 'success');
           this.reloadPage();
           console.log('bid Accepted', id);
         });
@@ -115,7 +115,7 @@ export class ViewShippingRequestComponent extends AppComponentBase implements On
 
   //this method is for CancelShippingRequestBid: which is for canceling bidding on the shipping request
   CancelShippingRequestBid(id: number) {
-    this.stopShippingRequestBody.shippingRequestId = id;
+    this.CancelBidShippingRequest.shippingRequestId = id;
     Swal.fire({
       title: 'Are you sure You Want to Cancel Bidding on this Shipping Request?',
       icon: 'warning',
@@ -124,7 +124,7 @@ export class ViewShippingRequestComponent extends AppComponentBase implements On
       confirmButtonText: 'Yes',
     }).then((result) => {
       if (result.value) {
-        this._shippingRequestBidsServiceProxy.cancelShippingRequestBid(this.stopShippingRequestBody).subscribe(() => {
+        this._shippingRequestBidsServiceProxy.cancelBidShippingRequest(this.CancelBidShippingRequest).subscribe(() => {
           Swal.fire('Success!', 'You Successfully Stopped the Bidding on this request.', 'success');
           this.reloadPage();
           console.log('Shipping Request bid Canceld', id);

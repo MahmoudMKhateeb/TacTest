@@ -1,10 +1,10 @@
 import { Component, ViewChild, Injector, Output, EventEmitter } from '@angular/core';
 import { ModalDirective } from 'ngx-bootstrap/modal';
 import {
-  ViewShipperBidsReqDetailsOutput,
+  GetAllBidShippingRequestsForCarrierOutput,
   ShippingRequestBidsServiceProxy,
   CreatOrEditShippingRequestBidDto,
-  ShippingRequestBidInput,
+  CancelShippingRequestBidInput,
 } from '@shared/service-proxies/service-proxies';
 import { AppComponentBase } from '@shared/common/app-component-base';
 import { Router } from '@angular/router';
@@ -25,18 +25,16 @@ export class ViewShippingRequestDetailsComponent extends AppComponentBase {
   active = false;
   saving = false;
   invalid = false;
-
-  record: ViewShipperBidsReqDetailsOutput;
+  record: GetAllBidShippingRequestsForCarrierOutput;
   placeBidInputs: CreatOrEditShippingRequestBidDto = new CreatOrEditShippingRequestBidDto();
-
-  DeleteBidinputs: ShippingRequestBidInput = new ShippingRequestBidInput();
+  CancelShippingRequestBidInput: CancelShippingRequestBidInput = new CancelShippingRequestBidInput();
 
   constructor(injector: Injector, private router: Router, private _shippingRequestBidsServiceProxy: ShippingRequestBidsServiceProxy) {
     super(injector);
-    this.record = new ViewShipperBidsReqDetailsOutput();
+    this.record = new GetAllBidShippingRequestsForCarrierOutput();
   }
 
-  show(record: ViewShipperBidsReqDetailsOutput): void {
+  show(record: GetAllBidShippingRequestsForCarrierOutput): void {
     this.record = record;
     this.active = true;
     this.modal.show();
@@ -45,23 +43,22 @@ export class ViewShippingRequestDetailsComponent extends AppComponentBase {
   close(): void {
     this.active = false;
     this.showSuccess = false;
-    this.record = new ViewShipperBidsReqDetailsOutput();
+    this.record = new GetAllBidShippingRequestsForCarrierOutput();
     this.placeBidInputs.id = null;
     this.saving = false;
     this.modal.hide();
     //this.price = null;
-    console.log('closed');
   }
 
   MakeABid(ShippingReqid: number) {
     let x;
-    x = Swal.fire(this.l('Success'), this.l('Bid Placed Successfully'), 'success');
+    x = Swal.fire(this.l('Success'), this.l('bidPlacedSuccessfully'), 'success');
     if (this.price > 0) {
       this.invalid = false;
       this.saving = true;
-      if (this.record.firstBidId !== 0) {
-        this.placeBidInputs.id = this.record.firstBidId;
-        x = Swal.fire(this.l('Success'), this.l('Bid Updated Successfully'), 'success');
+      if (this.record.myBidPrice !== 0) {
+        this.placeBidInputs.id = this.record.myBidId;
+        x = Swal.fire(this.l('Success'), this.l('bidUpdatedSuccessfully'), 'success');
         console.log('edited To :', this.price);
       }
       this.placeBidInputs.shippingRequestId = ShippingReqid;
@@ -88,7 +85,7 @@ export class ViewShippingRequestDetailsComponent extends AppComponentBase {
 
   DeleteBid(bidId: number) {
     Swal.fire({
-      title: this.l('Are you sure you want Cancel this bid ?'),
+      title: this.l('areYouSure?'),
       icon: 'warning',
       showCancelButton: true,
       confirmButtonText: this.l('Yes'),
@@ -96,10 +93,10 @@ export class ViewShippingRequestDetailsComponent extends AppComponentBase {
     }).then((result) => {
       if (result.value) {
         this.saving = true;
-        this.DeleteBidinputs.shippingRequestBidId = bidId;
-        this.DeleteBidinputs.cancledReason = null;
+        this.CancelShippingRequestBidInput.shippingRequestBidId = bidId;
+        this.CancelShippingRequestBidInput.cancledReason = null;
         this._shippingRequestBidsServiceProxy
-          .cancelBidRequest(this.DeleteBidinputs)
+          .cancelShippingRequestBid(this.CancelShippingRequestBidInput)
           .pipe(
             finalize(() => {
               this.saving = false;
@@ -107,7 +104,7 @@ export class ViewShippingRequestDetailsComponent extends AppComponentBase {
           )
           .subscribe(() => {
             this.close();
-            Swal.fire(this.l('Success'), this.l('Bid Request Removed'), 'success');
+            Swal.fire(this.l('Success'), this.l('bidRequestRemoved'), 'success');
             this.modalSave.emit(null);
           });
       } //end of if

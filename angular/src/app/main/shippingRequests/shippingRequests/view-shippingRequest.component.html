@@ -77,42 +77,42 @@
                     </tr>
                   </ng-template>
                   <ng-template let-record="$implicit" pTemplate="body">
-                    <tr [ngClass]="record.shippingRequestBid.isAccepted ? 'table-success' : ''">
+                    <tr [ngClass]="record.isAccepted ? 'table-success' : ''">
                       <td style="width: 150px;">
                         <span class="ui-column-title"> {{ l('id') }}</span>
-                        {{ record.shippingRequestBid.id }}
+                        {{ record.id }}
                       </td>
                       <td style="width: 150px;">
                         <span class="ui-column-title"> {{ l('carrierName') }}</span>
-                        {{ record.shippingRequestBid.carrierName }}
+                        {{ record.carrierName }}
                       </td>
                       <td style="width: 150px;">
                         <span class="ui-column-title"> {{ l('price') }}</span>
-                        {{ record.shippingRequestBid.price }}
+                        {{ record.price }}
                       </td>
                       <td style="width: 150px;">
                         <span class="ui-column-title"> {{ l('isAccepted') }}</span>
-                        {{ record.shippingRequestBid.isAccepted }}
+                        {{ record.isAccepted }}
                       </td>
                       <td style="width: 150px;">
                         <span class="ui-column-title"> {{ l('isRejected') }}</span>
-                        {{ record.shippingRequestBid.isRejected }}
+                        {{ record.isRejected }}
                       </td>
                       <td style="width: 150px;">
                         <span class="ui-column-title"> {{ l('cancledReason') }}</span>
-                        {{ record.shippingRequestBid.cancledReason }}
+                        {{ record.cancledReason }}
                       </td>
                       <td style="width: 150px;">
                         <span class="ui-column-title"> {{ l('acceptedDate') }}</span>
-                        {{ record.shippingRequestBid.acceptedDate }}
+                        {{ record.acceptedDate }}
                       </td>
                       <td style="width: 150px;">
                         <span class="ui-column-title"> {{ l('canceledDate') }}</span>
-                        {{ record.shippingRequestBid.canceledDate }}
+                        {{ record.canceledDate }}
                       </td>
                       <td style="width: 150px;">
                         <span class="ui-column-title"> {{ l('AcceptBid') }}</span>
-                        <button type="button" class="btn btn-outline-success mr-2" (click)="AcceptBidMeth(record.shippingRequestBid.id)">
+                        <button type="button" class="btn btn-outline-success mr-2" (click)="AcceptBidMeth(record.id)">
                           {{ l('AcceptBid') }}
                         </button>
                       </td>

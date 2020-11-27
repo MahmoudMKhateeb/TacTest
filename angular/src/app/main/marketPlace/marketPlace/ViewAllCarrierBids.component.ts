@@ -9,7 +9,6 @@ import { ShippingRequestBidsServiceProxy } from '@shared/service-proxies/service
 })
 export class ViewAllCarrierBidsComponent extends AppComponentBase {
   @ViewChild('ViewAllCarrierBidsModal', { static: true }) modal: ModalDirective;
-  @Output() modalSave: EventEmitter<any> = new EventEmitter<any>();
 
   active = false;
   saving = false;
@@ -34,11 +33,8 @@ export class ViewAllCarrierBidsComponent extends AppComponentBase {
     this.AllCarrierBidsArray = null;
     this.modal.hide();
   }
-  /**
-   * @return Success
-   */
   GetAllCarrierBid() {
-    this._shippingRequestBidsServiceProxy.getAllCarrierBidsForView().subscribe((results) => {
+    this._shippingRequestBidsServiceProxy.getAllCarrierShippingRequestBids().subscribe((results) => {
       this.AllCarrierBidsArray = results;
       this.Loading = false;
     });

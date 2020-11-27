@@ -33,7 +33,7 @@ export class MarketplaceComponent extends AppComponentBase implements OnInit {
   TruckSubTypeIdFilter: number;
   TransportTypeFilter: number;
   TransportSubTypeFilter: number;
-  CapacityIdFillter: number;
+  CapacityIdFilter: number;
 
   allTransportTypes: SelectItemDto[];
   allTransportSubTypes: SelectItemDto[];
@@ -55,12 +55,7 @@ export class MarketplaceComponent extends AppComponentBase implements OnInit {
     this.GetTransportDropDownList();
   }
 
-  test() {
-    console.log(this.MatchingBidOnlyFilter);
-  }
-
   reloadPage(): void {
-    console.log('reload page');
     this.paginator.changePage(this.paginator.getPage());
   }
   GetAllShippingRequests(event?: LazyLoadEvent) {
@@ -70,10 +65,7 @@ export class MarketplaceComponent extends AppComponentBase implements OnInit {
     }
     this.primengTableHelper.showLoadingIndicator();
     this._shippingRequestBidsServiceProxy
-      .getAllMarketPlaceSRForCarrier(
-        this.primengTableHelper.getSkipCount(this.paginator, event),
-        this.primengTableHelper.getMaxResultCount(this.paginator, event),
-        this.primengTableHelper.getSorting(this.dataTable),
+      .getAllBidShippingRequestsForCarrier(
         this.filterText,
         this.MatchingBidOnlyFilter,
         this.MyBidsOnlyFilter,
@@ -81,7 +73,10 @@ export class MarketplaceComponent extends AppComponentBase implements OnInit {
         this.TruckSubTypeIdFilter,
         this.TransportTypeFilter,
         this.TransportSubTypeFilter,
-        this.CapacityIdFillter
+        this.CapacityIdFilter,
+        this.primengTableHelper.getSorting(this.dataTable),
+        this.primengTableHelper.getSkipCount(this.paginator, event),
+        this.primengTableHelper.getMaxResultCount(this.paginator, event)
       )
       .subscribe((result) => {
         this.primengTableHelper.totalRecordsCount = result.totalCount;
@@ -96,6 +91,7 @@ export class MarketplaceComponent extends AppComponentBase implements OnInit {
     this.allTruckSubTypesByTruckTypeId = null;
     this.allTrucksCapByTruckSubTypeId = null;
   }
+
   GetTransportDropDownList(mode?: string, value?: number) {
     switch (mode) {
       case 'GetAllTransportSubTypes':

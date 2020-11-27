@@ -4,7 +4,7 @@
     <sub-header [title]="'MarketPlace' | localize" [description]="'marketPlaceHeaderInfo' | localize">
       <div role="actions">
         <button class="btn btn-primary" (click)="ViewAllCarrierBidsModal.show()">
-          <i class="flaticon2-indent-dots"></i> {{ l('My Bidding History') }}
+          <i class="flaticon2-indent-dots"></i> {{ l('myBiddingHistory') }}
         </button>
       </div>
     </sub-header>
@@ -43,13 +43,13 @@
                 <div class="row justify-content-center" [hidden]="!advancedFiltersAreShown">
                   <div class="col-md-4">
                     <div class="form-group m-form__group">
-                      <label for="transportTypeDisplayName">{{ l('TransportType') }}</label>
+                      <label for="truck.transportTypeId">{{ l('TransportType') }}</label>
                       <select
                         [(ngModel)]="TransportTypeFilter"
                         class="form-control"
                         name="truck.transportTypeId"
+                        id="truck.transportTypeId"
                         (change)="GetTransportDropDownList('GetAllTransportSubTypes', TransportTypeFilter)"
-                        required
                       >
                         <option>{{ l('SelectATransportType') }}</option>
                         <option *ngFor="let item of allTransportTypes" value="{{ item.id }}">{{ item.displayName }}</option>
@@ -63,9 +63,9 @@
                         [(ngModel)]="TruckSubTypeIdFilter"
                         class="form-control"
                         name="truck.transportSubtypeId"
+                        id="allTransportSubTypes"
                         (change)="GetTransportDropDownList('GetAllTruckTypesByTransportSubTypes', TruckSubTypeIdFilter)"
                         [disabled]="allTransportSubTypes ? null : true"
-                        required
                       >
                         <option value="0">{{ l('SelectATransportSubType') }}</option>
                         <option *ngFor="let item of allTransportSubTypes" value="{{ item.id }}">{{ item.displayName }} </option>
@@ -79,9 +79,9 @@
                         [(ngModel)]="TruckTypeIdFilter"
                         class="form-control"
                         name="truck.trucksTypeId"
+                        id="allTruckTypesByTransportSubtype"
                         (change)="GetTransportDropDownList('GetAllTruckSubTypesByTruckTypeId', TruckTypeIdFilter)"
                         [disabled]="allTruckTypesByTransportSubtype ? null : true"
-                        required
                       >
                         <option value="0">{{ l('SelectTruckTypeByTransportSubtype') }}</option>
                         <option *ngFor="let item of allTruckTypesByTransportSubtype" value="{{ item.id }}"> {{ item.displayName }}</option>
@@ -95,9 +95,9 @@
                         [(ngModel)]="TransportSubTypeFilter"
                         class="form-control"
                         name="truck.truckSubtypeId"
+                        id="allTruckSubTypesByTruckTypeIdDisplayName"
                         (change)="GetTransportDropDownList('GetAllCapByTruckSybTypeId', TransportSubTypeFilter)"
                         [disabled]="allTruckSubTypesByTruckTypeId ? null : true"
-                        required
                       >
                         <option value="0">{{ l('SelectTruckSubType') }}</option>
                         <option *ngFor="let item of allTruckSubTypesByTruckTypeId" value="{{ item.id }}"> {{ item.displayName }}</option>
@@ -108,11 +108,11 @@
                     <div class="form-group m-form__group">
                       <label for="truck.capacityId">{{ l('Capacity') }}</label>
                       <select
-                        [(ngModel)]="CapacityIdFillter"
+                        [(ngModel)]="CapacityIdFilter"
                         class="form-control"
                         name="truck.capacityId"
+                        id="truck.capacityId"
                         [disabled]="allTrucksCapByTruckSubTypeId ? null : true"
-                        required
                       >
                         <option value="0">{{ l('SelectTruckCapByTruckSubType') }}</option>
                         <option *ngFor="let item of allTrucksCapByTruckSubTypeId" value="{{ item.id }}">{{ item.displayName }} </option>
@@ -193,97 +193,93 @@
               >
                 <ng-template pTemplate="header">
                   <tr>
-                    <th style="width: 150px;" pSortableColumn="id">
+                    <th style="width: 150px;" pSortableColumn="shippingRequestId">
                       {{ l('id') }}
-                      <p-sortIcon field="id"></p-sortIcon>
+                      <p-sortIcon field="shippingRequestId"></p-sortIcon>
                     </th>
                     <th style="width: 150px;" pSortableColumn="shipperName">
                       {{ l('shipperName') }}
                       <p-sortIcon field="shipperName"></p-sortIcon>
                     </th>
-                    <th style="width: 150px;" pSortableColumn="truckType">
-                      {{ l('truckType') }}
-                      <p-sortIcon field="truckType"></p-sortIcon>
+                    <th style="width: 150px;" pSortableColumn="truckTypeDisplayName">
+                      {{ l('truckTypeDisplayName') }}
+                      <p-sortIcon field="truckTypeDisplayName"></p-sortIcon>
                     </th>
-                    <th style="width: 150px;" pSortableColumn="GoodType">
-                      {{ l('GoodType') }}
-                      <p-sortIcon field="GoodType"></p-sortIcon>
+                    <th style="width: 150px;" pSortableColumn="goodCategoryName">
+                      {{ l('goodCategoryName') }}
+                      <p-sortIcon field="goodCategoryName"></p-sortIcon>
                     </th>
-                    <th style="width: 150px;" pSortableColumn="StartDate">
-                      {{ l('StartDate') }}
-                      <p-sortIcon field="StartDate"></p-sortIcon>
+                    <th style="width: 150px;" pSortableColumn="bidStartDate">
+                      {{ l('bidStartDate') }}
+                      <p-sortIcon field="bidStartDate"></p-sortIcon>
                     </th>
-                    <th style="width: 150px;" pSortableColumn="EndDate">
-                      {{ l('EndDate') }}
-                      <p-sortIcon field="EndDate"></p-sortIcon>
+                    <th style="width: 150px;" pSortableColumn="bidEndDate">
+                      {{ l('bidEndDate') }}
+                      <p-sortIcon field="bidEndDate"></p-sortIcon>
                     </th>
-                    <th style="width: 150px;" pSortableColumn="BiddingStatusName">
-                      {{ l('BiddingStatusName') }}
-                      <p-sortIcon field="BiddingStatusName"></p-sortIcon>
+                    <th style="width: 150px;" pSortableColumn="StatusName">
+                      {{ l('StatusName') }}
+                      <p-sortIcon field="StatusName"></p-sortIcon>
                     </th>
 
-                    <th style="width: 150px;" pSortableColumn="LastBidPrice">
-                      {{ l('LastBidPrice') }}
-                      <p-sortIcon field="LastBidPrice"></p-sortIcon>
+                    <th style="width: 150px;" pSortableColumn="myBidPrice">
+                      {{ l('myBidPrice') }}
+                      <p-sortIcon field="myBidPrice"></p-sortIcon>
                     </th>
-                    <th style="width: 150px;" pSortableColumn="Actions">
+                    <th style="width: 150px;">
                       {{ l('Actions') }}
-                      <p-sortIcon field="Actions"></p-sortIcon>
                     </th>
                   </tr>
                 </ng-template>
                 <ng-template pTemplate="body" let-record="$implicit">
                   <tr>
                     <td style="width: 150px;">
-                      <span class="ui-column-title"> {{ l('id') }}</span>
-                      {{ record.viewShipperBidsReqDetailsOutput.id }}
+                      <span class="ui-column-title"> {{ l('shippingRequestId') }}</span>
+                      {{ record.shippingRequestId }}
                     </td>
                     <td style="width: 150px;">
                       <span class="ui-column-title"> {{ l('shipperName') }}</span>
-                      {{ record.viewShipperBidsReqDetailsOutput.shipperName }}
+                      {{ record.shipperName }}
                     </td>
                     <td style="width: 150px;">
                       <span class="ui-column-title"> {{ l('truckTypeDisplayName') }}</span>
-                      {{ record.viewShipperBidsReqDetailsOutput.truckTypeDisplayName }}
+                      {{ record.truckTypeDisplayName }}
                     </td>
                     <td style="width: 150px;">
                       <span class="ui-column-title"> {{ l('goodCategoryName') }}</span>
-                      {{ record.viewShipperBidsReqDetailsOutput.goodCategoryName }}
+                      {{ record.goodCategoryName }}
                     </td>
                     <td style="width: 150px;">
-                      <span
-                        *ngIf="record.viewShipperBidsReqDetailsOutput.startBidDate"
-                        class="label label-xl font-weight-bold label-light-success label-inline"
-                        >{{ record.viewShipperBidsReqDetailsOutput.startBidDate | momentFormat: 'L' }}</span
+                      <span *ngIf="record.bidStartDate" class="label label-xl font-weight-bold label-light-success label-inline">{{
+                        record.bidStartDate | momentFormat: 'L'
+                      }}</span>
+                    </td>
+                    <td style="width: 150px;">
+                      <span *ngIf="record.bidEndDate" class="label label-xl font-weight-bold label-light-danger label-inline ui-column-title">
+                        {{ l('endBidDate') }}</span
                       >
-                    </td>
-                    <td style="width: 150px;">
-                      <span class="ui-column-title"> {{ l('endBidDate') }}</span>
-                      {{ record.viewShipperBidsReqDetailsOutput.endBidDate }}
+                      {{ record.bidEndDate }}
                     </td>
                     <td style="width: 150px;">
                       <span
-                        *ngIf="record.viewShipperBidsReqDetailsOutput.shippingRequestBidStatusName"
+                        *ngIf="record.shippingRequestBidStatusName"
                         class="label label-xl label-inline font-weight-bold"
-                        [class.label-light-danger]="record.viewShipperBidsReqDetailsOutput.shippingRequestBidStatusName == 'Ongoing'"
-                        [class.label-light-dark]="record.viewShipperBidsReqDetailsOutput.shippingRequestBidStatusName == 'Cancled'"
-                        [class.label-light-warning]="record.viewShipperBidsReqDetailsOutput.shippingRequestBidStatusName == 'Closed'"
-                        >{{ record.viewShipperBidsReqDetailsOutput.shippingRequestBidStatusName }}</span
+                        [class.label-light-danger]="record.shippingRequestBidStatusName == 'Ongoing'"
+                        [class.label-light-dark]="record.shippingRequestBidStatusName == 'Canceled'"
+                        [class.label-light-warning]="record.shippingRequestBidStatusName == 'Closed'"
+                        >{{ record.shippingRequestBidStatusName }}</span
                       >
                     </td>
 
                     <td style="width: 150px;">
                       <span class="ui-column-title"> {{ l('lastBidPrice') }}</span>
-                      {{ record.viewShipperBidsReqDetailsOutput.lastBidPrice }}
+                      {{ record.myBidPrice }}
                     </td>
                     <td style="width: 150px;">
                       <button
                         class="btn btn-primary font-weight-bolder"
-                        [disabled]="
-                          record.viewShipperBidsReqDetailsOutput.shippingRequestBidStatusName == 'Cancled' ||
-                          record.viewShipperBidsReqDetailsOutput.shippingRequestBidStatusName == 'Closed'
-                        "
-                        (click)="ViewShippingRequestDetailsModal.show(record.viewShipperBidsReqDetailsOutput)"
+                        [disabled]="record.shippingRequestBidStatusName == 'Cancled' || record.shippingRequestBidStatusName == 'Closed'"
+                        (click)="ViewShippingRequestDetailsModal.show(record)"
                       >
                         {{ l('Details') }}
                       </button>
