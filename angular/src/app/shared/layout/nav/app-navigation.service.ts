@@ -68,9 +68,9 @@ export class AppNavigationService {
         '',
         [],
         [
-          new AppMenuItem('Document Management ', 'Pages.DocumentTypes', 'flaticon-more', '/app/main/documentTypes/documentTypes'),
+          new AppMenuItem('DocumentManagement ', 'Pages.DocumentTypes', 'flaticon-more', '/app/main/documentTypes/documentTypes'),
           new AppMenuItem('DocumentsEntities', 'Pages.DocumentsEntities', 'flaticon-more', '/app/main/documentsEntities/documentsEntities'),
-          new AppMenuItem('Submitted Documents', 'Pages.DocumentFiles', 'flaticon-more', '/app/main/documentFiles/documentFiles'),
+          new AppMenuItem('SubmittedDocuments', 'Pages.DocumentFiles', 'flaticon-more', '/app/main/documentFiles/documentFiles'),
           new AppMenuItem(
             'DocumentTypeTranslations',
             'Pages.DocumentTypeTranslations',
@@ -83,7 +83,7 @@ export class AppNavigationService {
 
       //Host
       new AppMenuItem(
-        'TMS Settings',
+        'TMSSettings',
         '',
         'flaticon-interface-8',
         '',
@@ -105,13 +105,13 @@ export class AppNavigationService {
           //   () => this._featureCheckerService.isEnabled('App.Carrier')
           // ),
           new AppMenuItem(
-            'Truck Types',
+            'TruckTypes',
             '',
             'flaticon-interface-8',
             '',
             [],
             [
-              new AppMenuItem('Capacities', 'Pages.Capacities', 'flaticon-more', '/app/main/truckCapacities/capacities'),
+              new AppMenuItem('CapacityCategories', 'Pages.Capacities', 'flaticon-more', '/app/main/truckCapacities/capacities'),
               new AppMenuItem('TruckSubtypes', 'Pages.TruckSubtypes', 'flaticon-more', '/app/main/truckSubtypes/truckSubtypes'),
               new AppMenuItem('TransportSubtypes', 'Pages.TransportSubtypes', 'flaticon-more', '/app/main/transportSubtypes/transportSubtypes'),
               new AppMenuItem('TransportTypes', 'Pages.TransportTypes', 'flaticon-more', '/app/main/transportTypes/transportTypes'),
@@ -159,7 +159,7 @@ export class AppNavigationService {
       ),
 
       new AppMenuItem(
-        'Offers MarketPlace',
+        'OffersMarketPlace',
         'Pages.Offers',
         'flaticon-more',
         '/app/main/offers/offers',

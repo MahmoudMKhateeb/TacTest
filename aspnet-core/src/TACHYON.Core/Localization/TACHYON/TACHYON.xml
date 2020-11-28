@@ -1,6 +1,8 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <localizationDictionary culture="en">
-  <texts>    <text name="TruckCapacities">Truck capacities</text>
+  <texts>	  <![CDATA[Tachyon:SideBare Start]]>      <text name="DocumentManagement">Document Management</text>
+    <text name="SubmittedDocuments">Submitted Documents</text>
+    <text name="TMSSettings">TMS Settings</text>	  <![CDATA[Tachyon:SideBare End]]>	  	      <text name="TruckCapacities">Truck capacities</text>
     <text name="Capacity">Capacity</text>
     <text name="TACHYON.TruckCapacities.Capacity">Capacity</text>
     <text name="CapacitiesHeaderInfo">Capacities header info</text>
