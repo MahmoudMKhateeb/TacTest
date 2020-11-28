@@ -3,7 +3,7 @@
     <sub-header [title]="'TruckSubtypes' | localize" [description]="'TruckSubtypesHeaderInfo' | localize">
       <div role="actions">
         <button *ngIf="isGranted('Pages.TruckSubtypes.Create')" (click)="createTruckSubtype()" class="btn btn-primary blue">
-          <i class="fa fa-plus"></i> {{ l('CreateNewTruckSubtype') }}
+          <i class="fa fa-plus"></i> {{ l('Create') }} {{ l('NewTruckSubtype') }}
         </button>
       </div>
     </sub-header>
@@ -45,7 +45,7 @@
                 </div>
                 <div class="col-md-3">
                   <div class="form-group">
-                    <label for="TrucksTypeDisplayNameFilter">({{ l('TrucksType') }}) {{ l('DisplayName') }}</label>
+                    <label for="TrucksTypeDisplayNameFilter">{{ l('TrucksType') }}</label>
                     <input
                       type="text"
                       class="form-control"
@@ -93,11 +93,11 @@
                       {{ l('Actions') }}
                     </th>
                     <th style="width: 150px;" pSortableColumn="trucksTypeFk.displayName">
-                      {{ l('trucksType') }}
+                      {{ l('TrucksType') }}
                       <p-sortIcon field="trucksTypeDisplayName"></p-sortIcon>
                     </th>
                     <th style="width: 150px;" pSortableColumn="displayName">
-                      {{ l('trucksSubType') }}
+                      {{ l('TrucksSubType') }}
                       <p-sortIcon field="truckSubtype.displayName"></p-sortIcon>
                     </th>
                   </tr>
@@ -135,11 +135,11 @@
                       </div>
                     </td>
                     <td style="width: 150px;">
-                      <span class="ui-column-title"> {{ l('DisplayName') }}</span>
+                      <span class="ui-column-title"> {{ l('TrucksType') }}</span>
                       {{ record.trucksTypeDisplayName }}
                     </td>
                     <td style="width: 150px;">
-                      <span class="ui-column-title"> {{ l('DisplayName') }}</span>
+                      <span class="ui-column-title"> {{ l('TruckSubtype') }}</span>
                       {{ record.truckSubtype.displayName }}
                     </td>
                   </tr>

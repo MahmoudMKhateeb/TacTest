@@ -1,6 +1,13 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <localizationDictionary culture="en">
-  <texts>    <text name="TruckCapacities">Truck capacities</text>
+  <texts>	 <![CDATA[Tachyon:Common  Start]]>-->	  <text name="Choose">Choose</text>
+	 <![CDATA[Tachyon:Common  End]]>-->	  	 <![CDATA[Tachyon:Truck Page Start]]>-->	  <text name="Trucks">Trucks</text>
+	  <text name="TrucksHeaderInfo">Trucks Header Info</text>
+	  <text name="NewTruck">New Truck</text>
+	  <text name="PlateNumber">Plate number</text>	  <text name="ModelName">Model Name</text>	  <text name="ModelYear">Model Year</text>	  <text name="Truck">Truck</text>
+	  <text name="UseArrowKeysToChooseTheYear">Use Arrow Keys To Choose The Year</text>
+	  <text name="TrucktypeDetails">Truck type Details</text>
+	 <![CDATA[Tachyon:Truck Page End]]>-->	 	 <![CDATA[Tachyon:Truck type Categories Pages Start]]>-->	  <text name="TruckStatus">Truck Status</text>	  <text name="TruckType">Truck Type</text>	  <text name="TransportTypes">Transport types</text>	  <text name="TransportType">Transport type</text>	  <text name="TransportSubType">Transport SubType</text>	  <text name="TransportSubTypes">Transport SubTypes</text>	  <text name="TruckSubType">Truck SubType</text>	  <text name="TruckSubTypes">Truck SubTypes</text>	  <text name="CapacityCategory">Capacity Category</text>	  <text name="CapacityCategories">Capacity Categories</text>	  <text name="TransportTypesHeaderInfo">TransportTypesHeaderInfo</text>	  <text name="NewTransportType">New Transport Type</text>	  <text name="NewTransportSubtype">New Transport Subtype</text>	  <text name="TransportSubtypesHeaderInfo">Transport Subtypes Header Info</text>	  <text name="TrucksTypesHeaderInfo">Trucks Types Header Info</text>	  <text name="NewTrucksType">New Trucks Type</text>	  <text name="TruckSubtypesHeaderInfo">Truck Subtypes Header Info</text>	  <text name="NewTruckSubtype">New Truck Subtype</text>	  <text name="CapacitiesCategoriesHeaderInfo">Capacities Categories Header Info</text>	  <text name="NewCapacityCategory">New Capacity Category</text>	  <text name="TruckStatuses">Truck Statuses</text>	  <text name="NewTruckStatus">New Truck Status</text>	  <text name="TruckStatusesHeaderInfo">Truck Statuses Header Info</text>	 <![CDATA[Tachyon:Truck type Categories Page End]]>-->	      <text name="TruckCapacities">Truck capacities</text>
     <text name="Capacity">Capacity</text>
     <text name="TACHYON.TruckCapacities.Capacity">Capacity</text>
     <text name="CapacitiesHeaderInfo">Capacities header info</text>
@@ -10,26 +17,13 @@
     <text name="Capacities">Capacities</text>
     <text name="TruckSubtypeDisplayName">Truck subtype display name</text>
     <text name="PickTruckSubtype">Pick truck subtype</text>
-    <text name="TruckSubtypes">Truck subtypes</text>
-    <text name="TruckSubtype">Truck subtype</text>
     <text name="TACHYON.TruckSubtypes.TruckSubtype">TruckSubtype</text>
-    <text name="TruckSubtypesHeaderInfo">Truck subtypes header info</text>
     <text name="CreateNewTruckSubtype">Create new truck subtype</text>
     <text name="EditTruckSubtype">Edit truck subtype</text>
     <text name="DeleteTruckSubtype">Delete truck subtype</text>
-    <text name="TransportSubtypes">Transport subtypes</text>
-    <text name="TransportSubtype">Transport subtype</text>
-    <text name="TACHYON.TransportSubtypes.TransportSubtype">TransportSubtype</text>
-    <text name="TransportSubtypesHeaderInfo">Transport subtypes header info</text>
     <text name="CreateNewTransportSubtype">Create new transport subtype</text>
-    <text name="EditTransportSubtype">Edit transport subtype</text>
     <text name="DeleteTransportSubtype">Delete transport subtype</text>
-    <text name="TransportTypeDisplayName">Transport type display name</text>
-    <text name="PickTransportType">Pick transport type</text>
-    <text name="TransportTypes">Transport types</text>
-    <text name="TransportType">Transport type</text>
     <text name="TACHYON.TransportTypes.TransportType">TransportType</text>
-    <text name="TransportTypesHeaderInfo">Transport types header info</text>
     <text name="CreateNewTransportType">Create new transport type</text>
     <text name="EditTransportType">Edit transport type</text>
     <text name="DeleteTransportType">Delete transport type</text>
@@ -254,17 +248,12 @@
     <text name="CreateNewTrailerType">Create new trailer type</text>
     <text name="EditTrailerType">Edit trailer type</text>
     <text name="DeleteTrailerType">Delete trailer type</text>
-    <text name="Truck">Truck</text>
     <text name="TACHYON.Trucks.Truck">Truck</text>
-    <text name="PlateNumber">Plate number</text>
-    <text name="ModelName">Model name</text>
-    <text name="ModelYear">Model year</text>
     <text name="LicenseNumber">License number</text>
     <text name="LicenseExpirationDate">License expiration date</text>
     <text name="IsAttachable">Is attachable</text>
     <text name="NotIsAttachable">Not is attachable</text>
     <text name="Note">Note</text>
-    <text name="TrucksHeaderInfo">Trucks header info</text>
     <text name="CreateNewTruck">Create new truck</text>
     <text name="EditTruck">Edit truck</text>
     <text name="DeleteTruck">Delete truck</text>
@@ -277,21 +266,15 @@
     <text name="TrucksTypes">Trucks types</text>
     <text name="TrucksType">Trucks type</text>
     <text name="TACHYON.TrucksTypes.TrucksType">TrucksType</text>
-    <text name="TrucksTypesHeaderInfo">Trucks types header info</text>
     <text name="CreateNewTrucksType">Create new trucks type</text>
     <text name="EditTrucksType">Edit trucks type</text>
     <text name="DeleteTrucksType">Delete trucks type</text>
 	  <text name="TrucksTypeDuplicateName">There is already a truck type with name : {0}</text>
 
-	  <text name="Trucks">Trucks</text>
-    <text name="TruckStatus">Truck status</text>
-    <text name="TACHYON.Trucks.TruckStatus">TruckStatus</text>
     <text name="DisplayName">Display name</text>
-    <text name="TruckStatusesHeaderInfo">Truck statuses header info</text>
     <text name="CreateNewTruckStatus">Create new truck status</text>
     <text name="EditTruckStatus">Edit truck status</text>
     <text name="DeleteTruckStatus">Delete truck status</text>
-    <text name="TruckStatuses">Truck statuses</text>
     <text name="{0}IsRequired">{0} is required.</text>
     <text name="View">View</text>
     <text name="Details">Details</text>

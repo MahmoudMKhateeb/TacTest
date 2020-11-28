@@ -3,7 +3,7 @@
     <sub-header [title]="'TransportSubtypes' | localize" [description]="'TransportSubtypesHeaderInfo' | localize">
       <div role="actions">
         <button *ngIf="isGranted('Pages.TransportSubtypes.Create')" (click)="createTransportSubtype()" class="btn btn-primary blue">
-          <i class="fa fa-plus"></i> {{ l('CreateNewTransportSubtype') }}
+          <i class="fa fa-plus"></i> {{ l('Create') }} {{ l('NewTransportSubtype') }}
         </button>
       </div>
     </sub-header>
@@ -39,13 +39,13 @@
 
                 <div class="col-md-3">
                   <div class="form-group">
-                    <label for="DisplayNameFilter">{{ l('DisplayName') }}</label>
+                    <label for="DisplayNameFilter">{{ l('Name') }}</label>
                     <input type="text" class="form-control" id="DisplayNameFilter" name="displayNameFilter" [(ngModel)]="displayNameFilter" />
                   </div>
                 </div>
                 <div class="col-md-3">
                   <div class="form-group">
-                    <label for="TransportTypeDisplayNameFilter">({{ l('TransportType') }}) {{ l('DisplayName') }}</label>
+                    <label for="TransportTypeDisplayNameFilter">{{ l('TransportType') }}</label>
                     <input
                       type="text"
                       class="form-control"
@@ -135,11 +135,11 @@
                       </div>
                     </td>
                     <td style="width: 150px;">
-                      <span class="ui-column-title"> {{ l('DisplayName') }}</span>
+                      <span class="ui-column-title"> {{ l('TransportType') }}</span>
                       {{ record.transportTypeDisplayName }}
                     </td>
                     <td style="width: 150px;">
-                      <span class="ui-column-title"> {{ l('DisplayName') }}</span>
+                      <span class="ui-column-title"> {{ l('TransportSubtype') }}</span>
                       {{ record.transportSubtype.displayName }}
                     </td>
                   </tr>
