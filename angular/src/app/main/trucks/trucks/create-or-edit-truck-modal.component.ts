@@ -20,9 +20,9 @@ import { FileItem, FileUploader, FileUploaderOptions } from '@node_modules/ng2-f
 import { IAjaxResponse, TokenService } from '@node_modules/abp-ng2-module';
 import { AppConsts } from '@shared/AppConsts';
 import { LocalStorageService } from '@shared/utils/local-storage.service';
-import { DateType } from '@app/admin/required-document-files/hijri-gregorian-datepicker/consts';
+import { DateType } from '@app/shared/common/hijri-gregorian-datepicker/consts';
 import { NgbDateStruct } from '@node_modules/@ng-bootstrap/ng-bootstrap';
-import { DateFormatterService } from '@app/admin/required-document-files/hijri-gregorian-datepicker/date-formatter.service';
+import { DateFormatterService } from '@app/shared/common/hijri-gregorian-datepicker/date-formatter.service';
 import * as _ from 'lodash';
 import { Paginator } from '@node_modules/primeng/paginator';
 import { Table } from '@node_modules/primeng/table';
@@ -116,7 +116,6 @@ export class CreateOrEditTruckModalComponent extends AppComponentBase {
     private _tokenService: TokenService,
     private _localStorageService: LocalStorageService,
     private _documentFilesServiceProxy: DocumentFilesServiceProxy,
-    private dateFormatterService: DateFormatterService,
     private _fileDownloadService: FileDownloadService,
     private changeDetectorRef: ChangeDetectorRef
   ) {
@@ -140,6 +139,9 @@ export class CreateOrEditTruckModalComponent extends AppComponentBase {
       this.truck.capacityId = null;
 
       this.GetTransportDropDownList();
+      this._trucksServiceProxy.getAllTruckStatusForTableDropdown().subscribe((result) => {
+        this.allTruckStatuss = result;
+      });
 
       //RequiredDocuments
       this._documentFilesServiceProxy.getTruckRequiredDocumentFiles('').subscribe((result) => {
@@ -460,16 +462,6 @@ export class CreateOrEditTruckModalComponent extends AppComponentBase {
   //     .subscribe((result) => {
   //       this._fileDownloadService.downloadTempFile(result);
   //     });
-
-  selectedDateChange($event: NgbDateStruct, item: CreateOrEditDocumentFileDto) {
-    if ($event != null && $event.year < 2000) {
-      this.dateFormatterService.SetFormat('DD/MM/YYYY', 'iDD/iMM/iYYYY');
-      const incomingDate = this.dateFormatterService.ToGregorian($event);
-      item.expirationDate = moment(incomingDate.month + '/' + incomingDate.day + '/' + incomingDate.year, 'MM/DD/YYYY');
-    } else if ($event != null && $event.year > 2000) {
-      item.expirationDate = moment($event.month + '/' + $event.day + '/' + $event.year, 'MM/DD/YYYY');
-    }
-  }
 
   //document files methods
   private setIsEntityHistoryEnabled(): boolean {

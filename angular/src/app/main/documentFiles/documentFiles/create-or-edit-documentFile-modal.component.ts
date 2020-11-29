@@ -17,9 +17,9 @@ import { AppConsts } from '@shared/AppConsts';
 import { IAjaxResponse, TokenService } from '@node_modules/abp-ng2-module';
 import { finalize } from '@node_modules/rxjs/internal/operators';
 import { NgbDateStruct } from '@ng-bootstrap/ng-bootstrap';
-import { DateFormatterService } from '@app/admin/required-document-files/hijri-gregorian-datepicker/date-formatter.service';
-import { DateType } from '@app/admin/required-document-files/hijri-gregorian-datepicker/consts';
-
+import { DateFormatterService } from '@app/shared/common/hijri-gregorian-datepicker/date-formatter.service';
+import { DateType } from '@app/shared/common/hijri-gregorian-datepicker/consts';
+import * as _ from 'lodash';
 @Component({
   selector: 'createOrEditDocumentFileModal',
   templateUrl: './create-or-edit-documentFile-modal.component.html',
@@ -36,7 +36,7 @@ export class CreateOrEditDocumentFileModalComponent extends AppComponentBase {
 
   documentTypeDisplayName = '';
   documentEntity = '';
-  selectedDateTypeHijri = DateType.Hijri; // or DateType.Gregorian
+  selectedDateType = DateType.Gregorian; // or DateType.Gregorian
   CreateOrEditDocumentFileDtoList: CreateOrEditDocumentFileDto[] = [];
   // allTrucks: DocumentFileTruckLookupTableDto[];
   // allTrailers: DocumentFileTrailerLookupTableDto[];
@@ -61,14 +61,10 @@ export class CreateOrEditDocumentFileModalComponent extends AppComponentBase {
   private _DocsUploaderOptions: FileUploaderOptions = {};
   private entityId: string;
 
+  public selectedDate: NgbDateStruct;
   //endregion
 
-  constructor(
-    injector: Injector,
-    private dateFormatterService: DateFormatterService,
-    private _documentFilesServiceProxy: DocumentFilesServiceProxy,
-    private _tokenService: TokenService
-  ) {
+  constructor(injector: Injector, private _documentFilesServiceProxy: DocumentFilesServiceProxy, private _tokenService: TokenService) {
     super(injector);
   }
 
@@ -93,6 +89,8 @@ export class CreateOrEditDocumentFileModalComponent extends AppComponentBase {
     else {
       this._documentFilesServiceProxy.getDocumentFileForEdit(documentFileId).subscribe((result) => {
         this.documentFile = result.documentFile;
+        this.selectedDate = this.dateFormatterService.MomentToNgbDateStruct(this.documentFile.expirationDate);
+        console.log('this.selectedDate', this.selectedDate);
       });
     }
     this.active = true;
@@ -223,16 +221,6 @@ export class CreateOrEditDocumentFileModalComponent extends AppComponentBase {
     }
 
     return s4() + s4() + '-' + s4() + '-' + s4() + '-' + s4() + '-' + s4() + s4() + s4();
-  }
-
-  selectedDateChange($event: NgbDateStruct, item: CreateOrEditDocumentFileDto) {
-    if ($event != null && $event.year < 2000) {
-      this.dateFormatterService.SetFormat('DD/MM/YYYY', 'iDD/iMM/iYYYY');
-      const incomingDate = this.dateFormatterService.ToGregorian($event);
-      item.expirationDate = moment(incomingDate.month + '/' + incomingDate.day + '/' + incomingDate.year, 'MM/DD/YYYY');
-    } else if ($event != null && $event.year > 2000) {
-      item.expirationDate = moment($event.month + '/' + $event.day + '/' + $event.year, 'MM/DD/YYYY');
-    }
   }
 
   DocFileChangeEvent(event: any, item: CreateOrEditDocumentFileDto): void {

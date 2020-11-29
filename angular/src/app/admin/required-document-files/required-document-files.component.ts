@@ -17,8 +17,8 @@ import { appModuleAnimation } from '@shared/animations/routerTransition';
 import { Table } from 'primeng/table';
 import * as moment from '@node_modules/moment';
 import { NgbDateStruct } from '@node_modules/@ng-bootstrap/ng-bootstrap';
-import { DateFormatterService } from '@app/admin/required-document-files/hijri-gregorian-datepicker/date-formatter.service';
-import { DateType } from '@app/admin/required-document-files/hijri-gregorian-datepicker/consts';
+import { DateFormatterService } from '@app/shared/common/hijri-gregorian-datepicker/date-formatter.service';
+import { DateType } from '@app/shared/common/hijri-gregorian-datepicker/consts';
 import { FileDownloadService } from '@shared/utils/file-download.service';
 
 @Component({
@@ -66,7 +66,6 @@ export class RequiredDocumentFilesComponent extends AppComponentBase implements 
     injector: Injector,
     private _documentFilesServiceProxy: DocumentFilesServiceProxy,
     private _tokenService: TokenService,
-    private dateFormatterService: DateFormatterService,
     private _fileDownloadService: FileDownloadService
   ) {
     super(injector);
@@ -171,16 +170,6 @@ export class RequiredDocumentFilesComponent extends AppComponentBase implements 
   save(): void {
     this.saving = true;
     this.DocsUploader.uploadAll();
-  }
-
-  selectedDateChange($event: NgbDateStruct, item: CreateOrEditDocumentFileDto) {
-    if ($event != null && $event.year < 2000) {
-      this.dateFormatterService.SetFormat('YYYY/MM/DD', 'iYYYY/iMM/iDD');
-      const incomingDate = this.dateFormatterService.ToGregorian($event);
-      item.expirationDate = moment(incomingDate.month + '/' + incomingDate.day + '/' + incomingDate.year, 'MM/DD/YYYY');
-    } else if ($event != null && $event.year > 2000) {
-      item.expirationDate = moment($event.month + '/' + $event.day + '/' + $event.year, 'MM/DD/YYYY');
-    }
   }
 
   getAllsubmittedDocumentsStatusList() {
