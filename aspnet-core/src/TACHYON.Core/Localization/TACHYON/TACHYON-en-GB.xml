@@ -2,6 +2,8 @@
 <localizationDictionary culture="en-GB">
   <texts>
 	  <text name="NumbersOnly">Numbers Only</text>
+	  <text name="TheNumberLengthMustBeMoreThanMinDigits">The Number Length Must Be More Than MinDigits</text>
+	  <text name="TheNumberLengthMustBeLessThanMaxDigits">The Number Length Must Be Less Than MaxDigits</text>
 
 	  <text name="HomePage">Home page</text>
     <text name="AboutUs">About us</text>
