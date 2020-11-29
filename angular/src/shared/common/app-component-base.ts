@@ -13,9 +13,11 @@ import { AppUrlService } from '@shared/common/nav/app-url.service';
 import { AppSessionService } from '@shared/common/session/app-session.service';
 import { AppUiCustomizationService } from '@shared/common/ui/app-ui-customization.service';
 import { PrimengTableHelper } from 'shared/helpers/PrimengTableHelper';
-import { UiCustomizationSettingsDto } from '@shared/service-proxies/service-proxies';
+import { CreateOrEditDocumentFileDto, UiCustomizationSettingsDto } from '@shared/service-proxies/service-proxies';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { NgxSpinnerTextService } from '@app/shared/ngx-spinner-text.service';
+import { NgbDateStruct } from '@node_modules/@ng-bootstrap/ng-bootstrap';
+import { DateFormatterService } from '@app/shared/common/hijri-gregorian-datepicker/date-formatter.service';
 
 export abstract class AppComponentBase {
   localizationSourceName = AppConsts.localization.defaultLocalizationSourceName;
@@ -33,6 +35,7 @@ export abstract class AppComponentBase {
   appUrlService: AppUrlService;
   spinnerService: NgxSpinnerService;
   private ngxSpinnerTextService: NgxSpinnerTextService;
+  dateFormatterService: DateFormatterService;
   /**
    * max file size that  user can upload
    */
@@ -51,6 +54,7 @@ export abstract class AppComponentBase {
     this.primengTableHelper = new PrimengTableHelper();
     this.spinnerService = injector.get(NgxSpinnerService);
     this.ngxSpinnerTextService = injector.get(NgxSpinnerTextService);
+    this.dateFormatterService = injector.get(DateFormatterService);
   }
 
   flattenDeep(array) {
@@ -135,5 +139,19 @@ export abstract class AppComponentBase {
    */
   numberOnly($event: KeyboardEvent) {
     return !($event.key === 'e' || $event.key === 'E');
+  }
+
+  /**
+   * is used to handle hijri gregorian datepicker change event
+   * @param $event
+   * @param item
+   */
+  hijriDatepickerSelectedDateChange($event: NgbDateStruct, item: CreateOrEditDocumentFileDto) {
+    if ($event != null && $event.year < 2000) {
+      const ngDate = this.dateFormatterService.ToGregorian($event);
+      item.expirationDate = this.dateFormatterService.NgbDateStructToMoment(ngDate);
+    } else if ($event != null && $event.year > 2000) {
+      item.expirationDate = this.dateFormatterService.NgbDateStructToMoment($event);
+    }
   }
 }

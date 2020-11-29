@@ -93,7 +93,7 @@
 
                     <td style="width: 150px;">
                       <span class="ui-column-title"> </span>
-                      {{ record.expirationDate == null ? '-' : (record.expirationDate | momentFormat: 'L') }}
+                      {{ record.expirationDate == null ? '-' : (record.expirationDate | momentFormat: 'D/M/YYYY') }}
                     </td>
 
                     <td style="width: 150px;">
@@ -215,12 +215,9 @@
                           [label]="l('ExpirationDate') + '*'"
                           class="m-input"
                           [isRequired]="true"
-                          [selectedDate]="datePickerToday"
                           [readonly]="true"
-                          [minGreg]="datePickerToday"
-                          [minHijri]="datePickerToday"
-                          [selectedDateType]="item.documentTypeDto.hasHijriExpirationDate ? selectedDateTypeHijri : selectedDateTypeGregorian"
-                          (selectedDateChange)="selectedDateChange($event, item)"
+                          [selectedDateType]="selectedDateTypeGregorian"
+                          (selectedDateChange)="hijriDatepickerSelectedDateChange($event, item)"
                         >
                         </hijri-gregorian-datepicker-test>
                         <div *ngIf="DateInvalideIndexList[i]">

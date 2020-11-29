@@ -20,10 +20,10 @@ import { IOrganizationUnitsTreeComponentData, OrganizationUnitsTreeComponent } f
 import * as _ from 'lodash';
 import { finalize } from 'rxjs/operators';
 import { FileItem, FileUploader, FileUploaderOptions } from '@node_modules/ng2-file-upload';
-import { DateType } from '@app/admin/required-document-files/hijri-gregorian-datepicker/consts';
+import { DateType } from '@app/shared/common/hijri-gregorian-datepicker/consts';
 import { NgbDateStruct } from '@node_modules/@ng-bootstrap/ng-bootstrap';
 import * as moment from '@node_modules/moment';
-import { DateFormatterService } from '@app/admin/required-document-files/hijri-gregorian-datepicker/date-formatter.service';
+import { DateFormatterService } from '@app/shared/common/hijri-gregorian-datepicker/date-formatter.service';
 import { IAjaxResponse, TokenService } from '@node_modules/abp-ng2-module';
 
 @Component({
@@ -85,7 +85,6 @@ export class CreateOrEditDriverModalComponent extends AppComponentBase {
     injector: Injector,
     private _userService: UserServiceProxy,
     private _profileService: ProfileServiceProxy,
-    private dateFormatterService: DateFormatterService,
     private _documentFilesServiceProxy: DocumentFilesServiceProxy,
     private _tokenService: TokenService
   ) {
@@ -236,16 +235,6 @@ export class CreateOrEditDriverModalComponent extends AppComponentBase {
 
     item.extn = event.target.files[0].type;
     item.name = event.target.files[0].name;
-  }
-
-  selectedDateChange($event: NgbDateStruct, item: CreateOrEditDocumentFileDto) {
-    if ($event != null && $event.year < 2000) {
-      this.dateFormatterService.SetFormat('DD/MM/YYYY', 'iDD/iMM/iYYYY');
-      const incomingDate = this.dateFormatterService.ToGregorian($event);
-      item.expirationDate = moment(incomingDate.month + '/' + incomingDate.day + '/' + incomingDate.year, 'MM/DD/YYYY');
-    } else if ($event != null && $event.year > 2000) {
-      item.expirationDate = moment($event.month + '/' + $event.day + '/' + $event.year, 'MM/DD/YYYY');
-    }
   }
 
   /**

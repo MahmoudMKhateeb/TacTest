@@ -8,7 +8,7 @@
   aria-hidden="true"
   [config]="{ backdrop: 'static' }"
 >
-  <div class="modal-dialog modal-lg" style="max-width: 90% !important;">
+  <div class="modal-dialog modal-lg">
     <div class="modal-content">
       <form *ngIf="active" #truckForm="ngForm" novalidate (ngSubmit)="save()" autocomplete="off">
         <div class="modal-header">
@@ -274,7 +274,7 @@
                   <h3 class="card-title">{{ item.documentTypeDto.displayName }}</h3>
                 </div>
               </div>
-              <div class="card-body">
+              <div class="card-body padding-bottom-5">
                 <div class="row d-flex">
                   <div class="form-group col-6">
                     <label>{{ l('File') }}</label>
@@ -291,19 +291,19 @@
                       >
                     </div>
                   </div>
-                  <div *ngIf="item.documentTypeDto.hasExpirationDate" class="form-group col-6">
-                    <label>{{ l('expiration date') }} <span class="text-danger">*</span></label>
-                    <input
-                      name="expirationDate{{ i }}"
-                      id="expirationDate{{ i }}"
-                      bsDatepicker
-                      class="form-control m-input"
-                      datePickerMomentModifier
-                      [required]="item.documentTypeDto.isRequired && !item.isAccepted"
-                      [(date)]="item.expirationDate"
-                      [disabled]="item.isAccepted"
-                    />
-                  </div>
+                  <!--                  <div *ngIf="item.documentTypeDto.hasExpirationDate" class="form-group col-6">-->
+                  <!--                    <label>{{ l('expiration date') }} <span class="text-danger">*</span></label>-->
+                  <!--                    <input-->
+                  <!--                      name="expirationDate{{ i }}"-->
+                  <!--                      id="expirationDate{{ i }}"-->
+                  <!--                      bsDatepicker-->
+                  <!--                      class="form-control m-input"-->
+                  <!--                      datePickerMomentModifier-->
+                  <!--                      [required]="item.documentTypeDto.isRequired && !item.isAccepted"-->
+                  <!--                      [(date)]="item.expirationDate"-->
+                  <!--                      [disabled]="item.isAccepted"-->
+                  <!--                    />-->
+                  <!--                  </div>-->
                   <div *ngIf="item.documentTypeDto.hasNumber" class="form-group col-6">
                     <label
                       >{{ l('number') }}
@@ -345,7 +345,7 @@
                       [isRequired]="true"
                       [readonly]="true"
                       [selectedDateType]="item.documentTypeDto.hasHijriExpirationDate ? selectedDateTypeHijri : selectedDateTypeGregorian"
-                      (selectedDateChange)="selectedDateChange($event, item)"
+                      (selectedDateChange)="hijriDatepickerSelectedDateChange($event, item)"
                     >
                     </hijri-gregorian-datepicker-test>
                   </div>

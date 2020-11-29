@@ -12,8 +12,8 @@ import { AppComponentBase } from '@shared/common/app-component-base';
 import { FileItem, FileUploader, FileUploaderOptions } from '@node_modules/ng2-file-upload';
 import { IAjaxResponse, TokenService } from '@node_modules/abp-ng2-module';
 import { LocalStorageService } from '@shared/utils/local-storage.service';
-import { DateType } from '@app/admin/required-document-files/hijri-gregorian-datepicker/consts';
-import { DateFormatterService } from '@app/admin/required-document-files/hijri-gregorian-datepicker/date-formatter.service';
+import { DateType } from '@app/shared/common/hijri-gregorian-datepicker/consts';
+import { DateFormatterService } from '@app/shared/common/hijri-gregorian-datepicker/date-formatter.service';
 import * as _ from 'lodash';
 import { LazyLoadEvent } from '@node_modules/primeng/public_api';
 import { Paginator } from '@node_modules/primeng/paginator';
@@ -73,7 +73,6 @@ export class ViewOrEditEntityDocumentsModalComponent extends AppComponentBase {
     private _tokenService: TokenService,
     private _localStorageService: LocalStorageService,
     private _documentFilesServiceProxy: DocumentFilesServiceProxy,
-    private dateFormatterService: DateFormatterService,
     private _fileDownloadService: FileDownloadService,
     private changeDetectorRef: ChangeDetectorRef
   ) {

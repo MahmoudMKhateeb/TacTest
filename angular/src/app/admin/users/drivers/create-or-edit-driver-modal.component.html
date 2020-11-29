@@ -355,7 +355,7 @@
                           [isRequired]="true"
                           [readonly]="true"
                           [selectedDateType]="item.documentTypeDto.hasHijriExpirationDate ? selectedDateTypeHijri : selectedDateTypeGregorian"
-                          (selectedDateChange)="selectedDateChange($event, item)"
+                          (selectedDateChange)="hijriDatepickerSelectedDateChange($event, item)"
                         >
                         </hijri-gregorian-datepicker-test>
                       </div>

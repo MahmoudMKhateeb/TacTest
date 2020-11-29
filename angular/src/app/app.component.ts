@@ -14,10 +14,13 @@ import { ChangeProfilePictureModalComponent } from '@app/shared/layout/profile/c
 import { MySettingsModalComponent } from '@app/shared/layout/profile/my-settings-modal.component';
 import { NotificationSettingsModalComponent } from '@app/shared/layout/notifications/notification-settings-modal.component';
 import { UserNotificationHelper } from '@app/shared/layout/notifications/UserNotificationHelper';
+import { NgbDateParserFormatter } from '@node_modules/@ng-bootstrap/ng-bootstrap';
+import { CustomNgbDateParserFormatter } from '@app/shared/common/hijri-gregorian-datepicker/CustomNgbDateParserFormatter';
 
 @Component({
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.less'],
+  providers: [{ provide: NgbDateParserFormatter, useClass: CustomNgbDateParserFormatter }],
 })
 export class AppComponent extends AppComponentBase implements OnInit {
   subscriptionStartType = SubscriptionStartType;
