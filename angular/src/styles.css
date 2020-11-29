@@ -388,6 +388,9 @@ a.text-hover-primary:hover,
   font-family: 'Open Sans Semibold';
 }
 
+.menu-link-icon {
+  color: #dc2434 !important;
+}
 .py-4 {
   font-family: 'Open Sans Semibold' !important;
 }
