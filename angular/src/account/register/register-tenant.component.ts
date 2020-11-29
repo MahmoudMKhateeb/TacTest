@@ -182,4 +182,7 @@ export class RegisterTenantComponent extends AppComponentBase implements OnInit,
       this.isEmailAvailable = result;
     });
   }
+  goToHome(): void {
+    (window as any).location.href = '/';
+  }
 }
