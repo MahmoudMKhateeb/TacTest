@@ -1,6 +1,67 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <localizationDictionary culture="ar">
   <texts>
+
+	   <text name="SignUp">إشترك</text>
+       <text name="IAMA">أنا</text>
+       <text name="CompanyInformation">معلومات عن المؤسسة\الشركة</text>
+       <text name="CompanyUniqueName">الإسم المختصر المميز للشركة</text>
+	   <text name="CompanyUniqueName_Regex_Description"> يجب أن يكون اسم الشركة على الأقل حرفين ويبدأ بحرف ومن ثم : حرف أو رقم أو شرطه أو شرطه سفلية وأن لا يكون باللغة العربية. </text>
+	  <text name="CompanyFullLeagalName">اللإسم  الكامل الخاص بالشركة</text>
+	  <text name="Country">البلد</text>
+	  <text name="City">المدينة</text>
+	  <text name="Address">العنوان</text>
+	  <text name="Format">الصيغة</text>
+	  <text name="AddressFormat">المدينة -- الولاية -- إسم الشارع -- الرمز البريدي</text>
+	  <text name="AdminUserAccountInfo">معلومات المستخدم لمشرف حساب الشركة</text>
+	  <text name="AdminEmailAddress">البريد الإلكتروني الخاص بالمشرف</text>
+	  <text name="AdminPassword">كلمة السر الخاصة بالمشرف</text>
+	  <text name="AdminPasswordRepeat">كلمة السر الخاصة بالمشرف (تكرار)</text>
+	  <text name="NewPasswordRepeat">إعادة إدخال كلمة المرور الجديدة</text>
+	  <text name="PleaseEnterYourNewPassword">الرجائ إدخال كلمة السر الجديدة الخاصة بك</text>
+	  <text name="weak">ضعيف</text>
+	  <text name="medium">متوسط</text>
+	  <text name="strong">قوي</text>
+	  <text name="PasswordComplexity_RequireDigit_Hint">كلمة السر يجب ان تحتوي على الأفل على رقم واحد ('0'-'9').</text>
+	  <text name="PasswordComplexity_RequireLowercase_Hint">كلمة السر يجب ان تحتوي على الأفل على حروف صغيرة ('a'-'z').</text>
+	  <text name="PasswordComplexity_RequireNonAlphanumeric_Hint">كلمة السر يجب ان تحتوي على الأفل على رمز واحد .</text>
+	  <text name="PasswordComplexity_RequireUppercase_Hint">كلمة السر يجب ان تحتوي على الأفل على حرف كبير واحد('A'-'Z').</text>
+	  <text name="PasswordComplexity_RequiredLength_Hint">كلمة السر يجب ان تحتوي على الأفل على {0} عناصر.</text>
+	  <text name="PasswordsDontMatch">كلمة المرور غير مطابقة!</text>
+	  <text name="NewPasswordRepeat">كلمة المرور الجديدة (تكرار)</text>
+	  <text name="PasswordRepeat">كلمة المرور (تكرار)</text>
+	  <text name="PleaseMakeSureYouProvideValidDetails">Please Make Sure You Provide Valid Details!</text>
+	  <text name="pleasemakesureyouchoosethecountryandthecity!">Please make sure you choose the country and the city!</text>
+	  <text name="Carrier">ناقل</text>
+
+	  <![CDATA[Tachyon: Tenant Registration Page End]]>
+
+
+
+	  <![CDATA[ Tachyon: Tenant login Page Start]]>
+	  <text name="NotAMemberYet">Not a member yet ?</text>
+	  <![CDATA[ Tachyon: Tenant login Page End]]>
+	  
+	  
+	  
+	   <![CDATA[Tachyon:Common Start]]>
+       <text name="AlreadyTaken">سبق إستخدامه</text>
+       <text name="Enter">أدخل</text>
+	  <text name="Select">إختار</text>
+	  <text name="isRequired">مطلوب</text>
+	  <text name="NotValid">غير صالح</text>
+	  <text name="Back">العودة</text>
+	  <text name="SavingWithThreeDot">جاري الحفظ...</text>
+	  <text name="Submit">إرسال</text>
+	  <text name="ThisFieldIsRequired">هذه الخانة مطلوبه.</text>
+      <text name="PleaseEnterAtLeastNCharacter">الرجاء إدخال {0} حرفا على الأقل.</text>
+      <text name="PleaseEnterNoMoreThanNCharacter">الرجاء إدخال أكثر من {0} حرفا.</text>
+	  <text name="InvalidEmailAddress">البريدالالكتروني غير صحيح</text>
+	  <![CDATA[Tachyon:Common End]]>
+	  
+	  
+	  
+	  
     <text name="HomePage">الرئيسية</text>
     <text name="AboutUs">من نحن</text>
     <text name="Administration">الإدارة</text>
@@ -12,7 +73,6 @@
     <text name="TenantIsNotActive">العميل {0} غير مغعّل</text>
     <text name="UserIsNotActiveAndCanNotLogin">العضو {0} غير مفعّل ولا يمكن تسجيل الدخول</text>
     <text name="PleaseEnterLoginInformation">الرجاء إدخال معلومات تسجيل الدخول</text>
-    <text name="TenancyName">اسم العميل</text>
     <text name="UserNameOrEmail">اسم المستخدم أو البريد الإلكتروني</text>
     <text name="Password">كلمة المرور</text>
     <text name="RememberMe">تذكرنى</text>
@@ -45,7 +105,6 @@
     <text name="LastLoginTime">آخر تسجيل الدخول</text>
     <text name="EditUser">تحرير المستخدم</text>
     <text name="UserInformations">تفاصيل المستخدم</text>
-    <text name="PasswordRepeat">أعد كلمة المرور</text>
     <text name="SuccessfullyDeleted">تم الحذف بنجاح</text>
     <text name="RoleDeleteWarningMessage">سيتم حذف الدور {0} و سوف يتم إزالة إذونات جميع المستخدمين المعيين بهذا الدور</text>
     <text name="UserDeleteWarningMessage">سيتم حذف المستخدم {0}.</text>
@@ -62,11 +121,7 @@
     <text name="TenantsHeaderInfo">إدارة العملاء</text>
     <text name="CreateNewTenant">إنشاء عميل الجديد</text>
     <text name="TenancyCodeName">كود العميل</text>
-    <text name="TenantName">اسم العميل</text>
     <text name="TenantDeleteWarningMessage">سيتم حذف العميل {0}</text>
-    <text name="AdminEmailAddress">البريد الإلكتروني للمشرف</text>
-    <text name="AdminPassword">كلمة مرور المشرف</text>
-    <text name="AdminPasswordRepeat">إعادة كلمة مرور المشرف</text>
     <text name="EditTenant">تحرير العميل</text>
     <text name="ChangingPermissions">تغيير الإذونات</text>
     <text name="EditingUser"> تحرير المستخدم </text>
@@ -81,7 +136,6 @@
     <text name="CreationTime">الإنشاء</text>
     <text name="SearchWithThreeDot">بـحث...</text>
     <text name="ResetSpecialPermissions">مسح الإذونات الخاصة</text>
-    <text name="SavingWithThreeDot">حـفظ...</text>
     <text name="Settings">الإعدادات</text>
     <text name="SaveAll">إحفظ الكل</text>
     <text name="SettingsHeaderInfo">عرض وتغيير إعدادات النظام</text>
@@ -109,10 +163,8 @@
     <text name="EmailActivation_Title">TACHYON مرحبا بك في</text>
     <text name="EmailActivation_SubTitle">تم إرسال هذه الرساله لتأكيد بريدك الإلكتروني.</text>
     <text name="EmailActivation_ClickTheLinkBelowToVerifyYourEmail">يرجى الضغط على الرابط أدناه لتأكيد البريد الإلكتروني:</text>
-    <text name="InvalidEmailAddress">البريدالالكتروني غير صحيح</text>
     <text name="InvalidPasswordResetCode">رمز إعادة تعيين كلمة المرور غير صحيح</text>
     <text name="InvalidPasswordResetCode_Detail">من فضلك تأكد من دخول هذه الصفحة بالضغط على الرابط المرسل إلى بريدك الإلكتروني.  إذا كان هذا لا يحل المشكلة، يمكنك محاولة إعادة تعيين كلمة المرور مره اخرى</text>
-    <text name="PleaseEnterYourNewPassword">الرجاء إدخال كلمة المرور الجديدة</text>
     <text name="UserEmailIsNotConfirmedAndCanNotLogin">لم يتم تأكيد عنوان بريدك الإلكتروني. يرجى التحقق من بريدك الالكتروني والضغط على رابط تأكيد البريد الإلكتروني لتفعيل حسابك. إذا لم تستلم الرسالة إضغط على "تاكيد البريد الإلكتروني" لإرسال الطلب مره اخرى </text>
     <text name="LoginFailed">لم نتمكن من تسجيل الدخول!</text>
     <text name="InvalidEmailConfirmationCode">رمز تأكيد البريد الإلكتروني غير صحيح</text>
@@ -126,7 +178,6 @@
     <text name="ChangePassword">تغيير كلمة المرور</text>
     <text name="CurrentPassword">كلمة المرور الحالية</text>
     <text name="NewPassword">كلمة المرور الجديدة</text>
-    <text name="NewPasswordRepeat">إعادة كلمة المرور الجديدة</text>
     <text name="YourPasswordHasChangedSuccessfully">تم تغيير كلمة المرور بنجاح</text>
     <text name="SelfUserRegistrationIsDisabledMessage">لا يمكنك الإشتراك بالنظام</text>
     <text name="SelfUserRegistrationIsDisabledMessage_Detail">تم تعطيل إشتراك المستخدم الذاتي يرجى الاتصال بمسؤول النظام للإشتراك.</text>
@@ -146,7 +197,6 @@
     <text name="{0}UserCannotBeDeleted">لا يمكن حذف المستخدم {0}.</text>
     <text name="TenantNameCanNotBeEmpty">اسم العميل لا يمكن أن يكون فارغا</text>
     <text name="ChangeProfilePicture">تغيير الصورة الشخصية</text>
-    <text name="TenantName_Regex_Description">يجب أن يكون اسم العميل على الأقل حرفين ويبدأ بحرف ومن ثم : حرف أو رقم أو شرطه أو شرطه سفلية.</text>
     <text name="ProfilePicture_Change_Info">يمكنك إختيار ملف JPG/JPEG/PNG وبحد أقصى للحجم {0} كيلوبايت  </text>
     <text name="ProfilePicture_Change_Error">تعذّر تغيير صورة ملفك الشخصي</text>
     <text name="ProfilePicture_Warn_SizeLimit">يجب أن يكون حجم الصورة أصغر من {0} كيلوبايت يرجى تحديد ملف آخر</text>
@@ -154,13 +204,9 @@
     <text name="Dashboard">لوحة القيادة</text>
     <text name="DashboardHeaderInfo">الإحصاءات والتقارير</text>
     <text name="GoToApplication">الى النظام</text>
-    <text name="TenantInformations">معلومات العميل</text>
     <text name="PersonalInformations">معلومات شخصية</text>
     <text name="AccountSettings">إعدادات الحساب</text>
     <text name="Captha_Hint">الرجاء إدخال الرمز الذي يظهر في الصورة أدناه</text>
-    <text name="Back">العودة</text>
-    <text name="Submit">أرسل</text>
-    <text name="SignUp">إشترك</text>
     <text name="CaptchaCanNotBeEmpty">يجب أن تثبت أنك لست روبوتًا.</text>
     <text name="IncorrectCaptchaAnswer">غير قادر على تحديد أنك لست روبوتًا.</text>
     <text name="FormIsNotValidMessage">النموذج يحتوي على أخطاء. يرجى مراجعة وتصحيح الأخطاء</text>
@@ -294,7 +340,6 @@
     <text name="SelectAnItem">إختر سجل</text>
     <text name="NewOrganizationUnit">وحدة تنظيمية جديدة</text>
     <text name="SelectAUser">إختر مستخدم</text>
-    <text name="Select">إختر</text>
     <text name="UserIsAlreadyInTheOrganizationUnit">هذا المستخدم موجود في الوحدة التنظيمية !</text>
     <text name="AddRootUnit">أضف وحدة جذرية</text>
     <text name="AddUser">أضف مستخدم</text>
@@ -499,11 +544,6 @@
     <text name="EmailSecurityCodeBody">رمز الحماية هو: {0}</text>
     <text name="Sms">SMS - رسائل قصيرة</text>
     <text name="SmsSecurityCodeMessage">رمز الحماية هو: {0}</text>
-    <text name="PasswordComplexity_RequireDigit_Hint">يجب أن تحتوي كلمات المرور على رقم واحد على الأقل ('0' - '9').</text>
-    <text name="PasswordComplexity_RequireLowercase_Hint">يجب أن تحتوي كلمات المرور على حرف صغير واحد على الأقل ('a' - 'z').</text>
-    <text name="PasswordComplexity_RequireNonAlphanumeric_Hint">يجب أن تحتوي كلمات المرور على حرف غير أبجدي وغير رقمي واحد على الأقل.</text>
-    <text name="PasswordComplexity_RequireUppercase_Hint">يجب أن تحتوي كلمات المرور على حرف واحد كبير على الأقل ('A' - 'Z').</text>
-    <text name="PasswordComplexity_RequiredLength_Hint">يجب أن تتكون كلمات المرور من {0} حرفا على الأقل.</text>
     <text name="PasswordComplexity_RequireDigit">تتطلب أرقام</text>
     <text name="PasswordComplexity_RequireLowercase">تتطلب أحرف صغيرة</text>
     <text name="PasswordComplexity_RequireNonAlphanumeric">تتطلب أحرف غير أبجدية وغير رقمية</text>
@@ -685,7 +725,6 @@
     <text name="Link">رابط</text>
     <text name="Billing">فواتير</text>
     <text name="LegalName">الإسم القانوني</text>
-    <text name="Address">عنوان</text>
     <text name="Tax/VatNo">ضريبة / رقم ضريبة القيمة المضافة </text>
     <text name="Invoice">فاتورة</text>
     <text name="TotalAmount">المبلغ الإجمالي</text>
@@ -748,7 +787,6 @@
     <text name="PickFromGallery">اختيار من المعرض</text>
     <text name="TakePhoto">التقاط صورة</text>
     <text name="Rotate">استدارة</text>
-    <text name="PasswordsDontMatch">كلمة المرور غير مطابقة!</text>
     <text name="RequiredField">حقل {0} مطلوب.</text>
     <text name="StringLengthDoesntMatch">يجب أن يكون {0} كحد ادنى {1} وحد اقصى {2}.</text>
     <text name="LessThanMinStringLength"> {0} يجب أن يكون كحد ادنى {1}.</text>
@@ -759,9 +797,6 @@
     <text name="UiCustomization_Desktop">كمبيوتر</text>
     <text name="TwoFactorLoginIsNotSupported">لا يتم اعتماد تسجيل دخول العاملين حاليا!</text>
     <text name="LinkToCurrentPage">رابط الصفحة الحالية</text>
-    <text name="ThisFieldIsRequired">هذه الخانة مطلوبه.</text>
-    <text name="PleaseEnterAtLeastNCharacter">الرجاء إدخال {0} حرفا على الأقل.</text>
-    <text name="PleaseEnterNoMoreThanNCharacter">الرجاء إدخال أكثر من {0} حرفا.</text>
     <text name="SelectTwoFactorProvider">اختر مزود التوثيق ذو العاملين</text>
     <text name="InvoiceInfoIsMissingOrNotCompleted">معلومات الفاتورة غير متوفرة أو غير مكتملة</text>
     <text name="InvoiceTo">فاتورة</text>
@@ -953,10 +988,7 @@
     <text name="PageNameCanNotBeEmpty">لا يمكن أن يكون اسم الصفحة فارغًا.</text>
     <text name="ShowMenuSearchInput">إظهار شريط البحث في القائمة</text>
     <text name="veryWeak">ضعيف جدا</text>
-    <text name="weak">ضعيف</text>
     <text name="normal">عادي</text>
-    <text name="medium">متوسط</text>
-    <text name="strong">قوي</text>
     <text name="veryStrong">قوي جدا</text>
     <text name="QuickNav">الإنتقال السريع</text>
     <text name="AutomaticBilling">الفواتير التلقائية</text>
