@@ -1,6 +1,11 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <localizationDictionary culture="ar">
   <texts>
+	  
+    <text name="NumbersOnly">أرقام فقط</text>
+	  <text name="TheNumberLengthMustBeMoreThanMinDigits">عدد خانات الرقم يجب أن يكون أكبر من العدد الادنى المسموح به </text>
+	  <text name="TheNumberLengthMustBeLessThanMaxDigits">عدد خانات الرقم يجب أن يكون أقل من العدد الأعلى المسموح به</text>
+	  
     <text name="HomePage">الرئيسية</text>
     <text name="AboutUs">من نحن</text>
     <text name="Administration">الإدارة</text>

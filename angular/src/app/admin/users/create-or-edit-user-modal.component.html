@@ -74,15 +74,31 @@
                   class="form-control"
                   [(ngModel)]="user.emailAddress"
                   required
+                  (change)="removeWhiteSpacesFromEmail()"
                   maxlength="256"
                   email
                 />
-                <validation-messages [formCtrl]="emailAddressInput"></validation-messages>
+                <span *ngIf="!isEmailValid" class="form-text text-danger">{{ l('NotValid') }}</span>
+                <span *ngIf="!isEmailAvailable" class="form-text text-danger">{{ l('AlreadyTaken') }}</span>
+                <!-- <validation-messages [formCtrl]="emailAddressInput"></validation-messages> -->
               </div>
 
               <div class="form-group">
                 <label for="PhoneNumber">{{ 'PhoneNumber' | localize }}</label>
-                <input id="PhoneNumber" type="text" name="PhoneNumber" class="form-control" [(ngModel)]="user.phoneNumber" maxlength="32" />
+                <input
+                  id="PhoneNumber"
+                  #phoneNumberInput="ngModel"
+                  (keypress)="numberOnly($event)"
+                  (change)="CheckIfDriverPhoneNumberIsValid(phoneNumberInput.value, user.id)"
+                  type="text"
+                  name="PhoneNumber"
+                  class="form-control"
+                  [(ngModel)]="user.phoneNumber"
+                  maxlength="32"
+                />
+                <span class="form-text text-muted">{{ 'Enter' | localize }} {{ 'PhoneNumber' | localize }}</span>
+                <span class="form-text text-muted">{{ 'NumbersOnly' | localize }}</span>
+                <span *ngIf="!isPhoneNumberAvilable" class="form-text text-danger">{{ l('AlreadyTaken') }}</span>
               </div>
               <div class="form-group">
                 <label for="Nationality">{{ 'Nationality' | localize }}</label>
@@ -94,6 +110,7 @@
                   id="UserName"
                   #userNameInput="ngModel"
                   type="text"
+                  (change)="CheckIfUserNameIsValid(userNameInput.value, user.id)"
                   [disabled]="!canChangeUserName"
                   name="UserName"
                   class="form-control"
@@ -101,6 +118,9 @@
                   required
                   maxlength="256"
                 />
+                <span class="form-text text-muted">{{ 'Enter' | localize }} {{ 'UserName' | localize }}</span>
+                <span *ngIf="!isUserNameAvilable" class="form-text text-danger">{{ l('AlreadyTaken') }}</span>
+
                 <span class="help-block" *ngIf="!canChangeUserName">{{ 'CanNotChangeAdminUserName' | localize }}</span>
                 <validation-messages [formCtrl]="userNameInput"></validation-messages>
               </div>

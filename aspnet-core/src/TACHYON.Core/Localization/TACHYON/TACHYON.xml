@@ -1,6 +1,9 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <localizationDictionary culture="en">
-  <texts>    <text name="TruckCapacities">Truck capacities</text>
+  <texts>
+	  <text name="NumbersOnly">Numbers Only</text>
+
+	  <text name="TruckCapacities">Truck capacities</text>
     <text name="Capacity">Capacity</text>
     <text name="TACHYON.TruckCapacities.Capacity">Capacity</text>
     <text name="CapacitiesHeaderInfo">Capacities header info</text>
