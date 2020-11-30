@@ -1,114 +1,139 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <localizationDictionary culture="en">
-  <texts>	        <text name="SignUp">Sign up</text>       <text name="IAMA">I AM A</text>       <text name="CompanyInformation">Company Information</text>       <text name="CompanyUniqueName">Company Unique Name</text>
-	   <text name="CompanyUniqueName_Regex_Description">Company unique name must be at least 2 chars, starts with a letter and continue with letter, number, dash or underscore. and can not be in Arabic</text>
-      <text name="CompanyFullLeagalName">Company Full Leagal Name</text>	  <text name="Country">Country</text>
-	  <text name="City">City</text>
-	  <text name="Address">Address</text>
-	  <text name="Format">Format</text>
-	  <text name="AddressFormat">City--State--Street Name--Zip</text>
-	  <text name="AdminUserAccountInfo">Admin user Account info</text>
-      <text name="AdminEmailAddress">admin email</text>
-	  <text name="AdminPassword">admin password</text>
-      <text name="AdminPasswordRepeat">admin password (repeat)</text>    
-	  <text name="PleaseEnterYourNewPassword">Please enter your new password.</text>
-      <text name="weak">Weak</text>
-      <text name="medium">Medium</text>
-	  <text name="strong">Strong</text>	  <text name="PasswordComplexity_RequireDigit_Hint">Passwords must have at least one digit ('0'-'9').</text>
- 	  <text name="PasswordComplexity_RequireLowercase_Hint">Passwords must have at least one lowercase ('a'-'z').</text>
-	  <text name="PasswordComplexity_RequireNonAlphanumeric_Hint">Passwords must have at least one non-alphanumeric character.</text>
-	  <text name="PasswordComplexity_RequireUppercase_Hint">Passwords must have at least one uppercase ('A'-'Z').</text>
-	  <text name="PasswordComplexity_RequiredLength_Hint">Passwords must be at least {0} characters.</text>
-      <text name="PasswordsDontMatch">Passwords do not match!</text>	  <text name="NewPasswordRepeat">New password (repeat)</text>
-	  <text name="PasswordRepeat">password (repeat)</text>
-	  <text name="PleaseMakeSureYouProvideValidDetails!">Please Make Sure You Provide Valid Details!</text>
-	  <text name="pleasemakesureyouchoosethecountryandthecity!">Please make sure you choose the country and the city!</text>
-	  <text name="Carrier">Carrier</text>
-	  <![CDATA[ Tachyon: Tenant Registration Page End]]>	  <![CDATA[ Tachyon: Tenant login Page Start]]>	  <text name="NotAMemberYet">Not a member yet ?</text>	  <![CDATA[ Tachyon: Tenant login Page End]]>	  <![CDATA[ Tachyon:Common]]>       <text name="AlreadyTaken">Already Taken</text>
-       <text name="Enter">Enter</text>
-       <text name="Select">Select</text>
-       <text name="isRequired">is Required</text>
-	   <text name="NotValid">NotValid</text>
-	   <text name="Back">Back</text>	   <text name="SavingWithThreeDot">Saving...</text>
-       <text name="Submit">Submit</text>	   <text name="ThisFieldIsRequired">This field is required.</text>
-       <text name="PleaseEnterAtLeastNCharacter">Please enter at least {0} characters.</text>
-       <text name="PleaseEnterNoMoreThanNCharacter">Please enter no more than {0} characters.</text>	   <text name="InvalidEmailAddress">Invalid email address</text>
-       <text name="InvalidPattern">Invalid</text>	   <![CDATA[ Tachyon: Tenant Registration Page Start]]>	  <text name="TruckCapacities">Truck capacities</text>
-	   <text name="DocumentFilesHeaderInfo">DocumentFilesHeaderInfo</text>
-	   <text name="DocumentName">Document Name</text>
-	   <text name="SubmitterTenant">Submitter Tenant</text>
-	   <text name="TruckID">Truck ID</text>
-	   <text name="TrailerCode">Trailer Code</text>
-	   <text name="DriverName">Driver Name</text>
-       <text name="IsAccepted">Is Accepted</text>
-       <text name="Accept">Accept</text>
-       <text name="Reject">Reject</text>
-	   <text name="DocumentFile">Document File</text>
-       <text name="NewDocumentFile">New Document File</text>
-	   <text name="AddDocument">Add Document</text>
+  <texts>
 
-	 <![CDATA[ Tachyon: Document files Page End]]>
-	  <![CDATA[Tachyon:Common Start]]>
-        <text name="ViewDetails">View Details</text>
+    <text name="SignUp">Sign up</text>
+    <text name="IAMA">I AM A</text>
+    <text name="CompanyInformation">Company Information</text>
+    <text name="CompanyUniqueName">Company Unique Name</text>
+    <text name="CompanyUniqueName_Regex_Description">Company unique name must be at least 2 chars, starts with a letter and continue with letter, number, dash or underscore. and can not be in Arabic</text>
+    <text name="CompanyFullLeagalName">Company Full Leagal Name</text>
+    <text name="Country">Country</text>
+    <text name="City">City</text>
+    <text name="Address">Address</text>
+    <text name="Format">Format</text>
+    <text name="AddressFormat">City--State--Street Name--Zip</text>
+    <text name="AdminUserAccountInfo">Admin user Account info</text>
+    <text name="AdminEmailAddress">admin email</text>
+    <text name="AdminPassword">admin password</text>
+    <text name="AdminPasswordRepeat">admin password (repeat)</text>
+    <text name="PleaseEnterYourNewPassword">Please enter your new password.</text>
+    <text name="weak">Weak</text>
+    <text name="medium">Medium</text>
+    <text name="strong">Strong</text>
+    <text name="PasswordComplexity_RequireDigit_Hint">Passwords must have at least one digit ('0'-'9').</text>
+    <text name="PasswordComplexity_RequireLowercase_Hint">Passwords must have at least one lowercase ('a'-'z').</text>
+    <text name="PasswordComplexity_RequireNonAlphanumeric_Hint">Passwords must have at least one non-alphanumeric character.</text>
+    <text name="PasswordComplexity_RequireUppercase_Hint">Passwords must have at least one uppercase ('A'-'Z').</text>
+    <text name="PasswordComplexity_RequiredLength_Hint">Passwords must be at least {0} characters.</text>
+    <text name="PasswordsDontMatch">Passwords do not match!</text>
+    <text name="NewPasswordRepeat">New password (repeat)</text>
+    <text name="PasswordRepeat">password (repeat)</text>
+    <text name="PleaseMakeSureYouProvideValidDetails!">Please Make Sure You Provide Valid Details!</text>
+    <text name="pleasemakesureyouchoosethecountryandthecity!">Please make sure you choose the country and the city!</text>
+    <text name="Carrier">Carrier</text>
+    <![CDATA[ Tachyon: Tenant Registration Page End]]>
+
+
+    <![CDATA[ Tachyon: Tenant login Page Start]]>
+    <text name="NotAMemberYet">Not a member yet ?</text>
+    <![CDATA[ Tachyon: Tenant login Page End]]>
+
+    <![CDATA[ Tachyon:Common]]>
+    <text name="AlreadyTaken">Already Taken</text>
+    <text name="Enter">Enter</text>
+    <text name="Select">Select</text>
+    <text name="isRequired">is Required</text>
+    <text name="NotValid">NotValid</text>
+    <text name="Back">Back</text>
+    <text name="SavingWithThreeDot">Saving...</text>
+    <text name="Submit">Submit</text>
+    <text name="ThisFieldIsRequired">This field is required.</text>
+    <text name="PleaseEnterAtLeastNCharacter">Please enter at least {0} characters.</text>
+    <text name="PleaseEnterNoMoreThanNCharacter">Please enter no more than {0} characters.</text>
+    <text name="InvalidEmailAddress">Invalid email address</text>
+    <text name="InvalidPattern">Invalid</text>
+    <![CDATA[ Tachyon: Tenant Registration Page Start]]>
+
+
+    <text name="DocumentFilesHeaderInfo">DocumentFilesHeaderInfo</text>
+    <text name="DocumentName">Document Name</text>
+    <text name="SubmitterTenant">Submitter Tenant</text>
+    <text name="TruckID">Truck ID</text>
+    <text name="TrailerCode">Trailer Code</text>
+    <text name="DriverName">Driver Name</text>
+    <text name="IsAccepted">Is Accepted</text>
+    <text name="Accept">Accept</text>
+    <text name="Reject">Reject</text>
+    <text name="DocumentFile">Document File</text>
+    <text name="NewDocumentFile">New Document File</text>
+    <text name="AddDocument">Add Document</text>
+
+    <![CDATA[ Tachyon: Document files Page End]]>
+
+
+    <![CDATA[Tachyon:Common Start]]>
+    <text name="ViewDetails">View Details</text>
     <text name="TotalRecordsCount">Total: {0}</text>
-	    <text name="Create">Create</text>
-	    <text name="Cancel">Cancel</text>
-	    <text name="Details">View Details</text>
-	    <text name="Close">Close</text>
-        <text name="ShowAdvancedFilters">Show advanced filters</text>
-        <text name="HideAdvancedFilters">Hide advanced filters</text>
-        <text name="All">All</text>
-        <text name="True">True</text>
-        <text name="False">False</text>
-		 <text name="Edition">Edition</text>
-		<text name="Language">Language</text>
-	  <![CDATA[Tachyon:Common End]]>
-	  <![CDATA[Tachyon:Documents Common Start]]>
-	     <text name="Documents">Documents</text>
-	  <![CDATA[Tachyon:Documents Common End]]>
-		
-		
-	   <![CDATA[Tachyon:Document Entites Page Start]]>
-	  <text name="DocumentsEntities">Documents Entities</text>
-	  <text name="DocumentsEntitiesHeaderInfo">Documents Entities Header Info</text>
-	  <text name="NewDocumentsEntity">New Documents Entity</text>
-	  <text name="DocumentEntityName">Document Entity Name</text>
-	  <text name="DocumentsEntity">Documents Entity</text>
-	  <![CDATA[Tachyon:Document Entites Page End]]>
-		
-		
-	  <![CDATA[Tachyon:Document Types Page Start]]>
-	  <text name="DocumentTypes">Document Types</text>
-	  <text name="IsRequired">Is Required</text>
-	  <text name="DocumentTypesHeaderInfo">Document Types Header Info</text>
-	  <text name="NewDocumentType">New Document Type</text>
-	  <text name="HasExpirationDate">Has Expiration Date</text>
-	  <text name="RequiredFrom">Required From</text>
-	  <text name="SpecialConstant">Special Constant</text>
-	  <text name="ExpirationAlertDays">Expiration Alert Days</text>
-	  <text name="InActiveToleranceDays">InActive Tolerance Days</text>
-	  <text name="InActiveAccountExpired">InActive Account Expired</text>
-	  <text name="HasNumber">Has Number</text>
-	  <text name="IsNumberUnique">Is Number Unique</text>
-	  <text name="HasHijriExpirationDate">Has Hijri Expiration Date</text>
-	  <text name="HasNotes">Has Notes</text>
-	  <text name="Company">Company</text>
-	  <text name="DocumentType">DocumentType</text>
-	  <text name="ToleranceDaysBeforeDeactivateAfterExpiration">Tolerance Days Before Deactivate After Expiration</text>
-	  <text name="DeactivateAccountUponexpiration">Deactivate Account Upon expiration</text>
-	  <![CDATA[Tachyon:Document Types Page End]]>
+    <text name="Create">Create</text>
+    <text name="Cancel">Cancel</text>
+    <text name="Details">View Details</text>
+    <text name="Close">Close</text>
+    <text name="ShowAdvancedFilters">Show advanced filters</text>
+    <text name="HideAdvancedFilters">Hide advanced filters</text>
+    <text name="All">All</text>
+    <text name="True">True</text>
+    <text name="False">False</text>
+    <text name="Edition">Edition</text>
+    <text name="Language">Language</text>
+    <![CDATA[Tachyon:Common End]]>
 
-		
+    <![CDATA[Tachyon:Documents Common Start]]>
+    <text name="Documents">Documents</text>
+    <![CDATA[Tachyon:Documents Common End]]>
 
-		<![CDATA[ Tachyon: Document Translation Page Start]]>
-		<text name="DocumentTypeTranslations">Document Type Translations</text>
-		<text name="DocumentTypeTranslationsHeaderInfo">Document Type Translations Header Info</text>
-		<text name="NewDocumentTypeTranslation">New Document Type Translation</text>
-		<![CDATA[ Tachyon: Document Translation Page End]]>
+
+    <![CDATA[Tachyon:Document Entites Page Start]]>
+    <text name="DocumentsEntities">Documents Entities</text>
+    <text name="DocumentsEntitiesHeaderInfo">Documents Entities Header Info</text>
+    <text name="NewDocumentsEntity">New Documents Entity</text>
+    <text name="DocumentEntityName">Document Entity Name</text>
+    <text name="DocumentsEntity">Documents Entity</text>
+    <![CDATA[Tachyon:Document Entites Page End]]>
+
+
+    <![CDATA[Tachyon:Document Types Page Start]]>
+    <text name="DocumentTypes">Document Types</text>
+    <text name="IsRequired">Is Required</text>
+    <text name="DocumentTypesHeaderInfo">Document Types Header Info</text>
+    <text name="NewDocumentType">New Document Type</text>
+    <text name="HasExpirationDate">Has Expiration Date</text>
+    <text name="RequiredFrom">Required From</text>
+    <text name="SpecialConstant">Special Constant</text>
+    <text name="ExpirationAlertDays">Expiration Alert Days</text>
+    <text name="InActiveToleranceDays">InActive Tolerance Days</text>
+    <text name="InActiveAccountExpired">InActive Account Expired</text>
+    <text name="HasNumber">Has Number</text>
+    <text name="IsNumberUnique">Is Number Unique</text>
+    <text name="HasHijriExpirationDate">Has Hijri Expiration Date</text>
+    <text name="HasNotes">Has Notes</text>
+    <text name="Company">Company</text>
+    <text name="DocumentType">DocumentType</text>
+    <text name="ToleranceDaysBeforeDeactivateAfterExpiration">Tolerance Days Before Deactivate After Expiration</text>
+    <text name="DeactivateAccountUponexpiration">Deactivate Account Upon expiration</text>
+    <![CDATA[Tachyon:Document Types Page End]]>
 
 
 
-		<text name="TruckCapacities">Truck capacities</text>
+    <![CDATA[ Tachyon: Document Translation Page Start]]>
+    <text name="DocumentTypeTranslations">Document Type Translations</text>
+    <text name="DocumentTypeTranslationsHeaderInfo">Document Type Translations Header Info</text>
+    <text name="NewDocumentTypeTranslation">New Document Type Translation</text>
+    <![CDATA[ Tachyon: Document Translation Page End]]>
+
+
+
+    <text name="TruckCapacities">Truck capacities</text>
     <text name="Capacity">Capacity</text>
     <text name="TACHYON.TruckCapacities.Capacity">Capacity</text>
     <text name="CapacitiesHeaderInfo">Capacities header info</text>
@@ -371,9 +396,9 @@
     <text name="CreateNewTrucksType">Create new trucks type</text>
     <text name="EditTrucksType">Edit trucks type</text>
     <text name="DeleteTrucksType">Delete trucks type</text>
-	  <text name="TrucksTypeDuplicateName">There is already a truck type with name : {0}</text>
+    <text name="TrucksTypeDuplicateName">There is already a truck type with name : {0}</text>
 
-	  <text name="Trucks">Trucks</text>
+    <text name="Trucks">Trucks</text>
     <text name="TruckStatus">Truck status</text>
     <text name="TACHYON.Trucks.TruckStatus">TruckStatus</text>
     <text name="DisplayName">Display name</text>
@@ -521,7 +546,7 @@
     <text name="StaticRole_Tooltip">Static roles can not be deleted.</text>
     <text name="EmailConfirmationRequiredForLogin">Email confirmation required for login.</text>
     <text name="{0}UserCannotBeDeleted">{0} user can not be deleted.</text>
-    <text name="TenantNameCanNotBeEmpty">Tenant name can not be empty</text>    
+    <text name="TenantNameCanNotBeEmpty">Tenant name can not be empty</text>
     <text name="ChangeProfilePicture">Change profile picture</text>
     <text name="TenantName_Regex_Description">Tenant name must be at least 2 chars, starts with a letter and continue with letter, number, dash or underscore.</text>
     <text name="ProfilePicture_Change_Info">You can select a JPG/JPEG/PNG file with a maximum {0}MB size.</text>
@@ -535,7 +560,7 @@
     <text name="AccountSettings">Account settings</text>
     <text name="Captha_Hint">Please prove you are not a robot</text>
 
-    
+
     <text name="CaptchaCanNotBeEmpty">You must prove that you are not a robot.</text>
     <text name="IncorrectCaptchaAnswer">Unable to determine that you are not a robot.</text>
     <text name="FormIsNotValidMessage">Form is not valid. Please check and fix errors.</text>
@@ -592,10 +617,14 @@
     <text name="Apply">Apply</text>
     <text name="CustomRange">Custom range</text>
     <text name="DashboardNoteForMpaVersion">
-      <![CDATA[      See Demo for Multi-Page Application version with <strong>ASP.NET MVC</strong> and <strong>jQuery</strong>.      ]]>
+      <![CDATA[
+      See Demo for Multi-Page Application version with <strong>ASP.NET MVC</strong> and <strong>jQuery</strong>.
+      ]]>
     </text>
     <text name="DashboardNoteForSpaVersion">
-      <![CDATA[      Notice: There is also a <strong>Single-Page Application</strong> version built using ASP.NET MVC and <strong>AngularJs</strong>.      ]]>
+      <![CDATA[
+      Notice: There is also a <strong>Single-Page Application</strong> version built using ASP.NET MVC and <strong>AngularJs</strong>.
+      ]]>
     </text>
     <text name="SeeDemo">See demo</text>
     <text name="Editions">Editions</text>
@@ -623,7 +652,7 @@
     <text name="DeletingLanguages">Deleting language</text>
     <text name="ChangingTexts">Changing texts</text>
     <text name="SuccessfullySaved">Successfully saved.</text>
-   
+
     <text name="Flag">Flag</text>
     <text name="SetAsDefaultLanguage">Set as default language</text>
     <text name="InvlalidLanguageCode">Invalid language code.</text>
@@ -769,7 +798,14 @@
     <text name="YouDontHaveAnyFriend">You don't have any friends. Write a username to above input box and click "Add Friend" button.</text>
     <text name="YouDontHaveAnyBlockedFriend">You don't have any blocked users. In order to block a friend, select a friend and select block from actions dropdown.</text>
     <text name="ChatUserSearch_Hint">
-      <![CDATA[      Write only username for same tenant users, <br>      <strong>[tenancyName]\[userName]</strong> for other tenant's users <br><br>      for example: <br>      .\admin -> for host admin <br>      Test\admin -> for test tenant's admin <br>      admin -> for your tenant's admin      ]]>
+      <![CDATA[
+      Write only username for same tenant users, <br>
+      <strong>[tenancyName]\[userName]</strong> for other tenant's users <br><br>
+      for example: <br>
+      .\admin -> for host admin <br>
+      Test\admin -> for test tenant's admin <br>
+      admin -> for your tenant's admin
+      ]]>
     </text>
     <text name="AddFriend">Add friend</text>
     <text name="TypeAMessageHere">Type a message here...</text>
@@ -822,7 +858,7 @@
     <text name="ChangeTenant">Switch Company</text>
     <text name="UnknownTenantId{0}">Unknown tenant id: {0}</text>
     <text name="TenantIdIsNotActive{0}">Inactive tenant id: {0}</text>
-    <text name="TimeoutPleaseTryAgain">Timeout! Please try again.</text>    
+    <text name="TimeoutPleaseTryAgain">Timeout! Please try again.</text>
     <text name="RemainingTime">Remaining time</text>
     <text name="SecondShort{0}">{0} sec</text>
     <text name="ResetCode">Reset code</text>

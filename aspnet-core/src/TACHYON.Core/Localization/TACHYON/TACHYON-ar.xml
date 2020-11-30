@@ -1,140 +1,139 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <localizationDictionary culture="ar">
   <texts>
-	  	<![CDATA[ Tachyon: Document files Page Start]]>
-	        <text name="DocumentFiles">المستندات</text>
-	        <text name="DocumentFilesHeaderInfo">DocumentFilesHeaderInfo</text>
-		    <text name="DocumentName">أسم المستند</text>
-	        <text name="SubmitterTenant">الشركة التي قامت بالارسال </text>
-	        <text name="TruckID">الرقم المميز للشاحنة</text>
-	        <text name="TrailerCode">رقم المقطورة</text>
-	        <text name="DriverName">إسم السائق</text>
-            <text name="IsAccepted">تم قبوله</text>
-            <text name="Accept">قبول</text>
-            <text name="Reject">رفض</text>
-            <text name="DocumentFile">مستند</text>
-            <text name="NewDocumentFile">مستند جديد</text>
-	  	  <text name="AddDocument">إضافة مستند</text>
+    <![CDATA[ Tachyon: Document files Page Start]]>
+    <text name="DocumentFiles">المستندات</text>
+    <text name="DocumentFilesHeaderInfo">DocumentFilesHeaderInfo</text>
+    <text name="DocumentName">أسم المستند</text>
+    <text name="SubmitterTenant">الشركة التي قامت بالارسال </text>
+    <text name="TruckID">الرقم المميز للشاحنة</text>
+    <text name="TrailerCode">رقم المقطورة</text>
+    <text name="DriverName">إسم السائق</text>
+    <text name="IsAccepted">تم قبوله</text>
+    <text name="Accept">قبول</text>
+    <text name="Reject">رفض</text>
+    <text name="DocumentFile">مستند</text>
+    <text name="NewDocumentFile">مستند جديد</text>
+    <text name="AddDocument">إضافة مستند</text>
 
-	   <![CDATA[ Tachyon: Document files Page End]]>
-	  
-	  <![CDATA[Tachyon:Common Start]]>
-         <text name="ViewDetails">مشاهدة التفاصيل</text>
-	  	  <text name="Details">التفاصيل</text>
-         <text name="TotalRecordsCount">المجموع: {0}</text>
-	     <text name="Create">إنشاء</text>
-         <text name="Cancel">إلغاء</text>
-         <text name="Close">إغلاق</text>
-	     <text name="ShowAdvancedFilters">إظهار الفلاتر المتقدمة</text>
-         <text name="HideAdvancedFilters">إخفاء الفلاتر المتقدمة</text>
-         <text name="All">الجميع</text>
-	     <text name="True">صحيح</text>
-	     <text name="False">خطأ</text>
-	     <text name="Edition">نوع الإشتراك</text>
-    	 <text name="Language">لغة</text>
-	  <![CDATA[Tachyon:Common End]]>
-	  
-	  
-	  	  <![CDATA[Tachyon:Documents Common Start]]>
-	       <text name="Documents">Documents</text>
-	  	  <![CDATA[Tachyon:Documents Common End]]>
-	  
-	  	  <![CDATA[Tachyon:Document Entites Page Start]]>
-	  <text name="DocumentsEntities">Documents Entities</text>
-	  <text name="DocumentsEntitiesHeaderInfo">Documents Entities Header Info</text>
-	  <text name="NewDocumentsEntity">New Documents Entity</text>
-	  <text name="DocumentEntityName">Document Entity Name</text>
-	  <text name="DocumentsEntity">Documents Entity</text>
-	  <![CDATA[Tachyon:Document Entites Page End]]>
+    <![CDATA[ Tachyon: Document files Page End]]>
 
-	  <![CDATA[ Tachyon: Document Translation Page Start]]>
-	  <text name="DocumentTypeTranslations">Document Type Translations</text>
-	  <text name="DocumentTypeTranslationsHeaderInfo">Document Type Translations Header Info</text>
-	  <text name="NewDocumentTypeTranslation">New Document Type Translation</text>
-	  <![CDATA[ Tachyon: Document Translation Page End]]>
-	  
-	 <![CDATA[Tachyon:Document Types Page Start]]>
-	  <text name="DocumentTypes">Document Types</text>
-	  <text name="IsRequired">Is Required</text>
-	  <text name="DocumentTypesHeaderInfo">Document Types Header Info</text>
-	  <text name="NewDocumentType">New Document Type</text>
-	  <text name="HasExpirationDate">Has Expiration Date</text>
-	  <text name="RequiredFrom">Required From</text>
-	  <text name="SpecialConstant">Special Constant</text>
-	  <text name="ExpirationAlertDays">Expiration Alert Days</text>
-	  <text name="InActiveToleranceDays">InActive Tolerance Days</text>
-	  <text name="InActiveAccountExpired">InActive Account Expired</text>
-	  <text name="HasNumber">Has Number</text>
-	  <text name="IsNumberUnique">Is Number Unique</text>
-	  <text name="HasHijriExpirationDate">Has Hijri Expiration Date</text>
-	  <text name="HasNotes">Has Notes</text>
-	  <text name="Company">Company</text>
-	  <text name="DocumentType">DocumentType</text>
-	  <text name="ToleranceDaysBeforeDeactivateAfterExpiration">Tolerance Days Before Deactivate After Expiration</text>
-	  <text name="DeactivateAccountUponexpiration">Deactivate Account Upon expiration</text>
-	  <![CDATA[Tachyon:Document Types Page End]]>
-	  
-
-	   <text name="SignUp">إشترك</text>
-       <text name="IAMA">أنا</text>
-       <text name="CompanyInformation">معلومات عن المؤسسة\الشركة</text>
-       <text name="CompanyUniqueName">الإسم المختصر المميز للشركة</text>
-	   <text name="CompanyUniqueName_Regex_Description"> يجب أن يكون اسم الشركة على الأقل حرفين ويبدأ بحرف ومن ثم : حرف أو رقم أو شرطه أو شرطه سفلية وأن لا يكون باللغة العربية. </text>
-	  <text name="CompanyFullLeagalName">اللإسم  الكامل الخاص بالشركة</text>
-	  <text name="Country">البلد</text>
-	  <text name="City">المدينة</text>
-	  <text name="Address">العنوان</text>
-	  <text name="Format">الصيغة</text>
-	  <text name="AddressFormat">المدينة -- الولاية -- إسم الشارع -- الرمز البريدي</text>
-	  <text name="AdminUserAccountInfo">معلومات المستخدم لمشرف حساب الشركة</text>
-	  <text name="AdminEmailAddress">البريد الإلكتروني الخاص بالمشرف</text>
-	  <text name="AdminPassword">كلمة السر الخاصة بالمشرف</text>
-	  <text name="AdminPasswordRepeat">كلمة السر الخاصة بالمشرف (تكرار)</text>
-	  <text name="NewPasswordRepeat">إعادة إدخال كلمة المرور الجديدة</text>
-	  <text name="PleaseEnterYourNewPassword">الرجائ إدخال كلمة السر الجديدة الخاصة بك</text>
-	  <text name="weak">ضعيف</text>
-	  <text name="medium">متوسط</text>
-	  <text name="strong">قوي</text>
-	  <text name="PasswordComplexity_RequireDigit_Hint">كلمة السر يجب ان تحتوي على الأفل على رقم واحد ('0'-'9').</text>
-	  <text name="PasswordComplexity_RequireLowercase_Hint">كلمة السر يجب ان تحتوي على الأفل على حروف صغيرة ('a'-'z').</text>
-	  <text name="PasswordComplexity_RequireNonAlphanumeric_Hint">كلمة السر يجب ان تحتوي على الأفل على رمز واحد .</text>
-	  <text name="PasswordComplexity_RequireUppercase_Hint">كلمة السر يجب ان تحتوي على الأفل على حرف كبير واحد('A'-'Z').</text>
-	  <text name="PasswordComplexity_RequiredLength_Hint">كلمة السر يجب ان تحتوي على الأفل على {0} عناصر.</text>
-	  <text name="PasswordsDontMatch">كلمة المرور غير مطابقة!</text>
-	  <text name="NewPasswordRepeat">كلمة المرور الجديدة (تكرار)</text>
-	  <text name="PasswordRepeat">كلمة المرور (تكرار)</text>
-	  <text name="PleaseMakeSureYouProvideValidDetails">Please Make Sure You Provide Valid Details!</text>
-	  <text name="pleasemakesureyouchoosethecountryandthecity!">Please make sure you choose the country and the city!</text>
-	  <text name="Carrier">ناقل</text>
-
-	  <![CDATA[Tachyon: Tenant Registration Page End]]>
+    <![CDATA[Tachyon:Common Start]]>
+    <text name="ViewDetails">مشاهدة التفاصيل</text>
+    <text name="Details">التفاصيل</text>
+    <text name="TotalRecordsCount">المجموع: {0}</text>
+    <text name="Create">إنشاء</text>
+    <text name="Cancel">إلغاء</text>
+    <text name="Close">إغلاق</text>
+    <text name="ShowAdvancedFilters">إظهار الفلاتر المتقدمة</text>
+    <text name="HideAdvancedFilters">إخفاء الفلاتر المتقدمة</text>
+    <text name="All">الجميع</text>
+    <text name="True">صحيح</text>
+    <text name="False">خطأ</text>
+    <text name="Edition">نوع الإشتراك</text>
+    <text name="Language">لغة</text>
+    <![CDATA[Tachyon:Common End]]>
 
 
+    <![CDATA[Tachyon:Documents Common Start]]>
+    <text name="Documents">Documents</text>
+    <![CDATA[Tachyon:Documents Common End]]>
 
-	  <![CDATA[ Tachyon: Tenant login Page Start]]>
-	  <text name="NotAMemberYet">Not a member yet ?</text>
-	  <![CDATA[ Tachyon: Tenant login Page End]]>
-	  
-	  
-	  
-	   <![CDATA[Tachyon:Common Start]]>
-       <text name="AlreadyTaken">سبق إستخدامه</text>
-       <text name="Enter">أدخل</text>
-	  <text name="Select">إختار</text>
-	  <text name="isRequired">مطلوب</text>
-	  <text name="NotValid">غير صالح</text>
-	  <text name="Back">العودة</text>
-	  <text name="SavingWithThreeDot">جاري الحفظ...</text>
-	  <text name="Submit">إرسال</text>
-	  <text name="ThisFieldIsRequired">هذه الخانة مطلوبه.</text>
-      <text name="PleaseEnterAtLeastNCharacter">الرجاء إدخال {0} حرفا على الأقل.</text>
-      <text name="PleaseEnterNoMoreThanNCharacter">الرجاء إدخال أكثر من {0} حرفا.</text>
-	  <text name="InvalidEmailAddress">البريدالالكتروني غير صحيح</text>
-	  <![CDATA[Tachyon:Common End]]>
-	  
-	  
-	  
-	  
+    <![CDATA[Tachyon:Document Entites Page Start]]>
+    <text name="DocumentsEntities">Documents Entities</text>
+    <text name="DocumentsEntitiesHeaderInfo">Documents Entities Header Info</text>
+    <text name="NewDocumentsEntity">New Documents Entity</text>
+    <text name="DocumentEntityName">Document Entity Name</text>
+    <text name="DocumentsEntity">Documents Entity</text>
+    <![CDATA[Tachyon:Document Entites Page End]]>
+
+    <![CDATA[ Tachyon: Document Translation Page Start]]>
+    <text name="DocumentTypeTranslations">Document Type Translations</text>
+    <text name="DocumentTypeTranslationsHeaderInfo">Document Type Translations Header Info</text>
+    <text name="NewDocumentTypeTranslation">New Document Type Translation</text>
+    <![CDATA[ Tachyon: Document Translation Page End]]>
+
+    <![CDATA[Tachyon:Document Types Page Start]]>
+    <text name="DocumentTypes">Document Types</text>
+    <text name="IsRequired">Is Required</text>
+    <text name="DocumentTypesHeaderInfo">Document Types Header Info</text>
+    <text name="NewDocumentType">New Document Type</text>
+    <text name="HasExpirationDate">Has Expiration Date</text>
+    <text name="RequiredFrom">Required From</text>
+    <text name="SpecialConstant">Special Constant</text>
+    <text name="ExpirationAlertDays">Expiration Alert Days</text>
+    <text name="InActiveToleranceDays">InActive Tolerance Days</text>
+    <text name="InActiveAccountExpired">InActive Account Expired</text>
+    <text name="HasNumber">Has Number</text>
+    <text name="IsNumberUnique">Is Number Unique</text>
+    <text name="HasHijriExpirationDate">Has Hijri Expiration Date</text>
+    <text name="HasNotes">Has Notes</text>
+    <text name="Company">Company</text>
+    <text name="DocumentType">DocumentType</text>
+    <text name="ToleranceDaysBeforeDeactivateAfterExpiration">Tolerance Days Before Deactivate After Expiration</text>
+    <text name="DeactivateAccountUponexpiration">Deactivate Account Upon expiration</text>
+    <![CDATA[Tachyon:Document Types Page End]]>
+
+
+    <text name="SignUp">إشترك</text>
+    <text name="IAMA">أنا</text>
+    <text name="CompanyInformation">معلومات عن المؤسسة\الشركة</text>
+    <text name="CompanyUniqueName">الإسم المختصر المميز للشركة</text>
+    <text name="CompanyUniqueName_Regex_Description"> يجب أن يكون اسم الشركة على الأقل حرفين ويبدأ بحرف ومن ثم : حرف أو رقم أو شرطه أو شرطه سفلية وأن لا يكون باللغة العربية. </text>
+    <text name="CompanyFullLeagalName">اللإسم  الكامل الخاص بالشركة</text>
+    <text name="Country">البلد</text>
+    <text name="City">المدينة</text>
+    <text name="Address">العنوان</text>
+    <text name="Format">الصيغة</text>
+    <text name="AddressFormat">المدينة -- الولاية -- إسم الشارع -- الرمز البريدي</text>
+    <text name="AdminUserAccountInfo">معلومات المستخدم لمشرف حساب الشركة</text>
+    <text name="AdminEmailAddress">البريد الإلكتروني الخاص بالمشرف</text>
+    <text name="AdminPassword">كلمة السر الخاصة بالمشرف</text>
+    <text name="AdminPasswordRepeat">كلمة السر الخاصة بالمشرف (تكرار)</text>
+    <text name="NewPasswordRepeat">إعادة إدخال كلمة المرور الجديدة</text>
+    <text name="PleaseEnterYourNewPassword">الرجائ إدخال كلمة السر الجديدة الخاصة بك</text>
+    <text name="weak">ضعيف</text>
+    <text name="medium">متوسط</text>
+    <text name="strong">قوي</text>
+    <text name="PasswordComplexity_RequireDigit_Hint">كلمة السر يجب ان تحتوي على الأفل على رقم واحد ('0'-'9').</text>
+    <text name="PasswordComplexity_RequireLowercase_Hint">كلمة السر يجب ان تحتوي على الأفل على حروف صغيرة ('a'-'z').</text>
+    <text name="PasswordComplexity_RequireNonAlphanumeric_Hint">كلمة السر يجب ان تحتوي على الأفل على رمز واحد .</text>
+    <text name="PasswordComplexity_RequireUppercase_Hint">كلمة السر يجب ان تحتوي على الأفل على حرف كبير واحد('A'-'Z').</text>
+    <text name="PasswordComplexity_RequiredLength_Hint">كلمة السر يجب ان تحتوي على الأفل على {0} عناصر.</text>
+    <text name="PasswordsDontMatch">كلمة المرور غير مطابقة!</text>
+    <text name="PasswordRepeat">كلمة المرور (تكرار)</text>
+    <text name="PleaseMakeSureYouProvideValidDetails">Please Make Sure You Provide Valid Details!</text>
+    <text name="pleasemakesureyouchoosethecountryandthecity!">Please make sure you choose the country and the city!</text>
+    <text name="Carrier">ناقل</text>
+
+    <![CDATA[Tachyon: Tenant Registration Page End]]>
+
+
+
+    <![CDATA[ Tachyon: Tenant login Page Start]]>
+    <text name="NotAMemberYet">Not a member yet ?</text>
+    <![CDATA[ Tachyon: Tenant login Page End]]>
+
+
+
+    <![CDATA[Tachyon:Common Start]]>
+    <text name="AlreadyTaken">سبق إستخدامه</text>
+    <text name="Enter">أدخل</text>
+    <text name="Select">إختار</text>
+    <text name="isRequired">مطلوب</text>
+    <text name="NotValid">غير صالح</text>
+    <text name="Back">العودة</text>
+    <text name="SavingWithThreeDot">جاري الحفظ...</text>
+    <text name="Submit">إرسال</text>
+    <text name="ThisFieldIsRequired">هذه الخانة مطلوبه.</text>
+    <text name="PleaseEnterAtLeastNCharacter">الرجاء إدخال {0} حرفا على الأقل.</text>
+    <text name="PleaseEnterNoMoreThanNCharacter">الرجاء إدخال أكثر من {0} حرفا.</text>
+    <text name="InvalidEmailAddress">البريدالالكتروني غير صحيح</text>
+    <![CDATA[Tachyon:Common End]]>
+
+
+
+
     <text name="HomePage">الرئيسية</text>
     <text name="AboutUs">من نحن</text>
     <text name="Administration">الإدارة</text>
@@ -916,7 +915,7 @@
     <text name="ThisNotificationDoesntBelongToYou">هذا الإشعار ليس لك.</text>
     <text name="CookieConsent_Message">يستخدم هذا الموقع ملفات تعريف الارتباط لضمان حصولك على أفضل تجربة.</text>
     <text name="CookieConsent_Dismiss">موافق!</text>
-     <text name="UiCustomization_Wide">واسع</text>
+    <text name="UiCustomization_Wide">واسع</text>
     <text name="TACHYON.Authorization.Roles.Role">دور</text>
     <text name="History">تاريخ</text>
     <text name="IsCookieConsentEnabled">تمكين: الموافقة على ملفات تعريف الارتباط</text>
