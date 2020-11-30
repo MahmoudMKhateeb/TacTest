@@ -95,7 +95,7 @@ export class RegisterTenantComponent extends AppComponentBase implements OnInit,
       return;
     }
     if (this.model.countryId == -2 || this.model.cityId == -2) {
-      this.notify.error('please make sure you choose the country and the city!');
+      this.notify.error('pleasemakesureyouchoosethecountryandthecity!');
       return;
     }
     let recaptchaCallback = (token: string) => {

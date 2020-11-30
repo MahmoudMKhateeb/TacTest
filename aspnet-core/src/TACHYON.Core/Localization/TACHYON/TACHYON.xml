@@ -451,7 +451,6 @@
     <text name="ChangingPermissions">Changing permissions</text>
     <text name="EditingUser">Editing user</text>
     <text name="CreatingNewUser">Creating new user</text>
-    <text name="Edit">Edit</text>
     <text name="EditingTenant">Editing tenant</text>
     <text name="CreatingNewTenant">Creating new tenant</text>
     <text name="DeletingTenant">Deleting tenant</text>
@@ -830,7 +829,6 @@
     <text name="ApplicationLogo">Application Logo</text>
     <text name="CustomCSS">Custom CSS</text>
     <text name="Upload">Upload</text>
-    <text name="Download">Download</text>
     <text name="UploadLogo_Info">Select a JPG/JPEG/PNG/GIF file with a maximum of 30KB size and 139x35 pixel resolution.</text>
     <text name="UploadCSS_Info">Select a .css file with a maximum of 1MB size.</text>
     <text name="Browse">Browse</text>
@@ -873,7 +871,6 @@
     <text name="RecentTenants">Recent tenants</text>
     <text name="RecentTenantsHelpText">Last {1} customers registered in {0} days...</text>
     <text name="ExpiringTenantsHelpText">First {1} clients expiring in {0} days...</text>
-    <text name="NoData">No data</text>
     <text name="SubscriptionEndDate">Subscription end date</text>
     <text name="TenantNameOrTenancyCode">Tenant name / tenancy code</text>
     <text name="IncomeWithAmount">Income: {0}</text>
@@ -981,7 +978,6 @@
     <text name="PaymentHistory">Payment history</text>
     <text name="Gateway">Gateway</text>
     <text name="Amount">Amount</text>
-    <text name="Status">Status</text>
     <text name="Period">Period</text>
     <text name="DayCount">Day count</text>
     <text name="LastModificationTime">Last modification time</text>
@@ -1014,7 +1010,6 @@
     <text name="FileUpload">File Upload</text>
     <text name="PostedValue">Posted value</text>
     <text name="SelectDate">Select date</text>
-    <text name="SelectFile">Select file</text>
     <text name="UploadedFile">Uploaded file</text>
     <text name="PostedData">Posted data</text>
     <text name="Remove">Remove</text>
@@ -1025,7 +1020,6 @@
     </text>
     <text name="DemoUiComponents_Info_Metronic_Link_Text">Check Metronic theme for more UI components</text>
     <text name="Image">Image</text>
-    <text name="File">File</text>
     <text name="Link">Link</text>
     <text name="Billing">Billing</text>
     <text name="LegalName">Legal Name</text>
