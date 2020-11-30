@@ -5,8 +5,6 @@
     (click)="changeLanguage(language)"
     title="{{ language.displayName }}"
   >
-    <div *ngIf="language.displayName == 'English' || language.displayName == 'العربية'" [attr.aria-label]="language.displayName">
-      language.displayName
-    </div>
+    <a class="text-black-50"> {{ language.displayName }} &nbsp; </a>
   </div>
 </div>
