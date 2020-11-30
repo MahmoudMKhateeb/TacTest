@@ -13,8 +13,8 @@
       <form *ngIf="active" #documentFileForm="ngForm" (ngSubmit)="save()" novalidate autocomplete="off">
         <div class="modal-header">
           <h4 class="modal-title">
-            <span *ngIf="documentFile.id">{{ l('EditDocumentFile') }}</span>
-            <span *ngIf="!documentFile.id">{{ l('CreateNewDocumentFile') }}</span>
+            <span *ngIf="documentFile.id">{{ l('Edit') }} {{ l('DocumentFile') }}</span>
+            <span *ngIf="!documentFile.id">{{ l('Create') }} {{ l('NewDocumentFile') }}</span>
           </h4>
           <button type="button" class="close" (click)="close()" aria-label="Close" [disabled]="saving">
             <span aria-hidden="true">&times;</span>
@@ -46,11 +46,11 @@
               </div>
             </div>
             <div class="form-group col-md-6">
-              <label>{{ l('Choose File') }}</label>
+              <label>{{ l('SelectFile') }}</label>
               <div class="custom-file">
                 <input (change)="DocFileChangeEvent($event, documentFile)" type="file" class="custom-file-input" required />
                 <label class="custom-file-label text-truncate" [for]="documentFile.name">
-                  {{ documentFile.name ? documentFile.name : l('select file') }}</label
+                  {{ documentFile.name ? documentFile.name : l('SelectFile') }}</label
                 >
               </div>
             </div>
@@ -78,10 +78,10 @@
               *ngIf="documentFile.documentTypeDto.hasExpirationDate && !documentFile.documentTypeDto.hasHijriExpirationDate"
               class="form-group col-md-6"
             >
-              <label for="DocumentExpireDate">{{ l('Expiration Date') }} </label>
+              <label for="DocumentExpireDate">{{ l('ExpirationDate') }} </label>
               <input
                 type="datetime"
-                placeholder="{{ l('Expiration Date') }}"
+                placeholder="{{ l('ExpirationDate') }}"
                 bsDatepicker
                 class="form-control"
                 id="DocumentExpireDate"
@@ -92,21 +92,17 @@
               <span style="line-height: 40px; padding: 0 15px 0 15px;"> &mdash; </span>
             </div>
 
-            <div
-              *ngIf="documentFile.documentTypeDto.hasExpirationDate && documentFile.documentTypeDto.hasHijriExpirationDate"
-              class="form-group col-md-6"
-            >
-              <!--              <label for="DocumentExpireDate">{{ l('Expiration Date') }} </label>-->
+            <div *ngIf="documentFile.documentTypeDto.hasExpirationDate" class="form-group col-md-6">
               <hijri-gregorian-datepicker-test
+                [selectedDateType]="selectedDateType"
                 [label]="l('ExpirationDate')"
                 class="m-input"
                 [isRequired]="true"
                 [readonly]="true"
-                [selectedDateType]="selectedDateTypeHijri"
-                (selectedDateChange)="selectedDateChange($event, documentFile)"
+                (selectedDateChange)="hijriDatepickerSelectedDateChange($event, documentFile)"
+                [(selectedDate)]="selectedDate"
               >
               </hijri-gregorian-datepicker-test>
-              <!--              <span style="line-height: 40px; padding: 0 15px 0 15px;"> &mdash; </span>-->
             </div>
           </div>
 

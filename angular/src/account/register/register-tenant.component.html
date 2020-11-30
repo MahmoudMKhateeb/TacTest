@@ -1,29 +1,34 @@
 <div class="login-form" [@routerTransition]>
-  <div class="pb-13 pt-lg-0 pt-5">
+  <div class="text-left login-logo">
+    <a>
+      <img [src]="appRootUrl() + 'assets/common/images/app-logo-on-light-login.svg'" class="max-h-75px" (click)="goToHome()" />
+    </a>
+  </div>
+  <div class="text-left label-text">
     <h3 class="font-weight-bolder text-dark font-size-h4 font-size-h1-lg">
-      {{ 'Sign Up' | localize }}
+      {{ 'SignUp' | localize }}
     </h3>
   </div>
-  <h4 *ngIf="model.edition" class="text-center">{{ 'I AM A' | localize }}: {{ model.edition.displayName }}</h4>
+  <h4 *ngIf="model.edition" class="text-left">{{ 'IAMA' | localize }}: {{ model.edition.displayName }}</h4>
   <div class="separator separator-border-dashed"></div>
   <hr />
-  <br />
 
   <form #registerForm="ngForm" role="form" novalidate (submit)="save()" class="login-form form mt-2">
-    <h5 style="text-align: center;" class="mt-2">
-      {{ 'TenantInformations' | localize }}
+    <h5 style="text-align: center;">
+      {{ 'CompanyInformation' | localize }}
+      <br />
       <br />
     </h5>
-    <hr />
+    <!-- <hr /> -->
     <div class="row">
       <div class="col-6">
         <div class="form-group">
           <input
             #tenancyName="ngModel"
-            class="form-control"
+            class="login-form-control form-control py-7 font-size-h6"
             autoFocus
             type="text"
-            placeholder="{{ 'TenancyName' | localize }} *"
+            placeholder="{{ 'CompanyUniqueName' | localize }} *"
             (change)="checkIfIsCompanyUniqueName()"
             [(ngModel)]="model.tenancyName"
             name="tenancyName"
@@ -33,10 +38,12 @@
             pattern="^[a-zA-Z][a-zA-Z0-9_-]{1,}$"
           />
           <div>
-            <span class="form-text text-muted">{{ l('EnterCompanyUniqueName') }}</span>
-            <span *ngIf="!isCompanyNameAvailable" class="form-text text-danger text-left">{{ 'NameIsAlreadyTakenPleasev' | localize }}</span>
+            <span class="form-text text-muted">{{ l('Enter') }} {{ l('CompanyUniqueName') }}</span>
+            <span *ngIf="!isCompanyNameAvailable" class="form-text text-danger text-left"
+              >{{ 'CompanyUniqueName' | localize }} {{ 'AlreadyTaken' | localize }}</span
+            >
             <span *ngIf="!tenancyName.valid && !tenancyName.pristine" class="form-text text-danger text-left">{{
-              'TenantName_Regex_Description' | localize
+              'CompanyUniqueName_Regex_Description' | localize
             }}</span>
           </div>
         </div>
@@ -46,16 +53,16 @@
         <div class="form-group">
           <input
             #nameInput="ngModel"
-            class="form-control"
+            class="login-form-control form-control py-7 font-size-h6"
             type="text"
-            placeholder="Full legal name *"
+            placeholder="{{ 'CompanyFullLeagalName' | localize }} *"
             [(ngModel)]="model.name"
             name="Name"
             required
             maxlength="128"
           />
           <div>
-            <span class="form-text text-muted">{{ l('EnterCompanyFullLegalName') }}</span>
+            <span class="form-text text-muted">{{ l('Enter') }} {{ l('CompanyFullLegalName') }}</span>
           </div>
           <validation-messages [formCtrl]="nameInput"></validation-messages>
         </div>
@@ -68,17 +75,19 @@
           <select
             (change)="CountryChanged($event)"
             #countrySelect="ngModel"
-            class="form-control form-control-lg custom-select mr-sm-2"
+            class="form-control form-control-lg custom-select mr-sm-2 remove-border-radius"
             name="tenant.countryId"
             [(ngModel)]="model.countryId"
             required
           >
-            <option selected value="-2">{{ l('Select A Country') }}</option>
+            <option selected value="-2">{{ l('Select') }} {{ l('Country') }}</option>
             <option *ngFor="let country of allCountries" value="{{ country.id }}">{{ country.displayName }}</option>
           </select>
           <div>
-            <span class="form-text text-muted">{{ l('SelectACountry') }}</span>
-            <span class="form-text text-danger" *ngIf="countrySelect.value == -2 && countrySelect.touched">Country is required</span>
+            <span class="form-text text-muted">{{ l('Select') }} {{ l('Country') }}</span>
+            <span class="form-text text-danger" *ngIf="countrySelect.value == -2 && countrySelect.touched"
+              >{{ l('Country') }} {{ l('isRequired') }}</span
+            >
           </div>
           <!-- <validation-messages [formCtrl]="nameInput"></validation-messages> -->
         </div>
@@ -89,18 +98,17 @@
           <select
             [disabled]="!isCountySelected"
             #citySelect="ngModel"
-            class="form-control form-control-lg custom-select mr-sm-2"
+            class="form-control form-control-lg custom-select mr-sm-2 remove-border-radius"
             name="tenant.cityId"
             [(ngModel)]="model.cityId"
             required
           >
-            <option value="-2">{{ l('Select A City') }}</option>
+            <option value="-2">{{ l('Select') }} {{ l('City') }}</option>
             <option *ngFor="let city of allCities" value="{{ city.id }}">{{ city.displayName }}</option>
-            <option value="-1">{{ l('Other') }}</option>
           </select>
           <div>
-            <span class="form-text text-muted">{{ l('SelectACity') }}</span>
-            <span class="form-text text-danger" *ngIf="citySelect.value == -2 && citySelect.touched">City is required</span>
+            <span class="form-text text-muted">{{ l('Select') }} {{ l('City') }}</span>
+            <span class="form-text text-danger" *ngIf="citySelect.value == -2 && citySelect.touched">{{ l('City') }} {{ l('isRequired') }}</span>
           </div>
           <!-- <validation-messages [formCtrl]="cityInput"></validation-messages> -->
         </div>
@@ -112,9 +120,9 @@
         <div class="form-group">
           <input
             #addressInput="ngModel"
-            class="form-control"
+            class="login-form-control form-control py-7 font-size-h6"
             type="Address"
-            placeholder="City--State--Street Name--Zip  *"
+            placeholder="{{ 'AddressFormat' | localize }} *"
             [(ngModel)]="model.address"
             name="Address"
             required
@@ -122,23 +130,23 @@
           />
           <div>
             <validation-messages [formCtrl]="addressInput"></validation-messages>
-            <span class="form-text text-muted">{{ l('PleaseFillTheAddress') }}</span>
-            <span class="form-text text-muted">{{ l('Format:City--State--Street Name--Zip') }}</span>
+            <span class="form-text text-muted"> {{ l('Enter') }} {{ l('Address') }}</span>
+            <span class="form-text text-muted"> {{ l('Format') }} :{{ l('AddressFormat') }}</span>
           </div>
         </div>
       </div>
     </div>
-    <br />
+
     <h5 style="text-align: center;" class="mt-2">
-      {{ 'Admin user Account info' | localize }}
+      {{ 'AdminUserAccountInfo' | localize }}
     </h5>
-    <hr />
+    <br />
     <div class="row">
       <div class="col-12">
         <div class="form-group">
           <input
             #adminEmailAddressInput="ngModel"
-            class="form-control"
+            class="login-form-control form-control py-7 font-size-h6"
             type="email"
             placeholder="{{ 'AdminEmailAddress' | localize }} *"
             [(ngModel)]="model.adminEmailAddress"
@@ -149,9 +157,9 @@
             email
           />
           <div>
-            <span class="form-text text-muted">{{ l('EnterTheEmaiulAddress') }}</span>
-            <span *ngIf="!isEmailValid" class="form-text text-danger">{{ l('EmailAdressNotValid') }}</span>
-            <span *ngIf="!isEmailAvailable" class="form-text text-danger">{{ l('EmailAdressIsAlreadyTakenChooseAnotherOne') }}</span>
+            <span class="form-text text-muted"> {{ l('Enter') }} {{ l('AdminEmailAddress') }}</span>
+            <span *ngIf="!isEmailValid" class="form-text text-danger">{{ l('AdminEmailAddress') }} {{ l('NotValid') }}</span>
+            <span *ngIf="!isEmailAvailable" class="form-text text-danger">{{ l('AdminEmailAddress') }} {{ 'AlreadyTaken' | localize }}</span>
           </div>
         </div>
       </div>
@@ -163,7 +171,7 @@
           <input
             type="password"
             name="Password"
-            class="form-control form-control-solid"
+            class="login-form-control form-control py-7 font-size-h6"
             [(ngModel)]="model.adminPassword"
             #Password="ngModel"
             placeholder="{{ 'AdminPassword' | localize }}"
@@ -206,7 +214,7 @@
           <input
             type="password"
             name="PasswordRepeat"
-            class="form-control form-control-solid"
+            class="login-form-control form-control py-7 font-size-h6"
             [ngModel]="model.passwordRepeat"
             #PasswordRepeat="ngModel"
             placeholder="{{ 'PasswordRepeat' | localize }}"
@@ -243,31 +251,31 @@
       </div>
     </div>
 
-    <div class="pb-lg-0 pb-5">
-      <button
-        [disabled]="saving"
-        routerLink="/account/login"
-        type="button"
-        class="btn btn-light-primary font-weight-bolder font-size-h6 px-8 py-4 my-3"
-      >
-        <i class="fa fa-arrow-left"></i> {{ 'Back' | localize }}
-      </button>
-      <button
-        type="submit"
-        class="btn btn-primary font-weight-bolder font-size-h6 px-8 py-4 my-3 mr-3"
-        [disabled]="
-          !isEmailValid ||
-          !isEmailAvailable ||
-          !isCompanyNameAvailable ||
-          !registerForm.form.valid ||
-          citySelect.value == -2 ||
-          countrySelect.value == -2
-        "
-        [buttonBusy]="saving"
-        [busyText]="l('SavingWithThreeDot')"
-      >
-        <i class="fa fa-check"></i> {{ 'Submit' | localize }}
-      </button>
-    </div>
+    <button
+      style="margin-top: 0px !important;"
+      [disabled]="saving"
+      routerLink="/account/login"
+      type="button"
+      class="btn btn-primary btn-primary-login"
+    >
+      <i class="fa fa-arrow-left"></i> {{ 'Back' | localize }}
+    </button>
+    <button
+      style="margin-top: 0px !important;"
+      type="submit"
+      class="btn btn-primary btn-primary-login"
+      [disabled]="
+        !isEmailValid ||
+        !isEmailAvailable ||
+        !isCompanyNameAvailable ||
+        !registerForm.form.valid ||
+        citySelect.value == -2 ||
+        countrySelect.value == -2
+      "
+      [buttonBusy]="saving"
+      [busyText]="l('SavingWithThreeDot')"
+    >
+      <i class="fa fa-check"></i> {{ 'Submit' | localize }}
+    </button>
   </form>
 </div>

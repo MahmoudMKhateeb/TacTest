@@ -13,8 +13,8 @@
       <form *ngIf="active" #truckSubtypeForm="ngForm" novalidate (ngSubmit)="save()" autocomplete="off">
         <div class="modal-header">
           <h4 class="modal-title">
-            <span *ngIf="truckSubtype.id">{{ l('EditTruckSubtype') }}</span>
-            <span *ngIf="!truckSubtype.id">{{ l('CreateNewTruckSubtype') }}</span>
+            <span *ngIf="truckSubtype.id">{{ l('Edit') }} {{ l('TruckSubtype') }}</span>
+            <span *ngIf="!truckSubtype.id">{{ l('Edit') }} {{ l('NewTruckSubtype') }}</span>
           </h4>
           <button type="button" class="close" (click)="close()" aria-label="Close" [disabled]="saving">
             <span aria-hidden="true">&times;</span>
@@ -31,11 +31,11 @@
               <option [ngValue]="null">{{ l('SelectATrucksType') }}</option>
               <option *ngFor="let item of allTrucksTypes" value="{{ item.id }}">{{ item.displayName }}</option>
             </select>
-            <span class="form-text text-muted">{{ 'ChooseTrucksType' | localize }}</span>
+            <span class="form-text text-muted">{{ 'Choose' | localize }} {{ 'TrucksType' | localize }}</span>
           </div>
 
           <div class="form-group">
-            <label for="TruckSubtype_DisplayName">{{ l('DisplayName') }} *</label>
+            <label for="TruckSubtype_DisplayName">{{ l('TruckSubtype') }} *</label>
             <input
               type="text"
               id="TruckSubtype_DisplayName"
@@ -46,7 +46,7 @@
               maxlength="256"
               required
             />
-            <span class="form-text text-muted">{{ 'EnterTruckSubType' | localize }}</span>
+            <span class="form-text text-muted">{{ 'Enter' | localize }} {{ 'TruckSubType' | localize }}</span>
           </div>
         </div>
         <div class="modal-footer">

@@ -95,7 +95,7 @@ export class RegisterTenantComponent extends AppComponentBase implements OnInit,
       return;
     }
     if (this.model.countryId == -2 || this.model.cityId == -2) {
-      this.notify.error('please make sure you choose the country and the city!');
+      this.notify.error('pleasemakesureyouchoosethecountryandthecity!');
       return;
     }
     let recaptchaCallback = (token: string) => {
@@ -181,5 +181,8 @@ export class RegisterTenantComponent extends AppComponentBase implements OnInit,
     this._tenantRegistrationService.checkIfEmailisAvailable(this.model.adminEmailAddress).subscribe((result) => {
       this.isEmailAvailable = result;
     });
+  }
+  goToHome(): void {
+    (window as any).location.href = '/';
   }
 }

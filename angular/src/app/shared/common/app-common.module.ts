@@ -8,7 +8,7 @@ import { UtilsModule } from '@shared/utils/utils.module';
 import { ModalModule } from 'ngx-bootstrap/modal';
 import { TabsModule } from 'ngx-bootstrap/tabs';
 import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
-import { BsDatepickerModule, BsDatepickerConfig, BsDaterangepickerConfig } from 'ngx-bootstrap/datepicker';
+import { BsDatepickerModule, BsDatepickerConfig, BsDaterangepickerConfig, BsLocaleService } from 'ngx-bootstrap/datepicker';
 import { PaginatorModule } from 'primeng/paginator';
 import { TableModule } from 'primeng/table';
 import { AppAuthService } from './auth/app-auth.service';
@@ -39,7 +39,7 @@ import { FilterDateRangePickerComponent } from './customizable-dashboard/filters
 import { AddWidgetModalComponent } from './customizable-dashboard/add-widget-modal/add-widget-modal.component';
 import { NgxChartsModule } from '@swimlane/ngx-charts';
 import { NgxBootstrapDatePickerConfigService } from 'assets/ngx-bootstrap/ngx-bootstrap-datepicker-config.service';
-import { PerfectScrollbarModule } from 'ngx-perfect-scrollbar';
+import { PERFECT_SCROLLBAR_CONFIG, PerfectScrollbarModule } from 'ngx-perfect-scrollbar';
 import { CountoModule } from 'angular2-counto';
 import { AppBsModalModule } from '@shared/common/appBsModal/app-bs-modal.module';
 import { SingleLineStringInputTypeComponent } from './input-types/single-line-string-input-type/single-line-string-input-type.component';
@@ -50,6 +50,10 @@ import { AutoCompleteModule } from 'primeng/autocomplete';
 import { PasswordInputWithShowButtonComponent } from './password-input-with-show-button/password-input-with-show-button.component';
 import { KeyValueListManagerComponent } from './key-value-list-manager/key-value-list-manager.component';
 import { SubHeaderComponent } from '@app/shared/common/sub-header/sub-header.component';
+import { HijriGregorianDatepickerComponent } from '@app/shared/common/hijri-gregorian-datepicker/hijri-gregorian-datepicker.component';
+import { HijriDatepickerComponent } from '@app/shared/common/hijri-gregorian-datepicker/hijri-datepicker/hijri-datepicker.component';
+import { NgbDateParserFormatter, NgbModule } from '@node_modules/@ng-bootstrap/ng-bootstrap';
+import { CustomNgbDateParserFormatter } from '@app/shared/common/hijri-gregorian-datepicker/CustomNgbDateParserFormatter';
 
 @NgModule({
   imports: [
@@ -70,6 +74,7 @@ import { SubHeaderComponent } from '@app/shared/common/sub-header/sub-header.com
     CountoModule,
     AppBsModalModule,
     AutoCompleteModule,
+    NgbModule,
   ],
   declarations: [
     TimeZoneComboComponent,
@@ -100,6 +105,8 @@ import { SubHeaderComponent } from '@app/shared/common/sub-header/sub-header.com
     PasswordInputWithShowButtonComponent,
     KeyValueListManagerComponent,
     SubHeaderComponent,
+    HijriGregorianDatepickerComponent,
+    HijriDatepickerComponent,
   ],
   exports: [
     TimeZoneComboComponent,
@@ -113,6 +120,7 @@ import { SubHeaderComponent } from '@app/shared/common/sub-header/sub-header.com
     PasswordInputWithShowButtonComponent,
     KeyValueListManagerComponent,
     SubHeaderComponent,
+    HijriGregorianDatepickerComponent,
   ],
   providers: [
     DateTimeService,
@@ -121,6 +129,7 @@ import { SubHeaderComponent } from '@app/shared/common/sub-header/sub-header.com
     DashboardViewConfigurationService,
     { provide: BsDatepickerConfig, useFactory: NgxBootstrapDatePickerConfigService.getDatepickerConfig },
     { provide: BsDaterangepickerConfig, useFactory: NgxBootstrapDatePickerConfigService.getDaterangepickerConfig },
+    { provide: BsLocaleService, useFactory: NgxBootstrapDatePickerConfigService.getDatepickerLocale },
   ],
 
   entryComponents: [

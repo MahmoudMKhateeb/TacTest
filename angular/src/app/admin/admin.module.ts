@@ -118,14 +118,12 @@ import { EntityDynamicParameterValueComponent } from './dynamic-entity-parameter
 import { ManageEntityDynamicParameterValuesModalComponent } from './dynamic-entity-parameters/entity-dynamic-parameter/entity-dynamic-parameter-value/manage-entity-dynamic-parameter-values-modal.component';
 import { EntityDynamicParameterValueManagerComponent } from './dynamic-entity-parameters/entity-dynamic-parameter/entity-dynamic-parameter-value/entity-dynamic-parameter-value-manager/entity-dynamic-parameter-value-manager.component';
 import { RequiredDocumentFilesComponent } from './required-document-files/required-document-files.component';
-import { HijriGregorianDatepickerComponent } from '@app/admin/required-document-files/hijri-gregorian-datepicker/hijri-gregorian-datepicker.component';
-import { HijriDatepickerComponent } from '@app/admin/required-document-files/hijri-gregorian-datepicker/hijri-datepicker/hijri-datepicker.component';
 import { NgbDateParserFormatter, NgbModule } from '@node_modules/@ng-bootstrap/ng-bootstrap';
-import { CustomNgbDateParserFormatter } from '@app/admin/required-document-files/hijri-gregorian-datepicker/CustomNgbDateParserFormatter';
 import { DriversComponent } from './users/drivers/drivers.component';
 import { CreateOrEditDriverModalComponent } from '@app/admin/users/drivers/create-or-edit-driver-modal.component';
 import { ViewOrEditEntityDocumentsModalComponent } from '@app/main/documentFiles/documentFiles/documentFilesViewComponents/view-or-edit-entity-documents-modal.componant';
 import { CreateOrEditDocumentFileModalComponent } from '@app/main/documentFiles/documentFiles/create-or-edit-documentFile-modal.component';
+import { CustomNgbDateParserFormatter } from '@app/shared/common/hijri-gregorian-datepicker/CustomNgbDateParserFormatter';
 const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
   // suppressScrollX: true
 };
@@ -251,19 +249,11 @@ const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
     ManageEntityDynamicParameterValuesModalComponent,
     EntityDynamicParameterValueManagerComponent,
     RequiredDocumentFilesComponent,
-    HijriGregorianDatepickerComponent,
-    HijriDatepickerComponent,
     DriversComponent,
     CreateOrEditDriverModalComponent,
   ],
 
-  exports: [
-    AddMemberModalComponent,
-    AddRoleModalComponent,
-    HijriGregorianDatepickerComponent,
-    CreateOrEditDocumentFileModalComponent,
-    ViewOrEditEntityDocumentsModalComponent,
-  ],
+  exports: [AddMemberModalComponent, AddRoleModalComponent, CreateOrEditDocumentFileModalComponent, ViewOrEditEntityDocumentsModalComponent],
   providers: [
     ImpersonationService,
     TreeDragDropService,
@@ -271,7 +261,6 @@ const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
     { provide: BsDaterangepickerConfig, useFactory: NgxBootstrapDatePickerConfigService.getDaterangepickerConfig },
     { provide: BsLocaleService, useFactory: NgxBootstrapDatePickerConfigService.getDatepickerLocale },
     { provide: PERFECT_SCROLLBAR_CONFIG, useValue: DEFAULT_PERFECT_SCROLLBAR_CONFIG },
-    { provide: NgbDateParserFormatter, useClass: CustomNgbDateParserFormatter },
   ],
 })
 export class AdminModule {}

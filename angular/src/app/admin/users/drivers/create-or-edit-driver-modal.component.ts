@@ -20,10 +20,10 @@ import { IOrganizationUnitsTreeComponentData, OrganizationUnitsTreeComponent } f
 import * as _ from 'lodash';
 import { finalize } from 'rxjs/operators';
 import { FileItem, FileUploader, FileUploaderOptions } from '@node_modules/ng2-file-upload';
-import { DateType } from '@app/admin/required-document-files/hijri-gregorian-datepicker/consts';
+import { DateType } from '@app/shared/common/hijri-gregorian-datepicker/consts';
 import { NgbDateStruct } from '@node_modules/@ng-bootstrap/ng-bootstrap';
 import * as moment from '@node_modules/moment';
-import { DateFormatterService } from '@app/admin/required-document-files/hijri-gregorian-datepicker/date-formatter.service';
+import { DateFormatterService } from '@app/shared/common/hijri-gregorian-datepicker/date-formatter.service';
 import { IAjaxResponse, TokenService } from '@node_modules/abp-ng2-module';
 
 @Component({
@@ -44,7 +44,9 @@ export class CreateOrEditDriverModalComponent extends AppComponentBase {
   isTwoFactorEnabled: boolean = this.setting.getBoolean('Abp.Zero.UserManagement.TwoFactorLogin.IsEnabled');
   isLockoutEnabled: boolean = this.setting.getBoolean('Abp.Zero.UserManagement.UserLockOut.IsEnabled');
   passwordComplexitySetting: PasswordComplexitySetting = new PasswordComplexitySetting();
-
+  isEmailAvailable = true;
+  isEmailValid = true;
+  isPhoneNumberAvilable = true;
   user: UserEditDto = new UserEditDto();
   roles: UserRoleDto[];
   sendActivationEmail = true;
@@ -52,7 +54,6 @@ export class CreateOrEditDriverModalComponent extends AppComponentBase {
   passwordComplexityInfo = '';
   profilePicture: string;
   createOrEditDocumentFileDtos!: CreateOrEditDocumentFileDto[];
-  nationalities = [];
   hasValidationErorr = false;
   /**
    * required documents fileUploader options
@@ -75,17 +76,16 @@ export class CreateOrEditDriverModalComponent extends AppComponentBase {
 
   selectedDateTypeHijri = DateType.Hijri; // or DateType.Gregorian
   selectedDateTypeGregorian = DateType.Gregorian; // or DateType.Gregorian
-  nationalites: SelectItemDto[] = [];
+  nationalities: SelectItemDto[] = [];
   allOrganizationUnits: OrganizationUnitDto[];
   memberedOrganizationUnits: string[];
   userPasswordRepeat = '';
-  isPhoneNumberValid = true;
+  isUserNameValid = false;
   isWaintingUserNameValidation = false;
   constructor(
     injector: Injector,
     private _userService: UserServiceProxy,
     private _profileService: ProfileServiceProxy,
-    private dateFormatterService: DateFormatterService,
     private _documentFilesServiceProxy: DocumentFilesServiceProxy,
     private _tokenService: TokenService
   ) {
@@ -182,6 +182,10 @@ export class CreateOrEditDriverModalComponent extends AppComponentBase {
   }
 
   save(): void {
+    if (this.isEmailAvailable == false || this.isEmailValid == false) {
+      this.notify.error('PleaseMakeSureYouProvideValidDetails!');
+      return;
+    }
     if (!this.user.id && this.user.isDriver) {
       this.DocsUploader.uploadAll();
     } else {
@@ -229,23 +233,13 @@ export class CreateOrEditDriverModalComponent extends AppComponentBase {
   DocFileChangeEvent(event: any, item: CreateOrEditDocumentFileDto): void {
     if (event.target.files[0].size > 5242880) {
       //5MB
-      this.message.warn(this.l('DocumentFile_Warn_SizeLimit', this.maxDocumentFileBytesUserFriendlyValue));
+      this.message.warn(this.l('DocumentFileWarnSizeLimit', this.maxDocumentFileBytesUserFriendlyValue));
       return;
     }
     this.DocsUploader.addToQueue(event.target.files);
 
     item.extn = event.target.files[0].type;
     item.name = event.target.files[0].name;
-  }
-
-  selectedDateChange($event: NgbDateStruct, item: CreateOrEditDocumentFileDto) {
-    if ($event != null && $event.year < 2000) {
-      this.dateFormatterService.SetFormat('DD/MM/YYYY', 'iDD/iMM/iYYYY');
-      const incomingDate = this.dateFormatterService.ToGregorian($event);
-      item.expirationDate = moment(incomingDate.month + '/' + incomingDate.day + '/' + incomingDate.year, 'MM/DD/YYYY');
-    } else if ($event != null && $event.year > 2000) {
-      item.expirationDate = moment($event.month + '/' + $event.day + '/' + $event.year, 'MM/DD/YYYY');
-    }
   }
 
   /**
@@ -307,6 +301,37 @@ export class CreateOrEditDriverModalComponent extends AppComponentBase {
     return s4() + s4() + '-' + s4() + '-' + s4() + '-' + s4() + '-' + s4() + s4() + s4();
   }
 
+  CheckIfDriverPhoneNumberIsValid(userName: string, id: number) {
+    this._userService.checkIfPhoneNumberValid(userName, id == null ? 0 : id).subscribe((res) => {
+      this.isPhoneNumberAvilable = res;
+    });
+  }
+
+  removeWhiteSpacesFromEmail() {
+    this.user.emailAddress.trim();
+    var exp = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/g;
+
+    var result = exp.test(this.user.emailAddress);
+    if (!result) {
+      this.isEmailValid = false;
+    } else {
+      this.isEmailValid = true;
+    }
+    this.checkIfIsEmailAvailable();
+  }
+  checkIfIsEmailAvailable() {
+    this._userService.checkIfEmailisAvailable(this.user.emailAddress).subscribe((result) => {
+      this.isEmailAvailable = result;
+    });
+  }
+  numberOnly(event): boolean {
+    const charCode = event.which ? event.which : event.keyCode;
+    if (charCode > 31 && (charCode < 48 || charCode > 57)) {
+      return false;
+    }
+    return true;
+  }
+
   // CheckIfDriverMobileNumberIsValid(mobileNumber: string) {
   //   this.isWaintingUserNameValidation = true;
   //   this._userService.checkIfPhoneNumberValid(mobileNumber, this.user.id).subscribe((res) => {
@@ -318,14 +343,7 @@ export class CreateOrEditDriverModalComponent extends AppComponentBase {
   getDriverNationalites() {
     this.isWaintingUserNameValidation = true;
     this._userService.getDriverNationalites().subscribe((res) => {
-      this.nationalites = res;
+      this.nationalities = res;
     });
-  }
-  numberOnly(event): boolean {
-    const charCode = event.which ? event.which : event.keyCode;
-    if (charCode > 31 && (charCode < 48 || charCode > 57)) {
-      return false;
-    }
-    return true;
   }
 }

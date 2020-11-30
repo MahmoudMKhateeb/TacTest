@@ -46,7 +46,7 @@
         </div>
 
         <button *ngIf="isGranted('Pages.Trucks.Create')" (click)="createTruck()" class="btn btn-primary blue">
-          <i class="fa fa-plus"></i> {{ l('CreateNewTruck') }}
+          <i class="fa fa-plus"></i> {{ l('Create') }} {{ l('NewTruck') }}
         </button>
       </div>
     </sub-header>
@@ -270,7 +270,7 @@
                           </li>
                           <li>
                             <a href="javascript:;" class="dropdown-item" (click)="viewOrEditEntityDocumentsModal.show(record.truck.id, 'Truck')">{{
-                              l('View Documents')
+                              l('ViewDocuments')
                             }}</a>
                           </li>
                           <li>

@@ -13,8 +13,8 @@
       <form *ngIf="active" #transportTypeForm="ngForm" novalidate (ngSubmit)="save()" autocomplete="off">
         <div class="modal-header">
           <h4 class="modal-title">
-            <span *ngIf="transportType.id">{{ l('EditTransportType') }}*</span>
-            <span *ngIf="!transportType.id">{{ l('CreateNewTransportType') }}</span>
+            <span *ngIf="transportType.id">{{ l('Edit') }} {{ l('TransportType') }}*</span>
+            <span *ngIf="!transportType.id"> {{ l('Create') }} {{ l('NewTransportType') }}</span>
           </h4>
           <button type="button" class="close" (click)="close()" aria-label="Close" [disabled]="saving">
             <span aria-hidden="true">&times;</span>
@@ -22,7 +22,7 @@
         </div>
         <div class="modal-body">
           <div class="form-group">
-            <label for="TransportType_DisplayName">{{ l('DisplayName') }} *</label>
+            <label for="TransportType_DisplayName">{{ l('Name') }} *</label>
             <input
               type="text"
               id="TransportType_DisplayName"
@@ -33,7 +33,7 @@
               maxlength="256"
               required
             />
-            <span class="form-text text-muted">{{ 'EnterTransportType' | localize }}</span>
+            <span class="form-text text-muted">{{ 'Enter' | localize }} {{ 'TransportType' | localize }}</span>
           </div>
         </div>
         <div class="modal-footer">

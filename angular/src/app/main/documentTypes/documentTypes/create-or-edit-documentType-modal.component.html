@@ -13,8 +13,8 @@
       <form *ngIf="active" #documentTypeForm="ngForm" novalidate (ngSubmit)="save()" autocomplete="off">
         <div class="modal-header">
           <h4 class="modal-title">
-            <span *ngIf="documentType.id">{{ l('EditDocumentType') }}</span>
-            <span *ngIf="!documentType.id">{{ l('CreateNewDocumentType') }}</span>
+            <span *ngIf="documentType.id"> {{ l('Edit') }} {{ l('DocumentType') }}</span>
+            <span *ngIf="!documentType.id"> {{ l('Create') }} {{ l('NewDocumentType') }}</span>
           </h4>
           <button type="button" class="close" (click)="close()" aria-label="Close" [disabled]="saving">
             <span aria-hidden="true">&times;</span>
@@ -23,7 +23,7 @@
         <div class="modal-body">
           <div class="row margin-bottom-15">
             <div class="col">
-              <label for="DocumentType_DisplayName">{{ l('DisplayName') }} *</label>
+              <label for="DocumentType_DisplayName">{{ l('Name') }} *</label>
               <input
                 type="text"
                 id="DocumentType_DisplayName"
@@ -36,7 +36,7 @@
                 required
               />
               <span class="text-muted">{{ 'PleaseEnterDocumentType' | localize }}</span>
-              <span *ngIf="!documentNameisAvaliable" class="form-text text-danger text-left">{{ 'DocumentTypeNameIsAlreadyTaken' | localize }}</span>
+              <span *ngIf="!documentNameisAvaliable" class="form-text text-danger text-left">{{ 'AlreadyTaken' | localize }}</span>
             </div>
 
             <div class="col">
@@ -49,7 +49,7 @@
                 required
                 (change)="documentsEntityDropDownOnChange($event)"
               >
-                <option value="{{ -1 }}">{{ l('SelectDocumentsEntity') }}</option>
+                <option value="{{ -1 }}">{{ l('Select') }} {{ l('DocumentsEntity') }}</option>
                 <option *ngFor="let item of allDocumentsEntities" value="{{ item.id }}">{{ item.displayName }}</option>
               </select>
             </div>
@@ -222,14 +222,14 @@
             </div>
           </div>
           <div *ngIf="tenantOptionSelected" class="form-group m-form__group">
-            <label for="documentType.editionId">{{ l('Edition') }}</label>
+            <label for="documentType.editionId">Select</label>
             <select
               id="documentType.editionId"
               name="documentType.editionId"
               [(ngModel)]="documentType.editionId"
               class="form-control form-control-lg custom-select mr-sm-2"
             >
-              <option value="{{ -1 }}">{{ l('Selectedition') }}</option>
+              <option value="{{ -1 }}">{{ l('Select') }} {{ l('Edition') }}</option>
               <option *ngFor="let item of editions" value="{{ item.id }}">{{ item.displayName }}</option>
             </select>
           </div>

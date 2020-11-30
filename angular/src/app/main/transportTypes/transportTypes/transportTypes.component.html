@@ -3,7 +3,7 @@
     <sub-header [title]="'TransportTypes' | localize" [description]="'TransportTypesHeaderInfo' | localize">
       <div role="actions">
         <button *ngIf="isGranted('Pages.TransportTypes.Create')" (click)="createTransportType()" class="btn btn-primary blue">
-          <i class="fa fa-plus"></i> {{ l('CreateNewTransportType') }}
+          <i class="fa fa-plus"></i>{{ l('Create') }} {{ l('NewTransportType') }}
         </button>
       </div>
     </sub-header>
@@ -81,7 +81,7 @@
                       {{ l('Actions') }}
                     </th>
                     <th style="width: 150px;" pSortableColumn="displayName">
-                      {{ l('DisplayName') }}
+                      {{ l('Name') }}
                       <p-sortIcon field="transportType.displayName"></p-sortIcon>
                     </th>
                   </tr>

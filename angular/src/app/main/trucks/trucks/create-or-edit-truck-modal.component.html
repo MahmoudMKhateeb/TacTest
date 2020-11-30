@@ -8,13 +8,13 @@
   aria-hidden="true"
   [config]="{ backdrop: 'static' }"
 >
-  <div class="modal-dialog modal-lg" style="max-width: 90% !important;">
+  <div class="modal-dialog modal-lg">
     <div class="modal-content">
       <form *ngIf="active" #truckForm="ngForm" novalidate (ngSubmit)="save()" autocomplete="off">
         <div class="modal-header">
           <h4 class="modal-title">
-            <span *ngIf="truck.id">{{ l('EditTruck') }}</span>
-            <span *ngIf="!truck.id">{{ l('CreateNewTruck') }}</span>
+            <span *ngIf="truck.id">{{ l('Edit') }} {{ l('Truck') }}</span>
+            <span *ngIf="!truck.id">{{ l('Create') }} {{ l('NewTruck') }}</span>
           </h4>
           <button type="button" class="close" (click)="close()" aria-label="Close" [disabled]="saving">
             <span aria-hidden="true">&times;</span>
@@ -30,7 +30,7 @@
               <div class="form-group m-form__group">
                 <label for="TruckStatusDisplayName">{{ l('TruckStatus') }}*</label>
                 <select [(ngModel)]="truck.truckStatusId" class="form-control" name="truck.truckStatusId" required>
-                  <option [ngValue]="null">{{ l('SelectATruckStatus') }}</option>
+                  <option [ngValue]="null"> {{ l('Select') }} {{ l('TruckStatus') }}</option>
                   <option *ngFor="let item of allTruckStatuss" value="{{ item.id }}">{{ item.displayName }}</option>
                 </select>
               </div>
@@ -47,7 +47,7 @@
                   (change)="GetTransportDropDownList('GetAllTransportSubTypes', truck.transportTypeId)"
                   required
                 >
-                  <option [ngValue]="null">{{ l('SelectATransport Type') }}*</option>
+                  <option [ngValue]="null">{{ l('Select') }} {{ l('TransportType') }}*</option>
                   <option *ngFor="let item of allTransportTypes" value="{{ item.id }}">{{ item.displayName }}</option>
                 </select>
               </div>
@@ -65,7 +65,7 @@
                   [disabled]="allTransportTypes != null ? null : true"
                   required
                 >
-                  <option [ngValue]="null">{{ l('SelectATransportSubType') }}*</option>
+                  <option [ngValue]="null">{{ l('Select') }} {{ l('TransportSubType') }}*</option>
                   <option *ngFor="let item of allTransportSubTypes" value="{{ item.id }}">{{ item.displayName }} </option>
                 </select>
               </div>
@@ -81,7 +81,7 @@
                   [disabled]="truck.transportSubtypeId != null && allTransportTypes != null ? null : true"
                   required
                 >
-                  <option [ngValue]="null">{{ l('SelectTruckTypeByTransportSubtype') }}</option>
+                  <option [ngValue]="null">{{ l('Select') }} {{ l('TruckType') }}</option>
                   <option *ngFor="let item of allTruckTypesByTransportSubtype" value="{{ item.id }}"> {{ item.displayName }}</option>
                 </select>
               </div>
@@ -90,7 +90,7 @@
           <div class="row">
             <div class="col-md-6">
               <div class="form-group m-form__group">
-                <label for="allTruckSubTypesByTruckTypeIdDisplayName">{{ l('Truck SubType') }}*</label>
+                <label for="allTruckSubTypesByTruckTypeIdDisplayName">{{ l('TruckSubType') }}*</label>
                 <select
                   [(ngModel)]="truck.truckSubtypeId"
                   class="form-control"
@@ -99,7 +99,7 @@
                   [disabled]="truck.trucksTypeId != null && truck.transportSubtypeId != null && allTransportTypes != null ? null : true"
                   required
                 >
-                  <option [ngValue]="null">{{ l('SelectTruckSubType') }}</option>
+                  <option [ngValue]="null">{{ l('Select') }} {{ l('TruckSubType') }}</option>
                   <option *ngFor="let item of allTruckSubTypesByTruckTypeId" value="{{ item.id }}"> {{ item.displayName }}</option>
                 </select>
               </div>
@@ -118,7 +118,7 @@
                   "
                   required
                 >
-                  <option [ngValue]="null">{{ l('SelectTruckCapByTruckSubType') }}</option>
+                  <option [ngValue]="null">{{ l('Select') }} {{ l('CapacityCategory') }}</option>
                   <option *ngFor="let item of allTrucksCapByTruckSubTypeId" value="{{ item.id }}">{{ item.displayName }} </option>
                 </select>
               </div>
@@ -143,7 +143,7 @@
                     <button (click)="setDriver1UserIdNull()" class="btn btn-danger btn-icon" type="button"><i class="fa fa-times"></i></button>
                   </div>
                 </div>
-                <span class="form-text text-muted">{{ l('EnterCompanyFullLegalName') }}</span>
+                <span class="form-text text-muted">{{ l('Enter') }} {{ l('DriverName') }}</span>
               </div>
               <input [(ngModel)]="truck.driver1UserId" class="form-control" hidden name="truck.driver1UserId" type="text" />
             </div>
@@ -159,7 +159,7 @@
                 required
                 type="text"
               />
-              <span class="form-text text-muted">{{ l('EnterPlateNumber') }}</span>
+              <span class="form-text text-muted">{{ l('Enter') }} {{ l('PlateNumber') }}</span>
             </div>
 
             <div class="form-group col-md-6">
@@ -174,7 +174,7 @@
                 required
                 type="text"
               />
-              <span class="form-text text-muted">{{ l('EnterModalName') }}</span>
+              <span class="form-text text-muted">{{ l('Enter') }} {{ l('ModalName') }}</span>
             </div>
 
             <div class="form-group col-md-6">
@@ -192,8 +192,8 @@
                 type="number"
                 (keydown)="numberOnly($event)"
               />
-              <span class="form-text text-muted">{{ l('EnterModalYear') }}</span>
-              <span class="form-text text-muted">{{ l('UseTheArrowKeysToChooseTheYear') }}</span>
+              <span class="form-text text-muted"> {{ l('Enter') }} {{ l('ModalYear') }}</span>
+              <span class="form-text text-muted">{{ l('UseArrowKeysToChooseTheYear') }}</span>
             </div>
 
             <!--            <div class="m-checkbox-list col-md-6">-->
@@ -244,7 +244,7 @@
                 name="Note"
                 type="text"
               ></textarea>
-              <span class="form-text text-muted">{{ l('EnterNote') }}</span>
+              <span class="form-text text-muted">{{ l('Enter') }} {{ l('EnterNote') }}</span>
             </div>
 
             <!--            <div class="form-group col-md-12">-->
@@ -274,7 +274,7 @@
                   <h3 class="card-title">{{ item.documentTypeDto.displayName }}</h3>
                 </div>
               </div>
-              <div class="card-body">
+              <div class="card-body padding-bottom-5">
                 <div class="row d-flex">
                   <div class="form-group col-6">
                     <label>{{ l('File') }}</label>
@@ -287,26 +287,26 @@
                         [required]="item.documentTypeDto.isRequired"
                       />
                       <label class="custom-file-label text-truncate" [for]="item.documentTypeDto.displayName">
-                        {{ item.name ? item.name : l('select file') }}</label
+                        {{ item.name ? item.name : l('Select') + l(' File') }}</label
                       >
                     </div>
                   </div>
-                  <div *ngIf="item.documentTypeDto.hasExpirationDate" class="form-group col-6">
-                    <label>{{ l('expiration date') }} <span class="text-danger">*</span></label>
-                    <input
-                      name="expirationDate{{ i }}"
-                      id="expirationDate{{ i }}"
-                      bsDatepicker
-                      class="form-control m-input"
-                      datePickerMomentModifier
-                      [required]="item.documentTypeDto.isRequired && !item.isAccepted"
-                      [(date)]="item.expirationDate"
-                      [disabled]="item.isAccepted"
-                    />
-                  </div>
+                  <!--                  <div *ngIf="item.documentTypeDto.hasExpirationDate" class="form-group col-6">-->
+                  <!--                    <label>{{ l('expiration date') }} <span class="text-danger">*</span></label>-->
+                  <!--                    <input-->
+                  <!--                      name="expirationDate{{ i }}"-->
+                  <!--                      id="expirationDate{{ i }}"-->
+                  <!--                      bsDatepicker-->
+                  <!--                      class="form-control m-input"-->
+                  <!--                      datePickerMomentModifier-->
+                  <!--                      [required]="item.documentTypeDto.isRequired && !item.isAccepted"-->
+                  <!--                      [(date)]="item.expirationDate"-->
+                  <!--                      [disabled]="item.isAccepted"-->
+                  <!--                    />-->
+                  <!--                  </div>-->
                   <div *ngIf="item.documentTypeDto.hasNumber" class="form-group col-6">
                     <label
-                      >{{ l('number') }}
+                      >{{ l('Number') }}
                       <span class="text-danger">*</span>
                     </label>
                     <input
@@ -326,7 +326,7 @@
                     </span>
                   </div>
                   <div *ngIf="item.documentTypeDto.hasNotes" class="form-group col-6">
-                    <label>{{ l('note') }}</label>
+                    <label>{{ l('Note') }}</label>
                     <input
                       name="note{{ i }}"
                       id="note{{ i }}"
@@ -345,7 +345,7 @@
                       [isRequired]="true"
                       [readonly]="true"
                       [selectedDateType]="item.documentTypeDto.hasHijriExpirationDate ? selectedDateTypeHijri : selectedDateTypeGregorian"
-                      (selectedDateChange)="selectedDateChange($event, item)"
+                      (selectedDateChange)="hijriDatepickerSelectedDateChange($event, item)"
                     >
                     </hijri-gregorian-datepicker-test>
                   </div>
