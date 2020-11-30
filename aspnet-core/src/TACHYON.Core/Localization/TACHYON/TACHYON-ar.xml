@@ -45,10 +45,10 @@
 	  <text name="TenantRequiredDocuments">الملفات المطلوبة من الشركة</text>
 	  <text name="WaitingForReviewMsg"> الرجاء الإنتظار ريثما يتم مراجعة الملفات الخاصة بك</text>
 	  <text name="SubmittedDocumnents">الملقات التي تم تسليمها</text>
-	  <text name="Extn">Extn</text>
-	  <text name="Accepted">Accepted</text>
-	  <text name="Rejected">Rejected</text>
-	  <text name="InReview">In Review</text>
+	  <text name="Extn">صيغة المستند</text>
+	  <text name="Accepted">تم القبول</text>
+	  <text name="Rejected">تم الرفض</text>
+	  <text name="InReview">تحت المراجعة</text>
 	  <text name="UploadDocumentMsg">الرجاء تحميل الملفات الأتية لكي يتم  إنهاء عملية  تسجيل الدخول الخاصة بك في البرنامج</text>
 	  <![CDATA[ Tachyon: Tenant document Upload Page End]]>
 
@@ -133,42 +133,42 @@
 
 
     <![CDATA[Tachyon:Documents Common Start]]>
-    <text name="Documents">Documents</text>
+    <text name="Documents">المستندات</text>
     <![CDATA[Tachyon:Documents Common End]]>
 
     <![CDATA[Tachyon:Document Entites Page Start]]>
-    <text name="DocumentsEntities">Documents Entities</text>
+    <text name="DocumentsEntities">الجهات التي يطلب منها مستندات</text>
     <text name="DocumentsEntitiesHeaderInfo">Documents Entities Header Info</text>
-    <text name="NewDocumentsEntity">New Documents Entity</text>
-    <text name="DocumentEntityName">Document Entity Name</text>
-    <text name="DocumentsEntity">Documents Entity</text>
+    <text name="NewDocumentsEntity">جهة جديدة مطلوب منها مستندات</text>
+    <text name="DocumentEntityName">إسم الجهة التي يطلب منها المستندات</text>
+    <text name="DocumentsEntity">جهة يطلب منها مستندات</text>
     <![CDATA[Tachyon:Document Entites Page End]]>
 
     <![CDATA[ Tachyon: Document Translation Page Start]]>
-    <text name="DocumentTypeTranslations">Document Type Translations</text>
+    <text name="DocumentTypeTranslations">ترجمة  إسم المستندات</text>
     <text name="DocumentTypeTranslationsHeaderInfo">Document Type Translations Header Info</text>
-    <text name="NewDocumentTypeTranslation">New Document Type Translation</text>
+    <text name="NewDocumentTypeTranslation">ترجمة جديدى لإسم مستند</text>
     <![CDATA[ Tachyon: Document Translation Page End]]>
 
     <![CDATA[Tachyon:Document Types Page Start]]>
-    <text name="DocumentTypes">Document Types</text>
-    <text name="IsRequired">Is Required</text>
+    <text name="DocumentTypes">نوع المستندات</text>
+    <text name="IsRequired">مطلوب</text>
     <text name="DocumentTypesHeaderInfo">Document Types Header Info</text>
-    <text name="NewDocumentType">New Document Type</text>
-    <text name="HasExpirationDate">Has Expiration Date</text>
-    <text name="RequiredFrom">Required From</text>
-    <text name="SpecialConstant">Special Constant</text>
-    <text name="ExpirationAlertDays">Expiration Alert Days</text>
-    <text name="InActiveToleranceDays">InActive Tolerance Days</text>
-    <text name="InActiveAccountExpired">InActive Account Expired</text>
-    <text name="HasNumber">Has Number</text>
-    <text name="IsNumberUnique">Is Number Unique</text>
-    <text name="HasHijriExpirationDate">Has Hijri Expiration Date</text>
-    <text name="HasNotes">Has Notes</text>
-    <text name="Company">Company</text>
-    <text name="DocumentType">DocumentType</text>
-    <text name="ToleranceDaysBeforeDeactivateAfterExpiration">Tolerance Days Before Deactivate After Expiration</text>
-    <text name="DeactivateAccountUponexpiration">Deactivate Account Upon expiration</text>
+    <text name="NewDocumentType">نوع مستند جديد</text>
+    <text name="HasExpirationDate">يحتوي على تاريخ إنتهاء</text>
+    <text name="RequiredFrom">مطلوب من</text>
+    <text name="SpecialConstant">رمز مميز</text>
+    <text name="ExpirationAlertDays">عدد أيام التنبيه قبل إنتهاء الصلاحية</text>
+    <text name="InActiveToleranceDays">عدد أيام السماحية بعد تاريخ إنتهاء الصلاحية</text>
+    <text name="InActiveAccountExpired">قفل الحساب بعد إنتهاء الصلاحية</text>
+    <text name="HasNumber">يحتوي على رقم</text>
+    <text name="IsNumberUnique">الرقم مميز</text>
+    <text name="HasHijriExpirationDate">يحتوي على تاريخ إنتهاء صلاحية  هجري</text>
+    <text name="HasNotes">يحتوي على ملاحظات </text>
+    <text name="Company">شركة</text>
+    <text name="DocumentType">نوع مستند</text>
+    <text name="ToleranceDaysBeforeDeactivateAfterExpiration">عدد أيام السماحية بعد تاريخ إنتهاء الصلاحية</text>
+    <text name="DeactivateAccountUponexpiration">قفل الحساب بعد إنتهاء الصلاحية</text>
     <![CDATA[Tachyon:Document Types Page End]]>
 
 
@@ -199,18 +199,14 @@
     <text name="PasswordComplexity_RequiredLength_Hint">كلمة السر يجب ان تحتوي على الأفل على {0} عناصر.</text>
     <text name="PasswordsDontMatch">كلمة المرور غير مطابقة!</text>
     <text name="PasswordRepeat">كلمة المرور (تكرار)</text>
-    <text name="PleaseMakeSureYouProvideValidDetails">Please Make Sure You Provide Valid Details!</text>
+    <text name="PleaseMakeSureYouProvideValidDetails">الرجاء التأكد من إعطاء بيانات صالحة!</text>
     <text name="pleasemakesureyouchoosethecountryandthecity!">Please make sure you choose the country and the city!</text>
     <text name="Carrier">ناقل</text>
-
     <![CDATA[Tachyon: Tenant Registration Page End]]>
 
-
-
     <![CDATA[ Tachyon: Tenant login Page Start]]>
-    <text name="NotAMemberYet">Not a member yet ?</text>
+    <text name="NotAMemberYet">أصبح عضوا</text>
     <![CDATA[ Tachyon: Tenant login Page End]]>
-
 
 
     <![CDATA[Tachyon:Common Start]]>
@@ -229,8 +225,6 @@
     <![CDATA[Tachyon:Common End]]>
 
 
-
-
 	  <![CDATA[Tachyon:Common Start]]>
 	  <text name="ExcelOperations">عمليات إكسل</text>
 	  <text name="ImportFromExcel">استيراد من إكسل</text>
@@ -241,7 +235,7 @@
 	  <text name="UserName">اسم المستخدم</text>
 	  <text name="EmailAddress">البريد الإلكتروني</text>
 	  <text name="CreationTime">تاريخ الإنشاء</text>
-	  <text name="ViewDocuments">View Documents</text>
+	  <text name="ViewDocuments">إظهار المستندات</text>
 	  <text name="Yes">نعم</text>
 	  <text name="No">لا</text>
 	  <text name="SavedSuccessfully">تم الحفظ بنجاح.</text>
@@ -473,7 +467,7 @@
        ]]>
     </text>
     <text name="SeeDemo">مشاهدة الموقع التجريبي</text>
-    <text name="Editions">النسخات</text>
+    <text name="Editions">أنواع الإشتراكات</text>
     <text name="EditionsHeaderInfo">إدارة النسخات ومميزات النظام</text>
     <text name="CreateNewEdition">إنشاء نسخة جديدة</text>
     <text name="EditEdition">تحرير نسخة</text>

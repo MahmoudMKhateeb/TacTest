@@ -41,7 +41,7 @@
 
 
     <![CDATA[ Tachyon: Tenant login Page Start]]>
-    <text name="NotAMemberYet">Not a member yet ?</text>
+    <text name="NotAMemberYet">Become a Member!</text>
     <![CDATA[ Tachyon: Tenant login Page End]]>
 
     <![CDATA[ Tachyon:Common]]>
@@ -73,7 +73,6 @@
     <text name="DocumentFile">Document File</text>
     <text name="NewDocumentFile">New Document File</text>
     <text name="AddDocument">Add Document</text>
-
     <![CDATA[ Tachyon: Document files Page End]]>
 
 
