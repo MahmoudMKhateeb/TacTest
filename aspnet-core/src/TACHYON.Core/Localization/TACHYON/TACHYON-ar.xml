@@ -135,6 +135,59 @@
 
 
     <text name="HomePage">الرئيسية</text>
+	  <![CDATA[Tachyon:Common Start]]>
+	  <text name="ExcelOperations">عمليات إكسل</text>
+	  <text name="ImportFromExcel">استيراد من إكسل</text>
+	  <text name="ExportToExcel">تصدير الى إكسل</text>
+	  <text name="ImportToExcelSampleFileDownloadInfo">{0} لتنزيل نموذج ملف الاستيراد.</text>
+	  <text name="ClickHere">إضغط هنا</text>
+	  <text name="Search">بحث</text>
+	  <text name="UserName">اسم المستخدم</text>
+	  <text name="EmailAddress">البريد الإلكتروني</text>
+	  <text name="CreationTime">تاريخ الإنشاء</text>
+	  <text name="ViewDocuments">View Documents</text>
+	  <text name="Yes">نعم</text>
+	  <text name="No">لا</text>
+	  <text name="SavedSuccessfully">تم الحفظ بنجاح.</text>
+	  <text name="AreYouSure">هل أنت متأكد؟</text>
+	  <text name="YesDelete">نعم إحذف</text>
+	  <![CDATA[Tachyon:Common end]]>
+
+
+	  <![CDATA[Tachyon:Documents Common Start]]>
+	  <text name="DocumentFileWarnSizeLimit">DocumentFile Warn Size Limit</text>
+	  <![CDATA[Tachyon:Documents Common End]]>
+
+	  <![CDATA[Tachyon:User and Driver Shared Start]]>
+	  <text name="Permissions">صلاحيات</text>
+	  <text name="Unlock">فتح القفل</text>
+	  <text name="User">مستخدم</text>
+	  <text name="NewUser">مستخدم جديد</text>
+	  <text name="PhoneNumber">رقم الهاتف</text>
+	  <text name="CanNotChangeAdminUserName">لا يمكن تغيير اسم مستخدم المشرف</text>
+	  <text name="Surname">الإسم الأخير</text>
+	  <text name="ShouldChangePasswordOnNextLogin">يجب تغيير كلمة المرور عند تسجيل الدخول المقبل.</text>
+	  <text name="Active">مفعّل</text>
+	  <text name="IsTwoFactorEnabled">تمكين التوثيق ذو عاملين</text>
+	  <text name="IsLockoutEnabled">تمكين قفل الحسابات</text>
+	  <![CDATA[Tachyon:User and Driver Shared  end]]>
+
+
+
+
+	  <![CDATA[Tachyon:Driver Page Start]]>
+	  <text name="Drivers">سائقين</text>
+	  <text name="Driver">سائق</text>
+	  <text name="DriversHeaderInfo">Drivers Header Info</text>
+	  <text name="NewDriver">سائق جديد</text>
+	  <text name="DriverInformations">Driver Informations</text>
+	  <text name="Nationality">الجنسية</text>
+	  <text name="ExperienceField">مجال الخبرة</text>
+	  <text name="DriverDocuments">مستندات السائق</text>
+	  <![CDATA[Tachyon:Driver Page End]]>
+
+
+	  <text name="HomePage">الرئيسية</text>
     <text name="AboutUs">من نحن</text>
     <text name="Administration">الإدارة</text>
     <text name="Roles">الأدوار</text>
@@ -157,32 +210,22 @@
     <text name="EditRole">تحرير الدور</text>
     <text name="CreateNewRole">إنشاء دور جديد</text>
     <text name="RoleProperties">خصائص الدور</text>
-    <text name="Permissions">إذونات</text>
     <text name="Save">حـفظ</text>
     <text name="RolesHeaderInfo">إستخدم الأدوار لإنشاء مجموعة إذونات</text>
     <text name="Static">مـثبّت</text>
     <text name="Actions">إجراءات</text>
     <text name="Delete">حـذف</text>
-    <text name="SavedSuccessfully">تم الحفظ بنجاح.</text>
-    <text name="AreYouSure">هل أنت متأكد؟</text>
-    <text name="YesDelete">نعم إحذف</text>
     <text name="DeletingUser"> حذف المستخدم</text>
     <text name="UsersHeaderInfo">إدارة المستخدمين و الإذونات</text>
     <text name="CreateNewUser">إنشاء مستخدم جديد</text>
-    <text name="UserName">اسم المستخدم</text>
     <text name="Name">الإسـم</text>
-    <text name="Surname">الإسم الأخير</text>
-    <text name="EmailAddress">البريد الإلكتروني</text>
     <text name="LastLoginTime">آخر تسجيل الدخول</text>
     <text name="EditUser">تحرير المستخدم</text>
     <text name="UserInformations">تفاصيل المستخدم</text>
     <text name="SuccessfullyDeleted">تم الحذف بنجاح</text>
     <text name="RoleDeleteWarningMessage">سيتم حذف الدور {0} و سوف يتم إزالة إذونات جميع المستخدمين المعيين بهذا الدور</text>
     <text name="UserDeleteWarningMessage">سيتم حذف المستخدم {0}.</text>
-    <text name="Active">مفعّل</text>
     <text name="EmailConfirm"> تأكيد البريد الإلكتروني</text>
-    <text name="Yes">نـعم</text>
-    <text name="No">لا</text>
     <text name="MySettings">إعداداتي</text>
     <text name="Logout">تسجيل الخروج</text>
     <text name="Reset">مسح</text>
@@ -204,7 +247,6 @@
     <text name="EditingRole"> تحرير الدور</text>
     <text name="CreatingNewRole"> إنشاء دور جديد</text>
     <text name="DeletingRole"> حذف الدور</text>
-    <text name="CreationTime">الإنشاء</text>
     <text name="SearchWithThreeDot">بـحث...</text>
     <text name="ResetSpecialPermissions">مسح الإذونات الخاصة</text>
     <text name="Settings">الإعدادات</text>
@@ -241,7 +283,6 @@
     <text name="InvalidEmailConfirmationCode">رمز تأكيد البريد الإلكتروني غير صحيح</text>
     <text name="InvalidEmailConfirmationCode_Detail">من فضلك تأكد من دخول هذه الصفحة بالضغط على الرابط المرسل إلى بريدك الإلكتروني. إذا كان هذا لا يحل المشكلة، يمكنك محاولة إعادة إرسال رمز التأكيد من جديد.</text>
     <text name="YourEmailIsConfirmedMessage">تم تأكيد بريدك الإلكتروني بنجاح</text>
-    <text name="ShouldChangePasswordOnNextLogin">يجب تغيير كلمة المرور عند تسجيل الدخول المقبل.</text>
     <text name="SetRandomPassword">تعيين كلمة مرور عشوائية.</text>
     <text name="EmailActivation">تفعيل البريد الإلكتروني</text>
     <text name="SendEmailActivationLink_Information">سيتم إرسال رابط تأكيد بريدك الإلكتروني. إذا لم يصلك البريد الإلكتروني في غضون بضع دقائق, الرجاء أعد المحاولة.</text>
@@ -281,7 +322,6 @@
     <text name="CaptchaCanNotBeEmpty">يجب أن تثبت أنك لست روبوتًا.</text>
     <text name="IncorrectCaptchaAnswer">غير قادر على تحديد أنك لست روبوتًا.</text>
     <text name="FormIsNotValidMessage">النموذج يحتوي على أخطاء. يرجى مراجعة وتصحيح الأخطاء</text>
-    <text name="CanNotChangeAdminUserName">لا يمكن تغيير اسم مستخدم المشرف</text>
     <text name="Error">خطأ</text>
     <text name="OopsYouAreLost">عذرا! هل أنت ضال</text>
     <text name="WeCanNotFindThePage">لم نتمكن من العثور على الصفحة التي تبحث عنها.</text>
@@ -330,7 +370,6 @@
     <text name="TenantSelection_Detail">الرجاء اختيار واحد من العملاء</text>
     <text name="LoginWith">تسجيل الدخول مع:</text>
     <text name="PasswordChangeDontRememberMessage">إذا كنت لا تتذكر كلمة المرور {0}.</text>
-    <text name="ClickHere">إضغط هنا</text>
     <text name="Apply">تطبيق</text>
     <text name="CustomRange">مدى مخصص</text>
     <text name="DashboardNoteForMpaVersion">
@@ -556,8 +595,6 @@
     <text name="VerifySecurityCode_Information">الرجاء إدخال رمز التحقق المرسل إليك.</text>
     <text name="RememberThisBrowser">تذكر هذا المتصفح</text>
     <text name="InvalidSecurityCode">رمز الأمان غير صالح!</text>
-    <text name="PhoneNumber">رقم الهاتف</text>
-    <text name="Unlock">فتح القفل</text>
     <text name="UnlockedTheUser">فتح قفل المستخدم {0}</text>
     <text name="UserLockOut">قفل المستخدم</text>
     <text name="EnableUserAccountLockingOnFailedLoginAttemts">تمكين تأمين محاولات الدخول الفاشلة</text>
@@ -578,8 +615,6 @@
     <text name="RemainingTime">الوقت المتبقي</text>
     <text name="SecondShort{0}">{0} ث</text>
     <text name="ResetCode">كود إعادة تعيين</text>
-    <text name="IsTwoFactorEnabled">تمكين التوثيق ذو عاملين</text>
-    <text name="IsLockoutEnabled">تمكين قفل الحسابات</text>
     <text name="IsLockoutEnabled_Hint">تم قفل حساب المستخدم لفترة من الوقت بعد كمية من محاولات الدخول الفاشلة.</text>
     <text name="TenantRegistrationLoginInfo">إضغط هنا لتسجيل الدخول</text>
     <text name="CouldNotValidateExternalUser">لم نتمكن من التحقق من صحة تسجيل دخول المستخدم الخارجي</text>
@@ -874,7 +909,6 @@
     <text name="CreatedAtByUser"><![CDATA[تم الإنشاء في <b> {0} </ b> بواسطة <b> {1} </ b>]]></text>
     <text name="TACHYON.MultiTenancy.Tenant">العميل</text>
     <text name="Abp.Organizations.OrganizationUnit">الوحدة التنظيمية</text>
-    <text name="Search">بحث</text>
     <text name="Pin">تثبيت</text>
     <text name="TopMenu">القائمة العلوية</text>
     <text name="LeftMenu">القائمة الجانبية</text>
@@ -962,10 +996,6 @@
     <text name="ManagingRoles">إدارة الأدوار</text>
     <text name="UiCustomization_LayoutFixedContent">محتوى ثابت (أجهزة الكمبيوتر)</text>
     <text name="UiCustomization_LayoutMobileFixedContent">محتوى ثابت (الجوال)</text>
-    <text name="ExcelOperations">عمليات إكسل</text>
-    <text name="ImportFromExcel">استيراد من إكسل</text>
-    <text name="ExportToExcel">تصدير الى إكسل</text>
-    <text name="ImportToExcelSampleFileDownloadInfo">{0} لتنزيل نموذج ملف الاستيراد.</text>
     <text name="ImportUsersProcessStart">بدأت عملية استيراد المستخدم.</text>
     <text name="ImportUsersUploadFailed">فشلت عملية استيراد المستخدم.</text>
     <text name="AllUsersSuccessfullyImportedFromExcel">اكتملت عملية استيراد المستخدم بنجاح. تم استيراد جميع المستخدمين في الملف.</text>

@@ -14,12 +14,12 @@
       <form *ngIf="active" #userForm="ngForm" novalidate (ngSubmit)="save()">
         <div class="modal-header">
           <h4 *ngIf="!creatDriver" class="modal-title">
-            <span *ngIf="user.id">{{ 'EditUser' | localize }}: {{ user.userName }}</span>
-            <span *ngIf="!user.id">{{ 'CreateNewUser' | localize }}</span>
+            <span *ngIf="user.id"> {{ 'Edit' | localize }} {{ 'User' | localize }}: {{ user.userName }}</span>
+            <span *ngIf="!user.id">{{ 'Create' | localize }} {{ 'NewUser' | localize }}</span>
           </h4>
           <h4 *ngIf="creatDriver" class="modal-title">
-            <span *ngIf="user.id">{{ 'Edit Driver' | localize }}: {{ user.userName }}</span>
-            <span *ngIf="!user.id">{{ 'Create New Driver' | localize }}</span>
+            <span *ngIf="user.id">{{ 'Edit' | localize }} {{ 'Driver' | localize }}: {{ user.userName }}</span>
+            <span *ngIf="!user.id">{{ 'Create' | localize }}{{ 'NewDriver' | localize }}</span>
           </h4>
           <button type="button" class="close" (click)="close()" [attr.aria-label]="l('Close')" [disabled]="saving">
             <span aria-hidden="true">&times;</span>
@@ -300,12 +300,12 @@
                             [required]="item.documentTypeDto.isRequired"
                           />
                           <label class="custom-file-label text-truncate" [for]="item.documentTypeDto.displayName">
-                            {{ item.name ? item.name : l('select file') }}</label
+                            {{ item.name ? item.name : l('Select') + l('File') }}</label
                           >
                         </div>
                       </div>
                       <div *ngIf="item.documentTypeDto.hasExpirationDate" class="form-group col-6">
-                        <label>{{ l('expiration date') }} <span class="text-danger">*</span></label>
+                        <label>{{ l('Expirationdate') }} <span class="text-danger">*</span></label>
                         <input
                           name="expirationDate{{ i }}"
                           id="expirationDate{{ i }}"
@@ -318,7 +318,7 @@
                       </div>
                       <div *ngIf="item.documentTypeDto.hasNumber" class="form-group col-6">
                         <label
-                          >{{ l('number') }}
+                          >{{ l('Number') }}
                           <span class="text-danger">*</span>
                         </label>
                         <input
@@ -337,7 +337,7 @@
                         </span>
                       </div>
                       <div *ngIf="item.documentTypeDto.hasNotes" class="form-group col-6">
-                        <label>{{ l('note') }}</label>
+                        <label>{{ l('Note') }}</label>
                         <input
                           name="note{{ i }}"
                           id="note{{ i }}"

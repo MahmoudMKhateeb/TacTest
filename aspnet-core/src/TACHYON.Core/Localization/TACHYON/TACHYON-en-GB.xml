@@ -1,6 +1,58 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <localizationDictionary culture="en-GB">
   <texts>
+	  <![CDATA[Tachyon:Common Start]]>
+	  <text name="ExcelOperations">Excel Operations</text>
+	  <text name="ExportToExcel">Export To Excel</text>
+	  <text name="ImportFromExcel">Import From Excel</text>
+	  <text name="ImportToExcelSampleFileDownloadInfo">Import To Excel Sample File Download Info</text>
+	  <text name="ClickHere">Click Here</text>
+	  <text name="Search">Search</text>
+	  <text name="UserName">User name</text>
+	  <text name="EmailAddress">Email address</text>
+	  <text name="CreationTime">Creation time</text>	  
+	  <text name="ViewDocuments">View Documents</text>
+	  <text name="Yes">Yes</text>
+	  <text name="No">No</text>
+	  <text name="SavedSuccessfully">Saved successfully.</text>
+	  <text name="AreYouSure">Are you sure?</text>
+	  <text name="YesDelete">Yes, delete!</text>
+	  <![CDATA[Tachyon:Common end]]>
+	  
+	  
+	  <![CDATA[Tachyon:Documents Common Start]]>
+	  <text name="DocumentFileWarnSizeLimit">DocumentFile Warn Size Limit</text>
+	  <![CDATA[Tachyon:Documents Common End]]>
+	  
+	  <![CDATA[Tachyon:User and Driver Shared Start]]>
+	  <text name="Permissions">Permissions</text>
+	  <text name="Unlock">Unlock</text>
+	  <text name="User">User</text>
+	  <text name="NewUser">New User</text>
+	  <text name="PhoneNumber">Phone number</text>
+	  <text name="CanNotChangeAdminUserName">Can not change username of the admin.</text>
+	  <text name="Surname">Surname</text>
+	  <text name="ShouldChangePasswordOnNextLogin">Should change password on next login.</text>
+	  <text name="Active">Active</text>
+	  <text name="IsTwoFactorEnabled">Two factor authentication enabled</text>
+	  <text name="IsLockoutEnabled">Lockout enabled</text>
+	  <![CDATA[Tachyon:User and Driver Shared  end]]>
+	  
+	  
+	  
+	  
+	  <![CDATA[Tachyon:Driver Page Start]]>
+	  <text name="Drivers">Drivers</text>
+	  <text name="Driver">Driver</text>
+	  <text name="DriversHeaderInfo">Drivers Header Info</text>
+	  <text name="NewDriver">New Driver</text>
+	  <text name="DriverInformations">Driver Informations</text>
+	  <text name="Nationality">Nationality</text>
+	  <text name="ExperienceField">Experience Field</text>
+	  <text name="DriverDocuments">Driver Documents</text> 
+	 <![CDATA[Tachyon:Driver Page End]]>
+
+	  
     <![CDATA[ Tachyon: Document files Page Start]]>
 
     <text name="DocumentFiles">Document Files</text>
@@ -148,32 +200,22 @@
     <text name="EditRole">Edit role</text>
     <text name="CreateNewRole">Create new role</text>
     <text name="RoleProperties">Role properties</text>
-    <text name="Permissions">Permissions</text>
     <text name="Save">Save</text>
     <text name="RolesHeaderInfo">Use roles to group permissions.</text>
     <text name="Static">Static</text>
     <text name="Actions">Actions</text>
     <text name="Delete">Delete</text>
-    <text name="SavedSuccessfully">Saved successfully.</text>
-    <text name="AreYouSure">Are you sure?</text>
-    <text name="YesDelete">Yes, delete!</text>
     <text name="DeletingUser">Deleting user</text>
     <text name="UsersHeaderInfo">Manage users and permissions.</text>
     <text name="CreateNewUser">Create new user</text>
-    <text name="UserName">User name</text>
     <text name="Name">Name</text>
-    <text name="Surname">Surname</text>
-    <text name="EmailAddress">Email address</text>
     <text name="LastLoginTime">Last login time</text>
     <text name="EditUser">Edit user</text>
     <text name="UserInformations">User information</text>
     <text name="SuccessfullyDeleted">Successfully deleted.</text>
     <text name="RoleDeleteWarningMessage">Role {0} will be deleted and unassigned from all assigned users.</text>
     <text name="UserDeleteWarningMessage">User {0} will be deleted.</text>
-    <text name="Active">Active</text>
     <text name="EmailConfirm">Email confirm</text>
-    <text name="Yes">Yes</text>
-    <text name="No">No</text>
     <text name="MySettings">My settings</text>
     <text name="Logout">Logout</text>
     <text name="Reset">Reset</text>
@@ -195,7 +237,6 @@
     <text name="EditingRole">Editing role</text>
     <text name="CreatingNewRole">Creating new role</text>
     <text name="DeletingRole">Deleting role</text>
-    <text name="CreationTime">Creation time</text>
     <text name="SearchWithThreeDot">Search...</text>
     <text name="ResetSpecialPermissions">Reset special permissions</text>
     <text name="Settings">Settings</text>
@@ -232,7 +273,6 @@
     <text name="InvalidEmailConfirmationCode">Invalid email confirmation code</text>
     <text name="InvalidEmailConfirmationCode_Detail">Please be sure you entered this page by clicking the link sent to your email. If this does not solve the problem, you can re-try to request a new confirmation code.</text>
     <text name="YourEmailIsConfirmedMessage">Your email address is successfully confirmed.</text>
-    <text name="ShouldChangePasswordOnNextLogin">Should change password on next login.</text>
     <text name="SetRandomPassword">Set random password.</text>
     <text name="EmailActivation">Email activation</text>
     <text name="SendEmailActivationLink_Information">A link will be sent to your email to activate your email address. If you don't get an email within a few minutes, please re-try.</text>
@@ -258,7 +298,6 @@
     <text name="EmailConfirmationRequiredForLogin">Email confirmation required for login.</text>
     <text name="{0}UserCannotBeDeleted">{0} user can not be deleted.</text>
     <text name="TenantNameCanNotBeEmpty">Tenant name can not be empty</text>
-    <text name="ExportToExcel">Export to excel</text>
     <text name="ChangeProfilePicture">Change profile picture</text>
     <text name="ProfilePicture_Change_Info">You can select a JPG/JPEG/PNG file with a maximum {0}MB size.</text>
     <text name="ProfilePicture_Change_Error">Your profile picture could not be changed.</text>
@@ -273,7 +312,6 @@
     <text name="CaptchaCanNotBeEmpty">You must prove that you are not a robot.</text>
     <text name="IncorrectCaptchaAnswer">Unable to determine that you are not a robot.</text>
     <text name="FormIsNotValidMessage">Form is not valid. Please check and fix errors.</text>
-    <text name="CanNotChangeAdminUserName">Can not change username of the admin.</text>
     <text name="Error">Error!</text>
     <text name="OopsYouAreLost">Oops! You're lost.</text>
     <text name="WeCanNotFindThePage">We can not find the page you're looking for.</text>
@@ -322,7 +360,6 @@
     <text name="TenantSelection_Detail">Please select one of the following tenants.</text>
     <text name="LoginWith">Login with:</text>
     <text name="PasswordChangeDontRememberMessage">If you can not remember your password, {0}.</text>
-    <text name="ClickHere">click here</text>
     <text name="Apply">Apply</text>
     <text name="CustomRange">Custom range</text>
     <text name="DashboardNoteForMpaVersion">
@@ -548,8 +585,6 @@
     <text name="VerifySecurityCode_Information">Please enter the verification code sent to you.</text>
     <text name="RememberThisBrowser">Remember this browser</text>
     <text name="InvalidSecurityCode">Invalid security code!</text>
-    <text name="PhoneNumber">Phone number</text>
-    <text name="Unlock">Unlock</text>
     <text name="UnlockedTheUser">Unlocked the user {0}</text>
     <text name="UserLockOut">User Lock Out</text>
     <text name="EnableUserAccountLockingOnFailedLoginAttemts">Enable user account locking on failed login attempts</text>
@@ -570,8 +605,6 @@
     <text name="RemainingTime">Remaining time</text>
     <text name="SecondShort{0}">{0} sec</text>
     <text name="ResetCode">Reset code</text>
-    <text name="IsTwoFactorEnabled">Two factor authentication enabled</text>
-    <text name="IsLockoutEnabled">Lockout enabled</text>
     <text name="IsLockoutEnabled_Hint">User is locked for a while after a certain amount of failed login attempts.</text>
     <text name="TenantRegistrationLoginInfo">Click here to login</text>
     <text name="CouldNotValidateExternalUser">Could not validate external user login</text>
@@ -864,7 +897,6 @@
     <text name="CreatedAtByUser"><![CDATA[Created at <b>{0}</b> by <b>{1}</b>]]></text>
     <text name="TACHYON.MultiTenancy.Tenant">Tenant</text>
     <text name="Abp.Organizations.OrganizationUnit">Organisation unit</text>
-    <text name="Search">Search</text>
     <text name="Pin">Pin</text>
     <text name="TopMenu">Top menu</text>
     <text name="LeftMenu">Left menu</text>
@@ -951,9 +983,6 @@
     <text name="ManagingRoles">Managing roles</text>
     <text name="UiCustomization_LayoutFixedContent">Fixed content (Desktop)</text>
     <text name="UiCustomization_LayoutMobileFixedContent">Fixed content (Mobile)</text>
-    <text name="ExcelOperations">Excel operations</text>
-    <text name="ImportFromExcel">Import from Excel</text>
-    <text name="ImportToExcelSampleFileDownloadInfo">{0} to download sample import file.</text>
     <text name="ImportUsersProcessStart">User import process has begun.</text>
     <text name="ImportUsersUploadFailed">User import process has failed.</text>
     <text name="AllUsersSuccessfullyImportedFromExcel">User import process has been completed successfully. All users in file are imported.</text>

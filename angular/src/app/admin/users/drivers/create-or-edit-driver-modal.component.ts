@@ -228,7 +228,7 @@ export class CreateOrEditDriverModalComponent extends AppComponentBase {
   DocFileChangeEvent(event: any, item: CreateOrEditDocumentFileDto): void {
     if (event.target.files[0].size > 5242880) {
       //5MB
-      this.message.warn(this.l('DocumentFile_Warn_SizeLimit', this.maxDocumentFileBytesUserFriendlyValue));
+      this.message.warn(this.l('DocumentFileWarnSizeLimit', this.maxDocumentFileBytesUserFriendlyValue));
       return;
     }
     this.DocsUploader.addToQueue(event.target.files);
