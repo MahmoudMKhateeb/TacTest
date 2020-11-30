@@ -1,6 +1,81 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <localizationDictionary culture="en-GB">
   <texts>
+	  <![CDATA[ Tachyon: Document files Page Start]]>
+
+	  <text name="DocumentFiles">Document Files</text>
+	  <text name="DocumentFilesHeaderInfo">DocumentFilesHeaderInfo</text>
+	  <text name="DocumentName">Document Name</text>
+	  <text name="SubmitterTenant">Submitter Tenant</text>
+	  <text name="TruckID">Truck ID</text>
+	  <text name="TrailerCode">Trailer Code</text>
+	  <text name="DriverName">Driver Name</text>
+	  <text name="IsAccepted">Is Accepted</text>
+	  <text name="Accept">Accept</text>
+	  <text name="Reject">Reject</text>
+	  <text name="DocumentFile">Document File</text>
+	  <text name="NewDocumentFile">New Document File</text>
+	  <text name="AddDocument">Add Document</text>
+	  <![CDATA[ Tachyon: Document files Page End]]>
+
+	  <![CDATA[Tachyon:Common Start]]>
+	  <text name="ViewDetails">View Details</text>
+	  <text name="Details">View Details</text>
+	  <text name="TotalRecordsCount">Total: {0}</text>
+	  <text name="Create">Create</text>
+	  <text name="Cancel">Cancel</text>
+	  <text name="Close">Close</text>
+	  <text name="ShowAdvancedFilters">Show advanced filters</text>
+	  <text name="HideAdvancedFilters">Hide advanced filters</text>
+	  <text name="All">All</text>
+	  <text name="True">True</text>
+	  <text name="False">False</text>
+	  <text name="Edition">Edition</text>
+	  <text name="Language">Language</text>
+	  <![CDATA[Tachyon:Common End]]>
+	  
+	  <![CDATA[Tachyon:Documents Common Start]]>
+	  <text name="Documents">Documents</text>
+	  <![CDATA[Tachyon:Documents Common End]]>
+	  
+	  
+	  <![CDATA[Tachyon:Document Entites Page Start]]>
+	  <text name="DocumentsEntities">Documents Entities</text>
+	  <text name="DocumentsEntitiesHeaderInfo">Documents Entities Header Info</text>
+	  <text name="NewDocumentsEntity">New Documents Entity</text>
+	  <text name="DocumentEntityName">Document Entity Name</text>
+	  <text name="DocumentsEntity">Documents Entity</text>
+	  <![CDATA[Tachyon:Document Entites Page End]]>
+
+
+	  <![CDATA[Tachyon:Document Types Page Start]]>
+	  <text name="DocumentTypes">Document Types</text>
+	  <text name="IsRequired">Is Required</text>
+	  <text name="DocumentTypesHeaderInfo">Document Types Header Info</text>
+	  <text name="NewDocumentType">New Document Type</text>
+	  <text name="HasExpirationDate">Has Expiration Date</text>
+	  <text name="RequiredFrom">Required From</text>
+	  <text name="SpecialConstant">Special Constant</text>
+	  <text name="ExpirationAlertDays">Expiration Alert Days</text>
+	  <text name="InActiveToleranceDays">InActive Tolerance Days</text>
+	  <text name="InActiveAccountExpired">InActive Account Expired</text>
+	  <text name="HasNumber">Has Number</text>
+	  <text name="IsNumberUnique">Is Number Unique</text>
+	  <text name="HasHijriExpirationDate">Has Hijri Expiration Date</text>
+	  <text name="HasNotes">Has Notes</text>
+	  <text name="Company">Company</text>
+	  <text name="DocumentType">DocumentType</text>
+	  <text name="ToleranceDaysBeforeDeactivateAfterExpiration">Tolerance Days Before Deactivate After Expiration</text>
+	  <text name="DeactivateAccountUponexpiration">Deactivate Account Upon expiration</text>
+	  <![CDATA[Tachyon:Document Types Page End]]>
+	  
+	  <![CDATA[ Tachyon: Document Translation Page Start]]>
+	  <text name="DocumentTypeTranslations">Document Type Translations</text>
+	  <text name="DocumentTypeTranslationsHeaderInfo">Document Type Translations Header Info</text>
+	  <text name="NewDocumentTypeTranslation">New Document Type Translation</text>
+	  <![CDATA[ Tachyon: Document Translation Page End]]>
+	  
+	  <text name="HomePage">Home page</text>
 
 	  <text name="SignUp">Sign up</text>
        <text name="IAMA">I AM A</text>
@@ -76,7 +151,6 @@
     <text name="RoleProperties">Role properties</text>
     <text name="Permissions">Permissions</text>
     <text name="Save">Save</text>
-    <text name="Cancel">Cancel</text>
     <text name="RolesHeaderInfo">Use roles to group permissions.</text>
     <text name="Static">Static</text>
     <text name="Actions">Actions</text>
@@ -232,13 +306,9 @@
     <text name="Client">Client</text>
     <text name="Browser">Browser</text>
     <text name="Xms">{0} ms</text>
-    <text name="Close">Close</text>
     <text name="Refresh">Refresh</text>
     <text name="ErrorState">Error state</text>
-    <text name="All">All</text>
     <text name="HasError">Has error</text>
-    <text name="ShowAdvancedFilters">Show advanced filters</text>
-    <text name="HideAdvancedFilters">Hide advanced filters</text>
     <text name="AuditLogDetail">Audit log detail</text>
     <text name="Parameters">Parameters</text>
     <text name="DateRange">Date range</text>
@@ -267,7 +337,6 @@
       ]]>
     </text>
     <text name="SeeDemo">See demo</text>
-    <text name="Edition">Edition</text>
     <text name="Editions">Editions</text>
     <text name="EditionsHeaderInfo">Manage editions and features of the application</text>
     <text name="CreateNewEdition">Create new edition</text>
@@ -293,7 +362,6 @@
     <text name="DeletingLanguages">Deleting language</text>
     <text name="ChangingTexts">Changing texts</text>
     <text name="SuccessfullySaved">Successfully saved.</text>
-    <text name="Language">Language</text>
     <text name="Flag">Flag</text>
     <text name="SetAsDefaultLanguage">Set as default language</text>
     <text name="InvlalidLanguageCode">Invalid language code.</text>
@@ -662,7 +730,6 @@
     <text name="YouCannotRemoveUserRolePermissionsFromAdminRole">You can not remove User/Role permission editing from the admin role</text>
     <text name="YouCannotRemoveUserRolePermissionsFromAdminUser">You can not remove User/Role permission editing from the admin user</text>
     <text name="Notification">Notification</text>
-    <text name="TotalRecordsCount">Total: {0}</text>
     <text name="SubscriptionInformation">Subscription information</text>
     <text name="PaymentHistory">Payment history</text>
     <text name="Gateway">Gateway</text>

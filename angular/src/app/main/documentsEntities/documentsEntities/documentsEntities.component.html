@@ -3,7 +3,7 @@
     <sub-header [title]="'DocumentsEntities' | localize" [description]="'DocumentsEntitiesHeaderInfo' | localize">
       <div role="actions">
         <button *ngIf="isGranted('Pages.DocumentsEntities.Create')" (click)="createDocumentsEntity()" class="btn btn-primary blue">
-          <i class="fa fa-plus"></i> {{ l('CreateNewDocumentsEntity') }}
+          <i class="fa fa-plus"></i> {{ l('Create') }} {{ l('NewDocumentsEntity') }}
         </button>
       </div>
     </sub-header>
@@ -39,7 +39,7 @@
 
                 <div class="col-md-3">
                   <div class="form-group">
-                    <label for="DisplayNameFilter">{{ l('DisplayName') }}</label>
+                    <label for="DisplayNameFilter">{{ l('Name') }}</label>
                     <input type="text" class="form-control" id="DisplayNameFilter" name="displayNameFilter" [(ngModel)]="displayNameFilter" />
                   </div>
                 </div>
@@ -81,7 +81,7 @@
                       {{ l('Actions') }}
                     </th>
                     <th style="width: 150px;" pSortableColumn="displayName">
-                      {{ l('DisplayName') }}
+                      {{ l('Name') }}
                       <p-sortIcon field="documentsEntity.displayName"></p-sortIcon>
                     </th>
                   </tr>
@@ -119,7 +119,7 @@
                       </div>
                     </td>
                     <td style="width: 150px;">
-                      <span class="ui-column-title"> {{ l('DisplayName') }}</span>
+                      <span class="ui-column-title"> {{ l('Name') }}</span>
                       {{ record.documentsEntity.displayName }}
                     </td>
                   </tr>

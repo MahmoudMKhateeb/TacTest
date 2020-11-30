@@ -1,6 +1,79 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <localizationDictionary culture="ar">
   <texts>
+	  	<![CDATA[ Tachyon: Document files Page Start]]>
+	        <text name="DocumentFiles">المستندات</text>
+	        <text name="DocumentFilesHeaderInfo">DocumentFilesHeaderInfo</text>
+		    <text name="DocumentName">أسم المستند</text>
+	        <text name="SubmitterTenant">الشركة التي قامت بالارسال </text>
+	        <text name="TruckID">الرقم المميز للشاحنة</text>
+	        <text name="TrailerCode">رقم المقطورة</text>
+	        <text name="DriverName">إسم السائق</text>
+            <text name="IsAccepted">تم قبوله</text>
+            <text name="Accept">قبول</text>
+            <text name="Reject">رفض</text>
+            <text name="DocumentFile">مستند</text>
+            <text name="NewDocumentFile">مستند جديد</text>
+	  	  <text name="AddDocument">إضافة مستند</text>
+
+	   <![CDATA[ Tachyon: Document files Page End]]>
+	  
+	  <![CDATA[Tachyon:Common Start]]>
+         <text name="ViewDetails">مشاهدة التفاصيل</text>
+	  	  <text name="Details">التفاصيل</text>
+         <text name="TotalRecordsCount">المجموع: {0}</text>
+	     <text name="Create">إنشاء</text>
+         <text name="Cancel">إلغاء</text>
+         <text name="Close">إغلاق</text>
+	     <text name="ShowAdvancedFilters">إظهار الفلاتر المتقدمة</text>
+         <text name="HideAdvancedFilters">إخفاء الفلاتر المتقدمة</text>
+         <text name="All">الجميع</text>
+	     <text name="True">صحيح</text>
+	     <text name="False">خطأ</text>
+	     <text name="Edition">نوع الإشتراك</text>
+    	 <text name="Language">لغة</text>
+	  <![CDATA[Tachyon:Common End]]>
+	  
+	  
+	  	  <![CDATA[Tachyon:Documents Common Start]]>
+	       <text name="Documents">Documents</text>
+	  	  <![CDATA[Tachyon:Documents Common End]]>
+	  
+	  	  <![CDATA[Tachyon:Document Entites Page Start]]>
+	  <text name="DocumentsEntities">Documents Entities</text>
+	  <text name="DocumentsEntitiesHeaderInfo">Documents Entities Header Info</text>
+	  <text name="NewDocumentsEntity">New Documents Entity</text>
+	  <text name="DocumentEntityName">Document Entity Name</text>
+	  <text name="DocumentsEntity">Documents Entity</text>
+	  <![CDATA[Tachyon:Document Entites Page End]]>
+
+	  <![CDATA[ Tachyon: Document Translation Page Start]]>
+	  <text name="DocumentTypeTranslations">Document Type Translations</text>
+	  <text name="DocumentTypeTranslationsHeaderInfo">Document Type Translations Header Info</text>
+	  <text name="NewDocumentTypeTranslation">New Document Type Translation</text>
+	  <![CDATA[ Tachyon: Document Translation Page End]]>
+	  
+	 <![CDATA[Tachyon:Document Types Page Start]]>
+	  <text name="DocumentTypes">Document Types</text>
+	  <text name="IsRequired">Is Required</text>
+	  <text name="DocumentTypesHeaderInfo">Document Types Header Info</text>
+	  <text name="NewDocumentType">New Document Type</text>
+	  <text name="HasExpirationDate">Has Expiration Date</text>
+	  <text name="RequiredFrom">Required From</text>
+	  <text name="SpecialConstant">Special Constant</text>
+	  <text name="ExpirationAlertDays">Expiration Alert Days</text>
+	  <text name="InActiveToleranceDays">InActive Tolerance Days</text>
+	  <text name="InActiveAccountExpired">InActive Account Expired</text>
+	  <text name="HasNumber">Has Number</text>
+	  <text name="IsNumberUnique">Is Number Unique</text>
+	  <text name="HasHijriExpirationDate">Has Hijri Expiration Date</text>
+	  <text name="HasNotes">Has Notes</text>
+	  <text name="Company">Company</text>
+	  <text name="DocumentType">DocumentType</text>
+	  <text name="ToleranceDaysBeforeDeactivateAfterExpiration">Tolerance Days Before Deactivate After Expiration</text>
+	  <text name="DeactivateAccountUponexpiration">Deactivate Account Upon expiration</text>
+	  <![CDATA[Tachyon:Document Types Page End]]>
+	  
 
 	   <text name="SignUp">إشترك</text>
        <text name="IAMA">أنا</text>
@@ -87,7 +160,6 @@
     <text name="RoleProperties">خصائص الدور</text>
     <text name="Permissions">إذونات</text>
     <text name="Save">حـفظ</text>
-    <text name="Cancel">إغلاق</text>
     <text name="RolesHeaderInfo">إستخدم الأدوار لإنشاء مجموعة إذونات</text>
     <text name="Static">مـثبّت</text>
     <text name="Actions">إجراءات</text>
@@ -242,13 +314,9 @@
     <text name="Client">زائر</text>
     <text name="Browser">المتصفح</text>
     <text name="Xms">{0} جزء ث.</text>
-    <text name="Close">إغلاق</text>
     <text name="Refresh">تحديث</text>
     <text name="ErrorState">حالة خطأ</text>
-    <text name="All">الجميع</text>
     <text name="HasError">يوجد خطأ</text>
-    <text name="ShowAdvancedFilters">إظهار الفلاتر المتقدمة</text>
-    <text name="HideAdvancedFilters">إخفاء الفلاتر المتقدمة</text>
     <text name="AuditLogDetail">تفاصيل سجل التدقيق</text>
     <text name="Parameters">المعلمات</text>
     <text name="DateRange">نطاق التاريخ</text>
@@ -277,7 +345,6 @@
        ]]>
     </text>
     <text name="SeeDemo">مشاهدة الموقع التجريبي</text>
-    <text name="Edition">نسخة</text>
     <text name="Editions">النسخات</text>
     <text name="EditionsHeaderInfo">إدارة النسخات ومميزات النظام</text>
     <text name="CreateNewEdition">إنشاء نسخة جديدة</text>
@@ -303,7 +370,6 @@
     <text name="DeletingLanguages">حذف اللغة</text>
     <text name="ChangingTexts">تغيير النصوص</text>
     <text name="SuccessfullySaved">تم الحـفظ بنجاح</text>
-    <text name="Language">لغة</text>
     <text name="Flag">علم</text>
     <text name="SetAsDefaultLanguage">تعيين اللغة الافتراضية</text>
     <text name="InvlalidLanguageCode">رمز اللغة غير صحيح</text>
@@ -672,7 +738,6 @@
     <text name="YouCannotRemoveUserRolePermissionsFromAdminRole">لا يمكنك إزالة إذن التعديل للمستخدم / للدور من دور المشرف</text>
     <text name="YouCannotRemoveUserRolePermissionsFromAdminUser">لا يمكنك إزالة إذن التعديل للمستخدم / للدور من مستخدم مشرف</text>
     <text name="Notification">إشعار</text>
-    <text name="TotalRecordsCount">المجموع: {0}</text>
     <text name="SubscriptionInformation">معلومات الاشتراك</text>
     <text name="PaymentHistory">سجل الدفعات</text>
     <text name="Gateway">بوابة</text>

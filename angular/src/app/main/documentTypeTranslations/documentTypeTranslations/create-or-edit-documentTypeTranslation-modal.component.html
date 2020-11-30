@@ -13,8 +13,8 @@
       <form *ngIf="active" #documentTypeTranslationForm="ngForm" novalidate (ngSubmit)="save()" autocomplete="off">
         <div class="modal-header">
           <h4 class="modal-title">
-            <span *ngIf="documentTypeTranslation.id">{{ l('EditDocumentTypeTranslation') }}</span>
-            <span *ngIf="!documentTypeTranslation.id">{{ l('CreateNewDocumentTypeTranslation') }}</span>
+            <span *ngIf="documentTypeTranslation.id">{{ l('Edit') }} {{ l('DocumentTypeTranslation') }}</span>
+            <span *ngIf="!documentTypeTranslation.id"> {{ l('Create') }} {{ l('NewDocumentTypeTranslation') }}</span>
           </h4>
           <button type="button" class="close" (click)="close()" aria-label="Close" [disabled]="saving">
             <span aria-hidden="true">&times;</span>
@@ -24,7 +24,7 @@
           <div class="form-group m-form__group">
             <label for="DocumentTypeDisplayName">{{ l('DocumentType') }}</label>
             <select name="documentTypeTranslation.coreId" [(ngModel)]="documentTypeTranslation.coreId" class="form-control" required>
-              <option value="{{ -1 }}">{{ l('SelectADocumentType') }}</option>
+              <option value="{{ -1 }}"> {{ l('Select') }} {{ l('DocumentType') }}</option>
               <option *ngFor="let item of allDocumentTypes" value="{{ item.id }}">{{ item.displayName }}</option>
             </select>
           </div>

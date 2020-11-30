@@ -5,7 +5,7 @@
         <button (click)="exportToExcel()" class="btn btn-outline-success"><i class="fa fa-file-excel"></i> {{ l('ExportToExcel') }}</button>
 
         <button *ngIf="isGranted('Pages.DocumentTypes.Create')" (click)="createDocumentType()" class="btn btn-primary blue">
-          <i class="fa fa-plus"></i> {{ l('CreateNewDocumentType') }}
+          <i class="fa fa-plus"></i> {{ l('Create') }} {{ l('NewDocumentType') }}
         </button>
       </div>
     </sub-header>
@@ -144,7 +144,7 @@
                       {{ l('Actions') }}
                     </th>
                     <th style="width: 150px;" pSortableColumn="displayName">
-                      {{ l('DisplayName') }}
+                      {{ l('Name') }}
                       <p-sortIcon field="documentType.displayName"></p-sortIcon>
                     </th>
                     <th style="width: 150px;" pSortableColumn="isRequired">
@@ -226,7 +226,7 @@
                       </div>
                     </td>
                     <td style="width: 150px; text-align: center;">
-                      <span class="ui-column-title"> {{ l('DisplayName') }}</span>
+                      <span class="ui-column-title"> {{ l('Name') }}</span>
                       {{ record.documentType.displayName }}
                     </td>
                     <td style="width: 150px; text-align: center;">
@@ -241,7 +241,9 @@
                     <td style="width: 150px; text-align: center;">
                       <span class="ui-column-title"> {{ l('RequiredFrom') }}</span>
                       {{
-                        record.documentType.requiredFrom == 'Tenant' ? 'Company/ ' + record.documentType.edition : record.documentType.requiredFrom
+                        record.documentType.requiredFrom == 'Tenant'
+                          ? ('Company' | localize) + '/ ' + record.documentType.edition
+                          : record.documentType.requiredFrom
                       }}
                     </td>
 

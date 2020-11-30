@@ -23,7 +23,7 @@
           (click)="createOrEditDocumentFileModal.show(entityIdFilter,documentEntityFilter,null)"
           class="btn btn-primary blue"
         >
-          <i class="fa fa-plus"></i> {{ l('Add Document') }}
+          <i class="fa fa-plus"></i> {{ l('AddDocument') }}
         </button>
       </div>
       <div class="modal-body">
@@ -47,15 +47,15 @@
                     {{ l('Actions') }}
                   </th>
                   <th style="width: 150px;" pSortableColumn="documentTypeFk.displayName">
-                    {{ l('Document Name') }}
+                    {{ l('DocumentName') }}
                     <p-sortIcon field="documentTypeDisplayName"></p-sortIcon>
                   </th>
                   <th *ngIf="documentEntityFilter=='Truck'" style="width: 150px;" pSortableColumn="truckFk.truckId">
-                    {{ l('Truck ID') }}
+                    {{ l('TruckID') }}
                     <p-sortIcon field="truckId"></p-sortIcon>
                   </th>
                   <th *ngIf="documentEntityFilter=='Driver'" style="width: 150px;" pSortableColumn="userFk.userId">
-                    {{ l('Driver Name') }}
+                    {{ l('DriverName') }}
                     <p-sortIcon field="userId"></p-sortIcon>
                   </th>
                   <th style="width: 150px;" pSortableColumn="extn">
@@ -118,11 +118,11 @@
                     {{ record.documentTypeDisplayName }}
                   </td>
                   <td *ngIf="documentEntityFilter=='Truck'" style="width: 150px;">
-                    <span class="ui-column-title"> {{ l('Truck ID') }}</span>
+                    <span class="ui-column-title"> {{ l('TruckID') }}</span>
                     {{ record.truckId }}
                   </td>
                   <td *ngIf="documentEntityFilter=='Driver'" style="width: 150px;">
-                    <span class="ui-column-title"> {{ l('Driver Name') }}</span>
+                    <span class="ui-column-title"> {{ l('DriverName') }}</span>
                     {{ record.userName }}
                   </td>
 
