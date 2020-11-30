@@ -270,7 +270,6 @@
 	  <![CDATA[Tachyon:Driver Page End]]>
 
 
-	  <text name="HomePage">الرئيسية</text>
     <text name="AboutUs">من نحن</text>
     <text name="Administration">الإدارة</text>
     <text name="Roles">الأدوار</text>
@@ -293,23 +292,11 @@
     <text name="EditRole">تحرير الدور</text>
     <text name="CreateNewRole">إنشاء دور جديد</text>
     <text name="RoleProperties">خصائص الدور</text>
-    <text name="Permissions">إذونات</text>
-    <text name="Cancel">إغلاق</text>
-    <text name="Save">حـفظ</text>
     <text name="RolesHeaderInfo">إستخدم الأدوار لإنشاء مجموعة إذونات</text>
     <text name="Static">مـثبّت</text>
-    <text name="SavedSuccessfully">تم الحفظ بنجاح.</text>
-    <text name="AreYouSure">هل أنت متأكد؟</text>
-    <text name="YesDelete">نعم إحذف</text>
-    <text name="Actions">إجراءات</text>
-    <text name="Delete">حـذف</text>
     <text name="DeletingUser"> حذف المستخدم</text>
     <text name="UsersHeaderInfo">إدارة المستخدمين و الإذونات</text>
     <text name="CreateNewUser">إنشاء مستخدم جديد</text>
-    <text name="UserName">اسم المستخدم</text>
-    <text name="Surname">الإسم الأخير</text>
-    <text name="EmailAddress">البريد الإلكتروني</text>
-    <text name="Name">الإسـم</text>
     <text name="LastLoginTime">آخر تسجيل الدخول</text>
     <text name="EditUser">تحرير المستخدم</text>
     <text name="UserInformations">تفاصيل المستخدم</text>
