@@ -34,7 +34,10 @@ export class CreateOrEditUserModalComponent extends AppComponentBase {
   isTwoFactorEnabled: boolean = this.setting.getBoolean('Abp.Zero.UserManagement.TwoFactorLogin.IsEnabled');
   isLockoutEnabled: boolean = this.setting.getBoolean('Abp.Zero.UserManagement.UserLockOut.IsEnabled');
   passwordComplexitySetting: PasswordComplexitySetting = new PasswordComplexitySetting();
-
+  isEmailAvailable = true;
+  isEmailValid = true;
+  isPhoneNumberAvilable = true;
+  isUserNameAvilable = true;
   user: UserEditDto = new UserEditDto();
   roles: UserRoleDto[];
   sendActivationEmail = true;
@@ -170,5 +173,41 @@ export class CreateOrEditUserModalComponent extends AppComponentBase {
 
   getAssignedRoleCount(): number {
     return _.filter(this.roles, { isAssigned: true }).length;
+  }
+
+  removeWhiteSpacesFromEmail() {
+    this.user.emailAddress.trim();
+    var exp = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/g;
+
+    var result = exp.test(this.user.emailAddress);
+    if (!result) {
+      this.isEmailValid = false;
+    } else {
+      this.isEmailValid = true;
+    }
+    this.checkIfIsEmailAvailable();
+  }
+  checkIfIsEmailAvailable() {
+    this._userService.checkIfEmailisAvailable(this.user.emailAddress).subscribe((result) => {
+      this.isEmailAvailable = result;
+    });
+  }
+  CheckIfDriverPhoneNumberIsValid(phoneNumber: string, id: number) {
+    this._userService.checkIfPhoneNumberValid(phoneNumber, id == null ? 0 : id).subscribe((res) => {
+      this.isPhoneNumberAvilable = res;
+    });
+  }
+  CheckIfUserNameIsValid(userName: string, id: number) {
+    this._userService.checkIfUserNameValid(userName, id == null ? 0 : id).subscribe((res) => {
+      this.isUserNameAvilable = res;
+    });
+  }
+
+  numberOnly(event): boolean {
+    const charCode = event.which ? event.which : event.keyCode;
+    if (charCode > 31 && (charCode < 48 || charCode > 57)) {
+      return false;
+    }
+    return true;
   }
 }

@@ -2,6 +2,11 @@
 <localizationDictionary culture="ar">
   <texts>
 	  
+    <text name="NumbersOnly">أرقام فقط</text>
+	  <text name="TheNumberLengthMustBeMoreThanMinDigits">عدد خانات الرقم يجب أن يكون أكبر من العدد الادنى المسموح به </text>
+	  <text name="TheNumberLengthMustBeLessThanMaxDigits">عدد خانات الرقم يجب أن يكون أقل من العدد الأعلى المسموح به</text>
+	  
+	  
 	  <![CDATA[Tachyon:SideBare Start]]>  
 	<text name="DocumentManagement">إدارة المستندات</text>
     <text name="SubmittedDocuments">المستندات التي تم تسليمها</text>

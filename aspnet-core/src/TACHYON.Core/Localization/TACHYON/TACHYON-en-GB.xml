@@ -270,6 +270,10 @@
 
 
 	  <text name="HomePage">Home page</text>
+	  <text name="NumbersOnly">Numbers Only</text>
+	  <text name="TheNumberLengthMustBeMoreThanMinDigits">The Number Length Must Be More Than MinDigits</text>
+	  <text name="TheNumberLengthMustBeLessThanMaxDigits">The Number Length Must Be Less Than MaxDigits</text>
+
     <text name="AboutUs">About us</text>
     <text name="Administration">Administration</text>
     <text name="Roles">Roles</text>

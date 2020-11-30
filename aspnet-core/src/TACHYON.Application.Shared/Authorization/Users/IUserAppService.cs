@@ -25,6 +25,7 @@ namespace TACHYON.Authorization.Users
         Task DeleteUser(EntityDto<long> input);
 
         Task UnlockUser(EntityDto<long> input);
-        Task<bool> CheckIfPhoneNumberValid(string userName, long? id);
+        Task<bool> CheckIfPhoneNumberValid(string phoneNumber, long? driverId);
+        Task<bool> CheckIfEmailisAvailable(string email);
     }
 }

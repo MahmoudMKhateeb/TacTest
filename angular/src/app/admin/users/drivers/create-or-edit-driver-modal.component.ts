@@ -44,7 +44,9 @@ export class CreateOrEditDriverModalComponent extends AppComponentBase {
   isTwoFactorEnabled: boolean = this.setting.getBoolean('Abp.Zero.UserManagement.TwoFactorLogin.IsEnabled');
   isLockoutEnabled: boolean = this.setting.getBoolean('Abp.Zero.UserManagement.UserLockOut.IsEnabled');
   passwordComplexitySetting: PasswordComplexitySetting = new PasswordComplexitySetting();
-
+  isEmailAvailable = true;
+  isEmailValid = true;
+  isPhoneNumberAvilable = true;
   user: UserEditDto = new UserEditDto();
   roles: UserRoleDto[];
   sendActivationEmail = true;
@@ -79,7 +81,7 @@ export class CreateOrEditDriverModalComponent extends AppComponentBase {
   allOrganizationUnits: OrganizationUnitDto[];
   memberedOrganizationUnits: string[];
   userPasswordRepeat = '';
-  isPhoneNumberValid = true;
+  isUserNameValid = false;
   isWaintingUserNameValidation = false;
   constructor(
     injector: Injector,
@@ -181,6 +183,10 @@ export class CreateOrEditDriverModalComponent extends AppComponentBase {
   }
 
   save(): void {
+    if (this.isEmailAvailable == false || this.isEmailValid == false) {
+      this.notify.error('PleaseMakeSureYouProvideValidDetails!');
+      return;
+    }
     if (!this.user.id && this.user.isDriver) {
       this.DocsUploader.uploadAll();
     } else {
@@ -296,6 +302,37 @@ export class CreateOrEditDriverModalComponent extends AppComponentBase {
     return s4() + s4() + '-' + s4() + '-' + s4() + '-' + s4() + '-' + s4() + s4() + s4();
   }
 
+  CheckIfDriverPhoneNumberIsValid(userName: string, id: number) {
+    this._userService.checkIfPhoneNumberValid(userName, id == null ? 0 : id).subscribe((res) => {
+      this.isPhoneNumberAvilable = res;
+    });
+  }
+
+  removeWhiteSpacesFromEmail() {
+    this.user.emailAddress.trim();
+    var exp = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/g;
+
+    var result = exp.test(this.user.emailAddress);
+    if (!result) {
+      this.isEmailValid = false;
+    } else {
+      this.isEmailValid = true;
+    }
+    this.checkIfIsEmailAvailable();
+  }
+  checkIfIsEmailAvailable() {
+    this._userService.checkIfEmailisAvailable(this.user.emailAddress).subscribe((result) => {
+      this.isEmailAvailable = result;
+    });
+  }
+  numberOnly(event): boolean {
+    const charCode = event.which ? event.which : event.keyCode;
+    if (charCode > 31 && (charCode < 48 || charCode > 57)) {
+      return false;
+    }
+    return true;
+  }
+
   // CheckIfDriverMobileNumberIsValid(mobileNumber: string) {
   //   this.isWaintingUserNameValidation = true;
   //   this._userService.checkIfPhoneNumberValid(mobileNumber, this.user.id).subscribe((res) => {
@@ -309,12 +346,5 @@ export class CreateOrEditDriverModalComponent extends AppComponentBase {
     this._userService.getDriverNationalites().subscribe((res) => {
       this.nationalites = res;
     });
-  }
-  numberOnly(event): boolean {
-    const charCode = event.which ? event.which : event.keyCode;
-    if (charCode > 31 && (charCode < 48 || charCode > 57)) {
-      return false;
-    }
-    return true;
   }
 }

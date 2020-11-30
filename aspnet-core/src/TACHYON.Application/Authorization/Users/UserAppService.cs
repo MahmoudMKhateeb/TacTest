@@ -4,6 +4,7 @@ using Abp.Authorization.Roles;
 using Abp.Authorization.Users;
 using Abp.Configuration;
 using Abp.Domain.Repositories;
+using Abp.Domain.Uow;
 using Abp.Extensions;
 using Abp.Linq.Extensions;
 using Abp.Notifications;
@@ -412,12 +413,16 @@ namespace TACHYON.Authorization.Users
             CheckErrors(await UserManager.CreateAsync(user));
             await CurrentUnitOfWork.SaveChangesAsync(); //To get new user's Id.
 
-            //save docs
-            foreach (var item in input.CreateOrEditDocumentFileDtos)
+
+            //save docs if is a driver
+            if(input.User.IsDriver)
             {
+                foreach (var item in input.CreateOrEditDocumentFileDtos)
+                 {
                 item.UserId = user.Id;
                 item.Name = item.Name + "_" + user.Id.ToString();
                 await _documentFilesAppService.CreateOrEdit(item);
+                 }
             }
 
 
@@ -528,9 +533,9 @@ namespace TACHYON.Authorization.Users
             return query;
         }
 
-        public async Task<bool> CheckIfPhoneNumberValid(string phoneNumber,long? id)
+        public async Task<bool> CheckIfPhoneNumberValid(string phoneNumber,long? driverId)
         {
-            var result = await _userManager.Users.Where(x=>x.PhoneNumber== phoneNumber && x.Id != id).FirstOrDefaultAsync();
+            var result = await _userManager.Users.FirstOrDefaultAsync(x => x.PhoneNumber == phoneNumber && x.Id != driverId);
             return (result ==null);
         }
 
@@ -565,6 +570,28 @@ namespace TACHYON.Authorization.Users
             nationalites.Add(nationality);
 
             return nationalites;       
+        }
+
+        public async Task<bool> CheckIfUserNameValid(string userName, long? userId)
+        {
+            var result = await _userManager.Users.FirstOrDefaultAsync(x => x.UserName == userName && x.Id != userId);
+            return (result == null);
+        }
+        public async Task<bool> CheckIfEmailisAvailable(string email)
+        {
+            using (CurrentUnitOfWork.DisableFilter(AbpDataFilters.MayHaveTenant))
+            {
+                var result = await UserManager.FindByEmailAsync(email);
+                if (result == null)
+                {
+                    return true;
+                }
+                else
+                {
+                    return false;
+                }
+            }
+
         }
     }
 }

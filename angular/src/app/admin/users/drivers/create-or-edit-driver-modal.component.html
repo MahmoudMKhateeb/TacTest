@@ -35,33 +35,25 @@
                 <div class="col-sm-9">
                   <div class="form-group">
                     <label for="UserName">{{ 'PhoneNumber' | localize }} *</label>
-                    <div>
-                      <div class="input-group">
-                        <div class="input-group-prepend"><span class="input-group-text">+966</span></div>
-                        <input
-                          id="UserName"
-                          #phoneNumberInput="ngModel"
-                          (keypress)="numberOnly($event)"
-                          type="number"
-                          [disabled]="!canChangeUserName"
-                          name="UserName"
-                          [class]="
-                            !phoneNumberInput.touched || isWaintingUserNameValidation
-                              ? 'form-control'
-                              : isPhoneNumberValid
-                              ? 'form-control is-valid'
-                              : 'form-control is-invalid'
-                          "
-                          [(ngModel)]="user.userName"
-                          required
-                          pattern="^\d{9}"
-                          maxlength="9"
-                        />
-                        <!--                        <span class="text-muted">{{ 'EnterMobileNumber' | localize }}</span>-->
-                      </div>
-                      <validation-messages [formCtrl]="phoneNumberInput"></validation-messages>
-                      <span *ngIf="!isPhoneNumberValid" class="text-danger">{{ 'AlreadyUsed' | localize }} </span>
-                    </div>
+                    <input
+                      (change)="CheckIfDriverPhoneNumberIsValid(userNameInput.value, user.id)"
+                      id="UserName"
+                      #userNameInput="ngModel"
+                      type="text"
+                      (keypress)="numberOnly($event)"
+                      [disabled]="!canChangeUserName"
+                      name="UserName"
+                      class="form-control"
+                      [(ngModel)]="user.userName"
+                      required
+                      maxlength="256"
+                    />
+                    <span class="form-text text-muted">{{ 'Enter' | localize }} {{ 'PhoneNumber' | localize }}</span>
+                    <span class="form-text text-muted">{{ 'NumbersOnly' | localize }}</span>
+
+                    <!-- <div *ngIf="isUserNameValid" class="valid-feedback">Success! You've done it.</div> -->
+                    <span *ngIf="!isPhoneNumberAvilable" class="form-text text-danger">{{ l('AlreadyTaken') }}</span>
+
                     <span class="help-block" *ngIf="!canChangeUserName">{{ 'CanNotChangeAdminUserName' | localize }}</span>
                   </div>
                   <div class="row">
@@ -111,10 +103,13 @@
                   class="form-control"
                   [(ngModel)]="user.emailAddress"
                   required
+                  (change)="removeWhiteSpacesFromEmail()"
                   maxlength="256"
                   email
                 />
-                <validation-messages [formCtrl]="emailAddressInput"></validation-messages>
+                <!-- <validation-messages [formCtrl]="emailAddressInput"></validation-messages> -->
+                <span *ngIf="!isEmailValid" class="form-text text-danger">{{ l('NotValid') }}</span>
+                <span *ngIf="!isEmailAvailable" class="form-text text-danger">{{ l('AlreadyTaken') }}</span>
               </div>
 
               <!--              <div class="form-group">-->
@@ -322,6 +317,7 @@
                           <span class="text-danger">*</span>
                         </label>
                         <input
+                          #inputDocumentNumber
                           name="number{{ i }}"
                           id="number{{ i }}"
                           class="form-control m-input"
@@ -331,6 +327,12 @@
                           type="text"
                           [(ngModel)]="item.number"
                         />
+                        <span *ngIf="item.number == null ? 0 : item.number.length < item.documentTypeDto.numberMinDigits" class="text-danger">
+                          {{ l('TheNumberLengthMustBeMoreThanMinDigits') }}
+                        </span>
+                        <span *ngIf="item.number == null ? false : item.number.length > item.documentTypeDto.numberMaxDigits" class="text-danger">
+                          {{ l('TheNumberLengthMustBeLessThanMaxDigits') }}
+                        </span>
                         <span class="form-text text-muted"
                           >{{ l('minDigits:') }} {{ item.documentTypeDto.numberMinDigits }} {{ l('maxDigits:') }}
                           {{ item.documentTypeDto.numberMaxDigits == 0 ? 50 : item.documentTypeDto.numberMaxDigits }}
