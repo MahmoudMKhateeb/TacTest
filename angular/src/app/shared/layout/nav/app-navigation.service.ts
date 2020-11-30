@@ -159,21 +159,21 @@ export class AppNavigationService {
         ]
       ),
 
-      new AppMenuItem('Routes', 'Pages.Routes', 'flaticon-map-location', '/app/main/routs/routes', undefined, undefined, undefined, undefined, () =>
-        this._featureCheckerService.isEnabled('App.Carrier')
-      ),
+      // new AppMenuItem('Routes', 'Pages.Routes', 'flaticon-map-location', '/app/main/routs/routes', undefined, undefined, undefined, undefined, () =>
+      //   this._featureCheckerService.isEnabled('App.Carrier')
+      // ),
 
-      new AppMenuItem(
-        'OffersMarketPlace',
-        'Pages.Offers',
-        'flaticon2-digital-marketing',
-        '/app/main/offers/offers',
-        undefined,
-        undefined,
-        undefined,
-        undefined,
-        () => this._featureCheckerService.isEnabled('App.Carrier') || this._featureCheckerService.isEnabled('App.OffersMarketPlace')
-      ),
+      // new AppMenuItem(
+      //   'OffersMarketPlace',
+      //   'Pages.Offers',
+      //   'flaticon2-digital-marketing',
+      //   '/app/main/offers/offers',
+      //   undefined,
+      //   undefined,
+      //   undefined,
+      //   undefined,
+      //   () => this._featureCheckerService.isEnabled('App.Carrier') || this._featureCheckerService.isEnabled('App.OffersMarketPlace')
+      // ),
 
       new AppMenuItem(
         'Settings',
