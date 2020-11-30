@@ -211,7 +211,11 @@
     <text name="NewDocumentTypeTranslation">New Document Type Translation</text>
     <![CDATA[ Tachyon: Document Translation Page End]]>
 
-
+	  <![CDATA[ Tachyon: Tenant login Page Start]]>
+	  <text name="NotAMemberYet">Become a Member!</text>
+	  <![CDATA[ Tachyon: Tenant login Page End]]>
+	  
+	  
     <text name="SignUp">Sign up</text>
     <text name="IAMA">I AM A</text>
     <text name="CompanyInformation">Company Information</text>
