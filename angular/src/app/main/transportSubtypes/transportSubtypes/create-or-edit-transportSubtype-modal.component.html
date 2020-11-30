@@ -13,8 +13,8 @@
       <form *ngIf="active" #transportSubtypeForm="ngForm" novalidate (ngSubmit)="save()" autocomplete="off">
         <div class="modal-header">
           <h4 class="modal-title">
-            <span *ngIf="transportSubtype.id">{{ l('EditTransportSubtype') }}</span>
-            <span *ngIf="!transportSubtype.id">{{ l('CreateNewTransportSubtype') }}</span>
+            <span *ngIf="transportSubtype.id">{{ l('Edit') }} {{ l('TransportSubtype') }}</span>
+            <span *ngIf="!transportSubtype.id">{{ l('Create') }} {{ l('NewTransportSubtype') }}</span>
           </h4>
           <button type="button" class="close" (click)="close()" aria-label="Close" [disabled]="saving">
             <span aria-hidden="true">&times;</span>
@@ -31,11 +31,11 @@
               <option [ngValue]="null">{{ l('SelectATransportType') }}</option>
               <option *ngFor="let item of allTransportTypes" value="{{ item.id }}">{{ item.displayName }}</option>
             </select>
-            <span class="form-text text-muted">{{ 'ChooseTransportType' | localize }}</span>
+            <span class="form-text text-muted">{{ 'Choose' | localize }} {{ 'TransportType' | localize }}</span>
           </div>
 
           <div class="form-group">
-            <label for="TransportSubtype_DisplayName">{{ l('DisplayName') }} *</label>
+            <label for="TransportSubtype_DisplayName">{{ l('Name') }} *</label>
             <input
               type="text"
               id="TransportSubtype_DisplayName"
@@ -46,7 +46,7 @@
               maxlength="256"
               required
             />
-            <span class="form-text text-muted">{{ 'EnterTransportSubtype' | localize }}</span>
+            <span class="form-text text-muted">{{ 'Enter' | localize }} {{ 'TransportSubtype' | localize }}</span>
           </div>
         </div>
         <div class="modal-footer">

@@ -13,8 +13,8 @@
       <form *ngIf="active" #truckStatusForm="ngForm" novalidate (ngSubmit)="save()" autocomplete="off">
         <div class="modal-header">
           <h4 class="modal-title">
-            <span *ngIf="truckStatus.id">{{ l('EditTruckStatus') }}</span>
-            <span *ngIf="!truckStatus.id">{{ l('CreateNewTruckStatus') }}</span>
+            <span *ngIf="truckStatus.id"> {{ l('Edit') }} {{ l('TruckStatus') }}</span>
+            <span *ngIf="!truckStatus.id">{{ l('Create') }} {{ l('NewTruckStatus') }}</span>
           </h4>
           <button type="button" class="close" (click)="close()" aria-label="Close" [disabled]="saving">
             <span aria-hidden="true">&times;</span>
@@ -22,7 +22,7 @@
         </div>
         <div class="modal-body">
           <div class="form-group">
-            <label for="TruckStatus_DisplayName">{{ l('DisplayName') }} *</label>
+            <label for="TruckStatus_DisplayName">{{ l('TruckStatus') }} *</label>
             <input
               type="text"
               id="TruckStatus_DisplayName"

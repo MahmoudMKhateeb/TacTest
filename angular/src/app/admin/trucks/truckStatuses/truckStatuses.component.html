@@ -3,7 +3,7 @@
     <sub-header [title]="'TruckStatuses' | localize" [description]="'TruckStatusesHeaderInfo' | localize">
       <div role="actions">
         <button *ngIf="isGranted('Pages.Administration.TruckStatuses.Create')" (click)="createTruckStatus()" class="btn btn-primary blue">
-          <i class="fa fa-plus"></i> {{ l('CreateNewTruckStatus') }}
+          <i class="fa fa-plus"></i> {{ l('Create') }} {{ l('NewTruckStatus') }}
         </button>
       </div>
     </sub-header>
@@ -39,7 +39,7 @@
 
                 <div class="col-md-3">
                   <div class="form-group">
-                    <label for="DisplayNameFilter">{{ l('DisplayName') }}</label>
+                    <label for="DisplayNameFilter">{{ l('Name') }}</label>
                     <input type="text" class="form-control" id="DisplayNameFilter" name="displayNameFilter" [(ngModel)]="displayNameFilter" />
                   </div>
                 </div>
@@ -84,7 +84,7 @@
                       {{ l('Actions') }}
                     </th>
                     <th style="width: 150px;" pSortableColumn="displayName">
-                      {{ l('DisplayName') }}
+                      {{ l('TruckStatus') }}
                       <p-sortIcon field="truckStatus.displayName"></p-sortIcon>
                     </th>
                   </tr>
@@ -128,7 +128,7 @@
                       </div>
                     </td>
                     <td style="width: 150px;">
-                      <span class="ui-column-title"> {{ l('DisplayName') }}</span>
+                      <span class="ui-column-title"> {{ l('Name') }}</span>
                       {{ record.truckStatus.displayName }}
                     </td>
                   </tr>

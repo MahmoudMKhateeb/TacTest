@@ -1,6 +1,49 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <localizationDictionary culture="ar">
   <texts>
+	  <![CDATA[Tachyon:Common  Start]]>-->
+	  <text name="Choose">إختر</text>
+	  <![CDATA[Tachyon:Common  End]]>-->
+
+	  <![CDATA[Tachyon:Truck Page Start]]>-->
+	  <text name="Trucks">الشاحنات</text>
+	  <text name="TrucksHeaderInfo">Trucks Header Info</text>
+	  <text name="NewTruck">شاحنة جديدة</text>
+	  <text name="PlateNumber">رقم اللوحة</text>
+	  <text name="ModelName">إسم الإصدار</text>
+	  <text name="ModelYear">تاريخ الإصدار</text>
+	  <text name="Truck">شاحنة</text>
+	  <text name="UseArrowKeysToChooseTheYear">إستخدم أزرار الأسهم لإختيار السنة</text>
+	  <![CDATA[Tachyon:Truck Page End]]>-->
+
+	  <![CDATA[Tachyon:Truck type Categories Pages Start]]>-->
+	  <text name="TrucktypeDetails">تفاصيل نوع الشاحنة</text>
+	  <text name="TruckStatus">حالة الشاحنة</text>
+	  <text name="TruckType">نوع الشاحنة</text>
+	  <text name="TransportTypes">أنواع النقل</text>
+	  <text name="TransportType">نوع النقل</text>
+	  <text name="TransportSubType">نوع النقل الفرعي</text>
+	  <text name="TransportSubTypes">أنواع النقل الفرعية</text>
+	  <text name="TruckSubType">نوع الشاحنة الفرعي</text>
+	  <text name="TruckSubTypes">أنواع الشاحنات</text>
+	  <text name="CapacityCategory">فئة وزن الحمولة</text>
+	  <text name="CapacityCategories">فئات وزن الحمولة</text>
+	  <text name="TransportTypesHeaderInfo">TransportTypesHeaderInfo</text>
+	  <text name="NewTransportType">فئة نقل جديدة</text>
+	  <text name="NewTransportSubtype">فئة نقل فرعية جديدة</text>
+	  <text name="TransportSubtypesHeaderInfo">Transport Subtypes Header Info</text>
+	  <text name="TrucksTypesHeaderInfo">Trucks Types Header Info</text>
+	  <text name="NewTrucksType">نوع شاحنة جديد</text>
+	  <text name="TruckSubtypesHeaderInfo">Truck Subtypes Header Info</text>
+	  <text name="NewTruckSubtype">نوع فرعي  جديد للشاحنة</text>
+	  <text name="CapacitiesCategoriesHeaderInfo">Capacities Categories Header Info</text>
+	  <text name="NewCapacityCategory">فئة وزن حمولة جديدة</text>
+	  <text name="TruckStatuses">حالات الشاحنات</text>
+	  <text name="NewTruckStatus">حالة شاحنة جديدة </text>
+	  <text name="TruckStatusesHeaderInfo">Truck Statuses Header Info</text>
+	  <![CDATA[Tachyon:Truck type Categories Page End]]>-->
+	  
+	  
     <![CDATA[ Tachyon: Document files Page Start]]>
     <text name="DocumentFiles">المستندات</text>
     <text name="DocumentFilesHeaderInfo">DocumentFilesHeaderInfo</text>
@@ -775,7 +818,6 @@
     <text name="PaymentHistory">سجل الدفعات</text>
     <text name="Gateway">بوابة</text>
     <text name="Amount">قيمة</text>
-    <text name="Status">حالة</text>
     <text name="Period">فترة</text>
     <text name="DayCount">عدد الأيام</text>
     <text name="LastModificationTime">آخر وقت التعديل</text>

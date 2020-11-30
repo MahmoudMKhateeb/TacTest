@@ -1,9 +1,9 @@
 ﻿<div [@routerTransition]>
   <div class="content d-flex flex-column flex-column-fluid">
-    <sub-header [title]="'Capacities' | localize" [description]="'CapacitiesHeaderInfo' | localize">
+    <sub-header [title]="'CapacitiesCategorie' | localize" [description]="'CapacitiesCategoriesHeaderInfo' | localize">
       <div role="actions">
         <button *ngIf="isGranted('Pages.Capacities.Create')" (click)="createCapacity()" class="btn btn-primary blue">
-          <i class="fa fa-plus"></i> {{ l('CreateNewCapacity') }}
+          <i class="fa fa-plus"></i> {{ l('Create') }} {{ l('NewCapacityCategory') }}
         </button>
       </div>
     </sub-header>
@@ -39,13 +39,13 @@
 
                 <div class="col-md-3">
                   <div class="form-group">
-                    <label for="DisplayNameFilter">{{ l('DisplayName') }}</label>
+                    <label for="DisplayNameFilter">{{ l('Name') }}</label>
                     <input type="text" class="form-control" id="DisplayNameFilter" name="displayNameFilter" [(ngModel)]="displayNameFilter" />
                   </div>
                 </div>
                 <div class="col-md-3">
                   <div class="form-group">
-                    <label for="TruckSubtypeDisplayNameFilter">({{ l('TruckSubtype') }}) {{ l('DisplayName') }}</label>
+                    <label for="TruckSubtypeDisplayNameFilter">{{ l('TruckSubtype') }}</label>
                     <input
                       type="text"
                       class="form-control"
@@ -91,11 +91,11 @@
                   <tr>
                     <th style="width: 130px;" [hidden]="!isGrantedAny('Pages.Capacities.Edit', 'Pages.Capacities.Delete')">{{ l('Actions') }}</th>
                     <th style="width: 150px;" pSortableColumn="truckSubtypeFk.displayName">
-                      {{ l('truckSubtype') }}
+                      {{ l('TruckSubtype') }}
                       <p-sortIcon field="truckSubtypeDisplayName"></p-sortIcon>
                     </th>
                     <th style="width: 150px;" pSortableColumn="displayName">
-                      {{ l('Capacity') }}
+                      {{ l('CapacityCategory') }}
                       <p-sortIcon field="capacity.displayName"></p-sortIcon>
                     </th>
                   </tr>
@@ -133,11 +133,11 @@
                       </div>
                     </td>
                     <td style="width: 150px;">
-                      <span class="ui-column-title"> {{ l('DisplayName') }}</span>
+                      <span class="ui-column-title"> {{ l('TruckSubtype') }}</span>
                       {{ record.truckSubtypeDisplayName }}
                     </td>
                     <td style="width: 150px;">
-                      <span class="ui-column-title"> {{ l('DisplayName') }}</span>
+                      <span class="ui-column-title"> {{ l('CapacityCategory') }}</span>
                       {{ record.capacity.displayName }}
                     </td>
                   </tr>
