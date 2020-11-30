@@ -54,7 +54,6 @@ export class CreateOrEditDriverModalComponent extends AppComponentBase {
   passwordComplexityInfo = '';
   profilePicture: string;
   createOrEditDocumentFileDtos!: CreateOrEditDocumentFileDto[];
-  nationalities = [];
   hasValidationErorr = false;
   /**
    * required documents fileUploader options
@@ -77,7 +76,7 @@ export class CreateOrEditDriverModalComponent extends AppComponentBase {
 
   selectedDateTypeHijri = DateType.Hijri; // or DateType.Gregorian
   selectedDateTypeGregorian = DateType.Gregorian; // or DateType.Gregorian
-  nationalites: SelectItemDto[] = [];
+  nationalities: SelectItemDto[] = [];
   allOrganizationUnits: OrganizationUnitDto[];
   memberedOrganizationUnits: string[];
   userPasswordRepeat = '';
@@ -344,7 +343,7 @@ export class CreateOrEditDriverModalComponent extends AppComponentBase {
   getDriverNationalites() {
     this.isWaintingUserNameValidation = true;
     this._userService.getDriverNationalites().subscribe((res) => {
-      this.nationalites = res;
+      this.nationalities = res;
     });
   }
 }
