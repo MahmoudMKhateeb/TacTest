@@ -261,7 +261,15 @@
 
     <![CDATA[ Tachyon: Tenant Registration Page Start]]>
 
-    <text name="HomePage">Home page</text>
+
+	  <![CDATA[Tachyon:SideBare Start]]>
+	  <text name="DocumentManagement">Document Management</text>
+	  <text name="SubmittedDocuments">Submitted Documents</text>
+	  <text name="TMSSettings">TMS Settings</text>
+	  <![CDATA[Tachyon:SideBare End]]>
+
+
+	  <text name="HomePage">Home page</text>
     <text name="AboutUs">About us</text>
     <text name="Administration">Administration</text>
     <text name="Roles">Roles</text>

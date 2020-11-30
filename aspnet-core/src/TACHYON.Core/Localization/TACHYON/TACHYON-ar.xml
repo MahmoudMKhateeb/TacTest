@@ -1,6 +1,14 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <localizationDictionary culture="ar">
-  <texts>	  
+  <texts>
+	  
+	  <![CDATA[Tachyon:SideBare Start]]>  
+	<text name="DocumentManagement">إدارة المستندات</text>
+    <text name="SubmittedDocuments">المستندات التي تم تسليمها</text>
+    <text name="TMSSettings">إعدادات إدارة الشاحنات</text>
+	  <![CDATA[Tachyon:SideBare End]]>  
+
+	  
 	  <![CDATA[Tachyon:Common Start]]>
 	  <text name="Name">الإسـم</text>
 	  <text name="Actions">إجراءات</text>

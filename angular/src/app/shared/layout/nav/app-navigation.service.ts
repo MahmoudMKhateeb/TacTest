@@ -83,7 +83,7 @@ export class AppNavigationService {
 
       //Host
       new AppMenuItem(
-        'TMS Settings',
+        'TMSSettings',
         '',
         'flaticon-cogwheel',
         '',
@@ -105,13 +105,13 @@ export class AppNavigationService {
           //   () => this._featureCheckerService.isEnabled('App.Carrier')
           // ),
           new AppMenuItem(
-            'Truck Types',
+            'TruckTypes',
             '',
             'flaticon-truck',
             '',
             [],
             [
-              new AppMenuItem('Capacities', 'Pages.Capacities', 'flaticon-more', '/app/main/truckCapacities/capacities'),
+              new AppMenuItem('CapacityCategories', 'Pages.Capacities', 'flaticon-more', '/app/main/truckCapacities/capacities'),
               new AppMenuItem('TruckSubtypes', 'Pages.TruckSubtypes', 'flaticon-more', '/app/main/truckSubtypes/truckSubtypes'),
               new AppMenuItem('TransportSubtypes', 'Pages.TransportSubtypes', 'flaticon-more', '/app/main/transportSubtypes/transportSubtypes'),
               new AppMenuItem('TransportTypes', 'Pages.TransportTypes', 'flaticon-more', '/app/main/transportTypes/transportTypes'),
@@ -164,7 +164,7 @@ export class AppNavigationService {
       ),
 
       new AppMenuItem(
-        'Offers MarketPlace',
+        'OffersMarketPlace',
         'Pages.Offers',
         'flaticon2-digital-marketing',
         '/app/main/offers/offers',
