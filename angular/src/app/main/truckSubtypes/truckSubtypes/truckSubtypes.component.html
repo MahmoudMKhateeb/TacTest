@@ -39,7 +39,7 @@
 
                 <div class="col-md-3">
                   <div class="form-group">
-                    <label for="DisplayNameFilter">{{ l('DisplayName') }}</label>
+                    <label for="DisplayNameFilter">{{ l('TruckSubType') }} {{ l('Name') }}</label>
                     <input type="text" class="form-control" id="DisplayNameFilter" name="displayNameFilter" [(ngModel)]="displayNameFilter" />
                   </div>
                 </div>
@@ -92,13 +92,14 @@
                     <th style="width: 130px;" [hidden]="!isGrantedAny('Pages.TruckSubtypes.Edit', 'Pages.TruckSubtypes.Delete')">
                       {{ l('Actions') }}
                     </th>
-                    <th style="width: 150px;" pSortableColumn="trucksTypeFk.displayName">
-                      {{ l('TrucksType') }}
-                      <p-sortIcon field="trucksTypeDisplayName"></p-sortIcon>
-                    </th>
+
                     <th style="width: 150px;" pSortableColumn="displayName">
                       {{ l('TrucksSubType') }}
                       <p-sortIcon field="truckSubtype.displayName"></p-sortIcon>
+                    </th>
+                    <th style="width: 150px;" pSortableColumn="trucksTypeFk.displayName">
+                      {{ l('TrucksType') }}
+                      <p-sortIcon field="trucksTypeDisplayName"></p-sortIcon>
                     </th>
                   </tr>
                 </ng-template>
@@ -134,13 +135,14 @@
                         </ul>
                       </div>
                     </td>
-                    <td style="width: 150px;">
-                      <span class="ui-column-title"> {{ l('TrucksType') }}</span>
-                      {{ record.trucksTypeDisplayName }}
-                    </td>
+
                     <td style="width: 150px;">
                       <span class="ui-column-title"> {{ l('TruckSubtype') }}</span>
                       {{ record.truckSubtype.displayName }}
+                    </td>
+                    <td style="width: 150px;">
+                      <span class="ui-column-title"> {{ l('TrucksType') }}</span>
+                      {{ record.trucksTypeDisplayName }}
                     </td>
                   </tr>
                 </ng-template>
@@ -167,7 +169,7 @@
         </div>
       </div>
     </div>
-    <createOrEditTruckSubtypeModal #createOrEditTruckSubtypeModal (modalSave)="getTruckSubtypes()"></createOrEditTruckSubtypeModal>
+    <createOrEditTruckSubtypeModal #createOrEditTruckSubtypeModal (modalSave)="getTruckSubtypes()"> </createOrEditTruckSubtypeModal>
     <viewTruckSubtypeModal #viewTruckSubtypeModal></viewTruckSubtypeModal>
   </div>
 </div>

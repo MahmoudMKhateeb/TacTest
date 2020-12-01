@@ -48,7 +48,7 @@ export class CreateOrEditTrucksTypeModalComponent extends AppComponentBase {
         this.modal.show();
       });
     }
-    this._transportSubtypesServiceProxy.getAllTransportTypeForTableDropdown().subscribe((result) => {
+    this._trucksTypesServiceProxy.getAllTransportSubTypeForTableDropdown().subscribe((result) => {
       this.allTransportSubTypes = result;
     });
   }
