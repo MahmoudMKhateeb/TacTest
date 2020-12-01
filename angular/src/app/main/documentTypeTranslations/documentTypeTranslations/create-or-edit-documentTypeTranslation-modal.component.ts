@@ -41,7 +41,6 @@ export class CreateOrEditDocumentTypeTranslationModalComponent extends AppCompon
       this.documentTypeTranslation = new CreateOrEditDocumentTypeTranslationDto();
       this.documentTypeTranslation.id = documentTypeTranslationId;
       this.documentTypeDisplayName = '';
-      this.documentTypeTranslation.id = -1;
       this.active = true;
       this.modal.show();
     } else {
