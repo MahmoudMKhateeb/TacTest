@@ -18,6 +18,7 @@ using TACHYON.Configuration;
 using TACHYON.Documents;
 using TACHYON.EntityFrameworkCore;
 using TACHYON.MultiTenancy;
+using TACHYON.Shipping.ShippingRequests;
 using TACHYON.Web.Startup.ExternalLoginInfoProviders;
 
 namespace TACHYON.Web.Startup
@@ -69,6 +70,9 @@ namespace TACHYON.Web.Startup
             {
                 workManager.Add(IocManager.Resolve<ExpiredAuditLogDeleterWorker>());
             }
+
+            //register worker start, end Bids requests
+            workManager.Add(IocManager.Resolve<TrackBidEndDateWorker>());
 
             workManager.Add(IocManager.Resolve<ExpiredDocumentFileWorker>());
             ConfigureExternalAuthProviders();

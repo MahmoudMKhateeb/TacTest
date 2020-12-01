@@ -15,6 +15,9 @@ namespace TACHYON.Shipping.ShippingRequests.Dtos
         public List<CreateOrEditRoutStepDto> CreateOrEditRoutStepDtoList { get; set; }
 
         public virtual bool IsBid { get; set; }
+        //Add Bid details If IsBid equals True
+        public DateTime? BidStartDate { get; set; }
+        public DateTime? BidEndDate { get; set; }
 
         public virtual bool IsTachyonDeal { get; set; }
 

@@ -1,0 +1,122 @@
+<div
+  bsModal
+  #ViewAllCarrierBidsModal="bs-modal"
+  class="modal fade"
+  tabindex="-1"
+  role="dialog"
+  aria-labelledby="createOrEditModal"
+  aria-hidden="true"
+  [config]="{ backdrop: 'static' }"
+>
+  <div class="modal-dialog modal-dialog-centered modal-xl">
+    <div class="modal-content">
+      <div class="modal-header">
+        <p class="modal-title">
+          <span>{{ l('biddingHistory') }}</span>
+        </p>
+      </div>
+      <div class="modal-body">
+        <div class="container">
+          <!-- Start::content-->
+
+          <div class="card card-custom gutter-b card-stretch">
+            <!--begin::Header-->
+
+            <!--end::Header-->
+            <!--begin::Body-->
+            <div class="card-body py-0 mt-5">
+              <!--begin::Table-->
+              <div class="table-responsive">
+                <table class="table table-head-custom table-vertical-center">
+                  <thead>
+                    <tr class="text-left">
+                      <th class="pl-0" style="width: 30px;">
+                        <label class="checkbox checkbox-lg checkbox-inline mr-2">
+                          <input type="checkbox" value="1" />
+                          <span></span>
+                        </label>
+                      </th>
+                      <th class="pl-0" style="min-width: 120px;">{{ l('ShipperName') }}</th>
+                      <th style="min-width: 110px;">{{ l('price')}}</th>
+                      <th style="min-width: 110px;">
+                        <span>{{l('StartDate')}}</span>
+                      </th>
+                      <th style="min-width: 120px;">{{ l('EndDate')}}</th>
+                      <th style="min-width: 120px;">{{ l('status')}}</th>
+                      <!--             <th class="pr-0 text-right" style="min-width: 160px;">Action</th>-->
+                    </tr>
+                  </thead>
+
+                  <tbody *ngIf="AllCarrierBidsArray">
+                    <!-- start::Tbody-data-->
+
+                    <tr *ngFor="let SingleCarrierBid of AllCarrierBidsArray">
+                      <td class="pl-0 py-6">
+                        <label class="checkbox checkbox-lg checkbox-inline">
+                          <input type="checkbox" value="1" />
+                          <span></span>
+                        </label>
+                      </td>
+                      <td class="pl-0">
+                        <a href="#" class="text-dark font-weight-bolder text-hover-primary font-size-lg">
+                          {{ SingleCarrierBid.shipperTenancyName }}
+                        </a>
+                      </td>
+                      <td>
+                        <span class="text-dark-75 font-weight-bolder d-block font-size-lg"> {{ SingleCarrierBid.shippingRequestBidDto.price }}</span>
+                      </td>
+                      <td>
+                        <span class="text-primary font-weight-bolder d-block font-size-lg"
+                          >{{ SingleCarrierBid.shippingRequestBidDto.acceptedDate | momentFormat: 'L' }}</span
+                        >
+                      </td>
+                      <td>
+                        <span class="text-danger font-weight-bolder d-block font-size-lg"
+                          >{{ SingleCarrierBid.shippingRequestBidDto.canceledDate | momentFormat: 'L'}}</span
+                        >
+                      </td>
+                      <td>
+                        <span class="label label-lg label-light-success label-inline" *ngIf="SingleCarrierBid.shippingRequestBidDto.isAccepted"
+                          >{{ l('Accepted')}}</span
+                        >
+                        <span class="label label-lg label-light-danger label-inline" *ngIf="SingleCarrierBid.shippingRequestBidDto.isRejected"
+                          >{{ l('Rejected')}}</span
+                        >
+                        <span
+                          class="label label-lg label-light-warning label-inline"
+                          *ngIf="!SingleCarrierBid.shippingRequestBidDto.isAccepted && !SingleCarrierBid.shippingRequestBidDto.isRejected"
+                          >{{ l('In Progress')}}</span
+                        >
+                      </td>
+                    </tr>
+                    <!--  end::Tbody-data-->
+                  </tbody>
+                </table>
+              </div>
+              <!--end::Table-->
+              <div class="alert m-alert--default d-flex justify-content-center" role="alert" *ngIf="!Loading && AllCarrierBidsArray.length == 0">
+                <strong>
+                  {{ l('NoData')}}!
+                </strong>
+              </div>
+              <div class="d-flex justify-content-center" *ngIf="Loading">
+                <div class="spinner-border" role="status">
+                  <span class="sr-only">Loading...</span>
+                </div>
+              </div>
+            </div>
+            <!--end::Body-->
+          </div>
+          <!--   end::content-->
+        </div>
+      </div>
+      <div class="modal-footer">
+        <!--begin::Buttons-->
+        <button [disabled]="saving" type="button" class="btn btn-primary font-weight-bolder btn-sm py-3 px-6 text-uppercase" (click)="close()">
+          {{ l('Close') }}
+        </button>
+        <!--end::Buttons-->
+      </div>
+    </div>
+  </div>
+</div>

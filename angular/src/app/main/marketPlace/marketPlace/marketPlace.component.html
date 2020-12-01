@@ -1,0 +1,320 @@
+<div [@routerTransition]>
+  <div class="content d-flex flex-column flex-column-fluid">
+    <!--begin::Subheader-->
+    <sub-header [title]="'MarketPlace' | localize" [description]="'marketPlaceHeaderInfo' | localize">
+      <div role="actions">
+        <button class="btn btn-primary" (click)="ViewAllCarrierBidsModal.show()">
+          <i class="flaticon2-indent-dots"></i> {{ l('myBiddingHistory') }}
+        </button>
+      </div>
+    </sub-header>
+    <!--end::Subheader-->
+    <!--begin::Entry-->
+    <div class="d-flex flex-column-fluid">
+      <!--begin::Container-->
+      <div class="container-fluid">
+        <div class="card card-custom">
+          <!-- start::cardheader -->
+          <!-- end::cardHeader -->
+          <!--begin::Body-->
+          <div class="card-body">
+            <!--  Start:advFiltters-->
+            <form class="form" autocomplete="off">
+              <div>
+                <div class="row align-items-center">
+                  <div class="col-xl-12">
+                    <div class="form-group m-form__group align-items-center">
+                      <div class="input-group">
+                        <input
+                          name="filterText"
+                          autoFocus
+                          class="form-control m-input"
+                          [(ngModel)]="filterText"
+                          [placeholder]="l('SearchWithThreeDot')"
+                          type="text"
+                        />
+                        <span class="input-group-btn">
+                          <button (click)="GetAllShippingRequests()" class="btn btn-primary" type="submit"><i class="flaticon-search-1"></i></button>
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="row justify-content-center" [hidden]="!advancedFiltersAreShown">
+                  <div class="col-md-4">
+                    <div class="form-group m-form__group">
+                      <label for="truck.transportTypeId">{{ l('TransportType') }}</label>
+                      <select
+                        [(ngModel)]="TransportTypeFilter"
+                        class="form-control"
+                        name="truck.transportTypeId"
+                        id="truck.transportTypeId"
+                        (change)="GetTransportDropDownList('GetAllTransportSubTypes', TransportTypeFilter)"
+                      >
+                        <option>{{ l('SelectATransportType') }}</option>
+                        <option *ngFor="let item of allTransportTypes" value="{{ item.id }}">{{ item.displayName }}</option>
+                      </select>
+                    </div>
+                  </div>
+                  <div class="col-md-4">
+                    <div class="form-group m-form__group">
+                      <label for="allTransportSubTypes">{{ l('TransportSubTypes') }}</label>
+                      <select
+                        [(ngModel)]="TruckSubTypeIdFilter"
+                        class="form-control"
+                        name="truck.transportSubtypeId"
+                        id="allTransportSubTypes"
+                        (change)="GetTransportDropDownList('GetAllTruckTypesByTransportSubTypes', TruckSubTypeIdFilter)"
+                        [disabled]="allTransportSubTypes ? null : true"
+                      >
+                        <option value="0">{{ l('SelectATransportSubType') }}</option>
+                        <option *ngFor="let item of allTransportSubTypes" value="{{ item.id }}">{{ item.displayName }} </option>
+                      </select>
+                    </div>
+                  </div>
+                  <div class="col-md-4">
+                    <div class="form-group m-form__group">
+                      <label for="allTruckTypesByTransportSubtype">{{ l('TruckType') }}</label>
+                      <select
+                        [(ngModel)]="TruckTypeIdFilter"
+                        class="form-control"
+                        name="truck.trucksTypeId"
+                        id="allTruckTypesByTransportSubtype"
+                        (change)="GetTransportDropDownList('GetAllTruckSubTypesByTruckTypeId', TruckTypeIdFilter)"
+                        [disabled]="allTruckTypesByTransportSubtype ? null : true"
+                      >
+                        <option value="0">{{ l('SelectTruckTypeByTransportSubtype') }}</option>
+                        <option *ngFor="let item of allTruckTypesByTransportSubtype" value="{{ item.id }}"> {{ item.displayName }}</option>
+                      </select>
+                    </div>
+                  </div>
+                  <div class="col-md-4">
+                    <div class="form-group m-form__group">
+                      <label for="allTruckSubTypesByTruckTypeIdDisplayName">{{ l('TruckSubType') }}</label>
+                      <select
+                        [(ngModel)]="TransportSubTypeFilter"
+                        class="form-control"
+                        name="truck.truckSubtypeId"
+                        id="allTruckSubTypesByTruckTypeIdDisplayName"
+                        (change)="GetTransportDropDownList('GetAllCapByTruckSybTypeId', TransportSubTypeFilter)"
+                        [disabled]="allTruckSubTypesByTruckTypeId ? null : true"
+                      >
+                        <option value="0">{{ l('SelectTruckSubType') }}</option>
+                        <option *ngFor="let item of allTruckSubTypesByTruckTypeId" value="{{ item.id }}"> {{ item.displayName }}</option>
+                      </select>
+                    </div>
+                  </div>
+                  <div class="col-md-4">
+                    <div class="form-group m-form__group">
+                      <label for="truck.capacityId">{{ l('Capacity') }}</label>
+                      <select
+                        [(ngModel)]="CapacityIdFilter"
+                        class="form-control"
+                        name="truck.capacityId"
+                        id="truck.capacityId"
+                        [disabled]="allTrucksCapByTruckSubTypeId ? null : true"
+                      >
+                        <option value="0">{{ l('SelectTruckCapByTruckSubType') }}</option>
+                        <option *ngFor="let item of allTrucksCapByTruckSubTypeId" value="{{ item.id }}">{{ item.displayName }} </option>
+                      </select>
+                    </div>
+                  </div>
+                  <div class="col-md-4 mt-5">
+                    <div class="row">
+                      <div class="col-md-6">
+                        <div class="form-group form-inline my-5">
+                          <label for="MatchingBidsOnly">{{ l('MatchingBidsOnly') }}</label>
+                          <span class="switch switch-sm switch-outline switch-icon switch-danger ml-2">
+                            <label>
+                              <input
+                                id="MatchingBidsOnly"
+                                type="checkbox"
+                                name="MatchingBidsOnly"
+                                [checked]="MatchingBidOnlyFilter"
+                                [(ngModel)]="MatchingBidOnlyFilter"
+                              />
+                              <span></span>
+                            </label>
+                          </span>
+                        </div>
+                      </div>
+                      <div class="col-md-6">
+                        <div class="form-group form-inline my-5">
+                          <label for="ShowOnlyMyBids">{{ l('ShowOnlyMyBids') }}</label>
+                          <span class="switch switch-sm switch-outline switch-icon switch-danger ml-2">
+                            <label>
+                              <input
+                                id="ShowOnlyMyBids"
+                                type="checkbox"
+                                name="ShowOnlyMyBids"
+                                [checked]="MyBidsOnlyFilter"
+                                [(ngModel)]="MyBidsOnlyFilter"
+                              />
+                              <span></span>
+                            </label>
+                          </span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="row mb-2">
+                  <div class="col-sm-12">
+                    <span
+                      class="clickable-item text-muted"
+                      *ngIf="!advancedFiltersAreShown"
+                      (click)="advancedFiltersAreShown = !advancedFiltersAreShown"
+                      ><i class="fa fa-angle-down"></i> {{ l('ShowAdvancedFilters') }}</span
+                    >
+                    <span
+                      class="clickable-item text-muted"
+                      *ngIf="advancedFiltersAreShown"
+                      (click)="advancedFiltersAreShown = !advancedFiltersAreShown"
+                      ><i class="fa fa-angle-up"></i> {{ l('HideAdvancedFilters') }}</span
+                    >
+                  </div>
+                </div>
+              </div>
+            </form>
+            <!--  End::advFillters-->
+            <!--begin: Datatable-->
+            <div class="primeng-datatable-container col-12" [busyIf]="primengTableHelper.isLoading">
+              <p-table
+                #dataTable
+                (onLazyLoad)="GetAllShippingRequests($event)"
+                [value]="primengTableHelper.records"
+                rows="{{ primengTableHelper.defaultRecordsCountPerPage }}"
+                [paginator]="false"
+                [lazy]="true"
+                [scrollable]="true"
+                ScrollWidth="100%"
+                [responsive]="primengTableHelper.isResponsive"
+                [resizableColumns]="primengTableHelper.resizableColumns"
+              >
+                <ng-template pTemplate="header">
+                  <tr>
+                    <th style="width: 150px;" pSortableColumn="shippingRequestId">
+                      {{ l('id') }}
+                      <p-sortIcon field="shippingRequestId"></p-sortIcon>
+                    </th>
+                    <th style="width: 150px;" pSortableColumn="shipperName">
+                      {{ l('shipperName') }}
+                      <p-sortIcon field="shipperName"></p-sortIcon>
+                    </th>
+                    <th style="width: 150px;" pSortableColumn="truckTypeDisplayName">
+                      {{ l('truckTypeDisplayName') }}
+                      <p-sortIcon field="truckTypeDisplayName"></p-sortIcon>
+                    </th>
+                    <th style="width: 150px;" pSortableColumn="goodCategoryName">
+                      {{ l('goodCategoryName') }}
+                      <p-sortIcon field="goodCategoryName"></p-sortIcon>
+                    </th>
+                    <th style="width: 150px;" pSortableColumn="bidStartDate">
+                      {{ l('bidStartDate') }}
+                      <p-sortIcon field="bidStartDate"></p-sortIcon>
+                    </th>
+                    <th style="width: 150px;" pSortableColumn="bidEndDate">
+                      {{ l('bidEndDate') }}
+                      <p-sortIcon field="bidEndDate"></p-sortIcon>
+                    </th>
+                    <th style="width: 150px;" pSortableColumn="StatusName">
+                      {{ l('StatusName') }}
+                      <p-sortIcon field="StatusName"></p-sortIcon>
+                    </th>
+
+                    <th style="width: 150px;" pSortableColumn="myBidPrice">
+                      {{ l('myBidPrice') }}
+                      <p-sortIcon field="myBidPrice"></p-sortIcon>
+                    </th>
+                    <th style="width: 150px;">
+                      {{ l('Actions') }}
+                    </th>
+                  </tr>
+                </ng-template>
+                <ng-template pTemplate="body" let-record="$implicit">
+                  <tr>
+                    <td style="width: 150px;">
+                      <span class="ui-column-title"> {{ l('shippingRequestId') }}</span>
+                      {{ record.shippingRequestId }}
+                    </td>
+                    <td style="width: 150px;">
+                      <span class="ui-column-title"> {{ l('shipperName') }}</span>
+                      {{ record.shipperName }}
+                    </td>
+                    <td style="width: 150px;">
+                      <span class="ui-column-title"> {{ l('truckTypeDisplayName') }}</span>
+                      {{ record.truckTypeDisplayName }}
+                    </td>
+                    <td style="width: 150px;">
+                      <span class="ui-column-title"> {{ l('goodCategoryName') }}</span>
+                      {{ record.goodCategoryName }}
+                    </td>
+                    <td style="width: 150px;">
+                      <span *ngIf="record.bidStartDate" class="label label-xl font-weight-bold label-light-success label-inline">{{
+                        record.bidStartDate | momentFormat: 'L'
+                      }}</span>
+                    </td>
+                    <td style="width: 150px;">
+                      <span *ngIf="record.bidEndDate" class="label label-xl font-weight-bold label-light-danger label-inline ui-column-title">
+                        {{ l('endBidDate') }}</span
+                      >
+                      {{ record.bidEndDate }}
+                    </td>
+                    <td style="width: 150px;">
+                      <span
+                        *ngIf="record.shippingRequestBidStatusName"
+                        class="label label-xl label-inline font-weight-bold"
+                        [class.label-light-danger]="record.shippingRequestBidStatusName == 'Ongoing'"
+                        [class.label-light-dark]="record.shippingRequestBidStatusName == 'Canceled'"
+                        [class.label-light-warning]="record.shippingRequestBidStatusName == 'Closed'"
+                        >{{ record.shippingRequestBidStatusName }}</span
+                      >
+                    </td>
+
+                    <td style="width: 150px;">
+                      <span class="ui-column-title"> {{ l('lastBidPrice') }}</span>
+                      {{ record.myBidPrice }}
+                    </td>
+                    <td style="width: 150px;">
+                      <button
+                        class="btn btn-primary font-weight-bolder"
+                        [disabled]="record.shippingRequestBidStatusName == 'Cancled' || record.shippingRequestBidStatusName == 'Closed'"
+                        (click)="ViewShippingRequestDetailsModal.show(record)"
+                      >
+                        {{ l('Details') }}
+                      </button>
+                    </td>
+                  </tr>
+                </ng-template>
+              </p-table>
+              <div class="primeng-no-data" *ngIf="primengTableHelper.totalRecordsCount == 0">
+                {{ l('NoData') }}
+              </div>
+              <div class="primeng-paging-container">
+                <p-paginator
+                  [rows]="primengTableHelper.defaultRecordsCountPerPage"
+                  #paginator
+                  (onPageChange)="GetAllShippingRequests($event)"
+                  [totalRecords]="primengTableHelper.totalRecordsCount"
+                  [rowsPerPageOptions]="primengTableHelper.predefinedRecordsCountPerPage"
+                >
+                </p-paginator>
+                <span class="total-records-count">
+                  {{ l('TotalRecordsCount', primengTableHelper.totalRecordsCount) }}
+                </span>
+              </div>
+              <ViewAllCarrierBidsModal #ViewAllCarrierBidsModal></ViewAllCarrierBidsModal>
+
+              <ViewShippingRequestDetailsModal #ViewShippingRequestDetailsModal (modalSave)="reloadPage()"></ViewShippingRequestDetailsModal>
+            </div>
+            <!--end: Datatable-->
+          </div>
+          <!--end::Body-->
+        </div>
+        <!--    End table card      -->
+      </div>
+      <!--end::Container-->
+    </div>
+    <!--end::Entry-->
+  </div>
+</div>
