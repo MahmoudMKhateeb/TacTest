@@ -177,6 +177,9 @@ export class RequiredDocumentFilesComponent extends AppComponentBase implements 
       if (result.length > 0) {
         this.isFormSubmitted = true;
         this.submittedDocumentsList = result;
+      } else {
+        this.isFormSubmitted = false;
+        this.submittedDocumentsList = [];
       }
     });
   }
