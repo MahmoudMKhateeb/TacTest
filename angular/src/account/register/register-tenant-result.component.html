@@ -1,20 +1,38 @@
 <div class="login-form" [@routerTransition]>
-  <h4>{{ 'SuccessfullyRegistered' | localize }}</h4>
-
-  <ul>
-    <li>
-      <span class="text-muted">{{ 'CompanyUniqueName' | localize }}:</span> {{ model.tenancyName }}
-    </li>
-    <li>
-      <span class="text-muted">{{ 'CompanyFullLeagalName' | localize }}:</span> {{ model.name }}
-    </li>
-    <li>
-      <span class="text-muted">{{ 'UserName' | localize }}:</span> {{ model.userName }}
-    </li>
-    <li>
-      <span class="text-muted">{{ 'EmailAddress' | localize }}:</span> {{ model.emailAddress }}
-    </li>
-  </ul>
+  <!-- Card -->
+  <div class="card booking-card">
+    <!-- Card content -->
+    <div class="card-body">
+      <!-- Title -->
+      <h4 class="card-title font-weight-bold">
+        <a> {{ 'SuccessfullyRegistered' | localize }}</a>
+      </h4>
+      <!-- Text -->
+      <hr class="my-4" />
+      <!-- <p class="lead"><strong>Tonight's availability</strong></p> -->
+      <ul class="list-unstyled list-inline d-flex justify-content-between mb-0 w-100">
+        <li class="list-inline-item mr-0 w-100">
+          <div class="chip w-100 mr-0 text-left w-100">{{ 'CompanyUniqueName' | localize }}: {{ model.tenancyName }}</div>
+        </li>
+      </ul>
+      <ul class="list-unstyled list-inline d-flex justify-content-between mb-0 w-100">
+        <li class="list-inline-item mr-0 w-100">
+          <div class="chip w-100 mr-0 text-left w-100">{{ 'CompanyFullLeagalName' | localize }}: {{ model.name }}</div>
+        </li>
+      </ul>
+      <ul class="list-unstyled list-inline d-flex justify-content-between mb-0 w-100">
+        <li class="list-inline-item mr-0 w-100">
+          <div class="chip w-100 mr-0 text-left w-100">{{ 'UserName' | localize }}: {{ model.userName }}</div>
+        </li>
+      </ul>
+      <ul class="list-unstyled list-inline d-flex justify-content-between mb-0 w-100">
+        <li class="list-inline-item mr-0 w-100">
+          <div class="chip w-100 mr-0 text-left w-100">{{ 'EmailAddress' | localize }}: {{ model.emailAddress }}</div>
+        </li>
+      </ul>
+    </div>
+  </div>
+  <!-- Card -->
 
   <div>
     <div *ngIf="model.isEmailConfirmationRequired" class="alert alert-warning" role="alert">
