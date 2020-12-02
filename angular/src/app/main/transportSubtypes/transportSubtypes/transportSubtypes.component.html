@@ -39,7 +39,7 @@
 
                 <div class="col-md-3">
                   <div class="form-group">
-                    <label for="DisplayNameFilter">{{ l('Name') }}</label>
+                    <label for="DisplayNameFilter">{{ l('TransportSubtype') }} {{ l('Name') }}</label>
                     <input type="text" class="form-control" id="DisplayNameFilter" name="displayNameFilter" [(ngModel)]="displayNameFilter" />
                   </div>
                 </div>
@@ -92,13 +92,14 @@
                     <th style="width: 130px;" [hidden]="!isGrantedAny('Pages.TransportSubtypes.Edit', 'Pages.TransportSubtypes.Delete')">
                       {{ l('Actions') }}
                     </th>
-                    <th style="width: 150px;" pSortableColumn="transportTypeFk.displayName">
-                      {{ l('TransportType') }}
-                      <p-sortIcon field="transportTypeDisplayName"></p-sortIcon>
-                    </th>
+
                     <th style="width: 150px;" pSortableColumn="displayName">
                       {{ l('TransportSubtype') }}
                       <p-sortIcon field="transportSubtype.displayName"></p-sortIcon>
+                    </th>
+                    <th style="width: 150px;" pSortableColumn="transportTypeFk.displayName">
+                      {{ l('TransportType') }}
+                      <p-sortIcon field="transportTypeDisplayName"></p-sortIcon>
                     </th>
                   </tr>
                 </ng-template>
@@ -135,12 +136,12 @@
                       </div>
                     </td>
                     <td style="width: 150px;">
-                      <span class="ui-column-title"> {{ l('TransportType') }}</span>
-                      {{ record.transportTypeDisplayName }}
-                    </td>
-                    <td style="width: 150px;">
                       <span class="ui-column-title"> {{ l('TransportSubtype') }}</span>
                       {{ record.transportSubtype.displayName }}
+                    </td>
+                    <td style="width: 150px;">
+                      <span class="ui-column-title"> {{ l('TransportType') }}</span>
+                      {{ record.transportTypeDisplayName }}
                     </td>
                   </tr>
                 </ng-template>
@@ -167,7 +168,7 @@
         </div>
       </div>
     </div>
-    <createOrEditTransportSubtypeModal #createOrEditTransportSubtypeModal (modalSave)="getTransportSubtypes()"></createOrEditTransportSubtypeModal>
+    <createOrEditTransportSubtypeModal #createOrEditTransportSubtypeModal (modalSave)="getTransportSubtypes()"> </createOrEditTransportSubtypeModal>
     <viewTransportSubtypeModal #viewTransportSubtypeModal></viewTransportSubtypeModal>
   </div>
 </div>

@@ -90,13 +90,14 @@
                 <ng-template pTemplate="header">
                   <tr>
                     <th style="width: 130px;" [hidden]="!isGrantedAny('Pages.Capacities.Edit', 'Pages.Capacities.Delete')">{{ l('Actions') }}</th>
-                    <th style="width: 150px;" pSortableColumn="truckSubtypeFk.displayName">
-                      {{ l('TruckSubtype') }}
-                      <p-sortIcon field="truckSubtypeDisplayName"></p-sortIcon>
-                    </th>
+
                     <th style="width: 150px;" pSortableColumn="displayName">
                       {{ l('CapacityCategory') }}
                       <p-sortIcon field="capacity.displayName"></p-sortIcon>
+                    </th>
+                    <th style="width: 150px;" pSortableColumn="truckSubtypeFk.displayName">
+                      {{ l('TruckSubtype') }}
+                      <p-sortIcon field="truckSubtypeDisplayName"></p-sortIcon>
                     </th>
                   </tr>
                 </ng-template>
@@ -132,13 +133,14 @@
                         </ul>
                       </div>
                     </td>
-                    <td style="width: 150px;">
-                      <span class="ui-column-title"> {{ l('TruckSubtype') }}</span>
-                      {{ record.truckSubtypeDisplayName }}
-                    </td>
+
                     <td style="width: 150px;">
                       <span class="ui-column-title"> {{ l('CapacityCategory') }}</span>
                       {{ record.capacity.displayName }}
+                    </td>
+                    <td style="width: 150px;">
+                      <span class="ui-column-title"> {{ l('TruckSubtype') }}</span>
+                      {{ record.truckSubtypeDisplayName }}
                     </td>
                   </tr>
                 </ng-template>

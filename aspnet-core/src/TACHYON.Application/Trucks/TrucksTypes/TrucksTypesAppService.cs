@@ -58,7 +58,7 @@ namespace TACHYON.Trucks.TrucksTypes
                                       DisplayName = o.DisplayName,
                                       Id = o.Id
                                   },
-                                 TransportSubtypeDisplayName = s1 == null || s1.DisplayName == null ? "" : s1.DisplayName.ToString()
+                                  TransportSubtypeDisplayName = s1 == null || s1.DisplayName == null ? "" : s1.DisplayName.ToString()
                               };
 
             var totalCount = await filteredTrucksTypes.CountAsync();
@@ -103,21 +103,22 @@ namespace TACHYON.Trucks.TrucksTypes
         [AbpAuthorize(AppPermissions.Pages_TrucksTypes_Create)]
         protected virtual async Task Create(CreateOrEditTrucksTypeDto input)
         {
-          var isDuplicateUserName =  await _trucksTypeRepository.FirstOrDefaultAsync(x =>( x.DisplayName).Trim().ToLower() == (input.DisplayName).Trim().ToLower());
+            var isDuplicateUserName = await _trucksTypeRepository.FirstOrDefaultAsync(x => (x.DisplayName).Trim().ToLower() == (input.DisplayName).Trim().ToLower());
 
             if (isDuplicateUserName != null)
             {
                 throw new UserFriendlyException(string.Format(L("TrucksTypeDuplicateName"), input.DisplayName));
             }
 
-             var trucksType = ObjectMapper.Map<TrucksType>(input);
+            var trucksType = ObjectMapper.Map<TrucksType>(input);
             await _trucksTypeRepository.InsertAsync(trucksType);
         }
 
         [AbpAuthorize(AppPermissions.Pages_TrucksTypes_Edit)]
         protected virtual async Task Update(CreateOrEditTrucksTypeDto input)
         {
-            var isDuplicateUserName = await _trucksTypeRepository.FirstOrDefaultAsync(x => x.DisplayName == input.DisplayName);
+            var isDuplicateUserName = await _trucksTypeRepository
+                .FirstOrDefaultAsync(x => x.DisplayName == input.DisplayName && x.Id != input.Id);
 
             if (isDuplicateUserName != null)
             {
