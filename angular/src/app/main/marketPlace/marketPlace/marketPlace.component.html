@@ -278,7 +278,7 @@
                     <td style="width: 150px;">
                       <button
                         class="btn btn-primary font-weight-bolder"
-                        [disabled]="record.shippingRequestBidStatusName == 'Cancled' || record.shippingRequestBidStatusName == 'Closed'"
+                        [disabled]="record.shippingRequestBidStatusName == 'Canceled' || record.shippingRequestBidStatusName == 'Closed'"
                         (click)="ViewShippingRequestDetailsModal.show(record)"
                       >
                         {{ l('Details') }}
