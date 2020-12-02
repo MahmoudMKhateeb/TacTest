@@ -74,7 +74,7 @@
                 (ngModelChange)="onUnlimitedChange()"
               />
               {{ 'UnlimitedTimeSubscription' | localize }}
-              <span></span>
+              <span class="ml-2 mt-1"></span>
             </label>
           </div>
           <div [hidden]="isUnlimited || !isSubscriptionFieldsVisible" class="form-group" [ngClass]="{ 'has-error': !subscriptionEndDateUtcIsValid }">
@@ -92,7 +92,6 @@
                 [(date)]="tenant.subscriptionEndDateUtc"
                 [bsConfig]="{ adaptivePosition: true }"
                 [required]="!isUnlimited"
-                class="form-control"
                 readonly
                 placeholder="Select date"
                 [minDate]="today"
@@ -110,11 +109,11 @@
                 id="CreateTenant_IsInTrialPeriod"
                 type="checkbox"
                 name="IsInTrialPeriod"
-                [disabled]="selectedEditionIsFree()"
+                [disabled]="!selectedEditionIsFree()"
                 [(ngModel)]="tenant.isInTrialPeriod"
               />
               {{ 'IsInTrialPeriod' | localize }}
-              <span></span>
+              <span class="ml-2 mt-1"></span>
             </label>
           </div>
 
@@ -122,7 +121,7 @@
             <label class="checkbox">
               <input id="EditTenant_IsActive" type="checkbox" name="IsActive" [(ngModel)]="tenant.isActive" />
               {{ 'Active' | localize }}
-              <span></span>
+              <span class="ml-2 mt-1"></span>
             </label>
           </div>
         </div>
