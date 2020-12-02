@@ -164,6 +164,7 @@ export class TenantsComponent extends AppComponentBase implements OnInit {
 
   reloadPage(): void {
     this.paginator.changePage(this.paginator.getPage());
+    console.log('page Reloaded');
   }
 
   createTenant(): void {
