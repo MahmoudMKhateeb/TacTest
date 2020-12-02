@@ -59,7 +59,6 @@ export class ViewShippingRequestDetailsComponent extends AppComponentBase {
       if (this.record.myBidPrice !== 0) {
         this.placeBidInputs.id = this.record.myBidId;
         x = Swal.fire(this.l('Success'), this.l('bidUpdatedSuccessfully'), 'success');
-        console.log('edited To :', this.price);
       }
       this.placeBidInputs.shippingRequestId = ShippingReqid;
       this.placeBidInputs.price = this.price;
@@ -75,7 +74,6 @@ export class ViewShippingRequestDetailsComponent extends AppComponentBase {
           this.modalSave.emit(null);
           x;
         });
-      console.log('Created Bid :', this.price);
     } else {
       this.saving = false;
       this.showSuccess = false;

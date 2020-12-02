@@ -18,9 +18,6 @@ export class ViewAllCarrierBidsComponent extends AppComponentBase {
     super(injector);
   }
 
-  // ngOnInit() {
-  //
-  // }
   show(): void {
     this.Loading = true;
     this.GetAllCarrierBid();
