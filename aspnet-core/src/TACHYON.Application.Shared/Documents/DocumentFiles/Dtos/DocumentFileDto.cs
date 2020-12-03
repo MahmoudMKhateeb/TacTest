@@ -30,6 +30,8 @@ namespace TACHYON.Documents.DocumentFiles.Dtos
         public string Notes { get; set; }
 
         public string HijriExpirationDate { get; set; }
+        public virtual DateTime CreationTime { get; set; }
+
 
     }
 }
