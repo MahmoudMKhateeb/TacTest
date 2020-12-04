@@ -159,11 +159,12 @@
                         <label>{{ l('File') }}*</label>
                         <div class="custom-file">
                           <input
-                            accept="image/x-png,image/jpeg"
+                            accept="image/x-png,image/jpeg,application/pdf"
                             [id]="item.documentTypeDto.displayName"
                             type="file"
+                            [name]="item.documentTypeDto.displayName"
                             class="custom-file-input"
-                            [required]="item.documentTypeDto.isRequired"
+                            [required]="true"
                             [disabled]="saving"
                             (change)="DocFileChangeEvent($event, item, i)"
                           />
@@ -225,7 +226,7 @@
                         </div>
                       </div>
                       <div *ngIf="item.documentTypeDto.hasNotes" class="form-group col-md-12">
-                        <label>{{ l('Note') }}</label>
+                        <label>{{ l('Note') }}*</label>
                         <textarea
                           style="resize: none;"
                           name="note{{ i }}"
@@ -255,7 +256,7 @@
             <button
               type="submit"
               class="btn btn-save blue"
-              [disabled]="!TenantRequiredDocumentsForm.form.valid"
+              [disabled]="!TenantRequiredDocumentsForm.form.valid || !alldocumentsValid"
               [buttonBusy]="saving"
               [busyText]="l('SavingWithThreeDot')"
             >

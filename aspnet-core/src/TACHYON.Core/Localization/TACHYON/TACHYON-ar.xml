@@ -24,6 +24,8 @@
 	  <text name="PleaseEnterAUniqueNumber">الرجاء إدخال  رقم مميز</text>
 	  <text name="Note">تعليق</text>
 	  <text name="Save">حـفظ</text>
+	  <text name="makeSureThatYouFillAllRequiredFields">الرجاء التأكد من ملء كل الخانات المطلوبة</text>
+
 	  <![CDATA[Tachyon:Common End]]>
 
 	  
