@@ -64,7 +64,7 @@
                           <!-- <li>
                                                   <a href="javascript:;" class="dropdown-item">{{ l('View') }}</a>
                                                 </li> -->
-                          <li>
+                          <li *ngIf="!record.isAccepted || record.expirationDate <= today">
                             <a
                               href="javascript:;"
                               class="dropdown-item"
@@ -113,11 +113,11 @@
                           {{ l('InReview') }}
                         </span>
                       </div>
-                      <!--                      <div *ngIf="record.expirationDate < today">-->
-                      <!--                        <span class="label label-lg font-weight-bold label-light-warning label-inline">-->
-                      <!--                          {{ l('Expired') }}-->
-                      <!--                        </span>-->
-                      <!--                      </div>-->
+                      <div *ngIf="record.expirationDate <= today">
+                        <span class="label label-lg font-weight-bold label-light-danger label-inline">
+                          {{ l('Expired') }}
+                        </span>
+                      </div>
                     </td>
                   </tr>
                 </ng-template>

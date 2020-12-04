@@ -30,7 +30,7 @@ import { FileDownloadService } from '@shared/utils/file-download.service';
 export class RequiredDocumentFilesComponent extends AppComponentBase implements OnInit {
   @ViewChild('dataTable', { static: true }) dataTable: Table;
   @ViewChild('requiredDocumentsCard') private myScrollContainer: ElementRef;
-  today = new Date();
+  today = abp.clock.now();
   datePickerToday: NgbDateStruct = { day: this.today.getDay(), month: this.today.getMonth(), year: this.today.getFullYear() };
   active = false;
   saving = false;
