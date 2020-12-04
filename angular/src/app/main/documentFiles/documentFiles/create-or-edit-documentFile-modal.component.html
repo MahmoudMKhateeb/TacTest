@@ -13,7 +13,7 @@
       <form *ngIf="active" #documentFileForm="ngForm" (ngSubmit)="save()" novalidate autocomplete="off">
         <div class="modal-header">
           <h4 class="modal-title">
-            <span *ngIf="documentFile.id">{{ l('Edit') }} {{ l('DocumentFile') }}</span>
+            <span *ngIf="documentFile.id">{{ l('Editt') }} {{ l('DocumentFile') }}</span>
             <span *ngIf="!documentFile.id">{{ l('Create') }} {{ l('NewDocumentFile') }}</span>
           </h4>
           <button type="button" class="close" (click)="close()" aria-label="Close" [disabled]="saving">
@@ -74,24 +74,6 @@
               </span>
             </div>
 
-            <div
-              *ngIf="documentFile.documentTypeDto.hasExpirationDate && !documentFile.documentTypeDto.hasHijriExpirationDate"
-              class="form-group col-md-6"
-            >
-              <label for="DocumentExpireDate">{{ l('ExpirationDate') }} </label>
-              <input
-                type="datetime"
-                placeholder="{{ l('ExpirationDate') }}"
-                bsDatepicker
-                class="form-control"
-                id="DocumentExpireDate"
-                name="documentExpireDate"
-                required
-                [(ngModel)]="documentFile.expirationDate"
-              />
-              <span style="line-height: 40px; padding: 0 15px 0 15px;"> &mdash; </span>
-            </div>
-
             <div *ngIf="documentFile.documentTypeDto.hasExpirationDate" class="form-group col-md-6">
               <hijri-gregorian-datepicker-test
                 [selectedDateType]="selectedDateType"
@@ -119,8 +101,7 @@
                 id="Note"
                 [maxLength]="500"
                 [minLength]="0"
-                name="documentExpireDate"
-                required
+                name="documentNotes"
                 [(ngModel)]="documentFile.notes"
               >
               </textarea>

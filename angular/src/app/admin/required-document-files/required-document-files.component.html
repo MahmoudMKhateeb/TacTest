@@ -231,7 +231,6 @@
                           name="note{{ i }}"
                           id="note{{ i }}"
                           class="form-control m-input"
-                          [required]="item.documentTypeDto.hasNotes && !item.isAccepted"
                           type="text"
                           rows="3"
                           [(ngModel)]="item.notes"
