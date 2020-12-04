@@ -20,7 +20,7 @@
 	  <text name="Download">Download</text>
 	  <text name="File">File</text>
 	  <text name="SelectFile">Select file</text>
-	  <text name="ValidDocumentFilesMsg">FileAllowedFormatesAre:.png,.jpeg</text>
+	  <text name="ValidDocumentFilesMsg">FileAllowedFormatesAre: .png, .jpeg, .pdf</text>
 	  <text name="PleaseChooseAvalidFormat">Please Choose Avalid Format</text>
 	  <text name="Number">Number</text>
 	  <text name="minDigits">minDigits</text>

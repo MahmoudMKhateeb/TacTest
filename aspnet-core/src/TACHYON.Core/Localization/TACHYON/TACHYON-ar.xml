@@ -35,7 +35,7 @@
 	  <text name="Download">تحميل</text>
 	  <text name="File">ملف</text>
 	  <text name="SelectFile">حدد الملف</text>
-	  <text name="ValidDocumentFilesMsg">:الصياغات المسموح بها.png,.jpeg</text>
+	  <text name="ValidDocumentFilesMsg">:الصياغات المسموح بها.png, .jpeg , .pdf</text>
 	  <text name="PleaseChooseAvalidFormat"> الرجاء إختيار صياغة مسموح بها</text>
 	  <text name="Number">رقم</text>
 	  <text name="minDigits">أقل عدد من الخانات</text>

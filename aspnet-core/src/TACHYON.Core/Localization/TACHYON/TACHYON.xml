@@ -95,6 +95,7 @@
 
     <![CDATA[Tachyon:Documents Common Start]]>
     <text name="Documents">Documents</text>
+	  <text name="ValidDocumentFilesMsg">FileAllowedFormatesAre: .png, .jpeg, .pdf</text>
     <![CDATA[Tachyon:Documents Common End]]>
 
 
