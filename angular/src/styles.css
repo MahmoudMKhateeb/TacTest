@@ -445,29 +445,6 @@ body {
 .login-form-control:focus {
   border-bottom: 1px solid #9c0711 !important;
 }
-.btn-primary-login {
-  margin-top: 80px;
-  border-radius: 0px !important;
-  width: 98px;
-}
-
-.btn-primary-login:disabled {
-  margin-top: 80px;
-  border-radius: 0px !important;
-  width: 98px;
-}
-
-.btn-primary-login:active {
-  margin-top: 80px;
-  border-radius: 0px !important;
-  width: 98px;
-}
-
-.btn-primary-login:focus {
-  margin-top: 80px;
-  border-radius: 0px !important;
-  width: 98px;
-}
 
 .text-red-login {
   margin-bottom: -20px;
@@ -510,13 +487,13 @@ body {
 
 .btn-primary-login {
   margin-top: 80px;
-  border-radius: 0px !important;
+  border-radius: 4px !important;
   width: 98px;
 }
 
 .btn-primary-login:disabled {
   margin-top: 80px;
-  border-radius: 0px !important;
+  border-radius: 4px !important;
   width: 98px;
 }
 
@@ -546,4 +523,39 @@ card-body {
   flex: 1 1 auto;
   min-height: 1px;
   padding: 1.25rem;
+}
+
+.aside-menu
+  .menu-nav
+  > .menu-item:not(.menu-item-parent):not(.menu-item-open):not(.menu-item-here):not(.menu-item-active):hover
+  > .menu-heading
+  .menu-arrow,
+.aside-menu
+  .menu-nav
+  > .menu-item:not(.menu-item-parent):not(.menu-item-open):not(.menu-item-here):not(.menu-item-active):hover
+  > .menu-link
+  .menu-arrow {
+  color: #d82631 !important;
+}
+
+.aside-menu .menu-nav > .menu-item.menu-item-open > .menu-heading .menu-arrow,
+.aside-menu .menu-nav > .menu-item.menu-item-open > .menu-link .menu-arrow {
+  color: #d82631 !important;
+}
+
+.aside-menu
+  .menu-nav
+  > .menu-item
+  .menu-submenu
+  .menu-item:not(.menu-item-parent):not(.menu-item-open):not(.menu-item-here):not(.menu-item-active):hover
+  > .menu-heading
+  .menu-arrow,
+.aside-menu
+  .menu-nav
+  > .menu-item
+  .menu-submenu
+  .menu-item:not(.menu-item-parent):not(.menu-item-open):not(.menu-item-here):not(.menu-item-active):hover
+  > .menu-link
+  .menu-arrow {
+  color: #d82631 !important;
 }

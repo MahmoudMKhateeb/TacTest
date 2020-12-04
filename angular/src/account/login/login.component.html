@@ -21,7 +21,7 @@
         #userNameOrEmailAddressInput="ngModel"
         [(ngModel)]="loginService.authenticateModel.userNameOrEmailAddress"
         autoFocus
-        class="login-form-control form-control py-7 font-size-h6"
+        class="form-control py-7 font-size-h6"
         type="email"
         placeholder="Email"
         autocomplete="new-password"
@@ -39,7 +39,7 @@
       <input
         #passwordInput="ngModel"
         [(ngModel)]="loginService.authenticateModel.password"
-        class="login-form-control form-control py-7 font-size-h6"
+        class="form-control py-7 font-size-h6"
         type="password"
         placeholder="Password"
         autocomplete="new-password"
@@ -100,8 +100,7 @@
 <div class="form-group d-flex justify-content-between mt-4" style="box-shadow: 0 2px 6px rgba(0, 0, 0, 0) !important;">
   <div *ngIf="!multiTenancySideIsTeanant && isTenantSelfRegistrationAllowed">
     <span>
-      {{ 'NotAMemberYet' | localize }}
-      <a class="text-login-links" routerLink="/account/select-edition">{{ 'NewTenant' | localize }}</a>
+      <a class="text-login-links" routerLink="/account/select-edition"> {{ 'NotAMemberYet' | localize }}</a>
     </span>
   </div>
   <!-- <span *ngIf="isSelfRegistrationAllowed">
