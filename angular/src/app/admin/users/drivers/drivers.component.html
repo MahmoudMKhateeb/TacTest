@@ -116,10 +116,10 @@
                       {{ 'UserName' | localize }}
                       <p-sortIcon field="username"></p-sortIcon>
                     </th>
-                    <th style="width: 250px;" pSortableColumn="emailAddress">
-                      {{ 'EmailAddress' | localize }}
-                      <p-sortIcon field="emailAddress"></p-sortIcon>
-                    </th>
+                    <!--                    <th style="width: 250px;" pSortableColumn="emailAddress">-->
+                    <!--                      {{ 'EmailAddress' | localize }}-->
+                    <!--                      <p-sortIcon field="emailAddress"></p-sortIcon>-->
+                    <!--                    </th>-->
                     <th style="width: 100px;" pSortableColumn="isActive">
                       {{ 'Active' | localize }}
                       <p-sortIcon field="isActive"></p-sortIcon>
@@ -147,6 +147,9 @@
                     >
                       <div class="btn-group dropdown" dropdown container="body">
                         <div class="row">
+                          <button class="dropdown-toggle btn btn-sm btn-primary" dropdownToggle>
+                            <i class="fa fa-cog"></i><span class="caret"></span> {{ l('Actions') }}
+                          </button>
                           <i
                             *ngIf="record.isMissingDocumentFiles"
                             class="flaticon2-information text-warning"
@@ -154,9 +157,6 @@
                             data-toggle="tooltip"
                             title="Missing documents"
                           ></i>
-                          <button class="dropdown-toggle btn btn-sm btn-primary" dropdownToggle>
-                            <i class="fa fa-cog"></i><span class="caret"></span> {{ l('Actions') }}
-                          </button>
                         </div>
                         <ul class="dropdown-menu" *dropdownMenu>
                           <li>
@@ -212,10 +212,10 @@
                         {{ record.userName }}
                       </span>
                     </td>
-                    <td style="width: 250px;">
-                      <span class="ui-column-title"> {{ 'EmailAddress' | localize }}</span>
-                      {{ record.emailAddress }}
-                    </td>
+                    <!--                    <td style="width: 250px;">-->
+                    <!--                      <span class="ui-column-title"> {{ 'EmailAddress' | localize }}</span>-->
+                    <!--                      {{ record.emailAddress }}-->
+                    <!--                    </td>-->
                     <td style="width: 100px;">
                       <span class="ui-column-title"> {{ 'Active' | localize }}</span>
                       <span class="label label-success label-inline" *ngIf="record.isActive">{{ 'Yes' | localize }}</span>
