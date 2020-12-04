@@ -168,17 +168,23 @@
                   <div class="card-body">
                     <div class="row d-flex">
                       <div class="form-group col-6">
-                        <label>{{ l('File') }}</label>
+                        <label>{{ l('File') }} *</label>
                         <div class="custom-file">
                           <input
-                            (change)="DocFileChangeEvent($event, item)"
+                            accept="image/x-png,image/jpeg,application/pdf"
+                            (change)="DocFileChangeEvent($event, item, i)"
                             type="file"
+                            [disabled]="saving"
                             class="custom-file-input"
-                            [required]="item.documentTypeDto.isRequired"
+                            [required]="true"
                           />
                           <label class="custom-file-label text-truncate" [for]="item.documentTypeDto.displayName">
                             {{ item.name ? item.name : l('Select') + l('File') }}</label
                           >
+                        </div>
+                        <span class="form-text text-muted">{{ 'ValidDocumentFilesMsg' | localize }}</span>
+                        <div *ngIf="fileFormateIsInvalideIndexList[i]">
+                          <span class="form-text text-danger text-left">{{ 'PleaseChooseAvalidFormat' | localize }}</span>
                         </div>
                       </div>
                       <div *ngIf="item.documentTypeDto.hasExpirationDate" class="form-group col-6">
@@ -259,7 +265,7 @@
           <button
             type="submit"
             class="btn btn-save font-weight-bold"
-            [disabled]="!userForm.form.valid"
+            [disabled]="!userForm.form.valid || !alldocumentsValid"
             [buttonBusy]="saving"
             [busyText]="l('SavingWithThreeDot')"
           >

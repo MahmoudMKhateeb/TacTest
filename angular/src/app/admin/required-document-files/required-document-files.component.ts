@@ -42,6 +42,8 @@ export class RequiredDocumentFilesComponent extends AppComponentBase implements 
   uniqueNumberIsInvalideIndexList: boolean[] = [];
   DateInvalideIndexList: boolean[] = [];
   submittedDocumentsList: GetTenantSubmittedDocumnetForView[] = [];
+  // truckFiles: File[] = [];
+  alldocumentsValid = false;
   /**
    * required documents fileUploader
    */
@@ -117,6 +119,10 @@ export class RequiredDocumentFilesComponent extends AppComponentBase implements 
 
     this.DocsUploader.onCompleteAll = () => {
       // create tenant req.
+      if (!this.alldocumentsValid) {
+        this.notify.error(this.l('makeSureThatYouFillAllRequiredFields'));
+        return;
+      }
       this._documentFilesServiceProxy
         .addTenantRequiredDocumentFiles(this.createOrEditDocumentFileDtos)
         .pipe(
@@ -145,15 +151,22 @@ export class RequiredDocumentFilesComponent extends AppComponentBase implements 
     if (event.target.files[0].size > 5242880) {
       //5MB
       this.message.warn(this.l('DocumentFile_Warn_SizeLimit', this.maxDocumentFileBytesUserFriendlyValue));
+      this.isAllfileFormatesAccepted();
+      item.name = '';
       return;
     }
     item.extn = event.target.files[0].type;
-    if (item.extn != 'image/jpeg' && item.extn != 'image/png') {
+    if (item.extn != 'image/jpeg' && item.extn != 'image/png' && item.extn != 'application/pdf') {
       this.fileFormateIsInvalideIndexList[index] = true;
+      item.name = '';
+      // this.truckFiles[index] = null;
+      this.isAllfileFormatesAccepted();
       return;
     }
     this.fileFormateIsInvalideIndexList[index] = false;
     item.name = event.target.files[0].name;
+    // this.truckFiles[index] = event.target.files;
+    this.isAllfileFormatesAccepted();
     this.DocsUploader.addToQueue(event.target.files);
   }
 
@@ -168,6 +181,10 @@ export class RequiredDocumentFilesComponent extends AppComponentBase implements 
   }
 
   save(): void {
+    if (!this.alldocumentsValid) {
+      this.notify.error(this.l('makeSureThatYouFillAllRequiredFields'));
+      return;
+    }
     this.saving = true;
     this.DocsUploader.uploadAll();
   }
@@ -235,5 +252,15 @@ export class RequiredDocumentFilesComponent extends AppComponentBase implements 
       left: 0,
       behavior: 'smooth',
     });
+  }
+  isAllfileFormatesAccepted() {
+    if (
+      this.fileFormateIsInvalideIndexList.every((x) => x === false) &&
+      this.fileFormateIsInvalideIndexList.length == this.createOrEditDocumentFileDtos.length
+    ) {
+      this.alldocumentsValid = true;
+    } else {
+      this.alldocumentsValid = false;
+    }
   }
 }

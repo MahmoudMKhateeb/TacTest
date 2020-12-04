@@ -55,6 +55,9 @@ export class CreateOrEditDriverModalComponent extends AppComponentBase {
   profilePicture: string;
   createOrEditDocumentFileDtos!: CreateOrEditDocumentFileDto[];
   hasValidationErorr = false;
+  alldocumentsValid = false;
+  fileFormateIsInvalideIndexList: boolean[] = [];
+
   /**
    * required documents fileUploader options
    * @private
@@ -195,7 +198,10 @@ export class CreateOrEditDriverModalComponent extends AppComponentBase {
 
   private saveInternal(): void {
     let input = new CreateOrUpdateUserInput();
-
+    if (!this.alldocumentsValid) {
+      this.notify.error(this.l('makeSureThatYouFillAllRequiredFields'));
+      return;
+    }
     input.user = this.user;
     input.setRandomPassword = this.setRandomPassword;
     input.sendActivationEmail = this.sendActivationEmail;
@@ -233,16 +239,34 @@ export class CreateOrEditDriverModalComponent extends AppComponentBase {
     return _.filter(this.roles, { isAssigned: true }).length;
   }
 
-  DocFileChangeEvent(event: any, item: CreateOrEditDocumentFileDto): void {
+  DocFileChangeEvent(event: any, item: CreateOrEditDocumentFileDto, index: number): void {
+    // if (event.target.files[0].size > 5242880) {
+    //   //5MB
+    //   this.message.warn(this.l('DocumentFileWarnSizeLimit', this.maxDocumentFileBytesUserFriendlyValue));
+    //   return;
+    // }
+    // this.DocsUploader.addToQueue(event.target.files);
+
+    // item.extn = event.target.files[0].type;
+    // item.name = event.target.files[0].name;
     if (event.target.files[0].size > 5242880) {
       //5MB
-      this.message.warn(this.l('DocumentFileWarnSizeLimit', this.maxDocumentFileBytesUserFriendlyValue));
+      this.message.warn(this.l('DocumentFile_Warn_SizeLimit', this.maxDocumentFileBytesUserFriendlyValue));
+      this.isAllfileFormatesAccepted();
+      item.name = '';
       return;
     }
-    this.DocsUploader.addToQueue(event.target.files);
-
     item.extn = event.target.files[0].type;
+    if (item.extn != 'image/jpeg' && item.extn != 'image/png' && item.extn != 'application/pdf') {
+      this.fileFormateIsInvalideIndexList[index] = true;
+      item.name = '';
+      this.isAllfileFormatesAccepted();
+      return;
+    }
+    this.fileFormateIsInvalideIndexList[index] = false;
     item.name = event.target.files[0].name;
+    this.isAllfileFormatesAccepted();
+    this.DocsUploader.addToQueue(event.target.files);
   }
 
   /**
@@ -348,5 +372,16 @@ export class CreateOrEditDriverModalComponent extends AppComponentBase {
     this._userService.getDriverNationalites().subscribe((res) => {
       this.nationalities = res;
     });
+  }
+
+  isAllfileFormatesAccepted() {
+    if (
+      this.fileFormateIsInvalideIndexList.every((x) => x === true) &&
+      this.fileFormateIsInvalideIndexList.length == this.createOrEditDocumentFileDtos.length
+    ) {
+      this.alldocumentsValid = true;
+    } else {
+      this.alldocumentsValid = false;
+    }
   }
 }

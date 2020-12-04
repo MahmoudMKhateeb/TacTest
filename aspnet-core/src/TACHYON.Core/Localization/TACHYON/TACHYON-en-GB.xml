@@ -11,6 +11,7 @@
 	  <text name="PleaseEnterAUniqueNumber">Please Enter A Unique Number</text>
 	  <text name="Note">Note</text>
 	  <text name="Save">Save</text>
+	  <text name="makeSureThatYouFillAllRequiredFields">Make sure that you fill all required fields</text>
 	  <![CDATA[Tachyon:Common End]]>
 	  
 	  <![CDATA[Tachyon:Documents Common Start]]>
@@ -19,7 +20,7 @@
 	  <text name="Download">Download</text>
 	  <text name="File">File</text>
 	  <text name="SelectFile">Select file</text>
-	  <text name="ValidDocumentFilesMsg">FileAllowedFormatesAre:.png,.jpeg</text>
+	  <text name="ValidDocumentFilesMsg">FileAllowedFormatesAre: .png, .jpeg, .pdf</text>
 	  <text name="PleaseChooseAvalidFormat">Please Choose Avalid Format</text>
 	  <text name="Number">Number</text>
 	  <text name="minDigits">minDigits</text>
