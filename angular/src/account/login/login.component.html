@@ -28,8 +28,17 @@
         name="userNameOrEmailAddress"
         required
         email="true"
+        maxlength="256"
+        pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,3}$"
       />
-      <validation-messages [formCtrl]="userNameOrEmailAddressInput" *ngIf="!userNameOrEmailAddressInput.touched"> </validation-messages>
+      <div *ngIf="userNameOrEmailAddressInput.errors && (userNameOrEmailAddressInput.touched || userNameOrEmailAddressInput.dirty)">
+        <div class="text-left" style="color: #f64e60;" [hidden]="!userNameOrEmailAddressInput.errors?.pattern">
+          {{ 'InvalidEmailAddress' | localize }}
+        </div>
+      </div>
+      <!-- <validation-messages
+        *ngIf="userNameOrEmailAddressInput.errors &&(userNameOrEmailAddressInput.touched || userNameOrEmailAddressInput.dirty)">
+      </validation-messages> -->
     </div>
 
     <div class="form-group">
