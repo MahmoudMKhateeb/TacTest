@@ -1,0 +1,11 @@
+@font-face {
+  font-family: 'GfArR';
+  font-weight: bold;
+  src: url('//localhost:4200/assets/fonts/tachyonFonts/ar/GE_Flow_Regular.otf') format('opentype');
+}
+
+@font-face {
+  font-family: 'GfArB';
+  font-weight: bold;
+  src: url('//localhost:4200/assets/fonts/tachyonFonts/ar/GE_Flow_bold.otf') format('opentype');
+}
