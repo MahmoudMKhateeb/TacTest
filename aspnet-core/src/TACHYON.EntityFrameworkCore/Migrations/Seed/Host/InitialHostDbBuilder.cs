@@ -1,10 +1,12 @@
-﻿using TACHYON.EntityFrameworkCore;
+﻿using Microsoft.Extensions.Hosting;
+using TACHYON.EntityFrameworkCore;
 
 namespace TACHYON.Migrations.Seed.Host
 {
     public class InitialHostDbBuilder
     {
         private readonly TACHYONDbContext _context;
+        private readonly IHostEnvironment _env;
 
         public InitialHostDbBuilder(TACHYONDbContext context)
         {
@@ -18,6 +20,8 @@ namespace TACHYON.Migrations.Seed.Host
             new HostRoleAndUserCreator(_context).Create();
             new DefaultSettingsCreator(_context).Create();
             new ShippingRequestBidStatusesCreator(_context).Create();
+            new CountriesAndCitiesCreator(_context).Create();
+            new TransportTypesAndTheirChildrenCreator(_context).Create();
             _context.SaveChanges();
         }
     }

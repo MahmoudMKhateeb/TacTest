@@ -43,10 +43,10 @@ namespace TACHYON.Migrations.Seed.Host
         private void AddStatusToDBwithId(int id,string displayName)
         {
             var item = new ShippingRequestBidStatus() { Id = id, IsDeleted = false, DisplayName = displayName, CreationTime = Clock.Now };
-            _context.Database.ExecuteSqlCommand("SET IDENTITY_INSERT [dbo].[ShippingRequestBidStatuses] ON");
+            _context.Database.ExecuteSqlRaw("SET IDENTITY_INSERT [dbo].[ShippingRequestBidStatuses] ON");
             _context.ShippingRequestBidStatuses.Add(item);
             _context.SaveChanges();
-            _context.Database.ExecuteSqlCommand("SET IDENTITY_INSERT [dbo].[ShippingRequestBidStatuses] OFF");
+            _context.Database.ExecuteSqlRaw("SET IDENTITY_INSERT [dbo].[ShippingRequestBidStatuses] OFF");
         }
         private void UpdateStatus(ShippingRequestBidStatus item, string DisplayName)
         {
