@@ -45,7 +45,7 @@ export class DocumentFilesComponent extends AppComponentBase implements OnInit {
   userNameFilter = '';
   isHost = true;
   routStepDisplayNameFilter = '';
-
+  today = abp.clock.now();
   entityType = 'Tenant';
   entityTypesList: SelectItemDto[] = [];
 
