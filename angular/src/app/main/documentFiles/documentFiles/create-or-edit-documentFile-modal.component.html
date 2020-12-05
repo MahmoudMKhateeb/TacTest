@@ -48,7 +48,13 @@
             <div class="form-group col-md-6">
               <label>{{ l('SelectFile') }}</label>
               <div class="custom-file">
-                <input (change)="DocFileChangeEvent($event, documentFile)" type="file" class="custom-file-input" required />
+                <input
+                  (change)="DocFileChangeEvent($event, documentFile)"
+                  type="file"
+                  class="custom-file-input"
+                  accept="image/x-png,image/jpeg,application/pdf"
+                  required
+                />
                 <label class="custom-file-label text-truncate" [for]="documentFile.name">
                   {{ documentFile.name ? documentFile.name : l('SelectFile') }}</label
                 >
