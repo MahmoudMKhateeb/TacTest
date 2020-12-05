@@ -479,6 +479,8 @@ namespace TACHYON.Documents.DocumentFiles
                 }
 
                 input.BinaryObjectId = await _documentFilesManager.SaveDocumentFileBinaryObject(input.UpdateDocumentFileInput.FileToken, AbpSession.TenantId);
+                input.IsAccepted = false;
+                input.IsRejected = false;
             }
 
             ObjectMapper.Map(input, documentFile);

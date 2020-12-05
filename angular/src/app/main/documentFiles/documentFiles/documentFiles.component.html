@@ -225,6 +225,8 @@
                     <td style="width: 150px;">
                       <span *ngIf="record.hasDate">
                         {{ record.documentFile.expirationDate | momentFormat: 'L' }}
+
+                        {{ record.documentFile.expirationDate > today ? '(' + l('Expired') + ')' : '' }}
                       </span>
                       <span *ngIf="!record.hasDate">--</span>
                     </td>

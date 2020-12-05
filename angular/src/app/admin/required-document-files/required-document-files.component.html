@@ -98,7 +98,7 @@
 
                     <td style="width: 150px;">
                       <span class="ui-column-title"></span>
-                      <div *ngIf="record.isAccepted && !record.isRejected">
+                      <div *ngIf="record.isAccepted && !record.isRejected && (record.expirationDate != null ? record.expirationDate > today : true)">
                         <span class="label label-lg font-weight-bold label-light-success label-inline">
                           {{ l('Accepted') }}
                         </span>
@@ -108,16 +108,17 @@
                           {{ l('Rejected') }}
                         </span>
                       </div>
-                      <div *ngIf="!record.isRejected && !record.isAccepted">
+                      <div *ngIf="!record.isRejected && !record.isAccepted && (record.expirationDate != null ? record.expirationDate > today : true)">
                         <span class="label label-lg font-weight-bold label-light-primary label-inline">
                           {{ l('InReview') }}
                         </span>
                       </div>
-                      <div *ngIf="record.expirationDate <= today">
+                      <div *ngIf="record.expirationDate < today && !record.isRejected">
                         <span class="label label-lg font-weight-bold label-light-danger label-inline">
                           {{ l('Expired') }}
                         </span>
                       </div>
+                      <!-- {{ today }} -->
                     </td>
                   </tr>
                 </ng-template>
