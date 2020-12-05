@@ -105,7 +105,8 @@
     <text name="DocumentFilesHeaderInfo">DocumentFilesHeaderInfo</text>
     <text name="DocumentName">أسم المستند</text>
     <text name="SubmitterTenant">الشركة التي قامت بالارسال </text>
-    <text name="TruckID">الرقم المميز للشاحنة</text>
+	<text name="SubmittingTime">تاريخ الإستلام</text>
+	<text name="TruckID">الرقم المميز للشاحنة</text>
     <text name="TrailerCode">رقم المقطورة</text>
     <text name="DriverName">إسم السائق</text>
     <text name="IsAccepted">تم قبوله</text>

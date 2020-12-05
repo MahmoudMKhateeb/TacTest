@@ -151,15 +151,18 @@
               <label for="Truck_PlateNumber">{{ l('PlateNumber') }} *</label>
               <input
                 [(ngModel)]="truck.plateNumber"
+                #plateNumberInput
                 class="form-control"
                 id="Truck_PlateNumber"
                 maxlength="64"
                 minlength="0"
                 name="PlateNumber"
                 required
+                pattern="^[a-z0-9].*?[a-z0-9]$"
                 type="text"
               />
               <span class="form-text text-muted">{{ l('Enter') }} {{ l('PlateNumber') }}</span>
+              <validation-messages [formCtrl]="plateNumberInput"></validation-messages>
             </div>
 
             <div class="form-group col-md-6">

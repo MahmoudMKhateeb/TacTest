@@ -123,12 +123,13 @@ namespace TACHYON.Documents.DocumentFiles
                                 {
                                     DocumentFile = new DocumentFileDto
                                     {
+                                        Id = o.Id,
                                         Name = o.Name,
                                         Extn = o.Extn,
                                         BinaryObjectId = o.BinaryObjectId,
                                         ExpirationDate = o.ExpirationDate,
                                         IsAccepted = o.IsAccepted,
-                                        Id = o.Id
+                                        CreationTime  = o.CreationTime
                                     },
                                     SubmitterTenatTenancyName = s6 == null || s6.TenancyName == null ? "Host" : s6.TenancyName.ToString(),
                                     HasDate = o.DocumentTypeFk.HasExpirationDate,
@@ -137,6 +138,7 @@ namespace TACHYON.Documents.DocumentFiles
                                     DocumentEntityDisplayName = (o.DocumentTypeFk.DocumentsEntityFk) == null ? "" : o.DocumentTypeFk.DocumentsEntityFk.DisplayName,
                                     DocumentTypeDisplayName = s1 == null || s1.DisplayName == null ? "" : s1.DisplayName,
                                     TruckId = (o.TruckFk == null ? (Guid?)null : o.TruckFk.Id).ToString(),
+                                    PlateNumber = (o.TruckFk == null ? "" : o.TruckFk.PlateNumber),
                                     TrailerTrailerCode = s3 == null || s3.TrailerCode == null ? "" : s3.TrailerCode,
                                     UserName = s4 == null || s4.Name == null ? "" : s4.UserName,
                                     RoutStepDisplayName = s5 == null || s5.DisplayName == null ? "" : s5.DisplayName.ToString()

@@ -139,12 +139,12 @@
 
 	  
     <![CDATA[ Tachyon: Document files Page Start]]>
-
     <text name="DocumentFiles">Document Files</text>
     <text name="DocumentFilesHeaderInfo">DocumentFilesHeaderInfo</text>
     <text name="DocumentName">Document Name</text>
     <text name="SubmitterTenant">Submitter Tenant</text>
-    <text name="TruckID">Truck ID</text>
+	<text name="SubmittingTime">Submitting Time</text>
+	<text name="TruckID">Truck ID</text>
     <text name="TrailerCode">Trailer Code</text>
     <text name="DriverName">Driver Name</text>
     <text name="IsAccepted">Is Accepted</text>
