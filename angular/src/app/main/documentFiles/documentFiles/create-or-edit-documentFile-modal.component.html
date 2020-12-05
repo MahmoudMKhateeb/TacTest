@@ -68,12 +68,25 @@
                 type="text"
                 class="form-control"
                 id="DocumentNumber"
-                [maxLength]="documentFile.documentTypeDto.numberMaxDigits"
+                (change)="numberChange(documentFile)"
+                [maxLength]="documentFile.documentTypeDto.numberMaxDigits == 0 ? 50 : documentFile.documentTypeDto.numberMaxDigits"
                 [minLength]="documentFile.documentTypeDto.numberMinDigits"
                 name="documentNumber"
                 required
                 [(ngModel)]="documentFile.number"
               />
+              <span
+                *ngIf="documentFile.number == null ? 0 : documentFile.number.length < documentFile.documentTypeDto.numberMinDigits"
+                class="text-danger"
+              >
+                {{ l('TheNumberLengthMustBeMoreThanMinDigits') }}
+              </span>
+              <span
+                *ngIf="documentFile.number == null ? false : documentFile.number.length > documentFile.documentTypeDto.numberMaxDigits"
+                class="text-danger"
+              >
+                {{ l('TheNumberLengthMustBeLessThanMaxDigits') }}
+              </span>
               <span class="form-text text-muted"
                 >{{ l('minDigits:') }} {{ documentFile.documentTypeDto.numberMinDigits }} {{ l('maxDigits:') }}
                 {{ documentFile.documentTypeDto.numberMaxDigits }}
@@ -127,7 +140,7 @@
           <button
             type="submit"
             class="btn btn-save blue"
-            [disabled]="!documentFileForm.form.valid"
+            [disabled]="!documentFileForm.form.valid || !isNumberInValid || !alldocumentsValid"
             [buttonBusy]="saving"
             [busyText]="l('SavingWithThreeDot')"
           >

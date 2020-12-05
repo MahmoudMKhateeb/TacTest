@@ -39,6 +39,7 @@ export class CreateOrEditDocumentFileModalComponent extends AppComponentBase {
   documentEntity = '';
   selectedDateType = DateType.Gregorian; // or DateType.Gregorian
   CreateOrEditDocumentFileDtoList: CreateOrEditDocumentFileDto[] = [];
+  isNumberInValid = false;
   // allTrucks: DocumentFileTruckLookupTableDto[];
   // allTrailers: DocumentFileTrailerLookupTableDto[];
   // allUsers: DocumentFileUserLookupTableDto[];
@@ -289,6 +290,14 @@ export class CreateOrEditDocumentFileModalComponent extends AppComponentBase {
       this.alldocumentsValid = true;
     } else {
       this.alldocumentsValid = false;
+    }
+  }
+
+  numberChange(item: CreateOrEditDocumentFileDto) {
+    if (item.documentTypeDto.numberMinDigits <= item.number.length && item.number.length <= item.documentTypeDto.numberMaxDigits) {
+      this.isNumberInValid = true;
+    } else {
+      this.isNumberInValid = false;
     }
   }
 }

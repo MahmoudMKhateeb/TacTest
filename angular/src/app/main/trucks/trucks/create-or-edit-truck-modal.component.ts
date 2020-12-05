@@ -87,7 +87,8 @@ export class CreateOrEditTruckModalComponent extends AppComponentBase {
   public temporaryPictureUrl: string;
   profilePicture = '';
   fileFormateIsInvalideIndexList: boolean[] = [];
-  truckFiles: any[] = [];
+  allnumbersValid = false;
+  numbersInValidList: boolean[] = [];
   alldocumentsValid = false;
   /**
    * required documents fileUploader
@@ -507,6 +508,23 @@ export class CreateOrEditTruckModalComponent extends AppComponentBase {
       this.alldocumentsValid = true;
     } else {
       this.alldocumentsValid = false;
+    }
+  }
+
+  numberChange(item: CreateOrEditDocumentFileDto, index: number) {
+    if (item.documentTypeDto.numberMinDigits <= item.number.length && item.number.length <= item.documentTypeDto.numberMaxDigits) {
+      this.numbersInValidList[index] = false;
+      this.isNumbersValid();
+    } else {
+      this.numbersInValidList[index] = true;
+      this.isNumbersValid();
+    }
+  }
+  isNumbersValid() {
+    if (this.numbersInValidList.every((x) => x === false) && this.numbersInValidList.length == this.truck.createOrEditDocumentFileDtos.length) {
+      this.allnumbersValid = true;
+    } else {
+      this.allnumbersValid = false;
     }
   }
 }

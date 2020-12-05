@@ -57,7 +57,8 @@ export class CreateOrEditDriverModalComponent extends AppComponentBase {
   hasValidationErorr = false;
   alldocumentsValid = false;
   fileFormateIsInvalideIndexList: boolean[] = [];
-
+  allnumbersValid = false;
+  numbersInValidList: boolean[] = [];
   /**
    * required documents fileUploader options
    * @private
@@ -189,6 +190,7 @@ export class CreateOrEditDriverModalComponent extends AppComponentBase {
       this.notify.error('PleaseMakeSureYouProvideValidDetails!');
       return;
     }
+    this.saving = true;
     if (!this.user.id && this.user.isDriver) {
       this.DocsUploader.uploadAll();
     } else {
@@ -214,8 +216,6 @@ export class CreateOrEditDriverModalComponent extends AppComponentBase {
 
     input.createOrEditDocumentFileDtos = this.createOrEditDocumentFileDtos;
 
-    this.saving = true;
-
     this._userService
       .createOrUpdateUser(input)
       .pipe(
@@ -240,15 +240,6 @@ export class CreateOrEditDriverModalComponent extends AppComponentBase {
   }
 
   DocFileChangeEvent(event: any, item: CreateOrEditDocumentFileDto, index: number): void {
-    // if (event.target.files[0].size > 5242880) {
-    //   //5MB
-    //   this.message.warn(this.l('DocumentFileWarnSizeLimit', this.maxDocumentFileBytesUserFriendlyValue));
-    //   return;
-    // }
-    // this.DocsUploader.addToQueue(event.target.files);
-
-    // item.extn = event.target.files[0].type;
-    // item.name = event.target.files[0].name;
     if (event.target.files[0].size > 5242880) {
       //5MB
       this.message.warn(this.l('DocumentFile_Warn_SizeLimit', this.maxDocumentFileBytesUserFriendlyValue));
@@ -374,9 +365,25 @@ export class CreateOrEditDriverModalComponent extends AppComponentBase {
     });
   }
 
+  isNumbersValid() {
+    if (this.numbersInValidList.every((x) => x === false) && this.numbersInValidList.length == this.createOrEditDocumentFileDtos.length) {
+      this.allnumbersValid = true;
+    } else {
+      this.allnumbersValid = false;
+    }
+  }
+  numberChange(item: CreateOrEditDocumentFileDto, index: number) {
+    if (item.documentTypeDto.numberMinDigits <= item.number.length && item.number.length <= item.documentTypeDto.numberMaxDigits) {
+      this.numbersInValidList[index] = false;
+      this.isNumbersValid();
+    } else {
+      this.numbersInValidList[index] = true;
+      this.isNumbersValid();
+    }
+  }
   isAllfileFormatesAccepted() {
     if (
-      this.fileFormateIsInvalideIndexList.every((x) => x === true) &&
+      this.fileFormateIsInvalideIndexList.every((x) => x === false) &&
       this.fileFormateIsInvalideIndexList.length == this.createOrEditDocumentFileDtos.length
     ) {
       this.alldocumentsValid = true;
