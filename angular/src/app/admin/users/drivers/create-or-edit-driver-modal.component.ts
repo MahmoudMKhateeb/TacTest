@@ -328,8 +328,8 @@ export class CreateOrEditDriverModalComponent extends AppComponentBase {
     return s4() + s4() + '-' + s4() + '-' + s4() + '-' + s4() + '-' + s4() + s4() + s4();
   }
 
-  CheckIfDriverPhoneNumberIsValid(userName: string, id: number) {
-    this._userService.checkIfPhoneNumberValid(userName, id == null ? 0 : id).subscribe((res) => {
+  CheckIfDriverPhoneNumberIsValid(phoneNumber: string, id: number) {
+    this._userService.checkIfPhoneNumberValid(phoneNumber, id == null ? 0 : id).subscribe((res) => {
       this.isPhoneNumberAvilable = res;
     });
   }
@@ -352,6 +352,9 @@ export class CreateOrEditDriverModalComponent extends AppComponentBase {
     });
   }
   numberOnly(event): boolean {
+    if (event.target.value.length >= 9) {
+      return false;
+    }
     const charCode = event.which ? event.which : event.keyCode;
     if (charCode > 31 && (charCode < 48 || charCode > 57)) {
       return false;
@@ -368,7 +371,7 @@ export class CreateOrEditDriverModalComponent extends AppComponentBase {
   // }
 
   getDriverNationalites() {
-    this.isWaintingUserNameValidation = true;
+    // this.isWaintingUserNameValidation = true;
     this._userService.getDriverNationalites().subscribe((res) => {
       this.nationalities = res;
     });
