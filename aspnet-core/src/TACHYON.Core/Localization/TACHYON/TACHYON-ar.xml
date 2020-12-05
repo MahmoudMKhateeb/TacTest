@@ -263,6 +263,7 @@
 	  <text name="Active">مفعّل</text>
 	  <text name="IsTwoFactorEnabled">تمكين التوثيق ذو عاملين</text>
 	  <text name="IsLockoutEnabled">تمكين قفل الحسابات</text>
+	  <text name="9digitsNumber">يجب أن يتكون من 9 أرقام</text>
 	  <![CDATA[Tachyon:User and Driver Shared  end]]>
 
 

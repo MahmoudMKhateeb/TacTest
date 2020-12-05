@@ -121,6 +121,7 @@
 	  <text name="Active">Active</text>
 	  <text name="IsTwoFactorEnabled">Two factor authentication enabled</text>
 	  <text name="IsLockoutEnabled">Lockout enabled</text>
+	  <text name="9digitsNumber">9 Digits Number</text>
 	  <![CDATA[Tachyon:User and Driver Shared  end]]>
 	  
 	  

@@ -35,22 +35,28 @@
                 <div class="col-sm-9">
                   <div class="form-group">
                     <label for="UserName">{{ 'PhoneNumber' | localize }} *</label>
-                    <input
-                      (change)="CheckIfDriverPhoneNumberIsValid(userNameInput.value, user.id)"
-                      id="UserName"
-                      #userNameInput="ngModel"
-                      type="text"
-                      (keypress)="numberOnly($event)"
-                      [disabled]="!canChangeUserName"
-                      name="UserName"
-                      class="form-control"
-                      [(ngModel)]="user.userName"
-                      required
-                      maxlength="256"
-                    />
-                    <span class="form-text text-muted">{{ 'Enter' | localize }} {{ 'PhoneNumber' | localize }}</span>
-                    <span class="form-text text-muted">{{ 'NumbersOnly' | localize }}</span>
+                    <div class="input-group">
+                      <div class="input-group-prepend">
+                        <span class="input-group-text">+966</span>
+                      </div>
+                      <input
+                        (change)="CheckIfDriverPhoneNumberIsValid(userNameInput.value, user.id)"
+                        id="UserName"
+                        #userNameInput="ngModel"
+                        type="text"
+                        (keypress)="numberOnly($event)"
+                        [disabled]="!canChangeUserName"
+                        name="UserName"
+                        pattern="^\d{9}$"
+                        class="form-control"
+                        [(ngModel)]="user.userName"
+                        required
+                      />
+                    </div>
+                    <validation-messages [formCtrl]="userNameInput"></validation-messages>
 
+                    <span class="form-text text-muted">{{ 'Enter' | localize }} {{ 'PhoneNumber' | localize }}</span>
+                    <span class="form-text text-muted">{{ '9digitsNumber' | localize }}</span>
                     <!-- <div *ngIf="isUserNameValid" class="valid-feedback">Success! You've done it.</div> -->
                     <span *ngIf="!isPhoneNumberAvilable" class="form-text text-danger">{{ l('AlreadyTaken') }}</span>
 

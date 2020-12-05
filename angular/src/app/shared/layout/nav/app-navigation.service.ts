@@ -160,7 +160,7 @@ export class AppNavigationService {
 
       // Host
       new AppMenuItem(
-        'User Management',
+        'UserManagement',
         '',
         'flaticon-user-settings',
         '',
