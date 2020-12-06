@@ -136,6 +136,7 @@ import { CustomNgbDateParserFormatter } from '@app/shared/common/hijri-gregorian
 import { MarketplaceComponent } from '@app/main/marketPlace/marketPlace/marketplace.component';
 import { ViewShippingRequestDetailsComponent } from '@app/main/marketPlace/marketPlace/ViewShippingRequestDetails.component';
 import { ViewAllCarrierBidsComponent } from '@app/main/marketPlace/marketPlace/ViewAllCarrierBids.component';
+import { RejectionReasonModalComponent } from './documentFiles/documentFiles/rejectionReason-modal.component';
 
 NgxBootstrapDatePickerConfigService.registerNgxBootstrapDatePickerLocales();
 
@@ -171,7 +172,7 @@ NgxBootstrapDatePickerConfigService.registerNgxBootstrapDatePickerLocales();
   ],
   declarations: [
     CapacitiesComponent,
-
+    RejectionReasonModalComponent,
     ViewCapacityModalComponent,
     CreateOrEditCapacityModalComponent,
     TruckSubtypesComponent,

@@ -115,7 +115,9 @@
     <text name="DocumentFile">مستند</text>
     <text name="NewDocumentFile">مستند جديد</text>
     <text name="AddDocument">إضافة مستند</text>
-
+	  <text name="ViewReason">إظهار سبب الرفض</text>
+	  <text name="RejectionReason">سبب رفض المستند</text>
+	  <text name="ViewRejectionReason">إظهار سبب رفض المستند</text>
     <![CDATA[ Tachyon: Document files Page End]]>
 
     <![CDATA[Tachyon:Common Start]]>

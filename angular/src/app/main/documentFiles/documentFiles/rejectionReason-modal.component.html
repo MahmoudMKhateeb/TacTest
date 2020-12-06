@@ -1,0 +1,54 @@
+<div
+  bsModal
+  #rejectionReasonModal="bs-modal"
+  class="modal fade"
+  tabindex="-1"
+  role="dialog"
+  aria-labelledby="rejectionReasonModal"
+  aria-hidden="true"
+  [config]="{ backdrop: 'static' }"
+>
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <form *ngIf="active" #rejectionReasonForm="ngForm" novalidate (ngSubmit)="rejectDocumentFile()" autocomplete="off">
+        <div class="modal-header">
+          <h4 class="modal-title">
+            <span>{{ l('Document') }} : {{ documentName }}</span>
+            <span>{{ l('Company') }} : {{ tenantName }}</span>
+          </h4>
+          <button type="button" class="close" (click)="close()" aria-label="Close" [disabled]="saving">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <div class="form-group">
+            <label for="RejectionReason">{{ l('RejectionReason') }} *</label>
+            <input
+              type="text"
+              id="RejectionReason"
+              class="form-control"
+              [(ngModel)]="rejectionReason"
+              name="DisplayName"
+              minlength="0"
+              maxlength="256"
+              required
+            />
+            <span class="form-text text-muted">{{ 'Enter' | localize }} {{ 'RejectionReason' | localize }}</span>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button [disabled]="saving" type="button" class="btn btn-default" (click)="close()">{{ l('Cancel') }}</button>
+          <button
+            type="submit"
+            class="btn btn-save blue"
+            [disabled]="!rejectionReasonForm.form.valid"
+            [buttonBusy]="saving"
+            [busyText]="l('SavingWithThreeDot')"
+          >
+            <i class="fa fa-save"></i> <span>{{ l('Save') }}</span>
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

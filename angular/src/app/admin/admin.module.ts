@@ -124,6 +124,7 @@ import { CreateOrEditDriverModalComponent } from '@app/admin/users/drivers/creat
 import { ViewOrEditEntityDocumentsModalComponent } from '@app/main/documentFiles/documentFiles/documentFilesViewComponents/view-or-edit-entity-documents-modal.componant';
 import { CreateOrEditDocumentFileModalComponent } from '@app/main/documentFiles/documentFiles/create-or-edit-documentFile-modal.component';
 import { CustomNgbDateParserFormatter } from '@app/shared/common/hijri-gregorian-datepicker/CustomNgbDateParserFormatter';
+import { ViewRejectionReasonModalComponent } from './required-document-files/view-rejection-reason-modal.component';
 const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
   // suppressScrollX: true
 };
@@ -162,6 +163,7 @@ const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
     NgbModule,
   ],
   declarations: [
+    ViewRejectionReasonModalComponent,
     CreateOrEditDocumentFileModalComponent,
     ViewOrEditEntityDocumentsModalComponent,
     ShippingRequestStatusesComponent,
@@ -253,7 +255,13 @@ const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
     CreateOrEditDriverModalComponent,
   ],
 
-  exports: [AddMemberModalComponent, AddRoleModalComponent, CreateOrEditDocumentFileModalComponent, ViewOrEditEntityDocumentsModalComponent],
+  exports: [
+    AddMemberModalComponent,
+    AddRoleModalComponent,
+    CreateOrEditDocumentFileModalComponent,
+    ViewRejectionReasonModalComponent,
+    ViewOrEditEntityDocumentsModalComponent,
+  ],
   providers: [
     ImpersonationService,
     TreeDragDropService,

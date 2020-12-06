@@ -169,8 +169,20 @@
                               href="javascript:;"
                               *ngIf="record.documentFile.isAccepted && isHost"
                               class="dropdown-item"
-                              (click)="rejectDocumentFile(record.documentFile.id)"
+                              (click)="
+                                rejectionReasonModal.show(record.documentFile.id, record.documentTypeDisplayName, record.submitterTenatTenancyName)
+                              "
                               >{{ l('Reject') }}</a
+                            >
+                          </li>
+
+                          <li>
+                            <a
+                              href="javascript:;"
+                              *ngIf="!record.documentFile.isAccepted && !record.documentFile.isRejected"
+                              class="dropdown-item"
+                              (click)="viewRejectionReasonModal.show(record.documentTypeDisplayName, record.documentFile.rejectionReason)"
+                              >{{ l('ViewRejectionReason') }}</a
                             >
                           </li>
                           <!-- <li>
@@ -244,7 +256,8 @@
 
                     <td *ngIf="entityType == 'Tenant'" style="width: 150px;">
                       <i *ngIf="record.documentFile.isAccepted" class="fa fa-check-circle text-success" title="True"></i>
-                      <i *ngIf="!record.documentFile.isAccepted" class="fa fa-times-circle" title="False"></i>
+                      <span *ngIf="record.documentFile.isRejected" title="False">{{ l('Rejected') }}</span>
+                      <span *ngIf="!record.documentFile.isAccepted && !record.documentFile.isRejected" title="False">{{ l('NotYet') }}</span>
                     </td>
                   </tr>
                 </ng-template>
@@ -273,6 +286,8 @@
     </div>
     <createOrEditDocumentFileModal #createOrEditDocumentFileModal (modalSave)="getDocumentFiles()"></createOrEditDocumentFileModal>
     <viewDocumentFileModal #viewDocumentFileModal></viewDocumentFileModal>
+    <rejectionReasonModal #rejectionReasonModal (modalSave)="getDocumentFiles()"></rejectionReasonModal>
+    <viewRejectionReasonModal #viewRejectionReasonModal></viewRejectionReasonModal>
     <entityTypeHistoryModal #entityTypeHistoryModal></entityTypeHistoryModal>
   </div>
 </div>

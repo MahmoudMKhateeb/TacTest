@@ -129,6 +129,8 @@ namespace TACHYON.Documents.DocumentFiles
                                         BinaryObjectId = o.BinaryObjectId,
                                         ExpirationDate = o.ExpirationDate,
                                         IsAccepted = o.IsAccepted,
+                                        IsRejected=o.IsRejected,
+                                        RejectionReason=o.RejectionReason,
                                         CreationTime  = o.CreationTime
                                     },
                                     SubmitterTenatTenancyName = s6 == null || s6.TenancyName == null ? "Host" : s6.TenancyName.ToString(),
@@ -483,10 +485,11 @@ namespace TACHYON.Documents.DocumentFiles
                 input.BinaryObjectId = await _documentFilesManager.SaveDocumentFileBinaryObject(input.UpdateDocumentFileInput.FileToken, AbpSession.TenantId);
                 input.IsAccepted = false;
                 input.IsRejected = false;
+               
             }
 
             ObjectMapper.Map(input, documentFile);
-
+            documentFile.RejectionReason = "";
 
             //ObjectMapper.Map(input.DocumentTypeDto, documentFile.DocumentTypeFk);
             //if (input.DocumentTypeDto.HasNumber)
@@ -612,22 +615,24 @@ namespace TACHYON.Documents.DocumentFiles
             var documentFile = _documentFileRepository.FirstOrDefault(id);
             documentFile.IsAccepted = true;
             documentFile.IsRejected = false;
+            documentFile.RejectionReason = "";
             //await _appNotifier.AcceptedSubmittedDocument(new UserIdentifier(documentFile.TenantId, AbpSession.UserId.Value), documentFile.Name);
 
             //todo send notification to the tenant
         }
 
-        public async void Reject(Guid id)
+        public async void Reject(Guid id,string reason)
         {
             DisableTenancyFiltersIfHost();
 
             var documentFile = _documentFileRepository.FirstOrDefault(id);
+            if (documentFile==null)
+            {
+                throw new UserFriendlyException(L("DocumentNotFound"));
+            }
             documentFile.IsAccepted = false;
             documentFile.IsRejected = true;
-
-            //await _appNotifier.RejectedSubmittedDocument(new UserIdentifier(AbpSession.TenantId, AbpSession.UserId.Value), documentFile.Name);
-
-            //todo send notification to the tenant
+            documentFile.RejectionReason = reason;
         }
 
 
@@ -649,6 +654,7 @@ namespace TACHYON.Documents.DocumentFiles
                        Extn = x.Extn,
                        IsAccepted = x.IsAccepted,
                        IsRejected = x.IsRejected,
+                       RejectionReason=x.RejectionReason,
                        Name = x.DocumentTypeFk.DisplayName,
                        //LastModificationTime = await  _binaryObjectManager.GetOrNullAsync(x.BinaryObjectId).Result.,
                        ExpirationDate = x.ExpirationDate

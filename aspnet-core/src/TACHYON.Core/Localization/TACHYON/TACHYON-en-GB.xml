@@ -25,18 +25,21 @@
 	  <text name="Number">Number</text>
 	  <text name="minDigits">minDigits</text>
 	  <text name="maxDigits">maxDigits</text>
+	  <text name="ViewReason">View Reason</text>
+	  <text name="RejectionReason">Rejection Reason</text>
+	  <text name="ViewRejectionReason">View Rejection Reason</text>
 	  <text name="DateIsRequired">Date is Required</text>
 	  <![CDATA[Tachyon:Documents Common End]]
 	  
 	  <![CDATA[ Tachyon: Tenant document Upload Page Start]]>
 	  <text name="TenantRequiredDocuments">Tenant Required Documents</text>
-	  <text name="WaitingForReviewMsg">Pleasewaituntillwereviewyourdocuments</text>
+	  <text name="WaitingForReviewMsg">Please wait untill we review your documents</text>
 	  <text name="SubmittedDocumnents">Submitted Documnents</text>
 	  <text name="Extn">Extn</text>
 	  <text name="Accepted">Accepted</text>
 	  <text name="Rejected">Rejected</text>
 	  <text name="InReview">In Review</text>
-	  <text name="UploadDocumentMsg">Please up load the following documents in order to finalize your registration process.</text>
+	  <text name="UploadDocumentMsg">Please upload the following documents in order to finalize your registration process.</text>
 	  <![CDATA[ Tachyon: Tenant document Upload Page End]]>
 
 
