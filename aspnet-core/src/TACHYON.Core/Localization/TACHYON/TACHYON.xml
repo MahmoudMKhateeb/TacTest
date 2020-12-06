@@ -46,6 +46,9 @@
     <![CDATA[ Tachyon: Tenant login Page End]]>
 
     <![CDATA[ Tachyon:Common]]>
+    <text name="UploadDocumentMsg">Please upload the following documents in order to finalize your registration process.</text>
+    <text name="WaitingForReviewMsg">Please wait untill we review your documents</text>
+	  
     <text name="AlreadyTaken">Already Taken</text>
     <text name="Enter">Enter</text>
     <text name="Select">Select</text>
@@ -76,6 +79,9 @@
     <text name="DocumentFile">Document File</text>
     <text name="NewDocumentFile">New Document File</text>
     <text name="AddDocument">Add Document</text>
+    <text name="ViewReason">View Reason</text>
+    <text name="RejectionReason">Rejection Reason</text>
+    <text name="ViewRejectionReason">View Rejection Reason</text>
     <![CDATA[ Tachyon: Document files Page End]]>
 
 

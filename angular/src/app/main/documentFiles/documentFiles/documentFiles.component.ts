@@ -178,13 +178,6 @@ export class DocumentFilesComponent extends AppComponentBase implements OnInit {
     });
   }
 
-  rejectDocumentFile(id: string) {
-    this._documentFilesServiceProxy.reject(id).subscribe(() => {
-      this.reloadPage();
-      this.notify.success(this.l('SuccessfullyRejected'));
-    });
-  }
-
   SwitchEntityType(type) {
     this.entityType = type;
     this.getDocumentFiles();

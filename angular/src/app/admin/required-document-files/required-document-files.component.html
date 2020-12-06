@@ -107,6 +107,11 @@
                         <span class="label label-lg font-weight-bold label-light-danger label-inline">
                           {{ l('Rejected') }}
                         </span>
+                        <span style="margin-left: 8px; height: 22px; padding-top: 1px;">
+                          <a class="btn btn-sm btn-primary" (click)="viewRejectionReasonModal.show(record.name, record.rejectionReason)">
+                            {{ l('ViewReason') }} !</a
+                          >
+                        </span>
                       </div>
                       <div *ngIf="!record.isRejected && !record.isAccepted && (record.expirationDate != null ? record.expirationDate > today : true)">
                         <span class="label label-lg font-weight-bold label-light-primary label-inline">
@@ -268,4 +273,5 @@
     </div>
   </div>
   <createOrEditDocumentFileModal #createOrEditDocumentFileModal (modalSave)="reload()"></createOrEditDocumentFileModal>
+  <viewRejectionReasonModal #viewRejectionReasonModal></viewRejectionReasonModal>
 </div>
