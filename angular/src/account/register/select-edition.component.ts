@@ -28,8 +28,8 @@ export class SelectEditionComponent extends AppComponentBase implements OnInit {
   subscriptionStartType: typeof SubscriptionStartType = SubscriptionStartType;
   /*you can change your edition icons order within editionIcons variable */
   editionIcons: string[] = [
-    'flaticon-open-box',
-    'flaticon-rocket',
+    'flaticon-truck',
+    'flaticon-bus-stop',
     'flaticon-gift',
     'flaticon-confetti',
     'flaticon-cogwheel-2',
