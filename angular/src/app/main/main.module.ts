@@ -133,6 +133,11 @@ import { AdminModule } from '@app/admin/admin.module';
 import { NgbDateParserFormatter } from '@node_modules/@ng-bootstrap/ng-bootstrap';
 import { CustomNgbDateParserFormatter } from '@app/shared/common/hijri-gregorian-datepicker/CustomNgbDateParserFormatter';
 
+import { MarketplaceComponent } from '@app/main/marketPlace/marketPlace/marketplace.component';
+import { ViewShippingRequestDetailsComponent } from '@app/main/marketPlace/marketPlace/ViewShippingRequestDetails.component';
+import { ViewAllCarrierBidsComponent } from '@app/main/marketPlace/marketPlace/ViewAllCarrierBids.component';
+import { RejectionReasonModalComponent } from './documentFiles/documentFiles/rejectionReason-modal.component';
+
 NgxBootstrapDatePickerConfigService.registerNgxBootstrapDatePickerLocales();
 
 @NgModule({
@@ -167,7 +172,7 @@ NgxBootstrapDatePickerConfigService.registerNgxBootstrapDatePickerLocales();
   ],
   declarations: [
     CapacitiesComponent,
-
+    RejectionReasonModalComponent,
     ViewCapacityModalComponent,
     CreateOrEditCapacityModalComponent,
     TruckSubtypesComponent,
@@ -272,6 +277,10 @@ NgxBootstrapDatePickerConfigService.registerNgxBootstrapDatePickerLocales();
     CreateOrEditTrucksTypeModalComponent,
     DashboardComponent,
     UpdatePriceShippingRequestModalComponent,
+
+    MarketplaceComponent,
+    ViewShippingRequestDetailsComponent,
+    ViewAllCarrierBidsComponent,
   ],
   providers: [
     { provide: BsDatepickerConfig, useFactory: NgxBootstrapDatePickerConfigService.getDatepickerConfig },

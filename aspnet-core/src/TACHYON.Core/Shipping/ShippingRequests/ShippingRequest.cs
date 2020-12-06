@@ -1,15 +1,19 @@
 ﻿using Abp.Domain.Entities;
 using Abp.Domain.Entities.Auditing;
+using Microsoft.Win32.SafeHandles;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using Abp.Timing;
 using TACHYON.Authorization.Users;
 using TACHYON.Goods.GoodCategories;
 using TACHYON.Goods.GoodsDetails;
 using TACHYON.MultiTenancy;
 using TACHYON.Routs;
 using TACHYON.Routs.RoutSteps;
+using TACHYON.Shipping.ShippingRequestBids;
+using TACHYON.Shipping.ShippingRequestBidStatuses;
 using TACHYON.Shipping.ShippingRequestStatuses;
 using TACHYON.Trailers;
 using TACHYON.Trailers.TrailerTypes;
@@ -26,6 +30,8 @@ namespace TACHYON.Shipping.ShippingRequests
     public class ShippingRequest : FullAuditedEntity<long>, IMustHaveTenant
     {
         public int TenantId { get; set; }
+        [ForeignKey("TenantId")]
+        public Tenant Tenant { get; set; }
         public int RouteId { get; set; }
         public virtual decimal Vas { get; set; }
 
@@ -157,5 +163,30 @@ namespace TACHYON.Shipping.ShippingRequests
         public Capacity CapacityFk { get; set; }
 
         #endregion
+
+        #region Bids Data
+        public DateTime? BidStartDate { get; set; }
+        public DateTime? BidEndDate { get; set; }
+
+        public int? ShippingRequestBidStatusId { get; set; }
+
+        [ForeignKey("ShippingRequestBidStatusId")]
+        public ShippingRequestBidStatus ShippingRequestBidStatusFK { get; set; }
+        public DateTime? CloseBidDate { get; set; }
+
+        public ICollection<ShippingRequestBid> ShippingRequestBids { get; set; }
+        #endregion
+
+        public void Close()
+        {
+            ShippingRequestBidStatusId = TACHYONConsts.ShippingRequestStatusClosed;
+            CloseBidDate = Clock.Now;
+        }
+
+        public void Start()
+        {
+            ShippingRequestBidStatusId = TACHYONConsts.ShippingRequestStatusOnGoing;
+            BidStartDate = Clock.Now;
+        }
     }
 }

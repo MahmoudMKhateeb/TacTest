@@ -38,7 +38,7 @@ namespace TACHYON.Documents.DocumentFiles
 
         public virtual bool IsAccepted { get; set; }
         public virtual bool IsRejected { get; set; }
-
+        public string RejectionReason { get; set; }
 
         public virtual long DocumentTypeId { get; set; }
 

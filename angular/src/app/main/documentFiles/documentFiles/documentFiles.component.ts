@@ -45,7 +45,7 @@ export class DocumentFilesComponent extends AppComponentBase implements OnInit {
   userNameFilter = '';
   isHost = true;
   routStepDisplayNameFilter = '';
-
+  today = abp.clock.now();
   entityType = 'Tenant';
   entityTypesList: SelectItemDto[] = [];
 
@@ -175,13 +175,6 @@ export class DocumentFilesComponent extends AppComponentBase implements OnInit {
     this._documentFilesServiceProxy.accept(id).subscribe(() => {
       this.reloadPage();
       this.notify.success(this.l('SuccessfullyAccepted'));
-    });
-  }
-
-  rejectDocumentFile(id: string) {
-    this._documentFilesServiceProxy.reject(id).subscribe(() => {
-      this.reloadPage();
-      this.notify.success(this.l('SuccessfullyRejected'));
     });
   }
 

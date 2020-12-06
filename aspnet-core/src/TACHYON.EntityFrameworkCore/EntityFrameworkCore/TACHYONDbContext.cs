@@ -6,6 +6,7 @@ using TACHYON.Documents.DocumentTypeTranslations;
 using TACHYON.Documents.DocumentsEntities;
 using TACHYON.Shipping.ShippingRequestStatuses;
 using TACHYON.AddressBook.Ports;
+using TACHYON.Shipping.ShippingRequestBids;
 using TACHYON.PickingTypes;
 using TACHYON.UnitOfMeasures;
 using TACHYON.AddressBook;
@@ -53,6 +54,10 @@ using TACHYON.Trucks;
 using TACHYON.Trucks;
 using TACHYON.Trucks.TrucksTypes;
 using TACHYON.Trucks.TrucksTypes;
+using TACHYON.Shipping.ShippingRequestBidStatuses;
+using System;
+using System.Linq.Expressions;
+using Microsoft.EntityFrameworkCore.Metadata;
 
 namespace TACHYON.EntityFrameworkCore
 {
@@ -135,6 +140,12 @@ namespace TACHYON.EntityFrameworkCore
         public virtual DbSet<SubscriptionPaymentExtensionData> SubscriptionPaymentExtensionDatas { get; set; }
 
         public virtual DbSet<UserDelegation> UserDelegations { get; set; }
+        public virtual DbSet<ShippingRequestBid> ShippingRequestBids { get; set; }
+        public virtual DbSet<ShippingRequestBidStatus> ShippingRequestBidStatuses { get; set; }
+
+        protected virtual bool CurrentIsCanceled => true;
+        protected virtual bool IsCanceledFilterEnabled => CurrentUnitOfWorkProvider?.Current?.IsFilterEnabled("IHasIsCanceled") == true;
+
 
         public TACHYONDbContext(DbContextOptions<TACHYONDbContext> options)
             : base(options)
@@ -142,11 +153,33 @@ namespace TACHYON.EntityFrameworkCore
 
         }
 
+        protected override bool ShouldFilterEntity<TEntity>(IMutableEntityType entityType)
+        {
+            if (typeof(IHasIsCanceled).IsAssignableFrom(typeof(TEntity)))
+            {
+                return true;
+            }
+            return base.ShouldFilterEntity<TEntity>(entityType);
+        }
+
+        protected override Expression<Func<TEntity, bool>> CreateFilterExpression<TEntity>()
+        {
+            var expression = base.CreateFilterExpression<TEntity>();
+            if (typeof(IHasIsCanceled).IsAssignableFrom(typeof(TEntity)))
+            {
+                Expression<Func<TEntity, bool>> mayHaveOUFilter = e => ((IHasIsCanceled)e).IsCancled == CurrentIsCanceled || (((IHasIsCanceled)e).IsCancled == CurrentIsCanceled) == IsCanceledFilterEnabled;
+                expression = expression == null ? mayHaveOUFilter : CombineExpressions(expression, mayHaveOUFilter);
+            }
+
+            return expression;
+        }
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
 
 
+            modelBuilder.Entity<ShippingRequestBid>().HasQueryFilter(p => !p.IsCancled);
 
 
 
@@ -156,7 +189,7 @@ namespace TACHYON.EntityFrameworkCore
 
 
 
-           
+
             modelBuilder.Entity<Facility>(f =>
             {
                 f.HasIndex(e => new { e.TenantId });
@@ -169,6 +202,10 @@ namespace TACHYON.EntityFrameworkCore
                        {
                            s.HasIndex(e => new { e.TenantId });
                        });
+            modelBuilder.Entity<ShippingRequestBid>(s =>
+            {
+                s.HasIndex(e => new { e.TenantId });
+            });
             modelBuilder.Entity<GoodsDetail>(g =>
                        {
                            g.HasIndex(e => new { e.TenantId });

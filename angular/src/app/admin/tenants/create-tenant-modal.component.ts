@@ -9,6 +9,7 @@ import {
   SubscribableEditionComboboxItemDto,
   TenantCountryLookupTableDto,
   TenantCityLookupTableDto,
+  TenantRegistrationServiceProxy,
 } from '@shared/service-proxies/service-proxies';
 import * as _ from 'lodash';
 import { ModalDirective } from 'ngx-bootstrap/modal';
@@ -37,10 +38,13 @@ export class CreateTenantModalComponent extends AppComponentBase {
   allCountries: TenantCountryLookupTableDto[];
   allCities: TenantCityLookupTableDto[];
   isCountySelected = false;
-
+  isCompanyNameAvailable = true;
+  isEmailAvailable = true;
+  isEmailValid = true;
   constructor(
     injector: Injector,
     private _tenantService: TenantServiceProxy,
+    private _tenantRegistrationService: TenantRegistrationServiceProxy,
     private _commonLookupService: CommonLookupServiceProxy,
     private _profileService: ProfileServiceProxy
   ) {
@@ -87,8 +91,8 @@ export class CreateTenantModalComponent extends AppComponentBase {
       });
     });
     this.GetAllCountries();
-    this.tenant.cityId = -2;
-    this.tenant.countryId = -2;
+    this.tenant.cityId = null;
+    this.tenant.countryId = null;
   }
 
   getEditionValue(item): number {
@@ -126,8 +130,8 @@ export class CreateTenantModalComponent extends AppComponentBase {
   }
 
   save(): void {
-    if (this.tenant.countryId == -2 || this.tenant.cityId == -2) {
-      this.notify.error('please make sure you choose the country and the city!');
+    if (this.isEmailAvailable == false || this.isCompanyNameAvailable == false || this.isEmailValid == false) {
+      this.notify.error('PleaseMakeSureYouProvideValidDetails!');
       return;
     }
     this.saving = true;
@@ -206,5 +210,29 @@ export class CreateTenantModalComponent extends AppComponentBase {
     this._tenantService.getAllCountryForTableDropdown().subscribe((result) => {
       this.allCountries = result;
     });
+  }
+
+  checkIfIsCompanyUniqueName() {
+    this._tenantRegistrationService.checkIfCompanyUniqueNameisAvailable(this.tenant.tenancyName).subscribe((result) => {
+      this.isCompanyNameAvailable = result;
+    });
+  }
+
+  checkIfIsEmailAvailable() {
+    this._tenantRegistrationService
+      .checkIfEmailisAvailable(this.tenant.adminEmailAddress == null ? ' ' : this.tenant.adminEmailAddress)
+      .subscribe((result) => {
+        this.isEmailAvailable = result;
+      });
+  }
+  removeWhiteSpacesFromEmail() {
+    var exp = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/g;
+    var result = exp.test(this.tenant.adminEmailAddress);
+    if (!result) {
+      this.isEmailValid = false;
+    } else {
+      this.isEmailValid = true;
+    }
+    this.checkIfIsEmailAvailable();
   }
 }

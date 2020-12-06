@@ -21,9 +21,13 @@ namespace TACHYON.Notifications
         Task RejectShippingRequest(UserIdentifier argsUser, long shippingRequestId);
 
         Task SomeTrucksCouldntBeImported(UserIdentifier user, string fileToken, string fileType, string fileName);
+        Task CreateBidRequest(UserIdentifier argsUser, long shippingRequestBidId);
          Task TenantDocumentFileUpdate(DocumentFile documentFile);
 
+        Task CancelBidRequest(UserIdentifier argsUser, long shippingRequestId,long shippingRequestBidId);
 
+        Task AcceptShippingRequestBid(UserIdentifier argsUser, long shippingRequestBidId);
+        Task ShippingRequestAsBidWithSameTruckAsync(UserIdentifier[] argsUser, long shippingRequestId);
         #endregion
         Task WelcomeToTheApplicationAsync(User user);
 

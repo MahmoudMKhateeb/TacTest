@@ -47,7 +47,7 @@
                   (change)="GetTransportDropDownList('GetAllTransportSubTypes', truck.transportTypeId)"
                   required
                 >
-                  <option [ngValue]="null">{{ l('Select') }} {{ l('TransportType') }}*</option>
+                  <option [ngValue]="null">{{ l('Select') }} {{ l('TransportType') }}</option>
                   <option *ngFor="let item of allTransportTypes" value="{{ item.id }}">{{ item.displayName }}</option>
                 </select>
               </div>
@@ -65,7 +65,7 @@
                   [disabled]="allTransportTypes != null ? null : true"
                   required
                 >
-                  <option [ngValue]="null">{{ l('Select') }} {{ l('TransportSubType') }}*</option>
+                  <option [ngValue]="null">{{ l('Select') }} {{ l('TransportSubType') }}</option>
                   <option *ngFor="let item of allTransportSubTypes" value="{{ item.id }}">{{ item.displayName }} </option>
                 </select>
               </div>
@@ -151,15 +151,18 @@
               <label for="Truck_PlateNumber">{{ l('PlateNumber') }} *</label>
               <input
                 [(ngModel)]="truck.plateNumber"
+                #plateNumberInput
                 class="form-control"
                 id="Truck_PlateNumber"
                 maxlength="64"
                 minlength="0"
                 name="PlateNumber"
                 required
+                pattern="^[a-z0-9].*?[a-z0-9]$"
                 type="text"
               />
               <span class="form-text text-muted">{{ l('Enter') }} {{ l('PlateNumber') }}</span>
+              <validation-messages [formCtrl]="plateNumberInput"></validation-messages>
             </div>
 
             <div class="form-group col-md-6">
@@ -267,87 +270,102 @@
           <hr />
           <label *ngIf="!truck.id"><h3>Truck Documents</h3></label>
 
-          <div *ngFor="let item of truck.createOrEditDocumentFileDtos; index as i" class="">
-            <div class="card card-custom">
-              <div class="card-header">
-                <div class="card-title">
-                  <h3 class="card-title">{{ item.documentTypeDto.displayName }}</h3>
+          <div *ngIf="truck.createOrEditDocumentFileDtos != undefined ? (truck.createOrEditDocumentFileDtos.length > 0 ? true : false) : false">
+            <div *ngFor="let item of truck.createOrEditDocumentFileDtos; index as i" class="">
+              <div class="card card-custom">
+                <div class="card-header">
+                  <div class="card-title">
+                    <h3 class="card-title">{{ item.documentTypeDto.displayName }}</h3>
+                  </div>
                 </div>
-              </div>
-              <div class="card-body padding-bottom-5">
-                <div class="row d-flex">
-                  <div class="form-group col-6">
-                    <label>{{ l('File') }}</label>
-                    <div class="custom-file">
-                      <input
-                        [disabled]="item.isAccepted"
-                        (change)="DocFileChangeEvent($event, item)"
-                        type="file"
-                        class="custom-file-input"
-                        [required]="item.documentTypeDto.isRequired"
-                      />
-                      <label class="custom-file-label text-truncate" [for]="item.documentTypeDto.displayName">
-                        {{ item.name ? item.name : l('Select') + l(' File') }}</label
-                      >
+                <div class="card-body padding-bottom-5">
+                  <div class="row d-flex">
+                    <div class="form-group col-6">
+                      <label>{{ l('File') }} *</label>
+                      <div class="custom-file">
+                        <input
+                          accept="image/x-png,image/jpeg,application/pdf"
+                          [disabled]="item.isAccepted"
+                          name="item.documentTypeDto.displayName{{ i }}"
+                          (change)="DocFileChangeEvent($event, item, i)"
+                          type="file"
+                          class="custom-file-input"
+                          [required]="true"
+                        />
+                        <label class="custom-file-label text-truncate" [for]="item.documentTypeDto.displayName">
+                          {{ item.name ? item.name : l('Select') + l(' File') }}</label
+                        >
+                      </div>
+                      <span class="form-text text-muted">{{ 'ValidDocumentFilesMsg' | localize }}</span>
+                      <div *ngIf="fileFormateIsInvalideIndexList[i]">
+                        <span class="form-text text-danger text-left">{{ 'PleaseChooseAvalidFormat' | localize }}</span>
+                      </div>
                     </div>
-                  </div>
-                  <!--                  <div *ngIf="item.documentTypeDto.hasExpirationDate" class="form-group col-6">-->
-                  <!--                    <label>{{ l('expiration date') }} <span class="text-danger">*</span></label>-->
-                  <!--                    <input-->
-                  <!--                      name="expirationDate{{ i }}"-->
-                  <!--                      id="expirationDate{{ i }}"-->
-                  <!--                      bsDatepicker-->
-                  <!--                      class="form-control m-input"-->
-                  <!--                      datePickerMomentModifier-->
-                  <!--                      [required]="item.documentTypeDto.isRequired && !item.isAccepted"-->
-                  <!--                      [(date)]="item.expirationDate"-->
-                  <!--                      [disabled]="item.isAccepted"-->
-                  <!--                    />-->
-                  <!--                  </div>-->
-                  <div *ngIf="item.documentTypeDto.hasNumber" class="form-group col-6">
-                    <label
-                      >{{ l('Number') }}
-                      <span class="text-danger">*</span>
-                    </label>
-                    <input
-                      name="number{{ i }}"
-                      id="number{{ i }}"
-                      class="form-control m-input"
-                      required
-                      [maxLength]="item.documentTypeDto.numberMaxDigits == 0 ? 50 : item.documentTypeDto.numberMaxDigits"
-                      [minLength]="item.documentTypeDto.numberMinDigits"
-                      type="text"
-                      [(ngModel)]="item.number"
-                      [disabled]="item.isAccepted"
-                    />
-                    <span class="form-text text-muted"
-                      >{{ l('minDigits:') }} {{ item.documentTypeDto.numberMinDigits }} {{ l('maxDigits:') }}
-                      {{ item.documentTypeDto.numberMaxDigits == 0 ? 50 : item.documentTypeDto.numberMaxDigits }}
-                    </span>
-                  </div>
-                  <div *ngIf="item.documentTypeDto.hasNotes" class="form-group col-6">
-                    <label>{{ l('Note') }}</label>
-                    <input
-                      name="note{{ i }}"
-                      id="note{{ i }}"
-                      class="form-control m-input"
-                      [required]="item.documentTypeDto.hasNotes && !item.isAccepted"
-                      type="text"
-                      [(ngModel)]="item.notes"
-                      [disabled]="item.isAccepted"
-                    />
-                  </div>
+                    <!--                  <div *ngIf="item.documentTypeDto.hasExpirationDate" class="form-group col-6">-->
+                    <!--                    <label>{{ l('expiration date') }} <span class="text-danger">*</span></label>-->
+                    <!--                    <input-->
+                    <!--                      name="expirationDate{{ i }}"-->
+                    <!--                      id="expirationDate{{ i }}"-->
+                    <!--                      bsDatepicker-->
+                    <!--                      class="form-control m-input"-->
+                    <!--                      datePickerMomentModifier-->
+                    <!--                      [required]="item.documentTypeDto.isRequired && !item.isAccepted"-->
+                    <!--                      [(date)]="item.expirationDate"-->
+                    <!--                      [disabled]="item.isAccepted"-->
+                    <!--                    />-->
+                    <!--                  </div>-->
+                    <div *ngIf="item.documentTypeDto.hasNumber" class="form-group col-6">
+                      <label
+                        >{{ l('Number') }}
+                        <span class="text-danger">*</span>
+                      </label>
+                      <input
+                        name="number{{ i }}"
+                        id="number{{ i }}"
+                        class="form-control m-input"
+                        required
+                        (change)="numberChange(item, i)"
+                        [maxLength]="item.documentTypeDto.numberMaxDigits == 0 ? 50 : item.documentTypeDto.numberMaxDigits"
+                        [minLength]="item.documentTypeDto.numberMinDigits"
+                        type="text"
+                        [(ngModel)]="item.number"
+                        [disabled]="item.isAccepted"
+                      />
+                      <span *ngIf="item.number == null ? 0 : item.number.length < item.documentTypeDto.numberMinDigits" class="text-danger">
+                        {{ l('TheNumberLengthMustBeMoreThanMinDigits') }}
+                      </span>
+                      <span *ngIf="item.number == null ? false : item.number.length > item.documentTypeDto.numberMaxDigits" class="text-danger">
+                        {{ l('TheNumberLengthMustBeLessThanMaxDigits') }}
+                      </span>
+                      <span class="form-text text-muted"
+                        >{{ l('minDigits:') }} {{ item.documentTypeDto.numberMinDigits }} {{ l('maxDigits:') }}
+                        {{ item.documentTypeDto.numberMaxDigits == 0 ? 50 : item.documentTypeDto.numberMaxDigits }}
+                      </span>
+                    </div>
+                    <div *ngIf="item.documentTypeDto.hasNotes" class="form-group col-6">
+                      <label>{{ l('Note') }}*</label>
+                      <input
+                        name="note{{ i }}"
+                        id="note{{ i }}"
+                        class="form-control m-input"
+                        [required]="item.documentTypeDto.hasNotes"
+                        type="text"
+                        [(ngModel)]="item.notes"
+                        [disabled]="item.isAccepted"
+                      />
+                    </div>
 
-                  <div *ngIf="item.documentTypeDto.hasExpirationDate" class="form-group col-6">
-                    <hijri-gregorian-datepicker-test
-                      [label]="l('ExpirationDate')"
-                      class="m-input"
-                      [isRequired]="true"
-                      [readonly]="true"
-                      [selectedDateType]="item.documentTypeDto.hasHijriExpirationDate ? selectedDateTypeHijri : selectedDateTypeGregorian"
-                      (selectedDateChange)="hijriDatepickerSelectedDateChange($event, item)"
-                    >
-                    </hijri-gregorian-datepicker-test>
+                    <div *ngIf="item.documentTypeDto.hasExpirationDate" class="form-group col-6">
+                      <hijri-gregorian-datepicker-test
+                        [label]="l('ExpirationDate')"
+                        class="m-input"
+                        [isRequired]="true"
+                        [readonly]="true"
+                        [selectedDateType]="item.documentTypeDto.hasHijriExpirationDate ? selectedDateTypeHijri : selectedDateTypeGregorian"
+                        (selectedDateChange)="hijriDatepickerSelectedDateChange($event, item)"
+                      >
+                      </hijri-gregorian-datepicker-test>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -365,7 +383,7 @@
           <button
             type="submit"
             class="btn btn-save blue"
-            [disabled]="!truckForm.form.valid"
+            [disabled]="!truckForm.form.valid || !alldocumentsValid"
             [buttonBusy]="saving"
             [busyText]="l('SavingWithThreeDot')"
           >

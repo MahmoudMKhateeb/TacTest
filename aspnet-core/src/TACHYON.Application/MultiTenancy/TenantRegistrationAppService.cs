@@ -99,9 +99,12 @@ namespace TACHYON.MultiTenancy
 
                 //Getting host-specific settings
                 var isActive = await IsNewRegisteredTenantActiveByDefault(input.SubscriptionStartType);
-                var isEmailConfirmationRequired = await SettingManager.GetSettingValueForApplicationAsync<bool>(
-                    AbpZeroSettingNames.UserManagement.IsEmailConfirmationRequiredForLogin
-                );
+                //var isEmailConfirmationRequired = await SettingManager.GetSettingValueForApplicationAsync<bool>(
+                //    AbpZeroSettingNames.UserManagement.IsEmailConfirmationRequiredForLogin
+                //);
+
+                //todo add setting here
+                var isEmailConfirmationRequired = true ;
 
                 DateTime? subscriptionEndDate = null;
                 var isInTrialPeriod = false;
@@ -350,7 +353,7 @@ namespace TACHYON.MultiTenancy
         {
             using (CurrentUnitOfWork.DisableFilter(AbpDataFilters.MayHaveTenant))
             {
-                var result =await UserManager.FindByEmailAsync(email);
+                var result =await UserManager.FindByEmailAsync(email==null?"":email);
             if (result == null)
             {
                 return true;

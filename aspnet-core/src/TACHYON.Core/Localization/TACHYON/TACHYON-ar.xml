@@ -24,6 +24,8 @@
 	  <text name="PleaseEnterAUniqueNumber">الرجاء إدخال  رقم مميز</text>
 	  <text name="Note">تعليق</text>
 	  <text name="Save">حـفظ</text>
+	  <text name="makeSureThatYouFillAllRequiredFields">الرجاء التأكد من ملء كل الخانات المطلوبة</text>
+
 	  <![CDATA[Tachyon:Common End]]>
 
 	  
@@ -33,7 +35,7 @@
 	  <text name="Download">تحميل</text>
 	  <text name="File">ملف</text>
 	  <text name="SelectFile">حدد الملف</text>
-	  <text name="ValidDocumentFilesMsg">:الصياغات المسموح بها.png,.jpeg</text>
+	  <text name="ValidDocumentFilesMsg">:الصياغات المسموح بها.png, .jpeg , .pdf</text>
 	  <text name="PleaseChooseAvalidFormat"> الرجاء إختيار صياغة مسموح بها</text>
 	  <text name="Number">رقم</text>
 	  <text name="minDigits">أقل عدد من الخانات</text>
@@ -103,7 +105,8 @@
     <text name="DocumentFilesHeaderInfo">DocumentFilesHeaderInfo</text>
     <text name="DocumentName">أسم المستند</text>
     <text name="SubmitterTenant">الشركة التي قامت بالارسال </text>
-    <text name="TruckID">الرقم المميز للشاحنة</text>
+	<text name="SubmittingTime">تاريخ الإستلام</text>
+	<text name="TruckID">الرقم المميز للشاحنة</text>
     <text name="TrailerCode">رقم المقطورة</text>
     <text name="DriverName">إسم السائق</text>
     <text name="IsAccepted">تم قبوله</text>
@@ -112,7 +115,9 @@
     <text name="DocumentFile">مستند</text>
     <text name="NewDocumentFile">مستند جديد</text>
     <text name="AddDocument">إضافة مستند</text>
-
+	  <text name="ViewReason">إظهار سبب الرفض</text>
+	  <text name="RejectionReason">سبب رفض المستند</text>
+	  <text name="ViewRejectionReason">إظهار سبب رفض المستند</text>
     <![CDATA[ Tachyon: Document files Page End]]>
 
     <![CDATA[Tachyon:Common Start]]>
@@ -205,7 +210,7 @@
     <![CDATA[Tachyon: Tenant Registration Page End]]>
 
     <![CDATA[ Tachyon: Tenant login Page Start]]>
-    <text name="NotAMemberYet">أصبح عضوا</text>
+    <text name="NotAMemberYet">إصبح عضوا</text>
     <![CDATA[ Tachyon: Tenant login Page End]]>
 
 
@@ -260,6 +265,7 @@
 	  <text name="Active">مفعّل</text>
 	  <text name="IsTwoFactorEnabled">تمكين التوثيق ذو عاملين</text>
 	  <text name="IsLockoutEnabled">تمكين قفل الحسابات</text>
+	  <text name="9digitsNumber">يجب أن يتكون من 9 أرقام</text>
 	  <![CDATA[Tachyon:User and Driver Shared  end]]>
 
 

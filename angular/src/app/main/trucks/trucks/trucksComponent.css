@@ -1,0 +1,24 @@
+.ui-fileupload-choose {
+  display: flex !important;
+}
+.ui-fileupload-choose .ui-button-icon-left {
+  margin-left: 6px !important;
+}
+.ui-fileupload-choose .ui-button-text {
+  color: #212529 !important;
+  font-size: 13px !important;
+  font-family: 'EnOpenSans' !important;
+  font-weight: 400 !important;
+  margin-left: 10px !important;
+}
+.ui-fileupload-choose:hover {
+  background-color: #f4f5f8 !important;
+}
+@media only screen and (max-width: 992px) {
+  .ui-fileupload-choose .ui-button-icon-left {
+    margin-left: 4px !important;
+  }
+  .ui-fileupload-choose .ui-button-text {
+    margin-left: 7px !important;
+  }
+}

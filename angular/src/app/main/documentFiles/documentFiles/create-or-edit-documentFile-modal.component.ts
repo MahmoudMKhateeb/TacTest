@@ -33,11 +33,13 @@ export class CreateOrEditDocumentFileModalComponent extends AppComponentBase {
   saving = false;
 
   documentFile: CreateOrEditDocumentFileDto = new CreateOrEditDocumentFileDto();
-
+  fileFormateIsInvalideIndex: boolean;
+  alldocumentsValid = false;
   documentTypeDisplayName = '';
   documentEntity = '';
   selectedDateType = DateType.Gregorian; // or DateType.Gregorian
   CreateOrEditDocumentFileDtoList: CreateOrEditDocumentFileDto[] = [];
+  isNumberInValid = false;
   // allTrucks: DocumentFileTruckLookupTableDto[];
   // allTrailers: DocumentFileTrailerLookupTableDto[];
   // allUsers: DocumentFileUserLookupTableDto[];
@@ -224,15 +226,33 @@ export class CreateOrEditDocumentFileModalComponent extends AppComponentBase {
   }
 
   DocFileChangeEvent(event: any, item: CreateOrEditDocumentFileDto): void {
+    // if (event.target.files[0].size > 5242880) {
+    //   //5MB
+    //   this.message.warn(this.l('DocumentFile_Warn_SizeLimit', this.maxDocumentFileBytesUserFriendlyValue));
+    //   return;
+    // }
+    // this.DocsUploader.addToQueue(event.target.files);
+
+    // item.extn = event.target.files[0].type;
+    // item.name = event.target.files[0].name;
     if (event.target.files[0].size > 5242880) {
       //5MB
       this.message.warn(this.l('DocumentFile_Warn_SizeLimit', this.maxDocumentFileBytesUserFriendlyValue));
+      this.isAllfileFormatesAccepted();
+      item.name = '';
       return;
     }
-    this.DocsUploader.addToQueue(event.target.files);
-
     item.extn = event.target.files[0].type;
+    if (item.extn != 'image/jpeg' && item.extn != 'image/png' && item.extn != 'application/pdf') {
+      this.fileFormateIsInvalideIndex = true;
+      item.name = '';
+      this.isAllfileFormatesAccepted();
+      return;
+    }
+    this.fileFormateIsInvalideIndex = false;
     item.name = event.target.files[0].name;
+    this.isAllfileFormatesAccepted();
+    this.DocsUploader.addToQueue(event.target.files);
   }
 
   chooseDocumentToBeCreated(id: string) {
@@ -263,5 +283,21 @@ export class CreateOrEditDocumentFileModalComponent extends AppComponentBase {
     }
     this.documentFile.expirationDate = moment().startOf('day');
     this.documentTypeDisplayName = '';
+  }
+
+  isAllfileFormatesAccepted() {
+    if (this.fileFormateIsInvalideIndex) {
+      this.alldocumentsValid = true;
+    } else {
+      this.alldocumentsValid = false;
+    }
+  }
+
+  numberChange(item: CreateOrEditDocumentFileDto) {
+    if (item.documentTypeDto.numberMinDigits <= item.number.length && item.number.length <= item.documentTypeDto.numberMaxDigits) {
+      this.isNumberInValid = true;
+    } else {
+      this.isNumberInValid = false;
+    }
   }
 }

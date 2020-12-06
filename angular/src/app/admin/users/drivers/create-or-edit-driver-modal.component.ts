@@ -55,6 +55,10 @@ export class CreateOrEditDriverModalComponent extends AppComponentBase {
   profilePicture: string;
   createOrEditDocumentFileDtos!: CreateOrEditDocumentFileDto[];
   hasValidationErorr = false;
+  alldocumentsValid = false;
+  fileFormateIsInvalideIndexList: boolean[] = [];
+  allnumbersValid = false;
+  numbersInValidList: boolean[] = [];
   /**
    * required documents fileUploader options
    * @private
@@ -186,6 +190,7 @@ export class CreateOrEditDriverModalComponent extends AppComponentBase {
       this.notify.error('PleaseMakeSureYouProvideValidDetails!');
       return;
     }
+    this.saving = true;
     if (!this.user.id && this.user.isDriver) {
       this.DocsUploader.uploadAll();
     } else {
@@ -195,17 +200,21 @@ export class CreateOrEditDriverModalComponent extends AppComponentBase {
 
   private saveInternal(): void {
     let input = new CreateOrUpdateUserInput();
-
+    if (!this.alldocumentsValid) {
+      this.notify.error(this.l('makeSureThatYouFillAllRequiredFields'));
+      return;
+    }
     input.user = this.user;
     input.setRandomPassword = this.setRandomPassword;
     input.sendActivationEmail = this.sendActivationEmail;
     input.assignedRoleNames = _.map(_.filter(this.roles, { isAssigned: true, inheritedFromOrganizationUnit: false }), (role) => role.roleName);
     input.user.phoneNumber = input.user.userName;
+    //#616
+    input.user.emailAddress = input.user.userName + '@' + this.appSession.tenancyName + '.com';
+
     //docs
 
     input.createOrEditDocumentFileDtos = this.createOrEditDocumentFileDtos;
-
-    this.saving = true;
 
     this._userService
       .createOrUpdateUser(input)
@@ -230,16 +239,25 @@ export class CreateOrEditDriverModalComponent extends AppComponentBase {
     return _.filter(this.roles, { isAssigned: true }).length;
   }
 
-  DocFileChangeEvent(event: any, item: CreateOrEditDocumentFileDto): void {
+  DocFileChangeEvent(event: any, item: CreateOrEditDocumentFileDto, index: number): void {
     if (event.target.files[0].size > 5242880) {
       //5MB
-      this.message.warn(this.l('DocumentFileWarnSizeLimit', this.maxDocumentFileBytesUserFriendlyValue));
+      this.message.warn(this.l('DocumentFile_Warn_SizeLimit', this.maxDocumentFileBytesUserFriendlyValue));
+      this.isAllfileFormatesAccepted();
+      item.name = '';
       return;
     }
-    this.DocsUploader.addToQueue(event.target.files);
-
     item.extn = event.target.files[0].type;
+    if (item.extn != 'image/jpeg' && item.extn != 'image/png' && item.extn != 'application/pdf') {
+      this.fileFormateIsInvalideIndexList[index] = true;
+      item.name = '';
+      this.isAllfileFormatesAccepted();
+      return;
+    }
+    this.fileFormateIsInvalideIndexList[index] = false;
     item.name = event.target.files[0].name;
+    this.isAllfileFormatesAccepted();
+    this.DocsUploader.addToQueue(event.target.files);
   }
 
   /**
@@ -301,8 +319,8 @@ export class CreateOrEditDriverModalComponent extends AppComponentBase {
     return s4() + s4() + '-' + s4() + '-' + s4() + '-' + s4() + '-' + s4() + s4() + s4();
   }
 
-  CheckIfDriverPhoneNumberIsValid(userName: string, id: number) {
-    this._userService.checkIfPhoneNumberValid(userName, id == null ? 0 : id).subscribe((res) => {
+  CheckIfDriverPhoneNumberIsValid(phoneNumber: string, id: number) {
+    this._userService.checkIfPhoneNumberValid(phoneNumber, id == null ? 0 : id).subscribe((res) => {
       this.isPhoneNumberAvilable = res;
     });
   }
@@ -325,6 +343,9 @@ export class CreateOrEditDriverModalComponent extends AppComponentBase {
     });
   }
   numberOnly(event): boolean {
+    if (event.target.value.length >= 9) {
+      return false;
+    }
     const charCode = event.which ? event.which : event.keyCode;
     if (charCode > 31 && (charCode < 48 || charCode > 57)) {
       return false;
@@ -341,9 +362,36 @@ export class CreateOrEditDriverModalComponent extends AppComponentBase {
   // }
 
   getDriverNationalites() {
-    this.isWaintingUserNameValidation = true;
+    // this.isWaintingUserNameValidation = true;
     this._userService.getDriverNationalites().subscribe((res) => {
       this.nationalities = res;
     });
+  }
+
+  isNumbersValid() {
+    if (this.numbersInValidList.every((x) => x === false) && this.numbersInValidList.length == this.createOrEditDocumentFileDtos.length) {
+      this.allnumbersValid = true;
+    } else {
+      this.allnumbersValid = false;
+    }
+  }
+  numberChange(item: CreateOrEditDocumentFileDto, index: number) {
+    if (item.documentTypeDto.numberMinDigits <= item.number.length && item.number.length <= item.documentTypeDto.numberMaxDigits) {
+      this.numbersInValidList[index] = false;
+      this.isNumbersValid();
+    } else {
+      this.numbersInValidList[index] = true;
+      this.isNumbersValid();
+    }
+  }
+  isAllfileFormatesAccepted() {
+    if (
+      this.fileFormateIsInvalideIndexList.every((x) => x === false) &&
+      this.fileFormateIsInvalideIndexList.length == this.createOrEditDocumentFileDtos.length
+    ) {
+      this.alldocumentsValid = true;
+    } else {
+      this.alldocumentsValid = false;
+    }
   }
 }

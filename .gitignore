@@ -22,3 +22,7 @@ aspnet-core/src/TACHYON.Web.Mvc/healthchecksdb
 aspnet-core/AspNetZeroRadTool/
 /aspnet-core/TACHYON.Web.favdoc
 /_ReSharper.Caches/
+/aspnet-core/src/TACHYON.EntityFrameworkCore/Migrations/20201021134957_AddShippingRequestBidCollectionToShippingRequest.Designer.cs
+/aspnet-core/src/TACHYON.EntityFrameworkCore/Migrations/20201021134957_AddShippingRequestBidCollectionToShippingRequest.cs
+
+aspnet-core/src/TACHYON.Web.Host/appsettings.json

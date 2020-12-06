@@ -86,7 +86,10 @@ export class CreateOrEditTruckModalComponent extends AppComponentBase {
   public uploader: FileUploader;
   public temporaryPictureUrl: string;
   profilePicture = '';
-
+  fileFormateIsInvalideIndexList: boolean[] = [];
+  allnumbersValid = false;
+  numbersInValidList: boolean[] = [];
+  alldocumentsValid = false;
   /**
    * required documents fileUploader
    */
@@ -190,6 +193,10 @@ export class CreateOrEditTruckModalComponent extends AppComponentBase {
   } //end of show
 
   createOrEditTruck() {
+    if (!this.alldocumentsValid) {
+      this.notify.error(this.l('makeSureThatYouFillAllRequiredFields'));
+      return;
+    }
     this._trucksServiceProxy
       .createOrEdit(this.truck)
       .pipe(
@@ -338,16 +345,28 @@ export class CreateOrEditTruckModalComponent extends AppComponentBase {
     this.DocsUploader.setOptions(this._DocsUploaderOptions);
   }
 
-  DocFileChangeEvent(event: any, item: CreateOrEditDocumentFileDto): void {
+  DocFileChangeEvent(event: any, item: CreateOrEditDocumentFileDto, index: number): void {
     if (event.target.files[0].size > 5242880) {
       //5MB
       this.message.warn(this.l('DocumentFile_Warn_SizeLimit', this.maxDocumentFileBytesUserFriendlyValue));
+      this.isAllfileFormatesAccepted();
+      item.name = '';
       return;
     }
-    this.DocsUploader.addToQueue(event.target.files);
-
     item.extn = event.target.files[0].type;
+    if (item.extn != 'image/jpeg' && item.extn != 'image/png' && item.extn != 'application/pdf') {
+      this.fileFormateIsInvalideIndexList[index] = true;
+      // this.truckFiles[index] = null;
+      item.name = '';
+      this.isAllfileFormatesAccepted();
+      return;
+    }
+    this.fileFormateIsInvalideIndexList[index] = false;
     item.name = event.target.files[0].name;
+    // item.name = '';
+    // this.truckFiles[index] = event.target.files;
+    this.isAllfileFormatesAccepted();
+    this.DocsUploader.addToQueue(event.target.files);
   }
 
   ClearAllTransPortDropDowns() {
@@ -479,5 +498,33 @@ export class CreateOrEditTruckModalComponent extends AppComponentBase {
       return true;
     }
     return false;
+  }
+
+  isAllfileFormatesAccepted() {
+    if (
+      this.fileFormateIsInvalideIndexList.every((x) => x === false) &&
+      this.fileFormateIsInvalideIndexList.length == this.truck.createOrEditDocumentFileDtos.length
+    ) {
+      this.alldocumentsValid = true;
+    } else {
+      this.alldocumentsValid = false;
+    }
+  }
+
+  numberChange(item: CreateOrEditDocumentFileDto, index: number) {
+    if (item.documentTypeDto.numberMinDigits <= item.number.length && item.number.length <= item.documentTypeDto.numberMaxDigits) {
+      this.numbersInValidList[index] = false;
+      this.isNumbersValid();
+    } else {
+      this.numbersInValidList[index] = true;
+      this.isNumbersValid();
+    }
+  }
+  isNumbersValid() {
+    if (this.numbersInValidList.every((x) => x === false) && this.numbersInValidList.length == this.truck.createOrEditDocumentFileDtos.length) {
+      this.allnumbersValid = true;
+    } else {
+      this.allnumbersValid = false;
+    }
   }
 }

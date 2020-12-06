@@ -4,6 +4,7 @@ import { NotificationServiceProxy, UserNotification } from '@shared/service-prox
 import { IFormattedUserNotification, UserNotificationHelper } from './UserNotificationHelper';
 import * as _ from 'lodash';
 import { UrlHelper } from '@shared/helpers/UrlHelper';
+import { Router } from '@angular/router';
 
 @Component({
   templateUrl: './header-notifications.component.html',
@@ -20,7 +21,8 @@ export class HeaderNotificationsComponent extends AppComponentBase implements On
     injector: Injector,
     private _notificationService: NotificationServiceProxy,
     private _userNotificationHelper: UserNotificationHelper,
-    public _zone: NgZone
+    public _zone: NgZone,
+    private _router: Router
   ) {
     super(injector);
   }
@@ -101,5 +103,9 @@ export class HeaderNotificationsComponent extends AppComponentBase implements On
     if (url) {
       location.href = url;
     }
+  }
+
+  GotoRequest(id: number): void {
+    this._router.navigate(['/app/main/shippingRequests/shippingRequests/view'], { queryParams: { id: id } });
   }
 }

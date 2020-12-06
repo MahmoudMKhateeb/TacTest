@@ -64,7 +64,7 @@
                           <!-- <li>
                                                   <a href="javascript:;" class="dropdown-item">{{ l('View') }}</a>
                                                 </li> -->
-                          <li>
+                          <li *ngIf="!record.isAccepted || record.expirationDate <= today">
                             <a
                               href="javascript:;"
                               class="dropdown-item"
@@ -98,7 +98,7 @@
 
                     <td style="width: 150px;">
                       <span class="ui-column-title"></span>
-                      <div *ngIf="record.isAccepted && !record.isRejected">
+                      <div *ngIf="record.isAccepted && !record.isRejected && (record.expirationDate != null ? record.expirationDate > today : true)">
                         <span class="label label-lg font-weight-bold label-light-success label-inline">
                           {{ l('Accepted') }}
                         </span>
@@ -107,17 +107,23 @@
                         <span class="label label-lg font-weight-bold label-light-danger label-inline">
                           {{ l('Rejected') }}
                         </span>
+                        <span style="margin-left: 8px; height: 22px; padding-top: 1px;">
+                          <a class="btn btn-sm btn-primary" (click)="viewRejectionReasonModal.show(record.name, record.rejectionReason)">
+                            {{ l('ViewReason') }} !</a
+                          >
+                        </span>
                       </div>
-                      <div *ngIf="!record.isRejected && !record.isAccepted">
+                      <div *ngIf="!record.isRejected && !record.isAccepted && (record.expirationDate != null ? record.expirationDate > today : true)">
                         <span class="label label-lg font-weight-bold label-light-primary label-inline">
                           {{ l('InReview') }}
                         </span>
                       </div>
-                      <!--                      <div *ngIf="record.expirationDate < today">-->
-                      <!--                        <span class="label label-lg font-weight-bold label-light-warning label-inline">-->
-                      <!--                          {{ l('Expired') }}-->
-                      <!--                        </span>-->
-                      <!--                      </div>-->
+                      <div *ngIf="record.expirationDate < today && !record.isRejected">
+                        <span class="label label-lg font-weight-bold label-light-danger label-inline">
+                          {{ l('Expired') }}
+                        </span>
+                      </div>
+                      <!-- {{ today }} -->
                     </td>
                   </tr>
                 </ng-template>
@@ -159,11 +165,12 @@
                         <label>{{ l('File') }}*</label>
                         <div class="custom-file">
                           <input
-                            accept="image/x-png,image/jpeg"
+                            accept="image/x-png,image/jpeg,application/pdf"
                             [id]="item.documentTypeDto.displayName"
                             type="file"
+                            [name]="item.documentTypeDto.displayName"
                             class="custom-file-input"
-                            [required]="item.documentTypeDto.isRequired"
+                            [required]="true"
                             [disabled]="saving"
                             (change)="DocFileChangeEvent($event, item, i)"
                           />
@@ -225,13 +232,12 @@
                         </div>
                       </div>
                       <div *ngIf="item.documentTypeDto.hasNotes" class="form-group col-md-12">
-                        <label>{{ l('Note') }}</label>
+                        <label>{{ l('Note') }}*</label>
                         <textarea
                           style="resize: none;"
                           name="note{{ i }}"
                           id="note{{ i }}"
                           class="form-control m-input"
-                          [required]="item.documentTypeDto.hasNotes && !item.isAccepted"
                           type="text"
                           rows="3"
                           [(ngModel)]="item.notes"
@@ -255,7 +261,7 @@
             <button
               type="submit"
               class="btn btn-save blue"
-              [disabled]="!TenantRequiredDocumentsForm.form.valid"
+              [disabled]="!TenantRequiredDocumentsForm.form.valid || !alldocumentsValid"
               [buttonBusy]="saving"
               [busyText]="l('SavingWithThreeDot')"
             >
@@ -267,4 +273,5 @@
     </div>
   </div>
   <createOrEditDocumentFileModal #createOrEditDocumentFileModal (modalSave)="reload()"></createOrEditDocumentFileModal>
+  <viewRejectionReasonModal #viewRejectionReasonModal></viewRejectionReasonModal>
 </div>

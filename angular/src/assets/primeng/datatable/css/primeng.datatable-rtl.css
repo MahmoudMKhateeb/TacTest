@@ -28,7 +28,7 @@
 }
 
 .primeng-datatable-container .ui-table th {
-    font-family: "Poppins", "Roboto";
+    font-family: "ArGEFlow";
     border: none !important;
     padding: 10px 10px 10px 0px !important;
     text-align: right;
@@ -36,7 +36,7 @@
 }
 
 .primeng-datatable-container .ui-table td {
-    font-family: "Poppins", "Roboto";
+    font-family: "ArGEFlow";
     border: none !important;
     padding: 8px 10px !important;
 }
@@ -65,7 +65,7 @@
 
 .primeng-datatable-container .ui-table table thead tr th {
     font-size: 14px;
-    font-family: Poppins;
+    font-family: ArGEFlow;
     font-weight: 300;
     line-height: 21px;
     vertical-align: middle;
@@ -223,4 +223,19 @@
 .ui-table .ui-sortable-column .ui-sortable-column-icon {
     font-size: 0.85rem;
     opacity: 0.5;
+}
+
+
+/*arabic fonts*/
+.primeng-datatable-container .ui-table th {
+    font-family: 'ArGEFlow' !important;
+}
+.primeng-datatable-container .ui-table td {
+    font-family: 'ArGEFlow' !important;
+}
+.primeng-datatable-container .ui-table table thead tr th {
+    font-family: 'ArGEFlow' !important;
+}
+.primeng-datatable-container .ui-table table thead tr th {
+    font-family: 'ArGEFlow' !important;
 }

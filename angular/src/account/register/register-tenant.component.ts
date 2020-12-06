@@ -154,16 +154,8 @@ export class RegisterTenantComponent extends AppComponentBase implements OnInit,
   }
 
   removeWhiteSpacesFromEmail() {
-    console.log(this.model.adminEmailAddress);
-    // this.model.adminEmailAddress.trim();
-    console.log(this.model.adminEmailAddress);
-
     var exp = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/g;
-
     var result = exp.test(this.model.adminEmailAddress);
-
-    // console.log(result);
-
     if (!result) {
       this.isEmailValid = false;
     } else {
@@ -178,6 +170,11 @@ export class RegisterTenantComponent extends AppComponentBase implements OnInit,
     });
   }
   checkIfIsEmailAvailable() {
+    if (this.model.adminEmailAddress == null || this.model.adminEmailAddress == '') {
+      this.isEmailValid = false;
+      this.isEmailAvailable = true;
+      return;
+    }
     this._tenantRegistrationService.checkIfEmailisAvailable(this.model.adminEmailAddress).subscribe((result) => {
       this.isEmailAvailable = result;
     });

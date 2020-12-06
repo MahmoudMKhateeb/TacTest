@@ -4,6 +4,7 @@ import { NgModule } from '@angular/core';
 import * as ApiServiceProxies from './service-proxies';
 import { ZeroRefreshTokenService } from '@account/auth/zero-refresh-token.service';
 import { ZeroTemplateHttpConfigurationService } from './zero-template-http-configuration.service';
+import { ShippingRequestBidsServiceProxy } from './service-proxies';
 
 @NgModule({
   providers: [
@@ -21,6 +22,7 @@ import { ZeroTemplateHttpConfigurationService } from './zero-template-http-confi
     ApiServiceProxies.DocumentFilesServiceProxy,
     ApiServiceProxies.DocumentTypesServiceProxy,
     ApiServiceProxies.ShippingRequestsServiceProxy,
+    ApiServiceProxies.ShippingRequestBidsServiceProxy,
     ApiServiceProxies.GoodsDetailsServiceProxy,
     ApiServiceProxies.OffersServiceProxy,
     ApiServiceProxies.RoutStepsServiceProxy,

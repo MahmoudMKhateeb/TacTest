@@ -123,12 +123,15 @@ namespace TACHYON.Documents.DocumentFiles
                                 {
                                     DocumentFile = new DocumentFileDto
                                     {
+                                        Id = o.Id,
                                         Name = o.Name,
                                         Extn = o.Extn,
                                         BinaryObjectId = o.BinaryObjectId,
                                         ExpirationDate = o.ExpirationDate,
                                         IsAccepted = o.IsAccepted,
-                                        Id = o.Id
+                                        IsRejected=o.IsRejected,
+                                        RejectionReason=o.RejectionReason,
+                                        CreationTime  = o.CreationTime
                                     },
                                     SubmitterTenatTenancyName = s6 == null || s6.TenancyName == null ? "Host" : s6.TenancyName.ToString(),
                                     HasDate = o.DocumentTypeFk.HasExpirationDate,
@@ -137,6 +140,7 @@ namespace TACHYON.Documents.DocumentFiles
                                     DocumentEntityDisplayName = (o.DocumentTypeFk.DocumentsEntityFk) == null ? "" : o.DocumentTypeFk.DocumentsEntityFk.DisplayName,
                                     DocumentTypeDisplayName = s1 == null || s1.DisplayName == null ? "" : s1.DisplayName,
                                     TruckId = (o.TruckFk == null ? (Guid?)null : o.TruckFk.Id).ToString(),
+                                    PlateNumber = (o.TruckFk == null ? "" : o.TruckFk.PlateNumber),
                                     TrailerTrailerCode = s3 == null || s3.TrailerCode == null ? "" : s3.TrailerCode,
                                     UserName = s4 == null || s4.Name == null ? "" : s4.UserName,
                                     RoutStepDisplayName = s5 == null || s5.DisplayName == null ? "" : s5.DisplayName.ToString()
@@ -479,10 +483,13 @@ namespace TACHYON.Documents.DocumentFiles
                 }
 
                 input.BinaryObjectId = await _documentFilesManager.SaveDocumentFileBinaryObject(input.UpdateDocumentFileInput.FileToken, AbpSession.TenantId);
+                input.IsAccepted = false;
+                input.IsRejected = false;
+               
             }
 
             ObjectMapper.Map(input, documentFile);
-
+            documentFile.RejectionReason = "";
 
             //ObjectMapper.Map(input.DocumentTypeDto, documentFile.DocumentTypeFk);
             //if (input.DocumentTypeDto.HasNumber)
@@ -608,22 +615,24 @@ namespace TACHYON.Documents.DocumentFiles
             var documentFile = _documentFileRepository.FirstOrDefault(id);
             documentFile.IsAccepted = true;
             documentFile.IsRejected = false;
+            documentFile.RejectionReason = "";
             //await _appNotifier.AcceptedSubmittedDocument(new UserIdentifier(documentFile.TenantId, AbpSession.UserId.Value), documentFile.Name);
 
             //todo send notification to the tenant
         }
 
-        public async void Reject(Guid id)
+        public async void Reject(Guid id,string reason)
         {
             DisableTenancyFiltersIfHost();
 
             var documentFile = _documentFileRepository.FirstOrDefault(id);
+            if (documentFile==null)
+            {
+                throw new UserFriendlyException(L("DocumentNotFound"));
+            }
             documentFile.IsAccepted = false;
             documentFile.IsRejected = true;
-
-            //await _appNotifier.RejectedSubmittedDocument(new UserIdentifier(AbpSession.TenantId, AbpSession.UserId.Value), documentFile.Name);
-
-            //todo send notification to the tenant
+            documentFile.RejectionReason = reason;
         }
 
 
@@ -645,6 +654,7 @@ namespace TACHYON.Documents.DocumentFiles
                        Extn = x.Extn,
                        IsAccepted = x.IsAccepted,
                        IsRejected = x.IsRejected,
+                       RejectionReason=x.RejectionReason,
                        Name = x.DocumentTypeFk.DisplayName,
                        //LastModificationTime = await  _binaryObjectManager.GetOrNullAsync(x.BinaryObjectId).Result.,
                        ExpirationDate = x.ExpirationDate

@@ -76,6 +76,11 @@
         public const string Pages_ShippingRequests_Edit = "Pages.ShippingRequests.Edit";
         public const string Pages_ShippingRequests_Delete = "Pages.ShippingRequests.Delete";
 
+        public const string Pages_ShippingRequestBids = "Pages.ShippingRequestBis";
+        public const string Pages_ShippingRequestBids_Create = "Pages.ShippingRequestBis.Create";
+        public const string Pages_ShippingRequestBids_Edit = "Pages.ShippingRequestBis.Edite";
+        public const string Pages_ShippingRequestBids_Delete = "Pages.ShippingRequestBis.Delete";
+
         public const string Pages_GoodsDetails = "Pages.GoodsDetails";
         public const string Pages_GoodsDetails_Create = "Pages.GoodsDetails.Create";
         public const string Pages_GoodsDetails_Edit = "Pages.GoodsDetails.Edit";

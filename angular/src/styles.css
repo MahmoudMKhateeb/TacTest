@@ -3,10 +3,34 @@
 /* fonts */
 
 /* en */
-@import url(//db.onlinewebfonts.com/c/33f225b8f5f7d6b34a0926f58f96c1e9?family=Open + Sans + Semibold);
-/* ar */
-@import url(//db.onlinewebfonts.com/c/aaff40b5e8234dc862e4df217e40cf1e?family=GE + SS + Two + Bold);
+@font-face {
+  font-family: 'EnOpenSans';
+  src: url(./assets/fonts/tachyonFonts/en/OpenSans-Semibold.ttf) format('truetype');
+}
 
+/* ar */
+@font-face {
+  font-family: 'ArGEFlow';
+  font-weight: bold;
+  src: url(./assets/fonts/tachyonFonts/ar/GE_Flow_Bold.otf) format('opentype');
+}
+
+body {
+  font-family: 'EnOpenSans' !important;
+}
+
+/*.primeng-datatable-container .ui-table th {*/
+/*  font-family: 'ArGEFlow' !important;*/
+/*}*/
+/*.primeng-datatable-container .ui-table td {*/
+/*  font-family: 'ArGEFlow' !important;*/
+/*}*/
+/*.primeng-datatable-container .ui-table table thead tr th {*/
+/*  font-family: 'ArGEFlow' !important;*/
+/*}*/
+/*.primeng-datatable-container .ui-table table thead tr th {*/
+/*  font-family: 'ArGEFlow';*/
+/*}*/
 .margin-left-5 {
   margin-left: 5px !important;
 }
@@ -372,46 +396,16 @@ a.text-hover-primary:hover,
   color: #df515a !important;
 }
 
-@font-face {
-  font-family: 'Open Sans Semibold';
-  src: url('//db.onlinewebfonts.com/t/33f225b8f5f7d6b34a0926f58f96c1e9.eot');
-  src: url('//db.onlinewebfonts.com/t/33f225b8f5f7d6b34a0926f58f96c1e9.eot?#iefix') format('embedded-opentype'),
-    url('//db.onlinewebfonts.com/t/33f225b8f5f7d6b34a0926f58f96c1e9.woff2') format('woff2'),
-    url('//db.onlinewebfonts.com/t/33f225b8f5f7d6b34a0926f58f96c1e9.woff') format('woff'),
-    url('//db.onlinewebfonts.com/t/33f225b8f5f7d6b34a0926f58f96c1e9.ttf') format('truetype'),
-    url('//db.onlinewebfonts.com/t/33f225b8f5f7d6b34a0926f58f96c1e9.svg#Open Sans Semibold') format('svg');
-}
 .aside-menu .menu-nav {
   margin: 0;
   list-style: none;
   padding: 15px 0;
-  font-family: 'Open Sans Semibold';
 }
 
 .menu-link-icon {
   color: #dc2434 !important;
 }
-.py-4 {
-  font-family: 'Open Sans Semibold' !important;
-}
-.text-dark {
-  font-family: 'Open Sans Semibold' !important;
-}
-.text-muted {
-  font-family: 'Open Sans Semibold' !important;
-}
-body {
-  font-family: 'Open Sans Semibold', Helvetica, 'sans-serif' !important;
-}
 
-@font-face {
-  font-family: 'GEFlow';
-  src: url(./assets/metronic/vendors/global/fonts/TachyonFonts/GE-Flow-Regular.ttf) format('truetype');
-  src: url('./assets/metronic/vendors/global/fonts/TachyonFonts/GE-Flow-Regular.ttf') format('truetype');
-}
-/* body {
-  font-family: 'GEFlow', Helvetica, 'sans-serif' !important;
-} */
 .img2 {
   margin-left: -96px;
 }
@@ -445,18 +439,6 @@ body {
 .login-form-control:focus {
   border-bottom: 1px solid #9c0711 !important;
 }
-.btn-primary-login {
-  margin-top: 80px;
-  border-radius: 0px !important;
-  width: 98px;
-}
-
-.btn-primary-login:disabled {
-  margin-top: 80px;
-  border-radius: 0px !important;
-  width: 98px;
-}
-
 
 .text-red-login {
   margin-bottom: -20px;
@@ -499,16 +481,75 @@ body {
 
 .btn-primary-login {
   margin-top: 80px;
-  border-radius: 0px !important;
+  border-radius: 4px !important;
   width: 98px;
 }
 
 .btn-primary-login:disabled {
   margin-top: 80px;
-  border-radius: 0px !important;
+  border-radius: 4px !important;
   width: 98px;
 }
 
 .remove-border-radius {
   border-radius: 0px !important;
+}
+
+.chip {
+  display: inline-block;
+  height: 32px;
+  padding: 0 12px;
+  margin-right: 1rem;
+  margin-bottom: 1rem;
+  font-size: 13px;
+  font-weight: 500;
+  line-height: 32px;
+  color: rgba(0, 0, 0, 0.6);
+  cursor: default;
+  background-color: #eceff1;
+  border-radius: 2px;
+  -webkit-transition: all 0.3s linear;
+  transition: all 0.3s linear;
+}
+
+card-body {
+  -ms-flex: 1 1 auto;
+  flex: 1 1 auto;
+  min-height: 1px;
+  padding: 1.25rem;
+}
+
+.aside-menu
+  .menu-nav
+  > .menu-item:not(.menu-item-parent):not(.menu-item-open):not(.menu-item-here):not(.menu-item-active):hover
+  > .menu-heading
+  .menu-arrow,
+.aside-menu
+  .menu-nav
+  > .menu-item:not(.menu-item-parent):not(.menu-item-open):not(.menu-item-here):not(.menu-item-active):hover
+  > .menu-link
+  .menu-arrow {
+  color: #d82631 !important;
+}
+
+.aside-menu .menu-nav > .menu-item.menu-item-open > .menu-heading .menu-arrow,
+.aside-menu .menu-nav > .menu-item.menu-item-open > .menu-link .menu-arrow {
+  color: #d82631 !important;
+}
+
+.aside-menu
+  .menu-nav
+  > .menu-item
+  .menu-submenu
+  .menu-item:not(.menu-item-parent):not(.menu-item-open):not(.menu-item-here):not(.menu-item-active):hover
+  > .menu-heading
+  .menu-arrow,
+.aside-menu
+  .menu-nav
+  > .menu-item
+  .menu-submenu
+  .menu-item:not(.menu-item-parent):not(.menu-item-open):not(.menu-item-here):not(.menu-item-active):hover
+  > .menu-link
+  .menu-arrow {
+  color: #d82631 !important;
 }

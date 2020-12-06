@@ -35,22 +35,28 @@
                 <div class="col-sm-9">
                   <div class="form-group">
                     <label for="UserName">{{ 'PhoneNumber' | localize }} *</label>
-                    <input
-                      (change)="CheckIfDriverPhoneNumberIsValid(userNameInput.value, user.id)"
-                      id="UserName"
-                      #userNameInput="ngModel"
-                      type="text"
-                      (keypress)="numberOnly($event)"
-                      [disabled]="!canChangeUserName"
-                      name="UserName"
-                      class="form-control"
-                      [(ngModel)]="user.userName"
-                      required
-                      maxlength="256"
-                    />
-                    <span class="form-text text-muted">{{ 'Enter' | localize }} {{ 'PhoneNumber' | localize }}</span>
-                    <span class="form-text text-muted">{{ 'NumbersOnly' | localize }}</span>
+                    <div class="input-group">
+                      <div class="input-group-prepend">
+                        <span class="input-group-text">+966</span>
+                      </div>
+                      <input
+                        (change)="CheckIfDriverPhoneNumberIsValid(userNameInput.value, user.id)"
+                        id="UserName"
+                        #userNameInput="ngModel"
+                        type="text"
+                        (keypress)="numberOnly($event)"
+                        [disabled]="!canChangeUserName"
+                        name="UserName"
+                        pattern="^\d{9}$"
+                        class="form-control"
+                        [(ngModel)]="user.userName"
+                        required
+                      />
+                    </div>
+                    <validation-messages [formCtrl]="userNameInput"></validation-messages>
 
+                    <span class="form-text text-muted">{{ 'Enter' | localize }} {{ 'PhoneNumber' | localize }}</span>
+                    <span class="form-text text-muted">{{ '9digitsNumber' | localize }}</span>
                     <!-- <div *ngIf="isUserNameValid" class="valid-feedback">Success! You've done it.</div> -->
                     <span *ngIf="!isPhoneNumberAvilable" class="form-text text-danger">{{ l('AlreadyTaken') }}</span>
 
@@ -93,45 +99,25 @@
                 </div>
               </div>
 
-                <div class="row">
-                    <div class="col-6">
-              <div class="form-group">
-                <label for="EmailAddress">{{ 'EmailAddress' | localize }} *</label>
-                <input
-                  id="EmailAddress"
-                  #emailAddressInput="ngModel"
-                  type="email"
-                  name="EmailAddress"
-                  class="form-control"
-                  [(ngModel)]="user.emailAddress"
-                  required
-                  (change)="removeWhiteSpacesFromEmail()"
-                  maxlength="256"
-                  email
-                />
-                <!-- <validation-messages [formCtrl]="emailAddressInput"></validation-messages> -->
-                <span *ngIf="!isEmailValid" class="form-text text-danger">{{ l('NotValid') }}</span>
-                <span *ngIf="!isEmailAvailable" class="form-text text-danger">{{ l('AlreadyTaken') }}</span>
-              </div>
-                    </div>
-                    <div class="col-6">
-              <div class="form-group">
-                <label for="Nationality">{{ 'Nationality' | localize }}*</label>
-                <select name="Nationality" [(ngModel)]="user.nationality" required class="form-control form-control-lg custom-select mr-sm-2">
-                  <option *ngFor="let nationality of nationalities" value="nationality.id">{{ nationality.displayName }}</option>
-                </select>
-                <span class="text-muted">{{ 'ChooseNationality' | localize }}</span>
-              </div>
-                    </div>
-                </div>
-
               <div class="row">
+                <div class="col-6">
+                  <div class="form-group">
+                    <label for="Nationality">{{ 'Nationality' | localize }}*</label>
+                    <select name="Nationality" [(ngModel)]="user.nationality" required class="form-control form-control-lg custom-select mr-sm-2">
+                      <option *ngFor="let nationality of nationalities" value="nationality.id">{{ nationality.displayName }}</option>
+                    </select>
+                    <span class="text-muted">{{ 'ChooseNationality' | localize }}</span>
+                  </div>
+                </div>
                 <div class="col-6">
                   <div class="form-group">
                     <label for="Address">{{ 'Address' | localize }}</label>
                     <input id="Address" type="text" name="Address" class="form-control" [(ngModel)]="user.address" maxlength="256" />
                   </div>
                 </div>
+              </div>
+
+              <div class="row">
                 <div class="col-6">
                   <div class="form-group" *ngIf="user.isDriver">
                     <label for="ExperienceField">{{ 'ExperienceField' | localize }}</label>
@@ -147,99 +133,6 @@
                 </div>
               </div>
 
-              <!--              <div class="checkbox-inline">-->
-              <!--                <label for="EditUser_SetRandomPassword" class="checkbox">-->
-              <!--                  <input id="EditUser_SetRandomPassword" type="checkbox" name="SetRandomPassword" [(ngModel)]="setRandomPassword" />-->
-              <!--                  {{ 'SetRandomPassword' | localize }}-->
-              <!--                  <span></span>-->
-              <!--                </label>-->
-              <!--              </div>-->
-              <!--              <div class="form-group" *ngIf="!setRandomPassword">-->
-              <!--                <div class="right">-->
-              <!--                  <label for="Password">{{ 'Password' | localize }}</label>-->
-              <!--                  <input-->
-              <!--                    id="Password"-->
-              <!--                    type="password"-->
-              <!--                    name="Password"-->
-              <!--                    #Password="ngModel"-->
-              <!--                    id="Password"-->
-              <!--                    class="form-control"-->
-              <!--                    [(ngModel)]="user.password"-->
-              <!--                    [required]="!user.id && !setRandomPassword"-->
-              <!--                    maxlength="32"-->
-              <!--                    [requireDigit]="passwordComplexitySetting.requireDigit"-->
-              <!--                    [requireLowercase]="passwordComplexitySetting.requireLowercase"-->
-              <!--                    [requireUppercase]="passwordComplexitySetting.requireUppercase"-->
-              <!--                    [requireNonAlphanumeric]="passwordComplexitySetting.requireNonAlphanumeric"-->
-              <!--                    [requiredLength]="passwordComplexitySetting.requiredLength"-->
-              <!--                    validateEqual="PasswordRepeat"-->
-              <!--                    reverse="true"-->
-              <!--                    autocomplete="new-password"-->
-              <!--                  />-->
-              <!--                </div>-->
-              <!--              </div>-->
-              <!--              <div [hidden]="setRandomPassword || userForm.form.valid || userForm.form.pristine">-->
-              <!--                <ul class="help-block text-danger" *ngIf="userForm.controls['Password'] && userForm.controls['Password'].errors">-->
-              <!--                  <li [hidden]="!userForm.controls['Password'].errors.requireDigit">-->
-              <!--                    {{ 'PasswordComplexity_RequireDigit_Hint' | localize }}-->
-              <!--                  </li>-->
-              <!--                  <li [hidden]="!userForm.controls['Password'].errors.requireLowercase">-->
-              <!--                    {{ 'PasswordComplexity_RequireLowercase_Hint' | localize }}-->
-              <!--                  </li>-->
-              <!--                  <li [hidden]="!userForm.controls['Password'].errors.requireUppercase">-->
-              <!--                    {{ 'PasswordComplexity_RequireUppercase_Hint' | localize }}-->
-              <!--                  </li>-->
-              <!--                  <li [hidden]="!userForm.controls['Password'].errors.requireNonAlphanumeric">-->
-              <!--                    {{ 'PasswordComplexity_RequireNonAlphanumeric_Hint' | localize }}-->
-              <!--                  </li>-->
-              <!--                  <li [hidden]="!userForm.controls['Password'].errors.requiredLength">-->
-              <!--                    {{ 'PasswordComplexity_RequiredLength_Hint' | localize: passwordComplexitySetting.requiredLength }}-->
-              <!--                  </li>-->
-              <!--                </ul>-->
-              <!--              </div>-->
-              <!--              <div class="form-group" *ngIf="!setRandomPassword">-->
-              <!--                <div class="right">-->
-              <!--                  <label for="PasswordRepeat">{{ 'PasswordRepeat' | localize }}</label>-->
-              <!--                  <input-->
-              <!--                    id="PasswordRepeat"-->
-              <!--                    type="password"-->
-              <!--                    name="PasswordRepeat"-->
-              <!--                    #PasswordRepeat="ngModel"-->
-              <!--                    class="form-control"-->
-              <!--                    [(ngModel)]="userPasswordRepeat"-->
-              <!--                    [required]="!user.id && !setRandomPassword"-->
-              <!--                    maxlength="32"-->
-              <!--                    [requireDigit]="passwordComplexitySetting.requireDigit"-->
-              <!--                    [requireLowercase]="passwordComplexitySetting.requireLowercase"-->
-              <!--                    [requireUppercase]="passwordComplexitySetting.requireUppercase"-->
-              <!--                    [requireNonAlphanumeric]="passwordComplexitySetting.requireNonAlphanumeric"-->
-              <!--                    [requiredLength]="passwordComplexitySetting.requiredLength"-->
-              <!--                    validateEqual="Password"-->
-              <!--                    reverse="false"-->
-              <!--                    autocomplete="new-password"-->
-              <!--                  />-->
-              <!--                </div>-->
-              <!--              </div>-->
-              <!--              <div [hidden]="setRandomPassword || userForm.form.valid || userForm.form.pristine">-->
-              <!--                <ul class="help-block text-danger" *ngIf="userForm.controls['PasswordRepeat'] && userForm.controls['PasswordRepeat'].errors">-->
-              <!--                  <li [hidden]="!userForm.controls['PasswordRepeat'].errors.requireDigit">-->
-              <!--                    {{ 'PasswordComplexity_RequireDigit_Hint' | localize }}-->
-              <!--                  </li>-->
-              <!--                  <li [hidden]="!userForm.controls['PasswordRepeat'].errors.requireLowercase">-->
-              <!--                    {{ 'PasswordComplexity_RequireLowercase_Hint' | localize }}-->
-              <!--                  </li>-->
-              <!--                  <li [hidden]="!userForm.controls['PasswordRepeat'].errors.requireUppercase">-->
-              <!--                    {{ 'PasswordComplexity_RequireUppercase_Hint' | localize }}-->
-              <!--                  </li>-->
-              <!--                  <li [hidden]="!userForm.controls['PasswordRepeat'].errors.requireNonAlphanumeric">-->
-              <!--                    {{ 'PasswordComplexity_RequireNonAlphanumeric_Hint' | localize }}-->
-              <!--                  </li>-->
-              <!--                  <li [hidden]="!userForm.controls['PasswordRepeat'].errors.requiredLength">-->
-              <!--                    {{ 'PasswordComplexity_RequiredLength_Hint' | localize: passwordComplexitySetting.requiredLength }}-->
-              <!--                  </li>-->
-              <!--                  <li [hidden]="userForm.controls['PasswordRepeat'].valid">{{ 'PasswordsDontMatch' | localize }}</li>-->
-              <!--                </ul>-->
-              <!--              </div>-->
               <div class="checkbox-inline">
                 <label for="EditUser_ShouldChangePasswordOnNextLogin" class="checkbox">
                   <input
@@ -281,17 +174,23 @@
                   <div class="card-body">
                     <div class="row d-flex">
                       <div class="form-group col-6">
-                        <label>{{ l('File') }}</label>
+                        <label>{{ l('File') }} *</label>
                         <div class="custom-file">
                           <input
-                            (change)="DocFileChangeEvent($event, item)"
+                            accept="image/x-png,image/jpeg,application/pdf"
+                            (change)="DocFileChangeEvent($event, item, i)"
                             type="file"
+                            [disabled]="saving"
                             class="custom-file-input"
-                            [required]="item.documentTypeDto.isRequired"
+                            [required]="true"
                           />
                           <label class="custom-file-label text-truncate" [for]="item.documentTypeDto.displayName">
                             {{ item.name ? item.name : l('Select') + l('File') }}</label
                           >
+                        </div>
+                        <span class="form-text text-muted">{{ 'ValidDocumentFilesMsg' | localize }}</span>
+                        <div *ngIf="fileFormateIsInvalideIndexList[i]">
+                          <span class="form-text text-danger text-left">{{ 'PleaseChooseAvalidFormat' | localize }}</span>
                         </div>
                       </div>
                       <div *ngIf="item.documentTypeDto.hasExpirationDate" class="form-group col-6">
@@ -317,6 +216,7 @@
                           id="number{{ i }}"
                           class="form-control m-input"
                           required
+                          (change)="numberChange(item, i)"
                           [maxLength]="item.documentTypeDto.numberMaxDigits == 0 ? 50 : item.documentTypeDto.numberMaxDigits"
                           [minLength]="item.documentTypeDto.numberMinDigits"
                           type="text"
@@ -372,7 +272,7 @@
           <button
             type="submit"
             class="btn btn-save font-weight-bold"
-            [disabled]="!userForm.form.valid"
+            [disabled]="!userForm.form.valid || !alldocumentsValid || !allnumbersValid"
             [buttonBusy]="saving"
             [busyText]="l('SavingWithThreeDot')"
           >

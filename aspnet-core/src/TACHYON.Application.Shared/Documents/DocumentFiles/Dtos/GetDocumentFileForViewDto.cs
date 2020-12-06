@@ -14,6 +14,7 @@ namespace TACHYON.Documents.DocumentFiles.Dtos
         public string DocumentTypeDisplayName { get; set; }
 
         public string TruckId { get; set; }
+        public string PlateNumber { get; set; }
 
         public string TrailerTrailerCode { get; set; }
 

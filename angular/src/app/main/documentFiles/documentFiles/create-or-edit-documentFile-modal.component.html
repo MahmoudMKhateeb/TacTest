@@ -13,7 +13,7 @@
       <form *ngIf="active" #documentFileForm="ngForm" (ngSubmit)="save()" novalidate autocomplete="off">
         <div class="modal-header">
           <h4 class="modal-title">
-            <span *ngIf="documentFile.id">{{ l('Edit') }} {{ l('DocumentFile') }}</span>
+            <span *ngIf="documentFile.id">{{ l('Editt') }} {{ l('DocumentFile') }}</span>
             <span *ngIf="!documentFile.id">{{ l('Create') }} {{ l('NewDocumentFile') }}</span>
           </h4>
           <button type="button" class="close" (click)="close()" aria-label="Close" [disabled]="saving">
@@ -48,7 +48,13 @@
             <div class="form-group col-md-6">
               <label>{{ l('SelectFile') }}</label>
               <div class="custom-file">
-                <input (change)="DocFileChangeEvent($event, documentFile)" type="file" class="custom-file-input" required />
+                <input
+                  (change)="DocFileChangeEvent($event, documentFile)"
+                  type="file"
+                  class="custom-file-input"
+                  accept="image/x-png,image/jpeg,application/pdf"
+                  required
+                />
                 <label class="custom-file-label text-truncate" [for]="documentFile.name">
                   {{ documentFile.name ? documentFile.name : l('SelectFile') }}</label
                 >
@@ -62,34 +68,29 @@
                 type="text"
                 class="form-control"
                 id="DocumentNumber"
-                [maxLength]="documentFile.documentTypeDto.numberMaxDigits"
+                (change)="numberChange(documentFile)"
+                [maxLength]="documentFile.documentTypeDto.numberMaxDigits == 0 ? 50 : documentFile.documentTypeDto.numberMaxDigits"
                 [minLength]="documentFile.documentTypeDto.numberMinDigits"
                 name="documentNumber"
                 required
                 [(ngModel)]="documentFile.number"
               />
+              <span
+                *ngIf="documentFile.number == null ? 0 : documentFile.number.length < documentFile.documentTypeDto.numberMinDigits"
+                class="text-danger"
+              >
+                {{ l('TheNumberLengthMustBeMoreThanMinDigits') }}
+              </span>
+              <span
+                *ngIf="documentFile.number == null ? false : documentFile.number.length > documentFile.documentTypeDto.numberMaxDigits"
+                class="text-danger"
+              >
+                {{ l('TheNumberLengthMustBeLessThanMaxDigits') }}
+              </span>
               <span class="form-text text-muted"
                 >{{ l('minDigits:') }} {{ documentFile.documentTypeDto.numberMinDigits }} {{ l('maxDigits:') }}
                 {{ documentFile.documentTypeDto.numberMaxDigits }}
               </span>
-            </div>
-
-            <div
-              *ngIf="documentFile.documentTypeDto.hasExpirationDate && !documentFile.documentTypeDto.hasHijriExpirationDate"
-              class="form-group col-md-6"
-            >
-              <label for="DocumentExpireDate">{{ l('ExpirationDate') }} </label>
-              <input
-                type="datetime"
-                placeholder="{{ l('ExpirationDate') }}"
-                bsDatepicker
-                class="form-control"
-                id="DocumentExpireDate"
-                name="documentExpireDate"
-                required
-                [(ngModel)]="documentFile.expirationDate"
-              />
-              <span style="line-height: 40px; padding: 0 15px 0 15px;"> &mdash; </span>
             </div>
 
             <div *ngIf="documentFile.documentTypeDto.hasExpirationDate" class="form-group col-md-6">
@@ -119,8 +120,7 @@
                 id="Note"
                 [maxLength]="500"
                 [minLength]="0"
-                name="documentExpireDate"
-                required
+                name="documentNotes"
                 [(ngModel)]="documentFile.notes"
               >
               </textarea>
@@ -140,7 +140,7 @@
           <button
             type="submit"
             class="btn btn-save blue"
-            [disabled]="!documentFileForm.form.valid"
+            [disabled]="!documentFileForm.form.valid || !isNumberInValid || !alldocumentsValid"
             [buttonBusy]="saving"
             [busyText]="l('SavingWithThreeDot')"
           >

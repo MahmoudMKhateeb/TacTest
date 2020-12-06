@@ -13,8 +13,8 @@
       <form *ngIf="active" #capacityForm="ngForm" novalidate (ngSubmit)="save()" autocomplete="off">
         <div class="modal-header">
           <h4 class="modal-title">
-            <span *ngIf="capacity.id">{{ l('EditCapacity') }}</span>
-            <span *ngIf="!capacity.id">{{ l('CreateNewCapacity') }}</span>
+            <span *ngIf="capacity.id">{{ l('Edit') }} {{ l('Capacity') }}</span>
+            <span *ngIf="!capacity.id">{{ l('Create') }} {{ l('NewCapacity') }}</span>
           </h4>
           <button type="button" class="close" (click)="close()" aria-label="Close" [disabled]="saving">
             <span aria-hidden="true">&times;</span>
@@ -29,14 +29,14 @@
               class="form-control form-control-lg custom-select mr-sm-2"
               required
             >
-              <option [ngValue]="null">{{ l('SelectATruckSubtype') }}</option>
+              <option [ngValue]="null">{{ l('Select') }} {{ l('TruckSubtype') }}</option>
               <option *ngFor="let item of allTruckSubtypes" value="{{ item.id }}">{{ item.displayName }}</option>
             </select>
-            <span class="form-text text-muted">{{ 'ChooseTruckSubType' | localize }}</span>
+            <span class="form-text text-muted">{{ l('Select') }} {{ l('TruckSubtype') }}</span>
           </div>
 
           <div class="form-group">
-            <label for="Capacity_DisplayName">{{ l('DisplayName') }} *</label>
+            <label for="Capacity_DisplayName">{{ l('CapacityCategory') }} *</label>
             <input
               type="text"
               id="Capacity_DisplayName"

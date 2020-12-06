@@ -9,6 +9,7 @@ import { Table } from 'primeng/table';
 import { Paginator } from 'primeng/paginator';
 import { LazyLoadEvent } from 'primeng/public_api';
 import { FileDownloadService } from '@shared/utils/file-download.service';
+import { AppSessionService } from '@shared/common/session/app-session.service';
 
 @Component({
   templateUrl: './shippingRequests.component.html',
@@ -39,9 +40,11 @@ export class ShippingRequestsComponent extends AppComponentBase {
     private _tokenAuth: TokenAuthServiceProxy,
     private _activatedRoute: ActivatedRoute,
     private _fileDownloadService: FileDownloadService,
-    private _router: Router
+    private _router: Router,
+    private _sessionService: AppSessionService
   ) {
     super(injector);
+    console.log(this._sessionService);
   }
 
   getShippingRequests(event?: LazyLoadEvent) {

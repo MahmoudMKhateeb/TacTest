@@ -59,6 +59,7 @@ using TACHYON.Documents.DocumentFiles;
 using TACHYON.Documents.DocumentFiles.Dtos;
 using TACHYON.Documents.DocumentTypes;
 using TACHYON.Documents.DocumentTypes.Dtos;
+using TACHYON.Drivers.importing.Dto;
 using TACHYON.DynamicEntityParameters.Dto;
 using TACHYON.Editions;
 using TACHYON.Editions.Dto;
@@ -98,6 +99,8 @@ using TACHYON.Routs.RoutTypes;
 using TACHYON.Routs.RoutTypes.Dtos;
 using TACHYON.Routs.RoutTypes.Dtos;
 using TACHYON.Sessions.Dto;
+using TACHYON.Shipping.ShippingRequestBids;
+using TACHYON.Shipping.ShippingRequestBids.Dtos;
 using TACHYON.Shipping.ShippingRequests;
 using TACHYON.Shipping.ShippingRequests.Dtos;
 using TACHYON.Trailers;
@@ -166,6 +169,10 @@ namespace TACHYON
                 .ForMember(dst => dst.RouteFk, opt => opt.MapFrom(src => src.CreateOrEditRouteDto))
                 .ForMember(dst => dst.RoutSteps, opt => opt.MapFrom(src => src.CreateOrEditRoutStepDtoList))
                 .ReverseMap();
+            configuration.CreateMap<ShippingRequestBidDto, ShippingRequestBid>()
+                .ForPath(dst => dst.Tenant.Name, opt => opt.MapFrom(src => src.CarrierName))
+                .ReverseMap();
+            configuration.CreateMap<CreatOrEditShippingRequestBidDto, ShippingRequestBid>().ReverseMap();
             configuration.CreateMap<ShippingRequestDto, ShippingRequest>().ReverseMap();
             configuration.CreateMap<CreateOrEditGoodsDetailDto, GoodsDetail>().ReverseMap();
             configuration.CreateMap<GoodsDetailDto, GoodsDetail>().ReverseMap();
@@ -276,6 +283,8 @@ namespace TACHYON
             configuration.CreateMap<CurrentUserProfileEditDto, User>().ReverseMap();
             configuration.CreateMap<UserLoginAttemptDto, UserLoginAttempt>().ReverseMap();
             configuration.CreateMap<ImportUserDto, User>();
+            configuration.CreateMap<ImportDriverDto, User>();
+            
 
             //AuditLog
             configuration.CreateMap<AuditLog, AuditLogListDto>();

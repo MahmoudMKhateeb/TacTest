@@ -48,7 +48,7 @@
                           value="true"
                         />
                         {{ 'SubscriptionEndDate' | localize }}
-                        <span></span>
+                        <span class="ml-2 mt-1"></span>
                       </label>
                     </div>
                     <input
@@ -64,7 +64,7 @@
                   </div>
                   <div class="col-xl-6">
                     <div class="checkbox-list mb-2">
-                      <label class="checkbox">
+                      <label class="checkbox ml-2">
                         <input
                           type="checkbox"
                           [(ngModel)]="filters.creationDateRangeActive"
@@ -73,7 +73,7 @@
                           value="true"
                         />
                         {{ 'CreationTime' | localize }}
-                        <span></span>
+                        <span class="ml-2 mt-1"></span>
                       </label>
                     </div>
                     <input
@@ -86,11 +86,6 @@
                       dateRangePickerMomentModifier
                       [(date)]="creationDateRange"
                     />
-                  </div>
-                </div>
-                <div class="row mb-4">
-                  <div class="col-xl-12 text-right">
-                    <button name="RefreshButton" class="btn btn-primary"><i class="fa fa-sync"></i> {{ 'Refresh' | localize }}</button>
                   </div>
                 </div>
               </div>

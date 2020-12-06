@@ -10,6 +10,7 @@ import {
   UserRoleDto,
   UserServiceProxy,
   GetUserForEditOutput,
+  SelectItemDto,
 } from '@shared/service-proxies/service-proxies';
 import { ModalDirective } from 'ngx-bootstrap/modal';
 import { IOrganizationUnitsTreeComponentData, OrganizationUnitsTreeComponent } from '../shared/organization-unit-tree.component';
@@ -44,11 +45,11 @@ export class CreateOrEditUserModalComponent extends AppComponentBase {
   setRandomPassword = true;
   passwordComplexityInfo = '';
   profilePicture: string;
-
+  isWaintingUserNameValidation = false;
   allOrganizationUnits: OrganizationUnitDto[];
   memberedOrganizationUnits: string[];
   userPasswordRepeat = '';
-
+  nationalities: SelectItemDto[] = [];
   constructor(injector: Injector, private _userService: UserServiceProxy, private _profileService: ProfileServiceProxy) {
     super(injector);
   }
@@ -59,7 +60,7 @@ export class CreateOrEditUserModalComponent extends AppComponentBase {
       this.setRandomPassword = true;
       this.sendActivationEmail = true;
     }
-
+    this.getUserNationalites();
     this._userService.getUserForEdit(userId).subscribe((userResult) => {
       this.user = userResult.user;
       this.user.isDriver = this.creatDriver;
@@ -193,6 +194,9 @@ export class CreateOrEditUserModalComponent extends AppComponentBase {
     });
   }
   CheckIfDriverPhoneNumberIsValid(phoneNumber: string, id: number) {
+    if (phoneNumber.length > 9) {
+      return false;
+    }
     this._userService.checkIfPhoneNumberValid(phoneNumber, id == null ? 0 : id).subscribe((res) => {
       this.isPhoneNumberAvilable = res;
     });
@@ -203,7 +207,16 @@ export class CreateOrEditUserModalComponent extends AppComponentBase {
     });
   }
 
+  getUserNationalites() {
+    this._userService.getDriverNationalites().subscribe((res) => {
+      this.nationalities = res;
+    });
+  }
+
   numberOnly(event): boolean {
+    if (event.target.value.length >= 9) {
+      return false;
+    }
     const charCode = event.which ? event.which : event.keyCode;
     if (charCode > 31 && (charCode < 48 || charCode > 57)) {
       return false;

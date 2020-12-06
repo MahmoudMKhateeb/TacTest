@@ -69,18 +69,25 @@
                       {{ l('DocumentName') }}
                       <p-sortIcon field="name"></p-sortIcon>
                     </th>
-                    <th *ngIf="entityType == 'Tenant' && isHost == true" style="width: 150px;" pSortableColumn="documentTypeFk.editionFk.name">
+                    <th *ngIf="entityType == 'Tenant' && isHost == true" style="width: 160px;" pSortableColumn="documentTypeFk.editionFk.name">
                       {{ l('SubmitterTenant') }}
                       <p-sortIcon field="documentTypeFk.editionFk.name"></p-sortIcon>
                     </th>
-
-                    <!-- <th style="width: 150px;" pSortableColumn="documentTypeFk.DocumentsEntityFk.displayName">
-                      {{ l('Entity') }}
-                      <p-sortIcon field="Entity"></p-sortIcon>
+                    <!-- <th *ngIf="entityType == 'Tenant' && isHost == true" style="width: 150px;" pSortableColumn="documentTypeFk.editionFk.name">
+                      {{ l('SubmitterTenant') }}
+                      <p-sortIcon field="documentTypeFk.editionFk.name"></p-sortIcon>
                     </th> -->
+                    <th style="width: 150px;" pSortableColumn="creationTime">
+                      {{ l('SubmittingTime') }}
+                      <p-sortIcon field="documentFile.creationTime"></p-sortIcon>
+                    </th>
                     <th *ngIf="entityType == 'Truck'" style="width: 150px;" pSortableColumn="truckFk.Id">
                       {{ l('TruckID') }}
                       <p-sortIcon field="documentFile.truckId"></p-sortIcon>
+                    </th>
+                    <th *ngIf="entityType == 'Truck'" style="width: 160px;" pSortableColumn="truckFk.plateNumber">
+                      {{ l('Truck') }} {{ l('PlateNumber') }}
+                      <p-sortIcon field="documentFile.plateNumber"></p-sortIcon>
                     </th>
                     <th *ngIf="entityType == 'Trailer'" style="width: 150px;" pSortableColumn="trailerFk.trailerCode">
                       {{ l('TrailerCode') }}
@@ -162,8 +169,20 @@
                               href="javascript:;"
                               *ngIf="record.documentFile.isAccepted && isHost"
                               class="dropdown-item"
-                              (click)="rejectDocumentFile(record.documentFile.id)"
+                              (click)="
+                                rejectionReasonModal.show(record.documentFile.id, record.documentTypeDisplayName, record.submitterTenatTenancyName)
+                              "
                               >{{ l('Reject') }}</a
+                            >
+                          </li>
+
+                          <li>
+                            <a
+                              href="javascript:;"
+                              *ngIf="!record.documentFile.isAccepted && !record.documentFile.isRejected"
+                              class="dropdown-item"
+                              (click)="viewRejectionReasonModal.show(record.documentTypeDisplayName, record.documentFile.rejectionReason)"
+                              >{{ l('ViewRejectionReason') }}</a
                             >
                           </li>
                           <!-- <li>
@@ -187,16 +206,20 @@
                       {{ record.documentTypeDisplayName }}
                     </td>
 
-                    <td *ngIf="entityType == 'Tenant' && isHost == true" style="width: 150px;">
+                    <td *ngIf="entityType == 'Tenant' && isHost == true" style="width: 160px;">
                       {{ record.submitterTenatTenancyName }}
                     </td>
 
-                    <!-- <td  style="width: 150px;">
-                      {{ record.documentEntityDisplayName }}
-                    </td> -->
+                    <td style="width: 150px;">
+                      {{ record.documentFile.creationTime | momentFormat: 'L' }}
+                    </td>
 
-                    <td *ngIf="entityType == 'Truck'" style="width: 150px;">
-                      {{ record.truckId == '' ? 'None' : record.truckId }}
+                    <td *ngIf="entityType == 'Truck'" style="width: 160px;">
+                      {{ record.truckId == '' || record.truckId == null ? '-' : record.truckId }}
+                    </td>
+
+                    <td *ngIf="entityType == 'Truck'" style="width: 160px;">
+                      {{ record.plateNumber == '' ? '-' : record.plateNumber }}
                     </td>
                     <td *ngIf="entityType == 'Trailer'" style="width: 150px;">
                       {{ record.trailerTrailerCode }}
@@ -225,13 +248,16 @@
                     <td style="width: 150px;">
                       <span *ngIf="record.hasDate">
                         {{ record.documentFile.expirationDate | momentFormat: 'L' }}
+
+                        {{ record.documentFile.expirationDate > today ? '(' + l('Expired') + ')' : '' }}
                       </span>
                       <span *ngIf="!record.hasDate">--</span>
                     </td>
 
                     <td *ngIf="entityType == 'Tenant'" style="width: 150px;">
                       <i *ngIf="record.documentFile.isAccepted" class="fa fa-check-circle text-success" title="True"></i>
-                      <i *ngIf="!record.documentFile.isAccepted" class="fa fa-times-circle" title="False"></i>
+                      <span *ngIf="record.documentFile.isRejected" title="False">{{ l('Rejected') }}</span>
+                      <span *ngIf="!record.documentFile.isAccepted && !record.documentFile.isRejected" title="False">{{ l('NotYet') }}</span>
                     </td>
                   </tr>
                 </ng-template>
@@ -260,6 +286,8 @@
     </div>
     <createOrEditDocumentFileModal #createOrEditDocumentFileModal (modalSave)="getDocumentFiles()"></createOrEditDocumentFileModal>
     <viewDocumentFileModal #viewDocumentFileModal></viewDocumentFileModal>
+    <rejectionReasonModal #rejectionReasonModal (modalSave)="getDocumentFiles()"></rejectionReasonModal>
+    <viewRejectionReasonModal #viewRejectionReasonModal></viewRejectionReasonModal>
     <entityTypeHistoryModal #entityTypeHistoryModal></entityTypeHistoryModal>
   </div>
 </div>
