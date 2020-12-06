@@ -216,6 +216,7 @@
                           id="number{{ i }}"
                           class="form-control m-input"
                           required
+                          (change)="numberChange(item, i)"
                           [maxLength]="item.documentTypeDto.numberMaxDigits == 0 ? 50 : item.documentTypeDto.numberMaxDigits"
                           [minLength]="item.documentTypeDto.numberMinDigits"
                           type="text"
@@ -271,7 +272,7 @@
           <button
             type="submit"
             class="btn btn-save font-weight-bold"
-            [disabled]="!userForm.form.valid || !alldocumentsValid"
+            [disabled]="!userForm.form.valid || !alldocumentsValid || !allnumbersValid"
             [buttonBusy]="saving"
             [busyText]="l('SavingWithThreeDot')"
           >

@@ -324,12 +324,19 @@
                         id="number{{ i }}"
                         class="form-control m-input"
                         required
+                        (change)="numberChange(item, i)"
                         [maxLength]="item.documentTypeDto.numberMaxDigits == 0 ? 50 : item.documentTypeDto.numberMaxDigits"
                         [minLength]="item.documentTypeDto.numberMinDigits"
                         type="text"
                         [(ngModel)]="item.number"
                         [disabled]="item.isAccepted"
                       />
+                      <span *ngIf="item.number == null ? 0 : item.number.length < item.documentTypeDto.numberMinDigits" class="text-danger">
+                        {{ l('TheNumberLengthMustBeMoreThanMinDigits') }}
+                      </span>
+                      <span *ngIf="item.number == null ? false : item.number.length > item.documentTypeDto.numberMaxDigits" class="text-danger">
+                        {{ l('TheNumberLengthMustBeLessThanMaxDigits') }}
+                      </span>
                       <span class="form-text text-muted"
                         >{{ l('minDigits:') }} {{ item.documentTypeDto.numberMinDigits }} {{ l('maxDigits:') }}
                         {{ item.documentTypeDto.numberMaxDigits == 0 ? 50 : item.documentTypeDto.numberMaxDigits }}
