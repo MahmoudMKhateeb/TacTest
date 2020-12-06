@@ -61,17 +61,17 @@ export class AppNavigationService {
       // ),
 
       //Host
-      new AppMenuItem(
-        'Shipping Requests',
-        '',
-        'flaticon-interface-8',
-        '',
-        [],
-        [new AppMenuItem('Marketplace', '', 'flaticon-more', '/app/main/marketPlace/marketPlace')],
-        undefined,
-        undefined,
-        () => this._featureCheckerService.isEnabled('App.Carrier')
-      ),
+      // new AppMenuItem(
+      //   'Shipping Requests',
+      //   '',
+      //   'flaticon-interface-8',
+      //   '',
+      //   [],
+      //   [new AppMenuItem('Marketplace', '', 'flaticon-more', '/app/main/marketPlace/marketPlace')],
+      //   undefined,
+      //   undefined,
+      //   () => this._featureCheckerService.isEnabled('App.Carrier')
+      // ),
       //Host
       new AppMenuItem(
         'Documents',
