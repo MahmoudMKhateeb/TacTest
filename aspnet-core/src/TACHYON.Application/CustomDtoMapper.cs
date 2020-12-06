@@ -59,6 +59,7 @@ using TACHYON.Documents.DocumentFiles;
 using TACHYON.Documents.DocumentFiles.Dtos;
 using TACHYON.Documents.DocumentTypes;
 using TACHYON.Documents.DocumentTypes.Dtos;
+using TACHYON.Drivers.importing.Dto;
 using TACHYON.DynamicEntityParameters.Dto;
 using TACHYON.Editions;
 using TACHYON.Editions.Dto;
@@ -282,6 +283,8 @@ namespace TACHYON
             configuration.CreateMap<CurrentUserProfileEditDto, User>().ReverseMap();
             configuration.CreateMap<UserLoginAttemptDto, UserLoginAttempt>().ReverseMap();
             configuration.CreateMap<ImportUserDto, User>();
+            configuration.CreateMap<ImportDriverDto, User>();
+            
 
             //AuditLog
             configuration.CreateMap<AuditLog, AuditLogListDto>();
