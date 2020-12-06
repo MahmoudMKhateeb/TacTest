@@ -353,7 +353,7 @@ namespace TACHYON.MultiTenancy
         {
             using (CurrentUnitOfWork.DisableFilter(AbpDataFilters.MayHaveTenant))
             {
-                var result =await UserManager.FindByEmailAsync(email);
+                var result =await UserManager.FindByEmailAsync(email==null?"":email);
             if (result == null)
             {
                 return true;
