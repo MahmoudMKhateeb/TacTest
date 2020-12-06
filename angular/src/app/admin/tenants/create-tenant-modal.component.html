@@ -14,7 +14,7 @@
       <form #tenantCreateForm="ngForm" role="form" novalidate class="form-validation" *ngIf="active" (submit)="save()">
         <div class="modal-header">
           <h5 class="modal-title">
-            <span>{{ 'CreateNewTenant' | localize }}</span>
+            <span> {{ 'Create' | localize }}{{ 'Create' | localize }}</span>
           </h5>
           <button type="button" class="close" (click)="close()" [attr.aria-label]="l('Close')" [disabled]="saving">
             <span aria-hidden="true">&times;</span>
@@ -31,29 +31,36 @@
                   #tenancyNameInput="ngModel"
                   class="form-control"
                   type="text"
+                  (change)="checkIfIsCompanyUniqueName()"
                   [ngClass]="{ edited: tenant.tenancyName }"
                   name="tenancyName"
+                  placeholder="{{ 'CompanyUniqueName' | localize }}"
                   [(ngModel)]="tenant.tenancyName"
                   #tenancyName="ngModel"
                   required
                   maxlength="64"
                   pattern="^[a-zA-Z][a-zA-Z0-9_-]{1,}$"
                 />
+                <span class="form-text text-muted">{{ l('Enter') }} {{ l('CompanyUniqueName') }}</span>
                 <validation-messages [formCtrl]="tenancyNameInput"></validation-messages>
-              </div>
-              <div>
-                <span class="form-control-feedback" *ngIf="!tenancyName.valid && !tenancyName.pristine">{{
-                  'TenantName_Regex_Description' | localize
-                }}</span>
+                <div>
+                  <span *ngIf="!isCompanyNameAvailable" class="form-text text-danger text-left"
+                    >{{ 'CompanyUniqueName' | localize }} {{ 'AlreadyTaken' | localize }}</span
+                  >
+                  <span class="form-control-feedback" *ngIf="!tenancyName.valid && !tenancyName.pristine">{{
+                    'CompanyName_Regex_Description' | localize
+                  }}</span>
+                </div>
               </div>
             </div>
             <div class="col-6">
               <div class="form-group">
-                <label for="Name">{{ 'TenantName' | localize }} *</label>
+                <label for="Name">{{ 'CompanyFullLeagalName' | localize }} *</label>
                 <input
                   id="Name"
                   #nameInput="ngModel"
                   type="text"
+                  placeholder="{{ 'CompanyFullLeagalName' | localize }}"
                   name="Name"
                   class="form-control"
                   [ngClass]="{ edited: tenant.name }"
@@ -61,6 +68,9 @@
                   required
                   maxlength="128"
                 />
+                <div>
+                  <span class="form-text text-muted">{{ l('Enter') }} {{ l('CompanyFullLegalName') }}</span>
+                </div>
                 <validation-messages [formCtrl]="nameInput"></validation-messages>
               </div>
             </div>
@@ -72,17 +82,16 @@
                 <select
                   (change)="CountryChanged($event)"
                   #countrySelect="ngModel"
-                  class="dropdown-menu"
+                  class="form-control form-control-lg custom-select mr-sm-2"
                   name="tenant.countryId"
                   [(ngModel)]="tenant.countryId"
-                  class="form-control"
                   required
                 >
-                  <option selected value="-2">{{ l('Select A Country') }}</option>
+                  <option [ngValue]="null">{{ l('Select') }} {{ l('Country') }}</option>
                   <option *ngFor="let country of allCountries" value="{{ country.id }}">{{ country.displayName }}</option>
                 </select>
-                <span class="form-text text-danger" *ngIf="countrySelect.value == -2 && countrySelect.touched">Country is required</span>
-                <!-- <validation-messages [formCtrl]="nameInput"></validation-messages> -->
+                <!-- <span class="form-text text-danger" *ngIf="countrySelect.value == -2 && countrySelect.touched">Country is required</span> -->
+                <validation-messages [formCtrl]="countrySelect"></validation-messages>
               </div>
             </div>
 
@@ -91,18 +100,17 @@
                 <select
                   [disabled]="!isCountySelected"
                   #citySelect="ngModel"
-                  class="dropdown-menu"
+                  class="form-control form-control-lg custom-select mr-sm-2"
                   name="tenant.cityId"
                   [(ngModel)]="tenant.cityId"
-                  class="form-control"
                   required
                 >
-                  <option value="-2">{{ l('Select A City') }}</option>
+                  <option [ngValue]="null">{{ l('Select') }} {{ l('City') }}</option>
                   <option *ngFor="let city of allCities" value="{{ city.id }}">{{ city.displayName }}</option>
                   <option value="-1">{{ l('Other') }}</option>
                 </select>
-                <span class="form-text text-danger" *ngIf="citySelect.value == -2 && citySelect.touched">City is required</span>
-                <!-- <validation-messages [formCtrl]="cityInput"></validation-messages> -->
+                <!-- <span class="form-text text-danger" *ngIf="citySelect.value == -2 && citySelect.touched">City is required</span> -->
+                <validation-messages [formCtrl]="citySelect"></validation-messages>
               </div>
             </div>
           </div>
@@ -112,15 +120,17 @@
               <div class="form-group">
                 <input
                   #addressInput="ngModel"
-                  class="form-control form-control-solid h-auto py-7 px-6 rounded-lg font-size-h6"
+                  class="form-control py-7 font-size-h6"
                   type="Address"
-                  placeholder="Full Address *"
+                  placeholder="{{ 'AddressFormat' | localize }} *"
                   [(ngModel)]="tenant.address"
                   name="Address"
                   required
                   maxlength="128"
                 />
                 <validation-messages [formCtrl]="addressInput"></validation-messages>
+                <span class="form-text text-muted"> {{ l('Enter') }} {{ l('Address') }}</span>
+                <span class="form-text text-muted"> {{ l('Format') }} :{{ l('AddressFormat') }}</span>
               </div>
             </div>
           </div>
@@ -160,9 +170,13 @@
               [(ngModel)]="tenant.adminEmailAddress"
               [ngClass]="{ edited: tenant.adminEmailAddress }"
               required
+              (change)="removeWhiteSpacesFromEmail()"
               pattern="^\w+([-+.']\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*$"
               maxlength="256"
             />
+            <span class="form-text text-muted"> {{ l('Enter') }} {{ l('AdminEmailAddress') }}</span>
+            <span *ngIf="!isEmailValid" class="form-text text-danger">{{ l('AdminEmailAddress') }} {{ l('NotValid') }}</span>
+            <span *ngIf="!isEmailAvailable" class="form-text text-danger">{{ l('AdminEmailAddress') }} {{ 'AlreadyTaken' | localize }}</span>
             <validation-messages [formCtrl]="adminEmailAddressInput"></validation-messages>
           </div>
 
@@ -264,7 +278,7 @@
                   <li [hidden]="!tenantCreateForm.controls['adminPasswordRepeat'].errors.requiredLength">
                     {{ 'PasswordComplexity_RequiredLength_Hint' | localize: passwordComplexitySetting.requiredLength }}
                   </li>
-                  <li [hidden]="tenantCreateForm.controls['adminPasswordRepeat'].valid">
+                  <li [hidden]="tenantCreateForm.controls['adminPasswordRepeat'].valid && !tenantCreateForm.controls['adminPasswordRepeat'].dirty">
                     {{ 'PasswordsDontMatch' | localize }}
                   </li>
                 </ul>
@@ -349,7 +363,15 @@
             [buttonBusy]="saving"
             [busyText]="l('SavingWithThreeDot')"
             class="btn btn-save font-weight-bold"
-            [disabled]="!tenantCreateForm.form.valid || saving || !subscriptionEndDateIsValid()"
+            [disabled]="
+              !tenantCreateForm.form.valid ||
+              saving ||
+              !subscriptionEndDateIsValid() ||
+              !isEmailValid ||
+              !isEmailAvailable ||
+              citySelect.value == -2 ||
+              countrySelect.value == -2
+            "
           >
             <i class="fa fa-save"></i> <span>{{ 'Save' | localize }}</span>
           </button>
