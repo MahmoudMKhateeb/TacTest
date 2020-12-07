@@ -65,9 +65,10 @@
             <div *ngIf="documentFile.documentTypeDto.hasNumber" class="form-group col-md-6">
               <label for="DocumentNumber">{{ l('Number') }} </label>
               <input
-                type="text"
+                type="number"
                 class="form-control"
                 id="DocumentNumber"
+                (keypress)="numberOnly($event)"
                 (change)="numberChange(documentFile)"
                 [maxLength]="documentFile.documentTypeDto.numberMaxDigits == 0 ? 50 : documentFile.documentTypeDto.numberMaxDigits"
                 [minLength]="documentFile.documentTypeDto.numberMinDigits"
