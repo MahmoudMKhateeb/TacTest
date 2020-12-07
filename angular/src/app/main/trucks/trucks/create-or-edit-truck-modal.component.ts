@@ -33,6 +33,7 @@ import * as moment from '@node_modules/moment';
 
 @Component({
   selector: 'createOrEditTruckModal',
+  styleUrls: ['./trucksComponent.css'],
   templateUrl: './create-or-edit-truck-modal.component.html',
   providers: [DateFormatterService],
 })
