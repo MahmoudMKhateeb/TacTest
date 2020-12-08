@@ -17,6 +17,10 @@ html {
 .langname:after {
   content: '\200E‎' !important;
 }
+.dropdown-menu-right {
+  left: 0px !important;
+  right: auto !important;
+}
 
 li.dropdown-language ul.dropdown-menu li a:after {
   content: '\200E‎' !important;
