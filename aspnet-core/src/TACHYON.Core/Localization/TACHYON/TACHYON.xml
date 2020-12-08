@@ -82,7 +82,9 @@
     <text name="ViewReason">View Reason</text>
     <text name="RejectionReason">Rejection Reason</text>
     <text name="ViewRejectionReason">View Rejection Reason</text>
-    <![CDATA[ Tachyon: Document files Page End]]>
+    <text name="DuplicateFileUploadMsg"> you can not upload same document twice name: {0} , extn:{1}</text>
+	<text name="PleaseChooseAvalidFormat">Please Choose Avalid Format</text>
+	  <![CDATA[ Tachyon: Document files Page End]]>
 
 
     <![CDATA[Tachyon:Common Start]]>

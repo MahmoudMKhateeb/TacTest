@@ -72,7 +72,8 @@ export class CreateOrEditTruckModalComponent extends AppComponentBase {
   testCond = null;
   truck: CreateOrEditTruckDto;
   trucksTypeDisplayName = '';
-
+  todayGregorian = this.dateFormatterService.GetTodayGregorian();
+  todayHijri = this.dateFormatterService.ToHijri(this.todayGregorian);
   userName = '';
   userName2 = '';
   allTrucksTypes: TruckTrucksTypeLookupTableDto[];
@@ -88,9 +89,14 @@ export class CreateOrEditTruckModalComponent extends AppComponentBase {
   public temporaryPictureUrl: string;
   profilePicture = '';
   fileFormateIsInvalideIndexList: boolean[] = [];
+  fileisDuplicateList: boolean[] = [];
+  alldocumentsNotDuplicated = false;
   allnumbersValid = false;
   numbersInValidList: boolean[] = [];
   alldocumentsValid = false;
+  allDatesValid = true;
+  datesInValidList: boolean[] = [];
+
   /**
    * required documents fileUploader
    */
@@ -150,6 +156,7 @@ export class CreateOrEditTruckModalComponent extends AppComponentBase {
       //RequiredDocuments
       this._documentFilesServiceProxy.getTruckRequiredDocumentFiles('').subscribe((result) => {
         this.truck.createOrEditDocumentFileDtos = result;
+        this.intilizedates();
       });
       this.ModalIsEdit = false;
       this.active = true;
@@ -194,10 +201,17 @@ export class CreateOrEditTruckModalComponent extends AppComponentBase {
   } //end of show
 
   createOrEditTruck() {
-    if (!this.alldocumentsValid) {
+    if (!this.alldocumentsValid || !this.allnumbersValid || !this.allDatesValid) {
       this.notify.error(this.l('makeSureThatYouFillAllRequiredFields'));
       return;
     }
+
+    this.truck.createOrEditDocumentFileDtos.forEach((element) => {
+      let date = this.dateFormatterService.MomentToNgbDateStruct(element.expirationDate);
+      let hijriDate = this.dateFormatterService.ToHijri(date);
+      element.hijriExpirationDate = this.dateFormatterService.ToString(hijriDate);
+    });
+
     this._trucksServiceProxy
       .createOrEdit(this.truck)
       .pipe(
@@ -320,6 +334,7 @@ export class CreateOrEditTruckModalComponent extends AppComponentBase {
 
       if (resp.success) {
         //attach each fileToken to his CreateOrEditDocumentFileDto
+        // console.log(resp.result.fileToken);
         this.truck.createOrEditDocumentFileDtos.find(
           (x) => x.name === item.file.name && x.extn === item.file.type
         ).updateDocumentFileInput = new UpdateDocumentFileInput({ fileToken: resp.result.fileToken });
@@ -362,8 +377,24 @@ export class CreateOrEditTruckModalComponent extends AppComponentBase {
       this.isAllfileFormatesAccepted();
       return;
     }
-    this.fileFormateIsInvalideIndexList[index] = false;
     item.name = event.target.files[0].name;
+    //not allow uploading the same document twice
+    for (let i = 0; i < this.truck.createOrEditDocumentFileDtos.length; i++) {
+      const element = this.truck.createOrEditDocumentFileDtos[i];
+      if (element.name == event.target.files[0].name && element.extn == event.target.files[0].type && i != index) {
+        item.name = '';
+        item.extn = '';
+        this.fileisDuplicateList[index] = true;
+        this.isAllfileNotDuplicated();
+        this.message.warn(this.l('DuplicateFileUploadMsg', element.name, element.extn));
+        return;
+      }
+    }
+
+    this.fileisDuplicateList[index] = false;
+    this.isAllfileNotDuplicated();
+    this.fileFormateIsInvalideIndexList[index] = false;
+
     // item.name = '';
     // this.truckFiles[index] = event.target.files;
     this.isAllfileFormatesAccepted();
@@ -527,5 +558,38 @@ export class CreateOrEditTruckModalComponent extends AppComponentBase {
     } else {
       this.allnumbersValid = false;
     }
+  }
+
+  // dateSelected() {
+  //   for (let index = 0; index < this.truck.createOrEditDocumentFileDtos.length; index++) {
+  //     const element = this.truck.createOrEditDocumentFileDtos[index];
+  //     if (element.documentTypeDto.hasExpirationDate) {
+  //       this.datesInValidList[index] = element.expirationDate == null;
+  //     }
+  //   }
+  //   if (
+  //     this.datesInValidList.every((x) => x === false) &&
+  //     this.truck.createOrEditDocumentFileDtos.filter((x) => x.documentTypeDto.hasExpirationDate).length == this.datesInValidList.length
+  //   ) {
+  //     this.allDatesValid = true;
+  //   } else {
+  //     this.allDatesValid = false;
+  //   }
+  // }
+
+  isAllfileNotDuplicated() {
+    if (this.fileisDuplicateList.every((x) => x === false) && this.fileisDuplicateList.length == this.truck.createOrEditDocumentFileDtos.length) {
+      this.alldocumentsNotDuplicated = true;
+    } else {
+      this.alldocumentsNotDuplicated = false;
+    }
+  }
+
+  intilizedates() {
+    this.truck.createOrEditDocumentFileDtos.forEach((element) => {
+      if (element.documentTypeDto.hasExpirationDate) {
+        element.expirationDate = this.dateFormatterService.NgbDateStructToMoment(this.todayGregorian);
+      }
+    });
   }
 }

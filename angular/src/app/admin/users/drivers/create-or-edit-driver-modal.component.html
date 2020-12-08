@@ -193,7 +193,7 @@
                           <span class="form-text text-danger text-left">{{ 'PleaseChooseAvalidFormat' | localize }}</span>
                         </div>
                       </div>
-                      <div *ngIf="item.documentTypeDto.hasExpirationDate" class="form-group col-6">
+                      <!-- <div *ngIf="item.documentTypeDto.hasExpirationDate" class="form-group col-6">
                         <label>{{ l('Expirationdate') }} <span class="text-danger">*</span></label>
                         <input
                           name="expirationDate{{ i }}"
@@ -204,7 +204,7 @@
                           [required]="item.documentTypeDto.isRequired"
                           [(date)]="item.expirationDate"
                         />
-                      </div>
+                      </div> -->
                       <div *ngIf="item.documentTypeDto.hasNumber" class="form-group col-6">
                         <label
                           >{{ l('Number') }}
@@ -233,17 +233,6 @@
                           {{ item.documentTypeDto.numberMaxDigits == 0 ? 50 : item.documentTypeDto.numberMaxDigits }}
                         </span>
                       </div>
-                      <div *ngIf="item.documentTypeDto.hasNotes" class="form-group col-6">
-                        <label>{{ l('Note') }}</label>
-                        <input
-                          name="note{{ i }}"
-                          id="note{{ i }}"
-                          class="form-control m-input"
-                          [required]="item.documentTypeDto.hasNotes"
-                          type="text"
-                          [(ngModel)]="item.notes"
-                        />
-                      </div>
 
                       <div *ngIf="item.documentTypeDto.hasExpirationDate" class="form-group col-6">
                         <hijri-gregorian-datepicker-test
@@ -251,15 +240,37 @@
                           class="m-input"
                           [isRequired]="true"
                           [readonly]="true"
+                          [minGreg]="todayGregorian"
+                          [minHijri]="todayHijri"
+                          [selectedDate]="item.documentTypeDto.hasHijriExpirationDate ? todayHijri : todayGregorian"
                           [selectedDateType]="item.documentTypeDto.hasHijriExpirationDate ? selectedDateTypeHijri : selectedDateTypeGregorian"
                           (selectedDateChange)="hijriDatepickerSelectedDateChange($event, item)"
                         >
                         </hijri-gregorian-datepicker-test>
                       </div>
+                      <div *ngIf="item.documentTypeDto.hasNotes" class="form-group col-6">
+                        <label>{{ l('Note') }}</label>
+                        <textarea
+                          name="note{{ i }}"
+                          id="note{{ i }}"
+                          class="form-control m-input"
+                          [required]="item.documentTypeDto.hasNotes"
+                          type="text"
+                          rows="2"
+                          style="resize: none;"
+                          [(ngModel)]="item.notes"
+                        ></textarea>
+                      </div>
                     </div>
                   </div>
 
                   <div *ngIf="createOrEditDocumentFileDtos.length - 1 != i" class="separator separator-dashed my-5"></div>
+                </div>
+              </div>
+              <div *ngIf="!user.id" class="row">
+                <label>{{ docProgressFileName }}</label>
+                <div class="col-md-12">
+                  <p-progressBar [value]="docProgress" [style]="{ height: '6px', width: '100' }"></p-progressBar>
                 </div>
               </div>
             </tab>
@@ -272,7 +283,7 @@
           <button
             type="submit"
             class="btn btn-save font-weight-bold"
-            [disabled]="!userForm.form.valid || !alldocumentsValid || !allnumbersValid"
+            [disabled]="!userForm.form.valid || !alldocumentsValid || !allnumbersValid || !allDatesValid || !alldocumentsNotDuplicated"
             [buttonBusy]="saving"
             [busyText]="l('SavingWithThreeDot')"
           >

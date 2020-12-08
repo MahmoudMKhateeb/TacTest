@@ -64,7 +64,7 @@
                           <!-- <li>
                                                   <a href="javascript:;" class="dropdown-item">{{ l('View') }}</a>
                                                 </li> -->
-                          <li *ngIf="!record.isAccepted || record.expirationDate <= today">
+                          <li *ngIf="!record.isAccepted || record.expirationDate <= todayMoment">
                             <a
                               href="javascript:;"
                               class="dropdown-item"
@@ -98,7 +98,11 @@
 
                     <td style="width: 150px;">
                       <span class="ui-column-title"></span>
-                      <div *ngIf="record.isAccepted && !record.isRejected && (record.expirationDate != null ? record.expirationDate > today : true)">
+                      <div
+                        *ngIf="
+                          record.isAccepted && !record.isRejected && (record.expirationDate != null ? record.expirationDate >= todayMoment : true)
+                        "
+                      >
                         <span class="label label-lg font-weight-bold label-light-success label-inline">
                           {{ l('Accepted') }}
                         </span>
@@ -113,12 +117,16 @@
                           >
                         </span>
                       </div>
-                      <div *ngIf="!record.isRejected && !record.isAccepted && (record.expirationDate != null ? record.expirationDate > today : true)">
+                      <div
+                        *ngIf="
+                          !record.isRejected && !record.isAccepted && (record.expirationDate != null ? record.expirationDate >= todayMoment : true)
+                        "
+                      >
                         <span class="label label-lg font-weight-bold label-light-primary label-inline">
                           {{ l('InReview') }}
                         </span>
                       </div>
-                      <div *ngIf="record.expirationDate < today && !record.isRejected">
+                      <div *ngIf="record.expirationDate < todayMoment && !record.isRejected">
                         <span class="label label-lg font-weight-bold label-light-danger label-inline">
                           {{ l('Expired') }}
                         </span>
@@ -190,6 +198,7 @@
                         </label>
                         <input
                           (focusout)="checkIfIsNumberUnique(item.documentTypeDto, i, $event.target.value)"
+                          (change)="numberChange(item, i)"
                           name="number{{ i }}"
                           id="number{{ i }}"
                           class="form-control m-input"
@@ -207,6 +216,12 @@
                           type="text"
                           [(ngModel)]="item.number"
                         />
+                        <span *ngIf="item.number == null ? 0 : item.number.length < item.documentTypeDto.numberMinDigits" class="text-danger">
+                          {{ l('TheNumberLengthMustBeMoreThanMinDigits') }}
+                        </span>
+                        <span *ngIf="item.number == null ? false : item.number.length > item.documentTypeDto.numberMaxDigits" class="text-danger">
+                          {{ l('TheNumberLengthMustBeLessThanMaxDigits') }}
+                        </span>
                         <span *ngIf="item.documentTypeDto.numberMinDigits || item.documentTypeDto.numberMinDigits" class="form-text text-muted"
                           >{{ l('minDigits:') }} {{ item.documentTypeDto.numberMinDigits == 0 ? null : item.documentTypeDto.numberMinDigits }}
                           {{ l('maxDigits:') }}
@@ -223,7 +238,10 @@
                           class="m-input"
                           [isRequired]="true"
                           [readonly]="true"
-                          [selectedDateType]="selectedDateTypeGregorian"
+                          [minGreg]="todayGregorian"
+                          [minHijri]="todayHijri"
+                          [selectedDate]="item.documentTypeDto.hasHijriExpirationDate ? todayHijri : todayGregorian"
+                          [selectedDateType]="item.documentTypeDto.hasHijriExpirationDate ? selectedDateTypeHijri : selectedDateTypeGregorian"
                           (selectedDateChange)="hijriDatepickerSelectedDateChange($event, item)"
                         >
                         </hijri-gregorian-datepicker-test>
@@ -232,7 +250,7 @@
                         </div>
                       </div>
                       <div *ngIf="item.documentTypeDto.hasNotes" class="form-group col-md-12">
-                        <label>{{ l('Note') }}*</label>
+                        <label>{{ l('Note') }}</label>
                         <textarea
                           style="resize: none;"
                           name="note{{ i }}"
@@ -241,7 +259,6 @@
                           type="text"
                           rows="3"
                           [(ngModel)]="item.notes"
-                          [disabled]="item.isAccepted"
                         ></textarea>
                       </div>
                     </div>
@@ -261,12 +278,19 @@
             <button
               type="submit"
               class="btn btn-save blue"
-              [disabled]="!TenantRequiredDocumentsForm.form.valid || !alldocumentsValid"
+              [disabled]="
+                !TenantRequiredDocumentsForm.form.valid || !alldocumentsValid || !allnumbersValid || !allDatesValid || !alldocumentsNotDuplicated
+              "
               [buttonBusy]="saving"
               [busyText]="l('SavingWithThreeDot')"
             >
               <i class="fa fa-save"></i> <span>{{ l('Save') }}</span>
             </button>
+
+            {{ ' alldocumentsValid :' + alldocumentsValid }}
+            {{ ' allnumbersValid :' + allnumbersValid }}
+            {{ ' allDatesValid :' + allDatesValid }}
+            {{ ' alldocumentsNotDuplicated :' + alldocumentsNotDuplicated }}
           </div>
         </form>
       </div>

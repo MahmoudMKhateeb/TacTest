@@ -29,6 +29,7 @@
 	  <text name="RejectionReason">Rejection Reason</text>
 	  <text name="ViewRejectionReason">View Rejection Reason</text>
 	  <text name="DateIsRequired">Date is Required</text>
+	  <text name="DuplicateFileUploadMsg">you can not upload same document twice name: {0} , extn:{1}</text>
 	  <![CDATA[Tachyon:Documents Common End]]
 	  
 	  <![CDATA[ Tachyon: Tenant document Upload Page Start]]>

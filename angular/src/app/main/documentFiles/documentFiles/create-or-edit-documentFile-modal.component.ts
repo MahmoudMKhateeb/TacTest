@@ -33,13 +33,15 @@ export class CreateOrEditDocumentFileModalComponent extends AppComponentBase {
   saving = false;
 
   documentFile: CreateOrEditDocumentFileDto = new CreateOrEditDocumentFileDto();
-  fileFormateIsInvalideIndex: boolean;
+  // fileFormateIsInvalideIndex: boolean;
   alldocumentsValid = false;
   documentTypeDisplayName = '';
   documentEntity = '';
   selectedDateType = DateType.Gregorian; // or DateType.Gregorian
   CreateOrEditDocumentFileDtoList: CreateOrEditDocumentFileDto[] = [];
-  isNumberInValid = false;
+  isNumberValid = false;
+  todayGregorian = this.dateFormatterService.GetTodayGregorian();
+  todayHijri = this.dateFormatterService.ToHijri(this.todayGregorian);
   // allTrucks: DocumentFileTruckLookupTableDto[];
   // allTrailers: DocumentFileTrailerLookupTableDto[];
   // allUsers: DocumentFileUserLookupTableDto[];
@@ -65,7 +67,7 @@ export class CreateOrEditDocumentFileModalComponent extends AppComponentBase {
 
   public selectedDate: NgbDateStruct;
   //endregion
-
+  isDateValid = false;
   constructor(injector: Injector, private _documentFilesServiceProxy: DocumentFilesServiceProxy, private _tokenService: TokenService) {
     super(injector);
   }
@@ -82,6 +84,7 @@ export class CreateOrEditDocumentFileModalComponent extends AppComponentBase {
     this.fileToken = '';
     this.entityId = entityId;
     this.documentEntity = documentEntity;
+    this.selectedDate = this.todayGregorian;
     //create
     if (!documentFileId) {
       this.getRequiredDocumentFiles(documentEntity);
@@ -92,7 +95,14 @@ export class CreateOrEditDocumentFileModalComponent extends AppComponentBase {
       this._documentFilesServiceProxy.getDocumentFileForEdit(documentFileId).subscribe((result) => {
         this.documentFile = result.documentFile;
         this.selectedDate = this.dateFormatterService.MomentToNgbDateStruct(this.documentFile.expirationDate);
-        console.log('this.selectedDate', this.selectedDate);
+        // console.log(this.selectedDate);
+        this.selectedDateType = this.documentFile.documentTypeDto.hasHijriExpirationDate ? DateType.Hijri : DateType.Gregorian;
+        if (this.selectedDateType == DateType.Hijri) {
+          this.selectedDate = this.dateFormatterService.ToHijri(this.selectedDate);
+        }
+        this.isNumberValid = true;
+        this.isDateValid = true;
+        this.alldocumentsValid = true;
       });
     }
     this.active = true;
@@ -226,32 +236,21 @@ export class CreateOrEditDocumentFileModalComponent extends AppComponentBase {
   }
 
   DocFileChangeEvent(event: any, item: CreateOrEditDocumentFileDto): void {
-    // if (event.target.files[0].size > 5242880) {
-    //   //5MB
-    //   this.message.warn(this.l('DocumentFile_Warn_SizeLimit', this.maxDocumentFileBytesUserFriendlyValue));
-    //   return;
-    // }
-    // this.DocsUploader.addToQueue(event.target.files);
-
-    // item.extn = event.target.files[0].type;
-    // item.name = event.target.files[0].name;
     if (event.target.files[0].size > 5242880) {
       //5MB
       this.message.warn(this.l('DocumentFile_Warn_SizeLimit', this.maxDocumentFileBytesUserFriendlyValue));
-      this.isAllfileFormatesAccepted();
       item.name = '';
+      this.alldocumentsValid = false;
       return;
     }
     item.extn = event.target.files[0].type;
     if (item.extn != 'image/jpeg' && item.extn != 'image/png' && item.extn != 'application/pdf') {
-      this.fileFormateIsInvalideIndex = true;
       item.name = '';
-      this.isAllfileFormatesAccepted();
+      this.alldocumentsValid = false;
       return;
     }
-    this.fileFormateIsInvalideIndex = false;
+    this.alldocumentsValid = true;
     item.name = event.target.files[0].name;
-    this.isAllfileFormatesAccepted();
     this.DocsUploader.addToQueue(event.target.files);
   }
 
@@ -285,19 +284,17 @@ export class CreateOrEditDocumentFileModalComponent extends AppComponentBase {
     this.documentTypeDisplayName = '';
   }
 
-  isAllfileFormatesAccepted() {
-    if (this.fileFormateIsInvalideIndex) {
-      this.alldocumentsValid = true;
-    } else {
-      this.alldocumentsValid = false;
+  checkIfDateIsValid() {
+    if (this.selectedDate != null) {
+      this.isDateValid = true;
     }
   }
 
   numberChange(item: CreateOrEditDocumentFileDto) {
     if (item.documentTypeDto.numberMinDigits <= item.number.length && item.number.length <= item.documentTypeDto.numberMaxDigits) {
-      this.isNumberInValid = true;
+      this.isNumberValid = true;
     } else {
-      this.isNumberInValid = false;
+      this.isNumberValid = false;
     }
   }
 }
