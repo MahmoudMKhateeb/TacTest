@@ -41,17 +41,19 @@
 	  <text name="minDigits">أقل عدد من الخانات</text>
 	  <text name="maxDigits">أكبر عدد من الخانات</text>
 	  <text name="DateIsRequired">التاريخ مطلوب</text>
+	  <text name="DuplicateFileUploadMsg">من غير المسموح تكرار المستند , إسم المستند : {0} إمتادا المستند : {1}</text>
+
 	  <![CDATA[Tachyon:Documents Common End]]>
 	  
 	  <![CDATA[ Tachyon: Tenant document Upload Page Start]]>
-	  <text name="TenantRequiredDocuments">الملفات المطلوبة من الشركة</text>
-	  <text name="WaitingForReviewMsg"> الرجاء الإنتظار ريثما يتم مراجعة الملفات الخاصة بك</text>
-	  <text name="SubmittedDocumnents">الملقات التي تم تسليمها</text>
+	  <text name="TenantRequiredDocuments">المستندات المطلوبة من الشركة</text>
+	  <text name="WaitingForReviewMsg"> الرجاء الإنتظار ريثما يتم مراجعة المستندات الخاصة بك</text>
+	  <text name="SubmittedDocumnents">المستندات التي تم تسليمها</text>
 	  <text name="Extn">صيغة المستند</text>
 	  <text name="Accepted">تم القبول</text>
 	  <text name="Rejected">تم الرفض</text>
 	  <text name="InReview">تحت المراجعة</text>
-	  <text name="UploadDocumentMsg">الرجاء تحميل الملفات الأتية لكي يتم  إنهاء عملية  تسجيل الدخول الخاصة بك في البرنامج</text>
+	  <text name="UploadDocumentMsg">الرجاء تحميل المستندات الآتية لكي يتم  إنهاء عملية  تسجيل الدخول الخاصة بك في البرنامج</text>
 	  <![CDATA[ Tachyon: Tenant document Upload Page End]]>
 
 	  

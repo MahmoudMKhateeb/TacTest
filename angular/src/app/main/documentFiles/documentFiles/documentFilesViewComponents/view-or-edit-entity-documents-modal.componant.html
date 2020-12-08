@@ -137,7 +137,7 @@
 
                   <td style="width: 150px;">
                     <span *ngIf="record.hasDate">
-                      {{ record.documentFile.expirationDate | momentFormat: 'L' }}
+                      {{ record.documentFile.expirationDate | momentFormat: 'D/M/YYYY' }}
                     </span>
                     <span *ngIf="!record.hasDate">--</span>
                   </td>

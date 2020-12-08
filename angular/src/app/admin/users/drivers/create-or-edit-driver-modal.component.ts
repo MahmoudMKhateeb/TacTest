@@ -57,8 +57,15 @@ export class CreateOrEditDriverModalComponent extends AppComponentBase {
   hasValidationErorr = false;
   alldocumentsValid = false;
   fileFormateIsInvalideIndexList: boolean[] = [];
+  fileisDuplicateList: boolean[] = [];
+  alldocumentsNotDuplicated = false;
   allnumbersValid = false;
   numbersInValidList: boolean[] = [];
+  allDatesValid = true;
+  datesInValidList: boolean[] = [];
+
+  todayGregorian = this.dateFormatterService.GetTodayGregorian();
+  todayHijri = this.dateFormatterService.ToHijri(this.todayGregorian);
   /**
    * required documents fileUploader options
    * @private
@@ -101,7 +108,9 @@ export class CreateOrEditDriverModalComponent extends AppComponentBase {
       //RequiredDocuments
       this._documentFilesServiceProxy.getDriverRequiredDocumentFiles('').subscribe((result) => {
         this.createOrEditDocumentFileDtos = result;
+        this.intilizedates();
       });
+
       this.active = true;
       this.setRandomPassword = true;
       this.sendActivationEmail = true;
@@ -112,7 +121,6 @@ export class CreateOrEditDriverModalComponent extends AppComponentBase {
       this.user.isDriver = this.creatDriver;
       this.roles = userResult.roles;
       this.canChangeUserName = this.user.userName !== AppConsts.userManagement.defaultAdminUserName;
-
       this.allOrganizationUnits = userResult.allOrganizationUnits;
       this.memberedOrganizationUnits = userResult.memberedOrganizationUnits;
 
@@ -200,7 +208,7 @@ export class CreateOrEditDriverModalComponent extends AppComponentBase {
 
   private saveInternal(): void {
     let input = new CreateOrUpdateUserInput();
-    if (!this.alldocumentsValid) {
+    if (!this.alldocumentsValid || !this.allnumbersValid || !this.allDatesValid || !this.alldocumentsNotDuplicated) {
       this.notify.error(this.l('makeSureThatYouFillAllRequiredFields'));
       return;
     }
@@ -215,6 +223,12 @@ export class CreateOrEditDriverModalComponent extends AppComponentBase {
     //docs
 
     input.createOrEditDocumentFileDtos = this.createOrEditDocumentFileDtos;
+
+    input.createOrEditDocumentFileDtos.forEach((element) => {
+      let date = this.dateFormatterService.MomentToNgbDateStruct(element.expirationDate);
+      let hijriDate = this.dateFormatterService.ToHijri(date);
+      element.hijriExpirationDate = this.dateFormatterService.ToString(hijriDate);
+    });
 
     this._userService
       .createOrUpdateUser(input)
@@ -232,6 +246,7 @@ export class CreateOrEditDriverModalComponent extends AppComponentBase {
   close(): void {
     this.active = false;
     this.userPasswordRepeat = '';
+    this.docProgress = 0;
     this.modal.hide();
   }
 
@@ -247,15 +262,31 @@ export class CreateOrEditDriverModalComponent extends AppComponentBase {
       item.name = '';
       return;
     }
+
     item.extn = event.target.files[0].type;
     if (item.extn != 'image/jpeg' && item.extn != 'image/png' && item.extn != 'application/pdf') {
-      this.fileFormateIsInvalideIndexList[index] = true;
+      this.message.warn(this.l('PleaseChooseAvalidFormat'));
       item.name = '';
       this.isAllfileFormatesAccepted();
       return;
     }
-    this.fileFormateIsInvalideIndexList[index] = false;
     item.name = event.target.files[0].name;
+    //not allow uploading the same document twice
+    for (let i = 0; i < this.createOrEditDocumentFileDtos.length; i++) {
+      const element = this.createOrEditDocumentFileDtos[i];
+      if (element.name == event.target.files[0].name && element.extn == event.target.files[0].type && i != index) {
+        item.name = '';
+        item.extn = '';
+        this.fileisDuplicateList[index] = true;
+        this.isAllfileNotDuplicated();
+        this.message.warn(this.l('DuplicateFileUploadMsg', element.name, element.extn));
+        return;
+      }
+    }
+
+    this.fileisDuplicateList[index] = false;
+    this.isAllfileNotDuplicated();
+    this.fileFormateIsInvalideIndexList[index] = false;
     this.isAllfileFormatesAccepted();
     this.DocsUploader.addToQueue(event.target.files);
   }
@@ -284,6 +315,8 @@ export class CreateOrEditDriverModalComponent extends AppComponentBase {
 
       if (resp.success) {
         //attach each fileToken to his CreateOrEditDocumentFileDto
+        // console.log(resp.result.fileToken);
+
         this.createOrEditDocumentFileDtos.find(
           (x) => x.name === item.file.name && x.extn === item.file.type
         ).updateDocumentFileInput = new UpdateDocumentFileInput({ fileToken: resp.result.fileToken });
@@ -394,4 +427,44 @@ export class CreateOrEditDriverModalComponent extends AppComponentBase {
       this.alldocumentsValid = false;
     }
   }
+  isAllfileNotDuplicated() {
+    if (this.fileisDuplicateList.every((x) => x === false) && this.fileisDuplicateList.length == this.createOrEditDocumentFileDtos.length) {
+      this.alldocumentsNotDuplicated = true;
+    } else {
+      this.alldocumentsNotDuplicated = false;
+    }
+  }
+
+  intilizedates() {
+    this.createOrEditDocumentFileDtos.forEach((element) => {
+      if (element.documentTypeDto.hasExpirationDate) {
+        element.expirationDate = this.dateFormatterService.NgbDateStructToMoment(this.todayGregorian);
+      }
+    });
+  }
+
+  /**
+   * do not delete the function dateSelected() below >
+   */
+
+  // dateSelected() {
+  //   for (let index = 0; index < this.createOrEditDocumentFileDtos.filter((x) => x.documentTypeDto.hasExpirationDate).length; index++) {
+  //     const element = this.createOrEditDocumentFileDtos[index];
+  //     if (element.documentTypeDto.hasExpirationDate) {
+  //       this.datesInValidList[index] = element.expirationDate == null;
+  //     }
+  //   }
+  //   if (
+  //     this.datesInValidList.every((x) => x === false) &&
+  //     this.createOrEditDocumentFileDtos.filter((x) => x.documentTypeDto.hasExpirationDate).length == this.datesInValidList.length
+  //   ) {
+  //     this.allDatesValid = true;
+  //   } else {
+  //     this.allDatesValid = false;
+  //   }
+
+  //   console.log(this.createOrEditDocumentFileDtos.filter((x) => x.documentTypeDto.hasExpirationDate));
+  //   console.log(this.datesInValidList.every((x) => x === false));
+  //   console.log(this.datesInValidList);
+  // }
 }

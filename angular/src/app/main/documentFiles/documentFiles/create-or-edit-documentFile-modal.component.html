@@ -100,6 +100,8 @@
                 class="m-input"
                 [isRequired]="true"
                 [readonly]="true"
+                [minHijri]="todayHijri"
+                [minGreg]="todayGregorian"
                 (selectedDateChange)="hijriDatepickerSelectedDateChange($event, documentFile)"
                 [(selectedDate)]="selectedDate"
               >
@@ -140,7 +142,7 @@
           <button
             type="submit"
             class="btn btn-save blue"
-            [disabled]="!documentFileForm.form.valid || !isNumberInValid || !alldocumentsValid"
+            [disabled]="!documentFileForm.form.valid || !isNumberValid || !alldocumentsValid || selectedDate == null"
             [buttonBusy]="saving"
             [busyText]="l('SavingWithThreeDot')"
           >
