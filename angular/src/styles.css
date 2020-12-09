@@ -553,3 +553,7 @@ card-body {
   .menu-arrow {
   color: #d82631 !important;
 }
+
+.btn.btn-link-success {
+  color: #1bc5bd !important;
+}
