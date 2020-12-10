@@ -1,4 +1,6 @@
-﻿using TACHYON.Trucks.TruckCategories.TruckCapacities.Dtos;
+﻿using TACHYON.Vases.Dtos;
+using TACHYON.Vases;
+using TACHYON.Trucks.TruckCategories.TruckCapacities.Dtos;
 using TACHYON.Trucks.TruckCategories.TruckCapacities;
 using TACHYON.Trucks.TruckCategories.TruckSubtypes.Dtos;
 using TACHYON.Trucks.TruckCategories.TruckSubtypes;
@@ -134,6 +136,8 @@ namespace TACHYON
     {
         public static void CreateMappings(IMapperConfigurationExpression configuration)
         {
+            configuration.CreateMap<CreateOrEditVasDto, Vas>().ReverseMap();
+            configuration.CreateMap<VasDto, Vas>().ReverseMap();
             configuration.CreateMap<CreateOrEditCapacityDto, Capacity>().ReverseMap();
             configuration.CreateMap<CapacityDto, Capacity>().ReverseMap();
             configuration.CreateMap<CreateOrEditTruckSubtypeDto, TruckSubtype>().ReverseMap();
@@ -246,7 +250,6 @@ namespace TACHYON
             configuration.CreateMap<Edition, SubscribableEdition>();
             configuration.CreateMap<Edition, EditionSelectDto>();
 
-
             //Payment
             configuration.CreateMap<SubscriptionPaymentDto, SubscriptionPayment>().ReverseMap();
             configuration.CreateMap<SubscriptionPaymentListDto, SubscriptionPayment>().ReverseMap();
@@ -284,7 +287,6 @@ namespace TACHYON
             configuration.CreateMap<UserLoginAttemptDto, UserLoginAttempt>().ReverseMap();
             configuration.CreateMap<ImportUserDto, User>();
             configuration.CreateMap<ImportDriverDto, User>();
-            
 
             //AuditLog
             configuration.CreateMap<AuditLog, AuditLogListDto>();
@@ -318,7 +320,6 @@ namespace TACHYON
             configuration.CreateMap<EntityDynamicParameterValue, EntityDynamicParameterValueDto>().ReverseMap();
             //User Delegations
             configuration.CreateMap<CreateUserDelegationDto, UserDelegation>();
-
 
             /* ADD YOUR OWN CUSTOM AUTOMAPPER MAPPINGS HERE */
         }

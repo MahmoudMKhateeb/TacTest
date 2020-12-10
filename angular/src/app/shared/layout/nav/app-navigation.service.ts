@@ -169,6 +169,9 @@ export class AppNavigationService {
       ),
 
       // Host
+      new AppMenuItem('Vases', 'Pages.Administration.Vases', 'flaticon-more', '/app/admin/vases/vases'),
+
+      // Host
       new AppMenuItem(
         'UserManagement',
         '',

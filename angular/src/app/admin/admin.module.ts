@@ -2,6 +2,10 @@
 import { NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { AppCommonModule } from '@app/shared/common/app-common.module';
+import { VasesComponent } from './vases/vases/vases.component';
+import { ViewVasModalComponent } from './vases/vases/view-vas-modal.component';
+import { CreateOrEditVasModalComponent } from './vases/vases/create-or-edit-vas-modal.component';
+
 import { ShippingRequestStatusesComponent } from './shippingRequestStatuses/shippingRequestStatuses/shippingRequestStatuses.component';
 import { ViewShippingRequestStatusModalComponent } from './shippingRequestStatuses/shippingRequestStatuses/view-shippingRequestStatus-modal.component';
 import { CreateOrEditShippingRequestStatusModalComponent } from './shippingRequestStatuses/shippingRequestStatuses/create-or-edit-shippingRequestStatus-modal.component';
@@ -163,6 +167,10 @@ const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
     NgbModule,
   ],
   declarations: [
+    VasesComponent,
+
+    ViewVasModalComponent,
+    CreateOrEditVasModalComponent,
     ViewRejectionReasonModalComponent,
     CreateOrEditDocumentFileModalComponent,
     ViewOrEditEntityDocumentsModalComponent,

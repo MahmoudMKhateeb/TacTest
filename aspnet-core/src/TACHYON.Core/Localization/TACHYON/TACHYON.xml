@@ -1,6 +1,16 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <localizationDictionary culture="en">
-  <texts>	 <![CDATA[Tachyon:Common  Start]]>-->	  <text name="Choose">Choose</text>
+  <texts>    <text name="Vases">Vases</text>
+    <text name="TACHYON.Vases.Vas">Vas</text>
+    <text name="HasAmount">Has amount</text>
+    <text name="NotHasAmount">Not has amount</text>
+    <text name="HasCount">Has count</text>
+    <text name="NotHasCount">Not has count</text>
+    <text name="VasesHeaderInfo">Vases header info</text>
+    <text name="CreateNewVas">Create new vas</text>
+    <text name="EditVas">Edit vas</text>
+    <text name="DeleteVas">Delete vas</text>
+	 <![CDATA[Tachyon:Common  Start]]>-->	  <text name="Choose">Choose</text>
 	  <text name="makeSureThatYouFillAllRequiredFields">Make sure that you fill all required fields</text>
 	 <![CDATA[Tachyon:Common  End]]>-->	  	 <![CDATA[Tachyon:Truck Page Start]]>-->	  <text name="TrucksHeaderInfo">Trucks Header Info</text>
 	  <text name="NewTruck">New Truck</text>
