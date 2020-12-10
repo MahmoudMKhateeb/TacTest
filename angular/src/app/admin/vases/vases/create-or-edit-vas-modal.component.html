@@ -13,8 +13,8 @@
       <form *ngIf="active" #vasForm="ngForm" novalidate (ngSubmit)="save()" autocomplete="off">
         <div class="modal-header">
           <h4 class="modal-title">
-            <span *ngIf="vas.id">{{ l('EditVas') }}</span>
-            <span *ngIf="!vas.id">{{ l('CreateNewVas') }}</span>
+            <span *ngIf="vas.id">{{ l('Edit') }} {{ l('Vas') }}</span>
+            <span *ngIf="!vas.id">{{ l('Create') }} {{ l('NewVas') }}</span>
           </h4>
           <button type="button" class="close" (click)="close()" aria-label="Close" [disabled]="saving">
             <span aria-hidden="true">&times;</span>
@@ -35,42 +35,33 @@
             />
             <validation-messages [formCtrl]="Vas_Name"></validation-messages>
           </div>
-
-          <!-- <div class="form-group">
-									<label for="Vas_DisplayName">{{l("DisplayName")}}</label>
-									<input type="text" #Vas_DisplayName="ngModel" id="Vas_DisplayName" class="form-control" [(ngModel)]="vas.displayName" name="DisplayName"   minlength="3"  maxlength="256" />
-								    <validation-messages [formCtrl]="Vas_DisplayName"></validation-messages>
-								</div> -->
-
           <br />
-          <div class="m-checkbox-list">
-            <label for="Vas_HasAmount" class="kt-checkbox">
-              <input id="Vas_HasAmount" #Vas_HasAmount="ngModel" type="checkbox" name="HasAmount" [(ngModel)]="vas.hasAmount" />
-              {{ l('HasAmount') }}
-              <span></span>
-            </label>
-            <validation-messages [formCtrl]="Vas_HasAmount"></validation-messages>
-          </div>
+          <div class="form-group row">
+            <label for="vas_HasCount" class="col-4 col-form-label">{{ l('HasCount') }}</label>
+            <div class="col-2">
+              <span class="switch switch-sm switch-icon">
+                <label>
+                  <input #Vas_HasCount="ngModel" id="vas_HasCount" type="checkbox" name="hasCount" [(ngModel)]="vas.hasCount" />
+                  <span></span>
+                </label>
+              </span>
+            </div>
 
-          <br />
-          <div class="m-checkbox-list">
-            <label for="Vas_HasCount" class="kt-checkbox">
-              <input id="Vas_HasCount" #Vas_HasCount="ngModel" type="checkbox" name="HasCount" [(ngModel)]="vas.hasCount" />
-              {{ l('HasCount') }}
-              <span></span>
-            </label>
-            <validation-messages [formCtrl]="Vas_HasCount"></validation-messages>
+            <label for="vas_HasAmount" class="col-4 col-form-label">{{ l('HasAmount') }}</label>
+            <div class="col-2">
+              <span class="switch switch-sm switch-icon">
+                <label>
+                  <input #Vas_HasCount="ngModel" id="vas_HasAmount" type="checkbox" name="hasAmount" [(ngModel)]="vas.hasAmount" />
+                  <span></span>
+                </label>
+              </span>
+            </div>
           </div>
+          <!-- </div> -->
         </div>
         <div class="modal-footer">
-          <button [disabled]="saving" type="button" class="btn btn-save blue" (click)="close()">{{ l('Cancel') }}</button>
-          <button
-            type="submit"
-            class="btn btn-primary blue"
-            [disabled]="!vasForm.form.valid"
-            [buttonBusy]="saving"
-            [busyText]="l('SavingWithThreeDot')"
-          >
+          <button [disabled]="saving" type="button" class="btn btn-default" (click)="close()">{{ l('Cancel') }}</button>
+          <button type="submit" class="btn btn-save blue" [disabled]="!vasForm.form.valid" [buttonBusy]="saving" [busyText]="l('SavingWithThreeDot')">
             <i class="fa fa-save"></i> <span>{{ l('Save') }}</span>
           </button>
         </div>

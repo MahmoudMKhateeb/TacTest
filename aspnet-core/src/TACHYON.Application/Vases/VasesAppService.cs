@@ -49,7 +49,8 @@ namespace TACHYON.Vases
                                 Name = o.Name,
                                 HasAmount = o.HasAmount,
                                 HasCount = o.HasCount,
-                                Id = o.Id
+                                Id = o.Id,
+                                CreationTime= o.CreationTime
                             }
                         };
 
