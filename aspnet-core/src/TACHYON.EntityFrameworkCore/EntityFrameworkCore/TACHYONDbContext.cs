@@ -64,6 +64,8 @@ namespace TACHYON.EntityFrameworkCore
 {
     public class TACHYONDbContext : AbpZeroDbContext<Tenant, Role, User, TACHYONDbContext>, IAbpPersistedGrantDbContext
     {
+        public virtual DbSet<VasPrice> VasPrices { get; set; }
+
         public virtual DbSet<Vas> Vases { get; set; }
 
         public virtual DbSet<Capacity> Capacities { get; set; }
@@ -180,7 +182,12 @@ namespace TACHYON.EntityFrameworkCore
         {
             base.OnModelCreating(modelBuilder);
 
-            modelBuilder.Entity<ShippingRequestBid>().HasQueryFilter(p => !p.IsCancled);
+           
+            modelBuilder.Entity<VasPrice>(v =>
+            {
+                v.HasIndex(e => new { e.TenantId });
+            });
+ modelBuilder.Entity<ShippingRequestBid>().HasQueryFilter(p => !p.IsCancled);
 
             modelBuilder.Entity<Facility>(f =>
             {

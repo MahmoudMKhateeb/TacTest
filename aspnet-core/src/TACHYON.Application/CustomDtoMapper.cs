@@ -136,6 +136,8 @@ namespace TACHYON
     {
         public static void CreateMappings(IMapperConfigurationExpression configuration)
         {
+            configuration.CreateMap<CreateOrEditVasPriceDto, VasPrice>().ReverseMap();
+            configuration.CreateMap<VasPriceDto, VasPrice>().ReverseMap();
             configuration.CreateMap<CreateOrEditVasDto, Vas>().ReverseMap();
             configuration.CreateMap<VasDto, Vas>().ReverseMap();
             configuration.CreateMap<CreateOrEditCapacityDto, Capacity>().ReverseMap();

@@ -2,6 +2,10 @@
 import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { AppCommonModule } from '@app/shared/common/app-common.module';
+import { VasPricesComponent } from './vases/vasPrices/vasPrices.component';
+import { ViewVasPriceModalComponent } from './vases/vasPrices/view-vasPrice-modal.component';
+import { CreateOrEditVasPriceModalComponent } from './vases/vasPrices/create-or-edit-vasPrice-modal.component';
+
 import { CapacitiesComponent } from './truckCapacities/capacities/capacities.component';
 import { ViewCapacityModalComponent } from './truckCapacities/capacities/view-capacity-modal.component';
 import { CreateOrEditCapacityModalComponent } from './truckCapacities/capacities/create-or-edit-capacity-modal.component';
@@ -171,6 +175,10 @@ NgxBootstrapDatePickerConfigService.registerNgxBootstrapDatePickerLocales();
     AdminModule,
   ],
   declarations: [
+    VasPricesComponent,
+
+    ViewVasPriceModalComponent,
+    CreateOrEditVasPriceModalComponent,
     CapacitiesComponent,
     RejectionReasonModalComponent,
     ViewCapacityModalComponent,

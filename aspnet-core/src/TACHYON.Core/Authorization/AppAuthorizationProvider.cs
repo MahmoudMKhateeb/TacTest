@@ -30,6 +30,13 @@ namespace TACHYON.Authorization
 
             var pages = context.GetPermissionOrNull(AppPermissions.Pages) ?? context.CreatePermission(AppPermissions.Pages, L("Pages"));
 
+            var vasPrices = pages.CreateChildPermission(AppPermissions.Pages_VasPrices, L("VasPrices"), multiTenancySides: MultiTenancySides.Tenant);
+            vasPrices.CreateChildPermission(AppPermissions.Pages_VasPrices_Create, L("CreateNewVasPrice"), multiTenancySides: MultiTenancySides.Tenant);
+            vasPrices.CreateChildPermission(AppPermissions.Pages_VasPrices_Edit, L("EditVasPrice"), multiTenancySides: MultiTenancySides.Tenant);
+            vasPrices.CreateChildPermission(AppPermissions.Pages_VasPrices_Delete, L("DeleteVasPrice"), multiTenancySides: MultiTenancySides.Tenant);
+
+
+
             var capacities = pages.CreateChildPermission(AppPermissions.Pages_Capacities, L("Capacities"), multiTenancySides: MultiTenancySides.Host);
             capacities.CreateChildPermission(AppPermissions.Pages_Capacities_Create, L("CreateNewCapacity"), multiTenancySides: MultiTenancySides.Host);
             capacities.CreateChildPermission(AppPermissions.Pages_Capacities_Edit, L("EditCapacity"), multiTenancySides: MultiTenancySides.Host);

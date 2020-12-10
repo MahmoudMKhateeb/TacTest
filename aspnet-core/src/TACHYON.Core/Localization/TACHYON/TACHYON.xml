@@ -1,6 +1,17 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <localizationDictionary culture="en">
-  <texts>    <text name="Vases">Vases</text>
+  <texts>    <text name="VasPrice">Vas price</text>
+    <text name="TACHYON.Vases.VasPrice">VasPrice</text>
+    <text name="MaxAmount">Max amount</text>
+    <text name="MaxCount">Max count</text>
+    <text name="VasPricesHeaderInfo">Vas prices header info</text>
+    <text name="CreateNewVasPrice">Create new vas price</text>
+    <text name="EditVasPrice">Edit vas price</text>
+    <text name="DeleteVasPrice">Delete vas price</text>
+    <text name="VasPrices">Vas prices</text>
+    <text name="VasName">Vas name</text>
+    <text name="PickVas">Pick vas</text>
+    <text name="Vases">Vases</text>
     <text name="TACHYON.Vases.Vas">Vas</text>
     <text name="HasAmount">Has amount</text>
     <text name="NotHasAmount">Not has amount</text>

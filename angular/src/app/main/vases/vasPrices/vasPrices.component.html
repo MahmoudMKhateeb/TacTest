@@ -1,0 +1,243 @@
+﻿<div [@routerTransition]>
+  <div class="content d-flex flex-column flex-column-fluid">
+    <sub-header [title]="'VasPrices' | localize" [description]="'VasPricesHeaderInfo' | localize">
+      <div role="actions">
+        <button (click)="exportToExcel()" class="btn btn-outline-success"><i class="fa fa-file-excel"></i> {{ l('ExportToExcel') }}</button>
+
+        <button *ngIf="isGranted('Pages.VasPrices.Create')" (click)="createVasPrice()" class="btn btn-primary blue">
+          <i class="fa fa-plus"></i> {{ l('CreateNewVasPrice') }}
+        </button>
+      </div>
+    </sub-header>
+
+    <div [class]="containerClass">
+      <div class="card card-custom gutter-b">
+        <div class="card-body">
+          <form class="form" autocomplete="off">
+            <div>
+              <div class="row align-items-center">
+                <div class="col-xl-12">
+                  <div class="form-group m-form__group align-items-center">
+                    <div class="input-group">
+                      <input
+                        [(ngModel)]="filterText"
+                        name="filterText"
+                        autoFocus
+                        class="form-control m-input"
+                        [placeholder]="l('SearchWithThreeDot')"
+                        type="text"
+                      />
+                      <span class="input-group-btn">
+                        <button (click)="getVasPrices()" class="btn btn-primary" type="submit"><i class="flaticon-search-1"></i></button>
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="row" [hidden]="!advancedFiltersAreShown">
+                <div class="col-md-12">
+                  <div class="kt-separator kt-separator--border-dashed"></div>
+                </div>
+
+                <div class="col-md-3">
+                  <div class="form-group">
+                    <label for="MinPriceFilter">{{ l('MinMax') }} {{ l('Price') }}</label>
+                    <div class="input-group">
+                      <input
+                        type="number"
+                        class="form-control"
+                        id="MinPriceFilter"
+                        [(ngModel)]="minPriceFilter"
+                        placeholder="{{ l('MinValue') }}"
+                        name="minPriceFilter"
+                      />
+                      <input
+                        type="number"
+                        class="form-control"
+                        [(ngModel)]="maxPriceFilter"
+                        placeholder="{{ l('MaxValue') }}"
+                        name="maxPriceFilter"
+                      />
+                    </div>
+                  </div>
+                </div>
+                <div class="col-md-3">
+                  <div class="form-group">
+                    <label for="MinMaxAmountFilter">{{ l('MinMax') }} {{ l('MaxAmount') }}</label>
+                    <div class="input-group">
+                      <input
+                        type="number"
+                        class="form-control"
+                        id="MinMaxAmountFilter"
+                        [(ngModel)]="minMaxAmountFilter"
+                        placeholder="{{ l('MinValue') }}"
+                        name="minMaxAmountFilter"
+                      />
+                      <input
+                        type="number"
+                        class="form-control"
+                        [(ngModel)]="maxMaxAmountFilter"
+                        placeholder="{{ l('MaxValue') }}"
+                        name="maxMaxAmountFilter"
+                      />
+                    </div>
+                  </div>
+                </div>
+                <div class="col-md-3">
+                  <div class="form-group">
+                    <label for="MinMaxCountFilter">{{ l('MinMax') }} {{ l('MaxCount') }}</label>
+                    <div class="input-group">
+                      <input
+                        type="number"
+                        class="form-control"
+                        id="MinMaxCountFilter"
+                        [(ngModel)]="minMaxCountFilter"
+                        placeholder="{{ l('MinValue') }}"
+                        name="minMaxCountFilter"
+                      />
+                      <input
+                        type="number"
+                        class="form-control"
+                        [(ngModel)]="maxMaxCountFilter"
+                        placeholder="{{ l('MaxValue') }}"
+                        name="maxMaxCountFilter"
+                      />
+                    </div>
+                  </div>
+                </div>
+                <div class="col-md-3">
+                  <div class="form-group">
+                    <label for="VasNameFilter">({{ l('Vas') }}) {{ l('Name') }}</label>
+                    <input type="text" class="form-control" id="VasNameFilter" name="vasNameFilter" [(ngModel)]="vasNameFilter" />
+                  </div>
+                </div>
+              </div>
+              <div class="row mb-2">
+                <div class="col-sm-12">
+                  <span
+                    class="clickable-item text-muted"
+                    *ngIf="!advancedFiltersAreShown"
+                    (click)="advancedFiltersAreShown = !advancedFiltersAreShown"
+                    ><i class="fa fa-angle-down"></i> {{ l('ShowAdvancedFilters') }}</span
+                  >
+                  <span class="clickable-item text-muted" *ngIf="advancedFiltersAreShown" (click)="advancedFiltersAreShown = !advancedFiltersAreShown"
+                    ><i class="fa fa-angle-up"></i> {{ l('HideAdvancedFilters') }}</span
+                  >
+                </div>
+              </div>
+            </div>
+          </form>
+
+          <div class="row align-items-center">
+            <!--<Primeng-Datatable-Start>-->
+            <div class="primeng-datatable-container col-12" [busyIf]="primengTableHelper.isLoading">
+              <p-table
+                #dataTable
+                (onLazyLoad)="getVasPrices($event)"
+                [value]="primengTableHelper.records"
+                rows="{{ primengTableHelper.defaultRecordsCountPerPage }}"
+                [paginator]="false"
+                [lazy]="true"
+                [scrollable]="true"
+                ScrollWidth="100%"
+                [responsive]="primengTableHelper.isResponsive"
+                [resizableColumns]="primengTableHelper.resizableColumns"
+              >
+                <ng-template pTemplate="header">
+                  <tr>
+                    <th style="width: 130px;" [hidden]="!isGrantedAny('Pages.VasPrices.Edit', 'Pages.VasPrices.Delete')">{{ l('Actions') }}</th>
+                    <th style="width: 150px;" pSortableColumn="vasFk.name">
+                      {{ l('Name') }}
+                      <p-sortIcon field="vasName"></p-sortIcon>
+                    </th>
+                    <th style="width: 150px;" pSortableColumn="price">
+                      {{ l('Price') }}
+                      <p-sortIcon field="vasPrice.price"></p-sortIcon>
+                    </th>
+                    <th style="width: 150px;" pSortableColumn="maxAmount">
+                      {{ l('MaxAmount') }}
+                      <p-sortIcon field="vasPrice.maxAmount"></p-sortIcon>
+                    </th>
+                    <th style="width: 150px;" pSortableColumn="maxCount">
+                      {{ l('MaxCount') }}
+                      <p-sortIcon field="vasPrice.maxCount"></p-sortIcon>
+                    </th>
+                  </tr>
+                </ng-template>
+                <ng-template pTemplate="body" let-record="$implicit">
+                  <tr>
+                    <td style="width: 130px;" [hidden]="!isGrantedAny('Pages.VasPrices.Edit', 'Pages.VasPrices.Delete')">
+                      <div class="btn-group dropdown" dropdown container="body">
+                        <button class="dropdown-toggle btn btn-sm btn-primary" dropdownToggle>
+                          <i class="fa fa-cog"></i><span class="caret"></span> {{ l('Actions') }}
+                        </button>
+                        <ul class="dropdown-menu" *dropdownMenu>
+                          <li>
+                            <a href="javascript:;" class="dropdown-item" (click)="viewVasPriceModal.show(record)">{{ l('View') }}</a>
+                          </li>
+                          <li>
+                            <a
+                              href="javascript:;"
+                              *ngIf="permission.isGranted('Pages.VasPrices.Edit')"
+                              class="dropdown-item"
+                              (click)="createOrEditVasPriceModal.show(record.vasPrice.id)"
+                              >{{ l('Edit') }}</a
+                            >
+                          </li>
+                          <li>
+                            <a
+                              class="dropdown-item"
+                              href="javascript:;"
+                              *ngIf="permission.isGranted('Pages.VasPrices.Delete')"
+                              (click)="deleteVasPrice(record.vasPrice)"
+                              >{{ l('Delete') }}</a
+                            >
+                          </li>
+                        </ul>
+                      </div>
+                    </td>
+                    <td style="width: 150px;">
+                      <span class="ui-column-title"> {{ l('Name') }}</span>
+                      {{ record.vasName }}
+                    </td>
+                    <td style="width: 150px;">
+                      <span class="ui-column-title"> {{ l('Price') }}</span>
+                      {{ record.vasPrice.price }}
+                    </td>
+                    <td style="width: 150px;">
+                      <span class="ui-column-title"> {{ l('MaxAmount') }}</span>
+                      {{ record.vasPrice.maxAmount }}
+                    </td>
+                    <td style="width: 150px;">
+                      <span class="ui-column-title"> {{ l('MaxCount') }}</span>
+                      {{ record.vasPrice.maxCount }}
+                    </td>
+                  </tr>
+                </ng-template>
+              </p-table>
+              <div class="primeng-no-data" *ngIf="primengTableHelper.totalRecordsCount == 0">
+                {{ l('NoData') }}
+              </div>
+              <div class="primeng-paging-container">
+                <p-paginator
+                  [rows]="primengTableHelper.defaultRecordsCountPerPage"
+                  #paginator
+                  (onPageChange)="getVasPrices($event)"
+                  [totalRecords]="primengTableHelper.totalRecordsCount"
+                  [rowsPerPageOptions]="primengTableHelper.predefinedRecordsCountPerPage"
+                >
+                </p-paginator>
+                <span class="total-records-count">
+                  {{ l('TotalRecordsCount', primengTableHelper.totalRecordsCount) }}
+                </span>
+              </div>
+            </div>
+            <!--<Primeng-Datatable-End>-->
+          </div>
+        </div>
+      </div>
+    </div>
+    <createOrEditVasPriceModal #createOrEditVasPriceModal (modalSave)="getVasPrices()"></createOrEditVasPriceModal>
+    <viewVasPriceModal #viewVasPriceModal></viewVasPriceModal>
+  </div>
+</div>
