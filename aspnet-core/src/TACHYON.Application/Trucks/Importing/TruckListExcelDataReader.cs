@@ -98,7 +98,7 @@ namespace TACHYON.Trucks.Importing
                 //7
                 truck.TruckSubtypeId = GetTruckSubTypeId(GetRequiredValueFromRowOrNull(worksheet, row, 7, "Truck Subtype", exceptionMessage), truck.TrucksTypeId, exceptionMessage);
                 //8
-                truck.CapacityId = Convert.ToInt32(GetRequiredValueFromRowOrNull(worksheet, row, 8, "Capacity (Payload)*", exceptionMessage));
+                truck.Capacity = GetRequiredValueFromRowOrNull(worksheet, row, 8, "Capacity (Payload)*", exceptionMessage);
                 //9
                 truck.Note = GetRequiredValueFromRowOrNull(worksheet, row, 9, "Note", exceptionMessage);
 
