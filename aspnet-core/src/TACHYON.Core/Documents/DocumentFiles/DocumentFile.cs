@@ -11,6 +11,7 @@ using TACHYON.Documents.DocumentTypes;
 using TACHYON.Routs.RoutSteps;
 using TACHYON.Trailers;
 using TACHYON.Trucks;
+using TACHYON.MultiTenancy;
 
 namespace TACHYON.Documents.DocumentFiles
 {
@@ -20,7 +21,8 @@ namespace TACHYON.Documents.DocumentFiles
     {
         public int? TenantId { get; set; }
 
-
+        [ForeignKey("TenantId")]
+        public Tenant TenantFk { get; set; }
         [Required]
         [StringLength(DocumentFileConsts.MaxNameLength, MinimumLength = DocumentFileConsts.MinNameLength)]
         public virtual string Name { get; set; }

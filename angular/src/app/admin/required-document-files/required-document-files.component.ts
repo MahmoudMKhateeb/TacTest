@@ -20,6 +20,7 @@ import { NgbDateStruct } from '@node_modules/@ng-bootstrap/ng-bootstrap';
 import { DateFormatterService } from '@app/shared/common/hijri-gregorian-datepicker/date-formatter.service';
 import { DateType } from '@app/shared/common/hijri-gregorian-datepicker/consts';
 import { FileDownloadService } from '@shared/utils/file-download.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-required-document-files',
@@ -30,8 +31,7 @@ import { FileDownloadService } from '@shared/utils/file-download.service';
 export class RequiredDocumentFilesComponent extends AppComponentBase implements OnInit {
   @ViewChild('dataTable', { static: true }) dataTable: Table;
   @ViewChild('requiredDocumentsCard') private myScrollContainer: ElementRef;
-  today = abp.clock.now();
-  datePickerToday: NgbDateStruct = { day: this.today.getDay(), month: this.today.getMonth(), year: this.today.getFullYear() };
+  todayGregorian = this.dateFormatterService.GetTodayGregorian();
   active = false;
   saving = false;
   GregValue: moment.Moment;
@@ -44,6 +44,14 @@ export class RequiredDocumentFilesComponent extends AppComponentBase implements 
   submittedDocumentsList: GetTenantSubmittedDocumnetForView[] = [];
   // truckFiles: File[] = [];
   alldocumentsValid = false;
+  todayMoment = this.dateFormatterService.NgbDateStructToMoment(this.todayGregorian);
+  todayHijri = this.dateFormatterService.ToHijri(this.todayGregorian);
+  allnumbersValid = false;
+  numbersInValidList: boolean[] = [];
+  allDatesValid = true;
+  datesInValidList: boolean[] = [];
+  fileisDuplicateList: boolean[] = [];
+  alldocumentsNotDuplicated = false;
   /**
    * required documents fileUploader
    */
@@ -68,7 +76,8 @@ export class RequiredDocumentFilesComponent extends AppComponentBase implements 
     injector: Injector,
     private _documentFilesServiceProxy: DocumentFilesServiceProxy,
     private _tokenService: TokenService,
-    private _fileDownloadService: FileDownloadService
+    private _fileDownloadService: FileDownloadService,
+    private _router: Router
   ) {
     super(injector);
 
@@ -123,6 +132,15 @@ export class RequiredDocumentFilesComponent extends AppComponentBase implements 
         this.notify.error(this.l('makeSureThatYouFillAllRequiredFields'));
         return;
       }
+
+      this.createOrEditDocumentFileDtos.forEach((element) => {
+        if (element.documentTypeDto.hasExpirationDate) {
+          let date = this.dateFormatterService.MomentToNgbDateStruct(element.expirationDate);
+          let hijriDate = this.dateFormatterService.ToHijri(date);
+          element.hijriExpirationDate = this.dateFormatterService.ToString(hijriDate);
+        }
+      });
+
       this._documentFilesServiceProxy
         .addTenantRequiredDocumentFiles(this.createOrEditDocumentFileDtos)
         .pipe(
@@ -163,8 +181,24 @@ export class RequiredDocumentFilesComponent extends AppComponentBase implements 
       this.isAllfileFormatesAccepted();
       return;
     }
-    this.fileFormateIsInvalideIndexList[index] = false;
+
     item.name = event.target.files[0].name;
+    //not allow uploading the same document twice
+    for (let i = 0; i < this.createOrEditDocumentFileDtos.length; i++) {
+      const element = this.createOrEditDocumentFileDtos[i];
+      if (element.name == event.target.files[0].name && element.extn == event.target.files[0].type && i != index) {
+        item.name = '';
+        item.extn = '';
+        this.fileisDuplicateList[index] = true;
+        this.isAllfileNotDuplicated();
+        this.message.warn(this.l('DuplicateFileUploadMsg', element.name, element.extn));
+        return;
+      }
+    }
+
+    this.fileisDuplicateList[index] = false;
+    this.isAllfileNotDuplicated();
+    this.fileFormateIsInvalideIndexList[index] = false;
     // this.truckFiles[index] = event.target.files;
     this.isAllfileFormatesAccepted();
     this.DocsUploader.addToQueue(event.target.files);
@@ -181,7 +215,7 @@ export class RequiredDocumentFilesComponent extends AppComponentBase implements 
   }
 
   save(): void {
-    if (!this.alldocumentsValid) {
+    if (!this.alldocumentsValid || !this.alldocumentsNotDuplicated || !this.allDatesValid || !this.allnumbersValid) {
       this.notify.error(this.l('makeSureThatYouFillAllRequiredFields'));
       return;
     }
@@ -194,6 +228,12 @@ export class RequiredDocumentFilesComponent extends AppComponentBase implements 
       if (result.length > 0) {
         this.isFormSubmitted = true;
         this.submittedDocumentsList = result;
+        let isAccepted = this.submittedDocumentsList.every((x) =>
+          x.isAccepted == true && x.expirationDate == undefined ? true : x.expirationDate >= this.todayMoment
+        );
+        if (isAccepted) {
+          this._router.navigate(['app/main/dashboard']);
+        }
       } else {
         this.isFormSubmitted = false;
         this.submittedDocumentsList = [];
@@ -204,6 +244,8 @@ export class RequiredDocumentFilesComponent extends AppComponentBase implements 
     this._documentFilesServiceProxy.getTenentMissingDocuments().subscribe((result) => {
       result.forEach((x) => (x.expirationDate = null));
       this.createOrEditDocumentFileDtos = result;
+      this.intilizedates();
+
       this.active = true;
       if (this.createOrEditDocumentFileDtos.length > 0) {
         this.scrollToRequiredDocumentsList();
@@ -262,5 +304,55 @@ export class RequiredDocumentFilesComponent extends AppComponentBase implements 
     } else {
       this.alldocumentsValid = false;
     }
+  }
+
+  numberChange(item: CreateOrEditDocumentFileDto, index: number) {
+    if (item.documentTypeDto.numberMinDigits <= item.number.length && item.number.length <= item.documentTypeDto.numberMaxDigits) {
+      this.numbersInValidList[index] = false;
+      this.isNumbersValid();
+    } else {
+      this.numbersInValidList[index] = true;
+      this.isNumbersValid();
+    }
+  }
+  isNumbersValid() {
+    if (this.numbersInValidList.every((x) => x === false) && this.numbersInValidList.length == this.createOrEditDocumentFileDtos.length) {
+      this.allnumbersValid = true;
+    } else {
+      this.allnumbersValid = false;
+    }
+  }
+
+  // dateSelected() {
+  //   for (let index = 0; index < this.createOrEditDocumentFileDtos.length; index++) {
+  //     const element = this.createOrEditDocumentFileDtos[index];
+  //     if (element.documentTypeDto.hasExpirationDate) {
+  //       this.datesInValidList[index] = element.expirationDate == null;
+  //     }
+  //   }
+  //   if (
+  //     this.datesInValidList.every((x) => x === false) &&
+  //     this.createOrEditDocumentFileDtos.filter((x) => x.documentTypeDto.hasExpirationDate).length == this.datesInValidList.length
+  //   ) {
+  //     this.allDatesValid = true;
+  //   } else {
+  //     this.allDatesValid = false;
+  //   }
+  // }
+
+  isAllfileNotDuplicated() {
+    if (this.fileisDuplicateList.every((x) => x === false) && this.fileisDuplicateList.length == this.createOrEditDocumentFileDtos.length) {
+      this.alldocumentsNotDuplicated = true;
+    } else {
+      this.alldocumentsNotDuplicated = false;
+    }
+  }
+
+  intilizedates() {
+    this.createOrEditDocumentFileDtos.forEach((element) => {
+      if (element.documentTypeDto.hasExpirationDate) {
+        element.expirationDate = this.dateFormatterService.NgbDateStructToMoment(this.todayGregorian);
+      }
+    });
   }
 }

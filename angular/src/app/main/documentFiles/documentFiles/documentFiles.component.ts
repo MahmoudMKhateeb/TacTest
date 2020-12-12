@@ -13,6 +13,7 @@ import { Paginator } from 'primeng/paginator';
 import { LazyLoadEvent } from 'primeng/public_api';
 import { FileDownloadService } from '@shared/utils/file-download.service';
 import { EntityTypeHistoryModalComponent } from '@app/shared/common/entityHistory/entity-type-history-modal.component';
+import { DateFormatterService } from '@app/shared/common/hijri-gregorian-datepicker/date-formatter.service';
 import * as _ from 'lodash';
 import * as moment from 'moment';
 import session = abp.session;
@@ -21,6 +22,7 @@ import session = abp.session;
   templateUrl: './documentFiles.component.html',
   encapsulation: ViewEncapsulation.None,
   animations: [appModuleAnimation()],
+  providers: [DateFormatterService],
 })
 export class DocumentFilesComponent extends AppComponentBase implements OnInit {
   @ViewChild('entityTypeHistoryModal', { static: true }) entityTypeHistoryModal: EntityTypeHistoryModalComponent;
@@ -45,7 +47,7 @@ export class DocumentFilesComponent extends AppComponentBase implements OnInit {
   userNameFilter = '';
   isHost = true;
   routStepDisplayNameFilter = '';
-  today = abp.clock.now();
+  todayGregorian = this.dateFormatterService.GetTodayGregorian();
   entityType = 'Tenant';
   entityTypesList: SelectItemDto[] = [];
 

@@ -36,6 +36,8 @@ namespace TACHYON.Trucks.Importing.Dto
 
         public long? Driver1UserId { get; set; }
 
+        public string Capacity { get; set; }
+
 
         #region Truck Categories
 

@@ -7,6 +7,7 @@ using Abp;
 using Abp.Dependency;
 using Abp.Domain.Repositories;
 using Abp.Domain.Uow;
+using Abp.Threading;
 using Abp.Threading.BackgroundWorkers;
 using Abp.Threading.Timers;
 using Abp.Timing;
@@ -49,24 +50,31 @@ namespace TACHYON.Documents
 
                 foreach (DocumentFile documentFile in docs)
                 {
-                    //ExpirationAlertDays 
-                    var expirationAlertDays = documentFile.DocumentTypeFk.ExpirationAlertDays;
-                    if (expirationAlertDays != null && documentFile.ExpirationDate != null)
+                    if (documentFile.ExpirationDate == null)
                     {
-                        var alertDate = documentFile.ExpirationDate.Value.Date.Subtract(TimeSpan.FromDays(Convert.ToDouble(expirationAlertDays))).Date;
+                        continue;
+                    }
+
+                    //AlertDays 
+                    var expirationAlertDays = documentFile.DocumentTypeFk.ExpirationAlertDays;
+                    if (expirationAlertDays != null)
+                    {
+                        var alertDate = documentFile.ExpirationDate.Value.AddDays(-1 * expirationAlertDays.Value).Date;
                         if (alertDate == Clock.Now.Date)
                         {
 
                             var user = new UserIdentifier(documentFile.TenantId, documentFile.CreatorUserId.Value);
-                            _appNotifier.DocumentFileBeforExpiration(user, documentFile.Id, expirationAlertDays.Value);
+                            AsyncHelper.RunSync(() => _appNotifier.DocumentFileBeforExpiration(user, documentFile.Id, expirationAlertDays.Value));
 
                         }
                     }
 
-                    if (documentFile.ExpirationDate != null && documentFile.ExpirationDate.Value.Date == DateTime.Now.Date)
+                    //Expiration
+                    if (documentFile.ExpirationDate.Value.Date == Clock.Now.Date)
                     {
                         var user = new UserIdentifier(documentFile.TenantId, documentFile.CreatorUserId.Value);
-                        _appNotifier.DocumentFileExpiration(user, documentFile.Id);
+                        AsyncHelper.RunSync(() => _appNotifier.DocumentFileExpiration(user, documentFile.Id));
+                        Logger.Info(documentFile + "ExpiredDocumentFileWorker logger.");
                     }
 
                 }

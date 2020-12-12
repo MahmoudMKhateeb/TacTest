@@ -184,7 +184,7 @@
               <label for="Truck_ModelYear">{{ l('ModelYear') }} *</label>
               <input
                 [(ngModel)]="truck.modelYear"
-                class="form-control"
+                class="form-control modelyearinput"
                 id="Truck_ModelYear"
                 maxlength="4"
                 placeholder="YYYY"
@@ -342,18 +342,6 @@
                         {{ item.documentTypeDto.numberMaxDigits == 0 ? 50 : item.documentTypeDto.numberMaxDigits }}
                       </span>
                     </div>
-                    <div *ngIf="item.documentTypeDto.hasNotes" class="form-group col-6">
-                      <label>{{ l('Note') }}*</label>
-                      <input
-                        name="note{{ i }}"
-                        id="note{{ i }}"
-                        class="form-control m-input"
-                        [required]="item.documentTypeDto.hasNotes"
-                        type="text"
-                        [(ngModel)]="item.notes"
-                        [disabled]="item.isAccepted"
-                      />
-                    </div>
 
                     <div *ngIf="item.documentTypeDto.hasExpirationDate" class="form-group col-6">
                       <hijri-gregorian-datepicker-test
@@ -361,10 +349,28 @@
                         class="m-input"
                         [isRequired]="true"
                         [readonly]="true"
+                        [minGreg]="todayGregorian"
+                        [minHijri]="todayHijri"
+                        [selectedDate]="item.documentTypeDto.hasHijriExpirationDate ? todayHijri : todayGregorian"
                         [selectedDateType]="item.documentTypeDto.hasHijriExpirationDate ? selectedDateTypeHijri : selectedDateTypeGregorian"
                         (selectedDateChange)="hijriDatepickerSelectedDateChange($event, item)"
                       >
                       </hijri-gregorian-datepicker-test>
+                    </div>
+
+                    <div *ngIf="item.documentTypeDto.hasNotes" class="form-group col-6">
+                      <label>{{ l('Note') }}*</label>
+                      <textarea
+                        name="note{{ i }}"
+                        id="note{{ i }}"
+                        class="form-control m-input"
+                        [required]="item.documentTypeDto.hasNotes"
+                        type="text"
+                        rows="2"
+                        style="resize: none;"
+                        [(ngModel)]="item.notes"
+                        [disabled]="item.isAccepted"
+                      ></textarea>
                     </div>
                   </div>
                 </div>
@@ -383,7 +389,7 @@
           <button
             type="submit"
             class="btn btn-save blue"
-            [disabled]="!truckForm.form.valid || !alldocumentsValid"
+            [disabled]="!truckForm.form.valid || !alldocumentsValid || !allnumbersValid || !allDatesValid || !alldocumentsNotDuplicated"
             [buttonBusy]="saving"
             [busyText]="l('SavingWithThreeDot')"
           >

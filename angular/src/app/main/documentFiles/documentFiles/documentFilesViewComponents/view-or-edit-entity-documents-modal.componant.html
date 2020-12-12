@@ -63,7 +63,7 @@
                     <p-sortIcon field="documentFile.extn"></p-sortIcon>
                   </th>
 
-                  <th style="width: 150px;" pSortableColumn="documentTypeFk.number">
+                  <th style="width: 150px;" pSortableColumn="number">
                     {{ l('Number') }}
                     <p-sortIcon field="Number"></p-sortIcon>
                   </th>
@@ -137,7 +137,7 @@
 
                   <td style="width: 150px;">
                     <span *ngIf="record.hasDate">
-                      {{ record.documentFile.expirationDate | momentFormat: 'L' }}
+                      {{ record.documentFile.expirationDate | momentFormat: 'D/M/YYYY' }}
                     </span>
                     <span *ngIf="!record.hasDate">--</span>
                   </td>

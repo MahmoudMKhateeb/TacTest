@@ -37,16 +37,20 @@ namespace TACHYON.Migrations.Seed.Host
                 {
                     break;
                 }
-                int countryId = AddCountryToDB(country).Id;
-                if (country == "Saudi Arabia")
+                if (!string.IsNullOrWhiteSpace(country))
                 {
-                    //insert citites
-                    foreach (var ci in co.Value.ToArray())
+                    int countryId = AddCountryToDB(country).Id;
+                    if (country == "Saudi Arabia")
                     {
-                        string city = ci.ToString();
-                        CreateCityToDB(city, countryId);
+                        //insert citites
+                        foreach (var ci in co.Value.ToArray())
+                        {
+                            string city = ci.ToString();
+                            CreateCityToDB(city, countryId);
+                        }
                     }
                 }
+
                     
             }
             
