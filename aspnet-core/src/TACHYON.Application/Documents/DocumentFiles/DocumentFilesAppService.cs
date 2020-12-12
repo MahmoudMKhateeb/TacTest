@@ -79,9 +79,15 @@ namespace TACHYON.Documents.DocumentFiles
                 .Include(e => e.TrailerFk)
                 .Include(e => e.UserFk)
                 .Include(e => e.RoutStepFk)
+                .Include(e=>e.TenantFk)
                 .WhereIf(!AbpSession.TenantId.HasValue, e => e.DocumentTypeFk.DocumentsEntityFk.DisplayName == AppConsts.TenantDocumentsEntityName)
                 //.WhereIf(AbpSession.TenantId.HasValue, e => e.DocumentTypeFk.DocumentsEntityFk.DisplayName == AppConsts.TenantDocumentsEntityName)
-                .WhereIf(!string.IsNullOrWhiteSpace(input.Filter), e => false || e.Name.Contains(input.Filter) || e.Extn.Contains(input.Filter))
+                .WhereIf(!string.IsNullOrWhiteSpace(input.Filter), e => false || e.Name.Contains(input.Filter) 
+                || e.Extn.Contains(input.Filter) || e.Number.Contains(input.Filter) ||
+                //If the filter related to tenant name, the rows that contains not null tenant Id should be returned and contain tenancy name
+                (e.TenantId!=null && e.TenantFk.TenancyName.Contains(input.Filter)) ||
+                //If Filter text equals Host so the null rows tenant Id only should be returned
+                (e.TenantId == null && input.Filter.ToLower()=="host"))
                 //.WhereIf(!string.IsNullOrWhiteSpace(input.NameFilter), e => e.Name == input.NameFilter)
                 //.WhereIf(!string.IsNullOrWhiteSpace(input.ExtnFilter), e => e.Extn == input.ExtnFilter)
                 //.WhereIf(!string.IsNullOrWhiteSpace(input.BinaryObjectIdFilter.ToString()), e => e.BinaryObjectId.ToString() == input.BinaryObjectIdFilter.ToString())
@@ -116,8 +122,8 @@ namespace TACHYON.Documents.DocumentFiles
                                 from s4 in j4.DefaultIfEmpty()
                                 join o5 in _lookupRoutStepRepository.GetAll() on o.RoutStepId equals o5.Id into j5
                                 from s5 in j5.DefaultIfEmpty()
-                                join o6 in _lookupTenantRepository.GetAll() on o.TenantId equals o6.Id into j6
-                                from s6 in j6.DefaultIfEmpty()
+                               // join o6 in _lookupTenantRepository.GetAll() on o.TenantId equals o6.Id into j6
+                               // from s6 in j6.DefaultIfEmpty()
 
                                 select new GetDocumentFileForViewDto
                                 {
@@ -133,7 +139,8 @@ namespace TACHYON.Documents.DocumentFiles
                                         RejectionReason=o.RejectionReason,
                                         CreationTime  = o.CreationTime
                                     },
-                                    SubmitterTenatTenancyName = s6 == null || s6.TenancyName == null ? "Host" : s6.TenancyName.ToString(),
+                                    SubmitterTenatTenancyName = o.TenantId==null ?"Host" :o.TenantFk.TenancyName.ToString(),
+                                    //s6 == null || s6.TenancyName == null ? "Host" : s6.TenancyName.ToString(),
                                     HasDate = o.DocumentTypeFk.HasExpirationDate,
                                     HasNumber = o.DocumentTypeFk.HasNumber,
                                     Number = o.Number,
