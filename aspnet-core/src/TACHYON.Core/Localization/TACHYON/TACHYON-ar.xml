@@ -179,7 +179,7 @@
     <![CDATA[Tachyon:Document Types Page End]]>
 
 
-    <text name="SignUp">إشترك</text>
+    <text name="SignUp">إشترك الآن</text>
     <text name="IAMA">أنا</text>
     <text name="CompanyInformation">معلومات عن المؤسسة\الشركة</text>
     <text name="CompanyUniqueName">الإسم المختصر المميز للشركة</text>
@@ -189,7 +189,7 @@
     <text name="City">المدينة</text>
     <text name="Address">العنوان</text>
     <text name="Format">الصيغة</text>
-    <text name="AddressFormat">المدينة -- الولاية -- إسم الشارع -- الرمز البريدي</text>
+    <text name="AddressFormat"> الولاية -- إسم الشارع -- الرمز البريدي</text>
     <text name="AdminUserAccountInfo">معلومات المستخدم لمشرف حساب الشركة</text>
     <text name="AdminEmailAddress">البريد الإلكتروني الخاص بالمشرف</text>
     <text name="AdminPassword">كلمة السر الخاصة بالمشرف</text>
@@ -212,7 +212,7 @@
     <![CDATA[Tachyon: Tenant Registration Page End]]>
 
     <![CDATA[ Tachyon: Tenant login Page Start]]>
-    <text name="NotAMemberYet">إصبح عضوا</text>
+    <text name="NotAMemberYet">إشترك الآن</text>
     <![CDATA[ Tachyon: Tenant login Page End]]>
 
 
