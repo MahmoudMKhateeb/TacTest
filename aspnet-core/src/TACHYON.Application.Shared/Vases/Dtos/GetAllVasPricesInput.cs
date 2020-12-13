@@ -16,8 +16,11 @@ namespace TACHYON.Vases.Dtos
 		public int? MaxMaxCountFilter { get; set; }
 		public int? MinMaxCountFilter { get; set; }
 
+        public int? HasAmountFilter { get; set; }
 
-		 public string VasNameFilter { get; set; }
+        public int? HasCountFilter { get; set; }
+
+        public string VasNameFilter { get; set; }
 
 		 
     }

@@ -1,13 +1,14 @@
 ﻿<div [@routerTransition]>
   <div class="content d-flex flex-column flex-column-fluid">
     <sub-header [title]="'VasPrices' | localize" [description]="'VasPricesHeaderInfo' | localize">
-      <div role="actions">
-        <button (click)="exportToExcel()" class="btn btn-outline-success"><i class="fa fa-file-excel"></i> {{ l('ExportToExcel') }}</button>
+      <!-- <div role="actions">
+        <button (click)="exportToExcel()" class="btn btn-outline-success"><i class="fa fa-file-excel"></i>
+          {{ l('ExportToExcel') }}</button>
 
         <button *ngIf="isGranted('Pages.VasPrices.Create')" (click)="createVasPrice()" class="btn btn-primary blue">
           <i class="fa fa-plus"></i> {{ l('CreateNewVasPrice') }}
         </button>
-      </div>
+      </div> -->
     </sub-header>
 
     <div [class]="containerClass">
@@ -135,6 +136,8 @@
                 #dataTable
                 (onLazyLoad)="getVasPrices($event)"
                 [value]="primengTableHelper.records"
+                dataKey="id"
+                editMode="row"
                 rows="{{ primengTableHelper.defaultRecordsCountPerPage }}"
                 [paginator]="false"
                 [lazy]="true"
@@ -145,8 +148,11 @@
               >
                 <ng-template pTemplate="header">
                   <tr>
-                    <th style="width: 130px;" [hidden]="!isGrantedAny('Pages.VasPrices.Edit', 'Pages.VasPrices.Delete')">{{ l('Actions') }}</th>
-                    <th style="width: 150px;" pSortableColumn="vasFk.name">
+                    <!--                     
+                    <th style="width: 130px;"
+                      [hidden]="!isGrantedAny('Pages.VasPrices.Edit', 'Pages.VasPrices.Delete')">{{ l('Actions') }}</th> -->
+
+                    <th style="width: 250px;" pSortableColumn="vasFk.name">
                       {{ l('Name') }}
                       <p-sortIcon field="vasName"></p-sortIcon>
                     </th>
@@ -164,8 +170,10 @@
                     </th>
                   </tr>
                 </ng-template>
-                <ng-template pTemplate="body" let-record="$implicit">
-                  <tr>
+
+                <ng-template pTemplate="body" let-record="$implicit" let-editing="editing" let-ri="rowIndex">
+                  <tr [pEditableRow]="record">
+                    <!--                     
                     <td style="width: 130px;" [hidden]="!isGrantedAny('Pages.VasPrices.Edit', 'Pages.VasPrices.Delete')">
                       <div class="btn-group dropdown" dropdown container="body">
                         <button class="dropdown-toggle btn btn-sm btn-primary" dropdownToggle>
@@ -195,22 +203,87 @@
                           </li>
                         </ul>
                       </div>
-                    </td>
-                    <td style="width: 150px;">
+                    </td> -->
+
+                    <td pEditableColumn style="width: 100px;">
                       <span class="ui-column-title"> {{ l('Name') }}</span>
-                      {{ record.vasName }}
+                      <p-cellEditor>
+                        <ng-template pTemplate="input">
+                          <input pInputText type="text" [(ngModel)]="record.vasName" />
+                        </ng-template>
+                        <ng-template pTemplate="output">
+                          {{ record.vasName }}
+                        </ng-template>
+                      </p-cellEditor>
                     </td>
-                    <td style="width: 150px;">
+
+                    <td pEditableColumn style="width: 150px;">
                       <span class="ui-column-title"> {{ l('Price') }}</span>
-                      {{ record.vasPrice.price }}
+                      <p-cellEditor>
+                        <ng-template pTemplate="input">
+                          <input pInputText type="text" [(ngModel)]="record.vasPrice.price" />
+                        </ng-template>
+                        <ng-template pTemplate="output">
+                          {{ record.vasPrice.price }}
+                        </ng-template>
+                      </p-cellEditor>
                     </td>
-                    <td style="width: 150px;">
+
+                    <td pEditableColumn style="width: 150px;">
                       <span class="ui-column-title"> {{ l('MaxAmount') }}</span>
-                      {{ record.vasPrice.maxAmount }}
+                      <p-cellEditor>
+                        <ng-template pTemplate="input">
+                          <input pInputText type="text" [(ngModel)]="record.vasPrice.maxAmount" />
+                        </ng-template>
+                        <ng-template pTemplate="output">
+                          {{ record.vasPrice.maxAmount }}
+                        </ng-template>
+                      </p-cellEditor>
                     </td>
-                    <td style="width: 150px;">
+
+                    <td pEditableColumn style="width: 150px;">
                       <span class="ui-column-title"> {{ l('MaxCount') }}</span>
-                      {{ record.vasPrice.maxCount }}
+                      <p-cellEditor>
+                        <ng-template pTemplate="input">
+                          <input pInputText type="text" [(ngModel)]="record.vasPrice.maxCount" />
+                        </ng-template>
+                        <ng-template pTemplate="output">
+                          {{ record.vasPrice.maxCount }}
+                        </ng-template>
+                      </p-cellEditor>
+                    </td>
+
+                    <td style="text-align: center;">
+                      <button
+                        *ngIf="!editing"
+                        pButton
+                        pRipple
+                        type="button"
+                        pInitEditableRow
+                        icon="pi pi-pencil"
+                        (click)="onRowEditInit(record.vasPrice)"
+                        class="p-button-rounded p-button-text"
+                      ></button>
+                      <button
+                        *ngIf="editing"
+                        pButton
+                        pRipple
+                        type="button"
+                        pSaveEditableRow
+                        icon="pi pi-check"
+                        (click)="onRowEditSave(record.vasPrice)"
+                        class="p-button-rounded p-button-text p-button-success p-mr-2"
+                      ></button>
+                      <button
+                        *ngIf="editing"
+                        pButton
+                        pRipple
+                        type="button"
+                        pCancelEditableRow
+                        icon="pi pi-times"
+                        (click)="onRowEditCancel(record.vasPrice, ri)"
+                        class="p-button-rounded p-button-text p-button-danger"
+                      ></button>
                     </td>
                   </tr>
                 </ng-template>
