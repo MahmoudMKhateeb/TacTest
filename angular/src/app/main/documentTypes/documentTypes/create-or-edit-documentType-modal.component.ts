@@ -71,8 +71,8 @@ export class CreateOrEditDocumentTypeModalComponent extends AppComponentBase {
       this.documentType.documentsEntityId = -1;
       this.documentType.editionId = -1;
       this.documentType.id = documentTypeId;
-      this.documentType.numberMaxDigits = 0;
-      this.documentType.numberMinDigits = 0;
+      this.documentType.numberMaxDigits = 2;
+      this.documentType.numberMinDigits = 1;
       this.documentType.expirationAlertDays = 0;
       this.documentType.inActiveToleranceDays = 0;
       //this.documentType.expirationDate = moment().startOf('day');
@@ -190,8 +190,8 @@ export class CreateOrEditDocumentTypeModalComponent extends AppComponentBase {
 
   hasNumberCheckBoxChange() {
     if (!this.documentType.hasNumber) {
-      this.documentType.numberMaxDigits = 0;
-      this.documentType.numberMinDigits = 0;
+      this.documentType.numberMaxDigits = 2;
+      this.documentType.numberMinDigits = 1;
     }
   }
 
@@ -212,5 +212,26 @@ export class CreateOrEditDocumentTypeModalComponent extends AppComponentBase {
     this._documentTypesServiceProxy.isDocuemntTypeNameAvaliable(name, id).subscribe((result) => {
       this.documentNameisAvaliable = result;
     });
+  }
+  numberChange(type: string) {
+    if (type == 'Min') {
+      if (this.documentType.numberMinDigits < 1) {
+        this.documentType.numberMinDigits = 1;
+        this.notify.info('MinDigitNumberCanNotBeLessThan1!');
+      }
+      if (this.documentType.numberMinDigits >= this.documentType.numberMaxDigits) {
+        this.documentType.numberMaxDigits = this.documentType.numberMinDigits + 1;
+        this.notify.warn('MinDigitNumberShouldBeLessMaxDigitNumber!');
+      }
+    } else if (type == 'Max') {
+      if (this.documentType.numberMaxDigits <= this.documentType.numberMinDigits) {
+        this.documentType.numberMaxDigits = this.documentType.numberMinDigits + 1;
+        this.notify.warn('MaxDigitNumberCanNotbeLessThanMinDigitNumber!');
+      }
+      if (this.documentType.numberMaxDigits > 100) {
+        this.documentType.numberMaxDigits = 100;
+        this.notify.info('MaxDigitNumberCanNotbeMoreThan100!');
+      }
+    }
   }
 }

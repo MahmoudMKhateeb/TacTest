@@ -170,9 +170,13 @@
     <text name="InActiveAccountExpired">قفل الحساب بعد إنتهاء الصلاحية</text>
     <text name="HasNumber">يحتوي على رقم</text>
     <text name="IsNumberUnique">الرقم مميز</text>
-    <text name="HasHijriExpirationDate">يحتوي على تاريخ إنتهاء صلاحية  هجري</text>
+    <text name="HasHijriExpirationDate"> تاريخ إنتهاءالصلاحية  هجري</text>
     <text name="HasNotes">يحتوي على ملاحظات </text>
     <text name="Company">شركة</text>
+	  <text name="MinDigitNumberCanNotBeLessThan1">الحد الأدني من الخانات لايمكن أن يكون أقل من 1</text>
+	  <text name="MinDigitNumberShouldBeLessMaxDigitNumber">الحد الأدني من الخانات من المفترض أن يكون أقل من الحد الأعلى</text>
+	  <text name="MaxDigitNumberCanNotbeLessThanMinDigitNumber">الحد الأعلى من الخانات يجب أن يكون أكبر من الحد الأدني</text>
+	  <text name="MaxDigitNumberCanNotbeMoreThan100">الحد الأعلى من الخانات يجب أن يكون أقل من  100</text>
     <text name="DocumentType">نوع مستند</text>
     <text name="ToleranceDaysBeforeDeactivateAfterExpiration">عدد أيام السماحية بعد تاريخ إنتهاء الصلاحية</text>
     <text name="DeactivateAccountUponexpiration">قفل الحساب بعد إنتهاء الصلاحية</text>

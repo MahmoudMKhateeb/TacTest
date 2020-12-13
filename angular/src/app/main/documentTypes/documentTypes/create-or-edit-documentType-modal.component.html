@@ -114,10 +114,11 @@
                   class="form-control"
                   [(ngModel)]="documentType.numberMinDigits"
                   name="numberMinDigits"
-                  min="0"
+                  min="1"
+                  [max]="documentType.numberMaxDigits"
                   required
                   (keypress)="numberOnly($event)"
-                  (change)="documentType.numberMinDigits = documentType.numberMinDigits == null ? 0 : documentType.numberMinDigits"
+                  (change)="numberChange('Min')"
                 />
                 <span class="text-muted">{{ 'NumberMinDigits' | localize }}</span>
               </div>
@@ -129,10 +130,11 @@
                   class="form-control"
                   [(ngModel)]="documentType.numberMaxDigits"
                   name="numberMaxDigits"
-                  min="0"
+                  [min]="documentType.numberMinDigits + 1"
+                  max="100"
                   required
                   (keypress)="numberOnly($event)"
-                  (change)="documentType.numberMaxDigits = documentType.numberMaxDigits == null ? 0 : documentType.numberMaxDigits"
+                  (change)="numberChange('Max')"
                 />
                 <span class="text-muted">{{ 'NumberMaxDigits' | localize }}</span>
               </div>
@@ -151,21 +153,6 @@
                   </label>
                 </span>
               </div>
-              <label for="DocumentType_HasHijriExpirationDate" class="col-4 col-form-label">{{ l('IsHijriExpirationDate') }}</label>
-              <div class="col-2">
-                <span class="switch switch-sm switch-icon">
-                  <label>
-                    <input
-                      id="DocumentType_HasHijriExpirationDate"
-                      type="checkbox"
-                      name="hasHijriExpirationDate"
-                      [(ngModel)]="documentType.hasHijriExpirationDate"
-                    />
-                    <span></span>
-                  </label>
-                </span>
-              </div>
-
               <div *ngIf="documentType.hasExpirationDate" class="col-6 margin-bottom-10">
                 <input
                   type="number"
@@ -180,7 +167,41 @@
                 />
                 <span class="text-muted">{{ 'AlertDaysBeforExpiration' | localize }}:</span>
               </div>
-              <div *ngIf="documentType.hasExpirationDate" class="col-6 margin-bottom-10">
+
+              <label *ngIf="documentType.hasExpirationDate" for="DocumentType_HasHijriExpirationDate" class="col-4 col-form-label">{{
+                l('IsHijriExpirationDate')
+              }}</label>
+              <div *ngIf="documentType.hasExpirationDate" class="col-2">
+                <span class="switch switch-sm switch-icon">
+                  <label>
+                    <input
+                      id="DocumentType_HasHijriExpirationDate"
+                      type="checkbox"
+                      name="hasHijriExpirationDate"
+                      [(ngModel)]="documentType.hasHijriExpirationDate"
+                    />
+                    <span></span>
+                  </label>
+                </span>
+              </div>
+
+              <label *ngIf="documentType.hasExpirationDate" for="DocumentType_InActiveAccountExpired" class="col-4 col-form-label">{{
+                l('DeactivateAccountUponexpiration')
+              }}</label>
+              <div *ngIf="documentType.hasExpirationDate" class="col-2">
+                <span class="switch switch-sm switch-icon">
+                  <label>
+                    <input
+                      id="DocumentType_InActiveAccountExpired"
+                      type="checkbox"
+                      name="InActiveAccountExpired"
+                      [(ngModel)]="documentType.inActiveAccountExpired"
+                    />
+                    <span></span>
+                  </label>
+                </span>
+              </div>
+              <div *ngIf="documentType.hasExpirationDate && documentType.inActiveAccountExpired" class="col-6 margin-bottom-10">
                 <input
                   type="number"
                   id="DocumentType_inActiveToleranceDays"
@@ -193,21 +214,6 @@
                   (change)="documentType.inActiveToleranceDays = documentType.inActiveToleranceDays == null ? 0 : documentType.inActiveToleranceDays"
                 />
                 <span class="text-muted">{{ 'ToleranceDaysBeforeDeactivateAfterExpiration' | localize }}:</span>
-              </div>
-
-              <label for="DocumentType_InActiveAccountExpired" class="col-4 col-form-label">{{ l('DeactivateAccountUponexpiration') }}</label>
-              <div class="col-2">
-                <span class="switch switch-sm switch-icon">
-                  <label>
-                    <input
-                      id="DocumentType_InActiveAccountExpired"
-                      type="checkbox"
-                      name="InActiveAccountExpired"
-                      [(ngModel)]="documentType.inActiveAccountExpired"
-                    />
-                    <span></span>
-                  </label>
-                </span>
               </div>
 
               <label for="DocumentType_HasNotes" class="col-4 col-form-label">{{ l('HasNotes') }}</label>
