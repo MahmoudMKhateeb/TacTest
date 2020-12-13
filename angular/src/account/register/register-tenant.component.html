@@ -29,7 +29,6 @@
             class="form-control"
             autoFocus
             type="text"
-            placeholder="{{ 'CompanyUniqueName' | localize }} *"
             (change)="checkIfIsCompanyUniqueName()"
             [(ngModel)]="model.tenancyName"
             name="tenancyName"
@@ -54,16 +53,7 @@
       <div class="col-6">
         <div class="form-group">
           <label>{{ 'CompanyFullLeagalName' | localize }}</label>
-          <input
-            #nameInput="ngModel"
-            class="form-control"
-            type="text"
-            placeholder="{{ 'CompanyFullLeagalName' | localize }} *"
-            [(ngModel)]="model.name"
-            name="Name"
-            required
-            maxlength="128"
-          />
+          <input #nameInput="ngModel" class="form-control" type="text" [(ngModel)]="model.name" name="Name" required maxlength="128" />
           <div>
             <!-- <span class="form-text text-muted">{{ l('Enter') }} {{ l('CompanyFullLegalName') }}</span> -->
           </div>
@@ -75,7 +65,7 @@
     <div class="row text-left">
       <div class="col-6">
         <div class="form-group">
-          <label>{{ 'text-3' | localize }}</label>
+          <label>{{ 'Country' | localize }}</label>
           <select
             (change)="CountryChanged($event)"
             #countrySelect="ngModel"
@@ -99,7 +89,7 @@
 
       <div class="col-6">
         <div class="form-group">
-          <label>{{ 'text-4' | localize }}</label>
+          <label>{{ 'City' | localize }}</label>
           <select [disabled]="!isCountySelected" #citySelect="ngModel" class="form-control" name="tenant.cityId" [(ngModel)]="model.cityId" required>
             <option value="-2">{{ l('Select') }} {{ l('City') }}</option>
             <option *ngFor="let city of allCities" value="{{ city.id }}">{{ city.displayName }}</option>
@@ -148,7 +138,6 @@
             #adminEmailAddressInput="ngModel"
             class="form-control"
             type="email"
-            placeholder="{{ 'AdminEmailAddress' | localize }} *"
             [(ngModel)]="model.adminEmailAddress"
             name="adminEmailAddress"
             required
@@ -175,7 +164,6 @@
             class="form-control"
             [(ngModel)]="model.adminPassword"
             #Password="ngModel"
-            placeholder="{{ 'AdminPassword' | localize }}"
             validateEqual="PasswordRepeat"
             reverse="true"
             [requireDigit]="passwordComplexitySetting.requireDigit"
@@ -219,7 +207,6 @@
             class="form-control"
             [ngModel]="model.passwordRepeat"
             #PasswordRepeat="ngModel"
-            placeholder="{{ 'PasswordRepeat' | localize }}"
             validateEqual="Password"
             reverse="false"
             [requireDigit]="passwordComplexitySetting.requireDigit"

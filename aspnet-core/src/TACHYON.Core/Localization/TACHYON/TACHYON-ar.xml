@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8" ?>
+<?xml version="1.0" encoding="utf-8" ?>
 <localizationDictionary culture="ar">
   <texts>
 	  
@@ -179,7 +179,7 @@
     <![CDATA[Tachyon:Document Types Page End]]>
 
 
-    <text name="SignUp">إشترك الآن</text>
+    <text name="SignUp">اشترك الآن</text>
     <text name="IAMA">أنا</text>
     <text name="CompanyInformation">معلومات عن المؤسسة\الشركة</text>
     <text name="CompanyUniqueName">الإسم المختصر المميز للشركة</text>
@@ -212,7 +212,7 @@
     <![CDATA[Tachyon: Tenant Registration Page End]]>
 
     <![CDATA[ Tachyon: Tenant login Page Start]]>
-    <text name="NotAMemberYet">إشترك الآن</text>
+    <text name="NotAMemberYet">اشترك الآن</text>
     <![CDATA[ Tachyon: Tenant login Page End]]>
 
 
