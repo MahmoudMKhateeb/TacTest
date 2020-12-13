@@ -26,6 +26,13 @@ li.dropdown-language ul.dropdown-menu li a:after {
   content: '\200E‎' !important;
 }
 
+.custom-file-label:after {
+  left: 0;
+  right: auto;
+  border-left-width: 0;
+  border-right: inherit;
+}
+
 .tenant-change-component:after {
   content: '\200E‎' !important;
 }
