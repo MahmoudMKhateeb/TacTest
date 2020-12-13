@@ -1,4 +1,4 @@
-﻿import { PermissionCheckerService } from 'abp-ng2-module';
+import { PermissionCheckerService } from 'abp-ng2-module';
 import { AppSessionService } from '@shared/common/session/app-session.service';
 
 import { Injectable } from '@angular/core';
@@ -70,7 +70,7 @@ export class AppNavigationService {
         [new AppMenuItem('Marketplace', '', 'flaticon-more', '/app/main/marketPlace/marketPlace')],
         undefined,
         undefined,
-        () => this._featureCheckerService.isEnabled('App.Shipper')
+        () => this._featureCheckerService.isEnabled('App.Carrier')
       ),
       //Host
       new AppMenuItem(
