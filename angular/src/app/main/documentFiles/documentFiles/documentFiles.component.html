@@ -167,7 +167,7 @@
                           <li>
                             <a
                               href="javascript:;"
-                              *ngIf="record.documentFile.isAccepted && isHost"
+                              *ngIf="!record.documentFile.isRejected && isHost"
                               class="dropdown-item"
                               (click)="
                                 rejectionReasonModal.show(record.documentFile.id, record.documentTypeDisplayName, record.submitterTenatTenancyName)
@@ -179,7 +179,7 @@
                           <li>
                             <a
                               href="javascript:;"
-                              *ngIf="!record.documentFile.isAccepted && record.documentFile.isRejected"
+                              *ngIf="!record.documentFile.isAccepted && record.documentFile.isRejected && isHost"
                               class="dropdown-item"
                               (click)="viewRejectionReasonModal.show(record.documentTypeDisplayName, record.documentFile.rejectionReason)"
                               >{{ l('ViewRejectionReason') }}</a
