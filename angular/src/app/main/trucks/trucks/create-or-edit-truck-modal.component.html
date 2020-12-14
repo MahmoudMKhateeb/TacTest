@@ -386,6 +386,17 @@
         <div class="modal-footer">
           <button [disabled]="saving" type="button" class="btn btn-default" (click)="close()">{{ l('Cancel') }}</button>
           <button
+            *ngIf="truck.id"
+            type="submit"
+            class="btn btn-save blue"
+            [disabled]="!truckForm.form.valid"
+            [buttonBusy]="saving"
+            [busyText]="l('SavingWithThreeDot')"
+          >
+            <i class="fa fa-save"></i> <span>{{ l('Save') }}</span>
+          </button>
+          <button
+            *ngIf="!truck.id"
             type="submit"
             class="btn btn-save blue"
             [disabled]="!truckForm.form.valid || !alldocumentsValid || !allnumbersValid || !allDatesValid || !alldocumentsNotDuplicated"

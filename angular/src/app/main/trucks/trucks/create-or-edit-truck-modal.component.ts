@@ -201,17 +201,6 @@ export class CreateOrEditTruckModalComponent extends AppComponentBase {
   } //end of show
 
   createOrEditTruck() {
-    if (!this.alldocumentsValid || !this.allnumbersValid || !this.allDatesValid) {
-      this.notify.error(this.l('makeSureThatYouFillAllRequiredFields'));
-      return;
-    }
-
-    this.truck.createOrEditDocumentFileDtos.forEach((element) => {
-      let date = this.dateFormatterService.MomentToNgbDateStruct(element.expirationDate);
-      let hijriDate = this.dateFormatterService.ToHijri(date);
-      element.hijriExpirationDate = this.dateFormatterService.ToString(hijriDate);
-    });
-
     this._trucksServiceProxy
       .createOrEdit(this.truck)
       .pipe(
@@ -233,6 +222,16 @@ export class CreateOrEditTruckModalComponent extends AppComponentBase {
       this.createOrEditTruck();
     }
     if (this.DocsUploader && this.DocsUploader.queue.length > 0) {
+      if (!this.alldocumentsValid || !this.allnumbersValid || !this.allDatesValid) {
+        this.notify.error(this.l('makeSureThatYouFillAllRequiredFields'));
+        return;
+      }
+
+      this.truck.createOrEditDocumentFileDtos.forEach((element) => {
+        let date = this.dateFormatterService.MomentToNgbDateStruct(element.expirationDate);
+        let hijriDate = this.dateFormatterService.ToHijri(date);
+        element.hijriExpirationDate = this.dateFormatterService.ToString(hijriDate);
+      });
       this.DocsUploader.uploadAll();
     } else {
       this.createOrEditTruck();

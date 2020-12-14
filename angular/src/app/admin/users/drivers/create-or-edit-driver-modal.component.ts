@@ -200,6 +200,10 @@ export class CreateOrEditDriverModalComponent extends AppComponentBase {
     }
     this.saving = true;
     if (!this.user.id && this.user.isDriver) {
+      if (!this.alldocumentsValid || !this.allnumbersValid || !this.allDatesValid || !this.alldocumentsNotDuplicated) {
+        this.notify.error(this.l('makeSureThatYouFillAllRequiredFields'));
+        return;
+      }
       this.DocsUploader.uploadAll();
     } else {
       this.saveInternal();
@@ -208,10 +212,7 @@ export class CreateOrEditDriverModalComponent extends AppComponentBase {
 
   private saveInternal(): void {
     let input = new CreateOrUpdateUserInput();
-    if (!this.alldocumentsValid || !this.allnumbersValid || !this.allDatesValid || !this.alldocumentsNotDuplicated) {
-      this.notify.error(this.l('makeSureThatYouFillAllRequiredFields'));
-      return;
-    }
+
     input.user = this.user;
     input.setRandomPassword = this.setRandomPassword;
     input.sendActivationEmail = this.sendActivationEmail;
@@ -224,11 +225,13 @@ export class CreateOrEditDriverModalComponent extends AppComponentBase {
 
     input.createOrEditDocumentFileDtos = this.createOrEditDocumentFileDtos;
 
-    input.createOrEditDocumentFileDtos.forEach((element) => {
-      let date = this.dateFormatterService.MomentToNgbDateStruct(element.expirationDate);
-      let hijriDate = this.dateFormatterService.ToHijri(date);
-      element.hijriExpirationDate = this.dateFormatterService.ToString(hijriDate);
-    });
+    if (!this.user.id) {
+      input.createOrEditDocumentFileDtos.forEach((element) => {
+        let date = this.dateFormatterService.MomentToNgbDateStruct(element.expirationDate);
+        let hijriDate = this.dateFormatterService.ToHijri(date);
+        element.hijriExpirationDate = this.dateFormatterService.ToString(hijriDate);
+      });
+    }
 
     this._userService
       .createOrUpdateUser(input)
