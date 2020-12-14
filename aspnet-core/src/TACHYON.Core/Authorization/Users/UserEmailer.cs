@@ -97,7 +97,7 @@ namespace TACHYON.Authorization.Users
                 mailMessage.AppendLine("<b>" + L("TenancyName") + "</b>: " + tenancyName + "<br />");
             }
 
-            mailMessage.AppendLine("<b>" + L("UserName") + "</b>: " + user.UserName + "<br />");
+            mailMessage.AppendLine("<b>" + L("Email") + "</b>: " + user.EmailAddress + "<br />");
 
             if (!plainPassword.IsNullOrEmpty())
             {
