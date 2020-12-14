@@ -280,9 +280,20 @@
             {{ 'Cancel' | localize }}
           </button>
           <button
+            *ngIf="!user.id"
             type="submit"
             class="btn btn-save font-weight-bold"
             [disabled]="!userForm.form.valid || !alldocumentsValid || !allnumbersValid || !allDatesValid || !alldocumentsNotDuplicated"
+            [buttonBusy]="saving"
+            [busyText]="l('SavingWithThreeDot')"
+          >
+            <i class="fa fa-save"></i> <span>{{ 'Save' | localize }}</span>
+          </button>
+          <button
+            *ngIf="user.id"
+            type="submit"
+            class="btn btn-save font-weight-bold"
+            [disabled]="!userForm.form.valid"
             [buttonBusy]="saving"
             [busyText]="l('SavingWithThreeDot')"
           >
