@@ -1,4 +1,6 @@
-﻿using TACHYON.Vases.Dtos;
+﻿using TACHYON.ShippingRequestVases.Dtos;
+using TACHYON.ShippingRequestVases;
+using TACHYON.Vases.Dtos;
 using TACHYON.Vases;
 using TACHYON.Trucks.TruckCategories.TruckCapacities.Dtos;
 using TACHYON.Trucks.TruckCategories.TruckCapacities;
@@ -136,6 +138,8 @@ namespace TACHYON
     {
         public static void CreateMappings(IMapperConfigurationExpression configuration)
         {
+            configuration.CreateMap<CreateOrEditShippingRequestVasDto, ShippingRequestVas>().ReverseMap();
+            configuration.CreateMap<ShippingRequestVasDto, ShippingRequestVas>().ReverseMap();
             configuration.CreateMap<CreateOrEditVasPriceDto, VasPrice>().ReverseMap();
             configuration.CreateMap<VasPriceDto, VasPrice>().ReverseMap();
             configuration.CreateMap<CreateOrEditVasDto, Vas>().ReverseMap();

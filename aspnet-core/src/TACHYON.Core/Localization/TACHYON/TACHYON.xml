@@ -1,6 +1,11 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <localizationDictionary culture="en">
-  <texts>    <text name="VasPrice">Vas price</text>
+  <texts>    <text name="ShippingRequestVases">Shipping request vases</text>
+    <text name="ShippingRequestVas">Shipping request vas</text>
+    <text name="CreateNewShippingRequestVas">Create new shipping request vas</text>
+    <text name="EditShippingRequestVas">Edit shipping request vas</text>
+    <text name="DeleteShippingRequestVas">Delete shipping request vas</text>
+    <text name="VasPrice">Vas price</text>
     <text name="TACHYON.Vases.VasPrice">VasPrice</text>
     <text name="MaxAmount">Max amount</text>
     <text name="MaxCount">Max count</text>

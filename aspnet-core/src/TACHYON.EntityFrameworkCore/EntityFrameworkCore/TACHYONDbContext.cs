@@ -1,4 +1,5 @@
-﻿using TACHYON.Vases;
+﻿using TACHYON.ShippingRequestVases;
+using TACHYON.Vases;
 using TACHYON.Trucks.TruckCategories.TruckCapacities;
 using TACHYON.Trucks.TruckCategories.TruckSubtypes;
 using TACHYON.Trucks.TruckCategories.TransportSubtypes;
@@ -64,6 +65,8 @@ namespace TACHYON.EntityFrameworkCore
 {
     public class TACHYONDbContext : AbpZeroDbContext<Tenant, Role, User, TACHYONDbContext>, IAbpPersistedGrantDbContext
     {
+        public virtual DbSet<ShippingRequestVas> ShippingRequestVases { get; set; }
+
         public virtual DbSet<VasPrice> VasPrices { get; set; }
 
         public virtual DbSet<Vas> Vases { get; set; }
@@ -182,12 +185,15 @@ namespace TACHYON.EntityFrameworkCore
         {
             base.OnModelCreating(modelBuilder);
 
-           
-            modelBuilder.Entity<VasPrice>(v =>
+            modelBuilder.Entity<ShippingRequestVas>(s =>
             {
-                v.HasIndex(e => new { e.TenantId });
+                s.HasIndex(e => new { e.TenantId });
             });
- modelBuilder.Entity<ShippingRequestBid>().HasQueryFilter(p => !p.IsCancled);
+            modelBuilder.Entity<VasPrice>(v =>
+                       {
+                           v.HasIndex(e => new { e.TenantId });
+                       });
+            modelBuilder.Entity<ShippingRequestBid>().HasQueryFilter(p => !p.IsCancled);
 
             modelBuilder.Entity<Facility>(f =>
             {

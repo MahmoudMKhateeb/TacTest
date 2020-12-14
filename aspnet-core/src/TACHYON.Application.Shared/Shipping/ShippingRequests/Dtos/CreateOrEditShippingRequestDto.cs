@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using TACHYON.Goods.GoodsDetails.Dtos;
 using TACHYON.Routs.Dtos;
 using TACHYON.Routs.RoutSteps.Dtos;
+using TACHYON.Vases.Dtos;
 
 namespace TACHYON.Shipping.ShippingRequests.Dtos
 {
@@ -46,6 +47,9 @@ namespace TACHYON.Shipping.ShippingRequests.Dtos
         //Route
         public CreateOrEditRouteDto CreateOrEditRouteDto { get; set; }
 
+
+        //VasList
+        public List<ShippingRequestVasListDto> ShippingRequestVasList { get; set; }
 
 
 

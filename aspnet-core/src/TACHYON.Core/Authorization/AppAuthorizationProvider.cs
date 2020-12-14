@@ -30,12 +30,15 @@ namespace TACHYON.Authorization
 
             var pages = context.GetPermissionOrNull(AppPermissions.Pages) ?? context.CreatePermission(AppPermissions.Pages, L("Pages"));
 
+            var shippingRequestVases = pages.CreateChildPermission(AppPermissions.Pages_ShippingRequestVases, L("ShippingRequestVases"), multiTenancySides: MultiTenancySides.Tenant);
+            shippingRequestVases.CreateChildPermission(AppPermissions.Pages_ShippingRequestVases_Create, L("CreateNewShippingRequestVas"), multiTenancySides: MultiTenancySides.Tenant);
+            shippingRequestVases.CreateChildPermission(AppPermissions.Pages_ShippingRequestVases_Edit, L("EditShippingRequestVas"), multiTenancySides: MultiTenancySides.Tenant);
+            shippingRequestVases.CreateChildPermission(AppPermissions.Pages_ShippingRequestVases_Delete, L("DeleteShippingRequestVas"), multiTenancySides: MultiTenancySides.Tenant);
+
             var vasPrices = pages.CreateChildPermission(AppPermissions.Pages_VasPrices, L("VasPrices"), multiTenancySides: MultiTenancySides.Tenant);
             vasPrices.CreateChildPermission(AppPermissions.Pages_VasPrices_Create, L("CreateNewVasPrice"), multiTenancySides: MultiTenancySides.Tenant);
             vasPrices.CreateChildPermission(AppPermissions.Pages_VasPrices_Edit, L("EditVasPrice"), multiTenancySides: MultiTenancySides.Tenant);
             vasPrices.CreateChildPermission(AppPermissions.Pages_VasPrices_Delete, L("DeleteVasPrice"), multiTenancySides: MultiTenancySides.Tenant);
-
-
 
             var capacities = pages.CreateChildPermission(AppPermissions.Pages_Capacities, L("Capacities"), multiTenancySides: MultiTenancySides.Host);
             capacities.CreateChildPermission(AppPermissions.Pages_Capacities_Create, L("CreateNewCapacity"), multiTenancySides: MultiTenancySides.Host);

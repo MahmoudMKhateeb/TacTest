@@ -33,7 +33,7 @@ namespace TACHYON.Shipping.ShippingRequests
         [ForeignKey("TenantId")]
         public Tenant Tenant { get; set; }
         public int RouteId { get; set; }
-        public virtual decimal Vas { get; set; }
+        //public virtual decimal Vas { get; set; }
 
 
         /// <summary>

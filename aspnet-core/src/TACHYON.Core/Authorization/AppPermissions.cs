@@ -6,6 +6,11 @@
     /// </summary>
     public static class AppPermissions
     {
+        public const string Pages_ShippingRequestVases = "Pages.ShippingRequestVases";
+        public const string Pages_ShippingRequestVases_Create = "Pages.ShippingRequestVases.Create";
+        public const string Pages_ShippingRequestVases_Edit = "Pages.ShippingRequestVases.Edit";
+        public const string Pages_ShippingRequestVases_Delete = "Pages.ShippingRequestVases.Delete";
+
         public const string Pages_VasPrices = "Pages.VasPrices";
         public const string Pages_VasPrices_Create = "Pages.VasPrices.Create";
         public const string Pages_VasPrices_Edit = "Pages.VasPrices.Edit";

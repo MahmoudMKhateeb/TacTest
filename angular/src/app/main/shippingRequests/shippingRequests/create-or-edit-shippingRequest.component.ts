@@ -17,6 +17,7 @@ import {
   RoutStepsServiceProxy,
   SelectItemDto,
   ShippingRequestsServiceProxy,
+  ShippingRequestVasListDto,
 } from '@shared/service-proxies/service-proxies';
 import { AppComponentBase } from '@shared/common/app-component-base';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -31,6 +32,10 @@ import { CreateOrEditFacilityModalComponent } from '@app/main/addressBook/facili
   templateUrl: './create-or-edit-shippingRequest.component.html',
   styles: [
     `
+      :host ::ng-deep .ui-multiselect {
+        min-width: 15rem;
+        width: 200px;
+      }
       agm-map {
         height: 300px;
       }
@@ -64,7 +69,8 @@ export class CreateOrEditShippingRequestComponent extends AppComponentBase imple
   allPorts: SelectItemDto[];
   createOrEditRoutStepDtoList: CreateOrEditRoutStepDto[] = [];
   facility: CreateOrEditFacilityDto = new CreateOrEditFacilityDto();
-
+  allVases: ShippingRequestVasListDto[] = [];
+  selectedVases: ShippingRequestVasListDto[] = [];
   zoom = 5;
   private geoCoder;
 
@@ -150,7 +156,7 @@ export class CreateOrEditShippingRequestComponent extends AppComponentBase imple
   private saveInternal(): Observable<void> {
     this.saving = true;
     this.shippingRequest.createOrEditRoutStepDtoList = this.createOrEditRoutStepDtoList;
-
+    this.shippingRequest.shippingRequestVasList = this.selectedVases;
     return this._shippingRequestsServiceProxy.createOrEdit(this.shippingRequest).pipe(
       finalize(() => {
         this.saving = false;
@@ -240,6 +246,7 @@ export class CreateOrEditShippingRequestComponent extends AppComponentBase imple
     this._shippingRequestsServiceProxy.getAllPortsForDropdown().subscribe((result) => {
       this.allPorts = result;
     });
+    this.getAllVasList();
   }
 
   createFacility() {
@@ -257,5 +264,18 @@ export class CreateOrEditShippingRequestComponent extends AppComponentBase imple
         this.createFacilityModal.hide();
         this.refreshFacilities();
       });
+  }
+
+  numberOnly(event): boolean {
+    const charCode = event.which ? event.which : event.keyCode;
+    if (charCode > 31 && (charCode < 48 || charCode > 57)) {
+      return false;
+    }
+    return true;
+  }
+  getAllVasList() {
+    this._shippingRequestsServiceProxy.getAllShippingRequestVasesForTableDropdown().subscribe((result) => {
+      this.allVases = result;
+    });
   }
 }

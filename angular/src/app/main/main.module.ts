@@ -141,13 +141,13 @@ import { MarketplaceComponent } from '@app/main/marketPlace/marketPlace/marketpl
 import { ViewShippingRequestDetailsComponent } from '@app/main/marketPlace/marketPlace/ViewShippingRequestDetails.component';
 import { ViewAllCarrierBidsComponent } from '@app/main/marketPlace/marketPlace/ViewAllCarrierBids.component';
 import { RejectionReasonModalComponent } from './documentFiles/documentFiles/rejectionReason-modal.component';
-
+import { MultiSelectModule } from 'primeng/multiselect';
 NgxBootstrapDatePickerConfigService.registerNgxBootstrapDatePickerLocales();
 
 @NgModule({
   imports: [
     FileUploadModule,
-
+    MultiSelectModule,
     AutoCompleteModule,
     PaginatorModule,
     EditorModule,

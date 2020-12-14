@@ -30,9 +30,12 @@ using TACHYON.Shipping.ShippingRequestBids;
 using TACHYON.Shipping.ShippingRequestBids.Dtos;
 using TACHYON.Shipping.ShippingRequests.Dtos;
 using TACHYON.Shipping.ShippingRequests.Exporting;
+using TACHYON.ShippingRequestVases;
 using TACHYON.Trailers.TrailerTypes;
 using TACHYON.Trucks;
 using TACHYON.Trucks.TrucksTypes;
+using TACHYON.Vases;
+using TACHYON.Vases.Dtos;
 
 namespace TACHYON.Shipping.ShippingRequests
 {
@@ -52,6 +55,8 @@ namespace TACHYON.Shipping.ShippingRequests
             IRepository<RoutType, int> lookupRoutTypeRepository,
             IRepository<GoodCategory, int> lookupGoodCategoryRepository,
             IRepository<Facility, long> lookupFacilityRepository,
+            IRepository<Vas, int> lookup_vasRepository,
+            IRepository<ShippingRequestVas, long> shippingRequestVasRepository,
             IRepository<Port, long> lookupPortRepository, IRepository<ShippingRequestBid, long> shippingRequestBidRepository,
             BidDomainService bidDomainService
         )
@@ -71,10 +76,14 @@ namespace TACHYON.Shipping.ShippingRequests
             _lookup_PortRepository = lookupPortRepository;
             _shippingRequestBidRepository = shippingRequestBidRepository;
             _bidDomainService = bidDomainService;
+            _lookup_vasRepository = lookup_vasRepository;
+            _shippingRequestVasRepository = shippingRequestVasRepository;
         }
 
         private readonly IRepository<ShippingRequest, long> _shippingRequestRepository;
         private readonly IShippingRequestsExcelExporter _shippingRequestsExcelExporter;
+        private readonly IRepository<Vas, int> _lookup_vasRepository;
+        private readonly IRepository<ShippingRequestVas, long> _shippingRequestVasRepository;
 
         private readonly IRepository<Route, int> _lookup_routeRepository;
         private readonly IRepository<RoutStep, long> _routStepRepository;
@@ -330,8 +339,8 @@ namespace TACHYON.Shipping.ShippingRequests
                     //get only this shipper shippingRequest
                     .Where(x => x.TenantId == AbpSession.TenantId)
                     .WhereIf(!string.IsNullOrWhiteSpace(input.Filter), e => false)
-                    .WhereIf(input.MinVasFilter != null, e => e.Vas >= input.MinVasFilter)
-                    .WhereIf(input.MaxVasFilter != null, e => e.Vas <= input.MaxVasFilter)
+                    //.WhereIf(input.MinVasFilter != null, e => e.Vas >= input.MinVasFilter)
+                    //.WhereIf(input.MaxVasFilter != null, e => e.Vas <= input.MaxVasFilter)
                     .WhereIf(input.IsTachyonDeal.HasValue, e => e.IsTachyonDeal == input.IsTachyonDeal.Value);
 
 
@@ -386,6 +395,8 @@ namespace TACHYON.Shipping.ShippingRequests
         [AbpAuthorize(AppPermissions.Pages_ShippingRequests_Create)]
         protected virtual async Task Create(CreateOrEditShippingRequestDto input)
         {
+            var vasList = input.ShippingRequestVasList;
+
             ShippingRequest shippingRequest = ObjectMapper.Map<ShippingRequest>(input);
 
             if (AbpSession.TenantId != null)
@@ -410,6 +421,28 @@ namespace TACHYON.Shipping.ShippingRequests
 
             await _shippingRequestRepository.InsertAndGetIdAsync(shippingRequest);
 
+            // Save shippingRequest VASes
+
+            if (vasList.Count > 0)
+            {
+
+                foreach (var item in vasList)
+                {
+                    var vas = new ShippingRequestVas();
+                    vas.RequestMaxAmount = item.MaxAmount;
+                    vas.RequestMaxCount = item.MaxCount;
+                    vas.VasId = item.Id;
+                    vas.ShippingRequestId = shippingRequest.Id;
+
+                    if (AbpSession.TenantId != null)
+                    {
+                        vas.TenantId = (int)AbpSession.TenantId;
+                    }
+
+                    await _shippingRequestVasRepository.InsertAsync(vas);
+                }
+
+            }
             await CurrentUnitOfWork.SaveChangesAsync();
             if (shippingRequest.IsBid)
             {
@@ -431,6 +464,21 @@ namespace TACHYON.Shipping.ShippingRequests
                 .Include(x => x.RoutSteps)
                 .FirstOrDefaultAsync(x => x.Id == (long)input.Id);
             ObjectMapper.Map(input, shippingRequest);
+        }
+
+
+        [AbpAuthorize(AppPermissions.Pages_VasPrices)]
+        public async Task<List<ShippingRequestVasListDto>> GetAllShippingRequestVasesForTableDropdown()
+        {
+            return await _lookup_vasRepository.GetAll()
+                .Select(vas => new ShippingRequestVasListDto
+                {
+                    VasName = vas == null || vas.Name == null ? "" : vas.Name.ToString(),
+                    HasAmount= vas.HasAmount,
+                    HasCount= vas.HasCount,
+                    MaxAmount= 0,
+                    MaxCount= 0,
+                }).ToListAsync();
         }
     }
 }
