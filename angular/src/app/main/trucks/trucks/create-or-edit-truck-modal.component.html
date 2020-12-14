@@ -359,12 +359,11 @@
                     </div>
 
                     <div *ngIf="item.documentTypeDto.hasNotes" class="form-group col-6">
-                      <label>{{ l('Note') }}*</label>
+                      <label>{{ l('Note') }}</label>
                       <textarea
                         name="note{{ i }}"
                         id="note{{ i }}"
                         class="form-control m-input"
-                        [required]="item.documentTypeDto.hasNotes"
                         type="text"
                         rows="2"
                         style="resize: none;"
