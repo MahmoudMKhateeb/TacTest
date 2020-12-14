@@ -200,13 +200,17 @@
     <text name="SpecialConstant">Special Constant</text>
     <text name="ExpirationAlertDays">Expiration Alert Days</text>
     <text name="InActiveToleranceDays">InActive Tolerance Days</text>
-    <text name="InActiveAccountExpired">InActive Account Expired</text>
+    <text name="InActiveAccountExpired">InActive account expired</text>
     <text name="HasNumber">Has Number</text>
     <text name="IsNumberUnique">Is Number Unique</text>
-    <text name="HasHijriExpirationDate">Has Hijri Expiration Date</text>
-    <text name="HasNotes">Has Notes</text>
+    <text name="HasHijriExpirationDate">Has hijri expiration date</text>
+    <text name="HasNotes">Has notes</text>
     <text name="Company">Company</text>
-    <text name="DocumentType">DocumentType</text>
+    <text name="DocumentType">Document type</text>
+	  <text name="MinDigitNumberCanNotBeLessThan1">Min digit number can't be less than 1</text>
+	  <text name="MinDigitNumberShouldBeLessMaxDigitNumber">Min digit number should be less max digit number</text>
+	  <text name="MaxDigitNumberCanNotbeLessThanMinDigitNumber">Max digit number can't be less than min digit number</text>
+	  <text name="MaxDigitNumberCanNotbeMoreThan100">Max digit number can't be more than 100</text>
     <text name="ToleranceDaysBeforeDeactivateAfterExpiration">Tolerance Days Before Deactivate After Expiration</text>
     <text name="DeactivateAccountUponexpiration">Deactivate Account Upon expiration</text>
     <![CDATA[Tachyon:Document Types Page End]]>

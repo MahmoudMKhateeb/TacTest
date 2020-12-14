@@ -6,8 +6,8 @@
     </a>
     <!-- </div> -->
   </div>
-  <div class="pb-13 pt-lg-0 pt-5">
-    <h3 class="font-weight-bolder text-dark font-size-h1-xxl text-left text-red text-red-login">
+  <div class="text-left label-text">
+    <h3 class="font-weight-bolder text-dark font-size-h4 font-size-h1-lg text-red">
       {{ 'LogIn' | localize }}
     </h3>
   </div>
@@ -21,7 +21,7 @@
         #userNameOrEmailAddressInput="ngModel"
         [(ngModel)]="loginService.authenticateModel.userNameOrEmailAddress"
         autoFocus
-        class="form-control py-7 font-size-h6"
+        class="form-control"
         type="email"
         placeholder="Email"
         autocomplete="new-password"
@@ -48,7 +48,7 @@
       <input
         #passwordInput="ngModel"
         [(ngModel)]="loginService.authenticateModel.password"
-        class="form-control py-7 font-size-h6"
+        class="form-control"
         type="password"
         placeholder="Password"
         autocomplete="new-password"
@@ -69,9 +69,7 @@
     </div>
 
     <div>
-      <a routerLink="/account/forgot-password" id="forget-password" class="text-login-links .text-login-links-hover float-left">
-        {{ 'ForgotPassword' | localize }}</a
-      >
+      <a routerLink="/account/forgot-password" id="forget-password" class=".text-login-links-hover float-left"> {{ 'ForgotPassword' | localize }}</a>
     </div>
 
     <div class="pb-lg-0 pb-5">
@@ -109,7 +107,7 @@
 <div class="form-group d-flex justify-content-between mt-4" style="box-shadow: 0 2px 6px rgba(0, 0, 0, 0) !important;">
   <div *ngIf="!multiTenancySideIsTeanant && isTenantSelfRegistrationAllowed">
     <span>
-      <a class="text-login-links" routerLink="/account/select-edition"> {{ 'NotAMemberYet' | localize }}</a>
+      <a routerLink="/account/select-edition"> {{ 'NotAMemberYet' | localize }}</a>
     </span>
   </div>
   <!-- <span *ngIf="isSelfRegistrationAllowed">

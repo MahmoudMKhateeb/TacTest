@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8" ?>
+<?xml version="1.0" encoding="utf-8" ?>
 <localizationDictionary culture="ar">
   <texts>
 	  
@@ -170,16 +170,20 @@
     <text name="InActiveAccountExpired">قفل الحساب بعد إنتهاء الصلاحية</text>
     <text name="HasNumber">يحتوي على رقم</text>
     <text name="IsNumberUnique">الرقم مميز</text>
-    <text name="HasHijriExpirationDate">يحتوي على تاريخ إنتهاء صلاحية  هجري</text>
+    <text name="HasHijriExpirationDate"> تاريخ إنتهاءالصلاحية  هجري</text>
     <text name="HasNotes">يحتوي على ملاحظات </text>
     <text name="Company">شركة</text>
+	  <text name="MinDigitNumberCanNotBeLessThan1">الحد الأدني من الخانات لايمكن أن يكون أقل من 1</text>
+	  <text name="MinDigitNumberShouldBeLessMaxDigitNumber">الحد الأدني من الخانات من المفترض أن يكون أقل من الحد الأعلى</text>
+	  <text name="MaxDigitNumberCanNotbeLessThanMinDigitNumber">الحد الأعلى من الخانات يجب أن يكون أكبر من الحد الأدني</text>
+	  <text name="MaxDigitNumberCanNotbeMoreThan100">الحد الأعلى من الخانات يجب أن يكون أقل من  100</text>
     <text name="DocumentType">نوع مستند</text>
     <text name="ToleranceDaysBeforeDeactivateAfterExpiration">عدد أيام السماحية بعد تاريخ إنتهاء الصلاحية</text>
     <text name="DeactivateAccountUponexpiration">قفل الحساب بعد إنتهاء الصلاحية</text>
     <![CDATA[Tachyon:Document Types Page End]]>
 
 
-    <text name="SignUp">إشترك</text>
+    <text name="SignUp">اشترك الآن</text>
     <text name="IAMA">أنا</text>
     <text name="CompanyInformation">معلومات عن المؤسسة\الشركة</text>
     <text name="CompanyUniqueName">الإسم المختصر المميز للشركة</text>
@@ -189,7 +193,7 @@
     <text name="City">المدينة</text>
     <text name="Address">العنوان</text>
     <text name="Format">الصيغة</text>
-    <text name="AddressFormat">المدينة -- الولاية -- إسم الشارع -- الرمز البريدي</text>
+    <text name="AddressFormat"> الولاية -- إسم الشارع -- الرمز البريدي</text>
     <text name="AdminUserAccountInfo">معلومات المستخدم لمشرف حساب الشركة</text>
     <text name="AdminEmailAddress">البريد الإلكتروني الخاص بالمشرف</text>
     <text name="AdminPassword">كلمة السر الخاصة بالمشرف</text>
@@ -212,7 +216,7 @@
     <![CDATA[Tachyon: Tenant Registration Page End]]>
 
     <![CDATA[ Tachyon: Tenant login Page Start]]>
-    <text name="NotAMemberYet">إصبح عضوا</text>
+    <text name="NotAMemberYet">اشترك الآن</text>
     <![CDATA[ Tachyon: Tenant login Page End]]>
 
 

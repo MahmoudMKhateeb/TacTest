@@ -42,6 +42,9 @@ export class RejectionReasonModalComponent extends AppComponentBase {
   close(): void {
     this.active = false;
     this.modalSave.emit(null);
+    this.rejectionReason = '';
+    this.documentName = '';
+    this.tenantName = '';
     this.modal.hide();
   }
 }

@@ -278,7 +278,7 @@
                   <li [hidden]="!tenantCreateForm.controls['adminPasswordRepeat'].errors.requiredLength">
                     {{ 'PasswordComplexity_RequiredLength_Hint' | localize: passwordComplexitySetting.requiredLength }}
                   </li>
-                  <li [hidden]="tenantCreateForm.controls['adminPasswordRepeat'].valid && !tenantCreateForm.controls['adminPasswordRepeat'].dirty">
+                  <li [hidden]="!tenantCreateForm.controls['adminPasswordRepeat'].valid && !tenantCreateForm.controls['adminPasswordRepeat'].touched">
                     {{ 'PasswordsDontMatch' | localize }}
                   </li>
                 </ul>

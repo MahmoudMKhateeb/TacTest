@@ -18,7 +18,7 @@
     <text name="City">City</text>
     <text name="Address">Address</text>
     <text name="Format">Format</text>
-    <text name="AddressFormat">City--State--Street Name--Zip</text>
+    <text name="AddressFormat">State--Street Name--Zip</text>
     <text name="AdminUserAccountInfo">Admin user Account info</text>
     <text name="AdminEmailAddress">admin email</text>
     <text name="AdminPassword">admin password</text>
@@ -136,6 +136,10 @@
     <text name="HasNotes">Has Notes</text>
     <text name="Company">Company</text>
     <text name="DocumentType">DocumentType</text>
+    <text name="MinDigitNumberCanNotBeLessThan1">Min digit number can't be less than 1</text>
+    <text name="MinDigitNumberShouldBeLessMaxDigitNumber">Min digit number should be less max digit number</text>
+    <text name="MaxDigitNumberCanNotbeLessThanMinDigitNumber">Max digit number can't be less than min digit number</text>
+    <text name="MaxDigitNumberCanNotbeMoreThan100">Max digit number can't be more than 100</text>
     <text name="ToleranceDaysBeforeDeactivateAfterExpiration">Tolerance Days Before Deactivate After Expiration</text>
     <text name="DeactivateAccountUponexpiration">Deactivate Account Upon expiration</text>
     <![CDATA[Tachyon:Document Types Page End]]>

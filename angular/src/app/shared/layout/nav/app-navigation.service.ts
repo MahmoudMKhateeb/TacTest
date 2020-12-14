@@ -1,4 +1,4 @@
-﻿import { PermissionCheckerService } from 'abp-ng2-module';
+import { PermissionCheckerService } from 'abp-ng2-module';
 import { AppSessionService } from '@shared/common/session/app-session.service';
 
 import { Injectable } from '@angular/core';
@@ -102,6 +102,46 @@ export class AppNavigationService {
         [],
         [
           new AppMenuItem(
+            'TruckTypes',
+            '',
+            'flaticon-truck',
+            '',
+            [],
+            [
+              new AppMenuItem('TransportTypes', 'Pages.TransportTypes', 'flaticon-more', '/app/main/transportTypes/transportTypes'),
+              new AppMenuItem('TransportSubtypes', 'Pages.TransportSubtypes', 'flaticon-more', '/app/main/transportSubtypes/transportSubtypes'),
+              new AppMenuItem('TrucksTypes', 'Pages.TrucksTypes', 'flaticon-truck', '/app/main/trucksTypes/trucksTypes'),
+              new AppMenuItem('TruckSubtypes', 'Pages.TruckSubtypes', 'flaticon-more', '/app/main/truckSubtypes/truckSubtypes'),
+              new AppMenuItem('CapacityCategories', 'Pages.Capacities', 'flaticon-more', '/app/main/truckCapacities/capacities'),
+            ]
+          ),
+          new AppMenuItem('TruckStatuses', 'Pages.Administration.TruckStatuses', 'flaticon-info', '/app/admin/trucks/truckStatuses'),
+          // new AppMenuItem('PickingTypes', 'Pages.PickingTypes', 'flaticon2-telegram-logo', '/app/main/pickingTypes/pickingTypes'),
+          // new AppMenuItem('TrailerTypes', 'Pages.TrailerTypes', 'flaticon2-delivery-truck', '/app/main/trailerTypes/trailerTypes'),
+          // new AppMenuItem('PayloadMaxWeights', 'Pages.PayloadMaxWeights', 'flaticon2-download-1', '/app/main/payloadMaxWeight/payloadMaxWeights'),
+          // new AppMenuItem('TrailerStatuses', 'Pages.TrailerStatuses', 'flaticon-dashboard', '/app/main/trailerStatuses/trailerStatuses'),
+          // new AppMenuItem('GoodCategories', 'Pages.GoodCategories', 'flaticon-interface-9', '/app/main/goodCategories/goodCategories'),
+          // new AppMenuItem(
+          //   'UnitOfMeasures',
+          //   'Pages.Administration.UnitOfMeasures',
+          //   'flaticon-pie-chart-1',
+          //   '/app/admin/unitOfMeasures/unitOfMeasures'
+          // ),
+        ],
+        undefined,
+        undefined
+        // () => this._featureCheckerService.isEnabled('App.Host')
+      ),
+
+      // Carrier
+      new AppMenuItem(
+        'TMS',
+        '',
+        'flaticon-cogwheel',
+        '',
+        [],
+        [
+          new AppMenuItem(
             'Drivers',
             'Pages.Administration.Users',
             'flaticon-users',
@@ -110,62 +150,15 @@ export class AppNavigationService {
             undefined,
             undefined,
             undefined,
-            () => this._featureCheckerService.isEnabled('App.Carrier')
+            undefined
           ),
           new AppMenuItem('Trucks', 'Pages.Trucks', 'flaticon-truck', '/app/main/trucks/trucks', undefined, undefined, undefined, undefined, () =>
             this._featureCheckerService.isEnabled('App.Carrier')
           ),
-          // new AppMenuItem(
-          //   'Trailers',
-          //   'Pages.Trailers',
-          //   'flaticon-more',
-          //   '/app/main/trailers/trailers',
-          //   undefined,
-          //   undefined,
-          //   undefined,
-          //   undefined,
-          //   () => this._featureCheckerService.isEnabled('App.Carrier')
-          // ),
-          // new AppMenuItem(
-          //   'Truck Types Management',
-          //   '',
-          //   'flaticon-interface-8',
-          //   '',
-          //   [],
-          //   [
-          new AppMenuItem('TruckStatuses', 'Pages.Administration.TruckStatuses', 'flaticon-more', '/app/admin/trucks/truckStatuses'),
-          new AppMenuItem('TransportTypes', 'Pages.TransportTypes', 'flaticon-more', '/app/main/transportTypes/transportTypes'),
-          new AppMenuItem('TransportSubtypes', 'Pages.TransportSubtypes', 'flaticon-more', '/app/main/transportSubtypes/transportSubtypes'),
-          new AppMenuItem('TrucksTypes', 'Pages.TrucksTypes', 'flaticon-more', '/app/main/trucksTypes/trucksTypes'),
-          new AppMenuItem('TruckSubtypes', 'Pages.TruckSubtypes', 'flaticon-more', '/app/main/truckSubtypes/truckSubtypes'),
-          new AppMenuItem('Capacities', 'Pages.Capacities', 'flaticon-more', '/app/main/truckCapacities/capacities'),
-          new AppMenuItem(
-            'Trucks',
-            '',
-            'flaticon-truck',
-            '',
-            [],
-            [
-              new AppMenuItem('TruckStatuses', 'Pages.Administration.TruckStatuses', 'flaticon-info', '/app/admin/trucks/truckStatuses'),
-              new AppMenuItem('TransportTypes', 'Pages.TransportTypes', 'flaticon-more', '/app/main/transportTypes/transportTypes'),
-              new AppMenuItem('TransportSubtypes', 'Pages.TransportSubtypes', 'flaticon-more', '/app/main/transportSubtypes/transportSubtypes'),
-              new AppMenuItem('TrucksTypes', 'Pages.TrucksTypes', 'flaticon-truck', '/app/main/trucksTypes/trucksTypes'),
-              new AppMenuItem('TruckSubtypes', 'Pages.TruckSubtypes', 'flaticon-more', '/app/main/truckSubtypes/truckSubtypes'),
-              new AppMenuItem('CapacityCategories', 'Pages.Capacities', 'flaticon-more', '/app/main/truckCapacities/capacities'),
-            ]
-          ),
-          new AppMenuItem('PickingTypes', 'Pages.PickingTypes', 'flaticon2-telegram-logo', '/app/main/pickingTypes/pickingTypes'),
-          // new AppMenuItem('TrailerTypes', 'Pages.TrailerTypes', 'flaticon2-delivery-truck', '/app/main/trailerTypes/trailerTypes'),
-          new AppMenuItem('PayloadMaxWeights', 'Pages.PayloadMaxWeights', 'flaticon2-download-1', '/app/main/payloadMaxWeight/payloadMaxWeights'),
-          new AppMenuItem('TrailerStatuses', 'Pages.TrailerStatuses', 'flaticon-dashboard', '/app/main/trailerStatuses/trailerStatuses'),
-          new AppMenuItem('GoodCategories', 'Pages.GoodCategories', 'flaticon-interface-9', '/app/main/goodCategories/goodCategories'),
-          new AppMenuItem(
-            'UnitOfMeasures',
-            'Pages.Administration.UnitOfMeasures',
-            'flaticon-pie-chart-1',
-            '/app/admin/unitOfMeasures/unitOfMeasures'
-          ),
-        ]
+        ],
+        undefined,
+        undefined,
+        () => this._featureCheckerService.isEnabled('App.Carrier')
       ),
 
       // Host

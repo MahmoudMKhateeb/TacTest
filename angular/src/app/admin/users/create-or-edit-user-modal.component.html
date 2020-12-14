@@ -146,7 +146,7 @@
               </div>
               <div class="form-group" *ngIf="!setRandomPassword">
                 <div class="right">
-                  <label for="Password">{{ 'Password' | localize }}</label>
+                  <label for="Password">{{ 'Password' | localize }} *</label>
                   <input
                     id="Password"
                     type="password"
@@ -189,7 +189,7 @@
               </div>
               <div class="form-group" *ngIf="!setRandomPassword">
                 <div class="right">
-                  <label for="PasswordRepeat">{{ 'PasswordRepeat' | localize }}</label>
+                  <label for="PasswordRepeat">{{ 'PasswordRepeat' | localize }} *</label>
                   <input
                     id="PasswordRepeat"
                     type="password"
@@ -227,7 +227,9 @@
                   <li [hidden]="!userForm.controls['PasswordRepeat'].errors.requiredLength">
                     {{ 'PasswordComplexity_RequiredLength_Hint' | localize: passwordComplexitySetting.requiredLength }}
                   </li>
-                  <li [hidden]="userForm.controls['PasswordRepeat'].valid">{{ 'PasswordsDontMatch' | localize }}</li>
+                  <li [hidden]="!userForm.controls['PasswordRepeat'].valid && !userForm.controls['PasswordRepeat'].touched">
+                    {{ 'PasswordsDontMatch' | localize }}
+                  </li>
                 </ul>
               </div>
               <div class="checkbox-inline">
