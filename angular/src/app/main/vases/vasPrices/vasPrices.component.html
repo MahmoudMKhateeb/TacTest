@@ -64,51 +64,51 @@
                 </div>
                 <div class="col-md-3">
                   <div class="form-group">
-                    <label for="MinMaxAmountFilter">{{ l('MinMax') }} {{ l('MaxAmount') }}</label>
+                    <label for="MinAmountFilter">{{ l('Min') }} {{ l('Amount') }}</label>
                     <div class="input-group">
                       <input
                         type="number"
                         class="form-control"
-                        id="MinMaxAmountFilter"
-                        [(ngModel)]="minMaxAmountFilter"
+                        id="MinAmountFilter"
+                        [(ngModel)]="minAmountFilter"
                         placeholder="{{ l('MinValue') }}"
-                        name="minMaxAmountFilter"
+                        name="minAmountFilter"
                       />
                       <input
                         type="number"
                         class="form-control"
-                        [(ngModel)]="maxMaxAmountFilter"
+                        [(ngModel)]="maxAmountFilter"
                         placeholder="{{ l('MaxValue') }}"
-                        name="maxMaxAmountFilter"
+                        name="maxAmountFilter"
                       />
                     </div>
                   </div>
                 </div>
                 <div class="col-md-3">
                   <div class="form-group">
-                    <label for="MinMaxCountFilter">{{ l('MinMax') }} {{ l('MaxCount') }}</label>
+                    <label for="MinCountFilter">{{ l('Min') }} {{ l('Count') }}</label>
                     <div class="input-group">
                       <input
                         type="number"
                         class="form-control"
-                        id="MinMaxCountFilter"
-                        [(ngModel)]="minMaxCountFilter"
+                        id="MinCountFilter"
+                        [(ngModel)]="minCountFilter"
                         placeholder="{{ l('MinValue') }}"
-                        name="minMaxCountFilter"
+                        name="minCountFilter"
                       />
                       <input
                         type="number"
                         class="form-control"
-                        [(ngModel)]="maxMaxCountFilter"
+                        [(ngModel)]="maxCountFilter"
                         placeholder="{{ l('MaxValue') }}"
-                        name="maxMaxCountFilter"
+                        name="maxCountFilter"
                       />
                     </div>
                   </div>
                 </div>
                 <div class="col-md-3">
                   <div class="form-group">
-                    <label for="VasNameFilter">({{ l('Vas') }}) {{ l('Name') }}</label>
+                    <label for="VasNameFilter">{{ l('Vas') }} {{ l('Name') }}</label>
                     <input type="text" class="form-control" id="VasNameFilter" name="vasNameFilter" [(ngModel)]="vasNameFilter" />
                   </div>
                 </div>
@@ -136,7 +136,7 @@
                 #dataTable
                 (onLazyLoad)="getVasPrices($event)"
                 [value]="primengTableHelper.records"
-                dataKey="id"
+                dataKey="vasPrice.vasId"
                 editMode="row"
                 rows="{{ primengTableHelper.defaultRecordsCountPerPage }}"
                 [paginator]="false"
@@ -148,76 +148,35 @@
               >
                 <ng-template pTemplate="header">
                   <tr>
-                    <!--                     
-                    <th style="width: 130px;"
-                      [hidden]="!isGrantedAny('Pages.VasPrices.Edit', 'Pages.VasPrices.Delete')">{{ l('Actions') }}</th> -->
-
-                    <th style="width: 250px;" pSortableColumn="vasFk.name">
+                    <th pSortableColumn="vasName">
                       {{ l('Name') }}
                       <p-sortIcon field="vasName"></p-sortIcon>
                     </th>
-                    <th style="width: 150px;" pSortableColumn="price">
+                    <th pSortableColumn="vasPrice.price">
                       {{ l('Price') }}
                       <p-sortIcon field="vasPrice.price"></p-sortIcon>
                     </th>
-                    <th style="width: 150px;" pSortableColumn="maxAmount">
+                    <th pSortableColumn="vasPrice.maxAmount">
                       {{ l('MaxAmount') }}
                       <p-sortIcon field="vasPrice.maxAmount"></p-sortIcon>
                     </th>
-                    <th style="width: 150px;" pSortableColumn="maxCount">
+                    <th pSortableColumn="vasPrice.maxCount">
                       {{ l('MaxCount') }}
                       <p-sortIcon field="vasPrice.maxCount"></p-sortIcon>
+                    </th>
+                    <th>
+                      {{ l('Actions') }}
                     </th>
                   </tr>
                 </ng-template>
 
                 <ng-template pTemplate="body" let-record="$implicit" let-editing="editing" let-ri="rowIndex">
                   <tr [pEditableRow]="record">
-                    <!--                     
-                    <td style="width: 130px;" [hidden]="!isGrantedAny('Pages.VasPrices.Edit', 'Pages.VasPrices.Delete')">
-                      <div class="btn-group dropdown" dropdown container="body">
-                        <button class="dropdown-toggle btn btn-sm btn-primary" dropdownToggle>
-                          <i class="fa fa-cog"></i><span class="caret"></span> {{ l('Actions') }}
-                        </button>
-                        <ul class="dropdown-menu" *dropdownMenu>
-                          <li>
-                            <a href="javascript:;" class="dropdown-item" (click)="viewVasPriceModal.show(record)">{{ l('View') }}</a>
-                          </li>
-                          <li>
-                            <a
-                              href="javascript:;"
-                              *ngIf="permission.isGranted('Pages.VasPrices.Edit')"
-                              class="dropdown-item"
-                              (click)="createOrEditVasPriceModal.show(record.vasPrice.id)"
-                              >{{ l('Edit') }}</a
-                            >
-                          </li>
-                          <li>
-                            <a
-                              class="dropdown-item"
-                              href="javascript:;"
-                              *ngIf="permission.isGranted('Pages.VasPrices.Delete')"
-                              (click)="deleteVasPrice(record.vasPrice)"
-                              >{{ l('Delete') }}</a
-                            >
-                          </li>
-                        </ul>
-                      </div>
-                    </td> -->
-
-                    <td pEditableColumn style="width: 100px;">
+                    <td>
                       <span class="ui-column-title"> {{ l('Name') }}</span>
-                      <p-cellEditor>
-                        <ng-template pTemplate="input">
-                          <input pInputText type="text" [(ngModel)]="record.vasName" />
-                        </ng-template>
-                        <ng-template pTemplate="output">
-                          {{ record.vasName }}
-                        </ng-template>
-                      </p-cellEditor>
+                      {{ record.vasName }}
                     </td>
-
-                    <td pEditableColumn style="width: 150px;">
+                    <td pEditableColumn>
                       <span class="ui-column-title"> {{ l('Price') }}</span>
                       <p-cellEditor>
                         <ng-template pTemplate="input">
@@ -229,31 +188,41 @@
                       </p-cellEditor>
                     </td>
 
-                    <td pEditableColumn style="width: 150px;">
+                    <td pEditableColumn>
                       <span class="ui-column-title"> {{ l('MaxAmount') }}</span>
-                      <p-cellEditor>
-                        <ng-template pTemplate="input">
-                          <input pInputText type="text" [(ngModel)]="record.vasPrice.maxAmount" />
-                        </ng-template>
-                        <ng-template pTemplate="output">
-                          {{ record.vasPrice.maxAmount }}
-                        </ng-template>
-                      </p-cellEditor>
+                      <div *ngIf="record.hasAmount">
+                        <p-cellEditor>
+                          <ng-template pTemplate="input">
+                            <input pInputText type="text" [(ngModel)]="record.vasPrice.maxAmount" />
+                          </ng-template>
+                          <ng-template pTemplate="output">
+                            {{ record.vasPrice.maxAmount }}
+                          </ng-template>
+                        </p-cellEditor>
+                      </div>
+                      <div *ngIf="!record.hasAmount">
+                        --
+                      </div>
                     </td>
 
-                    <td pEditableColumn style="width: 150px;">
+                    <td pEditableColumn>
                       <span class="ui-column-title"> {{ l('MaxCount') }}</span>
-                      <p-cellEditor>
-                        <ng-template pTemplate="input">
-                          <input pInputText type="text" [(ngModel)]="record.vasPrice.maxCount" />
-                        </ng-template>
-                        <ng-template pTemplate="output">
-                          {{ record.vasPrice.maxCount }}
-                        </ng-template>
-                      </p-cellEditor>
+                      <div *ngIf="record.hasCount">
+                        <p-cellEditor>
+                          <ng-template pTemplate="input">
+                            <input pInputText type="text" [(ngModel)]="record.vasPrice.maxCount" />
+                          </ng-template>
+                          <ng-template pTemplate="output">
+                            {{ record.vasPrice.maxCount }}
+                          </ng-template>
+                        </p-cellEditor>
+                      </div>
+                      <div *ngIf="!record.hasCount">
+                        --
+                      </div>
                     </td>
 
-                    <td style="text-align: center;">
+                    <td>
                       <button
                         *ngIf="!editing"
                         pButton
@@ -282,6 +251,16 @@
                         pCancelEditableRow
                         icon="pi pi-times"
                         (click)="onRowEditCancel(record.vasPrice, ri)"
+                        class="p-button-rounded p-button-text p-button-danger"
+                      ></button>
+                      <button
+                        *ngIf="editing"
+                        pButton
+                        pRipple
+                        type="button"
+                        pCancelEditableRow
+                        icon="pi pi-trash"
+                        (click)="deleteVasPrice(record.vasPrice)"
                         class="p-button-rounded p-button-text p-button-danger"
                       ></button>
                     </td>

@@ -40,15 +40,16 @@ import { finalize } from 'rxjs/operators';
 export class VasPricesComponent extends AppComponentBase {
   @ViewChild('createOrEditVasPriceModal', { static: true }) createOrEditVasPriceModal: CreateOrEditVasPriceModalComponent;
   @ViewChild('viewVasPriceModalComponent', { static: true }) viewVasPriceModal: ViewVasPriceModalComponent;
-
   @ViewChild('dataTable', { static: true }) dataTable: Table;
   @ViewChild('paginator', { static: true }) paginator: Paginator;
 
   vasPrice: CreateOrEditVasPriceDto = new CreateOrEditVasPriceDto();
 
-  VasPriceDto2: CreateOrEditVasPriceDto[];
+  vasPriceDto2: VasPriceDto = new VasPriceDto();
 
-  vasList: { [s: number]: CreateOrEditVasPriceDto } = {};
+  VasPriceDto3: { [s: number]: VasPriceDto } = {};
+
+  vasList: { [s: number]: VasPriceDto } = {};
 
   saving = false;
 
@@ -58,18 +59,14 @@ export class VasPricesComponent extends AppComponentBase {
   maxPriceFilterEmpty: number;
   minPriceFilter: number;
   minPriceFilterEmpty: number;
-  maxMaxAmountFilter: number;
-  maxMaxAmountFilterEmpty: number;
-  minMaxAmountFilter: number;
-  minMaxAmountFilterEmpty: number;
-  maxMaxCountFilter: number;
-  maxMaxCountFilterEmpty: number;
-  minMaxCountFilter: number;
-  minMaxCountFilterEmpty: number;
-  hasAmountFilter: number;
-  hasAmountFilterEmpty: number;
-  hasCountFilter: number;
-  hasCountFilterEmpty: number;
+  maxAmountFilter: number;
+  maxAmountFilterEmpty: number;
+  minAmountFilter: number;
+  minAmountFilterEmpty: number;
+  maxCountFilter: number;
+  maxCountFilterEmpty: number;
+  minCountFilter: number;
+  minCountFilterEmpty: number;
   vasNameFilter = '';
   vasName = '';
   allVass: VasPriceVasLookupTableDto[];
@@ -83,10 +80,9 @@ export class VasPricesComponent extends AppComponentBase {
     super(injector);
   }
 
-  onRowEditInit(vaspriceCreateEdit) {
-    this.vasList[vaspriceCreateEdit.id] = { ...vaspriceCreateEdit };
-
-    // console.log(this.vasList[vaspriceCreateEdit.id]);
+  onRowEditInit(vasPriceDto2) {
+    this.vasList[vasPriceDto2.vasId] = { ...vasPriceDto2 };
+    console.log(this.vasList[vasPriceDto2.vasId]);
   }
 
   onRowEditSave(vasPriceDto: VasPriceDto) {
@@ -96,6 +92,7 @@ export class VasPricesComponent extends AppComponentBase {
       this.vasPrice.price = vasPriceDto.price;
       this.vasPrice.maxAmount = vasPriceDto.maxAmount;
       this.vasPrice.maxCount = vasPriceDto.maxCount;
+      console.log(this.vasPrice);
 
       this.save();
       this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Vas Details is updated' });
@@ -104,9 +101,9 @@ export class VasPricesComponent extends AppComponentBase {
     }
   }
 
-  onRowEditCancel(vasPrice: CreateOrEditVasPriceDto, index: number) {
-    this.VasPriceDto2[index] = this.vasList[vasPrice.id];
-    delete this.vasList[vasPrice.id];
+  onRowEditCancel(vasPriceDto: VasPriceDto, index: number) {
+    this.VasPriceDto3[index] = this.vasList[vasPriceDto.vasId];
+    delete this.VasPriceDto3[vasPriceDto.vasId];
   }
 
   save(): void {
@@ -120,6 +117,7 @@ export class VasPricesComponent extends AppComponentBase {
         })
       )
       .subscribe(() => {
+        this.reloadPage();
         this.notify.info(this.l('SavedSuccessfully'));
         // this.close();
         // this.modalSave.emit(null);
@@ -139,12 +137,10 @@ export class VasPricesComponent extends AppComponentBase {
         this.filterText,
         this.maxPriceFilter == null ? this.maxPriceFilterEmpty : this.maxPriceFilter,
         this.minPriceFilter == null ? this.minPriceFilterEmpty : this.minPriceFilter,
-        this.maxMaxAmountFilter == null ? this.maxMaxAmountFilterEmpty : this.maxMaxAmountFilter,
-        this.minMaxAmountFilter == null ? this.minMaxAmountFilterEmpty : this.minMaxAmountFilter,
-        this.maxMaxCountFilter == null ? this.maxMaxCountFilterEmpty : this.maxMaxCountFilter,
-        this.minMaxCountFilter == null ? this.minMaxCountFilterEmpty : this.minMaxCountFilter,
-        this.hasAmountFilter == null ? this.hasAmountFilterEmpty : this.hasAmountFilter,
-        this.hasCountFilter == null ? this.hasCountFilterEmpty : this.hasCountFilter,
+        this.maxAmountFilter == null ? this.maxAmountFilterEmpty : this.maxAmountFilter,
+        this.minAmountFilter == null ? this.minAmountFilterEmpty : this.minAmountFilter,
+        this.maxCountFilter == null ? this.maxCountFilterEmpty : this.maxCountFilter,
+        this.minCountFilter == null ? this.minCountFilterEmpty : this.minCountFilter,
         this.vasNameFilter,
         this.primengTableHelper.getSorting(this.dataTable),
         this.primengTableHelper.getSkipCount(this.paginator, event),
@@ -165,34 +161,6 @@ export class VasPricesComponent extends AppComponentBase {
     this.createOrEditVasPriceModal.show();
   }
 
-  // show(vasPriceId?: number): void {
-  //   // if (!vasPriceId) {
-  //   //   this.VasPrice = new CreateOrEditVasPriceDto();
-  //   //   this.VasPrice.id = vasPriceId;
-  //   //   this.vasName = '';
-
-  //   //   this.active = true;
-  //   //   this.modal.show();
-  //   // } else
-  //   // {
-  //   //   this._vasPricesServiceProxy.getVasPriceForEdit(vasPriceId).subscribe((result) => {
-  //   //     this.vasPrice = result.vasPrice;
-
-  //   //     this.vasName = result.vasName;
-
-  //   //     // this.active = true;
-  //   //     // this.modal.show();
-  //   //   });
-  //   // }
-
-  // }
-
-  getAllVASs() {
-    this._vasPricesServiceProxy.getAllVasForTableDropdown().subscribe((result) => {
-      this.allVass = result;
-    });
-  }
-
   deleteVasPrice(vasPrice: VasPriceDto): void {
     this.message.confirm('', this.l('AreYouSure'), (isConfirmed) => {
       if (isConfirmed) {
@@ -210,10 +178,10 @@ export class VasPricesComponent extends AppComponentBase {
         this.filterText,
         this.maxPriceFilter == null ? this.maxPriceFilterEmpty : this.maxPriceFilter,
         this.minPriceFilter == null ? this.minPriceFilterEmpty : this.minPriceFilter,
-        this.maxMaxAmountFilter == null ? this.maxMaxAmountFilterEmpty : this.maxMaxAmountFilter,
-        this.minMaxAmountFilter == null ? this.minMaxAmountFilterEmpty : this.minMaxAmountFilter,
-        this.maxMaxCountFilter == null ? this.maxMaxCountFilterEmpty : this.maxMaxCountFilter,
-        this.minMaxCountFilter == null ? this.minMaxCountFilterEmpty : this.minMaxCountFilter,
+        this.maxAmountFilter == null ? this.maxAmountFilterEmpty : this.maxAmountFilter,
+        this.minAmountFilter == null ? this.minAmountFilterEmpty : this.minAmountFilter,
+        this.maxCountFilter == null ? this.maxCountFilterEmpty : this.maxCountFilter,
+        this.minCountFilter == null ? this.minCountFilterEmpty : this.minCountFilter,
         this.vasNameFilter
       )
       .subscribe((result) => {

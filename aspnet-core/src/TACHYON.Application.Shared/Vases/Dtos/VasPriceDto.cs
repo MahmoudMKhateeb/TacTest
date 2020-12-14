@@ -12,9 +12,6 @@ namespace TACHYON.Vases.Dtos
 
 		public int? MaxCount { get; set; }
 
-
-		 public int VasId { get; set; }
-
-		 
+		public int VasId { get; set; } 
     }
 }

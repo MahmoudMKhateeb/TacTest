@@ -42,25 +42,13 @@ namespace TACHYON.Vases
 
             var filteredVASs = _lookup_vasRepository.GetAll()
                         .WhereIf(!string.IsNullOrWhiteSpace(input.Filter), e => false || e.Name.Contains(input.Filter) || e.DisplayName.Contains(input.Filter))
-
-                        .WhereIf(!string.IsNullOrWhiteSpace(input.VasNameFilter), e => false || e.Name.Contains(input.VasNameFilter) || e.DisplayName.Contains(input.VasNameFilter))
-                        .WhereIf(input.HasAmountFilter.HasValue && input.HasAmountFilter > -1, e => (input.HasAmountFilter == 1 && e.HasAmount) || (input.HasAmountFilter == 0 && !e.HasAmount))
-                        .WhereIf(input.HasCountFilter.HasValue && input.HasCountFilter > -1, e => (input.HasCountFilter == 1 && e.HasCount) || (input.HasCountFilter == 0 && !e.HasCount));
-
+                        .WhereIf(!string.IsNullOrWhiteSpace(input.VasNameFilter), e => false || e.Name.Contains(input.VasNameFilter) || e.DisplayName.Contains(input.VasNameFilter));
 
             var pagedAndFilteredVASs = filteredVASs
-                .OrderBy(input.Sorting ?? "id asc")
                 .PageBy(input);
 
             var vasPrices = from o in pagedAndFilteredVASs
                             join o1 in _vasPriceRepository.GetAll()
-                            .WhereIf(input.MinPriceFilter != null, e => e.Price >= input.MinPriceFilter)
-                            .WhereIf(input.MaxPriceFilter != null, e => e.Price <= input.MaxPriceFilter)
-                            .WhereIf(input.MinMaxAmountFilter != null, e => e.MaxAmount >= input.MinMaxAmountFilter)
-                            .WhereIf(input.MaxMaxAmountFilter != null, e => e.MaxAmount <= input.MaxMaxAmountFilter)
-                            .WhereIf(input.MinMaxCountFilter != null, e => e.MaxCount >= input.MinMaxCountFilter)
-                            .WhereIf(input.MaxMaxCountFilter != null, e => e.MaxCount <= input.MaxMaxCountFilter)
-
                             on o.Id equals o1.VasId into j1
                             from s1 in j1.DefaultIfEmpty()
 
@@ -73,18 +61,31 @@ namespace TACHYON.Vases
                                     MaxAmount = s1.MaxAmount,
                                     MaxCount = s1.MaxCount,
                                     Id = s1.Id,
-                                    VasId = s1.VasId
+                                    VasId = o.Id
                                 },
                                 VasName = o == null || o.Name == null ? "" : o.Name.ToString(),
                                 HasCount = o == null ? false : o.HasCount,
                                 HasAmount = o == null ? false : o.HasAmount
                             };
 
-            var totalCount = await filteredVASs.CountAsync();
+            var filteredVASPrices = vasPrices
+                        .WhereIf(input.MinPriceFilter != null, e => e.VasPrice.Price >= input.MinPriceFilter)
+                        .WhereIf(input.MaxPriceFilter != null, e => e.VasPrice.Price <= input.MaxPriceFilter)
+                        .WhereIf(input.MinAmountFilter != null, e => e.VasPrice.MaxAmount >= input.MinAmountFilter)
+                        .WhereIf(input.MaxAmountFilter != null, e => e.VasPrice.MaxAmount <= input.MaxAmountFilter)
+                        .WhereIf(input.MinCountFilter != null, e => e.VasPrice.MaxCount >= input.MinCountFilter)
+                        .WhereIf(input.MaxCountFilter != null, e => e.VasPrice.MaxCount <= input.MaxCountFilter);
+
+
+            //var pagedAndFilteredVASPrices = filteredVASPrices;
+            //.OrderBy(input.Sorting ?? "VasName asc");
+            //   .PageBy(input);
+
+            var totalCount = await filteredVASPrices.CountAsync();
 
             return new PagedResultDto<GetVasPriceForViewDto>(
                 totalCount,
-                await vasPrices.ToListAsync()
+                await filteredVASPrices.OrderBy(input.Sorting ?? "vasPrice.id asc").ToListAsync()
             );
         }
 
@@ -97,10 +98,10 @@ namespace TACHYON.Vases
                         .WhereIf(!string.IsNullOrWhiteSpace(input.Filter), e => false)
                         .WhereIf(input.MinPriceFilter != null, e => e.Price >= input.MinPriceFilter)
                         .WhereIf(input.MaxPriceFilter != null, e => e.Price <= input.MaxPriceFilter)
-                        .WhereIf(input.MinMaxAmountFilter != null, e => e.MaxAmount >= input.MinMaxAmountFilter)
-                        .WhereIf(input.MaxMaxAmountFilter != null, e => e.MaxAmount <= input.MaxMaxAmountFilter)
-                        .WhereIf(input.MinMaxCountFilter != null, e => e.MaxCount >= input.MinMaxCountFilter)
-                        .WhereIf(input.MaxMaxCountFilter != null, e => e.MaxCount <= input.MaxMaxCountFilter)
+                        .WhereIf(input.MinAmountFilter != null, e => e.MaxAmount >= input.MinAmountFilter)
+                        .WhereIf(input.MaxAmountFilter != null, e => e.MaxAmount <= input.MaxAmountFilter)
+                        .WhereIf(input.MinCountFilter != null, e => e.MaxCount >= input.MinCountFilter)
+                        .WhereIf(input.MaxCountFilter != null, e => e.MaxCount <= input.MaxCountFilter)
                         .WhereIf(!string.IsNullOrWhiteSpace(input.VasNameFilter), e => e.VasFk != null && e.VasFk.Name == input.VasNameFilter);
 
             var pagedAndFilteredVasPrices = filteredVasPrices
@@ -118,14 +119,15 @@ namespace TACHYON.Vases
                                     Price = o.Price,
                                     MaxAmount = o.MaxAmount,
                                     MaxCount = o.MaxCount,
-                                    Id = o.Id
+                                    Id = o.Id,
+                                    VasId = s1.Id
                                 },
                                 VasName = s1 == null || s1.Name == null ? "" : s1.Name.ToString(),
                                 HasCount = s1 == null ? false : s1.HasCount,
                                 HasAmount = s1 == null ? false : s1.HasAmount
                             };
 
-            var totalCount = await filteredVasPrices.CountAsync();
+            var totalCount = await vasPrices.CountAsync();
 
             return new PagedResultDto<GetVasPriceForViewDto>(
                 totalCount,
