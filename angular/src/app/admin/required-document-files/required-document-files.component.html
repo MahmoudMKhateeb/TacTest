@@ -100,7 +100,7 @@
                       <span class="ui-column-title"></span>
                       <div
                         *ngIf="
-                          record.isAccepted && !record.isRejected && (record.expirationDate != null ? record.expirationDate >= todayMoment : true)
+                          record.isAccepted && !record.isRejected && (record.expirationDate != null ? record.expirationDate > todayMoment : true)
                         "
                       >
                         <span class="label label-lg font-weight-bold label-light-success label-inline">
@@ -119,14 +119,14 @@
                       </div>
                       <div
                         *ngIf="
-                          !record.isRejected && !record.isAccepted && (record.expirationDate != null ? record.expirationDate >= todayMoment : true)
+                          !record.isRejected && !record.isAccepted && (record.expirationDate != null ? record.expirationDate > todayMoment : true)
                         "
                       >
                         <span class="label label-lg font-weight-bold label-light-primary label-inline">
                           {{ l('InReview') }}
                         </span>
                       </div>
-                      <div *ngIf="record.expirationDate < todayMoment && !record.isRejected">
+                      <div *ngIf="record.expirationDate <= todayMoment && !record.isRejected">
                         <span class="label label-lg font-weight-bold label-light-danger label-inline">
                           {{ l('Expired') }}
                         </span>
@@ -286,11 +286,6 @@
             >
               <i class="fa fa-save"></i> <span>{{ l('Save') }}</span>
             </button>
-
-            {{ ' alldocumentsValid :' + alldocumentsValid }}
-            {{ ' allnumbersValid :' + allnumbersValid }}
-            {{ ' allDatesValid :' + allDatesValid }}
-            {{ ' alldocumentsNotDuplicated :' + alldocumentsNotDuplicated }}
           </div>
         </form>
       </div>
