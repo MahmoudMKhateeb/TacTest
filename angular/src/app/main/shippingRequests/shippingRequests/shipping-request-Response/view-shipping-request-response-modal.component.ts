@@ -11,7 +11,7 @@ import {
   ShippingRequestVasPriceDto,
   UpdatePriceInput,
 } from '@shared/service-proxies/service-proxies';
-import { finalize } from '@node_modules/rxjs/operators';
+import { elementAt, finalize } from '@node_modules/rxjs/operators';
 import { Router } from '@angular/router';
 
 @Component({
@@ -49,7 +49,7 @@ export class ViewShippingRequestPriceResponseModalComponent extends AppComponent
   getfullPrice() {
     if (this.item.pricedVasesList.length > 0) {
       this.item.pricedVasesList.forEach((element) => {
-        this.fullPrice = this.fullPrice + element.actualPrice;
+        this.fullPrice = this.fullPrice + element.actualPrice * (element.shippingRequestVas.maxCount == 0 ? 1 : element.shippingRequestVas.maxCount);
       });
     }
 
@@ -57,6 +57,7 @@ export class ViewShippingRequestPriceResponseModalComponent extends AppComponent
   }
 
   close(): void {
+    this.fullPrice = 0.0;
     this.active = false;
     this.modal.hide();
   }

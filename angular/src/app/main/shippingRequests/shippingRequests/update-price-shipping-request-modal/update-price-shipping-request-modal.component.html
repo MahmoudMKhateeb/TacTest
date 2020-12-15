@@ -61,7 +61,7 @@
               <div class="primeng-datatable-container col-12" [busyIf]="primengTableHelper.isLoading">
                 <p-table
                   #dataTable
-                  (onLazyLoad)="getallRequestedVasesForPricing()"
+                  (onLazyLoad)="getallRequestedVasesForPricing(item.shippingRequest.id)"
                   [value]="allVases"
                   rows="{{ allVases.length }}"
                   [paginator]="false"
@@ -98,16 +98,11 @@
                       </td>
                       <td style="width: 150px;">
                         <div class="form-group">
-                          <input
-                            type="number"
-                            id="vasPrice{{ i }}"
-                            class="form-control"
-                            [(ngModel)]="record.actualPrice"
-                            name="vasPrice{{ i }}"
-                            minlength="0"
-                            required
-                          />
+                          <input type="number" id="vasPrice{{ i }}" class="form-control" [(ngModel)]="record.actualPrice" name="vasPrice{{ i }}" />
                         </div>
+                        <span class="text-muted">
+                          {{ l('EmptyIfNotProvided') }}
+                        </span>
                       </td>
                     </tr>
                   </ng-template>

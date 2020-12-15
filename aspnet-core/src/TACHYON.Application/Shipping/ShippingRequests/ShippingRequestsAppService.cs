@@ -498,10 +498,10 @@ namespace TACHYON.Shipping.ShippingRequests
         }
 
 
-        public async Task<List<ShippingRequestVasPriceDto>> GetAllShippingRequestVasForPricing()
+        public async Task<List<ShippingRequestVasPriceDto>> GetAllShippingRequestVasForPricing(long shippingRequestId)
         {
             var carrierId = AbpSession.TenantId;
-            var shippingRequestVases = _shippingRequestVasRepository.GetAll().Include(x => x.VasFk).Where(z=>z.TenantId==carrierId);
+            var shippingRequestVases = _shippingRequestVasRepository.GetAll().Include(x => x.VasFk).Where(z=>z.TenantId==carrierId && z.ShippingRequestId == shippingRequestId);
             var result = from o in shippingRequestVases
                          join o1 in  _vasPriceRepository.GetAll() on o.VasId equals o1.VasId into j1
                          from s1 in j1.DefaultIfEmpty()
@@ -510,7 +510,7 @@ namespace TACHYON.Shipping.ShippingRequests
                 {
                     ShippingRequestVas = new ShippingRequestVasListDto
                     {
-                    VasName = s1 == null || s1.VasFk.Name == null ? "" : s1.VasFk.Name.ToString(),
+                    VasName = o.VasFk.Name == null || o.VasFk.Name == null ? "" : o.VasFk.Name,
                     HasAmount =  o.VasFk.HasAmount,
                     HasCount = o.VasFk.HasCount,
                     MaxAmount = o.RequestMaxAmount,

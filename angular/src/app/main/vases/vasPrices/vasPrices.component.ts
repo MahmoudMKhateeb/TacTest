@@ -64,8 +64,7 @@ export class VasPricesComponent extends AppComponentBase {
   minCountFilter: number;
   minCountFilterEmpty: number;
   vasNameFilter = '';
-  vasName = '';
-  allVass: VasPriceVasLookupTableDto[];
+  //allVass: VasPriceVasLookupTableDto[];
 
   constructor(
     injector: Injector,
@@ -78,7 +77,6 @@ export class VasPricesComponent extends AppComponentBase {
 
   onRowEditInit(vasPrice) {
     this.VasPriceDtoCopy[vasPrice.vasId] = { ...vasPrice };
-    // console.log(this.VasPriceDtoCopy[vasPrice.vasId]);
   }
 
   onRowEditSave(vasPriceDto: VasPriceDto) {
@@ -97,8 +95,6 @@ export class VasPricesComponent extends AppComponentBase {
   }
 
   onRowEditCancel(vasPrice: VasPriceDto, index) {
-    // console.log(vasPrice);
-    // console.log(this.primengTableHelper.records[vasPrice.vasId].vasPrice);
     this.primengTableHelper.records[index].vasPrice = this.VasPriceDtoCopy[vasPrice.vasId];
     delete this.VasPriceDtoCopy[vasPrice.vasId];
   }
@@ -152,10 +148,6 @@ export class VasPricesComponent extends AppComponentBase {
 
   reloadPage(): void {
     this.paginator.changePage(this.paginator.getPage());
-  }
-
-  createVasPrice(): void {
-    this.createOrEditVasPriceModal.show();
   }
 
   deleteVasPrice(vasPrice: VasPriceDto): void {

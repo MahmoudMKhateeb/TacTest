@@ -58,8 +58,21 @@
                     <td style="width: 150px;">
                       {{ record.shippingRequestVas.maxCount == 0 ? '--' : record.shippingRequestVas.maxCount }}
                     </td>
-                    <td style="width: 150px;">
+                    <td *ngIf="record.shippingRequestVas.maxCount == 0" style="width: 150px;">
                       {{ record.actualPrice == null ? 'NotProvided' : record.actualPrice == 0 ? 'Free' : record.actualPrice }}
+                    </td>
+                    <td *ngIf="record.shippingRequestVas.maxCount != 0" style="width: 150px;">
+                      {{
+                        record.actualPrice == null
+                          ? 'NotProvided'
+                          : record.actualPrice == 0
+                          ? 'Free'
+                          : record.actualPrice +
+                            ' X ' +
+                            record.shippingRequestVas.maxCount +
+                            ' = ' +
+                            record.actualPrice * record.shippingRequestVas.maxCount
+                      }}
                     </td>
                   </tr>
                 </ng-template>

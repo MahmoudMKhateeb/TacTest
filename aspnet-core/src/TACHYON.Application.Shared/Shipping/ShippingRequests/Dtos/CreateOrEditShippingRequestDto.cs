@@ -11,7 +11,6 @@ namespace TACHYON.Shipping.ShippingRequests.Dtos
 {
     public class CreateOrEditShippingRequestDto : EntityDto<long?>
     {
-        public decimal Vas { get; set; }
 
         public List<CreateOrEditRoutStepDto> CreateOrEditRoutStepDtoList { get; set; }
 

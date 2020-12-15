@@ -43,7 +43,7 @@ export class UpdatePriceShippingRequestModalComponent extends AppComponentBase {
       this.updatePriceInput.id = result.shippingRequest.id;
       this.acceptShippingRequestPriceInput.id = result.shippingRequest.id;
       this.active = true;
-      this.getallRequestedVasesForPricing();
+      this.getallRequestedVasesForPricing(shippingRequestId);
       this.modal.show();
     });
   }
@@ -106,8 +106,14 @@ export class UpdatePriceShippingRequestModalComponent extends AppComponentBase {
     this._router.navigate(['/app/main/shippingRequests/shippingRequests?id']);
   }
 
-  getallRequestedVasesForPricing() {
-    this._shippingRequestsServiceProxy.getAllShippingRequestVasForPricing().subscribe((result) => {
+  // isPriceZero(item: ShippingRequestVasPriceDto) {
+  //   if(item.actualPrice.toString() == ""){
+  //     item.actualPrice = null;
+  //   }
+  // }
+
+  getallRequestedVasesForPricing(shippingRequestId: number) {
+    this._shippingRequestsServiceProxy.getAllShippingRequestVasForPricing(shippingRequestId).subscribe((result) => {
       this.allVases = result;
     });
   }

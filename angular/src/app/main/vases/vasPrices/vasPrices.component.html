@@ -3,12 +3,7 @@
     <sub-header [title]="'VasPrices' | localize" [description]="'VasPricesHeaderInfo' | localize">
       <!-- <div role="actions">
         <button (click)="exportToExcel()" class="btn btn-outline-success"><i class="fa fa-file-excel"></i>
-          {{ l('ExportToExcel') }}</button>
-
-        <button *ngIf="isGranted('Pages.VasPrices.Create')" (click)="createVasPrice()" class="btn btn-primary blue">
-          <i class="fa fa-plus"></i> {{ l('CreateNewVasPrice') }}
-        </button>
-      </div> -->
+          {{ l('ExportToExcel') }}</button> -->
     </sub-header>
 
     <div [class]="containerClass">
@@ -180,7 +175,7 @@
                       <span class="ui-column-title"> {{ l('Price') }}</span>
                       <p-cellEditor>
                         <ng-template pTemplate="input">
-                          <input pInputText (keypress)="numberOnly($event)" type="number" [(ngModel)]="record.vasPrice.price" />
+                          <input pInputText type="number" [(ngModel)]="record.vasPrice.price" />
                         </ng-template>
                         <ng-template pTemplate="output">
                           {{ record.vasPrice.price }}
@@ -193,7 +188,7 @@
                       <div *ngIf="record.hasAmount">
                         <p-cellEditor>
                           <ng-template pTemplate="input">
-                            <input pInputText (keypress)="numberOnly($event)" type="number" [(ngModel)]="record.vasPrice.maxAmount" />
+                            <input pInputText type="number" [(ngModel)]="record.vasPrice.maxAmount" />
                           </ng-template>
                           <ng-template pTemplate="output">
                             {{ record.vasPrice.maxAmount }}
@@ -210,7 +205,7 @@
                       <div *ngIf="record.hasCount">
                         <p-cellEditor>
                           <ng-template pTemplate="input">
-                            <input pInputText (keypress)="numberOnly($event)" type="number" [(ngModel)]="record.vasPrice.maxCount" />
+                            <input pInputText type="number" [(ngModel)]="record.vasPrice.maxCount" />
                           </ng-template>
                           <ng-template pTemplate="output">
                             {{ record.vasPrice.maxCount }}
@@ -289,7 +284,5 @@
         </div>
       </div>
     </div>
-    <createOrEditVasPriceModal #createOrEditVasPriceModal (modalSave)="getVasPrices()"></createOrEditVasPriceModal>
-    <viewVasPriceModal #viewVasPriceModal></viewVasPriceModal>
   </div>
 </div>
