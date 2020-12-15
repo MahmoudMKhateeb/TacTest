@@ -18,29 +18,29 @@ export class AppNavigationService {
       new AppMenuItem('Dashboard', 'Pages.Administration.Host.Dashboard', 'flaticon-line-graph', '/app/admin/hostDashboard'),
       new AppMenuItem('Dashboard', 'Pages.Tenant.Dashboard', 'flaticon-line-graph', '/app/main/dashboard'),
       // //Shipper
-      // new AppMenuItem(
-      //   'Requests',
-      //   '',
-      //   'flaticon-interface-8',
-      //   '',
-      //   [],
-      //   [
-      //     new AppMenuItem(
-      //       'ShippingRequests',
-      //       'Pages.ShippingRequests',
-      //       'flaticon-more',
-      //       '/app/main/shippingRequests/shippingRequests',
-      //       undefined,
-      //       undefined,
-      //       undefined,
-      //       undefined,
-      //       () =>
-      //         this._featureCheckerService.isEnabled('App.shippingRequest') ||
-      //         this._featureCheckerService.isEnabled('App.TachyonDealer') ||
-      //         this._featureCheckerService.isEnabled('App.Broker')
-      //     ),
-      //   ]
-      // ),
+      new AppMenuItem(
+        'Requests',
+        '',
+        'flaticon-interface-8',
+        '',
+        [],
+        [
+          new AppMenuItem(
+            'ShippingRequests',
+            'Pages.ShippingRequests',
+            'flaticon-more',
+            '/app/main/shippingRequests/shippingRequests',
+            undefined,
+            undefined,
+            undefined,
+            undefined,
+            () =>
+              this._featureCheckerService.isEnabled('App.shippingRequest') ||
+              this._featureCheckerService.isEnabled('App.TachyonDealer') ||
+              this._featureCheckerService.isEnabled('App.Broker')
+          ),
+        ]
+      ),
 
       // //Host
       // new AppMenuItem(

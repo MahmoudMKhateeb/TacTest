@@ -215,6 +215,15 @@
                               l('Response')
                             }}</a>
                           </li>
+
+                          <li>
+                            <a
+                              href="javascript:;"
+                              class="dropdown-item"
+                              (click)="ViewShippingRequestPriceResponseModalComponent.show(record.shippingRequest.id)"
+                              >{{ l('ViewCarrierResponse') }}</a
+                            >
+                          </li>
                           <li>
                             <a
                               (click)="deleteShippingRequest(record.shippingRequest)"
@@ -293,5 +302,6 @@
       </div>
     </div>
     <app-update-price-shipping-request-modal (modalSave)="reloadPage()" #UpdatePriceShippingRequestModal></app-update-price-shipping-request-modal>
+    <app-view-shipping-request-price-response-modal #ViewShippingRequestPriceResponseModalComponent></app-view-shipping-request-price-response-modal>
   </div>
 </div>

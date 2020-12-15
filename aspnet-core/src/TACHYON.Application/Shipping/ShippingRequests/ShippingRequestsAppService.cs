@@ -57,10 +57,12 @@ namespace TACHYON.Shipping.ShippingRequests
             IRepository<Facility, long> lookupFacilityRepository,
             IRepository<Vas, int> lookup_vasRepository,
             IRepository<ShippingRequestVas, long> shippingRequestVasRepository,
+            IRepository<VasPrice> vasPriceRepository,
             IRepository<Port, long> lookupPortRepository, IRepository<ShippingRequestBid, long> shippingRequestBidRepository,
             BidDomainService bidDomainService
         )
         {
+            _vasPriceRepository = vasPriceRepository;
             _shippingRequestRepository = shippingRequestRepository;
             _shippingRequestsExcelExporter = shippingRequestsExcelExporter;
             _lookup_routeRepository = lookup_routeRepository;
@@ -80,6 +82,7 @@ namespace TACHYON.Shipping.ShippingRequests
             _shippingRequestVasRepository = shippingRequestVasRepository;
         }
 
+        private readonly IRepository<VasPrice> _vasPriceRepository;
         private readonly IRepository<ShippingRequest, long> _shippingRequestRepository;
         private readonly IShippingRequestsExcelExporter _shippingRequestsExcelExporter;
         private readonly IRepository<Vas, int> _lookup_vasRepository;
@@ -169,8 +172,20 @@ namespace TACHYON.Shipping.ShippingRequests
         [RequiresFeature(AppFeatures.TachyonDealer)]
         public async Task UpdatePrice(UpdatePriceInput input)
         {
+
             using (CurrentUnitOfWork.DisableFilter(AbpDataFilters.MustHaveTenant))
             {
+
+                var pricedVases = input.PricedVasesList;
+                foreach (var item in pricedVases)
+                {
+                    var vas =await _shippingRequestVasRepository.FirstOrDefaultAsync(x=>x.Id ==item.ShippingRequestVasId);
+                    vas.ActualPrice = long.Parse(item.ActualPrice.ToString());
+                    vas.DefualtPrice = long.Parse(item.DefaultPrice.ToString());
+                    await _shippingRequestVasRepository.UpdateAsync(vas);
+                }
+
+
                 ShippingRequest shippingRequest = await _shippingRequestRepository.FirstOrDefaultAsync(input.Id);
                 if ((shippingRequest.IsRejected != null && shippingRequest.IsRejected.Value) || (shippingRequest.IsPriceAccepted != null && shippingRequest.IsPriceAccepted.Value))
                 {
@@ -478,7 +493,61 @@ namespace TACHYON.Shipping.ShippingRequests
                     HasCount= vas.HasCount,
                     MaxAmount= 0,
                     MaxCount= 0,
+                    Id= vas.Id
                 }).ToListAsync();
         }
+
+
+        public async Task<List<ShippingRequestVasPriceDto>> GetAllShippingRequestVasForPricing()
+        {
+            var carrierId = AbpSession.TenantId;
+            var shippingRequestVases = _shippingRequestVasRepository.GetAll().Include(x => x.VasFk).Where(z=>z.TenantId==carrierId);
+            var result = from o in shippingRequestVases
+                         join o1 in  _vasPriceRepository.GetAll() on o.VasId equals o1.VasId into j1
+                         from s1 in j1.DefaultIfEmpty()
+
+                select new ShippingRequestVasPriceDto ()
+                {
+                    ShippingRequestVas = new ShippingRequestVasListDto
+                    {
+                    VasName = s1 == null || s1.VasFk.Name == null ? "" : s1.VasFk.Name.ToString(),
+                    HasAmount =  o.VasFk.HasAmount,
+                    HasCount = o.VasFk.HasCount,
+                    MaxAmount = o.RequestMaxAmount,
+                    MaxCount = o.RequestMaxCount,
+                    },
+                    ActualPrice = s1.Price,
+                    ShippingRequestVasId= o.Id,
+                    DefaultPrice = s1.Price
+                };
+            return await result.ToListAsync();
+        }
+
+
+
+        public async Task<ShippingRequestPricingOutputforView> GetAllShippingRequestPricingForView(long shippingRequestId )
+        {
+            var  pricedShippingRequest= new ShippingRequestPricingOutputforView();
+            var carrierId = AbpSession.TenantId;
+
+            pricedShippingRequest.PricedVasesList = await _shippingRequestVasRepository.GetAll().Include(x => x.VasFk).Include(s => s.ShippingRequestFk).Where(z => z.ShippingRequestId == shippingRequestId)
+                .Select(x=> new ShippingRequestVasPriceDto
+                {
+                    ActualPrice= x.ActualPrice,
+                    ShippingRequestVasId=x.Id,
+                    
+                    ShippingRequestVas= new ShippingRequestVasListDto
+                    {
+                        VasName= x.VasFk.Name,
+                    }
+                }
+            ).ToListAsync();
+
+            var shippingRequest  = await _shippingRequestRepository.FirstOrDefaultAsync(x=>x.Id ==shippingRequestId);
+            pricedShippingRequest.ShippingRequestPrice = shippingRequest.Price.Value;
+            return  pricedShippingRequest;
+        }
+
+        
     }
 }

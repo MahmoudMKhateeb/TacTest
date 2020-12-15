@@ -276,6 +276,13 @@ export class CreateOrEditShippingRequestComponent extends AppComponentBase imple
   getAllVasList() {
     this._shippingRequestsServiceProxy.getAllShippingRequestVasesForTableDropdown().subscribe((result) => {
       this.allVases = result;
+
+      if (!this.shippingRequest.id) {
+        this.allVases.forEach((element) => {
+          element.maxAmount = 0;
+          element.maxCount = 0;
+        });
+      }
     });
   }
 }

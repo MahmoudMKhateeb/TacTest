@@ -158,7 +158,8 @@
                 <div class="form-group">
                   <label for="Vas-Count">{{ l('Count') }} *</label>
                   <input
-                    type="text"
+                    type="number"
+                    min="0"
                     id="Vas-Count{{ i }}"
                     [(ngModel)]="item.maxCount"
                     (keypress)="numberOnly($event)"
@@ -173,7 +174,8 @@
                 <div class="form-group">
                   <label for="Vas-Amount">{{ l('Amount') }} *</label>
                   <input
-                    type="text"
+                    type="number"
+                    min="0"
                     id="Vas-Amount{{ i }}"
                     [(ngModel)]="item.maxAmount"
                     (keypress)="numberOnly($event)"
