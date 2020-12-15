@@ -180,8 +180,8 @@ namespace TACHYON.Shipping.ShippingRequests
                 foreach (var item in pricedVases)
                 {
                     var vas =await _shippingRequestVasRepository.FirstOrDefaultAsync(x=>x.Id ==item.ShippingRequestVasId);
-                    vas.ActualPrice = long.Parse(item.ActualPrice.ToString());
-                    vas.DefualtPrice = long.Parse(item.DefaultPrice.ToString());
+                    vas.ActualPrice = item.ActualPrice;
+                    vas.DefualtPrice = item.DefaultPrice;
                     await _shippingRequestVasRepository.UpdateAsync(vas);
                 }
 

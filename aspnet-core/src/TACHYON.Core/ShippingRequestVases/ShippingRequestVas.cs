@@ -13,9 +13,9 @@ namespace TACHYON.ShippingRequestVases
     {
         public int TenantId { get; set; }
 
-        public virtual long? DefualtPrice { get; set; }
+        public virtual double? DefualtPrice { get; set; }
 
-        public virtual long? ActualPrice { get; set; }
+        public virtual double? ActualPrice { get; set; }
 
         public virtual int RequestMaxAmount { get; set; }
 
