@@ -45,11 +45,7 @@ export class VasPricesComponent extends AppComponentBase {
 
   vasPrice: CreateOrEditVasPriceDto = new CreateOrEditVasPriceDto();
 
-  vasPriceDto2: VasPriceDto = new VasPriceDto();
-
-  VasPriceDto3: { [s: number]: VasPriceDto } = {};
-
-  vasList: { [s: number]: VasPriceDto } = {};
+  VasPriceDtoCopy: { [s: number]: VasPriceDto } = {};
 
   saving = false;
 
@@ -80,9 +76,9 @@ export class VasPricesComponent extends AppComponentBase {
     super(injector);
   }
 
-  onRowEditInit(vasPriceDto2) {
-    this.vasList[vasPriceDto2.vasId] = { ...vasPriceDto2 };
-    console.log(this.vasList[vasPriceDto2.vasId]);
+  onRowEditInit(vasPrice) {
+    this.VasPriceDtoCopy[vasPrice.vasId] = { ...vasPrice };
+    // console.log(this.VasPriceDtoCopy[vasPrice.vasId]);
   }
 
   onRowEditSave(vasPriceDto: VasPriceDto) {
@@ -92,7 +88,6 @@ export class VasPricesComponent extends AppComponentBase {
       this.vasPrice.price = vasPriceDto.price;
       this.vasPrice.maxAmount = vasPriceDto.maxAmount;
       this.vasPrice.maxCount = vasPriceDto.maxCount;
-      console.log(this.vasPrice);
 
       this.save();
       this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Vas Details is updated' });
@@ -101,9 +96,11 @@ export class VasPricesComponent extends AppComponentBase {
     }
   }
 
-  onRowEditCancel(vasPriceDto: VasPriceDto, index: number) {
-    this.VasPriceDto3[index] = this.vasList[vasPriceDto.vasId];
-    delete this.VasPriceDto3[vasPriceDto.vasId];
+  onRowEditCancel(vasPrice: VasPriceDto, index) {
+    // console.log(vasPrice);
+    // console.log(this.primengTableHelper.records[vasPrice.vasId].vasPrice);
+    this.primengTableHelper.records[index].vasPrice = this.VasPriceDtoCopy[vasPrice.vasId];
+    delete this.VasPriceDtoCopy[vasPrice.vasId];
   }
 
   save(): void {
@@ -187,5 +184,13 @@ export class VasPricesComponent extends AppComponentBase {
       .subscribe((result) => {
         this._fileDownloadService.downloadTempFile(result);
       });
+  }
+
+  numberOnly(event): boolean {
+    const charCode = event.which ? event.which : event.keyCode;
+    if (charCode === 38 || charCode === 40) {
+      return true;
+    }
+    return false;
   }
 }

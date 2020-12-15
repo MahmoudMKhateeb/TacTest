@@ -536,9 +536,12 @@ namespace TACHYON.Shipping.ShippingRequests
                     ActualPrice= x.ActualPrice,
                     ShippingRequestVasId=x.Id,
                     
+                    
                     ShippingRequestVas= new ShippingRequestVasListDto
                     {
                         VasName= x.VasFk.Name,
+                        MaxAmount= x.RequestMaxAmount,
+                        MaxCount= x.RequestMaxCount,
                     }
                 }
             ).ToListAsync();

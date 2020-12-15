@@ -53,7 +53,7 @@
                       {{ record.shippingRequestVas.vasName }}
                     </td>
                     <td style="width: 150px;">
-                      {{ record.shippingRequestVas.actualPrice == 0 ? '--' : record.shippingRequestVas.maxAmount }}
+                      {{ record.shippingRequestVas.maxAmount == 0 ? '--' : record.shippingRequestVas.maxAmount }}
                     </td>
                     <td style="width: 150px;">
                       {{ record.shippingRequestVas.maxCount == 0 ? '--' : record.shippingRequestVas.maxCount }}

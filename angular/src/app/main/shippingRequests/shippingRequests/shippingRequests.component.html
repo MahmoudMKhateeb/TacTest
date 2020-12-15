@@ -216,7 +216,7 @@
                             }}</a>
                           </li>
 
-                          <li>
+                          <li *ngIf="record.shippingRequest.price > 0">
                             <a
                               href="javascript:;"
                               class="dropdown-item"

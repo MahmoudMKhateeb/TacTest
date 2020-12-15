@@ -176,11 +176,11 @@
                       <span class="ui-column-title"> {{ l('Name') }}</span>
                       {{ record.vasName }}
                     </td>
-                    <td pEditableColumn>
+                    <td>
                       <span class="ui-column-title"> {{ l('Price') }}</span>
                       <p-cellEditor>
                         <ng-template pTemplate="input">
-                          <input pInputText type="text" [(ngModel)]="record.vasPrice.price" />
+                          <input pInputText (keypress)="numberOnly($event)" type="number" [(ngModel)]="record.vasPrice.price" />
                         </ng-template>
                         <ng-template pTemplate="output">
                           {{ record.vasPrice.price }}
@@ -188,12 +188,12 @@
                       </p-cellEditor>
                     </td>
 
-                    <td pEditableColumn>
+                    <td>
                       <span class="ui-column-title"> {{ l('MaxAmount') }}</span>
                       <div *ngIf="record.hasAmount">
                         <p-cellEditor>
                           <ng-template pTemplate="input">
-                            <input pInputText type="text" [(ngModel)]="record.vasPrice.maxAmount" />
+                            <input pInputText (keypress)="numberOnly($event)" type="number" [(ngModel)]="record.vasPrice.maxAmount" />
                           </ng-template>
                           <ng-template pTemplate="output">
                             {{ record.vasPrice.maxAmount }}
@@ -205,12 +205,12 @@
                       </div>
                     </td>
 
-                    <td pEditableColumn>
+                    <td>
                       <span class="ui-column-title"> {{ l('MaxCount') }}</span>
                       <div *ngIf="record.hasCount">
                         <p-cellEditor>
                           <ng-template pTemplate="input">
-                            <input pInputText type="text" [(ngModel)]="record.vasPrice.maxCount" />
+                            <input pInputText (keypress)="numberOnly($event)" type="number" [(ngModel)]="record.vasPrice.maxCount" />
                           </ng-template>
                           <ng-template pTemplate="output">
                             {{ record.vasPrice.maxCount }}
