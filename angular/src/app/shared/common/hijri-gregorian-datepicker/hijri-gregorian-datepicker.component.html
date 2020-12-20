@@ -50,7 +50,7 @@
         type="button"
         ذ
       >
-        {{ hijriLabel ? hijriLabel : 'Hijri' }}
+        {{ hijriLabel ? hijriLabel : ('Hijri' | localize) }}
       </button>
       <button
         class="btn btn-sm btn-primary {{ selectedDateType == DateType.Gregorian ? ' focus active' : 'btn-outline-primary' }}"
@@ -58,7 +58,7 @@
         [disabled]="disabled"
         type="button"
       >
-        {{ GregLabel ? GregLabel : 'Gregorian' }}
+        {{ GregLabel ? GregLabel : ('Gregorian' | localize) }}
       </button>
     </div>
   </div>

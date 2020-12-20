@@ -13,7 +13,7 @@
       <form *ngIf="active" #truckSubtypeForm="ngForm" novalidate (ngSubmit)="save()" autocomplete="off">
         <div class="modal-header">
           <h4 class="modal-title">
-            <span *ngIf="truckSubtype.id">{{ l('Edit') }} {{ l('TruckSubtype') }}</span>
+            <span *ngIf="truckSubtype.id">{{ l('Edit') }} {{ l('TruckSubType') }}</span>
             <span *ngIf="!truckSubtype.id">{{ l('Edit') }} {{ l('NewTruckSubtype') }}</span>
           </h4>
           <button type="button" class="close" (click)="close()" aria-label="Close" [disabled]="saving">
@@ -35,7 +35,7 @@
           </div>
 
           <div class="form-group">
-            <label for="TruckSubtype_DisplayName">{{ l('TruckSubtype') }} *</label>
+            <label for="TruckSubtype_DisplayName">{{ l('TruckSubType') }} *</label>
             <input
               type="text"
               id="TruckSubtype_DisplayName"

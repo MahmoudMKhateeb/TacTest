@@ -1,28 +1,81 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <localizationDictionary culture="en">
-  <texts>	 <![CDATA[Tachyon:Common  Start]]>-->	  <text name="Choose">Choose</text>
-	  <text name="makeSureThatYouFillAllRequiredFields">Make sure that you fill all required fields</text>
-	 <![CDATA[Tachyon:Common  End]]>-->	  	 <![CDATA[Tachyon:Truck Page Start]]>-->	  <text name="TrucksHeaderInfo">Trucks Header Info</text>
-	  <text name="NewTruck">New Truck</text>
-	  <text name="PlateNumber">Plate number</text>	  <text name="ModelName">Model Name</text>	  <text name="ModelYear">Model Year</text>	  <text name="Truck">Truck</text>
-	  <text name="UseArrowKeysToChooseTheYear">Use Arrow Keys To Choose The Year</text>
-	  <text name="TrucktypeDetails">Truck type Details</text>
-	 <![CDATA[Tachyon:Truck Page End]]>-->	 	 <![CDATA[Tachyon:Truck type Categories Pages Start]]>-->	  <text name="TruckType">Truck Type</text>	  <text name="TransportTypes">Transport types</text>	  <text name="TransportType">Transport type</text>	  <text name="TransportSubType">Transport SubType</text>	  <text name="TransportSubTypes">Transport SubTypes</text>	  <text name="TruckSubType">Truck SubType</text>	  <text name="TruckSubTypes">Truck SubTypes</text>	  <text name="CapacityCategory">Capacity Category</text>	  <text name="CapacityCategories">Capacity Categories</text>	  <text name="TransportTypesHeaderInfo">TransportTypesHeaderInfo</text>	  <text name="NewTransportType">New Transport Type</text>	  <text name="NewTransportSubtype">New Transport Subtype</text>	  <text name="TransportSubtypesHeaderInfo">Transport Subtypes Header Info</text>	  <text name="TrucksTypesHeaderInfo">Trucks Types Header Info</text>	  <text name="NewTrucksType">New Trucks Type</text>	  <text name="TruckSubtypesHeaderInfo">Truck Subtypes Header Info</text>	  <text name="NewTruckSubtype">New Truck Subtype</text>	  <text name="CapacitiesCategoriesHeaderInfo">Capacities Categories Header Info</text>	  <text name="NewCapacityCategory">New Capacity Category</text>	  <text name="TruckStatuses">Truck Statuses</text>	  <text name="NewTruckStatus">New Truck Status</text>	  <text name="TruckStatusesHeaderInfo">Truck Statuses Header Info</text>	 <![CDATA[Tachyon:Truck type Categories Page End]]>-->	  
+  <texts>
+    <![CDATA[Tachyon:Common  Start]]>-->
+    <text name="Choose">Choose</text>
+    <text name="makeSureThatYouFillAllRequiredFields">Make sure that you fill all required fields</text>
+    <![CDATA[Tachyon:Common  End]]>-->
+
+    <![CDATA[Tachyon:Truck Page Start]]>-->
+    <text name="TrucksHeaderInfo">Trucks Header Info</text>
+    <text name="NewTruck">New Truck</text>
+    <text name="PlateNumber">Plate number</text>
+    <text name="ModelName">Model Name</text>
+    <text name="ModelYear">Model Year</text>
+    <text name="Truck">Truck</text>
+    <text name="UseArrowKeysToChooseTheYear">Use Arrow Keys To Choose The Year</text>
+    <text name="TrucktypeDetails">Truck type Details</text>
+    <![CDATA[Tachyon:Truck Page End]]>-->
+
+    <![CDATA[Tachyon:SideBar Start]]>
+    <text name="ShippingRequests">Shipping Requests</text>
+    <text name="Marketplace">Marketplace</text>
+    <text name="TMSSettings">TMS Settings</text>
+    <text name="TMS">Trucks Management System</text>
+    <![CDATA[Tachyon:SideBar End]]>
+
+    <![CDATA[Tachyon:Truck type Categories Pages Start]]>-->
+    <text name="TruckType">Truck Type</text>
+    <text name="TruckTypes">Truck Types</text>
+    <text name="TransportTypes">Transport types</text>
+    <text name="TransportType">Transport type</text>
+    <text name="TransportSubtype">Transport SubType</text>
+    <text name="SelectATransportSubType">Select a Transport SubType</text>
+    <text name="TransportSubTypes">Transport SubTypes</text>
+    <text name="TruckSubtype">Truck SubType</text>
+    <text name="TruckSubTypes">Truck SubTypes</text>
+    <text name="TrucksSubType">Trucks SubType</text>
+    <text name="CapacityCategory">Capacity Category</text>
+    <text name="CapacityCategories">Capacity Categories</text>
+    <text name="Capacity">Capacity</text>
+    <text name="UseTheArrowKeysToChooseTheCapacity">Use the Arrow Keys to Choose the Capacity</text>
+    <text name="EnterCapacity">Enter Capacity</text>
+    <text name="TransportTypesHeaderInfo">TransportTypesHeaderInfo</text>
+    <text name="NewTransportType">New Transport Type</text>
+    <text name="NewTransportSubtype">New Transport Subtype</text>
+    <text name="TransportSubtypesHeaderInfo">Transport Subtypes Header Info</text>
+    <text name="TrucksTypesHeaderInfo">Trucks Types Header Info</text>
+    <text name="SelectATrucksType">Select a Trucks Type</text>
+    <text name="NewTrucksType">New Trucks Type</text>
+    <text name="TruckSubtypesHeaderInfo">Truck Subtypes Header Info</text>
+    <text name="NewTruckSubtype">New Truck Subtype</text>
+    <text name="CapacitiesCategories">Capacities Categories</text>
+    <text name="CapacitiesCategoriesHeaderInfo">Capacities Categories Header Info</text>
+    <text name="NewCapacityCategory">New Capacity Category</text>
+    <text name="TruckStatuses">Truck Statuses</text>
+    <text name="NewTruckStatus">New Truck Status</text>
+    <text name="TruckStatusesHeaderInfo">Truck Statuses Header Info</text>
+    <![CDATA[Tachyon:Truck type Categories Page End]]>-->
+
+
     <text name="SignUp">Sign up</text>
+    <text name="DontHaveAnAccount">DontHaveAnAccount</text>
+    <text name="EnterYourEmailAndPassword ">Enter Your Email and Password</text>
+    <text name="MembershipType">Membership Type</text>
     <text name="IAMA">I AM A</text>
     <text name="CompanyInformation">Company Information</text>
-    <text name="CompanyUniqueName">Company Unique Name</text>
-    <text name="CompanyUniqueName_Regex_Description">Company unique name must be at least 2 chars, starts with a letter and continue with letter, number, dash or underscore. and can not be in Arabic</text>
-    <text name="CompanyFullLeagalName">Company Full Leagal Name</text>
+    <text name="CompanyUniqueName">Company Legal Name</text>
+    <text name="CompanyUniqueName_Regex_Description">Please Add Company Name As It's in the CR</text>
+    <text name="CompanyFullLeagalName">Company English Name </text>
     <text name="Country">Country</text>
     <text name="City">City</text>
     <text name="Address">Address</text>
     <text name="Format">Format</text>
     <text name="AddressFormat">State--Street Name--Zip</text>
     <text name="AdminUserAccountInfo">Admin user Account info</text>
-    <text name="AdminEmailAddress">admin email</text>
-    <text name="AdminPassword">admin password</text>
-    <text name="AdminPasswordRepeat">admin password (repeat)</text>
+    <text name="AdminEmailAddress">Admin Email</text>
+    <text name="AdminPassword">Admin Password</text>
+    <text name="AdminPasswordRepeat">Confirm Password</text>
     <text name="PleaseEnterYourNewPassword">Please enter your new password.</text>
     <text name="weak">Weak</text>
     <text name="medium">Medium</text>
@@ -33,8 +86,8 @@
     <text name="PasswordComplexity_RequireUppercase_Hint">Passwords must have at least one uppercase ('A'-'Z').</text>
     <text name="PasswordComplexity_RequiredLength_Hint">Passwords must be at least {0} characters.</text>
     <text name="PasswordsDontMatch">Passwords do not match!</text>
-    <text name="NewPasswordRepeat">New password (repeat)</text>
-    <text name="PasswordRepeat">password (repeat)</text>
+    <text name="NewPasswordRepeat">Confirm the New Password</text>
+    <text name="PasswordRepeat">Confirm Password </text>
     <text name="PleaseMakeSureYouProvideValidDetails!">Please Make Sure You Provide Valid Details!</text>
     <text name="pleasemakesureyouchoosethecountryandthecity!">Please make sure you choose the country and the city!</text>
     <text name="Carrier">Carrier</text>
@@ -42,13 +95,13 @@
 
 
     <![CDATA[ Tachyon: Tenant login Page Start]]>
-    <text name="NotAMemberYet">Become a Member!</text>
+    <text name="NotAMemberYet">New Registration</text>
     <![CDATA[ Tachyon: Tenant login Page End]]>
 
     <![CDATA[ Tachyon:Common]]>
     <text name="UploadDocumentMsg">Please upload the following documents in order to finalize your registration process.</text>
     <text name="WaitingForReviewMsg">Please wait untill we review your documents</text>
-	  
+
     <text name="AlreadyTaken">Already Taken</text>
     <text name="Enter">Enter</text>
     <text name="Select">Select</text>
@@ -68,7 +121,7 @@
     <![CDATA[ Tachyon: Document files Page Start]]>
     <text name="DocumentFilesHeaderInfo">DocumentFilesHeaderInfo</text>
     <text name="DocumentName">Document Name</text>
-    <text name="SubmitterTenant">Submitter Tenant</text>
+    <text name="SubmitterTenant">Submitter From</text>
     <text name="SubmittingTime">Submitting Time</text>
     <text name="TruckID">Truck ID</text>
     <text name="TrailerCode">Trailer Code</text>
@@ -83,8 +136,13 @@
     <text name="RejectionReason">Rejection Reason</text>
     <text name="ViewRejectionReason">View Rejection Reason</text>
     <text name="DuplicateFileUploadMsg"> you can not upload same document twice name: {0} , extn:{1}</text>
-	<text name="PleaseChooseAvalidFormat">Please Choose Avalid Format</text>
-	  <![CDATA[ Tachyon: Document files Page End]]>
+    <text name="PleaseChooseAvalidFormat">Please Choose Avalid Format</text>
+    <text name="PleaseChooseDate">Please Choose Date</text>
+
+    <![CDATA[ Tachyon: Document files Page End]]>
+    <text name="SubmittedDocuments">Submitted Documents</text>
+    <text name="Company Registration (CR)">Company Registration (CR)</text>
+    <![CDATA[ Tachyon: Document files Page End]]>
 
 
     <![CDATA[Tachyon:Common Start]]>
@@ -99,21 +157,23 @@
     <text name="All">All</text>
     <text name="True">True</text>
     <text name="False">False</text>
-    <text name="Edition">Edition</text>
+    <text name="Edition">Subscription</text>
     <text name="Language">Language</text>
     <text name="9digitsNumber">9 Digits Number</text>
     <![CDATA[Tachyon:Common End]]>
 
     <![CDATA[Tachyon:Documents Common Start]]>
     <text name="Documents">Documents</text>
-	  <text name="ValidDocumentFilesMsg">FileAllowedFormatesAre: .png, .jpeg, .pdf</text>
+    <text name="ValidDocumentFilesMsg">FileAllowedFormatesAre: .png, .jpeg, .pdf</text>
+    <text name="DocumentFileWarnSizeLimit">Document exceeds the maximum allowed limit </text>
+    <text name="DocumentManagement">Document Management</text>
     <![CDATA[Tachyon:Documents Common End]]>
 
 
     <![CDATA[Tachyon:Document Entites Page Start]]>
     <text name="DocumentsEntities">Documents Entities</text>
     <text name="DocumentsEntitiesHeaderInfo">Documents Entities Header Info</text>
-    <text name="NewDocumentsEntity">New Documents Entity</text>
+    <text name="NewDocumentsEntity">New Document Required From </text>
     <text name="DocumentEntityName">Document Entity Name</text>
     <text name="DocumentsEntity">Documents Entity</text>
     <![CDATA[Tachyon:Document Entites Page End]]>
@@ -124,6 +184,7 @@
     <text name="IsRequired">Is Required</text>
     <text name="DocumentTypesHeaderInfo">Document Types Header Info</text>
     <text name="NewDocumentType">New Document Type</text>
+    <text name="PleaseEnterDocumentType">Please Enter DocumentType</text>
     <text name="HasExpirationDate">Has Expiration Date</text>
     <text name="RequiredFrom">Required From</text>
     <text name="SpecialConstant">Special Constant</text>
@@ -155,14 +216,14 @@
 
 
     <text name="TruckCapacities">Truck capacities</text>
-	  <text name="NumbersOnly">Numbers Only</text>
-	  <text name="TheNumberLengthMustBeMoreThanMinDigits">The Number Length Must Be More Than MinDigits</text>
-	  <text name="TheNumberLengthMustBeLessThanMaxDigits">The Number Length Must Be Less Than MaxDigits</text>
+    <text name="NumbersOnly">Numbers Only</text>
+    <text name="TheNumberLengthMustBeMoreThanMinDigits">The Number Length Must Be More Than MinDigits</text>
+    <text name="TheNumberLengthMustBeLessThanMaxDigits">The Number Length Must Be Less Than MaxDigits</text>
 
-    <text name="Capacity">Capacity</text>
     <text name="TACHYON.TruckCapacities.Capacity">Capacity</text>
     <text name="CapacitiesHeaderInfo">Capacities header info</text>
     <text name="CreateNewCapacity">Create new capacity</text>
+    <text name="NewCapacity">New Capacity</text>
     <text name="EditCapacity">Edit capacity</text>
     <text name="DeleteCapacity">Delete capacity</text>
     <text name="Capacities">Capacities</text>
@@ -176,6 +237,7 @@
     <text name="DeleteTransportSubtype">Delete transport subtype</text>
     <text name="TACHYON.TransportTypes.TransportType">TransportType</text>
     <text name="CreateNewTransportType">Create new transport type</text>
+    <text name="SelectATransportType">Select a Transport Type</text>
     <text name="EditTransportType">Edit transport type</text>
     <text name="DeleteTransportType">Delete transport type</text>
     <text name="DocumentTypeTranslation">Document type translation</text>
@@ -244,7 +306,6 @@
     <text name="EditDocumentType">Edit document type</text>
     <text name="DeleteDocumentType">Delete document type</text>
     <text name="ExpirationDateRange">Expiration date range</text>
-    <text name="ShippingRequests">Shipping requests</text>
     <text name="ShippingRequest">Shipping request</text>
     <text name="TACHYON.ShippingRequests.ShippingRequest">ShippingRequest</text>
     <text name="Vas">Vas</text>
@@ -373,7 +434,8 @@
     <text name="CreateNewPayloadMaxWeight">Create new payload max weight</text>
     <text name="EditPayloadMaxWeight">Edit payload max weight</text>
     <text name="DeletePayloadMaxWeight">Delete payload max weight</text>
-    <text name="PayloadMaxWeights">Payload max weights</text>
+    <text name="PayloadMaxWeights">Payload Max Weights</text>
+    <text name="PackingTypes">Packing Types</text>
     <text name="TrailerTypes">Trailer types</text>
     <text name="TrailerType">Trailer type</text>
     <text name="TACHYON.TrailerTypes.TrailerType">TrailerType</text>
@@ -382,6 +444,12 @@
     <text name="EditTrailerType">Edit trailer type</text>
     <text name="DeleteTrailerType">Delete trailer type</text>
     <text name="TACHYON.Trucks.Truck">Truck</text>
+    <text name="ModalName">Modal Name</text>
+    <text name="ModalYear">Modal Year</text>
+    <text name="Istimara">Istimara</text>
+    <text name="3rd Party Insurance coverage">3rd Party Insurance coverage</text>
+    <text name="TruckDocuments">Truck Documents</text>
+    <text name="TrucktDetails">Truckt Details</text>
     <text name="LicenseNumber">License number</text>
     <text name="LicenseExpirationDate">License expiration date</text>
     <text name="IsAttachable">Is attachable</text>
@@ -396,7 +464,7 @@
     <text name="PickTruckStatus">Pick truck status</text>
     <text name="PickUser">Pick user</text>
     <text name="LicenseExpirationDateRange">License expiration date range</text>
-    <text name="TrucksTypes">Trucks types</text>
+    <text name="TrucksTypes">Trucks Types</text>
     <text name="TrucksType">Trucks type</text>
     <text name="TACHYON.TrucksTypes.TrucksType">TrucksType</text>
     <text name="CreateNewTrucksType">Create new trucks type</text>
@@ -424,6 +492,7 @@
     <text name="InvalidFormMessage">Your form is invalid. Please check and correct it.</text>
     <text name="InvalidUserNameOrPassword">Invalid user name or password</text>
     <text name="ThereIsNoTenantDefinedWithName{0}">There is no tenant defined with name {0}</text>
+    <text name="TenantRequiredDocuments">Tenant Required Documents</text>
     <text name="TenantIsNotActive">Tenant {0} is not active.</text>
     <text name="UserIsNotActiveAndCanNotLogin">User {0} is not active and can not log in.</text>
     <text name="PleaseEnterLoginInformation">Please enter login information</text>
@@ -538,6 +607,7 @@
     <text name="EmailConfirmationRequiredForLogin">Email confirmation required for login.</text>
     <text name="{0}UserCannotBeDeleted">{0} user can not be deleted.</text>
     <text name="TenantNameCanNotBeEmpty">Tenant name can not be empty</text>
+    <text name="TenantName">Company Name</text>
     <text name="ChangeProfilePicture">Change profile picture</text>
     <text name="TenantName_Regex_Description">Tenant name must be at least 2 chars, starts with a letter and continue with letter, number, dash or underscore.</text>
     <text name="ProfilePicture_Change_Info">You can select a JPG/JPEG/PNG file with a maximum {0}MB size.</text>
@@ -1414,6 +1484,7 @@
     <text name="EditingEntityDynamicParameterValue">Editing Entity Dynamic Parameter Value</text>
     <text name="DeletingEntityDynamicParameterValue">Deleting Entity Dynamic Parameter Value</text>
     <text name="UnknownEntityType">Unknown Entity Type {0}</text>
+    <text name="EntityType">Entity Type</text>
     <text name="TrialWithoutEndDateErrorMessage">Trial accounts must have subscription end date</text>
     <text name="ManageUserDelegations">Manage authority delegations</text>
     <text name="UserDelegations">User Delegations</text>

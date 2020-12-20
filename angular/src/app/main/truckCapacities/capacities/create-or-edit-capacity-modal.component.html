@@ -22,17 +22,17 @@
         </div>
         <div class="modal-body">
           <div class="form-group m-form__group">
-            <label for="TruckSubtypeDisplayName">{{ l('TruckSubtype') }}*</label>
+            <label for="TruckSubtypeDisplayName">{{ l('TruckSubType') }}*</label>
             <select
               name="capacity.truckSubtypeId"
               [(ngModel)]="capacity.truckSubtypeId"
               class="form-control form-control-lg custom-select mr-sm-2"
               required
             >
-              <option [ngValue]="null">{{ l('Select') }} {{ l('TruckSubtype') }}</option>
+              <option [ngValue]="null">{{ l('Select') }} {{ l('TruckSubType') }}</option>
               <option *ngFor="let item of allTruckSubtypes" value="{{ item.id }}">{{ item.displayName }}</option>
             </select>
-            <span class="form-text text-muted">{{ l('Select') }} {{ l('TruckSubtype') }}</span>
+            <span class="form-text text-muted">{{ l('Select') }} {{ l('TruckSubType') }}</span>
           </div>
 
           <div class="form-group">

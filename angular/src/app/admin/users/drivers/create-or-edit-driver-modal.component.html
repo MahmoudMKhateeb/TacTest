@@ -106,7 +106,7 @@
                     <select name="Nationality" [(ngModel)]="user.nationality" required class="form-control form-control-lg custom-select mr-sm-2">
                       <option *ngFor="let nationality of nationalities" value="nationality.id">{{ nationality.displayName }}</option>
                     </select>
-                    <span class="text-muted">{{ 'ChooseNationality' | localize }}</span>
+                    <!-- <span class="text-muted">{{ 'ChooseNationality' | localize }}</span> -->
                   </div>
                 </div>
                 <div class="col-6">
@@ -168,7 +168,7 @@
                 <div class="card card-custom">
                   <div class="card-header">
                     <div class="card-title">
-                      <h3 class="card-title">{{ item.documentTypeDto.displayName }}</h3>
+                      <h3 class="card-title">{{ item.documentTypeDto.displayName | localize }}</h3>
                     </div>
                   </div>
                   <div class="card-body">

@@ -1,6 +1,7 @@
 ﻿<div [@routerTransition]>
   <div class="content d-flex flex-column flex-column-fluid">
-    <sub-header [title]="'DocumentsEntities' | localize" [description]="'DocumentsEntitiesHeaderInfo' | localize">
+    <!-- [description]="'DocumentsEntitiesHeaderInfo' | localize" -->
+    <sub-header [title]="'DocumentsEntities' | localize">
       <div role="actions">
         <button *ngIf="isGranted('Pages.DocumentsEntities.Create')" (click)="createDocumentsEntity()" class="btn btn-primary blue">
           <i class="fa fa-plus"></i> {{ l('Create') }} {{ l('NewDocumentsEntity') }}
@@ -147,7 +148,7 @@
         </div>
       </div>
     </div>
-    <createOrEditDocumentsEntityModal #createOrEditDocumentsEntityModal (modalSave)="getDocumentsEntities()"></createOrEditDocumentsEntityModal>
+    <createOrEditDocumentsEntityModal #createOrEditDocumentsEntityModal (modalSave)="getDocumentsEntities()"> </createOrEditDocumentsEntityModal>
     <viewDocumentsEntityModal #viewDocumentsEntityModal></viewDocumentsEntityModal>
   </div>
 </div>

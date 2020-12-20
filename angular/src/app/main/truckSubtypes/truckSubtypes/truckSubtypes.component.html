@@ -1,6 +1,7 @@
 ﻿<div [@routerTransition]>
   <div class="content d-flex flex-column flex-column-fluid">
-    <sub-header [title]="'TruckSubtypes' | localize" [description]="'TruckSubtypesHeaderInfo' | localize">
+    <!-- [description]="'TruckSubtypesHeaderInfo' | localize" -->
+    <sub-header [title]="'TruckSubTypes' | localize">
       <div role="actions">
         <button *ngIf="isGranted('Pages.TruckSubtypes.Create')" (click)="createTruckSubtype()" class="btn btn-primary blue">
           <i class="fa fa-plus"></i> {{ l('Create') }} {{ l('NewTruckSubtype') }}
@@ -137,7 +138,7 @@
                     </td>
 
                     <td style="width: 150px;">
-                      <span class="ui-column-title"> {{ l('TruckSubtype') }}</span>
+                      <span class="ui-column-title"> {{ l('TruckSubType') }}</span>
                       {{ record.truckSubtype.displayName }}
                     </td>
                     <td style="width: 150px;">

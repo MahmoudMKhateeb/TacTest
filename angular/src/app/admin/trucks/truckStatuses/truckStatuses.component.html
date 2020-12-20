@@ -1,6 +1,7 @@
 ﻿<div [@routerTransition]>
   <div class="content d-flex flex-column flex-column-fluid">
-    <sub-header [title]="'TruckStatuses' | localize" [description]="'TruckStatusesHeaderInfo' | localize">
+    <!-- [description]="'TruckStatusesHeaderInfo' | localize" -->
+    <sub-header [title]="'TruckStatuses' | localize">
       <div role="actions">
         <button *ngIf="isGranted('Pages.Administration.TruckStatuses.Create')" (click)="createTruckStatus()" class="btn btn-primary blue">
           <i class="fa fa-plus"></i> {{ l('Create') }} {{ l('NewTruckStatus') }}
@@ -156,7 +157,7 @@
         </div>
       </div>
     </div>
-    <createOrEditTruckStatusModal #createOrEditTruckStatusModal (modalSave)="getTruckStatuses()"></createOrEditTruckStatusModal>
+    <createOrEditTruckStatusModal #createOrEditTruckStatusModal (modalSave)="getTruckStatuses()"> </createOrEditTruckStatusModal>
     <viewTruckStatusModal #viewTruckStatusModal></viewTruckStatusModal>
     <entityTypeHistoryModal #entityTypeHistoryModal></entityTypeHistoryModal>
   </div>

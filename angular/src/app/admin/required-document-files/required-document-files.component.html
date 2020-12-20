@@ -1,6 +1,8 @@
 <div [@routerTransition]>
   <div class="content d-flex flex-column flex-column-fluid">
-    <sub-header [title]="'TenantRequiredDocuments' | localize" [description]="'TenantRequiredDocumentsHeaderInfo' | localize"> </sub-header>
+    <sub-header [title]="'TenantRequiredDocuments' | localize"> </sub-header>
+    <!-- <sub-header [title]="'TenantRequiredDocuments' | localize"
+      [description]="'TenantRequiredDocumentsHeaderInfo' | localize"> </sub-header> -->
     <div [class]="containerClass">
       <div *ngIf="isFormSubmitted && submittedDocumentsList.length != 0" class="alert alert-custom alert-light-warning" role="alert">
         <div class="alert-icon">
@@ -164,7 +166,7 @@
                 <div class="card card-custom">
                   <div class="card-header">
                     <div class="card-title">
-                      <h4 class="card-title">{{ item.documentTypeDto.displayName }}</h4>
+                      <h4 class="card-title">{{ item.documentTypeDto.displayName | localize }}</h4>
                     </div>
                   </div>
                   <div class="card-body">
@@ -183,7 +185,7 @@
                             (change)="DocFileChangeEvent($event, item, i)"
                           />
                           <label [for]="item.documentTypeDto.displayName" class="custom-file-label text-truncate">{{
-                            item.name ? item.name : l('selectfile')
+                            item.name ? item.name : l('SelectFile')
                           }}</label>
                         </div>
                         <span class="form-text text-muted">{{ 'ValidDocumentFilesMsg' | localize }}</span>
@@ -193,7 +195,7 @@
                       </div>
                       <div *ngIf="item.documentTypeDto.hasNumber" class="form-group col-md-6">
                         <label
-                          >{{ item.documentTypeDto.displayName }} {{ l('Number') }}
+                          >{{ item.documentTypeDto.displayName | localize }} {{ l('Number') }}
                           <span class="text-danger">*</span>
                         </label>
                         <input

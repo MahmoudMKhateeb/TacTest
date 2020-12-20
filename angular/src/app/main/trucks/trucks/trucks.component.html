@@ -1,6 +1,7 @@
 ﻿<div [@routerTransition]>
   <div class="content d-flex flex-column flex-column-fluid">
-    <sub-header [title]="'Trucks' | localize" [description]="'TrucksHeaderInfo' | localize">
+    <!-- [description]="'TrucksHeaderInfo' | localize" -->
+    <sub-header [title]="'Trucks' | localize">
       <div role="actions">
         <div class="btn-group" dropdown>
           <button
@@ -369,8 +370,8 @@
     </div>
     <createOrEditTruckModal #createOrEditTruckModal (modalSave)="getTrucks()"></createOrEditTruckModal>
     <viewTruckModal #viewTruckModal></viewTruckModal>
-    <viewOrEditEntityDocumentsModal #viewOrEditEntityDocumentsModal (modalSave)="getTrucks()"></viewOrEditEntityDocumentsModal>
+    <viewOrEditEntityDocumentsModal #viewOrEditEntityDocumentsModal (modalSave)="getTrucks()"> </viewOrEditEntityDocumentsModal>
     <entityTypeHistoryModal #entityTypeHistoryModal></entityTypeHistoryModal>
-    <truckUserLookupTableModal #truckUserLookupTableModal (modalSave)="getNewDriver1UserId()"></truckUserLookupTableModal>
+    <truckUserLookupTableModal #truckUserLookupTableModal (modalSave)="getNewDriver1UserId()"> </truckUserLookupTableModal>
   </div>
 </div>

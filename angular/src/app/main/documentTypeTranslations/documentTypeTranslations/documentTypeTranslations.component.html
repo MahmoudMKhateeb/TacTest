@@ -1,6 +1,7 @@
 ﻿<div [@routerTransition]>
   <div class="content d-flex flex-column flex-column-fluid">
-    <sub-header [title]="'DocumentTypeTranslations' | localize" [description]="'DocumentTypeTranslationsHeaderInfo' | localize">
+    <!-- [description]="'DocumentTypeTranslationsHeaderInfo' | localize" -->
+    <sub-header [title]="'DocumentTypeTranslations' | localize">
       <div role="actions">
         <button (click)="exportToExcel()" class="btn btn-outline-success"><i class="fa fa-file-excel"></i> {{ l('ExportToExcel') }}</button>
 
@@ -110,7 +111,7 @@
                       {{ l('Actions') }}
                     </th>
                     <th style="width: 150px;" pSortableColumn="coreId">
-                      {{ l('documentTypeDisplayName') }}
+                      {{ l('DocumentTypeDisplayName') }}
                       <p-sortIcon field="documentTypeDisplayName"></p-sortIcon>
                     </th>
                     <th style="width: 150px;" pSortableColumn="name">

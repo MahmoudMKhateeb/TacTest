@@ -21,9 +21,9 @@
           </button>
         </div>
         <div class="modal-body">
-          <label
-            ><h3>{{ l('TrucktypeDetails') }}</h3></label
-          >
+          <label>
+            <h3>{{ l('TrucktypeDetails') }}</h3>
+          </label>
 
           <div class="row">
             <div class="col-md-6">
@@ -125,9 +125,9 @@
             </div>
           </div>
           <hr />
-          <label
-            ><h3>{{ l('TrucktDetails') }}</h3></label
-          >
+          <label>
+            <h3>{{ l('TrucktDetails') }}</h3>
+          </label>
           <div class="row">
             <div class="col-md-6">
               <div class="form-group m-form__group">
@@ -247,7 +247,7 @@
                 name="Note"
                 type="text"
               ></textarea>
-              <span class="form-text text-muted">{{ l('Enter') }} {{ l('EnterNote') }}</span>
+              <span class="form-text text-muted">{{ l('Enter') }} {{ l('Note') }}</span>
             </div>
 
             <!--            <div class="form-group col-md-12">-->
@@ -268,14 +268,16 @@
           <viewDocumentFileModal #viewDocumentFileModal></viewDocumentFileModal>
           <entityTypeHistoryModal #entityTypeHistoryModal></entityTypeHistoryModal>
           <hr />
-          <label *ngIf="!truck.id"><h3>Truck Documents</h3></label>
+          <label *ngIf="!truck.id">
+            <h3>{{ l('TruckDocuments') }}</h3>
+          </label>
 
           <div *ngIf="truck.createOrEditDocumentFileDtos != undefined ? (truck.createOrEditDocumentFileDtos.length > 0 ? true : false) : false">
             <div *ngFor="let item of truck.createOrEditDocumentFileDtos; index as i" class="">
               <div class="card card-custom">
                 <div class="card-header">
                   <div class="card-title">
-                    <h3 class="card-title">{{ item.documentTypeDto.displayName }}</h3>
+                    <h3 class="card-title">{{ item.documentTypeDto.displayName | localize }}</h3>
                   </div>
                 </div>
                 <div class="card-body padding-bottom-5">

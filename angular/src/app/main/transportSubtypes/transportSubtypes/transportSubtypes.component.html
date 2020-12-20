@@ -1,6 +1,7 @@
 ﻿<div [@routerTransition]>
   <div class="content d-flex flex-column flex-column-fluid">
-    <sub-header [title]="'TransportSubtypes' | localize" [description]="'TransportSubtypesHeaderInfo' | localize">
+    <!-- [description]="'TransportSubtypesHeaderInfo' | localize" -->
+    <sub-header [title]="'TransportSubTypes' | localize">
       <div role="actions">
         <button *ngIf="isGranted('Pages.TransportSubtypes.Create')" (click)="createTransportSubtype()" class="btn btn-primary blue">
           <i class="fa fa-plus"></i> {{ l('Create') }} {{ l('NewTransportSubtype') }}
@@ -94,7 +95,7 @@
                     </th>
 
                     <th style="width: 150px;" pSortableColumn="displayName">
-                      {{ l('TransportSubtype') }}
+                      {{ l('TransportSubType') }}
                       <p-sortIcon field="transportSubtype.displayName"></p-sortIcon>
                     </th>
                     <th style="width: 150px;" pSortableColumn="transportTypeFk.displayName">

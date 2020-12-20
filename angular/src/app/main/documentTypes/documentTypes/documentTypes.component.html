@@ -1,6 +1,7 @@
 ﻿<div [@routerTransition]>
+  <!-- [description]="'DocumentTypesHeaderInfo' | localize" -->
   <div class="content d-flex flex-column flex-column-fluid">
-    <sub-header [title]="'DocumentTypes' | localize" [description]="'DocumentTypesHeaderInfo' | localize">
+    <sub-header [title]="'DocumentTypes' | localize">
       <div role="actions">
         <button (click)="exportToExcel()" class="btn btn-outline-success"><i class="fa fa-file-excel"></i> {{ l('ExportToExcel') }}</button>
 
@@ -343,7 +344,7 @@
         </div>
       </div>
     </div>
-    <createOrEditDocumentTypeModal #createOrEditDocumentTypeModal (modalSave)="getDocumentTypes()"></createOrEditDocumentTypeModal>
+    <createOrEditDocumentTypeModal #createOrEditDocumentTypeModal (modalSave)="getDocumentTypes()"> </createOrEditDocumentTypeModal>
     <!-- <viewDocumentTypeModal #viewDocumentTypeModal></viewDocumentTypeModal> -->
   </div>
 </div>
