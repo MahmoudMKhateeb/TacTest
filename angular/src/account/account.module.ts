@@ -40,6 +40,8 @@ import { StripeCancelPaymentComponent } from './payment/stripe/stripe-cancel-pay
 import { PaymentCompletedComponent } from './payment/payment-completed.component';
 import { SessionLockScreenComponent } from './login/session-lock-screen.component';
 import { AppBsModalModule } from '@shared/common/appBsModal/app-bs-modal.module';
+import { TermAndConditionRegistrationViewModalComponent } from './register/term-and-condition-registration-view-modal.component';
+import { SafePipe } from './register/safe.pipe';
 
 export function getRecaptchaLanguage(): string {
   return new LocaleMappingService().map('recaptcha', abp.localization.currentLanguage.name);
@@ -62,6 +64,7 @@ export function getRecaptchaLanguage(): string {
     AppBsModalModule,
   ],
   declarations: [
+    SafePipe,
     AccountComponent,
     TenantChangeComponent,
     TenantChangeModalComponent,
@@ -69,6 +72,7 @@ export function getRecaptchaLanguage(): string {
     RegisterComponent,
     RegisterTenantComponent,
     RegisterTenantResultComponent,
+    TermAndConditionRegistrationViewModalComponent,
     SelectEditionComponent,
     ForgotPasswordComponent,
     ResetPasswordComponent,

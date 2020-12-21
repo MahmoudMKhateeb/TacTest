@@ -21,9 +21,11 @@ import { RegisterTenantModel } from './register-tenant.model';
 import { TenantRegistrationHelperService } from './tenant-registration-helper.service';
 import { finalize, catchError } from 'rxjs/operators';
 import { ReCaptchaV3Service } from 'ngx-captcha';
+import { NgForm } from '@angular/forms';
 
 @Component({
   templateUrl: './register-tenant.component.html',
+  styleUrls: ['./register-tenant.component.css'],
   animations: [accountModuleAnimation()],
 })
 export class RegisterTenantComponent extends AppComponentBase implements OnInit, AfterViewInit {
@@ -43,6 +45,8 @@ export class RegisterTenantComponent extends AppComponentBase implements OnInit,
   isCompanyNameAvailable = true;
   isEmailAvailable = true;
   isEmailValid = true;
+  approvedHostTerms = false;
+  isAvailableTermsAndConditons = false;
   constructor(
     injector: Injector,
     private _tenantRegistrationService: TenantRegistrationServiceProxy,
@@ -82,6 +86,12 @@ export class RegisterTenantComponent extends AppComponentBase implements OnInit,
       this._tenantRegistrationService.getEdition(this.model.editionId).subscribe((result: EditionSelectDto) => {
         this.model.edition = result;
       });
+
+      this._tenantRegistrationService.getActiveTermAndConditionForViewAndApprove(this.model.editionId.toString()).subscribe((result) => {
+        if (result != null) {
+          this.isAvailableTermsAndConditons = true;
+        }
+      });
     }
   }
 
@@ -89,7 +99,7 @@ export class RegisterTenantComponent extends AppComponentBase implements OnInit,
     return this.setting.getBoolean('App.TenantManagement.UseCaptchaOnRegistration');
   }
 
-  save(): void {
+  save(registerForm: NgForm): void {
     if (this.isEmailAvailable == false || this.isCompanyNameAvailable == false || this.isEmailValid == false) {
       this.notify.error('PleaseMakeSureYouProvideValidDetails!');
       return;
@@ -98,6 +108,11 @@ export class RegisterTenantComponent extends AppComponentBase implements OnInit,
       this.notify.error('pleasemakesureyouchoosethecountryandthecity!');
       return;
     }
+    if ((!this.approvedHostTerms && this.isAvailableTermsAndConditons) || (registerForm.form.valid && this.isAvailableTermsAndConditons)) {
+      this.notify.error('please make sure you compleate all needed data!');
+      return;
+    }
+
     let recaptchaCallback = (token: string) => {
       this.saving = true;
       this.model.captchaResponse = token;

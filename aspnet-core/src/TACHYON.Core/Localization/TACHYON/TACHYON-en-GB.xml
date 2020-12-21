@@ -288,6 +288,18 @@
 	  <text name="TheNumberLengthMustBeMoreThanMinDigits">The Number Length Must Be More Than MinDigits</text>
 	  <text name="TheNumberLengthMustBeLessThanMaxDigits">The Number Length Must Be Less Than MaxDigits</text>
 
+
+	  <text name="NewTermAndCondition">new term and condition</text>
+	  <text name="TermAndConditions">Term and conditions</text>
+	  <text name="TermAndCondition">Term and condition</text>
+	  <text name="Title">Title</text>
+	  <text name="Content">Content</text>
+	  <text name="Version">Version</text>
+	  <text name="EditionId">Edition id</text>
+	  <text name="IAgreeonTahcyon">I Agree on Tahcyon's</text>
+	  <text name="TargetEdition">Target Edition</text>
+	  <text name="TermsAndConditions">Terms and conditions</text>
+	  
     <text name="AboutUs">About us</text>
     <text name="Administration">Administration</text>
     <text name="Roles">Roles</text>

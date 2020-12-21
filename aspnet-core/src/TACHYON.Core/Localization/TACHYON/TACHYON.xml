@@ -152,8 +152,16 @@
     <text name="NewDocumentTypeTranslation">New Document Type Translation</text>
     <![CDATA[ Tachyon: Document Translation Page End]]>
 
+    <text name="Title">Title</text>
+    <text name="NewTermAndCondition">new term and condition</text>
+    <text name="TermAndConditions">Term and conditions</text>	<text name="TermAndCondition">Term and condition</text>
+    <text name="Content">Content</text>
+    <text name="Version">Version</text>
+    <text name="EditionId">Edition id</text>
+    <text name="IAgreeonTahcyon">I Agree on Tahcyon's</text>    <text name="TargetEdition">Target Edition</text>    <text name="TermsAndConditions">Terms and conditions</text>
 
-
+	  
+	  
     <text name="TruckCapacities">Truck capacities</text>
 	  <text name="NumbersOnly">Numbers Only</text>
 	  <text name="TheNumberLengthMustBeMoreThanMinDigits">The Number Length Must Be More Than MinDigits</text>

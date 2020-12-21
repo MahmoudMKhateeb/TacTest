@@ -30,6 +30,8 @@ namespace TACHYON.Authorization
 
             var pages = context.GetPermissionOrNull(AppPermissions.Pages) ?? context.CreatePermission(AppPermissions.Pages, L("Pages"));
 
+
+
             var capacities = pages.CreateChildPermission(AppPermissions.Pages_Capacities, L("Capacities"), multiTenancySides: MultiTenancySides.Host);
             capacities.CreateChildPermission(AppPermissions.Pages_Capacities_Create, L("CreateNewCapacity"), multiTenancySides: MultiTenancySides.Host);
             capacities.CreateChildPermission(AppPermissions.Pages_Capacities_Edit, L("EditCapacity"), multiTenancySides: MultiTenancySides.Host);
@@ -305,6 +307,13 @@ namespace TACHYON.Authorization
             administration.CreateChildPermission(AppPermissions.Pages_Administration_Tenant_SubscriptionManagement, L("Subscription"), multiTenancySides: MultiTenancySides.Tenant);
 
             //HOST-SPECIFIC PERMISSIONS
+
+            var termAndConditions = pages.CreateChildPermission(AppPermissions.Pages_TermAndConditions, L("TermAndConditions"), multiTenancySides: MultiTenancySides.Host);
+            termAndConditions.CreateChildPermission(AppPermissions.Pages_TermAndConditions_Create, L("CreateNewTermAndCondition"), multiTenancySides: MultiTenancySides.Host);
+            termAndConditions.CreateChildPermission(AppPermissions.Pages_TermAndConditions_Edit, L("EditTermAndCondition"), multiTenancySides: MultiTenancySides.Host);
+            termAndConditions.CreateChildPermission(AppPermissions.Pages_TermAndConditions_Delete, L("DeleteTermAndCondition"), multiTenancySides: MultiTenancySides.Host);
+
+
 
             var editions = pages.CreateChildPermission(AppPermissions.Pages_Editions, L("Editions"), multiTenancySides: MultiTenancySides.Host);
             editions.CreateChildPermission(AppPermissions.Pages_Editions_Create, L("CreatingNewEdition"), multiTenancySides: MultiTenancySides.Host);

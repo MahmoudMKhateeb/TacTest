@@ -244,6 +244,7 @@ export class AppNavigationService {
           //  ),
           new AppMenuItem('Settings', 'Pages.Administration.Host.Settings', 'flaticon-settings', '/app/admin/hostSettings'),
           new AppMenuItem('Settings', 'Pages.Administration.Tenant.Settings', 'flaticon-settings', '/app/admin/tenantSettings'),
+          new AppMenuItem('TermAndConditions', 'Pages.TermAndConditions', 'flaticon-more', '/app/main/termsAndConditions/termAndConditions'),
         ]
       ),
       //new AppMenuItem('DemoUiComponents', 'Pages.DemoUiComponents', 'flaticon-shapes', '/app/admin/demo-ui-components'),

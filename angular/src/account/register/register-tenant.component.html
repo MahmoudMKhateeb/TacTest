@@ -13,7 +13,7 @@
   <div class="separator separator-border-dashed"></div>
   <hr />
 
-  <form #registerForm="ngForm" role="form" novalidate (submit)="save()" class="login-form form mt-2 text-red">
+  <form #registerForm="ngForm" role="form" novalidate (submit)="save(registerForm)" class="login-form form mt-2 text-red">
     <h5 style="text-align: center;">
       {{ 'CompanyInformation' | localize }}
       <br />
@@ -240,6 +240,28 @@
       </div>
     </div>
 
+    <div *ngIf="isAvailableTermsAndConditons" style="align-items: baseline;" class="row">
+      <div class="col-1">
+        <label class="checkbox checkbox-danger">
+          <input #TermsAndCondition_Host type="checkbox" [(ngModel)]="approvedHostTerms" name="Checkboxes12" />
+          <span></span>
+        </label>
+      </div>
+      <div style="display: contents;" class="col-8">
+        <div style="width: max-content; padding-left: 0px; padding-right: 3px;" class="alert alert-white" role="alert">
+          {{ l('IAgreeonTahcyon') }}
+        </div>
+        <div>
+          <div (click)="TermAndConditionRegisterationViewModal.show(model.editionId)" style="cursor: pointer; color: blue;">
+            {{ l('TermsAndConditons') }}
+          </div>
+        </div>
+      </div>
+      <span class="form-text text-danger">
+        <validation-messages [formCtrl]="TermsAndCondition_Host"></validation-messages>
+      </span>
+    </div>
+
     <button
       style="margin-top: 0px !important; height: 35px;"
       [disabled]="saving"
@@ -259,7 +281,8 @@
         !isCompanyNameAvailable ||
         !registerForm.form.valid ||
         citySelect.value == -2 ||
-        countrySelect.value == -2
+        countrySelect.value == -2 ||
+        (!approvedHostTerms && isAvailableTermsAndConditons)
       "
       [buttonBusy]="saving"
       [busyText]="l('SavingWithThreeDot')"
@@ -267,4 +290,5 @@
       <i class="fa fa-check"></i> {{ 'Submit' | localize }}
     </button>
   </form>
+  <termAndConditionRegisterationViewModal #TermAndConditionRegisterationViewModal></termAndConditionRegisterationViewModal>
 </div>

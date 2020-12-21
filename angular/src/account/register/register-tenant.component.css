@@ -1,0 +1,32 @@
+:host ::ng-deep .ql-align-right {
+  text-align: right;
+}
+
+:host ::ng-deep .ql-align-center {
+  text-align: center;
+}
+
+:host ::ng-deep .ql-align-justify {
+  text-align: justify;
+}
+
+:host ::ng-deep .ql-size-huge {
+  font-size: 2.5em;
+}
+
+:host ::ng-deep .ql-size-large {
+  font-size: 1.5em;
+}
+
+:host ::ng-deep .ql-size-small {
+  font-size: 0.75em;
+}
+
+.html2canvas-container {
+  width: 3000px !important;
+  height: 3000px !important;
+}
+
+:host ::ng-deep p {
+  text-align: left;
+}

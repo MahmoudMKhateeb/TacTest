@@ -1,4 +1,5 @@
-﻿using TACHYON.Trucks.TruckCategories.TruckCapacities;
+﻿using TACHYON.TermsAndConditions;
+using TACHYON.Trucks.TruckCategories.TruckCapacities;
 using TACHYON.Trucks.TruckCategories.TruckSubtypes;
 using TACHYON.Trucks.TruckCategories.TransportSubtypes;
 using TACHYON.Trucks.TruckCategories.TransportTypes;
@@ -63,6 +64,8 @@ namespace TACHYON.EntityFrameworkCore
 {
     public class TACHYONDbContext : AbpZeroDbContext<Tenant, Role, User, TACHYONDbContext>, IAbpPersistedGrantDbContext
     {
+        public virtual DbSet<TermAndCondition> TermAndConditions { get; set; }
+
         public virtual DbSet<Capacity> Capacities { get; set; }
 
         public virtual DbSet<TruckSubtype> TruckSubtypes { get; set; }
@@ -189,8 +192,13 @@ namespace TACHYON.EntityFrameworkCore
 
 
 
-
-            modelBuilder.Entity<Facility>(f =>
+           
+           
+            modelBuilder.Entity<TermAndCondition>(t =>
+            {
+                t.HasIndex(e => new { e.TenantId });
+            });
+ modelBuilder.Entity<Facility>(f =>
             {
                 f.HasIndex(e => new { e.TenantId });
             });

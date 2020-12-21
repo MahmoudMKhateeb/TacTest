@@ -1,4 +1,6 @@
-﻿using TACHYON.Trucks.TruckCategories.TruckCapacities.Dtos;
+﻿using TACHYON.TermsAndConditions.Dtos;
+using TACHYON.TermsAndConditions;
+using TACHYON.Trucks.TruckCategories.TruckCapacities.Dtos;
 using TACHYON.Trucks.TruckCategories.TruckCapacities;
 using TACHYON.Trucks.TruckCategories.TruckSubtypes.Dtos;
 using TACHYON.Trucks.TruckCategories.TruckSubtypes;
@@ -134,6 +136,8 @@ namespace TACHYON
     {
         public static void CreateMappings(IMapperConfigurationExpression configuration)
         {
+            configuration.CreateMap<CreateOrEditTermAndConditionDto, TermAndCondition>().ReverseMap();
+            configuration.CreateMap<TermAndConditionDto, TermAndCondition>().ReverseMap();
             configuration.CreateMap<CreateOrEditCapacityDto, Capacity>().ReverseMap();
             configuration.CreateMap<CapacityDto, Capacity>().ReverseMap();
             configuration.CreateMap<CreateOrEditTruckSubtypeDto, TruckSubtype>().ReverseMap();
