@@ -25,7 +25,7 @@ namespace TACHYON.Trucks.Dtos
 
         public long TruckStatusId { get; set; }
 
-        public long? Driver1UserId { get; set; }
+       // public long? Driver1UserId { get; set; }
 
         //public long? Driver2UserId { get; set; }
 

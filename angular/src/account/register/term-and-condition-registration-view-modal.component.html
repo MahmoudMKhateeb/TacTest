@@ -1,0 +1,25 @@
+<div
+  bsModal
+  #createOrEditModal="bs-modal"
+  class="modal fade"
+  tabindex="-1"
+  role="dialog"
+  aria-labelledby="createOrEditModal"
+  aria-hidden="true"
+  [config]="{ backdrop: 'static' }"
+>
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3 class="card-title">{{ item.termAndCondition.title }}</h3>
+      </div>
+      <div #content id="content" class="modal-body">
+        <div [innerHTML]="item.termAndCondition.content | safe: 'html'"></div>
+      </div>
+      <div class="modal-footer">
+        <button [disabled]="saving" type="button" class="btn btn-primary blue" (click)="close()">{{ l('Close') }}</button>
+        <button type="button" class="btn btn-primary" (click)="downloadAsPDF()">{{ l('Download') }}</button>
+      </div>
+    </div>
+  </div>
+</div>

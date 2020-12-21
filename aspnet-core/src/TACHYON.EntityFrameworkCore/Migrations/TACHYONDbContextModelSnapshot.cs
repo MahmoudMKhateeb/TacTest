@@ -3417,9 +3417,6 @@ namespace TACHYON.Migrations
                     b.Property<DateTime?>("DeletionTime")
                         .HasColumnType("datetime2");
 
-                    b.Property<long?>("Driver1UserId")
-                        .HasColumnType("bigint");
-
                     b.Property<bool>("IsAttachable")
                         .HasColumnType("bit");
 
@@ -3475,8 +3472,6 @@ namespace TACHYON.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("CapacityId");
-
-                    b.HasIndex("Driver1UserId");
 
                     b.HasIndex("TenantId");
 
@@ -4358,10 +4353,6 @@ namespace TACHYON.Migrations
                     b.HasOne("TACHYON.Trucks.TruckCategories.TruckCapacities.Capacity", "CapacityFk")
                         .WithMany()
                         .HasForeignKey("CapacityId");
-
-                    b.HasOne("TACHYON.Authorization.Users.User", "Driver1UserFk")
-                        .WithMany()
-                        .HasForeignKey("Driver1UserId");
 
                     b.HasOne("TACHYON.Trucks.TruckCategories.TransportSubtypes.TransportSubtype", "TransportSubtypeFk")
                         .WithMany()

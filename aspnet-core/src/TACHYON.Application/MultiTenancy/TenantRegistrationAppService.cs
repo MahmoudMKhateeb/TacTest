@@ -27,6 +27,8 @@ using TACHYON.MultiTenancy.Payments;
 using TACHYON.MultiTenancy.Payments.Dto;
 using TACHYON.Notifications;
 using TACHYON.Security.Recaptcha;
+using TACHYON.TermsAndConditions;
+using TACHYON.TermsAndConditions.Dtos;
 using TACHYON.Url;
 
 namespace TACHYON.MultiTenancy
@@ -44,6 +46,7 @@ namespace TACHYON.MultiTenancy
         private readonly ISubscriptionPaymentRepository _subscriptionPaymentRepository;
         private readonly IRepository<County, int> _lookup_countryRepository;
         private readonly IRepository<City, int> _lookup_cityRepository;
+        private readonly IRepository<TermAndCondition> _termAndConditionRepository;
 
         public TenantRegistrationAppService(
             IMultiTenancyConfig multiTenancyConfig,
@@ -52,8 +55,9 @@ namespace TACHYON.MultiTenancy
             IAppNotifier appNotifier,
             ILocalizationContext localizationContext,
             TenantManager tenantManager,
-            IRepository<County, int> lookup_countryRepository, 
+            IRepository<County, int> lookup_countryRepository,
             IRepository<City, int> lookup_cityRepository,
+            IRepository<TermAndCondition> termAndConditionRepository,
             ISubscriptionPaymentRepository subscriptionPaymentRepository)
         {
             _multiTenancyConfig = multiTenancyConfig;
@@ -65,6 +69,7 @@ namespace TACHYON.MultiTenancy
             _subscriptionPaymentRepository = subscriptionPaymentRepository;
             _lookup_countryRepository = lookup_countryRepository;
             _lookup_cityRepository = lookup_cityRepository;
+            _termAndConditionRepository = termAndConditionRepository;
 
             AppUrlService = NullAppUrlService.Instance;
         }
@@ -104,7 +109,7 @@ namespace TACHYON.MultiTenancy
                 //);
 
                 //todo add setting here
-                var isEmailConfirmationRequired = true ;
+                var isEmailConfirmationRequired = true;
 
                 DateTime? subscriptionEndDate = null;
                 var isInTrialPeriod = false;
@@ -353,15 +358,26 @@ namespace TACHYON.MultiTenancy
         {
             using (CurrentUnitOfWork.DisableFilter(AbpDataFilters.MayHaveTenant))
             {
-                var result =await UserManager.FindByEmailAsync(email==null?"":email);
-            if (result == null)
-            {
-                return true;
+                var result = await UserManager.FindByEmailAsync(email == null ? "" : email);
+                if (result == null)
+                {
+                    return true;
+                }
+                else
+                {
+                    return false;
+                }
             }
-            else
+
+        }
+
+        public async Task<GetTermAndConditionForViewDto> GetActiveTermAndConditionForViewAndApprove(string editiontId)
+        {
+            using (CurrentUnitOfWork.DisableFilter(AbpDataFilters.MayHaveTenant, AbpDataFilters.MustHaveTenant))
             {
-                return false;
-            }
+                var term = await _termAndConditionRepository.FirstOrDefaultAsync(x => x.TenantId == null && x.EditionId == int.Parse(editiontId));
+                var output = new GetTermAndConditionForViewDto { TermAndCondition = ObjectMapper.Map<TermAndConditionDto>(term) };
+                return output;
             }
 
         }

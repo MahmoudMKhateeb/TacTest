@@ -6,6 +6,11 @@
     /// </summary>
     public static class AppPermissions
     {
+        public const string Pages_TermAndConditions = "Pages.TermAndConditions";
+        public const string Pages_TermAndConditions_Create = "Pages.TermAndConditions.Create";
+        public const string Pages_TermAndConditions_Edit = "Pages.TermAndConditions.Edit";
+        public const string Pages_TermAndConditions_Delete = "Pages.TermAndConditions.Delete";
+
         public const string Pages_Capacities = "Pages.Capacities";
         public const string Pages_Capacities_Create = "Pages.Capacities.Create";
         public const string Pages_Capacities_Edit = "Pages.Capacities.Edit";

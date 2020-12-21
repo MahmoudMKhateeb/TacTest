@@ -16,6 +16,7 @@ using Microsoft.EntityFrameworkCore;
 using TACHYON.Authorization.Users;
 using TACHYON.Notifications;
 using TACHYON.Shipping.ShippingRequestBids;
+using Abp.Threading;
 
 namespace TACHYON.Shipping.ShippingRequests
 {
@@ -32,32 +33,32 @@ namespace TACHYON.Shipping.ShippingRequests
             AbpTimer timer,
             IRepository<ShippingRequest, long> shippingRequestRepository,
             IAppNotifier appNotifier,
-            BidDomainService bidDomainService
-
-            ) : base(timer)
+            BidDomainService bidDomainService) : base(timer)
         {
             _shippingRequestRepository = shippingRequestRepository;
             Timer.Period = CheckPeriodAsMilliseconds;
             Timer.RunOnStart = true;
             _appNotifier = appNotifier;
+            _bidDomainService = bidDomainService;
         }
 
         //#544
+        [UnitOfWork]
         protected override void DoWork()
         {
-            //using (CurrentUnitOfWork.DisableFilter(AbpDataFilters.MustHaveTenant))
-            //{
+            using (CurrentUnitOfWork.DisableFilter(AbpDataFilters.MustHaveTenant))
+            {
                 var expiresBids = _shippingRequestRepository.GetAll()
+                    .Where(u=>u.IsBid==true)
                     .Where(u => u.BidEndDate != null)
-                    .Where(u => u.ShippingRequestStatusId == TACHYONConsts.ShippingRequestStatusClosed)
-                    .Where(u => u.BidEndDate.Value.Date == Clock.Now.Date)
+                    .Where(u => u.ShippingRequestBidStatusId == TACHYONConsts.ShippingRequestStatusOnGoing)
+                    .Where(u => u.BidEndDate.Value.Date <= Clock.Now.Date)
                     .ToList();
 
 
                 foreach (var item in expiresBids)
                 {
-                    item.ShippingRequestStatusId = TACHYONConsts.ShippingRequestStatusClosed;
-                    item.CloseBidDate = Clock.Now;
+                    item.Close();
                 }
 
                 //todo add notification here 
@@ -66,22 +67,25 @@ namespace TACHYON.Shipping.ShippingRequests
 
                 //Open standBy Bids
                 var onGoingBids = _shippingRequestRepository.GetAll()
+                        .Where(x=>x.IsBid==true)
                         .Where(x => x.BidStartDate != null)
-                        .Where(x => x.ShippingRequestStatusId == TACHYONConsts.ShippingRequestStatusStandBy)
+                        .Where(x => x.ShippingRequestBidStatusId == TACHYONConsts.ShippingRequestStatusStandBy)
                         .Where(x => x.BidStartDate.Value.Date == Clock.Now.Date)
                         .ToList();
 
                 foreach (var item in onGoingBids)
                 {
-                    item.ShippingRequestStatusId = TACHYONConsts.ShippingRequestStatusOnGoing;
-                    var users = Task.Run<UserIdentifier[]>(async () => await _bidDomainService.GetCarriersByTruckTypeArrayAsync(item.TrucksTypeId)).Result;
-                    // to carrier
-                    _appNotifier.ShippingRequestAsBidWithSameTruckAsync(users, item.Id);
+                    item.ShippingRequestBidStatusId = TACHYONConsts.ShippingRequestStatusOnGoing;
+                    //var users = Task.Run<UserIdentifier[]>(async () => await _bidDomainService.GetCarriersByTruckTypeArrayAsync(item.TrucksTypeId)).Result;
+                    var users = AsyncHelper.RunSync(() => _bidDomainService.GetCarriersByTruckTypeArrayAsync(item.TrucksTypeId));
+                     // to carrier
+                     AsyncHelper.RunSync(() => _appNotifier.ShippingRequestAsBidWithSameTruckAsync(users, item.Id));
                       //todo add notification here to shipper
-
                 }
+
+                CurrentUnitOfWork.SaveChanges();
                
-           // }
+            }
         }
     }
 }

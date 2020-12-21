@@ -289,6 +289,19 @@
 	  <![CDATA[Tachyon:Driver Page End]]>
 
 
+
+	  <text name="NewTermAndCondition">شروط  وأحكام جديدة</text>
+	  <text name="TermAndConditions">شروط و أحكام</text>
+	  <text name="TermAndCondition">شروط و أحكام</text>
+	  <text name="Title">العنوان</text>
+	  <text name="Content">المحتوى</text>
+	  <text name="Version">الإصدار</text>
+	  <text name="IAgreeonTahcyon">أنا أوافق على </text>
+
+	  <text name="EditionId">الرقم المميز الخاص بنوع الإشتراك</text>
+	  <text name="TargetEdition">نوع الإشتراك المستهدف</text>
+	  <text name="TermsAndConditions">الشروط والأحكام</text>
+	  
     <text name="AboutUs">من نحن</text>
     <text name="Administration">الإدارة</text>
     <text name="Roles">الأدوار</text>

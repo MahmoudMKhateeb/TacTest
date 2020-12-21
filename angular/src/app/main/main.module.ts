@@ -2,6 +2,10 @@
 import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { AppCommonModule } from '@app/shared/common/app-common.module';
+import { TermAndConditionsComponent } from './termsAndConditions/termAndConditions/termAndConditions.component';
+import { ViewTermAndConditionModalComponent } from './termsAndConditions/termAndConditions/view-termAndCondition-modal.component';
+import { CreateOrEditTermAndConditionModalComponent } from './termsAndConditions/termAndConditions/create-or-edit-termAndCondition-modal.component';
+
 import { CapacitiesComponent } from './truckCapacities/capacities/capacities.component';
 import { ViewCapacityModalComponent } from './truckCapacities/capacities/view-capacity-modal.component';
 import { CreateOrEditCapacityModalComponent } from './truckCapacities/capacities/create-or-edit-capacity-modal.component';
@@ -137,6 +141,7 @@ import { MarketplaceComponent } from '@app/main/marketPlace/marketPlace/marketpl
 import { ViewShippingRequestDetailsComponent } from '@app/main/marketPlace/marketPlace/ViewShippingRequestDetails.component';
 import { ViewAllCarrierBidsComponent } from '@app/main/marketPlace/marketPlace/ViewAllCarrierBids.component';
 import { RejectionReasonModalComponent } from './documentFiles/documentFiles/rejectionReason-modal.component';
+import { SafePipe } from '../../account/register/safe.pipe';
 
 NgxBootstrapDatePickerConfigService.registerNgxBootstrapDatePickerLocales();
 
@@ -171,6 +176,10 @@ NgxBootstrapDatePickerConfigService.registerNgxBootstrapDatePickerLocales();
     AdminModule,
   ],
   declarations: [
+    TermAndConditionsComponent,
+
+    ViewTermAndConditionModalComponent,
+    CreateOrEditTermAndConditionModalComponent,
     CapacitiesComponent,
     RejectionReasonModalComponent,
     ViewCapacityModalComponent,

@@ -1,0 +1,162 @@
+﻿<div
+  bsModal
+  #createOrEditModal="bs-modal"
+  class="modal fade"
+  tabindex="-1"
+  role="dialog"
+  aria-labelledby="createOrEditModal"
+  aria-hidden="true"
+  [config]="{ backdrop: 'static' }"
+>
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <form *ngIf="active" #termAndConditionForm="ngForm" novalidate (ngSubmit)="save()" autocomplete="off">
+        <div class="modal-header">
+          <h4 class="modal-title">
+            <span *ngIf="termAndCondition.id"> {{ l('Edit') }} {{ l('TermAndCondition') }}</span>
+            <span *ngIf="!termAndCondition.id">{{ l('Create') }} {{ l('NewTermAndCondition') }}</span>
+          </h4>
+          <button type="button" class="close" (click)="close()" aria-label="Close" [disabled]="saving">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <div class="row">
+            <div class="col-6">
+              <div class="form-group">
+                <label for="TermAndCondition_Title">{{ l('Title') }} *</label>
+                <input
+                  type="text"
+                  id="TermAndCondition_Title"
+                  class="form-control"
+                  [(ngModel)]="termAndCondition.title"
+                  name="Title"
+                  minlength="3"
+                  maxlength="256"
+                  required
+                />
+              </div>
+            </div>
+            <div class="col-6">
+              <div class="form-group">
+                <label for="TermAndCondition_EditionId">{{ l('Edition') }}</label>
+                <!-- <input type="number" id="TermAndCondition_EditionId" class="form-control" [(ngModel)]="termAndCondition.editionId" name="EditionId" /> -->
+
+                <select id="TermAndCondition_EditionId" name="EditionId" [(ngModel)]="termAndCondition.editionId" class="form-control">
+                  <!-- <option value="">{{ l('SelectEdition') }}</option> -->
+                  <option *ngFor="let item of editionsList" value="{{ item.id }}">{{ item.displayName }}</option>
+                </select>
+              </div>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="TermAndCondition_Version">{{ l('Version') }}</label>
+            <input
+              (keypress)="numberOnly($event)"
+              type="number"
+              id="TermAndCondition_Version"
+              class="form-control"
+              [(ngModel)]="termAndCondition.version"
+              name="Version"
+              required
+            />
+          </div>
+
+          <!-- <div class="form-group">
+            <label for="TermAndCondition_Content">{{ l('Content') }} *</label>
+            <textarea
+            type="text"
+            rows="12"
+            cols="5"
+            id="TermAndCondition_Content"
+            class="form-control"
+            [(ngModel)]="termAndCondition.content"
+            name="Content"
+            required
+            >
+          </textarea>
+        </div> -->
+          <div>
+            <!-- <p-editor name="Content" [(ngModel)]="termAndCondition.content" [style]="{ height: '320px' }">
+            <p-header> </p-header>
+          </p-editor> -->
+
+            <label for="TermAndCondition_Content">{{ l('Content') }} *</label>
+            <p-editor required name="Content" [(ngModel)]="termAndCondition.content" [style]="{ height: '320px' }" #editor>
+              <p-header>
+                <span class="ql-formats">
+                  <select class="ql-size">
+                    <option value="small">small</option>
+                    <option selected></option>
+                    <option value="large">large</option>
+                    <option value="huge">huge</option>
+                  </select>
+                </span>
+                <!-- <span class="ql-formats">
+                  <select class="ql-size">
+                    <option value="8px">8</option>
+                    <option value="9px">9</option>
+                    <option value="10px">10</option>
+                    <option value="12px">12</option>
+                    <option value="14px">14</option>
+                    <option value="16px">16</option>
+                    <option value="18px">18</option>
+                    <option value="20px">20</option>
+                    <option value="22px">22</option>
+                    <option value="24px">24</option>
+                    <option value="26px">26</option>
+                  </select>
+                </span> -->
+                <span class="ql-formats">
+                  <button class="ql-bold" aria-label="Bold"></button>
+                  <button class="ql-italic" aria-label="Italic"></button>
+                  <button class="ql-underline" aria-label="Underline"></button>
+                  <button class="ql-strike" aria-label="Strike"></button>
+                </span>
+                <span class="ql-formats">
+                  <select title="Text Color" class="ql-color" defaultValue="rgb(0, 0, 0)">
+                    <option value="rgb(0, 0, 0)" label="rgb(0, 0, 0)"></option>
+                    <option value="rgb(61, 20, 102)" label="rgb(61, 20, 102)"></option>
+                    <option value="rgb(181, 181, 195)" label="rgb(181, 181, 195)"></option>
+                    <option value="rgb(216, 38, 49)" label="rgb(216, 38, 49)"></option>
+                  </select>
+                  <span class="ql-format-separator"></span>
+                  <select title="Background Color" class="ql-background" defaultValue="rgb(255, 255, 255)">
+                    <option value="rgb(0, 0, 0)" label="rgb(0, 0, 0)"></option>
+                    <option value="rgb(61, 20, 102)" label="rgb(61, 20, 102)"></option>
+                    <option value="rgb(181, 181, 195)" label="rgb(181, 181, 195)"></option>
+                    <option value="rgb(216, 38, 49)" label="rgb(216, 38, 49)"></option>
+                  </select>
+                </span>
+                <span class="ql-formats">
+                  <button class="ql-list" value="ordered"></button>
+                  <button class="ql-list" value="bullet"></button>
+
+                  <select title="Text Alignment" class="ql-align">
+                    <option selected>Gauche</option>
+                    <option value="center" label="Center"></option>
+                    <option value="right" label="Right"></option>
+                    <option value="justify" label="Justify"></option>
+                  </select>
+                </span>
+              </p-header>
+            </p-editor>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button [disabled]="saving" type="button" class="btn btn-default" (click)="close()">{{ l('Cancel') }}</button>
+          <button
+            type="submit"
+            class="btn btn-save blue"
+            [disabled]="!termAndConditionForm.form.valid"
+            [buttonBusy]="saving"
+            [busyText]="l('SavingWithThreeDot')"
+          >
+            <i class="fa fa-save"></i> <span>{{ l('Save') }}</span>
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
