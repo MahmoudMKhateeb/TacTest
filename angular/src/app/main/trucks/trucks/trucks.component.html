@@ -207,10 +207,6 @@
                       {{ l('Status') }}
                       <p-sortIcon field="truckStatus"></p-sortIcon>
                     </th>
-                    <th style="width: 150px;" pSortableColumn="driver1UserFk.name">
-                      {{ l('DriverName') }}
-                      <p-sortIcon field="driverName"></p-sortIcon>
-                    </th>
                     <th style="width: 150px;" pSortableColumn="modelName">
                       {{ l('ModelName') }}
                       <p-sortIcon field="truck.modelName"></p-sortIcon>
@@ -305,15 +301,6 @@
                       {{ record.truckStatusDisplayName }}
                     </td>
                     <td style="width: 150px;">
-                      <span class="ui-column-title"> {{ l('Driver') }}</span>
-                      {{ record.userName }}
-                    </td>
-                    <!-- <td style="width: 150px;">
-                      <span class="ui-column-title"> {{ l('Name') }}</span>
-                      {{ record.userName2 }}
-                    </td> -->
-
-                    <td style="width: 150px;">
                       <span class="ui-column-title"> {{ l('ModelName') }}</span>
                       {{ record.truck.modelName }}
                     </td>
@@ -371,6 +358,5 @@
     <viewTruckModal #viewTruckModal></viewTruckModal>
     <viewOrEditEntityDocumentsModal #viewOrEditEntityDocumentsModal (modalSave)="getTrucks()"></viewOrEditEntityDocumentsModal>
     <entityTypeHistoryModal #entityTypeHistoryModal></entityTypeHistoryModal>
-    <truckUserLookupTableModal #truckUserLookupTableModal (modalSave)="getNewDriver1UserId()"></truckUserLookupTableModal>
   </div>
 </div>

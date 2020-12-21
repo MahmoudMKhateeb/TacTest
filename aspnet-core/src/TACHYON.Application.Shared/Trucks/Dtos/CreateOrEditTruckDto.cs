@@ -43,7 +43,7 @@ namespace TACHYON.Trucks.Dtos
         [Required]
         public long? TruckStatusId { get; set; }
 
-        public long? Driver1UserId { get; set; }
+       // public long? Driver1UserId { get; set; }
 
         //public long? Driver2UserId { get; set; }
 

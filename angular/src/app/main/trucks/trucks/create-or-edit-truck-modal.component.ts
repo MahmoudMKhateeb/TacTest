@@ -39,7 +39,6 @@ import * as moment from '@node_modules/moment';
 })
 export class CreateOrEditTruckModalComponent extends AppComponentBase {
   @ViewChild('createOrEditModal', { static: true }) modal: ModalDirective;
-  @ViewChild('truckUserLookupTableModal', { static: true }) truckUserLookupTableModal: TruckUserLookupTableModalComponent;
   @ViewChild('truckUserLookupTableModal2', { static: true }) truckUserLookupTableModal2: TruckUserLookupTableModalComponent;
 
   @ViewChild('createOrEditDocumentFileModal', { static: true }) createOrEditDocumentFileModal: CreateOrEditDocumentFileModalComponent;
@@ -65,7 +64,6 @@ export class CreateOrEditTruckModalComponent extends AppComponentBase {
   documentTypeDisplayNameFilter = '';
   truckPlateNumberFilter = '';
   trailerTrailerCodeFilter = '';
-  userNameFilter = '';
   routStepDisplayNameFilter = '';
   _entityTypeFullName = 'TACHYON.Documents.DocumentFiles.DocumentFile';
   entityHistoryEnabled = false;
@@ -74,7 +72,6 @@ export class CreateOrEditTruckModalComponent extends AppComponentBase {
   trucksTypeDisplayName = '';
   todayGregorian = this.dateFormatterService.GetTodayGregorian();
   todayHijri = this.dateFormatterService.ToHijri(this.todayGregorian);
-  userName = '';
   userName2 = '';
   allTrucksTypes: TruckTrucksTypeLookupTableDto[];
   allTruckStatuss: TruckTruckStatusLookupTableDto[];
@@ -138,7 +135,6 @@ export class CreateOrEditTruckModalComponent extends AppComponentBase {
       //initlaize truck type values
       this.truck.id = truckId;
       this.trucksTypeDisplayName = '';
-      this.userName = '';
       this.truck.modelYear = '2000';
       this.truck.capacity = '1';
       this.truck.truckStatusId = null;
@@ -167,7 +163,6 @@ export class CreateOrEditTruckModalComponent extends AppComponentBase {
         this.truck = result.truck;
         this.GetTransportDropDownList();
         this.trucksTypeDisplayName = result.trucksTypeDisplayName;
-        this.userName = result.userName;
         this.getTruckPictureUrl(this.truck.id);
 
         // dropDowns
@@ -237,22 +232,6 @@ export class CreateOrEditTruckModalComponent extends AppComponentBase {
       this.createOrEditTruck();
     }
     // this.uploader.uploadAll();
-  }
-
-  openSelectUserModal() {
-    this.truckUserLookupTableModal.id = this.truck.driver1UserId;
-    this.truckUserLookupTableModal.displayName = this.userName;
-    this.truckUserLookupTableModal.show();
-  }
-
-  setDriver1UserIdNull() {
-    this.truck.driver1UserId = null;
-    this.userName = '';
-  }
-
-  getNewDriver1UserId() {
-    this.truck.driver1UserId = this.truckUserLookupTableModal.id;
-    this.userName = this.truckUserLookupTableModal.displayName;
   }
 
   getNewDriver2UserId() {

@@ -5,7 +5,7 @@ using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using TACHYON.Authorization.Users;
-using TACHYON.Authorization.Users;
+//using TACHYON.Authorization.Users;
 using TACHYON.Trucks;
 using TACHYON.Trucks.TruckCategories.TransportSubtypes;
 using TACHYON.Trucks.TruckCategories.TransportTypes;
@@ -54,10 +54,10 @@ namespace TACHYON.Trucks
         [ForeignKey("TruckStatusId")]
         public TruckStatus TruckStatusFk { get; set; }
 
-        public virtual long? Driver1UserId { get; set; }
+       // public virtual long? Driver1UserId { get; set; }
 
-        [ForeignKey("Driver1UserId")]
-        public User Driver1UserFk { get; set; }
+       // [ForeignKey("Driver1UserId")]
+       // public User Driver1UserFk { get; set; }
 
         //public virtual long? Driver2UserId { get; set; }
 

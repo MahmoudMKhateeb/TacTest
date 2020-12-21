@@ -88,23 +88,23 @@ namespace TACHYON.Trucks
 
             var filteredTrucks = _truckRepository.GetAll()
                 .Include(e => e.TruckStatusFk)
-                .Include(e => e.Driver1UserFk)
-                 //truck type related
+                //.Include(e => e.Driver1UserFk)
+                //truck type related
                 .Include(e => e.TrucksTypeFk)
                 .Include(e => e.TruckSubtypeFk)
                 .Include(e => e.TransportTypeFk)
                 .Include(e => e.TransportSubtypeFk)
                 .Include(e => e.CapacityFk)
                 .WhereIf(!string.IsNullOrWhiteSpace(input.Filter), e => false || e.PlateNumber.Contains(input.Filter) ||
-                e.ModelName.Contains(input.Filter) || e.ModelYear.Contains(input.Filter) || e.Note.Contains(input.Filter) ||
-                e.Driver1UserFk.Name.Contains(input.Filter))
+                e.ModelName.Contains(input.Filter) || e.ModelYear.Contains(input.Filter) || e.Note.Contains(input.Filter))
+                //e.Driver1UserFk.Name.Contains(input.Filter)
                 .WhereIf(!string.IsNullOrWhiteSpace(input.PlateNumberFilter), e => e.PlateNumber == input.PlateNumberFilter)
                 .WhereIf(!string.IsNullOrWhiteSpace(input.ModelNameFilter), e => e.ModelName == input.ModelNameFilter)
                 .WhereIf(!string.IsNullOrWhiteSpace(input.ModelYearFilter), e => e.ModelYear == input.ModelYearFilter)
                 .WhereIf(input.IsAttachableFilter > -1, e => (input.IsAttachableFilter == 1 && e.IsAttachable) || (input.IsAttachableFilter == 0 && !e.IsAttachable))
                 .WhereIf(!string.IsNullOrWhiteSpace(input.TrucksTypeDisplayNameFilter), e => e.TrucksTypeFk != null && e.TrucksTypeFk.DisplayName == input.TrucksTypeDisplayNameFilter)
-                .WhereIf(!string.IsNullOrWhiteSpace(input.TruckStatusDisplayNameFilter), e => e.TruckStatusFk != null && e.TruckStatusFk.DisplayName == input.TruckStatusDisplayNameFilter)
-                .WhereIf(!string.IsNullOrWhiteSpace(input.UserNameFilter), e => e.Driver1UserFk != null && e.Driver1UserFk.Name == input.UserNameFilter);
+                .WhereIf(!string.IsNullOrWhiteSpace(input.TruckStatusDisplayNameFilter), e => e.TruckStatusFk != null && e.TruckStatusFk.DisplayName == input.TruckStatusDisplayNameFilter);
+                //.WhereIf(!string.IsNullOrWhiteSpace(input.UserNameFilter), e => e.Driver1UserFk != null && e.Driver1UserFk.Name == input.UserNameFilter);
 
             var pagedAndFilteredTrucks = filteredTrucks
                 .OrderBy(input.Sorting ?? "id asc")
@@ -121,8 +121,8 @@ namespace TACHYON.Trucks
                          join o2 in _lookup_truckStatusRepository.GetAll() on o.TruckStatusId equals o2.Id into j2
                          from s2 in j2.DefaultIfEmpty()
 
-                         join o3 in _lookup_userRepository.GetAll() on o.Driver1UserId equals o3.Id into j3
-                         from s3 in j3.DefaultIfEmpty()
+                         //join o3 in _lookup_userRepository.GetAll() on o.Driver1UserId equals o3.Id into j3
+                         //from s3 in j3.DefaultIfEmpty()
 
                          select new GetTruckForViewDto()
                          {
@@ -142,7 +142,7 @@ namespace TACHYON.Trucks
                              (o.TruckSubtypeFk == null ?"": o.TruckSubtypeFk.DisplayName) + " - " +
                              (o.CapacityFk == null ?"": o.CapacityFk.DisplayName),                    
                              TruckStatusDisplayName = s2 == null || s2.DisplayName == null ? "" : s2.DisplayName.ToString(),
-                             UserName = s3 == null || s3.Name == null ? "" : s3.Name.ToString(),
+                             //UserName = s3 == null || s3.Name == null ? "" : s3.Name.ToString(),
                              IsMissingDocumentFiles =  documentTypesCount!= _documentFileRepository.GetAll().Where(t=>t.TruckId==o.Id).Count()
                          };
 
@@ -172,11 +172,11 @@ namespace TACHYON.Trucks
                 output.TruckStatusDisplayName = _lookupTruckStatus?.DisplayName?.ToString();
             }
 
-            if (output.Truck.Driver1UserId != null)
-            {
-                var _lookupUser = await _lookup_userRepository.FirstOrDefaultAsync((long)output.Truck.Driver1UserId);
-                output.UserName = _lookupUser?.Name?.ToString();
-            }
+            //if (output.Truck.Driver1UserId != null)
+            //{
+            //    var _lookupUser = await _lookup_userRepository.FirstOrDefaultAsync((long)output.Truck.Driver1UserId);
+            //    output.UserName = _lookupUser?.Name?.ToString();
+            //}
 
 
             return output;
@@ -201,11 +201,11 @@ namespace TACHYON.Trucks
                 output.TruckStatusDisplayName = _lookupTruckStatus?.DisplayName?.ToString();
             }
 
-            if (output.Truck.Driver1UserId != null)
-            {
-                var _lookupUser = await _lookup_userRepository.FirstOrDefaultAsync((long)output.Truck.Driver1UserId);
-                output.UserName = _lookupUser?.Name?.ToString();
-            }
+            //if (output.Truck.Driver1UserId != null)
+            //{
+            //    var _lookupUser = await _lookup_userRepository.FirstOrDefaultAsync((long)output.Truck.Driver1UserId);
+            //    output.UserName = _lookupUser?.Name?.ToString();
+            //}
 
 
             return output;
@@ -280,19 +280,19 @@ namespace TACHYON.Trucks
 
 
             var truckId = await _truckRepository.InsertAndGetIdAsync(truck);
-            if (input.Driver1UserId != null)
-            {
-                try
-                {
-                await _appNotifier.AssignDriverToTruck(new UserIdentifier(AbpSession.TenantId, input.Driver1UserId.Value), truckId);
+            //if (input.Driver1UserId != null)
+            //{
+            //    try
+            //    {
+            //    await _appNotifier.AssignDriverToTruck(new UserIdentifier(AbpSession.TenantId, input.Driver1UserId.Value), truckId);
 
-                }
-                catch (Exception ex)
-                {
+            //    }
+            //    catch (Exception ex)
+            //    {
 
-                    throw;
-                }
-            }
+            //        throw;
+            //    }
+            //}
 
 
             if (input.UpdateTruckPictureInput != null && !input.UpdateTruckPictureInput.FileToken.IsNullOrEmpty())
@@ -316,10 +316,10 @@ namespace TACHYON.Trucks
         protected virtual async Task Update(CreateOrEditTruckDto input)
         {
             var truck = await _truckRepository.FirstOrDefaultAsync((Guid)input.Id);
-            if (input.Driver1UserId.HasValue && input.Driver1UserId != truck.Driver1UserId)
-            {
-                await _appNotifier.AssignDriverToTruck(new UserIdentifier(AbpSession.TenantId, input.Driver1UserId.Value), truck.Id);
-            }
+            //if (input.Driver1UserId.HasValue && input.Driver1UserId != truck.Driver1UserId)
+            //{
+            //    await _appNotifier.AssignDriverToTruck(new UserIdentifier(AbpSession.TenantId, input.Driver1UserId.Value), truck.Id);
+            //}
 
 
             ObjectMapper.Map(input, truck);
@@ -348,15 +348,15 @@ namespace TACHYON.Trucks
             var filteredTrucks = _truckRepository.GetAll()
                 .Include(e => e.TrucksTypeFk)
                 .Include(e => e.TruckStatusFk)
-                .Include(e => e.Driver1UserFk)
+                //.Include(e => e.Driver1UserFk)
                 .WhereIf(!string.IsNullOrWhiteSpace(input.Filter), e => false || e.PlateNumber.Contains(input.Filter) || e.ModelName.Contains(input.Filter) || e.ModelYear.Contains(input.Filter) || e.Note.Contains(input.Filter))
                 .WhereIf(!string.IsNullOrWhiteSpace(input.PlateNumberFilter), e => e.PlateNumber == input.PlateNumberFilter)
                 .WhereIf(!string.IsNullOrWhiteSpace(input.ModelNameFilter), e => e.ModelName == input.ModelNameFilter)
                 .WhereIf(!string.IsNullOrWhiteSpace(input.ModelYearFilter), e => e.ModelYear == input.ModelYearFilter)
                 .WhereIf(input.IsAttachableFilter > -1, e => (input.IsAttachableFilter == 1 && e.IsAttachable) || (input.IsAttachableFilter == 0 && !e.IsAttachable))
                 .WhereIf(!string.IsNullOrWhiteSpace(input.TrucksTypeDisplayNameFilter), e => e.TrucksTypeFk != null && e.TrucksTypeFk.DisplayName == input.TrucksTypeDisplayNameFilter)
-                .WhereIf(!string.IsNullOrWhiteSpace(input.TruckStatusDisplayNameFilter), e => e.TruckStatusFk != null && e.TruckStatusFk.DisplayName == input.TruckStatusDisplayNameFilter)
-                .WhereIf(!string.IsNullOrWhiteSpace(input.UserNameFilter), e => e.Driver1UserFk != null && e.Driver1UserFk.Name == input.UserNameFilter);
+                .WhereIf(!string.IsNullOrWhiteSpace(input.TruckStatusDisplayNameFilter), e => e.TruckStatusFk != null && e.TruckStatusFk.DisplayName == input.TruckStatusDisplayNameFilter);
+                //.WhereIf(!string.IsNullOrWhiteSpace(input.UserNameFilter), e => e.Driver1UserFk != null && e.Driver1UserFk.Name == input.UserNameFilter);
 
             var query = (from o in filteredTrucks
                          join o1 in _lookup_trucksTypeRepository.GetAll() on o.TrucksTypeId equals o1.Id into j1
@@ -365,8 +365,8 @@ namespace TACHYON.Trucks
                          join o2 in _lookup_truckStatusRepository.GetAll() on o.TruckStatusId equals o2.Id into j2
                          from s2 in j2.DefaultIfEmpty()
 
-                         join o3 in _lookup_userRepository.GetAll() on o.Driver1UserId equals o3.Id into j3
-                         from s3 in j3.DefaultIfEmpty()
+                         //join o3 in _lookup_userRepository.GetAll() on o.Driver1UserId equals o3.Id into j3
+                         //from s3 in j3.DefaultIfEmpty()
 
 
                          select new GetTruckForViewDto()
@@ -387,7 +387,7 @@ namespace TACHYON.Trucks
                              (o.TruckSubtypeFk == null ? "" : o.TruckSubtypeFk.DisplayName) + " - " +
                              (o.CapacityFk == null ? "" : o.CapacityFk.DisplayName),
                              TruckStatusDisplayName = s2 == null || s2.DisplayName == null ? "" : s2.DisplayName.ToString(),
-                             UserName = s3 == null || s3.Name == null ? "" : s3.Name.ToString(),
+                             //UserName = s3 == null || s3.Name == null ? "" : s3.Name.ToString(),
 
                          });
 
