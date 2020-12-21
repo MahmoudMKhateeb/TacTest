@@ -37,8 +37,8 @@ namespace TACHYON.Authorization.Users
 
         // used for styling action links on email messages.
         private string _emailButtonStyle =
-            "padding-left: 30px; padding-right: 30px; padding-top: 12px; padding-bottom: 12px; color: #ffffff; background-color: #00bb77; font-size: 14pt; text-decoration: none;";
-        private string _emailButtonColor = "#00bb77";
+                "padding-left: 30px; padding-right: 30px; padding-top: 12px; padding-bottom: 12px; color: #ffffff; background-color: #d82631; font-size: 14pt; text-decoration: none;";
+        private string _emailButtonColor = "#d82631";
 
         public UserEmailer(
             IEmailTemplateProvider emailTemplateProvider,
@@ -94,7 +94,7 @@ namespace TACHYON.Authorization.Users
 
             if (!tenancyName.IsNullOrEmpty())
             {
-                mailMessage.AppendLine("<b>" + L("TenancyName") + "</b>: " + tenancyName + "<br />");
+                mailMessage.AppendLine("<b>" + L("CompanyFullLeagalName") + "</b>: " + tenancyName + "<br />");
             }
 
             mailMessage.AppendLine("<b>" + L("Email") + "</b>: " + user.EmailAddress + "<br />");
@@ -136,7 +136,7 @@ namespace TACHYON.Authorization.Users
 
             if (!tenancyName.IsNullOrEmpty())
             {
-                mailMessage.AppendLine("<b>" + L("TenancyName") + "</b>: " + tenancyName + "<br />");
+                mailMessage.AppendLine("<b>" + L("CompanyFullLeagalName") + "</b>: " + tenancyName + "<br />");
             }
 
             mailMessage.AppendLine("<b>" + L("UserName") + "</b>: " + user.UserName + "<br />");

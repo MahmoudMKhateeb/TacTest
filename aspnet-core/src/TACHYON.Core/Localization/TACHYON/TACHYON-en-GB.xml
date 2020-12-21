@@ -392,7 +392,7 @@
     <text name="SuccessfullyRegistered">Successfully registered</text>
     <text name="ConfirmationMailSentPleaseClickLinkInTheEmail">A confirmation mail sent to {0}. Please click link in the email in order to confirm your mail address.</text>
     <text name="YourAccountIsWaitingToBeActivatedByAdmin">Your account is waiting to be activated by system admin.</text>
-    <text name="NameSurname">Name surname</text>
+    <text name="NameSurname">Full Name</text>
     <text name="UserManagement">User management</text>
     <text name="AllowUsersToRegisterThemselves">Allow users to register to the system.</text>
     <text name="AllowUsersToRegisterThemselves_Hint">If you disable this, users will only be added by admin using user management page.</text>
