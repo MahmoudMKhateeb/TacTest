@@ -36,7 +36,7 @@ namespace TACHYON.Trucks.Exporting
                     AddHeader(
                         sheet,
                         L("PlateNumber"),
-                        L("Driver"),
+                       // L("Driver"),
                         L("TrucksType"),
                         L("ModelName"),
                         L("ModelYear"),
@@ -47,7 +47,7 @@ namespace TACHYON.Trucks.Exporting
                     AddObjects(
                         sheet, 2, trucks,
                         _ => _.Truck.PlateNumber,
-                        _ => _.UserName,
+                       // _ => _.UserName,
                         _ => _.TrucksTypeDisplayName,
                         _ => _.Truck.ModelName,
                         _ => _.Truck.ModelYear,

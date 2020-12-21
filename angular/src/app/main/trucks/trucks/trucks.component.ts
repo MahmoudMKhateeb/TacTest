@@ -47,7 +47,6 @@ export class TrucksComponent extends AppComponentBase {
   isAttachableFilter = -1;
   trucksTypeDisplayNameFilter = '';
   truckStatusDisplayNameFilter = '';
-  userNameFilter = '';
 
   _entityTypeFullName = 'TACHYON.Trucks.Truck';
   entityHistoryEnabled = false;
@@ -102,7 +101,6 @@ export class TrucksComponent extends AppComponentBase {
         this.isAttachableFilter,
         this.trucksTypeDisplayNameFilter,
         this.truckStatusDisplayNameFilter,
-        this.userNameFilter,
         this.primengTableHelper.getSorting(this.dataTable),
         this.primengTableHelper.getSkipCount(this.paginator, event),
         this.primengTableHelper.getMaxResultCount(this.paginator, event)
@@ -154,8 +152,7 @@ export class TrucksComponent extends AppComponentBase {
         this.modelYearFilter,
         this.isAttachableFilter,
         this.trucksTypeDisplayNameFilter,
-        this.truckStatusDisplayNameFilter,
-        this.userNameFilter
+        this.truckStatusDisplayNameFilter
       )
       .subscribe((result) => {
         this._fileDownloadService.downloadTempFile(result);
@@ -187,11 +184,5 @@ export class TrucksComponent extends AppComponentBase {
     this.truckUserLookupTableModal.id = null;
     this.truckUserLookupTableModal.displayName = '';
     this.truckUserLookupTableModal.show();
-  }
-  setDriver1UserIdNull() {
-    this.userNameFilter = '';
-  }
-  getNewDriver1UserId() {
-    this.userNameFilter = this.truckUserLookupTableModal.displayName;
   }
 }

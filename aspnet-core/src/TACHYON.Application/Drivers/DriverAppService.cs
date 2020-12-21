@@ -33,23 +33,23 @@ namespace TACHYON.Drivers
             _truckRepository = truckRepository;
         }
 
-        public async Task<GetDriverDetailsDto> GetDriverDetails()
-        {
-            var query = from driver in _userRepository.GetAll()
-                        join truck in _truckRepository.GetAll().Include(x => x.TrucksTypeFk) on driver.Id equals truck.Driver1UserId
-                        where driver.Id == AbpSession.UserId.Value
-                        select new GetDriverDetailsDto
-                        {
-                            FullName = driver.FullName,
-                            PhoneNumber = driver.PhoneNumber,
-                            EmailAddress = driver.EmailAddress,
-                            PlateNumber = truck.PlateNumber,
-                            TrucksType = truck.TrucksTypeFk.DisplayName
-                        };
+        //public async Task<GetDriverDetailsDto> GetDriverDetails()
+        //{
+        //    var query = from driver in _userRepository.GetAll()
+        //                join truck in _truckRepository.GetAll().Include(x => x.TrucksTypeFk) on driver.Id equals truck.Driver1UserId
+        //                where driver.Id == AbpSession.UserId.Value
+        //                select new GetDriverDetailsDto
+        //                {
+        //                    FullName = driver.FullName,
+        //                    PhoneNumber = driver.PhoneNumber,
+        //                    EmailAddress = driver.EmailAddress,
+        //                    PlateNumber = truck.PlateNumber,
+        //                    TrucksType = truck.TrucksTypeFk.DisplayName
+        //                };
 
-            return await query.FirstOrDefaultAsync();
+        //    return await query.FirstOrDefaultAsync();
 
-        }
+        //}
 
 
     }
