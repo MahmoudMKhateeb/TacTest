@@ -88,8 +88,10 @@ export class RegisterTenantComponent extends AppComponentBase implements OnInit,
       });
 
       this._tenantRegistrationService.getActiveTermAndConditionForViewAndApprove(this.model.editionId.toString()).subscribe((result) => {
-        if (result != null) {
-          this.isAvailableTermsAndConditons = true;
+        if (result.termAndCondition != null) {
+          if (result.termAndCondition.isActive == true) {
+            this.isAvailableTermsAndConditons = true;
+          }
         }
       });
     }
@@ -108,7 +110,7 @@ export class RegisterTenantComponent extends AppComponentBase implements OnInit,
       this.notify.error('pleasemakesureyouchoosethecountryandthecity!');
       return;
     }
-    if ((!this.approvedHostTerms && this.isAvailableTermsAndConditons) || (registerForm.form.valid && this.isAvailableTermsAndConditons)) {
+    if (!this.approvedHostTerms && this.isAvailableTermsAndConditons) {
       this.notify.error('please make sure you compleate all needed data!');
       return;
     }
