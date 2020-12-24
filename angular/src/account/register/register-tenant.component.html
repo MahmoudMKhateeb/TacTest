@@ -9,7 +9,7 @@
       {{ 'SignUp' | localize }}
     </h3>
   </div>
-  <h4 *ngIf="model.edition" class="text-left">{{ 'IAMA' | localize }}: {{ model.edition.displayName }}</h4>
+  <h4 *ngIf="model.edition" class="text-left">{{ 'IAMA' | localize }}: {{ model.edition.displayName | localize }}</h4>
   <div class="separator separator-border-dashed"></div>
   <hr />
 

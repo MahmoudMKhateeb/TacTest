@@ -248,6 +248,8 @@
     <text name="PleaseMakeSureYouProvideValidDetails">الرجاء التأكد من إعطاء بيانات صالحة!</text>
     <text name="pleasemakesureyouchoosethecountryandthecity!">الرجاء التأكد من إدخال بيانات المدينة و البلد!</text>
     <text name="Carrier">ناقل</text>
+    <text name="Shipper">شاحن</text>
+    <text name="Broker">وكيل</text>
     <![CDATA[Tachyon: Tenant Registration Page End]]>
 
     <![CDATA[ Tachyon: Tenant login Page Start]]>
@@ -285,7 +287,7 @@
     <![CDATA[Tachyon:Common Start]]>
     <text name="ExcelOperations">عمليات إكسل</text>
     <text name="ImportFromExcel">إستخراج البيانات في صيغة ملف إكسل</text>
-    <text name="ExportToExcel">إدخال البيانات في صيغة ملف إكسل</text>
+    <text name="ExportToExcel">تصدير البيانات في صيغة ملف إكسل</text>
     <text name="ImportToExcelSampleFileDownloadInfo">تحميل نموذج ادخال البيانات بصيغة اكسل </text>
     <text name="ClickHere">إضغط هنا</text>
     <text name="Search">بحث</text>
