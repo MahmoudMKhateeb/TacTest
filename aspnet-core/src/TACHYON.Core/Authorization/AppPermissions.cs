@@ -233,6 +233,10 @@
 
         public const string Pages_Administration_Tenant_SubscriptionManagement = "Pages.Administration.Tenant.SubscriptionManagement";
 
+        public const string Pages_Tenant_TMS_Settings = "Pages.Tenant.TMS.Settings";
+
+        public const string Pages_Administration_Host_Languages = "Pages.Administration.Host.Languages";
+
         //HOST-SPECIFIC PERMISSIONS
 
         public const string Pages_Editions = "Pages.Editions";

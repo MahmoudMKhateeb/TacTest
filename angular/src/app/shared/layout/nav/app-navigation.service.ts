@@ -61,17 +61,17 @@ export class AppNavigationService {
       // ),
 
       //Host
-      new AppMenuItem(
-        'ShippingRequests',
-        '',
-        'flaticon-interface-8',
-        '',
-        [],
-        [new AppMenuItem('Marketplace', '', 'flaticon-more', '/app/main/marketPlace/marketPlace')],
-        undefined,
-        undefined,
-        () => this._featureCheckerService.isEnabled('App.Carrier')
-      ),
+      // new AppMenuItem(
+      //   'Shipping Requests',
+      //   '',
+      //   'flaticon-interface-8',
+      //   '',
+      //   [],
+      //   [new AppMenuItem('Marketplace', '', 'flaticon-more', '/app/main/marketPlace/marketPlace')],
+      //   undefined,
+      //   undefined,
+      //   () => this._featureCheckerService.isEnabled('App.Carrier')
+      // ),
       //Host
       new AppMenuItem(
         'Documents',
@@ -205,7 +205,7 @@ export class AppNavigationService {
 
       new AppMenuItem(
         'Settings',
-        '',
+        'Pages.Administration',
         'flaticon-interface-8',
         '',
         [],
@@ -218,11 +218,11 @@ export class AppNavigationService {
           //    '/app/admin/shippingRequestStatuses/shippingRequestStatuses'
           //  ),
 
-          new AppMenuItem('Languages', 'Pages.Administration.Languages', 'flaticon-tabs', '/app/admin/languages', [
+          new AppMenuItem('Languages', 'Pages.Administration.Host.Languages', 'flaticon-tabs', '/app/admin/languages', [
             '/app/admin/languages/{name}/texts',
           ]),
           // new AppMenuItem('AuditLogs', 'Pages.Administration.AuditLogs', 'flaticon-folder-1', '/app/admin/auditLogs'),
-          new AppMenuItem('Maintenance', 'Pages.Administration.Host.Maintenance', 'flaticon-lock', '/app/admin/maintenance'),
+          // new AppMenuItem('Maintenance', 'Pages.Administration.Host.Maintenance', 'flaticon-lock', '/app/admin/maintenance'),
           // new AppMenuItem(
           //   'Subscription',
           //   'Pages.Administration.Tenant.SubscriptionManagement',
