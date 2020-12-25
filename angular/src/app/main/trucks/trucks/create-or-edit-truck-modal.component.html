@@ -142,7 +142,7 @@
                 </div>
               </div>
               <validation-messages [formCtrl]="capacity"></validation-messages>
-              <span *ngIf="truck.capacity < 0" class="form-text text-danger">{{ l('vlaueMustBeGreaterThan') }} 0</span>
+              <span *ngIf="Number(truck.capacity) < 0" class="form-text text-danger">{{ l('vlaueMustBeGreaterThan') }} 0</span>
             </div>
           </div>
           <div class="separator separator-dashed my-10"></div>
@@ -214,7 +214,7 @@
                 type="number"
               />
               <validation-messages [formCtrl]="modelYear"></validation-messages>
-              <span *ngIf="truck.modelYear < 2000" class="form-text text-danger">{{ l('vlaueMustBeGreaterThan') }} 2000</span>
+              <span *ngIf="Number(truck.modelYear) < 2000" class="form-text text-danger">{{ l('vlaueMustBeGreaterThan') }} 2000</span>
             </div>
 
             <div class="form-group col-md-12">

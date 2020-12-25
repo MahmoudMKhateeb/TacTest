@@ -107,7 +107,7 @@
     <text name="MembershipType">Membership Type</text>
     <text name="IAMA">I AM A</text>
     <text name="CompanyInformation">Company Information</text>
-    <text name="CompanyUniqueName">Company name</text>
+    <text name="CompanyUniqueName">Company  name</text>
     <text name="CompanyUniqueName_Regex_Description">Please Add Company Name As It's in the CR</text>
     <text name="CompanyFullLeagalName">Company Full Leagal Name </text>
     <text name="Country">Country</text>
