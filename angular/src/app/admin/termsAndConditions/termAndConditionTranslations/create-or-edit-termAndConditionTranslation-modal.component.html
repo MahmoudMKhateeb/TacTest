@@ -1,0 +1,130 @@
+﻿<div
+  bsModal
+  #createOrEditModal="bs-modal"
+  class="modal fade"
+  tabindex="-1"
+  role="dialog"
+  aria-labelledby="createOrEditModal"
+  aria-hidden="true"
+  [config]="{ backdrop: 'static' }"
+>
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <form *ngIf="active" #termAndConditionTranslationForm="ngForm" novalidate (ngSubmit)="save()" autocomplete="off">
+        <div class="modal-header">
+          <h4 class="modal-title">
+            <span *ngIf="termAndConditionTranslation.id">{{ l('EditTermAndConditionTranslation') }}</span>
+            <span *ngIf="!termAndConditionTranslation.id">{{ l('CreateNewTermAndConditionTranslation') }}</span>
+          </h4>
+          <button type="button" class="close" (click)="close()" aria-label="Close" [disabled]="saving">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <div class="form-group m-form__group">
+            <label for="TermAndConditionTitle">{{ l('TermAndCondition') }}</label>
+            <select name="termAndConditionTranslation.coreId" [(ngModel)]="termAndConditionTranslation.coreId" class="form-control">
+              <option value="">{{ l('SelectATermAndCondition') }}</option>
+              <option *ngFor="let item of allTermAndConditions" value="{{ item.id }}">{{ item.displayName }}</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <!--									<label for="TermAndConditionTranslation_Content">{{l("Content")}} *</label>-->
+            <!--									<input type="text" #TermAndConditionTranslation_Content="ngModel" id="TermAndConditionTranslation_Content" class="form-control" [(ngModel)]="termAndConditionTranslation.content" name="Content"     required/>-->
+            <!--								    <validation-messages [formCtrl]="TermAndConditionTranslation_Content"></validation-messages>-->
+
+            <label for="TermAndCondition_Content">{{ l('Content') }} *</label>
+            <p-editor required name="Content" [(ngModel)]="termAndConditionTranslation.content" [style]="{ height: '320px' }" #editor>
+              <p-header>
+                <span class="ql-formats">
+                  <select class="ql-size">
+                    <option value="small">small</option>
+                    <option selected></option>
+                    <option value="large">large</option>
+                    <option value="huge">huge</option>
+                  </select>
+                </span>
+                <!-- <span class="ql-formats">
+                                                  <select class="ql-size">
+                                                    <option value="8px">8</option>
+                                                    <option value="9px">9</option>
+                                                    <option value="10px">10</option>
+                                                    <option value="12px">12</option>
+                                                    <option value="14px">14</option>
+                                                    <option value="16px">16</option>
+                                                    <option value="18px">18</option>
+                                                    <option value="20px">20</option>
+                                                    <option value="22px">22</option>
+                                                    <option value="24px">24</option>
+                                                    <option value="26px">26</option>
+                                                  </select>
+                                                </span> -->
+                <span class="ql-formats">
+                  <button class="ql-bold" aria-label="Bold"></button>
+                  <button class="ql-italic" aria-label="Italic"></button>
+                  <button class="ql-underline" aria-label="Underline"></button>
+                  <button class="ql-strike" aria-label="Strike"></button>
+                </span>
+                <span class="ql-formats">
+                  <select title="Text Color" class="ql-color" defaultValue="rgb(0, 0, 0)">
+                    <option value="rgb(0, 0, 0)" label="rgb(0, 0, 0)"></option>
+                    <option value="rgb(61, 20, 102)" label="rgb(61, 20, 102)"></option>
+                    <option value="rgb(181, 181, 195)" label="rgb(181, 181, 195)"></option>
+                    <option value="rgb(216, 38, 49)" label="rgb(216, 38, 49)"></option>
+                  </select>
+                  <span class="ql-format-separator"></span>
+                  <select title="Background Color" class="ql-background" defaultValue="rgb(255, 255, 255)">
+                    <option value="rgb(0, 0, 0)" label="rgb(0, 0, 0)"></option>
+                    <option value="rgb(61, 20, 102)" label="rgb(61, 20, 102)"></option>
+                    <option value="rgb(181, 181, 195)" label="rgb(181, 181, 195)"></option>
+                    <option value="rgb(216, 38, 49)" label="rgb(216, 38, 49)"></option>
+                  </select>
+                </span>
+                <span class="ql-formats">
+                  <button class="ql-list" value="ordered"></button>
+                  <button class="ql-list" value="bullet"></button>
+
+                  <select title="Text Alignment" class="ql-align">
+                    <option selected>Gauche</option>
+                    <option value="center" label="Center"></option>
+                    <option value="right" label="Right"></option>
+                    <option value="justify" label="Justify"></option>
+                  </select>
+                </span>
+              </p-header>
+            </p-editor>
+          </div>
+
+          <div class="form-group">
+            <label for="TermAndConditionTranslation_Language">{{ l('Language') }} *</label>
+            <input
+              type="text"
+              #TermAndConditionTranslation_Language="ngModel"
+              id="TermAndConditionTranslation_Language"
+              class="form-control"
+              [(ngModel)]="termAndConditionTranslation.language"
+              name="Language"
+              minlength="0"
+              maxlength="50"
+              required
+            />
+            <validation-messages [formCtrl]="TermAndConditionTranslation_Language"></validation-messages>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button [disabled]="saving" type="button" class="btn btn-default" (click)="close()">{{ l('Cancel') }}</button>
+          <button
+            type="submit"
+            class="btn btn-primary blue"
+            [disabled]="!termAndConditionTranslationForm.form.valid"
+            [buttonBusy]="saving"
+            [busyText]="l('SavingWithThreeDot')"
+          >
+            <i class="fa fa-save"></i> <span>{{ l('Save') }}</span>
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

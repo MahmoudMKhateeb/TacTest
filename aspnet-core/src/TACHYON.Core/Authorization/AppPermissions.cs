@@ -6,6 +6,11 @@
     /// </summary>
     public static class AppPermissions
     {
+        public const string Pages_Administration_TermAndConditionTranslations = "Pages.Administration.TermAndConditionTranslations";
+        public const string Pages_Administration_TermAndConditionTranslations_Create = "Pages.Administration.TermAndConditionTranslations.Create";
+        public const string Pages_Administration_TermAndConditionTranslations_Edit = "Pages.Administration.TermAndConditionTranslations.Edit";
+        public const string Pages_Administration_TermAndConditionTranslations_Delete = "Pages.Administration.TermAndConditionTranslations.Delete";
+
         public const string Pages_TermAndConditions = "Pages.TermAndConditions";
         public const string Pages_TermAndConditions_Create = "Pages.TermAndConditions.Create";
         public const string Pages_TermAndConditions_Edit = "Pages.TermAndConditions.Edit";

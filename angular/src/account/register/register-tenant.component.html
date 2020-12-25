@@ -35,7 +35,7 @@
             required
             style="width: 100% !important;"
             maxlength="64"
-            pattern="^[a-zA-Z][a-zA-Z0-9_- ]{1,}$"
+            pattern="^[a-zA-Z][a-zA-Z0-9_-]{1,}$"
           />
           <div>
             <validation-messages [formCtrl]="tenancyName"></validation-messages>
@@ -252,9 +252,14 @@
           {{ l('IAgreeonTahcyon') }}
         </div>
         <div>
-          <div (click)="TermAndConditionRegisterationViewModal.show(model.editionId)" style="cursor: pointer; color: blue;">
-            {{ l('TermsAndConditons') }}
-          </div>
+          <a
+            routerLink="/account/term-and-condition-registration"
+            [queryParams]="{ editionId: model.editionId }"
+            routerLinkActive="active"
+            target="_blank"
+            rel="bookmark"
+            >{{ l('TermsAndConditons') }}</a
+          >
         </div>
       </div>
       <span class="form-text text-danger">
@@ -290,5 +295,5 @@
       <i class="fa fa-check"></i> {{ 'Submit' | localize }}
     </button>
   </form>
-  <termAndConditionRegisterationViewModal #TermAndConditionRegisterationViewModal></termAndConditionRegisterationViewModal>
+  <!--  <termAndConditionRegisterationViewModal #TermAndConditionRegisterationViewModal></termAndConditionRegisterationViewModal>-->
 </div>

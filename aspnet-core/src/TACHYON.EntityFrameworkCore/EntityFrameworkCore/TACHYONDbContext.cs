@@ -64,6 +64,8 @@ namespace TACHYON.EntityFrameworkCore
 {
     public class TACHYONDbContext : AbpZeroDbContext<Tenant, Role, User, TACHYONDbContext>, IAbpPersistedGrantDbContext
     {
+        public virtual DbSet<TermAndConditionTranslation> TermAndConditionTranslations { get; set; }
+
         public virtual DbSet<TermAndCondition> TermAndConditions { get; set; }
 
         public virtual DbSet<Capacity> Capacities { get; set; }
@@ -149,7 +151,6 @@ namespace TACHYON.EntityFrameworkCore
         protected virtual bool CurrentIsCanceled => true;
         protected virtual bool IsCanceledFilterEnabled => CurrentUnitOfWorkProvider?.Current?.IsFilterEnabled("IHasIsCanceled") == true;
 
-
         public TACHYONDbContext(DbContextOptions<TACHYONDbContext> options)
             : base(options)
         {
@@ -181,31 +182,17 @@ namespace TACHYON.EntityFrameworkCore
         {
             base.OnModelCreating(modelBuilder);
 
-
             modelBuilder.Entity<ShippingRequestBid>().HasQueryFilter(p => !p.IsCancled);
 
 
-
-
-
-
-
-
-
-           
-           
-            modelBuilder.Entity<TermAndCondition>(t =>
-            {
-                t.HasIndex(e => new { e.TenantId });
-            });
- modelBuilder.Entity<Facility>(f =>
-            {
-                f.HasIndex(e => new { e.TenantId });
-            });
- modelBuilder.Entity<DocumentFile>(d =>
-            {
-                d.HasIndex(e => new { e.TenantId });
-            });
+            modelBuilder.Entity<Facility>(f =>
+                       {
+                           f.HasIndex(e => new { e.TenantId });
+                       });
+            modelBuilder.Entity<DocumentFile>(d =>
+                       {
+                           d.HasIndex(e => new { e.TenantId });
+                       });
             modelBuilder.Entity<ShippingRequest>(s =>
                        {
                            s.HasIndex(e => new { e.TenantId });

@@ -2,6 +2,10 @@
 import { NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { AppCommonModule } from '@app/shared/common/app-common.module';
+import { TermAndConditionTranslationsComponent } from './termsAndConditions/termAndConditionTranslations/termAndConditionTranslations.component';
+import { ViewTermAndConditionTranslationModalComponent } from './termsAndConditions/termAndConditionTranslations/view-termAndConditionTranslation-modal.component';
+import { CreateOrEditTermAndConditionTranslationModalComponent } from './termsAndConditions/termAndConditionTranslations/create-or-edit-termAndConditionTranslation-modal.component';
+
 import { ShippingRequestStatusesComponent } from './shippingRequestStatuses/shippingRequestStatuses/shippingRequestStatuses.component';
 import { ViewShippingRequestStatusModalComponent } from './shippingRequestStatuses/shippingRequestStatuses/view-shippingRequestStatus-modal.component';
 import { CreateOrEditShippingRequestStatusModalComponent } from './shippingRequestStatuses/shippingRequestStatuses/create-or-edit-shippingRequestStatus-modal.component';
@@ -163,6 +167,10 @@ const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
     NgbModule,
   ],
   declarations: [
+		TermAndConditionTranslationsComponent,
+
+		ViewTermAndConditionTranslationModalComponent,
+		CreateOrEditTermAndConditionTranslationModalComponent,
     ViewRejectionReasonModalComponent,
     CreateOrEditDocumentFileModalComponent,
     ViewOrEditEntityDocumentsModalComponent,
