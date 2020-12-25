@@ -31,7 +31,7 @@
           <div class="row">
             <div *ngIf="!documentFile.id" class="form-group col-md-6">
               <div>
-                <label> Select Document</label>
+                <label> {{ l('Select') }} {{ l('Document') }}</label>
                 <select
                   id="DocumentType"
                   [(ngModel)]="documentFile.documentTypeId"
@@ -39,8 +39,8 @@
                   name="selectedDoctumentTypeDto"
                   class="form-control"
                 >
-                  <option *ngFor="let docFile of CreateOrEditDocumentFileDtoList" [value]="docFile.documentTypeDto.id"
-                    >{{ docFile.documentTypeDto.displayName }}
+                  <option *ngFor="let docFile of CreateOrEditDocumentFileDtoList" [value]="docFile.documentTypeDto.id">
+                    {{ docFile.documentTypeDto.displayName | localize }}
                   </option>
                 </select>
               </div>

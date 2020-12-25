@@ -1,6 +1,6 @@
 ﻿<div [@routerTransition]>
   <div class="content d-flex flex-column flex-column-fluid">
-    <sub-header [title]="'TrucksTypes' | localize" [description]="'TrucksTypesHeaderInfo' | localize">
+    <sub-header [title]="'TrucksTypes' | localize">
       <div role="actions">
         <button *ngIf="isGranted('Pages.TrucksTypes.Create')" (click)="createTrucksType()" class="btn btn-primary blue">
           <i class="fa fa-plus"></i> {{ l('Create') }} {{ l('NewTrucksType') }}
@@ -83,7 +83,7 @@
                       <p-sortIcon field="trucksType.displayName"></p-sortIcon>
                     </th>
                     <th style="width: 150px;" pSortableColumn="transportSubtypeId">
-                      {{ l('TransportSubtype') }}
+                      {{ l('TransportSubType') }}
                       <p-sortIcon field="transportSubtypeId"></p-sortIcon>
                     </th>
                   </tr>
@@ -156,7 +156,7 @@
         </div>
       </div>
     </div>
-    <createOrEditTrucksTypeModal #createOrEditTrucksTypeModal (modalSave)="getTrucksTypes()"></createOrEditTrucksTypeModal>
+    <createOrEditTrucksTypeModal #createOrEditTrucksTypeModal (modalSave)="getTrucksTypes()"> </createOrEditTrucksTypeModal>
     <viewTrucksTypeModal #viewTrucksTypeModal></viewTrucksTypeModal>
     <entityTypeHistoryModal #entityTypeHistoryModal></entityTypeHistoryModal>
   </div>

@@ -1,6 +1,7 @@
 ﻿<div [@routerTransition]>
   <div class="content d-flex flex-column flex-column-fluid">
-    <sub-header [title]="'TransportTypes' | localize" [description]="'TransportTypesHeaderInfo' | localize">
+    <!-- [description]="'TransportTypesHeaderInfo' | localize" -->
+    <sub-header [title]="'TransportTypes' | localize">
       <div role="actions">
         <button *ngIf="isGranted('Pages.TransportTypes.Create')" (click)="createTransportType()" class="btn btn-primary blue">
           <i class="fa fa-plus"></i>{{ l('Create') }} {{ l('NewTransportType') }}
@@ -147,7 +148,7 @@
         </div>
       </div>
     </div>
-    <createOrEditTransportTypeModal #createOrEditTransportTypeModal (modalSave)="getTransportTypes()"></createOrEditTransportTypeModal>
+    <createOrEditTransportTypeModal #createOrEditTransportTypeModal (modalSave)="getTransportTypes()"> </createOrEditTransportTypeModal>
     <viewTransportTypeModal #viewTransportTypeModal></viewTransportTypeModal>
   </div>
 </div>

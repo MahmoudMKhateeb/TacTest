@@ -80,9 +80,9 @@ export class AppNavigationService {
         '',
         [],
         [
-          new AppMenuItem('Document Management ', 'Pages.DocumentTypes', 'flaticon2-document', '/app/main/documentTypes/documentTypes'),
+          new AppMenuItem('DocumentManagement', 'Pages.DocumentTypes', 'flaticon2-document', '/app/main/documentTypes/documentTypes'),
           new AppMenuItem('DocumentsEntities', 'Pages.DocumentsEntities', 'flaticon-doc', '/app/main/documentsEntities/documentsEntities'),
-          new AppMenuItem('Submitted Documents', 'Pages.DocumentFiles', 'flaticon-file', '/app/main/documentFiles/documentFiles'),
+          new AppMenuItem('SubmittedDocuments', 'Pages.DocumentFiles', 'flaticon-file', '/app/main/documentFiles/documentFiles'),
           new AppMenuItem(
             'DocumentTypeTranslations',
             'Pages.DocumentTypeTranslations',
@@ -109,9 +109,9 @@ export class AppNavigationService {
             [],
             [
               new AppMenuItem('TransportTypes', 'Pages.TransportTypes', 'flaticon-more', '/app/main/transportTypes/transportTypes'),
-              new AppMenuItem('TransportSubtypes', 'Pages.TransportSubtypes', 'flaticon-more', '/app/main/transportSubtypes/transportSubtypes'),
+              new AppMenuItem('TransportSubTypes', 'Pages.TransportSubtypes', 'flaticon-more', '/app/main/transportSubtypes/transportSubtypes'),
               new AppMenuItem('TrucksTypes', 'Pages.TrucksTypes', 'flaticon-truck', '/app/main/trucksTypes/trucksTypes'),
-              new AppMenuItem('TruckSubtypes', 'Pages.TruckSubtypes', 'flaticon-more', '/app/main/truckSubtypes/truckSubtypes'),
+              new AppMenuItem('TruckSubTypes', 'Pages.TruckSubtypes', 'flaticon-more', '/app/main/truckSubtypes/truckSubtypes'),
               new AppMenuItem('CapacityCategories', 'Pages.Capacities', 'flaticon-more', '/app/main/truckCapacities/capacities'),
             ]
           ),
@@ -253,6 +253,7 @@ export class AppNavigationService {
           ),
         ]
       ),
+
       //new AppMenuItem('DemoUiComponents', 'Pages.DemoUiComponents', 'flaticon-shapes', '/app/admin/demo-ui-components'),
     ]);
   }

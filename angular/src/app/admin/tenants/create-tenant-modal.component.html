@@ -14,7 +14,7 @@
       <form #tenantCreateForm="ngForm" role="form" novalidate class="form-validation" *ngIf="active" (submit)="save()">
         <div class="modal-header">
           <h5 class="modal-title">
-            <span> {{ 'Create' | localize }}{{ 'Create' | localize }}</span>
+            <span> {{ 'Create' | localize }}{{ 'Tenant' | localize }}</span>
           </h5>
           <button type="button" class="close" (click)="close()" [attr.aria-label]="l('Close')" [disabled]="saving">
             <span aria-hidden="true">&times;</span>
@@ -69,7 +69,7 @@
                   maxlength="128"
                 />
                 <div>
-                  <span class="form-text text-muted">{{ l('Enter') }} {{ l('CompanyFullLegalName') }}</span>
+                  <span class="form-text text-muted">{{ l('Enter') }} {{ l('CompanyFullLeagalName') }}</span>
                 </div>
                 <validation-messages [formCtrl]="nameInput"></validation-messages>
               </div>
@@ -88,7 +88,7 @@
                   required
                 >
                   <option [ngValue]="null">{{ l('Select') }} {{ l('Country') }}</option>
-                  <option *ngFor="let country of allCountries" value="{{ country.id }}">{{ country.displayName }}</option>
+                  <option *ngFor="let country of allCountries" value="{{ country.id }}">{{ country.displayName }} </option>
                 </select>
                 <!-- <span class="form-text text-danger" *ngIf="countrySelect.value == -2 && countrySelect.touched">Country is required</span> -->
                 <validation-messages [formCtrl]="countrySelect"></validation-messages>

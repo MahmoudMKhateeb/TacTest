@@ -1,6 +1,7 @@
 <div [@routerTransition]>
   <div class="content d-flex flex-column flex-column-fluid">
-    <sub-header [title]="'Drivers' | localize" [description]="'DriversHeaderInfo' | localize">
+    <!-- [description]="'DriversHeaderInfo' | localize" -->
+    <sub-header [title]="'Drivers' | localize">
       <div role="actions">
         <div class="btn-group" dropdown>
           <button
@@ -251,7 +252,7 @@
       </div>
     </div>
     <viewOrEditEntityDocumentsModal #viewOrEditEntityDocumentsModal></viewOrEditEntityDocumentsModal>
-    <createOrEditDriverModal [creatDriver]="true" #createOrEditUserModal (modalSave)="getUsers()"></createOrEditDriverModal>
+    <createOrEditDriverModal [creatDriver]="true" #createOrEditUserModal (modalSave)="getUsers()"> </createOrEditDriverModal>
     <editUserPermissionsModal #editUserPermissionsModal></editUserPermissionsModal>
   </div>
 </div>
