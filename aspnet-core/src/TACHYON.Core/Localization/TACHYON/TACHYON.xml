@@ -35,9 +35,9 @@
     <text name="MembershipType">Membership Type</text>
     <text name="IAMA">I AM A</text>
     <text name="CompanyInformation">Company Information</text>
-    <text name="CompanyUniqueName">Company Legal Name</text>
+    <text name="CompanyUniqueName">Company Name</text>
     <text name="CompanyUniqueName_Regex_Description">Please Add Company Name As It's in the CR</text>
-    <text name="CompanyFullLeagalName">Company English Name </text>
+    <text name="CompanyFullLeagalName">Company Full Leagal Name</text>
     <text name="Country">Country</text>
     <text name="City">City</text>
     <text name="Address">Address</text>
