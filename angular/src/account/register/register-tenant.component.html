@@ -9,7 +9,7 @@
       {{ 'SignUp' | localize }}
     </h3>
   </div>
-  <h4 *ngIf="model.edition" class="text-left">{{ 'IAMA' | localize }}: {{ model.edition.displayName | localize }}</h4>
+  <h4 *ngIf="model.edition" class="text-left">{{ 'IAMA' | localize }} : {{ model.edition.displayName | localize }}</h4>
   <div class="separator separator-border-dashed"></div>
   <hr />
 
@@ -69,21 +69,15 @@
           <select
             (change)="CountryChanged($event)"
             #countrySelect="ngModel"
-            class="form-control form-control-lg custom-select mr-sm-2"
+            class="form-control"
             name="tenant.countryId"
             [(ngModel)]="model.countryId"
             required
           >
-            <option selected value="-2">{{ l('Select') }} {{ l('Country') }}</option>
+            <option [value]="undefined">{{ l('Select') }} {{ l('Country') }}</option>
             <option *ngFor="let country of allCountries" value="{{ country.id }}">{{ country.displayName }}</option>
           </select>
-          <div>
-            <!-- <span class="form-text text-muted">{{ l('Select') }} {{ l('Country') }}</span> -->
-            <span class="form-text text-danger" *ngIf="countrySelect.value == -2 && countrySelect.touched"
-              >{{ l('Country') }} {{ l('isRequired') }}</span
-            >
-          </div>
-          <!-- <validation-messages [formCtrl]="nameInput"></validation-messages> -->
+          <validation-messages [formCtrl]="countrySelect"></validation-messages>
         </div>
       </div>
 
@@ -91,14 +85,10 @@
         <div class="form-group">
           <label>{{ 'City' | localize }}</label>
           <select [disabled]="!isCountySelected" #citySelect="ngModel" class="form-control" name="tenant.cityId" [(ngModel)]="model.cityId" required>
-            <option value="-2">{{ l('Select') }} {{ l('City') }}</option>
+            <option [value]="undefined">{{ l('Select') }} {{ l('City') }}</option>
             <option *ngFor="let city of allCities" value="{{ city.id }}">{{ city.displayName }}</option>
           </select>
-          <div>
-            <!-- <span class="form-text text-muted">{{ l('Select') }} {{ l('City') }}</span> -->
-            <span class="form-text text-danger" *ngIf="citySelect.value == -2 && citySelect.touched">{{ l('City') }} {{ l('isRequired') }}</span>
-          </div>
-          <!-- <validation-messages [formCtrl]="cityInput"></validation-messages> -->
+          <validation-messages [formCtrl]="citySelect"></validation-messages>
         </div>
       </div>
     </div>
@@ -106,7 +96,7 @@
     <div class="row text-left">
       <div class="col-12">
         <div class="form-group">
-          <label>{{ 'AddressFormat' | localize }}</label>
+          <label>{{ 'Address' | localize }}</label>
           <input
             #addressInput="ngModel"
             class="form-control"
@@ -146,6 +136,7 @@
             email
           />
           <div>
+            <validation-messages [formCtrl]="adminEmailAddressInput"></validation-messages>
             <!-- <span class="form-text text-muted"> {{ l('Enter') }} {{ l('AdminEmailAddress') }}</span> -->
             <span *ngIf="!isEmailValid" class="form-text text-danger">{{ l('AdminEmailAddress') }} {{ l('NotValid') }}</span>
             <span *ngIf="!isEmailAvailable" class="form-text text-danger">{{ l('AdminEmailAddress') }} {{ 'AlreadyTaken' | localize }}</span>
@@ -178,6 +169,9 @@
             [mediumLabel]="l('medium')"
             [strongLabel]="l('strong')"
           />
+          <div>
+            <validation-messages [formCtrl]="Password"></validation-messages>
+          </div>
           <div [hidden]="registerForm.form.valid || registerForm.form.pristine" class="form-group">
             <ul class="form-text text-danger" *ngIf="Password.errors">
               <li [hidden]="!Password.errors.requireDigit">{{ 'PasswordComplexity_RequireDigit_Hint' | localize }}</li>
@@ -216,6 +210,9 @@
             [requiredLength]="passwordComplexitySetting.requiredLength"
             required
           />
+          <div>
+            <validation-messages [formCtrl]="PasswordRepeat"></validation-messages>
+          </div>
           <div [hidden]="registerForm.form.valid || registerForm.form.pristine" class="form-group">
             <ul class="form-text text-danger" *ngIf="PasswordRepeat.errors">
               <li [hidden]="!PasswordRepeat.errors.requireDigit">

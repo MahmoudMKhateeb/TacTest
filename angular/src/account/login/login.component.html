@@ -14,16 +14,15 @@
   <!--begin::Form-->
   <form #loginForm="ngForm" class="login-form form" method="post" method="post" (ngSubmit)="login()">
     <div class="form-group">
-      <!-- <div class="d-flex justify-content-between mt-n5">
-        <label class="font-size-h6 font-weight-bolder text-dark pt-5">{{ 'Email' | localize }} *</label>
-      </div> -->
+      <div class="d-flex justify-content-between mt-n5">
+        <label class="font-size-h6 font-weight-bolder text-dark pt-5">{{ 'Email' | localize }} </label>
+      </div>
       <input
         #userNameOrEmailAddressInput="ngModel"
         [(ngModel)]="loginService.authenticateModel.userNameOrEmailAddress"
         autoFocus
         class="form-control"
         type="email"
-        placeholder="Email"
         autocomplete="new-password"
         name="userNameOrEmailAddress"
         required
@@ -42,15 +41,14 @@
     </div>
 
     <div class="form-group">
-      <!-- <div class="d-flex justify-content-between mt-n5">
-        <label class="font-size-h6 font-weight-bolder text-dark pt-5">{{ 'Password' | localize }} *</label>
-      </div> -->
+      <div class="d-flex justify-content-between mt-n5">
+        <label class="font-size-h6 font-weight-bolder text-dark pt-5">{{ 'Password' | localize }} </label>
+      </div>
       <input
         #passwordInput="ngModel"
         [(ngModel)]="loginService.authenticateModel.password"
         class="form-control"
         type="password"
-        placeholder="Password"
         autocomplete="new-password"
         name="password"
         required

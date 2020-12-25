@@ -77,8 +77,8 @@ export class RegisterTenantComponent extends AppComponentBase implements OnInit,
       this.passwordComplexitySetting = result.setting;
     });
     this.GetAllCountries();
-    this.model.cityId = -2;
-    this.model.countryId = -2;
+    this.model.cityId = undefined;
+    this.model.countryId = undefined;
   }
 
   ngAfterViewInit() {
@@ -153,15 +153,16 @@ export class RegisterTenantComponent extends AppComponentBase implements OnInit,
   }
 
   CountryChanged(event) {
-    if (event.target.value == -2) {
-      this.isCountySelected = false;
-    } else {
+    console.log(this.model.countryId);
+    if (this.model.countryId > 0) {
       this.isCountySelected = true;
+      this._tenantRegistrationService.getAllCitiesForTableDropdown(event.target.value).subscribe((result) => {
+        this.allCities = result;
+      });
+    } else {
+      this.model.cityId = undefined;
+      this.isCountySelected = false;
     }
-
-    this._tenantRegistrationService.getAllCitiesForTableDropdown(event.target.value).subscribe((result) => {
-      this.allCities = result;
-    });
   }
 
   GetAllCountries() {
