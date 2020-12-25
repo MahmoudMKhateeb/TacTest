@@ -34,7 +34,6 @@ export class DocumentTypeTranslationsComponent extends AppComponentBase {
   nameFilter = '';
   languageFilter = '';
   documentTypeDisplayNameFilter = '';
-  currentLanguage: abp.localization.ILanguageInfo;
   languages: abp.localization.ILanguageInfo[] = [];
 
   constructor(
@@ -46,8 +45,7 @@ export class DocumentTypeTranslationsComponent extends AppComponentBase {
     private _fileDownloadService: FileDownloadService
   ) {
     super(injector);
-    this.languages = _.filter(abp.localization.languages, (l) => (<any>l).isDisabled === false);
-    this.currentLanguage = abp.localization.currentLanguage;
+    this.languages = abp.localization.languages;
   }
 
   getDocumentTypeTranslations(event?: LazyLoadEvent) {

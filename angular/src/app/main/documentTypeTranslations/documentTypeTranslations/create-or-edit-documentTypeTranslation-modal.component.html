@@ -45,16 +45,8 @@
 
           <div class="form-group">
             <label for="DocumentTypeTranslation_Language">{{ l('Language') }} *</label>
-            <!-- <input
-              type="text"
-              id="DocumentTypeTranslation_Language"
-              class="form-control"
-              [(ngModel)]="documentTypeTranslation.language"
-              name="Language"
-              required
-            /> -->
             <select id="DocumentTypeTranslation_Language" name="Language" [(ngModel)]="documentTypeTranslation.language" class="form-control">
-              <option *ngFor="let language of languages" value="{{ language.displayName }}">{{ language.displayName }}</option>
+              <option *ngFor="let language of languages" value="{{ language.name }}">{{ language.displayName }}</option>
             </select>
           </div>
         </div>

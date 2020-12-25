@@ -166,7 +166,7 @@
                 <div class="card card-custom">
                   <div class="card-header">
                     <div class="card-title">
-                      <h4 class="card-title">{{ item.documentTypeDto.displayName | localize }}</h4>
+                      <h4 class="card-title">{{ item.documentTypeDto.name }}</h4>
                     </div>
                   </div>
                   <div class="card-body">
@@ -205,6 +205,7 @@
                           id="number{{ i }}"
                           class="form-control m-input"
                           required
+                          #numberInput="ngModel"
                           [maxLength]="
                             item.documentTypeDto.numberMaxDigits == 0 || item.documentTypeDto.numberMaxDigits == null
                               ? 20
@@ -218,6 +219,8 @@
                           type="text"
                           [(ngModel)]="item.number"
                         />
+                        <validation-messages [formCtrl]="numberInput"></validation-messages>
+
                         <span *ngIf="item.number == null ? 0 : item.number.length < item.documentTypeDto.numberMinDigits" class="text-danger">
                           {{ l('TheNumberLengthMustBeMoreThanMinDigits') }}
                         </span>

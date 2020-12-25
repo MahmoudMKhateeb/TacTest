@@ -97,9 +97,10 @@ namespace TACHYON.Sessions
                     output.Tenant.Edition.IsHighestEdition = IsEditionHighest(output.Tenant.Edition.Id, lastPayment.GetPaymentPeriodType());
                 }
 
+                var allTenantMissingRequiredDocumentTypesListAsync = await _documentFilesManager.GetAllTenantMissingRequiredDocumentTypesListAsync(output.Tenant.Id);
                 output.Tenant.MissingRequiredDocumentTypes = ObjectMapper
                     .Map<List<DocumentTypeDto>>(
-                        await _documentFilesManager.GetAllTenantMissingRequiredDocumentTypesListAsync(output.Tenant.Id)
+                        allTenantMissingRequiredDocumentTypesListAsync.Where(x=> x.IsRequired)
                     );
 
             }

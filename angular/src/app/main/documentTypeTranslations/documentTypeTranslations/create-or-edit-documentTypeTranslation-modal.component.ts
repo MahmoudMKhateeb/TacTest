@@ -27,13 +27,11 @@ export class CreateOrEditDocumentTypeTranslationModalComponent extends AppCompon
   documentTypeDisplayName = '';
 
   allDocumentTypes: DocumentTypeTranslationDocumentTypeLookupTableDto[];
-  currentLanguage: abp.localization.ILanguageInfo;
   languages: abp.localization.ILanguageInfo[] = [];
 
   constructor(injector: Injector, private _documentTypeTranslationsServiceProxy: DocumentTypeTranslationsServiceProxy) {
     super(injector);
-    this.languages = _.filter(abp.localization.languages, (l) => (<any>l).isDisabled === false);
-    this.currentLanguage = abp.localization.currentLanguage;
+    this.languages = abp.localization.languages;
   }
 
   show(documentTypeTranslationId?: number, documentTypeId?: number): void {
