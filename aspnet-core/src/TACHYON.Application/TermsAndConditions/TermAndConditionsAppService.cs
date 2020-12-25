@@ -19,114 +19,96 @@ using Abp.UI;
 
 namespace TACHYON.TermsAndConditions
 {
-	[AbpAuthorize(AppPermissions.Pages_TermAndConditions)]
+    [AbpAuthorize(AppPermissions.Pages_TermAndConditions)]
     public class TermAndConditionsAppService : TACHYONAppServiceBase, ITermAndConditionsAppService
     {
-		 private readonly IRepository<TermAndCondition> _termAndConditionRepository;
+        private readonly IRepository<TermAndCondition> _termAndConditionRepository;
         private readonly IRepository<Edition, int> _editionRepository;
 
 
-        public TermAndConditionsAppService(IRepository<TermAndCondition> termAndConditionRepository, IRepository<Edition, int> editionRepository) 
-		  {
-			_termAndConditionRepository = termAndConditionRepository;
+        public TermAndConditionsAppService(IRepository<TermAndCondition> termAndConditionRepository, IRepository<Edition, int> editionRepository)
+        {
+            _termAndConditionRepository = termAndConditionRepository;
             _editionRepository = editionRepository;
         }
 
-		 public async Task<PagedResultDto<GetTermAndConditionForViewDto>> GetAll(GetAllTermAndConditionsInput input)
-         {
-
+        public async Task<PagedResultDto<GetTermAndConditionForViewDto>> GetAll(GetAllTermAndConditionsInput input)
+        {
             var filteredTermAndConditions = _termAndConditionRepository.GetAll()
-                        .WhereIf(!string.IsNullOrWhiteSpace(input.Filter), e => false || e.Title.Contains(input.Filter) || e.Content.Contains(input.Filter))
-                        .WhereIf(!string.IsNullOrWhiteSpace(input.TitleFilter), e => e.Title == input.TitleFilter)
-                        //.WhereIf(!string.IsNullOrWhiteSpace(input.ContentFilter),  e => e.Content == input.ContentFilter)
-                        .WhereIf(input.MinVersionFilter != null, e => e.Version >= input.MinVersionFilter)
-                        .WhereIf(input.MaxVersionFilter != null, e => e.Version <= input.MaxVersionFilter);
-						//.WhereIf(input.MinEditionIdFilter != null, e => e.EditionId >= input.MinEditionIdFilter)
-						//.WhereIf(input.MaxEditionIdFilter != null, e => e.EditionId <= input.MaxEditionIdFilter);
+                .Include(x => x.EditionFk)
+                .Include(x => x.Translations)
+                .WhereIf(!string.IsNullOrWhiteSpace(input.Filter), e => false || e.Title.Contains(input.Filter))
+                .WhereIf(!string.IsNullOrWhiteSpace(input.TitleFilter), e => e.Title == input.TitleFilter)
+                .WhereIf(input.MinVersionFilter != null, e => e.Version >= input.MinVersionFilter)
+                .WhereIf(input.MaxVersionFilter != null, e => e.Version <= input.MaxVersionFilter);
 
-			var pagedAndFilteredTermAndConditions = filteredTermAndConditions
+            var pagedAndFilteredTermAndConditions = filteredTermAndConditions
                 .OrderBy(input.Sorting ?? "id asc")
                 .PageBy(input);
 
-			var termAndConditions = from o in pagedAndFilteredTermAndConditions
-                                    join o1 in _editionRepository.GetAll() on o.EditionId equals o1.Id into j1
-                                    from s1 in j1.DefaultIfEmpty()
-                                    select new GetTermAndConditionForViewDto() {
-							TermAndCondition = new TermAndConditionDto
-							{
-                                Title = o.Title,
-                                Content = o.Content,
-                                Version = o.Version,
-                                EditionId = o.EditionId,
-                                IsActive=o.IsActive,
-                                EditionName = s1 == null? "" : s1.DisplayName,
-                                Id = o.Id
-							}
-						};
+            var termAndConditions = pagedAndFilteredTermAndConditions
+                .Select(x => new GetTermAndConditionForViewDto { TermAndCondition = ObjectMapper.Map<TermAndConditionDto>(x) });
 
             var totalCount = await filteredTermAndConditions.CountAsync();
             return new PagedResultDto<GetTermAndConditionForViewDto>(
                 totalCount,
                await termAndConditions.ToListAsync()
             );
-         }
-		 
-		 public async Task<GetTermAndConditionForViewDto> GetTermAndConditionForView(int id)
-         {
-            var termAndCondition = await _termAndConditionRepository.GetAsync(id);
+        }
+
+        public async Task<GetTermAndConditionForViewDto> GetTermAndConditionForView(int id)
+        {
+            var termAndCondition = await _termAndConditionRepository.GetAll()
+                .Include(x => x.EditionFk)
+                .Include(x => x.Translations)
+                .SingleAsync(x => x.Id == id);
 
             var output = new GetTermAndConditionForViewDto { TermAndCondition = ObjectMapper.Map<TermAndConditionDto>(termAndCondition) };
-            output.TermAndCondition.EditionName =  _editionRepository.FirstOrDefault(x => x.Id == output.TermAndCondition.EditionId).Name;
             return output;
-         }
-		 
-		 [AbpAuthorize(AppPermissions.Pages_TermAndConditions_Edit)]
-		 public async Task<GetTermAndConditionForEditOutput> GetTermAndConditionForEdit(EntityDto input)
-         {
+        }
+
+        [AbpAuthorize(AppPermissions.Pages_TermAndConditions_Edit)]
+        public async Task<GetTermAndConditionForEditOutput> GetTermAndConditionForEdit(EntityDto input)
+        {
             var termAndCondition = await _termAndConditionRepository.FirstOrDefaultAsync(input.Id);
-           
-		    var output = new GetTermAndConditionForEditOutput {TermAndCondition = ObjectMapper.Map<CreateOrEditTermAndConditionDto>(termAndCondition)};
-			
+
+            var output = new GetTermAndConditionForEditOutput { TermAndCondition = ObjectMapper.Map<CreateOrEditTermAndConditionDto>(termAndCondition) };
+
             return output;
-         }
+        }
 
-		 public async Task CreateOrEdit(CreateOrEditTermAndConditionDto input)
-         {
-            if(input.Id == null){
-				await Create(input);
-			}
-			else{
-				await Update(input);
-			}
-         }
+        public async Task CreateOrEdit(CreateOrEditTermAndConditionDto input)
+        {
+            if (input.Id == null)
+            {
+                await Create(input);
+            }
+            else
+            {
+                await Update(input);
+            }
+        }
 
-		 [AbpAuthorize(AppPermissions.Pages_TermAndConditions_Create)]
-		 protected virtual async Task Create(CreateOrEditTermAndConditionDto input)
-         {
+        [AbpAuthorize(AppPermissions.Pages_TermAndConditions_Create)]
+        protected virtual async Task Create(CreateOrEditTermAndConditionDto input)
+        {
             var termAndCondition = ObjectMapper.Map<TermAndCondition>(input);
 
-			
-			if (AbpSession.TenantId != null)
-			{
-				termAndCondition.TenantId = (int?) AbpSession.TenantId;
-			}
-		
-
             await _termAndConditionRepository.InsertAsync(termAndCondition);
-         }
+        }
 
-		 [AbpAuthorize(AppPermissions.Pages_TermAndConditions_Edit)]
-		 protected virtual async Task Update(CreateOrEditTermAndConditionDto input)
-         {
+        [AbpAuthorize(AppPermissions.Pages_TermAndConditions_Edit)]
+        protected virtual async Task Update(CreateOrEditTermAndConditionDto input)
+        {
             var termAndCondition = await _termAndConditionRepository.FirstOrDefaultAsync((int)input.Id);
-             ObjectMapper.Map(input, termAndCondition);
-         }
+            ObjectMapper.Map(input, termAndCondition);
+        }
 
-		 [AbpAuthorize(AppPermissions.Pages_TermAndConditions_Delete)]
-         public async Task Delete(EntityDto input)
-         {
+        [AbpAuthorize(AppPermissions.Pages_TermAndConditions_Delete)]
+        public async Task Delete(EntityDto input)
+        {
             await _termAndConditionRepository.DeleteAsync(input.Id);
-         }
+        }
 
         public async Task<List<SelectItemDto>> GetDocumentEntitiesForTableDropdown()
         {
@@ -141,15 +123,15 @@ namespace TACHYON.TermsAndConditions
         }
         public async Task SetAsActive(int id)
         {
-            var  term=   await _termAndConditionRepository.GetAsync(id);
-            if (term==null)
+            var term = await _termAndConditionRepository.GetAsync(id);
+            if (term == null)
             {
                 throw new UserFriendlyException(L("TermAndConditonNotFound"));
 
             }
-            term.IsActive=true;
+            term.IsActive = true;
 
-            var allTerms = await _termAndConditionRepository.GetAll().Where(x=>x.Id!= id &&x.EditionId==term.EditionId).ToListAsync();
+            var allTerms = await _termAndConditionRepository.GetAll().Where(x => x.Id != id && x.EditionId == term.EditionId).ToListAsync();
             if (allTerms == null)
             {
                 return;
@@ -158,10 +140,10 @@ namespace TACHYON.TermsAndConditions
             {
                 item.IsActive = false;
 
-             }
-                return;    
-     }
+            }
+            return;
+        }
 
 
     }
-   }
+}

@@ -1,6 +1,15 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <localizationDictionary culture="en">
-  <texts>	 <![CDATA[Tachyon:Common  Start]]>-->	  <text name="Choose">Choose</text>
+  <texts>    <text name="TermAndConditionTranslation">Term and condition translation</text>
+    <text name="TACHYON.TermsAndConditions.TermAndConditionTranslation">TermAndConditionTranslation</text>
+    <text name="TermAndConditionTranslationsHeaderInfo">Term and condition translations header info</text>
+    <text name="CreateNewTermAndConditionTranslation">Create new term and condition translation</text>
+    <text name="EditTermAndConditionTranslation">Edit term and condition translation</text>
+    <text name="DeleteTermAndConditionTranslation">Delete term and condition translation</text>
+    <text name="TermAndConditionTranslations">Term and condition translations</text>
+    <text name="TermAndConditionTitle">Term and condition title</text>
+    <text name="PickTermAndCondition">Pick term and condition</text>
+	 <![CDATA[Tachyon:Common  Start]]>-->	  <text name="Choose">Choose</text>
 	  <text name="makeSureThatYouFillAllRequiredFields">Make sure that you fill all required fields</text>
 	 <![CDATA[Tachyon:Common  End]]>-->	  	 <![CDATA[Tachyon:Truck Page Start]]>-->	  <text name="TrucksHeaderInfo">Trucks Header Info</text>
 	  <text name="NewTruck">New Truck</text>

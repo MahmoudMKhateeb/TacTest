@@ -136,8 +136,10 @@ namespace TACHYON
     {
         public static void CreateMappings(IMapperConfigurationExpression configuration)
         {
+            configuration.CreateMap<CreateOrEditTermAndConditionTranslationDto, TermAndConditionTranslation>().ReverseMap();
+            configuration.CreateMap<TermAndConditionTranslationDto, TermAndConditionTranslation>().ReverseMap();
             configuration.CreateMap<CreateOrEditTermAndConditionDto, TermAndCondition>().ReverseMap();
-            configuration.CreateMap<TermAndConditionDto, TermAndCondition>().ReverseMap();
+            //configuration.CreateMap<TermAndConditionDto, TermAndCondition>().ReverseMap();
             configuration.CreateMap<CreateOrEditCapacityDto, Capacity>().ReverseMap();
             configuration.CreateMap<CapacityDto, Capacity>().ReverseMap();
             configuration.CreateMap<CreateOrEditTruckSubtypeDto, TruckSubtype>().ReverseMap();
@@ -250,7 +252,6 @@ namespace TACHYON
             configuration.CreateMap<Edition, SubscribableEdition>();
             configuration.CreateMap<Edition, EditionSelectDto>();
 
-
             //Payment
             configuration.CreateMap<SubscriptionPaymentDto, SubscriptionPayment>().ReverseMap();
             configuration.CreateMap<SubscriptionPaymentListDto, SubscriptionPayment>().ReverseMap();
@@ -288,7 +289,6 @@ namespace TACHYON
             configuration.CreateMap<UserLoginAttemptDto, UserLoginAttempt>().ReverseMap();
             configuration.CreateMap<ImportUserDto, User>();
             configuration.CreateMap<ImportDriverDto, User>();
-            
 
             //AuditLog
             configuration.CreateMap<AuditLog, AuditLogListDto>();
@@ -323,7 +323,6 @@ namespace TACHYON
             //User Delegations
             configuration.CreateMap<CreateUserDelegationDto, UserDelegation>();
 
-
             /* ADD YOUR OWN CUSTOM AUTOMAPPER MAPPINGS HERE */
         }
 
@@ -338,6 +337,11 @@ namespace TACHYON
                 .EntityMap.ForMember(dst => dst.RequiredFrom, opt => opt.MapFrom(src => src.DocumentsEntityFk.DisplayName))
                 .ForMember(dst => dst.Edition, opt => opt.MapFrom(src => src.EditionFk.DisplayName))
                 .ReverseMap();
+
+
+            configuration.CreateMultiLingualMap<TermAndCondition,TermAndConditionTranslation, TermAndConditionDto>(context)
+                 .EntityMap.ForMember(dst => dst.EditionName, opt => opt.MapFrom(src => src.EditionFk.DisplayName))
+                 .ReverseMap();
         }
     }
 }
