@@ -23,10 +23,4 @@
   }
 }
 
-/* CreateNewTruck Css */
 
-.modelyearinput {
-  cursor: default !important;
-  color: transparent !important;
-  text-shadow: 0 0 0 #0c0404;
-}

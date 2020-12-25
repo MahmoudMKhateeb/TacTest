@@ -87,6 +87,15 @@ body {
   padding-bottom: 5px !important;
 }
 
+.padding-left-0 {
+    padding-left: 0px !important;
+}
+
+.padding-right-0 {
+    padding-right: 0px !important;
+}
+
+
 .width-percent-5 {
   width: 5%;
 }

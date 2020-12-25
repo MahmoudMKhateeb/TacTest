@@ -135,8 +135,6 @@ export class CreateOrEditTruckModalComponent extends AppComponentBase {
       //initlaize truck type values
       this.truck.id = truckId;
       this.trucksTypeDisplayName = '';
-      this.truck.modelYear = '2000';
-      this.truck.capacity = '1';
       this.truck.truckStatusId = null;
       this.truck.transportTypeId = null;
       this.truck.transportSubtypeId = null;
@@ -502,14 +500,6 @@ export class CreateOrEditTruckModalComponent extends AppComponentBase {
       _.filter(customSettings.EntityHistory.enabledEntities, (entityType) => entityType === this._entityTypeFullName).length === 1
     );
   }
-  numberOnly(event): boolean {
-    const charCode = event.which ? event.which : event.keyCode;
-    if (charCode === 38 || charCode === 40) {
-      return true;
-    }
-    return false;
-  }
-
   isAllfileFormatesAccepted() {
     if (
       this.fileFormateIsInvalideIndexList.every((x) => x === false) &&

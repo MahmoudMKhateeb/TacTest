@@ -21,26 +21,15 @@
           </button>
         </div>
         <div class="modal-body">
-          <label>
-            <h3>{{ l('TrucktypeDetails') }}</h3>
-          </label>
+          <h3 class="font-size-lg text-dark-75 font-weight-bold mb-10">{{ l('TrucktypeDetails') }}</h3>
 
           <div class="row">
             <div class="col-md-6">
               <div class="form-group m-form__group">
-                <label for="TruckStatusDisplayName">{{ l('TruckStatus') }}*</label>
-                <select [(ngModel)]="truck.truckStatusId" class="form-control" name="truck.truckStatusId" required>
-                  <option [ngValue]="null"> {{ l('Select') }} {{ l('TruckStatus') }}</option>
-                  <option *ngFor="let item of allTruckStatuss" value="{{ item.id }}">{{ item.displayName }}</option>
-                </select>
-              </div>
-            </div>
-
-            <hr />
-            <div class="col-md-6">
-              <div class="form-group m-form__group">
-                <label for="transportTypeDisplayName">{{ l('TransportType') }}*</label>
+                <label for="transportTypeId">* {{ l('TransportType') }}</label>
                 <select
+                  id="transportTypeId"
+                  #transportTypeId="ngModel"
                   [(ngModel)]="truck.transportTypeId"
                   class="form-control"
                   name="truck.transportTypeId"
@@ -50,14 +39,16 @@
                   <option [ngValue]="null">{{ l('Select') }} {{ l('TransportType') }}</option>
                   <option *ngFor="let item of allTransportTypes" value="{{ item.id }}">{{ item.displayName }}</option>
                 </select>
+                <validation-messages [formCtrl]="transportTypeId"></validation-messages>
               </div>
             </div>
-          </div>
-          <div class="row">
+
             <div class="col-md-6">
               <div class="form-group m-form__group">
-                <label for="allTransportSubTypes">{{ l('TransportSubType') }}*</label>
+                <label for="transportSubtypeId">* {{ l('TransportSubType') }}</label>
                 <select
+                  id="transportSubtypeId"
+                  #transportSubtypeId="ngModel"
                   [(ngModel)]="truck.transportSubtypeId"
                   class="form-control"
                   name="truck.transportSubtypeId"
@@ -68,12 +59,15 @@
                   <option [ngValue]="null">{{ l('Select') }} {{ l('TransportSubType') }}</option>
                   <option *ngFor="let item of allTransportSubTypes" value="{{ item.id }}">{{ item.displayName }} </option>
                 </select>
+                <validation-messages [formCtrl]="transportSubtypeId"></validation-messages>
               </div>
             </div>
             <div class="col-md-6">
               <div class="form-group m-form__group">
-                <label for="allTruckTypesByTransportSubtype">{{ l('TruckType') }}*</label>
+                <label for="trucksTypeId">* {{ l('TruckType') }}</label>
                 <select
+                  id="trucksTypeId"
+                  #trucksTypeId="ngModel"
                   [(ngModel)]="truck.trucksTypeId"
                   class="form-control"
                   name="truck.trucksTypeId"
@@ -84,14 +78,16 @@
                   <option [ngValue]="null">{{ l('Select') }} {{ l('TruckType') }}</option>
                   <option *ngFor="let item of allTruckTypesByTransportSubtype" value="{{ item.id }}"> {{ item.displayName }}</option>
                 </select>
+                <validation-messages [formCtrl]="trucksTypeId"></validation-messages>
               </div>
             </div>
-          </div>
-          <div class="row">
+
             <div class="col-md-6">
               <div class="form-group m-form__group">
-                <label for="allTruckSubTypesByTruckTypeIdDisplayName">{{ l('TruckSubType') }}*</label>
+                <label for="truckSubtypeId">* {{ l('TruckSubType') }}</label>
                 <select
+                  id="truckSubtypeId"
+                  #truckSubtypeId="ngModel"
                   [(ngModel)]="truck.truckSubtypeId"
                   class="form-control"
                   name="truck.truckSubtypeId"
@@ -102,12 +98,15 @@
                   <option [ngValue]="null">{{ l('Select') }} {{ l('TruckSubType') }}</option>
                   <option *ngFor="let item of allTruckSubTypesByTruckTypeId" value="{{ item.id }}"> {{ item.displayName }}</option>
                 </select>
+                <validation-messages [formCtrl]="truckSubtypeId"></validation-messages>
               </div>
             </div>
             <div class="col-md-6">
               <div class="form-group m-form__group">
-                <label for="truck.capacityId">{{ l('CapacityCategory') }}*</label>
+                <label for="capacityId">* {{ l('CapacityCategory') }}</label>
                 <select
+                  id="capacityId"
+                  #capacityId="ngModel"
                   [(ngModel)]="truck.capacityId"
                   class="form-control"
                   name="truck.capacityId"
@@ -121,19 +120,57 @@
                   <option [ngValue]="null">{{ l('Select') }} {{ l('CapacityCategory') }}</option>
                   <option *ngFor="let item of allTrucksCapByTruckSubTypeId" value="{{ item.id }}">{{ item.displayName }} </option>
                 </select>
+                <validation-messages [formCtrl]="capacityId"></validation-messages>
               </div>
             </div>
+            <div class="form-group col-md-6">
+              <label for="Truck_Capacity">{{ l('Capacity') }}</label>
+              <div class="input-group">
+                <input
+                  [(ngModel)]="truck.capacity"
+                  #capacity="ngModel"
+                  class="form-control"
+                  id="Truck_Capacity"
+                  maxlength="4"
+                  minlength="1"
+                  min="0"
+                  name="Capacity"
+                  type="number"
+                />
+                <div class="input-group-append">
+                  <span class="input-group-text">{{ l('Tons') }}</span>
+                </div>
+              </div>
+              <validation-messages [formCtrl]="capacity"></validation-messages>
+              <span *ngIf="truck.capacity < 0" class="form-text text-danger">{{ l('vlaueMustBeGreaterThan') }} 0</span>
+            </div>
           </div>
-          <hr />
-          <label>
-            <h3>{{ l('TrucktDetails') }}</h3>
-          </label>
+          <div class="separator separator-dashed my-10"></div>
+
+          <h3 class="font-size-lg text-dark-75 font-weight-bold mb-10">{{ l('TrucktDetails') }}</h3>
+
           <div class="row">
             <div class="form-group col-md-6">
-              <label for="Truck_PlateNumber">{{ l('PlateNumber') }} *</label>
+              <label for="TruckStatus">* {{ l('TruckStatus') }}</label>
+              <select
+                #TruckStatus="ngModel"
+                id="TruckStatus"
+                [(ngModel)]="truck.truckStatusId"
+                class="form-control"
+                name="truck.truckStatusId"
+                required
+              >
+                <option [ngValue]="null"> {{ l('Select') }} {{ l('TruckStatus') }}</option>
+                <option *ngFor="let item of allTruckStatuss" value="{{ item.id }}">{{ item.displayName }}</option>
+              </select>
+              <validation-messages [formCtrl]="TruckStatus"></validation-messages>
+            </div>
+
+            <div class="form-group col-md-6">
+              <label for="Truck_PlateNumber"> * {{ l('PlateNumber') }}</label>
               <input
                 [(ngModel)]="truck.plateNumber"
-                #plateNumberInput
+                #plateNumberInput="ngModel"
                 class="form-control"
                 id="Truck_PlateNumber"
                 maxlength="64"
@@ -143,14 +180,14 @@
                 pattern="^[a-z0-9].*?[a-z0-9]$"
                 type="text"
               />
-              <span class="form-text text-muted">{{ l('Enter') }} {{ l('PlateNumber') }}</span>
               <validation-messages [formCtrl]="plateNumberInput"></validation-messages>
             </div>
 
             <div class="form-group col-md-6">
-              <label for="Truck_ModelName">{{ l('ModelName') }} *</label>
+              <label for="Truck_ModelName"> * {{ l('ModelName') }}</label>
               <input
                 [(ngModel)]="truck.modelName"
+                #modelName="ngModel"
                 class="form-control"
                 id="Truck_ModelName"
                 maxlength="64"
@@ -159,60 +196,25 @@
                 required
                 type="text"
               />
-              <span class="form-text text-muted">{{ l('Enter') }} {{ l('ModalName') }}</span>
+              <validation-messages [formCtrl]="modelName"></validation-messages>
             </div>
 
             <div class="form-group col-md-6">
-              <label for="Truck_ModelYear">{{ l('ModelYear') }} *</label>
+              <label for="Truck_ModelYear"> * {{ l('ModelYear') }}</label>
               <input
+                #modelYear="ngModel"
                 [(ngModel)]="truck.modelYear"
                 class="form-control modelyearinput"
                 id="Truck_ModelYear"
                 maxlength="4"
-                placeholder="YYYY"
-                minlength="0"
-                min="0"
+                minlength="4"
+                min="2000"
                 name="ModelYear"
                 required
                 type="number"
-                (keydown)="numberOnly($event)"
               />
-              <span class="form-text text-muted"> {{ l('Enter') }} {{ l('ModalYear') }}</span>
-              <span class="form-text text-muted">{{ l('UseArrowKeysToChooseTheYear') }}</span>
-            </div>
-
-            <!--            <div class="m-checkbox-list col-md-6">-->
-            <!--              <br />-->
-            <!--              <br />-->
-            <!--              <label class="kt-checkbox" for="Truck_IsAttachable">-->
-            <!--                <input [(ngModel)]="truck.isAttachable" id="Truck_IsAttachable" name="IsAttachable" type="checkbox" />-->
-            <!--                {{ l('IsAttachable') }}-->
-            <!--                <span></span>-->
-            <!--              </label>-->
-            <!--            </div>-->
-
-            <div class="form-group col-md-6">
-              <label for="Truck_Capacity">{{ l('Capacity') }}</label>
-              <div class="input-group">
-                <input
-                  [(ngModel)]="truck.capacity"
-                  class="form-control"
-                  id="Truck_Capacity"
-                  maxlength="4"
-                  placeholder="YYYY"
-                  minlength="0"
-                  min="0"
-                  name="Capacity"
-                  required
-                  type="number"
-                  (keydown)="numberOnly($event)"
-                />
-                <div class="input-group-append">
-                  <span class="input-group-text">{{ l('Tons') }}</span>
-                </div>
-              </div>
-              <span class="form-text text-muted">{{ l('EnterCapacity') }}</span>
-              <span class="form-text text-muted">{{ l('UseTheArrowKeysToChooseTheCapacity') }}</span>
+              <validation-messages [formCtrl]="modelYear"></validation-messages>
+              <span *ngIf="truck.modelYear < 2000" class="form-text text-danger">{{ l('vlaueMustBeGreaterThan') }} 2000</span>
             </div>
 
             <div class="form-group col-md-12">
@@ -229,43 +231,24 @@
                 name="Note"
                 type="text"
               ></textarea>
-              <span class="form-text text-muted">{{ l('Enter') }} {{ l('Note') }}</span>
             </div>
-
-            <!--            <div class="form-group col-md-12">-->
-            <!--              <input (change)="fileChangeEvent($event)" type="file" />-->
-            <!--              <span class="help-block m-b-none">{{ 'ProfilePicture_Change_Info' | localize: maxProfilPictureBytesUserFriendlyValue }}</span>-->
-            <!--            </div>-->
-            <!--            <image-cropper-->
-            <!--              (imageCropped)="imageCroppedFile($event)"-->
-            <!--              [aspectRatio]="4 / 4"-->
-            <!--              [imageChangedEvent]="imageChangedEvent"-->
-            <!--              [maintainAspectRatio]="true"-->
-            <!--              [resizeToWidth]="128"-->
-            <!--              format="png"-->
-            <!--            ></image-cropper>-->
           </div>
 
           <createOrEditDocumentFileModal #createOrEditDocumentFileModal></createOrEditDocumentFileModal>
           <viewDocumentFileModal #viewDocumentFileModal></viewDocumentFileModal>
           <entityTypeHistoryModal #entityTypeHistoryModal></entityTypeHistoryModal>
-          <hr />
-          <label *ngIf="!truck.id">
-            <h3>{{ l('TruckDocuments') }}</h3>
-          </label>
+
+          <div class="separator separator-dashed my-10"></div>
+          <h3 class="font-size-lg text-dark-75 font-weight-bold mb-10">{{ l('TruckDocuments') }}</h3>
 
           <div *ngIf="truck.createOrEditDocumentFileDtos != undefined ? (truck.createOrEditDocumentFileDtos.length > 0 ? true : false) : false">
             <div *ngFor="let item of truck.createOrEditDocumentFileDtos; index as i" class="">
+              <div *ngIf="i != 0" class="separator separator-dashed"></div>
               <div class="card card-custom">
-                <div class="card-header">
-                  <div class="card-title">
-                    <h3 class="card-title">{{ item.documentTypeDto.displayName | localize }}</h3>
-                  </div>
-                </div>
-                <div class="card-body padding-bottom-5">
+                <div class="card-body padding-bottom-5 padding-left-0 padding-right-0">
                   <div class="row d-flex">
                     <div class="form-group col-6">
-                      <label>{{ l('File') }} *</label>
+                      <label>* {{ item.documentTypeDto.displayName | localize }}</label>
                       <div class="custom-file">
                         <input
                           accept="image/x-png,image/jpeg,application/pdf"
@@ -285,27 +268,12 @@
                         <span class="form-text text-danger text-left">{{ 'PleaseChooseAvalidFormat' | localize }}</span>
                       </div>
                     </div>
-                    <!--                  <div *ngIf="item.documentTypeDto.hasExpirationDate" class="form-group col-6">-->
-                    <!--                    <label>{{ l('expiration date') }} <span class="text-danger">*</span></label>-->
-                    <!--                    <input-->
-                    <!--                      name="expirationDate{{ i }}"-->
-                    <!--                      id="expirationDate{{ i }}"-->
-                    <!--                      bsDatepicker-->
-                    <!--                      class="form-control m-input"-->
-                    <!--                      datePickerMomentModifier-->
-                    <!--                      [required]="item.documentTypeDto.isRequired && !item.isAccepted"-->
-                    <!--                      [(date)]="item.expirationDate"-->
-                    <!--                      [disabled]="item.isAccepted"-->
-                    <!--                    />-->
-                    <!--                  </div>-->
                     <div *ngIf="item.documentTypeDto.hasNumber" class="form-group col-6">
-                      <label
-                        >{{ l('Number') }}
-                        <span class="text-danger">*</span>
-                      </label>
+                      <label for="number{{ i }}">* {{ l('Number') }} </label>
                       <input
                         name="number{{ i }}"
                         id="number{{ i }}"
+                        #number="ngModel"
                         class="form-control m-input"
                         required
                         (change)="numberChange(item, i)"
@@ -315,6 +283,7 @@
                         [(ngModel)]="item.number"
                         [disabled]="item.isAccepted"
                       />
+                      <validation-messages [formCtrl]="number"></validation-messages>
                       <span *ngIf="item.number == null ? 0 : item.number.length < item.documentTypeDto.numberMinDigits" class="text-danger">
                         {{ l('TheNumberLengthMustBeMoreThanMinDigits') }}
                       </span>
@@ -329,7 +298,7 @@
 
                     <div *ngIf="item.documentTypeDto.hasExpirationDate" class="form-group col-6">
                       <hijri-gregorian-datepicker-test
-                        [label]="l('ExpirationDate')"
+                        [label]="'* ' + l('ExpirationDate')"
                         class="m-input"
                         [isRequired]="true"
                         [readonly]="true"
