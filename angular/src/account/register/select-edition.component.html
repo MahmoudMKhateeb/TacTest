@@ -38,7 +38,13 @@
                   </svg>
                 </span>
                 <span class="pricing-item-icon text-primary">
-                  <i class="fa {{ editionIcons[i] }}"></i>
+                  <!-- {{editionWithFeatures.edition.displayName |json}} -->
+                  <i *ngIf="editionWithFeatures.edition.displayName === 'Carrier'">
+                    <img [src]="'assets/common/images/editions-icons/Carrier.png'" class="max-h-200px" i />
+                  </i>
+                  <i *ngIf="editionWithFeatures.edition.displayName == 'Shipper'">
+                    <img [src]="'assets/common/images/editions-icons/Shipper.png'" class="max-h-250px" i />
+                  </i>
                 </span>
               </div>
               <!--end::Icon-->
