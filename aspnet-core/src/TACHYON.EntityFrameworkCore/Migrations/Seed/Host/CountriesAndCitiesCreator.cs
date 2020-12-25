@@ -28,25 +28,53 @@ namespace TACHYON.Migrations.Seed.Host
             var countryObject = JObject.Parse(json);
 
             List<string> countriesList = _context.Counties.Where(x => x.IsDeleted == false).Select(x => x.DisplayName).ToList();
+            List<string> WantedCountriesList = new List<string>
+                    { "Saudi Arabia", "MENA", "United Arab Emirates", "Bahrain", "Oman", "Iraq", "Hashemite Kingdom of Jordan",
+                        "Egypt", "Turkey", "Libya", "Sudan" ,"Kuwait"
+                    };
             //insert countries
             foreach (var co in countryObject.Properties())
             {
                 var country = co.Name;
                     
+                //if the first country exists , check cities
                 if (countriesList.Contains(country))
                 {
-                    break;
-                }
-                if (!string.IsNullOrWhiteSpace(country))
-                {
-                    int countryId = AddCountryToDB(country).Id;
-                    if (country == "Saudi Arabia")
+                    //break;
+                    //contries which their cities will be added
+
+                    if (WantedCountriesList.Contains(country))
                     {
-                        //insert citites
-                        foreach (var ci in co.Value.ToArray())
+                        int countryid = GetCountryId(country);
+                        if (countryid != 0)
                         {
-                            string city = ci.ToString();
-                            CreateCityToDB(city, countryId);
+                            if (!_context.Cities.Any(x => x.CountyId == countryid))
+                            {
+                                //insert citites
+                                foreach (var ci in co.Value.ToArray())
+                                {
+                                    string city = ci.ToString();
+                                    CreateCityToDB(city, countryid);
+                                }
+                            }
+                        }
+                    }
+                }
+
+                //insert all countries
+                else if (!string.IsNullOrWhiteSpace(country))
+                {
+                    int? countryId = AddCountryToDB(country)?.Id;
+                    if (countryId != null)
+                    {
+                        if (WantedCountriesList.Contains(country))
+                        {
+                            //insert all citites
+                            foreach (var ci in co.Value.ToArray())
+                            {
+                                string city = ci.ToString();
+                                CreateCityToDB(city, countryId.Value);
+                            }
                         }
                     }
                 }
@@ -57,15 +85,29 @@ namespace TACHYON.Migrations.Seed.Host
         }
         private County AddCountryToDB(string displayName)
         {
-            var item= _context.Counties.AddAsync(new County { Code = "", CreationTime = Clock.Now, IsDeleted = false, DisplayName = displayName });
-            _context.SaveChanges();
-            return _context.Counties.FirstOrDefault(x => x.DisplayName == displayName);
+            var itemDB = _context.Cities.FirstOrDefault(x => x.DisplayName == displayName);
+            if (itemDB == null)
+            {
+                var item = _context.Counties.AddAsync(new County { Code = "", CreationTime = Clock.Now, IsDeleted = false, DisplayName = displayName });
+                _context.SaveChanges();
+                return _context.Counties.FirstOrDefault(x => x.DisplayName == displayName);
+            }
+            return null;
+        }
+
+        private int GetCountryId(string displayName)
+        {
+            var item = _context.Counties.FirstOrDefault(x=>x.DisplayName==displayName);
+            if (item != null)
+                return item.Id;
+            return 0;
         }
 
         private void CreateCityToDB(string cityName, int countryId)
         {
             _context.Cities.Add(new City { CountyId = countryId, IsDeleted = false, DisplayName = cityName, CreationTime = Clock.Now });
             _context.SaveChanges();
+
         }
 
     }
