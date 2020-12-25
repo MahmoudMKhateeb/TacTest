@@ -23,13 +23,13 @@ namespace TACHYON.Trucks.Importing
 
                     AddHeader(
                         sheet,
-                        L("ModelName"),
+                        L("PlateNumber"),
                         L("Refuse Reason")
                     );
 
                     AddObjects(
                         sheet, 2, truckListDtos,
-                        _ => _.ModelName,
+                        _ => _.PlateNumber,
                         _ => _.Exception
                     );
 

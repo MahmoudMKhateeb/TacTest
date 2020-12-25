@@ -62,20 +62,41 @@ namespace TACHYON.Trucks.Importing
             var truck = new ImportTruckDto();
             truck.ImportTruckDocumentFileDtos = new List<ImportTruckDocumentFileDto>();
 
-
+            //TruckIstimara
             var istimaraDocumentFileDto = new ImportTruckDocumentFileDto();
-            var istimaraDocumentType = _documentTypeRepository.FirstOrDefault(x => x.SpecialConstant.ToLower() == "TruckIstimara".ToLower());
-            istimaraDocumentFileDto.DocumentTypeId = istimaraDocumentType.Id;
+            DocumentType istimaraDocumentType = new DocumentType();
+            try
+            {
+                istimaraDocumentType = _documentTypeRepository.GetAll().First(x => x.SpecialConstant.ToLower() == "TruckIstimara".ToLower());
+                istimaraDocumentFileDto.DocumentTypeId = istimaraDocumentType.Id;
+            }
+            catch
+            {
+
+                exceptionMessage.Append("cant find document type with constant TruckIstimara;");
+            }
             istimaraDocumentFileDto.Name = "_";
             istimaraDocumentFileDto.Extn = " ";
 
 
 
+
             var insuranceDocumentFileDto = new ImportTruckDocumentFileDto();
-            var insuranceDocumentType = _documentTypeRepository.FirstOrDefault(x => x.SpecialConstant.ToLower() == "TruckInsurance".ToLower());
-            insuranceDocumentFileDto.DocumentTypeId = insuranceDocumentType.Id;
+            DocumentType insuranceDocumentType = new DocumentType();
+
+            try
+            {
+                insuranceDocumentType = _documentTypeRepository.GetAll().First(x => x.SpecialConstant.ToLower() == "TruckInsurance".ToLower());
+
+                insuranceDocumentFileDto.DocumentTypeId = insuranceDocumentType.Id;
+            }
+            catch
+            {
+                exceptionMessage.Append("cant find document type with constant TruckInsurance;");
+            }
             insuranceDocumentFileDto.Name = "_";
             insuranceDocumentFileDto.Extn = " ";
+
 
             try
             {
@@ -111,12 +132,14 @@ namespace TACHYON.Trucks.Importing
                 istimaraDocumentFileDto.ExpirationDate = DateTime.ParseExact(GetRequiredValueFromRowOrNull(worksheet, row, 12, "Istimara Expiry  Date (Gregorian)*", exceptionMessage), "dd/MM/yyyy", null).Date;
                 if (istimaraDocumentType.HasExpirationDate && istimaraDocumentFileDto.HijriExpirationDate.IsNullOrWhiteSpace())
                 {
-                    throw new Exception("Istimara Expiry  Date (Hijri) is required");
+                    exceptionMessage.Append("Istimara Expiry  Date (Hijri) is required");
+                    //throw new Exception("Istimara Expiry  Date (Hijri) is required");
                 }
 
                 if (istimaraDocumentType.HasExpirationDate && istimaraDocumentFileDto.ExpirationDate == null)
                 {
-                    throw new Exception("Istimara Expiry  Date (Gregorian) is required");
+                    exceptionMessage.Append("Istimara Expiry  Date (Gregorian) is required");
+                    //throw new Exception("Istimara Expiry  Date (Gregorian) is required");
                 }
 
                 truck.ImportTruckDocumentFileDtos.Add(istimaraDocumentFileDto);
@@ -132,30 +155,46 @@ namespace TACHYON.Trucks.Importing
 
                 if (insuranceDocumentType.HasExpirationDate && insuranceDocumentFileDto.HijriExpirationDate.IsNullOrWhiteSpace())
                 {
-                    throw new Exception("Insurance Expiry  Date (Hijri) is required");
+                    exceptionMessage.Append("Insurance Expiry  Date (Hijri) is required");
+                    // throw new Exception("Insurance Expiry  Date (Hijri) is required");
                 }
 
                 if (insuranceDocumentType.HasExpirationDate && insuranceDocumentFileDto.ExpirationDate == null)
                 {
-                    throw new Exception("Insurance Expiry  Date (Gregorian) is required");
+                    exceptionMessage.Append("Insurance Expiry  Date (Gregorian) is required");
+                    //throw new Exception("Insurance Expiry  Date (Gregorian) is required");
                 }
 
                 truck.ImportTruckDocumentFileDtos.Add(insuranceDocumentFileDto);
+                if (exceptionMessage.Length > 0)
+                {
+                    truck.Exception = exceptionMessage.ToString();
+                }
 
-
-
+                //default truck status active
+                truck.TruckStatusId = 1;
             }
             catch (System.Exception exception)
             {
                 truck.Exception = exception.Message;
             }
 
+
             return truck;
         }
 
         private bool GetIsAttachable(string text)
         {
-            return text.ToLower() == "yes";
+            try
+            {
+                return text.ToLower() == "yes";
+            }
+            catch
+            {
+                // ignored
+
+            }
+            return false;
         }
         private int? GetTransportTypeId(string text, StringBuilder exceptionMessage)
         {
@@ -195,6 +234,8 @@ namespace TACHYON.Trucks.Importing
                 return transportSubtype.Id;
             }
 
+            exceptionMessage.Append("transportSubtype does not belongs to transportType ");
+
             exceptionMessage.Append(GetLocalizedExceptionMessagePart("TransportSubtype"));
             return null;
 
@@ -219,7 +260,7 @@ namespace TACHYON.Trucks.Importing
             {
                 return trucksType.Id;
             }
-
+            exceptionMessage.Append("truckType does not belongs to transportSubtype ");
             exceptionMessage.Append(GetLocalizedExceptionMessagePart("TruckType"));
             return null;
 
@@ -244,6 +285,8 @@ namespace TACHYON.Trucks.Importing
             {
                 return truckSubtype.Id;
             }
+
+            exceptionMessage.Append("truckSubtype does not belongs to trucksType ");
 
             exceptionMessage.Append(GetLocalizedExceptionMessagePart("TruckSubType"));
             return null;
