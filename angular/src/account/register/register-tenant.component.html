@@ -101,7 +101,7 @@
             #addressInput="ngModel"
             class="form-control"
             type="Address"
-            placeholder="{{ 'AddressFormat' | localize }} *"
+            placeholder="{{ 'AddressFormat' | localize }}"
             [(ngModel)]="model.address"
             name="Address"
             required
@@ -109,8 +109,6 @@
           />
           <div>
             <validation-messages [formCtrl]="addressInput"></validation-messages>
-            <!-- <span class="form-text text-muted"> {{ l('Enter') }} {{ l('Address') }}</span>
-            <span class="form-text text-muted"> {{ l('Format') }} :{{ l('AddressFormat') }}</span> -->
           </div>
         </div>
       </div>
