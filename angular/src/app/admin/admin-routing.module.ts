@@ -1,5 +1,6 @@
-import { NgModule } from '@angular/core';
+﻿import { NgModule } from '@angular/core';
 import { NavigationEnd, Router, RouterModule } from '@angular/router';
+import { TermAndConditionTranslationsComponent } from './termsAndConditions/termAndConditionTranslations/termAndConditionTranslations.component';
 import { ShippingRequestStatusesComponent } from './shippingRequestStatuses/shippingRequestStatuses/shippingRequestStatuses.component';
 import { UnitOfMeasuresComponent } from './unitOfMeasures/unitOfMeasures/unitOfMeasures.component';
 import { TruckStatusesComponent } from './trucks/truckStatuses/truckStatuses.component';
@@ -35,6 +36,7 @@ import { DriversComponent } from '@app/admin/users/drivers/drivers.component';
       {
         path: '',
         children: [
+                    { path: 'termsAndConditions/termAndConditionTranslations', component: TermAndConditionTranslationsComponent, data: { permission: 'Pages.Administration.TermAndConditionTranslations' }  },
           {
             path: 'shippingRequestStatuses/shippingRequestStatuses',
             component: ShippingRequestStatusesComponent,

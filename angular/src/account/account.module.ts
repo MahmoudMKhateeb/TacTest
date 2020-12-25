@@ -42,6 +42,7 @@ import { SessionLockScreenComponent } from './login/session-lock-screen.componen
 import { AppBsModalModule } from '@shared/common/appBsModal/app-bs-modal.module';
 import { TermAndConditionRegistrationViewModalComponent } from './register/term-and-condition-registration-view-modal.component';
 import { SafePipe } from './register/safe.pipe';
+import { TermAndConditionRegistrationComponent } from './register/term-and-condition-registration/term-and-condition-registration.component';
 
 export function getRecaptchaLanguage(): string {
   return new LocaleMappingService().map('recaptcha', abp.localization.currentLanguage.name);
@@ -90,6 +91,7 @@ export function getRecaptchaLanguage(): string {
     StripeCancelPaymentComponent,
     PaymentCompletedComponent,
     SessionLockScreenComponent,
+    TermAndConditionRegistrationComponent,
   ],
   providers: [LoginService, TenantRegistrationHelperService, PaymentHelperService, AccountRouteGuard],
 })

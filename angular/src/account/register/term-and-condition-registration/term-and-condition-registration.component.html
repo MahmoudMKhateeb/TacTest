@@ -1,0 +1,17 @@
+<div class="login-form" [@routerTransition]>
+  <div class="text-left login-logo">
+    <a>
+      <img [src]="appRootUrl() + 'assets/common/images/app-logo-on-light-login.svg'" class="max-h-75px" (click)="goToHome()" />
+    </a>
+  </div>
+  <div class="text-left label-text">
+    <h3 class="font-weight-bolder text-dark font-size-h4 font-size-h1-lg text-red">
+      {{ 'TermsAndConditions' | localize }}
+    </h3>
+  </div>
+  <!--    <h4 *ngIf="model.edition" class="text-left">{{ 'IAMA' | localize }}: {{ model.edition.displayName }}</h4>-->
+  <div class="separator separator-border-dashed"></div>
+  <hr />
+
+  <div [innerHTML]="item.termAndCondition.content | safe: 'html'"></div>
+</div>

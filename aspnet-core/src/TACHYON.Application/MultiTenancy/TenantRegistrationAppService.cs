@@ -375,8 +375,14 @@ namespace TACHYON.MultiTenancy
         {
             using (CurrentUnitOfWork.DisableFilter(AbpDataFilters.MayHaveTenant, AbpDataFilters.MustHaveTenant))
             {
-                var term = await _termAndConditionRepository.FirstOrDefaultAsync(x => x.TenantId == null && x.EditionId == int.Parse(editiontId));
-                var output = new GetTermAndConditionForViewDto { TermAndCondition = ObjectMapper.Map<TermAndConditionDto>(term) };
+                var term = await _termAndConditionRepository.GetAll()
+                .Include(x => x.EditionFk)
+                .Include(x => x.Translations)
+                .FirstOrDefaultAsync(x => x.EditionId == int.Parse(editiontId));
+                var output = new GetTermAndConditionForViewDto
+                {
+                    TermAndCondition = ObjectMapper.Map<TermAndConditionDto>(term)
+                };
                 return output;
             }
 

@@ -23,6 +23,7 @@ import { StripeCancelPaymentComponent } from './payment/stripe/stripe-cancel-pay
 import { StripePaymentResultComponent } from './payment/stripe/stripe-payment-result.component';
 import { PaymentCompletedComponent } from './payment/payment-completed.component';
 import { SessionLockScreenComponent } from './login/session-lock-screen.component';
+import { TermAndConditionRegistrationComponent } from '@account/register/term-and-condition-registration/term-and-condition-registration.component';
 
 @NgModule({
   imports: [
@@ -36,6 +37,7 @@ import { SessionLockScreenComponent } from './login/session-lock-screen.componen
           { path: 'register', component: RegisterComponent, canActivate: [AccountRouteGuard] },
           { path: 'register-tenant', component: RegisterTenantComponent, canActivate: [AccountRouteGuard] },
           { path: 'register-tenant-result', component: RegisterTenantResultComponent, canActivate: [AccountRouteGuard] },
+          { path: 'term-and-condition-registration', component: TermAndConditionRegistrationComponent, canActivate: [AccountRouteGuard] },
           { path: 'forgot-password', component: ForgotPasswordComponent, canActivate: [AccountRouteGuard] },
           { path: 'reset-password', component: ResetPasswordComponent, canActivate: [AccountRouteGuard] },
           { path: 'email-activation', component: EmailActivationComponent, canActivate: [AccountRouteGuard] },

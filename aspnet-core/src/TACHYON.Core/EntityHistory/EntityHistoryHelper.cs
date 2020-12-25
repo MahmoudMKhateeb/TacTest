@@ -1,4 +1,5 @@
-﻿using Abp.Organizations;
+﻿using TACHYON.TermsAndConditions;
+using Abp.Organizations;
 using System;
 using System.Linq;
 using TACHYON.Authorization.Roles;
@@ -24,6 +25,7 @@ namespace TACHYON.EntityHistory
 
         public static readonly Type[] HostSideTrackedTypes =
         {
+            typeof(TermAndConditionTranslation),
             typeof(DocumentFile),
             typeof(City),
             typeof(RoutType),

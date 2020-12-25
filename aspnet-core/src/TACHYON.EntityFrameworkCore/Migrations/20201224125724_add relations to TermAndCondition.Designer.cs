@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using TACHYON.EntityFrameworkCore;
 
 namespace TACHYON.Migrations
 {
     [DbContext(typeof(TACHYONDbContext))]
-    partial class TACHYONDbContextModelSnapshot : ModelSnapshot
+    [Migration("20201224125724_add relations to TermAndCondition")]
+    partial class addrelationstoTermAndCondition
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -3195,6 +3197,9 @@ namespace TACHYON.Migrations
                     b.Property<bool>("IsActive")
                         .HasColumnType("bit");
 
+                    b.Property<int?>("TenantId")
+                        .HasColumnType("int");
+
                     b.Property<string>("Title")
                         .IsRequired()
                         .HasColumnType("nvarchar(256)")
@@ -3206,6 +3211,8 @@ namespace TACHYON.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("EditionId");
+
+                    b.HasIndex("TenantId");
 
                     b.ToTable("TermAndConditions");
                 });

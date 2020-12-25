@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using TACHYON.EntityFrameworkCore;
 
 namespace TACHYON.Migrations
 {
     [DbContext(typeof(TACHYONDbContext))]
-    partial class TACHYONDbContextModelSnapshot : ModelSnapshot
+    [Migration("20201224114138_Added_TermAndConditionTranslation")]
+    partial class Added_TermAndConditionTranslation
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -3183,6 +3185,10 @@ namespace TACHYON.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
+                    b.Property<string>("Content")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<DateTime>("CreationTime")
                         .HasColumnType("datetime2");
 
@@ -3195,6 +3201,9 @@ namespace TACHYON.Migrations
                     b.Property<bool>("IsActive")
                         .HasColumnType("bit");
 
+                    b.Property<int?>("TenantId")
+                        .HasColumnType("int");
+
                     b.Property<string>("Title")
                         .IsRequired()
                         .HasColumnType("nvarchar(256)")
@@ -3205,7 +3214,7 @@ namespace TACHYON.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("EditionId");
+                    b.HasIndex("TenantId");
 
                     b.ToTable("TermAndConditions");
                 });
@@ -3221,7 +3230,7 @@ namespace TACHYON.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("CoreId")
+                    b.Property<int?>("CoreId")
                         .HasColumnType("int");
 
                     b.Property<string>("Language")
@@ -4383,20 +4392,11 @@ namespace TACHYON.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("TACHYON.TermsAndConditions.TermAndCondition", b =>
-                {
-                    b.HasOne("Abp.Application.Editions.Edition", "EditionFk")
-                        .WithMany()
-                        .HasForeignKey("EditionId");
-                });
-
             modelBuilder.Entity("TACHYON.TermsAndConditions.TermAndConditionTranslation", b =>
                 {
-                    b.HasOne("TACHYON.TermsAndConditions.TermAndCondition", "Core")
-                        .WithMany("Translations")
-                        .HasForeignKey("CoreId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                    b.HasOne("TACHYON.TermsAndConditions.TermAndCondition", "CoreFk")
+                        .WithMany()
+                        .HasForeignKey("CoreId");
                 });
 
             modelBuilder.Entity("TACHYON.Trailers.Trailer", b =>
