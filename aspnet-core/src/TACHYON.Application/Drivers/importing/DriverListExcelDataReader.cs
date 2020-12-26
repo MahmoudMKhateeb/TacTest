@@ -43,23 +43,53 @@ namespace TACHYON.Drivers.importing
             var user = new ImportDriverDto();
             user.CreateOrEditDocumentFileDtos = new List<CreateOrEditDocumentFileDto>();
 
-
+            //DriverIqama
             var iqamaDocumentFileDto = new CreateOrEditDocumentFileDto();
-            var iqamaDocumentType = _documentTypeRepository.FirstOrDefault(x => x.SpecialConstant.ToLower() == "DriverIqama".ToLower());
-            iqamaDocumentFileDto.DocumentTypeId = iqamaDocumentType.Id;
+            DocumentType iqamaDocumentType = new DocumentType();
+            try
+            {
+                iqamaDocumentType = _documentTypeRepository.GetAll().First(x => x.SpecialConstant.ToLower() == "DriverIqama".ToLower());
+                iqamaDocumentFileDto.DocumentTypeId = iqamaDocumentType.Id;
+            }
+            catch
+            {
+                exceptionMessage.Append("cant find document type with constant DriverIqama;");
+            }
+
             iqamaDocumentFileDto.Name = "_";
             iqamaDocumentFileDto.Extn = " ";
 
 
+            //DriverDrivingLicense
             var drivingLicenseDocumentFileDto = new CreateOrEditDocumentFileDto();
-            var drivingLicenseDocumentType = _documentTypeRepository.FirstOrDefault(x => x.SpecialConstant.ToLower() == "DriverDrivingLicense".ToLower());
-            drivingLicenseDocumentFileDto.DocumentTypeId = drivingLicenseDocumentType.Id;
+            DocumentType drivingLicenseDocumentType = new DocumentType();
+            try
+            {
+                drivingLicenseDocumentType = _documentTypeRepository.GetAll().First(x => x.SpecialConstant.ToLower() == "DriverDrivingLicense".ToLower());
+                drivingLicenseDocumentFileDto.DocumentTypeId = drivingLicenseDocumentType.Id;
+            }
+            catch
+            {
+                exceptionMessage.Append("cant find document type with constant DriverDrivingLicense;");
+            }
+
             drivingLicenseDocumentFileDto.Name = "_";
             drivingLicenseDocumentFileDto.Extn = " ";
 
+
+            //DriverOccupationCard
             var occupationCardDocumentFileDto = new CreateOrEditDocumentFileDto();
-            var occupationCardDocumentType = _documentTypeRepository.FirstOrDefault(x => x.SpecialConstant.ToLower() == "DriverOccupationCard".ToLower());
-            occupationCardDocumentFileDto.DocumentTypeId = occupationCardDocumentType.Id;
+            DocumentType occupationCardDocumentType = new DocumentType();
+            try
+            {
+                occupationCardDocumentType = _documentTypeRepository.GetAll().First(x => x.SpecialConstant.ToLower() == "DriverOccupationCard".ToLower());
+                occupationCardDocumentFileDto.DocumentTypeId = occupationCardDocumentType.Id;
+            }
+            catch
+            {
+                exceptionMessage.Append("cant find document type with constant DriverOccupationCard;");
+            }
+
             occupationCardDocumentFileDto.Name = "_";
             occupationCardDocumentFileDto.Extn = " ";
 
@@ -73,7 +103,7 @@ namespace TACHYON.Drivers.importing
                 //B1
                 user.Surname = GetRequiredValueFromRowOrNull(worksheet, row, 1, nameof(user.Surname), exceptionMessage);
                 //C2
-                user.PhoneNumber = GetRequiredValueFromRowOrNull(worksheet, row, 3, nameof(user.PhoneNumber), exceptionMessage);
+                user.PhoneNumber = GetRequiredValueFromRowOrNull(worksheet, row, 2, nameof(user.PhoneNumber), exceptionMessage);
 
 
 
@@ -86,12 +116,12 @@ namespace TACHYON.Drivers.importing
                 iqamaDocumentFileDto.ExpirationDate = DateTime.ParseExact(GetRequiredValueFromRowOrNull(worksheet, row, 5, "ID/Iqama Expiry Date(Gregorian)", exceptionMessage), "dd/MM/yyyy", null).Date;
                 if (iqamaDocumentType.HasExpirationDate && iqamaDocumentFileDto.HijriExpirationDate.IsNullOrWhiteSpace())
                 {
-                    throw new Exception("iqama Expiry  Date (Hijri) is required");
+                    exceptionMessage.Append("iqama Expiry  Date (Hijri) is required;");
                 }
 
                 if (iqamaDocumentType.HasExpirationDate && iqamaDocumentFileDto.ExpirationDate == null)
                 {
-                    throw new Exception("iqama Expiry  Date (Gregorian) is required");
+                    exceptionMessage.Append("iqama Expiry  Date (Gregorian) is required;");
                 }
 
                 user.CreateOrEditDocumentFileDtos.Add(iqamaDocumentFileDto);
@@ -107,12 +137,12 @@ namespace TACHYON.Drivers.importing
                 drivingLicenseDocumentFileDto.ExpirationDate = DateTime.ParseExact(GetRequiredValueFromRowOrNull(worksheet, row, 8, "Driving License Expiry Date(Gregorian)", exceptionMessage), "dd/MM/yyyy", null).Date;
                 if (drivingLicenseDocumentType.HasExpirationDate && drivingLicenseDocumentFileDto.HijriExpirationDate.IsNullOrWhiteSpace())
                 {
-                    throw new Exception("drivingLicense Expiry  Date (Hijri) is required");
+                    exceptionMessage.Append("drivingLicense Expiry  Date (Hijri) is required;");
                 }
 
                 if (drivingLicenseDocumentType.HasExpirationDate && drivingLicenseDocumentFileDto.ExpirationDate == null)
                 {
-                    throw new Exception("drivingLicense Expiry  Date (Gregorian) is required");
+                    exceptionMessage.Append("drivingLicense Expiry  Date (Gregorian) is required;");
                 }
 
                 user.CreateOrEditDocumentFileDtos.Add(drivingLicenseDocumentFileDto);
@@ -127,7 +157,10 @@ namespace TACHYON.Drivers.importing
 
                 user.CreateOrEditDocumentFileDtos.Add(drivingLicenseDocumentFileDto);
 
-
+                if (exceptionMessage.Length > 0)
+                {
+                    user.Exception = exceptionMessage.ToString();
+                }
 
             }
             catch (System.Exception exception)
