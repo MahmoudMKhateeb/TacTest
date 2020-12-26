@@ -34,7 +34,7 @@
                 </div>
                 <div class="col-sm-9">
                   <div class="form-group">
-                    <label for="UserName">{{ 'PhoneNumber' | localize }} *</label>
+                    <label for="UserName">* {{ 'PhoneNumber' | localize }}</label>
                     <div class="input-group">
                       <div class="input-group-prepend">
                         <span class="input-group-text">+966</span>
@@ -54,18 +54,14 @@
                       />
                     </div>
                     <validation-messages [formCtrl]="userNameInput"></validation-messages>
-
-                    <span class="form-text text-muted">{{ 'Enter' | localize }} {{ 'PhoneNumber' | localize }}</span>
                     <span class="form-text text-muted">{{ '9digitsNumber' | localize }}</span>
-                    <!-- <div *ngIf="isUserNameValid" class="valid-feedback">Success! You've done it.</div> -->
                     <span *ngIf="!isPhoneNumberAvilable" class="form-text text-danger">{{ l('AlreadyTaken') }}</span>
-
                     <span class="help-block" *ngIf="!canChangeUserName">{{ 'CanNotChangeAdminUserName' | localize }}</span>
                   </div>
                   <div class="row">
                     <div class="col-6">
                       <div class="form-group">
-                        <label for="Name">{{ 'Name' | localize }} *</label>
+                        <label for="Name">* {{ 'Name' | localize }}</label>
                         <input
                           id="Name"
                           #nameInput="ngModel"
@@ -81,7 +77,7 @@
                     </div>
                     <div class="col-6">
                       <div class="form-group">
-                        <label for="Surname">{{ 'Surname' | localize }} *</label>
+                        <label for="Surname">* {{ 'Surname' | localize }}</label>
                         <input
                           id="Surname"
                           #surnameInput="ngModel"
@@ -102,11 +98,18 @@
               <div class="row">
                 <div class="col-6">
                   <div class="form-group">
-                    <label for="Nationality">{{ 'Nationality' | localize }}*</label>
-                    <select name="Nationality" [(ngModel)]="user.nationality" required class="form-control form-control-lg custom-select mr-sm-2">
+                    <label for="Nationality">* {{ 'Nationality' | localize }}</label>
+                    <select
+                      id="Nationality"
+                      #Nationality="ngModel"
+                      name="Nationality"
+                      [(ngModel)]="user.nationality"
+                      required
+                      class="form-control form-control-lg custom-select mr-sm-2"
+                    >
                       <option *ngFor="let nationality of nationalities" value="nationality.id">{{ nationality.displayName }}</option>
                     </select>
-                    <!-- <span class="text-muted">{{ 'ChooseNationality' | localize }}</span> -->
+                    <validation-messages [formCtrl]="Nationality"></validation-messages>
                   </div>
                 </div>
                 <div class="col-6">
@@ -165,105 +168,83 @@
             </tab>
             <tab *ngIf="!user.id" class="pt-5" heading="{{ 'DriverDocuments' | localize }}">
               <div *ngFor="let item of createOrEditDocumentFileDtos; index as i" class="">
-                <div class="card card-custom">
-                  <div class="card-header">
-                    <div class="card-title">
-                      <h3 class="card-title">{{ item.documentTypeDto.displayName | localize }}</h3>
+                <div *ngIf="i != 0" class="separator separator-dashed mb-5"></div>
+                <div class="row">
+                  <div class="form-group col-6">
+                    <label class="text-success"
+                      >* {{ item.documentTypeDto.name ? item.documentTypeDto.name : item.documentTypeDto.displayName }}</label
+                    >
+                    <div class="custom-file">
+                      <input
+                        accept="image/x-png,image/jpeg,application/pdf"
+                        (change)="DocFileChangeEvent($event, item, i)"
+                        type="file"
+                        [disabled]="saving"
+                        class="custom-file-input"
+                        [required]="true"
+                      />
+                      <label class="custom-file-label text-truncate" [for]="item.documentTypeDto.displayName">
+                        {{ item.name ? item.name : l('Select') + l('File') }}</label
+                      >
+                    </div>
+                    <span class="form-text text-muted">{{ 'ValidDocumentFilesMsg' | localize }}</span>
+                    <div *ngIf="fileFormateIsInvalideIndexList[i]">
+                      <span class="form-text text-danger text-left">{{ 'PleaseChooseAvalidFormat' | localize }}</span>
                     </div>
                   </div>
-                  <div class="card-body">
-                    <div class="row d-flex">
-                      <div class="form-group col-6">
-                        <label>{{ l('File') }} *</label>
-                        <div class="custom-file">
-                          <input
-                            accept="image/x-png,image/jpeg,application/pdf"
-                            (change)="DocFileChangeEvent($event, item, i)"
-                            type="file"
-                            [disabled]="saving"
-                            class="custom-file-input"
-                            [required]="true"
-                          />
-                          <label class="custom-file-label text-truncate" [for]="item.documentTypeDto.displayName">
-                            {{ item.name ? item.name : l('Select') + l('File') }}</label
-                          >
-                        </div>
-                        <span class="form-text text-muted">{{ 'ValidDocumentFilesMsg' | localize }}</span>
-                        <div *ngIf="fileFormateIsInvalideIndexList[i]">
-                          <span class="form-text text-danger text-left">{{ 'PleaseChooseAvalidFormat' | localize }}</span>
-                        </div>
-                      </div>
-                      <!-- <div *ngIf="item.documentTypeDto.hasExpirationDate" class="form-group col-6">
-                        <label>{{ l('Expirationdate') }} <span class="text-danger">*</span></label>
-                        <input
-                          name="expirationDate{{ i }}"
-                          id="expirationDate{{ i }}"
-                          bsDatepicker
-                          class="form-control m-input"
-                          datePickerMomentModifier
-                          [required]="item.documentTypeDto.isRequired"
-                          [(date)]="item.expirationDate"
-                        />
-                      </div> -->
-                      <div *ngIf="item.documentTypeDto.hasNumber" class="form-group col-6">
-                        <label
-                          >{{ l('Number') }}
-                          <span class="text-danger">*</span>
-                        </label>
-                        <input
-                          #inputDocumentNumber
-                          name="number{{ i }}"
-                          id="number{{ i }}"
-                          class="form-control m-input"
-                          required
-                          (change)="numberChange(item, i)"
-                          [maxLength]="item.documentTypeDto.numberMaxDigits == 0 ? 50 : item.documentTypeDto.numberMaxDigits"
-                          [minLength]="item.documentTypeDto.numberMinDigits"
-                          type="text"
-                          [(ngModel)]="item.number"
-                        />
-                        <span *ngIf="item.number == null ? 0 : item.number.length < item.documentTypeDto.numberMinDigits" class="text-danger">
-                          {{ l('TheNumberLengthMustBeMoreThanMinDigits') }}
-                        </span>
-                        <span *ngIf="item.number == null ? false : item.number.length > item.documentTypeDto.numberMaxDigits" class="text-danger">
-                          {{ l('TheNumberLengthMustBeLessThanMaxDigits') }}
-                        </span>
-                        <span class="form-text text-muted"
-                          >{{ l('minDigits:') }} {{ item.documentTypeDto.numberMinDigits }} {{ l('maxDigits:') }}
-                          {{ item.documentTypeDto.numberMaxDigits == 0 ? 50 : item.documentTypeDto.numberMaxDigits }}
-                        </span>
-                      </div>
-
-                      <div *ngIf="item.documentTypeDto.hasExpirationDate" class="form-group col-6">
-                        <hijri-gregorian-datepicker-test
-                          [label]="l('ExpirationDate')"
-                          class="m-input"
-                          [isRequired]="true"
-                          [readonly]="true"
-                          [minGreg]="todayGregorian"
-                          [minHijri]="todayHijri"
-                          [selectedDate]="item.documentTypeDto.hasHijriExpirationDate ? todayHijri : todayGregorian"
-                          [selectedDateType]="item.documentTypeDto.hasHijriExpirationDate ? selectedDateTypeHijri : selectedDateTypeGregorian"
-                          (selectedDateChange)="hijriDatepickerSelectedDateChange($event, item)"
-                        >
-                        </hijri-gregorian-datepicker-test>
-                      </div>
-                      <div *ngIf="item.documentTypeDto.hasNotes" class="form-group col-6">
-                        <label>{{ l('Note') }}</label>
-                        <textarea
-                          name="note{{ i }}"
-                          id="note{{ i }}"
-                          class="form-control m-input"
-                          type="text"
-                          rows="2"
-                          style="resize: none;"
-                          [(ngModel)]="item.notes"
-                        ></textarea>
-                      </div>
-                    </div>
+                  <div *ngIf="item.documentTypeDto.hasNumber" class="form-group col-6">
+                    <label>* {{ l('Number') }} </label>
+                    <input
+                      #inputDocumentNumber="ngModel"
+                      name="number{{ i }}"
+                      id="number{{ i }}"
+                      class="form-control m-input"
+                      required
+                      (change)="numberChange(item, i)"
+                      [maxLength]="item.documentTypeDto.numberMaxDigits == 0 ? 50 : item.documentTypeDto.numberMaxDigits"
+                      [minLength]="item.documentTypeDto.numberMinDigits"
+                      type="text"
+                      [(ngModel)]="item.number"
+                    />
+                    <validation-messages [formCtrl]="inputDocumentNumber"></validation-messages>
+                    <span *ngIf="item.number == null ? 0 : item.number.length < item.documentTypeDto.numberMinDigits" class="text-danger">
+                      {{ l('TheNumberLengthMustBeMoreThanMinDigits') }}
+                    </span>
+                    <span *ngIf="item.number == null ? false : item.number.length > item.documentTypeDto.numberMaxDigits" class="text-danger">
+                      {{ l('TheNumberLengthMustBeLessThanMaxDigits') }}
+                    </span>
+                    <span class="form-text text-muted"
+                      >{{ l('minDigits:') }} {{ item.documentTypeDto.numberMinDigits }} {{ l('maxDigits:') }}
+                      {{ item.documentTypeDto.numberMaxDigits == 0 ? 50 : item.documentTypeDto.numberMaxDigits }}
+                    </span>
                   </div>
 
-                  <div *ngIf="createOrEditDocumentFileDtos.length - 1 != i" class="separator separator-dashed my-5"></div>
+                  <div *ngIf="item.documentTypeDto.hasExpirationDate" class="form-group col-6">
+                    <hijri-gregorian-datepicker-test
+                      [label]="l('ExpirationDate')"
+                      class="m-input"
+                      [isRequired]="true"
+                      [readonly]="true"
+                      [minGreg]="todayGregorian"
+                      [minHijri]="todayHijri"
+                      [selectedDate]="item.documentTypeDto.hasHijriExpirationDate ? todayHijri : todayGregorian"
+                      [selectedDateType]="item.documentTypeDto.hasHijriExpirationDate ? selectedDateTypeHijri : selectedDateTypeGregorian"
+                      (selectedDateChange)="hijriDatepickerSelectedDateChange($event, item)"
+                    >
+                    </hijri-gregorian-datepicker-test>
+                  </div>
+                  <div *ngIf="item.documentTypeDto.hasNotes" class="form-group col-6">
+                    <label>{{ l('Note') }}</label>
+                    <textarea
+                      name="note{{ i }}"
+                      id="note{{ i }}"
+                      class="form-control m-input"
+                      type="text"
+                      rows="1"
+                      style="resize: none;"
+                      [(ngModel)]="item.notes"
+                    ></textarea>
+                  </div>
                 </div>
               </div>
               <div *ngIf="!user.id" class="row">
