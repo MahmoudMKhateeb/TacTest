@@ -80,7 +80,9 @@ namespace TACHYON.MultiTenancy
                 input.SendActivationEmail,
                 input.SubscriptionEndDateUtc?.ToUniversalTime(),
                 input.IsInTrialPeriod,
-                AppUrlService.CreateEmailActivationUrlFormat(input.TenancyName)
+                AppUrlService.CreateEmailActivationUrlFormat(input.TenancyName),
+                input.UserAdminFirstName,
+                input.UserAdminSurname
             );
         }
 
@@ -174,7 +176,7 @@ namespace TACHYON.MultiTenancy
 
         public async Task<List<TenantCityLookupTableDto>> GetAllCitiesForTableDropdown(int input)
         {
-            return await _lookup_cityRepository.GetAll().Where(c=>c.CountyFk.Id == input)
+            return await _lookup_cityRepository.GetAll().Where(c => c.CountyFk.Id == input)
                 .Select(county => new TenantCityLookupTableDto
                 {
                     Id = county.Id,

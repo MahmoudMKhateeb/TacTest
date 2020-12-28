@@ -51,5 +51,14 @@ namespace TACHYON.MultiTenancy.Dto
         public DateTime? SubscriptionEndDateUtc { get; set; }
 
         public bool IsInTrialPeriod { get; set; }
+
+        [Required]
+        [StringLength(AbpUserBase.MaxNameLength)]
+        public string UserAdminFirstName { get; set; }
+
+        [Required]
+        [StringLength(AbpUserBase.MaxSurnameLength)]
+        public string UserAdminSurname { get; set; }
+
     }
 }

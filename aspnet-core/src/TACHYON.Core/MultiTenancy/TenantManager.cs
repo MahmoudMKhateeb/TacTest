@@ -93,7 +93,9 @@ namespace TACHYON.MultiTenancy
             bool sendActivationEmail,
             DateTime? subscriptionEndDate,
             bool isInTrialPeriod,
-            string emailActivationLink)
+            string emailActivationLink,
+            string userAdminFirstName,
+            string userAdminSurname)
         {
             int newTenantId;
             long newAdminId;
@@ -162,6 +164,9 @@ namespace TACHYON.MultiTenancy
                     }
 
                     adminUser.Password = _passwordHasher.HashPassword(adminUser, adminPassword);
+
+                    adminUser.Name = userAdminFirstName;
+                    adminUser.Surname = userAdminSurname;
 
                     CheckErrors(await _userManager.CreateAsync(adminUser));
                     await _unitOfWorkManager.Current.SaveChangesAsync(); //To get admin user's id

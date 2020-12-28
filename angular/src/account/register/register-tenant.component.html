@@ -119,6 +119,47 @@
     </h5>
     <br />
     <div class="row text-left">
+      <div class="col-6">
+        <div class="form-group">
+          <label>{{ 'Name' | localize }}</label>
+          <input
+            #userAdminFirstName="ngModel"
+            class="form-control"
+            autoFocus
+            type="text"
+            [(ngModel)]="model.userAdminFirstName"
+            name="userAdminFirstName"
+            required
+            style="width: 100% !important;"
+            maxlength="64"
+          />
+          <div>
+            <validation-messages [formCtrl]="userAdminFirstName"></validation-messages>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-6">
+        <div class="form-group">
+          <label>{{ 'Surname' | localize }}</label>
+          <input
+            #userAdminSurname="ngModel"
+            class="form-control"
+            autoFocus
+            type="text"
+            [(ngModel)]="model.userAdminSurname"
+            name="userAdminSurname"
+            required
+            style="width: 100% !important;"
+            maxlength="64"
+          />
+          <div>
+            <validation-messages [formCtrl]="userAdminSurname"></validation-messages>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="row text-left">
       <div class="col-12">
         <div class="form-group">
           <label>{{ 'AdminEmailAddress' | localize }}</label>

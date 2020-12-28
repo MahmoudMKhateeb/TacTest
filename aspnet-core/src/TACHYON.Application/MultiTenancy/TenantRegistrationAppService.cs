@@ -95,6 +95,7 @@ namespace TACHYON.MultiTenancy
                     throw new Exception("admin Email Or CompanyName Is Already Taken!");
                 }
 
+
                 CheckTenantRegistrationIsEnabled();
 
                 if (UseCaptchaOnRegistration())
@@ -140,7 +141,10 @@ namespace TACHYON.MultiTenancy
                     sendActivationEmail: true,
                     subscriptionEndDate,
                     isInTrialPeriod,
-                    AppUrlService.CreateEmailActivationUrlFormat(input.TenancyName)
+                    AppUrlService.CreateEmailActivationUrlFormat(input.TenancyName),
+                    input.UserAdminFirstName,
+                    input.UserAdminSurname
+
                 );
 
                 var tenant = await TenantManager.GetByIdAsync(tenantId);

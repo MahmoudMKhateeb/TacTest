@@ -36,5 +36,14 @@ namespace TACHYON.MultiTenancy.Dto
         public virtual string Address { get; set; }
         public virtual int CountryId { get; set; }
         public virtual int CityId { get; set; }
+
+        [Required]
+        [StringLength(AbpUserBase.MaxNameLength)]
+        public string UserAdminFirstName { get; set; }
+
+        [Required]
+        [StringLength(AbpUserBase.MaxSurnameLength)]
+        public string UserAdminSurname { get; set; }
+
     }
 }
