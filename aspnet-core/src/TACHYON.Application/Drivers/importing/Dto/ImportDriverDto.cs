@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using TACHYON.Documents.DocumentFiles.Dtos;
 
 namespace TACHYON.Drivers.importing.Dto
@@ -13,6 +14,11 @@ namespace TACHYON.Drivers.importing.Dto
         public string UserName { get; set; }
 
         public string PhoneNumber { get; set; }
+
+        public string EmailAddress { get; set; }
+        public DateTime? DateOfBirth { get; set; }
+
+
 
         /// <summary>
         /// Can be set when reading data from excel or when importing user

@@ -98,22 +98,25 @@ namespace TACHYON.Drivers.importing
             try
             {
 
-                //A0
+                //0
                 user.Name = GetRequiredValueFromRowOrNull(worksheet, row, 0, nameof(user.Name), exceptionMessage);
-                //B1
+                //1
                 user.Surname = GetRequiredValueFromRowOrNull(worksheet, row, 1, nameof(user.Surname), exceptionMessage);
-                //C2
+                //2
                 user.PhoneNumber = GetRequiredValueFromRowOrNull(worksheet, row, 2, nameof(user.PhoneNumber), exceptionMessage);
-
-
+                //3
+                user.EmailAddress = GetRequiredValueFromRowOrNull(worksheet, row, 3, nameof(user.EmailAddress), exceptionMessage);
+                //4
+                user.DateOfBirth = DateTime.ParseExact(GetRequiredValueFromRowOrNull(worksheet, row, 4, nameof(user.DateOfBirth), exceptionMessage), "dd/MM/yyyy", null).Date;);
+                //5
 
                 //iqama document
-                //D3
-                iqamaDocumentFileDto.Number = GetRequiredValueFromRowOrNull(worksheet, row, 3, "ID/Iqama/ NO*", exceptionMessage);
-                //E4
-                iqamaDocumentFileDto.HijriExpirationDate = GetRequiredValueFromRowOrNull(worksheet, row, 4, "ID/Iqama Expiry Date(Hijri)", exceptionMessage);
-                //F5
-                iqamaDocumentFileDto.ExpirationDate = DateTime.ParseExact(GetRequiredValueFromRowOrNull(worksheet, row, 5, "ID/Iqama Expiry Date(Gregorian)", exceptionMessage), "dd/MM/yyyy", null).Date;
+                //6
+                iqamaDocumentFileDto.Number = GetRequiredValueFromRowOrNull(worksheet, row, 6, "ID/Iqama/ NO*", exceptionMessage);
+                //7
+                iqamaDocumentFileDto.HijriExpirationDate = GetRequiredValueFromRowOrNull(worksheet, row, 7, "ID/Iqama Expiry Date(Hijri)", exceptionMessage);
+                //8
+                iqamaDocumentFileDto.ExpirationDate = DateTime.ParseExact(GetRequiredValueFromRowOrNull(worksheet, row, 8, "ID/Iqama Expiry Date(Gregorian)", exceptionMessage), "dd/MM/yyyy", null).Date;
                 if (iqamaDocumentType.HasExpirationDate && iqamaDocumentFileDto.HijriExpirationDate.IsNullOrWhiteSpace())
                 {
                     exceptionMessage.Append("iqama Expiry  Date (Hijri) is required;");
@@ -129,12 +132,12 @@ namespace TACHYON.Drivers.importing
 
 
                 //drivingLicense document
-                //G6
-                drivingLicenseDocumentFileDto.Number = GetRequiredValueFromRowOrNull(worksheet, row, 6, "Driving License NO*", exceptionMessage);
-                //H7
-                drivingLicenseDocumentFileDto.HijriExpirationDate = GetRequiredValueFromRowOrNull(worksheet, row, 7, "Driving License Expiry Date(Hijri)", exceptionMessage);
-                //I8
-                drivingLicenseDocumentFileDto.ExpirationDate = DateTime.ParseExact(GetRequiredValueFromRowOrNull(worksheet, row, 8, "Driving License Expiry Date(Gregorian)", exceptionMessage), "dd/MM/yyyy", null).Date;
+                //9
+                drivingLicenseDocumentFileDto.Number = GetRequiredValueFromRowOrNull(worksheet, row, 9, "Driving License NO*", exceptionMessage);
+                //10
+                drivingLicenseDocumentFileDto.HijriExpirationDate = GetRequiredValueFromRowOrNull(worksheet, row, 10, "Driving License Expiry Date(Hijri)", exceptionMessage);
+                //11
+                drivingLicenseDocumentFileDto.ExpirationDate = DateTime.ParseExact(GetRequiredValueFromRowOrNull(worksheet, row, 11, "Driving License Expiry Date(Gregorian)", exceptionMessage), "dd/MM/yyyy", null).Date;
                 if (drivingLicenseDocumentType.HasExpirationDate && drivingLicenseDocumentFileDto.HijriExpirationDate.IsNullOrWhiteSpace())
                 {
                     exceptionMessage.Append("drivingLicense Expiry  Date (Hijri) is required;");
@@ -152,8 +155,8 @@ namespace TACHYON.Drivers.importing
 
 
                 //occupationCard document
-                //J9
-                drivingLicenseDocumentFileDto.Number = GetRequiredValueFromRowOrNull(worksheet, row, 9, "Occupation Card NO", exceptionMessage);
+                //12
+                drivingLicenseDocumentFileDto.Number = GetRequiredValueFromRowOrNull(worksheet, row, 12, "Occupation Card NO", exceptionMessage);
 
                 user.CreateOrEditDocumentFileDtos.Add(drivingLicenseDocumentFileDto);
 
