@@ -104,56 +104,50 @@ namespace TACHYON.Trucks.Importing
                 //4
                 truck.TransportTypeId = GetTransportTypeId(GetRequiredValueFromRowOrNull(worksheet, row, 4, "Transport Type*", exceptionMessage), exceptionMessage);
                 //5
-                //truck.TransportSubtypeId = GetTransportSubtypeId(GetRequiredValueFromRowOrNull(worksheet, row, 5, "Transport Subtype", exceptionMessage), truck.TransportTypeId, exceptionMessage);
+                truck.TrucksTypeId = GetTruckTypeId(GetRequiredValueFromRowOrNull(worksheet, row, 5, "Truck Type*", exceptionMessage), truck.TransportTypeId, exceptionMessage).Value;
                 //6
-                //truck.TrucksTypeId = GetTruckTypeId(GetRequiredValueFromRowOrNull(worksheet, row, 6, "Truck Type*", exceptionMessage), truck.TransportSubtypeId, exceptionMessage).Value;
+                truck.ModelYear = GetRequiredValueFromRowOrNull(worksheet, row, 6, "Truck length ", exceptionMessage);
                 //7
-                //truck.TruckSubtypeId = GetTruckSubTypeId(GetRequiredValueFromRowOrNull(worksheet, row, 7, "Truck Subtype", exceptionMessage), truck.TrucksTypeId, exceptionMessage);
+                truck.Capacity = GetRequiredValueFromRowOrNull(worksheet, row, 7, "Capacity (Payload)*", exceptionMessage);
                 //8
-                truck.Capacity = GetRequiredValueFromRowOrNull(worksheet, row, 8, "Capacity (Payload)*", exceptionMessage);
-                //9
-                truck.Note = GetRequiredValueFromRowOrNull(worksheet, row, 9, "Note", exceptionMessage);
+                truck.Note = GetRequiredValueFromRowOrNull(worksheet, row, 8, "Note", exceptionMessage);
 
                 //Istimara document
+                //9
+                istimaraDocumentFileDto.Number = GetRequiredValueFromRowOrNull(worksheet, row, 9, " Istimara NO*", exceptionMessage);
                 //10
-                istimaraDocumentFileDto.Number = GetRequiredValueFromRowOrNull(worksheet, row, 10, " Istimara NO*", exceptionMessage);
+                istimaraDocumentFileDto.HijriExpirationDate = GetRequiredValueFromRowOrNull(worksheet, row, 10, "Istimara Expiry  Date (Hijri)*", exceptionMessage);
                 //11
-                istimaraDocumentFileDto.HijriExpirationDate = GetRequiredValueFromRowOrNull(worksheet, row, 11, "Istimara Expiry  Date (Hijri)*", exceptionMessage);
-                //12
-                istimaraDocumentFileDto.ExpirationDate = DateTime.ParseExact(GetRequiredValueFromRowOrNull(worksheet, row, 12, "Istimara Expiry  Date (Gregorian)*", exceptionMessage), "dd/MM/yyyy", null).Date;
+                istimaraDocumentFileDto.ExpirationDate = DateTime.ParseExact(GetRequiredValueFromRowOrNull(worksheet, row, 11, "Istimara Expiry  Date (Gregorian)*", exceptionMessage), "dd/MM/yyyy", null).Date;
                 if (istimaraDocumentType.HasExpirationDate && istimaraDocumentFileDto.HijriExpirationDate.IsNullOrWhiteSpace())
                 {
                     exceptionMessage.Append("Istimara Expiry  Date (Hijri) is required");
-                    //throw new Exception("Istimara Expiry  Date (Hijri) is required");
                 }
 
                 if (istimaraDocumentType.HasExpirationDate && istimaraDocumentFileDto.ExpirationDate == null)
                 {
                     exceptionMessage.Append("Istimara Expiry  Date (Gregorian) is required");
-                    //throw new Exception("Istimara Expiry  Date (Gregorian) is required");
                 }
 
                 truck.ImportTruckDocumentFileDtos.Add(istimaraDocumentFileDto);
 
 
                 //Insurance document
+                //12
+                insuranceDocumentFileDto.Number = GetRequiredValueFromRowOrNull(worksheet, row, 12, "3rd Party Insurance Policy NO*", exceptionMessage);
                 //13
-                insuranceDocumentFileDto.Number = GetRequiredValueFromRowOrNull(worksheet, row, 13, "Insurance Policy NO*", exceptionMessage);
+                insuranceDocumentFileDto.HijriExpirationDate = GetRequiredValueFromRowOrNull(worksheet, row, 13, " 3rd party Insurance Expiry Date (Hijri)", exceptionMessage);
                 //14
-                insuranceDocumentFileDto.HijriExpirationDate = GetRequiredValueFromRowOrNull(worksheet, row, 14, "Insurance Expiry Date (Hijri)*", exceptionMessage);
-                //15
-                insuranceDocumentFileDto.ExpirationDate = DateTime.ParseExact(GetRequiredValueFromRowOrNull(worksheet, row, 15, "Insurance Expiry Date (Gregorian)*", exceptionMessage), "dd/MM/yyyy", null).Date;
+                insuranceDocumentFileDto.ExpirationDate = DateTime.ParseExact(GetRequiredValueFromRowOrNull(worksheet, row, 14, "3rd party Insurance Expiry Date (Gregorian)", exceptionMessage), "dd/MM/yyyy", null).Date;
 
                 if (insuranceDocumentType.HasExpirationDate && insuranceDocumentFileDto.HijriExpirationDate.IsNullOrWhiteSpace())
                 {
                     exceptionMessage.Append("Insurance Expiry  Date (Hijri) is required");
-                    // throw new Exception("Insurance Expiry  Date (Hijri) is required");
                 }
 
                 if (insuranceDocumentType.HasExpirationDate && insuranceDocumentFileDto.ExpirationDate == null)
                 {
                     exceptionMessage.Append("Insurance Expiry  Date (Gregorian) is required");
-                    //throw new Exception("Insurance Expiry  Date (Gregorian) is required");
                 }
 
                 truck.ImportTruckDocumentFileDtos.Add(insuranceDocumentFileDto);
@@ -206,7 +200,7 @@ namespace TACHYON.Trucks.Importing
         }
 
 
-        private long? GetTruckTypeId(string text, int? transportSubtypeId, StringBuilder exceptionMessage)
+        private long? GetTruckTypeId(string text, int? transportTypeId, StringBuilder exceptionMessage)
         {
             if (text.IsNullOrEmpty())
             {
@@ -221,11 +215,11 @@ namespace TACHYON.Trucks.Importing
                 return null;
             }
 
-            if (trucksType.TransportTypeId == transportSubtypeId)
+            if (trucksType.TransportTypeId == transportTypeId)
             {
                 return trucksType.Id;
             }
-            exceptionMessage.Append("truckType does not belongs to transportSubtype ");
+            exceptionMessage.Append("truckType does not belongs to transportType ");
             exceptionMessage.Append(GetLocalizedExceptionMessagePart("TruckType"));
             return null;
 
