@@ -30,16 +30,12 @@ export class MarketplaceComponent extends AppComponentBase implements OnInit {
   MatchingBidOnlyFilter = true;
   MyBidsOnlyFilter: false;
   TruckTypeIdFilter: number;
-  TruckSubTypeIdFilter: number;
   TransportTypeFilter: number;
-  TransportSubTypeFilter: number;
   CapacityIdFilter: number;
 
   allTransportTypes: SelectItemDto[];
-  allTransportSubTypes: SelectItemDto[];
-  allTruckTypesByTransportSubtype: SelectItemDto[];
-  allTruckSubTypesByTruckTypeId: SelectItemDto[];
-  allTrucksCapByTruckSubTypeId: SelectItemDto[];
+  allTruckTypesByTransportType: SelectItemDto[];
+  allTrucksCapByTruckTypeId: SelectItemDto[];
 
   constructor(
     injector: Injector,
@@ -52,7 +48,7 @@ export class MarketplaceComponent extends AppComponentBase implements OnInit {
   }
 
   ngOnInit() {
-    this.GetTransportDropDownList();
+    this.initTransportDropDownList();
   }
 
   reloadPage(): void {
@@ -70,9 +66,7 @@ export class MarketplaceComponent extends AppComponentBase implements OnInit {
         this.MatchingBidOnlyFilter,
         this.MyBidsOnlyFilter,
         this.TruckTypeIdFilter,
-        this.TruckSubTypeIdFilter,
         this.TransportTypeFilter,
-        this.TransportSubTypeFilter,
         this.CapacityIdFilter,
         this.primengTableHelper.getSorting(this.dataTable),
         this.primengTableHelper.getSkipCount(this.paginator, event),
@@ -84,68 +78,37 @@ export class MarketplaceComponent extends AppComponentBase implements OnInit {
         this.primengTableHelper.hideLoadingIndicator();
       });
   }
-  ClearAllTransPortDropDowns() {
-    this.allTransportTypes = null;
-    this.allTransportSubTypes = null;
-    this.allTruckTypesByTransportSubtype = null;
-    this.allTruckSubTypesByTruckTypeId = null;
-    this.allTrucksCapByTruckSubTypeId = null;
+  transportTypeSelectChange(transportTypeId?: number) {
+    if (transportTypeId > 0) {
+      this._trucksServiceProxy.getAllTruckTypesByTransportTypeIdForDropdown(transportTypeId).subscribe((result) => {
+        this.allTruckTypesByTransportType = result;
+        this.TruckTypeIdFilter = null;
+      });
+    } else {
+      this.TruckTypeIdFilter = null;
+      this.allTruckTypesByTransportType = null;
+      this.allTrucksCapByTruckTypeId = null;
+    }
   }
 
-  GetTransportDropDownList(mode?: string, value?: number) {
-    switch (mode) {
-      case 'GetAllTransportSubTypes':
-        if (value > 0) {
-          this._trucksServiceProxy.getAllTransportSubtypesByTransportTypeIdForDropdown(value).subscribe((result) => {
-            this.allTransportSubTypes = result;
-          });
-        } else {
-          this.allTransportSubTypes = null;
-          this.allTruckTypesByTransportSubtype = null;
-          this.allTruckSubTypesByTruckTypeId = null;
-          this.allTrucksCapByTruckSubTypeId = null;
-        }
-        break;
-      case 'GetAllTruckTypesByTransportSubTypes':
-        if (value > 0) {
-          this._trucksServiceProxy.getAllTruckTypesByTransportSubtypeIdForDropdown(value).subscribe((result) => {
-            this.allTruckTypesByTransportSubtype = result;
-          });
-        } else {
-          this.allTruckTypesByTransportSubtype = null;
-          this.allTruckSubTypesByTruckTypeId = null;
-          this.allTrucksCapByTruckSubTypeId = null;
-        }
-        break;
-      case 'GetAllTruckSubTypesByTruckTypeId':
-        if (value > 0) {
-          this._trucksServiceProxy.getAllTruckSubTypesByTruckTypeIdForDropdown(value).subscribe((result) => {
-            this.allTruckSubTypesByTruckTypeId = result;
-          });
-        } else {
-          this.allTruckSubTypesByTruckTypeId = null;
-          this.allTrucksCapByTruckSubTypeId = null;
-        }
-        break;
-      case 'GetAllCapByTruckSybTypeId':
-        if (value > 0) {
-          this._trucksServiceProxy.getAllTuckCapacitiesByTuckSubTypeIdForDropdown(value).subscribe((result) => {
-            this.allTrucksCapByTruckSubTypeId = result;
-          });
-        } else {
-          this.allTrucksCapByTruckSubTypeId = null;
-        }
-        break;
-      default:
-        this.ClearAllTransPortDropDowns();
-        if (this.allTransportTypes == null) {
-          this._trucksServiceProxy.getAllTransportTypesForDropdown().subscribe((result) => {
-            this.allTransportTypes = result;
-            console.log('if true fired');
-            console.log(this.allTransportTypes);
-          });
-        }
-        break;
+  trucksTypeSelectChange(trucksTypeId?: number) {
+    if (trucksTypeId > 0) {
+      this._trucksServiceProxy.getAllTuckCapacitiesByTuckTypeIdForDropdown(trucksTypeId).subscribe((result) => {
+        this.allTrucksCapByTruckTypeId = result;
+        this.CapacityIdFilter = null;
+      });
+    } else {
+      this.CapacityIdFilter = null;
+      this.allTrucksCapByTruckTypeId = null;
     }
+  }
+
+  initTransportDropDownList() {
+    this.allTransportTypes = null;
+    this.allTruckTypesByTransportType = null;
+    this.allTrucksCapByTruckTypeId = null;
+    this._trucksServiceProxy.getAllTransportTypesForDropdown().subscribe((result) => {
+      this.allTransportTypes = result;
+    });
   }
 }

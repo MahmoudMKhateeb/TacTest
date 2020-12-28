@@ -21,15 +21,6 @@
         public const string Pages_Capacities_Edit = "Pages.Capacities.Edit";
         public const string Pages_Capacities_Delete = "Pages.Capacities.Delete";
 
-        public const string Pages_TruckSubtypes = "Pages.TruckSubtypes";
-        public const string Pages_TruckSubtypes_Create = "Pages.TruckSubtypes.Create";
-        public const string Pages_TruckSubtypes_Edit = "Pages.TruckSubtypes.Edit";
-        public const string Pages_TruckSubtypes_Delete = "Pages.TruckSubtypes.Delete";
-
-        public const string Pages_TransportSubtypes = "Pages.TransportSubtypes";
-        public const string Pages_TransportSubtypes_Create = "Pages.TransportSubtypes.Create";
-        public const string Pages_TransportSubtypes_Edit = "Pages.TransportSubtypes.Edit";
-        public const string Pages_TransportSubtypes_Delete = "Pages.TransportSubtypes.Delete";
 
         public const string Pages_TransportTypes = "Pages.TransportTypes";
         public const string Pages_TransportTypes_Create = "Pages.TransportTypes.Create";

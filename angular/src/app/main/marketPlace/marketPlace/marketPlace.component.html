@@ -49,26 +49,10 @@
                         class="form-control"
                         name="truck.transportTypeId"
                         id="truck.transportTypeId"
-                        (change)="GetTransportDropDownList('GetAllTransportSubTypes', TransportTypeFilter)"
+                        (change)="transportTypeSelectChange(TransportTypeFilter)"
                       >
                         <option>{{ l('SelectATransportType') }}</option>
                         <option *ngFor="let item of allTransportTypes" value="{{ item.id }}">{{ item.displayName }}</option>
-                      </select>
-                    </div>
-                  </div>
-                  <div class="col-md-4">
-                    <div class="form-group m-form__group">
-                      <label for="allTransportSubTypes">{{ l('TransportSubTypes') }}</label>
-                      <select
-                        [(ngModel)]="TruckSubTypeIdFilter"
-                        class="form-control"
-                        name="truck.transportSubtypeId"
-                        id="allTransportSubTypes"
-                        (change)="GetTransportDropDownList('GetAllTruckTypesByTransportSubTypes', TruckSubTypeIdFilter)"
-                        [disabled]="allTransportSubTypes ? null : true"
-                      >
-                        <option value="0">{{ l('SelectATransportSubType') }}</option>
-                        <option *ngFor="let item of allTransportSubTypes" value="{{ item.id }}">{{ item.displayName }} </option>
                       </select>
                     </div>
                   </div>
@@ -80,27 +64,11 @@
                         class="form-control"
                         name="truck.trucksTypeId"
                         id="allTruckTypesByTransportSubtype"
-                        (change)="GetTransportDropDownList('GetAllTruckSubTypesByTruckTypeId', TruckTypeIdFilter)"
-                        [disabled]="allTruckTypesByTransportSubtype ? null : true"
+                        (change)="trucksTypeSelectChange(TruckTypeIdFilter)"
+                        [disabled]="allTruckTypesByTransportType ? null : true"
                       >
                         <option value="0">{{ l('SelectTruckTypeByTransportSubtype') }}</option>
-                        <option *ngFor="let item of allTruckTypesByTransportSubtype" value="{{ item.id }}"> {{ item.displayName }}</option>
-                      </select>
-                    </div>
-                  </div>
-                  <div class="col-md-4">
-                    <div class="form-group m-form__group">
-                      <label for="allTruckSubTypesByTruckTypeIdDisplayName">{{ l('TruckSubType') }}</label>
-                      <select
-                        [(ngModel)]="TransportSubTypeFilter"
-                        class="form-control"
-                        name="truck.truckSubtypeId"
-                        id="allTruckSubTypesByTruckTypeIdDisplayName"
-                        (change)="GetTransportDropDownList('GetAllCapByTruckSybTypeId', TransportSubTypeFilter)"
-                        [disabled]="allTruckSubTypesByTruckTypeId ? null : true"
-                      >
-                        <option value="0">{{ l('SelectTruckSubType') }}</option>
-                        <option *ngFor="let item of allTruckSubTypesByTruckTypeId" value="{{ item.id }}"> {{ item.displayName }}</option>
+                        <option *ngFor="let item of allTruckTypesByTransportType" value="{{ item.id }}"> {{ item.displayName }}</option>
                       </select>
                     </div>
                   </div>
@@ -112,10 +80,10 @@
                         class="form-control"
                         name="truck.capacityId"
                         id="truck.capacityId"
-                        [disabled]="allTrucksCapByTruckSubTypeId ? null : true"
+                        [disabled]="allTrucksCapByTruckTypeId ? null : true"
                       >
                         <option value="0">{{ l('SelectTruckCapByTruckSubType') }}</option>
-                        <option *ngFor="let item of allTrucksCapByTruckSubTypeId" value="{{ item.id }}">{{ item.displayName }} </option>
+                        <option *ngFor="let item of allTrucksCapByTruckTypeId" value="{{ item.id }}">{{ item.displayName }} </option>
                       </select>
                     </div>
                   </div>

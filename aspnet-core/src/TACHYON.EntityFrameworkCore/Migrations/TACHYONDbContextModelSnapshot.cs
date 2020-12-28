@@ -3106,13 +3106,7 @@ namespace TACHYON.Migrations
                     b.Property<int>("TenantId")
                         .HasColumnType("int");
 
-                    b.Property<int?>("TransportSubtypeId")
-                        .HasColumnType("int");
-
                     b.Property<int?>("TransportTypeId")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("TruckSubtypeId")
                         .HasColumnType("int");
 
                     b.Property<long>("TrucksTypeId")
@@ -3145,11 +3139,7 @@ namespace TACHYON.Migrations
 
                     b.HasIndex("TenantId");
 
-                    b.HasIndex("TransportSubtypeId");
-
                     b.HasIndex("TransportTypeId");
-
-                    b.HasIndex("TruckSubtypeId");
 
                     b.HasIndex("TrucksTypeId");
 
@@ -3459,7 +3449,6 @@ namespace TACHYON.Migrations
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("Capacity")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int?>("CapacityId")
@@ -3514,17 +3503,11 @@ namespace TACHYON.Migrations
                     b.Property<int>("TenantId")
                         .HasColumnType("int");
 
-                    b.Property<int?>("TransportSubtypeId")
-                        .HasColumnType("int");
-
                     b.Property<int?>("TransportTypeId")
                         .HasColumnType("int");
 
                     b.Property<long?>("TruckStatusId")
                         .HasColumnType("bigint");
-
-                    b.Property<int?>("TruckSubtypeId")
-                        .HasColumnType("int");
 
                     b.Property<long?>("TrucksTypeId")
                         .HasColumnType("bigint");
@@ -3535,60 +3518,13 @@ namespace TACHYON.Migrations
 
                     b.HasIndex("TenantId");
 
-                    b.HasIndex("TransportSubtypeId");
-
                     b.HasIndex("TransportTypeId");
 
                     b.HasIndex("TruckStatusId");
 
-                    b.HasIndex("TruckSubtypeId");
-
                     b.HasIndex("TrucksTypeId");
 
                     b.ToTable("Trucks");
-                });
-
-            modelBuilder.Entity("TACHYON.Trucks.TruckCategories.TransportSubtypes.TransportSubtype", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<DateTime>("CreationTime")
-                        .HasColumnType("datetime2");
-
-                    b.Property<long?>("CreatorUserId")
-                        .HasColumnType("bigint");
-
-                    b.Property<long?>("DeleterUserId")
-                        .HasColumnType("bigint");
-
-                    b.Property<DateTime?>("DeletionTime")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("DisplayName")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(256)")
-                        .HasMaxLength(256);
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("bit");
-
-                    b.Property<DateTime?>("LastModificationTime")
-                        .HasColumnType("datetime2");
-
-                    b.Property<long?>("LastModifierUserId")
-                        .HasColumnType("bigint");
-
-                    b.Property<int?>("TransportTypeId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("TransportTypeId");
-
-                    b.ToTable("TransportSubtypes");
                 });
 
             modelBuilder.Entity("TACHYON.Trucks.TruckCategories.TransportTypes.TransportType", b =>
@@ -3662,57 +3598,14 @@ namespace TACHYON.Migrations
                     b.Property<long?>("LastModifierUserId")
                         .HasColumnType("bigint");
 
-                    b.Property<int>("TruckSubtypeId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("TruckSubtypeId");
-
-                    b.ToTable("Capacities");
-                });
-
-            modelBuilder.Entity("TACHYON.Trucks.TruckCategories.TruckSubtypes.TruckSubtype", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<DateTime>("CreationTime")
-                        .HasColumnType("datetime2");
-
-                    b.Property<long?>("CreatorUserId")
-                        .HasColumnType("bigint");
-
-                    b.Property<long?>("DeleterUserId")
-                        .HasColumnType("bigint");
-
-                    b.Property<DateTime?>("DeletionTime")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("DisplayName")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(256)")
-                        .HasMaxLength(256);
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("bit");
-
-                    b.Property<DateTime?>("LastModificationTime")
-                        .HasColumnType("datetime2");
-
-                    b.Property<long?>("LastModifierUserId")
-                        .HasColumnType("bigint");
-
-                    b.Property<long?>("TrucksTypeId")
+                    b.Property<long>("TrucksTypeId")
                         .HasColumnType("bigint");
 
                     b.HasKey("Id");
 
                     b.HasIndex("TrucksTypeId");
 
-                    b.ToTable("TruckSubtypes");
+                    b.ToTable("Capacities");
                 });
 
             modelBuilder.Entity("TACHYON.Trucks.TruckStatus", b =>
@@ -3786,12 +3679,12 @@ namespace TACHYON.Migrations
                     b.Property<long?>("LastModifierUserId")
                         .HasColumnType("bigint");
 
-                    b.Property<int?>("TransportSubtypeId")
+                    b.Property<int?>("TransportTypeId")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("TransportSubtypeId");
+                    b.HasIndex("TransportTypeId");
 
                     b.ToTable("TrucksTypes");
                 });
@@ -4364,17 +4257,9 @@ namespace TACHYON.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("TACHYON.Trucks.TruckCategories.TransportSubtypes.TransportSubtype", "TransportSubtypeFk")
-                        .WithMany()
-                        .HasForeignKey("TransportSubtypeId");
-
                     b.HasOne("TACHYON.Trucks.TruckCategories.TransportTypes.TransportType", "TransportTypeFk")
                         .WithMany()
                         .HasForeignKey("TransportTypeId");
-
-                    b.HasOne("TACHYON.Trucks.TruckCategories.TruckSubtypes.TruckSubtype", "TruckSubtypeFk")
-                        .WithMany()
-                        .HasForeignKey("TruckSubtypeId");
 
                     b.HasOne("TACHYON.Trucks.TrucksTypes.TrucksType", "TrucksTypeFk")
                         .WithMany()
@@ -4430,10 +4315,6 @@ namespace TACHYON.Migrations
                         .WithMany()
                         .HasForeignKey("CapacityId");
 
-                    b.HasOne("TACHYON.Trucks.TruckCategories.TransportSubtypes.TransportSubtype", "TransportSubtypeFk")
-                        .WithMany()
-                        .HasForeignKey("TransportSubtypeId");
-
                     b.HasOne("TACHYON.Trucks.TruckCategories.TransportTypes.TransportType", "TransportTypeFk")
                         .WithMany()
                         .HasForeignKey("TransportTypeId");
@@ -4442,43 +4323,25 @@ namespace TACHYON.Migrations
                         .WithMany()
                         .HasForeignKey("TruckStatusId");
 
-                    b.HasOne("TACHYON.Trucks.TruckCategories.TruckSubtypes.TruckSubtype", "TruckSubtypeFk")
-                        .WithMany()
-                        .HasForeignKey("TruckSubtypeId");
-
                     b.HasOne("TACHYON.Trucks.TrucksTypes.TrucksType", "TrucksTypeFk")
                         .WithMany()
                         .HasForeignKey("TrucksTypeId");
-                });
-
-            modelBuilder.Entity("TACHYON.Trucks.TruckCategories.TransportSubtypes.TransportSubtype", b =>
-                {
-                    b.HasOne("TACHYON.Trucks.TruckCategories.TransportTypes.TransportType", "TransportTypeFk")
-                        .WithMany()
-                        .HasForeignKey("TransportTypeId");
                 });
 
             modelBuilder.Entity("TACHYON.Trucks.TruckCategories.TruckCapacities.Capacity", b =>
                 {
-                    b.HasOne("TACHYON.Trucks.TruckCategories.TruckSubtypes.TruckSubtype", "TruckSubtypeFk")
+                    b.HasOne("TACHYON.Trucks.TrucksTypes.TrucksType", "TrucksTypeFk")
                         .WithMany()
-                        .HasForeignKey("TruckSubtypeId")
+                        .HasForeignKey("TrucksTypeId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("TACHYON.Trucks.TruckCategories.TruckSubtypes.TruckSubtype", b =>
-                {
-                    b.HasOne("TACHYON.Trucks.TrucksTypes.TrucksType", "TrucksTypeFk")
-                        .WithMany()
-                        .HasForeignKey("TrucksTypeId");
-                });
-
             modelBuilder.Entity("TACHYON.Trucks.TrucksTypes.TrucksType", b =>
                 {
-                    b.HasOne("TACHYON.Trucks.TruckCategories.TransportSubtypes.TransportSubtype", "TransportSubtypeFk")
+                    b.HasOne("TACHYON.Trucks.TruckCategories.TransportTypes.TransportType", "TransportTypeFk")
                         .WithMany()
-                        .HasForeignKey("TransportSubtypeId");
+                        .HasForeignKey("TransportTypeId");
                 });
 
             modelBuilder.Entity("Abp.Application.Features.EditionFeatureSetting", b =>

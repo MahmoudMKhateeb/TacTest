@@ -22,17 +22,18 @@
         </div>
         <div class="modal-body">
           <div class="form-group m-form__group">
-            <label for="TruckSubtypeDisplayName">{{ l('TruckSubType') }}*</label>
+            <label for="TruckTypeDisplayName">{{ l('TruckType') }}*</label>
             <select
-              name="capacity.truckSubtypeId"
-              [(ngModel)]="capacity.truckSubtypeId"
+              id="TruckTypeDisplayName"
+              name="capacity.truckTypeId"
+              [(ngModel)]="capacity.trucksTypeId"
               class="form-control form-control-lg custom-select mr-sm-2"
               required
             >
-              <option [ngValue]="null">{{ l('Select') }} {{ l('TruckSubType') }}</option>
-              <option *ngFor="let item of allTruckSubtypes" value="{{ item.id }}">{{ item.displayName }}</option>
+              <option [ngValue]="null">{{ l('Select') }} {{ l('TruckType') }}</option>
+              <option *ngFor="let item of allTruckTypes" value="{{ item.id }}">{{ item.displayName }}</option>
             </select>
-            <span class="form-text text-muted">{{ l('Select') }} {{ l('TruckSubType') }}</span>
+            <span class="form-text text-muted">{{ l('Select') }} {{ l('TruckType') }}</span>
           </div>
 
           <div class="form-group">
@@ -55,7 +56,7 @@
           <button
             type="submit"
             class="btn btn-save blue"
-            [disabled]="!capacityForm.form.valid || capacity.truckSubtypeId == null"
+            [disabled]="!capacityForm.form.valid || capacity.trucksTypeId == null"
             [buttonBusy]="saving"
             [busyText]="l('SavingWithThreeDot')"
           >

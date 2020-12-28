@@ -4,7 +4,7 @@
     {
 		public CapacityDto Capacity { get; set; }
 
-		public string TruckSubtypeDisplayName { get; set;}
+		public string TruckTypeDisplayName { get; set;}
 
 
     }

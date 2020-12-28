@@ -22,7 +22,7 @@ namespace TACHYON.Trucks.TruckCategories.TruckCapacities
 		Task Delete(EntityDto input);
 
 		
-		Task<List<CapacityTruckSubtypeLookupTableDto>> GetAllTruckSubtypeForTableDropdown();
+		Task<List<CapacityTruckTypeLookupTableDto>> GetAllTruckTypeForTableDropdown();
 		
     }
 }

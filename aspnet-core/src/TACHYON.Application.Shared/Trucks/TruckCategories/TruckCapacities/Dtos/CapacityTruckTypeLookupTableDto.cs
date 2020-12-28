@@ -1,8 +1,8 @@
 ﻿using Abp.Application.Services.Dto;
 
-namespace TACHYON.Trucks.TruckCategories.TruckSubtypes.Dtos
+namespace TACHYON.Trucks.TruckCategories.TruckCapacities.Dtos
 {
-    public class TruckSubtypeTrucksTypeLookupTableDto
+    public class CapacityTruckTypeLookupTableDto
     {
 		public long Id { get; set; }
 

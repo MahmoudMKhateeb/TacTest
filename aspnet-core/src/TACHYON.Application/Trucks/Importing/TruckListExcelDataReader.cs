@@ -12,9 +12,7 @@ using TACHYON.DataExporting.Excel.NPOI;
 using TACHYON.Documents.DocumentFiles.Dtos;
 using TACHYON.Documents.DocumentTypes;
 using TACHYON.Trucks.Importing.Dto;
-using TACHYON.Trucks.TruckCategories.TransportSubtypes;
 using TACHYON.Trucks.TruckCategories.TransportTypes;
-using TACHYON.Trucks.TruckCategories.TruckSubtypes;
 using TACHYON.Trucks.TrucksTypes;
 
 namespace TACHYON.Trucks.Importing
@@ -23,25 +21,19 @@ namespace TACHYON.Trucks.Importing
     {
         private readonly ILocalizationSource _localizationSource;
         private readonly IRepository<TransportType> _transportTypeRepository;
-        private readonly IRepository<TransportSubtype> _transportSubtypeRepository;
         private readonly IRepository<TrucksType, long> _trucksTypeRepository;
-        private readonly IRepository<TruckSubtype> _truckSubtypeRepository;
         private readonly IRepository<DocumentType, long> _documentTypeRepository;
 
         private List<TransportType> TransportTypes { get; set; }
-        private List<TransportSubtype> TransportSubtypes { get; set; }
         private List<TrucksType> TrucksTypes { get; set; }
-        private List<TruckSubtype> TruckSubtypes { get; set; }
 
 
 
 
-        public TruckListExcelDataReader(ILocalizationManager localizationManager, IRepository<TransportType> transportTypeRepository, IRepository<TransportSubtype> transportSubtypeRepository, IRepository<TrucksType, long> trucksTypeRepository, IRepository<TruckSubtype> truckSubtypeRepository, IRepository<DocumentType, long> documentTypeRepository)
+        public TruckListExcelDataReader(ILocalizationManager localizationManager, IRepository<TransportType> transportTypeRepository, IRepository<TrucksType, long> trucksTypeRepository, IRepository<DocumentType, long> documentTypeRepository)
         {
             _transportTypeRepository = transportTypeRepository;
-            _transportSubtypeRepository = transportSubtypeRepository;
             _trucksTypeRepository = trucksTypeRepository;
-            _truckSubtypeRepository = truckSubtypeRepository;
             _documentTypeRepository = documentTypeRepository;
             _localizationSource = localizationManager.GetSource(TACHYONConsts.LocalizationSourceName);
         }
@@ -72,7 +64,6 @@ namespace TACHYON.Trucks.Importing
             }
             catch
             {
-
                 exceptionMessage.Append("cant find document type with constant TruckIstimara;");
             }
             istimaraDocumentFileDto.Name = "_";
@@ -113,11 +104,11 @@ namespace TACHYON.Trucks.Importing
                 //4
                 truck.TransportTypeId = GetTransportTypeId(GetRequiredValueFromRowOrNull(worksheet, row, 4, "Transport Type*", exceptionMessage), exceptionMessage);
                 //5
-                truck.TransportSubtypeId = GetTransportSubtypeId(GetRequiredValueFromRowOrNull(worksheet, row, 5, "Transport Subtype", exceptionMessage), truck.TransportTypeId, exceptionMessage);
+                //truck.TransportSubtypeId = GetTransportSubtypeId(GetRequiredValueFromRowOrNull(worksheet, row, 5, "Transport Subtype", exceptionMessage), truck.TransportTypeId, exceptionMessage);
                 //6
-                truck.TrucksTypeId = GetTruckTypeId(GetRequiredValueFromRowOrNull(worksheet, row, 6, "Truck Type*", exceptionMessage), truck.TransportSubtypeId, exceptionMessage).Value;
+                //truck.TrucksTypeId = GetTruckTypeId(GetRequiredValueFromRowOrNull(worksheet, row, 6, "Truck Type*", exceptionMessage), truck.TransportSubtypeId, exceptionMessage).Value;
                 //7
-                truck.TruckSubtypeId = GetTruckSubTypeId(GetRequiredValueFromRowOrNull(worksheet, row, 7, "Truck Subtype", exceptionMessage), truck.TrucksTypeId, exceptionMessage);
+                //truck.TruckSubtypeId = GetTruckSubTypeId(GetRequiredValueFromRowOrNull(worksheet, row, 7, "Truck Subtype", exceptionMessage), truck.TrucksTypeId, exceptionMessage);
                 //8
                 truck.Capacity = GetRequiredValueFromRowOrNull(worksheet, row, 8, "Capacity (Payload)*", exceptionMessage);
                 //9
@@ -214,32 +205,6 @@ namespace TACHYON.Trucks.Importing
 
         }
 
-        private int? GetTransportSubtypeId(string text, int? transportTypeId, StringBuilder exceptionMessage)
-        {
-            if (text.IsNullOrEmpty())
-            {
-                exceptionMessage.Append(GetLocalizedExceptionMessagePart("TransportSubtype"));
-                return null;
-            }
-
-            var transportSubtype = _transportSubtypeRepository.GetAll().FirstOrDefault(x => x.DisplayName.ToLower() == text.ToLower());
-
-            if (transportSubtype == null)
-            {
-                return null;
-            }
-
-            if (transportSubtype.TransportTypeId == transportTypeId)
-            {
-                return transportSubtype.Id;
-            }
-
-            exceptionMessage.Append("transportSubtype does not belongs to transportType ");
-
-            exceptionMessage.Append(GetLocalizedExceptionMessagePart("TransportSubtype"));
-            return null;
-
-        }
 
         private long? GetTruckTypeId(string text, int? transportSubtypeId, StringBuilder exceptionMessage)
         {
@@ -256,7 +221,7 @@ namespace TACHYON.Trucks.Importing
                 return null;
             }
 
-            if (trucksType.TransportSubtypeId == transportSubtypeId)
+            if (trucksType.TransportTypeId == transportSubtypeId)
             {
                 return trucksType.Id;
             }
@@ -266,32 +231,6 @@ namespace TACHYON.Trucks.Importing
 
         }
 
-        private int? GetTruckSubTypeId(string text, long? trucksTypeId, StringBuilder exceptionMessage)
-        {
-            if (text.IsNullOrEmpty())
-            {
-                exceptionMessage.Append(GetLocalizedExceptionMessagePart("TruckSubType"));
-                return null;
-            }
-
-            var truckSubtype = _truckSubtypeRepository.GetAll().FirstOrDefault(x => x.DisplayName.ToLower() == text.ToLower());
-
-            if (truckSubtype == null)
-            {
-                return null;
-            }
-
-            if (truckSubtype.TrucksTypeId == trucksTypeId)
-            {
-                return truckSubtype.Id;
-            }
-
-            exceptionMessage.Append("truckSubtype does not belongs to trucksType ");
-
-            exceptionMessage.Append(GetLocalizedExceptionMessagePart("TruckSubType"));
-            return null;
-
-        }
 
 
         private string GetRequiredValueFromRowOrNull(ISheet worksheet, int row, int column, string columnName, StringBuilder exceptionMessage)

@@ -8,7 +8,7 @@ namespace TACHYON.Trucks.TruckCategories.TruckCapacities.Dtos
     {
 		public CreateOrEditCapacityDto Capacity { get; set; }
 
-		public string TruckSubtypeDisplayName { get; set;}
+		public string TruckTypeDisplayName { get; set;}
 
 
     }

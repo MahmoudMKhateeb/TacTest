@@ -1,7 +1,7 @@
 ﻿import { Component, ViewChild, Injector, Output, EventEmitter } from '@angular/core';
 import { ModalDirective } from 'ngx-bootstrap/modal';
 import { finalize } from 'rxjs/operators';
-import { CapacitiesServiceProxy, CreateOrEditCapacityDto, CapacityTruckSubtypeLookupTableDto } from '@shared/service-proxies/service-proxies';
+import { CapacitiesServiceProxy, CapacityTruckTypeLookupTableDto, CreateOrEditCapacityDto } from '@shared/service-proxies/service-proxies';
 import { AppComponentBase } from '@shared/common/app-component-base';
 import * as moment from 'moment';
 
@@ -19,9 +19,9 @@ export class CreateOrEditCapacityModalComponent extends AppComponentBase {
 
   capacity: CreateOrEditCapacityDto = new CreateOrEditCapacityDto();
 
-  truckSubtypeDisplayName = '';
+  truckTypeDisplayName = '';
 
-  allTruckSubtypes: CapacityTruckSubtypeLookupTableDto[];
+  allTruckTypes: CapacityTruckTypeLookupTableDto[];
 
   constructor(injector: Injector, private _capacitiesServiceProxy: CapacitiesServiceProxy) {
     super(injector);
@@ -31,8 +31,8 @@ export class CreateOrEditCapacityModalComponent extends AppComponentBase {
     if (!capacityId) {
       this.capacity = new CreateOrEditCapacityDto();
       this.capacity.id = capacityId;
-      this.capacity.truckSubtypeId = null;
-      this.truckSubtypeDisplayName = '';
+      this.capacity.trucksTypeId = null;
+      this.truckTypeDisplayName = '';
 
       this.active = true;
       this.modal.show();
@@ -40,21 +40,21 @@ export class CreateOrEditCapacityModalComponent extends AppComponentBase {
       this._capacitiesServiceProxy.getCapacityForEdit(capacityId).subscribe((result) => {
         this.capacity = result.capacity;
 
-        this.truckSubtypeDisplayName = result.truckSubtypeDisplayName;
+        this.truckTypeDisplayName = result.truckTypeDisplayName;
 
         this.active = true;
         this.modal.show();
       });
     }
-    this._capacitiesServiceProxy.getAllTruckSubtypeForTableDropdown().subscribe((result) => {
-      this.allTruckSubtypes = result;
+    this._capacitiesServiceProxy.getAllTruckTypeForTableDropdown().subscribe((result) => {
+      this.allTruckTypes = result;
     });
   }
 
   save(): void {
     this.saving = true;
-    if (this.capacity.truckSubtypeId == null) {
-      this.notify.error(this.l('PleaseChooseATruckSubType'));
+    if (this.capacity.trucksTypeId == null) {
+      this.notify.error(this.l('PleaseChooseATruckType'));
       return;
     }
     this._capacitiesServiceProxy

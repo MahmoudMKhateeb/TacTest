@@ -4,7 +4,7 @@ using Abp.Domain.Entities.Auditing;
 using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using TACHYON.Trucks.TruckCategories.TransportSubtypes;
+using TACHYON.Trucks.TruckCategories.TransportTypes;
 
 namespace TACHYON.Trucks.TrucksTypes
 {
@@ -18,10 +18,10 @@ namespace TACHYON.Trucks.TrucksTypes
         [StringLength(TrucksTypeConsts.MaxDisplayNameLength, MinimumLength = TrucksTypeConsts.MinDisplayNameLength)]
         public virtual string DisplayName { get; set; }
 
-        public int? TransportSubtypeId { get; set; }
+        public int? TransportTypeId { get; set; }
         
-        [ForeignKey("TransportSubtypeId")]
-        public TransportSubtype TransportSubtypeFk { get; set; }
+        [ForeignKey("TransportTypeId")]
+        public TransportType TransportTypeFk { get; set; }
 
 
     }

@@ -46,13 +46,13 @@
                 </div>
                 <div class="col-md-3">
                   <div class="form-group">
-                    <label for="TruckSubtypeDisplayNameFilter">{{ l('TruckSubType') }}</label>
+                    <label for="TruckTypeDisplayNameFilter">{{ l('TruckType') }}</label>
                     <input
                       type="text"
                       class="form-control"
-                      id="TruckSubtypeDisplayNameFilter"
-                      name="truckSubtypeDisplayNameFilter"
-                      [(ngModel)]="truckSubtypeDisplayNameFilter"
+                      id="TruckTypeDisplayNameFilter"
+                      name="truckTypeDisplayNameFilter"
+                      [(ngModel)]="truckTypeDisplayNameFilter"
                     />
                   </div>
                 </div>
@@ -96,9 +96,9 @@
                       {{ l('CapacityCategory') }}
                       <p-sortIcon field="capacity.displayName"></p-sortIcon>
                     </th>
-                    <th style="width: 150px;" pSortableColumn="truckSubtypeFk.displayName">
-                      {{ l('TruckSubType') }}
-                      <p-sortIcon field="truckSubtypeDisplayName"></p-sortIcon>
+                    <th style="width: 150px;" pSortableColumn="truckTypeFk.displayName">
+                      {{ l('TruckType') }}
+                      <p-sortIcon field="truckTypeDisplayName"></p-sortIcon>
                     </th>
                   </tr>
                 </ng-template>
@@ -140,8 +140,8 @@
                       {{ record.capacity.displayName }}
                     </td>
                     <td style="width: 150px;">
-                      <span class="ui-column-title"> {{ l('TruckSubType') }}</span>
-                      {{ record.truckSubtypeDisplayName }}
+                      <span class="ui-column-title"> {{ l('TruckType') }}</span>
+                      {{ record.truckTypeDisplayName }}
                     </td>
                   </tr>
                 </ng-template>

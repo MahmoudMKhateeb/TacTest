@@ -9,7 +9,7 @@ namespace TACHYON.Trucks.TruckCategories.TruckCapacities.Dtos
 		public string DisplayName { get; set; }
 
 
-		 public int TruckSubtypeId { get; set; }
+		 public long TrucksTypeId { get; set; }
 
 		 
     }

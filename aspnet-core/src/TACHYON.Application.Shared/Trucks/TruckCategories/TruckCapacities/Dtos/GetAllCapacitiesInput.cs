@@ -10,7 +10,7 @@ namespace TACHYON.Trucks.TruckCategories.TruckCapacities.Dtos
 		public string DisplayNameFilter { get; set; }
 
 
-		 public string TruckSubtypeDisplayNameFilter { get; set; }
+		 public string TruckTypeDisplayNameFilter { get; set; }
 
 		 
 

@@ -43,14 +43,7 @@ namespace TACHYON.Trucks.Importing.Dto
 
         public virtual int? TransportTypeId { get; set; }
 
-
-        public virtual int? TransportSubtypeId { get; set; }
-
         public virtual long? TrucksTypeId { get; set; }
-
-
-        public virtual int? TruckSubtypeId { get; set; }
-
 
         public virtual int? CapacityId { get; set; }
 

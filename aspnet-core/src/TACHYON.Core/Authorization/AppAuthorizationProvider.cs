@@ -35,16 +35,6 @@ namespace TACHYON.Authorization
             capacities.CreateChildPermission(AppPermissions.Pages_Capacities_Edit, L("EditCapacity"), multiTenancySides: MultiTenancySides.Host);
             capacities.CreateChildPermission(AppPermissions.Pages_Capacities_Delete, L("DeleteCapacity"), multiTenancySides: MultiTenancySides.Host);
 
-            var truckSubtypes = pages.CreateChildPermission(AppPermissions.Pages_TruckSubtypes, L("TruckSubtypes"), multiTenancySides: MultiTenancySides.Host);
-            truckSubtypes.CreateChildPermission(AppPermissions.Pages_TruckSubtypes_Create, L("CreateNewTruckSubtype"), multiTenancySides: MultiTenancySides.Host);
-            truckSubtypes.CreateChildPermission(AppPermissions.Pages_TruckSubtypes_Edit, L("EditTruckSubtype"), multiTenancySides: MultiTenancySides.Host);
-            truckSubtypes.CreateChildPermission(AppPermissions.Pages_TruckSubtypes_Delete, L("DeleteTruckSubtype"), multiTenancySides: MultiTenancySides.Host);
-
-            var transportSubtypes = pages.CreateChildPermission(AppPermissions.Pages_TransportSubtypes, L("TransportSubtypes"), multiTenancySides: MultiTenancySides.Host);
-            transportSubtypes.CreateChildPermission(AppPermissions.Pages_TransportSubtypes_Create, L("CreateNewTransportSubtype"), multiTenancySides: MultiTenancySides.Host);
-            transportSubtypes.CreateChildPermission(AppPermissions.Pages_TransportSubtypes_Edit, L("EditTransportSubtype"), multiTenancySides: MultiTenancySides.Host);
-            transportSubtypes.CreateChildPermission(AppPermissions.Pages_TransportSubtypes_Delete, L("DeleteTransportSubtype"), multiTenancySides: MultiTenancySides.Host);
-
             var transportTypes = pages.CreateChildPermission(AppPermissions.Pages_TransportTypes, L("TransportTypes"), multiTenancySides: MultiTenancySides.Host);
             transportTypes.CreateChildPermission(AppPermissions.Pages_TransportTypes_Create, L("CreateNewTransportType"), multiTenancySides: MultiTenancySides.Host);
             transportTypes.CreateChildPermission(AppPermissions.Pages_TransportTypes_Edit, L("EditTransportType"), multiTenancySides: MultiTenancySides.Host);

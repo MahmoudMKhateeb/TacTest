@@ -2,8 +2,6 @@
 import { RouterModule } from '@angular/router';
 import { TermAndConditionsComponent } from './termsAndConditions/termAndConditions/termAndConditions.component';
 import { CapacitiesComponent } from './truckCapacities/capacities/capacities.component';
-import { TruckSubtypesComponent } from './truckSubtypes/truckSubtypes/truckSubtypes.component';
-import { TransportSubtypesComponent } from './transportSubtypes/transportSubtypes/transportSubtypes.component';
 import { TransportTypesComponent } from './transportTypes/transportTypes/transportTypes.component';
 import { DocumentTypeTranslationsComponent } from './documentTypeTranslations/documentTypeTranslations/documentTypeTranslations.component';
 import { DocumentsEntitiesComponent } from './documentsEntities/documentsEntities/documentsEntities.component';
@@ -42,8 +40,6 @@ import { MarketplaceComponent } from '@app/main/marketPlace/marketPlace/marketpl
         children: [
           { path: 'termsAndConditions/termAndConditions', component: TermAndConditionsComponent, data: { permission: 'Pages.TermAndConditions' } },
           { path: 'truckCapacities/capacities', component: CapacitiesComponent, data: { permission: 'Pages.Capacities' } },
-          { path: 'truckSubtypes/truckSubtypes', component: TruckSubtypesComponent, data: { permission: 'Pages.TruckSubtypes' } },
-          { path: 'transportSubtypes/transportSubtypes', component: TransportSubtypesComponent, data: { permission: 'Pages.TransportSubtypes' } },
           { path: 'transportTypes/transportTypes', component: TransportTypesComponent, data: { permission: 'Pages.TransportTypes' } },
           {
             path: 'documentTypeTranslations/documentTypeTranslations',

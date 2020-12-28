@@ -10,14 +10,6 @@ import { CapacitiesComponent } from './truckCapacities/capacities/capacities.com
 import { ViewCapacityModalComponent } from './truckCapacities/capacities/view-capacity-modal.component';
 import { CreateOrEditCapacityModalComponent } from './truckCapacities/capacities/create-or-edit-capacity-modal.component';
 
-import { TruckSubtypesComponent } from './truckSubtypes/truckSubtypes/truckSubtypes.component';
-import { ViewTruckSubtypeModalComponent } from './truckSubtypes/truckSubtypes/view-truckSubtype-modal.component';
-import { CreateOrEditTruckSubtypeModalComponent } from './truckSubtypes/truckSubtypes/create-or-edit-truckSubtype-modal.component';
-
-import { TransportSubtypesComponent } from './transportSubtypes/transportSubtypes/transportSubtypes.component';
-import { ViewTransportSubtypeModalComponent } from './transportSubtypes/transportSubtypes/view-transportSubtype-modal.component';
-import { CreateOrEditTransportSubtypeModalComponent } from './transportSubtypes/transportSubtypes/create-or-edit-transportSubtype-modal.component';
-
 import { TransportTypesComponent } from './transportTypes/transportTypes/transportTypes.component';
 import { ViewTransportTypeModalComponent } from './transportTypes/transportTypes/view-transportType-modal.component';
 import { CreateOrEditTransportTypeModalComponent } from './transportTypes/transportTypes/create-or-edit-transportType-modal.component';
@@ -184,14 +176,7 @@ NgxBootstrapDatePickerConfigService.registerNgxBootstrapDatePickerLocales();
     RejectionReasonModalComponent,
     ViewCapacityModalComponent,
     CreateOrEditCapacityModalComponent,
-    TruckSubtypesComponent,
 
-    ViewTruckSubtypeModalComponent,
-    CreateOrEditTruckSubtypeModalComponent,
-    TransportSubtypesComponent,
-
-    ViewTransportSubtypeModalComponent,
-    CreateOrEditTransportSubtypeModalComponent,
     TransportTypesComponent,
 
     ViewTransportTypeModalComponent,

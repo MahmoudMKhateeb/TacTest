@@ -24,7 +24,7 @@ import { TruckUserLookupTableModalComponent } from './truck-user-lookup-table-mo
 
 @Component({
   templateUrl: './trucks.component.html',
-  styleUrls: ['./trucksComponent.css'],
+  styleUrls: ['./trucks.Component.css'],
   encapsulation: ViewEncapsulation.None,
   animations: [appModuleAnimation()],
 })

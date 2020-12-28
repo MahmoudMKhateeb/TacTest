@@ -33,7 +33,7 @@
                   [(ngModel)]="truck.transportTypeId"
                   class="form-control"
                   name="truck.transportTypeId"
-                  (change)="GetTransportDropDownList('GetAllTransportSubTypes', truck.transportTypeId)"
+                  (change)="transportTypeSelectChange(truck.transportTypeId)"
                   required
                 >
                   <option [ngValue]="null">{{ l('Select') }} {{ l('TransportType') }}</option>
@@ -45,25 +45,6 @@
 
             <div class="col-md-6">
               <div class="form-group m-form__group">
-                <label for="transportSubtypeId">* {{ l('TransportSubType') }}</label>
-                <select
-                  id="transportSubtypeId"
-                  #transportSubtypeId="ngModel"
-                  [(ngModel)]="truck.transportSubtypeId"
-                  class="form-control"
-                  name="truck.transportSubtypeId"
-                  (change)="GetTransportDropDownList('GetAllTruckTypesByTransportSubTypes', truck.transportSubtypeId)"
-                  [disabled]="allTransportTypes != null ? null : true"
-                  required
-                >
-                  <option [ngValue]="null">{{ l('Select') }} {{ l('TransportSubType') }}</option>
-                  <option *ngFor="let item of allTransportSubTypes" value="{{ item.id }}">{{ item.displayName }} </option>
-                </select>
-                <validation-messages [formCtrl]="transportSubtypeId"></validation-messages>
-              </div>
-            </div>
-            <div class="col-md-6">
-              <div class="form-group m-form__group">
                 <label for="trucksTypeId">* {{ l('TruckType') }}</label>
                 <select
                   id="trucksTypeId"
@@ -71,36 +52,17 @@
                   [(ngModel)]="truck.trucksTypeId"
                   class="form-control"
                   name="truck.trucksTypeId"
-                  (change)="GetTransportDropDownList('GetAllTruckSubTypesByTruckTypeId', truck.trucksTypeId)"
-                  [disabled]="truck.transportSubtypeId != null && allTransportTypes != null ? null : true"
+                  (change)="trucksTypeSelectChange(truck.trucksTypeId)"
+                  [disabled]="truck.transportTypeId != null && allTransportTypes != null ? null : true"
                   required
                 >
                   <option [ngValue]="null">{{ l('Select') }} {{ l('TruckType') }}</option>
-                  <option *ngFor="let item of allTruckTypesByTransportSubtype" value="{{ item.id }}"> {{ item.displayName }}</option>
+                  <option *ngFor="let item of allTruckTypesByTransportType" value="{{ item.id }}"> {{ item.displayName }}</option>
                 </select>
                 <validation-messages [formCtrl]="trucksTypeId"></validation-messages>
               </div>
             </div>
 
-            <div class="col-md-6">
-              <div class="form-group m-form__group">
-                <label for="truckSubtypeId">* {{ l('TruckSubType') }}</label>
-                <select
-                  id="truckSubtypeId"
-                  #truckSubtypeId="ngModel"
-                  [(ngModel)]="truck.truckSubtypeId"
-                  class="form-control"
-                  name="truck.truckSubtypeId"
-                  (change)="GetTransportDropDownList('GetAllCapByTruckSybTypeId', truck.truckSubtypeId)"
-                  [disabled]="truck.trucksTypeId != null && truck.transportSubtypeId != null && allTransportTypes != null ? null : true"
-                  required
-                >
-                  <option [ngValue]="null">{{ l('Select') }} {{ l('TruckSubType') }}</option>
-                  <option *ngFor="let item of allTruckSubTypesByTruckTypeId" value="{{ item.id }}"> {{ item.displayName }}</option>
-                </select>
-                <validation-messages [formCtrl]="truckSubtypeId"></validation-messages>
-              </div>
-            </div>
             <div class="col-md-6">
               <div class="form-group m-form__group">
                 <label for="capacityId">* {{ l('CapacityCategory') }}</label>
@@ -111,14 +73,14 @@
                   class="form-control"
                   name="truck.capacityId"
                   [disabled]="
-                    truck.truckSubtypeId != null && truck.trucksTypeId != null && truck.transportSubtypeId && (allTransportTypes != null) != null
+                    truck.trucksTypeId != null && truck.trucksTypeId != null && truck.transportTypeId && (allTransportTypes != null) != null
                       ? null
                       : true
                   "
                   required
                 >
                   <option [ngValue]="null">{{ l('Select') }} {{ l('CapacityCategory') }}</option>
-                  <option *ngFor="let item of allTrucksCapByTruckSubTypeId" value="{{ item.id }}">{{ item.displayName }} </option>
+                  <option *ngFor="let item of allTrucksCapByTruckTypeId" value="{{ item.id }}">{{ item.displayName }} </option>
                 </select>
                 <validation-messages [formCtrl]="capacityId"></validation-messages>
               </div>

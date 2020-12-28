@@ -82,9 +82,9 @@
                       {{ l('TruckType') }}
                       <p-sortIcon field="trucksType.displayName"></p-sortIcon>
                     </th>
-                    <th style="width: 150px;" pSortableColumn="transportSubtypeId">
-                      {{ l('TransportSubType') }}
-                      <p-sortIcon field="transportSubtypeId"></p-sortIcon>
+                    <th style="width: 150px;" pSortableColumn="transportTypeId">
+                      {{ l('TransportType') }}
+                      <p-sortIcon field="transportTypeId"></p-sortIcon>
                     </th>
                   </tr>
                 </ng-template>
@@ -129,7 +129,7 @@
                     </td>
                     <td style="width: 150px;">
                       <span class="ui-column-title"> {{ l('TransportSubtyp') }}</span>
-                      {{ record.transportSubtypeDisplayName }}
+                      {{ record.transportTypeDisplayName }}
                     </td>
                   </tr>
                 </ng-template>

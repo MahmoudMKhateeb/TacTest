@@ -57,16 +57,7 @@ namespace TACHYON.Trucks.Dtos
         #region Truck Categories
 
         public virtual int? TransportTypeId { get; set; }
-
-
-        public virtual int? TransportSubtypeId { get; set; }
-
         public virtual long? TrucksTypeId { get; set; }
-
-
-        public virtual int? TruckSubtypeId { get; set; }
-
-
         public virtual int? CapacityId { get; set; }
 
         #endregion

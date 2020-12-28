@@ -33,7 +33,7 @@ import * as moment from '@node_modules/moment';
 
 @Component({
   selector: 'createOrEditTruckModal',
-  styleUrls: ['./trucksComponent.css'],
+  styleUrls: ['./trucks.Component.css'],
   templateUrl: './create-or-edit-truck-modal.component.html',
   providers: [DateFormatterService],
 })
@@ -42,14 +42,9 @@ export class CreateOrEditTruckModalComponent extends AppComponentBase {
   @ViewChild('truckUserLookupTableModal2', { static: true }) truckUserLookupTableModal2: TruckUserLookupTableModalComponent;
 
   @ViewChild('createOrEditDocumentFileModal', { static: true }) createOrEditDocumentFileModal: CreateOrEditDocumentFileModalComponent;
-  // @ViewChild('paginator', { static: true }) paginator: Paginator;
-  // @ViewChild('dataTable', { static: true }) dataTable: Table;
   @ViewChild('entityTypeHistoryModal', { static: true }) entityTypeHistoryModal: EntityTypeHistoryModalComponent;
 
   @Output() modalSave: EventEmitter<any> = new EventEmitter<any>();
-  //
-  // @ViewChildren('dataTable') TableComponent: Table;
-  // @ViewChildren('paginator') PaginatorComponent: Paginator;
   active = false;
   saving = false;
   ModalIsEdit = null;
@@ -76,10 +71,8 @@ export class CreateOrEditTruckModalComponent extends AppComponentBase {
   allTrucksTypes: TruckTrucksTypeLookupTableDto[];
   allTruckStatuss: TruckTruckStatusLookupTableDto[];
   allTransportTypes: SelectItemDto[];
-  allTransportSubTypes: SelectItemDto[];
-  allTruckTypesByTransportSubtype: SelectItemDto[];
-  allTruckSubTypesByTruckTypeId: SelectItemDto[];
-  allTrucksCapByTruckSubTypeId: SelectItemDto[];
+  allTruckTypesByTransportType: SelectItemDto[];
+  allTrucksCapByTruckTypeId: SelectItemDto[];
   imageChangedEvent: any = '';
   public maxProfilPictureBytesUserFriendlyValue = 5;
   public uploader: FileUploader;
@@ -137,12 +130,12 @@ export class CreateOrEditTruckModalComponent extends AppComponentBase {
       this.trucksTypeDisplayName = '';
       this.truck.truckStatusId = null;
       this.truck.transportTypeId = null;
-      this.truck.transportSubtypeId = null;
+      this.truck.transportTypeId = null;
       this.truck.trucksTypeId = null;
-      this.truck.truckSubtypeId = null;
+      this.truck.trucksTypeId = null;
       this.truck.capacityId = null;
 
-      this.GetTransportDropDownList();
+      this.initTransportDropDownList();
       this._trucksServiceProxy.getAllTruckStatusForTableDropdown().subscribe((result) => {
         this.allTruckStatuss = result;
       });
@@ -159,7 +152,7 @@ export class CreateOrEditTruckModalComponent extends AppComponentBase {
       this.ModalIsEdit = true;
       this._trucksServiceProxy.getTruckForEdit(truckId).subscribe((result) => {
         this.truck = result.truck;
-        this.GetTransportDropDownList();
+        this.initTransportDropDownList();
         this.trucksTypeDisplayName = result.trucksTypeDisplayName;
         this.getTruckPictureUrl(this.truck.id);
 
@@ -167,17 +160,11 @@ export class CreateOrEditTruckModalComponent extends AppComponentBase {
         this._trucksServiceProxy.getAllTransportTypesForDropdown().subscribe((result) => {
           this.allTransportTypes = result;
         });
-        this._trucksServiceProxy.getAllTransportSubtypesByTransportTypeIdForDropdown(this.truck.transportTypeId).subscribe((result) => {
-          this.allTransportSubTypes = result;
+        this._trucksServiceProxy.getAllTruckTypesByTransportTypeIdForDropdown(this.truck.transportTypeId).subscribe((result) => {
+          this.allTruckTypesByTransportType = result;
         });
-        this._trucksServiceProxy.getAllTruckTypesByTransportSubtypeIdForDropdown(this.truck.transportSubtypeId).subscribe((result) => {
-          this.allTruckTypesByTransportSubtype = result;
-        });
-        this._trucksServiceProxy.getAllTruckSubTypesByTruckTypeIdForDropdown(this.truck.trucksTypeId).subscribe((result) => {
-          this.allTruckSubTypesByTruckTypeId = result;
-        });
-        this._trucksServiceProxy.getAllTuckCapacitiesByTuckSubTypeIdForDropdown(this.truck.truckSubtypeId).subscribe((result) => {
-          this.allTrucksCapByTruckSubTypeId = result;
+        this._trucksServiceProxy.getAllTuckCapacitiesByTuckTypeIdForDropdown(this.truck.trucksTypeId).subscribe((result) => {
+          this.allTrucksCapByTruckTypeId = result;
         });
         this._trucksServiceProxy.getAllTruckStatusForTableDropdown().subscribe((result) => {
           this.allTruckStatuss = result;
@@ -377,75 +364,40 @@ export class CreateOrEditTruckModalComponent extends AppComponentBase {
     this.DocsUploader.addToQueue(event.target.files);
   }
 
-  ClearAllTransPortDropDowns() {
-    this.allTransportTypes = null;
-    this.allTransportSubTypes = null;
-    this.allTruckTypesByTransportSubtype = null;
-    this.allTruckSubTypesByTruckTypeId = null;
-    this.allTrucksCapByTruckSubTypeId = null;
-    this.allTruckStatuss = null;
+  transportTypeSelectChange(transportTypeId?: number) {
+    if (transportTypeId > 0) {
+      this._trucksServiceProxy.getAllTruckTypesByTransportTypeIdForDropdown(transportTypeId).subscribe((result) => {
+        this.allTruckTypesByTransportType = result;
+        this.truck.trucksTypeId = null;
+      });
+    } else {
+      this.truck.trucksTypeId = null;
+      this.allTruckTypesByTransportType = null;
+      this.allTrucksCapByTruckTypeId = null;
+    }
   }
 
-  GetTransportDropDownList(mode?: string, value?: number) {
-    switch (mode) {
-      case 'GetAllTransportSubTypes':
-        if (value > 0) {
-          this._trucksServiceProxy.getAllTransportSubtypesByTransportTypeIdForDropdown(value).subscribe((result) => {
-            this.allTransportSubTypes = result;
-            this.truck.transportSubtypeId = null;
-          });
-        } else {
-          this.truck.transportSubtypeId = null;
-          this.allTransportSubTypes = null;
-          this.allTruckTypesByTransportSubtype = null;
-          this.allTruckSubTypesByTruckTypeId = null;
-          this.allTrucksCapByTruckSubTypeId = null;
-        }
-        break;
-      case 'GetAllTruckTypesByTransportSubTypes':
-        if (value > 0) {
-          this._trucksServiceProxy.getAllTruckTypesByTransportSubtypeIdForDropdown(value).subscribe((result) => {
-            this.allTruckTypesByTransportSubtype = result;
-            this.truck.trucksTypeId = null;
-          });
-        } else {
-          this.truck.trucksTypeId = null;
-          this.allTruckTypesByTransportSubtype = null;
-          this.allTruckSubTypesByTruckTypeId = null;
-          this.allTrucksCapByTruckSubTypeId = null;
-        }
-        break;
-      case 'GetAllTruckSubTypesByTruckTypeId':
-        if (value > 0) {
-          this._trucksServiceProxy.getAllTruckSubTypesByTruckTypeIdForDropdown(value).subscribe((result) => {
-            this.allTruckSubTypesByTruckTypeId = result;
-            this.truck.truckSubtypeId = null;
-          });
-        } else {
-          this.truck.truckSubtypeId = null;
-          this.allTruckSubTypesByTruckTypeId = null;
-          this.allTrucksCapByTruckSubTypeId = null;
-        }
-        break;
-      case 'GetAllCapByTruckSybTypeId':
-        if (value > 0) {
-          this._trucksServiceProxy.getAllTuckCapacitiesByTuckSubTypeIdForDropdown(value).subscribe((result) => {
-            this.allTrucksCapByTruckSubTypeId = result;
-            this.truck.capacityId = null;
-          });
-        } else {
-          this.truck.capacityId = null;
-          this.allTrucksCapByTruckSubTypeId = null;
-        }
-        break;
-      default:
-        this.ClearAllTransPortDropDowns();
-        if (!this.truck.transportTypeId) {
-          this._trucksServiceProxy.getAllTransportTypesForDropdown().subscribe((result) => {
-            this.allTransportTypes = result;
-          });
-        }
-        break;
+  trucksTypeSelectChange(trucksTypeId?: number) {
+    if (trucksTypeId > 0) {
+      this._trucksServiceProxy.getAllTuckCapacitiesByTuckTypeIdForDropdown(trucksTypeId).subscribe((result) => {
+        this.allTrucksCapByTruckTypeId = result;
+        this.truck.capacityId = null;
+      });
+    } else {
+      this.truck.capacityId = null;
+      this.allTrucksCapByTruckTypeId = null;
+    }
+  }
+
+  initTransportDropDownList() {
+    this.allTransportTypes = null;
+    this.allTruckTypesByTransportType = null;
+    this.allTrucksCapByTruckTypeId = null;
+    this.allTruckStatuss = null;
+    if (!this.truck.transportTypeId) {
+      this._trucksServiceProxy.getAllTransportTypesForDropdown().subscribe((result) => {
+        this.allTransportTypes = result;
+      });
     }
   }
 
@@ -527,23 +479,6 @@ export class CreateOrEditTruckModalComponent extends AppComponentBase {
       this.allnumbersValid = false;
     }
   }
-
-  // dateSelected() {
-  //   for (let index = 0; index < this.truck.createOrEditDocumentFileDtos.length; index++) {
-  //     const element = this.truck.createOrEditDocumentFileDtos[index];
-  //     if (element.documentTypeDto.hasExpirationDate) {
-  //       this.datesInValidList[index] = element.expirationDate == null;
-  //     }
-  //   }
-  //   if (
-  //     this.datesInValidList.every((x) => x === false) &&
-  //     this.truck.createOrEditDocumentFileDtos.filter((x) => x.documentTypeDto.hasExpirationDate).length == this.datesInValidList.length
-  //   ) {
-  //     this.allDatesValid = true;
-  //   } else {
-  //     this.allDatesValid = false;
-  //   }
-  // }
 
   isAllfileNotDuplicated() {
     if (this.fileisDuplicateList.every((x) => x === false) && this.fileisDuplicateList.length == this.truck.createOrEditDocumentFileDtos.length) {

@@ -4,10 +4,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using TACHYON.EntityFrameworkCore;
-using TACHYON.Trucks.TruckCategories.TransportSubtypes;
 using TACHYON.Trucks.TruckCategories.TransportTypes;
 using TACHYON.Trucks.TruckCategories.TruckCapacities;
-using TACHYON.Trucks.TruckCategories.TruckSubtypes;
 using TACHYON.Trucks.TrucksTypes;
 
 namespace TACHYON.Migrations.Seed.Host
@@ -22,14 +20,11 @@ namespace TACHYON.Migrations.Seed.Host
 
         public void Create()
         {
+            return;
             //create Ambient transportType
             CreateOrUpdateTransportType("Ambient", 1);
             CreateOrUpdateTransportType("Cold Chain", 2);
 
-            //create tranport subtypes
-            CreateOrUpdateTransportSubType("General", 1, 1);
-            CreateOrUpdateTransportSubType("Temp controlled", 2, 2);
-            CreateOrUpdateTransportSubType("Frozen", 3, 2);
 
             //create truck type
             CreateOrUpdateTruckType("Flatbed", 1, 1);
@@ -46,21 +41,6 @@ namespace TACHYON.Migrations.Seed.Host
             CreateOrUpdateTruckType("Closed box freezer", 12, 3);
             CreateOrUpdateTruckType("Freezer Dyana & smaller capacities", 13, 3);
 
-            //create trucksubtypes
-            CreateOrUpdateTruckSubType("General", 1, 1);
-            CreateOrUpdateTruckSubType("General", 2, 2);
-            CreateOrUpdateTruckSubType("General", 3, 3);
-            CreateOrUpdateTruckSubType("General", 4, 4);
-            CreateOrUpdateTruckSubType("General", 5, 5);
-            CreateOrUpdateTruckSubType("General", 6, 6);
-            CreateOrUpdateTruckSubType("Closed box", 7, 7);
-            CreateOrUpdateTruckSubType("Open Top", 8, 7);
-            CreateOrUpdateTruckSubType("Open Top", 9, 8);
-            CreateOrUpdateTruckSubType("Open Top", 10, 9);
-            CreateOrUpdateTruckSubType("Open Top", 11, 10);
-            CreateOrUpdateTruckSubType("Open Top", 12, 11);
-            CreateOrUpdateTruckSubType("Open Top", 13, 12);
-            CreateOrUpdateTruckSubType("Open Top", 14, 13);
 
             //create Capacities
             CreateOrUpdateCapacity("Max Payload at 24 Tonnes", 1, 1);
@@ -113,38 +93,6 @@ namespace TACHYON.Migrations.Seed.Host
         }
         #endregion
 
-        #region TransportSubType
-        private void CreateOrUpdateTransportSubType(string displayName, int id,int transportTypeId)
-        {
-            var item = _context.TransportSubtypes.IgnoreQueryFilters().FirstOrDefault(x => x.Id == id );
-            if (item == null)
-            {
-                AddTransportSubTypeToDB(displayName, id,transportTypeId);
-            }
-            else
-            {
-                UpdateTransportSubType(item, displayName,transportTypeId);
-            }
-        }
-
-        private void AddTransportSubTypeToDB(string displayName, int id,int transportTypeId)
-        {
-            _context.Database.ExecuteSqlRaw("SET IDENTITY_INSERT [dbo].[TransportSubtypes] ON");
-            var newItem = new TransportSubtype() { DisplayName = displayName, IsDeleted = false, Id = id,TransportTypeId=transportTypeId };
-            _context.TransportSubtypes.Add(newItem);
-            _context.SaveChanges();
-            _context.Database.ExecuteSqlRaw("SET IDENTITY_INSERT [dbo].[TransportSubtypes] OFF");
-        }
-
-        private void UpdateTransportSubType(TransportSubtype item, string displayName, int transportTypeId)
-        {
-            item.DisplayName = displayName;
-            item.IsDeleted = false;
-            item.TransportTypeId = transportTypeId;
-            _context.TransportSubtypes.Update(item);
-            _context.SaveChanges();
-        }
-        #endregion
 
 
         #region TruckType
@@ -164,7 +112,7 @@ namespace TACHYON.Migrations.Seed.Host
         private void AddTruckTypeToDB(string displayName, int id, int transportSubTypeId)
         {
             _context.Database.ExecuteSqlRaw("SET IDENTITY_INSERT [dbo].[TrucksTypes] ON");
-            var newItem = new TrucksType() { DisplayName = displayName, IsDeleted = false, Id = id, TransportSubtypeId = transportSubTypeId };
+            var newItem = new TrucksType() { DisplayName = displayName, IsDeleted = false, Id = id, TransportTypeId = transportSubTypeId };
             _context.TrucksTypes.Add(newItem);
             _context.SaveChanges();
             _context.Database.ExecuteSqlRaw("SET IDENTITY_INSERT [dbo].[TrucksTypes] OFF");
@@ -174,46 +122,13 @@ namespace TACHYON.Migrations.Seed.Host
         {
             item.DisplayName = displayName;
             item.IsDeleted = false;
-            item.TransportSubtypeId = transportSubTypeId;
+            item.TransportTypeId = transportSubTypeId;
             _context.TrucksTypes.Update(item);
             _context.SaveChanges();
         }
 
         #endregion
 
-        #region TruckSubType
-        private void CreateOrUpdateTruckSubType(string displayName, int id, int truckTypeId)
-        {
-            var item = _context.TruckSubtypes.IgnoreQueryFilters().FirstOrDefault(x => x.Id == id);
-            if (item == null)
-            {
-                AddTruckSubTypeToDB(displayName, id, truckTypeId);
-            }
-            else
-            {
-                UpdateTruckSubType(item, displayName,truckTypeId);
-            }
-        }
-
-        private void AddTruckSubTypeToDB(string displayName, int id, int truckTypeId)
-        {
-            _context.Database.ExecuteSqlRaw("SET IDENTITY_INSERT [dbo].[TruckSubtypes] ON");
-            var newItem = new TruckSubtype() { DisplayName = displayName, IsDeleted = false, Id = id, TrucksTypeId = truckTypeId };
-            _context.TruckSubtypes.Add(newItem);
-            _context.SaveChanges();
-            _context.Database.ExecuteSqlRaw("SET IDENTITY_INSERT [dbo].[TruckSubtypes] OFF");
-        }
-
-        private void UpdateTruckSubType(TruckSubtype item, string displayName, int truckTypeId)
-        {
-            item.DisplayName = displayName;
-            item.IsDeleted = false;
-            item.TrucksTypeId = truckTypeId;
-            _context.TruckSubtypes.Update(item);
-            _context.SaveChanges();
-        }
-
-        #endregion
 
         #region Capacity
         private void CreateOrUpdateCapacity(string displayName, int id, int truckSubTypeId)
@@ -229,20 +144,20 @@ namespace TACHYON.Migrations.Seed.Host
             }
         }
 
-        private void AddCapacityToDB(string displayName, int id, int truckSubTypeId)
+        private void AddCapacityToDB(string displayName, int id, int truckTypeId)
         {
             _context.Database.ExecuteSqlRaw("SET IDENTITY_INSERT [dbo].[Capacities] ON");
-            var newItem = new Capacity() { DisplayName = displayName, IsDeleted = false, Id = id, TruckSubtypeId = truckSubTypeId };
+            var newItem = new Capacity() { DisplayName = displayName, IsDeleted = false, Id = id, TrucksTypeId = truckTypeId };
             _context.Capacities.Add(newItem);
             _context.SaveChanges();
             _context.Database.ExecuteSqlRaw("SET IDENTITY_INSERT [dbo].[Capacities] OFF");
         }
 
-        private void UpdateCapacity(Capacity item, string displayName,int truckSubTypeId)
+        private void UpdateCapacity(Capacity item, string displayName,int truckTypeId)
         {
             item.DisplayName = displayName;
             item.IsDeleted = false;
-            item.TruckSubtypeId = truckSubTypeId;
+            item.TrucksTypeId = truckTypeId;
             _context.Capacities.Update(item);
             _context.SaveChanges();
         }

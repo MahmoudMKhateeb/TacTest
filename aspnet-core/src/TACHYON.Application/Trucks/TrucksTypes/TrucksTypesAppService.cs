@@ -14,8 +14,7 @@ using System.Linq.Dynamic.Core;
 using System.Threading.Tasks;
 using TACHYON.Authorization;
 using TACHYON.Dto;
-using TACHYON.Trucks.TruckCategories.TransportSubtypes;
-using TACHYON.Trucks.TruckCategories.TransportSubtypes.Dtos;
+using TACHYON.Trucks.TruckCategories.TransportTypes;
 using TACHYON.Trucks.TrucksTypes.Dtos;
 
 namespace TACHYON.Trucks.TrucksTypes
@@ -25,16 +24,12 @@ namespace TACHYON.Trucks.TrucksTypes
     {
         private readonly IRepository<TrucksType, long> _trucksTypeRepository;
 
-        private readonly IRepository<TransportSubtype, int> _lookup_transportSubTypeRepository;
-        private readonly IRepository<TransportSubtype> _transportSubtypeRepository;
+        private readonly IRepository<TransportType, int> _transportTypeRepository;
 
-        public TrucksTypesAppService(IRepository<TransportSubtype> transportSubtypeRepository, IRepository<TrucksType, long> trucksTypeRepository, IRepository<TransportSubtype> lookup_transportSubTypeRepository)
+        public TrucksTypesAppService(IRepository<TrucksType, long> trucksTypeRepository, IRepository<TransportType, int> transportTypeRepository)
         {
             _trucksTypeRepository = trucksTypeRepository;
-            _lookup_transportSubTypeRepository = lookup_transportSubTypeRepository;
-            _transportSubtypeRepository = transportSubtypeRepository;
-
-
+            _transportTypeRepository = transportTypeRepository;
         }
 
         public async Task<PagedResultDto<GetTrucksTypeForViewDto>> GetAll(GetAllTrucksTypesInput input)
@@ -49,7 +44,7 @@ namespace TACHYON.Trucks.TrucksTypes
                 .PageBy(input);
 
             var trucksTypes = from o in pagedAndFilteredTrucksTypes
-                              join o1 in _transportSubtypeRepository.GetAll() on o.TransportSubtypeId equals o1.Id into j1
+                              join o1 in _transportTypeRepository.GetAll() on o.TransportTypeId equals o1.Id into j1
                               from s1 in j1.DefaultIfEmpty()
                               select new GetTrucksTypeForViewDto()
                               {
@@ -58,7 +53,7 @@ namespace TACHYON.Trucks.TrucksTypes
                                       DisplayName = o.DisplayName,
                                       Id = o.Id
                                   },
-                                  TransportSubtypeDisplayName = s1 == null || s1.DisplayName == null ? "" : s1.DisplayName.ToString()
+                                  TransportTypeDisplayName = s1 == null || s1.DisplayName == null ? "" : s1.DisplayName.ToString()
                               };
 
             var totalCount = await filteredTrucksTypes.CountAsync();
@@ -136,12 +131,12 @@ namespace TACHYON.Trucks.TrucksTypes
         }
 
         [AbpAuthorize(AppPermissions.Pages_TrucksTypes)]
-        public async Task<List<TransportSubtypeTransportTypeLookupTableDto>> GetAllTransportSubTypeForTableDropdown()
+        public async Task<List<SelectItemDto>> GetAllTransportTypeForTableDropdown()
         {
-            return await _lookup_transportSubTypeRepository.GetAll()
-                .Select(transportType => new TransportSubtypeTransportTypeLookupTableDto
+            return await _transportTypeRepository.GetAll()
+                .Select(transportType => new SelectItemDto
                 {
-                    Id = transportType.Id,
+                    Id = transportType.Id.ToString(),
                     DisplayName = transportType == null || transportType.DisplayName == null ? "" : transportType.DisplayName.ToString()
                 }).ToListAsync();
         }

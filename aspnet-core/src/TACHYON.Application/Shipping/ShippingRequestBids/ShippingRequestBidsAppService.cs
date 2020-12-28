@@ -260,9 +260,7 @@ namespace TACHYON.Shipping.ShippingRequestBids
                     .Include(x => x.Tenant)
                     .Where(x => x.IsBid)
                     .WhereIf(input.TruckTypeId != null, x => x.TrucksTypeId == input.TruckTypeId)
-                    .WhereIf(input.TruckSubTypeId != null, x => x.TruckSubtypeId != null && x.TruckSubtypeId == input.TruckSubTypeId)
                     .WhereIf(input.TransportType != null, x => x.TransportTypeId != null && x.TransportTypeId == input.TransportType)
-                    .WhereIf(input.TransportSubType != null, x => x.TransportSubtypeId != null && x.TransportSubtypeId == input.TransportSubType)
 
                     //Filter
                     .WhereIf(!string.IsNullOrWhiteSpace(input.Filter), x => x.ShippingRequestBids.Any(b => b.Tenant.Name.Contains(input.Filter)))

@@ -30,7 +30,7 @@ export class CapacitiesComponent extends AppComponentBase {
   advancedFiltersAreShown = false;
   filterText = '';
   displayNameFilter = '';
-  truckSubtypeDisplayNameFilter = '';
+  truckTypeDisplayNameFilter = '';
 
   constructor(
     injector: Injector,
@@ -55,7 +55,7 @@ export class CapacitiesComponent extends AppComponentBase {
       .getAll(
         this.filterText,
         this.displayNameFilter,
-        this.truckSubtypeDisplayNameFilter,
+        this.truckTypeDisplayNameFilter,
         this.primengTableHelper.getSorting(this.dataTable),
         this.primengTableHelper.getSkipCount(this.paginator, event),
         this.primengTableHelper.getMaxResultCount(this.paginator, event)

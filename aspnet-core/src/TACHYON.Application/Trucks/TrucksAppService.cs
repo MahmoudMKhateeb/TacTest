@@ -31,10 +31,8 @@ using TACHYON.Storage;
 using TACHYON.Trucks;
 using TACHYON.Trucks.Dtos;
 using TACHYON.Trucks.Exporting;
-using TACHYON.Trucks.TruckCategories.TransportSubtypes;
 using TACHYON.Trucks.TruckCategories.TransportTypes;
 using TACHYON.Trucks.TruckCategories.TruckCapacities;
-using TACHYON.Trucks.TruckCategories.TruckSubtypes;
 using TACHYON.Trucks.TrucksTypes;
 using GetAllForLookupTableInput = TACHYON.Trucks.Dtos.GetAllForLookupTableInput;
 
@@ -57,14 +55,12 @@ namespace TACHYON.Trucks
         private readonly IBinaryObjectManager _binaryObjectManager;
         private readonly DocumentFilesAppService _documentFilesAppService;
         private readonly IRepository<TransportType, int> _transportTypeRepository;
-        private readonly IRepository<TransportSubtype, int> _transportSubtypeRepository;
-        private readonly IRepository<TruckSubtype, int> _truckSubtypeRepository;
         private readonly IRepository<Capacity, int> _capacityRepository;
 
 
 
 
-        public TrucksAppService(IRepository<DocumentType, long> documentTypeRepository, IRepository<DocumentFile, Guid> documentFileRepository, IRepository<Truck, Guid> truckRepository, ITrucksExcelExporter trucksExcelExporter, IRepository<TrucksType, long> lookup_trucksTypeRepository, IRepository<TruckStatus, long> lookup_truckStatusRepository, IRepository<User, long> lookup_userRepository, IAppNotifier appNotifier, ITempFileCacheManager tempFileCacheManager, IBinaryObjectManager binaryObjectManager, DocumentFilesAppService documentFilesAppService, IRepository<TransportType, int> transportTypeRepository, IRepository<TransportSubtype, int> transportSubtypeRepository, IRepository<Capacity, int> capacityRepository, IRepository<TruckSubtype, int> truckSubtypeRepository)
+        public TrucksAppService(IRepository<DocumentType, long> documentTypeRepository, IRepository<DocumentFile, Guid> documentFileRepository, IRepository<Truck, Guid> truckRepository, ITrucksExcelExporter trucksExcelExporter, IRepository<TrucksType, long> lookup_trucksTypeRepository, IRepository<TruckStatus, long> lookup_truckStatusRepository, IRepository<User, long> lookup_userRepository, IAppNotifier appNotifier, ITempFileCacheManager tempFileCacheManager, IBinaryObjectManager binaryObjectManager, DocumentFilesAppService documentFilesAppService, IRepository<TransportType, int> transportTypeRepository,IRepository<Capacity, int> capacityRepository)
         {
             _documentFileRepository = documentFileRepository;
             _documentTypeRepository = documentTypeRepository;
@@ -78,9 +74,7 @@ namespace TACHYON.Trucks
             _binaryObjectManager = binaryObjectManager;
             _documentFilesAppService = documentFilesAppService;
             _transportTypeRepository = transportTypeRepository;
-            _transportSubtypeRepository = transportSubtypeRepository;
             _capacityRepository = capacityRepository;
-            _truckSubtypeRepository = truckSubtypeRepository;
         }
 
         public async Task<PagedResultDto<GetTruckForViewDto>> GetAll(GetAllTrucksInput input)
@@ -91,9 +85,7 @@ namespace TACHYON.Trucks
                 //.Include(e => e.Driver1UserFk)
                 //truck type related
                 .Include(e => e.TrucksTypeFk)
-                .Include(e => e.TruckSubtypeFk)
                 .Include(e => e.TransportTypeFk)
-                .Include(e => e.TransportSubtypeFk)
                 .Include(e => e.CapacityFk)
                 .WhereIf(!string.IsNullOrWhiteSpace(input.Filter), e => false || e.PlateNumber.Contains(input.Filter) ||
                 e.ModelName.Contains(input.Filter) || e.ModelYear.Contains(input.Filter) || e.Note.Contains(input.Filter))
@@ -137,9 +129,7 @@ namespace TACHYON.Trucks
                              },
                              TrucksTypeDisplayName =
                              (o.TransportTypeFk == null ?"": o.TransportTypeFk.DisplayName) + " - "+
-                             (o.TransportSubtypeFk == null ?"": o.TransportSubtypeFk.DisplayName) + " - " +
                              (o.TrucksTypeFk == null ?"": o.TrucksTypeFk.DisplayName) + " - " +
-                             (o.TruckSubtypeFk == null ?"": o.TruckSubtypeFk.DisplayName) + " - " +
                              (o.CapacityFk == null ?"": o.CapacityFk.DisplayName),                    
                              TruckStatusDisplayName = s2 == null || s2.DisplayName == null ? "" : s2.DisplayName.ToString(),
                              //UserName = s3 == null || s3.Name == null ? "" : s3.Name.ToString(),
@@ -218,17 +208,9 @@ namespace TACHYON.Trucks
             {
                 input.TransportTypeId = null;
             }
-            if (input.TransportSubtypeId==0)
-            {
-                input.TransportSubtypeId = null;
-            }
             if (input.TrucksTypeId==0)
             {
                 input.TrucksTypeId = null;
-            }
-            if (input.TruckSubtypeId==0) {
-                input.TruckSubtypeId = null;
-
             }
             if (input.CapacityId==0) {
                 input.CapacityId = null;
@@ -382,9 +364,7 @@ namespace TACHYON.Trucks
                              },
                              TrucksTypeDisplayName =
                              (o.TransportTypeFk == null ? "" : o.TransportTypeFk.DisplayName) + " - " +
-                             (o.TransportSubtypeFk == null ? "" : o.TransportSubtypeFk.DisplayName) + " - " +
                              (o.TrucksTypeFk == null ? "" : o.TrucksTypeFk.DisplayName) + " - " +
-                             (o.TruckSubtypeFk == null ? "" : o.TruckSubtypeFk.DisplayName) + " - " +
                              (o.CapacityFk == null ? "" : o.CapacityFk.DisplayName),
                              TruckStatusDisplayName = s2 == null || s2.DisplayName == null ? "" : s2.DisplayName.ToString(),
                              //UserName = s3 == null || s3.Name == null ? "" : s3.Name.ToString(),
@@ -513,9 +493,9 @@ namespace TACHYON.Trucks
                 DisplayName = x.DisplayName
             }).ToListAsync();
         }
-        public async Task<List<SelectItemDto>> GetAllTransportSubtypesByTransportTypeIdForDropdown(int transportTypeId)
+        public async Task<List<SelectItemDto>> GetAllTruckTypesByTransportTypeIdForDropdown(int transportTypeId)
         {
-            return await _transportSubtypeRepository.GetAll()
+            return await _lookup_trucksTypeRepository.GetAll()
                 .Where(x => x.TransportTypeId == transportTypeId)
                 .Select(x => new SelectItemDto()
                 {
@@ -523,30 +503,10 @@ namespace TACHYON.Trucks
                     DisplayName = x.DisplayName
                 }).ToListAsync();
         }
-        public async Task<List<SelectItemDto>> GetAllTruckTypesByTransportSubtypeIdForDropdown(int transportSubtypeId)
-        {
-            return await _lookup_trucksTypeRepository.GetAll()
-                .Where(x => x.TransportSubtypeId == transportSubtypeId)
-                .Select(x => new SelectItemDto()
-                {
-                    Id = x.Id.ToString(),
-                    DisplayName = x.DisplayName
-                }).ToListAsync();
-        }
-        public async Task<List<SelectItemDto>> GetAllTruckSubTypesByTruckTypeIdForDropdown(int truckTypeId)
-        {
-            return await _truckSubtypeRepository.GetAll()
-                .Where(x => x.TrucksTypeId == truckTypeId)
-                .Select(x => new SelectItemDto()
-                {
-                    Id = x.Id.ToString(),
-                    DisplayName = x.DisplayName
-                }).ToListAsync();
-        }
-        public async Task<List<SelectItemDto>> GetAllTuckCapacitiesByTuckSubTypeIdForDropdown(int truckSubTypeId)
+        public async Task<List<SelectItemDto>> GetAllTuckCapacitiesByTuckTypeIdForDropdown(int truckTypeId)
         {
             return await _capacityRepository.GetAll()
-                .Where(x => x.TruckSubtypeId == truckSubTypeId)
+                .Where(x => x.TrucksTypeId == truckTypeId)
                 .Select(x => new SelectItemDto()
                 {
                     Id = x.Id.ToString(),
