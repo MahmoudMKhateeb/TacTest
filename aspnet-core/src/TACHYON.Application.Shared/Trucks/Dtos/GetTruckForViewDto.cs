@@ -8,10 +8,8 @@
 
         public string TruckStatusDisplayName { get; set; }
 
-       // public string UserName { get; set; }
 
         public bool IsMissingDocumentFiles { get; set; }
 
-        //public string UserName2 { get; set; }
     }
 }

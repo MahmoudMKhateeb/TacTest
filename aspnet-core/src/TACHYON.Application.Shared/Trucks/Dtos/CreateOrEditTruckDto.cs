@@ -25,13 +25,6 @@ namespace TACHYON.Trucks.Dtos
         public string ModelYear { get; set; }
 
 
-        //[Required]
-        //[StringLength(TruckConsts.MaxLicenseNumberLength, MinimumLength = TruckConsts.MinLicenseNumberLength)]
-        //public string LicenseNumber { get; set; }
-
-
-        //public DateTime LicenseExpirationDate { get; set; }
-
         public virtual string Capacity { get; set; }
         public bool IsAttachable { get; set; }
 
@@ -42,13 +35,6 @@ namespace TACHYON.Trucks.Dtos
         [Required]
         public long? TruckStatusId { get; set; }
 
-       // public long? Driver1UserId { get; set; }
-
-        //public long? Driver2UserId { get; set; }
-
-        //public int? RentPrice { get; set; }
-
-        //public int? RentDuration { get; set; }
 
         public UpdateTruckPictureInput UpdateTruckPictureInput { get; set; }
 
@@ -61,6 +47,8 @@ namespace TACHYON.Trucks.Dtos
         public virtual int? CapacityId { get; set; }
 
         #endregion
+
+        public int? Length { get; set; }
 
     }
 }

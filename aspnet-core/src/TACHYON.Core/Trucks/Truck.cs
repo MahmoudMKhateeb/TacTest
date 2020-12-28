@@ -94,5 +94,8 @@ namespace TACHYON.Trucks
 
         #endregion
 
+        //Truck length (Meter) 
+        public int? Length { get; set; }
+
     }
 }

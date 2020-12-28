@@ -106,6 +106,17 @@
               <validation-messages [formCtrl]="capacity"></validation-messages>
               <span *ngIf="Number(truck.capacity) < 0" class="form-text text-danger">{{ l('vlaueMustBeGreaterThan') }} 0</span>
             </div>
+            <div class="form-group col-md-6">
+              <label for="Truck_Length">{{ l('Length') }}</label>
+              <div class="input-group">
+                <input [(ngModel)]="truck.length" #length="ngModel" class="form-control" id="Truck_Length" min="0" name="Length" type="number" />
+                <div class="input-group-append">
+                  <span class="input-group-text">{{ l('Meter') }}</span>
+                </div>
+              </div>
+              <validation-messages [formCtrl]="length"></validation-messages>
+              <span *ngIf="truck.length < 0" class="form-text text-danger">{{ l('vlaueMustBeGreaterThan') }} 0</span>
+            </div>
           </div>
           <div class="separator separator-dashed my-10"></div>
 

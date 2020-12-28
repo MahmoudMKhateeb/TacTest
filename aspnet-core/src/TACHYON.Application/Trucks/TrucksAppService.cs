@@ -126,6 +126,7 @@ namespace TACHYON.Trucks
                                  Note = o.Note,
                                  Id = o.Id,
                                  Capacity=o.Capacity,
+                                 Length = o.Length
                              },
                              TrucksTypeDisplayName =
                              (o.TransportTypeFk == null ?"": o.TransportTypeFk.DisplayName) + " - "+
@@ -162,11 +163,6 @@ namespace TACHYON.Trucks
                 output.TruckStatusDisplayName = _lookupTruckStatus?.DisplayName?.ToString();
             }
 
-            //if (output.Truck.Driver1UserId != null)
-            //{
-            //    var _lookupUser = await _lookup_userRepository.FirstOrDefaultAsync((long)output.Truck.Driver1UserId);
-            //    output.UserName = _lookupUser?.Name?.ToString();
-            //}
 
 
             return output;
