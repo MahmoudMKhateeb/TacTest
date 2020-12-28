@@ -25,7 +25,6 @@ namespace TACHYON.Drivers.importing
 
                     AddHeader(
                         sheet,
-                        L("UserName"),
                         L("Name"),
                         L("Surname"),
                         L("PhoneNumber"),
@@ -34,7 +33,6 @@ namespace TACHYON.Drivers.importing
 
                     AddObjects(
                         sheet, 2, userListDtos,
-                        _ => _.UserName,
                         _ => _.Name,
                         _ => _.Surname,
                         _ => _.PhoneNumber,

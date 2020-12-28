@@ -107,8 +107,9 @@ namespace TACHYON.Drivers.importing
                 //3
                 user.EmailAddress = GetRequiredValueFromRowOrNull(worksheet, row, 3, nameof(user.EmailAddress), exceptionMessage);
                 //4
-                user.DateOfBirth = DateTime.ParseExact(GetRequiredValueFromRowOrNull(worksheet, row, 4, nameof(user.DateOfBirth), exceptionMessage), "dd/MM/yyyy", null).Date;
                 //5
+
+                user.DateOfBirth = DateTime.ParseExact(GetRequiredValueFromRowOrNull(worksheet, row, 5, nameof(user.DateOfBirth), exceptionMessage), "dd/MM/yyyy", null).Date;
 
                 //iqama document
                 //6

@@ -95,7 +95,6 @@ namespace TACHYON.MultiTenancy
                     throw new Exception("admin Email Or CompanyName Is Already Taken!");
                 }
 
-
                 CheckTenantRegistrationIsEnabled();
 
                 if (UseCaptchaOnRegistration())
