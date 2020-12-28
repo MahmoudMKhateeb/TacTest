@@ -131,7 +131,8 @@ namespace TACHYON.Authorization.Users
                     Name = u.Name,
                     PhoneNumber = u.PhoneNumber,
                     ProfilePictureId = u.ProfilePictureId,
-                    Surname = u.Surname
+                    Surname = u.Surname,
+                    DateOfBirth = u.DateOfBirth
                 })
                 .OrderBy(input.Sorting)
                 .PageBy(input)

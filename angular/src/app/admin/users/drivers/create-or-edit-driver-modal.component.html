@@ -114,13 +114,36 @@
                 </div>
                 <div class="col-6">
                   <div class="form-group">
+                    <label for="DateOfBirth">{{ 'DateOfBirth' | localize }}</label>
+                    <div class="input-group date">
+                      <input
+                        type="datetime"
+                        id="DateOfBirth"
+                        #DateOfBirth
+                        name="DateOfBirth"
+                        class="form-control"
+                        bsDatepicker
+                        datePickerMomentModifier
+                        [(date)]="user.dateOfBirth"
+                        [bsConfig]="{ adaptivePosition: true }"
+                        readonly
+                        placeholder="Select date"
+                      />
+                      <div class="input-group-append">
+                        <span class="input-group-text">
+                          <i class="la la-calendar-check-o"></i>
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="col-6">
+                  <div class="form-group">
                     <label for="Address">{{ 'Address' | localize }}</label>
                     <input id="Address" type="text" name="Address" class="form-control" [(ngModel)]="user.address" maxlength="256" />
                   </div>
                 </div>
-              </div>
-
-              <div class="row">
                 <div class="col-6">
                   <div class="form-group" *ngIf="user.isDriver">
                     <label for="ExperienceField">{{ 'ExperienceField' | localize }}</label>

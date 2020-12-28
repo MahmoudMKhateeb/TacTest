@@ -55,6 +55,9 @@ namespace TACHYON.Authorization.Users.Dto
         public virtual string Nationality { get; set; }
         public virtual string ExperienceField { get; set; }
 
+        public DateTime? DateOfBirth { get; set; }
+
+
         #endregion
     }
 }

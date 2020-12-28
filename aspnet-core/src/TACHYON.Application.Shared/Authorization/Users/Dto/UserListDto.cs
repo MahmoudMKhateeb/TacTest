@@ -28,5 +28,8 @@ namespace TACHYON.Authorization.Users.Dto
         public bool IsMissingDocumentFiles { get; set; }
 
         public DateTime CreationTime { get; set; }
+
+        public  DateTime? DateOfBirth { get; set; }
+
     }
 }

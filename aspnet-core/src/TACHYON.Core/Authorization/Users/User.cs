@@ -30,7 +30,7 @@ namespace TACHYON.Authorization.Users
         public virtual string Address { get; set; }
         public virtual string Nationality { get; set; }
         public virtual string ExperienceField { get; set; }
-
+        public virtual DateTime? DateOfBirth { get; set; }
         public User()
         {
             IsLockoutEnabled = true;
