@@ -1,4 +1,4 @@
-﻿import { Component, Injector, ViewEncapsulation, ViewChild, ChangeDetectorRef } from '@angular/core';
+﻿import { Component, Injector, ViewEncapsulation, ViewChild, ChangeDetectorRef, AfterViewInit, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { TrucksServiceProxy, TruckDto } from '@shared/service-proxies/service-proxies';
 import { NotifyService } from 'abp-ng2-module';
@@ -28,7 +28,7 @@ import { TruckUserLookupTableModalComponent } from './truck-user-lookup-table-mo
   encapsulation: ViewEncapsulation.None,
   animations: [appModuleAnimation()],
 })
-export class TrucksComponent extends AppComponentBase {
+export class TrucksComponent extends AppComponentBase implements OnInit, AfterViewInit {
   @ViewChild('entityTypeHistoryModal', { static: true }) entityTypeHistoryModal: EntityTypeHistoryModalComponent;
   @ViewChild('createOrEditTruckModal', { static: true }) createOrEditTruckModal: CreateOrEditTruckModalComponent;
   @ViewChild('viewTruckModalComponent', { static: true }) viewTruckModal: ViewTruckModalComponent;
@@ -69,6 +69,10 @@ export class TrucksComponent extends AppComponentBase {
 
   ngOnInit(): void {
     this.entityHistoryEnabled = this.setIsEntityHistoryEnabled();
+  }
+
+  ngAfterViewInit(): void {
+    this.primengTableHelper.adjustScroll(this.dataTable);
   }
 
   private setIsEntityHistoryEnabled(): boolean {

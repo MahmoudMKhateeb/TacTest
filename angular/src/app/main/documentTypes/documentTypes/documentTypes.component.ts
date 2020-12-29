@@ -1,4 +1,4 @@
-﻿import { Component, Injector, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
+﻿import { AfterViewInit, Component, Injector, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { DocumentTypeDto, DocumentTypesServiceProxy, SelectItemDto, TokenAuthServiceProxy } from '@shared/service-proxies/service-proxies';
 import { NotifyService } from 'abp-ng2-module';
@@ -17,7 +17,7 @@ import { FileDownloadService } from '@shared/utils/file-download.service';
   encapsulation: ViewEncapsulation.None,
   animations: [appModuleAnimation()],
 })
-export class DocumentTypesComponent extends AppComponentBase implements OnInit {
+export class DocumentTypesComponent extends AppComponentBase implements OnInit, AfterViewInit {
   @ViewChild('createOrEditDocumentTypeModal', { static: true }) createOrEditDocumentTypeModal: CreateOrEditDocumentTypeModalComponent;
   @ViewChild('viewDocumentTypeModalComponent', { static: true }) viewDocumentTypeModal: ViewDocumentTypeModalComponent;
 
@@ -45,6 +45,10 @@ export class DocumentTypesComponent extends AppComponentBase implements OnInit {
 
   ngOnInit(): void {
     this.getDocumentsEntityLookUp();
+  }
+
+  ngAfterViewInit(): void {
+    this.primengTableHelper.adjustScroll(this.dataTable);
   }
 
   getDocumentTypes(event?: LazyLoadEvent) {
