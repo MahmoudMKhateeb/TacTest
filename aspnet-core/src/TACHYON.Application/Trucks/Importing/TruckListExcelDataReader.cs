@@ -157,7 +157,7 @@ namespace TACHYON.Trucks.Importing
                 }
 
                 //default truck status active
-                truck.TruckStatusId = 1;
+                truck.TruckStatusId = 3;
             }
             catch (System.Exception exception)
             {
