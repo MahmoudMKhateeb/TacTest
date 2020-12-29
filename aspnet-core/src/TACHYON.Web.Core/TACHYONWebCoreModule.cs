@@ -95,7 +95,10 @@ namespace TACHYON.Web
             //});
 
             //Send All Exceptions To Clients
-            Configuration.Modules.AbpWebCommon().SendAllExceptionsToClients = true;
+            if (_env.EnvironmentName.ToLower() == "development")
+            {
+                Configuration.Modules.AbpWebCommon().SendAllExceptionsToClients = true;
+            }
 
         }
 
