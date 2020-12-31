@@ -16,6 +16,7 @@ using TACHYON.Vases;
 using TACHYON.ShippingRequestVases;
 using TACHYON.ShippingRequestTripVases;
 using TACHYON.TermsAndConditions;
+﻿using TACHYON.Receivers;
 using TACHYON.Trucks.TruckCategories.TruckCapacities;
 using TACHYON.Trucks.TruckCategories.TransportTypes;
 using TACHYON.Documents.DocumentTypeTranslations;
@@ -111,6 +112,8 @@ namespace TACHYON.EntityFrameworkCore
         public virtual DbSet<VasPrice> VasPrices { get; set; }
         public virtual DbSet<ShippingRequestVas> ShippingRequestVases { get; set; }
         public virtual DbSet<ShippingRequestTripVas> ShippingRequestTripVases { get; set; }
+
+        public virtual DbSet<Receiver> Receivers { get; set; }
 
         public virtual DbSet<TermAndConditionTranslation> TermAndConditionTranslations { get; set; }
 
@@ -251,6 +254,10 @@ namespace TACHYON.EntityFrameworkCore
                        {
                            v.HasIndex(e => new { e.TenantId });
                        });
+            modelBuilder.Entity<Receiver>(r =>
+            {
+                r.HasIndex(e => new { e.TenantId });
+            });
             modelBuilder.Entity<ShippingRequestBid>().HasQueryFilter(p => !p.IsCancled);
 
             modelBuilder.Entity<Facility>(f =>

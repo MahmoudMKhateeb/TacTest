@@ -1,6 +1,18 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <localizationDictionary culture="en">
-  <texts>
+  <texts>    <text name="Receivers">Receivers</text>
+    <text name="Receiver">Receiver</text>
+    <text name="TACHYON.Receivers.Receiver">Receiver</text>
+    <text name="FullName">Full name</text>
+    <text name="PhoneNumber">Phone number</text>
+    <text name="ReceiversHeaderInfo">Receivers header info</text>
+    <text name="CreateNewReceiver">Create new receiver</text>
+    <text name="EditReceiver">Edit receiver</text>
+    <text name="DeleteReceiver">Delete receiver</text>
+    <text name="FacilityName">Facility name</text>
+    <text name="PickFacility">Pick facility</text>
+
+
 
     <![CDATA[Tachyon:Driver Start]]>
     <text name="FirstName">First name</text>

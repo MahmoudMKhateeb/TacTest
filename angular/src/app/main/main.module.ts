@@ -58,6 +58,10 @@ import { VasPricesComponent } from './vases/vasPrices/vasPrices.component';
 import { ViewVasPriceModalComponent } from './vases/vasPrices/view-vasPrice-modal.component';
 import { CreateOrEditVasPriceModalComponent } from './vases/vasPrices/create-or-edit-vasPrice-modal.component';
 
+import { ReceiversComponent } from './receivers/receivers/receivers.component';
+import { ViewReceiverModalComponent } from './receivers/receivers/view-receiver-modal.component';
+import { CreateOrEditReceiverModalComponent } from './receivers/receivers/create-or-edit-receiver-modal.component';
+
 import { TermAndConditionsComponent } from './termsAndConditions/termAndConditions/termAndConditions.component';
 import { ViewTermAndConditionModalComponent } from './termsAndConditions/termAndConditions/view-termAndCondition-modal.component';
 import { CreateOrEditTermAndConditionModalComponent } from './termsAndConditions/termAndConditions/create-or-edit-termAndCondition-modal.component';
@@ -338,6 +342,10 @@ NgxBootstrapDatePickerConfigService.registerNgxBootstrapDatePickerLocales();
     ViewShippingRequestPriceResponseModalComponent,
     ViewVasPriceModalComponent,
     CreateOrEditVasPriceModalComponent,
+    ReceiversComponent,
+
+    ViewReceiverModalComponent,
+    CreateOrEditReceiverModalComponent,
     TermAndConditionsComponent,
 
     ViewTermAndConditionModalComponent,

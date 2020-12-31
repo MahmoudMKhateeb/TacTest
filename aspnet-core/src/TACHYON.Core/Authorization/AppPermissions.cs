@@ -6,6 +6,11 @@
     /// </summary>
     public static class AppPermissions
     {
+        public const string Pages_Receivers = "Pages.Receivers";
+        public const string Pages_Receivers_Create = "Pages.Receivers.Create";
+        public const string Pages_Receivers_Edit = "Pages.Receivers.Edit";
+        public const string Pages_Receivers_Delete = "Pages.Receivers.Delete";
+
         public const string Pages_CitiesTranslations = "Pages.CitiesTranslations";
         public const string Pages_CitiesTranslations_Create = "Pages.CitiesTranslations.Create";
         public const string Pages_CitiesTranslations_Edit = "Pages.CitiesTranslations.Edit";

@@ -1,4 +1,5 @@
-﻿using TACHYON.TermsAndConditions;
+﻿using TACHYON.Receivers;
+using TACHYON.TermsAndConditions;
 using Abp.Organizations;
 using System;
 using System.Linq;
@@ -39,6 +40,7 @@ namespace TACHYON.EntityHistory
 
         public static readonly Type[] TenantSideTrackedTypes =
         {
+            typeof(Receiver),
             typeof(DocumentFile),
             //typeof(RoutStep),
             typeof(Route),
