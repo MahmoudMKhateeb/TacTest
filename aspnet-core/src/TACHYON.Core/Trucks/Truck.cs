@@ -24,11 +24,9 @@ namespace TACHYON.Trucks
         [StringLength(TruckConsts.MaxPlateNumberLength, MinimumLength = TruckConsts.MinPlateNumberLength)]
         public virtual string PlateNumber { get; set; }
 
-        [Required]
         [StringLength(TruckConsts.MaxModelNameLength, MinimumLength = TruckConsts.MinModelNameLength)]
         public virtual string ModelName { get; set; }
 
-        [Required]
         [StringLength(TruckConsts.MaxModelYearLength, MinimumLength = TruckConsts.MinModelYearLength)]
         public virtual string ModelYear { get; set; }
 
@@ -40,7 +38,7 @@ namespace TACHYON.Trucks
 
         //public virtual DateTime LicenseExpirationDate { get; set; }
 
-        public virtual bool IsAttachable { get; set; }
+        public virtual bool? IsAttachable { get; set; }
 
         [StringLength(TruckConsts.MaxNoteLength, MinimumLength = TruckConsts.MinNoteLength)]
         public virtual string Note { get; set; }

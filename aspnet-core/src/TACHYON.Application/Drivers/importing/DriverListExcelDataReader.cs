@@ -8,23 +8,26 @@ using Abp.Localization;
 using Abp.Localization.Sources;
 using NPOI.SS.UserModel;
 using TACHYON.Authorization.Users.Importing.Dto;
+using TACHYON.DataExporting.Excel;
 using TACHYON.DataExporting.Excel.NPOI;
 using TACHYON.Documents.DocumentFiles.Dtos;
 using TACHYON.Documents.DocumentTypes;
 using TACHYON.Drivers.importing.Dto;
+using TACHYON.Validation;
 
 namespace TACHYON.Drivers.importing
 {
     public class DriverListExcelDataReader : NpoiExcelImporterBase<ImportDriverDto>, IDriverListExcelDataReader
     {
-        private readonly ILocalizationSource _localizationSource;
         private readonly IRepository<DocumentType, long> _documentTypeRepository;
+        private readonly TachyonExcelDataReaderHelper _tachyonExcelDataReaderHelper;
 
 
-        public DriverListExcelDataReader(ILocalizationManager localizationManager, IRepository<DocumentType, long> documentTypeRepository)
+        public DriverListExcelDataReader(IRepository<DocumentType, long> documentTypeRepository, TachyonExcelDataReaderHelper tachyonExcelDataReaderHelper)
         {
             _documentTypeRepository = documentTypeRepository;
-            _localizationSource = localizationManager.GetSource(TACHYONConsts.LocalizationSourceName);
+            _tachyonExcelDataReaderHelper = tachyonExcelDataReaderHelper;
+
         }
 
         public List<ImportDriverDto> GetDriversFromExcel(byte[] fileBytes)
@@ -34,7 +37,7 @@ namespace TACHYON.Drivers.importing
 
         private ImportDriverDto ProcessExcelRow(ISheet worksheet, int row)
         {
-            if (IsRowEmpty(worksheet, row))
+            if (_tachyonExcelDataReaderHelper.IsRowEmpty(worksheet, row))
             {
                 return null;
             }
@@ -42,6 +45,8 @@ namespace TACHYON.Drivers.importing
             var exceptionMessage = new StringBuilder();
             var user = new ImportDriverDto();
             user.CreateOrEditDocumentFileDtos = new List<CreateOrEditDocumentFileDto>();
+
+            #region Required documents initiate
 
             //DriverIqama
             var iqamaDocumentFileDto = new CreateOrEditDocumentFileDto();
@@ -94,39 +99,39 @@ namespace TACHYON.Drivers.importing
             occupationCardDocumentFileDto.Extn = " ";
 
 
+            #endregion
+
+
 
             try
             {
 
                 //0
-                user.Name = GetRequiredValueFromRowOrNull(worksheet, row, 0, nameof(user.Name), exceptionMessage);
+                user.Name = _tachyonExcelDataReaderHelper.GetRequiredValueFromRowOrNull<string>(worksheet, row, 0, nameof(user.Name), exceptionMessage);
                 //1
-                user.Surname = GetRequiredValueFromRowOrNull(worksheet, row, 1, nameof(user.Surname), exceptionMessage);
+                user.Surname = _tachyonExcelDataReaderHelper.GetRequiredValueFromRowOrNull<string>(worksheet, row, 1, nameof(user.Surname), exceptionMessage);
                 //2
-                user.PhoneNumber = GetRequiredValueFromRowOrNull(worksheet, row, 2, nameof(user.PhoneNumber), exceptionMessage);
+                user.PhoneNumber = _tachyonExcelDataReaderHelper.GetRequiredValueFromRowOrNull<string>(worksheet, row, 2, nameof(user.PhoneNumber), exceptionMessage);
                 //3
-                user.EmailAddress = GetRequiredValueFromRowOrNull(worksheet, row, 3, nameof(user.EmailAddress), exceptionMessage);
+                user.EmailAddress = _tachyonExcelDataReaderHelper.GetValueFromRowOrNull<string>(worksheet, row, 3, nameof(user.EmailAddress), exceptionMessage);
+                if (!user.EmailAddress.IsNullOrEmpty() && !ValidationHelper.IsEmail(user.EmailAddress))
+                {
+                    exceptionMessage.Append("EmailAddress is not valid; ");
+                }
                 //4
                 //5
 
-                user.DateOfBirth = DateTime.ParseExact(GetRequiredValueFromRowOrNull(worksheet, row, 5, nameof(user.DateOfBirth), exceptionMessage), "dd/MM/yyyy", null).Date;
+                user.DateOfBirth = _tachyonExcelDataReaderHelper.GetValueFromRowOrNull<DateTime>(worksheet, row, 5, nameof(user.DateOfBirth), exceptionMessage);
 
                 //iqama document
                 //6
-                iqamaDocumentFileDto.Number = GetRequiredValueFromRowOrNull(worksheet, row, 6, "ID/Iqama/ NO*", exceptionMessage);
-                //7
-                iqamaDocumentFileDto.HijriExpirationDate = GetRequiredValueFromRowOrNull(worksheet, row, 7, "ID/Iqama Expiry Date(Hijri)", exceptionMessage);
-                //8
-                iqamaDocumentFileDto.ExpirationDate = DateTime.ParseExact(GetRequiredValueFromRowOrNull(worksheet, row, 8, "ID/Iqama Expiry Date(Gregorian)", exceptionMessage), "dd/MM/yyyy", null).Date;
-                if (iqamaDocumentType.HasExpirationDate && iqamaDocumentFileDto.HijriExpirationDate.IsNullOrWhiteSpace())
-                {
-                    exceptionMessage.Append("iqama Expiry  Date (Hijri) is required;");
-                }
+                iqamaDocumentFileDto.Number = _tachyonExcelDataReaderHelper.GetRequiredValueFromRowOrNull<string>(worksheet, row, 6, "ID/Iqama/ NO*", exceptionMessage);
 
-                if (iqamaDocumentType.HasExpirationDate && iqamaDocumentFileDto.ExpirationDate == null)
-                {
-                    exceptionMessage.Append("iqama Expiry  Date (Gregorian) is required;");
-                }
+                //7
+                iqamaDocumentFileDto.HijriExpirationDate = _tachyonExcelDataReaderHelper.GetValueFromRowOrNull<string>(worksheet, row, 7, "ID/Iqama Expiry Date(Hijri)", exceptionMessage);
+                //8
+                iqamaDocumentFileDto.ExpirationDate = _tachyonExcelDataReaderHelper.GetValueFromRowOrNull<DateTime?>(worksheet, row, 8, "ID/Iqama Expiry Date(Gregorian)", exceptionMessage);
+                ValidateIqamaDocumentFileDto(exceptionMessage, iqamaDocumentFileDto, iqamaDocumentType);
 
                 user.CreateOrEditDocumentFileDtos.Add(iqamaDocumentFileDto);
 
@@ -134,30 +139,19 @@ namespace TACHYON.Drivers.importing
 
                 //drivingLicense document
                 //9
-                drivingLicenseDocumentFileDto.Number = GetRequiredValueFromRowOrNull(worksheet, row, 9, "Driving License NO*", exceptionMessage);
+                drivingLicenseDocumentFileDto.Number = _tachyonExcelDataReaderHelper.GetRequiredValueFromRowOrNull<string>(worksheet, row, 9, "Driving License NO*", exceptionMessage);
                 //10
-                drivingLicenseDocumentFileDto.HijriExpirationDate = GetRequiredValueFromRowOrNull(worksheet, row, 10, "Driving License Expiry Date(Hijri)", exceptionMessage);
+                drivingLicenseDocumentFileDto.HijriExpirationDate = _tachyonExcelDataReaderHelper.GetValueFromRowOrNull<string>(worksheet, row, 10, "Driving License Expiry Date(Hijri)", exceptionMessage);
                 //11
-                drivingLicenseDocumentFileDto.ExpirationDate = DateTime.ParseExact(GetRequiredValueFromRowOrNull(worksheet, row, 11, "Driving License Expiry Date(Gregorian)", exceptionMessage), "dd/MM/yyyy", null).Date;
-                if (drivingLicenseDocumentType.HasExpirationDate && drivingLicenseDocumentFileDto.HijriExpirationDate.IsNullOrWhiteSpace())
-                {
-                    exceptionMessage.Append("drivingLicense Expiry  Date (Hijri) is required;");
-                }
-
-                if (drivingLicenseDocumentType.HasExpirationDate && drivingLicenseDocumentFileDto.ExpirationDate == null)
-                {
-                    exceptionMessage.Append("drivingLicense Expiry  Date (Gregorian) is required;");
-                }
+                drivingLicenseDocumentFileDto.ExpirationDate = _tachyonExcelDataReaderHelper.GetValueFromRowOrNull<DateTime?>(worksheet, row, 11, "Driving License Expiry Date(Gregorian)", exceptionMessage);
+                ValidateDrivingLicenseDocumentFileDto(exceptionMessage, drivingLicenseDocumentFileDto, drivingLicenseDocumentType);
 
                 user.CreateOrEditDocumentFileDtos.Add(drivingLicenseDocumentFileDto);
 
 
-
-
-
                 //occupationCard document
                 //12
-                drivingLicenseDocumentFileDto.Number = GetRequiredValueFromRowOrNull(worksheet, row, 12, "Occupation Card NO", exceptionMessage);
+                drivingLicenseDocumentFileDto.Number = _tachyonExcelDataReaderHelper.GetValueFromRowOrNull<string>(worksheet, row, 12, "Occupation Card NO", exceptionMessage);
 
                 user.CreateOrEditDocumentFileDtos.Add(drivingLicenseDocumentFileDto);
 
@@ -175,35 +169,84 @@ namespace TACHYON.Drivers.importing
             return user;
         }
 
-        private string GetRequiredValueFromRowOrNull(ISheet worksheet, int row, int column, string columnName, StringBuilder exceptionMessage)
+        private void ValidateIqamaDocumentFileDto(StringBuilder exceptionMessage, CreateOrEditDocumentFileDto iqamaDocumentFileDto, DocumentType iqamaDocumentType)
         {
-            IRow _row = worksheet.GetRow(row);
-            List<ICell> cells = _row.Cells;
-            List<string> rowData = new List<string>();
-            //Using row.Cells as List / Iterator will only get you the non-empty cells.
-            //The solution is to to use row.GetCell with MissingCellPolicy.CREATE_NULL_AS_BLANK and iterate by index over all cells in the row.
-            var cell = _row.GetCell(column, MissingCellPolicy.CREATE_NULL_AS_BLANK);
-            cell.SetCellType(CellType.String);
-            var cellValue = cell.StringCellValue;
-            if (cellValue != null && !string.IsNullOrWhiteSpace(cellValue))
+            if (!iqamaDocumentFileDto.Number.IsNullOrEmpty())
             {
-                return cellValue;
+                if (iqamaDocumentFileDto.Number.Length > iqamaDocumentType.NumberMaxDigits ||
+                 iqamaDocumentFileDto.Number.Length < iqamaDocumentType.NumberMinDigits)
+                {
+                    exceptionMessage.Append("ID/Iqama NO should be minimum " +
+                                            iqamaDocumentType.NumberMinDigits +
+                                            " character; ");
+                    exceptionMessage.Append("ID/Iqama NO should be maximum " +
+                                            iqamaDocumentType.NumberMaxDigits +
+                                            " character; ");
+                }
             }
 
-            exceptionMessage.Append(GetLocalizedExceptionMessagePart(columnName));
-            return null;
+            if (iqamaDocumentType.HasExpirationDate &&
+                iqamaDocumentFileDto.HijriExpirationDate.IsNullOrWhiteSpace() &&
+                iqamaDocumentFileDto.ExpirationDate == null)
+            {
+                exceptionMessage.Append("ID/Iqama Expiry  Date (Gregorian OR Hijri) is required; ");
+            }
+
+            if (!iqamaDocumentFileDto.HijriExpirationDate.IsNullOrWhiteSpace() &&
+                iqamaDocumentFileDto.ExpirationDate == null)
+            {
+                iqamaDocumentFileDto.ExpirationDate =
+                    _tachyonExcelDataReaderHelper.GetGregorianFromHijriDateString(iqamaDocumentFileDto
+                        .HijriExpirationDate);
+            }
+
+            if (iqamaDocumentFileDto.HijriExpirationDate.IsNullOrWhiteSpace() &&
+                iqamaDocumentFileDto.ExpirationDate != null)
+            {
+                iqamaDocumentFileDto.HijriExpirationDate =
+                    _tachyonExcelDataReaderHelper.GetHijriDateStringFromGregorian(iqamaDocumentFileDto
+                        .ExpirationDate.Value);
+            }
         }
 
-
-        private string GetLocalizedExceptionMessagePart(string parameter)
+        private void ValidateDrivingLicenseDocumentFileDto(StringBuilder exceptionMessage, CreateOrEditDocumentFileDto drivingLicenseDocumentFileDto, DocumentType drivingLicenseDocumentType)
         {
-            return _localizationSource.GetString("{0}IsInvalid", _localizationSource.GetString(parameter)) + "; ";
-        }
+            if (!drivingLicenseDocumentFileDto.Number.IsNullOrEmpty())
+            {
+                if (drivingLicenseDocumentFileDto.Number.Length > drivingLicenseDocumentType.NumberMaxDigits ||
+                 drivingLicenseDocumentFileDto.Number.Length < drivingLicenseDocumentType.NumberMinDigits)
+                {
+                    exceptionMessage.Append("drivingLicense NO should be minimum " +
+                                            drivingLicenseDocumentType.NumberMinDigits +
+                                            " character; ");
+                    exceptionMessage.Append("drivingLicense NO should be maximum " +
+                                            drivingLicenseDocumentType.NumberMaxDigits +
+                                            " character; ");
+                }
+            }
 
-        private bool IsRowEmpty(ISheet worksheet, int row)
-        {
-            var cell = worksheet.GetRow(row)?.Cells.FirstOrDefault();
-            return cell == null || string.IsNullOrWhiteSpace(cell.StringCellValue);
+            if (drivingLicenseDocumentType.HasExpirationDate &&
+                drivingLicenseDocumentFileDto.HijriExpirationDate.IsNullOrWhiteSpace() &&
+                drivingLicenseDocumentFileDto.ExpirationDate == null)
+            {
+                exceptionMessage.Append("drivingLicense Expiry  Date (Gregorian OR Hijri) is required; ");
+            }
+
+            if (!drivingLicenseDocumentFileDto.HijriExpirationDate.IsNullOrWhiteSpace() &&
+                drivingLicenseDocumentFileDto.ExpirationDate == null)
+            {
+                drivingLicenseDocumentFileDto.ExpirationDate =
+                    _tachyonExcelDataReaderHelper.GetGregorianFromHijriDateString(drivingLicenseDocumentFileDto
+                        .HijriExpirationDate);
+            }
+
+            if (drivingLicenseDocumentFileDto.HijriExpirationDate.IsNullOrWhiteSpace() &&
+                drivingLicenseDocumentFileDto.ExpirationDate != null)
+            {
+                drivingLicenseDocumentFileDto.HijriExpirationDate =
+                    _tachyonExcelDataReaderHelper.GetHijriDateStringFromGregorian(drivingLicenseDocumentFileDto
+                        .ExpirationDate.Value);
+            }
         }
     }
 }
