@@ -26,7 +26,7 @@ namespace TACHYON.Trucks.Importing.Dto
 
 
 
-        public bool IsAttachable { get; set; }
+        public bool? IsAttachable { get; set; }
 
 
         [StringLength(TruckConsts.MaxNoteLength, MinimumLength = TruckConsts.MinNoteLength)]
@@ -37,6 +37,9 @@ namespace TACHYON.Trucks.Importing.Dto
         public long? Driver1UserId { get; set; }
 
         public string Capacity { get; set; }
+
+        public int? Length { get; set; }
+
 
 
         #region Truck Categories

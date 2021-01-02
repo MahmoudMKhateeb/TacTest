@@ -57,5 +57,6 @@ namespace TACHYON.DataExporting.Excel.NPOI
 
             return entities;
         }
+
     }
 }
