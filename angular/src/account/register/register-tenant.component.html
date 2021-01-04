@@ -43,9 +43,10 @@
             <span *ngIf="!isCompanyNameAvailable" class="form-text text-danger text-left"
               >{{ 'CompanyUniqueName' | localize }} {{ 'AlreadyTaken' | localize }}</span
             >
-            <span *ngIf="!tenancyName.valid && !tenancyName.pristine" class="form-text text-danger text-left">{{
-              'CompanyUniqueName_Regex_Description' | localize
-            }}</span>
+            <!--            <span *ngIf="!tenancyName.valid && !tenancyName.pristine" class="form-text text-danger text-left">{{-->
+            <!--              'CompanyUniqueName_Regex_Description' | localize-->
+            <!--            }}</span>-->
+            <span class="form-text text-muted">Will be used as an identifier in the platform.</span>
           </div>
         </div>
       </div>
@@ -58,6 +59,8 @@
             <!-- <span class="form-text text-muted">{{ l('Enter') }} {{ l('CompanyFullLegalName') }}</span> -->
           </div>
           <validation-messages [formCtrl]="nameInput"></validation-messages>
+          <span class="form-text text-muted">The name of the company in the CR.</span>
+          <span class="form-text text-muted">Will be shown on all official documents like waybills & invoices.</span>
         </div>
       </div>
     </div>
