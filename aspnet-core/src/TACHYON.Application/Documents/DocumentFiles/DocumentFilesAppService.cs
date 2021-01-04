@@ -79,15 +79,15 @@ namespace TACHYON.Documents.DocumentFiles
                 .Include(e => e.TrailerFk)
                 .Include(e => e.UserFk)
                 .Include(e => e.RoutStepFk)
-                .Include(e=>e.TenantFk)
+                .Include(e => e.TenantFk)
                 .WhereIf(!AbpSession.TenantId.HasValue, e => e.DocumentTypeFk.DocumentsEntityFk.DisplayName == AppConsts.TenantDocumentsEntityName)
                 //.WhereIf(AbpSession.TenantId.HasValue, e => e.DocumentTypeFk.DocumentsEntityFk.DisplayName == AppConsts.TenantDocumentsEntityName)
-                .WhereIf(!string.IsNullOrWhiteSpace(input.Filter), e => false || e.Name.Contains(input.Filter) 
+                .WhereIf(!string.IsNullOrWhiteSpace(input.Filter), e => false || e.Name.Contains(input.Filter)
                 || e.Extn.Contains(input.Filter) || e.Number.Contains(input.Filter) ||
                 //If the filter related to tenant name, the rows that contains not null tenant Id should be returned and contain tenancy name
-                (e.TenantId!=null && e.TenantFk.TenancyName.Contains(input.Filter)) ||
+                (e.TenantId != null && e.TenantFk.TenancyName.Contains(input.Filter)) ||
                 //If Filter text equals Host so the null rows tenant Id only should be returned
-                (e.TenantId == null && input.Filter.ToLower()=="host"))
+                (e.TenantId == null && input.Filter.ToLower() == "host"))
                 //.WhereIf(!string.IsNullOrWhiteSpace(input.NameFilter), e => e.Name == input.NameFilter)
                 //.WhereIf(!string.IsNullOrWhiteSpace(input.ExtnFilter), e => e.Extn == input.ExtnFilter)
                 //.WhereIf(!string.IsNullOrWhiteSpace(input.BinaryObjectIdFilter.ToString()), e => e.BinaryObjectId.ToString() == input.BinaryObjectIdFilter.ToString())
@@ -122,8 +122,8 @@ namespace TACHYON.Documents.DocumentFiles
                                 from s4 in j4.DefaultIfEmpty()
                                 join o5 in _lookupRoutStepRepository.GetAll() on o.RoutStepId equals o5.Id into j5
                                 from s5 in j5.DefaultIfEmpty()
-                               // join o6 in _lookupTenantRepository.GetAll() on o.TenantId equals o6.Id into j6
-                               // from s6 in j6.DefaultIfEmpty()
+                                    // join o6 in _lookupTenantRepository.GetAll() on o.TenantId equals o6.Id into j6
+                                    // from s6 in j6.DefaultIfEmpty()
 
                                 select new GetDocumentFileForViewDto
                                 {
@@ -135,11 +135,11 @@ namespace TACHYON.Documents.DocumentFiles
                                         BinaryObjectId = o.BinaryObjectId,
                                         ExpirationDate = o.ExpirationDate,
                                         IsAccepted = o.IsAccepted,
-                                        IsRejected=o.IsRejected,
-                                        RejectionReason=o.RejectionReason,
-                                        CreationTime  = o.CreationTime
+                                        IsRejected = o.IsRejected,
+                                        RejectionReason = o.RejectionReason,
+                                        CreationTime = o.CreationTime
                                     },
-                                    SubmitterTenatTenancyName = o.TenantId==null ?"Host" :o.TenantFk.TenancyName.ToString(),
+                                    SubmitterTenatTenancyName = o.TenantId == null ? "Host" : o.TenantFk.TenancyName.ToString(),
                                     //s6 == null || s6.TenancyName == null ? "Host" : s6.TenancyName.ToString(),
                                     HasDate = o.DocumentTypeFk.HasExpirationDate,
                                     HasNumber = o.DocumentTypeFk.HasNumber,
@@ -492,7 +492,7 @@ namespace TACHYON.Documents.DocumentFiles
                 input.BinaryObjectId = await _documentFilesManager.SaveDocumentFileBinaryObject(input.UpdateDocumentFileInput.FileToken, AbpSession.TenantId);
                 input.IsAccepted = false;
                 input.IsRejected = false;
-               
+
             }
 
             ObjectMapper.Map(input, documentFile);
@@ -628,12 +628,12 @@ namespace TACHYON.Documents.DocumentFiles
             //todo send notification to the tenant
         }
 
-        public async void Reject(Guid id,string reason)
+        public async void Reject(Guid id, string reason)
         {
             DisableTenancyFiltersIfHost();
 
             var documentFile = _documentFileRepository.FirstOrDefault(id);
-            if (documentFile==null)
+            if (documentFile == null)
             {
                 throw new UserFriendlyException(L("DocumentNotFound"));
             }
@@ -652,21 +652,23 @@ namespace TACHYON.Documents.DocumentFiles
 
             var docs = await _documentFileRepository.GetAll()
                      .Include(doc => doc.DocumentTypeFk)
-                     .ThenInclude(doc => doc.DocumentsEntityFk)
+                     .ThenInclude(doc => doc.Translations)
                      .Where(x => x.DocumentTypeFk.DocumentsEntityFk.DisplayName == AppConsts.TenantDocumentsEntityName)
-                   //.Where(d => d.TenantId == AbpSession.GetTenantId())
-                   .Select(x => new GetTenantSubmittedDocumnetForView()
-                   {
-                       Id = x.Id,
-                       Extn = x.Extn,
-                       IsAccepted = x.IsAccepted,
-                       IsRejected = x.IsRejected,
-                       RejectionReason=x.RejectionReason,
-                       Name = x.DocumentTypeFk.DisplayName,
-                       //LastModificationTime = await  _binaryObjectManager.GetOrNullAsync(x.BinaryObjectId).Result.,
-                       ExpirationDate = x.ExpirationDate
-                   }).ToListAsync();
-            return docs;
+                     //.Where(d => d.TenantId == AbpSession.GetTenantId())
+                     .ToListAsync();
+            var result = docs
+                .Select(x => new GetTenantSubmittedDocumnetForView()
+                {
+                    Id = x.Id,
+                    Extn = x.Extn,
+                    IsAccepted = x.IsAccepted,
+                    IsRejected = x.IsRejected,
+                    RejectionReason = x.RejectionReason,
+                    Name = x.DocumentTypeFk.DisplayName,
+                    DocumentTypeDto = ObjectMapper.Map<DocumentTypeDto>(x.DocumentTypeFk),
+                    ExpirationDate = x.ExpirationDate
+                });
+            return result.ToList();
 
         }
 
@@ -728,7 +730,7 @@ namespace TACHYON.Documents.DocumentFiles
             var documentFiles = await _documentFileRepository.GetAll()
                     .Include(doc => doc.DocumentTypeFk)
                     .ThenInclude(doc => doc.DocumentsEntityFk)
-                    .Where(x => x.DocumentTypeFk.IsRequired)
+                    // .Where(x => x.DocumentTypeFk.IsRequired)
                     .ToListAsync();
 
             var documentTypes = await _documentTypeRepository.GetAll()

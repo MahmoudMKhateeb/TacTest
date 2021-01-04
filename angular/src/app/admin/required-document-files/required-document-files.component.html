@@ -86,7 +86,7 @@
                     </td>
                     <td style="width: 150px;">
                       <span class="ui-column-title"></span>
-                      {{ record.name }}
+                      {{ record.documentTypeDto.name }}
                     </td>
                     <td style="width: 150px;">
                       <span class="ui-column-title"></span>
@@ -166,7 +166,9 @@
                 <div class="card card-custom">
                   <div class="card-header">
                     <div class="card-title">
-                      <h4 class="card-title">{{ item.documentTypeDto.name }}</h4>
+                      <h4 class="card-title">
+                        <span *ngIf="item.documentTypeDto.isRequired">{{ '*' }} </span>{{ item.documentTypeDto.name }}
+                      </h4>
                     </div>
                   </div>
                   <div class="card-body">
@@ -195,7 +197,7 @@
                       </div>
                       <div *ngIf="item.documentTypeDto.hasNumber" class="form-group col-md-6">
                         <label
-                          >{{ item.documentTypeDto.displayName | localize }} {{ l('Number') }}
+                          >{{ item.documentTypeDto.name | localize }} {{ l('Number') }}
                           <span class="text-danger">*</span>
                         </label>
                         <input
