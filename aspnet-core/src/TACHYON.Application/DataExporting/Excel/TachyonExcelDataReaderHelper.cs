@@ -34,6 +34,8 @@ namespace TACHYON.DataExporting.Excel
         public T GetValueFromRowOrNull<T>(ISheet worksheet, int row, int column, string columnName, StringBuilder exceptionMessage)
         {
             var value = _GetStringValueFromRowOrNull(worksheet, row, column, columnName, exceptionMessage);
+
+
             if (value == null)
             {
                 return default(T);
@@ -45,8 +47,14 @@ namespace TACHYON.DataExporting.Excel
             }
             else if (typeof(T) == typeof(DateTime?))
             {
-                object r = DateTime.ParseExact(value, "d/M/yyyy", null);
-                return (T)Convert.ChangeType(r, typeof(T));
+
+                var d = DateTime.ParseExact(value, "d/M/yyyy", null);
+                DateTime? dt = d;
+
+                var type = typeof(T);
+                type = Nullable.GetUnderlyingType(type) ?? type;
+
+                return (T)Convert.ChangeType(dt, type);
             }
             return (T)Convert.ChangeType(value, typeof(T));
         }
