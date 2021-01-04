@@ -322,6 +322,7 @@ namespace TACHYON.MultiTenancy
         public async Task<List<TenantCountryLookupTableDto>> GetAllCountryForTableDropdown()
         {
             return await _lookup_countryRepository.GetAll()
+                .OrderBy(x => x.DisplayName)
                 .Select(country => new TenantCountryLookupTableDto
                 {
                     Id = country.Id,
@@ -333,6 +334,7 @@ namespace TACHYON.MultiTenancy
         public async Task<List<TenantCityLookupTableDto>> GetAllCitiesForTableDropdown(int input)
         {
             return await _lookup_cityRepository.GetAll().Where(c => c.CountyFk.Id == input)
+                .OrderBy(x => x.DisplayName)
                 .Select(county => new TenantCityLookupTableDto
                 {
                     Id = county.Id,
