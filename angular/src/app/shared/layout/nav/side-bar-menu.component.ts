@@ -8,9 +8,12 @@ import { filter } from 'rxjs/operators';
 import { MenuOptions } from '@metronic/app/core/_base/layout/directives/menu.directive';
 import { FormattedStringValueExtracter } from '@shared/helpers/FormattedStringValueExtracter';
 import * as objectPath from 'object-path';
+import { AppSessionService } from '@shared/common/session/app-session.service';
+import { Subject } from '@node_modules/rxjs';
 
 @Component({
   templateUrl: './side-bar-menu.component.html',
+  styleUrls: ['./side-bar-menu.component.css'],
   selector: 'side-bar-menu',
   encapsulation: ViewEncapsulation.None,
 })
@@ -20,6 +23,7 @@ export class SideBarMenuComponent extends AppComponentBase implements OnInit, Af
   currentRouteUrl = '';
   insideTm: any;
   outsideTm: any;
+  blockSideBar = false;
 
   menuOptions: MenuOptions = {
     submenu: {
@@ -41,7 +45,8 @@ export class SideBarMenuComponent extends AppComponentBase implements OnInit, Af
     private router: Router,
     public permission: PermissionCheckerService,
     private _appNavigationService: AppNavigationService,
-    private render: Renderer2
+    private render: Renderer2,
+    private _sessionService: AppSessionService
   ) {
     super(injector);
   }
@@ -54,6 +59,10 @@ export class SideBarMenuComponent extends AppComponentBase implements OnInit, Af
     this.router.events
       .pipe(filter((event) => event instanceof NavigationEnd))
       .subscribe((event) => (this.currentRouteUrl = this.router.url.split(/[?#]/)[0]));
+
+    if (this._sessionService.isTenantHasMissingRequiredDocuments()) {
+      this.blockSideBar = true;
+    }
   }
 
   ngAfterViewInit(): void {

@@ -1,5 +1,9 @@
 <!-- BEGIN: Aside Menu -->
-<div [class]="'aside-menu-wrapper aside-menu-' + currentTheme.baseSettings.menu.asideSkin" id="kt_aside_menu_wrapper">
+<div
+  [class]="'aside-menu-wrapper aside-menu-' + currentTheme.baseSettings.menu.asideSkin"
+  [ngClass]="{ 'not-allowed': blockSideBar }"
+  id="kt_aside_menu_wrapper"
+>
   <div
     #asideMenu
     ktMenu
@@ -48,15 +52,27 @@
     data-placement="right"
   >
     <!-- if menu item hasn't submenu -->
-    <a *ngIf="!item.items.length && !item.external" [queryParams]="item.parameters" [routerLink]="item.route" class="menu-link">
+    <a
+      *ngIf="!item.items.length && !item.external"
+      [queryParams]="item.parameters"
+      [routerLink]="item.route"
+      class="menu-link"
+      [ngClass]="{ 'not-allowed': blockSideBar }"
+    >
       <ng-container [ngTemplateOutlet]="mMenuItemText" [ngTemplateOutletContext]="{ item: item, parentItem: parentItem }"></ng-container>
     </a>
-    <a *ngIf="!item.items.length && item.external" [attr.href]="item.route" target="_blank" class="menu-link menu-toggle">
+    <a
+      *ngIf="!item.items.length && item.external"
+      [attr.href]="item.route"
+      target="_blank"
+      class="menu-link menu-toggle"
+      [ngClass]="{ 'not-allowed': blockSideBar }"
+    >
       <ng-container [ngTemplateOutlet]="mMenuItemText" [ngTemplateOutletContext]="{ item: item, parentItem: parentItem }"></ng-container>
     </a>
 
     <!-- if menu item has submenu child  -->
-    <a href="javascript:;" *ngIf="item.items.length" class="menu-link menu-toggle">
+    <a href="javascript:;" *ngIf="item.items.length" class="menu-link menu-toggle" [ngClass]="{ 'not-allowed': blockSideBar }">
       <ng-container [ngTemplateOutlet]="mMenuItemText" [ngTemplateOutletContext]="{ item: item, parentItem: parentItem }"></ng-container>
     </a>
 
