@@ -14,6 +14,12 @@ namespace TACHYON.MultiTenancy.Dto
         public string TenancyName { get; set; }
 
         [Required]
+        [StringLength(AbpTenantBase.MaxTenancyNameLength)]
+        [RegularExpression(TenantConsts.TenancyNameRegex)]
+        public string companyName { get; set; }
+
+
+        [Required]
         [StringLength(TenantConsts.MaxNameLength)]
         public string Name { get; set; }
 

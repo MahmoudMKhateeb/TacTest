@@ -30,12 +30,12 @@
             autoFocus
             type="text"
             (change)="checkIfIsCompanyUniqueName()"
-            [(ngModel)]="model.tenancyName"
+            [(ngModel)]="model.companyName"
             name="tenancyName"
             required
             style="width: 100% !important;"
             maxlength="64"
-            pattern="^[a-zA-Z][a-zA-Z0-9_-]{1,}$"
+            pattern="^[a-zA-Z][ a-zA-Z0-9_-]{1,}$"
           />
           <div>
             <validation-messages [formCtrl]="tenancyName"></validation-messages>
@@ -46,7 +46,7 @@
             <!--            <span *ngIf="!tenancyName.valid && !tenancyName.pristine" class="form-text text-danger text-left">{{-->
             <!--              'CompanyUniqueName_Regex_Description' | localize-->
             <!--            }}</span>-->
-            <span class="form-text text-muted">Will be used as an identifier in the platform.</span>
+            <!--            <span class="form-text text-muted">Will be used as an identifier in the platform.</span>-->
           </div>
         </div>
       </div>
@@ -59,8 +59,8 @@
             <!-- <span class="form-text text-muted">{{ l('Enter') }} {{ l('CompanyFullLegalName') }}</span> -->
           </div>
           <validation-messages [formCtrl]="nameInput"></validation-messages>
-          <span class="form-text text-muted">The name of the company in the CR.</span>
-          <span class="form-text text-muted">Will be shown on all official documents like waybills & invoices.</span>
+          <span class="form-text text-muted">{{ 'TheNameOfTheCompanyInTheCR' | localize }}</span>
+          <span class="form-text text-muted">{{ 'WillBeShownOnAllOfficialDocumentsLikeWaybillsAndInvoices' | localize }}.</span>
         </div>
       </div>
     </div>
@@ -297,8 +297,9 @@
             routerLinkActive="active"
             target="_blank"
             rel="bookmark"
-            >{{ l('TermsAndConditons') }}</a
           >
+            {{ l('TermsAndConditons') }}
+          </a>
         </div>
       </div>
       <span class="form-text text-danger">

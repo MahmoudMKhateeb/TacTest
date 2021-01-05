@@ -88,7 +88,9 @@ namespace TACHYON.MultiTenancy
             using (CurrentUnitOfWork.SetTenantId(null))
             {
                 var isMailValid = await CheckIfEmailisAvailable(input.AdminEmailAddress);
-                var isCompanyNameValid = CheckIfCompanyUniqueNameisAvailable(input.TenancyName);
+
+                var tenancyName = input.companyName.Trim().Replace(" ", "_");
+                var isCompanyNameValid = CheckIfCompanyUniqueNameisAvailable(tenancyName);
 
                 if (!isCompanyNameValid || !isMailValid)
                 {
@@ -126,7 +128,8 @@ namespace TACHYON.MultiTenancy
                 }
 
                 var tenantId = await _tenantManager.CreateWithAdminUserAsync(
-                    input.TenancyName,
+                    input.companyName,
+                    tenancyName,
                     input.Name,
                     input.Address,
                     input.CityId,
@@ -140,7 +143,7 @@ namespace TACHYON.MultiTenancy
                     sendActivationEmail: true,
                     subscriptionEndDate,
                     isInTrialPeriod,
-                    AppUrlService.CreateEmailActivationUrlFormat(input.TenancyName),
+                    AppUrlService.CreateEmailActivationUrlFormat(tenancyName),
                     input.UserAdminFirstName,
                     input.UserAdminSurname
 
@@ -152,7 +155,7 @@ namespace TACHYON.MultiTenancy
                 return new RegisterTenantOutput
                 {
                     TenantId = tenant.Id,
-                    TenancyName = input.TenancyName,
+                    TenancyName = tenancyName,
                     Name = input.Name,
                     UserName = AbpUserBase.AdminUserName,
                     EmailAddress = input.AdminEmailAddress,

@@ -24,6 +24,8 @@ namespace TACHYON.MultiTenancy
         public virtual int CityId { get; set; }
         public virtual string UserTitle { get; set; }
 
+        public virtual string companyName { get; set; }
+
 
 
         public DateTime? SubscriptionEndDateUtc { get; set; }

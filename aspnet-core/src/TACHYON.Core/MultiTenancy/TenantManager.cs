@@ -79,6 +79,7 @@ namespace TACHYON.MultiTenancy
         }
 
         public async Task<int> CreateWithAdminUserAsync(
+            string companyName,
             string tenancyName,
             string name,
             string address,
@@ -112,6 +113,7 @@ namespace TACHYON.MultiTenancy
                 //Create tenant
                 var tenant = new Tenant(tenancyName, name)
                 {
+                    companyName = companyName,
                     Address = address,
                     CityId = cityId,
                     CountryId = countryId,
