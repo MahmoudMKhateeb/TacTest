@@ -10,7 +10,7 @@
     <text name="TMS">Trucks Management System</text>
     <![CDATA[Tachyon:SideBar End]]>
 
-   
+
 
 
     <text name="TACHYON.TermsAndConditions.TermAndConditionTranslation">TermAndConditionTranslation</text>
@@ -21,14 +21,40 @@
     <text name="TermAndConditionTranslations">Term and condition translations</text>
     <text name="TermAndConditionTitle">Term and condition title</text>
     <text name="PickTermAndCondition">Pick term and condition</text>
-	 <![CDATA[Tachyon:Common  Start]]>-->	  <text name="Choose">Choose</text>
-	  <text name="makeSureThatYouFillAllRequiredFields">Make sure that you fill all required fields</text>
-	 <![CDATA[Tachyon:Common  End]]>-->	  	 <![CDATA[Tachyon:Truck Page Start]]>-->	  <text name="TrucksHeaderInfo">Trucks Header Info</text>
-	  <text name="NewTruck">New Truck</text>
-	  <text name="PlateNumber">Plate number</text>	  <text name="ModelName">Model Name</text>	  <text name="ModelYear">Model Year</text>	  <text name="Truck">Truck</text>
-	  <text name="UseArrowKeysToChooseTheYear">Use Arrow Keys To Choose The Year</text>
-	  <text name="TrucktypeDetails">Truck type Details</text>
-	 <![CDATA[Tachyon:Truck Page End]]>-->	 	 <![CDATA[Tachyon:Truck type Categories Pages Start]]>-->	  <text name="TruckType">Truck Type</text>	  <text name="TransportTypes">Transport types</text>	  <text name="TransportType">Transport type</text>	  <text name="CapacityCategory">Capacity Category</text>	  <text name="CapacityCategories">Capacity Categories</text>	  <text name="TransportTypesHeaderInfo">TransportTypesHeaderInfo</text>	  <text name="NewTransportType">New Transport Type</text>	  <text name="TrucksTypesHeaderInfo">Trucks Types Header Info</text>	  <text name="NewTrucksType">New Trucks Type</text>	  <text name="CapacitiesCategoriesHeaderInfo">Capacities Categories Header Info</text>	  <text name="NewCapacityCategory">New Capacity Category</text>	  <text name="TruckStatuses">Truck Statuses</text>	  <text name="NewTruckStatus">New Truck Status</text>	  <text name="TruckStatusesHeaderInfo">Truck Statuses Header Info</text>	 <![CDATA[Tachyon:Truck type Categories Page End]]>-->	  
+    <![CDATA[Tachyon:Common  Start]]>-->
+    <text name="Choose">Choose</text>
+    <text name="makeSureThatYouFillAllRequiredFields">Make sure that you fill all required fields</text>
+    <![CDATA[Tachyon:Common  End]]>-->
+
+    <![CDATA[Tachyon:Truck Page Start]]>-->
+    <text name="TrucksHeaderInfo">Trucks Header Info</text>
+    <text name="NewTruck">New Truck</text>
+    <text name="PlateNumber">Plate number</text>
+    <text name="ModelName">Model Name</text>
+    <text name="ModelYear">Model Year</text>
+    <text name="Truck">Truck</text>
+    <text name="UseArrowKeysToChooseTheYear">Use Arrow Keys To Choose The Year</text>
+    <text name="TrucktypeDetails">Truck type Details</text>
+    <![CDATA[Tachyon:Truck Page End]]>-->
+
+    <![CDATA[Tachyon:Truck type Categories Pages Start]]>-->
+    <text name="TruckType">Truck Type</text>
+    <text name="TransportTypes">Transport types</text>
+    <text name="TransportType">Transport type</text>
+    <text name="CapacityCategory">Capacity Category</text>
+    <text name="CapacityCategories">Capacity Categories</text>
+    <text name="TransportTypesHeaderInfo">TransportTypesHeaderInfo</text>
+    <text name="NewTransportType">New Transport Type</text>
+    <text name="TrucksTypesHeaderInfo">Trucks Types Header Info</text>
+    <text name="NewTrucksType">New Trucks Type</text>
+    <text name="CapacitiesCategoriesHeaderInfo">Capacities Categories Header Info</text>
+    <text name="NewCapacityCategory">New Capacity Category</text>
+    <text name="TruckStatuses">Truck Statuses</text>
+    <text name="NewTruckStatus">New Truck Status</text>
+    <text name="TruckStatusesHeaderInfo">Truck Statuses Header Info</text>
+    <![CDATA[Tachyon:Truck type Categories Page End]]>-->
+
+
     <text name="SignUp">Sign up</text>
     <text name="DontHaveAnAccount">DontHaveAnAccount</text>
     <text name="EnterYourEmailAndPassword ">Enter Your Email and Password</text>
@@ -36,8 +62,10 @@
     <text name="IAMA">I AM A</text>
     <text name="CompanyInformation">Company Information</text>
     <text name="CompanyUniqueName">Company Name</text>
-    <text name="CompanyUniqueName_Regex_Description">Please Add Company Name As It's in the CR</text>
-    <text name="CompanyFullLeagalName">Company Full Leagal Name</text>
+    <text name="CompanyUniqueName_Regex_Description">Please Add Company Name.</text>
+    <text name="CompanyFullLeagalName">Company Leagal Name</text>
+    <text name="WillBeShownOnAllOfficialDocumentsLikeWaybillsAndInvoices">Will be shown on all official documents like waybills and invoices</text>
+    <text name="TheNameOfTheCompanyInTheCR">The name of the company in the CR.</text>
     <text name="Country">Country</text>
     <text name="City">City</text>
     <text name="Address">Address</text>
@@ -61,7 +89,9 @@
     <text name="PasswordRepeat">Confirm Password </text>
     <text name="PleaseMakeSureYouProvideValidDetails!">Please Make Sure You Provide Valid Details!</text>
     <text name="pleasemakesureyouchoosethecountryandthecity!">Please make sure you choose the country and the city!</text>
-    <text name="Carrier">Carrier</text>      
+    <text name="Carrier">Carrier</text>
+    <text name="TermsAndConditons">Terms And Conditons</text>
+
     <![CDATA[ Tachyon: Tenant Registration Page End]]>
 
 
@@ -186,14 +216,17 @@
 
     <text name="Title">Title</text>
     <text name="NewTermAndCondition">new term and condition</text>
-    <text name="TermAndConditions">Term and conditions</text>	<text name="TermAndCondition">Term and condition</text>
+    <text name="TermAndConditions">Term and conditions</text>
+    <text name="TermAndCondition">Term and condition</text>
     <text name="Content">Content</text>
     <text name="Version">Version</text>
     <text name="EditionId">Edition id</text>
-    <text name="IAgreeonTahcyon">I Agree on Tahcyon's</text>    <text name="TargetEdition">Target Edition</text>    <text name="TermsAndConditions">Terms and conditions</text>
+    <text name="IAgreeonTahcyon">I Agree on Tahcyon's</text>
+    <text name="TargetEdition">Target Edition</text>
+    <text name="TermsAndConditions">Terms and conditions</text>
 
-	  
-	  
+
+
     <text name="TruckCapacities">Truck capacities</text>
     <text name="NumbersOnly">Numbers Only</text>
     <text name="TheNumberLengthMustBeMoreThanMinDigits">The Number Length Must Be More Than MinDigits</text>

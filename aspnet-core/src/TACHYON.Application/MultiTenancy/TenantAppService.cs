@@ -66,7 +66,11 @@ namespace TACHYON.MultiTenancy
         [UnitOfWork(IsDisabled = true)]
         public async Task CreateTenant(CreateTenantInput input)
         {
-            await TenantManager.CreateWithAdminUserAsync(input.TenancyName,
+            var tenancyName = input.companyName.Trim().Replace(" ", "_");
+
+            await TenantManager.CreateWithAdminUserAsync(
+                input.companyName,
+                tenancyName,
                 input.Name,
                 input.Address,
                 input.CountryId,
@@ -80,7 +84,7 @@ namespace TACHYON.MultiTenancy
                 input.SendActivationEmail,
                 input.SubscriptionEndDateUtc?.ToUniversalTime(),
                 input.IsInTrialPeriod,
-                AppUrlService.CreateEmailActivationUrlFormat(input.TenancyName),
+                AppUrlService.CreateEmailActivationUrlFormat(tenancyName),
                 input.UserAdminFirstName,
                 input.UserAdminSurname
             );

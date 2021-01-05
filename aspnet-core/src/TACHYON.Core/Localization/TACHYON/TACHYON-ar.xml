@@ -211,17 +211,19 @@
     <text name="MembershipType">نوع العضوية</text>
     <text name="IAMA">أنا</text>
     <text name="CompanyInformation">معلومات الشركة</text>
-    <text name="CompanyUniqueName">اسم الشركة القانوني</text>
-    <text name="CompanyUniqueName_Regex_Description">الرجاء ادخال اسم الشركة كما هو في السجل التجاري.</text>
-    <text name="CompanyFullLeagalName">الإسم الكامل الخاص بالشركة</text>
+    <text name="CompanyUniqueName">اسم الشركة</text>
+    <text name="CompanyUniqueName_Regex_Description">الرجاء ادخال اسم الشركة.</text>
+    <text name="CompanyFullLeagalName">اسم الشركة القانوني</text>
+    <text name="TheNameOfTheCompanyInTheCR">اسم الشركة كما هو في السجل التجاري</text>
+    <text name="WillBeShownOnAllOfficialDocumentsLikeWaybillsAndInvoices">سيظهر في جميع المستندات الرسمية.</text>
     <text name="Country">البلد</text>
     <text name="City">المدينة</text>
     <text name="Address">العنوان</text>
     <text name="Format">الصيغة</text>
     <text name="AddressFormat"> الولاية -- إسم الشارع -- الرمز البريدي</text>
     <text name="AdminUserAccountInfo">معلومات المستخدم الرئيسي للحساب </text>
-    <text name="AdminEmailAddress">البريد الإلكتروني للمستخدم الرئيسي </text>
-    <text name="AdminPassword">كلمة السر الخاصة بالمشرف</text>
+    <text name="AdminEmailAddress">البريد الإلكتروني</text>
+    <text name="AdminPassword">كلمة المرور</text>
     <text name="AdminPasswordRepeat"> تأكيد كلمة المرور</text>
     <text name="NewPasswordRepeat">تأكيد كلمة المرور الجديدة </text>
     <text name="PleaseEnterYourNewPassword">الرجائ إدخال كلمة السر الجديدة الخاصة بك</text>
@@ -240,6 +242,7 @@
     <text name="Carrier">ناقل</text>
     <text name="Shipper">شاحن</text>
     <text name="Broker">وكيل</text>
+    <text name="TermsAndConditons">الشروط والأحكام</text>
     <![CDATA[Tachyon: Tenant Registration Page End]]>
 
     <![CDATA[ Tachyon: Tenant login Page Start]]>
@@ -331,18 +334,18 @@
 
 
 
-	  <text name="NewTermAndCondition">شروط  وأحكام جديدة</text>
-	  <text name="TermAndConditions">شروط و أحكام</text>
-	  <text name="TermAndCondition">شروط و أحكام</text>
-	  <text name="Title">العنوان</text>
-	  <text name="Content">المحتوى</text>
-	  <text name="Version">الإصدار</text>
-	  <text name="IAgreeonTahcyon">أنا أوافق على </text>
+    <text name="NewTermAndCondition">شروط  وأحكام جديدة</text>
+    <text name="TermAndConditions">شروط و أحكام</text>
+    <text name="TermAndCondition">شروط و أحكام</text>
+    <text name="Title">العنوان</text>
+    <text name="Content">المحتوى</text>
+    <text name="Version">الإصدار</text>
+    <text name="IAgreeonTahcyon">أنا أوافق على </text>
 
-	  <text name="EditionId">الرقم المميز الخاص بنوع الإشتراك</text>
-	  <text name="TargetEdition">نوع الإشتراك المستهدف</text>
-	  <text name="TermsAndConditions">الشروط والأحكام</text>
-	  
+    <text name="EditionId">الرقم المميز الخاص بنوع الإشتراك</text>
+    <text name="TargetEdition">نوع الإشتراك المستهدف</text>
+    <text name="TermsAndConditions">الشروط والأحكام</text>
+
     <text name="AboutUs">من نحن</text>
     <text name="Administration">الإدارة</text>
     <text name="Roles">الأدوار</text>

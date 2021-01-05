@@ -183,6 +183,7 @@ export class RegisterTenantComponent extends AppComponentBase implements OnInit,
   }
 
   checkIfIsCompanyUniqueName() {
+    this.model.tenancyName = this.model.companyName.trim().replace(' ', '_');
     this._tenantRegistrationService.checkIfCompanyUniqueNameisAvailable(this.model.tenancyName).subscribe((result) => {
       this.isCompanyNameAvailable = result;
     });
