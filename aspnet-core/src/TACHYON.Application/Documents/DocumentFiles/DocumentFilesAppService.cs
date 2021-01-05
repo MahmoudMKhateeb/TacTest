@@ -730,12 +730,13 @@ namespace TACHYON.Documents.DocumentFiles
             var documentFiles = await _documentFileRepository.GetAll()
                     .Include(doc => doc.DocumentTypeFk)
                     .ThenInclude(doc => doc.DocumentsEntityFk)
-                    // .Where(x => x.DocumentTypeFk.IsRequired)
+                    .Where(x => x.DocumentTypeFk.IsRequired)
                     .ToListAsync();
 
             var documentTypes = await _documentTypeRepository.GetAll()
                  .Include(x => x.Translations)
                  .Where(x => x.EditionId == tenant.EditionId)
+                 .Where(x => x.IsRequired)
                  .ToListAsync();
 
 
