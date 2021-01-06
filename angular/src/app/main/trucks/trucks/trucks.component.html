@@ -38,6 +38,13 @@
             <div class="dropdown-divider"></div>
             <span class="dropdown-item-text text-muted pl-3" href="#">
               <small
+                *ngIf="isArabic"
+                [innerHTML]="
+                  l('ImportToExcelSampleFileDownloadInfo', '<a href=/assets/sampleFiles/ImportTrucksSampleFileAr.xlsx>' + l('ClickHere') + '</a>')
+                "
+              ></small>
+              <small
+                *ngIf="!isArabic"
                 [innerHTML]="
                   l('ImportToExcelSampleFileDownloadInfo', '<a href=/assets/sampleFiles/ImportTrucksSampleFile.xlsx>' + l('ClickHere') + '</a>')
                 "

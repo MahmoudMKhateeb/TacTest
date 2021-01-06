@@ -279,9 +279,9 @@
 
     <![CDATA[Tachyon:Common Start]]>
     <text name="ExcelOperations">عمليات إكسل</text>
-    <text name="ImportFromExcel">إستخراج البيانات في صيغة ملف إكسل</text>
+    <text name="ImportFromExcel">استيراد البيانات في صيغة ملف إكسل</text>
     <text name="ExportToExcel">تصدير البيانات في صيغة ملف إكسل</text>
-    <text name="ImportToExcelSampleFileDownloadInfo">تحميل نموذج ادخال البيانات بصيغة اكسل </text>
+    <text name="ImportToExcelSampleFileDownloadInfo">تحميل نموذج استيراد البيانات بصيغة اكسل {0}</text>
     <text name="ClickHere">إضغط هنا</text>
     <text name="Search">بحث</text>
     <text name="UserName">اسم المستخدم</text>

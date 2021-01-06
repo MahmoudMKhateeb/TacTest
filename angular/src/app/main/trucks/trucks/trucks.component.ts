@@ -1,4 +1,4 @@
-﻿import { Component, Injector, ViewEncapsulation, ViewChild, ChangeDetectorRef } from '@angular/core';
+﻿import { Component, Injector, ViewEncapsulation, ViewChild, ChangeDetectorRef, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { TrucksServiceProxy, TruckDto } from '@shared/service-proxies/service-proxies';
 import { NotifyService } from 'abp-ng2-module';
@@ -21,6 +21,7 @@ import { HttpClient } from '@angular/common/http';
 import { FileUpload } from '@node_modules/primeng/fileupload';
 import { ViewOrEditEntityDocumentsModalComponent } from '@app/main/documentFiles/documentFiles/documentFilesViewComponents/view-or-edit-entity-documents-modal.componant';
 import { TruckUserLookupTableModalComponent } from './truck-user-lookup-table-modal.component';
+import { AppSessionService } from '@shared/common/session/app-session.service';
 
 @Component({
   templateUrl: './trucks.component.html',
@@ -28,7 +29,7 @@ import { TruckUserLookupTableModalComponent } from './truck-user-lookup-table-mo
   encapsulation: ViewEncapsulation.None,
   animations: [appModuleAnimation()],
 })
-export class TrucksComponent extends AppComponentBase {
+export class TrucksComponent extends AppComponentBase implements OnInit {
   @ViewChild('entityTypeHistoryModal', { static: true }) entityTypeHistoryModal: EntityTypeHistoryModalComponent;
   @ViewChild('createOrEditTruckModal', { static: true }) createOrEditTruckModal: CreateOrEditTruckModalComponent;
   @ViewChild('viewTruckModalComponent', { static: true }) viewTruckModal: ViewTruckModalComponent;
@@ -50,7 +51,7 @@ export class TrucksComponent extends AppComponentBase {
 
   _entityTypeFullName = 'TACHYON.Trucks.Truck';
   entityHistoryEnabled = false;
-
+  isArabic = false;
   uploadUrl: string;
 
   constructor(
@@ -69,6 +70,7 @@ export class TrucksComponent extends AppComponentBase {
 
   ngOnInit(): void {
     this.entityHistoryEnabled = this.setIsEntityHistoryEnabled();
+    this.isArabic = abp.localization.currentLanguage.name === 'ar';
   }
 
   private setIsEntityHistoryEnabled(): boolean {

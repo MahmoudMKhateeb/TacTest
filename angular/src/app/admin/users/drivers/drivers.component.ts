@@ -19,6 +19,7 @@ import { ViewOrEditEntityDocumentsModalComponent } from '@app/main/documentFiles
 })
 export class DriversComponent extends UsersComponent {
   @ViewChild('viewOrEditEntityDocumentsModal', { static: true }) viewOrEditEntityDocumentsModal: ViewOrEditEntityDocumentsModalComponent;
+  isArabic = false;
 
   constructor(
     injector: Injector,
@@ -32,6 +33,7 @@ export class DriversComponent extends UsersComponent {
     super(injector, _impersonationService, _userServiceProxy, _fileDownloadService, _activatedRoute, _httpClient, _localStorageService);
     this.onlyDrivers = true;
     this.uploadUrl = AppConsts.remoteServiceBaseUrl + '/Users/ImportDriversFromExcel';
+    this.isArabic = abp.localization.currentLanguage.name === 'ar';
   }
 
   showDriverkDocuments(driverId) {
