@@ -33,7 +33,7 @@ export class DriversComponent extends UsersComponent {
     super(injector, _impersonationService, _userServiceProxy, _fileDownloadService, _activatedRoute, _httpClient, _localStorageService);
     this.onlyDrivers = true;
     this.uploadUrl = AppConsts.remoteServiceBaseUrl + '/Users/ImportDriversFromExcel';
-    this.isArabic = abp.localization.currentLanguage.name === 'ar';
+    this.isArabic = abp.localization.currentLanguage.name.startsWith('ar');
   }
 
   showDriverkDocuments(driverId) {

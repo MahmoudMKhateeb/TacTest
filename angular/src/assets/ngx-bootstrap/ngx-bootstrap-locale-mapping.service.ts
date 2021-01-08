@@ -5,6 +5,7 @@ export class NgxBootstrapLocaleMappingService {
       'es-MX': 'es',
       vi: 'en-gb',
       // Add more here
+      'ar-EG': 'ar',
     };
 
     if (locale === 'en' || locale.startsWith('en-')) {
@@ -25,6 +26,7 @@ export class NgxBootstrapLocaleMappingService {
       'pt-BR': 'ptBr',
       vi: 'enGb',
       // Add more here
+      'ar-EG': 'ar',
     };
 
     if (locale === 'en' || locale.startsWith('en-')) {

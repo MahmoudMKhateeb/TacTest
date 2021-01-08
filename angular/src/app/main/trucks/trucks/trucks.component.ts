@@ -70,7 +70,7 @@ export class TrucksComponent extends AppComponentBase implements OnInit {
 
   ngOnInit(): void {
     this.entityHistoryEnabled = this.setIsEntityHistoryEnabled();
-    this.isArabic = abp.localization.currentLanguage.name === 'ar';
+    this.isArabic = abp.localization.currentLanguage.name.startsWith('ar');
   }
 
   private setIsEntityHistoryEnabled(): boolean {
