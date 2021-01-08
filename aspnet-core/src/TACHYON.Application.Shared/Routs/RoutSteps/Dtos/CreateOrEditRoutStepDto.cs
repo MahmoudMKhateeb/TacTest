@@ -38,6 +38,16 @@ namespace TACHYON.Routs.RoutSteps.Dtos
         public long? TrucksTypeId { get; set; }
 
         public int? TrailerTypeId { get; set; }
+        public int? SourcePickingTypeId { get; set; }
+
+        public int? DestinationPickingTypeId { get; set; }
+        public long GoodsUnitOfMeaureId { get; set; }
+        public double GoodsWeight { get; set; }
+        public double TotalAmount { get; set; }
+        public double ExistingAmount { get; set; }
+        public double DroppedAmount { get; set; }
+        public double RemainingAmount { get; set; }
+        public int RoutStepOrder { get; set; }
         public CreateOrEditGoodsDetailDto CreateOrEditGoodsDetailDto { get; set; }
 
 

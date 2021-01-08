@@ -15,6 +15,7 @@ using TACHYON.Trailers;
 using TACHYON.Trailers.TrailerTypes;
 using TACHYON.Trucks;
 using TACHYON.Trucks.TrucksTypes;
+using TACHYON.UnitOfMeasures;
 
 namespace TACHYON.Routs.RoutSteps
 {
@@ -47,6 +48,14 @@ namespace TACHYON.Routs.RoutSteps
 
         [ForeignKey("DestinationCityId")]
         public City DestinationCityFk { get; set; }
+        public PickingType SourcePickingTypeFk { get; set; }
+
+        [ForeignKey("SourcePickingTypeId")]
+        public int? SourcePickingTypeId{get; set;}
+        public PickingType DestinationPickingTypeFk { get; set; }
+
+        [ForeignKey("DestinationPickingTypeId")]
+        public int? DestinationPickingTypeId { get; set; }
 
         public virtual long? ShippingRequestId { get; set; }
 
@@ -94,13 +103,24 @@ namespace TACHYON.Routs.RoutSteps
         /// <summary>
         /// assigned Trailer
         /// </summary>
-        public long AssignedTrailerId { get; set; }
+        public long? AssignedTrailerId { get; set; }
         [ForeignKey("AssignedTrailerId")]
         public Trailer AssignedTrailersFk { get; set; }
 
-        public int PickingTypeId { get; set; }
-        [ForeignKey("PickingTypeId")]
-        public PickingType PickingTypeFk { get; set; }
+        //public long PickingTypeId { get; set; }
+        //[ForeignKey("PickingTypeId")]
+        //public PickingType PickingTypeFk { get; set; }
+
+        public UnitOfMeasure GoodsUnitOfMeasureFk { get; set; }
+
+        [ForeignKey("unitOfMeaureId")]
+        public long GoodsUnitOfMeaureId { get; set; }
+        public double GoodsWeight { get; set; }
+        public double TotalAmount { get; set; }
+        public double ExistingAmount { get; set; }
+        public double DroppedAmount { get; set; }
+        public double RemainingAmount { get; set; }
+        public int RoutStepOrder { get; set; }
 
     }
 }
