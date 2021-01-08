@@ -7,6 +7,7 @@ import {
   GetShippingRequestForViewDto,
   GoodCategoriesServiceProxy,
   ShippingRequestsServiceProxy,
+  ShippingRequestVasPriceDto,
   UpdatePriceInput,
 } from '@shared/service-proxies/service-proxies';
 import { finalize } from '@node_modules/rxjs/operators';
@@ -20,7 +21,7 @@ export class UpdatePriceShippingRequestModalComponent extends AppComponentBase {
   @ViewChild('UpdatePriceModal', { static: true }) modal: ModalDirective;
 
   @Output() modalSave: EventEmitter<any> = new EventEmitter<any>();
-
+  allVases: ShippingRequestVasPriceDto[] = [];
   active = false;
   saving = false;
   item: GetShippingRequestForViewDto;
@@ -42,13 +43,14 @@ export class UpdatePriceShippingRequestModalComponent extends AppComponentBase {
       this.updatePriceInput.id = result.shippingRequest.id;
       this.acceptShippingRequestPriceInput.id = result.shippingRequest.id;
       this.active = true;
+      this.getallRequestedVasesForPricing(shippingRequestId);
       this.modal.show();
     });
   }
 
   save(): void {
     this.saving = true;
-
+    this.updatePriceInput.pricedVasesList = this.allVases;
     this._shippingRequestsServiceProxy
       .updatePrice(this.updatePriceInput)
       .pipe(
@@ -102,5 +104,17 @@ export class UpdatePriceShippingRequestModalComponent extends AppComponentBase {
 
   clone() {
     this._router.navigate(['/app/main/shippingRequests/shippingRequests?id']);
+  }
+
+  // isPriceZero(item: ShippingRequestVasPriceDto) {
+  //   if(item.actualPrice.toString() == ""){
+  //     item.actualPrice = null;
+  //   }
+  // }
+
+  getallRequestedVasesForPricing(shippingRequestId: number) {
+    this._shippingRequestsServiceProxy.getAllShippingRequestVasForPricing(shippingRequestId).subscribe((result) => {
+      this.allVases = result;
+    });
   }
 }

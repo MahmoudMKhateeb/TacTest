@@ -1,10 +1,9 @@
-﻿import { PermissionCheckerService } from 'abp-ng2-module';
-import { AppSessionService } from '@shared/common/session/app-session.service';
-
+﻿import { AppSessionService } from '@shared/common/session/app-session.service';
 import { Injectable } from '@angular/core';
 import { AppMenu } from './app-menu';
 import { AppMenuItem } from './app-menu-item';
 import { FeatureCheckerService } from '@node_modules/abp-ng2-module';
+import { PermissionCheckerService } from 'abp-ng2-module';
 
 @Injectable()
 export class AppNavigationService {
@@ -18,31 +17,30 @@ export class AppNavigationService {
     return new AppMenu('MainMenu', 'MainMenu', [
       new AppMenuItem('Dashboard', 'Pages.Administration.Host.Dashboard', 'flaticon-line-graph', '/app/admin/hostDashboard'),
       new AppMenuItem('Dashboard', 'Pages.Tenant.Dashboard', 'flaticon-line-graph', '/app/main/dashboard'),
-
       // //Shipper
-      // new AppMenuItem(
-      //   'Requests',
-      //   '',
-      //   'flaticon-interface-8',
-      //   '',
-      //   [],
-      //   [
-      //     new AppMenuItem(
-      //       'ShippingRequests',
-      //       'Pages.ShippingRequests',
-      //       'flaticon-more',
-      //       '/app/main/shippingRequests/shippingRequests',
-      //       undefined,
-      //       undefined,
-      //       undefined,
-      //       undefined,
-      //       () =>
-      //         this._featureCheckerService.isEnabled('App.shippingRequest') ||
-      //         this._featureCheckerService.isEnabled('App.TachyonDealer') ||
-      //         this._featureCheckerService.isEnabled('App.Broker')
-      //     ),
-      //   ]
-      // ),
+      new AppMenuItem(
+        'Requests',
+        '',
+        'flaticon-interface-8',
+        '',
+        [],
+        [
+          new AppMenuItem(
+            'ShippingRequests',
+            'Pages.ShippingRequests',
+            'flaticon-more',
+            '/app/main/shippingRequests/shippingRequests',
+            undefined,
+            undefined,
+            undefined,
+            undefined,
+            () =>
+              this._featureCheckerService.isEnabled('App.shippingRequest') ||
+              this._featureCheckerService.isEnabled('App.TachyonDealer') ||
+              this._featureCheckerService.isEnabled('App.Broker')
+          ),
+        ]
+      ),
 
       // //Host
       // new AppMenuItem(
@@ -174,6 +172,11 @@ export class AppNavigationService {
         ]
       ),
 
+      // Host
+      new AppMenuItem('Vases', 'Pages.Administration.Vases', 'flaticon-more', '/app/admin/vases/vases'),
+      new AppMenuItem('VasPrices', 'Pages.VasPrices', 'flaticon-more', '/app/main/vases/vasPrices', undefined, undefined, undefined, undefined, () =>
+        this._featureCheckerService.isEnabled('App.Carrier')
+      ),
       // Host
       new AppMenuItem(
         'UserManagement',

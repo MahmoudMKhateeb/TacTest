@@ -1,4 +1,6 @@
-﻿using TACHYON.TermsAndConditions;
+using TACHYON.Vases;
+using TACHYON.ShippingRequestVases;
+using TACHYON.TermsAndConditions;
 using TACHYON.Trucks.TruckCategories.TruckCapacities;
 using TACHYON.Trucks.TruckCategories.TransportTypes;
 using TACHYON.Documents.DocumentTypeTranslations;
@@ -10,7 +12,6 @@ using TACHYON.PickingTypes;
 using TACHYON.UnitOfMeasures;
 using TACHYON.AddressBook;
 using Abp.IdentityServer4;
-using Abp.Organizations;
 using Abp.Zero.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using TACHYON.Authorization.Delegation;
@@ -18,40 +19,27 @@ using TACHYON.Authorization.Roles;
 using TACHYON.Authorization.Users;
 using TACHYON.Chat;
 using TACHYON.Cities;
-using TACHYON.Cities;
-using TACHYON.Countries;
 using TACHYON.Countries;
 using TACHYON.Documents.DocumentFiles;
 using TACHYON.Documents.DocumentTypes;
 using TACHYON.Editions;
 using TACHYON.Friendships;
 using TACHYON.Goods.GoodCategories;
-using TACHYON.Goods.GoodCategories;
-using TACHYON.Goods.GoodsDetails;
 using TACHYON.Goods.GoodsDetails;
 using TACHYON.MultiTenancy;
 using TACHYON.MultiTenancy.Accounting;
 using TACHYON.MultiTenancy.Payments;
 using TACHYON.Offers;
-using TACHYON.Offers;
-using TACHYON.Routs;
 using TACHYON.Routs;
 using TACHYON.Routs.RoutSteps;
-using TACHYON.Routs.RoutSteps;
-using TACHYON.Routs.RoutTypes;
 using TACHYON.Routs.RoutTypes;
 using TACHYON.Shipping.ShippingRequests;
 using TACHYON.Storage;
 using TACHYON.Trailers;
-using TACHYON.Trailers;
 using TACHYON.Trailers.PayloadMaxWeights;
 using TACHYON.Trailers.TrailerStatuses;
-using TACHYON.Trailers.TrailerStatuses;
-using TACHYON.Trailers.TrailerTypes;
 using TACHYON.Trailers.TrailerTypes;
 using TACHYON.Trucks;
-using TACHYON.Trucks;
-using TACHYON.Trucks.TrucksTypes;
 using TACHYON.Trucks.TrucksTypes;
 using TACHYON.Shipping.ShippingRequestBidStatuses;
 using System;
@@ -62,6 +50,12 @@ namespace TACHYON.EntityFrameworkCore
 {
     public class TACHYONDbContext : AbpZeroDbContext<Tenant, Role, User, TACHYONDbContext>, IAbpPersistedGrantDbContext
     {
+
+        public virtual DbSet<Vas> Vases { get; set; }
+
+        public virtual DbSet<VasPrice> VasPrices { get; set; }
+        public virtual DbSet<ShippingRequestVas> ShippingRequestVases { get; set; }
+
         public virtual DbSet<TermAndConditionTranslation> TermAndConditionTranslations { get; set; }
 
         public virtual DbSet<TermAndCondition> TermAndConditions { get; set; }
@@ -176,13 +170,20 @@ namespace TACHYON.EntityFrameworkCore
         {
             base.OnModelCreating(modelBuilder);
 
+            modelBuilder.Entity<ShippingRequestVas>(s =>
+            {
+                s.HasIndex(e => new { e.TenantId });
+            });
+            modelBuilder.Entity<VasPrice>(v =>
+                       {
+                           v.HasIndex(e => new { e.TenantId });
+                       });
             modelBuilder.Entity<ShippingRequestBid>().HasQueryFilter(p => !p.IsCancled);
 
-
             modelBuilder.Entity<Facility>(f =>
-                       {
-                           f.HasIndex(e => new { e.TenantId });
-                       });
+            {
+                f.HasIndex(e => new { e.TenantId });
+            });
             modelBuilder.Entity<DocumentFile>(d =>
                        {
                            d.HasIndex(e => new { e.TenantId });

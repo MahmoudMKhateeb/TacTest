@@ -2,6 +2,10 @@
 import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { AppCommonModule } from '@app/shared/common/app-common.module';
+import { VasPricesComponent } from './vases/vasPrices/vasPrices.component';
+import { ViewVasPriceModalComponent } from './vases/vasPrices/view-vasPrice-modal.component';
+import { CreateOrEditVasPriceModalComponent } from './vases/vasPrices/create-or-edit-vasPrice-modal.component';
+
 import { TermAndConditionsComponent } from './termsAndConditions/termAndConditions/termAndConditions.component';
 import { ViewTermAndConditionModalComponent } from './termsAndConditions/termAndConditions/view-termAndCondition-modal.component';
 import { CreateOrEditTermAndConditionModalComponent } from './termsAndConditions/termAndConditions/create-or-edit-termAndCondition-modal.component';
@@ -133,6 +137,8 @@ import { MarketplaceComponent } from '@app/main/marketPlace/marketPlace/marketpl
 import { ViewShippingRequestDetailsComponent } from '@app/main/marketPlace/marketPlace/ViewShippingRequestDetails.component';
 import { ViewAllCarrierBidsComponent } from '@app/main/marketPlace/marketPlace/ViewAllCarrierBids.component';
 import { RejectionReasonModalComponent } from './documentFiles/documentFiles/rejectionReason-modal.component';
+import { MultiSelectModule } from 'primeng/multiselect';
+import { ViewShippingRequestPriceResponseModalComponent } from './shippingRequests/shippingRequests/shipping-request-Response/view-shipping-request-response-modal.component';
 import { SafePipe } from '../../account/register/safe.pipe';
 
 NgxBootstrapDatePickerConfigService.registerNgxBootstrapDatePickerLocales();
@@ -140,7 +146,7 @@ NgxBootstrapDatePickerConfigService.registerNgxBootstrapDatePickerLocales();
 @NgModule({
   imports: [
     FileUploadModule,
-
+    MultiSelectModule,
     AutoCompleteModule,
     PaginatorModule,
     EditorModule,
@@ -168,6 +174,10 @@ NgxBootstrapDatePickerConfigService.registerNgxBootstrapDatePickerLocales();
     AdminModule,
   ],
   declarations: [
+    VasPricesComponent,
+    ViewShippingRequestPriceResponseModalComponent,
+    ViewVasPriceModalComponent,
+    CreateOrEditVasPriceModalComponent,
     TermAndConditionsComponent,
 
     ViewTermAndConditionModalComponent,

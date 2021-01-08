@@ -2,6 +2,10 @@
 import { NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { AppCommonModule } from '@app/shared/common/app-common.module';
+import { VasesComponent } from './vases/vases/vases.component';
+import { ViewVasModalComponent } from './vases/vases/view-vas-modal.component';
+import { CreateOrEditVasModalComponent } from './vases/vases/create-or-edit-vas-modal.component';
+
 import { TermAndConditionTranslationsComponent } from './termsAndConditions/termAndConditionTranslations/termAndConditionTranslations.component';
 import { ViewTermAndConditionTranslationModalComponent } from './termsAndConditions/termAndConditionTranslations/view-termAndConditionTranslation-modal.component';
 import { CreateOrEditTermAndConditionTranslationModalComponent } from './termsAndConditions/termAndConditionTranslations/create-or-edit-termAndConditionTranslation-modal.component';
@@ -167,6 +171,10 @@ const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
     NgbModule,
   ],
   declarations: [
+    VasesComponent,
+
+    ViewVasModalComponent,
+    CreateOrEditVasModalComponent,
 		TermAndConditionTranslationsComponent,
 
 		ViewTermAndConditionTranslationModalComponent,

@@ -1,5 +1,6 @@
 ﻿import { NgModule } from '@angular/core';
 import { NavigationEnd, Router, RouterModule } from '@angular/router';
+import { VasesComponent } from './vases/vases/vases.component';
 import { TermAndConditionTranslationsComponent } from './termsAndConditions/termAndConditionTranslations/termAndConditionTranslations.component';
 import { ShippingRequestStatusesComponent } from './shippingRequestStatuses/shippingRequestStatuses/shippingRequestStatuses.component';
 import { UnitOfMeasuresComponent } from './unitOfMeasures/unitOfMeasures/unitOfMeasures.component';
@@ -36,6 +37,7 @@ import { DriversComponent } from '@app/admin/users/drivers/drivers.component';
       {
         path: '',
         children: [
+          { path: 'vases/vases', component: VasesComponent, data: { permission: 'Pages.Administration.Vases' } },
                     { path: 'termsAndConditions/termAndConditionTranslations', component: TermAndConditionTranslationsComponent, data: { permission: 'Pages.Administration.TermAndConditionTranslations' }  },
           {
             path: 'shippingRequestStatuses/shippingRequestStatuses',

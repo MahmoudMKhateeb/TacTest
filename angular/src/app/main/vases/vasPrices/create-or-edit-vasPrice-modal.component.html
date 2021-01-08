@@ -1,0 +1,62 @@
+﻿<div
+  bsModal
+  #createOrEditModal="bs-modal"
+  class="modal fade"
+  tabindex="-1"
+  role="dialog"
+  aria-labelledby="createOrEditModal"
+  aria-hidden="true"
+  [config]="{ backdrop: 'static' }"
+>
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <form *ngIf="active" #vasPriceForm="ngForm" novalidate (ngSubmit)="save()" autocomplete="off">
+        <div class="modal-header">
+          <h4 class="modal-title">
+            <span *ngIf="vasPrice.id">{{ l('EditVasPrice') }}</span>
+            <span *ngIf="!vasPrice.id">{{ l('CreateNewVasPrice') }}</span>
+          </h4>
+          <button type="button" class="close" (click)="close()" aria-label="Close" [disabled]="saving">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <div class="form-group m-form__group">
+            <label for="VasName">{{ l('Vas') }}</label>
+            <select name="vasPrice.vasId" [(ngModel)]="vasPrice.vasId" class="form-control" required>
+              <option value="">{{ l('SelectAVas') }}</option>
+              <option *ngFor="let item of allVass" value="{{ item.id }}">{{ item.displayName }}</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="VasPrice_Price">{{ l('Price') }}</label>
+            <input type="number" id="VasPrice_Price" class="form-control" [(ngModel)]="vasPrice.price" name="Price" />
+          </div>
+
+          <div class="form-group">
+            <label for="VasPrice_MaxAmount">{{ l('MaxAmount') }}</label>
+            <input type="number" id="VasPrice_MaxAmount" class="form-control" [(ngModel)]="vasPrice.maxAmount" name="MaxAmount" />
+          </div>
+
+          <div class="form-group">
+            <label for="VasPrice_MaxCount">{{ l('MaxCount') }}</label>
+            <input type="number" id="VasPrice_MaxCount" class="form-control" [(ngModel)]="vasPrice.maxCount" name="MaxCount" />
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button [disabled]="saving" type="button" class="btn btn-default" (click)="close()">{{ l('Cancel') }}</button>
+          <button
+            type="submit"
+            class="btn btn-primary blue"
+            [disabled]="!vasPriceForm.form.valid"
+            [buttonBusy]="saving"
+            [busyText]="l('SavingWithThreeDot')"
+          >
+            <i class="fa fa-save"></i> <span>{{ l('Save') }}</span>
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

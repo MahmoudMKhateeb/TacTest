@@ -5,12 +5,12 @@ using System.Collections.Generic;
 using TACHYON.Goods.GoodsDetails.Dtos;
 using TACHYON.Routs.Dtos;
 using TACHYON.Routs.RoutSteps.Dtos;
+using TACHYON.Vases.Dtos;
 
 namespace TACHYON.Shipping.ShippingRequests.Dtos
 {
     public class CreateOrEditShippingRequestDto : EntityDto<long?>
     {
-        public decimal Vas { get; set; }
 
         public List<CreateOrEditRoutStepDto> CreateOrEditRoutStepDtoList { get; set; }
 
@@ -46,6 +46,9 @@ namespace TACHYON.Shipping.ShippingRequests.Dtos
         //Route
         public CreateOrEditRouteDto CreateOrEditRouteDto { get; set; }
 
+
+        //VasList
+        public List<ShippingRequestVasListDto> ShippingRequestVasList { get; set; }
 
 
 

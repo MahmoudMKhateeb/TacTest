@@ -105,10 +105,6 @@
             </div>
           </div>
           <div class="row">
-            <div class="form-group col-md-6">
-              <label for="ShippingRequest_Vas">{{ l('Vas') }}</label>
-              <input [(ngModel)]="shippingRequest.vas" class="form-control" id="ShippingRequest_Vas" name="Vas" type="number" />
-            </div>
             <!--          <div class="form-group col-md-6 m-form__group">-->
             <!--            <label for="carrierTenantDisplayName">{{ l('carrierTenantDisplayName') }}</label>-->
             <!--            <select [(ngModel)]="shippingRequest.carrierTenantId" class="form-control" name="carrierTenantId">-->
@@ -132,10 +128,70 @@
               </label>
               &nbsp;
             </div>
+          </div>
+          <br />
 
-            <div *ngIf="shippingRequest.stageOneFinish" class="col-md-6">
-              <button (click)="openModal()" class="btn btn-primary" type="button">add route step</button>
+          <div class="row">
+            <div>
+              <h5>{{ l('VasList') }}</h5>
+              <p-multiSelect [options]="allVases" [(ngModel)]="selectedVases" [defaultLabel]="l('SelectVases')" optionLabel="vasName">
+              </p-multiSelect>
+              <br />
+
+              <!-- <div class="form-group col-md-6">
+                <label for="ShippingRequest_Vas">{{ l('Vas') }}</label>
+                <input [(ngModel)]="shippingRequest.vas" class="form-control" id="ShippingRequest_Vas" name="Vas" type="number" />
+              </div> -->
             </div>
+          </div>
+          <br />
+          <div *ngFor="let item of selectedVases; index as i" class="">
+            <div class="row">
+              <div class="col-4">
+                <label for="Vas-Name"> {{ l('Vas') }} {{ l('Name') }}</label>
+                <div style="align-self: end;" class="form-group">
+                  <span>{{ item.vasName }}</span>
+                </div>
+              </div>
+
+              <div *ngIf="item.hasCount" class="col-3">
+                <div class="form-group">
+                  <label for="Vas-Count">{{ l('Count') }} *</label>
+                  <input
+                    type="number"
+                    min="0"
+                    id="Vas-Count{{ i }}"
+                    [(ngModel)]="item.maxCount"
+                    (keypress)="numberOnly($event)"
+                    class="form-control"
+                    name="Count"
+                    required
+                  />
+                </div>
+              </div>
+
+              <div *ngIf="item.hasAmount" class="col-3">
+                <div class="form-group">
+                  <label for="Vas-Amount">{{ l('Amount') }} *</label>
+                  <input
+                    type="number"
+                    min="0"
+                    id="Vas-Amount{{ i }}"
+                    [(ngModel)]="item.maxAmount"
+                    (keypress)="numberOnly($event)"
+                    class="form-control"
+                    name="Amount"
+                    required
+                  />
+                </div>
+              </div>
+            </div>
+            <hr />
+            <!-- <div class="separator separator-dashed my-8"></div> -->
+          </div>
+
+          <div *ngIf="shippingRequest.stageOneFinish" class="col-md-6">
+            <button (click)="openModal()" class="btn btn-primary" type="button">add route step</button>
           </div>
         </div>
         <div class="card-footer">
@@ -147,54 +203,55 @@
           </div>
         </div>
       </div>
-      <div class="row">
-        <div *ngFor="let item of createOrEditRoutStepDtoList" class="col-md-6">
-          <div class="card card-custom">
-            <div class="card-header">
-              <div class="card-title">
-                <h3 class="card-label">{{ l('Route Step') }} #{{ item.order }} <small> </small></h3>
-              </div>
-            </div>
-            <div class="card-body">
-              <div class="row">
-                <div class="col-6 mb-3">
-                  <h6>{{ l('DisplayName') }} :</h6>
-                  {{ item.displayName }}
-                </div>
-                <div class="col-6 mb-3">
-                  <h6>{{ l('Latitude') }} :</h6>
-                  {{ item.latitude }}
-                </div>
-                <div class="col-6 mb-3">
-                  <h6>{{ l('Longitude') }} :</h6>
-                  {{ item.longitude }}
-                </div>
-                <div class="col-6 mb-3">
-                  <h6>{{ l('Order') }} :</h6>
-                  {{ item.order }}
-                </div>
-
-                <!--            <div class="col-6 mb-3">-->
-                <!--              <h6>({{ l('City') }}) {{ l('DisplayName') }} :</h6>-->
-                <!--              {{ item.cityDisplayName }}-->
-                <!--            </div>-->
-                <!--            <div class="col-6 mb-3">-->
-                <!--              <h6>({{ l('City') }}) {{ l('DisplayName') }} :</h6>-->
-                <!--              {{ item.cityDisplayName2 }}-->
-                <!--            </div>-->
-                <!--            <div class="col-6 mb-3">-->
-                <!--              <h6>({{ l('Route') }}) {{ l('DisplayName') }} :</h6>-->
-                <!--              {{ item.routeDisplayName }}-->
-                <!--            </div>-->
-              </div>
+    </div>
+    <div class="row">
+      <div *ngFor="let item of createOrEditRoutStepDtoList" class="col-md-6">
+        <div class="card card-custom">
+          <div class="card-header">
+            <div class="card-title">
+              <h3 class="card-label">{{ l('Route Step') }} #{{ item.order }} <small> </small></h3>
             </div>
           </div>
-          <br />
+          <div class="card-body">
+            <div class="row">
+              <div class="col-6 mb-3">
+                <h6>{{ l('DisplayName') }} :</h6>
+                {{ item.displayName }}
+              </div>
+              <div class="col-6 mb-3">
+                <h6>{{ l('Latitude') }} :</h6>
+                {{ item.latitude }}
+              </div>
+              <div class="col-6 mb-3">
+                <h6>{{ l('Longitude') }} :</h6>
+                {{ item.longitude }}
+              </div>
+              <div class="col-6 mb-3">
+                <h6>{{ l('Order') }} :</h6>
+                {{ item.order }}
+              </div>
+
+              <!--            <div class="col-6 mb-3">-->
+              <!--              <h6>({{ l('City') }}) {{ l('DisplayName') }} :</h6>-->
+              <!--              {{ item.cityDisplayName }}-->
+              <!--            </div>-->
+              <!--            <div class="col-6 mb-3">-->
+              <!--              <h6>({{ l('City') }}) {{ l('DisplayName') }} :</h6>-->
+              <!--              {{ item.cityDisplayName2 }}-->
+              <!--            </div>-->
+              <!--            <div class="col-6 mb-3">-->
+              <!--              <h6>({{ l('Route') }}) {{ l('DisplayName') }} :</h6>-->
+              <!--              {{ item.routeDisplayName }}-->
+              <!--            </div>-->
+            </div>
+          </div>
         </div>
+        <br />
       </div>
     </div>
   </div>
 </div>
+
 <div
   class="modal fade"
   bsModal

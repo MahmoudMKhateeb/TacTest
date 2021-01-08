@@ -7,7 +7,6 @@ using System.ComponentModel.DataAnnotations.Schema;
 using TACHYON.AddressBook;
 using TACHYON.Authorization.Users;
 using TACHYON.Cities;
-using TACHYON.Cities;
 using TACHYON.Goods.GoodsDetails;
 using TACHYON.PickingTypes;
 using TACHYON.Routs;

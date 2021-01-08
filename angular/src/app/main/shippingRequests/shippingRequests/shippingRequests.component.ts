@@ -30,8 +30,8 @@ export class ShippingRequestsComponent extends AppComponentBase {
   // trailerTypeDisplayNameFilter = '';
   // goodsDetailNameFilter = '';
   // routeDisplayNameFilter = '';
-  isBid = undefined;
-  isTachyonDeal = undefined;
+  isBid = false;
+  isTachyonDeal = true;
 
   constructor(
     injector: Injector,

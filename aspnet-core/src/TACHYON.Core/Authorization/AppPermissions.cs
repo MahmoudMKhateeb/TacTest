@@ -16,6 +16,21 @@
         public const string Pages_TermAndConditions_Edit = "Pages.TermAndConditions.Edit";
         public const string Pages_TermAndConditions_Delete = "Pages.TermAndConditions.Delete";
 
+        public const string Pages_ShippingRequestVases = "Pages.ShippingRequestVases";
+        public const string Pages_ShippingRequestVases_Create = "Pages.ShippingRequestVases.Create";
+        public const string Pages_ShippingRequestVases_Edit = "Pages.ShippingRequestVases.Edit";
+        public const string Pages_ShippingRequestVases_Delete = "Pages.ShippingRequestVases.Delete";
+
+        public const string Pages_VasPrices = "Pages.VasPrices";
+        public const string Pages_VasPrices_Create = "Pages.VasPrices.Create";
+        public const string Pages_VasPrices_Edit = "Pages.VasPrices.Edit";
+        public const string Pages_VasPrices_Delete = "Pages.VasPrices.Delete";
+
+        public const string Pages_Administration_Vases = "Pages.Administration.Vases";
+        public const string Pages_Administration_Vases_Create = "Pages.Administration.Vases.Create";
+        public const string Pages_Administration_Vases_Edit = "Pages.Administration.Vases.Edit";
+        public const string Pages_Administration_Vases_Delete = "Pages.Administration.Vases.Delete";
+
         public const string Pages_Capacities = "Pages.Capacities";
         public const string Pages_Capacities_Create = "Pages.Capacities.Create";
         public const string Pages_Capacities_Edit = "Pages.Capacities.Edit";
