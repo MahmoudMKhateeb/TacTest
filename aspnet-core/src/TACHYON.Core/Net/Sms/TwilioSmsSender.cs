@@ -1,4 +1,5 @@
 ﻿using Abp.Dependency;
+using System;
 using System.Threading.Tasks;
 using TACHYON.Identity;
 using Twilio;
@@ -24,6 +25,13 @@ namespace TACHYON.Net.Sms
                 @from: new Twilio.Types.PhoneNumber(_twilioSmsSenderConfiguration.SenderNumber),
                 to: new Twilio.Types.PhoneNumber(number)
             );
+        }
+
+        public Task SendReceiverSmsAsync(string number, DateTime date, string shipperName, string driverName, string driverPhone, string waybillNumber, string code, string link)
+        {
+            /* Implement this service to send SMS to users (can be used for two factor auth). */
+
+            return Task.FromResult(0);
         }
     }
 }

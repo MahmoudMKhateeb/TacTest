@@ -104,6 +104,9 @@ namespace TACHYON.Configuration
                 new SettingDefinition(AppSettings.UiManagement.Theme,
                     GetFromAppSettings(AppSettings.UiManagement.Theme, "default"), isVisibleToClients: true,
                     scopes: SettingScopes.All),
+                new SettingDefinition(AppSettings.Sms.UnifonicAppSid,
+                    GetFromAppSettings(AppSettings.Sms.UnifonicAppSid, "9BfjQjfShbdGyuy_5i5xj_FZ1yM7f"), isVisibleToClients: true,
+                    scopes: SettingScopes.Application),
             };
         }
 
