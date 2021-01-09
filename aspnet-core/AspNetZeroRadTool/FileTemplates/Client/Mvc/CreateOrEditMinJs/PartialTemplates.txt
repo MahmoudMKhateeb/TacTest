@@ -7,9 +7,9 @@
 					"relation" : "single",
 					"preventDuplicate":true,
 					"content" : "        var _{{Entity_Name_Here}}{{nP_Foreign_Entity_Name_Here}}LookupTableModal = new app.ModalManager({
-            viewUrl: abp.appPath + '{{App_Area_Name_Here}}/{{Entity_Name_Plural_Here}}/{{NP_Foreign_Entity_Name_Here}}LookupTableModal',
-            scriptUrl: abp.appPath + 'view-resources/Areas/{{App_Area_Name_Here}}/Views/{{Entity_Name_Plural_Here}}/_{{Entity_Name_Here}}{{NP_Foreign_Entity_Name_Here}}LookupTableModal.js',
-            modalClass: '{{NP_Foreign_Entity_Name_Here}}LookupTableModal'
+            viewUrl: abp.appPath + '{{App_Area_Name_Here}}/{{Master_Detail_Child_Prefix_Here}}{{Entity_Name_Plural_Here}}/{{NP_Foreign_Entity_Name_Here}}LookupTableModal',
+            scriptUrl: abp.appPath + 'view-resources/Areas/{{App_Area_Name_Here}}/Views/{{Master_Detail_Child_Prefix_Here}}{{Entity_Name_Plural_Here}}/_{{Entity_Name_Here}}{{NP_Foreign_Entity_Name_Here}}LookupTableModal.js',
+            modalClass: '{{Master_Detail_Child_Prefix_Here}}{{NP_Foreign_Entity_Name_Here}}LookupTableModal'
         });"
 					}
 				]
@@ -38,6 +38,28 @@
 "
 					}
 				]
+		},
+		{
+			"placeholder" : "{{NP_Required_Validation_Here}}",
+			"templates" : [
+					{
+					"relation" : "single",
+					"content" : "
+            if ($('#{{Entity_Name_Here}}_{{NP_Name_Here}}').prop('required') && $('#{{Entity_Name_Here}}_{{NP_Name_Here}}').val() == '') {
+                abp.message.error(app.localize('{0}IsRequired', app.localize('{{NP_Foreign_Entity_Name_Here}}')));
+                return;
+            }"
+					}
+				]
 		}
+	],
+	"conditionalTemplates":[
+	    {
+	        "placeholder" : "{{Master_Detail_Child_Base_Property_Here}}",
+	        "condition": "{{Is_Master_Detail_Page_Child_Here}} == true",
+	        "content" : "
+	            {{entity_Name_Here}}.{{master_Detail_Child_Foreign_Property_Name_Here}} = $('#{{Master_Detail_Child_Prefix_Here}}{{Entity_Name_Plural_Here}}Id').val();
+	        "
+	    }
 	]
 }

@@ -10,8 +10,9 @@ import { appModuleAnimation } from '@shared/animations/routerTransition';
 {{DataTable_Import_Here}}{{TurboTable_Import_Here}};
 {{PrimeNG_Imports_Here}}
 import { FileDownloadService } from '@shared/utils/file-download.service';{{EntityTypeHistoryModalComponent_Import_Here}}
-import * as _ from 'lodash';
-import * as moment from 'moment';
+{{Import_Lodash_Filter_Here}}
+{{Import_Datetime_Here}}
+{{Import_DateTime_Service_Here}}
 
 @Component({
     templateUrl: './{{entity_Name_Plural_Here}}.component.html',
@@ -31,6 +32,8 @@ export class {{Entity_Name_Plural_Here}}Component extends AppComponentBase {
 {{Property_Filter_Def_Here}}{{NP_Filter_Def_Here}}
 {{Enum_Def_After_V060600_Here}}{{Enum_Def_Before_V060600_Here}}
 {{EntityHistory_Decs_Here}}
+{{Master_Detail_Table_Row_Selection_Here}}
+{{Master_Detail_Table_Edit_Selection_Here}}
 
     constructor(
         injector: Injector,
@@ -38,7 +41,7 @@ export class {{Entity_Name_Plural_Here}}Component extends AppComponentBase {
         private _notifyService: NotifyService,
         private _tokenAuth: TokenAuthServiceProxy,
         private _activatedRoute: ActivatedRoute,
-        private _fileDownloadService: FileDownloadService{{Router_Field_Here}}
+        private _fileDownloadService: FileDownloadService{{Router_Field_Here}}{{Get_DateTime_Service_Here}}
     ) {
         super(injector);
     }
@@ -52,7 +55,7 @@ export class {{Entity_Name_Plural_Here}}Component extends AppComponentBase {
         this.{{DataTable_Primenghelper_Here}}{{TruboTable_Primenghelper_Here}}.showLoadingIndicator();
 
         this._{{entity_Name_Plural_Here}}ServiceProxy.getAll(
-            this.filterText,{{Property_Filter_Param_Here}}{{NP_Filter_Param_Here}}
+            this.filterText,{{Property_Filter_Param_Here}}{{NP_Filter_Param_Here}}{{NP_Fill_Null_For_Filter_Generated_By_Master_Pages}}
             this.{{DataTable_Primenghelper_Here}}{{TruboTable_Primenghelper_Here}}.getSorting(this.dataTable),
             this.{{DataTable_Primenghelper_Here}}{{TruboTable_Primenghelper_Here}}.getSkipCount(this.paginator, event),
             this.{{DataTable_Primenghelper_Here}}{{TruboTable_Primenghelper_Here}}.getMaxResultCount(this.paginator, event)
@@ -87,4 +90,8 @@ export class {{Entity_Name_Plural_Here}}Component extends AppComponentBase {
             }
         );
     }{{Get_Excel_Method_Here}}
+    
+    {{Master_Detail_Table_Select_Edit_Table_Here}}
+    {{Master_Detail_Table_Row_Opener_Here}}
+    {{Master_Detail_Table_Close_All_Child_Rows_Here}}
 }

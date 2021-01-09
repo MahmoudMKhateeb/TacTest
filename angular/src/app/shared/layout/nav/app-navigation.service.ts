@@ -107,6 +107,12 @@ export class AppNavigationService {
             [],
             [
               new AppMenuItem('TransportTypes', 'Pages.TransportTypes', 'flaticon-more', '/app/main/transportTypes/transportTypes'),
+              new AppMenuItem(
+                'TransportTypesTranslations',
+                'Pages.TransportTypesTranslations',
+                'flaticon-more',
+                '/app/main/transportTypesTranslations/transportTypesTranslations'
+              ),
               new AppMenuItem('TransportSubTypes', 'Pages.TransportSubtypes', 'flaticon-more', '/app/main/transportSubtypes/transportSubtypes'),
               new AppMenuItem('TrucksTypes', 'Pages.TrucksTypes', 'flaticon-truck', '/app/main/trucksTypes/trucksTypes'),
               new AppMenuItem('TruckSubTypes', 'Pages.TruckSubtypes', 'flaticon-more', '/app/main/truckSubtypes/truckSubtypes'),

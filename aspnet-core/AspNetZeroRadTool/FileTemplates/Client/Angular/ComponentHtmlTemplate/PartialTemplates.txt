@@ -152,7 +152,10 @@
 			"condition": "{{Create_View_Only_Here}} == true && {{Is_Non_Modal_CRUD_Page}} == false",
 			"content": "										    <li>
                                                 <a 
-                                                   (click)=\"view{{Entity_Name_Here}}Modal.show(record)\">{{l('View')}}</a>
+                                                   (click)=\"view{{Entity_Name_Here}}Modal.show(record)\">
+                                                   <i class="far fa-eye mr-2"></i>
+                                                   {{l('View')}}
+                                                </a>
                                             </li>"
 		},
 		{
@@ -180,15 +183,19 @@
 			"placeholder": "{{Edit_Button_Here}}",
 			"condition": "{{Is_Non_Modal_CRUD_Page}} == false",
 			"content": "<a *ngIf=\"permission.isGranted('{{Permission_Value_Here}}.Edit')\"
-                                                   (click)=\"createOrEdit{{Entity_Name_Here}}Modal.show(record.{{entity_Name_Here}}.id)\">{{l('Edit')}}</a>"
+                                                   (click)=\"createOrEdit{{Entity_Name_Here}}Modal.show(record.{{entity_Name_Here}}.id)\">
+                           <i class=\"far fa-edit mr-2\"></i>
+                           {{l('Edit')}}
+                       </a>"
 		},
 		{
 			"placeholder": "{{Edit_Button_Here}}",
 			"condition": "{{Is_Non_Modal_CRUD_Page}} == true",
 			"content": " <a *ngIf=\"permission.isGranted('{{Permission_Value_Here}}.Edit')\"
 			[routerLink]=\"['/app/{{menu_Position_Here}}/{{namespace_Relative_Here}}/{{entity_Name_Plural_Here}}/createOrEdit']\" [queryParams]=\"{id: record.{{entity_Name_Here}}.id}\">
-  {{l('Edit')}}	
-</a>"
+              <i class=\"far fa-edit mr-2\"></i>
+              {{l('Edit')}}	
+            </a>"
 		},
 		{
 			"placeholder": "{{Create_Or_Edit_Modal_Tag_Here}}",

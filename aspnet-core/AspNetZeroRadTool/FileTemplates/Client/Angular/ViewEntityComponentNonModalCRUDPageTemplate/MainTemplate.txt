@@ -4,9 +4,8 @@ import { {{Entity_Name_Plural_Here}}ServiceProxy, Get{{Entity_Name_Here}}ForView
 import { AppComponentBase } from '@shared/common/app-component-base';
 import { ActivatedRoute } from '@angular/router';
 import { appModuleAnimation } from '@shared/animations/routerTransition';
-
+{{Import_Breadcrumb_Here}}
 @Component({
-    selector: 'view{{Entity_Name_Here}}',
     templateUrl: './view-{{entity_Name_Here}}.component.html',
     animations: [appModuleAnimation()]
 })
@@ -17,7 +16,7 @@ export class View{{Entity_Name_Here}}Component extends AppComponentBase implemen
 
     item: Get{{Entity_Name_Here}}ForViewDto;
 {{enum_Def_After_V060600_Here}}{{enum_Def_Before_V060600_Here}}
-
+{{Breadcrumb_Definitions_Here}}
     constructor(
         injector: Injector,
         private _activatedRoute: ActivatedRoute,

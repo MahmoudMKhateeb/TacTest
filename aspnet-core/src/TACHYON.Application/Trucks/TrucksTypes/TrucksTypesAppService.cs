@@ -15,6 +15,7 @@ using System.Threading.Tasks;
 using TACHYON.Authorization;
 using TACHYON.Dto;
 using TACHYON.Trucks.TruckCategories.TransportTypes;
+using TACHYON.Trucks.TruckCategories.TransportTypes.Dtos;
 using TACHYON.Trucks.TrucksTypes.Dtos;
 
 namespace TACHYON.Trucks.TrucksTypes
@@ -131,14 +132,15 @@ namespace TACHYON.Trucks.TrucksTypes
         }
 
         [AbpAuthorize(AppPermissions.Pages_TrucksTypes)]
-        public async Task<List<SelectItemDto>> GetAllTransportTypeForTableDropdown()
+
+
+        public async Task<IEnumerable<ISelectItemDto>> GetAllTransportTypeForTableDropdown()
         {
-            return await _transportTypeRepository.GetAll()
-                .Select(transportType => new SelectItemDto
-                {
-                    Id = transportType.Id.ToString(),
-                    DisplayName = transportType == null || transportType.DisplayName == null ? "" : transportType.DisplayName.ToString()
-                }).ToListAsync();
+            List<TransportType> transportTypes = await _transportTypeRepository.GetAllListAsync();
+
+            List<TransportTypeSelectItemDto> transportTypeDtos = ObjectMapper.Map<List<TransportTypeSelectItemDto>>(transportTypes);
+
+            return transportTypeDtos;
         }
     }
 }

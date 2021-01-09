@@ -2,6 +2,8 @@
 {
     public class SelectItemDto
     {
+        private string _displayName;
+
         public SelectItemDto(string id, string displayName)
         {
             Id = id;
@@ -13,6 +15,32 @@
         }
 
         public string Id { get; set; }
-        public string DisplayName { get; set; }
+
+        public string DisplayName
+        {
+            get
+            {
+                return TranslatedDisplayName ?? _displayName;
+            }
+            set
+            {
+                _displayName = value;
+
+            }
+
+        }
+
+
+        public string TranslatedDisplayName { get; set; }
+
+
+    }
+
+    public interface ISelectItemDto
+    {
+        string Id { get; set; }
+        string DisplayName { get; set; }
+
+
     }
 }

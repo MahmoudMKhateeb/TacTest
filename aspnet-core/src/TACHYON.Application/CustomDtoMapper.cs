@@ -1,9 +1,11 @@
-﻿using TACHYON.ShippingRequestVases.Dtos;
+﻿using TACHYON.Trucks.TruckCategories.TransportTypes.TransportTypesTranslations.Dtos;
+using TACHYON.Trucks.TruckCategories.TransportTypes.TransportTypesTranslations;
+using TACHYON.ShippingRequestVases.Dtos;
 using TACHYON.ShippingRequestVases;
 using TACHYON.Vases.Dtos;
 using TACHYON.Vases;
 using TACHYON.TermsAndConditions;
-﻿using TACHYON.TermsAndConditions.Dtos;
+using TACHYON.TermsAndConditions.Dtos;
 using TACHYON.Trucks.TruckCategories.TruckCapacities;
 using TACHYON.Trucks.TruckCategories.TransportTypes.Dtos;
 using TACHYON.Trucks.TruckCategories.TransportTypes;
@@ -136,6 +138,8 @@ namespace TACHYON
     {
         public static void CreateMappings(IMapperConfigurationExpression configuration)
         {
+            configuration.CreateMap<CreateOrEditTransportTypesTranslationDto, TransportTypesTranslation>().ReverseMap();
+            configuration.CreateMap<TransportTypesTranslationDto, TransportTypesTranslation>().ReverseMap();
             configuration.CreateMap<CreateOrEditShippingRequestVasDto, ShippingRequestVas>().ReverseMap();
             configuration.CreateMap<ShippingRequestVasDto, ShippingRequestVas>().ReverseMap();
             configuration.CreateMap<CreateOrEditVasPriceDto, VasPrice>().ReverseMap();
@@ -340,10 +344,19 @@ namespace TACHYON
                 .ForMember(dst => dst.Edition, opt => opt.MapFrom(src => src.EditionFk.DisplayName))
                 .ReverseMap();
 
-
-            configuration.CreateMultiLingualMap<TermAndCondition,TermAndConditionTranslation, TermAndConditionDto>(context)
+            configuration.CreateMultiLingualMap<TermAndCondition, TermAndConditionTranslation, TermAndConditionDto>(context)
                  .EntityMap.ForMember(dst => dst.EditionName, opt => opt.MapFrom(src => src.EditionFk.DisplayName))
                  .ReverseMap();
+
+            configuration.CreateMultiLingualMap<TransportType, TransportTypesTranslation, TransportTypeDto>(context)
+                .EntityMap
+                .ReverseMap();
+            
+            // #Map_TransportType_TransportTypeSelectItemDto
+            configuration.CreateMultiLingualMap<TransportType, TransportTypesTranslation, TransportTypeSelectItemDto>(context)
+                  .EntityMap
+                  .ForMember(dst => dst.Id, opt => opt.MapFrom(src => src.Id.ToString()))
+                  .ReverseMap();
         }
     }
 }

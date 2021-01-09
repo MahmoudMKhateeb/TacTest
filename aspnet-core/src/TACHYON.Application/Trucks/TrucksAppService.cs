@@ -32,6 +32,8 @@ using TACHYON.Trucks;
 using TACHYON.Trucks.Dtos;
 using TACHYON.Trucks.Exporting;
 using TACHYON.Trucks.TruckCategories.TransportTypes;
+using TACHYON.Trucks.TruckCategories.TransportTypes.Dtos;
+using TACHYON.Trucks.TruckCategories.TransportTypes.TransportTypesTranslations;
 using TACHYON.Trucks.TruckCategories.TruckCapacities;
 using TACHYON.Trucks.TrucksTypes;
 using GetAllForLookupTableInput = TACHYON.Trucks.Dtos.GetAllForLookupTableInput;
@@ -60,7 +62,7 @@ namespace TACHYON.Trucks
 
 
 
-        public TrucksAppService(IRepository<DocumentType, long> documentTypeRepository, IRepository<DocumentFile, Guid> documentFileRepository, IRepository<Truck, Guid> truckRepository, ITrucksExcelExporter trucksExcelExporter, IRepository<TrucksType, long> lookup_trucksTypeRepository, IRepository<TruckStatus, long> lookup_truckStatusRepository, IRepository<User, long> lookup_userRepository, IAppNotifier appNotifier, ITempFileCacheManager tempFileCacheManager, IBinaryObjectManager binaryObjectManager, DocumentFilesAppService documentFilesAppService, IRepository<TransportType, int> transportTypeRepository,IRepository<Capacity, int> capacityRepository)
+        public TrucksAppService(IRepository<DocumentType, long> documentTypeRepository, IRepository<DocumentFile, Guid> documentFileRepository, IRepository<Truck, Guid> truckRepository, ITrucksExcelExporter trucksExcelExporter, IRepository<TrucksType, long> lookup_trucksTypeRepository, IRepository<TruckStatus, long> lookup_truckStatusRepository, IRepository<User, long> lookup_userRepository, IAppNotifier appNotifier, ITempFileCacheManager tempFileCacheManager, IBinaryObjectManager binaryObjectManager, DocumentFilesAppService documentFilesAppService, IRepository<TransportType, int> transportTypeRepository, IRepository<Capacity, int> capacityRepository)
         {
             _documentFileRepository = documentFileRepository;
             _documentTypeRepository = documentTypeRepository;
@@ -96,7 +98,7 @@ namespace TACHYON.Trucks
                 //.WhereIf(input.IsAttachableFilter > -1, e => (input.IsAttachableFilter == 1 && e.IsAttachable) || (input.IsAttachableFilter == 0 && !e.IsAttachable))
                 .WhereIf(!string.IsNullOrWhiteSpace(input.TrucksTypeDisplayNameFilter), e => e.TrucksTypeFk != null && e.TrucksTypeFk.DisplayName == input.TrucksTypeDisplayNameFilter)
                 .WhereIf(!string.IsNullOrWhiteSpace(input.TruckStatusDisplayNameFilter), e => e.TruckStatusFk != null && e.TruckStatusFk.DisplayName == input.TruckStatusDisplayNameFilter);
-                //.WhereIf(!string.IsNullOrWhiteSpace(input.UserNameFilter), e => e.Driver1UserFk != null && e.Driver1UserFk.Name == input.UserNameFilter);
+            //.WhereIf(!string.IsNullOrWhiteSpace(input.UserNameFilter), e => e.Driver1UserFk != null && e.Driver1UserFk.Name == input.UserNameFilter);
 
             var pagedAndFilteredTrucks = filteredTrucks
                 .OrderBy(input.Sorting ?? "id asc")
@@ -113,8 +115,8 @@ namespace TACHYON.Trucks
                          join o2 in _lookup_truckStatusRepository.GetAll() on o.TruckStatusId equals o2.Id into j2
                          from s2 in j2.DefaultIfEmpty()
 
-                         //join o3 in _lookup_userRepository.GetAll() on o.Driver1UserId equals o3.Id into j3
-                         //from s3 in j3.DefaultIfEmpty()
+                             //join o3 in _lookup_userRepository.GetAll() on o.Driver1UserId equals o3.Id into j3
+                             //from s3 in j3.DefaultIfEmpty()
 
                          select new GetTruckForViewDto()
                          {
@@ -125,16 +127,16 @@ namespace TACHYON.Trucks
                                  ModelYear = o.ModelYear,
                                  Note = o.Note,
                                  Id = o.Id,
-                                 Capacity=o.Capacity,
+                                 Capacity = o.Capacity,
                                  Length = o.Length
                              },
                              TrucksTypeDisplayName =
-                             (o.TransportTypeFk == null ?"": o.TransportTypeFk.DisplayName) + " - "+
-                             (o.TrucksTypeFk == null ?"": o.TrucksTypeFk.DisplayName) + " - " +
-                             (o.CapacityFk == null ?"": o.CapacityFk.DisplayName),                    
+                             (o.TransportTypeFk == null ? "" : o.TransportTypeFk.DisplayName) + " - " +
+                             (o.TrucksTypeFk == null ? "" : o.TrucksTypeFk.DisplayName) + " - " +
+                             (o.CapacityFk == null ? "" : o.CapacityFk.DisplayName),
                              TruckStatusDisplayName = s2 == null || s2.DisplayName == null ? "" : s2.DisplayName.ToString(),
                              //UserName = s3 == null || s3.Name == null ? "" : s3.Name.ToString(),
-                             IsMissingDocumentFiles =  documentTypesCount!= _documentFileRepository.GetAll().Where(t=>t.TruckId==o.Id).Count()
+                             IsMissingDocumentFiles = documentTypesCount != _documentFileRepository.GetAll().Where(t => t.TruckId == o.Id).Count()
                          };
 
             var totalCount = await filteredTrucks.CountAsync();
@@ -183,7 +185,7 @@ namespace TACHYON.Trucks
 
             if (output.Truck.TruckStatusId != null)
             {
-                var _lookupTruckStatus = await _lookup_truckStatusRepository.FirstOrDefaultAsync((long) output.Truck.TruckStatusId);
+                var _lookupTruckStatus = await _lookup_truckStatusRepository.FirstOrDefaultAsync((long)output.Truck.TruckStatusId);
                 output.TruckStatusDisplayName = _lookupTruckStatus?.DisplayName?.ToString();
             }
 
@@ -200,18 +202,19 @@ namespace TACHYON.Trucks
         public async Task CreateOrEdit(CreateOrEditTruckDto input)
         {
             //check for zero values 
-            if (input.TransportTypeId==0)
+            if (input.TransportTypeId == 0)
             {
                 input.TransportTypeId = null;
             }
-            if (input.TrucksTypeId==0)
+            if (input.TrucksTypeId == 0)
             {
                 input.TrucksTypeId = null;
             }
-            if (input.CapacityId==0) {
+            if (input.CapacityId == 0)
+            {
                 input.CapacityId = null;
             }
-            if (input.TruckStatusId==0)
+            if (input.TruckStatusId == 0)
             {
                 input.TruckStatusId = null;
             }
@@ -220,7 +223,7 @@ namespace TACHYON.Trucks
 
             if (input.Id == null)
             {
-                    await Create(input);
+                await Create(input);
             }
             else
             {
@@ -326,6 +329,7 @@ namespace TACHYON.Trucks
             var filteredTrucks = _truckRepository.GetAll()
                 .Include(e => e.TrucksTypeFk)
                 .Include(e => e.TruckStatusFk)
+                .Include(x => x.TransportTypeFk)
                 //.Include(e => e.Driver1UserFk)
                 .WhereIf(!string.IsNullOrWhiteSpace(input.Filter), e => false || e.PlateNumber.Contains(input.Filter) || e.ModelName.Contains(input.Filter) || e.ModelYear.Contains(input.Filter) || e.Note.Contains(input.Filter))
                 .WhereIf(!string.IsNullOrWhiteSpace(input.PlateNumberFilter), e => e.PlateNumber == input.PlateNumberFilter)
@@ -334,7 +338,7 @@ namespace TACHYON.Trucks
                 //.WhereIf(input.IsAttachableFilter > -1, e => (input.IsAttachableFilter == 1 && e.IsAttachable) || (input.IsAttachableFilter == 0 && !e.IsAttachable))
                 .WhereIf(!string.IsNullOrWhiteSpace(input.TrucksTypeDisplayNameFilter), e => e.TrucksTypeFk != null && e.TrucksTypeFk.DisplayName == input.TrucksTypeDisplayNameFilter)
                 .WhereIf(!string.IsNullOrWhiteSpace(input.TruckStatusDisplayNameFilter), e => e.TruckStatusFk != null && e.TruckStatusFk.DisplayName == input.TruckStatusDisplayNameFilter);
-                //.WhereIf(!string.IsNullOrWhiteSpace(input.UserNameFilter), e => e.Driver1UserFk != null && e.Driver1UserFk.Name == input.UserNameFilter);
+            //.WhereIf(!string.IsNullOrWhiteSpace(input.UserNameFilter), e => e.Driver1UserFk != null && e.Driver1UserFk.Name == input.UserNameFilter);
 
             var query = (from o in filteredTrucks
                          join o1 in _lookup_trucksTypeRepository.GetAll() on o.TrucksTypeId equals o1.Id into j1
@@ -343,8 +347,8 @@ namespace TACHYON.Trucks
                          join o2 in _lookup_truckStatusRepository.GetAll() on o.TruckStatusId equals o2.Id into j2
                          from s2 in j2.DefaultIfEmpty()
 
-                         //join o3 in _lookup_userRepository.GetAll() on o.Driver1UserId equals o3.Id into j3
-                         //from s3 in j3.DefaultIfEmpty()
+                             //join o3 in _lookup_userRepository.GetAll() on o.Driver1UserId equals o3.Id into j3
+                             //from s3 in j3.DefaultIfEmpty()
 
 
                          select new GetTruckForViewDto()
@@ -356,7 +360,7 @@ namespace TACHYON.Trucks
                                  ModelYear = o.ModelYear,
                                  Note = o.Note,
                                  Id = o.Id,
-                                 Capacity=o.Capacity
+                                 Capacity = o.Capacity
                              },
                              TrucksTypeDisplayName =
                              (o.TransportTypeFk == null ? "" : o.TransportTypeFk.DisplayName) + " - " +
@@ -403,7 +407,7 @@ namespace TACHYON.Trucks
         [AbpAuthorize(AppPermissions.Pages_Trucks)]
         public async Task<PagedResultDto<TruckUserLookupTableDto>> GetAllUserForLookupTable(GetAllForLookupTableInput input)
         {
-            var query = _lookup_userRepository.GetAll().Where(e=>e.IsDriver==true).WhereIf(
+            var query = _lookup_userRepository.GetAll().Where(e => e.IsDriver == true).WhereIf(
                    !string.IsNullOrWhiteSpace(input.Filter),
                   e => e.Name != null && e.Name.Contains(input.Filter)
                );
@@ -481,16 +485,22 @@ namespace TACHYON.Trucks
 
 
         #region Truck Categories
-        public async Task<List<SelectItemDto>> GetAllTransportTypesForDropdown()
+        public async Task<IEnumerable<ISelectItemDto>> GetAllTransportTypesForDropdown()
         {
-            return await _transportTypeRepository.GetAll().Select(x => new SelectItemDto()
-            {
-                Id = x.Id.ToString(),
-                DisplayName = x.DisplayName
-            }).ToListAsync();
+            List<TransportType> transportTypes = await _transportTypeRepository
+                .GetAllIncluding(x => x.Translations)
+                .ToListAsync();
+
+            List<TransportTypeSelectItemDto> transportTypeDtos = ObjectMapper.Map<List<TransportTypeSelectItemDto>>(transportTypes);
+
+            return transportTypeDtos;
         }
+
+
         public async Task<List<SelectItemDto>> GetAllTruckTypesByTransportTypeIdForDropdown(int transportTypeId)
         {
+
+
             return await _lookup_trucksTypeRepository.GetAll()
                 .Where(x => x.TransportTypeId == transportTypeId)
                 .Select(x => new SelectItemDto()

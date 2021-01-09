@@ -1,6 +1,15 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <localizationDictionary culture="en">
-  <texts>
+  <texts>    <text name="TransportTypesTranslations">Transport types translations</text>
+    <text name="TransportTypesTranslation">Transport types translation</text>
+    <text name="TACHYON.TransportTypesTranslations.TransportTypesTranslation">TransportTypesTranslation</text>
+    <text name="TransportTypesTranslationsHeaderInfo">Transport types translations header info</text>
+    <text name="CreateNewTransportTypesTranslation">Create new transport types translation</text>
+    <text name="EditTransportTypesTranslation">Edit transport types translation</text>
+    <text name="DeleteTransportTypesTranslation">Delete transport types translation</text>
+    <text name="TransportTypeDisplayName">Transport type display name</text>
+    <text name="PickTransportType">Pick transport type</text>
+
 
     <![CDATA[Tachyon:SideBar Start]]>
     <text name="ShippingRequests">Shipping Requests</text>

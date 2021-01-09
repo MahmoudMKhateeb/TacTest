@@ -1,5 +1,6 @@
 ﻿import { NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
+import { TransportTypesTranslationsComponent } from './transportTypesTranslations/transportTypesTranslations/transportTypesTranslations.component';
 import { VasPricesComponent } from './vases/vasPrices/vasPrices.component';
 import { TermAndConditionsComponent } from './termsAndConditions/termAndConditions/termAndConditions.component';
 import { CapacitiesComponent } from './truckCapacities/capacities/capacities.component';
@@ -39,6 +40,7 @@ import { MarketplaceComponent } from '@app/main/marketPlace/marketPlace/marketpl
       {
         path: '',
         children: [
+                    { path: 'transportTypesTranslations/transportTypesTranslations', component: TransportTypesTranslationsComponent, data: { permission: 'Pages.TransportTypesTranslations' }  },
           { path: 'vases/vasPrices', component: VasPricesComponent, data: { permission: 'Pages.VasPrices' } },
           { path: 'termsAndConditions/termAndConditions', component: TermAndConditionsComponent, data: { permission: 'Pages.TermAndConditions' } },
           { path: 'truckCapacities/capacities', component: CapacitiesComponent, data: { permission: 'Pages.Capacities' } },
