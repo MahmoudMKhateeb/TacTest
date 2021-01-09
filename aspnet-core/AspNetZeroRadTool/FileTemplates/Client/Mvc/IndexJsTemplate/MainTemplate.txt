@@ -1,7 +1,7 @@
 ﻿(function () {
     $(function () {
 
-        var _${{entity_Name_Plural_Here}}Table = $('#{{Entity_Name_Plural_Here}}Table');
+        var _${{entity_Name_Plural_Here}}Table = $('#{{Master_Detail_Child_Prefix_Here}}{{Entity_Name_Plural_Here}}Table');
         var _{{entity_Name_Plural_Here}}Service = abp.services.app.{{entity_Name_Plural_Here}};
 		{{EntityTypeFullName_Dec_Here}}
         $('.date-picker').datetimepicker({
@@ -27,6 +27,13 @@
             }
             return element.data("DateTimePicker").date().format("YYYY-MM-DDT00:00:00Z"); 
         }
+        
+        var getMaxDateFilter = function (element) {
+            if (element.data("DateTimePicker").date() == null) {
+                return null;
+            }
+            return element.data("DateTimePicker").date().format("YYYY-MM-DDT23:59:59Z"); 
+        }
 
         var dataTable = _${{entity_Name_Plural_Here}}Table.DataTable({
             paging: true,
@@ -36,14 +43,22 @@
                 ajaxFunction: _{{entity_Name_Plural_Here}}Service.getAll,
                 inputFilter: function () {
                     return {
-					filter: $('#{{Entity_Name_Plural_Here}}TableFilter').val(){{Property_Filter_Param_Here}}{{NP_Filter_Param_Here}}
+					filter: $('#{{Master_Detail_Child_Prefix_Here}}{{Entity_Name_Plural_Here}}TableFilter').val(){{Property_Filter_Param_Here}}{{NP_Filter_Param_Here}}{{Master_Detail_Child_Base_Entity_Filter_Here}}
                     };
                 }
             },
             columnDefs: [
                 {
+                    className: 'control responsive',
+                    orderable: false,
+                    render: function () {
+                        return '';
+                    },
+                    targets: 0
+                },
+                {
                     width: 120,
-                    targets: 0,
+                    targets: 1,
                     data: null,
                     orderable: false,
                     autoWidth: false,
@@ -54,6 +69,7 @@
                         items: [{{View_Button_Here}}
 						{
                             text: app.localize('Edit'),
+                            iconStyle: 'far fa-edit mr-2',
                             visible: function () {
                                 return _permissions.edit;
                             },
@@ -63,6 +79,7 @@
                         },{{EntityHistory_Action_Here}} 
 						{
                             text: app.localize('Delete'),
+                            iconStyle: 'far fa-trash-alt mr-2',
                             visible: function () {
                                 return _permissions.delete;
                             },
@@ -71,7 +88,7 @@
                             }
                         }]
                     }
-                }{{Property_Looped_Template_Here}}{{NP_Looped_Template_Here}}
+                }{{NP_Looped_One_To_Many_Table_Column_Def_Here}}{{Property_Looped_Template_Here}}{{NP_Looped_Template_Here}}
             ]
         });
 
@@ -96,16 +113,16 @@
             );
         }
 
-		$('#ShowAdvancedFiltersSpan').click(function () {
-            $('#ShowAdvancedFiltersSpan').hide();
-            $('#HideAdvancedFiltersSpan').show();
-            $('#AdvacedAuditFiltersArea').slideDown();
+		$('#{{Master_Detail_Child_Prefix_Here}}ShowAdvancedFiltersSpan').click(function () {
+            $('#{{Master_Detail_Child_Prefix_Here}}ShowAdvancedFiltersSpan').hide();
+            $('#{{Master_Detail_Child_Prefix_Here}}HideAdvancedFiltersSpan').show();
+            $('#{{Master_Detail_Child_Prefix_Here}}AdvacedAuditFiltersArea').slideDown();
         });
 
-        $('#HideAdvancedFiltersSpan').click(function () {
-            $('#HideAdvancedFiltersSpan').hide();
-            $('#ShowAdvancedFiltersSpan').show();
-            $('#AdvacedAuditFiltersArea').slideUp();
+        $('#{{Master_Detail_Child_Prefix_Here}}HideAdvancedFiltersSpan').click(function () {
+            $('#{{Master_Detail_Child_Prefix_Here}}HideAdvancedFiltersSpan').hide();
+            $('#{{Master_Detail_Child_Prefix_Here}}ShowAdvancedFiltersSpan').show();
+            $('#{{Master_Detail_Child_Prefix_Here}}AdvacedAuditFiltersArea').slideUp();
         });
 
         {{Create_Button_Here}}        
@@ -126,5 +143,8 @@
 			get{{Entity_Name_Plural_Here}}();
 		  }
 		});
+		
+		{{NP_Looped_One_To_Many_Table_Open_Detail_Row}}
+		{{NP_Looped_One_To_Many_Table_Details_Control_On_Click_Here}}
     });
 })();

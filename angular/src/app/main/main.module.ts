@@ -2,6 +2,10 @@
 import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { AppCommonModule } from '@app/shared/common/app-common.module';
+import { TransportTypesTranslationsComponent } from './transportTypesTranslations/transportTypesTranslations/transportTypesTranslations.component';
+import { ViewTransportTypesTranslationModalComponent } from './transportTypesTranslations/transportTypesTranslations/view-transportTypesTranslation-modal.component';
+import { CreateOrEditTransportTypesTranslationModalComponent } from './transportTypesTranslations/transportTypesTranslations/create-or-edit-transportTypesTranslation-modal.component';
+
 import { VasPricesComponent } from './vases/vasPrices/vasPrices.component';
 import { ViewVasPriceModalComponent } from './vases/vasPrices/view-vasPrice-modal.component';
 import { CreateOrEditVasPriceModalComponent } from './vases/vasPrices/create-or-edit-vasPrice-modal.component';
@@ -174,6 +178,10 @@ NgxBootstrapDatePickerConfigService.registerNgxBootstrapDatePickerLocales();
     AdminModule,
   ],
   declarations: [
+		TransportTypesTranslationsComponent,
+
+		ViewTransportTypesTranslationModalComponent,
+		CreateOrEditTransportTypesTranslationModalComponent,
     VasPricesComponent,
     ViewShippingRequestPriceResponseModalComponent,
     ViewVasPriceModalComponent,

@@ -1,5 +1,5 @@
 ﻿(function ($) {
-    app.modals.CreateOrEdit{{Entity_Name_Here}}Modal = function () {
+    app.modals.{{Master_Detail_Child_Prefix_Here}}CreateOrEdit{{Entity_Name_Here}}Modal = function () {
 
         var _{{entity_Name_Plural_Here}}Service = abp.services.app.{{entity_Name_Plural_Here}};
 
@@ -29,7 +29,7 @@
             }{{NP_Required_Validation_Here}}
 
             var {{entity_Name_Here}} = _${{entity_Name_Here}}InformationForm.serializeFormToObject();
-			
+			{{Master_Detail_Child_Base_Property_Here}}
 			 _modalManager.setBusy(true);
 			 _{{entity_Name_Plural_Here}}Service.createOrEdit(
 				{{entity_Name_Here}}

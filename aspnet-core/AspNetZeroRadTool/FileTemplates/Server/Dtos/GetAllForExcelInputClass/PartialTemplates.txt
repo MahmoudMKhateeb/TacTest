@@ -20,7 +20,7 @@
 					},
 					{
 					"type" : "bool",
-					"content" : "		public int {{Property_Name_Here}}Filter { get; set; }
+					"content" : "		public int? {{Property_Name_Here}}Filter { get; set; }
 
 "
 					},
