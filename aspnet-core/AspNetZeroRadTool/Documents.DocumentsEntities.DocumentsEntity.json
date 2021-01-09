@@ -1,0 +1,45 @@
+{
+  "IsRegenerate": false,
+  "MenuPosition": "main",
+  "RelativeNamespace": "Documents.DocumentsEntities",
+  "EntityName": "DocumentsEntity",
+  "EntityNamePlural": "DocumentsEntities",
+  "TableName": "DocumentsEntities",
+  "PrimaryKeyType": "int",
+  "BaseClass": "FullAuditedEntity",
+  "EntityHistory": false,
+  "AutoMigration": true,
+  "UpdateDatabase": true,
+  "CreateUserInterface": true,
+  "CreateViewOnly": true,
+  "CreateExcelExport": false,
+  "IsNonModalCRUDPage": false,
+  "PagePermission": {
+    "Host": true,
+    "Tenant": false
+  },
+  "Properties": [
+    {
+      "Name": "DisplayName",
+      "Type": "string",
+      "MaxLength": 256,
+      "MinLength": 0,
+      "Range": {
+        "IsRangeSet": false,
+        "MinimumValue": 0.0,
+        "MaximumValue": 0.0
+      },
+      "Required": true,
+      "Nullable": false,
+      "Regex": "",
+      "UserInterface": {
+        "AdvancedFilter": true,
+        "List": true,
+        "CreateOrUpdate": true
+      }
+    }
+  ],
+  "NavigationProperties": [],
+  "EnumDefinitions": [],
+  "DbContext": null
+}

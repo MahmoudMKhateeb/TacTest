@@ -19,7 +19,7 @@ aspnet-core/src/TACHYON.Web.Public/healthchecksdb
 aspnet-core/src/TACHYON.Web.Mvc/healthchecksdb
 *.pfx
 
-aspnet-core/AspNetZeroRadTool/
+#aspnet-core/AspNetZeroRadTool/
 /aspnet-core/TACHYON.Web.favdoc
 /_ReSharper.Caches/
 /aspnet-core/src/TACHYON.EntityFrameworkCore/Migrations/20201021134957_AddShippingRequestBidCollectionToShippingRequest.Designer.cs

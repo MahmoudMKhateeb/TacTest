@@ -1,0 +1,59 @@
+{
+  "IsRegenerate": false,
+  "MenuPosition": "main",
+  "RelativeNamespace": "Trucks.TruckCategories.TruckCapacities",
+  "EntityName": "Capacity",
+  "EntityNamePlural": "Capacities",
+  "TableName": "Capacities",
+  "PrimaryKeyType": "int",
+  "BaseClass": "FullAuditedEntity",
+  "EntityHistory": false,
+  "AutoMigration": true,
+  "UpdateDatabase": true,
+  "CreateUserInterface": true,
+  "CreateViewOnly": true,
+  "CreateExcelExport": false,
+  "IsNonModalCRUDPage": false,
+  "IsMasterDetailPage": false,
+  "PagePermission": {
+    "Host": true,
+    "Tenant": false
+  },
+  "Properties": [
+    {
+      "Name": "DisplayName",
+      "Type": "string",
+      "MaxLength": 256,
+      "MinLength": 0,
+      "Range": {
+        "IsRangeSet": false,
+        "MinimumValue": 0.0,
+        "MaximumValue": 0.0
+      },
+      "Required": true,
+      "Nullable": false,
+      "Regex": "",
+      "UserInterface": {
+        "AdvancedFilter": true,
+        "List": true,
+        "CreateOrUpdate": true
+      }
+    }
+  ],
+  "NavigationProperties": [
+    {
+      "Namespace": "TACHYON.Trucks.TruckCategories.TruckSubtypes",
+      "ForeignEntityName": "TruckSubtype",
+      "IdType": "int",
+      "IsNullable": false,
+      "PropertyName": "TruckSubtypeId",
+      "DisplayPropertyName": "DisplayName",
+      "DuplicationNumber": 0,
+      "RelationType": "single",
+      "ViewType": "Dropdown"
+    }
+  ],
+  "NavigationPropertyOneToManyTables": [],
+  "EnumDefinitions": [],
+  "DbContext": null
+}
