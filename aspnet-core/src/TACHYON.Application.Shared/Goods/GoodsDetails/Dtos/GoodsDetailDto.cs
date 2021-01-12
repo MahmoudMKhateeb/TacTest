@@ -6,11 +6,11 @@ namespace TACHYON.Goods.GoodsDetails.Dtos
 {
     public class GoodsDetailDto : EntityDto<long>
     {
-        public string Name { get; set; }
+        //public string Name { get; set; }
 
         public string Description { get; set; }
 
-        public string Quantity { get; set; }
+        public int TotalAmount { get; set; }
 
         public string Weight { get; set; }
 
@@ -19,7 +19,6 @@ namespace TACHYON.Goods.GoodsDetails.Dtos
         public bool IsDangerousGood { get; set; }
 
         public string DangerousGoodsCode { get; set; }
-
 
         public int? GoodCategoryId { get; set; }
 

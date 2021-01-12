@@ -345,14 +345,12 @@ namespace TACHYON.Shipping.ShippingRequests
 
         protected virtual async Task<PagedResultDto<GetShippingRequestForViewDto>> GetAllPagedResultDto(GetAllShippingRequestsInput input)
         {
-            using (CurrentUnitOfWork.DisableFilter(AbpDataFilters.MustHaveTenant))
-            {
                 IQueryable<ShippingRequest> filteredShippingRequests = _shippingRequestRepository.GetAll()
                     .Include(x => x.ShippingRequestBids)
                     .ThenInclude(b => b.Tenant)
                     .Include(e => e.RouteFk)
                     //get only this shipper shippingRequest
-                    .Where(x => x.TenantId == AbpSession.TenantId)
+                    //.Where(x => x.TenantId == AbpSession.TenantId)
                     .WhereIf(!string.IsNullOrWhiteSpace(input.Filter), e => false)
                     //.WhereIf(input.MinVasFilter != null, e => e.Vas >= input.MinVasFilter)
                     //.WhereIf(input.MaxVasFilter != null, e => e.Vas <= input.MaxVasFilter)
@@ -375,7 +373,6 @@ namespace TACHYON.Shipping.ShippingRequests
                 int totalCount = await filteredShippingRequests.CountAsync();
 
                 return new PagedResultDto<GetShippingRequestForViewDto>(0, shippingRequests.ToList());
-            }
         }
 
         protected virtual async Task<GetShippingRequestForViewDto> _GetShippingRequestForView(long id)

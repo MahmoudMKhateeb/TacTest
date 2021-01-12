@@ -25,7 +25,7 @@ namespace TACHYON.Routs.RoutSteps.Dtos
 
         public string TrailerTypeDisplayNameFilter { get; set; }
 
-        public string GoodsDetailNameFilter { get; set; }
+       // public string GoodsDetailNameFilter { get; set; }
 
     }
 }

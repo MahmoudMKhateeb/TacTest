@@ -135,6 +135,8 @@ using TACHYON.Trucks.TrucksTypes;
 using TACHYON.Trucks.TrucksTypes.Dtos;
 using TACHYON.Trucks.TrucksTypes.Dtos;
 using TACHYON.WebHooks.Dto;
+using TACHYON.Routs.RoutPoints.Dtos;
+using TACHYON.Routs.RoutPoints;
 
 namespace TACHYON
 {
@@ -200,6 +202,7 @@ namespace TACHYON
             configuration.CreateMap<OfferDto, Offer>().ReverseMap();
             configuration.CreateMap<CreateOrEditRoutStepDto, RoutStep>().ReverseMap();
             configuration.CreateMap<RoutStepDto, RoutStep>().ReverseMap();
+            configuration.CreateMap<RoutPointDto, RoutPoint>().ReverseMap();
             configuration.CreateMap<CreateOrEditRouteDto, Route>().ReverseMap();
             configuration.CreateMap<RouteDto, Route>().ReverseMap();
             configuration.CreateMap<CreateOrEditCityDto, City>().ReverseMap();

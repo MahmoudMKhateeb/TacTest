@@ -1,5 +1,6 @@
 ﻿using Abp.Application.Services.Dto;
 using System;
+using System.ComponentModel.DataAnnotations;
 
 namespace TACHYON.Goods.GoodCategories.Dtos
 {
@@ -9,7 +10,7 @@ namespace TACHYON.Goods.GoodCategories.Dtos
 
         public string DisplayNameFilter { get; set; }
 
-
+        public int? FatherId { get; set; }
 
     }
 }

@@ -21,6 +21,7 @@ using TACHYON.Trucks;
 using TACHYON.Trucks.TruckCategories.TransportTypes;
 using TACHYON.Trucks.TruckCategories.TruckCapacities;
 using TACHYON.Trucks.TrucksTypes;
+using TACHYON.UnitOfMeasures;
 
 namespace TACHYON.Shipping.ShippingRequests
 {
@@ -98,9 +99,11 @@ namespace TACHYON.Shipping.ShippingRequests
 
 
         /// <summary>
-        /// goods category that will be is this shipping request
+        /// goods category that will be is this shipping request, which is base category that doesn't have father category
         /// </summary>
+        [Required]
         public int GoodCategoryId { get; set; }
+
         [ForeignKey("GoodCategoryId")]
         public GoodCategory GoodCategoryFk { get; set; }
 
@@ -169,6 +172,7 @@ namespace TACHYON.Shipping.ShippingRequests
 
         public ICollection<ShippingRequestBid> ShippingRequestBids { get; set; }
         #endregion
+
 
         public void Close()
         {

@@ -11,7 +11,7 @@ namespace TACHYON.Goods.GoodsDetails.Dtos
 
         public string DescriptionFilter { get; set; }
 
-        public string QuantityFilter { get; set; }
+        public int QuantityFilter { get; set; }
 
         public string WeightFilter { get; set; }
 

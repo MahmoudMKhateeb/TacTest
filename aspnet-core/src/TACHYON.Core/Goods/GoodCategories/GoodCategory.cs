@@ -16,6 +16,11 @@ namespace TACHYON.Goods.GoodCategories
         [StringLength(GoodCategoryConsts.MaxDisplayNameLength, MinimumLength = GoodCategoryConsts.MinDisplayNameLength)]
         public virtual string DisplayName { get; set; }
 
+        public int? FatherId { get; set; }
+
+        [ForeignKey("FatherId")]
+        public GoodCategory FatherFk { get; set; }
+
 
     }
 }

@@ -10,6 +10,7 @@ using TACHYON.Cities;
 using TACHYON.Goods.GoodsDetails;
 using TACHYON.PickingTypes;
 using TACHYON.Routs;
+using TACHYON.Routs.RoutPoints;
 using TACHYON.Shipping.ShippingRequests;
 using TACHYON.Trailers;
 using TACHYON.Trailers.TrailerTypes;
@@ -29,48 +30,15 @@ namespace TACHYON.Routs.RoutSteps
         [StringLength(RoutStepConsts.MaxDisplayNameLength, MinimumLength = RoutStepConsts.MinDisplayNameLength)]
         public virtual string DisplayName { get; set; }
 
-        [StringLength(RoutStepConsts.MaxLatitudeLength, MinimumLength = RoutStepConsts.MinLatitudeLength)]
-        public virtual string Latitude { get; set; }
-
-        [StringLength(RoutStepConsts.MaxLongitudeLength, MinimumLength = RoutStepConsts.MinLongitudeLength)]
-        public virtual string Longitude { get; set; }
-
+        [Required]
         [Range(RoutStepConsts.MinOrderValue, RoutStepConsts.MaxOrderValue)]
         public virtual int Order { get; set; }
 
-
-        public virtual int? OriginCityId { get; set; }
-
-        [ForeignKey("OriginCityId")]
-        public City OriginCityFk { get; set; }
-
-        public virtual int? DestinationCityId { get; set; }
-
-        [ForeignKey("DestinationCityId")]
-        public City DestinationCityFk { get; set; }
-        public PickingType SourcePickingTypeFk { get; set; }
-
-        [ForeignKey("SourcePickingTypeId")]
-        public int? SourcePickingTypeId{get; set;}
-        public PickingType DestinationPickingTypeFk { get; set; }
-
-        [ForeignKey("DestinationPickingTypeId")]
-        public int? DestinationPickingTypeId { get; set; }
-
-        public virtual long? ShippingRequestId { get; set; }
+        [Required]
+        public virtual long ShippingRequestId { get; set; }
 
         [ForeignKey("ShippingRequestId")]
         public ShippingRequest ShippingRequestFk { get; set; }
-
-        public long? SourceFacilityId { get; set; }
-
-        public long? DestinationFacilityId { get; set; }
-
-        [ForeignKey("SourceFacilityId")]
-        public Facility SourceFacilityFk { get; set; }
-
-        [ForeignKey("DestinationFacilityId")]
-        public Facility DestinationFacilityFk { get; set; }
 
         public virtual long? TrucksTypeId { get; set; }
 
@@ -82,11 +50,7 @@ namespace TACHYON.Routs.RoutSteps
         [ForeignKey("TrailerTypeId")]
         public TrailerType TrailerTypeFk { get; set; }
 
-        public virtual long? GoodsDetailId { get; set; }
-
-        [ForeignKey("GoodsDetailId")]
-        public GoodsDetail GoodsDetailFk { get; set; }
-
+       
         /// <summary>
         /// assigned Driver
         /// </summary>
@@ -107,20 +71,21 @@ namespace TACHYON.Routs.RoutSteps
         [ForeignKey("AssignedTrailerId")]
         public Trailer AssignedTrailersFk { get; set; }
 
-        //public long PickingTypeId { get; set; }
-        //[ForeignKey("PickingTypeId")]
-        //public PickingType PickingTypeFk { get; set; }
+        [Required]
+        public long SourceRoutPointId { get; set; }
 
-        public UnitOfMeasure GoodsUnitOfMeasureFk { get; set; }
+        [ForeignKey("SourceRoutPointId")]
+        public RoutPoint SourceRoutPointFk { get; set; }
 
-        [ForeignKey("unitOfMeaureId")]
-        public long GoodsUnitOfMeaureId { get; set; }
-        public double GoodsWeight { get; set; }
-        public double TotalAmount { get; set; }
-        public double ExistingAmount { get; set; }
-        public double DroppedAmount { get; set; }
-        public double RemainingAmount { get; set; }
-        public int RoutStepOrder { get; set; }
+        [Required]
+        public long DestinationRoutPointId { get; set; }
+
+        [ForeignKey("DestinationRoutPointId")]
+        public RoutPoint DestinationRoutPointFk { get; set; }
+
+        public int TotalAmount { get; set; }
+        public int ExistingAmount { get; set; }
+        public int RemainingAmount { get; set; }
 
     }
 }
