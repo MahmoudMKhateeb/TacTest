@@ -1,6 +1,7 @@
 ﻿using Abp.Application.Services;
 using Abp.Application.Services.Dto;
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using TACHYON.Dto;
 using TACHYON.Goods.GoodCategories.Dtos;
@@ -22,6 +23,6 @@ namespace TACHYON.Goods.GoodCategories
 
         Task<FileDto> GetGoodCategoriesToExcel(GetAllGoodCategoriesForExcelInput input);
 
-
+        Task<List<GetAllGoodsCategoriesForDropDownOutput>> GetAllGoodsCategoriesForDropDown();
     }
 }

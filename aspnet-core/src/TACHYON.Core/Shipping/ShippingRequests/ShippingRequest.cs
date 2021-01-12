@@ -107,6 +107,8 @@ namespace TACHYON.Shipping.ShippingRequests
         [ForeignKey("GoodCategoryId")]
         public GoodCategory GoodCategoryFk { get; set; }
 
+        public string PackingType { get; set; }
+        public int NumberOfPackingType { get; set; }
         /// <summary>
         /// g-#409 
         /// </summary>

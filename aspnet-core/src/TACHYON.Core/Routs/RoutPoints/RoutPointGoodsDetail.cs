@@ -27,6 +27,6 @@ namespace TACHYON.Routs.RoutPoints
         /// Amount whick is picked or dropped off
         /// </summary>
         [Required]
-        public double Amount { get; set; }
+        public int Amount { get; set; }
     }
 }

@@ -10,5 +10,6 @@ namespace TACHYON.Routs.RoutPoints.Dtos
         public string CityName { get; set; }
         public string PickingTypeDisplayName{get; set;}
         public string FacilityName { get; set; }
+        public List<RoutPointGoodsDetailDto> RoutPointGoodsDetailsList { get; set; }
     }
 }
