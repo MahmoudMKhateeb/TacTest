@@ -13,7 +13,7 @@ namespace TACHYON.Routs.RoutSteps.Dtos
 
         //public string CityDisplayName2 { get; set; }
 
-        //public string RouteDisplayName { get; set; }
+        public string RouteDisplayName { get; set; }
 
 
         public string TrucksTypeDisplayName { get; set; }
