@@ -13,12 +13,35 @@
     <RootNamespace>TACHYON</RootNamespace>
   </PropertyGroup>
   <ItemGroup>
+    <None Remove="Waybills\Reports\Multiple_Drop_Waybill.rdlc" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Waybills\Reports\Multiple_Drop_Waybill.rdlc">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
     <PackageReference Include="Abp.EntityFrameworkCore.EFPlus" Version="5.10.1" />
+    <PackageReference Include="AspNetCore.Reporting" Version="2.1.0" />
     <PackageReference Include="NPOI" Version="2.5.1" />
+    <PackageReference Include="System.CodeDom" Version="5.0.0" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\TACHYON.Application.Shared\TACHYON.Application.Shared.csproj" />
     <ProjectReference Include="..\TACHYON.Core\TACHYON.Core.csproj" />
     <ProjectReference Include="..\TACHYON.EntityFrameworkCore\TACHYON.EntityFrameworkCore.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Update="Waybills\Reports\DataSet1.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>DataSet1.xsd</DependentUpon>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Update="Waybills\Reports\DataSet1.xsd">
+      <Generator>MSDataSetGenerator</Generator>
+      <LastGenOutput>DataSet1.Designer.cs</LastGenOutput>
+    </None>
   </ItemGroup>
 </Project>

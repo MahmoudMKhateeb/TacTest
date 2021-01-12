@@ -1,6 +1,6 @@
 ﻿import { Component, Injector, ViewEncapsulation, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { TrailersServiceProxy, TrailerDto } from '@shared/service-proxies/service-proxies';
+import { TrailersServiceProxy, TrailerDto, WaybillsServiceProxy } from '@shared/service-proxies/service-proxies';
 import { NotifyService } from 'abp-ng2-module';
 import { AppComponentBase } from '@shared/common/app-component-base';
 import { TokenAuthServiceProxy } from '@shared/service-proxies/service-proxies';
@@ -65,7 +65,8 @@ export class TrailersComponent extends AppComponentBase {
     private _notifyService: NotifyService,
     private _tokenAuth: TokenAuthServiceProxy,
     private _activatedRoute: ActivatedRoute,
-    private _fileDownloadService: FileDownloadService
+    private _fileDownloadService: FileDownloadService,
+    private _waybillsServiceProxy: WaybillsServiceProxy
   ) {
     super(injector);
   }
@@ -174,6 +175,14 @@ export class TrailersComponent extends AppComponentBase {
         this.payloadMaxWeightDisplayNameFilter,
         this.truckPlateNumberFilter
       )
+      .subscribe((result) => {
+        this._fileDownloadService.downloadTempFile(result);
+      });
+  }
+
+  DownloadPdf(): void {
+    this._waybillsServiceProxy
+      .getPdf()
       .subscribe((result) => {
         this._fileDownloadService.downloadTempFile(result);
       });

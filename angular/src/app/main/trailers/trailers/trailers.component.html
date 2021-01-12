@@ -3,7 +3,7 @@
     <sub-header [title]="'Trailers' | localize" [description]="'TrailersHeaderInfo' | localize">
       <div role="actions">
         <button (click)="exportToExcel()" class="btn btn-outline-success"><i class="fa fa-file-excel"></i> {{ l('ExportToExcel') }}</button>
-
+        <button (click)="DownloadPdf()" class="btn btn-outline-success"><i class="fa fa-file-excel"></i> {{ l('DownloadPdf') }}</button>
         <button *ngIf="isGranted('Pages.Trailers.Create')" (click)="createTrailer()" class="btn btn-primary blue">
           <i class="fa fa-plus"></i> {{ l('CreateNewTrailer') }}
         </button>

@@ -1,9 +1,11 @@
-﻿using Abp.AutoMapper;
+﻿using System.Reflection;
+using Abp.AutoMapper;
 using Abp.Configuration;
 using Abp.Modules;
 using Abp.Reflection.Extensions;
 using AutoMapper;
 using System.Reflection;
+using Abp.Resources.Embedded;
 using TACHYON.Authorization;
 
 namespace TACHYON
@@ -34,6 +36,14 @@ namespace TACHYON
                     IocManager.Resolve<ISettingManager>()
                 ));
             });
+
+            Configuration.EmbeddedResources.Sources.Add(
+                new EmbeddedResourceSet(
+                    "/Reports/",
+                    Assembly.GetExecutingAssembly(),
+                    "TACHYON.Waybills.Reports"
+                    )
+                );
 
         }
         public override void PostInitialize()
