@@ -218,18 +218,25 @@
                 <h6>{{ l('DisplayName') }} :</h6>
                 {{ item.displayName }}
               </div>
-              <div class="col-6 mb-3">
-                <h6>{{ l('Latitude') }} :</h6>
-                {{ item.latitude }}
-              </div>
-              <div class="col-6 mb-3">
-                <h6>{{ l('Longitude') }} :</h6>
-                {{ item.longitude }}
-              </div>
-              <div class="col-6 mb-3">
-                <h6>{{ l('Order') }} :</h6>
-                {{ item.order }}
-              </div>
+            </div>
+            <div class="card-body">
+              <div class="row">
+                <div class="col-6 mb-3">
+                  <h6>{{ l('DisplayName') }} :</h6>
+                  {{ item.displayName }}
+                </div>
+                <!--                <div class="col-6 mb-3">-->
+                <!--                  <h6>{{ l('Latitude') }} :</h6>-->
+                <!--                  {{ item.latitude }}-->
+                <!--                </div>-->
+                <!--                <div class="col-6 mb-3">-->
+                <!--                  <h6>{{ l('Longitude') }} :</h6>-->
+                <!--                  {{ item.longitude }}-->
+                <!--                </div>-->
+                <div class="col-6 mb-3">
+                  <h6>{{ l('Order') }} :</h6>
+                  {{ item.order }}
+                </div>
 
               <!--            <div class="col-6 mb-3">-->
               <!--              <h6>({{ l('City') }}) {{ l('DisplayName') }} :</h6>-->
@@ -276,29 +283,29 @@
         </div>
         <div class="modal-body">
           <div class="row">
-            <div class="form-group col-md-6 m-form__group">
-              <label for="destinationFacilityName">{{ l('destinationFacilityName') }}</label>
-              <div class="row">
-                <div class="col-md-8">
-                  <select name="routStep.destinationFacilityId" [(ngModel)]="routStep.destinationFacilityId" class="form-control">
-                    <option value="">{{ l('SelectAFacility') }}</option>
-                    <option *ngFor="let item of allFacilities" value="{{ item.id }}">{{ item.displayName }}</option>
-                  </select>
-                </div>
-                <div class="col-md-4">
-                  <button
-                    type="button"
-                    class="btn btn-save blue"
-                    [disabled]="saving"
-                    [buttonBusy]="saving"
-                    (click)="openCreateFacilityModal()"
-                    [busyText]="l('SavingWithThreeDot')"
-                  >
-                    <i class="fa fa-plus"></i> <span>{{ l('createFacility') }}</span>
-                  </button>
-                </div>
-              </div>
-            </div>
+            <!--            <div class="form-group col-md-6 m-form__group">-->
+            <!--              <label for="destinationFacilityName">{{ l('destinationFacilityName') }}</label>-->
+            <!--              <div class="row">-->
+            <!--                <div class="col-md-8">-->
+            <!--                  <select name="routStep.destinationFacilityId" [(ngModel)]="routStep.destinationFacilityId" class="form-control">-->
+            <!--                    <option value="">{{ l('SelectAFacility') }}</option>-->
+            <!--                    <option *ngFor="let item of allFacilities" value="{{ item.id }}">{{ item.displayName }}</option>-->
+            <!--                  </select>-->
+            <!--                </div>-->
+            <!--                <div class="col-md-4">-->
+            <!--                  <button-->
+            <!--                    type="button"-->
+            <!--                    class="btn btn-save blue"-->
+            <!--                    [disabled]="saving"-->
+            <!--                    [buttonBusy]="saving"-->
+            <!--                    (click)="openCreateFacilityModal()"-->
+            <!--                    [busyText]="l('SavingWithThreeDot')"-->
+            <!--                  >-->
+            <!--                    <i class="fa fa-plus"></i> <span>{{ l('createFacility') }}</span>-->
+            <!--                  </button>-->
+            <!--                </div>-->
+            <!--              </div>-->
+            <!--            </div>-->
 
             <div class="form-group col-md-12">
               <!--              <agm-map [latitude]="Number(routStep.latitude)" [longitude]="Number(routStep.longitude)" [zoom]="zoom" (mapClick)="mapClicked($event)">-->
@@ -323,21 +330,21 @@
               </select>
             </div>
 
-            <div class="form-group col-md-6 m-form__group">
-              <label for="CityDisplayName">{{ l('City') }}</label>
-              <select name="routStep.originCityId" [(ngModel)]="routStep.originCityId" class="form-control">
-                <option value="">{{ l('SelectACity') }}</option>
-                <option *ngFor="let item of allCitys" value="{{ item.id }}">{{ item.displayName }}</option>
-              </select>
-            </div>
+            <!--            <div class="form-group col-md-6 m-form__group">-->
+            <!--              <label for="CityDisplayName">{{ l('City') }}</label>-->
+            <!--              <select name="routStep.originCityId" [(ngModel)]="routStep.originCityId" class="form-control">-->
+            <!--                <option value="">{{ l('SelectACity') }}</option>-->
+            <!--                <option *ngFor="let item of allCitys" value="{{ item.id }}">{{ item.displayName }}</option>-->
+            <!--              </select>-->
+            <!--            </div>-->
 
-            <div class="form-group col-md-6 m-form__group">
-              <label for="CityDisplayName2">{{ l('City') }}</label>
-              <select name="routStep.destinationCityId" [(ngModel)]="routStep.destinationCityId" class="form-control">
-                <option value="">{{ l('SelectACity') }}</option>
-                <option *ngFor="let item of allCitys" value="{{ item.id }}">{{ item.displayName }}</option>
-              </select>
-            </div>
+            <!--            <div class="form-group col-md-6 m-form__group">-->
+            <!--              <label for="CityDisplayName2">{{ l('City') }}</label>-->
+            <!--              <select name="routStep.destinationCityId" [(ngModel)]="routStep.destinationCityId" class="form-control">-->
+            <!--                <option value="">{{ l('SelectACity') }}</option>-->
+            <!--                <option *ngFor="let item of allCitys" value="{{ item.id }}">{{ item.displayName }}</option>-->
+            <!--              </select>-->
+            <!--            </div>-->
 
             <div class="form-group col-md-6">
               <label for="RoutStep_DisplayName">{{ l('DisplayName') }}</label>

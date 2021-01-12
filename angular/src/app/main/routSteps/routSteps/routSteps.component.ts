@@ -95,7 +95,7 @@ export class RoutStepsComponent extends AppComponentBase implements OnInit {
         this.cityDisplayName2Filter,
         this.trucksTypeDisplayNameFilter,
         this.trailerTypeDisplayNameFilter,
-        this.goodsDetailNameFilter,
+        // this.goodsDetailNameFilter,
         this.primengTableHelper.getSorting(this.dataTable),
         this.primengTableHelper.getSkipCount(this.paginator, event),
         this.primengTableHelper.getMaxResultCount(this.paginator, event)

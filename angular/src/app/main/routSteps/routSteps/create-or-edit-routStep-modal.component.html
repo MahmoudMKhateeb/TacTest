@@ -21,21 +21,21 @@
           </button>
         </div>
         <div class="modal-body">
-          <div class="form-group m-form__group">
-            <label for="CityDisplayName">{{ l('City') }}</label>
-            <select name="routStep.originCityId" [(ngModel)]="routStep.originCityId" class="form-control">
-              <option value="">{{ l('SelectACity') }}</option>
-              <option *ngFor="let item of allCitys" value="{{ item.id }}">{{ item.displayName }}</option>
-            </select>
-          </div>
+          <!--          <div class="form-group m-form__group">-->
+          <!--            <label for="CityDisplayName">{{ l('City') }}</label>-->
+          <!--            <select name="routStep.originCityId" [(ngModel)]="routStep.originCityId" class="form-control">-->
+          <!--              <option value="">{{ l('SelectACity') }}</option>-->
+          <!--              <option *ngFor="let item of allCitys" value="{{ item.id }}">{{ item.displayName }}</option>-->
+          <!--            </select>-->
+          <!--          </div>-->
 
-          <div class="form-group m-form__group">
-            <label for="CityDisplayName2">{{ l('City') }}</label>
-            <select name="routStep.destinationCityId" [(ngModel)]="routStep.destinationCityId" class="form-control">
-              <option value="">{{ l('SelectACity') }}</option>
-              <option *ngFor="let item of allCitys" value="{{ item.id }}">{{ item.displayName }}</option>
-            </select>
-          </div>
+          <!--          <div class="form-group m-form__group">-->
+          <!--            <label for="CityDisplayName2">{{ l('City') }}</label>-->
+          <!--            <select name="routStep.destinationCityId" [(ngModel)]="routStep.destinationCityId" class="form-control">-->
+          <!--              <option value="">{{ l('SelectACity') }}</option>-->
+          <!--              <option *ngFor="let item of allCitys" value="{{ item.id }}">{{ item.displayName }}</option>-->
+          <!--            </select>-->
+          <!--          </div>-->
 
           <div class="form-group">
             <label for="RoutStep_DisplayName">{{ l('DisplayName') }}</label>
@@ -50,31 +50,31 @@
             />
           </div>
 
-          <div class="form-group">
-            <label for="RoutStep_Latitude">{{ l('Latitude') }}</label>
-            <input
-              type="text"
-              id="RoutStep_Latitude"
-              class="form-control"
-              [(ngModel)]="routStep.latitude"
-              name="Latitude"
-              minlength="0"
-              maxlength="256"
-            />
-          </div>
+          <!--          <div class="form-group">-->
+          <!--            <label for="RoutStep_Latitude">{{ l('Latitude') }}</label>-->
+          <!--            <input-->
+          <!--              type="text"-->
+          <!--              id="RoutStep_Latitude"-->
+          <!--              class="form-control"-->
+          <!--              [(ngModel)]="routStep.latitude"-->
+          <!--              name="Latitude"-->
+          <!--              minlength="0"-->
+          <!--              maxlength="256"-->
+          <!--            />-->
+          <!--          </div>-->
 
-          <div class="form-group">
-            <label for="RoutStep_Longitude">{{ l('Longitude') }}</label>
-            <input
-              type="text"
-              id="RoutStep_Longitude"
-              class="form-control"
-              [(ngModel)]="routStep.longitude"
-              name="Longitude"
-              minlength="0"
-              maxlength="256"
-            />
-          </div>
+          <!--          <div class="form-group">-->
+          <!--            <label for="RoutStep_Longitude">{{ l('Longitude') }}</label>-->
+          <!--            <input-->
+          <!--              type="text"-->
+          <!--              id="RoutStep_Longitude"-->
+          <!--              class="form-control"-->
+          <!--              [(ngModel)]="routStep.longitude"-->
+          <!--              name="Longitude"-->
+          <!--              minlength="0"-->
+          <!--              maxlength="256"-->
+          <!--            />-->
+          <!--          </div>-->
 
           <div class="form-group">
             <label for="RoutStep_Order">{{ l('Order') }}</label>

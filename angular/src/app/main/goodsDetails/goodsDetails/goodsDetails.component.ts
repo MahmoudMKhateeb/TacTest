@@ -28,7 +28,7 @@ export class GoodsDetailsComponent extends AppComponentBase {
   filterText = '';
   nameFilter = '';
   descriptionFilter = '';
-  quantityFilter = '';
+  quantityFilter = undefined;
   weightFilter = '';
   dimentionsFilter = '';
   isDangerousGoodFilter = -1;

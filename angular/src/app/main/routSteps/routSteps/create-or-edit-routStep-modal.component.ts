@@ -64,11 +64,11 @@ export class CreateOrEditRoutStepModalComponent extends AppComponentBase {
         this.routStep = result.routStep;
         this.trucksTypeDisplayName = result.trucksTypeDisplayName;
         this.trailerTypeDisplayName = result.trailerTypeDisplayName;
-        this.goodsDetailName = result.goodsDetailName;
+        // this.goodsDetailName = result.goodsDetailName;
         this.routeDisplayName = result.routeDisplayName;
 
-        this.cityDisplayName = result.cityDisplayName;
-        this.cityDisplayName2 = result.cityDisplayName2;
+        // this.cityDisplayName = result.cityDisplayName;
+        // this.cityDisplayName2 = result.cityDisplayName2;
 
         this.active = true;
         this.modal.show();
