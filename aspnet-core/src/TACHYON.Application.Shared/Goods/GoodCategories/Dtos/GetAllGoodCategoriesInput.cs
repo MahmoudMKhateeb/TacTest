@@ -10,7 +10,5 @@ namespace TACHYON.Goods.GoodCategories.Dtos
 
         public string DisplayNameFilter { get; set; }
 
-        public int? FatherId { get; set; }
-
     }
 }

@@ -61,6 +61,7 @@ namespace TACHYON.Routs.RoutSteps
                 .Include(e => e.DestinationRoutPointFk)
                 .ThenInclude(e=>e.CityFk)
                 //.Include(e => e.DestinationCityFk)
+                .Where(e=>e.ShippingRequestId==input.ShippingRequestId)
                 .WhereIf(!string.IsNullOrWhiteSpace(input.TrucksTypeDisplayNameFilter), e => e.TrucksTypeFk != null && e.TrucksTypeFk.DisplayName == input.TrucksTypeDisplayNameFilter)
                 .WhereIf(!string.IsNullOrWhiteSpace(input.TrailerTypeDisplayNameFilter), e => e.TrailerTypeFk != null && e.TrailerTypeFk.DisplayName == input.TrailerTypeDisplayNameFilter)
                 //.WhereIf(!string.IsNullOrWhiteSpace(input.GoodsDetailNameFilter), e => e.GoodsDetailFk != null && e.GoodsDetailFk.Name == input.GoodsDetailNameFilter)

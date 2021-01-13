@@ -4,6 +4,6 @@
     {
         public GoodCategoryDto GoodCategory { get; set; }
 
-
+        public string FatherCategoryName { get; set; }
     }
 }
