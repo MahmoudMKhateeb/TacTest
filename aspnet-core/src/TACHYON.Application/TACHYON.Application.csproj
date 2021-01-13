@@ -13,9 +13,17 @@
     <RootNamespace>TACHYON</RootNamespace>
   </PropertyGroup>
   <ItemGroup>
+    <None Remove="Waybills\Reports\Master_Waybill.rdlc" />
     <None Remove="Waybills\Reports\Multiple_Drop_Waybill.rdlc" />
+    <None Remove="Waybills\Reports\Single_Drop_Waybill.rdlc" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="Waybills\Reports\Master_Waybill.rdlc">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Waybills\Reports\Single_Drop_Waybill.rdlc">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </EmbeddedResource>
     <EmbeddedResource Include="Waybills\Reports\Multiple_Drop_Waybill.rdlc">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </EmbeddedResource>

@@ -24,7 +24,9 @@ namespace TACHYON.Waybills
 
         public FileDto GetPdf()
         {
-            var reportPath = "/Waybills/Reports/Multiple_Drop_Waybill.rdlc";
+            var reportPath = "/Waybills/Reports/Single_Drop_Waybill.rdlc";
+            //var reportPath = "/Waybills/Reports/Multiple_Drop_Waybill.rdlc";
+            //var reportPath = "/Waybills/Reports/Master_Waybill.rdlc";
 
             var list = _trucksRepository.GetAll()
                 .Select(x => new

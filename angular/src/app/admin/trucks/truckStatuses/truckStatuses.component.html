@@ -6,6 +6,7 @@
         <button *ngIf="isGranted('Pages.Administration.TruckStatuses.Create')" (click)="createTruckStatus()" class="btn btn-primary blue">
           <i class="fa fa-plus"></i> {{ l('Create') }} {{ l('NewTruckStatus') }}
         </button>
+        <button (click)="DownloadPdf()" class="btn btn-outline-success"><i class="fa fa-file-excel"></i> {{ l('DownloadPdf') }}</button>
       </div>
     </sub-header>
 
