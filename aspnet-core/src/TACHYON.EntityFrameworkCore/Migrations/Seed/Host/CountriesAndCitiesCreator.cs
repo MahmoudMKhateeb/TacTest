@@ -24,7 +24,7 @@ namespace TACHYON.Migrations.Seed.Host
 
         public void Create()
         {
-            var json=new WebClient().DownloadString("https://raw.githubusercontent.com/David-Haim-zz/CountriesToCitiesJSON/master/countriesToCities.json");
+            var json = new WebClient().DownloadString("https://raw.githubusercontent.com/David-Haim-zz/CountriesToCitiesJSON/master/countriesToCities.json");
             var countryObject = JObject.Parse(json);
 
             List<string> countriesList = _context.Counties.Where(x => x.IsDeleted == false).Select(x => x.DisplayName).ToList();
@@ -36,7 +36,7 @@ namespace TACHYON.Migrations.Seed.Host
             foreach (var co in countryObject.Properties())
             {
                 var country = co.Name;
-                    
+
                 //if the first country exists , check cities
                 if (countriesList.Contains(country))
                 {
@@ -64,10 +64,10 @@ namespace TACHYON.Migrations.Seed.Host
                 //insert all countries
                 else if (!string.IsNullOrWhiteSpace(country))
                 {
-                    int? countryId = AddCountryToDB(country)?.Id;
-                    if (countryId != null)
+                    if (WantedCountriesList.Contains(country))
                     {
-                        if (WantedCountriesList.Contains(country))
+                        int? countryId = AddCountryToDB(country)?.Id;
+                        if (countryId != null)
                         {
                             //insert all citites
                             foreach (var ci in co.Value.ToArray())
@@ -75,13 +75,15 @@ namespace TACHYON.Migrations.Seed.Host
                                 string city = ci.ToString();
                                 CreateCityToDB(city, countryId.Value);
                             }
+
                         }
                     }
+
                 }
 
-                    
+
             }
-            
+
         }
         private County AddCountryToDB(string displayName)
         {
@@ -97,7 +99,7 @@ namespace TACHYON.Migrations.Seed.Host
 
         private int GetCountryId(string displayName)
         {
-            var item = _context.Counties.FirstOrDefault(x=>x.DisplayName==displayName);
+            var item = _context.Counties.FirstOrDefault(x => x.DisplayName == displayName);
             if (item != null)
                 return item.Id;
             return 0;
