@@ -36,7 +36,7 @@ namespace TACHYON.Documents.DocumentFiles
     {
 
 
-        public DocumentFilesAppService(TenantManager tenantManager, IRepository<DocumentFile, Guid> documentFileRepository, IDocumentFilesExcelExporter documentFilesExcelExporter, IRepository<DocumentType, long> lookupDocumentTypeRepository, IRepository<Truck, Guid> lookupTruckRepository, IRepository<Trailer, long> lookupTrailerRepository, IRepository<User, long> lookupUserRepository, IRepository<RoutStep, long> lookupRoutStepRepository, ITempFileCacheManager tempFileCacheManager, IBinaryObjectManager binaryObjectManager, IRepository<Edition, int> editionRepository, IRepository<DocumentType, long> documentTypeRepository, DocumentFilesManager documentFilesManager, IRepository<Tenant, int> lookupTenantRepository, IRepository<DocumentsEntity, int> documentEntityRepository)
+        public DocumentFilesAppService(TenantManager tenantManager, IRepository<DocumentFile, Guid> documentFileRepository, IDocumentFilesExcelExporter documentFilesExcelExporter, IRepository<DocumentType, long> lookupDocumentTypeRepository, IRepository<Truck, long> lookupTruckRepository, IRepository<Trailer, long> lookupTrailerRepository, IRepository<User, long> lookupUserRepository, IRepository<RoutStep, long> lookupRoutStepRepository, ITempFileCacheManager tempFileCacheManager, IBinaryObjectManager binaryObjectManager, IRepository<Edition, int> editionRepository, IRepository<DocumentType, long> documentTypeRepository, DocumentFilesManager documentFilesManager, IRepository<Tenant, int> lookupTenantRepository, IRepository<DocumentsEntity, int> documentEntityRepository)
         {
             _documentFileRepository = documentFileRepository;
             _documentFilesExcelExporter = documentFilesExcelExporter;
@@ -59,7 +59,7 @@ namespace TACHYON.Documents.DocumentFiles
         private readonly IRepository<DocumentFile, Guid> _documentFileRepository;
         private readonly IDocumentFilesExcelExporter _documentFilesExcelExporter;
         private readonly IRepository<DocumentType, long> _lookupDocumentTypeRepository;
-        private readonly IRepository<Truck, Guid> _lookupTruckRepository;
+        private readonly IRepository<Truck, long> _lookupTruckRepository;
         private readonly IRepository<Trailer, long> _lookupTrailerRepository;
         private readonly IRepository<User, long> _lookupUserRepository;
         private readonly IRepository<RoutStep, long> _lookupRoutStepRepository;
@@ -97,7 +97,7 @@ namespace TACHYON.Documents.DocumentFiles
                 .WhereIf(!string.IsNullOrWhiteSpace(input.DocumentTypeDisplayNameFilter), e => e.DocumentTypeFk != null && e.DocumentTypeFk.DisplayName == input.DocumentTypeDisplayNameFilter)
                 .WhereIf(input.TruckIdFilter != null, e => e.TruckFk.Id == input.TruckIdFilter)
 
-                .WhereIf(input.EntityIdFilter != null && input.DocumentEntityFilter == "Truck", e => e.TruckFk.Id == Guid.Parse(input.EntityIdFilter))
+                .WhereIf(input.EntityIdFilter != null && input.DocumentEntityFilter == "Truck", e => e.TruckFk.Id == long.Parse(input.EntityIdFilter))
                 .WhereIf(input.EntityIdFilter != null && input.DocumentEntityFilter == "Driver", e => e.UserFk.Id == long.Parse(input.EntityIdFilter))
                 .WhereIf(input.EntityIdFilter != null && input.DocumentEntityFilter == "Trailer", e => e.TrailerFk.Id == long.Parse(input.EntityIdFilter))
 
@@ -156,7 +156,7 @@ namespace TACHYON.Documents.DocumentFiles
                                     Number = o.Number,
                                     DocumentEntityDisplayName = (o.DocumentTypeFk.DocumentsEntityFk) == null ? "" : o.DocumentTypeFk.DocumentsEntityFk.DisplayName,
                                     DocumentTypeDisplayName = s1 == null || s1.DisplayName == null ? "" : s1.DisplayName,
-                                    TruckId = (o.TruckFk == null ? (Guid?)null : o.TruckFk.Id).ToString(),
+                                    TruckId = (o.TruckFk == null ? (long?)null : o.TruckFk.Id).ToString(),
                                     PlateNumber = (o.TruckFk == null ? "" : o.TruckFk.PlateNumber),
                                     TrailerTrailerCode = s3 == null || s3.TrailerCode == null ? "" : s3.TrailerCode,
                                     UserName = s4 == null || s4.Name == null ? "" : s4.UserName,
@@ -196,8 +196,8 @@ namespace TACHYON.Documents.DocumentFiles
 
             if (output.DocumentFile.TruckId != null)
             {
-                var lookupTruck = await _lookupTruckRepository.FirstOrDefaultAsync((Guid)output.DocumentFile.TruckId);
-                output.TruckId = (lookupTruck == null ? (Guid?)null : lookupTruck.Id).ToString();
+                var lookupTruck = await _lookupTruckRepository.FirstOrDefaultAsync((long)output.DocumentFile.TruckId);
+                output.TruckId = (lookupTruck == null ? (long?)null : lookupTruck.Id).ToString();
             }
 
             if (output.DocumentFile.TrailerId != null)
@@ -461,7 +461,7 @@ namespace TACHYON.Documents.DocumentFiles
 
             if (input.EntityType == AppConsts.TruckDocumentsEntityName)
             {
-                documentFile.TruckId = Guid.Parse(input.EntityId);
+                documentFile.TruckId = long.Parse(input.EntityId);
             }
 
             if (input.EntityType == AppConsts.DriverDocumentsEntityName)
@@ -599,7 +599,7 @@ namespace TACHYON.Documents.DocumentFiles
                     .Where(doc => doc.DocumentsEntityFk.DisplayName == AppConsts.TruckDocumentsEntityName);
 
                 var query = from o in resultList
-                            join o1 in _documentFileRepository.GetAll().Where(a => a.TruckId == Guid.Parse(entityId)) on o.Id equals o1.DocumentTypeId into j1
+                            join o1 in _documentFileRepository.GetAll().Where(a => a.TruckId == long.Parse(entityId)) on o.Id equals o1.DocumentTypeId into j1
                             from s1 in j1.DefaultIfEmpty()
                             where s1.TruckId == null
                             select new DocumentType
@@ -618,7 +618,7 @@ namespace TACHYON.Documents.DocumentFiles
                             };
 
                 list = await query.ToListAsync();
-                return list.Select(x => new CreateOrEditDocumentFileDto { DocumentTypeId = x.Id, TruckId = Guid.Parse(entityId), DocumentTypeDto = ObjectMapper.Map<DocumentTypeDto>(x) }).ToList();
+                return list.Select(x => new CreateOrEditDocumentFileDto { DocumentTypeId = x.Id, TruckId = long.Parse(entityId), DocumentTypeDto = ObjectMapper.Map<DocumentTypeDto>(x) }).ToList();
 
             }
 
@@ -714,7 +714,7 @@ namespace TACHYON.Documents.DocumentFiles
                 var documentTypes = await _documentTypeRepository.GetAll().Include(ent => ent.DocumentsEntityFk)
                     .Where(doc => doc.DocumentsEntityFk.DisplayName == AppConsts.TruckDocumentsEntityName).CountAsync();
 
-                var submittedDocuments = await _documentFileRepository.GetAll().Where(t => t.TruckId == Guid.Parse(entityId))
+                var submittedDocuments = await _documentFileRepository.GetAll().Where(t => t.TruckId == long.Parse(entityId))
                     .CountAsync();
                 result = documentTypes != submittedDocuments;
             }

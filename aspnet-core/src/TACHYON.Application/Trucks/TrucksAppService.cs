@@ -45,7 +45,7 @@ namespace TACHYON.Trucks
     public class TrucksAppService : TACHYONAppServiceBase, ITrucksAppService
     {
         private const int MaxTruckPictureBytes = 5242880; //5MB
-        private readonly IRepository<Truck, Guid> _truckRepository;
+        private readonly IRepository<Truck, long> _truckRepository;
         private readonly ITrucksExcelExporter _trucksExcelExporter;
         private readonly IRepository<TrucksType, long> _lookup_trucksTypeRepository;
         private readonly IRepository<TruckStatus, long> _lookup_truckStatusRepository;
@@ -62,7 +62,7 @@ namespace TACHYON.Trucks
 
 
 
-        public TrucksAppService(IRepository<DocumentType, long> documentTypeRepository, IRepository<DocumentFile, Guid> documentFileRepository, IRepository<Truck, Guid> truckRepository, ITrucksExcelExporter trucksExcelExporter, IRepository<TrucksType, long> lookup_trucksTypeRepository, IRepository<TruckStatus, long> lookup_truckStatusRepository, IRepository<User, long> lookup_userRepository, IAppNotifier appNotifier, ITempFileCacheManager tempFileCacheManager, IBinaryObjectManager binaryObjectManager, DocumentFilesAppService documentFilesAppService, IRepository<TransportType, int> transportTypeRepository, IRepository<Capacity, int> capacityRepository)
+        public TrucksAppService(IRepository<DocumentType, long> documentTypeRepository, IRepository<DocumentFile, Guid> documentFileRepository, IRepository<Truck, long> truckRepository, ITrucksExcelExporter trucksExcelExporter, IRepository<TrucksType, long> lookup_trucksTypeRepository, IRepository<TruckStatus, long> lookup_truckStatusRepository, IRepository<User, long> lookup_userRepository, IAppNotifier appNotifier, ITempFileCacheManager tempFileCacheManager, IBinaryObjectManager binaryObjectManager, DocumentFilesAppService documentFilesAppService, IRepository<TransportType, int> transportTypeRepository, IRepository<Capacity, int> capacityRepository)
         {
             _documentFileRepository = documentFileRepository;
             _documentTypeRepository = documentTypeRepository;
@@ -147,7 +147,7 @@ namespace TACHYON.Trucks
             );
         }
 
-        public async Task<GetTruckForViewDto> GetTruckForView(Guid id)
+        public async Task<GetTruckForViewDto> GetTruckForView(long id)
         {
             var truck = await _truckRepository.GetAsync(id);
 
@@ -171,7 +171,7 @@ namespace TACHYON.Trucks
         }
 
         [AbpAuthorize(AppPermissions.Pages_Trucks_Edit)]
-        public async Task<GetTruckForEditOutput> GetTruckForEdit(EntityDto<Guid> input)
+        public async Task<GetTruckForEditOutput> GetTruckForEdit(EntityDto<long> input)
         {
             var truck = await _truckRepository.FirstOrDefaultAsync(input.Id);
 
@@ -296,7 +296,7 @@ namespace TACHYON.Trucks
         [AbpAuthorize(AppPermissions.Pages_Trucks_Edit)]
         protected virtual async Task Update(CreateOrEditTruckDto input)
         {
-            var truck = await _truckRepository.FirstOrDefaultAsync((Guid)input.Id);
+            var truck = await _truckRepository.FirstOrDefaultAsync(input.Id.Value);
             //if (input.Driver1UserId.HasValue && input.Driver1UserId != truck.Driver1UserId)
             //{
             //    await _appNotifier.AssignDriverToTruck(new UserIdentifier(AbpSession.TenantId, input.Driver1UserId.Value), truck.Id);
@@ -318,7 +318,7 @@ namespace TACHYON.Trucks
         }
 
         [AbpAuthorize(AppPermissions.Pages_Trucks_Delete)]
-        public async Task Delete(EntityDto<Guid> input)
+        public async Task Delete(EntityDto<long> input)
         {
             await _truckRepository.DeleteAsync(input.Id);
         }
@@ -471,7 +471,7 @@ namespace TACHYON.Trucks
         }
 
         [AbpAllowAnonymous]
-        public async Task<string> GetPictureContentForTruck(Guid truckId)
+        public async Task<string> GetPictureContentForTruck(long truckId)
         {
             var truck = await _truckRepository.GetAsync(truckId);
             if (truck.PictureId == null)

@@ -47,7 +47,7 @@ namespace TACHYON.Documents.DocumentFiles
         [ForeignKey("DocumentTypeId")]
         public DocumentType DocumentTypeFk { get; set; }
 
-        public virtual Guid? TruckId { get; set; }
+        public virtual long? TruckId { get; set; }
 
         [ForeignKey("TruckId")]
         public Truck TruckFk { get; set; }

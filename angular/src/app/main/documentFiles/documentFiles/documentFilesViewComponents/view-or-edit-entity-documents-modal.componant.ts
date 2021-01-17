@@ -59,7 +59,7 @@ export class ViewOrEditEntityDocumentsModalComponent extends AppComponentBase {
   entityHistoryEnabled = false;
   testCond = null;
   entityIdFilter = '';
-  truckIdFilter = '';
+  truckIdFilter: number;
   isMissingDocumentFiles = false;
   imageChangedEvent: any = '';
   public maxProfilPictureBytesUserFriendlyValue = 5;

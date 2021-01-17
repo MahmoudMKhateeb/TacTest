@@ -50,7 +50,7 @@ namespace TACHYON.Shipping.ShippingRequests
             IRepository<RoutStep, long> routStepRepository,
             IRepository<Tenant> tenantRepository,
             IRepository<TrucksType, long> lookupTrucksTypeRepository,
-            IRepository<Truck, Guid> truckRepository,
+            IRepository<Truck, long> truckRepository,
             IRepository<TrailerType, int> lookupTrailerTypeRepository,
             IRepository<RoutType, int> lookupRoutTypeRepository,
             IRepository<GoodCategory, int> lookupGoodCategoryRepository,
@@ -93,7 +93,7 @@ namespace TACHYON.Shipping.ShippingRequests
         private readonly IAppNotifier _appNotifier;
         private readonly IRepository<Tenant> _tenantRepository;
         private readonly IRepository<TrucksType, long> _lookup_trucksTypeRepository;
-        private readonly IRepository<Truck, Guid> _truckRepository;
+        private readonly IRepository<Truck, long> _truckRepository;
         private readonly IRepository<TrailerType, int> _lookup_trailerTypeRepository;
         private readonly IRepository<RoutType, int> _lookup_routTypeRepository;
         private readonly IRepository<GoodCategory, int> _lookup_goodCategoryRepository;

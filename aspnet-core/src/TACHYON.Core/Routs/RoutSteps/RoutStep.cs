@@ -87,7 +87,7 @@ namespace TACHYON.Routs.RoutSteps
         /// <summary>
         /// assigned Truck
         /// </summary>
-        public Guid AssignedTruckId { get; set; }
+        public long AssignedTruckId { get; set; }
         [ForeignKey("AssignedTruckId")]
         public Truck AssignedTruckFk { get; set; }
 

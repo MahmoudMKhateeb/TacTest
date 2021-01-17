@@ -23,7 +23,7 @@ namespace TACHYON.Web.Controllers
 
     public class HelperController : TACHYONControllerBase
     {
-        private readonly ITrucksAppService _trucksAppService;
+        private readonly TrucksAppService _trucksAppService;
         private readonly ITempFileCacheManager _tempFileCacheManager;
         private readonly IBinaryObjectManager BinaryObjectManager;
         protected readonly IBackgroundJobManager BackgroundJobManager;
@@ -31,7 +31,7 @@ namespace TACHYON.Web.Controllers
         private const int MaxDocumentFilePictureSize = 5242880; //5MB
 
 
-        public HelperController(ITrucksAppService trucksAppService, ITempFileCacheManager tempFileCacheManager, IBinaryObjectManager binaryObjectManager, IBackgroundJobManager backgroundJobManager)
+        public HelperController(TrucksAppService trucksAppService, ITempFileCacheManager tempFileCacheManager, IBinaryObjectManager binaryObjectManager, IBackgroundJobManager backgroundJobManager)
         {
             _trucksAppService = trucksAppService;
             _tempFileCacheManager = tempFileCacheManager;
@@ -39,7 +39,7 @@ namespace TACHYON.Web.Controllers
             BackgroundJobManager = backgroundJobManager;
         }
 
-        public async Task<FileResult> GetTruckPictureByTruckId(Guid truckId)
+        public async Task<FileResult> GetTruckPictureByTruckId(long truckId)
         {
             var output = await _trucksAppService.GetPictureContentForTruck(truckId);
             if (output.IsNullOrEmpty())

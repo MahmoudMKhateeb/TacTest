@@ -16,7 +16,7 @@ namespace TACHYON.Documents.DocumentFiles.Dtos
         public string DocumentTypeDisplayNameFilter { get; set; }
 
         public string DocumentEntityFilter { get; set; }
-        public Guid? TruckIdFilter { get; set; }
+        public long? TruckIdFilter { get; set; }
         public string EntityIdFilter { get; set; }
 
         public string TrailerTrailerCodeFilter { get; set; }

@@ -7,7 +7,7 @@ using TACHYON.Documents.DocumentFiles.Dtos;
 
 namespace TACHYON.Trucks.Dtos
 {
-    public class CreateOrEditTruckDto : EntityDto<Guid?>
+    public class CreateOrEditTruckDto : EntityDto<long?>
     {
 
         [Required]

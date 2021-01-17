@@ -25,9 +25,9 @@ namespace TACHYON.Drivers
     {
 
         private readonly IRepository<User, long> _userRepository;
-        private readonly IRepository<Truck, Guid> _truckRepository;
+        private readonly IRepository<Truck, long> _truckRepository;
 
-        public DriverAppService(IRepository<User, long> userRepository, IRepository<Truck, Guid> truckRepository)
+        public DriverAppService(IRepository<User, long> userRepository, IRepository<Truck, long> truckRepository)
         {
             _userRepository = userRepository;
             _truckRepository = truckRepository;
