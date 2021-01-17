@@ -16,6 +16,8 @@ import { ShippingRequestBidsServiceProxy, ShippingRequestsTripServiceProxy } fro
         ApiServiceProxies.NationalitiesServiceProxy,        
         ApiServiceProxies.NationalityTranslationsServiceProxy,        
         ApiServiceProxies.TransportTypesTranslationsServiceProxy,        
+    ApiServiceProxies.TrucksTypesTranslationsServiceProxy,
+    ApiServiceProxies.TransportTypesTranslationsServiceProxy,
     ApiServiceProxies.TripStatusesServiceProxy,
     ApiServiceProxies.PackingTypesServiceProxy,
     ApiServiceProxies.ShippingTypesServiceProxy,

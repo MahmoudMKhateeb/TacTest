@@ -1,7 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <localizationDictionary culture="en">
-  <texts>
-
+  <texts>
     <![CDATA[Tachyon:Driver Start]]>
     <text name="FirstName">First name</text>
     <text name="LastName">Last name</text>
@@ -195,6 +194,14 @@
     <text name="EditNationalityTranslation">Edit nationality translation</text>
     <text name="DeleteNationalityTranslation">Delete nationality translation</text>
     <text name="NationalityTranslations">Nationality translations</text>
+    <text name="TrucksTypesTranslations">Trucks types translations</text>
+    <text name="TrucksTypesTranslation">Trucks types translation</text>
+    <text name="TACHYON.TrucksTypesTranslations.TrucksTypesTranslation">TrucksTypesTranslation</text>
+    <text name="TranslatedDisplayName">Translated display name</text>
+    <text name="TrucksTypesTranslationsHeaderInfo">Trucks types translations header info</text>
+    <text name="CreateNewTrucksTypesTranslation">Create new trucks types translation</text>
+    <text name="EditTrucksTypesTranslation">Edit trucks types translation</text>
+    <text name="DeleteTrucksTypesTranslation">Delete trucks types translation</text>
     <text name="TransportTypesTranslations">Transport types translations</text>
     <text name="TransportTypesTranslation">Transport types translation</text>
     <text name="TACHYON.TransportTypesTranslations.TransportTypesTranslation">TransportTypesTranslation</text>
@@ -212,6 +219,8 @@
     <text name="DeleteTransportTypesTranslation">Delete transport types translation</text>
     <text name="TransportTypeDisplayName">Transport type display name</text>
     <text name="PickTransportType">Pick transport type</text>
+
+
 
 
     <![CDATA[Tachyon:SideBar Start]]>

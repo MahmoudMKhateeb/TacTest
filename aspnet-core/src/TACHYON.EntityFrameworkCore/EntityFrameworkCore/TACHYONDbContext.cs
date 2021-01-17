@@ -10,6 +10,7 @@ using TACHYON.Packing.PackingTypes;
 using TACHYON.Shipping.ShippingTypes;
 using TACHYON.Nationalities;
 using TACHYON.Nationalities.NationalitiesTranslation;
+using TACHYON.Trucks.TrucksTypes.TrucksTypesTranslations;
 using TACHYON.Trucks.TruckCategories.TransportTypes.TransportTypesTranslations;
 using TACHYON.Vases;
 using TACHYON.ShippingRequestVases;
@@ -95,6 +96,8 @@ namespace TACHYON.EntityFrameworkCore
         public virtual DbSet<Nationality> Nationalities { get; set; }
 
         public virtual DbSet<NationalityTranslation> NationalityTranslations { get; set; }
+
+        public virtual DbSet<TrucksTypesTranslation> TrucksTypesTranslations { get; set; }
 
         public virtual DbSet<TransportTypesTranslation> TransportTypesTranslations { get; set; }
 

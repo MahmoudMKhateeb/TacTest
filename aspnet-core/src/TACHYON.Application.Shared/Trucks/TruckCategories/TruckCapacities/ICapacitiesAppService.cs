@@ -5,6 +5,7 @@ using Abp.Application.Services.Dto;
 using TACHYON.Trucks.TruckCategories.TruckCapacities.Dtos;
 using TACHYON.Dto;
 using System.Collections.Generic;
+using TACHYON.Trucks.TrucksTypes.Dtos;
 
 
 namespace TACHYON.Trucks.TruckCategories.TruckCapacities
@@ -21,8 +22,7 @@ namespace TACHYON.Trucks.TruckCategories.TruckCapacities
 
 		Task Delete(EntityDto input);
 
-		
-		Task<List<CapacityTruckTypeLookupTableDto>> GetAllTruckTypeForTableDropdown();
+        Task<IEnumerable<ISelectItemDto>> GetAllTruckTypeForTableDropdown();
 		
     }
 }

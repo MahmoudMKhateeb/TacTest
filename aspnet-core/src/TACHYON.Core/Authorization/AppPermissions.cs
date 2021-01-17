@@ -62,6 +62,11 @@
         public const string Pages_NationalityTranslations_Edit = "Pages.NationalityTranslations.Edit";
         public const string Pages_NationalityTranslations_Delete = "Pages.NationalityTranslations.Delete";
 
+        public const string Pages_TrucksTypesTranslations = "Pages.TrucksTypesTranslations";
+        public const string Pages_TrucksTypesTranslations_Create = "Pages.TrucksTypesTranslations.Create";
+        public const string Pages_TrucksTypesTranslations_Edit = "Pages.TrucksTypesTranslations.Edit";
+        public const string Pages_TrucksTypesTranslations_Delete = "Pages.TrucksTypesTranslations.Delete";
+
         public const string Pages_TransportTypesTranslations = "Pages.TransportTypesTranslations";
         public const string Pages_TransportTypesTranslations_Create = "Pages.TransportTypesTranslations.Create";
         public const string Pages_TransportTypesTranslations_Edit = "Pages.TransportTypesTranslations.Edit";
