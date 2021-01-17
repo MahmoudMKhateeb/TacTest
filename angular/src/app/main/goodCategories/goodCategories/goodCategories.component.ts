@@ -30,7 +30,6 @@ export class GoodCategoriesComponent extends AppComponentBase {
   @ViewChild('paginator', { static: true }) paginator: Paginator;
 
   advancedFiltersAreShown = false;
-  GoodCatFatherId = null;
   filterText = '';
   displayNameFilter = '';
 
@@ -74,7 +73,6 @@ export class GoodCategoriesComponent extends AppComponentBase {
       .getAll(
         this.filterText,
         this.displayNameFilter,
-        this.GoodCatFatherId,
         this.primengTableHelper.getSorting(this.dataTable),
         this.primengTableHelper.getSkipCount(this.paginator, event),
         this.primengTableHelper.getMaxResultCount(this.paginator, event)

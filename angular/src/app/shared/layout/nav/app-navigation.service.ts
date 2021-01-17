@@ -124,7 +124,7 @@ export class AppNavigationService {
           // new AppMenuItem('TrailerTypes', 'Pages.TrailerTypes', 'flaticon2-delivery-truck', '/app/main/trailerTypes/trailerTypes'),
           // new AppMenuItem('PayloadMaxWeights', 'Pages.PayloadMaxWeights', 'flaticon2-download-1', '/app/main/payloadMaxWeight/payloadMaxWeights'),
           // new AppMenuItem('TrailerStatuses', 'Pages.TrailerStatuses', 'flaticon-dashboard', '/app/main/trailerStatuses/trailerStatuses'),
-          // new AppMenuItem('GoodCategories', 'Pages.GoodCategories', 'flaticon-interface-9', '/app/main/goodCategories/goodCategories'),
+          new AppMenuItem('GoodCategories', 'Pages.GoodCategories', 'flaticon-interface-9', '/app/main/goodCategories/goodCategories'),
           // new AppMenuItem(
           //   'UnitOfMeasures',
           //   'Pages.Administration.UnitOfMeasures',
