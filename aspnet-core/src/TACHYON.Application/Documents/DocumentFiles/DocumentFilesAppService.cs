@@ -139,6 +139,16 @@ namespace TACHYON.Documents.DocumentFiles
                                         RejectionReason = o.RejectionReason,
                                         CreationTime = o.CreationTime
                                     },
+                                    User = new UserInGetDocumentFileForViewDto
+                                    {
+                                        Id = s4.Id,
+                                        Name = s4.Name,
+                                        EmailAddress = s4.EmailAddress,
+                                        PhoneNumber = s4.PhoneNumber,
+                                        UserName = s4.UserName,
+                                        IsActive = s4.IsActive,
+                                        Surname = s4.Surname
+                                    },
                                     SubmitterTenatTenancyName = o.TenantId == null ? "Host" : o.TenantFk.TenancyName.ToString(),
                                     //s6 == null || s6.TenancyName == null ? "Host" : s6.TenancyName.ToString(),
                                     HasDate = o.DocumentTypeFk.HasExpirationDate,
