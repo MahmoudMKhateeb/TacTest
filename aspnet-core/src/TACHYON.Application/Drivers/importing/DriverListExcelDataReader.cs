@@ -30,6 +30,7 @@ namespace TACHYON.Drivers.importing
 
         }
 
+        // #GetDriversFromExcel
         public List<ImportDriverDto> GetDriversFromExcel(byte[] fileBytes)
         {
             return ProcessExcelFile(fileBytes, ProcessExcelRow);
@@ -151,9 +152,9 @@ namespace TACHYON.Drivers.importing
 
                 //occupationCard document
                 //12
-                drivingLicenseDocumentFileDto.Number = _tachyonExcelDataReaderHelper.GetValueFromRowOrNull<string>(worksheet, row, 12, "Occupation Card NO", exceptionMessage);
+                occupationCardDocumentFileDto.Number = _tachyonExcelDataReaderHelper.GetValueFromRowOrNull<string>(worksheet, row, 12, "Occupation Card NO", exceptionMessage);
 
-                user.CreateOrEditDocumentFileDtos.Add(drivingLicenseDocumentFileDto);
+                user.CreateOrEditDocumentFileDtos.Add(occupationCardDocumentFileDto);
 
                 if (exceptionMessage.Length > 0)
                 {

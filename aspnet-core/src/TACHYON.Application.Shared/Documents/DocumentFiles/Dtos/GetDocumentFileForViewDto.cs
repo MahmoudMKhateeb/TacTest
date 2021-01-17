@@ -21,5 +21,6 @@ namespace TACHYON.Documents.DocumentFiles.Dtos
         public string UserName { get; set; }
 
         public string RoutStepDisplayName { get; set; }
+        public UserInGetDocumentFileForViewDto User { get; set; }
     }
 }
