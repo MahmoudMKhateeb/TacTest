@@ -34,6 +34,10 @@ import { NationalityTranslationsComponent } from './nationalitiesTranslation/nat
 import { ViewNationalityTranslationModalComponent } from './nationalitiesTranslation/nationalityTranslations/view-nationalityTranslation-modal.component';
 import { CreateOrEditNationalityTranslationModalComponent } from './nationalitiesTranslation/nationalityTranslations/create-or-edit-nationalityTranslation-modal.component';
 
+import { TrucksTypesTranslationsComponent } from './trucksTypesTranslations/trucksTypesTranslations/trucksTypesTranslations.component';
+import { ViewTrucksTypesTranslationModalComponent } from './trucksTypesTranslations/trucksTypesTranslations/view-trucksTypesTranslation-modal.component';
+import { CreateOrEditTrucksTypesTranslationModalComponent } from './trucksTypesTranslations/trucksTypesTranslations/create-or-edit-trucksTypesTranslation-modal.component';
+
 import { TransportTypesTranslationsComponent } from './transportTypesTranslations/transportTypesTranslations/transportTypesTranslations.component';
 import { ViewTransportTypesTranslationModalComponent } from './transportTypesTranslations/transportTypesTranslations/view-transportTypesTranslation-modal.component';
 import { CreateOrEditTransportTypesTranslationModalComponent } from './transportTypesTranslations/transportTypesTranslations/create-or-edit-transportTypesTranslation-modal.component';
@@ -210,42 +214,14 @@ NgxBootstrapDatePickerConfigService.registerNgxBootstrapDatePickerLocales();
     AdminModule,
   ],
   declarations: [
-		TruckCapacitiesTranslationsComponent,
+    TrucksTypesTranslationsComponent,
 
-		ViewTruckCapacitiesTranslationModalComponent,
-		CreateOrEditTruckCapacitiesTranslationModalComponent,
-		TruckStatusesTranslationsComponent,
+    ViewTrucksTypesTranslationModalComponent,
+    CreateOrEditTrucksTypesTranslationModalComponent,
+    TransportTypesTranslationsComponent,
 
-		ViewTruckStatusesTranslationModalComponent,
-		CreateOrEditTruckStatusesTranslationModalComponent,
-		CitiesTranslationsComponent,
-
-		ViewCitiesTranslationModalComponent,
-		CreateOrEditCitiesTranslationModalComponent,
-		CountriesTranslationsComponent,
-
-		ViewCountriesTranslationModalComponent,
-		CreateOrEditCountriesTranslationModalComponent,
-		PlateTypesComponent,
-
-		ViewPlateTypeModalComponent,
-		CreateOrEditPlateTypeModalComponent,
-		NationalitiesComponent,
-
-		ViewNationalityModalComponent,
-		CreateOrEditNationalityModalComponent,
-		MasterDetailChild_Nationality_NationalityTranslationsComponent,
-
-		MasterDetailChild_Nationality_ViewNationalityTranslationModalComponent,
-		MasterDetailChild_Nationality_CreateOrEditNationalityTranslationModalComponent,
-		NationalityTranslationsComponent,
-
-		ViewNationalityTranslationModalComponent,
-		CreateOrEditNationalityTranslationModalComponent,
-		TransportTypesTranslationsComponent,
-
-		ViewTransportTypesTranslationModalComponent,
-		CreateOrEditTransportTypesTranslationModalComponent,
+    ViewTransportTypesTranslationModalComponent,
+    CreateOrEditTransportTypesTranslationModalComponent,
     VasPricesComponent,
     ViewShippingRequestPriceResponseModalComponent,
     ViewVasPriceModalComponent,
