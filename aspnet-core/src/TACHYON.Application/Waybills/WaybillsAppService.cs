@@ -21,12 +21,37 @@ namespace TACHYON.Waybills
             _pdfExporterBase = pdfExporterBase;
             _trucksRepository = trucksRepository;
         }
-
-        public FileDto GetPdf()
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="PlateNumber"></param>
+        /// <returns></returns>
+        public FileDto GetSingleDropWaybillPdf(string PlateNumber)
         {
             var reportPath = "/Waybills/Reports/Single_Drop_Waybill.rdlc";
-            //var reportPath = "/Waybills/Reports/Multiple_Drop_Waybill.rdlc";
-            //var reportPath = "/Waybills/Reports/Master_Waybill.rdlc";
+           
+            var list = _trucksRepository.GetAll()
+                .Select(x => new
+                {
+                    x.ModelName,
+                    x.ModelYear,
+                    x.PlateNumber,
+                    x.CreatorUserId
+                }).Where(t =>t.PlateNumber != PlateNumber && t.CreatorUserId !=null).ToList();
+
+            ArrayList names = new ArrayList();
+            ArrayList data = new ArrayList();
+
+            names.Add("DataSet1");
+            data.Add(list);
+            
+            return _pdfExporterBase.CreateRdlcPdfPackageFromList("Single_Drop_Waybill", reportPath, names, data);
+        }
+
+
+        public FileDto GetMultipleDropWaybillPdf()
+        {
+             var reportPath = "/Waybills/Reports/Multiple_Drop_Waybill.rdlc";
 
             var list = _trucksRepository.GetAll()
                 .Select(x => new
@@ -42,7 +67,30 @@ namespace TACHYON.Waybills
             names.Add("DataSet1");
             data.Add(list);
 
-            return _pdfExporterBase.CreateRdlcPdfPackageFromList("test", reportPath, names, data);
+            return _pdfExporterBase.CreateRdlcPdfPackageFromList("Multiple_Drop_Waybill", reportPath, names, data);
         }
+
+
+        public FileDto GetMasterWaybillPdf()
+        {       
+            var reportPath = "/Waybills/Reports/Master_Waybill.rdlc";
+
+            var list = _trucksRepository.GetAll()
+                .Select(x => new
+                {
+                    x.ModelName,
+                    x.ModelYear,
+                    x.PlateNumber
+                }).ToList();
+
+            ArrayList names = new ArrayList();
+            ArrayList data = new ArrayList();
+
+            names.Add("DataSet1");
+            data.Add(list);
+
+            return _pdfExporterBase.CreateRdlcPdfPackageFromList("Master_Waybill", reportPath, names, data);
+        }
+
     }
 }

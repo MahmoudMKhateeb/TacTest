@@ -32,6 +32,7 @@ export class TruckStatusesComponent extends AppComponentBase {
   advancedFiltersAreShown = false;
   filterText = '';
   displayNameFilter = '';
+  platenumber = '2121';
 
   _entityTypeFullName = 'TACHYON.Trucks.TruckStatus';
   entityHistoryEnabled = false;
@@ -111,8 +112,18 @@ export class TruckStatusesComponent extends AppComponentBase {
       }
     });
   }
-  DownloadPdf(): void {
-    this._waybillsServiceProxy.getPdf().subscribe((result) => {
+  DownloadSingleDropWaybillPdf(): void {
+    this._waybillsServiceProxy.getSingleDropWaybillPdf(this.platenumber).subscribe((result) => {
+      this._fileDownloadService.downloadTempFile(result);
+    });
+  }
+  DownloadMultipleDropWaybillPdf(): void {
+    this._waybillsServiceProxy.getMultipleDropWaybillPdf().subscribe((result) => {
+      this._fileDownloadService.downloadTempFile(result);
+    });
+  }
+  DownloadMasterWaybillPdf(): void {
+    this._waybillsServiceProxy.getMasterWaybillPdf().subscribe((result) => {
       this._fileDownloadService.downloadTempFile(result);
     });
   }

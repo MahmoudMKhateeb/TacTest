@@ -179,12 +179,4 @@ export class TrailersComponent extends AppComponentBase {
         this._fileDownloadService.downloadTempFile(result);
       });
   }
-
-  DownloadPdf(): void {
-    this._waybillsServiceProxy
-      .getPdf()
-      .subscribe((result) => {
-        this._fileDownloadService.downloadTempFile(result);
-      });
-  }
 }

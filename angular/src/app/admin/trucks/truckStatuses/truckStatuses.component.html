@@ -6,7 +6,15 @@
         <button *ngIf="isGranted('Pages.Administration.TruckStatuses.Create')" (click)="createTruckStatus()" class="btn btn-primary blue">
           <i class="fa fa-plus"></i> {{ l('Create') }} {{ l('NewTruckStatus') }}
         </button>
-        <button (click)="DownloadPdf()" class="btn btn-outline-success"><i class="fa fa-file-excel"></i> {{ l('DownloadPdf') }}</button>
+        <button (click)="DownloadSingleDropWaybillPdf(platenumber)" class="btn btn-outline-success">
+          <i class="fa fa-file-excel"></i> {{ l('Download Single Drop Waybill') }}
+        </button>
+        <button (click)="DownloadMultipleDropWaybillPdf()" class="btn btn-outline-success">
+          <i class="fa fa-file-excel"></i> {{ l('Download Multiple Drop Waybill') }}
+        </button>
+        <button (click)="DownloadMasterWaybillPdf()" class="btn btn-outline-success">
+          <i class="fa fa-file-excel"></i> {{ l('Download Master Waybill') }}
+        </button>
       </div>
     </sub-header>
 

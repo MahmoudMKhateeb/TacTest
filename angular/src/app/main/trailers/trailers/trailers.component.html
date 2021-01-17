@@ -3,7 +3,6 @@
     <sub-header [title]="'Trailers' | localize" [description]="'TrailersHeaderInfo' | localize">
       <div role="actions">
         <button (click)="exportToExcel()" class="btn btn-outline-success"><i class="fa fa-file-excel"></i> {{ l('ExportToExcel') }}</button>
-        <button (click)="DownloadPdf()" class="btn btn-outline-success"><i class="fa fa-file-excel"></i> {{ l('DownloadPdf') }}</button>
         <button *ngIf="isGranted('Pages.Trailers.Create')" (click)="createTrailer()" class="btn btn-primary blue">
           <i class="fa fa-plus"></i> {{ l('CreateNewTrailer') }}
         </button>
@@ -243,7 +242,9 @@
               >
                 <ng-template pTemplate="header">
                   <tr>
-                    <th style="width: 130px;" [hidden]="!isGrantedAny('Pages.Trailers.Edit', 'Pages.Trailers.Delete')">{{ l('Actions') }}</th>
+                    <th style="width: 130px;" [hidden]="!isGrantedAny('Pages.Trailers.Edit', 'Pages.Trailers.Delete')">
+                      {{ l('Actions') }}
+                    </th>
                     <th style="width: 150px;" pSortableColumn="trailerStatusFk.displayName">
                       {{ l('DisplayName') }}
                       <p-sortIcon field="trailerStatusDisplayName"></p-sortIcon>
