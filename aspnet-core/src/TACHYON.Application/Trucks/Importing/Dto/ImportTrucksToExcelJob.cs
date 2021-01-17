@@ -25,7 +25,7 @@ namespace TACHYON.Trucks.Importing.Dto
     public class ImportTrucksToExcelJob : BackgroundJob<ImportTrucksFromExcelJobArgs>, ITransientDependency
     {
         private readonly ITruckListExcelDataReader _truckListExcelDataReader;
-        private readonly IRepository<Truck, Guid> _truckRepository;
+        private readonly IRepository<Truck, long> _truckRepository;
         private readonly IInvalidTruckExporter _invalidTruckExporter;
         private readonly IAppNotifier _appNotifier;
         private readonly IBinaryObjectManager _binaryObjectManager;
@@ -37,7 +37,7 @@ namespace TACHYON.Trucks.Importing.Dto
             IAppNotifier appNotifier,
             IBinaryObjectManager binaryObjectManager,
             IObjectMapper objectMapper,
-            IUnitOfWorkManager unitOfWorkManager, ITruckListExcelDataReader truckListExcelDataReader, IRepository<Truck, Guid> truckRepository, IInvalidTruckExporter invalidTruckExporter, IRepository<DocumentFile, Guid> documentFileRepository)
+            IUnitOfWorkManager unitOfWorkManager, ITruckListExcelDataReader truckListExcelDataReader, IRepository<Truck, long> truckRepository, IInvalidTruckExporter invalidTruckExporter, IRepository<DocumentFile, Guid> documentFileRepository)
         {
             _appNotifier = appNotifier;
             _binaryObjectManager = binaryObjectManager;

@@ -13,9 +13,9 @@ namespace TACHYON.Shipping.ShippingRequestBids
 {
     public class BidDomainService: TACHYONDomainServiceBase, IBidDomainService
     {
-        private readonly IRepository<Truck,Guid> _truckRepository;
+        private readonly IRepository<Truck,long> _truckRepository;
 
-        public BidDomainService(IRepository<Truck, Guid> truckRepository)
+        public BidDomainService(IRepository<Truck, long> truckRepository)
         {
             _truckRepository = truckRepository;
         }

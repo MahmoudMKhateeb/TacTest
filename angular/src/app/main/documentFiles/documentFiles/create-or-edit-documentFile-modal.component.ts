@@ -276,7 +276,7 @@ export class CreateOrEditDocumentFileModalComponent extends AppComponentBase {
 
   initializeDocumentFile() {
     if (this.documentEntity === 'Truck') {
-      this.documentFile.truckId = this.entityId;
+      this.documentFile.truckId = this.Number(this.entityId);
     } else if (this.documentEntity === 'Driver') {
       this.documentFile.userId = this.Number(this.entityId);
     }

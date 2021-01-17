@@ -15,7 +15,7 @@ namespace TACHYON.Notifications
 
         #region Tachyon notifications
 
-        Task AssignDriverToTruck(UserIdentifier argsUser, Guid truckId);
+        Task AssignDriverToTruck(UserIdentifier argsUser, long truckId);
         Task UpdateShippingRequestPrice(UserIdentifier argsUser, long shippingRequestId, decimal price);
         Task AcceptShippingRequestPrice(long shippingRequestId, bool isAccepted);
         Task RejectShippingRequest(UserIdentifier argsUser, long shippingRequestId);

@@ -4,7 +4,7 @@ using System;
 
 namespace TACHYON.Trucks.Dtos
 {
-    public class TruckDto : EntityDto<Guid>
+    public class TruckDto : EntityDto<long>
     {
         public string PlateNumber { get; set; }
 

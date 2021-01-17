@@ -33,7 +33,7 @@ namespace TACHYON.Shipping.ShippingRequestBids
     {
         public ShippingRequestBidsAppService(IRepository<ShippingRequestBid, long> shippingRequestBidsRepository,
             IRepository<ShippingRequest, long> shippingRequestsRepository,
-            IRepository<Tenant> tenantsRepository, IRepository<Truck, Guid> trucksRepository,
+            IRepository<Tenant> tenantsRepository, IRepository<Truck, long> trucksRepository,
             BackgroundJobManager backgroundJobManager,
             IAppNotifier appNotifier)
         {
@@ -48,7 +48,7 @@ namespace TACHYON.Shipping.ShippingRequestBids
         private readonly IRepository<ShippingRequestBid, long> _shippingRequestBidsRepository;
         private readonly IRepository<ShippingRequest, long> _shippingRequestsRepository;
         private readonly IRepository<Tenant> _tenantsRepository;
-        private readonly IRepository<Truck, Guid> _trucksRepository;
+        private readonly IRepository<Truck, long> _trucksRepository;
         private readonly IAppNotifier _appNotifier;
         private readonly BackgroundJobManager _backgroundJobManager;
 

@@ -23,7 +23,7 @@ namespace TACHYON.Trucks.Importing.Dto
 
         public long DocumentTypeId { get; set; }
 
-        public Guid? TruckId { get; set; }
+        public long? TruckId { get; set; }
 
         public string Number { get; set; }
 

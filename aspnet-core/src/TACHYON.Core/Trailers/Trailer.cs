@@ -64,7 +64,7 @@ namespace TACHYON.Trailers
         [ForeignKey("PayloadMaxWeightId")]
         public PayloadMaxWeight PayloadMaxWeightFk { get; set; }
 
-        public virtual Guid? HookedTruckId { get; set; }
+        public virtual long? HookedTruckId { get; set; }
 
         [ForeignKey("HookedTruckId")]
         public Truck HookedTruckFk { get; set; }

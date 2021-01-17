@@ -36,10 +36,10 @@ namespace TACHYON.Trailers
         private readonly IRepository<TrailerStatus, int> _lookup_trailerStatusRepository;
         private readonly IRepository<TrailerType, int> _lookup_trailerTypeRepository;
         private readonly IRepository<PayloadMaxWeight, int> _lookup_payloadMaxWeightRepository;
-        private readonly IRepository<Truck, Guid> _lookup_truckRepository;
+        private readonly IRepository<Truck, long> _lookup_truckRepository;
 
 
-        public TrailersAppService(IRepository<Trailer, long> trailerRepository, ITrailersExcelExporter trailersExcelExporter, IRepository<TrailerStatus, int> lookup_trailerStatusRepository, IRepository<TrailerType, int> lookup_trailerTypeRepository, IRepository<PayloadMaxWeight, int> lookup_payloadMaxWeightRepository, IRepository<Truck, Guid> lookup_truckRepository)
+        public TrailersAppService(IRepository<Trailer, long> trailerRepository, ITrailersExcelExporter trailersExcelExporter, IRepository<TrailerStatus, int> lookup_trailerStatusRepository, IRepository<TrailerType, int> lookup_trailerTypeRepository, IRepository<PayloadMaxWeight, int> lookup_payloadMaxWeightRepository, IRepository<Truck, long> lookup_truckRepository)
         {
             _trailerRepository = trailerRepository;
             _trailersExcelExporter = trailersExcelExporter;
@@ -152,7 +152,7 @@ namespace TACHYON.Trailers
 
             if (output.Trailer.HookedTruckId != null)
             {
-                var _lookupTruck = await _lookup_truckRepository.FirstOrDefaultAsync((Guid)output.Trailer.HookedTruckId);
+                var _lookupTruck = await _lookup_truckRepository.FirstOrDefaultAsync((long)output.Trailer.HookedTruckId);
                 output.TruckPlateNumber = _lookupTruck?.PlateNumber?.ToString();
             }
 
@@ -186,7 +186,7 @@ namespace TACHYON.Trailers
 
             if (output.Trailer.HookedTruckId != null)
             {
-                var _lookupTruck = await _lookup_truckRepository.FirstOrDefaultAsync((Guid)output.Trailer.HookedTruckId);
+                var _lookupTruck = await _lookup_truckRepository.FirstOrDefaultAsync((long)output.Trailer.HookedTruckId);
                 output.TruckPlateNumber = _lookupTruck?.PlateNumber?.ToString();
             }
 

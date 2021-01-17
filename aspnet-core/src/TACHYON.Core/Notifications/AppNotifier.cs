@@ -26,7 +26,7 @@ namespace TACHYON.Notifications
 
         #region Tachyon Notifications
 
-        public async Task AssignDriverToTruck(UserIdentifier argsUser, Guid truckId)
+        public async Task AssignDriverToTruck(UserIdentifier argsUser, long truckId)
         {
             var notificationData = new LocalizableMessageNotificationData(
                 new LocalizableString(

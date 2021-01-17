@@ -55,7 +55,7 @@ namespace TACHYON.Trailers.Dtos
 
         public int PayloadMaxWeightId { get; set; }
 
-        public Guid? HookedTruckId { get; set; }
+        public long? HookedTruckId { get; set; }
 
 
     }

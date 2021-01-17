@@ -41,7 +41,7 @@ export class DocumentFilesComponent extends AppComponentBase implements OnInit {
   minExpirationDateFilter: moment.Moment;
   isAcceptedFilter = false;
   documentTypeDisplayNameFilter = '';
-  truckIdFilter = '';
+  truckIdFilter: number;
   entityIdFilter = '';
   trailerTrailerCodeFilter = '';
   userNameFilter = '';

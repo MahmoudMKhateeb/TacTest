@@ -122,7 +122,7 @@ export class CreateOrEditTruckModalComponent extends AppComponentBase {
     super(injector);
   }
 
-  show(truckId?: string): void {
+  show(truckId?: number): void {
     if (!truckId) {
       this.truck = new CreateOrEditTruckDto();
       //initlaize truck type values
@@ -259,7 +259,7 @@ export class CreateOrEditTruckModalComponent extends AppComponentBase {
     return s4() + s4() + '-' + s4() + '-' + s4() + '-' + s4() + '-' + s4() + s4() + s4();
   }
 
-  getTruckPictureUrl(truckId: string): void {
+  getTruckPictureUrl(truckId: number): void {
     let self = this;
     this._localStorageService.getItem(AppConsts.authorization.encrptedAuthTokenName, function (err, value) {
       self.profilePicture =

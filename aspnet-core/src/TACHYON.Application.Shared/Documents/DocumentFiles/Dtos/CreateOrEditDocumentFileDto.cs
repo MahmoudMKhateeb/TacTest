@@ -47,7 +47,7 @@ namespace TACHYON.Documents.DocumentFiles.Dtos
         public virtual bool IsRejected { get; set; }
 
         public long DocumentTypeId { get; set; }
-        public Guid? TruckId { get; set; }
+        public long? TruckId { get; set; }
 
         public long? TrailerId { get; set; }
 

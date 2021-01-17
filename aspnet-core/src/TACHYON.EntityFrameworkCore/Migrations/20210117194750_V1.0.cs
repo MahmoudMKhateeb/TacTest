@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace TACHYON.Migrations
 {
-    public partial class MVP_07 : Migration
+    public partial class V10 : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -397,7 +397,8 @@ namespace TACHYON.Migrations
                     IsDriver = table.Column<bool>(nullable: false),
                     Address = table.Column<string>(nullable: true),
                     Nationality = table.Column<string>(nullable: true),
-                    ExperienceField = table.Column<string>(nullable: true)
+                    ExperienceField = table.Column<string>(nullable: true),
+                    DateOfBirth = table.Column<DateTime>(nullable: true)
                 },
                 constraints: table =>
                 {
@@ -835,6 +836,29 @@ namespace TACHYON.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Vases",
+                columns: table => new
+                {
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    CreationTime = table.Column<DateTime>(nullable: false),
+                    CreatorUserId = table.Column<long>(nullable: true),
+                    LastModificationTime = table.Column<DateTime>(nullable: true),
+                    LastModifierUserId = table.Column<long>(nullable: true),
+                    IsDeleted = table.Column<bool>(nullable: false),
+                    DeleterUserId = table.Column<long>(nullable: true),
+                    DeletionTime = table.Column<DateTime>(nullable: true),
+                    Name = table.Column<string>(maxLength: 256, nullable: true),
+                    DisplayName = table.Column<string>(maxLength: 256, nullable: true),
+                    HasAmount = table.Column<bool>(nullable: false),
+                    HasCount = table.Column<bool>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Vases", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "AbpDynamicParameterValues",
                 columns: table => new
                 {
@@ -1080,6 +1104,7 @@ namespace TACHYON.Migrations
                     CountryId = table.Column<int>(nullable: false),
                     CityId = table.Column<int>(nullable: false),
                     UserTitle = table.Column<string>(nullable: true),
+                    companyName = table.Column<string>(nullable: true),
                     SubscriptionEndDateUtc = table.Column<DateTime>(nullable: true),
                     IsInTrialPeriod = table.Column<bool>(nullable: false),
                     CustomCssId = table.Column<Guid>(nullable: true),
@@ -1334,6 +1359,34 @@ namespace TACHYON.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "TransportTypesTranslations",
+                columns: table => new
+                {
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    CreationTime = table.Column<DateTime>(nullable: false),
+                    CreatorUserId = table.Column<long>(nullable: true),
+                    LastModificationTime = table.Column<DateTime>(nullable: true),
+                    LastModifierUserId = table.Column<long>(nullable: true),
+                    IsDeleted = table.Column<bool>(nullable: false),
+                    DeleterUserId = table.Column<long>(nullable: true),
+                    DeletionTime = table.Column<DateTime>(nullable: true),
+                    TranslatedDisplayName = table.Column<string>(maxLength: 256, nullable: false),
+                    Language = table.Column<string>(maxLength: 32, nullable: false),
+                    CoreId = table.Column<int>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_TransportTypesTranslations", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_TransportTypesTranslations_TransportTypes_CoreId",
+                        column: x => x.CoreId,
+                        principalTable: "TransportTypes",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "TrucksTypes",
                 columns: table => new
                 {
@@ -1397,6 +1450,36 @@ namespace TACHYON.Migrations
                         name: "FK_GoodsDetails_UnitOfMeasures_UnitOfMeasureId",
                         column: x => x.UnitOfMeasureId,
                         principalTable: "UnitOfMeasures",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "VasPrices",
+                columns: table => new
+                {
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    CreationTime = table.Column<DateTime>(nullable: false),
+                    CreatorUserId = table.Column<long>(nullable: true),
+                    LastModificationTime = table.Column<DateTime>(nullable: true),
+                    LastModifierUserId = table.Column<long>(nullable: true),
+                    IsDeleted = table.Column<bool>(nullable: false),
+                    DeleterUserId = table.Column<long>(nullable: true),
+                    DeletionTime = table.Column<DateTime>(nullable: true),
+                    TenantId = table.Column<int>(nullable: false),
+                    Price = table.Column<double>(nullable: true),
+                    MaxAmount = table.Column<int>(nullable: true),
+                    MaxCount = table.Column<int>(nullable: true),
+                    VasId = table.Column<int>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_VasPrices", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_VasPrices_Vases_VasId",
+                        column: x => x.VasId,
+                        principalTable: "Vases",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -1694,7 +1777,8 @@ namespace TACHYON.Migrations
                 name: "Trucks",
                 columns: table => new
                 {
-                    Id = table.Column<Guid>(nullable: false),
+                    Id = table.Column<long>(nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
                     CreationTime = table.Column<DateTime>(nullable: false),
                     CreatorUserId = table.Column<long>(nullable: true),
                     LastModificationTime = table.Column<DateTime>(nullable: true),
@@ -1704,16 +1788,17 @@ namespace TACHYON.Migrations
                     DeletionTime = table.Column<DateTime>(nullable: true),
                     TenantId = table.Column<int>(nullable: false),
                     PlateNumber = table.Column<string>(maxLength: 64, nullable: false),
-                    ModelName = table.Column<string>(maxLength: 64, nullable: false),
-                    ModelYear = table.Column<string>(maxLength: 64, nullable: false),
+                    ModelName = table.Column<string>(maxLength: 64, nullable: true),
+                    ModelYear = table.Column<string>(maxLength: 64, nullable: true),
                     Capacity = table.Column<string>(nullable: true),
-                    IsAttachable = table.Column<bool>(nullable: false),
+                    IsAttachable = table.Column<bool>(nullable: true),
                     Note = table.Column<string>(maxLength: 256, nullable: true),
                     TruckStatusId = table.Column<long>(nullable: true),
                     PictureId = table.Column<Guid>(nullable: true),
                     TransportTypeId = table.Column<int>(nullable: true),
                     TrucksTypeId = table.Column<long>(nullable: true),
-                    CapacityId = table.Column<int>(nullable: true)
+                    CapacityId = table.Column<int>(nullable: true),
+                    Length = table.Column<int>(nullable: true)
                 },
                 constraints: table =>
                 {
@@ -1823,7 +1908,7 @@ namespace TACHYON.Migrations
                     TrailerStatusId = table.Column<int>(nullable: false),
                     TrailerTypeId = table.Column<int>(nullable: false),
                     PayloadMaxWeightId = table.Column<int>(nullable: false),
-                    HookedTruckId = table.Column<Guid>(nullable: true)
+                    HookedTruckId = table.Column<long>(nullable: true)
                 },
                 constraints: table =>
                 {
@@ -1869,7 +1954,6 @@ namespace TACHYON.Migrations
                     DeletionTime = table.Column<DateTime>(nullable: true),
                     TenantId = table.Column<int>(nullable: false),
                     RouteId = table.Column<int>(nullable: false),
-                    Vas = table.Column<decimal>(nullable: false),
                     IsBid = table.Column<bool>(nullable: false),
                     IsTachyonDeal = table.Column<bool>(nullable: false),
                     Price = table.Column<decimal>(nullable: true),
@@ -1884,7 +1968,7 @@ namespace TACHYON.Migrations
                     GoodCategoryId = table.Column<int>(nullable: false),
                     ShippingRequestStatusId = table.Column<int>(nullable: false),
                     AssignedDriverUserId = table.Column<long>(nullable: true),
-                    AssignedTruckId = table.Column<Guid>(nullable: true),
+                    AssignedTruckId = table.Column<long>(nullable: true),
                     AssignedTrailerId = table.Column<long>(nullable: true),
                     TransportTypeId = table.Column<int>(nullable: true),
                     TrucksTypeId = table.Column<long>(nullable: false),
@@ -2004,7 +2088,7 @@ namespace TACHYON.Migrations
                     TrailerTypeId = table.Column<int>(nullable: true),
                     GoodsDetailId = table.Column<long>(nullable: true),
                     AssignedDriverUserId = table.Column<long>(nullable: false),
-                    AssignedTruckId = table.Column<Guid>(nullable: false),
+                    AssignedTruckId = table.Column<long>(nullable: false),
                     AssignedTrailerId = table.Column<long>(nullable: false),
                     PickingTypeId = table.Column<int>(nullable: false)
                 },
@@ -2126,6 +2210,44 @@ namespace TACHYON.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "ShippingRequestVases",
+                columns: table => new
+                {
+                    Id = table.Column<long>(nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    CreationTime = table.Column<DateTime>(nullable: false),
+                    CreatorUserId = table.Column<long>(nullable: true),
+                    LastModificationTime = table.Column<DateTime>(nullable: true),
+                    LastModifierUserId = table.Column<long>(nullable: true),
+                    IsDeleted = table.Column<bool>(nullable: false),
+                    DeleterUserId = table.Column<long>(nullable: true),
+                    DeletionTime = table.Column<DateTime>(nullable: true),
+                    TenantId = table.Column<int>(nullable: false),
+                    DefualtPrice = table.Column<double>(nullable: true),
+                    ActualPrice = table.Column<double>(nullable: true),
+                    RequestMaxAmount = table.Column<int>(nullable: false),
+                    RequestMaxCount = table.Column<int>(nullable: false),
+                    VasId = table.Column<int>(nullable: false),
+                    ShippingRequestId = table.Column<long>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ShippingRequestVases", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_ShippingRequestVases_ShippingRequests_ShippingRequestId",
+                        column: x => x.ShippingRequestId,
+                        principalTable: "ShippingRequests",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_ShippingRequestVases_Vases_VasId",
+                        column: x => x.VasId,
+                        principalTable: "Vases",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "DocumentFiles",
                 columns: table => new
                 {
@@ -2146,7 +2268,7 @@ namespace TACHYON.Migrations
                     IsRejected = table.Column<bool>(nullable: false),
                     RejectionReason = table.Column<string>(nullable: true),
                     DocumentTypeId = table.Column<long>(nullable: false),
-                    TruckId = table.Column<Guid>(nullable: true),
+                    TruckId = table.Column<long>(nullable: true),
                     TrailerId = table.Column<long>(nullable: true),
                     UserId = table.Column<long>(nullable: true),
                     RoutStepId = table.Column<long>(nullable: true),
@@ -2918,6 +3040,21 @@ namespace TACHYON.Migrations
                 column: "TrucksTypeId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_ShippingRequestVases_ShippingRequestId",
+                table: "ShippingRequestVases",
+                column: "ShippingRequestId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ShippingRequestVases_TenantId",
+                table: "ShippingRequestVases",
+                column: "TenantId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ShippingRequestVases_VasId",
+                table: "ShippingRequestVases",
+                column: "VasId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_TermAndConditions_EditionId",
                 table: "TermAndConditions",
                 column: "EditionId");
@@ -2953,6 +3090,11 @@ namespace TACHYON.Migrations
                 column: "TrailerTypeId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_TransportTypesTranslations_CoreId",
+                table: "TransportTypesTranslations",
+                column: "CoreId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Trucks_CapacityId",
                 table: "Trucks",
                 column: "CapacityId");
@@ -2981,6 +3123,16 @@ namespace TACHYON.Migrations
                 name: "IX_TrucksTypes_TransportTypeId",
                 table: "TrucksTypes",
                 column: "TransportTypeId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_VasPrices_TenantId",
+                table: "VasPrices",
+                column: "TenantId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_VasPrices_VasId",
+                table: "VasPrices",
+                column: "VasId");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
@@ -3100,7 +3252,16 @@ namespace TACHYON.Migrations
                 name: "ShippingRequestBids");
 
             migrationBuilder.DropTable(
+                name: "ShippingRequestVases");
+
+            migrationBuilder.DropTable(
                 name: "TermAndConditionTranslations");
+
+            migrationBuilder.DropTable(
+                name: "TransportTypesTranslations");
+
+            migrationBuilder.DropTable(
+                name: "VasPrices");
 
             migrationBuilder.DropTable(
                 name: "AbpEntityDynamicParameters");
@@ -3122,6 +3283,9 @@ namespace TACHYON.Migrations
 
             migrationBuilder.DropTable(
                 name: "TermAndConditions");
+
+            migrationBuilder.DropTable(
+                name: "Vases");
 
             migrationBuilder.DropTable(
                 name: "AbpDynamicParameters");

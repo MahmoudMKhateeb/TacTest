@@ -1972,8 +1972,8 @@ namespace TACHYON.Migrations
                     b.Property<long?>("TrailerId")
                         .HasColumnType("bigint");
 
-                    b.Property<Guid?>("TruckId")
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<long?>("TruckId")
+                        .HasColumnType("bigint");
 
                     b.Property<long?>("UserId")
                         .HasColumnType("bigint");
@@ -2663,8 +2663,8 @@ namespace TACHYON.Migrations
                     b.Property<long>("AssignedTrailerId")
                         .HasColumnType("bigint");
 
-                    b.Property<Guid>("AssignedTruckId")
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<long>("AssignedTruckId")
+                        .HasColumnType("bigint");
 
                     b.Property<DateTime>("CreationTime")
                         .HasColumnType("datetime2");
@@ -3028,8 +3028,8 @@ namespace TACHYON.Migrations
                     b.Property<long?>("AssignedTrailerId")
                         .HasColumnType("bigint");
 
-                    b.Property<Guid?>("AssignedTruckId")
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<long?>("AssignedTruckId")
+                        .HasColumnType("bigint");
 
                     b.Property<DateTime?>("BidEndDate")
                         .HasColumnType("datetime2");
@@ -3352,8 +3352,8 @@ namespace TACHYON.Migrations
                     b.Property<int>("Height")
                         .HasColumnType("int");
 
-                    b.Property<Guid?>("HookedTruckId")
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<long?>("HookedTruckId")
+                        .HasColumnType("bigint");
 
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
@@ -3507,9 +3507,10 @@ namespace TACHYON.Migrations
 
             modelBuilder.Entity("TACHYON.Trucks.Truck", b =>
                 {
-                    b.Property<Guid>("Id")
+                    b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("bigint")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<string>("Capacity")
                         .HasColumnType("nvarchar(max)");

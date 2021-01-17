@@ -15,7 +15,7 @@ namespace TACHYON.Trucks
 {
     [Table("Trucks")]
     [Audited]
-    public class Truck : FullAuditedEntity<Guid>, IMustHaveTenant
+    public class Truck : FullAuditedEntity<long>, IMustHaveTenant
     {
         public int TenantId { get; set; }
 
