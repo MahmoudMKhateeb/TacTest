@@ -1,6 +1,6 @@
 ﻿import { Component, Injector, ViewEncapsulation, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { TruckStatusesServiceProxy, TruckStatusDto, WaybillsServiceProxy } from '@shared/service-proxies/service-proxies';
+import { TruckStatusesServiceProxy, TruckStatusDto } from '@shared/service-proxies/service-proxies';
 import { NotifyService } from 'abp-ng2-module';
 import { AppComponentBase } from '@shared/common/app-component-base';
 import { TokenAuthServiceProxy } from '@shared/service-proxies/service-proxies';
@@ -43,8 +43,7 @@ export class TruckStatusesComponent extends AppComponentBase {
     private _notifyService: NotifyService,
     private _tokenAuth: TokenAuthServiceProxy,
     private _activatedRoute: ActivatedRoute,
-    private _fileDownloadService: FileDownloadService,
-    private _waybillsServiceProxy: WaybillsServiceProxy
+    private _fileDownloadService: FileDownloadService
   ) {
     super(injector);
   }
@@ -110,21 +109,6 @@ export class TruckStatusesComponent extends AppComponentBase {
           this.notify.success(this.l('SuccessfullyDeleted'));
         });
       }
-    });
-  }
-  DownloadSingleDropWaybillPdf(): void {
-    this._waybillsServiceProxy.getSingleDropWaybillPdf(this.platenumber).subscribe((result) => {
-      this._fileDownloadService.downloadTempFile(result);
-    });
-  }
-  DownloadMultipleDropWaybillPdf(): void {
-    this._waybillsServiceProxy.getMultipleDropWaybillPdf().subscribe((result) => {
-      this._fileDownloadService.downloadTempFile(result);
-    });
-  }
-  DownloadMasterWaybillPdf(): void {
-    this._waybillsServiceProxy.getMasterWaybillPdf().subscribe((result) => {
-      this._fileDownloadService.downloadTempFile(result);
     });
   }
 }

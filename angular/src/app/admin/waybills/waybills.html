@@ -1,0 +1,17 @@
+<div [@routerTransition]>
+  <div class="content d-flex flex-column flex-column-fluid">
+    <sub-header [title]="'Waybills' | localize">
+      <div role="actions">
+        <button (click)="DownloadSingleDropWaybillPdf(platenumber)" class="btn btn-outline-success">
+          <i class="fa fa-file-excel"></i> {{ l('Download Single Drop Waybill') }}
+        </button>
+        <button (click)="DownloadMultipleDropWaybillPdf()" class="btn btn-outline-success">
+          <i class="fa fa-file-excel"></i> {{ l('Download Multiple Drop Waybill') }}
+        </button>
+        <button (click)="DownloadMasterWaybillPdf()" class="btn btn-outline-success">
+          <i class="fa fa-file-excel"></i> {{ l('Download Master Waybill') }}
+        </button>
+      </div>
+    </sub-header>
+  </div>
+</div>
