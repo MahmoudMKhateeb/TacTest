@@ -15,9 +15,9 @@ namespace TACHYON.Goods.GoodsDetails
         public int TenantId { get; set; }
 
 
-        //[Required]
-        //[StringLength(GoodsDetailConsts.MaxNameLength, MinimumLength = GoodsDetailConsts.MinNameLength)]
-        //public virtual string Name { get; set; }
+        [Required]
+        [StringLength(GoodsDetailConsts.MaxNameLength, MinimumLength = GoodsDetailConsts.MinNameLength)]
+        public virtual string Name { get; set; }
 
         [StringLength(GoodsDetailConsts.MaxDescriptionLength, MinimumLength = GoodsDetailConsts.MinDescriptionLength)]
         public virtual string Description { get; set; }
@@ -50,7 +50,7 @@ namespace TACHYON.Goods.GoodsDetails
         /// this category represents subcategory, which nested in base category that specefied in shipping request, subcategory is the one that has father category in GoodsCategory entity
         /// </summary>
         [Required]
-        public virtual int? GoodCategoryId { get; set; }
+        public virtual int GoodCategoryId { get; set; }
 
         [ForeignKey("GoodCategoryId")]
         public GoodCategory GoodCategoryFk { get; set; }

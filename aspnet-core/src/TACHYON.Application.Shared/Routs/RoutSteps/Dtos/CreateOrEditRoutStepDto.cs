@@ -4,6 +4,7 @@ using System;
 using System.ComponentModel.DataAnnotations;
 using TACHYON.Goods.GoodsDetails.Dtos;
 using TACHYON.Routs.RoutPoints;
+using TACHYON.Routs.RoutPoints.Dtos;
 
 namespace TACHYON.Routs.RoutSteps.Dtos
 {
@@ -29,15 +30,17 @@ namespace TACHYON.Routs.RoutSteps.Dtos
 
         public int? TrailerTypeId { get; set; }
 
-        [Required]
-        public long SourceRoutPointId { get; set; }
+        //[Required]
+        //public long SourceRoutPointId { get; set; }
 
-        [Required]
-        public long DestinationRoutPointId { get; set; }
+        //[Required]
+        //public long DestinationRoutPointId { get; set; }
         public double TotalAmount { get; set; }
         public double ExistingAmount { get; set; }
         public double RemainingAmount { get; set; }
         public CreateOrEditGoodsDetailDto CreateOrEditGoodsDetailDto { get; set; }
+        public CreateOrEditRoutPointInput CreateOrEditSourceRoutPointInputDto { get; set; }
+        public CreateOrEditRoutPointInput CreateOrEditDestinationRoutPointInputDto { get; set; }
 
     }
 }

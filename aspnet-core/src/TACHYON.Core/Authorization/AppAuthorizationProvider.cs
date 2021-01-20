@@ -145,6 +145,12 @@ namespace TACHYON.Authorization
             routTypes.CreateChildPermission(AppPermissions.Pages_RoutTypes_Edit, L("EditRoutType"), multiTenancySides: MultiTenancySides.Host);
             routTypes.CreateChildPermission(AppPermissions.Pages_RoutTypes_Delete, L("DeleteRoutType"), multiTenancySides: MultiTenancySides.Host);
 
+            var routPoints = pages.CreateChildPermission(AppPermissions.Pages_RoutPoints, L("RoutPoints"), multiTenancySides: MultiTenancySides.Tenant);
+            routPoints.CreateChildPermission(AppPermissions.Pages_RoutPoints_Create, L("CreateRoutPoint"), multiTenancySides: MultiTenancySides.Tenant);
+            routPoints.CreateChildPermission(AppPermissions.Pages_RoutPoints_Edit, L("EditRoutPoint"), multiTenancySides: MultiTenancySides.Tenant);
+            routPoints.CreateChildPermission(AppPermissions.Pages_RoutPoints_Delete, L("DeleteRoutPoint"), multiTenancySides: MultiTenancySides.Tenant);
+
+
             var goodCategories = pages.CreateChildPermission(AppPermissions.Pages_GoodCategories, L("GoodCategories"), multiTenancySides: MultiTenancySides.Host);
             goodCategories.CreateChildPermission(AppPermissions.Pages_GoodCategories_Create, L("CreateNewGoodCategory"), multiTenancySides: MultiTenancySides.Host);
             goodCategories.CreateChildPermission(AppPermissions.Pages_GoodCategories_Edit, L("EditGoodCategory"), multiTenancySides: MultiTenancySides.Host);

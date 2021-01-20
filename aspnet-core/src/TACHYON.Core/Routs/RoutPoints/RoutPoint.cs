@@ -34,17 +34,8 @@ namespace TACHYON.Routs.RoutPoints
 
         [ForeignKey("PickingTypeId")]
         public PickingType PickingTypeFk { get; set; }
-
-        [Required]
-        [StringLength(RoutStepConsts.MaxLatitudeLength, MinimumLength = RoutStepConsts.MinLatitudeLength)]
-        public virtual string Latitude { get; set; }
-
-        [Required]
-        [StringLength(RoutStepConsts.MaxLatitudeLength, MinimumLength = RoutStepConsts.MinLatitudeLength)]
-        public virtual string Longitude { get; set; }
-
         /// <summary>
-        /// address book for this point
+        /// address book for this point, Location, city, address
         /// </summary>
         [Required]
         public long FacilityId { get; set; }

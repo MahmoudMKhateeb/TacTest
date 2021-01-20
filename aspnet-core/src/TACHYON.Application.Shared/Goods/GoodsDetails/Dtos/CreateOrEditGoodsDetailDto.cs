@@ -18,9 +18,9 @@ namespace TACHYON.Goods.GoodsDetails.Dtos
 
 
         [StringLength(GoodsDetailConsts.MaxQuantityLength, MinimumLength = GoodsDetailConsts.MinQuantityLength)]
-        public string Quantity { get; set; }
+        public int TotalAmount { get; set; }
 
-
+        [Required]
         [StringLength(GoodsDetailConsts.MaxWeightLength, MinimumLength = GoodsDetailConsts.MinWeightLength)]
         public string Weight { get; set; }
 
@@ -28,16 +28,21 @@ namespace TACHYON.Goods.GoodsDetails.Dtos
         [StringLength(GoodsDetailConsts.MaxDimentionsLength, MinimumLength = GoodsDetailConsts.MinDimentionsLength)]
         public string Dimentions { get; set; }
 
-
+        [Required]
         public bool IsDangerousGood { get; set; }
 
 
         [StringLength(GoodsDetailConsts.MaxDangerousGoodsCodeLength, MinimumLength = GoodsDetailConsts.MinDangerousGoodsCodeLength)]
         public string DangerousGoodsCode { get; set; }
 
-
+        [Required]
         public int? GoodCategoryId { get; set; }
 
+        [Required]
+        public int UnitOfMeasureId { get; set; }
+
+        [Required]
+        public long ShippingRequestId { get; set; }
 
     }
 }

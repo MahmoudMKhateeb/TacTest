@@ -22,10 +22,14 @@ using TACHYON.Routs.RoutSteps.Exporting;
 using TACHYON.Trailers.TrailerTypes;
 using TACHYON.Trucks.TrucksTypes;
 using TACHYON.Routs.RoutPoints.Dtos;
+using NUglify.Helpers;
+using Abp.Application.Features;
+using TACHYON.Features;
 
 namespace TACHYON.Routs.RoutSteps
 {
     [AbpAuthorize(AppPermissions.Pages_RoutSteps)]
+    [RequiresFeature(AppFeatures.Shipper)]
     public class RoutStepsAppService : TACHYONAppServiceBase, IRoutStepsAppService
     {
         private readonly IRepository<RoutStep, long> _routStepRepository;
@@ -54,24 +58,24 @@ namespace TACHYON.Routs.RoutSteps
         {
 
             var filteredRoutSteps = _routStepRepository.GetAll()
-                .Include(e => e.TrucksTypeFk)
-                .Include(e => e.TrailerTypeFk)
+                //.Include(e => e.TrucksTypeFk)
+               // .Include(e => e.TrailerTypeFk)
                 .Include(e => e.SourceRoutPointFk)
                 .ThenInclude(e=>e.CityFk)
                 .Include(e => e.DestinationRoutPointFk)
                 .ThenInclude(e=>e.CityFk)
                 //.Include(e => e.DestinationCityFk)
                 .Where(e=>e.ShippingRequestId==input.ShippingRequestId)
-                .WhereIf(!string.IsNullOrWhiteSpace(input.TrucksTypeDisplayNameFilter), e => e.TrucksTypeFk != null && e.TrucksTypeFk.DisplayName == input.TrucksTypeDisplayNameFilter)
-                .WhereIf(!string.IsNullOrWhiteSpace(input.TrailerTypeDisplayNameFilter), e => e.TrailerTypeFk != null && e.TrailerTypeFk.DisplayName == input.TrailerTypeDisplayNameFilter)
+                //.WhereIf(!string.IsNullOrWhiteSpace(input.TrucksTypeDisplayNameFilter), e => e.TrucksTypeFk != null && e.TrucksTypeFk.DisplayName == input.TrucksTypeDisplayNameFilter)
+                //.WhereIf(!string.IsNullOrWhiteSpace(input.TrailerTypeDisplayNameFilter), e => e.TrailerTypeFk != null && e.TrailerTypeFk.DisplayName == input.TrailerTypeDisplayNameFilter)
                 //.WhereIf(!string.IsNullOrWhiteSpace(input.GoodsDetailNameFilter), e => e.GoodsDetailFk != null && e.GoodsDetailFk.Name == input.GoodsDetailNameFilter)
 
-                .WhereIf(!string.IsNullOrWhiteSpace(input.Filter), e => false || e.DisplayName.Contains(input.Filter) ||
-                    e.SourceRoutPointFk.Latitude.Contains(input.Filter) || e.DestinationRoutPointFk.Latitude.Contains(input.Filter) ||
-                    e.SourceRoutPointFk.Longitude.Contains(input.Filter) || e.DestinationRoutPointFk.Longitude.Contains(input.Filter))
+                .WhereIf(!string.IsNullOrWhiteSpace(input.Filter), e => false || e.DisplayName.Contains(input.Filter))
+                   // e.SourceRoutPointFk.Latitude.Contains(input.Filter) || e.DestinationRoutPointFk.Latitude.Contains(input.Filter) ||
+                    //e.SourceRoutPointFk.Longitude.Contains(input.Filter) || e.DestinationRoutPointFk.Longitude.Contains(input.Filter))
                 .WhereIf(!string.IsNullOrWhiteSpace(input.DisplayNameFilter), e => e.DisplayName == input.DisplayNameFilter)
-                .WhereIf(!string.IsNullOrWhiteSpace(input.LatitudeFilter), e => e.SourceRoutPointFk.Latitude == input.LatitudeFilter || e.DestinationRoutPointFk.Latitude==input.LatitudeFilter)
-                .WhereIf(!string.IsNullOrWhiteSpace(input.LongitudeFilter), e => e.SourceRoutPointFk.Longitude == input.LongitudeFilter || e.DestinationRoutPointFk.Longitude==input.LongitudeFilter)
+                //.WhereIf(!string.IsNullOrWhiteSpace(input.LatitudeFilter), e => e.SourceRoutPointFk.Latitude == input.LatitudeFilter || e.DestinationRoutPointFk.Latitude==input.LatitudeFilter)
+                //.WhereIf(!string.IsNullOrWhiteSpace(input.LongitudeFilter), e => e.SourceRoutPointFk.Longitude == input.LongitudeFilter || e.DestinationRoutPointFk.Longitude==input.LongitudeFilter)
                 .WhereIf(input.MinOrderFilter != null, e => e.Order >= input.MinOrderFilter)
                 .WhereIf(input.MaxOrderFilter != null, e => e.Order <= input.MaxOrderFilter)
                 .WhereIf(!string.IsNullOrWhiteSpace(input.CityDisplayNameFilter), e =>  e.SourceRoutPointFk.CityFk.DisplayName == input.CityDisplayNameFilter)
@@ -82,18 +86,18 @@ namespace TACHYON.Routs.RoutSteps
                 .OrderBy(input.Sorting ?? "id asc")
                 .PageBy(input);
 
-            var routSteps = from o in pagedAndFilteredRoutSteps
+            var routSteps = from o in pagedAndFilteredRoutSteps.ToList()
                             join o1 in _lookup_cityRepository.GetAll() on o.SourceRoutPointFk.CityId equals o1.Id into j1
                             from s1 in j1.DefaultIfEmpty()
 
                             join o2 in _lookup_cityRepository.GetAll() on o.DestinationRoutPointFk.CityId equals o2.Id into j2
                             from s2 in j2.DefaultIfEmpty()
 
-                            join o4 in _lookup_trucksTypeRepository.GetAll() on o.TrucksTypeId equals o4.Id into j4
-                            from s4 in j4.DefaultIfEmpty()
+                            //join o4 in _lookup_trucksTypeRepository.GetAll() on o.TrucksTypeId equals o4.Id into j4
+                            //from s4 in j4.DefaultIfEmpty()
 
-                            join o5 in _lookup_trailerTypeRepository.GetAll() on o.TrailerTypeId equals o5.Id into j5
-                            from s5 in j5.DefaultIfEmpty()
+                           // join o5 in _lookup_trailerTypeRepository.GetAll() on o.TrailerTypeId equals o5.Id into j5
+                           // from s5 in j5.DefaultIfEmpty()
 
                             //join o6 in _lookup_goodsDetailRepository.GetAll() on o.GoodsDetailId equals o6.Id into j6
                             //from s6 in j6.DefaultIfEmpty()
@@ -110,17 +114,32 @@ namespace TACHYON.Routs.RoutSteps
                                 },
                                // CityDisplayName = s1 == null || s1.DisplayName == null ? "" : s1.DisplayName.ToString(),
                                // CityDisplayName2 = s2 == null || s2.DisplayName == null ? "" : s2.DisplayName.ToString(),
-                                TrucksTypeDisplayName = s4 == null || s4.DisplayName == null ? "" : s4.DisplayName.ToString(),
-                                TrailerTypeDisplayName = s5 == null || s5.DisplayName == null ? "" : s5.DisplayName.ToString()
+                              //  TrucksTypeDisplayName = s4 == null || s4.DisplayName == null ? "" : s4.DisplayName.ToString(),
+                               // TrailerTypeDisplayName = s5 == null || s5.DisplayName == null ? "" : s5.DisplayName.ToString(),
                                // GoodsDetailName = s6 == null || s6.Name == null ? "" : s6.Name.ToString(),
-
+                               SourceRoutPointDto=new GetRoutPointForViewDto
+                               {
+                                   CityName=o.SourceRoutPointFk.CityFk.DisplayName,
+                                   FacilityName=o.SourceRoutPointFk.FacilityFk.Name,
+                                   PickingTypeDisplayName=o.SourceRoutPointFk.PickingTypeFk.DisplayName,
+                                   RoutPointDto=ObjectMapper.Map<RoutPointDto>(o.SourceRoutPointFk),
+                                   RoutPointGoodsDetailsList=ObjectMapper.Map<List<RoutPointGoodsDetailDto>>(o.SourceRoutPointFk),
+                               },
+                                DestinationRoutPointDto = new GetRoutPointForViewDto
+                                {
+                                    CityName = o.DestinationRoutPointFk.CityFk.DisplayName,
+                                    FacilityName = o.DestinationRoutPointFk.FacilityFk.Name,
+                                    PickingTypeDisplayName = o.DestinationRoutPointFk.PickingTypeFk.DisplayName,
+                                    RoutPointDto = ObjectMapper.Map<RoutPointDto>(o.DestinationRoutPointFk),
+                                    RoutPointGoodsDetailsList = ObjectMapper.Map<List<RoutPointGoodsDetailDto>>(o.DestinationRoutPointFk),
+                                }
                             };
 
             var totalCount = await filteredRoutSteps.CountAsync();
 
             return new PagedResultDto<GetRoutStepForViewDto>(
                 totalCount,
-                await routSteps.ToListAsync()
+                 routSteps.ToList()
             );
         }
 
@@ -128,7 +147,11 @@ namespace TACHYON.Routs.RoutSteps
         {
             var routStep = await _routStepRepository.GetAsync(id);
 
-            var output = new GetRoutStepForViewDto { RoutStep = ObjectMapper.Map<RoutStepDto>(routStep) };
+            var output = new GetRoutStepForViewDto {
+                RoutStep = ObjectMapper.Map<RoutStepDto>(routStep),
+                SourceRoutPointDto= ObjectMapper.Map<GetRoutPointForViewDto>(routStep.SourceRoutPointFk),
+                DestinationRoutPointDto= ObjectMapper.Map<GetRoutPointForViewDto>(routStep.DestinationRoutPointFk)
+            };
 
             if (output.RoutStep.TrucksTypeId != null)
             {
@@ -148,17 +171,17 @@ namespace TACHYON.Routs.RoutSteps
             //    output.GoodsDetailName = _lookupGoodsDetail?.Name?.ToString();
             //}
 
-            if (output.SourceRoutPointDto.RoutPointDto.CityId != null)
-            {
-                var _lookupCity = await _lookup_cityRepository.FirstOrDefaultAsync((int)output.SourceRoutPointDto.RoutPointDto.CityId);
-                output.SourceRoutPointDto.CityName = _lookupCity?.DisplayName?.ToString();
-            }
+            //if (output.SourceRoutPointDto.RoutPointDto.CityId != null)
+            //{
+            //    var _lookupCity = await _lookup_cityRepository.FirstOrDefaultAsync((int)output.SourceRoutPointDto.RoutPointDto.CityId);
+            //    output.SourceRoutPointDto.CityName = _lookupCity?.DisplayName?.ToString();
+            //}
 
-            if (output.DestinationRoutPointDto.RoutPointDto.CityId != null)
-            {
-                var _lookupCity = await _lookup_cityRepository.FirstOrDefaultAsync((int)output.SourceRoutPointDto.RoutPointDto.CityId);
-                output.DestinationRoutPointDto.CityName = _lookupCity?.DisplayName?.ToString();
-            }
+            //if (output.DestinationRoutPointDto.RoutPointDto.CityId != null)
+            //{
+            //    var _lookupCity = await _lookup_cityRepository.FirstOrDefaultAsync((int)output.SourceRoutPointDto.RoutPointDto.CityId);
+            //    output.DestinationRoutPointDto.CityName = _lookupCity?.DisplayName?.ToString();
+            //}
 
             return output;
         }
@@ -172,17 +195,17 @@ namespace TACHYON.Routs.RoutSteps
                 ,SourceRoutPointDto=ObjectMapper.Map<GetRoutPointForViewDto>(routStep.SourceRoutPointFk)
                 ,DestinationRoutPointDto= ObjectMapper.Map<GetRoutPointForViewDto>(routStep.DestinationRoutPointFk)};
 
-            if (output.SourceRoutPointDto.RoutPointDto.CityId != null)
-            {
-                var _lookupCity = await _lookup_cityRepository.FirstOrDefaultAsync((int)output.SourceRoutPointDto.RoutPointDto.CityId);
-                output.SourceRoutPointDto.CityName = _lookupCity?.DisplayName?.ToString();
-            }
+            //if (output.SourceRoutPointDto.RoutPointDto.CityId != null)
+            //{
+            //    var _lookupCity = await _lookup_cityRepository.FirstOrDefaultAsync((int)output.SourceRoutPointDto.RoutPointDto.CityId);
+            //    output.SourceRoutPointDto.CityName = _lookupCity?.DisplayName?.ToString();
+            //}
 
-            if (output.DestinationRoutPointDto.RoutPointDto.CityId != null)
-            {
-                var _lookupCity = await _lookup_cityRepository.FirstOrDefaultAsync((int)output.SourceRoutPointDto.RoutPointDto.CityId);
-                output.DestinationRoutPointDto.CityName = _lookupCity?.DisplayName?.ToString();
-            }
+            //if (output.DestinationRoutPointDto.RoutPointDto.CityId != null)
+            //{
+            //    var _lookupCity = await _lookup_cityRepository.FirstOrDefaultAsync((int)output.SourceRoutPointDto.RoutPointDto.CityId);
+            //    output.DestinationRoutPointDto.CityName = _lookupCity?.DisplayName?.ToString();
+            //}
 
 
             if (output.RoutStep.TrucksTypeId != null)
@@ -222,17 +245,14 @@ namespace TACHYON.Routs.RoutSteps
         protected virtual async Task Create(CreateOrEditRoutStepDto input)
         {
             var routStep = ObjectMapper.Map<RoutStep>(input);
-            //routStep.GoodsDetailFk = ObjectMapper.Map<GoodsDetail>(input.CreateOrEditGoodsDetailDto);
 
-
-
-            if (AbpSession.TenantId != null)
+            int? tenantId = AbpSession.TenantId;
+            if (tenantId != null)
             {
-                routStep.TenantId = (int)AbpSession.TenantId;
-                // routStep.GoodsDetailFk.TenantId = (int)AbpSession.TenantId;
-
+                routStep.TenantId = (int)tenantId;
+                routStep.SourceRoutPointFk.TenantId = (int)tenantId;
+                routStep.DestinationRoutPointFk.TenantId = (int)tenantId;
             }
-
 
             await _routStepRepository.InsertAsync(routStep);
         }

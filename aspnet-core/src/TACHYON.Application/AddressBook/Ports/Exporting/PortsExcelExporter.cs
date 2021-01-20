@@ -37,8 +37,7 @@ namespace TACHYON.AddressBook.Ports.Exporting
                         sheet,
                         L("Name"),
                         L("Adress"),
-                        L("Longitude"),
-                        L("Latitude"),
+                        L("Location"),
                         (L("City")) + L("DisplayName")
                         );
 
@@ -46,8 +45,7 @@ namespace TACHYON.AddressBook.Ports.Exporting
                         sheet, 2, ports,
                         _ => _.Port.Name,
                         _ => _.Port.Adress,
-                        _ => _.Port.Longitude,
-                        _ => _.Port.Latitude,
+                        _ => _.Port.Location,
                         _ => _.CityDisplayName
                         );
 

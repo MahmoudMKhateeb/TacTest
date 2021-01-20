@@ -200,9 +200,15 @@ namespace TACHYON
             configuration.CreateMap<GoodsDetailDto, GoodsDetail>().ReverseMap();
             configuration.CreateMap<CreateOrEditOfferDto, Offer>().ReverseMap();
             configuration.CreateMap<OfferDto, Offer>().ReverseMap();
-            configuration.CreateMap<CreateOrEditRoutStepDto, RoutStep>().ReverseMap();
+            configuration.CreateMap<CreateOrEditRoutStepDto, RoutStep>()
+                .ForMember(dst=>dst.SourceRoutPointFk, opt=>opt.MapFrom(src=>src.CreateOrEditSourceRoutPointInputDto))
+                .ForMember(dest=>dest.DestinationRoutPointFk,opt=>opt.MapFrom(src=>src.CreateOrEditDestinationRoutPointInputDto))
+                .ReverseMap();
             configuration.CreateMap<RoutStepDto, RoutStep>().ReverseMap();
             configuration.CreateMap<RoutPointDto, RoutPoint>().ReverseMap();
+            configuration.CreateMap<CreateOrEditRoutPointInput, RoutPoint>()
+                .ForMember(dest=>dest.RoutPointGoodsDetails,opt=>opt.MapFrom(src=>src.RoutPointGoodsDetailListDto))
+                .ReverseMap();
             configuration.CreateMap<CreateOrEditRouteDto, Route>().ReverseMap();
             configuration.CreateMap<RouteDto, Route>().ReverseMap();
             configuration.CreateMap<CreateOrEditCityDto, City>().ReverseMap();

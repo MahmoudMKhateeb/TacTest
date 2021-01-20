@@ -6,7 +6,6 @@ using Abp.Linq.Extensions;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
-using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Dynamic.Core;
 using System.Threading.Tasks;
@@ -39,6 +38,7 @@ namespace TACHYON.Goods.GoodsDetails
 
             var filteredGoodsDetails = _goodsDetailRepository.GetAll()
                         .Include(e => e.GoodCategoryFk)
+                        .Where(e=>e.ShippingRequestId==input.ShippingRequestId)
                         //.WhereIf(!string.IsNullOrWhiteSpace(input.Filter), e => false || e.Name.Contains(input.Filter) || e.Description.Contains(input.Filter) || e.Quantity.Contains(input.Filter) || e.Weight.Contains(input.Filter) || e.Dimentions.Contains(input.Filter) || e.DangerousGoodsCode.Contains(input.Filter))
                         // .WhereIf(!string.IsNullOrWhiteSpace(input.NameFilter), e => e.Name == input.NameFilter)
                         .WhereIf(!string.IsNullOrWhiteSpace(input.DescriptionFilter), e => e.Description == input.DescriptionFilter)

@@ -1394,14 +1394,8 @@ namespace TACHYON.Migrations
                     b.Property<long?>("LastModifierUserId")
                         .HasColumnType("bigint");
 
-                    b.Property<decimal>("Latitude")
-                        .HasColumnType("decimal(18,2)");
-
                     b.Property<Point>("Location")
                         .HasColumnType("geography");
-
-                    b.Property<decimal>("Longitude")
-                        .HasColumnType("decimal(18,2)");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -1456,14 +1450,8 @@ namespace TACHYON.Migrations
                     b.Property<long?>("LastModifierUserId")
                         .HasColumnType("bigint");
 
-                    b.Property<decimal>("Latitude")
-                        .HasColumnType("decimal(18,2)");
-
                     b.Property<Point>("Location")
                         .HasColumnType("geography");
-
-                    b.Property<decimal>("Longitude")
-                        .HasColumnType("decimal(18,2)");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -2275,8 +2263,7 @@ namespace TACHYON.Migrations
                         .HasColumnType("nvarchar(128)")
                         .HasMaxLength(128);
 
-                    b.Property<int?>("GoodCategoryId")
-                        .IsRequired()
+                    b.Property<int>("GoodCategoryId")
                         .HasColumnType("int");
 
                     b.Property<bool>("IsDangerousGood")
@@ -2290,6 +2277,11 @@ namespace TACHYON.Migrations
 
                     b.Property<long?>("LastModifierUserId")
                         .HasColumnType("bigint");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(256)")
+                        .HasMaxLength(256);
 
                     b.Property<int>("NumberOfPacking")
                         .HasColumnType("int");
@@ -2791,16 +2783,6 @@ namespace TACHYON.Migrations
                     b.Property<long?>("LastModifierUserId")
                         .HasColumnType("bigint");
 
-                    b.Property<string>("Latitude")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(256)")
-                        .HasMaxLength(256);
-
-                    b.Property<string>("Longitude")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(256)")
-                        .HasMaxLength(256);
-
                     b.Property<int?>("PickingTypeId")
                         .HasColumnType("int");
 
@@ -2879,9 +2861,6 @@ namespace TACHYON.Migrations
                     b.Property<long>("AssignedDriverUserId")
                         .HasColumnType("bigint");
 
-                    b.Property<long?>("AssignedTrailerId")
-                        .HasColumnType("bigint");
-
                     b.Property<long>("AssignedTruckId")
                         .HasColumnType("bigint");
 
@@ -2934,17 +2913,9 @@ namespace TACHYON.Migrations
                     b.Property<int>("TotalAmount")
                         .HasColumnType("int");
 
-                    b.Property<int?>("TrailerTypeId")
-                        .HasColumnType("int");
-
-                    b.Property<long?>("TrucksTypeId")
-                        .HasColumnType("bigint");
-
                     b.HasKey("Id");
 
                     b.HasIndex("AssignedDriverUserId");
-
-                    b.HasIndex("AssignedTrailerId");
 
                     b.HasIndex("AssignedTruckId");
 
@@ -2955,10 +2926,6 @@ namespace TACHYON.Migrations
                     b.HasIndex("SourceRoutPointId");
 
                     b.HasIndex("TenantId");
-
-                    b.HasIndex("TrailerTypeId");
-
-                    b.HasIndex("TrucksTypeId");
 
                     b.ToTable("RoutSteps");
                 });
@@ -3285,6 +3252,9 @@ namespace TACHYON.Migrations
                     b.Property<int>("NumberOfDrops")
                         .HasColumnType("int");
 
+                    b.Property<int>("NumberOfTrips")
+                        .HasColumnType("int");
+
                     b.Property<decimal?>("Price")
                         .HasColumnType("decimal(18,2)");
 
@@ -3305,6 +3275,9 @@ namespace TACHYON.Migrations
 
                     b.Property<bool>("StageTowFinish")
                         .HasColumnType("bit");
+
+                    b.Property<DateTime>("StartTripDate")
+                        .HasColumnType("datetime2");
 
                     b.Property<int>("TenantId")
                         .HasColumnType("int");
@@ -4587,10 +4560,6 @@ namespace TACHYON.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("TACHYON.Trailers.Trailer", "AssignedTrailersFk")
-                        .WithMany()
-                        .HasForeignKey("AssignedTrailerId");
-
                     b.HasOne("TACHYON.Trucks.Truck", "AssignedTruckFk")
                         .WithMany()
                         .HasForeignKey("AssignedTruckId")
@@ -4614,14 +4583,6 @@ namespace TACHYON.Migrations
                         .HasForeignKey("SourceRoutPointId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.HasOne("TACHYON.Trailers.TrailerTypes.TrailerType", "TrailerTypeFk")
-                        .WithMany()
-                        .HasForeignKey("TrailerTypeId");
-
-                    b.HasOne("TACHYON.Trucks.TrucksTypes.TrucksType", "TrucksTypeFk")
-                        .WithMany()
-                        .HasForeignKey("TrucksTypeId");
                 });
 
             modelBuilder.Entity("TACHYON.Routs.Route", b =>

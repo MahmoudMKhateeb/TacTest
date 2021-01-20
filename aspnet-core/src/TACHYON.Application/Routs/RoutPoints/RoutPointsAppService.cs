@@ -9,6 +9,8 @@ using System.Linq.Dynamic.Core;
 using Microsoft.EntityFrameworkCore;
 using System.Threading.Tasks;
 using Abp.Application.Services.Dto;
+using Abp.Authorization;
+using TACHYON.Authorization;
 
 namespace TACHYON.Routs.RoutPoints
 {
@@ -46,5 +48,41 @@ namespace TACHYON.Routs.RoutPoints
             return new PagedResultDto<GetRoutPointForViewDto>(totalCount, await routPoints.ToListAsync());
 
         }
+
+        public async Task CreateOrEditRoutPoint(CreateOrEditRoutPointInput input)
+        {
+            if (input.Id == null)
+            {
+                await Create(input);
+            }
+            else
+            {
+                await Edit(input);
+            }
+           
+        }
+
+        [AbpAuthorize(AppPermissions.Pages_RoutPoints_Delete)]
+        public async Task Delete(EntityDto<long> input)
+        {
+            await _routPointsRepository.DeleteAsync(input.Id);
+        }
+
+        [AbpAuthorize(AppPermissions.Pages_RoutPoints_Create)]
+        private async Task Create(CreateOrEditRoutPointInput input)
+        {
+            var routPoint = ObjectMapper.Map<RoutPoint>(input);
+            await _routPointsRepository.InsertAsync(routPoint);
+        }
+
+        [AbpAuthorize(AppPermissions.Pages_RoutPoints_Edit)]
+        private async Task Edit(CreateOrEditRoutPointInput input)
+        {
+            var routPoint =await _routPointsRepository.FirstOrDefaultAsync((long)input.Id);
+            ObjectMapper.Map(input, routPoint);
+        }
+
+
+
     }
 }

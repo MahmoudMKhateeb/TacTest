@@ -131,6 +131,11 @@
         public const string Pages_Routes_Edit = "Pages.Routes.Edit";
         public const string Pages_Routes_Delete = "Pages.Routes.Delete";
 
+        public const string Pages_RoutPoints = "Pages.RoutPoints";
+        public const string Pages_RoutPoints_Create = "Pages.RoutPoints.Create";
+        public const string Pages_RoutPoints_Edit = "Pages.RoutPoints.Edit";
+        public const string Pages_RoutPoints_Delete = "Pages.RoutPoints.Delete";
+
         public const string Pages_Cities = "Pages.Cities";
         public const string Pages_Cities_Create = "Pages.Cities.Create";
         public const string Pages_Cities_Edit = "Pages.Cities.Edit";

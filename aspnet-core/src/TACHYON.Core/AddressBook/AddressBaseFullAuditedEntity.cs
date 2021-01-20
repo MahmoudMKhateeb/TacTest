@@ -20,10 +20,6 @@ namespace TACHYON.AddressBook
         [StringLength(FacilityConsts.MaxAdressLength, MinimumLength = FacilityConsts.MinAdressLength)]
         public virtual string Adress { get; set; }
 
-        public virtual decimal Longitude { get; set; }
-
-        public virtual decimal Latitude { get; set; }
-
         public virtual int CityId { get; set; }
 
         [ForeignKey("CityId")]

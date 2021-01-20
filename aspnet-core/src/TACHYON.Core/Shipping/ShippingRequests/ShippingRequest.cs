@@ -128,7 +128,8 @@ namespace TACHYON.Shipping.ShippingRequests
         public Truck AssignedTruckFk { get; set; }
 
 
-
+        public int NumberOfTrips { get; set; }
+        public DateTime StartTripDate { get; set; }
         // todo make sure those are nullable
 
         #region Truck Categories

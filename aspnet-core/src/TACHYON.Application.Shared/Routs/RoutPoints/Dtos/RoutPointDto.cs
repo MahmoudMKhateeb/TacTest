@@ -15,13 +15,17 @@ namespace TACHYON.Routs.RoutPoints.Dtos
         public int CityId { get; set; }
         public int? PickingTypeId { get; set; }
 
-        [Required]
-        [StringLength(RoutStepConsts.MaxLatitudeLength, MinimumLength = RoutStepConsts.MinLatitudeLength)]
-        public virtual string Latitude { get; set; }
+        //[Required]
+        //[StringLength(RoutStepConsts.MaxLatitudeLength, MinimumLength = RoutStepConsts.MinLatitudeLength)]
+        //public virtual string Latitude { get; set; }
+
+        //[Required]
+        //[StringLength(RoutStepConsts.MaxLatitudeLength, MinimumLength = RoutStepConsts.MinLatitudeLength)]
+        //public virtual string Longitude { get; set; }
 
         [Required]
-        [StringLength(RoutStepConsts.MaxLatitudeLength, MinimumLength = RoutStepConsts.MinLatitudeLength)]
-        public virtual string Longitude { get; set; }
+        [RegularExpression(@"^(-?\d + (\.\d +)?),\s*(-?\d+(\.\d+)?)$")]
+        public string Location { get; set; }
 
         [Required]
         public long FacilityId { get; set; }

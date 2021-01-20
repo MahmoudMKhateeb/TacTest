@@ -40,17 +40,7 @@ namespace TACHYON.Routs.RoutSteps
         [ForeignKey("ShippingRequestId")]
         public ShippingRequest ShippingRequestFk { get; set; }
 
-        public virtual long? TrucksTypeId { get; set; }
 
-        [ForeignKey("TrucksTypeId")]
-        public TrucksType TrucksTypeFk { get; set; }
-
-        public virtual int? TrailerTypeId { get; set; }
-
-        [ForeignKey("TrailerTypeId")]
-        public TrailerType TrailerTypeFk { get; set; }
-
-       
         /// <summary>
         /// assigned Driver
         /// </summary>
@@ -64,12 +54,7 @@ namespace TACHYON.Routs.RoutSteps
         [ForeignKey("AssignedTruckId")]
         public Truck AssignedTruckFk { get; set; }
 
-        /// <summary>
-        /// assigned Trailer
-        /// </summary>
-        public long? AssignedTrailerId { get; set; }
-        [ForeignKey("AssignedTrailerId")]
-        public Trailer AssignedTrailersFk { get; set; }
+       
 
         [Required]
         public long SourceRoutPointId { get; set; }
