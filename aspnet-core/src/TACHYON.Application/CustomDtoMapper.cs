@@ -1,4 +1,8 @@
-﻿using TACHYON.Trucks.TruckCategories.TransportTypes.TransportTypesTranslations.Dtos;
+﻿using TACHYON.Nationalities.Dtos;
+using TACHYON.Nationalities;
+using TACHYON.Nationalities.NationalitiesTranslation.Dtos;
+using TACHYON.Nationalities.NationalitiesTranslation;
+using TACHYON.Trucks.TruckCategories.TransportTypes.TransportTypesTranslations.Dtos;
 using TACHYON.Trucks.TruckCategories.TransportTypes.TransportTypesTranslations;
 using TACHYON.ShippingRequestVases.Dtos;
 using TACHYON.ShippingRequestVases;
@@ -138,6 +142,10 @@ namespace TACHYON
     {
         public static void CreateMappings(IMapperConfigurationExpression configuration)
         {
+            configuration.CreateMap<CreateOrEditNationalityDto, Nationality>().ReverseMap();
+            configuration.CreateMap<NationalityDto, Nationality>().ReverseMap();
+            configuration.CreateMap<CreateOrEditNationalityTranslationDto, NationalityTranslation>().ReverseMap();
+            configuration.CreateMap<NationalityTranslationDto, NationalityTranslation>().ReverseMap();
             configuration.CreateMap<CreateOrEditTransportTypesTranslationDto, TransportTypesTranslation>().ReverseMap();
             configuration.CreateMap<TransportTypesTranslationDto, TransportTypesTranslation>().ReverseMap();
             configuration.CreateMap<CreateOrEditShippingRequestVasDto, ShippingRequestVas>().ReverseMap();
@@ -351,7 +359,7 @@ namespace TACHYON
             configuration.CreateMultiLingualMap<TransportType, TransportTypesTranslation, TransportTypeDto>(context)
                 .EntityMap
                 .ReverseMap();
-            
+
             // #Map_TransportType_TransportTypeSelectItemDto
             configuration.CreateMultiLingualMap<TransportType, TransportTypesTranslation, TransportTypeSelectItemDto>(context)
                   .EntityMap

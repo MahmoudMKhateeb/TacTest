@@ -11,6 +11,7 @@ import {
   UserServiceProxy,
   GetUserForEditOutput,
   SelectItemDto,
+  NationalitiesServiceProxy,
 } from '@shared/service-proxies/service-proxies';
 import { ModalDirective } from 'ngx-bootstrap/modal';
 import { IOrganizationUnitsTreeComponentData, OrganizationUnitsTreeComponent } from '../shared/organization-unit-tree.component';
@@ -50,7 +51,12 @@ export class CreateOrEditUserModalComponent extends AppComponentBase {
   memberedOrganizationUnits: string[];
   userPasswordRepeat = '';
   nationalities: SelectItemDto[] = [];
-  constructor(injector: Injector, private _userService: UserServiceProxy, private _profileService: ProfileServiceProxy) {
+  constructor(
+    injector: Injector,
+    private _userService: UserServiceProxy,
+    private _profileService: ProfileServiceProxy,
+    private _nationalitiesServiceProxy: NationalitiesServiceProxy
+  ) {
     super(injector);
   }
 
@@ -208,7 +214,7 @@ export class CreateOrEditUserModalComponent extends AppComponentBase {
   }
 
   getUserNationalites() {
-    this._userService.getDriverNationalites().subscribe((res) => {
+    this._nationalitiesServiceProxy.getAllNationalityForDropdown().subscribe((res) => {
       this.nationalities = res;
     });
   }

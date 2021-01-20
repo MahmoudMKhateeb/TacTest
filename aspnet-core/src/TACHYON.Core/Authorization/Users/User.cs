@@ -4,6 +4,8 @@ using Abp.Extensions;
 using Abp.Timing;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
+using TACHYON.Nationalities;
 
 namespace TACHYON.Authorization.Users
 {
@@ -28,7 +30,10 @@ namespace TACHYON.Authorization.Users
         public virtual bool IsDriver { get; set; }
 
         public virtual string Address { get; set; }
-        public virtual string Nationality { get; set; }
+        public virtual int? NationalityId { get; set; }
+        
+        [ForeignKey("NationalityId")]
+        public virtual Nationality NationalityFk { get; set; }
         public virtual string ExperienceField { get; set; }
         public virtual DateTime? DateOfBirth { get; set; }
         public User()

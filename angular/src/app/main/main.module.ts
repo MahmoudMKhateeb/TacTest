@@ -2,6 +2,18 @@
 import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { AppCommonModule } from '@app/shared/common/app-common.module';
+import { NationalitiesComponent } from './nationalities/nationalities/nationalities.component';
+import { ViewNationalityModalComponent } from './nationalities/nationalities/view-nationality-modal.component';
+import { CreateOrEditNationalityModalComponent } from './nationalities/nationalities/create-or-edit-nationality-modal.component';
+
+import { MasterDetailChild_Nationality_NationalityTranslationsComponent } from './nationalitiesTranslation/nationalityTranslations/masterDetailChild_Nationality_nationalityTranslations.component';
+import { MasterDetailChild_Nationality_ViewNationalityTranslationModalComponent } from './nationalitiesTranslation/nationalityTranslations/masterDetailChild_Nationality_view-nationalityTranslation-modal.component';
+import { MasterDetailChild_Nationality_CreateOrEditNationalityTranslationModalComponent } from './nationalitiesTranslation/nationalityTranslations/masterDetailChild_Nationality_create-or-edit-nationalityTranslation-modal.component';
+
+import { NationalityTranslationsComponent } from './nationalitiesTranslation/nationalityTranslations/nationalityTranslations.component';
+import { ViewNationalityTranslationModalComponent } from './nationalitiesTranslation/nationalityTranslations/view-nationalityTranslation-modal.component';
+import { CreateOrEditNationalityTranslationModalComponent } from './nationalitiesTranslation/nationalityTranslations/create-or-edit-nationalityTranslation-modal.component';
+
 import { TransportTypesTranslationsComponent } from './transportTypesTranslations/transportTypesTranslations/transportTypesTranslations.component';
 import { ViewTransportTypesTranslationModalComponent } from './transportTypesTranslations/transportTypesTranslations/view-transportTypesTranslation-modal.component';
 import { CreateOrEditTransportTypesTranslationModalComponent } from './transportTypesTranslations/transportTypesTranslations/create-or-edit-transportTypesTranslation-modal.component';
@@ -178,6 +190,18 @@ NgxBootstrapDatePickerConfigService.registerNgxBootstrapDatePickerLocales();
     AdminModule,
   ],
   declarations: [
+		NationalitiesComponent,
+
+		ViewNationalityModalComponent,
+		CreateOrEditNationalityModalComponent,
+		MasterDetailChild_Nationality_NationalityTranslationsComponent,
+
+		MasterDetailChild_Nationality_ViewNationalityTranslationModalComponent,
+		MasterDetailChild_Nationality_CreateOrEditNationalityTranslationModalComponent,
+		NationalityTranslationsComponent,
+
+		ViewNationalityTranslationModalComponent,
+		CreateOrEditNationalityTranslationModalComponent,
 		TransportTypesTranslationsComponent,
 
 		ViewTransportTypesTranslationModalComponent,

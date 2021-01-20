@@ -1,6 +1,24 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <localizationDictionary culture="en">
-  <texts>    <text name="TransportTypesTranslations">Transport types translations</text>
+  <texts>    <text name="Nationalities">Nationalities</text>
+    <text name="Nationality">Nationality</text>
+    <text name="TACHYON.Nationalities.Nationality">Nationality</text>
+    <text name="NationalitiesHeaderInfo">Nationalities header info</text>
+    <text name="CreateNewNationality">Create new nationality</text>
+    <text name="EditNationality">Edit nationality</text>
+    <text name="DeleteNationality">Delete nationality</text>
+    <text name="NationalityName">Nationality name</text>
+    <text name="PickNationality">Pick nationality</text>
+    <text name="NationalitiesTranslation">Nationalities translation</text>
+    <text name="NationalityTranslation">Nationality translation</text>
+    <text name="TACHYON.NationalitiesTranslation.NationalityTranslation">NationalityTranslation</text>
+    <text name="TranslatedName">Translated name</text>
+    <text name="NationalityTranslationsHeaderInfo">Nationality translations header info</text>
+    <text name="CreateNewNationalityTranslation">Create new nationality translation</text>
+    <text name="EditNationalityTranslation">Edit nationality translation</text>
+    <text name="DeleteNationalityTranslation">Delete nationality translation</text>
+    <text name="NationalityTranslations">Nationality translations</text>
+    <text name="TransportTypesTranslations">Transport types translations</text>
     <text name="TransportTypesTranslation">Transport types translation</text>
     <text name="TACHYON.TransportTypesTranslations.TransportTypesTranslation">TransportTypesTranslation</text>
     <text name="TransportTypesTranslationsHeaderInfo">Transport types translations header info</text>

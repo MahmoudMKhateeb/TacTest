@@ -1,4 +1,6 @@
-﻿using TACHYON.Trucks.TruckCategories.TransportTypes.TransportTypesTranslations;
+﻿using TACHYON.Nationalities;
+using TACHYON.Nationalities.NationalitiesTranslation;
+using TACHYON.Trucks.TruckCategories.TransportTypes.TransportTypesTranslations;
 using TACHYON.Vases;
 using TACHYON.ShippingRequestVases;
 using TACHYON.TermsAndConditions;
@@ -51,6 +53,10 @@ namespace TACHYON.EntityFrameworkCore
 {
     public class TACHYONDbContext : AbpZeroDbContext<Tenant, Role, User, TACHYONDbContext>, IAbpPersistedGrantDbContext
     {
+        public virtual DbSet<Nationality> Nationalities { get; set; }
+
+        public virtual DbSet<NationalityTranslation> NationalityTranslations { get; set; }
+
         public virtual DbSet<TransportTypesTranslation> TransportTypesTranslations { get; set; }
 
         public virtual DbSet<Vas> Vases { get; set; }

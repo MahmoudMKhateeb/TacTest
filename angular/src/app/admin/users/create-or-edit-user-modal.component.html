@@ -80,7 +80,7 @@
                 />
                 <span *ngIf="!isEmailValid" class="form-text text-danger">{{ l('NotValid') }}</span>
                 <span *ngIf="!isEmailAvailable" class="form-text text-danger">{{ l('AlreadyTaken') }}</span>
-                <!-- <validation-messages [formCtrl]="emailAddressInput"></validation-messages> -->
+                <validation-messages [formCtrl]="emailAddressInput"></validation-messages>
               </div>
 
               <div class="form-group">
@@ -110,8 +110,8 @@
               <div class="form-group">
                 <div class="form-group">
                   <label for="Nationality">{{ 'Nationality' | localize }}*</label>
-                  <select name="Nationality" [(ngModel)]="user.nationality" required class="form-control form-control-lg custom-select mr-sm-2">
-                    <option *ngFor="let nationality of nationalities" value="nationality.id">{{ nationality.displayName }}</option>
+                  <select name="Nationality" [(ngModel)]="user.nationalityId" required class="form-control form-control-lg custom-select mr-sm-2">
+                    <option *ngFor="let nationality of nationalities" [value]="Number(nationality.id)">{{ nationality.displayName }}</option>
                   </select>
                   <span class="text-muted">{{ 'ChooseNationality' | localize }}</span>
                 </div>

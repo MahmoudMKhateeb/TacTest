@@ -211,6 +211,14 @@ export class AppNavigationService {
       //   undefined,
       //   () => this._featureCheckerService.isEnabled('App.Carrier') || this._featureCheckerService.isEnabled('App.OffersMarketPlace')
       // ),
+      new AppMenuItem('Nationalities', 'Pages.Nationalities', 'flaticon-more', '/app/main/nationalities/nationalities'),
+
+      new AppMenuItem(
+        'NationalityTranslations',
+        'Pages.NationalityTranslations',
+        'flaticon-more',
+        '/app/main/nationalitiesTranslation/nationalityTranslations'
+      ),
 
       new AppMenuItem(
         'Settings',

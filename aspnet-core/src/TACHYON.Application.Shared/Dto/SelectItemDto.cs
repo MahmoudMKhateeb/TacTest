@@ -1,6 +1,6 @@
 ﻿namespace TACHYON.Dto
 {
-    public class SelectItemDto
+    public class SelectItemDto :ISelectItemDto
     {
         private string _displayName;
 

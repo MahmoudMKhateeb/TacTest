@@ -30,6 +30,16 @@ namespace TACHYON.Authorization
 
             var pages = context.GetPermissionOrNull(AppPermissions.Pages) ?? context.CreatePermission(AppPermissions.Pages, L("Pages"));
 
+            var nationalities = pages.CreateChildPermission(AppPermissions.Pages_Nationalities, L("Nationalities"), multiTenancySides: MultiTenancySides.Host);
+            nationalities.CreateChildPermission(AppPermissions.Pages_Nationalities_Create, L("CreateNewNationality"), multiTenancySides: MultiTenancySides.Host);
+            nationalities.CreateChildPermission(AppPermissions.Pages_Nationalities_Edit, L("EditNationality"), multiTenancySides: MultiTenancySides.Host);
+            nationalities.CreateChildPermission(AppPermissions.Pages_Nationalities_Delete, L("DeleteNationality"), multiTenancySides: MultiTenancySides.Host);
+
+            var nationalityTranslations = pages.CreateChildPermission(AppPermissions.Pages_NationalityTranslations, L("NationalityTranslations"), multiTenancySides: MultiTenancySides.Host);
+            nationalityTranslations.CreateChildPermission(AppPermissions.Pages_NationalityTranslations_Create, L("CreateNewNationalityTranslation"), multiTenancySides: MultiTenancySides.Host);
+            nationalityTranslations.CreateChildPermission(AppPermissions.Pages_NationalityTranslations_Edit, L("EditNationalityTranslation"), multiTenancySides: MultiTenancySides.Host);
+            nationalityTranslations.CreateChildPermission(AppPermissions.Pages_NationalityTranslations_Delete, L("DeleteNationalityTranslation"), multiTenancySides: MultiTenancySides.Host);
+
             var transportTypesTranslations = pages.CreateChildPermission(AppPermissions.Pages_TransportTypesTranslations, L("TransportTypesTranslations"), multiTenancySides: MultiTenancySides.Host);
             transportTypesTranslations.CreateChildPermission(AppPermissions.Pages_TransportTypesTranslations_Create, L("CreateNewTransportTypesTranslation"), multiTenancySides: MultiTenancySides.Host);
             transportTypesTranslations.CreateChildPermission(AppPermissions.Pages_TransportTypesTranslations_Edit, L("EditTransportTypesTranslation"), multiTenancySides: MultiTenancySides.Host);

@@ -1,0 +1,144 @@
+﻿    <div [class]="containerClass">
+        <div class="card card-custom gutter-b">
+                       
+                <div class="card-header align-items-center border-0 mt-4">
+                    <h3 class="card-title align-items-start flex-column">
+                        <span class="font-weight-bolder text-dark">  {{"NationalityTranslations" | localize}}</span>
+                    </h3>
+                    <div class="card-toolbar">
+                            <button *ngIf="isGranted('Pages.NationalityTranslations.Create')" (click)="createNationalityTranslation()" 
+                            class="btn btn-primary blue"><i class="fa fa-plus"></i> {{l("CreateNewNationalityTranslation")}}</button>                    
+                    </div>
+                </div>
+            
+            <div class="card-body">
+                <form class="form" autocomplete="off">
+                    <div>
+                        <div class="row align-items-center">
+                            <div class="col-xl-12">
+                                <div class="form-group m-form__group align-items-center">
+                                    <div class="input-group">
+                                        <input [(ngModel)]="filterText" name="filterText" autoFocus class="form-control m-input" [placeholder]="l('SearchWithThreeDot')" type="text">
+                                        <span class="input-group-btn">
+                                            <button (click)="getNationalityTranslations()" class="btn btn-primary" type="submit"><i class="flaticon-search-1"></i></button>
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+						 <div class="row" [hidden]="!advancedFiltersAreShown">
+						 	<div class="col-md-12">
+						         <div class="kt-separator kt-separator--border-dashed"></div>
+						     </div>
+
+
+							<div class="col-md-3">
+								<div class="form-group">
+									<label for="TranslatedNameFilter">{{l("TranslatedName")}}</label>
+									<input type="text" class="form-control" id="TranslatedNameFilter" name="translatedNameFilter" [(ngModel)]="translatedNameFilter">
+								</div>
+                            </div>
+							<div class="col-md-3">
+								<div class="form-group">
+									<label for="LanguageFilter">{{l("Language")}}</label>
+									<input type="text" class="form-control" id="LanguageFilter" name="languageFilter" [(ngModel)]="languageFilter">
+								</div>
+                            </div>
+
+                        </div>
+                        <div class="row mb-2">
+                            <div class="col-sm-12">
+                                <span class="clickable-item text-muted" *ngIf="!advancedFiltersAreShown" (click)="advancedFiltersAreShown=!advancedFiltersAreShown"><i class="fa fa-angle-down"></i> {{l("ShowAdvancedFilters")}}</span>
+                                <span class="clickable-item text-muted" *ngIf="advancedFiltersAreShown" (click)="advancedFiltersAreShown=!advancedFiltersAreShown"><i class="fa fa-angle-up"></i> {{l("HideAdvancedFilters")}}</span>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+
+                <div class="row align-items-center">
+                    <!--<Primeng-Datatable-Start>-->
+                    <div class="primeng-datatable-container col-12"
+                         [busyIf]="primengTableHelper.isLoading">
+                        <p-table #dataTable
+                                     (onLazyLoad)="getNationalityTranslations($event)"
+                                     [value]="primengTableHelper.records"
+                                     rows="{{primengTableHelper.defaultRecordsCountPerPage}}"
+                                     [paginator]="false"
+                                     [lazy]="true"
+                                     [scrollable]="true"
+                                     ScrollWidth="100%"
+                                     [responsive]="primengTableHelper.isResponsive"
+                                     [resizableColumns]="primengTableHelper.resizableColumns">
+                            <ng-template pTemplate="header">
+                                <tr>
+                                    <th style="width: 130px" [hidden]="!isGrantedAny('Pages.NationalityTranslations.Edit', 'Pages.NationalityTranslations.Delete')">{{l('Actions')}}</th>
+                                    <th style="width: 150px" pSortableColumn="translatedName">
+                                        {{l('TranslatedName')}}
+                                        <p-sortIcon field="nationalityTranslation.translatedName"></p-sortIcon>
+                                    </th>
+                                    <th style="width: 150px" pSortableColumn="language">
+                                        {{l('Language')}}
+                                        <p-sortIcon field="nationalityTranslation.language"></p-sortIcon>
+                                    </th>
+
+                                </tr>
+                            </ng-template>                           
+							<ng-template pTemplate="body" let-record="$implicit">
+                                <tr>
+                                    <td style="width: 130px"
+                                        [hidden]="!isGrantedAny('Pages.NationalityTranslations.Edit', 'Pages.NationalityTranslations.Delete')">
+                                       <div class="btn-group dropdown" dropdown container="body">
+                                            <button class="dropdown-toggle btn btn-sm btn-primary" dropdownToggle>
+                                                <i class="fa fa-cog"></i><span class="caret"></span> {{l("Actions")}}
+                                            </button>
+												<ul class="dropdown-menu"  *dropdownMenu>
+												<li>
+													<a href="javascript:;" class="dropdown-item"
+														(click)="viewNationalityTranslationModal.show(record)">{{l('View')}}</a>
+												</li>
+												<li>
+                                                <a href="javascript:;" *ngIf="permission.isGranted('Pages.NationalityTranslations.Edit')" class="dropdown-item"
+														(click)="createOrEditNationalityTranslationModal.show(nationalityId,record.nationalityTranslation.id)">{{l('Edit')}}</a>												
+                                                </li>
+												<li>
+											        <a class="dropdown-item" href="javascript:;" *ngIf="permission.isGranted('Pages.NationalityTranslations.Delete')"
+														(click)="deleteNationalityTranslation(record.nationalityTranslation)">{{l('Delete')}}</a>
+												</li>
+                                            </ul>
+                                        </div>
+                                    </td>
+                                    <td style="width:150px">
+											<span class="ui-column-title"> {{l('TranslatedName')}}</span>
+											{{record.nationalityTranslation.translatedName}}
+										</td>
+                                    <td style="width:150px">
+											<span class="ui-column-title"> {{l('Language')}}</span>
+											{{record.nationalityTranslation.language}}
+										</td>
+
+                                </tr>
+                            </ng-template>
+                        </p-table>
+						<div class="primeng-no-data" *ngIf="primengTableHelper.totalRecordsCount == 0">
+                            {{l('NoData')}}
+                        </div>
+                        <div class="primeng-paging-container">
+                            <p-paginator [rows]="primengTableHelper.defaultRecordsCountPerPage"
+                                         #paginator
+                                         (onPageChange)="getNationalityTranslations($event)"
+                                         [totalRecords]="primengTableHelper.totalRecordsCount"
+                                         [rowsPerPageOptions]="primengTableHelper.predefinedRecordsCountPerPage">
+                            </p-paginator>
+                            <span class="total-records-count">
+                                {{l('TotalRecordsCount', primengTableHelper.totalRecordsCount)}}
+                            </span>
+                        </div>
+                    </div>
+                    <!--<Primeng-Datatable-End>-->
+                </div>
+            </div>
+        </div>
+    </div>
+    <masterDetailChild_Nationality_createOrEditNationalityTranslationModal #createOrEditNationalityTranslationModal (modalSave)="getNationalityTranslations()"></masterDetailChild_Nationality_createOrEditNationalityTranslationModal>    
+    <masterDetailChild_Nationality_viewNationalityTranslationModal #viewNationalityTranslationModal></masterDetailChild_Nationality_viewNationalityTranslationModal>
+    

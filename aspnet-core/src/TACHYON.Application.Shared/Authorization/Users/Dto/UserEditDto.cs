@@ -52,7 +52,7 @@ namespace TACHYON.Authorization.Users.Dto
         public virtual bool IsDriver { get; set; }
 
         public virtual string Address { get; set; }
-        public virtual string Nationality { get; set; }
+        public virtual int? NationalityId { get; set; }
         public virtual string ExperienceField { get; set; }
 
         public DateTime? DateOfBirth { get; set; }
