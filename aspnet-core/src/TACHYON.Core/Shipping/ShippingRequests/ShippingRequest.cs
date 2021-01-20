@@ -31,9 +31,6 @@ namespace TACHYON.Shipping.ShippingRequests
         public int TenantId { get; set; }
         [ForeignKey("TenantId")]
         public Tenant Tenant { get; set; }
-        public int RouteId { get; set; }
-        //public virtual decimal Vas { get; set; }
-
 
         /// <summary>
         /// when it is bidding shipping request
@@ -44,6 +41,8 @@ namespace TACHYON.Shipping.ShippingRequests
         /// when it is not bidding and it is Tachyon Deal
         /// </summary>
         public virtual bool IsTachyonDeal { get; set; }
+
+        public int RouteId { get; set; }
 
         [ForeignKey("RouteId")]
         public Route RouteFk { get; set; }
@@ -107,8 +106,6 @@ namespace TACHYON.Shipping.ShippingRequests
         [ForeignKey("GoodCategoryId")]
         public GoodCategory GoodCategoryFk { get; set; }
 
-        public string PackingType { get; set; }
-        public int NumberOfPackingType { get; set; }
         /// <summary>
         /// g-#409 
         /// </summary>
@@ -130,12 +127,6 @@ namespace TACHYON.Shipping.ShippingRequests
         [ForeignKey("AssignedTruckId")]
         public Truck AssignedTruckFk { get; set; }
 
-        /// <summary>
-        /// assigned Trailer
-        /// </summary>
-        public long? AssignedTrailerId { get; set; }
-        [ForeignKey("AssignedTrailerId")]
-        public Trailer AssignedTrailersFk { get; set; }
 
 
         // todo make sure those are nullable
@@ -146,15 +137,9 @@ namespace TACHYON.Shipping.ShippingRequests
 
         [ForeignKey("TransportTypeId")]
         public TransportType TransportTypeFk { get; set; }
-
-
         public virtual long TrucksTypeId { get; set; }
-
-
         [ForeignKey("TrucksTypeId")]
         public TrucksType TrucksTypeFk { get; set; }
-
-
 
         public virtual int? CapacityId { get; set; }
         [ForeignKey("CapacityId")]
@@ -174,7 +159,6 @@ namespace TACHYON.Shipping.ShippingRequests
 
         public ICollection<ShippingRequestBid> ShippingRequestBids { get; set; }
         #endregion
-
 
         public void Close()
         {

@@ -12,7 +12,7 @@ namespace TACHYON.Goods.GoodsDetails.Dtos
 
         public int TotalAmount { get; set; }
 
-        public string Weight { get; set; }
+        public double Weight { get; set; }
 
         public string Dimentions { get; set; }
 

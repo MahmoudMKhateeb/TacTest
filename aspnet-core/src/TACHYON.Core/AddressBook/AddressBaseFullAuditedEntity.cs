@@ -4,6 +4,7 @@ using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Text;
 using Abp.Domain.Entities.Auditing;
+using NetTopologySuite.Geometries;
 using TACHYON.Cities;
 using TACHYON.Countries;
 
@@ -27,5 +28,7 @@ namespace TACHYON.AddressBook
 
         [ForeignKey("CityId")]
         public City CityFk { get; set; }
+
+        public Point Location { get; set; }
     }
 }

@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using NetTopologySuite.Geometries;
 using TACHYON.EntityFrameworkCore;
@@ -10,9 +11,10 @@ using TACHYON.EntityFrameworkCore;
 namespace TACHYON.Migrations
 {
     [DbContext(typeof(TACHYONDbContext))]
-    partial class TACHYONDbContextModelSnapshot : ModelSnapshot
+    [Migration("20210120151524_Add_Point_TO_Facility_And_Point")]
+    partial class Add_Point_TO_Facility_And_Point
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -2291,12 +2293,6 @@ namespace TACHYON.Migrations
                     b.Property<long?>("LastModifierUserId")
                         .HasColumnType("bigint");
 
-                    b.Property<int>("NumberOfPacking")
-                        .HasColumnType("int");
-
-                    b.Property<string>("PackingType")
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<long>("ShippingRequestId")
                         .HasColumnType("bigint");
 
@@ -2309,8 +2305,9 @@ namespace TACHYON.Migrations
                     b.Property<int>("UnitOfMeasureId")
                         .HasColumnType("int");
 
-                    b.Property<double>("Weight")
-                        .HasColumnType("float")
+                    b.Property<string>("Weight")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(64)")
                         .HasMaxLength(64);
 
                     b.HasKey("Id");
@@ -3225,6 +3222,9 @@ namespace TACHYON.Migrations
                     b.Property<long?>("AssignedDriverUserId")
                         .HasColumnType("bigint");
 
+                    b.Property<long?>("AssignedTrailerId")
+                        .HasColumnType("bigint");
+
                     b.Property<long?>("AssignedTruckId")
                         .HasColumnType("bigint");
 
@@ -3285,6 +3285,12 @@ namespace TACHYON.Migrations
                     b.Property<int>("NumberOfDrops")
                         .HasColumnType("int");
 
+                    b.Property<int>("NumberOfPackingType")
+                        .HasColumnType("int");
+
+                    b.Property<string>("PackingType")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<decimal?>("Price")
                         .HasColumnType("decimal(18,2)");
 
@@ -3318,6 +3324,8 @@ namespace TACHYON.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("AssignedDriverUserId");
+
+                    b.HasIndex("AssignedTrailerId");
 
                     b.HasIndex("AssignedTruckId");
 
@@ -4667,6 +4675,10 @@ namespace TACHYON.Migrations
                     b.HasOne("TACHYON.Authorization.Users.User", "AssignedDriverUserFk")
                         .WithMany()
                         .HasForeignKey("AssignedDriverUserId");
+
+                    b.HasOne("TACHYON.Trailers.Trailer", "AssignedTrailersFk")
+                        .WithMany()
+                        .HasForeignKey("AssignedTrailerId");
 
                     b.HasOne("TACHYON.Trucks.Truck", "AssignedTruckFk")
                         .WithMany()

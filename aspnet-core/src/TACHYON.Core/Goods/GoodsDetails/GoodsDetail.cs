@@ -35,10 +35,10 @@ namespace TACHYON.Goods.GoodsDetails
         /// </summary>
         [Required]
         [StringLength(GoodsDetailConsts.MaxWeightLength, MinimumLength = GoodsDetailConsts.MinWeightLength)]
-        public virtual string Weight { get; set; }
+        public virtual double Weight { get; set; }
 
         [StringLength(GoodsDetailConsts.MaxDimentionsLength, MinimumLength = GoodsDetailConsts.MinDimentionsLength)]
-        public virtual string Dimentions { get; set; }
+        public virtual string Dimentions { get; set; } //todo  x y z 
 
         [Required]
         public virtual bool IsDangerousGood { get; set; }
@@ -63,7 +63,7 @@ namespace TACHYON.Goods.GoodsDetails
 
         [ForeignKey("UnitOfMeasureId")]
         public UnitOfMeasure UnitOfMeasureFk { get; set; }
-       // public string PackingType { get; set; }
+        // public string PackingType { get; set; }
         //public int NumberOfPackingType { get; set; }
 
         [Required]
@@ -71,6 +71,10 @@ namespace TACHYON.Goods.GoodsDetails
 
         [ForeignKey("ShippingRequestId")]
         public ShippingRequest ShippingRequestFk { get; set; }
+
+        public string PackingType { get; set; }
+        public int NumberOfPacking { get; set; }
+
 
     }
 }

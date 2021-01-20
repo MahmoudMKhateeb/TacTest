@@ -40,10 +40,10 @@ namespace TACHYON.Goods.GoodsDetails
             var filteredGoodsDetails = _goodsDetailRepository.GetAll()
                         .Include(e => e.GoodCategoryFk)
                         //.WhereIf(!string.IsNullOrWhiteSpace(input.Filter), e => false || e.Name.Contains(input.Filter) || e.Description.Contains(input.Filter) || e.Quantity.Contains(input.Filter) || e.Weight.Contains(input.Filter) || e.Dimentions.Contains(input.Filter) || e.DangerousGoodsCode.Contains(input.Filter))
-                       // .WhereIf(!string.IsNullOrWhiteSpace(input.NameFilter), e => e.Name == input.NameFilter)
+                        // .WhereIf(!string.IsNullOrWhiteSpace(input.NameFilter), e => e.Name == input.NameFilter)
                         .WhereIf(!string.IsNullOrWhiteSpace(input.DescriptionFilter), e => e.Description == input.DescriptionFilter)
-                        .WhereIf(input.QuantityFilter>0, e => e.TotalAmount == input.QuantityFilter)
-                        .WhereIf(!string.IsNullOrWhiteSpace(input.WeightFilter), e => e.Weight == input.WeightFilter)
+                        .WhereIf(input.QuantityFilter > 0, e => e.TotalAmount == input.QuantityFilter)
+                        .WhereIf(input.WeightFilter.HasValue, e => e.Weight == input.WeightFilter)
                         .WhereIf(!string.IsNullOrWhiteSpace(input.DimentionsFilter), e => e.Dimentions == input.DimentionsFilter)
                         .WhereIf(input.IsDangerousGoodFilter > -1, e => (input.IsDangerousGoodFilter == 1 && e.IsDangerousGood) || (input.IsDangerousGoodFilter == 0 && !e.IsDangerousGood))
                         .WhereIf(!string.IsNullOrWhiteSpace(input.DangerousGoodsCodeFilter), e => e.DangerousGoodsCode == input.DangerousGoodsCodeFilter)
@@ -61,7 +61,7 @@ namespace TACHYON.Goods.GoodsDetails
                                {
                                    GoodsDetail = new GoodsDetailDto
                                    {
-                                      // Name = o.Name,
+                                       // Name = o.Name,
                                        Description = o.Description,
                                        TotalAmount = o.TotalAmount,
                                        Weight = o.Weight,
@@ -161,7 +161,7 @@ namespace TACHYON.Goods.GoodsDetails
                         //.WhereIf(!string.IsNullOrWhiteSpace(input.NameFilter), e => e.Name == input.NameFilter)
                         .WhereIf(!string.IsNullOrWhiteSpace(input.DescriptionFilter), e => e.Description == input.DescriptionFilter)
                         .WhereIf(input.QuantityFilter > 0, e => e.TotalAmount == input.QuantityFilter)
-                        .WhereIf(!string.IsNullOrWhiteSpace(input.WeightFilter), e => e.Weight == input.WeightFilter)
+                        .WhereIf(input.WeightFilter.HasValue, e => e.Weight == input.WeightFilter)
                         .WhereIf(!string.IsNullOrWhiteSpace(input.DimentionsFilter), e => e.Dimentions == input.DimentionsFilter)
                         .WhereIf(input.IsDangerousGoodFilter > -1, e => (input.IsDangerousGoodFilter == 1 && e.IsDangerousGood) || (input.IsDangerousGoodFilter == 0 && !e.IsDangerousGood))
                         .WhereIf(!string.IsNullOrWhiteSpace(input.DangerousGoodsCodeFilter), e => e.DangerousGoodsCode == input.DangerousGoodsCodeFilter)

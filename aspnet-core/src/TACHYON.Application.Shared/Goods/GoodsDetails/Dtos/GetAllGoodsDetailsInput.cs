@@ -13,7 +13,7 @@ namespace TACHYON.Goods.GoodsDetails.Dtos
 
         public int QuantityFilter { get; set; }
 
-        public string WeightFilter { get; set; }
+        public double? WeightFilter { get; set; }
 
         public string DimentionsFilter { get; set; }
 
