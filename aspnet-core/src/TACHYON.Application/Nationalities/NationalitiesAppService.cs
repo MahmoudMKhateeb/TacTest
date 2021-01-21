@@ -15,7 +15,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace TACHYON.Nationalities
 {
-    [AbpAuthorize(AppPermissions.Pages_Nationalities)]
+    //[AbpAuthorize(AppPermissions.Pages_Nationalities)]
     public class NationalitiesAppService : TACHYONAppServiceBase, INationalitiesAppService
     {
         private readonly IRepository<Nationality> _nationalityRepository;
