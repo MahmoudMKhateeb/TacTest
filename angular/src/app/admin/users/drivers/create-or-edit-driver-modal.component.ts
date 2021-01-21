@@ -448,11 +448,11 @@ export class CreateOrEditDriverModalComponent extends AppComponentBase {
   //   console.log(this.datesInValidList);
   // }
 
-  isFileFormatIsInvalid(i: number): boolean {
+  isFileFormatValid(i: number): boolean {
     return this.fileFormateIsInvalideIndexList.every((x) => x !== i);
   }
   isFileDuplicate(i: number): boolean {
-    return this.fileisDuplicateList.every((x) => x !== i);
+    return !this.fileisDuplicateList.every((x) => x !== i);
   }
   isAllFileFormatValid(): boolean {
     return this.fileFormateIsInvalideIndexList?.length === 0;

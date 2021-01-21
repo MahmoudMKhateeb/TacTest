@@ -264,7 +264,7 @@
                       >
                     </div>
                     <span class="form-text text-muted">{{ 'ValidDocumentFilesMsg' | localize }}</span>
-                    <div *ngIf="isFileFormatIsInvalid(i)">
+                    <div *ngIf="!isFileFormatValid(i)">
                       <span class="form-text text-danger text-left">{{ 'PleaseChooseAvalidFormat' | localize }}</span>
                     </div>
                     <div *ngIf="isFileDuplicate(i)">
@@ -283,12 +283,19 @@
                       [minLength]="item.documentTypeDto.numberMinDigits"
                       type="text"
                       [(ngModel)]="item.number"
+                      [ngClass]="{
+                        'is-valid': inputDocumentNumber.valid,
+                        'is-invalid': userForm.submitted && !inputDocumentNumber.valid
+                      }"
                     />
                     <validation-messages [formCtrl]="inputDocumentNumber"></validation-messages>
-                    <span *ngIf="item.number == null ? 0 : item.number.length < item.documentTypeDto.numberMinDigits" class="text-danger">
+                    <span *ngIf="item.number == null ? 0 : item.number.length < item.documentTypeDto.numberMinDigits" class="form-text text-danger">
                       {{ l('TheNumberLengthMustBeMoreThanMinDigits') }}
                     </span>
-                    <span *ngIf="item.number == null ? false : item.number.length > item.documentTypeDto.numberMaxDigits" class="text-danger">
+                    <span
+                      *ngIf="item.number == null ? false : item.number.length > item.documentTypeDto.numberMaxDigits"
+                      class="form-text text-danger"
+                    >
                       {{ l('TheNumberLengthMustBeLessThanMaxDigits') }}
                     </span>
                     <span class="form-text text-muted"
