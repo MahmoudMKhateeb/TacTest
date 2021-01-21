@@ -33,35 +33,76 @@
                   <img src="{{ profilePicture }}" width="128" height="128" class="img-thumbnail img-rounded" />
                 </div>
                 <div class="col-sm-9">
-                  <div class="form-group">
-                    <label for="UserName">* {{ 'PhoneNumber' | localize }}</label>
-                    <div class="input-group">
-                      <div class="input-group-prepend">
-                        <span class="input-group-text">+966</span>
+                  <div class="row">
+                    <!--                    <div class="form-group col-6">-->
+                    <!--                      <label for="EmailAddress">{{ 'EmailAddress' | localize }} *</label>-->
+                    <!--                      <input-->
+                    <!--                        id="EmailAddress"-->
+                    <!--                        #emailAddressInput="ngModel"-->
+                    <!--                        type="email"-->
+                    <!--                        name="EmailAddress"-->
+                    <!--                        class="form-control"-->
+                    <!--                        [(ngModel)]="user.emailAddress"-->
+                    <!--                        required-->
+                    <!--                        (change)="removeWhiteSpacesFromEmail()"-->
+                    <!--                        maxlength="256"-->
+                    <!--                        email-->
+                    <!--                      />-->
+                    <!--                      <span *ngIf="!isEmailValid" class="form-text text-danger">{{ l('NotValid') }}</span>-->
+                    <!--                      <span *ngIf="!isEmailAvailable" class="form-text text-danger">{{ l('AlreadyTaken') }}</span>-->
+                    <!--                      <validation-messages [formCtrl]="emailAddressInput"></validation-messages>-->
+                    <!--                    </div>-->
+
+                    <div class="form-group col-6">
+                      <label for="UserName"><span class="text-danger">*</span> {{ 'PhoneNumber' | localize }}</label>
+                      <div class="input-group">
+                        <div class="input-group-prepend">
+                          <span class="input-group-text">+966</span>
+                        </div>
+                        <input
+                          (input)="CheckIfDriverPhoneNumberIsValid(userNameInput.value, user.id)"
+                          id="UserName"
+                          #userNameInput="ngModel"
+                          [disabled]="!canChangeUserName"
+                          name="UserName"
+                          pattern="^\d{9}$"
+                          maxlength="9"
+                          placeholder="{{ '9digitsNumber' | localize }}"
+                          type="tel"
+                          class="form-control"
+                          [(ngModel)]="user.userName"
+                          required
+                          [ngClass]="{
+                            'is-valid': !CheckingIfDriverPhoneNumberIsValid && isPhoneNumberAvilable && userNameInput.valid,
+                            'is-invalid':
+                              userForm.submitted && !CheckingIfDriverPhoneNumberIsValid && (!isPhoneNumberAvilable || !userNameInput.valid)
+                          }"
+                        />
+                        <div class="input-group-append">
+                          <span class="input-group-text">
+                            <i [ngClass]="{ 'fa-spin': CheckingIfDriverPhoneNumberIsValid }" class="flaticon-refresh"></i>
+                          </span>
+                        </div>
                       </div>
-                      <input
-                        (change)="CheckIfDriverPhoneNumberIsValid(userNameInput.value, user.id)"
-                        id="UserName"
-                        #userNameInput="ngModel"
-                        type="text"
-                        (keypress)="numberOnly($event)"
-                        [disabled]="!canChangeUserName"
-                        name="UserName"
-                        pattern="^\d{9}$"
-                        class="form-control"
-                        [(ngModel)]="user.userName"
-                        required
-                      />
+                      <validation-messages [formCtrl]="userNameInput"></validation-messages>
+                      <span
+                        *ngIf="!CheckingIfDriverPhoneNumberIsValid && userNameInput.valid && !isPhoneNumberAvilable"
+                        class="form-text text-danger"
+                        >{{ l('AlreadyTaken') }}</span
+                      >
+                      <span
+                        *ngIf="!CheckingIfDriverPhoneNumberIsValid && userNameInput.valid && isPhoneNumberAvilable"
+                        class="form-text text-success"
+                        >{{ l('Available') }}</span
+                      >
+                      <span class="help-block" *ngIf="!canChangeUserName">{{ 'CanNotChangeAdminUserName' | localize }}</span>
                     </div>
-                    <validation-messages [formCtrl]="userNameInput"></validation-messages>
-                    <span class="form-text text-muted">{{ '9digitsNumber' | localize }}</span>
-                    <span *ngIf="!isPhoneNumberAvilable" class="form-text text-danger">{{ l('AlreadyTaken') }}</span>
-                    <span class="help-block" *ngIf="!canChangeUserName">{{ 'CanNotChangeAdminUserName' | localize }}</span>
                   </div>
+
                   <div class="row">
                     <div class="col-6">
                       <div class="form-group">
-                        <label for="Name">* {{ 'Name' | localize }}</label>
+                        <label for="Name"><span class="text-danger">*</span> {{ 'Name' | localize }}</label>
                         <input
                           id="Name"
                           #nameInput="ngModel"
@@ -71,13 +112,17 @@
                           [(ngModel)]="user.name"
                           required
                           maxlength="64"
+                          [ngClass]="{
+                            'is-valid': nameInput.valid,
+                            'is-invalid': userForm.submitted && !nameInput.valid
+                          }"
                         />
                         <validation-messages [formCtrl]="nameInput"></validation-messages>
                       </div>
                     </div>
                     <div class="col-6">
                       <div class="form-group">
-                        <label for="Surname">* {{ 'Surname' | localize }}</label>
+                        <label for="Surname"><span class="text-danger">*</span> {{ 'Surname' | localize }}</label>
                         <input
                           id="Surname"
                           #surnameInput="ngModel"
@@ -87,6 +132,10 @@
                           [(ngModel)]="user.surname"
                           required
                           maxlength="64"
+                          [ngClass]="{
+                            'is-valid': surnameInput.valid,
+                            'is-invalid': userForm.submitted && !surnameInput.valid
+                          }"
                         />
                         <validation-messages [formCtrl]="surnameInput"></validation-messages>
                       </div>
@@ -98,7 +147,7 @@
               <div class="row">
                 <div class="col-6">
                   <div class="form-group">
-                    <label for="Nationality">* {{ 'Nationality' | localize }}</label>
+                    <label for="Nationality"><span class="text-danger">*</span> {{ 'Nationality' | localize }}</label>
                     <select
                       id="Nationality"
                       #Nationality="ngModel"
@@ -106,8 +155,12 @@
                       [(ngModel)]="user.nationalityId"
                       required
                       class="form-control form-control-lg custom-select mr-sm-2"
+                      [ngClass]="{
+                        'is-valid': Nationality.valid,
+                        'is-invalid': userForm.submitted && !Nationality.valid
+                      }"
                     >
-                      <option *ngFor="let nationality of nationalities" value="nationality.id">{{ nationality.displayName }}</option>
+                      <option *ngFor="let nationality of nationalities" [value]="nationality.id">{{ nationality.displayName }}</option>
                     </select>
                     <validation-messages [formCtrl]="Nationality"></validation-messages>
                   </div>
@@ -189,7 +242,7 @@
                 </label>
               </div>
             </tab>
-            <tab *ngIf="!user.id" class="pt-5" heading="{{ 'DriverDocuments' | localize }}">
+            <tab *ngIf="!user.id && createOrEditDocumentFileDtos?.length > 0" class="pt-5" heading="{{ 'DriverDocuments' | localize }}">
               <div *ngFor="let item of createOrEditDocumentFileDtos; index as i" class="">
                 <div *ngIf="i != 0" class="separator separator-dashed mb-5"></div>
                 <div class="row">
@@ -211,8 +264,11 @@
                       >
                     </div>
                     <span class="form-text text-muted">{{ 'ValidDocumentFilesMsg' | localize }}</span>
-                    <div *ngIf="fileFormateIsInvalideIndexList[i]">
+                    <div *ngIf="isFileFormatIsInvalid(i)">
                       <span class="form-text text-danger text-left">{{ 'PleaseChooseAvalidFormat' | localize }}</span>
+                    </div>
+                    <div *ngIf="isFileDuplicate(i)">
+                      <span class="form-text text-danger text-left">{{ 'DuplicateFileUploadMsg' | localize }}</span>
                     </div>
                   </div>
                   <div *ngIf="item.documentTypeDto.hasNumber" class="form-group col-6">
@@ -223,7 +279,6 @@
                       id="number{{ i }}"
                       class="form-control m-input"
                       required
-                      (change)="numberChange(item, i)"
                       [maxLength]="item.documentTypeDto.numberMaxDigits == 0 ? 50 : item.documentTypeDto.numberMaxDigits"
                       [minLength]="item.documentTypeDto.numberMinDigits"
                       type="text"
@@ -283,14 +338,7 @@
           <button [disabled]="saving" type="button" class="btn btn-light-primary font-weight-bold" (click)="close()">
             {{ 'Cancel' | localize }}
           </button>
-          <button
-            *ngIf="!user.id"
-            type="submit"
-            class="btn btn-save font-weight-bold"
-            [disabled]="!userForm.form.valid || !alldocumentsValid || !allnumbersValid || !allDatesValid || !alldocumentsNotDuplicated"
-            [buttonBusy]="saving"
-            [busyText]="l('SavingWithThreeDot')"
-          >
+          <button *ngIf="!user.id" type="submit" class="btn btn-save font-weight-bold" [buttonBusy]="saving" [busyText]="l('SavingWithThreeDot')">
             <i class="fa fa-save"></i> <span>{{ 'Save' | localize }}</span>
           </button>
           <button
