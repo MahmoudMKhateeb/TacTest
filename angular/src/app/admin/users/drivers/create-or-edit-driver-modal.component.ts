@@ -1,30 +1,28 @@
-import { AfterViewChecked, Component, ElementRef, EventEmitter, Injector, Input, Output, ViewChild } from '@angular/core';
+import { AfterViewInit, ChangeDetectorRef, Component, EventEmitter, Injector, Input, Output, ViewChild } from '@angular/core';
 import { AppConsts } from '@shared/AppConsts';
 import { AppComponentBase } from '@shared/common/app-component-base';
 import {
+  CreateOrEditDocumentFileDto,
   CreateOrUpdateUserInput,
+  DocumentFilesServiceProxy,
+  NationalitiesServiceProxy,
   OrganizationUnitDto,
   PasswordComplexitySetting,
   ProfileServiceProxy,
+  SelectItemDto,
   UserEditDto,
   UserRoleDto,
   UserServiceProxy,
-  CreateOrEditDocumentFileDto,
-  DocumentFilesServiceProxy,
-  UpdateDocumentFileInput,
-  SelectItemDto,
-  NationalitiesServiceProxy,
 } from '@shared/service-proxies/service-proxies';
 import { ModalDirective } from 'ngx-bootstrap/modal';
 import * as _ from 'lodash';
 import { finalize } from 'rxjs/operators';
-import { FileItem, FileUploader, FileUploaderOptions } from '@node_modules/ng2-file-upload';
-import { DateType } from '@app/shared/common/hijri-gregorian-datepicker/consts';
 import { DateFormatterService } from '@app/shared/common/hijri-gregorian-datepicker/date-formatter.service';
-import { IAjaxResponse, TokenService } from '@node_modules/abp-ng2-module';
 import { NgForm } from '@angular/forms';
+import { RequiredDocumentFormChildComponent } from '@app/shared/common/required-document-form-child/required-document-form-child.component';
 
 @Component({
+  //changeDetection: ChangeDetectionStrategy.Default,
   selector: 'createOrEditDriverModal',
   templateUrl: './create-or-edit-driver-modal.component.html',
   styleUrls: ['create-or-edit-driver-modal.component.less'],
@@ -33,6 +31,8 @@ import { NgForm } from '@angular/forms';
 export class CreateOrEditDriverModalComponent extends AppComponentBase {
   @ViewChild('createOrEditModal', { static: true }) modal: ModalDirective;
   @ViewChild('userForm', { static: false }) userForm: NgForm;
+  //@ViewChild(RequiredDocumentFormChildComponent) requiredDocumentFormChildComponent: RequiredDocumentFormChildComponent;
+  @ViewChild('requiredDocumentFormChildComponent', { static: false }) requiredDocumentFormChildComponent: RequiredDocumentFormChildComponent;
 
   @Output() modalSave: EventEmitter<any> = new EventEmitter<any>();
   @Input() creatDriver: boolean;
@@ -54,33 +54,8 @@ export class CreateOrEditDriverModalComponent extends AppComponentBase {
   profilePicture: string;
   createOrEditDocumentFileDtos!: CreateOrEditDocumentFileDto[];
   hasValidationErorr = false;
-  fileFormateIsInvalideIndexList: number[] = [];
-  fileisDuplicateList: number[] = [];
   datesInValidList: boolean[] = [];
 
-  todayGregorian = this.dateFormatterService.GetTodayGregorian();
-  todayHijri = this.dateFormatterService.ToHijri(this.todayGregorian);
-  /**
-   * required documents fileUploader options
-   * @private
-   */
-  private _DocsUploaderOptions: FileUploaderOptions = {};
-  /**
-   * required documents fileUploader
-   */
-  public DocsUploader: FileUploader;
-
-  /**
-   * DocFileUploader onProgressItem progress
-   */
-  docProgress: any;
-  /**
-   * DocFileUploader onProgressItem file name
-   */
-  docProgressFileName: any;
-
-  selectedDateTypeHijri = DateType.Hijri; // or DateType.Gregorian
-  selectedDateTypeGregorian = DateType.Gregorian; // or DateType.Gregorian
   nationalities: SelectItemDto[] = [];
   allOrganizationUnits: OrganizationUnitDto[];
   memberedOrganizationUnits: string[];
@@ -93,21 +68,18 @@ export class CreateOrEditDriverModalComponent extends AppComponentBase {
     injector: Injector,
     private _userService: UserServiceProxy,
     private _profileService: ProfileServiceProxy,
-    private _documentFilesServiceProxy: DocumentFilesServiceProxy,
-    private _tokenService: TokenService,
-    private _nationalitiesServiceProxy: NationalitiesServiceProxy
+    private _nationalitiesServiceProxy: NationalitiesServiceProxy,
+    private _documentFilesServiceProxy: DocumentFilesServiceProxy
   ) {
     super(injector);
+    //RequiredDocuments
+    this._documentFilesServiceProxy.getDriverRequiredDocumentFiles('').subscribe((result) => {
+      this.createOrEditDocumentFileDtos = result;
+    });
   }
 
   show(userId?: number): void {
     if (!userId) {
-      //RequiredDocuments
-      this._documentFilesServiceProxy.getDriverRequiredDocumentFiles('').subscribe((result) => {
-        this.createOrEditDocumentFileDtos = result;
-        this.intilizedates();
-      });
-
       this.active = true;
       this.setRandomPassword = true;
       this.sendActivationEmail = true;
@@ -139,7 +111,6 @@ export class CreateOrEditDriverModalComponent extends AppComponentBase {
         this.modal.show();
       });
     });
-    this.initDocsUploader();
   }
 
   onShown(): void {
@@ -149,7 +120,8 @@ export class CreateOrEditDriverModalComponent extends AppComponentBase {
   close(): void {
     this.active = false;
     this.userPasswordRepeat = '';
-    this.docProgress = 0;
+    //this.cdr.detectChanges();
+    //this.docProgress = 0;
     this.modal.hide();
   }
 
@@ -164,14 +136,14 @@ export class CreateOrEditDriverModalComponent extends AppComponentBase {
       return;
     }
 
-    if (!this.isAllFileFormatValid() || !this.isAllFileDuplicatePass()) {
-      this.notify.error(this.l('makeSureThatYouFillAllRequiredFields'));
-      return;
-    }
+    // if (!this.isAllFileFormatValid() || !this.isAllFileDuplicatePass()) {
+    //   this.notify.error(this.l('makeSureThatYouFillAllRequiredFields'));
+    //   return;
+    // }
 
     if (!this.user.id && this.user.isDriver) {
-      if (this.DocsUploader.queue?.length > 0) {
-        this.DocsUploader.uploadAll();
+      if (this.requiredDocumentFormChildComponent.DocsUploader.queue?.length > 0) {
+        this.requiredDocumentFormChildComponent.DocsUploader.uploadAll();
       } else {
         this.saveInternal();
       }
@@ -180,13 +152,19 @@ export class CreateOrEditDriverModalComponent extends AppComponentBase {
     }
   }
 
-  private saveInternal(): void {
+  public saveInternal(): void {
     let input = new CreateOrUpdateUserInput();
 
     input.user = this.user;
     input.setRandomPassword = this.setRandomPassword;
     input.sendActivationEmail = this.sendActivationEmail;
-    input.assignedRoleNames = _.map(_.filter(this.roles, { isAssigned: true, inheritedFromOrganizationUnit: false }), (role) => role.roleName);
+    input.assignedRoleNames = _.map(
+      _.filter(this.roles, {
+        isAssigned: true,
+        inheritedFromOrganizationUnit: false,
+      }),
+      (role) => role.roleName
+    );
     input.user.phoneNumber = input.user.userName;
     //#616
     input.user.emailAddress = input.user.userName + '@' + this.appSession.tenancyName + '.com';
@@ -263,106 +241,6 @@ export class CreateOrEditDriverModalComponent extends AppComponentBase {
     return _.filter(this.roles, { isAssigned: true }).length;
   }
 
-  DocFileChangeEvent(event: any, item: CreateOrEditDocumentFileDto, index: number): void {
-    item.extn = event.target.files[0].type;
-    item.name = event.target.files[0].name;
-
-    //size validation
-    if (event.target.files[0].size > 5242880) {
-      //5MB
-      this.message.warn(this.l('DocumentFile_Warn_SizeLimit', this.maxDocumentFileBytesUserFriendlyValue));
-      item.name = '';
-      return;
-    }
-
-    //extention validation
-    if (item.extn !== 'image/jpeg' && item.extn !== 'image/png' && item.extn !== 'application/pdf') {
-      this.fileFormateIsInvalideIndexList.push(index);
-      this.message.warn(this.l('PleaseChooseAvalidFormat'));
-      item.name = '';
-      return;
-    } else {
-      this.fileFormateIsInvalideIndexList = this.fileFormateIsInvalideIndexList.filter((x) => x !== index);
-    }
-
-    //not allow uploading the same document twice
-    for (let i = 0; i < this.createOrEditDocumentFileDtos.length; i++) {
-      const element = this.createOrEditDocumentFileDtos[i];
-      if (element.name === item.name && element.extn === item.extn && i !== index) {
-        item.name = '';
-        item.extn = '';
-        this.fileisDuplicateList.push(index);
-        this.message.warn(this.l('DuplicateFileUploadMsg', element.name, element.extn));
-        return;
-      } else {
-        //remove it if exist in validation list
-        this.fileisDuplicateList = this.fileisDuplicateList.filter((x) => x !== index);
-      }
-    }
-
-    this.DocsUploader.addToQueue(event.target.files);
-  }
-
-  /**
-   * initialize required documents fileUploader
-   */
-  initDocsUploader(): void {
-    this.DocsUploader = new FileUploader({ url: AppConsts.remoteServiceBaseUrl + '/Helper/UploadDocumentFile' });
-    this._DocsUploaderOptions.autoUpload = false;
-    this._DocsUploaderOptions.authToken = 'Bearer ' + this._tokenService.getToken();
-    this._DocsUploaderOptions.removeAfterUpload = true;
-
-    this.DocsUploader.onAfterAddingFile = (file) => {
-      file.withCredentials = false;
-    };
-
-    this.DocsUploader.onBuildItemForm = (fileItem: FileItem, form: any) => {
-      form.append('FileType', fileItem.file.type);
-      form.append('FileName', fileItem.file.name);
-      form.append('FileToken', this.guid());
-    };
-
-    this.DocsUploader.onSuccessItem = (item, response, status) => {
-      const resp = <IAjaxResponse>JSON.parse(response);
-
-      if (resp.success) {
-        //attach each fileToken to his CreateOrEditDocumentFileDto
-
-        this.createOrEditDocumentFileDtos.find(
-          (x) => x.name === item.file.name && x.extn === item.file.type
-        ).updateDocumentFileInput = new UpdateDocumentFileInput({ fileToken: resp.result.fileToken });
-      } else {
-        this.message.error(resp.error.message);
-      }
-    };
-
-    this.DocsUploader.onErrorItem = (item, response, status) => {
-      const resp = <IAjaxResponse>JSON.parse(response);
-    };
-
-    this.DocsUploader.onCompleteAll = () => {
-      this.saveInternal();
-    };
-
-    //for progressBar
-    this.DocsUploader.onProgressItem = (fileItem: FileItem, progress: any) => {
-      this.docProgress = progress;
-      this.docProgressFileName = fileItem.file.name;
-    };
-
-    this.DocsUploader.setOptions(this._DocsUploaderOptions);
-  }
-
-  guid(): string {
-    function s4() {
-      return Math.floor((1 + Math.random()) * 0x10000)
-        .toString(16)
-        .substring(1);
-    }
-
-    return s4() + s4() + '-' + s4() + '-' + s4() + '-' + s4() + '-' + s4() + s4() + s4();
-  }
-
   CheckIfDriverPhoneNumberIsValid(phoneNumber: string, id: number) {
     if (phoneNumber.trim().length === 9) {
       this.CheckingIfDriverPhoneNumberIsValid = true;
@@ -385,11 +263,13 @@ export class CreateOrEditDriverModalComponent extends AppComponentBase {
     }
     this.checkIfIsEmailAvailable();
   }
+
   checkIfIsEmailAvailable() {
     this._userService.checkIfEmailisAvailable(this.user.emailAddress).subscribe((result) => {
       this.isEmailAvailable = result;
     });
   }
+
   numberOnly(event): boolean {
     if (event.target.value.length >= 9) {
       return false;
@@ -412,14 +292,6 @@ export class CreateOrEditDriverModalComponent extends AppComponentBase {
   getDriverNationalites() {
     this._nationalitiesServiceProxy.getAllNationalityForDropdown().subscribe((res) => {
       this.nationalities = res;
-    });
-  }
-
-  intilizedates() {
-    this.createOrEditDocumentFileDtos.forEach((element) => {
-      if (element.documentTypeDto.hasExpirationDate) {
-        element.expirationDate = this.dateFormatterService.NgbDateStructToMoment(this.todayGregorian);
-      }
     });
   }
 
@@ -447,17 +319,4 @@ export class CreateOrEditDriverModalComponent extends AppComponentBase {
   //   console.log(this.datesInValidList.every((x) => x === false));
   //   console.log(this.datesInValidList);
   // }
-
-  isFileFormatValid(i: number): boolean {
-    return this.fileFormateIsInvalideIndexList.every((x) => x !== i);
-  }
-  isFileDuplicate(i: number): boolean {
-    return !this.fileisDuplicateList.every((x) => x !== i);
-  }
-  isAllFileFormatValid(): boolean {
-    return this.fileFormateIsInvalideIndexList?.length === 0;
-  }
-  isAllFileDuplicatePass(): boolean {
-    return this.fileisDuplicateList?.length === 0;
-  }
 }
