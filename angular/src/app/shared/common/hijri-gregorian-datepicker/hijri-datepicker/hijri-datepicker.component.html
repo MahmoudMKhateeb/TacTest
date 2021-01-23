@@ -3,7 +3,7 @@
     class="form-control hijriInput"
     #ngbDatepicker="ngModel"
     [ngClass]="{
-      'is-valid': ngbDatepicker.valid,
+      'is-valid': parentForm?.submitted && ngbDatepicker.valid,
       'is-invalid': parentForm?.submitted && ngbDatepicker.invalid
     }"
     [(ngModel)]="selectedDate"
