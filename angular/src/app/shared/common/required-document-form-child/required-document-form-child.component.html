@@ -2,7 +2,9 @@
   <div *ngIf="i != 0" class="separator separator-dashed mb-5"></div>
   <div class="row">
     <div class="form-group col-6">
-      <label class="text-success">* {{ item.documentTypeDto.name ? item.documentTypeDto.name : item.documentTypeDto.displayName }}</label>
+      <label class="text-primary"
+        ><span class="text-danger">*</span> {{ item.documentTypeDto.name ? item.documentTypeDto.name : item.documentTypeDto.displayName }}</label
+      >
       <div class="custom-file">
         <input
           accept="image/x-png,image/jpeg,application/pdf"
@@ -59,6 +61,7 @@
 
     <div *ngIf="item.documentTypeDto.hasExpirationDate" class="form-group col-6">
       <hijri-gregorian-datepicker-test
+        [parentForm]="parentForm"
         [label]="l('ExpirationDate')"
         class="m-input"
         [isRequired]="true"

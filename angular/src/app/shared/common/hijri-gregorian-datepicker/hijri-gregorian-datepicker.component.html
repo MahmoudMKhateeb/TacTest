@@ -7,7 +7,8 @@
         class="form-control"
         #ngbDatepicker="ngModel"
         [ngClass]="{
-          'is-invalid': ngbDatepicker.invalid
+          'is-valid': ngbDatepicker.valid,
+          'is-invalid': parentForm?.submitted && ngbDatepicker.invalid
         }"
         [placeholder]="placeHolder ? placeHolder : 'd/M/yyyy'"
         [name]="label"
@@ -27,6 +28,7 @@
     </ng-container>
 
     <hijri-date-picker
+      [parentForm]="parentForm"
       *ngIf="selectedDateType == DateType.Hijri"
       [(selectedDate)]="selectedDate"
       (selectedDateChange)="dateSelected()"
