@@ -73,7 +73,7 @@
                           [(ngModel)]="user.userName"
                           required
                           [ngClass]="{
-                            'is-valid': !CheckingIfDriverPhoneNumberIsValid && isPhoneNumberAvilable && userNameInput.valid,
+                            'is-valid': CheckingIfDriverPhoneNumberIsValid && isPhoneNumberAvilable && userNameInput.valid,
                             'is-invalid':
                               userForm.submitted && !CheckingIfDriverPhoneNumberIsValid && (!isPhoneNumberAvilable || !userNameInput.valid)
                           }"
@@ -113,7 +113,7 @@
                           required
                           maxlength="64"
                           [ngClass]="{
-                            'is-valid': nameInput.valid,
+                            'is-valid': userForm.submitted && nameInput.valid,
                             'is-invalid': userForm.submitted && !nameInput.valid
                           }"
                         />
@@ -133,7 +133,7 @@
                           required
                           maxlength="64"
                           [ngClass]="{
-                            'is-valid': surnameInput.valid,
+                            'is-valid': userForm.submitted && surnameInput.valid,
                             'is-invalid': userForm.submitted && !surnameInput.valid
                           }"
                         />
@@ -156,7 +156,7 @@
                       required
                       class="form-control form-control-lg custom-select mr-sm-2"
                       [ngClass]="{
-                        'is-valid': Nationality.valid,
+                        'is-valid': userForm.submitted && Nationality.valid,
                         'is-invalid': userForm.submitted && !Nationality.valid
                       }"
                     >
@@ -167,27 +167,37 @@
                 </div>
                 <div class="col-6">
                   <div class="form-group">
-                    <label for="DateOfBirth">{{ 'DateOfBirth' | localize }}</label>
-                    <div class="input-group date">
-                      <input
-                        type="datetime"
-                        id="DateOfBirth"
-                        #DateOfBirth
-                        name="DateOfBirth"
-                        class="form-control"
-                        bsDatepicker
-                        datePickerMomentModifier
-                        [(date)]="user.dateOfBirth"
-                        [bsConfig]="{ adaptivePosition: true }"
-                        readonly
-                        placeholder="Select date"
-                      />
-                      <div class="input-group-append">
-                        <span class="input-group-text">
-                          <i class="la la-calendar-check-o"></i>
-                        </span>
-                      </div>
-                    </div>
+                    <!--                    <label for="DateOfBirth">{{ 'DateOfBirth' | localize }}</label>-->
+                    <!--                    <div class="input-group date">-->
+                    <!--                      <input-->
+                    <!--                        type="datetime"-->
+                    <!--                        id="DateOfBirth"-->
+                    <!--                        #DateOfBirth-->
+                    <!--                        name="DateOfBirth"-->
+                    <!--                        class="form-control"-->
+                    <!--                        bsDatepicker-->
+                    <!--                        datePickerMomentModifier-->
+                    <!--                        [(date)]="user.dateOfBirth"-->
+                    <!--                        [bsConfig]="{ adaptivePosition: true }"-->
+                    <!--                        readonly-->
+                    <!--                        placeholder="Select date"-->
+                    <!--                      />-->
+                    <!--                      <div class="input-group-append">-->
+                    <!--                        <span class="input-group-text">-->
+                    <!--                          <i class="la la-calendar-check-o"></i>-->
+                    <!--                        </span>-->
+                    <!--                      </div>-->
+                    <!--                    </div>-->
+                    <hijri-gregorian-datepicker-test
+                      [parentForm]="userForm"
+                      [label]="l('dateOfBirth')"
+                      class="m-input"
+                      [isRequired]="true"
+                      [(selectedDate)]="selectedDate"
+                      [readonly]="true"
+                      (selectedDateChange)="dateOfBirthSelectedDateChange($event, user)"
+                    >
+                    </hijri-gregorian-datepicker-test>
                   </div>
                 </div>
 

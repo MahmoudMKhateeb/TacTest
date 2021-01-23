@@ -31,11 +31,13 @@ namespace TACHYON.Authorization.Users
 
         public virtual string Address { get; set; }
         public virtual int? NationalityId { get; set; }
-        
+
         [ForeignKey("NationalityId")]
         public virtual Nationality NationalityFk { get; set; }
         public virtual string ExperienceField { get; set; }
         public virtual DateTime? DateOfBirth { get; set; }
+        public string HijriDateOfBirth { get; set; }
+
         public User()
         {
             IsLockoutEnabled = true;

@@ -1,5 +1,5 @@
 <div class="form-group" provideParentForm>
-  <label class="requiredInput" *ngIf="showLabel">{{ label }} </label>
+  <label class="requiredInput" *ngIf="showLabel"> <span *ngIf="isRequired" class="text-danger">*</span> {{ label }} </label>
 
   <div class="input-group">
     <ng-container *ngIf="selectedDateType == DateType.Gregorian">
@@ -7,7 +7,7 @@
         class="form-control"
         #ngbDatepicker="ngModel"
         [ngClass]="{
-          'is-valid': ngbDatepicker.valid,
+          'is-valid': parentForm?.submitted && ngbDatepicker.valid,
           'is-invalid': parentForm?.submitted && ngbDatepicker.invalid
         }"
         [placeholder]="placeHolder ? placeHolder : 'd/M/yyyy'"

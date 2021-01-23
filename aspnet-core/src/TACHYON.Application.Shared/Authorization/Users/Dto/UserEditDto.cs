@@ -57,6 +57,9 @@ namespace TACHYON.Authorization.Users.Dto
 
         public DateTime? DateOfBirth { get; set; }
 
+        public string HijriDateOfBirth { get; set; }
+
+
 
         #endregion
     }

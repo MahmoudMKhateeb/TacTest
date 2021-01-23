@@ -20,6 +20,7 @@ import { finalize } from 'rxjs/operators';
 import { DateFormatterService } from '@app/shared/common/hijri-gregorian-datepicker/date-formatter.service';
 import { NgForm } from '@angular/forms';
 import { RequiredDocumentFormChildComponent } from '@app/shared/common/required-document-form-child/required-document-form-child.component';
+import { NgbDateStruct } from '@node_modules/@ng-bootstrap/ng-bootstrap';
 
 @Component({
   //changeDetection: ChangeDetectionStrategy.Default,
@@ -29,6 +30,16 @@ import { RequiredDocumentFormChildComponent } from '@app/shared/common/required-
   providers: [DateFormatterService],
 })
 export class CreateOrEditDriverModalComponent extends AppComponentBase {
+  constructor(
+    injector: Injector,
+    private _userService: UserServiceProxy,
+    private _profileService: ProfileServiceProxy,
+    private _nationalitiesServiceProxy: NationalitiesServiceProxy,
+    private _documentFilesServiceProxy: DocumentFilesServiceProxy
+  ) {
+    super(injector);
+    this.getDriverRequiredDocumentFiles();
+  }
   @ViewChild('createOrEditModal', { static: true }) modal: ModalDirective;
   @ViewChild('userForm', { static: false }) userForm: NgForm;
   //@ViewChild(RequiredDocumentFormChildComponent) requiredDocumentFormChildComponent: RequiredDocumentFormChildComponent;
@@ -64,16 +75,14 @@ export class CreateOrEditDriverModalComponent extends AppComponentBase {
   isWaintingUserNameValidation = false;
   CheckingIfDriverPhoneNumberIsValid = false;
 
-  constructor(
-    injector: Injector,
-    private _userService: UserServiceProxy,
-    private _profileService: ProfileServiceProxy,
-    private _nationalitiesServiceProxy: NationalitiesServiceProxy,
-    private _documentFilesServiceProxy: DocumentFilesServiceProxy
-  ) {
-    super(injector);
-    this.getDriverRequiredDocumentFiles();
-  }
+  // CheckIfDriverMobileNumberIsValid(mobileNumber: string) {
+  //   this.isWaintingUserNameValidation = true;
+  //   this._userService.checkIfPhoneNumberValid(mobileNumber, this.user.id).subscribe((res) => {
+  //     this.isWaintingUserNameValidation = false;
+  //     this.isPhoneNumberValid = res;
+  //   });
+  // }
+  selectedDate: NgbDateStruct;
 
   private getDriverRequiredDocumentFiles() {
     //RequiredDocuments
@@ -107,6 +116,7 @@ export class CreateOrEditDriverModalComponent extends AppComponentBase {
         }, 0);
 
         this.sendActivationEmail = false;
+        this.selectedDate = this.dateFormatterService.MomentToNgbDateStruct(userResult.user.dateOfBirth);
       }
 
       this._profileService.getPasswordComplexitySetting().subscribe((passwordComplexityResult) => {
@@ -126,8 +136,8 @@ export class CreateOrEditDriverModalComponent extends AppComponentBase {
     this.createOrEditDocumentFileDtos = [];
     this.active = false;
     this.userPasswordRepeat = '';
-    //this.cdr.detectChanges();
-    //this.docProgress = 0;
+    this.user = undefined;
+    this.selectedDate = undefined;
     this.modal.hide();
   }
 
@@ -177,9 +187,9 @@ export class CreateOrEditDriverModalComponent extends AppComponentBase {
 
     //docs
 
-    input.createOrEditDocumentFileDtos = this.createOrEditDocumentFileDtos;
-
     if (!this.user.id) {
+      input.createOrEditDocumentFileDtos = this.createOrEditDocumentFileDtos;
+
       input.createOrEditDocumentFileDtos.forEach((element) => {
         let date = this.dateFormatterService.MomentToNgbDateStruct(element.expirationDate);
         let hijriDate = this.dateFormatterService.ToHijri(date);
@@ -287,14 +297,6 @@ export class CreateOrEditDriverModalComponent extends AppComponentBase {
     return true;
   }
 
-  // CheckIfDriverMobileNumberIsValid(mobileNumber: string) {
-  //   this.isWaintingUserNameValidation = true;
-  //   this._userService.checkIfPhoneNumberValid(mobileNumber, this.user.id).subscribe((res) => {
-  //     this.isWaintingUserNameValidation = false;
-  //     this.isPhoneNumberValid = res;
-  //   });
-  // }
-
   getDriverNationalites() {
     this._nationalitiesServiceProxy.getAllNationalityForDropdown().subscribe((res) => {
       this.nationalities = res;
@@ -325,4 +327,18 @@ export class CreateOrEditDriverModalComponent extends AppComponentBase {
   //   console.log(this.datesInValidList.every((x) => x === false));
   //   console.log(this.datesInValidList);
   // }
+
+  dateOfBirthSelectedDateChange($event: NgbDateStruct, user: UserEditDto) {
+    if ($event != null && $event.year < 1900) {
+      const ngDate = this.dateFormatterService.ToGregorian($event);
+      user.dateOfBirth = this.dateFormatterService.NgbDateStructToMoment(ngDate);
+      user.hijriDateOfBirth = this.dateFormatterService.ToString($event);
+    } else if ($event != null && $event.year > 1900) {
+      user.dateOfBirth = this.dateFormatterService.NgbDateStructToMoment($event);
+      const ngDate = this.dateFormatterService.ToHijri($event);
+      user.hijriDateOfBirth = this.dateFormatterService.ToString(ngDate);
+    }
+
+    console.log(user.dateOfBirth, user.hijriDateOfBirth);
+  }
 }
