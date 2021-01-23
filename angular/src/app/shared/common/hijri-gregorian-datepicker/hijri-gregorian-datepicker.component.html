@@ -1,31 +1,30 @@
 <div class="form-group" provideParentForm>
-  <label class="requiredInput" *ngIf="showLabel" for="input-birth-Date">{{ label }} </label>
+  <label class="requiredInput" *ngIf="showLabel">{{ label }} </label>
 
   <div class="input-group">
-    <input
-      class="form-control"
-      [placeholder]="placeHolder ? placeHolder : 'd/M/yyyy'"
-      [name]="label"
-      *ngIf="selectedDateType == DateType.Gregorian"
-      [(ngModel)]="selectedDate"
-      ngbDatepicker
-      (click)="d.toggle()"
-      (dateSelect)="dateSelected()"
-      autocomplete="off"
-      [readonly]="readonly"
-      [minDate]="minGreg"
-      [maxDate]="maxGreg"
-      [required]="isRequired"
-      [disabled]="disabled"
-      [footerTemplate]="footerTemplate"
-      #d="ngbDatepicker"
-    />
-
-    <ng-template #footerTemplate>
-      <hr class="my-0" />
-      <button class="btn btn-secondary btn-sm m-2 float-right" type="button" (click)="close()">Close</button>
-      <button class="btn btn-primary btn-sm m-2 float-left" type="button" (click)="clear()">Clear</button>
-    </ng-template>
+    <ng-container *ngIf="selectedDateType == DateType.Gregorian">
+      <input
+        class="form-control"
+        #ngbDatepicker="ngModel"
+        [ngClass]="{
+          'is-invalid': ngbDatepicker.invalid
+        }"
+        [placeholder]="placeHolder ? placeHolder : 'd/M/yyyy'"
+        [name]="label"
+        [(ngModel)]="selectedDate"
+        ngbDatepicker
+        (click)="d.toggle()"
+        (dateSelect)="dateSelected()"
+        autocomplete="off"
+        [readonly]="readonly"
+        [minDate]="minGreg"
+        [maxDate]="maxGreg"
+        [required]="isRequired"
+        [disabled]="disabled"
+        [footerTemplate]="footerTemplate"
+        #d="ngbDatepicker"
+      />
+    </ng-container>
 
     <hijri-date-picker
       *ngIf="selectedDateType == DateType.Hijri"
@@ -41,26 +40,35 @@
       [disabled]="disabled"
     >
     </hijri-date-picker>
-
-    <div class="input-group-append">
-      <button
-        class="btn btn-sm btn-primary {{ selectedDateType == DateType.Hijri ? ' focus active' : 'btn-outline-primary' }}"
-        (click)="hijriClick()"
-        [disabled]="disabled"
-        type="button"
-        ذ
-      >
-        {{ hijriLabel ? hijriLabel : ('Hijri' | localize) }}
-      </button>
-      <button
-        class="btn btn-sm btn-primary {{ selectedDateType == DateType.Gregorian ? ' focus active' : 'btn-outline-primary' }}"
-        (click)="gregClick()"
-        [disabled]="disabled"
-        type="button"
-      >
-        {{ GregLabel ? GregLabel : ('Gregorian' | localize) }}
-      </button>
-    </div>
+    <ng-template [ngTemplateOutlet]="dateSwitshButtons"></ng-template>
   </div>
+
   <!--  <span class="form-text text-muted">{{ 'PleaseChooseDate' | localize }}</span>-->
 </div>
+
+<ng-template #dateSwitshButtons>
+  <div class="input-group-append">
+    <button
+      class="btn btn-sm btn-primary {{ selectedDateType == DateType.Hijri ? ' focus active' : 'btn-outline-primary' }}"
+      (click)="hijriClick()"
+      [disabled]="disabled"
+      type="button"
+    >
+      {{ hijriLabel ? hijriLabel : ('Hijri' | localize) }}
+    </button>
+    <button
+      class="btn btn-sm btn-primary {{ selectedDateType == DateType.Gregorian ? ' focus active' : 'btn-outline-primary' }}"
+      (click)="gregClick()"
+      [disabled]="disabled"
+      type="button"
+    >
+      {{ GregLabel ? GregLabel : ('Gregorian' | localize) }}
+    </button>
+  </div>
+</ng-template>
+
+<ng-template #footerTemplate>
+  <hr class="my-0" />
+  <button class="btn btn-secondary btn-sm m-2 float-right" type="button" (click)="close()">Close</button>
+  <button class="btn btn-primary btn-sm m-2 float-left" type="button" (click)="clear()">Clear</button>
+</ng-template>

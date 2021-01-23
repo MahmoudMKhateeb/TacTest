@@ -72,6 +72,10 @@ export class CreateOrEditDriverModalComponent extends AppComponentBase {
     private _documentFilesServiceProxy: DocumentFilesServiceProxy
   ) {
     super(injector);
+    this.getDriverRequiredDocumentFiles();
+  }
+
+  private getDriverRequiredDocumentFiles() {
     //RequiredDocuments
     this._documentFilesServiceProxy.getDriverRequiredDocumentFiles('').subscribe((result) => {
       this.createOrEditDocumentFileDtos = result;
@@ -114,10 +118,12 @@ export class CreateOrEditDriverModalComponent extends AppComponentBase {
   }
 
   onShown(): void {
+    this.getDriverRequiredDocumentFiles();
     document.getElementById('Name').focus();
   }
 
   close(): void {
+    this.createOrEditDocumentFileDtos = [];
     this.active = false;
     this.userPasswordRepeat = '';
     //this.cdr.detectChanges();

@@ -8,8 +8,12 @@
           accept="image/x-png,image/jpeg,application/pdf"
           (change)="DocFileChangeEvent($event, item, i)"
           type="file"
-          class="custom-file-input"
-          [required]="true"
+          class="custom-file-input is-valid"
+          required
+          [ngClass]="{
+            'is-valid': item?.name,
+            'is-invalid': parentForm.submitted && !item?.name
+          }"
         />
         <label class="custom-file-label text-truncate" [for]="item.documentTypeDto.displayName">
           {{ item.name ? item.name : l('Select') + l('File') }}</label
@@ -61,7 +65,7 @@
         [readonly]="true"
         [minGreg]="todayGregorian"
         [minHijri]="todayHijri"
-        [selectedDate]="item.documentTypeDto.hasHijriExpirationDate ? todayHijri : todayGregorian"
+        [selectedDate]="item.documentTypeDto.hasHijriExpirationDate"
         [selectedDateType]="item.documentTypeDto.hasHijriExpirationDate ? selectedDateTypeHijri : selectedDateTypeGregorian"
         (selectedDateChange)="hijriDatepickerSelectedDateChange($event, item)"
       >
