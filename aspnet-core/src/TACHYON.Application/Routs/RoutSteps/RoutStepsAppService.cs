@@ -61,25 +61,22 @@ namespace TACHYON.Routs.RoutSteps
                 //.Include(e => e.TrucksTypeFk)
                // .Include(e => e.TrailerTypeFk)
                 .Include(e => e.SourceRoutPointFk)
+                .ThenInclude(e=>e.FacilityFk)
                 .ThenInclude(e=>e.CityFk)
                 .Include(e => e.DestinationRoutPointFk)
-                .ThenInclude(e=>e.CityFk)
-                //.Include(e => e.DestinationCityFk)
+                .ThenInclude(e => e.FacilityFk)
+                .ThenInclude(e => e.CityFk)
                 .Where(e=>e.ShippingRequestId==input.ShippingRequestId)
                 //.WhereIf(!string.IsNullOrWhiteSpace(input.TrucksTypeDisplayNameFilter), e => e.TrucksTypeFk != null && e.TrucksTypeFk.DisplayName == input.TrucksTypeDisplayNameFilter)
                 //.WhereIf(!string.IsNullOrWhiteSpace(input.TrailerTypeDisplayNameFilter), e => e.TrailerTypeFk != null && e.TrailerTypeFk.DisplayName == input.TrailerTypeDisplayNameFilter)
                 //.WhereIf(!string.IsNullOrWhiteSpace(input.GoodsDetailNameFilter), e => e.GoodsDetailFk != null && e.GoodsDetailFk.Name == input.GoodsDetailNameFilter)
 
                 .WhereIf(!string.IsNullOrWhiteSpace(input.Filter), e => false || e.DisplayName.Contains(input.Filter))
-                   // e.SourceRoutPointFk.Latitude.Contains(input.Filter) || e.DestinationRoutPointFk.Latitude.Contains(input.Filter) ||
-                    //e.SourceRoutPointFk.Longitude.Contains(input.Filter) || e.DestinationRoutPointFk.Longitude.Contains(input.Filter))
                 .WhereIf(!string.IsNullOrWhiteSpace(input.DisplayNameFilter), e => e.DisplayName == input.DisplayNameFilter)
-                //.WhereIf(!string.IsNullOrWhiteSpace(input.LatitudeFilter), e => e.SourceRoutPointFk.Latitude == input.LatitudeFilter || e.DestinationRoutPointFk.Latitude==input.LatitudeFilter)
-                //.WhereIf(!string.IsNullOrWhiteSpace(input.LongitudeFilter), e => e.SourceRoutPointFk.Longitude == input.LongitudeFilter || e.DestinationRoutPointFk.Longitude==input.LongitudeFilter)
                 .WhereIf(input.MinOrderFilter != null, e => e.Order >= input.MinOrderFilter)
                 .WhereIf(input.MaxOrderFilter != null, e => e.Order <= input.MaxOrderFilter)
-                .WhereIf(!string.IsNullOrWhiteSpace(input.CityDisplayNameFilter), e =>  e.SourceRoutPointFk.CityFk.DisplayName == input.CityDisplayNameFilter)
-                .WhereIf(!string.IsNullOrWhiteSpace(input.CityDisplayName2Filter),e=>  e.DestinationRoutPointFk.CityFk.DisplayName == input.CityDisplayName2Filter);
+                .WhereIf(!string.IsNullOrWhiteSpace(input.CityDisplayNameFilter), e =>  e.SourceRoutPointFk.FacilityFk.CityFk.DisplayName == input.CityDisplayNameFilter)
+                .WhereIf(!string.IsNullOrWhiteSpace(input.CityDisplayName2Filter),e=>  e.DestinationRoutPointFk.FacilityFk.CityFk.DisplayName == input.CityDisplayName2Filter);
 
 
             var pagedAndFilteredRoutSteps = filteredRoutSteps
@@ -87,10 +84,10 @@ namespace TACHYON.Routs.RoutSteps
                 .PageBy(input);
 
             var routSteps = from o in pagedAndFilteredRoutSteps.ToList()
-                            join o1 in _lookup_cityRepository.GetAll() on o.SourceRoutPointFk.CityId equals o1.Id into j1
+                            join o1 in _lookup_cityRepository.GetAll() on o.SourceRoutPointFk.FacilityFk.CityId equals o1.Id into j1
                             from s1 in j1.DefaultIfEmpty()
 
-                            join o2 in _lookup_cityRepository.GetAll() on o.DestinationRoutPointFk.CityId equals o2.Id into j2
+                            join o2 in _lookup_cityRepository.GetAll() on o.DestinationRoutPointFk.FacilityFk.CityId equals o2.Id into j2
                             from s2 in j2.DefaultIfEmpty()
 
                             //join o4 in _lookup_trucksTypeRepository.GetAll() on o.TrucksTypeId equals o4.Id into j4
@@ -119,7 +116,7 @@ namespace TACHYON.Routs.RoutSteps
                                // GoodsDetailName = s6 == null || s6.Name == null ? "" : s6.Name.ToString(),
                                SourceRoutPointDto=new GetRoutPointForViewDto
                                {
-                                   CityName=o.SourceRoutPointFk.CityFk.DisplayName,
+                                   CityName=o.SourceRoutPointFk.FacilityFk.CityFk.DisplayName,
                                    FacilityName=o.SourceRoutPointFk.FacilityFk.Name,
                                    PickingTypeDisplayName=o.SourceRoutPointFk.PickingTypeFk.DisplayName,
                                    RoutPointDto=ObjectMapper.Map<RoutPointDto>(o.SourceRoutPointFk),
@@ -127,7 +124,7 @@ namespace TACHYON.Routs.RoutSteps
                                },
                                 DestinationRoutPointDto = new GetRoutPointForViewDto
                                 {
-                                    CityName = o.DestinationRoutPointFk.CityFk.DisplayName,
+                                    CityName = o.DestinationRoutPointFk.FacilityFk.CityFk.DisplayName,
                                     FacilityName = o.DestinationRoutPointFk.FacilityFk.Name,
                                     PickingTypeDisplayName = o.DestinationRoutPointFk.PickingTypeFk.DisplayName,
                                     RoutPointDto = ObjectMapper.Map<RoutPointDto>(o.DestinationRoutPointFk),

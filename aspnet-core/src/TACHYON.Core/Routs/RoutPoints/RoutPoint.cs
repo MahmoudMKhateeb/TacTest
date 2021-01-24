@@ -21,11 +21,6 @@ namespace TACHYON.Routs.RoutPoints
 
         [ForeignKey("TenantId")]
         public Tenant TenantFk { get; set; }
-        [Required]
-        public int CityId { get; set; }
-
-        [ForeignKey("CityId")]
-        public City CityFk { get; set; }
 
         /// <summary>
         /// pickup or droppoff or null

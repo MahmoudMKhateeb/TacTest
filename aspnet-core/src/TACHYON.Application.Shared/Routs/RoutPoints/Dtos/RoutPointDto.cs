@@ -11,8 +11,6 @@ namespace TACHYON.Routs.RoutPoints.Dtos
     {
         public string DisplayName { get; set; }
 
-        [Required]
-        public int CityId { get; set; }
         public int? PickingTypeId { get; set; }
 
         //[Required]

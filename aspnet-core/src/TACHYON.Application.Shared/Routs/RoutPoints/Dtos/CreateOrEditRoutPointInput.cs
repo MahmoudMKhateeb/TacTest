@@ -14,8 +14,6 @@ namespace TACHYON.Routs.RoutPoints.Dtos
         [RegularExpression(@"^(-?\d + (\.\d +)?),\s*(-?\d+(\.\d+)?)$")]
         public string Location { get; set; }
         public string DisplayName { get; set; }
-        [Required]
-        public int CityId { get; set; }
         public int? PickingTypeId { get; set; }
         [Required]
         public long FacilityId { get; set; }
