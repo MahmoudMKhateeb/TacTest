@@ -16,9 +16,10 @@ const momentHijri = moment_;
   templateUrl: './hijri-gregorian-datepicker.component.html',
 })
 export class HijriGregorianDatepickerComponent implements OnInit {
+  @Input() parentForm: NgForm;
   @ViewChild('d') datePicker: any;
 
-  @Input() selectedDateType: DateType;
+  @Input() selectedDateType: DateType = DateType.Gregorian;
   @Input() selectedDate: NgbDateStruct;
   @Output() selectedDateChange: EventEmitter<NgbDateStruct> = new EventEmitter();
 

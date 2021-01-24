@@ -54,6 +54,8 @@ import { HijriGregorianDatepickerComponent } from '@app/shared/common/hijri-greg
 import { HijriDatepickerComponent } from '@app/shared/common/hijri-gregorian-datepicker/hijri-datepicker/hijri-datepicker.component';
 import { NgbDateParserFormatter, NgbModule } from '@node_modules/@ng-bootstrap/ng-bootstrap';
 import { CustomNgbDateParserFormatter } from '@app/shared/common/hijri-gregorian-datepicker/CustomNgbDateParserFormatter';
+import { RequiredDocumentFormChildComponent } from './required-document-form-child/required-document-form-child.component';
+import { FileUploadModule } from '@node_modules/primeng';
 
 @NgModule({
   imports: [
@@ -75,6 +77,7 @@ import { CustomNgbDateParserFormatter } from '@app/shared/common/hijri-gregorian
     AppBsModalModule,
     AutoCompleteModule,
     NgbModule,
+    FileUploadModule,
   ],
   declarations: [
     TimeZoneComboComponent,
@@ -107,6 +110,7 @@ import { CustomNgbDateParserFormatter } from '@app/shared/common/hijri-gregorian
     SubHeaderComponent,
     HijriGregorianDatepickerComponent,
     HijriDatepickerComponent,
+    RequiredDocumentFormChildComponent,
   ],
   exports: [
     TimeZoneComboComponent,
@@ -121,6 +125,7 @@ import { CustomNgbDateParserFormatter } from '@app/shared/common/hijri-gregorian
     KeyValueListManagerComponent,
     SubHeaderComponent,
     HijriGregorianDatepickerComponent,
+    RequiredDocumentFormChildComponent,
   ],
   providers: [
     DateTimeService,

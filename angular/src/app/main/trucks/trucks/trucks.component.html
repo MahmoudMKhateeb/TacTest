@@ -198,8 +198,8 @@
               >
                 <ng-template pTemplate="header">
                   <tr>
-                    <th style="width: 130px;" [hidden]="!isGrantedAny('Pages.Trucks.Edit', 'Pages.Trucks.Delete')">{{ l('Actions') }}</th>
-                    <th style="width: 150px;" pSortableColumn="plateNumber">
+                    <th [hidden]="!isGrantedAny('Pages.Trucks.Edit', 'Pages.Trucks.Delete')">{{ l('Actions') }}</th>
+                    <th pSortableColumn="plateNumber">
                       {{ l('PlateNumber') }}
                       <p-sortIcon field="plateNumber"></p-sortIcon>
                     </th>
@@ -207,27 +207,27 @@
                       {{ l('ID') }}
                       <p-sortIcon field="truckId"></p-sortIcon>
                     </th> -->
-                    <th style="width: 500px;" pSortableColumn="trucksTypeFk.displayName">
+                    <th pSortableColumn="trucksTypeFk.displayName">
                       {{ l('TruckType') }}
                       <p-sortIcon field="truckStatusDisplayName"></p-sortIcon>
                     </th>
-                    <th style="width: 150px;" pSortableColumn="truckStatusFk.displayName">
+                    <th pSortableColumn="truckStatusFk.displayName">
                       {{ l('Status') }}
                       <p-sortIcon field="truckStatus"></p-sortIcon>
                     </th>
-                    <th style="width: 150px;" pSortableColumn="modelName">
+                    <th pSortableColumn="modelName">
                       {{ l('ModelName') }}
                       <p-sortIcon field="truck.modelName"></p-sortIcon>
                     </th>
-                    <th style="width: 150px;" pSortableColumn="modelYear">
+                    <th pSortableColumn="modelYear">
                       {{ l('ModelYear') }}
                       <p-sortIcon field="truck.modelYear"></p-sortIcon>
                     </th>
-                    <th style="width: 150px;" pSortableColumn="capacity">
+                    <th pSortableColumn="capacity">
                       {{ l('Capacity') }}
                       <p-sortIcon field="truck.capacity"></p-sortIcon>
                     </th>
-                    <th style="width: 150px;" pSortableColumn="Length">
+                    <th pSortableColumn="Length">
                       {{ l('Length') }}
                       <p-sortIcon field="truck.length"></p-sortIcon>
                     </th>
@@ -247,7 +247,7 @@
                 </ng-template>
                 <ng-template pTemplate="body" let-record="$implicit">
                   <tr>
-                    <td style="width: 130px;" [hidden]="!isGrantedAny('Pages.Trucks.Edit', 'Pages.Trucks.Delete')">
+                    <td [hidden]="!isGrantedAny('Pages.Trucks.Edit', 'Pages.Trucks.Delete')">
                       <div class="btn-group dropdown" dropdown container="body">
                         <div class="row ml-1">
                           <i
@@ -296,7 +296,7 @@
                         </ul>
                       </div>
                     </td>
-                    <td style="width: 150px;">
+                    <td>
                       <span class="ui-column-title"> {{ l('PlateNumber') }}</span>
                       {{ record.truck.plateNumber }}
                     </td>
@@ -304,27 +304,27 @@
                       <span class="ui-column-title"> {{ l('ID') }}</span>
                       {{ record.truck.id }}
                     </td> -->
-                    <td style="width: 500px;">
+                    <td>
                       <span class="ui-column-title"> {{ l('TruckType') }}</span>
                       {{ record.trucksTypeDisplayName }}
                     </td>
-                    <td style="width: 150px;">
+                    <td>
                       <span class="ui-column-title"> {{ l('Status') }}</span>
                       {{ record.truckStatusDisplayName }}
                     </td>
-                    <td style="width: 150px;">
+                    <td>
                       <span class="ui-column-title"> {{ l('ModelName') }}</span>
                       {{ record.truck.modelName }}
                     </td>
-                    <td style="width: 150px;">
+                    <td>
                       <span class="ui-column-title"> {{ l('ModelYear') }}</span>
                       {{ record.truck.modelYear }}
                     </td>
-                    <td style="width: 150px;">
+                    <td>
                       <span class="ui-column-title"> {{ l('Capacity') }}</span>
                       {{ record.truck.capacity }}
                     </td>
-                    <td style="width: 150px;">
+                    <td>
                       <span class="ui-column-title"> {{ l('Length') }}</span>
                       {{ record.truck.length }}
                     </td>

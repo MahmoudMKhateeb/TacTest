@@ -14,6 +14,7 @@ import { ControlContainer, NgForm } from '@angular/forms';
   encapsulation: ViewEncapsulation.None,
 })
 export class HijriDatepickerComponent {
+  @Input() parentForm: NgForm;
   @ViewChild('d') datePicker: any;
 
   @Input() selectedDate: NgbDateStruct;
