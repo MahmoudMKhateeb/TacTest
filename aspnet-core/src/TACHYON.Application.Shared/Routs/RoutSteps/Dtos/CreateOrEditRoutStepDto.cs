@@ -23,7 +23,7 @@ namespace TACHYON.Routs.RoutSteps.Dtos
         public long AssignedDriverUserId { get; set; }
 
         [Required]
-        public Guid AssignedTruckId { get; set; }
+        public long AssignedTruckId { get; set; }
 
         public long? AssignedTrailerId { get; set; }
         public long? TrucksTypeId { get; set; }
