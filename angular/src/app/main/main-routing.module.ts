@@ -1,5 +1,6 @@
 ﻿import { NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
+import { TruckStatusesTranslationsComponent } from './truckStatusesTranslations/truckStatusesTranslations/truckStatusesTranslations.component';
 import { NationalitiesComponent } from './nationalities/nationalities/nationalities.component';
 import { NationalityTranslationsComponent } from './nationalitiesTranslation/nationalityTranslations/nationalityTranslations.component';
 import { TransportTypesTranslationsComponent } from './transportTypesTranslations/transportTypesTranslations/transportTypesTranslations.component';
@@ -42,6 +43,7 @@ import { MarketplaceComponent } from '@app/main/marketPlace/marketPlace/marketpl
       {
         path: '',
         children: [
+                    { path: 'truckStatusesTranslations/truckStatusesTranslations', component: TruckStatusesTranslationsComponent, data: { permission: 'Pages.TruckStatusesTranslations' }  },
                     { path: 'nationalities/nationalities', component: NationalitiesComponent, data: { permission: 'Pages.Nationalities' }  },
                     { path: 'nationalitiesTranslation/nationalityTranslations', component: NationalityTranslationsComponent, data: { permission: 'Pages.NationalityTranslations' }  },
                     { path: 'transportTypesTranslations/transportTypesTranslations', component: TransportTypesTranslationsComponent, data: { permission: 'Pages.TransportTypesTranslations' }  },

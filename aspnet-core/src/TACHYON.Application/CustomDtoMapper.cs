@@ -1,4 +1,6 @@
-﻿using TACHYON.Nationalities.Dtos;
+﻿using TACHYON.Trucks.TruckStatusesTranslations.Dtos;
+using TACHYON.Trucks.TruckStatusesTranslations;
+using TACHYON.Nationalities.Dtos;
 using TACHYON.Nationalities;
 using TACHYON.Nationalities.NationalitiesTranslation.Dtos;
 using TACHYON.Nationalities.NationalitiesTranslation;
@@ -142,6 +144,8 @@ namespace TACHYON
     {
         public static void CreateMappings(IMapperConfigurationExpression configuration)
         {
+            configuration.CreateMap<CreateOrEditTruckStatusesTranslationDto, TruckStatusesTranslation>().ReverseMap();
+            configuration.CreateMap<TruckStatusesTranslationDto, TruckStatusesTranslation>().ReverseMap();
             configuration.CreateMap<CreateOrEditNationalityDto, Nationality>().ReverseMap();
             configuration.CreateMap<NationalityDto, Nationality>().ReverseMap();
             configuration.CreateMap<CreateOrEditNationalityTranslationDto, NationalityTranslation>().ReverseMap();
@@ -365,6 +369,16 @@ namespace TACHYON
                   .EntityMap
                   .ForMember(dst => dst.Id, opt => opt.MapFrom(src => src.Id.ToString()))
                   .ReverseMap();
+
+            configuration.CreateMultiLingualMap<TruckStatus, long, TruckStatusesTranslation, TruckStatusDto>(context)
+                .EntityMap
+                .ReverseMap();
+
+            // goto:#Map_TruckStatus_TruckStatusSelectItemDto
+            configuration.CreateMultiLingualMap<TruckStatus, long, TruckStatusesTranslation, TruckStatusSelectItemDto>(context)
+                .EntityMap
+                .ForMember(dst => dst.Id, opt => opt.MapFrom(src => src.Id.ToString()))
+                .ReverseMap();
         }
     }
 }

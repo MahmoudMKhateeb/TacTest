@@ -1,4 +1,5 @@
-﻿using TACHYON.Nationalities;
+﻿using TACHYON.Trucks.TruckStatusesTranslations;
+using TACHYON.Nationalities;
 using TACHYON.Nationalities.NationalitiesTranslation;
 using TACHYON.Trucks.TruckCategories.TransportTypes.TransportTypesTranslations;
 using TACHYON.Vases;
@@ -53,6 +54,8 @@ namespace TACHYON.EntityFrameworkCore
 {
     public class TACHYONDbContext : AbpZeroDbContext<Tenant, Role, User, TACHYONDbContext>, IAbpPersistedGrantDbContext
     {
+        public virtual DbSet<TruckStatusesTranslation> TruckStatusesTranslations { get; set; }
+
         public virtual DbSet<Nationality> Nationalities { get; set; }
 
         public virtual DbSet<NationalityTranslation> NationalityTranslations { get; set; }

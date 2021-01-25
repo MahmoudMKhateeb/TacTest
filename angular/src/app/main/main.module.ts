@@ -2,6 +2,10 @@
 import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { AppCommonModule } from '@app/shared/common/app-common.module';
+import { TruckStatusesTranslationsComponent } from './truckStatusesTranslations/truckStatusesTranslations/truckStatusesTranslations.component';
+import { ViewTruckStatusesTranslationModalComponent } from './truckStatusesTranslations/truckStatusesTranslations/view-truckStatusesTranslation-modal.component';
+import { CreateOrEditTruckStatusesTranslationModalComponent } from './truckStatusesTranslations/truckStatusesTranslations/create-or-edit-truckStatusesTranslation-modal.component';
+
 import { NationalitiesComponent } from './nationalities/nationalities/nationalities.component';
 import { ViewNationalityModalComponent } from './nationalities/nationalities/view-nationality-modal.component';
 import { CreateOrEditNationalityModalComponent } from './nationalities/nationalities/create-or-edit-nationality-modal.component';
@@ -190,6 +194,10 @@ NgxBootstrapDatePickerConfigService.registerNgxBootstrapDatePickerLocales();
     AdminModule,
   ],
   declarations: [
+		TruckStatusesTranslationsComponent,
+
+		ViewTruckStatusesTranslationModalComponent,
+		CreateOrEditTruckStatusesTranslationModalComponent,
 		NationalitiesComponent,
 
 		ViewNationalityModalComponent,

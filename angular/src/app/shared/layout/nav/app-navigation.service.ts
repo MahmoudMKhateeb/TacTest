@@ -120,6 +120,7 @@ export class AppNavigationService {
             ]
           ),
           new AppMenuItem('TruckStatuses', 'Pages.Administration.TruckStatuses', 'flaticon-info', '/app/admin/trucks/truckStatuses'),
+          new AppMenuItem('TruckStatusesTranslations', 'Pages.TruckStatusesTranslations', 'flaticon-more', '/app/main/truckStatusesTranslations/truckStatusesTranslations'),
           // new AppMenuItem('PickingTypes', 'Pages.PickingTypes', 'flaticon2-telegram-logo', '/app/main/pickingTypes/pickingTypes'),
           // new AppMenuItem('TrailerTypes', 'Pages.TrailerTypes', 'flaticon2-delivery-truck', '/app/main/trailerTypes/trailerTypes'),
           // new AppMenuItem('PayloadMaxWeights', 'Pages.PayloadMaxWeights', 'flaticon2-download-1', '/app/main/payloadMaxWeight/payloadMaxWeights'),
