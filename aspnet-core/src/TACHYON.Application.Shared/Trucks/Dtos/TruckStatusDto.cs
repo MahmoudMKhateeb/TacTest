@@ -8,7 +8,6 @@ namespace TACHYON.Trucks.Dtos
     {
         public string DisplayName { get; set; }
 
-
-
+        public string TranslatedDisplayName { get; set; }
     }
 }

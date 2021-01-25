@@ -27,6 +27,11 @@
         public const string Pages_ShippingTypes_Edit = "Pages.ShippingTypes.Edit";
         public const string Pages_ShippingTypes_Delete = "Pages.ShippingTypes.Delete";
 
+        public const string Pages_TruckStatusesTranslations = "Pages.TruckStatusesTranslations";
+        public const string Pages_TruckStatusesTranslations_Create = "Pages.TruckStatusesTranslations.Create";
+        public const string Pages_TruckStatusesTranslations_Edit = "Pages.TruckStatusesTranslations.Edit";
+        public const string Pages_TruckStatusesTranslations_Delete = "Pages.TruckStatusesTranslations.Delete";
+
         public const string Pages_Nationalities = "Pages.Nationalities";
         public const string Pages_Nationalities_Create = "Pages.Nationalities.Create";
         public const string Pages_Nationalities_Edit = "Pages.Nationalities.Edit";

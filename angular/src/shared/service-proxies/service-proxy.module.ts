@@ -8,6 +8,10 @@ import { ShippingRequestBidsServiceProxy, ShippingRequestsTripServiceProxy } fro
 
 @NgModule({
   providers: [
+        ApiServiceProxies.TruckStatusesTranslationsServiceProxy,        
+        ApiServiceProxies.NationalitiesServiceProxy,        
+        ApiServiceProxies.NationalityTranslationsServiceProxy,        
+        ApiServiceProxies.TransportTypesTranslationsServiceProxy,        
     ApiServiceProxies.TripStatusesServiceProxy,
     ApiServiceProxies.PackingTypesServiceProxy,
     ApiServiceProxies.ShippingTypesServiceProxy,

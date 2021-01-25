@@ -30,6 +30,11 @@ namespace TACHYON.Authorization
 
             var pages = context.GetPermissionOrNull(AppPermissions.Pages) ?? context.CreatePermission(AppPermissions.Pages, L("Pages"));
 
+            var truckStatusesTranslations = pages.CreateChildPermission(AppPermissions.Pages_TruckStatusesTranslations, L("TruckStatusesTranslations"), multiTenancySides: MultiTenancySides.Host);
+            truckStatusesTranslations.CreateChildPermission(AppPermissions.Pages_TruckStatusesTranslations_Create, L("CreateNewTruckStatusesTranslation"), multiTenancySides: MultiTenancySides.Host);
+            truckStatusesTranslations.CreateChildPermission(AppPermissions.Pages_TruckStatusesTranslations_Edit, L("EditTruckStatusesTranslation"), multiTenancySides: MultiTenancySides.Host);
+            truckStatusesTranslations.CreateChildPermission(AppPermissions.Pages_TruckStatusesTranslations_Delete, L("DeleteTruckStatusesTranslation"), multiTenancySides: MultiTenancySides.Host);
+
             var tripStatuses = pages.CreateChildPermission(AppPermissions.Pages_TripStatuses, L("TripStatuses"), multiTenancySides: MultiTenancySides.Host);
             tripStatuses.CreateChildPermission(AppPermissions.Pages_TripStatuses_Create, L("CreateNewTripStatus"), multiTenancySides: MultiTenancySides.Host);
             tripStatuses.CreateChildPermission(AppPermissions.Pages_TripStatuses_Edit, L("EditTripStatus"), multiTenancySides: MultiTenancySides.Host);

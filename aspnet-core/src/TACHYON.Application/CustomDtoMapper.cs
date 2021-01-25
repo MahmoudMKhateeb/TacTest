@@ -1,3 +1,35 @@
+﻿using TACHYON.Trucks.TruckStatusesTranslations.Dtos;
+using TACHYON.Trucks.TruckStatusesTranslations;
+using TACHYON.Nationalities.Dtos;
+using TACHYON.Nationalities;
+using TACHYON.Nationalities.NationalitiesTranslation.Dtos;
+using TACHYON.Nationalities.NationalitiesTranslation;
+using TACHYON.Trucks.TruckCategories.TransportTypes.TransportTypesTranslations.Dtos;
+using TACHYON.Trucks.TruckCategories.TransportTypes.TransportTypesTranslations;
+using TACHYON.ShippingRequestVases.Dtos;
+using TACHYON.ShippingRequestVases;
+using TACHYON.Vases.Dtos;
+using TACHYON.Vases;
+using TACHYON.TermsAndConditions;
+using TACHYON.TermsAndConditions.Dtos;
+using TACHYON.Trucks.TruckCategories.TruckCapacities;
+using TACHYON.Trucks.TruckCategories.TransportTypes.Dtos;
+using TACHYON.Trucks.TruckCategories.TransportTypes;
+using TACHYON.Documents.DocumentTypeTranslations.Dtos;
+using TACHYON.Documents.DocumentTypeTranslations;
+using TACHYON.Documents.DocumentsEntities.Dtos;
+using TACHYON.Documents.DocumentsEntities;
+using TACHYON.Shipping.ShippingRequestStatuses.Dtos;
+using TACHYON.Shipping.ShippingRequestStatuses;
+using TACHYON.PickingTypes.Dtos;
+using TACHYON.PickingTypes;
+using TACHYON.AddressBook.Ports.Dtos;
+using TACHYON.AddressBook.Ports;
+using TACHYON.UnitOfMeasures.Dtos;
+using TACHYON.UnitOfMeasures;
+using TACHYON.AddressBook.Dtos;
+using TACHYON.AddressBook;
+using Abp.Application.Editions;
 ﻿using Abp.Application.Editions;
 using Abp.Application.Features;
 using Abp.Auditing;
@@ -138,6 +170,8 @@ namespace TACHYON
         }
         public static void CreateMappings(IMapperConfigurationExpression configuration)
         {
+            configuration.CreateMap<CreateOrEditTruckStatusesTranslationDto, TruckStatusesTranslation>().ReverseMap();
+            configuration.CreateMap<TruckStatusesTranslationDto, TruckStatusesTranslation>().ReverseMap();
             #region Trips
                 configuration.CreateMap<CreateOrEditTripStatusDto, TripStatus>().ReverseMap();
                 configuration.CreateMap<TripStatusDto, TripStatus>().ReverseMap();
@@ -454,6 +488,16 @@ namespace TACHYON
                   .EntityMap
                   .ForMember(dst => dst.Id, opt => opt.MapFrom(src => src.Id.ToString()))
                   .ReverseMap();
+
+            configuration.CreateMultiLingualMap<TruckStatus, long, TruckStatusesTranslation, TruckStatusDto>(context)
+                .EntityMap
+                .ReverseMap();
+
+            // goto:#Map_TruckStatus_TruckStatusSelectItemDto
+            configuration.CreateMultiLingualMap<TruckStatus, long, TruckStatusesTranslation, TruckStatusSelectItemDto>(context)
+                .EntityMap
+                .ForMember(dst => dst.Id, opt => opt.MapFrom(src => src.Id.ToString()))
+                .ReverseMap();
         }
 
         private static void AddOrUpdateShippingRequest(CreateOrEditShippingRequestDto dto, ShippingRequest Request)
