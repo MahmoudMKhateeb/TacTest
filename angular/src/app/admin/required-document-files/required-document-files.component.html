@@ -52,20 +52,10 @@
                   <tr>
                     <td style="width: 130px;">
                       <div class="btn-group dropdown" dropdown container="body">
-                        <!--                        <i-->
-                        <!--                          *ngIf="record.expirationDate < today"-->
-                        <!--                          class="flaticon2-information text-warning"-->
-                        <!--                          style="padding: 3px;"-->
-                        <!--                          data-toggle="tooltip"-->
-                        <!--                          title="DocumnetIsExpired"-->
-                        <!--                        ></i>-->
                         <button class="dropdown-toggle btn btn-sm btn-primary" dropdownToggle>
                           <i class="fa fa-cog"></i><span class="caret"></span> {{ l('Actions') }}
                         </button>
                         <ul class="dropdown-menu" *dropdownMenu>
-                          <!-- <li>
-                                                  <a href="javascript:;" class="dropdown-item">{{ l('View') }}</a>
-                                                </li> -->
                           <li *ngIf="!record.isAccepted || record.expirationDate <= todayMoment">
                             <a
                               href="javascript:;"
@@ -100,36 +90,37 @@
 
                     <td style="width: 150px;">
                       <span class="ui-column-title"></span>
-                      <div
-                        *ngIf="
-                          record.isAccepted && !record.isRejected && (record.expirationDate != null ? record.expirationDate > todayMoment : true)
-                        "
-                      >
-                        <span class="label label-lg font-weight-bold label-light-success label-inline">
+                      <div>
+                        <span
+                          *ngIf="record.isAccepted && !record.isRejected"
+                          class="label mr-3 label-lg font-weight-bold label-light-success label-inline"
+                        >
                           {{ l('Accepted') }}
                         </span>
-                      </div>
-                      <div *ngIf="record.isRejected && !record.isAccepted">
-                        <span class="label label-lg font-weight-bold label-light-danger label-inline">
+
+                        <span
+                          *ngIf="record.isRejected && !record.isAccepted"
+                          class="label mr-3 label-lg font-weight-bold label-light-danger label-inline"
+                        >
                           {{ l('Rejected') }}
                         </span>
-                        <span style="margin-left: 8px; height: 22px; padding-top: 1px;">
-                          <a class="btn btn-sm btn-primary" (click)="viewRejectionReasonModal.show(record.name, record.rejectionReason)">
+                        <span *ngIf="record.isRejected && !record.isAccepted">
+                          <a class="btn mr-3 btn-sm btn-primary" (click)="viewRejectionReasonModal.show(record.name, record.rejectionReason)">
                             {{ l('ViewReason') }} !</a
                           >
                         </span>
-                      </div>
-                      <div
-                        *ngIf="
-                          !record.isRejected && !record.isAccepted && (record.expirationDate != null ? record.expirationDate > todayMoment : true)
-                        "
-                      >
-                        <span class="label label-lg font-weight-bold label-light-primary label-inline">
+
+                        <span
+                          *ngIf="!record.isRejected && !record.isAccepted"
+                          class="label mr-3 label-lg font-weight-bold label-light-primary label-inline"
+                        >
                           {{ l('InReview') }}
                         </span>
-                      </div>
-                      <div *ngIf="record.expirationDate <= todayMoment && !record.isRejected">
-                        <span class="label label-lg font-weight-bold label-light-danger label-inline">
+
+                        <span
+                          *ngIf="record.expirationDate <= todayMoment"
+                          class="label mr-3 label-lg font-weight-bold label-light-danger label-inline"
+                        >
                           {{ l('Expired') }}
                         </span>
                       </div>
