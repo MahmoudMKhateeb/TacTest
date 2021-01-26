@@ -38,7 +38,7 @@ namespace TACHYON.Routs.RoutSteps.Dtos
         public double TotalAmount { get; set; }
         public double ExistingAmount { get; set; }
         public double RemainingAmount { get; set; }
-        public CreateOrEditGoodsDetailDto CreateOrEditGoodsDetailDto { get; set; }
+        //public CreateOrEditGoodsDetailDto CreateOrEditGoodsDetailDto { get; set; }
         public CreateOrEditRoutPointInput CreateOrEditSourceRoutPointInputDto { get; set; }
         public CreateOrEditRoutPointInput CreateOrEditDestinationRoutPointInputDto { get; set; }
 
