@@ -488,8 +488,6 @@ namespace TACHYON.Documents.DocumentFiles
 
             DocumentFile documentFile = await _documentFileRepository
                 .GetAll()
-                .Include(x => x.DocumentTypeFk)
-                .ThenInclude(x => x.DocumentsEntityFk)
                 .FirstOrDefaultAsync(x => x.Id == (Guid)input.Id);
 
             if (input.UpdateDocumentFileInput != null && !input.UpdateDocumentFileInput.FileToken.IsNullOrEmpty())
@@ -504,23 +502,15 @@ namespace TACHYON.Documents.DocumentFiles
                 input.IsRejected = false;
 
             }
+            if (documentFile.ExpirationDate != input.ExpirationDate )
+            {
+                input.IsAccepted = false;
+                input.IsRejected = false;
+            }
 
             ObjectMapper.Map(input, documentFile);
             documentFile.RejectionReason = "";
 
-            //ObjectMapper.Map(input.DocumentTypeDto, documentFile.DocumentTypeFk);
-            //if (input.DocumentTypeDto.HasNumber)
-            //{
-            //    documentFile.Number = input.Number;
-            //}
-            //if (input.DocumentTypeDto.HasNotes)
-            //{
-            //    documentFile.Notes = input.Notes;
-            //}
-            //if (input.DocumentTypeDto.HasExpirationDate)
-            //{
-            //    documentFile.ExpirationDate = input.ExpirationDate.Value;
-            //}
         }
 
         private async Task<GetDocumentFileForEditOutput> _GetDocumentFileForEdit(EntityDto<Guid> input)
@@ -735,6 +725,10 @@ namespace TACHYON.Documents.DocumentFiles
 
         public async Task<List<CreateOrEditDocumentFileDto>> GetTenentMissingDocuments()
         {
+            if (!AbpSession.TenantId.HasValue)
+            {
+                return new List<CreateOrEditDocumentFileDto>();
+            }
             var tenant = _tenantManager.GetById(AbpSession.TenantId.Value);
 
             var documentFiles = await _documentFileRepository.GetAll()
