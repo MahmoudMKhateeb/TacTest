@@ -1,4 +1,5 @@
-﻿import { AppSessionService } from '@shared/common/session/app-session.service';
+﻿
+import { AppSessionService } from '@shared/common/session/app-session.service';
 import { Injectable } from '@angular/core';
 import { AppMenu } from './app-menu';
 import { AppMenuItem } from './app-menu-item';
@@ -117,6 +118,7 @@ export class AppNavigationService {
               new AppMenuItem('TrucksTypes', 'Pages.TrucksTypes', 'flaticon-truck', '/app/main/trucksTypes/trucksTypes'),
               new AppMenuItem('TruckSubTypes', 'Pages.TruckSubtypes', 'flaticon-more', '/app/main/truckSubtypes/truckSubtypes'),
               new AppMenuItem('CapacityCategories', 'Pages.Capacities', 'flaticon-more', '/app/main/truckCapacities/capacities'),
+              new AppMenuItem('TruckCapacitiesTranslations', 'Pages.TruckCapacitiesTranslations', 'flaticon-more', '/app/main/truckCapacitiesTranslations/truckCapacitiesTranslations'),
             ]
           ),
           new AppMenuItem('TruckStatuses', 'Pages.Administration.TruckStatuses', 'flaticon-info', '/app/admin/trucks/truckStatuses'),

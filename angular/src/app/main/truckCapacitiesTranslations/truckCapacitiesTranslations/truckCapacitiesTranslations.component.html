@@ -1,11 +1,11 @@
 ﻿<div [@routerTransition]>
   
   <div class="content d-flex flex-column flex-column-fluid">
-   <sub-header [title]="'TruckStatusesTranslations' | localize" [description]="'TruckStatusesTranslationsHeaderInfo' | localize">
+   <sub-header [title]="'TruckCapacitiesTranslations' | localize" [description]="'TruckCapacitiesTranslationsHeaderInfo' | localize">
              <div role="actions">
                  
-                 <button *ngIf="isGranted('Pages.TruckStatusesTranslations.Create')" (click)="createTruckStatusesTranslation()" 
-                                        class="btn btn-primary blue"><i class="fa fa-plus"></i> {{l("CreateNewTruckStatusesTranslation")}}</button>
+                 <button *ngIf="isGranted('Pages.TruckCapacitiesTranslations.Create')" (click)="createTruckCapacitiesTranslation()" 
+                                        class="btn btn-primary blue"><i class="fa fa-plus"></i> {{l("CreateNewTruckCapacitiesTranslation")}}</button>
              </div>
             </sub-header>
     
@@ -20,7 +20,7 @@
                                     <div class="input-group">
                                         <input [(ngModel)]="filterText" name="filterText" autoFocus class="form-control m-input" [placeholder]="l('SearchWithThreeDot')" type="text">
                                         <span class="input-group-btn">
-                                            <button (click)="getTruckStatusesTranslations()" class="btn btn-primary" type="submit"><i class="flaticon-search-1"></i></button>
+                                            <button (click)="getTruckCapacitiesTranslations()" class="btn btn-primary" type="submit"><i class="flaticon-search-1"></i></button>
                                         </span>
                                     </div>
                                 </div>
@@ -46,8 +46,8 @@
                             </div>
 							<div class="col-md-3">
 								<div class="form-group">
-									<label for="TruckStatusDisplayNameFilter">({{l("TruckStatus")}}) {{l("DisplayName")}}</label>
-									<input type="text" class="form-control" id="TruckStatusDisplayNameFilter" name="truckStatusDisplayNameFilter" [(ngModel)]="truckStatusDisplayNameFilter">
+									<label for="CapacityDisplayNameFilter">({{l("Capacity")}}) {{l("DisplayName")}}</label>
+									<input type="text" class="form-control" id="CapacityDisplayNameFilter" name="capacityDisplayNameFilter" [(ngModel)]="capacityDisplayNameFilter">
                                 </div>
                             </div>
 
@@ -66,7 +66,7 @@
                     <div class="primeng-datatable-container col-12"
                          [busyIf]="primengTableHelper.isLoading">
                         <p-table #dataTable
-                                     (onLazyLoad)="getTruckStatusesTranslations($event)"
+                                     (onLazyLoad)="getTruckCapacitiesTranslations($event)"
                                      [value]="primengTableHelper.records"
                                      rows="{{primengTableHelper.defaultRecordsCountPerPage}}"
                                      [paginator]="false"
@@ -77,18 +77,18 @@
                                      [resizableColumns]="primengTableHelper.resizableColumns">
                             <ng-template pTemplate="header">
                                 <tr>
-                                    <th style="width: 130px" [hidden]="!isGrantedAny('Pages.TruckStatusesTranslations.Edit', 'Pages.TruckStatusesTranslations.Delete')">{{l('Actions')}}</th>
+                                    <th style="width: 130px" [hidden]="!isGrantedAny('Pages.TruckCapacitiesTranslations.Edit', 'Pages.TruckCapacitiesTranslations.Delete')">{{l('Actions')}}</th>
                                     <th style="width: 150px" pSortableColumn="core.displayName">
                                         {{l('DisplayName')}}
-                                        <p-sortIcon field="truckStatusDisplayName"></p-sortIcon>
+                                        <p-sortIcon field="capacityDisplayName"></p-sortIcon>
                                     </th>
                                     <th style="width: 150px" pSortableColumn="translatedDisplayName">
                                         {{l('TranslatedDisplayName')}}
-                                        <p-sortIcon field="truckStatusesTranslation.translatedDisplayName"></p-sortIcon>
+                                        <p-sortIcon field="truckCapacitiesTranslation.translatedDisplayName"></p-sortIcon>
                                     </th>
                                     <th style="width: 150px" pSortableColumn="language">
                                         {{l('Language')}}
-                                        <p-sortIcon field="truckStatusesTranslation.language"></p-sortIcon>
+                                        <p-sortIcon field="truckCapacitiesTranslation.language"></p-sortIcon>
                                     </th>
 
                                 </tr>
@@ -96,7 +96,7 @@
 							<ng-template pTemplate="body" let-record="$implicit" let-i="rowIndex">
                                 <tr>
                                     <td style="width: 130px"
-                                        [hidden]="!isGrantedAny('Pages.TruckStatusesTranslations.Edit', 'Pages.TruckStatusesTranslations.Delete')">
+                                        [hidden]="!isGrantedAny('Pages.TruckCapacitiesTranslations.Edit', 'Pages.TruckCapacitiesTranslations.Delete')">
                                        <div class="btn-group dropdown" dropdown container="body">
                                             <button class="dropdown-toggle btn btn-sm btn-primary" dropdownToggle>
                                                 <i class="fa fa-cog"></i><span class="caret"></span> {{l("Actions")}}
@@ -104,30 +104,30 @@
 												<ul class="dropdown-menu"  *dropdownMenu>
 												<li>
 													<a href="javascript:;" class="dropdown-item"
-														(click)="viewTruckStatusesTranslationModal.show(record)">{{l('View')}}</a>
+														(click)="viewTruckCapacitiesTranslationModal.show(record)">{{l('View')}}</a>
 												</li>
 												<li>
-                                                <a href="javascript:;" *ngIf="permission.isGranted('Pages.TruckStatusesTranslations.Edit')" class="dropdown-item"
-														(click)="createOrEditTruckStatusesTranslationModal.show(record.truckStatusesTranslation.id)">{{l('Edit')}}</a>												
+                                                <a href="javascript:;" *ngIf="permission.isGranted('Pages.TruckCapacitiesTranslations.Edit')" class="dropdown-item"
+														(click)="createOrEditTruckCapacitiesTranslationModal.show(record.truckCapacitiesTranslation.id)">{{l('Edit')}}</a>												
                                                 </li>
 												<li>
-											        <a class="dropdown-item" href="javascript:;" *ngIf="permission.isGranted('Pages.TruckStatusesTranslations.Delete')"
-														(click)="deleteTruckStatusesTranslation(record.truckStatusesTranslation)">{{l('Delete')}}</a>
+											        <a class="dropdown-item" href="javascript:;" *ngIf="permission.isGranted('Pages.TruckCapacitiesTranslations.Delete')"
+														(click)="deleteTruckCapacitiesTranslation(record.truckCapacitiesTranslation)">{{l('Delete')}}</a>
 												</li>
                                             </ul>
                                         </div>
                                     </td>
                                     <td style="width:150px">
 												<span class="ui-column-title"> {{l('DisplayName')}}</span>
-												{{record.truckStatusDisplayName}}
+												{{record.capacityDisplayName}}
 											</td>
                                     <td style="width:150px">
 											<span class="ui-column-title"> {{l('TranslatedDisplayName')}}</span>
-											{{record.truckStatusesTranslation.translatedDisplayName}}
+											{{record.truckCapacitiesTranslation.translatedDisplayName}}
 										</td>
                                     <td style="width:150px">
 											<span class="ui-column-title"> {{l('Language')}}</span>
-											{{record.truckStatusesTranslation.language}}
+											{{record.truckCapacitiesTranslation.language}}
 										</td>
 
                                 </tr>
@@ -140,7 +140,7 @@
                         <div class="primeng-paging-container">
                             <p-paginator [rows]="primengTableHelper.defaultRecordsCountPerPage"
                                          #paginator
-                                         (onPageChange)="getTruckStatusesTranslations($event)"
+                                         (onPageChange)="getTruckCapacitiesTranslations($event)"
                                          [totalRecords]="primengTableHelper.totalRecordsCount"
                                          [rowsPerPageOptions]="primengTableHelper.predefinedRecordsCountPerPage">
                             </p-paginator>
@@ -154,8 +154,8 @@
             </div>
         </div>
     </div>
-    <createOrEditTruckStatusesTranslationModal #createOrEditTruckStatusesTranslationModal (modalSave)="getTruckStatusesTranslations()"></createOrEditTruckStatusesTranslationModal>    
-    <viewTruckStatusesTranslationModal #viewTruckStatusesTranslationModal></viewTruckStatusesTranslationModal>
+    <createOrEditTruckCapacitiesTranslationModal #createOrEditTruckCapacitiesTranslationModal (modalSave)="getTruckCapacitiesTranslations()"></createOrEditTruckCapacitiesTranslationModal>    
+    <viewTruckCapacitiesTranslationModal #viewTruckCapacitiesTranslationModal></viewTruckCapacitiesTranslationModal>
     
   </div>
 </div>

@@ -1,6 +1,15 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <localizationDictionary culture="en">
-  <texts>    <text name="TruckStatusesTranslations">Truck statuses translations</text>
+  <texts>    <text name="TruckCapacitiesTranslations">Truck capacities translations</text>
+    <text name="TruckCapacitiesTranslation">Truck capacities translation</text>
+    <text name="TACHYON.TruckCapacitiesTranslations.TruckCapacitiesTranslation">TruckCapacitiesTranslation</text>
+    <text name="TruckCapacitiesTranslationsHeaderInfo">Truck capacities translations header info</text>
+    <text name="CreateNewTruckCapacitiesTranslation">Create new truck capacities translation</text>
+    <text name="EditTruckCapacitiesTranslation">Edit truck capacities translation</text>
+    <text name="DeleteTruckCapacitiesTranslation">Delete truck capacities translation</text>
+    <text name="CapacityDisplayName">Capacity display name</text>
+    <text name="PickCapacity">Pick capacity</text>
+    <text name="TruckStatusesTranslations">Truck statuses translations</text>
     <text name="TruckStatusesTranslation">Truck statuses translation</text>
     <text name="TACHYON.TruckStatusesTranslations.TruckStatusesTranslation">TruckStatusesTranslation</text>
     <text name="TranslatedDisplayName">Translated display name</text>

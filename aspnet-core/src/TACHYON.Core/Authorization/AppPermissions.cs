@@ -6,6 +6,11 @@
     /// </summary>
     public static class AppPermissions
     {
+        public const string Pages_TruckCapacitiesTranslations = "Pages.TruckCapacitiesTranslations";
+        public const string Pages_TruckCapacitiesTranslations_Create = "Pages.TruckCapacitiesTranslations.Create";
+        public const string Pages_TruckCapacitiesTranslations_Edit = "Pages.TruckCapacitiesTranslations.Edit";
+        public const string Pages_TruckCapacitiesTranslations_Delete = "Pages.TruckCapacitiesTranslations.Delete";
+
         public const string Pages_TruckStatusesTranslations = "Pages.TruckStatusesTranslations";
         public const string Pages_TruckStatusesTranslations_Create = "Pages.TruckStatusesTranslations.Create";
         public const string Pages_TruckStatusesTranslations_Edit = "Pages.TruckStatusesTranslations.Edit";
