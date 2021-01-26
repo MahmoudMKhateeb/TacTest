@@ -1,4 +1,5 @@
-﻿using TACHYON.Trucks.TruckStatusesTranslations;
+﻿using TACHYON.Trucks.TruckCategories.TruckCapacities.TruckCapacitiesTranslations;
+using TACHYON.Trucks.TruckStatusesTranslations;
 using TACHYON.Nationalities;
 ﻿using TACHYON.Shipping.TripStatuses;
 using TACHYON.Packing.PackingTypes;
@@ -63,6 +64,8 @@ namespace TACHYON.EntityFrameworkCore
 {
     public class TACHYONDbContext : AbpZeroDbContext<Tenant, Role, User, TACHYONDbContext>, IAbpPersistedGrantDbContext
     {
+        public virtual DbSet<TruckCapacitiesTranslation> TruckCapacitiesTranslations { get; set; }
+
         public virtual DbSet<TruckStatusesTranslation> TruckStatusesTranslations { get; set; }
 
         #region Trips
