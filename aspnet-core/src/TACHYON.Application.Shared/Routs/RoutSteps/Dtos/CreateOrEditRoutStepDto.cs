@@ -17,29 +17,22 @@ namespace TACHYON.Routs.RoutSteps.Dtos
         [Range(RoutStepConsts.MinOrderValue, RoutStepConsts.MaxOrderValue)]
         public int Order { get; set; }
 
-        public int? ShippingRequestId { get; set; }
-
         [Required]
-        public long AssignedDriverUserId { get; set; }
+        public int ShippingRequestId { get; set; }
 
-        [Required]
-        public long AssignedTruckId { get; set; }
+        public long? AssignedDriverUserId { get; set; }
+
+        public long? AssignedTruckId { get; set; }
 
         public long? AssignedTrailerId { get; set; }
-        public long? TrucksTypeId { get; set; }
-
-        public int? TrailerTypeId { get; set; }
-
-        //[Required]
-        //public long SourceRoutPointId { get; set; }
-
-        //[Required]
-        //public long DestinationRoutPointId { get; set; }
+       
         public double TotalAmount { get; set; }
         public double ExistingAmount { get; set; }
         public double RemainingAmount { get; set; }
         //public CreateOrEditGoodsDetailDto CreateOrEditGoodsDetailDto { get; set; }
+        [Required]
         public CreateOrEditRoutPointInput CreateOrEditSourceRoutPointInputDto { get; set; }
+        [Required]
         public CreateOrEditRoutPointInput CreateOrEditDestinationRoutPointInputDto { get; set; }
 
     }

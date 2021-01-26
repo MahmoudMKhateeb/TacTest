@@ -44,13 +44,13 @@ namespace TACHYON.Routs.RoutSteps
         /// <summary>
         /// assigned Driver
         /// </summary>
-        public long AssignedDriverUserId { get; set; }
+        public long? AssignedDriverUserId { get; set; }
         [ForeignKey("AssignedDriverUserId")]
         public User AssignedDriverUserFk { get; set; }
         /// <summary>
         /// assigned Truck
         /// </summary>
-        public long AssignedTruckId { get; set; }
+        public long? AssignedTruckId { get; set; }
         [ForeignKey("AssignedTruckId")]
         public Truck AssignedTruckFk { get; set; }
 

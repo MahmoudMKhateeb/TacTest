@@ -12,7 +12,7 @@ namespace TACHYON.Shipping.ShippingRequests.Dtos
     public class CreateOrEditShippingRequestDto : EntityDto<long?>
     {
 
-        public List<CreateOrEditRoutStepDto> CreateOrEditRoutStepDtoList { get; set; }
+       public List<CreateOrEditRoutStepDto> CreateOrEditRoutStepDtoList { get; set; }
 
         public virtual bool IsBid { get; set; }
         //Add Bid details If IsBid equals True

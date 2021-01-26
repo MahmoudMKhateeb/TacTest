@@ -17,12 +17,10 @@ namespace TACHYON.Goods.GoodsDetails.Dtos
         public string Description { get; set; }
 
 
-        [StringLength(GoodsDetailConsts.MaxQuantityLength, MinimumLength = GoodsDetailConsts.MinQuantityLength)]
         public int TotalAmount { get; set; }
 
         [Required]
-        [StringLength(GoodsDetailConsts.MaxWeightLength, MinimumLength = GoodsDetailConsts.MinWeightLength)]
-        public string Weight { get; set; }
+        public double Weight { get; set; }
 
 
         [StringLength(GoodsDetailConsts.MaxDimentionsLength, MinimumLength = GoodsDetailConsts.MinDimentionsLength)]
@@ -43,6 +41,7 @@ namespace TACHYON.Goods.GoodsDetails.Dtos
 
         [Required]
         public long ShippingRequestId { get; set; }
-
+        public string PackingType { get; set; }
+        public int NumberOfPacking { get; set; }
     }
 }

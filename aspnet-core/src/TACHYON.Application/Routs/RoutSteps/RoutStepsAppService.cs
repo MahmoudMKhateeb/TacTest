@@ -144,23 +144,24 @@ namespace TACHYON.Routs.RoutSteps
         {
             var routStep = await _routStepRepository.GetAsync(id);
 
-            var output = new GetRoutStepForViewDto {
-                RoutStep = ObjectMapper.Map<RoutStepDto>(routStep),
-                SourceRoutPointDto= ObjectMapper.Map<GetRoutPointForViewDto>(routStep.SourceRoutPointFk),
-                DestinationRoutPointDto= ObjectMapper.Map<GetRoutPointForViewDto>(routStep.DestinationRoutPointFk)
-            };
+            //var output = new GetRoutStepForViewDto {
+            //    RoutStep = ObjectMapper.Map<RoutStepDto>(routStep),
+            //    SourceRoutPointDto= ObjectMapper.Map<GetRoutPointForViewDto>(routStep.SourceRoutPointFk),
+            //    DestinationRoutPointDto= ObjectMapper.Map<GetRoutPointForViewDto>(routStep.DestinationRoutPointFk)
+            //};
+            var output = ObjectMapper.Map<GetRoutStepForViewDto>(routStep);
 
-            if (output.RoutStep.TrucksTypeId != null)
-            {
-                var _lookupTrucksType = await _lookup_trucksTypeRepository.FirstOrDefaultAsync(output.RoutStep.TrucksTypeId.Value);
-                output.TrucksTypeDisplayName = _lookupTrucksType?.DisplayName?.ToString();
-            }
+            //if (output.RoutStep.TrucksTypeId != null)
+            //{
+            //    var _lookupTrucksType = await _lookup_trucksTypeRepository.FirstOrDefaultAsync(output.RoutStep.TrucksTypeId.Value);
+            //    output.TrucksTypeDisplayName = _lookupTrucksType?.DisplayName?.ToString();
+            //}
 
-            if (output.RoutStep.TrailerTypeId != null)
-            {
-                var _lookupTrailerType = await _lookup_trailerTypeRepository.FirstOrDefaultAsync((int)output.RoutStep.TrailerTypeId);
-                output.TrailerTypeDisplayName = _lookupTrailerType?.DisplayName?.ToString();
-            }
+            //if (output.RoutStep.TrailerTypeId != null)
+            //{
+            //    var _lookupTrailerType = await _lookup_trailerTypeRepository.FirstOrDefaultAsync((int)output.RoutStep.TrailerTypeId);
+            //    output.TrailerTypeDisplayName = _lookupTrailerType?.DisplayName?.ToString();
+            //}
 
             //if (output.RoutStep.GoodsDetailId != null)
             //{
@@ -205,22 +206,10 @@ namespace TACHYON.Routs.RoutSteps
             //}
 
 
-            if (output.RoutStep.TrucksTypeId != null)
-            {
-                var _lookupTrucksType = await _lookup_trucksTypeRepository.FirstOrDefaultAsync(output.RoutStep.TrucksTypeId.Value);
-                output.TrucksTypeDisplayName = _lookupTrucksType?.DisplayName?.ToString();
-            }
-
-            if (output.RoutStep.TrailerTypeId != null)
-            {
-                var _lookupTrailerType = await _lookup_trailerTypeRepository.FirstOrDefaultAsync((int)output.RoutStep.TrailerTypeId);
-                output.TrailerTypeDisplayName = _lookupTrailerType?.DisplayName?.ToString();
-            }
-
-            //if (output.RoutStep.GoodsDetailId != null)
+            //if (output.RoutStep.AssignedTruckId != null)
             //{
-            //    var _lookupGoodsDetails = await _lookup_goodsDetailRepository.FirstOrDefaultAsync((int)output.RoutStep.GoodsDetailId);
-            //    output.RoutStep.CreateOrEditGoodsDetailDto = ObjectMapper.Map<CreateOrEditGoodsDetailDto>(_lookupGoodsDetails);
+            //    var _lookupTrucksType = await _lookup_trucksTypeRepository.FirstOrDefaultAsync(output.RoutStep.AssignedTruckId.Value);
+            //    output.AssignedTruckDisplayName = _lookupTrucksType?.DisplayName?.ToString();
             //}
 
             return output;

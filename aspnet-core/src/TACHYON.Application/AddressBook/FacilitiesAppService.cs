@@ -19,6 +19,7 @@ using TACHYON.Authorization;
 using Abp.Extensions;
 using Abp.Authorization;
 using Microsoft.EntityFrameworkCore;
+using NetTopologySuite.Geometries;
 
 namespace TACHYON.AddressBook
 {
@@ -123,8 +124,13 @@ namespace TACHYON.AddressBook
         [AbpAuthorize(AppPermissions.Pages_Facilities_Create)]
         protected virtual async Task Create(CreateOrEditFacilityDto input)
         {
-            var facility = ObjectMapper.Map<Facility>(input);
+            var point = new Point(input.Longitude, input.Latitude)
+            {
+                SRID = 4326
+            };
 
+            var facility = ObjectMapper.Map<Facility>(input);
+            facility.Location = point;
 
             if (AbpSession.TenantId != null)
             {

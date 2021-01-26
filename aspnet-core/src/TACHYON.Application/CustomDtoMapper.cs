@@ -205,6 +205,14 @@ namespace TACHYON
                 .ForMember(dest=>dest.DestinationRoutPointFk,opt=>opt.MapFrom(src=>src.CreateOrEditDestinationRoutPointInputDto))
                 .ReverseMap();
             configuration.CreateMap<RoutStepDto, RoutStep>().ReverseMap();
+            configuration.CreateMap<GetRoutStepForViewDto, RoutStep>()
+                .ForMember(dest => dest.SourceRoutPointFk, opt => opt.MapFrom(src => src.SourceRoutPointDto))
+                .ForMember(dest => dest.DestinationRoutPointFk, opt => opt.MapFrom(src => src.DestinationRoutPointDto))
+                .ForPath(dest => dest.SourceRoutPointFk.FacilityFk, opt => opt.MapFrom(src => src.SourceRoutPointDto.FacilityDto))
+                .ForPath(dest => dest.DestinationRoutPointFk.FacilityFk, opt => opt.MapFrom(src => src.DestinationRoutPointDto.FacilityDto))
+                .ReverseMap();
+
+
             configuration.CreateMap<RoutPointDto, RoutPoint>().ReverseMap();
             configuration.CreateMap<CreateOrEditRoutPointInput, RoutPoint>()
                 .ForMember(dest=>dest.RoutPointGoodsDetails,opt=>opt.MapFrom(src=>src.RoutPointGoodsDetailListDto))
