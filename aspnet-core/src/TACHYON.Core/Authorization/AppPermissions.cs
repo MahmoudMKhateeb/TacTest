@@ -6,6 +6,11 @@
     /// </summary>
     public static class AppPermissions
     {
+        public const string Pages_PlateTypes = "Pages.PlateTypes";
+        public const string Pages_PlateTypes_Create = "Pages.PlateTypes.Create";
+        public const string Pages_PlateTypes_Edit = "Pages.PlateTypes.Edit";
+        public const string Pages_PlateTypes_Delete = "Pages.PlateTypes.Delete";
+
         public const string Pages_Nationalities = "Pages.Nationalities";
         public const string Pages_Nationalities_Create = "Pages.Nationalities.Create";
         public const string Pages_Nationalities_Edit = "Pages.Nationalities.Edit";

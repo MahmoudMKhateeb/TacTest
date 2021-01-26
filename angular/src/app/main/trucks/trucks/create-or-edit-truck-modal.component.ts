@@ -94,6 +94,8 @@ export class CreateOrEditTruckModalComponent extends AppComponentBase {
    */
   private _DocsUploaderOptions: FileUploaderOptions = {};
 
+  allPlateTypes: SelectItemDto[];
+
   constructor(
     injector: Injector,
     private _trucksServiceProxy: TrucksServiceProxy,
@@ -118,10 +120,15 @@ export class CreateOrEditTruckModalComponent extends AppComponentBase {
       this.truck.trucksTypeId = null;
       this.truck.trucksTypeId = null;
       this.truck.capacityId = null;
+      this.truck.plateTypeId = null;
 
       this.initTransportDropDownList();
       this._trucksServiceProxy.getAllTruckStatusForTableDropdown().subscribe((result) => {
         this.allTruckStatuss = result;
+      });
+
+      this._trucksServiceProxy.getAllPlateTypeIdForDropdown().subscribe((result) => {
+        this.allPlateTypes = result;
       });
 
       //RequiredDocuments

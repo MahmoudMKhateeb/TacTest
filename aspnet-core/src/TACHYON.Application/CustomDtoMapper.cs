@@ -1,4 +1,6 @@
-﻿using TACHYON.Nationalities.Dtos;
+﻿using TACHYON.Trucks.PlateTypes.Dtos;
+using TACHYON.Trucks.PlateTypes;
+using TACHYON.Nationalities.Dtos;
 using TACHYON.Nationalities;
 using TACHYON.Nationalities.NationalitiesTranslation.Dtos;
 using TACHYON.Nationalities.NationalitiesTranslation;
@@ -142,6 +144,8 @@ namespace TACHYON
     {
         public static void CreateMappings(IMapperConfigurationExpression configuration)
         {
+            configuration.CreateMap<CreateOrEditPlateTypeDto, PlateType>().ReverseMap();
+            configuration.CreateMap<PlateTypeDto, PlateType>().ReverseMap();
             configuration.CreateMap<CreateOrEditNationalityDto, Nationality>().ReverseMap();
             configuration.CreateMap<NationalityDto, Nationality>().ReverseMap();
             configuration.CreateMap<CreateOrEditNationalityTranslationDto, NationalityTranslation>().ReverseMap();

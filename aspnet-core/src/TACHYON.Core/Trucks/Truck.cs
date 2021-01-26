@@ -7,6 +7,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 using TACHYON.Authorization.Users;
 //using TACHYON.Authorization.Users;
 using TACHYON.Trucks;
+using TACHYON.Trucks.PlateTypes;
 using TACHYON.Trucks.TruckCategories.TransportTypes;
 using TACHYON.Trucks.TruckCategories.TruckCapacities;
 using TACHYON.Trucks.TrucksTypes;
@@ -49,10 +50,10 @@ namespace TACHYON.Trucks
         [ForeignKey("TruckStatusId")]
         public TruckStatus TruckStatusFk { get; set; }
 
-       // public virtual long? Driver1UserId { get; set; }
+        // public virtual long? Driver1UserId { get; set; }
 
-       // [ForeignKey("Driver1UserId")]
-       // public User Driver1UserFk { get; set; }
+        // [ForeignKey("Driver1UserId")]
+        // public User Driver1UserFk { get; set; }
 
         //public virtual long? Driver2UserId { get; set; }
 
@@ -94,6 +95,11 @@ namespace TACHYON.Trucks
 
         //Truck length (Meter) 
         public int? Length { get; set; }
+
+        public virtual int? PlateTypeId { get; set; }
+
+        [ForeignKey("PlateTypeId")]
+        public PlateType PlateTypeFk { get; set; }
 
     }
 }

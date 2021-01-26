@@ -31,6 +31,7 @@ using TACHYON.Storage;
 using TACHYON.Trucks;
 using TACHYON.Trucks.Dtos;
 using TACHYON.Trucks.Exporting;
+using TACHYON.Trucks.PlateTypes;
 using TACHYON.Trucks.TruckCategories.TransportTypes;
 using TACHYON.Trucks.TruckCategories.TransportTypes.Dtos;
 using TACHYON.Trucks.TruckCategories.TransportTypes.TransportTypesTranslations;
@@ -58,11 +59,12 @@ namespace TACHYON.Trucks
         private readonly DocumentFilesAppService _documentFilesAppService;
         private readonly IRepository<TransportType, int> _transportTypeRepository;
         private readonly IRepository<Capacity, int> _capacityRepository;
+        private readonly IRepository<PlateType> _plateTypesRepository;
+ 
 
 
 
-
-        public TrucksAppService(IRepository<DocumentType, long> documentTypeRepository, IRepository<DocumentFile, Guid> documentFileRepository, IRepository<Truck, long> truckRepository, ITrucksExcelExporter trucksExcelExporter, IRepository<TrucksType, long> lookup_trucksTypeRepository, IRepository<TruckStatus, long> lookup_truckStatusRepository, IRepository<User, long> lookup_userRepository, IAppNotifier appNotifier, ITempFileCacheManager tempFileCacheManager, IBinaryObjectManager binaryObjectManager, DocumentFilesAppService documentFilesAppService, IRepository<TransportType, int> transportTypeRepository, IRepository<Capacity, int> capacityRepository)
+        public TrucksAppService(IRepository<DocumentType, long> documentTypeRepository, IRepository<DocumentFile, Guid> documentFileRepository, IRepository<Truck, long> truckRepository, ITrucksExcelExporter trucksExcelExporter, IRepository<TrucksType, long> lookup_trucksTypeRepository, IRepository<TruckStatus, long> lookup_truckStatusRepository, IRepository<User, long> lookup_userRepository, IAppNotifier appNotifier, ITempFileCacheManager tempFileCacheManager, IBinaryObjectManager binaryObjectManager, DocumentFilesAppService documentFilesAppService, IRepository<TransportType, int> transportTypeRepository, IRepository<Capacity, int> capacityRepository ,IRepository<PlateType> PlateTypesRepository)
         {
             _documentFileRepository = documentFileRepository;
             _documentTypeRepository = documentTypeRepository;
@@ -77,6 +79,7 @@ namespace TACHYON.Trucks
             _documentFilesAppService = documentFilesAppService;
             _transportTypeRepository = transportTypeRepository;
             _capacityRepository = capacityRepository;
+            _plateTypesRepository = PlateTypesRepository;
         }
 
         public async Task<PagedResultDto<GetTruckForViewDto>> GetAll(GetAllTrucksInput input)
@@ -513,6 +516,16 @@ namespace TACHYON.Trucks
         {
             return await _capacityRepository.GetAll()
                 .Where(x => x.TrucksTypeId == truckTypeId)
+                .Select(x => new SelectItemDto()
+                {
+                    Id = x.Id.ToString(),
+                    DisplayName = x.DisplayName
+                }).ToListAsync();
+        }
+
+        public async Task<List<SelectItemDto>> GetAllPlateTypeIdForDropdown()
+        {
+            return await _plateTypesRepository.GetAll()
                 .Select(x => new SelectItemDto()
                 {
                     Id = x.Id.ToString(),
