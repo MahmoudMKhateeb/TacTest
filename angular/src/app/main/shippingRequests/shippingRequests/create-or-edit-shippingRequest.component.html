@@ -238,364 +238,365 @@
                   {{ item.order }}
                 </div>
 
-              <!--            <div class="col-6 mb-3">-->
-              <!--              <h6>({{ l('City') }}) {{ l('DisplayName') }} :</h6>-->
-              <!--              {{ item.cityDisplayName }}-->
-              <!--            </div>-->
-              <!--            <div class="col-6 mb-3">-->
-              <!--              <h6>({{ l('City') }}) {{ l('DisplayName') }} :</h6>-->
-              <!--              {{ item.cityDisplayName2 }}-->
-              <!--            </div>-->
-              <!--            <div class="col-6 mb-3">-->
-              <!--              <h6>({{ l('Route') }}) {{ l('DisplayName') }} :</h6>-->
-              <!--              {{ item.routeDisplayName }}-->
-              <!--            </div>-->
+                <!--            <div class="col-6 mb-3">-->
+                <!--              <h6>({{ l('City') }}) {{ l('DisplayName') }} :</h6>-->
+                <!--              {{ item.cityDisplayName }}-->
+                <!--            </div>-->
+                <!--            <div class="col-6 mb-3">-->
+                <!--              <h6>({{ l('City') }}) {{ l('DisplayName') }} :</h6>-->
+                <!--              {{ item.cityDisplayName2 }}-->
+                <!--            </div>-->
+                <!--            <div class="col-6 mb-3">-->
+                <!--              <h6>({{ l('Route') }}) {{ l('DisplayName') }} :</h6>-->
+                <!--              {{ item.routeDisplayName }}-->
+                <!--            </div>-->
+              </div>
             </div>
           </div>
+          <br />
         </div>
-        <br />
       </div>
     </div>
   </div>
-</div>
 
-<div
-  class="modal fade"
-  bsModal
-  #staticModal="bs-modal"
-  [config]="{ backdrop: 'static' }"
-  tabindex="-1"
-  role="dialog"
-  aria-labelledby="dialog-static-name"
->
-  <div class="modal-dialog modal-xl">
-    <div class="modal-content">
-      <form *ngIf="active" #routStepForm="ngForm" novalidate (ngSubmit)="addRouteStep()" autocomplete="off">
-        <div class="modal-header">
-          <h4 class="modal-title">
-            <!--                <span *ngIf="routStep.id">{{l("EditRoutStep")}}</span>-->
-            <!--                <span *ngIf="!routStep.id">{{l("CreateNewRoutStep")}}</span>-->
-            {{ l('CreateNewRoutStep') }}
-          </h4>
-          <button type="button" class="close" (click)="staticModal.hide()" aria-label="Close" [disabled]="saving">
-            <span aria-hidden="true">&times;</span>
-          </button>
-        </div>
-        <div class="modal-body">
-          <div class="row">
-            <!--            <div class="form-group col-md-6 m-form__group">-->
-            <!--              <label for="destinationFacilityName">{{ l('destinationFacilityName') }}</label>-->
-            <!--              <div class="row">-->
-            <!--                <div class="col-md-8">-->
-            <!--                  <select name="routStep.destinationFacilityId" [(ngModel)]="routStep.destinationFacilityId" class="form-control">-->
-            <!--                    <option value="">{{ l('SelectAFacility') }}</option>-->
-            <!--                    <option *ngFor="let item of allFacilities" value="{{ item.id }}">{{ item.displayName }}</option>-->
-            <!--                  </select>-->
-            <!--                </div>-->
-            <!--                <div class="col-md-4">-->
-            <!--                  <button-->
-            <!--                    type="button"-->
-            <!--                    class="btn btn-save blue"-->
-            <!--                    [disabled]="saving"-->
-            <!--                    [buttonBusy]="saving"-->
-            <!--                    (click)="openCreateFacilityModal()"-->
-            <!--                    [busyText]="l('SavingWithThreeDot')"-->
-            <!--                  >-->
-            <!--                    <i class="fa fa-plus"></i> <span>{{ l('createFacility') }}</span>-->
-            <!--                  </button>-->
-            <!--                </div>-->
-            <!--              </div>-->
-            <!--            </div>-->
+  <div
+    class="modal fade"
+    bsModal
+    #staticModal="bs-modal"
+    [config]="{ backdrop: 'static' }"
+    tabindex="-1"
+    role="dialog"
+    aria-labelledby="dialog-static-name"
+  >
+    <div class="modal-dialog modal-xl">
+      <div class="modal-content">
+        <form *ngIf="active" #routStepForm="ngForm" novalidate (ngSubmit)="addRouteStep()" autocomplete="off">
+          <div class="modal-header">
+            <h4 class="modal-title">
+              <!--                <span *ngIf="routStep.id">{{l("EditRoutStep")}}</span>-->
+              <!--                <span *ngIf="!routStep.id">{{l("CreateNewRoutStep")}}</span>-->
+              {{ l('CreateNewRoutStep') }}
+            </h4>
+            <button type="button" class="close" (click)="staticModal.hide()" aria-label="Close" [disabled]="saving">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <div class="row">
+              <!--            <div class="form-group col-md-6 m-form__group">-->
+              <!--              <label for="destinationFacilityName">{{ l('destinationFacilityName') }}</label>-->
+              <!--              <div class="row">-->
+              <!--                <div class="col-md-8">-->
+              <!--                  <select name="routStep.destinationFacilityId" [(ngModel)]="routStep.destinationFacilityId" class="form-control">-->
+              <!--                    <option value="">{{ l('SelectAFacility') }}</option>-->
+              <!--                    <option *ngFor="let item of allFacilities" value="{{ item.id }}">{{ item.displayName }}</option>-->
+              <!--                  </select>-->
+              <!--                </div>-->
+              <!--                <div class="col-md-4">-->
+              <!--                  <button-->
+              <!--                    type="button"-->
+              <!--                    class="btn btn-save blue"-->
+              <!--                    [disabled]="saving"-->
+              <!--                    [buttonBusy]="saving"-->
+              <!--                    (click)="openCreateFacilityModal()"-->
+              <!--                    [busyText]="l('SavingWithThreeDot')"-->
+              <!--                  >-->
+              <!--                    <i class="fa fa-plus"></i> <span>{{ l('createFacility') }}</span>-->
+              <!--                  </button>-->
+              <!--                </div>-->
+              <!--              </div>-->
+              <!--            </div>-->
 
-            <div class="form-group col-md-12">
-              <!--              <agm-map [latitude]="Number(routStep.latitude)" [longitude]="Number(routStep.longitude)" [zoom]="zoom" (mapClick)="mapClicked($event)">-->
-              <!--                <agm-marker [latitude]="Number(routStep.latitude)" [longitude]="Number(routStep.longitude)" [markerDraggable]="true"></agm-marker>-->
-              <!--              </agm-map>-->
-            </div>
+              <div class="form-group col-md-12">
+                <!--              <agm-map [latitude]="Number(routStep.latitude)" [longitude]="Number(routStep.longitude)" [zoom]="zoom" (mapClick)="mapClicked($event)">-->
+                <!--                <agm-marker [latitude]="Number(routStep.latitude)" [longitude]="Number(routStep.longitude)" [markerDraggable]="true"></agm-marker>-->
+                <!--              </agm-map>-->
+              </div>
 
-            <div class="form-group col-md-6 m-form__group">
-              <label for="TrucksTypeDisplayName">{{ l('TrucksType') }}</label>
-              {{ routStep.trucksTypeId }}
-              <select [(ngModel)]="routStep.trucksTypeId" class="form-control" name="shippingRequest.trucksTypeId">
-                <option value="">{{ l('SelectATrucksType') }}</option>
-                <option *ngFor="let item of allTrucksTypes" value="{{ item.id }}">{{ item.displayName }}</option>
-              </select>
-            </div>
+              <div class="form-group col-md-6 m-form__group">
+                <label for="TrucksTypeDisplayName">{{ l('TrucksType') }}</label>
+                {{ routStep.trucksTypeId }}
+                <select [(ngModel)]="routStep.trucksTypeId" class="form-control" name="shippingRequest.trucksTypeId">
+                  <option value="">{{ l('SelectATrucksType') }}</option>
+                  <option *ngFor="let item of allTrucksTypes" value="{{ item.id }}">{{ item.displayName }}</option>
+                </select>
+              </div>
 
-            <div class="form-group col-md-6 m-form__group">
-              <label for="TrailerTypeDisplayName">{{ l('TrailerType') }}</label>
-              <select [(ngModel)]="routStep.trailerTypeId" class="form-control" name="shippingRequest.trailerTypeId">
-                <option value="">{{ l('SelectATrailerType') }}</option>
-                <option *ngFor="let item of allTrailerTypes" value="{{ item.id }}">{{ item.displayName }}</option>
-              </select>
-            </div>
+              <div class="form-group col-md-6 m-form__group">
+                <label for="TrailerTypeDisplayName">{{ l('TrailerType') }}</label>
+                <select [(ngModel)]="routStep.trailerTypeId" class="form-control" name="shippingRequest.trailerTypeId">
+                  <option value="">{{ l('SelectATrailerType') }}</option>
+                  <option *ngFor="let item of allTrailerTypes" value="{{ item.id }}">{{ item.displayName }}</option>
+                </select>
+              </div>
 
-            <!--            <div class="form-group col-md-6 m-form__group">-->
-            <!--              <label for="CityDisplayName">{{ l('City') }}</label>-->
-            <!--              <select name="routStep.originCityId" [(ngModel)]="routStep.originCityId" class="form-control">-->
-            <!--                <option value="">{{ l('SelectACity') }}</option>-->
-            <!--                <option *ngFor="let item of allCitys" value="{{ item.id }}">{{ item.displayName }}</option>-->
-            <!--              </select>-->
-            <!--            </div>-->
+              <!--            <div class="form-group col-md-6 m-form__group">-->
+              <!--              <label for="CityDisplayName">{{ l('City') }}</label>-->
+              <!--              <select name="routStep.originCityId" [(ngModel)]="routStep.originCityId" class="form-control">-->
+              <!--                <option value="">{{ l('SelectACity') }}</option>-->
+              <!--                <option *ngFor="let item of allCitys" value="{{ item.id }}">{{ item.displayName }}</option>-->
+              <!--              </select>-->
+              <!--            </div>-->
 
-            <!--            <div class="form-group col-md-6 m-form__group">-->
-            <!--              <label for="CityDisplayName2">{{ l('City') }}</label>-->
-            <!--              <select name="routStep.destinationCityId" [(ngModel)]="routStep.destinationCityId" class="form-control">-->
-            <!--                <option value="">{{ l('SelectACity') }}</option>-->
-            <!--                <option *ngFor="let item of allCitys" value="{{ item.id }}">{{ item.displayName }}</option>-->
-            <!--              </select>-->
-            <!--            </div>-->
+              <!--            <div class="form-group col-md-6 m-form__group">-->
+              <!--              <label for="CityDisplayName2">{{ l('City') }}</label>-->
+              <!--              <select name="routStep.destinationCityId" [(ngModel)]="routStep.destinationCityId" class="form-control">-->
+              <!--                <option value="">{{ l('SelectACity') }}</option>-->
+              <!--                <option *ngFor="let item of allCitys" value="{{ item.id }}">{{ item.displayName }}</option>-->
+              <!--              </select>-->
+              <!--            </div>-->
 
-            <div class="form-group col-md-6">
-              <label for="RoutStep_DisplayName">{{ l('DisplayName') }}</label>
-              <input
-                type="text"
-                id="RoutStep_DisplayName"
-                class="form-control"
-                [(ngModel)]="routStep.displayName"
-                name="DisplayName"
-                minlength="0"
-                maxlength="256"
-              />
-            </div>
-
-            <div class="form-group col-md-6">
-              <label for="RoutStep_Order">{{ l('Order') }}</label>
-              <input type="number" id="RoutStep_Order" class="form-control" [(ngModel)]="routStep.order" name="Order" min="1" max="50" />
-            </div>
-
-            <div class="form-group col-md-6 m-form__group">
-              <label for="GoodCategoryDisplayName">{{ l('GoodCategory') }}</label>
-              <select
-                [(ngModel)]="routStep.createOrEditGoodsDetailDto.goodCategoryId"
-                class="form-control"
-                name="createOrEditGoodsDetailDto.goodCategoryId"
-              >
-                <option value="">{{ l('SelectAGoodCategory') }}</option>
-                <option *ngFor="let item of allGoodCategorys" value="{{ item.id }}">{{ item.displayName }}</option>
-              </select>
-            </div>
-
-            <div class="form-group col-md-6">
-              <label for="GoodsDetail_Name">{{ l('Name') }} *</label>
-              <input
-                [(ngModel)]="routStep.createOrEditGoodsDetailDto.name"
-                class="form-control"
-                id="GoodsDetail_Name"
-                maxlength="256"
-                minlength="0"
-                name="createOrEditGoodsDetailDto.Name"
-                required
-                type="text"
-              />
-            </div>
-
-            <div class="form-group col-md-6">
-              <label for="GoodsDetail_Description">{{ l('Description') }}</label>
-              <input
-                [(ngModel)]="routStep.createOrEditGoodsDetailDto.description"
-                class="form-control"
-                id="GoodsDetail_Description"
-                maxlength="256"
-                minlength="0"
-                name="createOrEditGoodsDetailDto.Description"
-                type="text"
-              />
-            </div>
-
-            <div class="form-group col-md-6">
-              <label for="GoodsDetail_Quantity">{{ l('Quantity') }}</label>
-              <input
-                [(ngModel)]="routStep.createOrEditGoodsDetailDto.quantity"
-                class="form-control"
-                id="GoodsDetail_Quantity"
-                maxlength="128"
-                minlength="0"
-                name="createOrEditGoodsDetailDto.Quantity"
-                type="text"
-              />
-            </div>
-
-            <div class="form-group col-md-6">
-              <label for="GoodsDetail_Weight">{{ l('Weight') }}</label>
-              <input
-                [(ngModel)]="routStep.createOrEditGoodsDetailDto.weight"
-                class="form-control"
-                id="GoodsDetail_Weight"
-                maxlength="64"
-                minlength="0"
-                name="createOrEditGoodsDetailDto.Weight"
-                type="text"
-              />
-            </div>
-
-            <div class="form-group col-md-6">
-              <label for="GoodsDetail_Dimentions">{{ l('Dimentions') }}</label>
-              <input
-                [(ngModel)]="routStep.createOrEditGoodsDetailDto.dimentions"
-                class="form-control"
-                id="GoodsDetail_Dimentions"
-                maxlength="128"
-                minlength="0"
-                name="createOrEditGoodsDetailDto.Dimentions"
-                type="text"
-              />
-            </div>
-
-            <div class="form-group col-md-6">
-              <label for="GoodsDetail_DangerousGoodsCode">{{ l('DangerousGoodsCode') }}</label>
-              <input
-                [(ngModel)]="routStep.createOrEditGoodsDetailDto.dangerousGoodsCode"
-                class="form-control"
-                id="GoodsDetail_DangerousGoodsCode"
-                maxlength="64"
-                minlength="0"
-                name="createOrEditGoodsDetailDto.DangerousGoodsCode"
-                type="text"
-              />
-            </div>
-            <div class="m-checkbox-list col-md-6">
-              <label class="kt-checkbox kt-" for="GoodsDetail_IsDangerousGood">
+              <div class="form-group col-md-6">
+                <label for="RoutStep_DisplayName">{{ l('DisplayName') }}</label>
                 <input
-                  [(ngModel)]="routStep.createOrEditGoodsDetailDto.isDangerousGood"
-                  id="GoodsDetail_IsDangerousGood"
-                  name="createOrEditGoodsDetailDto.IsDangerousGood"
-                  type="checkbox"
+                  type="text"
+                  id="RoutStep_DisplayName"
+                  class="form-control"
+                  [(ngModel)]="routStep.displayName"
+                  name="DisplayName"
+                  minlength="0"
+                  maxlength="256"
                 />
-                {{ l('IsDangerousGood') }}
-                <span></span>
-              </label>
+              </div>
+
+              <div class="form-group col-md-6">
+                <label for="RoutStep_Order">{{ l('Order') }}</label>
+                <input type="number" id="RoutStep_Order" class="form-control" [(ngModel)]="routStep.order" name="Order" min="1" max="50" />
+              </div>
+
+              <!--            <div class="form-group col-md-6 m-form__group">-->
+              <!--              <label for="GoodCategoryDisplayName">{{ l('GoodCategory') }}</label>-->
+              <!--              <select-->
+              <!--                [(ngModel)]="routStep.createOrEditGoodsDetailDto.goodCategoryId"-->
+              <!--                class="form-control"-->
+              <!--                name="createOrEditGoodsDetailDto.goodCategoryId"-->
+              <!--              >-->
+              <!--                <option value="">{{ l('SelectAGoodCategory') }}</option>-->
+              <!--                <option *ngFor="let item of allGoodCategorys" value="{{ item.id }}">{{ item.displayName }}</option>-->
+              <!--              </select>-->
+              <!--            </div>-->
+
+              <!--            <div class="form-group col-md-6">-->
+              <!--              <label for="GoodsDetail_Name">{{ l('Name') }} *</label>-->
+              <!--              <input-->
+              <!--                [(ngModel)]="routStep.createOrEditGoodsDetailDto.name"-->
+              <!--                class="form-control"-->
+              <!--                id="GoodsDetail_Name"-->
+              <!--                maxlength="256"-->
+              <!--                minlength="0"-->
+              <!--                name="createOrEditGoodsDetailDto.Name"-->
+              <!--                required-->
+              <!--                type="text"-->
+              <!--              />-->
+              <!--            </div>-->
+
+              <!--            <div class="form-group col-md-6">-->
+              <!--              <label for="GoodsDetail_Description">{{ l('Description') }}</label>-->
+              <!--              <input-->
+              <!--                [(ngModel)]="routStep.createOrEditGoodsDetailDto.description"-->
+              <!--                class="form-control"-->
+              <!--                id="GoodsDetail_Description"-->
+              <!--                maxlength="256"-->
+              <!--                minlength="0"-->
+              <!--                name="createOrEditGoodsDetailDto.Description"-->
+              <!--                type="text"-->
+              <!--              />-->
+              <!--            </div>-->
+
+              <!--            <div class="form-group col-md-6">-->
+              <!--              <label for="GoodsDetail_Quantity">{{ l('Quantity') }}</label>-->
+              <!--              <input-->
+              <!--                [(ngModel)]="routStep.createOrEditGoodsDetailDto.quantity"-->
+              <!--                class="form-control"-->
+              <!--                id="GoodsDetail_Quantity"-->
+              <!--                maxlength="128"-->
+              <!--                minlength="0"-->
+              <!--                name="createOrEditGoodsDetailDto.Quantity"-->
+              <!--                type="text"-->
+              <!--              />-->
+              <!--            </div>-->
+
+              <!--            <div class="form-group col-md-6">-->
+              <!--              <label for="GoodsDetail_Weight">{{ l('Weight') }}</label>-->
+              <!--              <input-->
+              <!--                [(ngModel)]="routStep.createOrEditGoodsDetailDto.weight"-->
+              <!--                class="form-control"-->
+              <!--                id="GoodsDetail_Weight"-->
+              <!--                maxlength="64"-->
+              <!--                minlength="0"-->
+              <!--                name="createOrEditGoodsDetailDto.Weight"-->
+              <!--                type="text"-->
+              <!--              />-->
+              <!--            </div>-->
+
+              <!--            <div class="form-group col-md-6">-->
+              <!--              <label for="GoodsDetail_Dimentions">{{ l('Dimentions') }}</label>-->
+              <!--              <input-->
+              <!--                [(ngModel)]="routStep.createOrEditGoodsDetailDto.dimentions"-->
+              <!--                class="form-control"-->
+              <!--                id="GoodsDetail_Dimentions"-->
+              <!--                maxlength="128"-->
+              <!--                minlength="0"-->
+              <!--                name="createOrEditGoodsDetailDto.Dimentions"-->
+              <!--                type="text"-->
+              <!--              />-->
+              <!--            </div>-->
+
+              <!--            <div class="form-group col-md-6">-->
+              <!--              <label for="GoodsDetail_DangerousGoodsCode">{{ l('DangerousGoodsCode') }}</label>-->
+              <!--              <input-->
+              <!--                [(ngModel)]="routStep.createOrEditGoodsDetailDto.dangerousGoodsCode"-->
+              <!--                class="form-control"-->
+              <!--                id="GoodsDetail_DangerousGoodsCode"-->
+              <!--                maxlength="64"-->
+              <!--                minlength="0"-->
+              <!--                name="createOrEditGoodsDetailDto.DangerousGoodsCode"-->
+              <!--                type="text"-->
+              <!--              />-->
+              <!--            </div>-->
+              <!--            <div class="m-checkbox-list col-md-6">-->
+              <!--              <label class="kt-checkbox kt-" for="GoodsDetail_IsDangerousGood">-->
+              <!--                <input-->
+              <!--                  [(ngModel)]="routStep.createOrEditGoodsDetailDto.isDangerousGood"-->
+              <!--                  id="GoodsDetail_IsDangerousGood"-->
+              <!--                  name="createOrEditGoodsDetailDto.IsDangerousGood"-->
+              <!--                  type="checkbox"-->
+              <!--                />-->
+              <!--                {{ l('IsDangerousGood') }}-->
+              <!--                <span></span>-->
+              <!--              </label>-->
+              <!--            </div>-->
             </div>
           </div>
-        </div>
-        <div class="modal-footer">
-          <button [disabled]="saving" type="button" class="btn btn-default" (click)="staticModal.hide()">{{ l('Cancel') }}</button>
-          <button
-            type="submit"
-            class="btn btn-primary blue"
-            [disabled]="!routStepForm.form.valid"
-            [buttonBusy]="saving"
-            [busyText]="l('SavingWithThreeDot')"
-          >
-            <i class="fa fa-save"></i> <span>{{ l('Save') }}</span>
-          </button>
-        </div>
-      </form>
+          <div class="modal-footer">
+            <button [disabled]="saving" type="button" class="btn btn-default" (click)="staticModal.hide()">{{ l('Cancel') }}</button>
+            <button
+              type="submit"
+              class="btn btn-primary blue"
+              [disabled]="!routStepForm.form.valid"
+              [buttonBusy]="saving"
+              [busyText]="l('SavingWithThreeDot')"
+            >
+              <i class="fa fa-save"></i> <span>{{ l('Save') }}</span>
+            </button>
+          </div>
+        </form>
+      </div>
     </div>
   </div>
-</div>
-<!--<createOrEditFacilityModal #createOrEditFacilityModal (modalSave)="refreshFacilities()"></createOrEditFacilityModal>-->
-<div
-  class="modal fade"
-  bsModal
-  #createFacilityModal="bs-modal"
-  [config]="{ backdrop: 'static' }"
-  tabindex="-1"
-  role="dialog"
-  aria-labelledby="dialog-static-name"
->
-  <div class="modal-dialog modal-xl">
-    <div class="modal-content">
-      <form *ngIf="active" #createFacilityForm="ngForm" novalidate (ngSubmit)="createFacility()" autocomplete="off">
-        <div class="modal-header">
-          <h4 class="modal-title">
-            <!--                <span *ngIf="routStep.id">{{l("EditRoutStep")}}</span>-->
-            <!--                <span *ngIf="!routStep.id">{{l("CreateNewRoutStep")}}</span>-->
-            {{ l('CreateFacilityModal') }}
-          </h4>
-          <button type="button" class="close" (click)="createFacilityModal.hide()" aria-label="Close" [disabled]="saving">
-            <span aria-hidden="true">&times;</span>
-          </button>
-        </div>
-        <div class="modal-body">
-          <div class="row">
-            <div class="form-group col-md-6">
-              <label>{{ l('search') }}</label>
-              <input
-                type="text"
-                class="form-control"
-                (keydown.enter)="$event.preventDefault()"
-                placeholder="Search Nearest Location"
-                autocorrect="off"
-                autocapitalize="off"
-                spellcheck="off"
-                type="text"
-                #search
-              />
-            </div>
-            <div class="form-group col-md-6">
-              <label for="Facility_Name">{{ l('Name') }} *</label>
-              <input
-                type="text"
-                id="Facility_Name"
-                class="form-control"
-                [(ngModel)]="facility.name"
-                name="Name"
-                minlength="0"
-                maxlength="256"
-                required
-              />
-            </div>
-
-            <div class="form-group col-md-12">
-              <agm-map [latitude]="facility.latitude" [longitude]="facility.longitude" [zoom]="zoom" (mapClick)="mapClicked($event)">
-                <agm-marker [latitude]="facility.latitude" [longitude]="facility.longitude" [markerDraggable]="true"> </agm-marker>
-              </agm-map>
-            </div>
-            <!--                        <div class="form-group m-form__group">-->
-            <!--                            <label for="CountyDisplayName">{{ l('County') }}</label>-->
-            <!--                            <select name="facility.countyId" [(ngModel)]="facility.countyId" class="form-control" required>-->
-            <!--                                <option value="">{{ l('SelectACounty') }}</option>-->
-            <!--                                <option *ngFor="let item of allCountries" value="{{ item.id }}">{{ item.displayName }}</option>-->
-            <!--                            </select>-->
-            <!--                        </div>-->
-
-            <div class="form-group m-form__group">
-              <label for="CityDisplayName">{{ l('City') }}</label>
-              <select name="facility.cityId" [(ngModel)]="facility.cityId" class="form-control" required>
-                <option value="">{{ l('SelectACity') }}</option>
-                <option *ngFor="let item of allCitys" value="{{ item.id }}">{{ item.displayName }}</option>
-              </select>
-            </div>
-
-            <div class="form-group col-md-6">
-              <label for="Facility_Adress">{{ l('Adress') }} *</label>
-              <input
-                type="text"
-                id="Facility_Adress"
-                class="form-control"
-                [(ngModel)]="facility.adress"
-                name="Adress"
-                minlength="0"
-                maxlength="256"
-                required
-              />
-            </div>
-
-            <!--                        <div class="form-group col-md-6">-->
-            <!--                            <label for="Facility_Longitude">{{ l('Longitude') }}</label>-->
-            <!--                            <input type="number" id="Facility_Longitude" class="form-control" [(ngModel)]="facility.longitude" name="Longitude" />-->
-            <!--                        </div>-->
-
-            <!--                        <div class="form-group col-md-6">-->
-            <!--                            <label for="Facility_Latitude">{{ l('Latitude') }}</label>-->
-            <!--                            <input type="number" id="Facility_Latitude" class="form-control" [(ngModel)]="facility.latitude" name="Latitude" />-->
-            <!--                        </div>-->
+  <!--<createOrEditFacilityModal #createOrEditFacilityModal (modalSave)="refreshFacilities()"></createOrEditFacilityModal>-->
+  <div
+    class="modal fade"
+    bsModal
+    #createFacilityModal="bs-modal"
+    [config]="{ backdrop: 'static' }"
+    tabindex="-1"
+    role="dialog"
+    aria-labelledby="dialog-static-name"
+  >
+    <div class="modal-dialog modal-xl">
+      <div class="modal-content">
+        <form *ngIf="active" #createFacilityForm="ngForm" novalidate (ngSubmit)="createFacility()" autocomplete="off">
+          <div class="modal-header">
+            <h4 class="modal-title">
+              <!--                <span *ngIf="routStep.id">{{l("EditRoutStep")}}</span>-->
+              <!--                <span *ngIf="!routStep.id">{{l("CreateNewRoutStep")}}</span>-->
+              {{ l('CreateFacilityModal') }}
+            </h4>
+            <button type="button" class="close" (click)="createFacilityModal.hide()" aria-label="Close" [disabled]="saving">
+              <span aria-hidden="true">&times;</span>
+            </button>
           </div>
-        </div>
-        <div class="modal-footer">
-          <button [disabled]="saving" type="button" class="btn btn-default" (click)="createFacilityModal.hide()">{{ l('Cancel') }}</button>
-          <button
-            type="submit"
-            class="btn btn-primary blue"
-            [disabled]="!createFacilityForm.form.valid"
-            [buttonBusy]="saving"
-            [busyText]="l('SavingWithThreeDot')"
-          >
-            <i class="fa fa-save"></i> <span>{{ l('Save') }}</span>
-          </button>
-        </div>
-      </form>
+          <div class="modal-body">
+            <div class="row">
+              <div class="form-group col-md-6">
+                <label>{{ l('search') }}</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  (keydown.enter)="$event.preventDefault()"
+                  placeholder="Search Nearest Location"
+                  autocorrect="off"
+                  autocapitalize="off"
+                  spellcheck="off"
+                  type="text"
+                  #search
+                />
+              </div>
+              <div class="form-group col-md-6">
+                <label for="Facility_Name">{{ l('Name') }} *</label>
+                <input
+                  type="text"
+                  id="Facility_Name"
+                  class="form-control"
+                  [(ngModel)]="facility.name"
+                  name="Name"
+                  minlength="0"
+                  maxlength="256"
+                  required
+                />
+              </div>
+
+              <div class="form-group col-md-12">
+                <agm-map [latitude]="facility.latitude" [longitude]="facility.longitude" [zoom]="zoom" (mapClick)="mapClicked($event)">
+                  <agm-marker [latitude]="facility.latitude" [longitude]="facility.longitude" [markerDraggable]="true"> </agm-marker>
+                </agm-map>
+              </div>
+              <!--                        <div class="form-group m-form__group">-->
+              <!--                            <label for="CountyDisplayName">{{ l('County') }}</label>-->
+              <!--                            <select name="facility.countyId" [(ngModel)]="facility.countyId" class="form-control" required>-->
+              <!--                                <option value="">{{ l('SelectACounty') }}</option>-->
+              <!--                                <option *ngFor="let item of allCountries" value="{{ item.id }}">{{ item.displayName }}</option>-->
+              <!--                            </select>-->
+              <!--                        </div>-->
+
+              <div class="form-group m-form__group">
+                <label for="CityDisplayName">{{ l('City') }}</label>
+                <select name="facility.cityId" [(ngModel)]="facility.cityId" class="form-control" required>
+                  <option value="">{{ l('SelectACity') }}</option>
+                  <option *ngFor="let item of allCitys" value="{{ item.id }}">{{ item.displayName }}</option>
+                </select>
+              </div>
+
+              <div class="form-group col-md-6">
+                <label for="Facility_Adress">{{ l('Adress') }} *</label>
+                <input
+                  type="text"
+                  id="Facility_Adress"
+                  class="form-control"
+                  [(ngModel)]="facility.adress"
+                  name="Adress"
+                  minlength="0"
+                  maxlength="256"
+                  required
+                />
+              </div>
+
+              <!--                        <div class="form-group col-md-6">-->
+              <!--                            <label for="Facility_Longitude">{{ l('Longitude') }}</label>-->
+              <!--                            <input type="number" id="Facility_Longitude" class="form-control" [(ngModel)]="facility.longitude" name="Longitude" />-->
+              <!--                        </div>-->
+
+              <!--                        <div class="form-group col-md-6">-->
+              <!--                            <label for="Facility_Latitude">{{ l('Latitude') }}</label>-->
+              <!--                            <input type="number" id="Facility_Latitude" class="form-control" [(ngModel)]="facility.latitude" name="Latitude" />-->
+              <!--                        </div>-->
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button [disabled]="saving" type="button" class="btn btn-default" (click)="createFacilityModal.hide()">{{ l('Cancel') }}</button>
+            <button
+              type="submit"
+              class="btn btn-primary blue"
+              [disabled]="!createFacilityForm.form.valid"
+              [buttonBusy]="saving"
+              [busyText]="l('SavingWithThreeDot')"
+            >
+              <i class="fa fa-save"></i> <span>{{ l('Save') }}</span>
+            </button>
+          </div>
+        </form>
+      </div>
     </div>
   </div>
 </div>

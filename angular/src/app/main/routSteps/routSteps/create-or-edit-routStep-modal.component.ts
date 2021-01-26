@@ -42,13 +42,13 @@ export class CreateOrEditRoutStepModalComponent extends AppComponentBase {
 
   constructor(injector: Injector, private _routStepsServiceProxy: RoutStepsServiceProxy) {
     super(injector);
-    this.routStep.createOrEditGoodsDetailDto = new CreateOrEditGoodsDetailDto();
+    // this.routStep.createOrEditGoodsDetailDto = new CreateOrEditGoodsDetailDto();
   }
 
   show(routStepId?: number): void {
     if (!routStepId) {
       this.routStep = new CreateOrEditRoutStepDto();
-      this.routStep.createOrEditGoodsDetailDto = new CreateOrEditGoodsDetailDto();
+      // this.routStep.createOrEditGoodsDetailDto = new CreateOrEditGoodsDetailDto();
 
       this.routStep.id = routStepId;
       this.cityDisplayName = '';

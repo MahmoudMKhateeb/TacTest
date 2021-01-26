@@ -29,11 +29,12 @@ export class GoodsDetailsComponent extends AppComponentBase {
   nameFilter = '';
   descriptionFilter = '';
   quantityFilter = undefined;
-  weightFilter = '';
+  weightFilter: number; //TODO: added it while fixing errors
   dimentionsFilter = '';
   isDangerousGoodFilter = -1;
   dangerousGoodsCodeFilter = '';
   goodCategoryDisplayNameFilter = '';
+  ShippingRequestId: number; //TODO: added it while fixing errors
 
   constructor(
     injector: Injector,
@@ -65,6 +66,7 @@ export class GoodsDetailsComponent extends AppComponentBase {
         this.isDangerousGoodFilter,
         this.dangerousGoodsCodeFilter,
         this.goodCategoryDisplayNameFilter,
+        this.ShippingRequestId,
         this.primengTableHelper.getSorting(this.dataTable),
         this.primengTableHelper.getSkipCount(this.paginator, event),
         this.primengTableHelper.getMaxResultCount(this.paginator, event)

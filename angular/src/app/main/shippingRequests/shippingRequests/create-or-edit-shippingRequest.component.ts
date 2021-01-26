@@ -3,7 +3,6 @@ import { finalize } from 'rxjs/operators';
 import {
   CarriersForDropDownDto,
   CreateOrEditFacilityDto,
-  CreateOrEditGoodsDetailDto,
   CreateOrEditRouteDto,
   CreateOrEditRoutStepDto,
   CreateOrEditShippingRequestDto,
@@ -109,7 +108,7 @@ export class CreateOrEditShippingRequestComponent extends AppComponentBase imple
 
   ngOnInit(): void {
     this.shippingRequest.createOrEditRouteDto = new CreateOrEditRouteDto();
-    this.routStep.createOrEditGoodsDetailDto = new CreateOrEditGoodsDetailDto();
+    //this.routStep.createOrEditGoodsDetailDto = new CreateOrEditGoodsDetailDto();
     this.show(this._activatedRoute.snapshot.queryParams['id']);
   }
 
