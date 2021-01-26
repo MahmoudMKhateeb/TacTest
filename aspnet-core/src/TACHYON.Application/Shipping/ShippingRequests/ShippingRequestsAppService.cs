@@ -372,7 +372,7 @@ namespace TACHYON.Shipping.ShippingRequests
 
                 int totalCount = await filteredShippingRequests.CountAsync();
 
-                return new PagedResultDto<GetShippingRequestForViewDto>(0, shippingRequests.ToList());
+                return new PagedResultDto<GetShippingRequestForViewDto>(totalCount, shippingRequests.ToList());
         }
 
         protected virtual async Task<GetShippingRequestForViewDto> _GetShippingRequestForView(long id)
