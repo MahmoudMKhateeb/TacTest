@@ -156,6 +156,25 @@
               </select>
               <validation-messages [formCtrl]="TruckStatus"></validation-messages>
             </div>
+            <div class="form-group col-md-6">
+              <label for="PlateTypeId"><span class="text-danger">*</span> {{ l('PlateType') }}</label>
+              <select
+                #PlateTypeId="ngModel"
+                id="PlateTypeId"
+                [(ngModel)]="truck.plateTypeId"
+                class="form-control"
+                name="truck.plateTypeId"
+                required
+                [ngClass]="{
+                  'is-valid': TruckStatus.valid,
+                  'is-invalid': truckForm.submitted && PlateTypeId.invalid
+                }"
+              >
+                <option [ngValue]="null"> {{ l('Select') }} {{ l('plateTypeId') }}</option>
+                <option *ngFor="let item of allPlateTypes" value="{{ item.id }}">{{ item.displayName }}</option>
+              </select>
+              <validation-messages [formCtrl]="PlateTypeId"></validation-messages>
+            </div>
 
             <div class="form-group col-md-6">
               <label for="Truck_PlateNumber"><span class="text-danger">*</span> {{ l('PlateNumber') }}</label>

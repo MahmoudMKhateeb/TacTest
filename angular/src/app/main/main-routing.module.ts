@@ -1,5 +1,6 @@
 ﻿import { NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
+import { PlateTypesComponent } from './plateTypes/plateTypes/plateTypes.component';
 import { TruckCapacitiesTranslationsComponent } from './truckCapacitiesTranslations/truckCapacitiesTranslations/truckCapacitiesTranslations.component';
 import { TruckStatusesTranslationsComponent } from './truckStatusesTranslations/truckStatusesTranslations/truckStatusesTranslations.component';
 import { TripStatusesComponent } from './tripStatuses/tripStatuses/tripStatuses.component';
@@ -47,6 +48,18 @@ import { MarketplaceComponent } from '@app/main/marketPlace/marketPlace/marketpl
       {
         path: '',
         children: [
+          { path: 'plateTypes/plateTypes', component: PlateTypesComponent, data: { permission: 'Pages.Capacities' } },
+          { path: 'nationalities/nationalities', component: NationalitiesComponent, data: { permission: 'Pages.Nationalities' } },
+          {
+            path: 'nationalitiesTranslation/nationalityTranslations',
+            component: NationalityTranslationsComponent,
+            data: { permission: 'Pages.NationalityTranslations' },
+          },
+          {
+            path: 'transportTypesTranslations/transportTypesTranslations',
+            component: TransportTypesTranslationsComponent,
+            data: { permission: 'Pages.TransportTypesTranslations' },
+          },
                     { path: 'truckCapacitiesTranslations/truckCapacitiesTranslations', component: TruckCapacitiesTranslationsComponent, data: { permission: 'Pages.TruckCapacitiesTranslations' }  },
                     { path: 'truckStatusesTranslations/truckStatusesTranslations', component: TruckStatusesTranslationsComponent, data: { permission: 'Pages.TruckStatusesTranslations' }  },
                     { path: 'nationalities/nationalities', component: NationalitiesComponent, data: { permission: 'Pages.Nationalities' }  },

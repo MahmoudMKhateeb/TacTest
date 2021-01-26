@@ -1,3 +1,6 @@
+﻿using TACHYON.Trucks.PlateTypes.Dtos;
+using TACHYON.Trucks.PlateTypes;
+using TACHYON.Nationalities.Dtos;
 ﻿using TACHYON.Trucks.TruckCategories.TruckCapacities.TruckCapacitiesTranslations.Dtos;
 using TACHYON.Trucks.TruckCategories.TruckCapacities.TruckCapacitiesTranslations;
 using TACHYON.Trucks.TruckStatusesTranslations.Dtos;
@@ -172,6 +175,8 @@ namespace TACHYON
         }
         public static void CreateMappings(IMapperConfigurationExpression configuration)
         {
+            configuration.CreateMap<CreateOrEditPlateTypeDto, PlateType>().ReverseMap();
+            configuration.CreateMap<PlateTypeDto, PlateType>().ReverseMap();
             configuration.CreateMap<CreateOrEditTruckCapacitiesTranslationDto, TruckCapacitiesTranslation>().ReverseMap();
             configuration.CreateMap<TruckCapacitiesTranslationDto, TruckCapacitiesTranslation>().ReverseMap();
             configuration.CreateMap<CreateOrEditTruckStatusesTranslationDto, TruckStatusesTranslation>().ReverseMap();

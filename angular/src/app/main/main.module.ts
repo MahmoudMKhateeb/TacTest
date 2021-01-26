@@ -2,6 +2,10 @@
 import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { AppCommonModule } from '@app/shared/common/app-common.module';
+import { PlateTypesComponent } from './plateTypes/plateTypes/plateTypes.component';
+import { ViewPlateTypeModalComponent } from './plateTypes/plateTypes/view-plateType-modal.component';
+import { CreateOrEditPlateTypeModalComponent } from './plateTypes/plateTypes/create-or-edit-plateType-modal.component';
+
 import { TruckCapacitiesTranslationsComponent } from './truckCapacitiesTranslations/truckCapacitiesTranslations/truckCapacitiesTranslations.component';
 import { ViewTruckCapacitiesTranslationModalComponent } from './truckCapacitiesTranslations/truckCapacitiesTranslations/view-truckCapacitiesTranslation-modal.component';
 import { CreateOrEditTruckCapacitiesTranslationModalComponent } from './truckCapacitiesTranslations/truckCapacitiesTranslations/create-or-edit-truckCapacitiesTranslation-modal.component';
@@ -219,6 +223,10 @@ NgxBootstrapDatePickerConfigService.registerNgxBootstrapDatePickerLocales();
     SelectButtonModule,
   ],
   declarations: [
+		PlateTypesComponent,
+
+		ViewPlateTypeModalComponent,
+		CreateOrEditPlateTypeModalComponent,
 		TruckCapacitiesTranslationsComponent,
 
 		ViewTruckCapacitiesTranslationModalComponent,

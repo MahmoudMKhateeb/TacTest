@@ -128,6 +128,8 @@ export class AppNavigationService {
               new AppMenuItem('TruckCapacitiesTranslations', 'Pages.TruckCapacitiesTranslations', 'flaticon-more', '/app/main/truckCapacitiesTranslations/truckCapacitiesTranslations'),
             ]
           ),
+          new AppMenuItem('PlateTypes', 'Pages.Capacities', 'flaticon-more', '/app/main/plateTypes/plateTypes'),
+
           new AppMenuItem('TruckStatuses', 'Pages.Administration.TruckStatuses', 'flaticon-info', '/app/admin/trucks/truckStatuses'),
           new AppMenuItem('TruckStatusesTranslations', 'Pages.TruckStatusesTranslations', 'flaticon-more', '/app/main/truckStatusesTranslations/truckStatusesTranslations'),
           // new AppMenuItem('PickingTypes', 'Pages.PickingTypes', 'flaticon2-telegram-logo', '/app/main/pickingTypes/pickingTypes'),

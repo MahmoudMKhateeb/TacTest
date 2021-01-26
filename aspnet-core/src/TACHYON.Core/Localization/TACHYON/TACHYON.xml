@@ -1,6 +1,13 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <localizationDictionary culture="en">
-  <texts>    <text name="TruckCapacitiesTranslations">Truck capacities translations</text>
+  <texts>    <text name="PlateTypes">Plate types</text>
+    <text name="PlateType">Plate type</text>
+    <text name="TACHYON.PlateTypes.PlateType">PlateType</text>
+    <text name="PlateTypesHeaderInfo">Plate types header info</text>
+    <text name="CreateNewPlateType">Create new plate type</text>
+    <text name="EditPlateType">Edit plate type</text>
+    <text name="DeletePlateType">Delete plate type</text>
+    <text name="Nationalities">Nationalities</text>
     <text name="TruckCapacitiesTranslation">Truck capacities translation</text>
     <text name="TACHYON.TruckCapacitiesTranslations.TruckCapacitiesTranslation">TruckCapacitiesTranslation</text>
     <text name="TruckCapacitiesTranslationsHeaderInfo">Truck capacities translations header info</text>
