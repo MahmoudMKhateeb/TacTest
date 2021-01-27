@@ -5,7 +5,7 @@ using TACHYON.AddressBook.Dtos;
 
 namespace TACHYON.Routs.RoutPoints.Dtos
 {
-    public class GetRoutPointForViewDto
+    public class GetRoutPointForViewOutput
     {
         public RoutPointDto RoutPointDto { get; set; }
         public string CityName { get; set; }

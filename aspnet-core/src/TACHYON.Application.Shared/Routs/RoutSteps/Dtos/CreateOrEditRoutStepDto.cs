@@ -8,8 +8,9 @@ using TACHYON.Routs.RoutPoints.Dtos;
 
 namespace TACHYON.Routs.RoutSteps.Dtos
 {
-    public class CreateOrEditRoutStepDto : EntityDto<long?>
+    public class CreateOrEditRoutStepDto: EntityDto<long?>
     {
+
         [StringLength(RoutStepConsts.MaxDisplayNameLength, MinimumLength = RoutStepConsts.MinDisplayNameLength)]
         public string DisplayName { get; set; }
 
@@ -17,8 +18,7 @@ namespace TACHYON.Routs.RoutSteps.Dtos
         [Range(RoutStepConsts.MinOrderValue, RoutStepConsts.MaxOrderValue)]
         public int Order { get; set; }
 
-        [Required]
-        public int ShippingRequestId { get; set; }
+        public int?ShippingRequestId { get; set; }
 
         public long? AssignedDriverUserId { get; set; }
 
@@ -31,9 +31,9 @@ namespace TACHYON.Routs.RoutSteps.Dtos
         public double RemainingAmount { get; set; }
         //public CreateOrEditGoodsDetailDto CreateOrEditGoodsDetailDto { get; set; }
         [Required]
-        public CreateOrEditRoutPointInput CreateOrEditSourceRoutPointInputDto { get; set; }
+        public CreateOrEditRoutPointDto CreateOrEditSourceRoutPointInputDto { get; set; }
         [Required]
-        public CreateOrEditRoutPointInput CreateOrEditDestinationRoutPointInputDto { get; set; }
+        public CreateOrEditRoutPointDto CreateOrEditDestinationRoutPointInputDto { get; set; }
 
     }
 }

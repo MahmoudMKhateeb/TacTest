@@ -13,8 +13,8 @@ namespace TACHYON.Shipping.ShippingRequests.Dtos
         public decimal? Price { get; set; }
         public bool? IsPriceAccepted { get; set; }
         public bool? IsRejected { get; set; }
-
-
+        public DateTime? StartTripDate { get; set; }
+        public int NumberOfTrips { get; set; }
 
 
     }

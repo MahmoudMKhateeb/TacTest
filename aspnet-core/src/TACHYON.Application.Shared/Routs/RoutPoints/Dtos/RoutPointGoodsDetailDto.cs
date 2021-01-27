@@ -11,8 +11,7 @@ namespace TACHYON.Routs.RoutPoints.Dtos
         public int Amount{get; set;}
         [Required]
         public long GoodsDetailsId { get; set; }
-        [Required]
-        public long RoutPointId { get; set; }
+        public long? RoutPointId { get; set; }
 
     }
 }

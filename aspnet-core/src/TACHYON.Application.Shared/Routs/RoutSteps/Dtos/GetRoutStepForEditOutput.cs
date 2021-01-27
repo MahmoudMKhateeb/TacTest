@@ -24,8 +24,8 @@ namespace TACHYON.Routs.RoutSteps.Dtos
         public string TrailerTypeDisplayName { get; set; }
 
         //public string GoodsDetailName { get; set; }
-        public GetRoutPointForViewDto SourceRoutPointDto { get; set; }
-        public GetRoutPointForViewDto DestinationRoutPointDto { get; set; }
+        public GetRoutPointForViewOutput SourceRoutPointDto { get; set; }
+        public GetRoutPointForViewOutput DestinationRoutPointDto { get; set; }
 
 
     }

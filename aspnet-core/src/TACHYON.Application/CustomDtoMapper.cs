@@ -203,18 +203,22 @@ namespace TACHYON
             configuration.CreateMap<CreateOrEditRoutStepDto, RoutStep>()
                 .ForMember(dst=>dst.SourceRoutPointFk, opt=>opt.MapFrom(src=>src.CreateOrEditSourceRoutPointInputDto))
                 .ForMember(dest=>dest.DestinationRoutPointFk,opt=>opt.MapFrom(src=>src.CreateOrEditDestinationRoutPointInputDto))
+                .ForPath(dest=>dest.SourceRoutPointFk.RoutPointGoodsDetails,opt=>opt.MapFrom(src=>src.CreateOrEditSourceRoutPointInputDto.RoutPointGoodsDetailListDto))
+                .ForPath(dest => dest.DestinationRoutPointFk.RoutPointGoodsDetails, opt => opt.MapFrom(src => src.CreateOrEditDestinationRoutPointInputDto.RoutPointGoodsDetailListDto))
                 .ReverseMap();
+
             configuration.CreateMap<RoutStepDto, RoutStep>().ReverseMap();
-            configuration.CreateMap<GetRoutStepForViewDto, RoutStep>()
+            configuration.CreateMap<GetRoutStepForViewOutput, RoutStep>()
                 .ForMember(dest => dest.SourceRoutPointFk, opt => opt.MapFrom(src => src.SourceRoutPointDto))
                 .ForMember(dest => dest.DestinationRoutPointFk, opt => opt.MapFrom(src => src.DestinationRoutPointDto))
                 .ForPath(dest => dest.SourceRoutPointFk.FacilityFk, opt => opt.MapFrom(src => src.SourceRoutPointDto.FacilityDto))
                 .ForPath(dest => dest.DestinationRoutPointFk.FacilityFk, opt => opt.MapFrom(src => src.DestinationRoutPointDto.FacilityDto))
                 .ReverseMap();
 
-
+            configuration.CreateMap<RoutPointGoodsDetail, RoutPointGoodsDetailDto>()
+                .ReverseMap();
             configuration.CreateMap<RoutPointDto, RoutPoint>().ReverseMap();
-            configuration.CreateMap<CreateOrEditRoutPointInput, RoutPoint>()
+            configuration.CreateMap<CreateOrEditRoutPointDto, RoutPoint>()
                 .ForMember(dest=>dest.RoutPointGoodsDetails,opt=>opt.MapFrom(src=>src.RoutPointGoodsDetailListDto))
                 .ReverseMap();
             configuration.CreateMap<CreateOrEditRouteDto, Route>().ReverseMap();

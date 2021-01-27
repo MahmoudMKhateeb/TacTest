@@ -10,7 +10,7 @@ namespace TACHYON.Routs.RoutPoints
 {
     public interface IRoutPointAppService: IApplicationService
     {
-        Task<PagedResultDto<GetRoutPointForViewDto>> GetAll(GetAllRoutPointInput input);
+        Task<PagedResultDto<GetRoutPointForViewOutput>> GetAll(GetAllRoutPointInput input);
 
     }
 }

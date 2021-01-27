@@ -22,7 +22,7 @@ namespace TACHYON.Routs.RoutPoints
             _routPointsRepository = routPointsRepository;
         }
 
-        public async Task<PagedResultDto<GetRoutPointForViewDto>> GetAll(GetAllRoutPointInput input)
+        public async Task<PagedResultDto<GetRoutPointForViewOutput>> GetAll(GetAllRoutPointInput input)
         {
             var filteredRoutPoints = _routPointsRepository.GetAll()
                 .Include(x=>x.FacilityFk)
@@ -36,7 +36,7 @@ namespace TACHYON.Routs.RoutPoints
                 .OrderBy(input.Sorting ?? "id asc")
                     .PageBy(input);
 
-            var routPoints = PagedAndFilteredRoutPoints.Select(x => new GetRoutPointForViewDto
+            var routPoints = PagedAndFilteredRoutPoints.Select(x => new GetRoutPointForViewOutput
             {
                 RoutPointDto = ObjectMapper.Map<RoutPointDto>(x),
                 CityName = x.FacilityFk.CityFk.DisplayName,
@@ -45,11 +45,11 @@ namespace TACHYON.Routs.RoutPoints
             });
 
             var totalCount =await routPoints.CountAsync();
-            return new PagedResultDto<GetRoutPointForViewDto>(totalCount, await routPoints.ToListAsync());
+            return new PagedResultDto<GetRoutPointForViewOutput>(totalCount, await routPoints.ToListAsync());
 
         }
 
-        public async Task CreateOrEditRoutPoint(CreateOrEditRoutPointInput input)
+        public async Task CreateOrEditRoutPoint(CreateOrEditRoutPointDto input)
         {
             if (input.Id == null)
             {
@@ -69,14 +69,14 @@ namespace TACHYON.Routs.RoutPoints
         }
 
         [AbpAuthorize(AppPermissions.Pages_RoutPoints_Create)]
-        private async Task Create(CreateOrEditRoutPointInput input)
+        private async Task Create(CreateOrEditRoutPointDto input)
         {
             var routPoint = ObjectMapper.Map<RoutPoint>(input);
             await _routPointsRepository.InsertAsync(routPoint);
         }
 
         [AbpAuthorize(AppPermissions.Pages_RoutPoints_Edit)]
-        private async Task Edit(CreateOrEditRoutPointInput input)
+        private async Task Edit(CreateOrEditRoutPointDto input)
         {
             var routPoint =await _routPointsRepository.FirstOrDefaultAsync((long)input.Id);
             ObjectMapper.Map(input, routPoint);
