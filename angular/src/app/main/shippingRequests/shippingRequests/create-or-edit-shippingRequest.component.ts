@@ -29,18 +29,7 @@ import { CreateOrEditFacilityModalComponent } from '@app/main/addressBook/facili
 
 @Component({
   templateUrl: './create-or-edit-shippingRequest.component.html',
-  styles: [
-    `
-      :host ::ng-deep .ui-multiselect {
-        min-width: 15rem;
-        width: 200px;
-      }
-      agm-map {
-        height: 300px;
-      }
-    `,
-  ],
-
+  styleUrls: ['./create-or-edit-shippingRequest.component.css'],
   animations: [appModuleAnimation()],
 })
 export class CreateOrEditShippingRequestComponent extends AppComponentBase implements OnInit {
@@ -272,6 +261,7 @@ export class CreateOrEditShippingRequestComponent extends AppComponentBase imple
     }
     return true;
   }
+
   getAllVasList() {
     this._shippingRequestsServiceProxy.getAllShippingRequestVasesForTableDropdown().subscribe((result) => {
       this.allVases = result;

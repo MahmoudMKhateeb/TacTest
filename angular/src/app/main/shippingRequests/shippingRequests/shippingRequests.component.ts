@@ -31,7 +31,7 @@ export class ShippingRequestsComponent extends AppComponentBase {
   // goodsDetailNameFilter = '';
   // routeDisplayNameFilter = '';
   isBid = false;
-  isTachyonDeal = true;
+  isTachyonDeal = false;
 
   constructor(
     injector: Injector,

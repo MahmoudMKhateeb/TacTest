@@ -1,259 +1,339 @@
 ﻿<!--suppress XmlInvalidId -->
 <div [@routerTransition]>
   <div class="content d-flex flex-column flex-column-fluid">
-    <sub-header [breadcrumbs]="breadcrumbs" [title]="('ShippingRequests' | localize) + ' ' + ('Details' | localize)"> </sub-header>
+    <sub-header [breadcrumbs]="breadcrumbs" [title]="('ShippingRequests' | localize) + ' ' + ('create' | localize)"></sub-header>
 
     <div [class]="containerClass">
       <div class="card card-custom gutter-b">
-        <div class="card-body">
-          <div class="row">
-            <div class="form-group col-md-6 m-form__group">
-              <label for="TrucksTypeDisplayName">{{ l('TrucksType') }}</label>
-              <select [(ngModel)]="shippingRequest.trucksTypeId" class="form-control" name="shippingRequest.trucksTypeId">
-                <option value="">{{ l('SelectATrucksType') }}</option>
-                <option *ngFor="let item of allTrucksTypes" value="{{ item.id }}">{{ item.displayName }}</option>
-              </select>
-            </div>
-
-            <div class="form-group col-md-6 m-form__group">
-              <label for="TrailerTypeDisplayName">{{ l('TrailerType') }}</label>
-              <select [(ngModel)]="shippingRequest.trailerTypeId" class="form-control" name="shippingRequest.trailerTypeId">
-                <option value="">{{ l('SelectATrailerType') }}</option>
-                <option *ngFor="let item of allTrailerTypes" value="{{ item.id }}">{{ item.displayName }}</option>
-              </select>
-            </div>
-            <div class="form-group col-md-6 m-form__group">
-              <label for="GoodCategoryDisplayName">{{ l('GoodCategory') }}</label>
-              <select [(ngModel)]="shippingRequest.goodCategoryId" class="form-control" name="goodCategoryId">
-                <option value="">{{ l('SelectAGoodCategory') }}</option>
-                <option *ngFor="let item of allGoodCategorys" value="{{ item.id }}">{{ item.displayName }}</option>
-              </select>
-            </div>
-
-            <div class="form-group col-md-6 m-form__group">
-              <label for="RoutTypeDisplayName">{{ l('RoutType') }}</label>
-              <select
-                name="shippingRequest.createOrEditRouteDto.routTypeId"
-                [(ngModel)]="shippingRequest.createOrEditRouteDto.routTypeId"
-                class="form-control"
-              >
-                <option value="">{{ l('SelectARoutType') }}</option>
-                <option *ngFor="let item of allRoutTypes" value="{{ item.id }}">{{ item.displayName }}</option>
-              </select>
-            </div>
-
-            <div *ngIf="shippingRequest.createOrEditRouteDto.routTypeId == 3" class="form-group col-md-6">
-              <label for="shippingRequest.numberOfDrops">{{ l('numberOfDrops') }}</label>
-              <input
-                [(ngModel)]="shippingRequest.numberOfDrops"
-                class="form-control"
-                id="shippingRequest.numberOfDrops"
-                name="numberOfDrops"
-                type="number"
-                minlength="0"
-              />
-              <span class="form-text text-muted">{{ l('IfMilkRunFillNumberOfDropsHintMsg') }}</span>
-            </div>
-          </div>
-          <div class="row">
-            <div class="form-group col-md-6 m-form__group">
-              <label for="RoutOriginCityDisplayName">{{ l('originCity') }}</label>
-              <select
-                name="shippingRequest.createOrEditRouteDto.originCityId"
-                [(ngModel)]="shippingRequest.createOrEditRouteDto.originCityId"
-                class="form-control"
-              >
-                <option value="">{{ l('SelectOriginCity') }}</option>
-                <option *ngFor="let item of allCitys" value="{{ item.id }}">{{ item.displayName }}</option>
-              </select>
-            </div>
-
-            <div class="form-group col-md-6 m-form__group">
-              <label for="RoutDestinationCityDisplayName">{{ l('destinationCity') }}</label>
-              <select
-                name="shippingRequest.createOrEditRouteDto.destinationCityId"
-                [(ngModel)]="shippingRequest.createOrEditRouteDto.destinationCityId"
-                class="form-control"
-              >
-                <option value="">{{ l('SelectDestinationCity') }}</option>
-                <option *ngFor="let item of allCitys" value="{{ item.id }}">{{ item.displayName }}</option>
-              </select>
-            </div>
-
-            <div class="form-group col-md-6 m-form__group">
-              <label for="RoutOriginPortDisplayName">{{ l('OriginPort') }}</label>
-              <select
-                name="shippingRequest.createOrEditRouteDto.originPortIdId"
-                [(ngModel)]="shippingRequest.createOrEditRouteDto.originPortId"
-                class="form-control"
-              >
-                <option value="">{{ l('SelectOriginPort') }}</option>
-                <option *ngFor="let item of allPorts" value="{{ item.id }}">{{ item.displayName }}</option>
-              </select>
-            </div>
-
-            <div class="form-group col-md-6 m-form__group">
-              <label for="RoutDestinationPortDisplayName">{{ l('destinationPort') }}</label>
-              <select
-                name="shippingRequest.createOrEditRouteDto.destinationPortId"
-                [(ngModel)]="shippingRequest.createOrEditRouteDto.destinationPortId"
-                class="form-control"
-              >
-                <option value="">{{ l('SelectDestinationPort') }}</option>
-                <option *ngFor="let item of allPorts" value="{{ item.id }}">{{ item.displayName }}</option>
-              </select>
-            </div>
-          </div>
-          <div class="row">
-            <!--          <div class="form-group col-md-6 m-form__group">-->
-            <!--            <label for="carrierTenantDisplayName">{{ l('carrierTenantDisplayName') }}</label>-->
-            <!--            <select [(ngModel)]="shippingRequest.carrierTenantId" class="form-control" name="carrierTenantId">-->
-            <!--              <option value="">{{ l('SelectCarrierTenantDisplayName') }}</option>-->
-            <!--              <option *ngFor="let item of allCarrierTenants" value="{{ item.id }}">{{ item.displayName }}</option>-->
-            <!--            </select>-->
-            <!--          </div>-->
-
-            <div class="m-checkbox-list col-md-6">
-              &nbsp;
-              <label class="kt-checkbox" for="isBid">
-                <input [(ngModel)]="shippingRequest.isBid" id="isBid" name="isBid" type="checkbox" />
-                {{ l('isBid') }}
-                <span></span>
-              </label>
-              &nbsp;
-              <label *ngIf="feature.isEnabled('App.SendTachyonDealShippingRequest')" class="kt-checkbox" for="isTachyonDeal">
-                <input [(ngModel)]="shippingRequest.isTachyonDeal" id="isTachyonDeal" name="isTachyonDeal" type="checkbox" />
-                {{ l('isTachyonDeal') }}
-                <span></span>
-              </label>
-              &nbsp;
-            </div>
-          </div>
-          <br />
-
-          <div class="row">
-            <div>
-              <h5>{{ l('VasList') }}</h5>
-              <p-multiSelect [options]="allVases" [(ngModel)]="selectedVases" [defaultLabel]="l('SelectVases')" optionLabel="vasName">
-              </p-multiSelect>
-              <br />
-
-              <!-- <div class="form-group col-md-6">
-                <label for="ShippingRequest_Vas">{{ l('Vas') }}</label>
-                <input [(ngModel)]="shippingRequest.vas" class="form-control" id="ShippingRequest_Vas" name="Vas" type="number" />
-              </div> -->
-            </div>
-          </div>
-          <br />
-          <div *ngFor="let item of selectedVases; index as i" class="">
-            <div class="row">
-              <div class="col-4">
-                <label for="Vas-Name"> {{ l('Vas') }} {{ l('Name') }}</label>
-                <div style="align-self: end;" class="form-group">
-                  <span>{{ item.vasName }}</span>
-                </div>
-              </div>
-
-              <div *ngIf="item.hasCount" class="col-3">
-                <div class="form-group">
-                  <label for="Vas-Count">{{ l('Count') }} *</label>
-                  <input
-                    type="number"
-                    min="0"
-                    id="Vas-Count{{ i }}"
-                    [(ngModel)]="item.maxCount"
-                    (keypress)="numberOnly($event)"
-                    class="form-control"
-                    name="Count"
-                    required
-                  />
-                </div>
-              </div>
-
-              <div *ngIf="item.hasAmount" class="col-3">
-                <div class="form-group">
-                  <label for="Vas-Amount">{{ l('Amount') }} *</label>
-                  <input
-                    type="number"
-                    min="0"
-                    id="Vas-Amount{{ i }}"
-                    [(ngModel)]="item.maxAmount"
-                    (keypress)="numberOnly($event)"
-                    class="form-control"
-                    name="Amount"
-                    required
-                  />
-                </div>
-              </div>
-            </div>
-            <hr />
-            <!-- <div class="separator separator-dashed my-8"></div> -->
-          </div>
-
-          <div *ngIf="shippingRequest.stageOneFinish" class="col-md-6">
-            <button (click)="openModal()" class="btn btn-primary" type="button">add route step</button>
-          </div>
+        <!--  start of card::form-->
+        <div class="card-header">
+          <h3 class="card-title">Enter Shipping Request Details</h3>
         </div>
-        <div class="card-footer">
-          <div class="col-lg-12">
-            <button (click)="save()" [busyText]="l('SavingWithThreeDot')" [buttonBusy]="saving" class="btn btn-primary blue float-right">
-              <i class="fa fa-save"></i>
-              <span>{{ l('Save') }}</span>
-            </button>
-          </div>
-        </div>
-      </div>
-    </div>
-    <div class="row">
-      <div *ngFor="let item of createOrEditRoutStepDtoList" class="col-md-6">
-        <div class="card card-custom">
-          <div class="card-header">
-            <div class="card-title">
-              <h3 class="card-label">{{ l('Route Step') }} #{{ item.order }} <small> </small></h3>
-            </div>
-          </div>
+        <form>
+          <!--  start of card::body-->
           <div class="card-body">
             <div class="row">
-              <div class="col-6 mb-3">
-                <h6>{{ l('DisplayName') }} :</h6>
-                {{ item.displayName }}
+              <!--  start of truck::Details-->
+              <div class="col-12">
+                <div class="mb-3">
+                  <h3 class="font-size-h3-xl text-dark font-weight-bold mb-6">{{ l('truckDetails') }} :</h3>
+                  <div class="mb-2">
+                    <div class="form-group row fv-plugins-icon-container">
+                      <div class="col-lg-4">
+                        <label>* TransportType:</label>
+                        <select class="form-control" name="TransportType">
+                          <option value="">Select</option>
+                          <option value="01">01</option>
+                          <option value="02">02</option>
+                          <option value="03">03</option>
+                          <option value="04">04</option>
+                          <option value="05">05</option>
+                          <option value="06">06</option>
+                          <option value="07">07</option>
+                          <option value="08">08</option>
+                          <option value="09">09</option>
+                          <option value="10">10</option>
+                          <option value="11">11</option>
+                          <option value="12">12</option>
+                        </select>
+                        <div class="fv-plugins-message-container"></div>
+                      </div>
+                      <div class="col-lg-4">
+                        <label>* truckType:</label>
+                        <select class="form-control" name="truckType">
+                          <option value="">Select</option>
+                          <option value="2018">2018</option>
+                          <option value="2019">2019</option>
+                          <option value="2020">2020</option>
+                          <option value="2021">2021</option>
+                          <option value="2022">2022</option>
+                          <option value="2023">2023</option>
+                          <option value="2024">2024</option>
+                        </select>
+                        <div class="fv-plugins-message-container"></div>
+                      </div>
+                      <div class="col-lg-4">
+                        <label>* Capacity:</label>
+                        <input type="number" class="form-control" name="Capacity" value="" />
+                        <div class="fv-plugins-message-container"></div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
               </div>
-            </div>
-            <div class="card-body">
-              <div class="row">
-                <div class="col-6 mb-3">
-                  <h6>{{ l('DisplayName') }} :</h6>
-                  {{ item.displayName }}
+              <!--  end of truck::Details-->
+              <!--  start of Shipment::Details-->
+              <div class="col-12">
+                <div class="mb-3">
+                  <h3 class="font-size-h3-xl text-dark font-weight-bold mb-6">{{ l('shipmentDetails') }} :</h3>
+                  <div class="mb-2">
+                    <div class="form-group row fv-plugins-icon-container">
+                      <div class="col-lg-4">
+                        <label>* {{ l('goodCategory') }}:</label>
+                        <select class="form-control" name="TransportType">
+                          <option value="">Select</option>
+                          <option value="01">01</option>
+                          <option value="02">02</option>
+                          <option value="03">03</option>
+                          <option value="04">04</option>
+                          <option value="05">05</option>
+                          <option value="06">06</option>
+                          <option value="07">07</option>
+                          <option value="08">08</option>
+                          <option value="09">09</option>
+                          <option value="10">10</option>
+                          <option value="11">11</option>
+                          <option value="12">12</option>
+                        </select>
+                        <div class="fv-plugins-message-container"></div>
+                      </div>
+                      <!--                      <div class="col-lg-12 mt-4">-->
+                      <!--                        <label>{{ l('goodsDetail') }}:</label>-->
+                      <!--                        <div class="primeng-datatable-container container-fluid mt-4">-->
+                      <!--                          <p-table-->
+                      <!--                            [value]="primengTableHelper.records"-->
+                      <!--                            rows="{{ primengTableHelper.defaultRecordsCountPerPage }}"-->
+                      <!--                            [paginator]="false"-->
+                      <!--                            [lazy]="true"-->
+                      <!--                            [scrollable]="true"-->
+                      <!--                            ScrollWidth="100%"-->
+                      <!--                            [responsive]="primengTableHelper.isResponsive"-->
+                      <!--                            [resizableColumns]="primengTableHelper.resizableColumns"-->
+                      <!--                          >-->
+                      <!--                            >-->
+                      <!--                            <ng-template pTemplate="header">-->
+                      <!--                              <tr>-->
+                      <!--                                <th pResizableColumn>{{ l('UnitOfMeasures') }}</th>-->
+                      <!--                                <th pResizableColumn>{{ l('Weight') }}</th>-->
+                      <!--                                <th pResizableColumn>{{ l('totalAmount') }}</th>-->
+                      <!--                                <th pResizableColumn>{{ l('description') }}</th>-->
+                      <!--                                <th pResizableColumn>{{ l('Name') }}</th>-->
+                      <!--                                <th pResizableColumn>{{ l('dimensions') }}</th>-->
+                      <!--                                <th pResizableColumn>{{ l('isDangerous') }}</th>-->
+                      <!--                                <th pResizableColumn>{{ l('dangerousCode') }}</th>-->
+                      <!--                                <th pResizableColumn>{{ l('category') }}</th>-->
+                      <!--                                <th pResizableColumn>{{ l('packingType') }}</th>-->
+                      <!--                                <th pResizableColumn>{{ l('numberOfpacking') }}</th>-->
+                      <!--                              </tr>-->
+                      <!--                            </ng-template>-->
+                      <!--                            <ng-template pTemplate="body" let-product>-->
+                      <!--                              <tr>-->
+                      <!--                                <td>{{ product.code }}</td>-->
+                      <!--                                <td>{{ product.name }}</td>-->
+                      <!--                                <td>{{ product.category }}</td>-->
+                      <!--                                <td>{{ product.quantity }}</td>-->
+                      <!--                              </tr>-->
+                      <!--                            </ng-template>-->
+                      <!--                          </p-table>-->
+                      <!--                        </div>-->
+                      <!--                      </div>-->
+                    </div>
+                  </div>
                 </div>
-                <!--                <div class="col-6 mb-3">-->
-                <!--                  <h6>{{ l('Latitude') }} :</h6>-->
-                <!--                  {{ item.latitude }}-->
-                <!--                </div>-->
-                <!--                <div class="col-6 mb-3">-->
-                <!--                  <h6>{{ l('Longitude') }} :</h6>-->
-                <!--                  {{ item.longitude }}-->
-                <!--                </div>-->
-                <div class="col-6 mb-3">
-                  <h6>{{ l('Order') }} :</h6>
-                  {{ item.order }}
-                </div>
+              </div>
+              <!--  end of Shipment::Details-->
+              <!--  start of Route::Details-->
+              <div class="col-12">
+                <div class="mb-3">
+                  <h3 class="font-size-h3-xl text-dark font-weight-bold mb-6">{{ l('routeDetails') }} :</h3>
+                  <div class="mb-2">
+                    <div class="form-group row fv-plugins-icon-container">
+                      <div class="col-lg-4">
+                        <div class="form-group">
+                          <label>* {{ l('source') }}:</label>
+                          <input type="text" class="form-control" placeholder="{{ l('source') }}" />
+                        </div>
+                      </div>
+                      <div class="col-lg-4">
+                        <div class="form-group">
+                          <label>* {{ l('destination') }}:</label>
+                          <input type="text" class="form-control" placeholder="{{ l('destination') }}" />
+                        </div>
+                      </div>
+                      <div class="col-lg-4">
+                        <label>* {{ l('routeType') }}:</label>
+                        <select class="form-control" name="truckType">
+                          <option value="">Select</option>
+                          <option value="2018">2018</option>
+                          <option value="2019">2019</option>
+                          <option value="2020">2020</option>
+                          <option value="2021">2021</option>
+                          <option value="2022">2022</option>
+                          <option value="2023">2023</option>
+                          <option value="2024">2024</option>
+                        </select>
+                        <div class="fv-plugins-message-container"></div>
+                      </div>
 
-                <!--            <div class="col-6 mb-3">-->
-                <!--              <h6>({{ l('City') }}) {{ l('DisplayName') }} :</h6>-->
-                <!--              {{ item.cityDisplayName }}-->
-                <!--            </div>-->
-                <!--            <div class="col-6 mb-3">-->
-                <!--              <h6>({{ l('City') }}) {{ l('DisplayName') }} :</h6>-->
-                <!--              {{ item.cityDisplayName2 }}-->
-                <!--            </div>-->
-                <!--            <div class="col-6 mb-3">-->
-                <!--              <h6>({{ l('Route') }}) {{ l('DisplayName') }} :</h6>-->
-                <!--              {{ item.routeDisplayName }}-->
-                <!--            </div>-->
+                      <div class="col-lg-4">
+                        <div class="form-group">
+                          <label>* {{ l('startDate') }}:</label>
+                          <input type="text" class="form-control" placeholder="{{ l('startDate') }}" />
+                        </div>
+                      </div>
+                      <div class="col-lg-4">
+                        <div class="form-group">
+                          <label>* {{ l('endDate') }}:</label>
+                          <input type="text" class="form-control" placeholder="{{ l('endDate') }}" />
+                        </div>
+                      </div>
+                      <div class="col-lg-4">
+                        <div class="form-group">
+                          <label>* {{ l('numberOfDrops') }}:</label>
+                          <input class="form-control" type="number" value="2" id="numberOfDrops" />
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
               </div>
+              <!--  end of Route::Details-->
+              <!--  start of ShippingRequestType::Details-->
+              <div class="col-12">
+                <div class="mb-3">
+                  <h3 class="font-size-h3-xl text-dark font-weight-bold mb-6">{{ l('shipmentDetails') }} :</h3>
+                  <div class="mb-2">
+                    <div class="form-group row fv-plugins-icon-container">
+                      <div class="col-lg-4">
+                        <label>* {{ l('ShippingRequestType') }}:</label>
+                        <select class="form-control" name="TransportType">
+                          <option value="">Select</option>
+                          <option value="bidding">{{ l('bidding') }}</option>
+                          <option value="tachyon">{{ l('TachyonDeal') }}</option>
+                        </select>
+                        <div class="fv-plugins-message-container"></div>
+                      </div>
+                      <div class="col-lg-4">
+                        <label>* {{ l('biddingStartDate') }}:</label>
+                        <input type="date" class="form-control" placeholder="{{ l('BiddingstartDate') }}" />
+                      </div>
+                      <div class="col-lg-4">
+                        <label>* {{ l('biddingEndDate') }}:</label>
+                        <input type="date" class="form-control" placeholder="{{ l('biddingEndDate') }}" />
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <!--  end of ShippingRequestType::Details-->
+              <!--  start of Vas::Details-->
+              <div class="col-12">
+                <div class="mb-3">
+                  <div class="col-lg-6">
+                    <h3 class="font-size-h3-xl text-dark font-weight-bold mb-6">{{ l('vasDetails') }} :</h3>
+                  </div>
+
+                  <div class="mb-2">
+                    <!--begin: Vas-Datatable-->
+                    <div class="primeng-datatable-container col-12 container-fluid" [busyIf]="primengTableHelper.isLoading">
+                      <div class="col-lg-12 text-lg-right mb-2">
+                        <a href="#" class="btn btn-primary"> <i class="flaticon-plus"></i>{{ l('AddaVas') }}</a>
+                      </div>
+                      <p-table
+                        #dataTable
+                        [value]="primengTableHelper.records"
+                        rows="{{ primengTableHelper.defaultRecordsCountPerPage }}"
+                        [paginator]="false"
+                        [lazy]="true"
+                        [scrollable]="true"
+                        ScrollWidth="100%"
+                        [responsive]="primengTableHelper.isResponsive"
+                        [resizableColumns]="primengTableHelper.resizableColumns"
+                      >
+                        <ng-template pTemplate="header">
+                          <tr>
+                            <th style="width: 150px;">
+                              {{ l('name') }}
+                            </th>
+                            <th style="width: 150px;">
+                              {{ l('count') }}
+                            </th>
+                            <th style="width: 150px;">
+                              {{ l('amount') }}
+                            </th>
+                            <th style="width: 150px;">
+                              {{ l('Actions') }}
+                            </th>
+                          </tr>
+                        </ng-template>
+                        <ng-template pTemplate="body" let-record="$implicit">
+                          <tr>
+                            <td style="width: 150px;">
+                              <span class="ui-column-title"> {{ l('shippingRequestId') }}</span>
+                              {{ record.shippingRequestId }}
+                            </td>
+                            <td style="width: 150px;">
+                              <span class="ui-column-title"> {{ l('shipperName') }}</span>
+                              {{ record.shipperName }}
+                            </td>
+                            <td style="width: 150px;">
+                              <span class="ui-column-title"> {{ l('truckTypeDisplayName') }}</span>
+                              {{ record.truckTypeDisplayName }}
+                            </td>
+                            <td style="width: 150px;">
+                              <span class="ui-column-title"> {{ l('goodCategoryName') }}</span>
+                              {{ record.goodCategoryName }}
+                            </td>
+                            <td style="width: 150px;">
+                              <span *ngIf="record.bidStartDate" class="label label-xl font-weight-bold label-light-success label-inline">{{
+                                record.bidStartDate | momentFormat: 'L'
+                              }}</span>
+                            </td>
+                            <td style="width: 150px;">
+                              <span *ngIf="record.bidEndDate" class="label label-xl font-weight-bold label-light-danger label-inline ui-column-title">
+                                {{ l('endBidDate') }}</span
+                              >
+                              {{ record.bidEndDate }}
+                            </td>
+                            <td style="width: 150px;">
+                              <span
+                                *ngIf="record.shippingRequestBidStatusName"
+                                class="label label-xl label-inline font-weight-bold"
+                                [class.label-light-danger]="record.shippingRequestBidStatusName == 'Ongoing'"
+                                [class.label-light-dark]="record.shippingRequestBidStatusName == 'Canceled'"
+                                [class.label-light-warning]="record.shippingRequestBidStatusName == 'Closed'"
+                                >{{ record.shippingRequestBidStatusName }}</span
+                              >
+                            </td>
+
+                            <td style="width: 150px;">
+                              <span class="ui-column-title"> {{ l('lastBidPrice') }}</span>
+                              {{ record.myBidPrice }}
+                            </td>
+                            <td style="width: 150px;">
+                              <button
+                                class="btn btn-primary font-weight-bolder"
+                                [disabled]="record.shippingRequestBidStatusName == 'Canceled' || record.shippingRequestBidStatusName == 'Closed'"
+                              >
+                                {{ l('Details') }}
+                              </button>
+                            </td>
+                          </tr>
+                        </ng-template>
+                      </p-table>
+                      <div class="primeng-no-data mb-2" *ngIf="primengTableHelper.totalRecordsCount == 0">
+                        {{ l('NoData') }}
+                        <!--                        <br /><a href="#" class="btn btn-success btn-sm mr-3"> <i class="flaticon-plus"></i>Add a VAS</a>-->
+                      </div>
+                    </div>
+                    <!--end: Vas-Datatable-->
+                  </div>
+                </div>
+              </div>
+              <!--  end of Vas::Details-->
             </div>
           </div>
-          <br />
+          <!--  end of card::body-->
+        </form>
+        <!--  start of card::form-->
+
+        <div class="card-footer">
+          <div class="col-lg-12">
+            <button (click)="save()" [busyText]="l('SavingWithThreeDot')" [buttonBusy]="saving" class="btn btn-primary float-right">
+              <i class="flaticon2-tag"></i>
+              <span>{{ l('CreateShippingRequest') }}</span>
+            </button>
+          </div>
         </div>
       </div>
     </div>
@@ -539,7 +619,7 @@
 
               <div class="form-group col-md-12">
                 <agm-map [latitude]="facility.latitude" [longitude]="facility.longitude" [zoom]="zoom" (mapClick)="mapClicked($event)">
-                  <agm-marker [latitude]="facility.latitude" [longitude]="facility.longitude" [markerDraggable]="true"> </agm-marker>
+                  <agm-marker [latitude]="facility.latitude" [longitude]="facility.longitude" [markerDraggable]="true"></agm-marker>
                 </agm-map>
               </div>
               <!--                        <div class="form-group m-form__group">-->
