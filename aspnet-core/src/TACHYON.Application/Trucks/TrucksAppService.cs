@@ -394,14 +394,13 @@ namespace TACHYON.Trucks
         }
 
         [AbpAuthorize(AppPermissions.Pages_Trucks)]
-        public async Task<IEnumerable<ISelectItemDto>> GetAllTruckStatusForTableDropdown()
+        public async Task<List<TruckTruckStatusLookupTableDto>> GetAllTruckStatusForTableDropdown()
         {
             List<TruckStatus> trucksStatuses = await _lookup_truckStatusRepository
                 .GetAllIncluding(x => x.Translations)
                 .ToListAsync();
 
-            List<TruckStatusSelectItemDto> truckStatusDto =
-                ObjectMapper.Map<List<TruckStatusSelectItemDto>>(trucksStatuses);
+            List<TruckTruckStatusLookupTableDto> truckStatusDto = ObjectMapper.Map<List<TruckTruckStatusLookupTableDto>>(trucksStatuses);
 
             return truckStatusDto;
 

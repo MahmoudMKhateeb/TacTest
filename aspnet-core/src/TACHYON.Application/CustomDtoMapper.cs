@@ -378,8 +378,8 @@ namespace TACHYON
                 .EntityMap
                 .ReverseMap();
 
-            // goto:#Map_TruckStatus_TruckStatusSelectItemDto
-            configuration.CreateMultiLingualMap<TruckStatus, long, TruckStatusesTranslation, TruckStatusSelectItemDto>(context)
+            // goto:#Map_TruckStatus_TruckTruckStatusLookupTableDto
+            configuration.CreateMultiLingualMap<TruckStatus, long, TruckStatusesTranslation, TruckTruckStatusLookupTableDto>(context)
                 .EntityMap
                 .ForMember(dst => dst.Id, opt => opt.MapFrom(src => src.Id.ToString()))
                 .ReverseMap();
