@@ -18,7 +18,9 @@ using System.Threading.Tasks;
 using TACHYON.Cities;
 using TACHYON.Configuration;
 using TACHYON.Countries;
+using TACHYON.Countries.Dtos;
 using TACHYON.Debugging;
+using TACHYON.Dto;
 using TACHYON.Editions;
 using TACHYON.Editions.Dto;
 using TACHYON.Features;
@@ -324,13 +326,13 @@ namespace TACHYON.MultiTenancy
 
         public async Task<List<TenantCountryLookupTableDto>> GetAllCountryForTableDropdown()
         {
-            return await _lookup_countryRepository.GetAll()
+            List<County> countries = await _lookup_countryRepository
+                .GetAllIncluding(x => x.Translations)
                 .OrderBy(x => x.DisplayName)
-                .Select(country => new TenantCountryLookupTableDto
-                {
-                    Id = country.Id,
-                    DisplayName = country == null || country.DisplayName == null ? "" : country.DisplayName.ToString()
-                }).ToListAsync();
+                .ToListAsync();
+
+            List<TenantCountryLookupTableDto> countryDtos = ObjectMapper.Map<List<TenantCountryLookupTableDto>>(countries);
+            return countryDtos;
         }
 
 

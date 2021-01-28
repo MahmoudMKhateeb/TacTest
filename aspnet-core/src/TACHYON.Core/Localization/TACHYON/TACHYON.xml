@@ -1,6 +1,14 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <localizationDictionary culture="en">
-  <texts>    <text name="PlateTypes">Plate types</text>
+  <texts>    <text name="CountriesTranslations">Countries translations</text>
+    <text name="CountriesTranslation">Countries translation</text>
+    <text name="TACHYON.CountriesTranslations.CountriesTranslation">CountriesTranslation</text>
+    <text name="TranslatedDisplayName">Translated display name</text>
+    <text name="CountriesTranslationsHeaderInfo">Countries translations header info</text>
+    <text name="CreateNewCountriesTranslation">Create new countries translation</text>
+    <text name="EditCountriesTranslation">Edit countries translation</text>
+    <text name="DeleteCountriesTranslation">Delete countries translation</text>
+    <text name="PlateTypes">Plate types</text>
     <text name="PlateType">Plate type</text>
     <text name="TACHYON.PlateTypes.PlateType">PlateType</text>
     <text name="PlateTypesHeaderInfo">Plate types header info</text>
