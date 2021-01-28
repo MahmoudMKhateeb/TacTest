@@ -14,12 +14,12 @@
       <form *ngIf="active" #userForm="ngForm" novalidate (ngSubmit)="save()">
         <div class="modal-header">
           <h4 *ngIf="!creatDriver" class="modal-title">
-            <span *ngIf="user.id"> {{ 'Edit' | localize }} {{ 'User' | localize }}: {{ user.userName }}</span>
+            <span *ngIf="user.id"> {{ 'EditDriver' | localize }}: {{ user.userName }}</span>
             <span *ngIf="!user.id">{{ 'Create' | localize }} {{ 'NewUser' | localize }}</span>
           </h4>
           <h4 *ngIf="creatDriver" class="modal-title">
-            <span *ngIf="user.id">{{ 'Edit' | localize }} {{ 'Driver' | localize }}: {{ user.userName }}</span>
-            <span *ngIf="!user.id">{{ 'Create' | localize }}{{ 'NewDriver' | localize }}</span>
+            <span *ngIf="user.id"> {{ 'EditDriver' | localize }}: {{ user.userName }}</span>
+            <span *ngIf="!user.id"> {{ 'CreateNewDriver' | localize }}</span>
           </h4>
           <button type="button" class="close" (click)="close()" [attr.aria-label]="l('Close')" [disabled]="saving">
             <span aria-hidden="true">&times;</span>
@@ -102,7 +102,7 @@
                   <div class="row">
                     <div class="col-6">
                       <div class="form-group">
-                        <label for="Name"><span class="text-danger">*</span> {{ 'Name' | localize }}</label>
+                        <label for="Name"><span class="text-danger">*</span> {{ 'FirstName' | localize }}</label>
                         <input
                           id="Name"
                           #nameInput="ngModel"
@@ -122,7 +122,7 @@
                     </div>
                     <div class="col-6">
                       <div class="form-group">
-                        <label for="Surname"><span class="text-danger">*</span> {{ 'Surname' | localize }}</label>
+                        <label for="Surname"><span class="text-danger">*</span> {{ 'LastName' | localize }}</label>
                         <input
                           id="Surname"
                           #surnameInput="ngModel"
@@ -190,7 +190,7 @@
                     <!--                    </div>-->
                     <hijri-gregorian-datepicker-test
                       [parentForm]="userForm"
-                      [label]="l('dateOfBirth')"
+                      [label]="l('DateOfBirth')"
                       class="m-input"
                       [isRequired]="true"
                       [(selectedDate)]="selectedDate"

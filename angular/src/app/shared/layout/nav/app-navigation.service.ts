@@ -189,7 +189,7 @@ export class AppNavigationService {
       ),
 
       // Host
-      new AppMenuItem('Vases', 'Pages.Administration.Vases', 'flaticon-more', '/app/admin/vases/vases'),
+      new AppMenuItem('Vas', 'Pages.Administration.Vases', 'flaticon-more', '/app/admin/vases/vases'),
       new AppMenuItem('VasPrices', 'Pages.VasPrices', 'flaticon-more', '/app/main/vases/vasPrices', undefined, undefined, undefined, undefined, () =>
         this._featureCheckerService.isEnabled('App.Carrier')
       ),
