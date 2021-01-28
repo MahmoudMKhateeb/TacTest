@@ -1,5 +1,6 @@
 ﻿import { NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
+import { CitiesTranslationsComponent } from './citiesTranslations/citiesTranslations/citiesTranslations.component';
 import { CountriesTranslationsComponent } from './countriesTranslations/countriesTranslations/countriesTranslations.component';
 import { PlateTypesComponent } from './plateTypes/plateTypes/plateTypes.component';
 import { NationalitiesComponent } from './nationalities/nationalities/nationalities.component';
@@ -44,6 +45,7 @@ import { MarketplaceComponent } from '@app/main/marketPlace/marketPlace/marketpl
       {
         path: '',
         children: [
+                    { path: 'citiesTranslations/citiesTranslations', component: CitiesTranslationsComponent, data: { permission: 'Pages.CitiesTranslations' }  },
                     { path: 'countriesTranslations/countriesTranslations', component: CountriesTranslationsComponent, data: { permission: 'Pages.CountriesTranslations' }  },
           { path: 'plateTypes/plateTypes', component: PlateTypesComponent, data: { permission: 'Pages.Capacities' } },
           { path: 'nationalities/nationalities', component: NationalitiesComponent, data: { permission: 'Pages.Nationalities' } },

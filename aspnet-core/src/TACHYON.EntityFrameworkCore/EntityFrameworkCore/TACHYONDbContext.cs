@@ -1,4 +1,5 @@
-﻿using TACHYON.Countries.CountriesTranslations;
+﻿using TACHYON.Cities.CitiesTranslations;
+using TACHYON.Countries.CountriesTranslations;
 using TACHYON.Trucks.PlateTypes;
 using TACHYON.Nationalities;
 using TACHYON.Nationalities.NationalitiesTranslation;
@@ -55,6 +56,8 @@ namespace TACHYON.EntityFrameworkCore
 {
     public class TACHYONDbContext : AbpZeroDbContext<Tenant, Role, User, TACHYONDbContext>, IAbpPersistedGrantDbContext
     {
+        public virtual DbSet<CitiesTranslation> CitiesTranslations { get; set; }
+
         public virtual DbSet<CountriesTranslation> CountriesTranslations { get; set; }
 
         public virtual DbSet<PlateType> PlateTypes { get; set; }

@@ -1,6 +1,13 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <localizationDictionary culture="en">
-  <texts>    <text name="CountriesTranslations">Countries translations</text>
+  <texts>    <text name="CitiesTranslations">Cities translations</text>
+    <text name="CitiesTranslation">Cities translation</text>
+    <text name="TACHYON.CitiesTranslations.CitiesTranslation">CitiesTranslation</text>
+    <text name="CitiesTranslationsHeaderInfo">Cities translations header info</text>
+    <text name="CreateNewCitiesTranslation">Create new cities translation</text>
+    <text name="EditCitiesTranslation">Edit cities translation</text>
+    <text name="DeleteCitiesTranslation">Delete cities translation</text>
+    <text name="CountriesTranslations">Countries translations</text>
     <text name="CountriesTranslation">Countries translation</text>
     <text name="TACHYON.CountriesTranslations.CountriesTranslation">CountriesTranslation</text>
     <text name="TranslatedDisplayName">Translated display name</text>
