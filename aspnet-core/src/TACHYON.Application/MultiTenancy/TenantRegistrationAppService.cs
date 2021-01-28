@@ -338,13 +338,15 @@ namespace TACHYON.MultiTenancy
 
         public async Task<List<TenantCityLookupTableDto>> GetAllCitiesForTableDropdown(int input)
         {
-            return await _lookup_cityRepository.GetAll().Where(c => c.CountyFk.Id == input)
+            List<City> cities = await _lookup_cityRepository
+                .GetAllIncluding(x => x.Translations)
+                .Where(x => x.CountyFk.Id == input)
                 .OrderBy(x => x.DisplayName)
-                .Select(county => new TenantCityLookupTableDto
-                {
-                    Id = county.Id,
-                    DisplayName = county == null || county.DisplayName == null ? "" : county.DisplayName.ToString()
-                }).ToListAsync();
+                .ToListAsync();
+
+            List<TenantCityLookupTableDto> cityDtos = ObjectMapper.Map<List<TenantCityLookupTableDto>>(cities);
+            return cityDtos;
+
         }
 
 

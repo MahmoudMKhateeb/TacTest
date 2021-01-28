@@ -1,0 +1,48 @@
+﻿<div bsModal #createOrEditModal="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="createOrEditModal" aria-hidden="true" [config]="{backdrop: 'static'}">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <form *ngIf="active" #citiesTranslationForm="ngForm" novalidate (ngSubmit)="save()" autocomplete="off">
+                <div class="modal-header">
+                    <h4 class="modal-title">
+                        <span *ngIf="citiesTranslation.id">{{l("EditCitiesTranslation")}}</span>
+                        <span *ngIf="!citiesTranslation.id">{{l("CreateNewCitiesTranslation")}}</span>
+                    </h4>
+                    <button type="button" class="close" (click)="close()" aria-label="Close" [disabled]="saving">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                 
+
+					<div class="form-group m-form__group">
+						<label for="CityDisplayName">{{l("City")}}</label>
+						<select name="citiesTranslation.coreId" [(ngModel)]="citiesTranslation.coreId" class="form-control" required>
+							<option value="">{{l("SelectACity")}}</option>
+							<option *ngFor="let item of allCitys" value="{{item.id}}">{{item.displayName}}</option>
+						</select>
+					</div>
+					 
+
+								<div class="form-group">
+									<label for="CitiesTranslation_TranslatedDisplayName">{{l("TranslatedDisplayName")}} *</label>
+									<input type="text" #CitiesTranslation_TranslatedDisplayName="ngModel" id="CitiesTranslation_TranslatedDisplayName" class="form-control" [(ngModel)]="citiesTranslation.translatedDisplayName" name="TranslatedDisplayName"   minlength="0"  maxlength="256"  required/>
+								    <validation-messages [formCtrl]="CitiesTranslation_TranslatedDisplayName"></validation-messages>
+								</div>
+					
+								<div class="form-group">
+									<label for="CitiesTranslation_Language">{{l("Language")}} *</label>
+									<input type="text" #CitiesTranslation_Language="ngModel" id="CitiesTranslation_Language" class="form-control" [(ngModel)]="citiesTranslation.language" name="Language"   minlength="0"  maxlength="32"  required/>
+								    <validation-messages [formCtrl]="CitiesTranslation_Language"></validation-messages>
+								</div>
+					
+
+                </div>
+                <div class="modal-footer">
+                    <button [disabled]="saving" type="button" class="btn btn-default" (click)="close()">{{l("Cancel")}}</button>
+                    <button type="submit" class="btn btn-primary blue" [disabled]="!citiesTranslationForm.form.valid" [buttonBusy]="saving" [busyText]="l('SavingWithThreeDot')"><i class="fa fa-save"></i> <span>{{l("Save")}}</span></button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+</div>
