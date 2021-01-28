@@ -7,18 +7,13 @@ namespace TACHYON.Routs.RoutSteps.Dtos
 {
     public class RoutStepDto : EntityDto<long>
     {
-        [StringLength(RoutStepConsts.MaxDisplayNameLength, MinimumLength = RoutStepConsts.MinDisplayNameLength)]
         public string DisplayName { get; set; }
-        [Required]
         public int Order { get; set; }
 
-        [Required]
         public  long ShippingRequestId { get; set; }
 
-        [Required]
         public long AssignedDriverUserId { get; set; }
 
-        [Required]
         public long AssignedTruckId { get; set; }
 
         public long? AssignedTrailerId { get; set; }
@@ -27,10 +22,8 @@ namespace TACHYON.Routs.RoutSteps.Dtos
 
         public int? TrailerTypeId { get; set; }
 
-        [Required]
         public long SourceRoutPointId { get; set; }
 
-        [Required]
         public long DestinationRoutPointId { get; set; }
 
         public double TotalAmount { get; set; }

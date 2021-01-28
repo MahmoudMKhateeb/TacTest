@@ -7,14 +7,16 @@ namespace TACHYON.AddressBook.Dtos
 {
     public class FacilityDto : EntityDto<long>
     {
-		public string Name { get; set; }
+        public string Name { get; set; }
 
-		public string Adress { get; set; }
+        public string Adress { get; set; }
 
-		public Point Location { get; set; }
+        //public Point Location { get; set; }
+        public double Long { get; set; }
+        public double Lat { get; set; }
 
-	    public int CityId { get; set; }
+        public int CityId { get; set; }
 
-		 
+
     }
 }

@@ -7,7 +7,7 @@ namespace TACHYON.Routs.RoutSteps.Dtos
 {
     public class GetRoutStepForEditOutput
     {
-        public CreateOrEditRoutStepDto RoutStep { get; set; }
+        public RoutStepDto RoutStep { get; set; }
 
         //public string CityDisplayName { get; set; }
 

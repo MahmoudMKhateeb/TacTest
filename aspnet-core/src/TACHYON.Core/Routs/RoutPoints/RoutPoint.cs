@@ -35,7 +35,7 @@ namespace TACHYON.Routs.RoutPoints
         [Required]
         public long FacilityId { get; set; }
 
-        [ForeignKey("SourceFacilityId")]
+        [ForeignKey("FacilityId")]
         public Facility FacilityFk { get; set; }
 
         public ICollection<RoutPointGoodsDetail> RoutPointGoodsDetails { get; set; }

@@ -161,6 +161,12 @@ namespace TACHYON.Shipping.ShippingRequests
         public ICollection<ShippingRequestBid> ShippingRequestBids { get; set; }
         #endregion
 
+        public ShippingRequest()
+        {
+            StageOneFinish = false;
+            StageTowFinish = false;
+            StageThreeFinish = false;
+        }
         public void Close()
         {
             ShippingRequestBidStatusId = TACHYONConsts.ShippingRequestStatusClosed;

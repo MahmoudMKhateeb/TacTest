@@ -11,6 +11,7 @@ using System.Threading.Tasks;
 using Abp.Application.Services.Dto;
 using Abp.Authorization;
 using TACHYON.Authorization;
+using TACHYON.AddressBook.Dtos;
 
 namespace TACHYON.Routs.RoutPoints
 {
@@ -39,9 +40,14 @@ namespace TACHYON.Routs.RoutPoints
             var routPoints = PagedAndFilteredRoutPoints.Select(x => new GetRoutPointForViewOutput
             {
                 RoutPointDto = ObjectMapper.Map<RoutPointDto>(x),
-                CityName = x.FacilityFk.CityFk.DisplayName,
-                FacilityName = x.FacilityFk.Name,
-                PickingTypeDisplayName = x.PickingTypeFk.DisplayName
+                
+                PickingTypeDisplayName = x.PickingTypeFk.DisplayName,
+                facilityDto=new GetFacilityForViewOutput
+                {
+                    CityDisplayName = x.FacilityFk.CityFk.DisplayName,
+                    FacilityName = x.FacilityFk.Name,
+                    Facility=ObjectMapper.Map<FacilityDto>(x.FacilityFk)
+                }
             });
 
             var totalCount =await routPoints.CountAsync();
