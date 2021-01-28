@@ -1,4 +1,6 @@
-﻿using TACHYON.Trucks.PlateTypes.Dtos;
+﻿using TACHYON.Countries.CountriesTranslations.Dtos;
+using TACHYON.Countries.CountriesTranslations;
+using TACHYON.Trucks.PlateTypes.Dtos;
 using TACHYON.Trucks.PlateTypes;
 using TACHYON.Nationalities.Dtos;
 ﻿using TACHYON.Trucks.TruckCategories.TruckCapacities.TruckCapacitiesTranslations.Dtos;
@@ -175,6 +177,8 @@ namespace TACHYON
         }
         public static void CreateMappings(IMapperConfigurationExpression configuration)
         {
+            configuration.CreateMap<CreateOrEditCountriesTranslationDto, CountriesTranslation>().ReverseMap();
+            configuration.CreateMap<CountriesTranslationDto, CountriesTranslation>().ReverseMap();
             configuration.CreateMap<CreateOrEditPlateTypeDto, PlateType>().ReverseMap();
             configuration.CreateMap<PlateTypeDto, PlateType>().ReverseMap();
             configuration.CreateMap<CreateOrEditTruckCapacitiesTranslationDto, TruckCapacitiesTranslation>().ReverseMap();
@@ -497,6 +501,15 @@ namespace TACHYON
                   .EntityMap
                   .ForMember(dst => dst.Id, opt => opt.MapFrom(src => src.Id.ToString()))
                   .ReverseMap();
+
+            configuration.CreateMultiLingualMap<County, CountriesTranslation, CountyDto>(context)
+                .EntityMap
+                .ReverseMap();
+
+            configuration.CreateMultiLingualMap<County, CountriesTranslation, TenantCountryLookupTableDto>(context)
+                .EntityMap
+                .ForMember(dst => dst.Id, opt => opt.MapFrom(src => src.Id.ToString()))
+                .ReverseMap();
 
             configuration.CreateMultiLingualMap<TruckStatus, long, TruckStatusesTranslation, TruckStatusDto>(context)
                 .EntityMap

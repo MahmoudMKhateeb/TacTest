@@ -10,6 +10,7 @@ namespace TACHYON.Countries.Dtos
 
         public string Code { get; set; }
 
+        public string TranslatedDisplayName { get; set; }
 
 
     }
