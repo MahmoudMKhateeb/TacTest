@@ -10,7 +10,7 @@
           'is-valid': parentForm?.submitted && ngbDatepicker.valid,
           'is-invalid': parentForm?.submitted && ngbDatepicker.invalid
         }"
-        [placeholder]="placeHolder ? placeHolder : 'd/M/yyyy'"
+        [placeholder]="'d/M/yyyy' | localize"
         [name]="label"
         [(ngModel)]="selectedDate"
         ngbDatepicker

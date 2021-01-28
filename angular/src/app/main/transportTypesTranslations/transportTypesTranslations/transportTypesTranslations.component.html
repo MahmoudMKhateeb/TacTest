@@ -1,6 +1,7 @@
 ﻿<div [@routerTransition]>
   <div class="content d-flex flex-column flex-column-fluid">
-    <sub-header [title]="'TransportTypesTranslations' | localize" [description]="'TransportTypesTranslationsHeaderInfo' | localize">
+    <!-- <sub-header [title]="'TransportTypesTranslations' | localize" [description]="'TransportTypesTranslationsHeaderInfo' | localize"> -->
+    <sub-header [title]="'TransportTypesTranslations' | localize">
       <div role="actions">
         <button *ngIf="isGranted('Pages.TransportTypesTranslations.Create')" (click)="createTransportTypesTranslation()" class="btn btn-primary blue">
           <i class="fa fa-plus"></i> {{ l('CreateNewTransportTypesTranslation') }}
@@ -104,11 +105,11 @@
                       {{ l('Actions') }}
                     </th>
                     <th style="width: 150px;" pSortableColumn="coreFk.displayName">
-                      {{ l('DisplayName') }}
+                      {{ l('Name') }}
                       <p-sortIcon field="transportTypeDisplayName"></p-sortIcon>
                     </th>
                     <th style="width: 150px;" pSortableColumn="displayName">
-                      {{ l('DisplayName') }}
+                      {{ l('TranslatedName') }}
                       <p-sortIcon field="transportTypesTranslation.displayName"></p-sortIcon>
                     </th>
                     <th style="width: 150px;" pSortableColumn="language">

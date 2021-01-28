@@ -47,6 +47,7 @@ export class CreateOrEditDriverModalComponent extends AppComponentBase {
 
   @Output() modalSave: EventEmitter<any> = new EventEmitter<any>();
   @Input() creatDriver: boolean;
+  @Input() placeholder: string;
 
   active = false;
   saving = false;

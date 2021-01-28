@@ -59,8 +59,8 @@
             <!-- <span class="form-text text-muted">{{ l('Enter') }} {{ l('CompanyFullLegalName') }}</span> -->
           </div>
           <validation-messages [formCtrl]="nameInput"></validation-messages>
-          <span class="form-text text-muted">{{ 'TheNameOfTheCompanyInTheCR' | localize }}</span>
-          <span class="form-text text-muted">{{ 'WillBeShownOnAllOfficialDocumentsLikeWaybillsAndInvoices' | localize }}.</span>
+          <span class="form-text text-muted">{{ 'CompanyUniqueName_Regex_Description' | localize }}</span>
+          <!-- <span class="form-text text-muted">{{ 'WillBeShownOnAllOfficialDocumentsLikeWaybillsAndInvoices' | localize}}.</span> -->
         </div>
       </div>
     </div>
@@ -124,7 +124,7 @@
     <div class="row text-left">
       <div class="col-6">
         <div class="form-group">
-          <label>{{ 'Name' | localize }}</label>
+          <label>{{ 'FirstName' | localize }}</label>
           <input
             #userAdminFirstName="ngModel"
             class="form-control"
@@ -144,7 +144,7 @@
 
       <div class="col-6">
         <div class="form-group">
-          <label>{{ 'Surname' | localize }}</label>
+          <label>{{ 'LastName' | localize }}</label>
           <input
             #userAdminSurname="ngModel"
             class="form-control"

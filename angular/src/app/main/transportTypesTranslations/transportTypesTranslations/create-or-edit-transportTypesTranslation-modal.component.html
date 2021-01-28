@@ -31,12 +31,12 @@
               required
             >
               <option value="">{{ l('SelectATransportType') }}</option>
-              <option *ngFor="let item of allTransportTypes" value="{{ item.id }}">{{ item.translatedDisplayName }}</option>
+              <option *ngFor="let item of allTransportTypes" value="{{ item.id }}">{{ item.translatedDisplayName }} </option>
             </select>
           </div>
 
           <div class="form-group">
-            <label for="TransportTypesTranslation_DisplayName">{{ l('DisplayName') }} *</label>
+            <label for="TransportTypesTranslation_DisplayName">{{ l('Name') }} *</label>
             <input
               type="text"
               #TransportTypesTranslation_DisplayName="ngModel"

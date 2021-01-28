@@ -14,7 +14,7 @@
       <div *ngIf="active && isFormSubmitted" class="card card-custom gutter-b">
         <div class="card-header">
           <div class="card-title">
-            <h4 class="card-title">{{ l('SubmittedDocumnents') }}</h4>
+            <h4 class="card-title">{{ l('SubmittedDocuments') }}</h4>
           </div>
         </div>
         <div class="card-body">
@@ -114,7 +114,7 @@
                           *ngIf="!record.isRejected && !record.isAccepted"
                           class="label mr-3 label-lg font-weight-bold label-light-primary label-inline"
                         >
-                          {{ l('InReview') }}
+                          {{ l('UnderReview') }}
                         </span>
 
                         <span
@@ -158,7 +158,8 @@
                 [createOrEditDocumentFileDtos]="createOrEditDocumentFileDtos"
                 (onDocsUploaderCompleteAll)="saveInternal()"
                 [parentForm]="TenantRequiredDocumentsForm"
-              ></app-required-document-form-child>
+              >
+              </app-required-document-form-child>
             </div>
             <div *ngIf="saving" class="overlay-layer bg-dark-o-10">
               <div class="spinner spinner-primary-lg"></div>
