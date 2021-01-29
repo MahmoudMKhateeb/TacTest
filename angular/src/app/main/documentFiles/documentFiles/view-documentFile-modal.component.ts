@@ -1,6 +1,11 @@
 ﻿import { Component, ViewChild, Injector, Output, EventEmitter } from '@angular/core';
 import { ModalDirective } from 'ngx-bootstrap/modal';
-import { GetDocumentFileForViewDto, DocumentFileDto } from '@shared/service-proxies/service-proxies';
+import {
+  GetDocumentFileForViewDto,
+  DocumentFileDto,
+  DocumentTypeDto,
+  UserInGetDocumentFileForViewDto,
+} from '@shared/service-proxies/service-proxies';
 import { AppComponentBase } from '@shared/common/app-component-base';
 
 @Component({
@@ -22,6 +27,8 @@ export class ViewDocumentFileModalComponent extends AppComponentBase {
     super(injector);
     this.item = new GetDocumentFileForViewDto();
     this.item.documentFile = new DocumentFileDto();
+    this.item.documentType = new DocumentTypeDto();
+    this.item.user = new UserInGetDocumentFileForViewDto();
   }
 
   show(item: GetDocumentFileForViewDto, entityType: string, isHost: boolean): void {
