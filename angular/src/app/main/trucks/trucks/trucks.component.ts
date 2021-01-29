@@ -1,4 +1,4 @@
-﻿import { Component, Injector, ViewEncapsulation, ViewChild, ChangeDetectorRef, OnInit } from '@angular/core';
+﻿import { Component, Injector, ViewEncapsulation, ViewChild, ChangeDetectorRef, AfterViewInit, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { TrucksServiceProxy, TruckDto } from '@shared/service-proxies/service-proxies';
 import { NotifyService } from 'abp-ng2-module';
@@ -29,7 +29,7 @@ import { AppSessionService } from '@shared/common/session/app-session.service';
   encapsulation: ViewEncapsulation.None,
   animations: [appModuleAnimation()],
 })
-export class TrucksComponent extends AppComponentBase implements OnInit {
+export class TrucksComponent extends AppComponentBase implements OnInit, AfterViewInit {
   @ViewChild('entityTypeHistoryModal', { static: true }) entityTypeHistoryModal: EntityTypeHistoryModalComponent;
   @ViewChild('createOrEditTruckModal', { static: true }) createOrEditTruckModal: CreateOrEditTruckModalComponent;
   @ViewChild('viewTruckModalComponent', { static: true }) viewTruckModal: ViewTruckModalComponent;
@@ -71,6 +71,10 @@ export class TrucksComponent extends AppComponentBase implements OnInit {
   ngOnInit(): void {
     this.entityHistoryEnabled = this.setIsEntityHistoryEnabled();
     this.isArabic = abp.localization.currentLanguage.name.startsWith('ar');
+  }
+
+  ngAfterViewInit(): void {
+    this.primengTableHelper.adjustScroll(this.dataTable);
   }
 
   private setIsEntityHistoryEnabled(): boolean {
