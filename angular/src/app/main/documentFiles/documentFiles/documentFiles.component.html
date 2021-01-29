@@ -204,7 +204,7 @@
                     </td>
 
                     <td style="width: 150px;">
-                      {{ record.documentTypeDisplayName }}
+                      {{ record.documentType?.name }}
                     </td>
 
                     <td *ngIf="entityType == 'Tenant' && isHost == true" style="width: 160px;">
@@ -229,7 +229,7 @@
                       {{ record.userName }}
                     </td>
                     <td style="width: 150px;">
-                      {{ record.hasNumber ? record.number : '--' }}
+                      {{ record.documentFile?.number }}
                     </td>
                     <!-- <td style="width: 150px;">
                       <span class="ui-column-title"> {{ l('DisplayName') }}</span>
@@ -247,12 +247,9 @@
                       {{ record.documentFile.binaryObjectId }}
                     </td> -->
                     <td style="width: 150px;">
-                      <span *ngIf="record.hasDate">
-                        {{ record.documentFile.expirationDate | momentFormat: 'D/M/YYYY' }}
+                      {{ record.documentFile?.expirationDate | momentFormat: 'D/M/YYYY' }}
 
-                        {{ record.documentFile.expirationDate > todayGregorian ? '(' + l('Expired') + ')' : '' }}
-                      </span>
-                      <span *ngIf="!record.hasDate">--</span>
+                      {{ record.documentFile?.expirationDate > todayGregorian ? '(' + l('Expired') + ')' : '' }}
                     </td>
 
                     <td *ngIf="entityType == 'Tenant'" style="width: 150px;">

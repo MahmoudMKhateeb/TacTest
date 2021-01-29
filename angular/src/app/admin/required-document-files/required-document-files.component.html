@@ -34,16 +34,16 @@
                 <ng-template pTemplate="header">
                   <tr>
                     <th style="width: 130px;">{{ l('Actions') }}</th>
-                    <th style="width: 150px;">
+                    <th>
                       {{ l('Name') }}
                     </th>
-                    <th style="width: 150px;">
+                    <th>
                       {{ l('Extn') }}
                     </th>
-                    <th style="width: 150px;">
+                    <th>
                       {{ l('ExpirationDate') }}
                     </th>
-                    <th style="width: 150px;">
+                    <th>
                       {{ l('Status') }}
                     </th>
                   </tr>
@@ -74,21 +74,21 @@
                         </ul>
                       </div>
                     </td>
-                    <td style="width: 150px;">
+                    <td>
                       <span class="ui-column-title"></span>
                       {{ record.documentTypeDto.name }}
                     </td>
-                    <td style="width: 150px;">
+                    <td>
                       <span class="ui-column-title"></span>
                       {{ record.extn }}
                     </td>
 
-                    <td style="width: 150px;">
+                    <td>
                       <span class="ui-column-title"> </span>
                       {{ record.expirationDate == null ? '-' : (record.expirationDate | momentFormat: 'D/M/YYYY') }}
                     </td>
 
-                    <td style="width: 150px;">
+                    <td>
                       <span class="ui-column-title"></span>
                       <div>
                         <span

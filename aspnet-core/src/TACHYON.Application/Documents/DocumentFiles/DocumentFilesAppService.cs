@@ -76,8 +76,10 @@ namespace TACHYON.Documents.DocumentFiles
 
         public async Task<PagedResultDto<GetDocumentFileForViewDto>> GetAll(GetAllDocumentFilesInput input)
         {
+            DisableTenancyFiltersIfHost();
             var filteredDocumentFiles = _documentFileRepository.GetAll()
                 .Include(e => e.DocumentTypeFk)
+                .ThenInclude(x=> x.Translations)
                 .Include(e => e.TruckFk)
                 .Include(e => e.TrailerFk)
                 .Include(e => e.UserFk)
@@ -114,64 +116,63 @@ namespace TACHYON.Documents.DocumentFiles
                 .OrderBy(input.Sorting ?? "id asc")
                 .PageBy(input);
 
-            var documentFiles = from o in pagedAndFilteredDocumentFiles
-                                join o1 in _lookupDocumentTypeRepository.GetAll() on o.DocumentTypeId equals o1.Id into j1
-                                from s1 in j1.DefaultIfEmpty()
-                                join o2 in _lookupTruckRepository.GetAll() on o.TruckId equals o2.Id into j2
-                                from s2 in j2.DefaultIfEmpty()
-                                join o3 in _lookupTrailerRepository.GetAll() on o.TrailerId equals o3.Id into j3
-                                from s3 in j3.DefaultIfEmpty()
-                                join o4 in _lookupUserRepository.GetAll() on o.UserId equals o4.Id into j4
-                                from s4 in j4.DefaultIfEmpty()
-                                join o5 in _lookupRoutStepRepository.GetAll() on o.RoutStepId equals o5.Id into j5
-                                from s5 in j5.DefaultIfEmpty()
-                                    // join o6 in _lookupTenantRepository.GetAll() on o.TenantId equals o6.Id into j6
-                                    // from s6 in j6.DefaultIfEmpty()
+            var documentFiles = await (from o in pagedAndFilteredDocumentFiles
+                                       join o1 in _lookupDocumentTypeRepository.GetAll() on o.DocumentTypeId equals o1.Id into j1
+                                       from s1 in j1.DefaultIfEmpty()
+                                       join o2 in _lookupTruckRepository.GetAll() on o.TruckId equals o2.Id into j2
+                                       from s2 in j2.DefaultIfEmpty()
+                                       join o3 in _lookupTrailerRepository.GetAll() on o.TrailerId equals o3.Id into j3
+                                       from s3 in j3.DefaultIfEmpty()
+                                       join o4 in _lookupUserRepository.GetAll() on o.UserId equals o4.Id into j4
+                                       from s4 in j4.DefaultIfEmpty()
+                                       join o5 in _lookupRoutStepRepository.GetAll() on o.RoutStepId equals o5.Id into j5
+                                       from s5 in j5.DefaultIfEmpty()
+                                           // join o6 in _lookupTenantRepository.GetAll() on o.TenantId equals o6.Id into j6
+                                           // from s6 in j6.DefaultIfEmpty()
 
-                                select new GetDocumentFileForViewDto
-                                {
-                                    DocumentFile = new DocumentFileDto
-                                    {
-                                        Id = o.Id,
-                                        Name = o.Name,
-                                        Extn = o.Extn,
-                                        BinaryObjectId = o.BinaryObjectId,
-                                        ExpirationDate = o.ExpirationDate,
-                                        IsAccepted = o.IsAccepted,
-                                        IsRejected = o.IsRejected,
-                                        RejectionReason = o.RejectionReason,
-                                        CreationTime = o.CreationTime
-                                    },
-                                    User = new UserInGetDocumentFileForViewDto
-                                    {
-                                        Id = s4.Id,
-                                        Name = s4.Name,
-                                        EmailAddress = s4.EmailAddress,
-                                        PhoneNumber = s4.PhoneNumber,
-                                        UserName = s4.UserName,
-                                        IsActive = s4.IsActive,
-                                        Surname = s4.Surname
-                                    },
-                                    SubmitterTenatTenancyName = o.TenantId == null ? "Host" : o.TenantFk.TenancyName.ToString(),
-                                    //s6 == null || s6.TenancyName == null ? "Host" : s6.TenancyName.ToString(),
-                                    HasDate = o.DocumentTypeFk.HasExpirationDate,
-                                    HasNumber = o.DocumentTypeFk.HasNumber,
-                                    Number = o.Number,
-                                    DocumentEntityDisplayName = (o.DocumentTypeFk.DocumentsEntityFk) == null ? "" : o.DocumentTypeFk.DocumentsEntityFk.DisplayName,
-                                    DocumentTypeDisplayName = s1 == null || s1.DisplayName == null ? "" : s1.DisplayName,
-                                    TruckId = (o.TruckFk == null ? (long?)null : o.TruckFk.Id).ToString(),
-                                    PlateNumber = (o.TruckFk == null ? "" : o.TruckFk.PlateNumber),
-                                    TrailerTrailerCode = s3 == null || s3.TrailerCode == null ? "" : s3.TrailerCode,
-                                    UserName = s4 == null || s4.Name == null ? "" : s4.UserName,
-                                    RoutStepDisplayName = s5 == null || s5.DisplayName == null ? "" : s5.DisplayName.ToString()
-                                };
+                                       select new
+                                       {
+                                           DocumentFile = o,
+                                           User = s4,
+                                           SubmitterTenatTenancyName = o.TenantId == null ? "Host" : o.TenantFk.TenancyName.ToString(),
+                                           //s6 == null || s6.TenancyName == null ? "Host" : s6.TenancyName.ToString(),
+                                           HasDate = o.DocumentTypeFk.HasExpirationDate,
+                                           HasNumber = o.DocumentTypeFk.HasNumber,
+                                           Number = o.Number,
+                                           DocumentEntityDisplayName = (o.DocumentTypeFk.DocumentsEntityFk) == null ? "" : o.DocumentTypeFk.DocumentsEntityFk.DisplayName,
+                                           DocumentTypeDisplayName = s1 == null || s1.DisplayName == null ? "" : s1.DisplayName,
+                                           TruckId = (o.TruckFk == null ? (long?)null : o.TruckFk.Id).ToString(),
+                                           PlateNumber = (o.TruckFk == null ? "" : o.TruckFk.PlateNumber),
+                                           TrailerTrailerCode = s3 == null || s3.TrailerCode == null ? "" : s3.TrailerCode,
+                                           UserName = s4 == null || s4.Name == null ? "" : s4.UserName,
+                                           RoutStepDisplayName = s5 == null || s5.DisplayName == null ? "" : s5.DisplayName.ToString()
+                                       }).ToListAsync();
 
+            var result = documentFiles.Select(x => new GetDocumentFileForViewDto
+            {
+                DocumentFile = ObjectMapper.Map<DocumentFileDto>(x.DocumentFile),
+                DocumentType = ObjectMapper.Map<DocumentTypeDto>(x.DocumentFile.DocumentTypeFk),
+                User = ObjectMapper.Map<UserInGetDocumentFileForViewDto>(x.User),
+                SubmitterTenatTenancyName = x.SubmitterTenatTenancyName,
+                //s6 == null || s6.TenancyName == null ? "Host" : s6.TenancyName.ToString(),
+                //HasDate = x.HasDate,
+                //HasNumber = x.HasDate,
+                //Number = x.Number,
+                DocumentEntityDisplayName = x.DocumentEntityDisplayName,
+                //DocumentTypeDisplayName = x.DocumentTypeDisplayName,
+                TruckId = x.TruckId,
+                PlateNumber = x.PlateNumber,
+                TrailerTrailerCode = x.TrailerTrailerCode,
+                UserName = x.UserName,
+                RoutStepDisplayName = x.RoutStepDisplayName
+            }).ToList();
 
+            //GetDocumentFileForViewDto
             if (AbpSession.TenantId.HasValue)
             {
                 return new PagedResultDto<GetDocumentFileForViewDto>(
                     await filteredDocumentFiles.CountAsync(),
-                   await documentFiles.ToListAsync()
+                   result
                 );
             }
 
@@ -179,7 +180,7 @@ namespace TACHYON.Documents.DocumentFiles
             {
                 return new PagedResultDto<GetDocumentFileForViewDto>(
                     await filteredDocumentFiles.CountAsync(),
-                    await documentFiles.ToListAsync()
+                    result
 
                 );
             }
@@ -194,10 +195,10 @@ namespace TACHYON.Documents.DocumentFiles
 
             {
                 var lookupDocumentType = await _lookupDocumentTypeRepository.FirstOrDefaultAsync(output.DocumentFile.DocumentTypeId);
-                output.DocumentTypeDisplayName = lookupDocumentType?.DisplayName;
+                output.DocumentType = ObjectMapper.Map<DocumentTypeDto>(lookupDocumentType);
             }
 
-            if (output.DocumentFile.TruckId != null)
+            if (output.DocumentFile.TruckId != null) 
             {
                 var lookupTruck = await _lookupTruckRepository.FirstOrDefaultAsync((long)output.DocumentFile.TruckId);
                 output.TruckId = (lookupTruck == null ? (long?)null : lookupTruck.Id).ToString();
@@ -618,7 +619,7 @@ namespace TACHYON.Documents.DocumentFiles
             return list.Select(x => new CreateOrEditDocumentFileDto { DocumentTypeId = x.Id, DocumentTypeDto = ObjectMapper.Map<DocumentTypeDto>(x) }).ToList();
         }
 
-        public async Task  AcceptAsync(Guid id)
+        public async Task AcceptAsync(Guid id)
         {
             DisableTenancyFiltersIfHost();
 
@@ -633,7 +634,7 @@ namespace TACHYON.Documents.DocumentFiles
 
         }
 
-        public async Task  Reject(Guid id, string reason)
+        public async Task Reject(Guid id, string reason)
         {
             DisableTenancyFiltersIfHost();
 
@@ -647,7 +648,7 @@ namespace TACHYON.Documents.DocumentFiles
             documentFile.RejectionReason = reason;
             if (documentFile.CreatorUserId != null)
             {
-               await  _appNotifier.RejectedSubmittedDocument(new UserIdentifier(documentFile.TenantId, documentFile.CreatorUserId.Value), documentFile);
+                await _appNotifier.RejectedSubmittedDocument(new UserIdentifier(documentFile.TenantId, documentFile.CreatorUserId.Value), documentFile);
             }
         }
 
