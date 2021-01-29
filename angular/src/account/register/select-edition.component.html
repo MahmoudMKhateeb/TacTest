@@ -1,6 +1,6 @@
 <div [@routerTransition]>
   <div class="content d-flex flex-column flex-column-fluid">
-    <div [class]="containerClass">
+    <div [class]="containerClass" style="min-height: 622px; min-width: 283px;">
       <span class="font-size-h1 d-block d-block font-weight-boldest py-2 pricing-title">
         <h2>{{ 'IAMA' | localize }}</h2>
       </span>
@@ -8,21 +8,24 @@
       <div class="card card-custom gutter-b">
         <div class="card-body">
           <div class="row justify-content-center mt-10 mb-0 pricing-items">
-            <div [class]="!editionsSelectOutput || !editionsSelectOutput.editionsWithFeatures ? 'overlay overlay-block' : ''">
-              <div>
-                <div class="overlay-wrapper">
-                  <div *ngIf="!editionsSelectOutput || !editionsSelectOutput.editionsWithFeatures" class="alert alert-warning fade show" role="alert">
-                    <div class="alert-icon">
-                      <i class="flaticon-warning"></i>
-                    </div>
-                    <div class="alert-text">{{ 'ThereIsNoEditionToUpgrade' | localize }}</div>
-                  </div>
-                </div>
-                <div *ngIf="!editionsSelectOutput || !editionsSelectOutput.editionsWithFeatures" class="overlay-layer bg-dark-o-10">
-                  <div class="spinner spinner-primary"></div>
-                </div>
-              </div>
+            <div *ngIf="!editionsSelectOutput || !editionsSelectOutput.editionsWithFeatures" class="overlay-layer bg-dark-o-10">
+              <div class="spinner spinner-primary"></div>
             </div>
+            <!--            <div [class]="!editionsSelectOutput || !editionsSelectOutput.editionsWithFeatures ? 'overlay overlay-block' : ''">-->
+            <!--              <div>-->
+            <!--                <div class="overlay-wrapper">-->
+            <!--                  <div *ngIf="!editionsSelectOutput || !editionsSelectOutput.editionsWithFeatures" class="alert alert-warning fade show" role="alert">-->
+            <!--                    <div class="alert-icon">-->
+            <!--                      <i class="flaticon-warning"></i>-->
+            <!--                    </div>-->
+            <!--                    <div class="alert-text">{{ 'ThereIsNoEditionToUpgrade' | localize }}</div>-->
+            <!--                  </div>-->
+            <!--                </div>-->
+            <!--                <div *ngIf="!editionsSelectOutput || !editionsSelectOutput.editionsWithFeatures" class="overlay-layer bg-dark-o-10">-->
+            <!--                  <div class="spinner spinner-primary"></div>-->
+            <!--                </div>-->
+            <!--              </div>-->
+            <!--            </div>-->
 
             <div
               class="pt-30 pt-md-25 px-5 mb-15 text-center"
