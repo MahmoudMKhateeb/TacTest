@@ -174,7 +174,7 @@ namespace TACHYON.Trucks.Importing.Dto
 
                 await _appNotifier.SendMessageAsync(
                     args.User,
-                    new LocalizableString("AllTrucksSuccessfullyImportedFromExcel", TACHYONConsts.LocalizationSourceName),
+                    new LocalizableString("AllTrucksSuccessfullyImportedFromExcel,PleaseUploadAllMissingDocuments", TACHYONConsts.LocalizationSourceName),
                     null,
                     Abp.Notifications.NotificationSeverity.Success);
             }

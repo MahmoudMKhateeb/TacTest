@@ -208,7 +208,7 @@ namespace TACHYON.Drivers.importing
             {
                 await _appNotifier.SendMessageAsync(
                     args.User,
-                    new LocalizableString("AllDriversSuccessfullyImportedFromExcel", TACHYONConsts.LocalizationSourceName),
+                    new LocalizableString("AllDriversSuccessfullyImportedFromExcel,PleaseUploadAllMissingDocuments", TACHYONConsts.LocalizationSourceName),
                     null,
                     Abp.Notifications.NotificationSeverity.Success);
             }
