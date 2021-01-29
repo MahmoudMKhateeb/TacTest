@@ -24,6 +24,7 @@ using TACHYON.Documents.DocumentTypes;
 using TACHYON.Documents.DocumentTypes.Dtos;
 using TACHYON.Dto;
 using TACHYON.MultiTenancy;
+using TACHYON.Notifications;
 using TACHYON.Routs.RoutSteps;
 using TACHYON.Storage;
 using TACHYON.Trailers;
@@ -36,7 +37,7 @@ namespace TACHYON.Documents.DocumentFiles
     {
 
 
-        public DocumentFilesAppService(TenantManager tenantManager, IRepository<DocumentFile, Guid> documentFileRepository, IDocumentFilesExcelExporter documentFilesExcelExporter, IRepository<DocumentType, long> lookupDocumentTypeRepository, IRepository<Truck, long> lookupTruckRepository, IRepository<Trailer, long> lookupTrailerRepository, IRepository<User, long> lookupUserRepository, IRepository<RoutStep, long> lookupRoutStepRepository, ITempFileCacheManager tempFileCacheManager, IBinaryObjectManager binaryObjectManager, IRepository<Edition, int> editionRepository, IRepository<DocumentType, long> documentTypeRepository, DocumentFilesManager documentFilesManager, IRepository<Tenant, int> lookupTenantRepository, IRepository<DocumentsEntity, int> documentEntityRepository)
+        public DocumentFilesAppService(TenantManager tenantManager, IRepository<DocumentFile, Guid> documentFileRepository, IDocumentFilesExcelExporter documentFilesExcelExporter, IRepository<DocumentType, long> lookupDocumentTypeRepository, IRepository<Truck, long> lookupTruckRepository, IRepository<Trailer, long> lookupTrailerRepository, IRepository<User, long> lookupUserRepository, IRepository<RoutStep, long> lookupRoutStepRepository, ITempFileCacheManager tempFileCacheManager, IBinaryObjectManager binaryObjectManager, IRepository<Edition, int> editionRepository, IRepository<DocumentType, long> documentTypeRepository, DocumentFilesManager documentFilesManager, IRepository<Tenant, int> lookupTenantRepository, IRepository<DocumentsEntity, int> documentEntityRepository, IAppNotifier appNotifier)
         {
             _documentFileRepository = documentFileRepository;
             _documentFilesExcelExporter = documentFilesExcelExporter;
@@ -53,6 +54,7 @@ namespace TACHYON.Documents.DocumentFiles
             _lookupTenantRepository = lookupTenantRepository;
             _documentEntityRepository = documentEntityRepository;
             _tenantManager = tenantManager;
+            _appNotifier = appNotifier;
         }
 
         private readonly IRepository<Tenant, int> _lookupTenantRepository;
@@ -70,6 +72,7 @@ namespace TACHYON.Documents.DocumentFiles
         private readonly IRepository<Edition, int> _editionRepository;
         private readonly DocumentFilesManager _documentFilesManager;
         private readonly TenantManager _tenantManager;
+        private readonly IAppNotifier _appNotifier;
 
         public async Task<PagedResultDto<GetDocumentFileForViewDto>> GetAll(GetAllDocumentFilesInput input)
         {
@@ -502,7 +505,7 @@ namespace TACHYON.Documents.DocumentFiles
                 input.IsRejected = false;
 
             }
-            if (documentFile.ExpirationDate != input.ExpirationDate )
+            if (documentFile.ExpirationDate != input.ExpirationDate)
             {
                 input.IsAccepted = false;
                 input.IsRejected = false;
@@ -615,24 +618,26 @@ namespace TACHYON.Documents.DocumentFiles
             return list.Select(x => new CreateOrEditDocumentFileDto { DocumentTypeId = x.Id, DocumentTypeDto = ObjectMapper.Map<DocumentTypeDto>(x) }).ToList();
         }
 
-        public void Accept(Guid id)
+        public async Task  AcceptAsync(Guid id)
         {
             DisableTenancyFiltersIfHost();
 
-            var documentFile = _documentFileRepository.FirstOrDefault(id);
+            var documentFile = await _documentFileRepository.FirstOrDefaultAsync(id);
             documentFile.IsAccepted = true;
             documentFile.IsRejected = false;
             documentFile.RejectionReason = "";
-            //await _appNotifier.AcceptedSubmittedDocument(new UserIdentifier(documentFile.TenantId, AbpSession.UserId.Value), documentFile.Name);
+            if (documentFile.CreatorUserId != null)
+            {
+                await _appNotifier.AcceptedSubmittedDocument(new UserIdentifier(documentFile.TenantId, documentFile.CreatorUserId.Value), documentFile);
+            }
 
-            //todo send notification to the tenant
         }
 
-        public async void Reject(Guid id, string reason)
+        public async Task  Reject(Guid id, string reason)
         {
             DisableTenancyFiltersIfHost();
 
-            var documentFile = _documentFileRepository.FirstOrDefault(id);
+            var documentFile = await _documentFileRepository.FirstOrDefaultAsync(id);
             if (documentFile == null)
             {
                 throw new UserFriendlyException(L("DocumentNotFound"));
@@ -640,6 +645,10 @@ namespace TACHYON.Documents.DocumentFiles
             documentFile.IsAccepted = false;
             documentFile.IsRejected = true;
             documentFile.RejectionReason = reason;
+            if (documentFile.CreatorUserId != null)
+            {
+               await  _appNotifier.RejectedSubmittedDocument(new UserIdentifier(documentFile.TenantId, documentFile.CreatorUserId.Value), documentFile);
+            }
         }
 
 

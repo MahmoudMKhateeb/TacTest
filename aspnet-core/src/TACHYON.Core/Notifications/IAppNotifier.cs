@@ -49,5 +49,7 @@ namespace TACHYON.Notifications
         Task SomeUsersCouldntBeImported(UserIdentifier user, string fileToken, string fileType, string fileName);
         Task DocumentFileBeforExpiration(UserIdentifier argsUser, Guid documentFileId, int expirationAlertDays);
         Task DocumentFileExpiration(UserIdentifier argsUser, Guid documentFileId);
+        Task AcceptedSubmittedDocument(UserIdentifier argsUser, DocumentFile documentFile);
+        Task RejectedSubmittedDocument(UserIdentifier argsUser, DocumentFile documentFile);
     }
 }
