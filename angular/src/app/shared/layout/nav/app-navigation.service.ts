@@ -238,8 +238,11 @@ export class AppNavigationService {
           new AppMenuItem('Languages', 'Pages.Administration.Host.Languages', 'flaticon-tabs', '/app/admin/languages', [
             '/app/admin/languages/{name}/texts',
           ]),
-          new AppMenuItem('Counties', 'Pages.Counties', 'flaticon-more', '/app/main/countries/counties'),
+          new AppMenuItem('Countries', 'Pages.Counties', 'flaticon-more', '/app/main/countries/counties'),
+          new AppMenuItem('CountriesTranslations', 'Pages.CountriesTranslations', 'flaticon-more', '/app/main/countriesTranslations/countriesTranslations'),
           new AppMenuItem('Cities', 'Pages.Cities', 'flaticon-more', '/app/main/cities/cities'),
+          new AppMenuItem('CitiesTranslations', 'Pages.CitiesTranslations', 'flaticon-more', '/app/main/citiesTranslations/citiesTranslations'),
+
 
           // new AppMenuItem('AuditLogs', 'Pages.Administration.AuditLogs', 'flaticon-folder-1', '/app/admin/auditLogs'),
           // new AppMenuItem('Maintenance', 'Pages.Administration.Host.Maintenance', 'flaticon-lock', '/app/admin/maintenance'),

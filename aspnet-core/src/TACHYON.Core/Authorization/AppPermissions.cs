@@ -6,6 +6,16 @@
     /// </summary>
     public static class AppPermissions
     {
+        public const string Pages_CitiesTranslations = "Pages.CitiesTranslations";
+        public const string Pages_CitiesTranslations_Create = "Pages.CitiesTranslations.Create";
+        public const string Pages_CitiesTranslations_Edit = "Pages.CitiesTranslations.Edit";
+        public const string Pages_CitiesTranslations_Delete = "Pages.CitiesTranslations.Delete";
+
+        public const string Pages_CountriesTranslations = "Pages.CountriesTranslations";
+        public const string Pages_CountriesTranslations_Create = "Pages.CountriesTranslations.Create";
+        public const string Pages_CountriesTranslations_Edit = "Pages.CountriesTranslations.Edit";
+        public const string Pages_CountriesTranslations_Delete = "Pages.CountriesTranslations.Delete";
+
         public const string Pages_PlateTypes = "Pages.PlateTypes";
         public const string Pages_PlateTypes_Create = "Pages.PlateTypes.Create";
         public const string Pages_PlateTypes_Edit = "Pages.PlateTypes.Edit";

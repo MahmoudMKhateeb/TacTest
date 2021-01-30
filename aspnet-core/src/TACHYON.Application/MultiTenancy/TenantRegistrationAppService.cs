@@ -18,7 +18,9 @@ using System.Threading.Tasks;
 using TACHYON.Cities;
 using TACHYON.Configuration;
 using TACHYON.Countries;
+using TACHYON.Countries.Dtos;
 using TACHYON.Debugging;
+using TACHYON.Dto;
 using TACHYON.Editions;
 using TACHYON.Editions.Dto;
 using TACHYON.Features;
@@ -324,25 +326,27 @@ namespace TACHYON.MultiTenancy
 
         public async Task<List<TenantCountryLookupTableDto>> GetAllCountryForTableDropdown()
         {
-            return await _lookup_countryRepository.GetAll()
+            List<County> countries = await _lookup_countryRepository
+                .GetAllIncluding(x => x.Translations)
                 .OrderBy(x => x.DisplayName)
-                .Select(country => new TenantCountryLookupTableDto
-                {
-                    Id = country.Id,
-                    DisplayName = country == null || country.DisplayName == null ? "" : country.DisplayName.ToString()
-                }).ToListAsync();
+                .ToListAsync();
+
+            List<TenantCountryLookupTableDto> countryDtos = ObjectMapper.Map<List<TenantCountryLookupTableDto>>(countries);
+            return countryDtos;
         }
 
 
         public async Task<List<TenantCityLookupTableDto>> GetAllCitiesForTableDropdown(int input)
         {
-            return await _lookup_cityRepository.GetAll().Where(c => c.CountyFk.Id == input)
+            List<City> cities = await _lookup_cityRepository
+                .GetAllIncluding(x => x.Translations)
+                .Where(x => x.CountyFk.Id == input)
                 .OrderBy(x => x.DisplayName)
-                .Select(county => new TenantCityLookupTableDto
-                {
-                    Id = county.Id,
-                    DisplayName = county == null || county.DisplayName == null ? "" : county.DisplayName.ToString()
-                }).ToListAsync();
+                .ToListAsync();
+
+            List<TenantCityLookupTableDto> cityDtos = ObjectMapper.Map<List<TenantCityLookupTableDto>>(cities);
+            return cityDtos;
+
         }
 
 

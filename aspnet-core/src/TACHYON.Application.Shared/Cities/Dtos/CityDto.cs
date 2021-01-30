@@ -14,8 +14,9 @@ namespace TACHYON.Cities.Dtos
 
         public string Longitude { get; set; }
 
-
         public int CountyId { get; set; }
+
+        public string TranslatedDisplayName { get; set; }
 
 
     }

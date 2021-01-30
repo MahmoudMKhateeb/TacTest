@@ -1,4 +1,8 @@
-﻿using TACHYON.Trucks.PlateTypes.Dtos;
+﻿using TACHYON.Cities.CitiesTranslations.Dtos;
+using TACHYON.Cities.CitiesTranslations;
+using TACHYON.Countries.CountriesTranslations.Dtos;
+using TACHYON.Countries.CountriesTranslations;
+using TACHYON.Trucks.PlateTypes.Dtos;
 using TACHYON.Trucks.PlateTypes;
 using TACHYON.Nationalities.Dtos;
 using TACHYON.Nationalities;
@@ -144,6 +148,10 @@ namespace TACHYON
     {
         public static void CreateMappings(IMapperConfigurationExpression configuration)
         {
+            configuration.CreateMap<CreateOrEditCitiesTranslationDto, CitiesTranslation>().ReverseMap();
+            configuration.CreateMap<CitiesTranslationDto, CitiesTranslation>().ReverseMap();
+            configuration.CreateMap<CreateOrEditCountriesTranslationDto, CountriesTranslation>().ReverseMap();
+            configuration.CreateMap<CountriesTranslationDto, CountriesTranslation>().ReverseMap();
             configuration.CreateMap<CreateOrEditPlateTypeDto, PlateType>().ReverseMap();
             configuration.CreateMap<PlateTypeDto, PlateType>().ReverseMap();
             configuration.CreateMap<CreateOrEditNationalityDto, Nationality>().ReverseMap();
@@ -371,6 +379,25 @@ namespace TACHYON
                   .EntityMap
                   .ForMember(dst => dst.Id, opt => opt.MapFrom(src => src.Id.ToString()))
                   .ReverseMap();
+
+            configuration.CreateMultiLingualMap<County, CountriesTranslation, CountyDto>(context)
+                .EntityMap
+                .ReverseMap();
+
+            configuration.CreateMultiLingualMap<County, CountriesTranslation, TenantCountryLookupTableDto>(context)
+                .EntityMap
+                .ForMember(dst => dst.Id, opt => opt.MapFrom(src => src.Id.ToString()))
+                .ReverseMap();
+
+            configuration.CreateMultiLingualMap<City, CitiesTranslation, CityDto>(context)
+                .EntityMap
+                .ForMember(dst => dst.Id, opt => opt.MapFrom(src => src.Id.ToString()))
+                .ReverseMap();
+
+            configuration.CreateMultiLingualMap<City, CitiesTranslation, TenantCityLookupTableDto>(context)
+                .EntityMap
+                .ForMember(dst => dst.Id, opt => opt.MapFrom(src => src.Id.ToString()))
+                .ReverseMap();
         }
     }
 }
