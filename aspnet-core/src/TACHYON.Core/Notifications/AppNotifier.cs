@@ -397,7 +397,7 @@ namespace TACHYON.Notifications
 
             notificationData["documentFileId"] = documentFile.Id;
             notificationData["documentFileName"] = documentFile.Name;
-            await _notificationPublisher.PublishAsync(AppNotificationNames.AcceptedSubmittedDocument, notificationData, userIds: new[] { argsUser });
+            await _notificationPublisher.PublishAsync(AppNotificationNames.RejectedSubmittedDocument, notificationData, userIds: new[] { argsUser });
         }
 
         #endregion
