@@ -91,8 +91,11 @@ export class HijriGregorianDatepickerComponent implements OnInit {
     if (this.selectedDateType == DateType.Gregorian) {
       return;
     }
+    console.log('Gregorian selectedDate', this.selectedDate);
     this.selectedDateType = DateType.Gregorian;
     //to Gregorian
     this.selectedDate = this.dateFormatterService.ToGregorian(this.selectedDate);
+    console.log('Gregorian selectedDate', this.selectedDate);
+    this.selectedDateChange.emit(this.selectedDate);
   }
 }

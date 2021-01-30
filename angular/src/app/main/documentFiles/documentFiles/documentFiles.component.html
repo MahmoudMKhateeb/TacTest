@@ -21,6 +21,7 @@
             </div>
           </div>
         </div>
+
         <div class="card-body">
           <form class="form" autocomplete="off">
             <div>
@@ -66,7 +67,7 @@
                     <th style="width: 130px;" [hidden]="!isGrantedAny('Pages.DocumentFiles.Edit', 'Pages.DocumentFiles.Delete')">
                       {{ l('Actions') }}
                     </th>
-                    <th style="width: 150px;" pSortableColumn="name">
+                    <th pSortableColumn="name">
                       {{ l('DocumentName') }}
                       <p-sortIcon field="name"></p-sortIcon>
                     </th>
@@ -74,15 +75,15 @@
                       {{ l('SubmitterTenant') }}
                       <p-sortIcon field="documentTypeFk.editionFk.name"></p-sortIcon>
                     </th>
-                    <!-- <th *ngIf="entityType == 'Tenant' && isHost == true" style="width: 150px;" pSortableColumn="documentTypeFk.editionFk.name">
+                    <!-- <th *ngIf="entityType == 'Tenant' && isHost == true"    pSortableColumn="documentTypeFk.editionFk.name">
                       {{ l('SubmitterTenant') }}
                       <p-sortIcon field="documentTypeFk.editionFk.name"></p-sortIcon>
                     </th> -->
-                    <th style="width: 150px;" pSortableColumn="creationTime">
+                    <th pSortableColumn="creationTime">
                       {{ l('SubmittingTime') }}
                       <p-sortIcon field="documentFile.creationTime"></p-sortIcon>
                     </th>
-                    <th *ngIf="entityType == 'Truck'" style="width: 150px;" pSortableColumn="truckFk.Id">
+                    <th *ngIf="entityType == 'Truck'" pSortableColumn="truckFk.Id">
                       {{ l('TruckID') }}
                       <p-sortIcon field="documentFile.truckId"></p-sortIcon>
                     </th>
@@ -90,29 +91,29 @@
                       {{ l('Truck') }} {{ l('PlateNumber') }}
                       <p-sortIcon field="documentFile.plateNumber"></p-sortIcon>
                     </th>
-                    <th *ngIf="entityType == 'Trailer'" style="width: 150px;" pSortableColumn="trailerFk.trailerCode">
+                    <th *ngIf="entityType == 'Trailer'" pSortableColumn="trailerFk.trailerCode">
                       {{ l('TrailerCode') }}
                       <p-sortIcon field="documentFile.trailerTrailerCode"></p-sortIcon>
                     </th>
-                    <th *ngIf="entityType == 'Driver'" style="width: 150px;" pSortableColumn="userFk.name">
+                    <th *ngIf="entityType == 'Driver'" pSortableColumn="userFk.name">
                       {{ l('DriverName') }}
                       <p-sortIcon field="documentFile.userName"></p-sortIcon>
                     </th>
 
-                    <th style="width: 150px;" pSortableColumn="number">
+                    <th pSortableColumn="number">
                       {{ l('Number') }}
                       <p-sortIcon field="documentFile.number"></p-sortIcon>
                     </th>
-                    <th style="width: 150px;" pSortableColumn="extn">
+                    <th pSortableColumn="extn">
                       {{ l('Extn') }}
                       <p-sortIcon field="documentFile.extn"></p-sortIcon>
                     </th>
-                    <th style="width: 150px;" pSortableColumn="expirationDate">
+                    <th pSortableColumn="expirationDate">
                       {{ l('ExpirationDate') }}
                       <p-sortIcon field="documentFile.expirationDate"></p-sortIcon>
                     </th>
-                    <th *ngIf="entityType == 'Tenant'" style="width: 150px;" pSortableColumn="isAccepted">
-                      {{ l('IsAccepted') }}
+                    <th *ngIf="entityType == 'Tenant'" pSortableColumn="isAccepted">
+                      {{ l('Status') }}
                       <p-sortIcon field="documentFile.isAccepted"></p-sortIcon>
                     </th>
                   </tr>
@@ -203,7 +204,7 @@
                       </div>
                     </td>
 
-                    <td style="width: 150px;">
+                    <td>
                       {{ record.documentType?.name }}
                     </td>
 
@@ -211,7 +212,7 @@
                       {{ record.submitterTenatTenancyName }}
                     </td>
 
-                    <td style="width: 150px;">
+                    <td>
                       {{ record.documentFile.creationTime | momentFormat: 'D/M/YYYY' }}
                     </td>
 
@@ -222,40 +223,69 @@
                     <td *ngIf="entityType == 'Truck'" style="width: 160px;">
                       {{ record.plateNumber == '' ? '-' : record.plateNumber }}
                     </td>
-                    <td *ngIf="entityType == 'Trailer'" style="width: 150px;">
+                    <td *ngIf="entityType == 'Trailer'">
                       {{ record.trailerTrailerCode }}
                     </td>
-                    <td *ngIf="entityType == 'Driver'" style="width: 150px;">
+                    <td *ngIf="entityType == 'Driver'">
                       {{ record.userName }}
                     </td>
-                    <td style="width: 150px;">
+                    <td>
                       {{ record.documentFile?.number }}
                     </td>
-                    <!-- <td style="width: 150px;">
+                    <!-- <td   >
                       <span class="ui-column-title"> {{ l('DisplayName') }}</span>
                       {{ record.routStepDisplayName }}
                     </td> -->
-                    <!-- <td style="width: 150px;">
+                    <!-- <td   >
                       <span class="ui-column-title"> {{ l('Name') }}</span>
                       {{ record.documentFile.name }}
                     </td> -->
-                    <td style="width: 150px;">
-                      {{ record.documentFile.extn }}
+                    <td>
+                      {{ record.documentFile?.extn }}
                     </td>
-                    <!-- <td style="width: 150px;">
+                    <!-- <td   >
                       <span class="ui-column-title"> {{ l('BinaryObjectId') }}</span>
                       {{ record.documentFile.binaryObjectId }}
                     </td> -->
-                    <td style="width: 150px;">
+                    <td>
                       {{ record.documentFile?.expirationDate | momentFormat: 'D/M/YYYY' }}
 
                       {{ record.documentFile?.expirationDate > todayGregorian ? '(' + l('Expired') + ')' : '' }}
                     </td>
 
-                    <td *ngIf="entityType == 'Tenant'" style="width: 150px;">
-                      <i *ngIf="record.documentFile.isAccepted" class="fa fa-check-circle text-success" title="True"></i>
-                      <span *ngIf="record.documentFile.isRejected" title="False">{{ l('Rejected') }}</span>
-                      <span *ngIf="!record.documentFile.isAccepted && !record.documentFile.isRejected" title="False">{{ l('NotYet') }}</span>
+                    <td *ngIf="entityType == 'Tenant'">
+                      <!--                      <i *ngIf="record.documentFile.isAccepted" class="fa fa-check-circle text-success" title="True"></i>-->
+                      <!--                      <span *ngIf="record.documentFile.isRejected" title="False">{{ l('Rejected') }}</span>-->
+                      <!--                      <span *ngIf="!record.documentFile.isAccepted && !record.documentFile.isRejected" title="False">{{ l('NotYet') }}</span>-->
+
+                      <div>
+                        <span
+                          *ngIf="record.documentFile?.isAccepted && !record.documentFile?.isRejected"
+                          class="label mr-3 label-lg font-weight-bold label-light-success label-inline"
+                        >
+                          {{ l('Accepted') }}
+                        </span>
+
+                        <span
+                          *ngIf="record.documentFile?.isRejected && !record.documentFile?.isAccepted"
+                          class="label mr-3 label-lg font-weight-bold label-light-danger label-inline"
+                        >
+                          {{ l('Rejected') }}
+                        </span>
+                        <span
+                          *ngIf="!record.documentFile?.isRejected && !record.documentFile?.isAccepted"
+                          class="label mr-3 label-lg font-weight-bold label-light-primary label-inline"
+                        >
+                          {{ l('InReview') }}
+                        </span>
+
+                        <span
+                          *ngIf="record.documentFile?.expirationDate <= todayMoment"
+                          class="label mr-3 label-lg font-weight-bold label-light-danger label-inline"
+                        >
+                          {{ l('Expired') }}
+                        </span>
+                      </div>
                     </td>
                   </tr>
                 </ng-template>

@@ -147,11 +147,14 @@ export abstract class AppComponentBase {
    * @param item
    */
   hijriDatepickerSelectedDateChange($event: NgbDateStruct, item: CreateOrEditDocumentFileDto) {
-    if ($event != null && $event.year < 2000) {
+    if ($event != null && $event.year < 1900) {
       const ngDate = this.dateFormatterService.ToGregorian($event);
       item.expirationDate = this.dateFormatterService.NgbDateStructToMoment(ngDate);
-    } else if ($event != null && $event.year > 2000) {
+      item.hijriExpirationDate = this.dateFormatterService.ToString($event);
+    } else if ($event != null && $event.year > 1900) {
       item.expirationDate = this.dateFormatterService.NgbDateStructToMoment($event);
+      const ngDate = this.dateFormatterService.ToHijri($event);
+      item.hijriExpirationDate = this.dateFormatterService.ToString(ngDate);
     }
   }
 }
