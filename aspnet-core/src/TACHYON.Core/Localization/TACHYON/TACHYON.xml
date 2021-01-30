@@ -1,6 +1,23 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <localizationDictionary culture="en">
-  <texts>    <text name="CitiesTranslations">Cities translations</text>
+  <texts>    <text name="TruckCapacitiesTranslations">Truck capacities translations</text>
+    <text name="TruckCapacitiesTranslation">Truck capacities translation</text>
+    <text name="TACHYON.TruckCapacitiesTranslations.TruckCapacitiesTranslation">TruckCapacitiesTranslation</text>
+    <text name="TruckCapacitiesTranslationsHeaderInfo">Truck capacities translations header info</text>
+    <text name="CreateNewTruckCapacitiesTranslation">Create new truck capacities translation</text>
+    <text name="EditTruckCapacitiesTranslation">Edit truck capacities translation</text>
+    <text name="DeleteTruckCapacitiesTranslation">Delete truck capacities translation</text>
+    <text name="CapacityDisplayName">Capacity display name</text>
+    <text name="PickCapacity">Pick capacity</text>
+    <text name="TruckStatusesTranslations">Truck statuses translations</text>
+    <text name="TruckStatusesTranslation">Truck statuses translation</text>
+    <text name="TACHYON.TruckStatusesTranslations.TruckStatusesTranslation">TruckStatusesTranslation</text>
+    <text name="TranslatedDisplayName">Translated display name</text>
+    <text name="TruckStatusesTranslationsHeaderInfo">Truck statuses translations header info</text>
+    <text name="CreateNewTruckStatusesTranslation">Create new truck statuses translation</text>
+    <text name="EditTruckStatusesTranslation">Edit truck statuses translation</text>
+    <text name="DeleteTruckStatusesTranslation">Delete truck statuses translation</text>
+    <text name="CitiesTranslations">Cities translations</text>
     <text name="CitiesTranslation">Cities translation</text>
     <text name="TACHYON.CitiesTranslations.CitiesTranslation">CitiesTranslation</text>
     <text name="CitiesTranslationsHeaderInfo">Cities translations header info</text>
@@ -10,7 +27,6 @@
     <text name="CountriesTranslations">Countries translations</text>
     <text name="CountriesTranslation">Countries translation</text>
     <text name="TACHYON.CountriesTranslations.CountriesTranslation">CountriesTranslation</text>
-    <text name="TranslatedDisplayName">Translated display name</text>
     <text name="CountriesTranslationsHeaderInfo">Countries translations header info</text>
     <text name="CreateNewCountriesTranslation">Create new countries translation</text>
     <text name="EditCountriesTranslation">Edit countries translation</text>

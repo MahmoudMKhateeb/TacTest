@@ -36,6 +36,7 @@ using TACHYON.Trucks.TruckCategories.TransportTypes;
 using TACHYON.Trucks.TruckCategories.TransportTypes.Dtos;
 using TACHYON.Trucks.TruckCategories.TransportTypes.TransportTypesTranslations;
 using TACHYON.Trucks.TruckCategories.TruckCapacities;
+using TACHYON.Trucks.TruckCategories.TruckCapacities.Dtos;
 using TACHYON.Trucks.TrucksTypes;
 using GetAllForLookupTableInput = TACHYON.Trucks.Dtos.GetAllForLookupTableInput;
 
@@ -398,12 +399,14 @@ namespace TACHYON.Trucks
         [AbpAuthorize(AppPermissions.Pages_Trucks)]
         public async Task<List<TruckTruckStatusLookupTableDto>> GetAllTruckStatusForTableDropdown()
         {
-            return await _lookup_truckStatusRepository.GetAll()
-                .Select(truckStatus => new TruckTruckStatusLookupTableDto
-                {
-                    Id = truckStatus.Id.ToString(),
-                    DisplayName = truckStatus == null || truckStatus.DisplayName == null ? "" : truckStatus.DisplayName.ToString()
-                }).ToListAsync();
+            List<TruckStatus> trucksStatuses = await _lookup_truckStatusRepository
+                .GetAllIncluding(x => x.Translations)
+                .ToListAsync();
+
+            List<TruckTruckStatusLookupTableDto> truckStatusDto = ObjectMapper.Map<List<TruckTruckStatusLookupTableDto>>(trucksStatuses);
+
+            return truckStatusDto;
+
         }
 
 
@@ -499,11 +502,8 @@ namespace TACHYON.Trucks
             return transportTypeDtos;
         }
 
-
         public async Task<List<SelectItemDto>> GetAllTruckTypesByTransportTypeIdForDropdown(int transportTypeId)
         {
-
-
             return await _lookup_trucksTypeRepository.GetAll()
                 .Where(x => x.TransportTypeId == transportTypeId)
                 .Select(x => new SelectItemDto()
@@ -512,15 +512,17 @@ namespace TACHYON.Trucks
                     DisplayName = x.DisplayName
                 }).ToListAsync();
         }
-        public async Task<List<SelectItemDto>> GetAllTuckCapacitiesByTuckTypeIdForDropdown(int truckTypeId)
+
+        public async Task<IEnumerable<ISelectItemDto>> GetAllTuckCapacitiesByTuckTypeIdForDropdown(int truckTypeId)
         {
-            return await _capacityRepository.GetAll()
+            List<Capacity> capacity = await _capacityRepository
+                .GetAllIncluding(x => x.Translations)
                 .Where(x => x.TrucksTypeId == truckTypeId)
-                .Select(x => new SelectItemDto()
-                {
-                    Id = x.Id.ToString(),
-                    DisplayName = x.DisplayName
-                }).ToListAsync();
+                .ToListAsync();
+
+            List<CapacitySelectItemDto> capacityDto = ObjectMapper.Map<List<CapacitySelectItemDto>>(capacity);
+
+            return capacityDto;
         }
 
         public async Task<List<SelectItemDto>> GetAllPlateTypeIdForDropdown()

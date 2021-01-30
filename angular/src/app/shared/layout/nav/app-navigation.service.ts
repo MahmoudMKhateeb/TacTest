@@ -1,4 +1,5 @@
-﻿import { AppSessionService } from '@shared/common/session/app-session.service';
+﻿
+import { AppSessionService } from '@shared/common/session/app-session.service';
 import { Injectable } from '@angular/core';
 import { AppMenu } from './app-menu';
 import { AppMenuItem } from './app-menu-item';
@@ -115,11 +116,13 @@ export class AppNavigationService {
               new AppMenuItem('TrucksTypes', 'Pages.TrucksTypes', 'flaticon-truck', '/app/main/trucksTypes/trucksTypes'),
               new AppMenuItem('TruckSubTypes', 'Pages.TruckSubtypes', 'flaticon-more', '/app/main/truckSubtypes/truckSubtypes'),
               new AppMenuItem('CapacityCategories', 'Pages.Capacities', 'flaticon-more', '/app/main/truckCapacities/capacities'),
+              new AppMenuItem('TruckCapacitiesTranslations', 'Pages.TruckCapacitiesTranslations', 'flaticon-more', '/app/main/truckCapacitiesTranslations/truckCapacitiesTranslations'),
             ]
           ),
           new AppMenuItem('PlateTypes', 'Pages.Capacities', 'flaticon-more', '/app/main/plateTypes/plateTypes'),
 
           new AppMenuItem('TruckStatuses', 'Pages.Administration.TruckStatuses', 'flaticon-info', '/app/admin/trucks/truckStatuses'),
+          new AppMenuItem('TruckStatusesTranslations', 'Pages.TruckStatusesTranslations', 'flaticon-more', '/app/main/truckStatusesTranslations/truckStatusesTranslations'),
           // new AppMenuItem('PickingTypes', 'Pages.PickingTypes', 'flaticon2-telegram-logo', '/app/main/pickingTypes/pickingTypes'),
           // new AppMenuItem('TrailerTypes', 'Pages.TrailerTypes', 'flaticon2-delivery-truck', '/app/main/trailerTypes/trailerTypes'),
           // new AppMenuItem('PayloadMaxWeights', 'Pages.PayloadMaxWeights', 'flaticon2-download-1', '/app/main/payloadMaxWeight/payloadMaxWeights'),

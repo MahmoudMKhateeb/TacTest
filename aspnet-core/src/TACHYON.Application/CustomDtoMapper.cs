@@ -1,3 +1,8 @@
+﻿using TACHYON.Trucks.TruckCategories.TruckCapacities.TruckCapacitiesTranslations.Dtos;
+using TACHYON.Trucks.TruckCategories.TruckCapacities.TruckCapacitiesTranslations;
+using TACHYON.Trucks.TruckStatusesTranslations.Dtos;
+using TACHYON.Trucks.TruckStatusesTranslations;
+using TACHYON.Nationalities.Dtos;
 ﻿using TACHYON.Cities.CitiesTranslations.Dtos;
 using TACHYON.Cities.CitiesTranslations;
 using TACHYON.Countries.CountriesTranslations.Dtos;
@@ -148,6 +153,10 @@ namespace TACHYON
     {
         public static void CreateMappings(IMapperConfigurationExpression configuration)
         {
+            configuration.CreateMap<CreateOrEditTruckCapacitiesTranslationDto, TruckCapacitiesTranslation>().ReverseMap();
+            configuration.CreateMap<TruckCapacitiesTranslationDto, TruckCapacitiesTranslation>().ReverseMap();
+            configuration.CreateMap<CreateOrEditTruckStatusesTranslationDto, TruckStatusesTranslation>().ReverseMap();
+            configuration.CreateMap<TruckStatusesTranslationDto, TruckStatusesTranslation>().ReverseMap();
             configuration.CreateMap<CreateOrEditCitiesTranslationDto, CitiesTranslation>().ReverseMap();
             configuration.CreateMap<CitiesTranslationDto, CitiesTranslation>().ReverseMap();
             configuration.CreateMap<CreateOrEditCountriesTranslationDto, CountriesTranslation>().ReverseMap();
@@ -395,6 +404,26 @@ namespace TACHYON
                 .ReverseMap();
 
             configuration.CreateMultiLingualMap<City, CitiesTranslation, TenantCityLookupTableDto>(context)
+                .EntityMap
+                .ForMember(dst => dst.Id, opt => opt.MapFrom(src => src.Id.ToString()))
+                .ReverseMap();
+
+            configuration.CreateMultiLingualMap<TruckStatus, long, TruckStatusesTranslation, TruckStatusDto>(context)
+                .EntityMap
+                .ReverseMap();
+
+            // goto:#Map_TruckStatus_TruckTruckStatusLookupTableDto
+            configuration.CreateMultiLingualMap<TruckStatus, long, TruckStatusesTranslation, TruckTruckStatusLookupTableDto>(context)
+                .EntityMap
+                .ForMember(dst => dst.Id, opt => opt.MapFrom(src => src.Id.ToString()))
+                .ReverseMap();
+
+            configuration.CreateMultiLingualMap<Capacity, TruckCapacitiesTranslation, CapacityDto>(context)
+                .EntityMap
+                .ReverseMap();
+
+            // goto:#Map_Capacity_CapacitySelectItemDto
+            configuration.CreateMultiLingualMap<Capacity, TruckCapacitiesTranslation, CapacitySelectItemDto>(context)
                 .EntityMap
                 .ForMember(dst => dst.Id, opt => opt.MapFrom(src => src.Id.ToString()))
                 .ReverseMap();
