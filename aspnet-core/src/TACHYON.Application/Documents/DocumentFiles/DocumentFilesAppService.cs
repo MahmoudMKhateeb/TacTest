@@ -79,7 +79,7 @@ namespace TACHYON.Documents.DocumentFiles
             DisableTenancyFiltersIfHost();
             var filteredDocumentFiles = _documentFileRepository.GetAll()
                 .Include(e => e.DocumentTypeFk)
-                .ThenInclude(x=> x.Translations)
+                .ThenInclude(x => x.Translations)
                 .Include(e => e.TruckFk)
                 .Include(e => e.TrailerFk)
                 .Include(e => e.UserFk)
@@ -198,7 +198,7 @@ namespace TACHYON.Documents.DocumentFiles
                 output.DocumentType = ObjectMapper.Map<DocumentTypeDto>(lookupDocumentType);
             }
 
-            if (output.DocumentFile.TruckId != null) 
+            if (output.DocumentFile.TruckId != null)
             {
                 var lookupTruck = await _lookupTruckRepository.FirstOrDefaultAsync((long)output.DocumentFile.TruckId);
                 output.TruckId = (lookupTruck == null ? (long?)null : lookupTruck.Id).ToString();
@@ -552,64 +552,49 @@ namespace TACHYON.Documents.DocumentFiles
             if (string.IsNullOrEmpty(entityId))
             {
                 list = await _documentTypeRepository.GetAll()
+                    .Include(x => x.Translations)
                 .Where(x => x.DocumentsEntityFk.DisplayName == documentsEntityName)
                 .ToListAsync();
 
                 return list.Select(x => new CreateOrEditDocumentFileDto { DocumentTypeId = x.Id, DocumentTypeDto = ObjectMapper.Map<DocumentTypeDto>(x) }).ToList();
             }
 
+            var mainQuery = _documentTypeRepository.GetAll()
+             .Include(ent => ent.DocumentsEntityFk)
+             .Include(x => x.Translations)
+             .Where(doc => doc.DocumentsEntityFk.DisplayName == documentsEntityName);
 
             if (documentsEntityName == AppConsts.DriverDocumentsEntityName)
             {
-                var resultList = _documentTypeRepository.GetAll().Include(ent => ent.DocumentsEntityFk)
-                    .Where(doc => doc.DocumentsEntityFk.DisplayName == AppConsts.DriverDocumentsEntityName);
 
 
-                var query = from o in resultList
-                            join o1 in _documentFileRepository.GetAll().Where(a => a.UserId == long.Parse(entityId)) on o.Id equals o1.DocumentTypeId into j1
+
+                var query = from o in mainQuery
+                            join o1 in _documentFileRepository.GetAll()
+                                .Where(a => a.UserId == long.Parse(entityId)) on o.Id equals o1.DocumentTypeId into j1
                             from s1 in j1.DefaultIfEmpty()
                             where s1.UserId == null
-                            select new DocumentType
-                            {
-                                DisplayName = o.DisplayName,
-                                HasExpirationDate = o.HasExpirationDate,
-                                Id = o.Id,
-                                HasHijriExpirationDate = o.HasHijriExpirationDate,
-                                HasNotes = o.HasNotes,
-                                HasNumber = o.HasNumber,
-                                IsNumberUnique = o.IsNumberUnique,
-                                IsRequired = o.IsRequired,
-                                NumberMaxDigits = o.NumberMaxDigits,
-                                NumberMinDigits = o.NumberMinDigits
-                            };
+                            select o;
 
                 list = await query.ToListAsync();
-                return list.Select(x => new CreateOrEditDocumentFileDto { DocumentTypeId = x.Id, UserId = long.Parse(entityId), DocumentTypeDto = ObjectMapper.Map<DocumentTypeDto>(x) }).ToList();
+                return list.Select(x => new CreateOrEditDocumentFileDto
+                {
+                    DocumentTypeId = x.Id,
+                    UserId = long.Parse(entityId),
+                    DocumentTypeDto = ObjectMapper.Map<DocumentTypeDto>(x)
+                }).ToList();
 
             }
             else if (documentsEntityName == AppConsts.TruckDocumentsEntityName)
             {
-                var resultList = _documentTypeRepository.GetAll().Include(ent => ent.DocumentsEntityFk)
-                    .Where(doc => doc.DocumentsEntityFk.DisplayName == AppConsts.TruckDocumentsEntityName);
 
-                var query = from o in resultList
-                            join o1 in _documentFileRepository.GetAll().Where(a => a.TruckId == long.Parse(entityId)) on o.Id equals o1.DocumentTypeId into j1
+
+                var query = from o in mainQuery
+                            join o1 in _documentFileRepository.GetAll()
+                                .Where(a => a.TruckId == long.Parse(entityId)) on o.Id equals o1.DocumentTypeId into j1
                             from s1 in j1.DefaultIfEmpty()
                             where s1.TruckId == null
-                            select new DocumentType
-                            {
-                                DisplayName = o.DisplayName,
-                                HasExpirationDate = o.HasExpirationDate,
-                                Id = o.Id,
-                                HasHijriExpirationDate = o.HasHijriExpirationDate,
-                                HasNotes = o.HasNotes,
-                                HasNumber = o.HasNumber,
-                                IsNumberUnique = o.IsNumberUnique,
-                                IsRequired = o.IsRequired,
-                                NumberMaxDigits = o.NumberMaxDigits,
-                                NumberMinDigits = o.NumberMinDigits
-
-                            };
+                            select o;
 
                 list = await query.ToListAsync();
                 return list.Select(x => new CreateOrEditDocumentFileDto { DocumentTypeId = x.Id, TruckId = long.Parse(entityId), DocumentTypeDto = ObjectMapper.Map<DocumentTypeDto>(x) }).ToList();
