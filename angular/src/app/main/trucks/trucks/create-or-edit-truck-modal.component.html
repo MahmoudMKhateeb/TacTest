@@ -162,13 +162,13 @@
               <input
                 [(ngModel)]="truck.plateNumber"
                 #plateNumberInput="ngModel"
+                (keyup)="plateNumberNoramlize()"
                 class="form-control"
                 id="Truck_PlateNumber"
                 maxlength="64"
                 minlength="0"
                 name="PlateNumber"
                 required
-                pattern="^[a-z0-9].*?[a-z0-9]$"
                 type="text"
                 [ngClass]="{
                   'is-valid': plateNumberInput.valid,
