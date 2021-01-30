@@ -269,7 +269,6 @@
     <text name="IAMA">أنا</text>
     <text name="CompanyInformation">معلومات الشركة</text>
     <text name="CompanyUniqueName">اسم الشركة</text>
-    <text name="CompanyUniqueName_Regex_Description">الرجاء ادخال اسم الشركة.</text>
     <text name="CompanyFullLeagalName">اسم الشركة القانوني</text>
     <text name="TheNameOfTheCompanyInTheCR">اسم الشركة كما هو في السجل التجاري</text>
     <text name="WillBeShownOnAllOfficialDocumentsLikeWaybillsAndInvoices">سيظهر في جميع المستندات الرسمية.</text>
