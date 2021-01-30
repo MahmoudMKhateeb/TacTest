@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <localizationDictionary culture="en">
   <texts>
-    
+
     <![CDATA[Tachyon:Driver Start]]>
     <text name="FirstName">First name</text>
     <text name="LastName">Last name</text>
@@ -10,12 +10,74 @@
     <text name="DriversHeaderInfo">Drivers Header Info</text>
     <text name="CreateNewDriver"> Create new driver</text>
     <text name="EditDriver">Edit driver</text>
-    <text name="DriverInformations">Driver Informations</text>
+    <text name="DriverInformations">Driver informations</text>
     <text name="ExperienceField">Experience field</text>
     <text name="DriverDocuments">Driver documents</text>
     <text name="DateOfBirth">Date of birth</text>
     <text name="d/M/yyyy">day/month/year</text>
+    <text name="ShouldChangePasswordOnNextLogin">Should change password on next login</text>
+    <text name="IsLockoutEnabled">Is lockout enabled</text>
+    <text name="PhoneNumber">Phone number</text>
+
     <![CDATA[Tachyon:Driver End]]>
+
+
+    <![CDATA[Tachyon:SideBar Start]]>
+    <text name="Requests">Requests</text>
+    <text name="ShippingRequests">Shipping Requests</text>
+    <text name="Marketplace">Marketplace</text>
+    <text name="TMSSettings">TMS Settings</text>
+    <text name="TMS">Transport Management System</text>
+    <![CDATA[Tachyon:SideBar End]]>
+
+
+
+
+
+    <![CDATA[Tachyon:Trucks Page Start]]>-->
+    <text name="TrucksHeaderInfo">Trucks Header Info</text>
+    <text name="NewTruck">New Truck</text>
+    <text name="PlateNumber">Plate number</text>
+    <text name="ModelName">Model name</text>
+    <text name="ModelYear">Model year</text>
+    <text name="Truck">Truck</text>
+    <text name="UseArrowKeysToChooseTheYear">Use arrow keys to choose the year</text>
+    <text name="TruckTypeDetails">Truck type details</text>
+    <text name="Capacity">Capacity (Tons)</text>
+    <text name="TruckDetails">Truck details</text>
+    <text name="SelectTransportTypeToOpenTrucksType">Select transport type to open trucks type</text>
+    <text name="SelectTrucksTypeToOpenCapacity">select transport type to open trucks type</text>
+    <text name="vlaueMustBeGreaterThan">value must be greater than</text>
+    <![CDATA[Tachyon:Trucks Page End]]>-->
+
+    <![CDATA[Tachyon:Shared Document Component Start]]>
+    <text name="UnderReview">UnderReview</text>
+    <text name="SelectFile">Select Document</text>
+    <![CDATA[Tachyon:Shared Document Component End]]>
+
+
+
+    <![CDATA[Tachyon: Common Start]]>
+    <text name="ViewDocuments">View documents</text>
+    <text name="CreationTime">Creation time</text>
+    <text name="ViewDetails">View details</text>
+    <text name="TotalRecordsCount">Total: {0}</text>
+    <text name="Create">Create</text>
+    <text name="Cancel">Cancel</text>
+    <text name="Details">View details</text>
+    <text name="Close">Close</text>
+    <text name="ShowAdvancedFilters">Show advanced filters</text>
+    <text name="HideAdvancedFilters">Hide advanced filters</text>
+    <text name="All">All</text>
+    <text name="True">True</text>
+    <text name="False">False</text>
+    <text name="Edition">Subscription</text>
+    <text name="Language">Language</text>
+    <text name="9digitsNumber">9 Digits number</text>
+    <![CDATA[Tachyon:Common End]]>
+
+
+
 
     <text name="TruckCapacitiesTranslations">Truck capacities translations</text>
     <text name="TruckCapacitiesTranslation">Truck capacities translation</text>
@@ -84,12 +146,6 @@
     <text name="PickTransportType">Pick transport type</text>
 
 
-    <![CDATA[Tachyon:SideBar Start]]>
-    <text name="ShippingRequests">Shipping Requests</text>
-    <text name="Marketplace">Marketplace</text>
-    <text name="TMSSettings">TMS Settings</text>
-    <text name="TMS">Trucks Management System</text>
-    <![CDATA[Tachyon:SideBar End]]>
 
 
 
@@ -134,16 +190,6 @@
     <text name="makeSureThatYouFillAllRequiredFields">Make sure that you fill all required fields</text>
     <![CDATA[Tachyon:Common  End]]>-->
 
-    <![CDATA[Tachyon:Truck Page Start]]>-->
-    <text name="TrucksHeaderInfo">Trucks Header Info</text>
-    <text name="NewTruck">New Truck</text>
-    <text name="PlateNumber">Plate number</text>
-    <text name="ModelName">Model Name</text>
-    <text name="ModelYear">Model Year</text>
-    <text name="Truck">Truck</text>
-    <text name="UseArrowKeysToChooseTheYear">Use Arrow Keys To Choose The Year</text>
-    <text name="TrucktypeDetails">Truck type Details</text>
-    <![CDATA[Tachyon:Truck Page End]]>-->
 
     <![CDATA[Tachyon:Truck type Categories Pages Start]]>-->
     <text name="TruckType">Truck Type</text>
@@ -252,26 +298,12 @@
     <![CDATA[ Tachyon: Document files Page End]]>
 
 
-    <![CDATA[Tachyon:Common Start]]>
-    <text name="ViewDetails">View Details</text>
-    <text name="TotalRecordsCount">Total: {0}</text>
-    <text name="Create">Create</text>
-    <text name="Cancel">Cancel</text>
-    <text name="Details">View Details</text>
-    <text name="Close">Close</text>
-    <text name="ShowAdvancedFilters">Show advanced filters</text>
-    <text name="HideAdvancedFilters">Hide advanced filters</text>
-    <text name="All">All</text>
-    <text name="True">True</text>
-    <text name="False">False</text>
-    <text name="Edition">Subscription</text>
-    <text name="Language">Language</text>
-    <text name="9digitsNumber">9 Digits Number</text>
-    <![CDATA[Tachyon:Common End]]>
 
     <![CDATA[Tachyon:Documents Common Start]]>
+    <text name="minDigits">Min Digits</text>
+
     <text name="Documents">Documents</text>
-    <text name="ValidDocumentFilesMsg">FileAllowedFormatesAre: .png, .jpeg, .pdf</text>
+    <text name="ValidDocumentFilesMsg">File allowed formats are:  png, jpeg, pdf</text>
     <text name="DocumentFileWarnSizeLimit">Document exceeds the maximum allowed limit </text>
     <text name="DocumentManagement">Document Management</text>
     <![CDATA[Tachyon:Documents Common End]]>
@@ -1412,7 +1444,7 @@
     <text name="ImportToExcelSampleFileDownloadInfo">{0} to download sample import file.</text>
     <text name="ImportUsersProcessStart">User import process has begun.</text>
     <text name="ImportUsersUploadFailed">User import process has failed.</text>
-    <text name="AllUsersSuccessfullyImportedFromExcel">User import process has been completed successfully. All users in file are imported.</text>
+    <text name="AllUsersSuccessfullyImportedFromExcel">import process has been completed successfully. All entities in the file are imported.</text>
     <text name="FileCantBeConvertedToUserList">User import process has failed. File is invalid.</text>
     <text name="{0}IsInvalid">"{0}" is invalid</text>
     <text name="Exception">Exception</text>
