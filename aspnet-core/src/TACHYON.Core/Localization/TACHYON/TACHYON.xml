@@ -227,7 +227,7 @@
     <text name="City">City</text>
     <text name="Address">Address</text>
     <text name="Format">Format</text>
-    <text name="AddressFormat">State--Street Name--Zip</text>
+    <text name="AddressFormat">City-Street Name-Building Number</text>
     <text name="AdminUserAccountInfo">Admin user Account info</text>
     <text name="AdminEmailAddress">Admin Email</text>
     <text name="AdminPassword">Admin Password</text>

@@ -276,7 +276,7 @@
     <text name="City">المدينة</text>
     <text name="Address">العنوان</text>
     <text name="Format">الصيغة</text>
-    <text name="AddressFormat"> الولاية -- إسم الشارع -- رقم البناء</text>
+    <text name="AddressFormat">المدينة-الشارع-رقم البناء</text>
     <text name="AdminUserAccountInfo">معلومات المستخدم الرئيسي للحساب </text>
     <text name="AdminEmailAddress">البريد الإلكتروني</text>
     <text name="AdminPassword">كلمة المرور</text>
