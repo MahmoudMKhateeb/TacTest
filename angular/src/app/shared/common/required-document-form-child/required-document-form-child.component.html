@@ -17,9 +17,7 @@
             'is-invalid': parentForm.submitted && !item?.name
           }"
         />
-        <label class="custom-file-label text-truncate" [for]="item.documentTypeDto.displayName">
-          {{ item.name ? item.name : l('Select') + l('File') }}</label
-        >
+        <label class="custom-file-label text-truncate" [for]="item.documentTypeDto.displayName"> {{ item.name ? item.name : l('SelectFile') }}</label>
       </div>
       <span class="form-text text-muted">{{ 'ValidDocumentFilesMsg' | localize }}</span>
       <div *ngIf="!isFileFormatValid(i)">
@@ -54,7 +52,7 @@
         {{ l('TheNumberLengthMustBeLessThanMaxDigits') }}
       </span>
       <span class="form-text text-muted"
-        >{{ l('minDigits:') }} {{ item.documentTypeDto.numberMinDigits }} {{ l('maxDigits:') }}
+        >{{ l('minDigits') }} {{ item.documentTypeDto.numberMinDigits }} {{ l('maxDigits') }}
         {{ item.documentTypeDto.numberMaxDigits }}
       </span>
     </div>

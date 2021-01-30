@@ -479,7 +479,7 @@
 
 	  <![CDATA[Tachyon:SideBare Start]]>
 	  <text name="DocumentManagement">Document Management</text>
-	  <text name="SubmittedDocuments">Submitted Documents</text>
+	  <!--<text name="SubmittedDocuments">Submitted Documents</text>-->
 	  <text name="TMSSettings">TMS Settings</text>
 	  <![CDATA[Tachyon:SideBare End]]>
 

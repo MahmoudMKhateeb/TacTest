@@ -317,4 +317,13 @@ export class CreateOrEditTruckModalComponent extends AppComponentBase {
       _.filter(customSettings.EntityHistory.enabledEntities, (entityType) => entityType === this._entityTypeFullName).length === 1
     );
   }
+
+  plateNumberNoramlize() {
+    this.truck.plateNumber = this.truck.plateNumber
+      .replace(/\s/g, '')
+      .replace(/([A-Z])/g, ' $1')
+      .replace(/([a-z])/g, ' $1')
+      .replace(/([أ-ي])/g, ' $1')
+      .trim();
+  }
 }

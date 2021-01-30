@@ -114,7 +114,7 @@
                   type="number"
                 />
                 <div class="input-group-append">
-                  <span class="input-group-text">{{ l('Tons') }}</span>
+                  <!-- <span class="input-group-text">{{ l('Tons') }}</span> -->
                 </div>
               </div>
               <validation-messages [formCtrl]="capacity"></validation-messages>
@@ -125,7 +125,7 @@
               <div class="input-group">
                 <input [(ngModel)]="truck.length" #length="ngModel" class="form-control" id="Truck_Length" min="0" name="Length" type="number" />
                 <div class="input-group-append">
-                  <span class="input-group-text">{{ l('Meter') }}</span>
+                  <!-- <span class="input-group-text">{{ l('Meter') }}</span> -->
                 </div>
               </div>
               <validation-messages [formCtrl]="length"></validation-messages>
@@ -181,13 +181,13 @@
               <input
                 [(ngModel)]="truck.plateNumber"
                 #plateNumberInput="ngModel"
+                (keyup)="plateNumberNoramlize()"
                 class="form-control"
                 id="Truck_PlateNumber"
                 maxlength="64"
                 minlength="0"
                 name="PlateNumber"
                 required
-                pattern="^[a-z0-9].*?[a-z0-9]$"
                 type="text"
                 [ngClass]="{
                   'is-valid': plateNumberInput.valid,
@@ -268,7 +268,8 @@
               [createOrEditDocumentFileDtos]="truck.createOrEditDocumentFileDtos"
               (onDocsUploaderCompleteAll)="createOrEditTruck()"
               [parentForm]="truckForm"
-            ></app-required-document-form-child>
+            >
+            </app-required-document-form-child>
           </div>
         </div>
         <div class="modal-footer">

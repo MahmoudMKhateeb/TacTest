@@ -1,6 +1,7 @@
 ﻿<div [@routerTransition]>
   <div class="content d-flex flex-column flex-column-fluid">
-    <sub-header [title]="'VasPrices' | localize" [description]="'VasPricesHeaderInfo' | localize">
+    <!-- <sub-header [title]="'VasPrices' | localize" [description]="'VasPricesHeaderInfo' | localize"> -->
+    <sub-header [title]="'VasPrices' | localize">
       <!-- <div role="actions">
         <button (click)="exportToExcel()" class="btn btn-outline-success"><i class="fa fa-file-excel"></i>
           {{ l('ExportToExcel') }}</button> -->
@@ -37,7 +38,7 @@
 
                 <div class="col-md-3">
                   <div class="form-group">
-                    <label for="MinPriceFilter">{{ l('MinMax') }} {{ l('Price') }}</label>
+                    <label for="MinPriceFilter"> {{ l('VasPrice') }}</label>
                     <div class="input-group">
                       <input
                         type="number"
@@ -59,7 +60,7 @@
                 </div>
                 <div class="col-md-3">
                   <div class="form-group">
-                    <label for="MinAmountFilter">{{ l('Min') }} {{ l('Amount') }}</label>
+                    <label for="MinAmountFilter"> {{ l('VasAmount') }}</label>
                     <div class="input-group">
                       <input
                         type="number"
@@ -81,7 +82,7 @@
                 </div>
                 <div class="col-md-3">
                   <div class="form-group">
-                    <label for="MinCountFilter">{{ l('Min') }} {{ l('Count') }}</label>
+                    <label for="MinCountFilter">{{ l('VasCount') }}</label>
                     <div class="input-group">
                       <input
                         type="number"
@@ -103,7 +104,7 @@
                 </div>
                 <div class="col-md-3">
                   <div class="form-group">
-                    <label for="VasNameFilter">{{ l('Vas') }} {{ l('Name') }}</label>
+                    <label for="VasNameFilter"> {{ l('VasName') }}</label>
                     <input type="text" class="form-control" id="VasNameFilter" name="vasNameFilter" [(ngModel)]="vasNameFilter" />
                   </div>
                 </div>
