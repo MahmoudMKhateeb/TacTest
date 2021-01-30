@@ -1,6 +1,23 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <localizationDictionary culture="en">
-  <texts>    <text name="TruckCapacitiesTranslations">Truck capacities translations</text>
+  <texts>
+    
+    <![CDATA[Tachyon:Driver Start]]>
+    <text name="FirstName">First name</text>
+    <text name="LastName">Last name</text>
+    <text name="Drivers">Drivers</text>
+    <text name="Driver">Driver</text>
+    <text name="DriversHeaderInfo">Drivers Header Info</text>
+    <text name="CreateNewDriver"> Create new driver</text>
+    <text name="EditDriver">Edit driver</text>
+    <text name="DriverInformations">Driver Informations</text>
+    <text name="ExperienceField">Experience field</text>
+    <text name="DriverDocuments">Driver documents</text>
+    <text name="DateOfBirth">Date of birth</text>
+    <text name="d/M/yyyy">day/month/year</text>
+    <![CDATA[Tachyon:Driver End]]>
+
+    <text name="TruckCapacitiesTranslations">Truck capacities translations</text>
     <text name="TruckCapacitiesTranslation">Truck capacities translation</text>
     <text name="TACHYON.TruckCapacitiesTranslations.TruckCapacitiesTranslation">TruckCapacitiesTranslation</text>
     <text name="TruckCapacitiesTranslationsHeaderInfo">Truck capacities translations header info</text>
