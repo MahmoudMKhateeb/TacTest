@@ -54,6 +54,8 @@ export class DocumentFilesComponent extends AppComponentBase implements OnInit, 
   _entityTypeFullName = 'TACHYON.Documents.DocumentFiles.DocumentFile';
   entityHistoryEnabled = false;
 
+  todayMoment = this.dateFormatterService.NgbDateStructToMoment(this.todayGregorian);
+
   constructor(
     injector: Injector,
     private _documentFilesServiceProxy: DocumentFilesServiceProxy,

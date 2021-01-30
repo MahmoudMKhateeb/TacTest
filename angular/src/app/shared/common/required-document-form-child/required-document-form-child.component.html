@@ -66,8 +66,8 @@
         [readonly]="true"
         [minGreg]="todayGregorian"
         [minHijri]="todayHijri"
-        [selectedDate]="item.documentTypeDto.hasHijriExpirationDate"
-        [selectedDateType]="item.documentTypeDto.hasHijriExpirationDate ? selectedDateTypeHijri : selectedDateTypeGregorian"
+        [selectedDate]="selectedDate"
+        [selectedDateType]="2"
         (selectedDateChange)="hijriDatepickerSelectedDateChange($event, item)"
       >
       </hijri-gregorian-datepicker-test>

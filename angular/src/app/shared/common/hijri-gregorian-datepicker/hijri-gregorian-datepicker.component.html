@@ -51,7 +51,7 @@
 <ng-template #dateSwitshButtons>
   <div class="input-group-append">
     <button
-      class="btn btn-sm btn-primary {{ selectedDateType == DateType.Hijri ? ' focus active' : 'btn-outline-primary' }}"
+      class="btn btn-sm   {{ selectedDateType == DateType.Hijri ? ' focus active btn-default' : 'btn-default' }}"
       (click)="hijriClick()"
       [disabled]="disabled"
       type="button"
@@ -59,7 +59,7 @@
       {{ hijriLabel ? hijriLabel : ('Hijri' | localize) }}
     </button>
     <button
-      class="btn btn-sm btn-primary {{ selectedDateType == DateType.Gregorian ? ' focus active' : 'btn-outline-primary' }}"
+      class="btn mr-0 btn-sm  {{ selectedDateType == DateType.Gregorian ? ' focus active btn-default' : 'btn-default' }}"
       (click)="gregClick()"
       [disabled]="disabled"
       type="button"

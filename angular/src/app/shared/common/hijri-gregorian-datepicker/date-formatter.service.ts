@@ -61,9 +61,9 @@ export class DateFormatterService {
 
     const dateStr = this.ToString(date);
 
-    const day = momentHijri(dateStr, 'iD/iM/iYYYY').format('D');
-    const month = momentHijri(dateStr, 'iD/iM/iYYYY').format('M');
-    const year = momentHijri(dateStr, 'iD/iM/iYYYY').format('Y');
+    const day = momentHijri(dateStr, 'iD/iM/iYYYY').locale('en').format('D');
+    const month = momentHijri(dateStr, 'iD/iM/iYYYY').locale('en').format('M');
+    const year = momentHijri(dateStr, 'iD/iM/iYYYY').locale('en').format('Y');
     const ngDate = new NgbDate(+year, +month, +day);
     return ngDate;
   }
