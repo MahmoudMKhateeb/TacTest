@@ -1,5 +1,6 @@
 ﻿import { Component, ElementRef, Injector, NgZone, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import { finalize } from 'rxjs/operators';
+
 import {
   CarriersForDropDownDto,
   CreateOrEditFacilityDto,
@@ -10,6 +11,7 @@ import {
   FacilityForDropdownDto,
   GoodsDetailGoodCategoryLookupTableDto,
   GoodsDetailsServiceProxy,
+  ISelectItemDto,
   RouteRoutTypeLookupTableDto,
   RoutesServiceProxy,
   RoutStepCityLookupTableDto,
@@ -26,10 +28,12 @@ import { BreadcrumbItem } from '@app/shared/common/sub-header/sub-header.compone
 import { BsModalRef, BsModalService, ModalDirective } from '@node_modules/ngx-bootstrap/modal';
 import { MapsAPILoader } from '@node_modules/@agm/core';
 import { CreateOrEditFacilityModalComponent } from '@app/main/addressBook/facilities/create-or-edit-facility-modal.component';
+import { VasForCreateShippingRequstModalComponent } from '@app/main/shippingRequests/shippingRequests/ShippingRequestVas/VasForCreateShippingRequstModal.component';
+import * as moment from '@node_modules/moment';
 
 @Component({
   templateUrl: './create-or-edit-shippingRequest.component.html',
-  styleUrls: ['./create-or-edit-shippingRequest.component.css'],
+  styleUrls: ['./create-or-edit-shippingRequest.component.scss'],
   animations: [appModuleAnimation()],
 })
 export class CreateOrEditShippingRequestComponent extends AppComponentBase implements OnInit {
@@ -41,13 +45,15 @@ export class CreateOrEditShippingRequestComponent extends AppComponentBase imple
   @ViewChild('search') public searchElementRef: ElementRef;
   @ViewChild('staticModal') public staticModal: ModalDirective;
   @ViewChild('createFacilityModal') public createFacilityModal: ModalDirective;
+  @ViewChild('VasForCreateShippingRequstModalComponent', { static: true })
+  VasForCreateShippingRequstModalComponent: VasForCreateShippingRequstModalComponent;
+
   active = false;
   saving = false;
 
   shippingRequest: CreateOrEditShippingRequestDto = new CreateOrEditShippingRequestDto();
   allGoodCategorys: GoodsDetailGoodCategoryLookupTableDto[];
   allCarrierTenants: CarriersForDropDownDto[];
-  allTrucksTypes: SelectItemDto[];
   allTrailerTypes: SelectItemDto[];
   allGoodsDetails: SelectItemDto[];
   allRoutTypes: RouteRoutTypeLookupTableDto[];
@@ -57,11 +63,24 @@ export class CreateOrEditShippingRequestComponent extends AppComponentBase imple
   allPorts: SelectItemDto[];
   createOrEditRoutStepDtoList: CreateOrEditRoutStepDto[] = [];
   facility: CreateOrEditFacilityDto = new CreateOrEditFacilityDto();
-  allVases: ShippingRequestVasListDto[] = [];
+  allVases: ShippingRequestVasListDto[];
   selectedVases: ShippingRequestVasListDto[] = [];
   zoom = 5;
   private geoCoder;
-
+  isTachyonDeal = false;
+  isBid = false;
+  shippingRequestType: string;
+  shippingrequestBidStratDate: moment.Moment;
+  shippingrequestBidEndDate: moment.Moment;
+  SelectedGoodCategory: number;
+  selectedRouteType: number;
+  allTransportTypes: ISelectItemDto[];
+  allTrucksTypes: SelectItemDto[];
+  allCapacities: SelectItemDto[];
+  fakestartDateinput: any;
+  fakeendtDateinput: any;
+  truckTypeLoading: boolean;
+  capacityLoading: boolean;
   constructor(
     injector: Injector,
     private _activatedRoute: ActivatedRoute,
@@ -99,6 +118,7 @@ export class CreateOrEditShippingRequestComponent extends AppComponentBase imple
     this.shippingRequest.createOrEditRouteDto = new CreateOrEditRouteDto();
     //this.routStep.createOrEditGoodsDetailDto = new CreateOrEditGoodsDetailDto();
     this.show(this._activatedRoute.snapshot.queryParams['id']);
+    console.log(this.allTransportTypes);
   }
 
   show(shippingRequestId?: number): void {
@@ -125,21 +145,27 @@ export class CreateOrEditShippingRequestComponent extends AppComponentBase imple
   }
 
   save(): void {
-    //if cloned request we will create it
-    console.log(this._activatedRoute.snapshot.queryParams['clone']);
-    if (this._activatedRoute.snapshot.queryParams['clone']) {
-      console.log('cloned request');
-      this.shippingRequest.id = undefined;
-      // this.shippingRequest.goodsDetailId = undefined;
-      // this.shippingRequest.createOrEditGoodsDetailDto.id = undefined;
-      this.shippingRequest.createOrEditRoutStepDtoList.forEach((x) => (x.id = undefined));
-      this.shippingRequest.fatherShippingRequestId = this._activatedRoute.snapshot.queryParams['id'];
-      this.shippingRequest.isTachyonDeal = false;
-    }
-    this.saveInternal().subscribe((x) => {
-      this._router.navigate(['/app/main/shippingRequests/shippingRequests']);
-    });
-  }
+    this.saving = true;
+    this.shippingRequest.id = undefined;
+    this.shippingRequest.isBid = this.shippingRequestType === 'bidding' ? true : false;
+    this.shippingRequest.isTachyonDeal = this.shippingRequestType === 'tachyondeal' ? true : false;
+    this.shippingRequest.bidStartDate = this.shippingrequestBidStratDate;
+    this.shippingRequest.bidEndDate = this.shippingrequestBidEndDate;
+    this.shippingRequest.goodCategoryId = this.SelectedGoodCategory;
+    this.shippingRequest.createOrEditRouteDto.routTypeId = this.selectedRouteType; //milkrun / oneway ....
+    this.shippingRequest.shippingRequestVasList = this.selectedVases;
+    this._shippingRequestsServiceProxy
+      .createOrEdit(this.shippingRequest)
+      .pipe(
+        finalize(() => {
+          this.saving = false;
+        })
+      )
+      .subscribe(() => {
+        this.notify.info(this.l('CreatedSuccessfully'));
+        this._router.navigate(['/app/main/shippingRequests/shippingRequests']);
+      });
+  } //end of create
 
   private saveInternal(): Observable<void> {
     this.saving = true;
@@ -213,27 +239,28 @@ export class CreateOrEditShippingRequestComponent extends AppComponentBase imple
     this._goodsDetailsServiceProxy.getAllGoodCategoryForTableDropdown().subscribe((result) => {
       this.allGoodCategorys = result;
     });
-    this._shippingRequestsServiceProxy.getAllCarriersForDropDown().subscribe((result) => {
-      this.allCarrierTenants = result;
-    });
+    // this._shippingRequestsServiceProxy.getAllCarriersForDropDown().subscribe((result) => {
+    //   this.allCarrierTenants = result;
+    // });
     this._routStepsServiceProxy.getAllCityForTableDropdown().subscribe((result) => {
       this.allCitys = result;
     });
-    this._routStepsServiceProxy.getAllTrucksTypeForTableDropdown().subscribe((result) => {
-      this.allTrucksTypes = result;
+
+    this._shippingRequestsServiceProxy.getAllTransportTypesForDropdown().subscribe((result) => {
+      this.allTransportTypes = result;
     });
-    this._routStepsServiceProxy.getAllTrailerTypeForTableDropdown().subscribe((result) => {
-      this.allTrailerTypes = result;
-    });
-    this._routStepsServiceProxy.getAllGoodsDetailForTableDropdown().subscribe((result) => {
-      this.allGoodsDetails = result;
-    });
+
+    // this._routStepsServiceProxy.getAllGoodsDetailForTableDropdown().subscribe((result) => {
+    //   this.allGoodsDetails = result;
+    // });
     this._routesServiceProxy.getAllRoutTypeForTableDropdown().subscribe((result) => {
       this.allRoutTypes = result;
     });
-    this._shippingRequestsServiceProxy.getAllPortsForDropdown().subscribe((result) => {
-      this.allPorts = result;
-    });
+    // this._shippingRequestsServiceProxy.getAllPortsForDropdown().subscribe((result) => {
+    //   this.allPorts = result;
+    // });
+    //Nwely added
+
     this.getAllVasList();
   }
 
@@ -273,5 +300,40 @@ export class CreateOrEditShippingRequestComponent extends AppComponentBase imple
         });
       }
     });
+  }
+
+  shippingRequestTypeChanged(): void {
+    this.shippingrequestBidStratDate = undefined;
+    this.shippingrequestBidEndDate = undefined;
+  }
+  // this function is for the first 3 Conditional DD Which is TransportType --> TruckType --> Capacitiy
+  transportTypeSelectChange(transportTypeId?: number) {
+    if (transportTypeId > 0) {
+      this.truckTypeLoading = true;
+      this._shippingRequestsServiceProxy.getAllTruckTypesByTransportTypeIdForDropdown(transportTypeId).subscribe((result) => {
+        this.allTrucksTypes = result;
+        this.shippingRequest.trucksTypeId = null;
+        this.truckTypeLoading = false;
+      });
+    } else {
+      this.shippingRequest.trucksTypeId = null;
+      this.allTrucksTypes = null;
+      this.allCapacities = null;
+    }
+  }
+
+  trucksTypeSelectChange(trucksTypeId?: number) {
+    if (trucksTypeId > 0) {
+      this.capacityLoading = true;
+
+      this._shippingRequestsServiceProxy.getAllTuckCapacitiesByTuckTypeIdForDropdown(trucksTypeId).subscribe((result) => {
+        this.allCapacities = result;
+        this.shippingRequest.capacityId = null;
+        this.capacityLoading = false;
+      });
+    } else {
+      this.shippingRequest.capacityId = null;
+      this.allCapacities = null;
+    }
   }
 }

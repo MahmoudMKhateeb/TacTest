@@ -66,6 +66,7 @@ import { CreateOrEditDocumentTypeModalComponent } from './documentTypes/document
 import { ShippingRequestsComponent } from './shippingRequests/shippingRequests/shippingRequests.component';
 import { ViewShippingRequestComponent } from './shippingRequests/shippingRequests/view-shippingRequest.component';
 import { CreateOrEditShippingRequestComponent } from './shippingRequests/shippingRequests/create-or-edit-shippingRequest.component';
+import { VasForCreateShippingRequstModalComponent } from './shippingRequests/shippingRequests/ShippingRequestVas/VasForCreateShippingRequstModal.component';
 
 import { GoodsDetailsComponent } from './goodsDetails/goodsDetails/goodsDetails.component';
 import { ViewGoodsDetailModalComponent } from './goodsDetails/goodsDetails/view-goodsDetail-modal.component';
@@ -153,16 +154,14 @@ import { MarketplaceComponent } from '@app/main/marketPlace/marketPlace/marketpl
 import { ViewShippingRequestDetailsComponent } from '@app/main/marketPlace/marketPlace/ViewShippingRequestDetails.component';
 import { ViewAllCarrierBidsComponent } from '@app/main/marketPlace/marketPlace/ViewAllCarrierBids.component';
 import { RejectionReasonModalComponent } from './documentFiles/documentFiles/rejectionReason-modal.component';
-import { MultiSelectModule } from 'primeng/multiselect';
 import { ViewShippingRequestPriceResponseModalComponent } from './shippingRequests/shippingRequests/shipping-request-Response/view-shipping-request-response-modal.component';
-import { SafePipe } from '../../account/register/safe.pipe';
+import { MultiSelectModule, PickListModule } from '@node_modules/primeng';
 
 NgxBootstrapDatePickerConfigService.registerNgxBootstrapDatePickerLocales();
 
 @NgModule({
   imports: [
     FileUploadModule,
-    MultiSelectModule,
     AutoCompleteModule,
     PaginatorModule,
     EditorModule,
@@ -188,24 +187,26 @@ NgxBootstrapDatePickerConfigService.registerNgxBootstrapDatePickerLocales();
       libraries: ['places'],
     }),
     AdminModule,
+    MultiSelectModule,
+    PickListModule,
   ],
   declarations: [
-		NationalitiesComponent,
+    NationalitiesComponent,
 
-		ViewNationalityModalComponent,
-		CreateOrEditNationalityModalComponent,
-		MasterDetailChild_Nationality_NationalityTranslationsComponent,
+    ViewNationalityModalComponent,
+    CreateOrEditNationalityModalComponent,
+    MasterDetailChild_Nationality_NationalityTranslationsComponent,
 
-		MasterDetailChild_Nationality_ViewNationalityTranslationModalComponent,
-		MasterDetailChild_Nationality_CreateOrEditNationalityTranslationModalComponent,
-		NationalityTranslationsComponent,
+    MasterDetailChild_Nationality_ViewNationalityTranslationModalComponent,
+    MasterDetailChild_Nationality_CreateOrEditNationalityTranslationModalComponent,
+    NationalityTranslationsComponent,
 
-		ViewNationalityTranslationModalComponent,
-		CreateOrEditNationalityTranslationModalComponent,
-		TransportTypesTranslationsComponent,
+    ViewNationalityTranslationModalComponent,
+    CreateOrEditNationalityTranslationModalComponent,
+    TransportTypesTranslationsComponent,
 
-		ViewTransportTypesTranslationModalComponent,
-		CreateOrEditTransportTypesTranslationModalComponent,
+    ViewTransportTypesTranslationModalComponent,
+    CreateOrEditTransportTypesTranslationModalComponent,
     VasPricesComponent,
     ViewShippingRequestPriceResponseModalComponent,
     ViewVasPriceModalComponent,
@@ -255,7 +256,7 @@ NgxBootstrapDatePickerConfigService.registerNgxBootstrapDatePickerLocales();
     ViewShippingRequestComponent,
     CreateOrEditShippingRequestComponent,
     GoodsDetailsComponent,
-
+    VasForCreateShippingRequstModalComponent,
     ViewGoodsDetailModalComponent,
     CreateOrEditGoodsDetailModalComponent,
     OffersComponent,
