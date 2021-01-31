@@ -31,9 +31,11 @@ namespace TACHYON.Shipping.ShippingRequests.Dtos
         /// </summary>
         public int? CarrierTenantId { get; set; }
 
-        public long? TrucksTypeId { get; set; }
+        public virtual int? TransportTypeId { get; set; }
 
-        public int? TrailerTypeId { get; set; }
+        public virtual long TrucksTypeId { get; set; }
+
+        public virtual int? CapacityId { get; set; }
 
         public int? GoodCategoryId { get; set; }
 
