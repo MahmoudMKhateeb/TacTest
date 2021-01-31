@@ -9,6 +9,6 @@ namespace TACHYON.Shipping.ShippingRequests.Dtos
 
         public List<ShippingRequestBidDto> ShippingRequestBidDtoList { get; set; }
 
-
+        public int VasCount { get; set; }
     }
 }

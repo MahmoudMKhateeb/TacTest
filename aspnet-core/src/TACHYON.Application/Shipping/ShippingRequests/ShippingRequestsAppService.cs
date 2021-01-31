@@ -33,6 +33,9 @@ using TACHYON.Shipping.ShippingRequests.Exporting;
 using TACHYON.ShippingRequestVases;
 using TACHYON.Trailers.TrailerTypes;
 using TACHYON.Trucks;
+using TACHYON.Trucks.TruckCategories.TransportTypes;
+using TACHYON.Trucks.TruckCategories.TransportTypes.Dtos;
+using TACHYON.Trucks.TruckCategories.TruckCapacities;
 using TACHYON.Trucks.TrucksTypes;
 using TACHYON.Vases;
 using TACHYON.Vases.Dtos;
@@ -59,7 +62,9 @@ namespace TACHYON.Shipping.ShippingRequests
             IRepository<ShippingRequestVas, long> shippingRequestVasRepository,
             IRepository<VasPrice> vasPriceRepository,
             IRepository<Port, long> lookupPortRepository, IRepository<ShippingRequestBid, long> shippingRequestBidRepository,
-            BidDomainService bidDomainService
+            BidDomainService bidDomainService,
+            IRepository<Capacity, int> capacityRepository, IRepository<TransportType, int> transportTypeRepository
+
         )
         {
             _vasPriceRepository = vasPriceRepository;
@@ -80,6 +85,8 @@ namespace TACHYON.Shipping.ShippingRequests
             _bidDomainService = bidDomainService;
             _lookup_vasRepository = lookup_vasRepository;
             _shippingRequestVasRepository = shippingRequestVasRepository;
+            _capacityRepository = capacityRepository;
+            _transportTypeRepository = transportTypeRepository;
         }
 
         private readonly IRepository<VasPrice> _vasPriceRepository;
@@ -101,6 +108,9 @@ namespace TACHYON.Shipping.ShippingRequests
         private readonly IRepository<Port, long> _lookup_PortRepository;
         private readonly IRepository<ShippingRequestBid, long> _shippingRequestBidRepository;
         private readonly BidDomainService _bidDomainService;
+        private readonly IRepository<Capacity, int> _capacityRepository;
+        private readonly IRepository<TransportType, int> _transportTypeRepository;
+
 
         public async Task<PagedResultDto<GetShippingRequestForViewDto>> GetAll(GetAllShippingRequestsInput input)
         {
@@ -349,6 +359,7 @@ namespace TACHYON.Shipping.ShippingRequests
                     .Include(x => x.ShippingRequestBids)
                     .ThenInclude(b => b.Tenant)
                     .Include(e => e.RouteFk)
+                    .Include(e=>e.ShippingRequestVases)
                     //get only this shipper shippingRequest
                     //.Where(x => x.TenantId == AbpSession.TenantId)
                     .WhereIf(!string.IsNullOrWhiteSpace(input.Filter), e => false)
@@ -366,8 +377,9 @@ namespace TACHYON.Shipping.ShippingRequests
                 // select result
                 IEnumerable<GetShippingRequestForViewDto> shippingRequests = (await pagedAndFilteredShippingRequests.ToListAsync())
                     .Select(x =>
-                        new GetShippingRequestForViewDto {ShippingRequest = ObjectMapper.Map<ShippingRequestDto>(x), ShippingRequestBidDtoList = ObjectMapper.Map<List<ShippingRequestBidDto>>(x.ShippingRequestBids)}
-                    );
+                        new GetShippingRequestForViewDto {ShippingRequest = ObjectMapper.Map<ShippingRequestDto>(x),
+                            ShippingRequestBidDtoList = ObjectMapper.Map<List<ShippingRequestBidDto>>(x.ShippingRequestBids),
+                        VasCount= x.ShippingRequestVases.Count()});
 
 
                 int totalCount = await filteredShippingRequests.CountAsync();
@@ -397,9 +409,12 @@ namespace TACHYON.Shipping.ShippingRequests
                 .GetAll()
                 .Include(x => x.RouteFk)
                 .Include(x => x.RoutSteps)
+                .Include(x=>x.ShippingRequestVases)
                 .Single(x => x.Id == input.Id);
 
-            GetShippingRequestForEditOutput output = new GetShippingRequestForEditOutput {ShippingRequest = ObjectMapper.Map<CreateOrEditShippingRequestDto>(shippingRequest)};
+            GetShippingRequestForEditOutput output = new GetShippingRequestForEditOutput {
+                ShippingRequest = ObjectMapper.Map<CreateOrEditShippingRequestDto>(shippingRequest)
+             };
 
             return output;
         }
@@ -548,6 +563,41 @@ namespace TACHYON.Shipping.ShippingRequests
             return  pricedShippingRequest;
         }
 
-        
+        #region Truck Category DropDowns
+        public async Task<IEnumerable<ISelectItemDto>> GetAllTransportTypesForDropdown()
+        {
+            List<TransportType> transportTypes = await _transportTypeRepository
+                .GetAllIncluding(x => x.Translations)
+                .ToListAsync();
+
+            List<TransportTypeSelectItemDto> transportTypeDtos = ObjectMapper.Map<List<TransportTypeSelectItemDto>>(transportTypes);
+
+            return transportTypeDtos;
+        }
+
+        public async Task<List<SelectItemDto>> GetAllTruckTypesByTransportTypeIdForDropdown(int transportTypeId)
+        {
+
+
+            return await _lookup_trucksTypeRepository.GetAll()
+                .Where(x => x.TransportTypeId == transportTypeId)
+                .Select(x => new SelectItemDto()
+                {
+                    Id = x.Id.ToString(),
+                    DisplayName = x.DisplayName
+                }).ToListAsync();
+        }
+
+        public async Task<List<SelectItemDto>> GetAllTuckCapacitiesByTuckTypeIdForDropdown(int truckTypeId)
+        {
+            return await _capacityRepository.GetAll()
+                .Where(x => x.TrucksTypeId == truckTypeId)
+                .Select(x => new SelectItemDto()
+                {
+                    Id = x.Id.ToString(),
+                    DisplayName = x.DisplayName
+                }).ToListAsync();
+        }
+        #endregion
     }
 }

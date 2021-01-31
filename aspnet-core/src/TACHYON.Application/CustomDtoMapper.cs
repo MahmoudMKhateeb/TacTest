@@ -193,6 +193,10 @@ namespace TACHYON
             configuration.CreateMap<CreateOrEditShippingRequestDto, ShippingRequest>()
                 .ForMember(dst => dst.RouteFk, opt => opt.MapFrom(src => src.CreateOrEditRouteDto))
                 .ForMember(dst => dst.RoutSteps, opt => opt.MapFrom(src => src.CreateOrEditRoutStepDtoList))
+                .ForMember(dest=>dest.ShippingRequestVases, opt => opt.MapFrom(src => src.ShippingRequestVasList))
+
+                .ReverseMap();
+            configuration.CreateMap<ShippingRequestVasListDto, ShippingRequestVas>()
                 .ReverseMap();
             configuration.CreateMap<ShippingRequestBidDto, ShippingRequestBid>()
                 .ForPath(dst => dst.Tenant.Name, opt => opt.MapFrom(src => src.CarrierName))

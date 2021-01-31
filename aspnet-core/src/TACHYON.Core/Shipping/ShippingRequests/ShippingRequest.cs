@@ -22,6 +22,7 @@ using TACHYON.Trucks.TruckCategories.TransportTypes;
 using TACHYON.Trucks.TruckCategories.TruckCapacities;
 using TACHYON.Trucks.TrucksTypes;
 using TACHYON.UnitOfMeasures;
+using TACHYON.ShippingRequestVases;
 
 namespace TACHYON.Shipping.ShippingRequests
 {
@@ -159,6 +160,7 @@ namespace TACHYON.Shipping.ShippingRequests
         public DateTime? CloseBidDate { get; set; }
 
         public ICollection<ShippingRequestBid> ShippingRequestBids { get; set; }
+        public ICollection<ShippingRequestVas> ShippingRequestVases { get; set; }
         #endregion
 
         public ShippingRequest()

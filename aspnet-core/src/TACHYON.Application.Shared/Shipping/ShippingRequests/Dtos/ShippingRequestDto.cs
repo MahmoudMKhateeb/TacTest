@@ -6,7 +6,7 @@ namespace TACHYON.Shipping.ShippingRequests.Dtos
 {
     public class ShippingRequestDto : EntityDto<long>
     {
-        public decimal Vas { get; set; }
+        //public decimal Vas { get; set; }
 
         public  bool IsBid { get; set; }
         public  bool IsTachyonDeal { get; set; }
