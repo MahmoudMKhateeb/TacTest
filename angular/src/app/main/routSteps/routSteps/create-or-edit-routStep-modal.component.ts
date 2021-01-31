@@ -61,8 +61,8 @@ export class CreateOrEditRoutStepModalComponent extends AppComponentBase {
       this.modal.show();
     } else {
       this._routStepsServiceProxy.getRoutStepForEdit(routStepId).subscribe((result) => {
-        this.routStep = result.routStep;
-        this.trucksTypeDisplayName = result.trucksTypeDisplayName;
+        // this.routStep = result.routStep;
+        // this.trucksTypeDisplayName = result.trucksTypeDisplayName;
         this.trailerTypeDisplayName = result.trailerTypeDisplayName;
         // this.goodsDetailName = result.goodsDetailName;
         this.routeDisplayName = result.routeDisplayName;
