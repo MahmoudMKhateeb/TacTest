@@ -1,6 +1,6 @@
 ﻿import { Component, ViewChild, Injector, Output, EventEmitter } from '@angular/core';
 import { ModalDirective } from 'ngx-bootstrap/modal';
-import { GetFacilityForViewDto, FacilityDto } from '@shared/service-proxies/service-proxies';
+import { GetFacilityForViewOutput, FacilityDto } from '@shared/service-proxies/service-proxies';
 import { AppComponentBase } from '@shared/common/app-component-base';
 
 @Component({
@@ -14,15 +14,15 @@ export class ViewFacilityModalComponent extends AppComponentBase {
   active = false;
   saving = false;
 
-  item: GetFacilityForViewDto;
+  item: GetFacilityForViewOutput;
 
   constructor(injector: Injector) {
     super(injector);
-    this.item = new GetFacilityForViewDto();
+    this.item = new GetFacilityForViewOutput();
     this.item.facility = new FacilityDto();
   }
 
-  show(item: GetFacilityForViewDto): void {
+  show(item: GetFacilityForViewOutput): void {
     this.item = item;
     this.active = true;
     this.modal.show();
