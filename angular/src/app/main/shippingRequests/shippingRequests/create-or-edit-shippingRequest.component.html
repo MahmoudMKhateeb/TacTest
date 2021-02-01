@@ -7,19 +7,18 @@
     ></sub-header>
 
     <div [class]="containerClass">
-      <div class="card card-custom gutter-b">
-        <!--  start of card::form-->
-        <div class="card-header">
-          <h3 class="card-title">{{ l('shippingRequestDetails') }}</h3>
-        </div>
-        <form *ngIf="active" #shippingRequestForm="ngForm" autocomplete="off">
+      <form *ngIf="active" #shippingRequestForm="ngForm" autocomplete="off">
+        <div class="card card-custom gutter-b">
+          <!--  start of card::form-->
+          <div class="card-header">
+            <h3 class="card-title">{{ l('truckDetails') }}</h3>
+          </div>
           <!--  start of card::body-->
           <div class="card-body">
             <div class="row">
               <!--  start of truck::Details-->
               <div class="col-12">
                 <div class="mb-3">
-                  <h3 class="font-size-h3-xl text-dark font-weight-bold mb-6">{{ l('truckDetails') }} :</h3>
                   <div class="mb-2">
                     <div class="form-group row fv-plugins-icon-container">
                       <div class="col-lg-6">
@@ -102,10 +101,24 @@
                 </div>
               </div>
               <!--  end of truck::Details-->
+            </div>
+          </div>
+          <!--  end of card::body-->
+
+          <!--  start of card::form-->
+        </div>
+
+        <div class="card card-custom gutter-b">
+          <!--  start of card::form-->
+          <div class="card-header">
+            <h3 class="card-title">{{ l('shipmentDetails') }}</h3>
+          </div>
+          <!--  start of card::body-->
+          <div class="card-body">
+            <div class="row">
               <!--  start of Shipment::Details-->
               <div class="col-12">
                 <div class="mb-3">
-                  <h3 class="font-size-h3-xl text-dark font-weight-bold mb-6">{{ l('shipmentDetails') }} :</h3>
                   <div class="mb-2">
                     <div class="form-group row fv-plugins-icon-container">
                       <div class="col-lg-6">
@@ -134,10 +147,24 @@
                 </div>
               </div>
               <!--  end of Shipment::Details-->
+            </div>
+          </div>
+          <!--  end of card::body-->
+
+          <!--  start of card::form-->
+        </div>
+
+        <div class="card card-custom gutter-b">
+          <!--  start of card::form-->
+          <div class="card-header">
+            <h3 class="card-title">{{ l('routeDetails') }}</h3>
+          </div>
+          <!--  start of card::body-->
+          <div class="card-body">
+            <div class="row">
               <!--  start of Route::Details-->
               <div class="col-12">
                 <div class="mb-3">
-                  <h3 class="font-size-h3-xl text-dark font-weight-bold mb-6">{{ l('routeDetails') }} :</h3>
                   <div class="mb-2">
                     <div class="form-group row fv-plugins-icon-container">
                       <div class="col-lg-6">
@@ -295,10 +322,24 @@
                 </div>
               </div>
               <!--  end of Route::Details-->
+            </div>
+          </div>
+          <!--  end of card::body-->
+
+          <!--  start of card::form-->
+        </div>
+
+        <div class="card card-custom gutter-b">
+          <!--  start of card::form-->
+          <div class="card-header">
+            <h3 class="card-title">{{ l('shipmentDetails') }}</h3>
+          </div>
+          <!--  start of card::body-->
+          <div class="card-body">
+            <div class="row">
               <!--  start of ShippingRequestType::Details-->
               <div class="col-12">
                 <div class="mb-3">
-                  <h3 class="font-size-h3-xl text-dark font-weight-bold mb-6">{{ l('shipmentDetails') }} :</h3>
                   <div class="mb-2">
                     <div class="form-group row fv-plugins-icon-container">
                       <div class="col-lg-6">
@@ -372,10 +413,24 @@
                 </div>
               </div>
               <!--  end of ShippingRequestType::Details-->
+            </div>
+          </div>
+          <!--  end of card::body-->
+
+          <!--  start of card::form-->
+        </div>
+
+        <div class="card card-custom gutter-b">
+          <!--  start of card::form-->
+          <div class="card-header">
+            <h3 class="card-title">{{ l('vasDetails') }}</h3>
+          </div>
+          <!--  start of card::body-->
+          <div class="card-body">
+            <div class="row">
               <!--  start of Vas::Details-->
               <div class="col-12">
                 <div class="mb-3">
-                  <h3 class="font-size-h3-xl text-dark font-weight-bold mb-6">{{ l('vasDetails') }} :</h3>
                   <!--                  <label class="text-dark mr-1 ml-1"> {{ l('selectAVas') }} :</label>-->
                   <!--                  <p>-->
                   <!--                    <p-multiSelect name="vasMultiSelect" [options]="allVases" [(ngModel)]="selectedVases" optionLabel="vasName"> </p-multiSelect>-->
@@ -385,9 +440,12 @@
                     [target]="selectedVases"
                     sourceHeader="{{ l('Select') }}"
                     targetHeader="{{ l('Selected') }}"
+                    [showSourceControls]="false"
+                    [showTargetControls]="false"
                     dragdrop="true"
-                    [sourceStyle]="{ height: '300px', width: '400px' }"
-                    [targetStyle]="{ height: '300px', width: '400px' }"
+                    [responsive]="true"
+                    [sourceStyle]="{ height: '300px' }"
+                    [targetStyle]="{ height: '300px' }"
                     filterBy="vasName"
                     sourceFilterPlaceholder="Search by name"
                     targetFilterPlaceholder="Search by name"
@@ -540,28 +598,31 @@
             </div>
           </div>
           <!--  end of card::body-->
-          <!--  start of card::footer-->
-          <div class="card-footer">
-            <div class="row">
-              <div class="col-lg-12">
-                <button
-                  (click)="save()"
-                  [busyText]="l('SavingWithThreeDot')"
-                  [buttonBusy]="saving"
-                  [disabled]="!shippingRequestForm.form.valid"
-                  class="btn btn-primary float-right"
-                >
-                  <i class="flaticon2-tag"></i>
-                  <span *ngIf="!shippingRequest.id">{{ l('CreateShippingRequest') }}</span>
-                  <span *ngIf="shippingRequest.id">{{ l('EditShippingRequest') }}</span>
-                </button>
-              </div>
+
+          <!--  start of card::form-->
+        </div>
+
+        <!--    start::Btns   -->
+        <div class="container-fluid">
+          <div class="row">
+            <div class="col-lg-12 float-right">
+              <button
+                (click)="save()"
+                [busyText]="l('SavingWithThreeDot')"
+                [buttonBusy]="saving"
+                [disabled]="!shippingRequestForm.form.valid"
+                class="btn btn-danger font-weight-bold font-size-h6 px-10 float-right"
+              >
+                <i class="flaticon2-tag"></i>
+                <span *ngIf="!shippingRequest.id"> {{ l('createShippingRequest') }}</span>
+                <span *ngIf="shippingRequest.id"> {{ l('saveEdits') }}</span>
+              </button>
             </div>
           </div>
-          <!--  end of card::footer-->
-          <!--  start of card::form-->
-        </form>
-      </div>
+        </div>
+
+        <!--     end::Btns     -->
+      </form>
     </div>
   </div>
 
