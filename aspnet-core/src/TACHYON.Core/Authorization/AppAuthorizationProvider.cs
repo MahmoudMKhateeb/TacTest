@@ -65,6 +65,11 @@ namespace TACHYON.Authorization
             nationalityTranslations.CreateChildPermission(AppPermissions.Pages_NationalityTranslations_Edit, L("EditNationalityTranslation"), multiTenancySides: MultiTenancySides.Host);
             nationalityTranslations.CreateChildPermission(AppPermissions.Pages_NationalityTranslations_Delete, L("DeleteNationalityTranslation"), multiTenancySides: MultiTenancySides.Host);
 
+            var trucksTypesTranslations = pages.CreateChildPermission(AppPermissions.Pages_TrucksTypesTranslations, L("TrucksTypesTranslations"), multiTenancySides: MultiTenancySides.Host);
+            trucksTypesTranslations.CreateChildPermission(AppPermissions.Pages_TrucksTypesTranslations_Create, L("CreateNewTrucksTypesTranslation"), multiTenancySides: MultiTenancySides.Host);
+            trucksTypesTranslations.CreateChildPermission(AppPermissions.Pages_TrucksTypesTranslations_Edit, L("EditTrucksTypesTranslation"), multiTenancySides: MultiTenancySides.Host);
+            trucksTypesTranslations.CreateChildPermission(AppPermissions.Pages_TrucksTypesTranslations_Delete, L("DeleteTrucksTypesTranslation"), multiTenancySides: MultiTenancySides.Host);
+
             var transportTypesTranslations = pages.CreateChildPermission(AppPermissions.Pages_TransportTypesTranslations, L("TransportTypesTranslations"), multiTenancySides: MultiTenancySides.Host);
             transportTypesTranslations.CreateChildPermission(AppPermissions.Pages_TransportTypesTranslations_Create, L("CreateNewTransportTypesTranslation"), multiTenancySides: MultiTenancySides.Host);
             transportTypesTranslations.CreateChildPermission(AppPermissions.Pages_TransportTypesTranslations_Edit, L("EditTransportTypesTranslation"), multiTenancySides: MultiTenancySides.Host);

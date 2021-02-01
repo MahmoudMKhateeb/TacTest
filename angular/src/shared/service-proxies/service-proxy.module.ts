@@ -16,6 +16,8 @@ import { ShippingRequestBidsServiceProxy } from './service-proxies';
         ApiServiceProxies.NationalitiesServiceProxy,        
         ApiServiceProxies.NationalityTranslationsServiceProxy,        
         ApiServiceProxies.TransportTypesTranslationsServiceProxy,        
+    ApiServiceProxies.TrucksTypesTranslationsServiceProxy,
+    ApiServiceProxies.TransportTypesTranslationsServiceProxy,
     ApiServiceProxies.VasPricesServiceProxy,
     ApiServiceProxies.VasesServiceProxy,
     ApiServiceProxies.TermAndConditionTranslationsServiceProxy,

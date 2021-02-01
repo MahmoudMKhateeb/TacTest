@@ -11,7 +11,6 @@ namespace TACHYON.Trucks.TrucksTypes.Dtos
 
         public int? TransportTypeId { get; set; }
 
-
-
+        public string TranslatedDisplayName { get; set; }
     }
 }

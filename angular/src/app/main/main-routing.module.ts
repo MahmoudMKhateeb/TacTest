@@ -7,6 +7,7 @@ import { TruckCapacitiesTranslationsComponent } from './truckCapacitiesTranslati
 import { TruckStatusesTranslationsComponent } from './truckStatusesTranslations/truckStatusesTranslations/truckStatusesTranslations.component';
 import { NationalitiesComponent } from './nationalities/nationalities/nationalities.component';
 import { NationalityTranslationsComponent } from './nationalitiesTranslation/nationalityTranslations/nationalityTranslations.component';
+import { TrucksTypesTranslationsComponent } from './trucksTypesTranslations/trucksTypesTranslations/trucksTypesTranslations.component';
 import { TransportTypesTranslationsComponent } from './transportTypesTranslations/transportTypesTranslations/transportTypesTranslations.component';
 import { VasPricesComponent } from './vases/vasPrices/vasPrices.component';
 import { TermAndConditionsComponent } from './termsAndConditions/termAndConditions/termAndConditions.component';
@@ -60,6 +61,16 @@ import { MarketplaceComponent } from '@app/main/marketPlace/marketPlace/marketpl
             path: 'nationalitiesTranslation/nationalityTranslations',
             component: NationalityTranslationsComponent,
             data: { permission: 'Pages.NationalityTranslations' },
+          },
+          {
+            path: 'transportTypesTranslations/transportTypesTranslations',
+            component: TransportTypesTranslationsComponent,
+            data: { permission: 'Pages.TransportTypesTranslations' },
+          },
+          {
+            path: 'trucksTypesTranslations/trucksTypesTranslations',
+            component: TrucksTypesTranslationsComponent,
+            data: { permission: 'Pages.TrucksTypesTranslations' },
           },
           {
             path: 'transportTypesTranslations/transportTypesTranslations',

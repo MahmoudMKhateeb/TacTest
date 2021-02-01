@@ -13,6 +13,8 @@ using TACHYON.Nationalities.Dtos;
 using TACHYON.Nationalities;
 using TACHYON.Nationalities.NationalitiesTranslation.Dtos;
 using TACHYON.Nationalities.NationalitiesTranslation;
+using TACHYON.Trucks.TrucksTypes.TrucksTypesTranslations.Dtos;
+using TACHYON.Trucks.TrucksTypes.TrucksTypesTranslations;
 using TACHYON.Trucks.TruckCategories.TransportTypes.TransportTypesTranslations.Dtos;
 using TACHYON.Trucks.TruckCategories.TransportTypes.TransportTypesTranslations;
 using TACHYON.ShippingRequestVases.Dtos;
@@ -167,6 +169,8 @@ namespace TACHYON
             configuration.CreateMap<NationalityDto, Nationality>().ReverseMap();
             configuration.CreateMap<CreateOrEditNationalityTranslationDto, NationalityTranslation>().ReverseMap();
             configuration.CreateMap<NationalityTranslationDto, NationalityTranslation>().ReverseMap();
+            configuration.CreateMap<CreateOrEditTrucksTypesTranslationDto, TrucksTypesTranslation>().ReverseMap();
+            configuration.CreateMap<TrucksTypesTranslationDto, TrucksTypesTranslation>().ReverseMap();
             configuration.CreateMap<CreateOrEditTransportTypesTranslationDto, TransportTypesTranslation>().ReverseMap();
             configuration.CreateMap<TransportTypesTranslationDto, TransportTypesTranslation>().ReverseMap();
             configuration.CreateMap<CreateOrEditShippingRequestVasDto, ShippingRequestVas>().ReverseMap();
@@ -424,6 +428,15 @@ namespace TACHYON
 
             // goto:#Map_Capacity_CapacitySelectItemDto
             configuration.CreateMultiLingualMap<Capacity, TruckCapacitiesTranslation, CapacitySelectItemDto>(context)
+                .EntityMap
+                .ForMember(dst => dst.Id, opt => opt.MapFrom(src => src.Id.ToString()))
+                .ReverseMap();
+
+            configuration.CreateMultiLingualMap<TrucksType, long, TrucksTypesTranslation, TrucksTypeDto>(context)
+                .EntityMap
+                .ReverseMap();
+
+            configuration.CreateMultiLingualMap<TrucksType, long, TrucksTypesTranslation, TrucksTypeSelectItemDto>(context)
                 .EntityMap
                 .ForMember(dst => dst.Id, opt => opt.MapFrom(src => src.Id.ToString()))
                 .ReverseMap();
