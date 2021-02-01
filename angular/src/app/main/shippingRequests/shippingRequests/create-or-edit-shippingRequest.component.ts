@@ -118,23 +118,25 @@ export class CreateOrEditShippingRequestComponent extends AppComponentBase imple
     this.shippingRequest.createOrEditRouteDto = new CreateOrEditRouteDto();
     //this.routStep.createOrEditGoodsDetailDto = new CreateOrEditGoodsDetailDto();
     this.show(this._activatedRoute.snapshot.queryParams['id']);
-    console.log(this.allTransportTypes);
   }
 
   show(shippingRequestId?: number): void {
     if (!shippingRequestId) {
-      this.shippingRequest.id = shippingRequestId;
+      this.shippingRequest.id = undefined;
       this.active = true;
     } else {
       this._shippingRequestsServiceProxy.getShippingRequestForEdit(shippingRequestId).subscribe((result) => {
         this.shippingRequest = result.shippingRequest;
-        //this.shippingRequest.createOrEditRouteDto = result.shippingRequest.createOrEditRouteDto;
+        this.shippingRequestType = result.shippingRequest.isBid === true ? 'bidding' : 'tachyondeal';
+        this.selectedVases = result.shippingRequest.shippingRequestVasList;
+        this.selectedRouteType = result.shippingRequest.createOrEditRouteDto.routTypeId;
+        this.shippingRequest.createOrEditRouteDto = result.shippingRequest.createOrEditRouteDto;
         this.createOrEditRoutStepDtoList = result.shippingRequest.createOrEditRoutStepDtoList;
         this.active = true;
       });
     }
     this.loadAllDropDownLists();
-    this.refreshFacilities();
+    //this.refreshFacilities();
   }
 
   addRouteStep(): void {
@@ -145,13 +147,10 @@ export class CreateOrEditShippingRequestComponent extends AppComponentBase imple
   }
 
   save(): void {
+    //this function fires when Create BTN is Clicked
     this.saving = true;
-    this.shippingRequest.id = undefined;
     this.shippingRequest.isBid = this.shippingRequestType === 'bidding' ? true : false;
     this.shippingRequest.isTachyonDeal = this.shippingRequestType === 'tachyondeal' ? true : false;
-    this.shippingRequest.bidStartDate = this.shippingrequestBidStratDate;
-    this.shippingRequest.bidEndDate = this.shippingrequestBidEndDate;
-    this.shippingRequest.goodCategoryId = this.SelectedGoodCategory;
     this.shippingRequest.createOrEditRouteDto.routTypeId = this.selectedRouteType; //milkrun / oneway ....
     this.shippingRequest.shippingRequestVasList = this.selectedVases;
     this._shippingRequestsServiceProxy

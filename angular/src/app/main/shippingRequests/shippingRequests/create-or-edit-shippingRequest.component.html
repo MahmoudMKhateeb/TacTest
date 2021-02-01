@@ -1,13 +1,16 @@
 ﻿<!--suppress XmlInvalidId -->
 <div [@routerTransition]>
   <div class="content d-flex flex-column flex-column-fluid">
-    <sub-header [breadcrumbs]="breadcrumbs" [title]="('ShippingRequests' | localize) + ' ' + ('create' | localize)"></sub-header>
+    <sub-header
+      [breadcrumbs]="breadcrumbs"
+      [title]="shippingRequest.id ? ('ShippingRequestsEdit' | localize) : ('ShippingRequestsCreate' | localize)"
+    ></sub-header>
 
     <div [class]="containerClass">
       <div class="card card-custom gutter-b">
         <!--  start of card::form-->
         <div class="card-header">
-          <h3 class="card-title">Enter Shipping Request Details</h3>
+          <h3 class="card-title">{{ l('shippingRequestDetails') }}</h3>
         </div>
         <form *ngIf="active" #shippingRequestForm="ngForm" autocomplete="off">
           <!--  start of card::body-->
@@ -114,7 +117,7 @@
                             class="form-control"
                             name="goodCategory"
                             [disabled]="!allGoodCategorys"
-                            [(ngModel)]="SelectedGoodCategory"
+                            [(ngModel)]="shippingRequest.goodCategoryId"
                             required
                             [class.is-invalid]="goodCategory.touched && !goodCategory.valid"
                             [class.is-valid]="goodCategory.touched && goodCategory.valid"
@@ -328,7 +331,7 @@
                               [required]="this.shippingRequestType == 'bidding'"
                               [class.is-invalid]="this.shippingRequestType == 'bidding' && BidStartDate.touched && !BidStartDate.valid"
                               [class.is-valid]="this.shippingRequestType == 'bidding' && BidStartDate.touched && BidStartDate.valid"
-                              [(ngModel)]="shippingrequestBidStratDate"
+                              [(ngModel)]="shippingRequest.bidStartDate"
                               [disabled]="shippingRequestType != 'bidding'"
                               bsDatepicker
                             />
@@ -352,7 +355,7 @@
                             [required]="this.shippingRequestType == 'bidding'"
                             [class.is-invalid]="this.shippingRequestType == 'bidding' && BidEndDate.touched && !BidEndDate.valid"
                             [class.is-valid]="this.shippingRequestType == 'bidding' && BidEndDate.touched && BidEndDate.valid"
-                            [(ngModel)]="shippingrequestBidEndDate"
+                            [(ngModel)]="shippingRequest.bidEndDate"
                             [disabled]="shippingRequestType != 'bidding'"
                             bsDatepicker
                           />
@@ -405,13 +408,7 @@
                         <!--begin::label-->
                         <label class="text text-dark text-sm-center"> {{ l('amount') }}: </label>
                         <div class="col-2">
-                          <input
-                            type="text"
-                            (keyup)="numberOnly($event)"
-                            [name]="product.vasName"
-                            [(ngModel)]="product.maxCount"
-                            class="form-control"
-                          />
+                          <input type="text" (keyup)="numberOnly($event)" [name]="product.vasName" class="form-control" />
                         </div>
 
                         <!--end::label-->
@@ -555,7 +552,8 @@
                   class="btn btn-primary float-right"
                 >
                   <i class="flaticon2-tag"></i>
-                  <span>{{ l('CreateShippingRequest') }}</span>
+                  <span *ngIf="!shippingRequest.id">{{ l('CreateShippingRequest') }}</span>
+                  <span *ngIf="shippingRequest.id">{{ l('EditShippingRequest') }}</span>
                 </button>
               </div>
             </div>
