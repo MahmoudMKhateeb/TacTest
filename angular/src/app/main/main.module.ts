@@ -218,6 +218,38 @@ NgxBootstrapDatePickerConfigService.registerNgxBootstrapDatePickerLocales();
 
     ViewTrucksTypesTranslationModalComponent,
     CreateOrEditTrucksTypesTranslationModalComponent,
+    TruckCapacitiesTranslationsComponent,
+
+    ViewTruckCapacitiesTranslationModalComponent,
+    CreateOrEditTruckCapacitiesTranslationModalComponent,
+    TruckStatusesTranslationsComponent,
+
+    ViewTruckStatusesTranslationModalComponent,
+    CreateOrEditTruckStatusesTranslationModalComponent,
+    CitiesTranslationsComponent,
+
+    ViewCitiesTranslationModalComponent,
+    CreateOrEditCitiesTranslationModalComponent,
+    CountriesTranslationsComponent,
+
+    ViewCountriesTranslationModalComponent,
+    CreateOrEditCountriesTranslationModalComponent,
+    PlateTypesComponent,
+
+    ViewPlateTypeModalComponent,
+    CreateOrEditPlateTypeModalComponent,
+    NationalitiesComponent,
+
+    ViewNationalityModalComponent,
+    CreateOrEditNationalityModalComponent,
+    MasterDetailChild_Nationality_NationalityTranslationsComponent,
+
+    MasterDetailChild_Nationality_ViewNationalityTranslationModalComponent,
+    MasterDetailChild_Nationality_CreateOrEditNationalityTranslationModalComponent,
+    NationalityTranslationsComponent,
+
+    ViewNationalityTranslationModalComponent,
+    CreateOrEditNationalityTranslationModalComponent,
     TransportTypesTranslationsComponent,
 
     ViewTransportTypesTranslationModalComponent,
