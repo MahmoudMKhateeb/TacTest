@@ -6,10 +6,10 @@ import {
   CreateOrEditTruckDto,
   DocumentFileDto,
   DocumentFilesServiceProxy,
+  ISelectItemDto,
   SelectItemDto,
   TrucksServiceProxy,
   TruckTruckStatusLookupTableDto,
-  TruckTrucksTypeLookupTableDto,
 } from '@shared/service-proxies/service-proxies';
 import { AppComponentBase } from '@shared/common/app-component-base';
 import { TruckUserLookupTableModalComponent } from './truck-user-lookup-table-modal.component';
@@ -71,7 +71,7 @@ export class CreateOrEditTruckModalComponent extends AppComponentBase {
   todayGregorian = this.dateFormatterService.GetTodayGregorian();
   todayHijri = this.dateFormatterService.ToHijri(this.todayGregorian);
   userName2 = '';
-  allTrucksTypes: TruckTrucksTypeLookupTableDto[];
+  allTrucksTypes: ISelectItemDto[];
   allTruckStatuss: TruckTruckStatusLookupTableDto[];
   allTransportTypes: SelectItemDto[];
   allTruckTypesByTransportType: SelectItemDto[];
