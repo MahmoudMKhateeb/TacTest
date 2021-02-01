@@ -36,8 +36,8 @@ li.dropdown-language ul.dropdown-menu li a:after {
 .ui-button-icon-left {
   padding: 0 !important;
   position: absolute;
-  right: 20px !important;
-  left: auto !important;
+  /* right: 20px !important;
+  left: auto !important; */
 }
 .dropdown-excel-operations a .ui-button-text {
   font-family: 'ArGEFlow' !important;
