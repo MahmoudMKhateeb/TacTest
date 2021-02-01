@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using Abp.Domain.Repositories;
 using TACHYON.DataExporting;
 using TACHYON.Dto;
+using TACHYON.Shipping.ShippingRequests;
 using TACHYON.Trucks;
 
 namespace TACHYON.Waybills
@@ -14,12 +15,14 @@ namespace TACHYON.Waybills
     public class WaybillsAppService : TACHYONAppServiceBase
     {
         private readonly PdfExporterBase _pdfExporterBase;
-        private readonly IRepository<Truck, Guid> _trucksRepository;
+        private readonly IRepository<Truck, long> _trucksRepository;
+        private readonly ShippingRequestsAppService _shippingRequestAppService;
 
-        public WaybillsAppService(PdfExporterBase pdfExporterBase, IRepository<Truck, Guid> trucksRepository)
+        public WaybillsAppService(PdfExporterBase pdfExporterBase, IRepository<Truck, long> trucksRepository, ShippingRequestsAppService shippingRequestAppService)
         {
             _pdfExporterBase = pdfExporterBase;
             _trucksRepository = trucksRepository;
+            _shippingRequestAppService = shippingRequestAppService;
         }
         /// <summary>
         /// 
@@ -75,20 +78,20 @@ namespace TACHYON.Waybills
         {       
             var reportPath = "/Waybills/Reports/Master_Waybill.rdlc";
 
-            var list = _trucksRepository.GetAll()
-                .Select(x => new
-                {
-                    x.ModelName,
-                    x.ModelYear,
-                    x.PlateNumber
-                }).ToList();
+            //var list = _trucksRepository.GetAll()
+            //    .Select(x => new
+            //    {
+            //        x.ModelName,
+            //        x.ModelYear,
+            //        x.PlateNumber
+            //    }).ToList();
 
             ArrayList names = new ArrayList();
             ArrayList data = new ArrayList();
 
             names.Add("DataSet1");
-            data.Add(list);
-
+            //data.Add(list);
+            data.Add(_shippingRequestAppService.GetMasterWaybill());
             return _pdfExporterBase.CreateRdlcPdfPackageFromList("Master_Waybill", reportPath, names, data);
         }
 

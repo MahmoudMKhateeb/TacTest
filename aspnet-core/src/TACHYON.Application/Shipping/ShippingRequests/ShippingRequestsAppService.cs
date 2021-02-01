@@ -801,6 +801,67 @@ namespace TACHYON.Shipping.ShippingRequests
                 }).ToListAsync();
         }
         #endregion
+        public async Task<GetMasterWaybillOutput> GetMasterWaybill()
+        {
+            var info = await _shippingRequestRepository.GetAll()
+              // .Where(e => e.Id == Id)
+               .Include(x => x.Tenant)
+               .Include(x => x.RoutSteps)
+               .ThenInclude(x => x.SourceRoutPointFk)
+               .ThenInclude(x => x.FacilityFk)
+               .ThenInclude(x => x.CityFk)
+               .Include(x => x.RoutSteps)
+               .ThenInclude(x => x.DestinationRoutPointFk)
+               .ThenInclude(x => x.FacilityFk)
+               .ThenInclude(x => x.CityFk)
+               .ThenInclude(x=>x.CountyFk)
+               .Include(x => x.RoutSteps)
+               .ThenInclude(x => x.DestinationRoutPointFk)
+               .ThenInclude(x=>x.PickingTypeFk)
+               .Include(x => x.RoutSteps)
+               .ThenInclude(x => x.AssignedDriverUserFk)
+               .Include(x => x.AssignedTruckFk)
+               .ThenInclude(x => x.TrucksTypeFk)
+               .Include(x => x.AssignedTruckFk)
+               .ThenInclude(x => x.TrucksTypeFk)
+               .Include(x => x.AssignedTruckFk)
+               .ThenInclude(x => x.TransportTypeFk)
+               .Include(x => x.AssignedTruckFk)
+               .ThenInclude(x => x.CapacityFk)
+               .FirstOrDefaultAsync();
+
+            var Recipient = info.RoutSteps
+                .Where(e => e.DestinationRoutPointFk.PickingTypeFk.DisplayName.Contains("Dropoff"))
+                .FirstOrDefault();
+
+
+            var output = new GetMasterWaybillOutput
+            {
+                MasterWaybillNo=info.Id,
+                Date = Clock.Now.ToShortDateString(),
+                ShippingRequestStatus = "Draft",
+                CompanyName = info.Tenant.companyName,
+                DriverName = info.AssignedDriverUserFk.FullName,
+                DriverIqamaNo = "",
+                TruckTypeDisplayName =info.AssignedTruckFk.TransportTypeFk?.DisplayName+"-"+
+                info.AssignedTruckFk.TrucksTypeFk?.DisplayName+"-"+
+                info.AssignedTruckFk.CapacityFk?.DisplayName,
+                PlateNumber = info.AssignedTruckFk.PlateNumber,
+                IsMultipDrops = info.NumberOfDrops > 1 ? true : false,
+                TotalDrops = info.NumberOfDrops,
+                PackingTypeDisplayName = "",
+                NumberOfPacking = 0,
+                FacilityName = Recipient.DestinationRoutPointFk.FacilityFk.Name,
+                CountryName = Recipient.DestinationRoutPointFk.FacilityFk.CityFk.CountyFk.DisplayName,
+                CityName = Recipient.DestinationRoutPointFk.FacilityFk.CityFk.DisplayName,
+                Area = Recipient.DestinationRoutPointFk.FacilityFk.Adress,
+                StartTripDate=info.StartTripDate?.ToShortDateString()
+            };
+
+            return output;
+        }
+
+        
 
         public async Task<List<SelectItemDto>> GetAllUnitOfMeasuresForDropdown()
         {
