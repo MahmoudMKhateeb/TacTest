@@ -801,10 +801,10 @@ namespace TACHYON.Shipping.ShippingRequests
                 }).ToListAsync();
         }
         #endregion
-        public async Task<GetMasterWaybillOutput> GetMasterWaybill()
+        public IEnumerable<GetMasterWaybillOutput> GetMasterWaybill()
         {
-            var info = await _shippingRequestRepository.GetAll()
-              // .Where(e => e.Id == Id)
+            var info =  _shippingRequestRepository.GetAll()
+               .Where(e => e.Id == 1)
                .Include(x => x.Tenant)
                .Include(x => x.RoutSteps)
                .ThenInclude(x => x.SourceRoutPointFk)
@@ -828,35 +828,35 @@ namespace TACHYON.Shipping.ShippingRequests
                .ThenInclude(x => x.TransportTypeFk)
                .Include(x => x.AssignedTruckFk)
                .ThenInclude(x => x.CapacityFk)
-               .FirstOrDefaultAsync();
+               .ToList();
 
-            var Recipient = info.RoutSteps
+            var Recipient = info.FirstOrDefault().RoutSteps
                 .Where(e => e.DestinationRoutPointFk.PickingTypeFk.DisplayName.Contains("Dropoff"))
                 .FirstOrDefault();
 
 
-            var output = new GetMasterWaybillOutput
+            var output = info.Select(x => new GetMasterWaybillOutput
             {
-                MasterWaybillNo=info.Id,
+                MasterWaybillNo = x.Id,
                 Date = Clock.Now.ToShortDateString(),
                 ShippingRequestStatus = "Draft",
-                CompanyName = info.Tenant.companyName,
-                DriverName = info.AssignedDriverUserFk.FullName,
+                CompanyName = x.Tenant.companyName,
+                DriverName = x.AssignedDriverUserFk?.FullName,
                 DriverIqamaNo = "",
-                TruckTypeDisplayName =info.AssignedTruckFk.TransportTypeFk?.DisplayName+"-"+
-                info.AssignedTruckFk.TrucksTypeFk?.DisplayName+"-"+
-                info.AssignedTruckFk.CapacityFk?.DisplayName,
-                PlateNumber = info.AssignedTruckFk.PlateNumber,
-                IsMultipDrops = info.NumberOfDrops > 1 ? true : false,
-                TotalDrops = info.NumberOfDrops,
+                TruckTypeDisplayName = x.AssignedTruckFk?.TransportTypeFk?.DisplayName + "-" +
+                 x.AssignedTruckFk?.TrucksTypeFk?.DisplayName + "-" +
+                 x.AssignedTruckFk?.CapacityFk?.DisplayName,
+                PlateNumber = x.AssignedTruckFk?.PlateNumber,
+                IsMultipDrops = x.NumberOfDrops > 1 ? true : false,
+                TotalDrops = x.NumberOfDrops,
                 PackingTypeDisplayName = "",
                 NumberOfPacking = 0,
                 FacilityName = Recipient.DestinationRoutPointFk.FacilityFk.Name,
                 CountryName = Recipient.DestinationRoutPointFk.FacilityFk.CityFk.CountyFk.DisplayName,
                 CityName = Recipient.DestinationRoutPointFk.FacilityFk.CityFk.DisplayName,
                 Area = Recipient.DestinationRoutPointFk.FacilityFk.Adress,
-                StartTripDate=info.StartTripDate?.ToShortDateString()
-            };
+                StartTripDate = (x.StartTripDate != null && x.StartTripDate?.Year > 1) ? x.StartTripDate?.ToShortDateString() : ""
+            }) ;
 
             return output;
         }
