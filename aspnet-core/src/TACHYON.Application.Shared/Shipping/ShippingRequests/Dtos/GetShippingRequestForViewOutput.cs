@@ -1,0 +1,22 @@
+﻿using System.Collections.Generic;
+using TACHYON.Shipping.ShippingRequestBids.Dtos;
+
+namespace TACHYON.Shipping.ShippingRequests.Dtos
+{
+    public class GetShippingRequestForViewOutput
+    {
+        public ShippingRequestDto ShippingRequest { get; set; }
+
+        public List<ShippingRequestBidDto> ShippingRequestBidDtoList { get; set; }
+        public int VasCount { get; set; }
+        public string TruckTypeDisplayName { get; set; }
+        public string DriverName { get; set; }
+        public string RoutTypeName { get; set; }
+        public string OriginalCityName { get; set; }
+        public string DestinationCityName { get; set; }
+        public string GoodsCategoryName { get; set; }
+        public string TruckTypeFullName { get; set; }
+        public string ShippingRequestStatusName { get; set; }
+
+    }
+}
