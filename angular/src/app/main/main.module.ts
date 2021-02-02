@@ -155,7 +155,7 @@ import { ViewShippingRequestDetailsComponent } from '@app/main/marketPlace/marke
 import { ViewAllCarrierBidsComponent } from '@app/main/marketPlace/marketPlace/ViewAllCarrierBids.component';
 import { RejectionReasonModalComponent } from './documentFiles/documentFiles/rejectionReason-modal.component';
 import { ViewShippingRequestPriceResponseModalComponent } from './shippingRequests/shippingRequests/shipping-request-Response/view-shipping-request-response-modal.component';
-import { MultiSelectModule, PickListModule } from '@node_modules/primeng';
+import { ListboxModule, MultiSelectModule, PickListModule } from '@node_modules/primeng';
 
 NgxBootstrapDatePickerConfigService.registerNgxBootstrapDatePickerLocales();
 
@@ -189,6 +189,7 @@ NgxBootstrapDatePickerConfigService.registerNgxBootstrapDatePickerLocales();
     AdminModule,
     MultiSelectModule,
     PickListModule,
+    ListboxModule,
   ],
   declarations: [
     NationalitiesComponent,
