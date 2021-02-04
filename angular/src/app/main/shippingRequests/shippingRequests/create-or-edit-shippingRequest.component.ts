@@ -4,6 +4,7 @@ import { finalize } from 'rxjs/operators';
 import {
   CarriersForDropDownDto,
   CreateOrEditFacilityDto,
+  CreateOrEditGoodsDetailDto,
   CreateOrEditRouteDto,
   CreateOrEditRoutStepDto,
   CreateOrEditShippingRequestDto,
@@ -30,6 +31,8 @@ import { MapsAPILoader } from '@node_modules/@agm/core';
 import { CreateOrEditFacilityModalComponent } from '@app/main/addressBook/facilities/create-or-edit-facility-modal.component';
 import { VasForCreateShippingRequstModalComponent } from '@app/main/shippingRequests/shippingRequests/ShippingRequestVas/VasForCreateShippingRequstModal.component';
 import * as moment from '@node_modules/moment';
+import { LazyLoadEvent } from '@node_modules/primeng/public_api';
+import { CreateOrEditGoodsDetailModalComponent } from '@app/main/goodsDetails/goodsDetails/create-or-edit-goodsDetail-modal.component';
 
 @Component({
   templateUrl: './create-or-edit-shippingRequest.component.html',
@@ -45,6 +48,7 @@ export class CreateOrEditShippingRequestComponent extends AppComponentBase imple
   @ViewChild('search') public searchElementRef: ElementRef;
   @ViewChild('staticModal') public staticModal: ModalDirective;
   @ViewChild('createFacilityModal') public createFacilityModal: ModalDirective;
+  @ViewChild('createOrEditGoodsDetailModal') public createOrEditGoodsDetailModal: CreateOrEditGoodsDetailModalComponent;
   @ViewChild('VasForCreateShippingRequstModalComponent', { static: true })
   VasForCreateShippingRequstModalComponent: VasForCreateShippingRequstModalComponent;
 
@@ -334,5 +338,13 @@ export class CreateOrEditShippingRequestComponent extends AppComponentBase imple
       this.shippingRequest.capacityId = null;
       this.allCapacities = null;
     }
+  }
+
+  refreshGoodsDetails() {
+    this.shippingRequest.goodsDetailS = this.createOrEditGoodsDetailModal.CreateOrEditGoodDetailList;
+  }
+
+  deleteGoodsDetail(index: number) {
+    this.shippingRequest.goodsDetailS.splice(index, 1);
   }
 }

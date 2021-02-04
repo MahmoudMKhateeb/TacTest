@@ -16,6 +16,7 @@ import { FileDownloadService } from '@shared/utils/file-download.service';
   templateUrl: './goodsDetails.component.html',
   encapsulation: ViewEncapsulation.None,
   animations: [appModuleAnimation()],
+  selector: 'app-goodsDetails',
 })
 export class GoodsDetailsComponent extends AppComponentBase {
   @ViewChild('createOrEditGoodsDetailModal', { static: true }) createOrEditGoodsDetailModal: CreateOrEditGoodsDetailModalComponent;

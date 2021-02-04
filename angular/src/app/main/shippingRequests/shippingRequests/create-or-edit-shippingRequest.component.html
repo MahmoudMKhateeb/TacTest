@@ -495,6 +495,84 @@
           <!--  start of card::form-->
         </div>
 
+        <!--    start::Goods details   -->
+        <div class="card card-custom gutter-b">
+          <div class="card-header">
+            <div class="card-toolbar">
+              <button (click)="createOrEditGoodsDetailModal.show()" class="btn btn-primary blue">
+                <i class="fa fa-plus"></i> {{ l('CreateNewGoodsDetail') }}
+              </button>
+            </div>
+          </div>
+          <div class="card-body">
+            <div class="row align-items-center">
+              <!--<Primeng-Datatable-Start>-->
+              <div [busyIf]="primengTableHelper.isLoading" class="primeng-datatable-container col-12">
+                <p-table
+                  ScrollWidth="100%"
+                  [paginator]="false"
+                  [resizableColumns]="primengTableHelper.resizableColumns"
+                  [responsive]="primengTableHelper.isResponsive"
+                  [scrollable]="true"
+                  [value]="shippingRequest.goodsDetailS"
+                  rows="{{ primengTableHelper.defaultRecordsCountPerPage }}"
+                >
+                  <ng-template pTemplate="header">
+                    <tr>
+                      <th [hidden]="!isGrantedAny('Pages.GoodsDetails.Edit', 'Pages.GoodsDetails.Delete')" style="width: 130px;">
+                        {{ l('Actions') }}
+                      </th>
+                      <th pSortableColumn="goodCategoryFk.displayName" style="width: 150px;">
+                        {{ l('Name') }}
+                        <p-sortIcon field="goodCategoryDisplayName"></p-sortIcon>
+                      </th>
+                    </tr>
+                  </ng-template>
+                  <ng-template let-record="$implicit" pTemplate="body" let-i="rowIndex">
+                    <tr>
+                      <td [hidden]="!isGrantedAny('Pages.GoodsDetails.Edit', 'Pages.GoodsDetails.Delete')" style="width: 130px;">
+                        <div class="btn-group dropdown" container="body" dropdown>
+                          <button class="dropdown-toggle btn btn-sm btn-primary" dropdownToggle>
+                            <i class="fa fa-cog"></i><span class="caret"></span> {{ l('Actions') }}
+                          </button>
+                          <ul *dropdownMenu class="dropdown-menu">
+                            <li>
+                              <a
+                                (click)="createOrEditGoodsDetailModal.edit(i)"
+                                *ngIf="permission.isGranted('Pages.GoodsDetails.Edit')"
+                                class="dropdown-item"
+                                href="javascript:"
+                                >{{ l('Edit') }}</a
+                              >
+                            </li>
+                            <li>
+                              <a (click)="deleteGoodsDetail(i)" class="dropdown-item" href="javascript:">{{ l('Delete') }}</a>
+                            </li>
+                          </ul>
+                        </div>
+                      </td>
+                      <td style="width: 150px;">
+                        <span class="ui-column-title"> {{ l('DisplayName') }}</span>
+                        {{ record.name }}
+                      </td>
+                    </tr>
+                  </ng-template>
+                </p-table>
+                <div *ngIf="shippingRequest.goodsDetailS?.length == 0" class="primeng-no-data">
+                  {{ l('NoData') }}
+                </div>
+              </div>
+              <!--<Primeng-Datatable-End>-->
+            </div>
+          </div>
+        </div>
+        <createOrEditGoodsDetailModal
+          #createOrEditGoodsDetailModal
+          [CreateOrEditGoodDetailList]="shippingRequest.goodsDetailS"
+          (modalSave)="refreshGoodsDetails()"
+        ></createOrEditGoodsDetailModal>
+
+        <!--     end::Goods details     -->
         <!--    start::Btns   -->
         <div class="container-fluid">
           <div class="row">
