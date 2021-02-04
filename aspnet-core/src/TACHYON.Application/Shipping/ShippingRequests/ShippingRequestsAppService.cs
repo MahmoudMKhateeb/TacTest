@@ -112,7 +112,7 @@ namespace TACHYON.Shipping.ShippingRequests
         private readonly IRepository<TransportType, int> _transportTypeRepository;
 
 
-        public async Task<PagedResultDto<GetShippingRequestForViewDto>> GetAll(GetAllShippingRequestsInput input)
+        public async Task<PagedResultDto<GetShippingRequestForViewOutput>> GetAll(GetAllShippingRequestsInput input)
         {
             if (await IsEnabledAsync(AppFeatures.TachyonDealer))
             {
@@ -126,7 +126,7 @@ namespace TACHYON.Shipping.ShippingRequests
             return await GetAllPagedResultDto(input);
         }
 
-        public async Task<GetShippingRequestForViewDto> GetShippingRequestForView(long id)
+        public async Task<GetShippingRequestForViewOutput> GetShippingRequestForView(long id)
         {
             ShippingRequest shippingRequest;
 
@@ -293,7 +293,7 @@ namespace TACHYON.Shipping.ShippingRequests
         //                 join o4 in _lookup_routeRepository.GetAll() on o.RouteId equals o4.Id into j4
         //                 from s4 in j4.DefaultIfEmpty()
 
-        //                 select new GetShippingRequestForViewDto()
+        //                 select new GetShippingRequestForViewOutput()
         //                 {
         //                     ShippingRequest = new ShippingRequestDto
         //                     {
@@ -353,18 +353,29 @@ namespace TACHYON.Shipping.ShippingRequests
                 .ToListAsync();
         }
 
-        protected virtual async Task<PagedResultDto<GetShippingRequestForViewDto>> GetAllPagedResultDto(GetAllShippingRequestsInput input)
+        protected virtual async Task<PagedResultDto<GetShippingRequestForViewOutput>> GetAllPagedResultDto(GetAllShippingRequestsInput input)
         {
                 IQueryable<ShippingRequest> filteredShippingRequests = _shippingRequestRepository.GetAll()
                     .Include(x => x.ShippingRequestBids)
                     .ThenInclude(b => b.Tenant)
                     .Include(e => e.RouteFk)
+                    .ThenInclude(e=>e.RoutTypeFk)
                     .Include(e=>e.ShippingRequestVases)
+                    .Include(e=>e.RouteFk)
+                    .ThenInclude(e=>e.OriginCityFk)
+                    .Include(e => e.RouteFk)
+                    .ThenInclude(e => e.DestinationCityFk)
+                    .Include(e=>e.ShippingRequestStatusFk)
+                    .Include(e=>e.AssignedDriverUserFk)
+                    .Include(e=>e.AssignedTruckFk)
+                    .ThenInclude(e=>e.TransportTypeFk)
+                    .Include(e => e.AssignedTruckFk)
+                    .ThenInclude(e => e.CapacityFk)
+                    .Include(e => e.AssignedTruckFk)
+                    .ThenInclude(e => e.TrucksTypeFk)
+                    .Include(e=>e.GoodCategoryFk)
                     //get only this shipper shippingRequest
-                    //.Where(x => x.TenantId == AbpSession.TenantId)
                     .WhereIf(!string.IsNullOrWhiteSpace(input.Filter), e => false)
-                    //.WhereIf(input.MinVasFilter != null, e => e.Vas >= input.MinVasFilter)
-                    //.WhereIf(input.MaxVasFilter != null, e => e.Vas <= input.MaxVasFilter)
                     .WhereIf(input.IsTachyonDeal.HasValue, e => e.IsTachyonDeal == input.IsTachyonDeal.Value);
 
 
@@ -375,21 +386,54 @@ namespace TACHYON.Shipping.ShippingRequests
 
 
                 // select result
-                IEnumerable<GetShippingRequestForViewDto> shippingRequests = (await pagedAndFilteredShippingRequests.ToListAsync())
+                IEnumerable<GetShippingRequestForViewOutput> shippingRequests = (await pagedAndFilteredShippingRequests.ToListAsync())
                     .Select(x =>
-                        new GetShippingRequestForViewDto {ShippingRequest = ObjectMapper.Map<ShippingRequestDto>(x),
+                        new GetShippingRequestForViewOutput {ShippingRequest = ObjectMapper.Map<ShippingRequestDto>(x),
                             ShippingRequestBidDtoList = ObjectMapper.Map<List<ShippingRequestBidDto>>(x.ShippingRequestBids),
-                        VasCount= x.ShippingRequestVases.Count()});
+                        VasCount= x.ShippingRequestVases.Count(),
+                        OriginalCityName=x.RouteFk.OriginCityFk.DisplayName,
+                        DestinationCityName=x.RouteFk.DestinationCityFk.DisplayName,
+                        DriverName=x.AssignedDriverUserFk?.FullName,
+                        GoodsCategoryName=x.GoodCategoryFk?.DisplayName,
+                        RoutTypeName=x.RouteFk.RoutTypeFk.DisplayName,
+                        ShippingRequestStatusName=x.ShippingRequestStatusFk.DisplayName,
+                        TruckTypeDisplayName=x.AssignedTruckFk?.TrucksTypeFk.DisplayName,
+                        TruckTypeFullName=x.AssignedTruckFk?.TransportTypeFk.DisplayName
+                                          +"-"+ x.AssignedTruckFk?.TrucksTypeFk.DisplayName
+                                          +"-"+x.AssignedTruckFk?.TransportTypeFk.DisplayName
+                        });
 
 
                 int totalCount = await filteredShippingRequests.CountAsync();
 
-                return new PagedResultDto<GetShippingRequestForViewDto>(totalCount, shippingRequests.ToList());
+                return new PagedResultDto<GetShippingRequestForViewOutput>(totalCount, shippingRequests.ToList());
         }
 
-        protected virtual async Task<GetShippingRequestForViewDto> _GetShippingRequestForView(long id)
+        protected virtual async Task<GetShippingRequestForViewOutput> _GetShippingRequestForView(long id)
         {
-            ShippingRequest shippingRequest = await _shippingRequestRepository.GetAsync(id);
+            //ShippingRequest shippingRequest = await _shippingRequestRepository.GetAsync(id);
+            ShippingRequest shippingRequest =await _shippingRequestRepository.GetAll()
+                    .Where(e => e.Id == id)
+                    .Include(x => x.ShippingRequestBids)
+                    .ThenInclude(b => b.Tenant)
+                    .Include(e => e.RouteFk)
+                    .ThenInclude(e => e.RoutTypeFk)
+                    .Include(e => e.ShippingRequestVases)
+                    .Include(e => e.RouteFk)
+                    .ThenInclude(e => e.OriginCityFk)
+                    .Include(e => e.RouteFk)
+                    .ThenInclude(e => e.DestinationCityFk)
+                    .Include(e => e.ShippingRequestStatusFk)
+                    .Include(e => e.AssignedDriverUserFk)
+                    .Include(e => e.AssignedTruckFk)
+                    .ThenInclude(e => e.TransportTypeFk)
+                    .Include(e => e.AssignedTruckFk)
+                    .ThenInclude(e => e.CapacityFk)
+                    .Include(e => e.AssignedTruckFk)
+                    .ThenInclude(e => e.TrucksTypeFk)
+                    .Include(e => e.GoodCategoryFk)
+                    .FirstOrDefaultAsync();
+
             List<ShippingRequestBid> shippingRequestBidsList;
 
             using (CurrentUnitOfWork.DisableFilter(AbpDataFilters.MustHaveTenant))
@@ -398,7 +442,21 @@ namespace TACHYON.Shipping.ShippingRequests
                     .Where(x => x.ShippingRequestId == id).ToListAsync();
             }
 
-            GetShippingRequestForViewDto output = new GetShippingRequestForViewDto {ShippingRequest = ObjectMapper.Map<ShippingRequestDto>(shippingRequest), ShippingRequestBidDtoList = ObjectMapper.Map<List<ShippingRequestBidDto>>(shippingRequestBidsList)};
+            GetShippingRequestForViewOutput output = new GetShippingRequestForViewOutput {
+                ShippingRequest = ObjectMapper.Map<ShippingRequestDto>(shippingRequest), 
+                ShippingRequestBidDtoList = ObjectMapper.Map<List<ShippingRequestBidDto>>(shippingRequestBidsList),
+                VasCount = shippingRequest.ShippingRequestVases.Count(),
+                OriginalCityName = shippingRequest.RouteFk.OriginCityFk.DisplayName,
+                DestinationCityName = shippingRequest.RouteFk.DestinationCityFk.DisplayName,
+                DriverName = shippingRequest.AssignedDriverUserFk?.FullName,
+                GoodsCategoryName = shippingRequest.GoodCategoryFk?.DisplayName,
+                RoutTypeName = shippingRequest.RouteFk.RoutTypeFk.DisplayName,
+                ShippingRequestStatusName = shippingRequest.ShippingRequestStatusFk.DisplayName,
+                TruckTypeDisplayName = shippingRequest.AssignedTruckFk?.TrucksTypeFk?.DisplayName,
+                TruckTypeFullName = shippingRequest.AssignedTruckFk?.TransportTypeFk?.DisplayName
+                                          + "-" + shippingRequest.AssignedTruckFk?.TrucksTypeFk?.DisplayName
+                                          + "-" + shippingRequest.AssignedTruckFk?.TransportTypeFk?.DisplayName
+            };
 
             return output;
         }

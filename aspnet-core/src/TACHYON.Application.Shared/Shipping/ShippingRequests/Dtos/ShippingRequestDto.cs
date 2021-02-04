@@ -15,6 +15,14 @@ namespace TACHYON.Shipping.ShippingRequests.Dtos
         public bool? IsRejected { get; set; }
         public DateTime? StartTripDate { get; set; }
         public int NumberOfTrips { get; set; }
+        public int NumberOfDrops { get; set; }
+        public bool StageOneFinish { get; set; }
+        public bool StageTowFinish { get; set; }
+        public bool StageThreeFinish { get; set; }
+        public int GoodCategoryId { get; set; }
+
+        public DateTime? BidStartDate { get; set; }
+        public DateTime? BidEndDate { get; set; }
 
 
     }

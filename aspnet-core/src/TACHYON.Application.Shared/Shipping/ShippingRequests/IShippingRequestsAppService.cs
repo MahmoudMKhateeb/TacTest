@@ -14,9 +14,9 @@ namespace TACHYON.Shipping.ShippingRequests
 {
     public interface IShippingRequestsAppService : IApplicationService
     {
-        Task<PagedResultDto<GetShippingRequestForViewDto>> GetAll(GetAllShippingRequestsInput input);
+        Task<PagedResultDto<GetShippingRequestForViewOutput>> GetAll(GetAllShippingRequestsInput input);
 
-        Task<GetShippingRequestForViewDto> GetShippingRequestForView(long id);
+        Task<GetShippingRequestForViewOutput> GetShippingRequestForView(long id);
 
         Task<GetShippingRequestForEditOutput> GetShippingRequestForEdit(EntityDto<long> input);
 
