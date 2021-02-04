@@ -205,7 +205,14 @@
                     </td>
 
                     <td>
-                      {{ record.documentType?.name }}
+                      <a
+                        class="d-flex align-items-center text-muted text-hover-primary py-1"
+                        href="javascript:;"
+                        (click)="downloadDocument(record.documentFile)"
+                      >
+                        <span class="flaticon2-clip-symbol text-warning icon-1x mr-2"></span>
+                        {{ record.documentType?.name }}</a
+                      >
                     </td>
 
                     <td *ngIf="entityType == 'Tenant' && isHost == true" style="width: 160px;">
