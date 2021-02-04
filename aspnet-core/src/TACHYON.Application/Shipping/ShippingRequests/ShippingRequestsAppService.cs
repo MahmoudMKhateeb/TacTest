@@ -122,6 +122,10 @@ namespace TACHYON.Shipping.ShippingRequests
                     return await GetAllPagedResultDto(input);
                 }
             }
+            else
+            {
+                input.IsTachyonDeal = false;
+            }
 
             return await GetAllPagedResultDto(input);
         }
@@ -189,7 +193,7 @@ namespace TACHYON.Shipping.ShippingRequests
                 var pricedVases = input.PricedVasesList;
                 foreach (var item in pricedVases)
                 {
-                    var vas =await _shippingRequestVasRepository.FirstOrDefaultAsync(x=>x.Id ==item.ShippingRequestVasId);
+                    var vas = await _shippingRequestVasRepository.FirstOrDefaultAsync(x => x.Id == item.ShippingRequestVasId);
                     vas.ActualPrice = item.ActualPrice;
                     vas.DefualtPrice = item.DefaultPrice;
                     await _shippingRequestVasRepository.UpdateAsync(vas);
@@ -317,102 +321,109 @@ namespace TACHYON.Shipping.ShippingRequests
         {
             return await _tenantRepository.GetAll()
                 .Where(x => x.Edition.Name == AppConsts.CarrierEditionName)
-                .Select(x => new CarriersForDropDownDto {Id = x.Id, DisplayName = x.TenancyName}).ToListAsync();
+                .Select(x => new CarriersForDropDownDto { Id = x.Id, DisplayName = x.TenancyName }).ToListAsync();
         }
 
         [AbpAuthorize(AppPermissions.Pages_ShippingRequests)]
         public async Task<List<SelectItemDto>> GetAllTrucksTypeForTableDropdown()
         {
             return await _lookup_trucksTypeRepository.GetAll()
-                .Select(trucksType => new SelectItemDto {Id = trucksType.Id.ToString(), DisplayName = trucksType == null || trucksType.DisplayName == null ? "" : trucksType.DisplayName.ToString()}).ToListAsync();
+                .Select(trucksType => new SelectItemDto { Id = trucksType.Id.ToString(), DisplayName = trucksType == null || trucksType.DisplayName == null ? "" : trucksType.DisplayName.ToString() }).ToListAsync();
         }
 
         [AbpAuthorize(AppPermissions.Pages_ShippingRequests)]
         public async Task<List<SelectItemDto>> GetAllTrailerTypeForTableDropdown()
         {
             return await _lookup_trailerTypeRepository.GetAll()
-                .Select(trailerType => new SelectItemDto {Id = trailerType.Id.ToString(), DisplayName = trailerType == null || trailerType.DisplayName == null ? "" : trailerType.DisplayName.ToString()}).ToListAsync();
+                .Select(trailerType => new SelectItemDto { Id = trailerType.Id.ToString(), DisplayName = trailerType == null || trailerType.DisplayName == null ? "" : trailerType.DisplayName.ToString() }).ToListAsync();
         }
 
         public async Task<List<SelectItemDto>> GetAllRouteTypeForTableDropdown()
         {
             return await _lookup_routTypeRepository.GetAll()
-                .Select(x => new SelectItemDto {Id = x.Id.ToString(), DisplayName = x == null || x.DisplayName == null ? "" : x.DisplayName.ToString()}).ToListAsync();
+                .Select(x => new SelectItemDto { Id = x.Id.ToString(), DisplayName = x == null || x.DisplayName == null ? "" : x.DisplayName.ToString() }).ToListAsync();
         }
 
         public async Task<List<SelectItemDto>> GetAllGoodCategoriesForTableDropdown()
         {
             return await _lookup_goodCategoryRepository.GetAll()
-                .Select(x => new SelectItemDto {Id = x.Id.ToString(), DisplayName = x == null || x.DisplayName == null ? "" : x.DisplayName.ToString()}).ToListAsync();
+                .Select(x => new SelectItemDto { Id = x.Id.ToString(), DisplayName = x == null || x.DisplayName == null ? "" : x.DisplayName.ToString() }).ToListAsync();
         }
 
         public async Task<List<SelectItemDto>> GetAllPortsForDropdown()
         {
             return await _lookup_PortRepository.GetAll()
-                .Select(x => new SelectItemDto {Id = x.Id.ToString(), DisplayName = x.Name})
+                .Select(x => new SelectItemDto { Id = x.Id.ToString(), DisplayName = x.Name })
                 .ToListAsync();
         }
 
         protected virtual async Task<PagedResultDto<GetShippingRequestForViewOutput>> GetAllPagedResultDto(GetAllShippingRequestsInput input)
         {
-                IQueryable<ShippingRequest> filteredShippingRequests = _shippingRequestRepository.GetAll()
-                    .Include(x => x.ShippingRequestBids)
-                    .ThenInclude(b => b.Tenant)
-                    .Include(e => e.RouteFk)
-                    .ThenInclude(e=>e.RoutTypeFk)
-                    .Include(e=>e.ShippingRequestVases)
-                    .Include(e=>e.RouteFk)
-                    .ThenInclude(e=>e.OriginCityFk)
-                    .Include(e => e.RouteFk)
-                    .ThenInclude(e => e.DestinationCityFk)
-                    .Include(e=>e.ShippingRequestStatusFk)
-                    .Include(e=>e.AssignedDriverUserFk)
-                    .Include(e=>e.AssignedTruckFk)
-                    .ThenInclude(e=>e.TransportTypeFk)
-                    .Include(e => e.AssignedTruckFk)
-                    .ThenInclude(e => e.CapacityFk)
-                    .Include(e => e.AssignedTruckFk)
-                    .ThenInclude(e => e.TrucksTypeFk)
-                    .Include(e=>e.GoodCategoryFk)
-                    //get only this shipper shippingRequest
+            using (CurrentUnitOfWork.DisableFilter(AbpDataFilters.MustHaveTenant, AbpDataFilters.MayHaveTenant))
+            {
+                //query 
+                IQueryable<ShippingRequest> filteredShippingRequests = _shippingRequestRepository
+                    .GetAll()
                     .WhereIf(!string.IsNullOrWhiteSpace(input.Filter), e => false)
-                    .WhereIf(input.IsTachyonDeal.HasValue, e => e.IsTachyonDeal == input.IsTachyonDeal.Value);
+                    .WhereIf(input.IsTachyonDeal.HasValue, e => e.IsTachyonDeal == input.IsTachyonDeal.Value)
+                    //get only this shipper shippingRequest when isTachyonDeal is false
+                    .WhereIf(input.IsTachyonDeal != null && !input.IsTachyonDeal.Value,
+                        e => e.TenantId == AbpSession.TenantId);
 
-
-                //paging
-                IQueryable<ShippingRequest> pagedAndFilteredShippingRequests = filteredShippingRequests
-                    .OrderBy(input.Sorting ?? "id asc")
-                    .PageBy(input);
-
-
-                // select result
-                IEnumerable<GetShippingRequestForViewOutput> shippingRequests = (await pagedAndFilteredShippingRequests.ToListAsync())
-                    .Select(x =>
-                        new GetShippingRequestForViewOutput {ShippingRequest = ObjectMapper.Map<ShippingRequestDto>(x),
-                            ShippingRequestBidDtoList = ObjectMapper.Map<List<ShippingRequestBidDto>>(x.ShippingRequestBids),
-                        VasCount= x.ShippingRequestVases.Count(),
-                        OriginalCityName=x.RouteFk.OriginCityFk.DisplayName,
-                        DestinationCityName=x.RouteFk.DestinationCityFk.DisplayName,
-                        DriverName=x.AssignedDriverUserFk?.FullName,
-                        GoodsCategoryName=x.GoodCategoryFk?.DisplayName,
-                        RoutTypeName=x.RouteFk.RoutTypeFk.DisplayName,
-                        ShippingRequestStatusName=x.ShippingRequestStatusFk.DisplayName,
-                        TruckTypeDisplayName=x.AssignedTruckFk?.TrucksTypeFk.DisplayName,
-                        TruckTypeFullName=x.AssignedTruckFk?.TransportTypeFk.DisplayName
-                                          +"-"+ x.AssignedTruckFk?.TrucksTypeFk.DisplayName
-                                          +"-"+x.AssignedTruckFk?.TransportTypeFk.DisplayName
-                        });
-
-
+                //totalCount
                 int totalCount = await filteredShippingRequests.CountAsync();
+                
+                // select result
+                var pagedAndFilteredShippingRequests = filteredShippingRequests.OrderBy(e => input.Sorting ?? "id asc")
+                    .PageBy(input).Select(x => new
+                    {
+                        ShippingRequest = x,
+                        ShippingRequestBidDtoList = x.ShippingRequestBids,
+                        ShippingRequestVasesList = x.ShippingRequestVases,
+                        OriginalCityName = x.RouteFk.OriginCityFk.DisplayName,
+                        DestinationCityName = x.RouteFk.DestinationCityFk.DisplayName,
+                        DriverName = x.AssignedDriverUserFk != null ? x.AssignedDriverUserFk.Name : "",
+                        GoodsCategoryName = x.GoodCategoryFk != null ? x.GoodCategoryFk.DisplayName : "",
+                        RoutTypeName = x.RouteFk.RoutTypeFk.DisplayName,
+                        ShippingRequestStatusName = x.ShippingRequestStatusFk.DisplayName,
+                        TruckTypeDisplayName =x.AssignedTruckFk != null ? x.AssignedTruckFk.TrucksTypeFk.DisplayName : "",
+                        TruckTypeFullName = x.AssignedTruckFk != null
+                            ? (x.AssignedTruckFk.TransportTypeFk != null ?
+                                x.AssignedTruckFk.TransportTypeFk.DisplayName :
+                                "" + "-" + x.AssignedTruckFk.TrucksTypeFk != null ?
+                                    x.AssignedTruckFk.TrucksTypeFk.DisplayName :
+                                    "" + "-" + x.AssignedTruckFk != null ?
+                                        x.AssignedTruckFk.TransportTypeFk.DisplayName : "")
+                            : ""
+                    });
 
-                return new PagedResultDto<GetShippingRequestForViewOutput>(totalCount, shippingRequests.ToList());
+
+                var result = pagedAndFilteredShippingRequests
+                    .ToList()
+                    .Select(x => new GetShippingRequestForViewOutput
+                    {
+                        ShippingRequest = ObjectMapper.Map<ShippingRequestDto>(x.ShippingRequest),
+                        ShippingRequestBidDtoList =
+                            ObjectMapper.Map<List<ShippingRequestBidDto>>(x.ShippingRequest.ShippingRequestBids),
+                        VasCount = x.ShippingRequestVasesList.Count(),
+                        OriginalCityName = x.OriginalCityName,
+                        DestinationCityName = x.DestinationCityName,
+                        DriverName = x.DriverName,
+                        GoodsCategoryName = x.GoodsCategoryName,
+                        RoutTypeName = x.RoutTypeName,
+                        ShippingRequestStatusName = x.ShippingRequestStatusName,
+                        TruckTypeDisplayName = x.TruckTypeDisplayName,
+                        TruckTypeFullName = x.TruckTypeFullName,
+                    });
+                
+                return new PagedResultDto<GetShippingRequestForViewOutput>(totalCount, result.ToList());
+            }
         }
 
         protected virtual async Task<GetShippingRequestForViewOutput> _GetShippingRequestForView(long id)
         {
             //ShippingRequest shippingRequest = await _shippingRequestRepository.GetAsync(id);
-            ShippingRequest shippingRequest =await _shippingRequestRepository.GetAll()
+            ShippingRequest shippingRequest = await _shippingRequestRepository.GetAll()
                     .Where(e => e.Id == id)
                     .Include(x => x.ShippingRequestBids)
                     .ThenInclude(b => b.Tenant)
@@ -442,8 +453,9 @@ namespace TACHYON.Shipping.ShippingRequests
                     .Where(x => x.ShippingRequestId == id).ToListAsync();
             }
 
-            GetShippingRequestForViewOutput output = new GetShippingRequestForViewOutput {
-                ShippingRequest = ObjectMapper.Map<ShippingRequestDto>(shippingRequest), 
+            GetShippingRequestForViewOutput output = new GetShippingRequestForViewOutput
+            {
+                ShippingRequest = ObjectMapper.Map<ShippingRequestDto>(shippingRequest),
                 ShippingRequestBidDtoList = ObjectMapper.Map<List<ShippingRequestBidDto>>(shippingRequestBidsList),
                 VasCount = shippingRequest.ShippingRequestVases.Count(),
                 OriginalCityName = shippingRequest.RouteFk.OriginCityFk.DisplayName,
@@ -467,12 +479,13 @@ namespace TACHYON.Shipping.ShippingRequests
                 .GetAll()
                 .Include(x => x.RouteFk)
                 .Include(x => x.RoutSteps)
-                .Include(x=>x.ShippingRequestVases)
+                .Include(x => x.ShippingRequestVases)
                 .Single(x => x.Id == input.Id);
 
-            GetShippingRequestForEditOutput output = new GetShippingRequestForEditOutput {
+            GetShippingRequestForEditOutput output = new GetShippingRequestForEditOutput
+            {
                 ShippingRequest = ObjectMapper.Map<CreateOrEditShippingRequestDto>(shippingRequest)
-             };
+            };
 
             return output;
         }
@@ -559,11 +572,11 @@ namespace TACHYON.Shipping.ShippingRequests
                 .Select(vas => new ShippingRequestVasListDto
                 {
                     VasName = vas == null || vas.Name == null ? "" : vas.Name.ToString(),
-                    HasAmount= vas.HasAmount,
-                    HasCount= vas.HasCount,
-                    MaxAmount= 0,
-                    MaxCount= 0,
-                    Id= vas.Id
+                    HasAmount = vas.HasAmount,
+                    HasCount = vas.HasCount,
+                    MaxAmount = 0,
+                    MaxCount = 0,
+                    Id = vas.Id
                 }).ToListAsync();
         }
 
@@ -571,54 +584,54 @@ namespace TACHYON.Shipping.ShippingRequests
         public async Task<List<ShippingRequestVasPriceDto>> GetAllShippingRequestVasForPricing(long shippingRequestId)
         {
             var carrierId = AbpSession.TenantId;
-            var shippingRequestVases = _shippingRequestVasRepository.GetAll().Include(x => x.VasFk).Where(z=>z.TenantId==carrierId && z.ShippingRequestId == shippingRequestId);
+            var shippingRequestVases = _shippingRequestVasRepository.GetAll().Include(x => x.VasFk).Where(z => z.TenantId == carrierId && z.ShippingRequestId == shippingRequestId);
             var result = from o in shippingRequestVases
-                         join o1 in  _vasPriceRepository.GetAll() on o.VasId equals o1.VasId into j1
+                         join o1 in _vasPriceRepository.GetAll() on o.VasId equals o1.VasId into j1
                          from s1 in j1.DefaultIfEmpty()
 
-                select new ShippingRequestVasPriceDto ()
-                {
-                    ShippingRequestVas = new ShippingRequestVasListDto
-                    {
-                    VasName = o.VasFk.Name == null || o.VasFk.Name == null ? "" : o.VasFk.Name,
-                    HasAmount =  o.VasFk.HasAmount,
-                    HasCount = o.VasFk.HasCount,
-                    MaxAmount = o.RequestMaxAmount,
-                    MaxCount = o.RequestMaxCount,
-                    },
-                    ActualPrice = s1.Price,
-                    ShippingRequestVasId= o.Id,
-                    DefaultPrice = s1.Price
-                };
+                         select new ShippingRequestVasPriceDto()
+                         {
+                             ShippingRequestVas = new ShippingRequestVasListDto
+                             {
+                                 VasName = o.VasFk.Name == null || o.VasFk.Name == null ? "" : o.VasFk.Name,
+                                 HasAmount = o.VasFk.HasAmount,
+                                 HasCount = o.VasFk.HasCount,
+                                 MaxAmount = o.RequestMaxAmount,
+                                 MaxCount = o.RequestMaxCount,
+                             },
+                             ActualPrice = s1.Price,
+                             ShippingRequestVasId = o.Id,
+                             DefaultPrice = s1.Price
+                         };
             return await result.ToListAsync();
         }
 
 
 
-        public async Task<ShippingRequestPricingOutputforView> GetAllShippingRequestPricingForView(long shippingRequestId )
+        public async Task<ShippingRequestPricingOutputforView> GetAllShippingRequestPricingForView(long shippingRequestId)
         {
-            var  pricedShippingRequest= new ShippingRequestPricingOutputforView();
+            var pricedShippingRequest = new ShippingRequestPricingOutputforView();
             var carrierId = AbpSession.TenantId;
 
             pricedShippingRequest.PricedVasesList = await _shippingRequestVasRepository.GetAll().Include(x => x.VasFk).Include(s => s.ShippingRequestFk).Where(z => z.ShippingRequestId == shippingRequestId)
-                .Select(x=> new ShippingRequestVasPriceDto
+                .Select(x => new ShippingRequestVasPriceDto
                 {
-                    ActualPrice= x.ActualPrice,
-                    ShippingRequestVasId=x.Id,
-                    
-                    
-                    ShippingRequestVas= new ShippingRequestVasListDto
+                    ActualPrice = x.ActualPrice,
+                    ShippingRequestVasId = x.Id,
+
+
+                    ShippingRequestVas = new ShippingRequestVasListDto
                     {
-                        VasName= x.VasFk.Name,
-                        MaxAmount= x.RequestMaxAmount,
-                        MaxCount= x.RequestMaxCount,
+                        VasName = x.VasFk.Name,
+                        MaxAmount = x.RequestMaxAmount,
+                        MaxCount = x.RequestMaxCount,
                     }
                 }
             ).ToListAsync();
 
-            var shippingRequest  = await _shippingRequestRepository.FirstOrDefaultAsync(x=>x.Id ==shippingRequestId);
+            var shippingRequest = await _shippingRequestRepository.FirstOrDefaultAsync(x => x.Id == shippingRequestId);
             pricedShippingRequest.ShippingRequestPrice = shippingRequest.Price.Value;
-            return  pricedShippingRequest;
+            return pricedShippingRequest;
         }
 
         #region Truck Category DropDowns
