@@ -53,6 +53,8 @@ namespace TACHYON.Shipping.ShippingRequests.Dtos
         //VasList
         public List<ShippingRequestVasListDto> ShippingRequestVasList { get; set; }
 
+        //GoodsDetails
+        public List<CreateOrEditGoodsDetailDto> GoodsDetailS { get; set; }
 
 
 

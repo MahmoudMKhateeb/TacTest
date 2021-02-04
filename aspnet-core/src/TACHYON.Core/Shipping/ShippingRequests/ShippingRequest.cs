@@ -161,6 +161,7 @@ namespace TACHYON.Shipping.ShippingRequests
 
         public ICollection<ShippingRequestBid> ShippingRequestBids { get; set; }
         public ICollection<ShippingRequestVas> ShippingRequestVases { get; set; }
+        public ICollection<GoodsDetail> GoodsDetailS { get; set; }
         #endregion
 
         public ShippingRequest()
