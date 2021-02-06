@@ -1,0 +1,79 @@
+<div class="card card-custom">
+  <div class="card-header">
+    <h3 class="card-title">
+      Route Steps
+    </h3>
+  </div>
+  <!--begin::Form-->
+  <form class="form">
+    <div class="card-body">
+      <div class="row">
+        <div class="col-lg-6">
+          <div class="form-group">
+            <div class="alert alert-custom alert-default" role="alert">
+              <div class="alert-icon"><i class="flaticon-warning text-primary"></i></div>
+              <div class="alert-text">Source</div>
+            </div>
+          </div>
+          <div class="form-group">
+            <label>DisplayName</label>
+            <div class="input-icon input-icon-right">
+              <input type="text" class="form-control" placeholder="DisplayName" name="DisplayName" />
+            </div>
+          </div>
+          <div class="form-group">
+            <label>pickingType</label>
+            <div class="input-icon input-icon-right">
+              <select name="PickingType" class="form-control">
+                <option value="">{{ l('SelectPickingType') }}</option>
+                <option>PickUp</option>
+                <option>Drop</option>
+              </select>
+            </div>
+          </div>
+          <div class="form-group">
+            <label>amount</label>
+            <div class="input-icon input-icon-right">
+              <input type="text" class="form-control" placeholder="amount" name="amount" />
+            </div>
+          </div>
+        </div>
+        <div class="vertical-separator"></div>
+        <div class="col-lg-6">
+          <div class="form-group">
+            <div class="alert alert-custom alert-default" role="alert">
+              <div class="alert-icon"><i class="flaticon-warning text-primary"></i></div>
+              <div class="alert-text">Destination</div>
+            </div>
+          </div>
+          <div class="form-group">
+            <label>DisplayName</label>
+            <div class="input-icon input-icon-right">
+              <input type="text" class="form-control" placeholder="DisplayName" name="DisplayName" />
+            </div>
+          </div>
+          <div class="form-group">
+            <label>pickingType</label>
+            <div class="input-icon input-icon-right">
+              <select name="PickingType" class="form-control">
+                <option value="">{{ l('SelectPickingType') }}</option>
+                <option>PickUp</option>
+                <option>Drop</option>
+              </select>
+            </div>
+          </div>
+          <div class="form-group">
+            <label>amount</label>
+            <div class="input-icon input-icon-right">
+              <input type="text" class="form-control" placeholder="amount" name="amount" />
+            </div>
+          </div>
+        </div>
+        <div class="col-lg-12">
+          <button type="reset" class="btn btn-primary mr-2 mt-2 float-right" (click)="changeDetectorz()">Add New RouteStep</button>
+        </div>
+      </div>
+    </div>
+  </form>
+  <!--end::Form-->
+</div>

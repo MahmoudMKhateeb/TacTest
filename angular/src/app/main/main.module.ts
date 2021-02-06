@@ -156,6 +156,7 @@ import { ViewAllCarrierBidsComponent } from '@app/main/marketPlace/marketPlace/V
 import { RejectionReasonModalComponent } from './documentFiles/documentFiles/rejectionReason-modal.component';
 import { ViewShippingRequestPriceResponseModalComponent } from './shippingRequests/shippingRequests/shipping-request-Response/view-shipping-request-response-modal.component';
 import { ListboxModule, MultiSelectModule, PickListModule } from '@node_modules/primeng';
+import { RouteStepsForCreateShippingRequstComponent } from '@app/main/shippingRequests/shippingRequests/ShippingRequestRouteSteps/RouteStepsForCreateShippingRequst.component';
 
 NgxBootstrapDatePickerConfigService.registerNgxBootstrapDatePickerLocales();
 
@@ -319,6 +320,7 @@ NgxBootstrapDatePickerConfigService.registerNgxBootstrapDatePickerLocales();
     MarketplaceComponent,
     ViewShippingRequestDetailsComponent,
     ViewAllCarrierBidsComponent,
+    RouteStepsForCreateShippingRequstComponent,
   ],
   providers: [
     { provide: BsDatepickerConfig, useFactory: NgxBootstrapDatePickerConfigService.getDatepickerConfig },

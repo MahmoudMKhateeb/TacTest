@@ -33,6 +33,7 @@ import { VasForCreateShippingRequstModalComponent } from '@app/main/shippingRequ
 import * as moment from '@node_modules/moment';
 import { LazyLoadEvent } from '@node_modules/primeng/public_api';
 import { CreateOrEditGoodsDetailModalComponent } from '@app/main/goodsDetails/goodsDetails/create-or-edit-goodsDetail-modal.component';
+import { CreateOrEditRoutStepModalComponent } from '@app/main/routSteps/routSteps/create-or-edit-routStep-modal.component';
 
 @Component({
   templateUrl: './create-or-edit-shippingRequest.component.html',
@@ -49,6 +50,7 @@ export class CreateOrEditShippingRequestComponent extends AppComponentBase imple
   @ViewChild('staticModal') public staticModal: ModalDirective;
   @ViewChild('createFacilityModal') public createFacilityModal: ModalDirective;
   @ViewChild('createOrEditGoodsDetailModal') public createOrEditGoodsDetailModal: CreateOrEditGoodsDetailModalComponent;
+  @ViewChild('routeStepsForShippingRequest') public RouteStepsForCreateShippingRequest: CreateOrEditRoutStepModalComponent;
   @ViewChild('VasForCreateShippingRequstModalComponent', { static: true })
   VasForCreateShippingRequstModalComponent: VasForCreateShippingRequstModalComponent;
 
@@ -85,6 +87,7 @@ export class CreateOrEditShippingRequestComponent extends AppComponentBase imple
   fakeendtDateinput: any;
   truckTypeLoading: boolean;
   capacityLoading: boolean;
+  //createOrEditRoutStepsDtos: CreateOrEditRoutStepDto[] = [];
   constructor(
     injector: Injector,
     private _activatedRoute: ActivatedRoute,
