@@ -152,14 +152,16 @@ namespace TACHYON.Goods.GoodCategories
             return _goodCategoriesExcelExporter.ExportToFile(goodCategoryListDtos);
         }
 
+        
         public async Task<List<GetAllGoodsCategoriesForDropDownOutput>> GetAllGoodsCategoriesForDropDown()
         {
-            return await  _goodCategoryRepository.GetAll().Select(x => new GetAllGoodsCategoriesForDropDownOutput
+            return await  _goodCategoryRepository.GetAll()
+                .Select(x => new GetAllGoodsCategoriesForDropDownOutput
             {
                 DisplayName = x.DisplayName,
                 Id = x.Id
             }).ToListAsync();
         }
-
+        
     }
 }
