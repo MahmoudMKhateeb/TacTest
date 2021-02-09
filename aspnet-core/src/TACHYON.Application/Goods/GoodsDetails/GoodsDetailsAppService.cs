@@ -195,9 +195,10 @@ namespace TACHYON.Goods.GoodsDetails
 
 
         [AbpAuthorize(AppPermissions.Pages_GoodsDetails)]
-        public async Task<List<GoodsDetailGoodCategoryLookupTableDto>> GetAllGoodCategoryForTableDropdown()
+        public async Task<List<GoodsDetailGoodCategoryLookupTableDto>> GetAllGoodCategoryForTableDropdown(int? fatherId)
         {
             return await _lookup_goodCategoryRepository.GetAll()
+                .Where(x=>x.FatherId==fatherId)
                 .Select(goodCategory => new GoodsDetailGoodCategoryLookupTableDto
                 {
                     Id = goodCategory.Id,
