@@ -23,6 +23,6 @@ namespace TACHYON.Goods.GoodCategories
 
         Task<FileDto> GetGoodCategoriesToExcel(GetAllGoodCategoriesForExcelInput input);
 
-        Task<List<GetAllGoodsCategoriesForDropDownOutput>> GetAllGoodsCategoriesForDropDown(int? fatherId);
+        Task<List<GetAllGoodsCategoriesForDropDownOutput>> GetAllGoodsCategoriesForDropDown();
     }
 }
