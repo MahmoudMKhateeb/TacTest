@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using Abp.Domain.Repositories;
 using TACHYON.DataExporting;
 using TACHYON.Dto;
+using TACHYON.Goods.GoodsDetails;
 using TACHYON.Shipping.ShippingRequests;
 using TACHYON.Trucks;
 
@@ -17,12 +18,17 @@ namespace TACHYON.Waybills
         private readonly PdfExporterBase _pdfExporterBase;
         private readonly IRepository<Truck, long> _trucksRepository;
         private readonly ShippingRequestsAppService _shippingRequestAppService;
+        private readonly GoodsDetailsAppService _goodsDetailsAppService;
 
-        public WaybillsAppService(PdfExporterBase pdfExporterBase, IRepository<Truck, long> trucksRepository, ShippingRequestsAppService shippingRequestAppService)
+        public WaybillsAppService(PdfExporterBase pdfExporterBase,
+            IRepository<Truck, long> trucksRepository,
+            ShippingRequestsAppService shippingRequestAppService,
+                GoodsDetailsAppService goodsDetailsAppService)
         {
             _pdfExporterBase = pdfExporterBase;
             _trucksRepository = trucksRepository;
             _shippingRequestAppService = shippingRequestAppService;
+            _goodsDetailsAppService = goodsDetailsAppService;
         }
         /// <summary>
         /// 
@@ -33,21 +39,27 @@ namespace TACHYON.Waybills
         {
             var reportPath = "/Waybills/Reports/Single_Drop_Waybill.rdlc";
            
-            var list = _trucksRepository.GetAll()
-                .Select(x => new
-                {
-                    x.ModelName,
-                    x.ModelYear,
-                    x.PlateNumber,
-                    x.CreatorUserId
-                }).Where(t =>t.PlateNumber != PlateNumber && t.CreatorUserId !=null).ToList();
+            //var list = _trucksRepository.GetAll()
+            //    .Select(x => new
+            //    {
+            //        x.ModelName,
+            //        x.ModelYear,
+            //        x.PlateNumber,
+            //        x.CreatorUserId
+            //    }).Where(t =>t.PlateNumber != PlateNumber && t.CreatorUserId !=null).ToList();
 
             ArrayList names = new ArrayList();
             ArrayList data = new ArrayList();
 
-            names.Add("DataSet1");
-            data.Add(list);
-            
+            names.Add("SingleDropDataSet");
+            data.Add(_shippingRequestAppService.GetSingleDropWaybill());
+
+            names.Add("SingleDropGoodsDetailsDataSet");
+            data.Add(_goodsDetailsAppService.GetShippingrequestGoodsDetailsForSingleDropWaybill());
+
+            names.Add("SingleDropVasDataSet");
+            data.Add(_shippingRequestAppService.GetShippingRequestVasesForSingleDropWaybill());
+
             return _pdfExporterBase.CreateRdlcPdfPackageFromList("Single_Drop_Waybill", reportPath, names, data);
         }
 

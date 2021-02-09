@@ -3092,7 +3092,7 @@
             <Top>6.8009in</Top>
             <Left>5.07831in</Left>
             <Height>0.36935in</Height>
-            <Width>1.43711in</Width>
+            <Width>1.48262in</Width>
             <ZIndex>61</ZIndex>
             <Style>
               <Border>
@@ -3124,9 +3124,9 @@
             </Paragraphs>
             <rd:DefaultName>Textbox82</rd:DefaultName>
             <Top>6.8009in</Top>
-            <Left>6.52204in</Left>
+            <Left>6.63037in</Left>
             <Height>0.36935in</Height>
-            <Width>1.77927in</Width>
+            <Width>1.67094in</Width>
             <ZIndex>62</ZIndex>
             <Style>
               <Border>
@@ -4241,7 +4241,7 @@
               <Paragraph>
                 <TextRuns>
                   <TextRun>
-                    <Value />
+                    <Value>=First(Fields!Date.Value, "DataSet1")</Value>
                     <Style />
                   </TextRun>
                 </TextRuns>
@@ -4952,7 +4952,7 @@
                 <Paragraph>
                   <TextRuns>
                     <TextRun>
-                      <Value>="*"+First(Fields!MasterWaybillNo.Value, "DataSet1")+"*"</Value>
+                      <Value>=First(Fields!MasterWaybillNo.Value, "DataSet1")</Value>
                       <Style>
                         <FontFamily>Free 3 of 9</FontFamily>
                         <FontSize>22pt</FontSize>

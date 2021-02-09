@@ -45,11 +45,38 @@
       <AutoGen>True</AutoGen>
       <DependentUpon>DataSet1.xsd</DependentUpon>
     </Compile>
+    <Compile Update="Waybills\Reports\SingleDropDataSet.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>SingleDropDataSet.xsd</DependentUpon>
+    </Compile>
+    <Compile Update="Waybills\Reports\SingleDropGoodsDetailsDataSet.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>SingleDropGoodsDetailsDataSet.xsd</DependentUpon>
+    </Compile>
+    <Compile Update="Waybills\Reports\SingleDropVasDataSet.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>SingleDropVasDataSet.xsd</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <None Update="Waybills\Reports\DataSet1.xsd">
       <Generator>MSDataSetGenerator</Generator>
       <LastGenOutput>DataSet1.Designer.cs</LastGenOutput>
+    </None>
+    <None Update="Waybills\Reports\SingleDropDataSet.xsd">
+      <Generator>MSDataSetGenerator</Generator>
+      <LastGenOutput>SingleDropDataSet.Designer.cs</LastGenOutput>
+    </None>
+    <None Update="Waybills\Reports\SingleDropGoodsDetailsDataSet.xsd">
+      <Generator>MSDataSetGenerator</Generator>
+      <LastGenOutput>SingleDropGoodsDetailsDataSet.Designer.cs</LastGenOutput>
+    </None>
+    <None Update="Waybills\Reports\SingleDropVasDataSet.xsd">
+      <Generator>MSDataSetGenerator</Generator>
+      <LastGenOutput>SingleDropVasDataSet.Designer.cs</LastGenOutput>
     </None>
   </ItemGroup>
 </Project>

@@ -176,11 +176,10 @@
           <Paragraph>
             <TextRuns>
               <TextRun>
-                <Value />
+                <Value>=First(Fields!Area.Value, "SingleDropDataSet")</Value>
                 <Style>
                   <FontFamily>microsoft sans Serif</FontFamily>
-                  <FontSize>15.5pt</FontSize>
-                  <FontWeight>Bold</FontWeight>
+                  <FontSize>14pt</FontSize>
                   <Color>#282828</Color>
                 </Style>
               </TextRun>
@@ -215,11 +214,10 @@
           <Paragraph>
             <TextRuns>
               <TextRun>
-                <Value />
+                <Value>=First(Fields!CityName.Value, "SingleDropDataSet")</Value>
                 <Style>
                   <FontFamily>microsoft sans Serif</FontFamily>
-                  <FontSize>15.5pt</FontSize>
-                  <FontWeight>Bold</FontWeight>
+                  <FontSize>14pt</FontSize>
                   <Color>#282828</Color>
                 </Style>
               </TextRun>
@@ -254,11 +252,10 @@
           <Paragraph>
             <TextRuns>
               <TextRun>
-                <Value />
+                <Value>=First(Fields!CountryName.Value, "SingleDropDataSet")</Value>
                 <Style>
                   <FontFamily>microsoft sans Serif</FontFamily>
-                  <FontSize>15.5pt</FontSize>
-                  <FontWeight>Bold</FontWeight>
+                  <FontSize>14pt</FontSize>
                   <Color>#282828</Color>
                 </Style>
               </TextRun>
@@ -293,11 +290,10 @@
           <Paragraph>
             <TextRuns>
               <TextRun>
-                <Value />
+                <Value>=First(Fields!FacilityName.Value, "SingleDropDataSet")</Value>
                 <Style>
                   <FontFamily>microsoft sans Serif</FontFamily>
-                  <FontSize>15.5pt</FontSize>
-                  <FontWeight>Bold</FontWeight>
+                  <FontSize>14pt</FontSize>
                   <Color>#282828</Color>
                 </Style>
               </TextRun>
@@ -631,7 +627,7 @@
                 </Style>
               </TextRun>
               <TextRun>
-                <Value>                               :</Value>
+                <Value>                              :</Value>
                 <Style>
                   <FontFamily>microsoft sans Serif</FontFamily>
                   <FontSize>15.5pt</FontSize>
@@ -1404,7 +1400,7 @@
                         <Paragraph>
                           <TextRuns>
                             <TextRun>
-                              <Value>=RowNumber(nothing)</Value>
+                              <Value>=RowNumber(Nothing)</Value>
                               <Style />
                             </TextRun>
                           </TextRuns>
@@ -1429,14 +1425,14 @@
                 </TablixCell>
                 <TablixCell>
                   <CellContents>
-                    <Textbox Name="PlateNumber">
+                    <Textbox Name="Description">
                       <CanGrow>true</CanGrow>
                       <KeepTogether>true</KeepTogether>
                       <Paragraphs>
                         <Paragraph>
                           <TextRuns>
                             <TextRun>
-                              <Value>=Fields!PlateNumber.Value</Value>
+                              <Value>=Fields!Description.Value</Value>
                               <Style />
                             </TextRun>
                           </TextRuns>
@@ -1445,7 +1441,7 @@
                           </Style>
                         </Paragraph>
                       </Paragraphs>
-                      <rd:DefaultName>PlateNumber</rd:DefaultName>
+                      <rd:DefaultName>Description</rd:DefaultName>
                       <Style>
                         <Border>
                           <Color>LightGrey</Color>
@@ -1461,14 +1457,14 @@
                 </TablixCell>
                 <TablixCell>
                   <CellContents>
-                    <Textbox Name="ModelYear">
+                    <Textbox Name="TotalAmount">
                       <CanGrow>true</CanGrow>
                       <KeepTogether>true</KeepTogether>
                       <Paragraphs>
                         <Paragraph>
                           <TextRuns>
                             <TextRun>
-                              <Value>=Fields!ModelYear.Value</Value>
+                              <Value>=Fields!TotalAmount.Value</Value>
                               <Style />
                             </TextRun>
                           </TextRuns>
@@ -1477,7 +1473,7 @@
                           </Style>
                         </Paragraph>
                       </Paragraphs>
-                      <rd:DefaultName>ModelYear</rd:DefaultName>
+                      <rd:DefaultName>TotalAmount</rd:DefaultName>
                       <Style>
                         <Border>
                           <Color>LightGrey</Color>
@@ -1493,14 +1489,14 @@
                 </TablixCell>
                 <TablixCell>
                   <CellContents>
-                    <Textbox Name="ModelName">
+                    <Textbox Name="UnitOfMeasureDisplayName">
                       <CanGrow>true</CanGrow>
                       <KeepTogether>true</KeepTogether>
                       <Paragraphs>
                         <Paragraph>
                           <TextRuns>
                             <TextRun>
-                              <Value>=Fields!ModelName.Value</Value>
+                              <Value>=Fields!UnitOfMeasureDisplayName.Value</Value>
                               <Style />
                             </TextRun>
                           </TextRuns>
@@ -1509,7 +1505,7 @@
                           </Style>
                         </Paragraph>
                       </Paragraphs>
-                      <rd:DefaultName>ModelName</rd:DefaultName>
+                      <rd:DefaultName>UnitOfMeasureDisplayName</rd:DefaultName>
                       <Style>
                         <Border>
                           <Color>LightGrey</Color>
@@ -1545,7 +1541,7 @@
         </TablixRowHierarchy>
         <RepeatColumnHeaders>true</RepeatColumnHeaders>
         <RepeatRowHeaders>true</RepeatRowHeaders>
-        <DataSetName>DataSet1</DataSetName>
+        <DataSetName>SingleDropGoodsDetailsDataSet</DataSetName>
         <Top>8.01791in</Top>
         <Left>0.22653in</Left>
         <Height>0.9236in</Height>
@@ -1928,7 +1924,9 @@
                           <TextRuns>
                             <TextRun>
                               <Value>=RowNumber(nothing)</Value>
-                              <Style />
+                              <Style>
+                                <FontSize>14pt</FontSize>
+                              </Style>
                             </TextRun>
                           </TextRuns>
                           <Style>
@@ -1960,8 +1958,10 @@
                         <Paragraph>
                           <TextRuns>
                             <TextRun>
-                              <Value>=Fields!PlateNumber.Value</Value>
-                              <Style />
+                              <Value>=Fields!VasName.Value</Value>
+                              <Style>
+                                <FontSize>14pt</FontSize>
+                              </Style>
                             </TextRun>
                           </TextRuns>
                           <Style>
@@ -1993,8 +1993,10 @@
                         <Paragraph>
                           <TextRuns>
                             <TextRun>
-                              <Value>=Fields!ModelName.Value</Value>
-                              <Style />
+                              <Value>=Fields!Count.Value</Value>
+                              <Style>
+                                <FontSize>14pt</FontSize>
+                              </Style>
                             </TextRun>
                           </TextRuns>
                           <Style>
@@ -2026,8 +2028,10 @@
                         <Paragraph>
                           <TextRuns>
                             <TextRun>
-                              <Value>=Fields!ModelYear.Value</Value>
-                              <Style />
+                              <Value>=Fields!Amount.Value</Value>
+                              <Style>
+                                <FontSize>14pt</FontSize>
+                              </Style>
                             </TextRun>
                           </TextRuns>
                           <Style>
@@ -2083,7 +2087,7 @@
             </TablixMember>
           </TablixMembers>
         </TablixRowHierarchy>
-        <DataSetName>DataSet1</DataSetName>
+        <DataSetName>SingleDropVasDataSet</DataSetName>
         <Top>11.67586in</Top>
         <Left>0.22653in</Left>
         <Height>0.91666in</Height>
@@ -2407,7 +2411,7 @@
           <Paragraph>
             <TextRuns>
               <TextRun>
-                <Value>1234567</Value>
+                <Value>=First(Fields!MasterWaybillNo.Value, "SingleDropDataSet")</Value>
                 <Style />
               </TextRun>
             </TextRuns>
@@ -2627,7 +2631,7 @@
           <Paragraph>
             <TextRuns>
               <TextRun>
-                <Value>True</Value>
+                <Value>=First(Fields!ShippingRequestStatus.Value, "SingleDropDataSet")</Value>
                 <Style />
               </TextRun>
             </TextRuns>
@@ -2773,7 +2777,7 @@
           <Paragraph>
             <TextRuns>
               <TextRun>
-                <Value>13/01/2021</Value>
+                <Value>=First(Fields!StartTripDate.Value, "SingleDropDataSet")</Value>
                 <Style />
               </TextRun>
             </TextRuns>
@@ -2948,7 +2952,7 @@
           <Paragraph>
             <TextRuns>
               <TextRun>
-                <Value>Company -1</Value>
+                <Value>=First(Fields!ReceiverCompanyName.Value, "SingleDropDataSet")</Value>
                 <Style />
               </TextRun>
             </TextRuns>
@@ -3123,7 +3127,7 @@
           <Paragraph>
             <TextRuns>
               <TextRun>
-                <Value>Company -1</Value>
+                <Value>=First(Fields!SenderCompanyName.Value, "SingleDropDataSet")</Value>
                 <Style />
               </TextRun>
             </TextRuns>
@@ -3257,7 +3261,7 @@
           <Paragraph>
             <TextRuns>
               <TextRun>
-                <Value>Company -1</Value>
+                <Value>=First(Fields!SenderContactName.Value, "SingleDropDataSet")</Value>
                 <Style />
               </TextRun>
             </TextRuns>
@@ -3429,7 +3433,7 @@
           <Paragraph>
             <TextRuns>
               <TextRun>
-                <Value>  Company -1</Value>
+                <Value>=First(Fields!ReceiverContactName.Value, "SingleDropDataSet")</Value>
                 <Style />
               </TextRun>
             </TextRuns>
@@ -3507,7 +3511,7 @@
           <Paragraph>
             <TextRuns>
               <TextRun>
-                <Value />
+                <Value>=First(Fields!SenderMobile.Value, "SingleDropDataSet")</Value>
                 <Style />
               </TextRun>
             </TextRuns>
@@ -3626,7 +3630,7 @@
           <Paragraph>
             <TextRuns>
               <TextRun>
-                <Value />
+                <Value>=First(Fields!ReceiverMobile.Value, "SingleDropDataSet")</Value>
                 <Style />
               </TextRun>
             </TextRuns>
@@ -4060,7 +4064,7 @@
           <Paragraph>
             <TextRuns>
               <TextRun>
-                <Value />
+                <Value>=First(Fields!TruckTypeDisplayName.Value, "SingleDropDataSet")</Value>
                 <Style />
               </TextRun>
             </TextRuns>
@@ -4190,7 +4194,7 @@
           <Paragraph>
             <TextRuns>
               <TextRun>
-                <Value />
+                <Value>=First(Fields!DriverName.Value, "SingleDropDataSet")</Value>
                 <Style />
               </TextRun>
             </TextRuns>
@@ -4277,9 +4281,9 @@
         </Paragraphs>
         <rd:DefaultName>Textbox3</rd:DefaultName>
         <Top>6.73428in</Top>
-        <Left>8.34943in</Left>
+        <Left>8.42443in</Left>
         <Height>0.36935in</Height>
-        <Width>1.33842in</Width>
+        <Width>1.26342in</Width>
         <ZIndex>73</ZIndex>
         <Style>
           <Border>
@@ -4331,7 +4335,7 @@
         <Top>6.73428in</Top>
         <Left>5.06601in</Left>
         <Height>0.36935in</Height>
-        <Width>1.43711in</Width>
+        <Width>1.49929in</Width>
         <ZIndex>74</ZIndex>
         <Style>
           <Border>
@@ -4352,7 +4356,7 @@
           <Paragraph>
             <TextRuns>
               <TextRun>
-                <Value />
+                <Value>=First(Fields!PlateNumber.Value, "SingleDropDataSet")</Value>
                 <Style />
               </TextRun>
             </TextRuns>
@@ -4363,7 +4367,7 @@
         </Paragraphs>
         <rd:DefaultName>Textbox82</rd:DefaultName>
         <Top>6.73428in</Top>
-        <Left>6.50974in</Left>
+        <Left>6.63474in</Left>
         <Height>0.36935in</Height>
         <Width>1.77927in</Width>
         <ZIndex>75</ZIndex>
@@ -4514,7 +4518,7 @@
           <Paragraph>
             <TextRuns>
               <TextRun>
-                <Value />
+                <Value>=First(Fields!DriverIqamaNo.Value, "SingleDropDataSet")</Value>
                 <Style />
               </TextRun>
             </TextRuns>
@@ -4634,7 +4638,7 @@
           <Paragraph>
             <TextRuns>
               <TextRun>
-                <Value />
+                <Value>=First(Fields!TotalWeight.Value, "SingleDropGoodsDetailsDataSet")</Value>
                 <Style />
               </TextRun>
             </TextRuns>
@@ -4741,7 +4745,7 @@
           <Paragraph>
             <TextRuns>
               <TextRun>
-                <Value />
+                <Value>=First(Fields!PackingTypeDisplayName.Value, "SingleDropDataSet")</Value>
                 <Style />
               </TextRun>
             </TextRuns>
@@ -4969,7 +4973,7 @@
           <Paragraph>
             <TextRuns>
               <TextRun>
-                <Value />
+                <Value>=First(Fields!NumberOfPacking.Value, "SingleDropDataSet")</Value>
                 <Style />
               </TextRun>
             </TextRuns>
@@ -5315,7 +5319,7 @@
           <Paragraph>
             <TextRuns>
               <TextRun>
-                <Value />
+                <Value>=First(Fields!Date.Value, "SingleDropDataSet")</Value>
                 <Style />
               </TextRun>
             </TextRuns>
@@ -5448,11 +5452,10 @@
           <Paragraph>
             <TextRuns>
               <TextRun>
-                <Value />
+                <Value>=First(Fields!DroppCountryName.Value, "SingleDropDataSet")</Value>
                 <Style>
                   <FontFamily>microsoft sans Serif</FontFamily>
-                  <FontSize>15.5pt</FontSize>
-                  <FontWeight>Bold</FontWeight>
+                  <FontSize>14pt</FontSize>
                   <Color>#282828</Color>
                 </Style>
               </TextRun>
@@ -5487,11 +5490,10 @@
           <Paragraph>
             <TextRuns>
               <TextRun>
-                <Value />
+                <Value>=First(Fields!DroppFacilityName.Value, "SingleDropDataSet")</Value>
                 <Style>
                   <FontFamily>microsoft sans Serif</FontFamily>
-                  <FontSize>15.5pt</FontSize>
-                  <FontWeight>Bold</FontWeight>
+                  <FontSize>14pt</FontSize>
                   <Color>#282828</Color>
                 </Style>
               </TextRun>
@@ -5644,11 +5646,10 @@
           <Paragraph>
             <TextRuns>
               <TextRun>
-                <Value />
+                <Value>=First(Fields!DroppArea.Value, "SingleDropDataSet")</Value>
                 <Style>
                   <FontFamily>microsoft sans Serif</FontFamily>
-                  <FontSize>15.5pt</FontSize>
-                  <FontWeight>Bold</FontWeight>
+                  <FontSize>14pt</FontSize>
                   <Color>#282828</Color>
                 </Style>
               </TextRun>
@@ -5683,11 +5684,10 @@
           <Paragraph>
             <TextRuns>
               <TextRun>
-                <Value />
+                <Value>=First(Fields!DroppCityName.Value, "SingleDropDataSet")</Value>
                 <Style>
                   <FontFamily>microsoft sans Serif</FontFamily>
-                  <FontSize>15.5pt</FontSize>
-                  <FontWeight>Bold</FontWeight>
+                  <FontSize>14pt</FontSize>
                   <Color>#282828</Color>
                 </Style>
               </TextRun>
@@ -5912,7 +5912,7 @@
                 </Style>
               </TextRun>
               <TextRun>
-                <Value>Country</Value>
+                <Value>Facility Name</Value>
                 <Style>
                   <FontStyle>Normal</FontStyle>
                   <FontFamily>Open Sans</FontFamily>
@@ -5934,7 +5934,7 @@
                 </Style>
               </TextRun>
               <TextRun>
-                <Value xml:space="preserve">                        </Value>
+                <Value xml:space="preserve">                </Value>
                 <Style>
                   <FontFamily>microsoft sans Serif</FontFamily>
                   <FontSize>15.5pt</FontSize>
@@ -6177,7 +6177,7 @@
                 </Style>
               </TextRun>
               <TextRun>
-                <Value>Country</Value>
+                <Value>Facility Name</Value>
                 <Style>
                   <FontStyle>Normal</FontStyle>
                   <FontFamily>Open Sans</FontFamily>
@@ -6199,7 +6199,7 @@
                 </Style>
               </TextRun>
               <TextRun>
-                <Value xml:space="preserve">                        </Value>
+                <Value xml:space="preserve">                </Value>
                 <Style>
                   <FontFamily>microsoft sans Serif</FontFamily>
                   <FontSize>15.5pt</FontSize>
@@ -6810,10 +6810,10 @@
             <Paragraph>
               <TextRuns>
                 <TextRun>
-                  <Value>12345678</Value>
+                  <Value>=First(Fields!MasterWaybillNo.Value, "SingleDropDataSet")</Value>
                   <Style>
                     <FontFamily>Free 3 of 9</FontFamily>
-                    <FontSize>38pt</FontSize>
+                    <FontSize>24pt</FontSize>
                     <Color>#282828</Color>
                   </Style>
                 </TextRun>
@@ -7213,38 +7213,235 @@
   </Page>
   <AutoRefresh>0</AutoRefresh>
   <DataSources>
-    <DataSource Name="DataSet1">
+    <DataSource Name="SingleDropDataSet">
       <ConnectionProperties>
         <DataProvider>System.Data.DataSet</DataProvider>
         <ConnectString>/* Local Connection */</ConnectString>
       </ConnectionProperties>
-      <rd:DataSourceID>38fb149c-8d26-4fde-ac41-88adcce7ca38</rd:DataSourceID>
+      <rd:DataSourceID>05f3cc63-04f6-476f-af0c-a615d39383cb</rd:DataSourceID>
+    </DataSource>
+    <DataSource Name="SingleDropGoodsDetails">
+      <ConnectionProperties>
+        <DataProvider>System.Data.DataSet</DataProvider>
+        <ConnectString>/* Local Connection */</ConnectString>
+      </ConnectionProperties>
+      <rd:DataSourceID>0087bb36-1616-45d6-afcd-3c28cb5ab42a</rd:DataSourceID>
+    </DataSource>
+    <DataSource Name="SingleDropVasDataSet">
+      <ConnectionProperties>
+        <DataProvider>System.Data.DataSet</DataProvider>
+        <ConnectString>/* Local Connection */</ConnectString>
+      </ConnectionProperties>
+      <rd:DataSourceID>47932b85-f6d1-4a8c-b9e0-eff3fcef2018</rd:DataSourceID>
+    </DataSource>
+    <DataSource Name="SingleDropGoodsDetailsDataSet">
+      <ConnectionProperties>
+        <DataProvider>System.Data.DataSet</DataProvider>
+        <ConnectString>/* Local Connection */</ConnectString>
+      </ConnectionProperties>
+      <rd:DataSourceID>c184d0a6-1415-42e5-85b0-62742772c38f</rd:DataSourceID>
     </DataSource>
   </DataSources>
   <DataSets>
-    <DataSet Name="DataSet1">
+    <DataSet Name="SingleDropDataSet">
       <Query>
-        <DataSourceName>DataSet1</DataSourceName>
+        <DataSourceName>SingleDropDataSet</DataSourceName>
         <CommandText>/* Local Query */</CommandText>
       </Query>
       <Fields>
-        <Field Name="ModelName">
-          <DataField>ModelName</DataField>
+        <Field Name="MasterWaybillNo">
+          <DataField>MasterWaybillNo</DataField>
           <rd:TypeName>System.String</rd:TypeName>
         </Field>
-        <Field Name="ModelYear">
-          <DataField>ModelYear</DataField>
+        <Field Name="Date">
+          <DataField>Date</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="ShippingRequestStatus">
+          <DataField>ShippingRequestStatus</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="InvoiceNumber">
+          <DataField>InvoiceNumber</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="ShipperReference">
+          <DataField>ShipperReference</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="SenderCompanyName">
+          <DataField>SenderCompanyName</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="SenderContactName">
+          <DataField>SenderContactName</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="SenderMobile">
+          <DataField>SenderMobile</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="ReceiverCompanyName">
+          <DataField>ReceiverCompanyName</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="ReceiverContactName">
+          <DataField>ReceiverContactName</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="ReceiverMobile">
+          <DataField>ReceiverMobile</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="DriverIqamaNo">
+          <DataField>DriverIqamaNo</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="TruckTypeDisplayName">
+          <DataField>TruckTypeDisplayName</DataField>
           <rd:TypeName>System.String</rd:TypeName>
         </Field>
         <Field Name="PlateNumber">
           <DataField>PlateNumber</DataField>
           <rd:TypeName>System.String</rd:TypeName>
         </Field>
+        <Field Name="IsMultipDrops">
+          <DataField>IsMultipDrops</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="DriverName">
+          <DataField>DriverName</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="TotalDrops">
+          <DataField>TotalDrops</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="PackingTypeDisplayName">
+          <DataField>PackingTypeDisplayName</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="NumberOfPacking">
+          <DataField>NumberOfPacking</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="FacilityName">
+          <DataField>FacilityName</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="CityName">
+          <DataField>CityName</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="Area">
+          <DataField>Area</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="StartTripDate">
+          <DataField>StartTripDate</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="CountryName">
+          <DataField>CountryName</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="DroppFacilityName">
+          <DataField>DroppFacilityName</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="DroppCountryName">
+          <DataField>DroppCountryName</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="DroppCityName">
+          <DataField>DroppCityName</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="DroppArea">
+          <DataField>DroppArea</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
       </Fields>
       <rd:DataSetInfo>
-        <rd:DataSetName>DataSet1</rd:DataSetName>
-        <rd:SchemaPath>C:\Users\hp\source\tachyon-core\aspnet-core\src\TACHYON.Application\Waybills\Reports\DataSet1.xsd</rd:SchemaPath>
-        <rd:TableName>Trucks</rd:TableName>
+        <rd:DataSetName>SingleDropDataSet</rd:DataSetName>
+        <rd:SchemaPath>C:\Users\tasneem\source\repos\tachyonhub\tachyon-core\aspnet-core\src\TACHYON.Application\Waybills\Reports\SingleDropDataSet.xsd</rd:SchemaPath>
+        <rd:TableName>DataTable1</rd:TableName>
+        <rd:TableAdapterFillMethod />
+        <rd:TableAdapterGetDataMethod />
+        <rd:TableAdapterName />
+      </rd:DataSetInfo>
+    </DataSet>
+    <DataSet Name="SingleDropVasDataSet">
+      <Query>
+        <DataSourceName>SingleDropVasDataSet</DataSourceName>
+        <CommandText>/* Local Query */</CommandText>
+      </Query>
+      <Fields>
+        <Field Name="VasName">
+          <DataField>VasName</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="Amount">
+          <DataField>Amount</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="Count">
+          <DataField>Count</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+      </Fields>
+      <rd:DataSetInfo>
+        <rd:DataSetName>SingleDropVasDataSet</rd:DataSetName>
+        <rd:SchemaPath>C:\Users\tasneem\source\repos\tachyonhub\tachyon-core\aspnet-core\src\TACHYON.Application\Waybills\Reports\SingleDropVasDataSet.xsd</rd:SchemaPath>
+        <rd:TableName>DataTable1</rd:TableName>
+        <rd:TableAdapterFillMethod />
+        <rd:TableAdapterGetDataMethod />
+        <rd:TableAdapterName />
+      </rd:DataSetInfo>
+    </DataSet>
+    <DataSet Name="SingleDropGoodsDetailsDataSet">
+      <Query>
+        <DataSourceName>SingleDropGoodsDetailsDataSet</DataSourceName>
+        <CommandText>/* Local Query */</CommandText>
+      </Query>
+      <Fields>
+        <Field Name="Name">
+          <DataField>Name</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="Description">
+          <DataField>Description</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="TotalAmount">
+          <DataField>TotalAmount</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="GoodCategoryDisplayName">
+          <DataField>GoodCategoryDisplayName</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="UnitOfMeasureDisplayName">
+          <DataField>UnitOfMeasureDisplayName</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="PackingType">
+          <DataField>PackingType</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="NumberOfPacking">
+          <DataField>NumberOfPacking</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="TotalWeight">
+          <DataField>TotalWeight</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+      </Fields>
+      <rd:DataSetInfo>
+        <rd:DataSetName>SingleDropGoodsDetailsDataSet</rd:DataSetName>
+        <rd:SchemaPath>C:\Users\tasneem\source\repos\tachyonhub\tachyon-core\aspnet-core\src\TACHYON.Application\Waybills\Reports\SingleDropGoodsDetailsDataSet.xsd</rd:SchemaPath>
+        <rd:TableName>DataTable1</rd:TableName>
         <rd:TableAdapterFillMethod />
         <rd:TableAdapterGetDataMethod />
         <rd:TableAdapterName />

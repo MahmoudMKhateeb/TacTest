@@ -14,6 +14,7 @@ using Abp.Linq.Extensions;
 using Abp.Runtime.Session;
 using Abp.Timing;
 using Abp.UI;
+using Castle.MicroKernel.ModelBuilder.Descriptors;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Rest;
 using NUglify.Helpers;
@@ -27,6 +28,7 @@ using TACHYON.MultiTenancy;
 using TACHYON.Notifications;
 using TACHYON.Packing.PackingTypes;
 using TACHYON.Routs;
+using TACHYON.Routs.RoutPoints;
 using TACHYON.Routs.Dtos;
 using TACHYON.Routs.RoutPoints.Dtos;
 using TACHYON.Routs.RoutSteps;
@@ -70,9 +72,7 @@ namespace TACHYON.Shipping.ShippingRequests
             IRepository<VasPrice> vasPriceRepository,
             IRepository<Port, long> lookupPortRepository, IRepository<ShippingRequestBid, long> shippingRequestBidRepository,
             BidDomainService bidDomainService,
-            IRepository<Capacity, int> capacityRepository, IRepository<TransportType, int> transportTypeRepository
-
-        )
+            IRepository<Capacity, int> capacityRepository, IRepository<TransportType, int> transportTypeRepository, IRepository<RoutPoint, long> routPointRepository)
         {
             _vasPriceRepository = vasPriceRepository;
             _shippingRequestRepository = shippingRequestRepository;
@@ -92,6 +92,7 @@ namespace TACHYON.Shipping.ShippingRequests
             _shippingRequestVasRepository = shippingRequestVasRepository;
             _capacityRepository = capacityRepository;
             _transportTypeRepository = transportTypeRepository;
+            _routPointRepository = routPointRepository;
         }
 
         private readonly IRepository<VasPrice> _vasPriceRepository;
@@ -101,6 +102,10 @@ namespace TACHYON.Shipping.ShippingRequests
         private readonly IRepository<UnitOfMeasure, int> _unitOfMeasureRepository;
         private readonly IRepository<Vas, int> _lookup_vasRepository;
         private readonly IRepository<ShippingRequestVas, long> _shippingRequestVasRepository;
+
+        private readonly IRepository<Route, int> _lookup_routeRepository;
+        private readonly IRepository<RoutStep, long> _routStepRepository;
+        private readonly IRepository<RoutPoint, long> _routPointRepository;
         private readonly IAppNotifier _appNotifier;
         private readonly IRepository<Tenant> _tenantRepository;
         private readonly IRepository<TrucksType, long> _lookup_trucksTypeRepository;
@@ -803,60 +808,173 @@ namespace TACHYON.Shipping.ShippingRequests
         #endregion
         public IEnumerable<GetMasterWaybillOutput> GetMasterWaybill()
         {
-            var info =  _shippingRequestRepository.GetAll()
-               .Where(e => e.Id == 1)
-               .Include(x => x.Tenant)
-               .Include(x => x.RoutSteps)
-               .ThenInclude(x => x.SourceRoutPointFk)
-               .ThenInclude(x => x.FacilityFk)
-               .ThenInclude(x => x.CityFk)
-               .Include(x => x.RoutSteps)
-               .ThenInclude(x => x.DestinationRoutPointFk)
-               .ThenInclude(x => x.FacilityFk)
-               .ThenInclude(x => x.CityFk)
-               .ThenInclude(x=>x.CountyFk)
-               .Include(x => x.RoutSteps)
-               .ThenInclude(x => x.DestinationRoutPointFk)
-               .ThenInclude(x=>x.PickingTypeFk)
-               .Include(x => x.RoutSteps)
-               .ThenInclude(x => x.AssignedDriverUserFk)
-               .Include(x => x.AssignedTruckFk)
-               .ThenInclude(x => x.TrucksTypeFk)
-               .Include(x => x.AssignedTruckFk)
-               .ThenInclude(x => x.TrucksTypeFk)
-               .Include(x => x.AssignedTruckFk)
-               .ThenInclude(x => x.TransportTypeFk)
-               .Include(x => x.AssignedTruckFk)
-               .ThenInclude(x => x.CapacityFk)
-               .ToList();
-
-            var Recipient = info.FirstOrDefault().RoutSteps
-                .Where(e => e.DestinationRoutPointFk.PickingTypeFk.DisplayName.Contains("Dropoff"))
-                .FirstOrDefault();
-
-
-            var output = info.Select(x => new GetMasterWaybillOutput
+            using (CurrentUnitOfWork.DisableFilter((AbpDataFilters.MustHaveTenant)))
             {
-                MasterWaybillNo = x.Id,
-                Date = Clock.Now.ToShortDateString(),
-                ShippingRequestStatus = "Draft",
-                CompanyName = x.Tenant.companyName,
-                DriverName = x.AssignedDriverUserFk?.FullName,
-                DriverIqamaNo = "",
-                TruckTypeDisplayName = x.AssignedTruckFk?.TransportTypeFk?.DisplayName + "-" +
-                 x.AssignedTruckFk?.TrucksTypeFk?.DisplayName + "-" +
-                 x.AssignedTruckFk?.CapacityFk?.DisplayName,
-                PlateNumber = x.AssignedTruckFk?.PlateNumber,
-                IsMultipDrops = x.NumberOfDrops > 1 ? true : false,
-                TotalDrops = x.NumberOfDrops,
-                PackingTypeDisplayName = "",
-                NumberOfPacking = 0,
-                FacilityName = Recipient.DestinationRoutPointFk.FacilityFk.Name,
-                CountryName = Recipient.DestinationRoutPointFk.FacilityFk.CityFk.CountyFk.DisplayName,
-                CityName = Recipient.DestinationRoutPointFk.FacilityFk.CityFk.DisplayName,
-                Area = Recipient.DestinationRoutPointFk.FacilityFk.Adress,
-                StartTripDate = (x.StartTripDate != null && x.StartTripDate?.Year > 1) ? x.StartTripDate?.ToShortDateString() : ""
-            }) ;
+                var info = _shippingRequestRepository.GetAll()
+                    .Where(e => e.TenantId == AbpSession.TenantId)
+                    .Where(e => e.Id == 1);
+
+                var query = info.Select(x => new
+                {
+                    MasterWaybillNo = x.Id,
+                    ShippingRequestStatus = "Draft",
+                    SenderCompanyName = x.Tenant.companyName,
+                    DriverName = x.AssignedDriverUserFk != null ? x.AssignedDriverUserFk.FullName : "",
+                    DriverIqamaNo = "",
+                    TruckTypeDisplayName = x.AssignedTruckFk != null
+                       ? (x.AssignedTruckFk.TransportTypeFk != null ?
+                           x.AssignedTruckFk.TransportTypeFk.DisplayName :
+                           "" + "-" + x.AssignedTruckFk.TrucksTypeFk != null ?
+                               x.AssignedTruckFk.TrucksTypeFk.DisplayName :
+                               "" + "-" + x.AssignedTruckFk.CapacityFk != null ?
+                                   x.AssignedTruckFk.CapacityFk.DisplayName : "")
+                       : "",
+                    PlateNumber = x.AssignedTruckFk != null ? x.AssignedTruckFk.PlateNumber : "",
+                    IsMultipDrops = x.NumberOfDrops > 1 ? true : false,
+                    TotalDrops = x.NumberOfDrops,
+                    PackingTypeDisplayName = "",
+                    NumberOfPacking = 0,
+                    StartTripDate = (x.StartTripDate != null && x.StartTripDate.Value.Year > 1)
+                       ? x.StartTripDate.Value.ToShortDateString()
+                       : "",
+                });
+
+                var pickup = _routStepRepository
+                    .GetAll()
+                    .Where(x => x.ShippingRequestId == 1)
+                    .Where(x => x.SourceRoutPointFk.PickingTypeId == 1)
+                    .Where(x => x.Order==1)
+                    .Include(x => x.SourceRoutPointFk.FacilityFk)
+                    .ThenInclude(x => x.CityFk)
+                    .ThenInclude(x => x.CountyFk)
+                    .Select(x => x.SourceRoutPointFk.FacilityFk)
+                    .FirstOrDefault();
+
+
+                var finalOutput = query.ToList().Select(x
+                    => new GetMasterWaybillOutput()
+                    {
+                        MasterWaybillNo = x.MasterWaybillNo,
+                        Date = Clock.Now.ToShortDateString(),
+                        ShippingRequestStatus = "Draft",
+                        CompanyName = x.SenderCompanyName,
+                        DriverName = x.DriverName,
+                        DriverIqamaNo = "",
+                        TruckTypeDisplayName = x.TruckTypeDisplayName,
+                        PlateNumber = x.PlateNumber,
+                        IsMultipDrops = x.IsMultipDrops,
+                        TotalDrops = x.TotalDrops,
+                        PackingTypeDisplayName = "",
+                        NumberOfPacking = 0,
+                        FacilityName = pickup?.Name,
+                        CountryName = pickup?.CityFk.CountyFk.DisplayName,
+                        CityName = pickup?.CityFk.DisplayName,
+                        Area = pickup?.Adress,
+                        StartTripDate = x.StartTripDate,
+                    });
+
+                return finalOutput;
+            }
+        }
+
+        public IEnumerable<GetSingleDropWaybillOutput> GetSingleDropWaybill()
+        {
+            using (CurrentUnitOfWork.DisableFilter((AbpDataFilters.MustHaveTenant)))
+            {
+                var info = _shippingRequestRepository.GetAll()
+                    .Where(e=>e.TenantId==AbpSession.TenantId)
+                    .Where(e => e.Id == 1);
+
+                var query = info.Select(x => new 
+                {
+                    MasterWaybillNo = x.Id,
+                    ShippingRequestStatus = "Draft",
+                    SenderCompanyName = x.Tenant.companyName,
+                    ReceiverCompanyName = x.CarrierTenantFk!=null? x.CarrierTenantFk.companyName :"",
+                    DriverName = x.AssignedDriverUserFk!=null ? x.AssignedDriverUserFk.FullName :"",
+                    DriverIqamaNo = "",
+                    TruckTypeDisplayName = x.AssignedTruckFk != null
+                        ? (x.AssignedTruckFk.TransportTypeFk != null ?
+                            x.AssignedTruckFk.TransportTypeFk.DisplayName :
+                            "" + "-" + x.AssignedTruckFk.TrucksTypeFk != null ?
+                                x.AssignedTruckFk.TrucksTypeFk.DisplayName :
+                                "" + "-" + x.AssignedTruckFk.CapacityFk != null ?
+                                    x.AssignedTruckFk.CapacityFk.DisplayName : "")
+                        : "",
+                    PlateNumber = x.AssignedTruckFk!=null ? x.AssignedTruckFk.PlateNumber :"",
+                    PackingTypeDisplayName = "",
+                    NumberOfPacking = 0,
+                    StartTripDate = (x.StartTripDate != null && x.StartTripDate.Value.Year > 1)
+                        ? x.StartTripDate.Value.ToShortDateString()
+                        : "",
+                });
+
+                var pickup = _routStepRepository
+                    .GetAll()
+                    .Where(x => x.ShippingRequestId == 1)
+                    .Where(x => x.SourceRoutPointFk.PickingTypeId == 1)
+                    .Where(x => x.Order==1)
+                    .Include(x => x.SourceRoutPointFk.FacilityFk)
+                    .ThenInclude(x => x.CityFk)
+                    .ThenInclude(x => x.CountyFk)
+                    .Select(x => x.SourceRoutPointFk.FacilityFk)
+                    .FirstOrDefault();
+
+                var delivery = _routStepRepository
+                    .GetAll()
+                    .Where(x => x.ShippingRequestId==1)
+                    .Where(x => x.DestinationRoutPointFk.PickingTypeId == 2)
+                    .OrderByDescending(x => x.Order)
+                    .Include(x=>x.DestinationRoutPointFk.FacilityFk)
+                    .ThenInclude(x => x.CityFk)
+                    .ThenInclude(x => x.CountyFk)
+                    .Select(x=>x.DestinationRoutPointFk.FacilityFk)
+                    .FirstOrDefault();
+
+
+                var finalOutput = query.ToList().Select(x 
+                    => new GetSingleDropWaybillOutput
+                {
+                    MasterWaybillNo = x.MasterWaybillNo,
+                    Date = Clock.Now.ToShortDateString(),
+                    ShippingRequestStatus = "Draft",
+                    SenderCompanyName = x.SenderCompanyName,
+                    ReceiverCompanyName  =x.ReceiverCompanyName,
+                    DriverName = x.DriverName,
+                    DriverIqamaNo = "",
+                    TruckTypeDisplayName = x.TruckTypeDisplayName,
+                    PlateNumber = x.PlateNumber,
+                    PackingTypeDisplayName = "",
+                    NumberOfPacking = 0,
+                    FacilityName = pickup?.Name,
+                    CountryName = pickup?.CityFk.CountyFk.DisplayName,
+                    CityName = pickup?.CityFk.DisplayName,
+                    Area = pickup?.Adress,
+                    StartTripDate = x.StartTripDate,
+                    DroppFacilityName = delivery?.Name,
+                    DroppCountryName = delivery?.CityFk.CountyFk.DisplayName,
+                    DroppCityName = delivery?.CityFk.DisplayName,
+                    DroppArea = delivery?.Adress
+                });
+
+                return finalOutput;
+            }
+        }
+
+        public IEnumerable<GetAllShippingRequestVasesOutput> GetShippingRequestVasesForSingleDropWaybill()
+        {
+            var vases = _shippingRequestVasRepository.GetAll()
+                .Include(x => x.VasFk)
+                .Include(x=>x.ShippingRequestFk)
+                .Where(x => x.ShippingRequestId == 1)
+                .ToList();
+
+            var output = vases.Select(x => new GetAllShippingRequestVasesOutput
+            {
+                VasName = x.VasFk.DisplayName,
+                Amount =x.RequestMaxAmount ,
+                Count = x.RequestMaxCount
+            });
 
             return output;
         }
