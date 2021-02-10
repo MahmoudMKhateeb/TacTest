@@ -38,16 +38,7 @@ namespace TACHYON.Waybills
         public FileDto GetSingleDropWaybillPdf(string PlateNumber)
         {
             var reportPath = "/Waybills/Reports/Single_Drop_Waybill.rdlc";
-           
-            //var list = _trucksRepository.GetAll()
-            //    .Select(x => new
-            //    {
-            //        x.ModelName,
-            //        x.ModelYear,
-            //        x.PlateNumber,
-            //        x.CreatorUserId
-            //    }).Where(t =>t.PlateNumber != PlateNumber && t.CreatorUserId !=null).ToList();
-
+            
             ArrayList names = new ArrayList();
             ArrayList data = new ArrayList();
 
@@ -68,19 +59,18 @@ namespace TACHYON.Waybills
         {
              var reportPath = "/Waybills/Reports/Multiple_Drop_Waybill.rdlc";
 
-            var list = _trucksRepository.GetAll()
-                .Select(x => new
-                {
-                    x.ModelName,
-                    x.ModelYear,
-                    x.PlateNumber
-                }).ToList();
+             ArrayList names = new ArrayList();
+             ArrayList data = new ArrayList();
 
-            ArrayList names = new ArrayList();
-            ArrayList data = new ArrayList();
+             names.Add("MultipleDropDataSet");
+             data.Add(_shippingRequestAppService.GetMultipleDropWaybill());
 
-            names.Add("DataSet1");
-            data.Add(list);
+             names.Add("MultipleDropsGoodsDetailsDataSet");
+             data.Add(_goodsDetailsAppService.GetShippingrequestGoodsDetailsForMultipleDropWaybill());
+
+             names.Add("MultipleDropsVasDataSet");
+             data.Add(_shippingRequestAppService.GetShippingRequestVasesForMultipleDropWaybill());
+
 
             return _pdfExporterBase.CreateRdlcPdfPackageFromList("Multiple_Drop_Waybill", reportPath, names, data);
         }
@@ -89,20 +79,11 @@ namespace TACHYON.Waybills
         public FileDto GetMasterWaybillPdf()
         {       
             var reportPath = "/Waybills/Reports/Master_Waybill.rdlc";
-
-            //var list = _trucksRepository.GetAll()
-            //    .Select(x => new
-            //    {
-            //        x.ModelName,
-            //        x.ModelYear,
-            //        x.PlateNumber
-            //    }).ToList();
-
+            
             ArrayList names = new ArrayList();
             ArrayList data = new ArrayList();
 
             names.Add("DataSet1");
-            //data.Add(list);
             data.Add(_shippingRequestAppService.GetMasterWaybill());
             return _pdfExporterBase.CreateRdlcPdfPackageFromList("Master_Waybill", reportPath, names, data);
         }

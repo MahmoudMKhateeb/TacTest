@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
   <Import Project="..\..\common.props"></Import>
   <PropertyGroup>
     <TargetFramework>netcoreapp3.1</TargetFramework>
@@ -45,6 +45,21 @@
       <AutoGen>True</AutoGen>
       <DependentUpon>DataSet1.xsd</DependentUpon>
     </Compile>
+    <Compile Update="Waybills\Reports\MultipleDropDataSet.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>MultipleDropDataSet.xsd</DependentUpon>
+    </Compile>
+    <Compile Update="Waybills\Reports\MultipleDropsGoodsDetailsDataSet.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>MultipleDropsGoodsDetailsDataSet.xsd</DependentUpon>
+    </Compile>
+    <Compile Update="Waybills\Reports\MultipleDropsVasDataSet.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>MultipleDropsVasDataSet.xsd</DependentUpon>
+    </Compile>
     <Compile Update="Waybills\Reports\SingleDropDataSet.Designer.cs">
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
@@ -65,6 +80,18 @@
     <None Update="Waybills\Reports\DataSet1.xsd">
       <Generator>MSDataSetGenerator</Generator>
       <LastGenOutput>DataSet1.Designer.cs</LastGenOutput>
+    </None>
+    <None Update="Waybills\Reports\MultipleDropDataSet.xsd">
+      <Generator>MSDataSetGenerator</Generator>
+      <LastGenOutput>MultipleDropDataSet.Designer.cs</LastGenOutput>
+    </None>
+    <None Update="Waybills\Reports\MultipleDropsGoodsDetailsDataSet.xsd">
+      <Generator>MSDataSetGenerator</Generator>
+      <LastGenOutput>MultipleDropsGoodsDetailsDataSet.Designer.cs</LastGenOutput>
+    </None>
+    <None Update="Waybills\Reports\MultipleDropsVasDataSet.xsd">
+      <Generator>MSDataSetGenerator</Generator>
+      <LastGenOutput>MultipleDropsVasDataSet.Designer.cs</LastGenOutput>
     </None>
     <None Update="Waybills\Reports\SingleDropDataSet.xsd">
       <Generator>MSDataSetGenerator</Generator>
