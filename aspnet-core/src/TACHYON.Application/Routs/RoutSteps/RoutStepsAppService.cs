@@ -357,7 +357,14 @@ namespace TACHYON.Routs.RoutSteps
         public async Task<List<FacilityForDropdownDto>> GetAllFacilitiesForDropdown()
         {
             return await _lookup_FacilityRepository.GetAll()
-                .Select(x => new FacilityForDropdownDto { Id = x.Id, DisplayName = x.Name }).ToListAsync();
+                .Select(x => new FacilityForDropdownDto
+                {
+                    Id = x.Id, 
+                    DisplayName = x.Name ,
+                    Long = x.Location.X,
+                    Lat = x.Location.Y
+
+                }).ToListAsync();
         }
 
 
