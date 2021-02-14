@@ -1,12 +1,12 @@
 ﻿import { Component, Injector, ViewEncapsulation, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { CountriesTranslationsServiceProxy, CountriesTranslationDto } from '@shared/service-proxies/service-proxies';
+import { TrucksTypesTranslationsServiceProxy, TrucksTypesTranslationDto } from '@shared/service-proxies/service-proxies';
 import { NotifyService } from 'abp-ng2-module';
 import { AppComponentBase } from '@shared/common/app-component-base';
 import { TokenAuthServiceProxy } from '@shared/service-proxies/service-proxies';
-import { CreateOrEditCountriesTranslationModalComponent } from './create-or-edit-countriesTranslation-modal.component';
+import { CreateOrEditTrucksTypesTranslationModalComponent } from './create-or-edit-trucksTypesTranslation-modal.component';
 
-import { ViewCountriesTranslationModalComponent } from './view-countriesTranslation-modal.component';
+import { ViewTrucksTypesTranslationModalComponent } from './view-trucksTypesTranslation-modal.component';
 import { appModuleAnimation } from '@shared/animations/routerTransition';
 import { Table } from 'primeng/table';
 import { Paginator } from 'primeng/paginator';
@@ -16,14 +16,14 @@ import * as _ from 'lodash';
 import * as moment from 'moment';
 
 @Component({
-  templateUrl: './countriesTranslations.component.html',
+  templateUrl: './trucksTypesTranslations.component.html',
   encapsulation: ViewEncapsulation.None,
   animations: [appModuleAnimation()],
 })
-export class CountriesTranslationsComponent extends AppComponentBase {
-  @ViewChild('createOrEditCountriesTranslationModal', { static: true })
-  createOrEditCountriesTranslationModal: CreateOrEditCountriesTranslationModalComponent;
-  @ViewChild('viewCountriesTranslationModalComponent', { static: true }) viewCountriesTranslationModal: ViewCountriesTranslationModalComponent;
+export class TrucksTypesTranslationsComponent extends AppComponentBase {
+  @ViewChild('createOrEditTrucksTypesTranslationModal', { static: true })
+  createOrEditTrucksTypesTranslationModal: CreateOrEditTrucksTypesTranslationModalComponent;
+  @ViewChild('viewTrucksTypesTranslationModalComponent', { static: true }) viewTrucksTypesTranslationModal: ViewTrucksTypesTranslationModalComponent;
 
   @ViewChild('dataTable', { static: true }) dataTable: Table;
   @ViewChild('paginator', { static: true }) paginator: Paginator;
@@ -32,11 +32,11 @@ export class CountriesTranslationsComponent extends AppComponentBase {
   filterText = '';
   translatedDisplayNameFilter = '';
   languageFilter = '';
-  countyDisplayNameFilter = '';
+  trucksTypeDisplayNameFilter = '';
 
   constructor(
     injector: Injector,
-    private _countriesTranslationsServiceProxy: CountriesTranslationsServiceProxy,
+    private _trucksTypesTranslationsServiceProxy: TrucksTypesTranslationsServiceProxy,
     private _notifyService: NotifyService,
     private _tokenAuth: TokenAuthServiceProxy,
     private _activatedRoute: ActivatedRoute,
@@ -45,7 +45,7 @@ export class CountriesTranslationsComponent extends AppComponentBase {
     super(injector);
   }
 
-  getCountriesTranslations(event?: LazyLoadEvent) {
+  getTrucksTypesTranslations(event?: LazyLoadEvent) {
     if (this.primengTableHelper.shouldResetPaging(event)) {
       this.paginator.changePage(0);
       return;
@@ -53,12 +53,12 @@ export class CountriesTranslationsComponent extends AppComponentBase {
 
     this.primengTableHelper.showLoadingIndicator();
 
-    this._countriesTranslationsServiceProxy
+    this._trucksTypesTranslationsServiceProxy
       .getAll(
         this.filterText,
         this.translatedDisplayNameFilter,
         this.languageFilter,
-        this.countyDisplayNameFilter,
+        this.trucksTypeDisplayNameFilter,
         this.primengTableHelper.getSorting(this.dataTable),
         this.primengTableHelper.getSkipCount(this.paginator, event),
         this.primengTableHelper.getMaxResultCount(this.paginator, event)
@@ -74,14 +74,14 @@ export class CountriesTranslationsComponent extends AppComponentBase {
     this.paginator.changePage(this.paginator.getPage());
   }
 
-  createCountriesTranslation(): void {
-    this.createOrEditCountriesTranslationModal.show();
+  createTrucksTypesTranslation(): void {
+    this.createOrEditTrucksTypesTranslationModal.show();
   }
 
-  deleteCountriesTranslation(countriesTranslation: CountriesTranslationDto): void {
+  deleteTrucksTypesTranslation(trucksTypesTranslation: TrucksTypesTranslationDto): void {
     this.message.confirm('', this.l('AreYouSure'), (isConfirmed) => {
       if (isConfirmed) {
-        this._countriesTranslationsServiceProxy.delete(countriesTranslation.id).subscribe(() => {
+        this._trucksTypesTranslationsServiceProxy.delete(trucksTypesTranslation.id).subscribe(() => {
           this.reloadPage();
           this.notify.success(this.l('SuccessfullyDeleted'));
         });

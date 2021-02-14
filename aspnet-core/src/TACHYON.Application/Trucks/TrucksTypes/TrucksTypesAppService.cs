@@ -136,7 +136,9 @@ namespace TACHYON.Trucks.TrucksTypes
 
         public async Task<IEnumerable<ISelectItemDto>> GetAllTransportTypeForTableDropdown()
         {
-            List<TransportType> transportTypes = await _transportTypeRepository.GetAllListAsync();
+            List<TransportType> transportTypes = await _transportTypeRepository
+                .GetAllIncluding(x =>x.Translations)
+                .ToListAsync();
 
             List<TransportTypeSelectItemDto> transportTypeDtos = ObjectMapper.Map<List<TransportTypeSelectItemDto>>(transportTypes);
 

@@ -15,7 +15,9 @@ using TACHYON.Authorization;
 using Abp.Extensions;
 using Abp.Authorization;
 using Microsoft.EntityFrameworkCore;
+using TACHYON.Trucks.TruckCategories.TransportTypes.Dtos;
 using TACHYON.Trucks.TrucksTypes;
+using TACHYON.Trucks.TrucksTypes.Dtos;
 
 namespace TACHYON.Trucks.TruckCategories.TruckCapacities
 {
@@ -133,15 +135,17 @@ namespace TACHYON.Trucks.TruckCategories.TruckCapacities
         {
             await _capacityRepository.DeleteAsync(input.Id);
         }
+
         [AbpAuthorize(AppPermissions.Pages_Capacities)]
-        public async Task<List<CapacityTruckTypeLookupTableDto>> GetAllTruckTypeForTableDropdown()
+        public async Task<IEnumerable<ISelectItemDto>> GetAllTruckTypeForTableDropdown()
         {
-            return await _lookup_trucktypeRepository.GetAll()
-                .Select(truckType => new CapacityTruckTypeLookupTableDto
-                {
-                    Id = truckType.Id,
-                    DisplayName = truckType == null || truckType.DisplayName == null ? "" : truckType.DisplayName.ToString()
-                }).ToListAsync();
+            List<TrucksType> trucksTypes = await _lookup_trucktypeRepository
+                .GetAllIncluding(x => x.Translations)
+                .ToListAsync();
+
+            List<TrucksTypeSelectItemDto> trucksTypeDtos = ObjectMapper.Map<List<TrucksTypeSelectItemDto>>(trucksTypes);
+
+            return trucksTypeDtos;
         }
 
     }
