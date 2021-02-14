@@ -4,9 +4,8 @@
   src: url(../../fonts/tachyonFonts/ar/GE_Flow_Regular.otf) format('opentype');
   /* src: url('../../fonts/tachyonFonts/ar/GE_Flow_Bold.otf') format('opentype'); */
 }
-
 body {
-  font-family: 'ArGEFlow' !important;
+  font-family: 'ArGEFlow', 'EnOpenSans' !important;
 }
 html {
   font-family: 'ArGEFlow' !important;
@@ -36,8 +35,8 @@ li.dropdown-language ul.dropdown-menu li a:after {
 .ui-button-icon-left {
   padding: 0 !important;
   position: absolute;
-  right: 20px !important;
-  left: auto !important;
+  /* right: 20px !important;
+  left: auto !important; */
 }
 .dropdown-excel-operations a .ui-button-text {
   font-family: 'ArGEFlow' !important;
