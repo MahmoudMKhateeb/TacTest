@@ -158,6 +158,9 @@ import { ViewShippingRequestPriceResponseModalComponent } from './shippingReques
 import { ListboxModule, MultiSelectModule, PickListModule } from '@node_modules/primeng';
 import { RouteStepsForCreateShippingRequstComponent } from '@app/main/shippingRequests/shippingRequests/ShippingRequestRouteSteps/RouteStepsForCreateShippingRequst.component';
 
+import { AgmDirectionModule } from '@node_modules/agm-direction';
+import { GoodDetailsForCreateShippingRequstComponent } from '@app/main/shippingRequests/shippingRequests/ShippingRequestGoodDetails/GoodDetailsForCreateShippingRequest.component';
+
 NgxBootstrapDatePickerConfigService.registerNgxBootstrapDatePickerLocales();
 
 @NgModule({
@@ -191,6 +194,7 @@ NgxBootstrapDatePickerConfigService.registerNgxBootstrapDatePickerLocales();
     MultiSelectModule,
     PickListModule,
     ListboxModule,
+    AgmDirectionModule,
   ],
   declarations: [
     NationalitiesComponent,
@@ -321,6 +325,7 @@ NgxBootstrapDatePickerConfigService.registerNgxBootstrapDatePickerLocales();
     ViewShippingRequestDetailsComponent,
     ViewAllCarrierBidsComponent,
     RouteStepsForCreateShippingRequstComponent,
+    GoodDetailsForCreateShippingRequstComponent,
   ],
   providers: [
     { provide: BsDatepickerConfig, useFactory: NgxBootstrapDatePickerConfigService.getDatepickerConfig },
