@@ -9,7 +9,7 @@ namespace TACHYON.Cities.CitiesTranslations
 {
     [Table("CitiesTranslations")]
     public class CitiesTranslation : FullAuditedEntity, IEntityTranslation<City>
-    {
+    { 
 
         [Required]
         [StringLength(CitiesTranslationConsts.MaxTranslatedDisplayNameLength, MinimumLength = CitiesTranslationConsts.MinTranslatedDisplayNameLength)]

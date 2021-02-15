@@ -8,6 +8,7 @@ using System.Reflection.Emit;
 using System.Threading.Tasks;
 using TACHYON.Authorization.Users;
 using TACHYON.Documents.DocumentFiles;
+using TACHYON.Invoices;
 using TACHYON.MultiTenancy;
 using TACHYON.Shipping.ShippingRequests;
 
@@ -400,6 +401,22 @@ namespace TACHYON.Notifications
             await _notificationPublisher.PublishAsync(AppNotificationNames.RejectedSubmittedDocument, notificationData, userIds: new[] { argsUser });
         }
 
+
+        public async Task NewInvoiceShipperGenerated(Invoice invoice)
+        {
+            var notificationData = new LocalizableMessageNotificationData(
+                new LocalizableString(
+                    "NewInvoiceShipperGenerated",
+                    TACHYONConsts.LocalizationSourceName
+                )
+            );
+
+         
+         //   notificationData["emailAddress"] = user.EmailAddress;
+
+            await _notificationPublisher.PublishAsync(AppNotificationNames.InvoiceShipperGenerated, notificationData,
+                tenantIds: new[] { (int?)invoice.TenantId });
+        }
         #endregion
 
 

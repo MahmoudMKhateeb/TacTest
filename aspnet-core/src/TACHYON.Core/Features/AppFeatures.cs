@@ -9,6 +9,8 @@
         public const string TestCheckFeature = "App.TestCheckFeature";
         public const string TestCheckFeature2 = "App.TestCheckFeature2";
 
+
+
         #region ######## Tachyon features #########
 
         public const string Shipper = "App.Shipper";
@@ -19,6 +21,8 @@
         public const string ShippingRequest = "App.shippingRequest";
         public const string OffersMarketPlace = "App.OffersMarketPlace";
         public const string SendTachyonDealShippingRequest = "App.SendTachyonDealShippingRequest";
+        public const string ShipperCreditLimit = "App.Shipper.CreditLimit";
+
 
         #endregion
 

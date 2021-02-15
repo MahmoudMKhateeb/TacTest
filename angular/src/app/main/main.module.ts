@@ -1,4 +1,4 @@
-﻿import { CommonModule } from '@angular/common';
+import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { AppCommonModule } from '@app/shared/common/app-common.module';
@@ -190,6 +190,10 @@ import { ViewShippingRequestDetailsComponent } from '@app/main/marketPlace/marke
 import { ViewAllCarrierBidsComponent } from '@app/main/marketPlace/marketPlace/ViewAllCarrierBids.component';
 import { RejectionReasonModalComponent } from './documentFiles/documentFiles/rejectionReason-modal.component';
 import { ViewShippingRequestPriceResponseModalComponent } from './shippingRequests/shippingRequests/shipping-request-Response/view-shipping-request-response-modal.component';
+import { SafePipe } from '../../account/register/safe.pipe';
+import { InvoicePeriodsListComponent } from '@app/main/Invoices/invoice-periods-list/invoice-periods-list.component';
+import { InvoicePeriodsModalComponent } from '@app/main/Invoices/invoice-periods-modal/invoice-periods-modal.component';
+import { InvoicesListComponent } from './Invoices/invoices-list/invoices-list.component';
 import { ListboxModule, MultiSelectModule, PickListModule, SelectButtonModule, StepsModule } from '@node_modules/primeng';
 import { RouteStepsForCreateShippingRequstComponent } from '@app/main/shippingRequests/shippingRequests/ShippingRequestRouteSteps/RouteStepsForCreateShippingRequst.component';
 
@@ -434,6 +438,9 @@ NgxBootstrapDatePickerConfigService.registerNgxBootstrapDatePickerLocales();
     MarketplaceComponent,
     ViewShippingRequestDetailsComponent,
     ViewAllCarrierBidsComponent,
+    InvoicePeriodsListComponent,
+    InvoicePeriodsModalComponent,
+    InvoicesListComponent,
     RouteStepsForCreateShippingRequstComponent,
 
     TripsForViewShippingRequestComponent,

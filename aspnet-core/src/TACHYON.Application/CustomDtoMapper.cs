@@ -169,6 +169,10 @@ using TACHYON.UnitOfMeasures.Dtos;
 using TACHYON.Vases;
 using TACHYON.Vases.Dtos;
 using TACHYON.WebHooks.Dto;
+using TACHYON.Invoices.Periods.Dto;
+using TACHYON.Invoices.Dto;
+using TACHYON.Invoices;
+using TACHYON.Invoices.Periods;
 
 namespace TACHYON
 {
@@ -488,6 +492,17 @@ namespace TACHYON
             //User Delegations
             configuration.CreateMap<CreateUserDelegationDto, UserDelegation>();
 
+
+            /*Invoices*/
+
+            configuration.CreateMap<InvoicePeriodDto, InvoicePeriod>();
+            configuration.CreateMap<InvoicePeriod, InvoicePeriodDto>();
+            configuration.CreateMap<Invoice, InvoiceListDto>();
+
+
+            configuration.CreateMap<Tenant, InvoiceTenantDto>()
+               .ForMember(dto => dto.DisplayName, options => options.MapFrom(entity => entity.Name))
+               .ForMember(dto => dto.Group, options => options.MapFrom(entity => entity.Edition.Name));
             /* ADD YOUR OWN CUSTOM AUTOMAPPER MAPPINGS HERE */
         }
         /// <summary>

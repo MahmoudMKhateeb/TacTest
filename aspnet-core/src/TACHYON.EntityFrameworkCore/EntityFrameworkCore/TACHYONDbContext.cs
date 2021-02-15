@@ -60,6 +60,8 @@ using TACHYON.Shipping.ShippingRequestBidStatuses;
 using System;
 using System.Linq.Expressions;
 using Microsoft.EntityFrameworkCore.Metadata;
+using TACHYON.Invoices;
+using TACHYON.Invoices.Periods;
 using TACHYON.Routs.RoutPoints;
 using TACHYON.Shipping.ShippingRequestTrips;
 using TACHYON.Shipping.Trips;
@@ -164,6 +166,11 @@ namespace TACHYON.EntityFrameworkCore
 
         public virtual DbSet<TruckStatus> TruckStatuses { get; set; }
 
+        /*Invoice entity*/
+        public virtual DbSet<InvoicePeriod> InvoicePeriod { get; set; }
+        public virtual DbSet<Invoices.Invoice> Invoice { get; set; }
+
+        public virtual DbSet<InvoiceShippingRequests> InvoiceShippingRequests { get; set; }
         /* Define an IDbSet for each entity of the application */
 
         public virtual DbSet<BinaryObject> BinaryObjects { get; set; }
@@ -176,7 +183,7 @@ namespace TACHYON.EntityFrameworkCore
 
         public virtual DbSet<SubscriptionPayment> SubscriptionPayments { get; set; }
 
-        public virtual DbSet<Invoice> Invoices { get; set; }
+        public virtual DbSet<MultiTenancy.Accounting.Invoice> Invoices { get; set; }
 
         public virtual DbSet<PersistedGrantEntity> PersistedGrants { get; set; }
 

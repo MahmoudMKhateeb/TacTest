@@ -354,6 +354,21 @@ namespace TACHYON.Authorization
             administration.CreateChildPermission(AppPermissions.Pages_Administration_HangfireDashboard, L("HangfireDashboard"), multiTenancySides: _isMultiTenancyEnabled ? MultiTenancySides.Host : MultiTenancySides.Tenant);
             administration.CreateChildPermission(AppPermissions.Pages_Administration_Host_Dashboard, L("Dashboard"), multiTenancySides: MultiTenancySides.Host);
 
+
+            /*Invoices */
+            var Invoices = pages.CreateChildPermission(AppPermissions.Pages_Invoices, L("Invoices"));
+            Invoices.CreateChildPermission(AppPermissions.Pages_Administration_Host_Invoices_Delete, L("DeletingInvoice"), multiTenancySides: MultiTenancySides.Host);
+            Invoices.CreateChildPermission(AppPermissions.Pages_Administration_Host_Invoices_MakePaid, L("PaidInvoice"), multiTenancySides: MultiTenancySides.Host);
+            Invoices.CreateChildPermission(AppPermissions.Pages_Administration_Host_Invoices_MakeUnPaid, L("UnPaidInvoice"), multiTenancySides: MultiTenancySides.Host);
+
+
+            var Periods = Invoices.CreateChildPermission(AppPermissions.Pages_Administration_Host_Invoices_Periods, L("Periods"), multiTenancySides: MultiTenancySides.Host);
+            Periods.CreateChildPermission(AppPermissions.Pages_Administration_Host_Invoices_Period_Create, L("CreatePeriod"), multiTenancySides: MultiTenancySides.Host);
+            Periods.CreateChildPermission(AppPermissions.Pages_Administration_Host_Invoices_Period_Edit, L("EditPeriod"), multiTenancySides: MultiTenancySides.Host);
+            Periods.CreateChildPermission(AppPermissions.Pages_Administration_Host_Invoices_Period_Delete, L("DeletePeriod"), multiTenancySides: MultiTenancySides.Host);
+            Periods.CreateChildPermission(AppPermissions.Pages_Administration_Host_Invoices_Period_Enabled, L("EnabledPeriod"), multiTenancySides: MultiTenancySides.Host);
+
+
             #region Shipping Request
             var CauseAccident = pages.CreateChildPermission(AppPermissions.Pages_ShippingRequestCauseAccidents, L("CausesAccidents"), multiTenancySides: MultiTenancySides.Host);
             CauseAccident.CreateChildPermission(AppPermissions.Pages_ShippingRequestCauseAccidents_Create, L("CreateNewCausesAccident"), multiTenancySides: MultiTenancySides.Host);

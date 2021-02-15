@@ -1,4 +1,4 @@
-﻿import { AppSessionService } from '@shared/common/session/app-session.service';
+import { AppSessionService } from '@shared/common/session/app-session.service';
 import { Injectable } from '@angular/core';
 import { AppMenu } from './app-menu';
 import { AppMenuItem } from './app-menu-item';
@@ -111,7 +111,20 @@ export class AppNavigationService {
           // new AppMenuItem('TenantRequiredDocuments', '', 'flaticon-settings', '/app/admin/tenantRequiredDocuments'),
         ]
       ),
+      new AppMenuItem(
+        'Invoices',
+        'Pages.Invoices',
+        'flaticon-book',
+        '',
+        [],
+        [
+          new AppMenuItem('InvoicesList', 'Pages.Invoices', 'flaticon2-document', '/app/main/invoices/view'),
 
+          new AppMenuItem('Periods', 'Pages.Administration.Host.Invoices.Periods', 'flaticon2-document', '/app/main/invoices/periods'),
+
+          // new AppMenuItem('TenantRequiredDocuments', '', 'flaticon-settings', '/app/admin/tenantRequiredDocuments'),
+        ]
+      ),
       //Host
       new AppMenuItem(
         'TMSSettings',

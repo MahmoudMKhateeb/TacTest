@@ -1,4 +1,4 @@
-﻿import { NgModule } from '@angular/core';
+import { NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { CitiesTranslationsComponent } from './citiesTranslations/citiesTranslations/citiesTranslations.component';
 import { CountriesTranslationsComponent } from './countriesTranslations/countriesTranslations/countriesTranslations.component';
@@ -44,6 +44,8 @@ import { TrucksComponent } from './trucks/trucks/trucks.component';
 import { TrucksTypesComponent } from './trucksTypes/trucksTypes/trucksTypes.component';
 import { DashboardComponent } from './dashboard/dashboard.component';
 import { MarketplaceComponent } from '@app/main/marketPlace/marketPlace/marketplace.component';
+import { InvoicePeriodsListComponent } from '@app/main/Invoices/invoice-periods-list/invoice-periods-list.component';
+import { InvoicesListComponent } from '@app/main/Invoices/invoices-list/invoices-list.component';
 
 @NgModule({
   imports: [
@@ -51,6 +53,34 @@ import { MarketplaceComponent } from '@app/main/marketPlace/marketPlace/marketpl
       {
         path: '',
         children: [
+          {
+            path: 'truckCapacitiesTranslations/truckCapacitiesTranslations',
+            component: TruckCapacitiesTranslationsComponent,
+            data: { permission: 'Pages.TruckCapacitiesTranslations' },
+          },
+          {
+            path: 'truckStatusesTranslations/truckStatusesTranslations',
+            component: TruckStatusesTranslationsComponent,
+            data: { permission: 'Pages.TruckStatusesTranslations' },
+          },
+          { path: 'nationalities/nationalities', component: NationalitiesComponent, data: { permission: 'Pages.Nationalities' } },
+          {
+            path: 'nationalitiesTranslation/nationalityTranslations',
+            component: NationalityTranslationsComponent,
+            data: { permission: 'Pages.NationalityTranslations' },
+          },
+          {
+            path: 'transportTypesTranslations/transportTypesTranslations',
+            component: TransportTypesTranslationsComponent,
+            data: { permission: 'Pages.TransportTypesTranslations' },
+          },
+          { path: 'citiesTranslations/citiesTranslations', component: CitiesTranslationsComponent, data: { permission: 'Pages.CitiesTranslations' } },
+          {
+            path: 'countriesTranslations/countriesTranslations',
+            component: CountriesTranslationsComponent,
+            data: { permission: 'Pages.CountriesTranslations' },
+          },
+          { path: 'plateTypes/plateTypes', component: PlateTypesComponent, data: { permission: 'Pages.Capacities' } },
                     { path: 'citiesTranslations/citiesTranslations', component: CitiesTranslationsComponent, data: { permission: 'Pages.CitiesTranslations' }  },
                     { path: 'countriesTranslations/countriesTranslations', component: CountriesTranslationsComponent, data: { permission: 'Pages.CountriesTranslations' }  },
           { path: 'plateTypes/plateTypes', component: PlateTypesComponent, data: { permission: 'Pages.Capacities' } },
@@ -132,6 +162,10 @@ import { MarketplaceComponent } from '@app/main/marketPlace/marketPlace/marketpl
           { path: 'trailerTypes/trailerTypes', component: TrailerTypesComponent, data: { permission: 'Pages.TrailerTypes' } },
           { path: 'trucks/trucks', component: TrucksComponent, data: { permission: 'Pages.Trucks' } },
           { path: 'trucksTypes/trucksTypes', component: TrucksTypesComponent, data: { permission: 'Pages.TrucksTypes' } },
+
+          { path: 'invoices/view', component: InvoicesListComponent, data: { permission: 'Pages.Invoices' } },
+          { path: 'invoices/periods', component: InvoicePeriodsListComponent, data: { permission: 'Pages.Administration.Host.Invoices.Periods' } },
+
           { path: 'dashboard', component: DashboardComponent, data: { permission: 'Pages.Tenant.Dashboard' } },
           { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
           { path: '**', redirectTo: 'dashboard' },

@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using TACHYON.Authorization.Users;
 using TACHYON.Documents.DocumentFiles;
+using TACHYON.Invoices;
 using TACHYON.MultiTenancy;
 using TACHYON.Shipping.ShippingRequests;
 
@@ -20,7 +21,7 @@ namespace TACHYON.Notifications
         Task UpdateShippingRequestPrice(UserIdentifier argsUser, long shippingRequestId, decimal price);
         Task AcceptShippingRequestPrice(long shippingRequestId, bool isAccepted);
         Task RejectShippingRequest(UserIdentifier argsUser, long shippingRequestId);
-
+        Task NewInvoiceShipperGenerated(Invoice invoice);
         Task SomeTrucksCouldntBeImported(UserIdentifier user, string fileToken, string fileType, string fileName);
         Task CreateBidRequest(UserIdentifier argsUser, long shippingRequestBidId);
          Task TenantDocumentFileUpdate(DocumentFile documentFile);

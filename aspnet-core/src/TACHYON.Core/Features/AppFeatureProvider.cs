@@ -157,6 +157,14 @@ namespace TACHYON.Features
                 L("TenantToHostChatFeature"),
                 inputType: new CheckboxInputType()
             );
+            /*Invoices*/
+            context.Create(
+                AppFeatures.ShipperCreditLimit,
+                "0",
+                L("ShipperCreditLimit"),
+                scope: FeatureScopes.Edition,
+                inputType: new SingleLineStringInputType(new NumericValueValidator(1, 1000000)));
+
         }
 
         private static ILocalizableString L(string name)
