@@ -35,7 +35,7 @@
                             [class.is-valid]="allTransportTypes && TransportType.touched && TransportType.valid"
                             (change)="transportTypeSelectChange(shippingRequest.transportTypeId)"
                           >
-                            <option [ngValue]="null">{{ l('SelectAGoodCategory') }}</option>
+                            <option [ngValue]="null">{{ l('selectaTransportType') }}</option>
                             <option *ngFor="let item of allTransportTypes" value="{{ item.id }}">{{ item.displayName }}</option>
                           </select>
                         </div>
@@ -104,10 +104,98 @@
             </div>
           </div>
           <!--  end of card::body-->
+          <!--  start of card::form-->
+        </div>
+        <div class="card card-custom gutter-b">
+          <!--  start of card::form-->
+          <div class="card-header">
+            <h3 class="card-title">{{ l('ShippingRequestType') }}</h3>
+          </div>
+          <!--  start of card::body-->
+          <div class="card-body">
+            <div class="row">
+              <!--  start of ShippingRequestType::Details-->
+              <div class="col-12">
+                <div class="mb-3">
+                  <div class="mb-2">
+                    <div class="form-group row fv-plugins-icon-container">
+                      <div class="col-lg-6">
+                        <label>* {{ l('ShippingRequestType') }}:</label>
+                        <select
+                          #SRType="ngModel"
+                          class="form-control"
+                          name="shippingRequestType"
+                          required
+                          [class.is-invalid]="SRType.touched && !SRType.valid"
+                          [class.is-valid]="SRType.touched && SRType.valid"
+                          [(ngModel)]="shippingRequestType"
+                          (change)="shippingRequestTypeChanged()"
+                        >
+                          <option>Select</option>
+                          <option value="bidding">{{ l('bidding') }}</option>
+                          <option value="tachyondeal">{{ l('TachyonDeal') }}</option>
+                        </select>
+                        <span class="form-text text-muted">{{ l('pickaShippingRequestType') }}</span>
+                      </div>
+                      <div class="col-lg-3">
+                        <div class="form-group">
+                          <label>* {{ l('biddingStartDate') }}:</label>
+                          <div class="input-group date">
+                            <input
+                              #BidStartDate="ngModel"
+                              class="form-control"
+                              placeholder="{{ l('BiddingstartDate') }}"
+                              name="shippingrequestBidStratDate"
+                              [required]="this.shippingRequestType == 'bidding'"
+                              [class.is-invalid]="this.shippingRequestType == 'bidding' && BidStartDate.touched && !BidStartDate.valid"
+                              [class.is-valid]="this.shippingRequestType == 'bidding' && BidStartDate.touched && BidStartDate.valid"
+                              [(ngModel)]="shippingRequest.bidStartDate"
+                              [disabled]="shippingRequestType != 'bidding'"
+                              bsDatepicker
+                            />
+                            <div class="input-group-append">
+                              <span class="input-group-text">
+                                <i class="la la-calendar-check-o"></i>
+                              </span>
+                            </div>
+                          </div>
+                          <span class="form-text text-muted">{{ l('SetBiddingStartDate') }} (in case of shipping request type is bidding)</span>
+                        </div>
+                      </div>
+                      <div class="col-lg-3">
+                        <label>* {{ l('biddingEndDate') }}:</label>
+                        <div class="input-group date">
+                          <input
+                            #BidEndDate="ngModel"
+                            class="form-control"
+                            placeholder="{{ l('biddingEndDate') }}"
+                            name="shippingrequestBidEndDate"
+                            [required]="this.shippingRequestType == 'bidding'"
+                            [class.is-invalid]="this.shippingRequestType == 'bidding' && BidEndDate.touched && !BidEndDate.valid"
+                            [class.is-valid]="this.shippingRequestType == 'bidding' && BidEndDate.touched && BidEndDate.valid"
+                            [(ngModel)]="shippingRequest.bidEndDate"
+                            [disabled]="shippingRequestType != 'bidding'"
+                            bsDatepicker
+                          />
+                          <div class="input-group-append">
+                            <span class="input-group-text">
+                              <i class="la la-calendar-check-o"></i>
+                            </span>
+                          </div>
+                        </div>
+                        <span class="form-text text-muted">{{ l('biddingEndDate') }} (in case of shipping request type is bidding)</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <!--  end of ShippingRequestType::Details-->
+            </div>
+          </div>
+          <!--  end of card::body-->
 
           <!--  start of card::form-->
         </div>
-
         <div class="card card-custom gutter-b">
           <!--  start of card::form-->
           <div class="card-header">
@@ -122,7 +210,7 @@
                   <div class="mb-2">
                     <div class="form-group row fv-plugins-icon-container">
                       <div class="col-lg-6">
-                        <label>* {{ l('goodCategory') }}:</label>
+                        <label>* {{ l('MainGoodCategory') }}:</label>
                         <!--   TODO:// Add DataBining for DD-->
                         <div [ngClass]="{ 'spinner spinner-success spinner-right mr-1 ml-1': !allGoodCategorys }">
                           <select
@@ -147,13 +235,17 @@
                 </div>
               </div>
               <!--  end of Shipment::Details-->
+              <!--  Start:Goods details  -->
+              <GoodDetailsForCreateShippingRequest
+                (SelectedGoodDetailsFromChild)="shippingRequest.goodsDetailS = $event"
+              ></GoodDetailsForCreateShippingRequest>
+              <!--   end::Goods details   -->
             </div>
           </div>
           <!--  end of card::body-->
 
           <!--  start of card::form-->
         </div>
-
         <div class="card card-custom gutter-b">
           <!--  start of card::form-->
           <div class="card-header">
@@ -321,6 +413,11 @@
                   </div>
                 </div>
               </div>
+              <!--  Start::RouteSteps     -->
+              <RouteStepsForCreateShippingRequest
+                (SelectedRouteStepsFromChild)="shippingRequest.createOrEditRoutStepDtoList = $event"
+              ></RouteStepsForCreateShippingRequest>
+              <!--   End::RouteSteps      -->
               <!--  end of Route::Details-->
             </div>
           </div>
@@ -328,98 +425,6 @@
 
           <!--  start of card::form-->
         </div>
-
-        <div class="card card-custom gutter-b">
-          <!--  start of card::form-->
-          <div class="card-header">
-            <h3 class="card-title">{{ l('shipmentDetails') }}</h3>
-          </div>
-          <!--  start of card::body-->
-          <div class="card-body">
-            <div class="row">
-              <!--  start of ShippingRequestType::Details-->
-              <div class="col-12">
-                <div class="mb-3">
-                  <div class="mb-2">
-                    <div class="form-group row fv-plugins-icon-container">
-                      <div class="col-lg-6">
-                        <label>* {{ l('ShippingRequestType') }}:</label>
-                        <select
-                          #SRType="ngModel"
-                          class="form-control"
-                          name="shippingRequestType"
-                          required
-                          [class.is-invalid]="SRType.touched && !SRType.valid"
-                          [class.is-valid]="SRType.touched && SRType.valid"
-                          [(ngModel)]="shippingRequestType"
-                          (change)="shippingRequestTypeChanged()"
-                        >
-                          <option>Select</option>
-                          <option value="bidding">{{ l('bidding') }}</option>
-                          <option value="tachyondeal">{{ l('TachyonDeal') }}</option>
-                        </select>
-                        <span class="form-text text-muted">{{ l('pickaShippingRequestType') }}</span>
-                      </div>
-                      <div class="col-lg-3">
-                        <div class="form-group">
-                          <label>* {{ l('biddingStartDate') }}:</label>
-                          <div class="input-group date">
-                            <input
-                              #BidStartDate="ngModel"
-                              class="form-control"
-                              placeholder="{{ l('BiddingstartDate') }}"
-                              name="shippingrequestBidStratDate"
-                              [required]="this.shippingRequestType == 'bidding'"
-                              [class.is-invalid]="this.shippingRequestType == 'bidding' && BidStartDate.touched && !BidStartDate.valid"
-                              [class.is-valid]="this.shippingRequestType == 'bidding' && BidStartDate.touched && BidStartDate.valid"
-                              [(ngModel)]="shippingRequest.bidStartDate"
-                              [disabled]="shippingRequestType != 'bidding'"
-                              bsDatepicker
-                            />
-                            <div class="input-group-append">
-                              <span class="input-group-text">
-                                <i class="la la-calendar-check-o"></i>
-                              </span>
-                            </div>
-                          </div>
-                          <span class="form-text text-muted">{{ l('SetBiddingStartDate') }} (in case of shipping request type is bidding)</span>
-                        </div>
-                      </div>
-                      <div class="col-lg-3">
-                        <label>* {{ l('biddingEndDate') }}:</label>
-                        <div class="input-group date">
-                          <input
-                            #BidEndDate="ngModel"
-                            class="form-control"
-                            placeholder="{{ l('biddingEndDate') }}"
-                            name="shippingrequestBidEndDate"
-                            [required]="this.shippingRequestType == 'bidding'"
-                            [class.is-invalid]="this.shippingRequestType == 'bidding' && BidEndDate.touched && !BidEndDate.valid"
-                            [class.is-valid]="this.shippingRequestType == 'bidding' && BidEndDate.touched && BidEndDate.valid"
-                            [(ngModel)]="shippingRequest.bidEndDate"
-                            [disabled]="shippingRequestType != 'bidding'"
-                            bsDatepicker
-                          />
-                          <div class="input-group-append">
-                            <span class="input-group-text">
-                              <i class="la la-calendar-check-o"></i>
-                            </span>
-                          </div>
-                        </div>
-                        <span class="form-text text-muted">{{ l('biddingEndDate') }} (in case of shipping request type is bidding)</span>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <!--  end of ShippingRequestType::Details-->
-            </div>
-          </div>
-          <!--  end of card::body-->
-
-          <!--  start of card::form-->
-        </div>
-
         <div class="card card-custom gutter-b">
           <!--  start of card::form-->
           <div class="card-header">
@@ -494,89 +499,6 @@
 
           <!--  start of card::form-->
         </div>
-
-        <!--    start::Goods details   -->
-        <div class="card card-custom gutter-b">
-          <div class="card-header">
-            <div class="card-toolbar">
-              <button (click)="createOrEditGoodsDetailModal.show()" class="btn btn-primary blue">
-                <i class="fa fa-plus"></i> {{ l('CreateNewGoodsDetail') }}
-              </button>
-            </div>
-          </div>
-          <div class="card-body">
-            <div class="row align-items-center">
-              <!--<Primeng-Datatable-Start>-->
-              <div [busyIf]="primengTableHelper.isLoading" class="primeng-datatable-container col-12">
-                <p-table
-                  ScrollWidth="100%"
-                  [paginator]="false"
-                  [resizableColumns]="primengTableHelper.resizableColumns"
-                  [responsive]="primengTableHelper.isResponsive"
-                  [scrollable]="true"
-                  [value]="shippingRequest.goodsDetailS"
-                  rows="{{ primengTableHelper.defaultRecordsCountPerPage }}"
-                >
-                  <ng-template pTemplate="header">
-                    <tr>
-                      <th [hidden]="!isGrantedAny('Pages.GoodsDetails.Edit', 'Pages.GoodsDetails.Delete')" style="width: 130px;">
-                        {{ l('Actions') }}
-                      </th>
-                      <th pSortableColumn="goodCategoryFk.displayName" style="width: 150px;">
-                        {{ l('Name') }}
-                        <p-sortIcon field="goodCategoryDisplayName"></p-sortIcon>
-                      </th>
-                    </tr>
-                  </ng-template>
-                  <ng-template let-record="$implicit" pTemplate="body" let-i="rowIndex">
-                    <tr>
-                      <td [hidden]="!isGrantedAny('Pages.GoodsDetails.Edit', 'Pages.GoodsDetails.Delete')" style="width: 130px;">
-                        <div class="btn-group dropdown" container="body" dropdown>
-                          <button class="dropdown-toggle btn btn-sm btn-primary" dropdownToggle>
-                            <i class="fa fa-cog"></i><span class="caret"></span> {{ l('Actions') }}
-                          </button>
-                          <ul *dropdownMenu class="dropdown-menu">
-                            <li>
-                              <a
-                                (click)="createOrEditGoodsDetailModal.edit(i)"
-                                *ngIf="permission.isGranted('Pages.GoodsDetails.Edit')"
-                                class="dropdown-item"
-                                href="javascript:"
-                                >{{ l('Edit') }}</a
-                              >
-                            </li>
-                            <li>
-                              <a (click)="deleteGoodsDetail(i)" class="dropdown-item" href="javascript:">{{ l('Delete') }}</a>
-                            </li>
-                          </ul>
-                        </div>
-                      </td>
-                      <td style="width: 150px;">
-                        <span class="ui-column-title"> {{ l('DisplayName') }}</span>
-                        {{ record.name }}
-                      </td>
-                    </tr>
-                  </ng-template>
-                </p-table>
-                <div *ngIf="shippingRequest.goodsDetailS?.length == 0" class="primeng-no-data">
-                  {{ l('NoData') }}
-                </div>
-              </div>
-              <!--<Primeng-Datatable-End>-->
-            </div>
-          </div>
-          <createOrEditGoodsDetailModal
-            #createOrEditGoodsDetailModal
-            [CreateOrEditGoodDetailList]="shippingRequest.goodsDetailS"
-            (modalSave)="refreshGoodsDetails()"
-          ></createOrEditGoodsDetailModal>
-        </div>
-        <!--     end::Goods details -->
-        <!--  Start::RouteSteps        -->
-        <RouteStepsForCreateShippingRequest></RouteStepsForCreateShippingRequest>
-
-        <!--   End::RouteSteps       -->
-
         <!--    start::Btns   -->
         <div class="container-fluid">
           <div class="row">
@@ -595,7 +517,7 @@
             </div>
           </div>
         </div>
-        <!--     end::Btns     -->
+        <!--   end::Btns  -->
       </form>
     </div>
   </div>
@@ -649,9 +571,9 @@
   <!--              &lt;!&ndash;            </div>&ndash;&gt;-->
 
   <!--              <div class="form-group col-md-12">-->
-  <!--                &lt;!&ndash;              <agm-map [latitude]="Number(routStep.latitude)" [longitude]="Number(routStep.longitude)" [zoom]="zoom" (mapClick)="mapClicked($event)">&ndash;&gt;-->
-  <!--                &lt;!&ndash;                <agm-marker [latitude]="Number(routStep.latitude)" [longitude]="Number(routStep.longitude)" [markerDraggable]="true"></agm-marker>&ndash;&gt;-->
-  <!--                &lt;!&ndash;              </agm-map>&ndash;&gt;-->
+  <!--                <agm-map>-->
+  <!--                  <agm-marker></agm-marker>-->
+  <!--                </agm-map>-->
   <!--              </div>-->
 
   <!--              &lt;!&ndash;              <div class="form-group col-md-6 m-form__group">&ndash;&gt;-->
@@ -825,120 +747,6 @@
   <!--      </div>-->
   <!--    </div>-->
   <!--  </div>-->
-  <!--  &lt;!&ndash;<createOrEditFacilityModal #createOrEditFacilityModal (modalSave)="refreshFacilities()"></createOrEditFacilityModal>&ndash;&gt;-->
-  <!--  <div-->
-  <!--    class="modal fade"-->
-  <!--    bsModal-->
-  <!--    #createFacilityModal="bs-modal"-->
-  <!--    [config]="{ backdrop: 'static' }"-->
-  <!--    tabindex="-1"-->
-  <!--    role="dialog"-->
-  <!--    aria-labelledby="dialog-static-name"-->
-  <!--  >-->
-  <!--    <div class="modal-dialog modal-xl">-->
-  <!--      <div class="modal-content">-->
-  <!--        <form *ngIf="active" #createFacilityForm="ngForm" novalidate (ngSubmit)="createFacility()" autocomplete="off">-->
-  <!--          <div class="modal-header">-->
-  <!--            <h4 class="modal-title">-->
-  <!--              &lt;!&ndash;                <span *ngIf="routStep.id">{{l("EditRoutStep")}}</span>&ndash;&gt;-->
-  <!--              &lt;!&ndash;                <span *ngIf="!routStep.id">{{l("CreateNewRoutStep")}}</span>&ndash;&gt;-->
-  <!--              {{ l('CreateFacilityModal') }}-->
-  <!--            </h4>-->
-  <!--            <button type="button" class="close" (click)="createFacilityModal.hide()" aria-label="Close" [disabled]="saving">-->
-  <!--              <span aria-hidden="true">&times;</span>-->
-  <!--            </button>-->
-  <!--          </div>-->
-  <!--          <div class="modal-body">-->
-  <!--            <div class="row">-->
-  <!--              <div class="form-group col-md-6">-->
-  <!--                <label>{{ l('search') }}</label>-->
-  <!--                <input-->
-  <!--                  type="text"-->
-  <!--                  class="form-control"-->
-  <!--                  (keydown.enter)="$event.preventDefault()"-->
-  <!--                  placeholder="Search Nearest Location"-->
-  <!--                  autocorrect="off"-->
-  <!--                  autocapitalize="off"-->
-  <!--                  spellcheck="off"-->
-  <!--                  type="text"-->
-  <!--                  #search-->
-  <!--                />-->
-  <!--              </div>-->
-  <!--              <div class="form-group col-md-6">-->
-  <!--                <label for="Facility_Name">{{ l('Name') }} *</label>-->
-  <!--                <input-->
-  <!--                  type="text"-->
-  <!--                  id="Facility_Name"-->
-  <!--                  class="form-control"-->
-  <!--                  [(ngModel)]="facility.name"-->
-  <!--                  name="Name"-->
-  <!--                  minlength="0"-->
-  <!--                  maxlength="256"-->
-  <!--                  required-->
-  <!--                />-->
-  <!--              </div>-->
-
-  <!--              <div class="form-group col-md-12">-->
-  <!--                <agm-map [latitude]="facility.latitude" [longitude]="facility.longitude" [zoom]="zoom" (mapClick)="mapClicked($event)">-->
-  <!--                  <agm-marker [latitude]="facility.latitude" [longitude]="facility.longitude" [markerDraggable]="true"></agm-marker>-->
-  <!--                </agm-map>-->
-  <!--              </div>-->
-  <!--              &lt;!&ndash;                        <div class="form-group m-form__group">&ndash;&gt;-->
-  <!--              &lt;!&ndash;                            <label for="CountyDisplayName">{{ l('County') }}</label>&ndash;&gt;-->
-  <!--              &lt;!&ndash;                            <select name="facility.countyId" [(ngModel)]="facility.countyId" class="form-control" required>&ndash;&gt;-->
-  <!--              &lt;!&ndash;                                <option value="">{{ l('SelectACounty') }}</option>&ndash;&gt;-->
-  <!--              &lt;!&ndash;                                <option *ngFor="let item of allCountries" value="{{ item.id }}">{{ item.displayName }}</option>&ndash;&gt;-->
-  <!--              &lt;!&ndash;                            </select>&ndash;&gt;-->
-  <!--              &lt;!&ndash;                        </div>&ndash;&gt;-->
-
-  <!--              <div class="form-group m-form__group">-->
-  <!--                <label for="CityDisplayName">{{ l('City') }}</label>-->
-  <!--                <select name="facility.cityId" [(ngModel)]="facility.cityId" class="form-control" required>-->
-  <!--                  <option value="">{{ l('SelectACity') }}</option>-->
-  <!--                  <option *ngFor="let item of allCitys" value="{{ item.id }}">{{ item.displayName }}</option>-->
-  <!--                </select>-->
-  <!--              </div>-->
-
-  <!--              <div class="form-group col-md-6">-->
-  <!--                <label for="Facility_Adress">{{ l('Adress') }} *</label>-->
-  <!--                <input-->
-  <!--                  type="text"-->
-  <!--                  id="Facility_Adress"-->
-  <!--                  class="form-control"-->
-  <!--                  [(ngModel)]="facility.adress"-->
-  <!--                  name="Adress"-->
-  <!--                  minlength="0"-->
-  <!--                  maxlength="256"-->
-  <!--                  required-->
-  <!--                />-->
-  <!--              </div>-->
-
-  <!--              &lt;!&ndash;                        <div class="form-group col-md-6">&ndash;&gt;-->
-  <!--              &lt;!&ndash;                            <label for="Facility_Longitude">{{ l('Longitude') }}</label>&ndash;&gt;-->
-  <!--              &lt;!&ndash;                            <input type="number" id="Facility_Longitude" class="form-control" [(ngModel)]="facility.longitude" name="Longitude" />&ndash;&gt;-->
-  <!--              &lt;!&ndash;                        </div>&ndash;&gt;-->
-
-  <!--              &lt;!&ndash;                        <div class="form-group col-md-6">&ndash;&gt;-->
-  <!--              &lt;!&ndash;                            <label for="Facility_Latitude">{{ l('Latitude') }}</label>&ndash;&gt;-->
-  <!--              &lt;!&ndash;                            <input type="number" id="Facility_Latitude" class="form-control" [(ngModel)]="facility.latitude" name="Latitude" />&ndash;&gt;-->
-  <!--              &lt;!&ndash;                        </div>&ndash;&gt;-->
-  <!--            </div>-->
-  <!--          </div>-->
-  <!--          <div class="modal-footer">-->
-  <!--            <button [disabled]="saving" type="button" class="btn btn-default" (click)="createFacilityModal.hide()">{{ l('Cancel') }}</button>-->
-  <!--            <button-->
-  <!--              type="submit"-->
-  <!--              class="btn btn-primary blue"-->
-  <!--              [disabled]="!createFacilityForm.form.valid"-->
-  <!--              [buttonBusy]="saving"-->
-  <!--              [busyText]="l('SavingWithThreeDot')"-->
-  <!--            >-->
-  <!--              <i class="fa fa-save"></i> <span>{{ l('Save') }}</span>-->
-  <!--            </button>-->
-  <!--          </div>-->
-  <!--        </form>-->
-  <!--      </div>-->
-  <!--    </div>-->
-  <!--  </div>-->
+  <!--<createOrEditFacilityModal #createOrEditFacilityModal (modalSave)="refreshFacilities()"></createOrEditFacilityModal>-->
 </div>
 <!--<VasForCreateShippingRequstModalComponent #VasForCreateShippingRequstModalComponent></VasForCreateShippingRequstModalComponent>-->

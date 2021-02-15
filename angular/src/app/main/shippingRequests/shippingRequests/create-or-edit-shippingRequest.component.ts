@@ -33,7 +33,7 @@ import { VasForCreateShippingRequstModalComponent } from '@app/main/shippingRequ
 import * as moment from '@node_modules/moment';
 import { LazyLoadEvent } from '@node_modules/primeng/public_api';
 import { CreateOrEditGoodsDetailModalComponent } from '@app/main/goodsDetails/goodsDetails/create-or-edit-goodsDetail-modal.component';
-import { CreateOrEditRoutStepModalComponent } from '@app/main/routSteps/routSteps/create-or-edit-routStep-modal.component';
+import { RouteStepsForCreateShippingRequstComponent } from '../shippingRequests/ShippingRequestRouteSteps/RouteStepsForCreateShippingRequst.component';
 
 @Component({
   templateUrl: './create-or-edit-shippingRequest.component.html',
@@ -50,8 +50,9 @@ export class CreateOrEditShippingRequestComponent extends AppComponentBase imple
   @ViewChild('staticModal') public staticModal: ModalDirective;
   @ViewChild('createFacilityModal') public createFacilityModal: ModalDirective;
   @ViewChild('createOrEditGoodsDetailModal') public createOrEditGoodsDetailModal: CreateOrEditGoodsDetailModalComponent;
-  @ViewChild('routeStepsForShippingRequest') public RouteStepsForCreateShippingRequest: CreateOrEditRoutStepModalComponent;
-  @ViewChild('VasForCreateShippingRequstModalComponent', { static: true })
+  @ViewChild('routeStepsForCreateShippingRequstComponent')
+  public RouteStepsForCreateShippingRequstComponent: RouteStepsForCreateShippingRequstComponent;
+
   VasForCreateShippingRequstModalComponent: VasForCreateShippingRequstModalComponent;
 
   active = false;
@@ -63,7 +64,7 @@ export class CreateOrEditShippingRequestComponent extends AppComponentBase imple
   allTrailerTypes: SelectItemDto[];
   allGoodsDetails: SelectItemDto[];
   allRoutTypes: RouteRoutTypeLookupTableDto[];
-  routStep: CreateOrEditRoutStepDto = new CreateOrEditRoutStepDto();
+  // routStep: CreateOrEditRoutStepDto = new CreateOrEditRoutStepDto();
   allCitys: RoutStepCityLookupTableDto[];
   allFacilities: FacilityForDropdownDto[];
   allPorts: SelectItemDto[];
@@ -103,27 +104,9 @@ export class CreateOrEditShippingRequestComponent extends AppComponentBase imple
     super(injector);
   }
 
-  openModal() {
-    //load Places Autocomplete
-    // this.loadMapApi();
-    // this.facility.latitude = 24.67911662122269;
-    // this.facility.longitude = 46.6355543345471;
-    // this.zoom = 5;
-    this.staticModal.show();
-  }
-
-  openCreateFacilityModal() {
-    //load Places Autocomplete
-    this.loadMapApi();
-    this.facility.latitude = 24.67911662122269;
-    this.facility.longitude = 46.6355543345471;
-    this.zoom = 5;
-    this.createFacilityModal.show();
-  }
-
   ngOnInit(): void {
     this.shippingRequest.createOrEditRouteDto = new CreateOrEditRouteDto();
-    //this.routStep.createOrEditGoodsDetailDto = new CreateOrEditGoodsDetailDto();
+    // this.routStep.createOrEditGoodsDetailDto = new CreateOrEditGoodsDetailDto();
     this.show(this._activatedRoute.snapshot.queryParams['id']);
   }
 
@@ -146,13 +129,6 @@ export class CreateOrEditShippingRequestComponent extends AppComponentBase imple
     //this.refreshFacilities();
   }
 
-  addRouteStep(): void {
-    const item = this.routStep;
-    this.createOrEditRoutStepDtoList.push(this.routStep);
-    this.routStep = new CreateOrEditRoutStepDto();
-    this.staticModal.hide();
-  }
-
   save(): void {
     //this function fires when Create BTN is Clicked
     this.saving = true;
@@ -173,68 +149,6 @@ export class CreateOrEditShippingRequestComponent extends AppComponentBase imple
       });
   } //end of create
 
-  private saveInternal(): Observable<void> {
-    this.saving = true;
-    this.shippingRequest.createOrEditRoutStepDtoList = this.createOrEditRoutStepDtoList;
-    this.shippingRequest.shippingRequestVasList = this.selectedVases;
-    return this._shippingRequestsServiceProxy.createOrEdit(this.shippingRequest).pipe(
-      finalize(() => {
-        this.saving = false;
-        this.notify.info(this.l('SavedSuccessfully'));
-      })
-    );
-  }
-
-  loadMapApi() {
-    this.mapsAPILoader.load().then(() => {
-      this.geoCoder = new google.maps.Geocoder();
-
-      let autocomplete = new google.maps.places.Autocomplete(this.searchElementRef.nativeElement);
-      autocomplete.addListener('place_changed', () => {
-        this.ngZone.run(() => {
-          //get the place result
-          let place: google.maps.places.PlaceResult = autocomplete.getPlace();
-
-          //verify result
-          if (place.geometry === undefined || place.geometry === null) {
-            return;
-          }
-
-          //set latitude, longitude and zoom
-          this.facility.latitude = place.geometry.location.lat();
-          this.facility.longitude = place.geometry.location.lng();
-          this.zoom = 12;
-        });
-      });
-    });
-  }
-
-  mapClicked($event: MouseEvent) {
-    // @ts-ignore
-    this.facility.latitude = $event.coords.lat;
-    // @ts-ignore
-    this.facility.longitude = $event.coords.lng;
-    // @ts-ignore
-    this.getAddress($event.coords.lat, $event.coords.lng);
-  }
-
-  getAddress(latitude, longitude) {
-    this.geoCoder.geocode({ location: { lat: latitude, lng: longitude } }, (results, status) => {
-      console.log(results);
-      console.log(status);
-      if (status === 'OK') {
-        if (results[0]) {
-          this.zoom = 12;
-          //this.address = results[0].formatted_address;
-        } else {
-          window.alert('No results found');
-        }
-      } else {
-        window.alert('Geocoder failed due to: ' + status);
-      }
-    });
-  }
-
   refreshFacilities() {
     this._routStepsServiceProxy.getAllFacilitiesForDropdown().subscribe((result) => {
       this.allFacilities = result;
@@ -242,7 +156,7 @@ export class CreateOrEditShippingRequestComponent extends AppComponentBase imple
   }
 
   loadAllDropDownLists(): void {
-    this._goodsDetailsServiceProxy.getAllGoodCategoryForTableDropdown().subscribe((result) => {
+    this._goodsDetailsServiceProxy.getAllGoodCategoryForTableDropdown(undefined).subscribe((result) => {
       this.allGoodCategorys = result;
     });
     // this._shippingRequestsServiceProxy.getAllCarriersForDropDown().subscribe((result) => {
@@ -272,7 +186,8 @@ export class CreateOrEditShippingRequestComponent extends AppComponentBase imple
 
   createFacility() {
     this.saving = true;
-
+    console.log('facility Created');
+    console.log(this.facility);
     this._facilitiesServiceProxy
       .createOrEdit(this.facility)
       .pipe(
@@ -285,14 +200,6 @@ export class CreateOrEditShippingRequestComponent extends AppComponentBase imple
         this.createFacilityModal.hide();
         this.refreshFacilities();
       });
-  }
-
-  numberOnly(event): boolean {
-    const charCode = event.which ? event.which : event.keyCode;
-    if (charCode > 31 && (charCode < 48 || charCode > 57)) {
-      return false;
-    }
-    return true;
   }
 
   getAllVasList() {
@@ -343,11 +250,7 @@ export class CreateOrEditShippingRequestComponent extends AppComponentBase imple
     }
   }
 
-  refreshGoodsDetails() {
-    this.shippingRequest.goodsDetailS = this.createOrEditGoodsDetailModal.CreateOrEditGoodDetailList;
-  }
-
-  deleteGoodsDetail(index: number) {
-    this.shippingRequest.goodsDetailS.splice(index, 1);
+  changeDetector() {
+    console.log(this.shippingRequest);
   }
 }

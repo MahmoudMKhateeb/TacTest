@@ -2,7 +2,7 @@
 import Swal from 'sweetalert2';
 
 import {
-  GetShippingRequestForViewDto,
+  GetShippingRequestForViewOutput,
   ShippingRequestBidsServiceProxy,
   ShippingRequestDto,
   ShippingRequestsServiceProxy,
@@ -18,6 +18,7 @@ import { LazyLoadEvent } from '@node_modules/primeng/public_api';
 import { filter } from '@node_modules/rxjs/internal/operators';
 @Component({
   templateUrl: './view-shippingRequest.component.html',
+  styleUrls: ['./view-shippingRequest.component.scss'],
   animations: [appModuleAnimation()],
 })
 export class ViewShippingRequestComponent extends AppComponentBase implements OnInit {
@@ -26,7 +27,7 @@ export class ViewShippingRequestComponent extends AppComponentBase implements On
   active = false;
   saving = false;
   CancelBidShippingRequest: CancelBidShippingRequestInput = new CancelBidShippingRequestInput();
-  item: GetShippingRequestForViewDto;
+  item: GetShippingRequestForViewOutput;
   private activeShippingRequestId: number;
 
   breadcrumbs: BreadcrumbItem[] = [
@@ -44,7 +45,7 @@ export class ViewShippingRequestComponent extends AppComponentBase implements On
     private changeDetectorRef: ChangeDetectorRef
   ) {
     super(injector);
-    this.item = new GetShippingRequestForViewDto();
+    this.item = new GetShippingRequestForViewOutput();
     this.item.shippingRequest = new ShippingRequestDto();
   }
 
@@ -59,6 +60,9 @@ export class ViewShippingRequestComponent extends AppComponentBase implements On
   show(shippingRequestId: number): void {
     this._shippingRequestsServiceProxy.getShippingRequestForView(shippingRequestId).subscribe((result) => {
       this.item = result;
+
+      console.log(this.item);
+
       this.activeShippingRequestId = this.item.shippingRequest.id;
       this.active = true;
     });

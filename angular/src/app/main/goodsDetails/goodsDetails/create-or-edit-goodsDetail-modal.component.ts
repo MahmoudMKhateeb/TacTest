@@ -27,7 +27,9 @@ export class CreateOrEditGoodsDetailModalComponent extends AppComponentBase {
 
   constructor(injector: Injector, private _goodsDetailsServiceProxy: GoodsDetailsServiceProxy) {
     super(injector);
-    this._goodsDetailsServiceProxy.getAllGoodCategoryForTableDropdown().subscribe((result) => {
+  }
+  getAllGoodDetails(fatherId) {
+    this._goodsDetailsServiceProxy.getAllGoodCategoryForTableDropdown(fatherId || undefined).subscribe((result) => {
       this.allGoodCategorys = result;
     });
   }
