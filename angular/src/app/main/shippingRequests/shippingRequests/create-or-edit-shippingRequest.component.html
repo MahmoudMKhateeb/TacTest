@@ -268,7 +268,7 @@
                               class="form-control"
                               name="origin"
                               [disabled]="!allCitys"
-                              [(ngModel)]="shippingRequest.createOrEditRouteDto.originCityId"
+                              [(ngModel)]="shippingRequest.createOrEditRouteDto.originFacilityId"
                               required
                               [class.is-invalid]="Origin.touched && !Origin.valid"
                               [class.is-valid]="Origin.touched && Origin.valid"
@@ -293,7 +293,7 @@
                               [class.is-invalid]="Destination.touched && !Destination.valid"
                               [class.is-valid]="Destination.touched && Destination.valid"
                               [disabled]="!allCitys"
-                              [(ngModel)]="shippingRequest.createOrEditRouteDto.destinationCityId"
+                              [(ngModel)]="shippingRequest.createOrEditRouteDto.destinationFacilityId"
                             >
                               <option value="">{{ l('selectaDestination') }}</option>
                               <option *ngFor="let item of allCitys" value="{{ item.id }}">{{ item.displayName }}</option>
