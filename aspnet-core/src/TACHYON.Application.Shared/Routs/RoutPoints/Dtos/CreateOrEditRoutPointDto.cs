@@ -13,6 +13,15 @@ namespace TACHYON.Routs.RoutPoints.Dtos
         [Required]
         public long FacilityId { get; set; }
 
+        /// <summary>
+        /// is for UI helpping only and will be ignored in mapping
+        /// </summary>
+        public double Longitude { get; set; }
+
+        /// <summary>
+        /// is for UI helpping only and will be ignored in mapping
+        /// </summary>
+        public double Latitude { get; set; }
         public List<RoutPointGoodsDetailDto> RoutPointGoodsDetailListDto { get; set; }
     }
 }
