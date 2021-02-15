@@ -1,142 +1,260 @@
-<div class="card card-custom gutter-b">
-  <div class="card-header">
-    <h4 class="card-title">
-      {{ l('Please Enter Your Goods Details')}}
-    </h4>
-    <div class="card-toolbar">
-      <button (click)="createOrEditGoodDetail.show()" class="btn btn-primary blue"><i class="fa fa-plus"></i> {{ l('addNewGoodDetails') }}</button>
-    </div>
-  </div>
-  <div class="card-body">
-    <div class="row align-items-center">
-      <!--<Primeng-Datatable-Start>-->
-      <div [busyIf]="primengTableHelper.isLoading" class="primeng-datatable-container col-12">
-        <p-table
-          ScrollWidth="100%"
-          [paginator]="false"
-          [resizableColumns]="primengTableHelper.resizableColumns"
-          [responsive]="primengTableHelper.isResponsive"
-          [scrollable]="true"
-          [value]="GoodDetailsList"
-          rows="{{ primengTableHelper.defaultRecordsCountPerPage }}"
-        >
-          <ng-template pTemplate="header">
-            <tr>
-              <th style="width: 130px;">
-                {{ l('Actions') }}
-              </th>
-              <th pSortableColumn="goodCategoryFk.displayName" style="width: 150px;">
-                {{ l('Name') }}
-                <p-sortIcon field="goodCategoryDisplayName"></p-sortIcon>
-              </th>
-              <th pSortableColumn="goodCategoryFk.displayName" style="width: 150px;">
-                {{ l('Amount') }}
-                <p-sortIcon field="goodCategoryDisplayName"></p-sortIcon>
-              </th>
-              <th pSortableColumn="goodCategoryFk.displayName" style="width: 150px;">
-                {{ l('weight') }}
-                <p-sortIcon field="goodCategoryDisplayName"></p-sortIcon>
-              </th>
-              <th pSortableColumn="goodCategoryFk.displayName" style="width: 150px;">
-                {{ l('Dimentions') }}
-                <p-sortIcon field="goodCategoryDisplayName"></p-sortIcon>
-              </th>
-
-              <th pSortableColumn="goodCategoryFk.displayName" style="width: 150px;">
-                {{ l('Dangerous') }}
-                <p-sortIcon field="goodCategoryDisplayName"></p-sortIcon>
-              </th>
-
-              <th pSortableColumn="goodCategoryFk.displayName" style="width: 150px;">
-                {{ l('DangerousGoodsCode') }}
-                <p-sortIcon field="goodCategoryDisplayName"></p-sortIcon>
-              </th>
-            </tr>
-          </ng-template>
-          <ng-template let-record="$implicit" pTemplate="body" let-i="rowIndex">
-            <tr>
-              <td style="width: 130px;">
-                <div class="btn-group dropdown" container="body" dropdown>
-                  <button class="dropdown-toggle btn btn-sm btn-primary" dropdownToggle>
-                    <i class="fa fa-cog"></i><span class="caret"></span> {{ l('Actions') }}
-                  </button>
-                  <ul *dropdownMenu class="dropdown-menu">
-                    <li>
-                      <a (click)="edit(i)" class="dropdown-item" href="javascript:">{{ l('Edit') }}</a>
-                    </li>
-                    <li>
-                      <a (click)="delete(i)" class="dropdown-item" href="javascript:">{{ l('Delete') }}</a>
-                    </li>
-                  </ul>
-                </div>
-              </td>
-              <td style="width: 150px;">
-                <span class="ui-column-title"> {{ l('name') }}</span>
-                {{ record.name }}
-              </td>
-              <td style="width: 150px;">
-                <span class="ui-column-title"> {{ l('totalAmount') }}</span>
-                {{ record.totalAmount }}
-              </td>
-              <td style="width: 150px;">
-                <span class="ui-column-title"> {{ l('weight') }}</span>
-                {{ record.weight }}
-              </td>
-              <td style="width: 150px;">
-                <span class="ui-column-title"> {{ l('Dimentions') }}</span>
-                {{ record.dimentions }}
-              </td>
-              <td style="width: 150px;">
-                <span class="ui-column-title"> {{ l('isDangerousGood') }}</span>
-                {{ record.isDangerousGood }}
-              </td>
-              <td style="width: 150px;">
-                <span class="ui-column-title"> {{ l('DangerousGoodsCode') }}</span>
-                {{ record.dangerousGoodsCode }}
-              </td>
-            </tr>
-          </ng-template>
-        </p-table>
-        <div *ngIf="GoodDetailsList.length == 0" class="primeng-no-data">
-          {{ l('NoData') }}
-        </div>
+<div>
+  <div class="card card-custom gutter-b">
+    <div class="card-header">
+      <h3 class="card-title">
+        {{ l('Please Enter Your Goods Details')}}
+      </h3>
+      <div class="card-toolbar">
+        <button type="button" class="btn btn-primary blue" (click)="createOrEditGoodDetail.show()">
+          <i class="fa fa-plus"></i>
+          {{ l('addNewGoodDetails') }}
+        </button>
       </div>
-      <!--<Primeng-Datatable-End>-->
+    </div>
+    <div class="card-body">
+      <div class="row align-items-center">
+        <!--<Primeng-Datatable-Start>-->
+        <div [busyIf]="primengTableHelper.isLoading" class="primeng-datatable-container col-12">
+          <p-table
+            ScrollWidth="100%"
+            [paginator]="false"
+            [resizableColumns]="primengTableHelper.resizableColumns"
+            [responsive]="primengTableHelper.isResponsive"
+            [scrollable]="true"
+            [value]="GoodDetailsList"
+            rows="{{ primengTableHelper.defaultRecordsCountPerPage }}"
+          >
+            <ng-template pTemplate="header">
+              <tr>
+                <th style="width: 130px;">
+                  {{ l('Actions') }}
+                </th>
+                <th pSortableColumn="goodCategoryFk.displayName" style="width: 150px;">
+                  {{ l('Name') }}
+                  <p-sortIcon field="goodCategoryDisplayName"></p-sortIcon>
+                </th>
+                <th pSortableColumn="goodCategoryFk.displayName" style="width: 150px;">
+                  {{ l('Amount') }}
+                  <p-sortIcon field="goodCategoryDisplayName"></p-sortIcon>
+                </th>
+                <th pSortableColumn="goodCategoryFk.displayName" style="width: 150px;">
+                  {{ l('weight') }}
+                  <p-sortIcon field="goodCategoryDisplayName"></p-sortIcon>
+                </th>
+                <th pSortableColumn="goodCategoryFk.displayName" style="width: 150px;">
+                  {{ l('Dimentions') }}
+                  <p-sortIcon field="goodCategoryDisplayName"></p-sortIcon>
+                </th>
+
+                <th pSortableColumn="goodCategoryFk.displayName" style="width: 150px;">
+                  {{ l('Dangerous') }}
+                  <p-sortIcon field="goodCategoryDisplayName"></p-sortIcon>
+                </th>
+
+                <th pSortableColumn="goodCategoryFk.displayName" style="width: 150px;">
+                  {{ l('DangerousGoodsCode') }}
+                  <p-sortIcon field="goodCategoryDisplayName"></p-sortIcon>
+                </th>
+              </tr>
+            </ng-template>
+            <ng-template let-record="$implicit" pTemplate="body" let-i="rowIndex">
+              <tr>
+                <td style="width: 130px;">
+                  <div class="btn-group dropdown" container="body" dropdown>
+                    <button class="dropdown-toggle btn btn-sm btn-primary" dropdownToggle>
+                      <i class="fa fa-cog"></i><span class="caret"></span> {{ l('Actions') }}
+                    </button>
+                    <ul *dropdownMenu class="dropdown-menu">
+                      <li>
+                        <a (click)="edit(i)" class="dropdown-item" href="javascript:">{{ l('Edit') }}</a>
+                      </li>
+                      <li>
+                        <a (click)="delete(i)" class="dropdown-item" href="javascript:">{{ l('Delete') }}</a>
+                      </li>
+                    </ul>
+                  </div>
+                </td>
+                <td style="width: 150px;">
+                  <span class="ui-column-title"> {{ l('name') }}</span>
+                  {{ record.name }}
+                </td>
+                <td style="width: 150px;">
+                  <span class="ui-column-title"> {{ l('totalAmount') }}</span>
+                  {{ record.totalAmount }}
+                </td>
+                <td style="width: 150px;">
+                  <span class="ui-column-title"> {{ l('weight') }}</span>
+                  {{ record.weight }}
+                </td>
+                <td style="width: 150px;">
+                  <span class="ui-column-title"> {{ l('Dimentions') }}</span>
+                  {{ record.dimentions }}
+                </td>
+                <td style="width: 150px;">
+                  <span class="ui-column-title"> {{ l('isDangerousGood') }}</span>
+                  {{ record.isDangerousGood }}
+                </td>
+                <td style="width: 150px;">
+                  <span class="ui-column-title"> {{ l('DangerousGoodsCode') }}</span>
+                  {{ record.dangerousGoodsCode }}
+                </td>
+              </tr>
+            </ng-template>
+          </p-table>
+          <div *ngIf="GoodDetailsList.length == 0" class="primeng-no-data">
+            {{ l('NoData') }}
+          </div>
+        </div>
+        <!--<Primeng-Datatable-End>-->
+      </div>
     </div>
   </div>
-</div>
-<div
-  #createOrEditGoodDetail="bs-modal"
-  [config]="{ backdrop: 'static' }"
-  aria-hidden="true"
-  aria-labelledby="createOrEditModal"
-  bsModal
-  class="modal fade"
-  role="dialog"
-  tabindex="-1"
->
-  <div class="modal-dialog modal-lg">
-    <div class="modal-content">
-      <form #goodsDetailForm="ngForm" (ngSubmit)="save()" autocomplete="off" novalidate>
-        <div class="modal-header">
-          <h4 class="modal-title">
-            <span *ngIf="goodsDetail.id">{{ l('EditGoodsDetail') }}</span>
-            <span *ngIf="!goodsDetail.id">{{ l('CreateNewGoodsDetail') }}</span>
-          </h4>
-          <button (click)="close()" [disabled]="saving" aria-label="Close" class="close" type="button">
-            <span aria-hidden="true">&times;</span>
-          </button>
-        </div>
-        <div class="modal-body">
-          <div class="form-group m-form__group">
-            <label>{{ l('GoodCategory') }}</label>
-            <select [(ngModel)]="goodsDetail.goodCategoryId" class="form-control" name="goodsDetail.goodCategoryId">
-              <option value="">{{ l('SelectAGoodCategory') }}</option>
-              <option *ngFor="let item of allGoodCategorys" value="{{ item.id }}">{{ item.displayName }}</option>
-            </select>
+  <div
+    #createOrEditGoodDetail="bs-modal"
+    [config]="{ backdrop: 'static' }"
+    aria-hidden="true"
+    aria-labelledby="createOrEditModal"
+    bsModal
+    class="modal fade"
+    role="dialog"
+    tabindex="-1"
+  >
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+        <form #goodsDetailForm="ngForm" (ngSubmit)="save()" autocomplete="off" novalidate>
+          <div class="modal-header">
+            <h4 class="modal-title">
+              <span *ngIf="goodsDetail.id">{{ l('EditGoodsDetail') }}</span>
+              <span *ngIf="!goodsDetail.id">{{ l('CreateNewGoodsDetail') }}</span>
+            </h4>
+            <button (click)="close()" [disabled]="saving" aria-label="Close" class="close" type="button">
+              <span aria-hidden="true">&times;</span>
+            </button>
           </div>
+          <div class="modal-body">
+            <div class="row">
+              <!--<div class="form-group m-form__group">-->
+              <div class="col-12">
+                <div class="form-group row fv-plugins-icon-container">
+                  <div class="col-lg-6">
+                    <div class="form-group">
+                      <label>* {{ l('GoodCategory') }}:</label>
+                      <!--   TODO:// Add DataBining for DD-->
+                      <div [ngClass]="{ 'spinner spinner-success spinner-right mr-1 ml-1': !allGoodCategorys }">
+                        <select select [(ngModel)]="goodsDetail.goodCategoryId" class="form-control" name="goodsDetail.goodCategoryId">
+                          <option value="">{{ l('SelectAGoodCategory') }}</option>
+                          <option *ngFor="let item of allGoodCategorys" value="{{ item.id }}">{{ item.displayName }}</option>
+                        </select>
+                      </div>
+                      <span class="form-text text-muted">{{ l('selectaGoodCategory') }}</span>
+                    </div>
+                  </div>
+                  <div class="col-lg-6">
+                    <div class="form-group">
+                      <label for="GoodsDetail_Name">{{ l('Name') }} *</label>
+                      <input
+                        [(ngModel)]="goodsDetail.name"
+                        class="form-control"
+                        id="GoodsDetail_Name"
+                        maxlength="256"
+                        minlength="0"
+                        name="Name"
+                        required
+                        type="text"
+                      />
+                    </div>
+                  </div>
+                  <div class="col-lg-6">
+                    <div class="form-group">
+                      <label for="GoodsDetail_Description">{{ l('Description') }}</label>
+                      <input
+                        [(ngModel)]="goodsDetail.description"
+                        class="form-control"
+                        id="GoodsDetail_Description"
+                        maxlength="256"
+                        minlength="0"
+                        name="Description"
+                        type="text"
+                      />
+                    </div>
+                  </div>
+                  <div class="col-lg-6">
+                    <div class="form-group">
+                      <label for="GoodsDetail_Quantity">{{ l('Quantity') }}</label>
+                      <input
+                        [(ngModel)]="goodsDetail.totalAmount"
+                        class="form-control"
+                        id="GoodsDetail_Quantity"
+                        maxlength="128"
+                        minlength="0"
+                        name="Quantity"
+                        type="text"
+                      />
+                    </div>
+                  </div>
+                  <div class="col-lg-6">
+                    <div class="form-group">
+                      <label for="GoodsDetail_Weight">{{ l('Weight') }}</label>
+                      <input
+                        [(ngModel)]="goodsDetail.weight"
+                        class="form-control"
+                        id="GoodsDetail_Weight"
+                        maxlength="64"
+                        minlength="0"
+                        name="Weight"
+                        type="text"
+                      />
+                    </div>
+                  </div>
+                  <div class="col-lg-6">
+                    <div class="form-group">
+                      <label for="GoodsDetail_Dimentions">{{ l('Dimentions') }}</label>
+                      <input
+                        [(ngModel)]="goodsDetail.dimentions"
+                        class="form-control"
+                        id="GoodsDetail_Dimentions"
+                        maxlength="128"
+                        minlength="0"
+                        name="Dimentions"
+                        type="text"
+                      />
+                    </div>
+                  </div>
+                  <div class="col-lg-6">
+                    <div class="form-group">
+                      <label for="GoodsDetail_DangerousGoodsCode">{{ l('DangerousGoodsCode') }}</label>
+                      <input
+                        [(ngModel)]="goodsDetail.dangerousGoodsCode"
+                        class="form-control"
+                        id="GoodsDetail_DangerousGoodsCode"
+                        maxlength="64"
+                        minlength="0"
+                        name="DangerousGoodsCode"
+                        type="text"
+                      />
+                    </div>
+                  </div>
 
-          <div class="form-group">
+                  <div class="col-lg-6 mt-10">
+                    <div class="form-check checkbox-inline">
+                      <label class="checkbox checkbox-danger">
+                        <input
+                          [(ngModel)]="goodsDetail.isDangerousGood"
+                          id="GoodsDetail_IsDangerousGood"
+                          name="IsDangerousGood"
+                          type="checkbox"
+                          checked="checked"
+                        />
+                        <span></span>
+                        {{ l('IsDangerousGood') }}
+                      </label>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!--<div class="form-group">
             <label for="GoodsDetail_Name">{{ l('Name') }} *</label>
             <input
               [(ngModel)]="goodsDetail.name"
@@ -148,94 +266,31 @@
               required
               type="text"
             />
-          </div>
+          </div>-->
 
-          <div class="form-group">
-            <label for="GoodsDetail_Description">{{ l('Description') }}</label>
-            <input
-              [(ngModel)]="goodsDetail.description"
-              class="form-control"
-              id="GoodsDetail_Description"
-              maxlength="256"
-              minlength="0"
-              name="Description"
-              type="text"
-            />
-          </div>
-
-          <div class="form-group">
-            <label for="GoodsDetail_Quantity">{{ l('Quantity') }}</label>
-            <input
-              [(ngModel)]="goodsDetail.totalAmount"
-              class="form-control"
-              id="GoodsDetail_Quantity"
-              maxlength="128"
-              minlength="0"
-              name="Quantity"
-              type="text"
-            />
-          </div>
-
-          <div class="form-group">
-            <label for="GoodsDetail_Weight">{{ l('Weight') }}</label>
-            <input
-              [(ngModel)]="goodsDetail.weight"
-              class="form-control"
-              id="GoodsDetail_Weight"
-              maxlength="64"
-              minlength="0"
-              name="Weight"
-              type="text"
-            />
-          </div>
-
-          <div class="form-group">
-            <label for="GoodsDetail_Dimentions">{{ l('Dimentions') }}</label>
-            <input
-              [(ngModel)]="goodsDetail.dimentions"
-              class="form-control"
-              id="GoodsDetail_Dimentions"
-              maxlength="128"
-              minlength="0"
-              name="Dimentions"
-              type="text"
-            />
-          </div>
-
-          <div class="m-checkbox-list">
+            <!-- <div class="m-checkbox-list">
             <label class="kt-checkbox" for="GoodsDetail_IsDangerousGood">
               <input [(ngModel)]="goodsDetail.isDangerousGood" id="GoodsDetail_IsDangerousGood" name="IsDangerousGood" type="checkbox" />
               {{ l('IsDangerousGood') }}
               <span></span>
             </label>
+          </div>-->
           </div>
 
-          <div class="form-group">
-            <label for="GoodsDetail_DangerousGoodsCode">{{ l('DangerousGoodsCode') }}</label>
-            <input
-              [(ngModel)]="goodsDetail.dangerousGoodsCode"
-              class="form-control"
-              id="GoodsDetail_DangerousGoodsCode"
-              maxlength="64"
-              minlength="0"
-              name="DangerousGoodsCode"
-              type="text"
-            />
+          <div class="modal-footer">
+            <button (click)="close()" [disabled]="saving" class="btn btn-default" type="button">{{ l('Cancel') }}</button>
+            <button
+              [busyText]="l('SavingWithThreeDot')"
+              [buttonBusy]="saving"
+              [disabled]="!goodsDetailForm.form.valid"
+              class="btn btn-save blue"
+              type="submit"
+            >
+              <i class="fa fa-save"></i> <span>{{ l('Save') }}</span>
+            </button>
           </div>
-        </div>
-        <div class="modal-footer">
-          <button (click)="close()" [disabled]="saving" class="btn btn-default" type="button">{{ l('Cancel') }}</button>
-          <button
-            [busyText]="l('SavingWithThreeDot')"
-            [buttonBusy]="saving"
-            [disabled]="!goodsDetailForm.form.valid"
-            class="btn btn-save blue"
-            type="submit"
-          >
-            <i class="fa fa-save"></i> <span>{{ l('Save') }}</span>
-          </button>
-        </div>
-      </form>
+        </form>
+      </div>
     </div>
   </div>
 </div>
