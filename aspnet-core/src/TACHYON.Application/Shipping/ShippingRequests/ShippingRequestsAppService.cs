@@ -380,8 +380,8 @@ namespace TACHYON.Shipping.ShippingRequests
                         ShippingRequest = x,
                         ShippingRequestBidDtoList = x.ShippingRequestBids,
                         ShippingRequestVasesList = x.ShippingRequestVases,
-                        OriginalCityName = x.RouteFk.OriginCityFk.DisplayName,
-                        DestinationCityName = x.RouteFk.DestinationCityFk.DisplayName,
+                        OriginalCityName = x.RouteFk.OriginFacilityFk.CityFk.DisplayName,
+                        DestinationCityName = x.RouteFk.DestinationFacilityFk.CityFk.DisplayName,
                         DriverName = x.AssignedDriverUserFk != null ? x.AssignedDriverUserFk.Name : "",
                         GoodsCategoryName = x.GoodCategoryFk != null ? x.GoodCategoryFk.DisplayName : "",
                         RoutTypeName = x.RouteFk.RoutTypeFk.DisplayName,
@@ -431,9 +431,11 @@ namespace TACHYON.Shipping.ShippingRequests
                     .ThenInclude(e => e.RoutTypeFk)
                     .Include(e => e.ShippingRequestVases)
                     .Include(e => e.RouteFk)
-                    .ThenInclude(e => e.OriginCityFk)
+                    .ThenInclude(e => e.OriginFacilityFk)
+                    .ThenInclude(e=>e.CityFk)
                     .Include(e => e.RouteFk)
-                    .ThenInclude(e => e.DestinationCityFk)
+                    .ThenInclude(e => e.DestinationFacilityFk)
+                    .ThenInclude(e=>e.CityFk)
                     .Include(e => e.ShippingRequestStatusFk)
                     .Include(e => e.AssignedDriverUserFk)
                     .Include(e => e.AssignedTruckFk)
@@ -458,8 +460,8 @@ namespace TACHYON.Shipping.ShippingRequests
                 ShippingRequest = ObjectMapper.Map<ShippingRequestDto>(shippingRequest),
                 ShippingRequestBidDtoList = ObjectMapper.Map<List<ShippingRequestBidDto>>(shippingRequestBidsList),
                 VasCount = shippingRequest.ShippingRequestVases.Count(),
-                OriginalCityName = shippingRequest.RouteFk.OriginCityFk.DisplayName,
-                DestinationCityName = shippingRequest.RouteFk.DestinationCityFk.DisplayName,
+                OriginalCityName = shippingRequest.RouteFk.OriginFacilityFk?.CityFk?.DisplayName,
+                DestinationCityName = shippingRequest.RouteFk.DestinationFacilityFk?.CityFk?.DisplayName,
                 DriverName = shippingRequest.AssignedDriverUserFk?.FullName,
                 GoodsCategoryName = shippingRequest.GoodCategoryFk?.DisplayName,
                 RoutTypeName = shippingRequest.RouteFk.RoutTypeFk.DisplayName,

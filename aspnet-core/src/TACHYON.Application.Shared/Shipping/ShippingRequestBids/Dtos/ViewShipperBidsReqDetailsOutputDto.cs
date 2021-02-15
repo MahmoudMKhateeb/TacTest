@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using TACHYON.AddressBook.Dtos;
 
 namespace TACHYON.Shipping.ShippingRequestBids.Dtos
 {
@@ -30,13 +31,13 @@ namespace TACHYON.Shipping.ShippingRequestBids.Dtos
         /// </summary>
         public long? MyBidId { get; set; }
         /// <summary>
-        /// shipping request origin city name
+        /// shipping request origin facility output
         /// </summary>
-        public string OriginalCityName { get; set; }
+        public GetFacilityForViewOutput OriginalFacility { get; set; }
         /// <summary>
-        /// shipping request destination city name
+        /// shipping request destination facility output
         /// </summary>
-        public string DestinationCityName { get; set; }
+        public GetFacilityForViewOutput DestinationFacility { get; set; }
         /// <summary>
         /// shipping request good category
         /// </summary>

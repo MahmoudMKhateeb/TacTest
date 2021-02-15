@@ -17,6 +17,7 @@ using Abp.Timing;
 using Abp.UI;
 using Microsoft.EntityFrameworkCore;
 using Org.BouncyCastle.Crypto.Generators;
+using TACHYON.AddressBook.Dtos;
 using TACHYON.Authorization;
 using TACHYON.Features;
 using TACHYON.MultiTenancy;
@@ -255,8 +256,10 @@ namespace TACHYON.Shipping.ShippingRequestBids
                     .Include(x => x.GoodCategoryFk)
                     .Include(x => x.GoodCategoryFk)
                     .Include(x => x.ShippingRequestBids)
-                    .Include(x => x.RouteFk.OriginCityFk)
-                    .Include(x => x.RouteFk.DestinationCityFk)
+                    .Include(x => x.RouteFk.OriginFacilityFk)
+                    .ThenInclude(x=>x.CityFk)
+                    .Include(x => x.RouteFk.DestinationFacilityFk)
+                    .ThenInclude(x=>x.CityFk)
                     .Include(x => x.Tenant)
                     .Where(x => x.IsBid)
                     .WhereIf(input.TruckTypeId != null, x => x.TrucksTypeId == input.TruckTypeId)
@@ -301,8 +304,18 @@ namespace TACHYON.Shipping.ShippingRequestBids
                         GoodCategoryName = o.GoodCategoryFk.DisplayName,
                         MyBidPrice = o.ShippingRequestBids.OrderByDescending(x => x.Id).FirstOrDefault()?.price,
                         MyBidId = o.ShippingRequestBids.FirstOrDefault()?.Id,
-                        OriginalCityName = o.RouteFk?.OriginCityFk?.DisplayName,
-                        DestinationCityName = o.RouteFk?.DestinationCityFk?.DisplayName
+                        OriginalFacility=new GetFacilityForViewOutput()
+                        {
+                            Facility =ObjectMapper.Map<FacilityDto>(o.RouteFk.OriginFacilityFk),
+                            CityDisplayName = o.RouteFk?.OriginFacilityFk?.CityFk.DisplayName,
+                            FacilityName = o.RouteFk?.OriginFacilityFk?.Name
+                        },
+                        DestinationFacility =new GetFacilityForViewOutput()
+                        {
+                            Facility = ObjectMapper.Map<FacilityDto>(o.RouteFk.DestinationFacilityFk),
+                            CityDisplayName = o.RouteFk?.DestinationFacilityFk?.CityFk.DisplayName,
+                            FacilityName = o.RouteFk?.DestinationFacilityFk?.Name
+                        } 
                     });
 
                 int totalCount = await filterBidShippingRequests.CountAsync();

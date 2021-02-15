@@ -30,15 +30,15 @@ namespace TACHYON.Routs
         [ForeignKey("RoutTypeId")]
         public RoutType RoutTypeFk { get; set; }
 
-        public virtual int? OriginCityId { get; set; }
+        public virtual long? OriginFacilityId { get; set; }
 
-        [ForeignKey("OriginCityId")]
-        public City OriginCityFk { get; set; }
+        [ForeignKey("OriginFacilityId")]
+        public Facility OriginFacilityFk { get; set; }
 
-        public virtual int? DestinationCityId { get; set; }
+        public virtual long? DestinationFacilityId { get; set; }
 
-        [ForeignKey("DestinationCityId")]
-        public City DestinationCityFk { get; set; }
+        [ForeignKey("DestinationFacilityId")]
+        public Facility DestinationFacilityFk { get; set; }
         public virtual long? OriginPortId { get; set; }
 
         [ForeignKey("OriginPortId")]
