@@ -62,7 +62,7 @@ namespace TACHYON.Trucks.Importing
             DocumentType istimaraDocumentType = new DocumentType();
             try
             {
-                istimaraDocumentType = _documentTypeRepository.GetAll().First(x => x.SpecialConstant.ToLower() == "TruckIstimara".ToLower());
+                istimaraDocumentType = _documentTypeRepository.GetAll().First(x => x.SpecialConstant.ToLower() == TACHYONConsts.TruckIstimaraDocumentTypeSpecialConstant.ToLower());
                 istimaraDocumentFileDto.DocumentTypeId = istimaraDocumentType.Id;
             }
             catch
@@ -76,7 +76,7 @@ namespace TACHYON.Trucks.Importing
             DocumentType insuranceDocumentType = new DocumentType();
             try
             {
-                insuranceDocumentType = _documentTypeRepository.GetAll().First(x => x.SpecialConstant.ToLower() == "TruckInsurance".ToLower());
+                insuranceDocumentType = _documentTypeRepository.GetAll().First(x => x.SpecialConstant.ToLower() == TACHYONConsts.TruckInsuranceDocumentTypeSpecialConstant.ToLower());
                 insuranceDocumentFileDto.DocumentTypeId = insuranceDocumentType.Id;
             }
             catch
@@ -142,8 +142,10 @@ namespace TACHYON.Trucks.Importing
                     truck.Exception = exceptionMessage.ToString();
                 }
 
-                //default truck status active
-                truck.TruckStatusId = 3;
+                //defaults
+                truck.TruckStatusId = TACHYONConsts.TruckDefualtStatusId;
+                truck.PlateTypeId = TACHYONConsts.TruckDefualtPlateTypeId;
+
             }
             catch (Exception exception)
             {

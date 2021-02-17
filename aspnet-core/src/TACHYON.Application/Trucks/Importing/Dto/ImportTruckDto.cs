@@ -50,6 +50,9 @@ namespace TACHYON.Trucks.Importing.Dto
 
         public virtual int? CapacityId { get; set; }
 
+        public virtual int? PlateTypeId { get; set; }
+
+
         #endregion
 
         /// <summary>

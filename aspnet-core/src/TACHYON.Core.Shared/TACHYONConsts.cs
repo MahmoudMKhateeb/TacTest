@@ -16,14 +16,7 @@
 
         public const string AbpApiClientUserAgent = "AbpApiClient";
 
-        //BidStatus consts
-        public const int ShippingRequestStatusStandBy = 1;
 
-        public const int ShippingRequestStatusOnGoing = 2;
-
-        public const int ShippingRequestStatusClosed = 3;
-
-        public const int ShippingRequestStatusCanceled = 4;
 
         // Note:
         // Minimum accepted payment amount. If a payment amount is less then that minimum value payment progress will continue without charging payment
@@ -34,6 +27,37 @@
 
         #region Tachyon consts
         public const int MaxDocumentFileBytesUserFriendlyValue = 5;
+
+        //BidStatus consts
+        public const int ShippingRequestStatusStandBy = 1;
+
+        public const int ShippingRequestStatusOnGoing = 2;
+
+        public const int ShippingRequestStatusClosed = 3;
+
+        public const int ShippingRequestStatusCanceled = 4;
+
+        //Trucks consts
+        /// <summary>
+        /// active
+        /// </summary>
+        public const int TruckDefualtStatusId = 1;
+        /// <summary>
+        /// publicTransport
+        /// </summary>
+        public const int TruckDefualtPlateTypeId = 1;
+
+        /// <summary>
+        /// Is used for mapping fields for Truck Istimara document in import from excel
+        /// </summary>
+        public const string TruckIstimaraDocumentTypeSpecialConstant = "TruckIstimara";
+
+        /// <summary>
+        /// Is used for mapping fields for Truck Insurance document in import from excel
+        /// </summary>
+        public const string TruckInsuranceDocumentTypeSpecialConstant = "TruckInsurance";
+
+
         #endregion
 
     }

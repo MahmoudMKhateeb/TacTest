@@ -146,7 +146,7 @@ namespace TACHYON.Trucks.Importing.Dto
                     truck.TenantId = tenantId.Value;
                 }
 
-                truck = await _truckRepository.InsertAsync(truck);
+                await _truckRepository.InsertAsync(truck);
 
                 foreach (var importTruckDocumentFileDto in input.ImportTruckDocumentFileDtos)
                 {
@@ -158,7 +158,7 @@ namespace TACHYON.Trucks.Importing.Dto
                 uow.Complete();
             }
 
-  
+
 
         }
 
