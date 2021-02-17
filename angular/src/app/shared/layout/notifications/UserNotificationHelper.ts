@@ -54,6 +54,9 @@ export class UserNotificationHelper extends AppComponentBase {
       //Add your custom notification names to navigate to a URL when user clicks to a notification.
       case 'App.RejectedSubmittedDocument':
         return '/app/main/documentFiles/documentFiles';
+
+      case 'App.AcceptedSubmittedDocument':
+        return '/app/main/documentFiles/documentFiles';
     }
 
     //No url for this notification
