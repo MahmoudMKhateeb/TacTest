@@ -1,4 +1,4 @@
-import { Component, ViewChild, Injector, Output, EventEmitter, OnInit } from '@angular/core';
+import { Component, ViewChild, Injector, Output, EventEmitter, OnInit, Input } from '@angular/core';
 import { AppComponentBase } from '@shared/common/app-component-base';
 import { ModalDirective } from 'ngx-bootstrap/modal';
 import { CreateOrEditGoodsDetailDto, GoodsDetailsServiceProxy } from '@shared/service-proxies/service-proxies';
@@ -9,8 +9,9 @@ import { CreateOrEditGoodsDetailDto, GoodsDetailsServiceProxy } from '@shared/se
 })
 export class GoodDetailsForCreateShippingRequstComponent extends AppComponentBase implements OnInit {
   @ViewChild('createOrEditGoodDetail') public createOrEditGoodDetail: ModalDirective;
-
+  @Input() MainCategory: string;
   @Output() SelectedGoodDetailsFromChild: EventEmitter<CreateOrEditGoodsDetailDto[]> = new EventEmitter<CreateOrEditGoodsDetailDto[]>();
+
   constructor(injector: Injector, private _goodsDetailsServiceProxy: GoodsDetailsServiceProxy) {
     super(injector);
   }
@@ -21,18 +22,16 @@ export class GoodDetailsForCreateShippingRequstComponent extends AppComponentBas
   active: any;
   saving: boolean;
   index: number;
-  allGoodCategorys: any;
+  allSubGoodCategorys: any;
+  //mainGoodCategory = undefined;
 
-  ngOnInit() {
-    this._goodsDetailsServiceProxy.getAllGoodCategoryForTableDropdown(undefined).subscribe((result) => {
-      this.allGoodCategorys = result;
-    });
-  }
+  ngOnInit() {}
 
   show(): void {
     if (!this.goodsDetail) {
       this.goodsDetail = new CreateOrEditGoodsDetailDto();
     }
+    this.GetAllSubCat(this.MainCategory);
     this.active = true;
     this.createOrEditGoodDetail.show();
   }
@@ -63,12 +62,12 @@ export class GoodDetailsForCreateShippingRequstComponent extends AppComponentBas
 
     this.EmitToFather();
     this.notify.info(this.l('SavedSuccessfully'));
-    console.log(this.GoodDetailsList);
     this.saving = false;
     this.close();
   }
   EmitToFather() {
     this.SelectedGoodDetailsFromChild.emit(this.GoodDetailsList);
+    console.log(this.GoodDetailsList);
     this.goodsDetail = new CreateOrEditGoodsDetailDto();
     this.createOrEditGoodDetail.hide();
   }
@@ -78,5 +77,15 @@ export class GoodDetailsForCreateShippingRequstComponent extends AppComponentBas
     this.goodsDetail = new CreateOrEditGoodsDetailDto();
     this.active = false;
     this.createOrEditGoodDetail.hide();
+  }
+
+  GetAllSubCat(FatherID) {
+    //Get All Sub-Good Category
+    if (FatherID) {
+      this.allSubGoodCategorys = undefined;
+      this._goodsDetailsServiceProxy.getAllGoodCategoryForTableDropdown(FatherID).subscribe((result) => {
+        this.allSubGoodCategorys = result;
+      });
+    }
   }
 }

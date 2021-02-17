@@ -223,7 +223,7 @@
                             [class.is-invalid]="goodCategory.touched && !goodCategory.valid"
                             [class.is-valid]="goodCategory.touched && goodCategory.valid"
                           >
-                            <option value="">{{ l('SelectAGoodCategory') }}</option>
+                            <option [ngValue]="undefined">{{ l('SelectAGoodCategory') }}</option>
                             <option *ngFor="let item of allGoodCategorys" value="{{ item.id }}">{{ item.displayName }}</option>
                           </select>
                         </div>
@@ -238,6 +238,7 @@
               <!--  Start:Goods details  -->
               <GoodDetailsForCreateShippingRequest
                 (SelectedGoodDetailsFromChild)="shippingRequest.goodsDetailS = $event"
+                [MainCategory]="shippingRequest.goodCategoryId"
               ></GoodDetailsForCreateShippingRequest>
               <!--   end::Goods details   -->
             </div>
@@ -415,6 +416,7 @@
               </div>
               <!--  Start::RouteSteps     -->
               <RouteStepsForCreateShippingRequest
+                [GoodsCategoryList]="shippingRequest.goodsDetailS"
                 (SelectedRouteStepsFromChild)="shippingRequest.createOrEditRoutStepDtoList = $event"
               ></RouteStepsForCreateShippingRequest>
               <!--   End::RouteSteps      -->
@@ -511,8 +513,7 @@
                 class="btn btn-danger font-weight-bold font-size-h6 px-10 float-right"
               >
                 <i class="flaticon2-tag"></i>
-                <span *ngIf="!shippingRequest.id"> {{ l('createShippingRequest') }}</span>
-                <span *ngIf="shippingRequest.id"> {{ l('saveEdits') }}</span>
+                <span> {{ shippingRequest.id ? l('UpdateSippingRequest') : l('createShippingRequest') }}</span>
               </button>
             </div>
           </div>
@@ -522,6 +523,7 @@
     </div>
   </div>
 
+  <createOrEditFacilityModal #createOrEditFacilityModal (modalSave)="refreshFacilities()"></createOrEditFacilityModal>
   <!--  <div-->
   <!--    class="modal fade"-->
   <!--    bsModal-->

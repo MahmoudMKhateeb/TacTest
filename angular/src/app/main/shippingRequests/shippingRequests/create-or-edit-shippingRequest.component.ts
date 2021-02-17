@@ -249,8 +249,4 @@ export class CreateOrEditShippingRequestComponent extends AppComponentBase imple
       this.allCapacities = null;
     }
   }
-
-  changeDetector() {
-    console.log(this.shippingRequest);
-  }
 }

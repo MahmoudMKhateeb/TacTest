@@ -179,11 +179,57 @@
                   </select>
                 </div>
               </div>
-
               <div class="form-group">
-                <label>amount</label>
-                <div class="input-icon input-icon-right">
-                  <input type="text" class="form-control" placeholder="amount" name="routStep.totalAmount" [(ngModel)]="routStep.totalAmount" />
+                <label>Good Details:</label>
+
+                <div class="row" [@simpleFadeAnimation]="'in'" *ngFor="let SourceGoodDetail of SourceGoodDetailValueslist; let i = index">
+                  <div class="col-lg-6">
+                    <div class="mb-2">
+                      <div class="input-group">
+                        <select
+                          class="form-control"
+                          [(ngModel)]="SourceGoodDetail.goodsDetailsId"
+                          #name="ngModel"
+                          name="GoodSubCategory{{i}}"
+                          [disabled]="!GoodsCategoryList"
+                        >
+                          <option value="">{{ l('SelectAGood') }}</option>
+                          <option *ngFor="let item of GoodsCategoryList" value="{{ item.goodCategoryId }}">{{ item.name }}</option>
+                        </select>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-lg-4">
+                    <div class="mb-2">
+                      <div class="input-group">
+                        <input
+                          type="text"
+                          class="form-control float-right"
+                          placeholder="Enter Amount"
+                          [(ngModel)]="SourceGoodDetail.amount"
+                          #name="ngModel"
+                          name="amount{{i}}"
+                          [disabled]="!GoodsCategoryList"
+                        />
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-lg-2">
+                    <button class="btn font-weight-bold btn-danger btn-icon float-right" (click)="removevalue(i , 'source')" [disabled]="i == 0">
+                      <i class="la la-trash float-right"></i>
+                    </button>
+                  </div>
+                </div>
+                <div class="form-group row mt-4">
+                  <div class="col-lg-12">
+                    <button
+                      class="btn btn-success font-weight-bold btn-icon float-right"
+                      (click)="addvalue('source')"
+                      [disabled]="!GoodsCategoryList"
+                    >
+                      <i class="la la-plus-circle"></i>
+                    </button>
+                  </div>
                 </div>
               </div>
             </div>
@@ -240,9 +286,52 @@
                 </div>
               </div>
               <div class="form-group">
-                <label>amount</label>
-                <div class="input-icon input-icon-right">
-                  <input type="text" class="form-control" placeholder="amount" name="amount" />
+                <label>Good Details:</label>
+
+                <div class="row" [@simpleFadeAnimation]="'in'" *ngFor="let DestGoodDetail of DestGoodDetailValueslist; let i = index">
+                  <div class="col-lg-6">
+                    <div class="mb-2">
+                      <div class="input-group">
+                        <select
+                          class="form-control"
+                          [(ngModel)]="DestGoodDetail.goodsDetailsId"
+                          #name="ngModel"
+                          name="GoodSubCategory{{i}}"
+                          [disabled]="!GoodsCategoryList"
+                        >
+                          <option value="">{{ l('SelectAGood') }}</option>
+                          <option *ngFor="let item of GoodsCategoryList" value="{{ item.goodCategoryId }}">{{ item.name }}</option>
+                        </select>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-lg-4">
+                    <div class="mb-2">
+                      <div class="input-group">
+                        <input
+                          type="text"
+                          class="form-control float-right"
+                          placeholder="Enter Amount"
+                          [(ngModel)]="DestGoodDetail.amount"
+                          #name="ngModel"
+                          name="amount{{i}}"
+                          [disabled]="!GoodsCategoryList"
+                        />
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-lg-2">
+                    <button class="btn font-weight-bold btn-danger btn-icon float-right" (click)="removevalue(i , 'dest')" [disabled]="i == 0">
+                      <i class="la la-trash float-right"></i>
+                    </button>
+                  </div>
+                </div>
+                <div class="form-group row mt-4">
+                  <div class="col-lg-12">
+                    <button class="btn btn-success font-weight-bold btn-icon float-right" (click)="addvalue('dest')" [disabled]="!GoodsCategoryList">
+                      <i class="la la-plus-circle"></i>
+                    </button>
+                  </div>
                 </div>
               </div>
             </div>
@@ -406,7 +495,7 @@
             </div>
           </div>
           <div class="modal-footer">
-            <button [disabled]="saving" type="button" class="btn btn-default" (click)="EmitToFather()">{{ l('Cancel') }}</button>
+            <button [disabled]="saving" type="button" class="btn btn-default" (click)="createFacilityModal.hide()">{{ l('Cancel') }}</button>
             <button
               type="submit"
               class="btn btn-primary blue"

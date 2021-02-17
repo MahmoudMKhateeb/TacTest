@@ -1,9 +1,11 @@
-import { Component, ViewChild, Injector, Output, EventEmitter, OnChanges, SimpleChanges, NgZone, ElementRef, OnInit } from '@angular/core';
+import { Component, ViewChild, Injector, Output, EventEmitter, OnChanges, SimpleChanges, NgZone, ElementRef, OnInit, Input } from '@angular/core';
 import { finalize } from 'rxjs/operators';
 import { AppComponentBase } from '@shared/common/app-component-base';
 import { ModalDirective } from 'ngx-bootstrap/modal';
 import {
   CreateOrEditFacilityDto,
+  CreateOrEditGoodsDetailDto,
+  CreateOrEditRoutPointDto,
   CreateOrEditRoutStepDto,
   FacilitiesServiceProxy,
   FacilityForDropdownDto,
@@ -13,16 +15,31 @@ import {
   RoutStepsServiceProxy,
 } from '@shared/service-proxies/service-proxies';
 import { MapsAPILoader } from '@node_modules/@agm/core';
+import { animate, state, style, transition, trigger } from '@angular/animations';
 
 @Component({
   selector: 'RouteStepsForCreateShippingRequest',
   templateUrl: './RouteStepsForCreateShippingRequest.html',
   styleUrls: ['./RouteStepsForCreateShippingRequest.scss'],
+  animations: [
+    // the fade-in/fade-out animation.
+    trigger('simpleFadeAnimation', [
+      // the "in" style determines the "resting" state of the element when it is visible.
+      state('in', style({ opacity: 1 })),
+
+      // fade in when created. this could also be written as transition('void => *')
+      transition(':enter', [style({ opacity: 0 }), animate(200)]),
+
+      // fade out when destroyed. this could also be written as transition('void => *')
+      transition(':leave', animate(400, style({ opacity: 0 }))),
+    ]),
+  ],
 })
 export class RouteStepsForCreateShippingRequstComponent extends AppComponentBase implements OnInit {
   @ViewChild('createFacilityModal') public createFacilityModal: ModalDirective;
   @ViewChild('createRouteStepModal') public createRouteStepModal: ModalDirective;
   @ViewChild('search') public searchElementRef: ElementRef;
+  @Input() GoodsCategoryList: CreateOrEditGoodsDetailDto[];
   @Output() SelectedRouteStepsFromChild: EventEmitter<CreateOrEditRoutStepDto[]> = new EventEmitter<CreateOrEditRoutStepDto[]>();
   routeStepsDetails: CreateOrEditRoutStepDto[] = [];
   routStep: CreateOrEditRoutStepDto = new CreateOrEditRoutStepDto();
@@ -58,7 +75,10 @@ export class RouteStepsForCreateShippingRequstComponent extends AppComponentBase
   wayPoints = [];
   wayPointMapSource = undefined;
   wayPointMapDest = undefined;
+  //end of way points
 
+  SourceGoodDetailValueslist = [];
+  DestGoodDetailValueslist = [];
   constructor(
     injector: Injector,
     private _routesServiceProxy: RoutesServiceProxy,
@@ -77,7 +97,29 @@ export class RouteStepsForCreateShippingRequstComponent extends AppComponentBase
 
     this.refreshFacilities();
     //this.Tester();
+    this.addvalue();
+    this.addvalue('source');
   }
+  //
+
+  removevalue(i, type) {
+    if (type === 'source') {
+      this.SourceGoodDetailValueslist.splice(i, 1);
+    } else {
+      this.DestGoodDetailValueslist.splice(i, 1);
+    }
+  }
+
+  addvalue(type?) {
+    if (type === 'source') {
+      this.SourceGoodDetailValueslist.push({ GoodSubCategory: '', amount: '' });
+    } else {
+      this.DestGoodDetailValueslist.push({ GoodSubCategory: '', amount: '' });
+    }
+    console.log(this.SourceGoodDetailValueslist);
+  }
+
+  //
 
   openCreateFacilityModal() {
     this.active = true;
@@ -93,6 +135,8 @@ export class RouteStepsForCreateShippingRequstComponent extends AppComponentBase
     //if there is an id for the RouteStep then update the Record Don't Create A new one
     console.log(`Save Edits Fired ${id}`);
     this.RouteStepCordSetter();
+    this.routStep.createOrEditSourceRoutPointInputDto.routPointGoodsDetailListDto = this.SourceGoodDetailValueslist;
+    this.routStep.createOrEditDestinationRoutPointInputDto.routPointGoodsDetailListDto = this.DestGoodDetailValueslist;
     this.routeStepsDetails[id] = this.routStep;
     this.createRouteStepModal.hide();
     this.notify.info(this.l('UpdatedSuccessfully'));
@@ -104,10 +148,14 @@ export class RouteStepsForCreateShippingRequstComponent extends AppComponentBase
       //if there is an id open the modal and display the date
       this.routeStepIdForEdit = id;
       this.routStep = this.routeStepsDetails[id];
+      this.SourceGoodDetailValueslist = this.routStep.createOrEditSourceRoutPointInputDto.routPointGoodsDetailListDto;
+      this.DestGoodDetailValueslist = this.routStep.createOrEditDestinationRoutPointInputDto.routPointGoodsDetailListDto;
       this.createRouteStepModal.show();
     } else {
       //create new route Step
       this.RouteStepCordSetter();
+      this.routStep.createOrEditSourceRoutPointInputDto.routPointGoodsDetailListDto = this.SourceGoodDetailValueslist;
+      this.routStep.createOrEditDestinationRoutPointInputDto.routPointGoodsDetailListDto = this.DestGoodDetailValueslist;
       this.routeStepsDetails.push(this.routStep);
       this.createRouteStepModal.hide();
       this.notify.info(this.l('SuccessfullyAdded'));

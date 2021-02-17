@@ -5,7 +5,7 @@
         {{ l('Please Enter Your Goods Details')}}
       </h3>
       <div class="card-toolbar">
-        <button type="button" class="btn btn-primary blue" (click)="createOrEditGoodDetail.show()">
+        <button type="button" class="btn btn-primary blue" (click)="show()" [disabled]="!MainCategory">
           <i class="fa fa-plus"></i>
           {{ l('addNewGoodDetails') }}
         </button>
@@ -113,7 +113,7 @@
     #createOrEditGoodDetail="bs-modal"
     [config]="{ backdrop: 'static' }"
     aria-hidden="true"
-    aria-labelledby="createOrEditModal"
+    aria-labelledby="createOrEditGoodDetail"
     bsModal
     class="modal fade"
     role="dialog"
@@ -138,12 +138,18 @@
                 <div class="form-group row fv-plugins-icon-container">
                   <div class="col-lg-6">
                     <div class="form-group">
-                      <label>* {{ l('GoodCategory') }}:</label>
+                      <label>* {{ l('GoodSubCategory') }}:</label>
                       <!--   TODO:// Add DataBining for DD-->
-                      <div [ngClass]="{ 'spinner spinner-success spinner-right mr-1 ml-1': !allGoodCategorys }">
-                        <select select [(ngModel)]="goodsDetail.goodCategoryId" class="form-control" name="goodsDetail.goodCategoryId">
-                          <option value="">{{ l('SelectAGoodCategory') }}</option>
-                          <option *ngFor="let item of allGoodCategorys" value="{{ item.id }}">{{ item.displayName }}</option>
+                      <div [ngClass]="{ 'spinner spinner-success spinner-right mr-1 ml-1': !allSubGoodCategorys }">
+                        <!--                          <select select [(ngModel)]="goodsDetail.goodCategoryId" class="form-control" name="goodsDetail.goodCategoryId">-->
+                        <select
+                          [(ngModel)]="goodsDetail.goodCategoryId"
+                          class="form-control"
+                          name="goodsDetail.goodCategoryId"
+                          [disabled]="!allSubGoodCategorys"
+                        >
+                          <option value="">{{ l('SelectAGoodSubCategory') }}</option>
+                          <option *ngFor="let item of allSubGoodCategorys" value="{{ item.id }}">{{ item.displayName }}</option>
                         </select>
                       </div>
                       <span class="form-text text-muted">{{ l('selectaGoodCategory') }}</span>
