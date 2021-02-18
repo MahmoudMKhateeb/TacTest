@@ -44,9 +44,9 @@ namespace TACHYON.AddressBook
 
             var filteredFacilities = _facilityRepository.GetAll()
                         .Include(e => e.CityFk)
-                        .WhereIf(!string.IsNullOrWhiteSpace(input.Filter), e => false || e.Name.Contains(input.Filter) || e.Adress.Contains(input.Filter))
+                        .WhereIf(!string.IsNullOrWhiteSpace(input.Filter), e => false || e.Name.Contains(input.Filter) || e.Address.Contains(input.Filter))
                         .WhereIf(!string.IsNullOrWhiteSpace(input.NameFilter), e => e.Name == input.NameFilter)
-                        .WhereIf(!string.IsNullOrWhiteSpace(input.AdressFilter), e => e.Adress == input.AdressFilter)
+                        .WhereIf(!string.IsNullOrWhiteSpace(input.AdressFilter), e => e.Address == input.AdressFilter)
                        .WhereIf(!string.IsNullOrWhiteSpace(input.CityDisplayNameFilter), e => e.CityFk != null && e.CityFk.DisplayName == input.CityDisplayNameFilter);
 
             var pagedAndFilteredFacilities = filteredFacilities
@@ -62,9 +62,9 @@ namespace TACHYON.AddressBook
                                  Facility = new FacilityDto
                                  {
                                      Name = o.Name,
-                                     Adress = o.Adress,
-                                     Long=o.Location.X,
-                                     Lat=o.Location.Y,
+                                     Address = o.Address,
+                                     Longitude= o.Location.X,
+                                     Latitude= o.Location.Y,
                                      Id = o.Id                                 },
                                  CityDisplayName = s2 == null || s2.DisplayName == null ? "" : s2.DisplayName.ToString()
                              };
@@ -161,9 +161,9 @@ namespace TACHYON.AddressBook
 
             var filteredFacilities = _facilityRepository.GetAll()
                         .Include(e => e.CityFk)
-                        .WhereIf(!string.IsNullOrWhiteSpace(input.Filter), e => false || e.Name.Contains(input.Filter) || e.Adress.Contains(input.Filter))
+                        .WhereIf(!string.IsNullOrWhiteSpace(input.Filter), e => false || e.Name.Contains(input.Filter) || e.Address.Contains(input.Filter))
                         .WhereIf(!string.IsNullOrWhiteSpace(input.NameFilter), e => e.Name == input.NameFilter)
-                        .WhereIf(!string.IsNullOrWhiteSpace(input.AdressFilter), e => e.Adress == input.AdressFilter)
+                        .WhereIf(!string.IsNullOrWhiteSpace(input.AdressFilter), e => e.Address == input.AdressFilter)
                         .WhereIf(!string.IsNullOrWhiteSpace(input.CityDisplayNameFilter), e => e.CityFk != null && e.CityFk.DisplayName == input.CityDisplayNameFilter);
 
             var query = (from o in filteredFacilities
@@ -175,9 +175,9 @@ namespace TACHYON.AddressBook
                              Facility = new FacilityDto
                              {
                                  Name = o.Name,
-                                 Adress = o.Adress,
-                                 Long=o.Location.X,
-                                 Lat=o.Location.Y,
+                                 Address = o.Address,
+                                 Longitude= o.Location.X,
+                                 Latitude= o.Location.Y,
                                  Id = o.Id
                              },
                              CityDisplayName = s2 == null || s2.DisplayName == null ? "" : s2.DisplayName.ToString()

@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using TACHYON.Routs.RoutPoints.Dtos;
 using TACHYON.Shipping.ShippingRequestBids.Dtos;
 
 namespace TACHYON.Shipping.ShippingRequests.Dtos
@@ -8,6 +9,8 @@ namespace TACHYON.Shipping.ShippingRequests.Dtos
         public ShippingRequestDto ShippingRequest { get; set; }
 
         public List<ShippingRequestBidDto> ShippingRequestBidDtoList { get; set; }
+
+        public List<RoutPointDto> RoutPointDtoList { get; set; }
         public int VasCount { get; set; }
         public string TruckTypeDisplayName { get; set; }
         public string DriverName { get; set; }

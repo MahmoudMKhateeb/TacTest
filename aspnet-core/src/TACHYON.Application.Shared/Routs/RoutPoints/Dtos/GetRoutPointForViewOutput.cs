@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 using TACHYON.AddressBook.Dtos;
+using TACHYON.Goods.GoodsDetails.Dtos;
 
 namespace TACHYON.Routs.RoutPoints.Dtos
 {
@@ -10,6 +11,6 @@ namespace TACHYON.Routs.RoutPoints.Dtos
         public RoutPointDto RoutPointDto { get; set; }
         public string PickingTypeDisplayName{get; set;}
         public GetFacilityForViewOutput facilityDto { get; set; }
-        public List<RoutPointGoodsDetailDto> RoutPointGoodsDetailsList { get; set; }
+        public List<GoodsDetailDto> GoodsDetailsList { get; set; }
     }
 }

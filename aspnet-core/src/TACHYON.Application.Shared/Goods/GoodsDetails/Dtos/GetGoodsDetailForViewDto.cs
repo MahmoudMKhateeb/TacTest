@@ -1,11 +1,12 @@
-﻿namespace TACHYON.Goods.GoodsDetails.Dtos
+﻿using TACHYON.Routs.RoutPoints.Dtos;
+
+namespace TACHYON.Goods.GoodsDetails.Dtos
 {
     public class GetGoodsDetailForViewDto
     {
         public GoodsDetailDto GoodsDetail { get; set; }
-
+        public string RoutPointDisplayName { get; set; }
         public string GoodCategoryDisplayName { get; set; }
-
 
     }
 }

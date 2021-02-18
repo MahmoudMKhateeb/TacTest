@@ -36,8 +36,8 @@ namespace TACHYON.AddressBook.Exporting
                     AddHeader(
                         sheet,
                         L("Name"),
-                        L("Adress"),
-                        L("Logitude"),
+                        L("Address"),
+                        L("Longitude"),
                         L("latitude"),
                         (L("City")) + L("DisplayName")
                         );
@@ -45,9 +45,9 @@ namespace TACHYON.AddressBook.Exporting
                     AddObjects(
                         sheet, 2, facilities,
                         _ => _.Facility.Name,
-                        _ => _.Facility.Adress,
-                        _ => _.Facility.Long,
-                        _ => _.Facility.Lat,
+                        _ => _.Facility.Address,
+                        _ => _.Facility.Longitude,
+                        _ => _.Facility.Latitude,
                         _ => _.CityDisplayName
                         );
 

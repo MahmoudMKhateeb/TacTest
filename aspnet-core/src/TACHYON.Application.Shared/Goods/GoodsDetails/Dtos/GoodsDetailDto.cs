@@ -10,7 +10,7 @@ namespace TACHYON.Goods.GoodsDetails.Dtos
 
         public string Description { get; set; }
 
-        public int TotalAmount { get; set; }
+        public int Amount { get; set; }
 
         public double Weight { get; set; }
 
@@ -21,7 +21,7 @@ namespace TACHYON.Goods.GoodsDetails.Dtos
         public string DangerousGoodsCode { get; set; }
 
         public int? GoodCategoryId { get; set; }
-
+        public long RoutPointId { get; set; }
 
     }
 }

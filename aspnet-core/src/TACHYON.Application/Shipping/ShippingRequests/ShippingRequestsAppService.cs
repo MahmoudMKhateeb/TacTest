@@ -24,6 +24,7 @@ using TACHYON.Goods.GoodCategories;
 using TACHYON.MultiTenancy;
 using TACHYON.Notifications;
 using TACHYON.Routs;
+using TACHYON.Routs.RoutPoints.Dtos;
 using TACHYON.Routs.RoutSteps;
 using TACHYON.Routs.RoutTypes;
 using TACHYON.Shipping.ShippingRequestBids;
@@ -394,7 +395,8 @@ namespace TACHYON.Shipping.ShippingRequests
                                     x.AssignedTruckFk.TrucksTypeFk.DisplayName :
                                     "" + "-" + x.AssignedTruckFk != null ?
                                         x.AssignedTruckFk.TransportTypeFk.DisplayName : "")
-                            : ""
+                            : "",
+                        routPointDtoList=x.RoutPoints
                     });
 
 
@@ -414,6 +416,7 @@ namespace TACHYON.Shipping.ShippingRequests
                         ShippingRequestStatusName = x.ShippingRequestStatusName,
                         TruckTypeDisplayName = x.TruckTypeDisplayName,
                         TruckTypeFullName = x.TruckTypeFullName,
+                        RoutPointDtoList =ObjectMapper.Map<List<RoutPointDto>>(x.routPointDtoList)
                     });
                 
                 return new PagedResultDto<GetShippingRequestForViewOutput>(totalCount, result.ToList());
@@ -480,7 +483,7 @@ namespace TACHYON.Shipping.ShippingRequests
             ShippingRequest shippingRequest = _shippingRequestRepository
                 .GetAll()
                 .Include(x => x.RouteFk)
-                .Include(x => x.RoutSteps)
+                .Include(x => x.RoutPoints)
                 .Include(x => x.ShippingRequestVases)
                 .Single(x => x.Id == input.Id);
 
@@ -502,7 +505,7 @@ namespace TACHYON.Shipping.ShippingRequests
             if (AbpSession.TenantId != null)
             {
                 shippingRequest.TenantId = (int)AbpSession.TenantId;
-                shippingRequest.RoutSteps.ForEach(x => x.TenantId = (int)AbpSession.TenantId);
+                shippingRequest.RoutPoints.ForEach(x => x.TenantId = (int)AbpSession.TenantId);
                 shippingRequest.RouteFk.TenantId = (int)AbpSession.TenantId;
                 shippingRequest.ShippingRequestStatusId = TACHYONConsts.ShippingRequestStatusStandBy;
                 // Bid start-date
@@ -561,7 +564,7 @@ namespace TACHYON.Shipping.ShippingRequests
         {
             ShippingRequest shippingRequest = await _shippingRequestRepository
                 .GetAllIncluding(x => x.RouteFk)
-                .Include(x => x.RoutSteps)
+                .Include(x => x.RoutPoints)
                 .FirstOrDefaultAsync(x => x.Id == (long)input.Id);
             ObjectMapper.Map(input, shippingRequest);
         }

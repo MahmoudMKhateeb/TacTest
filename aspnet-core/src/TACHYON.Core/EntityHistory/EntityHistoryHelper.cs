@@ -40,7 +40,7 @@ namespace TACHYON.EntityHistory
         public static readonly Type[] TenantSideTrackedTypes =
         {
             typeof(DocumentFile),
-            typeof(RoutStep),
+            //typeof(RoutStep),
             typeof(Route),
             typeof(Trailer),
             typeof(Truck),

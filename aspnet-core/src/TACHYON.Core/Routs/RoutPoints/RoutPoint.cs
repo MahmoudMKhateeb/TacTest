@@ -4,12 +4,11 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Text;
 using TACHYON.AddressBook;
-using TACHYON.Cities;
+using TACHYON.Goods.GoodsDetails;
 using TACHYON.MultiTenancy;
 using TACHYON.PickingTypes;
-using TACHYON.Routs.RoutSteps;
+using TACHYON.Shipping.ShippingRequests;
 
 namespace TACHYON.Routs.RoutPoints
 {
@@ -38,7 +37,14 @@ namespace TACHYON.Routs.RoutPoints
         [ForeignKey("FacilityId")]
         public Facility FacilityFk { get; set; }
 
-        public ICollection<RoutPointGoodsDetail> RoutPointGoodsDetails { get; set; }
+        [Required]
+        public virtual long ShippingRequestId { get; set; }
+
+        [ForeignKey("ShippingRequestId")]
+        public ShippingRequest ShippingRequestFk { get; set; }
+
+        public ICollection<GoodsDetail> GoodsDetails { get; set; }
+
 
         //to do receiver attribute
 

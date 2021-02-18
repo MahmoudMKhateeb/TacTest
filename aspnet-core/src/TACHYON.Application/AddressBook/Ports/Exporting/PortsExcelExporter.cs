@@ -44,7 +44,7 @@ namespace TACHYON.AddressBook.Ports.Exporting
                     AddObjects(
                         sheet, 2, ports,
                         _ => _.Port.Name,
-                        _ => _.Port.Adress,
+                        _ => _.Port.Address,
                         _ => _.Port.Location,
                         _ => _.CityDisplayName
                         );

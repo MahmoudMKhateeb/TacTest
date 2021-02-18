@@ -179,8 +179,8 @@ namespace TACHYON
             configuration.CreateMap<UnitOfMeasureDto, UnitOfMeasure>().ReverseMap();
             configuration.CreateMap<CreateOrEditFacilityDto, Facility>().ReverseMap();
             configuration.CreateMap<FacilityDto, Facility>()
-                 .ForPath(dst => dst.Location.X, opt => opt.MapFrom(src => src.Long))
-                 .ForPath(dst => dst.Location.Y, opt => opt.MapFrom(src => src.Lat))
+                 .ForPath(dst => dst.Location.X, opt => opt.MapFrom(src => src.Longitude))
+                 .ForPath(dst => dst.Location.Y, opt => opt.MapFrom(src => src.Latitude))
                 .ReverseMap();
             configuration.CreateMap<CreateOrEditDocumentFileDto, DocumentFile>().ReverseMap();
             configuration.CreateMap<DocumentFileDto, DocumentFile>().ReverseMap();
@@ -192,7 +192,7 @@ namespace TACHYON
             //    .ReverseMap();
             configuration.CreateMap<CreateOrEditShippingRequestDto, ShippingRequest>()
                 .ForMember(dst => dst.RouteFk, opt => opt.MapFrom(src => src.CreateOrEditRouteDto))
-                .ForMember(dst => dst.RoutSteps, opt => opt.MapFrom(src => src.CreateOrEditRoutStepDtoList))
+                .ForMember(dst => dst.RoutPoints, opt => opt.MapFrom(src => src.CreateOrEditRoutPointDtoList))
                 .ForMember(dest=>dest.ShippingRequestVases, opt => opt.MapFrom(src => src.ShippingRequestVasList))
 
                 .ReverseMap();
@@ -210,25 +210,19 @@ namespace TACHYON
             configuration.CreateMap<CreateOrEditRoutStepDto, RoutStep>()
                 .ForMember(dst=>dst.SourceRoutPointFk, opt=>opt.MapFrom(src=>src.CreateOrEditSourceRoutPointInputDto))
                 .ForMember(dest=>dest.DestinationRoutPointFk,opt=>opt.MapFrom(src=>src.CreateOrEditDestinationRoutPointInputDto))
-                .ForPath(dest=>dest.SourceRoutPointFk.RoutPointGoodsDetails,opt=>opt.MapFrom(src=>src.CreateOrEditSourceRoutPointInputDto.RoutPointGoodsDetailListDto))
-                .ForPath(dest => dest.DestinationRoutPointFk.RoutPointGoodsDetails, opt => opt.MapFrom(src => src.CreateOrEditDestinationRoutPointInputDto.RoutPointGoodsDetailListDto))
+               // .ForPath(dest=>dest.SourceRoutPointFk.RoutPointGoodsDetails,opt=>opt.MapFrom(src=>src.CreateOrEditSourceRoutPointInputDto.RoutPointGoodsDetailListDto))
+               // .ForPath(dest => dest.DestinationRoutPointFk.RoutPointGoodsDetails, opt => opt.MapFrom(src => src.CreateOrEditDestinationRoutPointInputDto.RoutPointGoodsDetailListDto))
                 .ReverseMap();
 
             configuration.CreateMap<RoutStepDto, RoutStep>().ReverseMap();
-            //configuration.CreateMap<GetRoutStepForViewOutput, RoutStep>()
-            //    .ForMember(dest => dest.SourceRoutPointFk, opt => opt.MapFrom(src => src.SourceRoutPointDto))
-            //    .ForMember(dest => dest.DestinationRoutPointFk, opt => opt.MapFrom(src => src.DestinationRoutPointDto))
-            //    .ForPath(dest => dest.SourceRoutPointFk.FacilityFk, opt => opt.MapFrom(src => src.SourceRoutPointDto.facilityDto))
-            //    .ForPath(dest => dest.DestinationRoutPointFk.FacilityFk, opt => opt.MapFrom(src => src.DestinationRoutPointDto.facilityDto))
-            //    .ForPath(dest => dest.SourceRoutPointFk.RoutPointGoodsDetails, opt => opt.MapFrom(src => src.SourceRoutPointDto.RoutPointGoodsDetailsList))
-            //    .ForPath(dest => dest.DestinationRoutPointFk.RoutPointGoodsDetails, opt => opt.MapFrom(src => src.DestinationRoutPointDto.RoutPointGoodsDetailsList))
-            //    .ReverseMap();
 
-            configuration.CreateMap< RoutPointGoodsDetailDto, RoutPointGoodsDetail>()
+            //configuration.CreateMap< RoutPointGoodsDetailDto, RoutPointGoodsDetail>()
+            //    .ReverseMap();
+            configuration.CreateMap<RoutPointDto, RoutPoint>()
+                .ForMember(dest => dest.FacilityFk, opt => opt.MapFrom(src => src.FacilityDto))
                 .ReverseMap();
-            configuration.CreateMap<RoutPointDto, RoutPoint>().ReverseMap();
             configuration.CreateMap<CreateOrEditRoutPointDto, RoutPoint>()
-                .ForMember(dest=>dest.RoutPointGoodsDetails,opt=>opt.MapFrom(src=>src.RoutPointGoodsDetailListDto))
+                .ForMember(dest=>dest.GoodsDetails,opt=>opt.MapFrom(src=>src.GoodsDetailListDto))
                 .ReverseMap();
             configuration.CreateMap<CreateOrEditRouteDto, Route>().ReverseMap();
             configuration.CreateMap<RouteDto, Route>().ReverseMap();

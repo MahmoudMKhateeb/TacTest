@@ -97,7 +97,6 @@ namespace TACHYON.EntityFrameworkCore
 
         public virtual DbSet<Offer> Offers { get; set; }
 
-        public virtual DbSet<RoutStep> RoutSteps { get; set; }
 
         public virtual DbSet<Route> Routes { get; set; }
 
@@ -145,8 +144,6 @@ namespace TACHYON.EntityFrameworkCore
         public virtual DbSet<ShippingRequestBid> ShippingRequestBids { get; set; }
         public virtual DbSet<ShippingRequestBidStatus> ShippingRequestBidStatuses { get; set; }
         public virtual DbSet<RoutPoint> RoutPoints { get; set; }
-        public virtual DbSet<RoutPointGoodsDetail> RoutPointGoodsDetails { get; set; }
-
         protected virtual bool CurrentIsCanceled => true;
         protected virtual bool IsCanceledFilterEnabled => CurrentUnitOfWorkProvider?.Current?.IsFilterEnabled("IHasIsCanceled") == true;
 
@@ -218,10 +215,6 @@ namespace TACHYON.EntityFrameworkCore
             modelBuilder.Entity<Offer>(o =>
                        {
                            o.HasIndex(e => new { e.TenantId });
-                       });
-            modelBuilder.Entity<RoutStep>(r =>
-                       {
-                           r.HasIndex(e => new { e.TenantId });
                        });
             modelBuilder.Entity<Route>(r =>
                        {

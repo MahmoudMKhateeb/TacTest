@@ -65,12 +65,12 @@ namespace TACHYON.Routs.RoutSteps
                 .ThenInclude(e=>e.FacilityFk)
                 .ThenInclude(e=>e.CityFk)
                 .Include(e => e.SourceRoutPointFk)
-                .ThenInclude(e=>e.RoutPointGoodsDetails)
+               // .ThenInclude(e=>e.RoutPointGoodsDetails)
                 .Include(e => e.DestinationRoutPointFk)
                 .ThenInclude(e => e.FacilityFk)
                 .ThenInclude(e => e.CityFk)
                 .Include(e => e.DestinationRoutPointFk)
-                .ThenInclude(e=>e.RoutPointGoodsDetails)
+               // .ThenInclude(e=>e.RoutPointGoodsDetails)
                 .Where(e=>e.ShippingRequestId==input.ShippingRequestId)
                 //.WhereIf(!string.IsNullOrWhiteSpace(input.TrucksTypeDisplayNameFilter), e => e.TrucksTypeFk != null && e.TrucksTypeFk.DisplayName == input.TrucksTypeDisplayNameFilter)
                 //.WhereIf(!string.IsNullOrWhiteSpace(input.TrailerTypeDisplayNameFilter), e => e.TrailerTypeFk != null && e.TrailerTypeFk.DisplayName == input.TrailerTypeDisplayNameFilter)
@@ -114,7 +114,7 @@ namespace TACHYON.Routs.RoutSteps
                                 {
                                     PickingTypeDisplayName = o.SourceRoutPointFk.PickingTypeFk?.DisplayName,
                                     RoutPointDto = ObjectMapper.Map<RoutPointDto>(o.SourceRoutPointFk),
-                                    RoutPointGoodsDetailsList = ObjectMapper.Map<List<RoutPointGoodsDetailDto>>(o.SourceRoutPointFk.RoutPointGoodsDetails),
+                                    //RoutPointGoodsDetailsList = ObjectMapper.Map<List<RoutPointGoodsDetailDto>>(o.SourceRoutPointFk.RoutPointGoodsDetails),
                                     facilityDto = new GetFacilityForViewOutput
                                     {
                                         Facility = ObjectMapper.Map<FacilityDto>(o.SourceRoutPointFk.FacilityFk),
@@ -126,7 +126,7 @@ namespace TACHYON.Routs.RoutSteps
                                 {
                                     PickingTypeDisplayName = o.DestinationRoutPointFk.PickingTypeFk?.DisplayName,
                                     RoutPointDto = ObjectMapper.Map<RoutPointDto>(o.DestinationRoutPointFk),
-                                    RoutPointGoodsDetailsList = ObjectMapper.Map<List<RoutPointGoodsDetailDto>>(o.DestinationRoutPointFk.RoutPointGoodsDetails),
+                                   // RoutPointGoodsDetailsList = ObjectMapper.Map<List<RoutPointGoodsDetailDto>>(o.DestinationRoutPointFk.RoutPointGoodsDetails),
                                     facilityDto = new GetFacilityForViewOutput
                                     {
                                         Facility = ObjectMapper.Map<FacilityDto>(o.SourceRoutPointFk.FacilityFk),
@@ -173,7 +173,7 @@ namespace TACHYON.Routs.RoutSteps
                         FacilityName = routStep.DestinationRoutPointFk.FacilityFk.Name
                     },
                     PickingTypeDisplayName = routStep.SourceRoutPointFk.PickingTypeFk?.DisplayName,
-                    RoutPointGoodsDetailsList =ObjectMapper.Map<List<RoutPointGoodsDetailDto>>(routStep.SourceRoutPointFk.RoutPointGoodsDetails)
+                    //RoutPointGoodsDetailsList =ObjectMapper.Map<List<RoutPointGoodsDetailDto>>(routStep.SourceRoutPointFk.RoutPointGoodsDetails)
                 },
                 DestinationRoutPointDto=new GetRoutPointForViewOutput
                 {
@@ -185,7 +185,7 @@ namespace TACHYON.Routs.RoutSteps
                         FacilityName = routStep.DestinationRoutPointFk.FacilityFk.Name
                     },
                     PickingTypeDisplayName = routStep.SourceRoutPointFk.PickingTypeFk?.DisplayName,
-                    RoutPointGoodsDetailsList = ObjectMapper.Map<List<RoutPointGoodsDetailDto>>(routStep.SourceRoutPointFk.RoutPointGoodsDetails)
+                    //RoutPointGoodsDetailsList = ObjectMapper.Map<List<RoutPointGoodsDetailDto>>(routStep.SourceRoutPointFk.RoutPointGoodsDetails)
                 }
             };
            // var FinalOutput = ObjectMapper.Map<GetRoutStepForViewOutput>(routStep);
@@ -221,7 +221,7 @@ namespace TACHYON.Routs.RoutSteps
                         FacilityName = routStep.SourceRoutPointFk.FacilityFk.Name
                     },
                     PickingTypeDisplayName = routStep.SourceRoutPointFk.PickingTypeFk.DisplayName,
-                    RoutPointGoodsDetailsList = ObjectMapper.Map<List<RoutPointGoodsDetailDto>>(routStep.SourceRoutPointFk.RoutPointGoodsDetails)
+                    //RoutPointGoodsDetailsList = ObjectMapper.Map<List<RoutPointGoodsDetailDto>>(routStep.SourceRoutPointFk.RoutPointGoodsDetails)
                 },
                  DestinationRoutPointDto = new GetRoutPointForViewOutput
                 {
@@ -233,7 +233,7 @@ namespace TACHYON.Routs.RoutSteps
                         FacilityName = routStep.DestinationRoutPointFk.FacilityFk.Name
                     },
                     PickingTypeDisplayName = routStep.DestinationRoutPointFk.PickingTypeFk.DisplayName,
-                    RoutPointGoodsDetailsList = ObjectMapper.Map<List<RoutPointGoodsDetailDto>>(routStep.DestinationRoutPointFk.RoutPointGoodsDetails)
+                    //RoutPointGoodsDetailsList = ObjectMapper.Map<List<RoutPointGoodsDetailDto>>(routStep.DestinationRoutPointFk.RoutPointGoodsDetails)
                 }
             };
 

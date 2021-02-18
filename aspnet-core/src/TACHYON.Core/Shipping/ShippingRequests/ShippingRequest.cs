@@ -11,6 +11,7 @@ using TACHYON.Goods.GoodCategories;
 using TACHYON.Goods.GoodsDetails;
 using TACHYON.MultiTenancy;
 using TACHYON.Routs;
+using TACHYON.Routs.RoutPoints;
 using TACHYON.Routs.RoutSteps;
 using TACHYON.Shipping.ShippingRequestBids;
 using TACHYON.Shipping.ShippingRequestBidStatuses;
@@ -52,7 +53,7 @@ namespace TACHYON.Shipping.ShippingRequests
         /// <summary>
         /// shipping request route steps that are declare the shipment steps
         /// </summary>
-        public ICollection<RoutStep> RoutSteps { get; set; }
+        public ICollection<RoutPoint> RoutPoints { get; set; }
 
         /// <summary>
         /// Tachyon user price

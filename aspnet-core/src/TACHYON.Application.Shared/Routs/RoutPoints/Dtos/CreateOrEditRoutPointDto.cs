@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Text;
+using TACHYON.Goods.GoodsDetails.Dtos;
 
 namespace TACHYON.Routs.RoutPoints.Dtos
 {
@@ -22,6 +23,9 @@ namespace TACHYON.Routs.RoutPoints.Dtos
         /// is for UI helpping only and will be ignored in mapping
         /// </summary>
         public double Latitude { get; set; }
-        public List<RoutPointGoodsDetailDto> RoutPointGoodsDetailListDto { get; set; }
+        [Required]
+        public long ShippingRequestId { get; set; }
+
+        public List<GoodsDetailDto> GoodsDetailListDto { get; set; }
     }
 }

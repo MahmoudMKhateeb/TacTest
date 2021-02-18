@@ -4,6 +4,7 @@ using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using TACHYON.Goods.GoodCategories;
+using TACHYON.Routs.RoutPoints;
 using TACHYON.Shipping.ShippingRequests;
 using TACHYON.UnitOfMeasures;
 
@@ -15,9 +16,9 @@ namespace TACHYON.Goods.GoodsDetails
         public int TenantId { get; set; }
 
 
-        [Required]
-        [StringLength(GoodsDetailConsts.MaxNameLength, MinimumLength = GoodsDetailConsts.MinNameLength)]
-        public virtual string Name { get; set; }
+        //[Required]
+        //[StringLength(GoodsDetailConsts.MaxNameLength, MinimumLength = GoodsDetailConsts.MinNameLength)]
+        //public virtual string Name { get; set; }
 
         [StringLength(GoodsDetailConsts.MaxDescriptionLength, MinimumLength = GoodsDetailConsts.MinDescriptionLength)]
         public virtual string Description { get; set; }
@@ -28,7 +29,7 @@ namespace TACHYON.Goods.GoodsDetails
         /// Total Amount for this Category of Goods 
         /// </summary>
         [Required]
-        public int TotalAmount { get; set; }
+        public int Amount { get; set; }
 
         /// <summary>
         /// Weight of this category of goods
@@ -63,17 +64,15 @@ namespace TACHYON.Goods.GoodsDetails
 
         [ForeignKey("UnitOfMeasureId")]
         public UnitOfMeasure UnitOfMeasureFk { get; set; }
-        // public string PackingType { get; set; }
-        //public int NumberOfPackingType { get; set; }
-
-        [Required]
-        public long ShippingRequestId { get; set; }
-
-        [ForeignKey("ShippingRequestId")]
-        public ShippingRequest ShippingRequestFk { get; set; }
 
         public string PackingType { get; set; }
         public int NumberOfPacking { get; set; }
+
+        [Required]
+        public long RoutPointId { get; set; }
+
+        [ForeignKey("RoutPointId")]
+        public RoutPoint RoutPointFk { get; set; }
 
 
     }

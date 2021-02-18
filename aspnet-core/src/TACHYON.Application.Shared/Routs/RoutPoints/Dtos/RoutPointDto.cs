@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Text;
+using TACHYON.AddressBook.Dtos;
 using TACHYON.Routs.RoutSteps;
 
 namespace TACHYON.Routs.RoutPoints.Dtos
@@ -13,20 +14,14 @@ namespace TACHYON.Routs.RoutPoints.Dtos
 
         public int? PickingTypeId { get; set; }
 
-        //[Required]
-        //[StringLength(RoutStepConsts.MaxLatitudeLength, MinimumLength = RoutStepConsts.MinLatitudeLength)]
-        //public virtual string Latitude { get; set; }
+        //public string Location { get; set; }
 
-        //[Required]
-        //[StringLength(RoutStepConsts.MaxLatitudeLength, MinimumLength = RoutStepConsts.MinLatitudeLength)]
-        //public virtual string Longitude { get; set; }
-
-        [Required]
-        [RegularExpression(@"^(-?\d + (\.\d +)?),\s*(-?\d+(\.\d+)?)$")]
-        public string Location { get; set; }
-
-        [Required]
         public long FacilityId { get; set; }
+
+        public FacilityDto FacilityDto { get; set; }
+
+        public long ShippingRequestId { get; set; }
+
 
         //to do receiver attribute
     }

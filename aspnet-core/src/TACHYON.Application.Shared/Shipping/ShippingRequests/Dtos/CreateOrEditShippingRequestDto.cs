@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using TACHYON.Goods.GoodsDetails.Dtos;
 using TACHYON.Routs.Dtos;
+using TACHYON.Routs.RoutPoints.Dtos;
 using TACHYON.Routs.RoutSteps.Dtos;
 using TACHYON.Vases.Dtos;
 
@@ -12,7 +13,7 @@ namespace TACHYON.Shipping.ShippingRequests.Dtos
     public class CreateOrEditShippingRequestDto : EntityDto<long?>
     {
 
-       public List<CreateOrEditRoutStepDto> CreateOrEditRoutStepDtoList { get; set; }
+       public List<CreateOrEditRoutPointDto> CreateOrEditRoutPointDtoList { get; set; }
 
         public virtual bool IsBid { get; set; }
         //Add Bid details If IsBid equals True
@@ -52,9 +53,6 @@ namespace TACHYON.Shipping.ShippingRequests.Dtos
 
         //VasList
         public List<ShippingRequestVasListDto> ShippingRequestVasList { get; set; }
-
-        //GoodsDetails
-        public List<CreateOrEditGoodsDetailDto> GoodsDetailS { get; set; }
 
 
 

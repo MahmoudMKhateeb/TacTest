@@ -47,9 +47,9 @@ namespace TACHYON.Goods.GoodsDetails.Exporting
 
                     AddObjects(
                         sheet, 2, goodsDetails,
-                       // _ => _.GoodsDetail.Name,
+                        //_ => _.GoodsDetail.Name,
                         _ => _.GoodsDetail.Description,
-                        _ => _.GoodsDetail.TotalAmount,
+                        _ => _.GoodsDetail.Amount,
                         _ => _.GoodsDetail.Weight,
                         _ => _.GoodsDetail.Dimentions,
                         _ => _.GoodsDetail.IsDangerousGood,

@@ -9,11 +9,11 @@ namespace TACHYON.AddressBook.Dtos
     {
         public string Name { get; set; }
 
-        public string Adress { get; set; }
+        public string Address { get; set; }
 
         //public Point Location { get; set; }
-        public double Long { get; set; }
-        public double Lat { get; set; }
+        public double Longitude { get; set; }
+        public double Latitude { get; set; }
 
         public int CityId { get; set; }
 

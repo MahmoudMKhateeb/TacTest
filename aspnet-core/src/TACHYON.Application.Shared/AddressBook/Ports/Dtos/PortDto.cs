@@ -9,7 +9,7 @@ namespace TACHYON.AddressBook.Ports.Dtos
     {
 		public string Name { get; set; }
 
-		public string Adress { get; set; }
+		public string Address { get; set; }
 
 		public Point Location { get; set; }
 
