@@ -14,7 +14,7 @@ namespace TACHYON.AddressBook.Ports.Dtos
 		
 		
 		[StringLength(PortConsts.MaxAdressLength, MinimumLength = PortConsts.MinAdressLength)]
-		public string Adress { get; set; }
+		public string Address { get; set; }
 		
 		
 		public decimal Longitude { get; set; }
