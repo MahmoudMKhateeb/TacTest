@@ -48,17 +48,12 @@ namespace TACHYON.Shipping.ShippingRequests
     {
         public ShippingRequestsAppService(
             IRepository<ShippingRequest, long> shippingRequestRepository,
-            IShippingRequestsExcelExporter shippingRequestsExcelExporter,
-            IRepository<Route, int> lookup_routeRepository,
             IAppNotifier appNotifier,
-            IRepository<RoutStep, long> routStepRepository,
             IRepository<Tenant> tenantRepository,
             IRepository<TrucksType, long> lookupTrucksTypeRepository,
-            IRepository<Truck, long> truckRepository,
             IRepository<TrailerType, int> lookupTrailerTypeRepository,
             IRepository<RoutType, int> lookupRoutTypeRepository,
             IRepository<GoodCategory, int> lookupGoodCategoryRepository,
-            IRepository<Facility, long> lookupFacilityRepository,
             IRepository<Vas, int> lookup_vasRepository,
             IRepository<ShippingRequestVas, long> shippingRequestVasRepository,
             IRepository<VasPrice> vasPriceRepository,
@@ -70,17 +65,12 @@ namespace TACHYON.Shipping.ShippingRequests
         {
             _vasPriceRepository = vasPriceRepository;
             _shippingRequestRepository = shippingRequestRepository;
-            _shippingRequestsExcelExporter = shippingRequestsExcelExporter;
-            _lookup_routeRepository = lookup_routeRepository;
             _appNotifier = appNotifier;
-            _routStepRepository = routStepRepository;
             _tenantRepository = tenantRepository;
             _lookup_trucksTypeRepository = lookupTrucksTypeRepository;
-            _truckRepository = truckRepository;
             _lookup_trailerTypeRepository = lookupTrailerTypeRepository;
             _lookup_routTypeRepository = lookupRoutTypeRepository;
             _lookup_goodCategoryRepository = lookupGoodCategoryRepository;
-            _lookup_FacilityRepository = lookupFacilityRepository;
             _lookup_PortRepository = lookupPortRepository;
             _shippingRequestBidRepository = shippingRequestBidRepository;
             _bidDomainService = bidDomainService;
@@ -92,20 +82,14 @@ namespace TACHYON.Shipping.ShippingRequests
 
         private readonly IRepository<VasPrice> _vasPriceRepository;
         private readonly IRepository<ShippingRequest, long> _shippingRequestRepository;
-        private readonly IShippingRequestsExcelExporter _shippingRequestsExcelExporter;
         private readonly IRepository<Vas, int> _lookup_vasRepository;
         private readonly IRepository<ShippingRequestVas, long> _shippingRequestVasRepository;
-
-        private readonly IRepository<Route, int> _lookup_routeRepository;
-        private readonly IRepository<RoutStep, long> _routStepRepository;
         private readonly IAppNotifier _appNotifier;
         private readonly IRepository<Tenant> _tenantRepository;
         private readonly IRepository<TrucksType, long> _lookup_trucksTypeRepository;
-        private readonly IRepository<Truck, long> _truckRepository;
         private readonly IRepository<TrailerType, int> _lookup_trailerTypeRepository;
         private readonly IRepository<RoutType, int> _lookup_routTypeRepository;
         private readonly IRepository<GoodCategory, int> _lookup_goodCategoryRepository;
-        private readonly IRepository<Facility, long> _lookup_FacilityRepository;
         private readonly IRepository<Port, long> _lookup_PortRepository;
         private readonly IRepository<ShippingRequestBid, long> _shippingRequestBidRepository;
         private readonly BidDomainService _bidDomainService;

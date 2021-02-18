@@ -97,7 +97,7 @@ namespace TACHYON.EntityFrameworkCore
 
         public virtual DbSet<Offer> Offers { get; set; }
 
-
+        public virtual  DbSet<RoutStep> RoutSteps { get; set; }
         public virtual DbSet<Route> Routes { get; set; }
 
         public virtual DbSet<City> Cities { get; set; }
@@ -220,6 +220,10 @@ namespace TACHYON.EntityFrameworkCore
                        {
                            r.HasIndex(e => new { e.TenantId });
                        });
+            modelBuilder.Entity<RoutStep>(r =>
+            {
+                r.HasIndex(e => new {e.TenantId});
+            });
             modelBuilder.Entity<Trailer>(t =>
                        {
                            t.HasIndex(e => new { e.TenantId });
