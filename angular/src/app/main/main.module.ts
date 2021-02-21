@@ -66,7 +66,6 @@ import { CreateOrEditDocumentTypeModalComponent } from './documentTypes/document
 import { ShippingRequestsComponent } from './shippingRequests/shippingRequests/shippingRequests.component';
 import { ViewShippingRequestComponent } from './shippingRequests/shippingRequests/view-shippingRequest.component';
 import { CreateOrEditShippingRequestComponent } from './shippingRequests/shippingRequests/create-or-edit-shippingRequest.component';
-import { VasForCreateShippingRequstModalComponent } from './shippingRequests/shippingRequests/ShippingRequestVas/VasForCreateShippingRequstModal.component';
 
 import { GoodsDetailsComponent } from './goodsDetails/goodsDetails/goodsDetails.component';
 import { ViewGoodsDetailModalComponent } from './goodsDetails/goodsDetails/view-goodsDetail-modal.component';
@@ -155,11 +154,10 @@ import { ViewShippingRequestDetailsComponent } from '@app/main/marketPlace/marke
 import { ViewAllCarrierBidsComponent } from '@app/main/marketPlace/marketPlace/ViewAllCarrierBids.component';
 import { RejectionReasonModalComponent } from './documentFiles/documentFiles/rejectionReason-modal.component';
 import { ViewShippingRequestPriceResponseModalComponent } from './shippingRequests/shippingRequests/shipping-request-Response/view-shipping-request-response-modal.component';
-import { ListboxModule, MultiSelectModule, PickListModule } from '@node_modules/primeng';
+import { ListboxModule, MultiSelectModule, PickListModule, StepsModule } from '@node_modules/primeng';
 import { RouteStepsForCreateShippingRequstComponent } from '@app/main/shippingRequests/shippingRequests/ShippingRequestRouteSteps/RouteStepsForCreateShippingRequst.component';
 
 import { AgmDirectionModule } from '@node_modules/agm-direction';
-import { GoodDetailsForCreateShippingRequstComponent } from '@app/main/shippingRequests/shippingRequests/ShippingRequestGoodDetails/GoodDetailsForCreateShippingRequest.component';
 
 NgxBootstrapDatePickerConfigService.registerNgxBootstrapDatePickerLocales();
 
@@ -195,6 +193,7 @@ NgxBootstrapDatePickerConfigService.registerNgxBootstrapDatePickerLocales();
     PickListModule,
     ListboxModule,
     AgmDirectionModule,
+    StepsModule,
   ],
   declarations: [
     NationalitiesComponent,
@@ -262,7 +261,6 @@ NgxBootstrapDatePickerConfigService.registerNgxBootstrapDatePickerLocales();
     ViewShippingRequestComponent,
     CreateOrEditShippingRequestComponent,
     GoodsDetailsComponent,
-    VasForCreateShippingRequstModalComponent,
     ViewGoodsDetailModalComponent,
     CreateOrEditGoodsDetailModalComponent,
     OffersComponent,
@@ -325,7 +323,6 @@ NgxBootstrapDatePickerConfigService.registerNgxBootstrapDatePickerLocales();
     ViewShippingRequestDetailsComponent,
     ViewAllCarrierBidsComponent,
     RouteStepsForCreateShippingRequstComponent,
-    GoodDetailsForCreateShippingRequstComponent,
   ],
   providers: [
     { provide: BsDatepickerConfig, useFactory: NgxBootstrapDatePickerConfigService.getDatepickerConfig },
