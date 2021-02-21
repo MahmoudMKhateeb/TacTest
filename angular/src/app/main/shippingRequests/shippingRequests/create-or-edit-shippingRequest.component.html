@@ -109,7 +109,7 @@
         <div class="card card-custom gutter-b">
           <!--  start of card::form-->
           <div class="card-header">
-            <h3 class="card-title">{{ l('ShippingRequestType') }}</h3>
+            <h3 class="card-title">{{ l('ShippingRequestProperties') }}</h3>
           </div>
           <!--  start of card::body-->
           <div class="card-body">
@@ -199,7 +199,7 @@
         <div class="card card-custom gutter-b">
           <!--  start of card::form-->
           <div class="card-header">
-            <h3 class="card-title">{{ l('shipmentDetails') }}</h3>
+            <h3 class="card-title">{{ l('GoodDetails') }}</h3>
           </div>
           <!--  start of card::body-->
           <div class="card-body">
@@ -230,16 +230,30 @@
 
                         <span class="form-text text-muted">{{ l('selectaGoodCategory') }}</span>
                       </div>
+                      <div class="col-lg-6">
+                        <label>* {{ l('totalWeight') }}:</label>
+                        <!--   TODO:// Add DataBining for DD-->
+                        <div>
+                          <div class="input-group">
+                            <div class="input-group-append">
+                              <span class="input-group-text">
+                                KG
+                              </span>
+                            </div>
+                            <input type="text" class="form-control" placeholder="Weight" />
+                          </div>
+                        </div>
+
+                        <span class="form-text text-muted">{{ l('totalWeightofGoodsinKG') }}</span>
+                      </div>
                     </div>
                   </div>
                 </div>
               </div>
               <!--  end of Shipment::Details-->
               <!--  Start:Goods details  -->
-              <GoodDetailsForCreateShippingRequest
-                (SelectedGoodDetailsFromChild)="shippingRequest.goodsDetailS = $event"
-                [MainCategory]="shippingRequest.goodCategoryId"
-              ></GoodDetailsForCreateShippingRequest>
+              <!--                (SelectedGoodDetailsFromChild)="shippingRequest.goodsDetailS = $event"-->
+              <!--              <GoodDetailsForCreateShippingRequest [MainCategory]="shippingRequest.goodCategoryId"></GoodDetailsForCreateShippingRequest>-->
               <!--   end::Goods details   -->
             </div>
           </div>
@@ -262,7 +276,7 @@
                     <div class="form-group row fv-plugins-icon-container">
                       <div class="col-lg-6">
                         <div class="form-group">
-                          <label>* {{ l('origin') }}:</label>
+                          <label>* {{ l('originCity') }}:</label>
                           <div [ngClass]="{ 'spinner spinner-success spinner-right mr-1 ml-1': !allCitys }">
                             <select
                               #Origin="ngModel"
@@ -284,7 +298,7 @@
                       </div>
                       <div class="col-lg-6">
                         <div class="form-group">
-                          <label>* {{ l('destination') }}:</label>
+                          <label>* {{ l('destinationCity') }}:</label>
                           <div [ngClass]="{ 'spinner spinner-success spinner-right mr-1 ml-1': !allCitys }">
                             <select
                               #Destination="ngModel"
@@ -415,10 +429,9 @@
                 </div>
               </div>
               <!--  Start::RouteSteps     -->
-              <RouteStepsForCreateShippingRequest
-                [GoodsCategoryList]="shippingRequest.goodsDetailS"
-                (SelectedRouteStepsFromChild)="shippingRequest.createOrEditRoutStepDtoList = $event"
-              ></RouteStepsForCreateShippingRequest>
+              <!--                [GoodsCategoryList]="shippingRequest.goodsDetailS"-->
+              <!--                (SelectedRouteStepsFromChild)="shippingRequest.createOrEditRoutStepDtoList = $event"-->
+              <RouteStepsForCreateShippingRequest [MainGoodsCategory]="shippingRequest.goodCategoryId"></RouteStepsForCreateShippingRequest>
               <!--   End::RouteSteps      -->
               <!--  end of Route::Details-->
             </div>

@@ -4,7 +4,6 @@ import { finalize } from 'rxjs/operators';
 import {
   CarriersForDropDownDto,
   CreateOrEditFacilityDto,
-  CreateOrEditGoodsDetailDto,
   CreateOrEditRouteDto,
   CreateOrEditRoutStepDto,
   CreateOrEditShippingRequestDto,
@@ -24,14 +23,10 @@ import {
 import { AppComponentBase } from '@shared/common/app-component-base';
 import { ActivatedRoute, Router } from '@angular/router';
 import { appModuleAnimation } from '@shared/animations/routerTransition';
-import { Observable } from '@node_modules/rxjs';
 import { BreadcrumbItem } from '@app/shared/common/sub-header/sub-header.component';
-import { BsModalRef, BsModalService, ModalDirective } from '@node_modules/ngx-bootstrap/modal';
+import { ModalDirective } from '@node_modules/ngx-bootstrap/modal';
 import { MapsAPILoader } from '@node_modules/@agm/core';
-import { CreateOrEditFacilityModalComponent } from '@app/main/addressBook/facilities/create-or-edit-facility-modal.component';
-import { VasForCreateShippingRequstModalComponent } from '@app/main/shippingRequests/shippingRequests/ShippingRequestVas/VasForCreateShippingRequstModal.component';
 import * as moment from '@node_modules/moment';
-import { LazyLoadEvent } from '@node_modules/primeng/public_api';
 import { CreateOrEditGoodsDetailModalComponent } from '@app/main/goodsDetails/goodsDetails/create-or-edit-goodsDetail-modal.component';
 import { RouteStepsForCreateShippingRequstComponent } from '../shippingRequests/ShippingRequestRouteSteps/RouteStepsForCreateShippingRequst.component';
 
@@ -52,12 +47,8 @@ export class CreateOrEditShippingRequestComponent extends AppComponentBase imple
   @ViewChild('createOrEditGoodsDetailModal') public createOrEditGoodsDetailModal: CreateOrEditGoodsDetailModalComponent;
   @ViewChild('routeStepsForCreateShippingRequstComponent')
   public RouteStepsForCreateShippingRequstComponent: RouteStepsForCreateShippingRequstComponent;
-
-  VasForCreateShippingRequstModalComponent: VasForCreateShippingRequstModalComponent;
-
   active = false;
   saving = false;
-
   shippingRequest: CreateOrEditShippingRequestDto = new CreateOrEditShippingRequestDto();
   allGoodCategorys: GoodsDetailGoodCategoryLookupTableDto[];
   allCarrierTenants: CarriersForDropDownDto[];
@@ -89,6 +80,7 @@ export class CreateOrEditShippingRequestComponent extends AppComponentBase imple
   truckTypeLoading: boolean;
   capacityLoading: boolean;
   //createOrEditRoutStepsDtos: CreateOrEditRoutStepDto[] = [];
+
   constructor(
     injector: Injector,
     private _activatedRoute: ActivatedRoute,
@@ -121,7 +113,7 @@ export class CreateOrEditShippingRequestComponent extends AppComponentBase imple
         this.selectedVases = result.shippingRequest.shippingRequestVasList;
         this.selectedRouteType = result.shippingRequest.createOrEditRouteDto.routTypeId;
         this.shippingRequest.createOrEditRouteDto = result.shippingRequest.createOrEditRouteDto;
-        this.createOrEditRoutStepDtoList = result.shippingRequest.createOrEditRoutStepDtoList;
+        // this.createOrEditRoutStepDtoList = result.shippingRequest.createOrEditRoutStepDtoList;
         this.active = true;
       });
     }
@@ -219,7 +211,9 @@ export class CreateOrEditShippingRequestComponent extends AppComponentBase imple
     this.shippingrequestBidStratDate = undefined;
     this.shippingrequestBidEndDate = undefined;
   }
+
   // this function is for the first 3 Conditional DD Which is TransportType --> TruckType --> Capacitiy
+
   transportTypeSelectChange(transportTypeId?: number) {
     if (transportTypeId > 0) {
       this.truckTypeLoading = true;
