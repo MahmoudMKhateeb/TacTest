@@ -47,6 +47,9 @@ namespace TACHYON.Shipping.ShippingRequests.Dtos
 
         public DateTime? StartTripDate { get; set; }
         public int NumberOfTrips { get; set; }
+        public string PackingType { get; set; }
+        public int NumberOfPacking { get; set; }
+
         //Route
         public CreateOrEditRouteDto CreateOrEditRouteDto { get; set; }
 

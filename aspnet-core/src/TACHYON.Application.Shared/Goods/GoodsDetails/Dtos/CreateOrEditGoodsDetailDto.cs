@@ -41,7 +41,5 @@ namespace TACHYON.Goods.GoodsDetails.Dtos
 
         [Required]
         public long RoutPointId { get; set; }
-        public string PackingType { get; set; }
-        public int NumberOfPacking { get; set; }
     }
 }

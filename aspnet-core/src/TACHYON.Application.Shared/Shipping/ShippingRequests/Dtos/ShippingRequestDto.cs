@@ -20,6 +20,8 @@ namespace TACHYON.Shipping.ShippingRequests.Dtos
         public bool StageTowFinish { get; set; }
         public bool StageThreeFinish { get; set; }
         public int GoodCategoryId { get; set; }
+        public string PackingType { get; set; }
+        public int NumberOfPacking { get; set; }
 
         public DateTime? BidStartDate { get; set; }
         public DateTime? BidEndDate { get; set; }
