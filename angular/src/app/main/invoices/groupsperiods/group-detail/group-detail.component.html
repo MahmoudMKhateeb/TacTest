@@ -1,0 +1,105 @@
+<div [@routerTransition]>
+  <div class="content d-flex flex-column flex-column-fluid">
+    <sub-header [title]="'GroupItemDetail' | localize" [description]="'GroupItemDetailHeaderInfo' | localize">
+      <div role="actions">
+        <button class="btn btn-outline-success"><i class="fa fa-file-excel"></i> {{ l('ExportToExcel') }}</button>
+      </div>
+    </sub-header>
+
+    <div [class]="containerClass">
+      <div class="card card-custom gutter-b">
+        <div class="card-body">
+          <div class="row align-items-center">
+            <div class="row">
+              <div class="col-md-4">
+                <div class="form-group">
+                  <label>{{ l('GroupId') }}:</label>
+                  {{ Data.id }}
+                </div>
+              </div>
+              <div class="col-md-4">
+                <div class="form-group">
+                  <label>{{ l('PhoneNo') }}:</label>
+                  {{ Data.phone }}
+                </div>
+              </div>
+              <div class="col-md-4">
+                <div class="form-group">
+                  <label>{{ l('BillTo') }}:</label>
+                  {{ Data.clientName }}
+                </div>
+              </div>
+              <div class="col-md-4">
+                <div class="form-group">
+                  <label>{{ l('InvoiceDate') }}:</label>
+                  {{ Data.creationTime | momentFormat: 'L' }}
+                </div>
+              </div>
+
+              <div class="col-md-4">
+                <div class="form-group">
+                  <label>{{ l('FaxNo') }}:</label>
+                  {{ Data.faxNo }}
+                </div>
+              </div>
+              <div class="col-md-4">
+                <div class="form-group">
+                  <label>{{ l('CR') }}:</label>
+                  {{ Data.cr }}
+                </div>
+              </div>
+
+              <div class="col-md-4">
+                <div class="form-group">
+                  <label>{{ l('Email') }}:</label>
+                  {{ Data.email }}
+                </div>
+              </div>
+              <div class="col-md-4">
+                <div class="form-group">
+                  <label>{{ l('Address') }}:</label>
+                  {{ Data.address }}
+                </div>
+              </div>
+              <div class="col-md-4">
+                <div class="form-group">
+                  <label>{{ l('ATTN') }}:</label>
+                  {{ Data.attn }}
+                </div>
+              </div>
+              <div class="col-md-4">
+                <div class="form-group">
+                  <label>{{ l('ContractNo') }}:</label>
+                  {{ Data.contractNo }}
+                </div>
+              </div>
+              <div class="col-md-4">
+                <div class="form-group">
+                  <label>{{ l('ProjectName') }}:</label>
+                  {{ Data.projectName }}
+                </div>
+              </div>
+            </div>
+
+            <div class="row">
+              <table class="table table-sm table-dark">
+                <tr>
+                  <td>{{ l('InvoiceSubTotal') }}</td>
+                  <td>{{ Data.amount }}</td>
+                </tr>
+                <tr>
+                  <td>{{ l('VatAmount') }}</td>
+                  <td>{{ Data.vatAmount }}</td>
+                </tr>
+                <tr>
+                  <td>{{ l('DueAmount') }}</td>
+                  <td>{{ Data.amountWithTaxVat }}</td>
+                </tr>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

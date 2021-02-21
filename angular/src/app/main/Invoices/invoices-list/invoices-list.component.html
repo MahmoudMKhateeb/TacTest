@@ -1,6 +1,6 @@
 <div [@routerTransition]>
   <div class="content d-flex flex-column flex-column-fluid">
-    <sub-header [title]="'Invoices' | localize" [description]="'CitiesHeaderInfo' | localize">
+    <sub-header [title]="'Invoices' | localize" [description]="'InvoiceHeaderInfo' | localize">
       <div role="actions">
         <button (click)="exportToExcel()" class="btn btn-outline-success"><i class="fa fa-file-excel"></i> {{ l('ExportToExcel') }}</button>
       </div>
@@ -12,17 +12,18 @@
           <form class="form" autocomplete="off">
             <div>
               <div class="row align-items-center">
-                <div class="col-xl-12">
+                <div class="col-xl-12" *ngIf="!appSession.tenantId">
                   <div class="form-group m-form__group align-items-center">
                     <div class="input-group">
-                      <input
-                        [(ngModel)]="filterText"
-                        name="filterText"
-                        autoFocus
-                        class="form-control m-input"
-                        [placeholder]="l('SearchWithThreeDot')"
-                        type="text"
-                      />
+                      <p-autoComplete
+                        [inputStyleClass]="'form-control'"
+                        [placeholder]="l('ClientName')"
+                        name="Tenant"
+                        [(ngModel)]="Tenant"
+                        [suggestions]="Tenants"
+                        (completeMethod)="search($event)"
+                        field="displayName"
+                      ></p-autoComplete>
                       <span class="input-group-btn">
                         <button (click)="getAll()" class="btn btn-primary" type="submit"><i class="flaticon-search-1"></i></button>
                       </span>
@@ -33,6 +34,17 @@
               <div class="row" [hidden]="!advancedFiltersAreShown">
                 <div class="col-md-12">
                   <div class="kt-separator kt-separator--border-dashed"></div>
+                </div>
+                <div class="col-md-3">
+                  <div class="form-group">
+                    <label for="DemandStatus">{{ l('Period') }}</label>
+                    <select name="periodId" [(ngModel)]="periodId" class="form-control" required>
+                      <option value="">{{ l('All') }}</option>
+                      <option [value]="period.id" *ngFor="let period of Periods">
+                        {{ period.displayName | localize }}
+                      </option>
+                    </select>
+                  </div>
                 </div>
 
                 <div class="col-md-3">
@@ -57,6 +69,32 @@
                     </div>
                   </div>
                 </ng-container>
+
+                <div class="col-xl-3">
+                  <div class="checkbox-list mb-2">
+                    <label class="checkbox ml-2">
+                      <input
+                        type="checkbox"
+                        [(ngModel)]="creationDateRangeActive"
+                        id="CreationDateRangeActive"
+                        name="CreationDateRangeActive"
+                        value="true"
+                      />
+                      {{ 'CreationTime' | localize }}
+                      <span class="ml-2 mt-1"></span>
+                    </label>
+                  </div>
+                  <input
+                    class="form-control"
+                    name="CreationDateRange"
+                    [attr.disabled]="!creationDateRangeActive ? 'disabled' : null"
+                    #drpCreationDateRange="bsDaterangepicker"
+                    bsDaterangepicker
+                    readonly="readonly"
+                    dateRangePickerMomentModifier
+                    [(date)]="creationDateRange"
+                  />
+                </div>
               </div>
               <div class="row mb-2">
                 <div class="col-sm-12">
@@ -91,63 +129,59 @@
               >
                 <ng-template pTemplate="header">
                   <tr>
-                    <th
-                      style="width: 130px;"
-                      [hidden]="
-                        !isGrantedAny(
-                          'Pages.Administration.Host.Invoices.Invoices.Delete',
-                          'Pages.Administration.Host.Invoices.MakePaid',
-                          'Pages.Administration.Host.Invoices.MakeUnPaid'
-                        )
-                      "
-                    >
+                    <th style="width: 130px;">
                       {{ l('Actions') }}
                     </th>
 
-                    <th style="width: 150px;" pSortableColumn="id">
+                    <th pSortableColumn="id">
                       {{ l('InvoiceId') }}
                       <p-sortIcon field="displayName"></p-sortIcon>
                     </th>
-                    <th *ngIf="!appSession.tenantId" style="width: 150px;" pSortableColumn="ClientName">
+                    <th *ngIf="!appSession.tenantId" pSortableColumn="tenantId">
                       {{ l('ClientName') }}
-                      <p-sortIcon field="ClientName"></p-sortIcon>
+                      <p-sortIcon field="tenantId"></p-sortIcon>
                     </th>
-                    <th style="width: 150px;" pSortableColumn="PeriodType">
-                      {{ l('PeriodType') }}
-                      <p-sortIcon field="periodType"></p-sortIcon>
+                    <th pSortableColumn="PeriodId">
+                      {{ l('Period') }}
+                      <p-sortIcon field="PeriodId"></p-sortIcon>
                     </th>
-
-                    <th style="width: 150px;" pSortableColumn="Amount">
+                    <th *ngIf="!appSession.tenantId" pSortableColumn="IsAccountReceivable">
+                      {{ l('AccountInvoiceType') }}
+                      <p-sortIcon field="IsAccountReceivable"></p-sortIcon>
+                    </th>
+                    <th pSortableColumn="Amount">
                       {{ l('Amount') }}
                       <p-sortIcon field="Amount"></p-sortIcon>
                     </th>
-                    <th style="width: 150px;" pSortableColumn="totalVat">
-                      {{ l('totalVat') }}
-                      <p-sortIcon field="totalVat"></p-sortIcon>
+                    <th pSortableColumn="VatAmount">
+                      {{ l('VatAmount') }}
+                      <p-sortIcon field="VatAmount"></p-sortIcon>
                     </th>
-                    <th style="width: 150px;" pSortableColumn="totalSumExclVat">
-                      {{ l('totalSumExclVat') }}
-                      <p-sortIcon field="totalSumExclVat"></p-sortIcon>
+                    <th pSortableColumn="amountWithTaxVat">
+                      {{ l('amountWithTaxVat') }}
+                      <p-sortIcon field="amountWithTaxVat"></p-sortIcon>
+                    </th>
+                    <th pSortableColumn="DueDate">
+                      {{ l('DueDate') }}
+                      <p-sortIcon field="DueDate"></p-sortIcon>
+                    </th>
+                    <th pSortableColumn="IsPaid">
+                      {{ l('PaidStatus') }}
+                      <p-sortIcon field="IsPaid"></p-sortIcon>
                     </th>
                   </tr>
                 </ng-template>
                 <ng-template pTemplate="body" let-record="$implicit">
                   <tr [class]="record.isPaid ? 'table-success' : 'table-danger'">
-                    <td
-                      style="width: 130px;"
-                      [hidden]="
-                        !isGrantedAny(
-                          'Pages.Administration.Host.Invoices.Invoices.Delete',
-                          'Pages.Administration.Host.Invoices.MakePaid',
-                          'Pages.Administration.Host.Invoices.MakeUnPaid'
-                        )
-                      "
-                    >
+                    <td style="width: 130px;">
                       <div class="btn-group dropdown" dropdown container="body">
                         <button class="dropdown-toggle btn btn-sm btn-primary" dropdownToggle>
                           <i class="fa fa-cog"></i><span class="caret"></span> {{ l('Actions') }}
                         </button>
                         <ul class="dropdown-menu" *dropdownMenu>
+                          <li>
+                            <a class="dropdown-item" [routerLink]="['/app/main/invoices/detail', record.id]">{{ l('Detail') }}</a>
+                          </li>
                           <li>
                             <a
                               class="dropdown-item"
@@ -179,29 +213,48 @@
                       </div>
                     </td>
 
-                    <td style="width: 150px;">
+                    <td>
                       <span class="ui-column-title"> {{ l('InvoiceId') }}</span>
                       {{ record.id }}
                     </td>
-                    <td style="width: 150px;" *ngIf="!appSession.tenantId">
+                    <td *ngIf="!appSession.tenantId">
                       <span class="ui-column-title"> {{ l('ClientName') }}</span>
-                      {{ record.tenant.displayName }}
+                      {{ record.tenantName }}
                     </td>
-                    <td style="width: 150px;">
-                      <span class="ui-column-title"> {{ l('PeriodType') }}</span>
-                      {{ record.invoicePeriodDto.displayName }}
+                    <td>
+                      <span class="ui-column-title"> {{ l('Period') }}</span>
+                      {{ record.period }}
                     </td>
-                    <td style="width: 150px;">
+                    <td>
+                      <span class="ui-column-title"> {{ l('AccountInvoiceType') }}</span>
+                      {{ l(AccountType(record.isAccountReceivable)) }}
+                    </td>
+
+                    <td>
                       <span class="ui-column-title"> {{ l('Amount') }}</span>
                       {{ record.amount }}
                     </td>
-                    <td style="width: 150px;">
-                      <span class="ui-column-title"> {{ l('TotalVat') }}</span>
-                      {{ record.totalVat }}
+                    <td>
+                      <span class="ui-column-title"> {{ l('VatAmount') }}</span>
+                      {{ record.vatAmount }}
                     </td>
-                    <td style="width: 150px;">
-                      <span class="ui-column-title"> {{ l('totalSumExclVat') }}</span>
-                      {{ record.totalSumExclVat }}
+                    <td>
+                      <span class="ui-column-title"> {{ l('AmountWithTaxVat') }}</span>
+                      {{ record.amountWithTaxVat }}
+                    </td>
+                    <td>
+                      <span class="ui-column-title"> {{ l('DueDate') }}</span>
+                      {{ record.dueDate | momentFormat: 'L' }}
+                    </td>
+                    <td>
+                      <span class="ui-column-title"> {{ l('PaidStatus') }}</span>
+                      <span *ngIf="record.isPaid" class="label label-success label-inline m-1" data-toggle="tooltip" data-placement="top">
+                        {{ 'Paid' | localize }}
+                      </span>
+
+                      <span *ngIf="!record.isPaid" class="label label-danger label-inline m-1" data-toggle="tooltip" data-placement="top">
+                        {{ 'UnPaid' | localize }}
+                      </span>
                     </td>
                   </tr>
                 </ng-template>

@@ -191,6 +191,15 @@ import { ViewAllCarrierBidsComponent } from '@app/main/marketPlace/marketPlace/V
 import { RejectionReasonModalComponent } from './documentFiles/documentFiles/rejectionReason-modal.component';
 import { ViewShippingRequestPriceResponseModalComponent } from './shippingRequests/shippingRequests/shipping-request-Response/view-shipping-request-response-modal.component';
 import { SafePipe } from '../../account/register/safe.pipe';
+import { InvoicePeriodsListComponent } from '@app/main/invoices/invoice-periods-list/invoice-periods-list.component';
+import { InvoicePeriodsModalComponent } from '@app/main/invoices/invoice-periods-modal/invoice-periods-modal.component';
+import { InvoicesListComponent } from './invoices/invoices-list/invoices-list.component';
+import { BalancesListComponent } from './invoices/balances/balances-list/balances-list.component';
+import { BalanceRechargeModelComponent } from './invoices/balances/balance-recharge-model/balance-recharge-model.component';
+import { GroupPeriodsListComponent } from './invoices/groupsperiods/group-periods-list/group-periods-list.component';
+import { InvoiceDetailComponent } from './invoices/invoice-detail/invoice-detail.component';
+import { GroupDetailComponent } from './invoices/groupsperiods/group-detail/group-detail.component';
+import { DemanModelComponent } from './invoices/groupsperiods/model/deman-model.component';
 import { InvoicePeriodsListComponent } from '@app/main/Invoices/invoice-periods-list/invoice-periods-list.component';
 import { InvoicePeriodsModalComponent } from '@app/main/Invoices/invoice-periods-modal/invoice-periods-modal.component';
 import { InvoicesListComponent } from './Invoices/invoices-list/invoices-list.component';
@@ -211,7 +220,6 @@ NgxBootstrapDatePickerConfigService.registerNgxBootstrapDatePickerLocales();
     EditorModule,
     InputMaskModule,
     TableModule,
-
     CommonModule,
     FormsModule,
     ModalModule,
@@ -434,13 +442,18 @@ NgxBootstrapDatePickerConfigService.registerNgxBootstrapDatePickerLocales();
     CreateOrEditTrucksTypeModalComponent,
     DashboardComponent,
     UpdatePriceShippingRequestModalComponent,
-
     MarketplaceComponent,
     ViewShippingRequestDetailsComponent,
     ViewAllCarrierBidsComponent,
     InvoicePeriodsListComponent,
     InvoicePeriodsModalComponent,
     InvoicesListComponent,
+    BalancesListComponent,
+    DemanModelComponent,
+    BalanceRechargeModelComponent,
+    GroupPeriodsListComponent,
+    InvoiceDetailComponent,
+    GroupDetailComponent,
     RouteStepsForCreateShippingRequstComponent,
 
     TripsForViewShippingRequestComponent,

@@ -10,6 +10,7 @@ namespace TACHYON.Invoices
     {
         Task<PagedResultDto<InvoiceListDto>> GetAll(InvoiceFilterInput input);
 
+        Task<InvoiceInfoDto> GetById(EntityDto input);
 
         Task MakePaid(long InvoiceId);
         Task MakeUnPaid(long InvoiceId);

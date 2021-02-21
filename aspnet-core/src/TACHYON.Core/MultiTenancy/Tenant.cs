@@ -40,9 +40,10 @@ namespace TACHYON.MultiTenancy
         [MaxLength(MaxLogoMimeTypeLength)]
         public virtual string LogoFileType { get; set; }
 
-        public virtual int? InvoicePeriodId { get; set; }
+        public decimal Balance { get; set; } = 0;
 
-        public virtual InvoicePeriod InvoicePeriod { get; set; }
+        public decimal CreditBalance { get; set; } = 0;
+
 
         public SubscriptionPaymentType SubscriptionPaymentType { get; set; }
 

@@ -6,9 +6,11 @@ using Abp.Extensions;
 using Abp.UI;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml.Serialization;
 using TACHYON.Authorization;
 using TACHYON.Common.Dto;
 using TACHYON.Dto;
@@ -72,6 +74,8 @@ namespace TACHYON.Invoices.Periods
             var Period = ObjectMapper.Map<InvoicePeriod>(input);
 
             await _PeriodRepository.InsertAsync(Period);
+
+            if (Period.Enabled & Period.PeriodType != InvoicePeriodType.PayInAdvance && Period.PeriodType != InvoicePeriodType.PayuponDelivery)
             await _invoiceManager.CreateTiggerAsync(Period);
 
         }
@@ -84,10 +88,8 @@ namespace TACHYON.Invoices.Periods
 
             ObjectMapper.Map(input, Period);
 
-            if (Period.Enabled)
-            {
-                await _invoiceManager.UpdateTriggerAsync(Period);
-            }
+            await _invoiceManager.UpdateTriggerAsync(Period);
+
         }
 
         [AbpAuthorize(AppPermissions.Pages_Administration_Host_Invoices_Period_Delete)]
@@ -127,5 +129,8 @@ namespace TACHYON.Invoices.Periods
 
             return ObjectMapper.Map<List<InvoicePeriodDto>>(Results);
         }
+
+
+  
     }
 }

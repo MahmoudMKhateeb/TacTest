@@ -21,7 +21,7 @@ namespace TACHYON.Invoices.Periods.Exporting
         public FileDto ExportToFile(List<InvoicePeriodDto> Periods)
         {
             return CreateExcelPackage(
-                "Cities.xlsx",
+                "Periods.xlsx",
                 excelPackage =>
                 {
 

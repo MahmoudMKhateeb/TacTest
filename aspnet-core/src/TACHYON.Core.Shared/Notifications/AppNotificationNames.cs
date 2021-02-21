@@ -32,7 +32,9 @@ namespace TACHYON.Notifications
         public const string AcceptedSubmittedDocument = "App.AcceptedSubmittedDocument";
         public const string RejectedSubmittedDocument = "App.RejectedSubmittedDocument";
         public const string InvoiceShipperGenerated = "App.InvoiceShipperGenerated";
+        public const string GroupPeriodsGenerated = "App.GroupPeriodsGenerated";
 
+        public const string GroupPeriodOnDemand = "App.GroupPeriodOnDemand";
 
         public const string StartShippment = "App.StartShippment";
 

@@ -1,4 +1,5 @@
-﻿using Abp.AspNetZeroCore;
+﻿using Abp.Application.Features;
+using Abp.AspNetZeroCore;
 using Abp.AspNetZeroCore.Timing;
 using Abp.AutoMapper;
 using Abp.Configuration.Startup;
@@ -10,7 +11,9 @@ using Abp.Modules;
 using Abp.Net.Mail;
 using Abp.Net.Mail.Smtp;
 using Abp.Reflection.Extensions;
+using Abp.Runtime.Validation;
 using Abp.Timing;
+using Abp.UI.Inputs;
 using Abp.Zero;
 using Abp.Zero.Configuration;
 using Abp.Zero.Ldap;
@@ -130,6 +133,9 @@ namespace TACHYON
 
             IocManager.Resolve<ChatUserStateWatcher>().Initialize();
             IocManager.Resolve<AppTimes>().StartupTime = Clock.Now;
+
+
+  
         }
     }
 }

@@ -44,8 +44,14 @@ import { TrucksComponent } from './trucks/trucks/trucks.component';
 import { TrucksTypesComponent } from './trucksTypes/trucksTypes/trucksTypes.component';
 import { DashboardComponent } from './dashboard/dashboard.component';
 import { MarketplaceComponent } from '@app/main/marketPlace/marketPlace/marketplace.component';
-import { InvoicePeriodsListComponent } from '@app/main/Invoices/invoice-periods-list/invoice-periods-list.component';
-import { InvoicesListComponent } from '@app/main/Invoices/invoices-list/invoices-list.component';
+import { InvoicePeriodsListComponent } from '@app/main/invoices/invoice-periods-list/invoice-periods-list.component';
+import { InvoicesListComponent } from '@app/main/invoices/invoices-list/invoices-list.component';
+import { BalancesListComponent } from './invoices/balances/balances-list/balances-list.component';
+import { GroupPeriodsListComponent } from './invoices/groupsperiods/group-periods-list/group-periods-list.component';
+import { InvoiceDetailComponent } from './invoices/invoice-detail/invoice-detail.component';
+import { InvoiceDetailResolverService } from './Invoices/invoice-detail/Invoice-detail-resolver.service';
+import { GroupDetailComponent } from './invoices/groupsperiods/group-detail/group-detail.component';
+import { GroupDetailResolverService } from './invoices/groupsperiods/group-detail/group-detail-resolver.service';
 
 @NgModule({
   imports: [
@@ -162,10 +168,30 @@ import { InvoicesListComponent } from '@app/main/Invoices/invoices-list/invoices
           { path: 'trailerTypes/trailerTypes', component: TrailerTypesComponent, data: { permission: 'Pages.TrailerTypes' } },
           { path: 'trucks/trucks', component: TrucksComponent, data: { permission: 'Pages.Trucks' } },
           { path: 'trucksTypes/trucksTypes', component: TrucksTypesComponent, data: { permission: 'Pages.TrucksTypes' } },
-
           { path: 'invoices/view', component: InvoicesListComponent, data: { permission: 'Pages.Invoices' } },
+          {
+            path: 'invoices/detail/:id',
+            component: InvoiceDetailComponent,
+            data: { permission: 'Pages.Invoices' },
+            resolve: {
+              invoiceinfo: InvoiceDetailResolverService,
+            },
+          },
           { path: 'invoices/periods', component: InvoicePeriodsListComponent, data: { permission: 'Pages.Administration.Host.Invoices.Periods' } },
-
+          {
+            path: 'invoices/balnacerecharges',
+            component: BalancesListComponent,
+            data: { permission: 'Pages.Administration.Host.Invoices.Balances' },
+          },
+          { path: 'invoices/groupperiods', component: GroupPeriodsListComponent, data: { permission: 'Pages.Invoices.GroupsPeriods' } },
+          {
+            path: 'invoices/groupperiods/detail/:id',
+            component: GroupDetailComponent,
+            data: { permission: 'Pages.Invoices.GroupsPeriods' },
+            resolve: {
+              groupinfo: GroupDetailResolverService,
+            },
+          },
           { path: 'dashboard', component: DashboardComponent, data: { permission: 'Pages.Tenant.Dashboard' } },
           { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
           { path: '**', redirectTo: 'dashboard' },

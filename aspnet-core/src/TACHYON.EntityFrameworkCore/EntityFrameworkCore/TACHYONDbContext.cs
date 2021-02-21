@@ -62,6 +62,8 @@ using System.Linq.Expressions;
 using Microsoft.EntityFrameworkCore.Metadata;
 using TACHYON.Invoices;
 using TACHYON.Invoices.Periods;
+using TACHYON.Invoices.Groups;
+using TACHYON.Invoices.Balances;
 using TACHYON.Routs.RoutPoints;
 using TACHYON.Shipping.ShippingRequestTrips;
 using TACHYON.Shipping.Trips;
@@ -171,6 +173,14 @@ namespace TACHYON.EntityFrameworkCore
         public virtual DbSet<Invoices.Invoice> Invoice { get; set; }
 
         public virtual DbSet<InvoiceShippingRequests> InvoiceShippingRequests { get; set; }
+        public virtual DbSet<GroupPeriod> GroupPeriod { get; set; }
+        public virtual DbSet<GroupShippingRequests> GroupShippingRequests { get; set; }
+        public virtual DbSet<GroupPeriodInvoice> GroupPeriodInvoice { get; set; }
+
+        
+        public virtual DbSet<BalanceRecharge> BalanceRecharge { get; set; }
+        
+
         /* Define an IDbSet for each entity of the application */
 
         public virtual DbSet<BinaryObject> BinaryObjects { get; set; }

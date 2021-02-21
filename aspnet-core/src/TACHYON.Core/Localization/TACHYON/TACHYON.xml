@@ -1,6 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <localizationDictionary culture="en">
-  <texts>
+  <texts>
+
     <![CDATA[Tachyon:Driver Start]]>
     <text name="FirstName">First name</text>
     <text name="LastName">Last name</text>
@@ -228,6 +229,8 @@
     <text name="TMSSettings">TMS Settings</text>
     <text name="TMS">Trucks Management System</text>
     <![CDATA[Tachyon:SideBar End]]>
+
+
 
 
 
@@ -1047,6 +1050,22 @@
     <text name="TenantSignUp">Company SignUp</text>
     <text name="NewTenantRegisteredNotificationDefinition">On a new tenant registered to the application.</text>
     <text name="NewTenantRegisteredNotificationMessage">A new tenant registered to the application. Tenancy name: {tenancyName}.</text>
+    <tex name="NewInvoiceShipperGenerated"><a href="/app/main/invoices/detail/{invoiceid}">A new invoice has been generated {invoiceid}#</a></tex>
+    <tex name="NewInvoiceShipperGeneratedEmailSubject">A new invoice has been generated {invoiceid}#</tex>
+    <tex name="NewInvoiceShipperGeneratedEmailBody">A new invoice has been generated {invoiceid}# <a href="/app/main/invoices/detail/{invoiceid}">click here to view invoice</a></tex>
+
+    <tex name="NewGroupPerioGenerated">
+      <a href="/app/main/invoices/groupperiods/detail/{groupid}">A new collect has been generated {groupid}#</a>
+    </tex>
+    <tex name="GroupPeriodOnDemand">
+      <a href="/app/main/invoices/groupperiods/detail/{groupid}">A new demand  has been add to group period {groupid}#</a>
+    </tex>
+    <tex name="NewGroupPerioGeneratedEmailSubject">
+      A new collect has been generated {groupid}#
+    </tex>
+    <tex name="NewGroupPerioGeneratedEmailBody">
+      <a href="/app/main/invoices/groupperiods/detail/{groupid}">A new collect has been generated {groupid}#</a>
+    </tex> 
     <text name="LoginAttempts">Login attempts</text>
     <text name="Failed">Failed</text>
     <text name="NewTenant">New Company</text>

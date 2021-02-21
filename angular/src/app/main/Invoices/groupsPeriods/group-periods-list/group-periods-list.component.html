@@ -1,0 +1,270 @@
+<div [@routerTransition]>
+  <div class="content d-flex flex-column flex-column-fluid">
+    <sub-header [title]="'GroupPeriods' | localize" [description]="'GroupPeriodsHeaderInfo' | localize">
+      <div role="actions">
+        <button (click)="exportToExcel()" class="btn btn-outline-success"><i class="fa fa-file-excel"></i> {{ l('ExportToExcel') }}</button>
+      </div>
+    </sub-header>
+
+    <div [class]="containerClass">
+      <div class="card card-custom gutter-b">
+        <div class="card-body">
+          <form class="form" autocomplete="off">
+            <div>
+              <div class="row align-items-center">
+                <div class="col-xl-6" *ngIf="!appSession.tenantId">
+                  <div class="form-group m-form__group align-items-center">
+                    <div class="input-group">
+                      <p-autoComplete
+                        [inputStyleClass]="'form-control'"
+                        [placeholder]="l('ClientName')"
+                        name="Tenant"
+                        [(ngModel)]="Tenant"
+                        [suggestions]="Tenants"
+                        (completeMethod)="search($event)"
+                        field="displayName"
+                      ></p-autoComplete>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-xl-6">
+                  <div class="checkbox-list mb-2">
+                    <label class="checkbox ml-2">
+                      <input
+                        type="checkbox"
+                        [(ngModel)]="creationDateRangeActive"
+                        id="TenantsTable_CreationDateRangeActive"
+                        name="CreationDateRangeActive"
+                        value="true"
+                      />
+                      {{ 'CreationTime' | localize }}
+                      <span class="ml-2 mt-1"></span>
+                    </label>
+                  </div>
+                  <input
+                    class="form-control"
+                    name="CreationDateRange"
+                    [attr.disabled]="!creationDateRangeActive ? 'disabled' : null"
+                    #drpCreationDateRange="bsDaterangepicker"
+                    bsDaterangepicker
+                    readonly="readonly"
+                    dateRangePickerMomentModifier
+                    [(date)]="creationDateRange"
+                  />
+                </div>
+                <div class="col-md-6">
+                  <div class="form-group">
+                    <label for="DemandStatus">{{ l('Demand') }}</label>
+                    <select name="DemandStatus" [(ngModel)]="DemandStatus" class="form-control">
+                      <option value="">{{ l('All') }}</option>
+                      <option value="true">{{ l('Demand') }}</option>
+                      <option value="false">{{ l('UnDemand') }}</option>
+                    </select>
+                  </div>
+                </div>
+
+                <div class="col-md-6">
+                  <div class="form-group">
+                    <label for="DemandStatus">{{ l('Period') }}</label>
+                    <select name="periodId" [(ngModel)]="periodId" class="form-control" required>
+                      <option value="">{{ l('All') }}</option>
+                      <option [value]="period.id" *ngFor="let period of Periods">
+                        {{ period.displayName | localize }}
+                      </option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+
+              <button (click)="getAll()" class="btn btn-primary" type="submit">{{ l('Search') }}</button>
+            </div>
+          </form>
+
+          <div class="row align-items-center">
+            <!--<Primeng-Datatable-Start>-->
+            <div class="primeng-datatable-container col-12" [busyIf]="primengTableHelper.isLoading">
+              <p-table
+                #dataTable
+                (onLazyLoad)="getAll($event)"
+                [value]="primengTableHelper.records"
+                rows="{{ primengTableHelper.defaultRecordsCountPerPage }}"
+                [paginator]="false"
+                [lazy]="true"
+                [scrollable]="true"
+                ScrollWidth="100%"
+                [responsive]="primengTableHelper.isResponsive"
+                [resizableColumns]="primengTableHelper.resizableColumns"
+              >
+                <ng-template pTemplate="header">
+                  <tr>
+                    <th style="width: 130px;">
+                      {{ l('Actions') }}
+                    </th>
+
+                    <th *ngIf="!appSession.tenantId" pSortableColumn="TenantId">
+                      {{ l('ClientName') }}
+                      <p-sortIcon field="TenantId"></p-sortIcon>
+                    </th>
+                    <th pSortableColumn="PeriodId">
+                      {{ l('Period') }}
+                      <p-sortIcon field="PeriodId"></p-sortIcon>
+                    </th>
+
+                    <th pSortableColumn="Amount">
+                      {{ l('Amount') }}
+                      <p-sortIcon field="Amount"></p-sortIcon>
+                    </th>
+                    <th pSortableColumn="VatAmount">
+                      {{ l('VatAmount') }}
+                      <p-sortIcon field="VatAmount"></p-sortIcon>
+                    </th>
+                    <th pSortableColumn="amountWithTaxVat">
+                      {{ l('AmountWithTaxVat') }}
+                      <p-sortIcon field="amountWithTaxVat"></p-sortIcon>
+                    </th>
+                    <th pSortableColumn="CreationTime">
+                      {{ l('CreationTime') }}
+                      <p-sortIcon field="CreationTime"></p-sortIcon>
+                    </th>
+                    <th pSortableColumn="IsDemand">
+                      {{ l('DemandStatus') }}
+                      <p-sortIcon field="IsDemand"></p-sortIcon>
+                    </th>
+                    <th *ngIf="!appSession.tenantId" pSortableColumn="IsClaim">
+                      {{ l('ClaimStatus') }}
+                      <p-sortIcon field="IsClaim"></p-sortIcon>
+                    </th>
+                  </tr>
+                </ng-template>
+                <ng-template pTemplate="body" let-record="$implicit">
+                  <tr [class]="record.isDemand ? 'table-success' : 'table-danger'">
+                    <td style="width: 130px;">
+                      <div class="btn-group dropdown" dropdown container="body">
+                        <button class="dropdown-toggle btn btn-sm btn-primary" dropdownToggle>
+                          <i class="fa fa-cog"></i><span class="caret"></span> {{ l('Actions') }}
+                        </button>
+                        <ul class="dropdown-menu" *dropdownMenu>
+                          <li>
+                            <a class="dropdown-item" [routerLink]="['/app/main/invoices/groupperiods/detail', record.id]">{{ l('Detail') }}</a>
+                          </li>
+                          <li>
+                            <a
+                              class="dropdown-item"
+                              href="javascript:;"
+                              *ngIf="permission.isGranted('Pages.Administration.Host.Invoices.GroupsPeriods.Delete')"
+                              (click)="delete(record)"
+                              >{{ l('Delete') }}</a
+                            >
+                          </li>
+                          <li *ngIf="!record.isDemand">
+                            <a
+                              class="dropdown-item"
+                              href="javascript:;"
+                              *ngIf="permission.isGranted('Pages.Invoices.GroupsPeriods.Demand')"
+                              (click)="GroupPeriodDemanModel.show(record.id)"
+                              >{{ l('Demand') }}</a
+                            >
+                          </li>
+                          <li *ngIf="record.isDemand && !record.isClaim">
+                            <a
+                              class="dropdown-item"
+                              href="javascript:;"
+                              *ngIf="permission.isGranted('Pages.Invoices.GroupsPeriods.UnDemand')"
+                              (click)="UnDemand(record)"
+                              >{{ l('UnDemand') }}</a
+                            >
+                          </li>
+                          <li *ngIf="record.isDemand && !record.isClaim">
+                            <a
+                              class="dropdown-item"
+                              href="javascript:;"
+                              *ngIf="permission.isGranted('Pages.Administration.Host.Invoices.GroupsPeriods.Claim')"
+                              (click)="Claim(record)"
+                              >{{ l('Claim') }}</a
+                            >
+                          </li>
+                          <li *ngIf="record.isClaim">
+                            <a
+                              class="dropdown-item"
+                              href="javascript:;"
+                              *ngIf="permission.isGranted('Pages.Administration.Host.Invoices.GroupsPeriods.UnClaim')"
+                              (click)="UnClaim(record)"
+                              >{{ l('UnClaim') }}</a
+                            >
+                          </li>
+                        </ul>
+                      </div>
+                    </td>
+
+                    <td *ngIf="!appSession.tenantId">
+                      <span class="ui-column-title"> {{ l('ClientName') }}</span>
+                      {{ record.tenantName }}
+                    </td>
+                    <td>
+                      <span class="ui-column-title"> {{ l('period') }}</span>
+                      {{ record.period }}
+                    </td>
+                    <td>
+                      <span class="ui-column-title"> {{ l('Amount') }}</span>
+                      {{ record.amount }}
+                    </td>
+                    <td>
+                      <span class="ui-column-title"> {{ l('VatAmount') }}</span>
+                      {{ record.vatAmount }}
+                    </td>
+                    <td>
+                      <span class="ui-column-title"> {{ l('AmountWithTaxVat') }}</span>
+                      {{ record.amountWithTaxVat }}
+                    </td>
+                    <td>
+                      <span class="ui-column-title"> {{ l('CreationTime') }}</span>
+                      {{ record.creationTime | momentFormat: 'L' }}
+                    </td>
+                    <td>
+                      <span class="ui-column-title"> {{ l('DemandStatus') }}</span>
+                      <span *ngIf="record.isDemand" class="label label-success label-inline m-1" data-toggle="tooltip" data-placement="top">
+                        {{ 'Demand' | localize }}
+                      </span>
+
+                      <span *ngIf="!record.isDemand" class="label label-danger label-inline m-1" data-toggle="tooltip" data-placement="top">
+                        {{ 'UnDemand' | localize }}
+                      </span>
+                    </td>
+                    <td *ngIf="!appSession.tenantId">
+                      <span class="ui-column-title"> {{ l('ClaimStatus') }}</span>
+                      <span *ngIf="record.isClaim" class="label label-success label-inline m-1" data-toggle="tooltip" data-placement="top">
+                        {{ 'Claim' | localize }}
+                      </span>
+
+                      <span *ngIf="!record.isClaim" class="label label-danger label-inline m-1" data-toggle="tooltip" data-placement="top">
+                        {{ 'UnClaim' | localize }}
+                      </span>
+                    </td>
+                  </tr>
+                </ng-template>
+              </p-table>
+              <div class="primeng-no-data" *ngIf="primengTableHelper.totalRecordsCount == 0 && IsStartSearch">
+                {{ l('NoData') }}
+              </div>
+              <div class="primeng-paging-container">
+                <p-paginator
+                  [rows]="primengTableHelper.defaultRecordsCountPerPage"
+                  #paginator
+                  (onPageChange)="getAll($event)"
+                  [totalRecords]="primengTableHelper.totalRecordsCount"
+                  [rowsPerPageOptions]="primengTableHelper.predefinedRecordsCountPerPage"
+                >
+                </p-paginator>
+                <span class="total-records-count">
+                  {{ l('TotalRecordsCount', primengTableHelper.totalRecordsCount) }}
+                </span>
+              </div>
+            </div>
+            <!--<Primeng-Datatable-End>-->
+          </div>
+        </div>
+      </div>
+    </div>
+    <deman-model #GroupPeriodDemanModel (modalSave)="getAll()"></deman-model>
+  </div>
+</div>

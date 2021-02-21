@@ -368,6 +368,17 @@ namespace TACHYON.Authorization
             Periods.CreateChildPermission(AppPermissions.Pages_Administration_Host_Invoices_Period_Delete, L("DeletePeriod"), multiTenancySides: MultiTenancySides.Host);
             Periods.CreateChildPermission(AppPermissions.Pages_Administration_Host_Invoices_Period_Enabled, L("EnabledPeriod"), multiTenancySides: MultiTenancySides.Host);
 
+            var Balances = Invoices.CreateChildPermission(AppPermissions.Pages_Administration_Host_Invoices_Balances, L("Balances"), multiTenancySides: MultiTenancySides.Host);
+            Balances.CreateChildPermission(AppPermissions.Pages_Administration_Host_Invoices_Balances_Create, L("CreateBalance"), multiTenancySides: MultiTenancySides.Host);
+            Balances.CreateChildPermission(AppPermissions.Pages_Administration_Host_Invoices_Balances_Delete, L("DeleteBalance"), multiTenancySides: MultiTenancySides.Host);
+
+            var GroupPeriods = Invoices.CreateChildPermission(AppPermissions.Pages_Invoices_GroupsPeriods, L("GroupPeriods"));
+            GroupPeriods.CreateChildPermission(AppPermissions.Pages_Invoices_GroupsPeriods_Demand, L("DemandGroupPeriods"));
+            GroupPeriods.CreateChildPermission(AppPermissions.Pages_Invoices_GroupsPeriods_UnDemand, L("UnDemandGroupPeriods"));
+            GroupPeriods.CreateChildPermission(AppPermissions.Pages_Administration_Host_Invoices_GroupsPeriods_Delete, L("DeleteGroupPeriods"), multiTenancySides: MultiTenancySides.Host);
+            GroupPeriods.CreateChildPermission(AppPermissions.Pages_Administration_Host_Invoices_GroupsPeriods_Claim, L("ClaimGroupPeriods"), multiTenancySides: MultiTenancySides.Host);
+            GroupPeriods.CreateChildPermission(AppPermissions.Pages_Administration_Host_Invoices_GroupsPeriods_UnClaim, L("UnClaimGroupPeriods"), multiTenancySides: MultiTenancySides.Host);
+
 
             #region Shipping Request
             var CauseAccident = pages.CreateChildPermission(AppPermissions.Pages_ShippingRequestCauseAccidents, L("CausesAccidents"), multiTenancySides: MultiTenancySides.Host);

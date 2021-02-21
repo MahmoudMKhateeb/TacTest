@@ -173,6 +173,11 @@ using TACHYON.Invoices.Periods.Dto;
 using TACHYON.Invoices.Dto;
 using TACHYON.Invoices;
 using TACHYON.Invoices.Periods;
+using TACHYON.Invoices.Balances;
+using TACHYON.Invoices.Balances.Dto;
+using TACHYON.Invoices.Groups;
+using TACHYON.Invoices.Groups.Dto;
+using System;
 
 namespace TACHYON
 {
@@ -497,12 +502,34 @@ namespace TACHYON
 
             configuration.CreateMap<InvoicePeriodDto, InvoicePeriod>();
             configuration.CreateMap<InvoicePeriod, InvoicePeriodDto>();
-            configuration.CreateMap<Invoice, InvoiceListDto>();
+            configuration.CreateMap<Invoice, InvoiceListDto>()
+                .ForMember(dto => dto.TenantName, options => options.MapFrom(entity => entity.Tenant.Name))
+                .ForMember(dto => dto.Period, options => options.MapFrom(entity => entity.InvoicePeriod.DisplayName));
 
+            configuration.CreateMap<Invoice, InvoiceInfoDto>()
+                .ForMember(dto => dto.ClientName, options => options.MapFrom(entity => entity.Tenant.Name))
+                .ForMember(dto => dto.Address, options => options.MapFrom(entity => entity.Tenant.Address))
+                .ForMember(dto => dto.Period, options => options.MapFrom(entity => entity.InvoicePeriod.DisplayName));
+
+            configuration.CreateMap<BalanceRecharge, BalanceRechargeListDto>()
+               .ForMember(dto => dto.TenantName, options => options.MapFrom(entity => entity.Tenant.Name));
+
+            configuration.CreateMap<CreateBalanceRechargeInput, BalanceRecharge>();
+            
 
             configuration.CreateMap<Tenant, InvoiceTenantDto>()
                .ForMember(dto => dto.DisplayName, options => options.MapFrom(entity => entity.Name))
                .ForMember(dto => dto.Group, options => options.MapFrom(entity => entity.Edition.Name));
+
+            configuration.CreateMap<GroupPeriod, GroupPeriodListDto>()
+                .ForMember(dto => dto.TenantName, options => options.MapFrom(entity => entity.Tenant.Name))
+                .ForMember(dto => dto.Period, options => options.MapFrom(entity => entity.InvoicePeriod.DisplayName));
+
+            configuration.CreateMap<GroupPeriod, GroupPeriodInfoDto>()
+                .ForMember(dto => dto.ClientName, options => options.MapFrom(entity => entity.Tenant.Name))
+                .ForMember(dto => dto.Address, options => options.MapFrom(entity => entity.Tenant.Address))
+                .ForMember(dto => dto.Period, options => options.MapFrom(entity => entity.InvoicePeriod.DisplayName));
+            
             /* ADD YOUR OWN CUSTOM AUTOMAPPER MAPPINGS HERE */
         }
         /// <summary>

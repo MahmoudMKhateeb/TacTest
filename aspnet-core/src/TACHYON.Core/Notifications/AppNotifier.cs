@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using TACHYON.Authorization.Users;
 using TACHYON.Documents.DocumentFiles;
 using TACHYON.Invoices;
+using TACHYON.Invoices.Groups;
 using TACHYON.MultiTenancy;
 using TACHYON.Shipping.ShippingRequests;
 
@@ -409,14 +410,54 @@ namespace TACHYON.Notifications
                     "NewInvoiceShipperGenerated",
                     TACHYONConsts.LocalizationSourceName
                 )
-            );
-
-         
-         //   notificationData["emailAddress"] = user.EmailAddress;
+            );     
+           notificationData["invoiceid"] = invoice.Id;
 
             await _notificationPublisher.PublishAsync(AppNotificationNames.InvoiceShipperGenerated, notificationData,
                 tenantIds: new[] { (int?)invoice.TenantId });
         }
+
+        public async Task NewGroupItemCarrierGenerated(Invoice invoice)
+        {
+            var notificationData = new LocalizableMessageNotificationData(
+                new LocalizableString(
+                    "NewInvoiceShipperGenerated",
+                    TACHYONConsts.LocalizationSourceName
+                )
+            );
+            notificationData["invoiceid"] = invoice.Id;
+
+            await _notificationPublisher.PublishAsync(AppNotificationNames.InvoiceShipperGenerated, notificationData,
+                tenantIds: new[] { (int?)invoice.TenantId });
+        }
+
+        public async Task NewGroupPeriodsGenerated(GroupPeriod groupPeriod)
+        {
+            var notificationData = new LocalizableMessageNotificationData(
+                new LocalizableString(
+                    "NewGroupPeriodsGenerated",
+                    TACHYONConsts.LocalizationSourceName
+                )
+            );
+            notificationData["groupid"] = groupPeriod.Id;
+
+            await _notificationPublisher.PublishAsync(AppNotificationNames.GroupPeriodsGenerated, notificationData,
+                tenantIds: new[] { (int?)groupPeriod.TenantId });
+        }
+
+        public async Task GroupPeriodOnDemand(GroupPeriod groupPeriod)
+        {
+            var notificationData = new LocalizableMessageNotificationData(
+                new LocalizableString(
+                    "GroupPeriodOnDemand",
+                    TACHYONConsts.LocalizationSourceName
+                )
+            );
+            notificationData["groupid"] = groupPeriod.Id;
+
+            await _notificationPublisher.PublishAsync(AppNotificationNames.GroupPeriodOnDemand, notificationData);
+        }
+
         #endregion
 
 

@@ -67,10 +67,9 @@ namespace TACHYON.Shipping.ShippingRequests
         /// </summary>
         public bool? IsPrePayed { get; set; }
 
-        /// <summary>
-        /// Related with invoice id
-        /// </summary>
-        public long? InvoiceId { get; set; }
+
+        public bool IsShipperHaveInvoice { get; set; }
+        public bool IsCarrierHaveInvoice { get; set; }
         /// <summary>
         /// when shipper reject tachyon-user price
         /// </summary>

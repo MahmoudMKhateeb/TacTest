@@ -26,11 +26,13 @@ namespace TACHYON.Invoices
         public bool IsPaid { get; set; }
 
         public string Note { get; set; }
-        public decimal? Amount { get; set; }
-        public decimal? TotalSumExclVat { get; set; }
-        public decimal? TotalVat { get; set; }
+        public decimal AmountWithTaxVat { get; set; }
+        public decimal Amount { get; set; }
+        public decimal VatAmount { get; set; }
 
-        public bool? IsAccountReceivable { get; set; }
+        public decimal TaxVat { get; set; }
+
+        public bool IsAccountReceivable { get; set; }
 
         public List<InvoiceShippingRequests> ShippingRequests { get; set; }
 

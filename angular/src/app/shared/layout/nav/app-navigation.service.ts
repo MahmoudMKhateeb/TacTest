@@ -119,10 +119,14 @@ export class AppNavigationService {
         [],
         [
           new AppMenuItem('InvoicesList', 'Pages.Invoices', 'flaticon2-document', '/app/main/invoices/view'),
-
           new AppMenuItem('Periods', 'Pages.Administration.Host.Invoices.Periods', 'flaticon2-document', '/app/main/invoices/periods'),
-
-          // new AppMenuItem('TenantRequiredDocuments', '', 'flaticon-settings', '/app/admin/tenantRequiredDocuments'),
+          new AppMenuItem(
+            'BalnaceRecharges',
+            'Pages.Administration.Host.Invoices.Periods',
+            'flaticon2-document',
+            '/app/main/invoices/balnacerecharges'
+          ),
+          new AppMenuItem('GroupPeriods', 'Pages.Invoices.GroupsPeriods', 'flaticon2-document', '/app/main/invoices/groupperiods'),
         ]
       ),
       //Host

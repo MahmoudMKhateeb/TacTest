@@ -1,7 +1,8 @@
-import { Component, Injector } from '@angular/core';
+import { Component, Injector, ViewChild } from '@angular/core';
 import { AppComponentBase } from '@shared/common/app-component-base';
 import { appModuleAnimation } from '@shared/animations/routerTransition';
 import { LazyLoadEvent } from 'primeng/public_api';
+import { Table } from 'primeng/table';
 import * as _ from 'lodash';
 import { InvoicePeriodServiceProxy, InvoicePeriodDto, InvoicePeriodType } from '@shared/service-proxies/service-proxies';
 @Component({
@@ -9,6 +10,7 @@ import { InvoicePeriodServiceProxy, InvoicePeriodDto, InvoicePeriodType } from '
   animations: [appModuleAnimation()],
 })
 export class InvoicePeriodsListComponent extends AppComponentBase {
+  @ViewChild('dataTable', { static: true }) dataTable: Table;
   advancedFiltersAreShown: boolean = false;
   displayNameFilter: string = '';
   filterText: string = '';
@@ -20,7 +22,7 @@ export class InvoicePeriodsListComponent extends AppComponentBase {
 
   getAll(event?: LazyLoadEvent): void {
     this.primengTableHelper.showLoadingIndicator();
-    this._InvoicePeriodServiceProxy.getAll(this.filterText, null).subscribe((result) => {
+    this._InvoicePeriodServiceProxy.getAll(this.filterText, this.primengTableHelper.getSorting(this.dataTable)).subscribe((result) => {
       this.IsStartSearch = true;
       this.primengTableHelper.totalRecordsCount = result.items.length;
       this.primengTableHelper.records = result.items;

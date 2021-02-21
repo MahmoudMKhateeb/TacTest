@@ -355,5 +355,21 @@
         public const string Pages_Administration_Host_Invoices_MakePaid = "Pages.Administration.Host.Invoices.MakePaid";
         public const string Pages_Administration_Host_Invoices_MakeUnPaid = "Pages.Administration.Host.Invoices.MakeUnPaid";
 
+
+        public const string Pages_Administration_Host_Invoices_Balances = "Pages.Administration.Host.Invoices.Balances";
+        public const string Pages_Administration_Host_Invoices_Balances_Create = "Pages.Administration.Host.Invoices.Balances.Create";
+        public const string Pages_Administration_Host_Invoices_Balances_Delete = "Pages.Administration.Host.Invoices_Balances.Delete";
+
+
+        public const string Pages_Invoices_GroupsPeriods = "Pages.Invoices.GroupsPeriods";
+        public const string Pages_Invoices_GroupsPeriods_Demand = "Pages.Invoices.GroupsPeriods.Demand";
+        public const string Pages_Invoices_GroupsPeriods_UnDemand = "Pages.Invoices.GroupsPeriods.UnDemand";
+
+        public const string Pages_Administration_Host_Invoices_GroupsPeriods_Delete = "Pages.Administration.Host.Invoices.GroupsPeriods.Delete";
+        public const string Pages_Administration_Host_Invoices_GroupsPeriods_Claim = "Pages.Administration.Host.Invoices.GroupsPeriods.Claim";
+        public const string Pages_Administration_Host_Invoices_GroupsPeriods_UnClaim = "Pages.Administration.Host.Invoices.GroupsPeriods.UnClaim";
+
+
+
     }
 }

@@ -10,6 +10,7 @@ namespace TACHYON.Configuration
         {
             public const string BillingLegalName = "App.HostManagement.BillingLegalName";
             public const string BillingAddress = "App.HostManagement.BillingAddress";
+            public const string TaxVat = "App.HostManagement.TaxVat";
         }
 
         public static class DashboardCustomization

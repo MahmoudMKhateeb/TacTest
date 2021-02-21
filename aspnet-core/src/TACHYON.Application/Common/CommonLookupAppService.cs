@@ -1,15 +1,22 @@
 ﻿using Abp.Application.Services.Dto;
 using Abp.Authorization;
 using Abp.Collections.Extensions;
+using Abp.Domain.Repositories;
 using Abp.Extensions;
 using Abp.Linq.Extensions;
 using Abp.Runtime.Session;
 using Microsoft.EntityFrameworkCore;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using TACHYON.Authorization.Users;
 using TACHYON.Common.Dto;
+using TACHYON.Dto;
 using TACHYON.Editions;
 using TACHYON.Editions.Dto;
+using TACHYON.Features;
+using TACHYON.Invoices.Periods;
+using TACHYON.MultiTenancy;
 
 namespace TACHYON.Common
 {
@@ -17,11 +24,16 @@ namespace TACHYON.Common
     public class CommonLookupAppService : TACHYONAppServiceBase, ICommonLookupAppService
     {
         private readonly EditionManager _editionManager;
+        private readonly IRepository<Tenant> _Tenant;
+        private readonly IRepository<InvoicePeriod> _PeriodRepository;
+        private User _CurrentUser;
 
-        public CommonLookupAppService(EditionManager editionManager)
+        public CommonLookupAppService(EditionManager editionManager, IRepository<Tenant> Tenant, IRepository<InvoicePeriod> PeriodRepository)
         {
             _editionManager = editionManager;
-        }
+            _Tenant = Tenant;
+            _PeriodRepository = PeriodRepository;
+    }
 
         public async Task<ListResultDto<SubscribableEditionComboboxItemDto>> GetEditionsForCombobox(bool onlyFreeItems = false)
         {
@@ -79,6 +91,29 @@ namespace TACHYON.Common
             {
                 Name = EditionManager.DefaultEditionName
             };
+        }
+
+        public IEnumerable<ISelectItemDto> GetAutoCompleteTenants(string name,string EdtionName)
+        {
+            name = name.ToLower().Trim();
+            var query =
+                _Tenant.GetAll().              
+                Where(t => t.IsActive && (t.Name.ToLower().Contains(name) || t.TenancyName.ToLower().Contains(name)) && (string.IsNullOrEmpty(EdtionName) || t.Edition.DisplayName.ToLower().Contains(EdtionName.ToLower().Trim())))
+                .Select(t => new SelectItemDto { DisplayName = t.Name, Id = t.Id.ToString() }).Take(20).ToList();
+
+            return query;
+        }
+
+
+        public async Task<List<SelectItemDto>> GetPeriods()
+        {
+            _CurrentUser = GetCurrentUser();
+
+            var query = await _PeriodRepository.GetAll()
+                .WhereIf(_CurrentUser.TenantId.HasValue && FeatureChecker.IsEnabled(AppFeatures.Carrier),p=> p.ShipperOnlyUsed==false)
+                .Where(p => p.Enabled == true)
+                .Select(t => new SelectItemDto { DisplayName = t.DisplayName, Id = t.Id.ToString() }).ToListAsync();
+            return query;
         }
     }
 }

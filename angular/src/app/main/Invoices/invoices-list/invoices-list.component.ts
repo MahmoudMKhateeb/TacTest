@@ -5,25 +5,42 @@ import { Table } from 'primeng/table';
 import { Paginator } from 'primeng/paginator';
 import { LazyLoadEvent } from 'primeng/public_api';
 import * as _ from 'lodash';
-import { InvoiceServiceProxy, InvoiceListDto } from '@shared/service-proxies/service-proxies';
+import { InvoiceServiceProxy, InvoiceListDto, ISelectItemDto, CommonLookupServiceProxy } from '@shared/service-proxies/service-proxies';
+import * as moment from 'moment';
+import { AutoCompleteModule } from 'primeng/autocomplete';
+
 @Component({
   templateUrl: './invoices-list.component.html',
   animations: [appModuleAnimation()],
 })
-export class InvoicesListComponent extends AppComponentBase {
+export class InvoicesListComponent extends AppComponentBase implements OnInit {
   @ViewChild('dataTable', { static: true }) dataTable: Table;
   @ViewChild('paginator', { static: true }) paginator: Paginator;
+  //  @ViewChild('InvoiceDetailModelComponent', { static: true }) InvoiceDetailModel: InvoiceDetailModelComponent;
+
   Invoices: InvoiceListDto[] = [];
   IsStartSearch: boolean = false;
   PaidStatus: boolean | null | undefined;
   AccountStatus: boolean | null | undefined;
-  filterText = '';
   advancedFiltersAreShown = false;
+  periodId: number | null | undefined;
+  Periods: ISelectItemDto[];
+  Tenant: ISelectItemDto;
+  Tenants: ISelectItemDto[];
+  fromDate: moment.Moment | null | undefined;
+  toDate: moment.Moment | null | undefined;
+  creationDateRange: Date[] = [moment().startOf('day').toDate(), moment().endOf('day').toDate()];
+  creationDateRangeActive: boolean = false;
 
-  constructor(injector: Injector, private _InvoiceServiceProxy: InvoiceServiceProxy) {
+  constructor(injector: Injector, private _InvoiceServiceProxy: InvoiceServiceProxy, private _CommonServ: CommonLookupServiceProxy) {
     super(injector);
   }
 
+  ngOnInit() {
+    this._CommonServ.getPeriods().subscribe((result) => {
+      this.Periods = result;
+    });
+  }
   getAll(event?: LazyLoadEvent): void {
     if (this.primengTableHelper.shouldResetPaging(event)) {
       this.paginator.changePage(0);
@@ -31,11 +48,22 @@ export class InvoicesListComponent extends AppComponentBase {
     }
 
     this.primengTableHelper.showLoadingIndicator();
+
+    if (this.creationDateRangeActive) {
+      this.fromDate = moment(this.creationDateRange[0]);
+      this.toDate = moment(this.creationDateRange[1]);
+    } else {
+      this.fromDate = null;
+      this.toDate = null;
+    }
     this._InvoiceServiceProxy
       .getAll(
-        this.filterText,
+        this.Tenant ? parseInt(this.Tenant.id) : undefined,
+        this.periodId,
         this.PaidStatus,
         this.AccountStatus,
+        this.fromDate,
+        this.toDate,
         this.primengTableHelper.getSorting(this.dataTable),
         this.primengTableHelper.getSkipCount(this.paginator, event),
         this.primengTableHelper.getMaxResultCount(this.paginator, event)
@@ -82,6 +110,14 @@ export class InvoicesListComponent extends AppComponentBase {
         });
       }
     });
+  }
+  search(event) {
+    this._CommonServ.getAutoCompleteTenants(event.query, '').subscribe((result) => {
+      this.Tenants = result;
+    });
+  }
+  AccountType(AccountType: boolean): string {
+    return AccountType ? 'AccountReceivable' : 'AccountPayable';
   }
   exportToExcel(): void {}
 }
