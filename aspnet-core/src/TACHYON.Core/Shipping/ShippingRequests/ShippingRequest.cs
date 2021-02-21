@@ -132,6 +132,7 @@ namespace TACHYON.Shipping.ShippingRequests
 
         public int NumberOfTrips { get; set; }
         public DateTime? StartTripDate { get; set; }
+        public DateTime? EndTripDate { get; set; }
         // todo make sure those are nullable
 
         #region Truck Categories
