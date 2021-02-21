@@ -172,7 +172,7 @@ export class CreateOrEditShippingRequestComponent extends AppComponentBase imple
     //   this.allPorts = result;
     // });
     //Nwely added
-
+    this.refreshFacilities();
     this.getAllVasList();
   }
 

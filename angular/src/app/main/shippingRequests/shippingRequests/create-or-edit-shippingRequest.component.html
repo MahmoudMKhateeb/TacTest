@@ -274,7 +274,9 @@
                 <div class="mb-3">
                   <div class="mb-2">
                     <div class="form-group row fv-plugins-icon-container">
-                      <div class="col-lg-6">
+                      <!-- Start of Select Source -->
+                      <!-- TODO: Add DataBiniding For source And Destanation Facilitys -->
+                      <div class="col-lg-3">
                         <div class="form-group">
                           <label>* {{ l('originCity') }}:</label>
                           <div [ngClass]="{ 'spinner spinner-success spinner-right mr-1 ml-1': !allCitys }">
@@ -296,7 +298,7 @@
                           <span class="form-text text-muted">{{ l('selectaCity') }}</span>
                         </div>
                       </div>
-                      <div class="col-lg-6">
+                      <div class="col-lg-3">
                         <div class="form-group">
                           <label>* {{ l('destinationCity') }}:</label>
                           <div [ngClass]="{ 'spinner spinner-success spinner-right mr-1 ml-1': !allCitys }">
@@ -317,7 +319,35 @@
                           <span class="form-text text-muted">{{ l('selectaCity') }}</span>
                         </div>
                       </div>
+                      <!--                        FAcility -->
 
+                      <div class="col-lg-3">
+                        <div class="form-group">
+                          <label>{{ l('originFacility') }}:</label>
+                          <div [ngClass]="{ 'spinner spinner-success spinner-right mr-1 ml-1': !allFacilities }">
+                            <select class="form-control" name="origin" [disabled]="!allFacilities">
+                              <option value="">{{ l('selectanOriginFacility') }}</option>
+                              <option *ngFor="let item of allFacilities" value="{{ item.id }}">{{ item.displayName }}</option>
+                            </select>
+                          </div>
+
+                          <span class="form-text text-muted">{{ l('optional') }}</span>
+                        </div>
+                      </div>
+                      <!--                        FAcility -->
+                      <div class="col-lg-3">
+                        <div class="form-group">
+                          <label>{{ l('destinationFacility') }}:</label>
+                          <div [ngClass]="{ 'spinner spinner-success spinner-right mr-1 ml-1': !allFacilities }">
+                            <select class="form-control" name="destination" [disabled]="!allFacilities">
+                              <option value="">{{ l('selectaDestination') }}</option>
+                              <option *ngFor="let item of allFacilities" value="{{ item.id }}">{{ item.displayName }}</option>
+                            </select>
+                          </div>
+                          <span class="form-text text-muted">{{ l('optional') }}</span>
+                        </div>
+                      </div>
+                      <!-- End Of Select Source City And Facility  -->
                       <div class="col-lg-6">
                         <div class="form-group">
                           <label>* {{ l('startDate') }}:</label>

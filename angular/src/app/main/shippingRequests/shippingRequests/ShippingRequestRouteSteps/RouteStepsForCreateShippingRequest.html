@@ -5,9 +5,13 @@
         wayPoints
       </h3>
       <div class="card-toolbar">
-        <button type="button" class="btn btn-primary blue" (click)="createRouteStepModal.show()">
+        <button [disabled]="wayPointsList.length == 0" type="button" class="btn btn-primary blue" (click)="showDropPointUpModal()">
           <i class="fa fa-plus"></i>
-          Add New WayPoint
+          {{l("AddNewDropPoint")}}
+        </button>
+        <button [disabled]="wayPointsList.length > 0" type="button" class="btn btn-primary blue" (click)="showPickUpModal()">
+          <i class="fa fa-plus"></i>
+          {{l("AddNewPickUpPoint")}}
         </button>
       </div>
     </div>
@@ -16,8 +20,15 @@
       <div class="card-body">
         <!--  Start::forViewAllRouteStepsMap (WayPoints)-->
         <div class="col-lg-12">
-          <agm-map [latitude]="lat" [longitude]="lng" [zoom]="13">
-            <agm-direction [origin]="wayPointMapSource" [destination]="wayPointMapDest" [waypoints]="wayPoints"></agm-direction>
+          <agm-map [zoom]="13" [latitude]="wayPointMapSource?.lat || lat" [longitude]="wayPointMapSource?.lng || lng">
+            <agm-marker *ngIf="!wayPointsList[1]" [longitude]="wayPointMapSource?.lng" [latitude]="wayPointMapSource?.lat"></agm-marker>
+            <agm-direction
+              *ngIf="wayPointMapDest && wayPointMapSource"
+              [origin]="wayPointMapSource"
+              [destination]="wayPointMapDest"
+              [waypoints]="wayPoints"
+              [travelMode]="'DRIVING'"
+            ></agm-direction>
           </agm-map>
         </div>
         <!--   End::forViewAllRouteStepsMap  -->
@@ -43,12 +54,10 @@
                         {{ l('Actions') }}
                       </th>
                       <th pSortableColumn="goodCategoryFk.displayName" style="width: 150px;">
-                        {{ l('Source') }}
-                        <p-sortIcon field="goodCategoryDisplayName"></p-sortIcon>
+                        {{ l('Facility') }}
                       </th>
                       <th pSortableColumn="goodCategoryFk.displayName" style="width: 150px;">
-                        {{ l('Destination') }}
-                        <p-sortIcon field="goodCategoryDisplayName"></p-sortIcon>
+                        {{ l('pickingType') }}
                       </th>
                     </tr>
                   </ng-template>
@@ -63,20 +72,22 @@
                             <li>
                               <a class="dropdown-item" (click)="AddRouteStep(i)">{{ l('Edit') }}</a>
                             </li>
-                            <li>
+                            <li *ngIf="record.pickingTypeId != 1">
                               <a class="dropdown-item" (click)="delete(i)">{{ l('Delete') }}</a>
                             </li>
                           </ul>
                         </div>
                       </td>
                       <td style="width: 150px;">
-                        <span class="ui-column-title"> {{ l('DisplayName') }}</span>
-                        {{ record.displayName }}
+                        <span class="ui-column-title"> {{ l('facilityName') }}</span>
+                        {{ getFacilityNameByid(record.facilityId) }}
                       </td>
 
                       <td style="width: 150px;">
-                        <span class="ui-column-title"> {{ l('DisplayName') }}</span>
-                        {{ record .displayName }}
+                        <span class="ui-column-title"> {{ l('pointType') }}</span>
+                        <!--                        {{ record .displayName }}-->
+                        <i class="icon-2x ki ki-double-arrow-up ml-10" style="color: #ec3939 !important;" *ngIf="record.pickingTypeId == 1"></i>
+                        <i class="icon-2x ki ki-double-arrow-down ml-10" style="color: #ec3939 !important;" *ngIf="record.pickingTypeId != 1"></i>
                       </td>
                     </tr>
                   </ng-template>
@@ -108,8 +119,6 @@
       <div class="modal-content">
         <div class="modal-header">
           <h4 class="modal-title">
-            <!--                <span *ngIf="routStep.id">{{l("EditRoutStep")}}</span>-->
-            <!--                <span *ngIf="!routStep.id">{{l("CreateNewRoutStep")}}</span>-->
             {{ l('addNewWayPoint') }}
           </h4>
         </div>
@@ -132,7 +141,7 @@
           </div>
           <div class="row p-0 mt-4">
             <div class="col-lg-12 row">
-              <div class="form-group col-lg-6">
+              <div class="form-group col-lg-12">
                 <label>{{ l('address') }}</label>
                 <div
                   [ngClass]="{'spinner spinner-success spinner-right mr-1 ml-1': facilityLoading
@@ -156,16 +165,16 @@
                 </div>
               </div>
 
-              <div class="form-group col-lg-6">
-                <label>pickingType</label>
-                <div class="input-icon input-icon-right">
-                  <select name="PickingType1" class="form-control" [(ngModel)]="singleWayPoint.pickingTypeId">
-                    <option value="">{{ l('SelectPickingType') }}</option>
-                    <option [ngValue]="1">PickUp</option>
-                    <option [ngValue]="2">Drop</option>
-                  </select>
-                </div>
-              </div>
+              <!--              <div class="form-group col-lg-6">-->
+              <!--                <label>pickingType</label>-->
+              <!--                <div class="input-icon input-icon-right">-->
+              <!--                  <select name="PickingType1" class="form-control" [(ngModel)]="singleWayPoint.pickingTypeId">-->
+              <!--                    <option value="">{{ l('SelectPickingType') }}</option>-->
+              <!--                    <option [ngValue]="1">PickUp</option>-->
+              <!--                    <option [ngValue]="2">Drop</option>-->
+              <!--                  </select>-->
+              <!--                </div>-->
+              <!--              </div>-->
 
               <!--    StartOF::GoodDetailsSection       -->
               <div>
