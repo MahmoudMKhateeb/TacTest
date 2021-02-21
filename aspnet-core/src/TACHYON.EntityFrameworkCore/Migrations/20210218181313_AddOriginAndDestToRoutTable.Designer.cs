@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using NetTopologySuite.Geometries;
 using TACHYON.EntityFrameworkCore;
@@ -10,9 +11,10 @@ using TACHYON.EntityFrameworkCore;
 namespace TACHYON.Migrations
 {
     [DbContext(typeof(TACHYONDbContext))]
-    partial class TACHYONDbContextModelSnapshot : ModelSnapshot
+    [Migration("20210218181313_AddOriginAndDestToRoutTable")]
+    partial class AddOriginAndDestToRoutTable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -2281,6 +2283,12 @@ namespace TACHYON.Migrations
                     b.Property<long?>("LastModifierUserId")
                         .HasColumnType("bigint");
 
+                    b.Property<int>("NumberOfPacking")
+                        .HasColumnType("int");
+
+                    b.Property<string>("PackingType")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<long>("RoutPointId")
                         .HasColumnType("bigint");
 
@@ -3207,14 +3215,8 @@ namespace TACHYON.Migrations
                     b.Property<int>("NumberOfDrops")
                         .HasColumnType("int");
 
-                    b.Property<int>("NumberOfPacking")
-                        .HasColumnType("int");
-
                     b.Property<int>("NumberOfTrips")
                         .HasColumnType("int");
-
-                    b.Property<string>("PackingType")
-                        .HasColumnType("nvarchar(max)");
 
                     b.Property<decimal?>("Price")
                         .HasColumnType("decimal(18,2)");

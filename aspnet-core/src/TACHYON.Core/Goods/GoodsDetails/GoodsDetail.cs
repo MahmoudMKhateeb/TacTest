@@ -65,9 +65,6 @@ namespace TACHYON.Goods.GoodsDetails
         [ForeignKey("UnitOfMeasureId")]
         public UnitOfMeasure UnitOfMeasureFk { get; set; }
 
-        public string PackingType { get; set; }
-        public int NumberOfPacking { get; set; }
-
         [Required]
         public long RoutPointId { get; set; }
 

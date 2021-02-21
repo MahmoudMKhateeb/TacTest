@@ -147,6 +147,8 @@ namespace TACHYON.Shipping.ShippingRequests
         public virtual int? CapacityId { get; set; }
         [ForeignKey("CapacityId")]
         public Capacity CapacityFk { get; set; }
+        public string PackingType { get; set; }
+        public int NumberOfPacking { get; set; }
 
         #endregion
 
