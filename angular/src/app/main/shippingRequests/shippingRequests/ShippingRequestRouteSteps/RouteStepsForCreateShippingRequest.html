@@ -2,12 +2,12 @@
   <div class="card card-custom">
     <div class="card-header">
       <h3 class="card-title">
-        Route Steps
+        wayPoints
       </h3>
       <div class="card-toolbar">
         <button type="button" class="btn btn-primary blue" (click)="createRouteStepModal.show()">
           <i class="fa fa-plus"></i>
-          Add New RouteStep
+          Add New WayPoint
         </button>
       </div>
     </div>
@@ -16,7 +16,7 @@
       <div class="card-body">
         <!--  Start::forViewAllRouteStepsMap (WayPoints)-->
         <div class="col-lg-12">
-          <agm-map [latitude]="lat" [longitude]="lng">
+          <agm-map [latitude]="lat" [longitude]="lng" [zoom]="13">
             <agm-direction [origin]="wayPointMapSource" [destination]="wayPointMapDest" [waypoints]="wayPoints"></agm-direction>
           </agm-map>
         </div>
@@ -34,7 +34,7 @@
                   [resizableColumns]="primengTableHelper.resizableColumns"
                   [responsive]="primengTableHelper.isResponsive"
                   [scrollable]="true"
-                  [value]="routeStepsDetails"
+                  [value]="wayPointsList"
                   rows="{{ primengTableHelper.defaultRecordsCountPerPage }}"
                 >
                   <ng-template pTemplate="header">
@@ -71,17 +71,17 @@
                       </td>
                       <td style="width: 150px;">
                         <span class="ui-column-title"> {{ l('DisplayName') }}</span>
-                        {{ record.createOrEditSourceRoutPointInputDto.displayName }}
+                        {{ record.displayName }}
                       </td>
 
                       <td style="width: 150px;">
                         <span class="ui-column-title"> {{ l('DisplayName') }}</span>
-                        {{ record.createOrEditDestinationRoutPointInputDto .displayName }}
+                        {{ record .displayName }}
                       </td>
                     </tr>
                   </ng-template>
                 </p-table>
-                <div *ngIf="routeStepsDetails.length == 0" class="primeng-no-data">
+                <div *ngIf="wayPointsList.length == 0" class="primeng-no-data">
                   {{ l('NoData') }}
                 </div>
               </div>
@@ -110,52 +110,39 @@
           <h4 class="modal-title">
             <!--                <span *ngIf="routStep.id">{{l("EditRoutStep")}}</span>-->
             <!--                <span *ngIf="!routStep.id">{{l("CreateNewRoutStep")}}</span>-->
-            {{ l('CreateRouteStep') }}
+            {{ l('addNewWayPoint') }}
           </h4>
         </div>
         <div class="modal-body">
           <div class="row mb-4">
             <!-- start:: map that draws the RouteStep::Route in CreateOrEditRouteStep-->
             <div class="col-lg-12">
-              <agm-map [latitude]="lat" [longitude]="lng">
-                <agm-direction
-                  *ngIf="dir.origin.lat && dir.origin.lng && dir.destination.lat && dir.destination.lng"
-                  [origin]="dir.origin"
-                  [destination]="dir.destination"
-                ></agm-direction>
+              <!--              <agm-map [latitude]="lat" [longitude]="lng">-->
+              <!--                <agm-direction-->
+              <!--                  *ngIf="dir.origin.lat && dir.origin.lng && dir.destination.lat && dir.destination.lng"-->
+              <!--                  [origin]="dir.origin"-->
+              <!--                  [destination]="dir.destination"-->
+              <!--                ></agm-direction>-->
+              <!--              </agm-map>-->
+              <agm-map [latitude]="singleWayPoint.latitude || lat" [longitude]="singleWayPoint.longitude || lng" [zoom]="zoom">
+                <agm-marker [latitude]="singleWayPoint.latitude" [longitude]="singleWayPoint.longitude"></agm-marker>
               </agm-map>
             </div>
             <!-- END::map that draws the RouteStep::Route in CreateOrEditRouteStep-->
           </div>
-          <div class="row p-0">
-            <div class="col-lg-6">
-              <div class="form-group">
-                <span class="card-label font-weight-bolder text-dark">Source</span>
-              </div>
-              <div class="form-group">
-                <label>DisplayName</label>
-                <div class="input-icon input-icon-right">
-                  <input
-                    type="text"
-                    class="form-control"
-                    placeholder="DisplayName"
-                    name="DisplayName1"
-                    [(ngModel)]="routStep.createOrEditSourceRoutPointInputDto.displayName"
-                  />
-                </div>
-              </div>
-              <div class="form-group">
-                <label>Facility</label>
+          <div class="row p-0 mt-4">
+            <div class="col-lg-12 row">
+              <div class="form-group col-lg-6">
+                <label>{{ l('address') }}</label>
                 <div
-                  [ngClass]="{
-                              'spinner spinner-success spinner-right mr-1 ml-1': facilityLoading
+                  [ngClass]="{'spinner spinner-success spinner-right mr-1 ml-1': facilityLoading
                             }"
                 >
                   <div class="input-group">
                     <select
                       name="Facility1"
                       class="form-control"
-                      [(ngModel)]="routStep.createOrEditSourceRoutPointInputDto.facilityId"
+                      [(ngModel)]="singleWayPoint.facilityId"
                       [disabled]="facilityLoading"
                       (change)="RouteStepCordSetter()"
                     >
@@ -169,171 +156,98 @@
                 </div>
               </div>
 
-              <div class="form-group">
+              <div class="form-group col-lg-6">
                 <label>pickingType</label>
                 <div class="input-icon input-icon-right">
-                  <select name="PickingType1" class="form-control" [(ngModel)]="routStep.createOrEditSourceRoutPointInputDto.pickingTypeId">
+                  <select name="PickingType1" class="form-control" [(ngModel)]="singleWayPoint.pickingTypeId">
                     <option value="">{{ l('SelectPickingType') }}</option>
                     <option [ngValue]="1">PickUp</option>
                     <option [ngValue]="2">Drop</option>
                   </select>
                 </div>
               </div>
-              <div class="form-group">
-                <label>Good Details:</label>
 
-                <div class="row" [@simpleFadeAnimation]="'in'" *ngFor="let SourceGoodDetail of SourceGoodDetailValueslist; let i = index">
-                  <div class="col-lg-6">
-                    <div class="mb-2">
-                      <div class="input-group">
-                        <select
-                          class="form-control"
-                          [(ngModel)]="SourceGoodDetail.goodsDetailsId"
-                          #name="ngModel"
-                          name="GoodSubCategory{{i}}"
-                          [disabled]="!GoodsCategoryList"
+              <!--    StartOF::GoodDetailsSection       -->
+              <div>
+                <div class="card card-custom gutter-b">
+                  <div class="card-header">
+                    <h3 class="card-title">
+                      {{ l('goodsDetails')}}
+                    </h3>
+                    <div class="card-toolbar">
+                      <button type="button" class="btn btn-primary blue" (click)="openAddNewGoodDetailModal()" [disabled]="!MainGoodsCategory">
+                        <i class="fa fa-plus"></i>
+                        {{ l('addNewGoodDetails') }}
+                      </button>
+                    </div>
+                  </div>
+                  <div class="card-body">
+                    <div class="row align-items-center">
+                      <!--<Primeng-Datatable-Start>-->
+                      <div [busyIf]="primengTableHelper.isLoading" class="primeng-datatable-container col-12">
+                        <p-table
+                          ScrollWidth="100%"
+                          [paginator]="false"
+                          [resizableColumns]="primengTableHelper.resizableColumns"
+                          [responsive]="primengTableHelper.isResponsive"
+                          [scrollable]="true"
+                          [value]="singleWayPoint.goodsDetailListDto"
+                          rows="{{ primengTableHelper.defaultRecordsCountPerPage }}"
                         >
-                          <option value="">{{ l('SelectAGood') }}</option>
-                          <option *ngFor="let item of GoodsCategoryList" value="{{ item.goodCategoryId }}">{{ item.name }}</option>
-                        </select>
+                          <ng-template pTemplate="header">
+                            <tr>
+                              <th style="width: 130px;">
+                                {{ l('Actions') }}
+                              </th>
+                              <th pSortableColumn="goodCategoryFk.displayName" style="width: 150px;">
+                                {{ l('GoodsName') }}
+                                <p-sortIcon field="goodCategoryDisplayName"></p-sortIcon>
+                              </th>
+                              <th pSortableColumn="goodCategoryFk.displayName" style="width: 150px;">
+                                {{ l('Amount') }}
+                                <p-sortIcon field="goodCategoryDisplayName"></p-sortIcon>
+                              </th>
+                              <th pSortableColumn="goodCategoryFk.displayName" style="width: 150px;">
+                                {{ l('weight') }}
+                                <p-sortIcon field="goodCategoryDisplayName"></p-sortIcon>
+                              </th>
+                            </tr>
+                          </ng-template>
+                          <ng-template let-record="$implicit" pTemplate="body" let-i="rowIndex">
+                            <tr>
+                              <td style="width: 130px;">
+                                <div class="btn-group dropdown">
+                                  <button class="btn font-weight-bold btn-danger btn-icon float-right" (click)="DeleteGoodDetail(i)">
+                                    <i class="la la-trash float-right"></i>
+                                  </button>
+                                </div>
+                              </td>
+                              <td style="width: 150px;">
+                                <span class="ui-column-title"> {{ l('goodCategoryId') }}</span>
+                                {{ record.goodCategoryId }}
+                              </td>
+                              <td style="width: 150px;">
+                                <span class="ui-column-title"> {{ l('totalAmount') }}</span>
+                                {{ record.totalAmount }}
+                              </td>
+                              <td style="width: 150px;">
+                                <span class="ui-column-title"> {{ l('weight') }}</span>
+                                {{ record.weight }}
+                              </td>
+                            </tr>
+                          </ng-template>
+                        </p-table>
+                        <div *ngIf="singleWayPoint?.goodsDetailListDto?.length == 0" class="primeng-no-data">
+                          {{ l('NoData') }}
+                        </div>
                       </div>
-                    </div>
-                  </div>
-                  <div class="col-lg-4">
-                    <div class="mb-2">
-                      <div class="input-group">
-                        <input
-                          type="text"
-                          class="form-control float-right"
-                          placeholder="Enter Amount"
-                          [(ngModel)]="SourceGoodDetail.amount"
-                          #name="ngModel"
-                          name="amount{{i}}"
-                          [disabled]="!GoodsCategoryList"
-                        />
-                      </div>
-                    </div>
-                  </div>
-                  <div class="col-lg-2">
-                    <button class="btn font-weight-bold btn-danger btn-icon float-right" (click)="removevalue(i , 'source')" [disabled]="i == 0">
-                      <i class="la la-trash float-right"></i>
-                    </button>
-                  </div>
-                </div>
-                <div class="form-group row mt-4">
-                  <div class="col-lg-12">
-                    <button
-                      class="btn btn-success font-weight-bold btn-icon float-right"
-                      (click)="addvalue('source')"
-                      [disabled]="!GoodsCategoryList"
-                    >
-                      <i class="la la-plus-circle"></i>
-                    </button>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div class="vertical-separator"></div>
-            <div class="col-lg-6">
-              <div class="form-group">
-                <span class="card-label font-weight-bolder text-dark">Destination</span>
-              </div>
-              <div class="form-group">
-                <label>DisplayName</label>
-                <div class="input-icon input-icon-right">
-                  <input
-                    type="text"
-                    class="form-control"
-                    placeholder="DisplayName"
-                    name="DisplayName2"
-                    [(ngModel)]="routStep.createOrEditDestinationRoutPointInputDto.displayName"
-                  />
-                </div>
-              </div>
-              <div class="form-group">
-                <label>Facility</label>
-                <div
-                  [ngClass]="{
-                              'spinner spinner-success spinner-right mr-1 ml-1': facilityLoading
-                            }"
-                >
-                  <div class="input-group">
-                    <select
-                      name="Facility2"
-                      class="form-control"
-                      [(ngModel)]="routStep.createOrEditDestinationRoutPointInputDto.facilityId"
-                      [disabled]="facilityLoading"
-                      (change)="RouteStepCordSetter()"
-                    >
-                      <option value="">{{ l('selectaFacility') }}</option>
-                      <option *ngFor="let item of allFacilities" value="{{ item.id }}">{{ item.displayName }}</option>
-                    </select>
-                    <div class="input-group-append">
-                      <button class="btn btn-primary" type="button" (click)="openCreateFacilityModal()">+</button>
+                      <!--<Primeng-Datatable-End>-->
                     </div>
                   </div>
                 </div>
               </div>
 
-              <div class="form-group">
-                <label>pickingType</label>
-                <div class="input-icon input-icon-right">
-                  <select name="PickingType2" class="form-control" [(ngModel)]="routStep.createOrEditDestinationRoutPointInputDto.pickingTypeId">
-                    <option value="">{{ l('SelectPickingType') }}</option>
-                    <option [ngValue]="1">PickUp</option>
-                    <option [ngValue]="2">Drop</option>
-                  </select>
-                </div>
-              </div>
-              <div class="form-group">
-                <label>Good Details:</label>
-
-                <div class="row" [@simpleFadeAnimation]="'in'" *ngFor="let DestGoodDetail of DestGoodDetailValueslist; let i = index">
-                  <div class="col-lg-6">
-                    <div class="mb-2">
-                      <div class="input-group">
-                        <select
-                          class="form-control"
-                          [(ngModel)]="DestGoodDetail.goodsDetailsId"
-                          #name="ngModel"
-                          name="GoodSubCategory{{i}}"
-                          [disabled]="!GoodsCategoryList"
-                        >
-                          <option value="">{{ l('SelectAGood') }}</option>
-                          <option *ngFor="let item of GoodsCategoryList" value="{{ item.goodCategoryId }}">{{ item.name }}</option>
-                        </select>
-                      </div>
-                    </div>
-                  </div>
-                  <div class="col-lg-4">
-                    <div class="mb-2">
-                      <div class="input-group">
-                        <input
-                          type="text"
-                          class="form-control float-right"
-                          placeholder="Enter Amount"
-                          [(ngModel)]="DestGoodDetail.amount"
-                          #name="ngModel"
-                          name="amount{{i}}"
-                          [disabled]="!GoodsCategoryList"
-                        />
-                      </div>
-                    </div>
-                  </div>
-                  <div class="col-lg-2">
-                    <button class="btn font-weight-bold btn-danger btn-icon float-right" (click)="removevalue(i , 'dest')" [disabled]="i == 0">
-                      <i class="la la-trash float-right"></i>
-                    </button>
-                  </div>
-                </div>
-                <div class="form-group row mt-4">
-                  <div class="col-lg-12">
-                    <button class="btn btn-success font-weight-bold btn-icon float-right" (click)="addvalue('dest')" [disabled]="!GoodsCategoryList">
-                      <i class="la la-plus-circle"></i>
-                    </button>
-                  </div>
-                </div>
-              </div>
+              <!--     Endof::GoodDetailsSection           -->
             </div>
           </div>
         </div>
@@ -354,7 +268,6 @@
   </div>
   <!--end::Create::RouteStepModal-->
   <!--begin::FacilityModal-->
-
   <div
     class="modal fade"
     bsModal
@@ -511,4 +424,160 @@
     </div>
   </div>
   <!--end::FacilityModal-->
+  <!-- begin::CreateNewGoodModal   -->
+  <div
+    #createOrEditGoodDetail="bs-modal"
+    [config]="{ backdrop: 'static' }"
+    aria-hidden="true"
+    aria-labelledby="createOrEditGoodDetail"
+    bsModal
+    class="modal fade"
+    role="dialog"
+    tabindex="-1"
+  >
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+        <form #goodsDetailForm="ngForm" (ngSubmit)="AddGoodDetail()" autocomplete="off" novalidate>
+          <div class="modal-header">
+            <h4 class="modal-title">
+              <span>{{ l('addNewGoodDetail') }}</span>
+            </h4>
+            <button (click)="createOrEditGoodDetail.hide()" [disabled]="saving" aria-label="Close" class="close" type="button">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <div class="row">
+              <!--<div class="form-group m-form__group">-->
+              <div class="col-12">
+                <div class="form-group row fv-plugins-icon-container">
+                  <div class="col-lg-6">
+                    <div class="form-group">
+                      <label>* {{ l('GoodSubCategory') }}:</label>
+                      <!--   TODO:// Add DataBining for DD-->
+                      <div [ngClass]="{ 'spinner spinner-success spinner-right mr-1 ml-1': !allSubGoodCategorys }">
+                        <!--                          <select select [(ngModel)]="goodsDetail.goodCategoryId" class="form-control" name="goodsDetail.goodCategoryId">-->
+                        <select
+                          [(ngModel)]="goodsDetail.goodCategoryId"
+                          class="form-control"
+                          name="goodsDetail.goodCategoryId"
+                          [disabled]="!allSubGoodCategorys"
+                        >
+                          <option value="">{{ l('SelectAGoodSubCategory') }}</option>
+                          <option *ngFor="let item of allSubGoodCategorys" value="{{ item.id }}">{{ item.displayName }}</option>
+                        </select>
+                      </div>
+                      <span class="form-text text-muted">{{ l('selectaGoodCategory') }}</span>
+                    </div>
+                  </div>
+                  <div class="col-lg-6">
+                    <div class="form-group">
+                      <label for="GoodsDetail_Quantity">{{ l('Amount') }}</label>
+                      <input
+                        [(ngModel)]="goodsDetail.amount"
+                        class="form-control"
+                        id="GoodsDetail_Quantity"
+                        maxlength="128"
+                        minlength="0"
+                        name="Quantity"
+                        type="text"
+                      />
+                    </div>
+                  </div>
+                  <div class="col-lg-6">
+                    <div class="form-group">
+                      <label for="GoodsDetail_Weight">{{ l('Weight') }}</label>
+                      <input
+                        [(ngModel)]="goodsDetail.weight"
+                        class="form-control"
+                        id="GoodsDetail_Weight"
+                        maxlength="64"
+                        minlength="0"
+                        name="Weight"
+                        type="text"
+                      />
+                    </div>
+                  </div>
+                  <div class="col-lg-6">
+                    <div class="form-group">
+                      <label for="GoodsDetail_Description">{{ l('Description') }}</label>
+                      <input
+                        [(ngModel)]="goodsDetail.description"
+                        class="form-control"
+                        id="GoodsDetail_Description"
+                        maxlength="256"
+                        minlength="0"
+                        name="Description"
+                        type="text"
+                      />
+                    </div>
+                  </div>
+
+                  <div class="col-lg-6">
+                    <div class="form-group">
+                      <label for="GoodsDetail_Dimentions">{{ l('Dimentions') }}</label>
+                      <input
+                        [(ngModel)]="goodsDetail.dimentions"
+                        class="form-control"
+                        id="GoodsDetail_Dimentions"
+                        maxlength="128"
+                        minlength="0"
+                        name="Dimentions"
+                        type="text"
+                      />
+                    </div>
+                  </div>
+                  <div class="col-lg-6 mt-10">
+                    <div class="form-check checkbox-inline">
+                      <label class="checkbox checkbox-danger">
+                        <input
+                          [(ngModel)]="goodsDetail.isDangerousGood"
+                          id="GoodsDetail_IsDangerousGood"
+                          name="IsDangerousGood"
+                          type="checkbox"
+                          checked="checked"
+                        />
+                        <span></span>
+                        {{ l('IsDangerousGood') }}
+                      </label>
+                    </div>
+                  </div>
+
+                  <div class="col-lg-6">
+                    <div class="form-group" [hidden]="!goodsDetail.isDangerousGood">
+                      <label for="GoodsDetail_DangerousGoodsCode">{{ l('DangerousGoodsCode') }}</label>
+                      <input
+                        [(ngModel)]="goodsDetail.dangerousGoodsCode"
+                        class="form-control"
+                        id="GoodsDetail_DangerousGoodsCode"
+                        maxlength="64"
+                        minlength="0"
+                        name="DangerousGoodsCode"
+                        type="text"
+                      />
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="modal-footer">
+            <button (click)="createOrEditGoodDetail.hide()" [disabled]="saving" class="btn btn-default" type="button">{{ l('Cancel') }}</button>
+            <button
+              [busyText]="l('SavingWithThreeDot')"
+              [buttonBusy]="saving"
+              [disabled]="!goodsDetailForm.form.valid"
+              class="btn btn-save blue"
+              type="submit"
+            >
+              <i class="fa fa-save"></i> <span>{{ l('Save') }}</span>
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- End::CreateNewGoodModal   -->
 </div>

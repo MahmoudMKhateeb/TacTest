@@ -9,8 +9,10 @@ import {
   CreateOrEditRoutStepDto,
   FacilitiesServiceProxy,
   FacilityForDropdownDto,
+  GoodsDetailDto,
+  GoodsDetailGoodCategoryLookupTableDto,
+  GoodsDetailsServiceProxy,
   RoutesServiceProxy,
-  RoutPointGoodsDetailDto,
   RoutStepCityLookupTableDto,
   RoutStepsServiceProxy,
 } from '@shared/service-proxies/service-proxies';
@@ -21,28 +23,19 @@ import { animate, state, style, transition, trigger } from '@angular/animations'
   selector: 'RouteStepsForCreateShippingRequest',
   templateUrl: './RouteStepsForCreateShippingRequest.html',
   styleUrls: ['./RouteStepsForCreateShippingRequest.scss'],
-  animations: [
-    // the fade-in/fade-out animation.
-    trigger('simpleFadeAnimation', [
-      // the "in" style determines the "resting" state of the element when it is visible.
-      state('in', style({ opacity: 1 })),
-
-      // fade in when created. this could also be written as transition('void => *')
-      transition(':enter', [style({ opacity: 0 }), animate(200)]),
-
-      // fade out when destroyed. this could also be written as transition('void => *')
-      transition(':leave', animate(400, style({ opacity: 0 }))),
-    ]),
-  ],
 })
 export class RouteStepsForCreateShippingRequstComponent extends AppComponentBase implements OnInit {
   @ViewChild('createFacilityModal') public createFacilityModal: ModalDirective;
   @ViewChild('createRouteStepModal') public createRouteStepModal: ModalDirective;
+  @ViewChild('createOrEditGoodDetail') public createOrEditGoodDetail: ModalDirective;
+
   @ViewChild('search') public searchElementRef: ElementRef;
-  @Input() GoodsCategoryList: CreateOrEditGoodsDetailDto[];
-  @Output() SelectedRouteStepsFromChild: EventEmitter<CreateOrEditRoutStepDto[]> = new EventEmitter<CreateOrEditRoutStepDto[]>();
-  routeStepsDetails: CreateOrEditRoutStepDto[] = [];
-  routStep: CreateOrEditRoutStepDto = new CreateOrEditRoutStepDto();
+  @Input() MainGoodsCategory: number;
+  @Output() SelectedRouteStepsFromChild: EventEmitter<CreateOrEditRoutPointDto[]> = new EventEmitter<CreateOrEditRoutPointDto[]>();
+  wayPointsList: CreateOrEditRoutPointDto[] = [];
+  singleWayPoint: CreateOrEditRoutPointDto = new CreateOrEditRoutPointDto();
+  goodsDetail: GoodsDetailDto = new GoodsDetailDto();
+
   facility: CreateOrEditFacilityDto = new CreateOrEditFacilityDto();
   allFacilities: FacilityForDropdownDto[];
 
@@ -61,14 +54,13 @@ export class RouteStepsForCreateShippingRequstComponent extends AppComponentBase
   selectedCountryCode = 'SA';
   routeStepIdForEdit: number = undefined;
 
-  zoom: Number = 14; //map zoom
+  zoom: Number = 13; //map zoom
   //this dir is for Single Route Step Map Route Draw
 
-  lat: Number = 24.67911662122269;
-  lng: Number = 46.6355543345471;
+  lat: Number = 24.717942;
+  lng: Number = 46.675761;
   dir = {
-    origin: { lat: undefined, lng: undefined },
-    destination: { lat: undefined, lng: undefined },
+    point: { lat: undefined, lng: undefined },
   };
 
   //wayPoints map
@@ -79,8 +71,10 @@ export class RouteStepsForCreateShippingRequstComponent extends AppComponentBase
 
   SourceGoodDetailValueslist = [];
   DestGoodDetailValueslist = [];
+  allSubGoodCategorys: GoodsDetailGoodCategoryLookupTableDto[];
   constructor(
     injector: Injector,
+    private _goodsDetailsServiceProxy: GoodsDetailsServiceProxy,
     private _routesServiceProxy: RoutesServiceProxy,
     private _facilitiesServiceProxy: FacilitiesServiceProxy,
     private mapsAPILoader: MapsAPILoader,
@@ -97,30 +91,7 @@ export class RouteStepsForCreateShippingRequstComponent extends AppComponentBase
 
     this.refreshFacilities();
     //this.Tester();
-    this.addvalue();
-    this.addvalue('source');
   }
-  //
-
-  removevalue(i, type) {
-    if (type === 'source') {
-      this.SourceGoodDetailValueslist.splice(i, 1);
-    } else {
-      this.DestGoodDetailValueslist.splice(i, 1);
-    }
-  }
-
-  addvalue(type?) {
-    if (type === 'source') {
-      this.SourceGoodDetailValueslist.push({ GoodSubCategory: '', amount: '' });
-    } else {
-      this.DestGoodDetailValueslist.push({ GoodSubCategory: '', amount: '' });
-    }
-    console.log(this.SourceGoodDetailValueslist);
-  }
-
-  //
-
   openCreateFacilityModal() {
     this.active = true;
     //load Places Autocomplete
@@ -135,9 +106,9 @@ export class RouteStepsForCreateShippingRequstComponent extends AppComponentBase
     //if there is an id for the RouteStep then update the Record Don't Create A new one
     console.log(`Save Edits Fired ${id}`);
     this.RouteStepCordSetter();
-    this.routStep.createOrEditSourceRoutPointInputDto.routPointGoodsDetailListDto = this.SourceGoodDetailValueslist;
-    this.routStep.createOrEditDestinationRoutPointInputDto.routPointGoodsDetailListDto = this.DestGoodDetailValueslist;
-    this.routeStepsDetails[id] = this.routStep;
+    // this.routStep.createOrEditSourceRoutPointInputDto.routPointGoodsDetailListDto = this.SourceGoodDetailValueslist;
+    // this.routStep.createOrEditDestinationRoutPointInputDto.routPointGoodsDetailListDto = this.DestGoodDetailValueslist;
+    this.wayPointsList[id] = this.singleWayPoint;
     this.createRouteStepModal.hide();
     this.notify.info(this.l('UpdatedSuccessfully'));
     this.EmitToFather();
@@ -147,33 +118,34 @@ export class RouteStepsForCreateShippingRequstComponent extends AppComponentBase
       //view
       //if there is an id open the modal and display the date
       this.routeStepIdForEdit = id;
-      this.routStep = this.routeStepsDetails[id];
-      this.SourceGoodDetailValueslist = this.routStep.createOrEditSourceRoutPointInputDto.routPointGoodsDetailListDto;
-      this.DestGoodDetailValueslist = this.routStep.createOrEditDestinationRoutPointInputDto.routPointGoodsDetailListDto;
+      this.singleWayPoint = this.wayPointsList[id];
+      // this.SourceGoodDetailValueslist = this.routStep.createOrEditSourceRoutPointInputDto.routPointGoodsDetailListDto;
+      // this.DestGoodDetailValueslist = this.routStep.createOrEditDestinationRoutPointInputDto.routPointGoodsDetailListDto;
       this.createRouteStepModal.show();
+      console.log('this is show: ', this.singleWayPoint);
     } else {
       //create new route Step
       this.RouteStepCordSetter();
-      this.routStep.createOrEditSourceRoutPointInputDto.routPointGoodsDetailListDto = this.SourceGoodDetailValueslist;
-      this.routStep.createOrEditDestinationRoutPointInputDto.routPointGoodsDetailListDto = this.DestGoodDetailValueslist;
-      this.routeStepsDetails.push(this.routStep);
+      // this.routStep.createOrEditSourceRoutPointInputDto.routPointGoodsDetailListDto = this.SourceGoodDetailValueslist;
+      // this.routStep.createOrEditDestinationRoutPointInputDto.routPointGoodsDetailListDto = this.DestGoodDetailValueslist;
+      console.log(this.wayPointsList);
+      this.wayPointsList.push(this.singleWayPoint);
       this.createRouteStepModal.hide();
       this.notify.info(this.l('SuccessfullyAdded'));
 
       this.EmitToFather();
     }
-    console.log(this.routeStepsDetails);
   }
   delete(index: number) {
-    this.routeStepsDetails.splice(index, 1);
+    this.wayPointsList.splice(index, 1);
     this.notify.info(this.l('SuccessfullyDeleted'));
     this.EmitToFather();
   }
   EmitToFather() {
     this.routeStepIdForEdit = undefined;
-    this.SelectedRouteStepsFromChild.emit(this.routeStepsDetails);
+    this.SelectedRouteStepsFromChild.emit(this.wayPointsList);
     this.wayPointsSetter();
-    this.routStep = new CreateOrEditRoutStepDto();
+    this.singleWayPoint = new CreateOrEditRoutPointDto();
     this.createFacilityModal.hide();
   }
 
@@ -265,7 +237,7 @@ export class RouteStepsForCreateShippingRequstComponent extends AppComponentBase
   }
   createFacility() {
     this.saving = true;
-    this.facility.adress = this.Address;
+    this.facility.address = this.Address;
     //to be Changed later cause it takes an id not a string for the city
     this.facility.cityId = 3;
     this._facilitiesServiceProxy
@@ -288,36 +260,10 @@ export class RouteStepsForCreateShippingRequstComponent extends AppComponentBase
   RouteStepCordSetter() {
     //facility Coordinates --> set the Coordinates in create RouteStep
     //source
-    this.routStep.createOrEditSourceRoutPointInputDto.latitude = this.allFacilities.find(
-      (x) => x.id == this.routStep.createOrEditSourceRoutPointInputDto.facilityId
-    )?.lat;
-    console.log('Source Lat ==> ', this.routStep.createOrEditSourceRoutPointInputDto.latitude);
-    this.routStep.createOrEditSourceRoutPointInputDto.longitude = this.allFacilities.find(
-      (x) => x.id == this.routStep.createOrEditSourceRoutPointInputDto.facilityId
-    )?.long;
-    console.log('Source Long ==> ', this.routStep.createOrEditSourceRoutPointInputDto.longitude);
-    //Dest
-    this.routStep.createOrEditDestinationRoutPointInputDto.latitude = this.allFacilities.find(
-      (x) => x.id == this.routStep.createOrEditDestinationRoutPointInputDto.facilityId
-    )?.lat;
-    console.log('Des Lat ==> ', this.routStep.createOrEditDestinationRoutPointInputDto.latitude);
-    this.routStep.createOrEditDestinationRoutPointInputDto.longitude = this.allFacilities.find(
-      (x) => x.id == this.routStep.createOrEditDestinationRoutPointInputDto.facilityId
-    )?.long;
-    console.log('Des Long ==> ', this.routStep.createOrEditDestinationRoutPointInputDto.longitude);
+    this.singleWayPoint.latitude = this.allFacilities.find((x) => x.id == this.singleWayPoint.facilityId)?.lat;
+    this.singleWayPoint.longitude = this.allFacilities.find((x) => x.id == this.singleWayPoint.facilityId)?.long;
 
     //end of each Facility Cordinates
-
-    return (this.dir = {
-      origin: {
-        lat: this.routStep.createOrEditSourceRoutPointInputDto.latitude,
-        lng: this.routStep.createOrEditSourceRoutPointInputDto.longitude,
-      },
-      destination: {
-        lat: this.routStep.createOrEditDestinationRoutPointInputDto.latitude,
-        lng: this.routStep.createOrEditDestinationRoutPointInputDto.longitude,
-      },
-    });
   }
 
   wayPointsSetter() {
@@ -326,31 +272,58 @@ export class RouteStepsForCreateShippingRequstComponent extends AppComponentBase
     this.wayPointMapDest = undefined;
     //Source is done
     this.wayPointMapSource = {
-      lat: this.routeStepsDetails[0].createOrEditSourceRoutPointInputDto?.latitude || undefined,
-      lng: this.routeStepsDetails[0].createOrEditSourceRoutPointInputDto?.longitude || undefined,
+      lat: this.wayPointsList[0]?.latitude || undefined,
+      lng: this.wayPointsList[0]?.longitude || undefined,
     };
 
     //set the way points
-    for (let i = 1; i < this.routeStepsDetails.length; i++) {
-      this.wayPoints.push(
-        {
-          location: {
-            lat: this.routeStepsDetails[i].createOrEditSourceRoutPointInputDto.latitude,
-            lng: this.routeStepsDetails[i].createOrEditSourceRoutPointInputDto.longitude,
-          },
+    for (let i = 1; i < this.wayPointsList.length - 1; i++) {
+      console.log('this is waypointlist length: ', this.wayPointsList.length);
+      console.log('this is i ', i);
+      this.wayPoints.push({
+        location: {
+          lat: this.wayPointsList[i].latitude,
+          lng: this.wayPointsList[i].longitude,
         },
-        {
-          location: {
-            lat: this.routeStepsDetails[i].createOrEditDestinationRoutPointInputDto.latitude,
-            lng: this.routeStepsDetails[i].createOrEditDestinationRoutPointInputDto.longitude,
-          },
-        }
-      );
+      });
     }
     //set the Dest
     this.wayPointMapDest = {
-      lat: this.routeStepsDetails[this.routeStepsDetails.length - 1].createOrEditDestinationRoutPointInputDto?.latitude || undefined,
-      lng: this.routeStepsDetails[this.routeStepsDetails.length - 1].createOrEditDestinationRoutPointInputDto?.longitude || undefined,
+      lat: this.wayPointsList[this.wayPointsList.length - 1]?.latitude || undefined,
+      lng: this.wayPointsList[this.wayPointsList.length - 1]?.longitude || undefined,
     };
+    console.log('this is my source points :', this.wayPointMapSource);
+    console.log('this is my waypoint:', this.wayPoints);
+    console.log('this is my Dest points :', this.wayPointMapDest);
+  }
+
+  //GootDetails Section
+
+  GetAllSubCat(FatherID) {
+    //Get All Sub-Good Category
+    if (FatherID) {
+      this.allSubGoodCategorys = undefined;
+      this._goodsDetailsServiceProxy.getAllGoodCategoryForTableDropdown(FatherID).subscribe((result) => {
+        this.allSubGoodCategorys = result;
+      });
+    }
+  }
+  getGoodSubDisplayname(id) {
+    return this.allSubGoodCategorys ? this.allSubGoodCategorys.find((x) => x.id == id)?.displayName : 0;
+  }
+
+  openAddNewGoodDetailModal() {
+    this.GetAllSubCat(this.MainGoodsCategory);
+    this.createOrEditGoodDetail.show();
+  }
+  AddGoodDetail() {
+    console.log(this.goodsDetail);
+    this.singleWayPoint.goodsDetailListDto ? 0 : (this.singleWayPoint.goodsDetailListDto = []);
+    this.singleWayPoint.goodsDetailListDto.push(this.goodsDetail);
+    this.createOrEditGoodDetail.hide();
+  }
+
+  DeleteGoodDetail(id) {
+    this.singleWayPoint.goodsDetailListDto.splice(id, 1);
   }
 }
