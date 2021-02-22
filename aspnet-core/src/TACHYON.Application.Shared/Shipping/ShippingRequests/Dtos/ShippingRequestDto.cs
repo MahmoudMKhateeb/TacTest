@@ -25,6 +25,8 @@ namespace TACHYON.Shipping.ShippingRequests.Dtos
         public string PackingType { get; set; }
         public int NumberOfPacking { get; set; }
         public double TotalWeight { get; set; }
+        public int ShippingTypeId { get; set; }
+
         public DateTime? BidStartDate { get; set; }
         public DateTime? BidEndDate { get; set; }
 

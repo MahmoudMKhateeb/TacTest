@@ -108,5 +108,15 @@ namespace TACHYON.Shipping.ShippingTypes
         {
             await _shippingTypeRepository.DeleteAsync(input.Id);
         }
+
+        public async Task<List<SelectItemDto>> GetAllShippingTypesForDropdown()
+        {
+            return await _shippingTypeRepository.GetAll()
+                .Select(x => new SelectItemDto()
+                {
+                    Id = x.Id.ToString(),
+                    DisplayName = x.DisplayName
+                }).ToListAsync();
+        }
     }
 }

@@ -16,6 +16,7 @@ using TACHYON.Routs.RoutSteps;
 using TACHYON.Shipping.ShippingRequestBids;
 using TACHYON.Shipping.ShippingRequestBidStatuses;
 using TACHYON.Shipping.ShippingRequestStatuses;
+using TACHYON.Shipping.ShippingTypes;
 using TACHYON.Trailers;
 using TACHYON.Trailers.TrailerTypes;
 using TACHYON.Trucks;
@@ -149,10 +150,16 @@ namespace TACHYON.Shipping.ShippingRequests
         public virtual int? CapacityId { get; set; }
         [ForeignKey("CapacityId")]
         public Capacity CapacityFk { get; set; }
+
+        #endregion
         public string PackingType { get; set; }
         public int NumberOfPacking { get; set; }
 
-        #endregion
+        public int ShippingTypeId { get; set; }
+
+        [ForeignKey("ShippingTypeId")]
+        public ShippingType ShippingTypeFk { get; set; }
+
 
         #region Bids Data
         public DateTime? BidStartDate { get; set; }

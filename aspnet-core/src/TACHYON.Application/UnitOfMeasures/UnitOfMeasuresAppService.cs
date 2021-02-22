@@ -107,6 +107,16 @@ namespace TACHYON.UnitOfMeasures
          public async Task Delete(EntityDto input)
          {
             await _unitOfMeasureRepository.DeleteAsync(input.Id);
-         } 
+         }
+
+         public async Task<List<SelectItemDto>> GetAllUnitOfMeasuresForDropdown()
+         {
+             return await _unitOfMeasureRepository.GetAll()
+                 .Select(x => new SelectItemDto()
+                 {
+                     Id = x.Id.ToString(),
+                     DisplayName = x.DisplayName
+                 }).ToListAsync();
+         }
     }
 }
