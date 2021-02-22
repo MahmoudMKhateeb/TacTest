@@ -31,6 +31,7 @@ using TACHYON.Shipping.ShippingRequestBids;
 using TACHYON.Shipping.ShippingRequestBids.Dtos;
 using TACHYON.Shipping.ShippingRequests.Dtos;
 using TACHYON.Shipping.ShippingRequests.Exporting;
+using TACHYON.Shipping.ShippingTypes;
 using TACHYON.ShippingRequestVases;
 using TACHYON.Trailers.TrailerTypes;
 using TACHYON.Trucks;
@@ -38,6 +39,7 @@ using TACHYON.Trucks.TruckCategories.TransportTypes;
 using TACHYON.Trucks.TruckCategories.TransportTypes.Dtos;
 using TACHYON.Trucks.TruckCategories.TruckCapacities;
 using TACHYON.Trucks.TrucksTypes;
+using TACHYON.UnitOfMeasures;
 using TACHYON.Vases;
 using TACHYON.Vases.Dtos;
 
@@ -48,6 +50,8 @@ namespace TACHYON.Shipping.ShippingRequests
     {
         public ShippingRequestsAppService(
             IRepository<ShippingRequest, long> shippingRequestRepository,
+            IRepository<ShippingType, int> shippingTypeRepository,
+            IRepository<UnitOfMeasure, int> unitOdMeasureRepository,
             IAppNotifier appNotifier,
             IRepository<Tenant> tenantRepository,
             IRepository<TrucksType, long> lookupTrucksTypeRepository,
@@ -65,6 +69,8 @@ namespace TACHYON.Shipping.ShippingRequests
         {
             _vasPriceRepository = vasPriceRepository;
             _shippingRequestRepository = shippingRequestRepository;
+            _shippingTypeRepository = shippingTypeRepository;
+            _unitOfMeasureRepository = unitOdMeasureRepository;
             _appNotifier = appNotifier;
             _tenantRepository = tenantRepository;
             _lookup_trucksTypeRepository = lookupTrucksTypeRepository;
@@ -82,6 +88,8 @@ namespace TACHYON.Shipping.ShippingRequests
 
         private readonly IRepository<VasPrice> _vasPriceRepository;
         private readonly IRepository<ShippingRequest, long> _shippingRequestRepository;
+        private readonly IRepository<ShippingType, int> _shippingTypeRepository;
+        private readonly IRepository<UnitOfMeasure, int> _unitOfMeasureRepository;
         private readonly IRepository<Vas, int> _lookup_vasRepository;
         private readonly IRepository<ShippingRequestVas, long> _shippingRequestVasRepository;
         private readonly IAppNotifier _appNotifier;
@@ -659,5 +667,25 @@ namespace TACHYON.Shipping.ShippingRequests
                 }).ToListAsync();
         }
         #endregion
+
+        public async Task<List<SelectItemDto>> GetAllUnitOfMeasuresForDropdown()
+        {
+            return await _unitOfMeasureRepository.GetAll()
+                .Select(x => new SelectItemDto()
+                {
+                    Id = x.Id.ToString(),
+                    DisplayName = x.DisplayName
+                }).ToListAsync();
+        }
+
+        public async Task<List<SelectItemDto>> GetAllShippingTypesForDropdown()
+        {
+            return await _shippingTypeRepository.GetAll()
+                .Select(x => new SelectItemDto()
+                {
+                    Id = x.Id.ToString(),
+                    DisplayName = x.DisplayName
+                }).ToListAsync();
+        }
     }
 }
