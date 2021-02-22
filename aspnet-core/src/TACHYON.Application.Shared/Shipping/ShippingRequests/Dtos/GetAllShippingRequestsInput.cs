@@ -15,6 +15,8 @@ namespace TACHYON.Shipping.ShippingRequests.Dtos
 
         public  bool? IsTachyonDeal { get; set; }
 
+        public bool? IsTachyonDealer { get; set; }
+
 
         public void Normalize()
         {

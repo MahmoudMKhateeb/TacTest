@@ -111,13 +111,13 @@ namespace TACHYON.Shipping.ShippingRequests
             {
                 using (CurrentUnitOfWork.DisableFilter(AbpDataFilters.MustHaveTenant))
                 {
-                    input.IsTachyonDeal = true;
+                    input.IsTachyonDealer = true;
                     return await GetAllPagedResultDto(input);
                 }
             }
             else
             {
-                input.IsTachyonDeal = false;
+                input.IsTachyonDealer = false;
             }
 
             return await GetAllPagedResultDto(input);
@@ -359,8 +359,9 @@ namespace TACHYON.Shipping.ShippingRequests
                     .GetAll()
                     .WhereIf(!string.IsNullOrWhiteSpace(input.Filter), e => false)
                     .WhereIf(input.IsTachyonDeal.HasValue, e => e.IsTachyonDeal == input.IsTachyonDeal.Value)
+                    .WhereIf(input.IsBid.HasValue, e => e.IsBid == input.IsBid.Value)
                     //get only this shipper shippingRequest when isTachyonDeal is false
-                    .WhereIf(input.IsTachyonDeal != null && !input.IsTachyonDeal.Value,
+                    .WhereIf(!input.IsTachyonDealer.Value,
                         e => e.TenantId == AbpSession.TenantId);
 
                 //totalCount
