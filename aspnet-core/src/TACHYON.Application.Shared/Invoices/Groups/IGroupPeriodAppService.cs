@@ -1,5 +1,6 @@
 ﻿using Abp.Application.Services;
 using Abp.Application.Services.Dto;
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using TACHYON.Dto;
@@ -18,6 +19,8 @@ namespace TACHYON.Invoices.Groups
         Task UnClaim(long GroupId);
 
         Task Delete(EntityDto Input);
+       // Task<FileDto> GetFileDto(long GroupId);
+
 
     }
 }

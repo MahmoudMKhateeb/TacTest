@@ -30,13 +30,14 @@ namespace TACHYON.Invoices.Groups
         private readonly IRepository<InvoicePeriod> _PeriodRepository;
         private readonly IRepository<GroupPeriodInvoice, long> _GroupPeriodInvoiceRepository;
         private readonly IRepository<ShippingRequest, long> _shippingRequestRepository;
-
         private readonly CommonManager _commonManager;
         private readonly UserManager _userManager;
         private readonly BalanceManager _BalanceManager;
         private readonly IBinaryObjectManager _BinaryObjectManager;
         private readonly IAppNotifier _appNotifier;
         private readonly InvoiceManager _invoiceManager;
+        private readonly ITempFileCacheManager _tempFileCacheManager;
+        private readonly IBinaryObjectManager _binaryObjectManager;
         public GroupPeriodAppService(
             IRepository<GroupPeriod, long> repository, 
             BalanceManager BalanceManager, 
@@ -47,7 +48,9 @@ namespace TACHYON.Invoices.Groups
             UserManager userManager,
             IBinaryObjectManager BinaryObjectManager,
             IAppNotifier appNotifier,
-            InvoiceManager invoiceManager)
+            InvoiceManager invoiceManager,
+            ITempFileCacheManager tempFileCacheManager,
+            IBinaryObjectManager binaryObjectManager)
         {
             _Repository = repository;
             _PeriodRepository = PeriodRepository;
@@ -59,6 +62,8 @@ namespace TACHYON.Invoices.Groups
             _BinaryObjectManager = BinaryObjectManager;
             _appNotifier = appNotifier;
             _invoiceManager = invoiceManager;
+            _tempFileCacheManager = tempFileCacheManager;
+            _binaryObjectManager = binaryObjectManager;
         }
 
 
@@ -198,6 +203,23 @@ namespace TACHYON.Invoices.Groups
 
             }
         }
+
+
+        //public async Task<FileDto> GetFileDto(long GroupId)
+        //{
+        //    var group = await GetGroupPeriod(GroupId);
+        //    //DisableTenancyFiltersIfHost();
+
+        //    var binaryObject = await _binaryObjectManager.GetOrNullAsync(group.BinaryObjectId.Value);
+
+        //    //var file = new FileDto(documentFile.Name, documentFile.Extn);
+
+        //    _tempFileCacheManager.SetFile(file.FileToken, binaryObject.Bytes);
+
+        //    return file;
+        //}
+
+
         #region Heleper
         private async Task<GroupPeriod> GetGroupPeriod(long GroupId)
         {

@@ -58,6 +58,9 @@ export class DemanModelComponent extends AppComponentBase {
   }
 
   async fileChangeEvent(event: any): Promise<void> {
-    this.File.documentBase64 = String(await toBase64(event.target.files[0]));
+    let file = event.target.files[0];
+    this.File.documentBase64 = String(await toBase64(file));
+    this.File.contentType = file.type;
+    this.File.fileName = file.name;
   }
 }

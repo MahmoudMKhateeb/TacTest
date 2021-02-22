@@ -10,6 +10,10 @@ namespace TACHYON.Invoices.Groups.Dto
     {
         [Required]
         public string DocumentBase64 { get; set; }
+        [Required]
+        public string FileName { get; set; }
 
+        [Required]
+        public string ContentType { get; set; }
     }
 }
