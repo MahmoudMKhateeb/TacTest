@@ -8,16 +8,14 @@ namespace TACHYON.Goods.GoodsDetails.Dtos
     public class CreateOrEditGoodsDetailDto : EntityDto<long?>
     {
 
-        //[Required]
-        //[StringLength(GoodsDetailConsts.MaxNameLength, MinimumLength = GoodsDetailConsts.MinNameLength)]
-        //public string Name { get; set; }
+        public long? Id { get; set; }
 
 
         [StringLength(GoodsDetailConsts.MaxDescriptionLength, MinimumLength = GoodsDetailConsts.MinDescriptionLength)]
         public string Description { get; set; }
 
 
-        public int TotalAmount { get; set; }
+        public int Amount { get; set; }
 
         [Required]
         public double Weight { get; set; }
@@ -33,13 +31,11 @@ namespace TACHYON.Goods.GoodsDetails.Dtos
         [StringLength(GoodsDetailConsts.MaxDangerousGoodsCodeLength, MinimumLength = GoodsDetailConsts.MinDangerousGoodsCodeLength)]
         public string DangerousGoodsCode { get; set; }
 
-        [Required]
         public int? GoodCategoryId { get; set; }
 
         [Required]
         public int UnitOfMeasureId { get; set; }
 
-        [Required]
-        public long RoutPointId { get; set; }
+        public long? RoutPointId { get; set; }
     }
 }

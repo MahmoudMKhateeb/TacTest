@@ -6,7 +6,6 @@ namespace TACHYON.Goods.GoodsDetails.Dtos
 {
     public class GoodsDetailDto : EntityDto<long>
     {
-        //public string Name { get; set; }
 
         public string Description { get; set; }
 
@@ -22,6 +21,7 @@ namespace TACHYON.Goods.GoodsDetails.Dtos
 
         public int? GoodCategoryId { get; set; }
         public long RoutPointId { get; set; }
+        public int UnitOfMeasureId { get; set; }
 
     }
 }

@@ -15,18 +15,12 @@ namespace TACHYON.Goods.GoodsDetails
     {
         public int TenantId { get; set; }
 
-
-        //[Required]
-        //[StringLength(GoodsDetailConsts.MaxNameLength, MinimumLength = GoodsDetailConsts.MinNameLength)]
-        //public virtual string Name { get; set; }
-
         [StringLength(GoodsDetailConsts.MaxDescriptionLength, MinimumLength = GoodsDetailConsts.MinDescriptionLength)]
         public virtual string Description { get; set; }
 
-        //[StringLength(GoodsDetailConsts.MaxQuantityLength, MinimumLength = GoodsDetailConsts.MinQuantityLength)]
         //public virtual string Quantity { get; set; }
         /// <summary>
-        /// Total Amount for this Category of Goods 
+        ///  Amount for this Category of Goods 
         /// </summary>
         [Required]
         public int Amount { get; set; }

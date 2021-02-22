@@ -23,9 +23,9 @@ namespace TACHYON.Routs.RoutPoints.Dtos
         /// is for UI helpping only and will be ignored in mapping
         /// </summary>
         public double Latitude { get; set; }
-        [Required]
-        public long ShippingRequestId { get; set; }
 
-        public List<GoodsDetailDto> GoodsDetailListDto { get; set; }
+        public long? ShippingRequestId { get; set; }
+
+        public List<CreateOrEditGoodsDetailDto> GoodsDetailListDto { get; set; }
     }
 }
