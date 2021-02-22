@@ -51,6 +51,7 @@ namespace TACHYON.Shipping.ShippingRequests.Dtos
         public int NumberOfTrips { get; set; }
         public string PackingType { get; set; }
         public int NumberOfPacking { get; set; }
+        public double TotalWeight { get; set; }
 
         //Route
         public CreateOrEditRouteDto CreateOrEditRouteDto { get; set; }
