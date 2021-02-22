@@ -2,6 +2,10 @@
 import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { AppCommonModule } from '@app/shared/common/app-common.module';
+import { ShippingTypesComponent } from './shippingTypes/shippingTypes/shippingTypes.component';
+import { ViewShippingTypeModalComponent } from './shippingTypes/shippingTypes/view-shippingType-modal.component';
+import { CreateOrEditShippingTypeModalComponent } from './shippingTypes/shippingTypes/create-or-edit-shippingType-modal.component';
+
 import { NationalitiesComponent } from './nationalities/nationalities/nationalities.component';
 import { ViewNationalityModalComponent } from './nationalities/nationalities/view-nationality-modal.component';
 import { CreateOrEditNationalityModalComponent } from './nationalities/nationalities/create-or-edit-nationality-modal.component';
@@ -196,6 +200,10 @@ NgxBootstrapDatePickerConfigService.registerNgxBootstrapDatePickerLocales();
     StepsModule,
   ],
   declarations: [
+		ShippingTypesComponent,
+
+		ViewShippingTypeModalComponent,
+		CreateOrEditShippingTypeModalComponent,
     NationalitiesComponent,
 
     ViewNationalityModalComponent,

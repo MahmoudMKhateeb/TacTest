@@ -1,0 +1,40 @@
+﻿<div bsModal #createOrEditModal="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="createOrEditModal" aria-hidden="true" [config]="{backdrop: 'static'}">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <form *ngIf="active" #shippingTypeForm="ngForm" novalidate (ngSubmit)="save()" autocomplete="off">
+                <div class="modal-header">
+                    <h4 class="modal-title">
+                        <span *ngIf="shippingType.id">{{l("EditShippingType")}}</span>
+                        <span *ngIf="!shippingType.id">{{l("CreateNewShippingType")}}</span>
+                    </h4>
+                    <button type="button" class="close" (click)="close()" aria-label="Close" [disabled]="saving">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                 
+
+
+								<div class="form-group">
+									<label for="ShippingType_DisplayName">{{l("DisplayName")}} *</label>
+									<input type="text" #ShippingType_DisplayName="ngModel" id="ShippingType_DisplayName" class="form-control" [(ngModel)]="shippingType.displayName" name="DisplayName"   minlength="0"  maxlength="128"  required/>
+								    <validation-messages [formCtrl]="ShippingType_DisplayName"></validation-messages>
+								</div>
+					
+								<div class="form-group">
+									<label for="ShippingType_Description">{{l("Description")}}</label>
+									<input type="text" #ShippingType_Description="ngModel" id="ShippingType_Description" class="form-control" [(ngModel)]="shippingType.description" name="Description"   minlength="0"  maxlength="256" />
+								    <validation-messages [formCtrl]="ShippingType_Description"></validation-messages>
+								</div>
+					
+
+                </div>
+                <div class="modal-footer">
+                    <button [disabled]="saving" type="button" class="btn btn-default" (click)="close()">{{l("Cancel")}}</button>
+                    <button type="submit" class="btn btn-primary blue" [disabled]="!shippingTypeForm.form.valid" [buttonBusy]="saving" [busyText]="l('SavingWithThreeDot')"><i class="fa fa-save"></i> <span>{{l("Save")}}</span></button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+</div>

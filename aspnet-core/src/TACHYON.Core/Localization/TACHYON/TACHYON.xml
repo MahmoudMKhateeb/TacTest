@@ -1,6 +1,13 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <localizationDictionary culture="en">
-  <texts>    <text name="Nationalities">Nationalities</text>
+  <texts>    <text name="ShippingTypes">Shipping types</text>
+    <text name="ShippingType">Shipping type</text>
+    <text name="TACHYON.ShippingTypes.ShippingType">ShippingType</text>
+    <text name="ShippingTypesHeaderInfo">Shipping types header info</text>
+    <text name="CreateNewShippingType">Create new shipping type</text>
+    <text name="EditShippingType">Edit shipping type</text>
+    <text name="DeleteShippingType">Delete shipping type</text>
+    <text name="Nationalities">Nationalities</text>
     <text name="Nationality">Nationality</text>
     <text name="TACHYON.Nationalities.Nationality">Nationality</text>
     <text name="NationalitiesHeaderInfo">Nationalities header info</text>

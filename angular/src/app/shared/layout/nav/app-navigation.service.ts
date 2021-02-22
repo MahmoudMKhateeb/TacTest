@@ -71,6 +71,8 @@ export class AppNavigationService {
       //   () => this._featureCheckerService.isEnabled('App.Carrier')
       // ),
       //Host
+      new AppMenuItem('ShippingTypes', 'Pages.ShippingTypes', 'flaticon-more', '/app/main/shippingTypes/shippingTypes'),
+
       new AppMenuItem(
         'Documents',
         '',

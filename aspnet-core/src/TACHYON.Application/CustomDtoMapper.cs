@@ -1,4 +1,6 @@
-﻿using TACHYON.Nationalities.Dtos;
+﻿using TACHYON.Shipping.ShippingTypes.Dtos;
+using TACHYON.Shipping.ShippingTypes;
+using TACHYON.Nationalities.Dtos;
 using TACHYON.Nationalities;
 using TACHYON.Nationalities.NationalitiesTranslation.Dtos;
 using TACHYON.Nationalities.NationalitiesTranslation;
@@ -144,6 +146,8 @@ namespace TACHYON
     {
         public static void CreateMappings(IMapperConfigurationExpression configuration)
         {
+            configuration.CreateMap<CreateOrEditShippingTypeDto, ShippingType>().ReverseMap();
+            configuration.CreateMap<ShippingTypeDto, ShippingType>().ReverseMap();
             configuration.CreateMap<CreateOrEditNationalityDto, Nationality>().ReverseMap();
             configuration.CreateMap<NationalityDto, Nationality>().ReverseMap();
             configuration.CreateMap<CreateOrEditNationalityTranslationDto, NationalityTranslation>().ReverseMap();
@@ -207,10 +211,10 @@ namespace TACHYON
             configuration.CreateMap<CreateOrEditOfferDto, Offer>().ReverseMap();
             configuration.CreateMap<OfferDto, Offer>().ReverseMap();
             configuration.CreateMap<CreateOrEditRoutStepDto, RoutStep>()
-                .ForMember(dst=>dst.SourceRoutPointFk, opt=>opt.MapFrom(src=>src.CreateOrEditSourceRoutPointInputDto))
-                .ForMember(dest=>dest.DestinationRoutPointFk,opt=>opt.MapFrom(src=>src.CreateOrEditDestinationRoutPointInputDto))
-               // .ForPath(dest=>dest.SourceRoutPointFk.RoutPointGoodsDetails,opt=>opt.MapFrom(src=>src.CreateOrEditSourceRoutPointInputDto.RoutPointGoodsDetailListDto))
-               // .ForPath(dest => dest.DestinationRoutPointFk.RoutPointGoodsDetails, opt => opt.MapFrom(src => src.CreateOrEditDestinationRoutPointInputDto.RoutPointGoodsDetailListDto))
+                .ForMember(dst => dst.SourceRoutPointFk, opt => opt.MapFrom(src => src.CreateOrEditSourceRoutPointInputDto))
+                .ForMember(dest => dest.DestinationRoutPointFk, opt => opt.MapFrom(src => src.CreateOrEditDestinationRoutPointInputDto))
+                // .ForPath(dest=>dest.SourceRoutPointFk.RoutPointGoodsDetails,opt=>opt.MapFrom(src=>src.CreateOrEditSourceRoutPointInputDto.RoutPointGoodsDetailListDto))
+                // .ForPath(dest => dest.DestinationRoutPointFk.RoutPointGoodsDetails, opt => opt.MapFrom(src => src.CreateOrEditDestinationRoutPointInputDto.RoutPointGoodsDetailListDto))
                 .ReverseMap();
 
             configuration.CreateMap<RoutStepDto, RoutStep>().ReverseMap();
@@ -221,7 +225,7 @@ namespace TACHYON
                 .ForMember(dest => dest.FacilityFk, opt => opt.MapFrom(src => src.FacilityDto))
                 .ReverseMap();
             configuration.CreateMap<CreateOrEditRoutPointDto, RoutPoint>()
-                .ForMember(dest=>dest.GoodsDetails,opt=>opt.MapFrom(src=>src.GoodsDetailListDto))
+                .ForMember(dest => dest.GoodsDetails, opt => opt.MapFrom(src => src.GoodsDetailListDto))
                 .ReverseMap();
             configuration.CreateMap<CreateOrEditRouteDto, Route>().ReverseMap();
             configuration.CreateMap<RouteDto, Route>().ReverseMap();

@@ -30,6 +30,11 @@ namespace TACHYON.Authorization
 
             var pages = context.GetPermissionOrNull(AppPermissions.Pages) ?? context.CreatePermission(AppPermissions.Pages, L("Pages"));
 
+            var shippingTypes = pages.CreateChildPermission(AppPermissions.Pages_ShippingTypes, L("ShippingTypes"), multiTenancySides: MultiTenancySides.Host);
+            shippingTypes.CreateChildPermission(AppPermissions.Pages_ShippingTypes_Create, L("CreateNewShippingType"), multiTenancySides: MultiTenancySides.Host);
+            shippingTypes.CreateChildPermission(AppPermissions.Pages_ShippingTypes_Edit, L("EditShippingType"), multiTenancySides: MultiTenancySides.Host);
+            shippingTypes.CreateChildPermission(AppPermissions.Pages_ShippingTypes_Delete, L("DeleteShippingType"), multiTenancySides: MultiTenancySides.Host);
+
             var nationalities = pages.CreateChildPermission(AppPermissions.Pages_Nationalities, L("Nationalities"), multiTenancySides: MultiTenancySides.Host);
             nationalities.CreateChildPermission(AppPermissions.Pages_Nationalities_Create, L("CreateNewNationality"), multiTenancySides: MultiTenancySides.Host);
             nationalities.CreateChildPermission(AppPermissions.Pages_Nationalities_Edit, L("EditNationality"), multiTenancySides: MultiTenancySides.Host);
@@ -149,7 +154,6 @@ namespace TACHYON.Authorization
             routPoints.CreateChildPermission(AppPermissions.Pages_RoutPoints_Create, L("CreateRoutPoint"), multiTenancySides: MultiTenancySides.Tenant);
             routPoints.CreateChildPermission(AppPermissions.Pages_RoutPoints_Edit, L("EditRoutPoint"), multiTenancySides: MultiTenancySides.Tenant);
             routPoints.CreateChildPermission(AppPermissions.Pages_RoutPoints_Delete, L("DeleteRoutPoint"), multiTenancySides: MultiTenancySides.Tenant);
-
 
             var goodCategories = pages.CreateChildPermission(AppPermissions.Pages_GoodCategories, L("GoodCategories"), multiTenancySides: MultiTenancySides.Host);
             goodCategories.CreateChildPermission(AppPermissions.Pages_GoodCategories_Create, L("CreateNewGoodCategory"), multiTenancySides: MultiTenancySides.Host);

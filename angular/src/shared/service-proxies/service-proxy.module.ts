@@ -8,6 +8,7 @@ import { ShippingRequestBidsServiceProxy } from './service-proxies';
 
 @NgModule({
   providers: [
+        ApiServiceProxies.ShippingTypesServiceProxy,        
         ApiServiceProxies.NationalitiesServiceProxy,        
         ApiServiceProxies.NationalityTranslationsServiceProxy,        
         ApiServiceProxies.TransportTypesTranslationsServiceProxy,        

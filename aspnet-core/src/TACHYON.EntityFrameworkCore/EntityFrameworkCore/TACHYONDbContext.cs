@@ -1,4 +1,5 @@
-﻿using TACHYON.Nationalities;
+﻿using TACHYON.Shipping.ShippingTypes;
+using TACHYON.Nationalities;
 using TACHYON.Nationalities.NationalitiesTranslation;
 using TACHYON.Trucks.TruckCategories.TransportTypes.TransportTypesTranslations;
 using TACHYON.Vases;
@@ -54,6 +55,8 @@ namespace TACHYON.EntityFrameworkCore
 {
     public class TACHYONDbContext : AbpZeroDbContext<Tenant, Role, User, TACHYONDbContext>, IAbpPersistedGrantDbContext
     {
+        public virtual DbSet<ShippingType> ShippingTypes { get; set; }
+
         public virtual DbSet<Nationality> Nationalities { get; set; }
 
         public virtual DbSet<NationalityTranslation> NationalityTranslations { get; set; }
@@ -97,7 +100,7 @@ namespace TACHYON.EntityFrameworkCore
 
         public virtual DbSet<Offer> Offers { get; set; }
 
-        public virtual  DbSet<RoutStep> RoutSteps { get; set; }
+        public virtual DbSet<RoutStep> RoutSteps { get; set; }
         public virtual DbSet<Route> Routes { get; set; }
 
         public virtual DbSet<City> Cities { get; set; }
@@ -206,7 +209,7 @@ namespace TACHYON.EntityFrameworkCore
             });
             modelBuilder.Entity<RoutPoint>(s =>
             {
-            s.HasIndex(e=> new { e.TenantId});
+                s.HasIndex(e => new { e.TenantId });
             });
             modelBuilder.Entity<GoodsDetail>(g =>
                        {
@@ -222,7 +225,7 @@ namespace TACHYON.EntityFrameworkCore
                        });
             modelBuilder.Entity<RoutStep>(r =>
             {
-                r.HasIndex(e => new {e.TenantId});
+                r.HasIndex(e => new { e.TenantId });
             });
             modelBuilder.Entity<Trailer>(t =>
                        {
