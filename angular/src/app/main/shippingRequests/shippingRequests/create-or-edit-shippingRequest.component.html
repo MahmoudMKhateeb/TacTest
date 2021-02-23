@@ -143,18 +143,15 @@
                           <label>* {{ l('biddingStartDate') }}:</label>
                           <div class="input-group date">
                             <input
-                              #BidStartDate="ngModel"
                               class="form-control"
                               placeholder="{{ l('BiddingstartDate') }}"
                               name="shippingrequestBidStratDate"
                               [required]="this.shippingRequestType == 'bidding'"
-                              [class.is-invalid]="this.shippingRequestType == 'bidding' && BidStartDate.touched && !BidStartDate.valid"
-                              [class.is-valid]="this.shippingRequestType == 'bidding' && BidStartDate.touched && BidStartDate.valid"
-                              [bsConfig]="{ dateInputFormat: 'YYYY-MM-DD' }"
-                              [(ngModel)]="shippingRequest.bidStartDate"
+                              [(date)]="shippingRequest.bidStartDate"
                               [disabled]="shippingRequestType != 'bidding' || shippingRequest.id"
                               [minDate]="today"
                               bsDatepicker
+                              datePickerMomentModifier
                             />
                             <div class="input-group-append">
                               <span class="input-group-text">
@@ -169,18 +166,15 @@
                         <label>* {{ l('biddingEndDate') }}:</label>
                         <div class="input-group date">
                           <input
-                            #BidEndDate="ngModel"
                             class="form-control"
                             placeholder="{{ l('biddingEndDate') }}"
                             name="shippingrequestBidEndDate"
                             [required]="this.shippingRequestType == 'bidding'"
-                            [class.is-invalid]="this.shippingRequestType == 'bidding' && BidEndDate.touched && !BidEndDate.valid"
-                            [class.is-valid]="this.shippingRequestType == 'bidding' && BidEndDate.touched && BidEndDate.valid"
-                            [(ngModel)]="shippingRequest.bidEndDate"
-                            [bsConfig]="{ dateInputFormat: 'YYYY-MM-DD' }"
+                            [(date)]="shippingRequest.bidEndDate"
                             [disabled]="shippingRequestType != 'bidding'"
                             [minDate]="today"
                             bsDatepicker
+                            datePickerMomentModifier
                           />
                           <div class="input-group-append">
                             <span class="input-group-text">
@@ -430,16 +424,14 @@
                           <label>* {{ l('startDate') }}:</label>
                           <div class="input-group date">
                             <input
-                              #StartDate="ngModel"
-                              type="datetime"
-                              name="StartDate"
+                              [(date)]="shippingRequest.startTripDate"
                               class="form-control"
+                              type="datetime"
+                              name="startdate"
+                              placeholder="Datepicker"
+                              required
                               bsDatepicker
                               datePickerMomentModifier
-                              [(date)]="shippingRequest.startTripDate"
-                              [bsConfig]="{ adaptivePosition: true }"
-                              required
-                              placeholder="Select date"
                             />
 
                             <div class="input-group-append">
@@ -456,16 +448,13 @@
                           <label>* {{ l('endDate') }}:</label>
                           <div class="input-group date">
                             <input
-                              #EndDate="ngModel"
-                              [(ngModel)]="shippingRequest.endTripDate"
+                              [(date)]="shippingRequest.endTripDate"
                               class="form-control"
                               name="endDate"
                               placeholder="{{ l('endDate') }}"
                               required
-                              [bsConfig]="{ dateInputFormat: 'YYYY-MM-DD' }"
-                              [class.is-invalid]="EndDate.touched && !EndDate.valid"
-                              [class.is-valid]="EndDate.touched && EndDate.valid"
                               bsDatepicker
+                              datePickerMomentModifier
                             />
                             <div class="input-group-append">
                               <span class="input-group-text">
