@@ -29,7 +29,12 @@ export class GroupPeriodsListComponent extends AppComponentBase implements OnIni
   toDate: moment.Moment | null | undefined;
   DemandStatus: boolean | null | undefined;
 
-  constructor(injector: Injector, private _CurrentService: GroupPeriodServiceProxy, private _CommonServ: CommonLookupServiceProxy) {
+  constructor(
+    injector: Injector,
+    private _CurrentService: GroupPeriodServiceProxy,
+    private _CommonServ: CommonLookupServiceProxy,
+    private _fileDownloadService: FileDownloadService
+  ) {
     super(injector);
   }
   ngOnInit() {
@@ -89,7 +94,7 @@ export class GroupPeriodsListComponent extends AppComponentBase implements OnIni
     this.message.confirm('', this.l('AreYouSure'), (isConfirmed) => {
       if (isConfirmed) {
         this._CurrentService.unDemand(Group.id).subscribe(() => {
-          this.notify.success(this.l('SuccessfullyDeleted'));
+          this.notify.success(this.l('Successfully'));
           this.reloadPage();
         });
       }
@@ -99,7 +104,7 @@ export class GroupPeriodsListComponent extends AppComponentBase implements OnIni
     this.message.confirm('', this.l('AreYouSure'), (isConfirmed) => {
       if (isConfirmed) {
         this._CurrentService.claim(Group.id).subscribe(() => {
-          this.notify.success(this.l('SuccessfullyDeleted'));
+          this.notify.success(this.l('Successfully'));
           this.reloadPage();
         });
       }
@@ -109,10 +114,15 @@ export class GroupPeriodsListComponent extends AppComponentBase implements OnIni
     this.message.confirm('', this.l('AreYouSure'), (isConfirmed) => {
       if (isConfirmed) {
         this._CurrentService.unClaim(Group.id).subscribe(() => {
-          this.notify.success(this.l('SuccessfullyDeleted'));
+          this.notify.success(this.l('Successfully'));
           this.reloadPage();
         });
       }
+    });
+  }
+  downloadDocument(id: number): void {
+    this._CurrentService.getFileDto(id).subscribe((result) => {
+      this._fileDownloadService.downloadTempFile(result);
     });
   }
   search(event) {

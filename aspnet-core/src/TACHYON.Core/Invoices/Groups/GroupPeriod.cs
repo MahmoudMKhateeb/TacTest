@@ -29,6 +29,9 @@ namespace TACHYON.Invoices.Groups
         public decimal Amount { get; set; }
         public decimal TaxVat { get; set; }
         public Guid? BinaryObjectId { get; set; }
+        public string DemandFileName { get; set; }
+        public string DemandFileContentType { get; set; }
+      
         public bool IsClaim { get; set; }
         public List<GroupShippingRequests> ShippingRequests { get; set; }
     }

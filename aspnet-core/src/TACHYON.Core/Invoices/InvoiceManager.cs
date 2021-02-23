@@ -247,22 +247,19 @@ namespace TACHYON.Invoices
 
         public async Task GenerateCarrirInvoice(GroupPeriod Group)
         {
-            var GroupRequest = Group.ShippingRequests.Select(r => r.RequestId).OfType<long>().ToArray();
+            var GroupRequest = Group.ShippingRequests.Select(r => r.RequestId) ;
             var Requests = _shippingRequestRepository.GetAllList(r => GroupRequest.Contains(r.Id));
-            TaxVat = GetTax();
-            decimal Amount = (decimal)Requests.Sum(r => r.Price);
-            decimal VatAmount = (Amount * TaxVat / 100);
-            decimal AmountWithTaxVat = VatAmount + Amount;
+
             var Invoice = new Invoice
             {
                 TenantId = Group.TenantId,
                 PeriodId = Group.PeriodId,
                 DueDate = Clock.Now,
                 IsPaid = false,
-                Amount = Amount,
-                VatAmount = VatAmount,
-                TaxVat = TaxVat,
-                AmountWithTaxVat = AmountWithTaxVat,
+                Amount = Group.Amount,
+                VatAmount = Group.VatAmount,
+                TaxVat = Group.TaxVat,
+                AmountWithTaxVat = Group.AmountWithTaxVat,
                 IsAccountReceivable = false,
                 ShippingRequests = Requests.Select(
                r => new InvoiceShippingRequests()
@@ -279,7 +276,7 @@ namespace TACHYON.Invoices
                 request.IsShipperHaveInvoice = true;
             }
 
-            Group.Tenant.Balance += AmountWithTaxVat;
+            Group.Tenant.Balance += Group.AmountWithTaxVat;
 
 
            await _appNotifier.NewInvoiceShipperGenerated(Invoice);
@@ -303,7 +300,7 @@ namespace TACHYON.Invoices
             var Invoicerequests = _invoiceShippingRequestsRepository.
                 GetAll().
                 Where(r => r.InvoiceId == invoice.Id)
-               .Select(r=> r.RequestId).OfType<long>().ToArray();
+               .Select(r=> r.RequestId);
 
             var Requests = _shippingRequestRepository.GetAllList(r => Invoicerequests.Contains(r.Id));
             if (!IsCarrier(invoice.TenantId))

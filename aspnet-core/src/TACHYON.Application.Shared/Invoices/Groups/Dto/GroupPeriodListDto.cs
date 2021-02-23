@@ -10,6 +10,8 @@ namespace TACHYON.Invoices.Groups.Dto
         public string Period { get; set; }
         public bool IsDemand { get; set; }
         public Guid? BinaryObjectId { get; set; }
+        public string DemandFileName { get; set; }
+        public string DemandFileContentType { get; set; }
         public bool IsClaim { get; set; }
         public string Note { get; set; }
         public decimal AmountWithTaxVat { get; set; }

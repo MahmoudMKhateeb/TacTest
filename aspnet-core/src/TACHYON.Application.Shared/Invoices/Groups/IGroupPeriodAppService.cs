@@ -19,7 +19,7 @@ namespace TACHYON.Invoices.Groups
         Task UnClaim(long GroupId);
 
         Task Delete(EntityDto Input);
-       // Task<FileDto> GetFileDto(long GroupId);
+        Task<FileDto> GetFileDto(long GroupId);
 
 
     }

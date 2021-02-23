@@ -2,7 +2,40 @@
   <div class="content d-flex flex-column flex-column-fluid">
     <sub-header [title]="'GroupItemDetail' | localize" [description]="'GroupItemDetailHeaderInfo' | localize">
       <div role="actions">
-        <button class="btn btn-outline-success"><i class="fa fa-file-excel"></i> {{ l('ExportToExcel') }}</button>
+        <button (click)="delete()" *ngIf="permission.isGranted('Pages.Administration.Host.Invoices.GroupsPeriods.Delete')" class="btn btn-danger">
+          <i class="fa fa-trash"></i> {{ l('Delete') }}
+        </button>
+        <button
+          (click)="GroupPeriodDemanModel.show(Data.id)"
+          *ngIf="!Data.isDemand && permission.isGranted('Pages.Invoices.GroupsPeriods.Demand')"
+          class="btn btn-success"
+        >
+          <i class="fa fa-file-excel"></i> {{ l('Demand') }}
+        </button>
+        <button
+          (click)="UnDemand()"
+          *ngIf="Data.isDemand && !Data.isClaim && permission.isGranted('Pages.Invoices.GroupsPeriods.UnDemand')"
+          class="btn btn-secondary"
+        >
+          <i class="fa fa-file-excel"></i> {{ l('UnDemand') }}
+        </button>
+        <button
+          (click)="Claim()"
+          *ngIf="Data.isDemand && !Data.isClaim && permission.isGranted('Pages.Administration.Host.Invoices.GroupsPeriods.Claim')"
+          class="btn btn-info"
+        >
+          <i class="fa fa-file-excel"></i> {{ l('Claim') }}
+        </button>
+        <button
+          (click)="UnClaim(record)"
+          *ngIf="Data.isClaim && permission.isGranted('Pages.Administration.Host.Invoices.GroupsPeriods.UnClaim')"
+          class="btn btn-light"
+        >
+          <i class="fa fa-file-excel"></i> {{ l('UnClaim') }}
+        </button>
+        <button (click)="downloadDocument()" *ngIf="Data.demandFileName" class="btn btn-dark">
+          <i class="fa fa-file-excel"></i> {{ l('Download') }}
+        </button>
       </div>
     </sub-header>
 
@@ -101,5 +134,6 @@
         </div>
       </div>
     </div>
+    <deman-model #GroupPeriodDemanModel (modalSave)="Demand()"></deman-model>
   </div>
 </div>

@@ -160,6 +160,8 @@ namespace TACHYON.Invoices.Groups
             await _BinaryObjectManager.SaveAsync(fileObject);
             Group.IsDemand = true;
             Group.BinaryObjectId = fileObject.Id;
+            Group.DemandFileContentType = Input.ContentType;
+            Group.DemandFileName = Input.FileName;
             await  _appNotifier.GroupPeriodOnDemand(Group);
         }
 
@@ -170,6 +172,9 @@ namespace TACHYON.Invoices.Groups
             if (Group.IsDemand && !Group.IsClaim)
             {
                 Group.IsDemand = false;
+                Group.DemandFileContentType = null;
+                Group.DemandFileName = null;
+                Group.BinaryObjectId = default(Guid);
                await _BinaryObjectManager.DeleteAsync((Guid)Group.BinaryObjectId);
             }
         }
@@ -199,25 +204,36 @@ namespace TACHYON.Invoices.Groups
                 var Invoice = await _GroupPeriodInvoiceRepository.SingleAsync(g => g.GroupId == Group.Id);
 
                 await _invoiceManager.RemoveInvoiceFromRequest(Invoice.InvoiceId);
+                await _GroupPeriodInvoiceRepository.DeleteAsync(Invoice);
                 Group.IsClaim = false;
 
             }
         }
 
 
-        //public async Task<FileDto> GetFileDto(long GroupId)
-        //{
-        //    var group = await GetGroupPeriod(GroupId);
-        //    //DisableTenancyFiltersIfHost();
+        [AbpAuthorize(AppPermissions.Pages_Invoices_GroupsPeriods)]
+        public async Task<FileDto> GetFileDto(long GroupId)
 
-        //    var binaryObject = await _binaryObjectManager.GetOrNullAsync(group.BinaryObjectId.Value);
+        {
+            DisableTenancyFiltersIfHost();
+            var documentFile = await _Repository.SingleAsync(g => g.Id == GroupId && g.IsDemand);
+            if (documentFile == null)
+            {
+                throw new UserFriendlyException(L("TheRequestNotFound"));
 
-        //    //var file = new FileDto(documentFile.Name, documentFile.Extn);
+            }
+            //DisableTenancyFiltersIfHost();
+            //var binaryObject = await _commonManager.ExecuteMethodIfHostOrTenantUsers( () =>_binaryObjectManager.GetOrNullAsync(documentFile.BinaryObjectId.Value));
 
-        //    _tempFileCacheManager.SetFile(file.FileToken, binaryObject.Bytes);
 
-        //    return file;
-        //}
+           var binaryObject = await _binaryObjectManager.GetOrNullAsync(documentFile.BinaryObjectId.Value);
+
+            var file = new FileDto(documentFile.DemandFileName, documentFile.DemandFileContentType);
+
+            _tempFileCacheManager.SetFile(file.FileToken, binaryObject.Bytes);
+
+            return file;
+        }
 
 
         #region Heleper

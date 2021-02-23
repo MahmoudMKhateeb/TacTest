@@ -148,6 +148,11 @@
                             <a class="dropdown-item" [routerLink]="['/app/main/invoices/groupperiods/detail', record.id]">{{ l('Detail') }}</a>
                           </li>
                           <li>
+                            <a *ngIf="record.demandFileName" class="dropdown-item" href="javascript:;" (click)="downloadDocument(record.id)">{{
+                              l('Download')
+                            }}</a>
+                          </li>
+                          <li>
                             <a
                               class="dropdown-item"
                               href="javascript:;"

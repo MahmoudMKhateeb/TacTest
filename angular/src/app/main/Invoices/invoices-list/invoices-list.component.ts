@@ -94,7 +94,7 @@ export class InvoicesListComponent extends AppComponentBase implements OnInit {
     this.message.confirm('', this.l('AreYouSure'), (isConfirmed) => {
       if (isConfirmed) {
         this._InvoiceServiceProxy.makePaid(invoice.id).subscribe(() => {
-          this.notify.success(this.l('SuccessfullyDeleted'));
+          this.notify.success(this.l('Successfully'));
           this.reloadPage();
         });
       }
@@ -105,7 +105,7 @@ export class InvoicesListComponent extends AppComponentBase implements OnInit {
     this.message.confirm('', this.l('AreYouSure'), (isConfirmed) => {
       if (isConfirmed) {
         this._InvoiceServiceProxy.makeUnPaid(invoice.id).subscribe(() => {
-          this.notify.success(this.l('SuccessfullyDeleted'));
+          this.notify.success(this.l('Successfully'));
           this.reloadPage();
         });
       }
