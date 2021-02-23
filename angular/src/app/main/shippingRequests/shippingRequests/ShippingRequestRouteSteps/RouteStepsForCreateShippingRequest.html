@@ -2,7 +2,7 @@
   <div class="card card-custom">
     <div class="card-header">
       <h3 class="card-title">
-        wayPoints
+        {{ l('waypoints') }}
       </h3>
       <div class="card-toolbar">
         <button [disabled]="wayPointsList.length == 0" type="button" class="btn btn-primary blue" (click)="showDropPointUpModal()">
@@ -84,10 +84,10 @@
                       </td>
 
                       <td style="width: 150px;">
-                        <span class="ui-column-title"> {{ l('pointType') }}</span>
-                        <!--                        {{ record .displayName }}-->
-                        <i class="icon-2x ki ki-double-arrow-up ml-10" style="color: #ec3939 !important;" *ngIf="record.pickingTypeId == 1"></i>
-                        <i class="icon-2x ki ki-double-arrow-down ml-10" style="color: #ec3939 !important;" *ngIf="record.pickingTypeId != 1"></i>
+                        <span *ngIf="record.pickingTypeId == 1" class="label label-success label-dot mr-2"></span>
+                        <span *ngIf="record.pickingTypeId == 1" class="font-weight-bold text-success">{{ l('pickup')}}</span>
+                        <span *ngIf="record.pickingTypeId != 1" class="label label-danger label-dot mr-2"></span>
+                        <span *ngIf="record.pickingTypeId != 1" class="font-weight-bold text-danger">{{ l('drop')}}</span>
                       </td>
                     </tr>
                   </ng-template>
@@ -463,9 +463,7 @@
                   <div class="col-lg-6">
                     <div class="form-group">
                       <label>* {{ l('GoodSubCategory') }}:</label>
-                      <!--   TODO:// Add DataBining for DD-->
                       <div [ngClass]="{ 'spinner spinner-success spinner-right mr-1 ml-1': !allSubGoodCategorys }">
-                        <!--                          <select select [(ngModel)]="goodsDetail.goodCategoryId" class="form-control" name="goodsDetail.goodCategoryId">-->
                         <select
                           [(ngModel)]="goodsDetail.goodCategoryId"
                           class="form-control"
@@ -509,6 +507,24 @@
                   </div>
                   <div class="col-lg-6">
                     <div class="form-group">
+                      <label>* {{ l('unitOfMeasure') }}:</label>
+                      <div [ngClass]="{ 'spinner spinner-success spinner-right mr-1 ml-1': !allUnitOfMeasure }">
+                        <select
+                          [(ngModel)]="goodsDetail.unitOfMeasureId"
+                          class="form-control"
+                          name="goodsDetail.unitOfMeasureId"
+                          [disabled]="!allUnitOfMeasure"
+                        >
+                          <option value="">{{ l('selectAUnitOfMeasure') }}</option>
+                          <option *ngFor="let item of allUnitOfMeasure" value="{{ item.id }}">{{ item.displayName }}</option>
+                        </select>
+                      </div>
+                      <span class="form-text text-muted">{{ l('selectAUnitOfMeasure') }}</span>
+                    </div>
+                  </div>
+
+                  <div class="col-lg-6">
+                    <div class="form-group">
                       <label for="GoodsDetail_Description">{{ l('Description') }}</label>
                       <input
                         [(ngModel)]="goodsDetail.description"
@@ -521,7 +537,6 @@
                       />
                     </div>
                   </div>
-
                   <div class="col-lg-6">
                     <div class="form-group">
                       <label for="GoodsDetail_Dimentions">{{ l('Dimentions') }}</label>
@@ -537,16 +552,11 @@
                     </div>
                   </div>
                   <div class="col-lg-6 mt-10">
-                    <div class="form-check checkbox-inline">
+                    <div class="form-group checkbox-inline">
                       <label class="checkbox checkbox-danger">
-                        <input
-                          [(ngModel)]="goodsDetail.isDangerousGood"
-                          id="GoodsDetail_IsDangerousGood"
-                          name="IsDangerousGood"
-                          type="checkbox"
-                          checked="checked"
-                        />
+                        <input [(ngModel)]="goodsDetail.isDangerousGood" id="GoodsDetail_IsDangerousGood" name="IsDangerousGood" type="checkbox" />
                         <span></span>
+
                         {{ l('IsDangerousGood') }}
                       </label>
                     </div>

@@ -12,12 +12,16 @@ import {
   GoodsDetailDto,
   GoodsDetailGoodCategoryLookupTableDto,
   GoodsDetailsServiceProxy,
+  ISelectItemDto,
   RoutesServiceProxy,
   RoutStepCityLookupTableDto,
   RoutStepsServiceProxy,
+  SelectItemDto,
+  ShippingRequestsServiceProxy,
 } from '@shared/service-proxies/service-proxies';
 import { MapsAPILoader } from '@node_modules/@agm/core';
 import { animate, state, style, transition, trigger } from '@angular/animations';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'RouteStepsForCreateShippingRequest',
@@ -31,8 +35,9 @@ export class RouteStepsForCreateShippingRequstComponent extends AppComponentBase
 
   @ViewChild('search') public searchElementRef: ElementRef;
   @Input() MainGoodsCategory: number;
-  @Output() SelectedRouteStepsFromChild: EventEmitter<CreateOrEditRoutPointDto[]> = new EventEmitter<CreateOrEditRoutPointDto[]>();
-  wayPointsList: CreateOrEditRoutPointDto[] = [];
+  @Input() WayPointListFromFatherForShippingRequestEdit: CreateOrEditRoutPointDto[];
+  @Output() SelectedWayPointsFromChild: EventEmitter<CreateOrEditRoutPointDto[]> = new EventEmitter<CreateOrEditRoutPointDto[]>();
+  wayPointsList: CreateOrEditRoutPointDto[] = this.WayPointListFromFatherForShippingRequestEdit || [];
   singleWayPoint: CreateOrEditRoutPointDto = new CreateOrEditRoutPointDto();
   goodsDetail: GoodsDetailDto = new GoodsDetailDto();
 
@@ -72,7 +77,7 @@ export class RouteStepsForCreateShippingRequstComponent extends AppComponentBase
   SourceGoodDetailValueslist = [];
   DestGoodDetailValueslist = [];
   allSubGoodCategorys: GoodsDetailGoodCategoryLookupTableDto[];
-
+  allUnitOfMeasure: SelectItemDto[];
   constructor(
     injector: Injector,
     private _goodsDetailsServiceProxy: GoodsDetailsServiceProxy,
@@ -80,7 +85,8 @@ export class RouteStepsForCreateShippingRequstComponent extends AppComponentBase
     private _facilitiesServiceProxy: FacilitiesServiceProxy,
     private mapsAPILoader: MapsAPILoader,
     private ngZone: NgZone,
-    private _routStepsServiceProxy: RoutStepsServiceProxy
+    private _routStepsServiceProxy: RoutStepsServiceProxy,
+    private _shippingRequestsServiceProxy: ShippingRequestsServiceProxy
   ) {
     super(injector);
   }
@@ -90,11 +96,23 @@ export class RouteStepsForCreateShippingRequstComponent extends AppComponentBase
       this.allCitys = result;
     });
 
+    this._shippingRequestsServiceProxy.getAllUnitOfMeasuresForDropdown().subscribe((result) => {
+      this.allUnitOfMeasure = result;
+    });
+    //check if ShippingRequest is in Edit Mode
+    if (this.WayPointListFromFatherForShippingRequestEdit) {
+      this.wayPointsList = this.WayPointListFromFatherForShippingRequestEdit;
+      //draw the waypointsForEdit
+      this.wayPointsSetter();
+    }
     this.refreshFacilities();
     //this.Tester();
   }
   //to Select PickUp Point
   showPickUpModal() {
+    if (!this.MainGoodsCategory) {
+      return Swal.fire(this.l('ERROR'), this.l('pleaseSelectMainGoodCategoryFirst'), 'info');
+    }
     this.singleWayPoint = new CreateOrEditRoutPointDto();
     this.singleWayPoint.pickingTypeId = 1;
     this.createRouteStepModal.show();
@@ -157,7 +175,7 @@ export class RouteStepsForCreateShippingRequstComponent extends AppComponentBase
   }
   EmitToFather() {
     this.routeStepIdForEdit = undefined;
-    this.SelectedRouteStepsFromChild.emit(this.wayPointsList);
+    this.SelectedWayPointsFromChild.emit(this.wayPointsList);
     this.wayPointsSetter();
     this.singleWayPoint = new CreateOrEditRoutPointDto();
     this.createFacilityModal.hide();
@@ -345,6 +363,6 @@ export class RouteStepsForCreateShippingRequstComponent extends AppComponentBase
   }
 
   getFacilityNameByid(id: number) {
-    return this.allFacilities.find((x) => x.id == id)?.displayName;
+    return this.allFacilities?.find((x) => x.id == id)?.displayName;
   }
 }

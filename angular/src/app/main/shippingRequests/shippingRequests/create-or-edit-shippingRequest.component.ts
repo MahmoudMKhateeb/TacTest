@@ -1,5 +1,5 @@
 ﻿import { Component, ElementRef, Injector, NgZone, OnInit, TemplateRef, ViewChild } from '@angular/core';
-import { finalize } from 'rxjs/operators';
+import { finalize, map } from 'rxjs/operators';
 
 import {
   CarriersForDropDownDto,
@@ -52,10 +52,7 @@ export class CreateOrEditShippingRequestComponent extends AppComponentBase imple
   shippingRequest: CreateOrEditShippingRequestDto = new CreateOrEditShippingRequestDto();
   allGoodCategorys: GoodsDetailGoodCategoryLookupTableDto[];
   allCarrierTenants: CarriersForDropDownDto[];
-  allTrailerTypes: SelectItemDto[];
-  allGoodsDetails: SelectItemDto[];
   allRoutTypes: RouteRoutTypeLookupTableDto[];
-  // routStep: CreateOrEditRoutStepDto = new CreateOrEditRoutStepDto();
   allCitys: RoutStepCityLookupTableDto[];
   allFacilities: FacilityForDropdownDto[];
   allPorts: SelectItemDto[];
@@ -64,22 +61,20 @@ export class CreateOrEditShippingRequestComponent extends AppComponentBase imple
   allVases: ShippingRequestVasListDto[];
   selectedVases: ShippingRequestVasListDto[] = [];
   zoom = 5;
-  private geoCoder;
+
   isTachyonDeal = false;
   isBid = false;
   shippingRequestType: string;
-  shippingrequestBidStratDate: moment.Moment;
-  shippingrequestBidEndDate: moment.Moment;
-  SelectedGoodCategory: number;
   selectedRouteType: number;
   allTransportTypes: ISelectItemDto[];
   allTrucksTypes: SelectItemDto[];
   allCapacities: SelectItemDto[];
-  fakestartDateinput: any;
-  fakeendtDateinput: any;
+  allShippingTypes: SelectItemDto[];
+
   truckTypeLoading: boolean;
   capacityLoading: boolean;
-  //createOrEditRoutStepsDtos: CreateOrEditRoutStepDto[] = [];
+
+  today = new Date();
 
   constructor(
     injector: Injector,
@@ -104,26 +99,39 @@ export class CreateOrEditShippingRequestComponent extends AppComponentBase imple
 
   show(shippingRequestId?: number): void {
     if (!shippingRequestId) {
+      //this is a create
+      console.log('this is create');
       this.shippingRequest.id = undefined;
       this.active = true;
+      this.loadAllDropDownLists();
     } else {
-      this._shippingRequestsServiceProxy.getShippingRequestForEdit(shippingRequestId).subscribe((result) => {
-        this.shippingRequest = result.shippingRequest;
-        this.shippingRequestType = result.shippingRequest.isBid === true ? 'bidding' : 'tachyondeal';
-        this.selectedVases = result.shippingRequest.shippingRequestVasList;
-        this.selectedRouteType = result.shippingRequest.createOrEditRouteDto.routTypeId;
-        this.shippingRequest.createOrEditRouteDto = result.shippingRequest.createOrEditRouteDto;
-        // this.createOrEditRoutStepDtoList = result.shippingRequest.createOrEditRoutStepDtoList;
-        this.active = true;
-      });
+      console.log('this is edit');
+      //this is an edit
+      this._shippingRequestsServiceProxy
+        .getShippingRequestForEdit(shippingRequestId)
+        .pipe(
+          finalize(() => {
+            this.loadAllDropDownLists();
+          })
+        )
+        .subscribe((result) => {
+          this.shippingRequest = result.shippingRequest;
+          this.shippingRequestType = result.shippingRequest.isBid === true ? 'bidding' : 'tachyondeal';
+          this.selectedVases = result.shippingRequest.shippingRequestVasList;
+          this.selectedRouteType = result.shippingRequest.createOrEditRouteDto.routTypeId;
+          this.shippingRequest.createOrEditRouteDto = result.shippingRequest.createOrEditRouteDto;
+          // this.createOrEditRoutStepDtoList = result.shippingRequest.createOrEditRoutStepDtoList;
+          this.active = true;
+          console.log(this.shippingRequest);
+        });
     }
-    this.loadAllDropDownLists();
-    //this.refreshFacilities();
+    console.log(this.shippingRequest);
   }
 
   save(): void {
     //this function fires when Create BTN is Clicked
     this.saving = true;
+    this.shippingRequest.id = null;
     this.shippingRequest.isBid = this.shippingRequestType === 'bidding' ? true : false;
     this.shippingRequest.isTachyonDeal = this.shippingRequestType === 'tachyondeal' ? true : false;
     this.shippingRequest.createOrEditRouteDto.routTypeId = this.selectedRouteType; //milkrun / oneway ....
@@ -151,9 +159,7 @@ export class CreateOrEditShippingRequestComponent extends AppComponentBase imple
     this._goodsDetailsServiceProxy.getAllGoodCategoryForTableDropdown(undefined).subscribe((result) => {
       this.allGoodCategorys = result;
     });
-    // this._shippingRequestsServiceProxy.getAllCarriersForDropDown().subscribe((result) => {
-    //   this.allCarrierTenants = result;
-    // });
+
     this._routStepsServiceProxy.getAllCityForTableDropdown().subscribe((result) => {
       this.allCitys = result;
     });
@@ -161,17 +167,28 @@ export class CreateOrEditShippingRequestComponent extends AppComponentBase imple
     this._shippingRequestsServiceProxy.getAllTransportTypesForDropdown().subscribe((result) => {
       this.allTransportTypes = result;
     });
+    //Get these DD in Edit Only
+    if (this.shippingRequest.id) {
+      this.capacityLoading = true;
+      this.truckTypeLoading = true;
+      this._shippingRequestsServiceProxy.getAllTruckTypesByTransportTypeIdForDropdown(this.shippingRequest.transportTypeId).subscribe((result) => {
+        this.allTrucksTypes = result;
+        this.truckTypeLoading = false;
+      });
+      this._shippingRequestsServiceProxy.getAllTuckCapacitiesByTuckTypeIdForDropdown(this.shippingRequest.trucksTypeId).subscribe((result) => {
+        this.allCapacities = result;
+        this.capacityLoading = false;
+      });
+    }
 
-    // this._routStepsServiceProxy.getAllGoodsDetailForTableDropdown().subscribe((result) => {
-    //   this.allGoodsDetails = result;
-    // });
+    this._shippingRequestsServiceProxy.getAllShippingTypesForDropdown().subscribe((result) => {
+      this.allShippingTypes = result;
+    });
+
     this._routesServiceProxy.getAllRoutTypeForTableDropdown().subscribe((result) => {
       this.allRoutTypes = result;
     });
-    // this._shippingRequestsServiceProxy.getAllPortsForDropdown().subscribe((result) => {
-    //   this.allPorts = result;
-    // });
-    //Nwely added
+
     this.refreshFacilities();
     this.getAllVasList();
   }
@@ -208,8 +225,8 @@ export class CreateOrEditShippingRequestComponent extends AppComponentBase imple
   }
 
   shippingRequestTypeChanged(): void {
-    this.shippingrequestBidStratDate = undefined;
-    this.shippingrequestBidEndDate = undefined;
+    this.shippingRequest.bidStartDate = undefined;
+    this.shippingRequest.bidEndDate = undefined;
   }
 
   // this function is for the first 3 Conditional DD Which is TransportType --> TruckType --> Capacitiy
@@ -232,7 +249,6 @@ export class CreateOrEditShippingRequestComponent extends AppComponentBase imple
   trucksTypeSelectChange(trucksTypeId?: number) {
     if (trucksTypeId > 0) {
       this.capacityLoading = true;
-
       this._shippingRequestsServiceProxy.getAllTuckCapacitiesByTuckTypeIdForDropdown(trucksTypeId).subscribe((result) => {
         this.allCapacities = result;
         this.shippingRequest.capacityId = null;
