@@ -62,6 +62,7 @@ export class ShippingRequestsComponent extends AppComponentBase {
         this.minVasFilter == null ? this.minVasFilterEmpty : this.minVasFilter,
         this.isBid,
         this.isTachyonDeal,
+        undefined,
         this.primengTableHelper.getSorting(this.dataTable),
         this.primengTableHelper.getSkipCount(this.paginator, event),
         this.primengTableHelper.getMaxResultCount(this.paginator, event)
