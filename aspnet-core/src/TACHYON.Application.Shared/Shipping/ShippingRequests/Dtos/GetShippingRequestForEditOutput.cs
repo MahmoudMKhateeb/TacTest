@@ -1,11 +1,12 @@
-﻿using Abp.Application.Services.Dto;
-using System;
-using System.ComponentModel.DataAnnotations;
+﻿using System;
+using System.Collections.Generic;
+using TACHYON.Routs.RoutPoints.Dtos;
+using TACHYON.ShippingRequestVases.Dtos;
 
 namespace TACHYON.Shipping.ShippingRequests.Dtos
 {
     public class GetShippingRequestForEditOutput
     {
-        public CreateOrEditShippingRequestDto ShippingRequest { get; set; }
+        public CreateOrEditShippingRequestInput ShippingRequest { get; set; } 
     }
 }

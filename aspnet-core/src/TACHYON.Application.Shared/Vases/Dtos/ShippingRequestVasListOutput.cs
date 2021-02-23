@@ -5,7 +5,7 @@ using System.Text;
 
 namespace TACHYON.Vases.Dtos
 {
-    public class ShippingRequestVasListDto : EntityDto
+    public class ShippingRequestVasListOutput : EntityDto
     {
         public string VasName { get; set; }
 

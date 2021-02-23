@@ -1,19 +1,15 @@
-﻿
-using Abp.Application.Services.Dto;
-using System;
+﻿using System;
 using System.Collections.Generic;
-using TACHYON.Goods.GoodsDetails.Dtos;
+using System.Text;
 using TACHYON.Routs.Dtos;
 using TACHYON.Routs.RoutPoints.Dtos;
-using TACHYON.Routs.RoutSteps.Dtos;
 using TACHYON.Vases.Dtos;
 
 namespace TACHYON.Shipping.ShippingRequests.Dtos
 {
-    public class CreateOrEditShippingRequestDto : EntityDto<long?>
+    public class CreateOrEditShippingRequestInput
     {
-
-       public List<CreateOrEditRoutPointDto> CreateOrEditRoutPointDtoList { get; set; }
+        public List<CreateOrEditRoutPointInput> CreateOrEditRoutPointDtoList { get; set; }
 
         public virtual bool IsBid { get; set; }
         //Add Bid details If IsBid equals True

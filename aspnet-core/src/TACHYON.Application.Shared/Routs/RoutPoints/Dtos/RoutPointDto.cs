@@ -18,7 +18,7 @@ namespace TACHYON.Routs.RoutPoints.Dtos
 
         public long FacilityId { get; set; }
 
-        public FacilityDto FacilityDto { get; set; }
+       // public FacilityDto FacilityDto { get; set; }
 
         public long ShippingRequestId { get; set; }
 
