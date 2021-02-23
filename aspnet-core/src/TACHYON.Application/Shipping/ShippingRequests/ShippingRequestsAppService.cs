@@ -486,8 +486,12 @@ namespace TACHYON.Shipping.ShippingRequests
 
             GetShippingRequestForEditOutput output = new GetShippingRequestForEditOutput
             {
-                ShippingRequest = ObjectMapper.Map<CreateOrEditShippingRequestInput>(shippingRequest)
+                ShippingRequest = ObjectMapper.Map<CreateOrEditShippingRequestDto>(shippingRequest)
             };
+
+
+
+
 
             return output;
         }
@@ -563,6 +567,8 @@ namespace TACHYON.Shipping.ShippingRequests
                 .GetAllIncluding(x => x.RouteFk)
                 .Include(x => x.RoutPoints)
                 .FirstOrDefaultAsync(x => x.Id == (long)input.Id);
+            input.IsBid = shippingRequest.IsBid;
+            input.IsTachyonDeal = shippingRequest.IsTachyonDeal;
             ObjectMapper.Map(input, shippingRequest);
         }
 

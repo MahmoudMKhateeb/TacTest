@@ -7,6 +7,6 @@ namespace TACHYON.Shipping.ShippingRequests.Dtos
 {
     public class GetShippingRequestForEditOutput
     {
-        public CreateOrEditShippingRequestInput ShippingRequest { get; set; } 
+        public CreateOrEditShippingRequestDto ShippingRequest { get; set; } 
     }
 }
