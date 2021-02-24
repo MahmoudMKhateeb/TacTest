@@ -14,6 +14,7 @@ using Abp.Runtime.Session;
 using Abp.Timing;
 using Abp.UI;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Rest;
 using NUglify.Helpers;
 using TACHYON.AddressBook;
 using TACHYON.AddressBook.Ports;
@@ -164,7 +165,13 @@ namespace TACHYON.Shipping.ShippingRequests
                     throw new UserFriendlyException(L("feature SendTachyonDealShippingRequest not enabled"));
                 }
             }
+            //Way Points Validation
+            CreateOrEditRoutPointDtoListValidate(input);
 
+            // Vas validation
+            await ShippingRequestVasListValidate(input);
+
+            //Check create or edit
             if (input.Id == null)
             {
                 await Create(input);
@@ -172,6 +179,70 @@ namespace TACHYON.Shipping.ShippingRequests
             else
             {
                 await Update(input);
+            }
+        }
+
+        private void CreateOrEditRoutPointDtoListValidate(CreateOrEditShippingRequestDto input)
+        {
+            if (input.CreateOrEditRoutPointDtoList.Count <= 0) return;
+
+                //Single drop check
+            if (input.CreateOrEditRouteDto.RoutTypeId == TACHYONConsts.SingleDropRoutType)
+            {
+                input.NumberOfDrops = 1;
+                if (input.CreateOrEditRoutPointDtoList.Count(x =>
+                    x.PickingTypeId == TACHYONConsts.DropoffPickingType) > 1)
+                {
+                    throw new UserFriendlyException(L("Way Points shouldn't be greater than number of One"));
+                }
+            }
+
+            //Two way check
+            else if (input.CreateOrEditRouteDto.RoutTypeId == TACHYONConsts.TwoWaysRoutType)
+            {
+                input.NumberOfDrops = 2;
+                if (input.CreateOrEditRoutPointDtoList.Count(x =>
+                    x.PickingTypeId == TACHYONConsts.DropoffPickingType) > 2)
+                {
+                    throw new UserFriendlyException(L("Way Points shouldn't be greater than Two"));
+                }
+            }
+
+            //Multiple drops check
+            else if (input.CreateOrEditRouteDto.RoutTypeId == TACHYONConsts.MultipleDropsRoutType)
+            {
+                if (input.CreateOrEditRoutPointDtoList.Count(x =>
+                    x.PickingTypeId == TACHYONConsts.DropoffPickingType) > input.NumberOfDrops)
+                {
+                    throw new UserFriendlyException(L("Way Points shouldn't be greater than number of drops"));
+                }
+            }
+        }
+
+        private async Task ShippingRequestVasListValidate(CreateOrEditShippingRequestDto input)
+        {
+            if (input.ShippingRequestVasList.Count <= 0) return;
+
+            var vasesItems = await _lookup_vasRepository.GetAllListAsync();
+
+            foreach (var item in input.ShippingRequestVasList)
+            {
+                var vasItem = vasesItems.FirstOrDefault(x => x.Id == item.VasId);
+                if (vasItem != null && vasItem.HasAmount)
+                {
+                    if (item.RequestMaxAmount < 1)
+                    {
+                        throw new ValidationException(L("Vas Amount must have value"));
+                    }
+                }
+
+                if (vasItem != null && vasItem.HasCount)
+                {
+                    if (item.RequestMaxCount < 1)
+                    {
+                        throw new ValidationException(L("Vas Count must have value"));
+                    }
+                }
             }
         }
 
@@ -366,7 +437,7 @@ namespace TACHYON.Shipping.ShippingRequests
 
                 //totalCount
                 int totalCount = await filteredShippingRequests.CountAsync();
-                
+
                 // select result
                 var pagedAndFilteredShippingRequests = filteredShippingRequests.OrderBy(e => input.Sorting ?? "id asc")
                     .PageBy(input).Select(x => new
@@ -380,7 +451,7 @@ namespace TACHYON.Shipping.ShippingRequests
                         GoodsCategoryName = x.GoodCategoryFk != null ? x.GoodCategoryFk.DisplayName : "",
                         RoutTypeName = x.RouteFk.RoutTypeFk.DisplayName,
                         ShippingRequestStatusName = x.ShippingRequestStatusFk.DisplayName,
-                        TruckTypeDisplayName =x.AssignedTruckFk != null ? x.AssignedTruckFk.TrucksTypeFk.DisplayName : "",
+                        TruckTypeDisplayName = x.AssignedTruckFk != null ? x.AssignedTruckFk.TrucksTypeFk.DisplayName : "",
                         TruckTypeFullName = x.AssignedTruckFk != null
                             ? (x.AssignedTruckFk.TransportTypeFk != null ?
                                 x.AssignedTruckFk.TransportTypeFk.DisplayName :
@@ -389,7 +460,7 @@ namespace TACHYON.Shipping.ShippingRequests
                                     "" + "-" + x.AssignedTruckFk != null ?
                                         x.AssignedTruckFk.TransportTypeFk.DisplayName : "")
                             : "",
-                        routPointDtoList=x.RoutPoints
+                        routPointDtoList = x.RoutPoints
                     });
 
 
@@ -409,9 +480,9 @@ namespace TACHYON.Shipping.ShippingRequests
                         ShippingRequestStatusName = x.ShippingRequestStatusName,
                         TruckTypeDisplayName = x.TruckTypeDisplayName,
                         TruckTypeFullName = x.TruckTypeFullName,
-                        RoutPointDtoList =ObjectMapper.Map<List<RoutPointDto>>(x.routPointDtoList)
+                        RoutPointDtoList = ObjectMapper.Map<List<RoutPointDto>>(x.routPointDtoList)
                     });
-                
+
                 return new PagedResultDto<GetShippingRequestForViewOutput>(totalCount, result.ToList());
             }
         }
@@ -429,7 +500,7 @@ namespace TACHYON.Shipping.ShippingRequests
                     .Include(e => e.RouteFk)
                     .ThenInclude(e => e.OriginCityFk)
                     .Include(e => e.RouteFk)
-                    .ThenInclude(e=>e.DestinationCityFk)
+                    .ThenInclude(e => e.DestinationCityFk)
                     .Include(e => e.ShippingRequestStatusFk)
                     .Include(e => e.AssignedDriverUserFk)
                     .Include(e => e.AssignedTruckFk)
@@ -439,7 +510,7 @@ namespace TACHYON.Shipping.ShippingRequests
                     .Include(e => e.AssignedTruckFk)
                     .ThenInclude(e => e.TrucksTypeFk)
                     .Include(e => e.GoodCategoryFk)
-                    .Include(e=>e.RoutPoints)
+                    .Include(e => e.RoutPoints)
                     .FirstOrDefaultAsync();
 
             List<ShippingRequestBid> shippingRequestBidsList;
@@ -465,8 +536,8 @@ namespace TACHYON.Shipping.ShippingRequests
                 TruckTypeFullName = shippingRequest.AssignedTruckFk?.TransportTypeFk?.DisplayName
                                           + "-" + shippingRequest.AssignedTruckFk?.TrucksTypeFk?.DisplayName
                                           + "-" + shippingRequest.AssignedTruckFk?.TransportTypeFk?.DisplayName,
-                ShippingRequestVasDtoList =ObjectMapper.Map<List<CreateOrEditShippingRequestVasListDto>>(shippingRequest.ShippingRequestVases) ,
-                RoutPointDtoList =ObjectMapper.Map<List<RoutPointDto>>(shippingRequest.RoutPoints)
+                ShippingRequestVasDtoList = ObjectMapper.Map<List<CreateOrEditShippingRequestVasListDto>>(shippingRequest.ShippingRequestVases),
+                RoutPointDtoList = ObjectMapper.Map<List<RoutPointDto>>(shippingRequest.RoutPoints)
             };
 
             return output;
@@ -478,7 +549,7 @@ namespace TACHYON.Shipping.ShippingRequests
                 .GetAll()
                 .Include(x => x.RouteFk)
                 .Include(x => x.RoutPoints)
-                .ThenInclude(x=>x.GoodsDetails)
+                .ThenInclude(x => x.GoodsDetails)
                 .Include(x => x.RoutPoints)
                 .ThenInclude(x => x.FacilityFk)
                 .Include(x => x.ShippingRequestVases)
@@ -509,7 +580,7 @@ namespace TACHYON.Shipping.ShippingRequests
                 shippingRequest.RoutPoints.ForEach(x => x.TenantId = (int)AbpSession.TenantId);
                 shippingRequest.RouteFk.TenantId = (int)AbpSession.TenantId;
                 shippingRequest.ShippingRequestStatusId = TACHYONConsts.ShippingRequestStatusStandBy;
-                shippingRequest.ShippingRequestVases.ForEach(x=>x.TenantId=(int)AbpSession.TenantId);
+                shippingRequest.ShippingRequestVases.ForEach(x => x.TenantId = (int)AbpSession.TenantId);
 
                 // Bid info
                 if (shippingRequest.IsBid)

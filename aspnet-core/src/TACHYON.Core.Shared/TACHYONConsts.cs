@@ -25,6 +25,17 @@
 
         public const int ShippingRequestStatusCanceled = 4;
 
+        //Route Type consts
+        public const int SingleDropRoutType = 1;
+
+        public const int TwoWaysRoutType = 2;
+
+        public const int MultipleDropsRoutType = 3;
+
+        //Pickup consts
+        public const int PickupPickingType = 1;
+        public const int DropoffPickingType = 2;
+
         // Note:
         // Minimum accepted payment amount. If a payment amount is less then that minimum value payment progress will continue without charging payment
         // Even though we can use multiple payment methods, users always can go and use the highest accepted payment amount.
