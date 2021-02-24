@@ -1783,5 +1783,26 @@
     <text name="VisualSettings_Description">Change look of the application</text>
     <text name="DownloadCollectedData_Description">Download data belongs to your account</text>
     <text name="New">New</text>
+
+    <![CDATA[Tachyon:Invoice]]>
+    <text name="Invoices">Invoices</text>
+    <text name="AccountPayable">Account payable</text>
+    <text name="AccountReceivable">Account receivable</text>
+    <text name="MakePaid">Make paid</text>
+    <text name="MakeUnPaid">Make unpaid</text>
+    <text name="PaidStatus">Paid status</text>
+    <text name="Unpaid">Un paid</text>
+    <text name="VatAmount">Vat amount</text>
+    <text name="AmountWithTaxVat">Amount with tax vat</text>
+    <text name="Demand">Demand</text>
+    <text name="UnDemand">Un demand</text>
+    <text name="Claim">Claim</text>
+    <text name="UnClaim">Un claim</text>
+
+    <text name="ShipperNotfiyWhenCreditLimitGreaterOrEqualXPercentage">
+      You have used more than 70% of your credit limit
+    </text>
+    <text name="EmailSubjectShipperCreditLimit">Credit limit</text>
+    <![CDATA[Tachyon:Invoice End]]>
   </texts>
 </localizationDictionary>

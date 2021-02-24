@@ -402,7 +402,7 @@ namespace TACHYON.Notifications
             await _notificationPublisher.PublishAsync(AppNotificationNames.RejectedSubmittedDocument, notificationData, userIds: new[] { argsUser });
         }
 
-
+        #region Invoices
         public async Task NewInvoiceShipperGenerated(Invoice invoice)
         {
             var notificationData = new LocalizableMessageNotificationData(
@@ -417,19 +417,7 @@ namespace TACHYON.Notifications
                 tenantIds: new[] { (int?)invoice.TenantId });
         }
 
-        public async Task NewGroupItemCarrierGenerated(Invoice invoice)
-        {
-            var notificationData = new LocalizableMessageNotificationData(
-                new LocalizableString(
-                    "NewInvoiceShipperGenerated",
-                    TACHYONConsts.LocalizationSourceName
-                )
-            );
-            notificationData["invoiceid"] = invoice.Id;
-
-            await _notificationPublisher.PublishAsync(AppNotificationNames.InvoiceShipperGenerated, notificationData,
-                tenantIds: new[] { (int?)invoice.TenantId });
-        }
+     
 
         public async Task NewGroupPeriodsGenerated(GroupPeriod groupPeriod)
         {
@@ -458,6 +446,19 @@ namespace TACHYON.Notifications
             await _notificationPublisher.PublishAsync(AppNotificationNames.GroupPeriodOnDemand, notificationData);
         }
 
+        public async Task ShipperNotfiyWhenCreditLimitGreaterOrEqualXPercentage(int? TenantId, int Percentage)
+        {
+            var notificationData = new LocalizableMessageNotificationData(
+                new LocalizableString(
+                    "ShipperNotfiyWhenCreditLimitGreaterOrEqualXPercentage",
+                    TACHYONConsts.LocalizationSourceName
+                )
+            );
+            notificationData["Percentage"] = Percentage;
+
+            await _notificationPublisher.PublishAsync(AppNotificationNames.ShipperNotfiyWhenCreditLimitGreaterOrEqualXPercentage, notificationData, tenantIds: new [] {TenantId });
+        }
+        #endregion
         #endregion
 
 

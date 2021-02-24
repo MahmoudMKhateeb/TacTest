@@ -25,6 +25,8 @@ namespace TACHYON.Notifications
         Task NewInvoiceShipperGenerated(Invoice invoice);    
         Task NewGroupPeriodsGenerated(GroupPeriod groupPeriod);
         Task GroupPeriodOnDemand(GroupPeriod groupPeriod);
+        Task ShipperNotfiyWhenCreditLimitGreaterOrEqualXPercentage(int? TenantId, int Percentage);
+
 
         Task SomeTrucksCouldntBeImported(UserIdentifier user, string fileToken, string fileType, string fileName);
         Task CreateBidRequest(UserIdentifier argsUser, long shippingRequestBidId);

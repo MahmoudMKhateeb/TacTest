@@ -17,6 +17,12 @@
     <EmbeddedResource Include="Localization\TACHYON\*.xml;Net\Emailing\EmailTemplates\default.html" Exclude="bin\**;obj\**;**\*.xproj;packages\**;@(EmbeddedResource)" />
   </ItemGroup>
   <ItemGroup>
+    <None Remove="Net\Emailing\EmailTemplates\ShipperNotfiyWhenCreditLimitGreaterOrEqualXPercentage.html" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Net\Emailing\EmailTemplates\ShipperNotfiyWhenCreditLimitGreaterOrEqualXPercentage.html" />
+  </ItemGroup>
+  <ItemGroup>
     <PackageReference Include="Abp.Quartz" Version="5.10.0" />
     <PackageReference Include="Microsoft.Extensions.Configuration.EnvironmentVariables" Version="3.1.5" />
     <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="3.1.5" />

@@ -1,5 +1,6 @@
 ﻿using Abp.Application.Services.Dto;
 using Abp.Authorization;
+using Abp.Authorization.Users;
 using Abp.Domain.Repositories;
 using Abp.Domain.Uow;
 using Abp.Linq.Extensions;
@@ -62,7 +63,7 @@ namespace TACHYON.Invoices
             {
                 using (CurrentUnitOfWork.DisableFilter(AbpDataFilters.MayHaveTenant))
                 {
-                    var user = await _userManager.Users.SingleAsync(u => u.TenantId == Invoice.TenantId);
+                    var user = await _userManager.Users.SingleAsync(u => u.TenantId == Invoice.TenantId && u.UserName== AbpUserBase.AdminUserName);
 
                     InvoiceDto.Email = user.EmailAddress;
                     InvoiceDto.Phone = user.PhoneNumber;

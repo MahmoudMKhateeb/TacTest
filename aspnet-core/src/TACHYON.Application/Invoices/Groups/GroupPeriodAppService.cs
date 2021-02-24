@@ -1,5 +1,6 @@
 ﻿using Abp.Application.Services.Dto;
 using Abp.Authorization;
+using Abp.Authorization.Users;
 using Abp.Collections.Extensions;
 using Abp.Domain.Repositories;
 using Abp.Domain.Uow;
@@ -92,7 +93,8 @@ namespace TACHYON.Invoices.Groups
             {
                 using (CurrentUnitOfWork.DisableFilter(AbpDataFilters.MayHaveTenant))
                 {
-                    var user = await _userManager.Users.SingleAsync(u => u.TenantId == Group.TenantId);
+                 
+                    var user = await _userManager.Users.SingleAsync(u => u.TenantId == Group.TenantId && u.UserName== AbpUserBase.AdminUserName);
 
                     GroupDto.Email = user.EmailAddress;
                     GroupDto.Phone = user.PhoneNumber;
@@ -222,8 +224,6 @@ namespace TACHYON.Invoices.Groups
                 throw new UserFriendlyException(L("TheRequestNotFound"));
 
             }
-            //DisableTenancyFiltersIfHost();
-            //var binaryObject = await _commonManager.ExecuteMethodIfHostOrTenantUsers( () =>_binaryObjectManager.GetOrNullAsync(documentFile.BinaryObjectId.Value));
 
 
            var binaryObject = await _binaryObjectManager.GetOrNullAsync(documentFile.BinaryObjectId.Value);

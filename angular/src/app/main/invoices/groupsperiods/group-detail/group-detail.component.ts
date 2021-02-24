@@ -28,6 +28,7 @@ export class GroupDetailComponent extends AppComponentBase {
       if (isConfirmed) {
         this._CurrentService.delete(this.Data.id).subscribe(() => {
           this.notify.success(this.l('SuccessfullyDeleted'));
+          this.router.navigate([`/app/main/invoices/groupperiods`]);
         });
       }
     });

@@ -202,7 +202,7 @@ namespace TACHYON.Invoices
         }
 
 
-        private void GenerateShipperInvoice(Tenant Tenant, List<ShippingRequest> Requests, byte PeriodId)
+        private async void GenerateShipperInvoice(Tenant Tenant, List<ShippingRequest> Requests, byte PeriodId)
         {
             decimal Amount = (decimal)Requests.Sum(r => r.Price);
             TaxVat = GetTax();
@@ -242,7 +242,8 @@ namespace TACHYON.Invoices
             }
 
 
-            _appNotifier.NewInvoiceShipperGenerated(Invoice);
+          await  _appNotifier.NewInvoiceShipperGenerated(Invoice);
+          await  _BalanceManager.CheckShipperOverLimit(Tenant);
         }
 
         public async Task GenerateCarrirInvoice(GroupPeriod Group)
@@ -341,5 +342,7 @@ namespace TACHYON.Invoices
         {
             return _settingManager.GetSettingValue<decimal>(AppSettings.HostManagement.TaxVat);
         }
+
+
     }
 }

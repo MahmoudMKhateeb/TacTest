@@ -2,7 +2,23 @@
   <div class="content d-flex flex-column flex-column-fluid">
     <sub-header [title]="'InvoiceDetail' | localize" [description]="'InvoiceDetailHeaderInfo' | localize">
       <div role="actions">
-        <button class="btn btn-outline-success"><i class="fa fa-file-excel"></i> {{ l('ExportToExcel') }}</button>
+        <button (click)="delete()" *ngIf="permission.isGranted('Pages.Administration.Host.Invoices.Invoices.Delete')" class="btn btn-danger">
+          <i class="fa fa-trash"></i> {{ l('Delete') }}
+        </button>
+        <button
+          (click)="MakePaid()"
+          *ngIf="!Data.isPaid && permission.isGranted('Pages.Administration.Host.Invoices.MakePaid')"
+          class="btn btn-success"
+        >
+          <i class="fa fa-file-excel"></i> {{ l('MakePaid') }}
+        </button>
+        <button
+          (click)="MakeUnPaid()"
+          *ngIf="Data.isPaid && permission.isGranted('Pages.Administration.Host.Invoices.MakeUnPaid')"
+          class="btn btn-secondary"
+        >
+          <i class="fa fa-file-excel"></i> {{ l('MakeUnPaid') }}
+        </button>
       </div>
     </sub-header>
 
