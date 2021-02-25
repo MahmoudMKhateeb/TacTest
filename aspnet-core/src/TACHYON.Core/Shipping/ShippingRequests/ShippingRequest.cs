@@ -10,6 +10,7 @@ using TACHYON.Authorization.Users;
 using TACHYON.Goods.GoodCategories;
 using TACHYON.Goods.GoodsDetails;
 using TACHYON.MultiTenancy;
+using TACHYON.Packing.PackingTypes;
 using TACHYON.Routs;
 using TACHYON.Routs.RoutPoints;
 using TACHYON.Routs.RoutSteps;
@@ -152,7 +153,11 @@ namespace TACHYON.Shipping.ShippingRequests
         public Capacity CapacityFk { get; set; }
 
         #endregion
-        public string PackingType { get; set; }
+        public int PackingTypeId { get; set; }
+
+        [ForeignKey("PackingTypeId")]
+        public PackingType PackingTypeFk { get; set; }
+
         public int NumberOfPacking { get; set; }
 
         public int ShippingTypeId { get; set; }

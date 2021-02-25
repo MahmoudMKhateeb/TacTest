@@ -22,7 +22,7 @@ namespace TACHYON.Shipping.ShippingRequests.Dtos
         public bool StageTowFinish { get; set; }
         public bool StageThreeFinish { get; set; }
         public int GoodCategoryId { get; set; }
-        public string PackingType { get; set; }
+        public int PackingTypeId { get; set; }
         public int NumberOfPacking { get; set; }
         public double TotalWeight { get; set; }
         public int ShippingTypeId { get; set; }
