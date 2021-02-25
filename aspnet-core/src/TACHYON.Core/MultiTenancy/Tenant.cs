@@ -41,7 +41,7 @@ namespace TACHYON.MultiTenancy
         public virtual string LogoFileType { get; set; }
 
         public decimal Balance { get; set; } = 0;
-
+        public decimal ReservedBalance { get; set; } = 0;
         public decimal CreditBalance { get; set; } = 0;
 
 

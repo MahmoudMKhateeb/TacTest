@@ -143,6 +143,7 @@ namespace TACHYON.Invoices.Groups
             {
                 var Invoice = await _GroupPeriodInvoiceRepository.SingleAsync(g => g.GroupId == Group.Id);
                 await _invoiceManager.RemoveInvoiceFromRequest(Invoice.InvoiceId);
+                await _GroupPeriodInvoiceRepository.DeleteAsync(Invoice);
             }
 
         }

@@ -64,6 +64,7 @@ using TACHYON.Invoices;
 using TACHYON.Invoices.Periods;
 using TACHYON.Invoices.Groups;
 using TACHYON.Invoices.Balances;
+using TACHYON.Invoices.Transactions;
 using TACHYON.Routs.RoutPoints;
 using TACHYON.Shipping.ShippingRequestTrips;
 using TACHYON.Shipping.Trips;
@@ -171,7 +172,9 @@ namespace TACHYON.EntityFrameworkCore
         /*Invoice entity*/
         public virtual DbSet<InvoicePeriod> InvoicePeriod { get; set; }
         public virtual DbSet<Invoices.Invoice> Invoice { get; set; }
+        public  DbSet<InvoiceProforma> InvoiceProforma { get; set; }
 
+        
         public virtual DbSet<InvoiceShippingRequests> InvoiceShippingRequests { get; set; }
         public virtual DbSet<GroupPeriod> GroupPeriod { get; set; }
         public virtual DbSet<GroupShippingRequests> GroupShippingRequests { get; set; }
@@ -179,7 +182,10 @@ namespace TACHYON.EntityFrameworkCore
 
         
         public virtual DbSet<BalanceRecharge> BalanceRecharge { get; set; }
-        
+
+        public DbSet<TransactionChannel> TrancactionChannel { get; set; }
+
+        public DbSet<Transaction> Transaction { get; set; }
 
         /* Define an IDbSet for each entity of the application */
 

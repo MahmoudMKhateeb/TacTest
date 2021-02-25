@@ -369,6 +369,7 @@
         public const string Pages_Administration_Host_Invoices_GroupsPeriods_Claim = "Pages.Administration.Host.Invoices.GroupsPeriods.Claim";
         public const string Pages_Administration_Host_Invoices_GroupsPeriods_UnClaim = "Pages.Administration.Host.Invoices.GroupsPeriods.UnClaim";
 
+        public const string Pages_Invoices_Transaction = "Pages.Invoices.Transaction";
 
 
     }

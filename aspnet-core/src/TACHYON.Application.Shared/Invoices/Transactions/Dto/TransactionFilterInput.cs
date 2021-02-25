@@ -1,12 +1,14 @@
 ﻿using Abp.Application.Services.Dto;
+using Abp.Domain.Entities.Auditing;
 using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace TACHYON.Invoices.Balances.Dto
+namespace TACHYON.Invoices.Transactions.Dto
 {
-    public class GetAllBalanceRechargeInput : PagedAndSortedResultRequestDto
+    public class TransactionFilterInput : PagedAndSortedResultRequestDto
     {
+        public ChannelType? channelType { get; set; }
         public int? TenantId { get; set; }
 
         public DateTime? FromDate { get; set; }

@@ -12,7 +12,7 @@ namespace TACHYON.Invoices
 
         Task<InvoiceInfoDto> GetById(EntityDto input);
 
-        Task MakePaid(long InvoiceId);
+        Task<bool> MakePaid(long InvoiceId);
         Task MakeUnPaid(long InvoiceId);
 
         Task Delete(EntityDto Input);

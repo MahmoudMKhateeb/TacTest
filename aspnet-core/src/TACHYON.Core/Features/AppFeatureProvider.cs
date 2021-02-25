@@ -66,16 +66,31 @@ namespace TACHYON.Features
             //---Y
             #region ######## Tachyon features #########
 
+            //var shipperFeature1 = context.Create(
+            //    AppFeatures.Shipper,
+            //    "false",
+            //    L("ShipperFeature"), // todo add localization here
+            //    inputType: new CheckboxInputType()
+            //)[FeatureMetadata.CustomFeatureKey] = new FeatureMetadata
+            //{
+            //    IsVisibleOnPricingTable = true,
+            //    TextHtmlColor = value => value == "true" ? "#c300ff" : "#d9534f"
+            //};
+
+
             var shipperFeature = context.Create(
                 AppFeatures.Shipper,
                 "false",
-                L("ShipperFeature"), // todo add localization here
+                L("ShipperFeature"),
                 inputType: new CheckboxInputType()
-            )[FeatureMetadata.CustomFeatureKey] = new FeatureMetadata
-            {
-                IsVisibleOnPricingTable = true,
-                TextHtmlColor = value => value == "true" ? "#c300ff" : "#d9534f"
-            };
+            );
+
+            shipperFeature.CreateChildFeature(
+                AppFeatures.ShipperCanMakInvoicePaid,
+                "false",
+                L("ShipperCanMakInvoicePaid"),
+                inputType: new CheckboxInputType()
+            );
 
 
             var carrierFeature = context.Create(

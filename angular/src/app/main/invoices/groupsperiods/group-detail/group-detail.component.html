@@ -27,7 +27,7 @@
           <i class="fa fa-file-excel"></i> {{ l('Claim') }}
         </button>
         <button
-          (click)="UnClaim(record)"
+          (click)="UnClaim()"
           *ngIf="Data.isClaim && permission.isGranted('Pages.Administration.Host.Invoices.GroupsPeriods.UnClaim')"
           class="btn btn-light"
         >

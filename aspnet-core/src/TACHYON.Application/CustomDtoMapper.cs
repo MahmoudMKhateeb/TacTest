@@ -178,6 +178,7 @@ using TACHYON.Invoices.Balances.Dto;
 using TACHYON.Invoices.Groups;
 using TACHYON.Invoices.Groups.Dto;
 using System;
+using TACHYON.Invoices.Transactions.Dto;
 
 namespace TACHYON
 {
@@ -529,6 +530,11 @@ namespace TACHYON
                 .ForMember(dto => dto.ClientName, options => options.MapFrom(entity => entity.Tenant.Name))
                 .ForMember(dto => dto.Address, options => options.MapFrom(entity => entity.Tenant.Address))
                 .ForMember(dto => dto.Period, options => options.MapFrom(entity => entity.InvoicePeriod.DisplayName));
+
+
+            configuration.CreateMap<TACHYON.Invoices.Transactions.Transaction, TransactionListDto>()
+                .ForMember(dto => dto.ClientName, options => options.MapFrom(entity => entity.Tenant.Name))
+                .ForMember(dto => dto.Channel, options => options.MapFrom(entity => entity.Channel.Channel));
             
             /* ADD YOUR OWN CUSTOM AUTOMAPPER MAPPINGS HERE */
         }

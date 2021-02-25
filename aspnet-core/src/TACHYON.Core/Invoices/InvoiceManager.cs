@@ -21,6 +21,7 @@ using TACHYON.Features;
 using Abp.Domain.Uow;
 using Microsoft.EntityFrameworkCore;
 using TACHYON.Invoices.Balances;
+using TACHYON.Invoices.Transactions;
 
 namespace TACHYON.Invoices
 {
@@ -31,6 +32,8 @@ namespace TACHYON.Invoices
         private readonly IRepository<ShippingRequest, long> _shippingRequestRepository;
         private readonly IRepository<InvoiceShippingRequests, long> _invoiceShippingRequestsRepository;
         private readonly IRepository<GroupPeriodInvoice, long> _GroupPeriodInvoiceRepository;
+        private readonly IRepository<InvoiceProforma, long> _invoiceProformaRepository;
+
         private readonly IUnitOfWorkManager _unitOfWorkManager;
         private readonly IRepository<Tenant> _Tenant;
         private readonly IEmailSender _emailSender;
@@ -41,13 +44,15 @@ namespace TACHYON.Invoices
         private readonly IRepository<GroupPeriod, long> _GroupRepository;
         private readonly IFeatureChecker _featureChecker;
         private readonly BalanceManager _BalanceManager;
-
+        private readonly TransactionManager _transactionManager;
+       
         private decimal TaxVat;
         #endregion
         public InvoiceManager(
             IRepository<InvoicePeriod> PeriodRepository,
             IRepository<Invoice, long> InvoiceRepository,
             IRepository<GroupPeriodInvoice, long> GroupPeriodInvoiceRepository,
+            IRepository<InvoiceProforma, long> invoiceProformaRepository,
             IQuartzScheduleJobManager JobManager,
             IEmailSender EmailSender,
             IAppNotifier AppNotifier,
@@ -58,7 +63,8 @@ namespace TACHYON.Invoices
             IFeatureChecker featureChecker,
             IRepository<Tenant> tenant,
              BalanceManager BalanceManager,
-             IUnitOfWorkManager unitOfWorkManager)
+             IUnitOfWorkManager unitOfWorkManager,
+             TransactionManager transactionManager)
         {
             _PeriodRepository = PeriodRepository;
             _InvoiceRepository = InvoiceRepository;
@@ -74,6 +80,8 @@ namespace TACHYON.Invoices
             _invoiceShippingRequestsRepository = invoiceShippingRequestsRepository;
             _BalanceManager = BalanceManager;
             _unitOfWorkManager = unitOfWorkManager;
+            _transactionManager = transactionManager;
+            _invoiceProformaRepository = invoiceProformaRepository;
         }
 
        // [UnitOfWork]
@@ -235,6 +243,9 @@ namespace TACHYON.Invoices
 
             if (PeriodType == InvoicePeriodType.PayInAdvance) {
                 Tenant.Balance -= AmountWithTaxVat;
+                Tenant.ReservedBalance -= AmountWithTaxVat;
+                var invoiceProformas =await _invoiceProformaRepository.SingleAsync(i => i.TenantId == Tenant.Id && i.RequestId== Requests[0].Id);
+            if (invoiceProformas !=null)   await _invoiceProformaRepository.DeleteAsync(invoiceProformas);
             }
             else
             {
@@ -280,10 +291,10 @@ namespace TACHYON.Invoices
             Group.Tenant.Balance += Group.AmountWithTaxVat;
 
 
-           await _appNotifier.NewInvoiceShipperGenerated(Invoice);
+          // await _appNotifier.NewInvoiceShipperGenerated(Invoice);
         }
 
-        public async Task GenertateInvoiceOutPeriod(ShippingRequest request)
+        public async Task GenertateInvoiceWhenShipmintDelivery(ShippingRequest request)
         {
             var Tenant = await _Tenant.SingleAsync(t=>t.Id== request.TenantId);
             var PeriodType = (InvoicePeriodType)byte.Parse(_featureChecker.GetValue(request.TenantId, AppFeatures.ShipperPeriods));

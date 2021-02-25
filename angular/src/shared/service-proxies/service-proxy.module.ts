@@ -113,6 +113,7 @@ import { ShippingRequestBidsServiceProxy, ShippingRequestsTripServiceProxy } fro
     ApiServiceProxies.InvoiceServiceProxy,
     ApiServiceProxies.BalanceRechargeServiceProxy,
     ApiServiceProxies.GroupPeriodServiceProxy,
+    ApiServiceProxies.TransactionServiceProxy,
     ApiServiceProxies.ShippingRequestsTripServiceProxy,
     { provide: RefreshTokenService, useClass: ZeroRefreshTokenService },
     { provide: AbpHttpConfigurationService, useClass: ZeroTemplateHttpConfigurationService },

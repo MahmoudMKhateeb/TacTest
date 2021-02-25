@@ -52,6 +52,7 @@ import { InvoiceDetailComponent } from './invoices/invoice-detail/invoice-detail
 import { InvoiceDetailResolverService } from './Invoices/invoice-detail/Invoice-detail-resolver.service';
 import { GroupDetailComponent } from './invoices/groupsperiods/group-detail/group-detail.component';
 import { GroupDetailResolverService } from './invoices/groupsperiods/group-detail/group-detail-resolver.service';
+import { TransactionListComponent } from './invoices/transaction/transaction-list/transaction-list.component';
 
 @NgModule({
   imports: [
@@ -178,6 +179,8 @@ import { GroupDetailResolverService } from './invoices/groupsperiods/group-detai
             },
           },
           { path: 'invoices/periods', component: InvoicePeriodsListComponent, data: { permission: 'Pages.Administration.Host.Invoices.Periods' } },
+          { path: 'invoices/transaction', component: TransactionListComponent, data: { permission: 'Pages.Invoices.Transaction' } },
+
           {
             path: 'invoices/balnacerecharges',
             component: BalancesListComponent,

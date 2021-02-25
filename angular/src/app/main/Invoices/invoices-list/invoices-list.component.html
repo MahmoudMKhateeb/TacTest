@@ -192,13 +192,7 @@
                             >
                           </li>
                           <li *ngIf="!record.isPaid">
-                            <a
-                              class="dropdown-item"
-                              href="javascript:;"
-                              *ngIf="permission.isGranted('Pages.Administration.Host.Invoices.MakePaid')"
-                              (click)="MakePaid(record)"
-                              >{{ l('MakePaid') }}</a
-                            >
+                            <a class="dropdown-item" href="javascript:;" *ngIf="CanMakPaid" (click)="MakePaid(record)">{{ l('MakePaid') }}</a>
                           </li>
                           <li *ngIf="record.isPaid">
                             <a

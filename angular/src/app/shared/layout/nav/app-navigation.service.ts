@@ -127,6 +127,7 @@ export class AppNavigationService {
             '/app/main/invoices/balnacerecharges'
           ),
           new AppMenuItem('GroupPeriods', 'Pages.Invoices.GroupsPeriods', 'flaticon2-document', '/app/main/invoices/groupperiods'),
+          new AppMenuItem('FinancialTransActionMenu', 'Pages.Invoices.Transaction', 'flaticon2-document', '/app/main/invoices/transaction'),
         ]
       ),
       //Host

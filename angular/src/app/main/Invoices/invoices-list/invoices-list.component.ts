@@ -16,7 +16,6 @@ import { AutoCompleteModule } from 'primeng/autocomplete';
 export class InvoicesListComponent extends AppComponentBase implements OnInit {
   @ViewChild('dataTable', { static: true }) dataTable: Table;
   @ViewChild('paginator', { static: true }) paginator: Paginator;
-  //  @ViewChild('InvoiceDetailModelComponent', { static: true }) InvoiceDetailModel: InvoiceDetailModelComponent;
 
   Invoices: InvoiceListDto[] = [];
   IsStartSearch: boolean = false;
@@ -31,12 +30,13 @@ export class InvoicesListComponent extends AppComponentBase implements OnInit {
   toDate: moment.Moment | null | undefined;
   creationDateRange: Date[] = [moment().startOf('day').toDate(), moment().endOf('day').toDate()];
   creationDateRangeActive: boolean = false;
-
+  CanMakPaid: boolean;
   constructor(injector: Injector, private _InvoiceServiceProxy: InvoiceServiceProxy, private _CommonServ: CommonLookupServiceProxy) {
     super(injector);
   }
 
   ngOnInit() {
+    this.CanMakPaid = this.appSession.tenantId ? abp.features.isEnabled('app.Shipper.CanMakeInvoicePaid') : true;
     this._CommonServ.getPeriods().subscribe((result) => {
       this.Periods = result;
     });
@@ -93,9 +93,13 @@ export class InvoicesListComponent extends AppComponentBase implements OnInit {
   MakePaid(invoice: InvoiceListDto): void {
     this.message.confirm('', this.l('AreYouSure'), (isConfirmed) => {
       if (isConfirmed) {
-        this._InvoiceServiceProxy.makePaid(invoice.id).subscribe(() => {
-          this.notify.success(this.l('Successfully'));
-          this.reloadPage();
+        this._InvoiceServiceProxy.makePaid(invoice.id).subscribe((r: boolean) => {
+          if (r) {
+            this.notify.success(this.l('Successfully'));
+            this.reloadPage();
+          } else {
+            this.message.warn(this.l('NoEnoughBalance'));
+          }
         });
       }
     });

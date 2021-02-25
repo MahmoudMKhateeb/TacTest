@@ -13,6 +13,7 @@ using TACHYON.Authorization;
 using TACHYON.Dto;
 using TACHYON.Invoices.Balances.Dto;
 using TACHYON.Invoices.Balances.Exporting;
+using TACHYON.Invoices.Transactions;
 
 namespace TACHYON.Invoices.Balances
 {
@@ -21,12 +22,18 @@ namespace TACHYON.Invoices.Balances
         private readonly IRepository<BalanceRecharge> _Repository;
         private readonly BalanceManager _balanceManager;
         private readonly IBalanceRechargeExcelExporter  _BalanceRechargeExcelExporter;
+        private readonly TransactionManager _transactionManager;
 
-        public BalanceRechargeAppService(IRepository<BalanceRecharge> Repository, BalanceManager balanceManager, IBalanceRechargeExcelExporter BalanceRechargeExcelExporter)
+        public BalanceRechargeAppService(
+            IRepository<BalanceRecharge> Repository,
+            BalanceManager balanceManager,
+            IBalanceRechargeExcelExporter BalanceRechargeExcelExporter,
+            TransactionManager transactionManager)
         {
             _Repository = Repository;
             _balanceManager = balanceManager;
             _BalanceRechargeExcelExporter = BalanceRechargeExcelExporter;
+             _transactionManager= transactionManager;
         }
 
         [AbpAuthorize(AppPermissions.Pages_Administration_Host_Invoices_Balances)]
@@ -56,8 +63,15 @@ namespace TACHYON.Invoices.Balances
         public async Task Create(CreateBalanceRechargeInput input)
         {
             var Recharge = ObjectMapper.Map<BalanceRecharge>(input);
-            await _Repository.InsertAsync(Recharge);
+           var id= await _Repository.InsertAndGetIdAsync(Recharge);
             await _balanceManager.AddBalanceToShipper(Recharge.TenantId, Recharge.Amount);
+            await _transactionManager.Create(new Transaction
+            {
+                Amount = Recharge.Amount,
+                ChannelId = (byte)ChannelType.BalanceRecharge,
+                TenantId = Recharge.TenantId,
+                SourceId = id,
+            });
         }
 
         [AbpAuthorize(AppPermissions.Pages_Administration_Host_Invoices_Balances_Delete)]
@@ -66,7 +80,7 @@ namespace TACHYON.Invoices.Balances
             var Recharge = await _Repository.SingleAsync(b => b.Id == input.Id);
             await _Repository.DeleteAsync(input.Id);
             await _balanceManager.AddBalanceToShipper(Recharge.TenantId, -Recharge.Amount);
-
+            await _transactionManager.Delete(Recharge.Id, ChannelType.BalanceRecharge);
         }
 
         [AbpAuthorize(AppPermissions.Pages_Administration_Host_Invoices_Balances)]

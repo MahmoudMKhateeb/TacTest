@@ -1,4 +1,5 @@
-﻿using Abp.Application.Services.Dto;
+﻿using Abp.Application.Features;
+using Abp.Application.Services.Dto;
 using Abp.Authorization;
 using Abp.Authorization.Users;
 using Abp.Domain.Repositories;
@@ -17,6 +18,8 @@ using TACHYON.Common;
 using TACHYON.Features;
 using TACHYON.Invoices.Balances;
 using TACHYON.Invoices.Dto;
+using TACHYON.Invoices.Periods;
+using TACHYON.Invoices.Transactions;
 
 namespace TACHYON.Invoices
 {
@@ -29,13 +32,15 @@ namespace TACHYON.Invoices
         private readonly IUnitOfWorkManager _UnitOfWorkManager;
         private readonly UserManager _userManager;
         private readonly InvoiceManager _invoiceManager;
+        private readonly TransactionManager _transactionManager;
         public InvoiceAppService(
             IRepository<Invoice, long> InvoiceRepository,
             CommonManager commonManager,
             BalanceManager BalanceManager,
             IUnitOfWorkManager UnitOfWorkManager,
             UserManager userManager,
-            InvoiceManager invoiceManager)
+            InvoiceManager invoiceManager,
+            TransactionManager transactionManager)
         {
             _InvoiceRepository = InvoiceRepository;
             _commonManager = commonManager;
@@ -43,6 +48,7 @@ namespace TACHYON.Invoices
             _UnitOfWorkManager = UnitOfWorkManager;
             _userManager = userManager;
             _invoiceManager = invoiceManager;
+            _transactionManager = transactionManager;
         }
 
 
@@ -89,37 +95,71 @@ namespace TACHYON.Invoices
 
         public async Task Delete(EntityDto Input)
         {
-            //var Invoice = await GetInvoice(Input.Id); 
-            //if (Invoice !=null)
-            //{
-            //    if (Invoice.IsPaid)
-            //    {
-            //        if (_invoiceManager.IsCarrier(Invoice.TenantId))
-            //            await _BalanceManager.AddBalanceToShipper(Invoice.TenantId, -Invoice.AmountWithTaxVat);
-            //        else
-            //            await _BalanceManager.AddBalanceToCarrier(Invoice.TenantId, +Invoice.AmountWithTaxVat);
-            //    }
+            var Invoice = await GetInvoice(Input.Id);
+            if (Invoice != null)
+            {
+                if (Invoice.IsPaid)
+                {
+                    if (!_invoiceManager.IsCarrier(Invoice.TenantId))
+                    {
+                        await _BalanceManager.AddBalanceToShipper(Invoice.TenantId, Invoice.AmountWithTaxVat);
+                        if ((InvoicePeriodType)Invoice.PeriodId !=InvoicePeriodType.PayInAdvance)
+                        {
+                            await _BalanceManager.AddCreditBalanceToShipper(Invoice.TenantId, -Invoice.AmountWithTaxVat);
 
-            //    await _InvoiceRepository.DeleteAsync(Input.Id);
+                        }
+                        await _transactionManager.Delete(Invoice.Id, ChannelType.Invoices);
 
-            //}
+                    }
+                    else
+                        await _BalanceManager.AddBalanceToCarrier(Invoice.TenantId, +Invoice.AmountWithTaxVat);
+                }
 
-            await _invoiceManager.RemoveInvoiceFromRequest(Input.Id);
+                await _InvoiceRepository.DeleteAsync(Input.Id);
+                await _invoiceManager.RemoveInvoiceFromRequest(Input.Id);
+
+            }
 
         }
 
-        [AbpAuthorize(AppPermissions.Pages_Administration_Host_Invoices_MakePaid)]
-        public async Task MakePaid(long invoiceId)
+        public async Task<bool> MakePaid(long invoiceId)
         {
             var Invoice = await GetInvoice(invoiceId);
-            if (Invoice != null && !Invoice.IsPaid) 
+            if (Invoice != null && !Invoice.IsPaid)
             {
-                Invoice.IsPaid = true;
-                if (_invoiceManager.IsCarrier(Invoice.TenantId))
-                    await _BalanceManager.AddBalanceToShipper(Invoice.TenantId, -Invoice.AmountWithTaxVat);
-                else
-                    await _BalanceManager.AddBalanceToCarrier(Invoice.TenantId, +Invoice.AmountWithTaxVat);
+                return await _commonManager.ExecuteMethodIfHostOrTenantUsers(async () =>
+                {
+                    if (!_invoiceManager.IsCarrier(Invoice.TenantId))
+                    {
+
+                        if (await _BalanceManager.CheckShipperCanPaidFromBalance(Invoice.TenantId, Invoice.AmountWithTaxVat))
+                        {
+                            await _BalanceManager.AddBalanceToShipper(Invoice.TenantId, -Invoice.AmountWithTaxVat);
+
+                            if ((InvoicePeriodType)Invoice.PeriodId != InvoicePeriodType.PayInAdvance)
+                            {
+                                await _BalanceManager.AddCreditBalanceToShipper(Invoice.TenantId, Invoice.AmountWithTaxVat);
+                            }
+                        }
+                        else
+                        return false;
+                    }
+                    else
+                    {
+                        await _BalanceManager.AddBalanceToCarrier(Invoice.TenantId, +Invoice.AmountWithTaxVat);
+                    }
+                    await _transactionManager.Create(new Transaction
+                    {
+                        Amount = Invoice.AmountWithTaxVat,
+                        ChannelId = (byte)ChannelType.Invoices,
+                        TenantId = Invoice.TenantId,
+                        SourceId = Invoice.Id,
+                    });
+                    Invoice.IsPaid = true;
+                    return true;
+                }, AppFeatures.ShipperCanMakInvoicePaid);
             }
+            return false;
         }
 
         [AbpAuthorize(AppPermissions.Pages_Administration_Host_Invoices_MakeUnPaid)]
@@ -128,12 +168,22 @@ namespace TACHYON.Invoices
             var Invoice = await GetInvoice(invoiceId);
             if (Invoice != null && Invoice.IsPaid)
             {
-                    Invoice.IsPaid = false;
-                if (_invoiceManager.IsCarrier(Invoice.TenantId))
-                    await _BalanceManager.AddBalanceToShipper(Invoice.TenantId, Invoice.AmountWithTaxVat);
-                else
-                    await _BalanceManager.AddBalanceToCarrier(Invoice.TenantId, -Invoice.AmountWithTaxVat);
 
+                if (!_invoiceManager.IsCarrier(Invoice.TenantId))
+                {
+                    await _BalanceManager.AddBalanceToShipper(Invoice.TenantId, Invoice.AmountWithTaxVat);
+                    if ((InvoicePeriodType)Invoice.PeriodId != InvoicePeriodType.PayInAdvance)
+                    {
+                        await _BalanceManager.AddCreditBalanceToShipper(Invoice.TenantId, -Invoice.AmountWithTaxVat);
+                    }
+                }
+                else
+                {
+                    await _BalanceManager.AddBalanceToCarrier(Invoice.TenantId, -Invoice.AmountWithTaxVat);
+                }
+
+                await _transactionManager.Delete(Invoice.Id, ChannelType.Invoices);
+                Invoice.IsPaid = false;
             }
         }
 

@@ -358,7 +358,6 @@ namespace TACHYON.Authorization
             /*Invoices */
             var Invoices = pages.CreateChildPermission(AppPermissions.Pages_Invoices, L("Invoices"));
             Invoices.CreateChildPermission(AppPermissions.Pages_Administration_Host_Invoices_Delete, L("DeletingInvoice"), multiTenancySides: MultiTenancySides.Host);
-            Invoices.CreateChildPermission(AppPermissions.Pages_Administration_Host_Invoices_MakePaid, L("PaidInvoice"), multiTenancySides: MultiTenancySides.Host);
             Invoices.CreateChildPermission(AppPermissions.Pages_Administration_Host_Invoices_MakeUnPaid, L("UnPaidInvoice"), multiTenancySides: MultiTenancySides.Host);
 
 
@@ -378,6 +377,7 @@ namespace TACHYON.Authorization
             GroupPeriods.CreateChildPermission(AppPermissions.Pages_Administration_Host_Invoices_GroupsPeriods_Delete, L("DeleteGroupPeriods"), multiTenancySides: MultiTenancySides.Host);
             GroupPeriods.CreateChildPermission(AppPermissions.Pages_Administration_Host_Invoices_GroupsPeriods_Claim, L("ClaimGroupPeriods"), multiTenancySides: MultiTenancySides.Host);
             GroupPeriods.CreateChildPermission(AppPermissions.Pages_Administration_Host_Invoices_GroupsPeriods_UnClaim, L("UnClaimGroupPeriods"), multiTenancySides: MultiTenancySides.Host);
+            Invoices.CreateChildPermission(AppPermissions.Pages_Invoices_Transaction, L("Transaction"));
 
 
             #region Shipping Request

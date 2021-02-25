@@ -1798,11 +1798,17 @@
     <text name="UnDemand">Un demand</text>
     <text name="Claim">Claim</text>
     <text name="UnClaim">Un claim</text>
-
+    <text name="Transaction">Transaction</text>
     <text name="ShipperNotfiyWhenCreditLimitGreaterOrEqualXPercentage">
       You have used more than 70% of your credit limit
     </text>
     <text name="EmailSubjectShipperCreditLimit">Credit limit</text>
+    <tex name="NoEnoughBalance">You do not have enough balance</tex>
+    <tex name="FinancialTransActionMenu">TransAction</tex>
+    <text name="Channel">Channel</text>
+    <text name="ChannelType">Channel</text>
+    <text name="Transactions">Transactions</text>
+
     <![CDATA[Tachyon:Invoice End]]>
   </texts>
 </localizationDictionary>

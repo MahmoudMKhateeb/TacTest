@@ -200,6 +200,7 @@ import { GroupPeriodsListComponent } from './invoices/groupsperiods/group-period
 import { InvoiceDetailComponent } from './invoices/invoice-detail/invoice-detail.component';
 import { GroupDetailComponent } from './invoices/groupsperiods/group-detail/group-detail.component';
 import { DemanModelComponent } from './invoices/groupsperiods/model/deman-model.component';
+import { TransactionListComponent } from './invoices/transaction/transaction-list/transaction-list.component';
 import { InvoicePeriodsListComponent } from '@app/main/Invoices/invoice-periods-list/invoice-periods-list.component';
 import { InvoicePeriodsModalComponent } from '@app/main/Invoices/invoice-periods-modal/invoice-periods-modal.component';
 import { InvoicesListComponent } from './Invoices/invoices-list/invoices-list.component';
@@ -454,6 +455,7 @@ NgxBootstrapDatePickerConfigService.registerNgxBootstrapDatePickerLocales();
     GroupPeriodsListComponent,
     InvoiceDetailComponent,
     GroupDetailComponent,
+    TransactionListComponent,
     RouteStepsForCreateShippingRequstComponent,
 
     TripsForViewShippingRequestComponent,
