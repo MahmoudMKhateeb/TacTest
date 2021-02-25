@@ -1,4 +1,6 @@
-﻿using TACHYON.Shipping.ShippingTypes.Dtos;
+﻿using TACHYON.Packing.PackingTypes.Dtos;
+using TACHYON.Packing.PackingTypes;
+using TACHYON.Shipping.ShippingTypes.Dtos;
 using TACHYON.Shipping.ShippingTypes;
 using TACHYON.Nationalities.Dtos;
 using TACHYON.Nationalities;
@@ -146,6 +148,8 @@ namespace TACHYON
     {
         public static void CreateMappings(IMapperConfigurationExpression configuration)
         {
+            configuration.CreateMap<CreateOrEditPackingTypeDto, PackingType>().ReverseMap();
+            configuration.CreateMap<PackingTypeDto, PackingType>().ReverseMap();
             configuration.CreateMap<CreateOrEditShippingTypeDto, ShippingType>().ReverseMap();
             configuration.CreateMap<ShippingTypeDto, ShippingType>().ReverseMap();
             configuration.CreateMap<CreateOrEditNationalityDto, Nationality>().ReverseMap();
@@ -231,7 +235,7 @@ namespace TACHYON
                 .ForMember(dest => dest.GoodsDetails, opt => opt.MapFrom(src => src.GoodsDetailListDto))
                 .ReverseMap();
 
-            configuration.CreateMap<RoutPoint,CreateOrEditRoutPointDto >()
+            configuration.CreateMap<RoutPoint, CreateOrEditRoutPointDto>()
                 .ForPath(dest => dest.Longitude, opt => opt.MapFrom(src => src.FacilityFk.Location.X))
                 .ForPath(dest => dest.Latitude, opt => opt.MapFrom(src => src.FacilityFk.Location.Y))
                 ;

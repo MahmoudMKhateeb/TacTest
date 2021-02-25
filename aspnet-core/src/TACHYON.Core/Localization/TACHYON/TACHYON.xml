@@ -1,6 +1,12 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <localizationDictionary culture="en">
-  <texts>    <text name="ShippingTypes">Shipping types</text>
+  <texts>    <text name="PackingType">Packing type</text>
+    <text name="TACHYON.PackingTypes.PackingType">PackingType</text>
+    <text name="PackingTypesHeaderInfo">Packing types header info</text>
+    <text name="CreateNewPackingType">Create new packing type</text>
+    <text name="EditPackingType">Edit packing type</text>
+    <text name="DeletePackingType">Delete packing type</text>
+    <text name="ShippingTypes">Shipping types</text>
     <text name="ShippingType">Shipping type</text>
     <text name="TACHYON.ShippingTypes.ShippingType">ShippingType</text>
     <text name="ShippingTypesHeaderInfo">Shipping types header info</text>

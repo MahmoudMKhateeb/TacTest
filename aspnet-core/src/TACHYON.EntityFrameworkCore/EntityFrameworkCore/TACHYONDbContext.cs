@@ -1,4 +1,5 @@
-﻿using TACHYON.Shipping.ShippingTypes;
+﻿using TACHYON.Packing.PackingTypes;
+using TACHYON.Shipping.ShippingTypes;
 using TACHYON.Nationalities;
 using TACHYON.Nationalities.NationalitiesTranslation;
 using TACHYON.Trucks.TruckCategories.TransportTypes.TransportTypesTranslations;
@@ -55,6 +56,8 @@ namespace TACHYON.EntityFrameworkCore
 {
     public class TACHYONDbContext : AbpZeroDbContext<Tenant, Role, User, TACHYONDbContext>, IAbpPersistedGrantDbContext
     {
+        public virtual DbSet<PackingType> PackingTypes { get; set; }
+
         public virtual DbSet<ShippingType> ShippingTypes { get; set; }
 
         public virtual DbSet<Nationality> Nationalities { get; set; }
