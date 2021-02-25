@@ -18,7 +18,8 @@ import {
   RoutStepsServiceProxy,
   SelectItemDto,
   ShippingRequestsServiceProxy,
-  ShippingRequestVasListDto,
+  CreateOrEditShippingRequestVasListDto,
+  ShippingRequestVasListOutput,
 } from '@shared/service-proxies/service-proxies';
 import { AppComponentBase } from '@shared/common/app-component-base';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -58,8 +59,8 @@ export class CreateOrEditShippingRequestComponent extends AppComponentBase imple
   allPorts: SelectItemDto[];
   createOrEditRoutStepDtoList: CreateOrEditRoutStepDto[] = [];
   facility: CreateOrEditFacilityDto = new CreateOrEditFacilityDto();
-  allVases: ShippingRequestVasListDto[];
-  selectedVases: ShippingRequestVasListDto[] = [];
+  allVases: ShippingRequestVasListOutput[];
+  selectedVases: CreateOrEditShippingRequestVasListDto[] = [];
   zoom = 5;
 
   isTachyonDeal = false;
@@ -112,6 +113,7 @@ export class CreateOrEditShippingRequestComponent extends AppComponentBase imple
         .pipe(
           finalize(() => {
             this.loadAllDropDownLists();
+            //console.log(this.shippingRequest);
           })
         )
         .subscribe((result) => {
@@ -122,10 +124,10 @@ export class CreateOrEditShippingRequestComponent extends AppComponentBase imple
           this.shippingRequest.createOrEditRouteDto = result.shippingRequest.createOrEditRouteDto;
           // this.createOrEditRoutStepDtoList = result.shippingRequest.createOrEditRoutStepDtoList;
           this.active = true;
-          console.log(this.shippingRequest);
+          //console.log(this.shippingRequest);
         });
     }
-    console.log(this.shippingRequest);
+    //console.log(this.shippingRequest);
   }
 
   save(): void {
@@ -169,6 +171,7 @@ export class CreateOrEditShippingRequestComponent extends AppComponentBase imple
     });
     //Get these DD in Edit Only
     if (this.shippingRequest.id) {
+      console.log('Load DD for Edit');
       this.capacityLoading = true;
       this.truckTypeLoading = true;
       this._shippingRequestsServiceProxy.getAllTruckTypesByTransportTypeIdForDropdown(this.shippingRequest.transportTypeId).subscribe((result) => {
@@ -258,5 +261,32 @@ export class CreateOrEditShippingRequestComponent extends AppComponentBase imple
       this.shippingRequest.capacityId = null;
       this.allCapacities = null;
     }
+  }
+
+  change($event: any) {
+    // if item exist do nothing  ;
+    // if item exist in this and not exist in selected remove it
+    this.selectedVases.forEach((item, index) => {
+      const listItem = $event.value.find((x) => x.id == item.vasId);
+      if (!listItem) {
+        console.log('item existed in selectedVases ', listItem);
+        this.selectedVases.splice(index, 1);
+      }
+    });
+
+    // if item not exist add it
+    $event.value.forEach((e) => {
+      const selectedItem = this.selectedVases.find((x) => x.vasId == e.id);
+      if (!selectedItem) {
+        const singleVas = new CreateOrEditShippingRequestVasListDto();
+        singleVas.vasId = e.id;
+        singleVas.requestMaxAmount = e.hasAmount ? 1 : 0;
+        singleVas.requestMaxCount = e.hasCount ? 1 : 0;
+        this.selectedVases.push(singleVas);
+      }
+    });
+  }
+  vasStatusChecker(vasId: number) {
+    return this.allVases.find((value) => value.id == vasId);
   }
 }

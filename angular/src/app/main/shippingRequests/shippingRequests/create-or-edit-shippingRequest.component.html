@@ -58,7 +58,6 @@
                               [class.is-invalid]="allTrucksTypes && TruckType.touched && !TruckType.valid"
                               [class.is-valid]="allTrucksTypes && TruckType.touched && TruckType.valid"
                               (change)="trucksTypeSelectChange(shippingRequest.trucksTypeId)"
-                              [disabled]="shippingRequest.transportTypeId == null || allTransportTypes == null || allTrucksTypes == null"
                             >
                               <option [ngValue]="null">{{ l('selectaTruckType') }}</option>
                               <option *ngFor="let item of allTrucksTypes" value="{{ item.id }}">{{ item.displayName }}</option>
@@ -83,12 +82,6 @@
                             [(ngModel)]="shippingRequest.capacityId"
                             [class.is-invalid]="allCapacities && Capacity.touched && !Capacity.valid"
                             [class.is-valid]="allCapacities && Capacity.touched && Capacity.valid"
-                            [disabled]="
-                              shippingRequest.trucksTypeId == null ||
-                              shippingRequest.transportTypeId == null ||
-                              allTransportTypes == null ||
-                              allTrucksTypes == null
-                            "
                           >
                             <option [ngValue]="null">{{ l('selectaCapacity') }}</option>
                             <option *ngFor="let item of allCapacities" value="{{ item.id }}">{{ item.displayName }}</option>
@@ -496,11 +489,11 @@
                             name="numberOfDrops"
                             id="numberOfDrops"
                             maxlength="2"
-                            [required]="selectedRouteType == 4"
+                            [required]="selectedRouteType == 3"
                             [(ngModel)]="shippingRequest.numberOfDrops"
-                            [class.is-invalid]="selectedRouteType == 4 && NumberOfDrops.touched && !NumberOfDrops.valid"
-                            [class.is-valid]="selectedRouteType == 4 && NumberOfDrops.touched && NumberOfDrops.valid"
-                            [disabled]="selectedRouteType != 4"
+                            [class.is-invalid]="selectedRouteType == 3 && NumberOfDrops.touched && !NumberOfDrops.valid"
+                            [class.is-valid]="selectedRouteType == 3 && NumberOfDrops.touched && NumberOfDrops.valid"
+                            [disabled]="selectedRouteType != 3"
                           />
                           <span class="form-text text-muted">{{ l('numberOfDrops') }} {{ l('forMiltibleTripsRouteType') }}</span>
                         </div>
@@ -556,7 +549,6 @@
                 <p-listbox
                   name="VasList"
                   [options]="allVases"
-                  [(ngModel)]="selectedVases"
                   [metaKeySelection]="false"
                   [checkbox]="true"
                   [filter]="true"
@@ -564,6 +556,7 @@
                   optionLabel="vasName"
                   [listStyle]="{ 'max-height': '250px' }"
                   [style]="{ width: '100%' }"
+                  (onChange)="change($event)"
                 >
                 </p-listbox>
               </div>
@@ -578,30 +571,30 @@
                   </thead>
                   <tbody>
                     <tr *ngFor="let item of selectedVases; index as i">
-                      <th>
-                        {{ item.vasName }}
-                      </th>
+                      <td>
+                        {{ vasStatusChecker(item.vasId).vasName }}
+                      </td>
                       <td>
                         <input
                           type="text"
-                          [disabled]="!item.hasCount"
+                          [disabled]="item.requestMaxCount == 0"
                           id="Vas-Count{{ i }}"
-                          [(ngModel)]="item.maxCount"
+                          [(ngModel)]="item.requestMaxCount"
                           (keypress)="numberOnly($event)"
                           class="form-control"
-                          name="Count"
+                          name="Vas-Count{{ i }}"
                           required
                         />
                       </td>
                       <td>
                         <input
-                          [disabled]="!item.hasAmount"
+                          [disabled]="item.requestMaxAmount == 0"
                           type="text"
                           id="Vas-Amount{{ i }}"
-                          [(ngModel)]="item.maxAmount"
+                          [(ngModel)]="item.requestMaxAmount"
                           (keypress)="numberOnly($event)"
                           class="form-control"
-                          name="Amount"
+                          name="Vas-Amount{{ i }}"
                           required
                         />
                       </td>
