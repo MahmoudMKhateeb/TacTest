@@ -54,6 +54,7 @@
                               class="form-control"
                               name="truckType"
                               required
+                              [disabled]="shippingRequest.transportTypeId == null || allTransportTypes == null || allTrucksTypes == null"
                               [(ngModel)]="shippingRequest.trucksTypeId"
                               [class.is-invalid]="allTrucksTypes && TruckType.touched && !TruckType.valid"
                               [class.is-valid]="allTrucksTypes && TruckType.touched && TruckType.valid"
@@ -79,6 +80,13 @@
                             class="form-control"
                             name="capacity"
                             required
+                            [disabled]="
+                              capacityLoading ||
+                              shippingRequest.trucksTypeId == null ||
+                              shippingRequest.transportTypeId == null ||
+                              allTransportTypes == null ||
+                              allTrucksTypes == null
+                            "
                             [(ngModel)]="shippingRequest.capacityId"
                             [class.is-invalid]="allCapacities && Capacity.touched && !Capacity.valid"
                             [class.is-valid]="allCapacities && Capacity.touched && Capacity.valid"
@@ -430,7 +438,7 @@
                               class="form-control"
                               type="datetime"
                               name="startdate"
-                              placeholder="Datepicker"
+                              placeholder="Startdate"
                               required
                               bsDatepicker
                               datePickerMomentModifier
@@ -469,7 +477,6 @@
                       </div>
                       <div class="col-lg-3">
                         <label>* {{ l('routeType') }}:</label>
-                        <!--   TODO:// Add DataBining for DD-->
                         <div [ngClass]="{ 'spinner spinner-success spinner-right mr-1 ml-1': !allRoutTypes }">
                           <select
                             #RouteType="ngModel"
@@ -570,7 +577,7 @@
                 </p-listbox>
               </div>
               <div class="col-9">
-                <table class="table">
+                <table *ngIf="allVases" class="table">
                   <thead>
                     <tr class="table-active">
                       <th scope="col">{{ l('name') }}</th>

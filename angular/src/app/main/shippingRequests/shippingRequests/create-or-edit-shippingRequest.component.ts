@@ -84,8 +84,7 @@ export class CreateOrEditShippingRequestComponent extends AppComponentBase imple
   show(shippingRequestId?: number): void {
     if (!shippingRequestId) {
       //this is a create
-      console.log('this is create');
-      this.shippingRequest.id = undefined;
+      this.shippingRequest.id = null;
       this.active = true;
       this.loadAllDropDownLists();
     } else {
@@ -102,6 +101,7 @@ export class CreateOrEditShippingRequestComponent extends AppComponentBase imple
           this.shippingRequest = result.shippingRequest;
           this.shippingRequestType = result.shippingRequest.isBid === true ? 'bidding' : 'tachyondeal';
           this.selectedVases = result.shippingRequest.shippingRequestVasList;
+          console.log(this.selectedVases);
           this.selectedRouteType = result.shippingRequest.createOrEditRouteDto.routTypeId;
           this.shippingRequest.createOrEditRouteDto = result.shippingRequest.createOrEditRouteDto;
           this.active = true;
@@ -111,7 +111,6 @@ export class CreateOrEditShippingRequestComponent extends AppComponentBase imple
 
   save(): void {
     this.saving = true;
-    this.shippingRequest.id = null;
     this.shippingRequest.isBid = this.shippingRequestType === 'bidding' ? true : false;
     this.shippingRequest.isTachyonDeal = this.shippingRequestType === 'tachyondeal' ? true : false;
     this.shippingRequest.createOrEditRouteDto.routTypeId = this.selectedRouteType; //milkrun / oneway ....
@@ -167,11 +166,24 @@ export class CreateOrEditShippingRequestComponent extends AppComponentBase imple
       this.allRoutTypes = result;
     });
 
-    this._shippingRequestsServiceProxy.getAllShippingRequestVasesForTableDropdown().subscribe((result) => {
-      this.allVases = result;
-    });
     this._routStepsServiceProxy.getAllFacilitiesForDropdown().subscribe((result) => {
       this.allFacilities = result;
+    });
+    this.loadallVases();
+  }
+
+  loadallVases() {
+    this._shippingRequestsServiceProxy.getAllShippingRequestVasesForTableDropdown().subscribe((result) => {
+      this.allVases = result;
+      this.allVases.forEach((item) => {
+        this.selectedVasesProperties[item.id] = {
+          vasId: item.id,
+          vasName: item.vasName,
+          vasCountDisabled: item.hasAmount ? false : true,
+          vasAmountDisabled: item.hasCount ? false : true,
+        };
+      });
+      console.log(this.selectedVasesProperties);
     });
   }
 
@@ -230,12 +242,6 @@ export class CreateOrEditShippingRequestComponent extends AppComponentBase imple
       if (!selectedItem) {
         const singleVas = new CreateOrEditShippingRequestVasListDto();
         singleVas.vasId = e.id;
-        this.selectedVasesProperties[e.id] = {
-          vasId: e.id,
-          vasName: e.vasName,
-          vasCountDisabled: e.hasAmount ? false : true,
-          vasAmountDisabled: e.hasCount ? false : true,
-        };
         this.selectedVases.push(singleVas);
       }
     });
