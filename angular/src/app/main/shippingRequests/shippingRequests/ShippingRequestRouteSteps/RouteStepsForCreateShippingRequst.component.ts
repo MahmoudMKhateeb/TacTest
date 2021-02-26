@@ -1,18 +1,15 @@
-import { Component, ViewChild, Injector, Output, EventEmitter, OnChanges, SimpleChanges, NgZone, ElementRef, OnInit, Input } from '@angular/core';
+import { Component, ViewChild, Injector, Output, EventEmitter, NgZone, ElementRef, OnInit, Input } from '@angular/core';
 import { finalize } from 'rxjs/operators';
 import { AppComponentBase } from '@shared/common/app-component-base';
 import { ModalDirective } from 'ngx-bootstrap/modal';
 import {
   CreateOrEditFacilityDto,
-  CreateOrEditGoodsDetailDto,
   CreateOrEditRoutPointDto,
-  CreateOrEditRoutStepDto,
   FacilitiesServiceProxy,
   FacilityForDropdownDto,
   GoodsDetailDto,
   GoodsDetailGoodCategoryLookupTableDto,
   GoodsDetailsServiceProxy,
-  ISelectItemDto,
   RoutesServiceProxy,
   RoutStepCityLookupTableDto,
   RoutStepsServiceProxy,
@@ -20,7 +17,6 @@ import {
   ShippingRequestsServiceProxy,
 } from '@shared/service-proxies/service-proxies';
 import { MapsAPILoader } from '@node_modules/@agm/core';
-import { animate, state, style, transition, trigger } from '@angular/animations';
 import Swal from 'sweetalert2';
 
 @Component({
@@ -32,7 +28,6 @@ export class RouteStepsForCreateShippingRequstComponent extends AppComponentBase
   @ViewChild('createFacilityModal') public createFacilityModal: ModalDirective;
   @ViewChild('createRouteStepModal') public createRouteStepModal: ModalDirective;
   @ViewChild('createOrEditGoodDetail') public createOrEditGoodDetail: ModalDirective;
-
   @ViewChild('search') public searchElementRef: ElementRef;
   @Input() MainGoodsCategory: number;
   @Input() WayPointListFromFatherForShippingRequestEdit: CreateOrEditRoutPointDto[];
@@ -50,7 +45,6 @@ export class RouteStepsForCreateShippingRequstComponent extends AppComponentBase
   allCitys: RoutStepCityLookupTableDto[];
   facilityLoading = false;
   editRouteId: number = undefined;
-  //
   Address: string;
   State: string;
   Postal: string;
@@ -58,24 +52,14 @@ export class RouteStepsForCreateShippingRequstComponent extends AppComponentBase
   Country: string;
   selectedCountryCode = 'SA';
   routeStepIdForEdit: number = undefined;
-
   zoom: Number = 13; //map zoom
   //this dir is for Single Route Step Map Route Draw
-
   lat: Number = 24.717942;
   lng: Number = 46.675761;
-  dir = {
-    point: { lat: undefined, lng: undefined },
-  };
-
-  //wayPoints map
+  dir = { point: { lat: undefined, lng: undefined } };
   wayPoints = [];
   wayPointMapSource = undefined;
   wayPointMapDest = undefined;
-  //end of way points
-
-  SourceGoodDetailValueslist = [];
-  DestGoodDetailValueslist = [];
   allSubGoodCategorys: GoodsDetailGoodCategoryLookupTableDto[];
   allUnitOfMeasure: SelectItemDto[];
   constructor(
@@ -95,18 +79,15 @@ export class RouteStepsForCreateShippingRequstComponent extends AppComponentBase
     this._routStepsServiceProxy.getAllCityForTableDropdown().subscribe((result) => {
       this.allCitys = result;
     });
-
     this._shippingRequestsServiceProxy.getAllUnitOfMeasuresForDropdown().subscribe((result) => {
       this.allUnitOfMeasure = result;
     });
     //check if ShippingRequest is in Edit Mode
     if (this.WayPointListFromFatherForShippingRequestEdit) {
       this.wayPointsList = this.WayPointListFromFatherForShippingRequestEdit;
-      //draw the waypointsForEdit
       this.wayPointsSetter();
     }
     this.refreshFacilities();
-    //this.Tester();
   }
   //to Select PickUp Point
   showPickUpModal() {
@@ -136,10 +117,7 @@ export class RouteStepsForCreateShippingRequstComponent extends AppComponentBase
 
   EditRouteStep(id) {
     //if there is an id for the RouteStep then update the Record Don't Create A new one
-    console.log(`Save Edits Fired ${id}`);
     this.RouteStepCordSetter();
-    // this.routStep.createOrEditSourceRoutPointInputDto.routPointGoodsDetailListDto = this.SourceGoodDetailValueslist;
-    // this.routStep.createOrEditDestinationRoutPointInputDto.routPointGoodsDetailListDto = this.DestGoodDetailValueslist;
     this.wayPointsList[id] = this.singleWayPoint;
     this.createRouteStepModal.hide();
     this.notify.info(this.l('UpdatedSuccessfully'));
@@ -151,15 +129,11 @@ export class RouteStepsForCreateShippingRequstComponent extends AppComponentBase
       //if there is an id open the modal and display the date
       this.routeStepIdForEdit = id;
       this.singleWayPoint = this.wayPointsList[id];
-      // this.SourceGoodDetailValueslist = this.routStep.createOrEditSourceRoutPointInputDto.routPointGoodsDetailListDto;
-      // this.DestGoodDetailValueslist = this.routStep.createOrEditDestinationRoutPointInputDto.routPointGoodsDetailListDto;
       this.createRouteStepModal.show();
       console.log('this is show: ', this.singleWayPoint);
     } else {
       //create new route Step
       this.RouteStepCordSetter();
-      // this.routStep.createOrEditSourceRoutPointInputDto.routPointGoodsDetailListDto = this.SourceGoodDetailValueslist;
-      // this.routStep.createOrEditDestinationRoutPointInputDto.routPointGoodsDetailListDto = this.DestGoodDetailValueslist;
       console.log(this.wayPointsList);
       this.wayPointsList.push(this.singleWayPoint);
       this.createRouteStepModal.hide();
@@ -258,7 +232,6 @@ export class RouteStepsForCreateShippingRequstComponent extends AppComponentBase
         break;
     }
   }
-
   refreshFacilities() {
     this.facilityLoading = true;
     this._routStepsServiceProxy.getAllFacilitiesForDropdown().subscribe((result) => {
@@ -284,17 +257,13 @@ export class RouteStepsForCreateShippingRequstComponent extends AppComponentBase
         this.refreshFacilities();
       });
   }
+  getFacilityNameByid(id: number) {
+    return this.allFacilities?.find((x) => x.id == id)?.displayName;
+  }
 
-  //this function is to update the CORD of the RouteSteps and set the Dir of map Direction
-  //by searching in the allFacilites array for the id of the facility and get the long/Lat of Each one
-  //triggerd when Facility DD is clicked
   RouteStepCordSetter() {
-    //facility Coordinates --> set the Coordinates in create RouteStep
-    //source
     this.singleWayPoint.latitude = this.allFacilities.find((x) => x.id == this.singleWayPoint.facilityId)?.lat;
     this.singleWayPoint.longitude = this.allFacilities.find((x) => x.id == this.singleWayPoint.facilityId)?.long;
-
-    //end of each Facility Cordinates
   }
 
   wayPointsSetter() {
@@ -306,11 +275,8 @@ export class RouteStepsForCreateShippingRequstComponent extends AppComponentBase
       lat: this.wayPointsList[0]?.latitude || undefined,
       lng: this.wayPointsList[0]?.longitude || undefined,
     };
-
     //Take Any Other Points but the First And last one in the List and set them to way points
     for (let i = 1; i < this.wayPointsList.length - 1; i++) {
-      // console.log('this is waypointlist length: ', this.wayPointsList.length);
-      // console.log('this is i ', i);
       this.wayPoints.push({
         location: {
           lat: this.wayPointsList[i].latitude,
@@ -326,14 +292,9 @@ export class RouteStepsForCreateShippingRequstComponent extends AppComponentBase
         lng: this.wayPointsList[this.wayPointsList.length - 1]?.longitude || undefined,
       };
     }
-
-    console.log('this is my source points :', this.wayPointMapSource);
-    console.log('this is my waypoint:', this.wayPoints);
-    console.log('this is my Dest points :', this.wayPointMapDest);
   }
 
   //GootDetails Section
-
   GetAllSubCat(FatherID) {
     //Get All Sub-Good Category
     if (FatherID) {
@@ -352,17 +313,14 @@ export class RouteStepsForCreateShippingRequstComponent extends AppComponentBase
     this.createOrEditGoodDetail.show();
   }
   AddGoodDetail() {
-    console.log(this.goodsDetail);
-    this.singleWayPoint.goodsDetailListDto ? 0 : (this.singleWayPoint.goodsDetailListDto = []);
+    if (!this.singleWayPoint.goodsDetailListDto) {
+      this.singleWayPoint.goodsDetailListDto = [];
+    }
     this.singleWayPoint.goodsDetailListDto.push(this.goodsDetail);
     this.createOrEditGoodDetail.hide();
   }
 
   DeleteGoodDetail(id) {
     this.singleWayPoint.goodsDetailListDto.splice(id, 1);
-  }
-
-  getFacilityNameByid(id: number) {
-    return this.allFacilities?.find((x) => x.id == id)?.displayName;
   }
 }

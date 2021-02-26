@@ -352,58 +352,22 @@
                   ></agm-marker>
                 </agm-map>
               </div>
-              <!-- CreateNewFacilityMap -->
-
-              <!--                        <div class="form-group m-form__group">-->
-              <!--                            <label for="CountyDisplayName">{{ l('County') }}</label>-->
-              <!--                            <select name="facility.countyId" [(ngModel)]="facility.countyId" class="form-control" required>-->
-              <!--                                <option value="">{{ l('SelectACounty') }}</option>-->
-              <!--                                <option *ngFor="let item of allCountries" value="{{ item.id }}">{{ item.displayName }}</option>-->
-              <!--                            </select>-->
-              <!--                        </div>-->
-
-              <!--            <div class="form-group m-form__group col-md-6">-->
-              <!--              <label for="facility.cityId">{{ l('City') }}</label>-->
-              <!--              <select name="facility.cityId" id="facility.cityId" [(ngModel)]="facility.cityId" class="form-control" required>-->
-              <!--                <option value="">{{ l('SelectACity') }}</option>-->
-              <!--                <option *ngFor="let item of allCitys" value="{{ item.id }}">{{ item.displayName }}</option>-->
-              <!--              </select>-->
-              <!--            </div>-->
-
-              <!--            <div class="form-group col-md-6">-->
-              <!--              <label for="Facility_Adress">{{ l('Adress') }} *</label>-->
-              <!--              <input-->
-              <!--                type="text"-->
-              <!--                id="Facility_Adress"-->
-              <!--                class="form-control"-->
-              <!--                [(ngModel)]="facility.adress"-->
-              <!--                name="Adress"-->
-              <!--                minlength="0"-->
-              <!--                maxlength="256"-->
-              <!--                required-->
-              <!--              />-->
-              <!--            </div>-->
-
-              <!--            <div class="form-group col-md-6">-->
-              <!--              <label>{{ l('Address') }}</label>-->
-              <!--              <input type="text" class="form-control"  name="address" />-->
-              <!--            </div>-->
               <div class="form-group col-md-6">
                 <label>{{ l('Address') }}</label>
-                <input type="text" class="form-control" [(ngModel)]="Address" name="Address" />
+                <input type="text" class="form-control" [(ngModel)]="facility.address" name="Address" />
               </div>
               <div class="form-group col-md-6">
                 <label>{{ l('State') }}</label>
-                <input type="text" class="form-control" [(ngModel)]="State" name="State" />
+                <input type="text" class="form-control" name="State" />
               </div>
               <div class="form-group col-md-6">
                 <label>{{ l('City') }}</label>
-                <input type="text" class="form-control" [(ngModel)]="City" name="City" />
+                <input type="text" class="form-control" name="City" />
               </div>
 
               <div class="form-group col-md-6">
                 <label>{{ l('Country') }}</label>
-                <input type="text" class="form-control" [(ngModel)]="Country" name="Country" />
+                <input type="text" class="form-control" name="Country" />
               </div>
               <div class="form-group col-md-6">
                 <label for="Facility_Longitude">{{ l('Longitude') }}</label>
@@ -597,6 +561,5 @@
       </div>
     </div>
   </div>
-
   <!-- End::CreateNewGoodModal   -->
 </div>
