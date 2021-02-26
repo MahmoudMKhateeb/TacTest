@@ -1,4 +1,4 @@
-﻿import { Component, ElementRef, Injector, NgZone, OnInit, TemplateRef, ViewChild } from '@angular/core';
+import { Component, ElementRef, Injector, NgZone, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import { finalize, map } from 'rxjs/operators';
 
 import {
@@ -186,6 +186,10 @@ export class CreateOrEditShippingRequestComponent extends AppComponentBase imple
 
     this._shippingRequestsServiceProxy.getAllShippingTypesForDropdown().subscribe((result) => {
       this.allShippingTypes = result;
+    });
+
+    this._shippingRequestsServiceProxy.getAllPackingTypesForDropdown().subscribe((result) => {
+      this.allpackingTypes = result;
     });
 
     this._routesServiceProxy.getAllRoutTypeForTableDropdown().subscribe((result) => {
