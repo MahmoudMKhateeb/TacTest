@@ -1,9 +1,8 @@
-import { Component, ElementRef, Injector, NgZone, OnInit, TemplateRef, ViewChild } from '@angular/core';
-import { finalize, map } from 'rxjs/operators';
+﻿import { Component, Injector, NgZone, OnInit } from '@angular/core';
+import { finalize } from 'rxjs/operators';
 
 import {
   CarriersForDropDownDto,
-  CreateOrEditFacilityDto,
   CreateOrEditRouteDto,
   CreateOrEditRoutStepDto,
   CreateOrEditShippingRequestDto,
@@ -25,11 +24,7 @@ import { AppComponentBase } from '@shared/common/app-component-base';
 import { ActivatedRoute, Router } from '@angular/router';
 import { appModuleAnimation } from '@shared/animations/routerTransition';
 import { BreadcrumbItem } from '@app/shared/common/sub-header/sub-header.component';
-import { ModalDirective } from '@node_modules/ngx-bootstrap/modal';
 import { MapsAPILoader } from '@node_modules/@agm/core';
-import * as moment from '@node_modules/moment';
-import { CreateOrEditGoodsDetailModalComponent } from '@app/main/goodsDetails/goodsDetails/create-or-edit-goodsDetail-modal.component';
-import { RouteStepsForCreateShippingRequstComponent } from '../shippingRequests/ShippingRequestRouteSteps/RouteStepsForCreateShippingRequst.component';
 
 @Component({
   templateUrl: './create-or-edit-shippingRequest.component.html',
@@ -42,12 +37,6 @@ export class CreateOrEditShippingRequestComponent extends AppComponentBase imple
     new BreadcrumbItem(this.l('Entity_Name_Plural_Here') + '' + this.l('Details')),
   ];
 
-  @ViewChild('search') public searchElementRef: ElementRef;
-  @ViewChild('staticModal') public staticModal: ModalDirective;
-  @ViewChild('createFacilityModal') public createFacilityModal: ModalDirective;
-  @ViewChild('createOrEditGoodsDetailModal') public createOrEditGoodsDetailModal: CreateOrEditGoodsDetailModalComponent;
-  @ViewChild('routeStepsForCreateShippingRequstComponent')
-  public RouteStepsForCreateShippingRequstComponent: RouteStepsForCreateShippingRequstComponent;
   active = false;
   saving = false;
   shippingRequest: CreateOrEditShippingRequestDto = new CreateOrEditShippingRequestDto();
@@ -56,13 +45,9 @@ export class CreateOrEditShippingRequestComponent extends AppComponentBase imple
   allRoutTypes: RouteRoutTypeLookupTableDto[];
   allCitys: RoutStepCityLookupTableDto[];
   allFacilities: FacilityForDropdownDto[];
-  allPorts: SelectItemDto[];
   createOrEditRoutStepDtoList: CreateOrEditRoutStepDto[] = [];
-  facility: CreateOrEditFacilityDto = new CreateOrEditFacilityDto();
   allVases: ShippingRequestVasListOutput[];
   selectedVases: CreateOrEditShippingRequestVasListDto[] = [];
-  zoom = 5;
-
   isTachyonDeal = false;
   isBid = false;
   shippingRequestType: string;
@@ -71,12 +56,10 @@ export class CreateOrEditShippingRequestComponent extends AppComponentBase imple
   allTrucksTypes: SelectItemDto[];
   allCapacities: SelectItemDto[];
   allShippingTypes: SelectItemDto[];
-
   truckTypeLoading: boolean;
   capacityLoading: boolean;
-
+  selectedVasesProperties = [];
   today = new Date();
-
   constructor(
     injector: Injector,
     private _activatedRoute: ActivatedRoute,
@@ -94,7 +77,6 @@ export class CreateOrEditShippingRequestComponent extends AppComponentBase imple
 
   ngOnInit(): void {
     this.shippingRequest.createOrEditRouteDto = new CreateOrEditRouteDto();
-    // this.routStep.createOrEditGoodsDetailDto = new CreateOrEditGoodsDetailDto();
     this.show(this._activatedRoute.snapshot.queryParams['id']);
   }
 
@@ -113,7 +95,6 @@ export class CreateOrEditShippingRequestComponent extends AppComponentBase imple
         .pipe(
           finalize(() => {
             this.loadAllDropDownLists();
-            //console.log(this.shippingRequest);
           })
         )
         .subscribe((result) => {
@@ -122,16 +103,12 @@ export class CreateOrEditShippingRequestComponent extends AppComponentBase imple
           this.selectedVases = result.shippingRequest.shippingRequestVasList;
           this.selectedRouteType = result.shippingRequest.createOrEditRouteDto.routTypeId;
           this.shippingRequest.createOrEditRouteDto = result.shippingRequest.createOrEditRouteDto;
-          // this.createOrEditRoutStepDtoList = result.shippingRequest.createOrEditRoutStepDtoList;
           this.active = true;
-          //console.log(this.shippingRequest);
         });
     }
-    //console.log(this.shippingRequest);
   }
 
   save(): void {
-    //this function fires when Create BTN is Clicked
     this.saving = true;
     this.shippingRequest.id = null;
     this.shippingRequest.isBid = this.shippingRequestType === 'bidding' ? true : false;
@@ -151,12 +128,6 @@ export class CreateOrEditShippingRequestComponent extends AppComponentBase imple
       });
   } //end of create
 
-  refreshFacilities() {
-    this._routStepsServiceProxy.getAllFacilitiesForDropdown().subscribe((result) => {
-      this.allFacilities = result;
-    });
-  }
-
   loadAllDropDownLists(): void {
     this._goodsDetailsServiceProxy.getAllGoodCategoryForTableDropdown(undefined).subscribe((result) => {
       this.allGoodCategorys = result;
@@ -171,7 +142,6 @@ export class CreateOrEditShippingRequestComponent extends AppComponentBase imple
     });
     //Get these DD in Edit Only
     if (this.shippingRequest.id) {
-      console.log('Load DD for Edit');
       this.capacityLoading = true;
       this.truckTypeLoading = true;
       this._shippingRequestsServiceProxy.getAllTruckTypesByTransportTypeIdForDropdown(this.shippingRequest.transportTypeId).subscribe((result) => {
@@ -196,48 +166,20 @@ export class CreateOrEditShippingRequestComponent extends AppComponentBase imple
       this.allRoutTypes = result;
     });
 
-    this.refreshFacilities();
-    this.getAllVasList();
-  }
-
-  createFacility() {
-    this.saving = true;
-    console.log('facility Created');
-    console.log(this.facility);
-    this._facilitiesServiceProxy
-      .createOrEdit(this.facility)
-      .pipe(
-        finalize(() => {
-          this.saving = false;
-        })
-      )
-      .subscribe(() => {
-        this.notify.info(this.l('SavedSuccessfully'));
-        this.createFacilityModal.hide();
-        this.refreshFacilities();
-      });
-  }
-
-  getAllVasList() {
     this._shippingRequestsServiceProxy.getAllShippingRequestVasesForTableDropdown().subscribe((result) => {
       this.allVases = result;
-
-      if (!this.shippingRequest.id) {
-        this.allVases.forEach((element) => {
-          element.maxAmount = 0;
-          element.maxCount = 0;
-        });
-      }
+    });
+    this._routStepsServiceProxy.getAllFacilitiesForDropdown().subscribe((result) => {
+      this.allFacilities = result;
     });
   }
 
-  shippingRequestTypeChanged(): void {
+  resetBiddingDates(): void {
     this.shippingRequest.bidStartDate = undefined;
     this.shippingRequest.bidEndDate = undefined;
   }
 
   // this function is for the first 3 Conditional DD Which is TransportType --> TruckType --> Capacitiy
-
   transportTypeSelectChange(transportTypeId?: number) {
     if (transportTypeId > 0) {
       this.truckTypeLoading = true;
@@ -267,30 +209,34 @@ export class CreateOrEditShippingRequestComponent extends AppComponentBase imple
     }
   }
 
-  change($event: any) {
+  //select a vas and move it to Selected Vases
+  selectVases($event: any) {
+    //if deSelectAll emptyTheSelectedItemsArray
+    if ($event.value.length === 0) {
+      return (this.selectedVases = []);
+    }
     // if item exist do nothing  ;
     // if item exist in this and not exist in selected remove it
     this.selectedVases.forEach((item, index) => {
       const listItem = $event.value.find((x) => x.id == item.vasId);
       if (!listItem) {
-        console.log('item existed in selectedVases ', listItem);
         this.selectedVases.splice(index, 1);
       }
     });
-
     // if item not exist add it
     $event.value.forEach((e) => {
       const selectedItem = this.selectedVases.find((x) => x.vasId == e.id);
       if (!selectedItem) {
         const singleVas = new CreateOrEditShippingRequestVasListDto();
         singleVas.vasId = e.id;
-        singleVas.requestMaxAmount = e.hasAmount ? 1 : 0;
-        singleVas.requestMaxCount = e.hasCount ? 1 : 0;
+        this.selectedVasesProperties[e.id] = {
+          vasId: e.id,
+          vasName: e.vasName,
+          vasCountDisabled: e.hasAmount ? false : true,
+          vasAmountDisabled: e.hasCount ? false : true,
+        };
         this.selectedVases.push(singleVas);
       }
     });
-  }
-  vasStatusChecker(vasId: number) {
-    return this.allVases.find((value) => value.id == vasId);
   }
 }

@@ -122,7 +122,7 @@
                           [class.is-invalid]="SRType.touched && !SRType.valid"
                           [class.is-valid]="SRType.touched && SRType.valid"
                           [(ngModel)]="shippingRequestType"
-                          (change)="shippingRequestTypeChanged()"
+                          (change)="resetBiddingDates()"
                           [disabled]="shippingRequest.id"
                         >
                           <option value="">Select</option>
@@ -559,7 +559,7 @@
                   optionLabel="vasName"
                   [listStyle]="{ 'max-height': '250px' }"
                   [style]="{ width: '100%' }"
-                  (onChange)="change($event)"
+                  (onChange)="selectVases($event)"
                 >
                 </p-listbox>
               </div>
@@ -567,20 +567,20 @@
                 <table class="table">
                   <thead>
                     <tr class="table-active">
-                      <th scope="col">name</th>
-                      <th scope="col">count</th>
-                      <th scope="col">amount</th>
+                      <th scope="col">{{ l('name') }}</th>
+                      <th scope="col">{{ l('count') }}</th>
+                      <th scope="col">{{ l('amount') }}</th>
                     </tr>
                   </thead>
                   <tbody>
                     <tr *ngFor="let item of selectedVases; index as i">
                       <td>
-                        {{ vasStatusChecker(item.vasId).vasName }}
+                        {{ selectedVasesProperties[item.vasId].vasName }}
                       </td>
                       <td>
                         <input
-                          type="text"
-                          [disabled]="item.requestMaxCount == 0"
+                          type="number"
+                          [attr.disabled]="selectedVasesProperties[item.vasId].vasCountDisabled || null"
                           id="Vas-Count{{ i }}"
                           [(ngModel)]="item.requestMaxCount"
                           (keypress)="numberOnly($event)"
@@ -591,8 +591,8 @@
                       </td>
                       <td>
                         <input
-                          [disabled]="item.requestMaxAmount == 0"
-                          type="text"
+                          [attr.disabled]="selectedVasesProperties[item.vasId].vasAmountDisabled || null"
+                          type="number"
                           id="Vas-Amount{{ i }}"
                           [(ngModel)]="item.requestMaxAmount"
                           (keypress)="numberOnly($event)"
@@ -634,233 +634,4 @@
       </form>
     </div>
   </div>
-
-  <createOrEditFacilityModal #createOrEditFacilityModal (modalSave)="refreshFacilities()"></createOrEditFacilityModal>
-  <!--  <div-->
-  <!--    class="modal fade"-->
-  <!--    bsModal-->
-  <!--    #staticModal="bs-modal"-->
-  <!--    [config]="{ backdrop: 'static' }"-->
-  <!--    tabindex="-1"-->
-  <!--    role="dialog"-->
-  <!--    aria-labelledby="dialog-static-name"-->
-  <!--  >-->
-  <!--    <div class="modal-dialog modal-xl">-->
-  <!--      <div class="modal-content">-->
-  <!--        <form *ngIf="active" #routStepForm="ngForm" novalidate (ngSubmit)="addRouteStep()" autocomplete="off">-->
-  <!--          <div class="modal-header">-->
-  <!--            <h4 class="modal-title">-->
-  <!--              &lt;!&ndash;                <span *ngIf="routStep.id">{{l("EditRoutStep")}}</span>&ndash;&gt;-->
-  <!--              &lt;!&ndash;                <span *ngIf="!routStep.id">{{l("CreateNewRoutStep")}}</span>&ndash;&gt;-->
-  <!--              {{ l('CreateNewRoutStep') }}-->
-  <!--            </h4>-->
-  <!--            <button type="button" class="close" (click)="staticModal.hide()" aria-label="Close" [disabled]="saving">-->
-  <!--              <span aria-hidden="true">&times;</span>-->
-  <!--            </button>-->
-  <!--          </div>-->
-  <!--          <div class="modal-body">-->
-  <!--            <div class="row">-->
-  <!--              &lt;!&ndash;            <div class="form-group col-md-6 m-form__group">&ndash;&gt;-->
-  <!--              &lt;!&ndash;              <label for="destinationFacilityName">{{ l('destinationFacilityName') }}</label>&ndash;&gt;-->
-  <!--              &lt;!&ndash;              <div class="row">&ndash;&gt;-->
-  <!--              &lt;!&ndash;                <div class="col-md-8">&ndash;&gt;-->
-  <!--              &lt;!&ndash;                  <select name="routStep.destinationFacilityId" [(ngModel)]="routStep.destinationFacilityId" class="form-control">&ndash;&gt;-->
-  <!--              &lt;!&ndash;                    <option value="">{{ l('SelectAFacility') }}</option>&ndash;&gt;-->
-  <!--              &lt;!&ndash;                    <option *ngFor="let item of allFacilities" value="{{ item.id }}">{{ item.displayName }}</option>&ndash;&gt;-->
-  <!--              &lt;!&ndash;                  </select>&ndash;&gt;-->
-  <!--              &lt;!&ndash;                </div>&ndash;&gt;-->
-  <!--              &lt;!&ndash;                <div class="col-md-4">&ndash;&gt;-->
-  <!--              &lt;!&ndash;                  <button&ndash;&gt;-->
-  <!--              &lt;!&ndash;                    type="button"&ndash;&gt;-->
-  <!--              &lt;!&ndash;                    class="btn btn-save blue"&ndash;&gt;-->
-  <!--              &lt;!&ndash;                    [disabled]="saving"&ndash;&gt;-->
-  <!--              &lt;!&ndash;                    [buttonBusy]="saving"&ndash;&gt;-->
-  <!--              &lt;!&ndash;                    (click)="openCreateFacilityModal()"&ndash;&gt;-->
-  <!--              &lt;!&ndash;                    [busyText]="l('SavingWithThreeDot')"&ndash;&gt;-->
-  <!--              &lt;!&ndash;                  >&ndash;&gt;-->
-  <!--              &lt;!&ndash;                    <i class="fa fa-plus"></i> <span>{{ l('createFacility') }}</span>&ndash;&gt;-->
-  <!--              &lt;!&ndash;                  </button>&ndash;&gt;-->
-  <!--              &lt;!&ndash;                </div>&ndash;&gt;-->
-  <!--              &lt;!&ndash;              </div>&ndash;&gt;-->
-  <!--              &lt;!&ndash;            </div>&ndash;&gt;-->
-
-  <!--              <div class="form-group col-md-12">-->
-  <!--                <agm-map>-->
-  <!--                  <agm-marker></agm-marker>-->
-  <!--                </agm-map>-->
-  <!--              </div>-->
-
-  <!--              &lt;!&ndash;              <div class="form-group col-md-6 m-form__group">&ndash;&gt;-->
-  <!--              &lt;!&ndash;                <label for="TrucksTypeDisplayName">{{ l('TrucksType') }}</label>&ndash;&gt;-->
-  <!--              &lt;!&ndash;                {{ routStep.trucksTypeId }}&ndash;&gt;-->
-  <!--              &lt;!&ndash;                <select [(ngModel)]="routStep.trucksTypeId" class="form-control" name="shippingRequest.trucksTypeId">&ndash;&gt;-->
-  <!--              &lt;!&ndash;                  <option value="">{{ l('SelectATrucksType') }}</option>&ndash;&gt;-->
-  <!--              &lt;!&ndash;                  <option *ngFor="let item of allTrucksTypes" value="{{ item.id }}">{{ item.displayName }}</option>&ndash;&gt;-->
-  <!--              &lt;!&ndash;                </select>&ndash;&gt;-->
-  <!--              &lt;!&ndash;              </div>&ndash;&gt;-->
-
-  <!--              &lt;!&ndash;              <div class="form-group col-md-6 m-form__group">&ndash;&gt;-->
-  <!--              &lt;!&ndash;                <label for="TrailerTypeDisplayName">{{ l('TrailerType') }}</label>&ndash;&gt;-->
-  <!--              &lt;!&ndash;                <select [(ngModel)]="routStep.trailerTypeId" class="form-control" name="shippingRequest.trailerTypeId">&ndash;&gt;-->
-  <!--              &lt;!&ndash;                  <option value="">{{ l('SelectATrailerType') }}</option>&ndash;&gt;-->
-  <!--              &lt;!&ndash;                  <option *ngFor="let item of allTrailerTypes" value="{{ item.id }}">{{ item.displayName }}</option>&ndash;&gt;-->
-  <!--              &lt;!&ndash;                </select>&ndash;&gt;-->
-  <!--              &lt;!&ndash;              </div>&ndash;&gt;-->
-
-  <!--              &lt;!&ndash;            <div class="form-group col-md-6 m-form__group">&ndash;&gt;-->
-  <!--              &lt;!&ndash;              <label for="CityDisplayName">{{ l('City') }}</label>&ndash;&gt;-->
-  <!--              &lt;!&ndash;              <select name="routStep.originCityId" [(ngModel)]="routStep.originCityId" class="form-control">&ndash;&gt;-->
-  <!--              &lt;!&ndash;                <option value="">{{ l('SelectACity') }}</option>&ndash;&gt;-->
-  <!--              &lt;!&ndash;                <option *ngFor="let item of allCitys" value="{{ item.id }}">{{ item.displayName }}</option>&ndash;&gt;-->
-  <!--              &lt;!&ndash;              </select>&ndash;&gt;-->
-  <!--              &lt;!&ndash;            </div>&ndash;&gt;-->
-
-  <!--              &lt;!&ndash;            <div class="form-group col-md-6 m-form__group">&ndash;&gt;-->
-  <!--              &lt;!&ndash;              <label for="CityDisplayName2">{{ l('City') }}</label>&ndash;&gt;-->
-  <!--              &lt;!&ndash;              <select name="routStep.destinationCityId" [(ngModel)]="routStep.destinationCityId" class="form-control">&ndash;&gt;-->
-  <!--              &lt;!&ndash;                <option value="">{{ l('SelectACity') }}</option>&ndash;&gt;-->
-  <!--              &lt;!&ndash;                <option *ngFor="let item of allCitys" value="{{ item.id }}">{{ item.displayName }}</option>&ndash;&gt;-->
-  <!--              &lt;!&ndash;              </select>&ndash;&gt;-->
-  <!--              &lt;!&ndash;            </div>&ndash;&gt;-->
-
-  <!--              <div class="form-group col-md-6">-->
-  <!--                <label for="RoutStep_DisplayName">{{ l('DisplayName') }}</label>-->
-  <!--                <input-->
-  <!--                  type="text"-->
-  <!--                  id="RoutStep_DisplayName"-->
-  <!--                  class="form-control"-->
-  <!--                  [(ngModel)]="routStep.displayName"-->
-  <!--                  name="DisplayName"-->
-  <!--                  minlength="0"-->
-  <!--                  maxlength="256"-->
-  <!--                />-->
-  <!--              </div>-->
-
-  <!--              <div class="form-group col-md-6">-->
-  <!--                <label for="RoutStep_Order">{{ l('Order') }}</label>-->
-  <!--                <input type="number" id="RoutStep_Order" class="form-control" [(ngModel)]="routStep.order" name="Order" min="1" max="50" />-->
-  <!--              </div>-->
-
-  <!--              &lt;!&ndash;            <div class="form-group col-md-6 m-form__group">&ndash;&gt;-->
-  <!--              &lt;!&ndash;              <label for="GoodCategoryDisplayName">{{ l('GoodCategory') }}</label>&ndash;&gt;-->
-  <!--              &lt;!&ndash;              <select&ndash;&gt;-->
-  <!--              &lt;!&ndash;                [(ngModel)]="routStep.createOrEditGoodsDetailDto.goodCategoryId"&ndash;&gt;-->
-  <!--              &lt;!&ndash;                class="form-control"&ndash;&gt;-->
-  <!--              &lt;!&ndash;                name="createOrEditGoodsDetailDto.goodCategoryId"&ndash;&gt;-->
-  <!--              &lt;!&ndash;              >&ndash;&gt;-->
-  <!--              &lt;!&ndash;                <option value="">{{ l('SelectAGoodCategory') }}</option>&ndash;&gt;-->
-  <!--              &lt;!&ndash;                <option *ngFor="let item of allGoodCategorys" value="{{ item.id }}">{{ item.displayName }}</option>&ndash;&gt;-->
-  <!--              &lt;!&ndash;              </select>&ndash;&gt;-->
-  <!--              &lt;!&ndash;            </div>&ndash;&gt;-->
-
-  <!--              &lt;!&ndash;            <div class="form-group col-md-6">&ndash;&gt;-->
-  <!--              &lt;!&ndash;              <label for="GoodsDetail_Name">{{ l('Name') }} *</label>&ndash;&gt;-->
-  <!--              &lt;!&ndash;              <input&ndash;&gt;-->
-  <!--              &lt;!&ndash;                [(ngModel)]="routStep.createOrEditGoodsDetailDto.name"&ndash;&gt;-->
-  <!--              &lt;!&ndash;                class="form-control"&ndash;&gt;-->
-  <!--              &lt;!&ndash;                id="GoodsDetail_Name"&ndash;&gt;-->
-  <!--              &lt;!&ndash;                maxlength="256"&ndash;&gt;-->
-  <!--              &lt;!&ndash;                minlength="0"&ndash;&gt;-->
-  <!--              &lt;!&ndash;                name="createOrEditGoodsDetailDto.Name"&ndash;&gt;-->
-  <!--              &lt;!&ndash;                required&ndash;&gt;-->
-  <!--              &lt;!&ndash;                type="text"&ndash;&gt;-->
-  <!--              &lt;!&ndash;              />&ndash;&gt;-->
-  <!--              &lt;!&ndash;            </div>&ndash;&gt;-->
-
-  <!--              &lt;!&ndash;            <div class="form-group col-md-6">&ndash;&gt;-->
-  <!--              &lt;!&ndash;              <label for="GoodsDetail_Description">{{ l('Description') }}</label>&ndash;&gt;-->
-  <!--              &lt;!&ndash;              <input&ndash;&gt;-->
-  <!--              &lt;!&ndash;                [(ngModel)]="routStep.createOrEditGoodsDetailDto.description"&ndash;&gt;-->
-  <!--              &lt;!&ndash;                class="form-control"&ndash;&gt;-->
-  <!--              &lt;!&ndash;                id="GoodsDetail_Description"&ndash;&gt;-->
-  <!--              &lt;!&ndash;                maxlength="256"&ndash;&gt;-->
-  <!--              &lt;!&ndash;                minlength="0"&ndash;&gt;-->
-  <!--              &lt;!&ndash;                name="createOrEditGoodsDetailDto.Description"&ndash;&gt;-->
-  <!--              &lt;!&ndash;                type="text"&ndash;&gt;-->
-  <!--              &lt;!&ndash;              />&ndash;&gt;-->
-  <!--              &lt;!&ndash;            </div>&ndash;&gt;-->
-
-  <!--              &lt;!&ndash;            <div class="form-group col-md-6">&ndash;&gt;-->
-  <!--              &lt;!&ndash;              <label for="GoodsDetail_Quantity">{{ l('Quantity') }}</label>&ndash;&gt;-->
-  <!--              &lt;!&ndash;              <input&ndash;&gt;-->
-  <!--              &lt;!&ndash;                [(ngModel)]="routStep.createOrEditGoodsDetailDto.quantity"&ndash;&gt;-->
-  <!--              &lt;!&ndash;                class="form-control"&ndash;&gt;-->
-  <!--              &lt;!&ndash;                id="GoodsDetail_Quantity"&ndash;&gt;-->
-  <!--              &lt;!&ndash;                maxlength="128"&ndash;&gt;-->
-  <!--              &lt;!&ndash;                minlength="0"&ndash;&gt;-->
-  <!--              &lt;!&ndash;                name="createOrEditGoodsDetailDto.Quantity"&ndash;&gt;-->
-  <!--              &lt;!&ndash;                type="text"&ndash;&gt;-->
-  <!--              &lt;!&ndash;              />&ndash;&gt;-->
-  <!--              &lt;!&ndash;            </div>&ndash;&gt;-->
-
-  <!--              &lt;!&ndash;            <div class="form-group col-md-6">&ndash;&gt;-->
-  <!--              &lt;!&ndash;              <label for="GoodsDetail_Weight">{{ l('Weight') }}</label>&ndash;&gt;-->
-  <!--              &lt;!&ndash;              <input&ndash;&gt;-->
-  <!--              &lt;!&ndash;                [(ngModel)]="routStep.createOrEditGoodsDetailDto.weight"&ndash;&gt;-->
-  <!--              &lt;!&ndash;                class="form-control"&ndash;&gt;-->
-  <!--              &lt;!&ndash;                id="GoodsDetail_Weight"&ndash;&gt;-->
-  <!--              &lt;!&ndash;                maxlength="64"&ndash;&gt;-->
-  <!--              &lt;!&ndash;                minlength="0"&ndash;&gt;-->
-  <!--              &lt;!&ndash;                name="createOrEditGoodsDetailDto.Weight"&ndash;&gt;-->
-  <!--              &lt;!&ndash;                type="text"&ndash;&gt;-->
-  <!--              &lt;!&ndash;              />&ndash;&gt;-->
-  <!--              &lt;!&ndash;            </div>&ndash;&gt;-->
-
-  <!--              &lt;!&ndash;            <div class="form-group col-md-6">&ndash;&gt;-->
-  <!--              &lt;!&ndash;              <label for="GoodsDetail_Dimentions">{{ l('Dimentions') }}</label>&ndash;&gt;-->
-  <!--              &lt;!&ndash;              <input&ndash;&gt;-->
-  <!--              &lt;!&ndash;                [(ngModel)]="routStep.createOrEditGoodsDetailDto.dimentions"&ndash;&gt;-->
-  <!--              &lt;!&ndash;                class="form-control"&ndash;&gt;-->
-  <!--              &lt;!&ndash;                id="GoodsDetail_Dimentions"&ndash;&gt;-->
-  <!--              &lt;!&ndash;                maxlength="128"&ndash;&gt;-->
-  <!--              &lt;!&ndash;                minlength="0"&ndash;&gt;-->
-  <!--              &lt;!&ndash;                name="createOrEditGoodsDetailDto.Dimentions"&ndash;&gt;-->
-  <!--              &lt;!&ndash;                type="text"&ndash;&gt;-->
-  <!--              &lt;!&ndash;              />&ndash;&gt;-->
-  <!--              &lt;!&ndash;            </div>&ndash;&gt;-->
-
-  <!--              &lt;!&ndash;            <div class="form-group col-md-6">&ndash;&gt;-->
-  <!--              &lt;!&ndash;              <label for="GoodsDetail_DangerousGoodsCode">{{ l('DangerousGoodsCode') }}</label>&ndash;&gt;-->
-  <!--              &lt;!&ndash;              <input&ndash;&gt;-->
-  <!--              &lt;!&ndash;                [(ngModel)]="routStep.createOrEditGoodsDetailDto.dangerousGoodsCode"&ndash;&gt;-->
-  <!--              &lt;!&ndash;                class="form-control"&ndash;&gt;-->
-  <!--              &lt;!&ndash;                id="GoodsDetail_DangerousGoodsCode"&ndash;&gt;-->
-  <!--              &lt;!&ndash;                maxlength="64"&ndash;&gt;-->
-  <!--              &lt;!&ndash;                minlength="0"&ndash;&gt;-->
-  <!--              &lt;!&ndash;                name="createOrEditGoodsDetailDto.DangerousGoodsCode"&ndash;&gt;-->
-  <!--              &lt;!&ndash;                type="text"&ndash;&gt;-->
-  <!--              &lt;!&ndash;              />&ndash;&gt;-->
-  <!--              &lt;!&ndash;            </div>&ndash;&gt;-->
-  <!--              &lt;!&ndash;            <div class="m-checkbox-list col-md-6">&ndash;&gt;-->
-  <!--              &lt;!&ndash;              <label class="kt-checkbox kt-" for="GoodsDetail_IsDangerousGood">&ndash;&gt;-->
-  <!--              &lt;!&ndash;                <input&ndash;&gt;-->
-  <!--              &lt;!&ndash;                  [(ngModel)]="routStep.createOrEditGoodsDetailDto.isDangerousGood"&ndash;&gt;-->
-  <!--              &lt;!&ndash;                  id="GoodsDetail_IsDangerousGood"&ndash;&gt;-->
-  <!--              &lt;!&ndash;                  name="createOrEditGoodsDetailDto.IsDangerousGood"&ndash;&gt;-->
-  <!--              &lt;!&ndash;                  type="checkbox"&ndash;&gt;-->
-  <!--              &lt;!&ndash;                />&ndash;&gt;-->
-  <!--              &lt;!&ndash;                {{ l('IsDangerousGood') }}&ndash;&gt;-->
-  <!--              &lt;!&ndash;                <span></span>&ndash;&gt;-->
-  <!--              &lt;!&ndash;              </label>&ndash;&gt;-->
-  <!--              &lt;!&ndash;            </div>&ndash;&gt;-->
-  <!--            </div>-->
-  <!--          </div>-->
-  <!--          <div class="modal-footer">-->
-  <!--            <button [disabled]="saving" type="button" class="btn btn-default" (click)="staticModal.hide()">{{ l('Cancel') }}</button>-->
-  <!--            <button-->
-  <!--              type="submit"-->
-  <!--              class="btn btn-primary blue"-->
-  <!--              [disabled]="!routStepForm.form.valid"-->
-  <!--              [buttonBusy]="saving"-->
-  <!--              [busyText]="l('SavingWithThreeDot')"-->
-  <!--            >-->
-  <!--              <i class="fa fa-save"></i> <span>{{ l('Save') }}</span>-->
-  <!--            </button>-->
-  <!--          </div>-->
-  <!--        </form>-->
-  <!--      </div>-->
-  <!--    </div>-->
-  <!--  </div>-->
-  <!--<createOrEditFacilityModal #createOrEditFacilityModal (modalSave)="refreshFacilities()"></createOrEditFacilityModal>-->
 </div>
-<!--<VasForCreateShippingRequstModalComponent #VasForCreateShippingRequstModalComponent></VasForCreateShippingRequstModalComponent>-->
