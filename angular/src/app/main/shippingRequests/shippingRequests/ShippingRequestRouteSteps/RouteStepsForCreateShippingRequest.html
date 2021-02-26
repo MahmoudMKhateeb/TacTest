@@ -429,10 +429,14 @@
                       <label>* {{ l('GoodSubCategory') }}:</label>
                       <div [ngClass]="{ 'spinner spinner-success spinner-right mr-1 ml-1': !allSubGoodCategorys }">
                         <select
+                          #subgoodsDetail="ngModel"
                           [(ngModel)]="goodsDetail.goodCategoryId"
                           class="form-control"
                           name="goodsDetail.goodCategoryId"
                           [disabled]="!allSubGoodCategorys"
+                          required
+                          [class.is-invalid]="subgoodsDetail.touched && !subgoodsDetail.valid"
+                          [class.is-valid]="subgoodsDetail.touched && subgoodsDetail.valid"
                         >
                           <option value="">{{ l('SelectAGoodSubCategory') }}</option>
                           <option *ngFor="let item of allSubGoodCategorys" value="{{ item.id }}">{{ item.displayName }}</option>
@@ -445,6 +449,7 @@
                     <div class="form-group">
                       <label for="GoodsDetail_Quantity">{{ l('Amount') }}</label>
                       <input
+                        #GoodsAmount="ngModel"
                         [(ngModel)]="goodsDetail.amount"
                         class="form-control"
                         id="GoodsDetail_Quantity"
@@ -452,6 +457,9 @@
                         minlength="0"
                         name="Quantity"
                         type="text"
+                        required
+                        [class.is-invalid]="GoodsAmount.touched && !GoodsAmount.valid"
+                        [class.is-valid]="GoodsAmount.touched && GoodsAmount.valid"
                       />
                     </div>
                   </div>
@@ -459,6 +467,7 @@
                     <div class="form-group">
                       <label for="GoodsDetail_Weight">{{ l('Weight') }}</label>
                       <input
+                        #GoodsWeight="ngModel"
                         [(ngModel)]="goodsDetail.weight"
                         class="form-control"
                         id="GoodsDetail_Weight"
@@ -466,6 +475,9 @@
                         minlength="0"
                         name="Weight"
                         type="text"
+                        required
+                        [class.is-invalid]="GoodsWeight.touched && !GoodsWeight.valid"
+                        [class.is-valid]="GoodsWeight.touched && GoodsWeight.valid"
                       />
                     </div>
                   </div>
@@ -474,10 +486,14 @@
                       <label>* {{ l('unitOfMeasure') }}:</label>
                       <div [ngClass]="{ 'spinner spinner-success spinner-right mr-1 ml-1': !allUnitOfMeasure }">
                         <select
+                          #GoodsUnitOfMeasure="ngModel"
                           [(ngModel)]="goodsDetail.unitOfMeasureId"
                           class="form-control"
                           name="goodsDetail.unitOfMeasureId"
                           [disabled]="!allUnitOfMeasure"
+                          required
+                          [class.is-invalid]="GoodsUnitOfMeasure.touched && !GoodsUnitOfMeasure.valid"
+                          [class.is-valid]="GoodsUnitOfMeasure.touched && GoodsUnitOfMeasure.valid"
                         >
                           <option value="">{{ l('selectAUnitOfMeasure') }}</option>
                           <option *ngFor="let item of allUnitOfMeasure" value="{{ item.id }}">{{ item.displayName }}</option>
@@ -491,6 +507,7 @@
                     <div class="form-group">
                       <label for="GoodsDetail_Description">{{ l('Description') }}</label>
                       <input
+                        #DescGoods="ngModel"
                         [(ngModel)]="goodsDetail.description"
                         class="form-control"
                         id="GoodsDetail_Description"
@@ -498,6 +515,9 @@
                         minlength="0"
                         name="Description"
                         type="text"
+                        required
+                        [class.is-invalid]="DescGoods.touched && !DescGoods.valid"
+                        [class.is-valid]="DescGoods.touched && DescGoods.valid"
                       />
                     </div>
                   </div>
@@ -505,6 +525,7 @@
                     <div class="form-group">
                       <label for="GoodsDetail_Dimentions">{{ l('Dimentions') }}</label>
                       <input
+                        #DimentionGoods="ngModel"
                         [(ngModel)]="goodsDetail.dimentions"
                         class="form-control"
                         id="GoodsDetail_Dimentions"
@@ -512,6 +533,9 @@
                         minlength="0"
                         name="Dimentions"
                         type="text"
+                        required
+                        [class.is-invalid]="DimentionGoods.touched && !DimentionGoods.valid"
+                        [class.is-valid]="DimentionGoods.touched && DimentionGoods.valid"
                       />
                     </div>
                   </div>
@@ -530,6 +554,7 @@
                     <div class="form-group" [hidden]="!goodsDetail.isDangerousGood">
                       <label for="GoodsDetail_DangerousGoodsCode">{{ l('DangerousGoodsCode') }}</label>
                       <input
+                        #DangerousGoods="ngModel"
                         [(ngModel)]="goodsDetail.dangerousGoodsCode"
                         class="form-control"
                         id="GoodsDetail_DangerousGoodsCode"
@@ -537,6 +562,9 @@
                         minlength="0"
                         name="DangerousGoodsCode"
                         type="text"
+                        required
+                        [class.is-invalid]="DangerousGoods.touched && !DangerousGoods.valid"
+                        [class.is-valid]="DangerousGoods.touched && DangerousGoods.valid"
                       />
                     </div>
                   </div>
