@@ -271,23 +271,29 @@
                         </div>
                         <span class="form-text text-muted">{{ l('totalWeightofGoodsinKG') }}</span>
                       </div>
+
                       <div class="col-lg-6 mt-4">
                         <div class="form-group">
-                          <label>* {{ l('packingType') }}:</label>
-                          <select
-                            #packingType="ngModel"
-                            class="form-control"
-                            name="packingType"
-                            required
-                            [(ngModel)]="shippingRequest.packingTypeId"
-                            [class.is-invalid]="packingType.touched && !packingType.valid"
-                            [class.is-valid]="packingType.touched && packingType.valid"
-                            [disabled]="!allpackingTypes"
+                          <div
+                            [ngClass]="{
+                              'spinner spinner-success spinner-right mr-1 ml-1': !allShippingTypes
+                            }"
                           >
-                            <option [ngValue]="null">{{ l('selectaPackingType') }}</option>
-                            <option *ngFor="let item of allpackingTypes" value="{{ item.id }}">{{ item.displayName }}</option>
-                          </select>
-
+                            <label>* {{ l('packingType') }}:</label>
+                            <select
+                              #packingType="ngModel"
+                              class="form-control"
+                              name="packingType"
+                              required
+                              [(ngModel)]="shippingRequest.packingTypeId"
+                              [class.is-invalid]="packingType.touched && !packingType.valid"
+                              [class.is-valid]="packingType.touched && packingType.valid"
+                              [disabled]="!allpackingTypes"
+                            >
+                              <option [ngValue]="null">{{ l('selectaPackingType') }}</option>
+                              <option *ngFor="let item of allpackingTypes" value="{{ item.id }}">{{ item.displayName }}</option>
+                            </select>
+                          </div>
                           <span class="form-text text-muted">{{ l('enterPackingType') }}</span>
                         </div>
                       </div>

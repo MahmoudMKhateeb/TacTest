@@ -56,6 +56,7 @@ export class CreateOrEditShippingRequestComponent extends AppComponentBase imple
   allTrucksTypes: SelectItemDto[];
   allCapacities: SelectItemDto[];
   allShippingTypes: SelectItemDto[];
+  allpackingTypes: SelectItemDto[];
   truckTypeLoading: boolean;
   capacityLoading: boolean;
   selectedVasesProperties = [];
