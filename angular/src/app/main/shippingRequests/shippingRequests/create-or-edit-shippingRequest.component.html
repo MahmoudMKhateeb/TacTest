@@ -439,7 +439,7 @@
                               type="datetime"
                               name="startdate"
                               placeholder="Startdate"
-                              required
+                              [minDate]="today"
                               bsDatepicker
                               datePickerMomentModifier
                             />
@@ -462,7 +462,7 @@
                               class="form-control"
                               name="endDate"
                               placeholder="{{ l('endDate') }}"
-                              required
+                              [minDate]="today"
                               bsDatepicker
                               datePickerMomentModifier
                             />
@@ -599,7 +599,6 @@
                           (keypress)="numberOnly($event)"
                           class="form-control"
                           name="Vas-Count{{ i }}"
-                          required
                         />
                       </td>
                       <td>
@@ -611,7 +610,6 @@
                           (keypress)="numberOnly($event)"
                           class="form-control"
                           name="Vas-Amount{{ i }}"
-                          required
                         />
                       </td>
                     </tr>
