@@ -134,29 +134,30 @@ namespace TACHYON.Trucks.Importing.Dto
 
         private async Task CreateTruckAsync(ImportTruckDto input)
         {
-            using (var uow = _unitOfWorkManager.Begin())
+
+            var tenantId = CurrentUnitOfWork.GetTenantId();
+
+
+            var truck = _objectMapper.Map<Truck>(input);
+
+            if (tenantId.HasValue)
             {
-                var tenantId = CurrentUnitOfWork.GetTenantId();
-
-
-                var truck = _objectMapper.Map<Truck>(input);
-
-                if (tenantId.HasValue)
-                {
-                    truck.TenantId = tenantId.Value;
-                }
-
-                await _truckRepository.InsertAsync(truck);
-
-                foreach (var importTruckDocumentFileDto in input.ImportTruckDocumentFileDtos)
-                {
-                    importTruckDocumentFileDto.TruckId = truck.Id;
-                    var documentFile = _objectMapper.Map<DocumentFile>(importTruckDocumentFileDto);
-                    documentFile.TenantId = tenantId;
-                    await _documentFileRepository.InsertAsync(documentFile);
-                }
-                uow.Complete();
+                truck.TenantId = tenantId.Value;
             }
+
+
+
+            foreach (var importTruckDocumentFileDto in input.ImportTruckDocumentFileDtos)
+            {
+                importTruckDocumentFileDto.TruckId = truck.Id;
+                var documentFile = _objectMapper.Map<DocumentFile>(importTruckDocumentFileDto);
+                documentFile.TenantId = tenantId;
+                truck.DocumentFiles = new List<DocumentFile>();
+                truck.DocumentFiles.Add(documentFile);
+            }
+
+            await _truckRepository.InsertAsync(truck);
+
 
 
 

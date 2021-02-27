@@ -2,9 +2,11 @@
 using Abp.Domain.Entities;
 using Abp.Domain.Entities.Auditing;
 using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using TACHYON.Authorization.Users;
+using TACHYON.Documents.DocumentFiles;
 //using TACHYON.Authorization.Users;
 using TACHYON.Trucks;
 using TACHYON.Trucks.PlateTypes;
@@ -100,6 +102,9 @@ namespace TACHYON.Trucks
 
         [ForeignKey("PlateTypeId")]
         public PlateType PlateTypeFk { get; set; }
+
+        public virtual ICollection<DocumentFile> DocumentFiles { get; set; }
+
 
     }
 }
