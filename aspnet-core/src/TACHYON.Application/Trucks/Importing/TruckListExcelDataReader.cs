@@ -15,14 +15,18 @@ using TACHYON.Documents.DocumentFiles.Dtos;
 using TACHYON.Documents.DocumentTypes;
 using TACHYON.Trucks.Importing.Dto;
 using TACHYON.Trucks.TruckCategories.TransportTypes;
+using TACHYON.Trucks.TruckCategories.TransportTypes.TransportTypesTranslations;
 using TACHYON.Trucks.TrucksTypes;
+using TACHYON.Trucks.TrucksTypes.TrucksTypesTranslations;
 
 namespace TACHYON.Trucks.Importing
 {
     public class TruckListExcelDataReader : NpoiExcelImporterBase<ImportTruckDto>, ITruckListExcelDataReader
     {
         private readonly IRepository<TransportType> _transportTypeRepository;
+        private readonly IRepository<TransportTypesTranslation> _transportTypesTranslationRepository;
         private readonly IRepository<TrucksType, long> _trucksTypeRepository;
+        private readonly IRepository<TrucksTypesTranslation> _trucksTypesTranslationRepository;
         private readonly IRepository<DocumentType, long> _documentTypeRepository;
         private readonly TachyonExcelDataReaderHelper _tachyonExcelDataReaderHelper;
 
@@ -31,12 +35,14 @@ namespace TACHYON.Trucks.Importing
 
 
 
-        public TruckListExcelDataReader(IRepository<TransportType> transportTypeRepository, IRepository<TrucksType, long> trucksTypeRepository, IRepository<DocumentType, long> documentTypeRepository, TachyonExcelDataReaderHelper tachyonExcelDataReaderHelper)
+        public TruckListExcelDataReader(IRepository<TransportType> transportTypeRepository, IRepository<TrucksType, long> trucksTypeRepository, IRepository<DocumentType, long> documentTypeRepository, TachyonExcelDataReaderHelper tachyonExcelDataReaderHelper, IRepository<TransportTypesTranslation> transportTypesTranslationRepository, IRepository<TrucksTypesTranslation> trucksTypesTranslationRepository)
         {
             _transportTypeRepository = transportTypeRepository;
             _trucksTypeRepository = trucksTypeRepository;
             _documentTypeRepository = documentTypeRepository;
             _tachyonExcelDataReaderHelper = tachyonExcelDataReaderHelper;
+            _transportTypesTranslationRepository = transportTypesTranslationRepository;
+            _trucksTypesTranslationRepository = trucksTypesTranslationRepository;
         }
 
         // #GetTrucksFromExcel
@@ -62,7 +68,7 @@ namespace TACHYON.Trucks.Importing
             DocumentType istimaraDocumentType = new DocumentType();
             try
             {
-                istimaraDocumentType = _documentTypeRepository.GetAll().First(x => x.SpecialConstant.ToLower() == TACHYONConsts.TruckIstimaraDocumentTypeSpecialConstant.ToLower());
+                istimaraDocumentType = _documentTypeRepository.GetAll().First(x => x.SpecialConstant.ToLower() == "TruckIstimara".ToLower());
                 istimaraDocumentFileDto.DocumentTypeId = istimaraDocumentType.Id;
             }
             catch
@@ -76,7 +82,7 @@ namespace TACHYON.Trucks.Importing
             DocumentType insuranceDocumentType = new DocumentType();
             try
             {
-                insuranceDocumentType = _documentTypeRepository.GetAll().First(x => x.SpecialConstant.ToLower() == TACHYONConsts.TruckInsuranceDocumentTypeSpecialConstant.ToLower());
+                insuranceDocumentType = _documentTypeRepository.GetAll().First(x => x.SpecialConstant.ToLower() == "TruckInsurance".ToLower());
                 insuranceDocumentFileDto.DocumentTypeId = insuranceDocumentType.Id;
             }
             catch
@@ -116,7 +122,7 @@ namespace TACHYON.Trucks.Importing
                 istimaraDocumentFileDto.HijriExpirationDate = _tachyonExcelDataReaderHelper.GetValueFromRowOrNull<string>(worksheet, row, 10, "Istimara Expiry  Date (Hijri)*", exceptionMessage);
                 //11
                 istimaraDocumentFileDto.ExpirationDate = _tachyonExcelDataReaderHelper.GetValueFromRowOrNull<DateTime?>(worksheet, row, 11, "Istimara Expiry  Date (Gregorian)*", exceptionMessage);
-                ValidateistimaraDocumentFileDto(exceptionMessage, istimaraDocumentFileDto, istimaraDocumentType);
+                ValidateIstimaraDocumentFileDto(exceptionMessage, istimaraDocumentFileDto, istimaraDocumentType);
 
                 truck.ImportTruckDocumentFileDtos.Add(istimaraDocumentFileDto);
 
@@ -142,10 +148,8 @@ namespace TACHYON.Trucks.Importing
                     truck.Exception = exceptionMessage.ToString();
                 }
 
-                //defaults
-                truck.TruckStatusId = TACHYONConsts.TruckDefualtStatusId;
-                truck.PlateTypeId = TACHYONConsts.TruckDefualtPlateTypeId;
-
+                //default truck status active
+                truck.TruckStatusId = 3;
             }
             catch (Exception exception)
             {
@@ -196,7 +200,7 @@ namespace TACHYON.Trucks.Importing
             }
         }
 
-        private void ValidateistimaraDocumentFileDto(StringBuilder exceptionMessage, ImportTruckDocumentFileDto istimaraDocumentFileDto, DocumentType istimaraDocumentType)
+        private void ValidateIstimaraDocumentFileDto(StringBuilder exceptionMessage, ImportTruckDocumentFileDto istimaraDocumentFileDto, DocumentType istimaraDocumentType)
         {
             if (!istimaraDocumentFileDto.Number.IsNullOrEmpty())
             {
@@ -268,10 +272,18 @@ namespace TACHYON.Trucks.Importing
                 exceptionMessage.Append(_tachyonExcelDataReaderHelper.GetLocalizedExceptionMessagePart("TransportType"));
                 return null;
             }
+            //English
             var transportType = _transportTypeRepository.GetAll().FirstOrDefault(x => x.DisplayName.ToLower() == text.ToLower());
             if (transportType != null)
             {
                 return transportType.Id;
+            }
+
+            //translaterd name
+            var transportTypeTranslation = _transportTypesTranslationRepository.GetAll().FirstOrDefault(x => x.TranslatedDisplayName.ToLower().Trim() == text.ToLower().Trim());
+            if (transportTypeTranslation != null)
+            {
+                return transportTypeTranslation.CoreId;
             }
 
             exceptionMessage.Append(_tachyonExcelDataReaderHelper.GetLocalizedExceptionMessagePart("TransportType"));
@@ -281,26 +293,45 @@ namespace TACHYON.Trucks.Importing
 
         private long? GetTruckTypeId(string text, int? transportTypeId, StringBuilder exceptionMessage)
         {
+            long? id = null;
+            //null check 
             if (text.IsNullOrEmpty())
             {
                 exceptionMessage.Append(_tachyonExcelDataReaderHelper.GetLocalizedExceptionMessagePart("TruckType"));
                 return null;
             }
 
+            // get truckType English 
             var trucksType = _trucksTypeRepository.GetAll().FirstOrDefault(x => x.DisplayName.ToLower() == text.ToLower());
-
-            if (trucksType == null)
+            if (trucksType != null)
             {
+                id = trucksType.Id;
+            }
+            else
+            {
+                //Translated name 
+                var truckTypeTranslation = _trucksTypesTranslationRepository.GetAll().FirstOrDefault(x => x.TranslatedDisplayName.ToLower().Trim() == text.ToLower().Trim());
+                if (truckTypeTranslation != null)
+                {
+                    id = truckTypeTranslation.CoreId;
+                }
+            }
+
+            if (id == null)
+            {
+                exceptionMessage.Append(_tachyonExcelDataReaderHelper.GetLocalizedExceptionMessagePart("TruckType"));
+
                 return null;
             }
 
             if (trucksType.TransportTypeId == transportTypeId)
             {
-                return trucksType.Id;
+                return id;
             }
+
             exceptionMessage.Append("truckType does not belongs to transportType ");
-            exceptionMessage.Append(_tachyonExcelDataReaderHelper.GetLocalizedExceptionMessagePart("TruckType"));
             return null;
+
 
         }
 
