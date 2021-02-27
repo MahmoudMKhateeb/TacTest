@@ -109,8 +109,8 @@ export class CreateOrEditTruckModalComponent extends AppComponentBase {
   }
 
   show(truckId?: number): void {
+    this.truck = new CreateOrEditTruckDto();
     if (!truckId) {
-      this.truck = new CreateOrEditTruckDto();
       //initlaize truck type values
       this.truck.id = truckId;
       this.trucksTypeDisplayName = '';
