@@ -215,7 +215,7 @@ export class CreateOrEditTruckModalComponent extends AppComponentBase {
     this.imageChangedEvent = '';
 
     this.truck = new CreateOrEditTruckDto();
-    this.requiredDocumentFormChildComponent.DocsUploader.clearQueue();
+    this.requiredDocumentFormChildComponent?.DocsUploader?.clearQueue();
 
     this.modal.hide();
   }
