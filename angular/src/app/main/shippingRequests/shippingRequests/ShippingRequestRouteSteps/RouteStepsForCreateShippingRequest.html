@@ -191,66 +191,71 @@
                     </div>
                   </div>
                   <div class="card-body">
-                    <div class="row align-items-center">
-                      <!--<Primeng-Datatable-Start>-->
-                      <div [busyIf]="primengTableHelper.isLoading" class="primeng-datatable-container col-12">
-                        <p-table
-                          ScrollWidth="100%"
-                          [paginator]="false"
-                          [resizableColumns]="primengTableHelper.resizableColumns"
-                          [responsive]="primengTableHelper.isResponsive"
-                          [scrollable]="true"
-                          [value]="singleWayPoint.goodsDetailListDto"
-                          rows="{{ primengTableHelper.defaultRecordsCountPerPage }}"
-                        >
-                          <ng-template pTemplate="header">
-                            <tr>
-                              <th style="width: 130px;">
-                                {{ l('Actions') }}
-                              </th>
-                              <th pSortableColumn="goodCategoryFk.displayName" style="width: 150px;">
-                                {{ l('GoodsName') }}
-                                <p-sortIcon field="goodCategoryDisplayName"></p-sortIcon>
-                              </th>
-                              <th pSortableColumn="goodCategoryFk.displayName" style="width: 150px;">
-                                {{ l('Amount') }}
-                                <p-sortIcon field="goodCategoryDisplayName"></p-sortIcon>
-                              </th>
-                              <th pSortableColumn="goodCategoryFk.displayName" style="width: 150px;">
-                                {{ l('weight') }}
-                                <p-sortIcon field="goodCategoryDisplayName"></p-sortIcon>
-                              </th>
-                            </tr>
-                          </ng-template>
-                          <ng-template let-record="$implicit" pTemplate="body" let-i="rowIndex">
-                            <tr>
-                              <td style="width: 130px;">
-                                <div class="btn-group dropdown">
-                                  <button class="btn font-weight-bold btn-danger btn-icon float-right" (click)="DeleteGoodDetail(i)">
-                                    <i class="la la-trash float-right"></i>
-                                  </button>
-                                </div>
-                              </td>
-                              <td style="width: 150px;">
-                                <span class="ui-column-title"> {{ l('goodCategoryId') }}</span>
-                                {{ record.goodCategoryId }}
-                              </td>
-                              <td style="width: 150px;">
-                                <span class="ui-column-title"> {{ l('totalAmount') }}</span>
-                                {{ record.totalAmount }}
-                              </td>
-                              <td style="width: 150px;">
-                                <span class="ui-column-title"> {{ l('weight') }}</span>
-                                {{ record.weight }}
-                              </td>
-                            </tr>
-                          </ng-template>
-                        </p-table>
-                        <div *ngIf="singleWayPoint?.goodsDetailListDto?.length == 0" class="primeng-no-data">
-                          {{ l('NoData') }}
+                    <div class="row">
+                      <div class="col-lg-6"></div>
+                      <div class="col-lg-12 mt-4">
+                        <div class="row align-items-center">
+                          <!--<Primeng-Datatable-Start>-->
+                          <div [busyIf]="primengTableHelper.isLoading" class="primeng-datatable-container col-12">
+                            <p-table
+                              ScrollWidth="100%"
+                              [paginator]="false"
+                              [resizableColumns]="primengTableHelper.resizableColumns"
+                              [responsive]="primengTableHelper.isResponsive"
+                              [scrollable]="true"
+                              [value]="singleWayPoint.goodsDetailListDto"
+                              rows="{{ primengTableHelper.defaultRecordsCountPerPage }}"
+                            >
+                              <ng-template pTemplate="header">
+                                <tr>
+                                  <th style="width: 130px;">
+                                    {{ l('Actions') }}
+                                  </th>
+                                  <th pSortableColumn="goodCategoryFk.displayName" style="width: 150px;">
+                                    {{ l('GoodsName') }}
+                                    <p-sortIcon field="goodCategoryDisplayName"></p-sortIcon>
+                                  </th>
+                                  <th pSortableColumn="goodCategoryFk.displayName" style="width: 150px;">
+                                    {{ l('Amount') }}
+                                    <p-sortIcon field="goodCategoryDisplayName"></p-sortIcon>
+                                  </th>
+                                  <th pSortableColumn="goodCategoryFk.displayName" style="width: 150px;">
+                                    {{ l('weight') }}
+                                    <p-sortIcon field="goodCategoryDisplayName"></p-sortIcon>
+                                  </th>
+                                </tr>
+                              </ng-template>
+                              <ng-template let-record="$implicit" pTemplate="body" let-i="rowIndex">
+                                <tr>
+                                  <td style="width: 130px;">
+                                    <div class="btn-group dropdown">
+                                      <button class="btn font-weight-bold btn-danger btn-icon float-right" (click)="DeleteGoodDetail(i)">
+                                        <i class="la la-trash float-right"></i>
+                                      </button>
+                                    </div>
+                                  </td>
+                                  <td style="width: 150px;">
+                                    <span class="ui-column-title"> {{ l('goodCategoryId') }}</span>
+                                    {{ getGoodSubDisplayname(record.goodCategoryId) }}
+                                  </td>
+                                  <td style="width: 150px;">
+                                    <span class="ui-column-title"> {{ l('totalAmount') }}</span>
+                                    {{ record.amount }}
+                                  </td>
+                                  <td style="width: 150px;">
+                                    <span class="ui-column-title"> {{ l('weight') }}</span>
+                                    {{ record.weight }}
+                                  </td>
+                                </tr>
+                              </ng-template>
+                            </p-table>
+                            <div *ngIf="singleWayPoint?.goodsDetailListDto?.length == 0" class="primeng-no-data">
+                              {{ l('NoData') }}
+                            </div>
+                          </div>
+                          <!--<Primeng-Datatable-End>-->
                         </div>
                       </div>
-                      <!--<Primeng-Datatable-End>-->
                     </div>
                   </div>
                 </div>
@@ -536,7 +541,14 @@
                   <div class="col-lg-6 mt-10">
                     <div class="form-group checkbox-inline">
                       <label class="checkbox checkbox-danger">
-                        <input [(ngModel)]="goodsDetail.isDangerousGood" id="GoodsDetail_IsDangerousGood" name="IsDangerousGood" type="checkbox" />
+                        <input
+                          #CheckDan="ngModel"
+                          [(ngModel)]="goodsDetail.isDangerousGood"
+                          id="GoodsDetail_IsDangerousGood"
+                          name="IsDangerousGood"
+                          type="checkbox"
+                          [class.is-valid]="CheckDan.touched && CheckDan.valid"
+                        />
                         <span></span>
 
                         {{ l('IsDangerousGood') }}
@@ -556,7 +568,7 @@
                         minlength="0"
                         name="DangerousGoodsCode"
                         type="text"
-                        required
+                        [required]="goodsDetail.isDangerousGood"
                         [class.is-invalid]="DangerousGoods.touched && !DangerousGoods.valid"
                         [class.is-valid]="DangerousGoods.touched && DangerousGoods.valid"
                       />
