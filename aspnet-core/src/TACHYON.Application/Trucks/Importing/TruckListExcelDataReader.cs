@@ -68,7 +68,7 @@ namespace TACHYON.Trucks.Importing
             DocumentType istimaraDocumentType = new DocumentType();
             try
             {
-                istimaraDocumentType = _documentTypeRepository.GetAll().First(x => x.SpecialConstant.ToLower() == "TruckIstimara".ToLower());
+                istimaraDocumentType = _documentTypeRepository.GetAll().First(x => x.SpecialConstant.ToLower() == TACHYONConsts.TruckIstimaraDocumentTypeSpecialConstant.ToLower());
                 istimaraDocumentFileDto.DocumentTypeId = istimaraDocumentType.Id;
             }
             catch
@@ -82,7 +82,7 @@ namespace TACHYON.Trucks.Importing
             DocumentType insuranceDocumentType = new DocumentType();
             try
             {
-                insuranceDocumentType = _documentTypeRepository.GetAll().First(x => x.SpecialConstant.ToLower() == "TruckInsurance".ToLower());
+                insuranceDocumentType = _documentTypeRepository.GetAll().First(x => x.SpecialConstant.ToLower() == TACHYONConsts.TruckInsuranceDocumentTypeSpecialConstant.ToLower());
                 insuranceDocumentFileDto.DocumentTypeId = insuranceDocumentType.Id;
             }
             catch
@@ -148,8 +148,9 @@ namespace TACHYON.Trucks.Importing
                     truck.Exception = exceptionMessage.ToString();
                 }
 
-                //default truck status active
-                truck.TruckStatusId = 3;
+                //defaults
+                truck.TruckStatusId = TACHYONConsts.TruckDefualtStatusId;
+                truck.PlateTypeId = TACHYONConsts.TruckDefualtPlateTypeId;
             }
             catch (Exception exception)
             {
@@ -293,7 +294,6 @@ namespace TACHYON.Trucks.Importing
 
         private long? GetTruckTypeId(string text, int? transportTypeId, StringBuilder exceptionMessage)
         {
-            long? id = null;
             //null check 
             if (text.IsNullOrEmpty())
             {
@@ -302,22 +302,20 @@ namespace TACHYON.Trucks.Importing
             }
 
             // get truckType English 
-            var trucksType = _trucksTypeRepository.GetAll().FirstOrDefault(x => x.DisplayName.ToLower() == text.ToLower());
-            if (trucksType != null)
-            {
-                id = trucksType.Id;
-            }
-            else
+            TrucksType trucksType = _trucksTypeRepository.GetAll().FirstOrDefault(x => x.DisplayName.ToLower() == text.ToLower());
+            if (trucksType == null)
             {
                 //Translated name 
-                var truckTypeTranslation = _trucksTypesTranslationRepository.GetAll().FirstOrDefault(x => x.TranslatedDisplayName.ToLower().Trim() == text.ToLower().Trim());
+                var truckTypeTranslation = _trucksTypesTranslationRepository.GetAllIncluding(x => x.Core)
+                    .FirstOrDefault(x => x.TranslatedDisplayName.ToLower().Trim() == text.ToLower().Trim());
                 if (truckTypeTranslation != null)
                 {
-                    id = truckTypeTranslation.CoreId;
+                    trucksType = truckTypeTranslation.Core;
                 }
             }
 
-            if (id == null)
+
+            if (trucksType == null)
             {
                 exceptionMessage.Append(_tachyonExcelDataReaderHelper.GetLocalizedExceptionMessagePart("TruckType"));
 
@@ -326,7 +324,7 @@ namespace TACHYON.Trucks.Importing
 
             if (trucksType.TransportTypeId == transportTypeId)
             {
-                return id;
+                return trucksType.Id;
             }
 
             exceptionMessage.Append("truckType does not belongs to transportType ");
