@@ -475,8 +475,6 @@
                         minlength="0"
                         name="Weight"
                         type="text"
-                        required
-                        [class.is-invalid]="GoodsWeight.touched && !GoodsWeight.valid"
                         [class.is-valid]="GoodsWeight.touched && GoodsWeight.valid"
                       />
                     </div>
@@ -491,8 +489,6 @@
                           class="form-control"
                           name="goodsDetail.unitOfMeasureId"
                           [disabled]="!allUnitOfMeasure"
-                          required
-                          [class.is-invalid]="GoodsUnitOfMeasure.touched && !GoodsUnitOfMeasure.valid"
                           [class.is-valid]="GoodsUnitOfMeasure.touched && GoodsUnitOfMeasure.valid"
                         >
                           <option value="">{{ l('selectAUnitOfMeasure') }}</option>
@@ -533,8 +529,6 @@
                         minlength="0"
                         name="Dimentions"
                         type="text"
-                        required
-                        [class.is-invalid]="DimentionGoods.touched && !DimentionGoods.valid"
                         [class.is-valid]="DimentionGoods.touched && DimentionGoods.valid"
                       />
                     </div>
