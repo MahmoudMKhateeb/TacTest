@@ -1,4 +1,4 @@
-import { Component, ViewChild, Injector, Output, EventEmitter, NgZone, ElementRef, OnInit, Input } from '@angular/core';
+import { Component, ViewChild, Injector, Output, EventEmitter, NgZone, ElementRef, OnInit, Input, OnChanges, SimpleChanges } from '@angular/core';
 import { finalize } from 'rxjs/operators';
 import { AppComponentBase } from '@shared/common/app-component-base';
 import { ModalDirective } from 'ngx-bootstrap/modal';
@@ -24,12 +24,27 @@ import Swal from 'sweetalert2';
   templateUrl: './RouteStepsForCreateShippingRequest.html',
   styleUrls: ['./RouteStepsForCreateShippingRequest.scss'],
 })
-export class RouteStepsForCreateShippingRequstComponent extends AppComponentBase implements OnInit {
+export class RouteStepsForCreateShippingRequstComponent extends AppComponentBase implements OnInit, OnChanges {
+  constructor(
+    injector: Injector,
+    private _goodsDetailsServiceProxy: GoodsDetailsServiceProxy,
+    private _routesServiceProxy: RoutesServiceProxy,
+    private _facilitiesServiceProxy: FacilitiesServiceProxy,
+    private mapsAPILoader: MapsAPILoader,
+    private ngZone: NgZone,
+    private _routStepsServiceProxy: RoutStepsServiceProxy,
+    private _shippingRequestsServiceProxy: ShippingRequestsServiceProxy
+  ) {
+    super(injector);
+  }
   @ViewChild('createFacilityModal') public createFacilityModal: ModalDirective;
   @ViewChild('createRouteStepModal') public createRouteStepModal: ModalDirective;
   @ViewChild('createOrEditGoodDetail') public createOrEditGoodDetail: ModalDirective;
   @ViewChild('search') public searchElementRef: ElementRef;
   @Input() MainGoodsCategory: number;
+  @Input() RouteType: number;
+  @Input() NumberOfDrops: number;
+
   @Input() WayPointListFromFatherForShippingRequestEdit: CreateOrEditRoutPointDto[];
   @Output() SelectedWayPointsFromChild: EventEmitter<CreateOrEditRoutPointDto[]> = new EventEmitter<CreateOrEditRoutPointDto[]>();
   wayPointsList: CreateOrEditRoutPointDto[] = this.WayPointListFromFatherForShippingRequestEdit || [];
@@ -62,18 +77,24 @@ export class RouteStepsForCreateShippingRequstComponent extends AppComponentBase
   wayPointMapDest = undefined;
   allSubGoodCategorys: GoodsDetailGoodCategoryLookupTableDto[];
   allUnitOfMeasure: SelectItemDto[];
-  constructor(
-    injector: Injector,
-    private _goodsDetailsServiceProxy: GoodsDetailsServiceProxy,
-    private _routesServiceProxy: RoutesServiceProxy,
-    private _facilitiesServiceProxy: FacilitiesServiceProxy,
-    private mapsAPILoader: MapsAPILoader,
-    private ngZone: NgZone,
-    private _routStepsServiceProxy: RoutStepsServiceProxy,
-    private _shippingRequestsServiceProxy: ShippingRequestsServiceProxy
-  ) {
-    super(injector);
-  }
+  wayPointValidationSets = {
+    singlePoint: {
+      allowedPoints: 2,
+      numberOfPickUps: 1,
+      numberOfDrops: 1,
+    },
+    twoWay: {
+      allowedPoints: 4,
+      numberOfPickUps: 1,
+      numberOfDrops: 3,
+    },
+    multiDrops: {
+      allowedPoints: this.NumberOfDrops + 1 || 20,
+      numberOfPickUps: 1,
+      numberOfDrops: this.NumberOfDrops || 15,
+    },
+  };
+  activeValidator = this.wayPointValidationSets.singlePoint;
 
   ngOnInit() {
     this._routStepsServiceProxy.getAllCityForTableDropdown().subscribe((result) => {
@@ -89,10 +110,30 @@ export class RouteStepsForCreateShippingRequstComponent extends AppComponentBase
     }
     this.refreshFacilities();
   }
+  ngOnChanges(changes: SimpleChanges) {
+    //if RouteType Was MultipleDrops/twoWays And Changed To SomeThing Else i want to keep the First 2 Point of the wayPoints
+    const Route = changes.RouteType;
+    if (Route?.currentValue !== Route?.previousValue) {
+      this.wayPointsList.length = 0;
+    }
+    //in case of single Drop allow only 2 points
+    if (this.RouteType == 1) {
+      this.activeValidator = this.wayPointValidationSets.singlePoint;
+    } else if (this.RouteType == 2) {
+      this.activeValidator = this.wayPointValidationSets.twoWay;
+    } else if (this.RouteType == 3) {
+      this.activeValidator = this.wayPointValidationSets.multiDrops;
+    }
+    console.log('Changes Happend');
+    this.EmitToFather();
+  }
   //to Select PickUp Point
   showPickUpModal() {
     if (!this.MainGoodsCategory) {
-      return Swal.fire(this.l('ERROR'), this.l('pleaseSelectMainGoodCategoryFirst'), 'info');
+      return Swal.fire(this.l('Warning'), this.l('pleaseSelectMainGoodCategoryFirst'), 'warning');
+    }
+    if (!this.RouteType) {
+      return Swal.fire(this.l('Warning'), this.l('pleaseSelectaRouteTypeFirst'), 'warning');
     }
     this.singleWayPoint = new CreateOrEditRoutPointDto();
     this.singleWayPoint.pickingTypeId = 1;
@@ -126,7 +167,7 @@ export class RouteStepsForCreateShippingRequstComponent extends AppComponentBase
   AddRouteStep(id?: number) {
     if (id !== undefined) {
       //view
-      //if there is an id open the modal and display the date
+      //if there is an id open the modal and display the data
       this.routeStepIdForEdit = id;
       this.singleWayPoint = this.wayPointsList[id];
       this.createRouteStepModal.show();
@@ -134,25 +175,33 @@ export class RouteStepsForCreateShippingRequstComponent extends AppComponentBase
     } else {
       //create new route Step
       this.RouteStepCordSetter();
-      console.log(this.wayPointsList);
-      this.wayPointsList.push(this.singleWayPoint);
-      this.createRouteStepModal.hide();
-      this.notify.info(this.l('SuccessfullyAdded'));
-
-      this.EmitToFather();
+      //console.log(this.wayPointsList);
+      if (this.validateAddRoutePoint()) {
+        this.wayPointsList.push(this.singleWayPoint);
+        this.createRouteStepModal.hide();
+        this.notify.info(this.l('SuccessfullyAdded'));
+        this.EmitToFather();
+      } else {
+        this.createRouteStepModal.hide();
+        Swal.fire(this.l('Warning'), this.l('wayPointsLimitReched'), 'warning');
+      }
     }
+  }
+  validateAddRoutePoint() {
+    return this.wayPointsList.length === this.activeValidator.allowedPoints ? false : true;
   }
   delete(index: number) {
     this.wayPointsList.splice(index, 1);
     this.notify.info(this.l('SuccessfullyDeleted'));
     this.EmitToFather();
   }
+
   EmitToFather() {
     this.routeStepIdForEdit = undefined;
     this.SelectedWayPointsFromChild.emit(this.wayPointsList);
     this.wayPointsSetter();
     this.singleWayPoint = new CreateOrEditRoutPointDto();
-    this.createFacilityModal.hide();
+    this.createFacilityModal?.hide();
   }
   loadMapApi() {
     this.mapsAPILoader.load().then(() => {
@@ -260,12 +309,10 @@ export class RouteStepsForCreateShippingRequstComponent extends AppComponentBase
   getFacilityNameByid(id: number) {
     return this.allFacilities?.find((x) => x.id == id)?.displayName;
   }
-
   RouteStepCordSetter() {
     this.singleWayPoint.latitude = this.allFacilities.find((x) => x.id == this.singleWayPoint.facilityId)?.lat;
     this.singleWayPoint.longitude = this.allFacilities.find((x) => x.id == this.singleWayPoint.facilityId)?.long;
   }
-
   wayPointsSetter() {
     this.wayPointMapSource = undefined;
     this.wayPoints = [];
@@ -293,8 +340,8 @@ export class RouteStepsForCreateShippingRequstComponent extends AppComponentBase
       };
     }
   }
-
   //GootDetails Section
+
   GetAllSubCat(FatherID) {
     //Get All Sub-Good Category
     if (FatherID) {
@@ -304,6 +351,7 @@ export class RouteStepsForCreateShippingRequstComponent extends AppComponentBase
       });
     }
   }
+
   getGoodSubDisplayname(id) {
     return this.allSubGoodCategorys ? this.allSubGoodCategorys.find((x) => x.id == id)?.displayName : 0;
   }

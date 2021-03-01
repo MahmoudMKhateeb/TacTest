@@ -537,10 +537,10 @@
                 </div>
               </div>
               <!--  Start::RouteSteps     -->
-              <!--                [GoodsCategoryList]="shippingRequest.goodsDetailS"-->
-              <!--                (SelectedRouteStepsFromChild)="shippingRequest.createOrEditRoutStepDtoList = $event"-->
               <RouteStepsForCreateShippingRequest
                 [MainGoodsCategory]="shippingRequest.goodCategoryId"
+                [RouteType]="shippingRequest.createOrEditRouteDto.routTypeId || this.selectedRouteType"
+                [NumberOfDrops]="shippingRequest.numberOfDrops"
                 (SelectedWayPointsFromChild)="shippingRequest.createOrEditRoutPointDtoList = $event"
                 [WayPointListFromFatherForShippingRequestEdit]="shippingRequest.createOrEditRoutPointDtoList"
               ></RouteStepsForCreateShippingRequest>
@@ -549,7 +549,6 @@
             </div>
           </div>
           <!--  end of card::body-->
-
           <!--  start of card::form-->
         </div>
         <div class="card card-custom gutter-b">
@@ -593,7 +592,7 @@
                       <td>
                         <input
                           type="number"
-                          [attr.disabled]="selectedVasesProperties[item.vasId].vasCountDisabled || null"
+                          [attr.disabled]="!selectedVasesProperties[item.vasId].vasCountDisabled || null"
                           id="Vas-Count{{ i }}"
                           [(ngModel)]="item.requestMaxCount"
                           (keypress)="numberOnly($event)"
@@ -603,7 +602,7 @@
                       </td>
                       <td>
                         <input
-                          [attr.disabled]="selectedVasesProperties[item.vasId].vasAmountDisabled || null"
+                          [attr.disabled]="!selectedVasesProperties[item.vasId].vasAmountDisabled || null"
                           type="number"
                           id="Vas-Amount{{ i }}"
                           [(ngModel)]="item.requestMaxAmount"

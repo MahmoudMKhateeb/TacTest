@@ -19,6 +19,7 @@ import {
   ShippingRequestsServiceProxy,
   CreateOrEditShippingRequestVasListDto,
   ShippingRequestVasListOutput,
+  CreateOrEditRoutPointDto,
 } from '@shared/service-proxies/service-proxies';
 import { AppComponentBase } from '@shared/common/app-component-base';
 import { ActivatedRoute, Router } from '@angular/router';
