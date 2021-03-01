@@ -187,12 +187,12 @@
                       </div>
                       <!--       Start Of Shipping Type                 -->
                       <div class="col-lg-6">
+                        <label>* {{ l('shippingType') }}:</label>
                         <div
                           [ngClass]="{
                             'spinner spinner-success spinner-right mr-1 ml-1': !allShippingTypes
                           }"
                         >
-                          <label>* {{ l('shippingType') }}:</label>
                           <select
                             #shippingType="ngModel"
                             class="form-control"
@@ -284,7 +284,7 @@
                         <div class="form-group">
                           <div
                             [ngClass]="{
-                              'spinner spinner-success spinner-right mr-1 ml-1': !allShippingTypes
+                              'spinner spinner-success spinner-right mr-1 ml-1': !allpackingTypes
                             }"
                           >
                             <label>* {{ l('packingType') }}:</label>
