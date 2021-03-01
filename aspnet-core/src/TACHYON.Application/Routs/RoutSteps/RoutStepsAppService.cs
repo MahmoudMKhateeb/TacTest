@@ -262,8 +262,8 @@ namespace TACHYON.Routs.RoutSteps
             if (tenantId != null)
             {
                 routStep.TenantId = (int)tenantId;
-                routStep.SourceRoutPointFk.TenantId = (int)tenantId;
-                routStep.DestinationRoutPointFk.TenantId = (int)tenantId;
+            //    routStep.SourceRoutPointFk.TenantId = (int)tenantId;
+            //    routStep.DestinationRoutPointFk.TenantId = (int)tenantId;
             }
 
             await _routStepRepository.InsertAsync(routStep);

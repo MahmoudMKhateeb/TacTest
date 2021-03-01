@@ -13,13 +13,13 @@ using TACHYON.Shipping.ShippingRequests;
 namespace TACHYON.Routs.RoutPoints
 {
     [Table("RoutPoints")]
-    public class RoutPoint: FullAuditedEntity<long>, IMustHaveTenant
+    public class RoutPoint: FullAuditedEntity<long>
     {
         public string DisplayName { get; set; }
-        public int TenantId { get; set; }
+        //public int TenantId { get; set; }
 
-        [ForeignKey("TenantId")]
-        public Tenant TenantFk { get; set; }
+        //[ForeignKey("TenantId")]
+        //public Tenant TenantFk { get; set; }
 
         /// <summary>
         /// pickup or droppoff or null

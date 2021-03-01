@@ -200,7 +200,7 @@ namespace TACHYON
             //    .ReverseMap();
             configuration.CreateMap<CreateOrEditShippingRequestDto, ShippingRequest>()
                 .ForMember(dst => dst.RouteFk, opt => opt.MapFrom(src => src.CreateOrEditRouteDto))
-                .ForMember(dst => dst.RoutPoints, opt => opt.MapFrom(src => src.CreateOrEditRoutPointDtoList))
+              //.ForMember(dst => dst.RoutPoints, opt => opt.MapFrom(src => src.CreateOrEditRoutPointDtoList))
                 .ForMember(dst => dst.ShippingRequestVases, opt => opt.MapFrom(src => src.ShippingRequestVasList))
                 .ReverseMap();
 
@@ -232,18 +232,13 @@ namespace TACHYON
                 //.ForMember(dest => dest.FacilityFk, opt => opt.MapFrom(src => src.FacilityDto))
                 .ReverseMap();
             configuration.CreateMap<CreateOrEditRoutPointDto, RoutPoint>()
-                .ForMember(dest => dest.GoodsDetails, opt => opt.MapFrom(src => src.GoodsDetailListDto))
+                //.ForMember(dest => dest.GoodsDetails, opt => opt.MapFrom(src => src.GoodsDetailListDto))
                 .ReverseMap();
 
             configuration.CreateMap<RoutPoint, CreateOrEditRoutPointDto>()
                 .ForPath(dest => dest.Longitude, opt => opt.MapFrom(src => src.FacilityFk.Location.X))
-                .ForPath(dest => dest.Latitude, opt => opt.MapFrom(src => src.FacilityFk.Location.Y))
-                ;
-            //configuration.CreateMap<CreateOrEditRoutPointInput, RoutPoint>()
-            //    .ForPath(dest => dest.FacilityFk.Location.X, opt => opt.MapFrom(src => src.Longitude))
-            //    .ForPath(dest => dest.FacilityFk.Location.Y, opt => opt.MapFrom(src => src.Latitude))
-            //    .ForMember(dest => dest.GoodsDetails, opt => opt.MapFrom(src => src.GoodsDetailListDto))
-            //    .ReverseMap();
+                .ForPath(dest => dest.Latitude, opt => opt.MapFrom(src => src.FacilityFk.Location.Y));
+          
             configuration.CreateMap<CreateOrEditRouteDto, Route>().ReverseMap();
             configuration.CreateMap<RouteDto, Route>().ReverseMap();
             configuration.CreateMap<CreateOrEditCityDto, City>().ReverseMap();

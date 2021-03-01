@@ -11,9 +11,9 @@ using TACHYON.UnitOfMeasures;
 namespace TACHYON.Goods.GoodsDetails
 {
     [Table("GoodsDetails")]
-    public class GoodsDetail : FullAuditedEntity<long>, IMustHaveTenant
+    public class GoodsDetail : FullAuditedEntity<long>
     {
-        public int TenantId { get; set; }
+        //public int TenantId { get; set; }
 
         [StringLength(GoodsDetailConsts.MaxDescriptionLength, MinimumLength = GoodsDetailConsts.MinDescriptionLength)]
         public virtual string Description { get; set; }

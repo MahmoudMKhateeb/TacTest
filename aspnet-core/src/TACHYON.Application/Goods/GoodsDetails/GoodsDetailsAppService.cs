@@ -140,10 +140,10 @@ namespace TACHYON.Goods.GoodsDetails
             var goodsDetail = ObjectMapper.Map<GoodsDetail>(input);
 
 
-            if (AbpSession.TenantId != null)
-            {
-                goodsDetail.TenantId = (int)AbpSession.TenantId;
-            }
+            //if (AbpSession.TenantId != null)
+            //{
+            //    goodsDetail.TenantId = (int)AbpSession.TenantId;
+            //}
 
 
             await _goodsDetailRepository.InsertAsync(goodsDetail);

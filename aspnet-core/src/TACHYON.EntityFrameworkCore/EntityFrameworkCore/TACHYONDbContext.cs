@@ -210,14 +210,14 @@ namespace TACHYON.EntityFrameworkCore
             {
                 s.HasIndex(e => new { e.TenantId });
             });
-            modelBuilder.Entity<RoutPoint>(s =>
-            {
-                s.HasIndex(e => new { e.TenantId });
-            });
-            modelBuilder.Entity<GoodsDetail>(g =>
-                       {
-                           g.HasIndex(e => new { e.TenantId });
-                       });
+            //modelBuilder.Entity<RoutPoint>(s =>
+            //{
+            //    s.HasIndex(e => new { e.TenantId });
+            //});
+            //modelBuilder.Entity<GoodsDetail>(g =>
+            //           {
+            //               g.HasIndex(e => new { e.TenantId });
+            //           });
             modelBuilder.Entity<Offer>(o =>
                        {
                            o.HasIndex(e => new { e.TenantId });

@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using NetTopologySuite.Geometries;
 using TACHYON.EntityFrameworkCore;
@@ -10,9 +11,10 @@ using TACHYON.EntityFrameworkCore;
 namespace TACHYON.Migrations
 {
     [DbContext(typeof(TACHYONDbContext))]
-    partial class TACHYONDbContextModelSnapshot : ModelSnapshot
+    [Migration("20210301081642_RemoveTenantFromRoutPoint")]
+    partial class RemoveTenantFromRoutPoint
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -2287,6 +2289,9 @@ namespace TACHYON.Migrations
                     b.Property<long?>("ShippingRequestId")
                         .HasColumnType("bigint");
 
+                    b.Property<int>("TenantId")
+                        .HasColumnType("int");
+
                     b.Property<int>("UnitOfMeasureId")
                         .HasColumnType("int");
 
@@ -2301,6 +2306,8 @@ namespace TACHYON.Migrations
                     b.HasIndex("RoutPointId");
 
                     b.HasIndex("ShippingRequestId");
+
+                    b.HasIndex("TenantId");
 
                     b.HasIndex("UnitOfMeasureId");
 

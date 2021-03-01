@@ -9,6 +9,7 @@ using Abp.Application.Services.Dto;
 using Abp.Authorization;
 using Abp.Domain.Repositories;
 using Abp.Domain.Uow;
+using Abp.EntityFrameworkCore.Repositories;
 using Abp.Linq.Extensions;
 using Abp.Runtime.Session;
 using Abp.Timing;
@@ -579,7 +580,7 @@ namespace TACHYON.Shipping.ShippingRequests
             if (AbpSession.TenantId != null)
             {
                 shippingRequest.TenantId = (int)AbpSession.TenantId;
-                shippingRequest.RoutPoints.ForEach(x => x.TenantId = (int)AbpSession.TenantId);
+               // shippingRequest.RoutPoints.ForEach(x => x.TenantId = (int)AbpSession.TenantId);
                 shippingRequest.RouteFk.TenantId = (int)AbpSession.TenantId;
                 shippingRequest.ShippingRequestStatusId = TACHYONConsts.ShippingRequestStatusStandBy;
                 shippingRequest.ShippingRequestVases.ForEach(x => x.TenantId = (int)AbpSession.TenantId);
@@ -615,13 +616,36 @@ namespace TACHYON.Shipping.ShippingRequests
         [AbpAuthorize(AppPermissions.Pages_ShippingRequests_Edit)]
         protected virtual async Task Update(CreateOrEditShippingRequestDto input)
         {
-            ShippingRequest shippingRequest = await _shippingRequestRepository
-                .GetAllIncluding(x => x.RouteFk)
+            ShippingRequest shippingRequest = await _shippingRequestRepository.GetAll()
+                .Include(x => x.RouteFk)
                 .Include(x => x.RoutPoints)
-                .FirstOrDefaultAsync(x => x.Id == (long)input.Id);
+                .ThenInclude(x=>x.FacilityFk)
+                .Include(x=>x.ShippingRequestVases)
+                .Where(x=>x.Id== (long)input.Id)
+                .FirstOrDefaultAsync();
+            var pointsCount = shippingRequest.RoutPoints.Count;
             input.IsBid = shippingRequest.IsBid;
             input.IsTachyonDeal = shippingRequest.IsTachyonDeal;
+
             ObjectMapper.Map(input, shippingRequest);
+
+
+                ObjectMapper.Map(input.CreateOrEditRoutPointDtoList, shippingRequest.RoutPoints);
+
+            
+
+            //shippingRequest.RoutPoints.Clear();
+            //ObjectMapper.Map(input.CreateOrEditRoutPointDtoList, shippingRequest.RoutPoints);
+            //foreach (var point in shippingRequest.RoutPoints)
+            //{
+            //    var tenant = point.TenantId;
+            //}
+            // CurrentUnitOfWork.SaveChanges();
+
+            //if (AbpSession.TenantId != null)
+            //{
+            //    shippingRequest.RoutPoints.ForEach(x => x.TenantId = (int)AbpSession.TenantId);
+            //}
         }
 
 

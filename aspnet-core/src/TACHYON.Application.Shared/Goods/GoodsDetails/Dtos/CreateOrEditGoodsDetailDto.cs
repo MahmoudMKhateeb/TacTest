@@ -8,9 +8,6 @@ namespace TACHYON.Goods.GoodsDetails.Dtos
     public class CreateOrEditGoodsDetailDto : EntityDto<long?>
     {
 
-        public long? Id { get; set; }
-
-
         [StringLength(GoodsDetailConsts.MaxDescriptionLength, MinimumLength = GoodsDetailConsts.MinDescriptionLength)]
         public string Description { get; set; }
 
