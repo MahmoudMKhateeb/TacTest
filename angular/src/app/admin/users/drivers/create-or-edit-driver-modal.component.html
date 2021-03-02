@@ -196,6 +196,8 @@
                       [(selectedDate)]="selectedDate"
                       [readonly]="true"
                       (selectedDateChange)="dateOfBirthSelectedDateChange($event, user)"
+                      [minGreg]="minGreg"
+                      [minHijri]="minHijri"
                     >
                     </hijri-gregorian-datepicker-test>
                   </div>

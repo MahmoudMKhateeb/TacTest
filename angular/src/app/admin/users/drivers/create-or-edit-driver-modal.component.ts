@@ -84,6 +84,8 @@ export class CreateOrEditDriverModalComponent extends AppComponentBase {
   //   });
   // }
   selectedDate: NgbDateStruct;
+  minGreg: NgbDateStruct = { day: 1, month: 1, year: 1900 };
+  minHijri: NgbDateStruct = { day: 1, month: 1, year: 1342 };
 
   private getDriverRequiredDocumentFiles() {
     //RequiredDocuments
