@@ -592,23 +592,25 @@
                       <td>
                         <input
                           type="number"
-                          [attr.disabled]="!selectedVasesProperties[item.vasId].vasCountDisabled || null"
+                          [attr.disabled]="selectedVasesProperties[item.vasId].vasCountDisabled || null"
                           id="Vas-Count{{ i }}"
                           [(ngModel)]="item.requestMaxCount"
                           (keypress)="numberOnly($event)"
+                          [required]="!selectedVasesProperties[item.vasId].vasCountDisabled"
                           class="form-control"
                           name="Vas-Count{{ i }}"
                         />
                       </td>
                       <td>
                         <input
-                          [attr.disabled]="!selectedVasesProperties[item.vasId].vasAmountDisabled || null"
                           type="number"
-                          id="Vas-Amount{{ i }}"
+                          [attr.disabled]="selectedVasesProperties[item.vasId].vasAmountDisabled || null"
+                          id="VasAmount2{{ i }}"
                           [(ngModel)]="item.requestMaxAmount"
                           (keypress)="numberOnly($event)"
+                          [required]="!selectedVasesProperties[item.vasId].vasAmountDisabled"
                           class="form-control"
-                          name="Vas-Amount{{ i }}"
+                          name="VasAmount2{{ i }}"
                         />
                       </td>
                     </tr>

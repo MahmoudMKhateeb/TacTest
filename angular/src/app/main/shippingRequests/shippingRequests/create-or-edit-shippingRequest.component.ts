@@ -180,8 +180,8 @@ export class CreateOrEditShippingRequestComponent extends AppComponentBase imple
         this.selectedVasesProperties[item.id] = {
           vasId: item.id,
           vasName: item.vasName,
-          vasCountDisabled: item.hasAmount ? false : true,
-          vasAmountDisabled: item.hasCount ? false : true,
+          vasCountDisabled: item.hasCount ? false : true,
+          vasAmountDisabled: item.hasAmount ? false : true,
         };
       });
       console.log(this.selectedVasesProperties);
