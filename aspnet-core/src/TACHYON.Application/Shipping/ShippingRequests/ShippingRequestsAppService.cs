@@ -545,7 +545,9 @@ namespace TACHYON.Shipping.ShippingRequests
                                           + "-" + shippingRequest.AssignedTruckFk?.TrucksTypeFk?.DisplayName
                                           + "-" + shippingRequest.AssignedTruckFk?.TransportTypeFk?.DisplayName,
                 ShippingRequestVasDtoList = ObjectMapper.Map<List<CreateOrEditShippingRequestVasListDto>>(shippingRequest.ShippingRequestVases),
-                RoutPointDtoList = ObjectMapper.Map<List<RoutPointDto>>(shippingRequest.RoutPoints)
+                RoutPointDtoList = ObjectMapper.Map<List<RoutPointDto>>(shippingRequest.RoutPoints),
+                ShippingTypeDisplayName = shippingRequest.ShippingTypeFk.DisplayName,
+                packingTypeDisplayName = shippingRequest.PackingTypeFk.DisplayName
             };
 
             return output;

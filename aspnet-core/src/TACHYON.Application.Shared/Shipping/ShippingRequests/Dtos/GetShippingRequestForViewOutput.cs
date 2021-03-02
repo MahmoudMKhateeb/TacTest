@@ -23,6 +23,7 @@ namespace TACHYON.Shipping.ShippingRequests.Dtos
         public string TruckTypeFullName { get; set; }
         public string ShippingRequestStatusName { get; set; }
         public string packingTypeDisplayName { get; set; }
+        public string ShippingTypeDisplayName { get; set; }
 
     }
 }
