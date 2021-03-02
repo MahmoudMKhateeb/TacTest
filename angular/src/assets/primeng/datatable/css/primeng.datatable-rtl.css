@@ -207,11 +207,11 @@
   font-family: 'ArGEFlow', 'EnOpenSans' !important;
 }
 .primeng-datatable-container .ui-table td {
-  font-family: 'ArGEFlow' !important;
+  font-family: 'ArGEFlow', 'EnOpenSans' !important;
 }
 .primeng-datatable-container .ui-table table thead tr th {
-  font-family: 'ArGEFlow' !important;
+  font-family: 'ArGEFlow', 'EnOpenSans' !important;
 }
 .primeng-datatable-container .ui-table table thead tr th {
-  font-family: 'ArGEFlow' !important;
+  font-family: 'ArGEFlow', 'EnOpenSans' !important;
 }
