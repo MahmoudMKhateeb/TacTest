@@ -187,12 +187,12 @@
                       </div>
                       <!--       Start Of Shipping Type                 -->
                       <div class="col-lg-6">
+                        <label>* {{ l('shippingType') }}:</label>
                         <div
                           [ngClass]="{
                             'spinner spinner-success spinner-right mr-1 ml-1': !allShippingTypes
                           }"
                         >
-                          <label>* {{ l('shippingType') }}:</label>
                           <select
                             #shippingType="ngModel"
                             class="form-control"
@@ -284,7 +284,7 @@
                         <div class="form-group">
                           <div
                             [ngClass]="{
-                              'spinner spinner-success spinner-right mr-1 ml-1': !allShippingTypes
+                              'spinner spinner-success spinner-right mr-1 ml-1': !allpackingTypes
                             }"
                           >
                             <label>* {{ l('packingType') }}:</label>
@@ -592,23 +592,25 @@
                       <td>
                         <input
                           type="number"
-                          [attr.disabled]="!selectedVasesProperties[item.vasId].vasCountDisabled || null"
+                          [attr.disabled]="selectedVasesProperties[item.vasId].vasCountDisabled || null"
                           id="Vas-Count{{ i }}"
                           [(ngModel)]="item.requestMaxCount"
                           (keypress)="numberOnly($event)"
+                          [required]="!selectedVasesProperties[item.vasId].vasCountDisabled"
                           class="form-control"
                           name="Vas-Count{{ i }}"
                         />
                       </td>
                       <td>
                         <input
-                          [attr.disabled]="!selectedVasesProperties[item.vasId].vasAmountDisabled || null"
                           type="number"
-                          id="Vas-Amount{{ i }}"
+                          [attr.disabled]="selectedVasesProperties[item.vasId].vasAmountDisabled || null"
+                          id="VasAmount2{{ i }}"
                           [(ngModel)]="item.requestMaxAmount"
                           (keypress)="numberOnly($event)"
+                          [required]="!selectedVasesProperties[item.vasId].vasAmountDisabled"
                           class="form-control"
-                          name="Vas-Amount{{ i }}"
+                          name="VasAmount2{{ i }}"
                         />
                       </td>
                     </tr>
