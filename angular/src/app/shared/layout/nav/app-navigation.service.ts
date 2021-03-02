@@ -34,12 +34,12 @@ export class AppNavigationService {
             undefined,
             undefined,
             undefined,
-            () =>
-              this._featureCheckerService.isEnabled('App.shippingRequest') ||
-              this._featureCheckerService.isEnabled('App.TachyonDealer') ||
-              this._featureCheckerService.isEnabled('App.Broker')
+            () => this._featureCheckerService.isEnabled('App.Shipper')
           ),
-        ]
+        ],
+        undefined,
+        undefined,
+        () => this._featureCheckerService.isEnabled('App.Shipper')
       ),
 
       // //Host
@@ -58,19 +58,19 @@ export class AppNavigationService {
       //   ]
       // ),
 
-      //Host
-      // new AppMenuItem(
-      //   'Shipping Requests',
-      //   '',
-      //   'flaticon-interface-8',
-      //   '',
-      //   [],
-      //   [new AppMenuItem('Marketplace', '', 'flaticon-more', '/app/main/marketPlace/marketPlace')],
-      //   undefined,
-      //   undefined,
-      //   () => this._featureCheckerService.isEnabled('App.Carrier')
-      // ),
-      //Host
+      //carrier
+      new AppMenuItem(
+        'Shipping Requests',
+        '',
+        'flaticon-interface-8',
+        '',
+        [],
+        [new AppMenuItem('Marketplace', '', 'flaticon-more', '/app/main/marketPlace/marketPlace')],
+        undefined,
+        undefined,
+        () => this._featureCheckerService.isEnabled('App.Carrier')
+      ),
+      //carrier
       new AppMenuItem('ShippingTypes', 'Pages.ShippingTypes', 'flaticon-more', '/app/main/shippingTypes/shippingTypes'),
       new AppMenuItem('PackingTypes', 'Pages.PackingTypes', 'flaticon-more', '/app/main/packingTypes/packingTypes'),
       new AppMenuItem('TripStatuses', 'Pages.TripStatuses', 'flaticon-more', '/app/main/tripStatuses/tripStatuses'),
