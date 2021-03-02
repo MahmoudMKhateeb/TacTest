@@ -126,13 +126,6 @@
           <div class="row mb-4">
             <!-- start:: map that draws the RouteStep::Route in CreateOrEditRouteStep-->
             <div class="col-lg-12">
-              <!--              <agm-map [latitude]="lat" [longitude]="lng">-->
-              <!--                <agm-direction-->
-              <!--                  *ngIf="dir.origin.lat && dir.origin.lng && dir.destination.lat && dir.destination.lng"-->
-              <!--                  [origin]="dir.origin"-->
-              <!--                  [destination]="dir.destination"-->
-              <!--                ></agm-direction>-->
-              <!--              </agm-map>-->
               <agm-map [latitude]="singleWayPoint.latitude || lat" [longitude]="singleWayPoint.longitude || lng" [zoom]="zoom">
                 <agm-marker [latitude]="singleWayPoint.latitude" [longitude]="singleWayPoint.longitude"></agm-marker>
               </agm-map>
@@ -165,19 +158,8 @@
                 </div>
               </div>
 
-              <!--              <div class="form-group col-lg-6">-->
-              <!--                <label>pickingType</label>-->
-              <!--                <div class="input-icon input-icon-right">-->
-              <!--                  <select name="PickingType1" class="form-control" [(ngModel)]="singleWayPoint.pickingTypeId">-->
-              <!--                    <option value="">{{ l('SelectPickingType') }}</option>-->
-              <!--                    <option [ngValue]="1">PickUp</option>-->
-              <!--                    <option [ngValue]="2">Drop</option>-->
-              <!--                  </select>-->
-              <!--                </div>-->
-              <!--              </div>-->
-
               <!--    StartOF::GoodDetailsSection       -->
-              <div>
+              <div *ngIf="singleWayPoint.pickingTypeId == 2">
                 <div class="card card-custom gutter-b">
                   <div class="card-header">
                     <h3 class="card-title">
