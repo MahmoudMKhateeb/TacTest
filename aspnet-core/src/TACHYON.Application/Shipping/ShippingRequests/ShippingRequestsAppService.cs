@@ -519,6 +519,8 @@ namespace TACHYON.Shipping.ShippingRequests
                     .ThenInclude(e => e.TrucksTypeFk)
                     .Include(e => e.GoodCategoryFk)
                     .Include(e => e.RoutPoints)
+                    .Include(e=>e.ShippingTypeFk)
+                    .Include(e=>e.PackingTypeFk)
                     .FirstOrDefaultAsync();
 
             List<ShippingRequestBid> shippingRequestBidsList;
