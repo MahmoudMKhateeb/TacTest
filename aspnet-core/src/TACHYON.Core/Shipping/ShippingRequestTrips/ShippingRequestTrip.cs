@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Text;
 using TACHYON.Authorization.Users;
+using TACHYON.Shipping.ShippingRequests;
 using TACHYON.Shipping.TripStatuses;
 using TACHYON.Trucks;
 
@@ -24,6 +25,9 @@ namespace TACHYON.Shipping.ShippingRequestTrips
         public long? AssignedTruckId { get; set; }
         [ForeignKey("AssignedTruckId")]
         public Truck AssignedTruckFk { get; set; }
+        public long ShippingRequestId { get; set; }
+        [ForeignKey("ShippingRequestId")]
+        public ShippingRequest ShippingRequestFk { get; set; }
 
     }
 }
