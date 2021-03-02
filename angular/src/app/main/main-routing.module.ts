@@ -1,5 +1,6 @@
 ﻿import { NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
+import { TripStatusesComponent } from './tripStatuses/tripStatuses/tripStatuses.component';
 import { PackingTypesComponent } from './packingTypes/packingTypes/packingTypes.component';
 import { ShippingTypesComponent } from './shippingTypes/shippingTypes/shippingTypes.component';
 import { NationalitiesComponent } from './nationalities/nationalities/nationalities.component';
@@ -44,6 +45,7 @@ import { MarketplaceComponent } from '@app/main/marketPlace/marketPlace/marketpl
       {
         path: '',
         children: [
+          { path: 'tripStatuses/tripStatuses', component: TripStatusesComponent, data: { permission: 'Pages.TripStatuses' } },
           { path: 'packingTypes/packingTypes', component: PackingTypesComponent, data: { permission: 'Pages.PackingTypes' } },
           { path: 'shippingTypes/shippingTypes', component: ShippingTypesComponent, data: { permission: 'Pages.ShippingTypes' } },
           { path: 'nationalities/nationalities', component: NationalitiesComponent, data: { permission: 'Pages.Nationalities' } },

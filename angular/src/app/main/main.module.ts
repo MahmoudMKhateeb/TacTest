@@ -2,6 +2,10 @@
 import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { AppCommonModule } from '@app/shared/common/app-common.module';
+import { TripStatusesComponent } from './tripStatuses/tripStatuses/tripStatuses.component';
+import { ViewTripStatusModalComponent } from './tripStatuses/tripStatuses/view-tripStatus-modal.component';
+import { CreateOrEditTripStatusModalComponent } from './tripStatuses/tripStatuses/create-or-edit-tripStatus-modal.component';
+
 import { PackingTypesComponent } from './packingTypes/packingTypes/packingTypes.component';
 import { ViewPackingTypeModalComponent } from './packingTypes/packingTypes/view-packingType-modal.component';
 import { CreateOrEditPackingTypeModalComponent } from './packingTypes/packingTypes/create-or-edit-packingType-modal.component';
@@ -204,6 +208,10 @@ NgxBootstrapDatePickerConfigService.registerNgxBootstrapDatePickerLocales();
     StepsModule,
   ],
   declarations: [
+    TripStatusesComponent,
+
+    ViewTripStatusModalComponent,
+    CreateOrEditTripStatusModalComponent,
     PackingTypesComponent,
 
     ViewPackingTypeModalComponent,

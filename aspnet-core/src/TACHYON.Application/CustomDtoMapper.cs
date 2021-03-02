@@ -1,4 +1,6 @@
-﻿using TACHYON.Packing.PackingTypes.Dtos;
+﻿using TACHYON.Shipping.TripStatuses.Dtos;
+using TACHYON.Shipping.TripStatuses;
+using TACHYON.Packing.PackingTypes.Dtos;
 using TACHYON.Packing.PackingTypes;
 using TACHYON.Shipping.ShippingTypes.Dtos;
 using TACHYON.Shipping.ShippingTypes;
@@ -148,6 +150,8 @@ namespace TACHYON
     {
         public static void CreateMappings(IMapperConfigurationExpression configuration)
         {
+            configuration.CreateMap<CreateOrEditTripStatusDto, TripStatus>().ReverseMap();
+            configuration.CreateMap<TripStatusDto, TripStatus>().ReverseMap();
             configuration.CreateMap<CreateOrEditPackingTypeDto, PackingType>().ReverseMap();
             configuration.CreateMap<PackingTypeDto, PackingType>().ReverseMap();
             configuration.CreateMap<CreateOrEditShippingTypeDto, ShippingType>().ReverseMap();
@@ -167,7 +171,6 @@ namespace TACHYON
             configuration.CreateMap<CreateOrEditTermAndConditionTranslationDto, TermAndConditionTranslation>().ReverseMap();
             configuration.CreateMap<TermAndConditionTranslationDto, TermAndConditionTranslation>().ReverseMap();
             configuration.CreateMap<CreateOrEditTermAndConditionDto, TermAndCondition>().ReverseMap();
-            //configuration.CreateMap<TermAndConditionDto, TermAndCondition>().ReverseMap();
             configuration.CreateMap<CreateOrEditCapacityDto, Capacity>().ReverseMap();
             configuration.CreateMap<CapacityDto, Capacity>().ReverseMap();
             configuration.CreateMap<CreateOrEditTransportTypeDto, TransportType>().ReverseMap();
@@ -194,13 +197,10 @@ namespace TACHYON
             configuration.CreateMap<DocumentFileDto, DocumentFile>().ReverseMap();
             configuration.CreateMap<ImportTruckDocumentFileDto, DocumentFile>().ReverseMap();
             configuration.CreateMap<CreateOrEditDocumentTypeDto, DocumentType>().ReverseMap();
-            //configuration.CreateMap<DocumentTypeDto, DocumentType>()
-            //    .ForPath(dst => dst.DocumentsEntityFk.DisplayName, opt => opt.MapFrom(src => src.RequiredFrom))
-            //    .ForPath(dst => dst.EditionFk.DisplayName, opt => opt.MapFrom(src => src.Edition))
-            //    .ReverseMap();
+
             configuration.CreateMap<CreateOrEditShippingRequestDto, ShippingRequest>()
                 .ForMember(dst => dst.RouteFk, opt => opt.MapFrom(src => src.CreateOrEditRouteDto))
-              //.ForMember(dst => dst.RoutPoints, opt => opt.MapFrom(src => src.CreateOrEditRoutPointDtoList))
+                //.ForMember(dst => dst.RoutPoints, opt => opt.MapFrom(src => src.CreateOrEditRoutPointDtoList))
                 .ForMember(dst => dst.ShippingRequestVases, opt => opt.MapFrom(src => src.ShippingRequestVasList))
                 .ReverseMap();
 
@@ -220,14 +220,10 @@ namespace TACHYON
             configuration.CreateMap<CreateOrEditRoutStepDto, RoutStep>()
                 .ForMember(dst => dst.SourceRoutPointFk, opt => opt.MapFrom(src => src.CreateOrEditSourceRoutPointInputDto))
                 .ForMember(dest => dest.DestinationRoutPointFk, opt => opt.MapFrom(src => src.CreateOrEditDestinationRoutPointInputDto))
-                // .ForPath(dest=>dest.SourceRoutPointFk.RoutPointGoodsDetails,opt=>opt.MapFrom(src=>src.CreateOrEditSourceRoutPointInputDto.RoutPointGoodsDetailListDto))
-                // .ForPath(dest => dest.DestinationRoutPointFk.RoutPointGoodsDetails, opt => opt.MapFrom(src => src.CreateOrEditDestinationRoutPointInputDto.RoutPointGoodsDetailListDto))
                 .ReverseMap();
 
             configuration.CreateMap<RoutStepDto, RoutStep>().ReverseMap();
 
-            //configuration.CreateMap< RoutPointGoodsDetailDto, RoutPointGoodsDetail>()
-            //    .ReverseMap();
             configuration.CreateMap<RoutPointDto, RoutPoint>()
                 //.ForMember(dest => dest.FacilityFk, opt => opt.MapFrom(src => src.FacilityDto))
                 .ReverseMap();
@@ -238,7 +234,7 @@ namespace TACHYON
             configuration.CreateMap<RoutPoint, CreateOrEditRoutPointDto>()
                 .ForPath(dest => dest.Longitude, opt => opt.MapFrom(src => src.FacilityFk.Location.X))
                 .ForPath(dest => dest.Latitude, opt => opt.MapFrom(src => src.FacilityFk.Location.Y));
-          
+
             configuration.CreateMap<CreateOrEditRouteDto, Route>().ReverseMap();
             configuration.CreateMap<RouteDto, Route>().ReverseMap();
             configuration.CreateMap<CreateOrEditCityDto, City>().ReverseMap();

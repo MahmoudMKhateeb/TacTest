@@ -1,6 +1,13 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <localizationDictionary culture="en">
-  <texts>    <text name="PackingType">Packing type</text>
+  <texts>    <text name="TripStatuses">Trip statuses</text>
+    <text name="TripStatus">Trip status</text>
+    <text name="TACHYON.TripStatuses.TripStatus">TripStatus</text>
+    <text name="TripStatusesHeaderInfo">Trip statuses header info</text>
+    <text name="CreateNewTripStatus">Create new trip status</text>
+    <text name="EditTripStatus">Edit trip status</text>
+    <text name="DeleteTripStatus">Delete trip status</text>
+    <text name="PackingType">Packing type</text>
     <text name="TACHYON.PackingTypes.PackingType">PackingType</text>
     <text name="PackingTypesHeaderInfo">Packing types header info</text>
     <text name="CreateNewPackingType">Create new packing type</text>
