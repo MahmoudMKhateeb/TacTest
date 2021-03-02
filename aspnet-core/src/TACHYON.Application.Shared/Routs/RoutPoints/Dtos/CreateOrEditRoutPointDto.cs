@@ -26,6 +26,6 @@ namespace TACHYON.Routs.RoutPoints.Dtos
 
         public long? ShippingRequestId { get; set; }
 
-        //public List<CreateOrEditGoodsDetailDto> GoodsDetailListDto { get; set; }
+        public List<CreateOrEditGoodsDetailDto> GoodsDetailListDto { get; set; }
     }
 }
