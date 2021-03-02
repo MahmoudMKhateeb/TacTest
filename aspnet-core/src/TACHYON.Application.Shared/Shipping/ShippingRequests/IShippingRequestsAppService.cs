@@ -22,7 +22,7 @@ namespace TACHYON.Shipping.ShippingRequests
 
    
         //Task<FileDto> GetShippingRequestsToExcel(GetAllShippingRequestsForExcelInput input);
-        IEnumerable<GetMasterWaybillOutput> GetMasterWaybill();
+        IEnumerable<GetMasterWaybillOutput> GetMasterWaybill(long shippingRequestId);
 
     }
 }

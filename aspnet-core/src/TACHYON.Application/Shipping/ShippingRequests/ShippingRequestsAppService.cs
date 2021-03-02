@@ -810,13 +810,13 @@ namespace TACHYON.Shipping.ShippingRequests
         #region Waybills
         
         //Master Waybill
-        public IEnumerable<GetMasterWaybillOutput> GetMasterWaybill()
+        public IEnumerable<GetMasterWaybillOutput> GetMasterWaybill(long shippingRequestId)
         {
             using (CurrentUnitOfWork.DisableFilter((AbpDataFilters.MustHaveTenant)))
             {
                 var info = _shippingRequestRepository.GetAll()
                     .Where(e => e.TenantId == AbpSession.TenantId)
-                    .Where(e => e.Id == 1);
+                    .Where(e => e.Id == shippingRequestId);
 
                 var query = info.Select(x => new
                 {
@@ -843,15 +843,14 @@ namespace TACHYON.Shipping.ShippingRequests
                        : "",
                 });
 
-                var pickup = _routStepRepository
+                var pickup = _routPointRepository
                     .GetAll()
                     .Where(x => x.ShippingRequestId == 1)
-                    .Where(x => x.SourceRoutPointFk.PickingTypeId == 1)
-                    .Where(x => x.Order == 1)
-                    .Include(x => x.SourceRoutPointFk.FacilityFk)
+                    .Where(x => x.PickingTypeId == 1)
+                    .Include(x => x.FacilityFk)
                     .ThenInclude(x => x.CityFk)
                     .ThenInclude(x => x.CountyFk)
-                    .Select(x => x.SourceRoutPointFk.FacilityFk)
+                    .Select(x => x.FacilityFk)
                     .FirstOrDefault();
 
 
@@ -873,13 +872,31 @@ namespace TACHYON.Shipping.ShippingRequests
                         FacilityName = pickup?.Name,
                         CountryName = pickup?.CityFk.CountyFk.DisplayName,
                         CityName = pickup?.CityFk.DisplayName,
-                        Area = pickup?.Adress,
+                        Area = pickup?.Address,
                         StartTripDate = x.StartTripDate,
                     });
 
                 return finalOutput;
             }
         }
+
+        //public IEnumerable<GetAllShippingRequestVasesOutput> GetShippingRequestDropsForMasterWaybill(long shippingRequestId)
+        //{
+        //    var vases = _shippingRequestVasRepository.GetAll()
+        //        .Include(x => x.VasFk)
+        //        .Include(x => x.ShippingRequestFk)
+        //        .Where(x => x.ShippingRequestId == shippingRequestId)
+        //        .ToList();
+
+        //    var output = vases.Select(x => new GetAllShippingRequestVasesOutput
+        //    {
+        //        VasName = x.VasFk.Name,
+        //        Amount = x.RequestMaxAmount,
+        //        Count = x.RequestMaxCount
+        //    });
+
+        //    return output;
+        //}
 
         //Single Drop Waybill
         public IEnumerable<GetSingleDropWaybillOutput> GetSingleDropWaybill()
@@ -954,29 +971,29 @@ namespace TACHYON.Shipping.ShippingRequests
                         FacilityName = pickup?.Name,
                         CountryName = pickup?.CityFk.CountyFk.DisplayName,
                         CityName = pickup?.CityFk.DisplayName,
-                        Area = pickup?.Adress,
+                        Area = pickup?.Address,
                         StartTripDate = x.StartTripDate,
                         DroppFacilityName = delivery?.Name,
                         DroppCountryName = delivery?.CityFk.CountyFk.DisplayName,
                         DroppCityName = delivery?.CityFk.DisplayName,
-                        DroppArea = delivery?.Adress
+                        DroppArea = delivery?.Address
                     });
 
                 return finalOutput;
             }
         }
 
-        public IEnumerable<GetAllShippingRequestVasesOutput> GetShippingRequestVasesForSingleDropWaybill()
+        public IEnumerable<GetAllShippingRequestVasesOutput> GetShippingRequestVasesForSingleDropWaybill(long shippingRequestId)
         {
             var vases = _shippingRequestVasRepository.GetAll()
                 .Include(x => x.VasFk)
                 .Include(x => x.ShippingRequestFk)
-                .Where(x => x.ShippingRequestId == 1)
+                .Where(x => x.ShippingRequestId == shippingRequestId)
                 .ToList();
 
             var output = vases.Select(x => new GetAllShippingRequestVasesOutput
             {
-                VasName = x.VasFk.DisplayName,
+                VasName = x.VasFk.Name,
                 Amount = x.RequestMaxAmount,
                 Count = x.RequestMaxCount
             });
@@ -1053,7 +1070,7 @@ namespace TACHYON.Shipping.ShippingRequests
                         DroppFacilityName = delivery?.Name,
                         DroppCountryName = delivery?.CityFk.CountyFk.DisplayName,
                         DroppCityName = delivery?.CityFk.DisplayName,
-                        DroppArea = delivery?.Adress
+                        DroppArea = delivery?.Address
                     });
 
                 return finalOutput;
@@ -1063,7 +1080,7 @@ namespace TACHYON.Shipping.ShippingRequests
         public IEnumerable<GetAllShippingRequestVasesOutput> GetShippingRequestVasesForMultipleDropWaybill()
         {
             //get shipping request id by step id
-            var shippingRequestId = _routStepRepository.FirstOrDefault(x => x.Id == 1).ShippingRequestId;
+            var shippingRequestId = _routPointRepository.FirstOrDefault(x => x.Id == 1).ShippingRequestId;
 
             //get vases by shipping request id
             var vases = _shippingRequestVasRepository.GetAll()
@@ -1082,8 +1099,12 @@ namespace TACHYON.Shipping.ShippingRequests
             return output;
         }
 
-        
 
+        #endregion
+
+        #region dropDowns
+
+        
         public async Task<List<SelectItemDto>> GetAllUnitOfMeasuresForDropdown()
         {
             return await _unitOfMeasureRepository.GetAll()
@@ -1113,6 +1134,7 @@ namespace TACHYON.Shipping.ShippingRequests
                 }).ToListAsync();
         }
         //end Multiple Drops
+
 
 
         #endregion

@@ -9,6 +9,13 @@
       </ConnectionProperties>
       <rd:DataSourceID>38fb149c-8d26-4fde-ac41-88adcce7ca38</rd:DataSourceID>
     </DataSource>
+    <DataSource Name="SingleDropVasDataSet">
+      <ConnectionProperties>
+        <DataProvider>System.Data.DataSet</DataProvider>
+        <ConnectString>/* Local Connection */</ConnectString>
+      </ConnectionProperties>
+      <rd:DataSourceID>dae7f80e-fe18-4b37-851c-201dd3bf3d4f</rd:DataSourceID>
+    </DataSource>
   </DataSources>
   <DataSets>
     <DataSet Name="DataSet1">
@@ -98,6 +105,34 @@
         <rd:DataSetName>DataSet1</rd:DataSetName>
         <rd:SchemaPath>C:\Users\tasneem\source\repos\tachyonhub\tachyon-core\aspnet-core\src\TACHYON.Application\Waybills\Reports\DataSet1.xsd</rd:SchemaPath>
         <rd:TableName>Trucks</rd:TableName>
+        <rd:TableAdapterFillMethod />
+        <rd:TableAdapterGetDataMethod />
+        <rd:TableAdapterName />
+      </rd:DataSetInfo>
+    </DataSet>
+    <DataSet Name="SingleDropVasDataSet">
+      <Query>
+        <DataSourceName>SingleDropVasDataSet</DataSourceName>
+        <CommandText>/* Local Query */</CommandText>
+      </Query>
+      <Fields>
+        <Field Name="VasName">
+          <DataField>VasName</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="Amount">
+          <DataField>Amount</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="Count">
+          <DataField>Count</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+      </Fields>
+      <rd:DataSetInfo>
+        <rd:DataSetName>SingleDropVasDataSet</rd:DataSetName>
+        <rd:SchemaPath>C:\Users\tasneem\source\repos\tachyonhub\tachyon-core\aspnet-core\src\TACHYON.Application\Waybills\Reports\SingleDropVasDataSet.xsd</rd:SchemaPath>
+        <rd:TableName>DataTable1</rd:TableName>
         <rd:TableAdapterFillMethod />
         <rd:TableAdapterGetDataMethod />
         <rd:TableAdapterName />
@@ -3021,7 +3056,7 @@
               <Paragraph>
                 <TextRuns>
                   <TextRun>
-                    <Value>:رﻗﻢ إﻗﺎﻣﺔ/ هوية اﻟﺴﺎﺋﻖ</Value>
+                    <Value>:رﻗﻢ إﻗﺎﻣﺔ/هوية اﻟﺴﺎﺋﻖ</Value>
                     <Style>
                       <FontStyle>Normal</FontStyle>
                       <FontSize>14pt</FontSize>
@@ -3115,7 +3150,7 @@
             <Top>6.0259in</Top>
             <Left>2.08011in</Left>
             <Height>0.36935in</Height>
-            <Width>1.48778in</Width>
+            <Width>1.38678in</Width>
             <ZIndex>62</ZIndex>
             <Style>
               <Border>
@@ -4968,10 +5003,13 @@
                   <Width>1.30841in</Width>
                 </TablixColumn>
                 <TablixColumn>
-                  <Width>5.26835in</Width>
+                  <Width>3.97906in</Width>
                 </TablixColumn>
                 <TablixColumn>
-                  <Width>2.92671in</Width>
+                  <Width>2.65372in</Width>
+                </TablixColumn>
+                <TablixColumn>
+                  <Width>1.56229in</Width>
                 </TablixColumn>
               </TablixColumns>
               <TablixRows>
@@ -5047,7 +5085,7 @@
                                   </Style>
                                 </TextRun>
                                 <TextRun>
-                                  <Value xml:space="preserve">                                 </Value>
+                                  <Value xml:space="preserve">               </Value>
                                   <Style>
                                     <FontFamily>microsoft sans Serif</FontFamily>
                                     <FontSize>15.5pt</FontSize>
@@ -5115,7 +5153,7 @@
                                   </Style>
                                 </TextRun>
                                 <TextRun>
-                                  <Value xml:space="preserve">                              </Value>
+                                  <Value xml:space="preserve">                    </Value>
                                   <Style>
                                     <FontStyle>Normal</FontStyle>
                                     <FontFamily>Open Sans</FontFamily>
@@ -5142,6 +5180,46 @@
                             </Paragraph>
                           </Paragraphs>
                           <rd:DefaultName>Textbox34</rd:DefaultName>
+                          <Style>
+                            <Border>
+                              <Color>LightGrey</Color>
+                              <Style>Solid</Style>
+                            </Border>
+                            <BackgroundColor>White</BackgroundColor>
+                            <PaddingLeft>2pt</PaddingLeft>
+                            <PaddingRight>2pt</PaddingRight>
+                            <PaddingTop>2pt</PaddingTop>
+                            <PaddingBottom>2pt</PaddingBottom>
+                          </Style>
+                        </Textbox>
+                      </CellContents>
+                    </TablixCell>
+                    <TablixCell>
+                      <CellContents>
+                        <Textbox Name="Textbox9">
+                          <CanGrow>true</CanGrow>
+                          <KeepTogether>true</KeepTogether>
+                          <Paragraphs>
+                            <Paragraph>
+                              <TextRuns>
+                                <TextRun>
+                                  <Value>Count          العدد</Value>
+                                  <Style>
+                                    <FontStyle>Normal</FontStyle>
+                                    <FontFamily>Open Sans</FontFamily>
+                                    <FontSize>14pt</FontSize>
+                                    <FontWeight>Normal</FontWeight>
+                                    <TextDecoration>None</TextDecoration>
+                                    <Color>#404040</Color>
+                                  </Style>
+                                </TextRun>
+                              </TextRuns>
+                              <Style>
+                                <TextAlign>Center</TextAlign>
+                              </Style>
+                            </Paragraph>
+                          </Paragraphs>
+                          <rd:DefaultName>Textbox9</rd:DefaultName>
                           <Style>
                             <Border>
                               <Color>LightGrey</Color>
@@ -5260,6 +5338,39 @@
                         </Textbox>
                       </CellContents>
                     </TablixCell>
+                    <TablixCell>
+                      <CellContents>
+                        <Textbox Name="Count">
+                          <CanGrow>true</CanGrow>
+                          <KeepTogether>true</KeepTogether>
+                          <Paragraphs>
+                            <Paragraph>
+                              <TextRuns>
+                                <TextRun>
+                                  <Value>=Fields!Count.Value</Value>
+                                  <Style />
+                                </TextRun>
+                              </TextRuns>
+                              <Style>
+                                <TextAlign>Center</TextAlign>
+                              </Style>
+                            </Paragraph>
+                          </Paragraphs>
+                          <rd:DefaultName>Count</rd:DefaultName>
+                          <Style>
+                            <Border>
+                              <Color>LightGrey</Color>
+                              <Style>Solid</Style>
+                            </Border>
+                            <VerticalAlign>Middle</VerticalAlign>
+                            <PaddingLeft>2pt</PaddingLeft>
+                            <PaddingRight>2pt</PaddingRight>
+                            <PaddingTop>2pt</PaddingTop>
+                            <PaddingBottom>2pt</PaddingBottom>
+                          </Style>
+                        </Textbox>
+                      </CellContents>
+                    </TablixCell>
                   </TablixCells>
                 </TablixRow>
               </TablixRows>
@@ -5275,6 +5386,7 @@
                 <TablixMember>
                   <FixedData>true</FixedData>
                 </TablixMember>
+                <TablixMember />
               </TablixMembers>
             </TablixColumnHierarchy>
             <TablixRowHierarchy>
@@ -5287,7 +5399,7 @@
                 </TablixMember>
               </TablixMembers>
             </TablixRowHierarchy>
-            <DataSetName>MultipleDropsVasDataSet</DataSetName>
+            <DataSetName>SingleDropVasDataSet</DataSetName>
             <Top>11.05157in</Top>
             <Left>0.19667in</Left>
             <Height>0.91666in</Height>
@@ -5388,7 +5500,7 @@
           <BackgroundColor>White</BackgroundColor>
         </Style>
       </Body>
-      <Width>9.9947in</Width>
+      <Width>10.70014in</Width>
       <Page>
         <PageHeader>
           <Height>1.22in</Height>

@@ -35,7 +35,7 @@ namespace TACHYON.Waybills
         /// </summary>
         /// <param name="PlateNumber"></param>
         /// <returns></returns>
-        public FileDto GetSingleDropWaybillPdf(string PlateNumber)
+        public FileDto GetSingleDropWaybillPdf(string platenumber)
         {
             var reportPath = "/Waybills/Reports/Single_Drop_Waybill.rdlc";
             
@@ -45,11 +45,11 @@ namespace TACHYON.Waybills
             names.Add("SingleDropDataSet");
             data.Add(_shippingRequestAppService.GetSingleDropWaybill());
 
-            names.Add("SingleDropGoodsDetailsDataSet");
-            data.Add(_goodsDetailsAppService.GetShippingrequestGoodsDetailsForSingleDropWaybill());
+            //names.Add("SingleDropGoodsDetailsDataSet");
+            //data.Add(_goodsDetailsAppService.GetShippingrequestGoodsDetailsForSingleDropWaybill());
 
-            names.Add("SingleDropVasDataSet");
-            data.Add(_shippingRequestAppService.GetShippingRequestVasesForSingleDropWaybill());
+            //names.Add("SingleDropVasDataSet");
+            //data.Add(_shippingRequestAppService.GetShippingRequestVasesForSingleDropWaybill(""shippingRequestId""));
 
             return _pdfExporterBase.CreateRdlcPdfPackageFromList("Single_Drop_Waybill", reportPath, names, data);
         }
@@ -65,8 +65,8 @@ namespace TACHYON.Waybills
              names.Add("MultipleDropDataSet");
              data.Add(_shippingRequestAppService.GetMultipleDropWaybill());
 
-             names.Add("MultipleDropsGoodsDetailsDataSet");
-             data.Add(_goodsDetailsAppService.GetShippingrequestGoodsDetailsForMultipleDropWaybill());
+             //names.Add("MultipleDropsGoodsDetailsDataSet");
+             //data.Add(_goodsDetailsAppService.GetShippingrequestGoodsDetailsForMultipleDropWaybill());
 
              names.Add("MultipleDropsVasDataSet");
              data.Add(_shippingRequestAppService.GetShippingRequestVasesForMultipleDropWaybill());
@@ -84,7 +84,10 @@ namespace TACHYON.Waybills
             ArrayList data = new ArrayList();
 
             names.Add("DataSet1");
-            data.Add(_shippingRequestAppService.GetMasterWaybill());
+            data.Add(_shippingRequestAppService.GetMasterWaybill(80));
+
+            names.Add("SingleDropVasDataSet");
+            data.Add(_shippingRequestAppService.GetShippingRequestVasesForSingleDropWaybill(80));
             return _pdfExporterBase.CreateRdlcPdfPackageFromList("Master_Waybill", reportPath, names, data);
         }
 

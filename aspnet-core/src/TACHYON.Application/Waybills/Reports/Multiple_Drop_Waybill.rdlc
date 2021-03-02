@@ -5530,7 +5530,7 @@
           <Paragraph>
             <TextRuns>
               <TextRun>
-                <Value>=First(Fields!DriverName.Value, "DataSet1")</Value>
+                <Value></Value>
                 <Style />
               </TextRun>
             </TextRuns>
