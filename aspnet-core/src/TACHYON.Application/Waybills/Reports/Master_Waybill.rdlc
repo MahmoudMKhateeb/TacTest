@@ -100,6 +100,18 @@
           <DataField>StartTripDate</DataField>
           <rd:TypeName>System.String</rd:TypeName>
         </Field>
+        <Field Name="TotalWeight">
+          <DataField>TotalWeight</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="PackingTypeDisplayName">
+          <DataField>PackingTypeDisplayName</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="NumberOfPacking">
+          <DataField>NumberOfPacking</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
       </Fields>
       <rd:DataSetInfo>
         <rd:DataSetName>DataSet1</rd:DataSetName>
@@ -502,7 +514,7 @@
                     </TablixCell>
                     <TablixCell>
                       <CellContents>
-                        <Textbox Name="ShippingRequestStatus">
+                        <Textbox Name="Textbox15">
                           <CanGrow>true</CanGrow>
                           <KeepTogether>true</KeepTogether>
                           <Paragraphs>
@@ -518,7 +530,7 @@
                               </Style>
                             </Paragraph>
                           </Paragraphs>
-                          <rd:DefaultName>ShippingRequestStatus</rd:DefaultName>
+                          <rd:DefaultName>Textbox15</rd:DefaultName>
                           <Style>
                             <Border>
                               <Color>LightGrey</Color>
@@ -819,7 +831,7 @@
               <Paragraph>
                 <TextRuns>
                   <TextRun>
-                    <Value />
+                    <Value>=First(Fields!PackingTypeDisplayName.Value, "DataSet1")</Value>
                     <Style />
                   </TextRun>
                 </TextRuns>
@@ -1044,7 +1056,7 @@
               <Paragraph>
                 <TextRuns>
                   <TextRun>
-                    <Value />
+                    <Value>=First(Fields!NumberOfPacking.Value, "DataSet1")</Value>
                     <Style />
                   </TextRun>
                 </TextRuns>
@@ -4861,7 +4873,7 @@
               <Paragraph>
                 <TextRuns>
                   <TextRun>
-                    <Value>Name</Value>
+                    <Value>Shipper</Value>
                     <Style />
                   </TextRun>
                 </TextRuns>
@@ -4930,7 +4942,7 @@
               <Paragraph>
                 <TextRuns>
                   <TextRun>
-                    <Value>Name</Value>
+                    <Value />
                     <Style />
                   </TextRun>
                 </TextRuns>
@@ -5514,7 +5526,7 @@
               <Top>0.07867in</Top>
               <Left>0.19667in</Left>
               <Height>0.76667in</Height>
-              <Width>2.7629in</Width>
+              <Width>2.83319in</Width>
               <Style>
                 <Border>
                   <Style>None</Style>
@@ -5547,7 +5559,7 @@
               <Top>0.59778in</Top>
               <Left>0.19667in</Left>
               <Height>0.43055in</Height>
-              <Width>2.7629in</Width>
+              <Width>2.83319in</Width>
               <ZIndex>1</ZIndex>
               <Style>
                 <Border />

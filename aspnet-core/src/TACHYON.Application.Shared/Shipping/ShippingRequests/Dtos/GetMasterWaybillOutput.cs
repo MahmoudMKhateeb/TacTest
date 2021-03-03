@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using TACHYON.MultiTenancy.Payments.Dto;
 
 namespace TACHYON.Shipping.ShippingRequests.Dtos
 {
@@ -12,6 +13,7 @@ namespace TACHYON.Shipping.ShippingRequests.Dtos
         public string ShippingRequestStatus { get; set; }
         public int InvoiceNumber { get; set; }
         public string ShipperReference { get; set; }
+        public double TotalWeight { get; set; }
 
         //Sender Details Info
         public string CompanyName { get; set; }
@@ -38,6 +40,9 @@ namespace TACHYON.Shipping.ShippingRequests.Dtos
         public string CityName { get; set; }
         public string Area { get; set; }
         public string StartTripDate { get; set; }
+
+        //carrier name
+        public string CarrierName { get; set; }
 
     }
 }

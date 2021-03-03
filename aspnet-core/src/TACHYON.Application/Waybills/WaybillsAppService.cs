@@ -75,19 +75,19 @@ namespace TACHYON.Waybills
             return _pdfExporterBase.CreateRdlcPdfPackageFromList("Multiple_Drop_Waybill", reportPath, names, data);
         }
 
-
-        public FileDto GetMasterWaybillPdf()
-        {       
+        
+        public FileDto GetMasterWaybillPdf(long shippingRequestId)
+        {
             var reportPath = "/Waybills/Reports/Master_Waybill.rdlc";
             
             ArrayList names = new ArrayList();
             ArrayList data = new ArrayList();
 
             names.Add("DataSet1");
-            data.Add(_shippingRequestAppService.GetMasterWaybill(80));
+            data.Add(_shippingRequestAppService.GetMasterWaybill(shippingRequestId));
 
             names.Add("SingleDropVasDataSet");
-            data.Add(_shippingRequestAppService.GetShippingRequestVasesForSingleDropWaybill(80));
+            data.Add(_shippingRequestAppService.GetShippingRequestVasesForSingleDropWaybill(shippingRequestId));
             return _pdfExporterBase.CreateRdlcPdfPackageFromList("Master_Waybill", reportPath, names, data);
         }
 

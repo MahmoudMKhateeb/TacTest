@@ -317,6 +317,12 @@ namespace TACHYON.Waybills.Reports {
             
             private global::System.Data.DataColumn columnStartTripDate;
             
+            private global::System.Data.DataColumn columnTotalWeight;
+            
+            private global::System.Data.DataColumn columnPackingTypeDisplayName;
+            
+            private global::System.Data.DataColumn columnNumberOfPacking;
+            
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
             public TrucksDataTable() {
@@ -504,6 +510,30 @@ namespace TACHYON.Waybills.Reports {
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public global::System.Data.DataColumn TotalWeightColumn {
+                get {
+                    return this.columnTotalWeight;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public global::System.Data.DataColumn PackingTypeDisplayNameColumn {
+                get {
+                    return this.columnPackingTypeDisplayName;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public global::System.Data.DataColumn NumberOfPackingColumn {
+                get {
+                    return this.columnNumberOfPacking;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
             [global::System.ComponentModel.Browsable(false)]
             public int Count {
                 get {
@@ -558,7 +588,10 @@ namespace TACHYON.Waybills.Reports {
                         string CityName, 
                         string Area, 
                         string MasterWaybillNo, 
-                        string StartTripDate) {
+                        string StartTripDate, 
+                        string TotalWeight, 
+                        string PackingTypeDisplayName, 
+                        string NumberOfPacking) {
                 TrucksRow rowTrucksRow = ((TrucksRow)(this.NewRow()));
                 object[] columnValuesArray = new object[] {
                         Date,
@@ -579,7 +612,10 @@ namespace TACHYON.Waybills.Reports {
                         CityName,
                         Area,
                         MasterWaybillNo,
-                        StartTripDate};
+                        StartTripDate,
+                        TotalWeight,
+                        PackingTypeDisplayName,
+                        NumberOfPacking};
                 rowTrucksRow.ItemArray = columnValuesArray;
                 this.Rows.Add(rowTrucksRow);
                 return rowTrucksRow;
@@ -621,6 +657,9 @@ namespace TACHYON.Waybills.Reports {
                 this.columnArea = base.Columns["Area"];
                 this.columnMasterWaybillNo = base.Columns["MasterWaybillNo"];
                 this.columnStartTripDate = base.Columns["StartTripDate"];
+                this.columnTotalWeight = base.Columns["TotalWeight"];
+                this.columnPackingTypeDisplayName = base.Columns["PackingTypeDisplayName"];
+                this.columnNumberOfPacking = base.Columns["NumberOfPacking"];
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
@@ -664,6 +703,12 @@ namespace TACHYON.Waybills.Reports {
                 base.Columns.Add(this.columnMasterWaybillNo);
                 this.columnStartTripDate = new global::System.Data.DataColumn("StartTripDate", typeof(string), null, global::System.Data.MappingType.Element);
                 base.Columns.Add(this.columnStartTripDate);
+                this.columnTotalWeight = new global::System.Data.DataColumn("TotalWeight", typeof(string), null, global::System.Data.MappingType.Element);
+                base.Columns.Add(this.columnTotalWeight);
+                this.columnPackingTypeDisplayName = new global::System.Data.DataColumn("PackingTypeDisplayName", typeof(string), null, global::System.Data.MappingType.Element);
+                base.Columns.Add(this.columnPackingTypeDisplayName);
+                this.columnNumberOfPacking = new global::System.Data.DataColumn("NumberOfPacking", typeof(string), null, global::System.Data.MappingType.Element);
+                base.Columns.Add(this.columnNumberOfPacking);
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
@@ -1110,6 +1155,54 @@ namespace TACHYON.Waybills.Reports {
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public string TotalWeight {
+                get {
+                    try {
+                        return ((string)(this[this.tableTrucks.TotalWeightColumn]));
+                    }
+                    catch (global::System.InvalidCastException e) {
+                        throw new global::System.Data.StrongTypingException("The value for column \'TotalWeight\' in table \'Trucks\' is DBNull.", e);
+                    }
+                }
+                set {
+                    this[this.tableTrucks.TotalWeightColumn] = value;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public string PackingTypeDisplayName {
+                get {
+                    try {
+                        return ((string)(this[this.tableTrucks.PackingTypeDisplayNameColumn]));
+                    }
+                    catch (global::System.InvalidCastException e) {
+                        throw new global::System.Data.StrongTypingException("The value for column \'PackingTypeDisplayName\' in table \'Trucks\' is DBNull.", e);
+                    }
+                }
+                set {
+                    this[this.tableTrucks.PackingTypeDisplayNameColumn] = value;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public string NumberOfPacking {
+                get {
+                    try {
+                        return ((string)(this[this.tableTrucks.NumberOfPackingColumn]));
+                    }
+                    catch (global::System.InvalidCastException e) {
+                        throw new global::System.Data.StrongTypingException("The value for column \'NumberOfPacking\' in table \'Trucks\' is DBNull.", e);
+                    }
+                }
+                set {
+                    this[this.tableTrucks.NumberOfPackingColumn] = value;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
             public bool IsDateNull() {
                 return this.IsNull(this.tableTrucks.DateColumn);
             }
@@ -1334,6 +1427,42 @@ namespace TACHYON.Waybills.Reports {
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
             public void SetStartTripDateNull() {
                 this[this.tableTrucks.StartTripDateColumn] = global::System.Convert.DBNull;
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public bool IsTotalWeightNull() {
+                return this.IsNull(this.tableTrucks.TotalWeightColumn);
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public void SetTotalWeightNull() {
+                this[this.tableTrucks.TotalWeightColumn] = global::System.Convert.DBNull;
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public bool IsPackingTypeDisplayNameNull() {
+                return this.IsNull(this.tableTrucks.PackingTypeDisplayNameColumn);
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public void SetPackingTypeDisplayNameNull() {
+                this[this.tableTrucks.PackingTypeDisplayNameColumn] = global::System.Convert.DBNull;
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public bool IsNumberOfPackingNull() {
+                return this.IsNull(this.tableTrucks.NumberOfPackingColumn);
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public void SetNumberOfPackingNull() {
+                this[this.tableTrucks.NumberOfPackingColumn] = global::System.Convert.DBNull;
             }
         }
         

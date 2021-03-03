@@ -836,16 +836,18 @@ namespace TACHYON.Shipping.ShippingRequests
                     PlateNumber = x.AssignedTruckFk != null ? x.AssignedTruckFk.PlateNumber : "",
                     IsMultipDrops = x.NumberOfDrops > 1 ? true : false,
                     TotalDrops = x.NumberOfDrops,
-                    PackingTypeDisplayName = "",
-                    NumberOfPacking = 0,
                     StartTripDate = (x.StartTripDate != null && x.StartTripDate.Value.Year > 1)
                        ? x.StartTripDate.Value.ToShortDateString()
                        : "",
+                    CarrierName=x.CarrierTenantFk!=null? x.CarrierTenantFk.TenancyName :"",
+                    PackingTypeDisplayName=x.PackingTypeFk.DisplayName,
+                    NumberOfPacking=x.NumberOfPacking,
+                    TotalWeight=x.TotalWeight
                 });
 
                 var pickup = _routPointRepository
                     .GetAll()
-                    .Where(x => x.ShippingRequestId == 1)
+                    .Where(x => x.ShippingRequestId == shippingRequestId)
                     .Where(x => x.PickingTypeId == 1)
                     .Include(x => x.FacilityFk)
                     .ThenInclude(x => x.CityFk)
@@ -867,13 +869,16 @@ namespace TACHYON.Shipping.ShippingRequests
                         PlateNumber = x.PlateNumber,
                         IsMultipDrops = x.IsMultipDrops,
                         TotalDrops = x.TotalDrops,
-                        PackingTypeDisplayName = "",
-                        NumberOfPacking = 0,
+                        PackingTypeDisplayName = x.PackingTypeDisplayName,
+                        NumberOfPacking = x.NumberOfPacking,
                         FacilityName = pickup?.Name,
                         CountryName = pickup?.CityFk.CountyFk.DisplayName,
                         CityName = pickup?.CityFk.DisplayName,
                         Area = pickup?.Address,
                         StartTripDate = x.StartTripDate,
+                        CarrierName = x.CarrierName,
+                        TotalWeight = x.TotalWeight
+
                     });
 
                 return finalOutput;

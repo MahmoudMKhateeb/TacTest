@@ -12,7 +12,7 @@
   <xs:element name="DataSet1" msdata:IsDataSet="true" msdata:UseCurrentLocale="true" msprop:EnableTableAdapterManager="true" msprop:Generator_DataSetName="DataSet1" msprop:Generator_UserDSName="DataSet1">
     <xs:complexType>
       <xs:choice minOccurs="0" maxOccurs="unbounded">
-        <xs:element name="Trucks" msprop:Generator_TableClassName="TrucksDataTable" msprop:Generator_TableVarName="tableTrucks" msprop:Generator_RowChangedName="TrucksRowChanged" msprop:Generator_TablePropName="Trucks" msprop:Generator_RowDeletingName="TrucksRowDeleting" msprop:Generator_RowChangingName="TrucksRowChanging" msprop:Generator_RowEvHandlerName="TrucksRowChangeEventHandler" msprop:Generator_RowDeletedName="TrucksRowDeleted" msprop:Generator_RowClassName="TrucksRow" msprop:Generator_UserTableName="Trucks" msprop:Generator_RowEvArgName="TrucksRowChangeEvent">
+        <xs:element name="Trucks" msprop:Generator_TableClassName="TrucksDataTable" msprop:Generator_TableVarName="tableTrucks" msprop:Generator_TablePropName="Trucks" msprop:Generator_RowDeletingName="TrucksRowDeleting" msprop:Generator_RowChangingName="TrucksRowChanging" msprop:Generator_RowEvHandlerName="TrucksRowChangeEventHandler" msprop:Generator_RowDeletedName="TrucksRowDeleted" msprop:Generator_UserTableName="Trucks" msprop:Generator_RowChangedName="TrucksRowChanged" msprop:Generator_RowEvArgName="TrucksRowChangeEvent" msprop:Generator_RowClassName="TrucksRow">
           <xs:complexType>
             <xs:sequence>
               <xs:element name="Date" msprop:Generator_ColumnVarNameInTable="columnDate" msprop:Generator_ColumnPropNameInRow="Date" msprop:Generator_ColumnPropNameInTable="DateColumn" msprop:Generator_UserColumnName="Date" type="xs:string" minOccurs="0" />
@@ -34,6 +34,9 @@
               <xs:element name="Area" msprop:Generator_ColumnVarNameInTable="columnArea" msprop:Generator_ColumnPropNameInRow="Area" msprop:Generator_ColumnPropNameInTable="AreaColumn" msprop:Generator_UserColumnName="Area" type="xs:string" minOccurs="0" />
               <xs:element name="MasterWaybillNo" msprop:Generator_ColumnVarNameInTable="columnMasterWaybillNo" msprop:Generator_ColumnPropNameInRow="MasterWaybillNo" msprop:Generator_ColumnPropNameInTable="MasterWaybillNoColumn" msprop:Generator_UserColumnName="MasterWaybillNo" type="xs:string" minOccurs="0" />
               <xs:element name="StartTripDate" msprop:Generator_ColumnVarNameInTable="columnStartTripDate" msprop:Generator_ColumnPropNameInRow="StartTripDate" msprop:Generator_ColumnPropNameInTable="StartTripDateColumn" msprop:Generator_UserColumnName="StartTripDate" type="xs:string" minOccurs="0" />
+              <xs:element name="TotalWeight" msprop:Generator_ColumnVarNameInTable="columnTotalWeight" msprop:Generator_ColumnPropNameInRow="TotalWeight" msprop:Generator_ColumnPropNameInTable="TotalWeightColumn" msprop:Generator_UserColumnName="TotalWeight" type="xs:string" minOccurs="0" />
+              <xs:element name="PackingTypeDisplayName" msprop:Generator_ColumnVarNameInTable="columnPackingTypeDisplayName" msprop:Generator_ColumnPropNameInRow="PackingTypeDisplayName" msprop:Generator_ColumnPropNameInTable="PackingTypeDisplayNameColumn" msprop:Generator_UserColumnName="PackingTypeDisplayName" type="xs:string" minOccurs="0" />
+              <xs:element name="NumberOfPacking" msprop:Generator_ColumnVarNameInTable="columnNumberOfPacking" msprop:Generator_ColumnPropNameInRow="NumberOfPacking" msprop:Generator_ColumnPropNameInTable="NumberOfPackingColumn" msprop:Generator_UserColumnName="NumberOfPacking" type="xs:string" minOccurs="0" />
             </xs:sequence>
           </xs:complexType>
         </xs:element>
