@@ -1,8 +1,5 @@
 ﻿using Abp.Application.Services.Dto;
-using System;
-using System.Collections.Generic;
-using System.Text;
-using TACHYON.Shipping.TripStatuses;
+using TACHYON.Shipping.Trips;
 
 namespace TACHYON.Shipping.Drivers.Dto
 {

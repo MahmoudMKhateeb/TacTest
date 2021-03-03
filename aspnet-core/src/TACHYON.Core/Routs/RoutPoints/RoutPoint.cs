@@ -16,10 +16,9 @@ namespace TACHYON.Routs.RoutPoints
     public class RoutPoint: FullAuditedEntity<long>
     {
         public string DisplayName { get; set; }
-        //public int TenantId { get; set; }
-
-        //[ForeignKey("TenantId")]
-        //public Tenant TenantFk { get; set; }
+        public int? ParentId { get; set; }
+        [ForeignKey("ParentId")]
+        public RoutPoint RoutPointFk { get; set; }
 
         /// <summary>
         /// pickup or droppoff or null
@@ -45,6 +44,7 @@ namespace TACHYON.Routs.RoutPoints
 
         public ICollection<GoodsDetail> GoodsDetails { get; set; }
 
+        public string Code { get; set; } = (new Random().Next(100000, 999999)).ToString();
 
         //to do receiver attribute
 

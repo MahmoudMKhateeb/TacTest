@@ -53,12 +53,19 @@ using System.Linq.Expressions;
 using Microsoft.EntityFrameworkCore.Metadata;
 using TACHYON.Routs.RoutPoints;
 using TACHYON.Shipping.ShippingRequestTrips;
+using TACHYON.Shipping.Trips;
 
 namespace TACHYON.EntityFrameworkCore
 {
     public class TACHYONDbContext : AbpZeroDbContext<Tenant, Role, User, TACHYONDbContext>, IAbpPersistedGrantDbContext
     {
+        #region Trips
+        public virtual DbSet<ShippingRequestTripRoute> ShippingRequestTripsRoutes { get; set; }
+
+        
+        #endregion
         public virtual DbSet<TripStatus> TripStatuses { get; set; }
+        
         public virtual DbSet<ShippingRequestTrip> ShippingRequestTrips { get; set; }
 
         public virtual DbSet<PackingType> PackingTypes { get; set; }

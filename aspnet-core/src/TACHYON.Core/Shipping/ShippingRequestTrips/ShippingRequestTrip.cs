@@ -29,9 +29,8 @@ namespace TACHYON.Shipping.ShippingRequestTrips
         [ForeignKey("ShippingRequestId")]
         public ShippingRequest ShippingRequestFk { get; set; }
 
-        public Guid? DocumentId { get; set; }
-        public string DocumentName { get; set; }
-        public string DocumentContentType { get; set; }
+        public string Code { get; set; } = (new Random().Next(100000, 999999)).ToString();
+
 
     }
 }

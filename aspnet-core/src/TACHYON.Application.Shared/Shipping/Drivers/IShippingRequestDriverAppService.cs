@@ -11,8 +11,12 @@ namespace TACHYON.Shipping.Drivers
     public interface IShippingRequestDriverAppService: IApplicationService
     {
         Task<PagedResultDto<ShippingRequestTripDriverListDto>> GetAll(ShippingRequestTripDriverFilterInput input);
-        void StartTrip(long TripId);
-        Task<bool> ConfirmReceiving(string Code);
+        Task<bool> StartTrip(long TripId);
+        void ChangeTripStatus();
+        void GotoNextLocation(long PointId);
+        Task<bool> UploadPointDeliveryDocument(ShippingRequestTripDriverDocumentDto Input, string Code);
+        void SetRating(long PointId, int Rate);
+
 
     }
 
