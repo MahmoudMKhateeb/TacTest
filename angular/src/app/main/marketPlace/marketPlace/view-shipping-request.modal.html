@@ -59,11 +59,11 @@
                   </div>
                   <div class="d-flex justify-content-between align-items-center my-1">
                     <span class="text-dark-75 font-weight-bolder mr-2">{{ l('Origin')}}: </span>
-                    <span class="text-muted font-weight-bold">{{ record.originalFacility.cityDisplayName }}</span>
+                    <span class="text-muted font-weight-bold">{{ record.originalFacility?.cityDisplayName }}</span>
                   </div>
                   <div class="d-flex justify-content-between align-items-center my-1">
                     <span class="text-dark-75 font-weight-bolder mr-2">{{ l('Destination')}}: </span>
-                    <span class="text-muted font-weight-bold">{{ record.destinationFacility.cityDisplayName }}</span>
+                    <span class="text-muted font-weight-bold">{{ record.destinationFacility?.cityDisplayName }}</span>
                   </div>
                   <div class="d-flex justify-content-between align-items-center my-1" *ngIf="record.myBidPrice > 0">
                     <span class="text-dark-75 font-weight-bolder mr-2">Bid Price:</span>
