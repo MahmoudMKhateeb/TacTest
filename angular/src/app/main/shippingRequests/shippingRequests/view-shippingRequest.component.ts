@@ -7,6 +7,7 @@ import {
   ShippingRequestDto,
   ShippingRequestsServiceProxy,
   CancelBidShippingRequestInput,
+  RoutPointDto,
 } from '@shared/service-proxies/service-proxies';
 import { AppComponentBase } from '@shared/common/app-component-base';
 import { ActivatedRoute, NavigationEnd, Router, RouterEvent } from '@angular/router';
@@ -27,9 +28,12 @@ export class ViewShippingRequestComponent extends AppComponentBase implements On
   active = false;
   saving = false;
   CancelBidShippingRequest: CancelBidShippingRequestInput = new CancelBidShippingRequestInput();
-  item: GetShippingRequestForViewOutput;
-  private activeShippingRequestId: number;
-
+  shippingRequestforView: GetShippingRequestForViewOutput;
+  activeShippingRequestId: number;
+  wayPointsList: RoutPointDto[] = [];
+  wayPoints = [];
+  wayPointMapSource = undefined;
+  wayPointMapDest = undefined;
   breadcrumbs: BreadcrumbItem[] = [
     new BreadcrumbItem(this.l('ShippingRequest'), '/app/main/shippingRequests/shippingRequests'),
     new BreadcrumbItem(this.l('ShippingRequests') + '' + this.l('Details')),
@@ -45,8 +49,8 @@ export class ViewShippingRequestComponent extends AppComponentBase implements On
     private changeDetectorRef: ChangeDetectorRef
   ) {
     super(injector);
-    this.item = new GetShippingRequestForViewOutput();
-    this.item.shippingRequest = new ShippingRequestDto();
+    this.shippingRequestforView = new GetShippingRequestForViewOutput();
+    this.shippingRequestforView.shippingRequest = new ShippingRequestDto();
   }
 
   ngOnInit(): void {
@@ -59,12 +63,14 @@ export class ViewShippingRequestComponent extends AppComponentBase implements On
 
   show(shippingRequestId: number): void {
     this._shippingRequestsServiceProxy.getShippingRequestForView(shippingRequestId).subscribe((result) => {
-      this.item = result;
+      this.shippingRequestforView = result;
 
-      console.log(this.item);
+      console.log(this.shippingRequestforView);
 
-      this.activeShippingRequestId = this.item.shippingRequest.id;
+      this.activeShippingRequestId = this.shippingRequestforView.shippingRequest.id;
       this.active = true;
+      this.wayPointsList = this.shippingRequestforView.routPointDtoList;
+      this.wayPointsSetter();
     });
   }
 
@@ -135,5 +141,38 @@ export class ViewShippingRequestComponent extends AppComponentBase implements On
         });
       }
     });
+  }
+
+  //draw route(WayPoints) On Map
+  wayPointsSetter() {
+    console.log(this.wayPointsList);
+    this.wayPointMapSource = undefined;
+    this.wayPoints = [];
+    this.wayPointMapDest = undefined;
+    //take the first Point in the List and Set it As The source
+    this.wayPointMapSource = {
+      lat: this.wayPointsList[0]?.latitude || undefined,
+      lng: this.wayPointsList[0]?.longitude || undefined,
+    };
+    //Take Any Other Points but the First And last one in the List and set them to way points
+    for (let i = 1; i < this.wayPointsList.length - 1; i++) {
+      this.wayPoints.push({
+        location: {
+          lat: this.wayPointsList[i].latitude,
+          lng: this.wayPointsList[i].longitude,
+        },
+      });
+    }
+    //to avoid the source and Dest from becoming the Same when place the First Elem in wayPointsList
+    if (this.wayPointsList.length > 1) {
+      //set the Dest
+      this.wayPointMapDest = {
+        lat: this.wayPointsList[this.wayPointsList.length - 1]?.latitude || undefined,
+        lng: this.wayPointsList[this.wayPointsList.length - 1]?.longitude || undefined,
+      };
+    }
+    console.log(this.wayPointMapSource);
+    console.log(this.wayPointsList);
+    console.log(this.wayPointMapDest);
   }
 }
