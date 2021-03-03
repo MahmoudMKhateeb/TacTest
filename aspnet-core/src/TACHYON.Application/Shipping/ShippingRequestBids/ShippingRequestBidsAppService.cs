@@ -260,6 +260,8 @@ namespace TACHYON.Shipping.ShippingRequestBids
                     .ThenInclude(x=>x.CityFk)
                     .Include(x => x.RouteFk.DestinationFacilityFk)
                     .ThenInclude(x=>x.CityFk)
+                    .Include(x=>x.RouteFk.OriginCityFk)
+                    .Include(x => x.RouteFk.DestinationCityFk)
                     .Include(x => x.Tenant)
                     .Where(x => x.IsBid)
                     .WhereIf(input.TruckTypeId != null, x => x.TrucksTypeId == input.TruckTypeId)
@@ -308,14 +310,21 @@ namespace TACHYON.Shipping.ShippingRequestBids
                         {
                             Facility =ObjectMapper.Map<FacilityDto>(o.RouteFk.OriginFacilityFk),
                             CityDisplayName = o.RouteFk?.OriginFacilityFk?.CityFk.DisplayName,
-                            FacilityName = o.RouteFk?.OriginFacilityFk?.Name
+                            FacilityName = o.RouteFk?.OriginFacilityFk?.Name,
+                            Longitude = o.RouteFk?.OriginFacilityFk?.Location.X,
+                            Latitude = o.RouteFk?.OriginFacilityFk?.Location.Y
                         },
                         DestinationFacility =new GetFacilityForViewOutput()
                         {
                             Facility = ObjectMapper.Map<FacilityDto>(o.RouteFk.DestinationFacilityFk),
                             CityDisplayName = o.RouteFk?.DestinationFacilityFk?.CityFk.DisplayName,
-                            FacilityName = o.RouteFk?.DestinationFacilityFk?.Name
-                        } 
+                            FacilityName = o.RouteFk?.DestinationFacilityFk?.Name,
+                            Longitude = o.RouteFk?.DestinationFacilityFk?.Location.X,
+                            Latitude = o.RouteFk?.DestinationFacilityFk?.Location.Y
+                        },
+                        SourceCityName = o.RouteFk?.OriginCityFk.DisplayName,
+                        DestinationCityName = o.RouteFk?.DestinationCityFk.DisplayName
+
                     });
 
                 int totalCount = await filterBidShippingRequests.CountAsync();

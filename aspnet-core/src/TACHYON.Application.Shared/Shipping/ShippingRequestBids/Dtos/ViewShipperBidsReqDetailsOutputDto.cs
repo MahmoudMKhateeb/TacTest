@@ -42,6 +42,8 @@ namespace TACHYON.Shipping.ShippingRequestBids.Dtos
         /// shipping request good category
         /// </summary>
         public string GoodCategoryName { get; set; }
+        public string SourceCityName { get; set; }
+        public string DestinationCityName { get; set; }
 
 
     }

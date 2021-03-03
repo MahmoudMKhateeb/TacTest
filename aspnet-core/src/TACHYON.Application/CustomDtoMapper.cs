@@ -212,10 +212,11 @@ namespace TACHYON
             configuration.CreateMap<RoutStepDto, RoutStep>().ReverseMap();
 
             configuration.CreateMap<RoutPointDto, RoutPoint>()
-                //.ForMember(dest => dest.FacilityFk, opt => opt.MapFrom(src => src.FacilityDto))
+                .ForPath(dest => dest.FacilityFk.Location.X, opt => opt.MapFrom(src => src.Longitude))
+                .ForPath(dest => dest.FacilityFk.Location.Y, opt => opt.MapFrom(src => src.Latitude))
                 .ReverseMap();
             configuration.CreateMap<CreateOrEditRoutPointDto, RoutPoint>()
-                //.ForMember(dest => dest.GoodsDetails, opt => opt.MapFrom(src => src.GoodsDetailListDto))
+                .ForMember(dest => dest.GoodsDetails, opt => opt.MapFrom(src => src.GoodsDetailListDto))
                 .ReverseMap();
 
             configuration.CreateMap<RoutPoint, CreateOrEditRoutPointDto>()

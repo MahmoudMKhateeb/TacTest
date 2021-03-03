@@ -32,12 +32,6 @@ namespace TACHYON.Trucks
 
         public virtual string Capacity { get; set; }
 
-        //[Required]
-        //[StringLength(TruckConsts.MaxLicenseNumberLength, MinimumLength = TruckConsts.MinLicenseNumberLength)]
-        //public virtual string LicenseNumber { get; set; }
-
-        //public virtual DateTime LicenseExpirationDate { get; set; }
-
         public virtual bool? IsAttachable { get; set; }
 
         [StringLength(TruckConsts.MaxNoteLength, MinimumLength = TruckConsts.MinNoteLength)]
@@ -49,23 +43,7 @@ namespace TACHYON.Trucks
         [ForeignKey("TruckStatusId")]
         public TruckStatus TruckStatusFk { get; set; }
 
-       // public virtual long? Driver1UserId { get; set; }
-
-       // [ForeignKey("Driver1UserId")]
-       // public User Driver1UserFk { get; set; }
-
-        //public virtual long? Driver2UserId { get; set; }
-
-        //[ForeignKey("Driver2UserId")]
-        //public User Driver2UserFk { get; set; }
-
-        //public int? RentPrice { get; set; }
-
-        //public int? RentDuration { get; set; }
-
         public virtual Guid? PictureId { get; set; }
-
-
 
         // todo make sure those are nullable
 

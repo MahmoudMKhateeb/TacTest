@@ -36,8 +36,10 @@ using TACHYON.Shipping.ShippingRequests.Dtos;
 using TACHYON.Shipping.ShippingRequests.Exporting;
 using TACHYON.Shipping.ShippingTypes;
 using TACHYON.ShippingRequestVases;
+using TACHYON.ShippingRequestVases.Dtos;
 using TACHYON.Trailers.TrailerTypes;
 using TACHYON.Trucks;
+using TACHYON.Trucks.Dtos;
 using TACHYON.Trucks.TruckCategories.TransportTypes;
 using TACHYON.Trucks.TruckCategories.TransportTypes.Dtos;
 using TACHYON.Trucks.TruckCategories.TruckCapacities;
@@ -450,6 +452,12 @@ namespace TACHYON.Shipping.ShippingRequests
                         ShippingRequest = x,
                         ShippingRequestBidDtoList = x.ShippingRequestBids,
                         ShippingRequestVasesList = x.ShippingRequestVases,
+                        ShippingRequestVasesDto= x.ShippingRequestVases.Select(e =>
+                            new GetShippingRequestVasForViewDto
+                            {
+                                ShippingRequestVas = ObjectMapper.Map<ShippingRequestVasDto>(e),
+                                VasName = e.VasFk.DisplayName
+                            }),
                         OriginalCityName = x.RouteFk.OriginCityFk.DisplayName,
                         DestinationCityName = x.RouteFk.DestinationCityFk.DisplayName,
                         DriverName = x.AssignedDriverUserFk != null ? x.AssignedDriverUserFk.Name : "",
@@ -488,20 +496,19 @@ namespace TACHYON.Shipping.ShippingRequests
                         TruckTypeFullName = x.TruckTypeFullName,
                         RoutPointDtoList = ObjectMapper.Map<List<RoutPointDto>>(x.routPointDtoList),
                         packingTypeDisplayName = x.PackingTypeDisplayName,
-                        ShippingRequestVasDtoList =ObjectMapper.Map<List<CreateOrEditShippingRequestVasListDto>>(x.ShippingRequestVasesList)
+                        ShippingRequestVasDtoList =x.ShippingRequestVasesDto.ToList()
                     });
-
                 return new PagedResultDto<GetShippingRequestForViewOutput>(totalCount, result.ToList());
             }
         }
 
         protected virtual async Task<GetShippingRequestForViewOutput> _GetShippingRequestForView(long id)
         {
-            //ShippingRequest shippingRequest = await _shippingRequestRepository.GetAsync(id);
-            ShippingRequest shippingRequest = await _shippingRequestRepository.GetAll()
+            using (CurrentUnitOfWork.DisableFilter(AbpDataFilters.MustHaveTenant))
+            {
+                ShippingRequest shippingRequest = await _shippingRequestRepository.GetAll()
                     .Where(e => e.Id == id)
-                    .Include(x => x.ShippingRequestBids)
-                    .ThenInclude(b => b.Tenant)
+                    .Where(x=>x.TenantId==AbpSession.TenantId)
                     .Include(e => e.RouteFk)
                     .ThenInclude(e => e.RoutTypeFk)
                     .Include(e => e.ShippingRequestVases)
@@ -512,47 +519,62 @@ namespace TACHYON.Shipping.ShippingRequests
                     .Include(e => e.ShippingRequestStatusFk)
                     .Include(e => e.AssignedDriverUserFk)
                     .Include(e => e.AssignedTruckFk)
-                    .ThenInclude(e => e.TransportTypeFk)
-                    .Include(e => e.AssignedTruckFk)
-                    .ThenInclude(e => e.CapacityFk)
-                    .Include(e => e.AssignedTruckFk)
                     .ThenInclude(e => e.TrucksTypeFk)
+                    .Include(e=>e.TrucksTypeFk)
+                    .Include(e => e.TransportTypeFk)
+                    .Include(e => e.CapacityFk)
+                    .Include(e => e.AssignedTruckFk)
+                    .ThenInclude(e => e.TruckStatusFk)
                     .Include(e => e.GoodCategoryFk)
                     .Include(e => e.RoutPoints)
-                    .Include(e=>e.ShippingTypeFk)
-                    .Include(e=>e.PackingTypeFk)
+                    .ThenInclude(e => e.FacilityFk)
+                    .Include(e => e.ShippingTypeFk)
+                    .Include(e => e.PackingTypeFk)
                     .FirstOrDefaultAsync();
 
-            List<ShippingRequestBid> shippingRequestBidsList;
+                List<ShippingRequestBid> shippingRequestBidsList;
 
-            using (CurrentUnitOfWork.DisableFilter(AbpDataFilters.MustHaveTenant))
-            {
-                shippingRequestBidsList = await _shippingRequestBidRepository.GetAll()
-                    .Where(x => x.ShippingRequestId == id).ToListAsync();
+                    shippingRequestBidsList = await _shippingRequestBidRepository.GetAll()
+                        .Where(x => x.ShippingRequestId == id).ToListAsync();
+
+                    var shippingRequestVasList= await _shippingRequestVasRepository.GetAll()
+                        .Where(x => x.ShippingRequestId == id)
+                        .Select(e =>
+                        new GetShippingRequestVasForViewDto
+                        {
+                            ShippingRequestVas = ObjectMapper.Map<ShippingRequestVasDto>(e),
+                            VasName = e.VasFk.Name
+                        }).ToListAsync();
+
+                GetShippingRequestForViewOutput output = new GetShippingRequestForViewOutput
+                {
+                    ShippingRequest = ObjectMapper.Map<ShippingRequestDto>(shippingRequest),
+                    ShippingRequestBidDtoList = ObjectMapper.Map<List<ShippingRequestBidDto>>(shippingRequestBidsList),
+                    VasCount = shippingRequest.ShippingRequestVases.Count(),
+                    OriginalCityName = shippingRequest.RouteFk.OriginCityFk.DisplayName,
+                    DestinationCityName = shippingRequest.RouteFk.DestinationCityFk.DisplayName,
+                    DriverName = shippingRequest.AssignedDriverUserFk?.Name,
+                    GoodsCategoryName = shippingRequest.GoodCategoryFk?.DisplayName,
+                    RoutTypeName = shippingRequest.RouteFk.RoutTypeFk.DisplayName,
+                    ShippingRequestStatusName = shippingRequest.ShippingRequestStatusFk.DisplayName,
+                    TruckTypeDisplayName = shippingRequest.TrucksTypeFk?.DisplayName,
+                    TruckTypeFullName = shippingRequest.TransportTypeFk?.DisplayName
+                                        + "-" + shippingRequest.TrucksTypeFk?.DisplayName
+                                        + "-" + shippingRequest?.CapacityFk?.DisplayName,
+                    ShippingRequestVasDtoList = shippingRequestVasList,
+                    RoutPointDtoList = ObjectMapper.Map<List<RoutPointDto>>(shippingRequest.RoutPoints),
+                    ShippingTypeDisplayName = shippingRequest.ShippingTypeFk.DisplayName,
+                    packingTypeDisplayName = shippingRequest.PackingTypeFk.DisplayName,
+                    AssignedTruckDto = new GetTruckForViewOutput
+                    {
+                        Truck = ObjectMapper.Map<TruckDto>(shippingRequest.AssignedTruckFk),
+                        TruckStatusDisplayName = shippingRequest.AssignedTruckFk?.TruckStatusFk?.DisplayName,
+                        TrucksTypeDisplayName = shippingRequest.AssignedTruckFk?.TrucksTypeFk.DisplayName
+                    },
+                };
+
+                return output;
             }
-
-            GetShippingRequestForViewOutput output = new GetShippingRequestForViewOutput
-            {
-                ShippingRequest = ObjectMapper.Map<ShippingRequestDto>(shippingRequest),
-                ShippingRequestBidDtoList = ObjectMapper.Map<List<ShippingRequestBidDto>>(shippingRequestBidsList),
-                VasCount = shippingRequest.ShippingRequestVases.Count(),
-                OriginalCityName = shippingRequest.RouteFk.OriginCityFk.DisplayName,
-                DestinationCityName = shippingRequest.RouteFk.DestinationCityFk.DisplayName,
-                DriverName = shippingRequest.AssignedDriverUserFk?.FullName,
-                GoodsCategoryName = shippingRequest.GoodCategoryFk?.DisplayName,
-                RoutTypeName = shippingRequest.RouteFk.RoutTypeFk.DisplayName,
-                ShippingRequestStatusName = shippingRequest.ShippingRequestStatusFk.DisplayName,
-                TruckTypeDisplayName = shippingRequest.AssignedTruckFk?.TrucksTypeFk?.DisplayName,
-                TruckTypeFullName = shippingRequest.AssignedTruckFk?.TransportTypeFk?.DisplayName
-                                          + "-" + shippingRequest.AssignedTruckFk?.TrucksTypeFk?.DisplayName
-                                          + "-" + shippingRequest.AssignedTruckFk?.TransportTypeFk?.DisplayName,
-                ShippingRequestVasDtoList = ObjectMapper.Map<List<CreateOrEditShippingRequestVasListDto>>(shippingRequest.ShippingRequestVases),
-                RoutPointDtoList = ObjectMapper.Map<List<RoutPointDto>>(shippingRequest.RoutPoints),
-                ShippingTypeDisplayName = shippingRequest.ShippingTypeFk.DisplayName,
-                packingTypeDisplayName = shippingRequest.PackingTypeFk.DisplayName
-            };
-
-            return output;
         }
 
         protected virtual GetShippingRequestForEditOutput _GetShippingRequestForEdit(EntityDto<long> input)
