@@ -16,7 +16,7 @@ namespace TACHYON.Routs.RoutPoints
     public class RoutPoint: FullAuditedEntity<long>
     {
         public string DisplayName { get; set; }
-        public int? ParentId { get; set; }
+        public long? ParentId { get; set; }
         [ForeignKey("ParentId")]
         public RoutPoint RoutPointFk { get; set; }
 

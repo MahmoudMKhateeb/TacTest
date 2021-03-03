@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
+using TACHYON.Shipping.Trips;
 using TACHYON.Shipping.TripStatuses;
 
 namespace TACHYON.Shipping.Drivers.Dto

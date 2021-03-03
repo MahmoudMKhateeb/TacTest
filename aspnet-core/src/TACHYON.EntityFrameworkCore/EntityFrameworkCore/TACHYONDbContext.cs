@@ -60,9 +60,9 @@ namespace TACHYON.EntityFrameworkCore
     public class TACHYONDbContext : AbpZeroDbContext<Tenant, Role, User, TACHYONDbContext>, IAbpPersistedGrantDbContext
     {
         #region Trips
-        public virtual DbSet<ShippingRequestTripRoute> ShippingRequestTripsRoutes { get; set; }
+        public virtual DbSet<ShippingRequestTripPoint> ShippingRequestTripPoint { get; set; }
+        public virtual DbSet<RoutePointTransition> RoutePointTranstions { get; set; }
 
-        
         #endregion
         public virtual DbSet<TripStatus> TripStatuses { get; set; }
         

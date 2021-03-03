@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using NetTopologySuite.Geometries;
 using TACHYON.EntityFrameworkCore;
@@ -10,9 +11,10 @@ using TACHYON.EntityFrameworkCore;
 namespace TACHYON.Migrations
 {
     [DbContext(typeof(TACHYONDbContext))]
-    partial class TACHYONDbContextModelSnapshot : ModelSnapshot
+    [Migration("20210303073448_RoutePointTranstion")]
+    partial class RoutePointTranstion
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -2836,7 +2838,7 @@ namespace TACHYON.Migrations
                     b.ToTable("RoutPoints");
                 });
 
-            modelBuilder.Entity("TACHYON.Routs.RoutPoints.RoutePointTransition", b =>
+            modelBuilder.Entity("TACHYON.Routs.RoutPoints.RoutePointTranstion", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -2855,7 +2857,7 @@ namespace TACHYON.Migrations
 
                     b.HasIndex("ToPointId");
 
-                    b.ToTable("RoutePointTransitions");
+                    b.ToTable("RoutePointTranstions");
                 });
 
             modelBuilder.Entity("TACHYON.Routs.RoutSteps.RoutStep", b =>
@@ -4765,7 +4767,7 @@ namespace TACHYON.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("TACHYON.Routs.RoutPoints.RoutePointTransition", b =>
+            modelBuilder.Entity("TACHYON.Routs.RoutPoints.RoutePointTranstion", b =>
                 {
                     b.HasOne("TACHYON.Routs.RoutPoints.RoutPoint", "FromPoint")
                         .WithMany()
