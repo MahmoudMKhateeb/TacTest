@@ -465,13 +465,18 @@ namespace TACHYON.Shipping.ShippingRequests
                         RoutTypeName = x.RouteFk.RoutTypeFk.DisplayName,
                         ShippingRequestStatusName = x.ShippingRequestStatusFk.DisplayName,
                         TruckTypeDisplayName = x.AssignedTruckFk != null ? x.AssignedTruckFk.TrucksTypeFk.DisplayName : "",
-                        TruckTypeFullName = x.AssignedTruckFk != null
-                            ? (x.AssignedTruckFk.TransportTypeFk != null ?
-                                x.AssignedTruckFk.TransportTypeFk.DisplayName :
-                                "" + "-" + x.AssignedTruckFk.TrucksTypeFk != null ?
-                                    x.AssignedTruckFk.TrucksTypeFk.DisplayName :
-                                    "" + "-" + x.AssignedTruckFk != null ?
-                                        x.AssignedTruckFk.TransportTypeFk.DisplayName : "")
+                        TruckTypeFullName =
+                        //    x.TransportTypeFk!=null ?( x.TransportTypeFk.DisplayName 
+                        //    + "-" + x.TrucksTypeFk!=null ?(x.TrucksTypeFk.DisplayName 
+                        //    + "-" + x.CapacityFk!=null ?x.CapacityFk.DisplayName :""):"")
+                        //:"",
+                        x.TrucksTypeFk != null
+                            ? (x.TrucksTypeFk.TransportTypeFk != null ?
+                                x.TrucksTypeFk.TransportTypeFk.DisplayName :
+                                "" + "-" + x.TrucksTypeFk != null ?
+                                    x.TrucksTypeFk.DisplayName :
+                                    "" + "-" + x.TrucksTypeFk != null ?
+                                        x.TrucksTypeFk.TransportTypeFk.DisplayName : "")
                             : "",
                         routPointDtoList = x.RoutPoints,
                         PackingTypeDisplayName=x.PackingTypeFk.DisplayName
@@ -561,6 +566,8 @@ namespace TACHYON.Shipping.ShippingRequests
                     TruckTypeFullName = shippingRequest.TransportTypeFk?.DisplayName
                                         + "-" + shippingRequest.TrucksTypeFk?.DisplayName
                                         + "-" + shippingRequest?.CapacityFk?.DisplayName,
+                    CapacityDisplayName = shippingRequest?.CapacityFk?.DisplayName,
+                    TransportTypeDisplayName = shippingRequest.TransportTypeFk?.DisplayName,
                     ShippingRequestVasDtoList = shippingRequestVasList,
                     RoutPointDtoList = ObjectMapper.Map<List<RoutPointDto>>(shippingRequest.RoutPoints),
                     ShippingTypeDisplayName = shippingRequest.ShippingTypeFk.DisplayName,
