@@ -186,7 +186,9 @@ export class CreateOrEditDriverModalComponent extends AppComponentBase {
     );
     input.user.phoneNumber = input.user.userName;
     //#616
-    input.user.emailAddress = input.user.userName + '@' + this.appSession.tenancyName + '.com';
+    if (!input.user.emailAddress) {
+      input.user.emailAddress = input.user.userName + '@' + this.appSession.tenancyName + '.com';
+    }
 
     //docs
 

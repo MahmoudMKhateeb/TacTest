@@ -124,6 +124,10 @@
                       {{ 'PhoneNumber' | localize }}
                       <p-sortIcon field="username"></p-sortIcon>
                     </th>
+                    <th style="width: 250px;" pSortableColumn="emailAddress">
+                      {{ 'EmailAddress' | localize }}
+                      <p-sortIcon field="emailAddress"></p-sortIcon>
+                    </th>
                     <th style="width: 150px;" pSortableColumn="name">
                       {{ 'FirstName' | localize }}
                       <p-sortIcon field="name"></p-sortIcon>
@@ -236,6 +240,10 @@
                       <span>
                         {{ record.userName }}
                       </span>
+                    </td>
+                    <td style="width: 250px;">
+                      <span class="ui-column-title"> {{ 'EmailAddress' | localize }}</span>
+                      {{ record.emailAddress }}
                     </td>
                     <td style="width: 150px;">
                       <span class="ui-column-title"> {{ 'Name' | localize }}</span>
