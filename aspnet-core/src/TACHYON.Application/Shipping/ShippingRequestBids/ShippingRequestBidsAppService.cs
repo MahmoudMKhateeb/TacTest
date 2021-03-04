@@ -248,7 +248,7 @@ namespace TACHYON.Shipping.ShippingRequestBids
         [RequiresFeature(AppFeatures.Carrier)]
         public virtual async Task<PagedResultDto<GetAllBidShippingRequestsForCarrierOutput>> GetAllBidShippingRequestsForCarrier(GetAllBidsShippingRequestForCarrierInput input)
         {
-            using (CurrentUnitOfWork.DisableFilter(AbpDataFilters.MustHaveTenant))
+            using (CurrentUnitOfWork.DisableFilter(AbpDataFilters.MustHaveTenant, AbpDataFilters.MayHaveTenant))
             {
                 IQueryable<ShippingRequest> filterBidShippingRequests = _shippingRequestsRepository.GetAll()
                     .Include(x => x.ShippingRequestBidStatusFK)
