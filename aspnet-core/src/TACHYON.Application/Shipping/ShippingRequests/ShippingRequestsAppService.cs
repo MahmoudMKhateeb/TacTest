@@ -660,10 +660,13 @@ namespace TACHYON.Shipping.ShippingRequests
             input.IsBid = shippingRequest.IsBid;
             input.IsTachyonDeal = shippingRequest.IsTachyonDeal;
 
+           
+
+
             ObjectMapper.Map(input, shippingRequest);
 
 
-                ObjectMapper.Map(input.CreateOrEditRoutPointDtoList, shippingRequest.RoutPoints);
+             //   ObjectMapper.Map(input.CreateOrEditRoutPointDtoList, shippingRequest.RoutPoints);
 
             
 

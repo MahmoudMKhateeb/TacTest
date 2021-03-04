@@ -13,6 +13,7 @@ using Abp.UI.Inputs;
 using Abp.Webhooks;
 using AutoMapper;
 using System;
+using System.Linq;
 using TACHYON.AddressBook;
 using TACHYON.AddressBook.Dtos;
 using TACHYON.AddressBook.Ports;
@@ -125,6 +126,11 @@ namespace TACHYON
 {
     internal static class CustomDtoMapper
     {
+        private static IMapper _Mapper;
+        public static void SetMapper(IMapper Mapper)
+        {
+            _Mapper = Mapper;
+        }
         public static void CreateMappings(IMapperConfigurationExpression configuration)
         {
             #region Trips
@@ -185,12 +191,19 @@ namespace TACHYON
             configuration.CreateMap<ImportTruckDocumentFileDto, DocumentFile>().ReverseMap();
             configuration.CreateMap<CreateOrEditDocumentTypeDto, DocumentType>().ReverseMap();
 
-            configuration.CreateMap<CreateOrEditShippingRequestDto, ShippingRequest>()
-                .ForMember(dst => dst.RouteFk, opt => opt.MapFrom(src => src.CreateOrEditRouteDto))
-                .ForMember(dst => dst.RoutPoints, opt => opt.MapFrom(src => src.CreateOrEditRoutPointDtoList))
-                .ForMember(dst => dst.ShippingRequestVases, opt => opt.MapFrom(src => src.ShippingRequestVasList))
-                .ReverseMap();
+            configuration.CreateMap<CreateOrEditRoutPointDto, RoutPoint>().ReverseMap();
+            configuration.CreateMap<CreateOrEditShippingRequestVasListDto, ShippingRequestVas>().ReverseMap();
+            configuration.CreateMap<CreateOrEditRouteDto, Route>().ReverseMap();
 
+            configuration.CreateMap<CreateOrEditShippingRequestDto, ShippingRequest>()
+                .ForMember(d => d.RoutPoints, opt => opt.Ignore())
+            .AfterMap(AddOrUpdateShippingRequest)
+                .ReverseMap();
+            /*            configuration.CreateMap<CreateOrEditShippingRequestDto, ShippingRequest>()
+                            .ForMember(dst => dst.RouteFk, opt => opt.MapFrom(src => src.CreateOrEditRouteDto))
+                            .ForMember(dst => dst.RoutPoints, opt => opt.MapFrom(src => src.CreateOrEditRoutPointDtoList))
+                            .ForMember(dst => dst.ShippingRequestVases, opt => opt.MapFrom(src => src.ShippingRequestVasList))
+                            .ReverseMap();*/
             configuration.CreateMap<ShippingRequestVasListOutput, ShippingRequestVas>()
                 .ReverseMap();
             configuration.CreateMap<CreateOrEditShippingRequestVasListDto, ShippingRequestVas>()
@@ -388,6 +401,38 @@ namespace TACHYON
                   .EntityMap
                   .ForMember(dst => dst.Id, opt => opt.MapFrom(src => src.Id.ToString()))
                   .ReverseMap();
+        }
+
+        private static void AddOrUpdateShippingRequest(CreateOrEditShippingRequestDto dto, ShippingRequest Request)
+        {
+            foreach (var point in dto.CreateOrEditRoutPointDtoList)
+            {
+
+                if (point.Id == 0)
+                {
+
+                    Request.RoutPoints.Add(_Mapper.Map<RoutPoint>(point));
+                }
+                else
+                {
+                    _Mapper.Map(point, Request.RoutPoints.SingleOrDefault(c => c.Id == point.Id));
+                }
+            }
+
+            foreach (var vas in dto.ShippingRequestVasList)
+            {
+
+                if (vas.Id == 0)
+                {
+
+                    Request.ShippingRequestVases.Add(_Mapper.Map<ShippingRequestVas>(vas));
+                }
+                else
+                {
+                    _Mapper.Map(vas, Request.ShippingRequestVases.SingleOrDefault(c => c.Id == vas.Id));
+                }
+            }
+
         }
     }
 }

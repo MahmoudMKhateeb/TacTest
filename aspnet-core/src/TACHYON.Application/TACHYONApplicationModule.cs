@@ -2,6 +2,7 @@
 using Abp.Configuration;
 using Abp.Modules;
 using Abp.Reflection.Extensions;
+using AutoMapper;
 using TACHYON.Authorization;
 
 namespace TACHYON
@@ -11,7 +12,8 @@ namespace TACHYON
     /// </summary>
     [DependsOn(
         typeof(TACHYONApplicationSharedModule),
-        typeof(TACHYONCoreModule)
+        typeof(TACHYONCoreModule),
+         typeof(AbpAutoMapperModule)
         )]
     public class TACHYONApplicationModule : AbpModule
     {
@@ -31,6 +33,13 @@ namespace TACHYON
                 ));
             });
 
+        }
+        public override void PostInitialize()
+        {
+
+            var mapper = IocManager.Resolve<IMapper>();
+
+            CustomDtoMapper.SetMapper(mapper);
         }
 
         public override void Initialize()

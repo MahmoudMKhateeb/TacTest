@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
+using TACHYON.Common;
 using TACHYON.Shipping.Drivers.Dto;
 
 namespace TACHYON.Shipping.Drivers
@@ -16,6 +17,7 @@ namespace TACHYON.Shipping.Drivers
         void GotoNextLocation(long PointId);
         Task<bool> UploadPointDeliveryDocument(ShippingRequestTripDriverDocumentDto Input, string Code);
         void SetRating(long PointId, int Rate);
+        Task<bool> ConfirmReceiverCode(string Code);
 
 
     }

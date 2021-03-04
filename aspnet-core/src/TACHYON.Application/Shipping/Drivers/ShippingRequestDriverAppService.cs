@@ -13,7 +13,6 @@ using TACHYON.Routs.RoutPoints;
 using TACHYON.Shipping.Drivers.Dto;
 using TACHYON.Shipping.ShippingRequestTrips;
 using TACHYON.Shipping.Trips;
-using TACHYON.Shipping.TripStatuses;
 using TACHYON.Storage;
 
 namespace TACHYON.Shipping.Drivers
@@ -25,6 +24,7 @@ namespace TACHYON.Shipping.Drivers
         private readonly IRepository<RoutPoint, long> _RoutPointRepository;
 
         private readonly IBinaryObjectManager _BinaryObjectManager;
+
         public ShippingRequestDriverAppService(
             IRepository<ShippingRequestTrip> ShippingRequestTrip,
             IRepository<ShippingRequestTripPoint> ShippingRequestTripPointRepository,
@@ -35,6 +35,7 @@ namespace TACHYON.Shipping.Drivers
             _ShippingRequestTripPointRepository = ShippingRequestTripPointRepository;
             _RoutPointRepository = RoutPointRepository;
             _BinaryObjectManager = BinaryObjectManager;
+         
         }
         public async Task<PagedResultDto<ShippingRequestTripDriverListDto>> GetAll(ShippingRequestTripDriverFilterInput input)
         {
@@ -59,11 +60,12 @@ namespace TACHYON.Shipping.Drivers
                 .PageBy(input);
 
             var totalCount = await query.CountAsync();
-
             return new PagedResultDto<ShippingRequestTripDriverListDto>(
                 totalCount,
                 ObjectMapper.Map<List<ShippingRequestTripDriverListDto>>(query)
+
             );
+
         }
 
         //public  async Task<ShippingRequestTripDriverListDto> Get(long TripId)
@@ -102,7 +104,7 @@ namespace TACHYON.Shipping.Drivers
                     trip.TripStatusId = (int)ShippingRequestTripStatus.PickupWay;
                     trip.StartTripDate = Clock.Now;
 
-                    return true;
+                    return true ;
                 }
 
 
@@ -110,6 +112,9 @@ namespace TACHYON.Shipping.Drivers
             return false;
         }
 
+        /// <summary>
+        /// Change trip status
+        /// </summary>
         public async void ChangeTripStatus()
         {
             var trip =await GetActiveTrip();
@@ -123,7 +128,13 @@ namespace TACHYON.Shipping.Drivers
                     trip.TripStatusId = (int)ShippingRequestTripStatus.DropoffArrived;
                     break;
             }
+
         }
+
+        /// <summary>
+        /// Set new active dropoff point for trip
+        /// </summary>
+        /// <param name="PointId">Dropoff point id</param>
 
         public async void GotoNextLocation(long PointId)
         {
@@ -139,12 +150,17 @@ namespace TACHYON.Shipping.Drivers
             }
         }
 
- 
+        public async Task<bool> ConfirmReceiverCode(string Code)
+        {
+            var CurrentPoint = await _ShippingRequestTripPointRepository.SingleAsync(x => x.IsActive && x.Code == Code && x.Trip.AssignedDriverUserId== AbpSession.UserId);
+
+            return CurrentPoint != null;
+        }
 
         public async Task<bool> UploadPointDeliveryDocument(ShippingRequestTripDriverDocumentDto Input, string Code)
         {
 
-            var CurrentPoint = await _ShippingRequestTripPointRepository.SingleAsync(x => x.IsActive && x.Code == Code);
+            var CurrentPoint = await _ShippingRequestTripPointRepository.SingleAsync(x => x.IsActive && x.Code == Code && x.Trip.AssignedDriverUserId == AbpSession.UserId);
             if (CurrentPoint == null) return false;
 
             if (Input == null || string.IsNullOrEmpty(Input.DocumentBase64)) return false;      
@@ -192,7 +208,7 @@ namespace TACHYON.Shipping.Drivers
 
         private async Task<ShippingRequestTripPoint> GetActivePoint()
         {
-            var ActivePoint= await _ShippingRequestTripPointRepository.SingleAsync(x => x.IsActive);
+            var ActivePoint= await _ShippingRequestTripPointRepository.SingleAsync(x => x.IsActive && x.Trip.AssignedDriverUserId== AbpSession.UserId);
             if (ActivePoint == null) throw new UserFriendlyException(L("thetripIsNotFound"));
 
             return ActivePoint;
