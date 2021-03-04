@@ -15,9 +15,10 @@ namespace TACHYON.Shipping.Drivers
         Task<bool> StartTrip(long TripId);
         void ChangeTripStatus();
         void GotoNextLocation(long PointId);
+        Task<bool> ConfirmReceiverCode(string Code);
+
         Task<bool> UploadPointDeliveryDocument(ShippingRequestTripDriverDocumentDto Input, string Code);
         void SetRating(long PointId, int Rate);
-        Task<bool> ConfirmReceiverCode(string Code);
 
 
     }

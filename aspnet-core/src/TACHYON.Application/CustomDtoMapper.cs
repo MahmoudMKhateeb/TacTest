@@ -375,7 +375,6 @@ namespace TACHYON
 
             /* ADD YOUR OWN CUSTOM AUTOMAPPER MAPPINGS HERE */
         }
-
         /// <summary>
         /// MultiLingualMapping configuration 
         /// </summary>

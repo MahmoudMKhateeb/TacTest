@@ -19,6 +19,7 @@ namespace TACHYON.Shipping.Drivers
 {
     public class ShippingRequestDriverAppService : TACHYONAppServiceBase, IShippingRequestDriverAppService
     {
+
         private readonly IRepository<ShippingRequestTrip> _ShippingRequestTrip;
         private readonly IRepository<ShippingRequestTripPoint> _ShippingRequestTripPointRepository;
         private readonly IRepository<RoutPoint, long> _RoutPointRepository;
