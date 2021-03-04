@@ -197,6 +197,7 @@ namespace TACHYON
 
             configuration.CreateMap<CreateOrEditShippingRequestDto, ShippingRequest>()
                 .ForMember(d => d.RoutPoints, opt => opt.Ignore())
+                .ForMember(d => d.ShippingRequestVases, opt => opt.Ignore())
             .AfterMap(AddOrUpdateShippingRequest)
                 .ReverseMap();
             /*            configuration.CreateMap<CreateOrEditShippingRequestDto, ShippingRequest>()
