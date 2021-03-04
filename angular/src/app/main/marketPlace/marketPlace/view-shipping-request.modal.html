@@ -17,90 +17,81 @@
       </div>
       <div class="modal-body">
         <div class="row">
-          <div class="col-xl-12">
-            <!--begin::Card-->
-            <div class="card card-custom gutter-b card-stretch">
-              <!--begin::Body-->
-              <div class="card-body text-center pt-4">
-                <!--begin::User-->
-                <div class="mt-7">
-                  <div class="symbol symbol-circle symbol-lg-90">
-                    <span class="font-size-h1 symbol-label font-weight-boldest">SH</span>
-                  </div>
-                </div>
-                <!--end::User-->
-                <!--begin::Name-->
-                <div class="my-4">
-                  <a class="text-dark font-weight-bold text-hover-primary font-size-h4">{{ record.shipperName }}</a>
-                </div>
-                <!--end::Name-->
-                <div class="mt-2 mb-2">
-                  <span class="btn btn-text btn-light-success btn-sm font-weight-bold">
-                    Status: {{ record.shippingRequestBidStatusName || 'unknown' }}
-                  </span>
-                </div>
-                <!-- begin::Label -->
-                <span class="btn btn-light-primary btn-sm font-weight-bold btn-upper btn-text">
-                  Start Date: {{ record.bidStartDate | momentFormat: 'L' }}</span
-                >
-                <span class="btn btn-light-danger btn-sm font-weight-bold btn-upper btn-text">
-                  End Date: {{ record.bidEndDate | momentFormat: 'L'}}</span
-                >
-                <!-- end::Label-->
-                <!-- START::CONTENT -->
-                <div class="my-5">
-                  <div class="d-flex justify-content-between align-items-center my-1">
-                    <span class="text-dark-75 font-weight-bolder mr-2">{{ l('truckType')}}</span>
-                    <a class="text-muted text-primary"> {{ record.truckTypeDisplayName }}</a>
-                  </div>
-                  <div class="d-flex justify-content-between align-items-center my-1">
-                    <span class="text-dark-75 font-weight-bolder mr-2">{{ l('GoodCategoryName') }}</span>
-                    <a class="text-muted text-hover-primary">{{ record.goodCategoryName }}</a>
-                  </div>
-                  <div class="d-flex justify-content-between align-items-center my-1">
-                    <span class="text-dark-75 font-weight-bolder mr-2">{{ l('Origin')}}: </span>
-                    <span class="text-muted font-weight-bold">{{ record.originalFacility?.cityDisplayName }}</span>
-                  </div>
-                  <div class="d-flex justify-content-between align-items-center my-1">
-                    <span class="text-dark-75 font-weight-bolder mr-2">{{ l('Destination')}}: </span>
-                    <span class="text-muted font-weight-bold">{{ record.destinationFacility?.cityDisplayName }}</span>
-                  </div>
-                  <div class="d-flex justify-content-between align-items-center my-1" *ngIf="record.myBidPrice > 0">
-                    <span class="text-dark-75 font-weight-bolder mr-2">Bid Price:</span>
-                    <span class="text-muted font-weight-bold">{{ record.myBidPrice || 'unknown' }}</span>
-                  </div>
+          <!--begin::Body-->
+          <div class="col-xl-12 text-center pt-4">
+            <!--begin::Map-->
+            <div class="mb-5">
+              <agm-map [latitude]="24.717942" [longitude]="46.675761" [zoom]="9">
+                <!--                          <agm-direction-->
+                <!--                              *ngIf="wayPointMapDest && wayPointMapSource"-->
+                <!--                              [origin]="wayPointMapSource"-->
+                <!--                              [destination]="wayPointMapDest"-->
+                <!--                              [waypoints]="wayPoints"-->
+                <!--                              [travelMode]="'DRIVING'"-->
+                <!--                          ></agm-direction>-->
+              </agm-map>
+            </div>
+            <!--end::Map-->
+            <!-- begin::Label -->
+            <span class="btn btn-text btn-light-success btn-sm font-weight-bold">
+              Status: {{ record.shippingRequestBidStatusName || 'unknown' }}
+            </span>
+            <span class="btn btn-light-primary btn-sm font-weight-bold btn-upper btn-text">
+              Start Date: {{ record.bidStartDate | momentFormat: 'L' }}</span
+            >
+            <span class="btn btn-light-danger btn-sm font-weight-bold btn-upper btn-text"> End Date: {{ record.bidEndDate | momentFormat: 'L'}}</span>
+            <!-- end::Label-->
+            <!-- START::CONTENT -->
+            <div class="my-5 mx-5">
+              <div class="d-flex justify-content-between align-items-center my-1">
+                <span class="text-dark-75 font-weight-bolder mr-2">{{ l('truckType')}}</span>
+                <a class="text-muted text-primary"> {{ record.truckTypeDisplayName }}</a>
+              </div>
+              <div class="d-flex justify-content-between align-items-center my-1">
+                <span class="text-dark-75 font-weight-bolder mr-2">{{ l('GoodCategoryName') }}</span>
+                <a class="text-muted text-hover-primary">{{ record.goodCategoryName }}</a>
+              </div>
+              <div class="d-flex justify-content-between align-items-center my-1">
+                <span class="text-dark-75 font-weight-bolder mr-2">{{ l('Origin')}}: </span>
+                <span class="text-muted font-weight-bold">{{ record.originalFacility?.cityDisplayName }}</span>
+              </div>
+              <div class="d-flex justify-content-between align-items-center my-1">
+                <span class="text-dark-75 font-weight-bolder mr-2">{{ l('Destination')}}: </span>
+                <span class="text-muted font-weight-bold">{{ record.destinationFacility?.cityDisplayName }}</span>
+              </div>
+              <div class="d-flex justify-content-between align-items-center my-1" *ngIf="record.myBidPrice > 0">
+                <span class="text-dark-75 font-weight-bolder mr-2">Bid Price:</span>
+                <span class="text-muted font-weight-bold">{{ record.myBidPrice || 'unknown' }}</span>
+              </div>
 
-                  <div class="d-flex justify-content-between align-items-center mt-8">
-                    <div class="input-group">
-                      <div class="input-group-prepend">
-                        <span class="input-group-text">$</span>
-                      </div>
-                      <input
-                        type="number"
-                        class="form-control"
-                        [class.is-invalid]="invalid"
-                        [disabled]="saving"
-                        [(ngModel)]="price"
-                        placeholder="{{ l('BidAmount')}}"
-                      />
-                      <div class="input-group-append">
-                        <button
-                          class="btn btn-primary font-weight-bolder btn-sm py-3 px-6 text-uppercase"
-                          type="button"
-                          [disabled]="saving"
-                          (click)="MakeABid(record.shippingRequestId)"
-                        >
-                          {{ record.myBidId ? l('update') : l('place') }}
-                        </button>
-                      </div>
-                    </div>
+              <div class="d-flex justify-content-between align-items-center mt-8">
+                <div class="input-group">
+                  <div class="input-group-prepend">
+                    <span class="input-group-text">$</span>
+                  </div>
+                  <input
+                    type="number"
+                    class="form-control"
+                    [class.is-invalid]="invalid"
+                    [disabled]="saving"
+                    [(ngModel)]="price"
+                    placeholder="{{ l('BidAmount')}}"
+                  />
+                  <div class="input-group-append">
+                    <button
+                      class="btn btn-primary font-weight-bolder btn-sm py-3 px-6 text-uppercase"
+                      type="button"
+                      [disabled]="saving"
+                      (click)="MakeABid(record.shippingRequestId)"
+                    >
+                      {{ record.myBidId ? l('update') : l('place') }}
+                    </button>
                   </div>
                 </div>
               </div>
-              <!--end::Body-->
             </div>
-            <!--end::Card-->
           </div>
+          <!--end::Body-->
         </div>
       </div>
       <div class="modal-footer">

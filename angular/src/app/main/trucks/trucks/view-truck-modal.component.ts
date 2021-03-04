@@ -1,6 +1,6 @@
 ﻿import { Component, ViewChild, Injector, Output, EventEmitter } from '@angular/core';
 import { ModalDirective } from 'ngx-bootstrap/modal';
-import { GetTruckForViewDto, TruckDto } from '@shared/service-proxies/service-proxies';
+import { GetTruckForViewOutput, TruckDto } from '@shared/service-proxies/service-proxies';
 import { AppComponentBase } from '@shared/common/app-component-base';
 
 @Component({
@@ -14,15 +14,15 @@ export class ViewTruckModalComponent extends AppComponentBase {
   active = false;
   saving = false;
 
-  item: GetTruckForViewDto;
+  item: GetTruckForViewOutput;
 
   constructor(injector: Injector) {
     super(injector);
-    this.item = new GetTruckForViewDto();
+    this.item = new GetTruckForViewOutput();
     this.item.truck = new TruckDto();
   }
 
-  show(item: GetTruckForViewDto): void {
+  show(item: GetTruckForViewOutput): void {
     this.item = item;
     this.active = true;
     this.modal.show();
