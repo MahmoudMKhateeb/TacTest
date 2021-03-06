@@ -365,6 +365,7 @@ export class RouteStepsForCreateShippingRequstComponent extends AppComponentBase
       this.singleWayPoint.goodsDetailListDto = [];
     }
     this.singleWayPoint.goodsDetailListDto.push(this.goodsDetail);
+    this.goodsDetail = new GoodsDetailDto();
     this.createOrEditGoodDetail.hide();
   }
 
