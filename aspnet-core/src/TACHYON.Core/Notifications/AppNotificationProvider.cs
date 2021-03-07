@@ -117,7 +117,12 @@ namespace TACHYON.Notifications
                     displayName:L("StartShippmentNotificationDefinition")
                     )
                 );
-
+            context.Manager.Add(
+                new NotificationDefinition(
+                    AppNotificationNames.ShipperShippingRequestFinish,
+                    displayName: L("ShipperShippingRequestFinishNotificationDefinition")
+                    )
+                );
             #endregion
         }
 

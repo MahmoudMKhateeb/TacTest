@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using TACHYON.Authorization.Users;
 using TACHYON.Documents.DocumentFiles;
 using TACHYON.MultiTenancy;
+using TACHYON.Shipping.ShippingRequests;
 
 namespace TACHYON.Notifications
 {
@@ -29,6 +30,7 @@ namespace TACHYON.Notifications
         Task AcceptShippingRequestBid(UserIdentifier argsUser, long shippingRequestBidId);
         Task ShippingRequestAsBidWithSameTruckAsync(UserIdentifier[] argsUser, long shippingRequestId);
         Task StartShippment(UserIdentifier argsUser, long TripId, string PickupFacilityName);
+        Task ShipperShippingRequestFinish(UserIdentifier argsUser, ShippingRequest Request);
         #endregion
         Task WelcomeToTheApplicationAsync(User user);
 

@@ -31,6 +31,7 @@ namespace TACHYON.Notifications
         public const string TenantDocumentFileUpdate = "App.TenantDocumentFileUpdate";
         public const string StartShippment = "App.StartShippment";
 
+        public const string ShipperShippingRequestFinish = "App.Shipper.ShippingRequest.Finish";
         #endregion
 
     }

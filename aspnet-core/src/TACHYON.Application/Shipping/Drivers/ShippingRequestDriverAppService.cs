@@ -1,4 +1,5 @@
-﻿using Abp.Application.Services.Dto;
+﻿using Abp;
+using Abp.Application.Services.Dto;
 using Abp.Domain.Repositories;
 using Abp.Linq.Extensions;
 using Abp.Timing;
@@ -9,7 +10,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Dynamic.Core;
 using System.Threading.Tasks;
+using TACHYON.Authorization.Users;
 using TACHYON.Net.Sms;
+using TACHYON.Notifications;
 using TACHYON.Routs.RoutPoints;
 using TACHYON.Shipping.Drivers.Dto;
 using TACHYON.Shipping.ShippingRequests;
@@ -27,7 +30,10 @@ namespace TACHYON.Shipping.Drivers
         private readonly IRepository<RoutPoint, long> _RoutPointRepository;
         private readonly IRepository<ShippingRequest, long> _ShippingRequestRepository;
         private readonly ISmsSender _smsSender;
+        private readonly IAppNotifier _appNotifier;
+
         private readonly IBinaryObjectManager _BinaryObjectManager;
+        private readonly UserManager _userManager;
 
         public ShippingRequestDriverAppService(
             IRepository<ShippingRequestTrip> ShippingRequestTrip,
@@ -35,7 +41,9 @@ namespace TACHYON.Shipping.Drivers
             IRepository<RoutPoint, long> RoutPointRepository,
             IRepository<ShippingRequest, long> ShippingRequestRepository,
             IBinaryObjectManager BinaryObjectManager,
-            ISmsSender smsSender)
+            ISmsSender smsSender,
+            IAppNotifier appNotifier,
+            UserManager userManager)
         {
             _ShippingRequestTrip = ShippingRequestTrip;
             _ShippingRequestTripPointRepository = ShippingRequestTripPointRepository;
@@ -43,6 +51,8 @@ namespace TACHYON.Shipping.Drivers
             _RoutPointRepository = RoutPointRepository;
             _BinaryObjectManager = BinaryObjectManager;
             _smsSender = smsSender;
+            _appNotifier = appNotifier;
+            _userManager = userManager;
 
 
         }
@@ -282,6 +292,8 @@ namespace TACHYON.Shipping.Drivers
             {
                 var Request = await _ShippingRequestRepository.SingleAsync(x=>x.Id== RequestId);
                 Request.ShippingRequestStatusId =(int) ShippingRequestStatus.Finished;
+
+                await _appNotifier.ShipperShippingRequestFinish(new UserIdentifier(Request.TenantId,  _userManager.GetAdminByTenantIdAsync(Request.TenantId).Id), Request);
             }
         }
 

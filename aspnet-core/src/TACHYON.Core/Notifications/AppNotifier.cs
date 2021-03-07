@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using TACHYON.Authorization.Users;
 using TACHYON.Documents.DocumentFiles;
 using TACHYON.MultiTenancy;
+using TACHYON.Shipping.ShippingRequests;
 
 namespace TACHYON.Notifications
 {
@@ -165,6 +166,21 @@ namespace TACHYON.Notifications
             notificationData["tripId"] = TripId;
             notificationData["PickupFacilityName"] = PickupFacilityName;
             await _notificationPublisher.PublishAsync(AppNotificationNames.StartShippment,
+                notificationData,
+                userIds: new[] { argsUser });
+        }
+
+
+        public async Task ShipperShippingRequestFinish(UserIdentifier argsUser, ShippingRequest Request)
+        {
+            var notificationData = new LocalizableMessageNotificationData(
+                new LocalizableString(
+                    L("ShipperShippingRequestFinishNotificationMessage"),
+                    TACHYONConsts.LocalizationSourceName
+                )
+            );
+            notificationData["requestid"] = Request.Id;
+            await _notificationPublisher.PublishAsync(AppNotificationNames.ShipperShippingRequestFinish,
                 notificationData,
                 userIds: new[] { argsUser });
         }
