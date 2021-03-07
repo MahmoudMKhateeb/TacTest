@@ -13,6 +13,7 @@ using Abp.UI.Inputs;
 using Abp.Webhooks;
 using AutoMapper;
 using System;
+using System.Collections.ObjectModel;
 using System.Linq;
 using TACHYON.AddressBook;
 using TACHYON.AddressBook.Dtos;
@@ -173,8 +174,8 @@ namespace TACHYON
             configuration.CreateMap<CreateOrEditDocumentsEntityDto, DocumentsEntity>().ReverseMap();
             configuration.CreateMap<DocumentFileForCreateOrEditDto, DocumentFile>().ReverseMap();
             configuration.CreateMap<DocumentsEntityDto, DocumentsEntity>().ReverseMap();
-            configuration.CreateMap<CreateOrEditShippingRequestStatusDto, ShippingRequestStatus>().ReverseMap();
-            configuration.CreateMap<ShippingRequestStatusDto, ShippingRequestStatus>().ReverseMap();
+            configuration.CreateMap<CreateOrEditShippingRequestStatusDto, Shipping.ShippingRequestStatuses.ShippingRequestStatus>().ReverseMap();
+            configuration.CreateMap<ShippingRequestStatusDto, Shipping.ShippingRequestStatuses.ShippingRequestStatus>().ReverseMap();
             configuration.CreateMap<CreateOrEditPickingTypeDto, PickingType>().ReverseMap();
             configuration.CreateMap<PickingTypeDto, PickingType>().ReverseMap();
             configuration.CreateMap<CreateOrEditPortDto, Port>().ReverseMap();
@@ -410,7 +411,7 @@ namespace TACHYON
 
                 if (!point.Id.HasValue)
                 {
-
+                    if (Request.RoutPoints == null) Request.RoutPoints  = new Collection<RoutPoint>();
                     Request.RoutPoints.Add(_Mapper.Map<RoutPoint>(point));
                 }
                 else
@@ -424,7 +425,7 @@ namespace TACHYON
 
                 if (!vas.Id.HasValue )
                 {
-
+                    if (Request.ShippingRequestVases==null) Request.ShippingRequestVases= new Collection<ShippingRequestVas>();
                     Request.ShippingRequestVases.Add(_Mapper.Map<ShippingRequestVas>(vas));
                 }
                 else

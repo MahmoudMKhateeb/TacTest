@@ -6,5 +6,6 @@ namespace TACHYON.Shipping.Drivers.Dto
 {
    public class ShippingRequestTripDriverRoutePointDto
     {
+
     }
 }
