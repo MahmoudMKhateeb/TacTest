@@ -29,6 +29,8 @@ namespace TACHYON.Notifications
         public const string DocumentFileBeforExpiration = "App.DocumentFileBeforExpiration";
         public const string DocumentFileExpiration = "App.DocumentFileExpiration";
         public const string TenantDocumentFileUpdate = "App.TenantDocumentFileUpdate";
+        public const string StartShippment = "App.StartShippment";
+
         #endregion
 
     }

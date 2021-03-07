@@ -108,8 +108,15 @@ namespace TACHYON.Notifications
               AppNotificationNames.TenantDocumentFileUpdate,
               displayName: L("TenantDocumentFileUpdateNotificationDefinition"),
                permissionDependency: new SimplePermissionDependency(AppPermissions.Pages_Tenants)
-          )
-      );
+              )
+          );
+
+            context.Manager.Add(
+                new NotificationDefinition(
+                    AppNotificationNames.StartShippment,
+                    displayName:L("StartShippmentNotificationDefinition")
+                    )
+                );
 
             #endregion
         }

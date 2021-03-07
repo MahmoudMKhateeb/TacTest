@@ -153,6 +153,21 @@ namespace TACHYON.Notifications
                 notificationData,
                 userIds: argsUser );
         }
+
+        public async Task StartShippment(UserIdentifier argsUser, long TripId,string PickupFacilityName)
+        {
+            var notificationData = new LocalizableMessageNotificationData(
+                new LocalizableString(
+                    L("StartShippmentNotificationMessage"),
+                    TACHYONConsts.LocalizationSourceName
+                )
+            );
+            notificationData["tripId"] = TripId;
+            notificationData["PickupFacilityName"] = PickupFacilityName;
+            await _notificationPublisher.PublishAsync(AppNotificationNames.StartShippment,
+                notificationData,
+                userIds: new[] { argsUser });
+        }
         /// <summary>
         /// For documentFiles befor file expiration date 
         /// </summary>
