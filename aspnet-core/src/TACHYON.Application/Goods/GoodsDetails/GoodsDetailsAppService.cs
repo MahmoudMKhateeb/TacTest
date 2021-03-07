@@ -26,7 +26,7 @@ namespace TACHYON.Goods.GoodsDetails
     public class GoodsDetailsAppService : TACHYONAppServiceBase, IGoodsDetailsAppService
     {
         private readonly IRepository<GoodsDetail, long> _goodsDetailRepository;
-        private readonly IRepository<RoutStep, long> _routStepRepository;
+        private readonly IRepository<RoutPoint, long> _routPointRepository;
         private readonly IGoodsDetailsExcelExporter _goodsDetailsExcelExporter;
         private readonly IRepository<GoodCategory, int> _lookup_goodCategoryRepository;
 
@@ -34,12 +34,12 @@ namespace TACHYON.Goods.GoodsDetails
         public GoodsDetailsAppService(IRepository<GoodsDetail, long> goodsDetailRepository, 
             IGoodsDetailsExcelExporter goodsDetailsExcelExporter,
             IRepository<GoodCategory, int> lookup_goodCategoryRepository,
-            IRepository<RoutStep, long> routStepRepository)
+            IRepository<RoutPoint, long> routPointRepository)
         {
             _goodsDetailRepository = goodsDetailRepository;
             _goodsDetailsExcelExporter = goodsDetailsExcelExporter;
             _lookup_goodCategoryRepository = lookup_goodCategoryRepository;
-            _routStepRepository = routStepRepository;
+            _routPointRepository = routPointRepository;
         }
 
         public async Task<PagedResultDto<GetGoodsDetailForViewDto>> GetAll(GetAllGoodsDetailsInput input)
@@ -250,36 +250,28 @@ namespace TACHYON.Goods.GoodsDetails
         //    return output;
         //}
 
-        //public IEnumerable<GetGoodsDetailsForWaybillsOutput> GetShippingrequestGoodsDetailsForMultipleDropWaybill()
-        //{
-        //    var routStep = _routStepRepository.FirstOrDefault(x => x.Id == 1);
+        public IEnumerable<GetGoodsDetailsForWaybillsOutput> GetShippingrequestGoodsDetailsForMultipleDropWaybill()
+        {
+            var goods = _goodsDetailRepository.GetAll()
+                .Where(x => x.RoutPointId == 62);
 
-        //    var goods = _routPointGoodsDetailRepository.GetAll()
-        //        .Where(x => x.GoodsDetailsFk.ShippingRequestId == routStep.ShippingRequestId)
-        //        .Where(x=>x.RoutPointId==routStep.DestinationRoutPointId);
+            var query = goods.Select(x => new
+            {
+                Description = x.Description,
+                //Amount which will be dropped
+                TotalAmount = x.Amount,
+                UnitOfMeasureDisplayName = x.UnitOfMeasureFk.DisplayName
+            });
 
-        //    var totalWeight = _goodsDetailRepository.GetAll()
-        //        .Where(x => x.ShippingRequestId == routStep.ShippingRequestId).Sum(e => e.Weight);
-
-        //    var query = goods.Select(x => new
-        //    {
-        //        Description = x.GoodsDetailsFk.Description,
-        //        //Amount which will be dropped
-        //        TotalAmount = x.Amount,
-        //        UnitOfMeasureDisplayName = x.GoodsDetailsFk.UnitOfMeasureFk.DisplayName,
-        //        goodsDetails=x.GoodsDetailsFk
-        //    });
-
-        //    var output = query.ToList().Select(e =>
-        //        new GetGoodsDetailsForWaybillsOutput()
-        //        {
-        //            UnitOfMeasureDisplayName = e.UnitOfMeasureDisplayName,
-        //            TotalAmount = e.TotalAmount,
-        //            Description = e.Description,
-        //            TotalWeight = totalWeight
-        //        });
-        //    return output;
-        //}
+            var output = query.ToList().Select(e =>
+                new GetGoodsDetailsForWaybillsOutput()
+                {
+                    UnitOfMeasureDisplayName = e.UnitOfMeasureDisplayName,
+                    TotalAmount = e.TotalAmount,
+                    Description = e.Description,
+                });
+            return output;
+        }
 
 
 

@@ -1010,23 +1010,23 @@ namespace TACHYON.Shipping.ShippingRequests
         //Multiple Drops 
         public IEnumerable<GetMultipleDropWaybillOutput> GetMultipleDropWaybill()
         {
-            using (CurrentUnitOfWork.DisableFilter((AbpDataFilters.MustHaveTenant)))
+            using (CurrentUnitOfWork.DisableFilter(AbpDataFilters.MustHaveTenant, AbpDataFilters.MayHaveTenant))
             {
                 //get shipping request id by step id
-                var routStep = _routStepRepository.FirstOrDefault(x => x.Id == 1);
+                var routPoint = _routPointRepository.FirstOrDefault(x => x.Id == 62);
 
                 var info = _shippingRequestRepository.GetAll()
                     .Where(e => e.TenantId == AbpSession.TenantId)
-                    .Where(e => e.Id == routStep.ShippingRequestId);
+                    .Where(e => e.Id == routPoint.ShippingRequestId);
 
                 var query = info.Select(x => new
                 {
                     MasterWaybillNo = x.Id,
-                    SubWaybillNo=routStep.Id,
+                    SubWaybillNo= routPoint.Id,
                     ShippingRequestStatus = "Draft",
                     SenderCompanyName = x.Tenant.companyName,
                     ReceiverCompanyName = x.CarrierTenantFk != null ? x.CarrierTenantFk.companyName : "",
-                    DriverName = x.AssignedDriverUserFk != null ? x.AssignedDriverUserFk.FullName : "",
+                    DriverName = x.AssignedDriverUserFk != null ? x.AssignedDriverUserFk.Name : "",
                     DriverIqamaNo = "",
                     TruckTypeDisplayName = x.AssignedTruckFk != null
                         ? (x.AssignedTruckFk.TransportTypeFk != null ?
@@ -1037,23 +1037,28 @@ namespace TACHYON.Shipping.ShippingRequests
                                     x.AssignedTruckFk.CapacityFk.DisplayName : "")
                         : "",
                     PlateNumber = x.AssignedTruckFk != null ? x.AssignedTruckFk.PlateNumber : "",
-                    PackingTypeDisplayName = "",
-                    NumberOfPacking = 0,
+                    PackingTypeDisplayName = x.PackingTypeFk.DisplayName,
+                    NumberOfPacking = x.NumberOfPacking,
                     StartTripDate = (x.StartTripDate != null && x.StartTripDate.Value.Year > 1)
                         ? x.StartTripDate.Value.ToShortDateString()
                         : "",
+                    DroppFacilityName =x.RouteFk.DestinationFacilityFk.Name,
+                    DroppCountryName = x.RouteFk.DestinationFacilityFk.CityFk.CountyFk.DisplayName,
+                    DroppCityName = x.RouteFk.DestinationFacilityFk.CityFk.DisplayName,
+                    DroppArea = x.RouteFk.DestinationFacilityFk.Address,
+                    CarrierName= x.CarrierTenantFk!=null ?x.CarrierTenantFk.Name :"",
+                    TotalWeight=x.TotalWeight,
+                    GoodsCategoryDisplayName=x.GoodCategoryFk.DisplayName
                 });
 
-                var delivery = _routStepRepository
-                    .GetAll()
-                    .Where(x => x.ShippingRequestId == 1)
-                    .Where(x => x.DestinationRoutPointFk.PickingTypeId == 2)
-                    .OrderByDescending(x => x.Order)
-                    .Include(x => x.DestinationRoutPointFk.FacilityFk)
-                    .ThenInclude(x => x.CityFk)
-                    .ThenInclude(x => x.CountyFk)
-                    .Select(x => x.DestinationRoutPointFk.FacilityFk)
-                    .FirstOrDefault();
+                //var delivery = _shippingRequestRepository
+                //    .GetAll()
+                //    .Where(x => x.Id == routPoint.ShippingRequestId)
+                //    .Include(x=>x.RouteFk.DestinationFacilityFk)
+                //    .ThenInclude(x => x.CityFk)
+                //    .ThenInclude(x => x.CountyFk)
+                //    .Select(x => x.RouteFk.DestinationFacilityFk)
+                //    .FirstOrDefault();
 
 
                 var finalOutput = query.ToList().Select(x
@@ -1069,13 +1074,17 @@ namespace TACHYON.Shipping.ShippingRequests
                         DriverIqamaNo = "",
                         TruckTypeDisplayName = x.TruckTypeDisplayName,
                         PlateNumber = x.PlateNumber,
-                        PackingTypeDisplayName = "",
-                        NumberOfPacking = 0,
+                        PackingTypeDisplayName = x.PackingTypeDisplayName,
+                        NumberOfPacking = x.NumberOfPacking,
                         StartTripDate = x.StartTripDate,
-                        DroppFacilityName = delivery?.Name,
-                        DroppCountryName = delivery?.CityFk.CountyFk.DisplayName,
-                        DroppCityName = delivery?.CityFk.DisplayName,
-                        DroppArea = delivery?.Address
+                        DroppFacilityName = x.DroppFacilityName,
+                        DroppCountryName =x.DroppCountryName,
+                        DroppCityName = x.DroppCityName,
+                        DroppArea = x.DroppArea,
+                        CarrierName = x.CarrierName,
+                        ClientName = "Shipper",
+                        TotalWeight = x.TotalWeight,
+                        GoodsCategoryDisplayName = x.GoodsCategoryDisplayName
                     });
 
                 return finalOutput;
@@ -1085,13 +1094,13 @@ namespace TACHYON.Shipping.ShippingRequests
         public IEnumerable<GetAllShippingRequestVasesOutput> GetShippingRequestVasesForMultipleDropWaybill()
         {
             //get shipping request id by step id
-            var shippingRequestId = _routPointRepository.FirstOrDefault(x => x.Id == 1).ShippingRequestId;
+            var shippingRequestId = _routPointRepository.FirstOrDefault(x => x.Id == 62).ShippingRequestId;
 
             //get vases by shipping request id
             var vases = _shippingRequestVasRepository.GetAll()
                 .Include(x => x.VasFk)
                 .Include(x => x.ShippingRequestFk)
-                .Where(x => x.ShippingRequestId == 1)
+                .Where(x => x.ShippingRequestId == shippingRequestId)
                 .ToList();
 
             var output = vases.Select(x => new GetAllShippingRequestVasesOutput

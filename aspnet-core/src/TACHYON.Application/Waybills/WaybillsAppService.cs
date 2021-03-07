@@ -65,10 +65,10 @@ namespace TACHYON.Waybills
              names.Add("MultipleDropDataSet");
              data.Add(_shippingRequestAppService.GetMultipleDropWaybill());
 
-             //names.Add("MultipleDropsGoodsDetailsDataSet");
-             //data.Add(_goodsDetailsAppService.GetShippingrequestGoodsDetailsForMultipleDropWaybill());
+            names.Add("MultipleDropsGoodsDetailsDataSet");
+            data.Add(_goodsDetailsAppService.GetShippingrequestGoodsDetailsForMultipleDropWaybill());
 
-             names.Add("MultipleDropsVasDataSet");
+            names.Add("MultipleDropsVasDataSet");
              data.Add(_shippingRequestAppService.GetShippingRequestVasesForMultipleDropWaybill());
 
 
@@ -76,8 +76,9 @@ namespace TACHYON.Waybills
         }
 
         
-        public FileDto GetMasterWaybillPdf(long shippingRequestId)
+        public FileDto GetMasterWaybillPdf()
         {
+            long shippingRequestId = 79;
             var reportPath = "/Waybills/Reports/Master_Waybill.rdlc";
             
             ArrayList names = new ArrayList();

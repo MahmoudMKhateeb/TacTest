@@ -10,9 +10,6 @@ namespace TACHYON.Goods.GoodsDetails.Dtos
 
         public int TotalAmount { get; set; }
 
-        public double Weight { get; set; }
-
         public string UnitOfMeasureDisplayName { get; set; }
-        public double TotalWeight { get; set; }
     }
 }

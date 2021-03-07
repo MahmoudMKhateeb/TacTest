@@ -3315,7 +3315,7 @@
           <Paragraph>
             <TextRuns>
               <TextRun>
-                <Value>=First(Fields!TotalWeight.Value, "MultipleDropsGoodsDetailsDataSet")</Value>
+                <Value>=First(Fields!TotalWeight.Value, "MultipleDropDataSet")</Value>
                 <Style />
               </TextRun>
             </TextRuns>
@@ -5196,7 +5196,7 @@
           <Paragraph>
             <TextRuns>
               <TextRun>
-                <Value>Name</Value>
+                <Value>=First(Fields!ClientName.Value, "MultipleDropDataSet")</Value>
                 <Style />
               </TextRun>
             </TextRuns>
@@ -5265,7 +5265,7 @@
           <Paragraph>
             <TextRuns>
               <TextRun>
-                <Value>Name</Value>
+                <Value>=First(Fields!CarrierName.Value, "MultipleDropDataSet")</Value>
                 <Style />
               </TextRun>
             </TextRuns>
@@ -5297,7 +5297,7 @@
           <Paragraph>
             <TextRuns>
               <TextRun>
-                <Value />
+                <Value>=First(Fields!GoodsCategoryDisplayName.Value, "MultipleDropDataSet")</Value>
                 <Style />
               </TextRun>
             </TextRuns>
@@ -5530,7 +5530,7 @@
           <Paragraph>
             <TextRuns>
               <TextRun>
-                <Value></Value>
+                <Value>=First(Fields!DriverIqamaNo.Value, "MultipleDropDataSet")</Value>
                 <Style />
               </TextRun>
             </TextRuns>
@@ -6260,6 +6260,22 @@
           <DataField>SubWaybillNo</DataField>
           <rd:TypeName>System.String</rd:TypeName>
         </Field>
+        <Field Name="ClientName">
+          <DataField>ClientName</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="CarrierName">
+          <DataField>CarrierName</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="TotalWeight">
+          <DataField>TotalWeight</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="GoodsCategoryDisplayName">
+          <DataField>GoodsCategoryDisplayName</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
       </Fields>
       <rd:DataSetInfo>
         <rd:DataSetName>MultipleDropDataSet</rd:DataSetName>
@@ -6276,8 +6292,8 @@
         <CommandText>/* Local Query */</CommandText>
       </Query>
       <Fields>
-        <Field Name="Name">
-          <DataField>Name</DataField>
+        <Field Name="UnitOfMeasureDisplayName">
+          <DataField>UnitOfMeasureDisplayName</DataField>
           <rd:TypeName>System.String</rd:TypeName>
         </Field>
         <Field Name="Description">
@@ -6286,26 +6302,6 @@
         </Field>
         <Field Name="TotalAmount">
           <DataField>TotalAmount</DataField>
-          <rd:TypeName>System.String</rd:TypeName>
-        </Field>
-        <Field Name="GoodCategoryDisplayName">
-          <DataField>GoodCategoryDisplayName</DataField>
-          <rd:TypeName>System.String</rd:TypeName>
-        </Field>
-        <Field Name="UnitOfMeasureDisplayName">
-          <DataField>UnitOfMeasureDisplayName</DataField>
-          <rd:TypeName>System.String</rd:TypeName>
-        </Field>
-        <Field Name="PackingType">
-          <DataField>PackingType</DataField>
-          <rd:TypeName>System.String</rd:TypeName>
-        </Field>
-        <Field Name="NumberOfPacking">
-          <DataField>NumberOfPacking</DataField>
-          <rd:TypeName>System.String</rd:TypeName>
-        </Field>
-        <Field Name="TotalWeight">
-          <DataField>TotalWeight</DataField>
           <rd:TypeName>System.String</rd:TypeName>
         </Field>
       </Fields>

@@ -279,21 +279,11 @@ namespace TACHYON.Waybills.Reports {
         [global::System.Xml.Serialization.XmlSchemaProviderAttribute("GetTypedTableSchema")]
         public partial class DataTable1DataTable : global::System.Data.TypedTableBase<DataTable1Row> {
             
-            private global::System.Data.DataColumn columnName;
+            private global::System.Data.DataColumn columnUnitOfMeasureDisplayName;
             
             private global::System.Data.DataColumn columnDescription;
             
             private global::System.Data.DataColumn columnTotalAmount;
-            
-            private global::System.Data.DataColumn columnGoodCategoryDisplayName;
-            
-            private global::System.Data.DataColumn columnUnitOfMeasureDisplayName;
-            
-            private global::System.Data.DataColumn columnPackingType;
-            
-            private global::System.Data.DataColumn columnNumberOfPacking;
-            
-            private global::System.Data.DataColumn columnTotalWeight;
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
@@ -330,9 +320,9 @@ namespace TACHYON.Waybills.Reports {
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
-            public global::System.Data.DataColumn NameColumn {
+            public global::System.Data.DataColumn UnitOfMeasureDisplayNameColumn {
                 get {
-                    return this.columnName;
+                    return this.columnUnitOfMeasureDisplayName;
                 }
             }
             
@@ -349,46 +339,6 @@ namespace TACHYON.Waybills.Reports {
             public global::System.Data.DataColumn TotalAmountColumn {
                 get {
                     return this.columnTotalAmount;
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
-            public global::System.Data.DataColumn GoodCategoryDisplayNameColumn {
-                get {
-                    return this.columnGoodCategoryDisplayName;
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
-            public global::System.Data.DataColumn UnitOfMeasureDisplayNameColumn {
-                get {
-                    return this.columnUnitOfMeasureDisplayName;
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
-            public global::System.Data.DataColumn PackingTypeColumn {
-                get {
-                    return this.columnPackingType;
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
-            public global::System.Data.DataColumn NumberOfPackingColumn {
-                get {
-                    return this.columnNumberOfPacking;
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
-            public global::System.Data.DataColumn TotalWeightColumn {
-                get {
-                    return this.columnTotalWeight;
                 }
             }
             
@@ -429,17 +379,12 @@ namespace TACHYON.Waybills.Reports {
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
-            public DataTable1Row AddDataTable1Row(string Name, string Description, string TotalAmount, string GoodCategoryDisplayName, string UnitOfMeasureDisplayName, string PackingType, string NumberOfPacking, string TotalWeight) {
+            public DataTable1Row AddDataTable1Row(string UnitOfMeasureDisplayName, string Description, string TotalAmount) {
                 DataTable1Row rowDataTable1Row = ((DataTable1Row)(this.NewRow()));
                 object[] columnValuesArray = new object[] {
-                        Name,
-                        Description,
-                        TotalAmount,
-                        GoodCategoryDisplayName,
                         UnitOfMeasureDisplayName,
-                        PackingType,
-                        NumberOfPacking,
-                        TotalWeight};
+                        Description,
+                        TotalAmount};
                 rowDataTable1Row.ItemArray = columnValuesArray;
                 this.Rows.Add(rowDataTable1Row);
                 return rowDataTable1Row;
@@ -462,35 +407,20 @@ namespace TACHYON.Waybills.Reports {
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
             internal void InitVars() {
-                this.columnName = base.Columns["Name"];
+                this.columnUnitOfMeasureDisplayName = base.Columns["UnitOfMeasureDisplayName"];
                 this.columnDescription = base.Columns["Description"];
                 this.columnTotalAmount = base.Columns["TotalAmount"];
-                this.columnGoodCategoryDisplayName = base.Columns["GoodCategoryDisplayName"];
-                this.columnUnitOfMeasureDisplayName = base.Columns["UnitOfMeasureDisplayName"];
-                this.columnPackingType = base.Columns["PackingType"];
-                this.columnNumberOfPacking = base.Columns["NumberOfPacking"];
-                this.columnTotalWeight = base.Columns["TotalWeight"];
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
             private void InitClass() {
-                this.columnName = new global::System.Data.DataColumn("Name", typeof(string), null, global::System.Data.MappingType.Element);
-                base.Columns.Add(this.columnName);
+                this.columnUnitOfMeasureDisplayName = new global::System.Data.DataColumn("UnitOfMeasureDisplayName", typeof(string), null, global::System.Data.MappingType.Element);
+                base.Columns.Add(this.columnUnitOfMeasureDisplayName);
                 this.columnDescription = new global::System.Data.DataColumn("Description", typeof(string), null, global::System.Data.MappingType.Element);
                 base.Columns.Add(this.columnDescription);
                 this.columnTotalAmount = new global::System.Data.DataColumn("TotalAmount", typeof(string), null, global::System.Data.MappingType.Element);
                 base.Columns.Add(this.columnTotalAmount);
-                this.columnGoodCategoryDisplayName = new global::System.Data.DataColumn("GoodCategoryDisplayName", typeof(string), null, global::System.Data.MappingType.Element);
-                base.Columns.Add(this.columnGoodCategoryDisplayName);
-                this.columnUnitOfMeasureDisplayName = new global::System.Data.DataColumn("UnitOfMeasureDisplayName", typeof(string), null, global::System.Data.MappingType.Element);
-                base.Columns.Add(this.columnUnitOfMeasureDisplayName);
-                this.columnPackingType = new global::System.Data.DataColumn("PackingType", typeof(string), null, global::System.Data.MappingType.Element);
-                base.Columns.Add(this.columnPackingType);
-                this.columnNumberOfPacking = new global::System.Data.DataColumn("NumberOfPacking", typeof(string), null, global::System.Data.MappingType.Element);
-                base.Columns.Add(this.columnNumberOfPacking);
-                this.columnTotalWeight = new global::System.Data.DataColumn("TotalWeight", typeof(string), null, global::System.Data.MappingType.Element);
-                base.Columns.Add(this.columnTotalWeight);
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
@@ -633,17 +563,17 @@ namespace TACHYON.Waybills.Reports {
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
-            public string Name {
+            public string UnitOfMeasureDisplayName {
                 get {
                     try {
-                        return ((string)(this[this.tableDataTable1.NameColumn]));
+                        return ((string)(this[this.tableDataTable1.UnitOfMeasureDisplayNameColumn]));
                     }
                     catch (global::System.InvalidCastException e) {
-                        throw new global::System.Data.StrongTypingException("The value for column \'Name\' in table \'DataTable1\' is DBNull.", e);
+                        throw new global::System.Data.StrongTypingException("The value for column \'UnitOfMeasureDisplayName\' in table \'DataTable1\' is DBNull.", e);
                     }
                 }
                 set {
-                    this[this.tableDataTable1.NameColumn] = value;
+                    this[this.tableDataTable1.UnitOfMeasureDisplayNameColumn] = value;
                 }
             }
             
@@ -681,94 +611,14 @@ namespace TACHYON.Waybills.Reports {
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
-            public string GoodCategoryDisplayName {
-                get {
-                    try {
-                        return ((string)(this[this.tableDataTable1.GoodCategoryDisplayNameColumn]));
-                    }
-                    catch (global::System.InvalidCastException e) {
-                        throw new global::System.Data.StrongTypingException("The value for column \'GoodCategoryDisplayName\' in table \'DataTable1\' is DBNull.", e);
-                    }
-                }
-                set {
-                    this[this.tableDataTable1.GoodCategoryDisplayNameColumn] = value;
-                }
+            public bool IsUnitOfMeasureDisplayNameNull() {
+                return this.IsNull(this.tableDataTable1.UnitOfMeasureDisplayNameColumn);
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
-            public string UnitOfMeasureDisplayName {
-                get {
-                    try {
-                        return ((string)(this[this.tableDataTable1.UnitOfMeasureDisplayNameColumn]));
-                    }
-                    catch (global::System.InvalidCastException e) {
-                        throw new global::System.Data.StrongTypingException("The value for column \'UnitOfMeasureDisplayName\' in table \'DataTable1\' is DBNull.", e);
-                    }
-                }
-                set {
-                    this[this.tableDataTable1.UnitOfMeasureDisplayNameColumn] = value;
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
-            public string PackingType {
-                get {
-                    try {
-                        return ((string)(this[this.tableDataTable1.PackingTypeColumn]));
-                    }
-                    catch (global::System.InvalidCastException e) {
-                        throw new global::System.Data.StrongTypingException("The value for column \'PackingType\' in table \'DataTable1\' is DBNull.", e);
-                    }
-                }
-                set {
-                    this[this.tableDataTable1.PackingTypeColumn] = value;
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
-            public string NumberOfPacking {
-                get {
-                    try {
-                        return ((string)(this[this.tableDataTable1.NumberOfPackingColumn]));
-                    }
-                    catch (global::System.InvalidCastException e) {
-                        throw new global::System.Data.StrongTypingException("The value for column \'NumberOfPacking\' in table \'DataTable1\' is DBNull.", e);
-                    }
-                }
-                set {
-                    this[this.tableDataTable1.NumberOfPackingColumn] = value;
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
-            public string TotalWeight {
-                get {
-                    try {
-                        return ((string)(this[this.tableDataTable1.TotalWeightColumn]));
-                    }
-                    catch (global::System.InvalidCastException e) {
-                        throw new global::System.Data.StrongTypingException("The value for column \'TotalWeight\' in table \'DataTable1\' is DBNull.", e);
-                    }
-                }
-                set {
-                    this[this.tableDataTable1.TotalWeightColumn] = value;
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
-            public bool IsNameNull() {
-                return this.IsNull(this.tableDataTable1.NameColumn);
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
-            public void SetNameNull() {
-                this[this.tableDataTable1.NameColumn] = global::System.Convert.DBNull;
+            public void SetUnitOfMeasureDisplayNameNull() {
+                this[this.tableDataTable1.UnitOfMeasureDisplayNameColumn] = global::System.Convert.DBNull;
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
@@ -793,66 +643,6 @@ namespace TACHYON.Waybills.Reports {
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
             public void SetTotalAmountNull() {
                 this[this.tableDataTable1.TotalAmountColumn] = global::System.Convert.DBNull;
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
-            public bool IsGoodCategoryDisplayNameNull() {
-                return this.IsNull(this.tableDataTable1.GoodCategoryDisplayNameColumn);
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
-            public void SetGoodCategoryDisplayNameNull() {
-                this[this.tableDataTable1.GoodCategoryDisplayNameColumn] = global::System.Convert.DBNull;
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
-            public bool IsUnitOfMeasureDisplayNameNull() {
-                return this.IsNull(this.tableDataTable1.UnitOfMeasureDisplayNameColumn);
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
-            public void SetUnitOfMeasureDisplayNameNull() {
-                this[this.tableDataTable1.UnitOfMeasureDisplayNameColumn] = global::System.Convert.DBNull;
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
-            public bool IsPackingTypeNull() {
-                return this.IsNull(this.tableDataTable1.PackingTypeColumn);
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
-            public void SetPackingTypeNull() {
-                this[this.tableDataTable1.PackingTypeColumn] = global::System.Convert.DBNull;
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
-            public bool IsNumberOfPackingNull() {
-                return this.IsNull(this.tableDataTable1.NumberOfPackingColumn);
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
-            public void SetNumberOfPackingNull() {
-                this[this.tableDataTable1.NumberOfPackingColumn] = global::System.Convert.DBNull;
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
-            public bool IsTotalWeightNull() {
-                return this.IsNull(this.tableDataTable1.TotalWeightColumn);
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
-            public void SetTotalWeightNull() {
-                this[this.tableDataTable1.TotalWeightColumn] = global::System.Convert.DBNull;
             }
         }
         
