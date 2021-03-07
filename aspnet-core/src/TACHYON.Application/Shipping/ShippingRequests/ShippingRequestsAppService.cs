@@ -27,6 +27,7 @@ using TACHYON.MultiTenancy;
 using TACHYON.Notifications;
 using TACHYON.Packing.PackingTypes;
 using TACHYON.Routs;
+using TACHYON.Routs.Dtos;
 using TACHYON.Routs.RoutPoints.Dtos;
 using TACHYON.Routs.RoutSteps;
 using TACHYON.Routs.RoutTypes;
@@ -595,10 +596,14 @@ namespace TACHYON.Shipping.ShippingRequests
                 .ThenInclude(x => x.FacilityFk)
                 .Include(x => x.ShippingRequestVases)
                 .Single(x => x.Id == input.Id);
+            var Request = ObjectMapper.Map<CreateOrEditShippingRequestDto>(shippingRequest);
+            Request.ShippingRequestVasList = ObjectMapper.Map<List<CreateOrEditShippingRequestVasListDto>>(shippingRequest.ShippingRequestVases);
+            Request.CreateOrEditRoutPointDtoList = ObjectMapper.Map<List<CreateOrEditRoutPointDto>>(shippingRequest.RoutPoints);
+            Request.CreateOrEditRouteDto  = ObjectMapper.Map<CreateOrEditRouteDto>(shippingRequest.RouteFk);
 
             GetShippingRequestForEditOutput output = new GetShippingRequestForEditOutput
             {
-                ShippingRequest = ObjectMapper.Map<CreateOrEditShippingRequestDto>(shippingRequest)
+                ShippingRequest = Request
             };
             return output;
         }
@@ -609,7 +614,7 @@ namespace TACHYON.Shipping.ShippingRequests
             var vasList = input.ShippingRequestVasList;
 
             ShippingRequest shippingRequest = ObjectMapper.Map<ShippingRequest>(input);
-
+            shippingRequest.RouteFk=ObjectMapper.Map<Route>(input.CreateOrEditRouteDto);
             if (AbpSession.TenantId != null)
             {
                 shippingRequest.TenantId = (int)AbpSession.TenantId;
@@ -664,24 +669,7 @@ namespace TACHYON.Shipping.ShippingRequests
 
 
             ObjectMapper.Map(input, shippingRequest);
-
-
-             //   ObjectMapper.Map(input.CreateOrEditRoutPointDtoList, shippingRequest.RoutPoints);
-
-            
-
-            //shippingRequest.RoutPoints.Clear();
-            //ObjectMapper.Map(input.CreateOrEditRoutPointDtoList, shippingRequest.RoutPoints);
-            //foreach (var point in shippingRequest.RoutPoints)
-            //{
-            //    var tenant = point.TenantId;
-            //}
-            // CurrentUnitOfWork.SaveChanges();
-
-            //if (AbpSession.TenantId != null)
-            //{
-            //    shippingRequest.RoutPoints.ForEach(x => x.TenantId = (int)AbpSession.TenantId);
-            //}
+            ObjectMapper.Map(input.CreateOrEditRouteDto, shippingRequest.RouteFk);
         }
 
 

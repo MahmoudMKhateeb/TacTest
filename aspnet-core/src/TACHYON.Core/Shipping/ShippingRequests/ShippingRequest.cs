@@ -115,7 +115,7 @@ namespace TACHYON.Shipping.ShippingRequests
         /// </summary>
         public int ShippingRequestStatusId { get; set; }
         [ForeignKey("ShippingRequestStatusId")]
-        public ShippingRequestStatus ShippingRequestStatusFk { get; set; }
+        public ShippingRequestStatuses.ShippingRequestStatus ShippingRequestStatusFk { get; set; }
 
 
         /// <summary>

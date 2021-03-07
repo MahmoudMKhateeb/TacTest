@@ -8,6 +8,7 @@ namespace TACHYON.Shipping.Drivers.Dto
     public class ShippingRequestTripDriverDetailsDto: EntityDto<long>
     {
         public ICollection<ShippingRequestTripDriverRoutePointDto> RoutePoints { get; set; }
+        public DateTime StartTripDate { get; set; }
         public string PackingType { get; set; }
 
         public double TotalWeight { get; set; }

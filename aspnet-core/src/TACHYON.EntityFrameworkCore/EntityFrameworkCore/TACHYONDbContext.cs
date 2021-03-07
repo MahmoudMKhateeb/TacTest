@@ -95,7 +95,7 @@ namespace TACHYON.EntityFrameworkCore
 
         public virtual DbSet<DocumentsEntity> DocumentsEntities { get; set; }
 
-        public virtual DbSet<ShippingRequestStatus> ShippingRequestStatuses { get; set; }
+        public virtual DbSet<Shipping.ShippingRequestStatuses.ShippingRequestStatus> ShippingRequestStatuses { get; set; }
 
         public virtual DbSet<Port> Ports { get; set; }
 
