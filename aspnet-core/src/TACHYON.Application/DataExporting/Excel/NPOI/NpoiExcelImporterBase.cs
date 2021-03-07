@@ -17,7 +17,13 @@ namespace TACHYON.DataExporting.Excel.NPOI
                 var workbook = new XSSFWorkbook(stream);
                 for (var i = 0; i < workbook.NumberOfSheets; i++)
                 {
-                    var entitiesInWorksheet = ProcessWorksheet(workbook.GetSheetAt(i), processExcelRow);
+                    var sheet = workbook.GetSheetAt(i);
+                    if (sheet.SheetName.ToLower() == "lists")
+                    {
+                        continue;
+                    }
+
+                    var entitiesInWorksheet = ProcessWorksheet(sheet, processExcelRow);
                     entities.AddRange(entitiesInWorksheet);
                 }
             }

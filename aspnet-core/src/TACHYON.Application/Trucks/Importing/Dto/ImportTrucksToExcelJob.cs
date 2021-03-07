@@ -32,12 +32,13 @@ namespace TACHYON.Trucks.Importing.Dto
         private readonly IObjectMapper _objectMapper;
         private readonly IUnitOfWorkManager _unitOfWorkManager;
         private readonly IRepository<DocumentFile, Guid> _documentFileRepository;
+        private readonly TruckManager _truckManager;
 
         public ImportTrucksToExcelJob(
             IAppNotifier appNotifier,
             IBinaryObjectManager binaryObjectManager,
             IObjectMapper objectMapper,
-            IUnitOfWorkManager unitOfWorkManager, ITruckListExcelDataReader truckListExcelDataReader, IRepository<Truck, long> truckRepository, IInvalidTruckExporter invalidTruckExporter, IRepository<DocumentFile, Guid> documentFileRepository)
+            IUnitOfWorkManager unitOfWorkManager, ITruckListExcelDataReader truckListExcelDataReader, IRepository<Truck, long> truckRepository, IInvalidTruckExporter invalidTruckExporter, IRepository<DocumentFile, Guid> documentFileRepository, TruckManager truckManager)
         {
             _appNotifier = appNotifier;
             _binaryObjectManager = binaryObjectManager;
@@ -47,6 +48,7 @@ namespace TACHYON.Trucks.Importing.Dto
             _truckRepository = truckRepository;
             _invalidTruckExporter = invalidTruckExporter;
             _documentFileRepository = documentFileRepository;
+            _truckManager = truckManager;
         }
 
         public override void Execute(ImportTrucksFromExcelJobArgs args)
@@ -145,21 +147,17 @@ namespace TACHYON.Trucks.Importing.Dto
                 truck.TenantId = tenantId.Value;
             }
 
-
+            truck.DocumentFiles = new List<DocumentFile>();
 
             foreach (var importTruckDocumentFileDto in input.ImportTruckDocumentFileDtos)
             {
                 importTruckDocumentFileDto.TruckId = truck.Id;
                 var documentFile = _objectMapper.Map<DocumentFile>(importTruckDocumentFileDto);
                 documentFile.TenantId = tenantId;
-                truck.DocumentFiles = new List<DocumentFile>();
                 truck.DocumentFiles.Add(documentFile);
             }
 
-            await _truckRepository.InsertAsync(truck);
-
-
-
+            await _truckManager.CreateAsync(truck);
 
         }
 

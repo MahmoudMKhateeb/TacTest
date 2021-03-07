@@ -51,8 +51,7 @@ namespace TACHYON.Trucks.Importing
             return ProcessExcelFile(fileBytes, ProcessExcelRow);
         }
 
-        private ImportTruckDto ProcessExcelRow(ISheet worksheet,
-            int row)
+        private ImportTruckDto ProcessExcelRow(ISheet worksheet, int row)
         {
             if (_tachyonExcelDataReaderHelper.IsRowEmpty(worksheet, row))
             {
@@ -167,10 +166,10 @@ namespace TACHYON.Trucks.Importing
                 if (insuranceDocumentFileDto.Number.Length > insuranceDocumentType.NumberMaxDigits ||
                 insuranceDocumentFileDto.Number.Length < insuranceDocumentType.NumberMinDigits)
                 {
-                    exceptionMessage.Append("Istimara NO should be minimum " +
+                    exceptionMessage.Append("Insurance NO should be minimum " +
                                             insuranceDocumentType.NumberMinDigits +
                                             " character; ");
-                    exceptionMessage.Append("Istimara NO should be maximum " +
+                    exceptionMessage.Append("Insurance NO should be maximum " +
                                             insuranceDocumentType.NumberMaxDigits +
                                             " character; ");
                 }
