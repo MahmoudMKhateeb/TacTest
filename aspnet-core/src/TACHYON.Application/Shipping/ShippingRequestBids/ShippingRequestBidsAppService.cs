@@ -264,6 +264,7 @@ namespace TACHYON.Shipping.ShippingRequestBids
                     .Include(x => x.RouteFk.DestinationCityFk)
                     .Include(x => x.Tenant)
                     .Where(x => x.IsBid)
+                    .Where(x=>x.ShippingRequestBidStatusId!=TACHYONConsts.ShippingRequestStatusStandBy)
                     .WhereIf(input.TruckTypeId != null, x => x.TrucksTypeId == input.TruckTypeId)
                     .WhereIf(input.TransportType != null, x => x.TransportTypeId != null && x.TransportTypeId == input.TransportType)
 
@@ -298,7 +299,6 @@ namespace TACHYON.Shipping.ShippingRequestBids
                     .Select(o => new GetAllBidShippingRequestsForCarrierOutput
                     {
                         ShippingRequestId = o.Id,
-                        BidEndDate = o.BidEndDate,
                         BidStartDate = o.BidStartDate,
                         ShippingRequestBidStatusName = o.ShippingRequestBidStatusFK.DisplayName,
                         ShipperName = o.Tenant.Name,

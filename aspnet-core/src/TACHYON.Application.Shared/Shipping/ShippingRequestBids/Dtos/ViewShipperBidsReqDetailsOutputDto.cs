@@ -13,10 +13,6 @@ namespace TACHYON.Shipping.ShippingRequestBids.Dtos
         /// </summary>
         public DateTime? BidStartDate { get; set; }
         /// <summary>
-        /// ShippingRequest bidding endDate
-        /// </summary>
-        public DateTime? BidEndDate { get; set; }
-        /// <summary>
         /// tenant name who created the shipping-request
         /// </summary>
         public string ShipperName { get; set; }
