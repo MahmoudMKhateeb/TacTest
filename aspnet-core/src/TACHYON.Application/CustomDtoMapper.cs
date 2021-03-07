@@ -408,7 +408,7 @@ namespace TACHYON
             foreach (var point in dto.CreateOrEditRoutPointDtoList)
             {
 
-                if (point.Id == 0)
+                if (!point.Id.HasValue)
                 {
 
                     Request.RoutPoints.Add(_Mapper.Map<RoutPoint>(point));
@@ -422,7 +422,7 @@ namespace TACHYON
             foreach (var vas in dto.ShippingRequestVasList)
             {
 
-                if (vas.Id == 0)
+                if (!vas.Id.HasValue )
                 {
 
                     Request.ShippingRequestVases.Add(_Mapper.Map<ShippingRequestVas>(vas));
