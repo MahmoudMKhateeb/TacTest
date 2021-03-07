@@ -170,6 +170,7 @@ namespace TACHYON.Shipping.ShippingRequestBids
                 //update shippingRequest final price
                 //todo review this to commission task team
                 ShippingRequest shippingRequestItem = await _shippingRequestsRepository.FirstOrDefaultAsync(bid.ShippingRequestId);
+                shippingRequestItem.CarrierTenantId = bid.TenantId;
                 shippingRequestItem.Price = Convert.ToDecimal(bid.price);
                 shippingRequestItem.Close();
 
@@ -267,9 +268,9 @@ namespace TACHYON.Shipping.ShippingRequestBids
                     .Where(x=>x.ShippingRequestBidStatusId!=TACHYONConsts.ShippingRequestStatusStandBy)
                     .WhereIf(input.TruckTypeId != null, x => x.TrucksTypeId == input.TruckTypeId)
                     .WhereIf(input.TransportType != null, x => x.TransportTypeId != null && x.TransportTypeId == input.TransportType)
-
+                    .WhereIf(input.IsMyAssignedBidsOnly!=null && input.IsMyAssignedBidsOnly==true, x=>x.ShippingRequestBids.Any(y=>y.IsAccepted== true))
                     //Filter
-                    .WhereIf(!string.IsNullOrWhiteSpace(input.Filter), x => x.ShippingRequestBids.Any(b => b.Tenant.Name.Contains(input.Filter)))
+                    .WhereIf(!string.IsNullOrWhiteSpace(input.Filter), x =>  x.CarrierTenantId==AbpSession.TenantId)
 
                     //Get Shipping Requests that carrier bid to them only
                     .WhereIf(input.IsMyBidsOnly, x => x.ShippingRequestBids.Any(b => b.TenantId == AbpSession.TenantId));

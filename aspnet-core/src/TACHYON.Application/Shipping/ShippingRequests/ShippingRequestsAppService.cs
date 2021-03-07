@@ -136,13 +136,14 @@ namespace TACHYON.Shipping.ShippingRequests
         {
             ShippingRequest shippingRequest;
 
-            if (await IsEnabledAsync(AppFeatures.TachyonDealer))
+            if (await IsEnabledAsync(AppFeatures.TachyonDealer) ||await IsEnabledAsync(AppFeatures.Carrier))
             {
                 using (CurrentUnitOfWork.DisableFilter(AbpDataFilters.MustHaveTenant))
                 {
                     return await _GetShippingRequestForView(id);
                 }
             }
+
 
             return await _GetShippingRequestForView(id);
         }
@@ -514,7 +515,9 @@ namespace TACHYON.Shipping.ShippingRequests
             {
                 ShippingRequest shippingRequest = await _shippingRequestRepository.GetAll()
                     .Where(e => e.Id == id)
-                    .Where(x=>x.TenantId==AbpSession.TenantId)
+                    .WhereIf(await IsEnabledAsync(AppFeatures.Shipper), x=>x.TenantId==AbpSession.TenantId)
+                    .WhereIf(await IsEnabledAsync(AppFeatures.TachyonDealer), x => x.IsTachyonDeal)
+                    .WhereIf(await IsEnabledAsync(AppFeatures.Carrier), x => x.CarrierTenantId==AbpSession.TenantId)
                     .Include(e => e.RouteFk)
                     .ThenInclude(e => e.RoutTypeFk)
                     .Include(e => e.ShippingRequestVases)
