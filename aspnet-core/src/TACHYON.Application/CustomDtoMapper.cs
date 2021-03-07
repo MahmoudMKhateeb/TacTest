@@ -143,6 +143,19 @@ namespace TACHYON
                 .ForMember(dst => dst.StartDate, opt => opt.MapFrom(src => src.StartTripDate))
                 .ForMember(dst => dst.EndDate, opt => opt.MapFrom(src => src.EndTripDate))
                 .ForMember(dst => dst.Status, opt => opt.MapFrom(src => src.TripStatusId));
+
+            configuration.CreateMap<ShippingRequestTrip, ShippingRequestTripDriverDetailsDto>()
+            .ForMember(dst => dst.Source, opt => opt.MapFrom(src => $"{src.ShippingRequestFk.RouteFk.OriginCityFk.DisplayName} - {src.ShippingRequestFk.RouteFk.OriginFacilityFk.Address}"))
+            .ForMember(dst => dst.Distination, opt => opt.MapFrom(src => $"{src.ShippingRequestFk.RouteFk.DestinationCityFk.DisplayName} - {src.ShippingRequestFk.RouteFk.DestinationFacilityFk.Address}"))
+            .ForMember(dst => dst.Status, opt => opt.MapFrom(src => src.TripStatusId))
+            .ForMember(dst => dst.TotalWeight, opt => opt.MapFrom(src => src.ShippingRequestFk.TotalWeight))
+            .ForMember(dst => dst.PackingType, opt => opt.MapFrom(src => src.ShippingRequestFk.PackingTypeFk.DisplayName))
+            .ForMember(dst => dst.RoutePoints, opt => opt.MapFrom(src => src.ShippingRequestFk.RoutPoints));
+
+
+            configuration.CreateMap<RoutPoint, ShippingRequestTripDriverRoutePointDto>()
+            .ForMember(dst => dst.Address, opt => opt.MapFrom(src => $"{src.FacilityFk.Name} - {src.FacilityFk.Address}"))
+            .ForMember(dst => dst.Location, opt => opt.MapFrom(src => src.FacilityFk.Location));
             #endregion
 
 
@@ -406,12 +419,15 @@ namespace TACHYON
 
         private static void AddOrUpdateShippingRequest(CreateOrEditShippingRequestDto dto, ShippingRequest Request)
         {
+            if (Request.RoutPoints == null) Request.RoutPoints = new Collection<RoutPoint>();
+            if (Request.ShippingRequestVases == null) Request.ShippingRequestVases = new Collection<ShippingRequestVas>();
+
             foreach (var point in dto.CreateOrEditRoutPointDtoList)
             {
 
                 if (!point.Id.HasValue)
                 {
-                    if (Request.RoutPoints == null) Request.RoutPoints  = new Collection<RoutPoint>();
+                 
                     Request.RoutPoints.Add(_Mapper.Map<RoutPoint>(point));
                 }
                 else
@@ -425,7 +441,6 @@ namespace TACHYON
 
                 if (!vas.Id.HasValue )
                 {
-                    if (Request.ShippingRequestVases==null) Request.ShippingRequestVases= new Collection<ShippingRequestVas>();
                     Request.ShippingRequestVases.Add(_Mapper.Map<ShippingRequestVas>(vas));
                 }
                 else
