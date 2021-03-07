@@ -19,6 +19,7 @@ namespace TACHYON.Shipping.Drivers.Dto
 
         public string Source { get; set; }
         public string Distination { get; set; }
+
         public ShippingRequestTripStatus Status { get; set; }
 
 

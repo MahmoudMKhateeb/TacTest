@@ -158,7 +158,6 @@ namespace TACHYON
             .ForMember(dst => dst.Location, opt => opt.MapFrom(src => src.FacilityFk.Location));
             #endregion
 
-
             configuration.CreateMap<CreateOrEditPackingTypeDto, PackingType>().ReverseMap();
             configuration.CreateMap<PackingTypeDto, PackingType>().ReverseMap();
             configuration.CreateMap<CreateOrEditShippingTypeDto, ShippingType>().ReverseMap();

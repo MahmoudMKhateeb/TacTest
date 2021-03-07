@@ -14,5 +14,6 @@ namespace TACHYON.Shipping.Drivers.Dto
 
         public Point Location { get; set; }
 
+
     }
 }
