@@ -44,7 +44,7 @@ namespace TACHYON.Shipping.ShippingRequestTrips
             using (CurrentUnitOfWork.DisableFilter(AbpDataFilters.MustHaveTenant, AbpDataFilters.MayHaveTenant))
             {
                 var StartedShippments = _shippingRequestTripRepository.GetAll()
-                    .Where(x => x.StartTripDate == Clock.Now)
+                    .Where(x => x.StartTripDate.Date == Clock.Now.Date)
                     .Include(x => x.ShippingRequestFk)
                     .ToList();
 
