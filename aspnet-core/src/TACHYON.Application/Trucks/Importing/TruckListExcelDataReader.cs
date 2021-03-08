@@ -256,7 +256,7 @@ namespace TACHYON.Trucks.Importing
             }
             try
             {
-                return text.ToLower() == "yes";
+                return text.ToLower() == "yes" || text == "نعم";
             }
             catch
             {
