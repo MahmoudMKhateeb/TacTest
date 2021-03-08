@@ -68,6 +68,7 @@ export class MarketplaceComponent extends AppComponentBase implements OnInit {
         this.TruckTypeIdFilter,
         this.TransportTypeFilter,
         this.CapacityIdFilter,
+        false,
         this.primengTableHelper.getSorting(this.dataTable),
         this.primengTableHelper.getSkipCount(this.paginator, event),
         this.primengTableHelper.getMaxResultCount(this.paginator, event)
