@@ -18,29 +18,29 @@ export class AppNavigationService {
       new AppMenuItem('Dashboard', 'Pages.Administration.Host.Dashboard', 'flaticon-line-graph', '/app/admin/hostDashboard'),
       new AppMenuItem('Dashboard', 'Pages.Tenant.Dashboard', 'flaticon-line-graph', '/app/main/dashboard'),
       // //Shipper
-      new AppMenuItem(
-        'Requests',
-        '',
-        'flaticon-interface-8',
-        '',
-        [],
-        [
-          new AppMenuItem(
-            'ShippingRequests',
-            'Pages.ShippingRequests',
-            'label label-danger label-dot',
-            '/app/main/shippingRequests/shippingRequests',
-            undefined,
-            undefined,
-            undefined,
-            undefined,
-            () =>
-              this._featureCheckerService.isEnabled('App.shippingRequest') ||
-              this._featureCheckerService.isEnabled('App.TachyonDealer') ||
-              this._featureCheckerService.isEnabled('App.Broker')
-          ),
-        ]
-      ),
+      // new AppMenuItem(
+      //   'Requests',
+      //   '',
+      //   'flaticon-interface-8',
+      //   '',
+      //   [],
+      //   [
+      //     new AppMenuItem(
+      //       'ShippingRequests',
+      //       'Pages.ShippingRequests',
+      //       'label label-danger label-dot',
+      //       '/app/main/shippingRequests/shippingRequests',
+      //       undefined,
+      //       undefined,
+      //       undefined,
+      //       undefined,
+      //       () =>
+      //         this._featureCheckerService.isEnabled('App.shippingRequest') ||
+      //         this._featureCheckerService.isEnabled('App.TachyonDealer') ||
+      //         this._featureCheckerService.isEnabled('App.Broker')
+      //     ),
+      //   ]
+      // ),
 
       // //Host
       // new AppMenuItem(
@@ -131,18 +131,18 @@ export class AppNavigationService {
       ),
 
       // Host
-      new AppMenuItem('Vas', 'Pages.Administration.Vases', 'label label-danger label-dot', '/app/admin/vases/vases'),
-      new AppMenuItem(
-        'VasPrices',
-        'Pages.VasPrices',
-        'label label-danger label-dot',
-        '/app/main/vases/vasPrices',
-        undefined,
-        undefined,
-        undefined,
-        undefined,
-        () => this._featureCheckerService.isEnabled('App.Carrier')
-      ),
+      // new AppMenuItem('Vas', 'Pages.Administration.Vases', 'label label-danger label-dot', '/app/admin/vases/vases'),
+      // new AppMenuItem(
+      //   'VasPrices',
+      //   'Pages.VasPrices',
+      //   'label label-danger label-dot',
+      //   '/app/main/vases/vasPrices',
+      //   undefined,
+      //   undefined,
+      //   undefined,
+      //   undefined,
+      //   () => this._featureCheckerService.isEnabled('App.Carrier')
+      // ),
       // Host
       new AppMenuItem(
         'UserManagement',
