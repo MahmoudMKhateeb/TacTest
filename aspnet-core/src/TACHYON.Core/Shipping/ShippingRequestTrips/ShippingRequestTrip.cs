@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Text;
+using TACHYON.AddressBook;
 using TACHYON.Authorization.Users;
 using TACHYON.Shipping.ShippingRequests;
 using TACHYON.Shipping.TripStatuses;
@@ -31,6 +32,16 @@ namespace TACHYON.Shipping.ShippingRequestTrips
 
         public string Code { get; set; } = (new Random().Next(100000, 999999)).ToString();
 
+        //Facility
+        public virtual long? OriginFacilityId { get; set; }
 
+        [ForeignKey("OriginFacilityId")]
+        public Facility OriginFacilityFk { get; set; }
+
+        public virtual long? DestinationFacilityId { get; set; }
+
+        [ForeignKey("DestinationFacilityId")]
+        public Facility DestinationFacilityFk { get; set; }
+        
     }
 }

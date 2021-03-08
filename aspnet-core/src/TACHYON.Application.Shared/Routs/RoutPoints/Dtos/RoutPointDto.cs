@@ -14,10 +14,23 @@ namespace TACHYON.Routs.RoutPoints.Dtos
 
         public int? PickingTypeId { get; set; }
         public long FacilityId { get; set; }
-        public long ShippingRequestId { get; set; }
         public double Longitude { get; set; }
         public double Latitude { get; set; }
+        public virtual int ShippingRequestTripId { get; set; }
 
+        public string Code { get; set; }
+
+        public DateTime? StartTime { get; set; }
+        public DateTime? EndTime { get; set; }
+
+        public bool IsActive { get; set; }
+        public bool IsComplete { get; set; }
+
+        public Guid? DocumentId { get; set; }
+        public string DocumentName { get; set; }
+        public string DocumentContentType { get; set; }
+
+        public int? Rating { get; set; }
         //to do receiver attribute
     }
 }

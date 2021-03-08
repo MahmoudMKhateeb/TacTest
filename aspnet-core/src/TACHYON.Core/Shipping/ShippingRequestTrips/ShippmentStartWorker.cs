@@ -49,12 +49,12 @@ namespace TACHYON.Shipping.ShippingRequestTrips
                     .ToList();
 
                 //get shipping request Ids for started shippments
-                var shippingRequestIds = StartedShippments.Select(y => y.ShippingRequestId).ToList();
+                var shippingRequestTripIds = StartedShippments.Select(y => y.Id).ToList();
 
                 //get all way points for started shippments
                 var AllWayPoints = _routPointRepository.GetAll()
                     .Include(e => e.FacilityFk)
-                    .Where(e =>shippingRequestIds.Contains(e.ShippingRequestId))
+                    .Where(e => shippingRequestTripIds.Contains(e.ShippingRequestTripId))
                     .Where(e => e.PickingTypeId == TACHYONConsts.PickupPickingType)
                     .ToList();
 
@@ -63,11 +63,11 @@ namespace TACHYON.Shipping.ShippingRequestTrips
                     var driverUserId = item.ShippingRequestFk.AssignedDriverUserId;
 
                     var pickupFacility = AllWayPoints
-                        .Where(e => e.ShippingRequestId == item.ShippingRequestId)
-                        .FirstOrDefault()?.FacilityFk.Name;
+                        .FirstOrDefault(e => e.ShippingRequestTripId == item.Id)?.FacilityFk.Name;
 
                     //send notification to Driver for start shippment
-                    _appNotifier.StartShippment(new UserIdentifier(item.ShippingRequestFk.TenantId, driverUserId.Value),
+                    _appNotifier.StartShippment(
+                        new UserIdentifier(item.ShippingRequestFk.TenantId, driverUserId.Value),
                         item.Id, pickupFacility);
                 }
 

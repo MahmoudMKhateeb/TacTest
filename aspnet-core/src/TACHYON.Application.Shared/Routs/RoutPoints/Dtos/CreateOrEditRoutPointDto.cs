@@ -24,7 +24,22 @@ namespace TACHYON.Routs.RoutPoints.Dtos
         /// </summary>
         public double Latitude { get; set; }
 
-        public long? ShippingRequestId { get; set; }
+        [Required]
+        public virtual int ShippingRequestTripId { get; set; }
+
+        public string Code { get; set; }
+
+        public DateTime? StartTime { get; set; }
+        public DateTime? EndTime { get; set; }
+
+        public bool IsActive { get; set; }
+        public bool IsComplete { get; set; }
+
+        public Guid? DocumentId { get; set; }
+        public string DocumentName { get; set; }
+        public string DocumentContentType { get; set; }
+
+        public int? Rating { get; set; }
 
         public List<CreateOrEditGoodsDetailDto> GoodsDetailListDto { get; set; }
     }

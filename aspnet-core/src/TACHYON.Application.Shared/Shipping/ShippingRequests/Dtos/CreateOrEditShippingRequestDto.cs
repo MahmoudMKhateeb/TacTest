@@ -12,9 +12,6 @@ namespace TACHYON.Shipping.ShippingRequests.Dtos
 {
     public class CreateOrEditShippingRequestDto : EntityDto<long?>
     {
-
-       public List<CreateOrEditRoutPointDto> CreateOrEditRoutPointDtoList { get; set; }
-
         public virtual bool IsBid { get; set; }
         //Add Bid details If IsBid equals True
         public DateTime? BidStartDate { get; set; }

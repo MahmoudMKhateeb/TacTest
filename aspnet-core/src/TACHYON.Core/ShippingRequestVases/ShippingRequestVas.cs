@@ -1,19 +1,15 @@
 ﻿using TACHYON.Vases;
 using System;
-using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using Abp.Domain.Entities.Auditing;
 using Abp.Domain.Entities;
 using TACHYON.Shipping.ShippingRequests;
-using TACHYON.Shipping.ShippingRequestTrips;
 
 namespace TACHYON.ShippingRequestVases
 {
     [Table("ShippingRequestVases")]
-    public class ShippingRequestVas : FullAuditedEntity<long>, IMustHaveTenant
+    public class ShippingRequestVas : FullAuditedEntity<long>
     {
-        public int TenantId { get; set; }
-
         public virtual double? DefualtPrice { get; set; }
 
         public virtual double? ActualPrice { get; set; }
@@ -32,8 +28,5 @@ namespace TACHYON.ShippingRequestVases
         public ShippingRequest ShippingRequestFk { get; set; }
         //number of trips for each vas, each vas shouldn't assign to more than this number
         public int NumberOfTrips { get; set; }
-        public virtual int? ShippingRequestTripId { get; set; }
-        [ForeignKey("ShippingRequestTripId")]
-        public ShippingRequestTrip ShippingRequestTripFk { get; set; }
     }
 }

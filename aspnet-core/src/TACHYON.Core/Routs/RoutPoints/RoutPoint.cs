@@ -38,7 +38,7 @@ namespace TACHYON.Routs.RoutPoints
         public Facility FacilityFk { get; set; }
 
         [Required]
-        public virtual long ShippingRequestTripId { get; set; }
+        public virtual int ShippingRequestTripId { get; set; }
 
         [ForeignKey("ShippingRequestTripId")]
         public ShippingRequestTrip ShippingRequestTripFk { get; set; }
