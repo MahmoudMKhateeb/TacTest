@@ -1,6 +1,6 @@
 ﻿import { Component, Injector, ViewEncapsulation, ViewChild, OnInit, AfterViewInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { DocumentFilesServiceProxy, DocumentFileDto, SelectItemDto } from '@shared/service-proxies/service-proxies';
+import { DocumentFilesServiceProxy, DocumentFileDto, SelectItemDto, DocumentsEntitiesEnum } from '@shared/service-proxies/service-proxies';
 import { NotifyService } from 'abp-ng2-module';
 import { AppComponentBase } from '@shared/common/app-component-base';
 import { TokenAuthServiceProxy } from '@shared/service-proxies/service-proxies';
@@ -48,8 +48,9 @@ export class DocumentFilesComponent extends AppComponentBase implements OnInit, 
   isHost = true;
   routStepDisplayNameFilter = '';
   todayGregorian = this.dateFormatterService.GetTodayGregorian();
-  entityType = 'Tenant';
+  entityType = DocumentsEntitiesEnum.Tenant;
   entityTypesList: SelectItemDto[] = [];
+  documentsEntitiesEnum = DocumentsEntitiesEnum;
 
   _entityTypeFullName = 'TACHYON.Documents.DocumentFiles.DocumentFile';
   entityHistoryEnabled = false;
@@ -69,7 +70,7 @@ export class DocumentFilesComponent extends AppComponentBase implements OnInit, 
 
   ngOnInit(): void {
     this.isHost = session.tenantId == null;
-    this.entityType = 'Tenant';
+    this.entityType = DocumentsEntitiesEnum.Tenant;
 
     this._documentFilesServiceProxy.getDocumentEntitiesForTableDropdown().subscribe((res) => {
       this.entityTypesList = res;

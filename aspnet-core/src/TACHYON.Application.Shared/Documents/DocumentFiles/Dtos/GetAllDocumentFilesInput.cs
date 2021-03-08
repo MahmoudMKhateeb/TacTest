@@ -1,5 +1,6 @@
 ﻿using Abp.Application.Services.Dto;
 using System;
+using TACHYON.Documents.DocumentsEntities;
 
 namespace TACHYON.Documents.DocumentFiles.Dtos
 {
@@ -15,7 +16,7 @@ namespace TACHYON.Documents.DocumentFiles.Dtos
 
         public string DocumentTypeDisplayNameFilter { get; set; }
 
-        public string DocumentEntityFilter { get; set; }
+        public DocumentsEntitiesEnum? DocumentEntityFilter { get; set; }
         public long? TruckIdFilter { get; set; }
         public string EntityIdFilter { get; set; }
 

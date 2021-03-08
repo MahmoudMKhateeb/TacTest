@@ -106,7 +106,6 @@
                 <ng-template pTemplate="header">
                   <tr>
                     <th
-                      style="width: 130px;"
                       [hidden]="
                         !(
                           [
@@ -120,27 +119,28 @@
                     >
                       {{ 'Actions' | localize }}
                     </th>
-                    <th style="width: 150px;" pSortableColumn="username">
+                    <th></th>
+                    <th pSortableColumn="username">
                       {{ 'PhoneNumber' | localize }}
                       <p-sortIcon field="username"></p-sortIcon>
                     </th>
-                    <th style="width: 250px;" pSortableColumn="emailAddress">
+                    <th pSortableColumn="emailAddress">
                       {{ 'EmailAddress' | localize }}
                       <p-sortIcon field="emailAddress"></p-sortIcon>
                     </th>
-                    <th style="width: 150px;" pSortableColumn="name">
+                    <th pSortableColumn="name">
                       {{ 'FirstName' | localize }}
                       <p-sortIcon field="name"></p-sortIcon>
                     </th>
-                    <th style="width: 150px;" pSortableColumn="surname">
+                    <th pSortableColumn="surname">
                       {{ 'LastName' | localize }}
                       <p-sortIcon field="surname"></p-sortIcon>
                     </th>
-                    <th style="width: 100px;" pSortableColumn="isActive">
+                    <th pSortableColumn="isActive">
                       {{ 'Active' | localize }}
                       <p-sortIcon field="isActive"></p-sortIcon>
                     </th>
-                    <th style="width: 200px;" pSortableColumn="creationTime">
+                    <th pSortableColumn="creationTime">
                       {{ 'CreationTime' | localize }}
                       <p-sortIcon field="creationTime"></p-sortIcon>
                     </th>
@@ -149,7 +149,6 @@
                 <ng-template pTemplate="body" let-record="$implicit">
                   <tr>
                     <td
-                      style="width: 130px;"
                       [hidden]="
                         !(
                           [
@@ -166,35 +165,15 @@
                           <button class="dropdown-toggle btn btn-sm btn-primary" dropdownToggle>
                             <i class="fa fa-cog"></i><span class="caret"></span> {{ l('Actions') }}
                           </button>
-                          <span
-                            *ngIf="record.isMissingDocumentFiles"
-                            data-toggle="tooltip"
-                            title="Missing documents"
-                            class="ml-3 svg-icon svg-icon-warning svg-icon-2x"
-                          >
-                            <!--begin::Svg Icon | path:/var/www/preview.keenthemes.com/metronic/releases/2020-12-28-020759/theme/html/demo1/dist/../src/media/svg/icons/Code/Warning-1-circle.svg--><svg
-                              xmlns="http://www.w3.org/2000/svg"
-                              xmlns:xlink="http://www.w3.org/1999/xlink"
-                              width="24px"
-                              height="24px"
-                              viewBox="0 0 24 24"
-                              version="1.1"
-                            >
-                              <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
-                                <rect x="0" y="0" width="24" height="24" />
-                                <circle fill="#000000" opacity="0.3" cx="12" cy="12" r="10" />
-                                <rect fill="#000000" x="11" y="7" width="2" height="8" rx="1" />
-                                <rect fill="#000000" x="11" y="16" width="2" height="2" rx="1" />
-                              </g>
-                            </svg>
-                            <!--end::Svg Icon-->
-                          </span>
                         </div>
                         <ul class="dropdown-menu" *dropdownMenu>
                           <li>
-                            <a href="javascript:;" class="dropdown-item" (click)="viewOrEditEntityDocumentsModal.show(record.id, 'Driver')">{{
-                              l('ViewDocuments')
-                            }}</a>
+                            <a
+                              href="javascript:;"
+                              class="dropdown-item"
+                              (click)="viewOrEditEntityDocumentsModal.show(record.id, documentsEntitiesEnum.Driver)"
+                              >{{ l('ViewDocuments') }}</a
+                            >
                           </li>
                           <li>
                             <a
@@ -235,34 +214,59 @@
                         </ul>
                       </div>
                     </td>
-                    <td style="width: 150px;">
+                    <td>
+                      <span
+                        *ngIf="record.isMissingDocumentFiles"
+                        data-toggle="tooltip"
+                        title="Missing documents"
+                        class="ml-3 svg-icon svg-icon-warning svg-icon-2x"
+                      >
+                        <!--begin::Svg Icon | path:/var/www/preview.keenthemes.com/metronic/releases/2020-12-28-020759/theme/html/demo1/dist/../src/media/svg/icons/Code/Warning-1-circle.svg--><svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          xmlns:xlink="http://www.w3.org/1999/xlink"
+                          width="24px"
+                          height="24px"
+                          viewBox="0 0 24 24"
+                          version="1.1"
+                        >
+                          <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+                            <rect x="0" y="0" width="24" height="24" />
+                            <circle fill="#000000" opacity="0.3" cx="12" cy="12" r="10" />
+                            <rect fill="#000000" x="11" y="7" width="2" height="8" rx="1" />
+                            <rect fill="#000000" x="11" y="16" width="2" height="2" rx="1" />
+                          </g>
+                        </svg>
+                        <!--end::Svg Icon-->
+                      </span>
+                    </td>
+                    <td>
                       <span class="ui-column-title"> {{ 'UserName' | localize }}</span>
                       <span>
                         {{ record.userName }}
                       </span>
                     </td>
-                    <td style="width: 250px;">
+                    <td>
                       <span class="ui-column-title"> {{ 'EmailAddress' | localize }}</span>
                       {{ record.emailAddress }}
                     </td>
-                    <td style="width: 150px;">
+                    <td>
                       <span class="ui-column-title"> {{ 'Name' | localize }}</span>
                       <span>
                         {{ record.name }}
                       </span>
                     </td>
-                    <td style="width: 150px;">
+                    <td>
                       <span class="ui-column-title"> {{ 'Surname' | localize }}</span>
                       <span>
                         {{ record.surname }}
                       </span>
                     </td>
-                    <td style="width: 100px;">
+                    <td>
                       <span class="ui-column-title"> {{ 'Active' | localize }}</span>
                       <span class="label label-success label-inline" *ngIf="record.isActive">{{ 'Yes' | localize }}</span>
                       <span class="label label-dark label-inline" *ngIf="!record.isActive">{{ 'No' | localize }}</span>
                     </td>
-                    <td style="width: 200px;">
+                    <td>
                       <span class="ui-column-title"> {{ 'CreationTime' | localize }}</span>
                       {{ record.creationTime | momentFormat: 'DD/MM/YY HH:mm' }}
                     </td>

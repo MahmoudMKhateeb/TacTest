@@ -19,7 +19,7 @@
         </button>
       </div>
       <div class="modal-body">
-        <div *ngIf="entityType == 'Tenant' && isHost == true" class="row">
+        <div *ngIf="entityType == documentsEntitiesEnum.Tenant && isHost == true" class="row">
           <div class="col-12">
             <h6>{{ l('SubmitterTenant') }} :</h6>
             {{ item.submitterTenatTenancyName }}
@@ -38,7 +38,7 @@
         </div>
 
         <div class="row">
-          <div *ngIf="entityType == 'Tenant'" class="col-6 mb-3">
+          <div *ngIf="entityType == documentsEntitiesEnum.Tenant" class="col-6 mb-3">
             <h6>{{ l('IsAccepted') }} :</h6>
             {{ item.documentFile.isAccepted }}
           </div>
@@ -50,18 +50,18 @@
         </div>
 
         <div class="row">
-          <div *ngIf="entityType == 'Truck'" class="col-6 mb-3">
+          <div *ngIf="entityType == documentsEntitiesEnum.Truck" class="col-6 mb-3">
             <h6>{{ l('TruckID') }} :</h6>
             {{ item.truckId }}
           </div>
-          <div *ngIf="entityType == 'Trailer'" class="col-6 mb-3">
-            <h6>{{ l('TrailerCode') }} :</h6>
-            {{ item.trailerTrailerCode }}
-          </div>
+          <!--          <div *ngIf="entityType == 'Trailer'" class="col-6 mb-3">-->
+          <!--            <h6>{{ l('TrailerCode') }} :</h6>-->
+          <!--            {{ item.trailerTrailerCode }}-->
+          <!--          </div>-->
         </div>
 
         <div class="row">
-          <div *ngIf="entityType == 'Driver'" class="col-6 mb-3">
+          <div *ngIf="entityType == documentsEntitiesEnum.Driver" class="col-6 mb-3">
             <h6>{{ l('DriverName') }} :</h6>
             {{ item.userName }}
           </div>

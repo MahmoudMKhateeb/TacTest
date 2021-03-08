@@ -2,7 +2,7 @@ import { AfterViewInit, Component, Injector, OnInit, ViewChild, ViewEncapsulatio
 import { UsersComponent } from '@app/admin/users/users.component';
 import { appModuleAnimation } from '@shared/animations/routerTransition';
 import { ImpersonationService } from '@app/admin/users/impersonation.service';
-import { UserServiceProxy } from '@shared/service-proxies/service-proxies';
+import { DocumentsEntitiesEnum, UserServiceProxy } from '@shared/service-proxies/service-proxies';
 import { FileDownloadService } from '@shared/utils/file-download.service';
 import { ActivatedRoute } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
@@ -20,6 +20,7 @@ import { ViewOrEditEntityDocumentsModalComponent } from '@app/main/documentFiles
 export class DriversComponent extends UsersComponent implements AfterViewInit {
   @ViewChild('viewOrEditEntityDocumentsModal', { static: true }) viewOrEditEntityDocumentsModal: ViewOrEditEntityDocumentsModalComponent;
   isArabic = false;
+  documentsEntitiesEnum = DocumentsEntitiesEnum;
 
   constructor(
     injector: Injector,
@@ -41,6 +42,6 @@ export class DriversComponent extends UsersComponent implements AfterViewInit {
   }
 
   showDriverkDocuments(driverId) {
-    this.viewOrEditEntityDocumentsModal.show(driverId, 'Driver');
+    this.viewOrEditEntityDocumentsModal.show(driverId, DocumentsEntitiesEnum.Driver);
   }
 }

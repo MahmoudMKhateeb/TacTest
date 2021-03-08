@@ -6,6 +6,7 @@ import {
   CreateOrEditTruckDto,
   DocumentFileDto,
   DocumentFilesServiceProxy,
+  DocumentsEntitiesEnum,
   TrucksServiceProxy,
 } from '@shared/service-proxies/service-proxies';
 import { AppComponentBase } from '@shared/common/app-component-base';
@@ -65,8 +66,8 @@ export class ViewOrEditEntityDocumentsModalComponent extends AppComponentBase {
   public maxProfilPictureBytesUserFriendlyValue = 5;
   public uploader: FileUploader;
   public temporaryPictureUrl: string;
-  public documentEntityFilter: string;
-
+  public documentEntityFilter: DocumentsEntitiesEnum;
+  public documentsEntitiesEnum = DocumentsEntitiesEnum;
   constructor(
     injector: Injector,
     private _trucksServiceProxy: TrucksServiceProxy,
@@ -79,7 +80,7 @@ export class ViewOrEditEntityDocumentsModalComponent extends AppComponentBase {
     super(injector);
   }
 
-  show(id: string, documentEntityFilter: string): void {
+  show(id: string, documentEntityFilter: DocumentsEntitiesEnum): void {
     // this.ModalIsEdit = true;
 
     this.entityIdFilter = id;

@@ -1,6 +1,6 @@
 ﻿import { Component, Injector, ViewEncapsulation, ViewChild, ChangeDetectorRef, AfterViewInit, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { TrucksServiceProxy, TruckDto } from '@shared/service-proxies/service-proxies';
+import { TrucksServiceProxy, TruckDto, DocumentsEntitiesEnum } from '@shared/service-proxies/service-proxies';
 import { NotifyService } from 'abp-ng2-module';
 import { AppComponentBase } from '@shared/common/app-component-base';
 import { TokenAuthServiceProxy } from '@shared/service-proxies/service-proxies';
@@ -53,6 +53,7 @@ export class TrucksComponent extends AppComponentBase implements OnInit, AfterVi
   entityHistoryEnabled = false;
   isArabic = false;
   uploadUrl: string;
+  documentsEntitiesEnum = DocumentsEntitiesEnum;
 
   constructor(
     injector: Injector,
@@ -123,7 +124,7 @@ export class TrucksComponent extends AppComponentBase implements OnInit, AfterVi
   }
 
   showTruckDocuments(truckId) {
-    this.viewOrEditEntityDocumentsModal.show(truckId, 'Truck');
+    this.viewOrEditEntityDocumentsModal.show(truckId, DocumentsEntitiesEnum.Truck);
   }
 
   createTruck(): void {

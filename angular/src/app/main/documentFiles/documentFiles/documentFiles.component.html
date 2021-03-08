@@ -71,7 +71,11 @@
                       {{ l('DocumentName') }}
                       <p-sortIcon field="name"></p-sortIcon>
                     </th>
-                    <th *ngIf="entityType == 'Tenant' && isHost == true" style="width: 160px;" pSortableColumn="documentTypeFk.editionFk.name">
+                    <th
+                      *ngIf="entityType == documentsEntitiesEnum.Tenant && isHost"
+                      style="width: 160px;"
+                      pSortableColumn="documentTypeFk.editionFk.name"
+                    >
                       {{ l('SubmitterTenant') }}
                       <p-sortIcon field="documentTypeFk.editionFk.name"></p-sortIcon>
                     </th>
@@ -83,19 +87,19 @@
                       {{ l('SubmittingTime') }}
                       <p-sortIcon field="documentFile.creationTime"></p-sortIcon>
                     </th>
-                    <th *ngIf="entityType == 'Truck'" pSortableColumn="truckFk.Id">
+                    <th *ngIf="entityType == documentsEntitiesEnum.Truck" pSortableColumn="truckFk.Id">
                       {{ l('TruckID') }}
                       <p-sortIcon field="documentFile.truckId"></p-sortIcon>
                     </th>
-                    <th *ngIf="entityType == 'Truck'" style="width: 160px;" pSortableColumn="truckFk.plateNumber">
+                    <th *ngIf="entityType == documentsEntitiesEnum.Truck" style="width: 160px;" pSortableColumn="truckFk.plateNumber">
                       {{ l('Truck') }} {{ l('PlateNumber') }}
                       <p-sortIcon field="documentFile.plateNumber"></p-sortIcon>
                     </th>
-                    <th *ngIf="entityType == 'Trailer'" pSortableColumn="trailerFk.trailerCode">
-                      {{ l('TrailerCode') }}
-                      <p-sortIcon field="documentFile.trailerTrailerCode"></p-sortIcon>
-                    </th>
-                    <th *ngIf="entityType == 'Driver'" pSortableColumn="userFk.name">
+                    <!--                    <th *ngIf="entityType == 'Trailer'" pSortableColumn="trailerFk.trailerCode">-->
+                    <!--                      {{ l('TrailerCode') }}-->
+                    <!--                      <p-sortIcon field="documentFile.trailerTrailerCode"></p-sortIcon>-->
+                    <!--                    </th>-->
+                    <th *ngIf="entityType == documentsEntitiesEnum.Driver" pSortableColumn="userFk.name">
                       {{ l('DriverName') }}
                       <p-sortIcon field="documentFile.userName"></p-sortIcon>
                     </th>
@@ -112,7 +116,7 @@
                       {{ l('ExpirationDate') }}
                       <p-sortIcon field="documentFile.expirationDate"></p-sortIcon>
                     </th>
-                    <th *ngIf="entityType == 'Tenant'" pSortableColumn="isAccepted">
+                    <th *ngIf="entityType == documentsEntitiesEnum.Tenant" pSortableColumn="isAccepted">
                       {{ l('Status') }}
                       <p-sortIcon field="documentFile.isAccepted"></p-sortIcon>
                     </th>
@@ -153,7 +157,7 @@
                                 !record.isRejected
                               "
                               class="dropdown-item"
-                              (click)="createOrEditDocumentFileModal.show(entityType, entityIdFilter, record.documentFile.id)"
+                              (click)="createOrEditDocumentFileModal.show(entityIdFilter, entityType, record.documentFile.id)"
                               >{{ l('Edit') }}</a
                             >
                           </li>
@@ -215,7 +219,7 @@
                       >
                     </td>
 
-                    <td *ngIf="entityType == 'Tenant' && isHost == true" style="width: 160px;">
+                    <td *ngIf="entityType == documentsEntitiesEnum.Tenant && isHost == true" style="width: 160px;">
                       {{ record.submitterTenatTenancyName }}
                     </td>
 
@@ -223,17 +227,17 @@
                       {{ record.documentFile.creationTime | momentFormat: 'D/M/YYYY' }}
                     </td>
 
-                    <td *ngIf="entityType == 'Truck'" style="width: 160px;">
+                    <td *ngIf="entityType == documentsEntitiesEnum.Truck" style="width: 160px;">
                       {{ record.truckId == '' || record.truckId == null ? '-' : record.truckId }}
                     </td>
 
-                    <td *ngIf="entityType == 'Truck'" style="width: 160px;">
+                    <td *ngIf="entityType == documentsEntitiesEnum.Truck" style="width: 160px;">
                       {{ record.plateNumber == '' ? '-' : record.plateNumber }}
                     </td>
-                    <td *ngIf="entityType == 'Trailer'">
-                      {{ record.trailerTrailerCode }}
-                    </td>
-                    <td *ngIf="entityType == 'Driver'">
+                    <!--                    <td *ngIf="entityType == 'Trailer'">-->
+                    <!--                      {{ record.trailerTrailerCode }}-->
+                    <!--                    </td>-->
+                    <td *ngIf="entityType == documentsEntitiesEnum.Driver">
                       {{ record.userName }}
                     </td>
                     <td>
@@ -260,7 +264,7 @@
                       {{ record.documentFile?.expirationDate > todayGregorian ? '(' + l('Expired') + ')' : '' }}
                     </td>
 
-                    <td *ngIf="entityType == 'Tenant'">
+                    <td *ngIf="entityType == documentsEntitiesEnum.Tenant">
                       <!--                      <i *ngIf="record.documentFile.isAccepted" class="fa fa-check-circle text-success" title="True"></i>-->
                       <!--                      <span *ngIf="record.documentFile.isRejected" title="False">{{ l('Rejected') }}</span>-->
                       <!--                      <span *ngIf="!record.documentFile.isAccepted && !record.documentFile.isRejected" title="False">{{ l('NotYet') }}</span>-->

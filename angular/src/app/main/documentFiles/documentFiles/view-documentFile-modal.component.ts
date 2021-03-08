@@ -5,6 +5,7 @@ import {
   DocumentFileDto,
   DocumentTypeDto,
   UserInGetDocumentFileForViewDto,
+  DocumentsEntitiesEnum,
 } from '@shared/service-proxies/service-proxies';
 import { AppComponentBase } from '@shared/common/app-component-base';
 
@@ -20,8 +21,9 @@ export class ViewDocumentFileModalComponent extends AppComponentBase {
   saving = false;
 
   item: GetDocumentFileForViewDto;
-  entityType: string = '';
-  isHost: boolean = false;
+  entityType: DocumentsEntitiesEnum;
+  isHost = false;
+  documentsEntitiesEnum = DocumentsEntitiesEnum;
 
   constructor(injector: Injector) {
     super(injector);
@@ -31,7 +33,7 @@ export class ViewDocumentFileModalComponent extends AppComponentBase {
     this.item.user = new UserInGetDocumentFileForViewDto();
   }
 
-  show(item: GetDocumentFileForViewDto, entityType: string, isHost: boolean): void {
+  show(item: GetDocumentFileForViewDto, entityType: DocumentsEntitiesEnum, isHost: boolean): void {
     this.item = item;
     this.isHost = isHost;
     this.entityType = entityType;

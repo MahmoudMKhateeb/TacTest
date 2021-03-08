@@ -5,6 +5,7 @@ import {
   CreateOrEditDocumentFileDto,
   DocumentFileDto,
   DocumentFilesServiceProxy,
+  DocumentsEntitiesEnum,
   GetTenantSubmittedDocumnetForView,
 } from '@shared/service-proxies/service-proxies';
 import { finalize } from '@node_modules/rxjs/operators';
@@ -37,6 +38,7 @@ export class RequiredDocumentFilesComponent extends AppComponentBase {
   todayMoment = this.dateFormatterService.NgbDateStructToMoment(this.todayGregorian);
   todayHijri = this.dateFormatterService.ToHijri(this.todayGregorian);
   @ViewChild('requiredDocumentsCard') private myScrollContainer: ElementRef;
+  documentsEntitiesEnum = DocumentsEntitiesEnum;
 
   constructor(
     injector: Injector,

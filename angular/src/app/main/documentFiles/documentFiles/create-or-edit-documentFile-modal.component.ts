@@ -7,6 +7,7 @@ import {
   DocumentFileTrailerLookupTableDto,
   DocumentFileTruckLookupTableDto,
   DocumentFileUserLookupTableDto,
+  DocumentsEntitiesEnum,
   DocumentTypeDto,
   UpdateDocumentFileInput,
 } from '@shared/service-proxies/service-proxies';
@@ -36,7 +37,7 @@ export class CreateOrEditDocumentFileModalComponent extends AppComponentBase {
   // fileFormateIsInvalideIndex: boolean;
   alldocumentsValid = false;
   documentTypeDisplayName = '';
-  documentEntity = '';
+  documentEntity: DocumentsEntitiesEnum;
   selectedDateType = DateType.Gregorian; // or DateType.Gregorian
   CreateOrEditDocumentFileDtoList: CreateOrEditDocumentFileDto[] = [];
   isNumberValid = false;
@@ -78,7 +79,7 @@ export class CreateOrEditDocumentFileModalComponent extends AppComponentBase {
    * @param documentEntity - if for the required document from entity type Driver or Truck or Tenant
    * @param documentFileId - is for the documentFileId for edit
    */
-  show(entityId: string, documentEntity: string, documentFileId: string): void {
+  show(entityId: string, documentEntity: DocumentsEntitiesEnum, documentFileId: string): void {
     this.documentFile = new CreateOrEditDocumentFileDto();
     this.documentFile.documentTypeDto = new DocumentTypeDto();
     this.fileToken = '';
@@ -259,13 +260,13 @@ export class CreateOrEditDocumentFileModalComponent extends AppComponentBase {
   }
 
   getRequiredDocumentFiles(entityType) {
-    if (entityType === 'Truck') {
+    if (entityType === DocumentsEntitiesEnum.Truck) {
       this._documentFilesServiceProxy.getTruckRequiredDocumentFiles(this.entityId).subscribe((result) => {
         this.CreateOrEditDocumentFileDtoList = result;
         this.documentFile = this.CreateOrEditDocumentFileDtoList[0];
         this.initializeDocumentFile();
       });
-    } else if (entityType === 'Driver') {
+    } else if (entityType === DocumentsEntitiesEnum.Driver) {
       this._documentFilesServiceProxy.getDriverRequiredDocumentFiles(this.entityId).subscribe((result) => {
         this.CreateOrEditDocumentFileDtoList = result;
         this.documentFile = this.CreateOrEditDocumentFileDtoList[0];
@@ -275,9 +276,9 @@ export class CreateOrEditDocumentFileModalComponent extends AppComponentBase {
   }
 
   initializeDocumentFile() {
-    if (this.documentEntity === 'Truck') {
+    if (this.documentEntity === DocumentsEntitiesEnum.Truck) {
       this.documentFile.truckId = this.Number(this.entityId);
-    } else if (this.documentEntity === 'Driver') {
+    } else if (this.documentEntity === DocumentsEntitiesEnum.Driver) {
       this.documentFile.userId = this.Number(this.entityId);
     }
     this.documentFile.expirationDate = moment().startOf('day');

@@ -23,6 +23,7 @@ using TACHYON.Authorization.Users.Profile.Dto;
 using TACHYON.Configuration;
 using TACHYON.Documents.DocumentFiles;
 using TACHYON.Documents.DocumentFiles.Dtos;
+using TACHYON.Documents.DocumentsEntities;
 using TACHYON.Documents.DocumentTypes;
 using TACHYON.Dto;
 using TACHYON.Features;
@@ -62,11 +63,11 @@ namespace TACHYON.Trucks
         private readonly IRepository<TransportType, int> _transportTypeRepository;
         private readonly IRepository<Capacity, int> _capacityRepository;
         private readonly IRepository<PlateType> _plateTypesRepository;
- 
 
 
 
-        public TrucksAppService(IRepository<DocumentType, long> documentTypeRepository, IRepository<DocumentFile, Guid> documentFileRepository, IRepository<Truck, long> truckRepository, ITrucksExcelExporter trucksExcelExporter, IRepository<TrucksType, long> lookup_trucksTypeRepository, IRepository<TruckStatus, long> lookup_truckStatusRepository, IRepository<User, long> lookup_userRepository, IAppNotifier appNotifier, ITempFileCacheManager tempFileCacheManager, IBinaryObjectManager binaryObjectManager, DocumentFilesAppService documentFilesAppService, IRepository<TransportType, int> transportTypeRepository, IRepository<Capacity, int> capacityRepository ,IRepository<PlateType> PlateTypesRepository)
+
+        public TrucksAppService(IRepository<DocumentType, long> documentTypeRepository, IRepository<DocumentFile, Guid> documentFileRepository, IRepository<Truck, long> truckRepository, ITrucksExcelExporter trucksExcelExporter, IRepository<TrucksType, long> lookup_trucksTypeRepository, IRepository<TruckStatus, long> lookup_truckStatusRepository, IRepository<User, long> lookup_userRepository, IAppNotifier appNotifier, ITempFileCacheManager tempFileCacheManager, IBinaryObjectManager binaryObjectManager, DocumentFilesAppService documentFilesAppService, IRepository<TransportType, int> transportTypeRepository, IRepository<Capacity, int> capacityRepository, IRepository<PlateType> PlateTypesRepository)
         {
             _documentFileRepository = documentFileRepository;
             _documentTypeRepository = documentTypeRepository;
@@ -109,8 +110,11 @@ namespace TACHYON.Trucks
                 .OrderBy(input.Sorting ?? "id asc")
                 .PageBy(input);
 
-            var documentTypesCount = await _documentTypeRepository.GetAll().Include(ent => ent.DocumentsEntityFk)
-                .Where(a => a.DocumentsEntityFk.DisplayName == AppConsts.TruckDocumentsEntityName).CountAsync();
+            var documentTypesCount = await _documentTypeRepository.GetAll()
+                .Include(ent => ent.DocumentsEntityFk)
+                .Where(a => a.DocumentsEntityId == (int)DocumentsEntitiesEnum.Truck)
+                .Where(x => x.IsRequired)
+                .CountAsync();
 
 
             var trucks = from o in pagedAndFilteredTrucks
@@ -141,7 +145,7 @@ namespace TACHYON.Trucks
                              (o.CapacityFk == null ? "" : o.CapacityFk.DisplayName),
                              TruckStatusDisplayName = s2 == null || s2.DisplayName == null ? "" : s2.DisplayName.ToString(),
                              //UserName = s3 == null || s3.Name == null ? "" : s3.Name.ToString(),
-                             IsMissingDocumentFiles = documentTypesCount != _documentFileRepository.GetAll().Where(t => t.TruckId == o.Id).Count()
+                             IsMissingDocumentFiles = documentTypesCount != _documentFileRepository.GetAll().Count(t => t.TruckId == o.Id)
                          };
 
             var totalCount = await filteredTrucks.CountAsync();

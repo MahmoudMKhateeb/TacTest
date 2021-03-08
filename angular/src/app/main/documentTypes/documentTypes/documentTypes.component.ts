@@ -1,6 +1,12 @@
 ﻿import { AfterViewInit, Component, Injector, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { DocumentTypeDto, DocumentTypesServiceProxy, SelectItemDto, TokenAuthServiceProxy } from '@shared/service-proxies/service-proxies';
+import {
+  DocumentsEntitiesEnum,
+  DocumentTypeDto,
+  DocumentTypesServiceProxy,
+  SelectItemDto,
+  TokenAuthServiceProxy,
+} from '@shared/service-proxies/service-proxies';
 import { NotifyService } from 'abp-ng2-module';
 import { AppComponentBase } from '@shared/common/app-component-base';
 import { CreateOrEditDocumentTypeModalComponent } from './create-or-edit-documentType-modal.component';
@@ -29,7 +35,7 @@ export class DocumentTypesComponent extends AppComponentBase implements OnInit, 
   displayNameFilter = '';
   isRequiredFilter = -1;
   hasExpirationDateFilter = -1;
-  requiredFromFilter = '';
+  requiredFromFilter: DocumentsEntitiesEnum;
   entityList: SelectItemDto[] = [];
 
   constructor(

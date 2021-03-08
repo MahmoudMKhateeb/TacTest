@@ -8,6 +8,7 @@ using Abp.UI;
 using Microsoft.EntityFrameworkCore;
 using TACHYON.Documents.DocumentFiles;
 using TACHYON.Documents.DocumentFiles.Dtos;
+using TACHYON.Documents.DocumentsEntities;
 using TACHYON.Documents.DocumentTypes;
 using TACHYON.MultiTenancy;
 using TACHYON.Storage;
@@ -94,8 +95,7 @@ namespace TACHYON.Documents
             {
                 return await _documentFileRepository.GetAll()
                       .Include(doc => doc.DocumentTypeFk)
-                      .ThenInclude(doc => doc.DocumentsEntityFk)
-                      .Where(x => x.DocumentTypeFk.DocumentsEntityFk.DisplayName == AppConsts.TenantDocumentsEntityName)
+                      .Where(x => x.DocumentTypeFk.DocumentsEntityId == (int)DocumentsEntitiesEnum.Tenant)
                     .Where(x => x.TenantId == tenantId)
                     .Where(x => x.ExpirationDate > DateTime.Now || x.ExpirationDate == null || !x.DocumentTypeFk.HasExpirationDate)
                     .Where(x => x.DocumentTypeFk.IsRequired)
@@ -132,6 +132,6 @@ namespace TACHYON.Documents
         }
 
 
-        
+
     }
 }

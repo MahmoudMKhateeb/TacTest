@@ -27,6 +27,7 @@ using TACHYON.Authorization.Roles;
 using TACHYON.Authorization.Users.Dto;
 using TACHYON.Authorization.Users.Exporting;
 using TACHYON.Documents.DocumentFiles;
+using TACHYON.Documents.DocumentsEntities;
 using TACHYON.Documents.DocumentTypes;
 using TACHYON.Dto;
 using TACHYON.Notifications;
@@ -116,8 +117,8 @@ namespace TACHYON.Authorization.Users
             var userListDtos = new List<UserListDto>();
             if (input.OnlyDrivers)
             {
-                var documentTypesCount = await _documentTypeRepository.GetAll().Include(ent => ent.DocumentsEntityFk)
-                .Where(a => a.DocumentsEntityFk.DisplayName == AppConsts.DriverDocumentsEntityName).CountAsync();
+                var documentTypesCount = await _documentTypeRepository.GetAll()
+                .Where(a => a.DocumentsEntityId == (int)DocumentsEntitiesEnum.Driver).CountAsync();
 
                 userListDtos = await query.Select(u => new UserListDto()
                 {

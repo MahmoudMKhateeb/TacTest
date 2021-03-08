@@ -12,7 +12,7 @@
     <div class="modal-content">
       <div class="modal-header">
         <h4 class="modal-title">
-          <span> {{ l(documentEntityFilter) }} {{ l('Documents') }}</span>
+          <span> {{ l(documentEntityFilter?.toString()) }} {{ l('Documents') }}</span>
         </h4>
         <button type="button" class="close" (click)="close()" aria-label="Close" [disabled]="saving">
           <span aria-hidden="true">&times;</span>
@@ -50,15 +50,15 @@
                     {{ l('DocumentName') }}
                     <p-sortIcon field="documentTypeDisplayName"></p-sortIcon>
                   </th>
-                  <th *ngIf="documentEntityFilter=='Truck'" style="width: 150px;" pSortableColumn="truckFk.truckId">
+                  <th *ngIf="documentEntityFilter==documentsEntitiesEnum.Truck" style="width: 150px;" pSortableColumn="truckFk.truckId">
                     {{ l('TruckID') }}
                     <p-sortIcon field="truckId"></p-sortIcon>
                   </th>
-                  <th *ngIf="documentEntityFilter=='Driver'" style="width: 150px;" pSortableColumn="userFk.name">
+                  <th *ngIf="documentEntityFilter==documentsEntitiesEnum.Driver" style="width: 150px;" pSortableColumn="userFk.name">
                     {{ 'Name' | localize }}
                     <p-sortIcon field="name"></p-sortIcon>
                   </th>
-                  <th *ngIf="documentEntityFilter=='Driver'" style="width: 150px;" pSortableColumn="userFk.surname">
+                  <th *ngIf="documentEntityFilter==documentsEntitiesEnum.Driver" style="width: 150px;" pSortableColumn="userFk.surname">
                     {{ 'lastName' | localize }}
                     <p-sortIcon field="surname"></p-sortIcon>
                   </th>
@@ -122,17 +122,17 @@
                     <span class="ui-column-title"> {{ l('Document Name') }}</span>
                     {{ record.documentTypeDisplayName }}
                   </td>
-                  <td *ngIf="documentEntityFilter=='Truck'" style="width: 150px;">
+                  <td *ngIf="documentEntityFilter==documentsEntitiesEnum.Truck" style="width: 150px;">
                     <span class="ui-column-title"> {{ l('TruckID') }}</span>
                     {{ record.truckId }}
                   </td>
-                  <td *ngIf="documentEntityFilter=='Driver'" style="width: 150px;">
+                  <td *ngIf="documentEntityFilter==documentsEntitiesEnum.Driver" style="width: 150px;">
                     <span class="ui-column-title"> {{ 'Name' | localize }}</span>
                     <span>
                       {{ record.user.name }}
                     </span>
                   </td>
-                  <td *ngIf="documentEntityFilter=='Driver'" style="width: 150px;">
+                  <td *ngIf="documentEntityFilter==documentsEntitiesEnum.Driver" style="width: 150px;">
                     <span class="ui-column-title"> {{ 'Surname' | localize }}</span>
                     <span>
                       {{ record.user.surname }}
