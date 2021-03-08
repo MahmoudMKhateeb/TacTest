@@ -39,7 +39,7 @@
           />
           <div>
             <validation-messages [formCtrl]="tenancyName"></validation-messages>
-            <!-- <span class="form-text text-muted">{{ l('Enter') }} {{ l('CompanyUniqueName') }}</span> -->
+            <span class="form-text text-muted">{{ l('EnglishLettersOnly') }}</span>
             <span *ngIf="!isCompanyNameAvailable" class="form-text text-danger text-left"
               >{{ 'CompanyUniqueName' | localize }} {{ 'AlreadyTaken' | localize }}</span
             >

@@ -1686,5 +1686,6 @@
     <text name="VisualSettings_Description">Change look of the application</text>
     <text name="DownloadCollectedData_Description">Download data belongs to your account</text>
     <text name="New">New</text>
+    <text name="EnglishLettersOnly">English letters only</text>
   </texts>
 </localizationDictionary>

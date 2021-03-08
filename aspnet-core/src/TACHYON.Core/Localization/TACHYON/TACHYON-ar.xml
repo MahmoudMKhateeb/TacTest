@@ -1412,5 +1412,6 @@
     <text name="AllowUsingGravatarProfilePicture">السماح للمستخدمين باستخدام صورة ملف تعريف Gravatar</text>
     <text name="UseGravatarProfilePicture">استخدم صورة ملف تعريف Gravatar</text>
     <text name="PleaseSelectAPicture">يرجى تحديد صورة!</text>
+    <text name="EnglishLettersOnly">حروف انجليزية فقط</text>
   </texts>
 </localizationDictionary>
