@@ -50,13 +50,6 @@ namespace TACHYON.Shipping.ShippingRequests
 
         [ForeignKey("RouteId")]
         public Route RouteFk { get; set; }
-
-
-        /// <summary>
-        /// shipping request route steps that are declare the shipment steps
-        /// </summary>
-        public ICollection<RoutPoint> RoutPoints { get; set; }
-
         /// <summary>
         /// Tachyon user price
         /// </summary>
@@ -92,7 +85,7 @@ namespace TACHYON.Shipping.ShippingRequests
 
 
         /// <summary>
-        /// if rout type == milk run , number of route steps drops
+        /// if rout type == milk run , number of points drops, for each trip
         /// </summary>
         public int NumberOfDrops { get; set; }
 
@@ -177,6 +170,8 @@ namespace TACHYON.Shipping.ShippingRequests
         public DateTime? CloseBidDate { get; set; }
 
         public ICollection<ShippingRequestBid> ShippingRequestBids { get; set; }
+
+        //Vases for all trips 
         public ICollection<ShippingRequestVas> ShippingRequestVases { get; set; }
         #endregion
 

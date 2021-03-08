@@ -9,6 +9,7 @@ using TACHYON.Goods.GoodsDetails;
 using TACHYON.MultiTenancy;
 using TACHYON.PickingTypes;
 using TACHYON.Shipping.ShippingRequests;
+using TACHYON.Shipping.ShippingRequestTrips;
 
 namespace TACHYON.Routs.RoutPoints
 {
@@ -37,14 +38,26 @@ namespace TACHYON.Routs.RoutPoints
         public Facility FacilityFk { get; set; }
 
         [Required]
-        public virtual long ShippingRequestId { get; set; }
+        public virtual long ShippingRequestTripId { get; set; }
 
-        [ForeignKey("ShippingRequestId")]
-        public ShippingRequest ShippingRequestFk { get; set; }
+        [ForeignKey("ShippingRequestTripId")]
+        public ShippingRequestTrip ShippingRequestTripFk { get; set; }
 
         public ICollection<GoodsDetail> GoodsDetails { get; set; }
 
         public string Code { get; set; } = (new Random().Next(100000, 999999)).ToString();
+
+        public DateTime? StartTime { get; set; }
+        public DateTime? EndTime { get; set; }
+
+        public bool IsActive { get; set; }
+        public bool IsComplete { get; set; }
+
+        public Guid? DocumentId { get; set; }
+        public string DocumentName { get; set; }
+        public string DocumentContentType { get; set; }
+
+        public int? Rating { get; set; }
 
         //to do receiver attribute
 

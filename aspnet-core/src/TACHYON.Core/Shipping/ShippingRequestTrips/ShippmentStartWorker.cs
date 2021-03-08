@@ -48,16 +48,22 @@ namespace TACHYON.Shipping.ShippingRequestTrips
                     .Include(x => x.ShippingRequestFk)
                     .ToList();
 
+                //get shipping request Ids for started shippments
+                var shippingRequestIds = StartedShippments.Select(y => y.ShippingRequestId).ToList();
+
+                //get all way points for started shippments
                 var AllWayPoints = _routPointRepository.GetAll()
                     .Include(e => e.FacilityFk)
+                    .Where(e =>shippingRequestIds.Contains(e.ShippingRequestId))
+                    .Where(e => e.PickingTypeId == TACHYONConsts.PickupPickingType)
                     .ToList();
+
                 foreach (var item in StartedShippments)
                 {
                     var driverUserId = item.ShippingRequestFk.AssignedDriverUserId;
 
                     var pickupFacility = AllWayPoints
                         .Where(e => e.ShippingRequestId == item.ShippingRequestId)
-                        .Where(e => e.PickingTypeId == TACHYONConsts.PickupPickingType)
                         .FirstOrDefault()?.FacilityFk.Name;
 
                     //send notification to Driver for start shippment

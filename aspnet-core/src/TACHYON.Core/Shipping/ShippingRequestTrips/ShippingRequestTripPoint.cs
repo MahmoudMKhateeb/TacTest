@@ -8,7 +8,7 @@ using System.Text;
 namespace TACHYON.Shipping.ShippingRequestTrips
 {
     [Table("ShippingRequestTripsPoints")]
-    public class ShippingRequestTripPoint : Entity
+    public class ShippingRequestTripPointt : Entity
     {
         public int TripId { get; set; }
         [ForeignKey("TripId")]
