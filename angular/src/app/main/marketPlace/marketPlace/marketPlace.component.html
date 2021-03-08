@@ -177,10 +177,7 @@
                       {{ l('bidStartDate') }}
                       <p-sortIcon field="bidStartDate"></p-sortIcon>
                     </th>
-                    <th style="width: 150px;" pSortableColumn="bidEndDate">
-                      {{ l('bidEndDate') }}
-                      <p-sortIcon field="bidEndDate"></p-sortIcon>
-                    </th>
+
                     <th style="width: 150px;" pSortableColumn="StatusName">
                       {{ l('StatusName') }}
                       <p-sortIcon field="StatusName"></p-sortIcon>
@@ -218,11 +215,7 @@
                         record.bidStartDate | momentFormat: 'L'
                       }}</span>
                     </td>
-                    <td style="width: 150px;">
-                      <span *ngIf="record.bidEndDate" class="label label-xl font-weight-bold label-light-danger label-inline">
-                        {{ record.bidEndDate | momentFormat: 'L' }}</span
-                      >
-                    </td>
+
                     <td style="width: 150px;">
                       <span
                         *ngIf="record.shippingRequestBidStatusName"
