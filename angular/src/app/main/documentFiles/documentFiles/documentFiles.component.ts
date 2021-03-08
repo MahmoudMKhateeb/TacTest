@@ -188,7 +188,12 @@ export class DocumentFilesComponent extends AppComponentBase implements OnInit, 
   }
 
   SwitchEntityType(type) {
-    this.entityType = type;
+    this.entityType = <DocumentsEntitiesEnum>type;
+    console.log('type', type);
     this.getDocumentFiles();
+  }
+  documentsEntitiesEnumKeys(): Array<string> {
+    var keys = Object.keys(this.documentsEntitiesEnum);
+    return keys.slice(keys.length / 2);
   }
 }

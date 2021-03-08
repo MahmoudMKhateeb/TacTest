@@ -10,12 +10,11 @@
               <div style="width: 200px;">
                 <label>{{ l('EntityType') }}</label>
                 <select
-                  [(ngModel)]="entityType"
                   (change)="SwitchEntityType($event.target.value)"
                   class="form-control form-control-lg custom-select mr-sm-2"
                   style="color: red;"
                 >
-                  <option *ngFor="let entityType of entityTypesList" [value]="entityType.displayName">{{ entityType.displayName }}</option>
+                  <option *ngFor="let key of documentsEntitiesEnumKeys()" [value]="documentsEntitiesEnum[key]">{{ key }}</option>
                 </select>
               </div>
             </div>
