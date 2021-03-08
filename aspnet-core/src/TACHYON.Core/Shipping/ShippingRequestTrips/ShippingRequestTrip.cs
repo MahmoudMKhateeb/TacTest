@@ -5,6 +5,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 using System.Text;
 using TACHYON.AddressBook;
 using TACHYON.Authorization.Users;
+using TACHYON.Routs.RoutPoints;
 using TACHYON.Shipping.ShippingRequests;
 using TACHYON.Shipping.TripStatuses;
 using TACHYON.Trucks;
@@ -42,6 +43,8 @@ namespace TACHYON.Shipping.ShippingRequestTrips
 
         [ForeignKey("DestinationFacilityId")]
         public Facility DestinationFacilityFk { get; set; }
+
+        public ICollection<RoutPoint> RoutPoints { get; set; }
         
     }
 }

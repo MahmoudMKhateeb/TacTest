@@ -17,6 +17,7 @@ using TACHYON.Routs.RoutSteps;
 using TACHYON.Shipping.ShippingRequestBids;
 using TACHYON.Shipping.ShippingRequestBidStatuses;
 using TACHYON.Shipping.ShippingRequestStatuses;
+using TACHYON.Shipping.ShippingRequestTrips;
 using TACHYON.Shipping.ShippingTypes;
 using TACHYON.Trailers;
 using TACHYON.Trailers.TrailerTypes;
@@ -173,6 +174,9 @@ namespace TACHYON.Shipping.ShippingRequests
 
         //Vases for all trips 
         public ICollection<ShippingRequestVas> ShippingRequestVases { get; set; }
+
+        //trips collection
+        public ICollection<ShippingRequestTrip> ShippingRequestTrips { get; set; }
         #endregion
 
         public ShippingRequest()

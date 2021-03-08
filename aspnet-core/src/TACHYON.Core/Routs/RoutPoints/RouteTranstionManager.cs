@@ -25,16 +25,16 @@ namespace TACHYON.Routs.RoutPoints
         
 
 
-        public void Start(long RequestId)
-        {
-             RoutPoints = _RoutPointRepository.GetAll()
-                 .Include(i => i.FacilityFk)
-                 .Where(x => x.ShippingRequestId == RequestId).OrderBy(x => x.ParentId).ToList();
+        //public void Start(long RequestId)
+        //{
+        //     RoutPoints = _RoutPointRepository.GetAll()
+        //         .Include(i => i.FacilityFk)
+        //         .Where(x => x.ShippingRequestId == RequestId).OrderBy(x => x.ParentId).ToList();
 
-            var PikupPoint = RoutPoints.Single(x => !x.ParentId.HasValue);
-            RoutPoints.Remove(PikupPoint);
-            BuildTransition(PikupPoint);
-        }
+        //    var PikupPoint = RoutPoints.Single(x => !x.ParentId.HasValue);
+        //    RoutPoints.Remove(PikupPoint);
+        //    BuildTransition(PikupPoint);
+        //}
         private async void BuildTransition(RoutPoint FromPoint)
         {
             var PointTo = FindClosestPoint(FromPoint);

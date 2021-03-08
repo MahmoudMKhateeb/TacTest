@@ -209,7 +209,6 @@ namespace TACHYON
             configuration.CreateMap<CreateOrEditRouteDto, Route>().ReverseMap();
 
             configuration.CreateMap<CreateOrEditShippingRequestDto, ShippingRequest>()
-                .ForMember(d => d.RoutPoints, opt => opt.Ignore())
                 .ForMember(d => d.ShippingRequestVases, opt => opt.Ignore())
             .AfterMap(AddOrUpdateShippingRequest)
                 .ReverseMap();
@@ -418,23 +417,6 @@ namespace TACHYON
 
         private static void AddOrUpdateShippingRequest(CreateOrEditShippingRequestDto dto, ShippingRequest Request)
         {
-            if (Request.RoutPoints == null) Request.RoutPoints = new Collection<RoutPoint>();
-            if (Request.ShippingRequestVases == null) Request.ShippingRequestVases = new Collection<ShippingRequestVas>();
-
-            foreach (var point in dto.CreateOrEditRoutPointDtoList)
-            {
-
-                if (!point.Id.HasValue)
-                {
-                 
-                    Request.RoutPoints.Add(_Mapper.Map<RoutPoint>(point));
-                }
-                else
-                {
-                    _Mapper.Map(point, Request.RoutPoints.SingleOrDefault(c => c.Id == point.Id));
-                }
-            }
-
             foreach (var vas in dto.ShippingRequestVasList)
             {
 
