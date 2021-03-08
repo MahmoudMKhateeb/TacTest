@@ -1,11 +1,10 @@
-﻿using Abp.Domain.Entities;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace TACHYON.ShippingRequestTripVas.Dtos
+namespace TACHYON.ShippingRequestTripVases.Dtos
 {
-    public class CreateOrEditShippingRequestTripVasDto : Entity<long?>
+    public class ShippingRequestTripVasDto
     {
         public long? ShippingRequestVasId { get; set; }
         public int? ShippingRequestTripId { get; set; }

@@ -111,11 +111,6 @@ namespace TACHYON.ShippingRequestVases
         {
             var shippingRequestVas = ObjectMapper.Map<ShippingRequestVas>(input);
 
-            if (AbpSession.TenantId != null)
-            {
-                shippingRequestVas.TenantId = (int)AbpSession.TenantId;
-            }
-
             await _shippingRequestVasRepository.InsertAsync(shippingRequestVas);
         }
 

@@ -6,6 +6,7 @@ using TACHYON.Nationalities.NationalitiesTranslation;
 using TACHYON.Trucks.TruckCategories.TransportTypes.TransportTypesTranslations;
 using TACHYON.Vases;
 using TACHYON.ShippingRequestVases;
+using TACHYON.ShippingRequestTripVases;
 using TACHYON.TermsAndConditions;
 using TACHYON.Trucks.TruckCategories.TruckCapacities;
 using TACHYON.Trucks.TruckCategories.TransportTypes;
@@ -82,6 +83,7 @@ namespace TACHYON.EntityFrameworkCore
 
         public virtual DbSet<VasPrice> VasPrices { get; set; }
         public virtual DbSet<ShippingRequestVas> ShippingRequestVases { get; set; }
+        public virtual DbSet<ShippingRequestTripVas> ShippingRequestTripVases { get; set; }
 
         public virtual DbSet<TermAndConditionTranslation> TermAndConditionTranslations { get; set; }
 

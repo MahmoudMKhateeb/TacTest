@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using NetTopologySuite.Geometries;
 using TACHYON.EntityFrameworkCore;
@@ -10,9 +11,10 @@ using TACHYON.EntityFrameworkCore;
 namespace TACHYON.Migrations
 {
     [DbContext(typeof(TACHYONDbContext))]
-    partial class TACHYONDbContextModelSnapshot : ModelSnapshot
+    [Migration("20210308115130_changePointEntityToShippingRequestTrips")]
+    partial class changePointEntityToShippingRequestTrips
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -3513,49 +3515,6 @@ namespace TACHYON.Migrations
                     b.ToTable("TripStatuses");
                 });
 
-            modelBuilder.Entity("TACHYON.ShippingRequestTripVases.ShippingRequestTripVas", b =>
-                {
-                    b.Property<long>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<DateTime>("CreationTime")
-                        .HasColumnType("datetime2");
-
-                    b.Property<long?>("CreatorUserId")
-                        .HasColumnType("bigint");
-
-                    b.Property<long?>("DeleterUserId")
-                        .HasColumnType("bigint");
-
-                    b.Property<DateTime?>("DeletionTime")
-                        .HasColumnType("datetime2");
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("bit");
-
-                    b.Property<DateTime?>("LastModificationTime")
-                        .HasColumnType("datetime2");
-
-                    b.Property<long?>("LastModifierUserId")
-                        .HasColumnType("bigint");
-
-                    b.Property<int>("ShippingRequestTripId")
-                        .HasColumnType("int");
-
-                    b.Property<long>("ShippingRequestVasId")
-                        .HasColumnType("bigint");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("ShippingRequestTripId");
-
-                    b.HasIndex("ShippingRequestVasId");
-
-                    b.ToTable("ShippingRequestTripVases");
-                });
-
             modelBuilder.Entity("TACHYON.ShippingRequestVases.ShippingRequestVas", b =>
                 {
                     b.Property<long>("Id")
@@ -4958,21 +4917,6 @@ namespace TACHYON.Migrations
                     b.HasOne("TACHYON.Trucks.TrucksTypes.TrucksType", "TrucksTypeFk")
                         .WithMany()
                         .HasForeignKey("TrucksTypeId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
-            modelBuilder.Entity("TACHYON.ShippingRequestTripVases.ShippingRequestTripVas", b =>
-                {
-                    b.HasOne("TACHYON.Shipping.ShippingRequestTrips.ShippingRequestTrip", "ShippingRequestTripFk")
-                        .WithMany()
-                        .HasForeignKey("ShippingRequestTripId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("TACHYON.ShippingRequestVases.ShippingRequestVas", "ShippingRequestVasFk")
-                        .WithMany("ShippingRequestTripVases")
-                        .HasForeignKey("ShippingRequestVasId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });

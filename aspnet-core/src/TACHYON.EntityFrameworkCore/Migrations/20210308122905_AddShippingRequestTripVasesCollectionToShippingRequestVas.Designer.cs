@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using NetTopologySuite.Geometries;
 using TACHYON.EntityFrameworkCore;
@@ -10,9 +11,10 @@ using TACHYON.EntityFrameworkCore;
 namespace TACHYON.Migrations
 {
     [DbContext(typeof(TACHYONDbContext))]
-    partial class TACHYONDbContextModelSnapshot : ModelSnapshot
+    [Migration("20210308122905_AddShippingRequestTripVasesCollectionToShippingRequestVas")]
+    partial class AddShippingRequestTripVasesCollectionToShippingRequestVas
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -3544,12 +3546,17 @@ namespace TACHYON.Migrations
                     b.Property<int>("ShippingRequestTripId")
                         .HasColumnType("int");
 
+                    b.Property<long?>("ShippingRequestVasFkId")
+                        .HasColumnType("bigint");
+
                     b.Property<long>("ShippingRequestVasId")
                         .HasColumnType("bigint");
 
                     b.HasKey("Id");
 
                     b.HasIndex("ShippingRequestTripId");
+
+                    b.HasIndex("ShippingRequestVasFkId");
 
                     b.HasIndex("ShippingRequestVasId");
 
@@ -4970,7 +4977,11 @@ namespace TACHYON.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("TACHYON.ShippingRequestVases.ShippingRequestVas", "ShippingRequestVasFk")
+                    b.HasOne("TACHYON.ShippingRequestTripVases.ShippingRequestTripVas", "ShippingRequestVasFk")
+                        .WithMany()
+                        .HasForeignKey("ShippingRequestVasFkId");
+
+                    b.HasOne("TACHYON.ShippingRequestVases.ShippingRequestVas", null)
                         .WithMany("ShippingRequestTripVases")
                         .HasForeignKey("ShippingRequestVasId")
                         .OnDelete(DeleteBehavior.Cascade)
