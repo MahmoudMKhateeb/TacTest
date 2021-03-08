@@ -138,19 +138,19 @@ namespace TACHYON
                 configuration.CreateMap<CreateOrEditTripStatusDto, TripStatus>().ReverseMap();
                 configuration.CreateMap<TripStatusDto, TripStatus>().ReverseMap();
                 configuration.CreateMap<ShippingRequestTrip, ShippingRequestTripDriverListDto>()
-                .ForMember(dst => dst.Source, opt => opt.MapFrom(src => $"{src.ShippingRequestFk.RouteFk.OriginCityFk.DisplayName} - {src.ShippingRequestFk.RouteFk.OriginFacilityFk.Address}"))
-                .ForMember(dst => dst.Distination, opt => opt.MapFrom(src => $"{src.ShippingRequestFk.RouteFk.DestinationCityFk.DisplayName} - {src.ShippingRequestFk.RouteFk.DestinationFacilityFk.Address}"))
+                .ForMember(dst => dst.Source, opt => opt.MapFrom(src => $"{src.ShippingRequestFk.RouteFk.OriginCityFk.DisplayName} - {src.OriginFacilityFk.Address}"))
+                .ForMember(dst => dst.Distination, opt => opt.MapFrom(src => $"{src.ShippingRequestFk.RouteFk.DestinationCityFk.DisplayName} - {src.DestinationFacilityFk.Address}"))
                 .ForMember(dst => dst.StartDate, opt => opt.MapFrom(src => src.StartTripDate))
                 .ForMember(dst => dst.EndDate, opt => opt.MapFrom(src => src.EndTripDate))
                 .ForMember(dst => dst.Status, opt => opt.MapFrom(src => src.TripStatusId));
 
             configuration.CreateMap<ShippingRequestTrip, ShippingRequestTripDriverDetailsDto>()
-            .ForMember(dst => dst.Source, opt => opt.MapFrom(src => $"{src.ShippingRequestFk.RouteFk.OriginCityFk.DisplayName} - {src.ShippingRequestFk.RouteFk.OriginFacilityFk.Address}"))
-            .ForMember(dst => dst.Distination, opt => opt.MapFrom(src => $"{src.ShippingRequestFk.RouteFk.DestinationCityFk.DisplayName} - {src.ShippingRequestFk.RouteFk.DestinationFacilityFk.Address}"))
+            .ForMember(dst => dst.Source, opt => opt.MapFrom(src => $"{src.ShippingRequestFk.RouteFk.OriginCityFk.DisplayName} - {src.OriginFacilityFk.Address}"))
+            .ForMember(dst => dst.Distination, opt => opt.MapFrom(src => $"{src.ShippingRequestFk.RouteFk.DestinationCityFk.DisplayName} - {src.DestinationFacilityFk.Address}"))
             .ForMember(dst => dst.Status, opt => opt.MapFrom(src => src.TripStatusId))
             .ForMember(dst => dst.TotalWeight, opt => opt.MapFrom(src => src.ShippingRequestFk.TotalWeight))
             .ForMember(dst => dst.PackingType, opt => opt.MapFrom(src => src.ShippingRequestFk.PackingTypeFk.DisplayName))
-            .ForMember(dst => dst.RoutePoints, opt => opt.MapFrom(src => src.ShippingRequestFk.RoutPoints));
+            .ForMember(dst => dst.RoutePoints, opt => opt.MapFrom(src => src.RoutPoints));
 
 
             configuration.CreateMap<RoutPoint, ShippingRequestTripDriverRoutePointDto>()
