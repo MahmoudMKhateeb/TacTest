@@ -1,12 +1,16 @@
 ﻿using Abp.Application.Services.Dto;
 using Abp.Domain.Repositories;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using TACHYON.AddressBook.Dtos;
 using TACHYON.Shipping.ShippingRequests;
 using TACHYON.Shipping.ShippingRequestTrips;
 using TACHYON.Shipping.Trips.Dto;
+using TACHYON.Trucks.Dtos;
 
 namespace TACHYON.Shipping.Trips
 {
@@ -24,14 +28,39 @@ namespace TACHYON.Shipping.Trips
             _ShippingRequestRepository = ShippingRequestRepository;
         }
 
-        public Task<ShippingRequestsTripListDto> GetAll(long ShippingRequestId)
+        public Task<ShippingRequestTripDto> GetAll(long ShippingRequestId)
         {
             throw new NotImplementedException();
         }
 
-        public Task<ShippingRequestsTripForViewDto> GetShippingRequestTripForView(long id)
+        public async Task<ShippingRequestTripForViewDto> GetShippingRequestTripForView(int id)
         {
-            throw new NotImplementedException();
+            var shippingRequestTrip =await _ShippingRequestTripRepository.GetAll()
+                .Include(x=>x.OriginFacilityFk)
+                .Include(x=>x.DestinationFacilityFk)
+                .Include(x=>x.AssignedDriverUserFk)
+                .Include(x=>x.AssignedTruckFk)
+                .ThenInclude(x=>x.TruckStatusFk)
+                .Include(x => x.AssignedTruckFk)
+                .ThenInclude(x => x.TrucksTypeFk)
+                .Where(x=>x.Id==id)
+                .FirstOrDefaultAsync();
+
+            var output = new ShippingRequestTripForViewDto
+            {
+                shippingRequestTripDto = ObjectMapper.Map<ShippingRequestTripDto>(shippingRequestTrip),
+                AssignedDriverDisplayName = shippingRequestTrip.AssignedDriverUserFk?.Name,
+                AssignedTruckDto = new GetTruckForViewOutput
+                {
+                    Truck = ObjectMapper.Map<TruckDto>(shippingRequestTrip.AssignedTruckFk),
+                    TruckStatusDisplayName = shippingRequestTrip.AssignedTruckFk?.TruckStatusFk.DisplayName,
+                    TrucksTypeDisplayName = shippingRequestTrip.AssignedTruckFk?.TransportTypeFk.DisplayName
+                },
+                OriginalFacilityDto = ObjectMapper.Map<FacilityDto>(shippingRequestTrip.OriginFacilityFk),
+                DestinationFacilityDto = ObjectMapper.Map<FacilityDto>(shippingRequestTrip.DestinationFacilityFk),
+                TripStatus = (ShippingRequestTripStatus)shippingRequestTrip.StatusId
+            };
+            return output;
         }
 
         public Task CreateOrEdit(CreateOrEditShippingRequestTripDto input)
@@ -48,21 +77,21 @@ namespace TACHYON.Shipping.Trips
            return Task.CompletedTask;
         }
 
-
+        public async Task Delete(EntityDto input)
+        {
+            await _ShippingRequestTripRepository.DeleteAsync(input.Id);
+        }
         private async void Create(CreateOrEditShippingRequestTripDto input)
         {
             ShippingRequestTrip trip = ObjectMapper.Map<ShippingRequestTrip>(input);
 
             await _ShippingRequestTripRepository.InsertAsync(trip);
         }
-        private void Update(CreateOrEditShippingRequestTripDto input)
+        private async void Update(CreateOrEditShippingRequestTripDto input)
         {
 
         }
-        public async Task Delete(EntityDto input)
-        {
-            await _ShippingRequestTripRepository.DeleteAsync(input.Id);
-        }
+       
 
 
     }

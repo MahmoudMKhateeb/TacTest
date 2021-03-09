@@ -8,10 +8,10 @@ using TACHYON.Shipping.Trips.Dto;
 
 namespace TACHYON.Shipping.Trips
 {
-  public  interface IShippingRequestsTripAppService: IApplicationService
+    public  interface IShippingRequestsTripAppService: IApplicationService
     {
-        Task<ShippingRequestsTripListDto> GetAll(long ShippingRequestId );
-        Task<ShippingRequestsTripForViewDto> GetShippingRequestTripForView(long id);
+        Task<ShippingRequestTripDto> GetAll(long ShippingRequestId );
+        Task<ShippingRequestTripForViewDto> GetShippingRequestTripForView(int id);
         Task CreateOrEdit(CreateOrEditShippingRequestTripDto input);
 
         Task Delete(EntityDto input);
