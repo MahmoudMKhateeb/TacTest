@@ -1,4 +1,5 @@
 ﻿using Abp.Application.Services.Dto;
+using JetBrains.Annotations;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -40,7 +41,11 @@ namespace TACHYON.Routs.RoutPoints.Dtos
         public string DocumentContentType { get; set; }
 
         public int? Rating { get; set; }
-
+        [CanBeNull] public string ReceiverFullName { get; set; }
+        [DataType(DataType.PhoneNumber)] [CanBeNull] public string ReceiverPhoneNumber { get; set; }
+        [CanBeNull] public string ReceiverEmailAddress { get; set; }
+        [CanBeNull] public string ReceiverCardIdNumber { get; set; }
         public List<CreateOrEditGoodsDetailDto> GoodsDetailListDto { get; set; }
+
     }
 }

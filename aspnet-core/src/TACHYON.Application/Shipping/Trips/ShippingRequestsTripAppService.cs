@@ -24,17 +24,17 @@ namespace TACHYON.Shipping.Trips
             _ShippingRequestRepository = ShippingRequestRepository;
         }
 
-        public Task<ShippingRequestsTripListDto> GetAll(long RequestId)
+        public Task<ShippingRequestsTripListDto> GetAll(long ShippingRequestId)
         {
             throw new NotImplementedException();
         }
 
-        public Task<ShippingRequestsTripForViewDto> GetForView(long id)
+        public Task<ShippingRequestsTripForViewDto> GetShippingRequestTripForView(long id)
         {
             throw new NotImplementedException();
         }
 
-        public Task CreateOrEdit(ShippingRequestsTripCreateOrEditDto input)
+        public Task CreateOrEdit(CreateOrEditShippingRequestTripDto input)
         {
            if (input.Id==0)
             {
@@ -49,13 +49,13 @@ namespace TACHYON.Shipping.Trips
         }
 
 
-        private async void Create(ShippingRequestsTripCreateOrEditDto input)
+        private async void Create(CreateOrEditShippingRequestTripDto input)
         {
             ShippingRequestTrip trip = ObjectMapper.Map<ShippingRequestTrip>(input);
 
             await _ShippingRequestTripRepository.InsertAsync(trip);
         }
-        private void Update(ShippingRequestsTripCreateOrEditDto input)
+        private void Update(CreateOrEditShippingRequestTripDto input)
         {
 
         }

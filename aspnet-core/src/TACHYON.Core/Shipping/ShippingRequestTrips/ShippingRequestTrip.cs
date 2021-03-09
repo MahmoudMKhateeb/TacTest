@@ -8,6 +8,7 @@ using TACHYON.Authorization.Users;
 using TACHYON.Routs.RoutPoints;
 using TACHYON.Shipping.ShippingRequests;
 using TACHYON.Shipping.TripStatuses;
+using TACHYON.ShippingRequestTripVases;
 using TACHYON.Trucks;
 
 namespace TACHYON.Shipping.ShippingRequestTrips
@@ -46,6 +47,6 @@ namespace TACHYON.Shipping.ShippingRequestTrips
         public Facility DestinationFacilityFk { get; set; }
 
         public ICollection<RoutPoint> RoutPoints { get; set; }
-        
+        public ICollection<ShippingRequestTripVas> ShippingRequestTripVases { get; set; }
     }
 }

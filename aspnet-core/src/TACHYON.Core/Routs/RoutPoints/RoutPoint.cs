@@ -1,5 +1,6 @@
 ﻿using Abp.Domain.Entities;
 using Abp.Domain.Entities.Auditing;
+using JetBrains.Annotations;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -60,6 +61,13 @@ namespace TACHYON.Routs.RoutPoints
         public int? Rating { get; set; }
 
         //to do receiver attribute
+
+        //Receiver Info if he is outside the platform
+        [CanBeNull] public string ReceiverFullName { get; set; }
+        [DataType(DataType.PhoneNumber)] [CanBeNull] public string ReceiverPhoneNumber { get; set; }
+        [CanBeNull] public string ReceiverEmailAddress { get; set; }
+        [CanBeNull] public string ReceiverCardIdNumber { get; set; }
+
 
     }
 }
