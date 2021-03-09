@@ -14,6 +14,6 @@ namespace TACHYON.Shipping.Trips
         Task<ShippingRequestsTripForViewDto> GetForView(long id);
         Task CreateOrEdit(ShippingRequestsTripCreateOrEditDto input);
 
-        Task Delete(EntityDto<long> input);
+        Task Delete(EntityDto input);
     }
 }
