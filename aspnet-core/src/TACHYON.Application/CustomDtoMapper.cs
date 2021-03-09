@@ -92,8 +92,11 @@ using TACHYON.Shipping.ShippingRequestStatuses.Dtos;
 using TACHYON.Shipping.ShippingRequestTrips;
 using TACHYON.Shipping.ShippingTypes;
 using TACHYON.Shipping.ShippingTypes.Dtos;
+using TACHYON.Shipping.Trips.Dto;
 using TACHYON.Shipping.TripStatuses;
 using TACHYON.Shipping.TripStatuses.Dtos;
+using TACHYON.ShippingRequestTripVases;
+using TACHYON.ShippingRequestTripVases.Dtos;
 using TACHYON.ShippingRequestVases;
 using TACHYON.ShippingRequestVases.Dtos;
 using TACHYON.TermsAndConditions;
@@ -212,11 +215,15 @@ namespace TACHYON
                 .ForMember(d => d.ShippingRequestVases, opt => opt.Ignore())
             .AfterMap(AddOrUpdateShippingRequest)
                 .ReverseMap();
-            /*            configuration.CreateMap<CreateOrEditShippingRequestDto, ShippingRequest>()
-                            .ForMember(dst => dst.RouteFk, opt => opt.MapFrom(src => src.CreateOrEditRouteDto))
-                            .ForMember(dst => dst.RoutPoints, opt => opt.MapFrom(src => src.CreateOrEditRoutPointDtoList))
-                            .ForMember(dst => dst.ShippingRequestVases, opt => opt.MapFrom(src => src.ShippingRequestVasList))
-                            .ReverseMap();*/
+
+            configuration.CreateMap<CreateOrEditShippingRequestTripDto, ShippingRequestTrip>()
+                .ForMember(d=>d.RoutPoints,opt=>opt.Ignore())
+                .ForMember(d => d.ShippingRequestTripVases, opt => opt.Ignore())
+                .AfterMap(AddOrUpdateShippingRequestTrip)
+                .ReverseMap();
+
+            configuration.CreateMap<CreateOrEditShippingRequestTripVasDto, ShippingRequestTripVas>()
+                .ReverseMap();
             configuration.CreateMap<ShippingRequestVasListOutput, ShippingRequestVas>()
                 .ReverseMap();
             configuration.CreateMap<CreateOrEditShippingRequestVasListDto, ShippingRequestVas>()
@@ -430,6 +437,41 @@ namespace TACHYON
                 }
             }
 
+        }
+
+        private static void AddOrUpdateShippingRequestTrip(CreateOrEditShippingRequestTripDto dto,ShippingRequestTrip trip)
+        {
+            //map Points 
+            foreach (var routPoint in dto.RoutPoints)
+            {
+                //Add
+                if (!routPoint.Id.HasValue)
+                {
+                    trip.RoutPoints.Add(_Mapper.Map<RoutPoint>(routPoint));
+                }
+
+                //update
+                else
+                {
+                    _Mapper.Map(routPoint,trip.RoutPoints.SingleOrDefault(c=>c.Id==routPoint.Id));
+                }
+            }
+
+            //map Vases
+            foreach (var vas in dto.ShippingRequestTripVases)
+            {
+                //Add
+                if (!vas.Id.HasValue)
+                {
+                    trip.ShippingRequestTripVases.Add(_Mapper.Map<ShippingRequestTripVas>(vas));
+                }
+
+                //update
+                else
+                {
+                    _Mapper.Map(vas, trip.ShippingRequestTripVases.SingleOrDefault(c => c.Id == vas.Id));
+                }
+            }
         }
     }
 }
