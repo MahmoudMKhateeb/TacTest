@@ -6,6 +6,7 @@ namespace TACHYON.Shipping.Trips
 {
   public  enum ShippingRequestTripStatus:byte
     {
+        StandBy=0,
         PickupWay= 1,
         StartLoading = 2,
         Dropoffway = 3,

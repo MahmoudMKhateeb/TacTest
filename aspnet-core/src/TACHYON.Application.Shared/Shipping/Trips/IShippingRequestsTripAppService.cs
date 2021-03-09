@@ -10,9 +10,10 @@ namespace TACHYON.Shipping.Trips
 {
   public  interface IShippingRequestsTripAppService: IApplicationService
     {
-        Task<ShippingRequestsTripListDto> GetAll(long ShippingRequestId );
-        Task<ShippingRequestsTripForViewDto> GetShippingRequestTripForView(long id);
+        Task<PagedResultDto<ShippingRequestsTripListDto>>  GetAll(ShippingRequestTripFilterInput Input);
+        Task<ShippingRequestsTripForViewDto> GetShippingRequestTripForView(int id);
         Task CreateOrEdit(CreateOrEditShippingRequestTripDto input);
+        Task<CreateOrEditShippingRequestTripDto> GetShippingRequestTripForEdit(EntityDto input);
 
         Task Delete(EntityDto input);
     }

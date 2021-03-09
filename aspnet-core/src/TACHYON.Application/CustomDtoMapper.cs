@@ -140,17 +140,32 @@ namespace TACHYON
             #region Trips
                 configuration.CreateMap<CreateOrEditTripStatusDto, TripStatus>().ReverseMap();
                 configuration.CreateMap<TripStatusDto, TripStatus>().ReverseMap();
-                configuration.CreateMap<ShippingRequestTrip, ShippingRequestTripDriverListDto>()
+
+            configuration.CreateMap<ShippingRequestTrip,ShippingRequestsTripListDto>()
+                 .ForMember(dst => dst.OriginFacility, opt => opt.MapFrom(src => $"{src.OriginFacilityFk.Name} - {src.OriginFacilityFk.Address}"))
+                 .ForMember(dst => dst.DestinationFacility, opt => opt.MapFrom(src => $"{src.DestinationFacilityFk.Name} - {src.DestinationFacilityFk.Address}"))
+                 .ForMember(dst => dst.Truck, opt => opt.MapFrom(src => src.AssignedTruckFk.ModelName))
+                 .ForMember(dst => dst.Driver, opt => opt.MapFrom(src => src.AssignedDriverUserFk.Name))
+                .ReverseMap();
+            configuration.CreateMap<ShippingRequestTrip, ShippingRequestsTripForViewDto>()
+                 .ForMember(dst => dst.OriginFacility, opt => opt.MapFrom(src => $"{src.OriginFacilityFk.Name} - {src.OriginFacilityFk.Address}"))
+                 .ForMember(dst => dst.DestinationFacility, opt => opt.MapFrom(src => $"{src.DestinationFacilityFk.Name} - {src.DestinationFacilityFk.Address}"))
+                 .ForMember(dst => dst.Truck, opt => opt.MapFrom(src => src.AssignedTruckFk.ModelName))
+                 .ForMember(dst => dst.Driver, opt => opt.MapFrom(src => src.AssignedDriverUserFk.Name))
+                .ReverseMap();
+            
+
+            configuration.CreateMap<ShippingRequestTrip, ShippingRequestTripDriverListDto>()
                 .ForMember(dst => dst.Source, opt => opt.MapFrom(src => $"{src.ShippingRequestFk.RouteFk.OriginCityFk.DisplayName} - {src.OriginFacilityFk.Address}"))
                 .ForMember(dst => dst.Distination, opt => opt.MapFrom(src => $"{src.ShippingRequestFk.RouteFk.DestinationCityFk.DisplayName} - {src.DestinationFacilityFk.Address}"))
                 .ForMember(dst => dst.StartDate, opt => opt.MapFrom(src => src.StartTripDate))
                 .ForMember(dst => dst.EndDate, opt => opt.MapFrom(src => src.EndTripDate))
-                .ForMember(dst => dst.Status, opt => opt.MapFrom(src => src.TripStatusId));
+                .ForMember(dst => dst.Status, opt => opt.MapFrom(src => src.Status));
 
             configuration.CreateMap<ShippingRequestTrip, ShippingRequestTripDriverDetailsDto>()
             .ForMember(dst => dst.Source, opt => opt.MapFrom(src => $"{src.ShippingRequestFk.RouteFk.OriginCityFk.DisplayName} - {src.OriginFacilityFk.Address}"))
             .ForMember(dst => dst.Distination, opt => opt.MapFrom(src => $"{src.ShippingRequestFk.RouteFk.DestinationCityFk.DisplayName} - {src.DestinationFacilityFk.Address}"))
-            .ForMember(dst => dst.Status, opt => opt.MapFrom(src => src.TripStatusId))
+            .ForMember(dst => dst.Status, opt => opt.MapFrom(src => src.Status))
             .ForMember(dst => dst.TotalWeight, opt => opt.MapFrom(src => src.ShippingRequestFk.TotalWeight))
             .ForMember(dst => dst.PackingType, opt => opt.MapFrom(src => src.ShippingRequestFk.PackingTypeFk.DisplayName))
             .ForMember(dst => dst.RoutePoints, opt => opt.MapFrom(src => src.RoutPoints));
@@ -224,10 +239,17 @@ namespace TACHYON
 
             configuration.CreateMap<CreateOrEditShippingRequestTripVasDto, ShippingRequestTripVas>()
                 .ReverseMap();
+            configuration.CreateMap<ShippingRequestTripVas,ShippingRequestTripVasDto>()
+            .ForMember(dst => dst.Name, opt => opt.MapFrom(src => src.ShippingRequestVasFk.VasFk.Name))
+             .ReverseMap();
+
             configuration.CreateMap<ShippingRequestVasListOutput, ShippingRequestVas>()
                 .ReverseMap();
             configuration.CreateMap<CreateOrEditShippingRequestVasListDto, ShippingRequestVas>()
                 .ReverseMap();
+            configuration.CreateMap<CreateOrEditShippingRequestVasListDto, ShippingRequestVas>()
+                .ReverseMap();
+            
             configuration.CreateMap<ShippingRequestBidDto, ShippingRequestBid>()
                 .ForPath(dst => dst.Tenant.Name, opt => opt.MapFrom(src => src.CarrierName))
                 .ReverseMap();

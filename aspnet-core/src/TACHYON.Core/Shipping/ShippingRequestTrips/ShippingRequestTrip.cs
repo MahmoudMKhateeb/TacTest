@@ -7,6 +7,7 @@ using TACHYON.AddressBook;
 using TACHYON.Authorization.Users;
 using TACHYON.Routs.RoutPoints;
 using TACHYON.Shipping.ShippingRequests;
+using TACHYON.Shipping.Trips;
 using TACHYON.Shipping.TripStatuses;
 using TACHYON.ShippingRequestTripVases;
 using TACHYON.Trucks;
@@ -20,8 +21,7 @@ namespace TACHYON.Shipping.ShippingRequestTrips
         public DateTime EndTripDate { get; set; }
         public DateTime? StartWorking { get; set; }
         public DateTime? EndWorking { get; set; }
-        public byte StatusId { get; set; }
-        public ShippingRequestStatus Status { get; set; }
+        public ShippingRequestTripStatus Status { get; set; } = ShippingRequestTripStatus.StandBy;
 
         public long? AssignedDriverUserId { get; set; }
         [ForeignKey("AssignedDriverUserId")]
@@ -33,7 +33,6 @@ namespace TACHYON.Shipping.ShippingRequestTrips
         [ForeignKey("ShippingRequestId")]
         public ShippingRequest ShippingRequestFk { get; set; }
 
-        public string Code { get; set; } = (new Random().Next(100000, 999999)).ToString();
 
         //Facility
         public virtual long? OriginFacilityId { get; set; }

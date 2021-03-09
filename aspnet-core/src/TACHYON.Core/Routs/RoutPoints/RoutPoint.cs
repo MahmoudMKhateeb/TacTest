@@ -62,6 +62,8 @@ namespace TACHYON.Routs.RoutPoints
 
         //to do receiver attribute
 
+        //If Receiver as user  in tachyon
+        public int? ReceiverId { get; set; }
         //Receiver Info if he is outside the platform
         [CanBeNull] public string ReceiverFullName { get; set; }
         [DataType(DataType.PhoneNumber)] [CanBeNull] public string ReceiverPhoneNumber { get; set; }
