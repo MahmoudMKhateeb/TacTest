@@ -96,7 +96,7 @@ namespace TACHYON.Shipping.Trips
         {
             var trip = await GetTrip((int)input.Id, input.ShippingRequestId);
 
-            ObjectMapper.Map(input, trip);         
+            ObjectMapper.Map(input, trip);
         }
         public async Task Delete(EntityDto input)
         {
@@ -123,7 +123,7 @@ namespace TACHYON.Shipping.Trips
 
             }
         }
-        private async Task<ShippingRequestTrip> GetTrip(int tripid,long? RequestId=null)
+        private async Task<ShippingRequestTrip> GetTrip(int tripid, long? RequestId = null)
         {
             var trip = await _ShippingRequestTripRepository
                 .GetAll()
@@ -134,7 +134,7 @@ namespace TACHYON.Shipping.Trips
                 .Include(x => x.RoutPoints)
                    .ThenInclude(r => r.GoodsDetails)
                 .Include(x => x.ShippingRequestTripVases)
-                .WhereIf(RequestId.HasValue,x=>x.ShippingRequestId== RequestId)
+                .WhereIf(RequestId.HasValue, x => x.ShippingRequestId == RequestId)
                  .FirstOrDefaultAsync(x => x.Id == tripid);
             if (trip == null) throw new UserFriendlyException(L("ShippingRequestTripIsNotFound"));
             return trip;
