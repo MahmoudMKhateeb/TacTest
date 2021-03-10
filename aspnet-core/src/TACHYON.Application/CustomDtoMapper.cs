@@ -222,7 +222,8 @@ namespace TACHYON
             configuration.CreateMap<ImportTruckDocumentFileDto, DocumentFile>().ReverseMap();
             configuration.CreateMap<CreateOrEditDocumentTypeDto, DocumentType>().ReverseMap();
 
-            configuration.CreateMap<CreateOrEditRoutPointDto, RoutPoint>().ReverseMap();
+            configuration.CreateMap<CreateOrEditRoutPointDto, RoutPoint>()
+                .AfterMap(AddOrUpdateShippingRequestTripRoutePointGoods).ReverseMap();
             configuration.CreateMap<CreateOrEditShippingRequestVasListDto, ShippingRequestVas>().ReverseMap();
             configuration.CreateMap<CreateOrEditRouteDto, Route>().ReverseMap();
 
@@ -446,6 +447,7 @@ namespace TACHYON
 
         private static void AddOrUpdateShippingRequest(CreateOrEditShippingRequestDto dto, ShippingRequest Request)
         {
+            if (Request.ShippingRequestVases == null) Request.ShippingRequestVases = new Collection<ShippingRequestVas>();
             foreach (var vas in dto.ShippingRequestVasList)
             {
 
@@ -464,12 +466,14 @@ namespace TACHYON
         private static void AddOrUpdateShippingRequestTrip(CreateOrEditShippingRequestTripDto dto,ShippingRequestTrip trip)
         {
             //map Points 
+            if (trip.RoutPoints == null) trip.RoutPoints = new Collection<RoutPoint>();
             foreach (var routPoint in dto.RoutPoints)
             {
                 //Add
                 if (!routPoint.Id.HasValue)
                 {
                     trip.RoutPoints.Add(_Mapper.Map<RoutPoint>(routPoint));
+                   
                 }
 
                 //update
@@ -477,8 +481,9 @@ namespace TACHYON
                 {
                     _Mapper.Map(routPoint,trip.RoutPoints.SingleOrDefault(c=>c.Id==routPoint.Id));
                 }
-            }
 
+            }
+            if (trip.ShippingRequestTripVases == null) trip.ShippingRequestTripVases = new Collection<ShippingRequestTripVas>();
             //map Vases
             foreach (var vas in dto.ShippingRequestTripVases)
             {
@@ -495,5 +500,29 @@ namespace TACHYON
                 }
             }
         }
+
+        private static void AddOrUpdateShippingRequestTripRoutePointGoods(CreateOrEditRoutPointDto dto, RoutPoint point)
+        {
+            if (point.GoodsDetails == null) point.GoodsDetails = new Collection<GoodsDetail>();
+            foreach (var good in dto.GoodsDetailListDto)
+            {
+                //Add
+                if (!good.Id.HasValue)
+                {
+                    point.GoodsDetails.Add(_Mapper.Map<GoodsDetail>(good));
+
+                }
+
+                //update
+                else
+                {
+                    _Mapper.Map(good, point.GoodsDetails.SingleOrDefault(c => c.Id == good.Id));
+                }
+
+            }
+
+        }
+
+        
     }
 }

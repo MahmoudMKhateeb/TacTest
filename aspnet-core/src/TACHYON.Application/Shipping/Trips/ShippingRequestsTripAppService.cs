@@ -73,6 +73,19 @@ namespace TACHYON.Shipping.Trips
         public async Task CreateOrEdit(CreateOrEditShippingRequestTripDto input)
         {
             var request = await GetShippingRequestByPermission(input.ShippingRequestId);
+
+            if (
+                input.StartTripDate.Date > request.EndTripDate?.Date ||
+                input.StartTripDate.Date < request.StartTripDate?.Date ||
+                input.EndTripDate.Date > request.EndTripDate?.Date ||
+                input.EndTripDate.Date < request.StartTripDate?.Date
+                )
+            {
+
+                throw new UserFriendlyException(L("The trip date range must between shipping request range date"));
+
+            }
+
             if (input.Id == 0)
             {
                 Create(input);
@@ -89,13 +102,13 @@ namespace TACHYON.Shipping.Trips
         private async void Create(CreateOrEditShippingRequestTripDto input)
         {
             ShippingRequestTrip trip = ObjectMapper.Map<ShippingRequestTrip>(input);
-            TripValidationForEditOrDelete(trip);
+         
             await _ShippingRequestTripRepository.InsertAsync(trip);
         }
         private async void Update(CreateOrEditShippingRequestTripDto input)
         {
             var trip = await GetTrip((int)input.Id, input.ShippingRequestId);
-
+            TripCanEditOrDelete(trip);
             ObjectMapper.Map(input, trip);
         }
         public async Task Delete(EntityDto input)
@@ -107,14 +120,14 @@ namespace TACHYON.Shipping.Trips
 
             if (trip != null)
             {
-                TripValidationForEditOrDelete(trip);
+                TripCanEditOrDelete(trip);
                 await _ShippingRequestTripRepository.DeleteAsync(input.Id);
             }
         }
 
 
         #region Heleper
-        private void TripValidationForEditOrDelete(ShippingRequestTrip trip)
+        private void TripCanEditOrDelete(ShippingRequestTrip trip)
         {
             // When Edit Or Delete
             if (trip.Status != ShippingRequestTripStatus.StandBy)
@@ -122,6 +135,8 @@ namespace TACHYON.Shipping.Trips
                 throw new UserFriendlyException(L("CanNotEditOrDeleteTrip"));
 
             }
+
+            
         }
         private async Task<ShippingRequestTrip> GetTrip(int tripid, long? RequestId = null)
         {
@@ -173,7 +188,7 @@ namespace TACHYON.Shipping.Trips
             var trip = await GetTrip(id);
             if (trip != null)
             {
-                ShippingRequest shippingRequest = await GetShippingRequestByPermission(trip.ShippingRequestId);
+                 await GetShippingRequestByPermission(trip.ShippingRequestId);
             }
 
             return ObjectMapper.Map<T>(trip);
