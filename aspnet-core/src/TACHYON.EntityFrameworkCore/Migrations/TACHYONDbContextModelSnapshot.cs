@@ -2734,44 +2734,6 @@ namespace TACHYON.Migrations
                     b.ToTable("PackingTypes");
                 });
 
-            modelBuilder.Entity("TACHYON.PickingTypes.PickingType", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<DateTime>("CreationTime")
-                        .HasColumnType("datetime2");
-
-                    b.Property<long?>("CreatorUserId")
-                        .HasColumnType("bigint");
-
-                    b.Property<long?>("DeleterUserId")
-                        .HasColumnType("bigint");
-
-                    b.Property<DateTime?>("DeletionTime")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("DisplayName")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(256)")
-                        .HasMaxLength(256);
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("bit");
-
-                    b.Property<DateTime?>("LastModificationTime")
-                        .HasColumnType("datetime2");
-
-                    b.Property<long?>("LastModifierUserId")
-                        .HasColumnType("bigint");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("PickingTypes");
-                });
-
             modelBuilder.Entity("TACHYON.Routs.RoutPoints.RoutPoint", b =>
                 {
                     b.Property<long>("Id")
@@ -2827,11 +2789,8 @@ namespace TACHYON.Migrations
                     b.Property<long?>("LastModifierUserId")
                         .HasColumnType("bigint");
 
-                    b.Property<long?>("ParentId")
-                        .HasColumnType("bigint");
-
-                    b.Property<int?>("PickingTypeId")
-                        .HasColumnType("int");
+                    b.Property<byte>("PickingType")
+                        .HasColumnType("tinyint");
 
                     b.Property<int?>("Rating")
                         .HasColumnType("int");
@@ -2860,10 +2819,6 @@ namespace TACHYON.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("FacilityId");
-
-                    b.HasIndex("ParentId");
-
-                    b.HasIndex("PickingTypeId");
 
                     b.HasIndex("ShippingRequestTripId");
 
@@ -4774,14 +4729,6 @@ namespace TACHYON.Migrations
                         .HasForeignKey("FacilityId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.HasOne("TACHYON.Routs.RoutPoints.RoutPoint", "RoutPointFk")
-                        .WithMany()
-                        .HasForeignKey("ParentId");
-
-                    b.HasOne("TACHYON.PickingTypes.PickingType", "PickingTypeFk")
-                        .WithMany()
-                        .HasForeignKey("PickingTypeId");
 
                     b.HasOne("TACHYON.Shipping.ShippingRequestTrips.ShippingRequestTrip", "ShippingRequestTripFk")
                         .WithMany("RoutPoints")

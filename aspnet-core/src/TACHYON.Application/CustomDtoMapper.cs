@@ -92,6 +92,7 @@ using TACHYON.Shipping.ShippingRequestStatuses.Dtos;
 using TACHYON.Shipping.ShippingRequestTrips;
 using TACHYON.Shipping.ShippingTypes;
 using TACHYON.Shipping.ShippingTypes.Dtos;
+using TACHYON.Shipping.Trips;
 using TACHYON.Shipping.Trips.Dto;
 using TACHYON.Shipping.TripStatuses;
 using TACHYON.Shipping.TripStatuses.Dtos;
@@ -146,12 +147,14 @@ namespace TACHYON
                  .ForMember(dst => dst.DestinationFacility, opt => opt.MapFrom(src => $"{src.DestinationFacilityFk.Name} - {src.DestinationFacilityFk.Address}"))
                  .ForMember(dst => dst.Truck, opt => opt.MapFrom(src => src.AssignedTruckFk.ModelName))
                  .ForMember(dst => dst.Driver, opt => opt.MapFrom(src => src.AssignedDriverUserFk.Name))
+                 .ForMember(dst => dst.Status, opt => opt.MapFrom(src => Enum.GetName(typeof(ShippingRequestTripStatus), src.Status)))
                 .ReverseMap();
             configuration.CreateMap<ShippingRequestTrip, ShippingRequestsTripForViewDto>()
                  .ForMember(dst => dst.OriginFacility, opt => opt.MapFrom(src => $"{src.OriginFacilityFk.Name} - {src.OriginFacilityFk.Address}"))
                  .ForMember(dst => dst.DestinationFacility, opt => opt.MapFrom(src => $"{src.DestinationFacilityFk.Name} - {src.DestinationFacilityFk.Address}"))
                  .ForMember(dst => dst.Truck, opt => opt.MapFrom(src => src.AssignedTruckFk.ModelName))
                  .ForMember(dst => dst.Driver, opt => opt.MapFrom(src => src.AssignedDriverUserFk.Name))
+                 .ForMember(dst => dst.Status, opt => opt.MapFrom(src => Enum.GetName(typeof(ShippingRequestTripStatus), src.Status)))
                 .ReverseMap();
             
 

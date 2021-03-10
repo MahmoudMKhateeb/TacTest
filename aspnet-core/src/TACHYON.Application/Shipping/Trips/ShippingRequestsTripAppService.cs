@@ -110,6 +110,7 @@ namespace TACHYON.Shipping.Trips
         [AbpAuthorize(AppPermissions.Pages_ShippingRequestTrips_Create)]
         private async void Create(CreateOrEditShippingRequestTripDto input)
         {
+            var RoutePoint = input.RoutPoints.OrderBy(x=>x.PickingType);
             ShippingRequestTrip trip = ObjectMapper.Map<ShippingRequestTrip>(input);
          
             await _ShippingRequestTripRepository.InsertAsync(trip);

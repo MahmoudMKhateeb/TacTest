@@ -12,7 +12,7 @@ namespace TACHYON.Shipping.Trips.Dto
         public DateTime EndTripDate { get; set; }
         public DateTime? StartWorking { get; set; }
         public DateTime? EndWorking { get; set; }
-        public ShippingRequestTripStatus Status { get; set; }
+        public string Status { get; set; }
         public string Driver { get; set; }
         public string Truck { get; set; }
         public string OriginFacility { get; set; }
