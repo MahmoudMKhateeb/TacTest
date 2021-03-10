@@ -1,4 +1,5 @@
 ﻿using Abp.Application.Services.Dto;
+using Abp.Authorization;
 using Abp.Collections.Extensions;
 using Abp.Domain.Repositories;
 using Abp.Domain.Uow;
@@ -9,13 +10,16 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Dynamic.Core;
 using System.Threading.Tasks;
+using TACHYON.Authorization;
 using TACHYON.Features;
+using TACHYON.Routs.RoutPoints;
 using TACHYON.Shipping.ShippingRequests;
 using TACHYON.Shipping.ShippingRequestTrips;
 using TACHYON.Shipping.Trips.Dto;
 
 namespace TACHYON.Shipping.Trips
 {
+    [AbpAuthorize(AppPermissions.Pages_ShippingRequestTrips)]
     public class ShippingRequestsTripAppService : TACHYONAppServiceBase, IShippingRequestsTripAppService
     {
         private readonly IRepository<ShippingRequestTrip> _ShippingRequestTripRepository;
@@ -84,6 +88,13 @@ namespace TACHYON.Shipping.Trips
 
             }
 
+            int requestNumberOfDrops = request.NumberOfDrops;
+
+            if (input.RoutPoints.Count(x => x.PickingType == PickingType.Dropoff) != requestNumberOfDrops)
+            {
+                throw new UserFriendlyException(L("The number of drop points must be"+requestNumberOfDrops));
+            }
+
             if (input.Id == 0)
             {
                 Create(input);
@@ -96,19 +107,23 @@ namespace TACHYON.Shipping.Trips
 
         }
 
-
+        [AbpAuthorize(AppPermissions.Pages_ShippingRequestTrips_Create)]
         private async void Create(CreateOrEditShippingRequestTripDto input)
         {
             ShippingRequestTrip trip = ObjectMapper.Map<ShippingRequestTrip>(input);
          
             await _ShippingRequestTripRepository.InsertAsync(trip);
         }
+
+        [AbpAuthorize(AppPermissions.Pages_ShippingRequestTrips_Edit)]
         private async void Update(CreateOrEditShippingRequestTripDto input)
         {
             var trip = await GetTrip((int)input.Id, input.ShippingRequestId);
             TripCanEditOrDelete(trip);
             ObjectMapper.Map(input, trip);
         }
+
+        [AbpAuthorize(AppPermissions.Pages_ShippingRequestTrips_Delete)]
         public async Task Delete(EntityDto input)
         {
             var trip = await _ShippingRequestTripRepository.

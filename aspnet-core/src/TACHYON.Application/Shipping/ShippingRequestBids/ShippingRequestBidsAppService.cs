@@ -172,6 +172,8 @@ namespace TACHYON.Shipping.ShippingRequestBids
                 ShippingRequest shippingRequestItem = await _shippingRequestsRepository.FirstOrDefaultAsync(bid.ShippingRequestId);
                 shippingRequestItem.CarrierTenantId = bid.TenantId;
                 shippingRequestItem.Price = Convert.ToDecimal(bid.price);
+                shippingRequestItem.IsPriceAccepted = true;
+
                 shippingRequestItem.Close();
 
             }

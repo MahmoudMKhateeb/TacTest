@@ -51,6 +51,11 @@
         public const string Pages_ShippingRequestVases_Edit = "Pages.ShippingRequestVases.Edit";
         public const string Pages_ShippingRequestVases_Delete = "Pages.ShippingRequestVases.Delete";
 
+        public const string Pages_ShippingRequestTrips = "Pages.ShippingRequestTrips";
+        public const string Pages_ShippingRequestTrips_Create = "Pages.ShippingRequestTrips.Create";
+        public const string Pages_ShippingRequestTrips_Edit = "Pages.ShippingRequestTrips.Edit";
+        public const string Pages_ShippingRequestTrips_Delete = "Pages.ShippingRequestTrips.Delete";
+
         public const string Pages_VasPrices = "Pages.VasPrices";
         public const string Pages_VasPrices_Create = "Pages.VasPrices.Create";
         public const string Pages_VasPrices_Edit = "Pages.VasPrices.Edit";

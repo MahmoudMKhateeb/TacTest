@@ -120,6 +120,11 @@ namespace TACHYON.Authorization
             shippingRequests.CreateChildPermission(AppPermissions.Pages_ShippingRequests_Edit, L("EditShippingRequest"), multiTenancySides: MultiTenancySides.Tenant);
             shippingRequests.CreateChildPermission(AppPermissions.Pages_ShippingRequests_Delete, L("DeleteShippingRequest"), multiTenancySides: MultiTenancySides.Tenant);
 
+            var shippingRequestTrips = pages.CreateChildPermission(AppPermissions.Pages_ShippingRequestTrips, L("ShippingRequests"), multiTenancySides: MultiTenancySides.Tenant);
+            shippingRequestTrips.CreateChildPermission(AppPermissions.Pages_ShippingRequestTrips_Create, L("CreateNewShippingRequestTrip"), multiTenancySides: MultiTenancySides.Tenant);
+            shippingRequestTrips.CreateChildPermission(AppPermissions.Pages_ShippingRequestTrips_Edit, L("EditShippingRequestTrip"), multiTenancySides: MultiTenancySides.Tenant);
+            shippingRequestTrips.CreateChildPermission(AppPermissions.Pages_ShippingRequestTrips_Delete, L("DeleteShippingRequestTrip"), multiTenancySides: MultiTenancySides.Tenant);
+
             var ShippingRequestBis = pages.CreateChildPermission(AppPermissions.Pages_ShippingRequestBids, L("ShippingRerquestBids"), multiTenancySides: MultiTenancySides.Tenant);
             ShippingRequestBis.CreateChildPermission(AppPermissions.Pages_ShippingRequestBids_Create, L("CreateNewShippingRequestBid"), multiTenancySides: MultiTenancySides.Tenant);
             ShippingRequestBis.CreateChildPermission(AppPermissions.Pages_ShippingRequestBids_Edit, L("EditNewShippingRequestBid"), multiTenancySides: MultiTenancySides.Tenant);

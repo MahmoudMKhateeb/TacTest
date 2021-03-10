@@ -480,8 +480,8 @@ namespace TACHYON.Shipping.ShippingRequests
                                     "" + "-" + x.TrucksTypeFk != null ?
                                         x.TrucksTypeFk.TransportTypeFk.DisplayName : "")
                             : "",
-                        //routPointDtoList = x.RoutPoints,
-                        PackingTypeDisplayName=x.PackingTypeFk.DisplayName
+                        HasTrips = x.ShippingRequestTrips.Any(),
+                        PackingTypeDisplayName =x.PackingTypeFk.DisplayName
                     });
 
 
@@ -503,7 +503,8 @@ namespace TACHYON.Shipping.ShippingRequests
                         TruckTypeFullName = x.TruckTypeFullName,
                         //RoutPointDtoList = ObjectMapper.Map<List<RoutPointDto>>(x.routPointDtoList),
                         packingTypeDisplayName = x.PackingTypeDisplayName,
-                        ShippingRequestVasDtoList =x.ShippingRequestVasesDto.ToList()
+                        ShippingRequestVasDtoList =x.ShippingRequestVasesDto.ToList(),
+                        HasTrips = x.HasTrips
                     });
                 return new PagedResultDto<GetShippingRequestForViewOutput>(totalCount, result.ToList());
             }
