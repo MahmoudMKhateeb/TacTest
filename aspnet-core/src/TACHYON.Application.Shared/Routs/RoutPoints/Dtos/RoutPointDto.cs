@@ -13,7 +13,7 @@ namespace TACHYON.Routs.RoutPoints.Dtos
     {
         public string DisplayName { get; set; }
 
-        public int? PickingTypeId { get; set; }
+        public PickingType PickingType { get; set; }
         public long FacilityId { get; set; }
         public double Longitude { get; set; }
         public double Latitude { get; set; }

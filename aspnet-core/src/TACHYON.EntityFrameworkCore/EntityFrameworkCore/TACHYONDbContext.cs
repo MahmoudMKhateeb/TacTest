@@ -101,7 +101,7 @@ namespace TACHYON.EntityFrameworkCore
 
         public virtual DbSet<Port> Ports { get; set; }
 
-        public virtual DbSet<PickingType> PickingTypes { get; set; }
+       // public virtual DbSet<PickingType> PickingTypes { get; set; }
 
         public virtual DbSet<UnitOfMeasure> UnitOfMeasures { get; set; }
 

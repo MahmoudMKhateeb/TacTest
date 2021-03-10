@@ -121,20 +121,8 @@ namespace TACHYON.Shipping.Drivers
             {
                 if (!_ShippingRequestTrip.GetAll().Any(x => x.Id != trip.Id && x.Status != ShippingRequestTripStatus.Finished && x.AssignedDriverUserId == AbpSession.UserId))
                 {
-                    var RouteStart = await _RoutPointRepository.SingleAsync(x => x.ShippingRequestTripId == trip.Id && !x.ParentId.HasValue);
-                    //foreach (var point in _RoutPointRepository.GetAll().Where(p => p.ShippingRequestTripId == trip.Id))
-                    //{
-                    //    var trippoint = new ShippingRequestTripPoint();
-                    //    trippoint.PointId = point.Id;
-                    //    trippoint.TripId = trip.Id;
-                    //    trip.Code = trip.Code + point.Code;
-                    //    if (point.ParentId.HasValue)
-                    //    {
-                    //        trippoint.StartTime = Clock.Now;
-                    //        trippoint.IsActive = true;
-                    //    }
-                    //    await _ShippingRequestTripPointRepository.InsertAsync(trippoint);
-                    //}
+                    var RouteStart = await _RoutPointRepository.SingleAsync(x => x.ShippingRequestTripId == trip.Id && x.PickingType== PickingType.Pickup);
+
                     RouteStart.StartTime = Clock.Now;
                     RouteStart.IsActive = true;
                     trip.Status = ShippingRequestTripStatus.PickupWay;

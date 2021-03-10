@@ -206,8 +206,8 @@ namespace TACHYON
             configuration.CreateMap<DocumentsEntityDto, DocumentsEntity>().ReverseMap();
             configuration.CreateMap<CreateOrEditShippingRequestStatusDto, Shipping.ShippingRequestStatuses.ShippingRequestStatus>().ReverseMap();
             configuration.CreateMap<ShippingRequestStatusDto, Shipping.ShippingRequestStatuses.ShippingRequestStatus>().ReverseMap();
-            configuration.CreateMap<CreateOrEditPickingTypeDto, PickingType>().ReverseMap();
-            configuration.CreateMap<PickingTypeDto, PickingType>().ReverseMap();
+            //configuration.CreateMap<CreateOrEditPickingTypeDto, PickingType>().ReverseMap();
+            //configuration.CreateMap<PickingTypeDto, PickingType>().ReverseMap();
             configuration.CreateMap<CreateOrEditPortDto, Port>().ReverseMap();
             configuration.CreateMap<PortDto, Port>().ReverseMap();
             configuration.CreateMap<CreateOrEditUnitOfMeasureDto, UnitOfMeasure>().ReverseMap();

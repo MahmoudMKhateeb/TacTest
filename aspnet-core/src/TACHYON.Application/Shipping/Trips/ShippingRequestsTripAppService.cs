@@ -1,20 +1,18 @@
 ﻿using Abp.Application.Services.Dto;
+using Abp.Collections.Extensions;
 using Abp.Domain.Repositories;
 using Abp.Domain.Uow;
+using Abp.Linq.Extensions;
 using Abp.UI;
 using Microsoft.EntityFrameworkCore;
-using System;
 using System.Collections.Generic;
-using System.Linq.Dynamic.Core;
 using System.Linq;
-using System.Text;
+using System.Linq.Dynamic.Core;
 using System.Threading.Tasks;
 using TACHYON.Features;
 using TACHYON.Shipping.ShippingRequests;
 using TACHYON.Shipping.ShippingRequestTrips;
 using TACHYON.Shipping.Trips.Dto;
-using Abp.Collections.Extensions;
-using Abp.Linq.Extensions;
 
 namespace TACHYON.Shipping.Trips
 {

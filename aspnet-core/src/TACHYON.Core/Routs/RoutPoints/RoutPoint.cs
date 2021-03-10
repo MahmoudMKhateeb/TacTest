@@ -18,17 +18,12 @@ namespace TACHYON.Routs.RoutPoints
     public class RoutPoint: FullAuditedEntity<long>
     {
         public string DisplayName { get; set; }
-        public long? ParentId { get; set; }
-        [ForeignKey("ParentId")]
-        public RoutPoint RoutPointFk { get; set; }
 
         /// <summary>
         /// pickup or droppoff or null
         /// </summary>
-        public int? PickingTypeId { get; set; }
+        public PickingType PickingType { get; set; }
 
-        [ForeignKey("PickingTypeId")]
-        public PickingType PickingTypeFk { get; set; }
         /// <summary>
         /// address book for this point, Location, city, address
         /// </summary>

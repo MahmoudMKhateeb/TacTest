@@ -11,7 +11,7 @@ namespace TACHYON.Routs.RoutPoints.Dtos
     public class CreateOrEditRoutPointDto: EntityDto<long?>
     {
         public string DisplayName { get; set; }
-        public int? PickingTypeId { get; set; }
+        public PickingType PickingType { get; set; }
         [Required]
         public long FacilityId { get; set; }
 

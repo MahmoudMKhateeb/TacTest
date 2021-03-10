@@ -55,7 +55,7 @@ namespace TACHYON.Shipping.ShippingRequestTrips
                 var AllWayPoints = _routPointRepository.GetAll()
                     .Include(e => e.FacilityFk)
                     .Where(e => shippingRequestTripIds.Contains(e.ShippingRequestTripId))
-                    .Where(e => e.PickingTypeId == TACHYONConsts.PickupPickingType)
+                    .Where(e => e.PickingType == PickingType.Pickup)
                     .ToList();
 
                 foreach (var item in StartedShippments)

@@ -28,9 +28,8 @@ namespace TACHYON.Routs.RoutPoints
             var filteredRoutPoints = _routPointsRepository.GetAll()
                 .Include(x=>x.FacilityFk)
                 .ThenInclude(x => x.CityFk)
-                .Include(x=>x.PickingTypeFk)
                 .WhereIf(!string.IsNullOrWhiteSpace(input.Filter), x => x.DisplayName == input.Filter)
-                .WhereIf(input.PickingTypeId != null, x => x.PickingTypeId == input.PickingTypeId);
+                .WhereIf(input.PickingType != null, x => x.PickingType == input.PickingType);
 
 
             var PagedAndFilteredRoutPoints= filteredRoutPoints
@@ -41,7 +40,6 @@ namespace TACHYON.Routs.RoutPoints
             {
                 RoutPointDto = ObjectMapper.Map<RoutPointDto>(x),
                 
-                PickingTypeDisplayName = x.PickingTypeFk.DisplayName,
                 facilityDto=new GetFacilityForViewOutput
                 {
                     CityDisplayName = x.FacilityFk.CityFk.DisplayName,
