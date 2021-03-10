@@ -40,6 +40,8 @@ namespace TACHYON.Shipping.Trips
             var query = _ShippingRequestTripRepository
     .GetAll()
     .AsNoTracking()
+                .Include(x=>x.OriginFacilityFk)
+                .Include(x=>x.DestinationFacilityFk)    
                 .Include(x => x.AssignedTruckFk)
                 .Include(x => x.RoutPoints)
                    .ThenInclude(r => r.FacilityFk)
@@ -54,7 +56,7 @@ namespace TACHYON.Shipping.Trips
             var totalCount = await query.CountAsync();
             return new PagedResultDto<ShippingRequestsTripListDto>(
                 totalCount,
-                ObjectMapper.Map<List<ShippingRequestsTripListDto>>(query)
+                ObjectMapper.Map<List<ShippingRequestsTripListDto>>(await query.ToListAsync())
 
             );
         }
@@ -95,7 +97,7 @@ namespace TACHYON.Shipping.Trips
                 throw new UserFriendlyException(L("The number of drop points must be"+requestNumberOfDrops));
             }
 
-            if (input.Id == 0)
+            if (!input.Id.HasValue)
             {
                 Create(input);
             }
@@ -157,6 +159,8 @@ namespace TACHYON.Shipping.Trips
             var trip = await _ShippingRequestTripRepository
                 .GetAll()
                 .AsNoTracking()
+                .Include(x=>x.OriginFacilityFk)
+                .Include(x => x.DestinationFacilityFk)
                 .Include(x => x.AssignedTruckFk)
                 .Include(x => x.RoutPoints)
                    .ThenInclude(r => r.FacilityFk)

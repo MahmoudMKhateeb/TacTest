@@ -46,8 +46,8 @@ namespace TACHYON.Routs.RoutPoints
         public DateTime? StartTime { get; set; }
         public DateTime? EndTime { get; set; }
 
-        public bool IsActive { get; set; }
-        public bool IsComplete { get; set; }
+        public bool IsActive { get; set; } 
+        public bool IsComplete { get; set; } 
 
         public Guid? DocumentId { get; set; }
         public string DocumentName { get; set; }
