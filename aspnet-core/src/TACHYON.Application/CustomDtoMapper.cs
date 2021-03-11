@@ -469,44 +469,53 @@ namespace TACHYON
 
         private static void AddOrUpdateShippingRequestTrip(CreateOrEditShippingRequestTripDto dto,ShippingRequestTrip trip)
         {
-            //map Points 
-            if (trip.RoutPoints == null) trip.RoutPoints = new Collection<RoutPoint>();
-            foreach (var routPoint in dto.RoutPoints)
+            if (dto.RoutPoints != null)
             {
-                //Add
-                if (!routPoint.Id.HasValue)
-                {
-                    trip.RoutPoints.Add(_Mapper.Map<RoutPoint>(routPoint));
-                   
-                }
 
-                //update
-                else
-                {
-                    _Mapper.Map(routPoint,trip.RoutPoints.SingleOrDefault(c=>c.Id==routPoint.Id));
-                }
 
+                //map Points 
+                if (trip.RoutPoints == null) trip.RoutPoints = new Collection<RoutPoint>();
+                foreach (var routPoint in dto.RoutPoints)
+                {
+                    //Add
+                    if (!routPoint.Id.HasValue)
+                    {
+                        trip.RoutPoints.Add(_Mapper.Map<RoutPoint>(routPoint));
+
+                    }
+
+                    //update
+                    else
+                    {
+                        _Mapper.Map(routPoint, trip.RoutPoints.SingleOrDefault(c => c.Id == routPoint.Id));
+                    }
+                }
             }
             if (trip.ShippingRequestTripVases == null) trip.ShippingRequestTripVases = new Collection<ShippingRequestTripVas>();
             //map Vases
-            foreach (var vas in dto.ShippingRequestTripVases)
+            if (dto.ShippingRequestTripVases !=null)
             {
-                //Add
-                if (!vas.Id.HasValue)
+                foreach (var vas in dto.ShippingRequestTripVases)
                 {
-                    trip.ShippingRequestTripVases.Add(_Mapper.Map<ShippingRequestTripVas>(vas));
-                }
+                    //Add
+                    if (!vas.Id.HasValue)
+                    {
+                        trip.ShippingRequestTripVases.Add(_Mapper.Map<ShippingRequestTripVas>(vas));
+                    }
 
-                //update
-                else
-                {
-                    _Mapper.Map(vas, trip.ShippingRequestTripVases.SingleOrDefault(c => c.Id == vas.Id));
+                    //update
+                    else
+                    {
+                        _Mapper.Map(vas, trip.ShippingRequestTripVases.SingleOrDefault(c => c.Id == vas.Id));
+                    }
                 }
             }
+
         }
 
         private static void AddOrUpdateShippingRequestTripRoutePointGoods(CreateOrEditRoutPointDto dto, RoutPoint point)
         {
+            if (dto.GoodsDetailListDto == null) return;
             if (point.GoodsDetails == null) point.GoodsDetails = new Collection<GoodsDetail>();
             foreach (var good in dto.GoodsDetailListDto)
             {
