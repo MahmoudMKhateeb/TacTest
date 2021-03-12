@@ -94,23 +94,23 @@ namespace TACHYON.Shipping.Trips
 
             if (input.RoutPoints.Count(x => x.PickingType == PickingType.Dropoff) != requestNumberOfDrops)
             {
-                throw new UserFriendlyException(L("The number of drop points must be"+requestNumberOfDrops));
+                throw new UserFriendlyException(L("The number of drop points must be" + requestNumberOfDrops));
             }
 
             if (!input.Id.HasValue)
             {
-                Create(input);
+               await Create(input);
             }
             else
             {
 
-                Update(input);
+               await Update(input);
             }
 
         }
 
         [AbpAuthorize(AppPermissions.Pages_ShippingRequestTrips_Create)]
-        private async void Create(CreateOrEditShippingRequestTripDto input)
+        private async Task Create(CreateOrEditShippingRequestTripDto input)
         {
             var RoutePoint = input.RoutPoints.OrderBy(x=>x.PickingType);
             ShippingRequestTrip trip = ObjectMapper.Map<ShippingRequestTrip>(input);
@@ -119,7 +119,7 @@ namespace TACHYON.Shipping.Trips
         }
 
         [AbpAuthorize(AppPermissions.Pages_ShippingRequestTrips_Edit)]
-        private async void Update(CreateOrEditShippingRequestTripDto input)
+        private async Task Update(CreateOrEditShippingRequestTripDto input)
         {
             var trip = await GetTrip((int)input.Id, input.ShippingRequestId);
             TripCanEditOrDelete(trip);
@@ -156,9 +156,9 @@ namespace TACHYON.Shipping.Trips
         }
         private async Task<ShippingRequestTrip> GetTrip(int tripid, long? RequestId = null)
         {
+
             var trip = await _ShippingRequestTripRepository
                 .GetAll()
-                .AsNoTracking()
                 .Include(x=>x.OriginFacilityFk)
                 .Include(x => x.DestinationFacilityFk)
                 .Include(x => x.AssignedTruckFk)
