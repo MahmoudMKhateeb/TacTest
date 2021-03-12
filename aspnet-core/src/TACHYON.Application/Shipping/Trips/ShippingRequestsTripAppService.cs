@@ -130,19 +130,18 @@ namespace TACHYON.Shipping.Trips
         {
             var trip = await GetTrip((int)input.Id, input.ShippingRequestId);
             TripCanEditOrDelete(trip);
-            var TripVas = new List<ShippingRequestTripVas>();
-            var TripPoint =new List<RoutPoint>() ;
+            var TripVas = trip.ShippingRequestTripVases.Select(x => x.Id);
+            var TripPoint = trip.RoutPoints.Select(x => x.Id);
             var TripGoodDetails = trip.RoutPoints.Select(x => x.GoodsDetails.Select(x => x.Id));
             var InputGoodDetails = input.RoutPoints.Select(x => x.GoodsDetailListDto.Where(x=>x.Id.HasValue).Select(x=>x.Id));
 
-            TripVas.AddRange(trip.ShippingRequestTripVases);
-            TripPoint.AddRange(trip.RoutPoints);
+          
 
             ObjectMapper.Map(input, trip);
 
             foreach (var point in TripPoint)
             {
-                if (!input.RoutPoints.Any(x=>x.Id== point.Id))
+                if (!input.RoutPoints.Any(x=>x.Id== point))
                 {
                     await _RoutPointRepository.DeleteAsync(point);
                 }
@@ -150,7 +149,7 @@ namespace TACHYON.Shipping.Trips
 
             foreach (var vas in TripVas)
             {
-                if (!input.ShippingRequestTripVases.Any(x => x.Id == vas.Id))
+                if (!input.ShippingRequestTripVases.Any(x => x.Id == vas))
                 {
                   await   _ShippingRequestTripVasRepository.DeleteAsync(vas);
                 }
@@ -161,15 +160,19 @@ namespace TACHYON.Shipping.Trips
         [AbpAuthorize(AppPermissions.Pages_ShippingRequestTrips_Delete)]
         public async Task Delete(EntityDto input)
         {
+            
             var trip = await _ShippingRequestTripRepository.
                 FirstOrDefaultAsync(
                 x => x.Id == input.Id &&
-                x.Status != ShippingRequestTripStatus.StandBy && x.ShippingRequestFk.TenantId == AbpSession.TenantId);
+                x.Status == ShippingRequestTripStatus.StandBy);
+
+         
 
             if (trip != null)
             {
+                var Request = await GetShippingRequestByPermission(trip.ShippingRequestId);
                 TripCanEditOrDelete(trip);
-                await _ShippingRequestTripRepository.DeleteAsync(input.Id);
+                await _ShippingRequestTripRepository.DeleteAsync(trip);
             }
         }
 
