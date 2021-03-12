@@ -12,6 +12,7 @@ using System.Linq.Dynamic.Core;
 using System.Threading.Tasks;
 using TACHYON.Authorization;
 using TACHYON.Features;
+using TACHYON.Goods.GoodsDetails;
 using TACHYON.Routs.RoutPoints;
 using TACHYON.Shipping.ShippingRequests;
 using TACHYON.Shipping.ShippingRequestTrips;
@@ -27,18 +28,20 @@ namespace TACHYON.Shipping.Trips
         private readonly IRepository<ShippingRequest, long> _ShippingRequestRepository;
         private readonly IRepository<RoutPoint, long> _RoutPointRepository;
         private readonly IRepository<ShippingRequestTripVas, long> _ShippingRequestTripVasRepository;
-
+        private readonly IRepository<GoodsDetail,long> _GoodsDetailRepository;
         
         public ShippingRequestsTripAppService(
             IRepository<ShippingRequestTrip> ShippingRequestTripRepository,
             IRepository<ShippingRequest, long> ShippingRequestRepository,
             IRepository<RoutPoint, long> RoutPointRepository,
-            IRepository<ShippingRequestTripVas, long> ShippingRequestTripVasRepository)
+            IRepository<ShippingRequestTripVas, long> ShippingRequestTripVasRepository,
+            IRepository<GoodsDetail, long> GoodsDetailRepository)
         {
             _ShippingRequestTripRepository = ShippingRequestTripRepository;
             _ShippingRequestRepository = ShippingRequestRepository;
             _RoutPointRepository = RoutPointRepository;
             _ShippingRequestTripVasRepository = ShippingRequestTripVasRepository;
+            _GoodsDetailRepository = GoodsDetailRepository;
         }
 
         public async Task<PagedResultDto<ShippingRequestsTripListDto>> GetAll(ShippingRequestTripFilterInput Input)
@@ -132,8 +135,6 @@ namespace TACHYON.Shipping.Trips
             TripCanEditOrDelete(trip);
             var TripVas = new List<ShippingRequestTripVas>();
             var TripPoint =new List<RoutPoint>() ;
-            var TripGoodDetails = trip.RoutPoints.Select(x => x.GoodsDetails.Select(y => y.Id));
-            var InputGoodDetails = input.RoutPoints.Select(x => x.GoodsDetailListDto.Where(y=>y.Id.HasValue).Select(e=>e.Id));
 
             TripVas.AddRange(trip.ShippingRequestTripVases);
             TripPoint.AddRange(trip.RoutPoints);
@@ -146,6 +147,13 @@ namespace TACHYON.Shipping.Trips
                 {
                     await _RoutPointRepository.DeleteAsync(point);
                 }
+                foreach (var g in point.GoodsDetails.Where(x=>x.Id !=0))
+                {
+                    if (!input.RoutPoints.Any(x => x.GoodsDetailListDto.Any(d => d.Id == g.Id)))
+                    {
+                        await _GoodsDetailRepository.DeleteAsync(g);
+                    }
+                }
             }
 
             foreach (var vas in TripVas)
@@ -155,6 +163,7 @@ namespace TACHYON.Shipping.Trips
                   await   _ShippingRequestTripVasRepository.DeleteAsync(vas);
                 }
             }
+
 
         }
 
