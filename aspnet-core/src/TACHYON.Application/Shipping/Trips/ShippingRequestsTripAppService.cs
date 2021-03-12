@@ -130,18 +130,19 @@ namespace TACHYON.Shipping.Trips
         {
             var trip = await GetTrip((int)input.Id, input.ShippingRequestId);
             TripCanEditOrDelete(trip);
-            var TripVas = trip.ShippingRequestTripVases.Select(x => x.Id);
-            var TripPoint = trip.RoutPoints.Select(x => x.Id);
+            var TripVas = new List<ShippingRequestTripVas>();
+            var TripPoint =new List<RoutPoint>() ;
             var TripGoodDetails = trip.RoutPoints.Select(x => x.GoodsDetails.Select(x => x.Id));
             var InputGoodDetails = input.RoutPoints.Select(x => x.GoodsDetailListDto.Where(x=>x.Id.HasValue).Select(x=>x.Id));
 
-          
+            TripVas.AddRange(trip.ShippingRequestTripVases);
+            TripPoint.AddRange(trip.RoutPoints);
 
             ObjectMapper.Map(input, trip);
 
             foreach (var point in TripPoint)
             {
-                if (!input.RoutPoints.Any(x=>x.Id== point))
+                if (!input.RoutPoints.Any(x=>x.Id== point.Id))
                 {
                     await _RoutPointRepository.DeleteAsync(point);
                 }
@@ -149,7 +150,7 @@ namespace TACHYON.Shipping.Trips
 
             foreach (var vas in TripVas)
             {
-                if (!input.ShippingRequestTripVases.Any(x => x.Id == vas))
+                if (!input.ShippingRequestTripVases.Any(x => x.Id == vas.Id))
                 {
                   await   _ShippingRequestTripVasRepository.DeleteAsync(vas);
                 }
