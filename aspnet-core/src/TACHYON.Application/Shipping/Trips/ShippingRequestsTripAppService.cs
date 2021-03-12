@@ -16,6 +16,7 @@ using TACHYON.Routs.RoutPoints;
 using TACHYON.Shipping.ShippingRequests;
 using TACHYON.Shipping.ShippingRequestTrips;
 using TACHYON.Shipping.Trips.Dto;
+using TACHYON.ShippingRequestTripVases;
 
 namespace TACHYON.Shipping.Trips
 {
@@ -24,14 +25,20 @@ namespace TACHYON.Shipping.Trips
     {
         private readonly IRepository<ShippingRequestTrip> _ShippingRequestTripRepository;
         private readonly IRepository<ShippingRequest, long> _ShippingRequestRepository;
+        private readonly IRepository<RoutPoint, long> _RoutPointRepository;
+        private readonly IRepository<ShippingRequestTripVas, long> _ShippingRequestTripVasRepository;
 
-
+        
         public ShippingRequestsTripAppService(
             IRepository<ShippingRequestTrip> ShippingRequestTripRepository,
-            IRepository<ShippingRequest, long> ShippingRequestRepository)
+            IRepository<ShippingRequest, long> ShippingRequestRepository,
+            IRepository<RoutPoint, long> RoutPointRepository,
+            IRepository<ShippingRequestTripVas, long> ShippingRequestTripVasRepository)
         {
             _ShippingRequestTripRepository = ShippingRequestTripRepository;
             _ShippingRequestRepository = ShippingRequestRepository;
+            _RoutPointRepository = RoutPointRepository;
+            _ShippingRequestTripVasRepository = ShippingRequestTripVasRepository;
         }
 
         public async Task<PagedResultDto<ShippingRequestsTripListDto>> GetAll(ShippingRequestTripFilterInput Input)
@@ -123,7 +130,29 @@ namespace TACHYON.Shipping.Trips
         {
             var trip = await GetTrip((int)input.Id, input.ShippingRequestId);
             TripCanEditOrDelete(trip);
+            var TripVas = trip.ShippingRequestTripVases;
+            var TripPoint = trip.RoutPoints;
+            var TripGoodDetails = trip.RoutPoints.Select(x => x.GoodsDetails);
+            var InputGoodDetails = input.RoutPoints.Select(x => x.GoodsDetailListDto.Where(x=>x.Id.HasValue).Select(x=>x.Id));
+
             ObjectMapper.Map(input, trip);
+
+            foreach (var point in TripPoint)
+            {
+                if (!input.RoutPoints.Any(x=>x.Id== point.Id))
+                {
+                   await _RoutPointRepository.DeleteAsync(point);
+                }
+            }
+
+            foreach (var vas in TripVas)
+            {
+                if (!input.ShippingRequestTripVases.Any(x => x.Id == vas.Id))
+                {
+                  await   _ShippingRequestTripVasRepository.DeleteAsync(vas);
+                }
+            }
+
         }
 
         [AbpAuthorize(AppPermissions.Pages_ShippingRequestTrips_Delete)]
