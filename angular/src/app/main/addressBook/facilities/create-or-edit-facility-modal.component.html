@@ -1,6 +1,6 @@
 ﻿<div
   bsModal
-  #createOrEditModal="bs-modal"
+  #createOrEditFacilityModal="bs-modal"
   class="modal fade"
   tabindex="-1"
   role="dialog"
@@ -8,71 +8,112 @@
   aria-hidden="true"
   [config]="{ backdrop: 'static' }"
 >
-  <div class="modal-dialog modal-lg">
+  <div class="modal-dialog modal-xl">
     <div class="modal-content">
-      <form *ngIf="active" #facilityForm="ngForm" novalidate (ngSubmit)="save()" autocomplete="off">
+      <form #createFacilityForm="ngForm" novalidate (ngSubmit)="save()" autocomplete="off">
         <div class="modal-header">
           <h4 class="modal-title">
-            <span *ngIf="facility.id">{{ l('EditFacility') }}</span>
-            <span *ngIf="!facility.id">{{ l('CreateNewFacility') }}</span>
+            <!--                <span *ngIf="routStep.id">{{l("EditRoutStep")}}</span>-->
+            <!--                <span *ngIf="!routStep.id">{{l("CreateNewRoutStep")}}</span>-->
+            {{ l('CreateFacilityModal') }}
           </h4>
-          <button type="button" class="close" (click)="close()" aria-label="Close" [disabled]="saving">
+          <button type="button" class="close" (click)="show()" aria-label="Close" [disabled]="saving">
             <span aria-hidden="true">&times;</span>
           </button>
         </div>
+
         <div class="modal-body">
-          <div class="form-group m-form__group">
-            <label for="CityDisplayName">{{ l('City') }}</label>
-            <select name="facility.cityId" [(ngModel)]="facility.cityId" class="form-control" required>
-              <option value="">{{ l('SelectACity') }}</option>
-              <option *ngFor="let item of allCitys" value="{{ item.id }}">{{ item.displayName }}</option>
-            </select>
-          </div>
+          <div class="row">
+            <div class="form-group col-md-12">
+              <label for="Facility_Name">{{ l('facilityName') }} *</label>
+              <input
+                type="text"
+                id="Facility_Name"
+                class="form-control"
+                [(ngModel)]="facility.name"
+                name="Name"
+                minlength="0"
+                maxlength="256"
+                required
+              />
+            </div>
 
-          <div class="form-group">
-            <label for="Facility_Name">{{ l('Name') }} *</label>
-            <input
-              type="text"
-              id="Facility_Name"
-              class="form-control"
-              [(ngModel)]="facility.name"
-              name="Name"
-              minlength="0"
-              maxlength="256"
-              required
-            />
-          </div>
+            <div class="form-group col-md-2">
+              <label>{{ l('selectaCountry') }}</label>
+              <select name="selectaCountry" [(ngModel)]="selectedCountryCode" class="form-control" (change)="loadMapApi()">
+                <option value="">{{ l('SelectACounty') }}</option>
+                <option ngValue="SA">Saudi Arabia</option>
+                <option ngValue="EG">Egypt</option>
+                <option ngValue="FR">France</option>
+              </select>
+            </div>
+            <div class="form-group col-md-10">
+              <label>{{ l('searchForLocation') }}</label>
+              <input
+                type="text"
+                class="form-control"
+                (keydown.enter)="$event.preventDefault()"
+                placeholder="Search Nearest Location"
+                autocorrect="off"
+                autocapitalize="off"
+                [disabled]="!selectedCountryCode"
+                name="searchForAddress"
+                spellcheck="off"
+                type="text"
+                #search
+              />
+            </div>
+            <!-- CreateNewFacilityMap -->
+            <div class="form-group col-md-12">
+              <agm-map
+                style="height: 300px;"
+                [latitude]="facility.latitude"
+                [longitude]="facility.longitude"
+                [zoom]="zoom"
+                (mapClick)="mapClicked($event)"
+              >
+                <agm-marker
+                  [latitude]="facility.latitude"
+                  [longitude]="facility.longitude"
+                  [markerDraggable]="true"
+                  (dragEnd)="mapClicked($event)"
+                ></agm-marker>
+              </agm-map>
+            </div>
+            <div class="form-group col-md-6">
+              <label>{{ l('Address') }}</label>
+              <input type="text" class="form-control" [(ngModel)]="facility.address" name="Address" />
+            </div>
+            <div class="form-group col-md-6">
+              <label>{{ l('State') }}</label>
+              <input type="text" class="form-control" name="State" />
+            </div>
+            <div class="form-group col-md-6">
+              <label>{{ l('City') }}</label>
+              <input type="text" class="form-control" name="City" />
+            </div>
 
-          <div class="form-group">
-            <label for="Facility_Address">{{ l('Address') }} *</label>
-            <input
-              type="text"
-              id="Facility_Address"
-              class="form-control"
-              [(ngModel)]="facility.address"
-              name="Address"
-              minlength="0"
-              maxlength="256"
-              required
-            />
-          </div>
+            <div class="form-group col-md-6">
+              <label>{{ l('Country') }}</label>
+              <input type="text" class="form-control" name="Country" />
+            </div>
+            <div class="form-group col-md-6">
+              <label for="Facility_Longitude">{{ l('Longitude') }}</label>
+              <input type="number" id="Facility_Longitude" class="form-control" [(ngModel)]="facility.longitude" name="Longitude" />
+            </div>
 
-          <div class="form-group">
-            <label for="Facility_Longitude">{{ l('Longitude') }}</label>
-            <input type="number" id="Facility_Longitude" class="form-control" [(ngModel)]="facility.longitude" name="Longitude" />
-          </div>
-
-          <div class="form-group">
-            <label for="Facility_Latitude">{{ l('Latitude') }}</label>
-            <input type="number" id="Facility_Latitude" class="form-control" [(ngModel)]="facility.latitude" name="Latitude" />
+            <div class="form-group col-md-6">
+              <label for="Facility_Latitude">{{ l('Latitude') }}</label>
+              <input type="number" id="Facility_Latitude" class="form-control" [(ngModel)]="facility.latitude" name="Latitude" />
+            </div>
           </div>
         </div>
         <div class="modal-footer">
           <button [disabled]="saving" type="button" class="btn btn-default" (click)="close()">{{ l('Cancel') }}</button>
           <button
             type="submit"
-            class="btn btn-save blue"
-            [disabled]="!facilityForm.form.valid"
+            class="btn btn-primary blue"
+            [disabled]="!createFacilityForm.form.valid"
             [buttonBusy]="saving"
             [busyText]="l('SavingWithThreeDot')"
           >
