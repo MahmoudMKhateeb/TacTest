@@ -132,8 +132,8 @@ namespace TACHYON.Shipping.Trips
             TripCanEditOrDelete(trip);
             var TripVas = new List<ShippingRequestTripVas>();
             var TripPoint =new List<RoutPoint>() ;
-            var TripGoodDetails = trip.RoutPoints.Select(x => x.GoodsDetails.Select(x => x.Id));
-            var InputGoodDetails = input.RoutPoints.Select(x => x.GoodsDetailListDto.Where(x=>x.Id.HasValue).Select(x=>x.Id));
+            var TripGoodDetails = trip.RoutPoints.Select(x => x.GoodsDetails.Select(y => y.Id));
+            var InputGoodDetails = input.RoutPoints.Select(x => x.GoodsDetailListDto.Where(y=>y.Id.HasValue).Select(e=>e.Id));
 
             TripVas.AddRange(trip.ShippingRequestTripVases);
             TripPoint.AddRange(trip.RoutPoints);
@@ -216,18 +216,19 @@ namespace TACHYON.Shipping.Trips
             {
                 using (CurrentUnitOfWork.DisableFilter(AbpDataFilters.MustHaveTenant))
                 {
-                    return await GetShippingReques(ShippingRequestId);
+                    return await GetShippingRequest(ShippingRequestId);
                 }
             }
 
-            return await GetShippingReques(ShippingRequestId);
+            return await GetShippingRequest(ShippingRequestId);
         }
 
 
-        private async Task<ShippingRequest> GetShippingReques(long ShippingRequestId)
+        private async Task<ShippingRequest> GetShippingRequest(long ShippingRequestId)
         {
 
-            var request = await _ShippingRequestRepository.FirstOrDefaultAsync(x => x.Id == ShippingRequestId && (!IsEnabled(AppFeatures.Carrier) || (IsEnabled(AppFeatures.Carrier) && x.CarrierTenantId == AbpSession.TenantId)));
+            var request = await _ShippingRequestRepository
+                .FirstOrDefaultAsync(x => x.Id == ShippingRequestId && (!IsEnabled(AppFeatures.Carrier) || (IsEnabled(AppFeatures.Carrier) && x.CarrierTenantId == AbpSession.TenantId)));
             if (request == null)
             {
                 throw new UserFriendlyException(L("ShippingRequestIsNotFound"));

@@ -226,8 +226,7 @@ namespace TACHYON
             configuration.CreateMap<ImportTruckDocumentFileDto, DocumentFile>().ReverseMap();
             configuration.CreateMap<CreateOrEditDocumentTypeDto, DocumentType>().ReverseMap();
 
-            configuration.CreateMap<CreateOrEditRoutPointDto, RoutPoint>()
-                .AfterMap(AddOrUpdateShippingRequestTripRoutePointGoods).ReverseMap();
+            
             configuration.CreateMap<CreateOrEditShippingRequestVasListDto, ShippingRequestVas>().ReverseMap();
             configuration.CreateMap<CreateOrEditRouteDto, Route>().ReverseMap();
 
@@ -239,8 +238,13 @@ namespace TACHYON
             configuration.CreateMap<CreateOrEditShippingRequestTripDto, ShippingRequestTrip>()
                 .ForMember(d=>d.RoutPoints,opt=>opt.Ignore())
                 .ForMember(d => d.ShippingRequestTripVases, opt => opt.Ignore())
-                .AfterMap(AddOrUpdateShippingRequestTrip)
-                .ReverseMap();
+                .AfterMap(AddOrUpdateShippingRequestTrip);
+            
+
+            configuration.CreateMap<ShippingRequestTrip,CreateOrEditShippingRequestTripDto>()
+                .ForMember(dest => dest.RoutPoints, opt => opt.MapFrom(src => src.RoutPoints))
+                .ForMember(dest => dest.ShippingRequestTripVases, opt => opt.MapFrom(src => src.ShippingRequestTripVases));
+
 
             configuration.CreateMap<CreateOrEditShippingRequestTripVasDto, ShippingRequestTripVas>()
                 .ReverseMap();
@@ -275,11 +279,12 @@ namespace TACHYON
                 .ForPath(dest => dest.FacilityFk.Location.X, opt => opt.MapFrom(src => src.Longitude))
                 .ForPath(dest => dest.FacilityFk.Location.Y, opt => opt.MapFrom(src => src.Latitude))
                 .ReverseMap();
+
             configuration.CreateMap<CreateOrEditRoutPointDto, RoutPoint>()
-                .ForMember(dest => dest.GoodsDetails, opt => opt.MapFrom(src => src.GoodsDetailListDto))
-                .ReverseMap();
+                .AfterMap(AddOrUpdateShippingRequestTripRoutePointGoods);
 
             configuration.CreateMap<RoutPoint, CreateOrEditRoutPointDto>()
+                .ForMember(dest => dest.GoodsDetailListDto, opt => opt.MapFrom(src => src.GoodsDetails))
                 .ForPath(dest => dest.Longitude, opt => opt.MapFrom(src => src.FacilityFk.Location.X))
                 .ForPath(dest => dest.Latitude, opt => opt.MapFrom(src => src.FacilityFk.Location.Y));
 
