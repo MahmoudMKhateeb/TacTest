@@ -187,6 +187,10 @@ namespace TACHYON.Shipping.Trips
 
 
         #region Heleper
+        /// <summary>
+        /// Check can delete or edit trip if trip on stand by status
+        /// </summary>
+        /// <param name="trip"></param>
         private void TripCanEditOrDelete(ShippingRequestTrip trip)
         {
             // When Edit Or Delete
@@ -216,7 +220,11 @@ namespace TACHYON.Shipping.Trips
             if (trip == null) throw new UserFriendlyException(L("ShippingRequestTripIsNotFound"));
             return trip;
         }
-
+        /// <summary>
+        /// Return Request when the user loging as shipper or host or carrier 
+        /// </summary>
+        /// <param name="ShippingRequestId"></param>
+        /// <returns></returns>
 
         private async Task<ShippingRequest> GetShippingRequestByPermission(long ShippingRequestId)
         {
@@ -245,14 +253,16 @@ namespace TACHYON.Shipping.Trips
         }
 
 
-
+        /// <summary>
+        /// Generic  auto mapper fro trip when view or edit 
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="id"></param>
+        /// <returns></returns>
         private async Task<T> GetShippingRequestTripForMapper<T>(int id)
         {
             var trip = await GetTrip(id);
-            if (trip != null)
-            {
-                 await GetShippingRequestByPermission(trip.ShippingRequestId);
-            }
+            await GetShippingRequestByPermission(trip.ShippingRequestId);
 
             return ObjectMapper.Map<T>(trip);
         }
