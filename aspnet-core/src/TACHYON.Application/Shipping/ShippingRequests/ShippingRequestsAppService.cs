@@ -490,8 +490,8 @@ namespace TACHYON.Shipping.ShippingRequests
                     .Select(x => new GetShippingRequestForViewOutput
                     {
                         ShippingRequest = ObjectMapper.Map<ShippingRequestDto>(x.ShippingRequest),
-                        //ShippingRequestBidDtoList =
-                        //    ObjectMapper.Map<List<ShippingRequestBidDto>>(x.ShippingRequest.ShippingRequestBids),
+                        ShippingRequestBidDtoList =
+                        ObjectMapper.Map<List<ShippingRequestBidDto>>(x.ShippingRequest.ShippingRequestBids),
                         VasCount = x.ShippingRequestVasesList.Count(),
                         OriginalCityName = x.OriginalCityName,
                         DestinationCityName = x.DestinationCityName,
@@ -509,6 +509,7 @@ namespace TACHYON.Shipping.ShippingRequests
                 return new PagedResultDto<GetShippingRequestForViewOutput>(totalCount, result.ToList());
             }
         }
+
 
         protected virtual async Task<GetShippingRequestForViewOutput> _GetShippingRequestForView(long id)
         {
@@ -559,7 +560,7 @@ namespace TACHYON.Shipping.ShippingRequests
                 GetShippingRequestForViewOutput output = new GetShippingRequestForViewOutput
                 {
                     ShippingRequest = ObjectMapper.Map<ShippingRequestDto>(shippingRequest),
-                    //ShippingRequestBidDtoList = ObjectMapper.Map<List<ShippingRequestBidDto>>(shippingRequestBidsList),
+                    ShippingRequestBidDtoList = ObjectMapper.Map<List<ShippingRequestBidDto>>(shippingRequestBidsList),
                     VasCount = shippingRequest.ShippingRequestVases.Count(),
                     OriginalCityName = shippingRequest.RouteFk.OriginCityFk.DisplayName,
                     DestinationCityName = shippingRequest.RouteFk.DestinationCityFk.DisplayName,
