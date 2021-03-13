@@ -270,7 +270,7 @@ namespace TACHYON.Shipping.Drivers
             if (!_ShippingRequestTrip.GetAll().Any(x => x.AssignedDriverUserId == AbpSession.UserId && x.Status != ShippingRequestTripStatus.Finished && x.ShippingRequestId == RequestId))
             {
                 var Request = await _ShippingRequestRepository.SingleAsync(x => x.Id == RequestId);
-                Request.ShippingRequestStatusId = (int)ShippingRequestStatus.Finished;
+                Request.Status = ShippingRequestStatus.Finished;
 
                 await _appNotifier.ShipperShippingRequestFinish(new UserIdentifier(Request.TenantId, _userManager.GetAdminByTenantIdAsync(Request.TenantId).Id), Request);
             }

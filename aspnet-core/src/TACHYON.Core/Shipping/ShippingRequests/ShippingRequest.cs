@@ -90,9 +90,9 @@ namespace TACHYON.Shipping.ShippingRequests
         /// </summary>
         public int NumberOfDrops { get; set; }
 
-        public bool StageOneFinish { get; set; }
-        public bool StageTowFinish { get; set; }
-        public bool StageThreeFinish { get; set; }
+        //public bool StageOneFinish { get; set; }
+        //public bool StageTowFinish { get; set; }
+        //public bool StageThreeFinish { get; set; }
 
 
         /// <summary>
@@ -107,11 +107,11 @@ namespace TACHYON.Shipping.ShippingRequests
         /// <summary>
         /// g-#409 
         /// </summary>
-        public int ShippingRequestStatusId { get; set; }
-        [ForeignKey("ShippingRequestStatusId")]
-        public ShippingRequestStatuses.ShippingRequestStatus ShippingRequestStatusFk { get; set; }
+        //public int ShippingRequestStatusId { get; set; }
+        //[ForeignKey("ShippingRequestStatusId")]
+        //public ShippingRequestStatuses.ShippingRequestStatus ShippingRequestStatusFk { get; set; }
 
-
+        public ShippingRequestStatus Status { get; set; }
         /// <summary>
         /// assigned Driver
         /// </summary>
@@ -181,9 +181,9 @@ namespace TACHYON.Shipping.ShippingRequests
 
         public ShippingRequest()
         {
-            StageOneFinish = false;
-            StageTowFinish = false;
-            StageThreeFinish = false;
+            //StageOneFinish = false;
+            //StageTowFinish = false;
+            //StageThreeFinish = false;
         }
         public void Close()
         {

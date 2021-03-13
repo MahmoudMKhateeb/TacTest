@@ -296,7 +296,7 @@ namespace TACHYON.Shipping.ShippingRequests
             shippingRequest.IsPriceAccepted = input.IsPriceAccepted;
             if (shippingRequest.IsPriceAccepted.Value)
             {
-                shippingRequest.StageOneFinish = true;
+                shippingRequest.Status = ShippingRequestStatus.StandBy;
             }
 
             await _appNotifier.AcceptShippingRequestPrice(input.Id, input.IsPriceAccepted);
@@ -337,7 +337,7 @@ namespace TACHYON.Shipping.ShippingRequests
                 throw new UserFriendlyException(L("the driver is not assigned to Shipping Request message"));
             }
 
-            shippingRequest.ShippingRequestStatusId = input.ShippingRequestStatusId;
+            //shippingRequest.ShippingRequestStatusId = input.ShippingRequestStatusId;
         }
 
 
@@ -465,7 +465,7 @@ namespace TACHYON.Shipping.ShippingRequests
                         DriverName = x.AssignedDriverUserFk != null ? x.AssignedDriverUserFk.Name : "",
                         GoodsCategoryName = x.GoodCategoryFk != null ? x.GoodCategoryFk.DisplayName : "",
                         RoutTypeName = x.RouteFk.RoutTypeFk.DisplayName,
-                        ShippingRequestStatusName = x.ShippingRequestStatusFk.DisplayName,
+                        ShippingRequestStatusName =Enum.GetName(typeof(ShippingRequestStatus),x.Status),
                         TruckTypeDisplayName = x.AssignedTruckFk != null ? x.AssignedTruckFk.TrucksTypeFk.DisplayName : "",
                         TruckTypeFullName =
                         //    x.TransportTypeFk!=null ?( x.TransportTypeFk.DisplayName 
@@ -526,7 +526,7 @@ namespace TACHYON.Shipping.ShippingRequests
                     .ThenInclude(e => e.OriginCityFk)
                     .Include(e => e.RouteFk)
                     .ThenInclude(e => e.DestinationCityFk)
-                    .Include(e => e.ShippingRequestStatusFk)
+                    //.Include(e => e.ShippingRequestStatusFk)
                     .Include(e => e.AssignedDriverUserFk)
                     .Include(e => e.AssignedTruckFk)
                     .ThenInclude(e => e.TrucksTypeFk)
@@ -566,7 +566,7 @@ namespace TACHYON.Shipping.ShippingRequests
                     DriverName = shippingRequest.AssignedDriverUserFk?.Name,
                     GoodsCategoryName = shippingRequest.GoodCategoryFk?.DisplayName,
                     RoutTypeName = shippingRequest.RouteFk.RoutTypeFk.DisplayName,
-                    ShippingRequestStatusName = shippingRequest.ShippingRequestStatusFk.DisplayName,
+                    ShippingRequestStatusName =Enum.GetName(typeof(ShippingRequestStatus), shippingRequest.Status),
                     TruckTypeDisplayName = shippingRequest.TrucksTypeFk?.DisplayName,
                     TruckTypeFullName = shippingRequest.TransportTypeFk?.DisplayName
                                         + "-" + shippingRequest.TrucksTypeFk?.DisplayName
@@ -624,7 +624,7 @@ namespace TACHYON.Shipping.ShippingRequests
                 shippingRequest.TenantId = (int)AbpSession.TenantId;
                // shippingRequest.RoutPoints.ForEach(x => x.TenantId = (int)AbpSession.TenantId);
                 shippingRequest.RouteFk.TenantId = (int)AbpSession.TenantId;
-                shippingRequest.ShippingRequestStatusId = TACHYONConsts.ShippingRequestStatusStandBy;
+                //shippingRequest.ShippingRequestStatusId = TACHYONConsts.ShippingRequestStatusStandBy;
 
                 // Bid info
                 if (shippingRequest.IsBid)
