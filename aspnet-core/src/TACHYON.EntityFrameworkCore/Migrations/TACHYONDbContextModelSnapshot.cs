@@ -4616,7 +4616,7 @@ namespace TACHYON.Migrations
                         .HasForeignKey("TrailerId");
 
                     b.HasOne("TACHYON.Trucks.Truck", "TruckFk")
-                        .WithMany()
+                        .WithMany("DocumentFiles")
                         .HasForeignKey("TruckId");
 
                     b.HasOne("TACHYON.Authorization.Users.User", "UserFk")
