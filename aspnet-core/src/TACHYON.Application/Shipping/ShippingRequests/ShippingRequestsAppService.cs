@@ -661,15 +661,21 @@ namespace TACHYON.Shipping.ShippingRequests
                 .Include(x => x.RouteFk)
                 //.Include(x => x.RoutPoints)
                 //.ThenInclude(x=>x.FacilityFk)
-                //.Include(x=>x.ShippingRequestVases)
+                .Include(x=>x.ShippingRequestVases)
                 .Where(x=>x.Id== (long)input.Id)
                 .FirstOrDefaultAsync();
             input.IsBid = shippingRequest.IsBid;
             input.IsTachyonDeal = shippingRequest.IsTachyonDeal;
 
-           
 
 
+            foreach (var vas in shippingRequest.ShippingRequestVases)
+            {
+                if (!input.ShippingRequestVasList.Any(x => x.Id == vas.Id))
+                {
+                    await _shippingRequestVasRepository.DeleteAsync(vas);
+                }
+            }
             ObjectMapper.Map(input, shippingRequest);
             ObjectMapper.Map(input.CreateOrEditRouteDto, shippingRequest.RouteFk);
         }
