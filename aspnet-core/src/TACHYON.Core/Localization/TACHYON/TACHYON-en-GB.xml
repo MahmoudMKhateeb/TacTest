@@ -99,7 +99,7 @@
     <text name="CompanyInformation">Company Information</text>
     <text name="CompanyUniqueName">Company  name</text>
     <text name="CompanyUniqueName_Regex_Description">Please Add Company Name As It's in the CR</text>
-    <text name="CompanyFullLeagalName">Company Full Leagal Name </text>
+    <text name="CompanyFullLeagalName">Company Full Legal Name </text>
     <text name="Country">Country</text>
     <text name="City">City</text>
     <text name="Address">Address</text>

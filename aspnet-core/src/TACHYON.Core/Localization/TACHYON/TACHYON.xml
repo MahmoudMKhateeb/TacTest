@@ -221,7 +221,7 @@
     <text name="IAMA">I AM A</text>
     <text name="CompanyInformation">Company Information</text>
     <text name="CompanyUniqueName">Company Name</text>
-    <text name="CompanyFullLeagalName">Company Leagal Name</text>
+    <text name="CompanyFullLeagalName">Company Legal Name</text>
     <text name="WillBeShownOnAllOfficialDocumentsLikeWaybillsAndInvoices">Will be shown on all official documents like waybills and invoices</text>
     <text name="TheNameOfTheCompanyInTheCR">The name of the company in the CR.</text>
     <text name="Country">Country</text>
