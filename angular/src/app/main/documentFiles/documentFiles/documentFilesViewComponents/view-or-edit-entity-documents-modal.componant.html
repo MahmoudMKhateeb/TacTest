@@ -120,7 +120,7 @@
                   </td>
                   <td style="width: 150px;">
                     <span class="ui-column-title"> {{ l('Document Name') }}</span>
-                    {{ record.documentTypeDisplayName }}
+                    {{ record.documentType.name }}
                   </td>
                   <td *ngIf="documentEntityFilter==documentsEntitiesEnum.Truck" style="width: 150px;">
                     <span class="ui-column-title"> {{ l('TruckID') }}</span>
