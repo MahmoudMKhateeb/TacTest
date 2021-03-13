@@ -7,6 +7,7 @@ using Abp.Extensions;
 using Abp.Localization;
 using Abp.Localization.Sources;
 using NPOI.SS.UserModel;
+using TACHYON.Authorization.Users;
 using TACHYON.Authorization.Users.Importing.Dto;
 using TACHYON.DataExporting.Excel;
 using TACHYON.DataExporting.Excel.NPOI;
@@ -113,6 +114,7 @@ namespace TACHYON.Drivers.importing
                 user.Surname = _tachyonExcelDataReaderHelper.GetRequiredValueFromRowOrNull<string>(worksheet, row, 1, nameof(user.Surname), exceptionMessage);
                 //2
                 user.PhoneNumber = _tachyonExcelDataReaderHelper.GetRequiredValueFromRowOrNull<string>(worksheet, row, 2, nameof(user.PhoneNumber), exceptionMessage);
+                ValidatePhoneNumber(user, exceptionMessage);
                 //3
                 user.EmailAddress = _tachyonExcelDataReaderHelper.GetValueFromRowOrNull<string>(worksheet, row, 3, nameof(user.EmailAddress), exceptionMessage);
                 if (!user.EmailAddress.IsNullOrEmpty() && !ValidationHelper.IsEmail(user.EmailAddress))
@@ -168,6 +170,14 @@ namespace TACHYON.Drivers.importing
             }
 
             return user;
+        }
+
+        private void ValidatePhoneNumber(ImportDriverDto user, StringBuilder exceptionMessage)
+        {
+            if (user.PhoneNumber.Length != UserConsts.DriverPhoneNumberLength)
+            {
+                exceptionMessage.Append("PhoneNumber should be " + UserConsts.DriverPhoneNumberLength.ToString() + " character;");
+            }
         }
 
         private void ValidateIqamaDocumentFileDto(StringBuilder exceptionMessage, CreateOrEditDocumentFileDto iqamaDocumentFileDto, DocumentType iqamaDocumentType)
