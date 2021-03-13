@@ -465,7 +465,7 @@ namespace TACHYON.Shipping.ShippingRequests
                         DriverName = x.AssignedDriverUserFk != null ? x.AssignedDriverUserFk.Name : "",
                         GoodsCategoryName = x.GoodCategoryFk != null ? x.GoodCategoryFk.DisplayName : "",
                         RoutTypeName = x.RouteFk.RoutTypeFk.DisplayName,
-                        ShippingRequestStatusName =Enum.GetName(typeof(ShippingRequestStatus),x.Status),
+                        Status =x.Status,
                         TruckTypeDisplayName = x.AssignedTruckFk != null ? x.AssignedTruckFk.TrucksTypeFk.DisplayName : "",
                         TruckTypeFullName =
                         //    x.TransportTypeFk!=null ?( x.TransportTypeFk.DisplayName 
@@ -490,15 +490,15 @@ namespace TACHYON.Shipping.ShippingRequests
                     .Select(x => new GetShippingRequestForViewOutput
                     {
                         ShippingRequest = ObjectMapper.Map<ShippingRequestDto>(x.ShippingRequest),
-                        ShippingRequestBidDtoList =
-                            ObjectMapper.Map<List<ShippingRequestBidDto>>(x.ShippingRequest.ShippingRequestBids),
+                        //ShippingRequestBidDtoList =
+                        //    ObjectMapper.Map<List<ShippingRequestBidDto>>(x.ShippingRequest.ShippingRequestBids),
                         VasCount = x.ShippingRequestVasesList.Count(),
                         OriginalCityName = x.OriginalCityName,
                         DestinationCityName = x.DestinationCityName,
                         DriverName = x.DriverName,
                         GoodsCategoryName = x.GoodsCategoryName,
                         RoutTypeName = x.RoutTypeName,
-                        ShippingRequestStatusName = x.ShippingRequestStatusName,
+                        ShippingRequestStatusName = Enum.GetName(typeof(ShippingRequestStatus), x.Status),
                         TruckTypeDisplayName = x.TruckTypeDisplayName,
                         TruckTypeFullName = x.TruckTypeFullName,
                         //RoutPointDtoList = ObjectMapper.Map<List<RoutPointDto>>(x.routPointDtoList),
@@ -559,7 +559,7 @@ namespace TACHYON.Shipping.ShippingRequests
                 GetShippingRequestForViewOutput output = new GetShippingRequestForViewOutput
                 {
                     ShippingRequest = ObjectMapper.Map<ShippingRequestDto>(shippingRequest),
-                    ShippingRequestBidDtoList = ObjectMapper.Map<List<ShippingRequestBidDto>>(shippingRequestBidsList),
+                    //ShippingRequestBidDtoList = ObjectMapper.Map<List<ShippingRequestBidDto>>(shippingRequestBidsList),
                     VasCount = shippingRequest.ShippingRequestVases.Count(),
                     OriginalCityName = shippingRequest.RouteFk.OriginCityFk.DisplayName,
                     DestinationCityName = shippingRequest.RouteFk.DestinationCityFk.DisplayName,

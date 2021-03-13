@@ -11,7 +11,7 @@ namespace TACHYON.Shipping.ShippingRequests.Dtos
     {
         public ShippingRequestDto ShippingRequest { get; set; }
 
-        public List<ShippingRequestBidDto> ShippingRequestBidDtoList { get; set; }
+       // public List<ShippingRequestBidDto> ShippingRequestBidDtoList { get; set; }
         public List<GetShippingRequestVasForViewDto> ShippingRequestVasDtoList { get; set; }
         //public List<RoutPointDto> RoutPointDtoList { get; set; }
         public int VasCount { get; set; }
