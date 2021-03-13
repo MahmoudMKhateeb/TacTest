@@ -100,7 +100,7 @@ namespace TACHYON.Shipping.Trips
 
             }
 
-            int requestNumberOfDrops = request.NumberOfDrops;
+            int requestNumberOfDrops = request.RouteFk.RoutTypeFk.Id==1? 1: request.NumberOfDrops;
 
             if (input.RoutPoints.Count(x => x.PickingType == PickingType.Dropoff) != requestNumberOfDrops)
             {
@@ -215,6 +215,8 @@ namespace TACHYON.Shipping.Trips
                 .Include(x => x.RoutPoints)
                    .ThenInclude(r => r.GoodsDetails)
                 .Include(x => x.ShippingRequestTripVases)
+                  .ThenInclude(v=>v.ShippingRequestVasFk)
+                    .ThenInclude(v=>v.VasFk)
                 .WhereIf(RequestId.HasValue, x => x.ShippingRequestId == RequestId)
                  .FirstOrDefaultAsync(x => x.Id == tripid);
             if (trip == null) throw new UserFriendlyException(L("ShippingRequestTripIsNotFound"));

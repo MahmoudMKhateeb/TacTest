@@ -246,7 +246,8 @@ namespace TACHYON
                 .ForMember(dest => dest.ShippingRequestTripVases, opt => opt.MapFrom(src => src.ShippingRequestTripVases));
 
 
-            configuration.CreateMap<CreateOrEditShippingRequestTripVasDto, ShippingRequestTripVas>()
+            configuration.CreateMap<ShippingRequestTripVas,CreateOrEditShippingRequestTripVasDto>()
+                   .ForMember(dst => dst.Name, opt => opt.MapFrom(src => src.ShippingRequestVasFk.VasFk.DisplayName))
                 .ReverseMap();
             configuration.CreateMap<ShippingRequestTripVas,ShippingRequestTripVasDto>()
             .ForMember(dst => dst.Name, opt => opt.MapFrom(src => src.ShippingRequestVasFk.VasFk.Name))

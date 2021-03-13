@@ -9,5 +9,6 @@ namespace TACHYON.ShippingRequestTripVases.Dtos
     {
         public long? ShippingRequestVasId { get; set; }
         public int? ShippingRequestTripId { get; set; }
+        public string Name { get; set; }
     }
 }
