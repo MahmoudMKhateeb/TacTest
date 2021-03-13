@@ -162,7 +162,7 @@ namespace TACHYON.EntityFrameworkCore
 
         public virtual DbSet<UserDelegation> UserDelegations { get; set; }
         public virtual DbSet<ShippingRequestBid> ShippingRequestBids { get; set; }
-        public virtual DbSet<ShippingRequestBidStatus> ShippingRequestBidStatuses { get; set; }
+        //public virtual DbSet<ShippingRequestBidStatus> ShippingRequestBidStatuses { get; set; }
         public virtual DbSet<RoutPoint> RoutPoints { get; set; }
         protected virtual bool CurrentIsCanceled => true;
         protected virtual bool IsCanceledFilterEnabled => CurrentUnitOfWorkProvider?.Current?.IsFilterEnabled("IHasIsCanceled") == true;

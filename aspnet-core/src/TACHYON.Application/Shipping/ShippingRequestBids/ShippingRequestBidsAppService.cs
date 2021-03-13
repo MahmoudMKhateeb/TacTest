@@ -101,13 +101,13 @@ namespace TACHYON.Shipping.ShippingRequestBids
         public async Task CancelBidShippingRequest(CancelBidShippingRequestInput input)
         {
             ShippingRequest bid = await _shippingRequestsRepository.GetAsync(input.ShippingRequestId);
-            if (bid.ShippingRequestBidStatusId != TACHYONConsts.ShippingRequestStatusOnGoing)
+            if (bid.BidStatus != ShippingRequestBidStatus.OnGoing)
             {
                 ThrowShippingRequestIsNotOngoingError();
             }
             else
             {
-                bid.ShippingRequestBidStatusId = TACHYONConsts.ShippingRequestStatusCanceled;
+                bid.BidStatus = ShippingRequestBidStatus.Cancled;
                 bid.CloseBidDate = Clock.Now;
             }
         }
@@ -119,7 +119,7 @@ namespace TACHYON.Shipping.ShippingRequestBids
             {
                 ShippingRequest item = await _shippingRequestsRepository.GetAsync(input.ShippingRequestId);
 
-                if (item.ShippingRequestBidStatusId != TACHYONConsts.ShippingRequestStatusOnGoing)
+                if (item.BidStatus != ShippingRequestBidStatus.OnGoing)
                 {
                     ThrowShippingRequestIsNotOngoingError();
                 }
@@ -152,7 +152,7 @@ namespace TACHYON.Shipping.ShippingRequestBids
                     throw new UserFriendlyException(L("Bid Is not exist message"));
                 }
 
-                if (bid.ShippingRequestFk.ShippingRequestBidStatusId != TACHYONConsts.ShippingRequestStatusOnGoing)
+                if (bid.ShippingRequestFk.BidStatus != ShippingRequestBidStatus.OnGoing)
                 {
                     ThrowShippingRequestIsNotOngoingError();
                 }
@@ -224,7 +224,7 @@ namespace TACHYON.Shipping.ShippingRequestBids
                 }
 
                 //Check if Shipping Request is not ongoing -- add cancel reason
-                if (bid.ShippingRequestFk.ShippingRequestBidStatusId != TACHYONConsts.ShippingRequestStatusOnGoing)
+                if (bid.ShippingRequestFk.BidStatus != ShippingRequestBidStatus.OnGoing)
                 {
                     if (bid.CancledReason.IsNullOrWhiteSpace())
                     {
@@ -254,7 +254,7 @@ namespace TACHYON.Shipping.ShippingRequestBids
             using (CurrentUnitOfWork.DisableFilter(AbpDataFilters.MustHaveTenant, AbpDataFilters.MayHaveTenant))
             {
                 IQueryable<ShippingRequest> filterBidShippingRequests = _shippingRequestsRepository.GetAll()
-                    .Include(x => x.ShippingRequestBidStatusFK)
+                    //.Include(x => x.ShippingRequestBidStatusFK)
                     .Include(x => x.TrucksTypeFk)
                     .Include(x => x.GoodCategoryFk)
                     .Include(x => x.GoodCategoryFk)
@@ -267,7 +267,7 @@ namespace TACHYON.Shipping.ShippingRequestBids
                     .Include(x => x.RouteFk.DestinationCityFk)
                     .Include(x => x.Tenant)
                     .Where(x => x.IsBid)
-                    .Where(x=>x.ShippingRequestBidStatusId!=TACHYONConsts.ShippingRequestStatusStandBy)
+                    .Where(x=>x.BidStatus!= ShippingRequestBidStatus.StandBy)
                     .WhereIf(input.TruckTypeId != null, x => x.TrucksTypeId == input.TruckTypeId)
                     .WhereIf(input.TransportType != null, x => x.TransportTypeId != null && x.TransportTypeId == input.TransportType)
                     .WhereIf(input.IsMyAssignedBidsOnly!=null && input.IsMyAssignedBidsOnly==true, x=>x.ShippingRequestBids.Any(y=>y.IsAccepted== true))
@@ -303,7 +303,7 @@ namespace TACHYON.Shipping.ShippingRequestBids
                     {
                         ShippingRequestId = o.Id,
                         BidStartDate = o.BidStartDate,
-                        ShippingRequestBidStatusName = o.ShippingRequestBidStatusFK.DisplayName,
+                        ShippingRequestBidStatusName =Enum.GetName(typeof(ShippingRequestBidStatus),o.BidStatus),
                         ShipperName = o.Tenant.Name,
                         TruckTypeDisplayName = o.TrucksTypeFk.DisplayName,
                         GoodCategoryName = o.GoodCategoryFk.DisplayName,

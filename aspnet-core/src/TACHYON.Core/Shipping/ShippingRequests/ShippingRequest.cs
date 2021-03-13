@@ -163,11 +163,12 @@ namespace TACHYON.Shipping.ShippingRequests
         #region Bids Data
         public DateTime? BidStartDate { get; set; }
         public DateTime? BidEndDate { get; set; }
+        public ShippingRequestBidStatus BidStatus { get; set; }
 
-        public int? ShippingRequestBidStatusId { get; set; }
+        //public int? ShippingRequestBidStatusId { get; set; }
 
-        [ForeignKey("ShippingRequestBidStatusId")]
-        public ShippingRequestBidStatus ShippingRequestBidStatusFK { get; set; }
+        //[ForeignKey("ShippingRequestBidStatusId")]
+        //public ShippingRequestBidStatus ShippingRequestBidStatusFK { get; set; }
         public DateTime? CloseBidDate { get; set; }
 
         public ICollection<ShippingRequestBid> ShippingRequestBids { get; set; }
@@ -187,13 +188,13 @@ namespace TACHYON.Shipping.ShippingRequests
         }
         public void Close()
         {
-            ShippingRequestBidStatusId = TACHYONConsts.ShippingRequestStatusClosed;
+            BidStatus = ShippingRequestBidStatus.Closed;
             CloseBidDate = Clock.Now;
         }
 
         public void Start()
         {
-            ShippingRequestBidStatusId = TACHYONConsts.ShippingRequestStatusOnGoing;
+            BidStatus = ShippingRequestBidStatus.OnGoing;
             BidStartDate = Clock.Now;
         }
     }

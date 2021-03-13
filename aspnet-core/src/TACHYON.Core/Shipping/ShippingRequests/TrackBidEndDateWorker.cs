@@ -51,7 +51,7 @@ namespace TACHYON.Shipping.ShippingRequests
                 var expiresBids = _shippingRequestRepository.GetAll()
                     .Where(u=>u.IsBid==true)
                     .Where(u => u.BidEndDate != null)
-                    .Where(u => u.ShippingRequestBidStatusId == TACHYONConsts.ShippingRequestStatusOnGoing)
+                    .Where(u => u.BidStatus == ShippingRequestBidStatus.OnGoing)
                     .Where(u => u.BidEndDate.Value.Date <= Clock.Now.Date)
                     .ToList();
 
@@ -69,13 +69,13 @@ namespace TACHYON.Shipping.ShippingRequests
                 var onGoingBids = _shippingRequestRepository.GetAll()
                         .Where(x=>x.IsBid==true)
                         .Where(x => x.BidStartDate != null)
-                        .Where(x => x.ShippingRequestBidStatusId == TACHYONConsts.ShippingRequestStatusStandBy)
+                        .Where(x => x.BidStatus == ShippingRequestBidStatus.StandBy)
                         .Where(x => x.BidStartDate.Value.Date == Clock.Now.Date)
                         .ToList();
 
                 foreach (var item in onGoingBids)
                 {
-                    item.ShippingRequestBidStatusId = TACHYONConsts.ShippingRequestStatusOnGoing;
+                    item.BidStatus = ShippingRequestBidStatus.OnGoing;
                     //var users = Task.Run<UserIdentifier[]>(async () => await _bidDomainService.GetCarriersByTruckTypeArrayAsync(item.TrucksTypeId)).Result;
                     var users = AsyncHelper.RunSync(() => _bidDomainService.GetCarriersByTruckTypeArrayAsync(item.TrucksTypeId));
                      // to carrier

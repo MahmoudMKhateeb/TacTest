@@ -634,7 +634,7 @@ namespace TACHYON.Shipping.ShippingRequests
                         shippingRequest.BidStartDate = Clock.Now.Date;
                     }
 
-                    shippingRequest.ShippingRequestBidStatusId = shippingRequest.BidStartDate.Value.Date == Clock.Now.Date ? TACHYONConsts.ShippingRequestStatusOnGoing : TACHYONConsts.ShippingRequestStatusStandBy;
+                    shippingRequest.BidStatus = shippingRequest.BidStartDate.Value.Date == Clock.Now.Date ? ShippingRequestBidStatus.OnGoing : ShippingRequestBidStatus.StandBy;
                 }
             }
 
@@ -645,7 +645,7 @@ namespace TACHYON.Shipping.ShippingRequests
             if (shippingRequest.IsBid)
             {
                 //Notify Carrier with the same Truck type
-                if (shippingRequest.ShippingRequestBidStatusId == TACHYONConsts.ShippingRequestStatusOnGoing)
+                if (shippingRequest.BidStatus == ShippingRequestBidStatus.OnGoing)
                 {
                     UserIdentifier[] users = await _bidDomainService.GetCarriersByTruckTypeArrayAsync(shippingRequest.TrucksTypeId);
                     await _appNotifier.ShippingRequestAsBidWithSameTruckAsync(users, shippingRequest.Id);

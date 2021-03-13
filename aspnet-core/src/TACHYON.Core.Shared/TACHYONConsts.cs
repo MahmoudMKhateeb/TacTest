@@ -17,13 +17,13 @@
         public const string AbpApiClientUserAgent = "AbpApiClient";
 
         //BidStatus consts
-        public const int ShippingRequestStatusStandBy = 1;
+        //public const int ShippingRequestStatusStandBy = 1;
 
-        public const int ShippingRequestStatusOnGoing = 2;
+        //public const int ShippingRequestStatusOnGoing = 2;
 
-        public const int ShippingRequestStatusClosed = 3;
+        //public const int ShippingRequestStatusClosed = 3;
 
-        public const int ShippingRequestStatusCanceled = 4;
+        //public const int ShippingRequestStatusCanceled = 4;
 
         //Route Type consts
         public const int SingleDropRoutType = 1;
