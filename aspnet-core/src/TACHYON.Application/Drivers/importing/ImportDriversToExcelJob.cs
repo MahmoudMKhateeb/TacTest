@@ -178,7 +178,11 @@ namespace TACHYON.Drivers.importing
             //user name
             driver.UserName = driver.PhoneNumber;
             //email address
-            driver.EmailAddress = driver.PhoneNumber + "@" + tenancyName + ".com";
+            if (input.EmailAddress.IsNullOrEmpty())
+            {
+                driver.EmailAddress = driver.PhoneNumber + "@" + tenancyName + ".com";
+
+            }
             //is driver
             driver.IsDriver = true;
 
