@@ -329,7 +329,8 @@ namespace TACHYON.MultiTenancy
                 .Select(country => new TenantCountryLookupTableDto
                 {
                     Id = country.Id,
-                    DisplayName = country == null || country.DisplayName == null ? "" : country.DisplayName.ToString()
+                    DisplayName = country == null || country.DisplayName == null ? "" : country.DisplayName.ToString(),
+                    Code=country.Code
                 }).ToListAsync();
         }
 
