@@ -296,7 +296,7 @@ namespace TACHYON.Shipping.ShippingRequests
             shippingRequest.IsPriceAccepted = input.IsPriceAccepted;
             if (shippingRequest.IsPriceAccepted.Value)
             {
-                shippingRequest.Status = ShippingRequestStatus.StandBy;
+                shippingRequest.Status = ShippingRequestStatus.PrePrice;
             }
 
             await _appNotifier.AcceptShippingRequestPrice(input.Id, input.IsPriceAccepted);
@@ -324,6 +324,15 @@ namespace TACHYON.Shipping.ShippingRequests
         public async Task Delete(EntityDto<long> input)
         {
             await _shippingRequestRepository.DeleteAsync(input.Id);
+        }
+      public  async Task<int> NoOfPricedWihtoutTrips()
+        {
+            using (CurrentUnitOfWork.DisableFilter(AbpDataFilters.MustHaveTenant))
+            {
+                int Totals = await _shippingRequestRepository.GetAll().Where(x => x.Status == ShippingRequestStatus.PostPrice && x.ShippingRequestTrips.Count == 0).CountAsync();
+                return Totals;
+            }
+
         }
 
         //g-#409
@@ -440,6 +449,7 @@ namespace TACHYON.Shipping.ShippingRequests
                     .WhereIf(!string.IsNullOrWhiteSpace(input.Filter), e => false)
                     .WhereIf(input.IsTachyonDeal.HasValue, e => e.IsTachyonDeal == input.IsTachyonDeal.Value)
                     .WhereIf(input.IsBid.HasValue, e => e.IsBid == input.IsBid.Value)
+                    .WhereIf(input.Status.HasValue, e => e.Status == input.Status.Value)
                     //get only this shipper shippingRequest when isTachyonDeal is false
                     .WhereIf(!input.IsTachyonDealer.Value,
                         e => e.TenantId == AbpSession.TenantId);

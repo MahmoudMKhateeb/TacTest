@@ -1,12 +1,6 @@
 ﻿using Abp.Application.Services;
 using Abp.Application.Services.Dto;
-using System;
-using System.Collections.Generic;
-using System.Collections.Generic;
-using System.Collections.Generic;
-using System.Collections.Generic;
 using System.Threading.Tasks;
-using TACHYON.Dto;
 using TACHYON.Shipping.ShippingRequests.Dtos;
 
 
@@ -24,6 +18,7 @@ namespace TACHYON.Shipping.ShippingRequests
 
         Task Delete(EntityDto<long> input);
 
+        Task<int> NoOfPricedWihtoutTrips();
         //Task<FileDto> GetShippingRequestsToExcel(GetAllShippingRequestsForExcelInput input);
 
     }

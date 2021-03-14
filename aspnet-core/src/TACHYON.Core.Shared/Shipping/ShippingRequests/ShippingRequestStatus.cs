@@ -6,8 +6,11 @@ namespace TACHYON.Shipping.ShippingRequests
 {
     public enum ShippingRequestStatus : byte
     {
-        StandBy = 1,
-        Started = 2,
-        Finished= 3
+        PrePrice=1,
+        PostPrice=2,
+        Started=3 ,//The driver start working on trips
+        Rejected=4,
+        Cancled=5,
+        Finished=6
     }
 }
