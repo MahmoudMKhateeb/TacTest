@@ -1,4 +1,4 @@
-import { Component, ViewChild, Injector, Output, EventEmitter, NgZone, ElementRef, OnInit, Input, OnChanges, SimpleChanges } from '@angular/core';
+import { Component, ViewChild, Injector, Output, EventEmitter, OnInit, Input, OnChanges, SimpleChanges } from '@angular/core';
 import { finalize } from 'rxjs/operators';
 import { AppComponentBase } from '@shared/common/app-component-base';
 import { ModalDirective } from 'ngx-bootstrap/modal';
@@ -10,6 +10,7 @@ import {
   GoodsDetailDto,
   GoodsDetailGoodCategoryLookupTableDto,
   GoodsDetailsServiceProxy,
+  PickingType,
   RoutesServiceProxy,
   RoutStepCityLookupTableDto,
   RoutStepsServiceProxy,
@@ -30,17 +31,14 @@ export class RouteStepsForCreateShippingRequstComponent extends AppComponentBase
     private _goodsDetailsServiceProxy: GoodsDetailsServiceProxy,
     private _routesServiceProxy: RoutesServiceProxy,
     private _facilitiesServiceProxy: FacilitiesServiceProxy,
-    private mapsAPILoader: MapsAPILoader,
-    private ngZone: NgZone,
     private _routStepsServiceProxy: RoutStepsServiceProxy,
     private _shippingRequestsServiceProxy: ShippingRequestsServiceProxy
   ) {
     super(injector);
   }
-  @ViewChild('createFacilityModal') public createFacilityModal: ModalDirective;
+  @ViewChild('createOrEditFacilityModal') public createOrEditFacilityModal: ModalDirective;
   @ViewChild('createRouteStepModal') public createRouteStepModal: ModalDirective;
-  @ViewChild('createOrEditGoodDetail') public createOrEditGoodDetail: ModalDirective;
-  @ViewChild('search') public searchElementRef: ElementRef;
+  @ViewChild('createOrEditGoodDetail', { static: false }) public createOrEditGoodDetail: ModalDirective;
   @Input() MainGoodsCategory: number;
   @Input() RouteType: number;
   @Input() NumberOfDrops: number;
@@ -51,21 +49,14 @@ export class RouteStepsForCreateShippingRequstComponent extends AppComponentBase
   singleWayPoint: CreateOrEditRoutPointDto = new CreateOrEditRoutPointDto();
   goodsDetail: GoodsDetailDto = new GoodsDetailDto();
 
-  facility: CreateOrEditFacilityDto = new CreateOrEditFacilityDto();
   allFacilities: FacilityForDropdownDto[];
 
-  private geoCoder;
   active = false;
   saving = false;
   allCitys: RoutStepCityLookupTableDto[];
   facilityLoading = false;
   editRouteId: number = undefined;
-  Address: string;
-  State: string;
-  Postal: string;
-  City: string;
-  Country: string;
-  selectedCountryCode = 'SA';
+
   routeStepIdForEdit: number = undefined;
   zoom: Number = 13; //map zoom
   //this dir is for Single Route Step Map Route Draw
@@ -129,31 +120,28 @@ export class RouteStepsForCreateShippingRequstComponent extends AppComponentBase
   }
   //to Select PickUp Point
   showPickUpModal() {
-    if (!this.MainGoodsCategory) {
-      return Swal.fire(this.l('Warning'), this.l('pleaseSelectMainGoodCategoryFirst'), 'warning');
-    }
-    if (!this.RouteType) {
-      return Swal.fire(this.l('Warning'), this.l('pleaseSelectaRouteTypeFirst'), 'warning');
-    }
+    // if (!this.MainGoodsCategory) {
+    //   return Swal.fire(this.l('Warning'), this.l('pleaseSelectMainGoodCategoryFirst'), 'warning');
+    // }
+    // if (!this.RouteType) {
+    //   return Swal.fire(this.l('Warning'), this.l('pleaseSelectaRouteTypeFirst'), 'warning');
+    // }
     this.singleWayPoint = new CreateOrEditRoutPointDto();
-    this.singleWayPoint.pickingTypeId = 1;
+    this.singleWayPoint.pickingType = PickingType.Pickup;
     this.createRouteStepModal.show();
   }
   //to Select DropDown point
   showDropPointUpModal() {
     this.singleWayPoint = new CreateOrEditRoutPointDto();
-    this.singleWayPoint.pickingTypeId = 2;
+    this.singleWayPoint.pickingType = PickingType.Dropoff;
     this.createRouteStepModal.show();
   }
 
   openCreateFacilityModal() {
     this.active = true;
     //load Places Autocomplete
-    this.loadMapApi();
-    this.facility.latitude = 24.67911662122269;
-    this.facility.longitude = 46.6355543345471;
-    this.zoom = 14;
-    this.createFacilityModal.show();
+    // this.zoom = 14;
+    this.createOrEditFacilityModal.show();
   }
 
   EditRouteStep(id) {
@@ -201,85 +189,6 @@ export class RouteStepsForCreateShippingRequstComponent extends AppComponentBase
     this.SelectedWayPointsFromChild.emit(this.wayPointsList);
     this.wayPointsSetter();
     this.singleWayPoint = new CreateOrEditRoutPointDto();
-    this.createFacilityModal?.hide();
-  }
-  loadMapApi() {
-    this.mapsAPILoader.load().then(() => {
-      this.geoCoder = new google.maps.Geocoder();
-
-      let autocomplete = new google.maps.places.Autocomplete(this.searchElementRef.nativeElement, {
-        componentRestrictions: {
-          country: this.selectedCountryCode,
-        },
-      });
-      autocomplete.addListener('place_changed', () => {
-        this.ngZone.run(() => {
-          //get the place result
-          let place: google.maps.places.PlaceResult = autocomplete.getPlace();
-
-          //verify result
-          if (place.geometry === undefined || place.geometry === null) {
-            return;
-          }
-
-          //set latitude, longitude and zoom
-          this.facility.latitude = place.geometry.location.lat();
-          this.facility.longitude = place.geometry.location.lng();
-          this.getAddress(place.geometry.location.lat(), place.geometry.location.lng());
-          this.zoom = 12;
-        });
-      });
-    });
-  }
-  mapClicked($event: MouseEvent) {
-    this.Address = undefined;
-    this.City = undefined;
-    this.State = undefined;
-    this.Country = undefined;
-    // @ts-ignore
-    this.facility.latitude = $event.coords.lat;
-    // @ts-ignore
-    this.facility.longitude = $event.coords.lng;
-    // @ts-ignore
-    this.getAddress($event.coords.lat, $event.coords.lng);
-  }
-  getAddress(latitude, longitude) {
-    this.geoCoder.geocode({ location: { lat: latitude, lng: longitude } }, (results, status) => {
-      if (status === 'OK') {
-        if (results[0]) {
-          this.zoom = 14;
-          let Spleted = results[0].formatted_address.split(',');
-          console.log('Address Should Be Changed By Now');
-          this.addressFormater(Spleted);
-        } else {
-          window.alert('No results found');
-        }
-      } else {
-        window.alert('Geocoder failed due to: ' + status);
-      }
-    });
-  }
-  addressFormater(Spleted) {
-    switch (Spleted.length) {
-      case 4:
-        this.Address = Spleted[0];
-        this.State = Spleted[1];
-        this.City = Spleted[2];
-        this.Country = Spleted[3];
-        break;
-      case 5:
-        this.Address = Spleted[0] + ' ' + Spleted[1];
-        this.State = Spleted[2];
-        this.City = Spleted[3];
-        this.Country = Spleted[4];
-        break;
-      default:
-        this.Address = undefined;
-        this.State = undefined;
-        this.City = undefined;
-        this.Country = undefined;
-        break;
-    }
   }
   refreshFacilities() {
     this.facilityLoading = true;
@@ -287,24 +196,6 @@ export class RouteStepsForCreateShippingRequstComponent extends AppComponentBase
       this.allFacilities = result;
       this.facilityLoading = false;
     });
-  }
-  createFacility() {
-    this.saving = true;
-    this.facility.address = this.Address;
-    //to be Changed later cause it takes an id not a string for the city
-    this.facility.cityId = 3;
-    this._facilitiesServiceProxy
-      .createOrEdit(this.facility)
-      .pipe(
-        finalize(() => {
-          this.saving = false;
-        })
-      )
-      .subscribe(() => {
-        this.notify.info(this.l('SavedSuccessfully'));
-        this.createFacilityModal.hide();
-        this.refreshFacilities();
-      });
   }
   getFacilityNameByid(id: number) {
     return this.allFacilities?.find((x) => x.id == id)?.displayName;

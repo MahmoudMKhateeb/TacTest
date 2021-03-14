@@ -5,13 +5,13 @@
         {{ l('waypoints') }}
       </h3>
       <div class="card-toolbar">
-        <button [disabled]="wayPointsList.length == 0" type="button" class="btn btn-primary blue" (click)="showDropPointUpModal()">
+        <button type="button" class="btn btn-primary blue" (click)="showDropPointUpModal()">
           <i class="fa fa-plus"></i>
-          {{l("AddNewDropPoint")}}
+          {{l("AddDrop")}}
         </button>
-        <button [disabled]="wayPointsList.length > 0" type="button" class="btn btn-primary blue" (click)="showPickUpModal()">
+        <button type="button" class="btn btn-primary blue" (click)="showPickUpModal()">
           <i class="fa fa-plus"></i>
-          {{l("AddNewPickUpPoint")}}
+          {{l("addSource")}}
         </button>
       </div>
     </div>
@@ -65,15 +65,15 @@
                     <tr>
                       <td style="width: 130px;">
                         <div class="btn-group dropdown" container="body" dropdown>
-                          <button class="dropdown-toggle btn btn-sm btn-primary" dropdownToggle>
+                          <a class="dropdown-toggle btn btn-sm btn-primary" dropdownToggle>
                             <i class="fa fa-cog"></i><span class="caret"></span> {{ l('Actions') }}
-                          </button>
+                          </a>
                           <ul *dropdownMenu class="dropdown-menu">
                             <li>
                               <a class="dropdown-item" (click)="AddRouteStep(i)">{{ l('Edit') }}</a>
                             </li>
-                            <li *ngIf="record.pickingTypeId != 1">
-                              <a class="dropdown-item" (click)="delete(i)">{{ l('Delete') }}</a>
+                            <li>
+                              <a class="dropdown-item" (click)="delete(i)" *ngIf="record.pickingType != 1">{{ l('Delete') }}</a>
                             </li>
                           </ul>
                         </div>
@@ -84,10 +84,10 @@
                       </td>
 
                       <td style="width: 150px;">
-                        <span *ngIf="record.pickingTypeId == 1" class="label label-success label-dot mr-2"></span>
-                        <span *ngIf="record.pickingTypeId == 1" class="font-weight-bold text-success">{{ l('pickup')}}</span>
-                        <span *ngIf="record.pickingTypeId != 1" class="label label-danger label-dot mr-2"></span>
-                        <span *ngIf="record.pickingTypeId != 1" class="font-weight-bold text-danger">{{ l('drop')}}</span>
+                        <span *ngIf="record.pickingType == 1" class="label label-success label-dot mr-2"></span>
+                        <span *ngIf="record.pickingType == 1" class="font-weight-bold text-success">{{ l('pickup')}}</span>
+                        <span *ngIf="record.pickingType != 1" class="label label-danger label-dot mr-2"></span>
+                        <span *ngIf="record.pickingType != 1" class="font-weight-bold text-danger">{{ l('drop')}}</span>
                       </td>
                     </tr>
                   </ng-template>
@@ -111,7 +111,6 @@
     bsModal
     #createRouteStepModal="bs-modal"
     [config]="{ backdrop: 'static' }"
-    tabindex="-1"
     role="dialog"
     aria-labelledby="dialog-static-name"
   >
@@ -135,14 +134,14 @@
           <div class="row p-0 mt-4">
             <div class="col-lg-12 row">
               <div class="form-group col-lg-12">
-                <label>{{ l('address') }}</label>
+                <label>{{ l('facility') }}</label>
                 <div
                   [ngClass]="{'spinner spinner-success spinner-right mr-1 ml-1': facilityLoading
                             }"
                 >
                   <div class="input-group">
                     <select
-                      name="Facility1"
+                      name="facility"
                       class="form-control"
                       [(ngModel)]="singleWayPoint.facilityId"
                       [disabled]="facilityLoading"
@@ -151,15 +150,17 @@
                       <option value="">{{ l('selectaFacility') }}</option>
                       <option *ngFor="let item of allFacilities" value="{{ item.id }}">{{ item.displayName }}</option>
                     </select>
-                    <div class="input-group-append">
-                      <button class="btn btn-primary" type="button" (click)="openCreateFacilityModal()">+</button>
+                    <div class="input-group-btn">
+                      <button class="btn btn-primary" [disabled]="facilityLoading" (click)="openCreateFacilityModal()">
+                        <i class="flaticon-plus"></i>{{ l('AddNew') }}
+                      </button>
                     </div>
                   </div>
                 </div>
               </div>
 
               <!--    StartOF::GoodDetailsSection       -->
-              <div *ngIf="singleWayPoint.pickingTypeId == 2">
+              <div *ngIf="this.singleWayPoint.pickingType != 1">
                 <div class="card card-custom gutter-b">
                   <div class="card-header">
                     <h3 class="card-title">
@@ -242,7 +243,6 @@
                   </div>
                 </div>
               </div>
-
               <!--     Endof::GoodDetailsSection           -->
             </div>
           </div>
@@ -263,127 +263,7 @@
     </div>
   </div>
   <!--end::Create::RouteStepModal-->
-  <!--begin::FacilityModal-->
-  <div
-    class="modal fade"
-    bsModal
-    #createFacilityModal="bs-modal"
-    [config]="{ backdrop: 'static' }"
-    tabindex="-1"
-    role="dialog"
-    aria-labelledby="dialog-static-name"
-  >
-    <div class="modal-dialog modal-xl">
-      <div class="modal-content">
-        <form #createFacilityForm="ngForm" novalidate (ngSubmit)="createFacility()" autocomplete="off">
-          <div class="modal-header">
-            <h4 class="modal-title">
-              <!--                <span *ngIf="routStep.id">{{l("EditRoutStep")}}</span>-->
-              <!--                <span *ngIf="!routStep.id">{{l("CreateNewRoutStep")}}</span>-->
-              {{ l('CreateFacilityModal') }}
-            </h4>
-            <button type="button" class="close" (click)="openCreateFacilityModal()" aria-label="Close" [disabled]="saving">
-              <span aria-hidden="true">&times;</span>
-            </button>
-          </div>
 
-          <div class="modal-body">
-            <div class="row">
-              <div class="form-group col-md-12">
-                <label for="Facility_Name">{{ l('facilityName') }} *</label>
-                <input
-                  type="text"
-                  id="Facility_Name"
-                  class="form-control"
-                  [(ngModel)]="facility.name"
-                  name="Name"
-                  minlength="0"
-                  maxlength="256"
-                  required
-                />
-              </div>
-
-              <div class="form-group col-md-2">
-                <label>{{ l('selectaCountry') }}</label>
-                <select name="selectaCountry" [(ngModel)]="selectedCountryCode" class="form-control" (change)="loadMapApi()">
-                  <option value="">{{ l('SelectACounty') }}</option>
-                  <option ngValue="SA">Saudi Arabia</option>
-                  <option ngValue="EG">Egypt</option>
-                  <option ngValue="FR">France</option>
-                </select>
-              </div>
-              <div class="form-group col-md-10">
-                <label>{{ l('searchForLocation') }}</label>
-                <input
-                  type="text"
-                  class="form-control"
-                  (keydown.enter)="$event.preventDefault()"
-                  placeholder="Search Nearest Location"
-                  autocorrect="off"
-                  autocapitalize="off"
-                  [disabled]="!selectedCountryCode"
-                  name="searchForAddress"
-                  spellcheck="off"
-                  type="text"
-                  #search
-                />
-              </div>
-              <!-- CreateNewFacilityMap -->
-              <div class="form-group col-md-12">
-                <agm-map [latitude]="facility.latitude" [longitude]="facility.longitude" [zoom]="zoom" (mapClick)="mapClicked($event)">
-                  <agm-marker
-                    [latitude]="facility.latitude"
-                    [longitude]="facility.longitude"
-                    [markerDraggable]="true"
-                    (dragEnd)="mapClicked($event)"
-                  ></agm-marker>
-                </agm-map>
-              </div>
-              <div class="form-group col-md-6">
-                <label>{{ l('Address') }}</label>
-                <input type="text" class="form-control" [(ngModel)]="facility.address" name="Address" />
-              </div>
-              <div class="form-group col-md-6">
-                <label>{{ l('State') }}</label>
-                <input type="text" class="form-control" name="State" />
-              </div>
-              <div class="form-group col-md-6">
-                <label>{{ l('City') }}</label>
-                <input type="text" class="form-control" name="City" />
-              </div>
-
-              <div class="form-group col-md-6">
-                <label>{{ l('Country') }}</label>
-                <input type="text" class="form-control" name="Country" />
-              </div>
-              <div class="form-group col-md-6">
-                <label for="Facility_Longitude">{{ l('Longitude') }}</label>
-                <input type="number" id="Facility_Longitude" class="form-control" [(ngModel)]="facility.longitude" name="Longitude" />
-              </div>
-
-              <div class="form-group col-md-6">
-                <label for="Facility_Latitude">{{ l('Latitude') }}</label>
-                <input type="number" id="Facility_Latitude" class="form-control" [(ngModel)]="facility.latitude" name="Latitude" />
-              </div>
-            </div>
-          </div>
-          <div class="modal-footer">
-            <button [disabled]="saving" type="button" class="btn btn-default" (click)="createFacilityModal.hide()">{{ l('Cancel') }}</button>
-            <button
-              type="submit"
-              class="btn btn-primary blue"
-              [disabled]="!createFacilityForm.form.valid"
-              [buttonBusy]="saving"
-              [busyText]="l('SavingWithThreeDot')"
-            >
-              <i class="fa fa-save"></i> <span>{{ l('Save') }}</span>
-            </button>
-          </div>
-        </form>
-      </div>
-    </div>
-  </div>
-  <!--end::FacilityModal-->
   <!-- begin::CreateNewGoodModal   -->
   <div
     #createOrEditGoodDetail="bs-modal"
@@ -579,3 +459,7 @@
   </div>
   <!-- End::CreateNewGoodModal   -->
 </div>
+
+<!--begin::CreateOrEditFacilityModal -->
+<createOrEditFacilityModal #createOrEditFacilityModal (modalSave)="refreshFacilities()"></createOrEditFacilityModal>
+<!-- End::CreateOrEditFacilityModal -->
