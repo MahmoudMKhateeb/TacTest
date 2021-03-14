@@ -13,6 +13,11 @@
     <div [class]="containerClass">
       <div class="card card-custom gutter-b">
         <div class="card-body">
+          <div class="alert alert-custom alert-light-danger" role="alert">
+            <div class="alert-icon"><i class="flaticon-warning"></i></div>
+            <div class="alert-text">You Have Incomplete Shipping Requests Show Them By Clicking <a class="mx-1">here</a>.</div>
+          </div>
+
           <form autocomplete="off" class="form">
             <div>
               <div class="row align-items-center">
@@ -188,7 +193,7 @@
 
                     <td style="width: 150px;">
                       <span class="ui-column-title"> {{ l('shippingRequestType') }}</span>
-                      {{ record.shippingRequest.isBid ? l('Bidding') : l('tachyonDeal') }}
+                      {{ record.shippingRequest.isBid ? l('Marketplace') : l('TachyonManageService') }}
                     </td>
                     <td style="width: 150px;">
                       <span class="ui-column-title"> {{ l('routType') }}</span>

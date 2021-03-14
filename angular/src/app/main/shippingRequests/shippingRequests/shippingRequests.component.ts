@@ -10,6 +10,8 @@ import { Paginator } from 'primeng/paginator';
 import { LazyLoadEvent } from 'primeng/public_api';
 import { FileDownloadService } from '@shared/utils/file-download.service';
 import { AppSessionService } from '@shared/common/session/app-session.service';
+import { CreateOrEditFacilityModalComponent } from '@app/main/addressBook/facilities/create-or-edit-facility-modal.component';
+import { AddNewTripComponent } from '@app/main/shippingRequests/shippingRequests/ShippingRequestTrips/AddNewTripModal/AddNewTrip.component';
 
 @Component({
   templateUrl: './shippingRequests.component.html',
@@ -63,6 +65,8 @@ export class ShippingRequestsComponent extends AppComponentBase {
         this.isBid,
         this.isTachyonDeal,
         undefined,
+        undefined,
+        true,
         this.primengTableHelper.getSorting(this.dataTable),
         this.primengTableHelper.getSkipCount(this.paginator, event),
         this.primengTableHelper.getMaxResultCount(this.paginator, event)

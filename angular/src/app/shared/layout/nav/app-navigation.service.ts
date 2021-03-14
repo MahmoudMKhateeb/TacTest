@@ -50,7 +50,7 @@ export class AppNavigationService {
       //   '',
       //   [],
       //   [
-      //     new AppMenuItem('Facilities', 'Pages.Facilities', 'flaticon-more', '/app/main/addressBook/facilities'),
+      new AppMenuItem('Facilities', 'Pages.Facilities', 'flaticon-more', '/app/main/addressBook/facilities'),
       //     new AppMenuItem('RoutTypes', 'Pages.RoutTypes', 'flaticon-more', '/app/main/routTypes/routTypes'),
       //     new AppMenuItem('Counties', 'Pages.Counties', 'flaticon-more', '/app/main/countries/counties'),
       //     new AppMenuItem('Cities', 'Pages.Cities', 'flaticon-more', '/app/main/cities/cities'),
@@ -65,7 +65,10 @@ export class AppNavigationService {
         'flaticon-interface-8',
         '',
         [],
-        [new AppMenuItem('Marketplace', '', 'flaticon-more', '/app/main/marketPlace/marketPlace')],
+        [
+          new AppMenuItem('Marketplace', '', 'flaticon-more', '/app/main/marketPlace/marketPlace'),
+          new AppMenuItem('Shipping Requests', '', 'flaticon-more', '/app/main/marketPlace/shippingRequests'),
+        ],
         undefined,
         undefined,
         () => this._featureCheckerService.isEnabled('App.Carrier')
