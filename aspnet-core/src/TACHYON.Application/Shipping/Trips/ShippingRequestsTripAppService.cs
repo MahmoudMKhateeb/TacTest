@@ -10,7 +10,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Dynamic.Core;
 using System.Threading.Tasks;
+using TACHYON.AddressBook;
 using TACHYON.Authorization;
+using TACHYON.Authorization.Users;
 using TACHYON.Features;
 using TACHYON.Goods.GoodsDetails;
 using TACHYON.Routs.RoutPoints;
@@ -18,6 +20,7 @@ using TACHYON.Shipping.ShippingRequests;
 using TACHYON.Shipping.ShippingRequestTrips;
 using TACHYON.Shipping.Trips.Dto;
 using TACHYON.ShippingRequestTripVases;
+using TACHYON.Trucks;
 
 namespace TACHYON.Shipping.Trips
 {
@@ -29,7 +32,6 @@ namespace TACHYON.Shipping.Trips
         private readonly IRepository<RoutPoint, long> _RoutPointRepository;
         private readonly IRepository<ShippingRequestTripVas, long> _ShippingRequestTripVasRepository;
         private readonly IRepository<GoodsDetail,long> _GoodsDetailRepository;
-        
         public ShippingRequestsTripAppService(
             IRepository<ShippingRequestTrip> ShippingRequestTripRepository,
             IRepository<ShippingRequest, long> ShippingRequestRepository,
@@ -42,6 +44,7 @@ namespace TACHYON.Shipping.Trips
             _RoutPointRepository = RoutPointRepository;
             _ShippingRequestTripVasRepository = ShippingRequestTripVasRepository;
             _GoodsDetailRepository = GoodsDetailRepository;
+
         }
 
         public async Task<PagedResultDto<ShippingRequestsTripListDto>> GetAll(ShippingRequestTripFilterInput Input)
@@ -53,11 +56,12 @@ namespace TACHYON.Shipping.Trips
                 .Include(x=>x.OriginFacilityFk)
                 .Include(x=>x.DestinationFacilityFk)    
                 .Include(x => x.AssignedTruckFk)
-                .Include(x => x.RoutPoints)
-                   .ThenInclude(r => r.FacilityFk)
-                .Include(x => x.RoutPoints)
-                   .ThenInclude(r => r.GoodsDetails)
-                .Include(x => x.ShippingRequestTripVases)
+                .Include(x=>x.AssignedDriverUserFk)
+                //.Include(x => x.RoutPoints)
+                //   .ThenInclude(r => r.FacilityFk)
+                //.Include(x => x.RoutPoints)
+                //   .ThenInclude(r => r.GoodsDetails)
+                //.Include(x => x.ShippingRequestTripVases)
                 .Where(x => x.ShippingRequestId == request.Id)
     .WhereIf(Input.Status.HasValue, e => e.Status == Input.Status)
     .OrderBy(Input.Sorting ?? "Status asc")
@@ -210,6 +214,7 @@ namespace TACHYON.Shipping.Trips
                 .Include(x=>x.OriginFacilityFk)
                 .Include(x => x.DestinationFacilityFk)
                 .Include(x => x.AssignedTruckFk)
+                .Include(x => x.AssignedDriverUserFk)
                 .Include(x => x.RoutPoints)
                    .ThenInclude(r => r.FacilityFk)
                 .Include(x => x.RoutPoints)

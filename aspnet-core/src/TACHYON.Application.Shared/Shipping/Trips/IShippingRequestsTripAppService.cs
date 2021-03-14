@@ -12,6 +12,7 @@ namespace TACHYON.Shipping.Trips
     {
 
         Task<PagedResultDto<ShippingRequestsTripListDto>>  GetAll(ShippingRequestTripFilterInput Input);
+
         Task<ShippingRequestsTripForViewDto> GetShippingRequestTripForView(int id);
 
         Task CreateOrEdit(CreateOrEditShippingRequestTripDto input);
