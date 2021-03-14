@@ -106,7 +106,7 @@ namespace TACHYON.Shipping.Trips
 
             }
 
-            int requestNumberOfDrops = request.RouteFk.RoutTypeFk.Id==1? 1: request.NumberOfDrops;
+            int requestNumberOfDrops = request.RouteFk.RoutTypeId==1 ? 1: request.NumberOfDrops;
 
             if (input.RoutPoints.Count(x => x.PickingType == PickingType.Dropoff) != requestNumberOfDrops)
             {
@@ -252,7 +252,7 @@ namespace TACHYON.Shipping.Trips
         private async Task<ShippingRequest> GetShippingRequest(long ShippingRequestId)
         {
 
-            var request = await _ShippingRequestRepository
+            var request = await _ShippingRequestRepository.GetAll().Include(x=>x.RouteFk)
                 .FirstOrDefaultAsync(x => x.Id == ShippingRequestId && (!IsEnabled(AppFeatures.Carrier) || (IsEnabled(AppFeatures.Carrier) && x.CarrierTenantId == AbpSession.TenantId)));
             if (request == null)
             {
