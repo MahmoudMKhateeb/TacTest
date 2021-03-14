@@ -111,6 +111,9 @@ export class CreateOrEditShippingRequestComponent extends AppComponentBase imple
   }
 
   save(): void {
+    //to be Removed Later
+    // this.shippingRequest.createOrEditRoutPointDtoList = [];
+    //
     this.saving = true;
     this.shippingRequest.isBid = this.shippingRequestType === 'bidding' ? true : false;
     this.shippingRequest.isTachyonDeal = this.shippingRequestType === 'tachyondeal' ? true : false;
