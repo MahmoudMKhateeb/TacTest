@@ -17,6 +17,7 @@ import { Paginator } from 'primeng/paginator';
 import { Table } from '@node_modules/primeng/table';
 import { LazyLoadEvent } from '@node_modules/primeng/public_api';
 import { filter } from '@node_modules/rxjs/internal/operators';
+import { CreateOrEditFacilityModalComponent } from '@app/main/addressBook/facilities/create-or-edit-facility-modal.component';
 @Component({
   templateUrl: './view-shippingRequest.component.html',
   styleUrls: ['./view-shippingRequest.component.scss'],
@@ -27,6 +28,7 @@ export class ViewShippingRequestComponent extends AppComponentBase implements On
   @ViewChild('paginatorchild', { static: false }) paginator: Paginator;
   active = false;
   saving = false;
+  loading = true;
   CancelBidShippingRequest: CancelBidShippingRequestInput = new CancelBidShippingRequestInput();
   shippingRequestforView: GetShippingRequestForViewOutput;
   activeShippingRequestId: number;
@@ -69,13 +71,14 @@ export class ViewShippingRequestComponent extends AppComponentBase implements On
 
       this.activeShippingRequestId = this.shippingRequestforView.shippingRequest.id;
       this.active = true;
-      this.wayPointsList = this.shippingRequestforView.routPointDtoList;
-      this.wayPointsSetter();
+      this.loading = false;
+      // this.wayPointsList = this.shippingRequestforView.routPointDtoList;
+      //this.wayPointsSetter();
     });
   }
 
   reloadPage(): void {
-    console.log('reload page');
+    //console.log('reload page');
     this.paginator.changePage(this.paginator.getPage());
   }
   getShippingRequestsBids(event?: LazyLoadEvent) {
@@ -85,7 +88,7 @@ export class ViewShippingRequestComponent extends AppComponentBase implements On
       return;
     }
     this.primengTableHelper.showLoadingIndicator();
-    console.log('bids Gotten');
+    //console.log('bids Gotten');
     this._shippingRequestBidsServiceProxy
       .getAllShippingRequestBids(
         null,
@@ -97,10 +100,8 @@ export class ViewShippingRequestComponent extends AppComponentBase implements On
         this.primengTableHelper.getMaxResultCount(this.paginator, event)
       )
       .subscribe((result) => {
-        //console.log(result);
         this.primengTableHelper.totalRecordsCount = result.totalCount;
         this.primengTableHelper.records = result.items;
-        //console.log(result.items);
         this.primengTableHelper.hideLoadingIndicator();
       });
   }
@@ -141,38 +142,5 @@ export class ViewShippingRequestComponent extends AppComponentBase implements On
         });
       }
     });
-  }
-
-  //draw route(WayPoints) On Map
-  wayPointsSetter() {
-    console.log(this.wayPointsList);
-    this.wayPointMapSource = undefined;
-    this.wayPoints = [];
-    this.wayPointMapDest = undefined;
-    //take the first Point in the List and Set it As The source
-    this.wayPointMapSource = {
-      lat: this.wayPointsList[0]?.latitude || undefined,
-      lng: this.wayPointsList[0]?.longitude || undefined,
-    };
-    //Take Any Other Points but the First And last one in the List and set them to way points
-    for (let i = 1; i < this.wayPointsList.length - 1; i++) {
-      this.wayPoints.push({
-        location: {
-          lat: this.wayPointsList[i].latitude,
-          lng: this.wayPointsList[i].longitude,
-        },
-      });
-    }
-    //to avoid the source and Dest from becoming the Same when place the First Elem in wayPointsList
-    if (this.wayPointsList.length > 1) {
-      //set the Dest
-      this.wayPointMapDest = {
-        lat: this.wayPointsList[this.wayPointsList.length - 1]?.latitude || undefined,
-        lng: this.wayPointsList[this.wayPointsList.length - 1]?.longitude || undefined,
-      };
-    }
-    console.log(this.wayPointMapSource);
-    console.log(this.wayPointsList);
-    console.log(this.wayPointMapDest);
   }
 }

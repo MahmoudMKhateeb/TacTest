@@ -3,7 +3,7 @@
   <div class="content d-flex flex-column flex-column-fluid">
     <sub-header [breadcrumbs]="breadcrumbs" [title]="'ShippingRequestsView' | localize"></sub-header>
 
-    <div [class]="containerClass">
+    <div [class]="containerClass" [busyIf]="loading">
       <div class="card card-custom gutter-b">
         <!--  start of card::form-->
         <div class="card-header">
@@ -296,83 +296,18 @@
                 </div>
               </div>
             </div>
-            <!--    Start::MapForViewShippingRequest-->
-            <div class="col-lg-12">
-              <agm-map [latitude]="24.717942" [longitude]="46.675761" [zoom]="14">
-                <agm-direction
-                  *ngIf="wayPointMapDest && wayPointMapSource"
-                  [origin]="wayPointMapSource"
-                  [destination]="wayPointMapDest"
-                  [waypoints]="wayPoints"
-                  [travelMode]="'DRIVING'"
-                ></agm-direction>
-              </agm-map>
-            </div>
-            <!--    End::MapForViewShippingRequest-->
           </div>
         </div>
         <!--  end of card::body-->
         <!--  start of card::form-->
       </div>
       <!--   End::RouteDetails     -->
-      <!--   Start::Vas Section     -->
-      <div class="card card-custom gutter-b">
-        <!--  start of card::form-->
-        <div class="card-header">
-          <h3 class="card-title">{{ l('vasDetails') }}</h3>
-        </div>
-        <!--  start of card::body-->
-        <div class="card-body">
-          <!--  start of Vas::Details-->
-          <div class="col-lg-12">
-            <table *ngIf="shippingRequestforView.shippingRequestVasDtoList" class="table">
-              <thead>
-                <tr class="table-active">
-                  <th scope="col">{{ l('name') }}</th>
-                  <th scope="col">{{ l('count') }}</th>
-                  <th scope="col">{{ l('amount') }}</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr *ngFor="let item of shippingRequestforView.shippingRequestVasDtoList; index as i">
-                  <td>
-                    {{ item.vasName }}
-                  </td>
-                  <td>
-                    <input
-                      type="number"
-                      [attr.disabled]="true"
-                      id="Vas-Count{{ i }}"
-                      [value]="item.shippingRequestVas.requestMaxCount"
-                      class="form-control"
-                      name="Vas-Count{{ i }}"
-                    />
-                  </td>
-                  <td>
-                    <input
-                      type="number"
-                      [attr.disabled]="true"
-                      id="VasAmount2{{ i }}"
-                      [value]="item.shippingRequestVas.requestMaxAmount"
-                      class="form-control"
-                      name="VasAmount2{{ i }}"
-                    />
-                  </td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-          <!--  end of Vas::Details-->
-        </div>
-
-        <!--  end of card::body-->
-
-        <!--  start of card::form-->
-      </div>
-      <!--    End::Vas Section    -->
 
       <!--   Start::Bidding Section     -->
-      <div class="card card-custom gutter-b" *ngIf="shippingRequestforView.shippingRequest.isBid">
+      <div
+        class="card card-custom gutter-b"
+        *ngIf="shippingRequestforView.shippingRequest.isBid && !shippingRequestforView.shippingRequest.isPriceAccepted"
+      >
         <!--  start of card::form-->
         <div class="card-header">
           <div class="card-title">
@@ -518,26 +453,14 @@
         <!--  start of card::form-->
       </div>
       <!--    End::Bidding Section    -->
-
+      <!--   Start::Trips Section     -->
+      <TripsForViewShippingRequest
+        *ngIf="activeShippingRequestId"
+        [ShippingRequest]="shippingRequestforView.shippingRequest"
+        [VasListFromFather]="shippingRequestforView.shippingRequestVasDtoList"
+      ></TripsForViewShippingRequest>
+      <!--    End::Trips Section    -->
       <!--  End of the First Container      -->
     </div>
-    <!--    start::Btns   -->
-    <div class="container-fluid">
-      <div class="row">
-        <div class="col-lg-12 float-right mt-2">
-          <!--              <button-->
-          <!--                (click)="save()"-->
-          <!--                [busyText]="l('SavingWithThreeDot')"-->
-          <!--                [buttonBusy]="saving"-->
-          <!--                [disabled]="!shippingRequestForm.form.valid"-->
-          <!--                class="btn btn-danger font-weight-bold font-size-h6 px-10 float-right"-->
-          <!--              >-->
-          <!--                <i class="flaticon2-tag"></i>-->
-          <!--                <span> {{ shippingRequest.id ? l('UpdateSippingRequest') : l('createShippingRequest') }}</span>-->
-          <!--              </button>-->
-        </div>
-      </div>
-    </div>
-    <!--   end::Btns  -->
   </div>
 </div>
