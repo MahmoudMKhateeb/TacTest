@@ -114,7 +114,7 @@ namespace TACHYON.Shipping.ShippingRequests
         private readonly IRepository<TransportType, int> _transportTypeRepository;
 
 
-        public async Task<PagedResultShippingRequestDto<GetShippingRequestForViewOutput>> GetAll(GetAllShippingRequestsInput input)
+        public async Task<GetAllShippingRequestsOutput> GetAll(GetAllShippingRequestsInput input)
         {
             if (await IsEnabledAsync(AppFeatures.TachyonDealer))
             {
@@ -431,7 +431,7 @@ namespace TACHYON.Shipping.ShippingRequests
                 .ToListAsync();
         }
 
-        protected virtual async Task<PagedResultShippingRequestDto<GetShippingRequestForViewOutput>> GetAllPagedResultDto(GetAllShippingRequestsInput input)
+        protected virtual async Task<GetAllShippingRequestsOutput> GetAllPagedResultDto(GetAllShippingRequestsInput input)
         {
             using (CurrentUnitOfWork.DisableFilter(AbpDataFilters.MustHaveTenant, AbpDataFilters.MayHaveTenant))
             {
@@ -511,7 +511,17 @@ namespace TACHYON.Shipping.ShippingRequests
                         ShippingRequestVasDtoList =x.ShippingRequestVasesDto.ToList(),
                         HasTrips = x.HasTrips
                     });
-                return new PagedResultShippingRequestDto<GetShippingRequestForViewOutput>(totalCount, result.ToList(), _shippingRequestRepository.GetAll().Where(r => r.Status == ShippingRequestStatus.PostPrice && r.TotalsTripsAddByShippier == 0).Count());
+                return new GetAllShippingRequestsOutput
+                {
+                    NoOfPostPriceWithoutTrips = _shippingRequestRepository.GetAll().Where(r => r.Status == ShippingRequestStatus.PostPrice && r.TotalsTripsAddByShippier == 0).Count(),
+                    Data = new PagedResultDto<GetShippingRequestForViewOutput>(
+                totalCount,
+                ObjectMapper.Map<List<GetShippingRequestForViewOutput>>(result.ToList())
+
+            )
+                }
+                    ;
+                    
             }
         }
 

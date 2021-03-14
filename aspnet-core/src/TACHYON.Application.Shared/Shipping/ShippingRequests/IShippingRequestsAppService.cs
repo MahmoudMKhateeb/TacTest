@@ -8,7 +8,7 @@ namespace TACHYON.Shipping.ShippingRequests
 {
     public interface IShippingRequestsAppService : IApplicationService
     {
-        Task<PagedResultShippingRequestDto<GetShippingRequestForViewOutput>> GetAll(GetAllShippingRequestsInput input);
+        Task<GetAllShippingRequestsOutput> GetAll(GetAllShippingRequestsInput input);
 
         Task<GetShippingRequestForViewOutput> GetShippingRequestForView(long id);
 
