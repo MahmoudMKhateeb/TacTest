@@ -13,9 +13,12 @@
     <div [class]="containerClass">
       <div class="card card-custom gutter-b">
         <div class="card-body">
-          <div class="alert alert-custom alert-light-danger" role="alert">
+          <div *ngIf="noOfPostPriceWithoutTrips > 0" class="alert alert-custom alert-light-warning" role="alert">
             <div class="alert-icon"><i class="flaticon-warning"></i></div>
-            <div class="alert-text">You Have Incomplete Shipping Requests Show Them By Clicking <a class="mx-1">here</a>.</div>
+            <div class="alert-text">
+              You Have {{ noOfPostPriceWithoutTrips }} Incomplete Shipping Requests Please Complete Them here
+              <a class="mx-1" (click)="GetIncompleteShippingRequests()">here</a>.
+            </div>
           </div>
 
           <form autocomplete="off" class="form">

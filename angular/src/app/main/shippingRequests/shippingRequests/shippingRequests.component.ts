@@ -33,7 +33,9 @@ export class ShippingRequestsComponent extends AppComponentBase {
   // goodsDetailNameFilter = '';
   // routeDisplayNameFilter = '';
   isBid: boolean;
+  ShowPriceAcceptedNoTrips = undefined;
   isTachyonDeal: boolean;
+  noOfPostPriceWithoutTrips: number;
 
   constructor(
     injector: Injector,
@@ -66,14 +68,15 @@ export class ShippingRequestsComponent extends AppComponentBase {
         this.isTachyonDeal,
         undefined,
         undefined,
-        true,
+        this.ShowPriceAcceptedNoTrips,
         this.primengTableHelper.getSorting(this.dataTable),
         this.primengTableHelper.getSkipCount(this.paginator, event),
         this.primengTableHelper.getMaxResultCount(this.paginator, event)
       )
       .subscribe((result) => {
-        this.primengTableHelper.totalRecordsCount = result.totalCount;
-        this.primengTableHelper.records = result.items;
+        this.noOfPostPriceWithoutTrips = result.noOfPostPriceWithoutTrips;
+        this.primengTableHelper.totalRecordsCount = result.data.totalCount;
+        this.primengTableHelper.records = result.data.items;
         this.primengTableHelper.hideLoadingIndicator();
       });
   }
@@ -112,4 +115,8 @@ export class ShippingRequestsComponent extends AppComponentBase {
   //       this._fileDownloadService.downloadTempFile(result);
   //     });
   // }
+  GetIncompleteShippingRequests() {
+    this.ShowPriceAcceptedNoTrips = true;
+    this.getShippingRequests();
+  }
 }
