@@ -114,7 +114,7 @@ namespace TACHYON.Shipping.ShippingRequests
         private readonly IRepository<TransportType, int> _transportTypeRepository;
 
 
-        public async Task<PagedResultDto<GetShippingRequestForViewOutput>> GetAll(GetAllShippingRequestsInput input)
+        public async Task<PagedResultShippingRequestDto<GetShippingRequestForViewOutput>> GetAll(GetAllShippingRequestsInput input)
         {
             if (await IsEnabledAsync(AppFeatures.TachyonDealer))
             {
@@ -431,7 +431,7 @@ namespace TACHYON.Shipping.ShippingRequests
                 .ToListAsync();
         }
 
-        protected virtual async Task<PagedResultDto<GetShippingRequestForViewOutput>> GetAllPagedResultDto(GetAllShippingRequestsInput input)
+        protected virtual async Task<PagedResultShippingRequestDto<GetShippingRequestForViewOutput>> GetAllPagedResultDto(GetAllShippingRequestsInput input)
         {
             using (CurrentUnitOfWork.DisableFilter(AbpDataFilters.MustHaveTenant, AbpDataFilters.MayHaveTenant))
             {
@@ -455,7 +455,7 @@ namespace TACHYON.Shipping.ShippingRequests
                     .PageBy(input).Select(x => new
                     {
                         ShippingRequest = x,
-                        NoOfPostPriceWithoutTrips= _shippingRequestRepository.GetAll().Where(r=>r.Status==ShippingRequestStatus.PostPrice && r.TotalsTripsAddByShippier==0).Count(),
+                        TotalsTripsAddByShippier=x.TotalsTripsAddByShippier,
                         ShippingRequestBidDtoList = x.ShippingRequestBids,
                         ShippingRequestVasesList = x.ShippingRequestVases,
                         ShippingRequestVasesDto= x.ShippingRequestVases.Select(e =>
@@ -494,7 +494,7 @@ namespace TACHYON.Shipping.ShippingRequests
                     .Select(x => new GetShippingRequestForViewOutput
                     {
                         ShippingRequest = ObjectMapper.Map<ShippingRequestDto>(x.ShippingRequest),
-                        NoOfPostPriceWithoutTrips= x.NoOfPostPriceWithoutTrips,
+                        TotalsTripsAddByShippier=x.TotalsTripsAddByShippier,
                         ShippingRequestBidDtoList =
                         ObjectMapper.Map<List<ShippingRequestBidDto>>(x.ShippingRequest.ShippingRequestBids),
                         VasCount = x.ShippingRequestVasesList.Count(),
@@ -511,7 +511,7 @@ namespace TACHYON.Shipping.ShippingRequests
                         ShippingRequestVasDtoList =x.ShippingRequestVasesDto.ToList(),
                         HasTrips = x.HasTrips
                     });
-                return new PagedResultDto<GetShippingRequestForViewOutput>(totalCount, result.ToList());
+                return new PagedResultShippingRequestDto<GetShippingRequestForViewOutput>(totalCount, result.ToList(), _shippingRequestRepository.GetAll().Where(r => r.Status == ShippingRequestStatus.PostPrice && r.TotalsTripsAddByShippier == 0).Count());
             }
         }
 
