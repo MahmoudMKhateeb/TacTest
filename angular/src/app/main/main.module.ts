@@ -166,10 +166,12 @@ import { ViewShippingRequestDetailsComponent } from '@app/main/marketPlace/marke
 import { ViewAllCarrierBidsComponent } from '@app/main/marketPlace/marketPlace/ViewAllCarrierBids.component';
 import { RejectionReasonModalComponent } from './documentFiles/documentFiles/rejectionReason-modal.component';
 import { ViewShippingRequestPriceResponseModalComponent } from './shippingRequests/shippingRequests/shipping-request-Response/view-shipping-request-response-modal.component';
-import { ListboxModule, MultiSelectModule, PickListModule, StepsModule } from '@node_modules/primeng';
+import { ListboxModule, MultiSelectModule, PickListModule, SelectButtonModule, StepsModule } from '@node_modules/primeng';
 import { RouteStepsForCreateShippingRequstComponent } from '@app/main/shippingRequests/shippingRequests/ShippingRequestRouteSteps/RouteStepsForCreateShippingRequst.component';
 
 import { AgmDirectionModule } from '@node_modules/agm-direction';
+import { TripsForViewShippingRequestComponent } from '@app/main/shippingRequests/shippingRequests/ShippingRequestTrips/TripsForViewShippingRequest.component';
+import { AddNewTripComponent } from '@app/main/shippingRequests/shippingRequests/ShippingRequestTrips/AddNewTripModal/AddNewTrip.component';
 
 NgxBootstrapDatePickerConfigService.registerNgxBootstrapDatePickerLocales();
 
@@ -206,6 +208,7 @@ NgxBootstrapDatePickerConfigService.registerNgxBootstrapDatePickerLocales();
     ListboxModule,
     AgmDirectionModule,
     StepsModule,
+    SelectButtonModule,
   ],
   declarations: [
     TripStatusesComponent,
@@ -347,6 +350,9 @@ NgxBootstrapDatePickerConfigService.registerNgxBootstrapDatePickerLocales();
     ViewShippingRequestDetailsComponent,
     ViewAllCarrierBidsComponent,
     RouteStepsForCreateShippingRequstComponent,
+
+    TripsForViewShippingRequestComponent,
+    AddNewTripComponent,
   ],
   providers: [
     { provide: BsDatepickerConfig, useFactory: NgxBootstrapDatePickerConfigService.getDatepickerConfig },

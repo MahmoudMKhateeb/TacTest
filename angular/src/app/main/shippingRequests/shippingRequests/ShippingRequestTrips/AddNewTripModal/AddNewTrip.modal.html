@@ -14,7 +14,7 @@
           <span>{{ l('Trip Details') }}</span>
         </p>
       </div>
-      <div class="modal-body">
+      <div class="modal-body" [busyIf]="loading">
         <div class="row">
           <!--begin::Body-->
           <!--  begin:: Source Dest Facilitys  -->
@@ -26,7 +26,9 @@
                 <option *ngFor="let item of allFacilities" value="{{ item.id }}">{{ item.displayName }}</option>
               </select>
               <div class="input-group-btn">
-                <button class="btn btn-primary" [disabled]="facilityLoading"><i class="flaticon-plus"></i>{{ l('AddNew') }}</button>
+                <button class="btn btn-primary" [disabled]="facilityLoading" (click)="createOrEditFacilityModal.show()">
+                  <i class="flaticon-plus"></i>{{ l('AddNew') }}
+                </button>
               </div>
             </div>
           </div>
@@ -38,7 +40,9 @@
                 <option *ngFor="let item of allFacilities" value="{{ item.id }}">{{ item.displayName }}</option>
               </select>
               <div class="input-group-btn">
-                <button class="btn btn-primary" [disabled]="facilityLoading"><i class="flaticon-plus"></i>{{ l('AddNew') }}</button>
+                <button class="btn btn-primary" [disabled]="facilityLoading" (click)="createOrEditFacilityModal.show()">
+                  <i class="flaticon-plus"></i>{{ l('AddNew') }}
+                </button>
               </div>
             </div>
           </div>
@@ -85,12 +89,29 @@
             </div>
           </div>
           <!--  end:: Trip start&End Dates-->
+          <!-- begin::Vas's  -->
+          <div class="col-lg-6" *ngIf="VasListFromFather.length > 0">
+            <div class="form-group" *ngIf="selectedVases != []">
+              <label>{{ l('vases') }}* </label>
+              <p-multiSelect
+                [options]="Vases"
+                [(ngModel)]="selectedVases"
+                [styleClass]="'form-control'"
+                [filter]="false"
+                [showHeader]="false"
+                [defaultLabel]="''"
+                optionLabel="name"
+              ></p-multiSelect>
+            </div>
+          </div>
+
+          <!--      end:Vas's      -->
           <!--  start:: RouteSteps -->
           <RouteStepsForCreateShippingRequest
-            #b
+            #RouteSteps
             (SelectedWayPointsFromChild)="trip.routPoints = $event"
             [WayPointListFromFatherForShippingRequestEdit]="trip.routPoints"
-            [MainGoodsCategory]="MainGoodsCategory"
+            [MainGoodsCategory]="shippingRequest.goodCategoryId"
           ></RouteStepsForCreateShippingRequest>
           <!--  end:: RouteSteps -->
           <!--end::Body-->
@@ -103,10 +124,11 @@
           {{ l('Close') }}
         </button>
         <button [disabled]="saving" class="btn btn-primary font-weight-bolder btn-sm py-3 px-6 text-uppercase" (click)="createOrEditTrip()">
-          {{ l('Create')}}
+          {{ trip.id ? l('updateTrip') : l('addNewTrip')}}
         </button>
         <!--end::Buttons-->
       </div>
     </div>
   </div>
 </div>
+<createOrEditFacilityModal #createOrEditFacilityModal (modalSave)="refreshOrGetFacilities()"></createOrEditFacilityModal>
