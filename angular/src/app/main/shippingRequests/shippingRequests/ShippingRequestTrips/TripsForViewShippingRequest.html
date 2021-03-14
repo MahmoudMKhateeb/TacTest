@@ -5,7 +5,13 @@
         {{ l('shippingRequestTrips') }}
       </h3>
       <div class="card-toolbar">
-        <button class="btn btn-primary" (click)="AddNewTripModal.show()"><i class="flaticon-plus"></i> {{ l('AddATrip') }}</button>
+        <button
+          class="btn btn-primary"
+          (click)="AddNewTripModal.show()"
+          [disabled]="primengTableHelper.totalRecordsCount >= ShippingRequest.numberOfTrips"
+        >
+          <i class="flaticon-plus"></i> {{ l('AddATrip') }}
+        </button>
       </div>
     </div>
     <!--begin::card-body-->
@@ -93,10 +99,10 @@
                         <a class="dropdown-item" (click)="AddNewTripModal.show(record)">{{ l('Edit') }}</a>
                       </li>
                       <li>
-                        <a class="dropdown-item" (click)="true">{{ l('View') }}</a>
+                        <a class="dropdown-item" (click)="AddNewTripModal.show(record)">{{ l('View') }}</a>
                       </li>
                       <li>
-                        <a class="dropdown-item" (click)="true">{{ l('Delete') }}</a>
+                        <a class="dropdown-item" (click)="AddNewTripModal.deleteTrip(record.id)">{{ l('Delete') }}</a>
                       </li>
                     </ul>
                   </div>
@@ -130,6 +136,6 @@
 <AddNewTripModal
   #AddNewTripModal
   (modalSave)="reloadPage()"
-  [shippingRequestId]="ShippingRequest.id"
-  [MainGoodsCategory]="ShippingRequest.goodCategoryId"
+  [shippingRequest]="ShippingRequest"
+  [VasListFromFather]="VasListFromFather"
 ></AddNewTripModal>

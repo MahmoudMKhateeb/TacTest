@@ -3,8 +3,15 @@ import { AppComponentBase } from '@shared/common/app-component-base';
 import { Table } from '@node_modules/primeng/table';
 import { Paginator } from '@node_modules/primeng/paginator';
 import { LazyLoadEvent } from '@node_modules/primeng/public_api';
-import { ShippingRequestDto, ShippingRequestsTripServiceProxy } from '@shared/service-proxies/service-proxies';
+import {
+  CreateOrEditShippingRequestVasListDto,
+  GetShippingRequestForViewOutput,
+  GetShippingRequestVasForViewDto,
+  ShippingRequestDto,
+  ShippingRequestsTripServiceProxy,
+} from '@shared/service-proxies/service-proxies';
 import { AddNewTripComponent } from '@app/main/shippingRequests/shippingRequests/ShippingRequestTrips/AddNewTripModal/AddNewTrip.component';
+import { CreateOrEditFacilityModalComponent } from '@app/main/addressBook/facilities/create-or-edit-facility-modal.component';
 
 @Component({
   selector: 'TripsForViewShippingRequest',
@@ -14,8 +21,9 @@ import { AddNewTripComponent } from '@app/main/shippingRequests/shippingRequests
 export class TripsForViewShippingRequestComponent extends AppComponentBase {
   @ViewChild('dataTablechild', { static: false }) dataTable: Table;
   @ViewChild('paginatorchild', { static: false }) paginator: Paginator;
-  @ViewChild('AddNewTripModal') AddNewTripModal: AddNewTripComponent;
+  @ViewChild('AddNewTripModal', { static: false }) AddNewTripModal: AddNewTripComponent;
   @Input() ShippingRequest: ShippingRequestDto;
+  @Input() VasListFromFather: GetShippingRequestVasForViewDto[];
   constructor(
     injector: Injector,
     private changeDetectorRef: ChangeDetectorRef,
@@ -25,7 +33,6 @@ export class TripsForViewShippingRequestComponent extends AppComponentBase {
   }
 
   getShippingRequestsTrips(event?: LazyLoadEvent) {
-    console.log('Get Trips Fired');
     this.changeDetectorRef.detectChanges();
     if (this.primengTableHelper.shouldResetPaging(event)) {
       this.paginator.changePage(0);
