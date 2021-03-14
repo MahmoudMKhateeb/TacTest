@@ -134,8 +134,8 @@
                           [disabled]="shippingRequest.id"
                         >
                           <option value="">Select</option>
-                          <option value="bidding">{{ l('bidding') }}</option>
-                          <option value="tachyondeal">{{ l('TachyonDeal') }}</option>
+                          <option value="bidding">{{ l('Marketplace') }}</option>
+                          <option value="tachyondeal">{{ l('TachyonManageService') }}</option>
                         </select>
                         <span class="form-text text-muted">{{ l('pickaShippingRequestType') }}</span>
                       </div>
@@ -351,7 +351,7 @@
                   <div class="mb-2">
                     <div class="row">
                       <!-- Start of Select Source -->
-                      <div class="col-lg-3">
+                      <div class="col-lg-6">
                         <div class="form-group">
                           <label>* {{ l('originCity') }}:</label>
                           <div [ngClass]="{ 'spinner spinner-success spinner-right mr-1 ml-1': !allCitys }">
@@ -373,7 +373,7 @@
                           <span class="form-text text-muted">{{ l('selectaCity') }}</span>
                         </div>
                       </div>
-                      <div class="col-lg-3">
+                      <div class="col-lg-6">
                         <div class="form-group">
                           <label>* {{ l('destinationCity') }}:</label>
                           <div [ngClass]="{ 'spinner spinner-success spinner-right mr-1 ml-1': !allCitys }">
@@ -394,41 +394,7 @@
                           <span class="form-text text-muted">{{ l('selectaCity') }}</span>
                         </div>
                       </div>
-                      <div class="col-lg-3">
-                        <div class="form-group">
-                          <label>{{ l('originFacility') }}:</label>
-                          <div [ngClass]="{ 'spinner spinner-success spinner-right mr-1 ml-1': !allFacilities }">
-                            <select
-                              class="form-control"
-                              name="originFacility"
-                              [(ngModel)]="shippingRequest.createOrEditRouteDto.originFacilityId"
-                              [disabled]="!allFacilities"
-                            >
-                              <option value="">{{ l('selectanOriginFacility') }}</option>
-                              <option *ngFor="let item of allFacilities" value="{{ item.id }}">{{ item.displayName }}</option>
-                            </select>
-                          </div>
 
-                          <span class="form-text text-muted">{{ l('optional') }}</span>
-                        </div>
-                      </div>
-                      <div class="col-lg-3">
-                        <div class="form-group">
-                          <label>{{ l('destinationFacility') }}:</label>
-                          <div [ngClass]="{ 'spinner spinner-success spinner-right mr-1 ml-1': !allFacilities }">
-                            <select
-                              class="form-control"
-                              name="destinationFacility"
-                              [(ngModel)]="shippingRequest.createOrEditRouteDto.destinationFacilityId"
-                              [disabled]="!allFacilities"
-                            >
-                              <option value=""></option>
-                              <option *ngFor="let item of allFacilities" value="{{ item.id }}">{{ item.displayName }}</option>
-                            </select>
-                          </div>
-                          <span class="form-text text-muted">{{ l('optional') }}</span>
-                        </div>
-                      </div>
                       <div class="col-lg-6">
                         <div class="form-group">
                           <label>* {{ l('startDate') }}:</label>
@@ -537,13 +503,13 @@
                 </div>
               </div>
               <!--  Start::RouteSteps     -->
-              <RouteStepsForCreateShippingRequest
-                [MainGoodsCategory]="shippingRequest.goodCategoryId"
-                [RouteType]="shippingRequest.createOrEditRouteDto.routTypeId || this.selectedRouteType"
-                [NumberOfDrops]="shippingRequest.numberOfDrops"
-                (SelectedWayPointsFromChild)="shippingRequest.createOrEditRoutPointDtoList = $event"
-                [WayPointListFromFatherForShippingRequestEdit]="shippingRequest.createOrEditRoutPointDtoList"
-              ></RouteStepsForCreateShippingRequest>
+              <!--              <RouteStepsForCreateShippingRequest-->
+              <!--                [MainGoodsCategory]="shippingRequest.goodCategoryId"-->
+              <!--                [RouteType]="shippingRequest.createOrEditRouteDto.routTypeId || this.selectedRouteType"-->
+              <!--                [NumberOfDrops]="shippingRequest.numberOfDrops"-->
+              <!--                (SelectedWayPointsFromChild)="shippingRequest.createOrEditRoutPointDtoList = $event"-->
+              <!--                [WayPointListFromFatherForShippingRequestEdit]="shippingRequest.createOrEditRoutPointDtoList"-->
+              <!--              ></RouteStepsForCreateShippingRequest>-->
               <!--   End::RouteSteps      -->
               <!--  end of Route::Details-->
             </div>
@@ -551,6 +517,7 @@
           <!--  end of card::body-->
           <!--  start of card::form-->
         </div>
+        <!--   Start:: Vas Card     -->
         <div class="card card-custom gutter-b">
           <!--  start of card::form-->
           <div class="card-header">
@@ -625,6 +592,8 @@
 
           <!--  start of card::form-->
         </div>
+
+        <!--   End: Vas Card       -->
         <!--    start::Btns   -->
         <div class="container-fluid">
           <div class="row">
