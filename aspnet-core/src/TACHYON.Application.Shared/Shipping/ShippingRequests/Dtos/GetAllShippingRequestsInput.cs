@@ -18,6 +18,8 @@ namespace TACHYON.Shipping.ShippingRequests.Dtos
         public bool? IsTachyonDealer { get; set; }
         public ShippingRequestStatus? Status { get; set; }
 
+        public bool? IsPricedWihtoutTrips { get; set; }
+
         public void Normalize()
         {
             if (Sorting == "GoodsCategoryName")

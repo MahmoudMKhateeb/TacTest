@@ -18,7 +18,7 @@ namespace TACHYON.Shipping.ShippingRequests
 
         Task Delete(EntityDto<long> input);
 
-        Task<int> NoOfPricedWihtoutTrips();
+   
         //Task<FileDto> GetShippingRequestsToExcel(GetAllShippingRequestsForExcelInput input);
 
     }

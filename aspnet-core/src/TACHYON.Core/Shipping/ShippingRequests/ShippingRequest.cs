@@ -127,6 +127,7 @@ namespace TACHYON.Shipping.ShippingRequests
 
 
         public int NumberOfTrips { get; set; }
+        public int TotalsTripsAddByShippier { get; set; }
         public DateTime? StartTripDate { get; set; }
         public DateTime? EndTripDate { get; set; }
         public double TotalWeight { get; set; }

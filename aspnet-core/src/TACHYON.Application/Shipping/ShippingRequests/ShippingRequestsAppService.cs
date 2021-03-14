@@ -325,15 +325,7 @@ namespace TACHYON.Shipping.ShippingRequests
         {
             await _shippingRequestRepository.DeleteAsync(input.Id);
         }
-      public  async Task<int> NoOfPricedWihtoutTrips()
-        {
-            using (CurrentUnitOfWork.DisableFilter(AbpDataFilters.MustHaveTenant))
-            {
-                int Totals = await _shippingRequestRepository.GetAll().Where(x => x.Status == ShippingRequestStatus.PostPrice && x.ShippingRequestTrips.Count == 0).CountAsync();
-                return Totals;
-            }
 
-        }
 
         //g-#409
         //todo @suhila add driver permission here
@@ -450,6 +442,7 @@ namespace TACHYON.Shipping.ShippingRequests
                     .WhereIf(input.IsTachyonDeal.HasValue, e => e.IsTachyonDeal == input.IsTachyonDeal.Value)
                     .WhereIf(input.IsBid.HasValue, e => e.IsBid == input.IsBid.Value)
                     .WhereIf(input.Status.HasValue, e => e.Status == input.Status.Value)
+                    .WhereIf(input.IsPricedWihtoutTrips.HasValue,e=>e.Status==ShippingRequestStatus.PostPrice && e.TotalsTripsAddByShippier==0)
                     //get only this shipper shippingRequest when isTachyonDeal is false
                     .WhereIf(!input.IsTachyonDealer.Value,
                         e => e.TenantId == AbpSession.TenantId);
@@ -462,6 +455,7 @@ namespace TACHYON.Shipping.ShippingRequests
                     .PageBy(input).Select(x => new
                     {
                         ShippingRequest = x,
+                        NoOfPostPriceWithoutTrips= _shippingRequestRepository.GetAll().Where(r=>r.Status==ShippingRequestStatus.PostPrice && r.TotalsTripsAddByShippier==0).Count(),
                         ShippingRequestBidDtoList = x.ShippingRequestBids,
                         ShippingRequestVasesList = x.ShippingRequestVases,
                         ShippingRequestVasesDto= x.ShippingRequestVases.Select(e =>
@@ -500,6 +494,7 @@ namespace TACHYON.Shipping.ShippingRequests
                     .Select(x => new GetShippingRequestForViewOutput
                     {
                         ShippingRequest = ObjectMapper.Map<ShippingRequestDto>(x.ShippingRequest),
+                        NoOfPostPriceWithoutTrips= x.NoOfPostPriceWithoutTrips,
                         ShippingRequestBidDtoList =
                         ObjectMapper.Map<List<ShippingRequestBidDto>>(x.ShippingRequest.ShippingRequestBids),
                         VasCount = x.ShippingRequestVasesList.Count(),

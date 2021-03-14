@@ -29,6 +29,7 @@ namespace TACHYON.Shipping.ShippingRequests.Dtos
         public string ShippingTypeDisplayName { get; set; }
         public bool HasTrips { get; set; }
         public GetTruckForViewOutput AssignedTruckDto { get; set; }
+        public int NoOfPostPriceWithoutTrips { get; set; }
 
     }
 }

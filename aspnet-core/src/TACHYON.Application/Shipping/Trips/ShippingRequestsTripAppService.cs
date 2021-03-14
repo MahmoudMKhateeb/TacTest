@@ -116,6 +116,7 @@ namespace TACHYON.Shipping.Trips
             if (!input.Id.HasValue)
             {
                await Create(input);
+               request.TotalsTripsAddByShippier += 1;
             }
             else
             {
@@ -187,6 +188,7 @@ namespace TACHYON.Shipping.Trips
             {
                 var Request = await GetShippingRequestByPermission(trip.ShippingRequestId);
                 TripCanEditOrDelete(trip);
+                Request.TotalsTripsAddByShippier -= 1;
                 await _ShippingRequestTripRepository.DeleteAsync(trip);
             }
         }
