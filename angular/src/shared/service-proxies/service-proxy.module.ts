@@ -4,7 +4,7 @@ import { NgModule } from '@angular/core';
 import * as ApiServiceProxies from './service-proxies';
 import { ZeroRefreshTokenService } from '@account/auth/zero-refresh-token.service';
 import { ZeroTemplateHttpConfigurationService } from './zero-template-http-configuration.service';
-import { ShippingRequestBidsServiceProxy } from './service-proxies';
+import { ShippingRequestBidsServiceProxy, ShippingRequestsTripServiceProxy } from './service-proxies';
 
 @NgModule({
   providers: [
@@ -91,6 +91,7 @@ import { ShippingRequestBidsServiceProxy } from './service-proxies';
     ApiServiceProxies.EntityDynamicParameterServiceProxy,
     ApiServiceProxies.DynamicParameterValueServiceProxy,
     ApiServiceProxies.EntityDynamicParameterValueServiceProxy,
+    ApiServiceProxies.ShippingRequestsTripServiceProxy,
     { provide: RefreshTokenService, useClass: ZeroRefreshTokenService },
     { provide: AbpHttpConfigurationService, useClass: ZeroTemplateHttpConfigurationService },
     { provide: HTTP_INTERCEPTORS, useClass: AbpHttpInterceptor, multi: true },
