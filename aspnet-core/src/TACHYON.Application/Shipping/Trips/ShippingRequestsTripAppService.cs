@@ -47,6 +47,8 @@ namespace TACHYON.Shipping.Trips
 
         }
 
+
+
         public async Task<PagedResultDto<ShippingRequestsTripListDto>> GetAll(ShippingRequestTripFilterInput Input)
         {
             var request = await GetShippingRequestByPermission(Input.RequestId);

@@ -18,6 +18,7 @@ namespace TACHYON.Shipping.Trips.Dto
         public string OriginFacility { get; set; }
         public string DestinationFacility { get; set; }
 
+
         //public ICollection<RoutPointDto> RoutPoints { get; set; }
         //public ICollection<ShippingRequestTripVasDto> ShippingRequestTripVases { get; set; }
     }
