@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 using TACHYON.AddressBook.Dtos;
+using TACHYON.ShippingRequestVases.Dtos;
 
 namespace TACHYON.Shipping.ShippingRequestBids.Dtos
 {
@@ -38,8 +39,11 @@ namespace TACHYON.Shipping.ShippingRequestBids.Dtos
         /// shipping request good category
         /// </summary>
         public string GoodCategoryName { get; set; }
+        public string SourceCountryName { get; set; }
         public string SourceCityName { get; set; }
+        public string DestinationCountryName { get; set; }
         public string DestinationCityName { get; set; }
+        public IEnumerable<GetShippingRequestVasForViewDto> ShippingRequestVasesDto { get; set; }
 
 
     }
