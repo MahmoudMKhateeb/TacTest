@@ -316,8 +316,8 @@ namespace TACHYON.Shipping.ShippingRequestBids
                             ShippingRequestVas =ObjectMapper.Map<ShippingRequestVasDto>(e),
                             VasName = e.VasFk.Name
                         }),
-                        SourceCountryName = o.RouteFk?.OriginCityFk.CountyFk.DisplayName,
-                        DestinationCountryName = o.RouteFk?.DestinationCityFk.CountyFk.DisplayName
+                        SourceCountryCode= o.RouteFk?.OriginCityFk.CountyFk.Code,
+                        DestinationCountryCode = o.RouteFk?.DestinationCityFk.CountyFk.Code
                     });
 
                 int totalCount = await filterBidShippingRequests.CountAsync();
