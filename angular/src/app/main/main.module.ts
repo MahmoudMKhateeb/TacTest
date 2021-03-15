@@ -191,9 +191,6 @@ import { ViewAllCarrierBidsComponent } from '@app/main/marketPlace/marketPlace/V
 import { RejectionReasonModalComponent } from './documentFiles/documentFiles/rejectionReason-modal.component';
 import { ViewShippingRequestPriceResponseModalComponent } from './shippingRequests/shippingRequests/shipping-request-Response/view-shipping-request-response-modal.component';
 import { SafePipe } from '../../account/register/safe.pipe';
-import { InvoicePeriodsListComponent } from '@app/main/invoices/invoice-periods-list/invoice-periods-list.component';
-import { InvoicePeriodsModalComponent } from '@app/main/invoices/invoice-periods-modal/invoice-periods-modal.component';
-import { InvoicesListComponent } from './invoices/invoices-list/invoices-list.component';
 import { BalancesListComponent } from './invoices/balances/balances-list/balances-list.component';
 import { BalanceRechargeModelComponent } from './invoices/balances/balance-recharge-model/balance-recharge-model.component';
 import { GroupPeriodsListComponent } from './invoices/groupsperiods/group-periods-list/group-periods-list.component';
@@ -288,27 +285,27 @@ NgxBootstrapDatePickerConfigService.registerNgxBootstrapDatePickerLocales();
 
     ViewTransportTypesTranslationModalComponent,
     CreateOrEditTransportTypesTranslationModalComponent,
-		CitiesTranslationsComponent,
+    CitiesTranslationsComponent,
 
-		ViewCitiesTranslationModalComponent,
-		CreateOrEditCitiesTranslationModalComponent,
-		CountriesTranslationsComponent,
+    ViewCitiesTranslationModalComponent,
+    CreateOrEditCitiesTranslationModalComponent,
+    CountriesTranslationsComponent,
 
-		ViewCountriesTranslationModalComponent,
-		CreateOrEditCountriesTranslationModalComponent,
-		PlateTypesComponent,
+    ViewCountriesTranslationModalComponent,
+    CreateOrEditCountriesTranslationModalComponent,
+    PlateTypesComponent,
 
-		ViewPlateTypeModalComponent,
-		CreateOrEditPlateTypeModalComponent,
-		TruckCapacitiesTranslationsComponent,
+    ViewPlateTypeModalComponent,
+    CreateOrEditPlateTypeModalComponent,
+    TruckCapacitiesTranslationsComponent,
 
-		ViewTruckCapacitiesTranslationModalComponent,
-		CreateOrEditTruckCapacitiesTranslationModalComponent,
-		TruckStatusesTranslationsComponent,
+    ViewTruckCapacitiesTranslationModalComponent,
+    CreateOrEditTruckCapacitiesTranslationModalComponent,
+    TruckStatusesTranslationsComponent,
 
-		ViewTruckStatusesTranslationModalComponent,
-		CreateOrEditTruckStatusesTranslationModalComponent,
-		NationalitiesComponent,
+    ViewTruckStatusesTranslationModalComponent,
+    CreateOrEditTruckStatusesTranslationModalComponent,
+    NationalitiesComponent,
     TripStatusesComponent,
 
     ViewTripStatusModalComponent,

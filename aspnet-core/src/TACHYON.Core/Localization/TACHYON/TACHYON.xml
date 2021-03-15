@@ -80,22 +80,6 @@
 
 
     <text name="TruckCapacitiesTranslations">Truck capacities translations</text>
-    <text name="TruckCapacitiesTranslation">Truck capacities translation</text>
-    <text name="TACHYON.TruckCapacitiesTranslations.TruckCapacitiesTranslation">TruckCapacitiesTranslation</text>
-    <text name="TruckCapacitiesTranslationsHeaderInfo">Truck capacities translations header info</text>
-    <text name="CreateNewTruckCapacitiesTranslation">Create new truck capacities translation</text>
-    <text name="EditTruckCapacitiesTranslation">Edit truck capacities translation</text>
-    <text name="DeleteTruckCapacitiesTranslation">Delete truck capacities translation</text>
-    <text name="CapacityDisplayName">Capacity display name</text>
-    <text name="PickCapacity">Pick capacity</text>
-    <text name="TruckStatusesTranslations">Truck statuses translations</text>
-    <text name="TruckStatusesTranslation">Truck statuses translation</text>
-    <text name="TACHYON.TruckStatusesTranslations.TruckStatusesTranslation">TruckStatusesTranslation</text>
-    <text name="TranslatedDisplayName">Translated display name</text>
-    <text name="TruckStatusesTranslationsHeaderInfo">Truck statuses translations header info</text>
-    <text name="CreateNewTruckStatusesTranslation">Create new truck statuses translation</text>
-    <text name="EditTruckStatusesTranslation">Edit truck statuses translation</text>
-    <text name="DeleteTruckStatusesTranslation">Delete truck statuses translation</text>
     <text name="CitiesTranslations">Cities translations</text>
     <text name="CitiesTranslation">Cities translation</text>
     <text name="TACHYON.CitiesTranslations.CitiesTranslation">CitiesTranslation</text>
@@ -117,29 +101,6 @@
     <text name="CreateNewPlateType">Create new plate type</text>
     <text name="EditPlateType">Edit plate type</text>
     <text name="DeletePlateType">Delete plate type</text>
-    <text name="Nationalities">Nationalities</text>
-    <text name="CitiesTranslation">Cities translation</text>
-    <text name="TACHYON.CitiesTranslations.CitiesTranslation">CitiesTranslation</text>
-    <text name="CitiesTranslationsHeaderInfo">Cities translations header info</text>
-    <text name="CreateNewCitiesTranslation">Create new cities translation</text>
-    <text name="EditCitiesTranslation">Edit cities translation</text>
-    <text name="DeleteCitiesTranslation">Delete cities translation</text>
-    <text name="CountriesTranslations">Countries translations</text>
-    <text name="CountriesTranslation">Countries translation</text>
-    <text name="TACHYON.CountriesTranslations.CountriesTranslation">CountriesTranslation</text>
-    <text name="TranslatedDisplayName">Translated display name</text>
-    <text name="CountriesTranslationsHeaderInfo">Countries translations header info</text>
-    <text name="CreateNewCountriesTranslation">Create new countries translation</text>
-    <text name="EditCountriesTranslation">Edit countries translation</text>
-    <text name="DeleteCountriesTranslation">Delete countries translation</text>
-    <text name="PlateTypes">Plate types</text>
-    <text name="PlateType">Plate type</text>
-    <text name="TACHYON.PlateTypes.PlateType">PlateType</text>
-    <text name="PlateTypesHeaderInfo">Plate types header info</text>
-    <text name="CreateNewPlateType">Create new plate type</text>
-    <text name="EditPlateType">Edit plate type</text>
-    <text name="DeletePlateType">Delete plate type</text>
-    <text name="Nationalities">Nationalities</text>
     <text name="TruckCapacitiesTranslation">Truck capacities translation</text>
     <text name="TACHYON.TruckCapacitiesTranslations.TruckCapacitiesTranslation">TruckCapacitiesTranslation</text>
     <text name="TruckCapacitiesTranslationsHeaderInfo">Truck capacities translations header info</text>
@@ -175,7 +136,6 @@
     <text name="CreateNewShippingType">Create new shipping type</text>
     <text name="EditShippingType">Edit shipping type</text>
     <text name="DeleteShippingType">Delete shipping type</text>
-    <text name="Nationalities">Nationalities</text>
     <text name="TripStatus">Trip status</text>
     <text name="TripStatuses">Trip statuses</text>
     <text name="Nationality">Nationality</text>
@@ -213,22 +173,8 @@
     <text name="PickTransportType">Pick transport type</text>
 
 
-    <text name="TransportTypesTranslationsHeaderInfo">Transport types translations header info</text>
-    <text name="CreateNewTransportTypesTranslation">Create new transport types translation</text>
-    <text name="EditTransportTypesTranslation">Edit transport types translation</text>
-    <text name="DeleteTransportTypesTranslation">Delete transport types translation</text>
-    <text name="TransportTypeDisplayName">Transport type display name</text>
-    <text name="PickTransportType">Pick transport type</text>
 
 
-
-
-    <![CDATA[Tachyon:SideBar Start]]>
-    <text name="ShippingRequests">Shipping Requests</text>
-    <text name="Marketplace">Marketplace</text>
-    <text name="TMSSettings">TMS Settings</text>
-    <text name="TMS">Trucks Management System</text>
-    <![CDATA[Tachyon:SideBar End]]>
 
 
 

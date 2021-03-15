@@ -45,7 +45,7 @@ export class InvoicePeriodsModalComponent extends AppComponentBase implements On
     this.FreRelativeInterval = this.enumToArray.transform(FrequencyRelativeInterval);
   }
 
-  show(period: InvoicePeriodDto | null): void {
+  public show(period: InvoicePeriodDto | null): void {
     this._periodService.getAllCommon().subscribe((result) => {
       this.Months = result.months;
       this.Weeks = result.weeks;
