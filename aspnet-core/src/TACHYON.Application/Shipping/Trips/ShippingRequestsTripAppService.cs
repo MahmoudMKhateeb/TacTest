@@ -52,29 +52,28 @@ namespace TACHYON.Shipping.Trips
         public async Task<PagedResultDto<ShippingRequestsTripListDto>> GetAll(ShippingRequestTripFilterInput Input)
         {
             var request = await GetShippingRequestByPermission(Input.RequestId);
-            var query = _ShippingRequestTripRepository
-    .GetAll()
-    .AsNoTracking()
-                .Include(x=>x.OriginFacilityFk)
-                .Include(x=>x.DestinationFacilityFk)    
+            using (CurrentUnitOfWork.DisableFilter(AbpDataFilters.MustHaveTenant, AbpDataFilters.MayHaveTenant))
+            {
+                var query = _ShippingRequestTripRepository
+            .GetAll()
+            .AsNoTracking()
+                .Include(x => x.OriginFacilityFk)
+                .Include(x => x.DestinationFacilityFk)
                 .Include(x => x.AssignedTruckFk)
-                .Include(x=>x.AssignedDriverUserFk)
-                //.Include(x => x.RoutPoints)
-                //   .ThenInclude(r => r.FacilityFk)
-                //.Include(x => x.RoutPoints)
-                //   .ThenInclude(r => r.GoodsDetails)
-                //.Include(x => x.ShippingRequestTripVases)
-                .Where(x => x.ShippingRequestId == request.Id)
-    .WhereIf(Input.Status.HasValue, e => e.Status == Input.Status)
-    .OrderBy(Input.Sorting ?? "Status asc")
-    .PageBy(Input);
+                .Include(x => x.AssignedDriverUserFk)
+            .Where(x => x.ShippingRequestId == request.Id)
+            .WhereIf(Input.Status.HasValue, e => e.Status == Input.Status)
+            .OrderBy(Input.Sorting ?? "Status asc")
+            .PageBy(Input);
 
-            var totalCount = await query.CountAsync();
-            return new PagedResultDto<ShippingRequestsTripListDto>(
-                totalCount,
-                ObjectMapper.Map<List<ShippingRequestsTripListDto>>(await query.ToListAsync())
+                var totalCount = await query.CountAsync();
+                return new PagedResultDto<ShippingRequestsTripListDto>(
+                    totalCount,
+                    ObjectMapper.Map<List<ShippingRequestsTripListDto>>(await query.ToListAsync())
 
-            );
+                );
+            }
+
         }
 
         public async Task<ShippingRequestsTripForViewDto> GetShippingRequestTripForView(int id)
@@ -212,10 +211,11 @@ namespace TACHYON.Shipping.Trips
         }
         private async Task<ShippingRequestTrip> GetTrip(int tripid, long? RequestId = null)
         {
-
-            var trip = await _ShippingRequestTripRepository
+            using (CurrentUnitOfWork.DisableFilter(AbpDataFilters.MustHaveTenant, AbpDataFilters.MayHaveTenant))
+            {
+                var trip = await _ShippingRequestTripRepository
                 .GetAll()
-                .Include(x=>x.OriginFacilityFk)
+                .Include(x => x.OriginFacilityFk)
                 .Include(x => x.DestinationFacilityFk)
                 .Include(x => x.AssignedTruckFk)
                 .Include(x => x.AssignedDriverUserFk)
@@ -224,12 +224,14 @@ namespace TACHYON.Shipping.Trips
                 .Include(x => x.RoutPoints)
                    .ThenInclude(r => r.GoodsDetails)
                 .Include(x => x.ShippingRequestTripVases)
-                  .ThenInclude(v=>v.ShippingRequestVasFk)
-                    .ThenInclude(v=>v.VasFk)
+                  .ThenInclude(v => v.ShippingRequestVasFk)
+                    .ThenInclude(v => v.VasFk)
                 .WhereIf(RequestId.HasValue, x => x.ShippingRequestId == RequestId)
                  .FirstOrDefaultAsync(x => x.Id == tripid);
-            if (trip == null) throw new UserFriendlyException(L("ShippingRequestTripIsNotFound"));
-            return trip;
+                if (trip == null) throw new UserFriendlyException(L("ShippingRequestTripIsNotFound"));
+                return trip;
+            }
+
         }
         /// <summary>
         /// Return Request when the user loging as shipper or host or carrier 

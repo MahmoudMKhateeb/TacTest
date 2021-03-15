@@ -1,6 +1,7 @@
 ﻿using Abp;
 using Abp.Application.Services.Dto;
 using Abp.Domain.Repositories;
+using Abp.Domain.Uow;
 using Abp.Linq.Extensions;
 using Abp.Timing;
 using Abp.UI;
@@ -60,30 +61,36 @@ namespace TACHYON.Shipping.Drivers
         /// <param name="input"></param>
         /// <returns></returns>
         public async Task<PagedResultDto<ShippingRequestTripDriverListDto>> GetAll(ShippingRequestTripDriverFilterInput input)
+
         {
-            var query = _ShippingRequestTrip
-                .GetAll()
-                .AsNoTracking()
-                .Include(i => i.ShippingRequestFk)
-                   .ThenInclude(r => r.RouteFk)
-                   .ThenInclude(r => r.DestinationCityFk)
-               .Include(i => i.ShippingRequestFk)
-                   .ThenInclude(r => r.RouteFk)
-                   .ThenInclude(r => r.OriginCityFk)
-               .Include(i => i.OriginFacilityFk)
-               .Include(i => i.DestinationFacilityFk)
-               .Include(r => r.RoutPoints)
-                   .Where(t => t.AssignedDriverUserId == AbpSession.UserId)
-                .WhereIf(input.Status.HasValue, e => e.Status == input.Status)
-                .OrderBy(input.Sorting ?? "Status asc")
-                .PageBy(input);
 
-            var totalCount = await query.CountAsync();
-            return new PagedResultDto<ShippingRequestTripDriverListDto>(
-                totalCount,
-                ObjectMapper.Map<List<ShippingRequestTripDriverListDto>>(query)
+            using (CurrentUnitOfWork.DisableFilter(AbpDataFilters.MustHaveTenant, AbpDataFilters.MayHaveTenant))
+            {
+                var query = _ShippingRequestTrip
+                    .GetAll()
+                    .AsNoTracking()
+                    .Include(i => i.ShippingRequestFk)
+                       .ThenInclude(r => r.RouteFk)
+                         .ThenInclude(r => r.DestinationCityFk)
+                   .Include(i => i.ShippingRequestFk)
+                       .ThenInclude(r => r.RouteFk)
+                          .ThenInclude(r => r.OriginCityFk)
+                   .Include(i => i.OriginFacilityFk)
+                   .Include(i => i.DestinationFacilityFk)
+                       //.Include(r => r.RoutPoints)
+                       .Where(t => t.AssignedDriverUserId == AbpSession.UserId)
+                    .WhereIf(input.Status.HasValue, e => e.Status == input.Status)
+                    .OrderBy(input.Sorting ?? "Status asc")
+                    .PageBy(input);
 
-            );
+                var totalCount = await query.CountAsync();
+                return new PagedResultDto<ShippingRequestTripDriverListDto>(
+                    totalCount,
+                    ObjectMapper.Map<List<ShippingRequestTripDriverListDto>>(query)
+
+                );
+            }
+
 
         }
 
@@ -94,7 +101,9 @@ namespace TACHYON.Shipping.Drivers
         /// <returns></returns>
         public async Task<ShippingRequestTripDriverDetailsDto> GetDetail(long TripId)
         {
-            var query = await _ShippingRequestTrip.GetAll()
+            using (CurrentUnitOfWork.DisableFilter(AbpDataFilters.MustHaveTenant, AbpDataFilters.MayHaveTenant))
+            {
+                var query = await _ShippingRequestTrip.GetAll()
                 .Include(i => i.ShippingRequestFk)
                    .ThenInclude(r => r.RouteFk)
                    .ThenInclude(r => r.DestinationCityFk)
@@ -105,7 +114,9 @@ namespace TACHYON.Shipping.Drivers
                .Include(i => i.OriginFacilityFk)
                 .SingleOrDefaultAsync(t => t.Id == TripId && t.AssignedDriverUserId == AbpSession.UserId);
 
-            return ObjectMapper.Map<ShippingRequestTripDriverDetailsDto>(query);
+                return ObjectMapper.Map<ShippingRequestTripDriverDetailsDto>(query);
+            }
+
         }
 
         /// <summary>
@@ -115,43 +126,56 @@ namespace TACHYON.Shipping.Drivers
         /// <returns></returns>
         public async Task<bool> StartTrip(long TripId)
         {
-            var trip = await _ShippingRequestTrip
-                .FirstOrDefaultAsync(t => t.Id == TripId && t.AssignedDriverUserId == AbpSession.UserId && t.Status != ShippingRequestTripStatus.Finished && t.ShippingRequestFk.StartTripDate <= Clock.Now);
-            if (trip != null)
+            using (CurrentUnitOfWork.DisableFilter(AbpDataFilters.MustHaveTenant, AbpDataFilters.MayHaveTenant))
             {
-                if (!_ShippingRequestTrip.GetAll().Any(x => x.Id != trip.Id && x.Status != ShippingRequestTripStatus.Finished && x.AssignedDriverUserId == AbpSession.UserId))
+                var trip = await _ShippingRequestTrip
+               .FirstOrDefaultAsync(
+                    t => t.Id == TripId && 
+                    t.AssignedDriverUserId == AbpSession.UserId && 
+                    t.Status == ShippingRequestTripStatus.StandBy && 
+                    t.ShippingRequestFk.StartTripDate <= Clock.Now);
+
+
+                if (trip != null)
                 {
-                    var RouteStart = await _RoutPointRepository.SingleAsync(x => x.ShippingRequestTripId == trip.Id && x.PickingType== PickingType.Pickup);
+                    if (!_ShippingRequestTrip.GetAll().Any(x => x.Id != trip.Id && x.Status != ShippingRequestTripStatus.StandBy && x.Status != ShippingRequestTripStatus.Finished && x.AssignedDriverUserId == AbpSession.UserId))
+                    {
+                        var RouteStart = await _RoutPointRepository.SingleAsync(x => x.ShippingRequestTripId == trip.Id && x.PickingType == PickingType.Pickup);
 
-                    RouteStart.StartTime = Clock.Now;
-                    RouteStart.IsActive = true;
-                    trip.Status = ShippingRequestTripStatus.PickupWay;
-                    trip.StartTripDate = Clock.Now;
+                        RouteStart.StartTime = Clock.Now;
+                        RouteStart.IsActive = true;
+                        trip.Status = ShippingRequestTripStatus.PickupWay;
+                        trip.StartTripDate = Clock.Now;
 
-                    return true;
+                        return true;
+                    }
+
+
                 }
-
-
+                return false;
             }
-            return false;
         }
 
         /// <summary>
         /// Change trip status for each points
         /// </summary>
-        public async void ChangeTripStatus()
+        public async Task ChangeTripStatus()
         {
-            var trip = await GetActiveTrip();
-            var Point = await _RoutPointRepository.FirstOrDefaultAsync(x => x.ShippingRequestTripId == trip.Id && x.IsActive);
-            switch (trip.Status)
+            using (CurrentUnitOfWork.DisableFilter(AbpDataFilters.MustHaveTenant, AbpDataFilters.MayHaveTenant))
             {
-                case ShippingRequestTripStatus.PickupWay:
-                    trip.Status = ShippingRequestTripStatus.StartLoading;
-                    break;
-                case ShippingRequestTripStatus.Dropoffway:
-                    trip.Status = ShippingRequestTripStatus.DropoffArrived;
-                    break;
+                var trip = await GetActiveTrip();
+                var Point = await _RoutPointRepository.FirstOrDefaultAsync(x => x.ShippingRequestTripId == trip.Id && x.IsActive==true);
+                switch (trip.Status)
+                {
+                    case ShippingRequestTripStatus.PickupWay:
+                        trip.Status = ShippingRequestTripStatus.StartLoading;
+                        break;
+                    case ShippingRequestTripStatus.Dropoffway:
+                        trip.Status = ShippingRequestTripStatus.DropoffArrived;
+                        break;
+                }
             }
+
 
         }
 
@@ -160,18 +184,22 @@ namespace TACHYON.Shipping.Drivers
         /// </summary>
         /// <param name="PointId">Dropoff point id</param>
 
-        public async void GotoNextLocation(long PointId)
+        public async Task GotoNextLocation(long PointId)
         {
-            var trip = await GetActiveTrip();
-            if (!_RoutPointRepository.GetAll().Any(x => (x.IsActive || (x.Id == PointId && x.IsComplete)) && x.ShippingRequestTripId == trip.Id))
+            using (CurrentUnitOfWork.DisableFilter(AbpDataFilters.MustHaveTenant, AbpDataFilters.MayHaveTenant))
             {
-                var Newpoint = await _RoutPointRepository.FirstOrDefaultAsync(x => x.Id == PointId);
-                if (Newpoint == null) throw new UserFriendlyException(L("the trip is not exists"));
-                Newpoint.StartTime = Clock.Now;
-                Newpoint.IsActive = true;
-                trip.Status = ShippingRequestTripStatus.Dropoffway;
+                var trip = await GetActiveTrip();
+                if (!_RoutPointRepository.GetAll().Any(x => (x.IsActive || (x.Id == PointId && x.IsComplete)) && x.ShippingRequestTripId == trip.Id))
+                {
+                    var Newpoint = await _RoutPointRepository.FirstOrDefaultAsync(x => x.Id == PointId);
+                    if (Newpoint == null) throw new UserFriendlyException(L("the trip is not exists"));
+                    Newpoint.StartTime = Clock.Now;
+                    Newpoint.IsActive = true;
+                    trip.Status = ShippingRequestTripStatus.Dropoffway;
 
+                }
             }
+
         }
         /// <summary>
         ///  confirm receiving the shipment
@@ -181,9 +209,13 @@ namespace TACHYON.Shipping.Drivers
 
         public async Task<bool> ConfirmReceiverCode(string Code)
         {
-            var CurrentPoint = await _RoutPointRepository.FirstOrDefaultAsync(x => x.IsActive && x.Code == Code && x.ShippingRequestTripFk.AssignedDriverUserId == AbpSession.UserId);
+            using (CurrentUnitOfWork.DisableFilter(AbpDataFilters.MustHaveTenant, AbpDataFilters.MayHaveTenant))
+            {
+                var CurrentPoint = await _RoutPointRepository.FirstOrDefaultAsync(x => x.IsActive && x.Code == Code && x.ShippingRequestTripFk.AssignedDriverUserId == AbpSession.UserId);
 
-            return CurrentPoint != null;
+                return CurrentPoint != null;
+            }
+
         }
 
         /// <summary>
@@ -193,51 +225,58 @@ namespace TACHYON.Shipping.Drivers
         /// <param name="Code"></param>
         /// <returns></returns>
 
-        public async Task<bool> UploadPointDeliveryDocument(ShippingRequestTripDriverDocumentDto Input, string Code)
+        public async Task<bool> UploadPointDeliveryDocument(ShippingRequestTripDriverDocumentDto Input)
         {
-
-            var CurrentPoint = await _RoutPointRepository.FirstOrDefaultAsync(x => x.IsActive && x.Code == Code && x.ShippingRequestTripFk.AssignedDriverUserId == AbpSession.UserId);
-            if (CurrentPoint == null) return false;
-
-            if (Input == null || string.IsNullOrEmpty(Input.DocumentBase64)) return false;
-
-
-            var fileBytes = Convert.FromBase64String(Input.DocumentBase64.Split(',')[1]);
-            var fileObject = new BinaryObject(AbpSession.TenantId, fileBytes);
-            await _BinaryObjectManager.SaveAsync(fileObject);
-
-            CurrentPoint.EndTime = Clock.Now;
-            CurrentPoint.DocumentContentType = Input.DocumentContentType;
-            CurrentPoint.DocumentName = Input.DocumentName;
-            CurrentPoint.DocumentId = fileObject.Id;
-            CurrentPoint.IsActive = false;
-            CurrentPoint.IsComplete = true;
-
-            var trip = await GetActiveTrip();
-            if (await _RoutPointRepository.GetAll().Where(x => x.ShippingRequestTripId == trip.Id && !x.IsComplete).CountAsync() == 0)
+            using (CurrentUnitOfWork.DisableFilter(AbpDataFilters.MustHaveTenant, AbpDataFilters.MayHaveTenant))
             {
-                trip.Status = ShippingRequestTripStatus.Finished;
-                trip.EndTripDate = Clock.Now;
+                var CurrentPoint = await _RoutPointRepository.FirstOrDefaultAsync(x => x.IsActive && x.Code == Input.ReceiverCode && x.ShippingRequestTripFk.AssignedDriverUserId == AbpSession.UserId);
+                if (CurrentPoint == null) return false;
 
-                await ChangeShippingRequestStatusIfAllTripsDone(trip.ShippingRequestId);
+                if (Input == null || string.IsNullOrEmpty(Input.DocumentBase64)) return false;
 
 
+                var fileBytes = Convert.FromBase64String(Input.DocumentBase64.Split(',')[1]);
+                var fileObject = new BinaryObject(AbpSession.TenantId, fileBytes);
+                await _BinaryObjectManager.SaveAsync(fileObject);
+
+                CurrentPoint.EndTime = Clock.Now;
+                CurrentPoint.DocumentContentType = Input.DocumentContentType;
+                CurrentPoint.DocumentName = Input.DocumentName;
+                CurrentPoint.DocumentId = fileObject.Id;
+                CurrentPoint.IsActive = false;
+                CurrentPoint.IsComplete = true;
+
+                var trip = await GetActiveTrip();
+                if (await _RoutPointRepository.GetAll().Where(x => x.ShippingRequestTripId == trip.Id && !x.IsComplete).CountAsync() == 0)
+                {
+                    trip.Status = ShippingRequestTripStatus.Finished;
+                    trip.EndTripDate = Clock.Now;
+
+                    await ChangeShippingRequestStatusIfAllTripsDone(trip.ShippingRequestId);
+
+
+                }
+                else
+                {
+                    trip.Status = ShippingRequestTripStatus.offloading;
+                }
+                return true;
             }
-            else
-            {
-                trip.Status = ShippingRequestTripStatus.offloading;
-            }
-            return true;
+
         }
         /// <summary>
         /// The driver ask receiver to rate the trip
         /// </summary>
         /// <param name="PointId"></param>
         /// <param name="Rate"></param>
-        public async void SetRating(long PointId, int Rate)
+        public async Task SetRating(long PointId, int Rate)
         {
-            var Point = await _RoutPointRepository.FirstOrDefaultAsync(x => x.Id == PointId && x.IsComplete && x.ShippingRequestTripFk.AssignedDriverUserId == AbpSession.UserId && !x.Rating.HasValue);
-            if (Point != null) Point.Rating = Rate;
+            using (CurrentUnitOfWork.DisableFilter(AbpDataFilters.MustHaveTenant, AbpDataFilters.MayHaveTenant))
+            {
+                var Point = await _RoutPointRepository.FirstOrDefaultAsync(x => x.Id == PointId && x.IsComplete && x.ShippingRequestTripFk.AssignedDriverUserId == AbpSession.UserId && !x.Rating.HasValue);
+                if (Point != null) Point.Rating = Rate;
+            }
+
         }
 
 
@@ -249,7 +288,7 @@ namespace TACHYON.Shipping.Drivers
         private async Task<ShippingRequestTrip> GetActiveTrip()
         {
             var trip = await _ShippingRequestTrip
-                            .FirstOrDefaultAsync(t => t.AssignedDriverUserId == AbpSession.UserId && (ShippingRequestTripStatus)t.Status != ShippingRequestTripStatus.Finished);
+                            .FirstOrDefaultAsync(t => t.AssignedDriverUserId == AbpSession.UserId && t.Status != ShippingRequestTripStatus.Finished && t.Status != ShippingRequestTripStatus.StandBy);
             if (trip == null) throw new UserFriendlyException(L("thetripIsNotFound"));
             return trip;
         }

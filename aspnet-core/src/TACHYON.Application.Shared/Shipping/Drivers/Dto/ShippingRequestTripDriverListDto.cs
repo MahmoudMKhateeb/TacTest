@@ -11,7 +11,7 @@ namespace TACHYON.Shipping.Drivers.Dto
     {
         public DateTime StartDate { get; set; }
         public DateTime EndDate { get; set; }
-        public string RoutType { get; set; }
+        public int? RoutTypeId { get; set; }
         public string Source { get; set; }
         public string Distination { get; set; }
         public ShippingRequestTripStatus Status { get; set; }
