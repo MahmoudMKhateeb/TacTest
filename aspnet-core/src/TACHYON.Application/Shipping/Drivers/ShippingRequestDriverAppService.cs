@@ -240,8 +240,8 @@ namespace TACHYON.Shipping.Drivers
                 await _BinaryObjectManager.SaveAsync(fileObject);
 
                 CurrentPoint.EndTime = Clock.Now;
-                CurrentPoint.DocumentContentType = Input.DocumentContentType;
-                CurrentPoint.DocumentName = Input.DocumentName;
+                CurrentPoint.DocumentContentType = "image/jpeg";
+                CurrentPoint.DocumentName = Guid.NewGuid().ToString();
                 CurrentPoint.DocumentId = fileObject.Id;
                 CurrentPoint.IsActive = false;
                 CurrentPoint.IsComplete = true;

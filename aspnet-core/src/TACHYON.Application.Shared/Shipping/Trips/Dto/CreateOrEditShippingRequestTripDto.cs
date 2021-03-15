@@ -16,8 +16,8 @@ namespace TACHYON.Shipping.Trips.Dto
         public DateTime EndTripDate { get; set; }
 
 
-        public long? AssignedDriverUserId { get; set; }
-        public long? AssignedTruckId { get; set; }
+        //public long? AssignedDriverUserId { get; set; }
+        //public long? AssignedTruckId { get; set; }
         public long ShippingRequestId { get; set; }
 
 

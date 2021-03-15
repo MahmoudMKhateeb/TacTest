@@ -10,9 +10,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Dynamic.Core;
 using System.Threading.Tasks;
-using TACHYON.AddressBook;
 using TACHYON.Authorization;
-using TACHYON.Authorization.Users;
 using TACHYON.Features;
 using TACHYON.Goods.GoodsDetails;
 using TACHYON.Routs.RoutPoints;
@@ -20,7 +18,6 @@ using TACHYON.Shipping.ShippingRequests;
 using TACHYON.Shipping.ShippingRequestTrips;
 using TACHYON.Shipping.Trips.Dto;
 using TACHYON.ShippingRequestTripVases;
-using TACHYON.Trucks;
 
 namespace TACHYON.Shipping.Trips
 {
