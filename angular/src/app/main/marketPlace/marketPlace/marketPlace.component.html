@@ -157,19 +157,19 @@
               >
                 <ng-template pTemplate="header">
                   <tr>
-                    <th style="width: 111px;">
-                      {{ l('Actions') }}
+                    <th style="width: 50px;" pSortableColumn="shippingRequestId">
+                      {{ l('id') }}
+                      <p-sortIcon field="shippingRequestId"></p-sortIcon>
                     </th>
-
-                    <th style="width: 147px;" pSortableColumn="shipperName">
+                    <th style="width: 110px;" pSortableColumn="shipperName">
                       {{ l('shipperName') }}
                       <p-sortIcon field="shipperName"></p-sortIcon>
                     </th>
-                    <th style="width: 200px;" pSortableColumn="truckTypeDisplayName">
+                    <th style="width: 160px;" pSortableColumn="truckTypeDisplayName">
                       {{ l('truckTypeDisplayName') }}
                       <p-sortIcon field="truckTypeDisplayName"></p-sortIcon>
                     </th>
-                    <th style="width: 180px;" pSortableColumn="goodCategoryName">
+                    <th style="width: 150px;" pSortableColumn="goodCategoryName">
                       {{ l('goodCategoryName') }}
                       <p-sortIcon field="goodCategoryName"></p-sortIcon>
                     </th>
@@ -187,25 +187,22 @@
                       {{ l('myBidPrice') }}
                       <p-sortIcon field="myBidPrice"></p-sortIcon>
                     </th>
+                    <th style="width: 150px;">
+                      {{ l('Actions') }}
+                    </th>
                   </tr>
                 </ng-template>
                 <ng-template pTemplate="body" let-record="$implicit">
                   <tr>
-                    <td style="width: 115px;">
-                      <button
-                        class="btn btn-primary font-weight-bolder"
-                        [disabled]="record.shippingRequestBidStatusName == 'Canceled' || record.shippingRequestBidStatusName == 'Closed'"
-                        (click)="ViewShippingRequestDetailsModal.show(record)"
-                      >
-                        {{ l('View') }}
-                      </button>
+                    <td style="width: 50px;">
+                      <span class="ui-column-title"> {{ l('shippingRequestId') }}</span>
+                      {{ record.shippingRequestId }}
                     </td>
-
-                    <td style="width: 180px;">
+                    <td style="width: 110px;">
                       <span class="ui-column-title"> {{ l('shipperName') }}</span>
                       {{ record.shipperName }}
                     </td>
-                    <td style="width: 200px;">
+                    <td style="width: 160px;">
                       <span class="ui-column-title"> {{ l('truckTypeDisplayName') }}</span>
                       {{ record.truckTypeDisplayName }}
                     </td>
@@ -233,6 +230,15 @@
                     <td style="width: 150px;">
                       <span class="ui-column-title"> {{ l('lastBidPrice') }}</span>
                       {{ record.myBidPrice }}
+                    </td>
+                    <td style="width: 150px;">
+                      <button
+                        class="btn btn-primary font-weight-bolder"
+                        [disabled]="record.shippingRequestBidStatusName == 'Canceled' || record.shippingRequestBidStatusName == 'Closed'"
+                        (click)="ViewShippingRequestDetailsModal.show(record)"
+                      >
+                        {{ l('Details') }}
+                      </button>
                     </td>
                   </tr>
                 </ng-template>
