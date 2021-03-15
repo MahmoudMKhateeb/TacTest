@@ -25,6 +25,7 @@ using TACHYON.Notifications;
 using TACHYON.Shipping.ShippingRequestBids.Dtos;
 using TACHYON.Shipping.ShippingRequests;
 using TACHYON.Shipping.ShippingRequests.Dtos;
+using TACHYON.ShippingRequestVases.Dtos;
 using TACHYON.Trucks;
 
 namespace TACHYON.Shipping.ShippingRequestBids
@@ -254,17 +255,16 @@ namespace TACHYON.Shipping.ShippingRequestBids
             using (CurrentUnitOfWork.DisableFilter(AbpDataFilters.MustHaveTenant, AbpDataFilters.MayHaveTenant))
             {
                 IQueryable<ShippingRequest> filterBidShippingRequests = _shippingRequestsRepository.GetAll()
-                    //.Include(x => x.ShippingRequestBidStatusFK)
                     .Include(x => x.TrucksTypeFk)
                     .Include(x => x.GoodCategoryFk)
                     .Include(x => x.GoodCategoryFk)
                     .Include(x => x.ShippingRequestBids)
-                    //.Include(x => x.RouteFk.OriginFacilityFk)
-                    //.ThenInclude(x=>x.CityFk)
-                    //.Include(x => x.RouteFk.DestinationFacilityFk)
-                    //.ThenInclude(x=>x.CityFk)
+                    .Include(x => x.ShippingRequestVases)
+                    .ThenInclude(x => x.VasFk)
                     .Include(x => x.RouteFk.OriginCityFk)
+                    .ThenInclude(x=>x.CountyFk)
                     .Include(x => x.RouteFk.DestinationCityFk)
+                    .ThenInclude(x=>x.CountyFk)
                     .Include(x => x.Tenant)
                     .Where(x => x.IsBid)
                     .Where(x=>x.BidStatus!= ShippingRequestBidStatus.StandBy)
@@ -309,25 +309,15 @@ namespace TACHYON.Shipping.ShippingRequestBids
                         GoodCategoryName = o.GoodCategoryFk.DisplayName,
                         MyBidPrice = o.ShippingRequestBids.OrderByDescending(x => x.Id).FirstOrDefault()?.price,
                         MyBidId = o.ShippingRequestBids.FirstOrDefault()?.Id,
-                        //OriginalFacility=new GetFacilityForViewOutput()
-                        //{
-                        //    Facility =ObjectMapper.Map<FacilityDto>(o.RouteFk.OriginFacilityFk),
-                        //    CityDisplayName = o.RouteFk?.OriginFacilityFk?.CityFk.DisplayName,
-                        //    FacilityName = o.RouteFk?.OriginFacilityFk?.Name,
-                        //    Longitude = o.RouteFk?.OriginFacilityFk?.Location.X,
-                        //    Latitude = o.RouteFk?.OriginFacilityFk?.Location.Y
-                        //},
-                        //DestinationFacility =new GetFacilityForViewOutput()
-                        //{
-                        //    Facility = ObjectMapper.Map<FacilityDto>(o.RouteFk.DestinationFacilityFk),
-                        //    CityDisplayName = o.RouteFk?.DestinationFacilityFk?.CityFk.DisplayName,
-                        //    FacilityName = o.RouteFk?.DestinationFacilityFk?.Name,
-                        //    Longitude = o.RouteFk?.DestinationFacilityFk?.Location.X,
-                        //    Latitude = o.RouteFk?.DestinationFacilityFk?.Location.Y
-                        //},
                         SourceCityName = o.RouteFk?.OriginCityFk.DisplayName,
-                        DestinationCityName = o.RouteFk?.DestinationCityFk.DisplayName
-
+                        DestinationCityName = o.RouteFk?.DestinationCityFk.DisplayName,
+                        ShippingRequestVasesDto=o.ShippingRequestVases.Select(e=>new GetShippingRequestVasForViewDto
+                        {
+                            ShippingRequestVas =ObjectMapper.Map<ShippingRequestVasDto>(e),
+                            VasName = e.VasFk.Name
+                        }),
+                        SourceCountryName = o.RouteFk?.OriginCityFk.CountyFk.DisplayName,
+                        DestinationCountryName = o.RouteFk?.DestinationCityFk.CountyFk.DisplayName
                     });
 
                 int totalCount = await filterBidShippingRequests.CountAsync();
