@@ -6,6 +6,12 @@
     /// </summary>
     public static class AppPermissions
     {
+        #region Shipping Request
+        public const string Pages_ShippingRequestCauseAccidents = "Pages.ShippingRequestCauseAccidents";
+        public const string Pages_ShippingRequestCauseAccidents_Create = "Pages.ShippingRequestCauseAccidents.Create";
+        public const string Pages_ShippingRequestCauseAccidents_Edit = "Pages.ShippingRequestCauseAccidents.Edit";
+        public const string Pages_ShippingRequestCauseAccidents_Delete = "Pages.ShippingRequestCauseAccidents.Delete";
+        #endregion
         public const string Pages_TripStatuses = "Pages.TripStatuses";
         public const string Pages_TripStatuses_Create = "Pages.TripStatuses.Create";
         public const string Pages_TripStatuses_Edit = "Pages.TripStatuses.Edit";

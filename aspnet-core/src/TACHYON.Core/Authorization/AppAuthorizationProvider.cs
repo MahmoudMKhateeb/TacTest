@@ -323,6 +323,13 @@ namespace TACHYON.Authorization
             administration.CreateChildPermission(AppPermissions.Pages_Administration_Host_Maintenance, L("Maintenance"), multiTenancySides: _isMultiTenancyEnabled ? MultiTenancySides.Host : MultiTenancySides.Tenant);
             administration.CreateChildPermission(AppPermissions.Pages_Administration_HangfireDashboard, L("HangfireDashboard"), multiTenancySides: _isMultiTenancyEnabled ? MultiTenancySides.Host : MultiTenancySides.Tenant);
             administration.CreateChildPermission(AppPermissions.Pages_Administration_Host_Dashboard, L("Dashboard"), multiTenancySides: MultiTenancySides.Host);
+
+            #region Shipping Request
+            var CauseAccident = pages.CreateChildPermission(AppPermissions.Pages_ShippingRequestCauseAccidents, L("CausesAccidents"), multiTenancySides: MultiTenancySides.Host);
+            CauseAccident.CreateChildPermission(AppPermissions.Pages_ShippingRequestCauseAccidents_Create, L("CreateNewCausesAccident"), multiTenancySides: MultiTenancySides.Host);
+            CauseAccident.CreateChildPermission(AppPermissions.Pages_ShippingRequestCauseAccidents_Edit, L("EditCausesAccident"), multiTenancySides: MultiTenancySides.Host);
+            CauseAccident.CreateChildPermission(AppPermissions.Pages_ShippingRequestCauseAccidents_Delete, L("DeleteCausesAccident"), multiTenancySides: MultiTenancySides.Host);
+            #endregion
         }
 
         private static ILocalizableString L(string name)

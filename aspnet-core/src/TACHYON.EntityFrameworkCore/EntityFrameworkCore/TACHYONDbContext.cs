@@ -55,6 +55,7 @@ using Microsoft.EntityFrameworkCore.Metadata;
 using TACHYON.Routs.RoutPoints;
 using TACHYON.Shipping.ShippingRequestTrips;
 using TACHYON.Shipping.Trips;
+using TACHYON.Shipping.Accidents;
 
 namespace TACHYON.EntityFrameworkCore
 {
@@ -63,11 +64,12 @@ namespace TACHYON.EntityFrameworkCore
         #region Trips
         //public virtual DbSet<ShippingRequestTripPoint> ShippingRequestTripPoint { get; set; }
         public virtual DbSet<RoutePointTransition> RoutePointTranstions { get; set; }
+        public virtual DbSet<ShippingRequestTrip> ShippingRequestTrips { get; set; }
 
+        public virtual DbSet<ShippingRequestCauseAccident> ShippingRequestCauseAccidents { get; set; }
         #endregion
         public virtual DbSet<TripStatus> TripStatuses { get; set; }
         
-        public virtual DbSet<ShippingRequestTrip> ShippingRequestTrips { get; set; }
 
         public virtual DbSet<PackingType> PackingTypes { get; set; }
 
