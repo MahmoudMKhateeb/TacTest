@@ -3,7 +3,9 @@ using Abp.Authorization;
 using Abp.Domain.Repositories;
 using Abp.Extensions;
 using Abp.Linq.Extensions;
+using Castle.MicroKernel.ModelBuilder.Descriptors;
 using Microsoft.EntityFrameworkCore;
+using Org.BouncyCastle.Math.EC.Rfc7748;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,6 +16,8 @@ using TACHYON.Dto;
 using TACHYON.Goods.GoodCategories;
 using TACHYON.Goods.GoodsDetails.Dtos;
 using TACHYON.Goods.GoodsDetails.Exporting;
+using TACHYON.Routs.RoutPoints;
+using TACHYON.Routs.RoutSteps;
 using TACHYON.Routs.RoutPoints.Dtos;
 
 namespace TACHYON.Goods.GoodsDetails
@@ -22,16 +26,20 @@ namespace TACHYON.Goods.GoodsDetails
     public class GoodsDetailsAppService : TACHYONAppServiceBase, IGoodsDetailsAppService
     {
         private readonly IRepository<GoodsDetail, long> _goodsDetailRepository;
+        private readonly IRepository<RoutPoint, long> _routPointRepository;
         private readonly IGoodsDetailsExcelExporter _goodsDetailsExcelExporter;
         private readonly IRepository<GoodCategory, int> _lookup_goodCategoryRepository;
 
 
-        public GoodsDetailsAppService(IRepository<GoodsDetail, long> goodsDetailRepository, IGoodsDetailsExcelExporter goodsDetailsExcelExporter, IRepository<GoodCategory, int> lookup_goodCategoryRepository)
+        public GoodsDetailsAppService(IRepository<GoodsDetail, long> goodsDetailRepository, 
+            IGoodsDetailsExcelExporter goodsDetailsExcelExporter,
+            IRepository<GoodCategory, int> lookup_goodCategoryRepository,
+            IRepository<RoutPoint, long> routPointRepository)
         {
             _goodsDetailRepository = goodsDetailRepository;
             _goodsDetailsExcelExporter = goodsDetailsExcelExporter;
             _lookup_goodCategoryRepository = lookup_goodCategoryRepository;
-
+            _routPointRepository = routPointRepository;
         }
 
         public async Task<PagedResultDto<GetGoodsDetailForViewDto>> GetAll(GetAllGoodsDetailsInput input)
@@ -215,6 +223,59 @@ namespace TACHYON.Goods.GoodsDetails
                     DisplayName = goodCategory == null || goodCategory.DisplayName == null ? "" : goodCategory.DisplayName.ToString()
                 }).ToListAsync();
         }
+
+        #region Waybills
+        //public IEnumerable<GetGoodsDetailsForWaybillsOutput> GetShippingrequestGoodsDetailsForSingleDropWaybill()
+        //{
+        //    var goods = _goodsDetailRepository.GetAll()
+        //        .Where(x => x.ShippingRequestId == 1);
+
+        //    var query = goods.Select(x => new
+        //    {
+        //        Description = x.Description,
+        //        TotalAmount = x.TotalAmount,
+        //        Weight = x.Weight,
+        //        UnitOfMeasureDisplayName = x.UnitOfMeasureFk.DisplayName
+        //    });
+
+        //    var output = query.ToList().Select(e =>
+        //        new GetGoodsDetailsForWaybillsOutput()
+        //        {
+        //            Weight = e.Weight,
+        //            UnitOfMeasureDisplayName = e.UnitOfMeasureDisplayName,
+        //            TotalAmount = e.TotalAmount,
+        //            Description = e.Description,
+        //            TotalWeight = goods.Sum(x => x.Weight)
+        //        });
+        //    return output;
+        //}
+
+        public IEnumerable<GetGoodsDetailsForWaybillsOutput> GetShippingrequestGoodsDetailsForMultipleDropWaybill()
+        {
+            var goods = _goodsDetailRepository.GetAll()
+                .Where(x => x.RoutPointId == 62);
+
+            var query = goods.Select(x => new
+            {
+                Description = x.Description,
+                //Amount which will be dropped
+                TotalAmount = x.Amount,
+                UnitOfMeasureDisplayName = x.UnitOfMeasureFk.DisplayName
+            });
+
+            var output = query.ToList().Select(e =>
+                new GetGoodsDetailsForWaybillsOutput()
+                {
+                    UnitOfMeasureDisplayName = e.UnitOfMeasureDisplayName,
+                    TotalAmount = e.TotalAmount,
+                    Description = e.Description,
+                });
+            return output;
+        }
+
+
+
+        #endregion
 
     }
 }

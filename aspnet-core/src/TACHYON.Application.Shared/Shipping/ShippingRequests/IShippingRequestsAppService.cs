@@ -1,8 +1,9 @@
 ﻿using Abp.Application.Services;
 using Abp.Application.Services.Dto;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using TACHYON.Shipping.ShippingRequests.Dtos;
-
+using TACHYON.Vases.Dtos;
 
 namespace TACHYON.Shipping.ShippingRequests
 {
@@ -14,12 +15,15 @@ namespace TACHYON.Shipping.ShippingRequests
 
         Task<GetShippingRequestForEditOutput> GetShippingRequestForEdit(EntityDto<long> input);
 
+        Task UpdatePrice(UpdatePriceInput input);
         Task CreateOrEdit(CreateOrEditShippingRequestDto input);
-
+        Task AcceptOrRejectShippingRequestPrice(AcceptShippingRequestPriceInput input);
+        Task RejectShippingRequest(long id);
         Task Delete(EntityDto<long> input);
 
    
         //Task<FileDto> GetShippingRequestsToExcel(GetAllShippingRequestsForExcelInput input);
+        IEnumerable<GetMasterWaybillOutput> GetMasterWaybill(long shippingRequestId);
 
     }
 }

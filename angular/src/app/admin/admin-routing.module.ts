@@ -30,6 +30,7 @@ import { DynamicParameterDetailComponent } from './dynamic-entity-parameters/dyn
 import { EntityDynamicParameterComponent } from './dynamic-entity-parameters/entity-dynamic-parameter/entity-dynamic-parameter.component';
 import { EntityDynamicParameterValueComponent } from './dynamic-entity-parameters/entity-dynamic-parameter/entity-dynamic-parameter-value/entity-dynamic-parameter-value.component';
 import { DriversComponent } from '@app/admin/users/drivers/drivers.component';
+import { waybillsComponent } from './waybills/waybills';
 
 @NgModule({
   imports: [
@@ -38,7 +39,12 @@ import { DriversComponent } from '@app/admin/users/drivers/drivers.component';
         path: '',
         children: [
           { path: 'vases/vases', component: VasesComponent, data: { permission: 'Pages.Administration.Vases' } },
-                    { path: 'termsAndConditions/termAndConditionTranslations', component: TermAndConditionTranslationsComponent, data: { permission: 'Pages.Administration.TermAndConditionTranslations' }  },
+          { path: 'waybills/waybills', component: waybillsComponent, data: { permission: undefined } },
+          {
+            path: 'termsAndConditions/termAndConditionTranslations',
+            component: TermAndConditionTranslationsComponent,
+            data: { permission: 'Pages.Administration.TermAndConditionTranslations' },
+          },
           {
             path: 'shippingRequestStatuses/shippingRequestStatuses',
             component: ShippingRequestStatusesComponent,

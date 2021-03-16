@@ -133,6 +133,7 @@ import { ViewOrEditEntityDocumentsModalComponent } from '@app/main/documentFiles
 import { CreateOrEditDocumentFileModalComponent } from '@app/main/documentFiles/documentFiles/create-or-edit-documentFile-modal.component';
 import { CustomNgbDateParserFormatter } from '@app/shared/common/hijri-gregorian-datepicker/CustomNgbDateParserFormatter';
 import { ViewRejectionReasonModalComponent } from './required-document-files/view-rejection-reason-modal.component';
+import { waybillsComponent } from './waybills/waybills';
 const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
   // suppressScrollX: true
 };
@@ -172,13 +173,13 @@ const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
   ],
   declarations: [
     VasesComponent,
-
+    waybillsComponent,
     ViewVasModalComponent,
     CreateOrEditVasModalComponent,
-		TermAndConditionTranslationsComponent,
+    TermAndConditionTranslationsComponent,
 
-		ViewTermAndConditionTranslationModalComponent,
-		CreateOrEditTermAndConditionTranslationModalComponent,
+    ViewTermAndConditionTranslationModalComponent,
+    CreateOrEditTermAndConditionTranslationModalComponent,
     ViewRejectionReasonModalComponent,
     CreateOrEditDocumentFileModalComponent,
     ViewOrEditEntityDocumentsModalComponent,

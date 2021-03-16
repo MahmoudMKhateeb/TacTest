@@ -8,5 +8,6 @@ namespace TACHYON.Goods.GoodsDetails.Dtos
         public string RoutPointDisplayName { get; set; }
         public string GoodCategoryDisplayName { get; set; }
 
+        public string UnitOfMeasureDisplayName { get; set; }
     }
 }

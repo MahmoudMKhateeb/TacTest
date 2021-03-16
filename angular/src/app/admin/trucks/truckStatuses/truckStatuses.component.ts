@@ -32,6 +32,7 @@ export class TruckStatusesComponent extends AppComponentBase {
   advancedFiltersAreShown = false;
   filterText = '';
   displayNameFilter = '';
+  platenumber = '2121';
 
   _entityTypeFullName = 'TACHYON.Trucks.TruckStatus';
   entityHistoryEnabled = false;

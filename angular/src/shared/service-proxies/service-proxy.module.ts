@@ -4,10 +4,15 @@ import { NgModule } from '@angular/core';
 import * as ApiServiceProxies from './service-proxies';
 import { ZeroRefreshTokenService } from '@account/auth/zero-refresh-token.service';
 import { ZeroTemplateHttpConfigurationService } from './zero-template-http-configuration.service';
-import { ShippingRequestBidsServiceProxy, ShippingRequestsTripServiceProxy } from './service-proxies';
+import { ShippingRequestBidsServiceProxy, WaybillsServiceProxy } from './service-proxies';
+import { ShippingRequestsTripServiceProxy } from './service-proxies';
 
 @NgModule({
   providers: [
+    ApiServiceProxies.NationalitiesServiceProxy,
+    ApiServiceProxies.NationalityTranslationsServiceProxy,
+    ApiServiceProxies.TransportTypesTranslationsServiceProxy,
+    ApiServiceProxies.WaybillsServiceProxy,
     ApiServiceProxies.TruckCapacitiesTranslationsServiceProxy,
     ApiServiceProxies.TruckStatusesTranslationsServiceProxy,
     ApiServiceProxies.CitiesTranslationsServiceProxy,
@@ -16,14 +21,14 @@ import { ShippingRequestBidsServiceProxy, ShippingRequestsTripServiceProxy } fro
     ApiServiceProxies.NationalitiesServiceProxy,
     ApiServiceProxies.NationalityTranslationsServiceProxy,
     ApiServiceProxies.TransportTypesTranslationsServiceProxy,
-        ApiServiceProxies.CitiesTranslationsServiceProxy,        
-        ApiServiceProxies.CountriesTranslationsServiceProxy,        
-        ApiServiceProxies.PlateTypesServiceProxy,        
-        ApiServiceProxies.TruckCapacitiesTranslationsServiceProxy,        
-        ApiServiceProxies.TruckStatusesTranslationsServiceProxy,        
-        ApiServiceProxies.NationalitiesServiceProxy,        
-        ApiServiceProxies.NationalityTranslationsServiceProxy,        
-        ApiServiceProxies.TransportTypesTranslationsServiceProxy,        
+    ApiServiceProxies.CitiesTranslationsServiceProxy,
+    ApiServiceProxies.CountriesTranslationsServiceProxy,
+    ApiServiceProxies.PlateTypesServiceProxy,
+    ApiServiceProxies.TruckCapacitiesTranslationsServiceProxy,
+    ApiServiceProxies.TruckStatusesTranslationsServiceProxy,
+    ApiServiceProxies.NationalitiesServiceProxy,
+    ApiServiceProxies.NationalityTranslationsServiceProxy,
+    ApiServiceProxies.TransportTypesTranslationsServiceProxy,
     ApiServiceProxies.TrucksTypesTranslationsServiceProxy,
     ApiServiceProxies.TransportTypesTranslationsServiceProxy,
     ApiServiceProxies.TripStatusesServiceProxy,

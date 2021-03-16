@@ -162,13 +162,23 @@ export class AppNavigationService {
               ),
               new AppMenuItem('TruckSubTypes', 'Pages.TruckSubtypes', 'flaticon-more', '/app/main/truckSubtypes/truckSubtypes'),
               new AppMenuItem('CapacityCategories', 'Pages.Capacities', 'flaticon-more', '/app/main/truckCapacities/capacities'),
-              new AppMenuItem('TruckCapacitiesTranslations', 'Pages.TruckCapacitiesTranslations', 'flaticon-more', '/app/main/truckCapacitiesTranslations/truckCapacitiesTranslations'),
+              new AppMenuItem(
+                'TruckCapacitiesTranslations',
+                'Pages.TruckCapacitiesTranslations',
+                'flaticon-more',
+                '/app/main/truckCapacitiesTranslations/truckCapacitiesTranslations'
+              ),
             ]
           ),
           new AppMenuItem('PlateTypes', 'Pages.Capacities', 'flaticon-more', '/app/main/plateTypes/plateTypes'),
 
           new AppMenuItem('TruckStatuses', 'Pages.Administration.TruckStatuses', 'flaticon-info', '/app/admin/trucks/truckStatuses'),
-          new AppMenuItem('TruckStatusesTranslations', 'Pages.TruckStatusesTranslations', 'flaticon-more', '/app/main/truckStatusesTranslations/truckStatusesTranslations'),
+          new AppMenuItem(
+            'TruckStatusesTranslations',
+            'Pages.TruckStatusesTranslations',
+            'flaticon-more',
+            '/app/main/truckStatusesTranslations/truckStatusesTranslations'
+          ),
           // new AppMenuItem('PickingTypes', 'Pages.PickingTypes', 'flaticon2-telegram-logo', '/app/main/pickingTypes/pickingTypes'),
           // new AppMenuItem('TrailerTypes', 'Pages.TrailerTypes', 'flaticon2-delivery-truck', '/app/main/trailerTypes/trailerTypes'),
           // new AppMenuItem('PayloadMaxWeights', 'Pages.PayloadMaxWeights', 'flaticon2-download-1', '/app/main/payloadMaxWeight/payloadMaxWeights'),
@@ -228,6 +238,11 @@ export class AppNavigationService {
       ),
 
       // Host
+      new AppMenuItem('Vases', 'Pages.Administration.Vases', 'flaticon-more', '/app/admin/vases/vases'),
+      new AppMenuItem('waybills', undefined, 'flaticon-more', '/app/admin/waybills/waybills'),
+      new AppMenuItem('VasPrices', 'Pages.VasPrices', 'flaticon-more', '/app/main/vases/vasPrices', undefined, undefined, undefined, undefined, () =>
+        this._featureCheckerService.isEnabled('App.Carrier')
+      ),
       new AppMenuItem('Vas', 'Pages.Administration.Vases', 'label label-danger label-dot', '/app/admin/vases/vases'),
       new AppMenuItem(
         'VasPrices',
