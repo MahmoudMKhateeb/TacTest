@@ -35,30 +35,6 @@ namespace TACHYON.Authorization
             receivers.CreateChildPermission(AppPermissions.Pages_Receivers_Edit, L("EditReceiver"), multiTenancySides: MultiTenancySides.Tenant);
             receivers.CreateChildPermission(AppPermissions.Pages_Receivers_Delete, L("DeleteReceiver"), multiTenancySides: MultiTenancySides.Tenant);
 
-            var citiesTranslations = pages.CreateChildPermission(AppPermissions.Pages_CitiesTranslations, L("CitiesTranslations"), multiTenancySides: MultiTenancySides.Host);
-            citiesTranslations.CreateChildPermission(AppPermissions.Pages_CitiesTranslations_Create, L("CreateNewCitiesTranslation"), multiTenancySides: MultiTenancySides.Host);
-            citiesTranslations.CreateChildPermission(AppPermissions.Pages_CitiesTranslations_Edit, L("EditCitiesTranslation"), multiTenancySides: MultiTenancySides.Host);
-            citiesTranslations.CreateChildPermission(AppPermissions.Pages_CitiesTranslations_Delete, L("DeleteCitiesTranslation"), multiTenancySides: MultiTenancySides.Host);
-
-            var countriesTranslations = pages.CreateChildPermission(AppPermissions.Pages_CountriesTranslations, L("CountriesTranslations"), multiTenancySides: MultiTenancySides.Host);
-            countriesTranslations.CreateChildPermission(AppPermissions.Pages_CountriesTranslations_Create, L("CreateNewCountriesTranslation"), multiTenancySides: MultiTenancySides.Host);
-            countriesTranslations.CreateChildPermission(AppPermissions.Pages_CountriesTranslations_Edit, L("EditCountriesTranslation"), multiTenancySides: MultiTenancySides.Host);
-            countriesTranslations.CreateChildPermission(AppPermissions.Pages_CountriesTranslations_Delete, L("DeleteCountriesTranslation"), multiTenancySides: MultiTenancySides.Host);
-
-            var plateTypes = pages.CreateChildPermission(AppPermissions.Pages_PlateTypes, L("PlateTypes"), multiTenancySides: MultiTenancySides.Host);
-            plateTypes.CreateChildPermission(AppPermissions.Pages_PlateTypes_Create, L("CreateNewPlateType"), multiTenancySides: MultiTenancySides.Host);
-            plateTypes.CreateChildPermission(AppPermissions.Pages_PlateTypes_Edit, L("EditPlateType"), multiTenancySides: MultiTenancySides.Host);
-            plateTypes.CreateChildPermission(AppPermissions.Pages_PlateTypes_Delete, L("DeletePlateType"), multiTenancySides: MultiTenancySides.Host);
-
-            var truckCapacitiesTranslations = pages.CreateChildPermission(AppPermissions.Pages_TruckCapacitiesTranslations, L("TruckCapacitiesTranslations"), multiTenancySides: MultiTenancySides.Host);
-            truckCapacitiesTranslations.CreateChildPermission(AppPermissions.Pages_TruckCapacitiesTranslations_Create, L("CreateNewTruckCapacitiesTranslation"), multiTenancySides: MultiTenancySides.Host);
-            truckCapacitiesTranslations.CreateChildPermission(AppPermissions.Pages_TruckCapacitiesTranslations_Edit, L("EditTruckCapacitiesTranslation"), multiTenancySides: MultiTenancySides.Host);
-            truckCapacitiesTranslations.CreateChildPermission(AppPermissions.Pages_TruckCapacitiesTranslations_Delete, L("DeleteTruckCapacitiesTranslation"), multiTenancySides: MultiTenancySides.Host);
-
-            var truckStatusesTranslations = pages.CreateChildPermission(AppPermissions.Pages_TruckStatusesTranslations, L("TruckStatusesTranslations"), multiTenancySides: MultiTenancySides.Host);
-            truckStatusesTranslations.CreateChildPermission(AppPermissions.Pages_TruckStatusesTranslations_Create, L("CreateNewTruckStatusesTranslation"), multiTenancySides: MultiTenancySides.Host);
-            truckStatusesTranslations.CreateChildPermission(AppPermissions.Pages_TruckStatusesTranslations_Edit, L("EditTruckStatusesTranslation"), multiTenancySides: MultiTenancySides.Host);
-            truckStatusesTranslations.CreateChildPermission(AppPermissions.Pages_TruckStatusesTranslations_Delete, L("DeleteTruckStatusesTranslation"), multiTenancySides: MultiTenancySides.Host);
 
             var tripStatuses = pages.CreateChildPermission(AppPermissions.Pages_TripStatuses, L("TripStatuses"), multiTenancySides: MultiTenancySides.Host);
             tripStatuses.CreateChildPermission(AppPermissions.Pages_TripStatuses_Create, L("CreateNewTripStatus"), multiTenancySides: MultiTenancySides.Host);

@@ -463,7 +463,6 @@ namespace TACHYON.Notifications
             await _notificationPublisher.PublishAsync(AppNotificationNames.ShipperNotfiyWhenCreditLimitGreaterOrEqualXPercentage, notificationData, tenantIds: new [] {TenantId });
         }
         #endregion
-        #endregion
 
 
 

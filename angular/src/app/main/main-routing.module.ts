@@ -1,10 +1,5 @@
 import { NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
-import { CitiesTranslationsComponent } from './citiesTranslations/citiesTranslations/citiesTranslations.component';
-import { CountriesTranslationsComponent } from './countriesTranslations/countriesTranslations/countriesTranslations.component';
-import { PlateTypesComponent } from './plateTypes/plateTypes/plateTypes.component';
-import { TruckCapacitiesTranslationsComponent } from './truckCapacitiesTranslations/truckCapacitiesTranslations/truckCapacitiesTranslations.component';
-import { TruckStatusesTranslationsComponent } from './truckStatusesTranslations/truckStatusesTranslations/truckStatusesTranslations.component';
 import { TripStatusesComponent } from './tripStatuses/tripStatuses/tripStatuses.component';
 import { PackingTypesComponent } from './packingTypes/packingTypes/packingTypes.component';
 import { ShippingTypesComponent } from './shippingTypes/shippingTypes/shippingTypes.component';
@@ -94,8 +89,12 @@ import { TransactionListComponent } from './invoices/transaction/transaction-lis
             data: { permission: 'Pages.CountriesTranslations' },
           },
           { path: 'plateTypes/plateTypes', component: PlateTypesComponent, data: { permission: 'Pages.Capacities' } },
-                    { path: 'citiesTranslations/citiesTranslations', component: CitiesTranslationsComponent, data: { permission: 'Pages.CitiesTranslations' }  },
-                    { path: 'countriesTranslations/countriesTranslations', component: CountriesTranslationsComponent, data: { permission: 'Pages.CountriesTranslations' }  },
+          { path: 'citiesTranslations/citiesTranslations', component: CitiesTranslationsComponent, data: { permission: 'Pages.CitiesTranslations' } },
+          {
+            path: 'countriesTranslations/countriesTranslations',
+            component: CountriesTranslationsComponent,
+            data: { permission: 'Pages.CountriesTranslations' },
+          },
           { path: 'plateTypes/plateTypes', component: PlateTypesComponent, data: { permission: 'Pages.Capacities' } },
           { path: 'nationalities/nationalities', component: NationalitiesComponent, data: { permission: 'Pages.Nationalities' } },
           {
@@ -108,13 +107,37 @@ import { TransactionListComponent } from './invoices/transaction/transaction-lis
             component: TransportTypesTranslationsComponent,
             data: { permission: 'Pages.TransportTypesTranslations' },
           },
-                    { path: 'truckCapacitiesTranslations/truckCapacitiesTranslations', component: TruckCapacitiesTranslationsComponent, data: { permission: 'Pages.TruckCapacitiesTranslations' }  },
-                    { path: 'truckStatusesTranslations/truckStatusesTranslations', component: TruckStatusesTranslationsComponent, data: { permission: 'Pages.TruckStatusesTranslations' }  },
-                    { path: 'truckCapacitiesTranslations/truckCapacitiesTranslations', component: TruckCapacitiesTranslationsComponent, data: { permission: 'Pages.TruckCapacitiesTranslations' }  },
-                    { path: 'truckStatusesTranslations/truckStatusesTranslations', component: TruckStatusesTranslationsComponent, data: { permission: 'Pages.TruckStatusesTranslations' }  },
-                    { path: 'nationalities/nationalities', component: NationalitiesComponent, data: { permission: 'Pages.Nationalities' }  },
-                    { path: 'nationalitiesTranslation/nationalityTranslations', component: NationalityTranslationsComponent, data: { permission: 'Pages.NationalityTranslations' }  },
-                    { path: 'transportTypesTranslations/transportTypesTranslations', component: TransportTypesTranslationsComponent, data: { permission: 'Pages.TransportTypesTranslations' }  },
+          {
+            path: 'truckCapacitiesTranslations/truckCapacitiesTranslations',
+            component: TruckCapacitiesTranslationsComponent,
+            data: { permission: 'Pages.TruckCapacitiesTranslations' },
+          },
+          {
+            path: 'truckStatusesTranslations/truckStatusesTranslations',
+            component: TruckStatusesTranslationsComponent,
+            data: { permission: 'Pages.TruckStatusesTranslations' },
+          },
+          {
+            path: 'truckCapacitiesTranslations/truckCapacitiesTranslations',
+            component: TruckCapacitiesTranslationsComponent,
+            data: { permission: 'Pages.TruckCapacitiesTranslations' },
+          },
+          {
+            path: 'truckStatusesTranslations/truckStatusesTranslations',
+            component: TruckStatusesTranslationsComponent,
+            data: { permission: 'Pages.TruckStatusesTranslations' },
+          },
+          { path: 'nationalities/nationalities', component: NationalitiesComponent, data: { permission: 'Pages.Nationalities' } },
+          {
+            path: 'nationalitiesTranslation/nationalityTranslations',
+            component: NationalityTranslationsComponent,
+            data: { permission: 'Pages.NationalityTranslations' },
+          },
+          {
+            path: 'transportTypesTranslations/transportTypesTranslations',
+            component: TransportTypesTranslationsComponent,
+            data: { permission: 'Pages.TransportTypesTranslations' },
+          },
           { path: 'tripStatuses/tripStatuses', component: TripStatusesComponent, data: { permission: 'Pages.TripStatuses' } },
           { path: 'packingTypes/packingTypes', component: PackingTypesComponent, data: { permission: 'Pages.PackingTypes' } },
           { path: 'shippingTypes/shippingTypes', component: ShippingTypesComponent, data: { permission: 'Pages.ShippingTypes' } },
@@ -139,8 +162,12 @@ import { TransactionListComponent } from './invoices/transaction/transaction-lis
             component: TransportTypesTranslationsComponent,
             data: { permission: 'Pages.TransportTypesTranslations' },
           },
-                    { path: 'citiesTranslations/citiesTranslations', component: CitiesTranslationsComponent, data: { permission: 'Pages.CitiesTranslations' }  },
-                    { path: 'countriesTranslations/countriesTranslations', component: CountriesTranslationsComponent, data: { permission: 'Pages.CountriesTranslations' }  },
+          { path: 'citiesTranslations/citiesTranslations', component: CitiesTranslationsComponent, data: { permission: 'Pages.CitiesTranslations' } },
+          {
+            path: 'countriesTranslations/countriesTranslations',
+            component: CountriesTranslationsComponent,
+            data: { permission: 'Pages.CountriesTranslations' },
+          },
           { path: 'plateTypes/plateTypes', component: PlateTypesComponent, data: { permission: 'Pages.Capacities' } },
           { path: 'nationalities/nationalities', component: NationalitiesComponent, data: { permission: 'Pages.Nationalities' } },
           {

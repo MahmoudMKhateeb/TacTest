@@ -16,20 +16,7 @@
         public const string Pages_TruckStatusesTranslations_Edit = "Pages.TruckStatusesTranslations.Edit";
         public const string Pages_TruckStatusesTranslations_Delete = "Pages.TruckStatusesTranslations.Delete";
 
-        public const string Pages_CitiesTranslations = "Pages.CitiesTranslations";
-        public const string Pages_CitiesTranslations_Create = "Pages.CitiesTranslations.Create";
-        public const string Pages_CitiesTranslations_Edit = "Pages.CitiesTranslations.Edit";
-        public const string Pages_CitiesTranslations_Delete = "Pages.CitiesTranslations.Delete";
 
-        public const string Pages_CountriesTranslations = "Pages.CountriesTranslations";
-        public const string Pages_CountriesTranslations_Create = "Pages.CountriesTranslations.Create";
-        public const string Pages_CountriesTranslations_Edit = "Pages.CountriesTranslations.Edit";
-        public const string Pages_CountriesTranslations_Delete = "Pages.CountriesTranslations.Delete";
-
-        public const string Pages_PlateTypes = "Pages.PlateTypes";
-        public const string Pages_PlateTypes_Create = "Pages.PlateTypes.Create";
-        public const string Pages_PlateTypes_Edit = "Pages.PlateTypes.Edit";
-        public const string Pages_PlateTypes_Delete = "Pages.PlateTypes.Delete";
 
         public const string Pages_Receivers = "Pages.Receivers";
         public const string Pages_Receivers_Create = "Pages.Receivers.Create";
@@ -51,10 +38,6 @@
         public const string Pages_PlateTypes_Edit = "Pages.PlateTypes.Edit";
         public const string Pages_PlateTypes_Delete = "Pages.PlateTypes.Delete";
 
-        public const string Pages_TruckCapacitiesTranslations = "Pages.TruckCapacitiesTranslations";
-        public const string Pages_TruckCapacitiesTranslations_Create = "Pages.TruckCapacitiesTranslations.Create";
-        public const string Pages_TruckCapacitiesTranslations_Edit = "Pages.TruckCapacitiesTranslations.Edit";
-        public const string Pages_TruckCapacitiesTranslations_Delete = "Pages.TruckCapacitiesTranslations.Delete";
 
         #region Shipping Request
         public const string Pages_ShippingRequestCauseAccidents = "Pages.ShippingRequestCauseAccidents";
@@ -77,10 +60,6 @@
         public const string Pages_ShippingTypes_Edit = "Pages.ShippingTypes.Edit";
         public const string Pages_ShippingTypes_Delete = "Pages.ShippingTypes.Delete";
 
-        public const string Pages_TruckStatusesTranslations = "Pages.TruckStatusesTranslations";
-        public const string Pages_TruckStatusesTranslations_Create = "Pages.TruckStatusesTranslations.Create";
-        public const string Pages_TruckStatusesTranslations_Edit = "Pages.TruckStatusesTranslations.Edit";
-        public const string Pages_TruckStatusesTranslations_Delete = "Pages.TruckStatusesTranslations.Delete";
 
         public const string Pages_Nationalities = "Pages.Nationalities";
         public const string Pages_Nationalities_Create = "Pages.Nationalities.Create";

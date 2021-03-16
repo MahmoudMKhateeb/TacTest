@@ -2,6 +2,10 @@
 {
 }
 
+namespace TACHYON.Waybills.Reports
+{
+}
+
 public partial class MultipleDropsGoodsDetailsDataSet {
 }
 
