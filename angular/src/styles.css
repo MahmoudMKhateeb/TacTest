@@ -566,3 +566,11 @@ card-body {
 .btn.btn-link-success {
   color: #1bc5bd !important;
 }
+
+/*.was-validated .form-control:valid, .form-control.is-valid {*/
+/*    background-position: right calc(1.375em + 0.325rem) center !important;*/
+/*}*/
+
+/*.was-validated .form-control:invalid, .form-control.is-invalid {*/
+/*    background-position: right calc(1.375em + 0.325rem) center !important;*/
+/*}*/

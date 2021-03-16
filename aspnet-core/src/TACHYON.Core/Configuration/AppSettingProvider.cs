@@ -97,6 +97,8 @@ namespace TACHYON.Configuration
                     GetFromAppSettings(AppSettings.HostManagement.BillingLegalName, "")),
                 new SettingDefinition(AppSettings.HostManagement.BillingAddress,
                     GetFromAppSettings(AppSettings.HostManagement.BillingAddress, "")),
+                new SettingDefinition(AppSettings.HostManagement.TaxVat,
+                    GetFromAppSettings(AppSettings.HostManagement.TaxVat, "5")),
                 new SettingDefinition(AppSettings.Recaptcha.SiteKey, GetFromSettings("Recaptcha:SiteKey"),
                     isVisibleToClients: true),
                 new SettingDefinition(AppSettings.UiManagement.Theme,

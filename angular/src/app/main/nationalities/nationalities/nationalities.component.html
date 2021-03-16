@@ -1,6 +1,7 @@
 ﻿<div [@routerTransition]>
   <div class="content d-flex flex-column flex-column-fluid">
-    <sub-header [title]="'Nationalities' | localize" [description]="'NationalitiesHeaderInfo' | localize">
+    <sub-header [title]="'Nationalities' | localize">
+      <!-- <sub-header [title]="'Nationalities' | localize" [description]="'NationalitiesHeaderInfo' | localize"> -->
       <div role="actions">
         <button *ngIf="isGranted('Pages.Nationalities.Create')" (click)="createNationality()" class="btn btn-primary blue">
           <i class="fa fa-plus"></i> {{ l('CreateNewNationality') }}
@@ -165,7 +166,7 @@
         </div>
       </div>
     </div>
-    <createOrEditNationalityModal #createOrEditNationalityModal (modalSave)="getNationalities()"></createOrEditNationalityModal>
+    <createOrEditNationalityModal #createOrEditNationalityModal (modalSave)="getNationalities()"> </createOrEditNationalityModal>
     <viewNationalityModal #viewNationalityModal></viewNationalityModal>
   </div>
 </div>

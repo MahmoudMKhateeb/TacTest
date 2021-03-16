@@ -1,8 +1,13 @@
 <div provideParentForm>
   <input
     class="form-control hijriInput"
+    #ngbDatepicker="ngModel"
+    [ngClass]="{
+      'is-valid': parentForm?.submitted && ngbDatepicker.valid,
+      'is-invalid': parentForm?.submitted && ngbDatepicker.invalid
+    }"
     [(ngModel)]="selectedDate"
-    [placeholder]="placeHolder ? placeHolder : 'd/M/yyyy'"
+    [placeholder]="'d/M/yyyy' | localize"
     ngbDatepicker
     (click)="d.toggle()"
     (dateSelect)="changeDate()"

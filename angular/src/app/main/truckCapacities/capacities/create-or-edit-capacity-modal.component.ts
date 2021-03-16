@@ -1,9 +1,8 @@
 ﻿import { Component, ViewChild, Injector, Output, EventEmitter } from '@angular/core';
 import { ModalDirective } from 'ngx-bootstrap/modal';
 import { finalize } from 'rxjs/operators';
-import { CapacitiesServiceProxy, CapacityTruckTypeLookupTableDto, CreateOrEditCapacityDto } from '@shared/service-proxies/service-proxies';
+import { CapacitiesServiceProxy, CreateOrEditCapacityDto, ISelectItemDto } from '@shared/service-proxies/service-proxies';
 import { AppComponentBase } from '@shared/common/app-component-base';
-import * as moment from 'moment';
 
 @Component({
   selector: 'createOrEditCapacityModal',
@@ -21,7 +20,7 @@ export class CreateOrEditCapacityModalComponent extends AppComponentBase {
 
   truckTypeDisplayName = '';
 
-  allTruckTypes: CapacityTruckTypeLookupTableDto[];
+  allTruckTypes: ISelectItemDto[];
 
   constructor(injector: Injector, private _capacitiesServiceProxy: CapacitiesServiceProxy) {
     super(injector);

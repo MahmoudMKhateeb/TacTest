@@ -1,4 +1,4 @@
-﻿import { Component, Injector, ViewEncapsulation, ViewChild, OnInit } from '@angular/core';
+﻿import { Component, Injector, ViewEncapsulation, ViewChild, OnInit, AfterViewInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { DocumentFilesServiceProxy, DocumentFileDto, SelectItemDto } from '@shared/service-proxies/service-proxies';
 import { NotifyService } from 'abp-ng2-module';
@@ -24,7 +24,7 @@ import session = abp.session;
   animations: [appModuleAnimation()],
   providers: [DateFormatterService],
 })
-export class DocumentFilesComponent extends AppComponentBase implements OnInit {
+export class DocumentFilesComponent extends AppComponentBase implements OnInit, AfterViewInit {
   @ViewChild('entityTypeHistoryModal', { static: true }) entityTypeHistoryModal: EntityTypeHistoryModalComponent;
   @ViewChild('createOrEditDocumentFileModal', { static: true }) createOrEditDocumentFileModal: CreateOrEditDocumentFileModalComponent;
   @ViewChild('viewDocumentFileModalComponent', { static: true }) viewDocumentFileModal: ViewDocumentFileModalComponent;
@@ -54,6 +54,8 @@ export class DocumentFilesComponent extends AppComponentBase implements OnInit {
   _entityTypeFullName = 'TACHYON.Documents.DocumentFiles.DocumentFile';
   entityHistoryEnabled = false;
 
+  todayMoment = this.dateFormatterService.NgbDateStructToMoment(this.todayGregorian);
+
   constructor(
     injector: Injector,
     private _documentFilesServiceProxy: DocumentFilesServiceProxy,
@@ -74,6 +76,10 @@ export class DocumentFilesComponent extends AppComponentBase implements OnInit {
     });
 
     this.entityHistoryEnabled = this.setIsEntityHistoryEnabled();
+  }
+
+  ngAfterViewInit(): void {
+    this.primengTableHelper.adjustScroll(this.dataTable);
   }
 
   private setIsEntityHistoryEnabled(): boolean {

@@ -4,6 +4,7 @@ using System;
 using System.ComponentModel.DataAnnotations;
 using TACHYON.Authorization.Users;
 using TACHYON.Editions;
+using TACHYON.Invoices.Periods;
 using TACHYON.MultiTenancy.Payments;
 
 namespace TACHYON.MultiTenancy
@@ -38,6 +39,11 @@ namespace TACHYON.MultiTenancy
 
         [MaxLength(MaxLogoMimeTypeLength)]
         public virtual string LogoFileType { get; set; }
+
+        public decimal Balance { get; set; } = 0;
+        public decimal ReservedBalance { get; set; } = 0;
+        public decimal CreditBalance { get; set; } = 0;
+
 
         public SubscriptionPaymentType SubscriptionPaymentType { get; set; }
 

@@ -1,4 +1,4 @@
-import { Component, Injector, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
+import { AfterViewInit, Component, Injector, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
 import { UsersComponent } from '@app/admin/users/users.component';
 import { appModuleAnimation } from '@shared/animations/routerTransition';
 import { ImpersonationService } from '@app/admin/users/impersonation.service';
@@ -17,7 +17,7 @@ import { ViewOrEditEntityDocumentsModalComponent } from '@app/main/documentFiles
   styleUrls: ['../users.component.less'],
   animations: [appModuleAnimation()],
 })
-export class DriversComponent extends UsersComponent {
+export class DriversComponent extends UsersComponent implements AfterViewInit {
   @ViewChild('viewOrEditEntityDocumentsModal', { static: true }) viewOrEditEntityDocumentsModal: ViewOrEditEntityDocumentsModalComponent;
   isArabic = false;
 
@@ -34,6 +34,10 @@ export class DriversComponent extends UsersComponent {
     this.onlyDrivers = true;
     this.uploadUrl = AppConsts.remoteServiceBaseUrl + '/Users/ImportDriversFromExcel';
     this.isArabic = abp.localization.currentLanguage.name.startsWith('ar');
+  }
+
+  ngAfterViewInit(): void {
+    this.primengTableHelper.adjustScroll(this.dataTable);
   }
 
   showDriverkDocuments(driverId) {

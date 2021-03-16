@@ -1,3 +1,46 @@
+﻿using TACHYON.Cities.CitiesTranslations.Dtos;
+using TACHYON.Cities.CitiesTranslations;
+using TACHYON.Countries.CountriesTranslations.Dtos;
+using TACHYON.Countries.CountriesTranslations;
+using TACHYON.Trucks.PlateTypes.Dtos;
+using TACHYON.Trucks.PlateTypes;
+using TACHYON.Nationalities.Dtos;
+﻿using TACHYON.Trucks.TruckCategories.TruckCapacities.TruckCapacitiesTranslations.Dtos;
+using TACHYON.Trucks.TruckCategories.TruckCapacities.TruckCapacitiesTranslations;
+using TACHYON.Trucks.TruckStatusesTranslations.Dtos;
+using TACHYON.Trucks.TruckStatusesTranslations;
+using TACHYON.Nationalities.Dtos;
+using TACHYON.Nationalities;
+using TACHYON.Nationalities.NationalitiesTranslation.Dtos;
+using TACHYON.Nationalities.NationalitiesTranslation;
+using TACHYON.Trucks.TrucksTypes.TrucksTypesTranslations.Dtos;
+using TACHYON.Trucks.TrucksTypes.TrucksTypesTranslations;
+using TACHYON.Trucks.TruckCategories.TransportTypes.TransportTypesTranslations.Dtos;
+using TACHYON.Trucks.TruckCategories.TransportTypes.TransportTypesTranslations;
+using TACHYON.ShippingRequestVases.Dtos;
+using TACHYON.ShippingRequestVases;
+using TACHYON.Vases.Dtos;
+using TACHYON.Vases;
+using TACHYON.TermsAndConditions;
+using TACHYON.TermsAndConditions.Dtos;
+using TACHYON.Trucks.TruckCategories.TruckCapacities;
+using TACHYON.Trucks.TruckCategories.TransportTypes.Dtos;
+using TACHYON.Trucks.TruckCategories.TransportTypes;
+using TACHYON.Documents.DocumentTypeTranslations.Dtos;
+using TACHYON.Documents.DocumentTypeTranslations;
+using TACHYON.Documents.DocumentsEntities.Dtos;
+using TACHYON.Documents.DocumentsEntities;
+using TACHYON.Shipping.ShippingRequestStatuses.Dtos;
+using TACHYON.Shipping.ShippingRequestStatuses;
+using TACHYON.PickingTypes.Dtos;
+using TACHYON.PickingTypes;
+using TACHYON.AddressBook.Ports.Dtos;
+using TACHYON.AddressBook.Ports;
+using TACHYON.UnitOfMeasures.Dtos;
+using TACHYON.UnitOfMeasures;
+using TACHYON.AddressBook.Dtos;
+using TACHYON.AddressBook;
+using Abp.Application.Editions;
 ﻿using Abp.Application.Editions;
 using Abp.Application.Features;
 using Abp.Auditing;
@@ -126,6 +169,16 @@ using TACHYON.UnitOfMeasures.Dtos;
 using TACHYON.Vases;
 using TACHYON.Vases.Dtos;
 using TACHYON.WebHooks.Dto;
+using TACHYON.Invoices.Periods.Dto;
+using TACHYON.Invoices.Dto;
+using TACHYON.Invoices;
+using TACHYON.Invoices.Periods;
+using TACHYON.Invoices.Balances;
+using TACHYON.Invoices.Balances.Dto;
+using TACHYON.Invoices.Groups;
+using TACHYON.Invoices.Groups.Dto;
+using System;
+using TACHYON.Invoices.Transactions.Dto;
 
 namespace TACHYON
 {
@@ -138,6 +191,16 @@ namespace TACHYON
         }
         public static void CreateMappings(IMapperConfigurationExpression configuration)
         {
+            configuration.CreateMap<CreateOrEditCitiesTranslationDto, CitiesTranslation>().ReverseMap();
+            configuration.CreateMap<CitiesTranslationDto, CitiesTranslation>().ReverseMap();
+            configuration.CreateMap<CreateOrEditCountriesTranslationDto, CountriesTranslation>().ReverseMap();
+            configuration.CreateMap<CountriesTranslationDto, CountriesTranslation>().ReverseMap();
+            configuration.CreateMap<CreateOrEditPlateTypeDto, PlateType>().ReverseMap();
+            configuration.CreateMap<PlateTypeDto, PlateType>().ReverseMap();
+            configuration.CreateMap<CreateOrEditTruckCapacitiesTranslationDto, TruckCapacitiesTranslation>().ReverseMap();
+            configuration.CreateMap<TruckCapacitiesTranslationDto, TruckCapacitiesTranslation>().ReverseMap();
+            configuration.CreateMap<CreateOrEditTruckStatusesTranslationDto, TruckStatusesTranslation>().ReverseMap();
+            configuration.CreateMap<TruckStatusesTranslationDto, TruckStatusesTranslation>().ReverseMap();
             #region Trips
                 configuration.CreateMap<CreateOrEditTripStatusDto, TripStatus>().ReverseMap();
                 configuration.CreateMap<TripStatusDto, TripStatus>().ReverseMap();
@@ -189,6 +252,8 @@ namespace TACHYON
             configuration.CreateMap<NationalityDto, Nationality>().ReverseMap();
             configuration.CreateMap<CreateOrEditNationalityTranslationDto, NationalityTranslation>().ReverseMap();
             configuration.CreateMap<NationalityTranslationDto, NationalityTranslation>().ReverseMap();
+            configuration.CreateMap<CreateOrEditTrucksTypesTranslationDto, TrucksTypesTranslation>().ReverseMap();
+            configuration.CreateMap<TrucksTypesTranslationDto, TrucksTypesTranslation>().ReverseMap();
             configuration.CreateMap<CreateOrEditTransportTypesTranslationDto, TransportTypesTranslation>().ReverseMap();
             configuration.CreateMap<TransportTypesTranslationDto, TransportTypesTranslation>().ReverseMap();
             configuration.CreateMap<CreateOrEditShippingRequestVasDto, ShippingRequestVas>().ReverseMap();
@@ -226,6 +291,12 @@ namespace TACHYON
             configuration.CreateMap<DocumentFileDto, DocumentFile>().ReverseMap();
             configuration.CreateMap<ImportTruckDocumentFileDto, DocumentFile>().ReverseMap();
             configuration.CreateMap<CreateOrEditDocumentTypeDto, DocumentType>().ReverseMap();
+            configuration.CreateMap<UserInGetDocumentFileForViewDto, User>().ReverseMap();
+
+            //configuration.CreateMap<DocumentTypeDto, DocumentType>()
+            //    .ForPath(dst => dst.DocumentsEntityFk.DisplayName, opt => opt.MapFrom(src => src.RequiredFrom))
+            //    .ForPath(dst => dst.EditionFk.DisplayName, opt => opt.MapFrom(src => src.Edition))
+            //    .ReverseMap();
 
             
             configuration.CreateMap<CreateOrEditShippingRequestVasListDto, ShippingRequestVas>().ReverseMap();
@@ -427,6 +498,44 @@ namespace TACHYON
             //User Delegations
             configuration.CreateMap<CreateUserDelegationDto, UserDelegation>();
 
+
+            /*Invoices*/
+
+            configuration.CreateMap<InvoicePeriodDto, InvoicePeriod>();
+            configuration.CreateMap<InvoicePeriod, InvoicePeriodDto>();
+            configuration.CreateMap<Invoice, InvoiceListDto>()
+                .ForMember(dto => dto.TenantName, options => options.MapFrom(entity => entity.Tenant.Name))
+                .ForMember(dto => dto.Period, options => options.MapFrom(entity => entity.InvoicePeriod.DisplayName));
+
+            configuration.CreateMap<Invoice, InvoiceInfoDto>()
+                .ForMember(dto => dto.ClientName, options => options.MapFrom(entity => entity.Tenant.Name))
+                .ForMember(dto => dto.Address, options => options.MapFrom(entity => entity.Tenant.Address))
+                .ForMember(dto => dto.Period, options => options.MapFrom(entity => entity.InvoicePeriod.DisplayName));
+
+            configuration.CreateMap<BalanceRecharge, BalanceRechargeListDto>()
+               .ForMember(dto => dto.TenantName, options => options.MapFrom(entity => entity.Tenant.Name));
+
+            configuration.CreateMap<CreateBalanceRechargeInput, BalanceRecharge>();
+            
+
+            configuration.CreateMap<Tenant, InvoiceTenantDto>()
+               .ForMember(dto => dto.DisplayName, options => options.MapFrom(entity => entity.Name))
+               .ForMember(dto => dto.Group, options => options.MapFrom(entity => entity.Edition.Name));
+
+            configuration.CreateMap<GroupPeriod, GroupPeriodListDto>()
+                .ForMember(dto => dto.TenantName, options => options.MapFrom(entity => entity.Tenant.Name))
+                .ForMember(dto => dto.Period, options => options.MapFrom(entity => entity.InvoicePeriod.DisplayName));
+
+            configuration.CreateMap<GroupPeriod, GroupPeriodInfoDto>()
+                .ForMember(dto => dto.ClientName, options => options.MapFrom(entity => entity.Tenant.Name))
+                .ForMember(dto => dto.Address, options => options.MapFrom(entity => entity.Tenant.Address))
+                .ForMember(dto => dto.Period, options => options.MapFrom(entity => entity.InvoicePeriod.DisplayName));
+
+
+            configuration.CreateMap<TACHYON.Invoices.Transactions.Transaction, TransactionListDto>()
+                .ForMember(dto => dto.ClientName, options => options.MapFrom(entity => entity.Tenant.Name))
+                .ForMember(dto => dto.Channel, options => options.MapFrom(entity => entity.Channel.Channel));
+            
             /* ADD YOUR OWN CUSTOM AUTOMAPPER MAPPINGS HERE */
         }
         /// <summary>
@@ -454,6 +563,54 @@ namespace TACHYON
                   .EntityMap
                   .ForMember(dst => dst.Id, opt => opt.MapFrom(src => src.Id.ToString()))
                   .ReverseMap();
+
+            configuration.CreateMultiLingualMap<County, CountriesTranslation, CountyDto>(context)
+                .EntityMap
+                .ReverseMap();
+
+            configuration.CreateMultiLingualMap<County, CountriesTranslation, TenantCountryLookupTableDto>(context)
+                .EntityMap
+                .ForMember(dst => dst.Id, opt => opt.MapFrom(src => src.Id.ToString()))
+                .ReverseMap();
+
+            configuration.CreateMultiLingualMap<City, CitiesTranslation, CityDto>(context)
+                .EntityMap
+                .ForMember(dst => dst.Id, opt => opt.MapFrom(src => src.Id.ToString()))
+                .ReverseMap();
+
+            configuration.CreateMultiLingualMap<City, CitiesTranslation, TenantCityLookupTableDto>(context)
+                .EntityMap
+                .ForMember(dst => dst.Id, opt => opt.MapFrom(src => src.Id.ToString()))
+                .ReverseMap();
+
+            configuration.CreateMultiLingualMap<TruckStatus, long, TruckStatusesTranslation, TruckStatusDto>(context)
+                .EntityMap
+                .ReverseMap();
+
+            // goto:#Map_TruckStatus_TruckTruckStatusLookupTableDto
+            configuration.CreateMultiLingualMap<TruckStatus, long, TruckStatusesTranslation, TruckTruckStatusLookupTableDto>(context)
+                .EntityMap
+                .ForMember(dst => dst.Id, opt => opt.MapFrom(src => src.Id.ToString()))
+                .ReverseMap();
+
+            configuration.CreateMultiLingualMap<Capacity, TruckCapacitiesTranslation, CapacityDto>(context)
+                .EntityMap
+                .ReverseMap();
+
+            // goto:#Map_Capacity_CapacitySelectItemDto
+            configuration.CreateMultiLingualMap<Capacity, TruckCapacitiesTranslation, CapacitySelectItemDto>(context)
+                .EntityMap
+                .ForMember(dst => dst.Id, opt => opt.MapFrom(src => src.Id.ToString()))
+                .ReverseMap();
+
+            configuration.CreateMultiLingualMap<TrucksType, long, TrucksTypesTranslation, TrucksTypeDto>(context)
+                .EntityMap
+                .ReverseMap();
+
+            configuration.CreateMultiLingualMap<TrucksType, long, TrucksTypesTranslation, TrucksTypeSelectItemDto>(context)
+                .EntityMap
+                .ForMember(dst => dst.Id, opt => opt.MapFrom(src => src.Id.ToString()))
+                .ReverseMap();
         }
 
         private static void AddOrUpdateShippingRequest(CreateOrEditShippingRequestDto dto, ShippingRequest Request)

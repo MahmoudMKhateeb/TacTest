@@ -1,27 +1,24 @@
 ﻿/* tslint:disable:member-ordering */
-import { AfterViewInit, ChangeDetectorRef, Component, EventEmitter, Injector, Output, QueryList, ViewChild, ViewChildren } from '@angular/core';
+import { ChangeDetectorRef, Component, EventEmitter, Injector, Output, ViewChild } from '@angular/core';
 import { ModalDirective } from 'ngx-bootstrap/modal';
 import { finalize } from 'rxjs/operators';
 import {
-  CreateOrEditDocumentFileDto,
   CreateOrEditTruckDto,
   DocumentFileDto,
   DocumentFilesServiceProxy,
+  ISelectItemDto,
   SelectItemDto,
   TrucksServiceProxy,
   TruckTruckStatusLookupTableDto,
-  TruckTrucksTypeLookupTableDto,
-  UpdateDocumentFileInput,
 } from '@shared/service-proxies/service-proxies';
 import { AppComponentBase } from '@shared/common/app-component-base';
 import { TruckUserLookupTableModalComponent } from './truck-user-lookup-table-modal.component';
 import { base64ToFile, ImageCroppedEvent } from '@node_modules/ngx-image-cropper';
-import { FileItem, FileUploader, FileUploaderOptions } from '@node_modules/ng2-file-upload';
-import { IAjaxResponse, TokenService } from '@node_modules/abp-ng2-module';
+import { FileUploader, FileUploaderOptions } from '@node_modules/ng2-file-upload';
+import { TokenService } from '@node_modules/abp-ng2-module';
 import { AppConsts } from '@shared/AppConsts';
 import { LocalStorageService } from '@shared/utils/local-storage.service';
 import { DateType } from '@app/shared/common/hijri-gregorian-datepicker/consts';
-import { NgbDateStruct } from '@node_modules/@ng-bootstrap/ng-bootstrap';
 import { DateFormatterService } from '@app/shared/common/hijri-gregorian-datepicker/date-formatter.service';
 import * as _ from 'lodash';
 import { Paginator } from '@node_modules/primeng/paginator';
@@ -30,6 +27,8 @@ import { CreateOrEditDocumentFileModalComponent } from '@app/main/documentFiles/
 import { FileDownloadService } from '@shared/utils/file-download.service';
 import { EntityTypeHistoryModalComponent } from '@app/shared/common/entityHistory/entity-type-history-modal.component';
 import * as moment from '@node_modules/moment';
+import { RequiredDocumentFormChildComponent } from '@app/shared/common/required-document-form-child/required-document-form-child.component';
+import { NgForm } from '@angular/forms';
 
 @Component({
   selector: 'createOrEditTruckModal',
@@ -39,10 +38,14 @@ import * as moment from '@node_modules/moment';
 })
 export class CreateOrEditTruckModalComponent extends AppComponentBase {
   @ViewChild('createOrEditModal', { static: true }) modal: ModalDirective;
+  @ViewChild('truckForm', { static: false }) truckForm: NgForm;
+
   @ViewChild('truckUserLookupTableModal2', { static: true }) truckUserLookupTableModal2: TruckUserLookupTableModalComponent;
 
   @ViewChild('createOrEditDocumentFileModal', { static: true }) createOrEditDocumentFileModal: CreateOrEditDocumentFileModalComponent;
   @ViewChild('entityTypeHistoryModal', { static: true }) entityTypeHistoryModal: EntityTypeHistoryModalComponent;
+
+  @ViewChild('requiredDocumentFormChildComponent', { static: false }) requiredDocumentFormChildComponent: RequiredDocumentFormChildComponent;
 
   @Output() modalSave: EventEmitter<any> = new EventEmitter<any>();
   active = false;
@@ -68,7 +71,7 @@ export class CreateOrEditTruckModalComponent extends AppComponentBase {
   todayGregorian = this.dateFormatterService.GetTodayGregorian();
   todayHijri = this.dateFormatterService.ToHijri(this.todayGregorian);
   userName2 = '';
-  allTrucksTypes: TruckTrucksTypeLookupTableDto[];
+  allTrucksTypes: ISelectItemDto[];
   allTruckStatuss: TruckTruckStatusLookupTableDto[];
   allTransportTypes: SelectItemDto[];
   allTruckTypesByTransportType: SelectItemDto[];
@@ -79,26 +82,7 @@ export class CreateOrEditTruckModalComponent extends AppComponentBase {
   public temporaryPictureUrl: string;
   profilePicture = '';
   fileFormateIsInvalideIndexList: boolean[] = [];
-  fileisDuplicateList: boolean[] = [];
-  alldocumentsNotDuplicated = false;
-  allnumbersValid = false;
-  numbersInValidList: boolean[] = [];
-  alldocumentsValid = false;
-  allDatesValid = true;
-  datesInValidList: boolean[] = [];
 
-  /**
-   * required documents fileUploader
-   */
-  public DocsUploader: FileUploader;
-  /**
-   * DocFileUploader onProgressItem progress
-   */
-  docProgress: any;
-  /**
-   * DocFileUploader onProgressItem file name
-   */
-  docProgressFileName: any;
   selectedDateTypeHijri = DateType.Hijri; // or DateType.Gregorian
   selectedDateTypeGregorian = DateType.Gregorian; // or DateType.Gregorian
   private dataTable: Table;
@@ -109,6 +93,8 @@ export class CreateOrEditTruckModalComponent extends AppComponentBase {
    * @private
    */
   private _DocsUploaderOptions: FileUploaderOptions = {};
+
+  allPlateTypes: SelectItemDto[];
 
   constructor(
     injector: Injector,
@@ -134,17 +120,22 @@ export class CreateOrEditTruckModalComponent extends AppComponentBase {
       this.truck.trucksTypeId = null;
       this.truck.trucksTypeId = null;
       this.truck.capacityId = null;
+      this.truck.plateTypeId = null;
 
       this.initTransportDropDownList();
       this._trucksServiceProxy.getAllTruckStatusForTableDropdown().subscribe((result) => {
         this.allTruckStatuss = result;
       });
 
+      this._trucksServiceProxy.getAllPlateTypeIdForDropdown().subscribe((result) => {
+        this.allPlateTypes = result;
+      });
+
       //RequiredDocuments
       this._documentFilesServiceProxy.getTruckRequiredDocumentFiles('').subscribe((result) => {
         this.truck.createOrEditDocumentFileDtos = result;
-        this.intilizedates();
       });
+
       this.ModalIsEdit = false;
       this.active = true;
       this.modal.show();
@@ -176,7 +167,6 @@ export class CreateOrEditTruckModalComponent extends AppComponentBase {
     }
 
     this.temporaryPictureUrl = '';
-    this.initDocsUploader();
     this.active = true;
   } //end of show
 
@@ -197,40 +187,36 @@ export class CreateOrEditTruckModalComponent extends AppComponentBase {
   }
 
   save(): void {
+    if (this.truckForm.invalid) {
+      return;
+    }
+
     this.saving = true;
     if (this.truck.id) {
       this.createOrEditTruck();
     }
-    if (this.DocsUploader && this.DocsUploader.queue.length > 0) {
-      if (!this.alldocumentsValid || !this.allnumbersValid || !this.allDatesValid) {
-        this.notify.error(this.l('makeSureThatYouFillAllRequiredFields'));
-        return;
-      }
 
-      this.truck.createOrEditDocumentFileDtos.forEach((element) => {
-        let date = this.dateFormatterService.MomentToNgbDateStruct(element.expirationDate);
-        let hijriDate = this.dateFormatterService.ToHijri(date);
-        element.hijriExpirationDate = this.dateFormatterService.ToString(hijriDate);
-      });
-      this.DocsUploader.uploadAll();
+    // if (!this.alldocumentsValid || !this.allnumbersValid || !this.allDatesValid) {
+    //   this.notify.error(this.l('makeSureThatYouFillAllRequiredFields'));
+    //   return;
+    // }
+
+    if (this.requiredDocumentFormChildComponent.DocsUploader.queue?.length > 0) {
+      this.normalizeDates();
+      this.requiredDocumentFormChildComponent.DocsUploader.uploadAll();
     } else {
       this.createOrEditTruck();
     }
     // this.uploader.uploadAll();
   }
 
-  getNewDriver2UserId() {
-    this.userName2 = this.truckUserLookupTableModal2.displayName;
-  }
-
   close(): void {
     this.active = false;
     this.imageChangedEvent = '';
-    if (this.DocsUploader) {
-      this.DocsUploader.clearQueue();
-    }
-    this.docProgressFileName = null;
-    this.docProgress = null;
+
+    this.truck = new CreateOrEditTruckDto();
+    this.requiredDocumentFormChildComponent.DocsUploader.clearQueue();
+
     this.modal.hide();
   }
 
@@ -249,16 +235,6 @@ export class CreateOrEditTruckModalComponent extends AppComponentBase {
     this.uploader.addToQueue([<File>base64ToFile(event.base64)]);
   }
 
-  guid(): string {
-    function s4() {
-      return Math.floor((1 + Math.random()) * 0x10000)
-        .toString(16)
-        .substring(1);
-    }
-
-    return s4() + s4() + '-' + s4() + '-' + s4() + '-' + s4() + '-' + s4() + s4() + s4();
-  }
-
   getTruckPictureUrl(truckId: number): void {
     let self = this;
     this._localStorageService.getItem(AppConsts.authorization.encrptedAuthTokenName, function (err, value) {
@@ -271,97 +247,6 @@ export class CreateOrEditTruckModalComponent extends AppComponentBase {
         '=' +
         encodeURIComponent(value.token);
     });
-  }
-
-  /**
-   * initialize required documents fileUploader
-   */
-  initDocsUploader(): void {
-    this.DocsUploader = new FileUploader({ url: AppConsts.remoteServiceBaseUrl + '/Helper/UploadDocumentFile' });
-    this._DocsUploaderOptions.autoUpload = false;
-    this._DocsUploaderOptions.authToken = 'Bearer ' + this._tokenService.getToken();
-    this._DocsUploaderOptions.removeAfterUpload = true;
-
-    this.DocsUploader.onAfterAddingFile = (file) => {
-      file.withCredentials = false;
-    };
-
-    this.DocsUploader.onBuildItemForm = (fileItem: FileItem, form: any) => {
-      form.append('FileType', fileItem.file.type);
-      form.append('FileName', fileItem.file.name);
-      form.append('FileToken', this.guid());
-    };
-
-    this.DocsUploader.onSuccessItem = (item, response, status) => {
-      const resp = <IAjaxResponse>JSON.parse(response);
-
-      if (resp.success) {
-        //attach each fileToken to his CreateOrEditDocumentFileDto
-        // console.log(resp.result.fileToken);
-        this.truck.createOrEditDocumentFileDtos.find(
-          (x) => x.name === item.file.name && x.extn === item.file.type
-        ).updateDocumentFileInput = new UpdateDocumentFileInput({ fileToken: resp.result.fileToken });
-      } else {
-        this.message.error(resp.error.message);
-      }
-    };
-
-    this.DocsUploader.onErrorItem = (item, response, status) => {
-      const resp = <IAjaxResponse>JSON.parse(response);
-    };
-
-    this.DocsUploader.onCompleteAll = () => {
-      // create truck req.
-      this.createOrEditTruck();
-    };
-
-    //for progressBar
-    this.DocsUploader.onProgressItem = (fileItem: FileItem, progress: any) => {
-      this.docProgress = progress;
-      this.docProgressFileName = fileItem.file.name;
-    };
-
-    this.DocsUploader.setOptions(this._DocsUploaderOptions);
-  }
-
-  DocFileChangeEvent(event: any, item: CreateOrEditDocumentFileDto, index: number): void {
-    if (event.target.files[0].size > 5242880) {
-      //5MB
-      this.message.warn(this.l('DocumentFile_Warn_SizeLimit', this.maxDocumentFileBytesUserFriendlyValue));
-      this.isAllfileFormatesAccepted();
-      item.name = '';
-      return;
-    }
-    item.extn = event.target.files[0].type;
-    if (item.extn != 'image/jpeg' && item.extn != 'image/png' && item.extn != 'application/pdf') {
-      this.fileFormateIsInvalideIndexList[index] = true;
-      // this.truckFiles[index] = null;
-      item.name = '';
-      this.isAllfileFormatesAccepted();
-      return;
-    }
-    item.name = event.target.files[0].name;
-    //not allow uploading the same document twice
-    for (let i = 0; i < this.truck.createOrEditDocumentFileDtos.length; i++) {
-      const element = this.truck.createOrEditDocumentFileDtos[i];
-      if (element.name == event.target.files[0].name && element.extn == event.target.files[0].type && i != index) {
-        item.name = '';
-        item.extn = '';
-        this.fileisDuplicateList[index] = true;
-        this.isAllfileNotDuplicated();
-        this.message.warn(this.l('DuplicateFileUploadMsg', element.name, element.extn));
-        return;
-      }
-    }
-
-    this.fileisDuplicateList[index] = false;
-    this.isAllfileNotDuplicated();
-    this.fileFormateIsInvalideIndexList[index] = false;
-
-    // item.name = '';
-    // this.truckFiles[index] = event.target.files;
-    this.isAllfileFormatesAccepted();
-    this.DocsUploader.addToQueue(event.target.files);
   }
 
   transportTypeSelectChange(transportTypeId?: number) {
@@ -415,34 +300,14 @@ export class CreateOrEditTruckModalComponent extends AppComponentBase {
     });
   }
 
-  // }
-  downloadDocument(documentFile: DocumentFileDto) {
-    this._documentFilesServiceProxy.getDocumentFileDto(documentFile.id).subscribe((result) => {
-      this._fileDownloadService.downloadTempFile(result);
+  private normalizeDates() {
+    this.truck.createOrEditDocumentFileDtos.forEach((element) => {
+      let date = this.dateFormatterService.MomentToNgbDateStruct(element.expirationDate);
+      let hijriDate = this.dateFormatterService.ToHijri(date);
+      element.hijriExpirationDate = this.dateFormatterService.ToString(hijriDate);
     });
   }
 
-  // exportToExcel(): void {
-  //   this._documentFilesServiceProxy
-  //     .getDocumentFilesToExcel(
-  //       this.filterText,
-  //       this.nameFilter,
-  //       this.extnFilter,
-  //       this.binaryObjectIdFilter,
-  //       this.maxExpirationDateFilter,
-  //       this.minExpirationDateFilter,
-  //       this.isAcceptedFilter,
-  //       this.documentTypeDisplayNameFilter,
-  //       this.truckPlateNumberFilter,
-  //       this.trailerTrailerCodeFilter,
-  //       this.userNameFilter,
-  //       this.routStepDisplayNameFilter
-  //     )
-  //     .subscribe((result) => {
-  //       this._fileDownloadService.downloadTempFile(result);
-  //     });
-
-  //document files methods
   private setIsEntityHistoryEnabled(): boolean {
     let customSettings = (abp as any).custom;
     return (
@@ -452,47 +317,13 @@ export class CreateOrEditTruckModalComponent extends AppComponentBase {
       _.filter(customSettings.EntityHistory.enabledEntities, (entityType) => entityType === this._entityTypeFullName).length === 1
     );
   }
-  isAllfileFormatesAccepted() {
-    if (
-      this.fileFormateIsInvalideIndexList.every((x) => x === false) &&
-      this.fileFormateIsInvalideIndexList.length == this.truck.createOrEditDocumentFileDtos.length
-    ) {
-      this.alldocumentsValid = true;
-    } else {
-      this.alldocumentsValid = false;
-    }
-  }
 
-  numberChange(item: CreateOrEditDocumentFileDto, index: number) {
-    if (item.documentTypeDto.numberMinDigits <= item.number.length && item.number.length <= item.documentTypeDto.numberMaxDigits) {
-      this.numbersInValidList[index] = false;
-      this.isNumbersValid();
-    } else {
-      this.numbersInValidList[index] = true;
-      this.isNumbersValid();
-    }
-  }
-  isNumbersValid() {
-    if (this.numbersInValidList.every((x) => x === false) && this.numbersInValidList.length == this.truck.createOrEditDocumentFileDtos.length) {
-      this.allnumbersValid = true;
-    } else {
-      this.allnumbersValid = false;
-    }
-  }
-
-  isAllfileNotDuplicated() {
-    if (this.fileisDuplicateList.every((x) => x === false) && this.fileisDuplicateList.length == this.truck.createOrEditDocumentFileDtos.length) {
-      this.alldocumentsNotDuplicated = true;
-    } else {
-      this.alldocumentsNotDuplicated = false;
-    }
-  }
-
-  intilizedates() {
-    this.truck.createOrEditDocumentFileDtos.forEach((element) => {
-      if (element.documentTypeDto.hasExpirationDate) {
-        element.expirationDate = this.dateFormatterService.NgbDateStructToMoment(this.todayGregorian);
-      }
-    });
+  plateNumberNoramlize() {
+    this.truck.plateNumber = this.truck.plateNumber
+      .replace(/\s/g, '')
+      .replace(/([A-Z])/g, ' $1')
+      .replace(/([a-z])/g, ' $1')
+      .replace(/([أ-ي])/g, ' $1')
+      .trim();
   }
 }

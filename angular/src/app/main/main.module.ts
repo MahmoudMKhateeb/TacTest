@@ -1,7 +1,27 @@
-﻿import { CommonModule } from '@angular/common';
+import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { AppCommonModule } from '@app/shared/common/app-common.module';
+import { CitiesTranslationsComponent } from './citiesTranslations/citiesTranslations/citiesTranslations.component';
+import { ViewCitiesTranslationModalComponent } from './citiesTranslations/citiesTranslations/view-citiesTranslation-modal.component';
+import { CreateOrEditCitiesTranslationModalComponent } from './citiesTranslations/citiesTranslations/create-or-edit-citiesTranslation-modal.component';
+
+import { CountriesTranslationsComponent } from './countriesTranslations/countriesTranslations/countriesTranslations.component';
+import { ViewCountriesTranslationModalComponent } from './countriesTranslations/countriesTranslations/view-countriesTranslation-modal.component';
+import { CreateOrEditCountriesTranslationModalComponent } from './countriesTranslations/countriesTranslations/create-or-edit-countriesTranslation-modal.component';
+
+import { PlateTypesComponent } from './plateTypes/plateTypes/plateTypes.component';
+import { ViewPlateTypeModalComponent } from './plateTypes/plateTypes/view-plateType-modal.component';
+import { CreateOrEditPlateTypeModalComponent } from './plateTypes/plateTypes/create-or-edit-plateType-modal.component';
+
+import { TruckCapacitiesTranslationsComponent } from './truckCapacitiesTranslations/truckCapacitiesTranslations/truckCapacitiesTranslations.component';
+import { ViewTruckCapacitiesTranslationModalComponent } from './truckCapacitiesTranslations/truckCapacitiesTranslations/view-truckCapacitiesTranslation-modal.component';
+import { CreateOrEditTruckCapacitiesTranslationModalComponent } from './truckCapacitiesTranslations/truckCapacitiesTranslations/create-or-edit-truckCapacitiesTranslation-modal.component';
+
+import { TruckStatusesTranslationsComponent } from './truckStatusesTranslations/truckStatusesTranslations/truckStatusesTranslations.component';
+import { ViewTruckStatusesTranslationModalComponent } from './truckStatusesTranslations/truckStatusesTranslations/view-truckStatusesTranslation-modal.component';
+import { CreateOrEditTruckStatusesTranslationModalComponent } from './truckStatusesTranslations/truckStatusesTranslations/create-or-edit-truckStatusesTranslation-modal.component';
+
 import { TripStatusesComponent } from './tripStatuses/tripStatuses/tripStatuses.component';
 import { ViewTripStatusModalComponent } from './tripStatuses/tripStatuses/view-tripStatus-modal.component';
 import { CreateOrEditTripStatusModalComponent } from './tripStatuses/tripStatuses/create-or-edit-tripStatus-modal.component';
@@ -25,6 +45,10 @@ import { MasterDetailChild_Nationality_CreateOrEditNationalityTranslationModalCo
 import { NationalityTranslationsComponent } from './nationalitiesTranslation/nationalityTranslations/nationalityTranslations.component';
 import { ViewNationalityTranslationModalComponent } from './nationalitiesTranslation/nationalityTranslations/view-nationalityTranslation-modal.component';
 import { CreateOrEditNationalityTranslationModalComponent } from './nationalitiesTranslation/nationalityTranslations/create-or-edit-nationalityTranslation-modal.component';
+
+import { TrucksTypesTranslationsComponent } from './trucksTypesTranslations/trucksTypesTranslations/trucksTypesTranslations.component';
+import { ViewTrucksTypesTranslationModalComponent } from './trucksTypesTranslations/trucksTypesTranslations/view-trucksTypesTranslation-modal.component';
+import { CreateOrEditTrucksTypesTranslationModalComponent } from './trucksTypesTranslations/trucksTypesTranslations/create-or-edit-trucksTypesTranslation-modal.component';
 
 import { TransportTypesTranslationsComponent } from './transportTypesTranslations/transportTypesTranslations/transportTypesTranslations.component';
 import { ViewTransportTypesTranslationModalComponent } from './transportTypesTranslations/transportTypesTranslations/view-transportTypesTranslation-modal.component';
@@ -166,6 +190,17 @@ import { ViewShippingRequestDetailsComponent } from '@app/main/marketPlace/marke
 import { ViewAllCarrierBidsComponent } from '@app/main/marketPlace/marketPlace/ViewAllCarrierBids.component';
 import { RejectionReasonModalComponent } from './documentFiles/documentFiles/rejectionReason-modal.component';
 import { ViewShippingRequestPriceResponseModalComponent } from './shippingRequests/shippingRequests/shipping-request-Response/view-shipping-request-response-modal.component';
+import { SafePipe } from '../../account/register/safe.pipe';
+import { BalancesListComponent } from './invoices/balances/balances-list/balances-list.component';
+import { BalanceRechargeModelComponent } from './invoices/balances/balance-recharge-model/balance-recharge-model.component';
+import { GroupPeriodsListComponent } from './invoices/groupsperiods/group-periods-list/group-periods-list.component';
+import { InvoiceDetailComponent } from './invoices/invoice-detail/invoice-detail.component';
+import { GroupDetailComponent } from './invoices/groupsperiods/group-detail/group-detail.component';
+import { DemanModelComponent } from './invoices/groupsperiods/model/deman-model.component';
+import { TransactionListComponent } from './invoices/transaction/transaction-list/transaction-list.component';
+import { InvoicePeriodsListComponent } from '@app/main/Invoices/invoice-periods-list/invoice-periods-list.component';
+import { InvoicePeriodsModalComponent } from '@app/main/Invoices/invoice-periods-modal/invoice-periods-modal.component';
+import { InvoicesListComponent } from './Invoices/invoices-list/invoices-list.component';
 import { ListboxModule, MultiSelectModule, PickListModule, SelectButtonModule, StepsModule } from '@node_modules/primeng';
 import { RouteStepsForCreateShippingRequstComponent } from '@app/main/shippingRequests/shippingRequests/ShippingRequestRouteSteps/RouteStepsForCreateShippingRequst.component';
 
@@ -183,7 +218,6 @@ NgxBootstrapDatePickerConfigService.registerNgxBootstrapDatePickerLocales();
     EditorModule,
     InputMaskModule,
     TableModule,
-
     CommonModule,
     FormsModule,
     ModalModule,
@@ -211,6 +245,67 @@ NgxBootstrapDatePickerConfigService.registerNgxBootstrapDatePickerLocales();
     SelectButtonModule,
   ],
   declarations: [
+    TrucksTypesTranslationsComponent,
+
+    ViewTrucksTypesTranslationModalComponent,
+    CreateOrEditTrucksTypesTranslationModalComponent,
+    TruckCapacitiesTranslationsComponent,
+
+    ViewTruckCapacitiesTranslationModalComponent,
+    CreateOrEditTruckCapacitiesTranslationModalComponent,
+    TruckStatusesTranslationsComponent,
+
+    ViewTruckStatusesTranslationModalComponent,
+    CreateOrEditTruckStatusesTranslationModalComponent,
+    CitiesTranslationsComponent,
+
+    ViewCitiesTranslationModalComponent,
+    CreateOrEditCitiesTranslationModalComponent,
+    CountriesTranslationsComponent,
+
+    ViewCountriesTranslationModalComponent,
+    CreateOrEditCountriesTranslationModalComponent,
+    PlateTypesComponent,
+
+    ViewPlateTypeModalComponent,
+    CreateOrEditPlateTypeModalComponent,
+    NationalitiesComponent,
+
+    ViewNationalityModalComponent,
+    CreateOrEditNationalityModalComponent,
+    MasterDetailChild_Nationality_NationalityTranslationsComponent,
+
+    MasterDetailChild_Nationality_ViewNationalityTranslationModalComponent,
+    MasterDetailChild_Nationality_CreateOrEditNationalityTranslationModalComponent,
+    NationalityTranslationsComponent,
+
+    ViewNationalityTranslationModalComponent,
+    CreateOrEditNationalityTranslationModalComponent,
+    TransportTypesTranslationsComponent,
+
+    ViewTransportTypesTranslationModalComponent,
+    CreateOrEditTransportTypesTranslationModalComponent,
+    CitiesTranslationsComponent,
+
+    ViewCitiesTranslationModalComponent,
+    CreateOrEditCitiesTranslationModalComponent,
+    CountriesTranslationsComponent,
+
+    ViewCountriesTranslationModalComponent,
+    CreateOrEditCountriesTranslationModalComponent,
+    PlateTypesComponent,
+
+    ViewPlateTypeModalComponent,
+    CreateOrEditPlateTypeModalComponent,
+    TruckCapacitiesTranslationsComponent,
+
+    ViewTruckCapacitiesTranslationModalComponent,
+    CreateOrEditTruckCapacitiesTranslationModalComponent,
+    TruckStatusesTranslationsComponent,
+
+    ViewTruckStatusesTranslationModalComponent,
+    CreateOrEditTruckStatusesTranslationModalComponent,
+    NationalitiesComponent,
     TripStatusesComponent,
 
     ViewTripStatusModalComponent,
@@ -345,10 +440,19 @@ NgxBootstrapDatePickerConfigService.registerNgxBootstrapDatePickerLocales();
     CreateOrEditTrucksTypeModalComponent,
     DashboardComponent,
     UpdatePriceShippingRequestModalComponent,
-
     MarketplaceComponent,
     ViewShippingRequestDetailsComponent,
     ViewAllCarrierBidsComponent,
+    InvoicePeriodsListComponent,
+    InvoicePeriodsModalComponent,
+    InvoicesListComponent,
+    BalancesListComponent,
+    DemanModelComponent,
+    BalanceRechargeModelComponent,
+    GroupPeriodsListComponent,
+    InvoiceDetailComponent,
+    GroupDetailComponent,
+    TransactionListComponent,
     RouteStepsForCreateShippingRequstComponent,
 
     TripsForViewShippingRequestComponent,

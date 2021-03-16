@@ -1,43 +1,53 @@
-import { AfterViewChecked, Component, ElementRef, EventEmitter, Injector, Input, Output, ViewChild } from '@angular/core';
+import { AfterViewInit, ChangeDetectorRef, Component, EventEmitter, Injector, Input, Output, ViewChild } from '@angular/core';
 import { AppConsts } from '@shared/AppConsts';
 import { AppComponentBase } from '@shared/common/app-component-base';
 import {
+  CreateOrEditDocumentFileDto,
   CreateOrUpdateUserInput,
+  DocumentFilesServiceProxy,
+  NationalitiesServiceProxy,
   OrganizationUnitDto,
   PasswordComplexitySetting,
   ProfileServiceProxy,
+  SelectItemDto,
   UserEditDto,
   UserRoleDto,
   UserServiceProxy,
-  GetUserForEditOutput,
-  CreateOrEditDocumentFileDto,
-  DocumentFilesServiceProxy,
-  UpdateDocumentFileInput,
-  SelectItemDto,
-  NationalitiesServiceProxy,
 } from '@shared/service-proxies/service-proxies';
 import { ModalDirective } from 'ngx-bootstrap/modal';
-import { IOrganizationUnitsTreeComponentData, OrganizationUnitsTreeComponent } from '../../shared/organization-unit-tree.component';
 import * as _ from 'lodash';
 import { finalize } from 'rxjs/operators';
-import { FileItem, FileUploader, FileUploaderOptions } from '@node_modules/ng2-file-upload';
-import { DateType } from '@app/shared/common/hijri-gregorian-datepicker/consts';
-import { NgbDateStruct } from '@node_modules/@ng-bootstrap/ng-bootstrap';
-import * as moment from '@node_modules/moment';
 import { DateFormatterService } from '@app/shared/common/hijri-gregorian-datepicker/date-formatter.service';
-import { IAjaxResponse, TokenService } from '@node_modules/abp-ng2-module';
+import { NgForm } from '@angular/forms';
+import { RequiredDocumentFormChildComponent } from '@app/shared/common/required-document-form-child/required-document-form-child.component';
+import { NgbDateStruct } from '@node_modules/@ng-bootstrap/ng-bootstrap';
 
 @Component({
+  //changeDetection: ChangeDetectionStrategy.Default,
   selector: 'createOrEditDriverModal',
   templateUrl: './create-or-edit-driver-modal.component.html',
   styleUrls: ['create-or-edit-driver-modal.component.less'],
   providers: [DateFormatterService],
 })
 export class CreateOrEditDriverModalComponent extends AppComponentBase {
+  constructor(
+    injector: Injector,
+    private _userService: UserServiceProxy,
+    private _profileService: ProfileServiceProxy,
+    private _nationalitiesServiceProxy: NationalitiesServiceProxy,
+    private _documentFilesServiceProxy: DocumentFilesServiceProxy
+  ) {
+    super(injector);
+    this.getDriverRequiredDocumentFiles();
+  }
   @ViewChild('createOrEditModal', { static: true }) modal: ModalDirective;
+  @ViewChild('userForm', { static: false }) userForm: NgForm;
+  //@ViewChild(RequiredDocumentFormChildComponent) requiredDocumentFormChildComponent: RequiredDocumentFormChildComponent;
+  @ViewChild('requiredDocumentFormChildComponent', { static: false }) requiredDocumentFormChildComponent: RequiredDocumentFormChildComponent;
 
   @Output() modalSave: EventEmitter<any> = new EventEmitter<any>();
   @Input() creatDriver: boolean;
+  @Input() placeholder: string;
 
   active = false;
   saving = false;
@@ -56,63 +66,34 @@ export class CreateOrEditDriverModalComponent extends AppComponentBase {
   profilePicture: string;
   createOrEditDocumentFileDtos!: CreateOrEditDocumentFileDto[];
   hasValidationErorr = false;
-  alldocumentsValid = false;
-  fileFormateIsInvalideIndexList: boolean[] = [];
-  fileisDuplicateList: boolean[] = [];
-  alldocumentsNotDuplicated = false;
-  allnumbersValid = false;
-  numbersInValidList: boolean[] = [];
-  allDatesValid = true;
   datesInValidList: boolean[] = [];
 
-  todayGregorian = this.dateFormatterService.GetTodayGregorian();
-  todayHijri = this.dateFormatterService.ToHijri(this.todayGregorian);
-  /**
-   * required documents fileUploader options
-   * @private
-   */
-  private _DocsUploaderOptions: FileUploaderOptions = {};
-  /**
-   * required documents fileUploader
-   */
-  public DocsUploader: FileUploader;
-
-  /**
-   * DocFileUploader onProgressItem progress
-   */
-  docProgress: any;
-  /**
-   * DocFileUploader onProgressItem file name
-   */
-  docProgressFileName: any;
-
-  selectedDateTypeHijri = DateType.Hijri; // or DateType.Gregorian
-  selectedDateTypeGregorian = DateType.Gregorian; // or DateType.Gregorian
   nationalities: SelectItemDto[] = [];
   allOrganizationUnits: OrganizationUnitDto[];
   memberedOrganizationUnits: string[];
   userPasswordRepeat = '';
   isUserNameValid = false;
   isWaintingUserNameValidation = false;
-  constructor(
-    injector: Injector,
-    private _userService: UserServiceProxy,
-    private _profileService: ProfileServiceProxy,
-    private _documentFilesServiceProxy: DocumentFilesServiceProxy,
-    private _tokenService: TokenService,
-    private _nationalitiesServiceProxy: NationalitiesServiceProxy
-  ) {
-    super(injector);
+  CheckingIfDriverPhoneNumberIsValid = false;
+
+  // CheckIfDriverMobileNumberIsValid(mobileNumber: string) {
+  //   this.isWaintingUserNameValidation = true;
+  //   this._userService.checkIfPhoneNumberValid(mobileNumber, this.user.id).subscribe((res) => {
+  //     this.isWaintingUserNameValidation = false;
+  //     this.isPhoneNumberValid = res;
+  //   });
+  // }
+  selectedDate: NgbDateStruct;
+
+  private getDriverRequiredDocumentFiles() {
+    //RequiredDocuments
+    this._documentFilesServiceProxy.getDriverRequiredDocumentFiles('').subscribe((result) => {
+      this.createOrEditDocumentFileDtos = result;
+    });
   }
 
   show(userId?: number): void {
     if (!userId) {
-      //RequiredDocuments
-      this._documentFilesServiceProxy.getDriverRequiredDocumentFiles('').subscribe((result) => {
-        this.createOrEditDocumentFileDtos = result;
-        this.intilizedates();
-      });
-
       this.active = true;
       this.setRandomPassword = true;
       this.sendActivationEmail = true;
@@ -136,6 +117,7 @@ export class CreateOrEditDriverModalComponent extends AppComponentBase {
         }, 0);
 
         this.sendActivationEmail = false;
+        this.selectedDate = this.dateFormatterService.MomentToNgbDateStruct(userResult.user.dateOfBirth);
       }
 
       this._profileService.getPasswordComplexitySetting().subscribe((passwordComplexityResult) => {
@@ -144,10 +126,91 @@ export class CreateOrEditDriverModalComponent extends AppComponentBase {
         this.modal.show();
       });
     });
-    this.initDocsUploader();
   }
 
-  getDriversNationalites() {}
+  onShown(): void {
+    this.getDriverRequiredDocumentFiles();
+    document.getElementById('Name').focus();
+  }
+
+  close(): void {
+    this.createOrEditDocumentFileDtos = [];
+    this.active = false;
+    this.userPasswordRepeat = '';
+    this.user = undefined;
+    this.selectedDate = undefined;
+    this.modal.hide();
+  }
+
+  save(): void {
+    if (this.userForm.invalid) {
+      return;
+    }
+    this.saving = true;
+
+    if (this.isEmailAvailable === false || this.isEmailValid === false) {
+      this.notify.error('PleaseMakeSureYouProvideValidDetails!');
+      return;
+    }
+
+    // if (!this.isAllFileFormatValid() || !this.isAllFileDuplicatePass()) {
+    //   this.notify.error(this.l('makeSureThatYouFillAllRequiredFields'));
+    //   return;
+    // }
+
+    if (!this.user.id && this.user.isDriver) {
+      if (this.requiredDocumentFormChildComponent.DocsUploader.queue?.length > 0) {
+        this.requiredDocumentFormChildComponent.DocsUploader.uploadAll();
+      } else {
+        this.saveInternal();
+      }
+    } else {
+      this.saveInternal();
+    }
+  }
+
+  public saveInternal(): void {
+    let input = new CreateOrUpdateUserInput();
+
+    input.user = this.user;
+    input.setRandomPassword = this.setRandomPassword;
+    input.sendActivationEmail = this.sendActivationEmail;
+    input.assignedRoleNames = _.map(
+      _.filter(this.roles, {
+        isAssigned: true,
+        inheritedFromOrganizationUnit: false,
+      }),
+      (role) => role.roleName
+    );
+    input.user.phoneNumber = input.user.userName;
+    //#616
+    input.user.emailAddress = input.user.userName + '@' + this.appSession.tenancyName + '.com';
+
+    //docs
+
+    if (!this.user.id) {
+      input.createOrEditDocumentFileDtos = this.createOrEditDocumentFileDtos;
+
+      input.createOrEditDocumentFileDtos.forEach((element) => {
+        let date = this.dateFormatterService.MomentToNgbDateStruct(element.expirationDate);
+        let hijriDate = this.dateFormatterService.ToHijri(date);
+        element.hijriExpirationDate = this.dateFormatterService.ToString(hijriDate);
+      });
+    }
+
+    this._userService
+      .createOrUpdateUser(input)
+      .pipe(
+        finalize(() => {
+          this.saving = false;
+        })
+      )
+      .subscribe(() => {
+        this.notify.info(this.l('SavedSuccessfully'));
+        this.close();
+        this.modalSave.emit(null);
+      });
+  }
 
   setPasswordComplexityInfo(): void {
     this.passwordComplexityInfo = '<ul>';
@@ -191,183 +254,25 @@ export class CreateOrEditDriverModalComponent extends AppComponentBase {
     });
   }
 
-  onShown(): void {
-    document.getElementById('Name').focus();
-  }
-
-  save(): void {
-    if (this.isEmailAvailable == false || this.isEmailValid == false) {
-      this.notify.error('PleaseMakeSureYouProvideValidDetails!');
-      return;
-    }
-    this.saving = true;
-    if (!this.user.id && this.user.isDriver) {
-      if (!this.alldocumentsValid || !this.allnumbersValid || !this.allDatesValid || !this.alldocumentsNotDuplicated) {
-        this.notify.error(this.l('makeSureThatYouFillAllRequiredFields'));
-        return;
-      }
-      this.DocsUploader.uploadAll();
-    } else {
-      this.saveInternal();
-    }
-  }
-
-  private saveInternal(): void {
-    let input = new CreateOrUpdateUserInput();
-
-    input.user = this.user;
-    input.setRandomPassword = this.setRandomPassword;
-    input.sendActivationEmail = this.sendActivationEmail;
-    input.assignedRoleNames = _.map(_.filter(this.roles, { isAssigned: true, inheritedFromOrganizationUnit: false }), (role) => role.roleName);
-    input.user.phoneNumber = input.user.userName;
-    //#616
-    input.user.emailAddress = input.user.userName + '@' + this.appSession.tenancyName + '.com';
-
-    //docs
-
-    input.createOrEditDocumentFileDtos = this.createOrEditDocumentFileDtos;
-
-    if (!this.user.id) {
-      input.createOrEditDocumentFileDtos.forEach((element) => {
-        let date = this.dateFormatterService.MomentToNgbDateStruct(element.expirationDate);
-        let hijriDate = this.dateFormatterService.ToHijri(date);
-        element.hijriExpirationDate = this.dateFormatterService.ToString(hijriDate);
-      });
-    }
-
-    this._userService
-      .createOrUpdateUser(input)
-      .pipe(
-        finalize(() => {
-          this.saving = false;
-        })
-      )
-      .subscribe(() => {
-        this.notify.info(this.l('SavedSuccessfully'));
-        this.close();
-        this.modalSave.emit(null);
-      });
-  }
-  close(): void {
-    this.active = false;
-    this.userPasswordRepeat = '';
-    this.docProgress = 0;
-    this.modal.hide();
-  }
-
   getAssignedRoleCount(): number {
     return _.filter(this.roles, { isAssigned: true }).length;
   }
 
-  DocFileChangeEvent(event: any, item: CreateOrEditDocumentFileDto, index: number): void {
-    if (event.target.files[0].size > 5242880) {
-      //5MB
-      this.message.warn(this.l('DocumentFile_Warn_SizeLimit', this.maxDocumentFileBytesUserFriendlyValue));
-      this.isAllfileFormatesAccepted();
-      item.name = '';
-      return;
-    }
-
-    item.extn = event.target.files[0].type;
-    if (item.extn != 'image/jpeg' && item.extn != 'image/png' && item.extn != 'application/pdf') {
-      this.message.warn(this.l('PleaseChooseAvalidFormat'));
-      item.name = '';
-      this.isAllfileFormatesAccepted();
-      return;
-    }
-    item.name = event.target.files[0].name;
-    //not allow uploading the same document twice
-    for (let i = 0; i < this.createOrEditDocumentFileDtos.length; i++) {
-      const element = this.createOrEditDocumentFileDtos[i];
-      if (element.name == event.target.files[0].name && element.extn == event.target.files[0].type && i != index) {
-        item.name = '';
-        item.extn = '';
-        this.fileisDuplicateList[index] = true;
-        this.isAllfileNotDuplicated();
-        this.message.warn(this.l('DuplicateFileUploadMsg', element.name, element.extn));
-        return;
-      }
-    }
-
-    this.fileisDuplicateList[index] = false;
-    this.isAllfileNotDuplicated();
-    this.fileFormateIsInvalideIndexList[index] = false;
-    this.isAllfileFormatesAccepted();
-    this.DocsUploader.addToQueue(event.target.files);
-  }
-
-  /**
-   * initialize required documents fileUploader
-   */
-  initDocsUploader(): void {
-    this.DocsUploader = new FileUploader({ url: AppConsts.remoteServiceBaseUrl + '/Helper/UploadDocumentFile' });
-    this._DocsUploaderOptions.autoUpload = false;
-    this._DocsUploaderOptions.authToken = 'Bearer ' + this._tokenService.getToken();
-    this._DocsUploaderOptions.removeAfterUpload = true;
-
-    this.DocsUploader.onAfterAddingFile = (file) => {
-      file.withCredentials = false;
-    };
-
-    this.DocsUploader.onBuildItemForm = (fileItem: FileItem, form: any) => {
-      form.append('FileType', fileItem.file.type);
-      form.append('FileName', fileItem.file.name);
-      form.append('FileToken', this.guid());
-    };
-
-    this.DocsUploader.onSuccessItem = (item, response, status) => {
-      const resp = <IAjaxResponse>JSON.parse(response);
-
-      if (resp.success) {
-        //attach each fileToken to his CreateOrEditDocumentFileDto
-        // console.log(resp.result.fileToken);
-
-        this.createOrEditDocumentFileDtos.find(
-          (x) => x.name === item.file.name && x.extn === item.file.type
-        ).updateDocumentFileInput = new UpdateDocumentFileInput({ fileToken: resp.result.fileToken });
-      } else {
-        this.message.error(resp.error.message);
-      }
-    };
-
-    this.DocsUploader.onErrorItem = (item, response, status) => {
-      const resp = <IAjaxResponse>JSON.parse(response);
-    };
-
-    this.DocsUploader.onCompleteAll = () => {
-      this.saveInternal();
-    };
-
-    //for progressBar
-    this.DocsUploader.onProgressItem = (fileItem: FileItem, progress: any) => {
-      this.docProgress = progress;
-      this.docProgressFileName = fileItem.file.name;
-    };
-
-    this.DocsUploader.setOptions(this._DocsUploaderOptions);
-  }
-
-  guid(): string {
-    function s4() {
-      return Math.floor((1 + Math.random()) * 0x10000)
-        .toString(16)
-        .substring(1);
-    }
-
-    return s4() + s4() + '-' + s4() + '-' + s4() + '-' + s4() + '-' + s4() + s4() + s4();
-  }
-
   CheckIfDriverPhoneNumberIsValid(phoneNumber: string, id: number) {
-    this._userService.checkIfPhoneNumberValid(phoneNumber, id == null ? 0 : id).subscribe((res) => {
-      this.isPhoneNumberAvilable = res;
-    });
+    if (phoneNumber.trim().length === 9) {
+      this.CheckingIfDriverPhoneNumberIsValid = true;
+      this._userService.checkIfPhoneNumberValid(phoneNumber, id == null ? 0 : id).subscribe((res) => {
+        this.isPhoneNumberAvilable = res;
+        this.CheckingIfDriverPhoneNumberIsValid = false;
+      });
+    }
   }
 
   removeWhiteSpacesFromEmail() {
     this.user.emailAddress.trim();
-    var exp = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/g;
+    let exp = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/g;
 
-    var result = exp.test(this.user.emailAddress);
+    let result = exp.test(this.user.emailAddress);
     if (!result) {
       this.isEmailValid = false;
     } else {
@@ -375,11 +280,13 @@ export class CreateOrEditDriverModalComponent extends AppComponentBase {
     }
     this.checkIfIsEmailAvailable();
   }
+
   checkIfIsEmailAvailable() {
     this._userService.checkIfEmailisAvailable(this.user.emailAddress).subscribe((result) => {
       this.isEmailAvailable = result;
     });
   }
+
   numberOnly(event): boolean {
     if (event.target.value.length >= 9) {
       return false;
@@ -391,59 +298,9 @@ export class CreateOrEditDriverModalComponent extends AppComponentBase {
     return true;
   }
 
-  // CheckIfDriverMobileNumberIsValid(mobileNumber: string) {
-  //   this.isWaintingUserNameValidation = true;
-  //   this._userService.checkIfPhoneNumberValid(mobileNumber, this.user.id).subscribe((res) => {
-  //     this.isWaintingUserNameValidation = false;
-  //     this.isPhoneNumberValid = res;
-  //   });
-  // }
-
   getDriverNationalites() {
     this._nationalitiesServiceProxy.getAllNationalityForDropdown().subscribe((res) => {
       this.nationalities = res;
-    });
-  }
-
-  isNumbersValid() {
-    if (this.numbersInValidList.every((x) => x === false) && this.numbersInValidList.length == this.createOrEditDocumentFileDtos.length) {
-      this.allnumbersValid = true;
-    } else {
-      this.allnumbersValid = false;
-    }
-  }
-  numberChange(item: CreateOrEditDocumentFileDto, index: number) {
-    if (item.documentTypeDto.numberMinDigits <= item.number.length && item.number.length <= item.documentTypeDto.numberMaxDigits) {
-      this.numbersInValidList[index] = false;
-      this.isNumbersValid();
-    } else {
-      this.numbersInValidList[index] = true;
-      this.isNumbersValid();
-    }
-  }
-  isAllfileFormatesAccepted() {
-    if (
-      this.fileFormateIsInvalideIndexList.every((x) => x === false) &&
-      this.fileFormateIsInvalideIndexList.length == this.createOrEditDocumentFileDtos.length
-    ) {
-      this.alldocumentsValid = true;
-    } else {
-      this.alldocumentsValid = false;
-    }
-  }
-  isAllfileNotDuplicated() {
-    if (this.fileisDuplicateList.every((x) => x === false) && this.fileisDuplicateList.length == this.createOrEditDocumentFileDtos.length) {
-      this.alldocumentsNotDuplicated = true;
-    } else {
-      this.alldocumentsNotDuplicated = false;
-    }
-  }
-
-  intilizedates() {
-    this.createOrEditDocumentFileDtos.forEach((element) => {
-      if (element.documentTypeDto.hasExpirationDate) {
-        element.expirationDate = this.dateFormatterService.NgbDateStructToMoment(this.todayGregorian);
-      }
     });
   }
 
@@ -471,4 +328,18 @@ export class CreateOrEditDriverModalComponent extends AppComponentBase {
   //   console.log(this.datesInValidList.every((x) => x === false));
   //   console.log(this.datesInValidList);
   // }
+
+  dateOfBirthSelectedDateChange($event: NgbDateStruct, user: UserEditDto) {
+    if ($event != null && $event.year < 1900) {
+      const ngDate = this.dateFormatterService.ToGregorian($event);
+      user.dateOfBirth = this.dateFormatterService.NgbDateStructToMoment(ngDate);
+      user.hijriDateOfBirth = this.dateFormatterService.ToString($event);
+    } else if ($event != null && $event.year > 1900) {
+      user.dateOfBirth = this.dateFormatterService.NgbDateStructToMoment($event);
+      const ngDate = this.dateFormatterService.ToHijri($event);
+      user.hijriDateOfBirth = this.dateFormatterService.ToString(ngDate);
+    }
+
+    console.log(user.dateOfBirth, user.hijriDateOfBirth);
+  }
 }

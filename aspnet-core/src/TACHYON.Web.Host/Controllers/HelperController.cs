@@ -114,7 +114,7 @@ namespace TACHYON.Web.Controllers
                 {
                     fileBytes = stream.GetAllBytes();
                 }
-
+                
                 var tenantId = AbpSession.TenantId;
                 var fileObject = new BinaryObject(tenantId, fileBytes);
 

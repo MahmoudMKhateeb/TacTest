@@ -26,7 +26,7 @@
           <div class="row">
             <div class="col-md-6">
               <div class="form-group m-form__group">
-                <label for="transportTypeId">* {{ l('TransportType') }}</label>
+                <label for="transportTypeId"><span class="text-danger">*</span> {{ l('TransportType') }}</label>
                 <select
                   id="transportTypeId"
                   #transportTypeId="ngModel"
@@ -35,6 +35,10 @@
                   name="truck.transportTypeId"
                   (change)="transportTypeSelectChange(truck.transportTypeId)"
                   required
+                  [ngClass]="{
+                    'is-valid': transportTypeId.valid,
+                    'is-invalid': truckForm.submitted && transportTypeId.invalid
+                  }"
                 >
                   <option [ngValue]="null">{{ l('Select') }} {{ l('TransportType') }}</option>
                   <option *ngFor="let item of allTransportTypes" value="{{ item.id }}">{{ item.displayName }}</option>
@@ -45,7 +49,7 @@
 
             <div class="col-md-6">
               <div class="form-group m-form__group">
-                <label for="trucksTypeId">* {{ l('TruckType') }}</label>
+                <label for="trucksTypeId"><span class="text-danger">*</span> {{ l('TruckType') }}</label>
                 <select
                   id="trucksTypeId"
                   #trucksTypeId="ngModel"
@@ -55,17 +59,22 @@
                   (change)="trucksTypeSelectChange(truck.trucksTypeId)"
                   [disabled]="truck.transportTypeId != null && allTransportTypes != null ? null : true"
                   required
+                  [ngClass]="{
+                    'is-valid': trucksTypeId.valid,
+                    'is-invalid': truckForm.submitted && trucksTypeId.invalid
+                  }"
                 >
                   <option [ngValue]="null">{{ l('Select') }} {{ l('TruckType') }}</option>
                   <option *ngFor="let item of allTruckTypesByTransportType" value="{{ item.id }}"> {{ item.displayName }}</option>
                 </select>
                 <validation-messages [formCtrl]="trucksTypeId"></validation-messages>
+                <span class="form-text text-muted">{{ l('SelectTransportTypeToOpenTrucksType') }} </span>
               </div>
             </div>
 
             <div class="col-md-6">
               <div class="form-group m-form__group">
-                <label for="capacityId">* {{ l('CapacityCategory') }}</label>
+                <label for="capacityId"><span class="text-danger">*</span> {{ l('CapacityCategory') }}</label>
                 <select
                   id="capacityId"
                   #capacityId="ngModel"
@@ -78,14 +87,19 @@
                       : true
                   "
                   required
+                  [ngClass]="{
+                    'is-valid': capacityId.valid,
+                    'is-invalid': truckForm.submitted && capacityId.invalid
+                  }"
                 >
                   <option [ngValue]="null">{{ l('Select') }} {{ l('CapacityCategory') }}</option>
                   <option *ngFor="let item of allTrucksCapByTruckTypeId" value="{{ item.id }}">{{ item.displayName }} </option>
                 </select>
                 <validation-messages [formCtrl]="capacityId"></validation-messages>
+                <span class="form-text text-muted">{{ l('SelectTrucksTypeToOpenCapacity') }} </span>
               </div>
             </div>
-            <div class="form-group col-md-6">
+            <div class="form-group col-md-3">
               <label for="Truck_Capacity">{{ l('Capacity') }}</label>
               <div class="input-group">
                 <input
@@ -100,31 +114,31 @@
                   type="number"
                 />
                 <div class="input-group-append">
-                  <span class="input-group-text">{{ l('Tons') }}</span>
+                  <!-- <span class="input-group-text">{{ l('Tons') }}</span> -->
                 </div>
               </div>
               <validation-messages [formCtrl]="capacity"></validation-messages>
               <span *ngIf="Number(truck.capacity) < 0" class="form-text text-danger">{{ l('vlaueMustBeGreaterThan') }} 0</span>
             </div>
-            <div class="form-group col-md-6">
+            <div class="form-group col-md-3">
               <label for="Truck_Length">{{ l('Length') }}</label>
               <div class="input-group">
                 <input [(ngModel)]="truck.length" #length="ngModel" class="form-control" id="Truck_Length" min="0" name="Length" type="number" />
                 <div class="input-group-append">
-                  <span class="input-group-text">{{ l('Meter') }}</span>
+                  <!-- <span class="input-group-text">{{ l('Meter') }}</span> -->
                 </div>
               </div>
               <validation-messages [formCtrl]="length"></validation-messages>
               <span *ngIf="truck.length < 0" class="form-text text-danger">{{ l('vlaueMustBeGreaterThan') }} 0</span>
             </div>
           </div>
-          <div class="separator separator-dashed my-10"></div>
+          <div class="separator separator-dashed my-5"></div>
 
-          <h3 class="font-size-lg text-dark-75 font-weight-bold mb-10">{{ l('TrucktDetails') }}</h3>
+          <h3 class="font-size-lg text-dark-75 font-weight-bold mb-10">{{ l('TruckDetails') }}</h3>
 
           <div class="row">
             <div class="form-group col-md-6">
-              <label for="TruckStatus">* {{ l('TruckStatus') }}</label>
+              <label for="TruckStatus"><span class="text-danger">*</span> {{ l('TruckStatus') }}</label>
               <select
                 #TruckStatus="ngModel"
                 id="TruckStatus"
@@ -132,32 +146,59 @@
                 class="form-control"
                 name="truck.truckStatusId"
                 required
+                [ngClass]="{
+                  'is-valid': TruckStatus.valid,
+                  'is-invalid': truckForm.submitted && TruckStatus.invalid
+                }"
               >
                 <option [ngValue]="null"> {{ l('Select') }} {{ l('TruckStatus') }}</option>
                 <option *ngFor="let item of allTruckStatuss" value="{{ item.id }}">{{ item.displayName }}</option>
               </select>
               <validation-messages [formCtrl]="TruckStatus"></validation-messages>
             </div>
+            <div class="form-group col-md-6">
+              <label for="PlateTypeId"><span class="text-danger">*</span> {{ l('PlateType') }}</label>
+              <select
+                #PlateTypeId="ngModel"
+                id="PlateTypeId"
+                [(ngModel)]="truck.plateTypeId"
+                class="form-control"
+                name="truck.plateTypeId"
+                required
+                [ngClass]="{
+                  'is-valid': TruckStatus.valid,
+                  'is-invalid': truckForm.submitted && PlateTypeId.invalid
+                }"
+              >
+                <option [ngValue]="null"> {{ l('Select') }} {{ l('plateTypeId') }}</option>
+                <option *ngFor="let item of allPlateTypes" value="{{ item.id }}">{{ item.displayName }}</option>
+              </select>
+              <validation-messages [formCtrl]="PlateTypeId"></validation-messages>
+            </div>
 
             <div class="form-group col-md-6">
-              <label for="Truck_PlateNumber"> * {{ l('PlateNumber') }}</label>
+              <label for="Truck_PlateNumber"><span class="text-danger">*</span> {{ l('PlateNumber') }}</label>
               <input
                 [(ngModel)]="truck.plateNumber"
                 #plateNumberInput="ngModel"
+                (keyup)="plateNumberNoramlize()"
                 class="form-control"
                 id="Truck_PlateNumber"
                 maxlength="64"
                 minlength="0"
                 name="PlateNumber"
                 required
-                pattern="^[a-z0-9].*?[a-z0-9]$"
                 type="text"
+                [ngClass]="{
+                  'is-valid': plateNumberInput.valid,
+                  'is-invalid': truckForm.submitted && plateNumberInput.invalid
+                }"
               />
               <validation-messages [formCtrl]="plateNumberInput"></validation-messages>
             </div>
 
             <div class="form-group col-md-6">
-              <label for="Truck_ModelName"> * {{ l('ModelName') }}</label>
+              <label for="Truck_ModelName"> <span class="text-danger">*</span> {{ l('ModelName') }}</label>
               <input
                 [(ngModel)]="truck.modelName"
                 #modelName="ngModel"
@@ -168,12 +209,16 @@
                 name="ModelName"
                 required
                 type="text"
+                [ngClass]="{
+                  'is-valid': modelName.valid,
+                  'is-invalid': truckForm.submitted && modelName.invalid
+                }"
               />
               <validation-messages [formCtrl]="modelName"></validation-messages>
             </div>
 
             <div class="form-group col-md-6">
-              <label for="Truck_ModelYear"> * {{ l('ModelYear') }}</label>
+              <label for="Truck_ModelYear"> <span class="text-danger">*</span> {{ l('ModelYear') }}</label>
               <input
                 #modelYear="ngModel"
                 [(ngModel)]="truck.modelYear"
@@ -185,6 +230,10 @@
                 name="ModelYear"
                 required
                 type="number"
+                [ngClass]="{
+                  'is-valid': modelYear.valid,
+                  'is-invalid': truckForm.submitted && modelYear.invalid
+                }"
               />
               <validation-messages [formCtrl]="modelYear"></validation-messages>
               <span *ngIf="Number(truck.modelYear) < 2000" class="form-text text-danger">{{ l('vlaueMustBeGreaterThan') }} 2000</span>
@@ -197,7 +246,7 @@
                 class="form-control"
                 id="Truck_Note"
                 maxlength="256"
-                rows="4"
+                rows="1"
                 cols="12"
                 style="resize: none;"
                 minlength="0"
@@ -211,124 +260,22 @@
           <viewDocumentFileModal #viewDocumentFileModal></viewDocumentFileModal>
           <entityTypeHistoryModal #entityTypeHistoryModal></entityTypeHistoryModal>
 
-          <div class="separator separator-dashed my-10"></div>
-          <h3 class="font-size-lg text-dark-75 font-weight-bold mb-10">{{ l('TruckDocuments') }}</h3>
-
           <div *ngIf="truck.createOrEditDocumentFileDtos != undefined ? (truck.createOrEditDocumentFileDtos.length > 0 ? true : false) : false">
-            <div *ngFor="let item of truck.createOrEditDocumentFileDtos; index as i" class="">
-              <div *ngIf="i != 0" class="separator separator-dashed"></div>
-              <div class="card card-custom">
-                <div class="card-body padding-bottom-5 padding-left-0 padding-right-0">
-                  <div class="row d-flex">
-                    <div class="form-group col-6">
-                      <label>* {{ item.documentTypeDto.displayName | localize }}</label>
-                      <div class="custom-file">
-                        <input
-                          accept="image/x-png,image/jpeg,application/pdf"
-                          [disabled]="item.isAccepted"
-                          name="item.documentTypeDto.displayName{{ i }}"
-                          (change)="DocFileChangeEvent($event, item, i)"
-                          type="file"
-                          class="custom-file-input"
-                          [required]="true"
-                        />
-                        <label class="custom-file-label text-truncate" [for]="item.documentTypeDto.displayName">
-                          {{ item.name ? item.name : l('Select') + l(' File') }}</label
-                        >
-                      </div>
-                      <span class="form-text text-muted">{{ 'ValidDocumentFilesMsg' | localize }}</span>
-                      <div *ngIf="fileFormateIsInvalideIndexList[i]">
-                        <span class="form-text text-danger text-left">{{ 'PleaseChooseAvalidFormat' | localize }}</span>
-                      </div>
-                    </div>
-                    <div *ngIf="item.documentTypeDto.hasNumber" class="form-group col-6">
-                      <label for="number{{ i }}">* {{ l('Number') }} </label>
-                      <input
-                        name="number{{ i }}"
-                        id="number{{ i }}"
-                        #number="ngModel"
-                        class="form-control m-input"
-                        required
-                        (change)="numberChange(item, i)"
-                        [maxLength]="item.documentTypeDto.numberMaxDigits == 0 ? 50 : item.documentTypeDto.numberMaxDigits"
-                        [minLength]="item.documentTypeDto.numberMinDigits"
-                        type="text"
-                        [(ngModel)]="item.number"
-                        [disabled]="item.isAccepted"
-                      />
-                      <validation-messages [formCtrl]="number"></validation-messages>
-                      <span *ngIf="item.number == null ? 0 : item.number.length < item.documentTypeDto.numberMinDigits" class="text-danger">
-                        {{ l('TheNumberLengthMustBeMoreThanMinDigits') }}
-                      </span>
-                      <span *ngIf="item.number == null ? false : item.number.length > item.documentTypeDto.numberMaxDigits" class="text-danger">
-                        {{ l('TheNumberLengthMustBeLessThanMaxDigits') }}
-                      </span>
-                      <span class="form-text text-muted"
-                        >{{ l('minDigits:') }} {{ item.documentTypeDto.numberMinDigits }} {{ l('maxDigits:') }}
-                        {{ item.documentTypeDto.numberMaxDigits == 0 ? 50 : item.documentTypeDto.numberMaxDigits }}
-                      </span>
-                    </div>
-
-                    <div *ngIf="item.documentTypeDto.hasExpirationDate" class="form-group col-6">
-                      <hijri-gregorian-datepicker-test
-                        [label]="'* ' + l('ExpirationDate')"
-                        class="m-input"
-                        [isRequired]="true"
-                        [readonly]="true"
-                        [minGreg]="todayGregorian"
-                        [minHijri]="todayHijri"
-                        [selectedDate]="item.documentTypeDto.hasHijriExpirationDate ? todayHijri : todayGregorian"
-                        [selectedDateType]="item.documentTypeDto.hasHijriExpirationDate ? selectedDateTypeHijri : selectedDateTypeGregorian"
-                        (selectedDateChange)="hijriDatepickerSelectedDateChange($event, item)"
-                      >
-                      </hijri-gregorian-datepicker-test>
-                    </div>
-
-                    <div *ngIf="item.documentTypeDto.hasNotes" class="form-group col-6">
-                      <label>{{ l('Note') }}</label>
-                      <textarea
-                        name="note{{ i }}"
-                        id="note{{ i }}"
-                        class="form-control m-input"
-                        type="text"
-                        rows="2"
-                        style="resize: none;"
-                        [(ngModel)]="item.notes"
-                        [disabled]="item.isAccepted"
-                      ></textarea>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div *ngIf="!truck.id" class="row">
-            <label>{{ docProgressFileName }}</label>
-            <div class="col-md-12">
-              <p-progressBar [value]="docProgress" [style]="{ height: '6px', width: '100' }"></p-progressBar>
-            </div>
+            <div class="separator separator-dashed my-5"></div>
+            <h3 class="font-size-lg text-dark-75 font-weight-bold mb-10">{{ l('TruckDocuments') }}</h3>
+            <app-required-document-form-child
+              #requiredDocumentFormChildComponent
+              [createOrEditDocumentFileDtos]="truck.createOrEditDocumentFileDtos"
+              (onDocsUploaderCompleteAll)="createOrEditTruck()"
+              [parentForm]="truckForm"
+            >
+            </app-required-document-form-child>
           </div>
         </div>
         <div class="modal-footer">
           <button [disabled]="saving" type="button" class="btn btn-default" (click)="close()">{{ l('Cancel') }}</button>
-          <button
-            *ngIf="truck.id"
-            type="submit"
-            class="btn btn-save blue"
-            [disabled]="!truckForm.form.valid"
-            [buttonBusy]="saving"
-            [busyText]="l('SavingWithThreeDot')"
-          >
-            <i class="fa fa-save"></i> <span>{{ l('Save') }}</span>
-          </button>
-          <button
-            *ngIf="!truck.id"
-            type="submit"
-            class="btn btn-save blue"
-            [disabled]="!truckForm.form.valid || !alldocumentsValid || !allnumbersValid || !allDatesValid || !alldocumentsNotDuplicated"
-            [buttonBusy]="saving"
-            [busyText]="l('SavingWithThreeDot')"
-          >
+
+          <button type="submit" class="btn btn-save blue" [buttonBusy]="saving" [busyText]="l('SavingWithThreeDot')">
             <i class="fa fa-save"></i> <span>{{ l('Save') }}</span>
           </button>
         </div>

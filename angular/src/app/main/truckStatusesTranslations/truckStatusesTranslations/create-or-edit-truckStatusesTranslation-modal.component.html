@@ -1,0 +1,48 @@
+﻿<div bsModal #createOrEditModal="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="createOrEditModal" aria-hidden="true" [config]="{backdrop: 'static'}">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <form *ngIf="active" #truckStatusesTranslationForm="ngForm" novalidate (ngSubmit)="save()" autocomplete="off">
+                <div class="modal-header">
+                    <h4 class="modal-title">
+                        <span *ngIf="truckStatusesTranslation.id">{{l("EditTruckStatusesTranslation")}}</span>
+                        <span *ngIf="!truckStatusesTranslation.id">{{l("CreateNewTruckStatusesTranslation")}}</span>
+                    </h4>
+                    <button type="button" class="close" (click)="close()" aria-label="Close" [disabled]="saving">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                 
+
+					<div class="form-group m-form__group">
+						<label for="TruckStatusDisplayName">{{l("TruckStatus")}}</label>
+						<select name="truckStatusesTranslation.coreId" [(ngModel)]="truckStatusesTranslation.coreId" class="form-control" required>
+							<option value="">{{l("SelectATruckStatus")}}</option>
+							<option *ngFor="let item of allTruckStatuss" value="{{item.id}}">{{item.displayName}}</option>
+						</select>
+					</div>
+					 
+
+								<div class="form-group">
+									<label for="TruckStatusesTranslation_TranslatedDisplayName">{{l("TranslatedDisplayName")}} *</label>
+									<input type="text" #TruckStatusesTranslation_TranslatedDisplayName="ngModel" id="TruckStatusesTranslation_TranslatedDisplayName" class="form-control" [(ngModel)]="truckStatusesTranslation.translatedDisplayName" name="TranslatedDisplayName"   minlength="0"  maxlength="256"  required/>
+								    <validation-messages [formCtrl]="TruckStatusesTranslation_TranslatedDisplayName"></validation-messages>
+								</div>
+					
+								<div class="form-group">
+									<label for="TruckStatusesTranslation_Language">{{l("Language")}} *</label>
+									<input type="text" #TruckStatusesTranslation_Language="ngModel" id="TruckStatusesTranslation_Language" class="form-control" [(ngModel)]="truckStatusesTranslation.language" name="Language"   minlength="0"  maxlength="32"  required/>
+								    <validation-messages [formCtrl]="TruckStatusesTranslation_Language"></validation-messages>
+								</div>
+					
+
+                </div>
+                <div class="modal-footer">
+                    <button [disabled]="saving" type="button" class="btn btn-default" (click)="close()">{{l("Cancel")}}</button>
+                    <button type="submit" class="btn btn-primary blue" [disabled]="!truckStatusesTranslationForm.form.valid" [buttonBusy]="saving" [busyText]="l('SavingWithThreeDot')"><i class="fa fa-save"></i> <span>{{l("Save")}}</span></button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+</div>

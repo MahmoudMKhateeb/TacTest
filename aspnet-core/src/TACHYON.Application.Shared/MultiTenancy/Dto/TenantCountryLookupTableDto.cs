@@ -1,13 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using TACHYON.Dto;
 
 namespace TACHYON.MultiTenancy.Dto
 {
-   public class TenantCountryLookupTableDto
+   public class TenantCountryLookupTableDto : SelectItemDto, ISelectItemDto
     {
-        public int Id { get; set; }
-        public string DisplayName { get; set; }
-        public string Code { get; set; }
+       
     }
 }

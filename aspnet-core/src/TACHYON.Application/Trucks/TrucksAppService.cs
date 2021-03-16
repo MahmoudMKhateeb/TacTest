@@ -31,11 +31,14 @@ using TACHYON.Storage;
 using TACHYON.Trucks;
 using TACHYON.Trucks.Dtos;
 using TACHYON.Trucks.Exporting;
+using TACHYON.Trucks.PlateTypes;
 using TACHYON.Trucks.TruckCategories.TransportTypes;
 using TACHYON.Trucks.TruckCategories.TransportTypes.Dtos;
 using TACHYON.Trucks.TruckCategories.TransportTypes.TransportTypesTranslations;
 using TACHYON.Trucks.TruckCategories.TruckCapacities;
+using TACHYON.Trucks.TruckCategories.TruckCapacities.Dtos;
 using TACHYON.Trucks.TrucksTypes;
+using TACHYON.Trucks.TrucksTypes.Dtos;
 using GetAllForLookupTableInput = TACHYON.Trucks.Dtos.GetAllForLookupTableInput;
 
 namespace TACHYON.Trucks
@@ -58,11 +61,12 @@ namespace TACHYON.Trucks
         private readonly DocumentFilesAppService _documentFilesAppService;
         private readonly IRepository<TransportType, int> _transportTypeRepository;
         private readonly IRepository<Capacity, int> _capacityRepository;
+        private readonly IRepository<PlateType> _plateTypesRepository;
+ 
 
 
 
-
-        public TrucksAppService(IRepository<DocumentType, long> documentTypeRepository, IRepository<DocumentFile, Guid> documentFileRepository, IRepository<Truck, long> truckRepository, ITrucksExcelExporter trucksExcelExporter, IRepository<TrucksType, long> lookup_trucksTypeRepository, IRepository<TruckStatus, long> lookup_truckStatusRepository, IRepository<User, long> lookup_userRepository, IAppNotifier appNotifier, ITempFileCacheManager tempFileCacheManager, IBinaryObjectManager binaryObjectManager, DocumentFilesAppService documentFilesAppService, IRepository<TransportType, int> transportTypeRepository, IRepository<Capacity, int> capacityRepository)
+        public TrucksAppService(IRepository<DocumentType, long> documentTypeRepository, IRepository<DocumentFile, Guid> documentFileRepository, IRepository<Truck, long> truckRepository, ITrucksExcelExporter trucksExcelExporter, IRepository<TrucksType, long> lookup_trucksTypeRepository, IRepository<TruckStatus, long> lookup_truckStatusRepository, IRepository<User, long> lookup_userRepository, IAppNotifier appNotifier, ITempFileCacheManager tempFileCacheManager, IBinaryObjectManager binaryObjectManager, DocumentFilesAppService documentFilesAppService, IRepository<TransportType, int> transportTypeRepository, IRepository<Capacity, int> capacityRepository ,IRepository<PlateType> PlateTypesRepository)
         {
             _documentFileRepository = documentFileRepository;
             _documentTypeRepository = documentTypeRepository;
@@ -77,6 +81,7 @@ namespace TACHYON.Trucks
             _documentFilesAppService = documentFilesAppService;
             _transportTypeRepository = transportTypeRepository;
             _capacityRepository = capacityRepository;
+            _plateTypesRepository = PlateTypesRepository;
         }
 
         public async Task<PagedResultDto<GetTruckForViewOutput>> GetAll(GetAllTrucksInput input)
@@ -379,28 +384,31 @@ namespace TACHYON.Trucks
 
 
         [AbpAuthorize(AppPermissions.Pages_Trucks)]
-        public async Task<List<TruckTrucksTypeLookupTableDto>> GetAllTrucksTypeForTableDropdown()
+        public async Task<IEnumerable<ISelectItemDto>> GetAllTrucksTypeForTableDropdown()
         {
             using (CurrentUnitOfWork.DisableFilter(AbpDataFilters.MayHaveTenant))
             {
-                return await _lookup_trucksTypeRepository.GetAll()
-                   .Select(trucksType => new TruckTrucksTypeLookupTableDto
-                   {
-                       Id = trucksType.Id.ToString(),
-                       DisplayName = trucksType == null || trucksType.DisplayName == null ? "" : trucksType.DisplayName.ToString()
-                   }).ToListAsync();
+                List<TrucksType> trucksTypes = await _lookup_trucksTypeRepository
+                    .GetAllIncluding(x => x.Translations)
+                    .ToListAsync();
+
+                List<TrucksTypeSelectItemDto> trucksTypeDtos = ObjectMapper.Map<List<TrucksTypeSelectItemDto>>(trucksTypes);
+
+                return trucksTypeDtos;
             }
         }
 
         [AbpAuthorize(AppPermissions.Pages_Trucks)]
         public async Task<List<TruckTruckStatusLookupTableDto>> GetAllTruckStatusForTableDropdown()
         {
-            return await _lookup_truckStatusRepository.GetAll()
-                .Select(truckStatus => new TruckTruckStatusLookupTableDto
-                {
-                    Id = truckStatus.Id.ToString(),
-                    DisplayName = truckStatus == null || truckStatus.DisplayName == null ? "" : truckStatus.DisplayName.ToString()
-                }).ToListAsync();
+            List<TruckStatus> trucksStatuses = await _lookup_truckStatusRepository
+                .GetAllIncluding(x => x.Translations)
+                .ToListAsync();
+
+            List<TruckTruckStatusLookupTableDto> truckStatusDto = ObjectMapper.Map<List<TruckTruckStatusLookupTableDto>>(trucksStatuses);
+
+            return truckStatusDto;
+
         }
 
 
@@ -496,23 +504,33 @@ namespace TACHYON.Trucks
             return transportTypeDtos;
         }
 
-
-        public async Task<List<SelectItemDto>> GetAllTruckTypesByTransportTypeIdForDropdown(int transportTypeId)
+        public async Task<IEnumerable<ISelectItemDto>> GetAllTruckTypesByTransportTypeIdForDropdown(int transportTypeId)
         {
-
-
-            return await _lookup_trucksTypeRepository.GetAll()
+            List<TrucksType> trucksTypes = await _lookup_trucksTypeRepository
+                .GetAllIncluding(x => x.Translations)
                 .Where(x => x.TransportTypeId == transportTypeId)
-                .Select(x => new SelectItemDto()
-                {
-                    Id = x.Id.ToString(),
-                    DisplayName = x.DisplayName
-                }).ToListAsync();
+                .ToListAsync();
+
+            List<TrucksTypeSelectItemDto> trucksTypeDtos = ObjectMapper.Map<List<TrucksTypeSelectItemDto>>(trucksTypes);
+
+            return trucksTypeDtos;
         }
-        public async Task<List<SelectItemDto>> GetAllTuckCapacitiesByTuckTypeIdForDropdown(int truckTypeId)
+
+        public async Task<IEnumerable<ISelectItemDto>> GetAllTuckCapacitiesByTuckTypeIdForDropdown(int truckTypeId)
         {
-            return await _capacityRepository.GetAll()
+            List<Capacity> capacity = await _capacityRepository
+                .GetAllIncluding(x => x.Translations)
                 .Where(x => x.TrucksTypeId == truckTypeId)
+                .ToListAsync();
+
+            List<CapacitySelectItemDto> capacityDto = ObjectMapper.Map<List<CapacitySelectItemDto>>(capacity);
+
+            return capacityDto;
+        }
+
+        public async Task<List<SelectItemDto>> GetAllPlateTypeIdForDropdown()
+        {
+            return await _plateTypesRepository.GetAll()
                 .Select(x => new SelectItemDto()
                 {
                     Id = x.Id.ToString(),

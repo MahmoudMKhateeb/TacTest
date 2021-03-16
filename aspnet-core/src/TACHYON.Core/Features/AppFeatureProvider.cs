@@ -1,14 +1,28 @@
 ﻿using Abp.Application.Features;
+using Abp.Domain.Repositories;
 using Abp.Localization;
 using Abp.Runtime.Validation;
 using Abp.UI.Inputs;
+using TACHYON.Invoices.Periods;
+using System.Linq;
+using Abp.Dependency;
+using Abp.Domain.Uow;
 
 namespace TACHYON.Features
 {
     public class AppFeatureProvider : FeatureProvider
     {
+        private IRepository<InvoicePeriod> _PeriodRepository;
+
+        public AppFeatureProvider(IRepository<InvoicePeriod> periodRepository)
+        {
+            _PeriodRepository = periodRepository;
+        }
+
+        [UnitOfWork]
         public override void SetFeatures(IFeatureDefinitionContext context)
         {
+
             context.Create(
                 AppFeatures.MaxUserCount,
                 "0", //0 = unlimited
@@ -52,16 +66,31 @@ namespace TACHYON.Features
             //---Y
             #region ######## Tachyon features #########
 
+            //var shipperFeature1 = context.Create(
+            //    AppFeatures.Shipper,
+            //    "false",
+            //    L("ShipperFeature"), // todo add localization here
+            //    inputType: new CheckboxInputType()
+            //)[FeatureMetadata.CustomFeatureKey] = new FeatureMetadata
+            //{
+            //    IsVisibleOnPricingTable = true,
+            //    TextHtmlColor = value => value == "true" ? "#c300ff" : "#d9534f"
+            //};
+
+
             var shipperFeature = context.Create(
                 AppFeatures.Shipper,
                 "false",
-                L("ShipperFeature"), // todo add localization here
+                L("ShipperFeature"),
                 inputType: new CheckboxInputType()
-            )[FeatureMetadata.CustomFeatureKey] = new FeatureMetadata
-            {
-                IsVisibleOnPricingTable = true,
-                TextHtmlColor = value => value == "true" ? "#c300ff" : "#d9534f"
-            };
+            );
+
+            shipperFeature.CreateChildFeature(
+                AppFeatures.ShipperCanMakInvoicePaid,
+                "false",
+                L("ShipperCanMakInvoicePaid"),
+                inputType: new CheckboxInputType()
+            );
 
 
             var carrierFeature = context.Create(
@@ -134,7 +163,57 @@ namespace TACHYON.Features
                 TextHtmlColor = value => value == "true" ? "#c300ff" : "#d9534f"
             };
 
+            ///*Invoices*/
 
+            context.Create(
+                AppFeatures.ShipperCreditLimit,
+                "0",
+                L(AppFeatures.ShipperCreditLimit),
+                inputType: new SingleLineStringInputType(new NumericValueValidator(1, int.MaxValue)));
+
+            var periods = _PeriodRepository.GetAll().Where(p => p.Enabled == true).ToList();
+            if (periods != null && periods.Count > 0)
+            {
+
+                LocalizableComboboxItem[] Shipperitems = new LocalizableComboboxItem[periods.Count];
+
+                for (var i = 0; i < periods.Count; i++)
+                {
+                    Shipperitems[i] = new LocalizableComboboxItem(periods[i].Id.ToString(), L(periods[i].DisplayName));
+
+                }
+
+
+                context.Create(
+                          AppFeatures.ShipperPeriods,
+                          defaultValue: periods[0].Id.ToString(),
+                          displayName: L(AppFeatures.ShipperPeriods),
+                          inputType: new ComboboxInputType(
+                              new StaticLocalizableComboboxItemSource(Shipperitems)
+                          )
+                        );
+
+                var Carrierperiods = periods.Where(p => p.ShipperOnlyUsed == false).ToList();
+                if (Carrierperiods != null && Carrierperiods.Count > 0)
+                {
+                    LocalizableComboboxItem[] Carrieritems = new LocalizableComboboxItem[Carrierperiods.Count];
+
+                    for (var i = 0; i < Carrierperiods.Count; i++)
+                    {
+                        Carrieritems[i] = new LocalizableComboboxItem(Carrierperiods[i].Id.ToString(), L(Carrierperiods[i].DisplayName));
+
+                    }
+                    context.Create(
+                                  AppFeatures.CarrierPeriods,
+                                  defaultValue: Carrierperiods[0].Id.ToString(),
+                                  displayName: L(AppFeatures.CarrierPeriods),
+                                  inputType: new ComboboxInputType(
+                                      new StaticLocalizableComboboxItemSource(Carrieritems)
+                                  )
+                                );
+                }
+
+            }
             #endregion
             //---Y
             var chatFeature = context.Create(
@@ -157,6 +236,8 @@ namespace TACHYON.Features
                 L("TenantToHostChatFeature"),
                 inputType: new CheckboxInputType()
             );
+
+
         }
 
         private static ILocalizableString L(string name)

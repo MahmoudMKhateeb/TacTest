@@ -45,6 +45,9 @@
 
         #region Tachyon consts
         public const int MaxDocumentFileBytesUserFriendlyValue = 5;
+        public const string ShipperEdtionName= "shipper";
+        public const string CarrierEdtionName = "carrier";
+
         #endregion
 
     }

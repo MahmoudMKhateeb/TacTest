@@ -4,7 +4,7 @@
     <!-- <sub-header [title]="'TenantRequiredDocuments' | localize"
       [description]="'TenantRequiredDocumentsHeaderInfo' | localize"> </sub-header> -->
     <div [class]="containerClass">
-      <div *ngIf="isFormSubmitted && submittedDocumentsList.length != 0" class="alert alert-custom alert-light-warning" role="alert">
+      <div *ngIf="isFormSubmitted && submittedDocumentsList.length != 0" class="alert alert-custom alert-light-primary" role="alert">
         <div class="alert-icon">
           <i class="flaticon-warning"></i>
         </div>
@@ -14,7 +14,7 @@
       <div *ngIf="active && isFormSubmitted" class="card card-custom gutter-b">
         <div class="card-header">
           <div class="card-title">
-            <h4 class="card-title">{{ l('SubmittedDocumnents') }}</h4>
+            <h4 class="card-title">{{ l('SubmittedDocuments') }}</h4>
           </div>
         </div>
         <div class="card-body">
@@ -34,16 +34,16 @@
                 <ng-template pTemplate="header">
                   <tr>
                     <th style="width: 130px;">{{ l('Actions') }}</th>
-                    <th style="width: 150px;">
+                    <th>
                       {{ l('Name') }}
                     </th>
-                    <th style="width: 150px;">
+                    <th>
                       {{ l('Extn') }}
                     </th>
-                    <th style="width: 150px;">
+                    <th>
                       {{ l('ExpirationDate') }}
                     </th>
-                    <th style="width: 150px;">
+                    <th>
                       {{ l('Status') }}
                     </th>
                   </tr>
@@ -52,20 +52,10 @@
                   <tr>
                     <td style="width: 130px;">
                       <div class="btn-group dropdown" dropdown container="body">
-                        <!--                        <i-->
-                        <!--                          *ngIf="record.expirationDate < today"-->
-                        <!--                          class="flaticon2-information text-warning"-->
-                        <!--                          style="padding: 3px;"-->
-                        <!--                          data-toggle="tooltip"-->
-                        <!--                          title="DocumnetIsExpired"-->
-                        <!--                        ></i>-->
                         <button class="dropdown-toggle btn btn-sm btn-primary" dropdownToggle>
                           <i class="fa fa-cog"></i><span class="caret"></span> {{ l('Actions') }}
                         </button>
                         <ul class="dropdown-menu" *dropdownMenu>
-                          <!-- <li>
-                                                  <a href="javascript:;" class="dropdown-item">{{ l('View') }}</a>
-                                                </li> -->
                           <li *ngIf="!record.isAccepted || record.expirationDate <= todayMoment">
                             <a
                               href="javascript:;"
@@ -84,56 +74,55 @@
                         </ul>
                       </div>
                     </td>
-                    <td style="width: 150px;">
+                    <td>
                       <span class="ui-column-title"></span>
                       {{ record.documentTypeDto.name }}
                     </td>
-                    <td style="width: 150px;">
+                    <td>
                       <span class="ui-column-title"></span>
                       {{ record.extn }}
                     </td>
 
-                    <td style="width: 150px;">
+                    <td>
                       <span class="ui-column-title"> </span>
                       {{ record.expirationDate == null ? '-' : (record.expirationDate | momentFormat: 'D/M/YYYY') }}
                     </td>
 
-                    <td style="width: 150px;">
-                      <span class="ui-column-title"></span>
-                      <div
-                        *ngIf="
-                          record.isAccepted && !record.isRejected && (record.expirationDate != null ? record.expirationDate > todayMoment : true)
-                        "
-                      >
-                        <span class="label label-lg font-weight-bold label-light-success label-inline">
+                    <td>
+                      <div>
+                        <span
+                          *ngIf="record.isAccepted && !record.isRejected"
+                          class="label mr-3 label-lg font-weight-bold label-light-success label-inline"
+                        >
                           {{ l('Accepted') }}
                         </span>
-                      </div>
-                      <div *ngIf="record.isRejected && !record.isAccepted">
-                        <span class="label label-lg font-weight-bold label-light-danger label-inline">
+
+                        <span
+                          *ngIf="record.isRejected && !record.isAccepted"
+                          class="label mr-3 label-lg font-weight-bold label-light-danger label-inline"
+                        >
                           {{ l('Rejected') }}
                         </span>
-                        <span style="margin-left: 8px; height: 22px; padding-top: 1px;">
-                          <a class="btn btn-sm btn-primary" (click)="viewRejectionReasonModal.show(record.name, record.rejectionReason)">
+                        <span *ngIf="record.isRejected && !record.isAccepted">
+                          <a class="btn mr-3 btn-sm btn-primary" (click)="viewRejectionReasonModal.show(record.name, record.rejectionReason)">
                             {{ l('ViewReason') }} !</a
                           >
                         </span>
-                      </div>
-                      <div
-                        *ngIf="
-                          !record.isRejected && !record.isAccepted && (record.expirationDate != null ? record.expirationDate > todayMoment : true)
-                        "
-                      >
-                        <span class="label label-lg font-weight-bold label-light-primary label-inline">
-                          {{ l('InReview') }}
+
+                        <span
+                          *ngIf="!record.isRejected && !record.isAccepted"
+                          class="label mr-3 label-lg font-weight-bold label-light-primary label-inline"
+                        >
+                          {{ l('UnderReview') }}
                         </span>
-                      </div>
-                      <div *ngIf="record.expirationDate <= todayMoment && !record.isRejected">
-                        <span class="label label-lg font-weight-bold label-light-danger label-inline">
+
+                        <span
+                          *ngIf="record.expirationDate <= todayMoment"
+                          class="label mr-3 label-lg font-weight-bold label-light-danger label-inline"
+                        >
                           {{ l('Expired') }}
                         </span>
                       </div>
-                      <!-- {{ today }} -->
                     </td>
                   </tr>
                 </ng-template>
@@ -147,7 +136,7 @@
       </div>
     </div>
     <div #requiredDocumentsCard [class]="containerClass">
-      <div *ngIf="createOrEditDocumentFileDtos.length != 0" class="alert alert-custom alert-light-danger" role="alert">
+      <div *ngIf="createOrEditDocumentFileDtos.length != 0" class="alert alert-custom alert-light-warning" role="alert">
         <div class="alert-icon"><i class="flaticon-warning"></i></div>
         <div class="alert-text">{{ l('UploadDocumentMsg') }}</div>
       </div>
@@ -162,135 +151,20 @@
         >
           <div class="card-body">
             <div [class]="saving == true ? 'overlay-wrapper ' : ''">
-              <div *ngFor="let item of createOrEditDocumentFileDtos; index as i">
-                <div class="card card-custom">
-                  <div class="card-header">
-                    <div class="card-title">
-                      <h4 class="card-title">
-                        <span *ngIf="item.documentTypeDto.isRequired">{{ '*' }} </span>{{ item.documentTypeDto.name }}
-                      </h4>
-                    </div>
-                  </div>
-                  <div class="card-body">
-                    <div class="row d-flex">
-                      <div class="form-group col-md-6">
-                        <label>{{ l('File') }}*</label>
-                        <div class="custom-file">
-                          <input
-                            accept="image/x-png,image/jpeg,application/pdf"
-                            [id]="item.documentTypeDto.displayName"
-                            type="file"
-                            [name]="item.documentTypeDto.displayName"
-                            class="custom-file-input"
-                            [required]="true"
-                            [disabled]="saving"
-                            (change)="DocFileChangeEvent($event, item, i)"
-                          />
-                          <label [for]="item.documentTypeDto.displayName" class="custom-file-label text-truncate">{{
-                            item.name ? item.name : l('SelectFile')
-                          }}</label>
-                        </div>
-                        <span class="form-text text-muted">{{ 'ValidDocumentFilesMsg' | localize }}</span>
-                        <div *ngIf="fileFormateIsInvalideIndexList[i]">
-                          <span class="form-text text-danger text-left">{{ 'PleaseChooseAvalidFormat' | localize }}</span>
-                        </div>
-                      </div>
-                      <div *ngIf="item.documentTypeDto.hasNumber" class="form-group col-md-6">
-                        <label
-                          >{{ item.documentTypeDto.name | localize }} {{ l('Number') }}
-                          <span class="text-danger">*</span>
-                        </label>
-                        <input
-                          (focusout)="checkIfIsNumberUnique(item.documentTypeDto, i, $event.target.value)"
-                          (change)="numberChange(item, i)"
-                          name="number{{ i }}"
-                          id="number{{ i }}"
-                          class="form-control m-input"
-                          required
-                          #numberInput="ngModel"
-                          [maxLength]="
-                            item.documentTypeDto.numberMaxDigits == 0 || item.documentTypeDto.numberMaxDigits == null
-                              ? 20
-                              : item.documentTypeDto.numberMaxDigits
-                          "
-                          [minLength]="
-                            item.documentTypeDto.numberMinDigits == 0 || item.documentTypeDto.numberMinDigits == null
-                              ? 1
-                              : item.documentTypeDto.numberMinDigits
-                          "
-                          type="text"
-                          [(ngModel)]="item.number"
-                        />
-                        <validation-messages [formCtrl]="numberInput"></validation-messages>
-
-                        <span *ngIf="item.number == null ? 0 : item.number.length < item.documentTypeDto.numberMinDigits" class="text-danger">
-                          {{ l('TheNumberLengthMustBeMoreThanMinDigits') }}
-                        </span>
-                        <span *ngIf="item.number == null ? false : item.number.length > item.documentTypeDto.numberMaxDigits" class="text-danger">
-                          {{ l('TheNumberLengthMustBeLessThanMaxDigits') }}
-                        </span>
-                        <span *ngIf="item.documentTypeDto.numberMinDigits || item.documentTypeDto.numberMinDigits" class="form-text text-muted"
-                          >{{ l('minDigits:') }} {{ item.documentTypeDto.numberMinDigits == 0 ? null : item.documentTypeDto.numberMinDigits }}
-                          {{ l('maxDigits:') }}
-                          {{ item.documentTypeDto.numberMaxDigits == 0 ? null : item.documentTypeDto.numberMaxDigits }}
-                        </span>
-                        <span *ngIf="item.documentTypeDto.isNumberUnique" class="form-text text-muted">{{ 'ShouldBeUnique' | localize }}</span>
-                        <div *ngIf="uniqueNumberIsInvalideIndexList[i]">
-                          <span class="form-text text-danger text-left">{{ 'PleaseEnterAUniqueNumber' | localize }}</span>
-                        </div>
-                      </div>
-                      <div *ngIf="item.documentTypeDto.hasExpirationDate" class="form-group col-md-6">
-                        <hijri-gregorian-datepicker-test
-                          [label]="l('ExpirationDate') + '*'"
-                          class="m-input"
-                          [isRequired]="true"
-                          [readonly]="true"
-                          [minGreg]="todayGregorian"
-                          [minHijri]="todayHijri"
-                          [selectedDate]="item.documentTypeDto.hasHijriExpirationDate ? todayHijri : todayGregorian"
-                          [selectedDateType]="item.documentTypeDto.hasHijriExpirationDate ? selectedDateTypeHijri : selectedDateTypeGregorian"
-                          (selectedDateChange)="hijriDatepickerSelectedDateChange($event, item)"
-                        >
-                        </hijri-gregorian-datepicker-test>
-                        <div *ngIf="DateInvalideIndexList[i]">
-                          <span class="form-text text-danger text-left">{{ 'DateIsRequired' | localize }}</span>
-                        </div>
-                      </div>
-                      <div *ngIf="item.documentTypeDto.hasNotes" class="form-group col-md-12">
-                        <label>{{ l('Note') }}</label>
-                        <textarea
-                          style="resize: none;"
-                          name="note{{ i }}"
-                          id="note{{ i }}"
-                          class="form-control m-input"
-                          type="text"
-                          rows="3"
-                          [(ngModel)]="item.notes"
-                        ></textarea>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div class="form-group col-md-12">
-                <label>{{ docProgressFileName }}</label>
-                <p-progressBar [value]="docProgress" [style]="{ height: '6px', width: '100' }"></p-progressBar>
-              </div>
+              <app-required-document-form-child
+                #requiredDocumentFormChildComponent
+                [createOrEditDocumentFileDtos]="createOrEditDocumentFileDtos"
+                (onDocsUploaderCompleteAll)="saveInternal()"
+                [parentForm]="TenantRequiredDocumentsForm"
+              >
+              </app-required-document-form-child>
             </div>
             <div *ngIf="saving" class="overlay-layer bg-dark-o-10">
               <div class="spinner spinner-primary-lg"></div>
             </div>
           </div>
           <div class="card-footer">
-            <button
-              type="submit"
-              class="btn btn-save blue"
-              [disabled]="
-                !TenantRequiredDocumentsForm.form.valid || !alldocumentsValid || !allnumbersValid || !allDatesValid || !alldocumentsNotDuplicated
-              "
-              [buttonBusy]="saving"
-              [busyText]="l('SavingWithThreeDot')"
-            >
+            <button type="submit" class="btn btn-save blue" [buttonBusy]="saving" [busyText]="l('SavingWithThreeDot')">
               <i class="fa fa-save"></i> <span>{{ l('Save') }}</span>
             </button>
           </div>

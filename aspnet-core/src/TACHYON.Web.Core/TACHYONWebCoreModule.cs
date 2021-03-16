@@ -5,10 +5,12 @@ using Abp.AspNetZeroCore.Licensing;
 using Abp.AspNetZeroCore.Web;
 using Abp.Configuration.Startup;
 using Abp.Dependency;
+using Abp.Domain.Uow;
 using Abp.Hangfire;
 using Abp.Hangfire.Configuration;
 using Abp.IO;
 using Abp.Modules;
+using Abp.Quartz;
 using Abp.Reflection.Extensions;
 using Abp.Runtime.Caching.Redis;
 using Abp.Zero.Configuration;
@@ -23,6 +25,7 @@ using System.Text;
 using TACHYON.Chat;
 using TACHYON.Configuration;
 using TACHYON.EntityFrameworkCore;
+using TACHYON.Invoices;
 using TACHYON.Startup;
 using TACHYON.Web.Authentication.JwtBearer;
 using TACHYON.Web.Authentication.TwoFactor;
@@ -39,7 +42,9 @@ namespace TACHYON.Web
         typeof(AbpAspNetCoreSignalRModule),
         typeof(TACHYONGraphQLModule),
         typeof(AbpRedisCacheModule), //AbpRedisCacheModule dependency (and Abp.RedisCache nuget package) can be removed if not using Redis cache
-        typeof(AbpHangfireAspNetCoreModule) //AbpHangfireModule dependency (and Abp.Hangfire.AspNetCore nuget package) can be removed if not using Hangfire
+        typeof(AbpHangfireAspNetCoreModule), //AbpHangfireModule dependency (and Abp.Hangfire.AspNetCore nuget package) can be removed if not using Hangfire
+        typeof(AbpQuartzModule)
+
     )]
     public class TACHYONWebCoreModule : AbpModule
     {
@@ -126,6 +131,12 @@ namespace TACHYON.Web
 
             IocManager.Resolve<ApplicationPartManager>()
                 .AddApplicationPartsIfNotAddedBefore(typeof(TACHYONWebCoreModule).Assembly);
+
+            using (IocManager.Resolve<IUnitOfWorkManager>().Begin())
+            {
+                IocManager.Resolve<InvoiceManager>().RunAllJobs();
+
+            }
         }
 
         private void SetAppFolders()

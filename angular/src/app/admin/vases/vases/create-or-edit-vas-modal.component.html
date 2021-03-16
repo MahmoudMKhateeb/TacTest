@@ -13,8 +13,8 @@
       <form *ngIf="active" #vasForm="ngForm" novalidate (ngSubmit)="save()" autocomplete="off">
         <div class="modal-header">
           <h4 class="modal-title">
-            <span *ngIf="vas.id">{{ l('Edit') }} {{ l('Vas') }}</span>
-            <span *ngIf="!vas.id">{{ l('Create') }} {{ l('NewVas') }}</span>
+            <span *ngIf="vas.id"> {{ l('EditVas') }}</span>
+            <span *ngIf="!vas.id"> {{ l('CreateNewVas') }}</span>
           </h4>
           <button type="button" class="close" (click)="close()" aria-label="Close" [disabled]="saving">
             <span aria-hidden="true">&times;</span>

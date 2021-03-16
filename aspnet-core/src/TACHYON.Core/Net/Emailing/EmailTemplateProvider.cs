@@ -40,6 +40,25 @@ namespace TACHYON.Net.Emailing
             });
         }
 
+
+
+        public string ShipperNotfiyWhenCreditLimitGreaterOrEqualXPercentage(int? TenantId, int Percentage)
+        {
+            var tenancyKey = TenantId.ToString();
+
+            return _defaultTemplates.GetOrAdd(tenancyKey, key =>
+            {
+                using (var stream = typeof(EmailTemplateProvider).GetAssembly().GetManifestResourceStream("TACHYON.Net.Emailing.EmailTemplates.ShipperNotfiyWhenCreditLimitGreaterOrEqualXPercentage.html"))
+                {
+                    var bytes = stream.GetAllBytes();
+                    var template = Encoding.UTF8.GetString(bytes, 3, bytes.Length - 3);
+                    template = template.Replace("{EMAIL_PERCENTAGE}", Percentage.ToString());
+                    template = template.Replace("{THIS_YEAR}", DateTime.Now.Year.ToString());
+                    return template.Replace("{EMAIL_LOGO_URL}", GetTenantLogoUrl(TenantId));
+                }
+            });
+        }
+
         private string GetTenantLogoUrl(int? tenantId)
         {
             if (!tenantId.HasValue)

@@ -218,7 +218,8 @@ namespace TACHYON.Configuration.Host
             return new HostBillingSettingsEditDto
             {
                 LegalName = await SettingManager.GetSettingValueAsync(AppSettings.HostManagement.BillingLegalName),
-                Address = await SettingManager.GetSettingValueAsync(AppSettings.HostManagement.BillingAddress)
+                Address = await SettingManager.GetSettingValueAsync(AppSettings.HostManagement.BillingAddress),
+                TaxVat= await SettingManager.GetSettingValueAsync(AppSettings.HostManagement.TaxVat)
             };
         }
 
@@ -363,6 +364,9 @@ namespace TACHYON.Configuration.Host
                 input.LegalName);
             await SettingManager.ChangeSettingForApplicationAsync(AppSettings.HostManagement.BillingAddress,
                 input.Address);
+            
+            await SettingManager.ChangeSettingForApplicationAsync(AppSettings.HostManagement.TaxVat,input.TaxVat);
+
         }
 
         private async Task UpdateGeneralSettingsAsync(GeneralSettingsEditDto settings)

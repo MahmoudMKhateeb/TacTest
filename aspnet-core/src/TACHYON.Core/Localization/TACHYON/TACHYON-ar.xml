@@ -7,12 +7,54 @@
     <text name="TheNumberLengthMustBeLessThanMaxDigits">عدد خانات الرقم يجب أن يكون أقل من العدد الأعلى المسموح به</text>
 
 
-    <![CDATA[Tachyon:SideBare Start]]>
+    <![CDATA[Tachyon:Sidebare Start]]>
     <text name="DocumentManagement">إدارة المستندات</text>
     <text name="SubmittedDocuments">المستندات التي تم تسليمها</text>
     <text name="TMSSettings">إعدادات إدارة الشاحنات</text>
-    <text name="TMS">نظام إدارة الشاحنات</text>
-    <![CDATA[Tachyon:SideBare End]]>
+    <text name="TMS">نظام إدارة النقل</text>
+    <text name="VasPrices">أسعار الخدمات الإضافية</text>
+    <text name="VasPrice">السعر</text>
+    <text name="Nationalities">الجنسيات</text>
+    <text name="NationalityTranslations">ترجمة الجنسيات</text>
+    <text name="TransportTypesTranslations">ترجمة أنواع النقل</text>
+    <![CDATA[Tachyon:Sidebare End]]>
+
+    <![CDATA[Tachyon:VAS Price Start]]>
+    <text name="VasName">إسم الحدمة الإضافية</text>
+    <text name="MaxAmount">أعلى سعر</text>
+    <text name="MaxCount">أكبر عدد</text>
+    <text name="MinValue">أقل قيمة</text>
+    <text name="MaxValue">أكبر قيمة</text>
+    <text name="VasAmount">الكمية</text>
+    <text name="VasCount">العدد</text>
+    <![CDATA[Tachyon:VAS Price End]]>
+
+    <![CDATA[Tachyon:VAS Start]]>
+
+    <text name="Vas">الخدمات الإضافية</text>
+    <text name="CreateNewVas">إنشاء خدمة إضافية</text>
+    <text name="EditVas">تعديل الخدمات الإضافية</text>
+    <text name="HasAmount">بها كمية</text>
+    <text name="HasCount">بها عدد</text>
+
+    <![CDATA[Tachyon:VAS End]]>
+
+
+    <![CDATA[Tachyon:Driver Start]]>
+    <text name="FirstName">الإسم الأول</text>
+    <text name="LastName">الإسم الأخير</text>
+    <text name="Drivers">السائقين</text>
+    <text name="Driver">سائق</text>
+    <text name="DriversHeaderInfo">Drivers Header Info</text>
+    <text name="CreateNewDriver"> إنشاء سائق جديد</text>
+    <text name="EditDriver"> تعديل السائق</text>
+    <text name="DriverInformations">Driver Informations</text>
+    <text name="Nationality">الجنسية</text>
+    <text name="ExperienceField">مجال الخبرة</text>
+    <text name="DriverDocuments">مستندات السائق</text>
+    <text name="DateOfBirth">تاريخ الميلاد</text>
+    <text name="d/M/yyyy">سنة/شهر/يوم</text>
+    <![CDATA[Tachyon:Driver End]]>
 
 
     <![CDATA[Tachyon:Common Start]]>
@@ -23,31 +65,42 @@
     <text name="NoData">لايوجد بيانات</text>
     <text name="ShouldBeUnique">يجب أن يكون مميز</text>
     <text name="PleaseEnterAUniqueNumber">الرجاء إدخال  رقم مميز</text>
-    <text name="Note">ملاحظة</text>
+    <text name="Note">ملاحظات</text>
     <text name="Save">حـفظ</text>
     <text name="makeSureThatYouFillAllRequiredFields">الرجاء التأكد من ملء كل الخانات المطلوبة</text>
-
     <![CDATA[Tachyon:Common End]]>
+
+    <![CDATA[Tachyon:Nationalities Start]]>
+    <text name="CreateNewNationality">إنشاء جنسية جديدة</text>
+    <text name="CreateNewNationalityTranslation">إنشاء ترجمة جنسية جديدة</text>
+    <text name="EditTranslation">تعديل ترجمة الجنسية</text>
+    <text name="TranslatedName">الإسم المترجم</text>
+    <![CDATA[Tachyon:Nationalities End]]>
+
+    <![CDATA[Tachyon:TransportTypes Start]]>
+    <text name="CreateNewTransportTypesTranslation">إنشاء ترجمة نوع نقل</text>
+    <text name="EditTransportTypesTranslation">تعديل ترجمة نوع نقل</text>
+    <text name="SelectATransportType">إختر نوع نقل</text>
+    <![CDATA[Tachyon:TransportTypes End]]>
 
 
     <![CDATA[Tachyon:Shipping Requests Start]]>
+    <text name="Requests">الطلبات</text>
     <text name="ShippingRequests">طلبات الشحن</text>
     <text name="Marketplace">المتجر</text>
     <![CDATA[Tachyon:Shipping Requests End]]>
-
 
     <![CDATA[Tachyon:Documents Common Start]]>
     <text name="ExpirationDate">تاريخ إنتهاء الصلاحية</text>
     <text name="Status">الحالة</text>selectfile
     <text name="Download">تحميل</text>
     <text name="File">ملف</text>
-    <text name="SelectFile">حدد الملف</text>
     <text name="ValidDocumentFilesMsg">صيغة المستندات المسموح بها:.png,.jpeg</text>
     <text name="PleaseChooseAvalidFormat"> الرجاء إختيار صيغة مسموح بها</text>
     <text name="PleaseChooseDate">الرجاء إختيار تاريخ</text>
     <text name="Number">رقم</text>
-    <text name="minDigits:">أقل عدد من الخانات</text>
-    <text name="maxDigits:">أكبر عدد من الخانات</text>
+    <text name="minDigits">أقل عدد من الخانات</text>
+    <text name="maxDigits">أكبر عدد من الخانات</text>
     <text name="DateIsRequired">التاريخ مطلوب</text>
     <![CDATA[Tachyon:Documents Common End]]>
 
@@ -57,7 +110,7 @@
     <text name="Extn">صيغة المستند</text>
     <text name="Accepted">تم القبول</text>
     <text name="Rejected">تم الرفض</text>
-    <text name="InReview">تحت المراجعة</text>
+    <text name="UnderReview">تحت المراجعة</text>
     <text name="UploadDocumentMsg">الرجاء تتقديم الملفات التالية حتى يتم إكمال عملية إنشاء الحساب</text>
     <text name="Company Registration (CR)">تسجيل الشركة</text>
     <text name="Transport Permit">تصريح النقل</text>
@@ -71,7 +124,7 @@
     <text name="Choose">إختر</text>
     <![CDATA[Tachyon:Common  End]]>-->
 
-    <![CDATA[Tachyon:Truck Page Start]]>-->
+    <![CDATA[Tachyon:Trucks Page Start]]>-->
     <text name="Trucks">الشاحنات</text>
     <text name="Istimara">الإستمارة</text>
     <text name="3rd Party Insurance coverage">تغطية تأمينية للطرف الثالث</text>
@@ -82,11 +135,16 @@
     <text name="TruckDocuments">مستندات الشاحنة</text>
     <text name="NewTruck">شاحنة جديدة</text>
     <text name="PlateNumber">رقم اللوحة</text>
-    <text name="ModelName">إسم الإصدار</text>
-    <text name="ModelYear">تاريخ الإصدار</text>
+    <text name="ModelName">موديل الشاحنة</text>
+    <text name="ModelYear">سنة الصنع</text>
     <text name="Truck">شاحنة</text>
     <text name="UseArrowKeysToChooseTheYear">إستخدم أزرار الأسهم لإختيار السنة</text>
-    <![CDATA[Tachyon:Truck Page End]]>-->
+    <text name="TruckDetails">تفاصيل الشاحنة</text>
+    <text name="SelectTransportTypeToOpenTrucksType">إختر نوع الشحن ليتم فتح نوع الشاحنات</text>
+    <text name="Length">الطول (متر)</text>
+    <text name="SelectTrucksTypeToOpenCapacity">إختر نوع الشاحنة ليتم فتح فة وزن الحمولة</text>
+    <text name="vlaueMustBeGreaterThan">يجب أن تكون القيمة أكبر من</text>
+    <![CDATA[Tachyon:Trucks Page End]]>-->
 
     <![CDATA[Tachyon:Truck type Categories Pages Start]]>-->
     <text name="TrucktypeDetails">تفاصيل نوع الشاحنة</text>
@@ -95,9 +153,8 @@
     <text name="TruckTypes">أنوع الشاحنة</text>
     <text name="TransportTypes">أنواع النقل</text>
     <text name="TransportType">نوع النقل</text>
-    <text name="SelectATransportType">إختر نوع النقل</text>
     <text name="CapacityCategory">فئة وزن الحمولة</text>
-    <text name="Capacity">وزن الحمولة</text>
+    <text name="Capacity">وزن الحمولة (طن)</text>
     <text name="UseTheArrowKeysToChooseTheCapacity">استخدم مفاتيح الأسهم لاختيار وزن الحمولة</text>
     <text name="CapacityCategories">فئات وزن الحمولة</text>
     <text name="TransportTypesHeaderInfo">TransportTypesHeaderInfo</text>
@@ -121,12 +178,11 @@
     <![CDATA[ Tachyon: Document files Page Start]]>
     <text name="DocumentFiles">المستندات</text>
     <text name="DocumentFilesHeaderInfo">DocumentFilesHeaderInfo</text>
-    <text name="DocumentName">أسم المستند</text>
+    <text name="DocumentName">إسم المستند</text>
     <text name="SubmitterTenant">مقدم من  </text>
     <text name="SubmittingTime">تاريخ الإستلام</text>
     <text name="TruckID">الرقم المميز للشاحنة</text>
     <text name="TrailerCode">الرقم المميز للمفطورة</text>
-    <text name="DriverName">إسم السائق</text>
     <text name="IsAccepted">تم قبوله</text>
     <text name="Accept">قبول</text>
     <text name="Reject">رفض</text>
@@ -136,6 +192,7 @@
     <text name="ViewReason">إظهار سبب الرفض</text>
     <text name="RejectionReason">سبب رفض المستند</text>
     <text name="ViewRejectionReason">إظهار سبب رفض المستند</text>
+    <text name="SelectFile">إختر المستند</text>
     <![CDATA[ Tachyon: Document files Page End]]>
 
     <![CDATA[Tachyon:Common Start]]>
@@ -212,7 +269,6 @@
     <text name="IAMA">أنا</text>
     <text name="CompanyInformation">معلومات الشركة</text>
     <text name="CompanyUniqueName">اسم الشركة</text>
-    <text name="CompanyUniqueName_Regex_Description">الرجاء ادخال اسم الشركة.</text>
     <text name="CompanyFullLeagalName">اسم الشركة القانوني</text>
     <text name="TheNameOfTheCompanyInTheCR">اسم الشركة كما هو في السجل التجاري</text>
     <text name="WillBeShownOnAllOfficialDocumentsLikeWaybillsAndInvoices">سيظهر في جميع المستندات الرسمية.</text>
@@ -220,7 +276,7 @@
     <text name="City">المدينة</text>
     <text name="Address">العنوان</text>
     <text name="Format">الصيغة</text>
-    <text name="AddressFormat"> الولاية -- إسم الشارع -- الرمز البريدي</text>
+    <text name="AddressFormat">المدينة-الشارع-رقم البناء</text>
     <text name="AdminUserAccountInfo">معلومات المستخدم الرئيسي للحساب </text>
     <text name="AdminEmailAddress">البريد الإلكتروني</text>
     <text name="AdminPassword">كلمة المرور</text>
@@ -282,6 +338,7 @@
     <text name="ImportFromExcel">استيراد البيانات في صيغة ملف إكسل</text>
     <text name="ExportToExcel">تصدير البيانات في صيغة ملف إكسل</text>
     <text name="ImportToExcelSampleFileDownloadInfo">تحميل نموذج استيراد البيانات بصيغة اكسل {0}</text>
+    <text name="AllUsersSuccessfullyImportedFromExcel">اكتملت عملية استيراد المستخدم بنجاح. تم استيراد جميع المستخدمين في الملف.</text>
     <text name="ClickHere">إضغط هنا</text>
     <text name="Search">بحث</text>
     <text name="UserName">اسم المستخدم</text>
@@ -304,7 +361,6 @@
     <text name="Permissions">الصلاحيات</text>
     <text name="Unlock">فك القفل</text>
     <text name="User">مستخدم</text>
-    <text name="NewUser">مستخدم جديد</text>
     <text name="PhoneNumber">رقم الهاتف</text>
     <text name="CanNotChangeAdminUserName">غير مسموح بتغيير اسم مؤسس حساب الشركة. </text>
     <text name="Surname">الإسم الأخير</text>
@@ -314,25 +370,6 @@
     <text name="IsLockoutEnabled">تمكين قفل الحسابات</text>
     <text name="9digitsNumber">يجب أن يتكون من 9 أرقام</text>
     <![CDATA[Tachyon:User and Driver Shared  end]]>
-
-
-
-
-    <![CDATA[Tachyon:Driver Page Start]]>
-    <text name="Drivers">سائقين</text>
-    <text name="ID / Iqama">رقم الإقامة</text>
-    <text name="Driving License">رخصة القيادة</text>
-    <text name="Driver">سائق</text>
-    <text name="Occupation Card">بطاقة المهنة</text>
-    <text name="DriversHeaderInfo">Drivers Header Info</text>
-    <text name="NewDriver">سائق جديد</text>
-    <text name="DriverInformations">Driver Informations</text>
-    <text name="Nationality">الجنسية</text>
-    <text name="ExperienceField">مجال الخبرة</text>
-    <text name="DriverDocuments">مستندات السائق</text>
-    <![CDATA[Tachyon:Driver Page End]]>
-
-
 
     <text name="NewTermAndCondition">شروط  وأحكام جديدة</text>
     <text name="TermAndConditions">شروط و أحكام</text>
@@ -385,7 +422,7 @@
     <text name="Reset">مسح</text>
     <text name="ResetPermissionsTooltip"> هذا الزر سيقوم على الفور بمسح إذونات المستخدم. المستخدم سيملك الإذونات المرتبطة بالأدوار المعينة من قبل</text>
     <text name="ResetSuccessfully">تم المسح بنجاح</text>
-    <text name="Tenants">عملاء</text>
+    <text name="Tenants">العملاء</text>
     <text name="TenantsHeaderInfo">إدارة العملاء</text>
     <text name="CreateNewTenant">إنشاء عميل الجديد</text>
     <text name="TenancyCodeName">كود العميل</text>
@@ -1147,7 +1184,6 @@
     <text name="UiCustomization_LayoutMobileFixedContent">محتوى ثابت (الجوال)</text>
     <text name="ImportUsersProcessStart">بدأت عملية استيراد المستخدم.</text>
     <text name="ImportUsersUploadFailed">فشلت عملية استيراد المستخدم.</text>
-    <text name="AllUsersSuccessfullyImportedFromExcel">اكتملت عملية استيراد المستخدم بنجاح. تم استيراد جميع المستخدمين في الملف.</text>
     <text name="FileCantBeConvertedToUserList">فشلت عملية استيراد المستخدم. الملف غير صالح.</text>
     <text name="{0}IsInvalid">"{0}" غير صالح</text>
     <text name="Exception">خطأ</text>

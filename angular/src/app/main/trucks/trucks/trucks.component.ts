@@ -73,6 +73,10 @@ export class TrucksComponent extends AppComponentBase implements OnInit {
     this.isArabic = abp.localization.currentLanguage.name.startsWith('ar');
   }
 
+  ngAfterViewInit(): void {
+    this.primengTableHelper.adjustScroll(this.dataTable);
+  }
+
   private setIsEntityHistoryEnabled(): boolean {
     let customSettings = (abp as any).custom;
     return (

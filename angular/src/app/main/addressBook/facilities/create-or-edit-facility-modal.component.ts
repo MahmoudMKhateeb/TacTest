@@ -7,6 +7,7 @@ import {
   FacilityCityLookupTableDto,
   CountiesServiceProxy,
   TenantRegistrationServiceProxy,
+  TenantCityLookupTableDto,
 } from '@shared/service-proxies/service-proxies';
 import { AppComponentBase } from '@shared/common/app-component-base';
 import { MapsAPILoader } from '@node_modules/@agm/core';
@@ -27,7 +28,7 @@ export class CreateOrEditFacilityModalComponent extends AppComponentBase impleme
   countries: any;
   cities: any;
   private geoCoder;
-  allCities: FacilityCityLookupTableDto[];
+  allCities: TenantCityLookupTableDto[];
   countriesLoading: boolean;
   citiesLoading: boolean;
   selectedCountryId: number;
@@ -63,9 +64,9 @@ export class CreateOrEditFacilityModalComponent extends AppComponentBase impleme
         this.modal.show();
       });
     }
-    this._facilitiesServiceProxy.getAllCityForTableDropdown().subscribe((result) => {
-      this.allCities = result;
-    });
+    // this._facilitiesServiceProxy.getAllCityForTableDropdown().subscribe((result) => {
+    //   this.allCities = result;
+    // });
   }
 
   /**

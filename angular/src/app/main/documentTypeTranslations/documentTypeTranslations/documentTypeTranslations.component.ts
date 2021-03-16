@@ -1,4 +1,4 @@
-﻿import { Component, Injector, ViewEncapsulation, ViewChild } from '@angular/core';
+﻿import { Component, Injector, ViewEncapsulation, ViewChild, AfterViewInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { DocumentTypeTranslationsServiceProxy, DocumentTypeTranslationDto } from '@shared/service-proxies/service-proxies';
 import { NotifyService } from 'abp-ng2-module';
@@ -20,7 +20,7 @@ import * as moment from 'moment';
   encapsulation: ViewEncapsulation.None,
   animations: [appModuleAnimation()],
 })
-export class DocumentTypeTranslationsComponent extends AppComponentBase {
+export class DocumentTypeTranslationsComponent extends AppComponentBase implements AfterViewInit {
   @ViewChild('createOrEditDocumentTypeTranslationModal', { static: true })
   createOrEditDocumentTypeTranslationModal: CreateOrEditDocumentTypeTranslationModalComponent;
   @ViewChild('viewDocumentTypeTranslationModalComponent', { static: true })
@@ -46,6 +46,10 @@ export class DocumentTypeTranslationsComponent extends AppComponentBase {
   ) {
     super(injector);
     this.languages = abp.localization.languages;
+  }
+
+  ngAfterViewInit(): void {
+    this.primengTableHelper.adjustScroll(this.dataTable);
   }
 
   getDocumentTypeTranslations(event?: LazyLoadEvent) {

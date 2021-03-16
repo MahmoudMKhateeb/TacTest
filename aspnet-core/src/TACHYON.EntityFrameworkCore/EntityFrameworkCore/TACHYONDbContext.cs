@@ -1,8 +1,16 @@
+﻿using TACHYON.Cities.CitiesTranslations;
+using TACHYON.Countries.CountriesTranslations;
+using TACHYON.Trucks.PlateTypes;
+using TACHYON.Nationalities;
+﻿using TACHYON.Trucks.TruckCategories.TruckCapacities.TruckCapacitiesTranslations;
+using TACHYON.Trucks.TruckStatusesTranslations;
+using TACHYON.Nationalities;
 ﻿using TACHYON.Shipping.TripStatuses;
 using TACHYON.Packing.PackingTypes;
 using TACHYON.Shipping.ShippingTypes;
 using TACHYON.Nationalities;
 using TACHYON.Nationalities.NationalitiesTranslation;
+using TACHYON.Trucks.TrucksTypes.TrucksTypesTranslations;
 using TACHYON.Trucks.TruckCategories.TransportTypes.TransportTypesTranslations;
 using TACHYON.Vases;
 using TACHYON.ShippingRequestVases;
@@ -52,6 +60,11 @@ using TACHYON.Shipping.ShippingRequestBidStatuses;
 using System;
 using System.Linq.Expressions;
 using Microsoft.EntityFrameworkCore.Metadata;
+using TACHYON.Invoices;
+using TACHYON.Invoices.Periods;
+using TACHYON.Invoices.Groups;
+using TACHYON.Invoices.Balances;
+using TACHYON.Invoices.Transactions;
 using TACHYON.Routs.RoutPoints;
 using TACHYON.Shipping.ShippingRequestTrips;
 using TACHYON.Shipping.Trips;
@@ -61,6 +74,16 @@ namespace TACHYON.EntityFrameworkCore
 {
     public class TACHYONDbContext : AbpZeroDbContext<Tenant, Role, User, TACHYONDbContext>, IAbpPersistedGrantDbContext
     {
+        public virtual DbSet<CitiesTranslation> CitiesTranslations { get; set; }
+
+        public virtual DbSet<CountriesTranslation> CountriesTranslations { get; set; }
+
+        public virtual DbSet<PlateType> PlateTypes { get; set; }
+
+        public virtual DbSet<TruckCapacitiesTranslation> TruckCapacitiesTranslations { get; set; }
+
+        public virtual DbSet<TruckStatusesTranslation> TruckStatusesTranslations { get; set; }
+
         #region Trips
         //public virtual DbSet<ShippingRequestTripPoint> ShippingRequestTripPoint { get; set; }
         public virtual DbSet<RoutePointTransition> RoutePointTranstions { get; set; }
@@ -78,6 +101,8 @@ namespace TACHYON.EntityFrameworkCore
         public virtual DbSet<Nationality> Nationalities { get; set; }
 
         public virtual DbSet<NationalityTranslation> NationalityTranslations { get; set; }
+
+        public virtual DbSet<TrucksTypesTranslation> TrucksTypesTranslations { get; set; }
 
         public virtual DbSet<TransportTypesTranslation> TransportTypesTranslations { get; set; }
 
@@ -144,6 +169,24 @@ namespace TACHYON.EntityFrameworkCore
 
         public virtual DbSet<TruckStatus> TruckStatuses { get; set; }
 
+        /*Invoice entity*/
+        public virtual DbSet<InvoicePeriod> InvoicePeriod { get; set; }
+        public virtual DbSet<Invoices.Invoice> Invoice { get; set; }
+        public  DbSet<InvoiceProforma> InvoiceProforma { get; set; }
+
+        
+        public virtual DbSet<InvoiceShippingRequests> InvoiceShippingRequests { get; set; }
+        public virtual DbSet<GroupPeriod> GroupPeriod { get; set; }
+        public virtual DbSet<GroupShippingRequests> GroupShippingRequests { get; set; }
+        public virtual DbSet<GroupPeriodInvoice> GroupPeriodInvoice { get; set; }
+
+        
+        public virtual DbSet<BalanceRecharge> BalanceRecharge { get; set; }
+
+        public DbSet<TransactionChannel> TrancactionChannel { get; set; }
+
+        public DbSet<Transaction> Transaction { get; set; }
+
         /* Define an IDbSet for each entity of the application */
 
         public virtual DbSet<BinaryObject> BinaryObjects { get; set; }
@@ -156,7 +199,7 @@ namespace TACHYON.EntityFrameworkCore
 
         public virtual DbSet<SubscriptionPayment> SubscriptionPayments { get; set; }
 
-        public virtual DbSet<Invoice> Invoices { get; set; }
+        public virtual DbSet<MultiTenancy.Accounting.Invoice> Invoices { get; set; }
 
         public virtual DbSet<PersistedGrantEntity> PersistedGrants { get; set; }
 

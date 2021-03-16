@@ -7,10 +7,8 @@ namespace TACHYON.Trucks.TruckCategories.TruckCapacities.Dtos
     public class CapacityDto : EntityDto
     {
 		public string DisplayName { get; set; }
+        public long TrucksTypeId { get; set; }
+        public string TranslatedDisplayName { get; set; }
 
-
-		 public long TrucksTypeId { get; set; }
-
-		 
     }
 }

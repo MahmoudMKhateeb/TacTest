@@ -50,5 +50,8 @@ namespace TACHYON.Trucks.Dtos
 
         public int? Length { get; set; }
 
+        [Required]
+        public virtual int PlateTypeId { get; set; }
+
     }
 }

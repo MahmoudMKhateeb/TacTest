@@ -525,6 +525,7 @@
             <tab class="p-5" *ngIf="true" heading="{{ 'Invoice' | localize }}">
               <!-- *ngIf="true" is a workaround for https://github.com/valor-software/ng2-bootstrap/issues/823 -->
               <h5>{{ 'InvoiceInformation' | localize }}</h5>
+
               <div class="form-group">
                 <label for="LegalName">{{ 'LegalName' | localize }}</label>
                 <input
@@ -548,6 +549,18 @@
                   [(ngModel)]="hostSettings.billing.address"
                   maxlength="256"
                 ></textarea>
+              </div>
+              <div class="form-group">
+                <label for="taxVat">{{ 'taxVat' | localize }}</label>
+                <input
+                  id="taxVat"
+                  min="1"
+                  type="number"
+                  name="taxVat"
+                  class="form-control"
+                  [ngClass]="{ edited: hostSettings.billing.taxVat }"
+                  [(ngModel)]="hostSettings.billing.taxVat"
+                />
               </div>
             </tab>
             <tab class="p-5" *ngIf="true" heading="{{ 'OtherSettings' | localize }}">
