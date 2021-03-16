@@ -847,8 +847,8 @@ namespace TACHYON.Shipping.ShippingRequests
 
                 var pickup = _routPointRepository
                     .GetAll()
-                    .Where(x => x.ShippingRequestId == shippingRequestId)
-                    .Where(x => x.PickingTypeId == 1)
+                    .Where(x => x.ShippingRequestTripId == shippingRequestId)
+                    .Where(x => x.PickingType == PickingType.Pickup)
                     .Include(x => x.FacilityFk)
                     .ThenInclude(x => x.CityFk)
                     .ThenInclude(x => x.CountyFk)
@@ -939,7 +939,7 @@ namespace TACHYON.Shipping.ShippingRequests
                 var pickup = _routStepRepository
                     .GetAll()
                     .Where(x => x.ShippingRequestId == 1)
-                    .Where(x => x.SourceRoutPointFk.PickingTypeId == 1)
+                    .Where(x => x.SourceRoutPointFk.PickingType == PickingType.Pickup)
                     .Where(x => x.Order == 1)
                     .Include(x => x.SourceRoutPointFk.FacilityFk)
                     .ThenInclude(x => x.CityFk)
@@ -950,7 +950,7 @@ namespace TACHYON.Shipping.ShippingRequests
                 var delivery = _routStepRepository
                     .GetAll()
                     .Where(x => x.ShippingRequestId == 1)
-                    .Where(x => x.DestinationRoutPointFk.PickingTypeId == 2)
+                    .Where(x => x.DestinationRoutPointFk.PickingType == PickingType.Dropoff)
                     .OrderByDescending(x => x.Order)
                     .Include(x => x.DestinationRoutPointFk.FacilityFk)
                     .ThenInclude(x => x.CityFk)
@@ -1017,7 +1017,7 @@ namespace TACHYON.Shipping.ShippingRequests
 
                 var info = _shippingRequestRepository.GetAll()
                     .Where(e => e.TenantId == AbpSession.TenantId)
-                    .Where(e => e.Id == routPoint.ShippingRequestId);
+                    .Where(e => e.Id == routPoint.ShippingRequestTripId);
 
                 var query = info.Select(x => new
                 {
@@ -1042,10 +1042,10 @@ namespace TACHYON.Shipping.ShippingRequests
                     StartTripDate = (x.StartTripDate != null && x.StartTripDate.Value.Year > 1)
                         ? x.StartTripDate.Value.ToShortDateString()
                         : "",
-                    DroppFacilityName =x.RouteFk.DestinationFacilityFk.Name,
-                    DroppCountryName = x.RouteFk.DestinationFacilityFk.CityFk.CountyFk.DisplayName,
-                    DroppCityName = x.RouteFk.DestinationFacilityFk.CityFk.DisplayName,
-                    DroppArea = x.RouteFk.DestinationFacilityFk.Address,
+                    //DroppFacilityName =x.RouteFk.DestinationFacilityFk.Name,
+                    //DroppCountryName = x.RouteFk.DestinationFacilityFk.CityFk.CountyFk.DisplayName,
+                    //DroppCityName = x.RouteFk.DestinationFacilityFk.CityFk.DisplayName,
+                    //DroppArea = x.RouteFk.DestinationFacilityFk.Address,
                     CarrierName= x.CarrierTenantFk!=null ?x.CarrierTenantFk.Name :"",
                     TotalWeight=x.TotalWeight,
                     GoodsCategoryDisplayName=x.GoodCategoryFk.DisplayName
@@ -1077,10 +1077,10 @@ namespace TACHYON.Shipping.ShippingRequests
                         PackingTypeDisplayName = x.PackingTypeDisplayName,
                         NumberOfPacking = x.NumberOfPacking,
                         StartTripDate = x.StartTripDate,
-                        DroppFacilityName = x.DroppFacilityName,
-                        DroppCountryName =x.DroppCountryName,
-                        DroppCityName = x.DroppCityName,
-                        DroppArea = x.DroppArea,
+                        //DroppFacilityName = x.DroppFacilityName,
+                        //DroppCountryName =x.DroppCountryName,
+                        //DroppCityName = x.DroppCityName,
+                        //DroppArea = x.DroppArea,
                         CarrierName = x.CarrierName,
                         ClientName = "Shipper",
                         TotalWeight = x.TotalWeight,
@@ -1094,7 +1094,7 @@ namespace TACHYON.Shipping.ShippingRequests
         public IEnumerable<GetAllShippingRequestVasesOutput> GetShippingRequestVasesForMultipleDropWaybill()
         {
             //get shipping request id by step id
-            var shippingRequestId = _routPointRepository.FirstOrDefault(x => x.Id == 62).ShippingRequestId;
+            var shippingRequestId = _routPointRepository.FirstOrDefault(x => x.Id == 62).ShippingRequestTripId;
 
             //get vases by shipping request id
             var vases = _shippingRequestVasRepository.GetAll()
