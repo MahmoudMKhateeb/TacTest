@@ -1,4 +1,4 @@
-import { Component, OnInit, Injector, ViewChild } from '@angular/core';
+import { Component, OnInit, Injector, ViewChild, ViewEncapsulation } from '@angular/core';
 import { AppComponentBase } from '@shared/common/app-component-base';
 import { appModuleAnimation } from '@shared/animations/routerTransition';
 import { Table } from 'primeng/table';
@@ -11,6 +11,8 @@ import { AutoCompleteModule } from 'primeng/autocomplete';
 
 @Component({
   templateUrl: './invoices-list.component.html',
+  encapsulation: ViewEncapsulation.None,
+
   animations: [appModuleAnimation()],
 })
 export class InvoicesListComponent extends AppComponentBase implements OnInit {
