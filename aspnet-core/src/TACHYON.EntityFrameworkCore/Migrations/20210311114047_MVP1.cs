@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace TACHYON.Migrations
 {
-    public partial class V10 : Migration
+    public partial class MVP1 : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -356,74 +356,6 @@ namespace TACHYON.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "AbpUsers",
-                columns: table => new
-                {
-                    Id = table.Column<long>(nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    CreationTime = table.Column<DateTime>(nullable: false),
-                    CreatorUserId = table.Column<long>(nullable: true),
-                    LastModificationTime = table.Column<DateTime>(nullable: true),
-                    LastModifierUserId = table.Column<long>(nullable: true),
-                    IsDeleted = table.Column<bool>(nullable: false),
-                    DeleterUserId = table.Column<long>(nullable: true),
-                    DeletionTime = table.Column<DateTime>(nullable: true),
-                    AuthenticationSource = table.Column<string>(maxLength: 64, nullable: true),
-                    UserName = table.Column<string>(maxLength: 256, nullable: false),
-                    TenantId = table.Column<int>(nullable: true),
-                    EmailAddress = table.Column<string>(maxLength: 256, nullable: false),
-                    Name = table.Column<string>(maxLength: 64, nullable: false),
-                    Surname = table.Column<string>(maxLength: 64, nullable: false),
-                    Password = table.Column<string>(maxLength: 128, nullable: false),
-                    EmailConfirmationCode = table.Column<string>(maxLength: 328, nullable: true),
-                    PasswordResetCode = table.Column<string>(maxLength: 328, nullable: true),
-                    LockoutEndDateUtc = table.Column<DateTime>(nullable: true),
-                    AccessFailedCount = table.Column<int>(nullable: false),
-                    IsLockoutEnabled = table.Column<bool>(nullable: false),
-                    PhoneNumber = table.Column<string>(maxLength: 32, nullable: true),
-                    IsPhoneNumberConfirmed = table.Column<bool>(nullable: false),
-                    SecurityStamp = table.Column<string>(maxLength: 128, nullable: true),
-                    IsTwoFactorEnabled = table.Column<bool>(nullable: false),
-                    IsEmailConfirmed = table.Column<bool>(nullable: false),
-                    IsActive = table.Column<bool>(nullable: false),
-                    NormalizedUserName = table.Column<string>(maxLength: 256, nullable: false),
-                    NormalizedEmailAddress = table.Column<string>(maxLength: 256, nullable: false),
-                    ConcurrencyStamp = table.Column<string>(maxLength: 128, nullable: true),
-                    ProfilePictureId = table.Column<Guid>(nullable: true),
-                    ShouldChangePasswordOnNextLogin = table.Column<bool>(nullable: false),
-                    SignInTokenExpireTimeUtc = table.Column<DateTime>(nullable: true),
-                    SignInToken = table.Column<string>(nullable: true),
-                    GoogleAuthenticatorKey = table.Column<string>(nullable: true),
-                    IsDriver = table.Column<bool>(nullable: false),
-                    Address = table.Column<string>(nullable: true),
-                    Nationality = table.Column<string>(nullable: true),
-                    ExperienceField = table.Column<string>(nullable: true),
-                    DateOfBirth = table.Column<DateTime>(nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_AbpUsers", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_AbpUsers_AbpUsers_CreatorUserId",
-                        column: x => x.CreatorUserId,
-                        principalTable: "AbpUsers",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
-                        name: "FK_AbpUsers_AbpUsers_DeleterUserId",
-                        column: x => x.DeleterUserId,
-                        principalTable: "AbpUsers",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
-                        name: "FK_AbpUsers_AbpUsers_LastModifierUserId",
-                        column: x => x.LastModifierUserId,
-                        principalTable: "AbpUsers",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "AbpWebhookEvents",
                 columns: table => new
                 {
@@ -634,6 +566,26 @@ namespace TACHYON.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Nationalities",
+                columns: table => new
+                {
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    CreationTime = table.Column<DateTime>(nullable: false),
+                    CreatorUserId = table.Column<long>(nullable: true),
+                    LastModificationTime = table.Column<DateTime>(nullable: true),
+                    LastModifierUserId = table.Column<long>(nullable: true),
+                    IsDeleted = table.Column<bool>(nullable: false),
+                    DeleterUserId = table.Column<long>(nullable: true),
+                    DeletionTime = table.Column<DateTime>(nullable: true),
+                    Name = table.Column<string>(maxLength: 128, nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Nationalities", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "PayloadMaxWeights",
                 columns: table => new
                 {
@@ -672,6 +624,26 @@ namespace TACHYON.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_PickingTypes", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "PlateTypes",
+                columns: table => new
+                {
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    CreationTime = table.Column<DateTime>(nullable: false),
+                    CreatorUserId = table.Column<long>(nullable: true),
+                    LastModificationTime = table.Column<DateTime>(nullable: true),
+                    LastModifierUserId = table.Column<long>(nullable: true),
+                    IsDeleted = table.Column<bool>(nullable: false),
+                    DeleterUserId = table.Column<long>(nullable: true),
+                    DeletionTime = table.Column<DateTime>(nullable: true),
+                    DisplayName = table.Column<string>(maxLength: 64, nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_PlateTypes", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -1013,6 +985,568 @@ namespace TACHYON.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "AbpWebhookSendAttempts",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(nullable: false),
+                    WebhookEventId = table.Column<Guid>(nullable: false),
+                    WebhookSubscriptionId = table.Column<Guid>(nullable: false),
+                    Response = table.Column<string>(nullable: true),
+                    ResponseStatusCode = table.Column<int>(nullable: true),
+                    CreationTime = table.Column<DateTime>(nullable: false),
+                    LastModificationTime = table.Column<DateTime>(nullable: true),
+                    TenantId = table.Column<int>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_AbpWebhookSendAttempts", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_AbpWebhookSendAttempts_AbpWebhookEvents_WebhookEventId",
+                        column: x => x.WebhookEventId,
+                        principalTable: "AbpWebhookEvents",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Cities",
+                columns: table => new
+                {
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    CreationTime = table.Column<DateTime>(nullable: false),
+                    CreatorUserId = table.Column<long>(nullable: true),
+                    LastModificationTime = table.Column<DateTime>(nullable: true),
+                    LastModifierUserId = table.Column<long>(nullable: true),
+                    IsDeleted = table.Column<bool>(nullable: false),
+                    DeleterUserId = table.Column<long>(nullable: true),
+                    DeletionTime = table.Column<DateTime>(nullable: true),
+                    DisplayName = table.Column<string>(maxLength: 256, nullable: false),
+                    Code = table.Column<string>(maxLength: 64, nullable: true),
+                    Latitude = table.Column<string>(maxLength: 256, nullable: true),
+                    Longitude = table.Column<string>(maxLength: 256, nullable: true),
+                    CountyId = table.Column<int>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Cities", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Cities_Counties_CountyId",
+                        column: x => x.CountyId,
+                        principalTable: "Counties",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "CountriesTranslations",
+                columns: table => new
+                {
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    CreationTime = table.Column<DateTime>(nullable: false),
+                    CreatorUserId = table.Column<long>(nullable: true),
+                    LastModificationTime = table.Column<DateTime>(nullable: true),
+                    LastModifierUserId = table.Column<long>(nullable: true),
+                    IsDeleted = table.Column<bool>(nullable: false),
+                    DeleterUserId = table.Column<long>(nullable: true),
+                    DeletionTime = table.Column<DateTime>(nullable: true),
+                    TranslatedDisplayName = table.Column<string>(maxLength: 256, nullable: false),
+                    Language = table.Column<string>(maxLength: 32, nullable: false),
+                    CoreId = table.Column<int>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_CountriesTranslations", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_CountriesTranslations_Counties_CoreId",
+                        column: x => x.CoreId,
+                        principalTable: "Counties",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "DocumentTypes",
+                columns: table => new
+                {
+                    Id = table.Column<long>(nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    CreationTime = table.Column<DateTime>(nullable: false),
+                    CreatorUserId = table.Column<long>(nullable: true),
+                    LastModificationTime = table.Column<DateTime>(nullable: true),
+                    LastModifierUserId = table.Column<long>(nullable: true),
+                    IsDeleted = table.Column<bool>(nullable: false),
+                    DeleterUserId = table.Column<long>(nullable: true),
+                    DeletionTime = table.Column<DateTime>(nullable: true),
+                    DisplayName = table.Column<string>(maxLength: 256, nullable: false),
+                    IsRequired = table.Column<bool>(nullable: false),
+                    HasExpirationDate = table.Column<bool>(nullable: false),
+                    DocumentsEntityId = table.Column<int>(nullable: false),
+                    EditionId = table.Column<int>(nullable: true),
+                    HasNumber = table.Column<bool>(nullable: false),
+                    IsNumberUnique = table.Column<bool>(nullable: false),
+                    HasNotes = table.Column<bool>(nullable: false),
+                    SpecialConstant = table.Column<string>(nullable: true),
+                    NumberMinDigits = table.Column<int>(nullable: true),
+                    NumberMaxDigits = table.Column<int>(nullable: true),
+                    ExpirationAlertDays = table.Column<int>(nullable: true),
+                    InActiveAccountExpired = table.Column<bool>(nullable: false),
+                    InActiveToleranceDays = table.Column<int>(nullable: true),
+                    HasHijriExpirationDate = table.Column<bool>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_DocumentTypes", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_DocumentTypes_DocumentsEntities_DocumentsEntityId",
+                        column: x => x.DocumentsEntityId,
+                        principalTable: "DocumentsEntities",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_DocumentTypes_AbpEditions_EditionId",
+                        column: x => x.EditionId,
+                        principalTable: "AbpEditions",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "AbpUsers",
+                columns: table => new
+                {
+                    Id = table.Column<long>(nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    CreationTime = table.Column<DateTime>(nullable: false),
+                    CreatorUserId = table.Column<long>(nullable: true),
+                    LastModificationTime = table.Column<DateTime>(nullable: true),
+                    LastModifierUserId = table.Column<long>(nullable: true),
+                    IsDeleted = table.Column<bool>(nullable: false),
+                    DeleterUserId = table.Column<long>(nullable: true),
+                    DeletionTime = table.Column<DateTime>(nullable: true),
+                    AuthenticationSource = table.Column<string>(maxLength: 64, nullable: true),
+                    UserName = table.Column<string>(maxLength: 256, nullable: false),
+                    TenantId = table.Column<int>(nullable: true),
+                    EmailAddress = table.Column<string>(maxLength: 256, nullable: false),
+                    Name = table.Column<string>(maxLength: 64, nullable: false),
+                    Surname = table.Column<string>(maxLength: 64, nullable: false),
+                    Password = table.Column<string>(maxLength: 128, nullable: false),
+                    EmailConfirmationCode = table.Column<string>(maxLength: 328, nullable: true),
+                    PasswordResetCode = table.Column<string>(maxLength: 328, nullable: true),
+                    LockoutEndDateUtc = table.Column<DateTime>(nullable: true),
+                    AccessFailedCount = table.Column<int>(nullable: false),
+                    IsLockoutEnabled = table.Column<bool>(nullable: false),
+                    PhoneNumber = table.Column<string>(maxLength: 32, nullable: true),
+                    IsPhoneNumberConfirmed = table.Column<bool>(nullable: false),
+                    SecurityStamp = table.Column<string>(maxLength: 128, nullable: true),
+                    IsTwoFactorEnabled = table.Column<bool>(nullable: false),
+                    IsEmailConfirmed = table.Column<bool>(nullable: false),
+                    IsActive = table.Column<bool>(nullable: false),
+                    NormalizedUserName = table.Column<string>(maxLength: 256, nullable: false),
+                    NormalizedEmailAddress = table.Column<string>(maxLength: 256, nullable: false),
+                    ConcurrencyStamp = table.Column<string>(maxLength: 128, nullable: true),
+                    ProfilePictureId = table.Column<Guid>(nullable: true),
+                    ShouldChangePasswordOnNextLogin = table.Column<bool>(nullable: false),
+                    SignInTokenExpireTimeUtc = table.Column<DateTime>(nullable: true),
+                    SignInToken = table.Column<string>(nullable: true),
+                    GoogleAuthenticatorKey = table.Column<string>(nullable: true),
+                    IsDriver = table.Column<bool>(nullable: false),
+                    Address = table.Column<string>(nullable: true),
+                    NationalityId = table.Column<int>(nullable: true),
+                    ExperienceField = table.Column<string>(nullable: true),
+                    DateOfBirth = table.Column<DateTime>(nullable: true),
+                    HijriDateOfBirth = table.Column<string>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_AbpUsers", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_AbpUsers_AbpUsers_CreatorUserId",
+                        column: x => x.CreatorUserId,
+                        principalTable: "AbpUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_AbpUsers_AbpUsers_DeleterUserId",
+                        column: x => x.DeleterUserId,
+                        principalTable: "AbpUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_AbpUsers_AbpUsers_LastModifierUserId",
+                        column: x => x.LastModifierUserId,
+                        principalTable: "AbpUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_AbpUsers_Nationalities_NationalityId",
+                        column: x => x.NationalityId,
+                        principalTable: "Nationalities",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "NationalityTranslations",
+                columns: table => new
+                {
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    CreationTime = table.Column<DateTime>(nullable: false),
+                    CreatorUserId = table.Column<long>(nullable: true),
+                    LastModificationTime = table.Column<DateTime>(nullable: true),
+                    LastModifierUserId = table.Column<long>(nullable: true),
+                    IsDeleted = table.Column<bool>(nullable: false),
+                    DeleterUserId = table.Column<long>(nullable: true),
+                    DeletionTime = table.Column<DateTime>(nullable: true),
+                    TranslatedName = table.Column<string>(nullable: false),
+                    Language = table.Column<string>(nullable: false),
+                    CoreId = table.Column<int>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_NationalityTranslations", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_NationalityTranslations_Nationalities_CoreId",
+                        column: x => x.CoreId,
+                        principalTable: "Nationalities",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "TransportTypesTranslations",
+                columns: table => new
+                {
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    CreationTime = table.Column<DateTime>(nullable: false),
+                    CreatorUserId = table.Column<long>(nullable: true),
+                    LastModificationTime = table.Column<DateTime>(nullable: true),
+                    LastModifierUserId = table.Column<long>(nullable: true),
+                    IsDeleted = table.Column<bool>(nullable: false),
+                    DeleterUserId = table.Column<long>(nullable: true),
+                    DeletionTime = table.Column<DateTime>(nullable: true),
+                    TranslatedDisplayName = table.Column<string>(maxLength: 256, nullable: false),
+                    Language = table.Column<string>(maxLength: 32, nullable: false),
+                    CoreId = table.Column<int>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_TransportTypesTranslations", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_TransportTypesTranslations_TransportTypes_CoreId",
+                        column: x => x.CoreId,
+                        principalTable: "TransportTypes",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "TrucksTypes",
+                columns: table => new
+                {
+                    Id = table.Column<long>(nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    CreationTime = table.Column<DateTime>(nullable: false),
+                    CreatorUserId = table.Column<long>(nullable: true),
+                    LastModificationTime = table.Column<DateTime>(nullable: true),
+                    LastModifierUserId = table.Column<long>(nullable: true),
+                    IsDeleted = table.Column<bool>(nullable: false),
+                    DeleterUserId = table.Column<long>(nullable: true),
+                    DeletionTime = table.Column<DateTime>(nullable: true),
+                    DisplayName = table.Column<string>(maxLength: 256, nullable: false),
+                    TransportTypeId = table.Column<int>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_TrucksTypes", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_TrucksTypes_TransportTypes_TransportTypeId",
+                        column: x => x.TransportTypeId,
+                        principalTable: "TransportTypes",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "TruckStatusesTranslations",
+                columns: table => new
+                {
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    CreationTime = table.Column<DateTime>(nullable: false),
+                    CreatorUserId = table.Column<long>(nullable: true),
+                    LastModificationTime = table.Column<DateTime>(nullable: true),
+                    LastModifierUserId = table.Column<long>(nullable: true),
+                    IsDeleted = table.Column<bool>(nullable: false),
+                    DeleterUserId = table.Column<long>(nullable: true),
+                    DeletionTime = table.Column<DateTime>(nullable: true),
+                    TranslatedDisplayName = table.Column<string>(maxLength: 256, nullable: false),
+                    Language = table.Column<string>(maxLength: 32, nullable: false),
+                    CoreId = table.Column<long>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_TruckStatusesTranslations", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_TruckStatusesTranslations_TruckStatuses_CoreId",
+                        column: x => x.CoreId,
+                        principalTable: "TruckStatuses",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "GoodsDetails",
+                columns: table => new
+                {
+                    Id = table.Column<long>(nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    CreationTime = table.Column<DateTime>(nullable: false),
+                    CreatorUserId = table.Column<long>(nullable: true),
+                    LastModificationTime = table.Column<DateTime>(nullable: true),
+                    LastModifierUserId = table.Column<long>(nullable: true),
+                    IsDeleted = table.Column<bool>(nullable: false),
+                    DeleterUserId = table.Column<long>(nullable: true),
+                    DeletionTime = table.Column<DateTime>(nullable: true),
+                    TenantId = table.Column<int>(nullable: false),
+                    Name = table.Column<string>(maxLength: 256, nullable: false),
+                    Description = table.Column<string>(maxLength: 256, nullable: true),
+                    Quantity = table.Column<string>(maxLength: 128, nullable: true),
+                    Weight = table.Column<string>(maxLength: 64, nullable: true),
+                    Dimentions = table.Column<string>(maxLength: 128, nullable: true),
+                    IsDangerousGood = table.Column<bool>(nullable: false),
+                    DangerousGoodsCode = table.Column<string>(maxLength: 64, nullable: true),
+                    GoodCategoryId = table.Column<int>(nullable: true),
+                    UnitOfMeasureId = table.Column<int>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_GoodsDetails", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_GoodsDetails_GoodCategories_GoodCategoryId",
+                        column: x => x.GoodCategoryId,
+                        principalTable: "GoodCategories",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_GoodsDetails_UnitOfMeasures_UnitOfMeasureId",
+                        column: x => x.UnitOfMeasureId,
+                        principalTable: "UnitOfMeasures",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "VasPrices",
+                columns: table => new
+                {
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    CreationTime = table.Column<DateTime>(nullable: false),
+                    CreatorUserId = table.Column<long>(nullable: true),
+                    LastModificationTime = table.Column<DateTime>(nullable: true),
+                    LastModifierUserId = table.Column<long>(nullable: true),
+                    IsDeleted = table.Column<bool>(nullable: false),
+                    DeleterUserId = table.Column<long>(nullable: true),
+                    DeletionTime = table.Column<DateTime>(nullable: true),
+                    TenantId = table.Column<int>(nullable: false),
+                    Price = table.Column<double>(nullable: true),
+                    MaxAmount = table.Column<int>(nullable: true),
+                    MaxCount = table.Column<int>(nullable: true),
+                    VasId = table.Column<int>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_VasPrices", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_VasPrices_Vases_VasId",
+                        column: x => x.VasId,
+                        principalTable: "Vases",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "AbpEntityDynamicParameterValues",
+                columns: table => new
+                {
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Value = table.Column<string>(nullable: false),
+                    EntityId = table.Column<string>(nullable: true),
+                    EntityDynamicParameterId = table.Column<int>(nullable: false),
+                    TenantId = table.Column<int>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_AbpEntityDynamicParameterValues", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_AbpEntityDynamicParameterValues_AbpEntityDynamicParameters_EntityDynamicParameterId",
+                        column: x => x.EntityDynamicParameterId,
+                        principalTable: "AbpEntityDynamicParameters",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "TermAndConditionTranslations",
+                columns: table => new
+                {
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Content = table.Column<string>(nullable: false),
+                    Language = table.Column<string>(maxLength: 50, nullable: false),
+                    CoreId = table.Column<int>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_TermAndConditionTranslations", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_TermAndConditionTranslations_TermAndConditions_CoreId",
+                        column: x => x.CoreId,
+                        principalTable: "TermAndConditions",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "AbpEntityPropertyChanges",
+                columns: table => new
+                {
+                    Id = table.Column<long>(nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    EntityChangeId = table.Column<long>(nullable: false),
+                    NewValue = table.Column<string>(maxLength: 512, nullable: true),
+                    OriginalValue = table.Column<string>(maxLength: 512, nullable: true),
+                    PropertyName = table.Column<string>(maxLength: 96, nullable: true),
+                    PropertyTypeFullName = table.Column<string>(maxLength: 192, nullable: true),
+                    TenantId = table.Column<int>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_AbpEntityPropertyChanges", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_AbpEntityPropertyChanges_AbpEntityChanges_EntityChangeId",
+                        column: x => x.EntityChangeId,
+                        principalTable: "AbpEntityChanges",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "CitiesTranslations",
+                columns: table => new
+                {
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    CreationTime = table.Column<DateTime>(nullable: false),
+                    CreatorUserId = table.Column<long>(nullable: true),
+                    LastModificationTime = table.Column<DateTime>(nullable: true),
+                    LastModifierUserId = table.Column<long>(nullable: true),
+                    IsDeleted = table.Column<bool>(nullable: false),
+                    DeleterUserId = table.Column<long>(nullable: true),
+                    DeletionTime = table.Column<DateTime>(nullable: true),
+                    TranslatedDisplayName = table.Column<string>(maxLength: 256, nullable: false),
+                    Language = table.Column<string>(maxLength: 32, nullable: false),
+                    CoreId = table.Column<int>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_CitiesTranslations", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_CitiesTranslations_Cities_CoreId",
+                        column: x => x.CoreId,
+                        principalTable: "Cities",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Facilities",
+                columns: table => new
+                {
+                    Id = table.Column<long>(nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    CreationTime = table.Column<DateTime>(nullable: false),
+                    CreatorUserId = table.Column<long>(nullable: true),
+                    LastModificationTime = table.Column<DateTime>(nullable: true),
+                    LastModifierUserId = table.Column<long>(nullable: true),
+                    IsDeleted = table.Column<bool>(nullable: false),
+                    DeleterUserId = table.Column<long>(nullable: true),
+                    DeletionTime = table.Column<DateTime>(nullable: true),
+                    Name = table.Column<string>(maxLength: 256, nullable: false),
+                    Adress = table.Column<string>(maxLength: 256, nullable: false),
+                    Longitude = table.Column<decimal>(nullable: false),
+                    Latitude = table.Column<decimal>(nullable: false),
+                    CityId = table.Column<int>(nullable: false),
+                    TenantId = table.Column<int>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Facilities", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Facilities_Cities_CityId",
+                        column: x => x.CityId,
+                        principalTable: "Cities",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Ports",
+                columns: table => new
+                {
+                    Id = table.Column<long>(nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    CreationTime = table.Column<DateTime>(nullable: false),
+                    CreatorUserId = table.Column<long>(nullable: true),
+                    LastModificationTime = table.Column<DateTime>(nullable: true),
+                    LastModifierUserId = table.Column<long>(nullable: true),
+                    IsDeleted = table.Column<bool>(nullable: false),
+                    DeleterUserId = table.Column<long>(nullable: true),
+                    DeletionTime = table.Column<DateTime>(nullable: true),
+                    Name = table.Column<string>(maxLength: 256, nullable: false),
+                    Adress = table.Column<string>(maxLength: 256, nullable: false),
+                    Longitude = table.Column<decimal>(nullable: false),
+                    Latitude = table.Column<decimal>(nullable: false),
+                    CityId = table.Column<int>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Ports", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Ports_Cities_CityId",
+                        column: x => x.CityId,
+                        principalTable: "Cities",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "DocumentTypeTranslations",
+                columns: table => new
+                {
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Name = table.Column<string>(maxLength: 256, nullable: false),
+                    Language = table.Column<string>(nullable: false),
+                    CoreId = table.Column<long>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_DocumentTypeTranslations", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_DocumentTypeTranslations_DocumentTypes_CoreId",
+                        column: x => x.CoreId,
+                        principalTable: "DocumentTypes",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "AbpRoles",
                 columns: table => new
                 {
@@ -1259,437 +1793,6 @@ namespace TACHYON.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "AbpWebhookSendAttempts",
-                columns: table => new
-                {
-                    Id = table.Column<Guid>(nullable: false),
-                    WebhookEventId = table.Column<Guid>(nullable: false),
-                    WebhookSubscriptionId = table.Column<Guid>(nullable: false),
-                    Response = table.Column<string>(nullable: true),
-                    ResponseStatusCode = table.Column<int>(nullable: true),
-                    CreationTime = table.Column<DateTime>(nullable: false),
-                    LastModificationTime = table.Column<DateTime>(nullable: true),
-                    TenantId = table.Column<int>(nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_AbpWebhookSendAttempts", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_AbpWebhookSendAttempts_AbpWebhookEvents_WebhookEventId",
-                        column: x => x.WebhookEventId,
-                        principalTable: "AbpWebhookEvents",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Cities",
-                columns: table => new
-                {
-                    Id = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    CreationTime = table.Column<DateTime>(nullable: false),
-                    CreatorUserId = table.Column<long>(nullable: true),
-                    LastModificationTime = table.Column<DateTime>(nullable: true),
-                    LastModifierUserId = table.Column<long>(nullable: true),
-                    IsDeleted = table.Column<bool>(nullable: false),
-                    DeleterUserId = table.Column<long>(nullable: true),
-                    DeletionTime = table.Column<DateTime>(nullable: true),
-                    DisplayName = table.Column<string>(maxLength: 256, nullable: false),
-                    Code = table.Column<string>(maxLength: 64, nullable: true),
-                    Latitude = table.Column<string>(maxLength: 256, nullable: true),
-                    Longitude = table.Column<string>(maxLength: 256, nullable: true),
-                    CountyId = table.Column<int>(nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Cities", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Cities_Counties_CountyId",
-                        column: x => x.CountyId,
-                        principalTable: "Counties",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "DocumentTypes",
-                columns: table => new
-                {
-                    Id = table.Column<long>(nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    CreationTime = table.Column<DateTime>(nullable: false),
-                    CreatorUserId = table.Column<long>(nullable: true),
-                    LastModificationTime = table.Column<DateTime>(nullable: true),
-                    LastModifierUserId = table.Column<long>(nullable: true),
-                    IsDeleted = table.Column<bool>(nullable: false),
-                    DeleterUserId = table.Column<long>(nullable: true),
-                    DeletionTime = table.Column<DateTime>(nullable: true),
-                    DisplayName = table.Column<string>(maxLength: 256, nullable: false),
-                    IsRequired = table.Column<bool>(nullable: false),
-                    HasExpirationDate = table.Column<bool>(nullable: false),
-                    DocumentsEntityId = table.Column<int>(nullable: false),
-                    EditionId = table.Column<int>(nullable: true),
-                    HasNumber = table.Column<bool>(nullable: false),
-                    IsNumberUnique = table.Column<bool>(nullable: false),
-                    HasNotes = table.Column<bool>(nullable: false),
-                    SpecialConstant = table.Column<string>(nullable: true),
-                    NumberMinDigits = table.Column<int>(nullable: true),
-                    NumberMaxDigits = table.Column<int>(nullable: true),
-                    ExpirationAlertDays = table.Column<int>(nullable: true),
-                    InActiveAccountExpired = table.Column<bool>(nullable: false),
-                    InActiveToleranceDays = table.Column<int>(nullable: true),
-                    HasHijriExpirationDate = table.Column<bool>(nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_DocumentTypes", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_DocumentTypes_DocumentsEntities_DocumentsEntityId",
-                        column: x => x.DocumentsEntityId,
-                        principalTable: "DocumentsEntities",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_DocumentTypes_AbpEditions_EditionId",
-                        column: x => x.EditionId,
-                        principalTable: "AbpEditions",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "TransportTypesTranslations",
-                columns: table => new
-                {
-                    Id = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    CreationTime = table.Column<DateTime>(nullable: false),
-                    CreatorUserId = table.Column<long>(nullable: true),
-                    LastModificationTime = table.Column<DateTime>(nullable: true),
-                    LastModifierUserId = table.Column<long>(nullable: true),
-                    IsDeleted = table.Column<bool>(nullable: false),
-                    DeleterUserId = table.Column<long>(nullable: true),
-                    DeletionTime = table.Column<DateTime>(nullable: true),
-                    TranslatedDisplayName = table.Column<string>(maxLength: 256, nullable: false),
-                    Language = table.Column<string>(maxLength: 32, nullable: false),
-                    CoreId = table.Column<int>(nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_TransportTypesTranslations", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_TransportTypesTranslations_TransportTypes_CoreId",
-                        column: x => x.CoreId,
-                        principalTable: "TransportTypes",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "TrucksTypes",
-                columns: table => new
-                {
-                    Id = table.Column<long>(nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    CreationTime = table.Column<DateTime>(nullable: false),
-                    CreatorUserId = table.Column<long>(nullable: true),
-                    LastModificationTime = table.Column<DateTime>(nullable: true),
-                    LastModifierUserId = table.Column<long>(nullable: true),
-                    IsDeleted = table.Column<bool>(nullable: false),
-                    DeleterUserId = table.Column<long>(nullable: true),
-                    DeletionTime = table.Column<DateTime>(nullable: true),
-                    DisplayName = table.Column<string>(maxLength: 256, nullable: false),
-                    TransportTypeId = table.Column<int>(nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_TrucksTypes", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_TrucksTypes_TransportTypes_TransportTypeId",
-                        column: x => x.TransportTypeId,
-                        principalTable: "TransportTypes",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "GoodsDetails",
-                columns: table => new
-                {
-                    Id = table.Column<long>(nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    CreationTime = table.Column<DateTime>(nullable: false),
-                    CreatorUserId = table.Column<long>(nullable: true),
-                    LastModificationTime = table.Column<DateTime>(nullable: true),
-                    LastModifierUserId = table.Column<long>(nullable: true),
-                    IsDeleted = table.Column<bool>(nullable: false),
-                    DeleterUserId = table.Column<long>(nullable: true),
-                    DeletionTime = table.Column<DateTime>(nullable: true),
-                    TenantId = table.Column<int>(nullable: false),
-                    Name = table.Column<string>(maxLength: 256, nullable: false),
-                    Description = table.Column<string>(maxLength: 256, nullable: true),
-                    Quantity = table.Column<string>(maxLength: 128, nullable: true),
-                    Weight = table.Column<string>(maxLength: 64, nullable: true),
-                    Dimentions = table.Column<string>(maxLength: 128, nullable: true),
-                    IsDangerousGood = table.Column<bool>(nullable: false),
-                    DangerousGoodsCode = table.Column<string>(maxLength: 64, nullable: true),
-                    GoodCategoryId = table.Column<int>(nullable: true),
-                    UnitOfMeasureId = table.Column<int>(nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_GoodsDetails", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_GoodsDetails_GoodCategories_GoodCategoryId",
-                        column: x => x.GoodCategoryId,
-                        principalTable: "GoodCategories",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
-                        name: "FK_GoodsDetails_UnitOfMeasures_UnitOfMeasureId",
-                        column: x => x.UnitOfMeasureId,
-                        principalTable: "UnitOfMeasures",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "VasPrices",
-                columns: table => new
-                {
-                    Id = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    CreationTime = table.Column<DateTime>(nullable: false),
-                    CreatorUserId = table.Column<long>(nullable: true),
-                    LastModificationTime = table.Column<DateTime>(nullable: true),
-                    LastModifierUserId = table.Column<long>(nullable: true),
-                    IsDeleted = table.Column<bool>(nullable: false),
-                    DeleterUserId = table.Column<long>(nullable: true),
-                    DeletionTime = table.Column<DateTime>(nullable: true),
-                    TenantId = table.Column<int>(nullable: false),
-                    Price = table.Column<double>(nullable: true),
-                    MaxAmount = table.Column<int>(nullable: true),
-                    MaxCount = table.Column<int>(nullable: true),
-                    VasId = table.Column<int>(nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_VasPrices", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_VasPrices_Vases_VasId",
-                        column: x => x.VasId,
-                        principalTable: "Vases",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "AbpEntityDynamicParameterValues",
-                columns: table => new
-                {
-                    Id = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Value = table.Column<string>(nullable: false),
-                    EntityId = table.Column<string>(nullable: true),
-                    EntityDynamicParameterId = table.Column<int>(nullable: false),
-                    TenantId = table.Column<int>(nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_AbpEntityDynamicParameterValues", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_AbpEntityDynamicParameterValues_AbpEntityDynamicParameters_EntityDynamicParameterId",
-                        column: x => x.EntityDynamicParameterId,
-                        principalTable: "AbpEntityDynamicParameters",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "TermAndConditionTranslations",
-                columns: table => new
-                {
-                    Id = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Content = table.Column<string>(nullable: false),
-                    Language = table.Column<string>(maxLength: 50, nullable: false),
-                    CoreId = table.Column<int>(nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_TermAndConditionTranslations", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_TermAndConditionTranslations_TermAndConditions_CoreId",
-                        column: x => x.CoreId,
-                        principalTable: "TermAndConditions",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "AbpEntityPropertyChanges",
-                columns: table => new
-                {
-                    Id = table.Column<long>(nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    EntityChangeId = table.Column<long>(nullable: false),
-                    NewValue = table.Column<string>(maxLength: 512, nullable: true),
-                    OriginalValue = table.Column<string>(maxLength: 512, nullable: true),
-                    PropertyName = table.Column<string>(maxLength: 96, nullable: true),
-                    PropertyTypeFullName = table.Column<string>(maxLength: 192, nullable: true),
-                    TenantId = table.Column<int>(nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_AbpEntityPropertyChanges", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_AbpEntityPropertyChanges_AbpEntityChanges_EntityChangeId",
-                        column: x => x.EntityChangeId,
-                        principalTable: "AbpEntityChanges",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "AbpPermissions",
-                columns: table => new
-                {
-                    Id = table.Column<long>(nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    CreationTime = table.Column<DateTime>(nullable: false),
-                    CreatorUserId = table.Column<long>(nullable: true),
-                    TenantId = table.Column<int>(nullable: true),
-                    Name = table.Column<string>(maxLength: 128, nullable: false),
-                    IsGranted = table.Column<bool>(nullable: false),
-                    Discriminator = table.Column<string>(nullable: false),
-                    RoleId = table.Column<int>(nullable: true),
-                    UserId = table.Column<long>(nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_AbpPermissions", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_AbpPermissions_AbpRoles_RoleId",
-                        column: x => x.RoleId,
-                        principalTable: "AbpRoles",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_AbpPermissions_AbpUsers_UserId",
-                        column: x => x.UserId,
-                        principalTable: "AbpUsers",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "AbpRoleClaims",
-                columns: table => new
-                {
-                    Id = table.Column<long>(nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    CreationTime = table.Column<DateTime>(nullable: false),
-                    CreatorUserId = table.Column<long>(nullable: true),
-                    TenantId = table.Column<int>(nullable: true),
-                    RoleId = table.Column<int>(nullable: false),
-                    ClaimType = table.Column<string>(maxLength: 256, nullable: true),
-                    ClaimValue = table.Column<string>(nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_AbpRoleClaims", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_AbpRoleClaims_AbpRoles_RoleId",
-                        column: x => x.RoleId,
-                        principalTable: "AbpRoles",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Facilities",
-                columns: table => new
-                {
-                    Id = table.Column<long>(nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    CreationTime = table.Column<DateTime>(nullable: false),
-                    CreatorUserId = table.Column<long>(nullable: true),
-                    LastModificationTime = table.Column<DateTime>(nullable: true),
-                    LastModifierUserId = table.Column<long>(nullable: true),
-                    IsDeleted = table.Column<bool>(nullable: false),
-                    DeleterUserId = table.Column<long>(nullable: true),
-                    DeletionTime = table.Column<DateTime>(nullable: true),
-                    Name = table.Column<string>(maxLength: 256, nullable: false),
-                    Adress = table.Column<string>(maxLength: 256, nullable: false),
-                    Longitude = table.Column<decimal>(nullable: false),
-                    Latitude = table.Column<decimal>(nullable: false),
-                    CityId = table.Column<int>(nullable: false),
-                    TenantId = table.Column<int>(nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Facilities", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Facilities_Cities_CityId",
-                        column: x => x.CityId,
-                        principalTable: "Cities",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Ports",
-                columns: table => new
-                {
-                    Id = table.Column<long>(nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    CreationTime = table.Column<DateTime>(nullable: false),
-                    CreatorUserId = table.Column<long>(nullable: true),
-                    LastModificationTime = table.Column<DateTime>(nullable: true),
-                    LastModifierUserId = table.Column<long>(nullable: true),
-                    IsDeleted = table.Column<bool>(nullable: false),
-                    DeleterUserId = table.Column<long>(nullable: true),
-                    DeletionTime = table.Column<DateTime>(nullable: true),
-                    Name = table.Column<string>(maxLength: 256, nullable: false),
-                    Adress = table.Column<string>(maxLength: 256, nullable: false),
-                    Longitude = table.Column<decimal>(nullable: false),
-                    Latitude = table.Column<decimal>(nullable: false),
-                    CityId = table.Column<int>(nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Ports", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Ports_Cities_CityId",
-                        column: x => x.CityId,
-                        principalTable: "Cities",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "DocumentTypeTranslations",
-                columns: table => new
-                {
-                    Id = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Name = table.Column<string>(maxLength: 256, nullable: false),
-                    Language = table.Column<string>(nullable: false),
-                    CoreId = table.Column<long>(nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_DocumentTypeTranslations", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_DocumentTypeTranslations_DocumentTypes_CoreId",
-                        column: x => x.CoreId,
-                        principalTable: "DocumentTypes",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "Capacities",
                 columns: table => new
                 {
@@ -1711,6 +1814,34 @@ namespace TACHYON.Migrations
                     table.ForeignKey(
                         name: "FK_Capacities_TrucksTypes_TrucksTypeId",
                         column: x => x.TrucksTypeId,
+                        principalTable: "TrucksTypes",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "TrucksTypesTranslations",
+                columns: table => new
+                {
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    CreationTime = table.Column<DateTime>(nullable: false),
+                    CreatorUserId = table.Column<long>(nullable: true),
+                    LastModificationTime = table.Column<DateTime>(nullable: true),
+                    LastModifierUserId = table.Column<long>(nullable: true),
+                    IsDeleted = table.Column<bool>(nullable: false),
+                    DeleterUserId = table.Column<long>(nullable: true),
+                    DeletionTime = table.Column<DateTime>(nullable: true),
+                    TranslatedDisplayName = table.Column<string>(maxLength: 256, nullable: false),
+                    Language = table.Column<string>(maxLength: 32, nullable: false),
+                    CoreId = table.Column<long>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_TrucksTypesTranslations", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_TrucksTypesTranslations_TrucksTypes_CoreId",
+                        column: x => x.CoreId,
                         principalTable: "TrucksTypes",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
@@ -1774,6 +1905,90 @@ namespace TACHYON.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "AbpPermissions",
+                columns: table => new
+                {
+                    Id = table.Column<long>(nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    CreationTime = table.Column<DateTime>(nullable: false),
+                    CreatorUserId = table.Column<long>(nullable: true),
+                    TenantId = table.Column<int>(nullable: true),
+                    Name = table.Column<string>(maxLength: 128, nullable: false),
+                    IsGranted = table.Column<bool>(nullable: false),
+                    Discriminator = table.Column<string>(nullable: false),
+                    RoleId = table.Column<int>(nullable: true),
+                    UserId = table.Column<long>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_AbpPermissions", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_AbpPermissions_AbpRoles_RoleId",
+                        column: x => x.RoleId,
+                        principalTable: "AbpRoles",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_AbpPermissions_AbpUsers_UserId",
+                        column: x => x.UserId,
+                        principalTable: "AbpUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "AbpRoleClaims",
+                columns: table => new
+                {
+                    Id = table.Column<long>(nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    CreationTime = table.Column<DateTime>(nullable: false),
+                    CreatorUserId = table.Column<long>(nullable: true),
+                    TenantId = table.Column<int>(nullable: true),
+                    RoleId = table.Column<int>(nullable: false),
+                    ClaimType = table.Column<string>(maxLength: 256, nullable: true),
+                    ClaimValue = table.Column<string>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_AbpRoleClaims", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_AbpRoleClaims_AbpRoles_RoleId",
+                        column: x => x.RoleId,
+                        principalTable: "AbpRoles",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "TruckCapacitiesTranslations",
+                columns: table => new
+                {
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    CreationTime = table.Column<DateTime>(nullable: false),
+                    CreatorUserId = table.Column<long>(nullable: true),
+                    LastModificationTime = table.Column<DateTime>(nullable: true),
+                    LastModifierUserId = table.Column<long>(nullable: true),
+                    IsDeleted = table.Column<bool>(nullable: false),
+                    DeleterUserId = table.Column<long>(nullable: true),
+                    DeletionTime = table.Column<DateTime>(nullable: true),
+                    TranslatedDisplayName = table.Column<string>(maxLength: 256, nullable: false),
+                    Language = table.Column<string>(maxLength: 32, nullable: false),
+                    CoreId = table.Column<int>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_TruckCapacitiesTranslations", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_TruckCapacitiesTranslations_Capacities_CoreId",
+                        column: x => x.CoreId,
+                        principalTable: "Capacities",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Trucks",
                 columns: table => new
                 {
@@ -1798,7 +2013,8 @@ namespace TACHYON.Migrations
                     TransportTypeId = table.Column<int>(nullable: true),
                     TrucksTypeId = table.Column<long>(nullable: true),
                     CapacityId = table.Column<int>(nullable: true),
-                    Length = table.Column<int>(nullable: true)
+                    Length = table.Column<int>(nullable: true),
+                    PlateTypeId = table.Column<int>(nullable: true)
                 },
                 constraints: table =>
                 {
@@ -1807,6 +2023,12 @@ namespace TACHYON.Migrations
                         name: "FK_Trucks_Capacities_CapacityId",
                         column: x => x.CapacityId,
                         principalTable: "Capacities",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_Trucks_PlateTypes_PlateTypeId",
+                        column: x => x.PlateTypeId,
+                        principalTable: "PlateTypes",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
@@ -2658,6 +2880,11 @@ namespace TACHYON.Migrations
                 column: "LastModifierUserId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_AbpUsers_NationalityId",
+                table: "AbpUsers",
+                column: "NationalityId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_AbpUsers_TenantId_NormalizedEmailAddress",
                 table: "AbpUsers",
                 columns: new[] { "TenantId", "NormalizedEmailAddress" });
@@ -2770,6 +2997,16 @@ namespace TACHYON.Migrations
                 column: "CountyId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_CitiesTranslations_CoreId",
+                table: "CitiesTranslations",
+                column: "CoreId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_CountriesTranslations_CoreId",
+                table: "CountriesTranslations",
+                column: "CoreId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_DocumentFiles_DocumentTypeId",
                 table: "DocumentFiles",
                 column: "DocumentTypeId");
@@ -2838,6 +3075,11 @@ namespace TACHYON.Migrations
                 name: "IX_GoodsDetails_UnitOfMeasureId",
                 table: "GoodsDetails",
                 column: "UnitOfMeasureId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_NationalityTranslations_CoreId",
+                table: "NationalityTranslations",
+                column: "CoreId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Offers_GoodCategoryId",
@@ -3095,9 +3337,19 @@ namespace TACHYON.Migrations
                 column: "CoreId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_TruckCapacitiesTranslations_CoreId",
+                table: "TruckCapacitiesTranslations",
+                column: "CoreId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Trucks_CapacityId",
                 table: "Trucks",
                 column: "CapacityId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Trucks_PlateTypeId",
+                table: "Trucks",
+                column: "PlateTypeId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Trucks_TenantId",
@@ -3120,9 +3372,19 @@ namespace TACHYON.Migrations
                 column: "TrucksTypeId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_TruckStatusesTranslations_CoreId",
+                table: "TruckStatusesTranslations",
+                column: "CoreId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_TrucksTypes_TransportTypeId",
                 table: "TrucksTypes",
                 column: "TransportTypeId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_TrucksTypesTranslations_CoreId",
+                table: "TrucksTypesTranslations",
+                column: "CoreId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_VasPrices_TenantId",
@@ -3240,10 +3502,19 @@ namespace TACHYON.Migrations
                 name: "AppUserDelegations");
 
             migrationBuilder.DropTable(
+                name: "CitiesTranslations");
+
+            migrationBuilder.DropTable(
+                name: "CountriesTranslations");
+
+            migrationBuilder.DropTable(
                 name: "DocumentFiles");
 
             migrationBuilder.DropTable(
                 name: "DocumentTypeTranslations");
+
+            migrationBuilder.DropTable(
+                name: "NationalityTranslations");
 
             migrationBuilder.DropTable(
                 name: "Offers");
@@ -3259,6 +3530,15 @@ namespace TACHYON.Migrations
 
             migrationBuilder.DropTable(
                 name: "TransportTypesTranslations");
+
+            migrationBuilder.DropTable(
+                name: "TruckCapacitiesTranslations");
+
+            migrationBuilder.DropTable(
+                name: "TruckStatusesTranslations");
+
+            migrationBuilder.DropTable(
+                name: "TrucksTypesTranslations");
 
             migrationBuilder.DropTable(
                 name: "VasPrices");
@@ -3357,7 +3637,13 @@ namespace TACHYON.Migrations
                 name: "Capacities");
 
             migrationBuilder.DropTable(
+                name: "PlateTypes");
+
+            migrationBuilder.DropTable(
                 name: "TruckStatuses");
+
+            migrationBuilder.DropTable(
+                name: "Nationalities");
 
             migrationBuilder.DropTable(
                 name: "Cities");
