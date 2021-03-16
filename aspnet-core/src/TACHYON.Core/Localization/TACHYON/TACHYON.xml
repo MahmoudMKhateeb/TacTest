@@ -5,7 +5,6 @@
     <text name="Receiver">Receiver</text>
     <text name="TACHYON.Receivers.Receiver">Receiver</text>
     <text name="FullName">Full name</text>
-    <text name="PhoneNumber">Phone number</text>
     <text name="ReceiversHeaderInfo">Receivers header info</text>
     <text name="CreateNewReceiver">Create new receiver</text>
     <text name="EditReceiver">Edit receiver</text>
