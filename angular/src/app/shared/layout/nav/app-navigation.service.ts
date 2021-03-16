@@ -51,6 +51,18 @@ export class AppNavigationService {
       //   [],
       //   [
       new AppMenuItem('Facilities', 'Pages.Facilities', 'flaticon-more', '/app/main/addressBook/facilities'),
+      new AppMenuItem('Facilities', 'Pages.Facilities', 'flaticon-more', '/app/main/addressBook/facilities'),
+      new AppMenuItem(
+        'Receivers',
+        'Pages.Receivers',
+        'flaticon-more',
+        '/app/main/receivers/receivers',
+        undefined,
+        undefined,
+        undefined,
+        undefined,
+        () => this._featureCheckerService.isEnabled('App.Shipper')
+      ),
       //     new AppMenuItem('RoutTypes', 'Pages.RoutTypes', 'flaticon-more', '/app/main/routTypes/routTypes'),
       //     new AppMenuItem('Ports', 'Pages.Ports', 'flaticon-more', '/app/main/ports/ports'),
       //     new AppMenuItem('Facilities', 'Pages.Facilities', 'label label-danger label-dot', '/app/main/addressBook/facilities'),
@@ -420,6 +432,7 @@ export class AppNavigationService {
           //      new AppMenuItem('EntityDynamicParameters', 'Pages.Administration.EntityDynamicParameters', '', '/app/admin/entity-dynamic-parameter'),
           //    ]
           //  ),
+
           new AppMenuItem('Settings', 'Pages.Administration.Host.Settings', 'flaticon-settings', '/app/admin/hostSettings'),
           new AppMenuItem('Settings', 'Pages.Administration.Tenant.Settings', 'flaticon-settings', '/app/admin/tenantSettings'),
           new AppMenuItem(

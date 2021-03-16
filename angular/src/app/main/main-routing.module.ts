@@ -13,6 +13,7 @@ import { NationalityTranslationsComponent } from './nationalitiesTranslation/nat
 import { TrucksTypesTranslationsComponent } from './trucksTypesTranslations/trucksTypesTranslations/trucksTypesTranslations.component';
 import { TransportTypesTranslationsComponent } from './transportTypesTranslations/transportTypesTranslations/transportTypesTranslations.component';
 import { VasPricesComponent } from './vases/vasPrices/vasPrices.component';
+import { ReceiversComponent } from './receivers/receivers/receivers.component';
 import { TermAndConditionsComponent } from './termsAndConditions/termAndConditions/termAndConditions.component';
 import { CapacitiesComponent } from './truckCapacities/capacities/capacities.component';
 import { TransportTypesComponent } from './transportTypes/transportTypes/transportTypes.component';
@@ -132,6 +133,7 @@ import { TransactionListComponent } from './invoices/transaction/transaction-lis
             data: { permission: 'Pages.TransportTypesTranslations' },
           },
           { path: 'vases/vasPrices', component: VasPricesComponent, data: { permission: 'Pages.VasPrices' } },
+          { path: 'receivers/receivers', component: ReceiversComponent, data: { permission: 'Pages.Receivers' } },
           { path: 'termsAndConditions/termAndConditions', component: TermAndConditionsComponent, data: { permission: 'Pages.TermAndConditions' } },
           { path: 'truckCapacities/capacities', component: CapacitiesComponent, data: { permission: 'Pages.Capacities' } },
           { path: 'transportTypes/transportTypes', component: TransportTypesComponent, data: { permission: 'Pages.TransportTypes' } },

@@ -133,5 +133,11 @@ namespace TACHYON.Configuration
                 public const string WsFederation = "ExternalLoginProvider.WsFederation.Tenant";
             }
         }
+
+        public static class Sms
+        {
+            public const string UnifonicAppSid = "App.Sms.UnifonicAppSid";
+        }
+
     }
 }

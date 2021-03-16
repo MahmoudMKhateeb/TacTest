@@ -234,6 +234,17 @@
     <![CDATA[Tachyon:Driver Page Start]]>
     <![CDATA[Tachyon:Driver Page End]]>
 
+    <![CDATA[Tachyon:Sms]]>
+    <text name="AShipmentWasAssignedForYouToReceiveOn">A shipment was assigned for you to receive on</text>
+    <text name="ShipperName">Shipper name</text>
+    <text name="WaybillNumber">Waybill number</text>
+    <text name="PleaseOnClickFollowingLinkToTrackYourShipmentAndRateTheShippingCompany">Please on click following link to track your shipment and rate the Shipping company</text>
+    <![CDATA[Tachyon:Sms]]>
+
+    <![CDATA[Tachyon:Setting]]>
+    <text name="SMSSettings">SMS Settings</text>
+    <text name="UnifonicAppSid">Unifonic AppSid</text>
+    <![CDATA[Tachyon:Setting]]>
 
     <text name="TruckCapacities">Truck capacities</text>
     <text name="NumbersOnly">Numbers Only</text>

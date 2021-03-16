@@ -9,6 +9,7 @@ import { ShippingRequestsTripServiceProxy } from './service-proxies';
 
 @NgModule({
   providers: [
+    ApiServiceProxies.ReceiversServiceProxy,
     ApiServiceProxies.NationalitiesServiceProxy,
     ApiServiceProxies.NationalityTranslationsServiceProxy,
     ApiServiceProxies.TransportTypesTranslationsServiceProxy,

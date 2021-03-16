@@ -26,5 +26,8 @@ namespace TACHYON.Configuration.Host.Dto
         public OtherSettingsEditDto OtherSettings { get; set; }
 
         public ExternalLoginProviderSettingsEditDto ExternalLoginProviderSettings { get; set; }
+
+        [Required]
+        public SmsSettingsEditDto SmsSettings { get; set; }
     }
 }

@@ -1,6 +1,16 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <localizationDictionary culture="en">
   <texts>
+    <text name="Receivers">Receivers</text>
+    <text name="Receiver">Receiver</text>
+    <text name="TACHYON.Receivers.Receiver">Receiver</text>
+    <text name="FullName">Full name</text>
+    <text name="ReceiversHeaderInfo">Receivers header info</text>
+    <text name="CreateNewReceiver">Create new receiver</text>
+    <text name="EditReceiver">Edit receiver</text>
+    <text name="DeleteReceiver">Delete receiver</text>
+    <text name="FacilityName">Facility name</text>
+    <text name="PickFacility">Pick facility</text>
 
     <![CDATA[Tachyon:Driver Start]]>
     <text name="FirstName">First name</text>
@@ -384,6 +394,18 @@
     <text name="DocumentTypeTranslationsHeaderInfo">Document Type Translations Header Info</text>
     <text name="NewDocumentTypeTranslation">New Document Type Translation</text>
     <![CDATA[ Tachyon: Document Translation Page End]]>
+
+    <![CDATA[Tachyon:Sms]]>
+    <text name="AShipmentWasAssignedForYouToReceiveOn">A shipment was assigned for you to receive on</text>
+    <text name="ShipperName">Shipper name</text>
+    <text name="WaybillNumber">Waybill number</text>
+    <text name="PleaseOnClickFollowingLinkToTrackYourShipmentAndRateTheShippingCompany">Please on click following link to track your shipment and rate the Shipping company</text>
+    <![CDATA[Tachyon:Sms]]>
+
+    <![CDATA[Tachyon:Setting]]>
+    <text name="SMSSettings">SMS Settings</text>
+    <text name="UnifonicAppSid">Unifonic AppSid</text>
+    <![CDATA[Tachyon:Setting]]>
 
     <text name="Title">Title</text>
     <text name="NewTermAndCondition">new term and condition</text>

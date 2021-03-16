@@ -522,6 +522,19 @@
                 </div>
               </div>
             </tab>
+            <tab class="p-5" *ngIf="true" heading="{{ 'SMS' | localize }}">
+              <h5>{{ 'SMSSettings' | localize }}</h5>
+              <div class="form-group">
+                <label for="UnifonicAppSid">{{ 'UnifonicAppSid' | localize }}</label>
+                <input
+                  id="UnifonicAppSid"
+                  type="text"
+                  name="UnifonicAppSid"
+                  class="form-control"
+                  [(ngModel)]="hostSettings.smsSettings.unifonicAppSid"
+                />
+              </div>
+            </tab>
             <tab class="p-5" *ngIf="true" heading="{{ 'Invoice' | localize }}">
               <!-- *ngIf="true" is a workaround for https://github.com/valor-software/ng2-bootstrap/issues/823 -->
               <h5>{{ 'InvoiceInformation' | localize }}</h5>

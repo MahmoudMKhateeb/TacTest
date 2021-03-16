@@ -21,6 +21,8 @@ using TACHYON.ShippingRequestVases.Dtos;
 using TACHYON.ShippingRequestVases;
 using TACHYON.Vases.Dtos;
 using TACHYON.Vases;
+﻿using TACHYON.Receivers.Dtos;
+using TACHYON.Receivers;
 using TACHYON.TermsAndConditions;
 using TACHYON.TermsAndConditions.Dtos;
 using TACHYON.Trucks.TruckCategories.TruckCapacities;
@@ -262,6 +264,8 @@ namespace TACHYON
             configuration.CreateMap<VasPriceDto, VasPrice>().ReverseMap();
             configuration.CreateMap<CreateOrEditVasDto, Vas>().ReverseMap();
             configuration.CreateMap<VasDto, Vas>().ReverseMap();
+            configuration.CreateMap<CreateOrEditReceiverDto, Receiver>().ReverseMap();
+            configuration.CreateMap<ReceiverDto, Receiver>().ReverseMap();
             configuration.CreateMap<CreateOrEditTermAndConditionTranslationDto, TermAndConditionTranslation>().ReverseMap();
             configuration.CreateMap<TermAndConditionTranslationDto, TermAndConditionTranslation>().ReverseMap();
             configuration.CreateMap<CreateOrEditTermAndConditionDto, TermAndCondition>().ReverseMap();
