@@ -24,7 +24,7 @@ namespace TACHYON.Trucks.Exporting
             _abpSession = abpSession;
         }
 
-        public FileDto ExportToFile(List<GetTruckForViewDto> trucks)
+        public FileDto ExportToFile(List<GetTruckForViewOutput> trucks)
         {
             return CreateExcelPackage(
                 "Trucks.xlsx",

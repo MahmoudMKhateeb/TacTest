@@ -1,5 +1,13 @@
-﻿import { NgModule } from '@angular/core';
+import { NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
+import { CitiesTranslationsComponent } from './citiesTranslations/citiesTranslations/citiesTranslations.component';
+import { CountriesTranslationsComponent } from './countriesTranslations/countriesTranslations/countriesTranslations.component';
+import { PlateTypesComponent } from './plateTypes/plateTypes/plateTypes.component';
+import { TruckCapacitiesTranslationsComponent } from './truckCapacitiesTranslations/truckCapacitiesTranslations/truckCapacitiesTranslations.component';
+import { TruckStatusesTranslationsComponent } from './truckStatusesTranslations/truckStatusesTranslations/truckStatusesTranslations.component';
+import { TripStatusesComponent } from './tripStatuses/tripStatuses/tripStatuses.component';
+import { PackingTypesComponent } from './packingTypes/packingTypes/packingTypes.component';
+import { ShippingTypesComponent } from './shippingTypes/shippingTypes/shippingTypes.component';
 import { CitiesTranslationsComponent } from './citiesTranslations/citiesTranslations/citiesTranslations.component';
 import { CountriesTranslationsComponent } from './countriesTranslations/countriesTranslations/countriesTranslations.component';
 import { PlateTypesComponent } from './plateTypes/plateTypes/plateTypes.component';
@@ -10,6 +18,7 @@ import { NationalityTranslationsComponent } from './nationalitiesTranslation/nat
 import { TrucksTypesTranslationsComponent } from './trucksTypesTranslations/trucksTypesTranslations/trucksTypesTranslations.component';
 import { TransportTypesTranslationsComponent } from './transportTypesTranslations/transportTypesTranslations/transportTypesTranslations.component';
 import { VasPricesComponent } from './vases/vasPrices/vasPrices.component';
+import { ReceiversComponent } from './receivers/receivers/receivers.component';
 import { TermAndConditionsComponent } from './termsAndConditions/termAndConditions/termAndConditions.component';
 import { CapacitiesComponent } from './truckCapacities/capacities/capacities.component';
 import { TransportTypesComponent } from './transportTypes/transportTypes/transportTypes.component';
@@ -41,6 +50,15 @@ import { TrucksComponent } from './trucks/trucks/trucks.component';
 import { TrucksTypesComponent } from './trucksTypes/trucksTypes/trucksTypes.component';
 import { DashboardComponent } from './dashboard/dashboard.component';
 import { MarketplaceComponent } from '@app/main/marketPlace/marketPlace/marketplace.component';
+import { InvoicePeriodsListComponent } from '@app/main/invoices/invoice-periods-list/invoice-periods-list.component';
+import { InvoicesListComponent } from '@app/main/invoices/invoices-list/invoices-list.component';
+import { BalancesListComponent } from './invoices/balances/balances-list/balances-list.component';
+import { GroupPeriodsListComponent } from './invoices/groupsperiods/group-periods-list/group-periods-list.component';
+import { InvoiceDetailComponent } from './invoices/invoice-detail/invoice-detail.component';
+import { InvoiceDetailResolverService } from './Invoices/invoice-detail/Invoice-detail-resolver.service';
+import { GroupDetailComponent } from './invoices/groupsperiods/group-detail/group-detail.component';
+import { GroupDetailResolverService } from './invoices/groupsperiods/group-detail/group-detail-resolver.service';
+import { TransactionListComponent } from './invoices/transaction/transaction-list/transaction-list.component';
 
 @NgModule({
   imports: [
@@ -48,11 +66,79 @@ import { MarketplaceComponent } from '@app/main/marketPlace/marketPlace/marketpl
       {
         path: '',
         children: [
+          {
+            path: 'truckCapacitiesTranslations/truckCapacitiesTranslations',
+            component: TruckCapacitiesTranslationsComponent,
+            data: { permission: 'Pages.TruckCapacitiesTranslations' },
+          },
+          {
+            path: 'truckStatusesTranslations/truckStatusesTranslations',
+            component: TruckStatusesTranslationsComponent,
+            data: { permission: 'Pages.TruckStatusesTranslations' },
+          },
+          { path: 'nationalities/nationalities', component: NationalitiesComponent, data: { permission: 'Pages.Nationalities' } },
+          {
+            path: 'nationalitiesTranslation/nationalityTranslations',
+            component: NationalityTranslationsComponent,
+            data: { permission: 'Pages.NationalityTranslations' },
+          },
+          {
+            path: 'transportTypesTranslations/transportTypesTranslations',
+            component: TransportTypesTranslationsComponent,
+            data: { permission: 'Pages.TransportTypesTranslations' },
+          },
+          { path: 'citiesTranslations/citiesTranslations', component: CitiesTranslationsComponent, data: { permission: 'Pages.CitiesTranslations' } },
+          {
+            path: 'countriesTranslations/countriesTranslations',
+            component: CountriesTranslationsComponent,
+            data: { permission: 'Pages.CountriesTranslations' },
+          },
+          { path: 'plateTypes/plateTypes', component: PlateTypesComponent, data: { permission: 'Pages.Capacities' } },
+                    { path: 'citiesTranslations/citiesTranslations', component: CitiesTranslationsComponent, data: { permission: 'Pages.CitiesTranslations' }  },
+                    { path: 'countriesTranslations/countriesTranslations', component: CountriesTranslationsComponent, data: { permission: 'Pages.CountriesTranslations' }  },
+          { path: 'plateTypes/plateTypes', component: PlateTypesComponent, data: { permission: 'Pages.Capacities' } },
+          { path: 'nationalities/nationalities', component: NationalitiesComponent, data: { permission: 'Pages.Nationalities' } },
+          {
+            path: 'nationalitiesTranslation/nationalityTranslations',
+            component: NationalityTranslationsComponent,
+            data: { permission: 'Pages.NationalityTranslations' },
+          },
+          {
+            path: 'transportTypesTranslations/transportTypesTranslations',
+            component: TransportTypesTranslationsComponent,
+            data: { permission: 'Pages.TransportTypesTranslations' },
+          },
+                    { path: 'truckCapacitiesTranslations/truckCapacitiesTranslations', component: TruckCapacitiesTranslationsComponent, data: { permission: 'Pages.TruckCapacitiesTranslations' }  },
+                    { path: 'truckStatusesTranslations/truckStatusesTranslations', component: TruckStatusesTranslationsComponent, data: { permission: 'Pages.TruckStatusesTranslations' }  },
                     { path: 'truckCapacitiesTranslations/truckCapacitiesTranslations', component: TruckCapacitiesTranslationsComponent, data: { permission: 'Pages.TruckCapacitiesTranslations' }  },
                     { path: 'truckStatusesTranslations/truckStatusesTranslations', component: TruckStatusesTranslationsComponent, data: { permission: 'Pages.TruckStatusesTranslations' }  },
                     { path: 'nationalities/nationalities', component: NationalitiesComponent, data: { permission: 'Pages.Nationalities' }  },
                     { path: 'nationalitiesTranslation/nationalityTranslations', component: NationalityTranslationsComponent, data: { permission: 'Pages.NationalityTranslations' }  },
                     { path: 'transportTypesTranslations/transportTypesTranslations', component: TransportTypesTranslationsComponent, data: { permission: 'Pages.TransportTypesTranslations' }  },
+          { path: 'tripStatuses/tripStatuses', component: TripStatusesComponent, data: { permission: 'Pages.TripStatuses' } },
+          { path: 'packingTypes/packingTypes', component: PackingTypesComponent, data: { permission: 'Pages.PackingTypes' } },
+          { path: 'shippingTypes/shippingTypes', component: ShippingTypesComponent, data: { permission: 'Pages.ShippingTypes' } },
+          { path: 'nationalities/nationalities', component: NationalitiesComponent, data: { permission: 'Pages.Nationalities' } },
+          {
+            path: 'nationalitiesTranslation/nationalityTranslations',
+            component: NationalityTranslationsComponent,
+            data: { permission: 'Pages.NationalityTranslations' },
+          },
+          {
+            path: 'transportTypesTranslations/transportTypesTranslations',
+            component: TransportTypesTranslationsComponent,
+            data: { permission: 'Pages.TransportTypesTranslations' },
+          },
+          {
+            path: 'trucksTypesTranslations/trucksTypesTranslations',
+            component: TrucksTypesTranslationsComponent,
+            data: { permission: 'Pages.TrucksTypesTranslations' },
+          },
+          {
+            path: 'transportTypesTranslations/transportTypesTranslations',
+            component: TransportTypesTranslationsComponent,
+            data: { permission: 'Pages.TransportTypesTranslations' },
+          },
                     { path: 'citiesTranslations/citiesTranslations', component: CitiesTranslationsComponent, data: { permission: 'Pages.CitiesTranslations' }  },
                     { path: 'countriesTranslations/countriesTranslations', component: CountriesTranslationsComponent, data: { permission: 'Pages.CountriesTranslations' }  },
           { path: 'plateTypes/plateTypes', component: PlateTypesComponent, data: { permission: 'Pages.Capacities' } },
@@ -78,6 +164,7 @@ import { MarketplaceComponent } from '@app/main/marketPlace/marketPlace/marketpl
             data: { permission: 'Pages.TransportTypesTranslations' },
           },
           { path: 'vases/vasPrices', component: VasPricesComponent, data: { permission: 'Pages.VasPrices' } },
+          { path: 'receivers/receivers', component: ReceiversComponent, data: { permission: 'Pages.Receivers' } },
           { path: 'termsAndConditions/termAndConditions', component: TermAndConditionsComponent, data: { permission: 'Pages.TermAndConditions' } },
           { path: 'truckCapacities/capacities', component: CapacitiesComponent, data: { permission: 'Pages.Capacities' } },
           { path: 'transportTypes/transportTypes', component: TransportTypesComponent, data: { permission: 'Pages.TransportTypes' } },
@@ -115,6 +202,32 @@ import { MarketplaceComponent } from '@app/main/marketPlace/marketPlace/marketpl
           { path: 'trailerTypes/trailerTypes', component: TrailerTypesComponent, data: { permission: 'Pages.TrailerTypes' } },
           { path: 'trucks/trucks', component: TrucksComponent, data: { permission: 'Pages.Trucks' } },
           { path: 'trucksTypes/trucksTypes', component: TrucksTypesComponent, data: { permission: 'Pages.TrucksTypes' } },
+          { path: 'invoices/view', component: InvoicesListComponent, data: { permission: 'Pages.Invoices' } },
+          {
+            path: 'invoices/detail/:id',
+            component: InvoiceDetailComponent,
+            data: { permission: 'Pages.Invoices' },
+            resolve: {
+              invoiceinfo: InvoiceDetailResolverService,
+            },
+          },
+          { path: 'invoices/periods', component: InvoicePeriodsListComponent, data: { permission: 'Pages.Administration.Host.Invoices.Periods' } },
+          { path: 'invoices/transaction', component: TransactionListComponent, data: { permission: 'Pages.Invoices.Transaction' } },
+
+          {
+            path: 'invoices/balnacerecharges',
+            component: BalancesListComponent,
+            data: { permission: 'Pages.Administration.Host.Invoices.Balances' },
+          },
+          { path: 'invoices/groupperiods', component: GroupPeriodsListComponent, data: { permission: 'Pages.Invoices.GroupsPeriods' } },
+          {
+            path: 'invoices/groupperiods/detail/:id',
+            component: GroupDetailComponent,
+            data: { permission: 'Pages.Invoices.GroupsPeriods' },
+            resolve: {
+              groupinfo: GroupDetailResolverService,
+            },
+          },
           { path: 'dashboard', component: DashboardComponent, data: { permission: 'Pages.Tenant.Dashboard' } },
           { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
           { path: '**', redirectTo: 'dashboard' },

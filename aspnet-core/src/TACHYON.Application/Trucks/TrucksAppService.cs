@@ -85,7 +85,7 @@ namespace TACHYON.Trucks
             _plateTypesRepository = PlateTypesRepository;
         }
 
-        public async Task<PagedResultDto<GetTruckForViewDto>> GetAll(GetAllTrucksInput input)
+        public async Task<PagedResultDto<GetTruckForViewOutput>> GetAll(GetAllTrucksInput input)
         {
 
             var filteredTrucks = _truckRepository.GetAll()
@@ -127,7 +127,7 @@ namespace TACHYON.Trucks
                              //join o3 in _lookup_userRepository.GetAll() on o.Driver1UserId equals o3.Id into j3
                              //from s3 in j3.DefaultIfEmpty()
 
-                         select new GetTruckForViewDto()
+                         select new GetTruckForViewOutput()
                          {
                              Truck = new TruckDto
                              {
@@ -150,17 +150,17 @@ namespace TACHYON.Trucks
 
             var totalCount = await filteredTrucks.CountAsync();
             var result = await trucks.ToListAsync();
-            return new PagedResultDto<GetTruckForViewDto>(
+            return new PagedResultDto<GetTruckForViewOutput>(
                 totalCount,
                 result
             );
         }
 
-        public async Task<GetTruckForViewDto> GetTruckForView(long id)
+        public async Task<GetTruckForViewOutput> GetTruckForView(long id)
         {
             var truck = await _truckRepository.GetAsync(id);
 
-            var output = new GetTruckForViewDto { Truck = ObjectMapper.Map<TruckDto>(truck) };
+            var output = new GetTruckForViewOutput { Truck = ObjectMapper.Map<TruckDto>(truck) };
 
             if (output.Truck.TrucksTypeId != null)
             {
@@ -360,7 +360,7 @@ namespace TACHYON.Trucks
                              //from s3 in j3.DefaultIfEmpty()
 
 
-                         select new GetTruckForViewDto()
+                         select new GetTruckForViewOutput()
                          {
                              Truck = new TruckDto
                              {

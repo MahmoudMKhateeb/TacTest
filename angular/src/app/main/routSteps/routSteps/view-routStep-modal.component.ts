@@ -1,6 +1,6 @@
 ﻿import { Component, ViewChild, Injector, Output, EventEmitter } from '@angular/core';
 import { ModalDirective } from 'ngx-bootstrap/modal';
-import { GetRoutStepForViewDto, RoutStepDto } from '@shared/service-proxies/service-proxies';
+import { GetRoutStepForViewOutput, RoutStepDto } from '@shared/service-proxies/service-proxies';
 import { AppComponentBase } from '@shared/common/app-component-base';
 
 @Component({
@@ -14,15 +14,15 @@ export class ViewRoutStepModalComponent extends AppComponentBase {
   active = false;
   saving = false;
 
-  item: GetRoutStepForViewDto;
+  item: GetRoutStepForViewOutput;
 
   constructor(injector: Injector) {
     super(injector);
-    this.item = new GetRoutStepForViewDto();
+    this.item = new GetRoutStepForViewOutput();
     this.item.routStep = new RoutStepDto();
   }
 
-  show(item: GetRoutStepForViewDto): void {
+  show(item: GetRoutStepForViewOutput): void {
     this.item = item;
     this.active = true;
     this.modal.show();

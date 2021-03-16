@@ -12,9 +12,9 @@ namespace TACHYON.AddressBook
 {
     public interface IFacilitiesAppService : IApplicationService 
     {
-        Task<PagedResultDto<GetFacilityForViewDto>> GetAll(GetAllFacilitiesInput input);
+        Task<PagedResultDto<GetFacilityForViewOutput>> GetAll(GetAllFacilitiesInput input);
 
-        Task<GetFacilityForViewDto> GetFacilityForView(long id);
+        Task<GetFacilityForViewOutput> GetFacilityForView(long id);
 
 		Task<GetFacilityForEditOutput> GetFacilityForEdit(EntityDto<long> input);
 

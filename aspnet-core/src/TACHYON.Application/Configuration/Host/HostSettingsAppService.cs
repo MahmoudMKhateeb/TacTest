@@ -57,7 +57,8 @@ namespace TACHYON.Configuration.Host
                 Security = await GetSecuritySettingsAsync(),
                 Billing = await GetBillingSettingsAsync(),
                 OtherSettings = await GetOtherSettingsAsync(),
-                ExternalLoginProviderSettings = await GetExternalLoginProviderSettings()
+                ExternalLoginProviderSettings = await GetExternalLoginProviderSettings(),
+                SmsSettings = await GetSmsSettingsAsync()
             };
         }
 
@@ -218,7 +219,8 @@ namespace TACHYON.Configuration.Host
             return new HostBillingSettingsEditDto
             {
                 LegalName = await SettingManager.GetSettingValueAsync(AppSettings.HostManagement.BillingLegalName),
-                Address = await SettingManager.GetSettingValueAsync(AppSettings.HostManagement.BillingAddress)
+                Address = await SettingManager.GetSettingValueAsync(AppSettings.HostManagement.BillingAddress),
+                TaxVat= await SettingManager.GetSettingValueAsync(AppSettings.HostManagement.TaxVat)
             };
         }
 
@@ -333,6 +335,20 @@ namespace TACHYON.Configuration.Host
             };
         }
 
+        #region Tachyon Settings
+
+        private async Task<SmsSettingsEditDto> GetSmsSettingsAsync()
+        {
+            var settings = new SmsSettingsEditDto
+            {
+                UnifonicAppSid = 
+                    await SettingManager.GetSettingValueAsync(AppSettings.Sms.UnifonicAppSid)
+            };
+            return settings;
+        }
+
+        #endregion
+
         #endregion
 
         #region Update Settings
@@ -347,6 +363,7 @@ namespace TACHYON.Configuration.Host
             await UpdateBillingSettingsAsync(input.Billing);
             await UpdateOtherSettingsAsync(input.OtherSettings);
             await UpdateExternalLoginSettingsAsync(input.ExternalLoginProviderSettings);
+            await UpdateSmsSettingsAsync(input.SmsSettings);
         }
 
         private async Task UpdateOtherSettingsAsync(OtherSettingsEditDto input)
@@ -363,6 +380,9 @@ namespace TACHYON.Configuration.Host
                 input.LegalName);
             await SettingManager.ChangeSettingForApplicationAsync(AppSettings.HostManagement.BillingAddress,
                 input.Address);
+            
+            await SettingManager.ChangeSettingForApplicationAsync(AppSettings.HostManagement.TaxVat,input.TaxVat);
+
         }
 
         private async Task UpdateGeneralSettingsAsync(GeneralSettingsEditDto settings)
@@ -629,6 +649,18 @@ namespace TACHYON.Configuration.Host
 
             ExternalLoginOptionsCacheManager.ClearCache();
         }
+
+        #region Tachyon Settings
+
+        private async Task UpdateSmsSettingsAsync(SmsSettingsEditDto input)
+        {
+            await SettingManager.ChangeSettingForApplicationAsync(
+                AppSettings.Sms.UnifonicAppSid,
+                input.UnifonicAppSid
+            );
+        }
+
+        #endregion
 
         #endregion
     }

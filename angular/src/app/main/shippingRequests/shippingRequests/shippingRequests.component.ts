@@ -10,6 +10,8 @@ import { Paginator } from 'primeng/paginator';
 import { LazyLoadEvent } from 'primeng/public_api';
 import { FileDownloadService } from '@shared/utils/file-download.service';
 import { AppSessionService } from '@shared/common/session/app-session.service';
+import { CreateOrEditFacilityModalComponent } from '@app/main/addressBook/facilities/create-or-edit-facility-modal.component';
+import { AddNewTripComponent } from '@app/main/shippingRequests/shippingRequests/ShippingRequestTrips/AddNewTripModal/AddNewTrip.component';
 
 @Component({
   templateUrl: './shippingRequests.component.html',
@@ -30,8 +32,10 @@ export class ShippingRequestsComponent extends AppComponentBase {
   // trailerTypeDisplayNameFilter = '';
   // goodsDetailNameFilter = '';
   // routeDisplayNameFilter = '';
-  isBid = false;
-  isTachyonDeal = true;
+  isBid: boolean;
+  ShowPriceAcceptedNoTrips = undefined;
+  isTachyonDeal: boolean;
+  noOfPostPriceWithoutTrips: number;
 
   constructor(
     injector: Injector,
@@ -62,13 +66,17 @@ export class ShippingRequestsComponent extends AppComponentBase {
         this.minVasFilter == null ? this.minVasFilterEmpty : this.minVasFilter,
         this.isBid,
         this.isTachyonDeal,
+        undefined,
+        undefined,
+        this.ShowPriceAcceptedNoTrips,
         this.primengTableHelper.getSorting(this.dataTable),
         this.primengTableHelper.getSkipCount(this.paginator, event),
         this.primengTableHelper.getMaxResultCount(this.paginator, event)
       )
       .subscribe((result) => {
-        this.primengTableHelper.totalRecordsCount = result.totalCount;
-        this.primengTableHelper.records = result.items;
+        this.noOfPostPriceWithoutTrips = result.noOfPostPriceWithoutTrips;
+        this.primengTableHelper.totalRecordsCount = result.data.totalCount;
+        this.primengTableHelper.records = result.data.items;
         this.primengTableHelper.hideLoadingIndicator();
       });
   }
@@ -107,4 +115,8 @@ export class ShippingRequestsComponent extends AppComponentBase {
   //       this._fileDownloadService.downloadTempFile(result);
   //     });
   // }
+  GetIncompleteShippingRequests() {
+    this.ShowPriceAcceptedNoTrips = true;
+    this.getShippingRequests();
+  }
 }

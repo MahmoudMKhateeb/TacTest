@@ -40,7 +40,7 @@
                     </div>
                   </div>
                 </div>
-                <div class="row justify-content-center" [hidden]="!advancedFiltersAreShown">
+                <div class="row" [hidden]="!advancedFiltersAreShown">
                   <div class="col-md-4">
                     <div class="form-group m-form__group">
                       <label for="truck.transportTypeId">{{ l('TransportType') }}</label>
@@ -87,42 +87,38 @@
                       </select>
                     </div>
                   </div>
-                  <div class="col-md-4 mt-5">
-                    <div class="row">
-                      <div class="col-md-6">
-                        <div class="form-group form-inline my-5">
-                          <label for="MatchingBidsOnly">{{ l('MatchingBidsOnly') }}</label>
-                          <span class="switch switch-sm switch-outline switch-icon switch-danger ml-2">
-                            <label>
-                              <input
-                                id="MatchingBidsOnly"
-                                type="checkbox"
-                                name="MatchingBidsOnly"
-                                [checked]="MatchingBidOnlyFilter"
-                                [(ngModel)]="MatchingBidOnlyFilter"
-                              />
-                              <span></span>
-                            </label>
-                          </span>
-                        </div>
-                      </div>
-                      <div class="col-md-6">
-                        <div class="form-group form-inline my-5">
-                          <label for="ShowOnlyMyBids">{{ l('ShowOnlyMyBids') }}</label>
-                          <span class="switch switch-sm switch-outline switch-icon switch-danger ml-2">
-                            <label>
-                              <input
-                                id="ShowOnlyMyBids"
-                                type="checkbox"
-                                name="ShowOnlyMyBids"
-                                [checked]="MyBidsOnlyFilter"
-                                [(ngModel)]="MyBidsOnlyFilter"
-                              />
-                              <span></span>
-                            </label>
-                          </span>
-                        </div>
-                      </div>
+                  <div class="col-md-2">
+                    <div class="form-group form-inline">
+                      <label for="MatchingBidsOnly">{{ l('MatchingBidsOnly') }}</label>
+                      <span class="switch switch-sm switch-outline switch-icon switch-danger ml-2">
+                        <label>
+                          <input
+                            id="MatchingBidsOnly"
+                            type="checkbox"
+                            name="MatchingBidsOnly"
+                            [checked]="MatchingBidOnlyFilter"
+                            [(ngModel)]="MatchingBidOnlyFilter"
+                          />
+                          <span></span>
+                        </label>
+                      </span>
+                    </div>
+                  </div>
+                  <div class="col-md-2">
+                    <div class="form-group form-inline float-right">
+                      <label for="ShowOnlyMyBids">{{ l('ShowOnlyMyBids') }}</label>
+                      <span class="switch switch-sm switch-outline switch-icon switch-danger ml-2">
+                        <label>
+                          <input
+                            id="ShowOnlyMyBids"
+                            type="checkbox"
+                            name="ShowOnlyMyBids"
+                            [checked]="MyBidsOnlyFilter"
+                            [(ngModel)]="MyBidsOnlyFilter"
+                          />
+                          <span></span>
+                        </label>
+                      </span>
                     </div>
                   </div>
                 </div>
@@ -161,15 +157,15 @@
               >
                 <ng-template pTemplate="header">
                   <tr>
-                    <th style="width: 150px;" pSortableColumn="shippingRequestId">
+                    <th style="width: 50px;" pSortableColumn="shippingRequestId">
                       {{ l('id') }}
                       <p-sortIcon field="shippingRequestId"></p-sortIcon>
                     </th>
-                    <th style="width: 150px;" pSortableColumn="shipperName">
+                    <th style="width: 110px;" pSortableColumn="shipperName">
                       {{ l('shipperName') }}
                       <p-sortIcon field="shipperName"></p-sortIcon>
                     </th>
-                    <th style="width: 150px;" pSortableColumn="truckTypeDisplayName">
+                    <th style="width: 160px;" pSortableColumn="truckTypeDisplayName">
                       {{ l('truckTypeDisplayName') }}
                       <p-sortIcon field="truckTypeDisplayName"></p-sortIcon>
                     </th>
@@ -181,10 +177,7 @@
                       {{ l('bidStartDate') }}
                       <p-sortIcon field="bidStartDate"></p-sortIcon>
                     </th>
-                    <th style="width: 150px;" pSortableColumn="bidEndDate">
-                      {{ l('bidEndDate') }}
-                      <p-sortIcon field="bidEndDate"></p-sortIcon>
-                    </th>
+
                     <th style="width: 150px;" pSortableColumn="StatusName">
                       {{ l('StatusName') }}
                       <p-sortIcon field="StatusName"></p-sortIcon>
@@ -201,15 +194,15 @@
                 </ng-template>
                 <ng-template pTemplate="body" let-record="$implicit">
                   <tr>
-                    <td style="width: 150px;">
+                    <td style="width: 50px;">
                       <span class="ui-column-title"> {{ l('shippingRequestId') }}</span>
                       {{ record.shippingRequestId }}
                     </td>
-                    <td style="width: 150px;">
+                    <td style="width: 110px;">
                       <span class="ui-column-title"> {{ l('shipperName') }}</span>
                       {{ record.shipperName }}
                     </td>
-                    <td style="width: 150px;">
+                    <td style="width: 160px;">
                       <span class="ui-column-title"> {{ l('truckTypeDisplayName') }}</span>
                       {{ record.truckTypeDisplayName }}
                     </td>
@@ -222,17 +215,12 @@
                         record.bidStartDate | momentFormat: 'L'
                       }}</span>
                     </td>
-                    <td style="width: 150px;">
-                      <span *ngIf="record.bidEndDate" class="label label-xl font-weight-bold label-light-danger label-inline ui-column-title">
-                        {{ l('endBidDate') }}</span
-                      >
-                      {{ record.bidEndDate }}
-                    </td>
+
                     <td style="width: 150px;">
                       <span
                         *ngIf="record.shippingRequestBidStatusName"
                         class="label label-xl label-inline font-weight-bold"
-                        [class.label-light-danger]="record.shippingRequestBidStatusName == 'Ongoing'"
+                        [class.label-light-success]="record.shippingRequestBidStatusName == 'Ongoing'"
                         [class.label-light-dark]="record.shippingRequestBidStatusName == 'Canceled'"
                         [class.label-light-warning]="record.shippingRequestBidStatusName == 'Closed'"
                         >{{ record.shippingRequestBidStatusName }}</span

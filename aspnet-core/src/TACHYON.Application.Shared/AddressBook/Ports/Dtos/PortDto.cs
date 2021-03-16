@@ -1,6 +1,7 @@
 ﻿
 using System;
 using Abp.Application.Services.Dto;
+using NetTopologySuite.Geometries;
 
 namespace TACHYON.AddressBook.Ports.Dtos
 {
@@ -8,12 +9,9 @@ namespace TACHYON.AddressBook.Ports.Dtos
     {
 		public string Name { get; set; }
 
-		public string Adress { get; set; }
+		public string Address { get; set; }
 
-		public decimal Longitude { get; set; }
-
-		public decimal Latitude { get; set; }
-
+		public Point Location { get; set; }
 
 		 public int CityId { get; set; }
 

@@ -1,0 +1,70 @@
+﻿<div
+  bsModal
+  #createOrEditModal="bs-modal"
+  class="modal fade"
+  tabindex="-1"
+  role="dialog"
+  aria-labelledby="createOrEditModal"
+  aria-hidden="true"
+  [config]="{ backdrop: 'static' }"
+>
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <form *ngIf="active" #packingTypeForm="ngForm" novalidate (ngSubmit)="save()" autocomplete="off">
+        <div class="modal-header">
+          <h4 class="modal-title">
+            <span *ngIf="packingType.id">{{ l('EditPackingType') }}</span>
+            <span *ngIf="!packingType.id">{{ l('CreateNewPackingType') }}</span>
+          </h4>
+          <button type="button" class="close" (click)="close()" aria-label="Close" [disabled]="saving">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <div class="form-group">
+            <label for="PackingType_DisplayName">{{ l('DisplayName') }} *</label>
+            <input
+              type="text"
+              #PackingType_DisplayName="ngModel"
+              id="PackingType_DisplayName"
+              class="form-control"
+              [(ngModel)]="packingType.displayName"
+              name="DisplayName"
+              minlength="0"
+              maxlength="128"
+              required
+            />
+            <validation-messages [formCtrl]="PackingType_DisplayName"></validation-messages>
+          </div>
+
+          <div class="form-group">
+            <label for="PackingType_Description">{{ l('Description') }}</label>
+            <input
+              type="text"
+              #PackingType_Description="ngModel"
+              id="PackingType_Description"
+              class="form-control"
+              [(ngModel)]="packingType.description"
+              name="Description"
+              minlength="0"
+              maxlength="256"
+            />
+            <validation-messages [formCtrl]="PackingType_Description"></validation-messages>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button [disabled]="saving" type="button" class="btn btn-default" (click)="close()">{{ l('Cancel') }}</button>
+          <button
+            type="submit"
+            class="btn btn-primary blue"
+            [disabled]="!packingTypeForm.form.valid"
+            [buttonBusy]="saving"
+            [busyText]="l('SavingWithThreeDot')"
+          >
+            <i class="fa fa-save"></i> <span>{{ l('Save') }}</span>
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

@@ -41,9 +41,14 @@ namespace TACHYON.Localization
         {
             var languages = (await _applicationLanguageManager.GetLanguagesAsync(AbpSession.TenantId)).OrderBy(l => l.DisplayName);
             var defaultLanguage = await _applicationLanguageManager.GetDefaultLanguageOrNullAsync(AbpSession.TenantId);
+            var ApplicationLanguageListDto= ObjectMapper.Map<List<ApplicationLanguageListDto>>(languages);
+            ApplicationLanguageListDto.ForEach(lang =>
+            {
+                lang.IsRTL = new CultureInfo(lang.Name).TextInfo.IsRightToLeft;
+            });
 
             return new GetLanguagesOutput(
-                ObjectMapper.Map<List<ApplicationLanguageListDto>>(languages),
+                ApplicationLanguageListDto,
                 defaultLanguage?.Name
                 );
         }

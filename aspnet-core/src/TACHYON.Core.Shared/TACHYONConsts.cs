@@ -16,7 +16,25 @@
 
         public const string AbpApiClientUserAgent = "AbpApiClient";
 
+        //BidStatus consts
+        //public const int ShippingRequestStatusStandBy = 1;
 
+        //public const int ShippingRequestStatusOnGoing = 2;
+
+        //public const int ShippingRequestStatusClosed = 3;
+
+        //public const int ShippingRequestStatusCanceled = 4;
+
+        //Route Type consts
+        public const int SingleDropRoutType = 1;
+
+        public const int TwoWaysRoutType = 2;
+
+        public const int MultipleDropsRoutType = 3;
+
+        //Pickup consts
+        public const int PickupPickingType = 1;
+        public const int DropoffPickingType = 2;
 
         // Note:
         // Minimum accepted payment amount. If a payment amount is less then that minimum value payment progress will continue without charging payment
@@ -27,6 +45,9 @@
 
         #region Tachyon consts
         public const int MaxDocumentFileBytesUserFriendlyValue = 5;
+        public const string ShipperEdtionName= "shipper";
+        public const string CarrierEdtionName = "carrier";
+
 
         //BidStatus consts
         public const int ShippingRequestStatusStandBy = 1;

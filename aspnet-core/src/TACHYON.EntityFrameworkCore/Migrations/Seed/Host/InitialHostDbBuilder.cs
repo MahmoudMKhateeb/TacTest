@@ -19,7 +19,7 @@ namespace TACHYON.Migrations.Seed.Host
             new DefaultLanguagesCreator(_context).Create();
             new HostRoleAndUserCreator(_context).Create();
             new DefaultSettingsCreator(_context).Create();
-            new ShippingRequestBidStatusesCreator(_context).Create();
+            //new ShippingRequestBidStatusesCreator(_context).Create();
             new CountriesAndCitiesCreator(_context).Create();
             new TransportTypesAndTheirChildrenCreator(_context).Create();
             _context.SaveChanges();

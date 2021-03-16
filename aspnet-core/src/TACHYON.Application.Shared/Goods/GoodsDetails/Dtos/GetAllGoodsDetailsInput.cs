@@ -11,9 +11,9 @@ namespace TACHYON.Goods.GoodsDetails.Dtos
 
         public string DescriptionFilter { get; set; }
 
-        public string QuantityFilter { get; set; }
+        public int QuantityFilter { get; set; }
 
-        public string WeightFilter { get; set; }
+        public double? WeightFilter { get; set; }
 
         public string DimentionsFilter { get; set; }
 
@@ -23,7 +23,7 @@ namespace TACHYON.Goods.GoodsDetails.Dtos
 
 
         public string GoodCategoryDisplayNameFilter { get; set; }
-
+        public long RoutPointId { get; set; }
 
     }
 }

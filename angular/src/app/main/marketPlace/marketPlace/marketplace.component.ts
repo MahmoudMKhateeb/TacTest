@@ -24,7 +24,7 @@ export class MarketplaceComponent extends AppComponentBase implements OnInit {
   @ViewChild('dataTable', { static: true }) dataTable: Table;
   @ViewChild('paginator', { static: true }) paginator: Paginator;
   //inputs
-  advancedFiltersAreShown = true;
+  advancedFiltersAreShown = false;
 
   filterText = '';
   MatchingBidOnlyFilter = true;
@@ -68,6 +68,7 @@ export class MarketplaceComponent extends AppComponentBase implements OnInit {
         this.TruckTypeIdFilter,
         this.TransportTypeFilter,
         this.CapacityIdFilter,
+        false,
         this.primengTableHelper.getSorting(this.dataTable),
         this.primengTableHelper.getSkipCount(this.paginator, event),
         this.primengTableHelper.getMaxResultCount(this.paginator, event)

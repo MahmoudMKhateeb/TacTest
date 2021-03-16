@@ -41,13 +41,9 @@ namespace TACHYON.AddressBook.Ports
 			
 			var filteredPorts = _portRepository.GetAll()
 						.Include( e => e.CityFk)
-						.WhereIf(!string.IsNullOrWhiteSpace(input.Filter), e => false  || e.Name.Contains(input.Filter) || e.Adress.Contains(input.Filter))
+						.WhereIf(!string.IsNullOrWhiteSpace(input.Filter), e => false  || e.Name.Contains(input.Filter) || e.Address.Contains(input.Filter))
 						.WhereIf(!string.IsNullOrWhiteSpace(input.NameFilter),  e => e.Name == input.NameFilter)
-						.WhereIf(!string.IsNullOrWhiteSpace(input.AdressFilter),  e => e.Adress == input.AdressFilter)
-						.WhereIf(input.MinLongitudeFilter != null, e => e.Longitude >= input.MinLongitudeFilter)
-						.WhereIf(input.MaxLongitudeFilter != null, e => e.Longitude <= input.MaxLongitudeFilter)
-						.WhereIf(input.MinLatitudeFilter != null, e => e.Latitude >= input.MinLatitudeFilter)
-						.WhereIf(input.MaxLatitudeFilter != null, e => e.Latitude <= input.MaxLatitudeFilter)
+						.WhereIf(!string.IsNullOrWhiteSpace(input.AdressFilter),  e => e.Address == input.AdressFilter)
 						.WhereIf(!string.IsNullOrWhiteSpace(input.CityDisplayNameFilter), e => e.CityFk != null && e.CityFk.DisplayName == input.CityDisplayNameFilter);
 
 			var pagedAndFilteredPorts = filteredPorts
@@ -62,9 +58,8 @@ namespace TACHYON.AddressBook.Ports
 							Port = new PortDto
 							{
                                 Name = o.Name,
-                                Adress = o.Adress,
-                                Longitude = o.Longitude,
-                                Latitude = o.Latitude,
+                                Address = o.Address,
+                                Location=o.Location,
                                 Id = o.Id
 							},
                          	CityDisplayName = s1 == null || s1.DisplayName == null ? "" : s1.DisplayName.ToString()
@@ -147,13 +142,9 @@ namespace TACHYON.AddressBook.Ports
 			
 			var filteredPorts = _portRepository.GetAll()
 						.Include( e => e.CityFk)
-						.WhereIf(!string.IsNullOrWhiteSpace(input.Filter), e => false  || e.Name.Contains(input.Filter) || e.Adress.Contains(input.Filter))
+						.WhereIf(!string.IsNullOrWhiteSpace(input.Filter), e => false  || e.Name.Contains(input.Filter) || e.Address.Contains(input.Filter))
 						.WhereIf(!string.IsNullOrWhiteSpace(input.NameFilter),  e => e.Name == input.NameFilter)
-						.WhereIf(!string.IsNullOrWhiteSpace(input.AdressFilter),  e => e.Adress == input.AdressFilter)
-						.WhereIf(input.MinLongitudeFilter != null, e => e.Longitude >= input.MinLongitudeFilter)
-						.WhereIf(input.MaxLongitudeFilter != null, e => e.Longitude <= input.MaxLongitudeFilter)
-						.WhereIf(input.MinLatitudeFilter != null, e => e.Latitude >= input.MinLatitudeFilter)
-						.WhereIf(input.MaxLatitudeFilter != null, e => e.Latitude <= input.MaxLatitudeFilter)
+						.WhereIf(!string.IsNullOrWhiteSpace(input.AdressFilter),  e => e.Address == input.AdressFilter)
 						.WhereIf(!string.IsNullOrWhiteSpace(input.CityDisplayNameFilter), e => e.CityFk != null && e.CityFk.DisplayName == input.CityDisplayNameFilter);
 
 			var query = (from o in filteredPorts
@@ -164,9 +155,8 @@ namespace TACHYON.AddressBook.Ports
 							Port = new PortDto
 							{
                                 Name = o.Name,
-                                Adress = o.Adress,
-                                Longitude = o.Longitude,
-                                Latitude = o.Latitude,
+                                Address = o.Address,
+                                Location=o.Location,
                                 Id = o.Id
 							},
                          	CityDisplayName = s1 == null || s1.DisplayName == null ? "" : s1.DisplayName.ToString()

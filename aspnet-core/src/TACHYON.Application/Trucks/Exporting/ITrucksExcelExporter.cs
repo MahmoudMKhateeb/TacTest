@@ -6,6 +6,6 @@ namespace TACHYON.Trucks.Exporting
 {
     public interface ITrucksExcelExporter
     {
-        FileDto ExportToFile(List<GetTruckForViewDto> trucks);
+        FileDto ExportToFile(List<GetTruckForViewOutput> trucks);
     }
 }

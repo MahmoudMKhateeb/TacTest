@@ -3,9 +3,10 @@ using Abp.Authorization;
 using Abp.Domain.Repositories;
 using Abp.Extensions;
 using Abp.Linq.Extensions;
+using Castle.MicroKernel.ModelBuilder.Descriptors;
 using Microsoft.EntityFrameworkCore;
+using Org.BouncyCastle.Math.EC.Rfc7748;
 using System;
-using System.Collections.Generic;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Dynamic.Core;
@@ -15,6 +16,9 @@ using TACHYON.Dto;
 using TACHYON.Goods.GoodCategories;
 using TACHYON.Goods.GoodsDetails.Dtos;
 using TACHYON.Goods.GoodsDetails.Exporting;
+using TACHYON.Routs.RoutPoints;
+using TACHYON.Routs.RoutSteps;
+using TACHYON.Routs.RoutPoints.Dtos;
 
 namespace TACHYON.Goods.GoodsDetails
 {
@@ -22,16 +26,20 @@ namespace TACHYON.Goods.GoodsDetails
     public class GoodsDetailsAppService : TACHYONAppServiceBase, IGoodsDetailsAppService
     {
         private readonly IRepository<GoodsDetail, long> _goodsDetailRepository;
+        private readonly IRepository<RoutPoint, long> _routPointRepository;
         private readonly IGoodsDetailsExcelExporter _goodsDetailsExcelExporter;
         private readonly IRepository<GoodCategory, int> _lookup_goodCategoryRepository;
 
 
-        public GoodsDetailsAppService(IRepository<GoodsDetail, long> goodsDetailRepository, IGoodsDetailsExcelExporter goodsDetailsExcelExporter, IRepository<GoodCategory, int> lookup_goodCategoryRepository)
+        public GoodsDetailsAppService(IRepository<GoodsDetail, long> goodsDetailRepository, 
+            IGoodsDetailsExcelExporter goodsDetailsExcelExporter,
+            IRepository<GoodCategory, int> lookup_goodCategoryRepository,
+            IRepository<RoutPoint, long> routPointRepository)
         {
             _goodsDetailRepository = goodsDetailRepository;
             _goodsDetailsExcelExporter = goodsDetailsExcelExporter;
             _lookup_goodCategoryRepository = lookup_goodCategoryRepository;
-
+            _routPointRepository = routPointRepository;
         }
 
         public async Task<PagedResultDto<GetGoodsDetailForViewDto>> GetAll(GetAllGoodsDetailsInput input)
@@ -39,11 +47,12 @@ namespace TACHYON.Goods.GoodsDetails
 
             var filteredGoodsDetails = _goodsDetailRepository.GetAll()
                         .Include(e => e.GoodCategoryFk)
-                        .WhereIf(!string.IsNullOrWhiteSpace(input.Filter), e => false || e.Name.Contains(input.Filter) || e.Description.Contains(input.Filter) || e.Quantity.Contains(input.Filter) || e.Weight.Contains(input.Filter) || e.Dimentions.Contains(input.Filter) || e.DangerousGoodsCode.Contains(input.Filter))
-                        .WhereIf(!string.IsNullOrWhiteSpace(input.NameFilter), e => e.Name == input.NameFilter)
+                        .Where(e=>e.RoutPointId==input.RoutPointId)
+                        //.WhereIf(!string.IsNullOrWhiteSpace(input.Filter), e => false || e.Name.Contains(input.Filter) || e.Description.Contains(input.Filter) || e.Quantity.Contains(input.Filter) || e.Weight.Contains(input.Filter) || e.Dimentions.Contains(input.Filter) || e.DangerousGoodsCode.Contains(input.Filter))
+                        // .WhereIf(!string.IsNullOrWhiteSpace(input.NameFilter), e => e.Name == input.NameFilter)
                         .WhereIf(!string.IsNullOrWhiteSpace(input.DescriptionFilter), e => e.Description == input.DescriptionFilter)
-                        .WhereIf(!string.IsNullOrWhiteSpace(input.QuantityFilter), e => e.Quantity == input.QuantityFilter)
-                        .WhereIf(!string.IsNullOrWhiteSpace(input.WeightFilter), e => e.Weight == input.WeightFilter)
+                        .WhereIf(input.QuantityFilter > 0, e => e.Amount == input.QuantityFilter)
+                        .WhereIf(input.WeightFilter.HasValue, e => e.Weight == input.WeightFilter)
                         .WhereIf(!string.IsNullOrWhiteSpace(input.DimentionsFilter), e => e.Dimentions == input.DimentionsFilter)
                         .WhereIf(input.IsDangerousGoodFilter > -1, e => (input.IsDangerousGoodFilter == 1 && e.IsDangerousGood) || (input.IsDangerousGoodFilter == 0 && !e.IsDangerousGood))
                         .WhereIf(!string.IsNullOrWhiteSpace(input.DangerousGoodsCodeFilter), e => e.DangerousGoodsCode == input.DangerousGoodsCodeFilter)
@@ -61,9 +70,9 @@ namespace TACHYON.Goods.GoodsDetails
                                {
                                    GoodsDetail = new GoodsDetailDto
                                    {
-                                       Name = o.Name,
+                                       // Name = o.Name,
                                        Description = o.Description,
-                                       Quantity = o.Quantity,
+                                       Amount = o.Amount,
                                        Weight = o.Weight,
                                        Dimentions = o.Dimentions,
                                        IsDangerousGood = o.IsDangerousGood,
@@ -83,9 +92,18 @@ namespace TACHYON.Goods.GoodsDetails
 
         public async Task<GetGoodsDetailForViewDto> GetGoodsDetailForView(long id)
         {
-            var goodsDetail = await _goodsDetailRepository.GetAsync(id);
+            var goodsDetail = await _goodsDetailRepository
+                .GetAllIncluding(e => e.GoodCategoryFk,
+                    e=>e.RoutPointFk)
+                .Where(e=>e.Id==id)
+                .FirstOrDefaultAsync();
 
-            var output = new GetGoodsDetailForViewDto { GoodsDetail = ObjectMapper.Map<GoodsDetailDto>(goodsDetail) };
+            var output = new GetGoodsDetailForViewDto
+            {
+                GoodsDetail = ObjectMapper.Map<GoodsDetailDto>(goodsDetail),
+                GoodCategoryDisplayName = goodsDetail.GoodCategoryFk.DisplayName,
+                RoutPointDisplayName = goodsDetail.RoutPointFk.DisplayName
+            };
 
             if (output.GoodsDetail.GoodCategoryId != null)
             {
@@ -130,10 +148,10 @@ namespace TACHYON.Goods.GoodsDetails
             var goodsDetail = ObjectMapper.Map<GoodsDetail>(input);
 
 
-            if (AbpSession.TenantId != null)
-            {
-                goodsDetail.TenantId = (int)AbpSession.TenantId;
-            }
+            //if (AbpSession.TenantId != null)
+            //{
+            //    goodsDetail.TenantId = (int)AbpSession.TenantId;
+            //}
 
 
             await _goodsDetailRepository.InsertAsync(goodsDetail);
@@ -157,11 +175,11 @@ namespace TACHYON.Goods.GoodsDetails
 
             var filteredGoodsDetails = _goodsDetailRepository.GetAll()
                         .Include(e => e.GoodCategoryFk)
-                        .WhereIf(!string.IsNullOrWhiteSpace(input.Filter), e => false || e.Name.Contains(input.Filter) || e.Description.Contains(input.Filter) || e.Quantity.Contains(input.Filter) || e.Weight.Contains(input.Filter) || e.Dimentions.Contains(input.Filter) || e.DangerousGoodsCode.Contains(input.Filter))
-                        .WhereIf(!string.IsNullOrWhiteSpace(input.NameFilter), e => e.Name == input.NameFilter)
+                        //.WhereIf(!string.IsNullOrWhiteSpace(input.Filter), e => false || e.Name.Contains(input.Filter) || e.Description.Contains(input.Filter) || e.Quantity.Contains(input.Filter) || e.Weight.Contains(input.Filter) || e.Dimentions.Contains(input.Filter) || e.DangerousGoodsCode.Contains(input.Filter))
+                        //.WhereIf(!string.IsNullOrWhiteSpace(input.NameFilter), e => e.Name == input.NameFilter)
                         .WhereIf(!string.IsNullOrWhiteSpace(input.DescriptionFilter), e => e.Description == input.DescriptionFilter)
-                        .WhereIf(!string.IsNullOrWhiteSpace(input.QuantityFilter), e => e.Quantity == input.QuantityFilter)
-                        .WhereIf(!string.IsNullOrWhiteSpace(input.WeightFilter), e => e.Weight == input.WeightFilter)
+                        .WhereIf(input.QuantityFilter > 0, e => e.Amount == input.QuantityFilter)
+                        .WhereIf(input.WeightFilter.HasValue, e => e.Weight == input.WeightFilter)
                         .WhereIf(!string.IsNullOrWhiteSpace(input.DimentionsFilter), e => e.Dimentions == input.DimentionsFilter)
                         .WhereIf(input.IsDangerousGoodFilter > -1, e => (input.IsDangerousGoodFilter == 1 && e.IsDangerousGood) || (input.IsDangerousGoodFilter == 0 && !e.IsDangerousGood))
                         .WhereIf(!string.IsNullOrWhiteSpace(input.DangerousGoodsCodeFilter), e => e.DangerousGoodsCode == input.DangerousGoodsCodeFilter)
@@ -175,9 +193,9 @@ namespace TACHYON.Goods.GoodsDetails
                          {
                              GoodsDetail = new GoodsDetailDto
                              {
-                                 Name = o.Name,
+                                 //Name = o.Name,
                                  Description = o.Description,
-                                 Quantity = o.Quantity,
+                                 Amount = o.Amount,
                                  Weight = o.Weight,
                                  Dimentions = o.Dimentions,
                                  IsDangerousGood = o.IsDangerousGood,
@@ -195,15 +213,69 @@ namespace TACHYON.Goods.GoodsDetails
 
 
         [AbpAuthorize(AppPermissions.Pages_GoodsDetails)]
-        public async Task<List<GoodsDetailGoodCategoryLookupTableDto>> GetAllGoodCategoryForTableDropdown()
+        public async Task<List<GoodsDetailGoodCategoryLookupTableDto>> GetAllGoodCategoryForTableDropdown(int? fatherId)
         {
             return await _lookup_goodCategoryRepository.GetAll()
+                .Where(x=>x.FatherId==fatherId)
                 .Select(goodCategory => new GoodsDetailGoodCategoryLookupTableDto
                 {
                     Id = goodCategory.Id,
                     DisplayName = goodCategory == null || goodCategory.DisplayName == null ? "" : goodCategory.DisplayName.ToString()
                 }).ToListAsync();
         }
+
+        #region Waybills
+        //public IEnumerable<GetGoodsDetailsForWaybillsOutput> GetShippingrequestGoodsDetailsForSingleDropWaybill()
+        //{
+        //    var goods = _goodsDetailRepository.GetAll()
+        //        .Where(x => x.ShippingRequestId == 1);
+
+        //    var query = goods.Select(x => new
+        //    {
+        //        Description = x.Description,
+        //        TotalAmount = x.TotalAmount,
+        //        Weight = x.Weight,
+        //        UnitOfMeasureDisplayName = x.UnitOfMeasureFk.DisplayName
+        //    });
+
+        //    var output = query.ToList().Select(e =>
+        //        new GetGoodsDetailsForWaybillsOutput()
+        //        {
+        //            Weight = e.Weight,
+        //            UnitOfMeasureDisplayName = e.UnitOfMeasureDisplayName,
+        //            TotalAmount = e.TotalAmount,
+        //            Description = e.Description,
+        //            TotalWeight = goods.Sum(x => x.Weight)
+        //        });
+        //    return output;
+        //}
+
+        public IEnumerable<GetGoodsDetailsForWaybillsOutput> GetShippingrequestGoodsDetailsForMultipleDropWaybill()
+        {
+            var goods = _goodsDetailRepository.GetAll()
+                .Where(x => x.RoutPointId == 62);
+
+            var query = goods.Select(x => new
+            {
+                Description = x.Description,
+                //Amount which will be dropped
+                TotalAmount = x.Amount,
+                UnitOfMeasureDisplayName = x.UnitOfMeasureFk.DisplayName
+            });
+
+            var output = query.ToList().Select(e =>
+                new GetGoodsDetailsForWaybillsOutput()
+                {
+                    UnitOfMeasureDisplayName = e.UnitOfMeasureDisplayName,
+                    TotalAmount = e.TotalAmount,
+                    Description = e.Description,
+                });
+            return output;
+        }
+
+
+
+        #endregion
 
     }
 }

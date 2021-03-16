@@ -31,8 +31,15 @@ namespace TACHYON.Notifications
         public const string TenantDocumentFileUpdate = "App.TenantDocumentFileUpdate";
         public const string AcceptedSubmittedDocument = "App.AcceptedSubmittedDocument";
         public const string RejectedSubmittedDocument = "App.RejectedSubmittedDocument";
+        public const string InvoiceShipperGenerated = "App.InvoiceShipperGenerated";
+        public const string GroupPeriodsGenerated = "App.GroupPeriodsGenerated";
 
+        public const string GroupPeriodOnDemand = "App.GroupPeriodOnDemand";
+        public const string ShipperNotfiyWhenCreditLimitGreaterOrEqualXPercentage = "App.ShipperNotfiyWhenCreditLimitGreaterOrEqualXPercentage";
 
+        public const string StartShippment = "App.StartShippment";
+
+        public const string ShipperShippingRequestFinish = "App.Shipper.ShippingRequest.Finish";
         #endregion
 
     }

@@ -1,0 +1,160 @@
+<div
+  bsModal
+  #modal="bs-modal"
+  (onShown)="onShown()"
+  class="modal fade"
+  tabindex="-1"
+  role="dialog"
+  aria-labelledby="modal"
+  aria-hidden="true"
+  [config]="{ backdrop: 'static' }"
+>
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <form *ngIf="active" #PeriodForm="ngForm" novalidate (ngSubmit)="save()">
+        <div class="modal-header">
+          <h4 class="modal-title">
+            <span>{{ Period.id ? l('EditInvoicePeriod') : l('AddInvoicePeriod') }}</span>
+          </h4>
+          <button type="button" class="close" (click)="close()" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <div class="form-group">
+            <label>{{ 'Name' | localize }}</label>
+            <input #nameInput class="form-control" type="text" name="name" [(ngModel)]="Period.displayName" required minLength="3" maxlength="250" />
+          </div>
+
+          <div class="form-group m-form__group">
+            <label for="periodType">{{ l('InvoicePeriodType') }}</label>
+            <select
+              name="Period.periodType"
+              [(ngModel)]="Period.periodType"
+              (change)="onChangePeriodType($event.target.value)"
+              class="form-control"
+              required
+            >
+              <option value="">{{ l('SelectInvoicePeriodFreqType') }}</option>
+              <option [value]="code.key" *ngFor="let code of PeriodType">
+                {{ code.value | localize }}
+              </option>
+            </select>
+          </div>
+          <div class="form-check">
+            <input class="form-check-input" type="checkbox" [(ngModel)]="Period.shipperOnlyUsed" name="shipperOnlyUsed" id="shipperOnlyUsed" />
+            <label class="form-check-label" for="shipperOnlyUsed">
+              {{ 'shipperOnlyUsed' | localize }}
+            </label>
+          </div>
+          <div class="form-check">
+            <input class="form-check-input" type="checkbox" name="enabled" id="enabled" [(ngModel)]="Period.enabled" />
+            <label class="form-check-label" for="enabled">
+              {{ 'Enabled' | localize }}
+            </label>
+          </div>
+          <ng-container *ngIf="Period.periodType != 1 && Period.periodType != 2">
+            <div class="form-group">
+              <label>{{ 'CreditLimit' | localize }}</label>
+              <input class="form-control" type="number" min="1" name="CreditLimit" [(ngModel)]="Period.creditLimit" />
+            </div>
+          </ng-container>
+          <ng-container *ngIf="Period.periodType == 3 || Period.periodType == 4">
+            <div class="form-group">
+              <label>{{ 'FreqInterval' | localize }}</label>
+              <input class="form-control" type="number" name="freqInterval" min="1" [(ngModel)]="Period.freqInterval" />
+              <span>{{ Period.periodType == 3 ? l('FreqIntervalDays') : l('FreqIntervalWeeks') }}</span>
+            </div>
+          </ng-container>
+
+          <ng-container *ngIf="Period.periodType == 4">
+            <div class="form-group">
+              <label>{{ 'WeekDays' | localize }}</label>
+              <select name="FreqRecurrenceWeekDays" [(ngModel)]="FreqRecurrenceWeekDays" class="form-control" multiple>
+                <option [value]="w.value" *ngFor="let w of Weeks">
+                  {{ w.key }}
+                </option>
+              </select>
+            </div>
+          </ng-container>
+
+          <ng-container *ngIf="Period.periodType == 5">
+            <div class="form-group">
+              <label>{{ 'FreqInterval' | localize }}</label>
+
+              <div class="form-check">
+                <input class="form-check-input" type="radio" name="RDMonthType" id="RDMonthTypeDay" value="1" [(ngModel)]="MonthType" />
+                <label class="form-check-label" for="inlineRadio1">{{ 'Day' | localize }}</label>
+                <div class="form-group">
+                  <input
+                    class="form-control"
+                    type="number"
+                    name="FreqIntervalMonthlyperday"
+                    min="1"
+                    [(ngModel)]="FreqIntervalMonthlyperday"
+                    [attr.disabled]="MonthType != '1' ? '' : null"
+                  />
+                  <span>{{ 'OFMonth_S' | localize }}</span>
+                </div>
+              </div>
+              <div class="form-check">
+                <input class="form-check-input" type="radio" name="RDMonthType" id="RDMonthTypeThe" value="2" [(ngModel)]="MonthType" />
+                <label class="form-check-label" for="inlineRadio2">{{ 'The' | localize }}</label>
+                <div class="form-row">
+                  <div class="col-md-4 mb-3">
+                    <select
+                      name="Period.freqRelativeInterval"
+                      [(ngModel)]="Period.freqRelativeInterval"
+                      [attr.disabled]="MonthType != '2' ? '' : null"
+                      class="form-control"
+                    >
+                      <option [value]="R.key" *ngFor="let R of FreRelativeInterval">
+                        {{ R.value | localize }}
+                      </option>
+                    </select>
+                  </div>
+                  <div class="col-md-4 mb-3">
+                    <select
+                      name="FreqIntervalMonthlyperweek"
+                      [(ngModel)]="FreqIntervalMonthlyperweek"
+                      [attr.disabled]="MonthType != '2' ? '' : null"
+                      class="form-control"
+                    >
+                      <option [value]="w.value" *ngFor="let w of Weeks">
+                        {{ w.key }}
+                      </option>
+                    </select>
+                  </div>
+                  <div class="col-md-4 mb-3">
+                    <span>{{ 'OFMonth_S' | localize }}</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="form-group">
+              <label>{{ 'Months' | localize }}</label>
+              <select name="FreqRecurrenceMonths" [(ngModel)]="FreqRecurrenceMonths" class="form-control" multiple>
+                <option [value]="m.value" *ngFor="let m of Months">
+                  {{ m.key }}
+                </option>
+              </select>
+            </div>
+          </ng-container>
+        </div>
+
+        <div class="modal-footer">
+          <button [disabled]="saving" type="button" class="btn btn-secondary" (click)="close()">{{ 'Cancel' | localize }}</button>
+          <button
+            type="submit"
+            class="btn btn-primary"
+            [disabled]="!PeriodForm.form.valid"
+            [buttonBusy]="saving"
+            [busyText]="l('SavingWithThreeDot' | localize)"
+          >
+            <i class="fa fa-save"></i> <span>{{ 'Save' | localize }}</span>
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

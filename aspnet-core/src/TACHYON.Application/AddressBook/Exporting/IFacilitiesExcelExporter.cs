@@ -6,6 +6,6 @@ namespace TACHYON.AddressBook.Exporting
 {
     public interface IFacilitiesExcelExporter
     {
-        FileDto ExportToFile(List<GetFacilityForViewDto> facilities);
+        FileDto ExportToFile(List<GetFacilityForViewOutput> facilities);
     }
 }

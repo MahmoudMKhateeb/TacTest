@@ -17,7 +17,6 @@ namespace TACHYON.Routs
     {
         public int TenantId { get; set; }
 
-
         [StringLength(RouteConsts.MaxDisplayNameLength, MinimumLength = RouteConsts.MinDisplayNameLength)]
         public virtual string DisplayName { get; set; }
 
@@ -30,15 +29,17 @@ namespace TACHYON.Routs
         [ForeignKey("RoutTypeId")]
         public RoutType RoutTypeFk { get; set; }
 
-        public virtual int? OriginCityId { get; set; }
+        //city
+        public virtual int OriginCityId { get; set; }
 
         [ForeignKey("OriginCityId")]
         public City OriginCityFk { get; set; }
 
-        public virtual int? DestinationCityId { get; set; }
+        public virtual int DestinationCityId { get; set; }
 
         [ForeignKey("DestinationCityId")]
         public City DestinationCityFk { get; set; }
+        //port
         public virtual long? OriginPortId { get; set; }
 
         [ForeignKey("OriginPortId")]

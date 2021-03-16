@@ -13,6 +13,14 @@
     <div [class]="containerClass">
       <div class="card card-custom gutter-b">
         <div class="card-body">
+          <div *ngIf="noOfPostPriceWithoutTrips > 0" class="alert alert-custom alert-light-warning" role="alert">
+            <div class="alert-icon"><i class="flaticon-warning"></i></div>
+            <div class="alert-text">
+              You Have {{ noOfPostPriceWithoutTrips }} Incomplete Shipping Requests Please Complete Them here
+              <a class="mx-1" (click)="GetIncompleteShippingRequests()">here</a>.
+            </div>
+          </div>
+
           <form autocomplete="off" class="form">
             <div>
               <div class="row align-items-center">
@@ -34,14 +42,14 @@
                   </div>
                 </div>
               </div>
-              <div [hidden]="!advancedFiltersAreShown" class="row">
+              <!--<div [hidden]="!advancedFiltersAreShown" class="row">
                 <div class="col-md-12">
                   <div class="kt-separator kt-separator--border-dashed"></div>
                 </div>
 
-                <div class="col-md-3">
+                <div class="col-md-2">
                   <div class="form-group">
-                    <label for="MinVasFilter">{{ l('MinMax') }} {{ l('Vas') }}</label>
+                    <label for="MinVasFilter">{{ l('Min') }} {{ l('Vas') }}</label>
                     <div class="input-group">
                       <input
                         [(ngModel)]="minVasFilter"
@@ -51,60 +59,67 @@
                         placeholder="{{ l('MinValue') }}"
                         type="number"
                       />
+                    </div>
+                  </div>
+                </div>
+                <div class="col-md-2">
+                  <div class="form-group">
+                    <label for="MinVasFilter">{{ l('Max') }} {{ l('Vas') }}</label>
+                    <div class="input-group">
                       <input [(ngModel)]="maxVasFilter" class="form-control" name="maxVasFilter" placeholder="{{ l('MaxValue') }}" type="number" />
                     </div>
                   </div>
                 </div>
                 <!--                <div class="col-md-3">-->
-                <!--                  <div class="form-group">-->
-                <!--                    <label for="TrucksTypeDisplayNameFilter">({{ l('TrucksType') }} ) {{ l('DisplayName') }}</label>-->
-                <!--                    <input-->
-                <!--                      [(ngModel)]="trucksTypeDisplayNameFilter"-->
-                <!--                      class="form-control"-->
-                <!--                      id="TrucksTypeDisplayNameFilter"-->
-                <!--                      name="trucksTypeDisplayNameFilter"-->
-                <!--                      type="text"-->
-                <!--                    />-->
-                <!--                  </div>-->
-                <!--                </div>-->
-                <!--                <div class="col-md-3">-->
-                <!--                  <div class="form-group">-->
-                <!--                    <label for="TrailerTypeDisplayNameFilter">({{ l('TrailerType') }} ) {{ l('DisplayName') }}</label>-->
-                <!--                    <input-->
-                <!--                      [(ngModel)]="trailerTypeDisplayNameFilter"-->
-                <!--                      class="form-control"-->
-                <!--                      id="TrailerTypeDisplayNameFilter"-->
-                <!--                      name="trailerTypeDisplayNameFilter"-->
-                <!--                      type="text"-->
-                <!--                    />-->
-                <!--                  </div>-->
-                <!--                </div>-->
-                <!--                <div class="col-md-3">-->
-                <!--                  <div class="form-group">-->
-                <!--                    <label for="GoodsDetailNameFilter">({{ l('GoodsDetail') }}) {{ l('Name') }}</label>-->
-                <!--                    <input-->
-                <!--                      [(ngModel)]="goodsDetailNameFilter"-->
-                <!--                      class="form-control"-->
-                <!--                      id="GoodsDetailNameFilter"-->
-                <!--                      name="goodsDetailNameFilter"-->
-                <!--                      type="text"-->
-                <!--                    />-->
-                <!--                  </div>-->
-                <!--                </div>-->
-                <!--                <div class="col-md-3">-->
-                <!--                  <div class="form-group">-->
-                <!--                    <label for="RouteDisplayNameFilter">({{ l('Route') }} ) {{ l('DisplayName') }}</label>-->
-                <!--                    <input-->
-                <!--                      [(ngModel)]="routeDisplayNameFilter"-->
-                <!--                      class="form-control"-->
-                <!--                      id="RouteDisplayNameFilter"-->
-                <!--                      name="routeDisplayNameFilter"-->
-                <!--                      type="text"-->
-                <!--                    />-->
-                <!--                  </div>-->
-                <!--                </div>-->
-              </div>
-              <div class="row mb-2">
+              <!--                  <div class="form-group">-->
+              <!--                    <label for="TrucksTypeDisplayNameFilter">({{ l('TrucksType') }} ) {{ l('DisplayName') }}</label>-->
+              <!--                    <input-->
+              <!--                      [(ngModel)]="trucksTypeDisplayNameFilter"-->
+              <!--                      class="form-control"-->
+              <!--                      id="TrucksTypeDisplayNameFilter"-->
+              <!--                      name="trucksTypeDisplayNameFilter"-->
+              <!--                      type="text"-->
+              <!--                    />-->
+              <!--                  </div>-->
+              <!--                </div>-->
+              <!--                <div class="col-md-3">-->
+              <!--                  <div class="form-group">-->
+              <!--                    <label for="TrailerTypeDisplayNameFilter">({{ l('TrailerType') }} ) {{ l('DisplayName') }}</label>-->
+              <!--                    <input-->
+              <!--                      [(ngModel)]="trailerTypeDisplayNameFilter"-->
+              <!--                      class="form-control"-->
+              <!--                      id="TrailerTypeDisplayNameFilter"-->
+              <!--                      name="trailerTypeDisplayNameFilter"-->
+              <!--                      type="text"-->
+              <!--                    />-->
+              <!--                  </div>-->
+              <!--                </div>-->
+              <!--                <div class="col-md-3">-->
+              <!--                  <div class="form-group">-->
+              <!--                    <label for="GoodsDetailNameFilter">({{ l('GoodsDetail') }}) {{ l('Name') }}</label>-->
+              <!--                    <input-->
+              <!--                      [(ngModel)]="goodsDetailNameFilter"-->
+              <!--                      class="form-control"-->
+              <!--                      id="GoodsDetailNameFilter"-->
+              <!--                      name="goodsDetailNameFilter"-->
+              <!--                      type="text"-->
+              <!--                    />-->
+              <!--                  </div>-->
+              <!--                </div>-->
+              <!--                <div class="col-md-3">-->
+              <!--                  <div class="form-group">-->
+              <!--                    <label for="RouteDisplayNameFilter">({{ l('Route') }} ) {{ l('DisplayName') }}</label>-->
+              <!--                    <input-->
+              <!--                      [(ngModel)]="routeDisplayNameFilter"-->
+              <!--                      class="form-control"-->
+              <!--                      id="RouteDisplayNameFilter"-->
+              <!--                      name="routeDisplayNameFilter"-->
+              <!--                      type="text"-->
+              <!--                    />-->
+              <!--                  </div>-->
+              <!--                </div>-->
+              <!--</div>-->
+              <!--<div class="row mb-2">
                 <div class="col-sm-12">
                   <span
                     (click)="advancedFiltersAreShown = !advancedFiltersAreShown"
@@ -116,7 +131,7 @@
                     ><i class="fa fa-angle-up"></i> {{ l('HideAdvancedFilters') }}</span
                   >
                 </div>
-              </div>
+              </div>-->
             </div>
           </form>
 
@@ -137,53 +152,64 @@
               >
                 <ng-template pTemplate="header">
                   <tr>
-                    <th [hidden]="!isGrantedAny('Pages.ShippingRequests.Edit', 'Pages.ShippingRequests.Delete')" style="width: 130px;">
-                      {{ l('Actions') }}
+                    <th pSortableColumn="id" style="width: 50px;">
+                      {{ l('id') }}
+                      <p-sortIcon field="id"></p-sortIcon>
                     </th>
-                    <th pSortableColumn="trucksTypeFk.displayName" style="width: 150px;">
-                      {{ l('DisplayName') }}
-                      <p-sortIcon field="trucksTypeDisplayName"></p-sortIcon>
+                    <th pSortableColumn="shippingRequestStatusName" style="width: 150px;">
+                      {{ l('shippingRequestStatus') }}
+                      <p-sortIcon field="shippingRequestStatusName"></p-sortIcon>
                     </th>
-                    <th pSortableColumn="trailerTypeFk.displayName" style="width: 150px;">
-                      {{ l('DisplayName') }}
-                      <p-sortIcon field="trailerTypeDisplayName"></p-sortIcon>
-                    </th>
-                    <th pSortableColumn="goodsDetailFk.name" style="width: 150px;">
-                      {{ l('Name') }}
-                      <p-sortIcon field="goodsDetailName"></p-sortIcon>
-                    </th>
-                    <th pSortableColumn="routeFk.displayName" style="width: 150px;">
-                      {{ l('DisplayName') }}
-                      <p-sortIcon field="routeDisplayName"></p-sortIcon>
-                    </th>
-                    <th pSortableColumn="vas" style="width: 150px;">
-                      {{ l('Vas') }}
-                      <p-sortIcon field="shippingRequest.vas"></p-sortIcon>
-                    </th>
+
                     <th pSortableColumn="isBid" style="width: 150px;">
-                      {{ l('isBid') }}
+                      {{ l('shippingRequestType') }}
                       <p-sortIcon field="isBid"></p-sortIcon>
                     </th>
-                    <th pSortableColumn="isTachyonDeal" style="width: 150px;">
-                      {{ l('isTachyonDeal') }}
-                      <p-sortIcon field="isTachyonDeal"></p-sortIcon>
+
+                    <th pSortableColumn="routTypeName" style="width: 150px;">
+                      {{ l('routType') }}
+                      <p-sortIcon field="routTypeName"></p-sortIcon>
                     </th>
-                    <th pSortableColumn="price" style="width: 150px;">
-                      {{ l('price') }}
-                      <p-sortIcon field="price"></p-sortIcon>
+                    <th pSortableColumn="originalCityName" style="width: 150px;">
+                      {{ l('originCity') }}
+                      <p-sortIcon field="originalCityName"></p-sortIcon>
                     </th>
-                    <th pSortableColumn="isPriceAccepted" style="width: 150px;">
-                      {{ l('isPriceAccepted') }}
-                      <p-sortIcon field="isPriceAccepted"></p-sortIcon>
+                    <th pSortableColumn="destinationCityName" style="width: 150px;">
+                      {{ l('destinationCity') }}
+                      <p-sortIcon field="destinationCityName"></p-sortIcon>
                     </th>
-                    <th pSortableColumn="isRejected" style="width: 150px;">
-                      {{ l('isRejected') }}
-                      <p-sortIcon field="isRejected"></p-sortIcon>
+                    <th [hidden]="!isGrantedAny('Pages.ShippingRequests.Edit', 'Pages.ShippingRequests.Delete')" style="width: 130px;">
+                      {{ l('Actions') }}
                     </th>
                   </tr>
                 </ng-template>
                 <ng-template let-record="$implicit" pTemplate="body">
                   <tr [ngClass]="record.shippingRequest.price > 0 ? 'table-success' : ''">
+                    <td style="width: 50px;">
+                      <span class="ui-column-title"> {{ l('id') }}</span>
+                      {{ record.shippingRequest.id }}
+                    </td>
+                    <td style="width: 150px;">
+                      <span class="ui-column-title"> {{ l('shippingRequestStatusName') }}</span>
+                      {{ record.shippingRequestStatusName }}
+                    </td>
+
+                    <td style="width: 150px;">
+                      <span class="ui-column-title"> {{ l('shippingRequestType') }}</span>
+                      {{ record.shippingRequest.isBid ? l('Marketplace') : l('TachyonManageService') }}
+                    </td>
+                    <td style="width: 150px;">
+                      <span class="ui-column-title"> {{ l('routType') }}</span>
+                      {{ record.routTypeName }}
+                    </td>
+                    <td style="width: 150px;">
+                      <span class="ui-column-title"> {{ l('originalCity') }}</span>
+                      {{ record.originalCityName }}
+                    </td>
+                    <td style="width: 150px;">
+                      <span class="ui-column-title"> {{ l('destinationCity') }}</span>
+                      {{ record.destinationCityName }}
+                    </td>
                     <td [hidden]="!isGrantedAny('Pages.ShippingRequests.Edit', 'Pages.ShippingRequests.Delete')" style="width: 130px;">
                       <div class="btn-group dropdown" container="body" dropdown>
                         <button class="dropdown-toggle btn btn-sm btn-primary" dropdownToggle>
@@ -235,46 +261,6 @@
                           </li>
                         </ul>
                       </div>
-                    </td>
-                    <td style="width: 150px;">
-                      <span class="ui-column-title"> {{ l('DisplayName') }}</span>
-                      {{ record.trucksTypeDisplayName }}
-                    </td>
-                    <td style="width: 150px;">
-                      <span class="ui-column-title"> {{ l('DisplayName') }}</span>
-                      {{ record.trailerTypeDisplayName }}
-                    </td>
-                    <td style="width: 150px;">
-                      <span class="ui-column-title"> {{ l('Name') }}</span>
-                      {{ record.goodsDetailName }}
-                    </td>
-                    <td style="width: 150px;">
-                      <span class="ui-column-title"> {{ l('DisplayName') }}</span>
-                      {{ record.routeDisplayName }}
-                    </td>
-                    <td style="width: 150px;">
-                      <span class="ui-column-title"> {{ l('Vas') }}</span>
-                      {{ record.shippingRequest.vas }}
-                    </td>
-                    <td style="width: 150px;">
-                      <span class="ui-column-title"> {{ l('isBid') }}</span>
-                      {{ record.shippingRequest.isBid }}
-                    </td>
-                    <td style="width: 150px;">
-                      <span class="ui-column-title"> {{ l('isTachyonDeal') }}</span>
-                      {{ record.shippingRequest.isTachyonDeal }}
-                    </td>
-                    <td style="width: 150px;">
-                      <span class="ui-column-title"> {{ l('price') }}</span>
-                      {{ record.shippingRequest.price }}
-                    </td>
-                    <td style="width: 150px;">
-                      <span class="ui-column-title"> {{ l('isPriceAccepted') }}</span>
-                      {{ record.shippingRequest.isPriceAccepted }}
-                    </td>
-                    <td style="width: 150px;">
-                      <span class="ui-column-title"> {{ l('isRejected') }}</span>
-                      {{ record.shippingRequest.isRejected }}
                     </td>
                   </tr>
                 </ng-template>

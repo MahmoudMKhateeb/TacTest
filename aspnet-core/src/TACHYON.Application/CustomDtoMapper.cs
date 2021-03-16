@@ -1,3 +1,15 @@
+﻿using TACHYON.Cities.CitiesTranslations.Dtos;
+using TACHYON.Cities.CitiesTranslations;
+using TACHYON.Countries.CountriesTranslations.Dtos;
+using TACHYON.Countries.CountriesTranslations;
+using TACHYON.Trucks.PlateTypes.Dtos;
+using TACHYON.Trucks.PlateTypes;
+using TACHYON.Nationalities.Dtos;
+﻿using TACHYON.Trucks.TruckCategories.TruckCapacities.TruckCapacitiesTranslations.Dtos;
+using TACHYON.Trucks.TruckCategories.TruckCapacities.TruckCapacitiesTranslations;
+using TACHYON.Trucks.TruckStatusesTranslations.Dtos;
+using TACHYON.Trucks.TruckStatusesTranslations;
+using TACHYON.Nationalities.Dtos;
 ﻿using TACHYON.Trucks.TruckCategories.TruckCapacities.TruckCapacitiesTranslations.Dtos;
 using TACHYON.Trucks.TruckCategories.TruckCapacities.TruckCapacitiesTranslations;
 using TACHYON.Trucks.TruckStatusesTranslations.Dtos;
@@ -21,6 +33,8 @@ using TACHYON.ShippingRequestVases.Dtos;
 using TACHYON.ShippingRequestVases;
 using TACHYON.Vases.Dtos;
 using TACHYON.Vases;
+﻿using TACHYON.Receivers.Dtos;
+using TACHYON.Receivers;
 using TACHYON.TermsAndConditions;
 using TACHYON.TermsAndConditions.Dtos;
 using TACHYON.Trucks.TruckCategories.TruckCapacities;
@@ -41,6 +55,7 @@ using TACHYON.UnitOfMeasures;
 using TACHYON.AddressBook.Dtos;
 using TACHYON.AddressBook;
 using Abp.Application.Editions;
+﻿using Abp.Application.Editions;
 using Abp.Application.Features;
 using Abp.Auditing;
 using Abp.Authorization;
@@ -54,6 +69,13 @@ using Abp.Organizations;
 using Abp.UI.Inputs;
 using Abp.Webhooks;
 using AutoMapper;
+using System;
+using System.Collections.ObjectModel;
+using System.Linq;
+using TACHYON.AddressBook;
+using TACHYON.AddressBook.Dtos;
+using TACHYON.AddressBook.Ports;
+using TACHYON.AddressBook.Ports.Dtos;
 using TACHYON.Auditing.Dto;
 using TACHYON.Authorization.Accounts.Dto;
 using TACHYON.Authorization.Delegation;
@@ -68,17 +90,17 @@ using TACHYON.Authorization.Users.Profile.Dto;
 using TACHYON.Chat;
 using TACHYON.Chat.Dto;
 using TACHYON.Cities;
-using TACHYON.Cities;
-using TACHYON.Cities.Dtos;
 using TACHYON.Cities.Dtos;
 using TACHYON.Countries;
-using TACHYON.Countries;
-using TACHYON.Countries.Dtos;
 using TACHYON.Countries.Dtos;
 using TACHYON.Documents.DocumentFiles;
 using TACHYON.Documents.DocumentFiles.Dtos;
+using TACHYON.Documents.DocumentsEntities;
+using TACHYON.Documents.DocumentsEntities.Dtos;
 using TACHYON.Documents.DocumentTypes;
 using TACHYON.Documents.DocumentTypes.Dtos;
+using TACHYON.Documents.DocumentTypeTranslations;
+using TACHYON.Documents.DocumentTypeTranslations.Dtos;
 using TACHYON.Drivers.importing.Dto;
 using TACHYON.DynamicEntityParameters.Dto;
 using TACHYON.Editions;
@@ -87,12 +109,8 @@ using TACHYON.Friendships;
 using TACHYON.Friendships.Cache;
 using TACHYON.Friendships.Dto;
 using TACHYON.Goods.GoodCategories;
-using TACHYON.Goods.GoodCategories;
-using TACHYON.Goods.GoodCategories.Dtos;
 using TACHYON.Goods.GoodCategories.Dtos;
 using TACHYON.Goods.GoodsDetails;
-using TACHYON.Goods.GoodsDetails;
-using TACHYON.Goods.GoodsDetails.Dtos;
 using TACHYON.Goods.GoodsDetails.Dtos;
 using TACHYON.Localization.Dto;
 using TACHYON.MultiTenancy;
@@ -100,61 +118,150 @@ using TACHYON.MultiTenancy.Dto;
 using TACHYON.MultiTenancy.HostDashboard.Dto;
 using TACHYON.MultiTenancy.Payments;
 using TACHYON.MultiTenancy.Payments.Dto;
+using TACHYON.Nationalities;
+using TACHYON.Nationalities.Dtos;
+using TACHYON.Nationalities.NationalitiesTranslation;
+using TACHYON.Nationalities.NationalitiesTranslation.Dtos;
 using TACHYON.Notifications.Dto;
 using TACHYON.Offers;
-using TACHYON.Offers;
-using TACHYON.Offers.Dtos;
 using TACHYON.Offers.Dtos;
 using TACHYON.Organizations.Dto;
-using TACHYON.Routs;
+using TACHYON.Packing.PackingTypes;
+using TACHYON.Packing.PackingTypes.Dtos;
+using TACHYON.PickingTypes;
+using TACHYON.PickingTypes.Dtos;
 using TACHYON.Routs;
 using TACHYON.Routs.Dtos;
-using TACHYON.Routs.Dtos;
-using TACHYON.Routs.RoutSteps;
+using TACHYON.Routs.RoutPoints;
+using TACHYON.Routs.RoutPoints.Dtos;
 using TACHYON.Routs.RoutSteps;
 using TACHYON.Routs.RoutSteps.Dtos;
-using TACHYON.Routs.RoutSteps.Dtos;
 using TACHYON.Routs.RoutTypes;
-using TACHYON.Routs.RoutTypes;
-using TACHYON.Routs.RoutTypes.Dtos;
 using TACHYON.Routs.RoutTypes.Dtos;
 using TACHYON.Sessions.Dto;
+using TACHYON.Shipping.Drivers.Dto;
 using TACHYON.Shipping.ShippingRequestBids;
 using TACHYON.Shipping.ShippingRequestBids.Dtos;
 using TACHYON.Shipping.ShippingRequests;
 using TACHYON.Shipping.ShippingRequests.Dtos;
+using TACHYON.Shipping.ShippingRequestStatuses;
+using TACHYON.Shipping.ShippingRequestStatuses.Dtos;
+using TACHYON.Shipping.ShippingRequestTrips;
+using TACHYON.Shipping.ShippingTypes;
+using TACHYON.Shipping.ShippingTypes.Dtos;
+using TACHYON.Shipping.Trips;
+using TACHYON.Shipping.Trips.Dto;
+using TACHYON.Shipping.TripStatuses;
+using TACHYON.Shipping.TripStatuses.Dtos;
+using TACHYON.ShippingRequestTripVases;
+using TACHYON.ShippingRequestTripVases.Dtos;
+using TACHYON.ShippingRequestVases;
+using TACHYON.ShippingRequestVases.Dtos;
+using TACHYON.TermsAndConditions;
+using TACHYON.TermsAndConditions.Dtos;
 using TACHYON.Trailers;
-using TACHYON.Trailers;
-using TACHYON.Trailers.Dtos;
 using TACHYON.Trailers.Dtos;
 using TACHYON.Trailers.PayloadMaxWeights;
 using TACHYON.Trailers.PayloadMaxWeights.Dtos;
 using TACHYON.Trailers.TrailerStatuses;
-using TACHYON.Trailers.TrailerStatuses;
-using TACHYON.Trailers.TrailerStatuses.Dtos;
 using TACHYON.Trailers.TrailerStatuses.Dtos;
 using TACHYON.Trailers.TrailerTypes;
-using TACHYON.Trailers.TrailerTypes;
-using TACHYON.Trailers.TrailerTypes.Dtos;
 using TACHYON.Trailers.TrailerTypes.Dtos;
 using TACHYON.Trucks;
-using TACHYON.Trucks;
-using TACHYON.Trucks.Dtos;
 using TACHYON.Trucks.Dtos;
 using TACHYON.Trucks.Importing.Dto;
+using TACHYON.Trucks.TruckCategories.TransportTypes;
+using TACHYON.Trucks.TruckCategories.TransportTypes.Dtos;
+using TACHYON.Trucks.TruckCategories.TransportTypes.TransportTypesTranslations;
+using TACHYON.Trucks.TruckCategories.TransportTypes.TransportTypesTranslations.Dtos;
+using TACHYON.Trucks.TruckCategories.TruckCapacities;
 using TACHYON.Trucks.TruckCategories.TruckCapacities.Dtos;
 using TACHYON.Trucks.TrucksTypes;
-using TACHYON.Trucks.TrucksTypes;
 using TACHYON.Trucks.TrucksTypes.Dtos;
-using TACHYON.Trucks.TrucksTypes.Dtos;
+using TACHYON.UnitOfMeasures;
+using TACHYON.UnitOfMeasures.Dtos;
+using TACHYON.Vases;
+using TACHYON.Vases.Dtos;
 using TACHYON.WebHooks.Dto;
+using TACHYON.Invoices.Periods.Dto;
+using TACHYON.Invoices.Dto;
+using TACHYON.Invoices;
+using TACHYON.Invoices.Periods;
+using TACHYON.Invoices.Balances;
+using TACHYON.Invoices.Balances.Dto;
+using TACHYON.Invoices.Groups;
+using TACHYON.Invoices.Groups.Dto;
+using System;
+using TACHYON.Invoices.Transactions.Dto;
 
 namespace TACHYON
 {
     internal static class CustomDtoMapper
     {
+        private static IMapper _Mapper;
+        public static void SetMapper(IMapper Mapper)
+        {
+            _Mapper = Mapper;
+        }
         public static void CreateMappings(IMapperConfigurationExpression configuration)
         {
+            configuration.CreateMap<CreateOrEditCitiesTranslationDto, CitiesTranslation>().ReverseMap();
+            configuration.CreateMap<CitiesTranslationDto, CitiesTranslation>().ReverseMap();
+            configuration.CreateMap<CreateOrEditCountriesTranslationDto, CountriesTranslation>().ReverseMap();
+            configuration.CreateMap<CountriesTranslationDto, CountriesTranslation>().ReverseMap();
+            configuration.CreateMap<CreateOrEditPlateTypeDto, PlateType>().ReverseMap();
+            configuration.CreateMap<PlateTypeDto, PlateType>().ReverseMap();
+            configuration.CreateMap<CreateOrEditTruckCapacitiesTranslationDto, TruckCapacitiesTranslation>().ReverseMap();
+            configuration.CreateMap<TruckCapacitiesTranslationDto, TruckCapacitiesTranslation>().ReverseMap();
+            configuration.CreateMap<CreateOrEditTruckStatusesTranslationDto, TruckStatusesTranslation>().ReverseMap();
+            configuration.CreateMap<TruckStatusesTranslationDto, TruckStatusesTranslation>().ReverseMap();
+            #region Trips
+                configuration.CreateMap<CreateOrEditTripStatusDto, TripStatus>().ReverseMap();
+                configuration.CreateMap<TripStatusDto, TripStatus>().ReverseMap();
+
+            configuration.CreateMap<ShippingRequestTrip,ShippingRequestsTripListDto>()
+                 .ForMember(dst => dst.OriginFacility, opt => opt.MapFrom(src => src.OriginFacilityFk!=null ? $"{src.OriginFacilityFk.Name} - {src.OriginFacilityFk.Address}" :""))
+                 .ForMember(dst => dst.DestinationFacility, opt => opt.MapFrom(src => src.DestinationFacilityFk!=null ?$"{src.DestinationFacilityFk.Name} - {src.DestinationFacilityFk.Address}" :""))
+                 .ForMember(dst => dst.Truck, opt => opt.MapFrom(src => src.AssignedTruckFk!=null ?src.AssignedTruckFk.ModelName :string.Empty))
+                 .ForMember(dst => dst.Driver, opt => opt.MapFrom(src => src.AssignedDriverUserFk!=null ?src.AssignedDriverUserFk.Name :string.Empty))
+                 .ForMember(dst => dst.Status, opt => opt.MapFrom(src => Enum.GetName(typeof(ShippingRequestTripStatus), src.Status)))
+
+                 .ReverseMap();
+            configuration.CreateMap<ShippingRequestTrip, ShippingRequestsTripForViewDto>()
+                 .ForMember(dst => dst.OriginFacility, opt => opt.MapFrom(src => src.OriginFacilityFk != null ? $"{src.OriginFacilityFk.Name} - {src.OriginFacilityFk.Address}" : ""))
+                 .ForMember(dst => dst.DestinationFacility, opt => opt.MapFrom(src => src.DestinationFacilityFk != null ? $"{src.DestinationFacilityFk.Name} - {src.DestinationFacilityFk.Address}" : ""))
+                 .ForMember(dst => dst.Truck, opt => opt.MapFrom(src => src.AssignedTruckFk != null ? src.AssignedTruckFk.ModelName : string.Empty))
+                 .ForMember(dst => dst.Driver, opt => opt.MapFrom(src => src.AssignedDriverUserFk != null ? src.AssignedDriverUserFk.Name : string.Empty))
+                 .ForMember(dst => dst.Status, opt => opt.MapFrom(src => Enum.GetName(typeof(ShippingRequestTripStatus), src.Status)))
+                .ReverseMap();
+
+            
+            configuration.CreateMap<ShippingRequestTrip, ShippingRequestTripDriverListDto>()
+                .ForMember(dst => dst.Source, opt => opt.MapFrom(src => $"{src.ShippingRequestFk.RouteFk.OriginCityFk.DisplayName} - {src.OriginFacilityFk.Address}"))
+                .ForMember(dst => dst.Distination, opt => opt.MapFrom(src => $"{src.ShippingRequestFk.RouteFk.DestinationCityFk.DisplayName} - {src.DestinationFacilityFk.Address}"))
+                .ForMember(dst => dst.RoutTypeId, opt => opt.MapFrom(src => src.ShippingRequestFk.RouteFk.RoutTypeId))
+                .ForMember(dst => dst.StartDate, opt => opt.MapFrom(src => src.StartTripDate))
+                .ForMember(dst => dst.EndDate, opt => opt.MapFrom(src => src.EndTripDate))
+                .ForMember(dst => dst.Status, opt => opt.MapFrom(src => src.Status));
+
+            configuration.CreateMap<ShippingRequestTrip, ShippingRequestTripDriverDetailsDto>()
+            .ForMember(dst => dst.Source, opt => opt.MapFrom(src => $"{src.ShippingRequestFk.RouteFk.OriginCityFk.DisplayName} - {src.OriginFacilityFk.Address}"))
+            .ForMember(dst => dst.Distination, opt => opt.MapFrom(src => $"{src.ShippingRequestFk.RouteFk.DestinationCityFk.DisplayName} - {src.DestinationFacilityFk.Address}"))
+            .ForMember(dst => dst.Status, opt => opt.MapFrom(src => src.Status))
+            .ForMember(dst => dst.TotalWeight, opt => opt.MapFrom(src => src.ShippingRequestFk.TotalWeight))
+            .ForMember(dst => dst.PackingType, opt => opt.MapFrom(src => src.ShippingRequestFk.PackingTypeFk.DisplayName))
+            .ForMember(dst => dst.RoutePoints, opt => opt.MapFrom(src => src.RoutPoints));
+
+
+            configuration.CreateMap<RoutPoint, ShippingRequestTripDriverRoutePointDto>()
+            .ForMember(dst => dst.Address, opt => opt.MapFrom(src => $"{src.FacilityFk.Name} - {src.FacilityFk.Address}"))
+            .ForMember(dst => dst.Location, opt => opt.MapFrom(src => src.FacilityFk.Location));
+            #endregion
+
+            configuration.CreateMap<CreateOrEditPackingTypeDto, PackingType>().ReverseMap();
+            configuration.CreateMap<PackingTypeDto, PackingType>().ReverseMap();
+            configuration.CreateMap<CreateOrEditShippingTypeDto, ShippingType>().ReverseMap();
+            configuration.CreateMap<ShippingTypeDto, ShippingType>().ReverseMap();
             configuration.CreateMap<CreateOrEditTruckCapacitiesTranslationDto, TruckCapacitiesTranslation>().ReverseMap();
             configuration.CreateMap<TruckCapacitiesTranslationDto, TruckCapacitiesTranslation>().ReverseMap();
             configuration.CreateMap<CreateOrEditTruckStatusesTranslationDto, TruckStatusesTranslation>().ReverseMap();
@@ -179,10 +286,11 @@ namespace TACHYON
             configuration.CreateMap<VasPriceDto, VasPrice>().ReverseMap();
             configuration.CreateMap<CreateOrEditVasDto, Vas>().ReverseMap();
             configuration.CreateMap<VasDto, Vas>().ReverseMap();
+            configuration.CreateMap<CreateOrEditReceiverDto, Receiver>().ReverseMap();
+            configuration.CreateMap<ReceiverDto, Receiver>().ReverseMap();
             configuration.CreateMap<CreateOrEditTermAndConditionTranslationDto, TermAndConditionTranslation>().ReverseMap();
             configuration.CreateMap<TermAndConditionTranslationDto, TermAndConditionTranslation>().ReverseMap();
             configuration.CreateMap<CreateOrEditTermAndConditionDto, TermAndCondition>().ReverseMap();
-            //configuration.CreateMap<TermAndConditionDto, TermAndCondition>().ReverseMap();
             configuration.CreateMap<CreateOrEditCapacityDto, Capacity>().ReverseMap();
             configuration.CreateMap<CapacityDto, Capacity>().ReverseMap();
             configuration.CreateMap<CreateOrEditTransportTypeDto, TransportType>().ReverseMap();
@@ -192,16 +300,19 @@ namespace TACHYON
             configuration.CreateMap<CreateOrEditDocumentsEntityDto, DocumentsEntity>().ReverseMap();
             configuration.CreateMap<DocumentFileForCreateOrEditDto, DocumentFile>().ReverseMap();
             configuration.CreateMap<DocumentsEntityDto, DocumentsEntity>().ReverseMap();
-            configuration.CreateMap<CreateOrEditShippingRequestStatusDto, ShippingRequestStatus>().ReverseMap();
-            configuration.CreateMap<ShippingRequestStatusDto, ShippingRequestStatus>().ReverseMap();
-            configuration.CreateMap<CreateOrEditPickingTypeDto, PickingType>().ReverseMap();
-            configuration.CreateMap<PickingTypeDto, PickingType>().ReverseMap();
+            configuration.CreateMap<CreateOrEditShippingRequestStatusDto, Shipping.ShippingRequestStatuses.ShippingRequestStatus>().ReverseMap();
+            configuration.CreateMap<ShippingRequestStatusDto, Shipping.ShippingRequestStatuses.ShippingRequestStatus>().ReverseMap();
+            //configuration.CreateMap<CreateOrEditPickingTypeDto, PickingType>().ReverseMap();
+            //configuration.CreateMap<PickingTypeDto, PickingType>().ReverseMap();
             configuration.CreateMap<CreateOrEditPortDto, Port>().ReverseMap();
             configuration.CreateMap<PortDto, Port>().ReverseMap();
             configuration.CreateMap<CreateOrEditUnitOfMeasureDto, UnitOfMeasure>().ReverseMap();
             configuration.CreateMap<UnitOfMeasureDto, UnitOfMeasure>().ReverseMap();
             configuration.CreateMap<CreateOrEditFacilityDto, Facility>().ReverseMap();
-            configuration.CreateMap<FacilityDto, Facility>().ReverseMap();
+            configuration.CreateMap<FacilityDto, Facility>()
+                 .ForPath(dst => dst.Location.X, opt => opt.MapFrom(src => src.Longitude))
+                 .ForPath(dst => dst.Location.Y, opt => opt.MapFrom(src => src.Latitude))
+                .ReverseMap();
             configuration.CreateMap<CreateOrEditDocumentFileDto, DocumentFile>().ReverseMap();
             configuration.CreateMap<DocumentFileDto, DocumentFile>().ReverseMap();
             configuration.CreateMap<ImportTruckDocumentFileDto, DocumentFile>().ReverseMap();
@@ -212,10 +323,41 @@ namespace TACHYON
             //    .ForPath(dst => dst.DocumentsEntityFk.DisplayName, opt => opt.MapFrom(src => src.RequiredFrom))
             //    .ForPath(dst => dst.EditionFk.DisplayName, opt => opt.MapFrom(src => src.Edition))
             //    .ReverseMap();
+
+            
+            configuration.CreateMap<CreateOrEditShippingRequestVasListDto, ShippingRequestVas>().ReverseMap();
+            configuration.CreateMap<CreateOrEditRouteDto, Route>().ReverseMap();
+
             configuration.CreateMap<CreateOrEditShippingRequestDto, ShippingRequest>()
-                .ForMember(dst => dst.RouteFk, opt => opt.MapFrom(src => src.CreateOrEditRouteDto))
-                .ForMember(dst => dst.RoutSteps, opt => opt.MapFrom(src => src.CreateOrEditRoutStepDtoList))
+                .ForMember(d => d.ShippingRequestVases, opt => opt.Ignore())
+            .AfterMap(AddOrUpdateShippingRequest)
                 .ReverseMap();
+
+            configuration.CreateMap<CreateOrEditShippingRequestTripDto, ShippingRequestTrip>()
+                .ForMember(d=>d.RoutPoints,opt=>opt.Ignore())
+                .ForMember(d => d.ShippingRequestTripVases, opt => opt.Ignore())
+                .AfterMap(AddOrUpdateShippingRequestTrip);
+            
+
+            configuration.CreateMap<ShippingRequestTrip,CreateOrEditShippingRequestTripDto>()
+                .ForMember(dest => dest.RoutPoints, opt => opt.MapFrom(src => src.RoutPoints))
+                .ForMember(dest => dest.ShippingRequestTripVases, opt => opt.MapFrom(src => src.ShippingRequestTripVases));
+
+
+            configuration.CreateMap<ShippingRequestTripVas,CreateOrEditShippingRequestTripVasDto>()
+                   .ForMember(dst => dst.Name, opt => opt.MapFrom(src => src.ShippingRequestVasFk.VasFk.DisplayName))
+                .ReverseMap();
+            configuration.CreateMap<ShippingRequestTripVas,ShippingRequestTripVasDto>()
+            .ForMember(dst => dst.Name, opt => opt.MapFrom(src => src.ShippingRequestVasFk.VasFk.Name))
+             .ReverseMap();
+
+            configuration.CreateMap<ShippingRequestVasListOutput, ShippingRequestVas>()
+                .ReverseMap();
+            configuration.CreateMap<CreateOrEditShippingRequestVasListDto, ShippingRequestVas>()
+                .ReverseMap();
+            configuration.CreateMap<CreateOrEditShippingRequestVasListDto, ShippingRequestVas>()
+                .ReverseMap();
+            
             configuration.CreateMap<ShippingRequestBidDto, ShippingRequestBid>()
                 .ForPath(dst => dst.Tenant.Name, opt => opt.MapFrom(src => src.CarrierName))
                 .ReverseMap();
@@ -225,8 +367,26 @@ namespace TACHYON
             configuration.CreateMap<GoodsDetailDto, GoodsDetail>().ReverseMap();
             configuration.CreateMap<CreateOrEditOfferDto, Offer>().ReverseMap();
             configuration.CreateMap<OfferDto, Offer>().ReverseMap();
-            configuration.CreateMap<CreateOrEditRoutStepDto, RoutStep>().ReverseMap();
+            configuration.CreateMap<CreateOrEditRoutStepDto, RoutStep>()
+                .ForMember(dst => dst.SourceRoutPointFk, opt => opt.MapFrom(src => src.CreateOrEditSourceRoutPointInputDto))
+                .ForMember(dest => dest.DestinationRoutPointFk, opt => opt.MapFrom(src => src.CreateOrEditDestinationRoutPointInputDto))
+                .ReverseMap();
+
             configuration.CreateMap<RoutStepDto, RoutStep>().ReverseMap();
+
+            configuration.CreateMap<RoutPointDto, RoutPoint>()
+                .ForPath(dest => dest.FacilityFk.Location.X, opt => opt.MapFrom(src => src.Longitude))
+                .ForPath(dest => dest.FacilityFk.Location.Y, opt => opt.MapFrom(src => src.Latitude))
+                .ReverseMap();
+
+            configuration.CreateMap<CreateOrEditRoutPointDto, RoutPoint>()
+                .AfterMap(AddOrUpdateShippingRequestTripRoutePointGoods);
+
+            configuration.CreateMap<RoutPoint, CreateOrEditRoutPointDto>()
+                .ForMember(dest => dest.GoodsDetailListDto, opt => opt.MapFrom(src => src.GoodsDetails))
+                .ForPath(dest => dest.Longitude, opt => opt.MapFrom(src => src.FacilityFk.Location.X))
+                .ForPath(dest => dest.Latitude, opt => opt.MapFrom(src => src.FacilityFk.Location.Y));
+
             configuration.CreateMap<CreateOrEditRouteDto, Route>().ReverseMap();
             configuration.CreateMap<RouteDto, Route>().ReverseMap();
             configuration.CreateMap<CreateOrEditCityDto, City>().ReverseMap();
@@ -364,9 +524,46 @@ namespace TACHYON
             //User Delegations
             configuration.CreateMap<CreateUserDelegationDto, UserDelegation>();
 
+
+            /*Invoices*/
+
+            configuration.CreateMap<InvoicePeriodDto, InvoicePeriod>();
+            configuration.CreateMap<InvoicePeriod, InvoicePeriodDto>();
+            configuration.CreateMap<Invoice, InvoiceListDto>()
+                .ForMember(dto => dto.TenantName, options => options.MapFrom(entity => entity.Tenant.Name))
+                .ForMember(dto => dto.Period, options => options.MapFrom(entity => entity.InvoicePeriod.DisplayName));
+
+            configuration.CreateMap<Invoice, InvoiceInfoDto>()
+                .ForMember(dto => dto.ClientName, options => options.MapFrom(entity => entity.Tenant.Name))
+                .ForMember(dto => dto.Address, options => options.MapFrom(entity => entity.Tenant.Address))
+                .ForMember(dto => dto.Period, options => options.MapFrom(entity => entity.InvoicePeriod.DisplayName));
+
+            configuration.CreateMap<BalanceRecharge, BalanceRechargeListDto>()
+               .ForMember(dto => dto.TenantName, options => options.MapFrom(entity => entity.Tenant.Name));
+
+            configuration.CreateMap<CreateBalanceRechargeInput, BalanceRecharge>();
+            
+
+            configuration.CreateMap<Tenant, InvoiceTenantDto>()
+               .ForMember(dto => dto.DisplayName, options => options.MapFrom(entity => entity.Name))
+               .ForMember(dto => dto.Group, options => options.MapFrom(entity => entity.Edition.Name));
+
+            configuration.CreateMap<GroupPeriod, GroupPeriodListDto>()
+                .ForMember(dto => dto.TenantName, options => options.MapFrom(entity => entity.Tenant.Name))
+                .ForMember(dto => dto.Period, options => options.MapFrom(entity => entity.InvoicePeriod.DisplayName));
+
+            configuration.CreateMap<GroupPeriod, GroupPeriodInfoDto>()
+                .ForMember(dto => dto.ClientName, options => options.MapFrom(entity => entity.Tenant.Name))
+                .ForMember(dto => dto.Address, options => options.MapFrom(entity => entity.Tenant.Address))
+                .ForMember(dto => dto.Period, options => options.MapFrom(entity => entity.InvoicePeriod.DisplayName));
+
+
+            configuration.CreateMap<TACHYON.Invoices.Transactions.Transaction, TransactionListDto>()
+                .ForMember(dto => dto.ClientName, options => options.MapFrom(entity => entity.Tenant.Name))
+                .ForMember(dto => dto.Channel, options => options.MapFrom(entity => entity.Channel.Channel));
+            
             /* ADD YOUR OWN CUSTOM AUTOMAPPER MAPPINGS HERE */
         }
-
         /// <summary>
         /// MultiLingualMapping configuration 
         /// </summary>
@@ -441,5 +638,94 @@ namespace TACHYON
                 .ForMember(dst => dst.Id, opt => opt.MapFrom(src => src.Id.ToString()))
                 .ReverseMap();
         }
+
+        private static void AddOrUpdateShippingRequest(CreateOrEditShippingRequestDto dto, ShippingRequest Request)
+        {
+            if (Request.ShippingRequestVases == null) Request.ShippingRequestVases = new Collection<ShippingRequestVas>();
+            foreach (var vas in dto.ShippingRequestVasList)
+            {
+
+                if (!vas.Id.HasValue )
+                {
+                    Request.ShippingRequestVases.Add(_Mapper.Map<ShippingRequestVas>(vas));
+                }
+                else
+                {
+                    _Mapper.Map(vas, Request.ShippingRequestVases.SingleOrDefault(c => c.Id == vas.Id));
+                }
+            }
+
+        }
+
+        private static void AddOrUpdateShippingRequestTrip(CreateOrEditShippingRequestTripDto dto,ShippingRequestTrip trip)
+        {
+            if (dto.RoutPoints != null)
+            {
+
+
+                //map Points 
+                if (trip.RoutPoints == null) trip.RoutPoints = new Collection<RoutPoint>();
+                foreach (var routPoint in dto.RoutPoints)
+                {
+                    //Add
+                    if (!routPoint.Id.HasValue)
+                    {
+                        trip.RoutPoints.Add(_Mapper.Map<RoutPoint>(routPoint));
+
+                    }
+
+                    //update
+                    else
+                    {
+                        _Mapper.Map(routPoint, trip.RoutPoints.SingleOrDefault(c => c.Id == routPoint.Id));
+                    }
+                }
+            }
+            if (trip.ShippingRequestTripVases == null) trip.ShippingRequestTripVases = new Collection<ShippingRequestTripVas>();
+            //map Vases
+            if (dto.ShippingRequestTripVases !=null)
+            {
+                foreach (var vas in dto.ShippingRequestTripVases)
+                {
+                    //Add
+                    if (!vas.Id.HasValue)
+                    {
+                        trip.ShippingRequestTripVases.Add(_Mapper.Map<ShippingRequestTripVas>(vas));
+                    }
+
+                    //update
+                    else
+                    {
+                        _Mapper.Map(vas, trip.ShippingRequestTripVases.SingleOrDefault(c => c.Id == vas.Id));
+                    }
+                }
+            }
+
+        }
+
+        private static void AddOrUpdateShippingRequestTripRoutePointGoods(CreateOrEditRoutPointDto dto, RoutPoint point)
+        {
+            if (dto.GoodsDetailListDto == null) return;
+            if (point.GoodsDetails == null) point.GoodsDetails = new Collection<GoodsDetail>();
+            foreach (var good in dto.GoodsDetailListDto)
+            {
+                //Add
+                if (!good.Id.HasValue)
+                {
+                    point.GoodsDetails.Add(_Mapper.Map<GoodsDetail>(good));
+
+                }
+
+                //update
+                else
+                {
+                    _Mapper.Map(good, point.GoodsDetails.SingleOrDefault(c => c.Id == good.Id));
+                }
+
+            }
+
+        }
+
+        
     }
 }

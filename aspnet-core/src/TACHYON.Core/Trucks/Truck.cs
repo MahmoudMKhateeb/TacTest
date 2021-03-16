@@ -35,12 +35,6 @@ namespace TACHYON.Trucks
 
         public virtual string Capacity { get; set; }
 
-        //[Required]
-        //[StringLength(TruckConsts.MaxLicenseNumberLength, MinimumLength = TruckConsts.MinLicenseNumberLength)]
-        //public virtual string LicenseNumber { get; set; }
-
-        //public virtual DateTime LicenseExpirationDate { get; set; }
-
         public virtual bool? IsAttachable { get; set; }
 
         [StringLength(TruckConsts.MaxNoteLength, MinimumLength = TruckConsts.MinNoteLength)]
@@ -67,8 +61,6 @@ namespace TACHYON.Trucks
         //public int? RentDuration { get; set; }
 
         public virtual Guid? PictureId { get; set; }
-
-
 
         // todo make sure those are nullable
 

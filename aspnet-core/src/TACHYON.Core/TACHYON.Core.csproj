@@ -17,6 +17,13 @@
     <EmbeddedResource Include="Localization\TACHYON\*.xml;Net\Emailing\EmailTemplates\default.html" Exclude="bin\**;obj\**;**\*.xproj;packages\**;@(EmbeddedResource)" />
   </ItemGroup>
   <ItemGroup>
+    <None Remove="Net\Emailing\EmailTemplates\ShipperNotfiyWhenCreditLimitGreaterOrEqualXPercentage.html" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Net\Emailing\EmailTemplates\ShipperNotfiyWhenCreditLimitGreaterOrEqualXPercentage.html" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="Abp.Quartz" Version="5.10.0" />
     <PackageReference Include="Microsoft.Extensions.Configuration.EnvironmentVariables" Version="3.1.5" />
     <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="3.1.5" />
     <PackageReference Include="Microsoft.Extensions.Configuration.AzureKeyVault" Version="3.1.5" />
@@ -34,6 +41,7 @@
     <PackageReference Include="Abp.MailKit" Version="5.10.1" />
     <PackageReference Include="Abp.Zero.Ldap" Version="5.10.1" />
     <PackageReference Include="Twilio" Version="5.44.0" />
+    <PackageReference Include="Unifonic" Version="1.0.0" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\TACHYON.Application.Shared\TACHYON.Application.Shared.csproj" />

@@ -42,13 +42,13 @@ export class CreateOrEditRoutStepModalComponent extends AppComponentBase {
 
   constructor(injector: Injector, private _routStepsServiceProxy: RoutStepsServiceProxy) {
     super(injector);
-    this.routStep.createOrEditGoodsDetailDto = new CreateOrEditGoodsDetailDto();
+    // this.routStep.createOrEditGoodsDetailDto = new CreateOrEditGoodsDetailDto();
   }
 
   show(routStepId?: number): void {
     if (!routStepId) {
       this.routStep = new CreateOrEditRoutStepDto();
-      this.routStep.createOrEditGoodsDetailDto = new CreateOrEditGoodsDetailDto();
+      // this.routStep.createOrEditGoodsDetailDto = new CreateOrEditGoodsDetailDto();
 
       this.routStep.id = routStepId;
       this.cityDisplayName = '';
@@ -61,14 +61,14 @@ export class CreateOrEditRoutStepModalComponent extends AppComponentBase {
       this.modal.show();
     } else {
       this._routStepsServiceProxy.getRoutStepForEdit(routStepId).subscribe((result) => {
-        this.routStep = result.routStep;
-        this.trucksTypeDisplayName = result.trucksTypeDisplayName;
+        // this.routStep = result.routStep;
+        // this.trucksTypeDisplayName = result.trucksTypeDisplayName;
         this.trailerTypeDisplayName = result.trailerTypeDisplayName;
-        this.goodsDetailName = result.goodsDetailName;
+        // this.goodsDetailName = result.goodsDetailName;
         this.routeDisplayName = result.routeDisplayName;
 
-        this.cityDisplayName = result.cityDisplayName;
-        this.cityDisplayName2 = result.cityDisplayName2;
+        // this.cityDisplayName = result.cityDisplayName;
+        // this.cityDisplayName2 = result.cityDisplayName2;
 
         this.active = true;
         this.modal.show();

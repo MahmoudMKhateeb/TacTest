@@ -108,8 +108,68 @@ namespace TACHYON.Notifications
               AppNotificationNames.TenantDocumentFileUpdate,
               displayName: L("TenantDocumentFileUpdateNotificationDefinition"),
                permissionDependency: new SimplePermissionDependency(AppPermissions.Pages_Tenants)
+              )
+          );
+
+
+            #region Invoices
+            #region Shipper
+            context.Manager.Add(
+          new NotificationDefinition(
+              AppNotificationNames.InvoiceShipperGenerated,
+              displayName: L("NewInvoiceShipperGenerated"),
+               permissionDependency: new SimplePermissionDependency(AppFeatures.Shipper)
           )
+
       );
+
+            context.Manager.Add(
+          new NotificationDefinition(
+              AppNotificationNames.ShipperNotfiyWhenCreditLimitGreaterOrEqualXPercentage,
+              displayName: L("ShipperNotfiyWhenCreditLimitGreaterOrEqualXPercentage"),
+               permissionDependency: new SimplePermissionDependency(AppFeatures.Shipper)
+          )
+
+      );
+            context.Manager.Add(
+                new NotificationDefinition(
+                    AppNotificationNames.StartShippment,
+                    displayName:L("StartShippmentNotificationDefinition")
+                    )
+                );
+            context.Manager.Add(
+                new NotificationDefinition(
+                    AppNotificationNames.ShipperShippingRequestFinish,
+                    displayName: L("ShipperShippingRequestFinishNotificationDefinition")
+                    )
+                );
+            #endregion
+            #region Carrier 
+            context.Manager.Add(
+          new NotificationDefinition(
+              AppNotificationNames.GroupPeriodsGenerated,
+              displayName: L("NewGroupPeriodsGenerated"),
+               permissionDependency: new SimplePermissionDependency(AppFeatures.Carrier)
+          )
+
+      );
+
+
+            #endregion
+            #region Host
+            context.Manager.Add(
+          new NotificationDefinition(
+              AppNotificationNames.GroupPeriodOnDemand,
+              displayName: L("GroupPeriodOnDemand"),
+               permissionDependency: new SimplePermissionDependency(AppPermissions.Pages_Tenants)
+          )
+
+      );
+            #endregion
+
+
+
+            #endregion
 
             #endregion
         }

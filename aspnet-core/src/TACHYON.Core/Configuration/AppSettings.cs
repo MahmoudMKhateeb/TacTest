@@ -10,6 +10,7 @@ namespace TACHYON.Configuration
         {
             public const string BillingLegalName = "App.HostManagement.BillingLegalName";
             public const string BillingAddress = "App.HostManagement.BillingAddress";
+            public const string TaxVat = "App.HostManagement.TaxVat";
         }
 
         public static class DashboardCustomization
@@ -132,5 +133,11 @@ namespace TACHYON.Configuration
                 public const string WsFederation = "ExternalLoginProvider.WsFederation.Tenant";
             }
         }
+
+        public static class Sms
+        {
+            public const string UnifonicAppSid = "App.Sms.UnifonicAppSid";
+        }
+
     }
 }

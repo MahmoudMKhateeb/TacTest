@@ -16,6 +16,7 @@ import { FileDownloadService } from '@shared/utils/file-download.service';
   templateUrl: './goodsDetails.component.html',
   encapsulation: ViewEncapsulation.None,
   animations: [appModuleAnimation()],
+  selector: 'app-goodsDetails',
 })
 export class GoodsDetailsComponent extends AppComponentBase {
   @ViewChild('createOrEditGoodsDetailModal', { static: true }) createOrEditGoodsDetailModal: CreateOrEditGoodsDetailModalComponent;
@@ -28,12 +29,13 @@ export class GoodsDetailsComponent extends AppComponentBase {
   filterText = '';
   nameFilter = '';
   descriptionFilter = '';
-  quantityFilter = '';
-  weightFilter = '';
+  quantityFilter = undefined;
+  weightFilter: number; //TODO: added it while fixing errors
   dimentionsFilter = '';
   isDangerousGoodFilter = -1;
   dangerousGoodsCodeFilter = '';
   goodCategoryDisplayNameFilter = '';
+  ShippingRequestId: number; //TODO: added it while fixing errors
 
   constructor(
     injector: Injector,
@@ -65,6 +67,7 @@ export class GoodsDetailsComponent extends AppComponentBase {
         this.isDangerousGoodFilter,
         this.dangerousGoodsCodeFilter,
         this.goodCategoryDisplayNameFilter,
+        this.ShippingRequestId,
         this.primengTableHelper.getSorting(this.dataTable),
         this.primengTableHelper.getSkipCount(this.paginator, event),
         this.primengTableHelper.getMaxResultCount(this.paginator, event)

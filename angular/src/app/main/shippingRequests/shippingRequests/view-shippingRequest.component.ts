@@ -2,11 +2,12 @@
 import Swal from 'sweetalert2';
 
 import {
-  GetShippingRequestForViewDto,
+  GetShippingRequestForViewOutput,
   ShippingRequestBidsServiceProxy,
   ShippingRequestDto,
   ShippingRequestsServiceProxy,
   CancelBidShippingRequestInput,
+  RoutPointDto,
 } from '@shared/service-proxies/service-proxies';
 import { AppComponentBase } from '@shared/common/app-component-base';
 import { ActivatedRoute, NavigationEnd, Router, RouterEvent } from '@angular/router';
@@ -16,8 +17,10 @@ import { Paginator } from 'primeng/paginator';
 import { Table } from '@node_modules/primeng/table';
 import { LazyLoadEvent } from '@node_modules/primeng/public_api';
 import { filter } from '@node_modules/rxjs/internal/operators';
+import { CreateOrEditFacilityModalComponent } from '@app/main/addressBook/facilities/create-or-edit-facility-modal.component';
 @Component({
   templateUrl: './view-shippingRequest.component.html',
+  styleUrls: ['./view-shippingRequest.component.scss'],
   animations: [appModuleAnimation()],
 })
 export class ViewShippingRequestComponent extends AppComponentBase implements OnInit {
@@ -25,10 +28,14 @@ export class ViewShippingRequestComponent extends AppComponentBase implements On
   @ViewChild('paginatorchild', { static: false }) paginator: Paginator;
   active = false;
   saving = false;
+  loading = true;
   CancelBidShippingRequest: CancelBidShippingRequestInput = new CancelBidShippingRequestInput();
-  item: GetShippingRequestForViewDto;
-  private activeShippingRequestId: number;
-
+  shippingRequestforView: GetShippingRequestForViewOutput;
+  activeShippingRequestId: number;
+  wayPointsList: RoutPointDto[] = [];
+  wayPoints = [];
+  wayPointMapSource = undefined;
+  wayPointMapDest = undefined;
   breadcrumbs: BreadcrumbItem[] = [
     new BreadcrumbItem(this.l('ShippingRequest'), '/app/main/shippingRequests/shippingRequests'),
     new BreadcrumbItem(this.l('ShippingRequests') + '' + this.l('Details')),
@@ -44,8 +51,8 @@ export class ViewShippingRequestComponent extends AppComponentBase implements On
     private changeDetectorRef: ChangeDetectorRef
   ) {
     super(injector);
-    this.item = new GetShippingRequestForViewDto();
-    this.item.shippingRequest = new ShippingRequestDto();
+    this.shippingRequestforView = new GetShippingRequestForViewOutput();
+    this.shippingRequestforView.shippingRequest = new ShippingRequestDto();
   }
 
   ngOnInit(): void {
@@ -58,14 +65,20 @@ export class ViewShippingRequestComponent extends AppComponentBase implements On
 
   show(shippingRequestId: number): void {
     this._shippingRequestsServiceProxy.getShippingRequestForView(shippingRequestId).subscribe((result) => {
-      this.item = result;
-      this.activeShippingRequestId = this.item.shippingRequest.id;
+      this.shippingRequestforView = result;
+
+      console.log(this.shippingRequestforView);
+
+      this.activeShippingRequestId = this.shippingRequestforView.shippingRequest.id;
       this.active = true;
+      this.loading = false;
+      // this.wayPointsList = this.shippingRequestforView.routPointDtoList;
+      //this.wayPointsSetter();
     });
   }
 
   reloadPage(): void {
-    console.log('reload page');
+    //console.log('reload page');
     this.paginator.changePage(this.paginator.getPage());
   }
   getShippingRequestsBids(event?: LazyLoadEvent) {
@@ -75,7 +88,7 @@ export class ViewShippingRequestComponent extends AppComponentBase implements On
       return;
     }
     this.primengTableHelper.showLoadingIndicator();
-    console.log('bids Gotten');
+    //console.log('bids Gotten');
     this._shippingRequestBidsServiceProxy
       .getAllShippingRequestBids(
         null,
@@ -87,10 +100,8 @@ export class ViewShippingRequestComponent extends AppComponentBase implements On
         this.primengTableHelper.getMaxResultCount(this.paginator, event)
       )
       .subscribe((result) => {
-        //console.log(result);
         this.primengTableHelper.totalRecordsCount = result.totalCount;
         this.primengTableHelper.records = result.items;
-        //console.log(result.items);
         this.primengTableHelper.hideLoadingIndicator();
       });
   }

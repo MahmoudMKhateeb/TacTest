@@ -82,6 +82,10 @@
                     <th style="width: 130px;" [hidden]="!isGrantedAny('Pages.GoodCategories.Edit', 'Pages.GoodCategories.Delete')">
                       {{ l('Actions') }}
                     </th>
+                    <th style="width: 150px;" pSortableColumn="fatherId">
+                      {{ l('fatherId') }}
+                      <p-sortIcon field="goodCategory.fatherId"></p-sortIcon>
+                    </th>
                     <th style="width: 150px;" pSortableColumn="displayName">
                       {{ l('DisplayName') }}
                       <p-sortIcon field="goodCategory.displayName"></p-sortIcon>
@@ -122,6 +126,10 @@
                           </li>
                         </ul>
                       </div>
+                    </td>
+                    <td style="width: 150px;">
+                      <span class="ui-column-title"> {{ l('fatherId') }}</span>
+                      {{ record.goodCategory.fatherId }}
                     </td>
                     <td style="width: 150px;">
                       <span class="ui-column-title"> {{ l('DisplayName') }}</span>

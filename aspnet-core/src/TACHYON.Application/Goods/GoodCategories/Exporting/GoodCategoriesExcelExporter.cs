@@ -35,12 +35,14 @@ namespace TACHYON.Goods.GoodCategories.Exporting
 
                     AddHeader(
                         sheet,
-                        L("DisplayName")
+                        L("DisplayName"),
+                        L("FatherCategoryDisplayName")
                         );
 
                     AddObjects(
                         sheet, 2, goodCategories,
-                        _ => _.GoodCategory.DisplayName
+                        _ => _.GoodCategory.DisplayName,
+                        _ => _.FatherCategoryName
                         );
 
 

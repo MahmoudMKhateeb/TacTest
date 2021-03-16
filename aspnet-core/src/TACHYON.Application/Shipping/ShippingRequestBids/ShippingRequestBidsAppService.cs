@@ -17,6 +17,7 @@ using Abp.Timing;
 using Abp.UI;
 using Microsoft.EntityFrameworkCore;
 using Org.BouncyCastle.Crypto.Generators;
+using TACHYON.AddressBook.Dtos;
 using TACHYON.Authorization;
 using TACHYON.Features;
 using TACHYON.MultiTenancy;
@@ -24,6 +25,7 @@ using TACHYON.Notifications;
 using TACHYON.Shipping.ShippingRequestBids.Dtos;
 using TACHYON.Shipping.ShippingRequests;
 using TACHYON.Shipping.ShippingRequests.Dtos;
+using TACHYON.ShippingRequestVases.Dtos;
 using TACHYON.Trucks;
 
 namespace TACHYON.Shipping.ShippingRequestBids
@@ -100,13 +102,13 @@ namespace TACHYON.Shipping.ShippingRequestBids
         public async Task CancelBidShippingRequest(CancelBidShippingRequestInput input)
         {
             ShippingRequest bid = await _shippingRequestsRepository.GetAsync(input.ShippingRequestId);
-            if (bid.ShippingRequestBidStatusId != TACHYONConsts.ShippingRequestStatusOnGoing)
+            if (bid.BidStatus != ShippingRequestBidStatus.OnGoing)
             {
                 ThrowShippingRequestIsNotOngoingError();
             }
             else
             {
-                bid.ShippingRequestBidStatusId = TACHYONConsts.ShippingRequestStatusCanceled;
+                bid.BidStatus = ShippingRequestBidStatus.Cancled;
                 bid.CloseBidDate = Clock.Now;
             }
         }
@@ -118,7 +120,7 @@ namespace TACHYON.Shipping.ShippingRequestBids
             {
                 ShippingRequest item = await _shippingRequestsRepository.GetAsync(input.ShippingRequestId);
 
-                if (item.ShippingRequestBidStatusId != TACHYONConsts.ShippingRequestStatusOnGoing)
+                if (item.BidStatus != ShippingRequestBidStatus.OnGoing)
                 {
                     ThrowShippingRequestIsNotOngoingError();
                 }
@@ -151,7 +153,7 @@ namespace TACHYON.Shipping.ShippingRequestBids
                     throw new UserFriendlyException(L("Bid Is not exist message"));
                 }
 
-                if (bid.ShippingRequestFk.ShippingRequestBidStatusId != TACHYONConsts.ShippingRequestStatusOnGoing)
+                if (bid.ShippingRequestFk.BidStatus != ShippingRequestBidStatus.OnGoing)
                 {
                     ThrowShippingRequestIsNotOngoingError();
                 }
@@ -169,7 +171,10 @@ namespace TACHYON.Shipping.ShippingRequestBids
                 //update shippingRequest final price
                 //todo review this to commission task team
                 ShippingRequest shippingRequestItem = await _shippingRequestsRepository.FirstOrDefaultAsync(bid.ShippingRequestId);
+                shippingRequestItem.CarrierTenantId = bid.TenantId;
                 shippingRequestItem.Price = Convert.ToDecimal(bid.price);
+                shippingRequestItem.IsPriceAccepted = true;
+
                 shippingRequestItem.Close();
 
             }
@@ -220,7 +225,7 @@ namespace TACHYON.Shipping.ShippingRequestBids
                 }
 
                 //Check if Shipping Request is not ongoing -- add cancel reason
-                if (bid.ShippingRequestFk.ShippingRequestBidStatusId != TACHYONConsts.ShippingRequestStatusOnGoing)
+                if (bid.ShippingRequestFk.BidStatus != ShippingRequestBidStatus.OnGoing)
                 {
                     if (bid.CancledReason.IsNullOrWhiteSpace())
                     {
@@ -247,23 +252,27 @@ namespace TACHYON.Shipping.ShippingRequestBids
         [RequiresFeature(AppFeatures.Carrier)]
         public virtual async Task<PagedResultDto<GetAllBidShippingRequestsForCarrierOutput>> GetAllBidShippingRequestsForCarrier(GetAllBidsShippingRequestForCarrierInput input)
         {
-            using (CurrentUnitOfWork.DisableFilter(AbpDataFilters.MustHaveTenant))
+            using (CurrentUnitOfWork.DisableFilter(AbpDataFilters.MustHaveTenant, AbpDataFilters.MayHaveTenant))
             {
                 IQueryable<ShippingRequest> filterBidShippingRequests = _shippingRequestsRepository.GetAll()
-                    .Include(x => x.ShippingRequestBidStatusFK)
                     .Include(x => x.TrucksTypeFk)
                     .Include(x => x.GoodCategoryFk)
                     .Include(x => x.GoodCategoryFk)
                     .Include(x => x.ShippingRequestBids)
+                    .Include(x => x.ShippingRequestVases)
+                    .ThenInclude(x => x.VasFk)
                     .Include(x => x.RouteFk.OriginCityFk)
+                    .ThenInclude(x=>x.CountyFk)
                     .Include(x => x.RouteFk.DestinationCityFk)
+                    .ThenInclude(x=>x.CountyFk)
                     .Include(x => x.Tenant)
                     .Where(x => x.IsBid)
+                    .Where(x=>x.BidStatus!= ShippingRequestBidStatus.StandBy)
                     .WhereIf(input.TruckTypeId != null, x => x.TrucksTypeId == input.TruckTypeId)
                     .WhereIf(input.TransportType != null, x => x.TransportTypeId != null && x.TransportTypeId == input.TransportType)
-
+                    .WhereIf(input.IsMyAssignedBidsOnly!=null && input.IsMyAssignedBidsOnly==true, x=>x.ShippingRequestBids.Any(y=>y.IsAccepted== true))
                     //Filter
-                    .WhereIf(!string.IsNullOrWhiteSpace(input.Filter), x => x.ShippingRequestBids.Any(b => b.Tenant.Name.Contains(input.Filter)))
+                    .WhereIf(!string.IsNullOrWhiteSpace(input.Filter), x =>  x.CarrierTenantId==AbpSession.TenantId)
 
                     //Get Shipping Requests that carrier bid to them only
                     .WhereIf(input.IsMyBidsOnly, x => x.ShippingRequestBids.Any(b => b.TenantId == AbpSession.TenantId));
@@ -293,16 +302,22 @@ namespace TACHYON.Shipping.ShippingRequestBids
                     .Select(o => new GetAllBidShippingRequestsForCarrierOutput
                     {
                         ShippingRequestId = o.Id,
-                        BidEndDate = o.BidEndDate,
                         BidStartDate = o.BidStartDate,
-                        ShippingRequestBidStatusName = o.ShippingRequestBidStatusFK.DisplayName,
+                        ShippingRequestBidStatusName =Enum.GetName(typeof(ShippingRequestBidStatus),o.BidStatus),
                         ShipperName = o.Tenant.Name,
                         TruckTypeDisplayName = o.TrucksTypeFk.DisplayName,
                         GoodCategoryName = o.GoodCategoryFk.DisplayName,
                         MyBidPrice = o.ShippingRequestBids.OrderByDescending(x => x.Id).FirstOrDefault()?.price,
                         MyBidId = o.ShippingRequestBids.FirstOrDefault()?.Id,
-                        OriginalCityName = o.RouteFk?.OriginCityFk?.DisplayName,
-                        DestinationCityName = o.RouteFk?.DestinationCityFk?.DisplayName
+                        SourceCityName = o.RouteFk?.OriginCityFk.DisplayName,
+                        DestinationCityName = o.RouteFk?.DestinationCityFk.DisplayName,
+                        ShippingRequestVasesDto=o.ShippingRequestVases.Select(e=>new GetShippingRequestVasForViewDto
+                        {
+                            ShippingRequestVas =ObjectMapper.Map<ShippingRequestVasDto>(e),
+                            VasName = e.VasFk.Name
+                        }),
+                        SourceCountryCode= o.RouteFk?.OriginCityFk.CountyFk.Code,
+                        DestinationCountryCode = o.RouteFk?.DestinationCityFk.CountyFk.Code
                     });
 
                 int totalCount = await filterBidShippingRequests.CountAsync();

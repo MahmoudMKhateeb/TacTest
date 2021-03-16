@@ -45,10 +45,10 @@ export class RoutStepsComponent extends AppComponentBase implements OnInit {
   cityDisplayName2Filter = '';
   trucksTypeDisplayNameFilter = '';
   trailerTypeDisplayNameFilter = '';
-  goodsDetailNameFilter = '';
 
   _entityTypeFullName = 'TACHYON.Routs.RoutSteps.RoutStep';
   entityHistoryEnabled = false;
+  shippingRequestId: number;
 
   constructor(
     injector: Injector,
@@ -95,7 +95,7 @@ export class RoutStepsComponent extends AppComponentBase implements OnInit {
         this.cityDisplayName2Filter,
         this.trucksTypeDisplayNameFilter,
         this.trailerTypeDisplayNameFilter,
-        this.goodsDetailNameFilter,
+        this.shippingRequestId,
         this.primengTableHelper.getSorting(this.dataTable),
         this.primengTableHelper.getSkipCount(this.paginator, event),
         this.primengTableHelper.getMaxResultCount(this.paginator, event)

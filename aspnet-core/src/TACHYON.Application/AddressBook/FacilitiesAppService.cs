@@ -19,6 +19,7 @@ using TACHYON.Authorization;
 using Abp.Extensions;
 using Abp.Authorization;
 using Microsoft.EntityFrameworkCore;
+using NetTopologySuite.Geometries;
 
 namespace TACHYON.AddressBook
 {
@@ -38,19 +39,15 @@ namespace TACHYON.AddressBook
 
         }
 
-        public async Task<PagedResultDto<GetFacilityForViewDto>> GetAll(GetAllFacilitiesInput input)
+        public async Task<PagedResultDto<GetFacilityForViewOutput>> GetAll(GetAllFacilitiesInput input)
         {
 
             var filteredFacilities = _facilityRepository.GetAll()
                         .Include(e => e.CityFk)
-                        .WhereIf(!string.IsNullOrWhiteSpace(input.Filter), e => false || e.Name.Contains(input.Filter) || e.Adress.Contains(input.Filter))
+                        .WhereIf(!string.IsNullOrWhiteSpace(input.Filter), e => false || e.Name.Contains(input.Filter) || e.Address.Contains(input.Filter))
                         .WhereIf(!string.IsNullOrWhiteSpace(input.NameFilter), e => e.Name == input.NameFilter)
-                        .WhereIf(!string.IsNullOrWhiteSpace(input.AdressFilter), e => e.Adress == input.AdressFilter)
-                        .WhereIf(input.MinLongitudeFilter != null, e => e.Longitude >= input.MinLongitudeFilter)
-                        .WhereIf(input.MaxLongitudeFilter != null, e => e.Longitude <= input.MaxLongitudeFilter)
-                        .WhereIf(input.MinLatitudeFilter != null, e => e.Latitude >= input.MinLatitudeFilter)
-                        .WhereIf(input.MaxLatitudeFilter != null, e => e.Latitude <= input.MaxLatitudeFilter)
-                        .WhereIf(!string.IsNullOrWhiteSpace(input.CityDisplayNameFilter), e => e.CityFk != null && e.CityFk.DisplayName == input.CityDisplayNameFilter);
+                        .WhereIf(!string.IsNullOrWhiteSpace(input.AdressFilter), e => e.Address == input.AdressFilter)
+                       .WhereIf(!string.IsNullOrWhiteSpace(input.CityDisplayNameFilter), e => e.CityFk != null && e.CityFk.DisplayName == input.CityDisplayNameFilter);
 
             var pagedAndFilteredFacilities = filteredFacilities
                 .OrderBy(input.Sorting ?? "id asc")
@@ -60,32 +57,31 @@ namespace TACHYON.AddressBook
                              join o2 in _lookup_cityRepository.GetAll() on o.CityId equals o2.Id into j2
                              from s2 in j2.DefaultIfEmpty()
 
-                             select new GetFacilityForViewDto()
+                             select new GetFacilityForViewOutput()
                              {
                                  Facility = new FacilityDto
                                  {
                                      Name = o.Name,
-                                     Adress = o.Adress,
-                                     Longitude = o.Longitude,
-                                     Latitude = o.Latitude,
-                                     Id = o.Id
-                                 },
+                                     Address = o.Address,
+                                     Longitude= o.Location.X,
+                                     Latitude= o.Location.Y,
+                                     Id = o.Id                                 },
                                  CityDisplayName = s2 == null || s2.DisplayName == null ? "" : s2.DisplayName.ToString()
                              };
 
             var totalCount = await filteredFacilities.CountAsync();
 
-            return new PagedResultDto<GetFacilityForViewDto>(
+            return new PagedResultDto<GetFacilityForViewOutput>(
                 totalCount,
                 await facilities.ToListAsync()
             );
         }
 
-        public async Task<GetFacilityForViewDto> GetFacilityForView(long id)
+        public async Task<GetFacilityForViewOutput> GetFacilityForView(long id)
         {
             var facility = await _facilityRepository.GetAsync(id);
 
-            var output = new GetFacilityForViewDto { Facility = ObjectMapper.Map<FacilityDto>(facility) };
+            var output = new GetFacilityForViewOutput { Facility = ObjectMapper.Map<FacilityDto>(facility) };
 
 
             if (output.Facility.CityId != null)
@@ -129,8 +125,14 @@ namespace TACHYON.AddressBook
         [AbpAuthorize(AppPermissions.Pages_Facilities_Create)]
         protected virtual async Task Create(CreateOrEditFacilityDto input)
         {
-            var facility = ObjectMapper.Map<Facility>(input);
+            var point = new Point
+                (input.Longitude, input.Latitude)
+            {
+                SRID = 4326
+            };
 
+            var facility = ObjectMapper.Map<Facility>(input);
+            facility.Location = point;
 
             if (AbpSession.TenantId != null)
             {
@@ -159,27 +161,23 @@ namespace TACHYON.AddressBook
 
             var filteredFacilities = _facilityRepository.GetAll()
                         .Include(e => e.CityFk)
-                        .WhereIf(!string.IsNullOrWhiteSpace(input.Filter), e => false || e.Name.Contains(input.Filter) || e.Adress.Contains(input.Filter))
+                        .WhereIf(!string.IsNullOrWhiteSpace(input.Filter), e => false || e.Name.Contains(input.Filter) || e.Address.Contains(input.Filter))
                         .WhereIf(!string.IsNullOrWhiteSpace(input.NameFilter), e => e.Name == input.NameFilter)
-                        .WhereIf(!string.IsNullOrWhiteSpace(input.AdressFilter), e => e.Adress == input.AdressFilter)
-                        .WhereIf(input.MinLongitudeFilter != null, e => e.Longitude >= input.MinLongitudeFilter)
-                        .WhereIf(input.MaxLongitudeFilter != null, e => e.Longitude <= input.MaxLongitudeFilter)
-                        .WhereIf(input.MinLatitudeFilter != null, e => e.Latitude >= input.MinLatitudeFilter)
-                        .WhereIf(input.MaxLatitudeFilter != null, e => e.Latitude <= input.MaxLatitudeFilter)
+                        .WhereIf(!string.IsNullOrWhiteSpace(input.AdressFilter), e => e.Address == input.AdressFilter)
                         .WhereIf(!string.IsNullOrWhiteSpace(input.CityDisplayNameFilter), e => e.CityFk != null && e.CityFk.DisplayName == input.CityDisplayNameFilter);
 
             var query = (from o in filteredFacilities
                          join o2 in _lookup_cityRepository.GetAll() on o.CityId equals o2.Id into j2
                          from s2 in j2.DefaultIfEmpty()
 
-                         select new GetFacilityForViewDto()
+                         select new GetFacilityForViewOutput()
                          {
                              Facility = new FacilityDto
                              {
                                  Name = o.Name,
-                                 Adress = o.Adress,
-                                 Longitude = o.Longitude,
-                                 Latitude = o.Latitude,
+                                 Address = o.Address,
+                                 Longitude= o.Location.X,
+                                 Latitude= o.Location.Y,
                                  Id = o.Id
                              },
                              CityDisplayName = s2 == null || s2.DisplayName == null ? "" : s2.DisplayName.ToString()

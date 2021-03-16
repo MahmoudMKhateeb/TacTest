@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using TACHYON.Goods.GoodsDetails.Dtos;
 using TACHYON.Routs.Dtos;
+using TACHYON.Routs.RoutPoints.Dtos;
 using TACHYON.Routs.RoutSteps.Dtos;
 using TACHYON.Vases.Dtos;
 
@@ -11,9 +12,6 @@ namespace TACHYON.Shipping.ShippingRequests.Dtos
 {
     public class CreateOrEditShippingRequestDto : EntityDto<long?>
     {
-
-        public List<CreateOrEditRoutStepDto> CreateOrEditRoutStepDtoList { get; set; }
-
         public virtual bool IsBid { get; set; }
         //Add Bid details If IsBid equals True
         public DateTime? BidStartDate { get; set; }
@@ -31,9 +29,11 @@ namespace TACHYON.Shipping.ShippingRequests.Dtos
         /// </summary>
         public int? CarrierTenantId { get; set; }
 
-        public long? TrucksTypeId { get; set; }
+        public virtual int? TransportTypeId { get; set; }
 
-        public int? TrailerTypeId { get; set; }
+        public virtual long TrucksTypeId { get; set; }
+
+        public virtual int? CapacityId { get; set; }
 
         public int? GoodCategoryId { get; set; }
 
@@ -42,14 +42,22 @@ namespace TACHYON.Shipping.ShippingRequests.Dtos
         public bool StageTowFinish { get; set; }
         public bool StageThreeFinish { get; set; }
 
+        public DateTime? StartTripDate { get; set; }
+        public DateTime? EndTripDate { get; set; }
+
+        public int NumberOfTrips { get; set; }
+        public int PackingTypeId { get; set; }
+        public int NumberOfPacking { get; set; }
+        public double TotalWeight { get; set; }
+        public int ShippingTypeId { get; set; }
+
 
         //Route
         public CreateOrEditRouteDto CreateOrEditRouteDto { get; set; }
 
 
         //VasList
-        public List<ShippingRequestVasListDto> ShippingRequestVasList { get; set; }
-
+        public List<CreateOrEditShippingRequestVasListDto> ShippingRequestVasList { get; set; }
 
 
 

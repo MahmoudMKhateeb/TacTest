@@ -8,7 +8,10 @@ using System.Reflection.Emit;
 using System.Threading.Tasks;
 using TACHYON.Authorization.Users;
 using TACHYON.Documents.DocumentFiles;
+using TACHYON.Invoices;
+using TACHYON.Invoices.Groups;
 using TACHYON.MultiTenancy;
+using TACHYON.Shipping.ShippingRequests;
 
 namespace TACHYON.Notifications
 {
@@ -283,6 +286,38 @@ namespace TACHYON.Notifications
                 userIds: argsUser);
         }
 
+        public async Task StartShippment(UserIdentifier argsUser, long TripId,string PickupFacilityName)
+        {
+            var notificationData = new LocalizableMessageNotificationData(
+                new LocalizableString(
+                    L("StartShippmentNotificationMessage"),
+                    TACHYONConsts.LocalizationSourceName
+                )
+            );
+            notificationData["tripId"] = TripId;
+            notificationData["PickupFacilityName"] = PickupFacilityName;
+            await _notificationPublisher.PublishAsync(AppNotificationNames.StartShippment,
+                notificationData,
+                userIds: new[] { argsUser });
+        }
+
+
+        public async Task ShipperShippingRequestFinish(UserIdentifier argsUser, ShippingRequest Request)
+        {
+            var notificationData = new LocalizableMessageNotificationData(
+                new LocalizableString(
+                    L("ShipperShippingRequestFinishNotificationMessage"),
+                    TACHYONConsts.LocalizationSourceName
+                )
+            );
+            notificationData["requestid"] = Request.Id;
+            await _notificationPublisher.PublishAsync(AppNotificationNames.ShipperShippingRequestFinish,
+                notificationData,
+                userIds: new[] { argsUser });
+        }
+
+        //document Files
+
         //document Files
         /// <summary>
         /// For documentFiles befor file expiration date 
@@ -369,6 +404,65 @@ namespace TACHYON.Notifications
             await _notificationPublisher.PublishAsync(AppNotificationNames.RejectedSubmittedDocument, notificationData, userIds: new[] { argsUser });
         }
 
+        #region Invoices
+        public async Task NewInvoiceShipperGenerated(Invoice invoice)
+        {
+            var notificationData = new LocalizableMessageNotificationData(
+                new LocalizableString(
+                    "NewInvoiceShipperGenerated",
+                    TACHYONConsts.LocalizationSourceName
+                )
+            );     
+           notificationData["invoiceid"] = invoice.Id;
+        #endregion
+
+            await _notificationPublisher.PublishAsync(AppNotificationNames.InvoiceShipperGenerated, notificationData,
+                tenantIds: new[] { (int?)invoice.TenantId });
+        }
+
+
+     
+
+        public async Task NewGroupPeriodsGenerated(GroupPeriod groupPeriod)
+        {
+            var notificationData = new LocalizableMessageNotificationData(
+                new LocalizableString(
+                    "NewGroupPeriodsGenerated",
+                    TACHYONConsts.LocalizationSourceName
+                )
+            );
+            notificationData["groupid"] = groupPeriod.Id;
+
+            await _notificationPublisher.PublishAsync(AppNotificationNames.GroupPeriodsGenerated, notificationData,
+                tenantIds: new[] { (int?)groupPeriod.TenantId });
+        }
+
+        public async Task GroupPeriodOnDemand(GroupPeriod groupPeriod)
+        {
+            var notificationData = new LocalizableMessageNotificationData(
+                new LocalizableString(
+                    "GroupPeriodOnDemand",
+                    TACHYONConsts.LocalizationSourceName
+                )
+            );
+            notificationData["groupid"] = groupPeriod.Id;
+
+            await _notificationPublisher.PublishAsync(AppNotificationNames.GroupPeriodOnDemand, notificationData);
+        }
+
+        public async Task ShipperNotfiyWhenCreditLimitGreaterOrEqualXPercentage(int? TenantId, int Percentage)
+        {
+            var notificationData = new LocalizableMessageNotificationData(
+                new LocalizableString(
+                    "ShipperNotfiyWhenCreditLimitGreaterOrEqualXPercentage",
+                    TACHYONConsts.LocalizationSourceName
+                )
+            );
+            notificationData["Percentage"] = Percentage;
+
+            await _notificationPublisher.PublishAsync(AppNotificationNames.ShipperNotfiyWhenCreditLimitGreaterOrEqualXPercentage, notificationData, tenantIds: new [] {TenantId });
+        }
+        #endregion
         #endregion
 
 

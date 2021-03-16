@@ -13,5 +13,7 @@ namespace TACHYON.Localization.Dto
         public virtual string Icon { get; set; }
 
         public bool IsDisabled { get; set; }
+
+        public bool IsRTL { get; set; }
     }
 }

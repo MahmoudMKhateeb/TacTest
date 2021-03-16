@@ -14,3 +14,6 @@
   background-color: #e1f0ff !important;
   border-color: transparent !important;
 }
+agm-map {
+  height: 250px;
+}

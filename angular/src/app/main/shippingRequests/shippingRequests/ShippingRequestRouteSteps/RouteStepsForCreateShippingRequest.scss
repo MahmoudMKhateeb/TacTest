@@ -1,0 +1,25 @@
+agm-map {
+  height: 400px;
+  width: 100% !important;
+}
+
+.btn.btn-light-danger {
+  color: #f64e60;
+  background-color: #ffe2e5;
+  border-color: transparent;
+}
+.btn.btn-success {
+  color: #fff !important;
+  background-color: #1bc5bd !important;
+  border-color: #1bc5bd !important;
+}
+
+::ng-deep .modal-backdrop.fade.in {
+  z-index: 999 !important;
+}
+::ng-deep .modal {
+  z-index: 1000 !important;
+}
+::ng-deep .dropdown-menu {
+  z-index: 1005 !important;
+}

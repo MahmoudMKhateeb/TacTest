@@ -4,7 +4,7 @@ import { ModalDirective } from '@node_modules/ngx-bootstrap/modal';
 import {
   AcceptShippingRequestPriceInput,
   CreateOrEditGoodCategoryDto,
-  GetShippingRequestForViewDto,
+  GetShippingRequestForViewOutput,
   GoodCategoriesServiceProxy,
   ShippingRequestPricingOutputforView,
   ShippingRequestsServiceProxy,

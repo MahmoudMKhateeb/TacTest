@@ -121,6 +121,11 @@ namespace TACHYON.Authorization.Users
         /// </summary>
         /// <param name="user">User</param>
         /// <param name="link">Reset link</param>
+        [UnitOfWork]
+        public virtual async Task SendNewTenantRegistrationEmailToHostAsyn(Tenant tenant, string link)
+        {
+
+        }
         public async Task SendPasswordResetLinkAsync(User user, string link = null)
         {
             if (user.PasswordResetCode.IsNullOrEmpty())

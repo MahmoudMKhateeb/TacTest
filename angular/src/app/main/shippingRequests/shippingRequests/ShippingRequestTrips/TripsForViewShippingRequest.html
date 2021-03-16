@@ -1,0 +1,141 @@
+<div>
+  <div class="card card-custom">
+    <div class="card-header">
+      <h3 class="card-title">
+        {{ l('shippingRequestTrips') }}
+      </h3>
+      <div class="card-toolbar">
+        <button
+          class="btn btn-primary"
+          (click)="AddNewTripModal.show()"
+          [disabled]="primengTableHelper.totalRecordsCount >= ShippingRequest.numberOfTrips"
+        >
+          <i class="flaticon-plus"></i> {{ l('AddATrip') }}
+        </button>
+      </div>
+    </div>
+    <!--begin::card-body-->
+    <div class="card-body">
+      <div class="row align-items-center">
+        <!--<Primeng-Datatable-Start>-->
+        <div [busyIf]="primengTableHelper.isLoading" class="primeng-datatable-container col-12">
+          <p-table
+            #dataTablechild
+            (onLazyLoad)="getShippingRequestsTrips($event)"
+            ScrollWidth="100%"
+            [lazy]="true"
+            [paginator]="false"
+            [resizableColumns]="primengTableHelper.resizableColumns"
+            [responsive]="primengTableHelper.isResponsive"
+            [scrollable]="true"
+            [value]="primengTableHelper.records"
+            rows="{{ primengTableHelper.defaultRecordsCountPerPage }}"
+          >
+            <ng-template pTemplate="header">
+              <tr>
+                <th style="width: 50px;">
+                  {{ l('id') }}
+                </th>
+                <th pSortableColumn="startTripDate" style="width: 150px;">
+                  {{ l('startDate') }}
+                  <p-sortIcon field="startTripDate"></p-sortIcon>
+                </th>
+                <th pSortableColumn="endTripDate" style="width: 150px;">
+                  {{ l('endDate') }}
+                  <p-sortIcon field="endTripDate"></p-sortIcon>
+                </th>
+                <th pSortableColumn="originFacility" style="width: 150px;">
+                  {{ l('origin') }}
+                  <p-sortIcon field="originFacility"></p-sortIcon>
+                </th>
+                <th pSortableColumn="destinationFacility" style="width: 150px;">
+                  {{ l('destination') }}
+                  <p-sortIcon field="destinationFacility"></p-sortIcon>
+                </th>
+                <th pSortableColumn="status" style="width: 150px;">
+                  {{ l('tripStatus') }}
+                  <p-sortIcon field="status"></p-sortIcon>
+                </th>
+                <th style="width: 150px;">
+                  {{ l('Actions') }}
+                </th>
+              </tr>
+            </ng-template>
+            <ng-template let-record="$implicit" pTemplate="body">
+              <tr>
+                <td style="width: 50px;">
+                  <span class="ui-column-title"> {{ l('id') }}</span>
+                  {{ record.id }}
+                </td>
+                <td style="width: 150px;">
+                  <span class="ui-column-title"> {{ l('startTripDate') }}</span>
+                  {{ record.startTripDate | momentFormat: 'L' }}
+                </td>
+                <td style="width: 150px;">
+                  <span class="ui-column-title"> {{ l('endTripDate') }}</span>
+                  {{ record.endTripDate | momentFormat: 'L' }}
+                </td>
+                <td style="width: 150px;">
+                  <span class="ui-column-title"> {{ l('originFacility') }}</span>
+                  {{ record.originFacility }}
+                </td>
+                <td style="width: 150px;">
+                  <span class="ui-column-title"> {{ l('destinationFacility') }}</span>
+                  {{ record.destinationFacility }}
+                </td>
+                <td style="width: 150px;">
+                  <span class="ui-column-title"> {{ l('tripStatus') }}</span>
+                  {{ record.status }}
+                </td>
+                <td style="width: 150px;">
+                  <span class="ui-column-title"> {{ l('AcceptBid') }}</span>
+
+                  <div class="btn-group dropdown" container="body" dropdown>
+                    <a class="dropdown-toggle btn btn-sm btn-primary" dropdownToggle>
+                      <i class="fa fa-cog"></i><span class="caret"></span> {{ l('Actions') }}
+                    </a>
+                    <ul *dropdownMenu class="dropdown-menu">
+                      <li>
+                        <a class="dropdown-item" (click)="AddNewTripModal.show(record)">{{ l('Edit') }}</a>
+                      </li>
+                      <li>
+                        <a class="dropdown-item" (click)="AddNewTripModal.show(record)">{{ l('View') }}</a>
+                      </li>
+                      <li>
+                        <a class="dropdown-item" (click)="AddNewTripModal.deleteTrip(record.id)">{{ l('Delete') }}</a>
+                      </li>
+                    </ul>
+                  </div>
+                </td>
+              </tr>
+            </ng-template>
+          </p-table>
+          <div *ngIf="primengTableHelper.totalRecordsCount == 0" class="primeng-no-data">
+            {{ l('NoData') }}
+          </div>
+          <div class="primeng-paging-container">
+            <p-paginator
+              #paginatorchild
+              (onPageChange)="getShippingRequestsTrips($event)"
+              [rowsPerPageOptions]="primengTableHelper.predefinedRecordsCountPerPage"
+              [rows]="primengTableHelper.defaultRecordsCountPerPage"
+              [totalRecords]="primengTableHelper.totalRecordsCount"
+            >
+            </p-paginator>
+            <span class="total-records-count">
+              {{ l('TotalRecordsCount', primengTableHelper.totalRecordsCount) }}
+            </span>
+          </div>
+        </div>
+        <!--<Primeng-Datatable-End>-->
+      </div>
+    </div>
+    <!--end::card-body-->
+  </div>
+</div>
+<AddNewTripModal
+  #AddNewTripModal
+  (modalSave)="reloadPage()"
+  [shippingRequest]="ShippingRequest"
+  [VasListFromFather]="VasListFromFather"
+></AddNewTripModal>

@@ -156,6 +156,14 @@
 
 
 
+
+
+
+
+
+
+
+
     <text name="TACHYON.TermsAndConditions.TermAndConditionTranslation">TermAndConditionTranslation</text>
     <text name="TermAndConditionTranslationsHeaderInfo">Term and condition translations header info</text>
     <text name="CreateNewTermAndConditionTranslation">Create new term and condition translation</text>
@@ -357,6 +365,18 @@
     <text name="DocumentTypeTranslationsHeaderInfo">Document Type Translations Header Info</text>
     <text name="NewDocumentTypeTranslation">New Document Type Translation</text>
     <![CDATA[ Tachyon: Document Translation Page End]]>
+
+    <![CDATA[Tachyon:Sms]]>
+    <text name="AShipmentWasAssignedForYouToReceiveOn">A shipment was assigned for you to receive on</text>
+    <text name="ShipperName">Shipper name</text>
+    <text name="WaybillNumber">Waybill number</text>
+    <text name="PleaseOnClickFollowingLinkToTrackYourShipmentAndRateTheShippingCompany">Please on click following link to track your shipment and rate the Shipping company</text>
+    <![CDATA[Tachyon:Sms]]>
+
+    <![CDATA[Tachyon:Setting]]>
+    <text name="SMSSettings">SMS Settings</text>
+    <text name="UnifonicAppSid">Unifonic AppSid</text>
+    <![CDATA[Tachyon:Setting]]>
 
     <text name="Title">Title</text>
     <text name="NewTermAndCondition">new term and condition</text>
@@ -969,6 +989,22 @@
     <text name="TenantSignUp">Company SignUp</text>
     <text name="NewTenantRegisteredNotificationDefinition">On a new tenant registered to the application.</text>
     <text name="NewTenantRegisteredNotificationMessage">A new tenant registered to the application. Tenancy name: {tenancyName}.</text>
+    <tex name="NewInvoiceShipperGenerated"><a href="/app/main/invoices/detail/{invoiceid}">A new invoice has been generated {invoiceid}#</a></tex>
+    <tex name="NewInvoiceShipperGeneratedEmailSubject">A new invoice has been generated {invoiceid}#</tex>
+    <tex name="NewInvoiceShipperGeneratedEmailBody">A new invoice has been generated {invoiceid}# <a href="/app/main/invoices/detail/{invoiceid}">click here to view invoice</a></tex>
+
+    <tex name="NewGroupPerioGenerated">
+      <a href="/app/main/invoices/groupperiods/detail/{groupid}">A new collect has been generated {groupid}#</a>
+    </tex>
+    <tex name="GroupPeriodOnDemand">
+      <a href="/app/main/invoices/groupperiods/detail/{groupid}">A new demand  has been add to group period {groupid}#</a>
+    </tex>
+    <tex name="NewGroupPerioGeneratedEmailSubject">
+      A new collect has been generated {groupid}#
+    </tex>
+    <tex name="NewGroupPerioGeneratedEmailBody">
+      <a href="/app/main/invoices/groupperiods/detail/{groupid}">A new collect has been generated {groupid}#</a>
+    </tex> 
     <text name="LoginAttempts">Login attempts</text>
     <text name="Failed">Failed</text>
     <text name="NewTenant">New Company</text>

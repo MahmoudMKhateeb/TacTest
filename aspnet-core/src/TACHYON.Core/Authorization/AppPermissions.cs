@@ -31,6 +31,57 @@
         public const string Pages_PlateTypes_Edit = "Pages.PlateTypes.Edit";
         public const string Pages_PlateTypes_Delete = "Pages.PlateTypes.Delete";
 
+        public const string Pages_Receivers = "Pages.Receivers";
+        public const string Pages_Receivers_Create = "Pages.Receivers.Create";
+        public const string Pages_Receivers_Edit = "Pages.Receivers.Edit";
+        public const string Pages_Receivers_Delete = "Pages.Receivers.Delete";
+
+        public const string Pages_CitiesTranslations = "Pages.CitiesTranslations";
+        public const string Pages_CitiesTranslations_Create = "Pages.CitiesTranslations.Create";
+        public const string Pages_CitiesTranslations_Edit = "Pages.CitiesTranslations.Edit";
+        public const string Pages_CitiesTranslations_Delete = "Pages.CitiesTranslations.Delete";
+
+        public const string Pages_CountriesTranslations = "Pages.CountriesTranslations";
+        public const string Pages_CountriesTranslations_Create = "Pages.CountriesTranslations.Create";
+        public const string Pages_CountriesTranslations_Edit = "Pages.CountriesTranslations.Edit";
+        public const string Pages_CountriesTranslations_Delete = "Pages.CountriesTranslations.Delete";
+
+        public const string Pages_PlateTypes = "Pages.PlateTypes";
+        public const string Pages_PlateTypes_Create = "Pages.PlateTypes.Create";
+        public const string Pages_PlateTypes_Edit = "Pages.PlateTypes.Edit";
+        public const string Pages_PlateTypes_Delete = "Pages.PlateTypes.Delete";
+
+        public const string Pages_TruckCapacitiesTranslations = "Pages.TruckCapacitiesTranslations";
+        public const string Pages_TruckCapacitiesTranslations_Create = "Pages.TruckCapacitiesTranslations.Create";
+        public const string Pages_TruckCapacitiesTranslations_Edit = "Pages.TruckCapacitiesTranslations.Edit";
+        public const string Pages_TruckCapacitiesTranslations_Delete = "Pages.TruckCapacitiesTranslations.Delete";
+
+        #region Shipping Request
+        public const string Pages_ShippingRequestCauseAccidents = "Pages.ShippingRequestCauseAccidents";
+        public const string Pages_ShippingRequestCauseAccidents_Create = "Pages.ShippingRequestCauseAccidents.Create";
+        public const string Pages_ShippingRequestCauseAccidents_Edit = "Pages.ShippingRequestCauseAccidents.Edit";
+        public const string Pages_ShippingRequestCauseAccidents_Delete = "Pages.ShippingRequestCauseAccidents.Delete";
+        #endregion
+        public const string Pages_TripStatuses = "Pages.TripStatuses";
+        public const string Pages_TripStatuses_Create = "Pages.TripStatuses.Create";
+        public const string Pages_TripStatuses_Edit = "Pages.TripStatuses.Edit";
+        public const string Pages_TripStatuses_Delete = "Pages.TripStatuses.Delete";
+
+        public const string Pages_PackingTypes = "Pages.PackingTypes";
+        public const string Pages_PackingTypes_Create = "Pages.PackingTypes.Create";
+        public const string Pages_PackingTypes_Edit = "Pages.PackingTypes.Edit";
+        public const string Pages_PackingTypes_Delete = "Pages.PackingTypes.Delete";
+
+        public const string Pages_ShippingTypes = "Pages.ShippingTypes";
+        public const string Pages_ShippingTypes_Create = "Pages.ShippingTypes.Create";
+        public const string Pages_ShippingTypes_Edit = "Pages.ShippingTypes.Edit";
+        public const string Pages_ShippingTypes_Delete = "Pages.ShippingTypes.Delete";
+
+        public const string Pages_TruckStatusesTranslations = "Pages.TruckStatusesTranslations";
+        public const string Pages_TruckStatusesTranslations_Create = "Pages.TruckStatusesTranslations.Create";
+        public const string Pages_TruckStatusesTranslations_Edit = "Pages.TruckStatusesTranslations.Edit";
+        public const string Pages_TruckStatusesTranslations_Delete = "Pages.TruckStatusesTranslations.Delete";
+
         public const string Pages_Nationalities = "Pages.Nationalities";
         public const string Pages_Nationalities_Create = "Pages.Nationalities.Create";
         public const string Pages_Nationalities_Edit = "Pages.Nationalities.Edit";
@@ -65,6 +116,11 @@
         public const string Pages_ShippingRequestVases_Create = "Pages.ShippingRequestVases.Create";
         public const string Pages_ShippingRequestVases_Edit = "Pages.ShippingRequestVases.Edit";
         public const string Pages_ShippingRequestVases_Delete = "Pages.ShippingRequestVases.Delete";
+
+        public const string Pages_ShippingRequestTrips = "Pages.ShippingRequestTrips";
+        public const string Pages_ShippingRequestTrips_Create = "Pages.ShippingRequestTrips.Create";
+        public const string Pages_ShippingRequestTrips_Edit = "Pages.ShippingRequestTrips.Edit";
+        public const string Pages_ShippingRequestTrips_Delete = "Pages.ShippingRequestTrips.Delete";
 
         public const string Pages_VasPrices = "Pages.VasPrices";
         public const string Pages_VasPrices_Create = "Pages.VasPrices.Create";
@@ -160,6 +216,11 @@
         public const string Pages_Routes_Create = "Pages.Routes.Create";
         public const string Pages_Routes_Edit = "Pages.Routes.Edit";
         public const string Pages_Routes_Delete = "Pages.Routes.Delete";
+
+        public const string Pages_RoutPoints = "Pages.RoutPoints";
+        public const string Pages_RoutPoints_Create = "Pages.RoutPoints.Create";
+        public const string Pages_RoutPoints_Edit = "Pages.RoutPoints.Edit";
+        public const string Pages_RoutPoints_Delete = "Pages.RoutPoints.Delete";
 
         public const string Pages_Cities = "Pages.Cities";
         public const string Pages_Cities_Create = "Pages.Cities.Create";
@@ -310,6 +371,36 @@
         public const string Pages_Administration_Host_Maintenance = "Pages.Administration.Host.Maintenance";
         public const string Pages_Administration_Host_Settings = "Pages.Administration.Host.Settings";
         public const string Pages_Administration_Host_Dashboard = "Pages.Administration.Host.Dashboard";
+
+
+        /*Invoices */
+        public const string Pages_Administration_Host_Invoices_Periods = "Pages.Administration.Host.Invoices.Periods";
+        public const string Pages_Administration_Host_Invoices_Period_Create = "Pages.Administration.Host.Invoices.Period.Create";
+        public const string Pages_Administration_Host_Invoices_Period_Edit = "Pages.Administration.Host.Invoices.Period.Edit";
+        public const string Pages_Administration_Host_Invoices_Period_Delete = "Pages.Administration.Host.Invoices.Period.Delete";
+        public const string Pages_Administration_Host_Invoices_Period_Enabled = "Pages.Administration.Host.Invoices.Period.Enbaled";
+
+        public const string Pages_Invoices = "Pages.Invoices";
+        public const string Pages_Administration_Host_Invoices_Delete = "Pages.Administration.Host.Invoices.Invoices.Delete";
+        public const string Pages_Administration_Host_Invoices_MakePaid = "Pages.Administration.Host.Invoices.MakePaid";
+        public const string Pages_Administration_Host_Invoices_MakeUnPaid = "Pages.Administration.Host.Invoices.MakeUnPaid";
+
+
+        public const string Pages_Administration_Host_Invoices_Balances = "Pages.Administration.Host.Invoices.Balances";
+        public const string Pages_Administration_Host_Invoices_Balances_Create = "Pages.Administration.Host.Invoices.Balances.Create";
+        public const string Pages_Administration_Host_Invoices_Balances_Delete = "Pages.Administration.Host.Invoices_Balances.Delete";
+
+
+        public const string Pages_Invoices_GroupsPeriods = "Pages.Invoices.GroupsPeriods";
+        public const string Pages_Invoices_GroupsPeriods_Demand = "Pages.Invoices.GroupsPeriods.Demand";
+        public const string Pages_Invoices_GroupsPeriods_UnDemand = "Pages.Invoices.GroupsPeriods.UnDemand";
+
+        public const string Pages_Administration_Host_Invoices_GroupsPeriods_Delete = "Pages.Administration.Host.Invoices.GroupsPeriods.Delete";
+        public const string Pages_Administration_Host_Invoices_GroupsPeriods_Claim = "Pages.Administration.Host.Invoices.GroupsPeriods.Claim";
+        public const string Pages_Administration_Host_Invoices_GroupsPeriods_UnClaim = "Pages.Administration.Host.Invoices.GroupsPeriods.UnClaim";
+
+        public const string Pages_Invoices_Transaction = "Pages.Invoices.Transaction";
+
 
     }
 }

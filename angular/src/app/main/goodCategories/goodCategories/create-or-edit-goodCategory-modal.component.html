@@ -10,7 +10,7 @@
 >
   <div class="modal-dialog modal-lg">
     <div class="modal-content">
-      <form *ngIf="active" #goodCategoryForm="ngForm" novalidate (ngSubmit)="save()" autocomplete="off">
+      <form *ngIf="active" #goodCategoryForm="ngForm" (ngSubmit)="save()" autocomplete="off">
         <div class="modal-header">
           <h4 class="modal-title">
             <span *ngIf="goodCategory.id">{{ l('EditGoodCategory') }}</span>
@@ -21,18 +21,47 @@
           </button>
         </div>
         <div class="modal-body">
-          <div class="form-group">
-            <label for="GoodCategory_DisplayName">{{ l('DisplayName') }} *</label>
-            <input
-              type="text"
-              id="GoodCategory_DisplayName"
-              class="form-control"
-              [(ngModel)]="goodCategory.displayName"
-              name="DisplayName"
-              minlength="0"
-              maxlength="256"
-              required
-            />
+          <div class="row">
+            <div class="col-12">
+              <div class="form-group">
+                <label for="GoodCategory_CategoryFather">{{ l('CategoryFather') }}</label>
+                <select
+                  class="form-control"
+                  name="GoodCategory_CategoryFather"
+                  id="GoodCategory_CategoryFather"
+                  [(ngModel)]="goodCategory.fatherId"
+                  [disabled]="!AllGoodsCategoriesForDropDown"
+                >
+                  <option [ngValue]="0"></option>
+                  <option
+                    *ngFor="let item of AllGoodsCategoriesForDropDown"
+                    [ngValue]="item.id"
+                    [disabled]="goodCategory.id && item.id === goodCategory.id"
+                  >
+                    {{ item.displayName }}</option
+                  >
+                </select>
+              </div>
+            </div>
+            <div class="col-12">
+              <div class="form-group">
+                <label for="GoodCategory_DisplayName">{{ l('DisplayName') }} *</label>
+                <input
+                  #DisplayName="ngModel"
+                  type="text"
+                  name="GoodCategory_DisplayName"
+                  id="GoodCategory_DisplayName"
+                  class="form-control"
+                  [(ngModel)]="goodCategory.displayName"
+                  name="DisplayName"
+                  minlength="0"
+                  maxlength="256"
+                  required
+                  [class.is-invalid]="DisplayName.touched && !DisplayName.valid"
+                />
+                <div class="invalid-feedback" *ngIf="DisplayName.touched && !DisplayName.valid">{{ l('thisFieldIsRequired') }}</div>
+              </div>
+            </div>
           </div>
         </div>
         <div class="modal-footer">

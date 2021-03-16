@@ -1,268 +1,152 @@
-﻿<div [@routerTransition]>
-  <div class="content d-flex flex-column flex-column-fluid">
-    <sub-header [description]="'GoodsDetailsHeaderInfo' | localize" [title]="'GoodsDetails' | localize">
-      <div role="actions">
-        <button (click)="exportToExcel()" class="btn btn-outline-success"><i class="fa fa-file-excel"></i> {{ l('ExportToExcel') }}</button>
-
-        <button (click)="createGoodsDetail()" *ngIf="isGranted('Pages.GoodsDetails.Create')" class="btn btn-primary blue">
-          <i class="fa fa-plus"></i> {{ l('CreateNewGoodsDetail') }}
-        </button>
-      </div>
-    </sub-header>
-
-    <div [class]="containerClass">
-      <div class="card card-custom gutter-b">
-        <div class="card-body">
-          <form autocomplete="off" class="form">
-            <div>
-              <div class="row align-items-center">
-                <div class="col-xl-12">
-                  <div class="form-group m-form__group align-items-center">
-                    <div class="input-group">
-                      <input
-                        [(ngModel)]="filterText"
-                        [placeholder]="l('SearchWithThreeDot')"
-                        autoFocus
-                        class="form-control m-input"
-                        name="filterText"
-                        type="text"
-                      />
-                      <span class="input-group-btn">
-                        <button (click)="getGoodsDetails()" class="btn btn-primary" type="submit"><i class="flaticon-search-1"></i></button>
-                      </span>
-                    </div>
-                  </div>
+﻿<div class="card card-custom gutter-b">
+  <div class="card-header">
+    <div class="card-toolbar">
+      <button (click)="createGoodsDetail()" class="btn btn-primary blue"><i class="fa fa-plus"></i> {{ l('CreateNewGoodsDetail') }}</button>
+    </div>
+  </div>
+  <div class="card-body">
+    <div class="row align-items-center">
+      <!--<Primeng-Datatable-Start>-->
+      <div [busyIf]="primengTableHelper.isLoading" class="primeng-datatable-container col-12">
+        <p-table
+          #dataTable
+          (onLazyLoad)="getGoodsDetails($event)"
+          ScrollWidth="100%"
+          [lazy]="true"
+          [paginator]="false"
+          [resizableColumns]="primengTableHelper.resizableColumns"
+          [responsive]="primengTableHelper.isResponsive"
+          [scrollable]="true"
+          [value]="primengTableHelper.records"
+          rows="{{ primengTableHelper.defaultRecordsCountPerPage }}"
+        >
+          <ng-template pTemplate="header">
+            <tr>
+              <th [hidden]="!isGrantedAny('Pages.GoodsDetails.Edit', 'Pages.GoodsDetails.Delete')" style="width: 130px;">{{ l('Actions') }}</th>
+              <th pSortableColumn="goodCategoryFk.displayName" style="width: 150px;">
+                {{ l('DisplayName') }}
+                <p-sortIcon field="goodCategoryDisplayName"></p-sortIcon>
+              </th>
+              <th pSortableColumn="name" style="width: 150px;">
+                {{ l('Name') }}
+                <p-sortIcon field="goodsDetail.name"></p-sortIcon>
+              </th>
+              <th pSortableColumn="description" style="width: 150px;">
+                {{ l('Description') }}
+                <p-sortIcon field="goodsDetail.description"></p-sortIcon>
+              </th>
+              <th pSortableColumn="quantity" style="width: 150px;">
+                {{ l('Quantity') }}
+                <p-sortIcon field="goodsDetail.quantity"></p-sortIcon>
+              </th>
+              <th pSortableColumn="weight" style="width: 150px;">
+                {{ l('Weight') }}
+                <p-sortIcon field="goodsDetail.weight"></p-sortIcon>
+              </th>
+              <th pSortableColumn="dimentions" style="width: 150px;">
+                {{ l('Dimentions') }}
+                <p-sortIcon field="goodsDetail.dimentions"></p-sortIcon>
+              </th>
+              <th pSortableColumn="isDangerousGood" style="width: 150px;">
+                {{ l('IsDangerousGood') }}
+                <p-sortIcon field="goodsDetail.isDangerousGood"></p-sortIcon>
+              </th>
+              <th pSortableColumn="dangerousGoodsCode" style="width: 150px;">
+                {{ l('DangerousGoodsCode') }}
+                <p-sortIcon field="goodsDetail.dangerousGoodsCode"></p-sortIcon>
+              </th>
+            </tr>
+          </ng-template>
+          <ng-template let-record="$implicit" pTemplate="body">
+            <tr>
+              <td [hidden]="!isGrantedAny('Pages.GoodsDetails.Edit', 'Pages.GoodsDetails.Delete')" style="width: 130px;">
+                <div class="btn-group dropdown" container="body" dropdown>
+                  <button class="dropdown-toggle btn btn-sm btn-primary" dropdownToggle>
+                    <i class="fa fa-cog"></i><span class="caret"></span> {{ l('Actions') }}
+                  </button>
+                  <ul *dropdownMenu class="dropdown-menu">
+                    <li>
+                      <a (click)="viewGoodsDetailModal.show(record)" class="dropdown-item" href="javascript:">{{ l('View') }}</a>
+                    </li>
+                    <li>
+                      <a
+                        (click)="createOrEditGoodsDetailModal.show()"
+                        *ngIf="permission.isGranted('Pages.GoodsDetails.Edit')"
+                        class="dropdown-item"
+                        href="javascript:"
+                        >{{ l('Edit') }}</a
+                      >
+                    </li>
+                    <li>
+                      <a
+                        (click)="deleteGoodsDetail(record.goodsDetail)"
+                        *ngIf="permission.isGranted('Pages.GoodsDetails.Delete')"
+                        class="dropdown-item"
+                        href="javascript:"
+                        >{{ l('Delete') }}</a
+                      >
+                    </li>
+                  </ul>
                 </div>
-              </div>
-              <div [hidden]="!advancedFiltersAreShown" class="row">
-                <div class="col-md-12">
-                  <div class="kt-separator kt-separator--border-dashed"></div>
+              </td>
+              <td style="width: 150px;">
+                <span class="ui-column-title"> {{ l('DisplayName') }}</span>
+                {{ record.goodCategoryDisplayName }}
+              </td>
+              <td style="width: 150px;">
+                <span class="ui-column-title"> {{ l('Name') }}</span>
+                {{ record.goodsDetail.name }}
+              </td>
+              <td style="width: 150px;">
+                <span class="ui-column-title"> {{ l('Description') }}</span>
+                {{ record.goodsDetail.description }}
+              </td>
+              <td style="width: 150px;">
+                <span class="ui-column-title"> {{ l('Quantity') }}</span>
+                {{ record.goodsDetail.quantity }}
+              </td>
+              <td style="width: 150px;">
+                <span class="ui-column-title"> {{ l('Weight') }}</span>
+                {{ record.goodsDetail.weight }}
+              </td>
+              <td style="width: 150px;">
+                <span class="ui-column-title"> {{ l('Dimentions') }}</span>
+                {{ record.goodsDetail.dimentions }}
+              </td>
+              <td style="width: 150px;">
+                <span class="ui-column-title"> {{ l('IsDangerousGood') }}</span>
+                <div *ngIf="record.goodsDetail.isDangerousGood" class="text-center">
+                  <i class="fa fa-check-circle text-success" title="True"></i>
                 </div>
-
-                <div class="col-md-3">
-                  <div class="form-group">
-                    <label for="NameFilter">{{ l('Name') }}</label>
-                    <input [(ngModel)]="nameFilter" class="form-control" id="NameFilter" name="nameFilter" type="text" />
-                  </div>
-                </div>
-                <div class="col-md-3">
-                  <div class="form-group">
-                    <label for="DescriptionFilter">{{ l('Description') }}</label>
-                    <input [(ngModel)]="descriptionFilter" class="form-control" id="DescriptionFilter" name="descriptionFilter" type="text" />
-                  </div>
-                </div>
-                <div class="col-md-3">
-                  <div class="form-group">
-                    <label for="QuantityFilter">{{ l('Quantity') }}</label>
-                    <input [(ngModel)]="quantityFilter" class="form-control" id="QuantityFilter" name="quantityFilter" type="text" />
-                  </div>
-                </div>
-                <div class="col-md-3">
-                  <div class="form-group">
-                    <label for="WeightFilter">{{ l('Weight') }}</label>
-                    <input [(ngModel)]="weightFilter" class="form-control" id="WeightFilter" name="weightFilter" type="text" />
-                  </div>
-                </div>
-                <div class="col-md-3">
-                  <div class="form-group">
-                    <label for="DimentionsFilter">{{ l('Dimentions') }}</label>
-                    <input [(ngModel)]="dimentionsFilter" class="form-control" id="DimentionsFilter" name="dimentionsFilter" type="text" />
-                  </div>
-                </div>
-                <div class="col-md-3">
-                  <label for="IsDangerousGoodFilterSelect">{{ l('IsDangerousGood') }}</label>
-                  <select [(ngModel)]="isDangerousGoodFilter" class="form-control" id="IsDangerousGoodFilterSelect" name="IsDangerousGoodFilter">
-                    <option value="-1">{{ l('All') }}</option>
-                    <option value="0">{{ l('False') }}</option>
-                    <option value="1">{{ l('True') }}</option>
-                  </select>
-                </div>
-                <div class="col-md-3">
-                  <div class="form-group">
-                    <label for="DangerousGoodsCodeFilter">{{ l('DangerousGoodsCode') }}</label>
-                    <input
-                      [(ngModel)]="dangerousGoodsCodeFilter"
-                      class="form-control"
-                      id="DangerousGoodsCodeFilter"
-                      name="dangerousGoodsCodeFilter"
-                      type="text"
-                    />
-                  </div>
-                </div>
-                <div class="col-md-3">
-                  <div class="form-group">
-                    <label for="GoodCategoryDisplayNameFilter">({{ l('GoodCategory') }} ) {{ l('DisplayName') }}</label>
-                    <input
-                      [(ngModel)]="goodCategoryDisplayNameFilter"
-                      class="form-control"
-                      id="GoodCategoryDisplayNameFilter"
-                      name="goodCategoryDisplayNameFilter"
-                      type="text"
-                    />
-                  </div>
-                </div>
-              </div>
-              <div class="row mb-2">
-                <div class="col-sm-12">
-                  <span
-                    (click)="advancedFiltersAreShown = !advancedFiltersAreShown"
-                    *ngIf="!advancedFiltersAreShown"
-                    class="clickable-item text-muted"
-                    ><i class="fa fa-angle-down"></i> {{ l('ShowAdvancedFilters') }}</span
-                  >
-                  <span (click)="advancedFiltersAreShown = !advancedFiltersAreShown" *ngIf="advancedFiltersAreShown" class="clickable-item text-muted"
-                    ><i class="fa fa-angle-up"></i> {{ l('HideAdvancedFilters') }}</span
-                  >
-                </div>
-              </div>
-            </div>
-          </form>
-
-          <div class="row align-items-center">
-            <!--<Primeng-Datatable-Start>-->
-            <div [busyIf]="primengTableHelper.isLoading" class="primeng-datatable-container col-12">
-              <p-table
-                #dataTable
-                (onLazyLoad)="getGoodsDetails($event)"
-                ScrollWidth="100%"
-                [lazy]="true"
-                [paginator]="false"
-                [resizableColumns]="primengTableHelper.resizableColumns"
-                [responsive]="primengTableHelper.isResponsive"
-                [scrollable]="true"
-                [value]="primengTableHelper.records"
-                rows="{{ primengTableHelper.defaultRecordsCountPerPage }}"
-              >
-                <ng-template pTemplate="header">
-                  <tr>
-                    <th [hidden]="!isGrantedAny('Pages.GoodsDetails.Edit', 'Pages.GoodsDetails.Delete')" style="width: 130px;">{{ l('Actions') }}</th>
-                    <th pSortableColumn="goodCategoryFk.displayName" style="width: 150px;">
-                      {{ l('DisplayName') }}
-                      <p-sortIcon field="goodCategoryDisplayName"></p-sortIcon>
-                    </th>
-                    <th pSortableColumn="name" style="width: 150px;">
-                      {{ l('Name') }}
-                      <p-sortIcon field="goodsDetail.name"></p-sortIcon>
-                    </th>
-                    <th pSortableColumn="description" style="width: 150px;">
-                      {{ l('Description') }}
-                      <p-sortIcon field="goodsDetail.description"></p-sortIcon>
-                    </th>
-                    <th pSortableColumn="quantity" style="width: 150px;">
-                      {{ l('Quantity') }}
-                      <p-sortIcon field="goodsDetail.quantity"></p-sortIcon>
-                    </th>
-                    <th pSortableColumn="weight" style="width: 150px;">
-                      {{ l('Weight') }}
-                      <p-sortIcon field="goodsDetail.weight"></p-sortIcon>
-                    </th>
-                    <th pSortableColumn="dimentions" style="width: 150px;">
-                      {{ l('Dimentions') }}
-                      <p-sortIcon field="goodsDetail.dimentions"></p-sortIcon>
-                    </th>
-                    <th pSortableColumn="isDangerousGood" style="width: 150px;">
-                      {{ l('IsDangerousGood') }}
-                      <p-sortIcon field="goodsDetail.isDangerousGood"></p-sortIcon>
-                    </th>
-                    <th pSortableColumn="dangerousGoodsCode" style="width: 150px;">
-                      {{ l('DangerousGoodsCode') }}
-                      <p-sortIcon field="goodsDetail.dangerousGoodsCode"></p-sortIcon>
-                    </th>
-                  </tr>
-                </ng-template>
-                <ng-template let-record="$implicit" pTemplate="body">
-                  <tr>
-                    <td [hidden]="!isGrantedAny('Pages.GoodsDetails.Edit', 'Pages.GoodsDetails.Delete')" style="width: 130px;">
-                      <div class="btn-group dropdown" container="body" dropdown>
-                        <button class="dropdown-toggle btn btn-sm btn-primary" dropdownToggle>
-                          <i class="fa fa-cog"></i><span class="caret"></span> {{ l('Actions') }}
-                        </button>
-                        <ul *dropdownMenu class="dropdown-menu">
-                          <li>
-                            <a (click)="viewGoodsDetailModal.show(record)" class="dropdown-item" href="javascript:">{{ l('View') }}</a>
-                          </li>
-                          <li>
-                            <a
-                              (click)="createOrEditGoodsDetailModal.show(record.goodsDetail.id)"
-                              *ngIf="permission.isGranted('Pages.GoodsDetails.Edit')"
-                              class="dropdown-item"
-                              href="javascript:"
-                              >{{ l('Edit') }}</a
-                            >
-                          </li>
-                          <li>
-                            <a
-                              (click)="deleteGoodsDetail(record.goodsDetail)"
-                              *ngIf="permission.isGranted('Pages.GoodsDetails.Delete')"
-                              class="dropdown-item"
-                              href="javascript:"
-                              >{{ l('Delete') }}</a
-                            >
-                          </li>
-                        </ul>
-                      </div>
-                    </td>
-                    <td style="width: 150px;">
-                      <span class="ui-column-title"> {{ l('DisplayName') }}</span>
-                      {{ record.goodCategoryDisplayName }}
-                    </td>
-                    <td style="width: 150px;">
-                      <span class="ui-column-title"> {{ l('Name') }}</span>
-                      {{ record.goodsDetail.name }}
-                    </td>
-                    <td style="width: 150px;">
-                      <span class="ui-column-title"> {{ l('Description') }}</span>
-                      {{ record.goodsDetail.description }}
-                    </td>
-                    <td style="width: 150px;">
-                      <span class="ui-column-title"> {{ l('Quantity') }}</span>
-                      {{ record.goodsDetail.quantity }}
-                    </td>
-                    <td style="width: 150px;">
-                      <span class="ui-column-title"> {{ l('Weight') }}</span>
-                      {{ record.goodsDetail.weight }}
-                    </td>
-                    <td style="width: 150px;">
-                      <span class="ui-column-title"> {{ l('Dimentions') }}</span>
-                      {{ record.goodsDetail.dimentions }}
-                    </td>
-                    <td style="width: 150px;">
-                      <span class="ui-column-title"> {{ l('IsDangerousGood') }}</span>
-                      <div *ngIf="record.goodsDetail.isDangerousGood" class="text-center">
-                        <i class="fa fa-check-circle text-success" title="True"></i>
-                      </div>
-                      <div *ngIf="!record.goodsDetail.isDangerousGood" class="text-center"><i class="fa fa-times-circle" title="False"></i></div>
-                    </td>
-                    <td style="width: 150px;">
-                      <span class="ui-column-title"> {{ l('DangerousGoodsCode') }}</span>
-                      {{ record.goodsDetail.dangerousGoodsCode }}
-                    </td>
-                  </tr>
-                </ng-template>
-              </p-table>
-              <div *ngIf="primengTableHelper.totalRecordsCount == 0" class="primeng-no-data">
-                {{ l('NoData') }}
-              </div>
-              <div class="primeng-paging-container">
-                <p-paginator
-                  #paginator
-                  (onPageChange)="getGoodsDetails($event)"
-                  [rowsPerPageOptions]="primengTableHelper.predefinedRecordsCountPerPage"
-                  [rows]="primengTableHelper.defaultRecordsCountPerPage"
-                  [totalRecords]="primengTableHelper.totalRecordsCount"
-                >
-                </p-paginator>
-                <span class="total-records-count">
-                  {{ l('TotalRecordsCount', primengTableHelper.totalRecordsCount) }}
-                </span>
-              </div>
-            </div>
-            <!--<Primeng-Datatable-End>-->
-          </div>
+                <div *ngIf="!record.goodsDetail.isDangerousGood" class="text-center"><i class="fa fa-times-circle" title="False"></i></div>
+              </td>
+              <td style="width: 150px;">
+                <span class="ui-column-title"> {{ l('DangerousGoodsCode') }}</span>
+                {{ record.goodsDetail.dangerousGoodsCode }}
+              </td>
+            </tr>
+          </ng-template>
+        </p-table>
+        <div *ngIf="primengTableHelper.totalRecordsCount == 0" class="primeng-no-data">
+          {{ l('NoData') }}
+        </div>
+        <div class="primeng-paging-container">
+          <p-paginator
+            #paginator
+            (onPageChange)="getGoodsDetails($event)"
+            [rowsPerPageOptions]="primengTableHelper.predefinedRecordsCountPerPage"
+            [rows]="primengTableHelper.defaultRecordsCountPerPage"
+            [totalRecords]="primengTableHelper.totalRecordsCount"
+          >
+          </p-paginator>
+          <span class="total-records-count">
+            {{ l('TotalRecordsCount', primengTableHelper.totalRecordsCount) }}
+          </span>
         </div>
       </div>
+      <!--<Primeng-Datatable-End>-->
     </div>
-    <createOrEditGoodsDetailModal #createOrEditGoodsDetailModal (modalSave)="getGoodsDetails()"></createOrEditGoodsDetailModal>
-    <viewGoodsDetailModal #viewGoodsDetailModal></viewGoodsDetailModal>
   </div>
 </div>
+<createOrEditGoodsDetailModal #createOrEditGoodsDetailModal (modalSave)="getGoodsDetails()"></createOrEditGoodsDetailModal>
+<viewGoodsDetailModal #viewGoodsDetailModal></viewGoodsDetailModal>

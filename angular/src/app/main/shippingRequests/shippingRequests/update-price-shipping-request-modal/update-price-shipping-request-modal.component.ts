@@ -4,7 +4,7 @@ import { ModalDirective } from '@node_modules/ngx-bootstrap/modal';
 import {
   AcceptShippingRequestPriceInput,
   CreateOrEditGoodCategoryDto,
-  GetShippingRequestForViewDto,
+  GetShippingRequestForViewOutput,
   GoodCategoriesServiceProxy,
   ShippingRequestsServiceProxy,
   ShippingRequestVasPriceDto,
@@ -24,14 +24,14 @@ export class UpdatePriceShippingRequestModalComponent extends AppComponentBase {
   allVases: ShippingRequestVasPriceDto[] = [];
   active = false;
   saving = false;
-  item: GetShippingRequestForViewDto;
+  item: GetShippingRequestForViewOutput;
   updatePriceInput: UpdatePriceInput;
   acceptShippingRequestPriceInput: AcceptShippingRequestPriceInput;
   private _router: Router;
 
   constructor(injector: Injector, private _shippingRequestsServiceProxy: ShippingRequestsServiceProxy) {
     super(injector);
-    this.item = new GetShippingRequestForViewDto();
+    this.item = new GetShippingRequestForViewOutput();
     this.updatePriceInput = new UpdatePriceInput();
     this.acceptShippingRequestPriceInput = new AcceptShippingRequestPriceInput();
   }

@@ -13,5 +13,6 @@ namespace TACHYON.AddressBook
     {
         public int? TenantId { get; set; }
 
+        public override string Name { get; set; }
     }
 }

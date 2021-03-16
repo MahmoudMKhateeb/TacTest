@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using TACHYON.AddressBook.Dtos;
+using TACHYON.ShippingRequestVases.Dtos;
 
 namespace TACHYON.Shipping.ShippingRequestBids.Dtos
 {
@@ -11,10 +13,6 @@ namespace TACHYON.Shipping.ShippingRequestBids.Dtos
         /// ShippingRequest bidding startDate
         /// </summary>
         public DateTime? BidStartDate { get; set; }
-        /// <summary>
-        /// ShippingRequest bidding endDate
-        /// </summary>
-        public DateTime? BidEndDate { get; set; }
         /// <summary>
         /// tenant name who created the shipping-request
         /// </summary>
@@ -30,17 +28,22 @@ namespace TACHYON.Shipping.ShippingRequestBids.Dtos
         /// </summary>
         public long? MyBidId { get; set; }
         /// <summary>
-        /// shipping request origin city name
+        /// shipping request origin facility output
         /// </summary>
-        public string OriginalCityName { get; set; }
+        public GetFacilityForViewOutput OriginalFacility { get; set; }
         /// <summary>
-        /// shipping request destination city name
+        /// shipping request destination facility output
         /// </summary>
-        public string DestinationCityName { get; set; }
+        public GetFacilityForViewOutput DestinationFacility { get; set; }
         /// <summary>
         /// shipping request good category
         /// </summary>
         public string GoodCategoryName { get; set; }
+        public string SourceCountryCode{ get; set; }
+        public string SourceCityName { get; set; }
+        public string DestinationCountryCode { get; set; }
+        public string DestinationCityName { get; set; }
+        public IEnumerable<GetShippingRequestVasForViewDto> ShippingRequestVasesDto { get; set; }
 
 
     }

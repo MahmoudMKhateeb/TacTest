@@ -5,6 +5,7 @@ using Abp.Authorization;
 using Abp.Domain.Repositories;
 using Abp.Extensions;
 using Abp.Linq.Extensions;
+using Abp.UI;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -36,6 +37,7 @@ namespace TACHYON.Goods.GoodCategories
         {
 
             var filteredGoodCategories = _goodCategoryRepository.GetAll()
+                        .Include(e=>e.FatherFk)
                         .WhereIf(!string.IsNullOrWhiteSpace(input.Filter), e => false || e.DisplayName.Contains(input.Filter))
                         .WhereIf(!string.IsNullOrWhiteSpace(input.DisplayNameFilter), e => e.DisplayName == input.DisplayNameFilter);
 
@@ -49,8 +51,10 @@ namespace TACHYON.Goods.GoodCategories
                                      GoodCategory = new GoodCategoryDto
                                      {
                                          DisplayName = o.DisplayName,
-                                         Id = o.Id
-                                     }
+                                         Id = o.Id,
+                                         FatherId=o.FatherId
+                                     },
+                                     FatherCategoryName = o.FatherId != null ? o.FatherFk.DisplayName :"",
                                  };
 
             var totalCount = await filteredGoodCategories.CountAsync();
@@ -65,7 +69,10 @@ namespace TACHYON.Goods.GoodCategories
         {
             var goodCategory = await _goodCategoryRepository.GetAsync(id);
 
-            var output = new GetGoodCategoryForViewDto { GoodCategory = ObjectMapper.Map<GoodCategoryDto>(goodCategory) };
+            var output = new GetGoodCategoryForViewDto {
+                GoodCategory = ObjectMapper.Map<GoodCategoryDto>(goodCategory),
+            FatherCategoryName=goodCategory.FatherFk?.DisplayName
+            };
 
             return output;
         }
@@ -105,6 +112,10 @@ namespace TACHYON.Goods.GoodCategories
         [AbpAuthorize(AppPermissions.Pages_GoodCategories_Edit)]
         protected virtual async Task Update(CreateOrEditGoodCategoryDto input)
         {
+            if (input.FatherId == input.Id)
+            {
+                throw new UserFriendlyException(L("Category cannot be father to itself"));
+            }
             var goodCategory = await _goodCategoryRepository.FirstOrDefaultAsync((int)input.Id);
             ObjectMapper.Map(input, goodCategory);
         }
@@ -119,6 +130,7 @@ namespace TACHYON.Goods.GoodCategories
         {
 
             var filteredGoodCategories = _goodCategoryRepository.GetAll()
+                        .Include(x=>x.FatherFk)
                         .WhereIf(!string.IsNullOrWhiteSpace(input.Filter), e => false || e.DisplayName.Contains(input.Filter))
                         .WhereIf(!string.IsNullOrWhiteSpace(input.DisplayNameFilter), e => e.DisplayName == input.DisplayNameFilter);
 
@@ -128,8 +140,10 @@ namespace TACHYON.Goods.GoodCategories
                              GoodCategory = new GoodCategoryDto
                              {
                                  DisplayName = o.DisplayName,
-                                 Id = o.Id
-                             }
+                                 Id = o.Id,
+                                 FatherId=o.FatherId
+                             },
+                             FatherCategoryName=o.FatherId!=null ?o.FatherFk.DisplayName :""
                          });
 
 
@@ -138,6 +152,16 @@ namespace TACHYON.Goods.GoodCategories
             return _goodCategoriesExcelExporter.ExportToFile(goodCategoryListDtos);
         }
 
-
+        
+        public async Task<List<GetAllGoodsCategoriesForDropDownOutput>> GetAllGoodsCategoriesForDropDown()
+        {
+            return await  _goodCategoryRepository.GetAll()
+                .Select(x => new GetAllGoodsCategoriesForDropDownOutput
+            {
+                DisplayName = x.DisplayName,
+                Id = x.Id
+            }).ToListAsync();
+        }
+        
     }
 }

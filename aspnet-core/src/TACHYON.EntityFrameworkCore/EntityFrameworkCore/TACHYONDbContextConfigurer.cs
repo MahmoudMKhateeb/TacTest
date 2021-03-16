@@ -7,12 +7,12 @@ namespace TACHYON.EntityFrameworkCore
     {
         public static void Configure(DbContextOptionsBuilder<TACHYONDbContext> builder, string connectionString)
         {
-            builder.UseSqlServer(connectionString);
+            builder.UseSqlServer(connectionString, x => x.UseNetTopologySuite());
         }
 
         public static void Configure(DbContextOptionsBuilder<TACHYONDbContext> builder, DbConnection connection)
         {
-            builder.UseSqlServer(connection);
+            builder.UseSqlServer(connection, x => x.UseNetTopologySuite());
         }
     }
 }

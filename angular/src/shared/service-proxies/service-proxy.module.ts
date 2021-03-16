@@ -1,10 +1,11 @@
-﻿import { AbpHttpInterceptor, RefreshTokenService, AbpHttpConfigurationService } from 'abp-ng2-module';
+import { AbpHttpInterceptor, RefreshTokenService, AbpHttpConfigurationService } from 'abp-ng2-module';
 import { HTTP_INTERCEPTORS } from '@angular/common/http';
 import { NgModule } from '@angular/core';
 import * as ApiServiceProxies from './service-proxies';
 import { ZeroRefreshTokenService } from '@account/auth/zero-refresh-token.service';
 import { ZeroTemplateHttpConfigurationService } from './zero-template-http-configuration.service';
-import { ShippingRequestBidsServiceProxy } from './service-proxies';
+import { ShippingRequestBidsServiceProxy, WaybillsServiceProxy } from './service-proxies';
+import { ShippingRequestsTripServiceProxy } from './service-proxies';
 
 @NgModule({
   providers: [
@@ -17,6 +18,35 @@ import { ShippingRequestBidsServiceProxy } from './service-proxies';
         ApiServiceProxies.NationalityTranslationsServiceProxy,        
         ApiServiceProxies.TransportTypesTranslationsServiceProxy,        
     ApiServiceProxies.TrucksTypesTranslationsServiceProxy,
+    ApiServiceProxies.TransportTypesTranslationsServiceProxy,
+    ApiServiceProxies.ReceiversServiceProxy,
+    ApiServiceProxies.NationalitiesServiceProxy,
+    ApiServiceProxies.NationalityTranslationsServiceProxy,
+    ApiServiceProxies.TransportTypesTranslationsServiceProxy,
+    ApiServiceProxies.WaybillsServiceProxy,
+    ApiServiceProxies.TruckCapacitiesTranslationsServiceProxy,
+    ApiServiceProxies.TruckStatusesTranslationsServiceProxy,
+    ApiServiceProxies.CitiesTranslationsServiceProxy,
+    ApiServiceProxies.CountriesTranslationsServiceProxy,
+    ApiServiceProxies.PlateTypesServiceProxy,
+    ApiServiceProxies.NationalitiesServiceProxy,
+    ApiServiceProxies.NationalityTranslationsServiceProxy,
+    ApiServiceProxies.TransportTypesTranslationsServiceProxy,
+    ApiServiceProxies.CitiesTranslationsServiceProxy,
+    ApiServiceProxies.CountriesTranslationsServiceProxy,
+    ApiServiceProxies.PlateTypesServiceProxy,
+    ApiServiceProxies.TruckCapacitiesTranslationsServiceProxy,
+    ApiServiceProxies.TruckStatusesTranslationsServiceProxy,
+    ApiServiceProxies.NationalitiesServiceProxy,
+    ApiServiceProxies.NationalityTranslationsServiceProxy,
+    ApiServiceProxies.TransportTypesTranslationsServiceProxy,
+    ApiServiceProxies.TrucksTypesTranslationsServiceProxy,
+    ApiServiceProxies.TransportTypesTranslationsServiceProxy,
+    ApiServiceProxies.TripStatusesServiceProxy,
+    ApiServiceProxies.PackingTypesServiceProxy,
+    ApiServiceProxies.ShippingTypesServiceProxy,
+    ApiServiceProxies.NationalitiesServiceProxy,
+    ApiServiceProxies.NationalityTranslationsServiceProxy,
     ApiServiceProxies.TransportTypesTranslationsServiceProxy,
     ApiServiceProxies.VasPricesServiceProxy,
     ApiServiceProxies.VasesServiceProxy,
@@ -95,6 +125,12 @@ import { ShippingRequestBidsServiceProxy } from './service-proxies';
     ApiServiceProxies.EntityDynamicParameterServiceProxy,
     ApiServiceProxies.DynamicParameterValueServiceProxy,
     ApiServiceProxies.EntityDynamicParameterValueServiceProxy,
+    ApiServiceProxies.InvoicePeriodServiceProxy,
+    ApiServiceProxies.InvoiceServiceProxy,
+    ApiServiceProxies.BalanceRechargeServiceProxy,
+    ApiServiceProxies.GroupPeriodServiceProxy,
+    ApiServiceProxies.TransactionServiceProxy,
+    ApiServiceProxies.ShippingRequestsTripServiceProxy,
     { provide: RefreshTokenService, useClass: ZeroRefreshTokenService },
     { provide: AbpHttpConfigurationService, useClass: ZeroTemplateHttpConfigurationService },
     { provide: HTTP_INTERCEPTORS, useClass: AbpHttpInterceptor, multi: true },

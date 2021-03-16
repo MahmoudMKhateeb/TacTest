@@ -6,7 +6,10 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using TACHYON.Authorization.Users;
 using TACHYON.Documents.DocumentFiles;
+using TACHYON.Invoices;
+using TACHYON.Invoices.Groups;
 using TACHYON.MultiTenancy;
+using TACHYON.Shipping.ShippingRequests;
 
 namespace TACHYON.Notifications
 {
@@ -19,6 +22,11 @@ namespace TACHYON.Notifications
         Task UpdateShippingRequestPrice(UserIdentifier argsUser, long shippingRequestId, decimal price);
         Task AcceptShippingRequestPrice(long shippingRequestId, bool isAccepted);
         Task RejectShippingRequest(UserIdentifier argsUser, long shippingRequestId);
+        Task NewInvoiceShipperGenerated(Invoice invoice);    
+        Task NewGroupPeriodsGenerated(GroupPeriod groupPeriod);
+        Task GroupPeriodOnDemand(GroupPeriod groupPeriod);
+        Task ShipperNotfiyWhenCreditLimitGreaterOrEqualXPercentage(int? TenantId, int Percentage);
+
 
         Task SomeTrucksCouldntBeImported(UserIdentifier user, string fileToken, string fileType, string fileName);
         Task CreateBidRequest(UserIdentifier argsUser, long shippingRequestBidId);
@@ -28,6 +36,8 @@ namespace TACHYON.Notifications
 
         Task AcceptShippingRequestBid(UserIdentifier argsUser, long shippingRequestBidId);
         Task ShippingRequestAsBidWithSameTruckAsync(UserIdentifier[] argsUser, long shippingRequestId);
+        Task StartShippment(UserIdentifier argsUser, long TripId, string PickupFacilityName);
+        Task ShipperShippingRequestFinish(UserIdentifier argsUser, ShippingRequest Request);
         #endregion
         Task WelcomeToTheApplicationAsync(User user);
 

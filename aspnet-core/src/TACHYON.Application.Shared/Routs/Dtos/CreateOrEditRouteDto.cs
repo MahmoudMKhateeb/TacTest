@@ -18,13 +18,14 @@ namespace TACHYON.Routs.Dtos
 
         public int? RoutTypeId { get; set; }
 
-        public virtual int? OriginCityId { get; set; }
-
-        public virtual int? DestinationCityId { get; set; }
 
         public virtual long? OriginPortId { get; set; }
 
-
         public virtual long? DestinationPortId { get; set; }
+        [Required]
+        public virtual int OriginCityId { get; set; }
+        [Required]
+        public virtual int DestinationCityId { get; set; }
+
     }
 }

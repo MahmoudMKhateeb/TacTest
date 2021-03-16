@@ -97,11 +97,16 @@ namespace TACHYON.Configuration
                     GetFromAppSettings(AppSettings.HostManagement.BillingLegalName, "")),
                 new SettingDefinition(AppSettings.HostManagement.BillingAddress,
                     GetFromAppSettings(AppSettings.HostManagement.BillingAddress, "")),
+                new SettingDefinition(AppSettings.HostManagement.TaxVat,
+                    GetFromAppSettings(AppSettings.HostManagement.TaxVat, "5")),
                 new SettingDefinition(AppSettings.Recaptcha.SiteKey, GetFromSettings("Recaptcha:SiteKey"),
                     isVisibleToClients: true),
                 new SettingDefinition(AppSettings.UiManagement.Theme,
                     GetFromAppSettings(AppSettings.UiManagement.Theme, "default"), isVisibleToClients: true,
                     scopes: SettingScopes.All),
+                new SettingDefinition(AppSettings.Sms.UnifonicAppSid,
+                    GetFromAppSettings(AppSettings.Sms.UnifonicAppSid, "9BfjQjfShbdGyuy_5i5xj_FZ1yM7f"), isVisibleToClients: true,
+                    scopes: SettingScopes.Application),
             };
         }
 

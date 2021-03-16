@@ -13,9 +13,9 @@ namespace TACHYON.Routs.RoutSteps
 {
     public interface IRoutStepsAppService : IApplicationService
     {
-        Task<PagedResultDto<GetRoutStepForViewDto>> GetAll(GetAllRoutStepsInput input);
+        Task<PagedResultDto<GetRoutStepForViewOutput>> GetAll(GetAllRoutStepsInput input);
 
-        Task<GetRoutStepForViewDto> GetRoutStepForView(long id);
+        Task<GetRoutStepForViewOutput> GetRoutStepForView(long id);
 
         Task<GetRoutStepForEditOutput> GetRoutStepForEdit(EntityDto<long> input);
 

@@ -1,0 +1,134 @@
+<div
+  bsModal
+  #addNewTripsModal="bs-modal"
+  class="modal fade"
+  role="dialog"
+  aria-labelledby="createOrEditModal"
+  aria-hidden="true"
+  [config]="{ backdrop: 'static' }"
+>
+  <div class="modal-dialog modal-dialog-centered modal-xl">
+    <div class="modal-content">
+      <div class="modal-header">
+        <p class="modal-title">
+          <span>{{ l('Trip Details') }}</span>
+        </p>
+      </div>
+      <div class="modal-body" [busyIf]="loading">
+        <div class="row">
+          <!--begin::Body-->
+          <!--  begin:: Source Dest Facilitys  -->
+          <div class="col-lg-6 form-group">
+            <label>{{ l('sourceFacility') }}</label>
+            <div class="input-group">
+              <select name="sourceFacility" class="form-control" [disabled]="facilityLoading" [(ngModel)]="trip.originFacilityId">
+                <option value="">{{ l('selectaFacility') }}</option>
+                <option *ngFor="let item of allFacilities" value="{{ item.id }}">{{ item.displayName }}</option>
+              </select>
+              <div class="input-group-btn">
+                <button class="btn btn-primary" [disabled]="facilityLoading" (click)="createOrEditFacilityModal.show()">
+                  <i class="flaticon-plus"></i>{{ l('AddNew') }}
+                </button>
+              </div>
+            </div>
+          </div>
+          <div class="col-lg-6 form-group">
+            <label>{{ l('destFacility') }}</label>
+            <div class="input-group">
+              <select name="destFacility" class="form-control" [disabled]="facilityLoading" [(ngModel)]="trip.destinationFacilityId">
+                <option value="">{{ l('selectaFacility') }}</option>
+                <option *ngFor="let item of allFacilities" value="{{ item.id }}">{{ item.displayName }}</option>
+              </select>
+              <div class="input-group-btn">
+                <button class="btn btn-primary" [disabled]="facilityLoading" (click)="createOrEditFacilityModal.show()">
+                  <i class="flaticon-plus"></i>{{ l('AddNew') }}
+                </button>
+              </div>
+            </div>
+          </div>
+          <!--  end:: Source Dest Facilitys  -->
+          <!--  begin:: Trip start&End Dates-->
+          <div class="col-lg-6">
+            <div class="form-group">
+              <label>{{ l('tripStartDate') }} *</label>
+              <div class="input-group date">
+                <input
+                  [(date)]="trip.startTripDate"
+                  class="form-control"
+                  name="tripStartDate"
+                  placeholder="{{ l('tripStartDate') }}"
+                  bsDatepicker
+                  datePickerMomentModifier
+                />
+                <div class="input-group-append">
+                  <span class="input-group-text">
+                    <i class="la la-calendar-check-o"></i>
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-lg-6">
+            <div class="form-group">
+              <label>{{ l('tripEndDate') }} *</label>
+              <div class="input-group date">
+                <input
+                  [(date)]="trip.endTripDate"
+                  class="form-control"
+                  name="tripEndDate"
+                  placeholder="{{ l('tripEndDate') }}"
+                  bsDatepicker
+                  datePickerMomentModifier
+                />
+                <div class="input-group-append">
+                  <span class="input-group-text">
+                    <i class="la la-calendar-check-o"></i>
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
+          <!--  end:: Trip start&End Dates-->
+          <!-- begin::Vas's  -->
+          <div class="col-lg-6" *ngIf="VasListFromFather.length > 0">
+            <div class="form-group" *ngIf="selectedVases != []">
+              <label>{{ l('vases') }}* </label>
+              <p-multiSelect
+                [options]="Vases"
+                [(ngModel)]="selectedVases"
+                [styleClass]="'form-control'"
+                [filter]="false"
+                [showHeader]="false"
+                [defaultLabel]="''"
+                optionLabel="name"
+              ></p-multiSelect>
+            </div>
+          </div>
+
+          <!--      end:Vas's      -->
+          <!--  start:: RouteSteps -->
+          <RouteStepsForCreateShippingRequest
+            #RouteSteps
+            (SelectedWayPointsFromChild)="trip.routPoints = $event"
+            [WayPointListFromFatherForShippingRequestEdit]="trip.routPoints"
+            [MainGoodsCategory]="shippingRequest.goodCategoryId"
+          ></RouteStepsForCreateShippingRequest>
+          <!--  end:: RouteSteps -->
+          <!--end::Body-->
+        </div>
+      </div>
+      <div class="modal-footer">
+        <!--begin::Buttons-->
+
+        <button [disabled]="saving" type="button" class="btn btn-primary font-weight-bolder btn-sm py-3 px-6 text-uppercase" (click)="close()">
+          {{ l('Close') }}
+        </button>
+        <button [disabled]="saving" class="btn btn-primary font-weight-bolder btn-sm py-3 px-6 text-uppercase" (click)="createOrEditTrip()">
+          {{ trip.id ? l('updateTrip') : l('addNewTrip')}}
+        </button>
+        <!--end::Buttons-->
+      </div>
+    </div>
+  </div>
+</div>
+<createOrEditFacilityModal #createOrEditFacilityModal (modalSave)="refreshOrGetFacilities()"></createOrEditFacilityModal>

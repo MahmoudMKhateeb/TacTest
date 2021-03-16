@@ -13,6 +13,7 @@ namespace TACHYON.Shipping.ShippingRequestBids.Dtos
         public long? TruckTypeId { get; set; }
         public long? TransportType { get; set; }
         public int? CapacityId { get; set; }
+        public bool? IsMyAssignedBidsOnly { get; set; }
     }
 
 

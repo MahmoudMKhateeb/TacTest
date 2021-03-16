@@ -24,7 +24,7 @@ namespace TACHYON.AddressBook.Exporting
             _abpSession = abpSession;
         }
 
-        public FileDto ExportToFile(List<GetFacilityForViewDto> facilities)
+        public FileDto ExportToFile(List<GetFacilityForViewOutput> facilities)
         {
             return CreateExcelPackage(
                 "Facilities.xlsx",
@@ -36,16 +36,16 @@ namespace TACHYON.AddressBook.Exporting
                     AddHeader(
                         sheet,
                         L("Name"),
-                        L("Adress"),
+                        L("Address"),
                         L("Longitude"),
-                        L("Latitude"),
+                        L("latitude"),
                         (L("City")) + L("DisplayName")
                         );
 
                     AddObjects(
                         sheet, 2, facilities,
                         _ => _.Facility.Name,
-                        _ => _.Facility.Adress,
+                        _ => _.Facility.Address,
                         _ => _.Facility.Longitude,
                         _ => _.Facility.Latitude,
                         _ => _.CityDisplayName
