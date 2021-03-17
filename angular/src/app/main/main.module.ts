@@ -2,26 +2,6 @@ import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { AppCommonModule } from '@app/shared/common/app-common.module';
-import { CitiesTranslationsComponent } from './citiesTranslations/citiesTranslations/citiesTranslations.component';
-import { ViewCitiesTranslationModalComponent } from './citiesTranslations/citiesTranslations/view-citiesTranslation-modal.component';
-import { CreateOrEditCitiesTranslationModalComponent } from './citiesTranslations/citiesTranslations/create-or-edit-citiesTranslation-modal.component';
-
-import { CountriesTranslationsComponent } from './countriesTranslations/countriesTranslations/countriesTranslations.component';
-import { ViewCountriesTranslationModalComponent } from './countriesTranslations/countriesTranslations/view-countriesTranslation-modal.component';
-import { CreateOrEditCountriesTranslationModalComponent } from './countriesTranslations/countriesTranslations/create-or-edit-countriesTranslation-modal.component';
-
-import { PlateTypesComponent } from './plateTypes/plateTypes/plateTypes.component';
-import { ViewPlateTypeModalComponent } from './plateTypes/plateTypes/view-plateType-modal.component';
-import { CreateOrEditPlateTypeModalComponent } from './plateTypes/plateTypes/create-or-edit-plateType-modal.component';
-
-import { TruckCapacitiesTranslationsComponent } from './truckCapacitiesTranslations/truckCapacitiesTranslations/truckCapacitiesTranslations.component';
-import { ViewTruckCapacitiesTranslationModalComponent } from './truckCapacitiesTranslations/truckCapacitiesTranslations/view-truckCapacitiesTranslation-modal.component';
-import { CreateOrEditTruckCapacitiesTranslationModalComponent } from './truckCapacitiesTranslations/truckCapacitiesTranslations/create-or-edit-truckCapacitiesTranslation-modal.component';
-
-import { TruckStatusesTranslationsComponent } from './truckStatusesTranslations/truckStatusesTranslations/truckStatusesTranslations.component';
-import { ViewTruckStatusesTranslationModalComponent } from './truckStatusesTranslations/truckStatusesTranslations/view-truckStatusesTranslation-modal.component';
-import { CreateOrEditTruckStatusesTranslationModalComponent } from './truckStatusesTranslations/truckStatusesTranslations/create-or-edit-truckStatusesTranslation-modal.component';
-
 import { TripStatusesComponent } from './tripStatuses/tripStatuses/tripStatuses.component';
 import { ViewTripStatusModalComponent } from './tripStatuses/tripStatuses/view-tripStatus-modal.component';
 import { CreateOrEditTripStatusModalComponent } from './tripStatuses/tripStatuses/create-or-edit-tripStatus-modal.component';
@@ -117,7 +97,6 @@ import { FileUploadModule } from 'primeng/fileupload';
 
 import { DocumentFilesComponent } from './documentFiles/documentFiles/documentFiles.component';
 import { ViewDocumentFileModalComponent } from './documentFiles/documentFiles/view-documentFile-modal.component';
-import { CreateOrEditDocumentFileModalComponent } from './documentFiles/documentFiles/create-or-edit-documentFile-modal.component';
 
 import { DocumentTypesComponent } from './documentTypes/documentTypes/documentTypes.component';
 import { ViewDocumentTypeModalComponent } from './documentTypes/documentTypes/view-documentType-modal.component';
@@ -199,56 +178,52 @@ import { DashboardComponent } from './dashboard/dashboard.component';
 import { MainRoutingModule } from './main-routing.module';
 import { NgxChartsModule } from '@swimlane/ngx-charts';
 
-import { BsDatepickerConfig, BsDaterangepickerConfig, BsLocaleService } from 'ngx-bootstrap/datepicker';
-import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
+import { BsDatepickerConfig, BsDatepickerModule, BsDaterangepickerConfig, BsLocaleService } from 'ngx-bootstrap/datepicker';
 import { NgxBootstrapDatePickerConfigService } from 'assets/ngx-bootstrap/ngx-bootstrap-datepicker-config.service';
 import { ImageCropperModule } from '@node_modules/ngx-image-cropper';
 import { AgmCoreModule } from '@node_modules/@agm/core';
 import { UpdatePriceShippingRequestModalComponent } from './shippingRequests/shippingRequests/update-price-shipping-request-modal/update-price-shipping-request-modal.component';
 import { AdminModule } from '@app/admin/admin.module';
-import { NgbDateParserFormatter } from '@node_modules/@ng-bootstrap/ng-bootstrap';
-import { CustomNgbDateParserFormatter } from '@app/shared/common/hijri-gregorian-datepicker/CustomNgbDateParserFormatter';
 
 import { MarketplaceComponent } from '@app/main/marketPlace/marketPlace/marketplace.component';
 import { ViewShippingRequestDetailsComponent } from '@app/main/marketPlace/marketPlace/ViewShippingRequestDetails.component';
 import { ViewAllCarrierBidsComponent } from '@app/main/marketPlace/marketPlace/ViewAllCarrierBids.component';
 import { RejectionReasonModalComponent } from './documentFiles/documentFiles/rejectionReason-modal.component';
 import { ViewShippingRequestPriceResponseModalComponent } from './shippingRequests/shippingRequests/shipping-request-Response/view-shipping-request-response-modal.component';
-import { SafePipe } from '../../account/register/safe.pipe';
-import { BalancesListComponent } from './invoices/balances/balances-list/balances-list.component';
-import { BalanceRechargeModelComponent } from './invoices/balances/balance-recharge-model/balance-recharge-model.component';
-import { GroupPeriodsListComponent } from './invoices/groupsperiods/group-periods-list/group-periods-list.component';
-import { InvoiceDetailComponent } from './invoices/invoice-detail/invoice-detail.component';
-import { GroupDetailComponent } from './invoices/groupsperiods/group-detail/group-detail.component';
-import { DemanModelComponent } from './invoices/groupsperiods/model/deman-model.component';
-import { TransactionListComponent } from './invoices/transaction/transaction-list/transaction-list.component';
-import { InvoicePeriodsListComponent } from '@app/main/Invoices/invoice-periods-list/invoice-periods-list.component';
-import { InvoicePeriodsModalComponent } from '@app/main/Invoices/invoice-periods-modal/invoice-periods-modal.component';
-import { InvoicesListComponent } from './Invoices/invoices-list/invoices-list.component';
 import { ListboxModule, MultiSelectModule, PickListModule, SelectButtonModule, StepsModule } from '@node_modules/primeng';
 import { RouteStepsForCreateShippingRequstComponent } from '@app/main/shippingRequests/shippingRequests/ShippingRequestRouteSteps/RouteStepsForCreateShippingRequst.component';
 
 import { AgmDirectionModule } from '@node_modules/agm-direction';
 import { TripsForViewShippingRequestComponent } from '@app/main/shippingRequests/shippingRequests/ShippingRequestTrips/TripsForViewShippingRequest.component';
 import { AddNewTripComponent } from '@app/main/shippingRequests/shippingRequests/ShippingRequestTrips/AddNewTripModal/AddNewTrip.component';
+import { InvoicePeriodsListComponent } from '@app/main/invoices/invoice-periods-list/invoice-periods-list.component';
+import { InvoicePeriodsModalComponent } from '@app/main/invoices/invoice-periods-modal/invoice-periods-modal.component';
+import { InvoicesListComponent } from '@app/main/invoices/invoices-list/invoices-list.component';
+import { BalancesListComponent } from '@app/main/invoices/balances/balances-list/balances-list.component';
+import { DemanModelComponent } from '@app/main/invoices/groupsPeriods/model/deman-model.component';
+import { BalanceRechargeModelComponent } from '@app/main/invoices/balances/balance-recharge-model/balance-recharge-model.component';
+import { GroupPeriodsListComponent } from '@app/main/invoices/groupsPeriods/group-periods-list/group-periods-list.component';
+import { GroupDetailComponent } from '@app/main/invoices/groupsPeriods/group-detail/group-detail.component';
+import { InvoiceDetailComponent } from '@app/main/invoices/invoice-detail/invoice-detail.component';
+import { TransactionListComponent } from '@app/main/invoices/transaction/transaction-list/transaction-list.component';
 
 NgxBootstrapDatePickerConfigService.registerNgxBootstrapDatePickerLocales();
 
 @NgModule({
   imports: [
+    UtilsModule,
+    AppCommonModule,
+    CommonModule,
+    FormsModule,
     FileUploadModule,
     AutoCompleteModule,
     PaginatorModule,
     EditorModule,
     InputMaskModule,
     TableModule,
-    CommonModule,
-    FormsModule,
     ModalModule,
     TabsModule,
     TooltipModule,
-    AppCommonModule.forRoot(),
-    UtilsModule,
     MainRoutingModule,
     CountoModule,
     NgxChartsModule,
@@ -270,118 +245,42 @@ NgxBootstrapDatePickerConfigService.registerNgxBootstrapDatePickerLocales();
   ],
   declarations: [
     TrucksTypesTranslationsComponent,
-
     ViewTrucksTypesTranslationModalComponent,
     CreateOrEditTrucksTypesTranslationModalComponent,
+    CitiesTranslationsComponent,
     TruckCapacitiesTranslationsComponent,
-
     ViewTruckCapacitiesTranslationModalComponent,
     CreateOrEditTruckCapacitiesTranslationModalComponent,
     TruckStatusesTranslationsComponent,
-
     ViewTruckStatusesTranslationModalComponent,
     CreateOrEditTruckStatusesTranslationModalComponent,
-    CitiesTranslationsComponent,
-
-    ViewCitiesTranslationModalComponent,
-    CreateOrEditCitiesTranslationModalComponent,
-    CountriesTranslationsComponent,
-
-    ViewCountriesTranslationModalComponent,
-    CreateOrEditCountriesTranslationModalComponent,
-    PlateTypesComponent,
-
-    ViewPlateTypeModalComponent,
-    CreateOrEditPlateTypeModalComponent,
-    NationalitiesComponent,
-
-    ViewNationalityModalComponent,
-    CreateOrEditNationalityModalComponent,
-    MasterDetailChild_Nationality_NationalityTranslationsComponent,
-
-    MasterDetailChild_Nationality_ViewNationalityTranslationModalComponent,
-    MasterDetailChild_Nationality_CreateOrEditNationalityTranslationModalComponent,
-    NationalityTranslationsComponent,
-
-    ViewNationalityTranslationModalComponent,
-    CreateOrEditNationalityTranslationModalComponent,
-    TransportTypesTranslationsComponent,
-
-    ViewTransportTypesTranslationModalComponent,
-    CreateOrEditTransportTypesTranslationModalComponent,
-    CitiesTranslationsComponent,
-
-    ViewCitiesTranslationModalComponent,
-    CreateOrEditCitiesTranslationModalComponent,
-    CountriesTranslationsComponent,
-
-    ViewCountriesTranslationModalComponent,
-    CreateOrEditCountriesTranslationModalComponent,
-    PlateTypesComponent,
-
-    ViewPlateTypeModalComponent,
-    CreateOrEditPlateTypeModalComponent,
-    TruckCapacitiesTranslationsComponent,
-
-    ViewTruckCapacitiesTranslationModalComponent,
-    CreateOrEditTruckCapacitiesTranslationModalComponent,
-    TruckStatusesTranslationsComponent,
-
-    ViewTruckStatusesTranslationModalComponent,
-    CreateOrEditTruckStatusesTranslationModalComponent,
-    NationalitiesComponent,
     TripStatusesComponent,
-
     ViewTripStatusModalComponent,
     CreateOrEditTripStatusModalComponent,
     PackingTypesComponent,
-
     ViewPackingTypeModalComponent,
     CreateOrEditPackingTypeModalComponent,
     ShippingTypesComponent,
-
     ViewShippingTypeModalComponent,
     CreateOrEditShippingTypeModalComponent,
-    NationalitiesComponent,
-
-    ViewNationalityModalComponent,
-    CreateOrEditNationalityModalComponent,
-    MasterDetailChild_Nationality_NationalityTranslationsComponent,
-
-    MasterDetailChild_Nationality_ViewNationalityTranslationModalComponent,
-    MasterDetailChild_Nationality_CreateOrEditNationalityTranslationModalComponent,
-    NationalityTranslationsComponent,
-
-    ViewNationalityTranslationModalComponent,
-    CreateOrEditNationalityTranslationModalComponent,
-    TransportTypesTranslationsComponent,
-
-    ViewTransportTypesTranslationModalComponent,
-    CreateOrEditTransportTypesTranslationModalComponent,
     ViewCitiesTranslationModalComponent,
     CreateOrEditCitiesTranslationModalComponent,
     CountriesTranslationsComponent,
-
     ViewCountriesTranslationModalComponent,
     CreateOrEditCountriesTranslationModalComponent,
     PlateTypesComponent,
-
     ViewPlateTypeModalComponent,
     CreateOrEditPlateTypeModalComponent,
     NationalitiesComponent,
-
     ViewNationalityModalComponent,
     CreateOrEditNationalityModalComponent,
     MasterDetailChild_Nationality_NationalityTranslationsComponent,
-
     MasterDetailChild_Nationality_ViewNationalityTranslationModalComponent,
     MasterDetailChild_Nationality_CreateOrEditNationalityTranslationModalComponent,
     NationalityTranslationsComponent,
-
     ViewNationalityTranslationModalComponent,
     CreateOrEditNationalityTranslationModalComponent,
     TransportTypesTranslationsComponent,
-
     ViewTransportTypesTranslationModalComponent,
     CreateOrEditTransportTypesTranslationModalComponent,
     VasPricesComponent,
@@ -389,107 +288,82 @@ NgxBootstrapDatePickerConfigService.registerNgxBootstrapDatePickerLocales();
     ViewVasPriceModalComponent,
     CreateOrEditVasPriceModalComponent,
     ReceiversComponent,
-
     ViewReceiverModalComponent,
     CreateOrEditReceiverModalComponent,
     TermAndConditionsComponent,
-
     ViewTermAndConditionModalComponent,
     CreateOrEditTermAndConditionModalComponent,
     CapacitiesComponent,
     RejectionReasonModalComponent,
     ViewCapacityModalComponent,
     CreateOrEditCapacityModalComponent,
-
     TransportTypesComponent,
-
     ViewTransportTypeModalComponent,
     CreateOrEditTransportTypeModalComponent,
     DocumentTypeTranslationsComponent,
-
     ViewDocumentTypeTranslationModalComponent,
     CreateOrEditDocumentTypeTranslationModalComponent,
     DocumentsEntitiesComponent,
-
     ViewDocumentsEntityModalComponent,
     CreateOrEditDocumentsEntityModalComponent,
     PortsComponent,
-
     ViewPortModalComponent,
     CreateOrEditPortModalComponent,
     PickingTypesComponent,
-
     ViewPickingTypeModalComponent,
     CreateOrEditPickingTypeModalComponent,
     FacilitiesComponent,
-
     ViewFacilityModalComponent,
     CreateOrEditFacilityModalComponent,
     DocumentFilesComponent,
-
     ViewDocumentFileModalComponent,
     DocumentTypesComponent,
-
     ViewDocumentTypeModalComponent,
     CreateOrEditDocumentTypeModalComponent,
     ShippingRequestsComponent,
-
     ViewShippingRequestComponent,
     CreateOrEditShippingRequestComponent,
     GoodsDetailsComponent,
     ViewGoodsDetailModalComponent,
     CreateOrEditGoodsDetailModalComponent,
     OffersComponent,
-
     ViewOfferModalComponent,
     CreateOrEditOfferModalComponent,
     RoutStepsComponent,
-
     ViewRoutStepModalComponent,
     CreateOrEditRoutStepModalComponent,
     RoutesComponent,
-
     ViewRouteComponent,
     CreateOrEditRouteComponent,
     CitiesComponent,
-
     ViewCityModalComponent,
     CreateOrEditCityModalComponent,
     CountiesComponent,
-
     ViewCountyModalComponent,
     CreateOrEditCountyModalComponent,
     RoutTypesComponent,
-
     ViewRoutTypeModalComponent,
     CreateOrEditRoutTypeModalComponent,
     GoodCategoriesComponent,
-
     ViewGoodCategoryModalComponent,
     CreateOrEditGoodCategoryModalComponent,
     TrailersComponent,
-
     ViewTrailerModalComponent,
     CreateOrEditTrailerModalComponent,
     TrailerStatusesComponent,
-
     ViewTrailerStatusModalComponent,
     CreateOrEditTrailerStatusModalComponent,
     PayloadMaxWeightsComponent,
-
     ViewPayloadMaxWeightModalComponent,
     CreateOrEditPayloadMaxWeightModalComponent,
     TrailerTypesComponent,
-
     ViewTrailerTypeModalComponent,
     CreateOrEditTrailerTypeModalComponent,
     TrucksComponent,
-
     ViewTruckModalComponent,
     CreateOrEditTruckModalComponent,
     TruckUserLookupTableModalComponent,
     TrucksTypesComponent,
-
     ViewTrucksTypeModalComponent,
     CreateOrEditTrucksTypeModalComponent,
     DashboardComponent,
@@ -508,7 +382,6 @@ NgxBootstrapDatePickerConfigService.registerNgxBootstrapDatePickerLocales();
     GroupDetailComponent,
     TransactionListComponent,
     RouteStepsForCreateShippingRequstComponent,
-
     TripsForViewShippingRequestComponent,
     AddNewTripComponent,
   ],

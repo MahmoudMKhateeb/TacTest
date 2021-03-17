@@ -45,15 +45,15 @@ import { TrucksComponent } from './trucks/trucks/trucks.component';
 import { TrucksTypesComponent } from './trucksTypes/trucksTypes/trucksTypes.component';
 import { DashboardComponent } from './dashboard/dashboard.component';
 import { MarketplaceComponent } from '@app/main/marketPlace/marketPlace/marketplace.component';
-import { InvoicePeriodsListComponent } from '@app/main/invoices/invoice-periods-list/invoice-periods-list.component';
+import { InvoiceDetailResolverService } from '@app/main/invoices/invoice-detail/Invoice-detail-resolver.service';
+import { BalancesListComponent } from '@app/main/invoices/balances/balances-list/balances-list.component';
+import { GroupPeriodsListComponent } from '@app/main/invoices/groupsPeriods/group-periods-list/group-periods-list.component';
+import { GroupDetailComponent } from '@app/main/invoices/groupsPeriods/group-detail/group-detail.component';
+import { InvoiceDetailComponent } from '@app/main/invoices/invoice-detail/invoice-detail.component';
 import { InvoicesListComponent } from '@app/main/invoices/invoices-list/invoices-list.component';
-import { BalancesListComponent } from './invoices/balances/balances-list/balances-list.component';
-import { GroupPeriodsListComponent } from './invoices/groupsperiods/group-periods-list/group-periods-list.component';
-import { InvoiceDetailComponent } from './invoices/invoice-detail/invoice-detail.component';
-import { InvoiceDetailResolverService } from './Invoices/invoice-detail/Invoice-detail-resolver.service';
-import { GroupDetailComponent } from './invoices/groupsperiods/group-detail/group-detail.component';
-import { GroupDetailResolverService } from './invoices/groupsperiods/group-detail/group-detail-resolver.service';
-import { TransactionListComponent } from './invoices/transaction/transaction-list/transaction-list.component';
+import { InvoicePeriodsListComponent } from '@app/main/invoices/invoice-periods-list/invoice-periods-list.component';
+import { TransactionListComponent } from '@app/main/invoices/transaction/transaction-list/transaction-list.component';
+import { GroupDetailResolverService } from '@app/main/invoices/groupsPeriods/group-detail/group-detail-resolver.service';
 
 @NgModule({
   imports: [
