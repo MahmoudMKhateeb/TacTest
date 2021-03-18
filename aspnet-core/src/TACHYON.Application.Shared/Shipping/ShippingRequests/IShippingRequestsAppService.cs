@@ -23,7 +23,15 @@ namespace TACHYON.Shipping.ShippingRequests
 
    
         //Task<FileDto> GetShippingRequestsToExcel(GetAllShippingRequestsForExcelInput input);
-        IEnumerable<GetMasterWaybillOutput> GetMasterWaybill(long shippingRequestId);
+        IEnumerable<GetMasterWaybillOutput> GetMasterWaybill(int shippingRequestTripId);
+        IEnumerable<GetSingleDropWaybillOutput> GetSingleDropWaybill(int shippingRequestTripId);
+
+        IEnumerable<GetAllShippingRequestVasesOutput> GetShippingRequestVasesForSingleDropWaybill(
+            int shippingRequestTripId);
+
+        IEnumerable<GetMultipleDropWaybillOutput> GetMultipleDropWaybill(long routPointId);
+        IEnumerable<GetAllShippingRequestVasesOutput> GetShippingRequestVasesForMultipleDropWaybill(long RoutPointId);
+
 
     }
 }

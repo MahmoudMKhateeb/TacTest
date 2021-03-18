@@ -14,6 +14,7 @@ namespace TACHYON.Shipping.ShippingRequests.Dtos
         public int InvoiceNumber { get; set; }
         public string ShipperReference { get; set; }
         public string StartTripDate { get; set; }
+        public DateTime DeliveryDate { get; set; }
         public string CarrierName { get; set; }
         public string ClientName { get; set; }
         public double TotalWeight { get; set; }

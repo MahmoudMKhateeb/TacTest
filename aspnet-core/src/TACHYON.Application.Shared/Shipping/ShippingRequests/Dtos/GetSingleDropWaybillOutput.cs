@@ -14,17 +14,24 @@ namespace TACHYON.Shipping.ShippingRequests.Dtos
         public string ShippingRequestStatus { get; set; }
         public int InvoiceNumber { get; set; }
         public string ShipperReference { get; set; }
-        public string StartTripDate { get; set; }
-
+        public DateTime StartTripDate { get; set; }
+        public DateTime DeliveryDate { get; set; }
+        public double TotalWeight { get; set; }
+        public string GoodsCategoryDisplayName { get; set; }
 
         //Sender Details Info
         public string SenderCompanyName { get; set; }
         public string SenderContactName { get; set; }
         public string SenderMobile { get; set; }
+        /// <summary>
+        /// إسم العميل
+        /// </summary>
+        public string ClientName { get; set; }
         // Receiver Details info
         public string ReceiverCompanyName { get; set; }
         public string ReceiverContactName { get; set; }
         public string ReceiverMobile { get; set; }
+        public string CarrierName { get; set; }
     
         //Driver Details
         public string DriverName { get; set; }

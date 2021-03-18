@@ -9,6 +9,7 @@ using TACHYON.AddressBook;
 using TACHYON.Goods.GoodsDetails;
 using TACHYON.MultiTenancy;
 using TACHYON.PickingTypes;
+using TACHYON.Receivers;
 using TACHYON.Shipping.ShippingRequests;
 using TACHYON.Shipping.ShippingRequestTrips;
 
@@ -59,6 +60,8 @@ namespace TACHYON.Routs.RoutPoints
 
         //If Receiver as user  in tachyon
         public int? ReceiverId { get; set; }
+        [ForeignKey("ReceiverId")]
+        public Receiver ReceiverFk { get; set; }
         //Receiver Info if he is outside the platform
         [CanBeNull] public string ReceiverFullName { get; set; }
         [DataType(DataType.PhoneNumber)] [CanBeNull] public string ReceiverPhoneNumber { get; set; }

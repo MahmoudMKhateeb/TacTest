@@ -13,6 +13,9 @@
         <p class="modal-title">
           <span>{{ l('Trip Details') }}</span>
         </p>
+        <div class="card-toolbar">
+          <button class="btn btn-primary" [disabled]="!trip.id" (click)="printMasterWaybill(trip.id)">{{ l('PrintMasterWaybill')}}</button>
+        </div>
       </div>
       <div class="modal-body" [busyIf]="loading">
         <div class="row">
@@ -90,12 +93,12 @@
           </div>
           <!--  end:: Trip start&End Dates-->
           <!-- begin::Vas's  -->
-          <div class="col-lg-6" *ngIf="VasListFromFather.length > 0">
+          <div class="col-lg-6" *ngIf="VasListFromFather?.length > 0">
             <div class="form-group" *ngIf="selectedVases != []">
               <label>{{ l('vases') }}* </label>
               <p-multiSelect
                 [options]="Vases"
-                [(ngModel)]="selectedVases"
+                [(ngModel)]="trip.shippingRequestTripVases"
                 [styleClass]="'form-control'"
                 [filter]="false"
                 [showHeader]="false"

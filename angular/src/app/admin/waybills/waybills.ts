@@ -17,17 +17,12 @@ export class waybillsComponent extends AppComponentBase {
   platenumber = '2121';
 
   DownloadSingleDropWaybillPdf(platenumber: string): void {
-    this._waybillsServiceProxy.getSingleDropWaybillPdf(this.platenumber).subscribe((result) => {
+    this._waybillsServiceProxy.getSingleDropOrMasterWaybillPdf(2).subscribe((result) => {
       this._fileDownloadService.downloadTempFile(result);
     });
   }
   DownloadMultipleDropWaybillPdf(): void {
-    this._waybillsServiceProxy.getMultipleDropWaybillPdf().subscribe((result) => {
-      this._fileDownloadService.downloadTempFile(result);
-    });
-  }
-  DownloadMasterWaybillPdf(): void {
-    this._waybillsServiceProxy.getMasterWaybillPdf().subscribe((result) => {
+    this._waybillsServiceProxy.getMultipleDropWaybillPdf(3).subscribe((result) => {
       this._fileDownloadService.downloadTempFile(result);
     });
   }

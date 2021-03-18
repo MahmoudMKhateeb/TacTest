@@ -38,8 +38,8 @@ import { waybillsComponent } from './waybills/waybills';
       {
         path: '',
         children: [
-          // { path: 'vases/vases', component: VasesComponent, data: { permission: 'Pages.Administration.Vases' } },
-          // { path: 'waybills/waybills', component: waybillsComponent, data: { permission: undefined } },
+          { path: 'vases/vases', component: VasesComponent, data: { permission: 'Pages.Administration.Vases' } },
+          { path: 'waybills/waybills', component: waybillsComponent, data: { permission: undefined } },
           {
             path: 'termsAndConditions/termAndConditionTranslations',
             component: TermAndConditionTranslationsComponent,

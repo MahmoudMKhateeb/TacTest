@@ -12,6 +12,7 @@ using Abp.Application.Services.Dto;
 using Abp.Authorization;
 using TACHYON.Authorization;
 using TACHYON.AddressBook.Dtos;
+using TACHYON.Routs.Dtos;
 
 namespace TACHYON.Routs.RoutPoints
 {
@@ -71,6 +72,24 @@ namespace TACHYON.Routs.RoutPoints
         {
             await _routPointsRepository.DeleteAsync(input.Id);
         }
+
+        #region Waybills
+
+        public IEnumerable<GetDropsDetailsForMasterWaybillOutput> GetDropsDetailsForMasterWaybill(long shippingRequestTripId)
+        {
+            var points = _routPointsRepository.GetAll()
+                .Where(e => e.ShippingRequestTripId == shippingRequestTripId)
+                .Where(e => e.PickingType == PickingType.Dropoff);
+
+            var query = points.Select(x => new {Id = x.Id, ReceiverName = x.ReceiverFk!=null ?x.ReceiverFk.FullName :""});
+            return query.ToList().Select(x => new GetDropsDetailsForMasterWaybillOutput
+            {
+                Code = x.Id.ToString(), ReceiverDisplayName = x.ReceiverName
+            });
+        }
+        
+
+        #endregion
 
         [AbpAuthorize(AppPermissions.Pages_RoutPoints_Create)]
         private async Task Create(CreateOrEditRoutPointDto input)

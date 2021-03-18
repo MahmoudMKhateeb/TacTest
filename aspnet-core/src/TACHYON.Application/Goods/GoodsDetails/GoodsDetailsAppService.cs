@@ -225,35 +225,36 @@ namespace TACHYON.Goods.GoodsDetails
         }
 
         #region Waybills
-        //public IEnumerable<GetGoodsDetailsForWaybillsOutput> GetShippingrequestGoodsDetailsForSingleDropWaybill()
-        //{
-        //    var goods = _goodsDetailRepository.GetAll()
-        //        .Where(x => x.ShippingRequestId == 1);
+        public IEnumerable<GetGoodsDetailsForWaybillsOutput> GetShippingrequestGoodsDetailsForSingleDropWaybill(int shippingRequestTripId)
+        {
+            var dropPoint = _routPointRepository.Single(x =>
+                x.ShippingRequestTripId == shippingRequestTripId && x.PickingType == PickingType.Dropoff);
 
-        //    var query = goods.Select(x => new
-        //    {
-        //        Description = x.Description,
-        //        TotalAmount = x.TotalAmount,
-        //        Weight = x.Weight,
-        //        UnitOfMeasureDisplayName = x.UnitOfMeasureFk.DisplayName
-        //    });
+            var goods = _goodsDetailRepository.GetAll()
+                .Where(x => x.RoutPointId == dropPoint.Id);
 
-        //    var output = query.ToList().Select(e =>
-        //        new GetGoodsDetailsForWaybillsOutput()
-        //        {
-        //            Weight = e.Weight,
-        //            UnitOfMeasureDisplayName = e.UnitOfMeasureDisplayName,
-        //            TotalAmount = e.TotalAmount,
-        //            Description = e.Description,
-        //            TotalWeight = goods.Sum(x => x.Weight)
-        //        });
-        //    return output;
-        //}
+            var query = goods.Select(x => new
+            {
+                Description = x.Description,
+                TotalAmount = x.Amount,
+                Weight = x.Weight,
+                UnitOfMeasureDisplayName = x.UnitOfMeasureFk.DisplayName
+            });
 
-        public IEnumerable<GetGoodsDetailsForWaybillsOutput> GetShippingrequestGoodsDetailsForMultipleDropWaybill()
+            var output = query.ToList().Select(e =>
+                new GetGoodsDetailsForWaybillsOutput()
+                {
+                    UnitOfMeasureDisplayName = e.UnitOfMeasureDisplayName,
+                    TotalAmount = e.TotalAmount,
+                    Description = e.Description,
+                });
+            return output;
+        }
+
+        public IEnumerable<GetGoodsDetailsForWaybillsOutput> GetShippingrequestGoodsDetailsForMultipleDropWaybill(long RoutPointId)
         {
             var goods = _goodsDetailRepository.GetAll()
-                .Where(x => x.RoutPointId == 62);
+                .Where(x => x.RoutPointId == RoutPointId);
 
             var query = goods.Select(x => new
             {

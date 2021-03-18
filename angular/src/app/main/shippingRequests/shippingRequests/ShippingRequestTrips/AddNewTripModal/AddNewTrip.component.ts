@@ -12,6 +12,7 @@ import {
   CreateOrEditShippingRequestTripVasDto,
   ShippingRequestVasDto,
   GetShippingRequestVasForViewDto,
+  WaybillsServiceProxy,
 } from '@shared/service-proxies/service-proxies';
 import { AppComponentBase } from '@shared/common/app-component-base';
 import { Router } from '@angular/router';
@@ -19,6 +20,7 @@ import { finalize } from '@node_modules/rxjs/operators';
 import { RouteStepsForCreateShippingRequstComponent } from '@app/main/shippingRequests/shippingRequests/ShippingRequestRouteSteps/RouteStepsForCreateShippingRequst.component';
 import Swal from 'sweetalert2';
 import { CreateOrEditFacilityModalComponent } from '@app/main/addressBook/facilities/create-or-edit-facility-modal.component';
+import { FileDownloadService } from '@shared/utils/file-download.service';
 
 @Component({
   selector: 'AddNewTripModal',
@@ -47,7 +49,9 @@ export class AddNewTripComponent extends AppComponentBase implements OnInit {
   constructor(
     injector: Injector,
     private _routStepsServiceProxy: RoutStepsServiceProxy,
-    private _shippingRequestTripsService: ShippingRequestsTripServiceProxy
+    private _shippingRequestTripsService: ShippingRequestsTripServiceProxy,
+    private _waybillsServiceProxy: WaybillsServiceProxy,
+    private _fileDownloadService: FileDownloadService
   ) {
     super(injector);
   }
@@ -55,12 +59,12 @@ export class AddNewTripComponent extends AppComponentBase implements OnInit {
   ngOnInit() {
     this.Vases = [];
     this.selectedVases = [];
-    this.VasListFromFather.forEach((x) => {
-      const vas = new CreateOrEditShippingRequestTripVasDto();
-      vas.shippingRequestVasId = x.shippingRequestVas.id;
-      vas.name = x.vasName;
-      this.Vases.push(vas);
-    });
+    // this.VasListFromFather.forEach((x) => {
+    //   const vas = new CreateOrEditShippingRequestTripVasDto();
+    //   vas.shippingRequestVasId = x.shippingRequestVas.id;
+    //   vas.name = x.vasName;
+    //   this.Vases.push(vas);
+    // });
     //load the Facilites
     this.refreshOrGetFacilities();
     this.sortVases();
@@ -154,5 +158,16 @@ export class AddNewTripComponent extends AppComponentBase implements OnInit {
       this.allFacilities = result;
       this.facilityLoading = false;
     });
+  }
+
+  /**
+   * downloads Masteer WayBill For EachTrip
+   * @param id
+   */
+  printMasterWaybill(tripId) {
+    this._waybillsServiceProxy.getSingleDropOrMasterWaybillPdf(tripId).subscribe((res) => {
+      this._fileDownloadService.downloadTempFile(res);
+    });
+    console.log('test');
   }
 }

@@ -16,6 +16,13 @@
       </ConnectionProperties>
       <rd:DataSourceID>dae7f80e-fe18-4b37-851c-201dd3bf3d4f</rd:DataSourceID>
     </DataSource>
+    <DataSource Name="GetDropDetailsDS">
+      <ConnectionProperties>
+        <DataProvider>System.Data.DataSet</DataProvider>
+        <ConnectString>/* Local Connection */</ConnectString>
+      </ConnectionProperties>
+      <rd:DataSourceID>8422542a-6918-459e-9cf2-456f07d2595e</rd:DataSourceID>
+    </DataSource>
   </DataSources>
   <DataSets>
     <DataSet Name="DataSet1">
@@ -112,6 +119,10 @@
           <DataField>NumberOfPacking</DataField>
           <rd:TypeName>System.String</rd:TypeName>
         </Field>
+        <Field Name="CarrierName">
+          <DataField>CarrierName</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
       </Fields>
       <rd:DataSetInfo>
         <rd:DataSetName>DataSet1</rd:DataSetName>
@@ -150,6 +161,30 @@
         <rd:TableAdapterName />
       </rd:DataSetInfo>
     </DataSet>
+    <DataSet Name="GetDropDetailsDS">
+      <Query>
+        <DataSourceName>GetDropDetailsDS</DataSourceName>
+        <CommandText>/* Local Query */</CommandText>
+      </Query>
+      <Fields>
+        <Field Name="Code">
+          <DataField>Code</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="ReceiverDisplayName">
+          <DataField>ReceiverDisplayName</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+      </Fields>
+      <rd:DataSetInfo>
+        <rd:DataSetName>GetDropDetailsDS</rd:DataSetName>
+        <rd:SchemaPath>C:\Users\tasneem\source\repos\tachyonhub\tachyon-core\aspnet-core\src\TACHYON.Application\Waybills\Reports\GetDropDetailsDS.xsd</rd:SchemaPath>
+        <rd:TableName>DataTable1</rd:TableName>
+        <rd:TableAdapterFillMethod />
+        <rd:TableAdapterGetDataMethod />
+        <rd:TableAdapterName />
+      </rd:DataSetInfo>
+    </DataSet>
   </DataSets>
   <ReportSections>
     <ReportSection>
@@ -166,50 +201,32 @@
                     <Style>
                       <FontStyle>Normal</FontStyle>
                       <FontFamily>Open Sans</FontFamily>
-                      <FontSize>16pt</FontSize>
+                      <FontSize>13pt</FontSize>
                       <FontWeight>Bold</FontWeight>
                       <TextDecoration>None</TextDecoration>
                       <Color>White</Color>
                     </Style>
                   </TextRun>
                   <TextRun>
-                    <Value xml:space="preserve"> </Value>
+                    <Value xml:space="preserve">                        </Value>
                     <Style>
                       <FontFamily>microsoft sans Serif</FontFamily>
-                      <FontSize>19pt</FontSize>
-                      <FontWeight>Bold</FontWeight>
-                      <Color>White</Color>
-                    </Style>
-                  </TextRun>
-                  <TextRun>
-                    <Value xml:space="preserve">                                                                                                               </Value>
-                    <Style>
-                      <FontFamily>microsoft sans Serif</FontFamily>
-                      <FontSize>14.5pt</FontSize>
-                      <FontWeight>Bold</FontWeight>
-                      <Color>White</Color>
-                    </Style>
-                  </TextRun>
-                  <TextRun>
-                    <Value xml:space="preserve"> </Value>
-                    <Style>
-                      <FontFamily>microsoft sans Serif</FontFamily>
-                      <FontSize>20pt</FontSize>
+                      <FontSize>13pt</FontSize>
                       <FontWeight>Bold</FontWeight>
                       <Color>White</Color>
                     </Style>
                   </TextRun>
                 </TextRuns>
                 <Style>
-                  <TextAlign>Center</TextAlign>
+                  <TextAlign>Left</TextAlign>
                 </Style>
               </Paragraph>
             </Paragraphs>
             <rd:DefaultName>Textbox3</rd:DefaultName>
             <Top>12.06979in</Top>
-            <Left>0.21467in</Left>
+            <Left>0.19667in</Left>
             <Height>0.49167in</Height>
-            <Width>9.52418in</Width>
+            <Width>6.87717in</Width>
             <Style>
               <Border>
                 <Style>None</Style>
@@ -227,13 +244,13 @@
                   <Width>0.03125in</Width>
                 </TablixColumn>
                 <TablixColumn>
-                  <Width>0.59635in</Width>
+                  <Width>0.66849in</Width>
                 </TablixColumn>
                 <TablixColumn>
-                  <Width>4.53528in</Width>
+                  <Width>2.5106in</Width>
                 </TablixColumn>
                 <TablixColumn>
-                  <Width>4.32446in</Width>
+                  <Width>3.67361in</Width>
                 </TablixColumn>
               </TablixColumns>
               <TablixRows>
@@ -253,7 +270,7 @@
                                   <Style>
                                     <FontStyle>Normal</FontStyle>
                                     <FontFamily>Open Sans</FontFamily>
-                                    <FontSize>19pt</FontSize>
+                                    <FontSize>12pt</FontSize>
                                     <FontWeight>Bold</FontWeight>
                                     <TextDecoration>None</TextDecoration>
                                     <Color>#404040</Color>
@@ -293,7 +310,7 @@
                                   <Style>
                                     <FontStyle>Normal</FontStyle>
                                     <FontFamily>Open Sans</FontFamily>
-                                    <FontSize>14pt</FontSize>
+                                    <FontSize>12pt</FontSize>
                                     <FontWeight>Normal</FontWeight>
                                     <TextDecoration>None</TextDecoration>
                                     <Color>#404040</Color>
@@ -333,7 +350,7 @@
                                   <Style>
                                     <FontStyle>Normal</FontStyle>
                                     <FontFamily>Open Sans</FontFamily>
-                                    <FontSize>14pt</FontSize>
+                                    <FontSize>12pt</FontSize>
                                     <FontWeight>Normal</FontWeight>
                                     <TextDecoration>None</TextDecoration>
                                     <Color>#404040</Color>
@@ -343,7 +360,7 @@
                                   <Value xml:space="preserve">                                          </Value>
                                   <Style>
                                     <FontStyle>Normal</FontStyle>
-                                    <FontSize>19pt</FontSize>
+                                    <FontSize>12pt</FontSize>
                                     <FontWeight>Bold</FontWeight>
                                     <TextDecoration>None</TextDecoration>
                                     <Color>#404040</Color>
@@ -354,7 +371,7 @@
                                   <Style>
                                     <FontStyle>Normal</FontStyle>
                                     <FontFamily>arial</FontFamily>
-                                    <FontSize>14pt</FontSize>
+                                    <FontSize>12pt</FontSize>
                                     <FontWeight>Normal</FontWeight>
                                     <TextDecoration>None</TextDecoration>
                                     <Color>#404040</Color>
@@ -390,22 +407,11 @@
                             <Paragraph>
                               <TextRuns>
                                 <TextRun>
-                                  <Value>Sub-Waybill No.</Value>
+                                  <Value>Sub-Waybill No.               </Value>
                                   <Style>
                                     <FontStyle>Normal</FontStyle>
                                     <FontFamily>Open Sans</FontFamily>
-                                    <FontSize>14pt</FontSize>
-                                    <FontWeight>Normal</FontWeight>
-                                    <TextDecoration>None</TextDecoration>
-                                    <Color>#404040</Color>
-                                  </Style>
-                                </TextRun>
-                                <TextRun>
-                                  <Value xml:space="preserve">               </Value>
-                                  <Style>
-                                    <FontStyle>Normal</FontStyle>
-                                    <FontFamily>Open Sans</FontFamily>
-                                    <FontSize>19pt</FontSize>
+                                    <FontSize>12pt</FontSize>
                                     <FontWeight>Normal</FontWeight>
                                     <TextDecoration>None</TextDecoration>
                                     <Color>#404040</Color>
@@ -416,7 +422,7 @@
                                   <Style>
                                     <FontStyle>Normal</FontStyle>
                                     <FontFamily>arial</FontFamily>
-                                    <FontSize>14pt</FontSize>
+                                    <FontSize>12pt</FontSize>
                                     <FontWeight>Normal</FontWeight>
                                     <TextDecoration>None</TextDecoration>
                                     <Color>#404040</Color>
@@ -458,7 +464,9 @@
                               <TextRuns>
                                 <TextRun>
                                   <Value />
-                                  <Style />
+                                  <Style>
+                                    <FontSize>11pt</FontSize>
+                                  </Style>
                                 </TextRun>
                               </TextRuns>
                               <Style>
@@ -489,8 +497,10 @@
                             <Paragraph>
                               <TextRuns>
                                 <TextRun>
-                                  <Value />
-                                  <Style />
+                                  <Value>=RowNumber(nothing)</Value>
+                                  <Style>
+                                    <FontSize>11pt</FontSize>
+                                  </Style>
                                 </TextRun>
                               </TextRuns>
                               <Style>
@@ -514,15 +524,17 @@
                     </TablixCell>
                     <TablixCell>
                       <CellContents>
-                        <Textbox Name="Textbox15">
+                        <Textbox Name="ReceiverDisplayName1">
                           <CanGrow>true</CanGrow>
                           <KeepTogether>true</KeepTogether>
                           <Paragraphs>
                             <Paragraph>
                               <TextRuns>
                                 <TextRun>
-                                  <Value />
-                                  <Style />
+                                  <Value>=Fields!ReceiverDisplayName.Value</Value>
+                                  <Style>
+                                    <FontSize>11pt</FontSize>
+                                  </Style>
                                 </TextRun>
                               </TextRuns>
                               <Style>
@@ -530,7 +542,7 @@
                               </Style>
                             </Paragraph>
                           </Paragraphs>
-                          <rd:DefaultName>Textbox15</rd:DefaultName>
+                          <rd:DefaultName>ReceiverDisplayName1</rd:DefaultName>
                           <Style>
                             <Border>
                               <Color>LightGrey</Color>
@@ -546,15 +558,17 @@
                     </TablixCell>
                     <TablixCell>
                       <CellContents>
-                        <Textbox Name="CompanyName">
+                        <Textbox Name="Code">
                           <CanGrow>true</CanGrow>
                           <KeepTogether>true</KeepTogether>
                           <Paragraphs>
                             <Paragraph>
                               <TextRuns>
                                 <TextRun>
-                                  <Value />
-                                  <Style />
+                                  <Value>=Fields!Code.Value</Value>
+                                  <Style>
+                                    <FontSize>11pt</FontSize>
+                                  </Style>
                                 </TextRun>
                               </TextRuns>
                               <Style>
@@ -562,7 +576,7 @@
                               </Style>
                             </Paragraph>
                           </Paragraphs>
-                          <rd:DefaultName>CompanyName</rd:DefaultName>
+                          <rd:DefaultName>Code</rd:DefaultName>
                           <Style>
                             <Border>
                               <Color>LightGrey</Color>
@@ -597,11 +611,11 @@
             </TablixRowHierarchy>
             <RepeatColumnHeaders>true</RepeatColumnHeaders>
             <RepeatRowHeaders>true</RepeatRowHeaders>
-            <DataSetName>DataSet1</DataSetName>
+            <DataSetName>GetDropDetailsDS</DataSetName>
             <Top>7.24291in</Top>
             <Left>0.22653in</Left>
             <Height>0.9236in</Height>
-            <Width>9.48734in</Width>
+            <Width>6.88395in</Width>
             <ZIndex>1</ZIndex>
             <Style>
               <Border>
@@ -620,7 +634,7 @@
                     <Value>:حمولات متعددة</Value>
                     <Style>
                       <FontFamily>arial</FontFamily>
-                      <FontSize>14pt</FontSize>
+                      <FontSize>11pt</FontSize>
                       <Color>#282828</Color>
                     </Style>
                   </TextRun>
@@ -631,8 +645,8 @@
               </Paragraph>
             </Paragraphs>
             <rd:DefaultName>Textbox3</rd:DefaultName>
-            <Top>8.60612in</Top>
-            <Left>8.46641in</Left>
+            <Top>8.63056in</Top>
+            <Left>5.86302in</Left>
             <Height>0.36935in</Height>
             <Width>1.24746in</Width>
             <ZIndex>2</ZIndex>
@@ -656,7 +670,9 @@
                 <TextRuns>
                   <TextRun>
                     <Value />
-                    <Style />
+                    <Style>
+                      <FontSize>11pt</FontSize>
+                    </Style>
                   </TextRun>
                 </TextRuns>
                 <Style>
@@ -665,10 +681,10 @@
               </Paragraph>
             </Paragraphs>
             <rd:DefaultName>Textbox82</rd:DefaultName>
-            <Top>8.62001in</Top>
+            <Top>8.63056in</Top>
             <Left>1.73954in</Left>
             <Height>0.36935in</Height>
-            <Width>6.87578in</Width>
+            <Width>4.58939in</Width>
             <ZIndex>3</ZIndex>
             <Style>
               <Border>
@@ -690,7 +706,7 @@
                     <Value>: مجموع الحمولات</Value>
                     <Style>
                       <FontFamily>arial</FontFamily>
-                      <FontSize>14pt</FontSize>
+                      <FontSize>11pt</FontSize>
                       <Color>#282828</Color>
                     </Style>
                   </TextRun>
@@ -702,7 +718,7 @@
             </Paragraphs>
             <rd:DefaultName>Textbox3</rd:DefaultName>
             <Top>9.1589in</Top>
-            <Left>8.34943in</Left>
+            <Left>5.73808in</Left>
             <Height>0.36935in</Height>
             <Width>1.33841in</Width>
             <ZIndex>4</ZIndex>
@@ -725,7 +741,9 @@
                 <TextRuns>
                   <TextRun>
                     <Value>=First(Fields!TotalDrops.Value, "DataSet1")</Value>
-                    <Style />
+                    <Style>
+                      <FontSize>11pt</FontSize>
+                    </Style>
                   </TextRun>
                 </TextRuns>
                 <Style>
@@ -735,7 +753,7 @@
             </Paragraphs>
             <rd:DefaultName>Textbox82</rd:DefaultName>
             <Top>9.1589in</Top>
-            <Left>7.26914in</Left>
+            <Left>4.65779in</Left>
             <Height>0.36935in</Height>
             <Width>1.01987in</Width>
             <ZIndex>5</ZIndex>
@@ -759,7 +777,7 @@
                     <Value>Total Drops:</Value>
                     <Style>
                       <FontFamily>Open Sans</FontFamily>
-                      <FontSize>14pt</FontSize>
+                      <FontSize>11pt</FontSize>
                       <FontWeight>Normal</FontWeight>
                       <Color>#282828</Color>
                     </Style>
@@ -797,7 +815,7 @@
                     <Value>: نوع التعبئة</Value>
                     <Style>
                       <FontFamily>arial</FontFamily>
-                      <FontSize>14pt</FontSize>
+                      <FontSize>11pt</FontSize>
                       <Color>#282828</Color>
                     </Style>
                   </TextRun>
@@ -808,8 +826,8 @@
               </Paragraph>
             </Paragraphs>
             <rd:DefaultName>Textbox3</rd:DefaultName>
-            <Top>9.65196in</Top>
-            <Left>8.71086in</Left>
+            <Top>9.63808in</Top>
+            <Left>6.09686in</Left>
             <Height>0.36935in</Height>
             <Width>0.97698in</Width>
             <ZIndex>7</ZIndex>
@@ -832,7 +850,9 @@
                 <TextRuns>
                   <TextRun>
                     <Value>=First(Fields!PackingTypeDisplayName.Value, "DataSet1")</Value>
-                    <Style />
+                    <Style>
+                      <FontSize>11pt</FontSize>
+                    </Style>
                   </TextRun>
                 </TextRuns>
                 <Style>
@@ -844,7 +864,7 @@
             <Top>9.65196in</Top>
             <Left>1.71176in</Left>
             <Height>0.36935in</Height>
-            <Width>6.93163in</Width>
+            <Width>4.34481in</Width>
             <ZIndex>8</ZIndex>
             <Style>
               <Border>
@@ -866,7 +886,7 @@
                     <Value>Packing Type:</Value>
                     <Style>
                       <FontFamily>Open Sans</FontFamily>
-                      <FontSize>14pt</FontSize>
+                      <FontSize>11pt</FontSize>
                       <FontWeight>Normal</FontWeight>
                       <Color>#282828</Color>
                     </Style>
@@ -904,7 +924,7 @@
                     <Value>:تاريخ الإستلام</Value>
                     <Style>
                       <FontFamily>arial</FontFamily>
-                      <FontSize>14pt</FontSize>
+                      <FontSize>11pt</FontSize>
                       <Color>#282828</Color>
                     </Style>
                   </TextRun>
@@ -939,7 +959,9 @@
                 <TextRuns>
                   <TextRun>
                     <Value>=First(Fields!StartTripDate.Value, "DataSet1")</Value>
-                    <Style />
+                    <Style>
+                      <FontSize>11pt</FontSize>
+                    </Style>
                   </TextRun>
                 </TextRuns>
                 <Style>
@@ -974,7 +996,7 @@
                     <Style>
                       <FontStyle>Normal</FontStyle>
                       <FontFamily>Open Sans</FontFamily>
-                      <FontSize>14pt</FontSize>
+                      <FontSize>11pt</FontSize>
                       <FontWeight>Normal</FontWeight>
                       <TextDecoration>None</TextDecoration>
                       <Color>#404040</Color>
@@ -984,7 +1006,7 @@
                     <Value>:</Value>
                     <Style>
                       <FontFamily>Open Sans</FontFamily>
-                      <FontSize>14pt</FontSize>
+                      <FontSize>11pt</FontSize>
                       <FontWeight>Normal</FontWeight>
                       <Color>#282828</Color>
                     </Style>
@@ -1022,7 +1044,7 @@
                     <Value>: عدد أنواع التعبئة</Value>
                     <Style>
                       <FontFamily>arial</FontFamily>
-                      <FontSize>14pt</FontSize>
+                      <FontSize>11pt</FontSize>
                       <Color>#282828</Color>
                     </Style>
                   </TextRun>
@@ -1033,8 +1055,8 @@
               </Paragraph>
             </Paragraphs>
             <rd:DefaultName>Textbox3</rd:DefaultName>
-            <Top>10.09075in</Top>
-            <Left>8.14598in</Left>
+            <Top>10.07687in</Top>
+            <Left>5.53198in</Left>
             <Height>0.36935in</Height>
             <Width>1.54186in</Width>
             <ZIndex>13</ZIndex>
@@ -1057,7 +1079,9 @@
                 <TextRuns>
                   <TextRun>
                     <Value>=First(Fields!NumberOfPacking.Value, "DataSet1")</Value>
-                    <Style />
+                    <Style>
+                      <FontSize>11pt</FontSize>
+                    </Style>
                   </TextRun>
                 </TextRuns>
                 <Style>
@@ -1069,7 +1093,7 @@
             <Top>10.09075in</Top>
             <Left>2.13479in</Left>
             <Height>0.36935in</Height>
-            <Width>5.94234in</Width>
+            <Width>3.35552in</Width>
             <ZIndex>14</ZIndex>
             <Style>
               <Border>
@@ -1091,7 +1115,7 @@
                     <Value>#Of Packing Type:</Value>
                     <Style>
                       <FontFamily>Open Sans</FontFamily>
-                      <FontSize>14pt</FontSize>
+                      <FontSize>11pt</FontSize>
                       <FontWeight>Normal</FontWeight>
                       <Color>#282828</Color>
                     </Style>
@@ -1129,7 +1153,7 @@
                     <Value />
                     <Style>
                       <FontFamily>GE Flow</FontFamily>
-                      <FontSize>15.5pt</FontSize>
+                      <FontSize>11pt</FontSize>
                       <Color>#282828</Color>
                     </Style>
                   </TextRun>
@@ -1143,7 +1167,7 @@
             <Top>0.72292in</Top>
             <Left>0.23357in</Left>
             <Height>0.47667in</Height>
-            <Width>4.70894in</Width>
+            <Width>3.37417in</Width>
             <ZIndex>16</ZIndex>
             <Style>
               <Border>
@@ -1166,7 +1190,7 @@
                     <Value>: وثيقة الشحن الرئيسية</Value>
                     <Style>
                       <FontFamily>arial</FontFamily>
-                      <FontSize>14pt</FontSize>
+                      <FontSize>11pt</FontSize>
                       <Color>#282828</Color>
                     </Style>
                   </TextRun>
@@ -1178,9 +1202,9 @@
             </Paragraphs>
             <rd:DefaultName>Textbox3</rd:DefaultName>
             <Top>0.20214in</Top>
-            <Left>8.23083in</Left>
+            <Left>5.73808in</Left>
             <Height>0.36935in</Height>
-            <Width>1.53166in</Width>
+            <Width>1.23885in</Width>
             <ZIndex>17</ZIndex>
             <Style>
               <Border>
@@ -1203,7 +1227,7 @@
                   <TextRun>
                     <Value>:مرجع المرسل</Value>
                     <Style>
-                      <FontSize>14pt</FontSize>
+                      <FontSize>11pt</FontSize>
                       <FontWeight>Normal</FontWeight>
                       <Color>#3b3a3c</Color>
                     </Style>
@@ -1215,10 +1239,10 @@
               </Paragraph>
             </Paragraphs>
             <rd:DefaultName>Textbox3</rd:DefaultName>
-            <Top>0.70593in</Top>
-            <Left>8.76891in</Left>
-            <Height>0.47143in</Height>
-            <Width>0.96994in</Width>
+            <Top>0.76524in</Top>
+            <Left>6.14394in</Left>
+            <Height>0.41212in</Height>
+            <Width>0.83299in</Width>
             <ZIndex>18</ZIndex>
             <Style>
               <Border>
@@ -1240,7 +1264,6 @@
                     <Value>Master Waybill No</Value>
                     <Style>
                       <FontFamily>Open Sans</FontFamily>
-                      <FontSize>13.5pt</FontSize>
                       <Color>#282828</Color>
                     </Style>
                   </TextRun>
@@ -1248,7 +1271,6 @@
                     <Value>:</Value>
                     <Style>
                       <FontFamily>Open Sans</FontFamily>
-                      <FontSize>13.5pt</FontSize>
                       <FontWeight>Normal</FontWeight>
                       <Color>#282828</Color>
                     </Style>
@@ -1260,10 +1282,10 @@
               </Paragraph>
             </Paragraphs>
             <rd:DefaultName>Textbox3</rd:DefaultName>
-            <Top>0.17371in</Top>
-            <Left>5.12871in</Left>
+            <Top>0.18713in</Top>
+            <Left>3.72782in</Left>
             <Height>0.47667in</Height>
-            <Width>1.80262in</Width>
+            <Width>1.34453in</Width>
             <ZIndex>19</ZIndex>
             <Style>
               <Border>
@@ -1287,7 +1309,7 @@
                     <Value>Shipper Reference</Value>
                     <Style>
                       <FontFamily>Open Sans</FontFamily>
-                      <FontSize>14pt</FontSize>
+                      <FontSize>11pt</FontSize>
                       <FontWeight>Normal</FontWeight>
                       <Color>#3b3a3c</Color>
                     </Style>
@@ -1296,22 +1318,22 @@
                     <Value>:</Value>
                     <Style>
                       <FontFamily>microsoft sans Serif</FontFamily>
-                      <FontSize>14pt</FontSize>
+                      <FontSize>11pt</FontSize>
                       <FontWeight>Normal</FontWeight>
                       <Color>#3b3a3c</Color>
                     </Style>
                   </TextRun>
                 </TextRuns>
                 <Style>
-                  <TextAlign>Center</TextAlign>
+                  <TextAlign>Left</TextAlign>
                 </Style>
               </Paragraph>
             </Paragraphs>
             <rd:DefaultName>Textbox3</rd:DefaultName>
-            <Top>0.70593in</Top>
-            <Left>5.10799in</Left>
+            <Top>0.7396in</Top>
+            <Left>3.72782in</Left>
             <Height>0.47143in</Height>
-            <Width>1.82334in</Width>
+            <Width>1.34453in</Width>
             <ZIndex>20</ZIndex>
             <Style>
               <Border>
@@ -1333,7 +1355,7 @@
                     <Value xml:space="preserve"> </Value>
                     <Style>
                       <FontFamily>microsoft sans Serif</FontFamily>
-                      <FontSize>15.5pt</FontSize>
+                      <FontSize>11pt</FontSize>
                       <FontWeight>Bold</FontWeight>
                       <Color>#282828</Color>
                     </Style>
@@ -1342,14 +1364,14 @@
                     <Value>:</Value>
                     <Style>
                       <FontFamily>GE Flow</FontFamily>
-                      <FontSize>15.5pt</FontSize>
+                      <FontSize>11pt</FontSize>
                       <Color>#282828</Color>
                     </Style>
                   </TextRun>
                   <TextRun>
                     <Value>رقم الفاتورة</Value>
                     <Style>
-                      <FontSize>14pt</FontSize>
+                      <FontSize>11pt</FontSize>
                       <Color>#282828</Color>
                       <Language>ar-SA</Language>
                     </Style>
@@ -1362,9 +1384,9 @@
             </Paragraphs>
             <rd:DefaultName>Textbox3</rd:DefaultName>
             <Top>0.76524in</Top>
-            <Left>3.90442in</Left>
+            <Left>2.88687in</Left>
             <Height>0.36935in</Height>
-            <Width>0.96994in</Width>
+            <Width>0.70327in</Width>
             <ZIndex>21</ZIndex>
             <Style>
               <Border>
@@ -1388,7 +1410,7 @@
                     <Value>Invoice NO</Value>
                     <Style>
                       <FontFamily>Open Sans</FontFamily>
-                      <FontSize>14pt</FontSize>
+                      <FontSize>11pt</FontSize>
                       <FontWeight>Normal</FontWeight>
                       <Color>#282828</Color>
                     </Style>
@@ -1397,7 +1419,7 @@
                     <Value>:</Value>
                     <Style>
                       <FontFamily>microsoft sans Serif</FontFamily>
-                      <FontSize>14pt</FontSize>
+                      <FontSize>11pt</FontSize>
                       <FontWeight>Normal</FontWeight>
                       <Color>#282828</Color>
                     </Style>
@@ -1433,8 +1455,10 @@
               <Paragraph>
                 <TextRuns>
                   <TextRun>
-                    <Value>1234568</Value>
-                    <Style />
+                    <Value />
+                    <Style>
+                      <FontSize>11pt</FontSize>
+                    </Style>
                   </TextRun>
                 </TextRuns>
                 <Style>
@@ -1444,9 +1468,9 @@
             </Paragraphs>
             <rd:DefaultName>Textbox82</rd:DefaultName>
             <Top>0.76524in</Top>
-            <Left>1.44653in</Left>
+            <Left>1.19653in</Left>
             <Height>0.36935in</Height>
-            <Width>2.18744in</Width>
+            <Width>1.69034in</Width>
             <ZIndex>23</ZIndex>
             <Style>
               <Border>
@@ -1468,7 +1492,7 @@
                     <Value />
                     <Style>
                       <FontFamily>Open Sans</FontFamily>
-                      <FontSize>13.5pt</FontSize>
+                      <FontSize>11pt</FontSize>
                       <Color>#282828</Color>
                     </Style>
                   </TextRun>
@@ -1480,9 +1504,9 @@
             </Paragraphs>
             <rd:DefaultName>Textbox3</rd:DefaultName>
             <Top>0.15982in</Top>
-            <Left>5.0272in</Left>
+            <Left>3.68612in</Left>
             <Height>0.47667in</Height>
-            <Width>4.73529in</Width>
+            <Width>3.37715in</Width>
             <ZIndex>24</ZIndex>
             <Style>
               <Border>
@@ -1513,9 +1537,9 @@
             </Paragraphs>
             <rd:DefaultName>Textbox82</rd:DefaultName>
             <Top>0.20214in</Top>
-            <Left>6.93133in</Left>
+            <Left>5.03181in</Left>
             <Height>0.36935in</Height>
-            <Width>1.31338in</Width>
+            <Width>0.88398in</Width>
             <ZIndex>25</ZIndex>
             <Style>
               <Border>
@@ -1537,7 +1561,7 @@
                     <Value />
                     <Style>
                       <FontFamily>GE Flow</FontFamily>
-                      <FontSize>15.5pt</FontSize>
+                      <FontSize>11pt</FontSize>
                       <Color>#282828</Color>
                     </Style>
                   </TextRun>
@@ -1549,9 +1573,9 @@
             </Paragraphs>
             <rd:DefaultName>Textbox3</rd:DefaultName>
             <Top>0.72292in</Top>
-            <Left>5.01872in</Left>
+            <Left>3.67718in</Left>
             <Height>0.49167in</Height>
-            <Width>4.74377in</Width>
+            <Width>3.39931in</Width>
             <ZIndex>26</ZIndex>
             <Style>
               <Border>
@@ -1572,7 +1596,9 @@
                 <TextRuns>
                   <TextRun>
                     <Value>12346789</Value>
-                    <Style />
+                    <Style>
+                      <FontSize>11pt</FontSize>
+                    </Style>
                   </TextRun>
                 </TextRuns>
                 <Style>
@@ -1581,10 +1607,10 @@
               </Paragraph>
             </Paragraphs>
             <rd:DefaultName>Textbox88</rd:DefaultName>
-            <Top>0.75593in</Top>
-            <Left>6.95911in</Left>
+            <Top>0.80088in</Top>
+            <Left>5.06625in</Left>
             <Height>0.37404in</Height>
-            <Width>1.75893in</Width>
+            <Width>1.11136in</Width>
             <ZIndex>27</ZIndex>
             <Style>
               <Border>
@@ -1605,7 +1631,7 @@
                   <TextRun>
                     <Value>: الحالة</Value>
                     <Style>
-                      <FontSize>14pt</FontSize>
+                      <FontSize>11pt</FontSize>
                       <FontWeight>Normal</FontWeight>
                       <Color>#3b3a3c</Color>
                     </Style>
@@ -1617,10 +1643,10 @@
               </Paragraph>
             </Paragraphs>
             <rd:DefaultName>Textbox3</rd:DefaultName>
-            <Top>1.82451in</Top>
-            <Left>8.66051in</Left>
+            <Top>1.8384in</Top>
+            <Left>6.54384in</Left>
             <Height>0.47143in</Height>
-            <Width>1.06642in</Width>
+            <Width>0.43309in</Width>
             <ZIndex>28</ZIndex>
             <Style>
               <Border>
@@ -1642,7 +1668,7 @@
                     <Value> Status</Value>
                     <Style>
                       <FontFamily>Open Sans</FontFamily>
-                      <FontSize>14pt</FontSize>
+                      <FontSize>11pt</FontSize>
                       <FontWeight>Normal</FontWeight>
                       <Color>#3b3a3c</Color>
                     </Style>
@@ -1651,7 +1677,7 @@
                     <Value>:</Value>
                     <Style>
                       <FontFamily>microsoft sans Serif</FontFamily>
-                      <FontSize>14pt</FontSize>
+                      <FontSize>11pt</FontSize>
                       <FontWeight>Normal</FontWeight>
                       <Color>#3b3a3c</Color>
                     </Style>
@@ -1688,7 +1714,7 @@
                     <Value />
                     <Style>
                       <FontFamily>GE Flow</FontFamily>
-                      <FontSize>15.5pt</FontSize>
+                      <FontSize>11pt</FontSize>
                       <Color>#282828</Color>
                     </Style>
                   </TextRun>
@@ -1702,7 +1728,7 @@
             <Top>1.80427in</Top>
             <Left>0.22165in</Left>
             <Height>0.49167in</Height>
-            <Width>9.5328in</Width>
+            <Width>6.85484in</Width>
             <ZIndex>30</ZIndex>
             <Style>
               <Border>
@@ -1723,7 +1749,9 @@
                 <TextRuns>
                   <TextRun>
                     <Value>=First(Fields!ShippingRequestStatus.Value, "DataSet1")</Value>
-                    <Style />
+                    <Style>
+                      <FontSize>11pt</FontSize>
+                    </Style>
                   </TextRun>
                 </TextRuns>
                 <Style>
@@ -1732,8 +1760,8 @@
               </Paragraph>
             </Paragraphs>
             <rd:DefaultName>Textbox88</rd:DefaultName>
-            <Top>1.87451in</Top>
-            <Left>4.26006in</Left>
+            <Top>1.85in</Top>
+            <Left>3.06402in</Left>
             <Height>0.37404in</Height>
             <Width>1.59999in</Width>
             <ZIndex>31</ZIndex>
@@ -1757,7 +1785,7 @@
                     <Value>: التاريخ</Value>
                     <Style>
                       <FontFamily>arial</FontFamily>
-                      <FontSize>14pt</FontSize>
+                      <FontSize>11pt</FontSize>
                       <Color>#282828</Color>
                     </Style>
                   </TextRun>
@@ -1768,10 +1796,10 @@
               </Paragraph>
             </Paragraphs>
             <rd:DefaultName>Textbox3</rd:DefaultName>
-            <Top>0.14745in</Top>
-            <Left>3.70692in</Left>
+            <Top>0.1587in</Top>
+            <Left>3.06402in</Left>
             <Height>0.49167in</Height>
-            <Width>1.18354in</Width>
+            <Width>0.55265in</Width>
             <ZIndex>32</ZIndex>
             <Style>
               <Border>
@@ -1795,7 +1823,6 @@
                     <Value>Date: </Value>
                     <Style>
                       <FontFamily>Open Sans</FontFamily>
-                      <FontSize>14pt</FontSize>
                       <FontWeight>Normal</FontWeight>
                       <Color>#282828</Color>
                     </Style>
@@ -1846,9 +1873,9 @@
             </Paragraphs>
             <rd:DefaultName>Textbox3</rd:DefaultName>
             <Top>0.15982in</Top>
-            <Left>0.22331in</Left>
+            <Left>0.22165in</Left>
             <Height>0.49167in</Height>
-            <Width>4.7192in</Width>
+            <Width>3.39997in</Width>
             <ZIndex>34</ZIndex>
             <Style>
               <Border>
@@ -1879,7 +1906,7 @@
             </Paragraphs>
             <rd:DefaultName>Textbox82</rd:DefaultName>
             <Top>0.20214in</Top>
-            <Left>1.88378in</Left>
+            <Left>1.62998in</Left>
             <Height>0.36935in</Height>
             <Width>1.35271in</Width>
             <ZIndex>35</ZIndex>
@@ -1900,118 +1927,10 @@
               <Paragraph>
                 <TextRuns>
                   <TextRun>
-                    <Value xml:space="preserve">              </Value>
+                    <Value xml:space="preserve">                                                                                           </Value>
                     <Style>
                       <FontFamily>microsoft sans Serif</FontFamily>
-                      <FontSize>19pt</FontSize>
-                      <FontWeight>Bold</FontWeight>
-                      <Color>White</Color>
-                    </Style>
-                  </TextRun>
-                  <TextRun>
-                    <Value xml:space="preserve">     </Value>
-                    <Style>
-                      <FontFamily>microsoft sans Serif</FontFamily>
-                      <FontSize>14.5pt</FontSize>
-                      <FontWeight>Bold</FontWeight>
-                      <Color>White</Color>
-                    </Style>
-                  </TextRun>
-                  <TextRun>
-                    <Value xml:space="preserve">        </Value>
-                    <Style>
-                      <FontFamily>microsoft sans Serif</FontFamily>
-                      <FontSize>19pt</FontSize>
-                      <FontWeight>Bold</FontWeight>
-                      <Color>White</Color>
-                    </Style>
-                  </TextRun>
-                  <TextRun>
-                    <Value xml:space="preserve">     </Value>
-                    <Style>
-                      <FontFamily>microsoft sans Serif</FontFamily>
-                      <FontSize>14.5pt</FontSize>
-                      <FontWeight>Bold</FontWeight>
-                      <Color>White</Color>
-                    </Style>
-                  </TextRun>
-                  <TextRun>
-                    <Value xml:space="preserve">        </Value>
-                    <Style>
-                      <FontFamily>microsoft sans Serif</FontFamily>
-                      <FontSize>19pt</FontSize>
-                      <FontWeight>Bold</FontWeight>
-                      <Color>White</Color>
-                    </Style>
-                  </TextRun>
-                  <TextRun>
-                    <Value xml:space="preserve">     </Value>
-                    <Style>
-                      <FontFamily>microsoft sans Serif</FontFamily>
-                      <FontSize>14.5pt</FontSize>
-                      <FontWeight>Bold</FontWeight>
-                      <Color>White</Color>
-                    </Style>
-                  </TextRun>
-                  <TextRun>
-                    <Value xml:space="preserve">        </Value>
-                    <Style>
-                      <FontFamily>microsoft sans Serif</FontFamily>
-                      <FontSize>19pt</FontSize>
-                      <FontWeight>Bold</FontWeight>
-                      <Color>White</Color>
-                    </Style>
-                  </TextRun>
-                  <TextRun>
-                    <Value xml:space="preserve">     </Value>
-                    <Style>
-                      <FontFamily>microsoft sans Serif</FontFamily>
-                      <FontSize>14.5pt</FontSize>
-                      <FontWeight>Bold</FontWeight>
-                      <Color>White</Color>
-                    </Style>
-                  </TextRun>
-                  <TextRun>
-                    <Value xml:space="preserve">        </Value>
-                    <Style>
-                      <FontFamily>microsoft sans Serif</FontFamily>
-                      <FontSize>19pt</FontSize>
-                      <FontWeight>Bold</FontWeight>
-                      <Color>White</Color>
-                    </Style>
-                  </TextRun>
-                  <TextRun>
-                    <Value xml:space="preserve">     </Value>
-                    <Style>
-                      <FontFamily>microsoft sans Serif</FontFamily>
-                      <FontSize>14.5pt</FontSize>
-                      <FontWeight>Bold</FontWeight>
-                      <Color>White</Color>
-                    </Style>
-                  </TextRun>
-                  <TextRun>
-                    <Value xml:space="preserve">          </Value>
-                    <Style>
-                      <FontFamily>microsoft sans Serif</FontFamily>
-                      <FontSize>19pt</FontSize>
-                      <FontWeight>Bold</FontWeight>
-                      <Color>White</Color>
-                    </Style>
-                  </TextRun>
-                  <TextRun>
-                    <Value xml:space="preserve">        </Value>
-                    <Style>
-                      <FontFamily>microsoft sans Serif</FontFamily>
-                      <FontSize>14.5pt</FontSize>
-                      <FontWeight>Bold</FontWeight>
-                      <Color>White</Color>
-                    </Style>
-                  </TextRun>
-                  <TextRun>
-                    <Value xml:space="preserve">  </Value>
-                    <Style>
-                      <FontFamily>microsoft sans Serif</FontFamily>
-                      <FontSize>20pt</FontSize>
+                      <FontSize>13pt</FontSize>
                       <FontWeight>Bold</FontWeight>
                       <Color>White</Color>
                     </Style>
@@ -2026,7 +1945,7 @@
             <Top>2.7214in</Top>
             <Left>0.2181in</Left>
             <Height>0.49167in</Height>
-            <Width>9.52914in</Width>
+            <Width>6.85839in</Width>
             <ZIndex>36</ZIndex>
             <Style>
               <Border>
@@ -2048,7 +1967,7 @@
                     <Value xml:space="preserve">                                           </Value>
                     <Style>
                       <FontFamily>microsoft sans Serif</FontFamily>
-                      <FontSize>15.5pt</FontSize>
+                      <FontSize>11pt</FontSize>
                       <Color>#282828</Color>
                     </Style>
                   </TextRun>
@@ -2062,7 +1981,7 @@
             <Top>3.76029in</Top>
             <Left>0.2181in</Left>
             <Height>0.49167in</Height>
-            <Width>9.52914in</Width>
+            <Width>6.85839in</Width>
             <ZIndex>37</ZIndex>
             <Style>
               <Border>
@@ -2086,7 +2005,7 @@
                     <Value />
                     <Style>
                       <FontFamily>GE Flow</FontFamily>
-                      <FontSize>15.5pt</FontSize>
+                      <FontSize>11pt</FontSize>
                       <Color>#282828</Color>
                     </Style>
                   </TextRun>
@@ -2100,7 +2019,7 @@
             <Top>3.22696in</Top>
             <Left>0.26622in</Left>
             <Height>0.47667in</Height>
-            <Width>9.48102in</Width>
+            <Width>6.71071in</Width>
             <ZIndex>38</ZIndex>
             <Style>
               <Border>
@@ -2124,7 +2043,7 @@
                     <Value xml:space="preserve"> </Value>
                     <Style>
                       <FontFamily>microsoft sans Serif</FontFamily>
-                      <FontSize>15.5pt</FontSize>
+                      <FontSize>11pt</FontSize>
                       <FontWeight>Bold</FontWeight>
                       <Color>#282828</Color>
                     </Style>
@@ -2133,14 +2052,14 @@
                     <Value>:</Value>
                     <Style>
                       <FontFamily>GE Flow</FontFamily>
-                      <FontSize>15.5pt</FontSize>
+                      <FontSize>11pt</FontSize>
                       <Color>#282828</Color>
                     </Style>
                   </TextRun>
                   <TextRun>
                     <Value>إسم الشركة</Value>
                     <Style>
-                      <FontSize>14pt</FontSize>
+                      <FontSize>11pt</FontSize>
                       <Color>#282828</Color>
                       <Language>ar-SA</Language>
                     </Style>
@@ -2152,10 +2071,10 @@
               </Paragraph>
             </Paragraphs>
             <rd:DefaultName>Textbox3</rd:DefaultName>
-            <Top>3.26928in</Top>
-            <Left>3.87002in</Left>
+            <Top>3.3215in</Top>
+            <Left>6.06193in</Left>
             <Height>0.36935in</Height>
-            <Width>5.79035in</Width>
+            <Width>0.915in</Width>
             <ZIndex>39</ZIndex>
             <Style>
               <Border>
@@ -2180,7 +2099,7 @@
                     <Style>
                       <FontStyle>Normal</FontStyle>
                       <FontFamily>Open Sans</FontFamily>
-                      <FontSize>14pt</FontSize>
+                      <FontSize>11pt</FontSize>
                       <FontWeight>Normal</FontWeight>
                       <TextDecoration>None</TextDecoration>
                       <Color>#404040</Color>
@@ -2190,7 +2109,7 @@
                     <Value>:</Value>
                     <Style>
                       <FontFamily>microsoft sans Serif</FontFamily>
-                      <FontSize>14pt</FontSize>
+                      <FontSize>11pt</FontSize>
                       <FontWeight>Normal</FontWeight>
                       <Color>#282828</Color>
                     </Style>
@@ -2227,7 +2146,9 @@
                 <TextRuns>
                   <TextRun>
                     <Value>=First(Fields!CompanyName.Value, "DataSet1")</Value>
-                    <Style />
+                    <Style>
+                      <FontSize>11pt</FontSize>
+                    </Style>
                   </TextRun>
                 </TextRuns>
                 <Style>
@@ -2239,7 +2160,7 @@
             <Top>3.26928in</Top>
             <Left>1.76761in</Left>
             <Height>0.36935in</Height>
-            <Width>7.07718in</Width>
+            <Width>3.35754in</Width>
             <ZIndex>41</ZIndex>
             <Style>
               <Border>
@@ -2262,7 +2183,7 @@
                     <Style>
                       <FontStyle>Normal</FontStyle>
                       <FontFamily>Microsoft Sans Serif</FontFamily>
-                      <FontSize>15.5pt</FontSize>
+                      <FontSize>11pt</FontSize>
                       <FontWeight>Normal</FontWeight>
                       <TextDecoration>None</TextDecoration>
                       <Color>#404040</Color>
@@ -2272,7 +2193,7 @@
                     <Value>ﺟﻬﺔ اﻻﺗﺼﺎل</Value>
                     <Style>
                       <FontStyle>Normal</FontStyle>
-                      <FontSize>14pt</FontSize>
+                      <FontSize>11pt</FontSize>
                       <FontWeight>Normal</FontWeight>
                       <TextDecoration>None</TextDecoration>
                       <Color>#404040</Color>
@@ -2285,10 +2206,10 @@
               </Paragraph>
             </Paragraphs>
             <rd:DefaultName>Textbox3</rd:DefaultName>
-            <Top>3.82695in</Top>
-            <Left>3.87002in</Left>
+            <Top>3.84095in</Top>
+            <Left>6.06193in</Left>
             <Height>0.36935in</Height>
-            <Width>5.79035in</Width>
+            <Width>0.915in</Width>
             <ZIndex>42</ZIndex>
             <Style>
               <Border>
@@ -2313,7 +2234,7 @@
                     <Style>
                       <FontStyle>Normal</FontStyle>
                       <FontFamily>Open Sans</FontFamily>
-                      <FontSize>14pt</FontSize>
+                      <FontSize>11pt</FontSize>
                       <FontWeight>Normal</FontWeight>
                       <TextDecoration>None</TextDecoration>
                       <Color>#404040</Color>
@@ -2323,7 +2244,7 @@
                     <Value>:</Value>
                     <Style>
                       <FontStyle>Normal</FontStyle>
-                      <FontSize>14.5pt</FontSize>
+                      <FontSize>11pt</FontSize>
                       <FontWeight>Normal</FontWeight>
                       <TextDecoration>None</TextDecoration>
                       <Color>#404040</Color>
@@ -2361,7 +2282,9 @@
                 <TextRuns>
                   <TextRun>
                     <Value>    Company -1</Value>
-                    <Style />
+                    <Style>
+                      <FontSize>11pt</FontSize>
+                    </Style>
                   </TextRun>
                 </TextRuns>
                 <Style>
@@ -2373,7 +2296,7 @@
             <Top>3.82695in</Top>
             <Left>1.76761in</Left>
             <Height>0.36935in</Height>
-            <Width>6.92168in</Width>
+            <Width>2.8964in</Width>
             <ZIndex>44</ZIndex>
             <Style>
               <Border>
@@ -2395,7 +2318,7 @@
                     <Value>:</Value>
                     <Style>
                       <FontFamily>GE Flow</FontFamily>
-                      <FontSize>14pt</FontSize>
+                      <FontSize>11pt</FontSize>
                       <FontWeight>Bold</FontWeight>
                       <Color>#282828</Color>
                     </Style>
@@ -2403,7 +2326,7 @@
                   <TextRun>
                     <Value>جوال</Value>
                     <Style>
-                      <FontSize>14pt</FontSize>
+                      <FontSize>11pt</FontSize>
                       <Color>#282828</Color>
                     </Style>
                   </TextRun>
@@ -2414,10 +2337,10 @@
               </Paragraph>
             </Paragraphs>
             <rd:DefaultName>Textbox3</rd:DefaultName>
-            <Top>4.30752in</Top>
-            <Left>4.32108in</Left>
+            <Top>4.32141in</Top>
+            <Left>5.81387in</Left>
             <Height>0.32768in</Height>
-            <Width>5.33929in</Width>
+            <Width>1.16306in</Width>
             <ZIndex>45</ZIndex>
             <Style>
               <Border>
@@ -2439,7 +2362,9 @@
                 <TextRuns>
                   <TextRun>
                     <Value />
-                    <Style />
+                    <Style>
+                      <FontSize>11pt</FontSize>
+                    </Style>
                   </TextRun>
                 </TextRuns>
                 <Style>
@@ -2451,7 +2376,7 @@
             <Top>4.27974in</Top>
             <Left>1.04055in</Left>
             <Height>0.36935in</Height>
-            <Width>8.02266in</Width>
+            <Width>4.20073in</Width>
             <ZIndex>46</ZIndex>
             <Style>
               <Border>
@@ -2474,7 +2399,7 @@
                     <Style>
                       <FontStyle>Normal</FontStyle>
                       <FontFamily>Open Sans</FontFamily>
-                      <FontSize>14pt</FontSize>
+                      <FontSize>11pt</FontSize>
                       <FontWeight>Normal</FontWeight>
                       <TextDecoration>None</TextDecoration>
                       <Color>#404040</Color>
@@ -2515,35 +2440,17 @@
                     <Style>
                       <FontStyle>Normal</FontStyle>
                       <FontFamily>Open Sans</FontFamily>
-                      <FontSize>16pt</FontSize>
+                      <FontSize>13pt</FontSize>
                       <FontWeight>Bold</FontWeight>
                       <TextDecoration>None</TextDecoration>
                       <Color>White</Color>
                     </Style>
                   </TextRun>
                   <TextRun>
-                    <Value xml:space="preserve"> </Value>
+                    <Value xml:space="preserve">             </Value>
                     <Style>
                       <FontFamily>microsoft sans Serif</FontFamily>
-                      <FontSize>19pt</FontSize>
-                      <FontWeight>Bold</FontWeight>
-                      <Color>White</Color>
-                    </Style>
-                  </TextRun>
-                  <TextRun>
-                    <Value xml:space="preserve">                               </Value>
-                    <Style>
-                      <FontFamily>microsoft sans Serif</FontFamily>
-                      <FontSize>14.5pt</FontSize>
-                      <FontWeight>Bold</FontWeight>
-                      <Color>White</Color>
-                    </Style>
-                  </TextRun>
-                  <TextRun>
-                    <Value xml:space="preserve"> </Value>
-                    <Style>
-                      <FontFamily>microsoft sans Serif</FontFamily>
-                      <FontSize>20pt</FontSize>
+                      <FontSize>13pt</FontSize>
                       <FontWeight>Bold</FontWeight>
                       <Color>White</Color>
                     </Style>
@@ -2552,7 +2459,7 @@
                     <Value>ﺗﻔﺎﺻﻴﻞ</Value>
                     <Style>
                       <FontStyle>Normal</FontStyle>
-                      <FontSize>16pt</FontSize>
+                      <FontSize>13pt</FontSize>
                       <FontWeight>Bold</FontWeight>
                       <TextDecoration>None</TextDecoration>
                       <Color>White</Color>
@@ -2562,7 +2469,7 @@
                     <Value xml:space="preserve"> </Value>
                     <Style>
                       <FontFamily>microsoft sans Serif</FontFamily>
-                      <FontSize>20pt</FontSize>
+                      <FontSize>13pt</FontSize>
                       <FontWeight>Bold</FontWeight>
                       <Color>White</Color>
                     </Style>
@@ -2571,7 +2478,7 @@
                     <Value>اﻟﺸﺎﺣﻨﺔ</Value>
                     <Style>
                       <FontStyle>Normal</FontStyle>
-                      <FontSize>16pt</FontSize>
+                      <FontSize>13pt</FontSize>
                       <FontWeight>Bold</FontWeight>
                       <TextDecoration>None</TextDecoration>
                       <Color>White</Color>
@@ -2584,10 +2491,10 @@
               </Paragraph>
             </Paragraphs>
             <rd:DefaultName>Textbox3</rd:DefaultName>
-            <Top>4.89246in</Top>
-            <Left>4.99235in</Left>
+            <Top>4.88979in</Top>
+            <Left>3.94806in</Left>
             <Height>0.49167in</Height>
-            <Width>4.7442in</Width>
+            <Width>3.16242in</Width>
             <ZIndex>48</ZIndex>
             <Style>
               <Border>
@@ -2612,27 +2519,17 @@
                     <Style>
                       <FontStyle>Normal</FontStyle>
                       <FontFamily>Open Sans</FontFamily>
-                      <FontSize>16pt</FontSize>
+                      <FontSize>13pt</FontSize>
                       <FontWeight>Bold</FontWeight>
                       <TextDecoration>None</TextDecoration>
                       <Color>White</Color>
                     </Style>
                   </TextRun>
                   <TextRun>
-                    <Value xml:space="preserve">                           </Value>
+                    <Value>                       ﺗﻔﺎﺻﻴﻞ اﻟﺴﺎﺋﻖ</Value>
                     <Style>
                       <FontStyle>Normal</FontStyle>
-                      <FontSize>19pt</FontSize>
-                      <FontWeight>Bold</FontWeight>
-                      <TextDecoration>None</TextDecoration>
-                      <Color>White</Color>
-                    </Style>
-                  </TextRun>
-                  <TextRun>
-                    <Value>ﺗﻔﺎﺻﻴﻞ اﻟﺴﺎﺋﻖ</Value>
-                    <Style>
-                      <FontStyle>Normal</FontStyle>
-                      <FontSize>16pt</FontSize>
+                      <FontSize>13pt</FontSize>
                       <FontWeight>Bold</FontWeight>
                       <TextDecoration>None</TextDecoration>
                       <Color>White</Color>
@@ -2648,7 +2545,7 @@
             <Top>4.89246in</Top>
             <Left>0.23883in</Left>
             <Height>0.49167in</Height>
-            <Width>4.75923in</Width>
+            <Width>3.66756in</Width>
             <ZIndex>49</ZIndex>
             <Style>
               <Border>
@@ -2671,7 +2568,7 @@
                   <TextRun>
                     <Value>: نوع الشاحنة</Value>
                     <Style>
-                      <FontSize>14pt</FontSize>
+                      <FontSize>11pt</FontSize>
                       <Color>#282828</Color>
                     </Style>
                   </TextRun>
@@ -2682,10 +2579,10 @@
               </Paragraph>
             </Paragraphs>
             <rd:DefaultName>Textbox3</rd:DefaultName>
-            <Top>5.4509in</Top>
-            <Left>8.74537in</Left>
+            <Top>5.46479in</Top>
+            <Left>6.28421in</Left>
             <Height>0.36935in</Height>
-            <Width>0.95299in</Width>
+            <Width>0.79228in</Width>
             <ZIndex>50</ZIndex>
             <Style>
               <Border>
@@ -2707,7 +2604,9 @@
                 <TextRuns>
                   <TextRun>
                     <Value>=First(Fields!TruckTypeDisplayName.Value, "DataSet1")</Value>
-                    <Style />
+                    <Style>
+                      <FontSize>11pt</FontSize>
+                    </Style>
                   </TextRun>
                 </TextRuns>
                 <Style>
@@ -2716,10 +2615,10 @@
               </Paragraph>
             </Paragraphs>
             <rd:DefaultName>Textbox82</rd:DefaultName>
-            <Top>5.46479in</Top>
-            <Left>6.45162in</Left>
+            <Top>5.45357in</Top>
+            <Left>4.81818in</Left>
             <Height>0.36935in</Height>
-            <Width>2.25209in</Width>
+            <Width>1.23839in</Width>
             <ZIndex>51</ZIndex>
             <Style>
               <Border>
@@ -2742,7 +2641,7 @@
                     <Style>
                       <FontStyle>Normal</FontStyle>
                       <FontFamily>Open Sans</FontFamily>
-                      <FontSize>14pt</FontSize>
+                      <FontSize>11pt</FontSize>
                       <FontWeight>Normal</FontWeight>
                       <TextDecoration>None</TextDecoration>
                       <Color>#404040</Color>
@@ -2752,7 +2651,7 @@
                     <Value>:</Value>
                     <Style>
                       <FontStyle>Normal</FontStyle>
-                      <FontSize>14.5pt</FontSize>
+                      <FontSize>11pt</FontSize>
                       <FontWeight>Normal</FontWeight>
                       <TextDecoration>None</TextDecoration>
                       <Color>#404040</Color>
@@ -2766,7 +2665,7 @@
             </Paragraphs>
             <rd:DefaultName>Textbox3</rd:DefaultName>
             <Top>5.4509in</Top>
-            <Left>5.05054in</Left>
+            <Left>4.05054in</Left>
             <Height>0.36935in</Height>
             <Width>1.33163in</Width>
             <ZIndex>52</ZIndex>
@@ -2791,7 +2690,7 @@
                   <TextRun>
                     <Value>:</Value>
                     <Style>
-                      <FontSize>14pt</FontSize>
+                      <FontSize>11pt</FontSize>
                       <Color>#282828</Color>
                     </Style>
                   </TextRun>
@@ -2799,7 +2698,7 @@
                     <Value>إﺳﻢ اﻟﺴﺎﺋﻖ</Value>
                     <Style>
                       <FontStyle>Normal</FontStyle>
-                      <FontSize>14pt</FontSize>
+                      <FontSize>11pt</FontSize>
                       <FontWeight>Normal</FontWeight>
                       <TextDecoration>None</TextDecoration>
                       <Color>#404040</Color>
@@ -2812,10 +2711,10 @@
               </Paragraph>
             </Paragraphs>
             <rd:DefaultName>Textbox3</rd:DefaultName>
-            <Top>5.4509in</Top>
-            <Left>3.9582in</Left>
+            <Top>5.46479in</Top>
+            <Left>3.04942in</Left>
             <Height>0.36935in</Height>
-            <Width>0.95299in</Width>
+            <Width>0.66747in</Width>
             <ZIndex>53</ZIndex>
             <Style>
               <Border>
@@ -2837,7 +2736,9 @@
                 <TextRuns>
                   <TextRun>
                     <Value>=First(Fields!DriverName.Value, "DataSet1")</Value>
-                    <Style />
+                    <Style>
+                      <FontSize>11pt</FontSize>
+                    </Style>
                   </TextRun>
                 </TextRuns>
                 <Style>
@@ -2846,10 +2747,10 @@
               </Paragraph>
             </Paragraphs>
             <rd:DefaultName>Textbox82</rd:DefaultName>
-            <Top>5.46746in</Top>
-            <Left>1.72406in</Left>
+            <Top>5.45357in</Top>
+            <Left>1.29414in</Left>
             <Height>0.36935in</Height>
-            <Width>2.21605in</Width>
+            <Width>1.3933in</Width>
             <ZIndex>54</ZIndex>
             <Style>
               <Border>
@@ -2871,7 +2772,7 @@
                     <Value xml:space="preserve">                                           </Value>
                     <Style>
                       <FontFamily>microsoft sans Serif</FontFamily>
-                      <FontSize>15.5pt</FontSize>
+                      <FontSize>11pt</FontSize>
                       <Color>#282828</Color>
                     </Style>
                   </TextRun>
@@ -2883,9 +2784,9 @@
             </Paragraphs>
             <rd:DefaultName>Textbox3</rd:DefaultName>
             <Top>5.95924in</Top>
-            <Left>5.00316in</Left>
+            <Left>3.94806in</Left>
             <Height>0.49167in</Height>
-            <Width>4.73339in</Width>
+            <Width>3.16242in</Width>
             <ZIndex>55</ZIndex>
             <Style>
               <Border>
@@ -2909,7 +2810,7 @@
                     <Value>:رﻗﻢ ﻟﻮﺣﺔ اﻟﺸﺎﺣﻨﺔ</Value>
                     <Style>
                       <FontStyle>Normal</FontStyle>
-                      <FontSize>14pt</FontSize>
+                      <FontSize>11pt</FontSize>
                       <FontWeight>Normal</FontWeight>
                       <TextDecoration>None</TextDecoration>
                       <Color>#404040</Color>
@@ -2923,9 +2824,9 @@
             </Paragraphs>
             <rd:DefaultName>Textbox3</rd:DefaultName>
             <Top>6.0259in</Top>
-            <Left>8.36173in</Left>
+            <Left>6.09719in</Left>
             <Height>0.36935in</Height>
-            <Width>1.33842in</Width>
+            <Width>0.98929in</Width>
             <ZIndex>56</ZIndex>
             <Style>
               <Border>
@@ -2946,22 +2847,11 @@
               <Paragraph>
                 <TextRuns>
                   <TextRun>
-                    <Value>Truck Plate No</Value>
+                    <Value>Truck Plate No:</Value>
                     <Style>
                       <FontStyle>Normal</FontStyle>
                       <FontFamily>Open Sans</FontFamily>
-                      <FontSize>14pt</FontSize>
-                      <FontWeight>Normal</FontWeight>
-                      <TextDecoration>None</TextDecoration>
-                      <Color>#404040</Color>
-                    </Style>
-                  </TextRun>
-                  <TextRun>
-                    <Value>:</Value>
-                    <Style>
-                      <FontStyle>Normal</FontStyle>
-                      <FontFamily>Open Sans</FontFamily>
-                      <FontSize>14.5pt</FontSize>
+                      <FontSize>11pt</FontSize>
                       <FontWeight>Normal</FontWeight>
                       <TextDecoration>None</TextDecoration>
                       <Color>#404040</Color>
@@ -2975,9 +2865,9 @@
             </Paragraphs>
             <rd:DefaultName>Textbox3</rd:DefaultName>
             <Top>6.0259in</Top>
-            <Left>5.07831in</Left>
+            <Left>3.94806in</Left>
             <Height>0.36935in</Height>
-            <Width>1.48262in</Width>
+            <Width>1.12429in</Width>
             <ZIndex>57</ZIndex>
             <Style>
               <Border>
@@ -2999,7 +2889,9 @@
                 <TextRuns>
                   <TextRun>
                     <Value>=First(Fields!PlateNumber.Value, "DataSet1")</Value>
-                    <Style />
+                    <Style>
+                      <FontSize>11pt</FontSize>
+                    </Style>
                   </TextRun>
                 </TextRuns>
                 <Style>
@@ -3009,9 +2901,9 @@
             </Paragraphs>
             <rd:DefaultName>Textbox82</rd:DefaultName>
             <Top>6.0259in</Top>
-            <Left>6.63037in</Left>
+            <Left>5.03181in</Left>
             <Height>0.36935in</Height>
-            <Width>1.67094in</Width>
+            <Width>0.99594in</Width>
             <ZIndex>58</ZIndex>
             <Style>
               <Border>
@@ -3033,7 +2925,7 @@
                     <Value xml:space="preserve">                                           </Value>
                     <Style>
                       <FontFamily>microsoft sans Serif</FontFamily>
-                      <FontSize>15.5pt</FontSize>
+                      <FontSize>11pt</FontSize>
                       <Color>#282828</Color>
                     </Style>
                   </TextRun>
@@ -3047,7 +2939,7 @@
             <Top>5.95924in</Top>
             <Left>0.22653in</Left>
             <Height>0.49167in</Height>
-            <Width>4.76628in</Width>
+            <Width>3.67986in</Width>
             <ZIndex>59</ZIndex>
             <Style>
               <Border>
@@ -3071,7 +2963,7 @@
                     <Value>:رﻗﻢ إﻗﺎﻣﺔ/هوية اﻟﺴﺎﺋﻖ</Value>
                     <Style>
                       <FontStyle>Normal</FontStyle>
-                      <FontSize>14pt</FontSize>
+                      <FontSize>11pt</FontSize>
                       <FontWeight>Normal</FontWeight>
                       <TextDecoration>None</TextDecoration>
                       <Color>#404040</Color>
@@ -3085,9 +2977,9 @@
             </Paragraphs>
             <rd:DefaultName>Textbox3</rd:DefaultName>
             <Top>6.0259in</Top>
-            <Left>3.46689in</Left>
+            <Left>2.63597in</Left>
             <Height>0.36935in</Height>
-            <Width>1.48071in</Width>
+            <Width>1.27042in</Width>
             <ZIndex>60</ZIndex>
             <Style>
               <Border>
@@ -3112,7 +3004,7 @@
                     <Style>
                       <FontStyle>Normal</FontStyle>
                       <FontFamily>Open Sans</FontFamily>
-                      <FontSize>14pt</FontSize>
+                      <FontSize>11pt</FontSize>
                       <FontWeight>Normal</FontWeight>
                       <TextDecoration>None</TextDecoration>
                       <Color>#404040</Color>
@@ -3128,7 +3020,7 @@
             <Top>6.0259in</Top>
             <Left>0.2543in</Left>
             <Height>0.36935in</Height>
-            <Width>1.95917in</Width>
+            <Width>1.47135in</Width>
             <ZIndex>61</ZIndex>
             <Style>
               <Border>
@@ -3150,7 +3042,9 @@
                 <TextRuns>
                   <TextRun>
                     <Value>=First(Fields!DriverName.Value, "DataSet1")</Value>
-                    <Style />
+                    <Style>
+                      <FontSize>11pt</FontSize>
+                    </Style>
                   </TextRun>
                 </TextRuns>
                 <Style>
@@ -3160,9 +3054,9 @@
             </Paragraphs>
             <rd:DefaultName>Textbox82</rd:DefaultName>
             <Top>6.0259in</Top>
-            <Left>2.08011in</Left>
+            <Left>1.75545in</Left>
             <Height>0.36935in</Height>
-            <Width>1.38678in</Width>
+            <Width>0.93199in</Width>
             <ZIndex>62</ZIndex>
             <Style>
               <Border>
@@ -3185,7 +3079,7 @@
                     <Style>
                       <FontStyle>Normal</FontStyle>
                       <FontFamily>Open Sans</FontFamily>
-                      <FontSize>14pt</FontSize>
+                      <FontSize>11pt</FontSize>
                       <FontWeight>Normal</FontWeight>
                       <TextDecoration>None</TextDecoration>
                       <Color>#404040</Color>
@@ -3195,7 +3089,7 @@
                     <Value>:</Value>
                     <Style>
                       <FontStyle>Normal</FontStyle>
-                      <FontSize>14.5pt</FontSize>
+                      <FontSize>11pt</FontSize>
                       <FontWeight>Normal</FontWeight>
                       <TextDecoration>None</TextDecoration>
                       <Color>#404040</Color>
@@ -3211,7 +3105,7 @@
             <Top>5.46479in</Top>
             <Left>0.28695in</Left>
             <Height>0.36935in</Height>
-            <Width>1.36766in</Width>
+            <Width>1.09115in</Width>
             <ZIndex>63</ZIndex>
             <Style>
               <Border>
@@ -3236,7 +3130,7 @@
                     <Style>
                       <FontStyle>Normal</FontStyle>
                       <FontFamily>Open Sans</FontFamily>
-                      <FontSize>14pt</FontSize>
+                      <FontSize>11pt</FontSize>
                       <FontWeight>Normal</FontWeight>
                       <TextDecoration>None</TextDecoration>
                       <Color>#404040</Color>
@@ -3246,14 +3140,14 @@
                     <Value xml:space="preserve">                      </Value>
                     <Style>
                       <FontFamily>microsoft sans Serif</FontFamily>
-                      <FontSize>15.5pt</FontSize>
+                      <FontSize>11pt</FontSize>
                       <Color>#282828</Color>
                     </Style>
                   </TextRun>
                   <TextRun>
                     <Value>المنطقة</Value>
                     <Style>
-                      <FontSize>14pt</FontSize>
+                      <FontSize>11pt</FontSize>
                       <Color>#282828</Color>
                     </Style>
                   </TextRun>
@@ -3264,10 +3158,10 @@
               </Paragraph>
             </Paragraphs>
             <rd:DefaultName>Textbox3</rd:DefaultName>
-            <Top>12.58924in</Top>
-            <Left>7.13205in</Left>
+            <Top>12.60313in</Top>
+            <Left>5.06625in</Left>
             <Height>0.49167in</Height>
-            <Width>2.6068in</Width>
+            <Width>2.01564in</Width>
             <ZIndex>64</ZIndex>
             <Style>
               <Border>
@@ -3292,7 +3186,7 @@
                     <Style>
                       <FontStyle>Normal</FontStyle>
                       <FontFamily>Open Sans</FontFamily>
-                      <FontSize>14pt</FontSize>
+                      <FontSize>11pt</FontSize>
                       <FontWeight>Normal</FontWeight>
                       <TextDecoration>None</TextDecoration>
                       <Color>#404040</Color>
@@ -3302,14 +3196,14 @@
                     <Value xml:space="preserve">            </Value>
                     <Style>
                       <FontFamily>microsoft sans Serif</FontFamily>
-                      <FontSize>15.5pt</FontSize>
+                      <FontSize>11pt</FontSize>
                       <Color>#282828</Color>
                     </Style>
                   </TextRun>
                   <TextRun>
                     <Value>المدينة</Value>
                     <Style>
-                      <FontSize>14pt</FontSize>
+                      <FontSize>11pt</FontSize>
                       <Color>#282828</Color>
                     </Style>
                   </TextRun>
@@ -3320,10 +3214,10 @@
               </Paragraph>
             </Paragraphs>
             <rd:DefaultName>Textbox3</rd:DefaultName>
-            <Top>12.58924in</Top>
-            <Left>5.29684in</Left>
-            <Height>0.49167in</Height>
-            <Width>1.77965in</Width>
+            <Top>12.60313in</Top>
+            <Left>3.84998in</Left>
+            <Height>0.47778in</Height>
+            <Width>1.18849in</Width>
             <ZIndex>65</ZIndex>
             <Style>
               <Border>
@@ -3344,39 +3238,28 @@
               <Paragraph>
                 <TextRuns>
                   <TextRun>
-                    <Value>Country</Value>
+                    <Value>Country  </Value>
                     <Style>
                       <FontStyle>Normal</FontStyle>
                       <FontFamily>Open Sans</FontFamily>
-                      <FontSize>14pt</FontSize>
+                      <FontSize>11pt</FontSize>
                       <FontWeight>Normal</FontWeight>
                       <TextDecoration>None</TextDecoration>
                       <Color>#404040</Color>
                     </Style>
                   </TextRun>
                   <TextRun>
-                    <Value xml:space="preserve">  </Value>
-                    <Style>
-                      <FontStyle>Normal</FontStyle>
-                      <FontFamily>Open Sans</FontFamily>
-                      <FontSize>14.5pt</FontSize>
-                      <FontWeight>Normal</FontWeight>
-                      <TextDecoration>None</TextDecoration>
-                      <Color>#404040</Color>
-                    </Style>
-                  </TextRun>
-                  <TextRun>
-                    <Value xml:space="preserve">            </Value>
+                    <Value xml:space="preserve"> </Value>
                     <Style>
                       <FontFamily>microsoft sans Serif</FontFamily>
-                      <FontSize>15.5pt</FontSize>
+                      <FontSize>11pt</FontSize>
                       <Color>#282828</Color>
                     </Style>
                   </TextRun>
                   <TextRun>
                     <Value>الدولة</Value>
                     <Style>
-                      <FontSize>14pt</FontSize>
+                      <FontSize>11pt</FontSize>
                       <Color>#282828</Color>
                     </Style>
                   </TextRun>
@@ -3387,10 +3270,10 @@
               </Paragraph>
             </Paragraphs>
             <rd:DefaultName>Textbox3</rd:DefaultName>
-            <Top>12.58924in</Top>
-            <Left>3.27925in</Left>
+            <Top>12.57535in</Top>
+            <Left>2.46522in</Left>
             <Height>0.49167in</Height>
-            <Width>1.97592in</Width>
+            <Width>1.38476in</Width>
             <ZIndex>66</ZIndex>
             <Style>
               <Border>
@@ -3411,43 +3294,21 @@
               <Paragraph>
                 <TextRuns>
                   <TextRun>
-                    <Value xml:space="preserve"> </Value>
+                    <Value> Facility Name </Value>
                     <Style>
                       <FontStyle>Normal</FontStyle>
                       <FontFamily>Open Sans</FontFamily>
-                      <FontSize>14.5pt</FontSize>
+                      <FontSize>11pt</FontSize>
                       <FontWeight>Normal</FontWeight>
                       <TextDecoration>None</TextDecoration>
                       <Color>#404040</Color>
                     </Style>
                   </TextRun>
                   <TextRun>
-                    <Value>Facility Name</Value>
-                    <Style>
-                      <FontStyle>Normal</FontStyle>
-                      <FontFamily>Open Sans</FontFamily>
-                      <FontSize>14pt</FontSize>
-                      <FontWeight>Normal</FontWeight>
-                      <TextDecoration>None</TextDecoration>
-                      <Color>#404040</Color>
-                    </Style>
-                  </TextRun>
-                  <TextRun>
-                    <Value xml:space="preserve"> </Value>
-                    <Style>
-                      <FontStyle>Normal</FontStyle>
-                      <FontFamily>Open Sans</FontFamily>
-                      <FontSize>14.5pt</FontSize>
-                      <FontWeight>Normal</FontWeight>
-                      <TextDecoration>None</TextDecoration>
-                      <Color>#404040</Color>
-                    </Style>
-                  </TextRun>
-                  <TextRun>
-                    <Value xml:space="preserve">                </Value>
+                    <Value xml:space="preserve">      </Value>
                     <Style>
                       <FontFamily>microsoft sans Serif</FontFamily>
-                      <FontSize>15.5pt</FontSize>
+                      <FontSize>11pt</FontSize>
                       <Color>#282828</Color>
                     </Style>
                   </TextRun>
@@ -3455,14 +3316,14 @@
                     <Value xml:space="preserve"> </Value>
                     <Style>
                       <FontFamily>GE Flow</FontFamily>
-                      <FontSize>15.5pt</FontSize>
+                      <FontSize>11pt</FontSize>
                       <Color>#282828</Color>
                     </Style>
                   </TextRun>
                   <TextRun>
                     <Value>اسم المنشأة</Value>
                     <Style>
-                      <FontSize>14pt</FontSize>
+                      <FontSize>11pt</FontSize>
                       <Color>#282828</Color>
                     </Style>
                   </TextRun>
@@ -3476,7 +3337,7 @@
             <Top>12.58924in</Top>
             <Left>0.21467in</Left>
             <Height>0.49167in</Height>
-            <Width>3.03889in</Width>
+            <Width>2.20887in</Width>
             <ZIndex>67</ZIndex>
             <Style>
               <Border>
@@ -3500,21 +3361,21 @@
                     <Value>=First(Fields!Area.Value, "DataSet1")</Value>
                     <Style>
                       <FontFamily>microsoft sans Serif</FontFamily>
-                      <FontSize>14pt</FontSize>
+                      <FontSize>11pt</FontSize>
                       <Color>#282828</Color>
                     </Style>
                   </TextRun>
                 </TextRuns>
                 <Style>
-                  <TextAlign>General</TextAlign>
+                  <TextAlign>Center</TextAlign>
                 </Style>
               </Paragraph>
             </Paragraphs>
             <rd:DefaultName>Textbox3</rd:DefaultName>
             <Top>13.10869in</Top>
-            <Left>7.14593in</Left>
+            <Left>5.06625in</Left>
             <Height>0.38867in</Height>
-            <Width>2.59292in</Width>
+            <Width>2.00759in</Width>
             <ZIndex>68</ZIndex>
             <Style>
               <Border>
@@ -3538,21 +3399,21 @@
                     <Value>=First(Fields!CityName.Value, "DataSet1")</Value>
                     <Style>
                       <FontFamily>microsoft sans Serif</FontFamily>
-                      <FontSize>14pt</FontSize>
+                      <FontSize>11pt</FontSize>
                       <Color>#282828</Color>
                     </Style>
                   </TextRun>
                 </TextRuns>
                 <Style>
-                  <TextAlign>General</TextAlign>
+                  <TextAlign>Center</TextAlign>
                 </Style>
               </Paragraph>
             </Paragraphs>
             <rd:DefaultName>Textbox3</rd:DefaultName>
-            <Top>13.10869in</Top>
-            <Left>5.29684in</Left>
+            <Top>13.12258in</Top>
+            <Left>3.84998in</Left>
             <Height>0.38867in</Height>
-            <Width>1.77965in</Width>
+            <Width>1.22237in</Width>
             <ZIndex>69</ZIndex>
             <Style>
               <Border>
@@ -3576,21 +3437,21 @@
                     <Value>=First(Fields!CountryName.Value, "DataSet1")</Value>
                     <Style>
                       <FontFamily>microsoft sans Serif</FontFamily>
-                      <FontSize>14pt</FontSize>
+                      <FontSize>11pt</FontSize>
                       <Color>#282828</Color>
                     </Style>
                   </TextRun>
                 </TextRuns>
                 <Style>
-                  <TextAlign>General</TextAlign>
+                  <TextAlign>Center</TextAlign>
                 </Style>
               </Paragraph>
             </Paragraphs>
             <rd:DefaultName>Textbox3</rd:DefaultName>
-            <Top>13.10869in</Top>
-            <Left>3.27925in</Left>
+            <Top>13.0948in</Top>
+            <Left>2.46521in</Left>
             <Height>0.38867in</Height>
-            <Width>1.96203in</Width>
+            <Width>1.35699in</Width>
             <ZIndex>70</ZIndex>
             <Style>
               <Border>
@@ -3614,13 +3475,13 @@
                     <Value>=First(Fields!FacilityName.Value, "DataSet1")</Value>
                     <Style>
                       <FontFamily>microsoft sans Serif</FontFamily>
-                      <FontSize>14pt</FontSize>
+                      <FontSize>11pt</FontSize>
                       <Color>#282828</Color>
                     </Style>
                   </TextRun>
                 </TextRuns>
                 <Style>
-                  <TextAlign>General</TextAlign>
+                  <TextAlign>Center</TextAlign>
                 </Style>
               </Paragraph>
             </Paragraphs>
@@ -3628,7 +3489,7 @@
             <Top>13.10869in</Top>
             <Left>0.21467in</Left>
             <Height>0.38867in</Height>
-            <Width>3.03889in</Width>
+            <Width>2.20887in</Width>
             <ZIndex>71</ZIndex>
             <Style>
               <Border>
@@ -3653,7 +3514,7 @@
                     <Style>
                       <FontStyle>Normal</FontStyle>
                       <FontFamily>Open Sans</FontFamily>
-                      <FontSize>14.5pt</FontSize>
+                      <FontSize>11pt</FontSize>
                       <FontWeight>Normal</FontWeight>
                       <TextDecoration>None</TextDecoration>
                       <Color>#404040</Color>
@@ -3663,7 +3524,7 @@
                     <Value xml:space="preserve">                                                                                                                                        </Value>
                     <Style>
                       <FontFamily>microsoft sans Serif</FontFamily>
-                      <FontSize>15.5pt</FontSize>
+                      <FontSize>11pt</FontSize>
                       <Color>#282828</Color>
                     </Style>
                   </TextRun>
@@ -3671,7 +3532,7 @@
                     <Value xml:space="preserve"> </Value>
                     <Style>
                       <FontFamily>GE Flow</FontFamily>
-                      <FontSize>15.5pt</FontSize>
+                      <FontSize>11pt</FontSize>
                       <Color>#282828</Color>
                     </Style>
                   </TextRun>
@@ -3679,7 +3540,7 @@
                     <Value>ملاحظات</Value>
                     <Style>
                       <FontFamily>arial</FontFamily>
-                      <FontSize>14pt</FontSize>
+                      <FontSize>11pt</FontSize>
                       <Color>#282828</Color>
                     </Style>
                   </TextRun>
@@ -3693,7 +3554,7 @@
             <Top>14.5824in</Top>
             <Left>0.21467in</Left>
             <Height>0.5104in</Height>
-            <Width>9.56102in</Width>
+            <Width>6.85917in</Width>
             <ZIndex>72</ZIndex>
             <Style>
               <Border>
@@ -3718,7 +3579,7 @@
                     <Style>
                       <FontStyle>Normal</FontStyle>
                       <FontFamily>Open Sans</FontFamily>
-                      <FontSize>14.5pt</FontSize>
+                      <FontSize>11pt</FontSize>
                       <FontWeight>Normal</FontWeight>
                       <TextDecoration>None</TextDecoration>
                       <Color>#404040</Color>
@@ -3734,7 +3595,7 @@
             <Top>15.10668in</Top>
             <Left>0.21467in</Left>
             <Height>0.99729in</Height>
-            <Width>9.56102in</Width>
+            <Width>6.85917in</Width>
             <ZIndex>73</ZIndex>
             <Style>
               <Border>
@@ -3759,7 +3620,7 @@
                     <Style>
                       <FontStyle>Normal</FontStyle>
                       <FontFamily>Open Sans</FontFamily>
-                      <FontSize>14.5pt</FontSize>
+                      <FontSize>11pt</FontSize>
                       <FontWeight>Normal</FontWeight>
                       <TextDecoration>None</TextDecoration>
                       <Color>#404040</Color>
@@ -3769,7 +3630,7 @@
                     <Value xml:space="preserve">                                                                                                                                       </Value>
                     <Style>
                       <FontFamily>microsoft sans Serif</FontFamily>
-                      <FontSize>15.5pt</FontSize>
+                      <FontSize>11pt</FontSize>
                       <Color>#282828</Color>
                     </Style>
                   </TextRun>
@@ -3777,7 +3638,7 @@
                     <Value xml:space="preserve"> </Value>
                     <Style>
                       <FontFamily>GE Flow</FontFamily>
-                      <FontSize>15.5pt</FontSize>
+                      <FontSize>11pt</FontSize>
                       <Color>#282828</Color>
                     </Style>
                   </TextRun>
@@ -3785,7 +3646,7 @@
                     <Value>التواقيع</Value>
                     <Style>
                       <FontFamily>arial</FontFamily>
-                      <FontSize>15.5pt</FontSize>
+                      <FontSize>11pt</FontSize>
                       <Color>#282828</Color>
                     </Style>
                   </TextRun>
@@ -3799,7 +3660,7 @@
             <Top>16.10397in</Top>
             <Left>0.22165in</Left>
             <Height>0.5104in</Height>
-            <Width>9.55404in</Width>
+            <Width>6.85219in</Width>
             <ZIndex>74</ZIndex>
             <Style>
               <Border>
@@ -3820,43 +3681,21 @@
               <Paragraph>
                 <TextRuns>
                   <TextRun>
-                    <Value xml:space="preserve"> </Value>
+                    <Value> Driver:</Value>
                     <Style>
                       <FontStyle>Normal</FontStyle>
                       <FontFamily>Open Sans</FontFamily>
-                      <FontSize>14.5pt</FontSize>
+                      <FontSize>11pt</FontSize>
                       <FontWeight>Normal</FontWeight>
                       <TextDecoration>None</TextDecoration>
                       <Color>#404040</Color>
                     </Style>
                   </TextRun>
                   <TextRun>
-                    <Value>Driver</Value>
-                    <Style>
-                      <FontStyle>Normal</FontStyle>
-                      <FontFamily>Open Sans</FontFamily>
-                      <FontSize>14pt</FontSize>
-                      <FontWeight>Normal</FontWeight>
-                      <TextDecoration>None</TextDecoration>
-                      <Color>#404040</Color>
-                    </Style>
-                  </TextRun>
-                  <TextRun>
-                    <Value>:</Value>
-                    <Style>
-                      <FontStyle>Normal</FontStyle>
-                      <FontFamily>Open Sans</FontFamily>
-                      <FontSize>14.5pt</FontSize>
-                      <FontWeight>Normal</FontWeight>
-                      <TextDecoration>None</TextDecoration>
-                      <Color>#404040</Color>
-                    </Style>
-                  </TextRun>
-                  <TextRun>
-                    <Value>                                 :</Value>
+                    <Value>                         :</Value>
                     <Style>
                       <FontFamily>microsoft sans Serif</FontFamily>
-                      <FontSize>15.5pt</FontSize>
+                      <FontSize>11pt</FontSize>
                       <Color>#282828</Color>
                     </Style>
                   </TextRun>
@@ -3864,23 +3703,15 @@
                     <Value xml:space="preserve"> </Value>
                     <Style>
                       <FontFamily>GE Flow</FontFamily>
-                      <FontSize>15.5pt</FontSize>
+                      <FontSize>11pt</FontSize>
                       <Color>#282828</Color>
                     </Style>
                   </TextRun>
                   <TextRun>
-                    <Value>السائق</Value>
+                    <Value>السائق </Value>
                     <Style>
                       <FontFamily>arial</FontFamily>
-                      <FontSize>14pt</FontSize>
-                      <Color>#282828</Color>
-                    </Style>
-                  </TextRun>
-                  <TextRun>
-                    <Value xml:space="preserve"> </Value>
-                    <Style>
-                      <FontFamily>arial</FontFamily>
-                      <FontSize>15.5pt</FontSize>
+                      <FontSize>11pt</FontSize>
                       <Color>#282828</Color>
                     </Style>
                   </TextRun>
@@ -3892,9 +3723,9 @@
             </Paragraphs>
             <rd:DefaultName>Textbox3</rd:DefaultName>
             <Top>16.65604in</Top>
-            <Left>6.4643in</Left>
+            <Left>4.81818in</Left>
             <Height>0.49167in</Height>
-            <Width>3.31139in</Width>
+            <Width>2.25565in</Width>
             <ZIndex>75</ZIndex>
             <Style>
               <Border>
@@ -3915,33 +3746,11 @@
               <Paragraph>
                 <TextRuns>
                   <TextRun>
-                    <Value xml:space="preserve"> </Value>
+                    <Value> Recipient :</Value>
                     <Style>
                       <FontStyle>Normal</FontStyle>
                       <FontFamily>Open Sans</FontFamily>
-                      <FontSize>14.5pt</FontSize>
-                      <FontWeight>Normal</FontWeight>
-                      <TextDecoration>None</TextDecoration>
-                      <Color>#404040</Color>
-                    </Style>
-                  </TextRun>
-                  <TextRun>
-                    <Value>Recipient</Value>
-                    <Style>
-                      <FontStyle>Normal</FontStyle>
-                      <FontFamily>Open Sans</FontFamily>
-                      <FontSize>14pt</FontSize>
-                      <FontWeight>Normal</FontWeight>
-                      <TextDecoration>None</TextDecoration>
-                      <Color>#404040</Color>
-                    </Style>
-                  </TextRun>
-                  <TextRun>
-                    <Value> :</Value>
-                    <Style>
-                      <FontStyle>Normal</FontStyle>
-                      <FontFamily>Open Sans</FontFamily>
-                      <FontSize>14.5pt</FontSize>
+                      <FontSize>11pt</FontSize>
                       <FontWeight>Normal</FontWeight>
                       <TextDecoration>None</TextDecoration>
                       <Color>#404040</Color>
@@ -3951,7 +3760,7 @@
                     <Value>                          :</Value>
                     <Style>
                       <FontFamily>microsoft sans Serif</FontFamily>
-                      <FontSize>15.5pt</FontSize>
+                      <FontSize>11pt</FontSize>
                       <Color>#282828</Color>
                     </Style>
                   </TextRun>
@@ -3959,7 +3768,7 @@
                     <Value xml:space="preserve"> </Value>
                     <Style>
                       <FontFamily>GE Flow</FontFamily>
-                      <FontSize>15.5pt</FontSize>
+                      <FontSize>11pt</FontSize>
                       <Color>#282828</Color>
                     </Style>
                   </TextRun>
@@ -3967,7 +3776,7 @@
                     <Value>المستلم</Value>
                     <Style>
                       <FontFamily>arial</FontFamily>
-                      <FontSize>14pt</FontSize>
+                      <FontSize>11pt</FontSize>
                       <Color>#282828</Color>
                     </Style>
                   </TextRun>
@@ -3978,10 +3787,10 @@
               </Paragraph>
             </Paragraphs>
             <rd:DefaultName>Textbox3</rd:DefaultName>
-            <Top>16.64215in</Top>
-            <Left>3.06402in</Left>
+            <Top>16.65604in</Top>
+            <Left>2.46522in</Left>
             <Height>0.49167in</Height>
-            <Width>3.35861in</Width>
+            <Width>2.37888in</Width>
             <ZIndex>76</ZIndex>
             <Style>
               <Border>
@@ -4002,32 +3811,21 @@
               <Paragraph>
                 <TextRuns>
                   <TextRun>
-                    <Value>Sender</Value>
+                    <Value>Sender:</Value>
                     <Style>
                       <FontStyle>Normal</FontStyle>
                       <FontFamily>Open Sans</FontFamily>
-                      <FontSize>14pt</FontSize>
+                      <FontSize>11pt</FontSize>
                       <FontWeight>Normal</FontWeight>
                       <TextDecoration>None</TextDecoration>
                       <Color>#404040</Color>
                     </Style>
                   </TextRun>
                   <TextRun>
-                    <Value>:</Value>
-                    <Style>
-                      <FontStyle>Normal</FontStyle>
-                      <FontFamily>Open Sans</FontFamily>
-                      <FontSize>14.5pt</FontSize>
-                      <FontWeight>Normal</FontWeight>
-                      <TextDecoration>None</TextDecoration>
-                      <Color>#404040</Color>
-                    </Style>
-                  </TextRun>
-                  <TextRun>
-                    <Value>                        :</Value>
+                    <Value>              :</Value>
                     <Style>
                       <FontFamily>microsoft sans Serif</FontFamily>
-                      <FontSize>15.5pt</FontSize>
+                      <FontSize>11pt</FontSize>
                       <Color>#282828</Color>
                     </Style>
                   </TextRun>
@@ -4035,7 +3833,7 @@
                     <Value>المرسل</Value>
                     <Style>
                       <FontFamily>arial</FontFamily>
-                      <FontSize>14pt</FontSize>
+                      <FontSize>11pt</FontSize>
                       <Color>#282828</Color>
                     </Style>
                   </TextRun>
@@ -4049,7 +3847,7 @@
             <Top>16.64215in</Top>
             <Left>0.22165in</Left>
             <Height>0.49167in</Height>
-            <Width>2.80821in</Width>
+            <Width>2.18801in</Width>
             <ZIndex>77</ZIndex>
             <Style>
               <Border>
@@ -4070,18 +3868,10 @@
               <Paragraph>
                 <TextRuns>
                   <TextRun>
-                    <Value>:تاريخ </Value>
+                    <Value>:تاريخ الطباعة</Value>
                     <Style>
                       <FontFamily>arial</FontFamily>
-                      <FontSize>14pt</FontSize>
-                      <Color>#282828</Color>
-                    </Style>
-                  </TextRun>
-                  <TextRun>
-                    <Value>الطباعة</Value>
-                    <Style>
-                      <FontFamily>arial</FontFamily>
-                      <FontSize>15.5pt</FontSize>
+                      <FontSize>11pt</FontSize>
                       <Color>#282828</Color>
                     </Style>
                   </TextRun>
@@ -4093,7 +3883,7 @@
             </Paragraphs>
             <rd:DefaultName>Textbox3</rd:DefaultName>
             <Top>17.53395in</Top>
-            <Left>5.19459in</Left>
+            <Left>3.50469in</Left>
             <Height>0.36935in</Height>
             <Width>1.15932in</Width>
             <ZIndex>78</ZIndex>
@@ -4116,7 +3906,9 @@
                 <TextRuns>
                   <TextRun>
                     <Value>=First(Fields!Date.Value, "DataSet1")</Value>
-                    <Style />
+                    <Style>
+                      <FontSize>11pt</FontSize>
+                    </Style>
                   </TextRun>
                 </TextRuns>
                 <Style>
@@ -4128,7 +3920,7 @@
             <Top>17.53395in</Top>
             <Left>1.44754in</Left>
             <Height>0.36935in</Height>
-            <Width>3.67761in</Width>
+            <Width>1.98933in</Width>
             <ZIndex>79</ZIndex>
             <Style>
               <Border>
@@ -4147,22 +3939,11 @@
               <Paragraph>
                 <TextRuns>
                   <TextRun>
-                    <Value>Print </Value>
+                    <Value>Print Date</Value>
                     <Style>
                       <FontStyle>Normal</FontStyle>
                       <FontFamily>Open Sans</FontFamily>
-                      <FontSize>14.5pt</FontSize>
-                      <FontWeight>Normal</FontWeight>
-                      <TextDecoration>None</TextDecoration>
-                      <Color>#404040</Color>
-                    </Style>
-                  </TextRun>
-                  <TextRun>
-                    <Value>Date</Value>
-                    <Style>
-                      <FontStyle>Normal</FontStyle>
-                      <FontFamily>Open Sans</FontFamily>
-                      <FontSize>14pt</FontSize>
+                      <FontSize>11pt</FontSize>
                       <FontWeight>Normal</FontWeight>
                       <TextDecoration>None</TextDecoration>
                       <Color>#404040</Color>
@@ -4172,7 +3953,7 @@
                     <Value>:</Value>
                     <Style>
                       <FontFamily>Open Sans</FontFamily>
-                      <FontSize>14pt</FontSize>
+                      <FontSize>11pt</FontSize>
                       <FontWeight>Normal</FontWeight>
                       <Color>#282828</Color>
                     </Style>
@@ -4204,8 +3985,8 @@
             <Source>Embedded</Source>
             <Value>check</Value>
             <Sizing>FitProportional</Sizing>
-            <Top>8.70297in</Top>
-            <Left>8.46641in</Left>
+            <Top>8.85241in</Top>
+            <Left>5.86302in</Left>
             <Height>0.2275in</Height>
             <Width>0.17618in</Width>
             <ZIndex>81</ZIndex>
@@ -4222,7 +4003,7 @@
             <Source>Embedded</Source>
             <Value>check</Value>
             <Sizing>FitProportional</Sizing>
-            <Top>8.70297in</Top>
+            <Top>8.82797in</Top>
             <Left>1.83676in</Left>
             <Height>0.2275in</Height>
             <Width>0.17618in</Width>
@@ -4245,7 +4026,7 @@
                   <TextRun>
                     <Value>تفاصيل المرسل</Value>
                     <Style>
-                      <FontSize>16pt</FontSize>
+                      <FontSize>13pt</FontSize>
                       <FontWeight>Bold</FontWeight>
                       <Color>White</Color>
                     </Style>
@@ -4257,8 +4038,8 @@
               </Paragraph>
             </Paragraphs>
             <rd:DefaultName>Textbox82</rd:DefaultName>
-            <Top>2.70751in</Top>
-            <Left>7.95728in</Left>
+            <Top>2.76372in</Top>
+            <Left>5.19766in</Left>
             <Height>0.45in</Height>
             <Width>1.77927in</Width>
             <ZIndex>83</ZIndex>
@@ -4282,7 +4063,7 @@
                     <Value>Sender Details</Value>
                     <Style>
                       <FontFamily>open sans</FontFamily>
-                      <FontSize>16pt</FontSize>
+                      <FontSize>13pt</FontSize>
                       <FontWeight>Bold</FontWeight>
                       <Color>White</Color>
                     </Style>
@@ -4316,118 +4097,10 @@
               <Paragraph>
                 <TextRuns>
                   <TextRun>
-                    <Value xml:space="preserve">              </Value>
+                    <Value xml:space="preserve"> </Value>
                     <Style>
                       <FontFamily>microsoft sans Serif</FontFamily>
-                      <FontSize>19pt</FontSize>
-                      <FontWeight>Bold</FontWeight>
-                      <Color>White</Color>
-                    </Style>
-                  </TextRun>
-                  <TextRun>
-                    <Value xml:space="preserve">     </Value>
-                    <Style>
-                      <FontFamily>microsoft sans Serif</FontFamily>
-                      <FontSize>14.5pt</FontSize>
-                      <FontWeight>Bold</FontWeight>
-                      <Color>White</Color>
-                    </Style>
-                  </TextRun>
-                  <TextRun>
-                    <Value xml:space="preserve">        </Value>
-                    <Style>
-                      <FontFamily>microsoft sans Serif</FontFamily>
-                      <FontSize>19pt</FontSize>
-                      <FontWeight>Bold</FontWeight>
-                      <Color>White</Color>
-                    </Style>
-                  </TextRun>
-                  <TextRun>
-                    <Value xml:space="preserve">     </Value>
-                    <Style>
-                      <FontFamily>microsoft sans Serif</FontFamily>
-                      <FontSize>14.5pt</FontSize>
-                      <FontWeight>Bold</FontWeight>
-                      <Color>White</Color>
-                    </Style>
-                  </TextRun>
-                  <TextRun>
-                    <Value xml:space="preserve">        </Value>
-                    <Style>
-                      <FontFamily>microsoft sans Serif</FontFamily>
-                      <FontSize>19pt</FontSize>
-                      <FontWeight>Bold</FontWeight>
-                      <Color>White</Color>
-                    </Style>
-                  </TextRun>
-                  <TextRun>
-                    <Value xml:space="preserve">     </Value>
-                    <Style>
-                      <FontFamily>microsoft sans Serif</FontFamily>
-                      <FontSize>14.5pt</FontSize>
-                      <FontWeight>Bold</FontWeight>
-                      <Color>White</Color>
-                    </Style>
-                  </TextRun>
-                  <TextRun>
-                    <Value xml:space="preserve">        </Value>
-                    <Style>
-                      <FontFamily>microsoft sans Serif</FontFamily>
-                      <FontSize>19pt</FontSize>
-                      <FontWeight>Bold</FontWeight>
-                      <Color>White</Color>
-                    </Style>
-                  </TextRun>
-                  <TextRun>
-                    <Value xml:space="preserve">     </Value>
-                    <Style>
-                      <FontFamily>microsoft sans Serif</FontFamily>
-                      <FontSize>14.5pt</FontSize>
-                      <FontWeight>Bold</FontWeight>
-                      <Color>White</Color>
-                    </Style>
-                  </TextRun>
-                  <TextRun>
-                    <Value xml:space="preserve">        </Value>
-                    <Style>
-                      <FontFamily>microsoft sans Serif</FontFamily>
-                      <FontSize>19pt</FontSize>
-                      <FontWeight>Bold</FontWeight>
-                      <Color>White</Color>
-                    </Style>
-                  </TextRun>
-                  <TextRun>
-                    <Value xml:space="preserve">     </Value>
-                    <Style>
-                      <FontFamily>microsoft sans Serif</FontFamily>
-                      <FontSize>14.5pt</FontSize>
-                      <FontWeight>Bold</FontWeight>
-                      <Color>White</Color>
-                    </Style>
-                  </TextRun>
-                  <TextRun>
-                    <Value xml:space="preserve">          </Value>
-                    <Style>
-                      <FontFamily>microsoft sans Serif</FontFamily>
-                      <FontSize>19pt</FontSize>
-                      <FontWeight>Bold</FontWeight>
-                      <Color>White</Color>
-                    </Style>
-                  </TextRun>
-                  <TextRun>
-                    <Value xml:space="preserve">        </Value>
-                    <Style>
-                      <FontFamily>microsoft sans Serif</FontFamily>
-                      <FontSize>14.5pt</FontSize>
-                      <FontWeight>Bold</FontWeight>
-                      <Color>White</Color>
-                    </Style>
-                  </TextRun>
-                  <TextRun>
-                    <Value xml:space="preserve">  </Value>
-                    <Style>
-                      <FontFamily>microsoft sans Serif</FontFamily>
-                      <FontSize>20pt</FontSize>
+                      <FontSize>13pt</FontSize>
                       <FontWeight>Bold</FontWeight>
                       <Color>White</Color>
                     </Style>
@@ -4442,7 +4115,7 @@
             <Top>6.72346in</Top>
             <Left>0.2181in</Left>
             <Height>0.49167in</Height>
-            <Width>9.5202in</Width>
+            <Width>6.89238in</Width>
             <ZIndex>85</ZIndex>
             <Style>
               <Border>
@@ -4463,7 +4136,7 @@
                   <TextRun>
                     <Value>تفاصيل الحمولات</Value>
                     <Style>
-                      <FontSize>16pt</FontSize>
+                      <FontSize>13pt</FontSize>
                       <FontWeight>Bold</FontWeight>
                       <Color>White</Color>
                     </Style>
@@ -4475,8 +4148,8 @@
               </Paragraph>
             </Paragraphs>
             <rd:DefaultName>Textbox82</rd:DefaultName>
-            <Top>6.70957in</Top>
-            <Left>8.01504in</Left>
+            <Top>6.76513in</Top>
+            <Left>5.35498in</Left>
             <Height>0.45in</Height>
             <Width>1.72151in</Width>
             <ZIndex>86</ZIndex>
@@ -4500,7 +4173,7 @@
                     <Value>DropsDetails</Value>
                     <Style>
                       <FontFamily>open sans</FontFamily>
-                      <FontSize>16pt</FontSize>
+                      <FontSize>13pt</FontSize>
                       <FontWeight>Bold</FontWeight>
                       <Color>White</Color>
                     </Style>
@@ -4536,7 +4209,7 @@
                   <TextRun>
                     <Value>موقع الإستلام</Value>
                     <Style>
-                      <FontSize>16pt</FontSize>
+                      <FontSize>13pt</FontSize>
                       <FontWeight>Bold</FontWeight>
                       <Color>White</Color>
                     </Style>
@@ -4548,8 +4221,8 @@
               </Paragraph>
             </Paragraphs>
             <rd:DefaultName>Textbox82</rd:DefaultName>
-            <Top>12.11146in</Top>
-            <Left>7.90608in</Left>
+            <Top>12.09757in</Top>
+            <Left>5.29457in</Left>
             <Height>0.45in</Height>
             <Width>1.77927in</Width>
             <ZIndex>88</ZIndex>
@@ -4573,7 +4246,7 @@
                     <Value>Multiple Drops:</Value>
                     <Style>
                       <FontFamily>Open Sans</FontFamily>
-                      <FontSize>14pt</FontSize>
+                      <FontSize>11pt</FontSize>
                       <FontWeight>Normal</FontWeight>
                       <Color>#282828</Color>
                     </Style>
@@ -4609,7 +4282,9 @@
                 <TextRuns>
                   <TextRun>
                     <Value>=First(Fields!TotalDrops.Value, "DataSet1")</Value>
-                    <Style />
+                    <Style>
+                      <FontSize>11pt</FontSize>
+                    </Style>
                   </TextRun>
                 </TextRuns>
                 <Style>
@@ -4637,8 +4312,8 @@
             <Source>Embedded</Source>
             <Value>blacksquareboxvariant1</Value>
             <Sizing>FitProportional</Sizing>
-            <Top>8.70297in</Top>
-            <Left>8.25199in</Left>
+            <Top>8.85241in</Top>
+            <Left>5.6486in</Left>
             <Height>0.29694in</Height>
             <Width>0.15886in</Width>
             <ZIndex>91</ZIndex>
@@ -4655,7 +4330,7 @@
             <Source>Embedded</Source>
             <Value>blacksquareboxvariant1</Value>
             <Sizing>FitProportional</Sizing>
-            <Top>8.70297in</Top>
+            <Top>8.82797in</Top>
             <Left>2.05461in</Left>
             <Height>0.29694in</Height>
             <Width>0.15886in</Width>
@@ -4679,7 +4354,7 @@
                     <Value />
                     <Style>
                       <FontFamily>GE Flow</FontFamily>
-                      <FontSize>15.5pt</FontSize>
+                      <FontSize>11pt</FontSize>
                       <Color>#282828</Color>
                     </Style>
                   </TextRun>
@@ -4693,7 +4368,7 @@
             <Top>1.26135in</Top>
             <Left>0.22165in</Left>
             <Height>0.47667in</Height>
-            <Width>4.72086in</Width>
+            <Width>3.39502in</Width>
             <ZIndex>93</ZIndex>
             <Style>
               <Border>
@@ -4715,7 +4390,7 @@
                   <TextRun>
                     <Value>إسم الناقل</Value>
                     <Style>
-                      <FontSize>14pt</FontSize>
+                      <FontSize>11pt</FontSize>
                       <FontWeight>Normal</FontWeight>
                       <Color>#3b3a3c</Color>
                     </Style>
@@ -4728,9 +4403,9 @@
             </Paragraphs>
             <rd:DefaultName>Textbox3</rd:DefaultName>
             <Top>1.24436in</Top>
-            <Left>8.75699in</Left>
+            <Left>6.46532in</Left>
             <Height>0.47143in</Height>
-            <Width>0.96994in</Width>
+            <Width>0.51161in</Width>
             <ZIndex>94</ZIndex>
             <Style>
               <Border>
@@ -4752,7 +4427,7 @@
                     <Value>Carrier Name:</Value>
                     <Style>
                       <FontFamily>Open Sans</FontFamily>
-                      <FontSize>14pt</FontSize>
+                      <FontSize>11pt</FontSize>
                       <FontWeight>Normal</FontWeight>
                       <Color>#3b3a3c</Color>
                     </Style>
@@ -4764,10 +4439,10 @@
               </Paragraph>
             </Paragraphs>
             <rd:DefaultName>Textbox3</rd:DefaultName>
-            <Top>1.24436in</Top>
-            <Left>5.09607in</Left>
+            <Top>1.32301in</Top>
+            <Left>3.67718in</Left>
             <Height>0.47143in</Height>
-            <Width>1.82334in</Width>
+            <Width>1.0486in</Width>
             <ZIndex>95</ZIndex>
             <Style>
               <Border>
@@ -4789,7 +4464,7 @@
                     <Value>إسم العميل</Value>
                     <Style>
                       <FontFamily>microsoft sans Serif</FontFamily>
-                      <FontSize>14pt</FontSize>
+                      <FontSize>11pt</FontSize>
                       <FontWeight>Normal</FontWeight>
                       <Color>#282828</Color>
                     </Style>
@@ -4802,9 +4477,9 @@
             </Paragraphs>
             <rd:DefaultName>Textbox3</rd:DefaultName>
             <Top>1.30367in</Top>
-            <Left>3.8925in</Left>
+            <Left>2.98776in</Left>
             <Height>0.36935in</Height>
-            <Width>0.96994in</Width>
+            <Width>0.60238in</Width>
             <ZIndex>96</ZIndex>
             <Style>
               <Border>
@@ -4828,7 +4503,7 @@
                     <Value>Client Name</Value>
                     <Style>
                       <FontFamily>Open Sans</FontFamily>
-                      <FontSize>14pt</FontSize>
+                      <FontSize>11pt</FontSize>
                       <FontWeight>Normal</FontWeight>
                       <Color>#282828</Color>
                     </Style>
@@ -4837,7 +4512,7 @@
                     <Value>:</Value>
                     <Style>
                       <FontFamily>microsoft sans Serif</FontFamily>
-                      <FontSize>14pt</FontSize>
+                      <FontSize>11pt</FontSize>
                       <FontWeight>Normal</FontWeight>
                       <Color>#282828</Color>
                     </Style>
@@ -4852,7 +4527,7 @@
             <Top>1.30367in</Top>
             <Left>0.2543in</Left>
             <Height>0.36935in</Height>
-            <Width>1.2204in</Width>
+            <Width>0.99818in</Width>
             <ZIndex>97</ZIndex>
             <Style>
               <Border>
@@ -4874,7 +4549,9 @@
                 <TextRuns>
                   <TextRun>
                     <Value>Shipper</Value>
-                    <Style />
+                    <Style>
+                      <FontSize>11pt</FontSize>
+                    </Style>
                   </TextRun>
                 </TextRuns>
                 <Style>
@@ -4884,9 +4561,9 @@
             </Paragraphs>
             <rd:DefaultName>Textbox82</rd:DefaultName>
             <Top>1.30367in</Top>
-            <Left>1.43461in</Left>
+            <Left>1.29414in</Left>
             <Height>0.36935in</Height>
-            <Width>2.6487in</Width>
+            <Width>1.55864in</Width>
             <ZIndex>98</ZIndex>
             <Style>
               <Border>
@@ -4908,7 +4585,7 @@
                     <Value />
                     <Style>
                       <FontFamily>GE Flow</FontFamily>
-                      <FontSize>15.5pt</FontSize>
+                      <FontSize>11pt</FontSize>
                       <Color>#282828</Color>
                     </Style>
                   </TextRun>
@@ -4920,9 +4597,9 @@
             </Paragraphs>
             <rd:DefaultName>Textbox3</rd:DefaultName>
             <Top>1.26135in</Top>
-            <Left>5.01872in</Left>
+            <Left>3.67718in</Left>
             <Height>0.49167in</Height>
-            <Width>4.74377in</Width>
+            <Width>3.39931in</Width>
             <ZIndex>99</ZIndex>
             <Style>
               <Border>
@@ -4942,8 +4619,10 @@
               <Paragraph>
                 <TextRuns>
                   <TextRun>
-                    <Value />
-                    <Style />
+                    <Value>=First(Fields!CarrierName.Value, "DataSet1")</Value>
+                    <Style>
+                      <FontSize>11pt</FontSize>
+                    </Style>
                   </TextRun>
                 </TextRuns>
                 <Style>
@@ -4952,10 +4631,10 @@
               </Paragraph>
             </Paragraphs>
             <rd:DefaultName>Textbox88</rd:DefaultName>
-            <Top>1.29436in</Top>
-            <Left>6.43136in</Left>
+            <Top>1.30367in</Top>
+            <Left>4.65779in</Left>
             <Height>0.37404in</Height>
-            <Width>2.7065in</Width>
+            <Width>1.81914in</Width>
             <ZIndex>100</ZIndex>
             <Style>
               <Border>
@@ -4978,7 +4657,7 @@
                     <Style>
                       <FontStyle>Normal</FontStyle>
                       <FontFamily>Open Sans</FontFamily>
-                      <FontSize>16pt</FontSize>
+                      <FontSize>13pt</FontSize>
                       <FontWeight>ExtraBold</FontWeight>
                       <TextDecoration>None</TextDecoration>
                       <Color>White</Color>
@@ -4994,7 +4673,7 @@
             <Top>10.54182in</Top>
             <Left>0.19667in</Left>
             <Height>0.49167in</Height>
-            <Width>9.49356in</Width>
+            <Width>6.87717in</Width>
             <ZIndex>101</ZIndex>
             <Style>
               <Border>
@@ -5012,16 +4691,16 @@
             <TablixBody>
               <TablixColumns>
                 <TablixColumn>
-                  <Width>1.30841in</Width>
+                  <Width>0.65499in</Width>
                 </TablixColumn>
                 <TablixColumn>
-                  <Width>3.97906in</Width>
+                  <Width>3.32564in</Width>
                 </TablixColumn>
                 <TablixColumn>
-                  <Width>2.65372in</Width>
+                  <Width>2.0003in</Width>
                 </TablixColumn>
                 <TablixColumn>
-                  <Width>1.56229in</Width>
+                  <Width>0.90887in</Width>
                 </TablixColumn>
               </TablixColumns>
               <TablixRows>
@@ -5041,7 +4720,7 @@
                                   <Style>
                                     <FontStyle>Normal</FontStyle>
                                     <FontFamily>Open Sans</FontFamily>
-                                    <FontSize>14pt</FontSize>
+                                    <FontSize>12pt</FontSize>
                                     <FontWeight>Normal</FontWeight>
                                     <Color>#404040</Color>
                                   </Style>
@@ -5080,7 +4759,7 @@
                                   <Style>
                                     <FontStyle>Normal</FontStyle>
                                     <FontFamily>Open Sans</FontFamily>
-                                    <FontSize>14pt</FontSize>
+                                    <FontSize>12pt</FontSize>
                                     <FontWeight>Normal</FontWeight>
                                     <TextDecoration>None</TextDecoration>
                                     <Color>#404040</Color>
@@ -5090,7 +4769,7 @@
                                   <Value xml:space="preserve">       </Value>
                                   <Style>
                                     <FontStyle>Normal</FontStyle>
-                                    <FontSize>19pt</FontSize>
+                                    <FontSize>12pt</FontSize>
                                     <FontWeight>Bold</FontWeight>
                                     <TextDecoration>None</TextDecoration>
                                     <Color>#404040</Color>
@@ -5100,7 +4779,7 @@
                                   <Value xml:space="preserve">               </Value>
                                   <Style>
                                     <FontFamily>microsoft sans Serif</FontFamily>
-                                    <FontSize>15.5pt</FontSize>
+                                    <FontSize>12pt</FontSize>
                                     <Color>#282828</Color>
                                   </Style>
                                 </TextRun>
@@ -5108,7 +4787,7 @@
                                   <Value xml:space="preserve">           </Value>
                                   <Style>
                                     <FontStyle>Normal</FontStyle>
-                                    <FontSize>19pt</FontSize>
+                                    <FontSize>12pt</FontSize>
                                     <FontWeight>Bold</FontWeight>
                                     <TextDecoration>None</TextDecoration>
                                     <Color>#404040</Color>
@@ -5118,7 +4797,7 @@
                                   <Value>نوع الخدمة</Value>
                                   <Style>
                                     <FontStyle>Normal</FontStyle>
-                                    <FontSize>14pt</FontSize>
+                                    <FontSize>12pt</FontSize>
                                     <FontWeight>Normal</FontWeight>
                                     <TextDecoration>None</TextDecoration>
                                     <Color>#404040</Color>
@@ -5154,22 +4833,11 @@
                             <Paragraph>
                               <TextRuns>
                                 <TextRun>
-                                  <Value>QTY</Value>
+                                  <Value>QTY                    </Value>
                                   <Style>
                                     <FontStyle>Normal</FontStyle>
                                     <FontFamily>Open Sans</FontFamily>
-                                    <FontSize>14pt</FontSize>
-                                    <FontWeight>Normal</FontWeight>
-                                    <TextDecoration>None</TextDecoration>
-                                    <Color>#404040</Color>
-                                  </Style>
-                                </TextRun>
-                                <TextRun>
-                                  <Value xml:space="preserve">                    </Value>
-                                  <Style>
-                                    <FontStyle>Normal</FontStyle>
-                                    <FontFamily>Open Sans</FontFamily>
-                                    <FontSize>19pt</FontSize>
+                                    <FontSize>12pt</FontSize>
                                     <FontWeight>Normal</FontWeight>
                                     <TextDecoration>None</TextDecoration>
                                     <Color>#404040</Color>
@@ -5179,7 +4847,7 @@
                                   <Value>الكمية</Value>
                                   <Style>
                                     <FontStyle>Normal</FontStyle>
-                                    <FontSize>14pt</FontSize>
+                                    <FontSize>12pt</FontSize>
                                     <FontWeight>Normal</FontWeight>
                                     <TextDecoration>None</TextDecoration>
                                     <Color>#404040</Color>
@@ -5215,11 +4883,11 @@
                             <Paragraph>
                               <TextRuns>
                                 <TextRun>
-                                  <Value>Count          العدد</Value>
+                                  <Value>Count   العدد</Value>
                                   <Style>
                                     <FontStyle>Normal</FontStyle>
                                     <FontFamily>Open Sans</FontFamily>
-                                    <FontSize>14pt</FontSize>
+                                    <FontSize>12pt</FontSize>
                                     <FontWeight>Normal</FontWeight>
                                     <TextDecoration>None</TextDecoration>
                                     <Color>#404040</Color>
@@ -5261,7 +4929,9 @@
                               <TextRuns>
                                 <TextRun>
                                   <Value>=RowNumber(nothing)</Value>
-                                  <Style />
+                                  <Style>
+                                    <FontSize>11pt</FontSize>
+                                  </Style>
                                 </TextRun>
                               </TextRuns>
                               <Style>
@@ -5294,7 +4964,9 @@
                               <TextRuns>
                                 <TextRun>
                                   <Value>=Fields!VasName.Value</Value>
-                                  <Style />
+                                  <Style>
+                                    <FontSize>11pt</FontSize>
+                                  </Style>
                                 </TextRun>
                               </TextRuns>
                               <Style>
@@ -5327,7 +4999,9 @@
                               <TextRuns>
                                 <TextRun>
                                   <Value>=Fields!Amount.Value</Value>
-                                  <Style />
+                                  <Style>
+                                    <FontSize>11pt</FontSize>
+                                  </Style>
                                 </TextRun>
                               </TextRuns>
                               <Style>
@@ -5360,7 +5034,9 @@
                               <TextRuns>
                                 <TextRun>
                                   <Value>=Fields!Count.Value</Value>
-                                  <Style />
+                                  <Style>
+                                    <FontSize>11pt</FontSize>
+                                  </Style>
                                 </TextRun>
                               </TextRuns>
                               <Style>
@@ -5415,7 +5091,7 @@
             <Top>11.05157in</Top>
             <Left>0.19667in</Left>
             <Height>0.91666in</Height>
-            <Width>9.50348in</Width>
+            <Width>6.8898in</Width>
             <ZIndex>102</ZIndex>
             <Style>
               <Border>
@@ -5435,7 +5111,7 @@
                     <Value>الخدمات الإضافية</Value>
                     <Style>
                       <FontFamily>arial</FontFamily>
-                      <FontSize>16pt</FontSize>
+                      <FontSize>13pt</FontSize>
                       <FontWeight>Bold</FontWeight>
                       <Color>White</Color>
                     </Style>
@@ -5447,8 +5123,8 @@
               </Paragraph>
             </Paragraphs>
             <rd:DefaultName>Textbox3</rd:DefaultName>
-            <Top>10.61278in</Top>
-            <Left>8.18817in</Left>
+            <Top>10.64055in</Top>
+            <Left>5.56861in</Left>
             <Height>0.36935in</Height>
             <Width>1.40832in</Width>
             <ZIndex>103</ZIndex>
@@ -5474,7 +5150,7 @@
                     <Value>VAS</Value>
                     <Style>
                       <FontFamily>open Sans</FontFamily>
-                      <FontSize>16pt</FontSize>
+                      <FontSize>13pt</FontSize>
                       <FontWeight>Bold</FontWeight>
                       <Color>White</Color>
                     </Style>
@@ -5504,7 +5180,7 @@
             </Style>
           </Textbox>
         </ReportItems>
-        <Height>18.06005in</Height>
+        <Height>45.87253cm</Height>
         <Style>
           <Border>
             <Style>None</Style>
@@ -5512,10 +5188,10 @@
           <BackgroundColor>White</BackgroundColor>
         </Style>
       </Body>
-      <Width>10.70014in</Width>
+      <Width>18.54745cm</Width>
       <Page>
         <PageHeader>
-          <Height>1.22in</Height>
+          <Height>3.0988cm</Height>
           <PrintOnFirstPage>true</PrintOnFirstPage>
           <PrintOnLastPage>true</PrintOnLastPage>
           <ReportItems>
@@ -5525,8 +5201,8 @@
               <Sizing>FitProportional</Sizing>
               <Top>0.07867in</Top>
               <Left>0.19667in</Left>
-              <Height>0.76667in</Height>
-              <Width>2.83319in</Width>
+              <Height>0.49133in</Height>
+              <Width>2.36734in</Width>
               <Style>
                 <Border>
                   <Style>None</Style>
@@ -5544,7 +5220,7 @@
                       <Style>
                         <FontStyle>Normal</FontStyle>
                         <FontFamily>Open Sans</FontFamily>
-                        <FontSize>14pt</FontSize>
+                        <FontSize>12pt</FontSize>
                         <TextDecoration>None</TextDecoration>
                         <Color>#000000</Color>
                       </Style>
@@ -5559,7 +5235,7 @@
               <Top>0.59778in</Top>
               <Left>0.19667in</Left>
               <Height>0.43055in</Height>
-              <Width>2.83319in</Width>
+              <Width>2.36734in</Width>
               <ZIndex>1</ZIndex>
               <Style>
                 <Border />
@@ -5580,7 +5256,7 @@
                       <Style>
                         <FontStyle>Normal</FontStyle>
                         <FontFamily>Open Sans Semibold</FontFamily>
-                        <FontSize>20pt</FontSize>
+                        <FontSize>13pt</FontSize>
                         <FontWeight>Normal</FontWeight>
                         <TextDecoration>None</TextDecoration>
                         <Color>#000000</Color>
@@ -5591,29 +5267,18 @@
                       <Style>
                         <FontStyle>Normal</FontStyle>
                         <FontFamily>arial</FontFamily>
-                        <FontSize>25pt</FontSize>
+                        <FontSize>13pt</FontSize>
                         <FontWeight>Bold</FontWeight>
                         <TextDecoration>None</TextDecoration>
                         <Color>#000000</Color>
                       </Style>
                     </TextRun>
                     <TextRun>
-                      <Value>|</Value>
+                      <Value>| </Value>
                       <Style>
                         <FontStyle>Normal</FontStyle>
                         <FontFamily>arial</FontFamily>
-                        <FontSize>25pt</FontSize>
-                        <FontWeight>Normal</FontWeight>
-                        <TextDecoration>None</TextDecoration>
-                        <Color>#000000</Color>
-                      </Style>
-                    </TextRun>
-                    <TextRun>
-                      <Value xml:space="preserve"> </Value>
-                      <Style>
-                        <FontStyle>Normal</FontStyle>
-                        <FontFamily>arial</FontFamily>
-                        <FontSize>27pt</FontSize>
+                        <FontSize>13pt</FontSize>
                         <FontWeight>Normal</FontWeight>
                         <TextDecoration>None</TextDecoration>
                         <Color>#000000</Color>
@@ -5624,7 +5289,7 @@
                       <Style>
                         <FontStyle>Normal</FontStyle>
                         <FontFamily>arial</FontFamily>
-                        <FontSize>25pt</FontSize>
+                        <FontSize>13pt</FontSize>
                         <FontWeight>Normal</FontWeight>
                         <TextDecoration>None</TextDecoration>
                         <Color>#000000</Color>
@@ -5639,9 +5304,9 @@
               </Paragraphs>
               <rd:DefaultName>Textbox2</rd:DefaultName>
               <Top>0.17167in</Top>
-              <Left>3.43048in</Left>
+              <Left>2.88687in</Left>
               <Height>0.48333in</Height>
-              <Width>4.35in</Width>
+              <Width>2.59727in</Width>
               <ZIndex>2</ZIndex>
               <Style>
                 <Border>
@@ -5660,7 +5325,7 @@
                 <Paragraph>
                   <TextRuns>
                     <TextRun>
-                      <Value>=First(Fields!MasterWaybillNo.Value, "DataSet1")</Value>
+                      <Value>132132332</Value>
                       <Style>
                         <FontFamily>Free 3 of 9</FontFamily>
                         <FontSize>22pt</FontSize>
@@ -5674,10 +5339,10 @@
                 </Paragraph>
               </Paragraphs>
               <rd:DefaultName>Textbox3</rd:DefaultName>
-              <Top>0.13534in</Top>
-              <Left>7.98748in</Left>
-              <Height>0.71in</Height>
-              <Width>1.78415in</Width>
+              <Top>0.07867in</Top>
+              <Left>5.8144in</Left>
+              <Height>0.49133in</Height>
+              <Width>1.26209in</Width>
               <ZIndex>3</ZIndex>
               <Style>
                 <Border />
@@ -5696,7 +5361,7 @@
           </Style>
         </PageHeader>
         <PageFooter>
-          <Height>1.35833in</Height>
+          <Height>3.45016cm</Height>
           <PrintOnFirstPage>true</PrintOnFirstPage>
           <PrintOnLastPage>true</PrintOnLastPage>
           <ReportItems>
@@ -5718,7 +5383,7 @@
               <Top>0.06944in</Top>
               <Left>0.22653in</Left>
               <Height>0.04167in</Height>
-              <Width>9.52418in</Width>
+              <Width>6.85536in</Width>
               <Style>
                 <Border>
                   <Style>None</Style>
@@ -5741,7 +5406,7 @@
                       <Style>
                         <FontStyle>Normal</FontStyle>
                         <FontFamily>Open Sans</FontFamily>
-                        <FontSize>12pt</FontSize>
+                        <FontSize>9pt</FontSize>
                         <FontWeight>Bold</FontWeight>
                         <TextDecoration>None</TextDecoration>
                         <Color>#404040</Color>
@@ -5773,7 +5438,7 @@
                       <Style>
                         <FontStyle>Normal</FontStyle>
                         <FontFamily>Tahoma</FontFamily>
-                        <FontSize>10.5pt</FontSize>
+                        <FontSize>8pt</FontSize>
                         <FontWeight>Normal</FontWeight>
                         <TextDecoration>None</TextDecoration>
                         <Color>#404040</Color>
@@ -5787,7 +5452,7 @@
               <Top>0.34167in</Top>
               <Left>0.22653in</Left>
               <Height>0.71667in</Height>
-              <Width>3.53459in</Width>
+              <Width>2.62626in</Width>
               <ZIndex>1</ZIndex>
               <Style>
                 <Border>
@@ -5853,10 +5518,10 @@
                 </Paragraph>
               </Paragraphs>
               <rd:DefaultName>Textbox75</rd:DefaultName>
-              <Top>0.36168in</Top>
-              <Left>6.35671in</Left>
+              <Top>0.39252in</Top>
+              <Left>4.84441in</Left>
               <Height>0.71667in</Height>
-              <Width>1.95833in</Width>
+              <Width>1.63252in</Width>
               <ZIndex>2</ZIndex>
               <Style>
                 <Border>
@@ -5872,8 +5537,8 @@
               <Source>Embedded</Source>
               <Value>MaskGroup3</Value>
               <Sizing>FitProportional</Sizing>
-              <Top>0.36168in</Top>
-              <Left>6.1456in</Left>
+              <Top>0.39252in</Top>
+              <Left>4.6333in</Left>
               <Height>0.23084in</Height>
               <Width>0.18333in</Width>
               <ZIndex>3</ZIndex>
@@ -5892,21 +5557,21 @@
                     <TextRun>
                       <Value>=Globals!PageNumber</Value>
                       <Style>
-                        <FontSize>18pt</FontSize>
+                        <FontSize>8pt</FontSize>
                         <Color>White</Color>
                       </Style>
                     </TextRun>
                     <TextRun>
                       <Value>/</Value>
                       <Style>
-                        <FontSize>18pt</FontSize>
+                        <FontSize>12pt</FontSize>
                         <Color>White</Color>
                       </Style>
                     </TextRun>
                     <TextRun>
                       <Value>=Globals!TotalPages</Value>
                       <Style>
-                        <FontSize>18pt</FontSize>
+                        <FontSize>8pt</FontSize>
                         <Color>White</Color>
                       </Style>
                     </TextRun>
@@ -5918,9 +5583,9 @@
               </Paragraphs>
               <rd:DefaultName>Textbox79</rd:DefaultName>
               <Top>0.48333in</Top>
-              <Left>8.99627in</Left>
+              <Left>6.53249in</Left>
               <Height>0.35in</Height>
-              <Width>0.75444in</Width>
+              <Width>0.44444in</Width>
               <ZIndex>4</ZIndex>
               <Style>
                 <Border>
@@ -5945,7 +5610,6 @@
                       <Style>
                         <FontStyle>Normal</FontStyle>
                         <FontFamily>Times New Roman</FontFamily>
-                        <FontSize>12pt</FontSize>
                         <FontWeight>Normal</FontWeight>
                         <TextDecoration>None</TextDecoration>
                         <Color>#000000</Color>
@@ -5988,10 +5652,10 @@
                 </Paragraph>
               </Paragraphs>
               <rd:DefaultName>Textbox75</rd:DefaultName>
-              <Top>0.35085in</Top>
-              <Left>4.06942in</Left>
+              <Top>0.38169in</Top>
+              <Left>3.14719in</Left>
               <Height>0.71667in</Height>
-              <Width>1.95833in</Width>
+              <Width>1.45083in</Width>
               <ZIndex>5</ZIndex>
               <Style>
                 <Border>
@@ -6007,8 +5671,8 @@
               <Source>Embedded</Source>
               <Value>MaskGroup4</Value>
               <Sizing>FitProportional</Sizing>
-              <Top>0.33084in</Top>
-              <Left>3.83057in</Left>
+              <Top>0.36168in</Top>
+              <Left>2.90834in</Left>
               <Height>0.26168in</Height>
               <Width>0.25274in</Width>
               <ZIndex>6</ZIndex>
@@ -6022,8 +5686,8 @@
               <Source>Embedded</Source>
               <Value>MaskGroup5</Value>
               <Sizing>FitProportional</Sizing>
-              <Top>0.72584in</Top>
-              <Left>3.83057in</Left>
+              <Top>0.75668in</Top>
+              <Left>2.90834in</Left>
               <Height>0.26168in</Height>
               <Width>0.2in</Width>
               <ZIndex>7</ZIndex>
@@ -6037,8 +5701,8 @@
               <Source>Embedded</Source>
               <Value>MaskGroup1</Value>
               <Sizing>FitProportional</Sizing>
-              <Top>0.72584in</Top>
-              <Left>6.1456in</Left>
+              <Top>0.75668in</Top>
+              <Left>4.6333in</Left>
               <Height>0.26168in</Height>
               <Width>0.2in</Width>
               <ZIndex>8</ZIndex>
@@ -6055,8 +5719,13 @@
             </Border>
           </Style>
         </PageFooter>
-        <PageHeight>11.69in</PageHeight>
-        <PageWidth>10in</PageWidth>
+        <PageHeight>29.7cm</PageHeight>
+        <PageWidth>21cm</PageWidth>
+        <LeftMargin>1cm</LeftMargin>
+        <RightMargin>1cm</RightMargin>
+        <TopMargin>1cm</TopMargin>
+        <BottomMargin>1cm</BottomMargin>
+        <ColumnSpacing>1.27cm</ColumnSpacing>
         <Style />
       </Page>
     </ReportSection>
@@ -6342,6 +6011,6 @@ QQYAAIIuzHwE//0c7r0AAAAldEVYdGRhdGU6Y3JlYXRlADIwMjEtMDEtMzFUMTI6MzM6MjkrMDA6MDBp
     </EmbeddedImage>
   </EmbeddedImages>
   <Language>ar-SA</Language>
-  <rd:ReportUnitType>Inch</rd:ReportUnitType>
+  <rd:ReportUnitType>Cm</rd:ReportUnitType>
   <rd:ReportID>485ecc51-3ef2-4c73-920b-69bd7491ea49</rd:ReportID>
 </Report>

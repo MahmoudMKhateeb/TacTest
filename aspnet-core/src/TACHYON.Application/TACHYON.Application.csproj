@@ -45,6 +45,11 @@
       <AutoGen>True</AutoGen>
       <DependentUpon>DataSet1.xsd</DependentUpon>
     </Compile>
+    <Compile Update="Waybills\Reports\GetDropDetailsDS.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>GetDropDetailsDS.xsd</DependentUpon>
+    </Compile>
     <Compile Update="Waybills\Reports\MultipleDropDataSet.Designer.cs">
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
@@ -80,6 +85,10 @@
     <None Update="Waybills\Reports\DataSet1.xsd">
       <Generator>MSDataSetGenerator</Generator>
       <LastGenOutput>DataSet1.Designer.cs</LastGenOutput>
+    </None>
+    <None Update="Waybills\Reports\GetDropDetailsDS.xsd">
+      <Generator>MSDataSetGenerator</Generator>
+      <LastGenOutput>GetDropDetailsDS.Designer.cs</LastGenOutput>
     </None>
     <None Update="Waybills\Reports\MultipleDropDataSet.xsd">
       <Generator>MSDataSetGenerator</Generator>
