@@ -1,10 +1,8 @@
-﻿<div [@routerTransition]>
+<div [@routerTransition]>
   <div class="content d-flex flex-column flex-column-fluid">
     <sub-header [description]="'ShippingRequestsHeaderInfo' | localize" [title]="'ShippingRequests' | localize">
       <div role="actions">
-        <!--        <button (click)="exportToExcel()" class="btn btn-outline-success"><i class="fa fa-file-excel"></i> {{ l('ExportToExcel') }}</button>-->
-
-        <button (click)="createShippingRequest()" *ngIf="isGranted('Pages.ShippingRequests.Create')" class="btn btn-primary blue">
+        <button (click)="createShippingRequest()" *ngIf="feature.isEnabled('App.Shipper')" class="btn btn-primary blue">
           <i class="fa fa-plus"></i> {{ l('CreateNewShippingRequest') }}
         </button>
       </div>
@@ -16,7 +14,7 @@
           <div *ngIf="noOfPostPriceWithoutTrips > 0" class="alert alert-custom alert-light-warning" role="alert">
             <div class="alert-icon"><i class="flaticon-warning"></i></div>
             <div class="alert-text">
-              You Have {{ noOfPostPriceWithoutTrips }} Incomplete Shipping Requests Please Complete Them here
+              You Have {{ noOfPostPriceWithoutTrips }} Incomplete Shipping Requests Please Complete Them
               <a class="mx-1" (click)="GetIncompleteShippingRequests()">here</a>.
             </div>
           </div>
@@ -70,7 +68,7 @@
                     </div>
                   </div>
                 </div>
-                <!--                <div class="col-md-3">-->
+                <!--                <div class="col-md-3"> -->
               <!--                  <div class="form-group">-->
               <!--                    <label for="TrucksTypeDisplayNameFilter">({{ l('TrucksType') }} ) {{ l('DisplayName') }}</label>-->
               <!--                    <input-->
@@ -156,12 +154,12 @@
                       {{ l('id') }}
                       <p-sortIcon field="id"></p-sortIcon>
                     </th>
-                    <th pSortableColumn="shippingRequestStatusName" style="width: 150px;">
+                    <th pSortableColumn="status" style="width: 150px;">
                       {{ l('shippingRequestStatus') }}
-                      <p-sortIcon field="shippingRequestStatusName"></p-sortIcon>
+                      <p-sortIcon field="status"></p-sortIcon>
                     </th>
 
-                    <th pSortableColumn="isBid" style="width: 150px;">
+                    <th pSortableColumn="isBid" *ngIf="feature.isEnabled('App.Shipper')" style="width: 150px;">
                       {{ l('shippingRequestType') }}
                       <p-sortIcon field="isBid"></p-sortIcon>
                     </th>
@@ -178,37 +176,57 @@
                       {{ l('destinationCity') }}
                       <p-sortIcon field="destinationCityName"></p-sortIcon>
                     </th>
+                    <th pSortableColumn="numberOfTrips" style="width: 150px;">
+                      {{ l('numberOfTrips') }}
+                      <p-sortIcon field="numberOfTrips"></p-sortIcon>
+                    </th>
+                    <th
+                      *ngIf="feature.isEnabled('App.Shipper') || feature.isEnabled('App.TachyonDealer')"
+                      pSortableColumn="totalBidsCount"
+                      style="width: 150px;"
+                    >
+                      {{ l('totalBidsCount') }}
+                      <p-sortIcon field="totalBidsCount"></p-sortIcon>
+                    </th>
                     <th [hidden]="!isGrantedAny('Pages.ShippingRequests.Edit', 'Pages.ShippingRequests.Delete')" style="width: 130px;">
                       {{ l('Actions') }}
                     </th>
                   </tr>
                 </ng-template>
                 <ng-template let-record="$implicit" pTemplate="body">
-                  <tr [ngClass]="record.shippingRequest.price > 0 ? 'table-success' : ''">
+                  <tr [ngClass]="getrowstyle(record)">
                     <td style="width: 50px;">
                       <span class="ui-column-title"> {{ l('id') }}</span>
-                      {{ record.shippingRequest.id }}
+                      {{ record.id }}
                     </td>
                     <td style="width: 150px;">
                       <span class="ui-column-title"> {{ l('shippingRequestStatusName') }}</span>
-                      {{ record.shippingRequestStatusName }}
+                      {{ record.statusTitle }}
                     </td>
 
-                    <td style="width: 150px;">
+                    <td *ngIf="feature.isEnabled('App.Shipper')" style="width: 150px;">
                       <span class="ui-column-title"> {{ l('shippingRequestType') }}</span>
-                      {{ record.shippingRequest.isBid ? l('Marketplace') : l('TachyonManageService') }}
+                      {{ record.isBid ? l('Marketplace') : l('TachyonManageService') }}
                     </td>
                     <td style="width: 150px;">
                       <span class="ui-column-title"> {{ l('routType') }}</span>
-                      {{ record.routTypeName }}
+                      {{ record.routType }}
                     </td>
                     <td style="width: 150px;">
                       <span class="ui-column-title"> {{ l('originalCity') }}</span>
-                      {{ record.originalCityName }}
+                      {{ record.origin }}
                     </td>
                     <td style="width: 150px;">
                       <span class="ui-column-title"> {{ l('destinationCity') }}</span>
-                      {{ record.destinationCityName }}
+                      {{ record.destination }}
+                    </td>
+                    <td style="width: 150px;">
+                      <span class="ui-column-title"> {{ l('totalsTripsAddByShippier') }}</span>
+                      {{ record.totalsTripsAddByShippier }}
+                    </td>
+                    <td style="width: 150px;" *ngIf="feature.isEnabled('App.Shipper') || feature.isEnabled('App.TachyonDealer')">
+                      <span class="ui-column-title"> {{ l('totalBidsCount') }}</span>
+                      {{ record.totalBids }}
                     </td>
                     <td [hidden]="!isGrantedAny('Pages.ShippingRequests.Edit', 'Pages.ShippingRequests.Delete')" style="width: 130px;">
                       <div class="btn-group dropdown" container="body" dropdown>
@@ -216,10 +234,13 @@
                           <i class="fa fa-cog"></i><span class="caret"></span> {{ l('Actions') }}
                         </button>
                         <ul *dropdownMenu class="dropdown-menu">
+                          <!--                          <li *ngIf="feature.isEnabled('App.TachyonDealer')">-->
+                          <!--                            <a href="javascript:;" class="dropdown-item" (click)="pricingOfferModal.show()">{{ l('PricingOffer') }}</a>-->
+                          <!--                          </li>-->
                           <li>
                             <a
                               *ngIf="permission.isGranted('Pages.ShippingRequests.Edit')"
-                              [queryParams]="{ id: record.shippingRequest.id }"
+                              [queryParams]="{ id: record.id }"
                               [routerLink]="['/app/main/shippingRequests/shippingRequests/view']"
                               class="dropdown-item"
                             >
@@ -228,32 +249,30 @@
                           </li>
                           <li>
                             <a
-                              *ngIf="permission.isGranted('Pages.ShippingRequests.Edit') && feature.isEnabled('App.shippingRequest')"
-                              [queryParams]="{ id: record.shippingRequest.id }"
+                              *ngIf="permission.isGranted('Pages.ShippingRequests.Edit') && feature.isEnabled('App.Shipper')"
+                              [queryParams]="{ id: record.id }"
                               [routerLink]="['/app/main/shippingRequests/shippingRequests/createOrEdit']"
                               class="dropdown-item"
                             >
                               {{ l('Edit') }}
                             </a>
                           </li>
-                          <li>
-                            <a href="javascript:;" class="dropdown-item" (click)="UpdatePriceShippingRequestModal.show(record.shippingRequest.id)">{{
+                          <li [hidden]="true" *ngIf="!feature.isEnabled('App.Carrier')">
+                            <a href="javascript:;" class="dropdown-item" (click)="UpdatePriceShippingRequestModal.show(record.id)">{{
                               l('Response')
                             }}</a>
                           </li>
 
-                          <li *ngIf="record.shippingRequest.price > 0">
-                            <a
-                              href="javascript:;"
-                              class="dropdown-item"
-                              (click)="ViewShippingRequestPriceResponseModalComponent.show(record.shippingRequest.id)"
-                              >{{ l('ViewCarrierResponse') }}</a
-                            >
+                          <li [hidden]="true" *ngIf="!feature.isEnabled('App.Carrier')">
+                            <a href="javascript:;" class="dropdown-item" (click)="ViewShippingRequestPriceResponseModalComponent.show(record.id)">{{
+                              l('ViewCarrierResponse')
+                            }}</a>
                           </li>
+
                           <li>
                             <a
-                              (click)="deleteShippingRequest(record.shippingRequest)"
-                              *ngIf="permission.isGranted('Pages.ShippingRequests.Delete')"
+                              (click)="deleteShippingRequest(record.id)"
+                              *ngIf="permission.isGranted('Pages.ShippingRequests.Delete') && feature.isEnabled('App.Shipper')"
                               class="dropdown-item"
                               href="javascript:"
                               >{{ l('Delete') }}</a

@@ -13,6 +13,8 @@ namespace TACHYON.Invoices.Balances.Dto
 
         public DateTime? ToDate { get; set; }
 
+        public string ReferenceNo { get; set; }
+
 
     }
 }

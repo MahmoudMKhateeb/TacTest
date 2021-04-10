@@ -15,6 +15,7 @@ using TACHYON.Notifications;
 using System.Linq;
 using TACHYON.Shipping.ShippingRequests;
 using TACHYON.Authorization.Users;
+using Abp.UI;
 
 namespace TACHYON.Invoices.Balances
 {
@@ -53,7 +54,11 @@ namespace TACHYON.Invoices.Balances
         }
         #region Shipper
 
-
+        /// <summary>
+        /// When shipper rejected the shipping request
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
         public async Task ChangeShipperBalanceWhenRequestRejected(ShippingRequest request)
         {
             var PeriodType = (InvoicePeriodType)byte.Parse(await _featureChecker.GetValueAsync(request.TenantId, AppFeatures.ShipperPeriods));
@@ -62,7 +67,7 @@ namespace TACHYON.Invoices.Balances
 
             if (PeriodType == InvoicePeriodType.PayInAdvance)
             {
-                Tenant.ReservedBalance -= CalculateAmountWithVat((decimal)request.Price).TotalAmount;
+                Tenant.ReservedBalance -= request.Price.Value;// CalculateAmountWithVat((decimal)request.Price).TotalAmount;
                 var InvoiceProformare = await _InvoicesProformarepository.SingleAsync(i => i.TenantId == request.TenantId && i.RequestId== request.Id);
                 if (InvoiceProformare != null)
                 {
@@ -71,59 +76,81 @@ namespace TACHYON.Invoices.Balances
             }
             else
             {
-                Tenant.CreditBalance += CalculateAmountWithVat((decimal)request.Price).TotalAmount;
+                Tenant.CreditBalance += request.Price.Value;// CalculateAmountWithVat((decimal)request.Price).TotalAmount;
 
             }
         }
+        /// <summary>
+        /// Check if shipper can create new shipping  if the credit balance greater or equal credit limit
+        /// </summary>
+        /// <param name="ShipperTenantId"></param>
+        /// <returns></returns>
         public async Task<bool> ShipperCanCreateRequest(int ShipperTenantId)
         {
             var PeriodType = (InvoicePeriodType)byte.Parse(await _featureChecker.GetValueAsync(ShipperTenantId, AppFeatures.ShipperPeriods));
             if (PeriodType == InvoicePeriodType.PayInAdvance) return true;
             var Tenant = await GetTenant(ShipperTenantId);
             decimal CreditLimit = decimal.Parse(await _featureChecker.GetValueAsync(ShipperTenantId, AppFeatures.ShipperCreditLimit)) * -1;
-            return Tenant.CreditBalance > CreditLimit;
+            return Tenant.CreditBalance >= CreditLimit;
         }
-
-        public async Task<bool> ShipperCanAcceptPrice(int ShipperTenantId, decimal Price)
+        /// <summary>
+        /// Check if the credit balance for shipper can accept the shipping request or not.
+        /// </summary>
+        /// <param name="ShipperTenantId"></param>
+        /// <param name="Price"></param>
+        /// <returns></returns>
+        public async Task ShipperCanAcceptPrice(int TenantId,decimal Price,long shippingRequestId)
         {
-            var PeriodType = (InvoicePeriodType)byte.Parse(await _featureChecker.GetValueAsync(ShipperTenantId, AppFeatures.ShipperPeriods));
-            var Tenant = await GetTenant(ShipperTenantId);
-            if (PeriodType == InvoicePeriodType.PayInAdvance) 
+           
+            var PeriodType = (InvoicePeriodType)byte.Parse(await _featureChecker.GetValueAsync(TenantId, AppFeatures.ShipperPeriods));
+            var Tenant = await GetTenant(TenantId);
+            if (PeriodType == InvoicePeriodType.PayInAdvance ) 
             {
-                return await CheckShipperCanPaidFromBalance(ShipperTenantId, Price);
+                if (!await CheckShipperCanPaidFromBalance(TenantId,Price)) throw new UserFriendlyException(L("ThereIsNoBalanceToPaidThisShippiment"));
+                await ShipperWhenCanAcceptPrice(TenantId,Price, shippingRequestId);
             }
             else
             {
-                decimal CreditLimit = decimal.Parse(await _featureChecker.GetValueAsync(ShipperTenantId, AppFeatures.ShipperCreditLimit)) * -1;
+                decimal CreditLimit = decimal.Parse(await _featureChecker.GetValueAsync(TenantId, AppFeatures.ShipperCreditLimit)) * -1;
                 decimal CreditBalance = Tenant.CreditBalance - Price;
-                return (CreditBalance > CreditLimit);
+                if (!(CreditBalance > CreditLimit)) throw new UserFriendlyException(L("YouDoNoHaveEnoughCredit<nYourCreditCard"));
             }
         }
-
-        public async Task ShipperWhenCanAcceptPrice(ShippingRequest request)
+        /// <summary>
+        /// Shipper after accept price
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        public async Task ShipperWhenCanAcceptPrice(int TenantId, decimal Price,long shippingRequestId)
         {
-            var PeriodType = (InvoicePeriodType)byte.Parse(await _featureChecker.GetValueAsync(request.TenantId, AppFeatures.ShipperPeriods));
-            var Tenant = await GetTenant(request.TenantId);
-            var InvoiceAmount = this.CalculateAmountWithVat((decimal)request.Price);
+            var PeriodType = (InvoicePeriodType)byte.Parse(await _featureChecker.GetValueAsync(TenantId, AppFeatures.ShipperPeriods));
+            var Tenant = await GetTenant(TenantId);
+           // var InvoiceAmount =  this.CalculateAmountWithVat((decimal)request.Price);
             
             if (PeriodType == InvoicePeriodType.PayInAdvance)
             {
-             await   _InvoicesProformarepository.InsertAsync(new InvoiceProforma
-                {
+             await   _InvoicesProformarepository.InsertAsync(new InvoiceProforma // Generate Invoice proforma when the shipper billing interval is pay in advance
+             {
                   TenantId= Tenant.Id,
-                  Amount = InvoiceAmount.Amount,
+                  Amount= Price,
+                 /* Amount = InvoiceAmount.Amount,
                   VatAmount= InvoiceAmount.VatAmount,
                   TaxVat= InvoiceAmount.TaxVat,
-                  TotalAmount= InvoiceAmount.TotalAmount,
-                  RequestId= request.Id
+                  TotalAmount= InvoiceAmount.TotalAmount,*/
+                  RequestId = shippingRequestId
              });
-                Tenant.ReservedBalance += InvoiceAmount.TotalAmount;
+                Tenant.ReservedBalance += Price;// InvoiceAmount.TotalAmount;
             }
             else
             {
-                Tenant.CreditBalance -= InvoiceAmount.TotalAmount;
+                Tenant.CreditBalance -= Price;// InvoiceAmount.TotalAmount;
             }
         }
+        /// <summary>
+        /// Check if the shipper credit limit over the limit or not
+        /// </summary>
+        /// <param name="Tenant"></param>
+        /// <returns></returns>
         public async Task CheckShipperOverLimit(Tenant Tenant)
         {
             if (Tenant.CreditBalance < 0)
@@ -141,6 +168,12 @@ namespace TACHYON.Invoices.Balances
 
             }
         }
+        /// <summary>
+        /// Add balance to shipper when recharge blanace
+        /// </summary>
+        /// <param name="ShipperTenantId"></param>
+        /// <param name="Amount"></param>
+        /// <returns></returns>
         public async Task AddBalanceToShipper(int ShipperTenantId, decimal Amount)
         {
 
@@ -155,11 +188,15 @@ namespace TACHYON.Invoices.Balances
             Tenant.CreditBalance += Amount;
 
         }
-
+        /// <summary>
+        /// Check if the pay in adnavce can shipper pay to shipping request price or not
+        /// </summary>
+        /// <param name="ShipperTenantId"></param>
+        /// <param name="Amount"></param>
+        /// <returns></returns>
         public async Task<bool> CheckShipperCanPaidFromBalance(int ShipperTenantId, decimal Amount)
         {
             var Tenant = await GetTenant(ShipperTenantId);
-            //Amount += _InvoicesProformarepository.GetAll().Where(i => i.TenantId == ShipperTenantId).Sum(i => i.Amount);
             var Balance = Tenant.Balance - Tenant.ReservedBalance;
             return Balance >= Amount;
         }
@@ -169,23 +206,23 @@ namespace TACHYON.Invoices.Balances
         public async Task AddBalanceToCarrier(int CarrierTenantId, decimal Price)
         {
             var Tenant = await GetTenant(CarrierTenantId);
-            Tenant.Balance += CalculateAmountWithVat(Price).TotalAmount;
+            Tenant.Balance += Price; //CalculateAmountWithVat(Price).TotalAmount;
         }
 
-        public async Task RemoveBalanceToCarrier(int CarrierTenantId, decimal Price)
+        public async Task RemoveBalanceFromCarrier(int CarrierTenantId, decimal Price)
         {
             var Tenant = await GetTenant(CarrierTenantId);
-            Tenant.Balance -= CalculateAmountWithVat(Price).TotalAmount;
+            Tenant.Balance -= Price; //CalculateAmountWithVat(Price).TotalAmount;
         }
         #endregion
 
         #region Heleper
-        public InvoiceAmount CalculateAmountWithVat(decimal amount)
-        {
-            decimal VatAmount = Math.Round((amount * TaxVat) * 100, 2);
-            return new InvoiceAmount(TaxVat, amount, VatAmount, amount + VatAmount);
+        //public InvoiceAmount CalculateAmountWithVat(decimal amount)
+        //{
+        //    decimal VatAmount = Math.Round((amount * TaxVat) * 100, 2);
+        //    return new InvoiceAmount(TaxVat, amount, VatAmount, amount + VatAmount);
            
-        }
+        //}
         private async Task<Tenant> GetTenant(int TenantId)
         {
             return await _Tenant.SingleAsync(t => t.Id == TenantId);

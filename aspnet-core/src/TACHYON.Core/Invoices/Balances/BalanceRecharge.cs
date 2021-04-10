@@ -18,6 +18,8 @@ namespace TACHYON.Invoices.Balances
         [Required]
         public decimal Amount { get; set; }
         public DateTime CreationTime { get; set; }
+
+        public string ReferenceNo { get; set; }
         public BalanceRecharge()
         {
             CreationTime = Clock.Now;

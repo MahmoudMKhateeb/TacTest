@@ -3,7 +3,7 @@ import { appModuleAnimation } from '@shared/animations/routerTransition';
 import { AppComponentBase } from '@shared/common/app-component-base';
 import { Location } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
-import { InvoiceInfoDto, InvoiceServiceProxy } from '@shared/service-proxies/service-proxies';
+import { InvoiceInfoDto, InvoiceServiceProxy, InvoiceItemDto } from '@shared/service-proxies/service-proxies';
 
 @Component({
   animations: [appModuleAnimation()],
@@ -11,9 +11,15 @@ import { InvoiceInfoDto, InvoiceServiceProxy } from '@shared/service-proxies/ser
 })
 export class InvoiceDetailComponent extends AppComponentBase {
   Data: InvoiceInfoDto;
+  Items: InvoiceItemDto[];
+  TotalItems: number;
   constructor(injector: Injector, private route: ActivatedRoute, private router: Router, private _InvoiceServiceProxy: InvoiceServiceProxy) {
     super(injector);
     this.Data = this.route.snapshot.data.invoiceinfo;
+    this.Items = this.Data.items;
+    this.TotalItems = this.Items.length;
+
+    // console.log(this.Data);
   }
 
   delete(): void {

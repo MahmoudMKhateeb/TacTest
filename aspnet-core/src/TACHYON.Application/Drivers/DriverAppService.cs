@@ -1,55 +1,83 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Abp.Authorization;
+﻿using Abp.Authorization;
 using Abp.Domain.Repositories;
+using Abp.Runtime.Session;
 using Microsoft.EntityFrameworkCore;
-using TACHYON.Authorization.Users;
-using TACHYON.Trucks;
+using System;
+using System.Drawing;
+using System.Globalization;
+using System.IO;
+using System.Linq;
+using System.Threading.Tasks;
+using TACHYON.Authorization.Users.Profile;
+using TACHYON.Shipping.ShippingRequestTrips;
 
 namespace TACHYON.Drivers
 {
-    public class GetDriverDetailsDto
+    public class DriverDetailDto
     {
         public string FullName { get; set; }
         public string PhoneNumber { get; set; }
         public string EmailAddress { get; set; }
         public string PlateNumber { get; set; }
+        public string Picture { get; set; }
         public string TrucksType { get; set; }
+        public string LangaugeCode { get; set; }
+        public string LangaugeName { get; set; }
+        public string LangaugeNative { get; set; }
+
     }
 
     [AbpAuthorize]
     public class DriverAppService : TACHYONAppServiceBase
     {
 
-        private readonly IRepository<User, long> _userRepository;
-        private readonly IRepository<Truck, long> _truckRepository;
-
-        public DriverAppService(IRepository<User, long> userRepository, IRepository<Truck, long> truckRepository)
+        private readonly IRepository<ShippingRequestTrip> _shippingRequestTripRepository;
+        private readonly ProfileImageServiceFactory _profileImageServiceFactory;
+        public DriverAppService(IRepository<ShippingRequestTrip> shippingRequestTripRepository, ProfileImageServiceFactory profileImageServiceFactory)
         {
-            _userRepository = userRepository;
-            _truckRepository = truckRepository;
+            _shippingRequestTripRepository = shippingRequestTripRepository;
+            _profileImageServiceFactory = profileImageServiceFactory;
         }
 
-        //public async Task<GetDriverDetailsDto> GetDriverDetails()
-        //{
-        //    var query = from driver in _userRepository.GetAll()
-        //                join truck in _truckRepository.GetAll().Include(x => x.TrucksTypeFk) on driver.Id equals truck.Driver1UserId
-        //                where driver.Id == AbpSession.UserId.Value
-        //                select new GetDriverDetailsDto
-        //                {
-        //                    FullName = driver.FullName,
-        //                    PhoneNumber = driver.PhoneNumber,
-        //                    EmailAddress = driver.EmailAddress,
-        //                    PlateNumber = truck.PlateNumber,
-        //                    TrucksType = truck.TrucksTypeFk.DisplayName
-        //                };
+        public async Task<DriverDetailDto> GetDriverDetails()
+        {
+            var user = await GetCurrentUserAsync();
+            DriverDetailDto driverDetail = new DriverDetailDto() 
+            {
+                FullName= user.FullName,
+                PhoneNumber=user.PhoneNumber,
+                EmailAddress=user.EmailAddress,
+                LangaugeCode = CultureInfo.CurrentCulture.Name,
+                LangaugeName= CultureInfo.CurrentCulture.DisplayName,
+                LangaugeNative = CultureInfo.CurrentCulture.NativeName
+            };
 
-        //    return await query.FirstOrDefaultAsync();
+            using (var profileImageService = await _profileImageServiceFactory.Get(AbpSession.ToUserIdentifier()))
+            {
+                var profilePictureContent = await profileImageService.Object.GetProfilePictureContentForUser(
+                    AbpSession.ToUserIdentifier()
+                );
+                driverDetail.Picture = profilePictureContent;
 
-        //}
+            }
+
+            var trip = await _shippingRequestTripRepository
+                .GetAll()
+                .AsTracking()
+                .Include(t => t.AssignedTruckFk)
+                    .ThenInclude(t => t.TrucksTypeFk)
+                .OrderByDescending(x => x.Id)
+                .FirstOrDefaultAsync(d => d.AssignedDriverUserId == user.Id && d.DriverStatus == Shipping.Trips.ShippingRequestTripDriverStatus.Accepted && d.AssignedTruckId != null);
+                if (trip !=null)
+            {
+                driverDetail.PlateNumber = trip.AssignedTruckFk.PlateNumber;
+                driverDetail.TrucksType = trip.AssignedTruckFk.TrucksTypeFk.DisplayName ;
+
+            }
+
+            return driverDetail;
+
+        }
 
 
     }

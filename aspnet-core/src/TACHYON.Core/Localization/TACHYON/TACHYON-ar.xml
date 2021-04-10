@@ -19,6 +19,14 @@
     <text name="TransportTypesTranslations">ترجمة أنواع النقل</text>
     <![CDATA[Tachyon:Sidebare End]]>
 
+
+    <![CDATA[Tachyon:Shipping Request Start]]>
+    <text name="PleaseAddReceiverFullName">الرجاء إضافة اسم المستلم </text>
+    <text name="PleaseAddReceiverPhoneNumber">الرجاء إضافة رقم هاتف المستلم</text>
+    <text name="PleaseAddReceiverEmailAddress">الرجاء إضافة عنوان البريد الإلكتروني للمستلم</text>
+    <text name="PleaseAddReceiverCardIdNumber">الرجاء إضافة رقم معرف بطاقة المستلم</text>
+    <![CDATA[Tachyon:Shipping Request End]]>
+    
     <![CDATA[Tachyon:VAS Price Start]]>
     <text name="VasName">إسم الحدمة الإضافية</text>
     <text name="MaxAmount">أعلى سعر</text>
@@ -1412,6 +1420,24 @@
     <text name="AllowUsingGravatarProfilePicture">السماح للمستخدمين باستخدام صورة ملف تعريف Gravatar</text>
     <text name="UseGravatarProfilePicture">استخدم صورة ملف تعريف Gravatar</text>
     <text name="PleaseSelectAPicture">يرجى تحديد صورة!</text>
+
+    <text name="ShippingRequestAccidentsOccure">لقد حدث حادث للشحنة رقم: {ShipimentNo}.</text>
+
     <text name="EnglishLettersOnly">حروف انجليزية فقط</text>
+    <text name="ShippingRequestReceiverCode">رقم الشحنة الخاصة بك هي:{0}</text>
+    <text name="NotifyDriverWhenAssignToTrip">تم إسناد رحلة جديدة إليك</text>
+    <text name="TotalOfDrop">عدد مرات التنزيل: {0}</text>
+    <text name="InvoiceVasType">النوع:{0}</text>
+    <text name="InvoiceVasRemarksAll">العدد:{0}, الكمية:{1}</text>
+    <text name="InvoiceVasRemarksAmount">الكمية:{0}</text>
+    <text name="InvoiceVasRemarksCount">العدد:{0}</text>
+    <text name="TachyonDealOfferRejectedByShipper">تم رفض العرض المالي من قبل الشاحن {clientname}.</text>
+    <text name="TachyonDealOfferAccepByShipper">تم الموافقة العرض المالي من قبل الشاحن  {clientname}.</text>
+    <text name="SendDriectRequestForCarrier">
+      <a href="/app/main/shippingRequests/shippingRequests/view?id={ShipimentNo}">يرجى إرسال عرض أسعار الشحنة رقم.: {ShipimentNo}.</a>
+    </text>
+    <text name="DriectRequestCarrierRespone">
+      <a href="/app/main/shippingRequests/shippingRequests/view?id={ShipimentNo}">{clientname} قام بوضع عرض مالي للشحنة رقم: {ShipimentNo}.</a>
+    </text>
   </texts>
 </localizationDictionary>

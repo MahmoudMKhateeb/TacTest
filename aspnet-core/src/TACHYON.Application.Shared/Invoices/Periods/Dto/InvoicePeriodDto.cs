@@ -22,7 +22,6 @@ namespace TACHYON.Invoices.Periods.Dto
 
         public FrequencyRelativeInterval FreqRelativeInterval { get; set; }
 
-        public double CreditLimit { get; set; }
 
         [NotMapped]
         public string Cronexpression { get; set; }
@@ -31,15 +30,12 @@ namespace TACHYON.Invoices.Periods.Dto
             if (PeriodType == InvoicePeriodType.PayInAdvance || PeriodType==InvoicePeriodType.PayuponDelivery)
             {
                 FreqRecurrence = null;
-                CreditLimit = 0;
                 FreqInterval = 0;
                 FreqRelativeInterval = 0;
                 FreqRecurrence = null;
             }
             else
             {
-                if (CreditLimit<0)
-                    context.Results.Add(new ValidationResult("	The field CreditLimit value must greater than or equal to 1."));
                 switch (PeriodType)
                 {
 

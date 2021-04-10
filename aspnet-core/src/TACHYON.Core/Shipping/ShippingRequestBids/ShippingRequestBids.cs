@@ -21,7 +21,36 @@ namespace TACHYON.Shipping.ShippingRequestBids
         public long ShippingRequestId { get; set; }
         [ForeignKey("ShippingRequestId")]
         public ShippingRequest ShippingRequestFk { get; set; }
-        public double price { get; set; }
+        public decimal BasePrice { get; set; }
+        /// <summary>
+        /// Price After commission and vat
+        /// </summary>
+        public decimal price { get; set; }
+        /// <summary>
+        /// Total Commission after sum ActualPercentCommission + ActualCommissionValue
+        /// </summary>
+        public decimal TotalCommission { get; set; }
+        /// <summary>
+        /// Actual commission percent that used
+        /// </summary>
+        public decimal ActualPercentCommission { get; set; }
+        /// <summary>
+        /// Actual Commission value that used
+        /// </summary>
+        public decimal ActualCommissionValue { get; set; }
+        /// <summary>
+        /// Actual minimum value that used
+        /// </summary>
+        public decimal ActualMinCommissionValue { get; set; }
+        /// <summary>
+        /// price after add total commission
+        /// </summary>
+        public decimal PriceSubTotal { get; set; }
+        /// <summary>
+        /// Amount of Tax vat after calculate PriceSubTotal*vatStettings/100
+        /// </summary>
+        public decimal VatAmount { get; set; }
+        
         public bool IsCancled { get; set; }
         public DateTime? CanceledDate { get; set; }
         public string CancledReason { get; set; }

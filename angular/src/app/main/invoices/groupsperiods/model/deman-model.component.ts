@@ -3,15 +3,7 @@ import { ModalDirective } from 'ngx-bootstrap/modal';
 import { finalize } from 'rxjs/operators';
 import { AppComponentBase } from '@shared/common/app-component-base';
 
-import { GroupPeriodServiceProxy, GroupPeriodDemandCreateInput } from '@shared/service-proxies/service-proxies';
-
-const toBase64 = (file) =>
-  new Promise((resolve, reject) => {
-    const reader = new FileReader();
-    reader.readAsDataURL(file);
-    reader.onload = () => resolve(reader.result);
-    reader.onerror = (error) => reject(error);
-  });
+import { GroupPeriodServiceProxy, GroupPeriodClaimCreateInput } from '@shared/service-proxies/service-proxies';
 
 @Component({
   selector: 'deman-model',
@@ -22,14 +14,13 @@ export class DemanModelComponent extends AppComponentBase {
   @ViewChild('modal', { static: false }) modal: ModalDirective;
   active = false;
   saving = false;
-  File: GroupPeriodDemandCreateInput;
-  DocumentBase64: string;
+  File: GroupPeriodClaimCreateInput;
   constructor(injector: Injector, private _GroupService: GroupPeriodServiceProxy) {
     super(injector);
   }
 
   show(groupid: number): void {
-    this.File = new GroupPeriodDemandCreateInput();
+    this.File = new GroupPeriodClaimCreateInput();
     this.File.id = groupid;
     this.active = true;
     this.modal.show();
@@ -39,7 +30,7 @@ export class DemanModelComponent extends AppComponentBase {
     this.saving = true;
     console.log(this.File);
     this._GroupService
-      .demand(this.File)
+      .claim(this.File)
       .pipe(
         finalize(() => {
           this.saving = false;
@@ -59,8 +50,8 @@ export class DemanModelComponent extends AppComponentBase {
 
   async fileChangeEvent(event: any): Promise<void> {
     let file = event.target.files[0];
-    this.File.documentBase64 = String(await toBase64(file));
-    this.File.contentType = file.type;
-    this.File.fileName = file.name;
+    this.File.documentBase64 = String(await this.toBase64(file));
+    this.File.documentContentType = file.type;
+    this.File.documentName = file.name;
   }
 }

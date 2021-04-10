@@ -8,11 +8,15 @@ namespace TACHYON.Shipping.Trips.Dto
 {
     public class ShippingRequestsTripForViewDto
     {
+
         public DateTime StartTripDate { get; set; }
         public DateTime EndTripDate { get; set; }
         public DateTime? StartWorking { get; set; }
         public DateTime? EndWorking { get; set; }
         public string Status { get; set; }
+        public long? AssignedDriverUserId { get; set; }
+        public long? AssignedTruckId { get; set; }
+
         public string Driver { get; set; }
         public string Truck { get; set; }
         public string OriginFacility { get; set; }
@@ -20,5 +24,9 @@ namespace TACHYON.Shipping.Trips.Dto
 
         public ICollection<RoutPointDto> RoutPoints { get; set; }
         public ICollection<ShippingRequestTripVasDto> ShippingRequestTripVases { get; set; }
+
+        public ShippingRequestTripDriverStatus DriverStatus { get; set; }
+        public string DriverStatusTitle { get; set; }
+        public string RejectedReason { get; set; }
     }
 }

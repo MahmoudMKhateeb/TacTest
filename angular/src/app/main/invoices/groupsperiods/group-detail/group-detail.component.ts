@@ -3,7 +3,7 @@ import { appModuleAnimation } from '@shared/animations/routerTransition';
 import { AppComponentBase } from '@shared/common/app-component-base';
 import { Location } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
-import { GroupPeriodInfoDto, GroupPeriodServiceProxy } from '@shared/service-proxies/service-proxies';
+import { GroupPeriodInfoDto, GroupPeriodServiceProxy, SubmitInvoiceStatus, SubmitInvoiceItemDto } from '@shared/service-proxies/service-proxies';
 import { FileDownloadService } from '@shared/utils/file-download.service';
 
 @Component({
@@ -12,6 +12,8 @@ import { FileDownloadService } from '@shared/utils/file-download.service';
 })
 export class GroupDetailComponent extends AppComponentBase {
   Data: GroupPeriodInfoDto;
+  Items: SubmitInvoiceItemDto[];
+  TotalItems: number;
   constructor(
     injector: Injector,
     private route: ActivatedRoute,
@@ -21,6 +23,8 @@ export class GroupDetailComponent extends AppComponentBase {
   ) {
     super(injector);
     this.Data = this.route.snapshot.data.groupinfo;
+    this.Items = this.Data.items;
+    this.TotalItems = this.Items.length;
   }
 
   delete(): void {
@@ -33,41 +37,25 @@ export class GroupDetailComponent extends AppComponentBase {
       }
     });
   }
-  Demand(): void {
-    this.Data.isDemand = true;
-    this.Data.demandFileName = 'foundfile';
-  }
-  UnDemand(): void {
-    this.message.confirm('', this.l('AreYouSure'), (isConfirmed) => {
-      if (isConfirmed) {
-        this._CurrentService.unDemand(this.Data.id).subscribe(() => {
-          this.notify.success(this.l('Successfully'));
-          this.Data.isDemand = false;
-          this.Data.demandFileName = '';
-        });
-      }
-    });
-  }
   Claim(): void {
+    this.Data.status = SubmitInvoiceStatus.Claim;
+    this.Data.documentName = 'foundfile';
+  }
+  Rejected(): void {
+    this.Data.status = SubmitInvoiceStatus.Rejected;
+  }
+
+  Accepted(): void {
     this.message.confirm('', this.l('AreYouSure'), (isConfirmed) => {
       if (isConfirmed) {
-        this._CurrentService.claim(this.Data.id).subscribe(() => {
+        this._CurrentService.accepted(this.Data.id).subscribe(() => {
           this.notify.success(this.l('Successfully'));
-          this.Data.isClaim = true;
+          this.Data.status = SubmitInvoiceStatus.Accepted;
         });
       }
     });
   }
-  UnClaim(): void {
-    this.message.confirm('', this.l('AreYouSure'), (isConfirmed) => {
-      if (isConfirmed) {
-        this._CurrentService.unClaim(this.Data.id).subscribe(() => {
-          this.notify.success(this.l('Successfully'));
-          this.Data.isClaim = false;
-        });
-      }
-    });
-  }
+
   downloadDocument(): void {
     this._CurrentService.getFileDto(this.Data.id).subscribe((result) => {
       this._fileDownloadService.downloadTempFile(result);

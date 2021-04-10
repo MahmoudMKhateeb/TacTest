@@ -1,4 +1,5 @@
-﻿using Abp.Domain.Entities;
+﻿using Abp.Configuration;
+using Abp.Domain.Entities;
 using Abp.Domain.Entities.Auditing;
 using Microsoft.Win32.SafeHandles;
 using System;
@@ -6,7 +7,9 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using Abp.Timing;
+using System.Threading.Tasks;
 using TACHYON.Authorization.Users;
+using TACHYON.Configuration;
 using TACHYON.Goods.GoodCategories;
 using TACHYON.Goods.GoodsDetails;
 using TACHYON.MultiTenancy;
@@ -27,6 +30,8 @@ using TACHYON.Trucks.TruckCategories.TruckCapacities;
 using TACHYON.Trucks.TrucksTypes;
 using TACHYON.UnitOfMeasures;
 using TACHYON.ShippingRequestVases;
+using TACHYON.TachyonPriceOffers;
+using TACHYON.Cities;
 
 namespace TACHYON.Shipping.ShippingRequests
 {
@@ -47,15 +52,30 @@ namespace TACHYON.Shipping.ShippingRequests
         /// </summary>
         public virtual bool IsTachyonDeal { get; set; }
 
-        public int RouteId { get; set; }
+        //public int RouteId { get; set; }
 
-        [ForeignKey("RouteId")]
-        public Route RouteFk { get; set; }
+        //[ForeignKey("RouteId")]
+        //public Route RouteFk { get; set; }
+
+        public ShippingRequestRouteType RouteTypeId { get; set; }
+
+
+        //city
+        public virtual int OriginCityId { get; set; }
+
+        [ForeignKey("OriginCityId")]
+        public City OriginCityFk { get; set; }
+
+        public virtual int DestinationCityId { get; set; }
+
+        [ForeignKey("DestinationCityId")]
+        public City DestinationCityFk { get; set; }
+
+
         /// <summary>
-        /// Tachyon user price
+        /// assigned price after commission
         /// </summary>
         public decimal? Price { get; set; }
-
 
         /// <summary>
         /// when shipper accept tachyon-user price
@@ -67,13 +87,18 @@ namespace TACHYON.Shipping.ShippingRequests
         /// </summary>
         public bool? IsPrePayed { get; set; }
 
-
+        /// <summary>
+        /// check if this request is related with shipper invoice
+        /// </summary>
         public bool IsShipperHaveInvoice { get; set; }
+        /// <summary>
+        /// check if this request is related with carrirer invoice
+        /// </summary>
         public bool IsCarrierHaveInvoice { get; set; }
         /// <summary>
         /// when shipper reject tachyon-user price
         /// </summary>
-        public bool? IsRejected { get; set; }
+       // public bool? IsRejected { get; set; }
 
         /// <summary>
         /// ShippingRequest that this ShippingRequest cloned from
@@ -98,11 +123,6 @@ namespace TACHYON.Shipping.ShippingRequests
         /// </summary>
         public int NumberOfDrops { get; set; }
 
-        //public bool StageOneFinish { get; set; }
-        //public bool StageTowFinish { get; set; }
-        //public bool StageThreeFinish { get; set; }
-
-
         /// <summary>
         /// goods category that will be is this shipping request, which is base category that doesn't have father category
         /// </summary>
@@ -111,14 +131,9 @@ namespace TACHYON.Shipping.ShippingRequests
 
         [ForeignKey("GoodCategoryId")]
         public GoodCategory GoodCategoryFk { get; set; }
-
         /// <summary>
-        /// g-#409 
+        /// Status of shipping request
         /// </summary>
-        //public int ShippingRequestStatusId { get; set; }
-        //[ForeignKey("ShippingRequestStatusId")]
-        //public ShippingRequestStatuses.ShippingRequestStatus ShippingRequestStatusFk { get; set; }
-
         public ShippingRequestStatus Status { get; set; }
         /// <summary>
         /// assigned Driver
@@ -126,6 +141,12 @@ namespace TACHYON.Shipping.ShippingRequests
         public long? AssignedDriverUserId { get; set; }
         [ForeignKey("AssignedDriverUserId")]
         public User AssignedDriverUserFk { get; set; }
+        /// <summary>
+        /// if the driver make accident when he work on trip
+        /// </summary>
+
+        public bool HasAccident { get; set; }
+
         /// <summary>
         /// assigned Truck
         /// </summary>
@@ -173,11 +194,8 @@ namespace TACHYON.Shipping.ShippingRequests
         public DateTime? BidStartDate { get; set; }
         public DateTime? BidEndDate { get; set; }
         public ShippingRequestBidStatus BidStatus { get; set; }
+        public int TotalBids { get; set; }
 
-        //public int? ShippingRequestBidStatusId { get; set; }
-
-        //[ForeignKey("ShippingRequestBidStatusId")]
-        //public ShippingRequestBidStatus ShippingRequestBidStatusFK { get; set; }
         public DateTime? CloseBidDate { get; set; }
 
         public ICollection<ShippingRequestBid> ShippingRequestBids { get; set; }
@@ -189,12 +207,35 @@ namespace TACHYON.Shipping.ShippingRequests
         public ICollection<ShippingRequestTrip> ShippingRequestTrips { get; set; }
         #endregion
 
-        public ShippingRequest()
-        {
-            //StageOneFinish = false;
-            //StageTowFinish = false;
-            //StageThreeFinish = false;
-        }
+        #region Commission
+        public decimal VatSetting { get; set; }
+        /// <summary>
+        /// total of price after commission, before add Vat settings
+        /// </summary>
+        public decimal SubTotalAmount { get; set; }
+        /// <summary>
+        /// Amount of vat, PriceSubTotal*Vat/100
+        /// </summary>
+        public decimal VatAmount { get; set; }
+        public decimal PercentCommissionSetting { get; set; }
+        public decimal CommissionValueSetting { get; set; }
+        public decimal MinValueCommissionSetting { get; set; }
+        /// <summary>
+        /// total commission always sum of ActualPercentCommission + ActualCommissionValue + ActualMinCommission
+        /// </summary>
+        public decimal TotalCommission { get; set; }
+        // profit of final price calculated after all commissions + base carrier price 
+       // public decimal TachyonDealerProfit { get; set; }
+        //this field special to tachyonDealer,describes accepted carrier price coming from bidding or direct request, or other; the price source defines in TachyonPriceOffer
+        public decimal CarrierPrice { get; set; }
+        /// <summary>
+        /// type of carrier price, describes from where the price comes from, bidding, direct request, ..
+        /// </summary>
+        public CarrierPriceType CarrierPriceType { get; set; }
+        public decimal ActualPercentCommission { get; set; }
+        public decimal ActualCommissionValue { get; set; }
+        public decimal ActualMinCommissionValue { get; set; }
+        #endregion
         public void Close()
         {
             BidStatus = ShippingRequestBidStatus.Closed;
@@ -206,5 +247,6 @@ namespace TACHYON.Shipping.ShippingRequests
             BidStatus = ShippingRequestBidStatus.OnGoing;
             BidStartDate = Clock.Now;
         }
+
     }
 }

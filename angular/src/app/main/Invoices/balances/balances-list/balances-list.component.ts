@@ -27,6 +27,7 @@ export class BalancesListComponent extends AppComponentBase {
   IsStartSearch: boolean = false;
   fromDate: moment.Moment | null | undefined;
   toDate: moment.Moment | null | undefined;
+  ReferenceNo: string | null | undefined;
   Tenant: ISelectItemDto;
   Tenants: ISelectItemDto[];
   creationDateRange: Date[] = [moment().startOf('day').toDate(), moment().endOf('day').toDate()];
@@ -47,16 +48,18 @@ export class BalancesListComponent extends AppComponentBase {
       this.fromDate = null;
       this.toDate = null;
     }
-    if (this.primengTableHelper.shouldResetPaging(event)) {
+    /*if (this.primengTableHelper.shouldResetPaging(event)) {
       this.paginator.changePage(0);
       return;
-    }
+      }*/
+
     this.primengTableHelper.showLoadingIndicator();
     this._CurrentServ
       .getAll(
         this.Tenant ? parseInt(this.Tenant.id) : undefined,
         this.fromDate,
         this.toDate,
+        this.ReferenceNo,
         this.primengTableHelper.getSorting(this.dataTable),
         this.primengTableHelper.getSkipCount(this.paginator, event),
         this.primengTableHelper.getMaxResultCount(this.paginator, event)

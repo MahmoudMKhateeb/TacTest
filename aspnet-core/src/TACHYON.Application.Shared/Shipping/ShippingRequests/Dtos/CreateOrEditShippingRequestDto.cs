@@ -1,7 +1,9 @@
 ﻿
 using Abp.Application.Services.Dto;
+using Abp.Runtime.Validation;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using TACHYON.Goods.GoodsDetails.Dtos;
 using TACHYON.Routs.Dtos;
 using TACHYON.Routs.RoutPoints.Dtos;
@@ -10,7 +12,7 @@ using TACHYON.Vases.Dtos;
 
 namespace TACHYON.Shipping.ShippingRequests.Dtos
 {
-    public class CreateOrEditShippingRequestDto : EntityDto<long?>
+    public class CreateOrEditShippingRequestDto : EntityDto<long?>, ICustomValidate
     {
         public virtual bool IsBid { get; set; }
         //Add Bid details If IsBid equals True
@@ -53,13 +55,34 @@ namespace TACHYON.Shipping.ShippingRequests.Dtos
 
 
         //Route
-        public CreateOrEditRouteDto CreateOrEditRouteDto { get; set; }
+
+        public ShippingRequestRouteType RouteTypeId { get; set; }
+
+        [Required]
+        public virtual int OriginCityId { get; set; }
+        [Required]
+        public virtual int DestinationCityId { get; set; }
 
 
         //VasList
         public List<CreateOrEditShippingRequestVasListDto> ShippingRequestVasList { get; set; }
 
+        public void AddValidationErrors(CustomValidationContext context)
+        {
+            switch(this.RouteTypeId)
+            {
+                case  ShippingRequestRouteType.SingleDrop:
+                    this.NumberOfDrops = 1;
+                break;
+                case ShippingRequestRouteType.TwoWay:
+                    this.NumberOfDrops = 2;
+                    break;
+                default :
+                    if (this.NumberOfDrops<2)
+                        context.Results.Add(new ValidationResult("TheNumberOfDropsMustHigerOrEqualTwo"));
+                    break;
+            }
 
-
+        }
     }
 }

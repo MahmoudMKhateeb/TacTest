@@ -12,7 +12,6 @@ namespace TACHYON.Invoices.Periods
         [StringLength(InvoicePeriodConst.MaxDisplayNameLength, MinimumLength = InvoicePeriodConst.MinDisplayNameLength)]
         public string DisplayName { get; set; }
         public string Description { get; set; }
-        public double CreditLimit { get; set; }
         public InvoicePeriodType PeriodType { get; set; }
 
 

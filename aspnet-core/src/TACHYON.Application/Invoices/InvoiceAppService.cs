@@ -5,6 +5,7 @@ using Abp.Authorization.Users;
 using Abp.Domain.Repositories;
 using Abp.Domain.Uow;
 using Abp.Linq.Extensions;
+using Abp.UI;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -20,35 +21,39 @@ using TACHYON.Invoices.Balances;
 using TACHYON.Invoices.Dto;
 using TACHYON.Invoices.Periods;
 using TACHYON.Invoices.Transactions;
+using TACHYON.ShippingRequestVases;
 
 namespace TACHYON.Invoices
 {
     public class InvoiceAppService : TACHYONAppServiceBase, IInvoiceAppService
     {
 
-        private readonly IRepository<Invoice, long> _InvoiceRepository;
+        private readonly IRepository<Invoice, long> _invoiceRepository;
         private readonly CommonManager _commonManager;
-        private readonly BalanceManager _BalanceManager ;
-        private readonly IUnitOfWorkManager _UnitOfWorkManager;
+        private readonly BalanceManager _balanceManager ;
         private readonly UserManager _userManager;
         private readonly InvoiceManager _invoiceManager;
         private readonly TransactionManager _transactionManager;
+        private readonly IRepository<InvoiceShippingRequests, long> _invoiceShippingRequestRepository;
+        private readonly IRepository<ShippingRequestVas, long> _shippingRequestVasesRepository;
+
         public InvoiceAppService(
-            IRepository<Invoice, long> InvoiceRepository,
+            IRepository<Invoice, long> invoiceRepository,
             CommonManager commonManager,
-            BalanceManager BalanceManager,
-            IUnitOfWorkManager UnitOfWorkManager,
+            BalanceManager balanceManager,
             UserManager userManager,
             InvoiceManager invoiceManager,
-            TransactionManager transactionManager)
+            TransactionManager transactionManager,
+            IRepository<InvoiceShippingRequests, long> invoiceShippingRequestRepository, IRepository<ShippingRequestVas, long> shippingRequestVasesRepository)
         {
-            _InvoiceRepository = InvoiceRepository;
+            _invoiceRepository = invoiceRepository;
             _commonManager = commonManager;
-            _BalanceManager = BalanceManager;
-            _UnitOfWorkManager = UnitOfWorkManager;
+            _balanceManager = balanceManager;
             _userManager = userManager;
             _invoiceManager = invoiceManager;
             _transactionManager = transactionManager;
+            _invoiceShippingRequestRepository = invoiceShippingRequestRepository;
+            _shippingRequestVasesRepository = shippingRequestVasesRepository;
         }
 
 
@@ -62,34 +67,85 @@ namespace TACHYON.Invoices
 
         public async Task<InvoiceInfoDto> GetById(EntityDto input)
         {
-            var Invoice= await _commonManager.ExecuteMethodIfHostOrTenantUsers(() => GetInvoiceInfo(input.Id));
-
-            var InvoiceDto = ObjectMapper.Map<InvoiceInfoDto>(Invoice);
-            if (InvoiceDto != null)
+            var invoice= await _commonManager.ExecuteMethodIfHostOrTenantUsers(() => GetInvoiceInfo(input.Id));
+            if (invoice==null) throw new UserFriendlyException(L("TheInvoiceNotFound"));
+            List<InvoiceItemDto> Items = new List<InvoiceItemDto>();
+            invoice.ShippingRequests.ForEach(request =>
             {
-                using (CurrentUnitOfWork.DisableFilter(AbpDataFilters.MayHaveTenant))
+                Items.Add(new InvoiceItemDto
                 {
-                    var user = await _userManager.Users.SingleAsync(u => u.TenantId == Invoice.TenantId && u.UserName== AbpUserBase.AdminUserName);
+                    Price = request.ShippingRequests.Price,
+                    TruckType = request.ShippingRequests.TrucksTypeFk.DisplayName,
+                    Source = request.ShippingRequests.OriginCityFk.DisplayName,
+                    Destination = request.ShippingRequests.DestinationCityFk.DisplayName,
+                    DateWork = request.ShippingRequests.StartTripDate.Value.ToString("dd MMM, yyyy"),
+                    Remarks = L("TotalOfDrop", request.ShippingRequests.NumberOfDrops)
+                }); 
 
-                    InvoiceDto.Email = user.EmailAddress;
-                    InvoiceDto.Phone = user.PhoneNumber;
+                foreach (var vas in request.ShippingRequests.ShippingRequestVases)
+                {
+                    var item = new InvoiceItemDto
+                    {
+                        Price = (decimal?)vas.ActualPrice,
+                        TruckType = L("InvoiceVasType", vas.VasFk.Name),
+                        Source = "-",
+                        Destination = "-",
+                        DateWork = "-"
+                    };
+                    if (vas.RequestMaxAmount > 0 && vas.RequestMaxCount > 0)
+                    {
+                        item.Remarks = L("InvoiceVasRemarksAll", vas.RequestMaxCount, vas.RequestMaxAmount);
+                    }
+                    else if (vas.RequestMaxCount > 0)
+                    {
+                        item.Remarks = L("InvoiceVasRemarksCount", vas.RequestMaxCount);
+
+                    }
+                    else if (vas.RequestMaxAmount > 0)
+                    {
+                        item.Remarks = L("InvoiceVasRemarksAmount", vas.RequestMaxAmount);
+
+                    }
+                    Items.Add(item);
                 }
 
-            }
-            return InvoiceDto;
+            });
+
+
+            var invoiceDto = ObjectMapper.Map<InvoiceInfoDto>(invoice);
+            invoiceDto.Items = Items;
+                using (CurrentUnitOfWork.DisableFilter(AbpDataFilters.MayHaveTenant, AbpDataFilters.MayHaveTenant))
+                {
+                    var user = await _userManager.Users.SingleAsync(u => u.TenantId == invoice.TenantId && u.UserName== AbpUserBase.AdminUserName);
+
+                    invoiceDto.Email = user.EmailAddress;
+                    invoiceDto.Phone = user.PhoneNumber;
+                }
+
+            return invoiceDto;
 
         }
 
-        private  async Task<Invoice> GetInvoiceInfo(int InvoiceId)
+        private  async Task<Invoice> GetInvoiceInfo(int invoiceId)
         {
-         return  await _InvoiceRepository
+         return  await _invoiceRepository
                             .GetAll()
                             .Include(i => i.InvoicePeriod)
                             .Include(i => i.Tenant)
                             .Include(i => i.ShippingRequests)
                              .ThenInclude(r => r.ShippingRequests)
+                               .ThenInclude(r => r.OriginCityFk)
+                            .Include(i => i.ShippingRequests)
+                             .ThenInclude(r => r.ShippingRequests)
+                               .ThenInclude(r => r.DestinationCityFk)
+                            .Include(i => i.ShippingRequests)
+                             .ThenInclude(r => r.ShippingRequests)
                               .ThenInclude(r=>r.TrucksTypeFk)
-                            .SingleAsync(i => i.Id == InvoiceId);
+                            .Include(i => i.ShippingRequests)
+                             .ThenInclude(r => r.ShippingRequests)
+                              .ThenInclude(r => r.ShippingRequestVases)
+                               .ThenInclude(v => v.VasFk)
+                            .FirstOrDefaultAsync(i => i.Id == invoiceId);
         }
         [AbpAuthorize(AppPermissions.Pages_Administration_Host_Invoices_Delete)]
 
@@ -102,20 +158,20 @@ namespace TACHYON.Invoices
                 {
                     if (!_invoiceManager.IsCarrier(Invoice.TenantId))
                     {
-                        await _BalanceManager.AddBalanceToShipper(Invoice.TenantId, Invoice.AmountWithTaxVat);
+                        await _balanceManager.AddBalanceToShipper(Invoice.TenantId, Invoice.TotalAmount);
                         if ((InvoicePeriodType)Invoice.PeriodId !=InvoicePeriodType.PayInAdvance)
                         {
-                            await _BalanceManager.AddCreditBalanceToShipper(Invoice.TenantId, -Invoice.AmountWithTaxVat);
+                            await _balanceManager.AddCreditBalanceToShipper(Invoice.TenantId, -Invoice.TotalAmount);
 
                         }
                         await _transactionManager.Delete(Invoice.Id, ChannelType.Invoices);
 
                     }
                     else
-                        await _BalanceManager.AddBalanceToCarrier(Invoice.TenantId, +Invoice.AmountWithTaxVat);
+                        await _balanceManager.AddBalanceToCarrier(Invoice.TenantId, +Invoice.TotalAmount);
                 }
 
-                await _InvoiceRepository.DeleteAsync(Input.Id);
+                await _invoiceRepository.DeleteAsync(Input.Id);
                 await _invoiceManager.RemoveInvoiceFromRequest(Input.Id);
 
             }
@@ -132,13 +188,13 @@ namespace TACHYON.Invoices
                     if (!_invoiceManager.IsCarrier(Invoice.TenantId))
                     {
 
-                        if (await _BalanceManager.CheckShipperCanPaidFromBalance(Invoice.TenantId, Invoice.AmountWithTaxVat))
+                        if (await _balanceManager.CheckShipperCanPaidFromBalance(Invoice.TenantId, Invoice.TotalAmount))
                         {
-                            await _BalanceManager.AddBalanceToShipper(Invoice.TenantId, -Invoice.AmountWithTaxVat);
+                            await _balanceManager.AddBalanceToShipper(Invoice.TenantId, -Invoice.TotalAmount);
 
                             if ((InvoicePeriodType)Invoice.PeriodId != InvoicePeriodType.PayInAdvance)
                             {
-                                await _BalanceManager.AddCreditBalanceToShipper(Invoice.TenantId, Invoice.AmountWithTaxVat);
+                                await _balanceManager.AddCreditBalanceToShipper(Invoice.TenantId, Invoice.TotalAmount);
                             }
                         }
                         else
@@ -146,16 +202,17 @@ namespace TACHYON.Invoices
                     }
                     else
                     {
-                        await _BalanceManager.AddBalanceToCarrier(Invoice.TenantId, +Invoice.AmountWithTaxVat);
+                        await _balanceManager.AddBalanceToCarrier(Invoice.TenantId, +Invoice.TotalAmount);
                     }
+                    Invoice.IsPaid = true;
                     await _transactionManager.Create(new Transaction
                     {
-                        Amount = Invoice.AmountWithTaxVat,
-                        ChannelId = (byte)ChannelType.Invoices,
+                        Amount = Invoice.TotalAmount,
+                        ChannelId = ChannelType.Invoices,
                         TenantId = Invoice.TenantId,
                         SourceId = Invoice.Id,
                     });
-                    Invoice.IsPaid = true;
+
                     return true;
                 }, AppFeatures.ShipperCanMakInvoicePaid);
             }
@@ -171,15 +228,15 @@ namespace TACHYON.Invoices
 
                 if (!_invoiceManager.IsCarrier(Invoice.TenantId))
                 {
-                    await _BalanceManager.AddBalanceToShipper(Invoice.TenantId, Invoice.AmountWithTaxVat);
+                    await _balanceManager.AddBalanceToShipper(Invoice.TenantId, Invoice.TotalAmount);
                     if ((InvoicePeriodType)Invoice.PeriodId != InvoicePeriodType.PayInAdvance)
                     {
-                        await _BalanceManager.AddCreditBalanceToShipper(Invoice.TenantId, -Invoice.AmountWithTaxVat);
+                        await _balanceManager.AddCreditBalanceToShipper(Invoice.TenantId, -Invoice.TotalAmount);
                     }
                 }
                 else
                 {
-                    await _BalanceManager.AddBalanceToCarrier(Invoice.TenantId, -Invoice.AmountWithTaxVat);
+                    await _balanceManager.AddBalanceToCarrier(Invoice.TenantId, -Invoice.TotalAmount);
                 }
 
                 await _transactionManager.Delete(Invoice.Id, ChannelType.Invoices);
@@ -187,11 +244,119 @@ namespace TACHYON.Invoices
             }
         }
 
+        #region Reports
+
+        public IEnumerable<GetInvoiceReportInfoOutput> GetInvoiceReportInfo(long invoiceId)
+        {
+            var invoice=_invoiceRepository.GetAll()
+                .Include(e=>e.Tenant)
+                .Where(e => e.Id == invoiceId);
+            var query = invoice.Select(x => new
+            {
+                InvoiceNo=x.Id,
+                InvoiceDate=x.CreationTime,
+                DueDate=x.DueDate,
+                Attn="",
+                Phone="",
+                Fax="",
+                Email="",
+                ContractNo="",
+                BillTo=x.Tenant.companyName,
+                CR="",
+                Address=x.Tenant.Address,
+                ProjectName="",
+                InvoiceSubTotal=x.SubTotalAmount,
+                VatAmount=x.VatAmount,
+                DueAmount=x.TotalAmount
+            });
+            var output = query.ToList().Select(x=>new GetInvoiceReportInfoOutput
+            {
+                VatAmount = x.VatAmount,
+                Address = x.Address,
+                DueDate = x.DueDate,
+                Attn = x.Attn,
+                BillTo = x.BillTo,
+                CR = x.CR,
+                ContractNo = x.ContractNo,
+                DueAmount = x.DueAmount,
+                Email = x.Email,
+                Fax = x.Fax,
+                InvoiceDate = x.InvoiceDate,
+                InvoiceNo = x.InvoiceNo,
+                InvoiceSubTotal = x.InvoiceSubTotal,
+                Phone = x.Phone,
+                ProjectName = x.ProjectName
+            });
+            return output;
+        }
+        public IEnumerable<GetInvoiceShippingRequestsReportInfoOutput> GetInvoiceShippingRequestsReportInfo(long invoiceId)
+        {
+            var requests = _invoiceShippingRequestRepository.GetAll()
+                .Include(x => x.ShippingRequests)
+                .ThenInclude(x => x.DestinationCityFk)
+                .Include(x => x.ShippingRequests)
+                .ThenInclude(x => x.OriginCityFk)
+                .Include(x => x.ShippingRequests.TrucksTypeFk)
+                .Include(x => x.ShippingRequests.ShippingRequestTrips)
+                .Where(e => e.InvoiceId == invoiceId)
+                .ToList();
+
+            var vasesList = _shippingRequestVasesRepository.GetAll()
+                .Where(x => requests.Select
+                        (e => e.ShippingRequests.Id).Contains(x.ShippingRequestId))
+                .ToList();
+
+            var list = requests.GroupJoin(vasesList,
+                vas => vas.RequestId,
+                req => req.ShippingRequestId,
+                (req, VasGroup) => new
+                { Vases = VasGroup, req = req.ShippingRequests });
+
+            var finalList = new List<GetInvoiceShippingRequestsReportInfoOutput>();
+
+            foreach (var request in list)
+            {
+                if (request.req.StartTripDate != null)
+                {
+                    finalList.Add(new GetInvoiceShippingRequestsReportInfoOutput
+                    {
+                        Price = request.req.Price.ToString(),
+                        Date = request.req.StartTripDate.Value,
+                        DestinationCityName = request.req.DestinationCityFk.DisplayName,
+                        Notes = request.req.NumberOfDrops > 1
+                            ? "Total of drops" + request.req.NumberOfDrops
+                            : "",
+                        OriginCityName = request.req.OriginCityFk.DisplayName,
+                        TruckType = request.req.TrucksTypeFk.DisplayName,
+                        WaybillNo = request.req.ShippingRequestTrips.FirstOrDefault()?.Id.ToString()
+                    });
+                }
+
+                int vasIndex = 0;
+                foreach (var vas in request.Vases)
+                {
+                    vasIndex = vasIndex + 1;
+                    finalList.Add(new GetInvoiceShippingRequestsReportInfoOutput
+                    {
+                        Price = request.req.Price.ToString(),
+                        Date = request.req.StartTripDate.Value,
+                        DestinationCityName = "-",
+                        Notes = "Count:" + vas.RequestMaxCount + " Amount:" + vas.RequestMaxAmount,
+                        OriginCityName = "-",
+                        TruckType = request.req.TrucksTypeFk.DisplayName,
+                        WaybillNo = request.req.ShippingRequestTrips.FirstOrDefault()?.Id.ToString() + "VAS" + vasIndex
+                    });
+                }
+            }
+            return finalList;
+        }
+
+        #endregion
 
         #region Helper 
         private async Task<PagedResultDto<InvoiceListDto>> GetInvoices(InvoiceFilterInput input)
         {
-            var query = _InvoiceRepository
+            var query = _invoiceRepository
                 .GetAll()
                 .Include(i=>i.InvoicePeriod)
                 .Include(i => i.Tenant)
@@ -216,13 +381,8 @@ namespace TACHYON.Invoices
 
         private async Task<Invoice> GetInvoice(long  invoiceId)
         {
-          return await _InvoiceRepository.SingleAsync(i => i.Id == invoiceId);
+          return await _invoiceRepository.SingleAsync(i => i.Id == invoiceId);
         }
-
-      
-
-
-
 
         #endregion
     }

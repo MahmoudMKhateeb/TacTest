@@ -1,6 +1,6 @@
 <div [@routerTransition]>
   <div class="content d-flex flex-column flex-column-fluid">
-    <sub-header [title]="'GroupPeriods' | localize" [description]="'GroupPeriodsHeaderInfo' | localize">
+    <sub-header [title]="'SubmitInvoices' | localize" [description]="'SubmitInvoicesHeaderInfo' | localize">
       <div role="actions">
         <button (click)="exportToExcel()" class="btn btn-outline-success"><i class="fa fa-file-excel"></i> {{ l('ExportToExcel') }}</button>
       </div>
@@ -17,7 +17,7 @@
                     <div class="input-group">
                       <p-autoComplete
                         [inputStyleClass]="'form-control'"
-                        [placeholder]="l('ClientName')"
+                        [placeholder]="l('CompanyName')"
                         name="Tenant"
                         [(ngModel)]="Tenant"
                         [suggestions]="Tenants"
@@ -54,18 +54,19 @@
                 </div>
                 <div class="col-md-6">
                   <div class="form-group">
-                    <label for="DemandStatus">{{ l('Demand') }}</label>
-                    <select name="DemandStatus" [(ngModel)]="DemandStatus" class="form-control">
+                    <label for="Status">{{ l('Status') }}</label>
+                    <select name="Status" [(ngModel)]="Status" class="form-control">
                       <option value="">{{ l('All') }}</option>
-                      <option value="true">{{ l('Demand') }}</option>
-                      <option value="false">{{ l('UnDemand') }}</option>
+                      <option [value]="code.key" *ngFor="let code of SubmitStatus">
+                        {{ code.value | localize }}
+                      </option>
                     </select>
                   </div>
                 </div>
 
-                <div class="col-md-6">
+                <div *ngIf="!appSession.tenantId" class="col-md-6">
                   <div class="form-group">
-                    <label for="DemandStatus">{{ l('Period') }}</label>
+                    <label for="DemandStatus">{{ l('BillingInterval') }}</label>
                     <select name="periodId" [(ngModel)]="periodId" class="form-control" required>
                       <option value="">{{ l('All') }}</option>
                       <option [value]="period.id" *ngFor="let period of Periods">
@@ -102,37 +103,25 @@
                     </th>
 
                     <th *ngIf="!appSession.tenantId" pSortableColumn="TenantId">
-                      {{ l('ClientName') }}
+                      {{ l('CompanyName') }}
                       <p-sortIcon field="TenantId"></p-sortIcon>
                     </th>
                     <th pSortableColumn="PeriodId">
-                      {{ l('Period') }}
+                      {{ l('Interval') }}
                       <p-sortIcon field="PeriodId"></p-sortIcon>
                     </th>
 
-                    <th pSortableColumn="Amount">
-                      {{ l('Amount') }}
-                      <p-sortIcon field="Amount"></p-sortIcon>
-                    </th>
-                    <th pSortableColumn="VatAmount">
-                      {{ l('VatAmount') }}
-                      <p-sortIcon field="VatAmount"></p-sortIcon>
-                    </th>
                     <th pSortableColumn="amountWithTaxVat">
-                      {{ l('AmountWithTaxVat') }}
+                      {{ l('TotalAmount') }}
                       <p-sortIcon field="amountWithTaxVat"></p-sortIcon>
                     </th>
                     <th pSortableColumn="CreationTime">
                       {{ l('CreationTime') }}
                       <p-sortIcon field="CreationTime"></p-sortIcon>
                     </th>
-                    <th pSortableColumn="IsDemand">
-                      {{ l('DemandStatus') }}
-                      <p-sortIcon field="IsDemand"></p-sortIcon>
-                    </th>
-                    <th *ngIf="!appSession.tenantId" pSortableColumn="IsClaim">
-                      {{ l('ClaimStatus') }}
-                      <p-sortIcon field="IsClaim"></p-sortIcon>
+                    <th pSortableColumn="Status">
+                      {{ l('Status') }}
+                      <p-sortIcon field="Status"></p-sortIcon>
                     </th>
                   </tr>
                 </ng-template>
@@ -145,56 +134,47 @@
                         </button>
                         <ul class="dropdown-menu" *dropdownMenu>
                           <li>
-                            <a class="dropdown-item" [routerLink]="['/app/main/invoices/groupperiods/detail', record.id]">{{ l('Detail') }}</a>
+                            <a class="dropdown-item" [routerLink]="['/app/main/invoices/submitinvoices/detail', record.id]">{{ l('Detail') }}</a>
                           </li>
                           <li>
-                            <a *ngIf="record.demandFileName" class="dropdown-item" href="javascript:;" (click)="downloadDocument(record.id)">{{
-                              l('Download')
-                            }}</a>
+                            <a *ngIf="record.demandFileName" class="dropdown-item" href="javascript:;" (click)="downloadDocument(record.id)">
+                              {{ l('Download') }}
+                            </a>
                           </li>
                           <li>
                             <a
                               class="dropdown-item"
                               href="javascript:;"
-                              *ngIf="permission.isGranted('Pages.Administration.Host.Invoices.GroupsPeriods.Delete')"
+                              *ngIf="permission.isGranted('Pages.Administration.Host.Invoices.SubmitInvoices.Delete')"
                               (click)="delete(record)"
                               >{{ l('Delete') }}</a
                             >
                           </li>
-                          <li *ngIf="!record.isDemand">
+                          <li *ngIf="record.status == 0 || record.status == 3">
                             <a
                               class="dropdown-item"
                               href="javascript:;"
-                              *ngIf="permission.isGranted('Pages.Invoices.GroupsPeriods.Demand')"
+                              *ngIf="permission.isGranted('Pages.Invoices.SubmitInvoices.Claim')"
                               (click)="GroupPeriodDemanModel.show(record.id)"
-                              >{{ l('Demand') }}</a
-                            >
-                          </li>
-                          <li *ngIf="record.isDemand && !record.isClaim">
-                            <a
-                              class="dropdown-item"
-                              href="javascript:;"
-                              *ngIf="permission.isGranted('Pages.Invoices.GroupsPeriods.UnDemand')"
-                              (click)="UnDemand(record)"
-                              >{{ l('UnDemand') }}</a
-                            >
-                          </li>
-                          <li *ngIf="record.isDemand && !record.isClaim">
-                            <a
-                              class="dropdown-item"
-                              href="javascript:;"
-                              *ngIf="permission.isGranted('Pages.Administration.Host.Invoices.GroupsPeriods.Claim')"
-                              (click)="Claim(record)"
                               >{{ l('Claim') }}</a
                             >
                           </li>
-                          <li *ngIf="record.isClaim">
+                          <li *ngIf="record.status == 1">
                             <a
                               class="dropdown-item"
                               href="javascript:;"
-                              *ngIf="permission.isGranted('Pages.Administration.Host.Invoices.GroupsPeriods.UnClaim')"
-                              (click)="UnClaim(record)"
-                              >{{ l('UnClaim') }}</a
+                              *ngIf="permission.isGranted('Pages.Administration.Host.Invoices.SubmitInvoices.Accepted')"
+                              (click)="Accepted(record)"
+                              >{{ l('Accpeted') }}</a
+                            >
+                          </li>
+                          <li *ngIf="record.status == 1">
+                            <a
+                              class="dropdown-item"
+                              href="javascript:;"
+                              *ngIf="permission.isGranted('Pages.Administration.Host.Invoices.SubmitInvoices.Rejected')"
+                              (click)="RejectedModel.show(record.id)"
+                              >{{ l('Rejected') }}</a
                             >
                           </li>
                         </ul>
@@ -202,23 +182,15 @@
                     </td>
 
                     <td *ngIf="!appSession.tenantId">
-                      <span class="ui-column-title"> {{ l('ClientName') }}</span>
+                      <span class="ui-column-title"> {{ l('CompanyName') }}</span>
                       {{ record.tenantName }}
                     </td>
                     <td>
-                      <span class="ui-column-title"> {{ l('period') }}</span>
+                      <span class="ui-column-title"> {{ l('Interval') }}</span>
                       {{ record.period }}
                     </td>
                     <td>
-                      <span class="ui-column-title"> {{ l('Amount') }}</span>
-                      {{ record.amount }}
-                    </td>
-                    <td>
-                      <span class="ui-column-title"> {{ l('VatAmount') }}</span>
-                      {{ record.vatAmount }}
-                    </td>
-                    <td>
-                      <span class="ui-column-title"> {{ l('AmountWithTaxVat') }}</span>
+                      <span class="ui-column-title"> {{ l('TotalAmount') }}</span>
                       {{ record.amountWithTaxVat }}
                     </td>
                     <td>
@@ -226,23 +198,9 @@
                       {{ record.creationTime | momentFormat: 'L' }}
                     </td>
                     <td>
-                      <span class="ui-column-title"> {{ l('DemandStatus') }}</span>
-                      <span *ngIf="record.isDemand" class="label label-success label-inline m-1" data-toggle="tooltip" data-placement="top">
-                        {{ 'Demand' | localize }}
-                      </span>
-
-                      <span *ngIf="!record.isDemand" class="label label-danger label-inline m-1" data-toggle="tooltip" data-placement="top">
-                        {{ 'UnDemand' | localize }}
-                      </span>
-                    </td>
-                    <td *ngIf="!appSession.tenantId">
-                      <span class="ui-column-title"> {{ l('ClaimStatus') }}</span>
-                      <span *ngIf="record.isClaim" class="label label-success label-inline m-1" data-toggle="tooltip" data-placement="top">
-                        {{ 'Claim' | localize }}
-                      </span>
-
-                      <span *ngIf="!record.isClaim" class="label label-danger label-inline m-1" data-toggle="tooltip" data-placement="top">
-                        {{ 'UnClaim' | localize }}
+                      <span class="ui-column-title"> {{ l('Status') }}</span>
+                      <span [class]="StyleStatus(record.status)" data-toggle="tooltip" data-placement="top">
+                        {{ record.statusTitle | localize }}
                       </span>
                     </td>
                   </tr>
@@ -271,5 +229,6 @@
       </div>
     </div>
     <deman-model #GroupPeriodDemanModel (modalSave)="getAll()"></deman-model>
+    <submitinvoice-rejected-modal #RejectedModel (modalSave)="getAll()"></submitinvoice-rejected-modal>
   </div>
 </div>

@@ -25,7 +25,12 @@
         public const string ShipperCreditLimit = "App.Shipper.CreditLimit";
         public const string ShipperPeriods = "App.Shipper.Periods";
         public const string CarrierPeriods = "App.Carrier.Periods";
-
+        public const string BiddingCommissionPercentage = "App.Shipper.BiddingCommissionPercentage";
+        public const string BiddingCommissionValue = "App.Shipper.BiddingCommissionValue";
+        public const string BiddingMinValueCommission = "App.Shipper.BiddingMinValueCommission";
+        public const string TachyonDealerCommissionPercentage = "TachyonDealer.TachyonDealerCommissionPercentage";
+        public const string TachyonDealerCommissionValue = "TachyonDealer.TachyonDealerCommissionValue";
+        public const string TachyonDealerMinValueCommission = "TachyonDealer.TachyonDealerMinValueCommission";
 
 
         #endregion

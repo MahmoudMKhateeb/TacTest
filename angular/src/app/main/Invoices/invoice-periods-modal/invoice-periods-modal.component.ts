@@ -56,7 +56,6 @@ export class InvoicePeriodsModalComponent extends AppComponentBase implements On
       this.Period.freqInterval = 1;
       this.Period.periodType = InvoicePeriodType.PayInAdvance;
       this.Period.freqRelativeInterval = 1;
-      this.Period.creditLimit = 1;
 
       this.modal.show();
     } else {
@@ -96,7 +95,6 @@ export class InvoicePeriodsModalComponent extends AppComponentBase implements On
         this.Period.freqInterval = this.FreqIntervalMonthlyperweek;
       }
     } else {
-      this.Period.creditLimit = 0;
       this.Period.freqInterval = 0;
       this.Period.freqRelativeInterval = 0;
       this.Period.freqRecurrence = null;

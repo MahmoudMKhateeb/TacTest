@@ -56,13 +56,13 @@ export class AppNavigationService {
             undefined,
             undefined,
             undefined,
-            undefined,
-            () => this._featureCheckerService.isEnabled('App.Shipper')
+            undefined /*,
+            () => this._featureCheckerService.isEnabled('App.Shipper')*/
           ),
         ],
         undefined,
-        undefined,
-        () => this._featureCheckerService.isEnabled('App.Shipper')
+        undefined /*,
+        () => this._featureCheckerService.isEnabled('App.Shipper')*/
       ),
 
       // //Host
@@ -119,7 +119,8 @@ export class AppNavigationService {
         [],
         [
           new AppMenuItem('Marketplace', '', 'flaticon-more', '/app/main/marketPlace/marketPlace'),
-          new AppMenuItem('Shipping Requests', '', 'flaticon-more', '/app/main/marketPlace/shippingRequests'),
+          new AppMenuItem('DirectShippingRequests', '', 'flaticon-more', '/app/main/shippingRequests/directShippingRequests'),
+          new AppMenuItem('MyShippingRequests', '', 'flaticon-more', '/app/main/shippingRequests/shippingRequests'),
         ],
         undefined,
         undefined,
@@ -158,14 +159,24 @@ export class AppNavigationService {
         [],
         [
           new AppMenuItem('InvoicesList', 'Pages.Invoices', 'flaticon2-document', '/app/main/invoices/view'),
-          new AppMenuItem('Periods', 'Pages.Administration.Host.Invoices.Periods', 'flaticon2-document', '/app/main/invoices/periods'),
+          new AppMenuItem('BillingInterval', 'Pages.Administration.Host.Invoices.Periods', 'flaticon2-document', '/app/main/invoices/periods'),
           new AppMenuItem(
             'BalnaceRecharges',
             'Pages.Administration.Host.Invoices.Periods',
             'flaticon2-document',
             '/app/main/invoices/balnacerecharges'
           ),
-          new AppMenuItem('GroupPeriods', 'Pages.Invoices.GroupsPeriods', 'flaticon2-document', '/app/main/invoices/groupperiods'),
+          new AppMenuItem(
+            'SubmitInvoice',
+            'Pages.Invoices.SubmitInvoices',
+            'flaticon2-document',
+            '/app/main/invoices/submitinvoice',
+            undefined,
+            undefined,
+            undefined,
+            undefined,
+            () => !this._featureCheckerService.isEnabled('App.Shipper')
+          ),
           new AppMenuItem('FinancialTransActionMenu', 'Pages.Invoices.Transaction', 'flaticon2-document', '/app/main/invoices/transaction'),
         ]
       ),
@@ -448,6 +459,13 @@ export class AppNavigationService {
             'Pages.CitiesTranslations',
             'label label-danger label-dot',
             '/app/main/citiesTranslations/citiesTranslations'
+          ),
+          new AppMenuItem('AccidentsReason', 'Pages.ShippingRequestResoneAccidents', 'label label-danger label-dot', '/app/main/accidents/reasons'),
+          new AppMenuItem(
+            'TripRejectReason',
+            'Pages.ShippingRequestTrips.Reject.Reason',
+            'label label-danger label-dot',
+            '/app/main/trip/reject/reasons'
           ),
 
           // new AppMenuItem('AuditLogs', 'Pages.Administration.AuditLogs', 'flaticon-folder-1', '/app/admin/auditLogs'),

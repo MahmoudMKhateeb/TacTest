@@ -9,8 +9,9 @@ namespace TACHYON.Shipping.ShippingRequests
 {
     public interface IShippingRequestsAppService : IApplicationService
     {
-        Task<GetAllShippingRequestsOutput> GetAll(GetAllShippingRequestsInput input);
+        Task<GetAllShippingRequestsOutputDto> GetAll(GetAllShippingRequestsInput Input);
 
+       // Task<GetAllShippingRequestsOutput> GetForAll(GetAllShippingRequestsInput input);
         Task<GetShippingRequestForViewOutput> GetShippingRequestForView(long id);
 
         Task<GetShippingRequestForEditOutput> GetShippingRequestForEdit(EntityDto<long> input);
@@ -20,8 +21,8 @@ namespace TACHYON.Shipping.ShippingRequests
         Task AcceptOrRejectShippingRequestPrice(AcceptShippingRequestPriceInput input);
         Task RejectShippingRequest(long id);
         Task Delete(EntityDto<long> input);
+        
 
-   
         //Task<FileDto> GetShippingRequestsToExcel(GetAllShippingRequestsForExcelInput input);
         IEnumerable<GetMasterWaybillOutput> GetMasterWaybill(int shippingRequestTripId);
         IEnumerable<GetSingleDropWaybillOutput> GetSingleDropWaybill(int shippingRequestTripId);

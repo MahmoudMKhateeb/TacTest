@@ -1,8 +1,9 @@
 import { Component, Injector, ViewEncapsulation } from '@angular/core';
 import { AppComponentBase } from '@shared/common/app-component-base';
 import { FileDownloadService } from '@shared/utils/file-download.service';
-import { WaybillsServiceProxy } from '@shared/service-proxies/service-proxies';
+import { InvoiceReportServiceServiceProxy, WaybillsServiceProxy } from '@shared/service-proxies/service-proxies';
 import { appModuleAnimation } from '@shared/animations/routerTransition';
+import { result } from 'lodash';
 
 @Component({
   templateUrl: './waybills.html',
@@ -10,19 +11,30 @@ import { appModuleAnimation } from '@shared/animations/routerTransition';
   animations: [appModuleAnimation()],
 })
 export class waybillsComponent extends AppComponentBase {
-  constructor(injector: Injector, private _fileDownloadService: FileDownloadService, private _waybillsServiceProxy: WaybillsServiceProxy) {
+  constructor(
+    injector: Injector,
+    private _fileDownloadService: FileDownloadService,
+    private _waybillsServiceProxy: WaybillsServiceProxy,
+    private _InvoiceReportServiceProxy: InvoiceReportServiceServiceProxy
+  ) {
     super(injector);
   }
 
   platenumber = '2121';
 
-  DownloadSingleDropWaybillPdf(platenumber: string): void {
-    this._waybillsServiceProxy.getSingleDropOrMasterWaybillPdf(2).subscribe((result) => {
+  DownloadSingleDropWaybillPdf(shippingRequestTripId: number): void {
+    this._waybillsServiceProxy.getSingleDropOrMasterWaybillPdf(shippingRequestTripId).subscribe((result) => {
       this._fileDownloadService.downloadTempFile(result);
     });
   }
-  DownloadMultipleDropWaybillPdf(): void {
-    this._waybillsServiceProxy.getMultipleDropWaybillPdf(3).subscribe((result) => {
+  DownloadMultipleDropWaybillPdf(pointId: number): void {
+    this._waybillsServiceProxy.getMultipleDropWaybillPdf(pointId).subscribe((result) => {
+      this._fileDownloadService.downloadTempFile(result);
+    });
+  }
+
+  DownloadInvoiceReportPdf(InvoiceId: number): void {
+    this._InvoiceReportServiceProxy.downloadInvoiceReportPdf(InvoiceId).subscribe((result) => {
       this._fileDownloadService.downloadTempFile(result);
     });
   }

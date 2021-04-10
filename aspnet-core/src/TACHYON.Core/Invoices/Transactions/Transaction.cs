@@ -12,9 +12,8 @@ namespace TACHYON.Invoices.Transactions
     [Table("Transactions")]
     public class Transaction : Entity<long>, IHasCreationTime, ICreationAudited
     {
-        public byte ChannelId { get; set; }
-        [ForeignKey("ChannelId")]
-        public TransactionChannel Channel { get; set; }
+        public ChannelType ChannelId { get; set; }
+
         public decimal Amount { get; set; }
         public int Count { get; set; } = 1;
         public int? TenantId { get; set; }

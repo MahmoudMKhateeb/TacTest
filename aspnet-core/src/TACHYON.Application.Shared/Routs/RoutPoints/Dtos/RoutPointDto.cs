@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Text;
 using TACHYON.AddressBook.Dtos;
+using TACHYON.Goods.GoodsDetails.Dtos;
 using TACHYON.Routs.RoutSteps;
 
 namespace TACHYON.Routs.RoutPoints.Dtos
@@ -15,6 +16,7 @@ namespace TACHYON.Routs.RoutPoints.Dtos
 
         public PickingType PickingType { get; set; }
         public long FacilityId { get; set; }
+        public string Facility { get; set; }
         public double Longitude { get; set; }
         public double Latitude { get; set; }
         public virtual int ShippingRequestTripId { get; set; }
@@ -30,10 +32,16 @@ namespace TACHYON.Routs.RoutPoints.Dtos
         public string DocumentContentType { get; set; }
 
         public int? Rating { get; set; }
+        public int? ReceiverId { get; set; }
+
         [CanBeNull] public string ReceiverFullName { get; set; }
         [DataType(DataType.PhoneNumber)] [CanBeNull] public string ReceiverPhoneNumber { get; set; }
         [CanBeNull] public string ReceiverEmailAddress { get; set; }
         [CanBeNull] public string ReceiverCardIdNumber { get; set; }
+
+        public List<GoodsDetailDto> GoodsDetailListDto { get; set; }
+        [CanBeNull] public string Note { get; set; }
+
         //to do receiver attribute
     }
 }

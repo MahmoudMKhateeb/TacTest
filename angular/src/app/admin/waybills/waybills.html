@@ -2,11 +2,18 @@
   <div class="content d-flex flex-column flex-column-fluid">
     <sub-header [title]="'Waybills' | localize">
       <div role="actions">
-        <button (click)="DownloadSingleDropWaybillPdf(platenumber)" class="btn btn-outline-success">
+        <button (click)="DownloadSingleDropWaybillPdf(2)" class="btn btn-outline-success">
           <i class="fa fa-file-excel"></i> {{ l('Download Single Drop Waybill') }}
         </button>
-        <button (click)="DownloadMultipleDropWaybillPdf()" class="btn btn-outline-success">
+        <button (click)="DownloadMultipleDropWaybillPdf(4)" class="btn btn-outline-success">
           <i class="fa fa-file-excel"></i> {{ l('Download Multiple Drop Waybill') }}
+        </button>
+
+        <button (click)="DownloadInvoiceReportPdf(10003)" class="btn btn-outline-success">
+          <i class="fa fa-file-excel"></i> {{l("download Invoice report")}}
+        </button>
+        <button (click)="DownloadInvoiceReportPdf(10003)" class="btn btn-outline-success">
+          <i class="fa fa-file-excel"></i> {{l("download Invoice report")}}
         </button>
       </div>
     </sub-header>

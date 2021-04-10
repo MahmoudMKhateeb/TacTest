@@ -7,7 +7,7 @@ namespace TACHYON.Shipping.ShippingRequestBids.Dtos
 {
     public class ShippingRequestBidDto :EntityDto<long>
     {
-       public double price { get; set; }
+       public decimal price { get; set; }
         public long ShippingRequestId { get; set; }
         public bool IsAccepted { get; set; }
         public bool IsRejected { get; set; }

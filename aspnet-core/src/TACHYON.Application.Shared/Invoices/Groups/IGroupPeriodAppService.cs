@@ -13,10 +13,10 @@ namespace TACHYON.Invoices.Groups
         Task<PagedResultDto<GroupPeriodListDto>> GetAll(GroupPeriodFilterInput input);
         Task<GroupPeriodInfoDto> GetById(EntityDto input);
 
-        Task Demand(GroupPeriodDemandCreateInput Input);
-        Task UnDemand(long GroupId);
-        Task Claim(long GroupId);
-        Task UnClaim(long GroupId);
+        Task Claim(GroupPeriodClaimCreateInput Input);
+       // Task UnDemand(long GroupId);
+        Task Accepted(long GroupId);
+        Task Rejected(SubmitInvoiceRejectedInput Input);
 
         Task Delete(EntityDto Input);
         Task<FileDto> GetFileDto(long GroupId);

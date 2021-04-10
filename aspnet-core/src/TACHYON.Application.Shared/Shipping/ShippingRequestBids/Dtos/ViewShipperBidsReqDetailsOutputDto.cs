@@ -22,26 +22,18 @@ namespace TACHYON.Shipping.ShippingRequestBids.Dtos
         /// <summary>
         /// carrier bid price
         /// </summary>
-        public double? MyBidPrice { get; set; }
+        public decimal? MyBidPrice { get; set; }
         /// <summary>
         /// carrier bid Id if exist
         /// </summary>
         public long? MyBidId { get; set; }
         /// <summary>
-        /// shipping request origin facility output
-        /// </summary>
-        public GetFacilityForViewOutput OriginalFacility { get; set; }
-        /// <summary>
-        /// shipping request destination facility output
-        /// </summary>
-        public GetFacilityForViewOutput DestinationFacility { get; set; }
-        /// <summary>
         /// shipping request good category
         /// </summary>
         public string GoodCategoryName { get; set; }
-        public string SourceCountryCode{ get; set; }
+        public int NumberOfTrips { get; set; }
+        public double TotalWeight { get; set; }
         public string SourceCityName { get; set; }
-        public string DestinationCountryCode { get; set; }
         public string DestinationCityName { get; set; }
         public IEnumerable<GetShippingRequestVasForViewDto> ShippingRequestVasesDto { get; set; }
 

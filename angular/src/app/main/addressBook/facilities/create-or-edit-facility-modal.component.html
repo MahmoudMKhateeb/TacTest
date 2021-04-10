@@ -86,7 +86,7 @@
                 [(ngModel)]="facility.address"
                 placeholder="{{ l('searchForNearestLocation') }}"
                 autocorrect="off"
-                [disabled]="!selectedCountryCode || !facility.cityId"
+                [disabled]="!facility.cityId"
                 name="searchForAddress"
                 required
               />

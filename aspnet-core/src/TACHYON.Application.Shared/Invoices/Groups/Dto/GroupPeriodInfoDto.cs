@@ -3,7 +3,9 @@ using Abp.Domain.Entities.Auditing;
 using System;
 using System.Collections.Generic;
 using System.Text;
+using TACHYON.Invoices.Dto;
 using TACHYON.Invoices.GroupsGroups.Dto;
+using TACHYON.Invoices.SubmitInvoices;
 
 namespace TACHYON.Invoices.Groups.Dto
 {
@@ -19,11 +21,12 @@ namespace TACHYON.Invoices.Groups.Dto
         public string ContractNo { get; set; }
         public string ProjectName { get; set; }
         public string Period { get; set; }
-        public bool IsDemand { get; set; }
-        public Guid? BinaryObjectId { get; set; }
-        public string DemandFileName { get; set; }
-        public string DemandFileContentType { get; set; }
-        public bool IsClaim { get; set; }
+        public SubmitInvoiceStatus Status { get; set; }
+        // public bool IsDemand { get; set; }
+        public Guid? DocumentId { get; set; }
+        public string DocumentName { get; set; }
+        public string DocumentContentType { get; set; }
+        // public bool IsClaim { get; set; }
         public string Note { get; set; }
         public decimal AmountWithTaxVat { get; set; }
         public decimal VatAmount { get; set; }
@@ -31,6 +34,8 @@ namespace TACHYON.Invoices.Groups.Dto
         public decimal TaxVat { get; set; }
         public DateTime CreationTime { get; set; }
         public List<GroupShippingRequestDto> ShippingRequest { get; set; }
+        public List<SubmitInvoiceItemDto> Items { get; set; }
+
     }
 
 }

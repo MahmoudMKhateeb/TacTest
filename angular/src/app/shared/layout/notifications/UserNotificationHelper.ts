@@ -52,11 +52,28 @@ export class UserNotificationHelper extends AppComponentBase {
           userNotification.notification.data.properties.fileName
         );
       //Add your custom notification names to navigate to a URL when user clicks to a notification.
+      // Document managment module
       case 'App.RejectedSubmittedDocument':
         return '/app/main/documentFiles/documentFiles';
 
       case 'App.AcceptedSubmittedDocument':
         return '/app/main/documentFiles/documentFiles';
+
+      // Shipping request module
+      case 'App.ShippingRequestAccidentsOccure ':
+        return '/app/main/shippingRequests/shippingRequests/view?id={ShipimentNo}';
+
+      case 'App.SendDriectRequestForCarrier':
+        return '/app/main/shippingRequests/shippingRequests/view?id={ShipimentNo}';
+
+      case 'App.DriectRequestCarrierRespone':
+        return '/app/main/shippingRequests/shippingRequests/view?id={ShipimentNo}';
+
+      case 'App.DriverRejectTrip':
+        return '/app/main/shippingRequests/shippingRequests/view?id={ShipimentNo}';
+
+      case 'App.DriverAcceptTrip':
+        return '/app/main/shippingRequests/shippingRequests/view?id={ShipimentNo}';
     }
 
     //No url for this notification

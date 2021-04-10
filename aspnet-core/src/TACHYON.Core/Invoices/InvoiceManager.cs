@@ -140,7 +140,10 @@ namespace TACHYON.Invoices
 
 
         }
-
+        /// <summary>
+        /// Generate invoices for shipper and submitinvoices for carrirer by period
+        /// </summary>
+        /// <param name="PeriodId"></param>
         public void GenerateInvoice(byte PeriodId)
         {
             var Tenants = _Tenant.GetAll()
@@ -152,38 +155,47 @@ namespace TACHYON.Invoices
             foreach (var Tenant in Tenants)
             {
                 CollectRequestForShipper(Tenant, PeriodId);
-                BuildCarrierGroup(Tenant, PeriodId);
+                BuildCarrierSubmitInvoice(Tenant, PeriodId);
 
             }
 
         }
+
+        /// <summary>
+        /// Collect all shipping request for shipper in the period interval
+        /// </summary>
+        /// <param name="Tenant"></param>
+        /// <param name="PeriodId"></param>
         private void CollectRequestForShipper(Tenant Tenant, byte PeriodId)
         {       
             var Requests = _shippingRequestRepository
-                .GetAllList(r =>r.TenantId== Tenant.Id && r.IsShipperHaveInvoice == false && r.IsPriceAccepted == true && r.IsPrePayed == false);
+                .GetAllList(r =>r.TenantId== Tenant.Id && r.IsShipperHaveInvoice == false && r.Status ==  ShippingRequestStatus.PostPrice && r.IsPrePayed == false);
           if (Requests.Count()>0) GenerateShipperInvoice(Tenant, Requests, PeriodId);
 
         }
-
-        private void BuildCarrierGroup(Tenant Tenant, byte PeriodId)
+        /// <summary>
+        /// Generate submit invoices for carrirer in period intreval
+        /// </summary>
+        /// <param name="Tenant"></param>
+        /// <param name="PeriodId"></param>
+        private void BuildCarrierSubmitInvoice(Tenant Tenant, byte PeriodId)
         {
 
             var Requests = _shippingRequestRepository
-                .GetAllList(r => r.CarrierTenantId== Tenant.Id &&  r.IsCarrierHaveInvoice == false && r.IsPriceAccepted == true );
+                .GetAllList(r => r.CarrierTenantId== Tenant.Id &&  r.IsCarrierHaveInvoice == false && r.Status == ShippingRequestStatus.PostPrice);
             if (Requests.Count() == 0) return;
             decimal Amount =(decimal)Requests.Sum(r => r.Price);
-            TaxVat = GetTax();
-            decimal VatAmount = (Amount * TaxVat / 100);
-            decimal AmountWithTaxVat = VatAmount + Amount;
+            //TaxVat = GetTax();
+            //decimal VatAmount = (Amount * TaxVat / 100);
+            //decimal AmountWithTaxVat = VatAmount + Amount;
             var GroupPeriod = new GroupPeriod
             {
                 TenantId = Tenant.Id,
                 PeriodId = PeriodId,
-                IsDemand = false,
                 Amount = Amount,
-                TaxVat = TaxVat,
-                AmountWithTaxVat = AmountWithTaxVat,
-                VatAmount= VatAmount,
+               // TaxVat = TaxVat,
+               // AmountWithTaxVat = AmountWithTaxVat,
+               // VatAmount= VatAmount,
                 ShippingRequests = Requests.Select(
                r => new GroupShippingRequests()
                {
@@ -198,7 +210,7 @@ namespace TACHYON.Invoices
             {
                 request.IsCarrierHaveInvoice = true;
             }
-            _appNotifier.NewGroupPeriodsGenerated(GroupPeriod);
+            _appNotifier.NewSubmitInvoiceGenerated(GroupPeriod);
             //_emailSender.Send(
             //               to: user.EmailAddress,
             //               subject: "You have a new notification!",
@@ -208,25 +220,29 @@ namespace TACHYON.Invoices
 
             /*Update For Both account Shipper and Carrier  */
         }
-
-
+        /// <summary>
+        /// Generate invoices for shipper
+        /// </summary>
+        /// <param name="Tenant"></param>
+        /// <param name="Requests"></param>
+        /// <param name="PeriodId"></param>
         private async void GenerateShipperInvoice(Tenant Tenant, List<ShippingRequest> Requests, byte PeriodId)
         {
-            decimal Amount = (decimal)Requests.Sum(r => r.Price);
-            TaxVat = GetTax();
-            decimal VatAmount = (Amount * TaxVat / 100);
-            decimal AmountWithTaxVat = VatAmount + Amount;
+            decimal TotalAmount = (decimal)Requests.Sum(r => r.Price);
+            decimal VatAmount= (decimal)Requests.Sum(r => r.Price);
+            decimal SubTotalAmount = (decimal)Requests.Sum(r => r.Price);
+
             var PeriodType = (InvoicePeriodType)PeriodId;
             var Invoice = new Invoice
             {
                 TenantId = Tenant.Id,
                 PeriodId = PeriodId,
                 DueDate = Clock.Now,
-                IsPaid = PeriodType == InvoicePeriodType.PayInAdvance ? true: false,
-                Amount = Amount,
+                IsPaid = PeriodType == InvoicePeriodType.PayInAdvance ? true : false,
+                TotalAmount = TotalAmount,
                 VatAmount = VatAmount,
-                TaxVat = TaxVat,
-                AmountWithTaxVat = AmountWithTaxVat,
+                SubTotalAmount = SubTotalAmount,
+                TaxVat = Requests.FirstOrDefault().VatSetting,
                 IsAccountReceivable = true,
                 ShippingRequests = Requests.Select(
                r => new InvoiceShippingRequests()
@@ -242,21 +258,25 @@ namespace TACHYON.Invoices
             }
 
             if (PeriodType == InvoicePeriodType.PayInAdvance) {
-                Tenant.Balance -= AmountWithTaxVat;
-                Tenant.ReservedBalance -= AmountWithTaxVat;
+                Tenant.Balance -= TotalAmount;
+                Tenant.ReservedBalance -= TotalAmount;
                 var invoiceProformas =await _invoiceProformaRepository.SingleAsync(i => i.TenantId == Tenant.Id && i.RequestId== Requests[0].Id);
             if (invoiceProformas !=null)   await _invoiceProformaRepository.DeleteAsync(invoiceProformas);
             }
             else
             {
-                Tenant.CreditBalance -= AmountWithTaxVat;
+                Tenant.CreditBalance -= TotalAmount;
             }
 
 
           await  _appNotifier.NewInvoiceShipperGenerated(Invoice);
           await  _BalanceManager.CheckShipperOverLimit(Tenant);
         }
-
+/// <summary>
+/// Generate invoice for carrirer after the host accepted the submit invoice
+/// </summary>
+/// <param name="Group"></param>
+/// <returns></returns>
         public async Task GenerateCarrirInvoice(GroupPeriod Group)
         {
             var GroupRequest = Group.ShippingRequests.Select(r => r.RequestId) ;
@@ -268,10 +288,10 @@ namespace TACHYON.Invoices
                 PeriodId = Group.PeriodId,
                 DueDate = Clock.Now,
                 IsPaid = false,
-                Amount = Group.Amount,
-                VatAmount = Group.VatAmount,
+                TotalAmount = Group.Amount,
+                //VatAmount = Group.VatAmount,
                 TaxVat = Group.TaxVat,
-                AmountWithTaxVat = Group.AmountWithTaxVat,
+                //AmountWithTaxVat = Group.AmountWithTaxVat,
                 IsAccountReceivable = false,
                 ShippingRequests = Requests.Select(
                r => new InvoiceShippingRequests()
@@ -289,11 +309,12 @@ namespace TACHYON.Invoices
             }
 
             Group.Tenant.Balance += Group.AmountWithTaxVat;
-
-
-          // await _appNotifier.NewInvoiceShipperGenerated(Invoice);
         }
-
+        /// <summary>
+        /// When the shipper billing interval  after delivry run this method to generate invoice
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
         public async Task GenertateInvoiceWhenShipmintDelivery(ShippingRequest request)
         {
             var Tenant = await _Tenant.SingleAsync(t=>t.Id== request.TenantId);
@@ -304,7 +325,11 @@ namespace TACHYON.Invoices
             }          
         }
 
-
+        /// <summary>
+        /// remove invoice from shipping request when delete invoice
+        /// </summary>
+        /// <param name="invoiceId"></param>
+        /// <returns></returns>
         public async Task RemoveInvoiceFromRequest(long invoiceId)
         {
             var invoice = await GetInvoiceInfo(invoiceId);
@@ -317,15 +342,16 @@ namespace TACHYON.Invoices
             var Requests = _shippingRequestRepository.GetAllList(r => Invoicerequests.Contains(r.Id));
             if (!IsCarrier(invoice.TenantId))
             {
-                if (invoice.IsPaid) await _BalanceManager.AddBalanceToShipper(invoice.TenantId, -invoice.AmountWithTaxVat);
-                foreach (var request in Requests)
+                if (invoice.IsPaid) await _BalanceManager.AddBalanceToShipper(invoice.TenantId, -invoice.TotalAmount);
+                Requests.ForEach(request =>
                 {
                     request.IsShipperHaveInvoice = false;
-                }
+                });
+
             }
             else
             {
-                if (invoice.IsPaid) await _BalanceManager.AddBalanceToCarrier(invoice.TenantId, -invoice.AmountWithTaxVat);
+                if (invoice.IsPaid) await _BalanceManager.AddBalanceToCarrier(invoice.TenantId, -invoice.TotalAmount);
             }
            await _InvoiceRepository.DeleteAsync(invoice);
         }

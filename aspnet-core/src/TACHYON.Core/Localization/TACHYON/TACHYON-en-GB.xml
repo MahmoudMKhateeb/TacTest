@@ -1572,5 +1572,14 @@
     <text name="VisualSettings_Description">Change look of the application</text>
     <text name="DownloadCollectedData_Description">Download data belongs to your account</text>
     <text name="New">New</text>
+    <text name="NotifyDriverWhenAssignToTrip">You have new trip assign to you</text>
+    <text name="TotalOfDrop">Total  of drops: {0}</text>
+    <text name="InvoiceVasType">Type:{0}</text>
+    <text name="InvoiceVasRemarksAll">Count:{0}, Amount:{1}</text>
+    <text name="InvoiceVasRemarksAmount">Amount:{0}</text>
+    <text name="InvoiceVasRemarksCount">Count:{0}</text>
+    <text name="TachyonDealOfferRejectedByShipper">The offer has been rejected by the shipper {clientname}.</text>
+    <text name="TachyonDealOfferAccepByShipper">The offer has been accepted by the shipper {clientname}.</text>
+
   </texts>
 </localizationDictionary>

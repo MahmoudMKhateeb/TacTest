@@ -1,6 +1,17 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <localizationDictionary culture="en">
-  <texts>
+  <texts>
+    <text name="Receivers">Receivers</text>
+    <text name="Receiver">Receiver</text>
+    <text name="TACHYON.Receivers.Receiver">Receiver</text>
+    <text name="FullName">Full name</text>
+    <text name="ReceiversHeaderInfo">Receivers header info</text>
+    <text name="CreateNewReceiver">Create new receiver</text>
+    <text name="EditReceiver">Edit receiver</text>
+    <text name="DeleteReceiver">Delete receiver</text>
+    <text name="FacilityName">Facility name</text>
+    <text name="PickFacility">Pick facility</text>
+
     <![CDATA[Tachyon:Driver Start]]>
     <text name="FirstName">First name</text>
     <text name="LastName">Last name</text>
@@ -29,9 +40,12 @@
     <text name="TMS">Transport Management System</text>
     <![CDATA[Tachyon:SideBar End]]>
 
-
-
-
+    <![CDATA[Tachyon:Shipping Request Start]]>
+    <text name="PleaseAddReceiverFullName">Please Add Receiver Full Name</text>
+    <text name="PleaseAddReceiverPhoneNumber">Please Add Receiver Phone Number</text>
+    <text name="PleaseAddReceiverEmailAddress">Please Add Receiver Email Address</text>
+    <text name="PleaseAddReceiverCardIdNumber">Please Add Receiver CardId Number</text>
+    <![CDATA[Tachyon:Shipping Request End]]>
 
     <![CDATA[Tachyon:Trucks Page Start]]>-->
     <text name="TrucksHeaderInfo">Trucks Header Info</text>
@@ -989,22 +1003,32 @@
     <text name="TenantSignUp">Company SignUp</text>
     <text name="NewTenantRegisteredNotificationDefinition">On a new tenant registered to the application.</text>
     <text name="NewTenantRegisteredNotificationMessage">A new tenant registered to the application. Tenancy name: {tenancyName}.</text>
-    <tex name="NewInvoiceShipperGenerated"><a href="/app/main/invoices/detail/{invoiceid}">A new invoice has been generated {invoiceid}#</a></tex>
+    <tex name="NewInvoiceShipperGenerated">
+      <a href="/app/main/invoices/detail/{invoiceid}">A new invoice has been generated {invoiceid}#</a>
+    </tex>
     <tex name="NewInvoiceShipperGeneratedEmailSubject">A new invoice has been generated {invoiceid}#</tex>
-    <tex name="NewInvoiceShipperGeneratedEmailBody">A new invoice has been generated {invoiceid}# <a href="/app/main/invoices/detail/{invoiceid}">click here to view invoice</a></tex>
+    <tex name="NewInvoiceShipperGeneratedEmailBody">
+      A new invoice has been generated {invoiceid}# <a href="/app/main/invoices/detail/{invoiceid}">click here to view invoice</a>
+    </tex>
 
     <tex name="NewGroupPerioGenerated">
-      <a href="/app/main/invoices/groupperiods/detail/{groupid}">A new collect has been generated {groupid}#</a>
+      <a href="/app/main/invoices/submitinvoices/detail/{groupid}">A new collect has been generated {groupid}#</a>
     </tex>
-    <tex name="GroupPeriodOnDemand">
-      <a href="/app/main/invoices/groupperiods/detail/{groupid}">A new demand  has been add to group period {groupid}#</a>
+    <tex name="GroupPeriodOnClaim">
+      <a href="/app/main/invoices/submitinvoices/detail/{groupid}">The submit invoice has been claimed</a>
+    </tex>
+    <tex name="SubmitInvoiceOnAccepted">
+      <a href="/app/main/invoices/submitinvoices/detail/{groupid}">The submit invoice has been Accepted</a>
+    </tex>
+    <tex name="SubmitInvoiceOnRejected">
+      <a href="/app/main/invoices/submitinvoices/detail/{groupid}">The submit invoice has been Rejected because {reason}</a>
     </tex>
     <tex name="NewGroupPerioGeneratedEmailSubject">
       A new collect has been generated {groupid}#
     </tex>
     <tex name="NewGroupPerioGeneratedEmailBody">
       <a href="/app/main/invoices/groupperiods/detail/{groupid}">A new collect has been generated {groupid}#</a>
-    </tex> 
+    </tex>
     <text name="LoginAttempts">Login attempts</text>
     <text name="Failed">Failed</text>
     <text name="NewTenant">New Company</text>
@@ -1722,6 +1746,58 @@
     <text name="VisualSettings_Description">Change look of the application</text>
     <text name="DownloadCollectedData_Description">Download data belongs to your account</text>
     <text name="New">New</text>
+
+    <![CDATA[Tachyon:Invoice]]>
+    <text name="Invoices">Invoices</text>
+    <text name="AccountPayable">Account payable</text>
+    <text name="AccountReceivable">Account receivable</text>
+    <text name="MakePaid">Make paid</text>
+    <text name="MakeUnPaid">Make unpaid</text>
+    <text name="PaidStatus">Paid status</text>
+    <text name="Unpaid">Un paid</text>
+    <text name="VatAmount">Vat amount</text>
+    <text name="AmountWithTaxVat">Amount with tax vat</text>
+    <text name="Demand">Demand</text>
+    <text name="UnDemand">Un demand</text>
+    <text name="Claim">Claim</text>
+    <text name="UnClaim">Un claim</text>
+    <text name="Transaction">Transaction</text>
+    <text name="ShipperNotfiyWhenCreditLimitGreaterOrEqualXPercentage">
+      You have used more than 70% of your credit limit
+    </text>
+    <text name="EmailSubjectShipperCreditLimit">Credit limit</text>
+    <tex name="NoEnoughBalance">You do not have enough balance</tex>
+    <tex name="FinancialTransActionMenu">TransAction</tex>
+    <text name="Channel">Channel</text>
+    <text name="ChannelType">Channel</text>
+    <text name="Transactions">Transactions</text>
+
+    <![CDATA[Tachyon:Invoice End]]>
+    <text name="ShippingRequestAccidentsOccure">
+      <a href="/app/main/shippingRequests/shippingRequests/view?id={ShipimentNo}">There has been an accident for shipment No.: {ShipimentNo}.</a>
+    </text>
+
     <text name="EnglishLettersOnly">English letters only</text>
+    <text name="ShippingRequestReceiverCode">Your shipping code is {0}</text>
+    <text name="NotifyDriverWhenAssignToTrip">You have new trip assign to you</text>
+    <text name="TotalOfDrop">Total  of drops: {0}</text>
+    <text name="InvoiceVasType">Type:{0}</text>
+    <text name="InvoiceVasRemarksAll">Count:{0}, Amount:{1}</text>
+    <text name="InvoiceVasRemarksAmount">Amount:{0}</text>
+    <text name="InvoiceVasRemarksCount">Count:{0}</text>
+
+    <text name="TachyonDealOfferRejectedByShipper">The offer has been rejected by the shipper {clientname}.</text>
+    <text name="TachyonDealOfferAccepByShipper">The offer has been accepted by the shipper {clientname}.</text>
+    <text name="SendDriectRequestForCarrier">
+      <a href="/app/main/shippingRequests/shippingRequests/view?id={ShipimentNo}">Please send us a quote for the shipment No.: {ShipimentNo}.</a>
+    </text>
+    <text name="DriectRequestCarrierRespone">
+      <a href="/app/main/shippingRequests/shippingRequests/view?id={ShipimentNo}">The {clientname} has established a current view of the  shipment No.: {ShipimentNo}.</a>
+    </text>
+    <text name="DriverRejectTrip">
+      <a href="/app/main/shippingRequests/shippingRequests/view?id={ShipimentNo}">The driver {driver} has been rejected the trip from {source} to {destination}</a></text>
+    <text name="DriverAcceptTrip">
+      <a href="/app/main/shippingRequests/shippingRequests/view?id={ShipimentNo}">The driver {driver} has been accepted the trip from {source} to {destination}</a>
+    </text>
   </texts>
 </localizationDictionary>

@@ -2,13 +2,11 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Text;
 using TACHYON.AddressBook;
 using TACHYON.Authorization.Users;
 using TACHYON.Routs.RoutPoints;
 using TACHYON.Shipping.ShippingRequests;
 using TACHYON.Shipping.Trips;
-using TACHYON.Shipping.TripStatuses;
 using TACHYON.ShippingRequestTripVases;
 using TACHYON.Trucks;
 
@@ -26,6 +24,12 @@ namespace TACHYON.Shipping.ShippingRequestTrips
         public long? AssignedDriverUserId { get; set; }
         [ForeignKey("AssignedDriverUserId")]
         public User AssignedDriverUserFk { get; set; }
+        /// <summary>
+        /// if the driver make accident when he work on trip
+        /// </summary>
+        public bool HasAccident { get; set; }
+        public bool IsApproveCancledByShipper { get; set; }
+        public bool IsApproveCancledByCarrier { get; set; }
         public long? AssignedTruckId { get; set; }
         [ForeignKey("AssignedTruckId")]
         public Truck AssignedTruckFk { get; set; }
@@ -47,5 +51,12 @@ namespace TACHYON.Shipping.ShippingRequestTrips
 
         public ICollection<RoutPoint> RoutPoints { get; set; }
         public ICollection<ShippingRequestTripVas> ShippingRequestTripVases { get; set; }
+        public ShippingRequestTripDriverStatus DriverStatus { get; set; }
+        public int? RejectReasonId { get; set; }
+        [ForeignKey("RejectReasonId")]
+        public ShippingRequestTripRejectReason ShippingRequestTripRejectReason { get; set; }
+        public string RejectedReason { get; set; }
+
+
     }
 }

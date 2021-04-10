@@ -66,8 +66,9 @@ namespace TACHYON.Invoices.Transactions
         private IOrderedQueryable<Transaction> GetFilterTransactions(TransactionFilterInput input)
         {
             var query = _transactionRepository
-                .GetAllIncluding(t => t.Tenant, t => t.Channel)
-                .WhereIf(input.channelType.HasValue, e => e.ChannelId == (byte)input.channelType)
+                .GetAll()
+                .Include(t=>t.Tenant)
+                .WhereIf(input.channelType.HasValue, e => e.ChannelId == input.channelType)
                 .WhereIf(input.TenantId.HasValue, i => i.TenantId == input.TenantId)
                 .WhereIf(input.FromDate.HasValue && input.ToDate.HasValue, i => i.CreationTime >= input.FromDate && i.CreationTime < input.ToDate)
                 .AsNoTracking()

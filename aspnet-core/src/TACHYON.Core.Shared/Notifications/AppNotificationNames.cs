@@ -34,12 +34,37 @@ namespace TACHYON.Notifications
         public const string InvoiceShipperGenerated = "App.InvoiceShipperGenerated";
         public const string GroupPeriodsGenerated = "App.GroupPeriodsGenerated";
 
-        public const string GroupPeriodOnDemand = "App.GroupPeriodOnDemand";
+        public const string SubmitInvoiceOnClaim = "App.SubmitInvoiceOnClaim";
+        public const string SubmitInvoiceOnAccepted = "App.SubmitInvoiceOnAccepted";
+        public const string SubmitInvoiceOnRejected = "App.SubmitInvoiceOnRejected";
+
         public const string ShipperNotfiyWhenCreditLimitGreaterOrEqualXPercentage = "App.ShipperNotfiyWhenCreditLimitGreaterOrEqualXPercentage";
 
         public const string StartShippment = "App.StartShippment";
 
         public const string ShipperShippingRequestFinish = "App.Shipper.ShippingRequest.Finish";
+
+        #region Trip
+        public const string ShipperShippingRequestTripNotifyDriverWhenAssignTrip = "App.ShipperShippingRequestTripNotifyDriverWhenAssignTrip";
+        public const string NotifyDriverWhenAssignToTrip = "App.NotifyDriverWhenAssignToTrip";
+        public const string DriverRejectTrip = "App.DriverRejectTrip";
+        public const string DriverAcceptTrip = "App.DriverAcceptTrip";
+        #endregion
+        #region Accident
+        public const string ShippingRequestAccidents = "App.ShippingRequest.Accident";
+        public const string ShippingRequestCancelByTripAccidents = "App.ShippingRequest.trip.Accident.Cancel";
+
+        #endregion
+        #region TachyonDeal
+        public const string SendDriectRequestForCarrier = "App.SendDriectRequestForCarrier";
+        public const string DriectRequestCarrierRespone = "App.DriectRequestCarrierRespone";
+        public const string TachyonDealOfferRejectedByShipper = "App.TachyonDealOfferRejectedByShipper";
+        public const string TachyonDealOfferAcceptedByShipper = "App.TachyonDealOfferAcceptedByShipper";
+
+        #endregion
+        #region Shipping Request
+        public const string ShippingRequestNotifyCarrirerWhenShipperAccepted = "App.ShippingRequestNotifyCarrirerWhenShipperAccepted";
+        #endregion
         #endregion
 
     }

@@ -14,7 +14,7 @@
       <form *ngIf="active" #PeriodForm="ngForm" novalidate (ngSubmit)="save()">
         <div class="modal-header">
           <h4 class="modal-title">
-            <span>{{ Period.id ? l('EditInvoicePeriod') : l('AddInvoicePeriod') }}</span>
+            <span>{{ Period.id ? l('EditBillingInterval') : l('CreateNewBillingInterval') }}</span>
           </h4>
           <button type="button" class="close" (click)="close()" aria-label="Close">
             <span aria-hidden="true">&times;</span>
@@ -27,7 +27,7 @@
           </div>
 
           <div class="form-group m-form__group">
-            <label for="periodType">{{ l('InvoicePeriodType') }}</label>
+            <label for="periodType">{{ l('BillingIntervalType') }}</label>
             <select
               name="Period.periodType"
               [(ngModel)]="Period.periodType"
@@ -35,7 +35,7 @@
               class="form-control"
               required
             >
-              <option value="">{{ l('SelectInvoicePeriodFreqType') }}</option>
+              <option value="">{{ l('SelectBillingIntervalFreqType') }}</option>
               <option [value]="code.key" *ngFor="let code of PeriodType">
                 {{ code.value | localize }}
               </option>
@@ -53,12 +53,7 @@
               {{ 'Enabled' | localize }}
             </label>
           </div>
-          <ng-container *ngIf="Period.periodType != 1 && Period.periodType != 2">
-            <div class="form-group">
-              <label>{{ 'CreditLimit' | localize }}</label>
-              <input class="form-control" type="number" min="1" name="CreditLimit" [(ngModel)]="Period.creditLimit" />
-            </div>
-          </ng-container>
+
           <ng-container *ngIf="Period.periodType == 3 || Period.periodType == 4">
             <div class="form-group">
               <label>{{ 'FreqInterval' | localize }}</label>

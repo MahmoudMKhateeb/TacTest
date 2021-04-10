@@ -157,14 +157,7 @@ namespace TACHYON.Notifications
 
             #endregion
             #region Host
-            context.Manager.Add(
-          new NotificationDefinition(
-              AppNotificationNames.GroupPeriodOnDemand,
-              displayName: L("GroupPeriodOnDemand"),
-               permissionDependency: new SimplePermissionDependency(AppPermissions.Pages_Tenants)
-          )
 
-      );
             #endregion
 
 

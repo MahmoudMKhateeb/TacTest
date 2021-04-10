@@ -6,6 +6,11 @@
     /// </summary>
     public static class AppPermissions
     {
+        public const string Pages_Receivers = "Pages.Receivers";
+        public const string Pages_Receivers_Create = "Pages.Receivers.Create";
+        public const string Pages_Receivers_Edit = "Pages.Receivers.Edit";
+        public const string Pages_Receivers_Delete = "Pages.Receivers.Delete";
+
         public const string Pages_TruckCapacitiesTranslations = "Pages.TruckCapacitiesTranslations";
         public const string Pages_TruckCapacitiesTranslations_Create = "Pages.TruckCapacitiesTranslations.Create";
         public const string Pages_TruckCapacitiesTranslations_Edit = "Pages.TruckCapacitiesTranslations.Edit";
@@ -16,12 +21,9 @@
         public const string Pages_TruckStatusesTranslations_Edit = "Pages.TruckStatusesTranslations.Edit";
         public const string Pages_TruckStatusesTranslations_Delete = "Pages.TruckStatusesTranslations.Delete";
 
+        public const string App_Shipper="App.Shipper";
+        public const string App_Carrier = "App.Carrier";
 
-
-        public const string Pages_Receivers = "Pages.Receivers";
-        public const string Pages_Receivers_Create = "Pages.Receivers.Create";
-        public const string Pages_Receivers_Edit = "Pages.Receivers.Edit";
-        public const string Pages_Receivers_Delete = "Pages.Receivers.Delete";
 
         public const string Pages_CitiesTranslations = "Pages.CitiesTranslations";
         public const string Pages_CitiesTranslations_Create = "Pages.CitiesTranslations.Create";
@@ -40,15 +42,33 @@
 
 
         #region Shipping Request
-        public const string Pages_ShippingRequestCauseAccidents = "Pages.ShippingRequestCauseAccidents";
-        public const string Pages_ShippingRequestCauseAccidents_Create = "Pages.ShippingRequestCauseAccidents.Create";
-        public const string Pages_ShippingRequestCauseAccidents_Edit = "Pages.ShippingRequestCauseAccidents.Edit";
-        public const string Pages_ShippingRequestCauseAccidents_Delete = "Pages.ShippingRequestCauseAccidents.Delete";
+
+        #region Trip
+        public const string Pages_ShippingRequestTrips = "Pages.ShippingRequestTrips";
+        public const string Pages_ShippingRequestTrips_Create = "Pages.ShippingRequestTrips.Create";
+        public const string Pages_ShippingRequestTrips_Edit = "Pages.ShippingRequestTrips.Edit";
+        public const string Pages_ShippingRequestTrips_Delete = "Pages.ShippingRequestTrips.Delete";
+        public const string Pages_ShippingRequestTrips_Acident_Cancel = "Pages.ShippingRequestTrips.Accident.Cancel";
+        #region Accident
+        public const string Pages_ShippingRequestResoneAccidents = "Pages.ShippingRequestResoneAccidents";
+        public const string Pages_ShippingRequestResoneAccidents_Create = "Pages.ShippingRequestResoneAccidents.Create";
+        public const string Pages_ShippingRequestResoneAccidents_Edit = "Pages.ShippingRequestResoneAccidents.Edit";
+        public const string Pages_ShippingRequestResoneAccidents_Delete = "Pages.ShippingRequestResoneAccidents.Delete";
+
+        public const string Pages_ShippingRequest_Accidents = "Pages.ShippingRequest.Accidents";
+        public const string Pages_ShippingRequest_Accidents_Create = "Pages.ShippingRequest.Accidents.Create";
+        public const string Pages_ShippingRequest_Accidents_Edit = "Pages.ShippingRequest.Accidents.Edit";
+        public const string Pages_ShippingRequest_Accidents_Resolve_Create = "Pages.ShippingRequest.Accidents.Resolve.Create";
+        public const string Pages_ShippingRequest_Accidents_Resolve_Edit = "Pages.ShippingRequest.Accidents.Resolve.Edit";
         #endregion
-        public const string Pages_TripStatuses = "Pages.TripStatuses";
-        public const string Pages_TripStatuses_Create = "Pages.TripStatuses.Create";
-        public const string Pages_TripStatuses_Edit = "Pages.TripStatuses.Edit";
-        public const string Pages_TripStatuses_Delete = "Pages.TripStatuses.Delete";
+        #region "Reject Reason Trip"
+        public const string Pages_ShippingRequestTrips_Reject_Reason = "Pages.ShippingRequestTrips.Reject.Reason";
+        public const string Pages_ShippingRequestTrips_Reject_Reason_Create = "Pages.ShippingRequestTrips.Reject.Reason.Create";
+        public const string Pages_ShippingRequestTrips_Reject_Reason_Edit = "Pages.ShippingRequestTrips.Reject.Reason.Edit";
+        public const string Pages_ShippingRequestTrips_Reject_Reason_Delete = "Pages.ShippingRequestTrips.Reject.Reason.Delete";
+        #endregion
+        #endregion
+        #endregion
 
         public const string Pages_PackingTypes = "Pages.PackingTypes";
         public const string Pages_PackingTypes_Create = "Pages.PackingTypes.Create";
@@ -96,10 +116,7 @@
         public const string Pages_ShippingRequestVases_Edit = "Pages.ShippingRequestVases.Edit";
         public const string Pages_ShippingRequestVases_Delete = "Pages.ShippingRequestVases.Delete";
 
-        public const string Pages_ShippingRequestTrips = "Pages.ShippingRequestTrips";
-        public const string Pages_ShippingRequestTrips_Create = "Pages.ShippingRequestTrips.Create";
-        public const string Pages_ShippingRequestTrips_Edit = "Pages.ShippingRequestTrips.Edit";
-        public const string Pages_ShippingRequestTrips_Delete = "Pages.ShippingRequestTrips.Delete";
+
 
         public const string Pages_VasPrices = "Pages.VasPrices";
         public const string Pages_VasPrices_Create = "Pages.VasPrices.Create";
@@ -370,13 +387,12 @@
         public const string Pages_Administration_Host_Invoices_Balances_Delete = "Pages.Administration.Host.Invoices_Balances.Delete";
 
 
-        public const string Pages_Invoices_GroupsPeriods = "Pages.Invoices.GroupsPeriods";
-        public const string Pages_Invoices_GroupsPeriods_Demand = "Pages.Invoices.GroupsPeriods.Demand";
-        public const string Pages_Invoices_GroupsPeriods_UnDemand = "Pages.Invoices.GroupsPeriods.UnDemand";
+        public const string Pages_Invoices_SubmitInvoices = "Pages.Invoices.SubmitInvoices";
+        public const string Pages_Invoices_SubmitInvoices_Claim = "Pages.Invoices.SubmitInvoices.Claim";
 
-        public const string Pages_Administration_Host_Invoices_GroupsPeriods_Delete = "Pages.Administration.Host.Invoices.GroupsPeriods.Delete";
-        public const string Pages_Administration_Host_Invoices_GroupsPeriods_Claim = "Pages.Administration.Host.Invoices.GroupsPeriods.Claim";
-        public const string Pages_Administration_Host_Invoices_GroupsPeriods_UnClaim = "Pages.Administration.Host.Invoices.GroupsPeriods.UnClaim";
+        public const string Pages_Administration_Host_Invoices_SubmitInvoices_Delete = "Pages.Administration.Host.Invoices.SubmitInvoices.Delete";
+        public const string Pages_Administration_Host_Invoices_SubmitInvoices_Accepted = "Pages.Administration.Host.Invoices.SubmitInvoices.Accepted";
+        public const string Pages_Administration_Host_Invoices_SubmitInvoices_Rejected = "Pages.Administration.Host.Invoices.SubmitInvoices.Rejected";
 
         public const string Pages_Invoices_Transaction = "Pages.Invoices.Transaction";
 

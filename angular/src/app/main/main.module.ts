@@ -2,9 +2,6 @@ import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { AppCommonModule } from '@app/shared/common/app-common.module';
-import { TripStatusesComponent } from './tripStatuses/tripStatuses/tripStatuses.component';
-import { ViewTripStatusModalComponent } from './tripStatuses/tripStatuses/view-tripStatus-modal.component';
-import { CreateOrEditTripStatusModalComponent } from './tripStatuses/tripStatuses/create-or-edit-tripStatus-modal.component';
 
 import { PackingTypesComponent } from './packingTypes/packingTypes/packingTypes.component';
 import { ViewPackingTypeModalComponent } from './packingTypes/packingTypes/view-packingType-modal.component';
@@ -185,17 +182,23 @@ import { AgmCoreModule } from '@node_modules/@agm/core';
 import { UpdatePriceShippingRequestModalComponent } from './shippingRequests/shippingRequests/update-price-shipping-request-modal/update-price-shipping-request-modal.component';
 import { AdminModule } from '@app/admin/admin.module';
 
-import { MarketplaceComponent } from '@app/main/marketPlace/marketPlace/marketplace.component';
-import { ViewShippingRequestDetailsComponent } from '@app/main/marketPlace/marketPlace/ViewShippingRequestDetails.component';
-import { ViewAllCarrierBidsComponent } from '@app/main/marketPlace/marketPlace/ViewAllCarrierBids.component';
+import { MarketplaceComponent } from '@app/main/marketPlace/marketPlace/marketPlace/marketplace.component';
+import { ViewShippingRequestDetailsComponent } from '@app/main/marketPlace/marketPlace/ViewShippingRequestDetailsModal/ViewShippingRequestDetails.component';
+import { ViewAllCarrierBidsComponent } from '@app/main/marketPlace/marketPlace/ViewAllCarrierBidsModal/ViewAllCarrierBids.component';
 import { RejectionReasonModalComponent } from './documentFiles/documentFiles/rejectionReason-modal.component';
 import { ViewShippingRequestPriceResponseModalComponent } from './shippingRequests/shippingRequests/shipping-request-Response/view-shipping-request-response-modal.component';
 import { ListboxModule, MultiSelectModule, PickListModule, SelectButtonModule, StepsModule } from '@node_modules/primeng';
-import { RouteStepsForCreateShippingRequstComponent } from '@app/main/shippingRequests/shippingRequests/ShippingRequestRouteSteps/RouteStepsForCreateShippingRequst.component';
+import { WayPointsComponent } from '@app/main/shippingRequests/shippingRequests/ShippingRequestTrips/wayPoints/wayPoints.component';
 
 import { AgmDirectionModule } from '@node_modules/agm-direction';
-import { TripsForViewShippingRequestComponent } from '@app/main/shippingRequests/shippingRequests/ShippingRequestTrips/TripsForViewShippingRequest.component';
-import { AddNewTripComponent } from '@app/main/shippingRequests/shippingRequests/ShippingRequestTrips/AddNewTripModal/AddNewTrip.component';
+import { TripsForViewShippingRequestComponent } from '@app/main/shippingRequests/shippingRequests/ShippingRequestTrips/trips/tripsForViewShippingRequest.component';
+import { CreateOrEditTripComponent } from '@app/main/shippingRequests/shippingRequests/ShippingRequestTrips/trips/createOrEditTripModal/createOrEditTrip.component';
+import { CreateOrEditTripAccidentModalComponent } from '@app/main/shippingRequests/shippingRequests/ShippingRequestTrips/accident/create-or-edit-trip-accident-modal.component';
+import { ViewTripAccidentModelComponent } from '@app/main/shippingRequests/shippingRequests/ShippingRequestTrips/accident/View-trip-accident-modal.component';
+import { CreateOrEditTripResolveAccidentModalComponent } from '@app/main/shippingRequests/shippingRequests/ShippingRequestTrips/accident/resolves/create-or-edit-resolve-trip-accident-modal.component';
+import { TripRejectReasonComponent } from '@app/main/shippingRequests/shippingRequests/ShippingRequestTrips/rejectreason/trip-reject-reason.component';
+import { TripRejectReasonModalComponent } from '@app/main/shippingRequests/shippingRequests/ShippingRequestTrips/rejectreason/create-or-edit-trip-reject-reason-modal.component';
+
 import { InvoicePeriodsListComponent } from '@app/main/invoices/invoice-periods-list/invoice-periods-list.component';
 import { InvoicePeriodsModalComponent } from '@app/main/invoices/invoice-periods-modal/invoice-periods-modal.component';
 import { InvoicesListComponent } from '@app/main/invoices/invoices-list/invoices-list.component';
@@ -204,8 +207,25 @@ import { DemanModelComponent } from '@app/main/invoices/groupsPeriods/model/dema
 import { BalanceRechargeModelComponent } from '@app/main/invoices/balances/balance-recharge-model/balance-recharge-model.component';
 import { GroupPeriodsListComponent } from '@app/main/invoices/groupsPeriods/group-periods-list/group-periods-list.component';
 import { GroupDetailComponent } from '@app/main/invoices/groupsPeriods/group-detail/group-detail.component';
+import { SubmitInvoiceRejectedModelComponent } from '@app/main/invoices/groupsPeriods/model/Rejected-model.component';
+
 import { InvoiceDetailComponent } from '@app/main/invoices/invoice-detail/invoice-detail.component';
 import { TransactionListComponent } from '@app/main/invoices/transaction/transaction-list/transaction-list.component';
+
+import { AccidentReasonComponent } from '@app/main/accidents/reasons/reason.component';
+import { AccidentReasonComponentModalComponent } from '@app/main/accidents/reasons/create-or-edit-reason-modal.component';
+import { ViewTripModalComponent } from '@app/main/shippingRequests/shippingRequests/ShippingRequestTrips/trips/viewTripModal/viewTripModal.component';
+import { SendPricingOfferModalComponent } from '@app/main/shippingRequests/shippingRequests/tachyonDeal/pricingOffer/sendPricingOfferModal.component';
+import { TachyonDealToBiddingModalComponent } from '@app/main/shippingRequests/shippingRequests/tachyonDeal/tachyonDealToBiddingModal/tachyonDealToBiddingModal.component';
+import { PricingOfferComponent } from '@app/main/shippingRequests/shippingRequests/tachyonDeal/pricingOffer/pricingOffer.component';
+import { BiddingTableComponent } from '@app/main/shippingRequests/shippingRequests/bidding/biddingTable.component';
+import { RejectPricingOfferModalComponent } from '@app/main/shippingRequests/shippingRequests/tachyonDeal/pricingOffer/rejectPricingOfferModal.component';
+import { CarrierDirectReqestPageComponent } from '@app/main/shippingRequests/shippingRequests/directShippingRequest/carrierDirectReqestPage.component';
+import { CarrierResponseModalComponent } from '@app/main/shippingRequests/shippingRequests/directShippingRequest/carrierResponseModal/carrierResponseModal.component';
+import { GetAllDirectRequestsTableComponent } from '@app/main/shippingRequests/shippingRequests/directShippingRequest/getAllDirectRequestsTable.component';
+import { TachyonDealerResponceModelComponent } from '@app/main/shippingRequests/shippingRequests/directShippingRequest/tachyonDealerResponseModal/tachyonDealerResponceModel.component';
+import { SendDirectRequestModalComponent } from '@app/main/shippingRequests/shippingRequests/directShippingRequest/sendDirectRequestsModal/sendDirectRequestModal.component';
+import { AssignDriverTruckModalComponent } from '@app/main/shippingRequests/shippingRequests/ShippingRequestTrips/trips/assignDriverTruckModal/assignDriverTruckModal.component';
 
 NgxBootstrapDatePickerConfigService.registerNgxBootstrapDatePickerLocales();
 
@@ -254,9 +274,6 @@ NgxBootstrapDatePickerConfigService.registerNgxBootstrapDatePickerLocales();
     TruckStatusesTranslationsComponent,
     ViewTruckStatusesTranslationModalComponent,
     CreateOrEditTruckStatusesTranslationModalComponent,
-    TripStatusesComponent,
-    ViewTripStatusModalComponent,
-    CreateOrEditTripStatusModalComponent,
     PackingTypesComponent,
     ViewPackingTypeModalComponent,
     CreateOrEditPackingTypeModalComponent,
@@ -380,10 +397,31 @@ NgxBootstrapDatePickerConfigService.registerNgxBootstrapDatePickerLocales();
     GroupPeriodsListComponent,
     InvoiceDetailComponent,
     GroupDetailComponent,
+    SubmitInvoiceRejectedModelComponent,
     TransactionListComponent,
-    RouteStepsForCreateShippingRequstComponent,
+    WayPointsComponent,
     TripsForViewShippingRequestComponent,
-    AddNewTripComponent,
+    CreateOrEditTripComponent,
+    CreateOrEditTripAccidentModalComponent,
+    ViewTripModalComponent,
+    ViewTripAccidentModelComponent,
+    BiddingTableComponent,
+    CreateOrEditTripResolveAccidentModalComponent,
+    AccidentReasonComponent,
+    AccidentReasonComponentModalComponent,
+    TripRejectReasonComponent,
+    TripRejectReasonModalComponent,
+    AssignDriverTruckModalComponent,
+    //  tachyondealer
+    TachyonDealToBiddingModalComponent,
+    CarrierDirectReqestPageComponent,
+    GetAllDirectRequestsTableComponent,
+    SendDirectRequestModalComponent,
+    CarrierResponseModalComponent,
+    TachyonDealerResponceModelComponent,
+    RejectPricingOfferModalComponent,
+    SendPricingOfferModalComponent,
+    PricingOfferComponent,
   ],
   providers: [
     { provide: BsDatepickerConfig, useFactory: NgxBootstrapDatePickerConfigService.getDatepickerConfig },

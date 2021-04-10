@@ -5,6 +5,7 @@ using Abp.Authorization;
 using Abp.Authorization.Users;
 using Abp.Configuration;
 using Abp.Extensions;
+using Abp.Localization;
 using Abp.MultiTenancy;
 using Abp.Net.Mail;
 using Abp.Notifications;
@@ -249,7 +250,20 @@ namespace TACHYON.Web.Controllers
             var accessToken = CreateAccessToken(await CreateJwtClaims(loginResult.Identity, loginResult.User));
             var refreshToken = CreateRefreshToken(await CreateJwtClaims(loginResult.Identity, loginResult.User, tokenType: TokenType.RefreshToken));
 
-            return new AuthenticateResultModel
+
+            if (!string.IsNullOrEmpty(model.Language))
+            {
+                await SettingManager.ChangeSettingForUserAsync(
+                    new UserIdentifier(loginResult.User.TenantId, loginResult.User.Id),
+                    LocalizationSettingNames.DefaultLanguage,
+                    model.Language
+                );
+            }
+            if (!string.IsNullOrEmpty(model.DeviceToken))
+            {
+
+            }
+                return new AuthenticateResultModel
             {
                 AccessToken = accessToken,
                 ExpireInSeconds = (int)_configuration.AccessTokenExpiration.TotalSeconds,

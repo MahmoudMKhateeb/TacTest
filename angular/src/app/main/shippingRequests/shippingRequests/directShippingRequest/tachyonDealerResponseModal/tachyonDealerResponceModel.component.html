@@ -1,0 +1,120 @@
+<div
+  bsModal
+  #tachyonDealerResponceModal="bs-modal"
+  class="modal fade"
+  role="dialog"
+  aria-labelledby="createOrEditModal"
+  aria-hidden="true"
+  [config]="{ backdrop: 'static' }"
+>
+  <div class="modal-dialog modal-dialog-centered modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <p class="modal-title">
+          <span>{{ l('summary') }}</span>
+        </p>
+        <div class="card-toolbar">
+          <a class="btn btn-sm btn-icon btn-light-danger mr-2" (click)="getCommetion(directRequestId, bidId)">
+            <i class="flaticon2-reload"></i>
+          </a>
+          <a class="btn btn-sm btn-icon btn-light-success mr-2" (click)="allowEdits()">
+            <i class="flaticon2-edit"></i>
+          </a>
+        </div>
+      </div>
+      <div class="modal-body" [busyIf]="loading">
+        <div class="row">
+          <div class="col-lg-4">
+            <label>{{ l('carrierPrice') }}*</label>
+            <div class="input-group">
+              <input type="text" class="form-control" name="carrierPrice" [(ngModel)]="commetionCalculations.carrierPrice" disabled />
+            </div>
+          </div>
+          <div class="col-lg-4">
+            <label>{{ l('subTotalAmount') }}*</label>
+            <div class="input-group">
+              <input type="text" class="form-control" name="subTotalAmount" [(ngModel)]="commetionCalculations.subTotalAmount" disabled />
+            </div>
+          </div>
+          <div class="col-lg-4">
+            <label>{{ l('TotalAmount') }}*</label>
+            <div class="input-group">
+              <input type="text" class="form-control" name="totalAmount" [(ngModel)]="commetionCalculations.totalAmount" disabled />
+            </div>
+          </div>
+          <div class="col-lg-4 my-2">
+            <label>{{ l('vatAmount') }}*</label>
+            <div class="input-group">
+              <input type="text" class="form-control" name="vatAmount" [(ngModel)]="commetionCalculations.vatAmount" disabled />
+            </div>
+          </div>
+          <div class="col-lg-4 my-2">
+            <label>{{ l('totalCommission') }}*</label>
+            <div class="input-group">
+              <input
+                type="number"
+                class="form-control"
+                name="totalCommission"
+                [(ngModel)]="commetionCalculations.totalCommission"
+                [disabled]="disAllowEdits"
+              />
+            </div>
+          </div>
+          <div class="col-lg-4 my-2">
+            <label>{{ l('actualCommissionValue') }}*</label>
+            <div class="input-group">
+              <input
+                type="number"
+                class="form-control"
+                name="actualCommissionValue"
+                [(ngModel)]="commetionCalculations.actualCommissionValue"
+                (keyup)="calculateTotalComm()"
+                [disabled]="disAllowEdits"
+              />
+            </div>
+          </div>
+          <div class="col-lg-4">
+            <label>{{ l('actualPercentCommission') }}*</label>
+            <div class="input-group">
+              <input
+                type="number"
+                class="form-control"
+                name="actualPercentCommission"
+                [(ngModel)]="commetionCalculations.actualPercentCommission"
+                (keyup)="calculateTotalComm()"
+                [disabled]="disAllowEdits"
+              />
+            </div>
+          </div>
+          <div class="col-lg-4">
+            <label>{{ l('minCommissionValueSetting') }}*</label>
+            <div class="input-group">
+              <input
+                type="text"
+                class="form-control"
+                name="minCommissionValueSetting"
+                [(ngModel)]="commetionCalculations.minCommissionValueSetting"
+                disabled
+              />
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <!--begin::Buttons-->
+        <button type="button" class="btn btn-primary font-weight-bolder btn-sm py-3 px-6 text-uppercase" [disabled]="saving" (click)="close()">
+          {{ l('Close') }}
+        </button>
+        <button
+          type="button"
+          class="btn btn-primary font-weight-bolder btn-sm py-3 px-6 text-uppercase"
+          [buttonBusy]="saving"
+          (click)="validateCommision()"
+        >
+          {{ l('Approve') }}
+        </button>
+        <!--end::Buttons-->
+      </div>
+    </div>
+  </div>
+</div>

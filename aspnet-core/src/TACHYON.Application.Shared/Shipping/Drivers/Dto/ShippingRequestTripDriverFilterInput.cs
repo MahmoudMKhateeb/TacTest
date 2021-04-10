@@ -5,6 +5,15 @@ namespace TACHYON.Shipping.Drivers.Dto
 {
     public class ShippingRequestTripDriverFilterInput : PagedAndSortedResultRequestDto
     {
-        public ShippingRequestTripStatus? Status { get; set; }
+        public ShippingRequestTripDriverLoadStatusDto? Status { get; set; }
     }
+
+
+    public enum ShippingRequestTripDriverLoadStatusDto :byte
+    {
+        Current = 0,
+        Comming = 1,
+        Past = 2
+    }
+
 }

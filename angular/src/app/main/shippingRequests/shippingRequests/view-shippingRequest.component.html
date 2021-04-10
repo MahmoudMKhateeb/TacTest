@@ -1,9 +1,15 @@
-﻿<!--suppress XmlInvalidId -->
-<div [@routerTransition]>
+<!--suppress XmlInvalidId -->
+<div [@routerTransition] [busyIf]="loading">
   <div class="content d-flex flex-column flex-column-fluid">
-    <sub-header [breadcrumbs]="breadcrumbs" [title]="'ShippingRequestsView' | localize"></sub-header>
+    <sub-header [breadcrumbs]="breadcrumbs" [title]="'ShippingRequestsView' | localize">
+      <!--      <div role="actions" *ngIf="feature.isEnabled('App.TachyonDealer')">-->
+      <!--        <button class="btn btn-danger" (click)="pricingOffer.sendPricingOfferModal.show(shippingRequestforView.shippingRequest.id)">-->
+      <!--          <i class="fa fa-money-bill"></i> {{ l('sendPricingOfferToShipper') }}-->
+      <!--        </button>-->
+      <!--      </div>-->
+    </sub-header>
 
-    <div [class]="containerClass" [busyIf]="loading">
+    <div [class]="containerClass">
       <div class="card card-custom gutter-b">
         <!--  start of card::form-->
         <div class="card-header">
@@ -11,6 +17,24 @@
         </div>
         <!--  start of card::body-->
         <div class="card-body">
+          <div *ngIf="shippingRequestforView.shippingRequest.hasAccident" class="alert alert-custom alert-light-warning" role="alert">
+            <div class="alert-icon"><i class="flaticon-warning"></i></div>
+            <div class="alert-text">
+              You have trips that contain accidents
+            </div>
+          </div>
+          <div
+            *ngIf="feature.isEnabled('App.TachyonDealer') && !shippingRequestforView.shippingRequest.isBid"
+            class="alert alert-custom alert-light-info"
+            role="alert"
+          >
+            <div class="alert-icon"><i class="flaticon-info"></i></div>
+            <div class="alert-text text-bold">
+              This Shipping Request is still in price Offering Stage Would You like To
+              <a class="mx-1">Send Direct Request</a> or
+              <a class="mx-1" (click)="tachyonDealToBiddingModal.show(activeShippingRequestId)">Start Bidding</a> on it now ?
+            </div>
+          </div>
           <div class="row">
             <!--  start of truck::Details-->
             <div class="col-12">
@@ -55,13 +79,7 @@
                   <div class="form-group row fv-plugins-icon-container">
                     <div class="col-lg-6">
                       <label>* {{ l('ShippingRequestType') }}:</label>
-                      <input
-                        class="form-control"
-                        type="text"
-                        name="ShippingRequestType"
-                        value="{{ shippingRequestforView.shippingRequest.isBid ? l('Bid') : l('tachyondeal') }}"
-                        disabled
-                      />
+                      <input class="form-control" type="text" name="ShippingRequestType" [value]="shipppingRequestType()" disabled />
                     </div>
                     <div *ngIf="shippingRequestforView.shippingRequest.isBid" class="col-lg-3">
                       <div class="form-group">
@@ -116,7 +134,6 @@
           </div>
         </div>
         <!--  end of card::body-->
-
         <!--  start of card::form-->
       </div>
       <div class="card card-custom gutter-b">
@@ -301,166 +318,37 @@
         <!--  end of card::body-->
         <!--  start of card::form-->
       </div>
-      <!--   End::RouteDetails     -->
-
+      <!--   End::RouteDetails   -->
+      <!--  start:: DirectOffers      -->
+      <ng-template [ngIf]="canSeeDirectRequests()">
+        <GetAllDirectRequestsTable [shippingRequestId]="activeShippingRequestId"></GetAllDirectRequestsTable>
+      </ng-template>
+      <!--  end:: DirectOffers        -->
+      <!--  start:: PriceOfferingSection -->
+      <ng-template [ngIf]="!feature.isEnabled('App.Carrier') && shippingRequestforView.shippingRequest.isTachyonDeal">
+        <pricingOffer #pricingOffer [shippingRequestId]="activeShippingRequestId"></pricingOffer>
+      </ng-template>
+      <!--  end:: PricOfferingSection -->
       <!--   Start::Bidding Section     -->
-      <div
-        class="card card-custom gutter-b"
-        *ngIf="shippingRequestforView.shippingRequest.isBid && !shippingRequestforView.shippingRequest.isPriceAccepted"
-      >
-        <!--  start of card::form-->
-        <div class="card-header">
-          <div class="card-title">
-            <h3 class="card-label">
-              {{ l('Bids List') }}
-              <span class="d-block text-muted pt-2 font-size-sm">
-                {{ l('All Bids on Shipping Request') }}: {{ shippingRequestforView.shippingRequest.id }}
-              </span>
-            </h3>
-          </div>
-
-          <div class="card-toolbar">
-            <!--begin::Button-->
-
-            <button class="btn btn-primary" (click)="CancelShippingRequestBid(shippingRequestforView.shippingRequest.id)">
-              <i class="flaticon-close"></i> {{ l('StopBiddingOnthisRequest') }}
-            </button>
-
-            <!--end::Button-->
-          </div>
-        </div>
-        <!--  start of card::body-->
-        <div class="card-body">
-          <div class="row align-items-center">
-            <!--<Primeng-Datatable-Start>-->
-            <div [busyIf]="primengTableHelper.isLoading" class="primeng-datatable-container col-12">
-              <p-table
-                #dataTablechild
-                (onLazyLoad)="getShippingRequestsBids($event)"
-                ScrollWidth="100%"
-                [lazy]="true"
-                [paginator]="false"
-                [resizableColumns]="primengTableHelper.resizableColumns"
-                [responsive]="primengTableHelper.isResponsive"
-                [scrollable]="true"
-                [value]="primengTableHelper.records"
-                rows="{{ primengTableHelper.defaultRecordsCountPerPage }}"
-              >
-                <ng-template pTemplate="header">
-                  <tr>
-                    <th style="width: 130px;">
-                      {{ l('id') }}
-                    </th>
-                    <th pSortableColumn="trucksTypeFk.displayName" style="width: 150px;">
-                      {{ l('carrierName') }}
-                      <p-sortIcon field="trucksTypeDisplayName"></p-sortIcon>
-                    </th>
-                    <th pSortableColumn="trucksTypeFk.displayName" style="width: 150px;">
-                      {{ l('price') }}
-                      <p-sortIcon field="trucksTypeDisplayName"></p-sortIcon>
-                    </th>
-                    <th pSortableColumn="trailerTypeFk.displayName" style="width: 150px;">
-                      {{ l('Accepted') }}
-                      <p-sortIcon field="trailerTypeDisplayName"></p-sortIcon>
-                    </th>
-                    <th pSortableColumn="goodsDetailFk.name" style="width: 150px;">
-                      {{ l('Rejected') }}
-                      <p-sortIcon field="goodsDetailName"></p-sortIcon>
-                    </th>
-                    <th pSortableColumn="routeFk.displayName" style="width: 150px;">
-                      {{ l('cancledReason') }}
-                      <p-sortIcon field="routeDisplayName"></p-sortIcon>
-                    </th>
-                    <th pSortableColumn="vas" style="width: 150px;">
-                      {{ l('acceptedDate') }}
-                      <p-sortIcon field="shippingRequest.vas"></p-sortIcon>
-                    </th>
-                    <th pSortableColumn="isBid" style="width: 150px;">
-                      {{ l('canceledDate') }}
-                      <p-sortIcon field="isBid"></p-sortIcon>
-                    </th>
-                    <th style="width: 130px;">
-                      {{ l('Actions') }}
-                    </th>
-                  </tr>
-                </ng-template>
-                <ng-template let-record="$implicit" pTemplate="body">
-                  <tr [ngClass]="record.isAccepted ? 'table-success' : ''">
-                    <td style="width: 150px;">
-                      <span class="ui-column-title"> {{ l('id') }}</span>
-                      {{ record.id }}
-                    </td>
-                    <td style="width: 150px;">
-                      <span class="ui-column-title"> {{ l('carrierName') }}</span>
-                      {{ record.carrierName }}
-                    </td>
-                    <td style="width: 150px;">
-                      <span class="ui-column-title"> {{ l('price') }}</span>
-                      {{ record.price }}
-                    </td>
-                    <td style="width: 150px;">
-                      <span class="ui-column-title"> {{ l('isAccepted') }}</span>
-                      {{ record.isAccepted }}
-                    </td>
-                    <td style="width: 150px;">
-                      <span class="ui-column-title"> {{ l('isRejected') }}</span>
-                      {{ record.isRejected }}
-                    </td>
-                    <td style="width: 150px;">
-                      <span class="ui-column-title"> {{ l('cancledReason') }}</span>
-                      {{ record.cancledReason }}
-                    </td>
-                    <td style="width: 150px;">
-                      <span class="ui-column-title"> {{ l('acceptedDate') }}</span>
-                      {{ record.acceptedDate }}
-                    </td>
-                    <td style="width: 150px;">
-                      <span class="ui-column-title"> {{ l('canceledDate') }}</span>
-                      {{ record.canceledDate }}
-                    </td>
-                    <td style="width: 150px;">
-                      <span class="ui-column-title"> {{ l('AcceptBid') }}</span>
-                      <button type="button" class="btn btn-outline-success mr-2" (click)="AcceptBidMeth(record.id)">
-                        {{ l('AcceptBid') }}
-                      </button>
-                    </td>
-                  </tr>
-                </ng-template>
-              </p-table>
-              <div *ngIf="primengTableHelper.totalRecordsCount == 0" class="primeng-no-data">
-                {{ l('NoData') }}
-              </div>
-              <div class="primeng-paging-container">
-                <p-paginator
-                  #paginatorchild
-                  (onPageChange)="getShippingRequestsBids($event)"
-                  [rowsPerPageOptions]="primengTableHelper.predefinedRecordsCountPerPage"
-                  [rows]="primengTableHelper.defaultRecordsCountPerPage"
-                  [totalRecords]="primengTableHelper.totalRecordsCount"
-                >
-                </p-paginator>
-                <span class="total-records-count">
-                  {{ l('TotalRecordsCount', primengTableHelper.totalRecordsCount) }}
-                </span>
-              </div>
-            </div>
-            <!--<Primeng-Datatable-End>-->
-          </div>
-        </div>
-
-        <!--  end of card::body-->
-
-        <!--  start of card::form-->
-      </div>
+      <biddingTableComponent
+        *ngIf="canSeeShippingRequestBids()"
+        [shippingRequestId]="activeShippingRequestId"
+        (onSave)="reloadCurrentPage()"
+      ></biddingTableComponent>
       <!--    End::Bidding Section    -->
       <!--   Start::Trips Section     -->
-      <TripsForViewShippingRequest
-        *ngIf="activeShippingRequestId"
-        [ShippingRequest]="shippingRequestforView.shippingRequest"
-        [VasListFromFather]="shippingRequestforView.shippingRequestVasDtoList"
-      ></TripsForViewShippingRequest>
+      <!--        !feature.isEnabled('App.TachyonDealer') || -->
+      <ng-template [ngIf]="canSeeShippingRequestTrips()">
+        <TripsForViewShippingRequest
+          *ngIf="shippingRequestforView.shippingRequest.id && bidsloading == false"
+          [ShippingRequest]="shippingRequestforView.shippingRequest"
+          [VasListFromFather]="shippingRequestforView.shippingRequestVasDtoList"
+        ></TripsForViewShippingRequest>
+      </ng-template>
+
       <!--    End::Trips Section    -->
       <!--  End of the First Container      -->
     </div>
   </div>
+  <tachyonDealToBiddingModal #tachyonDealToBiddingModal (modalsave)="reloadCurrentPage()"></tachyonDealToBiddingModal>
 </div>

@@ -231,6 +231,15 @@ namespace TACHYON.Authorization.Users
 
         }
 
+        public async Task<User> GetAdminHostAsync()
+        {
+
+            using (_unitOfWorkManager.Current.DisableFilter(AbpDataFilters.MayHaveTenant))
+            {
+                return await _userRepository.GetAll().FirstOrDefaultAsync(x => !x.TenantId.HasValue  && x.UserName == AbpUserBase.AdminUserName);
+            }
+
+        }
 
     }
 }

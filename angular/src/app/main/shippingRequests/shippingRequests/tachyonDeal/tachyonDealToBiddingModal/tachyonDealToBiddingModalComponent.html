@@ -1,0 +1,78 @@
+<div
+  bsModal
+  #tachyonDealToBiddingModal="bs-modal"
+  class="modal fade"
+  role="dialog"
+  aria-labelledby="createOrEditModal"
+  aria-hidden="true"
+  [config]="{ backdrop: 'static' }"
+>
+  <div class="modal-dialog modal-dialog-centered modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <p class="modal-title">
+          <span>{{ l('marketPlaceSettings') }}</span>
+        </p>
+      </div>
+      <div class="modal-body">
+        <div class="row">
+          <!--          begin::Body-->
+          <div class="col-lg-6">
+            <div class="form-group">
+              <label>* {{ l('biddingStartDate') }}:</label>
+              <div class="input-group date">
+                <input
+                  class="form-control"
+                  placeholder="{{ l('BiddingstartDate') }}"
+                  name="shippingrequestBidStratDate"
+                  [required]="true"
+                  [(date)]="bidsSettings.startDate"
+                  [minDate]="today"
+                  bsDatepicker
+                  datePickerMomentModifier
+                />
+                <div class="input-group-append">
+                  <span class="input-group-text">
+                    <i class="la la-calendar-check-o"></i>
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-lg-6">
+            <label>* {{ l('biddingEndDate') }}:</label>
+            <div class="input-group date">
+              <input
+                class="form-control"
+                placeholder="{{ l('biddingEndDate') }}"
+                name="shippingrequestBidEndDate"
+                [required]="true"
+                [(date)]="bidsSettings.endDate"
+                [minDate]="today"
+                bsDatepicker
+                datePickerMomentModifier
+              />
+              <div class="input-group-append">
+                <span class="input-group-text">
+                  <i class="la la-calendar-check-o"></i>
+                </span>
+              </div>
+            </div>
+          </div>
+          <!--          end::Body-->
+        </div>
+      </div>
+      <div class="modal-footer">
+        <!--begin::Buttons-->
+
+        <button type="button" class="btn btn-primary font-weight-bolder btn-sm py-3 px-6 text-uppercase" (click)="close()">
+          {{ l('Close') }}
+        </button>
+        <button type="button" class="btn btn-primary font-weight-bolder btn-sm py-3 px-6 text-uppercase" (click)="makeShippingRequestaBidding()">
+          {{ l('save') }}
+        </button>
+        <!--end::Buttons-->
+      </div>
+    </div>
+  </div>
+</div>

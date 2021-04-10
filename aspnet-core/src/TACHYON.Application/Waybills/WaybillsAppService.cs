@@ -82,20 +82,20 @@ namespace TACHYON.Waybills
         {
             var item=_shippingRequestTripRepository
                 .GetAll()
-                .Include(e => e.ShippingRequestFk.RouteFk)
+                .Include(e => e.ShippingRequestFk)
                 .FirstOrDefault(e => e.Id == shippingRequestTripId);
-            return item.ShippingRequestFk.RouteFk.RoutTypeId == 1;
+            return item.ShippingRequestFk.RouteTypeId ==  ShippingRequestRouteType.SingleDrop;
         }
 
         private bool IsSingleDropShippingRequest(long routPointId)
         {
             var item = _shippingRequestTripRepository
                 .GetAll()
-                .Include(e => e.ShippingRequestFk.RouteFk)
+                .Include(e => e.ShippingRequestFk)
                 .Include(e=>e.RoutPoints)
                 .FirstOrDefault(e => e.RoutPoints.Any(x=>x.Id== routPointId));
 
-            return item.ShippingRequestFk.RouteFk.RoutTypeId == 1;
+            return item.ShippingRequestFk.RouteTypeId == ShippingRequestRouteType.SingleDrop;
         }
 
         private FileDto GetMasterWaybillPdf(int shippingRequestTripId)

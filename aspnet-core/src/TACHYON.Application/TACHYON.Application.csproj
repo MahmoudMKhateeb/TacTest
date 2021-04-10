@@ -13,11 +13,19 @@
     <RootNamespace>TACHYON</RootNamespace>
   </PropertyGroup>
   <ItemGroup>
+    <None Remove="Invoices\Reports\Dedicated_Invoice.rdlc" />
+    <None Remove="Invoices\Reports\Invoice.rdlc" />
     <None Remove="Waybills\Reports\Master_Waybill.rdlc" />
     <None Remove="Waybills\Reports\Multiple_Drop_Waybill.rdlc" />
     <None Remove="Waybills\Reports\Single_Drop_Waybill.rdlc" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="Invoices\Reports\Invoice.rdlc">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Invoices\Reports\Dedicated_Invoice.rdlc">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </EmbeddedResource>
     <EmbeddedResource Include="Waybills\Reports\Master_Waybill.rdlc">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </EmbeddedResource>
@@ -40,6 +48,16 @@
     <ProjectReference Include="..\TACHYON.EntityFrameworkCore\TACHYON.EntityFrameworkCore.csproj" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Update="Invoices\Reports\Datasets\GetInvoiceReportInfoDataset.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>GetInvoiceReportInfoDataset.xsd</DependentUpon>
+    </Compile>
+    <Compile Update="Invoices\Reports\Datasets\GetInvoiceShippingRequestsReportInfoDataset.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>GetInvoiceShippingRequestsReportInfoDataset.xsd</DependentUpon>
+    </Compile>
     <Compile Update="Waybills\Reports\DataSet1.Designer.cs">
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
@@ -82,6 +100,14 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
+    <None Update="Invoices\Reports\Datasets\GetInvoiceReportInfoDataset.xsd">
+      <Generator>MSDataSetGenerator</Generator>
+      <LastGenOutput>GetInvoiceReportInfoDataset.Designer.cs</LastGenOutput>
+    </None>
+    <None Update="Invoices\Reports\Datasets\GetInvoiceShippingRequestsReportInfoDataset.xsd">
+      <Generator>MSDataSetGenerator</Generator>
+      <LastGenOutput>GetInvoiceShippingRequestsReportInfoDataset.Designer.cs</LastGenOutput>
+    </None>
     <None Update="Waybills\Reports\DataSet1.xsd">
       <Generator>MSDataSetGenerator</Generator>
       <LastGenOutput>DataSet1.Designer.cs</LastGenOutput>

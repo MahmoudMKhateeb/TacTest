@@ -17,6 +17,7 @@ using TACHYON.Editions.Dto;
 using TACHYON.Features;
 using TACHYON.Invoices.Periods;
 using TACHYON.MultiTenancy;
+using TACHYON.Shipping.Accidents;
 
 namespace TACHYON.Common
 {
@@ -26,13 +27,17 @@ namespace TACHYON.Common
         private readonly EditionManager _editionManager;
         private readonly IRepository<Tenant> _Tenant;
         private readonly IRepository<InvoicePeriod> _PeriodRepository;
+        private readonly IRepository<ShippingRequestReasonAccident> _ReasonAccidentRepository;
         private User _CurrentUser;
 
-        public CommonLookupAppService(EditionManager editionManager, IRepository<Tenant> Tenant, IRepository<InvoicePeriod> PeriodRepository)
+        public CommonLookupAppService(EditionManager editionManager, IRepository<Tenant> Tenant,
+            IRepository<InvoicePeriod> PeriodRepository,
+            IRepository<ShippingRequestReasonAccident> ReasonAccidentRepository)
         {
             _editionManager = editionManager;
             _Tenant = Tenant;
             _PeriodRepository = PeriodRepository;
+            _ReasonAccidentRepository = ReasonAccidentRepository;
     }
 
         public async Task<ListResultDto<SubscribableEditionComboboxItemDto>> GetEditionsForCombobox(bool onlyFreeItems = false)
@@ -114,6 +119,14 @@ namespace TACHYON.Common
                 .Where(p => p.Enabled == true)
                 .Select(t => new SelectItemDto { DisplayName = t.DisplayName, Id = t.Id.ToString() }).ToListAsync();
             return query;
+        }
+
+        public async Task<List<SelectItemDto>> GetAccidentReason()
+        {
+            return  await _ReasonAccidentRepository
+                .GetAll()
+                .Select(t => new SelectItemDto { DisplayName = t.DisplayName, Id = t.Id.ToString() }).ToListAsync();
+            
         }
     }
 }

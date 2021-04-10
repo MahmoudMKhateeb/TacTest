@@ -1,5 +1,4 @@
-﻿import { ChangeDetectorRef, Component, Injector, OnInit, ViewChild } from '@angular/core';
-import Swal from 'sweetalert2';
+import { ChangeDetectorRef, Component, Inject, Injector, OnInit, ViewChild } from '@angular/core';
 
 import {
   GetShippingRequestForViewOutput,
@@ -7,7 +6,6 @@ import {
   ShippingRequestDto,
   ShippingRequestsServiceProxy,
   CancelBidShippingRequestInput,
-  RoutPointDto,
 } from '@shared/service-proxies/service-proxies';
 import { AppComponentBase } from '@shared/common/app-component-base';
 import { ActivatedRoute, NavigationEnd, Router, RouterEvent } from '@angular/router';
@@ -15,44 +13,48 @@ import { appModuleAnimation } from '@shared/animations/routerTransition';
 import { BreadcrumbItem } from '@app/shared/common/sub-header/sub-header.component';
 import { Paginator } from 'primeng/paginator';
 import { Table } from '@node_modules/primeng/table';
-import { LazyLoadEvent } from '@node_modules/primeng/public_api';
 import { filter } from '@node_modules/rxjs/internal/operators';
-import { CreateOrEditFacilityModalComponent } from '@app/main/addressBook/facilities/create-or-edit-facility-modal.component';
+import { DOCUMENT } from '@angular/common';
+import { PricingOfferComponent } from '@app/main/shippingRequests/shippingRequests/tachyonDeal/pricingOffer/pricingOffer.component';
+import { ViewCapacityModalComponent } from '@app/main/truckCapacities/capacities/view-capacity-modal.component';
+import { GetAllDirectRequestsTableComponent } from '@app/main/shippingRequests/shippingRequests/directShippingRequest/getAllDirectRequestsTable.component';
 @Component({
   templateUrl: './view-shippingRequest.component.html',
   styleUrls: ['./view-shippingRequest.component.scss'],
   animations: [appModuleAnimation()],
 })
 export class ViewShippingRequestComponent extends AppComponentBase implements OnInit {
-  @ViewChild('dataTablechild', { static: false }) dataTable: Table;
-  @ViewChild('paginatorchild', { static: false }) paginator: Paginator;
+  @ViewChild('pricingOffer', { static: false }) pricingOffer: PricingOfferComponent;
+  @ViewChild('GetAllDirectRequestsTable', { static: false }) GetAllDirectRequestsTable: GetAllDirectRequestsTableComponent;
+  @ViewChild('dataTableChild', { static: false })
+  dataTable: Table;
+  @ViewChild('paginatorChild', { static: false }) paginator: Paginator;
   active = false;
   saving = false;
   loading = true;
   CancelBidShippingRequest: CancelBidShippingRequestInput = new CancelBidShippingRequestInput();
   shippingRequestforView: GetShippingRequestForViewOutput;
   activeShippingRequestId: number;
-  wayPointsList: RoutPointDto[] = [];
-  wayPoints = [];
-  wayPointMapSource = undefined;
-  wayPointMapDest = undefined;
+  bidsloading = false;
+
   breadcrumbs: BreadcrumbItem[] = [
-    new BreadcrumbItem(this.l('ShippingRequest'), '/app/main/shippingRequests/shippingRequests'),
-    new BreadcrumbItem(this.l('ShippingRequests') + '' + this.l('Details')),
+    new BreadcrumbItem(this.l('ShippingRequests'), '/app/main/shippingRequests/shippingRequests'),
+    new BreadcrumbItem('' + this._activatedRoute.snapshot.queryParams['id']),
   ];
 
   constructor(
     injector: Injector,
     private _activatedRoute: ActivatedRoute,
     private _router: Router,
-
     private _shippingRequestsServiceProxy: ShippingRequestsServiceProxy,
     private _shippingRequestBidsServiceProxy: ShippingRequestBidsServiceProxy,
-    private changeDetectorRef: ChangeDetectorRef
+    private changeDetectorRef: ChangeDetectorRef,
+    @Inject(DOCUMENT) private _document: Document
   ) {
     super(injector);
     this.shippingRequestforView = new GetShippingRequestForViewOutput();
     this.shippingRequestforView.shippingRequest = new ShippingRequestDto();
+    this.activeShippingRequestId = this._activatedRoute.snapshot.queryParams['id'];
   }
 
   ngOnInit(): void {
@@ -61,86 +63,84 @@ export class ViewShippingRequestComponent extends AppComponentBase implements On
       this.show(this._activatedRoute.snapshot.queryParams['id']);
       this.reloadPage();
     });
+    // this.GetAllDirectRequestsTable.sendDirectRequestsModal.shippingRequestId = this._activatedRoute.snapshot.queryParams['id'];
   }
 
   show(shippingRequestId: number): void {
     this._shippingRequestsServiceProxy.getShippingRequestForView(shippingRequestId).subscribe((result) => {
       this.shippingRequestforView = result;
-
-      console.log(this.shippingRequestforView);
-
       this.activeShippingRequestId = this.shippingRequestforView.shippingRequest.id;
       this.active = true;
       this.loading = false;
-      // this.wayPointsList = this.shippingRequestforView.routPointDtoList;
-      //this.wayPointsSetter();
     });
+  }
+
+  reloadCurrentPage() {
+    this._document.defaultView.location.reload();
   }
 
   reloadPage(): void {
-    //console.log('reload page');
     this.paginator.changePage(this.paginator.getPage());
   }
-  getShippingRequestsBids(event?: LazyLoadEvent) {
-    this.changeDetectorRef.detectChanges();
-    if (this.primengTableHelper.shouldResetPaging(event)) {
-      this.paginator.changePage(0);
-      return;
+
+  /**
+   * this function validates who Can See And Access the Bidding List in ViewShippingRequest
+   */
+  canSeeShippingRequestBids() {
+    if (
+      this.feature.isEnabled('App.Shipper') &&
+      !this.shippingRequestforView.shippingRequest.isTachyonDeal &&
+      this.shippingRequestforView.shippingRequest.status === 0
+    ) {
+      return true;
+    } else if (
+      this.feature.isEnabled('App.TachyonDealer') &&
+      this.shippingRequestforView.shippingRequest.isBid &&
+      this.shippingRequestforView.shippingRequest.status === 0
+    ) {
+      return true;
+    } else {
+      return false;
     }
-    this.primengTableHelper.showLoadingIndicator();
-    //console.log('bids Gotten');
-    this._shippingRequestBidsServiceProxy
-      .getAllShippingRequestBids(
-        null,
-        0,
-        10000,
-        this.activeShippingRequestId,
-        this.primengTableHelper.getSorting(this.dataTable),
-        this.primengTableHelper.getSkipCount(this.paginator, event),
-        this.primengTableHelper.getMaxResultCount(this.paginator, event)
-      )
-      .subscribe((result) => {
-        this.primengTableHelper.totalRecordsCount = result.totalCount;
-        this.primengTableHelper.records = result.items;
-        this.primengTableHelper.hideLoadingIndicator();
-      });
+  }
+  /**
+   * Binds the Value if Shipping Request Type in View Shipping Request Base on User Feature
+   */
+  shipppingRequestType() {
+    if (
+      this.feature.isEnabled('App.TachyonDealer') &&
+      this.shippingRequestforView.shippingRequest.isBid &&
+      this.shippingRequestforView.shippingRequest.isTachyonDeal
+    ) {
+      return `${this.l('TachyonManageService')},${this.l('Marketplace')} `;
+    } else if (this.shippingRequestforView.shippingRequest.isTachyonDeal) {
+      return this.l('TachyonManageService');
+    } else if (this.shippingRequestforView.shippingRequest.isBid) {
+      return this.l('Marketplace');
+    }
   }
 
-  AcceptBidMeth(id: number) {
-    Swal.fire({
-      title: 'Are you sure you want accept this bid ?',
-      icon: 'warning',
-      showCancelButton: true,
-      confirmButtonText: 'Yes',
-      cancelButtonText: 'No',
-    }).then((result) => {
-      if (result.value) {
-        this._shippingRequestBidsServiceProxy.acceptShippingRequestBid(id).subscribe(() => {
-          Swal.fire('Accepted!', 'YouSuccessfullyAcceptedthebidrequest.', 'success');
-          this.reloadPage();
-          console.log('bid Accepted', id);
-        });
-      }
-    });
-  } //end of Accept
+  canSeeShippingRequestTrips() {
+    //if there is no carrier price and the current user in not a carrier Hide Trips Section
+    if (this.feature.isEnabled('App.Carrier') && !this.shippingRequestforView.shippingRequest.carrierTenantId) {
+      return false;
+      // console.log('1111111111111111111111111111');
+    } else if (this.feature.isEnabled('App.TachyonDealer')) {
+      //if Tachyon Dealer
+      return false;
+    }
+    //By Default
+    return true;
+  }
 
-  //this method is for CancelShippingRequestBid: which is for canceling bidding on the shipping request
-  CancelShippingRequestBid(id: number) {
-    this.CancelBidShippingRequest.shippingRequestId = id;
-    Swal.fire({
-      title: 'Are you sure You Want to Cancel Bidding on this Shipping Request?',
-      icon: 'warning',
-      showCancelButton: true,
-      cancelButtonText: 'No',
-      confirmButtonText: 'Yes',
-    }).then((result) => {
-      if (result.value) {
-        this._shippingRequestBidsServiceProxy.cancelBidShippingRequest(this.CancelBidShippingRequest).subscribe(() => {
-          Swal.fire('Success!', 'You Successfully Stopped the Bidding on this request.', 'success');
-          this.reloadPage();
-          console.log('Shipping Request bid Canceld', id);
-        });
-      }
-    });
+  /**
+   * this function validates who Can See And Access the DirectRequests List in ViewShippingRequest
+   */
+  canSeeDirectRequests() {
+    //if there is an active shipping Request id and the user is TachyonDealer and the ShippingRequest Type is not bid
+    if (this.activeShippingRequestId && this.feature.isEnabled('App.TachyonDealer') && !this.shippingRequestforView.shippingRequest.isBid) {
+      return true;
+    }
+    return false;
   }
 }

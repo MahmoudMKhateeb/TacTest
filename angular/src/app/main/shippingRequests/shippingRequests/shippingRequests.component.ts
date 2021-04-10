@@ -1,6 +1,11 @@
-﻿import { Component, Injector, ViewChild, ViewEncapsulation } from '@angular/core';
+import { Component, Injector, ViewChild, ViewEncapsulation } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { ShippingRequestDto, ShippingRequestsServiceProxy, TokenAuthServiceProxy } from '@shared/service-proxies/service-proxies';
+import {
+  ShippingRequestDto,
+  ShippingRequestsServiceProxy,
+  TokenAuthServiceProxy,
+  ShippingRequestStatus,
+} from '@shared/service-proxies/service-proxies';
 import { NotifyService } from 'abp-ng2-module';
 import { AppComponentBase } from '@shared/common/app-component-base';
 
@@ -10,8 +15,6 @@ import { Paginator } from 'primeng/paginator';
 import { LazyLoadEvent } from 'primeng/public_api';
 import { FileDownloadService } from '@shared/utils/file-download.service';
 import { AppSessionService } from '@shared/common/session/app-session.service';
-import { CreateOrEditFacilityModalComponent } from '@app/main/addressBook/facilities/create-or-edit-facility-modal.component';
-import { AddNewTripComponent } from '@app/main/shippingRequests/shippingRequests/ShippingRequestTrips/AddNewTripModal/AddNewTrip.component';
 
 @Component({
   templateUrl: './shippingRequests.component.html',
@@ -78,6 +81,7 @@ export class ShippingRequestsComponent extends AppComponentBase {
         this.primengTableHelper.totalRecordsCount = result.data.totalCount;
         this.primengTableHelper.records = result.data.items;
         this.primengTableHelper.hideLoadingIndicator();
+        console.log(result.data.items);
       });
   }
 
@@ -118,5 +122,11 @@ export class ShippingRequestsComponent extends AppComponentBase {
   GetIncompleteShippingRequests() {
     this.ShowPriceAcceptedNoTrips = true;
     this.getShippingRequests();
+  }
+
+  getrowstyle(request: ShippingRequestDto) {
+    if (request.hasAccident) return 'table-warning';
+    else if (request.status == ShippingRequestStatus.PostPrice) return 'table-success';
+    else '';
   }
 }

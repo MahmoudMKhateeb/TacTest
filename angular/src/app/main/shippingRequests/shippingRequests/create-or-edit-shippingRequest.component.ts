@@ -1,36 +1,34 @@
-﻿import { Component, Injector, NgZone, OnInit } from '@angular/core';
+import { Component, Injector, NgZone, OnInit } from '@angular/core';
 import { finalize } from 'rxjs/operators';
 
 import {
   CarriersForDropDownDto,
-  CreateOrEditRouteDto,
-  CreateOrEditRoutStepDto,
   CreateOrEditShippingRequestDto,
   FacilitiesServiceProxy,
   FacilityForDropdownDto,
   GoodsDetailGoodCategoryLookupTableDto,
   GoodsDetailsServiceProxy,
   ISelectItemDto,
-  RouteRoutTypeLookupTableDto,
-  RoutesServiceProxy,
   RoutStepCityLookupTableDto,
-  RoutStepsServiceProxy,
   SelectItemDto,
   ShippingRequestsServiceProxy,
   CreateOrEditShippingRequestVasListDto,
   ShippingRequestVasListOutput,
-  CreateOrEditRoutPointDto,
+  RoutStepsServiceProxy,
+  ShippingRequestRouteType,
 } from '@shared/service-proxies/service-proxies';
 import { AppComponentBase } from '@shared/common/app-component-base';
 import { ActivatedRoute, Router } from '@angular/router';
 import { appModuleAnimation } from '@shared/animations/routerTransition';
 import { BreadcrumbItem } from '@app/shared/common/sub-header/sub-header.component';
 import { MapsAPILoader } from '@node_modules/@agm/core';
+import { EnumToArrayPipe } from '@shared/common/pipes/enum-to-array.pipe';
 
 @Component({
   templateUrl: './create-or-edit-shippingRequest.component.html',
   styleUrls: ['./create-or-edit-shippingRequest.component.scss'],
   animations: [appModuleAnimation()],
+  providers: [EnumToArrayPipe],
 })
 export class CreateOrEditShippingRequestComponent extends AppComponentBase implements OnInit {
   breadcrumbs: BreadcrumbItem[] = [
@@ -43,10 +41,9 @@ export class CreateOrEditShippingRequestComponent extends AppComponentBase imple
   shippingRequest: CreateOrEditShippingRequestDto = new CreateOrEditShippingRequestDto();
   allGoodCategorys: GoodsDetailGoodCategoryLookupTableDto[];
   allCarrierTenants: CarriersForDropDownDto[];
-  allRoutTypes: RouteRoutTypeLookupTableDto[];
+  allRoutTypes: any;
   allCitys: RoutStepCityLookupTableDto[];
   allFacilities: FacilityForDropdownDto[];
-  createOrEditRoutStepDtoList: CreateOrEditRoutStepDto[] = [];
   allVases: ShippingRequestVasListOutput[];
   selectedVases: CreateOrEditShippingRequestVasListDto[] = [];
   isTachyonDeal = false;
@@ -68,18 +65,18 @@ export class CreateOrEditShippingRequestComponent extends AppComponentBase imple
     private _shippingRequestsServiceProxy: ShippingRequestsServiceProxy,
     private _router: Router,
     private _goodsDetailsServiceProxy: GoodsDetailsServiceProxy,
-    private _routStepsServiceProxy: RoutStepsServiceProxy,
     private mapsAPILoader: MapsAPILoader,
     private ngZone: NgZone,
-    private _routesServiceProxy: RoutesServiceProxy,
-    private _facilitiesServiceProxy: FacilitiesServiceProxy
+    private _facilitiesServiceProxy: FacilitiesServiceProxy,
+    private _routStepsServiceProxy: RoutStepsServiceProxy,
+    private enumToArray: EnumToArrayPipe
   ) {
     super(injector);
   }
 
   ngOnInit(): void {
-    this.shippingRequest.createOrEditRouteDto = new CreateOrEditRouteDto();
     this.show(this._activatedRoute.snapshot.queryParams['id']);
+    this.allRoutTypes = this.enumToArray.transform(ShippingRequestRouteType);
   }
 
   show(shippingRequestId?: number): void {
@@ -103,8 +100,7 @@ export class CreateOrEditShippingRequestComponent extends AppComponentBase imple
           this.shippingRequestType = result.shippingRequest.isBid === true ? 'bidding' : 'tachyondeal';
           this.selectedVases = result.shippingRequest.shippingRequestVasList;
           console.log(this.selectedVases);
-          this.selectedRouteType = result.shippingRequest.createOrEditRouteDto.routTypeId;
-          this.shippingRequest.createOrEditRouteDto = result.shippingRequest.createOrEditRouteDto;
+          this.selectedRouteType = result.shippingRequest.routeTypeId;
           this.active = true;
         });
     }
@@ -117,7 +113,7 @@ export class CreateOrEditShippingRequestComponent extends AppComponentBase imple
     this.saving = true;
     this.shippingRequest.isBid = this.shippingRequestType === 'bidding' ? true : false;
     this.shippingRequest.isTachyonDeal = this.shippingRequestType === 'tachyondeal' ? true : false;
-    this.shippingRequest.createOrEditRouteDto.routTypeId = this.selectedRouteType; //milkrun / oneway ....
+    this.shippingRequest.routeTypeId = this.selectedRouteType; //milkrun / oneway ....
     this.shippingRequest.shippingRequestVasList = this.selectedVases;
     this._shippingRequestsServiceProxy
       .createOrEdit(this.shippingRequest)
@@ -166,16 +162,18 @@ export class CreateOrEditShippingRequestComponent extends AppComponentBase imple
       this.allpackingTypes = result;
     });
 
-    this._routesServiceProxy.getAllRoutTypeForTableDropdown().subscribe((result) => {
+    /*this._routesServiceProxy.getAllRoutTypeForTableDropdown().subscribe((result) => {
       this.allRoutTypes = result;
-    });
+    });*/
 
     this._routStepsServiceProxy.getAllFacilitiesForDropdown().subscribe((result) => {
       this.allFacilities = result;
     });
     this.loadallVases();
   }
-
+  cancel(): void {
+    this._router.navigate(['app/main/shippingRequests/shippingRequests']);
+  }
   loadallVases() {
     this._shippingRequestsServiceProxy.getAllShippingRequestVasesForTableDropdown().subscribe((result) => {
       this.allVases = result;

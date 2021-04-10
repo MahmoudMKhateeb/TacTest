@@ -1,0 +1,145 @@
+<div
+  bsModal
+  #viewTripDetails="bs-modal"
+  class="modal fade"
+  role="dialog"
+  aria-labelledby="createOrEditModal"
+  aria-hidden="true"
+  [config]="{ backdrop: 'static' }"
+>
+  <div class="modal-dialog modal-dialog-centered modal-xl">
+    <div class="modal-content">
+      <div class="modal-header">
+        <p class="modal-title">
+          <span>{{ l('tripDetails') }}</span>
+        </p>
+        <div class="card-toolbar">
+          <button class="btn btn-primary" (click)="DownloadSingleDropWaybillPdf(currentTripId)" [buttonBusy]="wayBillIsDownloading">
+            {{ l('PrintWaybill') }}
+          </button>
+        </div>
+      </div>
+      <div class="modal-body" [busyIf]="loading">
+        <div class="row">
+          <!--begin::Body-->
+          <!--  begin:: Source Dest Facilitys  -->
+          <div class="col-lg-6 form-group">
+            <label>{{ l('sourceFacility') }}</label>
+            <div class="input-group">
+              <input type="text" class="form-control" name="originFacility" [(ngModel)]="trip.originFacility" disabled />
+            </div>
+          </div>
+          <div class="col-lg-6 form-group">
+            <label>{{ l('destFacility') }}</label>
+            <div class="input-group">
+              <input type="text" class="form-control" name="destinationFacility" [(ngModel)]="trip.destinationFacility" disabled />
+            </div>
+          </div>
+          <!--  end:: Source Dest Facilitys  -->
+          <!--  begin:: Trip start&End Dates-->
+          <div class="col-lg-6">
+            <div class="form-group">
+              <label>{{ l('tripStartDate') }} *</label>
+              <div class="input-group date">
+                <input
+                  [(date)]="trip.startTripDate"
+                  class="form-control"
+                  name="tripStartDate"
+                  placeholder="{{ l('tripStartDate') }}"
+                  bsDatepicker
+                  datePickerMomentModifier
+                  disabled
+                />
+                <div class="input-group-append">
+                  <span class="input-group-text">
+                    <i class="la la-calendar-check-o"></i>
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-lg-6">
+            <div class="form-group">
+              <label>{{ l('tripEndDate') }} *</label>
+              <div class="input-group date">
+                <input
+                  [(date)]="trip.endTripDate"
+                  class="form-control"
+                  name="tripEndDate"
+                  placeholder="{{ l('tripEndDate') }}"
+                  bsDatepicker
+                  datePickerMomentModifier
+                  disabled
+                />
+                <div class="input-group-append">
+                  <span class="input-group-text">
+                    <i class="la la-calendar-check-o"></i>
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- StartOf::Driver&Truck -->
+          <ng-container *ngIf="feature.isEnabled('App.Carrier')">
+            <div class="col-lg-6">
+              <div class="form-group">
+                <label>{{ l('driver') }} *</label>
+                <input class="form-control" name="trip.driver" [ngModel]="trip.driver" disabled />
+              </div>
+            </div>
+            <div class="col-lg-5">
+              <div class="form-group">
+                <label>{{ l('truck') }} *</label>
+                <input class="form-control" name="trip.truck" [ngModel]="trip.truck" disabled />
+              </div>
+            </div>
+            <div class="col-lg-1 mt-7 align-content-center">
+              <a class="btn font-weight-bold btn-danger btn-icon" (click)="assignDriverTruckModal.show(currentTripId)">
+                <i class="fas fa-edit"></i>
+              </a>
+            </div>
+          </ng-container>
+
+          <!--   EndOf::Driver&Truck -->
+          <!--  end:: Trip start&End Dates-->
+          <!-- begin::Vas's  -->
+          <!--          <div class="col-lg-6" *ngIf="VasListFromFather.length > 0">-->
+          <!--            <div class="form-group" *ngIf="selectedVases != []">-->
+          <!--              <label>{{ l('vases') }}* </label>-->
+          <!--              <p-multiSelect-->
+          <!--                [options]="Vases"-->
+          <!--                [(ngModel)]="selectedVases"-->
+          <!--                [styleClass]="'form-control'"-->
+          <!--                [filter]="false"-->
+          <!--                [showHeader]="false"-->
+          <!--                [defaultLabel]="''"-->
+          <!--                optionLabel="name"-->
+          <!--              ></p-multiSelect>-->
+          <!--            </div>-->
+          <!--          </div>-->
+
+          <!--      end:Vas's      -->
+          <!--  start:: RouteSteps -->
+          <wayPointsComponent
+            *ngIf="trip.routPoints"
+            #RouteSteps
+            [WayPointListFromFatherForShippingRequestEdit]="trip.routPoints"
+          ></wayPointsComponent>
+          <!--  end:: RouteSteps -->
+          <!--end::Body-->
+        </div>
+      </div>
+      <div class="modal-footer">
+        <!--begin::Buttons-->
+
+        <button type="button" class="btn btn-primary font-weight-bolder btn-sm py-3 px-6 text-uppercase" (click)="close()">
+          {{ l('Close') }}
+        </button>
+        <!--end::Buttons-->
+      </div>
+    </div>
+  </div>
+</div>
+
+<assignDriverTruckModal #assignDriverTruckModal (modalsave)="show(this.currentTripId)"></assignDriverTruckModal>

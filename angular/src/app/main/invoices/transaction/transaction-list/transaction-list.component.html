@@ -87,7 +87,7 @@
               >
                 <ng-template pTemplate="header">
                   <tr>
-                    <th pSortableColumn="TenantId">
+                    <th *ngIf="!appSession.tenantId" pSortableColumn="TenantId">
                       {{ l('ClientName') }}
                       <p-sortIcon field="TenantId"></p-sortIcon>
                     </th>
@@ -108,7 +108,7 @@
                 </ng-template>
                 <ng-template pTemplate="body" let-record="$implicit">
                   <tr [class]="record.isPaid ? 'table-success' : 'table-danger'">
-                    <td>
+                    <td *ngIf="!appSession.tenantId">
                       <span class="ui-column-title"> {{ l('ClientName') }}</span>
                       {{ record.clientName }}
                     </td>

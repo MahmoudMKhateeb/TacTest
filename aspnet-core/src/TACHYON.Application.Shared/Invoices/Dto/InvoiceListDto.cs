@@ -15,11 +15,9 @@ namespace TACHYON.Invoices.Dto
         public bool IsPaid { get; set; }
         public bool IsAccountReceivable { get; set; }
         public string Note { get; set; }
-        public decimal AmountWithTaxVat { get; set; }
+        public decimal SubTotalAmount { get; set; }
+        public decimal TotalAmount { get; set; }
         public decimal VatAmount { get; set; }
-
-        public decimal Amount { get; set; }
-        public decimal TaxVat { get; set; }
 
 
     }

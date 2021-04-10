@@ -15,7 +15,6 @@ namespace TACHYON.Invoices.Periods.Dto
         public string FreqRecurrence { get; set; }
         public bool Enabled { get; set; }
         public bool ShipperOnlyUsed { get; set; }
-        public double CreditLimit { get; set; }
 
     }
 }

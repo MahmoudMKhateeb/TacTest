@@ -200,6 +200,7 @@ namespace TACHYON.MultiTenancy
 
             var editions = (await _editionManager.GetAllAsync())
                 .Cast<SubscribableEdition>()
+                .Where(x=>!x.DisplayName.ToLower().Contains(TACHYONConsts.TachyonDealerEdtionName.ToLower()))
                 .OrderBy(e => e.MonthlyPrice)
                 .ToList();
 
@@ -335,7 +336,14 @@ namespace TACHYON.MultiTenancy
             return countryDtos;
         }
 
-
+        public async Task<List<CountyDto>> GetAllCountriesWithCode()
+        {
+            var countries = await _lookup_countryRepository
+                .GetAll().OrderBy(x => x.DisplayName)
+                .ToListAsync();
+            var result = ObjectMapper.Map<List<CountyDto>>(countries);
+            return result;
+        }
         public async Task<List<TenantCityLookupTableDto>> GetAllCitiesForTableDropdown(int input)
         {
             List<City> cities = await _lookup_cityRepository

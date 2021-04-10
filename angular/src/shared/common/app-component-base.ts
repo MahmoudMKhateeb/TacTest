@@ -18,6 +18,7 @@ import { NgxSpinnerService } from 'ngx-spinner';
 import { NgxSpinnerTextService } from '@app/shared/ngx-spinner-text.service';
 import { NgbDateStruct } from '@node_modules/@ng-bootstrap/ng-bootstrap';
 import { DateFormatterService } from '@app/shared/common/hijri-gregorian-datepicker/date-formatter.service';
+import { isNumeric } from '@node_modules/rxjs/internal/util/isNumeric';
 
 export abstract class AppComponentBase {
   localizationSourceName = AppConsts.localization.defaultLocalizationSourceName;
@@ -134,11 +135,12 @@ export abstract class AppComponentBase {
   }
 
   /**
-   * we can use this to validate "e" letter in numbers input onKeyPressEvent
+   * Forces the User To Enter Numbers Only in inputs
+   * recommend to be used with keypress
    * @param $event
    */
   numberOnly($event: KeyboardEvent) {
-    return !($event.key === 'e' || $event.key === 'E');
+    return isNumeric($event.key);
   }
 
   /**
@@ -157,4 +159,12 @@ export abstract class AppComponentBase {
       item.hijriExpirationDate = this.dateFormatterService.ToString(ngDate);
     }
   }
+
+  toBase64 = (file) =>
+    new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.readAsDataURL(file);
+      reader.onload = () => resolve(reader.result);
+      reader.onerror = (error) => reject(error);
+    });
 }

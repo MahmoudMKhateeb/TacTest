@@ -158,7 +158,7 @@ export class CreateOrEditFacilityModalComponent extends AppComponentBase impleme
    */
   loadAllCountries() {
     this.countriesLoading = true;
-    this._countriesServiceProxy.getAllCountryForTableDropdown().subscribe((res) => {
+    this._countriesServiceProxy.getAllCountriesWithCode().subscribe((res) => {
       this.countries = res;
       this.countriesLoading = false;
     });

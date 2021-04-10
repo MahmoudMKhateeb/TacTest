@@ -15,5 +15,7 @@ namespace TACHYON.Invoices.Balances.Dto
         [Required]
         public decimal Amount { get; set; }
         public DateTime CreationTime { get; set; }
+
+        public string ReferenceNo { get; set; }
     }
 }

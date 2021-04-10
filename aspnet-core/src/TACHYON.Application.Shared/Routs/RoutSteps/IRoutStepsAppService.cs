@@ -28,7 +28,7 @@ namespace TACHYON.Routs.RoutSteps
 
         Task<List<RoutStepCityLookupTableDto>> GetAllCityForTableDropdown();
 
-        Task<List<RoutStepRouteLookupTableDto>> GetAllRouteForTableDropdown();
+       // Task<List<RoutStepRouteLookupTableDto>> GetAllRouteForTableDropdown();
 
     }
 }

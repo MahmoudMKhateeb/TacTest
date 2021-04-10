@@ -1,0 +1,126 @@
+<div class="card card-custom gutter-b">
+  <div class="card-header">
+    <h3 class="card-title">
+      {{ l('priceOffers') }}
+    </h3>
+    <div class="card-toolbar">
+      <!--          *ngIf="ShippingRequest.status <= 1"-->
+      <button class="btn btn-danger" *ngIf="feature.isEnabled('App.TachyonDealer')" (click)="sendPricingOfferModal.show(shippingRequestId)">
+        <i class="fa fa-money-bill"></i> {{ l('sendPricingOfferToShipper') }}
+      </button>
+    </div>
+  </div>
+  <!--begin::card-body-->
+  <div class="card-body">
+    <div class="row align-items-center">
+      <!--<Primeng-Datatable-Start>-->
+      <div [busyIf]="primengTableHelper.isLoading" class="primeng-datatable-container col-12">
+        <p-table
+          #dataTableForOfferaing
+          (onLazyLoad)="getallPricingOffers($event)"
+          ScrollWidth="100%"
+          [lazy]="true"
+          [paginator]="false"
+          [resizableColumns]="primengTableHelper.resizableColumns"
+          [responsive]="primengTableHelper.isResponsive"
+          [scrollable]="true"
+          [value]="primengTableHelper.records"
+          rows="{{ primengTableHelper.defaultRecordsCountPerPage }}"
+        >
+          <ng-template pTemplate="header">
+            <tr>
+              <th style="width: 80px;">
+                {{ l('id') }}
+              </th>
+              <th style="width: 150px;">
+                {{ l('offeredPrice') }}
+              </th>
+              <th style="width: 150px;">
+                {{ l('offerStatus') }}
+              </th>
+              <th style="width: 200px;">
+                {{ l('rejectedReason') }}
+              </th>
+              <th style="width: 150px;">
+                {{ l('Actions') }}
+              </th>
+            </tr>
+          </ng-template>
+          <ng-template let-record="$implicit" pTemplate="body">
+            <tr>
+              <td style="width: 80px;">
+                <span class="ui-column-title"> {{ l('id') }}</span>
+                {{ record.tachyonPriceOfferDto.id }}
+              </td>
+              <td style="width: 150px;">
+                <span class="ui-column-title"> {{ l('offeredPrice') }}</span>
+                {{ record.tachyonPriceOfferDto.offeredPrice }}
+              </td>
+              <td style="width: 150px;">
+                <span class="ui-column-title"> {{ l('offeredPrice') }}</span>
+                {{ record.tachyonPriceOfferDto.offerStatusName }}
+              </td>
+              <td style="width: 200px;">
+                <span class="ui-column-title"> {{ l('rejectedReason') }}</span>
+                {{ record.tachyonPriceOfferDto.rejectedReason }}
+              </td>
+              <td style="width: 150px;">
+                <span class="ui-column-title"> {{ l('actions') }}</span>
+                <div class="btn-group dropdown" container="body" dropdown>
+                  <a class="dropdown-toggle btn btn-sm btn-primary" dropdownToggle>
+                    <i class="fa fa-cog"></i><span class="caret"></span> {{ l('Actions') }}
+                  </a>
+                  <ul *dropdownMenu class="dropdown-menu">
+                    <li>
+                      <a
+                        class="dropdown-item"
+                        *ngIf="feature.isEnabled('App.Shipper') && record.tachyonPriceOfferDto.offerStatusName == 'Pending'"
+                        (click)="acceptOffer(record.tachyonPriceOfferDto.id)"
+                        >{{ l('accept') }}</a
+                      >
+                    </li>
+                    <li>
+                      <a
+                        class="dropdown-item"
+                        *ngIf="feature.isEnabled('App.Shipper') && record.tachyonPriceOfferDto.offerStatusName == 'Pending'"
+                        (click)="rejectPricingOfferModal.show(record.tachyonPriceOfferDto.id)"
+                        >{{ l('reject') }}</a
+                      >
+                    </li>
+                    <li>
+                      <a
+                        class="dropdown-item"
+                        *ngIf="feature.isEnabled('App.TachyonDealer') && record.tachyonPriceOfferDto.offerStatusName == 'Pending'"
+                        (click)="deleteOffer(record.tachyonPriceOfferDto.id)"
+                        >{{ l('delete') }}</a
+                      >
+                    </li>
+                  </ul>
+                </div>
+              </td>
+            </tr>
+          </ng-template>
+        </p-table>
+        <div *ngIf="primengTableHelper.totalRecordsCount == 0" class="primeng-no-data">
+          {{ l('NoData') }}
+        </div>
+        <div class="primeng-paging-container">
+          <p-paginator
+            #paginatorForOfferaing
+            (onPageChange)="getallPricingOffers($event)"
+            [rows]="primengTableHelper.defaultRecordsCountPerPage"
+            [totalRecords]="primengTableHelper.totalRecordsCount"
+          >
+          </p-paginator>
+          <span class="total-records-count">
+            {{ l('TotalRecordsCount', primengTableHelper.totalRecordsCount) }}
+          </span>
+        </div>
+      </div>
+      <!--<Primeng-Datatable-End>-->
+    </div>
+  </div>
+  <!--end::card-body-->
+</div>
+<sendPricingOfferModal #sendPricingOfferModal (modalsave)="reloadpage()"></sendPricingOfferModal>
+<rejectPricingOfferModal #rejectPricingOfferModal (modalsave)="reloadpage()"></rejectPricingOfferModal>

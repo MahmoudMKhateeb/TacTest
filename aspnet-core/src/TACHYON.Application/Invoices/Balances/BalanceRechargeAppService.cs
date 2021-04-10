@@ -44,6 +44,7 @@ namespace TACHYON.Invoices.Balances
                 var query = _Repository
                     .GetAll()
                     .Include(i => i.Tenant)
+                    .WhereIf(!string.IsNullOrEmpty(input.ReferenceNo), i => i.ReferenceNo == input.ReferenceNo)
                     .WhereIf(input.TenantId.HasValue, i => i.TenantId == input.TenantId)
                     .WhereIf(input.FromDate.HasValue && input.ToDate.HasValue, i => i.CreationTime >= input.FromDate && i.CreationTime < input.ToDate);
 
@@ -68,7 +69,7 @@ namespace TACHYON.Invoices.Balances
             await _transactionManager.Create(new Transaction
             {
                 Amount = Recharge.Amount,
-                ChannelId = (byte)ChannelType.BalanceRecharge,
+                ChannelId = ChannelType.BalanceRecharge,
                 TenantId = Recharge.TenantId,
                 SourceId = id,
             });

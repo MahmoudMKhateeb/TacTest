@@ -7,6 +7,8 @@ using Abp.Extensions;
 using Abp.Hangfire;
 using Abp.PlugIns;
 using Castle.Facilities.Logging;
+using FirebaseAdmin;
+using Google.Apis.Auth.OAuth2;
 using GraphQL.Server;
 using GraphQL.Server.Ui.Playground;
 using Hangfire;
@@ -20,6 +22,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
 using Owl.reCAPTCHA;
 using Stripe;
@@ -32,6 +35,7 @@ using TACHYON.Authorization;
 using TACHYON.Configuration;
 using TACHYON.Configure;
 using TACHYON.EntityFrameworkCore;
+using TACHYON.Firebases;
 using TACHYON.Identity;
 using TACHYON.Schemas;
 using TACHYON.Web.Chat.SignalR;
@@ -66,6 +70,13 @@ namespace TACHYON.Web.Startup
             }).AddNewtonsoftJson();
 
             services.AddSignalR();
+            //Firebase register
+            Firebase fbconfig = new Firebase();
+            _appConfiguration.Bind("Firebase", fbconfig);
+            FirebaseApp.Create(new AppOptions()
+            {
+                Credential = GoogleCredential.FromJson(JsonConvert.SerializeObject(fbconfig)),
+            });
 
             //Configure CORS for angular2 UI
             services.AddCors(options =>

@@ -1,12 +1,14 @@
-﻿using System.Reflection;
-using Abp.AutoMapper;
+﻿using Abp.AutoMapper;
 using Abp.Configuration;
 using Abp.Modules;
 using Abp.Reflection.Extensions;
-using AutoMapper;
-using System.Reflection;
 using Abp.Resources.Embedded;
+using AutoMapper;
+using System.Linq;
+using System.Reflection;
 using TACHYON.Authorization;
+using TACHYON.Authorization.Permissions;
+using TACHYON.Authorization.Permissions.Shipping.Trips;
 
 namespace TACHYON
 {
@@ -23,7 +25,13 @@ namespace TACHYON
         public override void PreInitialize()
         {
             //Adding authorization providers
+
             Configuration.Authorization.Providers.Add<AppAuthorizationProvider>();
+            //Add all permission provider inherit from base class AppAuthorizationBaseProvider
+            foreach (var provider in typeof(AppAuthorizationBaseProvider).Assembly.GetTypes().Where(t => t.BaseType == typeof(AppAuthorizationBaseProvider)))
+            {
+                Configuration.Authorization.Providers.Add(provider);
+            }
 
             //Adding custom AutoMapper configuration
             Configuration.Modules.AbpAutoMapper().Configurators.Add(CustomDtoMapper.CreateMappings);
@@ -45,6 +53,13 @@ namespace TACHYON
                     )
                 );
 
+            Configuration.EmbeddedResources.Sources.Add(
+                new EmbeddedResourceSet(
+                    "/Reports/",
+                    Assembly.GetExecutingAssembly(),
+                    "TACHYON.Invoices.Reports"
+                )
+            );
         }
         public override void PostInitialize()
         {
@@ -52,6 +67,8 @@ namespace TACHYON
             var mapper = IocManager.Resolve<IMapper>();
 
             CustomDtoMapper.SetMapper(mapper);
+
+
         }
 
         public override void Initialize()

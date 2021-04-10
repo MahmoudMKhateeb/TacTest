@@ -415,6 +415,20 @@ namespace TACHYON.Trucks
 
         }
 
+        public async Task<List<SelectItemDto>> GetAllCarrierTrucksForDropDown()
+        {
+            return await _truckRepository.GetAll().Select(x => new SelectItemDto
+            {
+                DisplayName = x.PlateNumber+"-"+x.ModelName,
+                Id = x.Id.ToString()
+            }).ToListAsync();
+        }
+
+        public async Task<List<SelectItemDto>> GetAllDriversForDropDown()
+        {
+            return await _lookup_userRepository.GetAll().Where(e => e.IsDriver == true)
+                .Select(x => new SelectItemDto {Id = x.Id.ToString(), DisplayName = x.Name}).ToListAsync();
+        }
 
         [AbpAuthorize(AppPermissions.Pages_Trucks)]
         public async Task<PagedResultDto<TruckUserLookupTableDto>> GetAllUserForLookupTable(GetAllForLookupTableInput input)

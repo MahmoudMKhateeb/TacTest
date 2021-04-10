@@ -13,5 +13,6 @@ namespace TACHYON.Vases.Dtos
         public int VasId { get; set; }
 
         public long? ShippingRequestId { get; set; }
+        public int NumberOfTrips { get; set; }
     }
 }

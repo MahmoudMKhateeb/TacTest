@@ -1,6 +1,5 @@
 import { NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
-import { TripStatusesComponent } from './tripStatuses/tripStatuses/tripStatuses.component';
 import { PackingTypesComponent } from './packingTypes/packingTypes/packingTypes.component';
 import { ShippingTypesComponent } from './shippingTypes/shippingTypes/shippingTypes.component';
 import { CitiesTranslationsComponent } from './citiesTranslations/citiesTranslations/citiesTranslations.component';
@@ -44,7 +43,7 @@ import { TrailerTypesComponent } from './trailerTypes/trailerTypes/trailerTypes.
 import { TrucksComponent } from './trucks/trucks/trucks.component';
 import { TrucksTypesComponent } from './trucksTypes/trucksTypes/trucksTypes.component';
 import { DashboardComponent } from './dashboard/dashboard.component';
-import { MarketplaceComponent } from '@app/main/marketPlace/marketPlace/marketplace.component';
+import { MarketplaceComponent } from '@app/main/marketPlace/marketPlace/marketPlace/marketplace.component';
 import { InvoiceDetailResolverService } from '@app/main/invoices/invoice-detail/Invoice-detail-resolver.service';
 import { BalancesListComponent } from '@app/main/invoices/balances/balances-list/balances-list.component';
 import { GroupPeriodsListComponent } from '@app/main/invoices/groupsPeriods/group-periods-list/group-periods-list.component';
@@ -54,6 +53,9 @@ import { InvoicesListComponent } from '@app/main/invoices/invoices-list/invoices
 import { InvoicePeriodsListComponent } from '@app/main/invoices/invoice-periods-list/invoice-periods-list.component';
 import { TransactionListComponent } from '@app/main/invoices/transaction/transaction-list/transaction-list.component';
 import { GroupDetailResolverService } from '@app/main/invoices/groupsPeriods/group-detail/group-detail-resolver.service';
+import { AccidentReasonComponent } from '@app/main/accidents/reasons/reason.component';
+import { TripRejectReasonComponent } from '@app/main/shippingRequests/shippingRequests/ShippingRequestTrips/rejectreason/trip-reject-reason.component';
+import { CarrierDirectReqestPageComponent } from '@app/main/shippingRequests/shippingRequests/directShippingRequest/carrierDirectReqestPage.component';
 
 @NgModule({
   imports: [
@@ -138,7 +140,6 @@ import { GroupDetailResolverService } from '@app/main/invoices/groupsPeriods/gro
             component: TransportTypesTranslationsComponent,
             data: { permission: 'Pages.TransportTypesTranslations' },
           },
-          { path: 'tripStatuses/tripStatuses', component: TripStatusesComponent, data: { permission: 'Pages.TripStatuses' } },
           { path: 'packingTypes/packingTypes', component: PackingTypesComponent, data: { permission: 'Pages.PackingTypes' } },
           { path: 'shippingTypes/shippingTypes', component: ShippingTypesComponent, data: { permission: 'Pages.ShippingTypes' } },
           { path: 'nationalities/nationalities', component: NationalitiesComponent, data: { permission: 'Pages.Nationalities' } },
@@ -213,6 +214,7 @@ import { GroupDetailResolverService } from '@app/main/invoices/groupsPeriods/gro
             data: { permission: 'Pages.ShippingRequests.Create' },
           },
           { path: 'shippingRequests/shippingRequests/view', component: ViewShippingRequestComponent, data: { permission: 'Pages.ShippingRequests' } },
+          { path: 'shippingRequests/directShippingRequests', component: CarrierDirectReqestPageComponent },
           { path: 'marketPlace/marketPlace', component: MarketplaceComponent },
           { path: 'offers/offers', component: OffersComponent, data: { permission: 'Pages.Offers' } },
           { path: 'routSteps/routSteps', component: RoutStepsComponent, data: { permission: 'Pages.RoutSteps' } },
@@ -246,15 +248,18 @@ import { GroupDetailResolverService } from '@app/main/invoices/groupsPeriods/gro
             component: BalancesListComponent,
             data: { permission: 'Pages.Administration.Host.Invoices.Balances' },
           },
-          { path: 'invoices/groupperiods', component: GroupPeriodsListComponent, data: { permission: 'Pages.Invoices.GroupsPeriods' } },
+          { path: 'invoices/submitinvoice', component: GroupPeriodsListComponent, data: { permission: 'Pages.Invoices.SubmitInvoices' } },
           {
-            path: 'invoices/groupperiods/detail/:id',
+            path: 'invoices/submitinvoices/detail/:id',
             component: GroupDetailComponent,
-            data: { permission: 'Pages.Invoices.GroupsPeriods' },
+            data: { permission: 'Pages.Invoices.SubmitInvoices' },
             resolve: {
               groupinfo: GroupDetailResolverService,
             },
           },
+          { path: 'accidents/reasons', component: AccidentReasonComponent, data: { permission: 'Pages.ShippingRequestResoneAccidents' } },
+          { path: 'trip/reject/reasons', component: TripRejectReasonComponent, data: { permission: 'Pages.ShippingRequestTrips.Reject.Reason' } },
+
           { path: 'dashboard', component: DashboardComponent, data: { permission: 'Pages.Tenant.Dashboard' } },
           { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
           { path: '**', redirectTo: 'dashboard' },

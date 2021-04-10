@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
+using TACHYON.Invoices.SubmitInvoices;
 
 namespace TACHYON.Invoices.Groups.Dto
 {
@@ -11,11 +12,12 @@ namespace TACHYON.Invoices.Groups.Dto
         public int? PeriodId { get; set; }
 
 
-        public bool? IsDemand { get; set; }
+      //  public bool? IsDemand { get; set; }
 
         public DateTime? FromDate { get; set; }
 
         public DateTime? ToDate { get; set; }
+        public SubmitInvoiceStatus? Status { get; set; }
 
 
     }

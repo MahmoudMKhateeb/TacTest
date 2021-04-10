@@ -47,7 +47,7 @@
         public const int MaxDocumentFileBytesUserFriendlyValue = 5;
         public const string ShipperEdtionName= "shipper";
         public const string CarrierEdtionName = "carrier";
-
+        public const string TachyonDealerEdtionName = "Tachyon dealer";
 
         //BidStatus consts
         public const int ShippingRequestStatusStandBy = 1;

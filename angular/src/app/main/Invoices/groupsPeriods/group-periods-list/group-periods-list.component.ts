@@ -7,12 +7,20 @@ import { LazyLoadEvent } from 'primeng/public_api';
 import * as _ from 'lodash';
 import { AutoCompleteModule } from 'primeng/autocomplete';
 import * as moment from 'moment';
-import { GroupPeriodServiceProxy, GroupPeriodListDto, CommonLookupServiceProxy, ISelectItemDto } from '@shared/service-proxies/service-proxies';
+import {
+  GroupPeriodServiceProxy,
+  GroupPeriodListDto,
+  CommonLookupServiceProxy,
+  ISelectItemDto,
+  SubmitInvoiceStatus,
+} from '@shared/service-proxies/service-proxies';
 import { FileDownloadService } from '@shared/utils/file-download.service';
+import { EnumToArrayPipe } from '@shared/common/pipes/enum-to-array.pipe';
 
 @Component({
   templateUrl: './group-periods-list.component.html',
   animations: [appModuleAnimation()],
+  providers: [EnumToArrayPipe],
 })
 export class GroupPeriodsListComponent extends AppComponentBase implements OnInit {
   @ViewChild('dataTable', { static: true }) dataTable: Table;
@@ -27,15 +35,17 @@ export class GroupPeriodsListComponent extends AppComponentBase implements OnIni
   creationDateRangeActive: boolean = false;
   fromDate: moment.Moment | null | undefined;
   toDate: moment.Moment | null | undefined;
-  DemandStatus: boolean | null | undefined;
-
+  Status: SubmitInvoiceStatus | null | undefined;
+  SubmitStatus: any;
   constructor(
     injector: Injector,
     private _CurrentService: GroupPeriodServiceProxy,
     private _CommonServ: CommonLookupServiceProxy,
-    private _fileDownloadService: FileDownloadService
+    private _fileDownloadService: FileDownloadService,
+    private enumToArray: EnumToArrayPipe
   ) {
     super(injector);
+    this.SubmitStatus = this.enumToArray.transform(SubmitInvoiceStatus);
   }
   ngOnInit() {
     this._CommonServ.getPeriods().subscribe((result) => {
@@ -61,9 +71,9 @@ export class GroupPeriodsListComponent extends AppComponentBase implements OnIni
       .getAll(
         this.Tenant ? parseInt(this.Tenant.id) : undefined,
         this.periodId,
-        this.DemandStatus,
         this.fromDate,
         this.toDate,
+        this.Status,
         this.primengTableHelper.getSorting(this.dataTable),
         this.primengTableHelper.getSkipCount(this.paginator, event),
         this.primengTableHelper.getMaxResultCount(this.paginator, event)
@@ -73,6 +83,7 @@ export class GroupPeriodsListComponent extends AppComponentBase implements OnIni
         this.primengTableHelper.totalRecordsCount = result.items.length;
         this.primengTableHelper.records = result.items;
         this.primengTableHelper.hideLoadingIndicator();
+        console.log(result.items);
       });
   }
 
@@ -90,7 +101,7 @@ export class GroupPeriodsListComponent extends AppComponentBase implements OnIni
     });
   }
 
-  UnDemand(Group: GroupPeriodListDto): void {
+  /*UnDemand(Group: GroupPeriodListDto): void {
     this.message.confirm('', this.l('AreYouSure'), (isConfirmed) => {
       if (isConfirmed) {
         this._CurrentService.unDemand(Group.id).subscribe(() => {
@@ -99,27 +110,18 @@ export class GroupPeriodsListComponent extends AppComponentBase implements OnIni
         });
       }
     });
-  }
-  Claim(Group: GroupPeriodListDto): void {
+  }*/
+  Accepted(Group: GroupPeriodListDto): void {
     this.message.confirm('', this.l('AreYouSure'), (isConfirmed) => {
       if (isConfirmed) {
-        this._CurrentService.claim(Group.id).subscribe(() => {
+        this._CurrentService.accepted(Group.id).subscribe(() => {
           this.notify.success(this.l('Successfully'));
           this.reloadPage();
         });
       }
     });
   }
-  UnClaim(Group: GroupPeriodListDto): void {
-    this.message.confirm('', this.l('AreYouSure'), (isConfirmed) => {
-      if (isConfirmed) {
-        this._CurrentService.unClaim(Group.id).subscribe(() => {
-          this.notify.success(this.l('Successfully'));
-          this.reloadPage();
-        });
-      }
-    });
-  }
+
   downloadDocument(id: number): void {
     this._CurrentService.getFileDto(id).subscribe((result) => {
       this._fileDownloadService.downloadTempFile(result);
@@ -130,6 +132,18 @@ export class GroupPeriodsListComponent extends AppComponentBase implements OnIni
       this.Tenants = result;
     });
   }
-
+  StyleStatus(Status: SubmitInvoiceStatus): string {
+    switch (Status) {
+      case SubmitInvoiceStatus.Accepted:
+        return 'label label-success label-inline m-1';
+      case SubmitInvoiceStatus.Rejected:
+        return 'label label-danger label-inline m-1';
+      case SubmitInvoiceStatus.Claim:
+        return 'label label-info label-inline m-1';
+      default:
+        return 'label label-default label-inline m-1';
+    }
+    return '';
+  }
   exportToExcel(): void {}
 }

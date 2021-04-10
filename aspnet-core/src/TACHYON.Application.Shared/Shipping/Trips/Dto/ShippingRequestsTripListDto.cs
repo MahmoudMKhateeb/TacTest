@@ -12,14 +12,25 @@ namespace TACHYON.Shipping.Trips.Dto
         public DateTime EndTripDate { get; set; }
         public DateTime? StartWorking { get; set; }
         public DateTime? EndWorking { get; set; }
-        public string Status { get; set; } 
+        public ShippingRequestTripStatus Status { get; set; }
+
+        public string StatusTitle 
+        { 
+            get {
+                    return Enum.GetName(typeof(ShippingRequestTripStatus), Status);
+                }
+        }
         public string Driver { get; set; }
         public string Truck { get; set; }
         public string OriginFacility { get; set; }
         public string DestinationFacility { get; set; }
+        public bool HasAccident { get; set; }
+        public bool IsApproveCancledByShipper { get; set; }
+        public bool IsApproveCancledByCarrier { get; set; }
 
+        public ShippingRequestTripDriverStatus DriverStatus { get; set; }
+        public string DriverStatusTitle { get; set; }
+        public string RejectedReason { get; set; }
 
-        //public ICollection<RoutPointDto> RoutPoints { get; set; }
-        //public ICollection<ShippingRequestTripVasDto> ShippingRequestTripVases { get; set; }
     }
 }

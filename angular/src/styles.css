@@ -207,6 +207,11 @@ ngx-spinner .loading-text {
 .table-success > td {
   background-color: #bfefed !important;
 }
+.table-warning,
+.table-warning > th,
+.table-warning > td {
+  background-color: #ffeeba !important;
+}
 
 .btn.btn-primary:hover:not(.btn-text):not(:disabled):not(.disabled),
 .btn.btn-primary:focus:not(.btn-text),

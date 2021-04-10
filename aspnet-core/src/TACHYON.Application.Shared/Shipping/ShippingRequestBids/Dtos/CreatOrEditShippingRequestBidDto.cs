@@ -8,6 +8,6 @@ namespace TACHYON.Shipping.ShippingRequestBids.Dtos
     {
         public long? Id { get; set; }
         public long ShippingRequestId { get; set; }
-        public double price { get; set; }
+        public decimal BasePrice { get; set; }
     }
 }

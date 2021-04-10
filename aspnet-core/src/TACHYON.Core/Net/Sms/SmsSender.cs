@@ -24,15 +24,11 @@ namespace TACHYON.Net.Sms
             _settingManager = settingManager;
         }
 
-        public Task SendAsync(string number, string message)
+        public async Task SendAsync(string number, string message)
         {
-            /* Implement this service to send SMS to users (can be used for two factor auth). */
-
-            //Logger.Warn("Sending SMS is not implemented! Message content:");
-            //Logger.Warn("Number  : " + number);
-            //Logger.Warn("Message : " + message);
-
-            return Task.FromResult(0);
+            if (string.IsNullOrEmpty(number) || string.IsNullOrEmpty(message)) return;
+            var unifonicClint = new UnifonicRestClient(await _settingManager.GetSettingValueAsync(AppSettings.Sms.UnifonicAppSid));
+            unifonicClint.SendSmsMessage(number, message);
         }
 
         public async Task SendReceiverSmsAsync(string number, DateTime date, string shipperName, string driverName, string driverPhone, string waybillNumber, string code, string link)

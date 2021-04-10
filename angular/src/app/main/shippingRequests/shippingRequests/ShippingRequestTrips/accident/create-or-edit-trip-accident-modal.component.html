@@ -1,0 +1,58 @@
+<div
+  bsModal
+  #modal="bs-modal"
+  class="modal fade"
+  tabindex="-1"
+  role="dialog"
+  aria-labelledby="modal"
+  aria-hidden="true"
+  [config]="{ backdrop: 'static' }"
+>
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <form *ngIf="active" #Form="ngForm" novalidate (ngSubmit)="save()">
+        <div class="modal-header">
+          <h4 class="modal-title">
+            <span>{{ accident.id ? l('EditAccident') : l('CreateAccident') }}</span>
+          </h4>
+          <button type="button" class="close" (click)="close()" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <div class="form-group">
+            <label>{{ 'Name' | localize }}</label>
+            <select name="reasonId" [(ngModel)]="reasonId" (change)="onChangeReason($event.target.value)" class="form-control" required>
+              <option value="">{{ l('SelectReason') }}</option>
+              <option [value]="reason.id" *ngFor="let reason of reasons">
+                {{ reason.displayName }}
+              </option>
+              <option value="0">{{ l('Other') }}</option>
+            </select>
+          </div>
+          <div *ngIf="reasonId != '' && reasonId == 0" class="form-group">
+            <label for="Image">{{ 'Description' | localize }}</label>
+            <textarea name="accident.description" [(ngModel)]="accident.description" class="form-control"></textarea>
+          </div>
+          <div class="form-group">
+            <label for="file">{{ 'UploadDocument' | localize }}</label>
+            <input class="form-control" type="file" id="file" name="file" required (change)="fileChangeEvent($event)" />
+          </div>
+        </div>
+
+        <div class="modal-footer">
+          <button [disabled]="saving" type="button" class="btn btn-secondary" (click)="close()">{{ 'Cancel' | localize }}</button>
+          <button
+            type="submit"
+            class="btn btn-primary"
+            [disabled]="!Form.form.valid"
+            [buttonBusy]="saving"
+            [busyText]="l('SavingWithThreeDot' | localize)"
+          >
+            <i class="fa fa-save"></i> <span>{{ 'Save' | localize }}</span>
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

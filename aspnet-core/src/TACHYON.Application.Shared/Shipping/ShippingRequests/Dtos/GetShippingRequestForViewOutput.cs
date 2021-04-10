@@ -30,6 +30,9 @@ namespace TACHYON.Shipping.ShippingRequests.Dtos
         public bool HasTrips { get; set; }
         public GetTruckForViewOutput AssignedTruckDto { get; set; }
         public int TotalsTripsAddByShippier { get; set; }
+        //this field special to tachyon user
+        public decimal? CarrierPrice { get; set; }
+
 
     }
 }

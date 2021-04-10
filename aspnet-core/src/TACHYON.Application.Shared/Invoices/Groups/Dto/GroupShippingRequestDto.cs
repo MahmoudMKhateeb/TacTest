@@ -9,6 +9,8 @@ namespace TACHYON.Invoices.GroupsGroups.Dto
     {
         public decimal Price { get; set; }
         public string TruckType { get; set; }
+        public string Source { get; set; }
+        public string Destination { get; set; }
         public DateTime CreationTime { get; set; }
     }
 }

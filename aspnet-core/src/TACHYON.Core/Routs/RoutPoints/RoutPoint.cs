@@ -1,5 +1,4 @@
-﻿using Abp.Domain.Entities;
-using Abp.Domain.Entities.Auditing;
+﻿using Abp.Domain.Entities.Auditing;
 using JetBrains.Annotations;
 using System;
 using System.Collections.Generic;
@@ -7,10 +6,7 @@ using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using TACHYON.AddressBook;
 using TACHYON.Goods.GoodsDetails;
-using TACHYON.MultiTenancy;
-using TACHYON.PickingTypes;
 using TACHYON.Receivers;
-using TACHYON.Shipping.ShippingRequests;
 using TACHYON.Shipping.ShippingRequestTrips;
 
 namespace TACHYON.Routs.RoutPoints
@@ -46,16 +42,15 @@ namespace TACHYON.Routs.RoutPoints
 
         public DateTime? StartTime { get; set; }
         public DateTime? EndTime { get; set; }
-
         public bool IsActive { get; set; } 
-        public bool IsComplete { get; set; } 
+        public bool IsComplete { get; set; }
 
         public Guid? DocumentId { get; set; }
         public string DocumentName { get; set; }
         public string DocumentContentType { get; set; }
 
-        public int? Rating { get; set; }
-
+        public double? Rating { get; set; }
+        [CanBeNull] public string ReceiverNote { get; set; }
         //to do receiver attribute
 
         //If Receiver as user  in tachyon
@@ -67,6 +62,9 @@ namespace TACHYON.Routs.RoutPoints
         [DataType(DataType.PhoneNumber)] [CanBeNull] public string ReceiverPhoneNumber { get; set; }
         [CanBeNull] public string ReceiverEmailAddress { get; set; }
         [CanBeNull] public string ReceiverCardIdNumber { get; set; }
+
+        //Shipper Note
+        [CanBeNull] public string Note { get; set; }
 
 
     }

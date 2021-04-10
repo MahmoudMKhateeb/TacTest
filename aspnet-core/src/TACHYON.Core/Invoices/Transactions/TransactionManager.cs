@@ -21,8 +21,8 @@ namespace TACHYON.Invoices.Transactions
 
         public async Task Delete(long SourceId,ChannelType channelType)
         {
-            var transaction = await _TransactionRepository.SingleAsync(t => t.SourceId == SourceId && t.ChannelId == (byte)channelType);
-            await _TransactionRepository.DeleteAsync(transaction);
+            var transaction = await _TransactionRepository.FirstOrDefaultAsync(t => t.SourceId == SourceId && t.ChannelId == channelType);
+           if (transaction !=null) await _TransactionRepository.DeleteAsync(transaction);
         }
     }
 }
