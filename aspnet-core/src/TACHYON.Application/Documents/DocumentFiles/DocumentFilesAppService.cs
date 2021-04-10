@@ -382,9 +382,9 @@ namespace TACHYON.Documents.DocumentFiles
             var documentFile = await _documentFileRepository.GetAsync(documentFileId);
 
             var binaryObject = await _binaryObjectManager.GetOrNullAsync(documentFile.BinaryObjectId.Value);
-
+            if (binaryObject==null) throw new UserFriendlyException(L("TheFileDoesNotExists"));
             var file = new FileDto(documentFile.Name, documentFile.Extn);
-
+            
             _tempFileCacheManager.SetFile(file.FileToken, binaryObject.Bytes);
 
             return file;
