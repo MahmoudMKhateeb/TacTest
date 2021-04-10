@@ -1,4 +1,4 @@
-﻿import { AfterViewInit, Component, Injector, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
+import { AfterViewInit, Component, Injector, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import {
   DocumentsEntitiesEnum,
@@ -104,13 +104,7 @@ export class DocumentTypesComponent extends AppComponentBase implements OnInit, 
 
   exportToExcel(): void {
     this._documentTypesServiceProxy
-      .getDocumentTypesToExcel(
-        this.filterText,
-        this.displayNameFilter,
-        this.isRequiredFilter,
-        this.hasExpirationDateFilter,
-        this.requiredFromFilter.toString()
-      )
+      .getDocumentTypesToExcel(this.filterText, this.displayNameFilter, this.isRequiredFilter, this.hasExpirationDateFilter, this.requiredFromFilter)
       .subscribe((result) => {
         this._fileDownloadService.downloadTempFile(result);
       });

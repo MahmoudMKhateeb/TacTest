@@ -1,5 +1,6 @@
 ﻿using Abp.Application.Services.Dto;
 using System;
+using TACHYON.Documents.DocumentsEntities;
 
 namespace TACHYON.Documents.DocumentTypes.Dtos
 {
@@ -14,7 +15,7 @@ namespace TACHYON.Documents.DocumentTypes.Dtos
 
         public int HasExpirationDateFilter { get; set; }
 
-        public string RequiredFromFilter { get; set; }
+        public DocumentsEntitiesEnum? RequiredFromFilter { get; set; }
 
 
 
