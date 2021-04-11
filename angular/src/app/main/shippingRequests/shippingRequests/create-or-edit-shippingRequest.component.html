@@ -151,6 +151,7 @@
                               [(date)]="shippingRequest.bidStartDate"
                               [disabled]="shippingRequestType != 'bidding' || shippingRequest.id"
                               [minDate]="today"
+                              (dateChange)="validateBiddingDates()"
                               bsDatepicker
                               datePickerMomentModifier
                             />
@@ -160,7 +161,7 @@
                               </span>
                             </div>
                           </div>
-                          <span class="form-text text-muted">{{ l('SetBiddingStartDate') }} (in case of shipping request type is bidding)</span>
+                          <span class="form-text text-muted">{{ l('SetBiddingStartDate') }}</span>
                         </div>
                       </div>
                       <div class="col-lg-3">
@@ -173,7 +174,8 @@
                             [required]="this.shippingRequestType == 'bidding'"
                             [(date)]="shippingRequest.bidEndDate"
                             [disabled]="shippingRequestType != 'bidding'"
-                            [minDate]="today"
+                            [minDate]="shippingRequest.bidStartDate"
+                            (dateChange)="validateBiddingDates()"
                             bsDatepicker
                             datePickerMomentModifier
                           />
@@ -183,7 +185,7 @@
                             </span>
                           </div>
                         </div>
-                        <span class="form-text text-muted">{{ l('biddingEndDate') }} (in case of shipping request type is bidding)</span>
+                        <span class="form-text text-muted">{{ l('biddingEndDate') }}</span>
                       </div>
                       <!--       Start Of Shipping Type                 -->
                       <div class="col-lg-6">
@@ -209,17 +211,16 @@
                         </div>
                         <span class="form-text text-muted">{{ l('selectAShippingType') }}</span>
                       </div>
-                      <!--                        End of Shipping Type-->
+                      <!--  End of Shipping Type -->
                     </div>
                   </div>
                 </div>
               </div>
-              <!--  end of ShippingRequestType::Details-->
+              <!--  end of ShippingRequestType::Details -->
             </div>
           </div>
-          <!--  end of card::body-->
-
-          <!--  start of card::form-->
+          <!--  end of card::body -->
+          <!--  start of card::form -->
         </div>
         <div class="card card-custom gutter-b">
           <!--  start of card::form-->
