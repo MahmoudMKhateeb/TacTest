@@ -47,8 +47,8 @@
                 </div>
                 <div class="col-md-3">
                   <div class="form-group">
-                    <label for="AdressFilter">{{ l('Address') }}</label>
-                    <input type="text" class="form-control" id="AdressFilter" name="adressFilter" [(ngModel)]="adressFilter" />
+                    <label for="AddressFilter">{{ l('Address') }}</label>
+                    <input type="text" class="form-control" id="AddressFilter" name="addressFilter" [(ngModel)]="adressFilter" />
                   </div>
                 </div>
                 <div class="col-md-3">
@@ -162,9 +162,9 @@
                       {{ l('Name') }}
                       <p-sortIcon field="facility.name"></p-sortIcon>
                     </th>
-                    <th style="width: 150px;" pSortableColumn="adress">
+                    <th style="width: 150px;" pSortableColumn="address">
                       {{ l('Address') }}
-                      <p-sortIcon field="facility.adress"></p-sortIcon>
+                      <p-sortIcon field="facility.address"></p-sortIcon>
                     </th>
                     <th style="width: 150px;" pSortableColumn="longitude">
                       {{ l('Longitude') }}
