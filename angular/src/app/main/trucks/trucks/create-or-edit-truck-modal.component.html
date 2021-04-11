@@ -220,23 +220,35 @@
             <div class="form-group col-md-6">
               <label for="Truck_ModelYear"> <span class="text-danger">*</span> {{ l('ModelYear') }}</label>
               <input
-                #modelYear="ngModel"
-                [(ngModel)]="truck.modelYear"
-                class="form-control modelyearinput"
+                #modelYear="bsDatepicker"
                 id="Truck_ModelYear"
-                maxlength="4"
-                minlength="4"
-                min="2000"
-                name="ModelYear"
-                required
+                name="Truck_ModelYear"
                 type="number"
-                [ngClass]="{
-                  'is-valid': modelYear.valid,
-                  'is-invalid': truckForm.submitted && modelYear.invalid
-                }"
+                [ngModel]="truck.modelYear"
+                [bsConfig]="{ viewMode: 'year', minMode: 'year', dateInputFormat: 'YYYY' }"
+                bsDatepicker
+                [maxDate]="today"
+                class="form-control"
+                (keypress)="numberOnly($event)"
+                required
               />
               <validation-messages [formCtrl]="modelYear"></validation-messages>
-              <span *ngIf="Number(truck.modelYear) < 2000" class="form-text text-danger">{{ l('vlaueMustBeGreaterThan') }} 2000</span>
+              <!--            </div>-->
+              <!--              <input-->
+              <!--                #modelYear="ngModel"-->
+              <!--                [(ngModel)]="truck.modelYear"-->
+              <!--                class="form-control modelyearinput"-->
+              <!--                id="Truck_ModelYear"-->
+              <!--                [max]="2021"-->
+              <!--                name="ModelYear"-->
+              <!--                required-->
+              <!--                type="number"-->
+              <!--                [ngClass]="{-->
+              <!--                  'is-valid': modelYear.valid,-->
+              <!--                  'is-invalid': (truckForm.submitted && modelYear.invalid) || Number(truck.modelYear) < 1900-->
+              <!--                }"-->
+              <!--              />-->
+              <!--              <validation-messages [formCtrl]="modelYear"></validation-messages>-->
             </div>
 
             <div class="form-group col-md-12">

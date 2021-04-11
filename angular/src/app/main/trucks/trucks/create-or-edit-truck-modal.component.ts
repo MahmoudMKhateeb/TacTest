@@ -95,6 +95,7 @@ export class CreateOrEditTruckModalComponent extends AppComponentBase {
   private _DocsUploaderOptions: FileUploaderOptions = {};
 
   allPlateTypes: SelectItemDto[];
+  today = new Date();
 
   constructor(
     injector: Injector,
