@@ -56,6 +56,10 @@ namespace TACHYON.Shipping.ShippingRequestTrips
         [ForeignKey("RejectReasonId")]
         public ShippingRequestTripRejectReason ShippingRequestTripRejectReason { get; set; }
         public string RejectedReason { get; set; }
+        /// <summary>
+        /// approximate total value of goods
+        /// </summary>
+        public string TotalValue { get; set; }
 
 
     }

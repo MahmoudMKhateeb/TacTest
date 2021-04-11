@@ -36,7 +36,8 @@ namespace TACHYON.AutoMapper.Shipping.Trips
                .ForMember(dst => dst.DriverStatusTitle, opt => opt.MapFrom(src => Enum.GetName(typeof(ShippingRequestTripDriverStatus), src.DriverStatus)))
                .ForMember(dst => dst.RejectedReason, opt => opt.MapFrom(src => src.ShippingRequestTripRejectReason != null ? src.ShippingRequestTripRejectReason.DisplayName : src.RejectedReason))
                .ForMember(dst => dst.RoutPoints, opt => opt.MapFrom(src => src.RoutPoints))
-               .ForMember(dst => dst.ShippingRequestTripVases, opt => opt.MapFrom(src => src.ShippingRequestTripVases));
+               .ForMember(dst => dst.ShippingRequestTripVases, opt => opt.MapFrom(src => src.ShippingRequestTripVases))
+               .ForMember(dst => dst.TotalValue, opt => opt.MapFrom(src => src.TotalValue));
 
             CreateMap<ShippingRequestTrip, ShippingRequestTripDriverListDto>()
                 .ForMember(dst => dst.Source, opt => opt.MapFrom(src => $"{src.ShippingRequestFk.OriginCityFk.DisplayName} - {src.OriginFacilityFk.Address}"))
