@@ -36,8 +36,9 @@ using TACHYON.Authorization.Impersonation;
 using TACHYON.Authorization.Roles;
 using TACHYON.Authorization.Users;
 using TACHYON.Configuration;
-using TACHYON.Debugging;
 using TACHYON.Identity;
+using TACHYON.Mobile;
+using TACHYON.Mobile.Dtos;
 using TACHYON.MultiTenancy;
 using TACHYON.Net.Sms;
 using TACHYON.Notifications;
@@ -79,7 +80,7 @@ namespace TACHYON.Web.Controllers
         private readonly TenantManager _tenantManager;
         public IRecaptchaValidator RecaptchaValidator { get; set; }
         private readonly IUserDelegationManager _userDelegationManager;
-
+        private readonly UserDeviceTokenManager _userDeviceTokenManager;
         public TokenAuthController(
             LogInManager logInManager,
             ITenantCache tenantCache,
@@ -102,7 +103,8 @@ namespace TACHYON.Web.Controllers
             ISettingManager settingManager,
             IJwtSecurityStampHandler securityStampHandler,
             AbpUserClaimsPrincipalFactory<User, Role> claimsPrincipalFactory,
-            IUserDelegationManager userDelegationManager, TenantManager tenantManager)
+            IUserDelegationManager userDelegationManager, TenantManager tenantManager,
+            UserDeviceTokenManager userDeviceTokenManager)
         {
             _logInManager = logInManager;
             _tenantCache = tenantCache;
@@ -128,6 +130,7 @@ namespace TACHYON.Web.Controllers
             RecaptchaValidator = NullRecaptchaValidator.Instance;
             _userDelegationManager = userDelegationManager;
             _tenantManager = tenantManager;
+            _userDeviceTokenManager = userDeviceTokenManager;
         }
 
         [HttpPost]
@@ -259,7 +262,10 @@ namespace TACHYON.Web.Controllers
                     model.Language
                 );
             }
-            if (!string.IsNullOrEmpty(model.DeviceToken))
+            if (!string.IsNullOrEmpty(model.DeviceToken) && !string.IsNullOrEmpty(model.DeviceId))
+            {
+              await  _userDeviceTokenManager.CreateOrEdit(new UserDeviceTokenDto { DeviceId = model.DeviceId, Token = model.DeviceToken, ExpireDate = model.DeviceExpireDate, UserId = loginResult.User.Id });
+            }
             {
 
             }

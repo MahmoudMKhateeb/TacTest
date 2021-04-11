@@ -9,6 +9,8 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using TACHYON.Authorization.Users.Profile;
+using TACHYON.Mobile;
+using TACHYON.Mobile.Dtos;
 using TACHYON.Shipping.ShippingRequestTrips;
 
 namespace TACHYON.Drivers
@@ -33,10 +35,17 @@ namespace TACHYON.Drivers
 
         private readonly IRepository<ShippingRequestTrip> _shippingRequestTripRepository;
         private readonly ProfileImageServiceFactory _profileImageServiceFactory;
-        public DriverAppService(IRepository<ShippingRequestTrip> shippingRequestTripRepository, ProfileImageServiceFactory profileImageServiceFactory)
+        private readonly UserDeviceTokenManager _userDeviceTokenManager;
+
+        public DriverAppService(
+            IRepository<ShippingRequestTrip> shippingRequestTripRepository,
+            ProfileImageServiceFactory profileImageServiceFactory,
+            UserDeviceTokenManager userDeviceTokenManager)
         {
             _shippingRequestTripRepository = shippingRequestTripRepository;
             _profileImageServiceFactory = profileImageServiceFactory;
+            _userDeviceTokenManager = userDeviceTokenManager;
+
         }
 
         public async Task<DriverDetailDto> GetDriverDetails()
@@ -78,7 +87,11 @@ namespace TACHYON.Drivers
             return driverDetail;
 
         }
-
+        public async Task RefreshDeviceToken(UserDeviceTokenDto Input)
+        {
+            Input.UserId = AbpSession.UserId.Value;
+            await _userDeviceTokenManager.CreateOrEdit(Input);
+        }
 
     }
 }

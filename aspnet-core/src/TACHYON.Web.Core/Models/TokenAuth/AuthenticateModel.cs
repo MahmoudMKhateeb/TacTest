@@ -1,5 +1,6 @@
 ﻿using Abp.Auditing;
 using Abp.Authorization.Users;
+using System;
 using System.ComponentModel.DataAnnotations;
 
 namespace TACHYON.Web.Models.TokenAuth
@@ -34,6 +35,7 @@ namespace TACHYON.Web.Models.TokenAuth
 
         public string DeviceToken { get; set; }
         public string DeviceId { get;set;}
+        public DateTime? DeviceExpireDate { get; set; }
 
 
     }

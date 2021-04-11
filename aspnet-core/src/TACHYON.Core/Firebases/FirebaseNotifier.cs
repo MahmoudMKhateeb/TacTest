@@ -5,6 +5,8 @@ using System.Threading.Tasks;
 using TACHYON.Mobile;
 using System.Linq;
 using Abp.Timing;
+using Abp.Localization;
+using System;
 
 namespace TACHYON.Firebases
 {
@@ -13,51 +15,70 @@ namespace TACHYON.Firebases
 
         public FirebaseMessaging messaging { get; set; }
         private readonly IRepository<UserDeviceToken> _userDeviceToken;
-
-        public FirebaseNotifier(IRepository<UserDeviceToken> userDeviceToken)
+        private readonly ILocalizationManager _localizationManager;
+        public FirebaseNotifier(IRepository<UserDeviceToken> userDeviceToken, ILocalizationManager localizationManager)
         {
             messaging = FirebaseMessaging.DefaultInstance;
             _userDeviceToken = userDeviceToken;
+            _localizationManager = localizationManager;
 
         }
 
-        public async Task PushNotificationToDriverWhenAssignTrip(long driverId,string TripId)
+        public async Task PushNotificationToDriverWhenAssignTrip(long driverId, string TripId)
         {
-            foreach (var device in _userDeviceToken.GetAll().Where(x => x.UserId == driverId && x.ExpireDate>= Clock.Now))
+            string Title = L("NewTripAssign");
+            var message = new Message()
+            {
+                Notification = new Notification
+                {
+                    Title = Title,
+                },
+                Data = new Dictionary<string, string>()
+                {
+                    ["id"] = TripId,
+                    ["tripId"] = TripId
+                }
+            };
+            await SendMessage(driverId, message, "ViewComingLoadInfoActivity");
+        }
+
+
+        #region Helper
+        private async Task SendMessage(long UserId, Message message,string ClickAction)
+        {
+            foreach (var device in await GetUserDevices(UserId))
             {
                 try
                 {
-                    var message = new Message()
+                    message.Token = device.Token;
+                    message.Android = new AndroidConfig()
                     {
-                        Notification = new Notification
+                        Priority = Priority.High,
+                        Notification = new AndroidNotification
                         {
-                            Title = "NewTripAssign",
+                            Title = message.Notification.Title,
+                            Body = message.Notification.Body,
+                            ClickAction = ClickAction
+
                         },
-                        Token = device.Token,
-                        Data = new Dictionary<string, string>()
-                        {
-                            ["id"] = TripId
-                        },
-                        Android = new AndroidConfig()
-                        {
-                            Notification = new AndroidNotification
-                            {
-                                Title = "NewTripAssign",
-                            },
-                            Data = new Dictionary<string, string>()
-                            {
-                                ["id"] = TripId
-                            }
-                        }
+                        Data = message.Data
                     };
-                     await messaging.SendAsync(message);
+                    await messaging.SendAsync(message);
                 }
-                catch
+                catch (Exception e)
                 {
 
                 }
-
             }
         }
+        private Task<IQueryable<UserDeviceToken>> GetUserDevices(long UserId)
+        {
+            return Task.FromResult(_userDeviceToken.GetAll().Where(x => x.UserId == UserId && (!x.ExpireDate.HasValue || x.ExpireDate >= Clock.Now)));
+        }
+        private string L(string name)
+        {
+            return _localizationManager.GetString(TACHYONConsts.LocalizationSourceName, "NewTripAssign");
+        }
+        #endregion
     }
 }

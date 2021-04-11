@@ -11,6 +11,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Dynamic.Core;
 using System.Threading.Tasks;
+using TACHYON.Firebases;
 using TACHYON.Notifications;
 using TACHYON.Routs.RoutPoints;
 using TACHYON.Routs.RoutPoints.Dtos;
@@ -32,6 +33,7 @@ namespace TACHYON.Shipping.Drivers
         private readonly IRepository<ShippingRequestTripTransition> _shippingRequestTripTransitionRepository;
         private readonly ShippingRequestDriverManager _shippingRequestDriverManager;
         private readonly IAppNotifier _appNotifier;
+        private readonly IFirebaseNotifier _firebaseNotifier;
 
 
         public ShippingRequestDriverAppService(
@@ -39,13 +41,15 @@ namespace TACHYON.Shipping.Drivers
             IRepository<RoutPoint, long> RoutPointRepository,
             IRepository<ShippingRequestTripTransition> shippingRequestTripTransitionRepository,
             ShippingRequestDriverManager shippingRequestDriverManager,
-            IAppNotifier appNotifier)
+            IAppNotifier appNotifier,
+            IFirebaseNotifier firebaseNotifier)
         {
             _ShippingRequestTrip = ShippingRequestTrip;
             _RoutPointRepository = RoutPointRepository;
             _shippingRequestTripTransitionRepository = shippingRequestTripTransitionRepository;
             _shippingRequestDriverManager = shippingRequestDriverManager;
             _appNotifier = appNotifier;
+             _firebaseNotifier= firebaseNotifier;
 
 
         }
@@ -340,6 +344,11 @@ namespace TACHYON.Shipping.Drivers
                await  _shippingRequestTripTransitionRepository.DeleteAsync(x => x.ToPoint.ShippingRequestTripId == TripId);
             }
 
+        }
+        [AbpAllowAnonymous]
+        public async Task PushNotification(int TripId)
+        {
+            await _firebaseNotifier.PushNotificationToDriverWhenAssignTrip(6, TripId.ToString());
         }
 
 
