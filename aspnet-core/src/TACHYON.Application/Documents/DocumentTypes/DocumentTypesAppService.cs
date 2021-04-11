@@ -147,7 +147,7 @@ namespace TACHYON.Documents.DocumentTypes
                         .WhereIf(!string.IsNullOrWhiteSpace(input.DisplayNameFilter), e => e.DisplayName == input.DisplayNameFilter)
                         .WhereIf(input.IsRequiredFilter > -1, e => (input.IsRequiredFilter == 1 && e.IsRequired) || (input.IsRequiredFilter == 0 && !e.IsRequired))
                         .WhereIf(input.HasExpirationDateFilter > -1, e => (input.HasExpirationDateFilter == 1 && e.HasExpirationDate) || (input.HasExpirationDateFilter == 0 && !e.HasExpirationDate))
-                        .WhereIf(!string.IsNullOrWhiteSpace(input.RequiredFromFilter), e => e.DocumentsEntityFk.DisplayName == input.RequiredFromFilter);
+                        .WhereIf(input.RequiredFromFilter.HasValue, e => e.DocumentsEntityId == (int)input.RequiredFromFilter);
 
             var query = (from o in filteredDocumentTypes
                          select new GetDocumentTypeForViewDto()
