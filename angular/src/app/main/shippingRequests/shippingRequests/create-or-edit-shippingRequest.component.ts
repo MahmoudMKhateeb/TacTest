@@ -248,4 +248,14 @@ export class CreateOrEditShippingRequestComponent extends AppComponentBase imple
       }
     });
   }
+
+  /**
+   * validates bidding start+end date
+   */
+  validateBiddingDates() {
+    //if end date is more than start date reset end date
+    if (this.shippingRequest.bidStartDate > this.shippingRequest.bidEndDate) {
+      this.shippingRequest.bidEndDate = undefined;
+    }
+  }
 }
