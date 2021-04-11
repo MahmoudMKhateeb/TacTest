@@ -32,24 +32,6 @@
                   </div>
                 </div>
               </div>
-              <div class="row" [hidden]="!advancedFiltersAreShown">
-                <div class="col-md-12">
-                  <div class="kt-separator kt-separator--border-dashed"></div>
-                </div>
-              </div>
-              <div class="row mb-2">
-                <div class="col-sm-12">
-                  <span
-                    class="clickable-item text-muted"
-                    *ngIf="!advancedFiltersAreShown"
-                    (click)="advancedFiltersAreShown = !advancedFiltersAreShown"
-                    ><i class="fa fa-angle-down"></i> {{ l('ShowAdvancedFilters') }}</span
-                  >
-                  <span class="clickable-item text-muted" *ngIf="advancedFiltersAreShown" (click)="advancedFiltersAreShown = !advancedFiltersAreShown"
-                    ><i class="fa fa-angle-up"></i> {{ l('HideAdvancedFilters') }}</span
-                  >
-                </div>
-              </div>
             </div>
           </form>
 
