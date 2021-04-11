@@ -248,4 +248,14 @@ export class CreateOrEditShippingRequestComponent extends AppComponentBase imple
       }
     });
   }
+
+  /**
+   * validates trips start/end date
+   */
+  validateTripsDates() {
+    //checks if the trips end date is less than trips start date
+    if (this.shippingRequest.endTripDate < this.shippingRequest.startTripDate) {
+      this.shippingRequest.endTripDate = undefined;
+    }
+  }
 }
