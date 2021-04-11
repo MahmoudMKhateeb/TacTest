@@ -117,15 +117,32 @@ namespace TACHYON.Authorization.Users
         }
 
         /// <summary>
+        /// Send Email to tenant when approve all documents and eligible to use platform
+        /// </summary>
+        /// <param name="hostAdminEmailAddresses"></param>
+        /// <param name="tenant"></param>
+        /// <returns></returns>
+        [UnitOfWork]
+        public virtual async Task SendAllApprovedDocumentsAsyn(Tenant tenant)
+        {
+            var adminUser=await _userManager.GetAdminByTenantIdAsync(tenant.Id);
+            var mailMessage = new StringBuilder();
+            var tenantItem = await _tenantRepository.GetAsync(tenant.Id);
+            var emailTemplate = GetTitleAndSubTitle(tenant.Id, L("ApprovedDocuments_Title"), L("ApprovedDocuments_SubTitle"));
+
+            mailMessage.AppendLine("<b>" + L("TenancyName") + "</b>:" + tenantItem.TenancyName);
+            mailMessage.AppendLine("<b>" + L("CompanyName") + "</b>:" + tenantItem.companyName);
+            mailMessage.AppendLine("<b>" + L("Address") + "</b>:" + tenantItem.Address);
+            
+            mailMessage.AppendLine(L("All your documents have been approved, you can now use platform message"));
+
+            await ReplaceBodyAndSend(adminUser.EmailAddress, L("DocumentsApproved"), emailTemplate, mailMessage);
+        }
+        /// <summary>
         /// Sends a password reset link to user's email.
         /// </summary>
         /// <param name="user">User</param>
         /// <param name="link">Reset link</param>
-        [UnitOfWork]
-        public virtual async Task SendNewTenantRegistrationEmailToHostAsyn(Tenant tenant, string link)
-        {
-
-        }
         public async Task SendPasswordResetLinkAsync(User user, string link = null)
         {
             if (user.PasswordResetCode.IsNullOrEmpty())
