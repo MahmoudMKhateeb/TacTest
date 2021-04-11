@@ -29,6 +29,7 @@ export class GroupPeriodsListComponent extends AppComponentBase implements OnIni
   Tenant: ISelectItemDto;
   Tenants: ISelectItemDto[];
   Periods: ISelectItemDto[];
+  TenantId: number | null | undefined;
   periodId: number | null | undefined;
   IsStartSearch: boolean = false;
   creationDateRange: Date[] = [moment().startOf('day').toDate(), moment().endOf('day').toDate()];
@@ -67,9 +68,15 @@ export class GroupPeriodsListComponent extends AppComponentBase implements OnIni
       this.toDate = null;
     }
 
+    if (this.Tenant != null && this.Tenant.id != null) {
+      this.TenantId = parseInt(this.Tenant.id);
+    } else {
+      this.TenantId = undefined;
+      this.Tenant = undefined;
+    }
     this._CurrentService
       .getAll(
-        this.Tenant ? parseInt(this.Tenant.id) : undefined,
+        this.TenantId,
         this.periodId,
         this.fromDate,
         this.toDate,
