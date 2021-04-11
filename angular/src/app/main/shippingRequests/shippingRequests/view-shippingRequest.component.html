@@ -240,7 +240,7 @@
 
                     <div class="col-lg-6">
                       <div class="form-group">
-                        <label>* {{ l('startDate') }}:</label>
+                        <label>* {{ l('tripsStartDate') }}:</label>
                         <div class="input-group date">
                           <input
                             [(date)]="shippingRequestforView.shippingRequest.startTripDate"
@@ -262,13 +262,12 @@
                     </div>
                     <div class="col-lg-6">
                       <div class="form-group">
-                        <label>* {{ l('endDate') }}:</label>
+                        <label>* {{ l('tripsEndDate') }}:</label>
                         <div class="input-group date">
                           <input
                             [(date)]="shippingRequestforView.shippingRequest.endTripDate"
                             class="form-control"
                             name="endDate"
-                            placeholder="{{ l('endDate') }}"
                             bsDatepicker
                             datePickerMomentModifier
                             disabled
