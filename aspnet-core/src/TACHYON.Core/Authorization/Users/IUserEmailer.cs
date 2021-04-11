@@ -1,5 +1,6 @@
 ﻿using System.Threading.Tasks;
 using TACHYON.Chat;
+using TACHYON.MultiTenancy;
 
 namespace TACHYON.Authorization.Users
 {
@@ -14,7 +15,13 @@ namespace TACHYON.Authorization.Users
         /// Can be set to user's plain password to include it in the email.
         /// </param>
         Task SendEmailActivationLinkAsync(User user, string link, string plainPassword = null);
-
+        /// <summary>
+        /// Send Email to admin tenant user when all documents approved by host
+        /// </summary>
+        /// <param name="user"></param>
+        /// <param name="tenant"></param>
+        /// <returns></returns>
+        Task SendAllApprovedDocumentsAsyn(Tenant tenant);
         /// <summary>
         /// Sends a password reset link to user's email.
         /// </summary>

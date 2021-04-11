@@ -37,7 +37,23 @@ namespace TACHYON.Documents.DocumentFiles
     {
 
 
-        public DocumentFilesAppService(TenantManager tenantManager, IRepository<DocumentFile, Guid> documentFileRepository, IDocumentFilesExcelExporter documentFilesExcelExporter, IRepository<DocumentType, long> lookupDocumentTypeRepository, IRepository<Truck, long> lookupTruckRepository, IRepository<Trailer, long> lookupTrailerRepository, IRepository<User, long> lookupUserRepository, IRepository<RoutStep, long> lookupRoutStepRepository, ITempFileCacheManager tempFileCacheManager, IBinaryObjectManager binaryObjectManager, IRepository<Edition, int> editionRepository, IRepository<DocumentType, long> documentTypeRepository, DocumentFilesManager documentFilesManager, IRepository<Tenant, int> lookupTenantRepository, IRepository<DocumentsEntity, int> documentEntityRepository, IAppNotifier appNotifier)
+        public DocumentFilesAppService(TenantManager tenantManager,
+            IRepository<DocumentFile, Guid> documentFileRepository, 
+            IDocumentFilesExcelExporter documentFilesExcelExporter, 
+            IRepository<DocumentType, long> lookupDocumentTypeRepository,
+            IRepository<Truck, long> lookupTruckRepository,
+            IRepository<Trailer, long> lookupTrailerRepository, 
+            IRepository<User, long> lookupUserRepository, 
+            IRepository<RoutStep, long> lookupRoutStepRepository,
+            ITempFileCacheManager tempFileCacheManager,
+            IBinaryObjectManager binaryObjectManager, 
+            IRepository<Edition, int> editionRepository,
+            IRepository<DocumentType, long> documentTypeRepository,
+            DocumentFilesManager documentFilesManager, 
+            IRepository<Tenant, int> lookupTenantRepository,
+            IRepository<DocumentsEntity, int> documentEntityRepository,
+            IAppNotifier appNotifier,
+            IUserEmailer userEmailer)
         {
             _documentFileRepository = documentFileRepository;
             _documentFilesExcelExporter = documentFilesExcelExporter;
@@ -55,6 +71,7 @@ namespace TACHYON.Documents.DocumentFiles
             _documentEntityRepository = documentEntityRepository;
             _tenantManager = tenantManager;
             _appNotifier = appNotifier;
+            _userEmailer = userEmailer;
         }
 
         private readonly IRepository<Tenant, int> _lookupTenantRepository;
@@ -73,6 +90,7 @@ namespace TACHYON.Documents.DocumentFiles
         private readonly DocumentFilesManager _documentFilesManager;
         private readonly TenantManager _tenantManager;
         private readonly IAppNotifier _appNotifier;
+        private readonly IUserEmailer _userEmailer;
 
         public async Task<PagedResultDto<GetDocumentFileForViewDto>> GetAll(GetAllDocumentFilesInput input)
         {
@@ -615,13 +633,20 @@ namespace TACHYON.Documents.DocumentFiles
         {
             DisableTenancyFiltersIfHost();
 
-            var documentFile = await _documentFileRepository.FirstOrDefaultAsync(id);
+            var documentFile = await _documentFileRepository.GetAll()
+                .Include(x=>x.TenantFk)
+                .FirstOrDefaultAsync(x=>x.Id==id);
             documentFile.IsAccepted = true;
             documentFile.IsRejected = false;
             documentFile.RejectionReason = "";
             if (documentFile.CreatorUserId != null)
             {
                 await _appNotifier.AcceptedSubmittedDocument(new UserIdentifier(documentFile.TenantId, documentFile.CreatorUserId.Value), documentFile);
+            }
+
+            if (await IsAllRequiredDocumentsApproved(documentFile.TenantId.Value))
+            {
+                await _userEmailer.SendAllApprovedDocumentsAsyn(documentFile.TenantFk);
             }
 
         }
@@ -768,6 +793,40 @@ namespace TACHYON.Documents.DocumentFiles
                 DocumentTypeId = x.Id,
                 DocumentTypeDto = ObjectMapper.Map<DocumentTypeDto>(x)
             }).ToList();
+        }
+
+        public async Task<bool> IsAllRequiredDocumentsApproved(int tenantId)
+        {
+            DisableTenancyFilters();
+            var tenant = _tenantManager.GetById(tenantId);
+
+            var documentFiles = await _documentFileRepository.GetAll()
+                    .Where(x=>x.TenantId== tenantId)
+                    .Where(x=>x.IsAccepted==true)
+                    .Include(doc => doc.DocumentTypeFk)
+                    .ThenInclude(doc => doc.DocumentsEntityFk)
+                    .Where(x => x.DocumentTypeFk.IsRequired)
+                    .ToListAsync();
+
+            var documentTypes = await _documentTypeRepository.GetAll()
+                 .Include(x => x.Translations)
+                 .Where(x => x.EditionId == tenant.EditionId)
+                 .Where(x => x.IsRequired)
+                 .ToListAsync();
+
+
+            if (documentTypes != null && documentTypes.Any())
+            {
+                foreach (var item in documentTypes.ToList())
+                {
+                    if (documentFiles.Any(x => x.DocumentTypeId == item.Id))
+                    {
+                        documentTypes.Remove(item);
+                    }
+                }
+            }
+
+            return documentTypes.Count == 0;
         }
 
         public async Task<List<SelectItemDto>> GetDocumentEntitiesForTableDropdown()
