@@ -7,6 +7,7 @@ using System.Text;
 using TACHYON.MultiTenancy;
 using TACHYON.Shipping.ShippingRequestBids;
 using TACHYON.Shipping.ShippingRequests;
+using TACHYON.Shipping.ShippingRequests.TachyonDealer;
 
 namespace TACHYON.TachyonPriceOffers
 {
@@ -18,12 +19,15 @@ namespace TACHYON.TachyonPriceOffers
         public int? CarrirerTenantId { get; set; }
         [ForeignKey("CarrirerTenantId")]
         public Tenant CarrirerTenant { get; set; }
-        public virtual long ShippingRequestId { get; set; } 
+        public virtual long ShippingRequestId { get; set; }
         [ForeignKey("ShippingRequestId")]
         public ShippingRequest ShippingRequestFk { get; set; }
         public long? ShippingRequestBidId { get; set; }
         [ForeignKey("ShippingRequestBidId")]
         public ShippingRequestBid ShippingRequestBidFk { get; set; }
+        public int? ShippingRequestCarrierDirectPricingId { get; set; }
+        [ForeignKey("ShippingRequestCarrierDirectPricingId")]
+        public ShippingRequestsCarrierDirectPricing ShippingRequestCarrierDirectPricingFk { get; set; }
         public OfferStatus OfferStatus { get; set; }
         /// <summary>
         /// If shipper reject offer, will place reason of rejected

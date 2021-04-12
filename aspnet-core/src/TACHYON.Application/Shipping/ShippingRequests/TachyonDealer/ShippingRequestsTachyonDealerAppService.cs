@@ -57,13 +57,22 @@ namespace TACHYON.Shipping.ShippingRequests.TachyonDealer
             if (shippingRequest != null)
             {
                 shippingRequest.IsBid = true;
-                
                 shippingRequest.BidStartDate = Input.StartDate;
                 shippingRequest.BidEndDate = Input.EndDate;
                 if (Input.StartDate.Date==Clock.Now.Date) shippingRequest.BidStatus = ShippingRequestBidStatus.OnGoing;
             }
         }
 
+        [RequiresFeature(AppFeatures.SendDirectRequest)]
+        public async Task StartShippingRequestAsDirectRequest(long id)
+        {
+            DisableTenancyFilters();
+            var item = await _shippingRequestRepository.FirstOrDefaultAsync(e => e.Id == id && e.IsTachyonDeal && !e.IsDirectRequest && e.Status == ShippingRequestStatus.PrePrice);
+            if (item != null)
+            {
+                item.IsDirectRequest = true;
+            }
+        }
         //public async Task SendOfferToShipper(TachyonDealerDirectOfferToShipperInputDto Input)
         //{
         //    DisableTenancyFilters();
@@ -81,7 +90,7 @@ namespace TACHYON.Shipping.ShippingRequests.TachyonDealer
         /// </summary>
         /// <param name="Input"></param>
         /// <returns></returns>
-        [RequiresFeature(AppFeatures.TachyonDealer)]
+        [RequiresFeature(AppFeatures.SendDirectRequest)]
 
         public async Task SendDriectRequestForCarrier(TachyonDealerCreateDirectOfferToCarrirerInuptDto Input)
         {
@@ -89,7 +98,8 @@ namespace TACHYON.Shipping.ShippingRequests.TachyonDealer
 
             DisableTenancyFilters();
             ShippingRequest shippingRequest= await GetShippingRequestOnPrePriceStage(Input.Id);
-            if (shippingRequest.IsBid) throw new UserFriendlyException(L("YouCanNotSendDriectRequestWhenTheSippingIsBid"));
+            //if (shippingRequest.IsBid) throw new UserFriendlyException(L("YouCanNotSendDriectRequestWhenTheSippingIsBid"));
+            if(!shippingRequest.IsDirectRequest) throw new UserFriendlyException(L("ShippingRequestMustBeIsDirectRequest"));
 
             if (await _CarrierDirectPricingRepository.GetAll().AnyAsync(x => x.CarrirerTenantId == Input.TenantId && x.RequestId == Input.Id))
                 throw new UserFriendlyException(L("YouAlreadyAddThisCarrrierToThisShipping"));
@@ -209,8 +219,10 @@ namespace TACHYON.Shipping.ShippingRequests.TachyonDealer
 
 
         }
-        [RequiresFeature(AppFeatures.TachyonDealer)]
 
+        
+
+        [RequiresFeature(AppFeatures.SendDirectRequest)]
         public async Task<PagedResultDto<TachyonDealerGetCarrirerDto>> GetAllCarriers(TachyonDealerGetCarrirerFilterInputDto Input)
         {
             var query =

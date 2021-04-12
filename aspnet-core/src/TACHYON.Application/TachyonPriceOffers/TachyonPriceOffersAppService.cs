@@ -29,6 +29,10 @@ namespace TACHYON.TachyonPriceOffers
         private readonly IRepository<ShippingRequestsCarrierDirectPricing> _carrierDirectPricingRepository;
         private readonly IRepository<ShippingRequestBid, long> _shippingRequestBidsRepository;
         private readonly IAppNotifier _appNotifier;
+        private readonly IRepository<ShippingRequestsCarrierDirectPricing> _shippingRequestsCarrierDirectPricing;
+        private readonly IRepository<ShippingRequestBid,long> _shippingRequestBidRepository;
+
+
         public TachyonPriceOffersAppService(IRepository<TachyonPriceOffer> tachyonPriceOfferRepository,
             IRepository<ShippingRequest, long> shippingRequestRepository, CommissionManager commissionManager, BalanceManager balanceManager,
             IRepository<ShippingRequestsCarrierDirectPricing> carrierDirectPricingRepository,
@@ -44,6 +48,9 @@ namespace TACHYON.TachyonPriceOffers
             _shippingRequestManager = shippingRequestManager;
             _shippingRequestBidsRepository = shippingRequestBidsRepository;
             _appNotifier = appNotifier;
+            _shippingRequestsCarrierDirectPricing = shippingRequestsCarrierDirectPricing;
+            _shippingRequestBidRepository = shippingRequestBidRepository;
+
         }
         [RequiresFeature(AppFeatures.TachyonDealer, AppFeatures.Shipper)]
         public async Task<PagedResultDto<GetAllTachyonPriceOfferOutput>> GetAllTachyonPriceOffers(GetAllTachyonPriceOfferInput input)
@@ -132,6 +139,18 @@ namespace TACHYON.TachyonPriceOffers
                 }
                 else
                 {
+                    //todo change bid or direct request status
+                    if (offer.ShippingRequestBidId != null)
+                    {
+                        var bid=await _shippingRequestBidRepository.FirstOrDefaultAsync(offer.ShippingRequestBidId.Value);
+                        bid.IsAccepted = true;
+                        bid.price = bid.BasePrice = offer.CarrierPrice.Value;
+                    }
+                    else if (offer.ShippingRequestCarrierDirectPricingId != null)
+                    {
+                        var directPriceItem=await _shippingRequestsCarrierDirectPricing.FirstOrDefaultAsync(offer.ShippingRequestCarrierDirectPricingId.Value);
+                        directPriceItem.Status = ShippingRequestsCarrierDirectPricingStatus.Accepted;
+                    }
                     await _balanceManager.ShipperCanAcceptPrice(offer.ShippingRequestFk.TenantId, offer.TotalAmount, offer.ShippingRequestId);
                     // ObjectMapper.Map(offer, offer.ShippingRequestFk);
                     offer.ShippingRequestFk.CarrierTenantId = offer.CarrirerTenantId;

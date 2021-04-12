@@ -21,6 +21,7 @@
         public const string TachyonDealer = "App.TachyonDealer";
         public const string ShippingRequest = "App.shippingRequest";
         public const string OffersMarketPlace = "App.OffersMarketPlace";
+        public const string SendDirectRequest = "App.SendDirectRequest";
         public const string SendTachyonDealShippingRequest = "App.SendTachyonDealShippingRequest";
         public const string ShipperCreditLimit = "App.Shipper.CreditLimit";
         public const string ShipperPeriods = "App.Shipper.Periods";
