@@ -274,7 +274,7 @@ export class CreateOrEditDriverModalComponent extends AppComponentBase {
 
   removeWhiteSpacesFromEmail() {
     this.user.emailAddress.trim();
-    let exp = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/g;
+    let exp = /^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$/i;
 
     let result = exp.test(this.user.emailAddress);
     if (!result) {
