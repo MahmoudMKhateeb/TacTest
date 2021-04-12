@@ -1,4 +1,4 @@
-﻿<div [@routerTransition]>
+<div [@routerTransition]>
   <div class="content d-flex flex-column flex-column-fluid">
     <sub-header [title]="'TermAndConditions' | localize">
       <div role="actions">
@@ -125,7 +125,7 @@
                       {{ l('TargetEdition') }}
                       <p-sortIcon field="termAndCondition.editionId"></p-sortIcon>
                     </th>
-                    <th style="width: 150px;" pSortableColumn="editionId">
+                    <th style="width: 150px;" pSortableColumn="isActive">
                       {{ l('IsActive') }}
                       <p-sortIcon field="termAndCondition.isActive"></p-sortIcon>
                     </th>
