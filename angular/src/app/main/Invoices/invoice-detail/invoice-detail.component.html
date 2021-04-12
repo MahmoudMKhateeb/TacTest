@@ -164,6 +164,9 @@
                 <button type="button" class="btn btn-primary font-weight-bold" onclick="window.print();">{{ l('PrintInvoice') }}</button>
               </div>
             </div>
+            <div class="col-md-3">
+              <button class="btn btn-danger float-right" (click)="downloadInvoice()" [buttonBusy]="loading">{{ l('downloadInvoice') }}</button>
+            </div>
           </div>
           <!-- end: Invoice action-->
           <!-- end: Invoice-->

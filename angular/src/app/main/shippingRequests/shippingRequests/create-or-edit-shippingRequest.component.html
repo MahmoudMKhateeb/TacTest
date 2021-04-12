@@ -398,15 +398,16 @@
 
                       <div class="col-lg-6">
                         <div class="form-group">
-                          <label>* {{ l('startDate') }}:</label>
+                          <label>* {{ l('tripsStartDate') }}:</label>
                           <div class="input-group date">
                             <input
                               [(date)]="shippingRequest.startTripDate"
                               class="form-control"
                               type="datetime"
                               name="startdate"
-                              placeholder="Startdate"
-                              [minDate]="today"
+                              placeholder="{{ l('tripsStartDate') }}"
+                              [minDate]="shippingRequest.bidStartDate || today"
+                              (dateChange)="validateTripsDates()"
                               bsDatepicker
                               datePickerMomentModifier
                             />
@@ -417,19 +418,20 @@
                               </span>
                             </div>
                           </div>
-                          <span class="form-text text-muted">{{ l('pickaStartDate') }}</span>
+                          <span class="form-text text-muted">{{ l('tripsStartDate') }}</span>
                         </div>
                       </div>
                       <div class="col-lg-6">
                         <div class="form-group">
-                          <label>* {{ l('endDate') }}:</label>
+                          <label>* {{ l('tripsEndDate') }}:</label>
                           <div class="input-group date">
                             <input
                               [(date)]="shippingRequest.endTripDate"
                               class="form-control"
                               name="endDate"
-                              placeholder="{{ l('endDate') }}"
-                              [minDate]="today"
+                              placeholder="{{ l('tripsEndDate') }}"
+                              [minDate]="shippingRequest.startTripDate || today"
+                              (dateChange)="validateTripsDates()"
                               bsDatepicker
                               datePickerMomentModifier
                             />
@@ -439,7 +441,7 @@
                               </span>
                             </div>
                           </div>
-                          <span class="form-text text-muted">{{ l('pickanEndDate') }}</span>
+                          <span class="form-text text-muted">{{ l('tripsEndDate') }}</span>
                         </div>
                       </div>
                       <div class="col-lg-3">

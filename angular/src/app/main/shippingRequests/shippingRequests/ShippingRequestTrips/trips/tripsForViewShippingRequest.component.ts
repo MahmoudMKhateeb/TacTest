@@ -45,7 +45,7 @@ export class TripsForViewShippingRequestComponent extends AppComponentBase {
       .getAll(
         this.ShippingRequest.id,
         undefined,
-        this.primengTableHelper.getSorting(this.dataTable),
+        this.primengTableHelper.getSorting(this.dataTable) || 'startTripDate ASC',
         this.primengTableHelper.getSkipCount(this.paginator, event),
         this.primengTableHelper.getMaxResultCount(this.paginator, event)
       )
