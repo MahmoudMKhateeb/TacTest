@@ -598,7 +598,8 @@
           </div>
           <div class="card-footer bg-gray-100 border-top-0 text-right">
             <button
-              type="reset"
+              type="submit"
+              (click)="save()"
               class="btn btn-primary font-weight-bold mr-2"
               [busyText]="l('SavingWithThreeDot')"
               [buttonBusy]="saving"
