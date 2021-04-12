@@ -69,6 +69,7 @@ namespace TACHYON.Shipping.ShippingRequestBids
         [RequiresFeature(AppFeatures.Shipper, AppFeatures.TachyonDealer)]
         public virtual async Task<PagedResultDto<ShippingRequestBidDto>> GetAllShippingRequestBids(GetAllShippingRequestBidsInput input)
         {
+
             DisableTenancyFilters();
             IQueryable<ShippingRequestBid> filterShippingRequestsBids = _shippingRequestBidsRepository.GetAll()
                 .Include(x => x.Tenant)
@@ -307,7 +308,6 @@ namespace TACHYON.Shipping.ShippingRequestBids
             {
                 IQueryable<ShippingRequest> filterBidShippingRequests = _shippingRequestsRepository.GetAll()
                     .Include(x => x.TrucksTypeFk)
-                    .Include(x => x.GoodCategoryFk)
                     .Include(x => x.GoodCategoryFk)
                     .Include(x => x.ShippingRequestBids)
                     .Include(x => x.ShippingRequestVases)
