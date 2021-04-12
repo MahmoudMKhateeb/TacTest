@@ -1,4 +1,4 @@
-﻿<div
+<div
   bsModal
   #createOrEditFacilityModal="bs-modal"
   class="modal fade"
@@ -15,7 +15,7 @@
           <h4 class="modal-title">
             <!--                <span *ngIf="routStep.id">{{l("EditRoutStep")}}</span>-->
             <!--                <span *ngIf="!routStep.id">{{l("CreateNewRoutStep")}}</span>-->
-            {{ l('CreateFacilityModal') }}
+            <span>{{ facility.id ? l('EditFacilityModal') : l('CreateFacilityModal') }}</span>
           </h4>
           <button type="button" class="close" (click)="show()" aria-label="Close" [disabled]="saving">
             <span aria-hidden="true">&times;</span>
