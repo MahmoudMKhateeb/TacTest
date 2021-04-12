@@ -248,6 +248,11 @@ namespace TACHYON.Invoices
 
         public IEnumerable<GetInvoiceReportInfoOutput> GetInvoiceReportInfo(long invoiceId)
         {
+            //for host user
+            if(AbpSession.TenantId==null && AbpSession.UserId != null)
+            {
+                DisableTenancyFilters();
+            }
             var invoice=_invoiceRepository.GetAll()
                 .Include(e=>e.Tenant)
                 .Where(e => e.Id == invoiceId);

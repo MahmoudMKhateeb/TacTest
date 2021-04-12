@@ -123,16 +123,16 @@ namespace TACHYON.Shipping.ShippingRequestBids
 
         public async Task<long> CreateOrEditShippingRequestBid(CreatOrEditShippingRequestBidDto input)
         {
-            ShippingRequest item;
-            using (CurrentUnitOfWork.DisableFilter(AbpDataFilters.MustHaveTenant))
-            {
-                 item = await _shippingRequestsRepository.GetAsync(input.ShippingRequestId);
+            DisableTenancyFilters();
+            var item = await _shippingRequestsRepository.GetAll()
+                .Where(x=>x.BidStatus == ShippingRequestBidStatus.OnGoing)
+                .FirstOrDefaultAsync(x=>x.Id== input.ShippingRequestId);
 
-                if (item.BidStatus != ShippingRequestBidStatus.OnGoing)
-                {
-                    ThrowShippingRequestIsNotOngoingError();
-                }
+            if (item==null)
+            {
+                ThrowShippingRequestIsNotOngoingError();
             }
+            
 
             if (input.Id == null)
             {
@@ -154,6 +154,7 @@ namespace TACHYON.Shipping.ShippingRequestBids
             DisableTenancyFilters();
 
                 ShippingRequestBid bid = await _shippingRequestBidsRepository.GetAll()
+                    .Where(x=>x.ShippingRequestFk.TenantId==AbpSession.TenantId)
                     .Include(x => x.ShippingRequestFk)
                     .FirstOrDefaultAsync(x => x.Id == shippingRequestBidId &&
                     x.ShippingRequestFk.IsBid &&
@@ -262,12 +263,9 @@ namespace TACHYON.Shipping.ShippingRequestBids
             using (CurrentUnitOfWork.DisableFilter(AbpDataFilters.MustHaveTenant))
             {
                 ShippingRequestBid bid = await _shippingRequestBidsRepository.GetAll()
+                    .Where(x=>x.TenantId==AbpSession.TenantId)
                     .Include(x => x.ShippingRequestFk)
                     .FirstOrDefaultAsync(x => x.Id == input.ShippingRequestBidId);
-                if (bid == null)
-                {
-                    throw new UserFriendlyException(L("the bid is not exists message"));
-                }
 
                 //check if the bid is already canceled
                 if (bid.IsCancled)
