@@ -157,9 +157,9 @@
               >
                 <ng-template pTemplate="header">
                   <tr>
-                    <th style="width: 50px;" pSortableColumn="shippingRequestId">
+                    <th style="width: 50px;" pSortableColumn="id">
                       {{ l('id') }}
-                      <p-sortIcon field="shippingRequestId"></p-sortIcon>
+                      <p-sortIcon field="id"></p-sortIcon>
                     </th>
                     <th style="width: 110px;" pSortableColumn="shipperName">
                       {{ l('shipperName') }}
@@ -182,14 +182,14 @@
                       <p-sortIcon field="bidStartDate"></p-sortIcon>
                     </th>
 
-                    <th style="width: 150px;" pSortableColumn="StatusName">
+                    <th style="width: 150px;" pSortableColumn="BidStatus">
                       {{ l('StatusName') }}
-                      <p-sortIcon field="StatusName"></p-sortIcon>
+                      <p-sortIcon field="BidStatus"></p-sortIcon>
                     </th>
 
-                    <th style="width: 150px;" pSortableColumn="myBidPrice">
+                    <th style="width: 150px;" pSortableColumn="BasePrice">
                       {{ l('myBidPrice') }}
-                      <p-sortIcon field="myBidPrice"></p-sortIcon>
+                      <p-sortIcon field="BasePrice"></p-sortIcon>
                     </th>
                     <th style="width: 150px;">
                       {{ l('Actions') }}
