@@ -28,12 +28,6 @@
                 <table class="table table-head-custom table-vertical-center">
                   <thead>
                     <tr class="text-left">
-                      <th class="pl-0" style="width: 30px;">
-                        <label class="checkbox checkbox-lg checkbox-inline mr-2">
-                          <input type="checkbox" value="1" />
-                          <span></span>
-                        </label>
-                      </th>
                       <th class="pl-0" style="min-width: 120px;">{{ l('ShipperName') }}</th>
                       <th style="min-width: 110px;">{{ l('price')}}</th>
                       <th style="min-width: 110px;">
@@ -41,7 +35,6 @@
                       </th>
 
                       <th style="min-width: 120px;">{{ l('status')}}</th>
-                      <!--             <th class="pr-0 text-right" style="min-width: 160px;">Action</th>-->
                     </tr>
                   </thead>
 
@@ -49,12 +42,6 @@
                     <!-- start::Tbody-data-->
 
                     <tr *ngFor="let SingleCarrierBid of AllCarrierBidsArray">
-                      <td class="pl-0 py-6">
-                        <label class="checkbox checkbox-lg checkbox-inline">
-                          <input type="checkbox" value="1" />
-                          <span></span>
-                        </label>
-                      </td>
                       <td class="pl-0">
                         <a href="#" class="text-dark font-weight-bolder text-hover-primary font-size-lg">
                           {{ SingleCarrierBid.shipperTenancyName }}
@@ -65,14 +52,10 @@
                       </td>
                       <td>
                         <span class="text-primary font-weight-bolder d-block font-size-lg"
-                          >{{ SingleCarrierBid.shippingRequestBidDto.acceptedDate | momentFormat: 'L' }}</span
+                          >{{ SingleCarrierBid.shippingRequestDto.bidStartDate | momentFormat: 'L' }}</span
                         >
                       </td>
-                      <td>
-                        <span class="text-danger font-weight-bolder d-block font-size-lg"
-                          >{{ SingleCarrierBid.shippingRequestBidDto.canceledDate | momentFormat: 'L'}}</span
-                        >
-                      </td>
+
                       <td>
                         <span class="label label-lg label-light-success label-inline" *ngIf="SingleCarrierBid.shippingRequestBidDto.isAccepted"
                           >{{ l('Accepted')}}</span
