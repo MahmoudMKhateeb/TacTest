@@ -187,63 +187,8 @@ namespace TACHYON.TachyonPriceOffers
             }
             TachyonPriceOffer tachyonPriceOffer = ObjectMapper.Map<TachyonPriceOffer>(input);
             await _commissionManager.CalculateAmountByOffer(tachyonPriceOffer, shippingRequest);
+         
             await _tachyonPriceOfferRepository.InsertAsync(tachyonPriceOffer);
-            //var carrierPriceType = await GetCarrierPriceType(tachyonPriceOffer.ShippingRequestId);
-            //switch (carrierPriceType)
-            //{
-            //    case CarrierPriceType.NotSet:
-            //        tachyonPriceOffer.PriceType = PriceType.GuesingPrice;
-            //        break;
-            //    case CarrierPriceType.TachyonDealerBidding:
-            //        tachyonPriceOffer.PriceType = PriceType.Bidding;
-            //        break;
-            //    case CarrierPriceType.TachyonDirectRequest:
-            //        tachyonPriceOffer.PriceType = PriceType.DirectRequest;
-            //        break;
-            //}
-
-            //if (tachyonPriceOffer.PriceType == PriceType.GuesingPrice)
-            //{
-            //    tachyonPriceOffer.ActualCommissionValue = 0;
-            //    tachyonPriceOffer.ActualPercentCommission = 0;
-            //    tachyonPriceOffer.ActualMinCommissionValue = 0;
-            //    tachyonPriceOffer.TotalCommission = 0;
-            //}
-            //else
-            //{
-            //    var shippingRequest =
-            //        await _shippingRequestRepository.FirstOrDefaultAsync(tachyonPriceOffer.ShippingRequestId);
-
-            //    //check if total Commission less than Minimum value settings, take minimum value as total commission
-            //    if (tachyonPriceOffer.TotalCommission < shippingRequest.MinValueCommissionSetting)
-            //    {
-            //        tachyonPriceOffer.ActualCommissionValue = 0;
-            //        tachyonPriceOffer.ActualPercentCommission =0;
-            //        tachyonPriceOffer.ActualMinCommissionValue = shippingRequest.MinValueCommissionSetting;
-            //        tachyonPriceOffer.TotalCommission = shippingRequest.MinValueCommissionSetting;
-
-            //    }
-
-            //    if (tachyonPriceOffer.TotalAmount < (shippingRequest.CarrierPrice + tachyonPriceOffer.TotalCommission))
-            //    {
-            //        //throw new UserFriendlyException(
-            //        //    L("Offered Price caused financial loss in this case, please edit price"));
-            //        tachyonPriceOffer.ActualCommissionValue = 0;
-            //        tachyonPriceOffer.ActualPercentCommission = 0;
-            //        tachyonPriceOffer.ActualMinCommissionValue = 0;
-            //        tachyonPriceOffer.TotalCommission = 0;
-            //    }
-            //    else
-            //    {
-            //        tachyonPriceOffer.ActualCommissionValue = shippingRequest.CommissionValueSetting;
-            //        tachyonPriceOffer.ActualPercentCommission = shippingRequest.PercentCommissionSetting;
-            //        tachyonPriceOffer.ActualMinCommissionValue = 0;
-            //        tachyonPriceOffer.TotalCommission = shippingRequest.CarrierPrice != 0
-            //            ? (shippingRequest.CarrierPrice * tachyonPriceOffer.ActualPercentCommission / 100) + tachyonPriceOffer.ActualCommissionValue
-            //            : 0;
-            //    }
-            //}
-
 
         }
 

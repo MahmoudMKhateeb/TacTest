@@ -27,7 +27,6 @@ namespace TACHYON.Shipping.ShippingRequests.TachyonDealer
         private readonly IRepository<ShippingRequestsCarrierDirectPricing> _CarrierDirectPricingRepository;
         private readonly IRepository<Tenant> _tenantRepository;
         private readonly IRepository<ShippingRequestBid, long> _shippingRequestBidsRepository;
-
         private readonly IAppNotifier _appNotifier;
         private readonly CommissionManager _commissionManager;
         public ShippingRequestsTachyonDealerAppService(
@@ -192,10 +191,20 @@ namespace TACHYON.Shipping.ShippingRequests.TachyonDealer
                 ObjectMapper.Map(bid, PricingDto);
             }
 
+            var offer = await _tachyonPriceOfferRepository.FirstOrDefaultAsync(x => x.ShippingRequestId == shippingRequest.Id && x.OfferStatus == OfferStatus.AcceptedAndWaitingForCarrier);
 
-            var Calculate = await _commissionManager.CalculateAmountByDefault(Price, shippingRequest);
+            if (offer != null) //If offer guesing price no need to apply the commission
+            {
+                PricingDto.SubTotalAmount = offer.SubTotalAmount.Value;
+                PricingDto.VatAmount = offer.VatSetting.Value;
+                PricingDto.TotalAmount = offer.TotalAmount;
+                PricingDto.IsGuesingPrice = true;
+            }
+            else { 
+                var Calculate = await _commissionManager.CalculateAmountByDefault(Price, shippingRequest);
+                ObjectMapper.Map(Calculate, PricingDto);
+            }
 
-            ObjectMapper.Map(Calculate, PricingDto);
             return PricingDto;
 
 
