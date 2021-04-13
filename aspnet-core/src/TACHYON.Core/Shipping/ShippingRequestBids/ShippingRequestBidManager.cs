@@ -1,4 +1,5 @@
-﻿using Abp.BackgroundJobs;
+﻿using Abp;
+using Abp.BackgroundJobs;
 using Abp.Domain.Repositories;
 using System;
 using System.Collections.Generic;
@@ -6,6 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using TACHYON.Features;
 using TACHYON.Invoices.Balances;
+using TACHYON.Notifications;
 using TACHYON.Shipping.ShippingRequests;
 using TACHYON.TachyonPriceOffers;
 
@@ -17,15 +19,18 @@ namespace TACHYON.Shipping.ShippingRequestBids
         private readonly BalanceManager _balanceManager;
         private readonly ShippingRequestManager _shippingRequestManager;
         private readonly BackgroundJobManager _backgroundJobManager;
+        IAppNotifier _appNotifier;
 
         public ShippingRequestBidManager(IRepository<ShippingRequestBid, long> shippingRequestBidsRepository,
             BalanceManager balanceManager,
-            ShippingRequestManager shippingRequestManager, BackgroundJobManager backgroundJobManager)
+            ShippingRequestManager shippingRequestManager, BackgroundJobManager backgroundJobManager,
+            IAppNotifier appNotifier)
         {
             _shippingRequestBidsRepository = shippingRequestBidsRepository;
             _balanceManager = balanceManager;
             shippingRequestManager = _shippingRequestManager;
             _backgroundJobManager = backgroundJobManager;
+            _appNotifier = appNotifier;
         }
 
         public async Task AcceptBidAndGoToPostPriceAsync(ShippingRequestBid bid)
@@ -43,6 +48,7 @@ namespace TACHYON.Shipping.ShippingRequestBids
             await _backgroundJobManager.EnqueueAsync<RejectOtherBidsJob, RejectOtherBidsJobArgs>
                 (new RejectOtherBidsJobArgs { AcceptedBidId = bid.Id, ShippingReuquestId = bid.ShippingRequestId });
 
+            await _appNotifier.AcceptShippingRequestBid(new UserIdentifier(bid.TenantId, bid.CreatorUserId.Value), bid.ShippingRequestId);
         }
 
         private void AssignShippingRequestInfo(ShippingRequest shippingRequestItem, ShippingRequestBid bid)
