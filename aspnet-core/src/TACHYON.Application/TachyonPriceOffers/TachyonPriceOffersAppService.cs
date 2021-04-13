@@ -31,6 +31,7 @@ namespace TACHYON.TachyonPriceOffers
         private readonly IAppNotifier _appNotifier;
         private readonly IRepository<ShippingRequestsCarrierDirectPricing> _shippingRequestsCarrierDirectPricingRepository;
         private readonly IRepository<ShippingRequestBid,long> _shippingRequestBidRepository;
+        private readonly ShippingRequestBidManager _shippingRequestBidManager;
 
 
         public TachyonPriceOffersAppService(IRepository<TachyonPriceOffer> tachyonPriceOfferRepository,
@@ -38,7 +39,7 @@ namespace TACHYON.TachyonPriceOffers
             IRepository<ShippingRequestsCarrierDirectPricing> shippingRequestsCarrierDirectPricingRepository,
             ShippingRequestManager shippingRequestManager,
             IRepository<ShippingRequestBid, long> shippingRequestBidsRepository,
-            IAppNotifier appNotifier)
+            IAppNotifier appNotifier, ShippingRequestBidManager shippingRequestBidManager)
         {
             _tachyonPriceOfferRepository = tachyonPriceOfferRepository;
             _shippingRequestRepository = shippingRequestRepository;
@@ -49,7 +50,7 @@ namespace TACHYON.TachyonPriceOffers
             _appNotifier = appNotifier;
             _shippingRequestsCarrierDirectPricingRepository = shippingRequestsCarrierDirectPricingRepository;
             _shippingRequestBidRepository = shippingRequestBidsRepository;
-
+            _shippingRequestBidManager = shippingRequestBidManager;
         }
         [RequiresFeature(AppFeatures.TachyonDealer, AppFeatures.Shipper)]
         public async Task<PagedResultDto<GetAllTachyonPriceOfferOutput>> GetAllTachyonPriceOffers(GetAllTachyonPriceOfferInput input)
@@ -189,7 +190,7 @@ namespace TACHYON.TachyonPriceOffers
                 throw new UserFriendlyException(L("Cannot Create new offer, there is already existing offer message"));
             }
 
-             await OfferMappingFromDirectRequestOrBidding(input, shippingRequest.Id);
+             await OfferMappingFromDirectRequestOrBidding(input, shippingRequest);
             TachyonPriceOffer tachyonPriceOffer = ObjectMapper.Map<TachyonPriceOffer>(input);
 
             await _commissionManager.CalculateAmountByOffer(tachyonPriceOffer, shippingRequest);
@@ -200,7 +201,7 @@ namespace TACHYON.TachyonPriceOffers
 
         private async Task Edit(CreateOrEditTachyonPriceOfferDto input, TachyonPriceOffer offer, ShippingRequest shippingRequest)
         {
-            await OfferMappingFromDirectRequestOrBidding(input, shippingRequest.Id);
+            await OfferMappingFromDirectRequestOrBidding(input, shippingRequest);
             offer.CarrierPrice = input.CarrierPrice;
             offer.CarrirerTenantId = input.CarrirerTenantId;
             offer.ShippingRequestBidId = input.ShippingRequestBidId;
@@ -210,7 +211,7 @@ namespace TACHYON.TachyonPriceOffers
             await _shippingRequestManager.SetToPostPrice(offer.ShippingRequestFk);
         }
 
-        private async Task OfferMappingFromDirectRequestOrBidding(CreateOrEditTachyonPriceOfferDto input,long requestId)
+        private async Task OfferMappingFromDirectRequestOrBidding(CreateOrEditTachyonPriceOfferDto input,ShippingRequest request)
         {
             if (input.DriectRequestForCarrierId.HasValue)
             {
@@ -219,18 +220,21 @@ namespace TACHYON.TachyonPriceOffers
                 input.CarrierPrice = direct.Price;
                 input.CarrirerTenantId = direct.CarrirerTenantId;
                 direct.Status = ShippingRequestsCarrierDirectPricingStatus.Accepted;
+                if (request.IsBid) 
+                {
+                    request.BidStatus = ShippingRequestBidStatus.Closed;
+                }
             }
             else if (input.ShippingRequestBidId.HasValue)
             {
                 var bid = await _shippingRequestBidsRepository
                     .GetAll()
-                    .Where(x => x.Id == input.ShippingRequestBidId.Value && x.ShippingRequestId == requestId)
+                    .Where(x => x.Id == input.ShippingRequestBidId.Value && x.ShippingRequestId == request.Id)
                     .FirstOrDefaultAsync();
                 if (bid == null) throw new UserFriendlyException(L("ThebidIsNotFound"));
                 input.CarrierPrice = bid.BasePrice;
                 input.CarrirerTenantId = bid.TenantId;
-                bid.IsAccepted = true;
-                bid.ShippingRequestFk.BidStatus = ShippingRequestBidStatus.Closed;
+                await _shippingRequestBidManager.AcceptBidAndGoToPostPriceAsync(bid);
             }
         }
         private async Task<bool> IsExistingOffer(long shippingRequestId)

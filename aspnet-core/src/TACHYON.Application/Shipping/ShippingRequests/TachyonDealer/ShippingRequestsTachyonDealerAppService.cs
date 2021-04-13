@@ -63,28 +63,6 @@ namespace TACHYON.Shipping.ShippingRequests.TachyonDealer
             }
         }
 
-        [RequiresFeature(AppFeatures.SendDirectRequest)]
-        public async Task StartShippingRequestAsDirectRequest(long id)
-        {
-            DisableTenancyFilters();
-            var item = await _shippingRequestRepository.FirstOrDefaultAsync(e => e.Id == id && e.IsTachyonDeal && !e.IsDirectRequest && e.Status == ShippingRequestStatus.PrePrice);
-            if (item != null)
-            {
-                item.IsDirectRequest = true;
-            }
-        }
-        //public async Task SendOfferToShipper(TachyonDealerDirectOfferToShipperInputDto Input)
-        //{
-        //    DisableTenancyFilters();
-
-        //    ShippingRequest shippingRequest = await GetShippingRequestOnPrePriceStage(Input.Id);
-        //    var TachyonPriceOffer = new TachyonPriceOffer();
-        //    TachyonPriceOffer.TenantId = shippingRequest.TenantId;
-        //    TachyonPriceOffer.OfferedPrice = Input.Price;
-        //    TachyonPriceOffer.PriceType = PriceType.GuesingPrice;
-        //    TachyonPriceOffer.ShippingRequestId = shippingRequest.Id;
-        //}
-
         /// <summary>
         /// User tachyon dealer sent request to get offer from carrirer
         /// </summary>
@@ -99,7 +77,6 @@ namespace TACHYON.Shipping.ShippingRequests.TachyonDealer
             DisableTenancyFilters();
             ShippingRequest shippingRequest= await GetShippingRequestOnPrePriceStage(Input.Id);
             //if (shippingRequest.IsBid) throw new UserFriendlyException(L("YouCanNotSendDriectRequestWhenTheSippingIsBid"));
-            if(!shippingRequest.IsDirectRequest) throw new UserFriendlyException(L("ShippingRequestMustBeIsDirectRequest"));
 
             if (await _CarrierDirectPricingRepository.GetAll().AnyAsync(x => x.CarrirerTenantId == Input.TenantId && x.RequestId == Input.Id))
                 throw new UserFriendlyException(L("YouAlreadyAddThisCarrrierToThisShipping"));
@@ -123,7 +100,7 @@ namespace TACHYON.Shipping.ShippingRequests.TachyonDealer
                  .ThenInclude(t=>t.Tenant)
                 .Include(t=>t.Carrirer)
                 //.Where(x => x.Request.Status == ShippingRequestStatus.PrePrice && x.Request.IsTachyonDeal && x.Request.CarrierPriceType== CarrierPriceType.TachyonDirectRequest)
-                .WhereIf(IsEnabled(AppFeatures.Carrier), e => e.CarrirerTenantId == AbpSession.TenantId)
+                .WhereIf(IsEnabled(AppFeatures.Carrier), e => e.CarrirerTenantId == AbpSession.TenantId && e.Request.Status== ShippingRequestStatus.PrePrice)
                 .WhereIf(IsEnabled(AppFeatures.TachyonDealer), e => e.TenantId == AbpSession.TenantId)
                 .WhereIf(Input.RequestId.HasValue,e=>e.RequestId== Input.RequestId.Value)
                 .OrderBy(Input.Sorting ?? "id desc")
