@@ -18,7 +18,7 @@ namespace TACHYON.MultiTenancy.Dto
         [RegularExpression(TenantConsts.TenancyNameRegex)]
         public string companyName { get; set; }
 
-
+        public string MobileNo { get; set; }
         [Required]
         [StringLength(TenantConsts.MaxNameLength)]
         public string Name { get; set; }

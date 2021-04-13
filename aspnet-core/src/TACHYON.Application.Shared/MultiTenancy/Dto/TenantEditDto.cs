@@ -16,6 +16,7 @@ namespace TACHYON.MultiTenancy.Dto
         [StringLength(TenantConsts.MaxNameLength)]
         public string Name { get; set; }
 
+        public string MobileNo { get; set; }
         [Required]
         public virtual string Address { get; set; }
         [Required]

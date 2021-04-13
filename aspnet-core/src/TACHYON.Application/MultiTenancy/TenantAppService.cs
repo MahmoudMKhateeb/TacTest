@@ -71,6 +71,7 @@ namespace TACHYON.MultiTenancy
 
             await TenantManager.CreateWithAdminUserAsync(
                 input.companyName,
+                input.MobileNo,
                 tenancyName,
                 input.Name,
                 input.Address,

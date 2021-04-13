@@ -27,7 +27,7 @@ namespace TACHYON.MultiTenancy
 
         public virtual string companyName { get; set; }
 
-
+        public virtual string MobileNo { get; set; }
 
         public DateTime? SubscriptionEndDateUtc { get; set; }
 
