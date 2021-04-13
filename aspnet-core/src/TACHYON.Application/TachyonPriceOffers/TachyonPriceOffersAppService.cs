@@ -41,7 +41,7 @@ namespace TACHYON.TachyonPriceOffers
             IAppNotifier appNotifier)
         {
             _tachyonPriceOfferRepository = tachyonPriceOfferRepository;
-=            _shippingRequestRepository = shippingRequestRepository;
+            _shippingRequestRepository = shippingRequestRepository;
             _commissionManager = commissionManager;
             _balanceManager = balanceManager;
             _shippingRequestManager = shippingRequestManager;
