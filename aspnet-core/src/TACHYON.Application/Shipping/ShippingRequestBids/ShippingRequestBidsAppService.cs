@@ -316,7 +316,7 @@ namespace TACHYON.Shipping.ShippingRequestBids
                 IQueryable<ShippingRequest> filterBidShippingRequests = _shippingRequestsRepository.GetAll()
                     .Include(x => x.TrucksTypeFk)
                     .Include(x => x.GoodCategoryFk)
-                    .Include(x => x.ShippingRequestBids)
+                    .Include(x => x.ShippingRequestBids.Where(x=>x.TenantId==AbpSession.TenantId))
                     .Include(x => x.ShippingRequestVases)
                     .ThenInclude(x => x.VasFk)
                     .Include(x => x.OriginCityFk)
@@ -365,7 +365,7 @@ namespace TACHYON.Shipping.ShippingRequestBids
                         ShipperName = o.Tenant.Name,
                         TruckTypeDisplayName = o.TrucksTypeFk.DisplayName,
                         GoodCategoryName = o.GoodCategoryFk.DisplayName,
-                        MyBidPrice = o.ShippingRequestBids.OrderByDescending(x => x.Id).FirstOrDefault()?.BasePrice,
+                        MyBidPrice = o.ShippingRequestBids.FirstOrDefault()?.BasePrice,
                         MyBidId = o.ShippingRequestBids.FirstOrDefault()?.Id,
                         SourceCityName = o.OriginCityFk?.DisplayName,
                         DestinationCityName = o.DestinationCityFk?.DisplayName,
