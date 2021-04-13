@@ -164,19 +164,15 @@ namespace TACHYON.Shipping.ShippingRequestBids
                     x.ShippingRequestFk.BidStatus != ShippingRequestBidStatus.OnGoing);
                 if (bid == null)
                 {
-                    throw new UserFriendlyException(L("Bid Is not exist message"));
+                    ThrowShippingRequestIsNotOngoingError();
                 }
 
-            //if (bid.ShippingRequestFk.BidStatus != ShippingRequestBidStatus.OnGoing)
-            //{
-            //    ThrowShippingRequestIsNotOngoingError();
-            //}
+           
             bid.IsAccepted = true;
-
+            bid.ShippingRequestFk.BidStatus = ShippingRequestBidStatus.Closed;
             await _balanceManager.ShipperCanAcceptPrice(bid.ShippingRequestFk.TenantId,bid.price,bid.ShippingRequestId);
-            AssignShippingRequestInfoAndGoToPostPrice(bid.ShippingRequestFk, bid);
+            AssignShippingRequestInfo(bid.ShippingRequestFk, bid);
             await _shippingRequestManager.SetToPostPrice(bid.ShippingRequestFk);
-
 
 
                 //Reject the other bids of this shipping request by background job
@@ -214,7 +210,7 @@ namespace TACHYON.Shipping.ShippingRequestBids
             
         }
         
-        private void AssignShippingRequestInfoAndGoToPostPrice(ShippingRequest shippingRequestItem,ShippingRequestBid bid)
+        private void AssignShippingRequestInfo(ShippingRequest shippingRequestItem,ShippingRequestBid bid)
         {
             shippingRequestItem.CarrierTenantId = bid.TenantId;
             shippingRequestItem.Price = bid.price; //bid price that biddingCommission added to the base

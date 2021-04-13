@@ -29,27 +29,26 @@ namespace TACHYON.TachyonPriceOffers
         private readonly IRepository<ShippingRequestsCarrierDirectPricing> _carrierDirectPricingRepository;
         private readonly IRepository<ShippingRequestBid, long> _shippingRequestBidsRepository;
         private readonly IAppNotifier _appNotifier;
-        private readonly IRepository<ShippingRequestsCarrierDirectPricing> _shippingRequestsCarrierDirectPricing;
+        private readonly IRepository<ShippingRequestsCarrierDirectPricing> _shippingRequestsCarrierDirectPricingRepository;
         private readonly IRepository<ShippingRequestBid,long> _shippingRequestBidRepository;
 
 
         public TachyonPriceOffersAppService(IRepository<TachyonPriceOffer> tachyonPriceOfferRepository,
             IRepository<ShippingRequest, long> shippingRequestRepository, CommissionManager commissionManager, BalanceManager balanceManager,
-            IRepository<ShippingRequestsCarrierDirectPricing> carrierDirectPricingRepository,
+            IRepository<ShippingRequestsCarrierDirectPricing> shippingRequestsCarrierDirectPricingRepository,
             ShippingRequestManager shippingRequestManager,
             IRepository<ShippingRequestBid, long> shippingRequestBidsRepository,
             IAppNotifier appNotifier)
         {
             _tachyonPriceOfferRepository = tachyonPriceOfferRepository;
-            _carrierDirectPricingRepository = carrierDirectPricingRepository;
-            _shippingRequestRepository = shippingRequestRepository;
+=            _shippingRequestRepository = shippingRequestRepository;
             _commissionManager = commissionManager;
             _balanceManager = balanceManager;
             _shippingRequestManager = shippingRequestManager;
             _shippingRequestBidsRepository = shippingRequestBidsRepository;
             _appNotifier = appNotifier;
-            _shippingRequestsCarrierDirectPricing = shippingRequestsCarrierDirectPricing;
-            _shippingRequestBidRepository = shippingRequestBidRepository;
+            _shippingRequestsCarrierDirectPricingRepository = shippingRequestsCarrierDirectPricingRepository;
+            _shippingRequestBidRepository = shippingRequestBidsRepository;
 
         }
         [RequiresFeature(AppFeatures.TachyonDealer, AppFeatures.Shipper)]
@@ -83,7 +82,9 @@ namespace TACHYON.TachyonPriceOffers
         {
             DisableTenancyFilters();
             var Request = await GetShippingRequestOnPrePriceStage(input.ShippingRequestId);
-            var Offer = await _tachyonPriceOfferRepository.FirstOrDefaultAsync(x => x.ShippingRequestId == input.ShippingRequestId && x.OfferStatus == OfferStatus.AcceptedAndWaitingForCarrier);
+            var Offer = await _tachyonPriceOfferRepository
+                .FirstOrDefaultAsync(x => x.ShippingRequestId == input.ShippingRequestId && 
+            x.OfferStatus == OfferStatus.AcceptedAndWaitingForCarrier);
 
             if (Offer == null)
             {
@@ -91,7 +92,7 @@ namespace TACHYON.TachyonPriceOffers
             }
             else
             {
-                if (!input.CarrirerTenantId.HasValue) throw new UserFriendlyException(L("ItShouldBeHaveCarrirer"));
+                if (!input.CarrirerTenantId.HasValue) throw new UserFriendlyException(L("ItShouldHaveCarrirer"));
                 await Edit(input, Offer, Request);
             }
         }
@@ -139,18 +140,9 @@ namespace TACHYON.TachyonPriceOffers
                 }
                 else
                 {
-                    //todo change bid or direct request status
-                    if (offer.ShippingRequestBidId != null)
-                    {
-                        var bid=await _shippingRequestBidRepository.FirstOrDefaultAsync(offer.ShippingRequestBidId.Value);
-                        bid.IsAccepted = true;
-                        bid.price = bid.BasePrice = offer.CarrierPrice.Value;
-                    }
-                    else if (offer.ShippingRequestCarrierDirectPricingId != null)
-                    {
-                        var directPriceItem=await _shippingRequestsCarrierDirectPricing.FirstOrDefaultAsync(offer.ShippingRequestCarrierDirectPricingId.Value);
-                        directPriceItem.Status = ShippingRequestsCarrierDirectPricingStatus.Accepted;
-                    }
+                    //if bidding, set bid as accepted, 
+                    await ChangeBiddingOrDirectRequestStatus(offer);
+
                     await _balanceManager.ShipperCanAcceptPrice(offer.ShippingRequestFk.TenantId, offer.TotalAmount, offer.ShippingRequestId);
                     // ObjectMapper.Map(offer, offer.ShippingRequestFk);
                     offer.ShippingRequestFk.CarrierTenantId = offer.CarrirerTenantId;
@@ -169,6 +161,23 @@ namespace TACHYON.TachyonPriceOffers
                 await _appNotifier.TachyonDealOfferRejectedByShipper(offer);
             }
 
+        }
+
+        private async Task ChangeBiddingOrDirectRequestStatus(TachyonPriceOffer offer)
+        {
+            if (offer.ShippingRequestBidId != null)
+            {
+                var bid = await _shippingRequestBidRepository.GetAll()
+                    .Include(x=>x.ShippingRequestFk).FirstOrDefaultAsync(x=>x.Id==offer.ShippingRequestBidId.Value);
+                bid.IsAccepted = true;
+                bid.price = bid.BasePrice = offer.CarrierPrice.Value;
+                bid.ShippingRequestFk.BidStatus = ShippingRequestBidStatus.Closed;
+            }
+            else if (offer.ShippingRequestCarrierDirectPricingId != null)
+            {
+                var directPriceItem = await _shippingRequestsCarrierDirectPricingRepository.FirstOrDefaultAsync(offer.ShippingRequestCarrierDirectPricingId.Value);
+                directPriceItem.Status = ShippingRequestsCarrierDirectPricingStatus.Accepted;
+            }
         }
 
 
@@ -209,6 +218,7 @@ namespace TACHYON.TachyonPriceOffers
                 if (direct == null) throw new UserFriendlyException(L("TheCarrierDirectPricingIsNotFound"));
                 input.CarrierPrice = direct.Price;
                 input.CarrirerTenantId = direct.CarrirerTenantId;
+                direct.Status = ShippingRequestsCarrierDirectPricingStatus.Accepted;
             }
             else if (input.ShippingRequestBidId.HasValue)
             {
@@ -219,6 +229,8 @@ namespace TACHYON.TachyonPriceOffers
                 if (bid == null) throw new UserFriendlyException(L("ThebidIsNotFound"));
                 input.CarrierPrice = bid.BasePrice;
                 input.CarrirerTenantId = bid.TenantId;
+                bid.IsAccepted = true;
+                bid.ShippingRequestFk.BidStatus = ShippingRequestBidStatus.Closed;
             }
         }
         private async Task<bool> IsExistingOffer(long shippingRequestId)
