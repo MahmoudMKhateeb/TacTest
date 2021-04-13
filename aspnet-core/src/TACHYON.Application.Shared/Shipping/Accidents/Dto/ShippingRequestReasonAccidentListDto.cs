@@ -7,6 +7,6 @@ namespace TACHYON.Shipping.Accidents.Dto
 {
    public class ShippingRequestReasonAccidentListDto: FullAuditedEntityDto
     {
-        public string DisplayName { get; set; }
+        public string Name { get; set; }
     }
 }

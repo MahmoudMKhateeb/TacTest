@@ -18,6 +18,7 @@ using TACHYON.Features;
 using TACHYON.Invoices.Periods;
 using TACHYON.MultiTenancy;
 using TACHYON.Shipping.Accidents;
+using TACHYON.Shipping.Accidents.Dto;
 
 namespace TACHYON.Common
 {
@@ -121,11 +122,12 @@ namespace TACHYON.Common
             return query;
         }
 
-        public async Task<List<SelectItemDto>> GetAccidentReason()
+        public  Task<List<SelectItemDto>> GetAccidentReason()
         {
-            return  await _ReasonAccidentRepository
-                .GetAll()
-                .Select(t => new SelectItemDto { DisplayName = t.DisplayName, Id = t.Id.ToString() }).ToListAsync();
+            var query=  _ReasonAccidentRepository
+                .GetAllIncluding(x => x.Translations)
+                .AsNoTracking();
+            return Task.FromResult(ObjectMapper.Map<List<ShippingRequestReasonAccidentListDto>>(query).Select(t => new SelectItemDto { DisplayName = t.Name, Id = t.Id.ToString() }).ToList());
             
         }
     }

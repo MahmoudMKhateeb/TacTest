@@ -98,6 +98,8 @@ using TACHYON.Routs.RoutSteps.Dtos;
 using TACHYON.Routs.RoutTypes;
 using TACHYON.Routs.RoutTypes.Dtos;
 using TACHYON.Sessions.Dto;
+using TACHYON.Shipping.Accidents;
+using TACHYON.Shipping.Accidents.Dto;
 using TACHYON.Shipping.ShippingRequestBids;
 using TACHYON.Shipping.ShippingRequestBids.Dtos;
 using TACHYON.Shipping.ShippingRequests;
@@ -106,6 +108,7 @@ using TACHYON.Shipping.ShippingRequestStatuses.Dtos;
 using TACHYON.Shipping.ShippingRequestTrips;
 using TACHYON.Shipping.ShippingTypes;
 using TACHYON.Shipping.ShippingTypes.Dtos;
+using TACHYON.Shipping.Trips.Accidents.Dto;
 using TACHYON.Shipping.Trips.Dto;
 using TACHYON.ShippingRequestTripVases;
 using TACHYON.ShippingRequestTripVases.Dtos;
@@ -569,6 +572,12 @@ namespace TACHYON
                 .EntityMap
                 .ForMember(dst => dst.Id, opt => opt.MapFrom(src => src.Id.ToString()))
                 .ReverseMap();
+
+
+            
+            configuration.
+                CreateMultiLingualMap<ShippingRequestReasonAccident, ShippingRequestReasonAccidentTranslation, ShippingRequestReasonAccidentListDto>(context);
+
         }
 
         private static void AddOrUpdateShippingRequest(CreateOrEditShippingRequestDto dto, ShippingRequest Request)
