@@ -99,6 +99,27 @@
     <div class="row text-left">
       <div class="col-12">
         <div class="form-group">
+          <label>{{ 'MobileNo' | localize }}</label>
+          <input
+            #mobileNo="ngModel"
+            class="form-control"
+            type="number"
+            onkeypress="numberOnly($event)"
+            [(ngModel)]="model.mobileNo"
+            name="MobileNo"
+            required
+            maxlength="128"
+          />
+          <div>
+            <validation-messages [formCtrl]="mobileNo"></validation-messages>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="row text-left">
+      <div class="col-12">
+        <div class="form-group">
           <label>{{ 'Address' | localize }}</label>
           <input
             #addressInput="ngModel"
