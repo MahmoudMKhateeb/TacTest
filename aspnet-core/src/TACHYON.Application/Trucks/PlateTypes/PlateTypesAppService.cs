@@ -12,6 +12,7 @@ using TACHYON.Authorization;
 using Abp.Extensions;
 using Abp.Authorization;
 using Microsoft.EntityFrameworkCore;
+using Abp.UI;
 
 namespace TACHYON.Trucks.PlateTypes
 {
@@ -76,6 +77,7 @@ namespace TACHYON.Trucks.PlateTypes
 
         public async Task CreateOrEdit(CreateOrEditPlateTypeDto input)
         {
+            await CheckIfNameExists(input);
             if (input.Id == null)
             {
                 await Create(input);
@@ -84,6 +86,12 @@ namespace TACHYON.Trucks.PlateTypes
             {
                 await Update(input);
             }
+        }
+
+        [AbpAuthorize(AppPermissions.Pages_PlateTypes_Delete)]
+        public async Task Delete(EntityDto input)
+        {
+            await _plateTypeRepository.DeleteAsync(input.Id);
         }
 
         [AbpAuthorize(AppPermissions.Pages_PlateTypes_Create)]
@@ -100,11 +108,14 @@ namespace TACHYON.Trucks.PlateTypes
             var plateType = await _plateTypeRepository.FirstOrDefaultAsync((int)input.Id);
             ObjectMapper.Map(input, plateType);
         }
-
-        [AbpAuthorize(AppPermissions.Pages_PlateTypes_Delete)]
-        public async Task Delete(EntityDto input)
+        private async Task CheckIfNameExists(CreateOrEditPlateTypeDto input)
         {
-            await _plateTypeRepository.DeleteAsync(input.Id);
+            var nameExists = await _plateTypeRepository.FirstOrDefaultAsync(x => x.DisplayName.ToLower() == input.DisplayName.ToLower());
+            if (nameExists != null)
+            {
+                throw new UserFriendlyException(L("CannotCreateDuplicatedNameMessage"));
+            }
         }
+
     }
 }
