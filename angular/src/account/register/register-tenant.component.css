@@ -30,3 +30,7 @@
 :host ::ng-deep p {
   text-align: left;
 }
+
+::ng-deep .main-login-form {
+  min-width: fit-content !important;
+}

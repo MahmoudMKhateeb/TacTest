@@ -1,27 +1,17 @@
-<div class="login-form" [@routerTransition]>
-  <div class="text-left login-logo">
-    <!-- <div class="mb-5"> -->
-    <a>
-      <img [src]="appRootUrl() + 'assets/common/images/app-logo-on-light-login.svg'" class="max-h-75px" (click)="goToHome()" />
-    </a>
-    <!-- </div> -->
+<!--begin::Login Sign in form-->
+<div class="login-signin">
+  <div class="mb-20">
+    <h3 class="head-text">Sign In To Tachyon</h3>
+    <div class="normal-text">Enter your details to login to your account:</div>
   </div>
-  <div class="text-left label-text">
-    <h3 class="font-weight-bolder text-dark font-size-h4 font-size-h1-lg text-red">
-      {{ 'LogIn' | localize }}
-    </h3>
-  </div>
-  <!--begin::Form-->
-  <form #loginForm="ngForm" class="login-form form" method="post" method="post" (ngSubmit)="login()">
-    <div class="form-group">
-      <div class="d-flex justify-content-between mt-n5">
-        <label class="font-size-h6 font-weight-bolder text-dark pt-5">{{ 'Email' | localize }} </label>
-      </div>
+  <form #loginForm="ngForm" class="form fv-plugins-bootstrap fv-plugins-framework" method="post" (ngSubmit)="login()">
+    <div class="form-group mb-5 fv-plugins-icon-container">
       <input
         #userNameOrEmailAddressInput="ngModel"
         [(ngModel)]="loginService.authenticateModel.userNameOrEmailAddress"
-        autoFocus
-        class="form-control"
+        autofocus
+        placeholder="Email"
+        class="input-custom"
         type="email"
         autocomplete="new-password"
         name="userNameOrEmailAddress"
@@ -35,20 +25,14 @@
           {{ 'InvalidEmailAddress' | localize }}
         </div>
       </div>
-      <!-- <validation-messages
-        *ngIf="userNameOrEmailAddressInput.errors &&(userNameOrEmailAddressInput.touched || userNameOrEmailAddressInput.dirty)">
-      </validation-messages> -->
     </div>
-
-    <div class="form-group">
-      <div class="d-flex justify-content-between mt-n5">
-        <label class="font-size-h6 font-weight-bolder text-dark pt-5">{{ 'Password' | localize }} </label>
-      </div>
+    <div class="form-group mb-5 fv-plugins-icon-container">
       <input
         #passwordInput="ngModel"
         [(ngModel)]="loginService.authenticateModel.password"
-        class="form-control"
+        class="input-custom"
         type="password"
+        placeholder="Password"
         autocomplete="new-password"
         name="password"
         required
@@ -56,65 +40,19 @@
       />
       <validation-messages [formCtrl]="passwordInput" *ngIf="!passwordInput.touched"></validation-messages>
     </div>
-
-    <div class="form-group d-flex justify-content-between mt-4">
+    <div class="form-group d-flex flex-wrap justify-content-between align-items-center">
       <div class="checkbox-inline">
-        <label class="checkbox m-0 font-weight-bold">
+        <label class="checkbox m-0 text-muted">
           <input [(ngModel)]="loginService.rememberMe" type="checkbox" name="rememberMe" value="true" />
-          <span></span>{{ 'RememberMe' | localize }}</label
+          <span></span>Remember me</label
         >
       </div>
+      <a routerLink="/account/forgot-password" id="forget-password" class="text-muted text-hover-primary">Forget Password ?</a>
     </div>
-
-    <div>
-      <a routerLink="/account/forgot-password" id="forget-password" class=".text-login-links-hover float-left"> {{ 'ForgotPassword' | localize }}</a>
-    </div>
-
-    <div class="pb-lg-0 pb-5">
-      <button type="submit" class="btn btn-primary btn-primary-login float-right" [disabled]="!loginForm.form.valid">
-        {{ 'LogIn' | localize }}
-      </button>
-    </div>
+    <button type="submit" class="btn btn-primary font-weight-bold px-9 py-4 my-3 mx-4" [disabled]="!loginForm.form.valid">Sign In</button>
   </form>
-
-  <!--end::Form-->
-
-  <!--begin::Options-->
-  <div class="mt-10 mb-2" *ngIf="(multiTenancySideIsTeanant || !isMultiTenancyEnabled) && loginService.externalLoginProviders.length > 0">
-    <div class="divider">
-      <span></span>
-      <span>{{ 'LoginWith' | localize }}</span>
-      <span></span>
-    </div>
+  <div class="mt-10">
+    <span class="opacity-70 mr-4">Don't have an account yet?</span>
+    <a class="text-muted text-hover-primary font-weight-bold" routerLink="/account/select-edition">Sign Up!</a>
   </div>
-
-  <div class="pb-lg-0 pb-5" *ngIf="(multiTenancySideIsTeanant || !isMultiTenancyEnabled) && loginService.externalLoginProviders.length > 0">
-    <a
-      *ngFor="let provider of loginService.externalLoginProviders"
-      class="btn btn-sm btn-light-primary font-weight-bolder py-2"
-      (click)="externalLogin(provider)"
-      title="{{ provider.name }}"
-    >
-      <i class="fab fa-{{ provider.icon }}"></i>
-      {{ provider.name }}
-    </a>
-  </div>
-  <!--end::Options-->
-</div>
-<br />
-<div class="form-group d-flex justify-content-between mt-4" style="box-shadow: 0 2px 6px rgba(0, 0, 0, 0) !important;">
-  <div *ngIf="!multiTenancySideIsTeanant && isTenantSelfRegistrationAllowed">
-    <span>
-      <a routerLink="/account/select-edition"> {{ 'NotAMemberYet' | localize }}</a>
-    </span>
-  </div>
-  <!-- <span *ngIf="isSelfRegistrationAllowed">
-    <a class="text-login-links" routerLink="/account/register">{{ 'CreateAnAccount' | localize }}</a>
-    <span> | </span>
-  </span> -->
-  <!-- <span *ngIf="!multiTenancySideIsTeanant && isTenantSelfRegistrationAllowed">
-    <a class="text-login-links " routerLink="/account/select-edition">{{ 'NewTenant' | localize }}</a>
-    <span> | </span>
-  </span> -->
-  <!-- <a class="text-login-links" routerLink="/account/email-activation" id="email-activation-btn">{{ 'EmailActivation' | localize }}</a> -->
 </div>

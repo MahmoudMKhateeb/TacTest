@@ -1,5 +1,26 @@
-<div *ngIf="languages.length > 1" class="ml-1 mx-auto">
-  <div class="btn btn-pill" *ngFor="let language of languages" (click)="changeLanguage(language)">
-    <a class="text-primary font-weight-bolder">{{ language.displayName }}</a>
+<div *ngIf="languages.length > 1" class="ml-1">
+  <!--  <div class="btn btn-pill" *ngFor="let language of languages" (click)="changeLanguage(language)">-->
+  <!--    <a class="text-primary font-weight-bolder">{{ language.displayName }}</a>-->
+  <!--  </div>-->
+  <div>
+    <span><i class="famfamfam-flags-us"></i></span>
+    <select ngModel id="language" class="form-control" (ngModelChange)="changeLanguage($event)">
+      <option *ngFor="let language of languages" [ngValue]="language">
+        {{ language.displayName }}
+      </option>
+    </select>
   </div>
 </div>
+<!--<div class="form-group">-->
+<!--  <label for="language">language</label>-->
+
+<!--</div>-->
+<!--<div class="ml-1 mx-auto">-->
+<!--  <select id="language" class="form-control">-->
+<!--    <option>Arabic</option>-->
+<!--    <option>2</option>-->
+<!--    <option>3</option>-->
+<!--    <option>4</option>-->
+<!--    <option>5</option>-->
+<!--  </select>-->
+<!--</div>-->

@@ -1,13 +1,9 @@
 <div [@routerTransition]>
-  <div class="content d-flex flex-column flex-column-fluid">
-    <div [class]="containerClass" style="min-height: 622px; min-width: 283px;">
-      <span class="font-size-h1 d-block d-block font-weight-boldest py-2 pricing-title">
-        <h2>{{ 'IAMA' | localize }}</h2>
-      </span>
-
+  <div class="content d-flex flex-column flex-column-fluid" style="padding: 0 0 !important;">
+    <div [class]="containerClass">
       <div class="card card-custom gutter-b">
         <div class="card-body">
-          <div class="row justify-content-center mt-10 mb-0 pricing-items">
+          <div class="row justify-content-center mb-0 pricing-items">
             <div *ngIf="!editionsSelectOutput || !editionsSelectOutput.editionsWithFeatures" class="overlay-layer bg-dark-o-10">
               <div class="spinner spinner-primary"></div>
             </div>
@@ -28,8 +24,7 @@
             <!--            </div>-->
 
             <div
-              class="pt-30 pt-md-25 px-5 mb-15 text-center"
-              style="min-width: 200px;"
+              class="pt-30 pt-md-25 px-5 text-center edition-card"
               *ngFor="let editionWithFeatures of editionsSelectOutput.editionsWithFeatures; let i = index"
               [class.border-left-md]="i > 0"
             >
@@ -116,7 +111,7 @@
               </button>
 
               <button
-                class="btn btn-success btn-pill btn-brand btn-wide btn-uppercase btn-bolder btn-sm mx-2"
+                class="btn btn-primary"
                 [routerLink]="['/account/register-tenant']"
                 [queryParams]="{ editionId: editionWithFeatures.edition.id, subscriptionStartType: subscriptionStartType.Free }"
                 href="#"
@@ -126,7 +121,7 @@
               </button>
 
               <button
-                class="btn btn-warning btn-pill btn-brand btn-wide btn-uppercase btn-bolder btn-sm mx-2"
+                class="btn btn-primary"
                 [routerLink]="['/account/register-tenant']"
                 [queryParams]="{ editionId: editionWithFeatures.edition.id, subscriptionStartType: subscriptionStartType.Trial }"
                 href="#"
@@ -152,6 +147,7 @@
           </div>
         </div>
       </div>
+      <div class="col-xl-12"></div>
     </div>
   </div>
 </div>
