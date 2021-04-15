@@ -105,6 +105,8 @@ namespace TACHYON.Shipping.Drivers
                    .ThenInclude(r => r.OriginCityFk)
                .Include(i => i.ShippingRequestFk)
                    .ThenInclude(p=>p.PackingTypeFk)
+               .Include(i => i.ShippingRequestFk)
+                   .ThenInclude(p => p.GoodCategoryFk)
                .Include(i => i.DestinationFacilityFk)
                .Include(i => i.OriginFacilityFk)
                .Include(i=>i.RoutPoints)
