@@ -80,9 +80,9 @@ namespace TACHYON.AutoMapper.Shipping.Trips
 
         private static ShippingRequestTripDriverLoadStatusDto GetMobileTripStatus(ShippingRequestTrip trip)
         {
-            if (trip.StartTripDate.Date <= Clock.Now.Date && trip.Status != ShippingRequestTripStatus.Finished)
+            if (trip.StartTripDate.Date <= Clock.Now.Date && trip.Status != ShippingRequestTripStatus.Delivered)
                 return ShippingRequestTripDriverLoadStatusDto.Current;
-            if (trip.Status == ShippingRequestTripStatus.Finished)
+            if (trip.Status == ShippingRequestTripStatus.Delivered)
                 return ShippingRequestTripDriverLoadStatusDto.Past;
             return ShippingRequestTripDriverLoadStatusDto.Comming;
         }

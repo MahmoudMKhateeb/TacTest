@@ -11,7 +11,7 @@
         StartOffloading =6,
         ReceiverConfirmed=7,
         DeliveryConfirmation = 8,
-        Finished = 9,
+        Delivered = 9,
         FinishLoading=10,
         FinishOffLoadShipment=11,
         Cancled =12,

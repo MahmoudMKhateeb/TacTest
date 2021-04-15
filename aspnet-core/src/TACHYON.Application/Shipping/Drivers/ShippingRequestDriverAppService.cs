@@ -73,8 +73,8 @@ namespace TACHYON.Shipping.Drivers
        .Include(i => i.OriginFacilityFk)
        .Include(i => i.DestinationFacilityFk)
            .Where(t => t.AssignedDriverUserId == AbpSession.UserId && t.Status != ShippingRequestTripStatus.Cancled && t.DriverStatus != ShippingRequestTripDriverStatus.Rejected)
-        .WhereIf(input.Status.HasValue && input.Status == ShippingRequestTripDriverLoadStatusDto.Current, e => e.StartTripDate.Date <= Clock.Now.Date && e.Status != ShippingRequestTripStatus.Finished)
-        .WhereIf(input.Status.HasValue && input.Status == ShippingRequestTripDriverLoadStatusDto.Past, e => e.Status == ShippingRequestTripStatus.Finished)
+        .WhereIf(input.Status.HasValue && input.Status == ShippingRequestTripDriverLoadStatusDto.Current, e => e.StartTripDate.Date <= Clock.Now.Date && e.Status != ShippingRequestTripStatus.Delivered)
+        .WhereIf(input.Status.HasValue && input.Status == ShippingRequestTripDriverLoadStatusDto.Past, e => e.Status == ShippingRequestTripStatus.Delivered)
         .WhereIf(input.Status.HasValue && input.Status == ShippingRequestTripDriverLoadStatusDto.Comming, e => e.StartTripDate.Date > Clock.Now.Date)
         .OrderBy(input.Sorting ?? "Status asc");
 
@@ -117,7 +117,7 @@ namespace TACHYON.Shipping.Drivers
             if (trip==null) throw new UserFriendlyException(L("TheTripIsNotFound"));
             var tripDto = ObjectMapper.Map<ShippingRequestTripDriverDetailsDto>(trip);
 
-            if (tripDto.Status != ShippingRequestTripStatus.Finished && tripDto.Status != ShippingRequestTripStatus.StandBy && tripDto.Status != ShippingRequestTripStatus.Cancled)
+            if (tripDto.Status != ShippingRequestTripStatus.Delivered && tripDto.Status != ShippingRequestTripStatus.StandBy && tripDto.Status != ShippingRequestTripStatus.Cancled)
             {
                 tripDto.ActionStatus = ShippingRequestTripDriverActionStatusDto.ContinueTrip;
             }
@@ -126,7 +126,7 @@ namespace TACHYON.Shipping.Drivers
 
                 //Check there any trip the driver still working on or not
                 var Count = await _ShippingRequestTrip.GetAll()
-                    .Where(x => x.AssignedDriverUserId == AbpSession.UserId && x.Status != ShippingRequestTripStatus.Finished && x.Status != ShippingRequestTripStatus.StandBy && x.Status != ShippingRequestTripStatus.Cancled).CountAsync();
+                    .Where(x => x.AssignedDriverUserId == AbpSession.UserId && x.Status != ShippingRequestTripStatus.Delivered && x.Status != ShippingRequestTripStatus.StandBy && x.Status != ShippingRequestTripStatus.Cancled).CountAsync();
                     await _RoutPointRepository.GetAll().Where(x => x.IsActive && x.ShippingRequestTripFk.AssignedDriverUserId == AbpSession.UserId).CountAsync();
                 if (Count == 0)
                     tripDto.ActionStatus = ShippingRequestTripDriverActionStatusDto.CanStartTrip;
@@ -180,7 +180,7 @@ namespace TACHYON.Shipping.Drivers
 
             if (!_ShippingRequestTrip.GetAll().Any(x => x.Id != trip.Id &&
             x.Status != ShippingRequestTripStatus.StandBy && 
-            x.Status != ShippingRequestTripStatus.Finished &&
+            x.Status != ShippingRequestTripStatus.Delivered &&
             x.Status != ShippingRequestTripStatus.Cancled &&
             x.AssignedDriverUserId == AbpSession.UserId))
             {
@@ -245,8 +245,8 @@ namespace TACHYON.Shipping.Drivers
             DisableTenancyFilters();
                 var trip = await _shippingRequestDriverManager.GetActiveTrip();
 
-            if (trip.Status == ShippingRequestTripStatus.StartedMovingToLoadingLocation || trip.Status == ShippingRequestTripStatus.ArriveToLoadingLocation) throw new UserFriendlyException(L("TheTripIsNotFound"));
-            if (trip.Status == ShippingRequestTripStatus.StartLoading)
+            if (trip.Status == ShippingRequestTripStatus.StartedMovingToLoadingLocation || trip.Status == ShippingRequestTripStatus.ArriveToLoadingLocation || trip.Status == ShippingRequestTripStatus.StartLoading) throw new UserFriendlyException(L("TheTripIsNotFound"));
+            if (trip.Status == ShippingRequestTripStatus.FinishLoading)
             {
                 var OldTrip = await _shippingRequestDriverManager.GetActivePoint();
                 if (OldTrip==null) throw new UserFriendlyException(L("TheTripIsNotFound"));

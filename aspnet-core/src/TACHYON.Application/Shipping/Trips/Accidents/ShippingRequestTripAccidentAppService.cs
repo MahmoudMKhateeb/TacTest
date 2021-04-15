@@ -285,7 +285,7 @@ namespace TACHYON.Shipping.Trips.Accidents
                 .GetAll()
                     .Include(T => T.ShippingRequestTripFk)
                      .ThenInclude(r => r.ShippingRequestFk)
-                    .Where(x => x.IsActive && x.ShippingRequestTripFk.Status != ShippingRequestTripStatus.Cancled && x.ShippingRequestTripFk.Status != ShippingRequestTripStatus.Finished)
+                    .Where(x => x.IsActive && x.ShippingRequestTripFk.Status != ShippingRequestTripStatus.Cancled && x.ShippingRequestTripFk.Status != ShippingRequestTripStatus.Delivered)
                     .WhereIf(IsEnabled(AppFeatures.Carrier), x => x.ShippingRequestTripFk.ShippingRequestFk.CarrierTenantId == AbpSession.TenantId && x.ShippingRequestTripFk.Id == TripId)
                     .WhereIf(IsEnabled(AppFeatures.Shipper), x => x.ShippingRequestTripFk.ShippingRequestFk.TenantId == AbpSession.TenantId && x.ShippingRequestTripFk.Id == TripId)
                     .WhereIf(IsEnabled(AppFeatures.TachyonDealer), x => x.ShippingRequestTripFk.ShippingRequestFk.IsTachyonDeal && x.ShippingRequestTripFk.Id == TripId)
