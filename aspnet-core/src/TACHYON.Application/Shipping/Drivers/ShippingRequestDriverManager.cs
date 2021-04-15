@@ -76,7 +76,7 @@ namespace TACHYON.Shipping.Drivers
             CurrentPoint.DocumentId = document.DocumentId;
             CurrentPoint.IsActive = false;
             CurrentPoint.IsComplete = true;
-            await SetRoutStatusTransition(CurrentPoint, ShippingRequestTripStatus.ProofOfDeliveryCompleted);
+            await SetRoutStatusTransition(CurrentPoint, ShippingRequestTripStatus.DeliveryConfirmation);
             var trip = await GetActiveTrip();
             if (await _RoutPointRepository.GetAll().Where(x => x.ShippingRequestTripId == trip.Id && x.IsComplete == false && x.Id != CurrentPoint.Id).CountAsync() == 0)
             {
@@ -86,7 +86,7 @@ namespace TACHYON.Shipping.Drivers
             }
             else
             {
-                trip.Status = ShippingRequestTripStatus.ProofOfDeliveryCompleted;
+                trip.Status = ShippingRequestTripStatus.DeliveryConfirmation;
             }
             return true;
 
@@ -133,7 +133,7 @@ namespace TACHYON.Shipping.Drivers
             tripTransition.ToPointId = routPoint.Id;
             tripTransition.ToLocation = routPoint.FacilityFk.Location;
             await _shippingRequestTripTransitionRepository.InsertAsync(tripTransition);
-            await SetRoutStatusTransition(routPoint, ShippingRequestTripStatus.InTransitToPickupLocation);
+            await SetRoutStatusTransition(routPoint, ShippingRequestTripStatus.StartedMovingToLoadingLocation);
 
         }
         /// <summary>

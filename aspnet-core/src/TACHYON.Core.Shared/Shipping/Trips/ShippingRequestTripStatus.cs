@@ -3,16 +3,18 @@
     public  enum ShippingRequestTripStatus:byte
     {
         StandBy=0,
-        InTransitToPickupLocation = 1,
-        ReachedPickupLocation = 2,
-        Loading = 3,
-        InTransitToDropLocation = 4,
-        ReachedDropLocation = 5,
-        Offloading =6,
+        StartedMovingToLoadingLocation = 1,
+        ArriveToLoadingLocation = 2,
+        StartLoading = 3,
+        StartedMovingToOfLoadingLocation = 4,
+        ArrivedToDestination = 5,
+        StartOffloading =6,
         ReceiverConfirmed=7,
-        ProofOfDeliveryCompleted = 8,
+        DeliveryConfirmation = 8,
         Finished = 9,
-        Cancled=10,
-        Issue=11
+        FinishLoading=10,
+        FinishOffLoadShipment=11,
+        Cancled =12,
+        Issue=13
     }
 }
