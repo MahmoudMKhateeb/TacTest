@@ -31,7 +31,6 @@ namespace TACHYON.Shipping.Accidents
                 .WhereIf(!string.IsNullOrWhiteSpace(Input.Filter), e => e.Translations.Any(x=> x.Name.Contains(Input.Filter.Trim())))
                 .OrderBy(Input.Sorting ?? "id asc");
 
-            var totalCount = await query.CountAsync();
             return new ListResultDto<ShippingRequestReasonAccidentListDto>(
                 ObjectMapper.Map<List<ShippingRequestReasonAccidentListDto>>(query)
 
