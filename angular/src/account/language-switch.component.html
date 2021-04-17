@@ -2,10 +2,20 @@
   <!--  <div class="btn btn-pill" *ngFor="let language of languages" (click)="changeLanguage(language)">-->
   <!--    <a class="text-primary font-weight-bolder">{{ language.displayName }}</a>-->
   <!--  </div>-->
-  <div>
-    <span><i class="famfamfam-flags-us"></i></span>
-    <select ngModel id="language" class="form-control" (ngModelChange)="changeLanguage($event)">
-      <option *ngFor="let language of languages" [ngValue]="language">
+  <div class="form-inline dropdown">
+    <label class="my-1 mr-2">{{ l('language') }}</label>
+    <select
+      name="selectedLanguage"
+      [(ngModel)]="selectedLanguage"
+      id="language"
+      class="form-control"
+      (ngModelChange)="changeLanguage($event)"
+      style="border: 1px solid rgba(12, 12, 13, 0.3);"
+    >
+      <option value="">{{ 'selectLanguage' | localize }}</option>
+      <option *ngFor="let language of languages" [ngValue]="language.name">
+        <i class="{{ language.icon }}" [attr.aria-label]="language.displayName"></i>
+        <span class="symbol symbol-20 mr-3"><i class="{{ language.icon }}" [attr.aria-label]="language.displayName"></i></span>
         {{ language.displayName }}
       </option>
     </select>

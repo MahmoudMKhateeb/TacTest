@@ -36,6 +36,8 @@
       [ngClass]="{ 'login-content': !useFullWidthLayout() }"
       class="flex-row-fluid d-flex flex-column justify-content-center position-relative overflow-hidden p-7 mx-auto"
     >
+      <!-- footer -->
+
       <div class="d-flex flex-column-fluid flex-column flex-center mt-5 mt-lg-0">
         <div class="main-login-form login-form p-7">
           <div *ngIf="showTenantChange()" class="login__signup-label tenant-change-box">
@@ -44,10 +46,9 @@
 
           <router-outlet></router-outlet>
         </div>
-      </div>
-      <!-- footer -->
-      <div class="d-flex justify-content-lg-start justify-content-center align-items-end py-7 py-lg-0">
-        <language-switch></language-switch>
+        <div class="d-flex justify-content-center py-7 py-lg-0 mt-20">
+          <language-switch></language-switch>
+        </div>
       </div>
     </div>
   </div>

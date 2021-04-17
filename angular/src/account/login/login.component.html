@@ -1,8 +1,8 @@
 <!--begin::Login Sign in form-->
-<div class="login-signin">
+<div class="login-signin" [@routerTransition]>
   <div class="mb-20">
-    <h3 class="head-text">Sign In To Tachyon</h3>
-    <div class="normal-text">Enter your details to login to your account:</div>
+    <h3 class="head-text">{{ 'signInToTachyon' | localize }}</h3>
+    <div class="normal-text">{{ 'enterYourDetailsToLoginToYourAccount' | localize }}:</div>
   </div>
   <form #loginForm="ngForm" class="form fv-plugins-bootstrap fv-plugins-framework" method="post" (ngSubmit)="login()">
     <div class="form-group mb-5 fv-plugins-icon-container">
@@ -10,7 +10,7 @@
         #userNameOrEmailAddressInput="ngModel"
         [(ngModel)]="loginService.authenticateModel.userNameOrEmailAddress"
         autofocus
-        placeholder="Email"
+        placeholder="{{ 'Email' | localize }}"
         class="input-custom"
         type="email"
         autocomplete="new-password"
@@ -44,15 +44,17 @@
       <div class="checkbox-inline">
         <label class="checkbox m-0 text-muted">
           <input [(ngModel)]="loginService.rememberMe" type="checkbox" name="rememberMe" value="true" />
-          <span></span>Remember me</label
+          <span></span>{{ 'RememberMe' | localize }}</label
         >
       </div>
-      <a routerLink="/account/forgot-password" id="forget-password" class="text-muted text-hover-primary">Forget Password ?</a>
+      <a routerLink="/account/forgot-password" id="forget-password" class="text-muted text-hover-primary">{{ 'ForgotPassword' | localize }}</a>
     </div>
-    <button type="submit" class="btn btn-primary font-weight-bold px-9 py-4 my-3 mx-4" [disabled]="!loginForm.form.valid">Sign In</button>
+    <button type="submit" class="btn btn-primary login-btn font-weight-bold px-9 py-4 my-3 mx-4" [disabled]="!loginForm.form.valid">
+      {{ 'LogIn' | localize }}
+    </button>
   </form>
   <div class="mt-10">
-    <span class="opacity-70 mr-4">Don't have an account yet?</span>
-    <a class="text-muted text-hover-primary font-weight-bold" routerLink="/account/select-edition">Sign Up!</a>
+    <span class="opacity-70 mr-4">{{ 'dontHaveAnAccountYet' | localize }}?</span>
+    <a class="text-muted text-hover-primary font-weight-bold" routerLink="/account/select-edition">{{ 'NotAMemberYet' | localize }}!</a>
   </div>
 </div>

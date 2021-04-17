@@ -104,11 +104,16 @@ body {
   font-weight: 400;
   opacity: 1;
 }
-.btn-primary {
+html[dir='ltr'] .login-btn {
   width: 100%;
   margin-left: -2px !important;
 }
-html[dir='ltr'] input {
+html[dir='rtl'] .login-btn {
+  width: 100%;
+  margin-right: -2px !important;
+}
+
+input {
   padding: 0 11px 0 16px;
 }
 
