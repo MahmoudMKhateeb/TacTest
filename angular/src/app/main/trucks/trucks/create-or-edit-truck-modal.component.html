@@ -1,4 +1,4 @@
-﻿<div
+<div
   bsModal
   #createOrEditModal="bs-modal"
   class="modal fade"
@@ -287,7 +287,13 @@
         <div class="modal-footer">
           <button [disabled]="saving" type="button" class="btn btn-default" (click)="close()">{{ l('Cancel') }}</button>
 
-          <button type="submit" class="btn btn-save blue" [buttonBusy]="saving" [busyText]="l('SavingWithThreeDot')">
+          <button
+            [disabled]="!truckForm.form.valid"
+            type="submit"
+            class="btn btn-save blue"
+            [buttonBusy]="saving"
+            [busyText]="l('SavingWithThreeDot')"
+          >
             <i class="fa fa-save"></i> <span>{{ l('Save') }}</span>
           </button>
         </div>

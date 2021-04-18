@@ -1,4 +1,4 @@
-﻿/* tslint:disable:member-ordering */
+/* tslint:disable:member-ordering */
 import { ChangeDetectorRef, Component, EventEmitter, Injector, Output, ViewChild } from '@angular/core';
 import { ModalDirective } from 'ngx-bootstrap/modal';
 import { finalize } from 'rxjs/operators';
@@ -188,15 +188,11 @@ export class CreateOrEditTruckModalComponent extends AppComponentBase {
   }
 
   save(): void {
-    if (this.truckForm.invalid) {
-      return;
-    }
-
     this.saving = true;
+
     if (this.truck.id) {
       this.createOrEditTruck();
     }
-
     // if (!this.alldocumentsValid || !this.allnumbersValid || !this.allDatesValid) {
     //   this.notify.error(this.l('makeSureThatYouFillAllRequiredFields'));
     //   return;

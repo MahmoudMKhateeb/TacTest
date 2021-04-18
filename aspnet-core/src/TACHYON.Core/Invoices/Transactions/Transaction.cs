@@ -2,15 +2,13 @@
 using Abp.Domain.Entities.Auditing;
 using Abp.Timing;
 using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Text;
 using TACHYON.MultiTenancy;
 
 namespace TACHYON.Invoices.Transactions
 {
     [Table("Transactions")]
-    public class Transaction : Entity<long>, IHasCreationTime, ICreationAudited
+    public class Transaction : Entity<long>, IHasCreationTime, ICreationAudited,IMayHaveTenant
     {
         public ChannelType ChannelId { get; set; }
 
