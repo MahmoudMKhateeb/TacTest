@@ -409,7 +409,7 @@ namespace TACHYON.Shipping.ShippingRequestBids
             {
                 //notification to shipper when Carrier create new bid in his Shipping Request
                 await _appNotifier.CreateBidRequest(
-                    new UserIdentifier(shippingRequest.TenantId, shippingRequestBid.ShippingRequestFk.CreatorUserId.Value),
+                    new UserIdentifier(shippingRequest.TenantId, shippingRequest.CreatorUserId.Value),
                     shippingRequestBid.Id);
             }
             else
