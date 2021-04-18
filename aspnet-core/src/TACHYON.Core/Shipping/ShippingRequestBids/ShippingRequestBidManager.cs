@@ -28,7 +28,7 @@ namespace TACHYON.Shipping.ShippingRequestBids
         {
             _shippingRequestBidsRepository = shippingRequestBidsRepository;
             _balanceManager = balanceManager;
-            shippingRequestManager = _shippingRequestManager;
+            _shippingRequestManager = shippingRequestManager;
             _backgroundJobManager = backgroundJobManager;
             _appNotifier = appNotifier;
         }
