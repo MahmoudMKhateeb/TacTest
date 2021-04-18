@@ -60,7 +60,7 @@ namespace TACHYON.Notifications
         public const string DriectRequestCarrierRespone = "App.DriectRequestCarrierRespone";
         public const string TachyonDealOfferRejectedByShipper = "App.TachyonDealOfferRejectedByShipper";
         public const string TachyonDealOfferAcceptedByShipper = "App.TachyonDealOfferAcceptedByShipper";
-
+        public const string TachyonDealOfferCreated = "App.TachyonDealOfferCreated";
         #endregion
         #region Shipping Request
         public const string ShippingRequestNotifyCarrirerWhenShipperAccepted = "App.ShippingRequestNotifyCarrirerWhenShipperAccepted";

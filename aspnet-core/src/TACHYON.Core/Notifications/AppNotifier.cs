@@ -617,7 +617,22 @@ namespace TACHYON.Notifications
             var user = new UserIdentifier(Pricing.TenantId, Pricing.CreatorUserId.Value);
             await _notificationPublisher.PublishAsync(AppNotificationNames.DriectRequestCarrierRespone, notificationData, userIds: new[] { user });
         }
+       
+        public async Task TachyonDealerOfferCreated(TachyonPriceOffer offer,ShippingRequest request)
+        {
+            var notificationData = new LocalizableMessageNotificationData(
+                new LocalizableString(
+                    L("TachyonDealOfferCreated"),
+                    TACHYONConsts.LocalizationSourceName
+                )
+            );
 
+            notificationData["offerid"] = offer.Id;
+            var user = new UserIdentifier(offer.ShippingRequestFk.TenantId, request.CreatorUserId.Value);
+
+            await _notificationPublisher.PublishAsync(AppNotificationNames.TachyonDealOfferCreated, notificationData, userIds: new[] { user });
+
+        }
         public async Task TachyonDealOfferRejectedByShipper(TachyonPriceOffer offer)
         {
             var notificationData = new LocalizableMessageNotificationData(
