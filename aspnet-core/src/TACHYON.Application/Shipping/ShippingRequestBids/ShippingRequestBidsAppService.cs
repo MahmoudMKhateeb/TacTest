@@ -1,4 +1,5 @@
 ﻿using Abp;
+using Abp.Application.Editions;
 using Abp.Application.Features;
 using Abp.Application.Services.Dto;
 using Abp.Authorization;
@@ -16,6 +17,7 @@ using System.Linq;
 using System.Linq.Dynamic.Core;
 using System.Threading.Tasks;
 using TACHYON.Authorization;
+using TACHYON.Authorization.Users;
 using TACHYON.Features;
 using TACHYON.Invoices.Balances;
 using TACHYON.MultiTenancy;
@@ -36,7 +38,7 @@ namespace TACHYON.Shipping.ShippingRequestBids
             IRepository<ShippingRequest, long> shippingRequestsRepository,
             IRepository<Tenant> tenantsRepository, IRepository<Truck, long> trucksRepository,
             BackgroundJobManager backgroundJobManager, CommissionManager commissionManager,
-            IAppNotifier appNotifier, OfferManager offerManager, BalanceManager balanceManager, ShippingRequestManager shippingRequestManager)
+            IAppNotifier appNotifier, OfferManager offerManager, BalanceManager balanceManager, ShippingRequestManager shippingRequestManager, UserManager userManager, IRepository<Edition> editionRepository)
         {
             _shippingRequestBidsRepository = shippingRequestBidsRepository;
             _shippingRequestsRepository = shippingRequestsRepository;
@@ -48,6 +50,8 @@ namespace TACHYON.Shipping.ShippingRequestBids
             _offerManager = offerManager;
             _balanceManager = balanceManager;
             _shippingRequestManager = shippingRequestManager;
+            _userManager = userManager;
+            _editionRepository = editionRepository;
         }
 
         private readonly IRepository<ShippingRequestBid, long> _shippingRequestBidsRepository;
@@ -60,6 +64,8 @@ namespace TACHYON.Shipping.ShippingRequestBids
         private readonly OfferManager _offerManager;
         private readonly BalanceManager _balanceManager;
         private readonly ShippingRequestManager _shippingRequestManager;
+        private readonly UserManager _userManager;
+        private readonly IRepository<Edition> _editionRepository;
 
         /// <summary>
         ///     This is for shipper to view Shipping Request bids in view-shipping-request page.
@@ -399,13 +405,23 @@ namespace TACHYON.Shipping.ShippingRequestBids
             await _shippingRequestBidsRepository.InsertAndGetIdAsync(shippingRequestBid);
             shippingRequest.TotalBids += 1;
             await CurrentUnitOfWork.SaveChangesAsync();
-
-
-            //notification to shipper when Carrier create new bid in his Shipping Request
-            await _appNotifier.CreateBidRequest(
-                new UserIdentifier(shippingRequestBid.ShippingRequestFk.TenantId, shippingRequestBid.ShippingRequestFk.CreatorUserId.Value),
-                shippingRequestBid.Id);
-
+            if (!shippingRequest.IsTachyonDeal)
+            {
+                //notification to shipper when Carrier create new bid in his Shipping Request
+                await _appNotifier.CreateBidRequest(
+                    new UserIdentifier(shippingRequest.TenantId, shippingRequestBid.ShippingRequestFk.CreatorUserId.Value),
+                    shippingRequestBid.Id);
+            }
+            else
+            {
+                //send notification to tachyon dealer
+                var edition = await _editionRepository.FirstOrDefaultAsync(x => x.DisplayName.ToLower() == TACHYONConsts.TachyonDealerEdtionName.ToLower());
+                var tenant=await _tenantsRepository.FirstOrDefaultAsync(x => x.EditionId == edition.Id);
+                var tachyonDealerUser=_userManager.Users.Where(e => e.TenantId == tenant.Id).FirstOrDefault();
+                await _appNotifier.CreateBidRequest(
+                    new UserIdentifier(tenant.Id, tachyonDealerUser.Id),
+                    shippingRequestBid.Id);
+            }
             return shippingRequestBid.Id;
         }
 
