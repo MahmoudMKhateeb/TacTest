@@ -38,7 +38,7 @@ namespace TACHYON.Invoices.Balances
 
         [AbpAuthorize(AppPermissions.Pages_Administration_Host_Invoices_Balances)]
         public async Task<PagedResultDto<BalanceRechargeListDto>> GetAll(GetAllBalanceRechargeInput input)
-        {
+       {
             using (UnitOfWorkManager.Current.DisableFilter(AbpDataFilters.MustHaveTenant))
             {
                 var query = _Repository

@@ -30,6 +30,7 @@ export class BalancesListComponent extends AppComponentBase {
   ReferenceNo: string | null | undefined;
   Tenant: ISelectItemDto;
   Tenants: ISelectItemDto[];
+  TenantId: number | undefined = undefined;
   creationDateRange: Date[] = [moment().startOf('day').toDate(), moment().endOf('day').toDate()];
   creationDateRangeActive: boolean = false;
   constructor(
@@ -48,15 +49,16 @@ export class BalancesListComponent extends AppComponentBase {
       this.fromDate = null;
       this.toDate = null;
     }
-    /*if (this.primengTableHelper.shouldResetPaging(event)) {
-      this.paginator.changePage(0);
-      return;
-      }*/
 
+    if (this.Tenant?.id) {
+      this.TenantId = parseInt(this.Tenant.id);
+    } else {
+      this.Tenant = undefined;
+    }
     this.primengTableHelper.showLoadingIndicator();
     this._CurrentServ
       .getAll(
-        this.Tenant ? parseInt(this.Tenant.id) : undefined,
+        this.TenantId,
         this.fromDate,
         this.toDate,
         this.ReferenceNo,

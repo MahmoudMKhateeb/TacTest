@@ -34,7 +34,14 @@ export class BalanceRechargeModelComponent extends AppComponentBase {
 
   save(): void {
     this.saving = true;
-    this.Recharge.tenantId = parseInt(this.Tenant.id);
+
+    if (this.Tenant?.id) {
+      this.Recharge.tenantId = parseInt(this.Tenant.id);
+    } else {
+      this.Tenant = undefined;
+      this.Recharge.tenantId = undefined;
+    }
+
     this._RechargeService
       .create(this.Recharge)
       .pipe(
