@@ -1,4 +1,4 @@
-﻿<div [@routerTransition]>
+<div [@routerTransition]>
   <div class="content d-flex flex-column flex-column-fluid">
     <!-- <sub-header [title]="'TransportTypesTranslations' | localize" [description]="'TransportTypesTranslationsHeaderInfo' | localize"> -->
     <sub-header [title]="'TransportTypesTranslations' | localize">
@@ -104,17 +104,17 @@
                     >
                       {{ l('Actions') }}
                     </th>
-                    <th style="width: 150px;" pSortableColumn="coreFk.displayName">
+                    <th style="width: 150px;" pSortableColumn="Core.displayName">
                       {{ l('Name') }}
                       <p-sortIcon field="transportTypeDisplayName"></p-sortIcon>
                     </th>
-                    <th style="width: 150px;" pSortableColumn="displayName">
+                    <th style="width: 150px;" pSortableColumn="TranslatedDisplayName">
                       {{ l('TranslatedName') }}
-                      <p-sortIcon field="transportTypesTranslation.displayName"></p-sortIcon>
+                      <p-sortIcon field="TranslatedDisplayName"></p-sortIcon>
                     </th>
                     <th style="width: 150px;" pSortableColumn="language">
                       {{ l('Language') }}
-                      <p-sortIcon field="transportTypesTranslation.language"></p-sortIcon>
+                      <p-sortIcon field="language"></p-sortIcon>
                     </th>
                   </tr>
                 </ng-template>

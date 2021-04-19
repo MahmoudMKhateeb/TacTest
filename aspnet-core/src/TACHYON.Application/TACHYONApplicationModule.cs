@@ -1,5 +1,6 @@
 ﻿using Abp.AutoMapper;
 using Abp.Configuration;
+using Abp.Dependency;
 using Abp.Modules;
 using Abp.Reflection.Extensions;
 using Abp.Resources.Embedded;
@@ -9,6 +10,7 @@ using System.Reflection;
 using TACHYON.Authorization;
 using TACHYON.Authorization.Permissions;
 using TACHYON.Authorization.Permissions.Shipping.Trips;
+using TACHYON.Exporting;
 
 namespace TACHYON
 {
@@ -60,6 +62,7 @@ namespace TACHYON
                     "TACHYON.Invoices.Reports"
                 )
             );
+            IocManager.Register(typeof(IExcelExporterManager<>), typeof(ExcelExporterManager<>), DependencyLifeStyle.Transient);
         }
         public override void PostInitialize()
         {

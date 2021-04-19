@@ -1800,5 +1800,23 @@
       <a href="/app/main/shippingRequests/shippingRequests/view?id={ShipimentNo}">The driver {driver} has been accepted the trip from {source} to {destination}</a>
     </text>
     <text name="NewTripAssign">The new trip has assign to you.</text>
+    <text name="InvoicesList">Invoices</text>
+    <text name="BillingInterval">Billing interval</text>
+    <text name="BalnaceRecharges">Balnace recharges</text>
+    <text name="BalanceRecharge">Balnace recharges</text>
+    <text name="SubmitInvoice">Submit invoices</text>
+    <text name="SubmitInvoices">Submit invoices</text>
+    <text name="FinancialTransActionMenu">Financial transaction</text>
+    <text name="InvoiceId">Invoice No.</text>
+    <text name="CompanyName">Company</text>
+    <text name="AccountInvoiceType">Account type</text>
+    <text name="DueDate">Due date</text>
+    <text name="UnPaid">Un paid</text>
+    <text name="AccountStatus">Account status</text>
+    <text name="IntervalType">Interval type</text>
+    <text name="PayInAdvance">Pay in advance</text>
+    <text name="ClientName">Clien</text>
+    <text name="ReferenceNo">Reference No.</text>
+    <text name="TrukType">Truk type</text>
   </texts>
 </localizationDictionary>

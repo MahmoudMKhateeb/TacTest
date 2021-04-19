@@ -36,7 +36,9 @@ namespace TACHYON.Shipping.ShippingRequestBids
             IRepository<ShippingRequest, long> shippingRequestsRepository,
             IRepository<Tenant> tenantsRepository, IRepository<Truck, long> trucksRepository,
             BackgroundJobManager backgroundJobManager, CommissionManager commissionManager,
-            IAppNotifier appNotifier, OfferManager offerManager, BalanceManager balanceManager, ShippingRequestManager shippingRequestManager)
+            IAppNotifier appNotifier, OfferManager offerManager, BalanceManager balanceManager,
+            ShippingRequestManager shippingRequestManager, ShippingRequestBidManager shippingRequestBidManager,
+            TachyonPriceOffersAppService carrierPriceOfferService)
         {
             _shippingRequestBidsRepository = shippingRequestBidsRepository;
             _shippingRequestsRepository = shippingRequestsRepository;
@@ -48,6 +50,8 @@ namespace TACHYON.Shipping.ShippingRequestBids
             _offerManager = offerManager;
             _balanceManager = balanceManager;
             _shippingRequestManager = shippingRequestManager;
+            _shippingRequestBidManager = shippingRequestBidManager;
+            _carrierPriceOfferService = carrierPriceOfferService;
         }
 
         private readonly IRepository<ShippingRequestBid, long> _shippingRequestBidsRepository;
@@ -60,6 +64,9 @@ namespace TACHYON.Shipping.ShippingRequestBids
         private readonly OfferManager _offerManager;
         private readonly BalanceManager _balanceManager;
         private readonly ShippingRequestManager _shippingRequestManager;
+        private readonly ShippingRequestBidManager _shippingRequestBidManager;
+        private readonly TachyonPriceOffersAppService _carrierPriceOfferService;
+
 
         /// <summary>
         ///     This is for shipper to view Shipping Request bids in view-shipping-request page.
@@ -164,24 +171,26 @@ namespace TACHYON.Shipping.ShippingRequestBids
                     x.ShippingRequestFk.BidStatus != ShippingRequestBidStatus.OnGoing);
                 if (bid == null)
                 {
-                    throw new UserFriendlyException(L("Bid Is not exist message"));
+                    ThrowShippingRequestIsNotOngoingError();
                 }
 
-            //if (bid.ShippingRequestFk.BidStatus != ShippingRequestBidStatus.OnGoing)
-            //{
-            //    ThrowShippingRequestIsNotOngoingError();
-            //}
-            bid.IsAccepted = true;
+            if (await IsEnabledAsync(AppFeatures.Shipper))
+            {
+                await _shippingRequestBidManager.AcceptBidAndGoToPostPriceAsync(bid);
+            }
 
-            await _balanceManager.ShipperCanAcceptPrice(bid.ShippingRequestFk.TenantId,bid.price,bid.ShippingRequestId);
-            AssignShippingRequestInfoAndGoToPostPrice(bid.ShippingRequestFk, bid);
-            await _shippingRequestManager.SetToPostPrice(bid.ShippingRequestFk);
+            //redirect automaic from front if the feature is tacyon dealer to CreateOrEditTachyonPriceOffer in tachyonpriceofferAppService
+
+            //bid.IsAccepted = true;
+            //bid.ShippingRequestFk.BidStatus = ShippingRequestBidStatus.Closed;
+            //await _balanceManager.ShipperCanAcceptPrice(bid.ShippingRequestFk.TenantId,bid.price,bid.ShippingRequestId);
+            //AssignShippingRequestInfo(bid.ShippingRequestFk, bid);
+            //await _shippingRequestManager.SetToPostPrice(bid.ShippingRequestFk);
 
 
-
-                //Reject the other bids of this shipping request by background job
-                await _backgroundJobManager.EnqueueAsync<RejectOtherBidsJob, RejectOtherBidsJobArgs>
-                    (new RejectOtherBidsJobArgs { AcceptedBidId = bid.Id, ShippingReuquestId = bid.ShippingRequestId });
+            //    //Reject the other bids of this shipping request by background job
+            //    await _backgroundJobManager.EnqueueAsync<RejectOtherBidsJob, RejectOtherBidsJobArgs>
+            //        (new RejectOtherBidsJobArgs { AcceptedBidId = bid.Id, ShippingReuquestId = bid.ShippingRequestId });
 
 
             //update shippingRequest final price
@@ -210,23 +219,23 @@ namespace TACHYON.Shipping.ShippingRequestBids
             //        //to do send notification to shipper
             //    }
             //}
-              
-            
+
+
         }
-        
-        private void AssignShippingRequestInfoAndGoToPostPrice(ShippingRequest shippingRequestItem,ShippingRequestBid bid)
-        {
-            shippingRequestItem.CarrierTenantId = bid.TenantId;
-            shippingRequestItem.Price = bid.price; //bid price that biddingCommission added to the base
-          //  shippingRequestItem.Status = ShippingRequestStatus.PostPrice;
-            shippingRequestItem.CarrierPriceType = CarrierPriceType.ShipperBidding;
-            shippingRequestItem.ActualCommissionValue = bid.ActualCommissionValue;
-            shippingRequestItem.ActualPercentCommission = bid.ActualPercentCommission;
-            shippingRequestItem.ActualMinCommissionValue = bid.ActualMinCommissionValue;
-            shippingRequestItem.TotalCommission = bid.TotalCommission;
-            shippingRequestItem.VatAmount = bid.VatAmount;
-            shippingRequestItem.SubTotalAmount = bid.PriceSubTotal;
-        }
+
+        //private void AssignShippingRequestInfo(ShippingRequest shippingRequestItem,ShippingRequestBid bid)
+        //{
+        //    shippingRequestItem.CarrierTenantId = bid.TenantId;
+        //    shippingRequestItem.Price = bid.price; //bid price that biddingCommission added to the base
+        //  //  shippingRequestItem.Status = ShippingRequestStatus.PostPrice;
+        //    shippingRequestItem.CarrierPriceType = CarrierPriceType.ShipperBidding;
+        //    shippingRequestItem.ActualCommissionValue = bid.ActualCommissionValue;
+        //    shippingRequestItem.ActualPercentCommission = bid.ActualPercentCommission;
+        //    shippingRequestItem.ActualMinCommissionValue = bid.ActualMinCommissionValue;
+        //    shippingRequestItem.TotalCommission = bid.TotalCommission;
+        //    shippingRequestItem.VatAmount = bid.VatAmount;
+        //    shippingRequestItem.SubTotalAmount = bid.PriceSubTotal;
+        //}
         private async Task<ShippingRequest> GetShippingRequest(long id)
         {
             return await _shippingRequestsRepository.FirstOrDefaultAsync(id);
@@ -307,7 +316,7 @@ namespace TACHYON.Shipping.ShippingRequestBids
                 IQueryable<ShippingRequest> filterBidShippingRequests = _shippingRequestsRepository.GetAll()
                     .Include(x => x.TrucksTypeFk)
                     .Include(x => x.GoodCategoryFk)
-                    .Include(x => x.ShippingRequestBids)
+                    .Include(x => x.ShippingRequestBids.Where(x=>x.TenantId==AbpSession.TenantId))
                     .Include(x => x.ShippingRequestVases)
                     .ThenInclude(x => x.VasFk)
                     .Include(x => x.OriginCityFk)
@@ -356,7 +365,7 @@ namespace TACHYON.Shipping.ShippingRequestBids
                         ShipperName = o.Tenant.Name,
                         TruckTypeDisplayName = o.TrucksTypeFk.DisplayName,
                         GoodCategoryName = o.GoodCategoryFk.DisplayName,
-                        MyBidPrice = o.ShippingRequestBids.OrderByDescending(x => x.Id).FirstOrDefault()?.BasePrice,
+                        MyBidPrice = o.ShippingRequestBids.FirstOrDefault()?.BasePrice,
                         MyBidId = o.ShippingRequestBids.FirstOrDefault()?.Id,
                         SourceCityName = o.OriginCityFk?.DisplayName,
                         DestinationCityName = o.DestinationCityFk?.DisplayName,

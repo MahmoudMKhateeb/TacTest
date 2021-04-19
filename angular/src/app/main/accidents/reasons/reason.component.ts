@@ -27,6 +27,7 @@ export class AccidentReasonComponent extends AppComponentBase {
       this.primengTableHelper.totalRecordsCount = result.items.length;
       this.primengTableHelper.records = result.items;
       this.primengTableHelper.hideLoadingIndicator();
+      console.log(result.items);
     });
   }
 

@@ -27,7 +27,6 @@ namespace TACHYON.Shipping.ShippingRequests.TachyonDealer
         private readonly IRepository<ShippingRequestsCarrierDirectPricing> _CarrierDirectPricingRepository;
         private readonly IRepository<Tenant> _tenantRepository;
         private readonly IRepository<ShippingRequestBid, long> _shippingRequestBidsRepository;
-
         private readonly IAppNotifier _appNotifier;
         private readonly CommissionManager _commissionManager;
         public ShippingRequestsTachyonDealerAppService(
@@ -58,31 +57,18 @@ namespace TACHYON.Shipping.ShippingRequests.TachyonDealer
             if (shippingRequest != null)
             {
                 shippingRequest.IsBid = true;
-                
                 shippingRequest.BidStartDate = Input.StartDate;
                 shippingRequest.BidEndDate = Input.EndDate;
                 if (Input.StartDate.Date==Clock.Now.Date) shippingRequest.BidStatus = ShippingRequestBidStatus.OnGoing;
             }
         }
 
-        //public async Task SendOfferToShipper(TachyonDealerDirectOfferToShipperInputDto Input)
-        //{
-        //    DisableTenancyFilters();
-
-        //    ShippingRequest shippingRequest = await GetShippingRequestOnPrePriceStage(Input.Id);
-        //    var TachyonPriceOffer = new TachyonPriceOffer();
-        //    TachyonPriceOffer.TenantId = shippingRequest.TenantId;
-        //    TachyonPriceOffer.OfferedPrice = Input.Price;
-        //    TachyonPriceOffer.PriceType = PriceType.GuesingPrice;
-        //    TachyonPriceOffer.ShippingRequestId = shippingRequest.Id;
-        //}
-
         /// <summary>
         /// User tachyon dealer sent request to get offer from carrirer
         /// </summary>
         /// <param name="Input"></param>
         /// <returns></returns>
-        [RequiresFeature(AppFeatures.TachyonDealer)]
+        [RequiresFeature(AppFeatures.SendDirectRequest)]
 
         public async Task SendDriectRequestForCarrier(TachyonDealerCreateDirectOfferToCarrirerInuptDto Input)
         {
@@ -90,7 +76,7 @@ namespace TACHYON.Shipping.ShippingRequests.TachyonDealer
 
             DisableTenancyFilters();
             ShippingRequest shippingRequest= await GetShippingRequestOnPrePriceStage(Input.Id);
-            if (shippingRequest.IsBid) throw new UserFriendlyException(L("YouCanNotSendDriectRequestWhenTheSippingIsBid"));
+            //if (shippingRequest.IsBid) throw new UserFriendlyException(L("YouCanNotSendDriectRequestWhenTheSippingIsBid"));
 
             if (await _CarrierDirectPricingRepository.GetAll().AnyAsync(x => x.CarrirerTenantId == Input.TenantId && x.RequestId == Input.Id))
                 throw new UserFriendlyException(L("YouAlreadyAddThisCarrrierToThisShipping"));
@@ -114,7 +100,7 @@ namespace TACHYON.Shipping.ShippingRequests.TachyonDealer
                  .ThenInclude(t=>t.Tenant)
                 .Include(t=>t.Carrirer)
                 //.Where(x => x.Request.Status == ShippingRequestStatus.PrePrice && x.Request.IsTachyonDeal && x.Request.CarrierPriceType== CarrierPriceType.TachyonDirectRequest)
-                .WhereIf(IsEnabled(AppFeatures.Carrier), e => e.CarrirerTenantId == AbpSession.TenantId)
+                .WhereIf(IsEnabled(AppFeatures.Carrier), e => e.CarrirerTenantId == AbpSession.TenantId && e.Request.Status== ShippingRequestStatus.PrePrice)
                 .WhereIf(IsEnabled(AppFeatures.TachyonDealer), e => e.TenantId == AbpSession.TenantId)
                 .WhereIf(Input.RequestId.HasValue,e=>e.RequestId== Input.RequestId.Value)
                 .OrderBy(Input.Sorting ?? "id desc")
@@ -192,16 +178,28 @@ namespace TACHYON.Shipping.ShippingRequests.TachyonDealer
                 ObjectMapper.Map(bid, PricingDto);
             }
 
+            var offer = await _tachyonPriceOfferRepository.FirstOrDefaultAsync(x => x.ShippingRequestId == shippingRequest.Id && x.OfferStatus == OfferStatus.AcceptedAndWaitingForCarrier);
 
-            var Calculate = await _commissionManager.CalculateAmountByDefault(Price, shippingRequest);
+            if (offer != null) //If offer guesing price no need to apply the commission
+            {
+                PricingDto.SubTotalAmount = offer.SubTotalAmount.Value;
+                PricingDto.VatAmount = offer.VatSetting.Value;
+                PricingDto.TotalAmount = offer.TotalAmount;
+                PricingDto.IsGuesingPrice = true;
+            }
+            else { 
+                var Calculate = await _commissionManager.CalculateAmountByDefault(Price, shippingRequest);
+                ObjectMapper.Map(Calculate, PricingDto);
+            }
 
-            ObjectMapper.Map(Calculate, PricingDto);
             return PricingDto;
 
 
         }
-        [RequiresFeature(AppFeatures.TachyonDealer)]
 
+        
+
+        [RequiresFeature(AppFeatures.SendDirectRequest)]
         public async Task<PagedResultDto<TachyonDealerGetCarrirerDto>> GetAllCarriers(TachyonDealerGetCarrirerFilterInputDto Input)
         {
             var query =
