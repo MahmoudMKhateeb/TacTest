@@ -11,8 +11,9 @@ namespace TACHYON.AutoMapper.Shipping.Trips
     {
         public ShippingRequestTripRejectReasonProfile()
         {
-            CreateMap<ShippingRequestTripRejectReason, ShippingRequestTripRejectReasonListDto>();
-            CreateMap<ShippingRequestTripRejectReason, CreateOrEditShippingRequestTripRejectReasonDto>().ReverseMap();
+            CreateMap<ShippingRequestTripRejectReasonTranslation, ShippingRequestTripRejectReasonTranslationDto>();
+            CreateMap<ShippingRequestTripRejectReason, CreateOrEditShippingRequestTripRejectReasonDto>()
+                 .ForMember(dst => dst.Translations, opt => opt.MapFrom(src => src.Translations)).ReverseMap();
 
             
         }

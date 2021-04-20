@@ -9,6 +9,7 @@ namespace TACHYON.Shipping.Trips.RejectReasons
     public interface IShippingRequestTripRejectReasonAppService : IApplicationService
     {
         ListResultDto<ShippingRequestTripRejectReasonListDto> GetAllRejectReason(FilterInput Input);
+        Task<CreateOrEditShippingRequestTripRejectReasonDto> GetForEdit(EntityDto input);
         Task CreateOrEdit(CreateOrEditShippingRequestTripRejectReasonDto input);
         Task Delete(EntityDto input);
     }

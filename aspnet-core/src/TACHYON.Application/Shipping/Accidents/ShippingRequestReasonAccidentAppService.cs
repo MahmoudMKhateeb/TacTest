@@ -23,7 +23,7 @@ namespace TACHYON.Shipping.Accidents
         {
             _ShippingRequestReasonAccidentRepository = ShippingRequestCauseAccidentRepository;
         }
-        public async Task<ListResultDto<ShippingRequestReasonAccidentListDto>> GetAll(GetAllForShippingRequestReasonAccidentFilterInput Input)
+        public ListResultDto<ShippingRequestReasonAccidentListDto> GetAll(GetAllForShippingRequestReasonAccidentFilterInput Input)
         {
             var query = _ShippingRequestReasonAccidentRepository
                 .GetAllIncluding(x=>x.Translations)

@@ -1,11 +1,12 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace TACHYON.Shipping.Accidents.Dto
+namespace TACHYON.Shipping.Trips.RejectReasons.Dtos
 {
-    public class ShippingRequestReasonAccidentTranslationDto
+    public  class ShippingRequestTripRejectReasonTranslationDto
     {
-        [StringLength(60, MinimumLength = 3)]
         [Required]
+        [StringLength(60, MinimumLength = 3)]
+
         public string Name { get; set; }
         [Required]
         public string Language { get; set; }
@@ -13,6 +14,5 @@ namespace TACHYON.Shipping.Accidents.Dto
         public string Icon { get; set; }
 
         public string DisplayName { get; set; }
-
     }
 }

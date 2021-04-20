@@ -275,6 +275,7 @@
                     <label>{{ 'PasswordComplexity_RequiredLength' | localize }}</label>
                     <input
                       type="number"
+                      min="1"
                       name="RequiredLength"
                       class="form-control"
                       [ngClass]="{ edited: hostSettings.security.passwordComplexity.requiredLength }"
