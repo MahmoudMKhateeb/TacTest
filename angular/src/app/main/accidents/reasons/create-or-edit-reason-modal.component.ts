@@ -2,13 +2,16 @@ import { Component, ViewChild, Injector, Output, EventEmitter, OnInit, ElementRe
 import { ModalDirective } from 'ngx-bootstrap/modal';
 import { finalize } from 'rxjs/operators';
 import { AppComponentBase } from '@shared/common/app-component-base';
-import { ShippingRequestReasonAccidentServiceProxy, CreateOrEditShippingRequestReasonAccidentDto } from '@shared/service-proxies/service-proxies';
-import { EnumToArrayPipe } from '@shared/common/pipes/enum-to-array.pipe';
+import {
+  ShippingRequestReasonAccidentServiceProxy,
+  CreateOrEditShippingRequestReasonAccidentDto,
+  ShippingRequestReasonAccidentTranslationDto,
+} from '@shared/service-proxies/service-proxies';
+import * as _ from 'lodash';
 
 @Component({
   selector: 'accident-reason-modal',
   templateUrl: './create-or-edit-reason-modal.component.html',
-  providers: [EnumToArrayPipe],
 })
 export class AccidentReasonComponentModalComponent extends AppComponentBase implements OnInit {
   @Output() modalSave: EventEmitter<any> = new EventEmitter<any>();
@@ -17,32 +20,53 @@ export class AccidentReasonComponentModalComponent extends AppComponentBase impl
   @ViewChild('nameInput', { static: false }) nameInput: ElementRef;
 
   reason: CreateOrEditShippingRequestReasonAccidentDto;
+  languages: abp.localization.ILanguageInfo[];
+  Translations: ShippingRequestReasonAccidentTranslationDto[];
   active: boolean = false;
   saving: boolean = false;
 
   Specifiedtime: Date = new Date();
-  constructor(injector: Injector, private enumToArray: EnumToArrayPipe, private _Service: ShippingRequestReasonAccidentServiceProxy) {
+  constructor(injector: Injector, private _Service: ShippingRequestReasonAccidentServiceProxy) {
     super(injector);
   }
-  ngOnInit(): void {}
-
-  public show(reason: CreateOrEditShippingRequestReasonAccidentDto | null): void {
-    if (reason == null) {
-      this.reason = new CreateOrEditShippingRequestReasonAccidentDto();
-    } else {
-      this.reason = reason;
-    }
-    this.active = true;
-    this.modal.show();
+  ngOnInit(): void {
+    this.languages = _.filter(this.localization.languages, (l) => l.isDisabled === false);
   }
 
+  public show(id: number | null): void {
+    this.Translations = [];
+    if (id == null) {
+      this.reason = new CreateOrEditShippingRequestReasonAccidentDto();
+      this.PopulateTranslations([]);
+      this.active = true;
+      this.modal.show();
+    } else {
+      this._Service.getForEdit(id).subscribe((result) => {
+        this.reason = result;
+        this.PopulateTranslations(this.reason.translations);
+        this.active = true;
+        this.modal.show();
+      });
+    }
+  }
+  private PopulateTranslations(Translations: ShippingRequestReasonAccidentTranslationDto[]) {
+    this.languages.forEach((r) => {
+      let translation = new ShippingRequestReasonAccidentTranslationDto();
+      translation.language = r.name;
+      translation.displayName = r.displayName;
+      translation.icon = r.icon;
+      let lang = _.find(Translations, (t) => t.language == r.name);
+      if (lang != null) translation.name = lang.name;
+      this.Translations.push(translation);
+    });
+  }
   onShown(): void {
     this.nameInput.nativeElement.focus();
   }
 
   save(): void {
     this.saving = true;
-
+    this.reason.translations = this.Translations;
     this._Service
       .createOrEdit(this.reason)
       .pipe(finalize(() => (this.saving = false)))

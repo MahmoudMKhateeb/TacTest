@@ -98,8 +98,8 @@ export class TachyonDealerResponceModelComponent extends AppComponentBase implem
     this.saving = true;
     this.createOfferInput.shippingRequestId = this.shippingRequestId;
     this.createOfferInput.shippingRequestBidId = this.bidId;
-    this.createOfferInput.carrirerTenantId = this.commetionCalculations.carrirerTenantId;
-    this.createOfferInput.carrierPrice = this.commetionCalculations.carrierPrice;
+    // this.createOfferInput.carrirerTenantId = this.commetionCalculations.carrirerTenantId;
+    // this.createOfferInput.carrierPrice = this.commetionCalculations.carrierPrice;
     this.createOfferInput.totalAmount = this.commetionCalculations.totalAmount;
     this.createOfferInput.actualCommissionValue = this.commetionCalculations.actualCommissionValue;
     this.createOfferInput.actualPercentCommission = this.commetionCalculations.actualPercentCommission;

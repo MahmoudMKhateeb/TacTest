@@ -20,7 +20,7 @@ export class ViewShippingRequestDetailsComponent extends AppComponentBase {
   @ViewChild('ViewShippingRequestModal', { static: true }) modal: ModalDirective;
   @Output() modalSave: EventEmitter<any> = new EventEmitter<any>();
 
-  price = null;
+  price: number | undefined | null = null;
   showSuccess = false;
   active = false;
   saving = false;
@@ -44,6 +44,7 @@ export class ViewShippingRequestDetailsComponent extends AppComponentBase {
     this.record = record;
     this.getCordinatesByCityName(record.sourceCityName, 'source');
     this.getCordinatesByCityName(record.destinationCityName, 'destanation');
+    this.price = this.record.myBidPrice ?? null;
     this.active = true;
     this.modal.show();
   }

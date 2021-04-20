@@ -18,5 +18,6 @@ namespace TACHYON.Shipping.ShippingRequests.Dtos
         public decimal ActualCommissionValue { get; set; }
         public decimal ActualPercentCommission { get; set; }
         public decimal MinCommissionValueSetting { get; set; }
+        public bool IsGuesingPrice { get; set; }
     }
 }

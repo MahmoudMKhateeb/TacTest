@@ -50,6 +50,7 @@ namespace TACHYON.Shipping.ShippingRequests
                 .Include(r=>r.ReceiverFk)
                 .AsTracking()
                 .Where(x => x.ShippingRequestTripFk.ShippingRequestId == ShippingRequestId  && x.PickingType== PickingType.Dropoff);
+            if (Points==null) return;
             foreach (var p in Points)
             {
                 await SendSmsToReceiver(p);

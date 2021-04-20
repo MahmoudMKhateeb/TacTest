@@ -1,4 +1,4 @@
-﻿<div [@routerTransition]>
+<div [@routerTransition]>
   <div class="content d-flex flex-column flex-column-fluid">
     <!-- [description]="'CapacitiesCategoriesHeaderInfo' | localize" -->
     <sub-header [title]="'CapacitiesCategories' | localize">
@@ -96,7 +96,7 @@
                       {{ l('CapacityCategory') }}
                       <p-sortIcon field="capacity.displayName"></p-sortIcon>
                     </th>
-                    <th style="width: 150px;" pSortableColumn="truckTypeFk.displayName">
+                    <th style="width: 150px;" pSortableColumn="TrucksTypeFk.displayName">
                       {{ l('TruckType') }}
                       <p-sortIcon field="truckTypeDisplayName"></p-sortIcon>
                     </th>

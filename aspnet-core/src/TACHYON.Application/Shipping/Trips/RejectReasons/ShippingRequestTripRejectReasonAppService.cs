@@ -26,12 +26,22 @@ namespace TACHYON.Shipping.Trips.RejectReasons
         public ListResultDto<ShippingRequestTripRejectReasonListDto> GetAllRejectReason(FilterInput Input)
         {
             var query = _shippingRequestTripRejectReasonRepository
-              .GetAll()
+             .GetAllIncluding(x => x.Translations)
               .AsNoTracking()
-              .WhereIf(!string.IsNullOrWhiteSpace(Input.Filter), e => e.DisplayName.Contains(Input.Filter.Trim()))
+              .WhereIf(!string.IsNullOrWhiteSpace(Input.Filter), e => e.Translations.Any(x => x.Name.Contains(Input.Filter.Trim())))
               .OrderBy(Input.Sorting ?? "id asc");
 
+
+
+
             return new ListResultDto<ShippingRequestTripRejectReasonListDto>(ObjectMapper.Map<List<ShippingRequestTripRejectReasonListDto>>(query));
+        }
+
+        public async Task<CreateOrEditShippingRequestTripRejectReasonDto> GetForEdit(EntityDto input)
+        {
+            return ObjectMapper.Map<CreateOrEditShippingRequestTripRejectReasonDto>(await
+                _shippingRequestTripRejectReasonRepository.GetAllIncluding(x => x.Translations)
+                .FirstOrDefaultAsync(e => e.Id == input.Id));
         }
         public async Task CreateOrEdit(CreateOrEditShippingRequestTripRejectReasonDto input)
         {
@@ -66,7 +76,8 @@ namespace TACHYON.Shipping.Trips.RejectReasons
 
         private async Task Update(CreateOrEditShippingRequestTripRejectReasonDto input)
         {
-            var Reason = await _shippingRequestTripRejectReasonRepository.SingleAsync(e => e.Id == input.Id);
+            var Reason = await _shippingRequestTripRejectReasonRepository.GetAllIncluding(x => x.Translations).SingleAsync(e => e.Id == input.Id);
+            Reason.Translations.Clear();
             ObjectMapper.Map(input, Reason);
 
         }

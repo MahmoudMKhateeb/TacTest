@@ -16,6 +16,8 @@ namespace TACHYON.Invoices
         Task MakeUnPaid(long InvoiceId);
 
         Task Delete(EntityDto Input);
+        
+        Task<FileDto> Exports(InvoiceFilterInput input);
 
 
     }

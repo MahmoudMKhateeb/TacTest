@@ -27,7 +27,7 @@ export class MarketplaceComponent extends AppComponentBase implements OnInit {
   advancedFiltersAreShown = false;
 
   filterText = '';
-  MatchingBidOnlyFilter = true;
+  MatchingBidOnlyFilter = false;
   MyBidsOnlyFilter: false;
   TruckTypeIdFilter: number;
   TransportTypeFilter: number;

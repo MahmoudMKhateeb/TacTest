@@ -11,7 +11,9 @@ using System.Threading.Tasks;
 using TACHYON.Features;
 using TACHYON.Invoices.Balances;
 using TACHYON.Notifications;
+using TACHYON.Shipping.ShippingRequestBids;
 using TACHYON.Shipping.ShippingRequests;
+using TACHYON.Shipping.ShippingRequests.TachyonDealer;
 using TACHYON.TachyonPriceOffers.dtos;
 
 namespace TACHYON.TachyonPriceOffers
@@ -24,18 +26,31 @@ namespace TACHYON.TachyonPriceOffers
         private readonly CommissionManager _commissionManager;
         private readonly BalanceManager _balanceManager;
         private readonly ShippingRequestManager _shippingRequestManager;
+        private readonly IRepository<ShippingRequestsCarrierDirectPricing> _carrierDirectPricingRepository;
+        private readonly IRepository<ShippingRequestBid, long> _shippingRequestBidsRepository;
         private readonly IAppNotifier _appNotifier;
+        private readonly IRepository<ShippingRequestsCarrierDirectPricing> _shippingRequestsCarrierDirectPricingRepository;
+        private readonly IRepository<ShippingRequestBid,long> _shippingRequestBidRepository;
+        private readonly ShippingRequestBidManager _shippingRequestBidManager;
+
+
         public TachyonPriceOffersAppService(IRepository<TachyonPriceOffer> tachyonPriceOfferRepository,
             IRepository<ShippingRequest, long> shippingRequestRepository, CommissionManager commissionManager, BalanceManager balanceManager,
+            IRepository<ShippingRequestsCarrierDirectPricing> shippingRequestsCarrierDirectPricingRepository,
             ShippingRequestManager shippingRequestManager,
-            IAppNotifier appNotifier)
+            IRepository<ShippingRequestBid, long> shippingRequestBidsRepository,
+            IAppNotifier appNotifier, ShippingRequestBidManager shippingRequestBidManager)
         {
             _tachyonPriceOfferRepository = tachyonPriceOfferRepository;
             _shippingRequestRepository = shippingRequestRepository;
             _commissionManager = commissionManager;
             _balanceManager = balanceManager;
             _shippingRequestManager = shippingRequestManager;
+            _shippingRequestBidsRepository = shippingRequestBidsRepository;
             _appNotifier = appNotifier;
+            _shippingRequestsCarrierDirectPricingRepository = shippingRequestsCarrierDirectPricingRepository;
+            _shippingRequestBidRepository = shippingRequestBidsRepository;
+            _shippingRequestBidManager = shippingRequestBidManager;
         }
         [RequiresFeature(AppFeatures.TachyonDealer, AppFeatures.Shipper)]
         public async Task<PagedResultDto<GetAllTachyonPriceOfferOutput>> GetAllTachyonPriceOffers(GetAllTachyonPriceOfferInput input)
@@ -68,7 +83,9 @@ namespace TACHYON.TachyonPriceOffers
         {
             DisableTenancyFilters();
             var Request = await GetShippingRequestOnPrePriceStage(input.ShippingRequestId);
-            var Offer = await _tachyonPriceOfferRepository.FirstOrDefaultAsync(x => x.ShippingRequestId == input.ShippingRequestId && x.OfferStatus == OfferStatus.AcceptedAndWaitingForCarrier);
+            var Offer = await _tachyonPriceOfferRepository
+                .FirstOrDefaultAsync(x => x.ShippingRequestId == input.ShippingRequestId && 
+            x.OfferStatus == OfferStatus.AcceptedAndWaitingForCarrier);
 
             if (Offer == null)
             {
@@ -76,7 +93,7 @@ namespace TACHYON.TachyonPriceOffers
             }
             else
             {
-                if (!input.CarrirerTenantId.HasValue) throw new UserFriendlyException(L("ItShouldBeHaveCarrirer"));
+                if (!input.CarrirerTenantId.HasValue) throw new UserFriendlyException(L("ItShouldHaveCarrirer"));
                 await Edit(input, Offer, Request);
             }
         }
@@ -124,6 +141,9 @@ namespace TACHYON.TachyonPriceOffers
                 }
                 else
                 {
+                    //if bidding, set bid as accepted, 
+                    await ChangeBiddingOrDirectRequestStatus(offer);
+
                     await _balanceManager.ShipperCanAcceptPrice(offer.ShippingRequestFk.TenantId, offer.TotalAmount, offer.ShippingRequestId);
                     // ObjectMapper.Map(offer, offer.ShippingRequestFk);
                     offer.ShippingRequestFk.CarrierTenantId = offer.CarrirerTenantId;
@@ -141,40 +161,24 @@ namespace TACHYON.TachyonPriceOffers
                 offer.RejectedReason = input.RejectedReason;
                 await _appNotifier.TachyonDealOfferRejectedByShipper(offer);
             }
-            //var offer = await GetTachyonPriceOffer((input.Id));
 
-            //if (input.IsAccepted)
-            //{
-            //    if (!await IsPendingOfferAsyn(offer.ShippingRequestId))
-            //    {
-            //        throw new UserFriendlyException(L("Offer should be in pending status"));
-            //    }
+        }
 
-            //    //check if assigned carrier exists ..
-            //    if (await IsCarrierAssigned(offer.ShippingRequestId))
-            //    {
-            //        //post price
-            //        var shippingRequestItem =
-            //            await _shippingRequestRepository.FirstOrDefaultAsync(offer.ShippingRequestId);
-
-            //      _commissionManager.AssignShippingRequestActualCommissionAndGoToPostPrice(shippingRequestItem,
-            //     offer);
-            //        await _balanceManager.ShipperCanAcceptPrice(shippingRequestItem);
-            //        await _shippingRequestManager.SendSmsToReceivers(shippingRequestItem);
-
-            //        //to do send notification to tachyonDealer and shipper
-            //    }
-            //    else
-            //    {
-            //        offer.OfferStatus = OfferStatus.AcceptedAndWaitingForCarrier;
-            //        //to do send notification to tachyonDealer
-            //    }
-            //}
-            //else
-            //{
-            //    offer.OfferStatus = OfferStatus.Rejected;
-            //    offer.RejectedReason = input.RejectedReason;
-            //}
+        private async Task ChangeBiddingOrDirectRequestStatus(TachyonPriceOffer offer)
+        {
+            if (offer.ShippingRequestBidId != null)
+            {
+                var bid = await _shippingRequestBidRepository.GetAll()
+                    .Include(x=>x.ShippingRequestFk).FirstOrDefaultAsync(x=>x.Id==offer.ShippingRequestBidId.Value);
+                bid.IsAccepted = true;
+                bid.price = bid.BasePrice = offer.CarrierPrice.Value;
+                bid.ShippingRequestFk.BidStatus = ShippingRequestBidStatus.Closed;
+            }
+            else if (offer.ShippingRequestCarrierDirectPricingId != null)
+            {
+                var directPriceItem = await _shippingRequestsCarrierDirectPricingRepository.FirstOrDefaultAsync(offer.ShippingRequestCarrierDirectPricingId.Value);
+                directPriceItem.Status = ShippingRequestsCarrierDirectPricingStatus.Accepted;
+            }
         }
 
 
@@ -185,76 +189,19 @@ namespace TACHYON.TachyonPriceOffers
             {
                 throw new UserFriendlyException(L("Cannot Create new offer, there is already existing offer message"));
             }
+
+             await OfferMappingFromDirectRequestOrBidding(input, shippingRequest);
             TachyonPriceOffer tachyonPriceOffer = ObjectMapper.Map<TachyonPriceOffer>(input);
+
             await _commissionManager.CalculateAmountByOffer(tachyonPriceOffer, shippingRequest);
+         
             await _tachyonPriceOfferRepository.InsertAsync(tachyonPriceOffer);
-            //var carrierPriceType = await GetCarrierPriceType(tachyonPriceOffer.ShippingRequestId);
-            //switch (carrierPriceType)
-            //{
-            //    case CarrierPriceType.NotSet:
-            //        tachyonPriceOffer.PriceType = PriceType.GuesingPrice;
-            //        break;
-            //    case CarrierPriceType.TachyonDealerBidding:
-            //        tachyonPriceOffer.PriceType = PriceType.Bidding;
-            //        break;
-            //    case CarrierPriceType.TachyonDirectRequest:
-            //        tachyonPriceOffer.PriceType = PriceType.DirectRequest;
-            //        break;
-            //}
-
-            //if (tachyonPriceOffer.PriceType == PriceType.GuesingPrice)
-            //{
-            //    tachyonPriceOffer.ActualCommissionValue = 0;
-            //    tachyonPriceOffer.ActualPercentCommission = 0;
-            //    tachyonPriceOffer.ActualMinCommissionValue = 0;
-            //    tachyonPriceOffer.TotalCommission = 0;
-            //}
-            //else
-            //{
-            //    var shippingRequest =
-            //        await _shippingRequestRepository.FirstOrDefaultAsync(tachyonPriceOffer.ShippingRequestId);
-
-            //    //check if total Commission less than Minimum value settings, take minimum value as total commission
-            //    if (tachyonPriceOffer.TotalCommission < shippingRequest.MinValueCommissionSetting)
-            //    {
-            //        tachyonPriceOffer.ActualCommissionValue = 0;
-            //        tachyonPriceOffer.ActualPercentCommission =0;
-            //        tachyonPriceOffer.ActualMinCommissionValue = shippingRequest.MinValueCommissionSetting;
-            //        tachyonPriceOffer.TotalCommission = shippingRequest.MinValueCommissionSetting;
-
-            //    }
-
-            //    if (tachyonPriceOffer.TotalAmount < (shippingRequest.CarrierPrice + tachyonPriceOffer.TotalCommission))
-            //    {
-            //        //throw new UserFriendlyException(
-            //        //    L("Offered Price caused financial loss in this case, please edit price"));
-            //        tachyonPriceOffer.ActualCommissionValue = 0;
-            //        tachyonPriceOffer.ActualPercentCommission = 0;
-            //        tachyonPriceOffer.ActualMinCommissionValue = 0;
-            //        tachyonPriceOffer.TotalCommission = 0;
-            //    }
-            //    else
-            //    {
-            //        tachyonPriceOffer.ActualCommissionValue = shippingRequest.CommissionValueSetting;
-            //        tachyonPriceOffer.ActualPercentCommission = shippingRequest.PercentCommissionSetting;
-            //        tachyonPriceOffer.ActualMinCommissionValue = 0;
-            //        tachyonPriceOffer.TotalCommission = shippingRequest.CarrierPrice != 0
-            //            ? (shippingRequest.CarrierPrice * tachyonPriceOffer.ActualPercentCommission / 100) + tachyonPriceOffer.ActualCommissionValue
-            //            : 0;
-            //    }
-            //}
-
 
         }
 
         private async Task Edit(CreateOrEditTachyonPriceOfferDto input, TachyonPriceOffer offer, ShippingRequest shippingRequest)
         {
-            //if (await IsPendingOfferAsyn(input.ShippingRequestId))
-            //{
-            //    var item =await _tachyonPriceOfferRepository.FirstOrDefaultAsync(input.Id.Value);
-            //    ObjectMapper.Map(input, item);
-            //}
-            //  ObjectMapper.Map(input, offer);
+            await OfferMappingFromDirectRequestOrBidding(input, shippingRequest);
             offer.CarrierPrice = input.CarrierPrice;
             offer.CarrirerTenantId = input.CarrirerTenantId;
             offer.ShippingRequestBidId = input.ShippingRequestBidId;
@@ -262,11 +209,34 @@ namespace TACHYON.TachyonPriceOffers
             SetSettings(offer, shippingRequest);
             ObjectMapper.Map(offer, offer.ShippingRequestFk);
             await _shippingRequestManager.SetToPostPrice(offer.ShippingRequestFk);
-
-
-
         }
 
+        private async Task OfferMappingFromDirectRequestOrBidding(CreateOrEditTachyonPriceOfferDto input,ShippingRequest request)
+        {
+            if (input.DriectRequestForCarrierId.HasValue)
+            {
+                var direct = await _carrierDirectPricingRepository.FirstOrDefaultAsync(input.DriectRequestForCarrierId.Value);
+                if (direct == null) throw new UserFriendlyException(L("TheCarrierDirectPricingIsNotFound"));
+                input.CarrierPrice = direct.Price;
+                input.CarrirerTenantId = direct.CarrirerTenantId;
+                direct.Status = ShippingRequestsCarrierDirectPricingStatus.Accepted;
+                if (request.IsBid) 
+                {
+                    request.BidStatus = ShippingRequestBidStatus.Closed;
+                }
+            }
+            else if (input.ShippingRequestBidId.HasValue)
+            {
+                var bid = await _shippingRequestBidsRepository
+                    .GetAll()
+                    .Where(x => x.Id == input.ShippingRequestBidId.Value && x.ShippingRequestId == request.Id)
+                    .FirstOrDefaultAsync();
+                if (bid == null) throw new UserFriendlyException(L("ThebidIsNotFound"));
+                input.CarrierPrice = bid.BasePrice;
+                input.CarrirerTenantId = bid.TenantId;
+                await _shippingRequestBidManager.AcceptBidAndGoToPostPriceAsync(bid);
+            }
+        }
         private async Task<bool> IsExistingOffer(long shippingRequestId)
         {
             return await _tachyonPriceOfferRepository.GetAll()
@@ -306,68 +276,6 @@ namespace TACHYON.TachyonPriceOffers
         }
         #endregion
 
-        #region Removed
-        //[RequiresFeature(AppFeatures.TachyonDealer)]
-        //public async Task<GetTachyonPriceOfferForEditOutput> GetTachyonPriceForEdit(EntityDto entity)
-        //{
-        //    var item = await GetTachyonPriceOffer(entity.Id);
-        //    return new GetTachyonPriceOfferForEditOutput
-        //    {
-        //        createOrEditTachyonPriceOffer = ObjectMapper.Map<CreateOrEditTachyonPriceOfferDto>(item)
-        //    };
-        //}
-        //private async Task<bool> IsPendingOfferAsyn(long shippingRequestId)
-        //{
-        //    var item = await _tachyonPriceOfferRepository.GetAll()
-        //        .Where(e => e.ShippingRequestId == shippingRequestId)
-        //        .Where(e => e.OfferStatus == OfferStatus.Pending)
-        //        .FirstOrDefaultAsync();
-        //    return item != null;
-        //}
 
-        //private async Task<bool> IsPendingOfferAsyn(int id)
-        //{
-        //    var item = await _tachyonPriceOfferRepository.GetAll()
-        //        .Where(e => e.Id == id)
-        //        .Where(e => e.OfferStatus == OfferStatus.Pending)
-        //        .FirstOrDefaultAsync();
-        //    return item != null;
-        //}
-
-        //private async Task<bool> IsAcceptedOfferAsync(long shippingRequestId)
-        //{
-        //    var item = await _tachyonPriceOfferRepository.GetAll()
-        //        .Where(e => e.ShippingRequestId == shippingRequestId)
-        //        .Where(e => e.OfferStatus == OfferStatus.Accepted || e.OfferStatus == OfferStatus.AcceptedAndWaitingForCarrier)
-        //        .FirstOrDefaultAsync();
-        //    return item != null;
-        //}
-
-        //private async Task<bool> IsTachyonDealShippingRequestAsync(long shippingRequestId)
-        //{
-        //    using (CurrentUnitOfWork.DisableFilter(AbpDataFilters.MustHaveTenant))
-        //    {
-        //        var item=await _shippingRequestRepository.FirstOrDefaultAsync(e => e.Id == shippingRequestId);
-        //        return item.IsTachyonDeal;
-        //    }
-        //}
-
-
-
-        //private async Task<CarrierPriceType> GetCarrierPriceType(long shippingRequestId)
-        //{
-        //    DisableTenancyFilters();
-        //    var shippingRequest = await _shippingRequestRepository.FirstOrDefaultAsync(e => e.Id == shippingRequestId);
-        //    return shippingRequest.CarrierPriceType;
-        //}
-
-        //private async Task<bool> IsCarrierAssigned(long shippingRequestId)
-        //{
-        //    DisableTenancyFilters();
-        //    var shippingRequest = await _shippingRequestRepository.FirstOrDefaultAsync(e => e.Id == shippingRequestId);
-        //    return shippingRequest.CarrierPrice !=0;
-        //}
-
-        #endregion
     }
 }

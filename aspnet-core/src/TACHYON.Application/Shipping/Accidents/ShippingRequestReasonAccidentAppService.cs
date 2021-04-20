@@ -23,15 +23,14 @@ namespace TACHYON.Shipping.Accidents
         {
             _ShippingRequestReasonAccidentRepository = ShippingRequestCauseAccidentRepository;
         }
-        public async Task<ListResultDto<ShippingRequestReasonAccidentListDto>> GetAll(GetAllForShippingRequestReasonAccidentFilterInput Input)
+        public ListResultDto<ShippingRequestReasonAccidentListDto> GetAll(GetAllForShippingRequestReasonAccidentFilterInput Input)
         {
             var query = _ShippingRequestReasonAccidentRepository
-                .GetAll()
+                .GetAllIncluding(x=>x.Translations)
                 .AsNoTracking()
-                .WhereIf(!string.IsNullOrWhiteSpace(Input.Filter), e => e.DisplayName.Contains(Input.Filter.Trim()))
+                .WhereIf(!string.IsNullOrWhiteSpace(Input.Filter), e => e.Translations.Any(x=> x.Name.Contains(Input.Filter.Trim())))
                 .OrderBy(Input.Sorting ?? "id asc");
 
-            var totalCount = await query.CountAsync();
             return new ListResultDto<ShippingRequestReasonAccidentListDto>(
                 ObjectMapper.Map<List<ShippingRequestReasonAccidentListDto>>(query)
 
@@ -39,7 +38,9 @@ namespace TACHYON.Shipping.Accidents
         }
         public async Task<CreateOrEditShippingRequestReasonAccidentDto> GetForEdit(EntityDto input)
         {
-            return ObjectMapper.Map<CreateOrEditShippingRequestReasonAccidentDto>(await _ShippingRequestReasonAccidentRepository.FirstOrDefaultAsync(e => e.Id == input.Id));
+            return ObjectMapper.Map<CreateOrEditShippingRequestReasonAccidentDto>(await 
+                _ShippingRequestReasonAccidentRepository.GetAllIncluding(x=>x.Translations)
+                .FirstOrDefaultAsync(e => e.Id == input.Id));
         }
         public async Task CreateOrEdit(CreateOrEditShippingRequestReasonAccidentDto input)
         {
@@ -65,8 +66,9 @@ namespace TACHYON.Shipping.Accidents
 
         private async Task Update(CreateOrEditShippingRequestReasonAccidentDto input)
         {
-            var CauseAccident = await _ShippingRequestReasonAccidentRepository.SingleAsync(e => e.Id == input.Id);
-            ObjectMapper.Map(input, CauseAccident);
+            var ReasonAccident = await _ShippingRequestReasonAccidentRepository.GetAllIncluding(x=>x.Translations).SingleAsync(e => e.Id == input.Id);
+            ReasonAccident.Translations.Clear();
+            ObjectMapper.Map(input, ReasonAccident);
 
         }
         [AbpAuthorize(AppPermissions.Pages_ShippingRequestResoneAccidents_Delete)]

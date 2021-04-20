@@ -12,7 +12,7 @@ namespace TACHYON.AutoMapper.Shipping.Trips
         public ShippingRequestTripAccidenProfile()
         {
             CreateMap<ShippingRequestTripAccident, ShippingRequestTripAccidentListDto>()
-            .ForMember(dst => dst.Reason, opt => opt.MapFrom(src => src.ResoneFK != null ? src.ResoneFK.DisplayName : src.Description))
+            .ForMember(dst => dst.Reason, opt => opt.MapFrom(src => src.Description))
             .ForMember(dst => dst.Address, opt => opt.MapFrom(src => $"{src.RoutPointFK.FacilityFk.CityFk.DisplayName}-{src.RoutPointFK.FacilityFk.Address}"))
             .ForMember(dst => dst.PickingType, opt => opt.MapFrom(src => Enum.GetName(typeof(PickingType), src.RoutPointFK.PickingType)));
             CreateMap<ShippingRequestTripAccident, CreateOrEditShippingRequestTripAccidentDto>()

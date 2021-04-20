@@ -96,10 +96,12 @@ namespace TACHYON.EntityFrameworkCore
 
         #region Trips
         public virtual DbSet<ShippingRequestTripRejectReason> ShippingRequestTripRejectReasons { get; set; }
+        public DbSet<ShippingRequestTripRejectReasonTranslation> ShippingRequestTripRejectReasonTranslations { get; set; }
         public virtual DbSet<ShippingRequestTripTransition> ShippingRequestTripTransitions { get; set; }
         public virtual DbSet<ShippingRequestTrip> ShippingRequestTrips { get; set; }
 
         public virtual DbSet<ShippingRequestReasonAccident> ShippingRequestReasonAccidents { get; set; }
+        public DbSet<ShippingRequestReasonAccidentTranslation> ShippingRequestReasonAccidentTranslations { get; set; }
         public virtual DbSet<ShippingRequestTripAccident> ShippingRequestTripAccidents { get; set; }
         public virtual DbSet<ShippingRequestTripAccidentResolve> ShippingRequestTripAccidentResolves { get; set; }
 

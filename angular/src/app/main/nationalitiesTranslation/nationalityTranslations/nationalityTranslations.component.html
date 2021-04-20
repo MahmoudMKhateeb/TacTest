@@ -1,4 +1,4 @@
-﻿<div [@routerTransition]>
+<div [@routerTransition]>
   <div class="content d-flex flex-column flex-column-fluid">
     <sub-header [title]="'NationalityTranslations' | localize">
       <!-- <sub-header [title]="'NationalityTranslations' | localize" [description]="'NationalityTranslationsHeaderInfo' | localize"> -->
@@ -107,7 +107,7 @@
                     <th style="width: 130px;" [hidden]="!isGrantedAny('Pages.NationalityTranslations.Edit', 'Pages.NationalityTranslations.Delete')">
                       {{ l('Actions') }}
                     </th>
-                    <th style="width: 150px;" pSortableColumn="nationalityFk.name">
+                    <th style="width: 150px;" pSortableColumn="Core.name">
                       {{ l('Name') }}
                       <p-sortIcon field="nationalityName"></p-sortIcon>
                     </th>

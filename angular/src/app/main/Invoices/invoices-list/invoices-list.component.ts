@@ -5,9 +5,15 @@ import { Table } from 'primeng/table';
 import { Paginator } from 'primeng/paginator';
 import { LazyLoadEvent } from 'primeng/public_api';
 import * as _ from 'lodash';
-import { InvoiceServiceProxy, InvoiceListDto, ISelectItemDto, CommonLookupServiceProxy } from '@shared/service-proxies/service-proxies';
+import {
+  InvoiceServiceProxy,
+  InvoiceListDto,
+  ISelectItemDto,
+  CommonLookupServiceProxy,
+  InvoiceFilterInput,
+} from '@shared/service-proxies/service-proxies';
 import * as moment from 'moment';
-import { AutoCompleteModule } from 'primeng/autocomplete';
+import { FileDownloadService } from '@shared/utils/file-download.service';
 
 @Component({
   templateUrl: './invoices-list.component.html',
@@ -33,7 +39,12 @@ export class InvoicesListComponent extends AppComponentBase implements OnInit {
   creationDateRange: Date[] = [moment().startOf('day').toDate(), moment().endOf('day').toDate()];
   creationDateRangeActive: boolean = false;
   CanMakPaid: boolean;
-  constructor(injector: Injector, private _InvoiceServiceProxy: InvoiceServiceProxy, private _CommonServ: CommonLookupServiceProxy) {
+  constructor(
+    injector: Injector,
+    private _InvoiceServiceProxy: InvoiceServiceProxy,
+    private _CommonServ: CommonLookupServiceProxy,
+    private _fileDownloadService: FileDownloadService
+  ) {
     super(injector);
   }
 
@@ -125,5 +136,18 @@ export class InvoicesListComponent extends AppComponentBase implements OnInit {
   AccountType(AccountType: boolean): string {
     return AccountType ? 'AccountReceivable' : 'AccountPayable';
   }
-  exportToExcel(): void {}
+  exportToExcel(): void {
+    var data = {
+      tenantId: this.Tenant ? parseInt(this.Tenant.id) : undefined,
+      periodId: this.periodId,
+      isPaid: this.PaidStatus,
+      isAccountReceivable: this.AccountStatus,
+      fromDate: this.fromDate,
+      toDate: this.toDate,
+      sorting: this.primengTableHelper.getSorting(this.dataTable),
+    };
+    this._InvoiceServiceProxy.exports(data as InvoiceFilterInput).subscribe((result) => {
+      this._fileDownloadService.downloadTempFile(result);
+    });
+  }
 }

@@ -68,7 +68,7 @@ namespace TACHYON.Shipping.Drivers
                 .FirstOrDefaultAsync(x => x.IsActive &&
                 x.ShippingRequestTripFk.Status == ShippingRequestTripStatus.ReceiverConfirmed &&
                 x.ShippingRequestTripFk.AssignedDriverUserId == _abpSession.UserId);
-            if (CurrentPoint == null) return false;
+            if (CurrentPoint == null) throw new UserFriendlyException(L("TheTripIsNotFound"));
 
             CurrentPoint.EndTime = Clock.Now;
             CurrentPoint.DocumentContentType = "image/jpeg";
@@ -76,17 +76,17 @@ namespace TACHYON.Shipping.Drivers
             CurrentPoint.DocumentId = document.DocumentId;
             CurrentPoint.IsActive = false;
             CurrentPoint.IsComplete = true;
-            await SetRoutStatusTransition(CurrentPoint, ShippingRequestTripStatus.ProofOfDeliveryCompleted);
+            await SetRoutStatusTransition(CurrentPoint, ShippingRequestTripStatus.DeliveryConfirmation);
             var trip = await GetActiveTrip();
             if (await _RoutPointRepository.GetAll().Where(x => x.ShippingRequestTripId == trip.Id && x.IsComplete == false && x.Id != CurrentPoint.Id).CountAsync() == 0)
             {
-                trip.Status = ShippingRequestTripStatus.Finished;
+                trip.Status = ShippingRequestTripStatus.Delivered;
                 trip.EndTripDate = Clock.Now;
                 await Done(trip.ShippingRequestId, trip.Id);
             }
             else
             {
-                trip.Status = ShippingRequestTripStatus.ProofOfDeliveryCompleted;
+                trip.Status = ShippingRequestTripStatus.DeliveryConfirmation;
             }
             return true;
 
@@ -100,8 +100,8 @@ namespace TACHYON.Shipping.Drivers
         public async Task<ShippingRequestTrip> GetActiveTrip()
         {
             var trip = await _ShippingRequestTrip
-                            .FirstOrDefaultAsync(t => t.AssignedDriverUserId == _abpSession.UserId && t.Status != ShippingRequestTripStatus.Finished && t.Status != ShippingRequestTripStatus.StandBy && t.Status != ShippingRequestTripStatus.Cancled);
-            if (trip == null) throw new UserFriendlyException(L("thetripIsNotFound"));
+                            .FirstOrDefaultAsync(t => t.AssignedDriverUserId == _abpSession.UserId && t.Status != ShippingRequestTripStatus.Delivered && t.Status != ShippingRequestTripStatus.StandBy && t.Status != ShippingRequestTripStatus.Cancled);
+            if (trip == null) throw new UserFriendlyException(L("TheTripIsNotFound"));
             return trip;
         }
         /// <summary>
@@ -111,7 +111,7 @@ namespace TACHYON.Shipping.Drivers
         public async Task<RoutPoint> GetActivePoint()
         {
             var ActivePoint = await _RoutPointRepository.FirstOrDefaultAsync(x => x.IsActive && x.ShippingRequestTripFk.Status != ShippingRequestTripStatus.Cancled && x.ShippingRequestTripFk.AssignedDriverUserId == _abpSession.UserId);
-            if (ActivePoint == null) throw new UserFriendlyException(L("thetripIsNotFound"));
+            if (ActivePoint == null) throw new UserFriendlyException(L("TheTripIsNotFound"));
 
             return ActivePoint;
         }
@@ -133,7 +133,7 @@ namespace TACHYON.Shipping.Drivers
             tripTransition.ToPointId = routPoint.Id;
             tripTransition.ToLocation = routPoint.FacilityFk.Location;
             await _shippingRequestTripTransitionRepository.InsertAsync(tripTransition);
-            await SetRoutStatusTransition(routPoint, ShippingRequestTripStatus.InTransitToPickupLocation);
+            await SetRoutStatusTransition(routPoint, ShippingRequestTripStatus.StartedMovingToLoadingLocation);
 
         }
         /// <summary>
@@ -171,7 +171,7 @@ namespace TACHYON.Shipping.Drivers
 
         public async Task ChangeShippingRequestStatusIfAllTripsDone(long RequestId)
         {
-            if (!_ShippingRequestTrip.GetAll().Any(x => x.AssignedDriverUserId == _abpSession.UserId && x.Status != ShippingRequestTripStatus.Finished && x.ShippingRequestId == RequestId))
+            if (!_ShippingRequestTrip.GetAll().Any(x => x.AssignedDriverUserId == _abpSession.UserId && x.Status != ShippingRequestTripStatus.Delivered && x.ShippingRequestId == RequestId))
             {
                 var Request = await _ShippingRequestRepository.SingleAsync(x => x.Id == RequestId);
                 Request.Status = ShippingRequestStatus.Finished;

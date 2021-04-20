@@ -56,13 +56,13 @@ export class AppNavigationService {
             undefined,
             undefined,
             undefined,
-            undefined /*,
-            () => this._featureCheckerService.isEnabled('App.Shipper')*/
+            undefined,
+            () => !this._featureCheckerService.isEnabled('App.Carrier')
           ),
         ],
         undefined,
-        undefined /*,
-        () => this._featureCheckerService.isEnabled('App.Shipper')*/
+        undefined,
+        () => !this._featureCheckerService.isEnabled('App.Carrier')
       ),
 
       // //Host
@@ -76,7 +76,6 @@ export class AppNavigationService {
       //     new AppMenuItem('Facilities', 'Pages.Facilities', 'label label-danger label-dot', '/app/main/addressBook/facilities'),
       //     new AppMenuItem('RoutTypes', 'Pages.RoutTypes', 'label label-danger label-dot', '/app/main/routTypes/routTypes'),
       //     new AppMenuItem('Ports', 'Pages.Ports', 'label label-danger label-dot', '/app/main/ports/ports'),
-      new AppMenuItem('Facilities', 'Pages.Facilities', 'flaticon-more', '/app/main/addressBook/facilities'),
       new AppMenuItem('Facilities', 'Pages.Facilities', 'flaticon-more', '/app/main/addressBook/facilities'),
       new AppMenuItem(
         'Receivers',
@@ -287,25 +286,8 @@ export class AppNavigationService {
         ]
       ),
 
-      // Host
-      // new AppMenuItem('Vas', 'Pages.Administration.Vases', 'label label-danger label-dot', '/app/admin/vases/vases'),
-      // new AppMenuItem(
-      //   'VasPrices',
-      //   'Pages.VasPrices',
-      //   'label label-danger label-dot',
-      //   '/app/main/vases/vasPrices',
-      //   undefined,
-      //   undefined,
-      //   undefined,
-      //   undefined,
-      //   () => this._featureCheckerService.isEnabled('App.Carrier')
-      // ),
       new AppMenuItem('Vases', 'Pages.Administration.Vases', 'flaticon-more', '/app/admin/vases/vases'),
       new AppMenuItem('waybills', undefined, 'flaticon-more', '/app/admin/waybills/waybills'),
-      new AppMenuItem('VasPrices', 'Pages.VasPrices', 'flaticon-more', '/app/main/vases/vasPrices', undefined, undefined, undefined, undefined, () =>
-        this._featureCheckerService.isEnabled('App.Carrier')
-      ),
-      new AppMenuItem('Vas', 'Pages.Administration.Vases', 'label label-danger label-dot', '/app/admin/vases/vases'),
       new AppMenuItem(
         'VasPrices',
         'Pages.VasPrices',

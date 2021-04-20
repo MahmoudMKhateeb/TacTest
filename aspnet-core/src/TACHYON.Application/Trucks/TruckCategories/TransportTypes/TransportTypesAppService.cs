@@ -14,6 +14,7 @@ using TACHYON.Authorization;
 using Abp.Extensions;
 using Abp.Authorization;
 using Microsoft.EntityFrameworkCore;
+using Abp.UI;
 
 namespace TACHYON.Trucks.TruckCategories.TransportTypes
 {
@@ -81,6 +82,7 @@ namespace TACHYON.Trucks.TruckCategories.TransportTypes
 
         public async Task CreateOrEdit(CreateOrEditTransportTypeDto input)
         {
+            await CheckNameIsExists(input);
             if (input.Id == null)
             {
                 await Create(input);
@@ -113,5 +115,17 @@ namespace TACHYON.Trucks.TruckCategories.TransportTypes
         {
             await _transportTypeRepository.DeleteAsync(input.Id);
         }
+
+
+        #region Heleper
+        private async Task CheckNameIsExists(CreateOrEditTransportTypeDto input)
+        {
+            if ( await _transportTypeRepository.GetAll().AnyAsync(x => x.DisplayName.ToLower() == input.DisplayName.Trim().ToLower() && x.Id != input.Id)) 
+            {
+                throw new UserFriendlyException(L("TheNameIsAlreadyExists"));
+            }
+
+        }
+        #endregion
     }
 }

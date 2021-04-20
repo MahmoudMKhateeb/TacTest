@@ -14,7 +14,7 @@ namespace TACHYON.Shipping.Drivers.Dto
         public string EndTripDate { get; set; }
         public string TravelTime { get; set; }
         public string PackingType { get; set; }
-
+        public string GoodsCategory { get; set; }
         public double TotalWeight { get; set; }
 
         public string UnitOfMeasure { get; set; } = "Kg";

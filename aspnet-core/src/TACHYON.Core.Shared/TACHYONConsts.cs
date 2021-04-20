@@ -3,6 +3,7 @@
     public class TACHYONConsts
     {
         public const string LocalizationSourceName = "TACHYON";
+        public const string DefaultLanguage = "en";
 
         public const string ConnectionStringName = "Default";
 

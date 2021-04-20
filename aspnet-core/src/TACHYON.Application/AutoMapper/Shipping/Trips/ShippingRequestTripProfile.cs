@@ -58,6 +58,7 @@ namespace TACHYON.AutoMapper.Shipping.Trips
                 .ForMember(dst => dst.TravelTime, opt => opt.MapFrom(src => src.StartWorking == null ? "" : ((DateTime)src.StartWorking).ToString("hh:mm")))
                 .ForMember(dst => dst.TotalWeight, opt => opt.MapFrom(src => src.ShippingRequestFk.TotalWeight))
                 .ForMember(dst => dst.PackingType, opt => opt.MapFrom(src => src.ShippingRequestFk.PackingTypeFk.DisplayName))
+                .ForMember(dst => dst.GoodsCategory, opt => opt.MapFrom(src => src.ShippingRequestFk.GoodCategoryFk.DisplayName))
                 .ForMember(dst => dst.RoutePoints, opt => opt.MapFrom(src => src.RoutPoints.OrderBy(x => x.PickingType)))
                 .ForMember(dst => dst.StatusTitle, opt => opt.MapFrom(src => Enum.GetName(typeof(ShippingRequestTripStatus), src.Status)))
                 .ForMember(dst=>dst.ChangeStatusButtonTitle, opt => opt.MapFrom(src => GetMobileTripChangeStatusButtonTitle(src.Status)));
@@ -79,9 +80,9 @@ namespace TACHYON.AutoMapper.Shipping.Trips
 
         private static ShippingRequestTripDriverLoadStatusDto GetMobileTripStatus(ShippingRequestTrip trip)
         {
-            if (trip.StartTripDate.Date <= Clock.Now.Date && trip.Status != ShippingRequestTripStatus.Finished)
+            if (trip.StartTripDate.Date <= Clock.Now.Date && trip.Status != ShippingRequestTripStatus.Delivered)
                 return ShippingRequestTripDriverLoadStatusDto.Current;
-            if (trip.Status == ShippingRequestTripStatus.Finished)
+            if (trip.Status == ShippingRequestTripStatus.Delivered)
                 return ShippingRequestTripDriverLoadStatusDto.Past;
             return ShippingRequestTripDriverLoadStatusDto.Comming;
         }
@@ -92,15 +93,19 @@ namespace TACHYON.AutoMapper.Shipping.Trips
             switch (Status)
             {
                 case ShippingRequestTripStatus.StandBy:
-                    return Enum.GetName(typeof(ShippingRequestTripStatus), ShippingRequestTripStatus.InTransitToPickupLocation);
-                case ShippingRequestTripStatus.InTransitToPickupLocation:
-                    return Enum.GetName(typeof(ShippingRequestTripStatus), ShippingRequestTripStatus.ReachedPickupLocation);
-                case ShippingRequestTripStatus.ReachedPickupLocation:
-                    return Enum.GetName(typeof(ShippingRequestTripStatus), ShippingRequestTripStatus.Loading);
-                case ShippingRequestTripStatus.InTransitToDropLocation:
-                    return Enum.GetName(typeof(ShippingRequestTripStatus), ShippingRequestTripStatus.ReachedDropLocation);
-                case ShippingRequestTripStatus.ReachedDropLocation:
-                    return Enum.GetName(typeof(ShippingRequestTripStatus), ShippingRequestTripStatus.Offloading);
+                    return Enum.GetName(typeof(ShippingRequestTripStatus), ShippingRequestTripStatus.StartedMovingToLoadingLocation);
+                case ShippingRequestTripStatus.StartedMovingToLoadingLocation:
+                    return Enum.GetName(typeof(ShippingRequestTripStatus), ShippingRequestTripStatus.ArriveToLoadingLocation);
+                case ShippingRequestTripStatus.ArriveToLoadingLocation:
+                    return Enum.GetName(typeof(ShippingRequestTripStatus), ShippingRequestTripStatus.StartLoading);
+                case ShippingRequestTripStatus.StartLoading:
+                    return Enum.GetName(typeof(ShippingRequestTripStatus), ShippingRequestTripStatus.FinishLoading);
+                case ShippingRequestTripStatus.StartedMovingToOfLoadingLocation:
+                    return Enum.GetName(typeof(ShippingRequestTripStatus), ShippingRequestTripStatus.ArrivedToDestination);
+                case ShippingRequestTripStatus.ArrivedToDestination:
+                    return Enum.GetName(typeof(ShippingRequestTripStatus), ShippingRequestTripStatus.StartOffloading);
+                case ShippingRequestTripStatus.StartOffloading:
+                    return Enum.GetName(typeof(ShippingRequestTripStatus), ShippingRequestTripStatus.FinishOffLoadShipment);
                 default:
                     return "";
             }

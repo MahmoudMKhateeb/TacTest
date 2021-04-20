@@ -22,34 +22,27 @@ namespace TACHYON.Shipping.ShippingRequests.Dtos
 
         public void Normalize()
         {
-            if (Sorting == "GoodsCategoryName")
+
+            if (string.IsNullOrWhiteSpace(Sorting)) return;
+            if (Sorting.Contains("originalCityName"))
             {
-                Sorting = "GoodCategoryFk.DisplayName";
+                Sorting = Sorting.Replace("originalCityName", "OriginCityFk.DisplayName");
             }
-            else if(Sorting== "OriginalCityName")
+            else if (Sorting.Contains("destinationCityName"))
             {
-                Sorting = "RouteFk.OriginCityFk.DisplayName";
+                Sorting = Sorting.Replace("destinationCityName", "DestinationCityFk.DisplayName");
             }
-            else if (Sorting == "DestinationCityName")
+            else if (Sorting.Contains("totalBidsCount"))
             {
-                Sorting = "RouteFk.DestinationCityFk.DisplayName";
+                Sorting = Sorting.Replace("totalBidsCount", "TotalBids");
             }
-            else if (Sorting == "DriverName")
+            else if (Sorting.Contains("routeType"))
             {
-                Sorting = "AssignedDriverUserFk.Name";
+                Sorting=Sorting.Replace("routeType", "RouteTypeId");
             }
-            else if (Sorting == "RoutTypeName")
-            {
-                Sorting = "RoutTypeFk.DisplayName";
-            }
-            else if (Sorting == "ShippingRequestStatusName")
-            {
-                Sorting = "ShippingRequestStatusFk.DisplayName";
-            }
-            else if (Sorting == "TruckTypeDisplayName")
-            {
-                Sorting = "AssignedTruckFk.TrucksTypeFk.DisplayName";
-            }
+
+     
+
         }
     }
 }

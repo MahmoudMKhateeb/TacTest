@@ -8,6 +8,7 @@ namespace TACHYON.Shipping.ShippingRequests
     {
         None,
         Response,
+        Accepted,
         Rejected
     }
 }

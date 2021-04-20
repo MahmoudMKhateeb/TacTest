@@ -8,8 +8,12 @@ namespace TACHYON.AutoMapper.Shipping
     {
         public ShippingRequestResoneAccidentProfile ()
         {
-            CreateMap<ShippingRequestReasonAccident,ShippingRequestReasonAccidentListDto>();
-            CreateMap<CreateOrEditShippingRequestReasonAccidentDto, ShippingRequestReasonAccident>().ReverseMap();
+            CreateMap<ShippingRequestReasonAccidentTranslationDto, ShippingRequestReasonAccidentTranslation>().ReverseMap();
+            CreateMap<ShippingRequestReasonAccident, CreateOrEditShippingRequestReasonAccidentDto>()
+                .ForMember(dst => dst.Translations, opt => opt.MapFrom(src => src.Translations)).ReverseMap();
+
+
+
         }
     }
 }

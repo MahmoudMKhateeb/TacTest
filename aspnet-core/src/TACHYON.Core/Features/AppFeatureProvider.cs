@@ -216,6 +216,12 @@ namespace TACHYON.Features
                 inputType: new CheckboxInputType()
             )[FeatureMetadata.CustomFeatureKey] = new FeatureMetadata { IsVisibleOnPricingTable = true, TextHtmlColor = value => value == "true" ? "#c300ff" : "#d9534f" };
 
+            var SendDirectRequest = context.Create(
+                AppFeatures.SendDirectRequest,
+                "false",
+                L("SendDirectRequest"), // todo add localization here
+                inputType: new CheckboxInputType()
+            );
 
             var sendTachyonDealShippingRequest = context.Create(
             AppFeatures.SendTachyonDealShippingRequest,

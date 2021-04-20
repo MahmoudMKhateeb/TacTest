@@ -52,11 +52,6 @@ namespace TACHYON.Shipping.ShippingRequests
         /// </summary>
         public virtual bool IsTachyonDeal { get; set; }
 
-        //public int RouteId { get; set; }
-
-        //[ForeignKey("RouteId")]
-        //public Route RouteFk { get; set; }
-
         public ShippingRequestRouteType RouteTypeId { get; set; }
 
 

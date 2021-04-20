@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using Abp.Domain.Uow;
 using TACHYON.Authorization.Users;
 using TACHYON.MultiTenancy;
+using System.Globalization;
 
 namespace TACHYON
 {
@@ -21,9 +22,11 @@ namespace TACHYON
 
         public UserManager UserManager { get; set; }
 
+        public string CurrentLanguage { get; set; }
         protected TACHYONAppServiceBase()
         {
             LocalizationSourceName = TACHYONConsts.LocalizationSourceName;
+            CurrentLanguage = CultureInfo.CurrentCulture.Name;
         }
 
         protected virtual async Task<User> GetCurrentUserAsync()

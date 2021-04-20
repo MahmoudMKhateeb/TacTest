@@ -8,8 +8,10 @@ using Abp.UI;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Linq.Dynamic.Core;
+using System.Threading;
 using System.Threading.Tasks;
 using TACHYON.Authorization;
 using TACHYON.Authorization.Users;
@@ -18,6 +20,8 @@ using TACHYON.Dto;
 using TACHYON.Features;
 using TACHYON.Notifications;
 using TACHYON.Routs.RoutPoints;
+using TACHYON.Shipping.Accidents;
+using TACHYON.Shipping.Accidents.Dto;
 using TACHYON.Shipping.Drivers;
 using TACHYON.Shipping.ShippingRequests;
 using TACHYON.Shipping.ShippingRequestTrips;
@@ -33,6 +37,7 @@ namespace TACHYON.Shipping.Trips.Accidents
         private readonly IRepository<ShippingRequestTrip> _TripRepository;
         private readonly IRepository<ShippingRequest,long> _ShippingRequestRepository;
         private readonly IRepository<ShippingRequestTripAccidentResolve> _ResolveRepository;
+        private readonly IRepository<ShippingRequestReasonAccidentTranslation> _shippingRequestReasonAccidentRepository;
         private readonly ShippingRequestDriverManager _shippingRequestDriverManager;
         private readonly CommonManager _CommonManager;
         private readonly IAppNotifier _appNotifier;
@@ -44,6 +49,7 @@ namespace TACHYON.Shipping.Trips.Accidents
             IRepository<ShippingRequestTrip> TripRepository,
             IRepository<ShippingRequestTripAccidentResolve> ResolveRepository,
             IRepository<ShippingRequest, long> ShippingRequestRepository,
+            IRepository<ShippingRequestReasonAccidentTranslation> shippingRequestReasonAccidentRepository,
             ShippingRequestDriverManager shippingRequestDriverManager,
             CommonManager CommonManager,
             UserManager userManager,
@@ -55,6 +61,7 @@ namespace TACHYON.Shipping.Trips.Accidents
             _TripRepository = TripRepository;
             _ResolveRepository = ResolveRepository;
             _ShippingRequestRepository = ShippingRequestRepository;
+            _shippingRequestReasonAccidentRepository = shippingRequestReasonAccidentRepository;
             _shippingRequestDriverManager = shippingRequestDriverManager;
             _userManager = userManager;
             _appNotifier = appNotifier;
@@ -73,6 +80,7 @@ namespace TACHYON.Shipping.Trips.Accidents
                    .ThenInclude(f=>f.FacilityFk)
                     .ThenInclude(c=>c.CityFk)
                   .Include(r => r.ResoneFK)
+                   .ThenInclude(t=>t.Translations)
                           .Where(x => x.RoutPointFK.ShippingRequestTripId == Input.TripId)
                           .WhereIf(Input.PointId.HasValue, x => x.PointId == Input.PointId)
                           .WhereIf(Input.IsResolve.HasValue, x => x.IsResolve == Input.IsResolve)
@@ -80,7 +88,18 @@ namespace TACHYON.Shipping.Trips.Accidents
                           .WhereIf(IsEnabled(AppFeatures.Shipper), x => x.RoutPointFK.ShippingRequestTripFk.ShippingRequestFk.TenantId == AbpSession.TenantId)
                           .WhereIf(IsEnabled(AppFeatures.TachyonDealer), x => x.RoutPointFK.ShippingRequestTripFk.ShippingRequestFk.IsTachyonDeal)
                           .WhereIf(GetCurrentUser().IsDriver, x => x.RoutPointFK.ShippingRequestTripFk.AssignedDriverUserId == AbpSession.UserId)
-                  .OrderBy(Input.Sorting ?? "id asc");
+                  .OrderBy(Input.Sorting ?? "id asc").ToList();
+
+            query.ForEach(  q =>
+            {
+                if (q.ResoneFK != null)
+                {
+                    //var reasone = await _shippingRequestReasonAccidentRepository.FirstOrDefaultAsync(x=>x.Language== CurrentLanguage || x.Language== TACHYONConsts.DefaultLanguage);
+                    var reasone = ObjectMapper.Map<ShippingRequestReasonAccidentListDto>(q.ResoneFK);
+                    q.Description = reasone.Name;
+                }
+            });
+
                 return new ListResultDto<ShippingRequestTripAccidentListDto>(ObjectMapper.Map<List<ShippingRequestTripAccidentListDto>>(query));
 
 
@@ -266,7 +285,7 @@ namespace TACHYON.Shipping.Trips.Accidents
                 .GetAll()
                     .Include(T => T.ShippingRequestTripFk)
                      .ThenInclude(r => r.ShippingRequestFk)
-                    .Where(x => x.IsActive && x.ShippingRequestTripFk.Status != ShippingRequestTripStatus.Cancled && x.ShippingRequestTripFk.Status != ShippingRequestTripStatus.Finished)
+                    .Where(x => x.IsActive && x.ShippingRequestTripFk.Status != ShippingRequestTripStatus.Cancled && x.ShippingRequestTripFk.Status != ShippingRequestTripStatus.Delivered)
                     .WhereIf(IsEnabled(AppFeatures.Carrier), x => x.ShippingRequestTripFk.ShippingRequestFk.CarrierTenantId == AbpSession.TenantId && x.ShippingRequestTripFk.Id == TripId)
                     .WhereIf(IsEnabled(AppFeatures.Shipper), x => x.ShippingRequestTripFk.ShippingRequestFk.TenantId == AbpSession.TenantId && x.ShippingRequestTripFk.Id == TripId)
                     .WhereIf(IsEnabled(AppFeatures.TachyonDealer), x => x.ShippingRequestTripFk.ShippingRequestFk.IsTachyonDeal && x.ShippingRequestTripFk.Id == TripId)

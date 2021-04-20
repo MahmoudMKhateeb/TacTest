@@ -87,7 +87,7 @@
                               href="javascript:;"
                               *ngIf="permission.isGranted('Pages.ShippingRequestResoneAccidents.Edit')"
                               class="dropdown-item"
-                              (click)="AccidentReasonModal.show(record)"
+                              (click)="AccidentReasonModal.show(record.id)"
                               >{{ l('Edit') }}</a
                             >
                           </li>
@@ -106,7 +106,7 @@
 
                     <td style="width: 150px;">
                       <span class="ui-column-title"> {{ l('DisplayName') }}</span>
-                      {{ record.displayName }}
+                      {{ record.name }}
                     </td>
                   </tr>
                 </ng-template>
