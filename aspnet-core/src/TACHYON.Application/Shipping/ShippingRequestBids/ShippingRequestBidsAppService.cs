@@ -146,7 +146,7 @@ namespace TACHYON.Shipping.ShippingRequestBids
                 return await Create(input,item);
             }
 
-            return await Edit(input);
+            return await Edit(input,item);
         }
 
         /// <summary>
@@ -405,35 +405,66 @@ namespace TACHYON.Shipping.ShippingRequestBids
             await _shippingRequestBidsRepository.InsertAndGetIdAsync(shippingRequestBid);
             shippingRequest.TotalBids += 1;
             await CurrentUnitOfWork.SaveChangesAsync();
-            if (!shippingRequest.IsTachyonDeal)
-            {
-                //notification to shipper when Carrier create new bid in his Shipping Request
-                await _appNotifier.CreateBidRequest(
-                    new UserIdentifier(shippingRequest.TenantId, shippingRequest.CreatorUserId.Value),
-                    shippingRequestBid.Id);
-            }
-            else
-            {
-                //send notification to tachyon dealer
-                var edition = await _editionRepository.FirstOrDefaultAsync(x => x.DisplayName.ToLower() == TACHYONConsts.TachyonDealerEdtionName.ToLower());
-                var tenant=await _tenantsRepository.FirstOrDefaultAsync(x => x.EditionId == edition.Id);
-                var tachyonDealerUser=_userManager.Users.Where(e => e.TenantId == tenant.Id).FirstOrDefault();
-                await _appNotifier.CreateBidRequest(
-                    new UserIdentifier(tenant.Id, tachyonDealerUser.Id),
-                    shippingRequestBid.Id);
-            }
+
+            await SendNotificationAfterBid(shippingRequest, shippingRequestBid,true);
+
             return shippingRequestBid.Id;
         }
 
 
         [RequiresFeature(AppFeatures.Carrier)]
         [AbpAuthorize(AppPermissions.Pages_ShippingRequestBids_Edit)]
-        private async Task<long> Edit(CreatOrEditShippingRequestBidDto input)
+        private async Task<long> Edit(CreatOrEditShippingRequestBidDto input,ShippingRequest shippingRequest)
         {
             ShippingRequestBid item = await _shippingRequestBidsRepository.FirstOrDefaultAsync(input.Id.Value);
             ObjectMapper.Map(input, item);
             await _commissionManager.AddCommissionInfoAfterCarrierBid(item);
+
+            await SendNotificationAfterBid(shippingRequest, item,false);
+
             return item.Id;
+
+
+        }
+
+        private async Task SendNotificationAfterBid(ShippingRequest shippingRequest, ShippingRequestBid shippingRequestBid,bool IsCreateOperation)
+        {
+            if (!shippingRequest.IsTachyonDeal)
+            {
+                //notification to shipper when Carrier create new bid in his Shipping Request
+                if (IsCreateOperation)
+                {
+                    await _appNotifier.CreateBidRequest(
+                        new UserIdentifier(shippingRequest.TenantId, shippingRequest.CreatorUserId.Value),
+                        shippingRequestBid.Id);
+                }
+                else
+                {
+                    await _appNotifier.UpdateBidRequest(
+                        new UserIdentifier(shippingRequest.TenantId, shippingRequest.CreatorUserId.Value),
+                        shippingRequestBid.Id);
+                }
+            }
+            else
+            {
+                //send notification to tachyon dealer
+                var edition = await _editionRepository.FirstOrDefaultAsync(x => x.DisplayName.ToLower() == TACHYONConsts.TachyonDealerEdtionName.ToLower());
+                var tenant = await _tenantsRepository.FirstOrDefaultAsync(x => x.EditionId == edition.Id);
+                var tachyonDealerUser = await _userManager.GetAdminByTenantIdAsync(tenant.Id);
+
+                if (IsCreateOperation)
+                {
+                    await _appNotifier.CreateBidRequest(
+                        new UserIdentifier(tenant.Id, tachyonDealerUser.Id),
+                        shippingRequestBid.Id);
+                }
+                else
+                {
+                    await _appNotifier.UpdateBidRequest(
+                        new UserIdentifier(tenant.Id, tachyonDealerUser.Id),
+                        shippingRequestBid.Id);
+                }
+            }
         }
 
         private void ThrowShippingRequestIsNotOngoingError()

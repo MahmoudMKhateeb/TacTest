@@ -245,6 +245,20 @@ namespace TACHYON.Notifications
                 notificationData,
                 userIds: new[] { argsUser });
         }
+
+        public async Task UpdateBidRequest(UserIdentifier argsUser, long shippingRequestBidId)
+        {
+            var notificationData = new LocalizableMessageNotificationData(
+                new LocalizableString(
+                    L("UpdateBidRequestNotificationMessage"),
+                    TACHYONConsts.LocalizationSourceName
+                    )
+                );
+            notificationData["shippingRequestBidId"] = shippingRequestBidId;
+            await _notificationPublisher.PublishAsync(AppNotificationNames.UpdateShippingRequestBid,
+                notificationData,
+                userIds: new[] { argsUser });
+        }
         public async Task CancelBidRequest(UserIdentifier argsUser, long shippingRequestId, long shippingRequestBidId)
         {
             var notificationData = new LocalizableMessageNotificationData(
