@@ -25,34 +25,54 @@
           <div class="row">
             <div class="col-6">
               <div class="form-group">
-                <label for="TenancyName">{{ 'TenancyName' | localize }} *</label>
+                <label for="companyName">{{ 'CompanyUniqueName' | localize }}</label>
                 <input
-                  id="TenancyName"
-                  #tenancyNameInput="ngModel"
-                  class="form-control"
+                  #companyName="ngModel"
+                  id="companyName"
                   type="text"
-                  (change)="checkIfIsCompanyUniqueName()"
-                  [ngClass]="{ edited: tenant.tenancyName }"
-                  name="tenancyName"
                   placeholder="{{ 'CompanyUniqueName' | localize }}"
-                  [(ngModel)]="tenant.tenancyName"
-                  #tenancyName="ngModel"
+                  name="companyName"
+                  class="form-control"
+                  [(ngModel)]="tenant.companyName"
+                  maxlength="32"
                   required
-                  maxlength="64"
-                  pattern="^[a-zA-Z][a-zA-Z0-9_-]{1,}$"
                 />
-                <span class="form-text text-muted">{{ l('Enter') }} {{ l('CompanyUniqueName') }}</span>
-                <validation-messages [formCtrl]="tenancyNameInput"></validation-messages>
-                <div>
-                  <span *ngIf="!isCompanyNameAvailable" class="form-text text-danger text-left"
-                    >{{ 'CompanyUniqueName' | localize }} {{ 'AlreadyTaken' | localize }}</span
-                  >
-                  <span class="form-control-feedback" *ngIf="!tenancyName.valid && !tenancyName.pristine">{{
-                    'CompanyName_Regex_Description' | localize
-                  }}</span>
-                </div>
+                <span class="form-text text-muted">{{ l('Enter') }} {{ l('companyName') }}</span>
+                <validation-messages [formCtrl]="companyName"></validation-messages>
               </div>
             </div>
+
+            <!--            <div class="col-6">-->
+            <!--              <div class="form-group">-->
+            <!--                <label for="TenancyName">{{ 'TenancyName' | localize }} *</label>-->
+            <!--                <input-->
+            <!--                  id="TenancyName"-->
+            <!--                  #tenancyNameInput="ngModel"-->
+            <!--                  class="form-control"-->
+            <!--                  type="text"-->
+            <!--                  (change)="checkIfIsCompanyUniqueName()"-->
+            <!--                  [ngClass]="{ edited: tenant.tenancyName }"-->
+            <!--                  name="tenancyName"-->
+            <!--                  placeholder="{{ 'CompanyUniqueName' | localize }}"-->
+            <!--                  [(ngModel)]="tenant.tenancyName"-->
+            <!--                  #tenancyName="ngModel"-->
+            <!--                  required-->
+            <!--                  maxlength="64"-->
+            <!--                  pattern="^[a-zA-Z][a-zA-Z0-9_-]{1,}$"-->
+            <!--                />-->
+            <!--                <span class="form-text text-muted">{{ l('Enter') }} {{ l('CompanyUniqueName') }}</span>-->
+            <!--                <validation-messages [formCtrl]="tenancyNameInput"></validation-messages>-->
+            <!--                <div>-->
+            <!--                  <span *ngIf="!isCompanyNameAvailable" class="form-text text-danger text-left"-->
+            <!--                    >{{ 'CompanyUniqueName' | localize }} {{ 'AlreadyTaken' | localize }}</span-->
+            <!--                  >-->
+            <!--                  <span class="form-control-feedback" *ngIf="!tenancyName.valid && !tenancyName.pristine">{{-->
+            <!--                    'CompanyName_Regex_Description' | localize-->
+            <!--                  }}</span>-->
+            <!--                </div>-->
+            <!--              </div>-->
+            <!--            </div>-->
+
             <div class="col-6">
               <div class="form-group">
                 <label for="Name">{{ 'CompanyFullLeagalName' | localize }} *</label>
@@ -188,7 +208,43 @@
             </label>
           </div>
 
-          <div class="row">
+          <div class="row mt-2">
+            <!--    start::firstName+Surname -->
+            <div class="col-6">
+              <div class="form-group">
+                <label for="adminFirstname">{{ 'adminFirstName' | localize }}</label>
+                <input
+                  #adminFirstname="ngModel"
+                  id="adminFirstname"
+                  type="text"
+                  name="adminFirstname"
+                  class="form-control"
+                  [(ngModel)]="tenant.userAdminFirstName"
+                  maxlength="32"
+                  required
+                />
+                <span class="form-text text-muted">{{ l('Enter') }} {{ l('adminFirstName') }}</span>
+                <validation-messages [formCtrl]="adminFirstname"></validation-messages>
+              </div>
+            </div>
+            <div class="col-6">
+              <div class="form-group">
+                <label for="adminFirstname">{{ 'adminSurname' | localize }}</label>
+                <input
+                  #adminSurname="ngModel"
+                  id="adminSurname"
+                  type="text"
+                  name="adminSurname"
+                  class="form-control"
+                  [(ngModel)]="tenant.userAdminSurname"
+                  maxlength="32"
+                  required
+                />
+                <span class="form-text text-muted">{{ l('Enter') }} {{ l('adminSurname') }}</span>
+                <validation-messages [formCtrl]="adminSurname"></validation-messages>
+              </div>
+            </div>
+            <!--    end::firstName+Surname   -->
             <div class="col-6">
               <div class="form-group" *ngIf="!setRandomPassword">
                 <label for="AdminPassword">{{ 'AdminPassword' | localize }}</label>
