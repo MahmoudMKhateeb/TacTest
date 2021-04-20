@@ -121,7 +121,7 @@ namespace TACHYON.Shipping.Drivers
             {
                 tripDto.ActionStatus = ShippingRequestTripDriverActionStatusDto.ContinueTrip;
             }
-            else if (trip.StartTripDate.Date <= Clock.Now.Date && trip.Status == ShippingRequestTripStatus.StandBy)
+            else if (trip.StartTripDate.Date <= Clock.Now.Date && trip.Status == ShippingRequestTripStatus.StandBy && trip.DriverStatus== ShippingRequestTripDriverStatus.None)
             {
 
                 //Check there any trip the driver still working on or not
