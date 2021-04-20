@@ -155,13 +155,13 @@
             </div>
           </div>
 
-          <div class="checkbox-list">
-            <label class="checkbox">
-              <input id="CreateTenant_UseHostDb" type="checkbox" name="UseHostDb" [(ngModel)]="useHostDb" />
-              {{ 'UseHostDatabase' | localize }}
-              <span></span>
-            </label>
-          </div>
+          <!--          <div class="checkbox-list">-->
+          <!--            <label class="checkbox">-->
+          <!--              <input id="CreateTenant_UseHostDb" type="checkbox" name="UseHostDb" [(ngModel)]="useHostDb" />-->
+          <!--              {{ 'UseHostDatabase' | localize }}-->
+          <!--              <span></span>-->
+          <!--            </label>-->
+          <!--          </div>-->
 
           <div class="form-group" *ngIf="!useHostDb">
             <label for="DatabaseConnectionString">{{ 'DatabaseConnectionString' | localize }} *</label>

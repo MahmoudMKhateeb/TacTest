@@ -130,6 +130,7 @@ export class CreateTenantModalComponent extends AppComponentBase {
   }
 
   save(): void {
+    this.tenant.tenancyName = this.tenant.companyName.trim().replace(' ', '_');
     if (this.isEmailAvailable == false || this.isCompanyNameAvailable == false || this.isEmailValid == false) {
       this.notify.error('PleaseMakeSureYouProvideValidDetails!');
       return;
