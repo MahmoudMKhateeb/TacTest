@@ -188,11 +188,12 @@ namespace TACHYON.TachyonPriceOffers
             TachyonPriceOffer tachyonPriceOffer = ObjectMapper.Map<TachyonPriceOffer>(input);
             await _commissionManager.CalculateAmountByOffer(tachyonPriceOffer, shippingRequest);
             await _tachyonPriceOfferRepository.InsertAsync(tachyonPriceOffer);
+            await CurrentUnitOfWork.SaveChangesAsync();
 
-            shippingRequest=await _shippingRequestRepository.FirstOrDefaultAsync(tachyonPriceOffer.ShippingRequestId);
-            
+            shippingRequest = await _shippingRequestRepository.FirstOrDefaultAsync(tachyonPriceOffer.ShippingRequestId);
+
             //send notification to shipper when create offer
-            await _appNotifier.TachyonDealerOfferCreated(tachyonPriceOffer,shippingRequest);
+            await _appNotifier.TachyonDealerOfferCreated(tachyonPriceOffer, shippingRequest);
            
         }
 

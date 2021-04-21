@@ -89,6 +89,14 @@ namespace TACHYON.Notifications
                     featureDependency: new SimpleFeatureDependency(AppFeatures.Carrier)
                     )
                 );
+            
+                context.Manager.Add(
+                new NotificationDefinition(
+                    AppNotificationNames.TachyonDealOfferCreated,
+                    displayName: L("TachyonDealerOfferCreatedNotificationDefinition"),
+                    featureDependency: new SimpleFeatureDependency(AppFeatures.Carrier)
+                    )
+                );
             context.Manager.Add(
                 new NotificationDefinition(
                     AppNotificationNames.DocumentFileBeforExpiration,

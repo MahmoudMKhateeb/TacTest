@@ -628,7 +628,7 @@ namespace TACHYON.Notifications
             );
 
             notificationData["offerid"] = offer.Id;
-            var user = new UserIdentifier(offer.ShippingRequestFk.TenantId, request.CreatorUserId.Value);
+            var user = new UserIdentifier(request.TenantId, request.CreatorUserId.Value);
 
             await _notificationPublisher.PublishAsync(AppNotificationNames.TachyonDealOfferCreated, notificationData, userIds: new[] { user });
 
