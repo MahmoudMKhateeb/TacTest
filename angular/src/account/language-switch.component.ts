@@ -5,7 +5,7 @@ import * as _ from 'lodash';
 @Component({
   selector: 'language-switch',
   templateUrl: './language-switch.component.html',
-  styles: ['.lang-select { width: 25%; margin-top: 24px; border: 1px solid rgba(12, 12, 13, 0.3);border-radius: 4px; }'],
+  styleUrls: ['./language-switch.component.css'],
 })
 export class LanguageSwitchComponent extends AppComponentBase implements OnInit {
   currentLanguage: abp.localization.ILanguageInfo;
