@@ -275,6 +275,7 @@ namespace TACHYON.Web.Controllers
         [HttpPost]
         public async Task<string> MobileAuthenticate(string Username)
         {
+            if (string.IsNullOrEmpty(Username)) throw new AbpAuthorizationException(L("InvalidMobileNumber"));
             var user = await _userManager.GetUserByPhoneNumberAsync(Username);
             if (user == null && !user.IsDriver)
             {
