@@ -13,6 +13,7 @@ import {
   CommonLookupServiceProxy,
   ISelectItemDto,
   SubmitInvoiceStatus,
+  GroupPeriodFilterInput,
 } from '@shared/service-proxies/service-proxies';
 import { FileDownloadService } from '@shared/utils/file-download.service';
 import { EnumToArrayPipe } from '@shared/common/pipes/enum-to-array.pipe';
@@ -108,16 +109,6 @@ export class GroupPeriodsListComponent extends AppComponentBase implements OnIni
     });
   }
 
-  /*UnDemand(Group: GroupPeriodListDto): void {
-    this.message.confirm('', this.l('AreYouSure'), (isConfirmed) => {
-      if (isConfirmed) {
-        this._CurrentService.unDemand(Group.id).subscribe(() => {
-          this.notify.success(this.l('Successfully'));
-          this.reloadPage();
-        });
-      }
-    });
-  }*/
   Accepted(Group: GroupPeriodListDto): void {
     this.message.confirm('', this.l('AreYouSure'), (isConfirmed) => {
       if (isConfirmed) {
@@ -152,5 +143,16 @@ export class GroupPeriodsListComponent extends AppComponentBase implements OnIni
     }
     return '';
   }
-  exportToExcel(): void {}
+  exportToExcel(): void {
+    var data = {
+      tenantId: this.Tenant ? parseInt(this.Tenant.id) : undefined,
+      periodId: this.periodId,
+      fromDate: this.fromDate,
+      toDate: this.toDate,
+      sorting: this.primengTableHelper.getSorting(this.dataTable),
+    };
+    this._CurrentService.exports(data as GroupPeriodFilterInput).subscribe((result) => {
+      this._fileDownloadService.downloadTempFile(result);
+    });
+  }
 }
