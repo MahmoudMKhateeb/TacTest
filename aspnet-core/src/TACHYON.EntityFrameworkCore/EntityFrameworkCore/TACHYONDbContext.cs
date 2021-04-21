@@ -237,6 +237,9 @@ namespace TACHYON.EntityFrameworkCore
 
         #region Mobile
         public DbSet<UserDeviceToken> UserDeviceTokens { get; set; }
+        public DbSet<UserOTP> UserOTPs { get; set; }
+
+        
         #endregion
         public TACHYONDbContext(DbContextOptions<TACHYONDbContext> options)
             : base(options)
