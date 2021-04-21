@@ -288,7 +288,7 @@ namespace TACHYON.Web.Controllers
 
         public async Task<AuthenticateResultModel> OTPAuthenticate([FromBody] AuthenticateMobileModel model)
         {
-
+            if (string.IsNullOrEmpty(model.Username)) throw new AbpAuthorizationException(L("InvalidMobileNumber"));
             string tenancyName = null;
             var user = await _userManager.GetUserByPhoneNumberAsync(model.Username);
 
@@ -314,7 +314,7 @@ namespace TACHYON.Web.Controllers
 
 
             var loginResult = await GetLoginResultOtpAsync(
-                model.Username,
+                user.NormalizedUserName,
                 tenancyName
             );
 
@@ -811,16 +811,16 @@ namespace TACHYON.Web.Controllers
             }
         }
 
-        private async Task<AbpLoginResult<Tenant, User>> GetLoginResultOtpAsync(string usernameOrEmailAddress, string tenancyName)
+        private async Task<AbpLoginResult<Tenant, User>> GetLoginResultOtpAsync(string username, string tenancyName)
         {
-            var loginResult = await _mobileManager.LoginAsyn(usernameOrEmailAddress, tenancyName);
+            var loginResult = await _mobileManager.LoginAsyn(username, tenancyName);
 
             switch (loginResult.Result)
             {
                 case AbpLoginResultType.Success:
                     return loginResult;
                 default:
-                    throw _abpLoginResultTypeHelper.CreateExceptionForFailedLoginAttempt(loginResult.Result, usernameOrEmailAddress, tenancyName);
+                    throw _abpLoginResultTypeHelper.CreateExceptionForFailedLoginAttempt(loginResult.Result, username, tenancyName);
             }
         }
         private string CreateAccessToken(IEnumerable<Claim> claims, TimeSpan? expiration = null)

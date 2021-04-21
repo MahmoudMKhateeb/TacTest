@@ -78,10 +78,10 @@ namespace TACHYON.Mobile
 
 
         [UnitOfWork]
-        public async Task<AbpLoginResult<Tenant, User>> LoginAsyn(string userNameOrEmailAddress, string tenancyName)
+        public async Task<AbpLoginResult<Tenant, User>> LoginAsyn(string username, string tenancyName)
         {
-            var result = await LoginAsyncInternal(userNameOrEmailAddress, tenancyName, true);
-            await SaveLoginAttemptAsync(result, tenancyName, userNameOrEmailAddress);
+            var result = await LoginAsyncInternal(username, tenancyName, true);
+            await SaveLoginAttemptAsync(result, tenancyName, username);
             return result;
         }
 
