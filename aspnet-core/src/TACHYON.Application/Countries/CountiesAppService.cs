@@ -5,6 +5,7 @@ using Abp.Authorization;
 using Abp.Domain.Repositories;
 using Abp.Extensions;
 using Abp.Linq.Extensions;
+using Abp.UI;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -84,6 +85,10 @@ namespace TACHYON.Countries
 
         public async Task CreateOrEdit(CreateOrEditCountyDto input)
         {
+            if(await _countyRepository.FirstOrDefaultAsync(x => x.DisplayName.ToLower() == input.DisplayName.ToLower()) != null)
+            {
+                throw new UserFriendlyException(L("country is already exists message"));
+            }
             if (input.Id == null)
             {
                 await Create(input);

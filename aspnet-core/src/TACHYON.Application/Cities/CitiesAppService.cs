@@ -3,6 +3,7 @@ using Abp.Authorization;
 using Abp.Domain.Repositories;
 using Abp.Extensions;
 using Abp.Linq.Extensions;
+using Abp.UI;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -108,6 +109,11 @@ namespace TACHYON.Cities
 
         public async Task CreateOrEdit(CreateOrEditCityDto input)
         {
+            if (await _cityRepository.FirstOrDefaultAsync(x => x.DisplayName.ToLower() == input.DisplayName.ToLower() && x.CountyId==input.CountyId) != null)
+            {
+                throw new UserFriendlyException(L("City is already exists for this country message"));
+            }
+
             if (input.Id == null)
             {
                 await Create(input);
