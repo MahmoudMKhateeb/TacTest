@@ -14,7 +14,7 @@ namespace TACHYON.Mobile
 
         [ForeignKey(nameof(UserId))]
         public User User { get; set; }
-        public string OTP { get; set; } = (new Random().Next(100000, 999999)).ToString();
+        public string OTP { get; set; } = (new Random().Next(1000, 9999)).ToString();
         public DateTime CreationTime { get; set; }
 
         public DateTime ExpireTime { get; set; } = Clock.Now.AddMinutes(3);
