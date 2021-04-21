@@ -21,11 +21,11 @@ namespace TACHYON.Invoices.Periods.Exporting
         public FileDto ExportToFile(List<InvoicePeriodDto> Periods)
         {
             return CreateExcelPackage(
-                "Periods.xlsx",
+                "Periods",
                 excelPackage =>
                 {
 
-                    var sheet = excelPackage.CreateSheet(L("Periods"));
+                    var sheet = excelPackage.CreateSheet("Sheet1");
 
                     AddHeader(
                         sheet,

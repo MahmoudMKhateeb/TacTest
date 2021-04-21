@@ -93,7 +93,7 @@ namespace TACHYON.TachyonPriceOffers
             }
             else
             {
-                if (!input.CarrirerTenantId.HasValue) throw new UserFriendlyException(L("ItShouldHaveCarrirer"));
+                if (!input.ShippingRequestBidId.HasValue && !input.DriectRequestForCarrierId.HasValue) throw new UserFriendlyException(L("ItShouldHaveCarrirer"));
                 await Edit(input, Offer, Request);
             }
         }

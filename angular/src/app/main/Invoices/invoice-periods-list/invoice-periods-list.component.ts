@@ -4,7 +4,9 @@ import { appModuleAnimation } from '@shared/animations/routerTransition';
 import { LazyLoadEvent } from 'primeng/public_api';
 import { Table } from 'primeng/table';
 import * as _ from 'lodash';
-import { InvoicePeriodServiceProxy, InvoicePeriodDto, InvoicePeriodType } from '@shared/service-proxies/service-proxies';
+import { InvoicePeriodServiceProxy, InvoicePeriodDto, InvoicePeriodType, FilterInput } from '@shared/service-proxies/service-proxies';
+import { FileDownloadService } from '@shared/utils/file-download.service';
+
 @Component({
   templateUrl: './invoice-periods-list.component.html',
   animations: [appModuleAnimation()],
@@ -16,7 +18,7 @@ export class InvoicePeriodsListComponent extends AppComponentBase {
   filterText: string = '';
   Periods: InvoicePeriodDto[] = [];
   IsStartSearch = false;
-  constructor(injector: Injector, private _InvoicePeriodServiceProxy: InvoicePeriodServiceProxy) {
+  constructor(injector: Injector, private _InvoicePeriodServiceProxy: InvoicePeriodServiceProxy, private _fileDownloadService: FileDownloadService) {
     super(injector);
   }
 
@@ -43,5 +45,13 @@ export class InvoicePeriodsListComponent extends AppComponentBase {
   DisplayPeriod(type: InvoicePeriodType) {
     return this.l(InvoicePeriodType[type]);
   }
-  exportToExcel(): void {}
+  exportToExcel(): void {
+    var data = {
+      filter: this.filterText,
+      sorting: this.primengTableHelper.getSorting(this.dataTable),
+    };
+    this._InvoicePeriodServiceProxy.exportToExcel(data as FilterInput).subscribe((result) => {
+      this._fileDownloadService.downloadTempFile(result);
+    });
+  }
 }

@@ -1815,7 +1815,7 @@
     <text name="AccountStatus">Account status</text>
     <text name="IntervalType">Interval type</text>
     <text name="PayInAdvance">Pay in advance</text>
-    <text name="ClientName">Clien</text>
+    <text name="ClientName">Client</text>
     <text name="ReferenceNo">Reference No.</text>
     <text name="TrukType">Truk type</text>
   </texts>
