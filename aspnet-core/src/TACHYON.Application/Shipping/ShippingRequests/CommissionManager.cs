@@ -190,13 +190,14 @@ namespace TACHYON.Shipping.ShippingRequests
                 tachyonPriceOffer.ActualPercentCommission = default(decimal?);
                 tachyonPriceOffer.ActualCommissionValue = default(decimal?);
                 tachyonPriceOffer.SubTotalAmount = tachyonPriceOffer.TotalAmount;
+                tachyonPriceOffer.VatSetting = _settingManager.GetSettingValue<decimal>(AppSettings.HostManagement.TaxVat);
+
                 tachyonPriceOffer.VatAmount = CalculateVat(tachyonPriceOffer.SubTotalAmount.Value, tachyonPriceOffer.VatSetting.Value);
                 tachyonPriceOffer.TotalAmount = tachyonPriceOffer.SubTotalAmount.Value + tachyonPriceOffer.VatAmount.Value;
                 return Task.FromResult(0);
             }
 
 
-            tachyonPriceOffer.VatSetting = _settingManager.GetSettingValue<decimal>(AppSettings.HostManagement.TaxVat);
             tachyonPriceOffer.TotalCommission = (tachyonPriceOffer.CarrierPrice.Value * tachyonPriceOffer.ActualPercentCommission.Value / 100) + tachyonPriceOffer.ActualCommissionValue.Value;
             tachyonPriceOffer.SubTotalAmount = tachyonPriceOffer.CarrierPrice + tachyonPriceOffer.TotalCommission;
             tachyonPriceOffer.VatAmount = CalculateVat(tachyonPriceOffer.SubTotalAmount.Value, tachyonPriceOffer.VatSetting.Value);
