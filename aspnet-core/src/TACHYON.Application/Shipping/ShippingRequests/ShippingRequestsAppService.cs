@@ -146,7 +146,7 @@ namespace TACHYON.Shipping.ShippingRequests
                 ObjectMapper.Map<List<ShippingRequestListDto>>(await ResultPage.ToListAsync())
 
             )
-            ,NoOfPostPriceWithoutTrips = IsEnabled(AppFeatures.Shipper) ? _shippingRequestRepository.GetAll().Where(r => r.Status == ShippingRequestStatus.PostPrice && r.TotalsTripsAddByShippier == 0).Count() : 0
+            ,NoOfPostPriceWithoutTrips = IsEnabled(AppFeatures.Shipper) ? _shippingRequestRepository.GetAll().Where(r => r.Status == ShippingRequestStatus.PostPrice && r.TotalsTripsAddByShippier == 0 && r.TenantId==AbpSession.TenantId).Count() : 0
         };
         }
         // [RequiresFeature(AppFeatures.Shipper, AppFeatures.TachyonDealer)]

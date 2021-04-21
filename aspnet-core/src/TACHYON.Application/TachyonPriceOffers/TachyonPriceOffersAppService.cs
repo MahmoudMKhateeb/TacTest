@@ -207,7 +207,16 @@ namespace TACHYON.TachyonPriceOffers
             offer.ShippingRequestBidId = input.ShippingRequestBidId;
             offer.OfferStatus = OfferStatus.Accepted;
             SetSettings(offer, shippingRequest);
-            ObjectMapper.Map(offer, offer.ShippingRequestFk);
+
+
+            offer.ShippingRequestFk.CarrierTenantId = offer.CarrirerTenantId;
+
+            offer.ShippingRequestFk.VatAmount = offer.VatAmount.Value;
+            offer.ShippingRequestFk.Price = offer.TotalAmount;
+            offer.ShippingRequestFk.SubTotalAmount = offer.SubTotalAmount.Value;
+            offer.ShippingRequestFk.CarrierPrice = offer.CarrierPrice.Value;
+            offer.ShippingRequestFk.VatSetting = offer.VatSetting.Value;
+            //ObjectMapper.Map(offer, offer.ShippingRequestFk);
             await _shippingRequestManager.SetToPostPrice(offer.ShippingRequestFk);
         }
 
