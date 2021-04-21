@@ -61,9 +61,8 @@
                       {{ l('Actions') }}
                     </th>
 
-                    <th style="width: 150px;" pSortableColumn="displayName">
+                    <th style="width: 150px;">
                       {{ l('DisplayName') }}
-                      <p-sortIcon field="displayName"></p-sortIcon>
                     </th>
                   </tr>
                 </ng-template>
@@ -83,7 +82,7 @@
                               href="javascript:;"
                               *ngIf="permission.isGranted('Pages.ShippingRequestTrips.Reject.Reason.Edit')"
                               class="dropdown-item"
-                              (click)="ReasonModal.show(record)"
+                              (click)="ReasonModal.show(record.id)"
                               >{{ l('Edit') }}</a
                             >
                           </li>
@@ -102,7 +101,7 @@
 
                     <td style="width: 150px;">
                       <span class="ui-column-title"> {{ l('DisplayName') }}</span>
-                      {{ record.displayName }}
+                      {{ record.name }}
                     </td>
                   </tr>
                 </ng-template>

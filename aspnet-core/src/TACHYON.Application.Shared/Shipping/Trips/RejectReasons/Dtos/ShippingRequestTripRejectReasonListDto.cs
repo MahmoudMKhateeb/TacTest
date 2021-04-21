@@ -4,6 +4,6 @@ namespace TACHYON.Shipping.Trips.RejectReasons.Dtos
 {
     public class ShippingRequestTripRejectReasonListDto : EntityDto
     {
-        public string DisplayName { get; set; }
+        public string Name { get; set; }
     }
 }

@@ -3,38 +3,36 @@ using Abp.Authorization;
 using Abp.Domain.Repositories;
 using Abp.Linq.Extensions;
 using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Dynamic.Core;
 using System.Threading.Tasks;
 using TACHYON.Authorization;
 using TACHYON.Common.Dto;
+using TACHYON.Dto;
+using TACHYON.Exporting;
 using TACHYON.Shipping.ShippingRequestTrips;
 using TACHYON.Shipping.Trips.RejectReasons.Dtos;
 
 namespace TACHYON.Shipping.Trips.RejectReasons
 {
     [AbpAuthorize()]
-    public class ShippingRequestTripRejectReasonAppService: TACHYONAppServiceBase, IShippingRequestTripRejectReasonAppService
+    public class ShippingRequestTripRejectReasonAppService : TACHYONAppServiceBase, IShippingRequestTripRejectReasonAppService
     {
         private readonly IRepository<ShippingRequestTripRejectReason> _shippingRequestTripRejectReasonRepository;
+        private readonly IExcelExporterManager<ShippingRequestTripRejectReasonListDto> _excelExporterManager;
 
-        public ShippingRequestTripRejectReasonAppService(IRepository<ShippingRequestTripRejectReason> shippingRequestTripRejectReasonRepository)
+
+        public ShippingRequestTripRejectReasonAppService(IRepository<ShippingRequestTripRejectReason> shippingRequestTripRejectReasonRepository,
+            IExcelExporterManager<ShippingRequestTripRejectReasonListDto> excelExporterManager)
         {
             _shippingRequestTripRejectReasonRepository = shippingRequestTripRejectReasonRepository;
+            _excelExporterManager = excelExporterManager;
         }
         public ListResultDto<ShippingRequestTripRejectReasonListDto> GetAllRejectReason(FilterInput Input)
         {
-            var query = _shippingRequestTripRejectReasonRepository
-             .GetAllIncluding(x => x.Translations)
-              .AsNoTracking()
-              .WhereIf(!string.IsNullOrWhiteSpace(Input.Filter), e => e.Translations.Any(x => x.Name.Contains(Input.Filter.Trim())))
-              .OrderBy(Input.Sorting ?? "id asc");
-
-
-
-
-            return new ListResultDto<ShippingRequestTripRejectReasonListDto>(ObjectMapper.Map<List<ShippingRequestTripRejectReasonListDto>>(query));
+            return new ListResultDto<ShippingRequestTripRejectReasonListDto>(ObjectMapper.Map<List<ShippingRequestTripRejectReasonListDto>>(GetReason(Input)));
         }
 
         public async Task<CreateOrEditShippingRequestTripRejectReasonDto> GetForEdit(EntityDto input)
@@ -45,11 +43,11 @@ namespace TACHYON.Shipping.Trips.RejectReasons
         }
         public async Task CreateOrEdit(CreateOrEditShippingRequestTripRejectReasonDto input)
         {
-          if (input.Id==0)
+            if (input.Id == 0)
             {
                 await Create(input);
             }
-          else
+            else
             {
                 await Update(input);
             }
@@ -59,9 +57,20 @@ namespace TACHYON.Shipping.Trips.RejectReasons
 
         public async Task Delete(EntityDto input)
         {
-          await  _shippingRequestTripRejectReasonRepository.DeleteAsync(input.Id);
+            await _shippingRequestTripRejectReasonRepository.DeleteAsync(input.Id);
         }
 
+        public FileDto Exports(FilterInput Input)
+        {
+            string[] HeaderText;
+            Func<ShippingRequestTripRejectReasonListDto, object>[] propertySelectors;
+            HeaderText = new string[] { "Id", "Name" };
+            propertySelectors = new Func<ShippingRequestTripRejectReasonListDto, object>[] { _ => _.Id, _ => _.Name };
+
+            var ReasonListDto = ObjectMapper.Map<List<ShippingRequestTripRejectReasonListDto>>(GetReason(Input));
+            return _excelExporterManager.ExportToFile(ReasonListDto, "Reasons", HeaderText, propertySelectors);
+
+        }
 
         #region Heleper
         [AbpAuthorize(AppPermissions.Pages_ShippingRequestTrips_Reject_Reason_Create)]
@@ -80,6 +89,15 @@ namespace TACHYON.Shipping.Trips.RejectReasons
             Reason.Translations.Clear();
             ObjectMapper.Map(input, Reason);
 
+        }
+
+        private IQueryable<ShippingRequestTripRejectReason> GetReason(FilterInput Input)
+        {
+            return _shippingRequestTripRejectReasonRepository
+             .GetAllIncluding(x => x.Translations)
+              .AsNoTracking()
+              .WhereIf(!string.IsNullOrWhiteSpace(Input.Filter), e => e.Translations.Any(x => x.Name.Contains(Input.Filter.Trim())))
+              .OrderBy(!string.IsNullOrEmpty(Input.Sorting) ? Input.Sorting : "id asc");
         }
         #endregion
     }

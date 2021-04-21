@@ -11,11 +11,12 @@ namespace TACHYON.AutoMapper.Shipping.Trips
     {
         public ShippingRequestTripRejectReasonProfile()
         {
-            CreateMap<ShippingRequestTripRejectReasonTranslation, ShippingRequestTripRejectReasonTranslationDto>();
+
+            CreateMap<ShippingRequestTripRejectReasonTranslation, ShippingRequestTripRejectReasonTranslationDto>().ReverseMap();
             CreateMap<ShippingRequestTripRejectReason, CreateOrEditShippingRequestTripRejectReasonDto>()
                  .ForMember(dst => dst.Translations, opt => opt.MapFrom(src => src.Translations)).ReverseMap();
 
-            
+
         }
     }
 }
