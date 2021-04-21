@@ -131,10 +131,15 @@ namespace TACHYON.Shipping.ShippingRequestBids
 
         public async Task<long> CreateOrEditShippingRequestBid(CreatOrEditShippingRequestBidDto input)
         {
-            DisableTenancyFilters();
-            var item = await _shippingRequestsRepository.GetAll()
-                .Where(x=>x.BidStatus == ShippingRequestBidStatus.OnGoing)
-                .FirstOrDefaultAsync(x=>x.Id== input.ShippingRequestId);
+            //DisableTenancyFilters();
+            ShippingRequest item;
+            using (CurrentUnitOfWork.DisableFilter(AbpDataFilters.MustHaveTenant))
+            {
+                 item = await _shippingRequestsRepository.GetAll()
+               .Where(x => x.BidStatus == ShippingRequestBidStatus.OnGoing)
+               .FirstOrDefaultAsync(x => x.Id == input.ShippingRequestId);
+            }
+           
 
             if (item==null)
             {
@@ -417,7 +422,7 @@ namespace TACHYON.Shipping.ShippingRequestBids
         [AbpAuthorize(AppPermissions.Pages_ShippingRequestBids_Create)]
         private async Task<long> Create(CreatOrEditShippingRequestBidDto input, ShippingRequest shippingRequest)
         {
-            var count = await _shippingRequestBidsRepository.CountAsync(x => x.ShippingRequestId == input.ShippingRequestId);
+            var count = await _shippingRequestBidsRepository.CountAsync(x => x.ShippingRequestId == input.ShippingRequestId && x.TenantId==AbpSession.TenantId);
 
             if (count > 0)
             {
@@ -451,7 +456,7 @@ namespace TACHYON.Shipping.ShippingRequestBids
         [AbpAuthorize(AppPermissions.Pages_ShippingRequestBids_Edit)]
         private async Task<long> Edit(CreatOrEditShippingRequestBidDto input)
         {
-            ShippingRequestBid item = await _shippingRequestBidsRepository.FirstOrDefaultAsync(input.Id.Value);
+            ShippingRequestBid item = await _shippingRequestBidsRepository.FirstOrDefaultAsync(x=>x.Id== input.Id.Value && x.TenantId==AbpSession.TenantId);
             ObjectMapper.Map(input, item);
             await _commissionManager.AddCommissionInfoAfterCarrierBid(item);
             return item.Id;
