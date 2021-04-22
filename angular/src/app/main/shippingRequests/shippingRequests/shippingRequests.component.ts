@@ -93,10 +93,10 @@ export class ShippingRequestsComponent extends AppComponentBase {
     this._router.navigate(['/app/main/shippingRequests/shippingRequests/createOrEdit']);
   }
 
-  deleteShippingRequest(shippingRequest: ShippingRequestDto): void {
+  deleteShippingRequest(id): void {
     this.message.confirm('', this.l('AreYouSure'), (isConfirmed) => {
       if (isConfirmed) {
-        this._shippingRequestsServiceProxy.delete(shippingRequest.id).subscribe(() => {
+        this._shippingRequestsServiceProxy.delete(id).subscribe(() => {
           this.reloadPage();
           this.notify.success(this.l('SuccessfullyDeleted'));
         });
