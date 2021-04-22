@@ -1,6 +1,6 @@
 ﻿<div [@routerTransition]>
   <div class="content d-flex flex-column flex-column-fluid">
-    <sub-header [title]="'PickingTypes' | localize" [description]="'PickingTypesHeaderInfo' | localize">
+    <sub-header [title]="'PickingTypes' | localize" [description]="'' | localize">
       <div role="actions">
         <button *ngIf="isGranted('Pages.PickingTypes.Create')" (click)="createPickingType()" class="btn btn-primary blue">
           <i class="fa fa-plus"></i> {{ l('CreateNewPickingType') }}
@@ -145,7 +145,7 @@
         </div>
       </div>
     </div>
-    <createOrEditPickingTypeModal #createOrEditPickingTypeModal (modalSave)="getPickingTypes()"></createOrEditPickingTypeModal>
+    <createOrEditPickingTypeModal #createOrEditPickingTypeModal (modalSave)="getPickingTypes()"> </createOrEditPickingTypeModal>
     <viewPickingTypeModal #viewPickingTypeModal></viewPickingTypeModal>
   </div>
 </div>

@@ -13,7 +13,7 @@
       <form *ngIf="active" #transportTypeForm="ngForm" novalidate (ngSubmit)="save()" autocomplete="off">
         <div class="modal-header">
           <h4 class="modal-title">
-            <span *ngIf="transportType.id">{{ l('Edit') }} {{ l('TransportType') }}*</span>
+            <span *ngIf="transportType.id">{{ l('Edit') }} {{ l('TransportType') }}<span class="required-fileds"> *</span></span>
             <span *ngIf="!transportType.id"> {{ l('Create') }} {{ l('NewTransportType') }}</span>
           </h4>
           <button type="button" class="close" (click)="close()" aria-label="Close" [disabled]="saving">

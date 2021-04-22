@@ -1,6 +1,6 @@
 ﻿<div [@routerTransition]>
   <div class="content d-flex flex-column flex-column-fluid">
-    <sub-header [title]="'PackingTypes' | localize" [description]="'PackingTypesHeaderInfo' | localize">
+    <sub-header [title]="'PackingTypes' | localize" [description]="'' | localize">
       <div role="actions">
         <button *ngIf="isGranted('Pages.PackingTypes.Create')" (click)="createPackingType()" class="btn btn-primary blue">
           <i class="fa fa-plus"></i> {{ l('CreateNewPackingType') }}
@@ -128,7 +128,7 @@
         </div>
       </div>
     </div>
-    <createOrEditPackingTypeModal #createOrEditPackingTypeModal (modalSave)="getPackingTypes()"></createOrEditPackingTypeModal>
+    <createOrEditPackingTypeModal #createOrEditPackingTypeModal (modalSave)="getPackingTypes()"> </createOrEditPackingTypeModal>
     <viewPackingTypeModal #viewPackingTypeModal></viewPackingTypeModal>
   </div>
 </div>

@@ -11,7 +11,7 @@
     <div class="modal-content">
       <div class="modal-header">
         <p class="modal-title">
-          <span>{{ l('tripDetails') }}</span>
+          <span>{{ l('TripDetails') }}</span>
         </p>
         <div class="card-toolbar">
           <button class="btn btn-primary" [disabled]="!trip.id" (click)="DownloadSingleDropWaybillPdf(trip.id)">{{ l('PrintWaybill') }}</button>
@@ -22,7 +22,7 @@
           <!--begin::Body-->
           <!--  begin:: Source Dest Facilitys  -->
           <div class="col-lg-6 form-group">
-            <label>{{ l('sourceFacility') }}</label>
+            <label>{{ l('SourceFacility') }}</label>
             <div class="input-group">
               <select
                 name="sourceFacility"
@@ -31,7 +31,7 @@
                 [(ngModel)]="trip.originFacilityId"
                 (change)="wayPointsComponent.sourceTripFacilityId = trip.originFacilityId"
               >
-                <option value="">{{ l('selectaFacility') }}</option>
+                <option value="">{{ l('SelectaFacility') }}</option>
                 <option *ngFor="let item of allFacilities" value="{{ item.id }}">{{ item.displayName }}</option>
               </select>
               <div class="input-group-btn">
@@ -42,10 +42,10 @@
             </div>
           </div>
           <div class="col-lg-6 form-group">
-            <label>{{ l('destFacility') }}</label>
+            <label>{{ l('DestFacility') }}</label>
             <div class="input-group">
               <select name="destFacility" class="form-control" [disabled]="facilityLoading" [(ngModel)]="trip.destinationFacilityId">
-                <option value="">{{ l('selectaFacility') }}</option>
+                <option value="">{{ l('SelectaFacility') }}</option>
                 <option *ngFor="let item of allFacilities" value="{{ item.id }}">{{ item.displayName }}</option>
               </select>
               <div class="input-group-btn">
@@ -59,13 +59,13 @@
           <!--  begin:: Trip start&End Dates-->
           <div class="col-lg-6">
             <div class="form-group">
-              <label>{{ l('tripStartDate') }} *</label>
+              <label>{{ l('TripStartDate') }} <span class="required-fileds">*</span></label>
               <div class="input-group date">
                 <input
                   [(date)]="trip.startTripDate"
                   class="form-control"
                   name="tripStartDate"
-                  placeholder="{{ l('tripStartDate') }}"
+                  placeholder="{{ l('TripStartDate') }}"
                   [minDate]="shippingRequest.startTripDate"
                   bsDatepicker
                   datePickerMomentModifier
@@ -80,13 +80,13 @@
           </div>
           <div class="col-lg-6">
             <div class="form-group">
-              <label>{{ l('tripEndDate') }} *</label>
+              <label>{{ l('TripEndDate') }} <span class="required-fileds">*</span></label>
               <div class="input-group date">
                 <input
                   [(date)]="trip.endTripDate"
                   class="form-control"
                   name="tripEndDate"
-                  placeholder="{{ l('tripEndDate') }}"
+                  placeholder="{{ l('TripEndDate') }}"
                   [maxDate]="shippingRequest.endTripDate"
                   bsDatepicker
                   datePickerMomentModifier
@@ -103,7 +103,7 @@
           <!-- begin::Vas's  -->
           <div class="col-lg-6" *ngIf="VasListFromFather?.length > 0">
             <div class="form-group" *ngIf="selectedVases != []">
-              <label>{{ l('vases') }}* </label>
+              <label>{{ l('vases') }}<span class="required-fileds">*</span></label>
               <p-multiSelect
                 [options]="Vases"
                 [(ngModel)]="trip.shippingRequestTripVases"
@@ -135,11 +135,11 @@
           {{ l('Close') }}
         </button>
         <button [disabled]="saving" class="btn btn-primary font-weight-bolder btn-sm py-3 px-6 text-uppercase" (click)="createOrEditTrip()">
-          {{ trip.id ? l('updateTrip') : l('addNewTrip') }}
+          {{ trip.id ? l('UpdateTrip') : l('AddNewTrip') }}
         </button>
         <!--end::Buttons-->
       </div>
     </div>
   </div>
 </div>
-<createOrEditFacilityModal #createOrEditFacilityModal (modalSave)="refreshOrGetFacilities()"></createOrEditFacilityModal>
+<createOrEditFacilityModal #createOrEditFacilityModal (modalSave)="refreshOrGetFacilities()"> </createOrEditFacilityModal>

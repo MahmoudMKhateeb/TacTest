@@ -1,6 +1,6 @@
 ﻿<div [@routerTransition]>
   <div class="">
-    <sub-header [title]="'RoutSteps' | localize" [description]="'RoutStepsHeaderInfo' | localize">
+    <sub-header [title]="'RoutSteps' | localize" [description]="'' | localize">
       <div role="actions">
         <button *ngIf="isGranted('Pages.RoutSteps.Create')" (click)="createRoutStep()" class="btn btn-primary blue">
           <i class="fa fa-plus"></i> {{ l('CreateNewRoutStep') }}
@@ -134,7 +134,7 @@
       </div>
       <!--<Primeng-Datatable-End>-->
     </div>
-    <createOrEditRoutStepModal [routeId]="routeId" #createOrEditRoutStepModal (modalSave)="getRoutSteps()"></createOrEditRoutStepModal>
+    <createOrEditRoutStepModal [routeId]="routeId" #createOrEditRoutStepModal (modalSave)="getRoutSteps()"> </createOrEditRoutStepModal>
     <viewRoutStepModal #viewRoutStepModal></viewRoutStepModal>
     <entityTypeHistoryModal #entityTypeHistoryModal></entityTypeHistoryModal>
   </div>

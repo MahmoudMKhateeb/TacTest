@@ -33,7 +33,7 @@ import { EnumToArrayPipe } from '@shared/common/pipes/enum-to-array.pipe';
 export class CreateOrEditShippingRequestComponent extends AppComponentBase implements OnInit {
   breadcrumbs: BreadcrumbItem[] = [
     new BreadcrumbItem(this.l('ShippingRequest'), '/app/main/shippingRequests/shippingRequests'),
-    new BreadcrumbItem(this.l('Entity_Name_Plural_Here') + '' + this.l('Details')),
+    // new BreadcrumbItem(this.l('Entity_Name_Plural_Here') + '' + this.l('Details')),
   ];
 
   active = false;

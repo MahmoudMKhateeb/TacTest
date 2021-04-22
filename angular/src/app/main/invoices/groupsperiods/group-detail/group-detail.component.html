@@ -1,6 +1,6 @@
 <div [@routerTransition]>
   <div class="content d-flex flex-column flex-column-fluid">
-    <sub-header [title]="'SubmitInvoiceDetail' | localize" [description]="'SubmitInvoiceHeaderInfo' | localize">
+    <sub-header [title]="'SubmitInvoiceDetail' | localize" [description]="'' | localize">
       <div role="actions">
         <button (click)="delete()" *ngIf="permission.isGranted('Pages.Administration.Host.Invoices.SubmitInvoices.Delete')" class="btn btn-danger">
           <i class="fa fa-trash"></i> {{ l('Delete') }}

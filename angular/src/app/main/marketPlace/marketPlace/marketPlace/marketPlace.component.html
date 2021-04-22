@@ -1,10 +1,10 @@
 <div [@routerTransition]>
   <div class="content d-flex flex-column flex-column-fluid">
     <!--begin::Subheader-->
-    <sub-header [title]="'MarketPlace' | localize" [description]="'marketPlaceHeaderInfo' | localize">
+    <sub-header [title]="'MarketPlace' | localize" [description]="'' | localize">
       <div role="actions">
         <button class="btn btn-primary" (click)="ViewAllCarrierBidsModal.show()">
-          <i class="flaticon2-indent-dots"></i> {{ l('myBiddingHistory') }}
+          <i class="flaticon2-indent-dots"></i> {{ l('MyBiddingHistory') }}
         </button>
       </div>
     </sub-header>
@@ -52,7 +52,7 @@
                         (change)="transportTypeSelectChange(TransportTypeFilter)"
                       >
                         <option>{{ l('SelectATransportType') }}</option>
-                        <option *ngFor="let item of allTransportTypes" value="{{ item.id }}">{{ item.displayName }}</option>
+                        <option *ngFor="let item of allTransportTypes" value="{{ item.id }}">{{ item.displayName }} </option>
                       </select>
                     </div>
                   </div>
@@ -162,23 +162,23 @@
                       <p-sortIcon field="id"></p-sortIcon>
                     </th>
                     <th style="width: 110px;" pSortableColumn="shipperName">
-                      {{ l('shipperName') }}
+                      {{ l('ShipperName') }}
                       <p-sortIcon field="shipperName"></p-sortIcon>
                     </th>
                     <th style="width: 160px;" pSortableColumn="truckTypeDisplayName">
-                      {{ l('truckTypeDisplayName') }}
+                      {{ l('TruckTypeDisplayName') }}
                       <p-sortIcon field="truckTypeDisplayName"></p-sortIcon>
                     </th>
                     <th style="width: 150px;" pSortableColumn="goodCategoryName">
-                      {{ l('goodCategoryName') }}
+                      {{ l('GoodCategoryName') }}
                       <p-sortIcon field="goodCategoryName"></p-sortIcon>
                     </th>
                     <th style="width: 150px;" pSortableColumn="numberOfTrips">
-                      {{ l('numberOfTrips') }}
+                      {{ l('NumberOfTrips') }}
                       <p-sortIcon field="numberOfTrips"></p-sortIcon>
                     </th>
                     <th style="width: 150px;" pSortableColumn="bidStartDate">
-                      {{ l('bidStartDate') }}
+                      {{ l('BidStartDate') }}
                       <p-sortIcon field="bidStartDate"></p-sortIcon>
                     </th>
 
@@ -188,7 +188,7 @@
                     </th>
 
                     <th style="width: 150px;" pSortableColumn="BasePrice">
-                      {{ l('myBidPrice') }}
+                      {{ l('MyBidPrice') }}
                       <p-sortIcon field="BasePrice"></p-sortIcon>
                     </th>
                     <th style="width: 150px;">
@@ -203,19 +203,19 @@
                       {{ record.shippingRequestId }}
                     </td>
                     <td style="width: 110px;">
-                      <span class="ui-column-title"> {{ l('shipperName') }}</span>
+                      <span class="ui-column-title"> {{ l('ShipperName') }}</span>
                       {{ record.shipperName }}
                     </td>
                     <td style="width: 160px;">
-                      <span class="ui-column-title"> {{ l('truckTypeDisplayName') }}</span>
+                      <span class="ui-column-title"> {{ l('TruckTypeDisplayName') }}</span>
                       {{ record.truckTypeDisplayName }}
                     </td>
                     <td style="width: 150px;">
-                      <span class="ui-column-title"> {{ l('goodCategoryName') }}</span>
+                      <span class="ui-column-title"> {{ l('GoodCategoryName') }}</span>
                       {{ record.goodCategoryName }}
                     </td>
                     <td style="width: 150px;">
-                      <span class="ui-column-title"> {{ l('numberOfTrips') }}</span>
+                      <span class="ui-column-title"> {{ l('NumberOfTrips') }}</span>
                       {{ record.numberOfTrips }}
                     </td>
                     <td style="width: 150px;">
@@ -269,7 +269,7 @@
               </div>
               <ViewAllCarrierBidsModal #ViewAllCarrierBidsModal></ViewAllCarrierBidsModal>
 
-              <ViewShippingRequestDetailsModal #ViewShippingRequestDetailsModal (modalSave)="reloadPage()"></ViewShippingRequestDetailsModal>
+              <ViewShippingRequestDetailsModal #ViewShippingRequestDetailsModal (modalSave)="reloadPage()"> </ViewShippingRequestDetailsModal>
             </div>
             <!--end: Datatable-->
           </div>

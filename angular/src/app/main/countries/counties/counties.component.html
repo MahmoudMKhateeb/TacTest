@@ -1,6 +1,6 @@
 ﻿<div [@routerTransition]>
   <div class="content d-flex flex-column flex-column-fluid">
-    <sub-header [title]="'Counties' | localize" [description]="'CountiesHeaderInfo' | localize">
+    <sub-header [title]="'Counties' | localize" [description]="'' | localize">
       <div role="actions">
         <button (click)="exportToExcel()" class="btn btn-outline-success"><i class="fa fa-file-excel"></i> {{ l('ExportToExcel') }}</button>
 
@@ -85,7 +85,9 @@
               >
                 <ng-template pTemplate="header">
                   <tr>
-                    <th style="width: 130px;" [hidden]="!isGrantedAny('Pages.Counties.Edit', 'Pages.Counties.Delete')">{{ l('Actions') }}</th>
+                    <th style="width: 130px;" [hidden]="!isGrantedAny('Pages.Counties.Edit', 'Pages.Counties.Delete')">
+                      {{ l('Actions') }}
+                    </th>
                     <th style="width: 150px;" pSortableColumn="displayName">
                       {{ l('DisplayName') }}
                       <p-sortIcon field="county.displayName"></p-sortIcon>

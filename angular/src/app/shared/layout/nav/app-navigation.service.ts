@@ -15,8 +15,118 @@ export class AppNavigationService {
 
   getMenu(): AppMenu {
     return new AppMenu('MainMenu', 'MainMenu', [
+      //===================== Host ======================
       new AppMenuItem('Dashboard', 'Pages.Administration.Host.Dashboard', 'flaticon-line-graph', '/app/admin/hostDashboard'),
+
+      //================= Shipper =================
+
       new AppMenuItem('Dashboard', 'Pages.Tenant.Dashboard', 'flaticon-line-graph', '/app/main/dashboard'),
+
+      new AppMenuItem(
+        'Documents',
+        '',
+        'flaticon-book',
+        '',
+        [],
+        [
+          new AppMenuItem('DocumentManagement', 'Pages.DocumentTypes', 'flaticon2-document', '/app/main/documentTypes/documentTypes'),
+          new AppMenuItem('DocumentsEntities', 'Pages.DocumentsEntities', 'flaticon-doc', '/app/main/documentsEntities/documentsEntities'),
+          new AppMenuItem('SubmittedDocuments', 'Pages.DocumentFiles', 'flaticon-file', '/app/main/documentFiles/documentFiles'),
+
+          new AppMenuItem(
+            'DocumentTypeTranslations',
+            'Pages.DocumentTypeTranslations',
+            'flaticon-file-1',
+            '/app/main/documentTypeTranslations/documentTypeTranslations'
+          ),
+          // new AppMenuItem('TenantRequiredDocuments', '', 'flaticon-settings', '/app/admin/tenantRequiredDocuments'),
+        ]
+      ),
+      new AppMenuItem(
+        'Requests',
+        '',
+        'flaticon-interface-8',
+        '',
+        [],
+        [
+          new AppMenuItem(
+            'ShippingRequests',
+            'Pages.ShippingRequests',
+            'label label-danger label-dot',
+            '/app/main/shippingRequests/shippingRequests',
+            undefined,
+            undefined,
+            undefined,
+            undefined
+            /*,() => this._featureCheckerService.isEnabled('App.Shipper')*/
+          ),
+          new AppMenuItem('waybills', undefined, 'flaticon-more', '/app/admin/waybills/waybills'),
+        ],
+        undefined,
+        undefined /*,
+        () => this._featureCheckerService.isEnabled('App.Shipper')*/
+      ),
+      new AppMenuItem(
+        'Invoices',
+        'Pages.Invoices',
+        'flaticon-book',
+        '',
+        [],
+        [
+          new AppMenuItem('InvoicesList', 'Pages.Invoices', 'flaticon2-document', '/app/main/invoices/view'),
+          new AppMenuItem('BillingInterval', 'Pages.Administration.Host.Invoices.Periods', 'flaticon2-document', '/app/main/invoices/periods'),
+          new AppMenuItem(
+            'BalnaceRecharges',
+            'Pages.Administration.Host.Invoices.Periods',
+            'flaticon2-document',
+            '/app/main/invoices/balnacerecharges'
+          ),
+          new AppMenuItem(
+            'SubmitInvoice',
+            'Pages.Invoices.SubmitInvoices',
+            'flaticon2-document',
+            '/app/main/invoices/submitinvoice',
+            undefined,
+            undefined,
+            undefined,
+            undefined,
+            () => !this._featureCheckerService.isEnabled('App.Shipper')
+          ),
+        ]
+      ),
+
+      new AppMenuItem(
+        'AddressBook',
+        '',
+        'flaticon-book',
+        '',
+        [],
+        [
+          new AppMenuItem('FacilitiesSetup', 'Pages.Facilities', 'flaticon-more', '/app/main/addressBook/facilities'),
+          new AppMenuItem(
+            'ReceiversSetup',
+            'Pages.Receivers',
+            'flaticon-more',
+            '/app/main/receivers/receivers',
+            undefined,
+            undefined,
+            undefined,
+            undefined
+          ),
+        ],
+        undefined,
+        undefined
+        // () => !this._featureCheckerService.isEnabled('App.Shipper')
+      ),
+
+      //==================== End Shipper ======================
+      new AppMenuItem(
+        'FinancialTransActionMenu',
+        'Pages.Administration.Host.Invoices.Periods',
+        'flaticon2-document',
+        '/app/main/invoices/transaction'
+      ),
+
       // //Shipper
       // new AppMenuItem(
       //   'Requests',
@@ -41,29 +151,6 @@ export class AppNavigationService {
       //     ),
       //   ]
       // ),
-      new AppMenuItem(
-        'Requests',
-        '',
-        'flaticon-interface-8',
-        '',
-        [],
-        [
-          new AppMenuItem(
-            'ShippingRequests',
-            'Pages.ShippingRequests',
-            'label label-danger label-dot',
-            '/app/main/shippingRequests/shippingRequests',
-            undefined,
-            undefined,
-            undefined,
-            undefined /*,
-            () => this._featureCheckerService.isEnabled('App.Shipper')*/
-          ),
-        ],
-        undefined,
-        undefined /*,
-        () => this._featureCheckerService.isEnabled('App.Shipper')*/
-      ),
 
       // //Host
       // new AppMenuItem(
@@ -76,19 +163,7 @@ export class AppNavigationService {
       //     new AppMenuItem('Facilities', 'Pages.Facilities', 'label label-danger label-dot', '/app/main/addressBook/facilities'),
       //     new AppMenuItem('RoutTypes', 'Pages.RoutTypes', 'label label-danger label-dot', '/app/main/routTypes/routTypes'),
       //     new AppMenuItem('Ports', 'Pages.Ports', 'label label-danger label-dot', '/app/main/ports/ports'),
-      new AppMenuItem('Facilities', 'Pages.Facilities', 'flaticon-more', '/app/main/addressBook/facilities'),
-      new AppMenuItem('Facilities', 'Pages.Facilities', 'flaticon-more', '/app/main/addressBook/facilities'),
-      new AppMenuItem(
-        'Receivers',
-        'Pages.Receivers',
-        'flaticon-more',
-        '/app/main/receivers/receivers',
-        undefined,
-        undefined,
-        undefined,
-        undefined,
-        () => this._featureCheckerService.isEnabled('App.Shipper')
-      ),
+
       //     new AppMenuItem('RoutTypes', 'Pages.RoutTypes', 'flaticon-more', '/app/main/routTypes/routTypes'),
       //     new AppMenuItem('Ports', 'Pages.Ports', 'flaticon-more', '/app/main/ports/ports'),
       //     new AppMenuItem('Facilities', 'Pages.Facilities', 'label label-danger label-dot', '/app/main/addressBook/facilities'),
@@ -131,55 +206,6 @@ export class AppNavigationService {
       new AppMenuItem('PackingTypes', 'Pages.PackingTypes', 'flaticon-more', '/app/main/packingTypes/packingTypes'),
       new AppMenuItem('TripStatuses', 'Pages.TripStatuses', 'flaticon-more', '/app/main/tripStatuses/tripStatuses'),
 
-      new AppMenuItem(
-        'Documents',
-        '',
-        'flaticon-book',
-        '',
-        [],
-        [
-          new AppMenuItem('DocumentManagement', 'Pages.DocumentTypes', 'flaticon2-document', '/app/main/documentTypes/documentTypes'),
-          new AppMenuItem('DocumentsEntities', 'Pages.DocumentsEntities', 'flaticon-doc', '/app/main/documentsEntities/documentsEntities'),
-          new AppMenuItem('SubmittedDocuments', 'Pages.DocumentFiles', 'flaticon-file', '/app/main/documentFiles/documentFiles'),
-          new AppMenuItem(
-            'DocumentTypeTranslations',
-            'Pages.DocumentTypeTranslations',
-            'flaticon-file-1',
-            '/app/main/documentTypeTranslations/documentTypeTranslations'
-          ),
-          // new AppMenuItem('TenantRequiredDocuments', '', 'flaticon-settings', '/app/admin/tenantRequiredDocuments'),
-        ]
-      ),
-
-      new AppMenuItem(
-        'Invoices',
-        'Pages.Invoices',
-        'flaticon-book',
-        '',
-        [],
-        [
-          new AppMenuItem('InvoicesList', 'Pages.Invoices', 'flaticon2-document', '/app/main/invoices/view'),
-          new AppMenuItem('BillingInterval', 'Pages.Administration.Host.Invoices.Periods', 'flaticon2-document', '/app/main/invoices/periods'),
-          new AppMenuItem(
-            'BalnaceRecharges',
-            'Pages.Administration.Host.Invoices.Periods',
-            'flaticon2-document',
-            '/app/main/invoices/balnacerecharges'
-          ),
-          new AppMenuItem(
-            'SubmitInvoice',
-            'Pages.Invoices.SubmitInvoices',
-            'flaticon2-document',
-            '/app/main/invoices/submitinvoice',
-            undefined,
-            undefined,
-            undefined,
-            undefined,
-            () => !this._featureCheckerService.isEnabled('App.Shipper')
-          ),
-          new AppMenuItem('FinancialTransActionMenu', 'Pages.Invoices.Transaction', 'flaticon2-document', '/app/main/invoices/transaction'),
-        ]
-      ),
       //Host
       new AppMenuItem(
         'TMSSettings',
@@ -301,7 +327,6 @@ export class AppNavigationService {
       //   () => this._featureCheckerService.isEnabled('App.Carrier')
       // ),
       new AppMenuItem('Vases', 'Pages.Administration.Vases', 'flaticon-more', '/app/admin/vases/vases'),
-      new AppMenuItem('waybills', undefined, 'flaticon-more', '/app/admin/waybills/waybills'),
       new AppMenuItem('VasPrices', 'Pages.VasPrices', 'flaticon-more', '/app/main/vases/vasPrices', undefined, undefined, undefined, undefined, () =>
         this._featureCheckerService.isEnabled('App.Carrier')
       ),

@@ -11,7 +11,7 @@
     <div class="modal-content">
       <div class="modal-header">
         <p class="modal-title">
-          <span>{{ l('tripDetails') }}</span>
+          <span>{{ l('TripDetails') }}</span>
         </p>
         <div class="card-toolbar">
           <button class="btn btn-primary" (click)="DownloadSingleDropWaybillPdf(currentTripId)" [buttonBusy]="wayBillIsDownloading">
@@ -24,13 +24,13 @@
           <!--begin::Body-->
           <!--  begin:: Source Dest Facilitys  -->
           <div class="col-lg-6 form-group">
-            <label>{{ l('sourceFacility') }}</label>
+            <label>{{ l('SourceFacility') }}</label>
             <div class="input-group">
               <input type="text" class="form-control" name="originFacility" [(ngModel)]="trip.originFacility" disabled />
             </div>
           </div>
           <div class="col-lg-6 form-group">
-            <label>{{ l('destFacility') }}</label>
+            <label>{{ l('DestFacility') }}</label>
             <div class="input-group">
               <input type="text" class="form-control" name="destinationFacility" [(ngModel)]="trip.destinationFacility" disabled />
             </div>
@@ -39,7 +39,7 @@
           <!--  begin:: Trip start&End Dates-->
           <div class="col-lg-6">
             <div class="form-group">
-              <label>{{ l('tripStartDate') }} *</label>
+              <label>{{ l('TripStartDate') }} *</label>
               <div class="input-group date">
                 <input
                   [(date)]="trip.startTripDate"
@@ -60,13 +60,13 @@
           </div>
           <div class="col-lg-6">
             <div class="form-group">
-              <label>{{ l('tripEndDate') }} *</label>
+              <label>{{ l('TripEndDate') }} *</label>
               <div class="input-group date">
                 <input
                   [(date)]="trip.endTripDate"
                   class="form-control"
                   name="tripEndDate"
-                  placeholder="{{ l('tripEndDate') }}"
+                  placeholder="{{ l('TripEndDate') }}"
                   bsDatepicker
                   datePickerMomentModifier
                   disabled
@@ -84,13 +84,13 @@
           <ng-container *ngIf="feature.isEnabled('App.Carrier')">
             <div class="col-lg-6">
               <div class="form-group">
-                <label>{{ l('driver') }} *</label>
+                <label>{{ l('Driver') }} *</label>
                 <input class="form-control" name="trip.driver" [ngModel]="trip.driver" disabled />
               </div>
             </div>
             <div class="col-lg-5">
               <div class="form-group">
-                <label>{{ l('truck') }} *</label>
+                <label>{{ l('Truck') }} *</label>
                 <input class="form-control" name="trip.truck" [ngModel]="trip.truck" disabled />
               </div>
             </div>

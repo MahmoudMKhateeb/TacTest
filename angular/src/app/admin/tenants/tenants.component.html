@@ -1,6 +1,6 @@
 <div [@routerTransition]>
   <div class="content d-flex flex-column flex-column-fluid">
-    <sub-header [title]="'Tenants' | localize" [description]="'TenantsHeaderInfo' | localize">
+    <sub-header [title]="'Tenants' | localize" [description]="'' | localize">
       <div role="actions">
         <button *ngIf="'Pages.Tenants.Create' | permission" class="btn btn-primary" (click)="createTenant()">
           <i class="fa fa-plus"></i>{{ 'CreateNewTenant' | localize }}

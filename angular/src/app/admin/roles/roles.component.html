@@ -1,6 +1,6 @@
 <div [@routerTransition]>
   <div class="content d-flex flex-column flex-column-fluid">
-    <sub-header [title]="'Roles' | localize" [description]="'RolesHeaderInfo' | localize">
+    <sub-header [title]="'Roles' | localize" [description]="'' | localize">
       <div role="actions">
         <button (click)="createRole()" *ngIf="'Pages.Administration.Roles.Create' | permission" class="btn btn-primary">
           <i class="fa fa-plus"></i> {{ 'CreateNewRole' | localize }}

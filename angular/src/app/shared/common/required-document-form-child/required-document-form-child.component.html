@@ -28,7 +28,7 @@
       </div>
     </div>
     <div *ngIf="item.documentTypeDto.hasNumber" class="form-group col-6">
-      <label>* {{ l('Number') }} </label>
+      <label><span class="required-fileds"> *</span> {{ l('Number') }} </label>
       <input
         #inputDocumentNumber="ngModel"
         name="number{{ i }}"

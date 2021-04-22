@@ -1,6 +1,6 @@
 ﻿<div [@routerTransition]>
   <div class="content d-flex flex-column flex-column-fluid">
-    <sub-header [title]="'TrailerTypes' | localize" [description]="'TrailerTypesHeaderInfo' | localize">
+    <sub-header [title]="'TrailerTypes' | localize" [description]="'' | localize">
       <div role="actions">
         <button (click)="exportToExcel()" class="btn btn-outline-success"><i class="fa fa-file-excel"></i> {{ l('ExportToExcel') }}</button>
 
@@ -150,7 +150,7 @@
         </div>
       </div>
     </div>
-    <createOrEditTrailerTypeModal #createOrEditTrailerTypeModal (modalSave)="getTrailerTypes()"></createOrEditTrailerTypeModal>
+    <createOrEditTrailerTypeModal #createOrEditTrailerTypeModal (modalSave)="getTrailerTypes()"> </createOrEditTrailerTypeModal>
     <viewTrailerTypeModal #viewTrailerTypeModal></viewTrailerTypeModal>
     <entityTypeHistoryModal #entityTypeHistoryModal></entityTypeHistoryModal>
   </div>

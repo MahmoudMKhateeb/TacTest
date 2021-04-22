@@ -34,7 +34,7 @@
             <!--									<input type="text" #TermAndConditionTranslation_Content="ngModel" id="TermAndConditionTranslation_Content" class="form-control" [(ngModel)]="termAndConditionTranslation.content" name="Content"     required/>-->
             <!--								    <validation-messages [formCtrl]="TermAndConditionTranslation_Content"></validation-messages>-->
 
-            <label for="TermAndCondition_Content">{{ l('Content') }} *</label>
+            <label for="TermAndCondition_Content">{{ l('Content') }} <span class="required-fileds"> *</span></label>
             <p-editor required name="Content" [(ngModel)]="termAndConditionTranslation.content" [style]="{ height: '320px' }" #editor>
               <p-header>
                 <span class="ql-formats">
@@ -97,7 +97,7 @@
           </div>
 
           <div class="form-group">
-            <label for="TermAndConditionTranslation_Language">{{ l('Language') }} *</label>
+            <label for="TermAndConditionTranslation_Language">{{ l('Language') }} <span class="required-fileds"> *</span></label>
             <input
               type="text"
               #TermAndConditionTranslation_Language="ngModel"

@@ -15,7 +15,7 @@
           <h4 class="modal-title">
             <!--                <span *ngIf="routStep.id">{{l("EditRoutStep")}}</span>-->
             <!--                <span *ngIf="!routStep.id">{{l("CreateNewRoutStep")}}</span>-->
-            <span>{{ facility.id ? l('EditFacilityModal') : l('CreateFacilityModal') }}</span>
+            <span>{{ facility.id ? l('EditFacility') : l('CreateNewFacility') }}</span>
           </h4>
           <button type="button" class="close" (click)="show()" aria-label="Close" [disabled]="saving">
             <span aria-hidden="true">&times;</span>
@@ -25,7 +25,7 @@
         <div class="modal-body">
           <div class="row">
             <div class="form-group col-md-12">
-              <label>{{ l('facilityName') }} *</label>
+              <label>{{ l('FacilityName') }} <span class="required-fileds"> *</span></label>
               <input
                 #FacilityName="ngModel"
                 type="text"
@@ -41,7 +41,7 @@
             </div>
 
             <div class="form-group col-md-2">
-              <label>{{ l('selectaCountry') }} *</label>
+              <label>{{ l('selectaCountry') }} <span class="required-fileds"> *</span></label>
               <div [ngClass]="{ 'spinner spinner-success spinner-right mr-1 ml-1': countriesLoading }">
                 <select
                   #country="ngModel"
@@ -60,7 +60,7 @@
               </div>
             </div>
             <div class="form-group col-md-2">
-              <label>{{ l('selectaCity') }} *</label>
+              <label>{{ l('SelectaCity') }}<span class="required-fileds"> *</span></label>
               <div [ngClass]="{ 'spinner spinner-success spinner-right mr-1 ml-1': citiesLoading }">
                 <select
                   #city="ngModel"
@@ -78,7 +78,7 @@
               </div>
             </div>
             <div class="form-group col-md-8">
-              <label>{{ l('Address') }} *</label>
+              <label>{{ l('Address') }} <span class="required-fileds"> *</span></label>
               <input
                 #search
                 type="text"

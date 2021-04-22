@@ -21,7 +21,7 @@
           </button>
         </div>
         <div class="modal-body">
-          <h3 class="font-size-lg text-dark-75 font-weight-bold mb-10">{{ l('TrucktypeDetails') }}</h3>
+          <h3 class="font-size-lg text-dark-75 font-weight-bold mb-10">{{ l('TruckTypeDetails') }}</h3>
 
           <div class="row">
             <div class="col-md-6">
@@ -170,7 +170,7 @@
                   'is-invalid': truckForm.submitted && PlateTypeId.invalid
                 }"
               >
-                <option [ngValue]="null"> {{ l('Select') }} {{ l('plateTypeId') }}</option>
+                <option [ngValue]="null"> {{ l('Select') }} {{ l('PlateType') }}</option>
                 <option *ngFor="let item of allPlateTypes" value="{{ item.id }}">{{ item.displayName }}</option>
               </select>
               <validation-messages [formCtrl]="PlateTypeId"></validation-messages>

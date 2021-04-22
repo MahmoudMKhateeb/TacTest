@@ -4,30 +4,179 @@
     <text name="Receivers">Receivers</text>
     <text name="Receiver">Receiver</text>
     <text name="TACHYON.Receivers.Receiver">Receiver</text>
-    <text name="FullName">Full name</text>
+    <text name="FullName">Full Name</text>
     <text name="ReceiversHeaderInfo">Receivers header info</text>
-    <text name="CreateNewReceiver">Create new receiver</text>
-    <text name="EditReceiver">Edit receiver</text>
-    <text name="DeleteReceiver">Delete receiver</text>
-    <text name="FacilityName">Facility name</text>
-    <text name="PickFacility">Pick facility</text>
+    <text name="CreateNewReceiver">Create New Receiver</text>
+    <text name="EditReceiver">Edit Receiver</text>
+    <text name="DeleteReceiver">Delete Receiver</text>
+    <text name="FacilityName">Facility Name</text>
+    <text name="PickFacility">Pick Facility</text>
+    <text name="selectaCountry">Select Country</text>
+    <text name="ReceiverFullName">Receiver Full Name</text>
+    <text name="ReceiverPhoneNumber">Receiver Phone Number</text>
+    <!--Shipping Request Module-->
+    <![CDATA[Tachyon:Shipping Requests Start]]>
+
+    <!--Shipping Request Component-->
+    <![CDATA[Tachyon:Shipping Requests Start]]>
+    <text name="ShippingRequestStatusName">Shipping Request Status Name</text>
+    <text name="ShippingTypes">Shipping Types</text>
+    <![CDATA[Tachyon:Shipping Requests End]]>
+
+    <!--Shipping Request Create Component-->
+    <![CDATA[Tachyon:Shipping Requests Create Start]]>
+    <text name="ShippingRequestsCreate">Shipping Requests Create</text>
+    <text name="ShippingRequestsEdit">Shipping Requests Edit</text>
+    <text name="SelectaTransportType">Select a Transport Type</text>
+    <text name="SelectaTruckType">Select a Truck Type</text>
+    <text name="SelectaCapacity">Select a Capacity</text>
+    <text name="ShippingRequestProperties">Shipping Request Properties</text>
+    <text name="TachyonManageService">Tachyon Manage Service</text>
+    <text name="PickaShippingRequestType">Pick a Shipping Request Type</text>
+    <text name="SetBiddingStartDate">Set Bidding Start Date</text>
+    <text name="ShippingType">Shipping Type</text>
+    <text name="SelectAShippingType">Select a Shipping Type</text>
+    <text name="SelectaGoodCategory">Select a Good Category</text>
+    <text name="TotalWeightofGoodsinKG">Total Weight of Goods in KG</text>
+    <text name="SelectaPackingType">Select a Packing Type</text>
+    <text name="CreateNewPackingType">Create New Packing Type</text>
+    <text name="EnterPackingType">Enter Packing Type</text>
+    <text name="NumberOfPacking">Number Of Packing</text>
+    <text name="EnterNumberOfPacking">Enter Number Of Packing</text>
+    <text name="SelectaCity">Select City</text>
+    <text name="SelectaDestination">Select a Destination</text>
+    <text name="PickanEndDate">Pick an End Date</text>
+    <text name="SelectRouteType">Select Route Type</text>
+    <text name="PickaRouteType">Picka Route Type</text>
+    <text name="ForMiltibleTripsRouteType">For Miltible Trips Route Type</text>
+    <text name="EnterNumberOfTrips">Enter Number Of Trips</text>TruckDetails
+    <text name="VasDetails">Vas Details</text>
+    <text name="UpdateSippingRequest">Update Sipping Request</text>
+    <text name="CreateShippingRequest">Create Shipping Request</text>
+    <text name="InCaseOfShippingRequestTypeIsBidding">In Case Of Shipping, Request Type Is Bidding</text>
+    <text name="PickaStartDate">Pick Start Date</text>
+    <text name="DirectRequests">Direct Requests</text>
+    <text name="TotalBidsCount">Total Bids Count</text>
+    <![CDATA[Tachyon:Shipping Requests Create End]]>
+
+    <!--Shipping Request Update Price Component-->
+    <![CDATA[Tachyon:Shipping Requests Update Price Start]]>
+    <text name="IsBid">Is Bid</text>
+    <text name="IsTachyonDeal">Is Tachyon Deal</text>
+    <text name="IsPriceAccepted">Is Price Accepted</text>
+    <text name="NoVases">No Vases</text>
+    <text name="AcceptPrice">Accept Price</text>
+    <text name="Clone">Clone</text>
+    <![CDATA[Tachyon:Shipping Requests Update Price End]]>
+
+
+    <!--Route Steps For Create Shipping Requst Component-->
+    <![CDATA[Tachyon:Route Steps For Create Shipping Requst Component Start]]>
+    <text name="Drop">Drop</text>
+    <text name="AddNewWayPoint">Add New Way Point</text>
+    <text name="AddNewGoodDetails">Add New Good Details</text>
+    <text name="GoodsName">Goods Name</text>
+    <text name="GoodCategoryId">Good Category Id</text>
+    <text name="GoodSubCategory">Good Sub Category</text>
+    <text name="SelectAGoodSubCategory">Select Good Sub Category</text>
+    <text name="SelectAGoodCategory">Select Good Category</text>
+    <text name="SelectAUnitOfMeasure">Select Unit Of Measure</text>
+
+    <text name="ShippingRequestPricingResponse">Shipping Request Pricing Response</text>
+    <text name="ShippingRequestPrice">Shipping Request Price</text>
+    <text name="FinalPrice">Final Price</text>
+    <![CDATA[Tachyon:Route Steps For Create Shipping Requst Component End]]>
+
+    <!--Trips For View Shipping Request Component-->
+    <![CDATA[Tachyon:Trips For View Shipping Request Start]]>
+    <text name="ShippingRequestTrips">Shipping Request Trips</text>
+    <text name="TripsEndDate">Trips End Date</text>
+    <text name="Trips Start Date">Trips Start Date</text>
+    <text name="AddATrip">Add Trip</text>
+    <text name="Origin">Origin</text>
+    <text name="Destination">Destination</text>
+    <text name="OriginFacility">Origin Facility</text>
+    <text name="DestinationFacility">Destination Facility</text>
+    <text name="TripStatus">Trip Status</text>
+    <text name="AcceptBid">Accept Bid</text>
+    <text name="PrintMasterWaybill">Print Master Waybill</text>
+    <text name="TripDetails">Trip Details</text>
+    <text name="SourceFacility">Source Facility</text>
+    <text name="AddNew">Add New</text>
+    <text name="DestFacility">Dest Facility</text>
+    <text name="SelectaFacility">Select Facility</text>
+    <text name="TripStartDate">Trip Start Date</text>
+    <text name="UpdateTrip">Update Trip</text>
+    <text name="AddNewTrip">Add New Trip</text>
+    <text name="Waypoints">Way points</text>
+    <text name="AddDrop">Add Drop</text>
+    <text name="AddSource">Add Source</text>
+    <text name="PrintWaybill">Print addNewWayPointWaybill</text>
+
+    <![CDATA[Tachyon:Trips For View Shipping Request End]]>
+
+
+    <!--Shipping Request View Component-->
+    <![CDATA[Tachyon:Shipping Requests View Start]]>
+    <text name="ShippingRequestsView">Shipping Requests View</text>
+    <text name="ShippingRequestType">Shipping Request Type</text>
+    <text name="BiddingStartDate">Bidding Start Date</text>
+    <text name="BiddingEndDate">Bidding End Date</text>
+    <text name="GoodDetails">Good Details</text>
+    <text name="MainGoodCategory">Main Good Category</text>
+    <text name="TotalWeight">Total Weight</text>
+    <text name="PackingType">Packing Type</text>
+    <text name="RouteDetails">Route Details</text>
+    <text name="OriginCity">Origin City</text>
+    <text name="DestinationCity">Destination City</text>
+    <text name="StartDate">Start Date</text>
+    <text name="EndDate">End Date</text>
+    <text name="RouteType">Route Type</text>
+    <text name="NumberOfDrops">Number of Drops</text>
+    <text name="NumberOfTrips">Number of Trips</text>
+    <text name="AllBidsOnShippingRequest">All Bids on Shipping Request</text>
+    <text name="StopBiddingOnthisRequest">Stop Bidding on this Request</text>
+    <text name="CarrierName">Carrier Name</text>
+    <text name="Accepted">Accepted</text>
+    <text name="Rejected">Rejected</text>
+    <text name="CancledReason">Cancled Reason</text>
+    <text name="AcceptedDate">Accepted Date</text>
+    <text name="Canceled Date">Canceled Date</text>
+    <text name="Accept Bid">Accept Bid</text>
+    <text name="IsRejected">Is Rejected</text>
+    <text name="BidsList">Bids List</text>
+    <text name="CanceledDate">Canceled Date</text>
+
+    <![CDATA[Tachyon:Shipping Requests View End]]>
+
+    <![CDATA[Tachyon:myBiddingHistory End]]>
+    <text name="MyBiddingHistory">My Bidding History</text>
+    <text name="TruckTypeDisplayName">Truck Type Display Name</text>
+    <text name="GoodCategoryName">Good Category Name</text>
+    <text name="BidStartDate">Bid Start Date</text>
+    <text name="MyBidPrice">My Bid Price</text>
+
+    <![CDATA[Tachyon:myBiddingHistory End]]>
+
+    <![CDATA[Tachyon:Shipping Requests End]]>
+
 
     <![CDATA[Tachyon:Driver Start]]>
-    <text name="FirstName">First name</text>
-    <text name="LastName">Last name</text>
+    <text name="FirstName">First Name</text>
+    <text name="LastName">Last Name</text>
     <text name="Drivers">Drivers</text>
     <text name="Driver">Driver</text>
     <text name="DriversHeaderInfo">Drivers Header Info</text>
-    <text name="CreateNewDriver"> Create new driver</text>
+    <text name="CreateNewDriver"> Create New driver</text>
     <text name="EditDriver">Edit driver</text>
-    <text name="DriverInformations">Driver informations</text>
-    <text name="ExperienceField">Experience field</text>
-    <text name="DriverDocuments">Driver documents</text>
+    <text name="DriverInformations">Driver Informations</text>
+    <text name="ExperienceField">Experience Field</text>
+    <text name="DriverDocuments">Driver Documents</text>
     <text name="DateOfBirth">Date of birth</text>
     <text name="d/M/yyyy">day/month/year</text>
     <text name="ShouldChangePasswordOnNextLogin">Should change password on next login</text>
     <text name="IsLockoutEnabled">Is lockout enabled</text>
-    <text name="PhoneNumber">Phone number</text>
+    <text name="PhoneNumber">Phone Number</text>
 
     <![CDATA[Tachyon:Driver End]]>
 
@@ -38,6 +187,10 @@
     <text name="Marketplace">Marketplace</text>
     <text name="TMSSettings">TMS Settings</text>
     <text name="TMS">Transport Management System</text>
+    <text name="FacilitiesSetup">Facilities Setup</text>
+    <text name="ReceiversSetup">Receivers Setup</text>
+    <text name="waybills">Waybills</text>
+    
     <![CDATA[Tachyon:SideBar End]]>
 
     <![CDATA[Tachyon:Shipping Request Start]]>
@@ -50,17 +203,17 @@
     <![CDATA[Tachyon:Trucks Page Start]]>-->
     <text name="TrucksHeaderInfo">Trucks Header Info</text>
     <text name="NewTruck">New Truck</text>
-    <text name="PlateNumber">Plate number</text>
-    <text name="ModelName">Model name</text>
-    <text name="ModelYear">Model year</text>
+    <text name="PlateNumber">Plate Number</text>
+    <text name="ModelName">Model Name</text>
+    <text name="ModelYear">Model Year</text>
     <text name="Truck">Truck</text>
     <text name="UseArrowKeysToChooseTheYear">Use arrow keys to choose the year</text>
-    <text name="TruckTypeDetails">Truck type details</text>
+    <text name="TruckTypeDetails">Truck Type Details</text>
     <text name="Capacity">Capacity (Tons)</text>
-    <text name="TruckDetails">Truck details</text>
-    <text name="SelectTransportTypeToOpenTrucksType">Select transport type to open trucks type</text>
-    <text name="SelectTrucksTypeToOpenCapacity">select transport type to open trucks type</text>
-    <text name="vlaueMustBeGreaterThan">value must be greater than</text>
+    <text name="TruckDetails">Truck Details</text>
+    <text name="SelectTransportTypeToOpenTrucksType">Select Transport Type to open trucks Type</text>
+    <text name="SelectTrucksTypeToOpenCapacity">select Transport Type to open trucks Type</text>
+    <text name="vlaueMustBeGreaterThan">Value must be greater than</text>
     <![CDATA[Tachyon:Trucks Page End]]>-->
 
     <![CDATA[Tachyon:Shared Document Component Start]]>
@@ -71,13 +224,14 @@
 
 
     <![CDATA[Tachyon: Common Start]]>
-    <text name="ViewDocuments">View documents</text>
-    <text name="CreationTime">Creation time</text>
-    <text name="ViewDetails">View details</text>
+    <text name="ViewDocuments">View Documents</text>
+    <text name="CreationDate">Creation Date</text>
+    <text name="CreationTime">Creation Date</text>
+    <text name="ViewDetails">View Details</text>
     <text name="TotalRecordsCount">Total: {0}</text>
     <text name="Create">Create</text>
     <text name="Cancel">Cancel</text>
-    <text name="Details">View details</text>
+    <text name="Details">View Details</text>
     <text name="Close">Close</text>
     <text name="ShowAdvancedFilters">Show advanced filters</text>
     <text name="HideAdvancedFilters">Hide advanced filters</text>
@@ -86,123 +240,108 @@
     <text name="False">False</text>
     <text name="Edition">Subscription</text>
     <text name="Language">Language</text>
-    <text name="9digitsNumber">9 Digits number</text>
+    <text name="9digitsNumber">9 Digits Number</text>
+    <text name="EmailAddress">Email Address</text>
     <![CDATA[Tachyon:Common End]]>
 
-
-
-
-    <text name="TruckCapacitiesTranslations">Truck capacities translations</text>
-    <text name="TruckCapacitiesTranslation">Truck capacities translation</text>
-    <text name="TACHYON.TruckCapacitiesTranslations.TruckCapacitiesTranslation">TruckCapacitiesTranslation</text>
-    <text name="TruckCapacitiesTranslationsHeaderInfo">Truck capacities translations header info</text>
-    <text name="CreateNewTruckCapacitiesTranslation">Create new truck capacities translation</text>
-    <text name="EditTruckCapacitiesTranslation">Edit truck capacities translation</text>
-    <text name="DeleteTruckCapacitiesTranslation">Delete truck capacities translation</text>
-    <text name="CapacityDisplayName">Capacity display name</text>
-    <text name="PickCapacity">Pick capacity</text>
-    <text name="TruckStatusesTranslations">Truck statuses translations</text>
-    <text name="TruckStatusesTranslation">Truck statuses translation</text>
+    <text name="TruckCapacitiesTranslations">Truck Capacities Translations</text>
+    <text name="TruckCapacitiesTranslation">Truck Capacities Translation</text>
+    <text name="TACHYON.TruckCapacitiesTranslations.TruckCapacitiesTranslation">Truck Capacities Translation</text>
+    <text name="TruckCapacitiesTranslationsHeaderInfo">Truck Capacities Translations header info</text>
+    <text name="CreateNewTruckCapacitiesTranslation">Create New Truck Capacities Translation</text>
+    <text name="EditTruckCapacitiesTranslation">Edit Truck Capacities Translation</text>
+    <text name="DeleteTruckCapacitiesTranslation">Delete Truck Capacities Translation</text>
+    <text name="CapacityDisplayName">Capacity Display Name</text>
+    <text name="PickCapacity">Pick Capacity</text>
+    <text name="TruckStatusesTranslations">Truck Statuses Translations</text>
+    <text name="TruckStatusesTranslation">Truck Statuses Translation</text>
     <text name="TACHYON.TruckStatusesTranslations.TruckStatusesTranslation">TruckStatusesTranslation</text>
-    <text name="TranslatedDisplayName">Translated display name</text>
-    <text name="TruckStatusesTranslationsHeaderInfo">Truck statuses translations header info</text>
-    <text name="CreateNewTruckStatusesTranslation">Create new truck statuses translation</text>
-    <text name="EditTruckStatusesTranslation">Edit truck statuses translation</text>
-    <text name="DeleteTruckStatusesTranslation">Delete truck statuses translation</text>
-    <text name="CitiesTranslations">Cities translations</text>
-    <text name="CitiesTranslation">Cities translation</text>
+    <text name="TranslatedDisplayName">Translated Display Name</text>
+    <text name="TruckStatusesTranslationsHeaderInfo">Truck Statuses Translations header info</text>
+    <text name="CreateNewTruckStatusesTranslation">Create New Truck Statuses Translation</text>
+    <text name="EditTruckStatusesTranslation">Edit Truck Statuses Translation</text>
+    <text name="DeleteTruckStatusesTranslation">Delete Truck Statuses Translation</text>
+    <text name="CitiesTranslations">Cities Translations</text>
+    <text name="CitiesTranslation">Cities Translation</text>
     <text name="TACHYON.CitiesTranslations.CitiesTranslation">CitiesTranslation</text>
-    <text name="CitiesTranslationsHeaderInfo">Cities translations header info</text>
-    <text name="CreateNewCitiesTranslation">Create new cities translation</text>
-    <text name="EditCitiesTranslation">Edit cities translation</text>
-    <text name="DeleteCitiesTranslation">Delete cities translation</text>
-    <text name="CountriesTranslations">Countries translations</text>
-    <text name="CountriesTranslation">Countries translation</text>
+    <text name="CitiesTranslationsHeaderInfo">Cities Translations header info</text>
+    <text name="CreateNewCitiesTranslation">Create New Cities Translation</text>
+    <text name="EditCitiesTranslation">Edit Cities Translation</text>
+    <text name="DeleteCitiesTranslation">Delete Cities Translation</text>
+    <text name="CountriesTranslations">Countries Translations</text>
+    <text name="CountriesTranslation">Countries Translation</text>
     <text name="TACHYON.CountriesTranslations.CountriesTranslation">CountriesTranslation</text>
-    <text name="CountriesTranslationsHeaderInfo">Countries translations header info</text>
-    <text name="CreateNewCountriesTranslation">Create new countries translation</text>
-    <text name="EditCountriesTranslation">Edit countries translation</text>
-    <text name="DeleteCountriesTranslation">Delete countries translation</text>
-    <text name="PlateTypes">Plate types</text>
-    <text name="PlateType">Plate type</text>
+    <text name="CountriesTranslationsHeaderInfo">Countries Translations header info</text>
+    <text name="CreateNewCountriesTranslation">Create New countries Translation</text>
+    <text name="EditCountriesTranslation">Edit countries Translation</text>
+    <text name="DeleteCountriesTranslation">Delete countries Translation</text>
+    <text name="PlateTypes">Plate Types</text>
+    <text name="PlateType">Plate Type</text>
     <text name="TACHYON.PlateTypes.PlateType">PlateType</text>
-    <text name="PlateTypesHeaderInfo">Plate types header info</text>
-    <text name="CreateNewPlateType">Create new plate type</text>
-    <text name="EditPlateType">Edit plate type</text>
-    <text name="DeletePlateType">Delete plate type</text>
+    <text name="PlateTypesHeaderInfo">Plate Types header info</text>
+    <text name="CreateNewPlateType">Create New Plate Type</text>
+    <text name="EditPlateType">Edit Plate Type</text>
+    <text name="DeletePlateType">Delete Plate Type</text>
     <text name="Nationalities">Nationalities</text>
     <text name="Nationality">Nationality</text>
     <text name="TACHYON.Nationalities.Nationality">Nationality</text>
     <text name="NationalitiesHeaderInfo">Nationalities header info</text>
-    <text name="CreateNewNationality">Create new nationality</text>
-    <text name="EditNationality">Edit nationality</text>
-    <text name="DeleteNationality">Delete nationality</text>
-    <text name="NationalityName">Nationality name</text>
-    <text name="PickNationality">Pick nationality</text>
-    <text name="NationalitiesTranslation">Nationalities translation</text>
-    <text name="NationalityTranslation">Nationality translation</text>
+    <text name="CreateNewNationality">Create New Nationality</text>
+    <text name="EditNationality">Edit Nationality</text>
+    <text name="DeleteNationality">Delete Nationality</text>
+    <text name="NationalityName">Nationality Name</text>
+    <text name="PickNationality">Pick Nationality</text>
+    <text name="NationalitiesTranslation">Nationalities Translation</text>
+    <text name="NationalityTranslation">Nationality Translation</text>
     <text name="TACHYON.NationalitiesTranslation.NationalityTranslation">NationalityTranslation</text>
-    <text name="TranslatedName">Translated name</text>
-    <text name="NationalityTranslationsHeaderInfo">Nationality translations header info</text>
-    <text name="CreateNewNationalityTranslation">Create new nationality translation</text>
-    <text name="EditNationalityTranslation">Edit nationality translation</text>
-    <text name="DeleteNationalityTranslation">Delete nationality translation</text>
-    <text name="NationalityTranslations">Nationality translations</text>
-    <text name="TrucksTypesTranslations">Trucks types translations</text>
-    <text name="TrucksTypesTranslation">Trucks types translation</text>
+    <text name="TranslatedName">Translated Name</text>
+    <text name="NationalityTranslationsHeaderInfo">Nationality Translations header info</text>
+    <text name="CreateNewNationalityTranslation">Create New Nationality Translation</text>
+    <text name="EditNationalityTranslation">Edit Nationality Translation</text>
+    <text name="DeleteNationalityTranslation">Delete Nationality Translation</text>
+    <text name="NationalityTranslations">Nationality Translations</text>
+    <text name="TrucksTypesTranslations">Trucks Types Translations</text>
+    <text name="TrucksTypesTranslation">Trucks Types Translation</text>
     <text name="TACHYON.TrucksTypesTranslations.TrucksTypesTranslation">TrucksTypesTranslation</text>
-    <text name="TrucksTypesTranslationsHeaderInfo">Trucks types translations header info</text>
-    <text name="CreateNewTrucksTypesTranslation">Create new trucks types translation</text>
-    <text name="EditTrucksTypesTranslation">Edit trucks types translation</text>
-    <text name="DeleteTrucksTypesTranslation">Delete trucks types translation</text>
-    <text name="TransportTypesTranslations">Transport types translations</text>
-    <text name="TransportTypesTranslation">Transport types translation</text>
+    <text name="TrucksTypesTranslationsHeaderInfo">Trucks Types Translations header info</text>
+    <text name="CreateNewTrucksTypesTranslation">Create New trucks Types Translation</text>
+    <text name="EditTrucksTypesTranslation">Edit Trucks Types Translation</text>
+    <text name="DeleteTrucksTypesTranslation">Delete Trucks Types Translation</text>
+    <text name="TransportTypesTranslations">Transport Types Translations</text>
+    <text name="TransportTypesTranslation">Transport Types Translation</text>
     <text name="TACHYON.TransportTypesTranslations.TransportTypesTranslation">TransportTypesTranslation</text>
-    <text name="TransportTypesTranslationsHeaderInfo">Transport types translations header info</text>
-    <text name="CreateNewTransportTypesTranslation">Create new transport types translation</text>
-    <text name="EditTransportTypesTranslation">Edit transport types translation</text>
-    <text name="DeleteTransportTypesTranslation">Delete transport types translation</text>
-    <text name="TransportTypeDisplayName">Transport type display name</text>
-    <text name="PickTransportType">Pick transport type</text>
-
-
-
-
-
-
-
-
-
-
-
-
-
+    <text name="TransportTypesTranslationsHeaderInfo">Transport Types Translations header info</text>
+    <text name="CreateNewTransportTypesTranslation">Create New Transport Types Translation</text>
+    <text name="EditTransportTypesTranslation">Edit Transport Types Translation</text>
+    <text name="DeleteTransportTypesTranslation">Delete Transport Types Translation</text>
+    <text name="TransportTypeDisplayName">Transport Type display name</text>
+    <text name="PickTransportType">Pick Transport Type</text>
 
     <text name="TACHYON.TermsAndConditions.TermAndConditionTranslation">TermAndConditionTranslation</text>
-    <text name="TermAndConditionTranslationsHeaderInfo">Term and condition translations header info</text>
-    <text name="CreateNewTermAndConditionTranslation">Create new term and condition translation</text>
-    <text name="EditTermAndConditionTranslation">Edit term and condition translation</text>
-    <text name="DeleteTermAndConditionTranslation">Delete term and condition translation</text>
-    <text name="TermAndConditionTranslations">Term and condition translations</text>
-    <text name="TermAndConditionTitle">Term and condition title</text>
-    <text name="PickTermAndCondition">Pick term and condition</text>
+    <text name="TermAndConditionTranslationsHeaderInfo">Term and Condition Translations header info</text>
+    <text name="CreateNewTermAndConditionTranslation">Create New Term and Condition Translation</text>
+    <text name="EditTermAndConditionTranslation">Edit Term and Condition Translation</text>
+    <text name="DeleteTermAndConditionTranslation">Delete Term and Condition Translation</text>
+    <text name="TermAndConditionTranslations">Term and Condition Translations</text>
+    <text name="TermAndConditionTitle">Term and Condition title</text>
+    <text name="PickTermAndCondition">Pick Term and Condition</text>
 
-    <text name="ShippingRequestVases">Shipping request vases</text>
-    <text name="ShippingRequestVas">Shipping request vas</text>
-    <text name="CreateNewShippingRequestVas">Create new shipping request vas</text>
-    <text name="EditShippingRequestVas">Edit shipping request vas</text>
-    <text name="DeleteShippingRequestVas">Delete shipping request vas</text>
-    <text name="VasPrice">Vas price</text>
+    <text name="ShippingRequestVases">Shipping Request vases</text>
+    <text name="ShippingRequestVas">Shipping Request VAS</text>
+    <text name="CreateNewShippingRequestVas">Create New Shipping Request VAS</text>
+    <text name="EditShippingRequestVas">Edit Shipping Request VAS</text>
+    <text name="DeleteShippingRequestVas">Delete Shipping Request VAS</text>
+    <text name="VasPrice">Vas Price</text>
     <text name="TACHYON.Vases.VasPrice">VasPrice</text>
     <text name="MaxAmount">Max amount</text>
     <text name="MaxCount">Max count</text>
     <text name="VasPricesHeaderInfo">Vas prices header info</text>
-    <text name="CreateNewVasPrice">Create new vas price</text>
-    <text name="EditVasPrice">Edit vas price</text>
-    <text name="DeleteVasPrice">Delete vas price</text>
+    <text name="CreateNewVasPrice">Create New VAS Price</text>
+    <text name="EditVasPrice">Edit VAS Price</text>
+    <text name="DeleteVasPrice">Delete VAS Price</text>
     <text name="VasPrices">Vas prices</text>
     <text name="VasName">Vas name</text>
-    <text name="PickVas">Pick vas</text>
+    <text name="PickVas">Pick VAS</text>
     <text name="Vases">Vases</text>
     <text name="TACHYON.Vases.Vas">Vas</text>
     <text name="HasAmount">Has amount</text>
@@ -210,19 +349,19 @@
     <text name="HasCount">Has count</text>
     <text name="NotHasCount">Not has count</text>
     <text name="VasesHeaderInfo">Vases header info</text>
-    <text name="CreateNewVas">Create new vas</text>
-    <text name="EditVas">Edit vas</text>
-    <text name="DeleteVas">Delete vas</text>
+    <text name="CreateNewVas">Create New VAS</text>
+    <text name="EditVas">Edit VAS</text>
+    <text name="DeleteVas">Delete VAS</text>
     <![CDATA[Tachyon:Common  Start]]>-->
     <text name="Choose">Choose</text>
     <text name="makeSureThatYouFillAllRequiredFields">Make sure that you fill all required fields</text>
     <![CDATA[Tachyon:Common  End]]>-->
 
 
-    <![CDATA[Tachyon:Truck type Categories Pages Start]]>-->
+    <![CDATA[Tachyon:Truck Type Categories Pages Start]]>-->
     <text name="TruckType">Truck Type</text>
-    <text name="TransportTypes">Transport types</text>
-    <text name="TransportType">Transport type</text>
+    <text name="TransportTypes">Transport Types</text>
+    <text name="TransportType">Transport Type</text>
     <text name="CapacityCategory">Capacity Category</text>
     <text name="CapacityCategories">Capacity Categories</text>
     <text name="TransportTypesHeaderInfo">TransportTypesHeaderInfo</text>
@@ -230,11 +369,12 @@
     <text name="TrucksTypesHeaderInfo">Trucks Types Header Info</text>
     <text name="NewTrucksType">New Trucks Type</text>
     <text name="CapacitiesCategoriesHeaderInfo">Capacities Categories Header Info</text>
+    <text name="CapacitiesCategories">Capacities Categories</text>
     <text name="NewCapacityCategory">New Capacity Category</text>
     <text name="TruckStatuses">Truck Statuses</text>
     <text name="NewTruckStatus">New Truck Status</text>
     <text name="TruckStatusesHeaderInfo">Truck Statuses Header Info</text>
-    <![CDATA[Tachyon:Truck type Categories Page End]]>-->
+    <![CDATA[Tachyon:Truck Type Categories Page End]]>-->
 
     <text name="SignUp">Sign up</text>
     <text name="DontHaveAnAccount">DontHaveAnAccount</text>
@@ -255,7 +395,7 @@
     <text name="AdminEmailAddress">Admin Email</text>
     <text name="AdminPassword">Admin Password</text>
     <text name="AdminPasswordRepeat">Confirm Password</text>
-    <text name="PleaseEnterYourNewPassword">Please enter your new password.</text>
+    <text name="PleaseEnterYourNewPassword">Please enter your New password.</text>
     <text name="weak">Weak</text>
     <text name="medium">Medium</text>
     <text name="strong">Strong</text>
@@ -325,8 +465,6 @@
     <text name="Company Registration (CR)">Company Registration (CR)</text>
     <![CDATA[ Tachyon: Document files Page End]]>
 
-
-
     <![CDATA[Tachyon:Documents Common Start]]>
     <text name="minDigits">Min Digits</text>
 
@@ -363,7 +501,7 @@
     <text name="HasHijriExpirationDate">Has Hijri Expiration Date</text>
     <text name="HasNotes">Has Notes</text>
     <text name="Company">Company</text>
-    <text name="DocumentType">DocumentType</text>
+    <text name="DocumentType">Document Type</text>
     <text name="MinDigitNumberCanNotBeLessThan1">Min digit number can't be less than 1</text>
     <text name="MinDigitNumberShouldBeLessMaxDigitNumber">Min digit number should be less max digit number</text>
     <text name="MaxDigitNumberCanNotbeLessThanMinDigitNumber">Max digit number can't be less than min digit number</text>
@@ -371,8 +509,6 @@
     <text name="ToleranceDaysBeforeDeactivateAfterExpiration">Tolerance Days Before Deactivate After Expiration</text>
     <text name="DeactivateAccountUponexpiration">Deactivate Account Upon expiration</text>
     <![CDATA[Tachyon:Document Types Page End]]>
-
-
 
     <![CDATA[ Tachyon: Document Translation Page Start]]>
     <text name="DocumentTypeTranslations">Document Type Translations</text>
@@ -393,9 +529,9 @@
     <![CDATA[Tachyon:Setting]]>
 
     <text name="Title">Title</text>
-    <text name="NewTermAndCondition">new term and condition</text>
+    <text name="NewTermAndCondition">New Term and Condition</text>
     <text name="TermAndConditions">Term and conditions</text>
-    <text name="TermAndCondition">Term and condition</text>
+    <text name="TermAndCondition">Term and Condition</text>
     <text name="Content">Content</text>
     <text name="Version">Version</text>
     <text name="EditionId">Edition id</text>
@@ -405,96 +541,97 @@
 
 
 
-    <text name="TruckCapacities">Truck capacities</text>
+    <text name="TruckCapacities">Truck Capacities</text>
     <text name="NumbersOnly">Numbers Only</text>
     <text name="TheNumberLengthMustBeMoreThanMinDigits">The Number Length Must Be More Than MinDigits</text>
     <text name="TheNumberLengthMustBeLessThanMaxDigits">The Number Length Must Be Less Than MaxDigits</text>
 
     <text name="TACHYON.TruckCapacities.Capacity">Capacity</text>
     <text name="CapacitiesHeaderInfo">Capacities header info</text>
-    <text name="CreateNewCapacity">Create new capacity</text>
+    <text name="CreateNewCapacity">Create New Capacity</text>
     <text name="NewCapacity">New Capacity</text>
-    <text name="EditCapacity">Edit capacity</text>
-    <text name="DeleteCapacity">Delete capacity</text>
+    <text name="EditCapacity">Edit Capacity</text>
+    <text name="DeleteCapacity">Delete Capacity</text>
     <text name="Capacities">Capacities</text>
     <text name="TACHYON.TransportTypes.TransportType">TransportType</text>
-    <text name="CreateNewTransportType">Create new transport type</text>
+    <text name="CreateNewTransportType">Create New Transport Type</text>
     <text name="SelectATransportType">Select a Transport Type</text>
-    <text name="EditTransportType">Edit transport type</text>
-    <text name="DeleteTransportType">Delete transport type</text>
-    <text name="DocumentTypeTranslation">Document type translation</text>
+    <text name="EditTransportType">Edit Transport Type</text>
+    <text name="DeleteTransportType">Delete Transport Type</text>
+    <text name="DocumentTypeTranslation">Document Type Translation</text>
     <text name="TACHYON.DocumentTypeTranslations.DocumentTypeTranslation">DocumentTypeTranslation</text>
-    <text name="EditDocumentTypeTranslation">Edit document type translation</text>
-    <text name="DeleteDocumentTypeTranslation">Delete document type translation</text>
+    <text name="EditDocumentTypeTranslation">Edit Document Type Translation</text>
+    <text name="DeleteDocumentTypeTranslation">Delete Document Type Translation</text>
     <text name="TACHYON.DocumentsEntities.DocumentsEntity">DocumentsEntity</text>
-    <text name="CreateNewDocumentsEntity">Create new documents entity</text>
-    <text name="EditDocumentsEntity">Edit documents entity</text>
-    <text name="DeleteDocumentsEntity">Delete documents entity</text>
-    <text name="ShippingRequestStatuses">Shipping request statuses</text>
-    <text name="ShippingRequestStatus">Shipping request status</text>
+    <text name="CreateNewDocumentsEntity">Create New Documents Entity</text>
+    <text name="EditDocumentsEntity">Edit Documents Entity</text>
+    <text name="DeleteDocumentsEntity">Delete Documents Entity</text>
+    <text name="ShippingRequestStatuses">Shipping Request Statuses</text>
+    <text name="ShippingRequestStatus">Shipping Request Status</text>
     <text name="TACHYON.ShippingRequestStatuses.ShippingRequestStatus">ShippingRequestStatus</text>
-    <text name="ShippingRequestStatusesHeaderInfo">Shipping request statuses header info</text>
-    <text name="CreateNewShippingRequestStatus">Create new shipping request status</text>
-    <text name="EditShippingRequestStatus">Edit shipping request status</text>
-    <text name="DeleteShippingRequestStatus">Delete shipping request status</text>
+    <text name="ShippingRequestStatusesHeaderInfo">Shipping Request Statuses header info</text>
+    <text name="CreateNewShippingRequestStatus">Create New Shipping Request Status</text>
+    <text name="EditShippingRequestStatus">Edit Shipping Request Status</text>
+    <text name="DeleteShippingRequestStatus">Delete Shipping Request Status</text>
     <text name="Ports">Ports</text>
     <text name="Port">Port</text>
     <text name="TACHYON.Ports.Port">Port</text>
     <text name="PortsHeaderInfo">Ports header info</text>
-    <text name="CreateNewPort">Create new port</text>
+    <text name="CreateNewPort">Create New port</text>
     <text name="EditPort">Edit port</text>
     <text name="DeletePort">Delete port</text>
-    <text name="PickingTypes">Picking types</text>
-    <text name="PickingType">Picking type</text>
+    <text name="PickingTypes">Picking Types</text>
+    <text name="PickingType">Picking Type</text>
     <text name="TACHYON.PickingTypes.PickingType">PickingType</text>
-    <text name="PickingTypesHeaderInfo">Picking types header info</text>
-    <text name="CreateNewPickingType">Create new picking type</text>
-    <text name="EditPickingType">Edit picking type</text>
-    <text name="DeletePickingType">Delete picking type</text>
+    <text name="PickingTypesHeaderInfo">Picking Types header info</text>
+    <text name="CreateNewPickingType">Create New Picking Type</text>
+    <text name="EditPickingType">Edit Picking Type</text>
+    <text name="DeletePickingType">Delete Picking Type</text>
     <text name="UnitOfMeasures">Unit of measures</text>
     <text name="UnitOfMeasure">Unit of measure</text>
     <text name="TACHYON.UnitOfMeasures.UnitOfMeasure">UnitOfMeasure</text>
     <text name="UnitOfMeasuresHeaderInfo">Unit of measures header info</text>
-    <text name="CreateNewUnitOfMeasure">Create new unit of measure</text>
+    <text name="CreateNewUnitOfMeasure">Create New unit of measure</text>
     <text name="EditUnitOfMeasure">Edit unit of measure</text>
     <text name="DeleteUnitOfMeasure">Delete unit of measure</text>
-    <text name="AddressBook">Address book</text>
+    <text name="AddressBook">Address Book</text>
     <text name="Facility">Facility</text>
     <text name="TACHYON.AddressBook.Facility">Facility</text>
     <text name="Adress">Adress</text>
     <text name="FacilitiesHeaderInfo">Facilities header info</text>
-    <text name="CreateNewFacility">Create new facility</text>
-    <text name="EditFacility">Edit facility</text>
-    <text name="DeleteFacility">Delete facility</text>
+    <text name="CreateNewFacility">Create New Facility</text>
+    <text name="EditFacility">Edit Facility</text>
+    <text name="DeleteFacility">Delete Facility</text>
     <text name="Facilities">Facilities</text>
     <text name="TACHYON.DocumentFiles.DocumentFile">DocumentFile</text>
+    <text name="DocumentFiles">Document File</text>
     <text name="Extn">Extn</text>
     <text name="BinaryObjectId">Binary object id</text>
-    <text name="CreateNewDocumentFile">Create new document file</text>
-    <text name="EditDocumentFile">Edit document file</text>
-    <text name="DeleteDocumentFile">Delete document file</text>
-    <text name="DocumentTypeDisplayName">Document type display name</text>
-    <text name="DuplicateDocumentTypeName">There is already document type with the name: {0}</text>
-    <text name="PickDocumentType">Pick document type</text>
-    <text name="TrailerTrailerCode">Trailer trailer code</text>
-    <text name="PickTrailer">Pick trailer</text>
+    <text name="CreateNewDocumentFile">Create New Document File</text>
+    <text name="EditDocumentFile">Edit Document File</text>
+    <text name="DeleteDocumentFile">Delete Document File</text>
+    <text name="DocumentTypeDisplayName">Document Type display name</text>
+    <text name="DuplicateDocumentTypeName">There is already Document Type with the name: {0}</text>
+    <text name="PickDocumentType">Pick Document Type</text>
+    <text name="TrailerTrailerCode">Trailer Trailer code</text>
+    <text name="PickTrailer">Pick Trailer</text>
     <text name="RoutStepDisplayName">Rout step display name</text>
     <text name="PickRoutStep">Pick rout step</text>
     <text name="TACHYON.DocumentTypes.DocumentType">DocumentType</text>
     <text name="NotIsRequired">Not is required</text>
     <text name="ExpirationDate">Expiration date</text>
     <text name="NotHasExpirationDate">Not has expiration date</text>
-    <text name="CreateNewDocumentType">Create new document type</text>
-    <text name="EditDocumentType">Edit document type</text>
-    <text name="DeleteDocumentType">Delete document type</text>
+    <text name="CreateNewDocumentType">Create New Document Type</text>
+    <text name="EditDocumentType">Edit Document Type</text>
+    <text name="DeleteDocumentType">Delete Document Type</text>
     <text name="ExpirationDateRange">Expiration date range</text>
-    <text name="ShippingRequest">Shipping request</text>
+    <text name="ShippingRequest">Shipping Request</text>
     <text name="TACHYON.ShippingRequests.ShippingRequest">ShippingRequest</text>
     <text name="Vas">Vas</text>
     <text name="ShippingRequestsHeaderInfo">Shipping requests header info</text>
-    <text name="CreateNewShippingRequest">Create new shipping request</text>
-    <text name="EditShippingRequest">Edit shipping request</text>
-    <text name="DeleteShippingRequest">Delete shipping request</text>
+    <text name="CreateNewShippingRequest">Create New Shipping Request</text>
+    <text name="EditShippingRequest">Edit Shipping Request</text>
+    <text name="DeleteShippingRequest">Delete Shipping Request</text>
     <text name="GoodsDetailName">Goods detail name</text>
     <text name="PickGoodsDetail">Pick goods detail</text>
     <text name="GoodsDetails">Goods details</text>
@@ -507,14 +644,14 @@
     <text name="NotIsDangerousGood">Not is dangerous good</text>
     <text name="DangerousGoodsCode">Dangerous goods code</text>
     <text name="GoodsDetailsHeaderInfo">Goods details header info</text>
-    <text name="CreateNewGoodsDetail">Create new goods detail</text>
+    <text name="CreateNewGoodsDetail">Create New goods detail</text>
     <text name="EditGoodsDetail">Edit goods detail</text>
     <text name="DeleteGoodsDetail">Delete goods detail</text>
     <text name="Offers">Offers</text>
     <text name="Offer">Offer</text>
     <text name="TACHYON.Offers.Offer">Offer</text>
     <text name="OffersHeaderInfo">Offers header info</text>
-    <text name="CreateNewOffer">Create new offer</text>
+    <text name="CreateNewOffer">Create New offer</text>
     <text name="EditOffer">Edit offer</text>
     <text name="DeleteOffer">Delete offer</text>
     <text name="GoodCategoryDisplayName">Good category display name</text>
@@ -524,54 +661,54 @@
     <text name="TACHYON.RoutSteps.RoutStep">RoutStep</text>
     <text name="Order">Order</text>
     <text name="RoutStepsHeaderInfo">Rout steps header info</text>
-    <text name="CreateNewRoutStep">Create new rout step</text>
+    <text name="CreateNewRoutStep">Create New rout step</text>
     <text name="EditRoutStep">Edit rout step</text>
     <text name="DeleteRoutStep">Delete rout step</text>
     <text name="CityDisplayName">City display name</text>
-    <text name="PickCity">Pick city</text>
+    <text name="PickCity">Pick City</text>
     <text name="RouteDisplayName">Route display name</text>
-    <text name="PickRoute">Pick route</text>
+    <text name="PickRoute">Pick Route</text>
     <text name="Routs">Routs</text>
     <text name="Route">Route</text>
     <text name="TACHYON.Routs.Route">Route</text>
     <text name="RoutesHeaderInfo">Routes header info</text>
-    <text name="CreateNewRoute">Create new route</text>
-    <text name="EditRoute">Edit route</text>
-    <text name="DeleteRoute">Delete route</text>
+    <text name="CreateNewRoute">Create New Route</text>
+    <text name="EditRoute">Edit Route</text>
+    <text name="DeleteRoute">Delete Route</text>
     <text name="Routes">Routes</text>
-    <text name="RoutTypeDisplayName">Rout type display name</text>
-    <text name="PickRoutType">Pick rout type</text>
+    <text name="RoutTypeDisplayName">Rout Type display name</text>
+    <text name="PickRoutType">Pick rout Type</text>
     <text name="Cities">Cities</text>
     <text name="TACHYON.Cities.City">City</text>
     <text name="Latitude">Latitude</text>
     <text name="Longitude">Longitude</text>
     <text name="CitiesHeaderInfo">Cities header info</text>
-    <text name="CreateNewCity">Create new city</text>
-    <text name="EditCity">Edit city</text>
-    <text name="DeleteCity">Delete city</text>
+    <text name="CreateNewCity">Create New City</text>
+    <text name="EditCity">Edit City</text>
+    <text name="DeleteCity">Delete City</text>
     <text name="CountyDisplayName">County display name</text>
     <text name="PickCounty">Pick county</text>
     <text name="Countries">Countries</text>
     <text name="County">County</text>
     <text name="TACHYON.Countries.County">County</text>
     <text name="CountiesHeaderInfo">Counties header info</text>
-    <text name="CreateNewCounty">Create new county</text>
+    <text name="CreateNewCounty">Create New county</text>
     <text name="EditCounty">Edit county</text>
     <text name="DeleteCounty">Delete county</text>
     <text name="Counties">Counties</text>
-    <text name="RoutTypes">Rout types</text>
-    <text name="RoutType">Rout type</text>
+    <text name="RoutTypes">Rout Types</text>
+    <text name="RoutType">Rout Type</text>
     <text name="TACHYON.RoutTypes.RoutType">RoutType</text>
     <text name="Description">Description</text>
-    <text name="RoutTypesHeaderInfo">Rout types header info</text>
-    <text name="CreateNewRoutType">Create new rout type</text>
-    <text name="EditRoutType">Edit rout type</text>
-    <text name="DeleteRoutType">Delete rout type</text>
+    <text name="RoutTypesHeaderInfo">Rout Types header info</text>
+    <text name="CreateNewRoutType">Create New rout Type</text>
+    <text name="EditRoutType">Edit rout Type</text>
+    <text name="DeleteRoutType">Delete rout Type</text>
     <text name="GoodCategories">Good categories</text>
     <text name="GoodCategory">Good category</text>
     <text name="TACHYON.GoodCategories.GoodCategory">GoodCategory</text>
     <text name="GoodCategoriesHeaderInfo">Good categories header info</text>
-    <text name="CreateNewGoodCategory">Create new good category</text>
+    <text name="CreateNewGoodCategory">Create New good category</text>
     <text name="EditGoodCategory">Edit good category</text>
     <text name="DeleteGoodCategory">Delete good category</text>
     <text name="Trailers">Trailers</text>
@@ -591,40 +728,40 @@
     <text name="IsRollDoor">Is roll door</text>
     <text name="NotIsRollDoor">Not is roll door</text>
     <text name="TrailersHeaderInfo">Trailers header info</text>
-    <text name="CreateNewTrailer">Create new trailer</text>
-    <text name="EditTrailer">Edit trailer</text>
-    <text name="DeleteTrailer">Delete trailer</text>
-    <text name="TrailerStatusDisplayName">Trailer status display name</text>
-    <text name="PickTrailerStatus">Pick trailer status</text>
-    <text name="TrailerTypeDisplayName">Trailer type display name</text>
-    <text name="PickTrailerType">Pick trailer type</text>
+    <text name="CreateNewTrailer">Create New Trailer</text>
+    <text name="EditTrailer">Edit Trailer</text>
+    <text name="DeleteTrailer">Delete Trailer</text>
+    <text name="TrailerStatusDisplayName">Trailer Status display name</text>
+    <text name="PickTrailerStatus">Pick Trailer Status</text>
+    <text name="TrailerTypeDisplayName">Trailer Type display name</text>
+    <text name="PickTrailerType">Pick Trailer Type</text>
     <text name="PayloadMaxWeightDisplayName">Payload max weight display name</text>
     <text name="PickPayloadMaxWeight">Pick payload max weight</text>
-    <text name="TruckPlateNumber">Truck plate number</text>
-    <text name="PickTruck">Pick truck</text>
-    <text name="TrailerStatuses">Trailer statuses</text>
-    <text name="TrailerStatus">Trailer status</text>
+    <text name="TruckPlateNumber">Truck Plate Number</text>
+    <text name="PickTruck">Pick Truck</text>
+    <text name="TrailerStatuses">Trailer Statuses</text>
+    <text name="TrailerStatus">Trailer Status</text>
     <text name="TACHYON.TrailerStatuses.TrailerStatus">TrailerStatus</text>
-    <text name="TrailerStatusesHeaderInfo">Trailer statuses header info</text>
-    <text name="CreateNewTrailerStatus">Create new trailer status</text>
-    <text name="EditTrailerStatus">Edit trailer status</text>
-    <text name="DeleteTrailerStatus">Delete trailer status</text>
+    <text name="TrailerStatusesHeaderInfo">Trailer Statuses header info</text>
+    <text name="CreateNewTrailerStatus">Create New Trailer Status</text>
+    <text name="EditTrailerStatus">Edit Trailer Status</text>
+    <text name="DeleteTrailerStatus">Delete Trailer Status</text>
     <text name="PayloadMaxWeight">Payload max weight</text>
     <text name="TACHYON.PayloadMaxWeight.PayloadMaxWeight">PayloadMaxWeight</text>
     <text name="MaxWeight">Max weight</text>
     <text name="PayloadMaxWeightsHeaderInfo">Payload max weights header info</text>
-    <text name="CreateNewPayloadMaxWeight">Create new payload max weight</text>
+    <text name="CreateNewPayloadMaxWeight">Create New payload max weight</text>
     <text name="EditPayloadMaxWeight">Edit payload max weight</text>
     <text name="DeletePayloadMaxWeight">Delete payload max weight</text>
     <text name="PayloadMaxWeights">Payload Max Weights</text>
     <text name="PackingTypes">Packing Types</text>
-    <text name="TrailerTypes">Trailer types</text>
-    <text name="TrailerType">Trailer type</text>
+    <text name="TrailerTypes">Trailer Types</text>
+    <text name="TrailerType">Trailer Type</text>
     <text name="TACHYON.TrailerTypes.TrailerType">TrailerType</text>
-    <text name="TrailerTypesHeaderInfo">Trailer types header info</text>
-    <text name="CreateNewTrailerType">Create new trailer type</text>
-    <text name="EditTrailerType">Edit trailer type</text>
-    <text name="DeleteTrailerType">Delete trailer type</text>
+    <text name="TrailerTypesHeaderInfo">Trailer Types header info</text>
+    <text name="CreateNewTrailerType">Create New Trailer Type</text>
+    <text name="EditTrailerType">Edit Trailer Type</text>
+    <text name="DeleteTrailerType">Delete Trailer Type</text>
     <text name="TACHYON.Trucks.Truck">Truck</text>
     <text name="ModalName">Modal Name</text>
     <text name="ModalYear">Modal Year</text>
@@ -632,35 +769,35 @@
     <text name="3rd Party Insurance coverage">3rd Party Insurance coverage</text>
     <text name="TruckDocuments">Truck Documents</text>
     <text name="TrucktDetails">Truckt Details</text>
-    <text name="LicenseNumber">License number</text>
+    <text name="LicenseNumber">License Number</text>
     <text name="LicenseExpirationDate">License expiration date</text>
     <text name="IsAttachable">Is attachable</text>
     <text name="NotIsAttachable">Not is attachable</text>
     <text name="Note">Note</text>
-    <text name="CreateNewTruck">Create new truck</text>
-    <text name="EditTruck">Edit truck</text>
-    <text name="DeleteTruck">Delete truck</text>
-    <text name="TrucksTypeDisplayName">Trucks type display name</text>
-    <text name="PickTrucksType">Pick trucks type</text>
-    <text name="TruckStatusDisplayName">Truck status display name</text>
-    <text name="PickTruckStatus">Pick truck status</text>
+    <text name="CreateNewTruck">Create New Truck</text>
+    <text name="EditTruck">Edit Truck</text>
+    <text name="DeleteTruck">Delete Truck</text>
+    <text name="TrucksTypeDisplayName">Trucks Type display name</text>
+    <text name="PickTrucksType">Pick trucks Type</text>
+    <text name="TruckStatusDisplayName">Truck Status Display Name</text>
+    <text name="PickTruckStatus">Pick Truck Status</text>
     <text name="PickUser">Pick user</text>
     <text name="LicenseExpirationDateRange">License expiration date range</text>
     <text name="TrucksTypes">Trucks Types</text>
-    <text name="TrucksType">Trucks type</text>
+    <text name="TrucksType">Trucks Type</text>
     <text name="TACHYON.TrucksTypes.TrucksType">TrucksType</text>
-    <text name="CreateNewTrucksType">Create new trucks type</text>
-    <text name="EditTrucksType">Edit trucks type</text>
-    <text name="DeleteTrucksType">Delete trucks type</text>
-    <text name="TrucksTypeDuplicateName">There is already a truck type with name : {0}</text>
+    <text name="CreateNewTrucksType">Create New trucks Type</text>
+    <text name="EditTrucksType">Edit trucks Type</text>
+    <text name="DeleteTrucksType">Delete trucks Type</text>
+    <text name="TrucksTypeDuplicateName">There is already a Truck Type with name : {0}</text>
 
     <text name="Trucks">Trucks</text>
-    <text name="TruckStatus">Truck status</text>
+    <text name="TruckStatus">Truck Status</text>
     <text name="TACHYON.Trucks.TruckStatus">TruckStatus</text>
-    <text name="DisplayName">Display name</text>
-    <text name="CreateNewTruckStatus">Create new truck status</text>
-    <text name="EditTruckStatus">Edit truck status</text>
-    <text name="DeleteTruckStatus">Delete truck status</text>
+    <text name="DisplayName">Display Name</text>
+    <text name="CreateNewTruckStatus">Create New Truck Status</text>
+    <text name="EditTruckStatus">Edit Truck Status</text>
+    <text name="DeleteTruckStatus">Delete Truck Status</text>
     <text name="{0}IsRequired">{0} is required.</text>
     <text name="View">View</text>
     <text name="Pick">Pick</text>
@@ -687,9 +824,9 @@
     <text name="DontYouHaveAnAccount">Don't you have an account?</text>
     <text name="CreateAnAccount">Create account</text>
     <text name="Pages">Pages</text>
-    <text name="RoleName">Role name</text>
+    <text name="RoleName">Role Name</text>
     <text name="EditRole">Edit role</text>
-    <text name="CreateNewRole">Create new role</text>
+    <text name="CreateNewRole">Create New Role</text>
     <text name="RoleProperties">Role properties</text>
     <text name="Save">Save</text>
 
@@ -699,7 +836,8 @@
     <text name="Delete">Delete</text>
     <text name="DeletingUser">Deleting user</text>
     <text name="UsersHeaderInfo">Manage users and permissions.</text>
-    <text name="CreateNewUser">Create new user</text>
+    <text name="UserName">User Name</text>
+    <text name="CreateNewUser">Create New user</text>
     <text name="Name">Name</text>
     <text name="LastLoginTime">Last login time</text>
     <text name="EditUser">Edit user</text>
@@ -715,18 +853,18 @@
     <text name="ResetSuccessfully">Reset successfully</text>
     <text name="Tenants">Tenants</text>
     <text name="TenantsHeaderInfo">Manage your tenants.</text>
-    <text name="CreateNewTenant">Create new tenant</text>
+    <text name="CreateNewTenant">Create New tenant</text>
     <text name="TenancyCodeName">Tenancy code name</text>
     <text name="TenantDeleteWarningMessage">Tenant {0} will be deleted.</text>
     <text name="EditTenant">Edit tenant</text>
     <text name="ChangingPermissions">Changing permissions</text>
     <text name="EditingUser">Editing user</text>
-    <text name="CreatingNewUser">Creating new user</text>
+    <text name="CreatingNewUser">Creating New user</text>
     <text name="EditingTenant">Editing tenant</text>
-    <text name="CreatingNewTenant">Creating new tenant</text>
+    <text name="CreatingNewTenant">Creating New tenant</text>
     <text name="DeletingTenant">Deleting tenant</text>
     <text name="EditingRole">Editing role</text>
-    <text name="CreatingNewRole">Creating new role</text>
+    <text name="CreatingNewRole">Creating New role</text>
     <text name="DeletingRole">Deleting role</text>
     <text name="SearchWithThreeDot">Search...</text>
     <text name="ResetSpecialPermissions">Reset special permissions</text>
@@ -758,7 +896,7 @@
     <text name="EmailActivation_SubTitle">This email is sent you to verify your email.</text>
     <text name="EmailActivation_ClickTheLinkBelowToVerifyYourEmail">Please click the link below to verify your email address:</text>
     <text name="InvalidPasswordResetCode">Invalid password reset code</text>
-    <text name="InvalidPasswordResetCode_Detail">Please be sure you entered this page by clicking the link sent to your email. If this does not solve the problem, you can re-try to request a new password reset link.</text>
+    <text name="InvalidPasswordResetCode_Detail">Please be sure you entered this page by clicking the link sent to your email. If this does not solve the problem, you can re-try to request a New password reset link.</text>
     <text name="UserEmailIsNotConfirmedAndCanNotLogin">Your email address is not confirmed. Please check your email and click the email confirmation link to activate your account. If you did not receive activation email, click the 'email confirmation' to request a new email.</text>
     <text name="LoginFailed">Login failed!</text>
     <text name="InvalidEmailConfirmationCode">Invalid email confirmation code</text>
@@ -871,13 +1009,13 @@
     <text name="SeeDemo">See demo</text>
     <text name="Editions">Editions</text>
     <text name="EditionsHeaderInfo">Manage editions and features of the application</text>
-    <text name="CreateNewEdition">Create new edition</text>
+    <text name="CreateNewEdition">Create New edition</text>
     <text name="EditEdition">Edit edition</text>
     <text name="EditionProperties">Edition properties</text>
     <text name="EditionName">Edition name</text>
     <text name="Features">Features</text>
     <text name="EditionDeleteWarningMessage">Are you sure to delete the edition {0}?</text>
-    <text name="CreatingNewEdition">Creating new edition</text>
+    <text name="CreatingNewEdition">Creating New edition</text>
     <text name="EditingEdition">Editing edition</text>
     <text name="DeletingEdition">Deleting edition</text>
     <text name="ChangingFeatures">Changing features</text>
@@ -887,9 +1025,9 @@
     <text name="InvalidFeaturesWarning">One or more feature values are not valid!</text>
     <text name="Languages">Languages</text>
     <text name="LanguagesHeaderInfo">Manage user interface languages.</text>
-    <text name="CreateNewLanguage">Create new language</text>
+    <text name="CreateNewLanguage">Create New language</text>
     <text name="Code">Code</text>
-    <text name="CreatingNewLanguage">Creating new language</text>
+    <text name="CreatingNewLanguage">Creating New language</text>
     <text name="EditingLanguage">Editing language</text>
     <text name="DeletingLanguages">Deleting language</text>
     <text name="ChangingTexts">Changing texts</text>
@@ -963,7 +1101,7 @@
     <text name="SuccessfullyUnlinked">Successfully unlinked</text>
     <text name="LinkedUserDeleteWarningMessage">Link to user {0} will be deleted.</text>
     <text name="SwitchToLinkedAccountTokenErrorMessage">Impersonation token is invalid or expired!</text>
-    <text name="WelcomeToTheApplicationNotificationMessage">Welcome to TACHYON! Notification system is used to inform you for intended events. You can select which type of notifications you want to receive from the notification settings.</text>
+    <text name="WelcomeToTheApplicationNotificationMessage">Welcome to TACHYON! Notification system is used to inform you for intended events. You can select which Type of notifications you want to receive from the notification settings.</text>
     <text name="NewUserRegisteredNotificationDefinition">On a new user registered to the application.</text>
     <text name="NewUserRegisteredNotificationMessage">A new user registered to the application. User name: {userName}, Email address: {emailAddress}.</text>
     <text name="SeeAllNotifications">See all notifications</text>
@@ -973,7 +1111,7 @@
     <text name="ReceiveNotifications">Receive Notifications</text>
     <text name="ReceiveNotifications_Definition">This option can be used to completely enable/disable receiving notifications.</text>
     <text name="NotificationTypes">Notification Types</text>
-    <text name="ReceiveNotifications_DisableInfo">You completely disabled receiving notifications. You can enable it and select notification types you want to receive.</text>
+    <text name="ReceiveNotifications_DisableInfo">You completely disabled receiving notifications. You can enable it and select notification Types you want to receive.</text>
     <text name="Notifications">Notifications</text>
     <text name="ThereAreNoNotifications">There are no notifications.</text>
     <text name="Unread">Unread</text>
@@ -1058,7 +1196,7 @@
     <text name="UserUnblocked">Block removed from user successfully.</text>
     <text name="BlockUser">Block user</text>
     <text name="UnblockUser">Unblock</text>
-    <text name="FriendshipRequestAccepted">Friendship request accepted</text>
+    <text name="FriendshipRequestAccepted">Friendship Request accepted</text>
     <text name="UserSendYouAFriendshipRequest">{0} added you as a friend.</text>
     <text name="Friends">Friends</text>
     <text name="Others">Others</text>
@@ -1100,7 +1238,7 @@
     <text name="TargetUserNotFoundProbablyDeleted">Target user could not be found. It's probably deleted.</text>
     <text name="UserLockedOutMessage">The user account has been locked out. Please try again later.</text>
     <text name="SendSecurityCode">Send security code.</text>
-    <text name="SendSecurityCode_Information">You should verify yourself to login. Please select a verification type. A code will be sent based on selected verification type.</text>
+    <text name="SendSecurityCode_Information">You should verify yourself to login. Please select a verification Type. A code will be sent based on selected verification Type.</text>
     <text name="SendSecurityCodeErrorMessage">Security code could not be sent!</text>
     <text name="VerifySecurityCodeNotLoggedInErrorMessage">You should be logged in first, in order to verify yourself! Probably, your login has been timed out. Please go to the login page and re-try it.</text>
     <text name="VerificationCode">Verification code</text>
@@ -1188,8 +1326,8 @@
     <text name="Upgrade">Upgrade</text>
     <text name="PaymentPeriodType">Payment period type</text>
     <text name="PaymentInfo">Payment info</text>
-    <text name="MonthlyPrice">Monthly price</text>
-    <text name="AnnualPrice">Annual price</text>
+    <text name="MonthlyPrice">Monthly Price</text>
+    <text name="AnnualPrice">Annual Price</text>
     <text name="StartUsingFree">Start using free</text>
     <text name="TryIt">Try it</text>
     <text name="Days">Days</text>
@@ -1207,7 +1345,7 @@
     <text name="WhatWillDoneAfterSubscriptionExpiry">What will be done after subscription expiry</text>
     <text name="DeactiveTenant">Deactive tenant</text>
     <text name="AssignToAnotherEdition">Assign to another edition</text>
-    <text name="SubscriptionPrice">Subscription price</text>
+    <text name="SubscriptionPrice">Subscription Price</text>
     <text name="Free">Free</text>
     <text name="Paid">Paid</text>
     <text name="IsTrialActive">Is trial active</text>
@@ -1228,7 +1366,7 @@
     <text name="User profile">User profile</text>
     <text name="Your user profile information (first name, last name, etc.)">Your user profile information (first name, last name, etc.)</text>
     <text name="Your email address">Your email address</text>
-    <text name="Your phone number">Your phone number</text>
+    <text name="Your Phone Number">Your Phone Number</text>
     <text name="Your postal address">Your postal address</text>
     <text name="AllFunctionalityYouHaveInTheApplication">All functionality you have in the application</text>
     <text name="Default (all) API">Default (all) API</text>
@@ -1504,9 +1642,9 @@
     <text name="ManagingRoles">Managing roles</text>
     <text name="UiCustomization_LayoutFixedContent">Fixed content (Desktop)</text>
     <text name="UiCustomization_LayoutMobileFixedContent">Fixed content (Mobile)</text>
-    <text name="ExcelOperations">Excel operations</text>
+    <text name="ExcelOperations">Excel Operations</text>
     <text name="ImportFromExcel">Import from excel</text>
-    <text name="ExportToExcel">Export to excel</text>
+    <text name="ExportToExcel">Export to Excel</text>
     <text name="ImportToExcelSampleFileDownloadInfo">{0} to download sample import file.</text>
     <text name="ImportUsersProcessStart">User import process has begun.</text>
     <text name="ImportUsersUploadFailed">User import process has failed.</text>
@@ -1748,12 +1886,13 @@
     <text name="New">New</text>
 
     <![CDATA[Tachyon:Invoice]]>
+    <text name="CreateNewBillingInterval">Create New Billing Interval</text>
     <text name="Invoices">Invoices</text>
     <text name="AccountPayable">Account payable</text>
     <text name="AccountReceivable">Account receivable</text>
     <text name="MakePaid">Make paid</text>
     <text name="MakeUnPaid">Make unpaid</text>
-    <text name="PaidStatus">Paid status</text>
+    <text name="PaidStatus">Paid Status</text>
     <text name="Unpaid">Un paid</text>
     <text name="VatAmount">Vat amount</text>
     <text name="AmountWithTaxVat">Amount with tax vat</text>
@@ -1768,7 +1907,7 @@
     <text name="EmailSubjectShipperCreditLimit">Credit limit</text>
     <tex name="NoEnoughBalance">You do not have enough balance</tex>
     <tex name="FinancialTransActionMenu">TransAction</tex>
-    <text name="Channel">Channel</text>
+    <text name="Channel">Channel</text>ShippingRequestStatus
     <text name="ChannelType">Channel</text>
     <text name="Transactions">Transactions</text>
 
@@ -1777,8 +1916,12 @@
       <a href="/app/main/shippingRequests/shippingRequests/view?id={ShipimentNo}">There has been an accident for shipment No.: {ShipimentNo}.</a>
     </text>
 
+    <text name="EditReason">Edit Reason</text>
+    <text name="CreateReason">Create Reason</text>
+    <text name="AccidentReason">Accident Reason</text>
+    <text name="CreateNewAccidentReason">Create New Accident Reason</text>
     <text name="EnglishLettersOnly">English letters only</text>
-    <text name="ShippingRequestReceiverCode">Your shipping code is {0}</text>
+    <text name="ShippingRequestReceiverCode">Your Shipping code is {0}</text>
     <text name="NotifyDriverWhenAssignToTrip">You have new trip assign to you</text>
     <text name="TotalOfDrop">Total  of drops: {0}</text>
     <text name="InvoiceVasType">Type:{0}</text>
@@ -1795,7 +1938,8 @@
       <a href="/app/main/shippingRequests/shippingRequests/view?id={ShipimentNo}">The {clientname} has established a current view of the  shipment No.: {ShipimentNo}.</a>
     </text>
     <text name="DriverRejectTrip">
-      <a href="/app/main/shippingRequests/shippingRequests/view?id={ShipimentNo}">The driver {driver} has been rejected the trip from {source} to {destination}</a></text>
+      <a href="/app/main/shippingRequests/shippingRequests/view?id={ShipimentNo}">The driver {driver} has been rejected the trip from {source} to {destination}</a>
+    </text>
     <text name="DriverAcceptTrip">
       <a href="/app/main/shippingRequests/shippingRequests/view?id={ShipimentNo}">The driver {driver} has been accepted the trip from {source} to {destination}</a>
     </text>
@@ -1803,18 +1947,20 @@
     <text name="InvoicesList">Invoices</text>
     <text name="BillingInterval">Billing interval</text>
     <text name="BalnaceRecharges">Balnace recharges</text>
+    <text name="RechargeAmount ">Recharge Amount </text>
+    <text name="CreateNewBalanceRecharge">Create New Balance Recharge</text>
     <text name="BalanceRecharge">Balnace recharges</text>
     <text name="SubmitInvoice">Submit invoices</text>
     <text name="SubmitInvoices">Submit invoices</text>
     <text name="FinancialTransActionMenu">Financial transaction</text>
     <text name="InvoiceId">Invoice No.</text>
     <text name="CompanyName">Company</text>
-    <text name="AccountInvoiceType">Account type</text>
-    <text name="DueDate">Due date</text>
-    <text name="UnPaid">Un paid</text>
-    <text name="AccountStatus">Account status</text>
-    <text name="IntervalType">Interval type</text>
-    <text name="PayInAdvance">Pay in advance</text>
+    <text name="AccountInvoiceType">Account Type</text>
+    <text name="DueDate">Due Date</text>
+    <text name="UnPaid">Un Paid</text>
+    <text name="AccountStatus">Account Status</text>
+    <text name="IntervalType">Interval Type</text>
+    <text name="PayInAdvance">Pay in Advance</text>
     <text name="ClientName">Clien</text>
     <text name="ReferenceNo">Reference No.</text>
     <text name="TrukType">Truk type</text>

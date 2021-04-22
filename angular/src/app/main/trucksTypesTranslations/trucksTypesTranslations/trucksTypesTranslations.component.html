@@ -1,6 +1,6 @@
 <div [@routerTransition]>
   <div class="content d-flex flex-column flex-column-fluid">
-    <sub-header [title]="'TrucksTypesTranslations' | localize" [description]="'TrucksTypesTranslationsHeaderInfo' | localize">
+    <sub-header [title]="'TrucksTypesTranslations' | localize" [description]="'' | localize">
       <div role="actions">
         <button *ngIf="isGranted('Pages.TrucksTypesTranslations.Create')" (click)="createTrucksTypesTranslation()" class="btn btn-primary blue">
           <i class="fa fa-plus"></i> {{ l('CreateNewTrucksTypesTranslation') }}
