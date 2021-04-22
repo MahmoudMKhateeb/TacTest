@@ -223,13 +223,14 @@
                 #modelYear="bsDatepicker"
                 id="Truck_ModelYear"
                 name="Truck_ModelYear"
-                type="number"
-                [ngModel]="truck.modelYear"
+                type="text"
+                [(ngModel)]="truck.modelYear"
                 [bsConfig]="{ viewMode: 'year', minMode: 'year', dateInputFormat: 'YYYY' }"
                 bsDatepicker
-                [maxDate]="today"
+                (keydown)="(false)"
+                [minDate]="truckModelMinYear"
+                [maxDate]="truckModelMaxYear"
                 class="form-control"
-                (keypress)="numberOnly($event)"
                 required
               />
               <validation-messages [formCtrl]="modelYear"></validation-messages>
