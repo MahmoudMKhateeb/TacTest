@@ -56,6 +56,7 @@ import { GroupDetailResolverService } from '@app/main/invoices/groupsPeriods/gro
 import { AccidentReasonComponent } from '@app/main/accidents/reasons/reason.component';
 import { TripRejectReasonComponent } from '@app/main/shippingRequests/shippingRequests/ShippingRequestTrips/rejectreason/trip-reject-reason.component';
 import { CarrierDirectReqestPageComponent } from '@app/main/shippingRequests/shippingRequests/directShippingRequest/carrierDirectReqestPage.component';
+import { AppLocalizationComponent } from '@app/main/applocalizations/applocalization.component';
 
 @NgModule({
   imports: [
@@ -259,6 +260,7 @@ import { CarrierDirectReqestPageComponent } from '@app/main/shippingRequests/shi
           },
           { path: 'accidents/reasons', component: AccidentReasonComponent, data: { permission: 'Pages.ShippingRequestResoneAccidents' } },
           { path: 'trip/reject/reasons', component: TripRejectReasonComponent, data: { permission: 'Pages.ShippingRequestTrips.Reject.Reason' } },
+          { path: 'lanaguages/applocalizations', component: AppLocalizationComponent, data: { permission: 'Pages.AppLocalizations' } },
 
           { path: 'dashboard', component: DashboardComponent, data: { permission: 'Pages.Tenant.Dashboard' } },
           { path: '', redirectTo: 'dashboard', pathMatch: 'full' },

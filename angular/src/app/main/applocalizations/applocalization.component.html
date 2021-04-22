@@ -1,0 +1,148 @@
+<div [@routerTransition]>
+  <div class="content d-flex flex-column flex-column-fluid">
+    <sub-header [title]="'Localizations' | localize" [description]="'LocalizationHeaderInfo' | localize">
+      <div role="actions">
+        <button (click)="exportToExcel()" class="btn btn-outline-success"><i class="fa fa-file-excel"></i> {{ l('ExportToExcel') }}</button>
+
+        <button *ngIf="isGranted('Pages.AppLocalizations.Create')" (click)="AppLocalizationModel.show(null)" class="btn btn-primary blue">
+          <i class="fa fa-plus"></i> {{ l('CreateLocalization') }}
+        </button>
+        <button *ngIf="isGranted('Pages.AppLocalizations.Restore')" (click)="restore()" class="btn btn-outline-success">
+          <i class="fas fa-trash-restore"></i> {{ l('Restore') }}
+        </button>
+        <button *ngIf="isGranted('Pages.AppLocalizations.Generate')" (click)="generate()" class="btn btn-outline-success">
+          <i class="fas fa-file-code"></i> {{ l('Generate') }}
+        </button>
+      </div>
+    </sub-header>
+
+    <div [class]="containerClass">
+      <div class="card card-custom gutter-b">
+        <div class="card-body">
+          <form class="form" autocomplete="off">
+            <div>
+              <div class="row align-items-center">
+                <div class="col-xl-12">
+                  <div class="form-group m-form__group align-items-center">
+                    <div class="input-group">
+                      <input
+                        [(ngModel)]="filterText"
+                        name="filterText"
+                        autoFocus
+                        class="form-control m-input"
+                        [placeholder]="l('SearchWithThreeDot')"
+                        type="text"
+                      />
+                      <span class="input-group-btn">
+                        <button (click)="getAll()" class="btn btn-primary" type="submit"><i class="flaticon-search-1"></i></button>
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </form>
+
+          <div class="row align-items-center">
+            <!--<Primeng-Datatable-Start>-->
+            <div class="primeng-datatable-container col-12" [busyIf]="primengTableHelper.isLoading">
+              <p-table
+                #dataTable
+                (onLazyLoad)="getAll($event)"
+                [value]="primengTableHelper.records"
+                rows="{{ primengTableHelper.defaultRecordsCountPerPage }}"
+                [paginator]="false"
+                [lazy]="true"
+                [scrollable]="true"
+                ScrollWidth="100%"
+                [responsive]="primengTableHelper.isResponsive"
+                [resizableColumns]="primengTableHelper.resizableColumns"
+              >
+                <ng-template pTemplate="header">
+                  <tr>
+                    <th style="width: 130px;" [hidden]="!isGrantedAny('Pages.AppLocalizations.Edit', 'Pages.AppLocalizations.Delete')">
+                      {{ l('Actions') }}
+                    </th>
+                    <th style="width: 150px;" pSortableColumn="MasterKey">
+                      {{ l('MasterKey') }}
+                      <p-sortIcon field="MasterKey"></p-sortIcon>
+                    </th>
+                    <th style="width: 150px;" pSortableColumn="MasterValue">
+                      {{ l('MasterValue') }}
+                      <p-sortIcon field="MasterValue"></p-sortIcon>
+                    </th>
+                    <th style="width: 150px;">
+                      {{ l('CurrentLanguage') }}
+                    </th>
+                  </tr>
+                </ng-template>
+                <ng-template pTemplate="body" let-record="$implicit">
+                  <tr>
+                    <td style="width: 130px;" [hidden]="!isGrantedAny('Pages.AppLocalizations.Edit', 'Pages.AppLocalizations.Delete')">
+                      <div class="btn-group dropdown" dropdown container="body">
+                        <button class="dropdown-toggle btn btn-sm btn-primary" dropdownToggle>
+                          <i class="fa fa-cog"></i><span class="caret"></span> {{ l('Actions') }}
+                        </button>
+                        <ul class="dropdown-menu" *dropdownMenu>
+                          <li>
+                            <a
+                              href="javascript:;"
+                              *ngIf="permission.isGranted('Pages.AppLocalizations.Edit')"
+                              class="dropdown-item"
+                              (click)="AppLocalizationModel.show(record.id)"
+                              >{{ l('Edit') }}</a
+                            >
+                          </li>
+                          <li>
+                            <a
+                              class="dropdown-item"
+                              href="javascript:;"
+                              *ngIf="permission.isGranted('Pages.AppLocalizations.Delete')"
+                              (click)="delete(record)"
+                              >{{ l('Delete') }}</a
+                            >
+                          </li>
+                        </ul>
+                      </div>
+                    </td>
+                    <td style="width: 150px;">
+                      <span class="ui-column-title"> {{ l('MasterKey') }}</span>
+                      {{ record.masterKey }}
+                    </td>
+                    <td style="width: 150px;">
+                      <span class="ui-column-title"> {{ l('MasterValue') }}</span>
+                      {{ record.masterValue }}
+                    </td>
+                    <td style="width: 150px;">
+                      <span class="ui-column-title"> {{ l('CurrentLanguage') }}</span>
+                      {{ record.value }}
+                    </td>
+                  </tr>
+                </ng-template>
+              </p-table>
+              <div class="primeng-no-data" *ngIf="primengTableHelper.totalRecordsCount == 0 && IsStartSearch">
+                {{ l('NoData') }}
+              </div>
+              <div class="primeng-paging-container">
+                <p-paginator
+                  [rows]="primengTableHelper.defaultRecordsCountPerPage"
+                  #paginator
+                  (onPageChange)="getAll($event)"
+                  [totalRecords]="primengTableHelper.totalRecordsCount"
+                  [rowsPerPageOptions]="primengTableHelper.predefinedRecordsCountPerPage"
+                >
+                </p-paginator>
+                <span class="total-records-count">
+                  {{ l('TotalRecordsCount', primengTableHelper.totalRecordsCount) }}
+                </span>
+              </div>
+            </div>
+            <!--<Primeng-Datatable-End>-->
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <applocalization-modal #AppLocalizationModel (modalSave)="getAll()"></applocalization-modal>
+  </div>
+</div>

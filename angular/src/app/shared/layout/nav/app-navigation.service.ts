@@ -449,7 +449,7 @@ export class AppNavigationService {
             'label label-danger label-dot',
             '/app/main/trip/reject/reasons'
           ),
-
+          new AppMenuItem('AppLocalization', 'Pages.AppLocalizations', 'label label-danger label-dot', '/app/main/lanaguages/applocalizations'),
           // new AppMenuItem('AuditLogs', 'Pages.Administration.AuditLogs', 'flaticon-folder-1', '/app/admin/auditLogs'),
           // new AppMenuItem('Maintenance', 'Pages.Administration.Host.Maintenance', 'flaticon-lock', '/app/admin/maintenance'),
           // new AppMenuItem(

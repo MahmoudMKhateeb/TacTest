@@ -226,6 +226,8 @@ import { GetAllDirectRequestsTableComponent } from '@app/main/shippingRequests/s
 import { TachyonDealerResponceModelComponent } from '@app/main/shippingRequests/shippingRequests/directShippingRequest/tachyonDealerResponseModal/tachyonDealerResponceModel.component';
 import { SendDirectRequestModalComponent } from '@app/main/shippingRequests/shippingRequests/directShippingRequest/sendDirectRequestsModal/sendDirectRequestModal.component';
 import { AssignDriverTruckModalComponent } from '@app/main/shippingRequests/shippingRequests/ShippingRequestTrips/trips/assignDriverTruckModal/assignDriverTruckModal.component';
+import { AppLocalizationComponent } from '@app/main/applocalizations/applocalization.component';
+import { ApplocalizationModalComponent } from '@app/main/applocalizations/create-or-edit-applocalization-modal.component';
 
 NgxBootstrapDatePickerConfigService.registerNgxBootstrapDatePickerLocales();
 
@@ -422,6 +424,8 @@ NgxBootstrapDatePickerConfigService.registerNgxBootstrapDatePickerLocales();
     RejectPricingOfferModalComponent,
     SendPricingOfferModalComponent,
     PricingOfferComponent,
+    AppLocalizationComponent,
+    ApplocalizationModalComponent,
   ],
   providers: [
     { provide: BsDatepickerConfig, useFactory: NgxBootstrapDatePickerConfigService.getDatepickerConfig },
