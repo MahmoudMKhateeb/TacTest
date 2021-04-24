@@ -1,5 +1,5 @@
 <div *ngIf="languages.length > 1" class="ml-1">
-  <div class="btn btn-pill" *ngFor="let language of languages" (click)="changeLanguage($event)">
+  <div class="btn btn-pill" *ngFor="let language of languages" (click)="changeLanguage(language)">
     <a class="text-primary font-weight-bolder">{{ language.displayName }}</a>
   </div>
   <!--  <div class="form-inline dropdown">-->
