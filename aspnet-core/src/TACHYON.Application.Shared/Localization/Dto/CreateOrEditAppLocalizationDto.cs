@@ -9,7 +9,7 @@ namespace TACHYON.Localization.Dto
     {
         [Required]
         [StringLength(300,MinimumLength =1)]
-        [RegularExpression(@"^[a-zA-Z]+$", ErrorMessage = "ValidateEnglishOnlyWithoutSpace")]
+        [RegularExpression(@"^(_|[a-zA-Z])[a-zA-Z0-9]+$", ErrorMessage = "Validate the input to contain only English characters and numbers and begin with only letters and underscores.")]
         public string MasterKey { get; set; }
         [Required]
         [StringLength(4000, MinimumLength = 1)]

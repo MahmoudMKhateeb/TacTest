@@ -189,8 +189,16 @@ namespace TACHYON.TachyonPriceOffers
             {
                 throw new UserFriendlyException(L("Cannot Create new offer, there is already existing offer message"));
             }
+            if (input.TotalAmount<1) throw new UserFriendlyException(L("ThePriceSholudBeNotLessThanOne"));
 
-             await OfferMappingFromDirectRequestOrBidding(input, shippingRequest);
+            if (input.DriectRequestForCarrierId.HasValue || input.ShippingRequestBidId.HasValue)
+            {
+                if (input.ActualCommissionValue<1 && input.ActualPercentCommission<1) throw new UserFriendlyException(L("TheCommissionValuevalueAndPercentCommissionMustNotBeLessThanOneAtTheSameTime"));
+                else if (input.ActualCommissionValue<0) throw new UserFriendlyException(L("TheCommissionValueSholudBeNotLessThanZero"));
+                else if (input.ActualPercentCommission < 0) throw new UserFriendlyException(L("ThePercentCommissionSholudBeNotLessThanZero"));
+            }
+
+            await OfferMappingFromDirectRequestOrBidding(input, shippingRequest);
             TachyonPriceOffer tachyonPriceOffer = ObjectMapper.Map<TachyonPriceOffer>(input);
 
             await _commissionManager.CalculateAmountByOffer(tachyonPriceOffer, shippingRequest);

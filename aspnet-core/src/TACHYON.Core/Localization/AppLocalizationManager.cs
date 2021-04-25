@@ -1,18 +1,13 @@
-﻿using System;
+﻿using Abp.BackgroundJobs;
+using Abp.Domain.Repositories;
+using Abp.Localization;
+using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Reflection;
-using System.Threading.Tasks;
-using System.Xml.Linq;
 using System.Linq;
 using System.Linq.Dynamic.Core;
-using Abp.Linq.Extensions;
-
-using Abp.Domain.Repositories;
-using Microsoft.EntityFrameworkCore;
-using Abp.Localization;
-using Abp.Domain.Uow;
-using Abp.BackgroundJobs;
+using System.Threading.Tasks;
 using System.Xml;
 
 namespace TACHYON.Localization

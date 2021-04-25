@@ -277,7 +277,7 @@ namespace TACHYON.Web.Controllers
         {
             if (string.IsNullOrEmpty(Username)) throw new AbpAuthorizationException(L("InvalidMobileNumber"));
             var user = await _userManager.GetUserByPhoneNumberAsync(Username);
-            if (user == null && !user.IsDriver)
+            if (user == null || !user.IsDriver)
             {
                 throw new AbpAuthorizationException(L("InvalidMobileNumber"));
             }
