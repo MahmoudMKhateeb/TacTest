@@ -177,12 +177,4 @@ export class VasPricesComponent extends AppComponentBase {
         this._fileDownloadService.downloadTempFile(result);
       });
   }
-
-  numberOnly(event): boolean {
-    const charCode = event.which ? event.which : event.keyCode;
-    if (charCode === 38 || charCode === 40) {
-      return true;
-    }
-    return false;
-  }
 }
