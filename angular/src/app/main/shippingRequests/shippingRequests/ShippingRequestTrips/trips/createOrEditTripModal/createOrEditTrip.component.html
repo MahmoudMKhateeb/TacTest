@@ -67,6 +67,8 @@
                   name="tripStartDate"
                   placeholder="{{ l('tripStartDate') }}"
                   [minDate]="shippingRequest.startTripDate"
+                  [maxDate]="shippingRequest.endTripDate"
+                  (dateChange)="validateTripDates()"
                   bsDatepicker
                   datePickerMomentModifier
                 />
@@ -87,7 +89,9 @@
                   class="form-control"
                   name="tripEndDate"
                   placeholder="{{ l('tripEndDate') }}"
+                  [minDate]="shippingRequest.startTripDate"
                   [maxDate]="shippingRequest.endTripDate"
+                  (dateChange)="validateTripDates()"
                   bsDatepicker
                   datePickerMomentModifier
                 />

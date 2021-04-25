@@ -178,4 +178,14 @@ export class CreateOrEditTripComponent extends AppComponentBase implements OnIni
       this._fileDownloadService.downloadTempFile(result);
     });
   }
+
+  /**
+   * validates add or Edit Trip Dates
+   */
+  validateTripDates() {
+    if (this.trip.endTripDate && this.trip.startTripDate > this.trip.endTripDate) {
+      this.trip.endTripDate = undefined;
+      this.notify.error(this.l('tripStartDateCantBeGretterThanTripEndDate'));
+    }
+  }
 }
