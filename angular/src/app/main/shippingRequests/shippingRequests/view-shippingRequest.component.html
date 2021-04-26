@@ -324,7 +324,7 @@
       </ng-template>
       <!--  end:: DirectOffers        -->
       <!--  start:: PriceOfferingSection -->
-      <ng-template [ngIf]="!feature.isEnabled('App.Carrier') && shippingRequestforView.shippingRequest.isTachyonDeal">
+      <ng-template [ngIf]="canSeePriceOffers()">
         <pricingOffer #pricingOffer [shippingRequestId]="activeShippingRequestId"></pricingOffer>
       </ng-template>
       <!--  end:: PricOfferingSection -->

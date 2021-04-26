@@ -143,4 +143,19 @@ export class ViewShippingRequestComponent extends AppComponentBase implements On
     }
     return false;
   }
+
+  /**
+   * Validaties who can See the Price Offering Component
+   */
+  canSeePriceOffers() {
+    //Carrier Cant See Price Offering Table
+    if (this.feature.isEnabled('App.Carrier')) {
+      return false;
+      //if there is a price for the Shipping Request No need For Displaying it
+    } else if (this.shippingRequestforView.shippingRequest.price) {
+      return false;
+    }
+    //otherwise Display IT
+    return true;
+  }
 }
