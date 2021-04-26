@@ -1,6 +1,7 @@
 ﻿<?xml version="1.0" encoding="UTF-8"?>
 <localizationDictionary culture="en-GB">
   <texts>
+    <text name="Receivers">Receivers</text>
     <text name="TrialExpireNotification">Your trial period will expire in {0} day(s).</text>
     <text name="SubscriptionExpireNotification">Your subscription will expire in {0} day(s).</text>
     <text name="TrialSubscriptionNotification">You are in Trial period for {0} edition, {1} to purchase.</text>
@@ -1321,8 +1322,8 @@
     <text name="NotIsReefer">Not is reefer</text>
     <text name="PickTrailerStatus">Pick trailer status</text>
     <text name="Counties">Counties</text>
-    <text name="DeleteCounty">Delete county</text>
-    <text name="EditCounty">Edit county</text>
+    <text name="DeleteCounty">Delete Country</text>
+    <text name="EditCounty">Edit country</text>
     <text name="RouteDisplayName">Route display name</text>
     <text name="PickCity">Pick city</text>
     <text name="CityDisplayName">City display name</text>
@@ -1349,13 +1350,13 @@
     <text name="EditTrailerStatus">Edit trailer status</text>
     <text name="Routs">Routs</text>
     <text name="TACHYON.Routs.Route">Route</text>
-    <text name="CreateNewCounty">Create new county</text>
+    <text name="CreateNewCounty">Create new country</text>
     <text name="CountiesHeaderInfo">Counties header info</text>
     <text name="TACHYON.Countries.County">County</text>
-    <text name="County">County</text>
+    <text name="County">Country</text>
     <text name="Countries">Countries</text>
-    <text name="PickCounty">Pick county</text>
-    <text name="CountyDisplayName">County display name</text>
+    <text name="PickCounty">Pick country</text>
+    <text name="CountyDisplayName">Country display name</text>
     <text name="DeleteCity">Delete city</text>
     <text name="EditCity">Edit city</text>
     <text name="CreateNewCity">Create new city</text>
@@ -1475,5 +1476,8 @@
     <text name="EditTruck">Edit truck</text>
     <text name="CreateNewTruck">Create new truck</text>
     <text name="TrucksType">Trucks Type</text>
+    <text name="AppLocalization">Terminologies</text>
+    <text name="PricingOffer">Pricing offer</text>
+    <text name="SMSOTP">your otp code:{0}</text>
   </texts>
 </localizationDictionary>

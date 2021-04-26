@@ -1,6 +1,7 @@
 ﻿<?xml version="1.0" encoding="UTF-8"?>
 <localizationDictionary culture="ar-EG">
   <texts>
+    <text name="Receivers">المستلمين</text>
     <text name="TrialExpireNotification">ستنتهي الفترة التجريبية خلال {0} أيام.</text>
     <text name="SubscriptionExpireNotification">سينتهي اشتراكك خلال {0} أيام.</text>
     <text name="TrialSubscriptionNotification">أنت في الفترة التجريبية لنسخة {0}، {1} للشراء.</text>
@@ -1224,6 +1225,14 @@
     <text name="TenantsHeaderInfo">إدارة العملاء</text>
     <text name="Tenants">العملاء</text>
     <text name="Length">الطول (متر)</text>
+    <text name="DeleteCounty">حذف الدولة</text>
+    <text name="EditCounty">تحرير الدولة</text>
+    <text name="CreateNewCounty">إنشاء دولة جديدة</text>
+    <text name="County">الدولة</text>
+    <text name="Countries">الدولة</text>
+    <text name="PickCounty">اختر الدولة</text>
+    <text name="CountyDisplayName">الدولة</text>
+    <text name="Cities">المدن</text>
     <text name="CreateAnAccount">إنشاء حساب</text>
     <text name="DontYouHaveAnAccount">ليس لديك حساب؟</text>
     <text name="ForgotPassword">هل نسيت كلمة المرور؟</text>
@@ -1285,5 +1294,8 @@
     <text name="TrucksTypes">أنواع الشاحنات</text>
     <text name="TrucksType">نواع الشاحنات</text>
     <text name="AccidentReasonHeaderInfo">الهيدر</text>
+    <text name="AppLocalization">المصطلحات</text>
+    <text name="PricingOffer">عرض التسعير</text>
+    <text name="SMSOTP">رمز:{0}</text>
   </texts>
 </localizationDictionary>

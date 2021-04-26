@@ -36,6 +36,7 @@ namespace TACHYON.Shipping.Trips
         private readonly UserManager _userManager;
         private readonly IAppNotifier _appNotifier;
         private readonly IFirebaseNotifier _firebase;
+        private readonly ShippingRequestManager _shippingRequestManager;
         public ShippingRequestsTripAppService(
             IRepository<ShippingRequestTrip> ShippingRequestTripRepository,
             IRepository<ShippingRequest, long> ShippingRequestRepository,
@@ -44,7 +45,8 @@ namespace TACHYON.Shipping.Trips
             IRepository<GoodsDetail, long> GoodsDetailRepository,
             UserManager userManager,
             IAppNotifier appNotifier,
-            IFirebaseNotifier firebase)
+            IFirebaseNotifier firebase,
+            ShippingRequestManager shippingRequestManager)
         {
             _ShippingRequestTripRepository = ShippingRequestTripRepository;
             _ShippingRequestRepository = ShippingRequestRepository;
@@ -54,6 +56,7 @@ namespace TACHYON.Shipping.Trips
             _userManager = userManager;
             _appNotifier = appNotifier;
             _firebase = firebase;
+            _shippingRequestManager = shippingRequestManager;
 
         }
 
@@ -137,13 +140,13 @@ namespace TACHYON.Shipping.Trips
             {
                 int requestNumberOfTripsAdd = await _ShippingRequestTripRepository.GetAll().Where(x => x.ShippingRequestId == input.ShippingRequestId).CountAsync() + 1;
                 if (requestNumberOfTripsAdd > request.NumberOfTrips) throw new UserFriendlyException(L("The number of trips " + request.NumberOfTrips));
-                await Create(input);
+                await Create(input, request);
                 request.TotalsTripsAddByShippier += 1;
             }
             else
             {
 
-                await Update(input);
+                await Update(input, request);
             }
 
         }
@@ -177,20 +180,21 @@ namespace TACHYON.Shipping.Trips
         }
 
         [AbpAuthorize(AppPermissions.Pages_ShippingRequestTrips_Create)]
-        private async Task Create(CreateOrEditShippingRequestTripDto input)
+        private async Task Create(CreateOrEditShippingRequestTripDto input,ShippingRequest request)
         {
             var RoutePoint = input.RoutPoints.OrderBy(x => x.PickingType);
             ShippingRequestTrip trip = ObjectMapper.Map<ShippingRequestTrip>(input);
 
-            await _ShippingRequestTripRepository.InsertAsync(trip);
+            var id = await _ShippingRequestTripRepository.InsertAndGetIdAsync(trip);
+            if (request.Status == ShippingRequestStatus.PostPrice)
+                await _shippingRequestManager.SendSmsToReceiversByTripId(id);
         }
 
         [AbpAuthorize(AppPermissions.Pages_ShippingRequestTrips_Edit)]
-        private async Task Update(CreateOrEditShippingRequestTripDto input)
+        private async Task Update(CreateOrEditShippingRequestTripDto input, ShippingRequest request)
         {
             var trip = await GetTrip((int)input.Id, input.ShippingRequestId);
             TripCanEditOrDelete(trip);
-
 
 
             foreach (var point in trip.RoutPoints)
@@ -217,10 +221,8 @@ namespace TACHYON.Shipping.Trips
             }
 
             ObjectMapper.Map(input, trip);
-
-
-
-
+            if (request.Status == ShippingRequestStatus.PostPrice)
+                await _shippingRequestManager.SendSmsToReceiversByTripId(trip.Id);
         }
 
         [AbpAuthorize(AppPermissions.Pages_ShippingRequestTrips_Delete)]

@@ -30,6 +30,7 @@
             <div class="form-group col-md-4">
               <label for="MasterKey">{{ l('MasterKey') }} *</label>
               <textarea
+                [readonly]="AppLocalization.id ? true : false"
                 type="text"
                 #nameInput
                 id="MasterKey"

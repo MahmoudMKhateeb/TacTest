@@ -16,7 +16,7 @@ namespace TACHYON.Net.Sms
             _twilioSmsSenderConfiguration = twilioSmsSenderConfiguration;
         }
 
-        public async Task SendAsync(string number, string message)
+        public async Task<bool> SendAsync(string number, string message)
         {
             TwilioClient.Init(_twilioSmsSenderConfiguration.AccountSid, _twilioSmsSenderConfiguration.AuthToken);
 
@@ -25,6 +25,7 @@ namespace TACHYON.Net.Sms
                 @from: new Twilio.Types.PhoneNumber(_twilioSmsSenderConfiguration.SenderNumber),
                 to: new Twilio.Types.PhoneNumber(number)
             );
+            return true;
         }
 
         public Task SendReceiverSmsAsync(string number, DateTime date, string shipperName, string driverName, string driverPhone, string waybillNumber, string code, string link)

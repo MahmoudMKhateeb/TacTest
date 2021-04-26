@@ -22,9 +22,9 @@ namespace TACHYON.Vases.Dtos
 
         public void AddValidationErrors(CustomValidationContext context)
         {
-            if (Price.HasValue && Price.Value<1)
+            if (Price.HasValue && Price.Value<0)
             {
-                context.Results.Add(new ValidationResult("ThePriceSholudBeNotLessThanOne"));
+                context.Results.Add(new ValidationResult("ThePriceSholudBeNotLessThanZero"));
             }
             if (MaxAmount.HasValue && MaxAmount.Value < 1)
             {

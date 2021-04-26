@@ -79,7 +79,10 @@
         /// </summary>
         public const string TruckInsuranceDocumentTypeSpecialConstant = "TruckInsurance";
 
-
+        #region SMS
+        public const string SMSOTP = "SMSOTP";
+        public const string SMSShippingRequestReceiverCode = "ShippingRequestReceiverCode";
+        #endregion
         #endregion
 
     }

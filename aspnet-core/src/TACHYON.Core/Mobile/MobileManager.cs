@@ -16,6 +16,7 @@ using System.Threading.Tasks;
 using TACHYON.Authorization.Roles;
 using TACHYON.Authorization.Users;
 using TACHYON.MultiTenancy;
+using TACHYON.Net.Sms;
 
 namespace TACHYON.Mobile
 {
@@ -27,11 +28,13 @@ namespace TACHYON.Mobile
         private readonly UserManager _userManager;
         private readonly AbpUserClaimsPrincipalFactory<User, Role> _claimsPrincipalFactory;
         private IClientInfoProvider ClientInfoProvider { get; set; }
+        private readonly ISmsSender _smsSender;
         public MobileManager(IRepository<UserOTP> userOTPRepository,
             IRepository<Tenant> tenantRepository,
             IRepository<UserLoginAttempt, long> userLoginAttemptRepository,
             UserManager userManager,
-            AbpUserClaimsPrincipalFactory<User, Role> claimsPrincipalFactory)
+            AbpUserClaimsPrincipalFactory<User, Role> claimsPrincipalFactory,
+            ISmsSender smsSender)
         {
             _userOTPRepository = userOTPRepository;
             _tenantRepository = tenantRepository;
@@ -39,12 +42,14 @@ namespace TACHYON.Mobile
             _userManager = userManager;
             _claimsPrincipalFactory = claimsPrincipalFactory;
             ClientInfoProvider = NullClientInfoProvider.Instance;
+            _smsSender = smsSender;
         }
-        public async Task<string> CreateOTP(long userId)
+        public async Task<string> CreateOTP(User user)
         {
-            await CheckIsExistOTP(userId);
-            var userOTP = new UserOTP(userId);
+            await CheckIsExistOTP(user.Id);
+            var userOTP = new UserOTP(user.Id);
             await _userOTPRepository.InsertAsync(userOTP);
+           await _smsSender.SendAsync(user.PhoneNumber,L(TACHYONConsts.SMSOTP, userOTP.OTP));
             return userOTP.OTP;
         }
 
