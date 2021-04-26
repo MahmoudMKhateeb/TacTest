@@ -26,7 +26,6 @@ namespace TACHYON.TachyonPriceOffers
         private readonly CommissionManager _commissionManager;
         private readonly BalanceManager _balanceManager;
         private readonly ShippingRequestManager _shippingRequestManager;
-        private readonly IRepository<ShippingRequestsCarrierDirectPricing> _carrierDirectPricingRepository;
         private readonly IRepository<ShippingRequestBid, long> _shippingRequestBidsRepository;
         private readonly IAppNotifier _appNotifier;
         private readonly IRepository<ShippingRequestsCarrierDirectPricing> _shippingRequestsCarrierDirectPricingRepository;
@@ -232,7 +231,7 @@ namespace TACHYON.TachyonPriceOffers
         {
             if (input.DriectRequestForCarrierId.HasValue)
             {
-                var direct = await _carrierDirectPricingRepository.FirstOrDefaultAsync(input.DriectRequestForCarrierId.Value);
+                var direct = await _shippingRequestsCarrierDirectPricingRepository.FirstOrDefaultAsync(input.DriectRequestForCarrierId.Value);
                 if (direct == null) throw new UserFriendlyException(L("TheCarrierDirectPricingIsNotFound"));
                 input.CarrierPrice = direct.Price;
                 input.CarrirerTenantId = direct.CarrirerTenantId;

@@ -1,4 +1,5 @@
 ﻿using Abp.Domain.Repositories;
+using Abp.Domain.Uow;
 using Microsoft.EntityFrameworkCore;
 using System.Linq;
 using System.Threading.Tasks;
@@ -52,11 +53,18 @@ namespace TACHYON.Shipping.ShippingRequests
             if (Points==null) return;
             foreach (var p in Points)
             {
-                await SendSmsToReceiver(p);
+                await SendSmsToReceiverAsync(p);
             }
         }
 
-        public async Task SendSmsToReceiversByTripId(long id)
+        public  Task SendSmsToReceiversByTripIdAsync(long id)
+        {
+            SendSmsToReceiversByTripId(id);
+            return Task.CompletedTask;
+        }
+
+        [UnitOfWork]
+        public void SendSmsToReceiversByTripId(long id)
         {
             var Points = _routPointRepository.GetAll()
                 .Include(r => r.ReceiverFk)
@@ -65,7 +73,7 @@ namespace TACHYON.Shipping.ShippingRequests
             if (Points == null) return;
             foreach (var p in Points)
             {
-                await SendSmsToReceiver(p);
+                SendSmsToReceiver(p);
             }
         }
         /// <summary>
@@ -73,7 +81,7 @@ namespace TACHYON.Shipping.ShippingRequests
         /// </summary>
         /// <param name="point"></param>
         /// <returns></returns>
-        private async Task SendSmsToReceiver(RoutPoint point)
+        public async  void SendSmsToReceiver(RoutPoint point)
         {
             string number= point.ReceiverPhoneNumber;
             string message = L(TACHYONConsts.SMSShippingRequestReceiverCode, point.Code);
@@ -81,11 +89,21 @@ namespace TACHYON.Shipping.ShippingRequests
             {
                 number = point.ReceiverFk.PhoneNumber;
             }
-            if (await CheckIfReceiverReceiveShipmentCodeBefore(point.Id, number)) return;
             await _smsSender.SendAsync(number, message);
 
         }
 
+        /// <summary>
+        /// Send shipment code to receiver
+        /// </summary>
+        /// <param name="point"></param>
+        /// <returns></returns>
+        private  Task SendSmsToReceiverAsync(RoutPoint point)
+        {
+            SendSmsToReceiver(point);
+
+            return Task.CompletedTask;
+        }
         /// <summary>
         /// Check if the receiver receive shipment Code before
         /// </summary>

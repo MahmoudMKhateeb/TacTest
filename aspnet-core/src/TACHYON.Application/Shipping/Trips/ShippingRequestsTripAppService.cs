@@ -185,9 +185,8 @@ namespace TACHYON.Shipping.Trips
             var RoutePoint = input.RoutPoints.OrderBy(x => x.PickingType);
             ShippingRequestTrip trip = ObjectMapper.Map<ShippingRequestTrip>(input);
 
-            var id = await _ShippingRequestTripRepository.InsertAndGetIdAsync(trip);
-            if (request.Status == ShippingRequestStatus.PostPrice)
-                await _shippingRequestManager.SendSmsToReceiversByTripId(id);
+            await _ShippingRequestTripRepository.InsertAsync(trip);
+
         }
 
         [AbpAuthorize(AppPermissions.Pages_ShippingRequestTrips_Edit)]
@@ -221,8 +220,6 @@ namespace TACHYON.Shipping.Trips
             }
 
             ObjectMapper.Map(input, trip);
-            if (request.Status == ShippingRequestStatus.PostPrice)
-                await _shippingRequestManager.SendSmsToReceiversByTripId(trip.Id);
         }
 
         [AbpAuthorize(AppPermissions.Pages_ShippingRequestTrips_Delete)]

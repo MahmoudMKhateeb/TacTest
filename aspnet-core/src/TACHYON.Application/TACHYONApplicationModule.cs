@@ -4,12 +4,14 @@ using Abp.Dependency;
 using Abp.Modules;
 using Abp.Reflection.Extensions;
 using Abp.Resources.Embedded;
+using Abp.Threading.BackgroundWorkers;
 using AutoMapper;
 using System.Linq;
 using System.Reflection;
 using TACHYON.Authorization;
 using TACHYON.Authorization.Permissions;
 using TACHYON.Authorization.Permissions.Shipping.Trips;
+using TACHYON.BackgroundWorkers.ShippingRequests;
 using TACHYON.Exporting;
 
 namespace TACHYON
@@ -70,6 +72,9 @@ namespace TACHYON
             var mapper = IocManager.Resolve<IMapper>();
 
             CustomDtoMapper.SetMapper(mapper);
+            var workManager = IocManager.Resolve<IBackgroundWorkerManager>();
+            workManager.Add(IocManager.Resolve<SendShipmentCodeToReceiverWorker>());
+
 
 
         }
