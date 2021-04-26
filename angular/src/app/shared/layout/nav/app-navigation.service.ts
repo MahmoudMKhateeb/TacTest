@@ -16,11 +16,154 @@ export class AppNavigationService {
   getMenu(): AppMenu {
     return new AppMenu('MainMenu', 'MainMenu', [
       //===================== Host ======================
-      new AppMenuItem('Dashboard', 'Pages.Administration.Host.Dashboard', 'flaticon-line-graph', '/app/admin/hostDashboard'),
+      // new AppMenuItem('Dashboard', 'Pages.Administration.Host.Dashboard', 'flaticon-line-graph', '/app/admin/hostDashboard'),
+
+      // ================== End Host
+
+      //================= Carrier ==================
+      new AppMenuItem(
+        'Dashboard',
+        'Pages.Tenant.Dashboard',
+        'flaticon-line-graph',
+        '/app/main/dashboard',
+        undefined,
+        undefined,
+        undefined,
+        undefined,
+        () => this._featureCheckerService.isEnabled('App.Carrier')
+      ),
+      new AppMenuItem(
+        'Documents',
+        '',
+        'flaticon-book',
+        '',
+        [],
+        [new AppMenuItem('SubmittedDocuments', 'Pages.DocumentFiles', 'flaticon-file', '/app/main/documentFiles/documentFiles')],
+        undefined,
+        undefined,
+        () => this._featureCheckerService.isEnabled('App.Carrier')
+      ),
+
+      new AppMenuItem('Marketplace', '', 'flaticon-more', '/app/main/marketPlace/marketPlace', undefined, undefined, undefined, undefined, () =>
+        this._featureCheckerService.isEnabled('App.Carrier')
+      ),
+      new AppMenuItem(
+        'DirectShippingRequests',
+        '',
+        'flaticon-more',
+        '/app/main/shippingRequests/directShippingRequests',
+        undefined,
+        undefined,
+        undefined,
+        undefined,
+        () => this._featureCheckerService.isEnabled('App.Carrier')
+      ),
+      new AppMenuItem(
+        'TMS',
+        '',
+        'flaticon-cogwheel',
+        '',
+        [],
+        [
+          new AppMenuItem(
+            'Drivers',
+            'Pages.Administration.Users',
+            'flaticon-users',
+            '/app/admin/drivers',
+            undefined,
+            undefined,
+            undefined,
+            undefined,
+            undefined
+          ),
+          new AppMenuItem('Trucks', 'Pages.Trucks', 'flaticon-truck', '/app/main/trucks/trucks', undefined, undefined, undefined, undefined, () =>
+            this._featureCheckerService.isEnabled('App.Carrier')
+          ),
+        ],
+        undefined,
+        undefined,
+        () => this._featureCheckerService.isEnabled('App.Carrier')
+      ),
+
+      new AppMenuItem(
+        'Invoices',
+        'Pages.Invoices',
+        'flaticon-book',
+        '',
+        [],
+        [
+          new AppMenuItem(
+            'InvoicesList',
+            'Pages.Invoices',
+            'flaticon2-document',
+            '/app/main/invoices/view',
+            undefined,
+            undefined,
+            undefined,
+            undefined,
+            () => this._featureCheckerService.isEnabled('App.Carrier')
+          ),
+        ],
+        undefined,
+        undefined,
+        () => this._featureCheckerService.isEnabled('App.Carrier')
+      ),
+      new AppMenuItem(
+        'UserManagement',
+        '',
+        'flaticon-user-settings',
+        '',
+        [],
+        [
+          new AppMenuItem('Roles', 'Pages.Administration.Roles', 'flaticon-suitcase', '/app/admin/roles'),
+          new AppMenuItem('Users', 'Pages.Administration.Users', 'flaticon-users', '/app/admin/users'),
+        ],
+        undefined,
+        undefined,
+        () => this._featureCheckerService.isEnabled('App.Carrier')
+      ),
+      new AppMenuItem(
+        'Settings',
+        'Pages.Administration.Tenant.Settings',
+        'flaticon-truck',
+        '',
+        [],
+        [
+          new AppMenuItem(
+            'TMSSettings',
+            '',
+            'flaticon-interface-8',
+            '',
+            [],
+            [new AppMenuItem('Vas', '', 'label label-danger label-dot', '/app/admin/vases/vases')]
+          ),
+          new AppMenuItem('GeneralSettings', 'Pages.Administration.Tenant.Settings', 'flaticon-settings', '/app/admin/tenantSettings'),
+        ],
+        undefined,
+        undefined,
+        () => this._featureCheckerService.isEnabled('App.Carrier')
+      ),
+
+      // new AppMenuItem('Vas', 'Pages.Administration.Vases', 'label label-danger label-dot', '/app/admin/vases/vases'),
+
+      // new AppMenuItem('VasPrices', 'Pages.VasPrices', 'flaticon-more', '/app/main/vases/vasPrices', undefined, undefined, undefined, undefined, () =>
+      // this._featureCheckerService.isEnabled('App.Carrier')
+      // ),
+
+      //================= End Carrier ===============
 
       //================= Shipper =================
-
-      new AppMenuItem('Dashboard', 'Pages.Tenant.Dashboard', 'flaticon-line-graph', '/app/main/dashboard'),
+      new AppMenuItem(
+        'Dashboard',
+        'Pages.Tenant.Dashboard',
+        'flaticon-line-graph',
+        '/app/main/dashboard',
+        undefined,
+        undefined,
+        undefined,
+        undefined,
+        () => this._featureCheckerService.isEnabled('App.Shipper')
+      ),
 
       new AppMenuItem(
         'Documents',
@@ -29,18 +172,12 @@ export class AppNavigationService {
         '',
         [],
         [
-          new AppMenuItem('DocumentManagement', 'Pages.DocumentTypes', 'flaticon2-document', '/app/main/documentTypes/documentTypes'),
-          new AppMenuItem('DocumentsEntities', 'Pages.DocumentsEntities', 'flaticon-doc', '/app/main/documentsEntities/documentsEntities'),
           new AppMenuItem('SubmittedDocuments', 'Pages.DocumentFiles', 'flaticon-file', '/app/main/documentFiles/documentFiles'),
-
-          new AppMenuItem(
-            'DocumentTypeTranslations',
-            'Pages.DocumentTypeTranslations',
-            'flaticon-file-1',
-            '/app/main/documentTypeTranslations/documentTypeTranslations'
-          ),
           // new AppMenuItem('TenantRequiredDocuments', '', 'flaticon-settings', '/app/admin/tenantRequiredDocuments'),
-        ]
+        ],
+        undefined,
+        undefined,
+        () => this._featureCheckerService.isEnabled('App.Shipper')
       ),
       new AppMenuItem(
         'Requests',
@@ -57,15 +194,15 @@ export class AppNavigationService {
             undefined,
             undefined,
             undefined,
-            undefined
-            /*,() => this._featureCheckerService.isEnabled('App.Shipper')*/
+            undefined /*,() => this._featureCheckerService.isEnabled('App.Shipper')*/
           ),
           new AppMenuItem('waybills', undefined, 'flaticon-more', '/app/admin/waybills/waybills'),
         ],
         undefined,
-        undefined /*,
-        () => this._featureCheckerService.isEnabled('App.Shipper')*/
+        undefined,
+        () => this._featureCheckerService.isEnabled('App.Shipper')
       ),
+
       new AppMenuItem(
         'Invoices',
         'Pages.Invoices',
@@ -90,9 +227,12 @@ export class AppNavigationService {
             undefined,
             undefined,
             undefined,
-            () => !this._featureCheckerService.isEnabled('App.Shipper')
+            () => this._featureCheckerService.isEnabled('App.Shipper')
           ),
-        ]
+        ],
+        undefined,
+        undefined,
+        () => this._featureCheckerService.isEnabled('App.Shipper')
       ),
 
       new AppMenuItem(
@@ -115,11 +255,46 @@ export class AppNavigationService {
           ),
         ],
         undefined,
-        undefined
-        // () => !this._featureCheckerService.isEnabled('App.Shipper')
+        undefined,
+        () => this._featureCheckerService.isEnabled('App.Shipper')
+      ),
+
+      new AppMenuItem(
+        'UserManagement',
+        '',
+        'flaticon-user-settings',
+        '',
+        [],
+        [
+          new AppMenuItem('Roles', 'Pages.Administration.Roles', 'flaticon-suitcase', '/app/admin/roles'),
+          new AppMenuItem('Users', 'Pages.Administration.Users', 'flaticon-users', '/app/admin/users'),
+        ],
+        undefined,
+        undefined,
+        () => this._featureCheckerService.isEnabled('App.Shipper')
       ),
 
       //==================== End Shipper ======================
+      new AppMenuItem(
+        'Documents',
+        '',
+        'flaticon-book',
+        '',
+        [],
+        [
+          new AppMenuItem('DocumentManagement', 'Pages.DocumentTypes', 'flaticon2-document', '/app/main/documentTypes/documentTypes'),
+          new AppMenuItem('DocumentsEntities', 'Pages.DocumentsEntities', 'flaticon-doc', '/app/main/documentsEntities/documentsEntities'),
+          // new AppMenuItem('SubmittedDocuments', 'Pages.DocumentFiles', 'flaticon-file', '/app/main/documentFiles/documentFiles'),
+
+          new AppMenuItem(
+            'DocumentTypeTranslations',
+            'Pages.DocumentTypeTranslations',
+            'flaticon-file-1',
+            '/app/main/documentTypeTranslations/documentTypeTranslations'
+          ),
+          // new AppMenuItem('TenantRequiredDocuments', '', 'flaticon-settings', '/app/admin/tenantRequiredDocuments'),
+        ]
+      ),
       new AppMenuItem(
         'FinancialTransActionMenu',
         'Pages.Administration.Host.Invoices.Periods',
@@ -186,21 +361,7 @@ export class AppNavigationService {
       //   () => this._featureCheckerService.isEnabled('App.Carrier')
       // ),
       //Host
-      new AppMenuItem(
-        'Shipping Requests',
-        '',
-        'flaticon-interface-8',
-        '',
-        [],
-        [
-          new AppMenuItem('Marketplace', '', 'flaticon-more', '/app/main/marketPlace/marketPlace'),
-          new AppMenuItem('DirectShippingRequests', '', 'flaticon-more', '/app/main/shippingRequests/directShippingRequests'),
-          new AppMenuItem('MyShippingRequests', '', 'flaticon-more', '/app/main/shippingRequests/shippingRequests'),
-        ],
-        undefined,
-        undefined,
-        () => this._featureCheckerService.isEnabled('App.Carrier')
-      ),
+
       //carrier
       new AppMenuItem('ShippingTypes', 'Pages.ShippingTypes', 'flaticon-more', '/app/main/shippingTypes/shippingTypes'),
       new AppMenuItem('PackingTypes', 'Pages.PackingTypes', 'flaticon-more', '/app/main/packingTypes/packingTypes'),
@@ -272,34 +433,6 @@ export class AppNavigationService {
         // () => this._featureCheckerService.isEnabled('App.Host')
       ),
 
-      // Carrier
-      new AppMenuItem(
-        'TMS',
-        '',
-        'flaticon-cogwheel',
-        '',
-        [],
-        [
-          new AppMenuItem(
-            'Drivers',
-            'Pages.Administration.Users',
-            'flaticon-users',
-            '/app/admin/drivers',
-            undefined,
-            undefined,
-            undefined,
-            undefined,
-            undefined
-          ),
-          new AppMenuItem('Trucks', 'Pages.Trucks', 'flaticon-truck', '/app/main/trucks/trucks', undefined, undefined, undefined, undefined, () =>
-            this._featureCheckerService.isEnabled('App.Carrier')
-          ),
-        ],
-        undefined,
-        undefined,
-        () => this._featureCheckerService.isEnabled('App.Carrier')
-      ),
-
       // Host
       new AppMenuItem(
         'Administration',
@@ -312,6 +445,18 @@ export class AppNavigationService {
           new AppMenuItem('Editions', 'Pages.Editions', 'flaticon-app', '/app/admin/editions'),
         ]
       ),
+
+      // new AppMenuItem(
+      //   'UserManagement',
+      //   '',
+      //   'flaticon-user-settings',
+      //   '',
+      //   [],
+      //   [
+      //     new AppMenuItem('Roles', 'Pages.Administration.Roles', 'flaticon-suitcase', '/app/admin/roles'),
+      //     new AppMenuItem('Users', 'Pages.Administration.Users', 'flaticon-users', '/app/admin/users'),
+      //   ]
+      // ),
 
       // Host
       // new AppMenuItem('Vas', 'Pages.Administration.Vases', 'label label-danger label-dot', '/app/admin/vases/vases'),
@@ -327,33 +472,8 @@ export class AppNavigationService {
       //   () => this._featureCheckerService.isEnabled('App.Carrier')
       // ),
       new AppMenuItem('Vases', 'Pages.Administration.Vases', 'flaticon-more', '/app/admin/vases/vases'),
-      new AppMenuItem('VasPrices', 'Pages.VasPrices', 'flaticon-more', '/app/main/vases/vasPrices', undefined, undefined, undefined, undefined, () =>
-        this._featureCheckerService.isEnabled('App.Carrier')
-      ),
-      new AppMenuItem('Vas', 'Pages.Administration.Vases', 'label label-danger label-dot', '/app/admin/vases/vases'),
-      new AppMenuItem(
-        'VasPrices',
-        'Pages.VasPrices',
-        'label label-danger label-dot',
-        '/app/main/vases/vasPrices',
-        undefined,
-        undefined,
-        undefined,
-        undefined,
-        () => this._featureCheckerService.isEnabled('App.Carrier')
-      ),
+
       // Host
-      new AppMenuItem(
-        'UserManagement',
-        '',
-        'flaticon-user-settings',
-        '',
-        [],
-        [
-          new AppMenuItem('Roles', 'Pages.Administration.Roles', 'flaticon-suitcase', '/app/admin/roles'),
-          new AppMenuItem('Users', 'Pages.Administration.Users', 'flaticon-users', '/app/admin/users'),
-        ]
-      ),
 
       // new AppMenuItem('Routes', 'Pages.Routes', 'flaticon-map-location', '/app/main/routs/routes', undefined, undefined, undefined, undefined, () =>
       //   this._featureCheckerService.isEnabled('App.Carrier')
@@ -516,7 +636,9 @@ export class AppNavigationService {
           //  ),
 
           new AppMenuItem('Settings', 'Pages.Administration.Host.Settings', 'flaticon-settings', '/app/admin/hostSettings'),
-          new AppMenuItem('Settings', 'Pages.Administration.Tenant.Settings', 'flaticon-settings', '/app/admin/tenantSettings'),
+
+          // new AppMenuItem('Settings', 'Pages.Administration.Tenant.Settings', 'flaticon-settings', '/app/admin/tenantSettings'  ),
+
           new AppMenuItem(
             'TermAndConditions',
             'Pages.TermAndConditions',
