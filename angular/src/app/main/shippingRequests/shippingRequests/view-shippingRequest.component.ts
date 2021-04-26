@@ -1,5 +1,4 @@
 import { ChangeDetectorRef, Component, Inject, Injector, OnInit, ViewChild } from '@angular/core';
-
 import {
   GetShippingRequestForViewOutput,
   ShippingRequestBidsServiceProxy,
@@ -121,13 +120,12 @@ export class ViewShippingRequestComponent extends AppComponentBase implements On
   }
 
   canSeeShippingRequestTrips() {
-    //if there is no carrier price and the current user in not a carrier Hide Trips Section
+    //if there is no carrierTenantId  and the current user in not a carrier Hide Trips Section
     if (this.feature.isEnabled('App.Carrier') && !this.shippingRequestforView.shippingRequest.carrierTenantId) {
       return false;
-      // console.log('1111111111111111111111111111');
     } else if (this.feature.isEnabled('App.TachyonDealer')) {
       //if Tachyon Dealer
-      return false;
+      return true;
     }
     //By Default
     return true;
@@ -137,25 +135,21 @@ export class ViewShippingRequestComponent extends AppComponentBase implements On
    * this function validates who Can See And Access the DirectRequests List in ViewShippingRequest
    */
   canSeeDirectRequests() {
-    //if there is an active shipping Request id and the user is TachyonDealer and the ShippingRequest Type is not bid
-    if (this.activeShippingRequestId && this.feature.isEnabled('App.TachyonDealer') && !this.shippingRequestforView.shippingRequest.isBid) {
+    //if there is an active shipping Request id and the user is TachyonDealer and there still no Carrier assigned to this shipping Reqeust
+    if (this.activeShippingRequestId && this.feature.isEnabled('App.TachyonDealer') && !this.shippingRequestforView.shippingRequest.carrierTenantId) {
       return true;
     }
     return false;
   }
 
   /**
-   * Validaties who can See the Price Offering Component
+   * this function validates who Can See Price Offers
    */
   canSeePriceOffers() {
-    //Carrier Cant See Price Offering Table
-    if (this.feature.isEnabled('App.Carrier')) {
-      return false;
-      //if there is a price for the Shipping Request No need For Displaying it
-    } else if (this.shippingRequestforView.shippingRequest.price) {
+    // if the user is carrier
+    if (this.feature.isEnabled('App.Carrier') || this.shippingRequestforView.shippingRequest.price) {
       return false;
     }
-    //otherwise Display IT
     return true;
   }
 }
