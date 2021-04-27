@@ -314,6 +314,7 @@
                     id="MaxFailedAccessAttemptsBeforeLockout"
                     type="number"
                     name="MaxFailedAccessAttemptsBeforeLockout"
+                    min="1"
                     class="form-control"
                     [ngClass]="{ edited: hostSettings.security.userLockOut.maxFailedAccessAttemptsBeforeLockout }"
                     [(ngModel)]="hostSettings.security.userLockOut.maxFailedAccessAttemptsBeforeLockout"
@@ -326,6 +327,7 @@
                     type="number"
                     name="DefaultAccountLockoutSeconds"
                     class="form-control"
+                    min="1"
                     [ngClass]="{ edited: hostSettings.security.userLockOut.defaultAccountLockoutSeconds }"
                     [(ngModel)]="hostSettings.security.userLockOut.defaultAccountLockoutSeconds"
                   />
