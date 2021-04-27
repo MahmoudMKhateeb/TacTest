@@ -43,9 +43,7 @@
 
                     <tr *ngFor="let SingleCarrierBid of AllCarrierBidsArray">
                       <td class="pl-0">
-                        <a href="#" class="text-dark font-weight-bolder text-hover-primary font-size-lg">
-                          {{ SingleCarrierBid.shipperTenancyName }}
-                        </a>
+                        {{ SingleCarrierBid.shipperTenancyName }}
                       </td>
                       <td>
                         <span class="text-dark-75 font-weight-bolder d-block font-size-lg"> {{ SingleCarrierBid.shippingRequestBidDto.price }}</span>

@@ -4,7 +4,13 @@ import { appModuleAnimation } from '@shared/animations/routerTransition';
 import { LazyLoadEvent } from 'primeng/public_api';
 import { Table } from 'primeng/table';
 import * as _ from 'lodash';
-import { ShippingRequestReasonAccidentServiceProxy, IShippingRequestReasonAccidentListDto } from '@shared/service-proxies/service-proxies';
+import {
+  ShippingRequestReasonAccidentServiceProxy,
+  IShippingRequestReasonAccidentListDto,
+  FilterInput,
+} from '@shared/service-proxies/service-proxies';
+import { FileDownloadService } from '@shared/utils/file-download.service';
+
 @Component({
   templateUrl: './reason.component.html',
   animations: [appModuleAnimation()],
@@ -16,7 +22,11 @@ export class AccidentReasonComponent extends AppComponentBase {
   filterText: string = '';
   Reasons: IShippingRequestReasonAccidentListDto[] = [];
   IsStartSearch = false;
-  constructor(injector: Injector, private _ServiceProxy: ShippingRequestReasonAccidentServiceProxy) {
+  constructor(
+    injector: Injector,
+    private _ServiceProxy: ShippingRequestReasonAccidentServiceProxy,
+    private _fileDownloadService: FileDownloadService
+  ) {
     super(injector);
   }
 
@@ -42,5 +52,13 @@ export class AccidentReasonComponent extends AppComponentBase {
     });
   }
 
-  exportToExcel(): void {}
+  exportToExcel(): void {
+    var data = {
+      filter: this.filterText,
+      sorting: this.primengTableHelper.getSorting(this.dataTable),
+    };
+    this._ServiceProxy.exports(data as FilterInput).subscribe((result) => {
+      this._fileDownloadService.downloadTempFile(result);
+    });
+  }
 }

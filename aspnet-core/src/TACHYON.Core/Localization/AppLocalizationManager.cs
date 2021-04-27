@@ -73,12 +73,22 @@ namespace TACHYON.Localization
 
             XmlElement texts = doc.CreateElement(string.Empty, "texts", string.Empty);
             localizationDictionary.AppendChild(texts);
-            foreach (var lang in languages)
+            foreach (var lang in languages.OrderBy(x=>x.MasterKey))
             {
                 XmlElement text = doc.CreateElement(string.Empty, "text", string.Empty);
                 text.SetAttribute("name", lang.MasterKey);
-                text.InnerText = lang.MasterValue;
-                texts.AppendChild(text);
+                try
+                {
+
+                    text.InnerXml = lang.MasterValue;//.Trim().Replace("<br>", "<br/>").Replace("&", "&amp;");
+                    texts.AppendChild(text);
+                }
+                catch (Exception e)
+                {
+                    text.InnerXml = $"<![CDATA[{lang.MasterValue.Trim()}]]>"; 
+                    texts.AppendChild(text);
+                }
+
             }
             doc.Save(path);
             return Task.CompletedTask;

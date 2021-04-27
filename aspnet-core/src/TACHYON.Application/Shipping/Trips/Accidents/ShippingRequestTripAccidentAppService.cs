@@ -326,8 +326,8 @@ namespace TACHYON.Shipping.Trips.Accidents
                 UserIdentifiers.Add(new UserIdentifier(routPoint.ShippingRequestTripFk.ShippingRequestFk.CarrierTenantId, (long)routPoint.ShippingRequestTripFk.AssignedDriverUserId));
             }
             var data = new Dictionary<string, object>();
-            data["ShipimentNo"] = routPoint.ShippingRequestTripFk.ShippingRequestId;
-            data["AccidentId"] = AccidentId;
+            data["id"] = routPoint.ShippingRequestTripFk.ShippingRequestId;
+            data["accidentid"] = AccidentId;
 
             await _appNotifier.ShippingRequestAccidentsOccure(UserIdentifiers, data);
         }
