@@ -321,6 +321,12 @@ namespace TACHYON
             configuration.CreateMap<CreateOrEditTruckDto, Truck>().ReverseMap();
             configuration.CreateMap<ImportTruckDto, Truck>().ReverseMap();
             configuration.CreateMap<TruckDto, Truck>().ReverseMap();
+
+            configuration.CreateMap<Truck, GetTruckForViewOutput>()
+                .ForMember(dest => dest.Truck, opt => opt.MapFrom(src => src))
+                .ForMember(dest => dest.TruckStatusDisplayName, opt => opt.MapFrom(src => src.TruckStatusFk.DisplayName))
+                .ForMember(dest => dest.TrucksTypeDisplayName, opt => opt.MapFrom(src => src.TrucksTypeFk.DisplayName));
+
             configuration.CreateMap<CreateOrEditTrucksTypeDto, TrucksType>().ReverseMap();
             configuration.CreateMap<TrucksTypeDto, TrucksType>().ReverseMap();
             configuration.CreateMap<CreateOrEditTruckStatusDto, TruckStatus>().ReverseMap();

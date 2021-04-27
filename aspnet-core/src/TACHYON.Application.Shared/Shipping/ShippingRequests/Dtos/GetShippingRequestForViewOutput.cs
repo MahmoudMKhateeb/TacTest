@@ -32,7 +32,7 @@ namespace TACHYON.Shipping.ShippingRequests.Dtos
         public int TotalsTripsAddByShippier { get; set; }
         //this field special to tachyon user
         public decimal? CarrierPrice { get; set; }
-
+        public string CarrierName { get; set; }
 
     }
 }
