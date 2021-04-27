@@ -538,6 +538,7 @@
     <text name="InvoiceVasRemarksAmount">الكمية:{0}</text>
     <text name="InvoiceVasRemarksCount">العدد:{0}</text>
     <text name="TachyonDealOfferRejectedByShipper">تم رفض العرض المالي من قبل الشاحن {clientname}.</text>
+    <text name="NewTripAssign">تم اسناد رحلة جديدة لك</text>
     <text name="DriectRequestCarrierRespone">{clientname} قام بوضع عرض مالي للشحنة رقم: {ShipimentNo}.</text>
     <text name="SendDriectRequestForCarrier">يرجى إرسال عرض أسعار الشحنة رقم.: {ShipimentNo}.</text>
     <text name="TachyonDealOfferAccepByShipper">تم الموافقة العرض المالي من قبل الشاحن  {clientname}.</text>
@@ -1297,5 +1298,7 @@
     <text name="AppLocalization">المصطلحات</text>
     <text name="PricingOffer">عرض التسعير</text>
     <text name="SMSOTP">رمز:{0}</text>
+    <text name="DriverTripReminder">لديك رحلة جديدة غداً</text>
+    <text name="ShipperReminderToCompelteTrips">لديك شحنة لم تكمل الرحلات الخاصة بها</text>
   </texts>
 </localizationDictionary>

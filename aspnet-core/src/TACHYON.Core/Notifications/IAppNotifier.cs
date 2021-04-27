@@ -65,6 +65,8 @@ namespace TACHYON.Notifications
         #endregion
         #region Shipping Request
         Task ShippingRequestNotifyCarrirerWhenShipperAccepted(ShippingRequest shippingRequest);
+        Task ShipperReminderToCompelteTrips(UserIdentifier user,ShippingRequest shippingRequest);
+
         #endregion
         Task WelcomeToTheApplicationAsync(User user);
 

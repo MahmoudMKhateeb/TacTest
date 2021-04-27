@@ -353,7 +353,7 @@ namespace TACHYON.Shipping.Drivers
         [AbpAllowAnonymous]
         public async Task PushNotification(int TripId)
         {
-            await _firebaseNotifier.PushNotificationToDriverWhenAssignTrip(6, TripId.ToString());
+            await _firebaseNotifier.PushNotificationToDriverWhenAssignTrip(new Abp.UserIdentifier(5,7), TripId.ToString());
         }
 
 

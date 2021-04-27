@@ -664,6 +664,17 @@ namespace TACHYON.Notifications
 
             await _notificationPublisher.PublishAsync(AppNotificationNames.ShippingRequestNotifyCarrirerWhenShipperAccepted, notificationData, userIds: new[] { await GetAdminUser(shippingRequest.CarrierTenantId) });
         }
+        public async Task ShipperReminderToCompelteTrips(UserIdentifier user, ShippingRequest shippingRequest)
+        {
+            var notificationData = new LocalizableMessageNotificationData(
+                new LocalizableString(
+                    L("ShipperReminderToCompelteTrips"),
+                    TACHYONConsts.LocalizationSourceName
+                )
+            );
+            notificationData["id"] = shippingRequest.Id;
+            await _notificationPublisher.PublishAsync(AppNotificationNames.ShipperReminderToCompelteTrips, notificationData, userIds: new[] { user });
+        }
         #endregion
         #endregion
 

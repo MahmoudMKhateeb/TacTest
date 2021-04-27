@@ -2,6 +2,7 @@
 using Abp.Dependency;
 using Abp.Domain.Repositories;
 using Abp.Domain.Uow;
+using Abp.Localization;
 using Abp.Threading.BackgroundWorkers;
 using Abp.Threading.Timers;
 using Abp.Timing;
@@ -33,25 +34,36 @@ namespace TACHYON.BackgroundWorkers.ShippingRequests
         {
             using (CurrentUnitOfWork.DisableFilter(AbpDataFilters.MustHaveTenant, AbpDataFilters.MayHaveTenant))
             {
-                var routePoints = _shippingRequestTripRepository.
+                var Trips = _shippingRequestTripRepository.
                     GetAll().        
                     AsNoTracking().
+                    Include(r=>r.ShippingRequestFk).
                     Include(p=>p.RoutPoints).
                         ThenInclude(r=>r.ReceiverFk).
                     Where(x => x.ShippingRequestFk.Status == Shipping.ShippingRequests.ShippingRequestStatus.PostPrice &&
-                    x.Status == Shipping.Trips.ShippingRequestTripStatus.StandBy && x.Id !=3 &&
-                    EF.Functions.DateDiffDay(Clock.Now, x.StartTripDate)==-1).Select(x=>x.RoutPoints).ToList();
-            
-                routePoints.ForEach(Points =>
+                    x.Status == Shipping.Trips.ShippingRequestTripStatus.StandBy && 
+                    EF.Functions.DateDiffDay(Clock.Now.Date, x.StartTripDate.Date)==-1).OrderBy(x=>x.ShippingRequestFk.TenantId).ToList();
+
+
+                Trips.ForEach(t =>
                 {
-                    foreach (var p in Points)
+                    string Culture=default;
+                   
+                    if (t.RoutPoints.Count>0)
                     {
-                        _shippingRequestManager.SendSmsToReceiver(p);
-                        Task.Delay(1000);
+                        var routPoints = t.RoutPoints.ToList();
+                        Culture = _settingManager.GetSettingValueForUser(LocalizationSettingNames.DefaultLanguage, t.ShippingRequestFk.TenantId, t.ShippingRequestFk.CreatorUserId.Value, true);
+
+                        routPoints.ForEach(p =>
+                        {
+                           _shippingRequestManager.SendSmsToReceiver(p, Culture);
+                            Task.Delay(1000);
+                        });
                     }
+
                 });
             }
-              //  _settingManager.GetSettingValueForUser(LocalizationSettingNames.DefaultLanguage, 1, 3, true);
+              
 
         }
     }

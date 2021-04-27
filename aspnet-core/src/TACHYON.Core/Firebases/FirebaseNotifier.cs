@@ -7,26 +7,48 @@ using System.Linq;
 using Abp.Timing;
 using Abp.Localization;
 using System;
+using Abp.Configuration;
+using Abp;
+using System.Globalization;
 
 namespace TACHYON.Firebases
 {
-    public  class FirebaseNotifier: IFirebaseNotifier
+    public  class FirebaseNotifier: TACHYONServiceBase, IFirebaseNotifier
     {
 
         public FirebaseMessaging messaging { get; set; }
         private readonly IRepository<UserDeviceToken> _userDeviceToken;
-        private readonly ILocalizationManager _localizationManager;
-        public FirebaseNotifier(IRepository<UserDeviceToken> userDeviceToken, ILocalizationManager localizationManager)
+        private readonly ISettingManager _settingManager;
+        public FirebaseNotifier(IRepository<UserDeviceToken> userDeviceToken, ISettingManager settingManager)
         {
             messaging = FirebaseMessaging.DefaultInstance;
             _userDeviceToken = userDeviceToken;
-            _localizationManager = localizationManager;
+            _settingManager = settingManager;
 
         }
-
-        public async Task PushNotificationToDriverWhenAssignTrip(long driverId, string TripId)
+        public async Task General
+            (
+                UserIdentifier user,
+                Dictionary<string, string> data,
+                string clickAction,
+                string localizeKey
+            )
         {
-            string Title = L("NewTripAssign");
+            string Title = L(localizeKey, GetCulture(user));
+            var message = new Message()
+            {
+                Notification = new Notification
+                {
+                    Title = Title,
+                },
+                Data = data
+            };
+            await SendMessage(user.UserId, message, clickAction);
+        }
+
+        public async Task PushNotificationToDriverWhenAssignTrip(UserIdentifier user, string TripId)
+        {
+            string Title = L("NewTripAssign", GetCulture(user));
             var message = new Message()
             {
                 Notification = new Notification
@@ -39,8 +61,27 @@ namespace TACHYON.Firebases
                     ["tripId"] = TripId
                 }
             };
-            await SendMessage(driverId, message, "ViewComingLoadInfoActivity");
+            await SendMessage(user.UserId, message, "ViewComingLoadInfoActivity");
         }
+
+        public async Task ReminderDriverForTrip(UserIdentifier user, string TripId)
+        {
+            string Title = L("DriverTripReminder", GetCulture(user));
+            var message = new Message()
+            {
+                Notification = new Notification
+                {
+                    Title = Title,
+                },
+                Data = new Dictionary<string, string>()
+                {
+                    ["id"] = TripId,
+                    ["tripId"] = TripId
+                }
+            };
+            await SendMessage(user.UserId, message, "ViewComingLoadInfoActivity");
+        }
+
 
 
         #region Helper
@@ -65,19 +106,20 @@ namespace TACHYON.Firebases
                     };
                     await messaging.SendAsync(message);
                 }
-                catch (Exception e)
+                catch 
                 {
 
                 }
             }
         }
+
         private Task<IQueryable<UserDeviceToken>> GetUserDevices(long UserId)
         {
             return Task.FromResult(_userDeviceToken.GetAll().Where(x => x.UserId == UserId && (!x.ExpireDate.HasValue || x.ExpireDate >= Clock.Now)));
         }
-        private string L(string name)
+        private  CultureInfo GetCulture(UserIdentifier user)
         {
-            return _localizationManager.GetString(TACHYONConsts.LocalizationSourceName, "NewTripAssign");
+           return new CultureInfo(_settingManager.GetSettingValueForUser(LocalizationSettingNames.DefaultLanguage, user.TenantId, user.UserId, true)) ;
         }
         #endregion
     }

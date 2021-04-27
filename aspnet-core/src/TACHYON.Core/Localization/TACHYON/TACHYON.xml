@@ -1678,5 +1678,8 @@
     <text name="AppLocalization">Terminologies</text>
     <text name="PricingOffer">Pricing offer</text>
     <text name="SMSOTP">your otp code is {0}</text>
+    <text name="jk">hujk</text>
+    <text name="DriverTripReminder">You have new trip start tomorrow</text>
+    <text name="ShipperReminderToCompelteTrips">You have a shipment that has not completed its journeys</text>
   </texts>
 </localizationDictionary>

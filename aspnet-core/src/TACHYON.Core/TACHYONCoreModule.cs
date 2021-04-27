@@ -1,30 +1,25 @@
-﻿using Abp.Application.Features;
-using Abp.AspNetZeroCore;
+﻿using Abp.AspNetZeroCore;
 using Abp.AspNetZeroCore.Timing;
 using Abp.AutoMapper;
 using Abp.Configuration.Startup;
 using Abp.Dependency;
-using Abp.Localization.Dictionaries.Xml;
-using Abp.Localization.Sources;
 using Abp.MailKit;
 using Abp.Modules;
 using Abp.Net.Mail;
 using Abp.Net.Mail.Smtp;
 using Abp.Reflection.Extensions;
-using Abp.Runtime.Validation;
+using Abp.Threading.BackgroundWorkers;
 using Abp.Timing;
-using Abp.UI.Inputs;
 using Abp.Zero;
 using Abp.Zero.Configuration;
 using Abp.Zero.Ldap;
-using Abp.Zero.Ldap.Configuration;
 using Castle.MicroKernel.Registration;
 using MailKit.Security;
 using System;
 using TACHYON.Authorization.Delegation;
-using TACHYON.Authorization.Ldap;
 using TACHYON.Authorization.Roles;
 using TACHYON.Authorization.Users;
+using TACHYON.BackgroundWorkers.ShippingRequests;
 using TACHYON.Chat;
 using TACHYON.Configuration;
 using TACHYON.DashboardCustomization.Definitions;
@@ -135,7 +130,12 @@ namespace TACHYON
             IocManager.Resolve<AppTimes>().StartupTime = Clock.Now;
 
 
-  
+            var workManager = IocManager.Resolve<IBackgroundWorkerManager>();
+            workManager.Add(IocManager.Resolve<SendShipmentCodeToReceiverWorker>());
+            workManager.Add(IocManager.Resolve<DriverTripReminderWorker>());
+            workManager.Add(IocManager.Resolve<ShipperReminderToCompelteTripsWroker>());
+            
+
         }
     }
 }

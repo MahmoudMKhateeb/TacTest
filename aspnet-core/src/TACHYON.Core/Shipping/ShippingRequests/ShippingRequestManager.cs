@@ -1,6 +1,7 @@
 ﻿using Abp.Domain.Repositories;
 using Abp.Domain.Uow;
 using Microsoft.EntityFrameworkCore;
+using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
 using TACHYON.Net.Sms;
@@ -36,55 +37,20 @@ namespace TACHYON.Shipping.ShippingRequests
         public async Task SetToPostPrice(ShippingRequest shippingRequest)
         {
             shippingRequest.Status = ShippingRequestStatus.PostPrice;
-            await SendSmsToReceiversByShippingRequestId(shippingRequest.Id);
             await _appNotifier.ShippingRequestNotifyCarrirerWhenShipperAccepted(shippingRequest);
         }
-        /// <summary>
-        /// Call only when the shipping status post price
-        /// </summary>
-        /// <param name="shippingRequest"></param>
-        /// <returns></returns>
-        private async Task SendSmsToReceiversByShippingRequestId(long ShippingRequestId)
-        {
-            var Points = _routPointRepository.GetAll()
-                .Include(r=>r.ReceiverFk)
-                .AsTracking()
-                .Where(x => x.ShippingRequestTripFk.ShippingRequestId == ShippingRequestId  && x.PickingType== PickingType.Dropoff);
-            if (Points==null) return;
-            foreach (var p in Points)
-            {
-                await SendSmsToReceiverAsync(p);
-            }
-        }
 
-        public  Task SendSmsToReceiversByTripIdAsync(long id)
-        {
-            SendSmsToReceiversByTripId(id);
-            return Task.CompletedTask;
-        }
 
-        [UnitOfWork]
-        public void SendSmsToReceiversByTripId(long id)
-        {
-            var Points = _routPointRepository.GetAll()
-                .Include(r => r.ReceiverFk)
-                .AsTracking()
-                .Where(x => x.ShippingRequestTripId == id && x.PickingType == PickingType.Dropoff);
-            if (Points == null) return;
-            foreach (var p in Points)
-            {
-                SendSmsToReceiver(p);
-            }
-        }
+  
         /// <summary>
         /// Send shipment code to receiver
         /// </summary>
         /// <param name="point"></param>
         /// <returns></returns>
-        public async  void SendSmsToReceiver(RoutPoint point)
+        public async  void SendSmsToReceiver(RoutPoint point,string Culture)
         {
             string number= point.ReceiverPhoneNumber;
-            string message = L(TACHYONConsts.SMSShippingRequestReceiverCode, point.Code);
+            string message = L(TACHYONConsts.SMSShippingRequestReceiverCode, new CultureInfo(Culture) , point.Code);
            if (point.ReceiverFk !=null)
             {
                 number = point.ReceiverFk.PhoneNumber;
@@ -93,31 +59,5 @@ namespace TACHYON.Shipping.ShippingRequests
 
         }
 
-        /// <summary>
-        /// Send shipment code to receiver
-        /// </summary>
-        /// <param name="point"></param>
-        /// <returns></returns>
-        private  Task SendSmsToReceiverAsync(RoutPoint point)
-        {
-            SendSmsToReceiver(point);
-
-            return Task.CompletedTask;
-        }
-        /// <summary>
-        /// Check if the receiver receive shipment Code before
-        /// </summary>
-        /// <param name="id"></param>
-        /// <param name="PhoneNumber"></param>
-        /// <returns></returns>
-        private async Task<bool> CheckIfReceiverReceiveShipmentCodeBefore(long id,string PhoneNumber)
-        {
-            if (! await _receiverReceiveShipmentCodeRepository.GetAll().AnyAsync(x=>x.PointId== id && x.ReceiverPhone == PhoneNumber))
-            {
-                await _receiverReceiveShipmentCodeRepository.InsertAsync(new  RoutePointReceiverReceiveShipmentCode(id, PhoneNumber));
-                return false;
-            }
-            return true;
-        }
     }
 }

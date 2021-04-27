@@ -1,4 +1,5 @@
-﻿using Abp.Dependency;
+﻿using Abp;
+using Abp.Dependency;
 using FirebaseAdmin.Messaging;
 using System;
 using System.Collections.Generic;
@@ -10,7 +11,10 @@ namespace TACHYON.Firebases
    public interface IFirebaseNotifier : ITransientDependency
     {
         FirebaseMessaging messaging { get; set; }
-        Task PushNotificationToDriverWhenAssignTrip(long driverId, string TripId);
+        Task General(UserIdentifier user, Dictionary<string, string> data, string clickAction, string localizeKey);
+        Task PushNotificationToDriverWhenAssignTrip(UserIdentifier user, string TripId);
+        Task ReminderDriverForTrip(UserIdentifier user, string TripId);
+
 
     }
 }

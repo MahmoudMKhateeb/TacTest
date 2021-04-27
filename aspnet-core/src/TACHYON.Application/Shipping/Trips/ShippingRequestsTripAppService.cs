@@ -154,7 +154,10 @@ namespace TACHYON.Shipping.Trips
         public async Task AssignDriverAndTruckToShippmentByCarrier(AssignDriverAndTruckToShippmentByCarrierInput input)
         {
             DisableTenancyFilters();
-            var trip = await _ShippingRequestTripRepository.GetAll().Include(e => e.ShippingRequestFk)
+            var trip = await _ShippingRequestTripRepository.
+                GetAll().
+                Include(e => e.ShippingRequestFk)
+                .Include(d=>d.AssignedDriverUserFk)
                 .Where(e => e.Id == input.Id)
                 .Where(e => e.ShippingRequestFk.CarrierTenantId == AbpSession.TenantId && e.DriverStatus != ShippingRequestTripDriverStatus.Accepted)
                 .FirstOrDefaultAsync();
@@ -174,7 +177,7 @@ namespace TACHYON.Shipping.Trips
             if (oldAssignedDriverUserId != trip.AssignedDriverUserId)
             {
                 await _appNotifier.NotifyDriverWhenAssignToTrip(trip);
-                await _firebase.PushNotificationToDriverWhenAssignTrip(trip.AssignedDriverUserId.Value, trip.Id.ToString());
+                await _firebase.PushNotificationToDriverWhenAssignTrip(new UserIdentifier(trip.AssignedDriverUserFk.TenantId, trip.AssignedDriverUserId.Value), trip.Id.ToString());
             }
             await _appNotifier.ShipperShippingRequestTripNotifyDriverWhenAssignTrip(new UserIdentifier(AbpSession.TenantId, trip.AssignedDriverUserId.Value), trip);
         }
