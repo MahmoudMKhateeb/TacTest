@@ -14,6 +14,11 @@
     <text name="selectaCountry">Select Country</text>
     <text name="ReceiverFullName">Receiver Full Name</text>
     <text name="ReceiverPhoneNumber">Receiver Phone Number</text>
+
+    <text name="dontHaveAnAccountYet">Dont Have An Account Yet</text>
+    <text name="signInToTachyon">Sign In To Tachyon</text>
+    <text name="enterYourDetailsToLoginToYourAccount">Enter Your Details To Login To Your Account</text>
+
     <!--Shipping Request Module-->
     <![CDATA[Tachyon:Shipping Requests Start]]>
 
