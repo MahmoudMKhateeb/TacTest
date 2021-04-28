@@ -1,5 +1,4 @@
 ﻿using Abp.Domain.Repositories;
-using Abp.Domain.Uow;
 using Microsoft.EntityFrameworkCore;
 using System.Globalization;
 using System.Linq;
@@ -59,5 +58,36 @@ namespace TACHYON.Shipping.ShippingRequests
 
         }
 
+        /// <summary>
+        /// Send shipment code to receiver
+        /// </summary>
+        /// <param name="point"></param>
+        /// <returns></returns>
+        public async Task SendSmsToReceiver(RoutPoint point)
+        {
+            string number = point.ReceiverPhoneNumber;
+            string message = L(TACHYONConsts.SMSShippingRequestReceiverCode, point.Code);
+            if (point.ReceiverFk != null)
+            {
+                number = point.ReceiverFk.PhoneNumber;
+            }
+            await _smsSender.SendAsync(number, message);
+
+        }
+
+        /// <summary>
+        /// Send shipment code to receivers
+        /// </summary>
+        /// <param name="point"></param>
+        /// <returns></returns>
+        public async Task SendSmsToReceivers(int tripId)
+        {
+            var RoutePoints = await _routPointRepository.GetAll().Where(x => x.ShippingRequestTripId == tripId && x.PickingType == PickingType.Dropoff).ToListAsync();
+            RoutePoints.ForEach(async p =>
+            {
+                await SendSmsToReceiver(p);
+            });
+
+        }
     }
 }

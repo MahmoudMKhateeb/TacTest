@@ -204,6 +204,16 @@ namespace TACHYON.Shipping.Drivers
            });
         }
 
+        public async Task SendShipmentCodeToReceivers(int id)
+        {
+            var RoutePoints = _RoutPointRepository.GetAll().Where(x => x.ShippingRequestTripId == id && x.PickingType == PickingType.Dropoff).ToList();
+            RoutePoints.ForEach(p =>
+            {
+
+            });
+
+        }
+
         /// <summary>
         /// Get the last transition for trip is not complete
         /// </summary>
