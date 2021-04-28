@@ -494,6 +494,7 @@ namespace TACHYON.Shipping.ShippingRequests
                     .Include(e => e.GoodCategoryFk)
                     .Include(e => e.ShippingTypeFk)
                     .Include(e => e.PackingTypeFk)
+                    .Include(e=>e.CarrierTenantFk)
                     .FirstOrDefaultAsync();
             if (await IsEnabledAsync(AppFeatures.Carrier))
             {
@@ -512,11 +513,7 @@ namespace TACHYON.Shipping.ShippingRequests
                     }
                 }
             }
-            //List<ShippingRequestBid> shippingRequestBidsList;
-
-            //shippingRequestBidsList = await _shippingRequestBidRepository.GetAll()
-            //    .Where(x => x.ShippingRequestId == id).ToListAsync();
-
+            
             var shippingRequestVasList = await _shippingRequestVasRepository.GetAll()
                 .Where(x => x.ShippingRequestId == id)
                 .Select(e =>
@@ -526,36 +523,45 @@ namespace TACHYON.Shipping.ShippingRequests
                     VasName = e.VasFk.Name
                 }).ToListAsync();
 
-
-          
-
-            GetShippingRequestForViewOutput output = new GetShippingRequestForViewOutput
+            var shippingRequestBidDtoList = ObjectMapper.Map<List<ShippingRequestBidDto>>(shippingRequest.ShippingRequestBids);
+            if (IsEnabled(AppFeatures.Shipper))
             {
-                ShippingRequest = ObjectMapper.Map<ShippingRequestDto>(shippingRequest),
-                ShippingRequestBidDtoList = shippingRequest.IsTachyonDeal ? ObjectMapper.Map<List<ShippingRequestBidDto>>(shippingRequest.ShippingRequestBids) : null,
-                VasCount = shippingRequest.ShippingRequestVases.Count(),
-                OriginalCityName = shippingRequest.OriginCityFk.DisplayName,
-                DestinationCityName = shippingRequest.DestinationCityFk.DisplayName,
-                DriverName = shippingRequest.AssignedDriverUserFk?.Name,
-                GoodsCategoryName = shippingRequest.GoodCategoryFk?.DisplayName,
-                RoutTypeName =Enum.GetName(typeof(ShippingRequestRouteType), shippingRequest.RouteTypeId),
-                ShippingRequestStatusName = Enum.GetName(typeof(ShippingRequestStatus), shippingRequest.Status),
-                TruckTypeDisplayName = shippingRequest.TrucksTypeFk?.DisplayName,
-                TruckTypeFullName = shippingRequest.TransportTypeFk?.DisplayName
-                                    + "-" + shippingRequest.TrucksTypeFk?.DisplayName
-                                    + "-" + shippingRequest?.CapacityFk?.DisplayName,
-                CapacityDisplayName = shippingRequest?.CapacityFk?.DisplayName,
-                TransportTypeDisplayName = shippingRequest.TransportTypeFk?.DisplayName,
-                ShippingRequestVasDtoList = shippingRequestVasList,
-                ShippingTypeDisplayName = shippingRequest.ShippingTypeFk.DisplayName,
-                packingTypeDisplayName = shippingRequest.PackingTypeFk.DisplayName,
-                AssignedTruckDto = new GetTruckForViewOutput
-                {
-                    Truck = ObjectMapper.Map<TruckDto>(shippingRequest.AssignedTruckFk),
-                    TruckStatusDisplayName = shippingRequest.AssignedTruckFk?.TruckStatusFk?.DisplayName,
-                    TrucksTypeDisplayName = shippingRequest.AssignedTruckFk?.TrucksTypeFk.DisplayName
-                },
-            };
+                if (shippingRequest.IsTachyonDeal)
+                    shippingRequestBidDtoList = null;
+            }
+
+            GetShippingRequestForViewOutput output = ObjectMapper.Map<GetShippingRequestForViewOutput>(shippingRequest);
+            output.ShippingRequestBidDtoList = shippingRequestBidDtoList;
+            output.ShippingRequestVasDtoList = shippingRequestVasList;
+
+
+            //GetShippingRequestForViewOutput output = new GetShippingRequestForViewOutput
+            //{
+            //    ShippingRequest = ObjectMapper.Map<ShippingRequestDto>(shippingRequest),
+            //    ShippingRequestBidDtoList = shippingRequest.IsTachyonDeal ? ObjectMapper.Map<List<ShippingRequestBidDto>>(shippingRequest.ShippingRequestBids) : null,
+            //    VasCount = shippingRequest.ShippingRequestVases.Count(),
+            //    OriginalCityName = shippingRequest.OriginCityFk.DisplayName,
+            //    DestinationCityName = shippingRequest.DestinationCityFk.DisplayName,
+            //    DriverName = shippingRequest.AssignedDriverUserFk?.Name,
+            //    GoodsCategoryName = shippingRequest.GoodCategoryFk?.DisplayName,
+            //    RoutTypeName =Enum.GetName(typeof(ShippingRequestRouteType), shippingRequest.RouteTypeId),
+            //    ShippingRequestStatusName = Enum.GetName(typeof(ShippingRequestStatus), shippingRequest.Status),
+            //    TruckTypeDisplayName = shippingRequest.TrucksTypeFk?.DisplayName,
+            //    TruckTypeFullName = shippingRequest.TransportTypeFk?.DisplayName
+            //                        + "-" + shippingRequest.TrucksTypeFk?.DisplayName
+            //                        + "-" + shippingRequest?.CapacityFk?.DisplayName,
+            //    CapacityDisplayName = shippingRequest?.CapacityFk?.DisplayName,
+            //    TransportTypeDisplayName = shippingRequest.TransportTypeFk?.DisplayName,
+            //    ShippingRequestVasDtoList = shippingRequestVasList,
+            //    ShippingTypeDisplayName = shippingRequest.ShippingTypeFk.DisplayName,
+            //    packingTypeDisplayName = shippingRequest.PackingTypeFk.DisplayName,
+            //    AssignedTruckDto = new GetTruckForViewOutput
+            //    {
+            //        Truck = ObjectMapper.Map<TruckDto>(shippingRequest.AssignedTruckFk),
+            //        TruckStatusDisplayName = shippingRequest.AssignedTruckFk?.TruckStatusFk?.DisplayName,
+            //        TrucksTypeDisplayName = shippingRequest.AssignedTruckFk?.TrucksTypeFk.DisplayName
+            //    },
+            //};
 
             return output;
         }
