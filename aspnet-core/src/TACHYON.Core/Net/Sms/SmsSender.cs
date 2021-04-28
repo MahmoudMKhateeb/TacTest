@@ -30,7 +30,7 @@ namespace TACHYON.Net.Sms
             var unifonicClint = new UnifonicRestClient(await _settingManager.GetSettingValueAsync(AppSettings.Sms.UnifonicAppSid));
             try
             {
-                unifonicClint.SendSmsMessage(AddCountryCode(number), ConvertToUnicode(message));
+                unifonicClint.SendSmsMessage(AddCountryCode(number), message);
                 return true;
             }
             catch
@@ -75,38 +75,5 @@ namespace TACHYON.Net.Sms
             return number;
         }
 
-        private string ConvertToUnicode(string val)
-        {
-            string msg2 = string.Empty;
-
-            for (int i = 0; i < val.Length; i++)
-            {
-                msg2 += convertToUnicode(System.Convert.ToChar(val.Substring(i, 1)));
-            }
-
-            return msg2;
-        }
-        private string convertToUnicode(char ch)
-        {
-            System.Text.UnicodeEncoding class1 = new System.Text.UnicodeEncoding();
-            byte[] msg = class1.GetBytes(System.Convert.ToString(ch));
-
-            return fourDigits(msg[1] + msg[0].ToString("X"));
-        }
-
-        private string fourDigits(string val)
-        {
-            string result = string.Empty;
-
-            switch (val.Length)
-            {
-                case 1: result = "000" + val; break;
-                case 2: result = "00" + val; break;
-                case 3: result = "0" + val; break;
-                case 4: result = val; break;
-            }
-
-            return result;
-        }
     }
 }
