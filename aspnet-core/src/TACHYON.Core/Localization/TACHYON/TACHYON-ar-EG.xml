@@ -67,6 +67,7 @@
     <text name="AppLocalization">المصطلحات</text>
     <text name="Apply">تطبيق</text>
     <text name="AppSecret">سر التطبيق</text>
+    <text name="AreYouSure">هل أنت متأكد من اتخاد هذا الإجراء؟</text>
     <text name="AssignToAnotherEdition">تعيين إلى نسخة اخرى</text>
     <text name="AtLeastOneOfThesePermissionsMustBeGranted">لم يتم منح الأذونات المطلوبة. يجب منح واحدة على الأقل من هذه الأذونات: {0}</text>
     <text name="Attach">إرفاق</text>
@@ -180,6 +181,7 @@
     <text name="Create">إنشاء</text>
     <text name="CreateAnAccount">إنشاء حساب</text>
     <text name="CreatedAtByUser"><![CDATA[تم الإنشاء في <b> {0} </ b> بواسطة <b> {1} </ b>]]></text>
+    <text name="CreateLocalization">إنشاء مصلح جديد</text>
     <text name="CreateNewCounty">إنشاء دولة جديدة</text>
     <text name="CreateNewDriver"> إنشاء سائق جديد</text>
     <text name="CreateNewEdition">إنشاء نسخة جديدة</text>
@@ -333,6 +335,7 @@
     <text name="DynamicParameters">الحقول الديناميكية</text>
     <text name="DynamicParameterValue">قيمة المعلمة الديناميكية</text>
     <text name="DynamicParameterValues">قيم الحقل الديناميكي</text>
+    <text name="EditAppLocalization">تحرير المصلطح</text>
     <text name="EditCounty">تحرير الدولة</text>
     <text name="EditDriver"> تعديل السائق</text>
     <text name="EditEdition">تحرير نسخة</text>
@@ -448,6 +451,8 @@
     <text name="GdprDataPreparedNotificationMessage">تم إعداد بياناتك ، انقر هنا للتنزيل.</text>
     <text name="GdprDataPrepareStartedNotification">نحن نعد بياناتك. سيتم إخطارك عند الإنتهاء من إعداد بياناتك.</text>
     <text name="General">عــام</text>
+    <text name="Generate">توليد</text>
+    <text name="GoodCategories">أصناف البضائع</text>
     <text name="GoogleAuthenticatorIsNotEnabled">لم يتم تمكين أداة مصادقة غوغل لحسابك. يجب عليك أولا تمكينه في إعداداتك.</text>
     <text name="GoogleAuthenticatorReferrerLink">ألست متأكدا مما تعنيه هذه الشاشة؟ قد تحتاج إلى التحقق من ذلك </text>
     <text name="GoToApplication">الى النظام</text>
@@ -842,6 +847,7 @@
     <text name="ResetSuccessfully">تم المسح بنجاح</text>
     <text name="ResizedProfilePicture_Warn_SizeLimit">حجم الصورة بعد التصغير يجب أن يكون أقل من {0} كيلوبايت. قم بتصغير الصورة وحاول مرة اخرى.</text>
     <text name="Response">Response</text>
+    <text name="Restore">استرجاع</text>
     <text name="Role">دور</text>
     <text name="RoleDeleteWarningMessage">سيتم حذف الدور {0} و سوف يتم إزالة إذونات جميع المستخدمين المعيين بهذا الدور</text>
     <text name="RoleIsInheritedFromOrganizationUnit">هذا الدور موروث من إحدى الوحدات التنظيمية للمستخدم</text>
@@ -989,9 +995,11 @@
     <text name="SuccessfullyAdded">تمت الإضافة بنجاح.</text>
     <text name="SuccessfullyDeactivated">تم إلغاء تفعيله بنجاح</text>
     <text name="SuccessfullyDeleted">تم الحذف بنجاح</text>
+    <text name="SuccessfullyGenerate">تمت عملية التوليد بنجاح</text>
     <text name="SuccessfullyMoved">تم النقل بنجاح.</text>
     <text name="SuccessfullyRegistered">تم الإشتراك بنجاح</text>
     <text name="SuccessfullyRemoved">تمت الإزالة بنجاح.</text>
+    <text name="SuccessfullyRestore">تمت عملية الاسترجاع بنجاح</text>
     <text name="SuccessfullySaved">تم الحـفظ بنجاح</text>
     <text name="SuccessfullyUnlinked">تم إزالة الربط بنجاح.</text>
     <text name="SwitchToDelegatedUserWarningMessage">هل أنت متأكد من التبديل إلى المستخدم {0}؟</text>
@@ -1317,6 +1325,7 @@
     <text name="XCountPermissionFiltered">إذن {0} تم تصفية.</text>
     <text name="Xms">{0} جزء ث.</text>
     <text name="Yellow">أصفر</text>
+    <text name="yes">نعم</text>
     <text name="Yesterday">اليوم السابق</text>
     <text name="You">أنت</text>
     <text name="YouAlreadySentAFriendshipRequestToThisUser">سبق وأن أضفت هذا المستخدم.</text>

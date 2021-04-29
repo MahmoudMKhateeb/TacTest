@@ -88,6 +88,7 @@
     <text name="AppLocalization">Terminologies</text>
     <text name="Apply">Apply</text>
     <text name="AppSecret">App Secret</text>
+    <text name="AreYouSure">Are you sure to take this action?</text>
     <text name="AShipmentWasAssignedForYouToReceiveOn">A shipment was assigned for you to receive on</text>
     <text name="AssignToAnotherEdition">Assign to another edition</text>
     <text name="AtLeastOneOfThesePermissionsMustBeGranted">Required permissions are not granted. At least one of these permissions must be granted: {0}</text>
@@ -231,6 +232,7 @@
     <text name="Create">Create</text>
     <text name="CreateAnAccount">Create account</text>
     <text name="CreatedAtByUser">Created at <b>{0}</b> by <b>{1}</b></text>
+    <text name="CreateLocalization">Create new Localization terminology</text>
     <text name="CreateNewAccidentReason">Create New Accident Reason</text>
     <text name="CreateNewBalanceRecharge">Create New Balance Recharge</text>
     <text name="CreateNewBillingInterval">Create New Billing Interval</text>
@@ -484,6 +486,7 @@
     <text name="DynamicParameters">Dynamic Parameters</text>
     <text name="DynamicParameterValue">Dynamic Parameter Value</text>
     <text name="DynamicParameterValues">Dynamic Parameter Values</text>
+    <text name="EditAppLocalization">Edit terminology</text>
     <text name="EditCapacity">Edit Capacity</text>
     <text name="EditCitiesTranslation">Edit Cities Translation</text>
     <text name="EditCity">Edit City</text>
@@ -654,7 +657,8 @@
     <text name="GdprDataPreparedNotificationMessage">Your data is prepared, click here to download.</text>
     <text name="GdprDataPrepareStartedNotification">We are preparing your data. You will be notified when your data is ready.</text>
     <text name="General">General</text>
-    <text name="GoodCategories">Good categories</text>
+    <text name="Generate">Generate</text>
+    <text name="GoodCategories">Goods categories</text>
     <text name="GoodCategoriesHeaderInfo">Good categories header info</text>
     <text name="GoodCategory">Good category</text>
     <text name="GoodCategoryDisplayName">Good category display name</text>
@@ -1175,6 +1179,7 @@
     <text name="ResetSuccessfully">Reset successfully</text>
     <text name="ResizedProfilePicture_Warn_SizeLimit">Resized picture size must be smaller than {0}KB. Please resize down and try again.</text>
     <text name="Response">Response</text>
+    <text name="Restore">Restore</text>
     <text name="Role">Role</text>
     <text name="RoleDeleteWarningMessage">Role {0} will be deleted and unassigned from all assigned users.</text>
     <text name="RoleIsInheritedFromOrganizationUnit">This role is inherited from one of users organizations</text>
@@ -1380,9 +1385,11 @@
     <text name="SuccessfullyAdded">Successfully added</text>
     <text name="SuccessfullyDeactivated">Successfully Deactivated</text>
     <text name="SuccessfullyDeleted">Successfully deleted.</text>
+    <text name="SuccessfullyGenerate">Successfully generate</text>
     <text name="SuccessfullyMoved">Successfully moved.</text>
     <text name="SuccessfullyRegistered">Successfully registered</text>
     <text name="SuccessfullyRemoved">Successfully removed</text>
+    <text name="SuccessfullyRestore">Successfully restore</text>
     <text name="SuccessfullySaved">Successfully saved.</text>
     <text name="SuccessfullyUnlinked">Successfully unlinked</text>
     <text name="SwitchToDelegatedUserWarningMessage">Are you sure to switch to user {0} ?</text>
@@ -1816,6 +1823,7 @@
     <text name="Xms">{0} ms</text>
     <text name="Year">Year</text>
     <text name="Yellow">Yellow</text>
+    <text name="yes">Yes</text>
     <text name="Yesterday">Yesterday</text>
     <text name="You">You</text>
     <text name="YouAlreadySentAFriendshipRequestToThisUser">You already added this user.</text>
