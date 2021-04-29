@@ -9,6 +9,7 @@
     <text name="Abp.Organizations.OrganizationUnit">الوحدة التنظيمية</text>
     <text name="Accept">قبول</text>
     <text name="Access to your applications and resources, even when you are offline">الوصول إلى التطبيقات والموارد الخاصة بك، حتى عندما لاتكون متصلا</text>
+    <text name="AccidentReason">أسباب الحوادث</text>
     <text name="AccidentReasonHeaderInfo">الهيدر</text>
     <text name="AccountSettings">إعدادات الحساب</text>
     <text name="Action">إجراء</text>
@@ -121,6 +122,7 @@
     <text name="ChangingPermissions">تغيير الإذونات</text>
     <text name="ChangingTexts">تغيير النصوص</text>
     <text name="ChangingWebhookActivity">Activate/Deactivate webhook</text>
+    <text name="ChannelType">القناة</text>
     <text name="ChartDateFormat">%m/%d/%Y</text>
     <text name="Chat">دردشة</text>
     <text name="ChatFeature">دردشة</text>
@@ -411,6 +413,7 @@
     <text name="ExternalLoginSettings">إعدادات تسجيل الدخول الخارجية</text>
     <text name="ExternalPaymentId">كود الدفع الخارجي</text>
     <text name="Extn">صيغة المستند</text>
+    <text name="Facilities">المنشأت</text>
     <text name="Failed">فشل</text>
     <text name="FailedSubscriptionTerminations_Email_Body">فشل إنهاء الاشتراك للعملاء التاليين {0} في {1}. يمكنك العثور على رسائل الخطأ المفصلة في سجلات النظام.</text>
     <text name="FailedSubscriptionTerminations_Email_Subject">أخفاق في إنهاء الاشتراك</text>
@@ -507,6 +510,7 @@
     <text name="InvoiceInfoIsMissingOrNotCompleted">معلومات الفاتورة غير متوفرة أو غير مكتملة</text>
     <text name="InvoiceInformation">معلومات الفاتورة</text>
     <text name="InvoiceNo">رقم الفاتورة</text>
+    <text name="Invoices">الفواتير</text>
     <text name="InvoicesList">قائمة الفواتير</text>
     <text name="InvoiceTo">فاتورة</text>
     <text name="InvoiceVasRemarksAll">العدد:{0}, الكمية:{1}</text>
@@ -707,6 +711,7 @@
     <text name="OriginalValue">القيمة الأصلية</text>
     <text name="Others">أخرون</text>
     <text name="OtherSettings">إعدادات اخرى</text>
+    <text name="PackingTypes">أنواع التعبئة</text>
     <text name="PageDeleteWarningMessage">هل أنت متأكد من إزالة صفحة "{0}"؟</text>
     <text name="PageName">اسم الصفحة</text>
     <text name="PageNameCanNotBeEmpty">لا يمكن أن يكون اسم الصفحة فارغًا.</text>
@@ -918,6 +923,7 @@
     </text>
     <text name="ShippingRequestReceiverCode">رقم الشحنة الخاصة بك هي:{0}</text>
     <text name="ShippingRequests">طلبات الشحن</text>
+    <text name="ShippingTypes">أنواع الشحن</text>
     <text name="ShouldChangePasswordOnNextLogin">يجب تغيير كلمة المرور عند تسجيل الدخول .</text>
     <text name="Show">إظهار</text>
     <text name="ShowAdvancedFilters">إظهار الفلاتر المتقدمة</text>
@@ -1108,6 +1114,7 @@
     <text name="TrialExpireNotification">ستنتهي الفترة التجريبية خلال {0} أيام.</text>
     <text name="TrialSubscriptionNotification">أنت في الفترة التجريبية لنسخة {0}، {1} للشراء.</text>
     <text name="TrialWithoutEndDateErrorMessage">يجب أن يكون للحسابات التجريبية تاريخ انتهاء الاشتراك</text>
+    <text name="TripRejectReason">أسباب رفض الرحلة</text>
     <text name="Truck">شاحنة</text>
     <text name="TruckDetails">تفاصيل الشاحنة</text>
     <text name="TruckDocuments">مستندات الشاحنة</text>
@@ -1123,6 +1130,7 @@
     <text name="TrucktDetails">تفاصيل الشاحنة</text>
     <text name="TruckType">نوع الشاحنة</text>
     <text name="TruckTypeDetails">تفاصيل نوع الشاحنة</text>
+    <text name="TruckTypes">أنواع الشاحنات</text>
     <text name="True">صحيح</text>
     <text name="TryIt">تجربة</text>
     <text name="TwoFactorLogin">توثيق تسجيل الدخول ذو عاملين</text>
@@ -1240,6 +1248,7 @@
     <text name="Value">قيمة</text>
     <text name="Values">قيم</text>
     <text name="Vas">الخدمات الإضافية</text>
+    <text name="Vases">الخدمات الإضافية</text>
     <text name="VasName">إسم الحدمة الإضافية</text>
     <text name="VasPrice">السعر</text>
     <text name="VasPrices">أسعار الخدمات الإضافية</text>

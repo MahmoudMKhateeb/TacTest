@@ -15,7 +15,7 @@
     <text name="AcceptedDate">Accepted Date</text>
     <text name="AcceptPrice">Accept Price</text>
     <text name="Access to your applications and resources, even when you are offline">Access to your applications and resources, even when you are offline</text>
-    <text name="AccidentReason">Accident Reason</text>
+    <text name="AccidentReason">Incident Reasons</text>
     <text name="AccidentReasonHeaderInfo">Accident ReasonHeader Info</text>
     <text name="AccountInvoiceType">Account Type</text>
     <text name="AccountPayable">Account payable</text>
@@ -1571,6 +1571,7 @@
     <text name="TrialSubscriptionNotification">You are in Trial period for {0} edition, {1} to purchase.</text>
     <text name="TrialWithoutEndDateErrorMessage">Trial accounts must have subscription end date</text>
     <text name="TripDetails">Trip Details</text>
+    <text name="TripRejectReason">Trip Reject Reasons</text>
     <text name="Trips Start Date">Trips Start Date</text>
     <text name="TripsEndDate">Trips End Date</text>
     <text name="TripStartDate">Trip Start Date</text>
@@ -1605,6 +1606,7 @@
     <text name="TruckType">Truck Type</text>
     <text name="TruckTypeDetails">Truck Type Details</text>
     <text name="TruckTypeDisplayName">Truck Type Display Name</text>
+    <text name="TruckTypes">Truck Types</text>
     <text name="True">True</text>
     <text name="TrukType">Truk type</text>
     <text name="TryIt">Try it</text>
