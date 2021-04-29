@@ -174,6 +174,7 @@
     <text name="CostOfProration">فرق السعر خلال هذه الفترة</text>
     <text name="CouldNotCompleteLoginOperation">تعذر إكمال عملية تسجيل الدخول.</text>
     <text name="CouldNotValidateExternalUser">لم نتمكن من التحقق من صحة تسجيل دخول المستخدم الخارجي</text>
+    <text name="Counties">الدول</text>
     <text name="Countries">الدولة</text>
     <text name="Country">البلد</text>
     <text name="County">الدولة</text>
@@ -918,6 +919,7 @@
     <text name="ShipperReminderToCompelteTrips">
       <a href="/app/main/shippingRequests/shippingRequests/view?id={id}">لديك شحنة لم تكمل الرحلات الخاصة بها</a>
     </text>
+    <text name="ShippingNote">ملاحظات الشحنة</text>
     <text name="ShippingRequestAccidentsOccure">
       <a href="/app/main/shippingRequests/shippingRequests/view?id={id}">لقد حدث حادث للشحنة رقم: {id}.</a>
     </text>
@@ -1063,6 +1065,7 @@
     <text name="TestEmailSentSuccessfully">تم إرسال بريد التجربة بنجاح.</text>
     <text name="TestEmailSettingsHeader">تجربة إعدادات البريد الإلكتروني</text>
     <text name="ThankYou">شكرا جزيلا</text>
+    <text name="TheKeyAlreadyExists">المفتاح مدخل مسبقاً</text>
     <text name="Theme_Default">إفتراضي</text>
     <text name="Theme_Theme1">تصميم  1</text>
     <text name="Theme_Theme10">تصميم  10</text>
@@ -1122,6 +1125,7 @@
     <text name="TrialExpireNotification">ستنتهي الفترة التجريبية خلال {0} أيام.</text>
     <text name="TrialSubscriptionNotification">أنت في الفترة التجريبية لنسخة {0}، {1} للشراء.</text>
     <text name="TrialWithoutEndDateErrorMessage">يجب أن يكون للحسابات التجريبية تاريخ انتهاء الاشتراك</text>
+    <text name="tripEndDate">تاريح نهاية الرحلة</text>
     <text name="TripRejectReason">أسباب رفض الرحلة</text>
     <text name="Truck">شاحنة</text>
     <text name="TruckDetails">تفاصيل الشاحنة</text>

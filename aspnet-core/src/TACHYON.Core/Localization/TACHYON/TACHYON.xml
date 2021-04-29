@@ -220,7 +220,7 @@
     <text name="CostOfProration">Price difference during the period</text>
     <text name="CouldNotCompleteLoginOperation">Could not complete the login operation.</text>
     <text name="CouldNotValidateExternalUser">Could not validate external user login</text>
-    <text name="Counties">Counties</text>
+    <text name="Counties">Countries</text>
     <text name="CountiesHeaderInfo">Counties header info</text>
     <text name="Countries">Countries</text>
     <text name="CountriesTranslation">Countries Translation</text>
@@ -1283,6 +1283,7 @@
     <text name="ShipperReminderToCompelteTrips">
       <a href="/app/main/shippingRequests/shippingRequests/view?id={id}">You have a shipment that has not completed its journeys</a>
     </text>
+    <text name="ShippingNote">Shipping note</text>
     <text name="ShippingRequest">Shipping Request</text>
     <text name="ShippingRequestAccidentsOccure">
       <a href="/app/main/shippingRequests/shippingRequests/view?id={id}">There has been an accident for shipment No.: {id}.</a>
@@ -1497,6 +1498,7 @@
     <text name="TestEmailSentSuccessfully">Test e-mail sent successfully.</text>
     <text name="TestEmailSettingsHeader">Test Email Settings</text>
     <text name="ThankYou">Thank You</text>
+    <text name="TheKeyAlreadyExists">The key already xxists</text>
     <text name="Theme_Default">Default</text>
     <text name="Theme_Theme1">Theme 1</text>
     <text name="Theme_Theme10">Theme 10</text>
@@ -1578,6 +1580,7 @@
     <text name="TrialSubscriptionNotification">You are in Trial period for {0} edition, {1} to purchase.</text>
     <text name="TrialWithoutEndDateErrorMessage">Trial accounts must have subscription end date</text>
     <text name="TripDetails">Trip Details</text>
+    <text name="tripEndDate">Trip end date</text>
     <text name="TripRejectReason">Trip Reject Reasons</text>
     <text name="Trips Start Date">Trips Start Date</text>
     <text name="TripsEndDate">Trips End Date</text>

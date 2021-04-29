@@ -4,6 +4,7 @@ using Abp.Collections.Extensions;
 using Abp.Domain.Repositories;
 using Abp.Linq.Extensions;
 using Abp.Threading;
+using Abp.UI;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -52,6 +53,7 @@ namespace TACHYON.Localization
         }
         public async Task CreateOrEdit(CreateOrEditAppLocalizationDto input)
         {
+            await CheckKeyIsExists(input);
             if (input.Id == 0)
             {
                 await Create(input);
@@ -97,20 +99,27 @@ namespace TACHYON.Localization
 
         private async Task Create(CreateOrEditAppLocalizationDto input)
         {
-            var Reason = ObjectMapper.Map<AppLocalization>(input);
+            var key = ObjectMapper.Map<AppLocalization>(input);
 
-            await _appLocalizationRepository.InsertAsync(Reason);
+            await _appLocalizationRepository.InsertAsync(key);
         }
         [AbpAuthorize(AppPermissions.Pages_AppLocalization_Edit)]
 
         private async Task Update(CreateOrEditAppLocalizationDto input)
         {
-            var Reason = await _appLocalizationRepository.GetAllIncluding(x => x.Translations).SingleAsync(e => e.Id == input.Id);
-            Reason.Translations.Clear();
-            ObjectMapper.Map(input, Reason);
+            var key = await _appLocalizationRepository.GetAllIncluding(x => x.Translations).SingleAsync(e => e.Id == input.Id);
+            key.Translations.Clear();
+            ObjectMapper.Map(input, key);
 
         }
+        private async Task CheckKeyIsExists(CreateOrEditAppLocalizationDto input)
+        {
+            if (await _appLocalizationRepository.GetAll().AnyAsync( x=>x.Id!= input.Id && x.MasterKey.ToLower()== input.MasterKey.ToLower()))
+            {
+                throw new UserFriendlyException(L("TheKeyAlreadyExists"));
 
+            }
+        }
         private IQueryable<AppLocalization> GetLocalization(AppLocalizationFilterInput Input)
         {
             if (!string.IsNullOrEmpty(Input.Filter)) Input.Filter = Input.Filter.Trim().ToLower();
