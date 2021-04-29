@@ -80,9 +80,11 @@
     <text name="BackToDefaultPageWarningMessage">هل أنت متأكد من إزالة صفحة "{0}" والعودة إلى الوضع الافتراضي؟</text>
     <text name="BackToMyAccount">العودة لحسابي</text>
     <text name="BackToMyAccount_Description">العودة الى حسابك الخاص</text>
+    <text name="BalnaceRecharges">إدارة الرصيد</text>
     <text name="BaseLanguage">اللغة الأساسية</text>
     <text name="BaseValue">النص الأساسي</text>
     <text name="Billing">فواتير</text>
+    <text name="BillingInterval">طرق الدفع</text>
     <text name="BlockedUsers">محظورين</text>
     <text name="BlockUser">حظر</text>
     <text name="Blue">أزرق</text>
@@ -129,11 +131,10 @@
     <text name="ChatMessage_From">من</text>
     <text name="ChatMessage_To">الى</text>
     <text name="ChatUserSearch_Hint">
-        للمستخدمين من نفس العميل ,إكتب إسم المتسخدم فقط <br />
-       <strong>[اسم العميل]\[اسم المستخدم]</strong> للمستخدمين من عملاء آخرين <br /><br />
-       مثال: <br />
-       .\admin -&gt; للمشرف العام المضيف <br />
-       Test\admin -&gt; للمشرف العميل Test <br />
+        للمستخدمين من نفس العميل ,إكتب إسم المتسخدم فقط [اسم العميل]\[اسم المستخدم] للمستخدمين من عملاء آخرين 
+       مثال: 
+       .\admin -&gt; للمشرف العام المضيف 
+       Test\admin -&gt; للمشرف العميل Test 
        admin -&gt; للمشرف المحلي</text>
     <text name="CheckoutWithPaypal">ادفع باستعمال باي بال</text>
     <text name="CheckoutWithStripe">ادفع باستعمال سترايب</text>
@@ -219,10 +220,10 @@
     <text name="DashboardFilters">فلاتر لوحة القيادة</text>
     <text name="DashboardHeaderInfo">الإحصاءات والتقارير</text>
     <text name="DashboardNoteForMpaVersion">
-       راجع الموقع التجريبي ذو الصفحات المتعددة <strong>ASP.NET MVC</strong> مع <strong>jQuery</strong>.
+       راجع الموقع التجريبي ذو الصفحات المتعددة ASP.NET MVC مع jQuery.
        </text>
     <text name="DashboardNoteForSpaVersion">
-       ملاحظة: يوجد أيضا  <strong>موقع تجريبي بصفحة واحدة</strong> مطوّر بإستخدام ASP.NET MVC مع <strong>AngularJs</strong>.
+       ملاحظة: يوجد أيضا  موقع تجريبي بصفحة واحدة مطوّر بإستخدام ASP.NET MVC مع AngularJs.
        </text>
     <text name="DashboardSampleStatistics">عينة من الإحصاءات</text>
     <text name="DashboardSampleStatisticsHelpText">التقدم</text>
@@ -427,6 +428,7 @@
     <text name="FilterByRole">تصفية حسب الدور</text>
     <text name="FilterDateRangePicker">نطاق التاريخ</text>
     <text name="FilterOrAddUser">تصفية\إضافة مستخدم</text>
+    <text name="FinancialTransActionMenu">التاريخ المالي</text>
     <text name="FirstName">الإسم الأول</text>
     <text name="Flag">علم</text>
     <text name="ForgotPassword">هل نسيت كلمة المرور؟</text>
@@ -505,6 +507,7 @@
     <text name="InvoiceInfoIsMissingOrNotCompleted">معلومات الفاتورة غير متوفرة أو غير مكتملة</text>
     <text name="InvoiceInformation">معلومات الفاتورة</text>
     <text name="InvoiceNo">رقم الفاتورة</text>
+    <text name="InvoicesList">قائمة الفواتير</text>
     <text name="InvoiceTo">فاتورة</text>
     <text name="InvoiceVasRemarksAll">العدد:{0}, الكمية:{1}</text>
     <text name="InvoiceVasRemarksAmount">الكمية:{0}</text>
@@ -628,6 +631,13 @@
     <text name="NewDocumentsEntity">جهة جديدة مطلوب منها مستندات</text>
     <text name="NewDocumentType">نوع مستند جديد</text>
     <text name="NewDocumentTypeTranslation">ترجمة نوع مستند جديد</text>
+    <text name="NewGroupPerioGenerated">
+      <a href="/app/main/invoices/submitinvoices/detail/{groupid}">A new submit invoice has been generated {groupid}#</a>
+    </text>
+    <text name="NewInvoiceShipperGenerated">
+      <a href="/app/main/invoices/detail/{invoiceid}">تم توليد فاتورة جديدة {invoiceid}#</a>
+    </text>
+    <text name="NewInvoiceShipperGeneratedEmailBody"> <a href="/app/main/invoices/detail/{invoiceid}">تم توليد الفاتورة رقم {invoiceid}#</a></text>
     <text name="NewNotifications">إشعارات جديدة</text>
     <text name="NewOrganizationUnit">وحدة تنظيمية جديدة</text>
     <text name="NewPage">صفحة جديدة</text>
@@ -858,6 +868,7 @@
     <text name="SelectAPermission">حدد إذن</text>
     <text name="SelectARole">إختر دور</text>
     <text name="SelectATheme">اختر تصميم</text>
+    <text name="SelectaTransportType">إختر نوع نقل</text>
     <text name="SelectATransportType">إختر نوع نقل</text>
     <text name="SelectAUser">إختر مستخدم</text>
     <text name="SelectDate">حدد تاريخ</text>
@@ -874,9 +885,7 @@
     <text name="SelfUserRegistrationIsDisabledMessage_Detail">تم تعطيل إشتراك المستخدم الذاتي يرجى الاتصال بمسؤول النظام للإشتراك.</text>
     <text name="Send">إرسال</text>
     <text name="SendActivationEmail">إرسال رسالة تفعيل البريد الإلكتروني.</text>
-    <text name="SendDriectRequestForCarrier">
-      <a href="/app/main/shippingRequests/shippingRequests/view?id={id}">يرجى إرسال عرض أسعار الشحنة رقم.: {id}.</a>
-    </text>
+    <text name="SendDriectRequestForCarrier">يرجى إرسال عرض أسعار الشحنة رقم.: {id}.</text>
     <text name="SendEmailActivationLink_Information">سيتم إرسال رابط تأكيد بريدك الإلكتروني. إذا لم يصلك البريد الإلكتروني في غضون بضع دقائق, الرجاء أعد المحاولة.</text>
     <text name="Sender">المرسل</text>
     <text name="SendPasswordResetLink_Information">سيتم إرسال رابط إعادة تعيين كلمة المرور إلى بريدك الإلكتروني. إذا لم يصلك البريد الإلكتروني في غضون بضع دقائق, الرجاء أعد المحاولة.</text>
@@ -936,6 +945,11 @@
     <text name="StringLengthDoesntMatch">يجب أن يكون {0} كحد ادنى {1} وحد اقصى {2}.</text>
     <text name="strong">قوي</text>
     <text name="Submit">إرسال</text>
+    <text name="SubmitInvoice">فواتير الناقل</text>
+    <text name="SubmitInvoiceOnAccepted">
+      <a href="/app/main/invoices/submitinvoices/detail/{groupid}">The submit invoice has been Accepted</a>
+    </text>
+    <text name="SubmitInvoices">فواتير الناقل</text>
     <text name="SubmittedDocuments">المستندات التي تم تسليمها</text>
     <text name="SubmitterTenant">مقدم من  </text>
     <text name="SubmittingTime">تاريخ الإستلام</text>
@@ -981,6 +995,7 @@
     <text name="SwitchToTheTenant">التبديل إلى العميل</text>
     <text name="SwitchToUser">التبديل إلى المستخدم</text>
     <text name="TACHYON.Authorization.Roles.Role">دور</text>
+    <text name="TACHYON.Countries.County">الدولة</text>
     <text name="TACHYON.MultiTenancy.Tenant">العميل</text>
     <text name="TachyonDealOfferAccepByShipper">تم الموافقة العرض المالي من قبل الشاحن  {clientname}.</text>
     <text name="TachyonDealOfferAcceptedByShipper">
@@ -1310,7 +1325,7 @@
     <text name="YouDontHaveAnyFriend">لا يوجد أحد. قم بكتابة إسم المسنخدم بالأعلى ثم إضغط زر الإضافة.</text>
     <text name="YouHaveToSubscribeToTestWebhookToReceiveTestEvent">You have to subscribe to test webhook to receive test event</text>
     <text name="Your email address">عنوان بريدك الإلكتروني</text>
-    <text name="Your phone number">رقم تليفونك</text>
+    <text name="Your Phone Number">رقم تليفونك</text>
     <text name="Your postal address">عنوانك البريدي</text>
     <text name="Your user identifier">معرف المستخدم</text>
     <text name="Your user profile information (first name, last name, etc.)">معلومات الملف الشخصي للمستخدم (الاسم الأول واسم العائلة وما إلى ذلك)</text>
