@@ -62,33 +62,25 @@ export class AppNavigationService {
             'ShippingRequests',
             'Pages.ShippingRequests',
             'label label-danger label-dot',
-            '/app/main/shippingRequests/shippingRequests',
+            '/app/main/shippingRequests/shippingRequests'
+          ),
+          new AppMenuItem('Marketplace', '', 'flaticon-more', '/app/main/marketPlace/marketPlace', undefined, undefined, undefined, undefined, () =>
+            this._featureCheckerService.isEnabled('App.Carrier')
+          ),
+          new AppMenuItem(
+            'DirectShippingRequests',
+            '',
+            'flaticon-more',
+            '/app/main/shippingRequests/directShippingRequests',
             undefined,
             undefined,
             undefined,
-            undefined /*,() => this._featureCheckerService.isEnabled('App.Shipper')*/
+            undefined,
+            () => this._featureCheckerService.isEnabled('App.Carrier')
           ),
           // TODO this Hole Component need To be removed Later
           // new AppMenuItem('waybills', undefined, 'flaticon-more', '/app/admin/waybills/waybills'),
-        ],
-        undefined,
-        undefined,
-        () => !this._featureCheckerService.isEnabled('App.Carrier')
-      ),
-      new AppMenuItem('Marketplace', '', 'flaticon-more', '/app/main/marketPlace/marketPlace', undefined, undefined, undefined, undefined, () =>
-        this._featureCheckerService.isEnabled('App.Carrier')
-      ),
-
-      new AppMenuItem(
-        'DirectShippingRequests',
-        '',
-        'flaticon-more',
-        '/app/main/shippingRequests/directShippingRequests',
-        undefined,
-        undefined,
-        undefined,
-        undefined,
-        () => this._featureCheckerService.isEnabled('App.Carrier')
+        ]
       ),
 
       new AppMenuItem(
@@ -138,7 +130,7 @@ export class AppNavigationService {
             'flaticon2-document',
             '/app/main/invoices/balnacerecharges'
           ),
-          new AppMenuItem('SubmitInvoice', 'Pages.Invoices.SubmitInvoices', 'flaticon2-document', '/app/main/invoices/submitinvoice'),
+          // new AppMenuItem('SubmitInvoice', 'Pages.Invoices.SubmitInvoices', 'flaticon2-document', '/app/main/invoices/submitinvoice'),
           new AppMenuItem('FinancialTransActionMenu', 'Pages.Invoices.Transaction', 'flaticon2-document', '/app/main/invoices/transaction'),
         ],
         undefined,
@@ -241,13 +233,6 @@ export class AppNavigationService {
         ]
       ),
       //End Of User Manegment
-
-      new AppMenuItem(
-        'FinancialTransActionMenu',
-        'Pages.Administration.Host.Invoices.Periods',
-        'flaticon2-document',
-        '/app/main/invoices/transaction'
-      ),
 
       // new AppMenuItem(
       //   'Requests',
