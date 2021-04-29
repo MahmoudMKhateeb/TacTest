@@ -26,17 +26,7 @@ export class AppNavigationService {
         [
           new AppMenuItem('DocumentManagement', 'Pages.DocumentTypes', 'flaticon2-document', '/app/main/documentTypes/documentTypes'),
           new AppMenuItem('DocumentsEntities', 'Pages.DocumentsEntities', 'flaticon-doc', '/app/main/documentsEntities/documentsEntities'),
-          new AppMenuItem(
-            'SubmittedDocuments',
-            'Pages.DocumentFiles',
-            'flaticon-file',
-            '/app/main/documentFiles/documentFiles',
-            [],
-            undefined,
-            undefined,
-            undefined,
-            () => this._featureCheckerService.isEnabled('App.Shipper') || this._featureCheckerService.isEnabled('App.Carrier')
-          ),
+          new AppMenuItem('SubmittedDocuments', 'Pages.DocumentFiles', 'flaticon-file', '/app/main/documentFiles/documentFiles'),
 
           new AppMenuItem(
             'DocumentTypeTranslations',
