@@ -2,6 +2,7 @@
 using Abp.Authorization;
 using Abp.Collections.Extensions;
 using Abp.Domain.Repositories;
+using Abp.Extensions;
 using Abp.Linq.Extensions;
 using Abp.Threading;
 using Abp.UI;
@@ -22,29 +23,48 @@ namespace TACHYON.Localization
     public class AppLocalizationAppService : TACHYONAppServiceBase, IAppLocalizationAppService
     {
         private readonly IRepository<AppLocalization> _appLocalizationRepository;
+        private readonly IRepository<TerminologieEdition> _terminologieEditionRepository;
+        private readonly IRepository<TerminologiePage> _terminologiePageRepository;
+
         private readonly IExcelExporterManager<AppLocalizationListDto> _excelExporterManager;
         private readonly AppLocalizationManager _appLocalizationManager;
 
-        public AppLocalizationAppService(IRepository<AppLocalization> AppLocalizationRepository,
+
+        public AppLocalizationAppService(
+            IRepository<AppLocalization> AppLocalizationRepository,
+            IRepository<TerminologieEdition> terminologieEditionRepository,
+            IRepository<TerminologiePage> terminologiePageRepository,
             IExcelExporterManager<AppLocalizationListDto> excelExporterManager,
             AppLocalizationManager appLocalizationManager)
         {
             _appLocalizationRepository = AppLocalizationRepository;
             _excelExporterManager = excelExporterManager;
             _appLocalizationManager = appLocalizationManager;
+            _terminologieEditionRepository = terminologieEditionRepository;
+            _terminologiePageRepository = terminologiePageRepository;
         }
         public async Task<PagedResultDto<AppLocalizationListDto>> GetAll(AppLocalizationFilterInput Input)
         {
             var query = GetLocalization(Input);
             var ResultPage = await query.PageBy(Input).ToListAsync();
+            var ResultPageDto = ObjectMapper.Map<List<AppLocalizationListDto>>(ResultPage);
 
             var totalCount = await query.CountAsync();
             return new PagedResultDto<AppLocalizationListDto>(
                 totalCount,
-                ObjectMapper.Map<List<AppLocalizationListDto>>(ResultPage)
+                ResultPageDto
             );
         }
-
+        public async Task<AppLocalizationForViewDto> GetForView(EntityDto input)
+        {
+            var query = await
+                _appLocalizationRepository
+                .GetAllIncluding(x => x.Translations, x => x.TerminologiePages)
+                .Include(x => x.TerminologieEditions)
+                    .ThenInclude(e => e.Edition)
+                .FirstOrDefaultAsync(e => e.Id == input.Id);
+            return ObjectMapper.Map<AppLocalizationForViewDto>(query);
+        }
         public async Task<CreateOrEditAppLocalizationDto> GetForEdit(EntityDto input)
         {
             return ObjectMapper.Map<CreateOrEditAppLocalizationDto>(await
@@ -75,7 +95,7 @@ namespace TACHYON.Localization
         {
             string[] HeaderText;
             Func<AppLocalizationListDto, object>[] propertySelectors;
-            HeaderText = new string[] { "Id", "MasterKey", "MasterValue","CurrentLanguage" };
+            HeaderText = new string[] { "Id", "MasterKey", "MasterValue", "CurrentLanguage" };
             propertySelectors = new Func<AppLocalizationListDto, object>[] { _ => _.Id, _ => _.MasterKey, _ => _.MasterValue, _ => _.Value };
 
             var LanguageListDto = ObjectMapper.Map<List<AppLocalizationListDto>>(GetLocalization(Input));
@@ -94,11 +114,28 @@ namespace TACHYON.Localization
         {
             await _appLocalizationManager.Generate();
         }
+
+        [AbpAllowAnonymous]
+        public async Task CreateOrUpdateKeyLog(TerminologieMonitorInput input)
+        {
+            var Terminologie = await _appLocalizationRepository.FirstOrDefaultAsync(x => x.MasterKey.ToLower() == input.Key.ToLower());
+            if (Terminologie == null)
+            {
+                await CreateKeyLog(input);
+            }
+            else
+            {
+                await UpdateKeyLog(input, Terminologie);
+            }
+        }
+
+
         #region Heleper
         [AbpAuthorize(AppPermissions.Pages_AppLocalization_Create)]
 
         private async Task Create(CreateOrEditAppLocalizationDto input)
         {
+            input.MasterKey = FirstCharToUpper(input.MasterKey);
             var key = ObjectMapper.Map<AppLocalization>(input);
 
             await _appLocalizationRepository.InsertAsync(key);
@@ -114,7 +151,7 @@ namespace TACHYON.Localization
         }
         private async Task CheckKeyIsExists(CreateOrEditAppLocalizationDto input)
         {
-            if (await _appLocalizationRepository.GetAll().AnyAsync( x=>x.Id!= input.Id && x.MasterKey.ToLower()== input.MasterKey.ToLower()))
+            if (await _appLocalizationRepository.GetAll().AnyAsync(x => x.Id != input.Id && x.MasterKey.ToLower() == input.MasterKey.ToLower()))
             {
                 throw new UserFriendlyException(L("TheKeyAlreadyExists"));
 
@@ -131,8 +168,35 @@ namespace TACHYON.Localization
               .OrderBy(!string.IsNullOrEmpty(Input.Sorting) ? Input.Sorting : "id asc");
         }
 
+        private async Task CreateKeyLog(TerminologieMonitorInput input)
+        {
+            AppLocalization Terminologie = new AppLocalization();
+            Terminologie.MasterKey = FirstCharToUpper(input.Key);
+            Terminologie.MasterValue = Terminologie.MasterKey.ToSentenceCase();
+            if (AbpSession.TenantId.HasValue) Terminologie.TerminologieEditions.Add(new TerminologieEdition { EditionId = GetCurrentTenant().EditionId.Value });
+            Terminologie.TerminologiePages.Add(new TerminologiePage { PageUrl = input.PageUrl });
 
+            await _appLocalizationRepository.InsertAsync(Terminologie);
+        }
 
+        private async Task UpdateKeyLog(TerminologieMonitorInput input, AppLocalization terminologie)
+        {
+            if (AbpSession.TenantId.HasValue)
+            {
+                int? EditionId = GetCurrentTenant().EditionId;
+                if (!await _terminologieEditionRepository.GetAll().AnyAsync(x => x.EditionId == EditionId && x.TerminologieId == terminologie.Id))
+                {
+                    await _terminologieEditionRepository.InsertAsync(new TerminologieEdition { EditionId = EditionId.Value, TerminologieId = terminologie.Id });
+                }
+            }
+
+            if (!await _terminologiePageRepository.GetAll().AnyAsync(x => x.PageUrl == input.PageUrl && x.TerminologieId == terminologie.Id))
+            {
+                await _terminologiePageRepository.InsertAsync(new TerminologiePage { PageUrl = input.PageUrl, TerminologieId = terminologie.Id });
+            }
+        }
+
+        public string FirstCharToUpper(string input) => input.First().ToString().ToUpper() + input.Substring(1);
 
         #endregion
     }

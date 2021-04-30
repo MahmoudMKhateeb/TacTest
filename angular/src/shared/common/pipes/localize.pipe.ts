@@ -1,7 +1,11 @@
 import { Injector, Pipe, PipeTransform } from '@angular/core';
 import { AppConsts } from '@shared/AppConsts';
 import { LocalizationService } from 'abp-ng2-module';
-
+import { TerminologieServiceProxy } from 'shared/service-proxies/terminologies-ervice-proxy';
+const capitalize = (s) => {
+  if (typeof s !== 'string') return '';
+  return s.charAt(0).toUpperCase() + s.slice(1);
+};
 @Pipe({
   name: 'localize',
 })
@@ -10,13 +14,15 @@ export class LocalizePipe implements PipeTransform {
 
   localization: LocalizationService;
 
-  constructor(injector: Injector) {
+  constructor(injector: Injector, private terminologieServiceProxy: TerminologieServiceProxy) {
     this.localization = injector.get(LocalizationService);
   }
 
   l(key: string, ...args: any[]): string {
+    key = capitalize(key);
     args.unshift(key);
     args.unshift(this.localizationSourceName);
+    this.terminologieServiceProxy.Add(key);
     return this.ls.apply(this, args);
   }
 

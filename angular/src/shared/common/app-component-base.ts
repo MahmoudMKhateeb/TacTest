@@ -19,6 +19,12 @@ import { NgxSpinnerTextService } from '@app/shared/ngx-spinner-text.service';
 import { NgbDateStruct } from '@node_modules/@ng-bootstrap/ng-bootstrap';
 import { DateFormatterService } from '@app/shared/common/hijri-gregorian-datepicker/date-formatter.service';
 import { isNumeric } from '@node_modules/rxjs/internal/util/isNumeric';
+import { TerminologieServiceProxy, Terminologie } from 'shared/service-proxies/terminologies-ervice-proxy';
+
+const capitalize = (s) => {
+  if (typeof s !== 'string') return '';
+  return s.charAt(0).toUpperCase() + s.slice(1);
+};
 
 export abstract class AppComponentBase {
   localizationSourceName = AppConsts.localization.defaultLocalizationSourceName;
@@ -35,8 +41,10 @@ export abstract class AppComponentBase {
   ui: AppUiCustomizationService;
   appUrlService: AppUrlService;
   spinnerService: NgxSpinnerService;
+  private terminologieServiceProxy: TerminologieServiceProxy;
   private ngxSpinnerTextService: NgxSpinnerTextService;
   dateFormatterService: DateFormatterService;
+  terminologie: Terminologie[] = [];
   /**
    * max file size that  user can upload
    */
@@ -56,6 +64,7 @@ export abstract class AppComponentBase {
     this.spinnerService = injector.get(NgxSpinnerService);
     this.ngxSpinnerTextService = injector.get(NgxSpinnerTextService);
     this.dateFormatterService = injector.get(DateFormatterService);
+    this.terminologieServiceProxy = injector.get(TerminologieServiceProxy);
   }
 
   flattenDeep(array) {
@@ -63,8 +72,10 @@ export abstract class AppComponentBase {
   }
 
   l(key: string, ...args: any[]): string {
+    key = capitalize(key);
     args.unshift(key);
     args.unshift(this.localizationSourceName);
+    this.terminologieServiceProxy.Add(key);
     return this.ls.apply(this, args);
   }
 

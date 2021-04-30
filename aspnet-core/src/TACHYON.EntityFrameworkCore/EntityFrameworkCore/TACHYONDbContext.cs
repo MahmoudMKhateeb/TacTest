@@ -101,6 +101,10 @@ namespace TACHYON.EntityFrameworkCore
         #region Localization
         public DbSet<AppLocalization> AppLocalizations { get; set; }
         public DbSet<AppLocalizationTranslation> AppLocalizationTranslations { get; set; }
+        public DbSet<TerminologieEdition> TerminologieEditions { get; set; }
+
+        public DbSet<TerminologiePage> TerminologiePages { get; set; }
+
 
         #endregion
         public virtual DbSet<PackingType> PackingTypes { get; set; }

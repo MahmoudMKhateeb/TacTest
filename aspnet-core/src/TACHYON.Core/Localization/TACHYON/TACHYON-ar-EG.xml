@@ -18,6 +18,7 @@
     <text name="Activate">تفعيل</text>
     <text name="ActivateSubscriptionWarningMessage">Webhook subscription will be activated and your endpoint will get related webhooks</text>
     <text name="ActivationMailSentMessage">رابط  تأكيد البريد الإلكتروني تم إرساله إلى بريدك الإلكتروني.  يرجى التحقق من رسائل بريدك الإلكتروني  </text>
+    <text name="Active">مفعل</text>
     <text name="Add">أضف</text>
     <text name="AddDocument">إضافة مستند جديد</text>
     <text name="AddedTime">الإضافة</text>
@@ -211,7 +212,7 @@
     <text name="CustomCSS">ملف Css خاص</text>
     <text name="CustomData">بيانات مخصصة</text>
     <text name="CustomRange">مدى مخصص</text>
-    <text name="d/M/yyyy">سنة/شهر/يوم</text>
+    <text name="D/M/yyyy">سنة/شهر/يوم</text>
     <text name="Daily">يومي</text>
     <text name="DailyPrice">السعر اليومي</text>
     <text name="Dashboard">لوحة القيادة</text>
@@ -286,6 +287,7 @@
     <text name="DetailingSubscription">See webhook detail page</text>
     <text name="Details">التفاصيل</text>
     <text name="DifferentTenantImpersonationErrorMessage">لا يمكن تمثيل مستخدم من عميل آخر!</text>
+    <text name="DirectShippingRequests">طلبات الشحن المباشر</text>
     <text name="Disable">تعطيل</text>
     <text name="Disabled">معطّل</text>
     <text name="DisableRecurringPayments">لا تفوتر حسابي تلقائيا</text>
@@ -336,6 +338,7 @@
     <text name="DynamicParameters">الحقول الديناميكية</text>
     <text name="DynamicParameterValue">قيمة المعلمة الديناميكية</text>
     <text name="DynamicParameterValues">قيم الحقل الديناميكي</text>
+    <text name="Edit">تحرير</text>
     <text name="EditAppLocalization">تحرير المصلطح</text>
     <text name="EditCounty">تحرير الدولة</text>
     <text name="EditDriver"> تعديل السائق</text>
@@ -385,6 +388,7 @@
     <text name="EnableRecurringPayments">تمكين المدفوعات المتكررة</text>
     <text name="EnableTwoFactorLogin">تمكين توثيق تسجيل الدخول ذو عاملين.</text>
     <text name="EnableUserAccountLockingOnFailedLoginAttemts">تمكين تأمين محاولات الدخول الفاشلة</text>
+    <text name="EndDate">تاريخ النهاية</text>
     <text name="EndTime">وقت النهاية</text>
     <text name="EnglishLettersOnly">حروف انجليزية فقط</text>
     <text name="Enter">أدخل</text>
@@ -536,7 +540,6 @@
     <text name="IsLockoutEnabled_Hint">تم قفل حساب المستخدم لفترة من الوقت بعد كمية من محاولات الدخول الفاشلة.</text>
     <text name="IsNumberUnique">الرقم مميز</text>
     <text name="IsQuickThemeSelectEnabled">هل الاختيار السريع للتصاميم مفعّل</text>
-    <text name="isRequired">مطلوب</text>
     <text name="IsRequired">مطلوب</text>
     <text name="IsSessionTimeOutEnabled">تمكين التحكم في مهلة الجلسة</text>
     <text name="IsSmsVerificationEnabled">تمكين التوثيق عن طريق الرسائل الهاتفية - أس أم أس.</text>
@@ -586,7 +589,7 @@
     <text name="MailSent">تم إرسال البريد</text>
     <text name="MainMenu">الرئيسية</text>
     <text name="Maintenance">الصيانة</text>
-    <text name="makeSureThatYouFillAllRequiredFields">الرجاء التأكد من ملء كل الخانات المطلوبة</text>
+    <text name="MakeSureThatYouFillAllRequiredFields">الرجاء التأكد من ملء كل الخانات المطلوبة</text>
     <text name="ManageLinkedAccounts">إدارة الحسابات</text>
     <text name="ManageLinkedAccounts_Description">إدارة الحسابات المرتبطة بحسابك</text>
     <text name="ManageUserDelegations">إدارة التفويضات</text>
@@ -605,7 +608,7 @@
     <text name="MaximumUserCount_Error_Detail">يسمح لهذا العميل {0} مستخدم بحد أقصى.</text>
     <text name="MaximumUserCount_Error_Message">وصلت إلى الحد الأقصى المسموح به للمستخدمين!</text>
     <text name="MaxValue">أكبر قيمة</text>
-    <text name="medium">متوسط</text>
+    <text name="Medium">متوسط</text>
     <text name="Members">الأعضاء</text>
     <text name="MembershipType">نوع العضوية</text>
     <text name="Message">الرسالة</text>
@@ -613,7 +616,7 @@
     <text name="MetaDataAddress">عنوان بيانات التعريف</text>
     <text name="MinDigitNumberCanNotBeLessThan1">الحد الأدني من الخانات لايمكن أن يكون أقل من 1</text>
     <text name="MinDigitNumberShouldBeLessMaxDigitNumber">الحد الأدني من الخانات من المفترض أن يكون أقل من الحد الأعلى</text>
-    <text name="minDigits">أقل عدد من الخانات</text>
+    <text name="MinDigits">أقل عدد من الخانات</text>
     <text name="MinValue">أقل قيمة</text>
     <text name="ModalName">إسم الموديل</text>
     <text name="ModalYear">سنة الموديل</text>
@@ -674,12 +677,13 @@
     <text name="NewUserRegisteredNotificationMessage">تم إنشاء حساب جديد بالنظام. المستخدم: {userName}, البريد الالكتروني: {emailAddress}.</text>
     <text name="NewValue">القيمة الجديدة</text>
     <text name="Next">التالي</text>
+    <text name="No">لا</text>
     <text name="NoCamera">لم يتم العثور على كاميرا متاحة!</text>
     <text name="NoInternetConnection">أنت غير متصل حاليا بالإنترنت</text>
     <text name="None">لا شيء</text>
     <text name="NoOrganizationUnitDefinedYet">لا توجد وحدات تنظيمية.</text>
     <text name="NoPermission">ليس لديك أي إذن. تواصل مع مشرف النظام.</text>
-    <text name="normal">عادي</text>
+    <text name="Normal">عادي</text>
     <text name="NotAMemberYet">تسجيل جديد</text>
     <text name="NotAssigned">لم يعيّن</text>
     <text name="Note">ملاحظات</text>
@@ -784,7 +788,7 @@
     <text name="PleaseEnterLoginInformation">الرجاء إدخال معلومات تسجيل الدخول</text>
     <text name="PleaseEnterNoMoreThanNCharacter">الرجاء إدخال أكثر من {0} حرفا.</text>
     <text name="PleaseEnterYourNewPassword">الرجائ إدخال كلمة السر الجديدة الخاصة بك</text>
-    <text name="pleasemakesureyouchoosethecountryandthecity!">الرجاء التأكد من إدخال بيانات المدينة و البلد!</text>
+    <text name="Pleasemakesureyouchoosethecountryandthecity!">الرجاء التأكد من إدخال بيانات المدينة و البلد!</text>
     <text name="PleaseSelectAPicture">يرجى تحديد صورة!</text>
     <text name="PleaseWait">أرجو الإنتظار</text>
     <text name="PleaseWaitToConfirmYourEmailMessage">الرجاء الانتظار لحين تأكيد عنوان البريد الإلكتروني...</text>
@@ -863,8 +867,10 @@
     <text name="SaveAndClose">حـفظ وإغلاق</text>
     <text name="SaveAndNext">حـفظ و التالي</text>
     <text name="SaveAsSystemDefault">حفظ كخيار افتراضي للنظام</text>
+    <text name="Saving...">جاري الحفظ...</text>
     <text name="SavingWithThreeDot">جاري الحفظ...</text>
     <text name="ScanQrCodeWithYourMobileApp">مسح رمز الاستجابة السريعة هذا مع تطبيق المحمول</text>
+    <text name="Search">بحث</text>
     <text name="SearchWithThreeDot">بـحث...</text>
     <text name="SecondShort{0}">{0} ث</text>
     <text name="Security">الأمن</text>
@@ -931,6 +937,7 @@
     </text>
     <text name="ShippingRequestReceiverCode">رقم الشحنة الخاصة بك هي:{0}</text>
     <text name="ShippingRequests">طلبات الشحن</text>
+    <text name="ShippingRequestTrips">رحلات طلب شحن</text>
     <text name="ShippingTypes">أنواع الشحن</text>
     <text name="ShouldChangePasswordOnNextLogin">يجب تغيير كلمة المرور عند تسجيل الدخول .</text>
     <text name="Show">إظهار</text>
@@ -952,12 +959,13 @@
     <text name="Source">مصدر</text>
     <text name="SpecialConstant">رمز مميز</text>
     <text name="Start">بدء</text>
+    <text name="StartDate">تاريخ البداية</text>
     <text name="StartTime">وقت البداية</text>
     <text name="StartUsingFree">بدء استخدام مجاني</text>
     <text name="Static">مـثبّت</text>
     <text name="StaticRole_Tooltip">لا يمكن حذف أدوار ثابتة.</text>
     <text name="StringLengthDoesntMatch">يجب أن يكون {0} كحد ادنى {1} وحد اقصى {2}.</text>
-    <text name="strong">قوي</text>
+    <text name="Strong">قوي</text>
     <text name="Submit">إرسال</text>
     <text name="SubmitInvoice">فواتير الناقل</text>
     <text name="SubmitInvoiceOnAccepted">
@@ -1125,8 +1133,9 @@
     <text name="TrialExpireNotification">ستنتهي الفترة التجريبية خلال {0} أيام.</text>
     <text name="TrialSubscriptionNotification">أنت في الفترة التجريبية لنسخة {0}، {1} للشراء.</text>
     <text name="TrialWithoutEndDateErrorMessage">يجب أن يكون للحسابات التجريبية تاريخ انتهاء الاشتراك</text>
-    <text name="tripEndDate">تاريح نهاية الرحلة</text>
+    <text name="TripEndDate">تاريح نهاية الرحلة</text>
     <text name="TripRejectReason">أسباب رفض الرحلة</text>
+    <text name="TripsStartDate">تاريخ بداية الرحلة</text>
     <text name="Truck">شاحنة</text>
     <text name="TruckDetails">تفاصيل الشاحنة</text>
     <text name="TruckDocuments">مستندات الشاحنة</text>
@@ -1271,8 +1280,8 @@
     <text name="VerifySecurityCodeNotLoggedInErrorMessage">يجب عليك تسجيل الدخول أولا، من أجل التحقق من حسابك! على الأرجح، تم تسجيل الخروج التلقائي. يرجى التوجه إلى صفحة تسجيل الدخول وإعادة المحاولة.</text>
     <text name="VerifyYourCode">تحقق من الرمز</text>
     <text name="Version">الإصدار</text>
-    <text name="veryStrong">قوي جدا</text>
-    <text name="veryWeak">ضعيف جدا</text>
+    <text name="VeryStrong">قوي جدا</text>
+    <text name="VeryWeak">ضعيف جدا</text>
     <text name="View">عرض</text>
     <text name="ViewDetails">عرض التفاصيل</text>
     <text name="ViewDocuments">عرض المستندات</text>
@@ -1281,12 +1290,12 @@
     <text name="ViewWebhookEvent">View Webhook Event</text>
     <text name="ViewWebhookSecret">View Webhook Secret</text>
     <text name="VisualSettings">إعدادات بصرية</text>
-    <text name="vlaueMustBeGreaterThan">يجب أن تكون القيمة أكبر من</text>
+    <text name="VlaueMustBeGreaterThan">يجب أن تكون القيمة أكبر من</text>
     <text name="WaitAfterSubscriptionExpireDate">انتظر بعد انتهاء صلاحية الاشتراك</text>
     <text name="WaitingDayAfterExpire">أيام الانتظار بعد انتهاء الصلاحية</text>
     <text name="WaitingForReviewMsg"> الرجاء الإنتظار حتى يتم مراجعة المستندات التي تم تقديمها</text>
     <text name="Warning">تحذير</text>
-    <text name="weak">ضعيف</text>
+    <text name="Weak">ضعيف</text>
     <text name="WebhookEndpoint">Webhook Endpoint</text>
     <text name="WebhookEvent">Webhook Event</text>
     <text name="WebhookEventDetail">Webhook Event Detail</text>
@@ -1329,7 +1338,7 @@
     <text name="XCountPermissionFiltered">إذن {0} تم تصفية.</text>
     <text name="Xms">{0} جزء ث.</text>
     <text name="Yellow">أصفر</text>
-    <text name="yes">نعم</text>
+    <text name="Yes">نعم</text>
     <text name="Yesterday">اليوم السابق</text>
     <text name="You">أنت</text>
     <text name="YouAlreadySentAFriendshipRequestToThisUser">سبق وأن أضفت هذا المستخدم.</text>

@@ -11,10 +11,16 @@ namespace TACHYON.Localization
         [Required]
         [DataType(dataType:DataType.Text)]
         public string MasterKey { get; set; }
-        [Required]
         [DataType(dataType: DataType.MultilineText)]
-        public string MasterValue { get; set; }
+        public  string MasterValue { get; set; }
         public ICollection<AppLocalizationTranslation> Translations { get; set; }
+        public List<TerminologieEdition> TerminologieEditions { get; set; } 
+        public List<TerminologiePage> TerminologiePages { get; set; } 
+        public AppLocalization()
+        {
+            TerminologieEditions = new List<TerminologieEdition>();
+            TerminologiePages = new List<TerminologiePage>();
+        }
 
     }
 }
