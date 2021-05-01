@@ -512,7 +512,7 @@ namespace TACHYON.Notifications
 
         public async Task NotifyDriverWhenAssignToTrip(ShippingRequestTrip Trip)
         {
-            if (Trip.AssignedDriverUserId.HasValue) return;
+            if (!Trip.AssignedDriverUserId.HasValue) return;
             var notificationData = new LocalizableMessageNotificationData(
                 new LocalizableString(
                     L("NotifyDriverWhenAssignToTrip"),
