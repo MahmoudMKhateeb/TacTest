@@ -118,6 +118,7 @@ namespace TACHYON.Localization
         [AbpAllowAnonymous]
         public async Task CreateOrUpdateKeyLog(TerminologieMonitorInput input)
         {
+            if (string.IsNullOrEmpty(input.Key)) return;
             var Terminologie = await _appLocalizationRepository.FirstOrDefaultAsync(x => x.MasterKey.ToLower() == input.Key.ToLower());
             if (Terminologie == null)
             {
