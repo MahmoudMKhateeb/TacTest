@@ -165,6 +165,8 @@ namespace TACHYON.Localization
              .GetAllIncluding(x => x.Translations)
               .AsNoTracking()
               .WhereIf(!string.IsNullOrWhiteSpace(Input.Filter), e => e.MasterKey.ToLower().Contains(Input.Filter) || e.MasterValue.ToLower().Contains(Input.Filter) || e.Translations.Any(x => x.Value.ToLower().Contains(Input.Filter)))
+              .WhereIf(Input.EditionId.HasValue, e => e.TerminologieEditions.Any(x=>x.EditionId== Input.EditionId.Value))
+              .WhereIf(!string.IsNullOrWhiteSpace(Input.Page), e => e.TerminologiePages.Any(x => x.PageUrl.ToLower().Contains(Input.Page.ToLower())))
               .OrderBy(!string.IsNullOrEmpty(Input.Sorting) ? Input.Sorting : "id asc");
         }
 

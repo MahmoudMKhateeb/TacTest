@@ -19,7 +19,7 @@ import { NgxSpinnerTextService } from '@app/shared/ngx-spinner-text.service';
 import { NgbDateStruct } from '@node_modules/@ng-bootstrap/ng-bootstrap';
 import { DateFormatterService } from '@app/shared/common/hijri-gregorian-datepicker/date-formatter.service';
 import { isNumeric } from '@node_modules/rxjs/internal/util/isNumeric';
-import { TerminologieServiceProxy, Terminologie } from 'shared/service-proxies/terminologies-ervice-proxy';
+import { TerminologieServiceProxy } from 'shared/service-proxies/terminologies-ervice-proxy';
 
 const capitalize = (s) => {
   if (typeof s !== 'string') return '';
@@ -44,7 +44,6 @@ export abstract class AppComponentBase {
   private terminologieServiceProxy: TerminologieServiceProxy;
   private ngxSpinnerTextService: NgxSpinnerTextService;
   dateFormatterService: DateFormatterService;
-  terminologie: Terminologie[] = [];
   /**
    * max file size that  user can upload
    */

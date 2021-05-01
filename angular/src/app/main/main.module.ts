@@ -228,7 +228,7 @@ import { SendDirectRequestModalComponent } from '@app/main/shippingRequests/ship
 import { AssignDriverTruckModalComponent } from '@app/main/shippingRequests/shippingRequests/ShippingRequestTrips/trips/assignDriverTruckModal/assignDriverTruckModal.component';
 import { AppLocalizationComponent } from '@app/main/applocalizations/applocalization.component';
 import { ApplocalizationModalComponent } from '@app/main/applocalizations/create-or-edit-applocalization-modal.component';
-
+import { ViewApplocalizationModalComponent } from '@app/main/applocalizations/view-applocalization-modal.component';
 NgxBootstrapDatePickerConfigService.registerNgxBootstrapDatePickerLocales();
 
 @NgModule({
@@ -426,6 +426,7 @@ NgxBootstrapDatePickerConfigService.registerNgxBootstrapDatePickerLocales();
     PricingOfferComponent,
     AppLocalizationComponent,
     ApplocalizationModalComponent,
+    ViewApplocalizationModalComponent,
   ],
   providers: [
     { provide: BsDatepickerConfig, useFactory: NgxBootstrapDatePickerConfigService.getDatepickerConfig },

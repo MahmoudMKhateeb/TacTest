@@ -24,7 +24,6 @@ export class ApplocalizationModalComponent extends AppComponentBase implements O
   active: boolean = false;
   saving: boolean = false;
 
-  Specifiedtime: Date = new Date();
   constructor(injector: Injector, private _Service: AppLocalizationServiceProxy) {
     super(injector);
   }

@@ -21,22 +21,42 @@
         <div class="card-body">
           <form class="form" autocomplete="off">
             <div>
-              <div class="row align-items-center">
+              <div class="row mb-4">
                 <div class="col-xl-12">
-                  <div class="form-group m-form__group align-items-center">
-                    <div class="input-group">
-                      <input
-                        [(ngModel)]="filterText"
-                        name="filterText"
-                        autoFocus
-                        class="form-control m-input"
-                        [placeholder]="l('SearchWithThreeDot')"
-                        type="text"
-                      />
-                      <span class="input-group-btn">
-                        <button (click)="getAll()" class="btn btn-primary" type="submit"><i class="flaticon-search-1"></i></button>
-                      </span>
-                    </div>
+                  <label for="TenantNameOrTenancyCode">{{ 'TenantNameOrTenancyCode' | localize }}</label>
+                  <div class="input-group">
+                    <input
+                      [(ngModel)]="input.filter"
+                      name="filterText"
+                      autoFocus
+                      class="form-control m-input"
+                      [placeholder]="l('SearchWithThreeDot')"
+                      type="text"
+                    />
+                    <span class="input-group-btn">
+                      <button (click)="getAll()" class="btn btn-primary" type="submit"><i class="flaticon-search-1"></i></button>
+                    </span>
+                  </div>
+                </div>
+              </div>
+              <div class="row mb-4">
+                <div class="col-xl-6">
+                  <label for="EditionDropdown">{{ 'Edition' | localize }}</label>
+                  <select class="form-control" name="editionId" [(ngModel)]="this.input.editionId">
+                    <option *ngFor="let edition of editions" [value]="edition.value">{{ edition.displayText }}</option>
+                  </select>
+                </div>
+                <div class="col-xl-6">
+                  <label for="Pages">{{ 'Pages' | localize }}</label>
+                  <div class="input-group">
+                    <input
+                      [(ngModel)]="input.page"
+                      name="Page"
+                      autoFocus
+                      class="form-control m-input"
+                      [placeholder]="l('SearchWithThreeDot')"
+                      type="text"
+                    />
                   </div>
                 </div>
               </div>
@@ -60,7 +80,7 @@
               >
                 <ng-template pTemplate="header">
                   <tr>
-                    <th style="width: 130px;" [hidden]="!isGrantedAny('Pages.AppLocalizations.Edit', 'Pages.AppLocalizations.Delete')">
+                    <th style="width: 130px;">
                       {{ l('Actions') }}
                     </th>
                     <th style="width: 150px;" pSortableColumn="MasterKey">
@@ -78,12 +98,15 @@
                 </ng-template>
                 <ng-template pTemplate="body" let-record="$implicit">
                   <tr>
-                    <td style="width: 130px;" [hidden]="!isGrantedAny('Pages.AppLocalizations.Edit', 'Pages.AppLocalizations.Delete')">
+                    <td style="width: 130px;">
                       <div class="btn-group dropdown" dropdown container="body">
                         <button class="dropdown-toggle btn btn-sm btn-primary" dropdownToggle>
                           <i class="fa fa-cog"></i><span class="caret"></span> {{ l('Actions') }}
                         </button>
                         <ul class="dropdown-menu" *dropdownMenu>
+                          <li>
+                            <a href="javascript:;" class="dropdown-item" (click)="ViewAppLocalizationModel.show(record.id)">{{ l('View') }}</a>
+                          </li>
                           <li>
                             <a
                               href="javascript:;"
@@ -144,5 +167,6 @@
     </div>
 
     <applocalization-modal #AppLocalizationModel (modalSave)="getAll()"></applocalization-modal>
+    <view-applocalization-modal #ViewAppLocalizationModel></view-applocalization-modal>
   </div>
 </div>
