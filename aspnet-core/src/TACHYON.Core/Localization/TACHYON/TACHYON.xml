@@ -733,6 +733,7 @@
     <text name="IncorrectImageFormat">Incorrect image format!</text>
     <text name="Info">Info</text>
     <text name="InputType">Input Type</text>
+    <text name="InReview">In review</text>
     <text name="IntervalType">Interval Type</text>
     <text name="InvalidEmailAddress">Invalid email address</text>
     <text name="InvalidEmailConfirmationCode">Invalid email confirmation code</text>
@@ -1534,6 +1535,7 @@
     <text name="TestEmail_Subject">TACHYON test email</text>
     <text name="TestEmailSentSuccessfully">Test e-mail sent successfully.</text>
     <text name="TestEmailSettingsHeader">Test Email Settings</text>
+    <text name="Text">Text</text>
     <text name="ThankYou">Thank You</text>
     <text name="TheKeyAlreadyExists">The key already xxists</text>
     <text name="Theme_Default">Default</text>
