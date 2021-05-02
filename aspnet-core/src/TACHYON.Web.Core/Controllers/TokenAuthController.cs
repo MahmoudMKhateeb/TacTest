@@ -273,12 +273,12 @@ namespace TACHYON.Web.Controllers
         }
 
         [HttpPost]
-        public async Task<string> MobileAuthenticate(string Username)
+        public async Task MobileAuthenticate(string Username,string Language)
         {
             if (string.IsNullOrEmpty(Username)) throw new AbpAuthorizationException(L("InvalidMobileNumber"));
             var user = await _userManager.GetUserByDriverPhoneNumberAsync(Username);
             if (user == null) throw new AbpAuthorizationException(L("InvalidMobileNumber"));
-            return await _mobileManager.CreateOTP(user);
+            await _mobileManager.CreateOTP(user, Language);
         }
         [HttpPost]
 

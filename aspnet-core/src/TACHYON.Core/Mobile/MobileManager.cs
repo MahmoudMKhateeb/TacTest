@@ -2,14 +2,17 @@
 using Abp.Auditing;
 using Abp.Authorization;
 using Abp.Authorization.Users;
+using Abp.Configuration;
 using Abp.Domain.Repositories;
 using Abp.Domain.Uow;
 using Abp.IdentityFramework;
+using Abp.Localization;
 using Abp.MultiTenancy;
 using Abp.Timing;
 using Abp.UI;
 using Microsoft.EntityFrameworkCore;
 using System;
+using System.Globalization;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
@@ -44,13 +47,12 @@ namespace TACHYON.Mobile
             ClientInfoProvider = NullClientInfoProvider.Instance;
             _smsSender = smsSender;
         }
-        public async Task<string> CreateOTP(User user)
+        public async Task CreateOTP(User user,string Language)
         {
             await CheckIsExistOTP(user.Id);
             var userOTP = new UserOTP(user.Id);
             await _userOTPRepository.InsertAsync(userOTP);
-           await _smsSender.SendAsync(user.PhoneNumber,L(TACHYONConsts.SMSOTP, userOTP.OTP));
-            return userOTP.OTP;
+            await _smsSender.SendAsync(user.PhoneNumber, L(TACHYONConsts.SMSOTP, new CultureInfo(Language), userOTP.OTP));
         }
 
         private async Task CheckIsExistOTP(long userId)
