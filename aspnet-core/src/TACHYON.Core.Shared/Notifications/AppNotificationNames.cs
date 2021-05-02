@@ -25,6 +25,7 @@ namespace TACHYON.Notifications
         public const string AcceptShippingRequestBid = "App.AcceptShippingRequestBid";
         public const string ShippingRequestAsBidWithSameTruck = "App.ShippingRequestAsBidWithSameTruck";
         public const string CreateShippingRequestBid = "app.CreateShippingRequestBid";
+        public const string UpdateShippingRequestBid = "app.UpdateShippingRequestBid";
         public const string CancelShippingRequestBid = "app.CancelShippingRequestBid";
         public const string DocumentFileBeforExpiration = "App.DocumentFileBeforExpiration";
         public const string DocumentFileExpiration = "App.DocumentFileExpiration";

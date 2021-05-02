@@ -1,4 +1,5 @@
 ﻿using Abp;
+using Abp.Application.Editions;
 using Abp.Application.Features;
 using Abp.Application.Services.Dto;
 using Abp.Authorization;
@@ -16,6 +17,7 @@ using System.Linq;
 using System.Linq.Dynamic.Core;
 using System.Threading.Tasks;
 using TACHYON.Authorization;
+using TACHYON.Authorization.Users;
 using TACHYON.Features;
 using TACHYON.Invoices.Balances;
 using TACHYON.MultiTenancy;
@@ -36,7 +38,7 @@ namespace TACHYON.Shipping.ShippingRequestBids
             IRepository<ShippingRequest, long> shippingRequestsRepository,
             IRepository<Tenant> tenantsRepository, IRepository<Truck, long> trucksRepository,
             BackgroundJobManager backgroundJobManager, CommissionManager commissionManager,
-            IAppNotifier appNotifier, OfferManager offerManager, BalanceManager balanceManager,
+            IAppNotifier appNotifier, OfferManager offerManager, BalanceManager balanceManager, ShippingRequestManager shippingRequestManager, UserManager userManager, IRepository<Edition> editionRepository)
             ShippingRequestManager shippingRequestManager, ShippingRequestBidManager shippingRequestBidManager,
             TachyonPriceOffersAppService carrierPriceOfferService)
         {
@@ -50,6 +52,8 @@ namespace TACHYON.Shipping.ShippingRequestBids
             _offerManager = offerManager;
             _balanceManager = balanceManager;
             _shippingRequestManager = shippingRequestManager;
+            _userManager = userManager;
+            _editionRepository = editionRepository;
             _shippingRequestBidManager = shippingRequestBidManager;
             _carrierPriceOfferService = carrierPriceOfferService;
         }
@@ -64,6 +68,8 @@ namespace TACHYON.Shipping.ShippingRequestBids
         private readonly OfferManager _offerManager;
         private readonly BalanceManager _balanceManager;
         private readonly ShippingRequestManager _shippingRequestManager;
+        private readonly UserManager _userManager;
+        private readonly IRepository<Edition> _editionRepository;
         private readonly ShippingRequestBidManager _shippingRequestBidManager;
         private readonly TachyonPriceOffersAppService _carrierPriceOfferService;
 
@@ -147,7 +153,7 @@ namespace TACHYON.Shipping.ShippingRequestBids
                 return await Create(input,item);
             }
 
-            return await Edit(input);
+            return await Edit(input,item);
         }
 
         /// <summary>
@@ -437,11 +443,7 @@ namespace TACHYON.Shipping.ShippingRequestBids
             shippingRequest.TotalBids += 1;
             await CurrentUnitOfWork.SaveChangesAsync();
 
-
-            //notification to shipper when Carrier create new bid in his Shipping Request
-            await _appNotifier.CreateBidRequest(
-                new UserIdentifier(shippingRequestBid.ShippingRequestFk.TenantId, shippingRequestBid.ShippingRequestFk.CreatorUserId.Value),
-                shippingRequestBid.Id);
+            await SendNotificationAfterBid(shippingRequest, shippingRequestBid,true);
 
             return shippingRequestBid.Id;
         }
@@ -449,12 +451,57 @@ namespace TACHYON.Shipping.ShippingRequestBids
 
         [RequiresFeature(AppFeatures.Carrier)]
         [AbpAuthorize(AppPermissions.Pages_ShippingRequestBids_Edit)]
-        private async Task<long> Edit(CreatOrEditShippingRequestBidDto input)
+        private async Task<long> Edit(CreatOrEditShippingRequestBidDto input,ShippingRequest shippingRequest)
         {
             ShippingRequestBid item = await _shippingRequestBidsRepository.FirstOrDefaultAsync(input.Id.Value);
             ObjectMapper.Map(input, item);
             await _commissionManager.AddCommissionInfoAfterCarrierBid(item);
+
+            await SendNotificationAfterBid(shippingRequest, item,false);
+
             return item.Id;
+
+
+        }
+
+        private async Task SendNotificationAfterBid(ShippingRequest shippingRequest, ShippingRequestBid shippingRequestBid,bool IsCreateOperation)
+        {
+            if (!shippingRequest.IsTachyonDeal)
+            {
+                //notification to shipper when Carrier create new bid in his Shipping Request
+                if (IsCreateOperation)
+                {
+                    await _appNotifier.CreateBidRequest(
+                        new UserIdentifier(shippingRequest.TenantId, shippingRequest.CreatorUserId.Value),
+                        shippingRequestBid.Id);
+                }
+                else
+                {
+                    await _appNotifier.UpdateBidRequest(
+                        new UserIdentifier(shippingRequest.TenantId, shippingRequest.CreatorUserId.Value),
+                        shippingRequestBid.Id);
+                }
+            }
+            else
+            {
+                //send notification to tachyon dealer
+                var edition = await _editionRepository.FirstOrDefaultAsync(x => x.DisplayName.ToLower() == TACHYONConsts.TachyonDealerEdtionName.ToLower());
+                var tenant = await _tenantsRepository.FirstOrDefaultAsync(x => x.EditionId == edition.Id);
+                var tachyonDealerUser = await _userManager.GetAdminByTenantIdAsync(tenant.Id);
+
+                if (IsCreateOperation)
+                {
+                    await _appNotifier.CreateBidRequest(
+                        new UserIdentifier(tenant.Id, tachyonDealerUser.Id),
+                        shippingRequestBid.Id);
+                }
+                else
+                {
+                    await _appNotifier.UpdateBidRequest(
+                        new UserIdentifier(tenant.Id, tachyonDealerUser.Id),
+                        shippingRequestBid.Id);
+                }
+            }
         }
 
         private void ThrowShippingRequestIsNotOngoingError()

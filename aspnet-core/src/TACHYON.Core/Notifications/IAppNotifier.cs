@@ -35,6 +35,7 @@ namespace TACHYON.Notifications
 
         Task SomeTrucksCouldntBeImported(UserIdentifier user, string fileToken, string fileType, string fileName);
         Task CreateBidRequest(UserIdentifier argsUser, long shippingRequestBidId);
+        Task UpdateBidRequest(UserIdentifier argsUser, long shippingRequestBidId);
          Task TenantDocumentFileUpdate(DocumentFile documentFile);
 
         Task CancelBidRequest(UserIdentifier argsUser, long shippingRequestId,long shippingRequestBidId);
