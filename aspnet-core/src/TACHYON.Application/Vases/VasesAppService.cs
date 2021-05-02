@@ -13,6 +13,7 @@ using TACHYON.Authorization;
 using Abp.Extensions;
 using Abp.Authorization;
 using Microsoft.EntityFrameworkCore;
+using Abp.UI;
 
 namespace TACHYON.Vases
 {
@@ -83,6 +84,8 @@ namespace TACHYON.Vases
 
         public async Task CreateOrEdit(CreateOrEditVasDto input)
         {
+            CheckIfEmptyOrDuplicatedVasName(input);
+
             if (input.Id == null)
             {
                 await Create(input);
@@ -92,6 +95,7 @@ namespace TACHYON.Vases
                 await Update(input);
             }
         }
+
 
         [AbpAuthorize(AppPermissions.Pages_Administration_Vases_Create)]
         protected virtual async Task Create(CreateOrEditVasDto input)
@@ -139,5 +143,14 @@ namespace TACHYON.Vases
             return _vasesExcelExporter.ExportToFile(vasListDtos);
         }
 
+
+        private void CheckIfEmptyOrDuplicatedVasName(CreateOrEditVasDto input)
+        {
+            var item = _vasRepository.FirstOrDefaultAsync(x => x.Name.ToLower() == input.Name.ToLower());
+            if (item != null)
+            {
+                throw new UserFriendlyException(L("CannotInsertDuplicatedVasNameMessage"));
+            }
+        }
     }
 }

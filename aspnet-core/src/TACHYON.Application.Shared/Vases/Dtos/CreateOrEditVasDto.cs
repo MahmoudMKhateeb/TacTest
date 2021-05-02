@@ -6,7 +6,7 @@ namespace TACHYON.Vases.Dtos
 {
     public class CreateOrEditVasDto : EntityDto<int?>
     {
-
+        [Required]
         [StringLength(VasConsts.MaxNameLength, MinimumLength = VasConsts.MinNameLength)]
         public string Name { get; set; }
 
