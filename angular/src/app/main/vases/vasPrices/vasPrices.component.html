@@ -176,7 +176,7 @@
                       <span class="ui-column-title"> {{ l('Price') }}</span>
                       <p-cellEditor>
                         <ng-template pTemplate="input">
-                          <input pInputText type="number" [(ngModel)]="record.vasPrice.price" />
+                          <input pInputNumber type="number" [(ngModel)]="record.vasPrice.price" (keypress)="numberOnly($event)" [min]="0" />
                         </ng-template>
                         <ng-template pTemplate="output">
                           {{ record.vasPrice.price }}
@@ -189,7 +189,7 @@
                       <div *ngIf="record.hasAmount">
                         <p-cellEditor>
                           <ng-template pTemplate="input">
-                            <input pInputText type="number" [(ngModel)]="record.vasPrice.maxAmount" />
+                            <input pInputText type="number" [(ngModel)]="record.vasPrice.maxAmount" (keypress)="numberOnly($event)" [min]="0" />
                           </ng-template>
                           <ng-template pTemplate="output">
                             {{ record.vasPrice.maxAmount }}
@@ -206,7 +206,7 @@
                       <div *ngIf="record.hasCount">
                         <p-cellEditor>
                           <ng-template pTemplate="input">
-                            <input pInputText type="number" [(ngModel)]="record.vasPrice.maxCount" />
+                            <input pInputText type="number" [(ngModel)]="record.vasPrice.maxCount" (keypress)="numberOnly($event)" [min]="0" />
                           </ng-template>
                           <ng-template pTemplate="output">
                             {{ record.vasPrice.maxCount }}
