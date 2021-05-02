@@ -184,13 +184,13 @@ namespace TACHYON.Shipping.ShippingRequests
             tachyonPriceOffer.CommissionValueSetting = shippingRequestAmount.CommissionValueSetting;
             tachyonPriceOffer.PercentCommissionSetting = shippingRequestAmount.PercentCommissionSetting;
             tachyonPriceOffer.MinCommissionValueSetting = shippingRequestAmount.MinCommissionValueSetting;
+            tachyonPriceOffer.VatSetting = _settingManager.GetSettingValue<decimal>(AppSettings.HostManagement.TaxVat);
 
             //If direct request before get price from carrirer, Apply vat only on the price
             if (!tachyonPriceOffer.CarrirerTenantId.HasValue) {
                 tachyonPriceOffer.ActualPercentCommission = default(decimal?);
                 tachyonPriceOffer.ActualCommissionValue = default(decimal?);
                 tachyonPriceOffer.SubTotalAmount = tachyonPriceOffer.TotalAmount;
-                tachyonPriceOffer.VatSetting = _settingManager.GetSettingValue<decimal>(AppSettings.HostManagement.TaxVat);
 
                 tachyonPriceOffer.VatAmount = CalculateVat(tachyonPriceOffer.SubTotalAmount.Value, tachyonPriceOffer.VatSetting.Value);
                 tachyonPriceOffer.TotalAmount = tachyonPriceOffer.SubTotalAmount.Value + tachyonPriceOffer.VatAmount.Value;
