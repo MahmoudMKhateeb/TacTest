@@ -41,6 +41,7 @@ namespace TACHYON.Waybills
         
         public FileDto GetMultipleDropWaybillPdf(long RoutPointId)
         {
+            DisableTenancyFilters();
             if (IsSingleDropShippingRequest(RoutPointId))
             {
                 throw new UserFriendlyException(L("Cannot download drop waybill for single drop shipping request"));
@@ -66,6 +67,7 @@ namespace TACHYON.Waybills
         
         public FileDto GetSingleDropOrMasterWaybillPdf(int shippingRequestTripId)
         {
+            DisableTenancyFilters();
             if (IsSingleDropShippingRequest(shippingRequestTripId))
             {
                 return GetSingleDropWaybillPdf(shippingRequestTripId);
@@ -100,6 +102,7 @@ namespace TACHYON.Waybills
 
         private FileDto GetMasterWaybillPdf(int shippingRequestTripId)
         {
+            DisableTenancyFilters();
             var reportPath = "/Waybills/Reports/Master_Waybill.rdlc";
 
             ArrayList names = new ArrayList();
@@ -123,6 +126,7 @@ namespace TACHYON.Waybills
         /// <returns></returns>
         private FileDto GetSingleDropWaybillPdf(int shippingRequestTripId)
         {
+            DisableTenancyFilters();
             var reportPath = "/Waybills/Reports/Single_Drop_Waybill.rdlc";
 
             ArrayList names = new ArrayList();

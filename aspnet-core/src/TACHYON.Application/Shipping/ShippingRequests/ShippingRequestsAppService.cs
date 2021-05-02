@@ -756,7 +756,7 @@ namespace TACHYON.Shipping.ShippingRequests
         //Master Waybill
         public IEnumerable<GetMasterWaybillOutput> GetMasterWaybill(int shippingRequestTripId)
         {
-            using (CurrentUnitOfWork.DisableFilter((AbpDataFilters.MustHaveTenant)))
+            using (CurrentUnitOfWork.DisableFilter(AbpDataFilters.MustHaveTenant, AbpDataFilters.MayHaveTenant))
             {
                 var info = _shippingRequestTripRepository.GetAll()
                     .Include(e => e.ShippingRequestFk)
@@ -825,7 +825,7 @@ namespace TACHYON.Shipping.ShippingRequests
         //Single Drop Waybill
         public IEnumerable<GetSingleDropWaybillOutput> GetSingleDropWaybill(int shippingRequestTripId)
         {
-            using (CurrentUnitOfWork.DisableFilter((AbpDataFilters.MustHaveTenant)))
+            using (CurrentUnitOfWork.DisableFilter(AbpDataFilters.MustHaveTenant, AbpDataFilters.MayHaveTenant))
             {
                 var info = _shippingRequestTripRepository.GetAll()
                     .Where(e => e.Id == shippingRequestTripId);
