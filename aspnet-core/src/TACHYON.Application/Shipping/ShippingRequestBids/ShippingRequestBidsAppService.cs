@@ -38,7 +38,7 @@ namespace TACHYON.Shipping.ShippingRequestBids
             IRepository<ShippingRequest, long> shippingRequestsRepository,
             IRepository<Tenant> tenantsRepository, IRepository<Truck, long> trucksRepository,
             BackgroundJobManager backgroundJobManager, CommissionManager commissionManager,
-            IAppNotifier appNotifier, OfferManager offerManager, BalanceManager balanceManager, ShippingRequestManager shippingRequestManager, UserManager userManager, IRepository<Edition> editionRepository)
+            IAppNotifier appNotifier, OfferManager offerManager, BalanceManager balanceManager, UserManager userManager, IRepository<Edition> editionRepository,
             ShippingRequestManager shippingRequestManager, ShippingRequestBidManager shippingRequestBidManager,
             TachyonPriceOffersAppService carrierPriceOfferService)
         {
