@@ -16,11 +16,9 @@ using TACHYON.Notifications;
 using TACHYON.Routs.RoutPoints;
 using TACHYON.Routs.RoutPoints.Dtos;
 using TACHYON.Shipping.Drivers.Dto;
-using TACHYON.Shipping.RoutPoints;
 using TACHYON.Shipping.ShippingRequests;
 using TACHYON.Shipping.ShippingRequestTrips;
 using TACHYON.Shipping.Trips;
-using TACHYON.Storage;
 
 namespace TACHYON.Shipping.Drivers
 {
@@ -32,6 +30,7 @@ namespace TACHYON.Shipping.Drivers
         private readonly IRepository<RoutPoint, long> _RoutPointRepository;
         private readonly IRepository<ShippingRequestTripTransition> _shippingRequestTripTransitionRepository;
         private readonly ShippingRequestDriverManager _shippingRequestDriverManager;
+        private readonly ShippingRequestManager _shippingRequestManager;
         private readonly IAppNotifier _appNotifier;
         private readonly IFirebaseNotifier _firebaseNotifier;
 
@@ -41,6 +40,7 @@ namespace TACHYON.Shipping.Drivers
             IRepository<RoutPoint, long> RoutPointRepository,
             IRepository<ShippingRequestTripTransition> shippingRequestTripTransitionRepository,
             ShippingRequestDriverManager shippingRequestDriverManager,
+            ShippingRequestManager shippingRequestManager,
             IAppNotifier appNotifier,
             IFirebaseNotifier firebaseNotifier)
         {
@@ -48,6 +48,7 @@ namespace TACHYON.Shipping.Drivers
             _RoutPointRepository = RoutPointRepository;
             _shippingRequestTripTransitionRepository = shippingRequestTripTransitionRepository;
             _shippingRequestDriverManager = shippingRequestDriverManager;
+            _shippingRequestManager = shippingRequestManager;
             _appNotifier = appNotifier;
              _firebaseNotifier= firebaseNotifier;
 
@@ -219,6 +220,7 @@ namespace TACHYON.Shipping.Drivers
                     break;
                 case ShippingRequestTripStatus.StartLoading:
                     trip.Status = ShippingRequestTripStatus.FinishLoading;
+                    await _shippingRequestManager.SendSmsToReceivers(trip.Id);
                     break;
                 case ShippingRequestTripStatus.StartedMovingToOfLoadingLocation:
                     trip.Status = ShippingRequestTripStatus.ArrivedToDestination;
@@ -353,7 +355,7 @@ namespace TACHYON.Shipping.Drivers
         [AbpAllowAnonymous]
         public async Task PushNotification(int TripId)
         {
-            await _firebaseNotifier.PushNotificationToDriverWhenAssignTrip(6, TripId.ToString());
+            await _firebaseNotifier.PushNotificationToDriverWhenAssignTrip(new Abp.UserIdentifier(5,7), TripId.ToString());
         }
 
 

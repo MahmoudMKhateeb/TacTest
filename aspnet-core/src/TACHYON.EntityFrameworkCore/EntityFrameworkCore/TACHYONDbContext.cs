@@ -27,6 +27,8 @@ using TACHYON.Invoices.Balances;
 using TACHYON.Invoices.Groups;
 using TACHYON.Invoices.Periods;
 using TACHYON.Invoices.Transactions;
+using TACHYON.Localization;
+using TACHYON.Mobile;
 using TACHYON.MultiTenancy;
 using TACHYON.MultiTenancy.Payments;
 using TACHYON.Nationalities;
@@ -39,13 +41,16 @@ using TACHYON.Routs.RoutPoints;
 using TACHYON.Routs.RoutSteps;
 using TACHYON.Routs.RoutTypes;
 using TACHYON.Shipping.Accidents;
+using TACHYON.Shipping.RoutPoints;
 using TACHYON.Shipping.ShippingRequestBids;
 using TACHYON.Shipping.ShippingRequests;
+using TACHYON.Shipping.ShippingRequests.TachyonDealer;
 using TACHYON.Shipping.ShippingRequestTrips;
 using TACHYON.Shipping.ShippingTypes;
 using TACHYON.ShippingRequestTripVases;
 using TACHYON.ShippingRequestVases;
 using TACHYON.Storage;
+using TACHYON.TachyonPriceOffers;
 using TACHYON.TermsAndConditions;
 using TACHYON.Trailers;
 using TACHYON.Trailers.PayloadMaxWeights;
@@ -62,23 +67,6 @@ using TACHYON.Trucks.TrucksTypes;
 using TACHYON.Trucks.TrucksTypes.TrucksTypesTranslations;
 using TACHYON.UnitOfMeasures;
 using TACHYON.Vases;
-using TACHYON.Shipping.ShippingRequestBidStatuses;
-using System;
-using System.Linq.Expressions;
-using Microsoft.EntityFrameworkCore.Metadata;
-using TACHYON.Invoices;
-using TACHYON.Invoices.Periods;
-using TACHYON.Invoices.Groups;
-using TACHYON.Invoices.Balances;
-using TACHYON.Invoices.Transactions;
-using TACHYON.Routs.RoutPoints;
-using TACHYON.Shipping.ShippingRequestTrips;
-using TACHYON.Shipping.Trips;
-using TACHYON.Shipping.Accidents;
-using TACHYON.TachyonPriceOffers;
-using TACHYON.Shipping.ShippingRequests.TachyonDealer;
-using TACHYON.Shipping.RoutPoints;
-using TACHYON.Mobile;
 
 namespace TACHYON.EntityFrameworkCore
 {
@@ -109,6 +97,15 @@ namespace TACHYON.EntityFrameworkCore
         #endregion
         #region TachyonDeal
         public virtual DbSet<ShippingRequestsCarrierDirectPricing> ShippingRequestsCarrierDirectPricing { get; set; }
+        #endregion
+        #region Localization
+        public DbSet<AppLocalization> AppLocalizations { get; set; }
+        public DbSet<AppLocalizationTranslation> AppLocalizationTranslations { get; set; }
+        public DbSet<TerminologieEdition> TerminologieEditions { get; set; }
+
+        public DbSet<TerminologiePage> TerminologiePages { get; set; }
+
+
         #endregion
         public virtual DbSet<PackingType> PackingTypes { get; set; }
 
@@ -228,6 +225,7 @@ namespace TACHYON.EntityFrameworkCore
         public virtual DbSet<ShippingRequestBid> ShippingRequestBids { get; set; }
 
         public virtual DbSet<RoutPoint> RoutPoints { get; set; }
+        public DbSet<RoutePointReceiverReceiveShipmentCode> RoutePointReceiverReceiveShipmentCodes { get; set; }
         public virtual DbSet<RoutPointStatusTransition> RoutPointStatusTransitions { get; set; }
 
         
@@ -237,6 +235,9 @@ namespace TACHYON.EntityFrameworkCore
 
         #region Mobile
         public DbSet<UserDeviceToken> UserDeviceTokens { get; set; }
+        public DbSet<UserOTP> UserOTPs { get; set; }
+
+        
         #endregion
         public TACHYONDbContext(DbContextOptions<TACHYONDbContext> options)
             : base(options)

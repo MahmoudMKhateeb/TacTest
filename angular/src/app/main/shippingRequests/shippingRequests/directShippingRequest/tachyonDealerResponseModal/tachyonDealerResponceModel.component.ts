@@ -24,7 +24,7 @@ export class TachyonDealerResponceModelComponent extends AppComponentBase implem
 
   carrierPriceResponse: CarrirSetPriceForDirectRequestDto = new CarrirSetPriceForDirectRequestDto();
   saving = false;
-  loading = true;
+  loading = false;
   disAllowEdits: boolean;
   commetionCalculations: ShippingRequestAmountDto = new ShippingRequestAmountDto();
   createOfferInput: CreateOrEditTachyonPriceOfferDto = new CreateOrEditTachyonPriceOfferDto();
@@ -55,18 +55,10 @@ export class TachyonDealerResponceModelComponent extends AppComponentBase implem
 
   getCommetion(directRequestid: number, bidId?: number): void {
     this.loading = true;
-    this._shippingRequestsTachyonDealer
-      .getCarrierPricing(directRequestid, bidId)
-      .pipe(
-        finalize(() => {
-          this.loading = false;
-        })
-      )
-      .subscribe((result) => {
-        this.commetionCalculations = result;
-        //as
-        console.log(this.commetionCalculations);
-      });
+    this._shippingRequestsTachyonDealer.getCarrierPricing(directRequestid, bidId).subscribe((result) => {
+      this.commetionCalculations = result;
+      this.loading = false;
+    });
   }
   CalculateVat(amount, vat) {
     return (amount / 100) * vat;
@@ -86,7 +78,7 @@ export class TachyonDealerResponceModelComponent extends AppComponentBase implem
         showCancelButton: true,
         confirmButtonText: this.l('confirm'),
       });
-      //  this.notify.error('PleaseNotThatYourCommestionValueisLess');
+      // this.notify.error('PleaseNotThatYourCommestionValueisLess');
     }
   }
 
@@ -98,6 +90,7 @@ export class TachyonDealerResponceModelComponent extends AppComponentBase implem
     this.saving = true;
     this.createOfferInput.shippingRequestId = this.shippingRequestId;
     this.createOfferInput.shippingRequestBidId = this.bidId;
+    this.createOfferInput.driectRequestForCarrierId = this.directRequestId;
     // this.createOfferInput.carrirerTenantId = this.commetionCalculations.carrirerTenantId;
     // this.createOfferInput.carrierPrice = this.commetionCalculations.carrierPrice;
     this.createOfferInput.totalAmount = this.commetionCalculations.totalAmount;

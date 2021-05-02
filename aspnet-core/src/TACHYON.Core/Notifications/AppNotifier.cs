@@ -526,7 +526,7 @@ namespace TACHYON.Notifications
 
         public async Task NotifyDriverWhenAssignToTrip(ShippingRequestTrip Trip)
         {
-            if (Trip.AssignedDriverUserId.HasValue) return;
+            if (!Trip.AssignedDriverUserId.HasValue) return;
             var notificationData = new LocalizableMessageNotificationData(
                 new LocalizableString(
                     L("NotifyDriverWhenAssignToTrip"),
@@ -550,7 +550,7 @@ namespace TACHYON.Notifications
                 )
             );
 
-                notificationData["ShipimentNo"] = Trip.ShippingRequestId;
+                notificationData["id"] = Trip.ShippingRequestId;
                 notificationData["driver"] = driver;
                 notificationData["source"] = Trip.OriginFacilityFk.Address;
                 notificationData["destination"] = Trip.DestinationFacilityFk.Address;
@@ -567,7 +567,7 @@ namespace TACHYON.Notifications
                 )
             );
 
-            notificationData["ShipimentNo"] = Trip.ShippingRequestId;
+            notificationData["id"] = Trip.ShippingRequestId;
             notificationData["driver"] = driver;
             notificationData["source"] = Trip.OriginFacilityFk.Address;
             notificationData["destination"] = Trip.DestinationFacilityFk.Address;
@@ -614,7 +614,7 @@ namespace TACHYON.Notifications
                     TACHYONConsts.LocalizationSourceName
                 )
             );
-            notificationData["ShipimentNo"] = Request.Id;
+            notificationData["id"] = Request.Id;
 
             await _notificationPublisher.PublishAsync(AppNotificationNames.SendDriectRequestForCarrier, notificationData, tenantIds: new[] { TenantId });
         }
@@ -626,7 +626,7 @@ namespace TACHYON.Notifications
                     TACHYONConsts.LocalizationSourceName
                 )
             );
-            notificationData["ShipimentNo"] = Pricing.RequestId;
+            notificationData["id"] = Pricing.RequestId;
             notificationData["clientname"] = Pricing.Carrirer.companyName;
             var user = new UserIdentifier(Pricing.TenantId, Pricing.CreatorUserId.Value);
             await _notificationPublisher.PublishAsync(AppNotificationNames.DriectRequestCarrierRespone, notificationData, userIds: new[] { user });
@@ -655,7 +655,7 @@ namespace TACHYON.Notifications
                     TACHYONConsts.LocalizationSourceName
                 )
             );
-            notificationData["requestid"] = offer.Id;
+            notificationData["id"] = offer.Id;
             notificationData["clientname"] = offer.ShippingRequestFk.Tenant.companyName;
 
             var user = new UserIdentifier(offer.TenantId, offer.CreatorUserId.Value);
@@ -671,7 +671,7 @@ namespace TACHYON.Notifications
                     TACHYONConsts.LocalizationSourceName
                 )
             );
-            notificationData["requestid"] = offer.Id;
+            notificationData["id"] = offer.Id;
             notificationData["clientname"] = offer.ShippingRequestFk.Tenant.companyName;
            var user=new UserIdentifier(offer.TenantId, offer.CreatorUserId.Value);
 
@@ -688,10 +688,21 @@ namespace TACHYON.Notifications
                     TACHYONConsts.LocalizationSourceName
                 )
             );
-            notificationData["requestid"] = shippingRequest.Id;
+            notificationData["id"] = shippingRequest.Id;
             notificationData["clientname"] = shippingRequest.Tenant.companyName;
 
             await _notificationPublisher.PublishAsync(AppNotificationNames.ShippingRequestNotifyCarrirerWhenShipperAccepted, notificationData, userIds: new[] { await GetAdminUser(shippingRequest.CarrierTenantId) });
+        }
+        public async Task ShipperReminderToCompelteTrips(UserIdentifier user, ShippingRequest shippingRequest)
+        {
+            var notificationData = new LocalizableMessageNotificationData(
+                new LocalizableString(
+                    L("ShipperReminderToCompelteTrips"),
+                    TACHYONConsts.LocalizationSourceName
+                )
+            );
+            notificationData["id"] = shippingRequest.Id;
+            await _notificationPublisher.PublishAsync(AppNotificationNames.ShipperReminderToCompelteTrips, notificationData, userIds: new[] { user });
         }
         #endregion
         #endregion

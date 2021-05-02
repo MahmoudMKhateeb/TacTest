@@ -9,7 +9,6 @@ using System.Linq;
 using System.Reflection;
 using TACHYON.Authorization;
 using TACHYON.Authorization.Permissions;
-using TACHYON.Authorization.Permissions.Shipping.Trips;
 using TACHYON.Exporting;
 
 namespace TACHYON
@@ -70,8 +69,6 @@ namespace TACHYON
             var mapper = IocManager.Resolve<IMapper>();
 
             CustomDtoMapper.SetMapper(mapper);
-
-
         }
 
         public override void Initialize()

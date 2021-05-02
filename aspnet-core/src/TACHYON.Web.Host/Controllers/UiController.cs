@@ -3,15 +3,12 @@ using Abp.Authorization;
 using Abp.Authorization.Users;
 using Abp.Configuration.Startup;
 using Abp.UI;
-using FirebaseAdmin.Messaging;
 using Microsoft.AspNetCore.Mvc;
-using System.Collections.Generic;
 using System.Threading.Tasks;
 using TACHYON.Authorization;
 using TACHYON.Authorization.Accounts;
 using TACHYON.Authorization.Accounts.Dto;
 using TACHYON.Authorization.Users;
-using TACHYON.Firebases;
 using TACHYON.Identity;
 using TACHYON.MultiTenancy;
 using TACHYON.Web.Models.Ui;
@@ -27,15 +24,13 @@ namespace TACHYON.Web.Controllers
         private readonly LogInManager _logInManager;
         private readonly SignInManager _signInManager;
         private readonly AbpLoginResultTypeHelper _abpLoginResultTypeHelper;
-        private readonly IFirebaseNotifier _firebaseNotifier;
         public UiController(
             IPerRequestSessionCache sessionCache,
             IMultiTenancyConfig multiTenancyConfig,
             IAccountAppService accountAppService,
             LogInManager logInManager,
             SignInManager signInManager,
-            AbpLoginResultTypeHelper abpLoginResultTypeHelper,
-            IFirebaseNotifier firebaseNotifier)
+            AbpLoginResultTypeHelper abpLoginResultTypeHelper)
         {
             _sessionCache = sessionCache;
             _multiTenancyConfig = multiTenancyConfig;
@@ -43,7 +38,6 @@ namespace TACHYON.Web.Controllers
             _logInManager = logInManager;
             _signInManager = signInManager;
             _abpLoginResultTypeHelper = abpLoginResultTypeHelper;
-            _firebaseNotifier = firebaseNotifier;
         }
 
         [DisableAuditing]

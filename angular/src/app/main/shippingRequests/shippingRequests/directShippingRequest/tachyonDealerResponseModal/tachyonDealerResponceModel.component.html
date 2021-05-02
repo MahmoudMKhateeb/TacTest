@@ -13,7 +13,7 @@
         <p class="modal-title">
           <span>{{ l('summary') }}</span>
         </p>
-        <div class="card-toolbar">
+        <div class="card-toolbar" *ngIf="!commetionCalculations.isGuesingPrice">
           <a class="btn btn-sm btn-icon btn-light-danger mr-2" (click)="getCommetion(directRequestId, bidId)">
             <i class="flaticon2-reload"></i>
           </a>
@@ -23,33 +23,55 @@
         </div>
       </div>
       <div class="modal-body" [busyIf]="loading">
-        <div class="row">
+        <!-- if gussing price show this row -->
+        <div class="row" *ngIf="commetionCalculations.isGuesingPrice">
+          <div class="col-lg-6">
+            <label>{{ l('carrierName') }}</label>
+            <div class="input-group">
+              <input type="text" class="form-control" name="clientName" [(ngModel)]="commetionCalculations.clientName" disabled />
+            </div>
+          </div>
+          <div class="col-lg-6">
+            <label>{{ l('carrierPrice') }}</label>
+            <div class="input-group">
+              <input type="text" class="form-control" name="carrierPrice" [(ngModel)]="commetionCalculations.carrierPrice" disabled />
+            </div>
+          </div>
+        </div>
+        <!-- if not gussing Price Show the below row -->
+        <div class="row" *ngIf="!commetionCalculations.isGuesingPrice">
           <div class="col-lg-4">
-            <label>{{ l('carrierPrice') }}*</label>
+            <label>{{ l('carrierName') }}</label>
+            <div class="input-group">
+              <input type="text" class="form-control" name="clientName" [(ngModel)]="commetionCalculations.clientName" disabled />
+            </div>
+          </div>
+          <div class="col-lg-4">
+            <label>{{ l('carrierPrice') }}</label>
             <div class="input-group">
               <input type="text" class="form-control" name="carrierPrice" [(ngModel)]="commetionCalculations.carrierPrice" disabled />
             </div>
           </div>
           <div class="col-lg-4">
-            <label>{{ l('subTotalAmount') }}*</label>
+            <label>{{ l('subTotalAmount') }}</label>
             <div class="input-group">
               <input type="text" class="form-control" name="subTotalAmount" [(ngModel)]="commetionCalculations.subTotalAmount" disabled />
             </div>
           </div>
           <div class="col-lg-4">
-            <label>{{ l('TotalAmount') }}*</label>
+            <label>{{ l('TotalAmount') }}</label>
             <div class="input-group">
               <input type="text" class="form-control" name="totalAmount" [(ngModel)]="commetionCalculations.totalAmount" disabled />
             </div>
           </div>
           <div class="col-lg-4 my-2">
-            <label>{{ l('vatAmount') }}*</label>
+            <label>{{ l('vatAmount') }}</label>
             <div class="input-group">
               <input type="text" class="form-control" name="vatAmount" [(ngModel)]="commetionCalculations.vatAmount" disabled />
             </div>
           </div>
           <div class="col-lg-4 my-2">
-            <label>{{ l('totalCommission') }}*</label>
+            <label>{{ l('totalCommission') }}</label>
             <div class="input-group">
               <input
                 type="number"
@@ -61,7 +83,7 @@
             </div>
           </div>
           <div class="col-lg-4 my-2">
-            <label>{{ l('actualCommissionValue') }}*</label>
+            <label>{{ l('actualCommissionValue') }}</label>
             <div class="input-group">
               <input
                 type="number"
@@ -74,7 +96,7 @@
             </div>
           </div>
           <div class="col-lg-4">
-            <label>{{ l('actualPercentCommission') }}*</label>
+            <label>{{ l('actualPercentCommission') }}</label>
             <div class="input-group">
               <input
                 type="number"
@@ -87,7 +109,7 @@
             </div>
           </div>
           <div class="col-lg-4">
-            <label>{{ l('minCommissionValueSetting') }}*</label>
+            <label>{{ l('minCommissionValueSetting') }}</label>
             <div class="input-group">
               <input
                 type="text"
@@ -111,7 +133,7 @@
           [buttonBusy]="saving"
           (click)="validateCommision()"
         >
-          {{ l('Approve') }}
+          {{ commetionCalculations.isGuesingPrice ? l('assignCarrier') : l('sendPriceOfferToShipper') }}
         </button>
         <!--end::Buttons-->
       </div>

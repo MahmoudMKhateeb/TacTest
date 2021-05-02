@@ -67,6 +67,7 @@ export class ViewOrEditEntityDocumentsModalComponent extends AppComponentBase {
   public uploader: FileUploader;
   public temporaryPictureUrl: string;
   public documentEntityFilter: DocumentsEntitiesEnum;
+  public documentEntityFilterName: string;
   public documentsEntitiesEnum = DocumentsEntitiesEnum;
   constructor(
     injector: Injector,
@@ -85,6 +86,7 @@ export class ViewOrEditEntityDocumentsModalComponent extends AppComponentBase {
 
     this.entityIdFilter = id;
     this.documentEntityFilter = documentEntityFilter;
+    this.documentEntityFilterName = documentEntityFilter != null ? DocumentsEntitiesEnum[documentEntityFilter] : '';
     this.checkIfMissingDocumentFiles();
     this.active = true;
     this.modal.show();

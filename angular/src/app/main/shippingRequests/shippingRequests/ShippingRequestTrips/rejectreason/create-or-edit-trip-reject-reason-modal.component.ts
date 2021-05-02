@@ -2,7 +2,12 @@ import { Component, ViewChild, Injector, Output, EventEmitter, OnInit, ElementRe
 import { ModalDirective } from 'ngx-bootstrap/modal';
 import { finalize } from 'rxjs/operators';
 import { AppComponentBase } from '@shared/common/app-component-base';
-import { ShippingRequestTripRejectReasonServiceProxy, CreateOrEditShippingRequestTripRejectReasonDto } from '@shared/service-proxies/service-proxies';
+import {
+  ShippingRequestTripRejectReasonServiceProxy,
+  CreateOrEditShippingRequestTripRejectReasonDto,
+  ShippingRequestTripRejectReasonTranslationDto,
+} from '@shared/service-proxies/service-proxies';
+import * as _ from 'lodash';
 
 @Component({
   selector: 'trip-reject-reason-modal',
@@ -15,6 +20,8 @@ export class TripRejectReasonModalComponent extends AppComponentBase implements 
   @ViewChild('nameInput', { static: false }) nameInput: ElementRef;
 
   reason: CreateOrEditShippingRequestTripRejectReasonDto;
+  languages: abp.localization.ILanguageInfo[];
+  Translations: ShippingRequestTripRejectReasonTranslationDto[];
   active: boolean = false;
   saving: boolean = false;
 
@@ -22,25 +29,44 @@ export class TripRejectReasonModalComponent extends AppComponentBase implements 
   constructor(injector: Injector, private _Service: ShippingRequestTripRejectReasonServiceProxy) {
     super(injector);
   }
-  ngOnInit(): void {}
-
-  public show(reason: CreateOrEditShippingRequestTripRejectReasonDto | null): void {
-    if (reason == null) {
-      this.reason = new CreateOrEditShippingRequestTripRejectReasonDto();
-    } else {
-      this.reason = reason;
-    }
-    this.active = true;
-    this.modal.show();
+  ngOnInit(): void {
+    this.languages = _.filter(this.localization.languages, (l) => l.isDisabled === false);
   }
 
+  public show(id: number | null): void {
+    this.Translations = [];
+    if (id == null) {
+      this.reason = new CreateOrEditShippingRequestTripRejectReasonDto();
+      this.PopulateTranslations([]);
+      this.active = true;
+      this.modal.show();
+    } else {
+      this._Service.getForEdit(id).subscribe((result) => {
+        this.reason = result;
+        this.PopulateTranslations(this.reason.translations);
+        this.active = true;
+        this.modal.show();
+      });
+    }
+  }
+  private PopulateTranslations(Translations: ShippingRequestTripRejectReasonTranslationDto[]) {
+    this.languages.forEach((r) => {
+      let translation = new ShippingRequestTripRejectReasonTranslationDto();
+      translation.language = r.name;
+      translation.displayName = r.displayName;
+      translation.icon = r.icon;
+      let lang = _.find(Translations, (t) => t.language == r.name);
+      if (lang != null) translation.name = lang.name;
+      this.Translations.push(translation);
+    });
+  }
   onShown(): void {
     this.nameInput.nativeElement.focus();
   }
 
   save(): void {
     this.saving = true;
-
+    this.reason.translations = this.Translations;
     this._Service
       .createOrEdit(this.reason)
       .pipe(finalize(() => (this.saving = false)))

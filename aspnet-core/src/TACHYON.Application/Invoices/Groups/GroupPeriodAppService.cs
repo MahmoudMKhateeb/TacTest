@@ -16,6 +16,7 @@ using TACHYON.Authorization;
 using TACHYON.Authorization.Users;
 using TACHYON.Common;
 using TACHYON.Dto;
+using TACHYON.Exporting;
 using TACHYON.Invoices.Balances;
 using TACHYON.Invoices.Dto;
 using TACHYON.Invoices.Groups.Dto;
@@ -36,6 +37,8 @@ namespace TACHYON.Invoices.Groups
         private readonly UserManager _userManager;
         private readonly IAppNotifier _appNotifier;
         private readonly InvoiceManager _invoiceManager;
+        private readonly IExcelExporterManager<GroupPeriodListDto> _excelExporterManager;
+
         public GroupPeriodAppService(
             IRepository<GroupPeriod, long> repository, 
             BalanceManager BalanceManager, 
@@ -45,7 +48,8 @@ namespace TACHYON.Invoices.Groups
             CommonManager commonManager,
             UserManager userManager,
             IAppNotifier appNotifier,
-            InvoiceManager invoiceManager)
+            InvoiceManager invoiceManager,
+            IExcelExporterManager<GroupPeriodListDto> excelExporterManager)
         {
             _Repository = repository;
             _PeriodRepository = PeriodRepository;
@@ -55,13 +59,14 @@ namespace TACHYON.Invoices.Groups
             _userManager = userManager;
             _appNotifier = appNotifier;
             _invoiceManager = invoiceManager;
+            _excelExporterManager = excelExporterManager;
         }
 
 
         [AbpAuthorize(AppPermissions.Pages_Invoices_SubmitInvoices)]
         public async Task<PagedResultDto<GroupPeriodListDto>> GetAll(GroupPeriodFilterInput input)
         {
-            IQueryable<GroupPeriod> query= _commonManager.ExecuteMethodIfHostOrTenantUsers(() => GetGroupPeriods(input));
+            IQueryable<GroupPeriod> query= await _commonManager.ExecuteMethodIfHostOrTenantUsers(  () =>  GetGroupPeriods(input));
 
             var totalCount = await query.CountAsync();
 
@@ -136,20 +141,7 @@ namespace TACHYON.Invoices.Groups
 
         }
 
-        private IQueryable<GroupPeriod> GetGroupPeriods(GroupPeriodFilterInput input)
-        {
-            var query = _Repository
-                .GetAll()
-                .Include(i => i.Tenant)
-                .Include(i => i.InvoicePeriod)
-                .WhereIf(input.TenantId.HasValue, i => i.TenantId == input.TenantId)
-                .WhereIf(input.Status.HasValue, i => i.Status == input.Status)
-                 .WhereIf(input.PeriodId.HasValue, i => i.PeriodId == input.PeriodId)
-                .WhereIf(input.FromDate.HasValue && input.ToDate.HasValue, i => i.CreationTime >= input.FromDate && i.CreationTime < input.ToDate)
-                .OrderBy(input.Sorting ?? "status asc")
-                .PageBy(input);
-            return query;
-        }
+
 
         [AbpAuthorize(AppPermissions.Pages_Administration_Host_Invoices_SubmitInvoices_Delete)]
 
@@ -247,8 +239,45 @@ namespace TACHYON.Invoices.Groups
 
         }
 
+        public async Task<FileDto> Exports(GroupPeriodFilterInput input)
+        {
+            string[] HeaderText;
+            Func<GroupPeriodListDto, object>[] propertySelectors;
+            if (AbpSession.TenantId == null)
+            {
+                HeaderText = new string[] { "SubmitInvoiceNo", "CompanyName", "Interval",  "TotalAmount", "CreationTime", "Status" };
+                propertySelectors = new Func<GroupPeriodListDto, object>[] { _ => _.Id, _ => _.TenantName, _ => _.Period,  _ => _.Amount, _ => _.CreationTime.ToShortDateString(), _ => _.StatusTitle};
+            }
+            else
+            {
+                HeaderText = new string[] { "SubmitInvoiceNo", "CompanyName", "Interval", "TotalAmount", "CreationTime", "Status" };
+                propertySelectors = new Func<GroupPeriodListDto, object>[] { _ => _.Id, _ => _.Period, _ => _.Amount, _ => _.CreationTime.ToShortDateString(), _ => _.StatusTitle };
 
+            }
+
+
+
+            return await _commonManager.ExecuteMethodIfHostOrTenantUsers(async () =>
+            {
+                var InvoiceListDto = ObjectMapper.Map<List<GroupPeriodListDto>>(await GetGroupPeriods(input));
+                return _excelExporterManager.ExportToFile(InvoiceListDto, "SubmitInvoices", HeaderText, propertySelectors);
+            });
+        }
         #region Heleper
+        private Task<IQueryable<GroupPeriod>> GetGroupPeriods(GroupPeriodFilterInput input)
+        {
+            var query = _Repository
+                .GetAll()
+                .Include(i => i.Tenant)
+                .Include(i => i.InvoicePeriod)
+                .WhereIf(input.TenantId.HasValue, i => i.TenantId == input.TenantId)
+                .WhereIf(input.Status.HasValue, i => i.Status == input.Status)
+                 .WhereIf(input.PeriodId.HasValue, i => i.PeriodId == input.PeriodId)
+                .WhereIf(input.FromDate.HasValue && input.ToDate.HasValue, i => i.CreationTime >= input.FromDate && i.CreationTime < input.ToDate)
+                .OrderBy(!string.IsNullOrEmpty(input.Sorting)? input.Sorting : "status asc")
+                .PageBy(input);
+            return Task.FromResult(query);
+        }
         private async Task<GroupPeriod> GetGroupPeriod(long GroupId)
         {
             return await _Repository.SingleAsync(g => g.Id == GroupId);

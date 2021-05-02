@@ -23,6 +23,11 @@ namespace TACHYON.Invoices.Balances.Dto
             {
                 context.Results.Add(new ValidationResult("YouMustSelectTheShipperFromAutoCompleteText"));
             }
+
+            if (Amount <= 0)
+            {
+                context.Results.Add(new ValidationResult("TheAmountMustBeGreaterThanZero"));
+            }
         }
     }
 }

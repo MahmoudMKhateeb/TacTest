@@ -24,11 +24,20 @@ namespace TACHYON.Net.Sms
             _settingManager = settingManager;
         }
 
-        public async Task SendAsync(string number, string message)
+        public async Task<bool> SendAsync(string number, string message)
         {
-            if (string.IsNullOrEmpty(number) || string.IsNullOrEmpty(message)) return;
+            if (string.IsNullOrEmpty(number) || string.IsNullOrEmpty(message)) return false;
             var unifonicClint = new UnifonicRestClient(await _settingManager.GetSettingValueAsync(AppSettings.Sms.UnifonicAppSid));
-            unifonicClint.SendSmsMessage(number, message);
+            try
+            {
+                unifonicClint.SendSmsMessage(AddCountryCode(number), message);
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
+
         }
 
         public async Task SendReceiverSmsAsync(string number, DateTime date, string shipperName, string driverName, string driverPhone, string waybillNumber, string code, string link)
@@ -51,6 +60,19 @@ namespace TACHYON.Net.Sms
         private static ILocalizableString L(string message)
         {
             return new LocalizableString(message, TACHYONConsts.LocalizationSourceName);
+        }
+        private string AddCountryCode(string number)
+        {
+            if (number.StartsWith("0"))
+                
+            {
+                number.Remove(0,1);
+                number = $"966{number}";
+            }
+                else if (!number.StartsWith("966"))
+                number = $"966{number}";
+
+            return number;
         }
 
     }

@@ -22,7 +22,7 @@ base(tempFileCacheManager)
                 excelPackage =>
                 {
 
-                    var sheet = excelPackage.CreateSheet(L("BalanceRecharges"));
+                    var sheet = excelPackage.CreateSheet("Sheet1");
 
                     AddHeader(
                         sheet,

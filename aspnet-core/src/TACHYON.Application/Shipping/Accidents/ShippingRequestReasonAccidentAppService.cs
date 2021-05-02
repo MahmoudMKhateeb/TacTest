@@ -9,6 +9,9 @@ using System.Linq;
 using System.Linq.Dynamic.Core;
 using System.Threading.Tasks;
 using TACHYON.Authorization;
+using TACHYON.Common.Dto;
+using TACHYON.Dto;
+using TACHYON.Exporting;
 using TACHYON.Shipping.Accidents.Dto;
 
 namespace TACHYON.Shipping.Accidents
@@ -18,18 +21,17 @@ namespace TACHYON.Shipping.Accidents
     public class ShippingRequestReasonAccidentAppService : TACHYONAppServiceBase, IShippingRequestReasonAccidentAppService
     {
         private readonly IRepository<ShippingRequestReasonAccident> _ShippingRequestReasonAccidentRepository;
+        private readonly IExcelExporterManager<ShippingRequestReasonAccidentListDto> _excelExporterManager;
 
-        public ShippingRequestReasonAccidentAppService(IRepository<ShippingRequestReasonAccident> ShippingRequestCauseAccidentRepository)
+        public ShippingRequestReasonAccidentAppService(IRepository<ShippingRequestReasonAccident> ShippingRequestCauseAccidentRepository,
+            IExcelExporterManager<ShippingRequestReasonAccidentListDto> excelExporterManager)
         {
             _ShippingRequestReasonAccidentRepository = ShippingRequestCauseAccidentRepository;
+            _excelExporterManager = excelExporterManager;
         }
-        public ListResultDto<ShippingRequestReasonAccidentListDto> GetAll(GetAllForShippingRequestReasonAccidentFilterInput Input)
+        public ListResultDto<ShippingRequestReasonAccidentListDto> GetAll(FilterInput Input)
         {
-            var query = _ShippingRequestReasonAccidentRepository
-                .GetAllIncluding(x=>x.Translations)
-                .AsNoTracking()
-                .WhereIf(!string.IsNullOrWhiteSpace(Input.Filter), e => e.Translations.Any(x=> x.Name.Contains(Input.Filter.Trim())))
-                .OrderBy(Input.Sorting ?? "id asc");
+            var query = GetReason(Input);
 
             return new ListResultDto<ShippingRequestReasonAccidentListDto>(
                 ObjectMapper.Map<List<ShippingRequestReasonAccidentListDto>>(query)
@@ -71,6 +73,18 @@ namespace TACHYON.Shipping.Accidents
             ObjectMapper.Map(input, ReasonAccident);
 
         }
+
+        public FileDto Exports(FilterInput Input)
+        {
+            string[] HeaderText;
+            Func<ShippingRequestReasonAccidentListDto, object>[] propertySelectors;
+            HeaderText = new string[] { "Id", "Name" };
+            propertySelectors = new Func<ShippingRequestReasonAccidentListDto, object>[] { _ => _.Id, _ => _.Name };
+            var ReasonListDto = ObjectMapper.Map<List<ShippingRequestReasonAccidentListDto>>(GetReason(Input));
+            return _excelExporterManager.ExportToFile(ReasonListDto, "Reasons", HeaderText, propertySelectors);
+
+        }
+
         [AbpAuthorize(AppPermissions.Pages_ShippingRequestResoneAccidents_Delete)]
 
         public async Task Delete(EntityDto input)
@@ -78,6 +92,15 @@ namespace TACHYON.Shipping.Accidents
             await _ShippingRequestReasonAccidentRepository.DeleteAsync(input.Id);
         }
 
-
+        #region Helper
+        private IQueryable<ShippingRequestReasonAccident> GetReason(FilterInput Input)
+        {
+            return _ShippingRequestReasonAccidentRepository
+                .GetAllIncluding(x => x.Translations)
+                .AsNoTracking()
+                .WhereIf(!string.IsNullOrWhiteSpace(Input.Filter), e => e.Translations.Any(x => x.Name.Contains(Input.Filter.Trim())))
+                .OrderBy(!string.IsNullOrEmpty(Input.Sorting)? Input.Sorting: "id asc");
+        }
+        #endregion
     }
 }

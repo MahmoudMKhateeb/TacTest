@@ -38,7 +38,7 @@ namespace TACHYON.Routs.RoutPoints
 
         public ICollection<GoodsDetail> GoodsDetails { get; set; }
 
-        public string Code { get; set; } = (new Random().Next(100000, 999999)).ToString();
+        public string Code { get; set; }
 
         public DateTime? StartTime { get; set; }
         public DateTime? EndTime { get; set; }

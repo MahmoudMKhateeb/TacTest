@@ -123,7 +123,14 @@ namespace TACHYON.Web.Startup
             }
 
             //Set auth token from cookie
-            context.Token = SimpleStringCipher.Instance.Decrypt(qsAuthToken, AppConsts.DefaultPassPhrase);
+            try
+            {
+                context.Token = SimpleStringCipher.Instance.Decrypt(qsAuthToken, AppConsts.DefaultPassPhrase);
+            }
+            catch
+            {
+
+            }
             return Task.CompletedTask;
         }
     }

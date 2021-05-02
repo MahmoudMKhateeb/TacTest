@@ -1,10 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using TACHYON.DataExporting.Excel.NPOI;
 using TACHYON.Dto;
 using TACHYON.Storage;
-using System.Linq;
-using Abp.Dependency;
 
 namespace TACHYON.Exporting
 {
@@ -17,7 +16,7 @@ namespace TACHYON.Exporting
                 $"{SheetName}",
                 excelPackage =>
                 {
-                    var sheet = excelPackage.CreateSheet(L(SheetName));
+                    var sheet = excelPackage.CreateSheet("Sheet1");
                     AddHeader(sheet, headerTexts.Select(x=>L(x)).ToArray());
                     AddObjects(sheet, 1, Sources, propertySelectors);
                 });

@@ -71,11 +71,9 @@ export class HeaderNotificationsComponent extends AppComponentBase implements On
     });
 
     function onNotificationsRead(userNotificationId) {
-      for (let i = 0; i < self.notifications.length; i++) {
-        if (self.notifications[i].userNotificationId === userNotificationId) {
-          self.notifications[i].state = 'READ';
-        }
-      }
+      let notification = _.findIndex(self.notifications, (n) => n.userNotificationId == userNotificationId);
+      self.notifications[notification].state = 'READ';
+      self.notifications[notification].isUnread = false;
 
       self.unreadNotificationCount -= 1;
     }

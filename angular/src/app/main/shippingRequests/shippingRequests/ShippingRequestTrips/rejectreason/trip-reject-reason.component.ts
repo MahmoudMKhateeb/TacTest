@@ -4,7 +4,13 @@ import { appModuleAnimation } from '@shared/animations/routerTransition';
 import { LazyLoadEvent } from 'primeng/public_api';
 import { Table } from 'primeng/table';
 import * as _ from 'lodash';
-import { ShippingRequestTripRejectReasonServiceProxy, ShippingRequestTripRejectReasonListDto } from '@shared/service-proxies/service-proxies';
+import {
+  ShippingRequestTripRejectReasonServiceProxy,
+  ShippingRequestTripRejectReasonListDto,
+  FilterInput,
+} from '@shared/service-proxies/service-proxies';
+import { FileDownloadService } from '@shared/utils/file-download.service';
+
 @Component({
   templateUrl: './trip-reject-reason.component.html',
   animations: [appModuleAnimation()],
@@ -16,7 +22,11 @@ export class TripRejectReasonComponent extends AppComponentBase {
   filterText: string = '';
   Reasons: ShippingRequestTripRejectReasonListDto[] = [];
   IsStartSearch = false;
-  constructor(injector: Injector, private _ServiceProxy: ShippingRequestTripRejectReasonServiceProxy) {
+  constructor(
+    injector: Injector,
+    private _ServiceProxy: ShippingRequestTripRejectReasonServiceProxy,
+    private _fileDownloadService: FileDownloadService
+  ) {
     super(injector);
   }
 
@@ -27,6 +37,7 @@ export class TripRejectReasonComponent extends AppComponentBase {
       this.primengTableHelper.totalRecordsCount = result.items.length;
       this.primengTableHelper.records = result.items;
       this.primengTableHelper.hideLoadingIndicator();
+      console.log(result.items);
     });
   }
 
@@ -41,5 +52,13 @@ export class TripRejectReasonComponent extends AppComponentBase {
     });
   }
 
-  exportToExcel(): void {}
+  exportToExcel(): void {
+    var data = {
+      filter: this.filterText,
+      sorting: this.primengTableHelper.getSorting(this.dataTable),
+    };
+    this._ServiceProxy.exports(data as FilterInput).subscribe((result) => {
+      this._fileDownloadService.downloadTempFile(result);
+    });
+  }
 }

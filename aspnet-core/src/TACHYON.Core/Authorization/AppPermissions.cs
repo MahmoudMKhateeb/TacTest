@@ -68,8 +68,16 @@
         public const string Pages_ShippingRequestTrips_Reject_Reason_Delete = "Pages.ShippingRequestTrips.Reject.Reason.Delete";
         #endregion
         #endregion
-        #endregion
+        public const string Pages_AppLocalization = "Pages.AppLocalizations";
+        public const string Pages_AppLocalization_Create = "Pages.AppLocalizations.Create";
+        public const string Pages_AppLocalization_Edit = "Pages.AppLocalizations.Edit";
+        public const string Pages_AppLocalization_Delete = "Pages.AppLocalizations.Delete";
+        public const string Pages_AppLocalization_Restore = "Pages.AppLocalizations.Restore";
+        public const string Pages_AppLocalization_Generate = "Pages.AppLocalizations.Generate";
 
+        #endregion
+        #region Localization
+        #endregion
         public const string Pages_PackingTypes = "Pages.PackingTypes";
         public const string Pages_PackingTypes_Create = "Pages.PackingTypes.Create";
         public const string Pages_PackingTypes_Edit = "Pages.PackingTypes.Edit";

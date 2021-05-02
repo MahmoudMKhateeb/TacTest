@@ -1,6 +1,7 @@
 ﻿using Abp.Application.Services.Dto;
 using Abp.Runtime.Validation;
 using JetBrains.Annotations;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -26,7 +27,8 @@ namespace TACHYON.Routs.RoutPoints.Dtos
         /// </summary>
         public double Latitude { get; set; }
         public int? ReceiverId { get; set; }
-
+        [JsonIgnore]
+        public string Code { get; set; } = (new Random().Next(100000, 999999)).ToString();
         [CanBeNull] public string ReceiverFullName { get; set; }
         [DataType(DataType.PhoneNumber)] [CanBeNull] public string ReceiverPhoneNumber { get; set; }
 

@@ -6,6 +6,7 @@ import { ZeroRefreshTokenService } from '@account/auth/zero-refresh-token.servic
 import { ZeroTemplateHttpConfigurationService } from './zero-template-http-configuration.service';
 import { ShippingRequestBidsServiceProxy, WaybillsServiceProxy } from './service-proxies';
 import { ShippingRequestsTripServiceProxy } from './service-proxies';
+import { TerminologieServiceProxy } from 'shared/service-proxies/terminologies-ervice-proxy';
 
 @NgModule({
   providers: [
@@ -136,6 +137,8 @@ import { ShippingRequestsTripServiceProxy } from './service-proxies';
     ApiServiceProxies.TachyonPriceOffersServiceProxy,
     ApiServiceProxies.ShippingRequestTripRejectReasonServiceProxy,
     ApiServiceProxies.InvoiceReportServiceServiceProxy,
+    ApiServiceProxies.AppLocalizationServiceProxy,
+    TerminologieServiceProxy,
     { provide: RefreshTokenService, useClass: ZeroRefreshTokenService },
     { provide: AbpHttpConfigurationService, useClass: ZeroTemplateHttpConfigurationService },
     { provide: HTTP_INTERCEPTORS, useClass: AbpHttpInterceptor, multi: true },

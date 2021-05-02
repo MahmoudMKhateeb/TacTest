@@ -20,6 +20,7 @@ namespace TACHYON.Invoices.Groups
 
         Task Delete(EntityDto Input);
         Task<FileDto> GetFileDto(long GroupId);
+        Task<FileDto> Exports(GroupPeriodFilterInput input);
 
 
     }

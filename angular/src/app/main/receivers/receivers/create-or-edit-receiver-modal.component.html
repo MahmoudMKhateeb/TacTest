@@ -21,61 +21,65 @@
           </button>
         </div>
         <div class="modal-body">
-          <div class="form-group m-form__group">
-            <label for="FacilityName">{{ l('Facility') }}</label>
-            <select name="receiver.facilityId" [(ngModel)]="receiver.facilityId" class="form-control" required>
-              <option value="">{{ l('SelectAFacility') }}</option>
-              <option *ngFor="let item of allFacilitys" value="{{ item.id }}">{{ item.displayName }}</option>
-            </select>
-          </div>
+          <div class="form-row">
+            <div class="form-group col-md-6">
+              <label for="FacilityName">{{ l('Facility') }}</label>
+              <select name="receiver.facilityId" [(ngModel)]="receiver.facilityId" class="form-control" required>
+                <option value="">{{ l('SelectAFacility') }}</option>
+                <option *ngFor="let item of allFacilitys" value="{{ item.id }}">{{ item.displayName }}</option>
+              </select>
+            </div>
 
-          <div class="form-group">
-            <label for="Receiver_FullName">{{ l('FullName') }} *</label>
-            <input
-              type="text"
-              #Receiver_FullName="ngModel"
-              id="Receiver_FullName"
-              class="form-control"
-              [(ngModel)]="receiver.fullName"
-              name="FullName"
-              minlength="0"
-              maxlength="256"
-              required
-            />
-            <validation-messages [formCtrl]="Receiver_FullName"></validation-messages>
+            <div class="form-group col-md-6">
+              <label for="Receiver_FullName">{{ l('FullName') }} *</label>
+              <input
+                type="text"
+                #Receiver_FullName="ngModel"
+                id="Receiver_FullName"
+                class="form-control"
+                [(ngModel)]="receiver.fullName"
+                name="FullName"
+                minlength="0"
+                maxlength="256"
+                required
+              />
+              <validation-messages [formCtrl]="Receiver_FullName"></validation-messages>
+            </div>
           </div>
+          <div class="form-row">
+            <div class="form-group col-md-6">
+              <label for="Receiver_Email">{{ l('Email') }}</label>
+              <input
+                type="text"
+                #Receiver_Email="ngModel"
+                id="Receiver_Email"
+                class="form-control"
+                [(ngModel)]="receiver.email"
+                name="Email"
+                minlength="0"
+                maxlength="256"
+              />
+              <validation-messages [formCtrl]="Receiver_Email"></validation-messages>
+            </div>
 
-          <div class="form-group">
-            <label for="Receiver_Email">{{ l('Email') }}</label>
-            <input
-              type="text"
-              #Receiver_Email="ngModel"
-              id="Receiver_Email"
-              class="form-control"
-              [(ngModel)]="receiver.email"
-              name="Email"
-              minlength="0"
-              maxlength="256"
-            />
-            <validation-messages [formCtrl]="Receiver_Email"></validation-messages>
-          </div>
-
-          <div class="form-group">
-            <label for="Receiver_PhoneNumber">{{ l('PhoneNumber') }} *</label>
-            <input
-              type="text"
-              #Receiver_PhoneNumber="ngModel"
-              id="Receiver_PhoneNumber"
-              class="form-control"
-              [(ngModel)]="receiver.phoneNumber"
-              name="PhoneNumber"
-              minlength="0"
-              maxlength="32"
-              required
-            />
-            <validation-messages [formCtrl]="Receiver_PhoneNumber"></validation-messages>
+            <div class="form-group col-md-6">
+              <label for="Receiver_PhoneNumber">{{ l('PhoneNumber') }} *</label>
+              <input
+                type="text"
+                #Receiver_PhoneNumber="ngModel"
+                id="Receiver_PhoneNumber"
+                class="form-control"
+                [(ngModel)]="receiver.phoneNumber"
+                name="PhoneNumber"
+                minlength="0"
+                maxlength="32"
+                required
+              />
+              <validation-messages [formCtrl]="Receiver_PhoneNumber"></validation-messages>
+            </div>
           </div>
         </div>
+
         <div class="modal-footer">
           <button [disabled]="saving" type="button" class="btn btn-default" (click)="close()">{{ l('Cancel') }}</button>
           <button

@@ -1,0 +1,112 @@
+<div
+  bsModal
+  #modal="bs-modal"
+  class="modal fade"
+  tabindex="-1"
+  role="dialog"
+  aria-labelledby="modal"
+  aria-hidden="true"
+  [config]="{ backdrop: 'static' }"
+>
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title">
+          <span>{{ l('View') }}</span>
+        </h4>
+        <button type="button" class="close" (click)="close()" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body container">
+        <div class="row">
+          <div class="form-group col-md-4">
+            <span class="navi-text">
+              {{ l('DefaultLanguage') }}
+            </span>
+          </div>
+          <div class="form-group col-md-4">
+            <label for="MasterKey">{{ l('Key') }}:</label>
+            <b>{{ Terminologie.masterKey }}</b>
+          </div>
+          <div class="form-group col-md-4">
+            <label for="MasterValue">{{ l('Text') }}:</label>
+            <b>{{ Terminologie.masterValue }}</b>
+          </div>
+        </div>
+        <div class="row" *ngFor="let t of Translations; let i = index">
+          <div class="form-group col-md-8">
+            <span class="symbol symbol-20 mr-3">
+              <i [class]="t.icon"></i>
+            </span>
+            <span class="navi-text">
+              {{ t.displayName }}
+            </span>
+          </div>
+
+          <div class="form-group col-md-4">
+            <label>{{ 'Text' | localize }}:</label>
+            {{ t.value }}
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-lg-6 col-xxl-4 order-1 order-xxl-1">
+            <!--begin::List Widget 1-->
+            <div class="card card-custom card-stretch gutter-b">
+              <!--begin::Header-->
+              <div class="card-header border-0 pt-5">
+                <h3 class="card-title align-items-start flex-column">
+                  <span class="card-label font-weight-bolder text-dark">{{ 'Editions' | localize }}</span>
+                </h3>
+              </div>
+              <!--end::Header-->
+              <!--begin::Body-->
+              <div class="card-body pt-8">
+                <!--begin::Item-->
+                <div class="d-flex align-items-center mb-10" *ngFor="let e of Terminologie.terminologieEditions; let i = index">
+                  <!--begin::Text-->
+                  <div class="d-flex flex-column font-weight-bold">
+                    <span class="text-muted">{{ e.edition }}</span>
+                  </div>
+                  <!--end::Text-->
+                </div>
+                <!--end::Item-->
+              </div>
+              <!--end::Body-->
+            </div>
+            <!--end::List Widget 1-->
+          </div>
+          <div class="col-lg-6 col-xxl-6 order-1 order-xxl-1">
+            <!--begin::List Widget 1-->
+            <div class="card card-custom card-stretch gutter-b">
+              <!--begin::Header-->
+              <div class="card-header border-0 pt-5">
+                <h3 class="card-title align-items-start flex-column">
+                  <span class="card-label font-weight-bolder text-dark">{{ 'Pages' | localize }}</span>
+                </h3>
+              </div>
+              <!--end::Header-->
+              <!--begin::Body-->
+              <div class="card-body pt-8">
+                <!--begin::Item-->
+                <div class="d-flex align-items-center mb-10" *ngFor="let p of Terminologie.terminologiePages; let i = index">
+                  <!--begin::Text-->
+                  <div class="d-flex flex-column font-weight-bold">
+                    <a routerLink="{{ p.pageUrl }}" class="text-dark text-hover-primary mb-1 font-size-lg">{{ p.pageUrl }}</a>
+                  </div>
+                  <!--end::Text-->
+                </div>
+                <!--end::Item-->
+              </div>
+              <!--end::Body-->
+            </div>
+            <!--end::List Widget 1-->
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" (click)="close()">{{ 'Cancel' | localize }}</button>
+      </div>
+    </div>
+  </div>
+</div>

@@ -2776,6 +2776,92 @@ namespace TACHYON.Migrations
                     b.ToTable("Transactions");
                 });
 
+            modelBuilder.Entity("TACHYON.Localization.AppLocalization", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("MasterKey")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("MasterValue")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("AppLocalizations");
+                });
+
+            modelBuilder.Entity("TACHYON.Localization.AppLocalizationTranslation", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<int>("CoreId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Language")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Value")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CoreId");
+
+                    b.ToTable("AppLocalizationTranslations");
+                });
+
+            modelBuilder.Entity("TACHYON.Localization.TerminologieEdition", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<int>("EditionId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("TerminologieId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("EditionId");
+
+                    b.HasIndex("TerminologieId");
+
+                    b.ToTable("TerminologieEditions");
+                });
+
+            modelBuilder.Entity("TACHYON.Localization.TerminologiePage", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("PageUrl")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("TerminologieId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("TerminologieId");
+
+                    b.ToTable("TerminologiePages");
+                });
+
             modelBuilder.Entity("TACHYON.Mobile.UserDeviceToken", b =>
                 {
                     b.Property<int>("Id")
@@ -2806,6 +2892,32 @@ namespace TACHYON.Migrations
                     b.HasIndex("UserId");
 
                     b.ToTable("UserDeviceTokens");
+                });
+
+            modelBuilder.Entity("TACHYON.Mobile.UserOTP", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<DateTime>("CreationTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("ExpireTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("OTP")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<long>("UserId")
+                        .HasColumnType("bigint");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("UserOTPs");
                 });
 
             modelBuilder.Entity("TACHYON.MultiTenancy.Accounting.Invoice", b =>
@@ -3406,6 +3518,26 @@ namespace TACHYON.Migrations
                     b.HasIndex("ShippingRequestTripId");
 
                     b.ToTable("RoutPoints");
+                });
+
+            modelBuilder.Entity("TACHYON.Routs.RoutPoints.RoutePointReceiverReceiveShipmentCode", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<long?>("PointId")
+                        .HasColumnType("bigint");
+
+                    b.Property<string>("ReceiverPhone")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("PointId");
+
+                    b.ToTable("RoutePointReceiverReceiveShipmentCodes");
                 });
 
             modelBuilder.Entity("TACHYON.Routs.RoutSteps.RoutStep", b =>
@@ -4030,11 +4162,6 @@ namespace TACHYON.Migrations
 
                     b.Property<DateTime?>("DeletionTime")
                         .HasColumnType("datetime2");
-
-                    b.Property<string>("DisplayName")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(500)")
-                        .HasMaxLength(500);
 
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
@@ -5999,7 +6126,49 @@ namespace TACHYON.Migrations
                         .HasForeignKey("TenantId");
                 });
 
+            modelBuilder.Entity("TACHYON.Localization.AppLocalizationTranslation", b =>
+                {
+                    b.HasOne("TACHYON.Localization.AppLocalization", "Core")
+                        .WithMany("Translations")
+                        .HasForeignKey("CoreId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("TACHYON.Localization.TerminologieEdition", b =>
+                {
+                    b.HasOne("Abp.Application.Editions.Edition", "Edition")
+                        .WithMany()
+                        .HasForeignKey("EditionId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("TACHYON.Localization.AppLocalization", "Terminologie")
+                        .WithMany("TerminologieEditions")
+                        .HasForeignKey("TerminologieId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("TACHYON.Localization.TerminologiePage", b =>
+                {
+                    b.HasOne("TACHYON.Localization.AppLocalization", "Terminologie")
+                        .WithMany("TerminologiePages")
+                        .HasForeignKey("TerminologieId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
             modelBuilder.Entity("TACHYON.Mobile.UserDeviceToken", b =>
+                {
+                    b.HasOne("TACHYON.Authorization.Users.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("TACHYON.Mobile.UserOTP", b =>
                 {
                     b.HasOne("TACHYON.Authorization.Users.User", "User")
                         .WithMany()
@@ -6096,6 +6265,13 @@ namespace TACHYON.Migrations
                         .HasForeignKey("ShippingRequestTripId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("TACHYON.Routs.RoutPoints.RoutePointReceiverReceiveShipmentCode", b =>
+                {
+                    b.HasOne("TACHYON.Routs.RoutPoints.RoutPoint", "Point")
+                        .WithMany()
+                        .HasForeignKey("PointId");
                 });
 
             modelBuilder.Entity("TACHYON.Routs.RoutSteps.RoutStep", b =>

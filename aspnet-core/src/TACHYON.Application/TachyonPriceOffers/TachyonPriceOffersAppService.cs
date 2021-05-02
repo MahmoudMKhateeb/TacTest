@@ -26,7 +26,6 @@ namespace TACHYON.TachyonPriceOffers
         private readonly CommissionManager _commissionManager;
         private readonly BalanceManager _balanceManager;
         private readonly ShippingRequestManager _shippingRequestManager;
-        private readonly IRepository<ShippingRequestsCarrierDirectPricing> _carrierDirectPricingRepository;
         private readonly IRepository<ShippingRequestBid, long> _shippingRequestBidsRepository;
         private readonly IAppNotifier _appNotifier;
         private readonly IRepository<ShippingRequestsCarrierDirectPricing> _shippingRequestsCarrierDirectPricingRepository;
@@ -93,7 +92,7 @@ namespace TACHYON.TachyonPriceOffers
             }
             else
             {
-                if (!input.CarrirerTenantId.HasValue) throw new UserFriendlyException(L("ItShouldHaveCarrirer"));
+                if (!input.ShippingRequestBidId.HasValue && !input.DriectRequestForCarrierId.HasValue) throw new UserFriendlyException(L("ItShouldHaveCarrirer"));
                 await Edit(input, Offer, Request);
             }
         }
@@ -189,8 +188,16 @@ namespace TACHYON.TachyonPriceOffers
             {
                 throw new UserFriendlyException(L("Cannot Create new offer, there is already existing offer message"));
             }
+            if (input.TotalAmount<1) throw new UserFriendlyException(L("ThePriceSholudBeNotLessThanOne"));
 
-             await OfferMappingFromDirectRequestOrBidding(input, shippingRequest);
+            if (input.DriectRequestForCarrierId.HasValue || input.ShippingRequestBidId.HasValue)
+            {
+                if (input.ActualCommissionValue<1 && input.ActualPercentCommission<1) throw new UserFriendlyException(L("TheCommissionValuevalueAndPercentCommissionMustNotBeLessThanOneAtTheSameTime"));
+                else if (input.ActualCommissionValue<0) throw new UserFriendlyException(L("TheCommissionValueSholudBeNotLessThanZero"));
+                else if (input.ActualPercentCommission < 0) throw new UserFriendlyException(L("ThePercentCommissionSholudBeNotLessThanZero"));
+            }
+
+            await OfferMappingFromDirectRequestOrBidding(input, shippingRequest);
             TachyonPriceOffer tachyonPriceOffer = ObjectMapper.Map<TachyonPriceOffer>(input);
 
             await _commissionManager.CalculateAmountByOffer(tachyonPriceOffer, shippingRequest);
@@ -213,7 +220,16 @@ namespace TACHYON.TachyonPriceOffers
             offer.ShippingRequestBidId = input.ShippingRequestBidId;
             offer.OfferStatus = OfferStatus.Accepted;
             SetSettings(offer, shippingRequest);
-            ObjectMapper.Map(offer, offer.ShippingRequestFk);
+
+
+            offer.ShippingRequestFk.CarrierTenantId = offer.CarrirerTenantId;
+
+            offer.ShippingRequestFk.VatAmount = offer.VatAmount.Value;
+            offer.ShippingRequestFk.Price = offer.TotalAmount;
+            offer.ShippingRequestFk.SubTotalAmount = offer.SubTotalAmount.Value;
+            offer.ShippingRequestFk.CarrierPrice = offer.CarrierPrice.Value;
+            offer.ShippingRequestFk.VatSetting = offer.VatSetting.Value;
+            //ObjectMapper.Map(offer, offer.ShippingRequestFk);
             await _shippingRequestManager.SetToPostPrice(offer.ShippingRequestFk);
         }
 
@@ -221,7 +237,7 @@ namespace TACHYON.TachyonPriceOffers
         {
             if (input.DriectRequestForCarrierId.HasValue)
             {
-                var direct = await _carrierDirectPricingRepository.FirstOrDefaultAsync(input.DriectRequestForCarrierId.Value);
+                var direct = await _shippingRequestsCarrierDirectPricingRepository.FirstOrDefaultAsync(input.DriectRequestForCarrierId.Value);
                 if (direct == null) throw new UserFriendlyException(L("TheCarrierDirectPricingIsNotFound"));
                 input.CarrierPrice = direct.Price;
                 input.CarrirerTenantId = direct.CarrirerTenantId;

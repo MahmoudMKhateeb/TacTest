@@ -211,6 +211,15 @@ namespace TACHYON.Authorization.Users
 
         }
 
+        public async Task<User> GetUserByDriverPhoneNumberAsync(string mobileNumber)
+        {
+
+            using (_unitOfWorkManager.Current.DisableFilter(AbpDataFilters.MayHaveTenant))
+            {
+                return await _userRepository.GetAll().FirstOrDefaultAsync(x => x.PhoneNumber == mobileNumber && x.IsDriver);
+            }
+
+        }
         public async Task<User> GetUserByEmailAsync(string emailAddress)
         {
 

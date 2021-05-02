@@ -1,0 +1,90 @@
+<div
+  bsModal
+  #modal="bs-modal"
+  (onShown)="onShown()"
+  class="modal fade"
+  tabindex="-1"
+  role="dialog"
+  aria-labelledby="modal"
+  aria-hidden="true"
+  [config]="{ backdrop: 'static' }"
+>
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <form *ngIf="active" #Form="ngForm" novalidate (ngSubmit)="save()">
+        <div class="modal-header">
+          <h4 class="modal-title">
+            <span>{{ AppLocalization.id ? l('EditAppLocalization') : l('CreateAppLocalization') }}</span>
+          </h4>
+          <button type="button" class="close" (click)="close()" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <div class="row">
+            <div class="form-group col-md-4">
+              <span class="navi-text">
+                {{ l('DefaultLanguage') }}
+              </span>
+            </div>
+            <div class="form-group col-md-4">
+              <label for="MasterKey">{{ l('MasterKey') }} *</label>
+              <textarea
+                [readonly]="AppLocalization.id ? true : false"
+                type="text"
+                #nameInput
+                id="MasterKey"
+                class="form-control"
+                [(ngModel)]="AppLocalization.masterKey"
+                name="MasterKey"
+                minlength="1"
+                maxlength="256"
+                required
+              ></textarea>
+            </div>
+            <div class="form-group col-md-4">
+              <label for="MasterValue">{{ l('MasterValue') }} *</label>
+              <textarea
+                type="text"
+                id="MasterValue"
+                class="form-control"
+                [(ngModel)]="AppLocalization.masterValue"
+                name="MasterValue"
+                minlength="1"
+                required
+              ></textarea>
+            </div>
+          </div>
+          <div class="row" *ngFor="let t of Translations; let i = index">
+            <div class="form-group col-md-6">
+              <span class="symbol symbol-20 mr-3">
+                <i [class]="t.icon"></i>
+              </span>
+              <span class="navi-text">
+                {{ t.displayName }}
+              </span>
+            </div>
+
+            <div class="form-group col-md-6">
+              <label>{{ 'Value' | localize }}</label>
+              <textarea class="form-control" type="text" [name]="'value' + i" [(ngModel)]="t.value" minLength="1"></textarea>
+            </div>
+          </div>
+        </div>
+
+        <div class="modal-footer">
+          <button [disabled]="saving" type="button" class="btn btn-secondary" (click)="close()">{{ 'Cancel' | localize }}</button>
+          <button
+            type="submit"
+            class="btn btn-primary"
+            [disabled]="!Form.form.valid"
+            [buttonBusy]="saving"
+            [busyText]="l('SavingWithThreeDot' | localize)"
+          >
+            <i class="fa fa-save"></i> <span>{{ 'Save' | localize }}</span>
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

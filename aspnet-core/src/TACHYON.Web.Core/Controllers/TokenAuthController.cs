@@ -4,6 +4,7 @@ using Abp.AspNetZeroCore.Web.Authentication.External;
 using Abp.Authorization;
 using Abp.Authorization.Users;
 using Abp.Configuration;
+using Abp.Domain.Uow;
 using Abp.Extensions;
 using Abp.Localization;
 using Abp.MultiTenancy;
@@ -81,6 +82,7 @@ namespace TACHYON.Web.Controllers
         public IRecaptchaValidator RecaptchaValidator { get; set; }
         private readonly IUserDelegationManager _userDelegationManager;
         private readonly UserDeviceTokenManager _userDeviceTokenManager;
+        private readonly MobileManager _mobileManager;
         public TokenAuthController(
             LogInManager logInManager,
             ITenantCache tenantCache,
@@ -104,7 +106,8 @@ namespace TACHYON.Web.Controllers
             IJwtSecurityStampHandler securityStampHandler,
             AbpUserClaimsPrincipalFactory<User, Role> claimsPrincipalFactory,
             IUserDelegationManager userDelegationManager, TenantManager tenantManager,
-            UserDeviceTokenManager userDeviceTokenManager)
+            UserDeviceTokenManager userDeviceTokenManager,
+           MobileManager mobileManager)
         {
             _logInManager = logInManager;
             _tenantCache = tenantCache;
@@ -131,6 +134,7 @@ namespace TACHYON.Web.Controllers
             _userDelegationManager = userDelegationManager;
             _tenantManager = tenantManager;
             _userDeviceTokenManager = userDeviceTokenManager;
+            _mobileManager = mobileManager;
         }
 
         [HttpPost]
@@ -254,6 +258,87 @@ namespace TACHYON.Web.Controllers
             var refreshToken = CreateRefreshToken(await CreateJwtClaims(loginResult.Identity, loginResult.User, tokenType: TokenType.RefreshToken));
 
 
+
+            return new AuthenticateResultModel
+            {
+                AccessToken = accessToken,
+                ExpireInSeconds = (int)_configuration.AccessTokenExpiration.TotalSeconds,
+                RefreshToken = refreshToken,
+                RefreshTokenExpireInSeconds = (int)_configuration.RefreshTokenExpiration.TotalSeconds,
+                EncryptedAccessToken = GetEncryptedAccessToken(accessToken),
+                TwoFactorRememberClientToken = twoFactorRememberClientToken,
+                UserId = loginResult.User.Id,
+                ReturnUrl = returnUrl
+            };
+        }
+
+        [HttpPost]
+        public async Task MobileAuthenticate(string Username,string Language)
+        {
+            if (string.IsNullOrEmpty(Username)) throw new AbpAuthorizationException(L("InvalidMobileNumber"));
+            var user = await _userManager.GetUserByDriverPhoneNumberAsync(Username);
+            if (user == null) throw new AbpAuthorizationException(L("InvalidMobileNumber"));
+            await _mobileManager.CreateOTP(user, Language);
+        }
+        [HttpPost]
+
+        public async Task<AuthenticateResultModel> OTPAuthenticate([FromBody] AuthenticateMobileModel model)
+        {
+            if (string.IsNullOrEmpty(model.Username)) throw new AbpAuthorizationException(L("InvalidMobileNumber"));
+            string tenancyName = null;
+            var user = await _userManager.GetUserByDriverPhoneNumberAsync(model.Username);
+
+
+            if (user == null)
+            {
+                throw new AbpAuthorizationException(L("InvalidMobileNumber"));
+            }
+
+            await _mobileManager.OTPValidate(user.Id, model.OTP);
+
+            //  get tenantId from UserName
+
+            if (user.TenantId != null)
+            {
+                tenancyName = _tenantManager.GetById(user.TenantId.Value).TenancyName;
+            }
+            //tenancyName = GetTenancyNameOrNull();
+
+
+
+            // chick 2 factor auth
+
+
+            var loginResult = await GetLoginResultOtpAsync(
+                user.NormalizedUserName,
+                tenancyName
+            );
+
+
+
+            if (loginResult.Result == AbpLoginResultType.Success)
+            {
+                loginResult.User.SetSignInToken();
+            }
+
+
+            //Two factor auth
+            await _userManager.InitializeOptionsAsync(loginResult.Tenant?.Id);
+
+
+
+            // One Concurrent Login 
+            if (AllowOneConcurrentLoginPerUser())
+            {
+                await _userManager.UpdateSecurityStampAsync(loginResult.User);
+                await _securityStampHandler.SetSecurityStampCacheItem(loginResult.User.TenantId, loginResult.User.Id, loginResult.User.SecurityStamp);
+                loginResult.Identity.ReplaceClaim(new Claim(AppConsts.SecurityStampKey, loginResult.User.SecurityStamp));
+            }
+
+            var accessToken = CreateAccessToken(await CreateJwtClaims(loginResult.Identity, loginResult.User));
+            var refreshToken = CreateRefreshToken(await CreateJwtClaims(loginResult.Identity, loginResult.User, tokenType: TokenType.RefreshToken));
+
+
             if (!string.IsNullOrEmpty(model.Language))
             {
                 await SettingManager.ChangeSettingForUserAsync(
@@ -264,21 +349,17 @@ namespace TACHYON.Web.Controllers
             }
             if (!string.IsNullOrEmpty(model.DeviceToken) && !string.IsNullOrEmpty(model.DeviceId))
             {
-              await  _userDeviceTokenManager.CreateOrEdit(new UserDeviceTokenDto { DeviceId = model.DeviceId, Token = model.DeviceToken, ExpireDate = model.DeviceExpireDate, UserId = loginResult.User.Id });
+                await _userDeviceTokenManager.CreateOrEdit(new UserDeviceTokenDto { DeviceId = model.DeviceId, Token = model.DeviceToken, ExpireDate = model.DeviceExpireDate, UserId = loginResult.User.Id });
             }
-            {
 
-            }
-                return new AuthenticateResultModel
+            return new AuthenticateResultModel
             {
                 AccessToken = accessToken,
                 ExpireInSeconds = (int)_configuration.AccessTokenExpiration.TotalSeconds,
                 RefreshToken = refreshToken,
                 RefreshTokenExpireInSeconds = (int)_configuration.RefreshTokenExpiration.TotalSeconds,
                 EncryptedAccessToken = GetEncryptedAccessToken(accessToken),
-                TwoFactorRememberClientToken = twoFactorRememberClientToken,
                 UserId = loginResult.User.Id,
-                ReturnUrl = returnUrl
             };
         }
 
@@ -726,6 +807,18 @@ namespace TACHYON.Web.Controllers
             }
         }
 
+        private async Task<AbpLoginResult<Tenant, User>> GetLoginResultOtpAsync(string username, string tenancyName)
+        {
+            var loginResult = await _mobileManager.LoginAsyn(username, tenancyName);
+
+            switch (loginResult.Result)
+            {
+                case AbpLoginResultType.Success:
+                    return loginResult;
+                default:
+                    throw _abpLoginResultTypeHelper.CreateExceptionForFailedLoginAttempt(loginResult.Result, username, tenancyName);
+            }
+        }
         private string CreateAccessToken(IEnumerable<Claim> claims, TimeSpan? expiration = null)
         {
             return CreateToken(claims, expiration ?? _configuration.AccessTokenExpiration);
@@ -872,5 +965,9 @@ namespace TACHYON.Web.Controllers
 
             await RecaptchaValidator.ValidateAsync(captchaResponse);
         }
+
+
+
+
     }
 }

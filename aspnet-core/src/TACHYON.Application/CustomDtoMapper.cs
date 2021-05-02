@@ -71,6 +71,7 @@ using TACHYON.Invoices.Periods.Dto;
 using TACHYON.Invoices.SubmitInvoices;
 using TACHYON.Invoices.Transactions;
 using TACHYON.Invoices.Transactions.Dto;
+using TACHYON.Localization;
 using TACHYON.Localization.Dto;
 using TACHYON.MultiTenancy;
 using TACHYON.MultiTenancy.Dto;
@@ -89,14 +90,10 @@ using TACHYON.Packing.PackingTypes;
 using TACHYON.Packing.PackingTypes.Dtos;
 using TACHYON.Receivers;
 using TACHYON.Receivers.Dtos;
-using TACHYON.Routs;
-using TACHYON.Routs.Dtos;
 using TACHYON.Routs.RoutPoints;
 using TACHYON.Routs.RoutPoints.Dtos;
 using TACHYON.Routs.RoutSteps;
 using TACHYON.Routs.RoutSteps.Dtos;
-using TACHYON.Routs.RoutTypes;
-using TACHYON.Routs.RoutTypes.Dtos;
 using TACHYON.Sessions.Dto;
 using TACHYON.Shipping.Accidents;
 using TACHYON.Shipping.Accidents.Dto;
@@ -108,7 +105,6 @@ using TACHYON.Shipping.ShippingRequestStatuses.Dtos;
 using TACHYON.Shipping.ShippingRequestTrips;
 using TACHYON.Shipping.ShippingTypes;
 using TACHYON.Shipping.ShippingTypes.Dtos;
-using TACHYON.Shipping.Trips.Accidents.Dto;
 using TACHYON.Shipping.Trips.Dto;
 using TACHYON.Shipping.Trips.RejectReasons.Dtos;
 using TACHYON.ShippingRequestTripVases;
@@ -325,6 +321,12 @@ namespace TACHYON
             configuration.CreateMap<CreateOrEditTruckDto, Truck>().ReverseMap();
             configuration.CreateMap<ImportTruckDto, Truck>().ReverseMap();
             configuration.CreateMap<TruckDto, Truck>().ReverseMap();
+
+            configuration.CreateMap<Truck, GetTruckForViewOutput>()
+                .ForMember(dest => dest.Truck, opt => opt.MapFrom(src => src))
+                .ForMember(dest => dest.TruckStatusDisplayName, opt => opt.MapFrom(src => src.TruckStatusFk.DisplayName))
+                .ForMember(dest => dest.TrucksTypeDisplayName, opt => opt.MapFrom(src => src.TrucksTypeFk.DisplayName));
+
             configuration.CreateMap<CreateOrEditTrucksTypeDto, TrucksType>().ReverseMap();
             configuration.CreateMap<TrucksTypeDto, TrucksType>().ReverseMap();
             configuration.CreateMap<CreateOrEditTruckStatusDto, TruckStatus>().ReverseMap();
@@ -580,6 +582,8 @@ namespace TACHYON
                 CreateMultiLingualMap<ShippingRequestReasonAccident, ShippingRequestReasonAccidentTranslation, ShippingRequestReasonAccidentListDto>(context);
             configuration.
                 CreateMultiLingualMap<ShippingRequestTripRejectReason, ShippingRequestTripRejectReasonTranslation, ShippingRequestTripRejectReasonListDto>(context);
+            configuration.
+                CreateMultiLingualMap<AppLocalization, AppLocalizationTranslation, AppLocalizationListDto>(context);
         }
 
         private static void AddOrUpdateShippingRequest(CreateOrEditShippingRequestDto dto, ShippingRequest Request)

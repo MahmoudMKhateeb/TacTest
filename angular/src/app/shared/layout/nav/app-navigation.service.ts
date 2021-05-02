@@ -151,7 +151,7 @@ export class AppNavigationService {
       ),
 
       new AppMenuItem(
-        'Invoices',
+        'InvoicesList',
         'Pages.Invoices',
         'flaticon-book',
         '',
@@ -442,14 +442,14 @@ export class AppNavigationService {
             'label label-danger label-dot',
             '/app/main/citiesTranslations/citiesTranslations'
           ),
-          new AppMenuItem('AccidentsReason', 'Pages.ShippingRequestResoneAccidents', 'label label-danger label-dot', '/app/main/accidents/reasons'),
+          new AppMenuItem('AccidentReason', 'Pages.ShippingRequestResoneAccidents', 'label label-danger label-dot', '/app/main/accidents/reasons'),
           new AppMenuItem(
             'TripRejectReason',
             'Pages.ShippingRequestTrips.Reject.Reason',
             'label label-danger label-dot',
             '/app/main/trip/reject/reasons'
           ),
-
+          new AppMenuItem('AppLocalization', 'Pages.AppLocalizations', 'label label-danger label-dot', '/app/main/lanaguages/applocalizations'),
           // new AppMenuItem('AuditLogs', 'Pages.Administration.AuditLogs', 'flaticon-folder-1', '/app/admin/auditLogs'),
           // new AppMenuItem('Maintenance', 'Pages.Administration.Host.Maintenance', 'flaticon-lock', '/app/admin/maintenance'),
           // new AppMenuItem(

@@ -95,7 +95,9 @@ export class CreateOrEditTruckModalComponent extends AppComponentBase {
   private _DocsUploaderOptions: FileUploaderOptions = {};
 
   allPlateTypes: SelectItemDto[];
-  today = new Date();
+
+  truckModelMaxYear = new Date('2021');
+  truckModelMinYear = new Date('2000');
 
   constructor(
     injector: Injector,
@@ -323,4 +325,13 @@ export class CreateOrEditTruckModalComponent extends AppComponentBase {
       .replace(/([أ-ي])/g, ' $1')
       .trim();
   }
+
+  // validateModalYear() {
+  //   console.log('Validator Modal Year Ran');
+  //   const selectedModalYear = moment(this.truck.modelYear).locale('en').format('YYYY');
+  //   if (this.Number(selectedModalYear) > 1999 && this.Number(selectedModalYear) < moment().year()) {
+  //     return true;
+  //   }
+  //   return false;
+  // }
 }
