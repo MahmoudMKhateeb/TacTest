@@ -37,6 +37,7 @@
                     <div class="form-group col-6">
                       <label for="EmailAddress">{{ 'EmailAddress' | localize }} *</label>
                       <input
+                        style="text-align: left !important;"
                         id="EmailAddress"
                         #emailAddressInput="ngModel"
                         type="email"
@@ -59,6 +60,7 @@
                           <span class="input-group-text">+966</span>
                         </div>
                         <input
+                          style="text-align: left !important;"
                           (input)="CheckIfDriverPhoneNumberIsValid(userNameInput.value, user.id)"
                           id="UserName"
                           #userNameInput="ngModel"
