@@ -28,7 +28,7 @@
         required
         email="true"
         maxlength="256"
-        pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,3}$"
+        pattern="[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,3}$"
       />
       <div *ngIf="userNameOrEmailAddressInput.errors && (userNameOrEmailAddressInput.touched || userNameOrEmailAddressInput.dirty)">
         <div class="text-left" style="color: #f64e60;" [hidden]="!userNameOrEmailAddressInput.errors?.pattern">
