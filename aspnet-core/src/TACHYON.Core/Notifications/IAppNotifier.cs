@@ -59,7 +59,7 @@ namespace TACHYON.Notifications
         #region TachyonDeal
         Task SendDriectRequestForCarrier(int? TenantId,ShippingRequest Request);
         Task DriectRequestCarrierRespone(ShippingRequestsCarrierDirectPricing Pricing);
-
+        Task TachyonDealerOfferCreated(TachyonPriceOffer offer,ShippingRequest request);
         Task TachyonDealOfferRejectedByShipper(TachyonPriceOffer offer);
         Task TachyonDealOfferAccepByShipper(TachyonPriceOffer offer);
 
