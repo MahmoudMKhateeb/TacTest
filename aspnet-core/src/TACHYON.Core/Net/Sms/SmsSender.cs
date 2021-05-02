@@ -66,8 +66,7 @@ namespace TACHYON.Net.Sms
             if (number.StartsWith("0"))
                 
             {
-                number.Remove(0,1);
-                number = $"966{number}";
+                number = $"966{number.Remove(0, 1)}";
             }
                 else if (!number.StartsWith("966"))
                 number = $"966{number}";
