@@ -80,6 +80,7 @@ namespace TACHYON.MultiTenancy
 
         public async Task<int> CreateWithAdminUserAsync(
             string companyName,
+            string mobileNo,
             string tenancyName,
             string name,
             string address,
@@ -121,6 +122,7 @@ namespace TACHYON.MultiTenancy
                     EditionId = editionId,
                     SubscriptionEndDateUtc = subscriptionEndDate?.ToUniversalTime(),
                     IsInTrialPeriod = isInTrialPeriod,
+                    MobileNo=mobileNo,
                     ConnectionString = connectionString.IsNullOrWhiteSpace() ? null : SimpleStringCipher.Instance.Encrypt(connectionString)
                 };
 

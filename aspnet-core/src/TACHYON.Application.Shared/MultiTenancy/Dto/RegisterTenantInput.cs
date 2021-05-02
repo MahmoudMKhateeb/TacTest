@@ -16,8 +16,8 @@ namespace TACHYON.MultiTenancy.Dto
         [Required]
         [StringLength(AbpTenantBase.MaxTenancyNameLength)]
         public string companyName { get; set; }
-
-
+        //tenant mobile no
+        public string MobileNo { get; set; }
         [Required]
         [StringLength(AbpUserBase.MaxNameLength)]
         public string Name { get; set; }

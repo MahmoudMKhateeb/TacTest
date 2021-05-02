@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using NetTopologySuite.Geometries;
 using TACHYON.EntityFrameworkCore;
@@ -10,9 +11,10 @@ using TACHYON.EntityFrameworkCore;
 namespace TACHYON.Migrations
 {
     [DbContext(typeof(TACHYONDbContext))]
-    partial class TACHYONDbContextModelSnapshot : ModelSnapshot
+    [Migration("20210413124748_AddMobileNoForTenant")]
+    partial class AddMobileNoForTenant
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -3617,6 +3619,11 @@ namespace TACHYON.Migrations
                     b.Property<DateTime?>("DeletionTime")
                         .HasColumnType("datetime2");
 
+                    b.Property<string>("DisplayName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(60)")
+                        .HasMaxLength(60);
+
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
 
@@ -3629,32 +3636,6 @@ namespace TACHYON.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("ShippingRequestReasonAccidents");
-                });
-
-            modelBuilder.Entity("TACHYON.Shipping.Accidents.ShippingRequestReasonAccidentTranslation", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<int>("CoreId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Language")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(60)")
-                        .HasMaxLength(60);
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("CoreId");
-
-                    b.ToTable("ShippingRequestReasonAccidentTranslations");
                 });
 
             modelBuilder.Entity("TACHYON.Shipping.RoutPoints.RoutPointStatusTransition", b =>
@@ -4048,32 +4029,6 @@ namespace TACHYON.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("ShippingRequestTripRejectReasons");
-                });
-
-            modelBuilder.Entity("TACHYON.Shipping.ShippingRequestTrips.ShippingRequestTripRejectReasonTranslation", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<int>("CoreId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Language")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(60)")
-                        .HasMaxLength(60);
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("CoreId");
-
-                    b.ToTable("ShippingRequestTripRejectReasonTranslations");
                 });
 
             modelBuilder.Entity("TACHYON.Shipping.ShippingRequestTrips.ShippingRequestTripTransition", b =>
@@ -4594,9 +4549,6 @@ namespace TACHYON.Migrations
                     b.Property<long?>("ShippingRequestBidId")
                         .HasColumnType("bigint");
 
-                    b.Property<int?>("ShippingRequestCarrierDirectPricingId")
-                        .HasColumnType("int");
-
                     b.Property<long>("ShippingRequestId")
                         .HasColumnType("bigint");
 
@@ -4623,8 +4575,6 @@ namespace TACHYON.Migrations
                     b.HasIndex("CarrirerTenantId");
 
                     b.HasIndex("ShippingRequestBidId");
-
-                    b.HasIndex("ShippingRequestCarrierDirectPricingId");
 
                     b.HasIndex("ShippingRequestId");
 
@@ -6154,15 +6104,6 @@ namespace TACHYON.Migrations
                         .HasForeignKey("RoutTypeId");
                 });
 
-            modelBuilder.Entity("TACHYON.Shipping.Accidents.ShippingRequestReasonAccidentTranslation", b =>
-                {
-                    b.HasOne("TACHYON.Shipping.Accidents.ShippingRequestReasonAccident", "Core")
-                        .WithMany("Translations")
-                        .HasForeignKey("CoreId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
             modelBuilder.Entity("TACHYON.Shipping.RoutPoints.RoutPointStatusTransition", b =>
                 {
                     b.HasOne("TACHYON.Routs.RoutPoints.RoutPoint", "RoutPointFK")
@@ -6234,15 +6175,6 @@ namespace TACHYON.Migrations
                     b.HasOne("TACHYON.Shipping.ShippingRequestTrips.ShippingRequestTripAccident", "AccidentFK")
                         .WithMany()
                         .HasForeignKey("AccidentId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
-            modelBuilder.Entity("TACHYON.Shipping.ShippingRequestTrips.ShippingRequestTripRejectReasonTranslation", b =>
-                {
-                    b.HasOne("TACHYON.Shipping.ShippingRequestTrips.ShippingRequestTripRejectReason", "Core")
-                        .WithMany("Translations")
-                        .HasForeignKey("CoreId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
@@ -6389,10 +6321,6 @@ namespace TACHYON.Migrations
                     b.HasOne("TACHYON.Shipping.ShippingRequestBids.ShippingRequestBid", "ShippingRequestBidFk")
                         .WithMany()
                         .HasForeignKey("ShippingRequestBidId");
-
-                    b.HasOne("TACHYON.Shipping.ShippingRequests.TachyonDealer.ShippingRequestsCarrierDirectPricing", "ShippingRequestCarrierDirectPricingFk")
-                        .WithMany()
-                        .HasForeignKey("ShippingRequestCarrierDirectPricingId");
 
                     b.HasOne("TACHYON.Shipping.ShippingRequests.ShippingRequest", "ShippingRequestFk")
                         .WithMany()
