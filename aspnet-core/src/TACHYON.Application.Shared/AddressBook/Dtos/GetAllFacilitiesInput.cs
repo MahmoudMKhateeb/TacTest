@@ -1,9 +1,10 @@
 ﻿using Abp.Application.Services.Dto;
+using Abp.Runtime.Validation;
 using System;
 
 namespace TACHYON.AddressBook.Dtos
 {
-    public class GetAllFacilitiesInput : PagedAndSortedResultRequestDto
+    public class GetAllFacilitiesInput : PagedAndSortedResultRequestDto, IShouldNormalize
     {
         public string Filter { get; set; }
 
@@ -19,6 +20,17 @@ namespace TACHYON.AddressBook.Dtos
 
         public string CityDisplayNameFilter { get; set; }
 
-
+        public void Normalize()
+        {
+            if (string.IsNullOrWhiteSpace(Sorting)) return;
+            if (Sorting.Contains("longitude"))
+            {
+                Sorting = Sorting.Replace("longitude", "Location.X");
+            }
+            else if (Sorting.Contains("latitude"))
+            {
+                Sorting = Sorting.Replace("latitude", "Location.Y");
+            }
+        }
     }
 }
