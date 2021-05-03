@@ -85,7 +85,8 @@ namespace TACHYON.Countries
 
         public async Task CreateOrEdit(CreateOrEditCountyDto input)
         {
-            if(await _countyRepository.FirstOrDefaultAsync(x => x.DisplayName.ToLower() == input.DisplayName.ToLower()) != null)
+            if(await _countyRepository.FirstOrDefaultAsync(x => x.DisplayName.ToLower() == input.DisplayName.ToLower()
+            && x.Id!=input.Id) != null)
             {
                 throw new UserFriendlyException(L("country is already exists message"));
             }
