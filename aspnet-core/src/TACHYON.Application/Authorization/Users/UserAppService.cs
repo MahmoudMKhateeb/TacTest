@@ -281,6 +281,8 @@ namespace TACHYON.Authorization.Users
 
         public async Task CreateOrUpdateUser(CreateOrUpdateUserInput input)
         {
+            CheckIfDriverPhoneNumberExists(input);
+
             if (input.User.Id.HasValue)
             {
                 await UpdateUserAsync(input);
@@ -794,6 +796,18 @@ namespace TACHYON.Authorization.Users
                 }
             }
 
+        }
+
+        private void CheckIfDriverPhoneNumberExists(CreateOrUpdateUserInput input)
+        {
+            if (input.User.IsDriver)
+            {
+                var userDB = _userManager.Users.FirstOrDefault(x => x.IsDriver == true && x.PhoneNumber == input.User.PhoneNumber && x.Id != input.User.Id);
+                if (userDB != null)
+                {
+                    throw new UserFriendlyException(L("DriverPhoneNumberAlreadyExists"));
+                }
+            }
         }
     }
 }
