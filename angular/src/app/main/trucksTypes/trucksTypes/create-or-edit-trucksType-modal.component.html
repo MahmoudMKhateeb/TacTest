@@ -22,7 +22,7 @@
         </div>
         <div class="modal-body">
           <div class="form-group m-form__group">
-            <label for="transportTypeDisplayName">{{ l('TransportType') }}*</label>
+            <label for="transportTypeDisplayName">{{ l('TransportType') }}<span class="required-fileds"> *</span></label>
             <select
               id="transportTypeDisplayName"
               name="transportType.transportTypeId"
@@ -35,7 +35,7 @@
             <span class="form-text text-muted">{{ l('Choose') }} {{ 'TransportType' | localize }}</span>
           </div>
           <div class="form-group">
-            <label for="TrucksType_DisplayName">{{ l('TrucksType') }} *</label>
+            <label for="TrucksType_DisplayName">{{ l('TrucksType') }} <span class="required-fileds"> *</span></label>
             <input
               type="text"
               id="TrucksType_DisplayName"

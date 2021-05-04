@@ -1,7 +1,7 @@
 <div class="card card-custom gutter-b">
   <div class="card-header" *ngIf="feature.isEnabled('App.TachyonDealer')">
     <h3 class="card-title">
-      {{ l('directRequests') }}
+      {{ l('DirectRequests') }}
     </h3>
     <div class="card-toolbar">
       <button class="btn btn-danger" (click)="sendDirectRequestsModal.show()">
@@ -32,23 +32,23 @@
                 {{ 'id' | localize }}
               </th>
               <th style="width: 150px;" pSortableColumn="shipperName" *ngIf="feature.isEnabled('App.Carrier')">
-                {{ 'shipperName' | localize }}
+                {{ 'ShipperName' | localize }}
                 <p-sortIcon field="shipperName"></p-sortIcon>
               </th>
               <th style="width: 150px;" pSortableColumn="carrierName" *ngIf="feature.isEnabled('App.TachyonDealer')">
-                {{ 'carrierName' | localize }}
+                {{ 'CarrierName' | localize }}
                 <p-sortIcon field="carrierName"></p-sortIcon>
               </th>
               <th style="width: 150px;" pSortableColumn="price">
-                {{ 'price' | localize }}
+                {{ 'Price' | localize }}
                 <p-sortIcon field="price"></p-sortIcon>
               </th>
               <th style="width: 100px;" pSortableColumn="statusTitle">
-                {{ 'status' | localize }}
+                {{ 'Status' | localize }}
                 <p-sortIcon field="statusTitle"></p-sortIcon>
               </th>
               <th style="width: 160px;" pSortableColumn="requestId" *ngIf="feature.isEnabled('App.Carrier')">
-                {{ 'shippingRequest' | localize }}
+                {{ 'ShippingRequest' | localize }}
                 <p-sortIcon field="requestId"></p-sortIcon>
               </th>
               <th style="width: 150px;">
@@ -65,34 +65,34 @@
                 </span>
               </td>
               <td style="width: 150px;" *ngIf="feature.isEnabled('App.Carrier')">
-                <span class="ui-column-title"> {{ 'shipperName' | localize }}</span>
+                <span class="ui-column-title"> {{ 'ShipperName' | localize }}</span>
                 <span>
                   {{ record.shipperName }}
                 </span>
               </td>
               <td style="width: 150px;" *ngIf="feature.isEnabled('App.TachyonDealer')">
-                <span class="ui-column-title"> {{ 'carrierName' | localize }}</span>
+                <span class="ui-column-title"> {{ 'CarrierName' | localize }}</span>
                 <span>
                   <a class="text-hover-primary" (click)="openCarrierProfile()">{{ record.carrierName }}</a>
                 </span>
               </td>
               <td style="width: 150px;">
-                <span class="ui-column-title"> {{ 'price' | localize }}</span>
+                <span class="ui-column-title"> {{ 'Price' | localize }}</span>
                 <span>
                   {{ record.price }}
                 </span>
               </td>
               <td style="width: 100px;">
-                <span class="ui-column-title"> {{ 'statusTitle' | localize }}</span>
+                <span class="ui-column-title"> {{ 'StatusTitle' | localize }}</span>
                 <span>
                   {{ record.statusTitle }}
                 </span>
               </td>
               <td style="width: 160px;" *ngIf="feature.isEnabled('App.Carrier')">
-                <span class="ui-column-title"> {{ 'requestId' | localize }}</span>
+                <span class="ui-column-title"> {{ 'RequestId' | localize }}</span>
                 <span>
                   <button class="btn btn-danger btn-sm" (click)="openViewShippingRequestInNewWindow(record.requestId)">
-                    <i class="flaticon-interface-9"></i> {{ l('viewShippingRequest') }}
+                    <i class="flaticon-interface-9"></i> {{ l('ViewShippingRequest') }}
                   </button>
                 </span>
               </td>

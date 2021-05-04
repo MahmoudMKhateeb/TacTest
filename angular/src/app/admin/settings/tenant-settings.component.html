@@ -1,6 +1,6 @@
 <div [@routerTransition]>
   <div class="content d-flex flex-column flex-column-fluid">
-    <sub-header [title]="'Settings' | localize" [description]="'SettingsHeaderInfo' | localize">
+    <sub-header [title]="'Settings' | localize" [description]="'' | localize">
       <div role="actions">
         <button class="btn btn-primary" (click)="saveAll()"><i class="la la-floppy-o"></i> {{ 'SaveAll' | localize }}</button>
       </div>
@@ -694,9 +694,8 @@
                   </div>
                   <div class="form-group">
                     <label>{{ 'AppSecret' | localize }}*</label>
-                    <password-input-with-show-button
-                      [(data)]="settings.externalLoginProviderSettings.facebook.appSecret"
-                    ></password-input-with-show-button>
+                    <password-input-with-show-button [(data)]="settings.externalLoginProviderSettings.facebook.appSecret">
+                    </password-input-with-show-button>
                   </div>
                 </div>
               </div>
@@ -727,9 +726,8 @@
                   </div>
                   <div class="form-group">
                     <label>{{ 'ClientSecret' | localize }}*</label>
-                    <password-input-with-show-button
-                      [(data)]="settings.externalLoginProviderSettings.google.clientSecret"
-                    ></password-input-with-show-button>
+                    <password-input-with-show-button [(data)]="settings.externalLoginProviderSettings.google.clientSecret">
+                    </password-input-with-show-button>
                   </div>
                   <div class="form-group">
                     <label for="Setting_Google_UserInfoEndpoint">{{ 'UserInfoEndpoint' | localize }}*</label>
@@ -769,9 +767,8 @@
                   </div>
                   <div class="form-group">
                     <label>{{ 'ClientSecret' | localize }}*</label>
-                    <password-input-with-show-button
-                      [(data)]="settings.externalLoginProviderSettings.microsoft.clientSecret"
-                    ></password-input-with-show-button>
+                    <password-input-with-show-button [(data)]="settings.externalLoginProviderSettings.microsoft.clientSecret">
+                    </password-input-with-show-button>
                   </div>
                 </div>
               </div>

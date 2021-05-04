@@ -1,6 +1,6 @@
 <div [@routerTransition]>
   <div class="content d-flex flex-column flex-column-fluid">
-    <sub-header [description]="'ShippingRequestsHeaderInfo' | localize" [title]="'ShippingRequests' | localize">
+    <sub-header [description]="'' | localize" [title]="'ShippingRequests' | localize">
       <div role="actions">
         <button (click)="createShippingRequest()" *ngIf="feature.isEnabled('App.Shipper')" class="btn btn-primary blue">
           <i class="fa fa-plus"></i> {{ l('CreateNewShippingRequest') }}
@@ -155,29 +155,29 @@
                       <p-sortIcon field="id"></p-sortIcon>
                     </th>
                     <th pSortableColumn="status" style="width: 150px;">
-                      {{ l('shippingRequestStatus') }}
+                      {{ l('ShippingRequestStatus') }}
                       <p-sortIcon field="status"></p-sortIcon>
                     </th>
 
                     <th pSortableColumn="isBid" *ngIf="feature.isEnabled('App.Shipper')" style="width: 150px;">
-                      {{ l('shippingRequestType') }}
+                      {{ l('ShippingRequestType') }}
                       <p-sortIcon field="isBid"></p-sortIcon>
                     </th>
 
                     <th pSortableColumn="routeType" style="width: 150px;">
-                      {{ l('routeType') }}
+                      {{ l('RouteType') }}
                       <p-sortIcon field="routeType"></p-sortIcon>
                     </th>
                     <th pSortableColumn="originalCityName" style="width: 150px;">
-                      {{ l('originCity') }}
+                      {{ l('OriginCity') }}
                       <p-sortIcon field="originalCityName"></p-sortIcon>
                     </th>
                     <th pSortableColumn="destinationCityName" style="width: 150px;">
-                      {{ l('destinationCity') }}
+                      {{ l('DestinationCity') }}
                       <p-sortIcon field="destinationCityName"></p-sortIcon>
                     </th>
                     <th pSortableColumn="numberOfTrips" style="width: 150px;">
-                      {{ l('numberOfTrips') }}
+                      {{ l('NumberOfTrips') }}
                       <p-sortIcon field="numberOfTrips"></p-sortIcon>
                     </th>
                     <th
@@ -185,7 +185,7 @@
                       pSortableColumn="totalBidsCount"
                       style="width: 150px;"
                     >
-                      {{ l('totalBidsCount') }}
+                      {{ l('TotalBidsCount') }}
                       <p-sortIcon field="totalBidsCount"></p-sortIcon>
                     </th>
                     <th [hidden]="!isGrantedAny('Pages.ShippingRequests.Edit', 'Pages.ShippingRequests.Delete')" style="width: 130px;">
@@ -200,32 +200,32 @@
                       {{ record.id }}
                     </td>
                     <td style="width: 150px;">
-                      <span class="ui-column-title"> {{ l('shippingRequestStatusName') }}</span>
+                      <span class="ui-column-title"> {{ l('ShippingRequestStatusName') }}</span>
                       {{ record.statusTitle }}
                     </td>
 
                     <td *ngIf="feature.isEnabled('App.Shipper')" style="width: 150px;">
-                      <span class="ui-column-title"> {{ l('shippingRequestType') }}</span>
+                      <span class="ui-column-title"> {{ l('ShippingRequestType') }}</span>
                       {{ record.isBid ? l('Marketplace') : l('TachyonManageService') }}
                     </td>
                     <td style="width: 150px;">
-                      <span class="ui-column-title"> {{ l('routeType') }}</span>
+                      <span class="ui-column-title"> {{ l('RouteType') }}</span>
                       {{ record.routeType }}
                     </td>
                     <td style="width: 150px;">
-                      <span class="ui-column-title"> {{ l('originalCity') }}</span>
+                      <span class="ui-column-title"> {{ l('OriginalCity') }}</span>
                       {{ record.origin }}
                     </td>
                     <td style="width: 150px;">
-                      <span class="ui-column-title"> {{ l('destinationCity') }}</span>
+                      <span class="ui-column-title"> {{ l('DestinationCity') }}</span>
                       {{ record.destination }}
                     </td>
                     <td style="width: 150px;">
-                      <span class="ui-column-title"> {{ l('totalsTripsAddByShippier') }}</span>
+                      <span class="ui-column-title"> {{ l('TotalsTripsAddByShippier') }}</span>
                       {{ record.totalsTripsAddByShippier }}
                     </td>
                     <td style="width: 150px;" *ngIf="feature.isEnabled('App.Shipper') || feature.isEnabled('App.TachyonDealer')">
-                      <span class="ui-column-title"> {{ l('totalBidsCount') }}</span>
+                      <span class="ui-column-title"> {{ l('TotalBidsCount') }}</span>
                       {{ record.totalBids }}
                     </td>
                     <td [hidden]="!isGrantedAny('Pages.ShippingRequests.Edit', 'Pages.ShippingRequests.Delete')" style="width: 130px;">
@@ -306,7 +306,7 @@
         </div>
       </div>
     </div>
-    <app-update-price-shipping-request-modal (modalSave)="reloadPage()" #UpdatePriceShippingRequestModal></app-update-price-shipping-request-modal>
-    <app-view-shipping-request-price-response-modal #ViewShippingRequestPriceResponseModalComponent></app-view-shipping-request-price-response-modal>
+    <app-update-price-shipping-request-modal (modalSave)="reloadPage()" #UpdatePriceShippingRequestModal> </app-update-price-shipping-request-modal>
+    <app-view-shipping-request-price-response-modal #ViewShippingRequestPriceResponseModalComponent> </app-view-shipping-request-price-response-modal>
   </div>
 </div>

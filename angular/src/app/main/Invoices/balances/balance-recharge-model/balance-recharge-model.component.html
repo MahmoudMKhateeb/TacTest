@@ -34,11 +34,11 @@
           </div>
 
           <div class="form-group">
-            <label for="RechargeAmount">{{ l('RechargeAmount') }} *</label>
+            <label for="RechargeAmount">{{ l('RechargeAmount') }} <span class="required-fileds"> *</span></label>
             <input type="number" id="Amount" class="form-control" [(ngModel)]="Recharge.amount" name="Amount" min="1" required />
           </div>
           <div class="form-group">
-            <label for="referenceNo">{{ l('referenceNo') }}</label>
+            <label for="referenceNo">{{ l('ReferenceNo') }}</label>
             <input type="text" id="referenceNo" class="form-control" [(ngModel)]="Recharge.referenceNo" name="referenceNo" />
           </div>
         </div>

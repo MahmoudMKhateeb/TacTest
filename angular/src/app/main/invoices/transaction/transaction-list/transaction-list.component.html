@@ -101,7 +101,7 @@
                     </th>
 
                     <th pSortableColumn="CreationTime">
-                      {{ l('CreationTime') }}
+                      {{ l('CreationDate') }}
                       <p-sortIcon field="CreationTime"></p-sortIcon>
                     </th>
                   </tr>
@@ -122,7 +122,7 @@
                       {{ record.amount }}
                     </td>
                     <td>
-                      <span class="ui-column-title"> {{ l('CreationTime') }}</span>
+                      <span class="ui-column-title"> {{ l('CreationDate') }}</span>
                       {{ record.creationTime | momentFormat: 'L' }}
                     </td>
                   </tr>

@@ -1,6 +1,6 @@
 <div [@routerTransition]>
   <div class="content d-flex flex-column flex-column-fluid">
-    <sub-header [title]="'Editions' | localize" [description]="'EditionsHeaderInfo' | localize">
+    <sub-header [title]="'Editions' | localize" [description]="'' | localize">
       <div role="actions">
         <button *ngIf="'Pages.Editions.Create' | permission" class="btn btn-primary" (click)="createEdition()">
           <i class="fa fa-plus"></i> {{ 'CreateNewEdition' | localize }}

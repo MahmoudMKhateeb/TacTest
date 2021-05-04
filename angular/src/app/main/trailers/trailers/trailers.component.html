@@ -1,6 +1,6 @@
 ﻿<div [@routerTransition]>
   <div class="content d-flex flex-column flex-column-fluid">
-    <sub-header [title]="'Trailers' | localize" [description]="'TrailersHeaderInfo' | localize">
+    <sub-header [title]="'Trailers' | localize" [description]="'' | localize">
       <div role="actions">
         <button (click)="exportToExcel()" class="btn btn-outline-success"><i class="fa fa-file-excel"></i> {{ l('ExportToExcel') }}</button>
         <button *ngIf="isGranted('Pages.Trailers.Create')" (click)="createTrailer()" class="btn btn-primary blue">
