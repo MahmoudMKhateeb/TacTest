@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Text;
+using System.Text.RegularExpressions;
 using TACHYON.Goods.GoodsDetails.Dtos;
 
 namespace TACHYON.Routs.RoutPoints.Dtos
@@ -46,10 +47,19 @@ namespace TACHYON.Routs.RoutPoints.Dtos
             {
                 if (string.IsNullOrEmpty(ReceiverFullName)) context.Results.Add(new ValidationResult("PleaseAddReceiverFullName"));
                 if (string.IsNullOrEmpty(ReceiverPhoneNumber)) context.Results.Add(new ValidationResult("PleaseAddReceiverPhoneNumber"));
-                //if (string.IsNullOrEmpty(ReceiverEmailAddress)) context.Results.Add(new ValidationResult("PleaseAddReceiverEmailAddress"));
+                else if (!isValidMobileNumber(ReceiverPhoneNumber)) context.Results.Add(new ValidationResult("InvalidMobileNumber"));
                 if (string.IsNullOrEmpty(ReceiverCardIdNumber)) context.Results.Add(new ValidationResult("PleaseAddReceiverCardIdNumber"));
 
             }
+        }
+
+        private static bool isValidMobileNumber(string inputMobileNumber)
+        {
+            string strRegex = @"^(5){1}\d{8}$";
+
+            Regex re = new Regex(strRegex);
+
+            return re.IsMatch(inputMobileNumber);
         }
     }
 }
