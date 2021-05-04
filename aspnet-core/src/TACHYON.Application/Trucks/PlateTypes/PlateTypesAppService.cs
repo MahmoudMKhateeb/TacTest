@@ -110,7 +110,8 @@ namespace TACHYON.Trucks.PlateTypes
         }
         private async Task CheckIfNameExists(CreateOrEditPlateTypeDto input)
         {
-            var nameExists = await _plateTypeRepository.FirstOrDefaultAsync(x => x.DisplayName.ToLower() == input.DisplayName.ToLower());
+            var nameExists = await _plateTypeRepository.FirstOrDefaultAsync(x => x.DisplayName.ToLower() == input.DisplayName.ToLower()
+            && x.Id!=input.Id);
             if (nameExists != null)
             {
                 throw new UserFriendlyException(L("CannotCreateDuplicatedNameMessage"));
