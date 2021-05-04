@@ -331,6 +331,9 @@
     <text name="Drivers">السائقين</text>
     <text name="DriversHeaderInfo">Drivers Header Info</text>
     <text name="DriverTripReminder">لديك رحلة جديدة غداً</text>
+    <text name="DropoffDetailDropoff">نقطة التنزيل</text>
+    <text name="DropoffDetailID">رقم الهوية</text>
+    <text name="DropoffDetailMobile">رقم الموبايل</text>
     <text name="Duration">المدة</text>
     <text name="DynamicEntityParameters">حقول الكيان الديناميكي</text>
     <text name="DynamicParameter">الحقل الديناميكي</text>
@@ -506,6 +509,7 @@
     <text name="InvalidEmailConfirmationCode_Detail">من فضلك تأكد من دخول هذه الصفحة بالضغط على الرابط المرسل إلى بريدك الإلكتروني. إذا كان هذا لا يحل المشكلة، يمكنك محاولة إعادة إرسال رمز التأكيد من جديد.</text>
     <text name="InvalidFeaturesWarning">واحد أو أكثر من قيم الميزة غير صحيح</text>
     <text name="InvalidFormMessage">النموذج يحتوي على أخطاء - يرجى تصحيح الأخطاء و المحاولة مرة اخرى</text>
+    <text name="InvalidMobileNumber">صيغة الجوال غير صحيحة</text>
     <text name="InvalidPasswordResetCode">رمز إعادة تعيين كلمة المرور غير صحيح</text>
     <text name="InvalidPasswordResetCode_Detail">من فضلك تأكد من دخول هذه الصفحة بالضغط على الرابط المرسل إلى بريدك الإلكتروني.  إذا كان هذا لا يحل المشكلة، يمكنك محاولة إعادة تعيين كلمة المرور مره اخرى</text>
     <text name="InvalidPattern">غير صالح</text>
@@ -1112,6 +1116,8 @@
     <text name="Timezone">منطقة زمنية</text>
     <text name="TimeZoneSettingChangedRefreshPageNotification">تم تغيير إعدادات المنطقة الزمنية. انقر على زر موافق لتحديث الصفحة وسيتم تفعيل التغييرات.</text>
     <text name="Title">العنوان</text>
+    <text name="TitleLogin">لتسجيل الدخول ، قم بأدخال رقم هاتفك المحمول</text>
+    <text name="TitleOTP">قم بأدخال الكود المكون من 4 خانات المرسل الي رقم الهاتف</text>
     <text name="TMS">نظام إدارة النقل</text>
     <text name="TMSSettings">إعدادات إدارة الشاحنات</text>
     <text name="Today">اليوم</text>

@@ -85,8 +85,16 @@ namespace TACHYON.Localization
                 }
                 catch (Exception e)
                 {
-                    text.InnerXml = $"<![CDATA[{lang.MasterValue.Trim()}]]>"; 
-                    texts.AppendChild(text);
+                    try
+                    {
+                        text.InnerXml = $"<![CDATA[{lang.MasterValue.Trim()}]]>";
+                        texts.AppendChild(text);
+                    }
+
+                    catch (Exception ex)
+                    {
+                        var data = lang.MasterValue.Trim();
+                    }
                 }
 
             }

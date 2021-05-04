@@ -72,7 +72,6 @@ export class AppNavigationService {
           // new AppMenuItem('waybills', undefined, 'flaticon-more', '/app/admin/waybills/waybills'),
         ]
       ),
-      // ),
 
       new AppMenuItem(
         'TMS',
@@ -101,8 +100,8 @@ export class AppNavigationService {
         () => this._featureCheckerService.isEnabled('App.Carrier')
       ),
       //start of Invoices
-        'Invoices',
-        'Invoices',
+      new AppMenuItem(
+        'InvoicesList',
         'Pages.Invoices',
         'flaticon-interface-8',
         '',
@@ -296,6 +295,7 @@ export class AppNavigationService {
           new AppMenuItem('Editions', 'Pages.Editions', 'flaticon-app', '/app/admin/editions'),
         ]
       ),
+
       // new AppMenuItem(
       //   'UserManagement',
       //   '',
@@ -322,11 +322,6 @@ export class AppNavigationService {
       //   () => this._featureCheckerService.isEnabled('App.Carrier')
       // ),
 
-        undefined,
-        undefined,
-        undefined,
-        () => this._featureCheckerService.isEnabled('App.Carrier')
-      ),
       // Host
 
       // new AppMenuItem('Routes', 'Pages.Routes', 'flaticon-map-location', '/app/main/routs/routes', undefined, undefined, undefined, undefined, () =>
