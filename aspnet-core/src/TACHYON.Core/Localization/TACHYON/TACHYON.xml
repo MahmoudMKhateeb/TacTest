@@ -6,6 +6,7 @@
     <text name="{0}UserCannotBeDeleted">{0} user can not be deleted.</text>
     <text name="3rd Party Insurance coverage">3rd Party Insurance coverage</text>
     <text name="9digitsNumber">9 Digits Number</text>
+    <text name="About">About</text>
     <text name="AboutUs">About us</text>
     <text name="Abp.Organizations.OrganizationUnit">Organization unit</text>
     <text name="Accept">Accept</text>
@@ -19,6 +20,7 @@
     <text name="AccidentReasonHeaderInfo">Accident ReasonHeader Info</text>
     <text name="AccidentsReason">Accidents reason</text>
     <text name="AccountInvoiceType">Account Type</text>
+    <text name="AccountNumber">Account number</text>
     <text name="AccountPayable">Account payable</text>
     <text name="AccountReceivable">Account receivable</text>
     <text name="AccountSettings">Account settings</text>
@@ -59,10 +61,12 @@
     <text name="AddUser">Add user</text>
     <text name="AddWidget">Add widget</text>
     <text name="AdminEmailAddress">Admin Email</text>
+    <text name="AdminFirstName">Admin first name</text>
     <text name="Administration">Administration</text>
     <text name="AdminPassword">Admin Password</text>
     <text name="AdminPasswordRepeat">Confirm Password</text>
     <text name="AdminRoleCannotRemoveFromAdminUser">Admin role can not be removed from admin user</text>
+    <text name="AdminSurname">Admin surname</text>
     <text name="AdminUserAccountInfo">Admin user Account info</text>
     <text name="Adress">Adress</text>
     <text name="AlertDaysBeforExpiration">Alert days befor expiration</text>
@@ -166,6 +170,7 @@
     <text name="CarrierName">Carrier Name</text>
     <text name="CarrierPrice">Carrier price</text>
     <text name="CascadeImpersonationErrorMessage">Can not make cascade impersonation. This is already an impersonated login!</text>
+    <text name="Category">Category</text>
     <text name="Change">Change</text>
     <text name="ChangeDateRange">Change date range</text>
     <text name="ChangeLogs">Change logs</text>
@@ -198,10 +203,13 @@
       .\admin -> for host admin <br>
       Test\admin -> for test tenant's admin <br>
       admin -> for your tenant's admin]]></text>
+    <text name="Check">Check</text>
     <text name="CheckoutWithPaypal">Checkout with PayPal</text>
     <text name="CheckoutWithStripe">Checkout with Stripe</text>
+    <text name="CheckRecipient">Check the recipient</text>
     <text name="Choose">Choose</text>
     <text name="ChooseNationality">Choose nationality</text>
+    <text name="ChooseWhatIncidentIs">Please choose what the incident is</text>
     <text name="Cities">Cities</text>
     <text name="CitiesHeaderInfo">Cities header info</text>
     <text name="CitiesTranslation">Cities Translation</text>
@@ -519,9 +527,16 @@
     <text name="DriverTripReminder">You have new trip start tomorrow</text>
     <text name="Driving License">Driving License</text>
     <text name="Drop">Drop</text>
+    <text name="DropOff">Dropoff</text>
+    <text name="DropoffDetailCommodity">Commodity</text>
     <text name="DropoffDetailDropoff">Dropoff </text>
     <text name="DropoffDetailID">id</text>
     <text name="DropoffDetailMobile">phone No.</text>
+    <text name="DropoffDetailPackagingType">Packaging Type </text>
+    <text name="DropoffDetailQuantity">Quantity</text>
+    <text name="DropoffDetailShipperNotes">Shipper Notes</text>
+    <text name="DropoffDetailUnitOfMeasure">Unit Of Measure</text>
+    <text name="DropoffDetailWeight">Weight</text>
     <text name="DueDate">Due Date</text>
     <text name="DuplicateDocumentTypeName">There is already Document Type with the name: {0}</text>
     <text name="DuplicateFileUploadMsg"> you can not upload same document twice name: {0} , extn:{1}</text>
@@ -635,6 +650,7 @@
     <text name="EnterNumberOfPacking">Enter Number Of Packing</text>
     <text name="EnterNumberOfTrips">Enter Number Of Trips</text>
     <text name="EnterPackingType">Enter Packing Type</text>
+    <text name="EnterRecipientCode">Please enter the code, with the recipient</text>
     <text name="EnterTenancyName">Enter tenancy name...</text>
     <text name="EnterYourDetailsToLoginToYourAccount">Enter Your Details To Login To Your Account</text>
     <text name="EnterYourEmailAndPassword ">Enter Your Email and Password</text>
@@ -711,6 +727,7 @@
     <text name="GdprDataPreparedNotificationMessage">Your data is prepared, click here to download.</text>
     <text name="GdprDataPrepareStartedNotification">We are preparing your data. You will be notified when your data is ready.</text>
     <text name="General">General</text>
+    <text name="GeneralDetails">General details</text>
     <text name="GeneralSettings">General settings</text>
     <text name="Generate">Generate</text>
     <text name="GoodCategories">Goods categories</text>
@@ -773,6 +790,7 @@
     <text name="InActiveAccountExpired">InActive Account Expired</text>
     <text name="InActiveToleranceDays">InActive Tolerance Days</text>
     <text name="InCaseOfShippingRequestTypeIsBidding">In Case Of Shipping, Request Type Is Bidding</text>
+    <text name="Incident">Incident!!</text>
     <text name="Income">Income</text>
     <text name="IncomeStatistics">Income statistics</text>
     <text name="IncomeWithAmount">Income: {0}</text>
@@ -935,6 +953,7 @@
     <text name="MinDigits:">Min digits:</text>
     <text name="MinMax">Min max</text>
     <text name="MinValue">Min</text>
+    <text name="MobileNo">Mobile no</text>
     <text name="ModalName">Modal Name</text>
     <text name="ModalYear">Modal Year</text>
     <text name="Model">Model</text>
@@ -950,6 +969,9 @@
     <text name="MultipleDrops">Multiple drops</text>
     <text name="MyBiddingHistory">My Bidding History</text>
     <text name="MyBidPrice">My Bid Price</text>
+    <text name="MyLoadComming">Comming</text>
+    <text name="MyLoadCurrent">Current</text>
+    <text name="MyLoadPast">Past</text>
     <text name="MySettings">My settings</text>
     <text name="MySettings_Description">Change your account settings</text>
     <text name="MyShippingRequests">My shipping requests</text>
@@ -1080,6 +1102,7 @@
     <text name="OriginCity">Origin City</text>
     <text name="OriginFacility">Origin Facility</text>
     <text name="Other">Other</text>
+    <text name="OtherReason">Other reason</text>
     <text name="Others">Others</text>
     <text name="OtherSettings">Other Settings</text>
     <text name="PackingType">Packing Type</text>
@@ -1202,8 +1225,10 @@
     <text name="PleaseOnClickFollowingLinkToTrackYourShipmentAndRateTheShippingCompany">Please on click following link to track your shipment and rate the Shipping company</text>
     <text name="PleaseSelectAPicture">Please select a picture!</text>
     <text name="PleaseSelectASourceTripFacilityFirst">Please select aSource trip facility first</text>
+    <text name="PleaseSelectReason">Please select reason</text>
     <text name="PleaseWait">Please Wait</text>
     <text name="PleaseWaitToConfirmYourEmailMessage">Please wait while confirming your email address...</text>
+    <text name="PointsLimitReached">Points limit reached</text>
     <text name="Port">Port</text>
     <text name="Ports">Ports</text>
     <text name="PortsHeaderInfo">Ports header info</text>
@@ -1229,6 +1254,8 @@
     <text name="Quantity">Quantity</text>
     <text name="QuickNav">Quick Navigation</text>
     <text name="QuickThemeSelection">Quick theme selection</text>
+    <text name="RateOffloadingAdditionalNote">AdditionalNote</text>
+    <text name="RateOffloadingRateFacility">Rate Facility</text>
     <text name="ReadState">Read state</text>
     <text name="Reason">Reason</text>
     <text name="ReceiveNotifications">Receive Notifications</text>
@@ -1254,6 +1281,7 @@
     <text name="RejectedReason">Rejected reason</text>
     <text name="RejectionReason">Rejection Reason</text>
     <text name="RejectPricingOffer">Reject pricing offer</text>
+    <text name="RejectThisTrip">Reject this trip!</text>
     <text name="RemainingDay">Remaining day</text>
     <text name="RemainingTime">Remaining time</text>
     <text name="RememberMe">Remember me</text>
@@ -1723,6 +1751,7 @@
     <text name="TransportTypesTranslation">Transport Types Translation</text>
     <text name="TransportTypesTranslations">Transport Types Translations</text>
     <text name="TransportTypesTranslationsHeaderInfo">Transport Types Translations header info</text>
+    <text name="Traveltime">Travel time</text>
     <text name="Trial">Trial</text>
     <text name="TrialDayCount">Trial day count</text>
     <text name="TrialExpireNotification">Your trial period will expire in {0} day(s).</text>
@@ -1731,11 +1760,13 @@
     <text name="TripDetails">Trip Details</text>
     <text name="TripEndDate">Trip end date</text>
     <text name="TripIncident">Trip incident</text>
+    <text name="TripInfo">Trip Info</text>
     <text name="TripRejectReason">Trip Reject Reasons</text>
     <text name="Trips Start Date">Trips Start Date</text>
     <text name="TripsEndDate">Trips End Date</text>
     <text name="TripsStartDate">Trips start date</text>
     <text name="TripStartDate">Trip Start Date</text>
+    <text name="TripStartDateCantBeGretterThanTripEndDate">Trip start date cant be gretter than trip end date</text>
     <text name="TripStatus">Trip Status</text>
     <text name="Truck">Truck</text>
     <text name="TruckCapacities">Truck Capacities</text>
@@ -1776,6 +1807,7 @@
     <text name="TwoFactorLogin">Two Factor Login</text>
     <text name="TwoFactorLoginIsNotSupported">Two factor login is not currently supported!</text>
     <text name="TwoWay">Two way</text>
+    <text name="Type">Type...</text>
     <text name="TypeAMessageHere">Type a message here...</text>
     <text name="UiCustomization_AllowAsideHiding">Allow aside hiding</text>
     <text name="UiCustomization_AllowAsideMinimizing">Allow aside minimizing</text>
@@ -1855,17 +1887,21 @@
     <text name="Unread">Unread</text>
     <text name="Update">Update</text>
     <text name="UpdatedSuccessfully">Updated successfully</text>
-    <text name="UpdateSippingRequest">Update Sipping Request</text>
+    <text name="UpdateSippingRequest">Update Shipping Request</text>
     <text name="UpdateTrip">Update Trip</text>
     <text name="Upgrade">Upgrade</text>
     <text name="Upgrade_Edition_Description">Upgrade to {0} Edition</text>
     <text name="UpgradedTo">Upgraded to {0} edition</text>
     <text name="Upload">Upload</text>
+    <text name="UploadCONFIRM">CONFIRM</text>
     <text name="UploadCSS_Info">Select a .css file with a maximum of 1MB size.</text>
     <text name="UploadDocument">Upload document</text>
     <text name="UploadDocumentMsg">Please upload the following documents in order to finalize your registration process.</text>
     <text name="UploadedFile">Uploaded file</text>
     <text name="UploadLogo_Info">Select a JPG/JPEG/PNG/GIF file with a maximum of 30KB size and 139x35 pixel resolution.</text>
+    <text name="UploadPODLbl">Upload POD</text>
+    <text name="UploadPODProofOfDelivery">Proof Of Delivery</text>
+    <text name="UsagePolicy">Usage Policy</text>
     <text name="UseArrowKeysToChooseTheYear">Use arrow keys to choose the year</text>
     <text name="UseCaptchaOnLogin">Use security image question (captcha) on login.</text>
     <text name="UseCaptchaOnRegistration">Use security image question (captcha) on registration.</text>
@@ -1900,6 +1936,7 @@
     <text name="UseSsl">Use SSL</text>
     <text name="UseSystemDefaults">Use system defaults</text>
     <text name="ValidateIssuer">Validate Issuer</text>
+    <text name="ValidationCode">Validation code</text>
     <text name="ValidDocumentFilesMsg">File allowed formats are:  png, jpeg, pdf</text>
     <text name="Value">Value</text>
     <text name="Values">Values</text>
@@ -1981,6 +2018,8 @@
     <text name="WidgetTopStats">General Summary</text>
     <text name="Width">Width</text>
     <text name="WillBeShownOnAllOfficialDocumentsLikeWaybillsAndInvoices">Will be shown on all official documents like waybills and invoices</text>
+    <text name="WriteIncidentReport">Please write the incident report</text>
+    <text name="WriteRejectionReason">Please write the rejection reason</text>
     <text name="WrongSmsVerificationCode">Wrong verification code!</text>
     <text name="Wtrealm">Wtrealm</text>
     <text name="XCanNotBeNullOrEmpty">{0} Can not be null or empty</text>

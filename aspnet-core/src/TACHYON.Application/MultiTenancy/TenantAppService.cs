@@ -93,9 +93,6 @@ namespace TACHYON.MultiTenancy
             );
 
             var tenant = await TenantManager.GetByIdAsync(tenantId);
-            tenant.AccountNumber = long.Parse(string.Format("{0}{1}", Clock.Now.ToString("yy"), tenant.Id.ToString("D5")));
-
-           await TenantManager.UpdateAsync(tenant);
         }
 
         [AbpAuthorize(AppPermissions.Pages_Tenants_Edit)]

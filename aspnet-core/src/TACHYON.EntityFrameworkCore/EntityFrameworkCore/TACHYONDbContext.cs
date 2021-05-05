@@ -373,6 +373,10 @@ namespace TACHYON.EntityFrameworkCore
                 b.HasIndex(e => new { e.TenantId, e.TargetUserId });
             });
 
+            modelBuilder.Entity<Tenant>()
+            .HasIndex(b => b.AccountNumber)
+            .IsUnique();
+
             modelBuilder.ConfigurePersistedGrantEntity();
         }
     }
