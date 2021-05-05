@@ -9,6 +9,7 @@ using Abp.Events.Bus;
 using Abp.Extensions;
 using Abp.Linq.Extensions;
 using Abp.Runtime.Security;
+using Abp.Timing;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Linq;
@@ -69,7 +70,7 @@ namespace TACHYON.MultiTenancy
         {
             var tenancyName = input.companyName.Trim().Replace(" ", "_");
 
-            await TenantManager.CreateWithAdminUserAsync(
+           var tenantId= await TenantManager.CreateWithAdminUserAsync(
                 input.companyName,
                 input.MobileNo,
                 tenancyName,
@@ -90,6 +91,11 @@ namespace TACHYON.MultiTenancy
                 input.UserAdminFirstName,
                 input.UserAdminSurname
             );
+
+            var tenant = await TenantManager.GetByIdAsync(tenantId);
+            tenant.AccountNumber = long.Parse(string.Format("{0}{1}", Clock.Now.ToString("yy"), tenant.Id.ToString("D5")));
+
+           await TenantManager.UpdateAsync(tenant);
         }
 
         [AbpAuthorize(AppPermissions.Pages_Tenants_Edit)]
