@@ -5,12 +5,14 @@
     <text name="{0}UserCannotBeDeleted">لا يمكن حذف المستخدم {0}.</text>
     <text name="3rd Party Insurance coverage">تغطية تأمينية للطرف الثالث</text>
     <text name="9digitsNumber">يجب أن يتكون من 9 أرقام</text>
+    <text name="About">حول التطبيق</text>
     <text name="AboutUs">من نحن</text>
     <text name="Abp.Organizations.OrganizationUnit">الوحدة التنظيمية</text>
     <text name="Accept">قبول</text>
     <text name="Access to your applications and resources, even when you are offline">الوصول إلى التطبيقات والموارد الخاصة بك، حتى عندما لاتكون متصلا</text>
     <text name="AccidentReason">أسباب الحوادث</text>
     <text name="AccidentReasonHeaderInfo">الهيدر</text>
+    <text name="AccountNumber">رقم الحساب</text>
     <text name="AccountSettings">إعدادات الحساب</text>
     <text name="Action">إجراء</text>
     <text name="ActionInformations">معلومات العمل</text>
@@ -109,6 +111,7 @@
     <text name="Captha_Hint">الرجاء إدخال الرمز الذي يظهر في الصورة أدناه</text>
     <text name="Carrier">ناقل</text>
     <text name="CascadeImpersonationErrorMessage">لايمكن ثمتيل شخص آخر. لان تسجيل دخولك الحالي ممثّل من قبل مستخدم آخر.</text>
+    <text name="Category">التصنيف</text>
     <text name="Change">تغيير</text>
     <text name="ChangeDateRange">تغيير النطاق الزمني</text>
     <text name="ChangeLogs">سجلات التحريرات</text>
@@ -140,9 +143,12 @@
        .\admin -&gt; للمشرف العام المضيف 
        Test\admin -&gt; للمشرف العميل Test 
        admin -&gt; للمشرف المحلي</text>
+    <text name="Check">فحص</text>
     <text name="CheckoutWithPaypal">ادفع باستعمال باي بال</text>
     <text name="CheckoutWithStripe">ادفع باستعمال سترايب</text>
+    <text name="CheckRecipient">تأكيد المستلم</text>
     <text name="Choose">إختر</text>
+    <text name="ChooseWhatIncidentIs">الرجاء اختيار ما هو الحادث</text>
     <text name="Cities">المدن</text>
     <text name="City">المدينة</text>
     <text name="ClaimKey">مفتاح المطالبة</text>
@@ -331,9 +337,16 @@
     <text name="Drivers">السائقين</text>
     <text name="DriversHeaderInfo">Drivers Header Info</text>
     <text name="DriverTripReminder">لديك رحلة جديدة غداً</text>
+    <text name="DropOff">تنزيل</text>
+    <text name="DropoffDetailCommodity">البضاعة</text>
     <text name="DropoffDetailDropoff">نقطة التنزيل</text>
     <text name="DropoffDetailID">رقم الهوية</text>
     <text name="DropoffDetailMobile">رقم الموبايل</text>
+    <text name="DropoffDetailPackagingType">نوع التغليف</text>
+    <text name="DropoffDetailQuantity">الكمية</text>
+    <text name="DropoffDetailShipperNotes">ملاحظات </text>
+    <text name="DropoffDetailUnitOfMeasure">وحدة القياس</text>
+    <text name="DropoffDetailWeight">الوزن</text>
     <text name="Duration">المدة</text>
     <text name="DynamicEntityParameters">حقول الكيان الديناميكي</text>
     <text name="DynamicParameter">الحقل الديناميكي</text>
@@ -395,6 +408,7 @@
     <text name="EndTime">وقت النهاية</text>
     <text name="EnglishLettersOnly">حروف انجليزية فقط</text>
     <text name="Enter">أدخل</text>
+    <text name="EnterRecipientCode">الرجاء ادخل الكود مع المستلم</text>
     <text name="EnterTenancyName">أدخل اسم العميل ...</text>
     <text name="Entity">Entity</text>
     <text name="EntityDynamicParameter">الحقل الديناميكي للكيان</text>
@@ -459,6 +473,7 @@
     <text name="GdprDataPreparedNotificationMessage">تم إعداد بياناتك ، انقر هنا للتنزيل.</text>
     <text name="GdprDataPrepareStartedNotification">نحن نعد بياناتك. سيتم إخطارك عند الإنتهاء من إعداد بياناتك.</text>
     <text name="General">عــام</text>
+    <text name="GeneralDetails">تفاصيل عامة</text>
     <text name="Generate">توليد</text>
     <text name="GoodCategories">أصناف البضائع</text>
     <text name="GoogleAuthenticatorIsNotEnabled">لم يتم تمكين أداة مصادقة غوغل لحسابك. يجب عليك أولا تمكينه في إعداداتك.</text>
@@ -497,6 +512,7 @@
     <text name="ImportUsersUploadFailed">فشلت عملية استيراد المستخدم.</text>
     <text name="InActiveAccountExpired">قفل الحساب بعد إنتهاء الصلاحية</text>
     <text name="InActiveToleranceDays">عدد أيام السماحية بعد تاريخ إنتهاء الصلاحية</text>
+    <text name="Incident">حادث!!</text>
     <text name="Income">دخل</text>
     <text name="IncomeStatistics">إحصاءات الدخل</text>
     <text name="IncomeWithAmount">الدخل: {0}</text>
@@ -632,6 +648,9 @@
     <text name="MoveTenantsOfEditionDescription">{0} سيتم نقل العملاء</text>
     <text name="MoveTenantsToAnotherEdition">نقل العملاء إلى نسخه أخرى</text>
     <text name="MoveTenantsToAnotherEditionStartedNotification">نحن ننقل العملاء إلى النسخه المختارة. سيتم إعلامك عند اكتمال العملية.</text>
+    <text name="MyLoadComming">القادمة</text>
+    <text name="MyLoadCurrent">الحالية</text>
+    <text name="MyLoadPast">المكتملة</text>
     <text name="MySettings">إعداداتي</text>
     <text name="MySettings_Description">تغيير إعدادات حسابك</text>
     <text name="Name">الإسـم</text>
@@ -723,6 +742,8 @@
     <text name="OrganizationUnits">الوحدات التنظيمية</text>
     <text name="OrganizationUnitsHeaderInfo">استخدم الوحدات التنظيمية لتجميع المستخدمين و الكيانات</text>
     <text name="OriginalValue">القيمة الأصلية</text>
+    <text name="Other">غير ذلك</text>
+    <text name="OtherReason">اسباب اخرى</text>
     <text name="Others">أخرون</text>
     <text name="OtherSettings">إعدادات اخرى</text>
     <text name="PackingTypes">أنواع التعبئة</text>
@@ -778,6 +799,7 @@
     <text name="PhoneNumber">رقم الهاتف</text>
     <text name="PickCounty">اختر الدولة</text>
     <text name="PickFromGallery">اختيار من المعرض</text>
+    <text name="Pickup">تحميل</text>
     <text name="Pin">تثبيت</text>
     <text name="Pink">وردي</text>
     <text name="PlateNumber">رقم اللوحة</text>
@@ -794,6 +816,7 @@
     <text name="PleaseEnterYourNewPassword">الرجائ إدخال كلمة السر الجديدة الخاصة بك</text>
     <text name="Pleasemakesureyouchoosethecountryandthecity!">الرجاء التأكد من إدخال بيانات المدينة و البلد!</text>
     <text name="PleaseSelectAPicture">يرجى تحديد صورة!</text>
+    <text name="PleaseSelectReason">الرجاء اختيار سبب</text>
     <text name="PleaseWait">أرجو الإنتظار</text>
     <text name="PleaseWaitToConfirmYourEmailMessage">الرجاء الانتظار لحين تأكيد عنوان البريد الإلكتروني...</text>
     <text name="PostedData">البيانات المنشورة</text>
@@ -814,6 +837,8 @@
     <text name="Purchase">شراء</text>
     <text name="QuickNav">الإنتقال السريع</text>
     <text name="QuickThemeSelection">الاختيار السريع للتصميم</text>
+    <text name="RateOffloadingAdditionalNote">ملاحظات اضافية</text>
+    <text name="RateOffloadingRateFacility">حفظ التقيم</text>
     <text name="ReadState">مقروء</text>
     <text name="ReceiveNotifications">تلقي الإخطارات</text>
     <text name="ReceiveNotifications_Definition">هذا الخيار يمكن استخدامة لتمكين / تعطيل الإخطارات.</text>
@@ -827,6 +852,7 @@
     <text name="RegisterFormUserNameInvalidMessage">من فضلك لاتدخل بريد إلكتروني كإسم مستخدم.</text>
     <text name="Reject">رفض</text>
     <text name="RejectionReason">سبب رفض المستند</text>
+    <text name="RejectThisTrip">رفض هذه الرحلة!</text>
     <text name="RemainingDay">الأيام المتبقية</text>
     <text name="RemainingTime">الوقت المتبقي</text>
     <text name="RememberMe">تذكرنى</text>
@@ -1134,12 +1160,14 @@
     <text name="TransportTypes">أنواع النقل</text>
     <text name="TransportTypesHeaderInfo">TransportTypesHeaderInfo</text>
     <text name="TransportTypesTranslations">ترجمة أنواع النقل</text>
+    <text name="Traveltime">زمن الرحلة</text>
     <text name="Trial">تجربة</text>
     <text name="TrialDayCount">عدد أيام التجربة</text>
     <text name="TrialExpireNotification">ستنتهي الفترة التجريبية خلال {0} أيام.</text>
     <text name="TrialSubscriptionNotification">أنت في الفترة التجريبية لنسخة {0}، {1} للشراء.</text>
     <text name="TrialWithoutEndDateErrorMessage">يجب أن يكون للحسابات التجريبية تاريخ انتهاء الاشتراك</text>
     <text name="TripEndDate">تاريح نهاية الرحلة</text>
+    <text name="TripInfo">معلومات الرحلة</text>
     <text name="TripRejectReason">أسباب رفض الرحلة</text>
     <text name="TripsStartDate">تاريخ بداية الرحلة</text>
     <text name="Truck">شاحنة</text>
@@ -1162,6 +1190,7 @@
     <text name="TryIt">تجربة</text>
     <text name="TwoFactorLogin">توثيق تسجيل الدخول ذو عاملين</text>
     <text name="TwoFactorLoginIsNotSupported">لا يتم اعتماد تسجيل دخول العاملين حاليا!</text>
+    <text name="Type">ادخل النص...</text>
     <text name="TypeAMessageHere">اكتب رسالتك هنا...</text>
     <text name="UiCustomization_AllowAsideHiding">السماح بغلق الجانب</text>
     <text name="UiCustomization_AllowAsideMinimizing">السماح بتقليل الجانب</text>
@@ -1234,10 +1263,14 @@
     <text name="Upgrade_Edition_Description">ترقية الى النسخة {0}</text>
     <text name="UpgradedTo">تمت الترقية إلى النسخة {0}</text>
     <text name="Upload">رفع</text>
+    <text name="UploadCONFIRM">تأكيد</text>
     <text name="UploadCSS_Info">إختر ملف CSS بحجم MB 1  كحد أقصى.</text>
     <text name="UploadDocumentMsg">الرجاء تتقديم الملفات التالية حتى يتم إكمال عملية إنشاء الحساب</text>
     <text name="UploadedFile">الملف المحمَل</text>
     <text name="UploadLogo_Info">إختر ملف JPG / JPEG / PNG / GIF  بحجم 30 KB  كحد أقصى و 139X35  بكسل.</text>
+    <text name="UploadPODLbl">رفع اثبات الاستلام</text>
+    <text name="UploadPODProofOfDelivery">إثبات التسليم</text>
+    <text name="UsagePolicy">السياية و الأحكام</text>
     <text name="UseArrowKeysToChooseTheYear">إستخدم أزرار الأسهم لإختيار السنة</text>
     <text name="UseCaptchaOnLogin">استخدم سؤال صورة الأمان (captcha) عند تسجيل الدخول.</text>
     <text name="UseCaptchaOnRegistration">استخدام صورة الأمان (captcha) عند الإشتراك.</text>
@@ -1271,6 +1304,7 @@
     <text name="UseSsl">إستخدم SSL</text>
     <text name="UseSystemDefaults">استخدام الإعدادات الافتراضية للنظام</text>
     <text name="ValidateIssuer">التحقق من مصدر الإصدار</text>
+    <text name="ValidationCode">رمز التأكيد</text>
     <text name="ValidDocumentFilesMsg">صيغة المستندات المسموح بها:.png,.jpeg</text>
     <text name="Value">قيمة</text>
     <text name="Values">قيم</text>
@@ -1338,6 +1372,8 @@
     <text name="WidgetSubscriptionExpiringTenants">عملاء تنتهي إشتراكاتهم</text>
     <text name="WidgetTopStats">الملخص العام</text>
     <text name="WillBeShownOnAllOfficialDocumentsLikeWaybillsAndInvoices">سيظهر في جميع المستندات الرسمية.</text>
+    <text name="WriteIncidentReport">الرجاء كتابة تقرير الحادث</text>
+    <text name="WriteRejectionReason">الرجاء كتابة سبب الرفض</text>
     <text name="WrongSmsVerificationCode">رمز التحقق غير صحيح!</text>
     <text name="Wtrealm">Wtrealm</text>
     <text name="XCanNotBeNullOrEmpty">{0} لا يمكن أن يكون فارغًا</text>
