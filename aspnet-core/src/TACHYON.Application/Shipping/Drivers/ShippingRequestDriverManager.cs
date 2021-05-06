@@ -82,6 +82,7 @@ namespace TACHYON.Shipping.Drivers
             if (await _RoutPointRepository.GetAll().Where(x => x.ShippingRequestTripId == trip.Id && x.IsComplete == false && x.Id != CurrentPoint.Id).CountAsync() == 0)
             {
                 trip.Status = ShippingRequestTripStatus.Delivered;
+                trip.RoutePointStatus = RoutePointStatus.Delivered;
                 trip.EndTripDate = Clock.Now;
                 await Done(trip.ShippingRequestId, trip.Id);
             }

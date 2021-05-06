@@ -13,6 +13,7 @@
         FinishOffLoadShipment = 8,
         ReceiverConfirmed =9,
         DeliveryConfirmation = 10,
-        Issue=11
+        Delivered=11,
+        Issue =12
     }
 }
