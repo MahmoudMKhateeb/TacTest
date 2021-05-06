@@ -27,7 +27,7 @@ namespace TACHYON.Trucks.PlateTypes
 
         }
 
-        public async Task<PagedResultDto<GetPlateTypeForViewDto>> GetAll(GetAllPlateTypesInput input)
+        public async Task<PagedResultDto<PlateTypeDto>> GetAll(GetAllPlateTypesInput input)
         {
 
             var filteredPlateTypes = _plateTypeRepository.GetAll()
@@ -38,21 +38,22 @@ namespace TACHYON.Trucks.PlateTypes
                 .OrderBy(input.Sorting ?? "id asc")
                 .PageBy(input);
 
-            var plateTypes = from o in pagedAndFilteredPlateTypes
-                             select new GetPlateTypeForViewDto()
-                             {
-                                 PlateType = new PlateTypeDto
-                                 {
-                                     DisplayName = o.DisplayName,
-                                     Id = o.Id
-                                 }
-                             };
+             var plateTypes = ObjectMapper.Map<List<PlateTypeDto>>(await pagedAndFilteredPlateTypes.ToListAsync());
+            //var plateTypes = from o in pagedAndFilteredPlateTypes
+            //                 select new GetPlateTypeForViewDto()
+            //                 {
+            //                     PlateType = new PlateTypeDto
+            //                     {
+            //                         DisplayName = o.DisplayName,
+            //                         Id = o.Id
+            //                     }
+            //                 };
 
             var totalCount = await filteredPlateTypes.CountAsync();
 
-            return new PagedResultDto<GetPlateTypeForViewDto>(
+            return new PagedResultDto<PlateTypeDto>(
                 totalCount,
-                await plateTypes.ToListAsync()
+                plateTypes
             );
         }
 
@@ -68,7 +69,8 @@ namespace TACHYON.Trucks.PlateTypes
         [AbpAuthorize(AppPermissions.Pages_PlateTypes_Edit)]
         public async Task<GetPlateTypeForEditOutput> GetPlateTypeForEdit(EntityDto input)
         {
-            var plateType = await _plateTypeRepository.FirstOrDefaultAsync(input.Id);
+            var plateType = await _plateTypeRepository.GetAllIncluding(x=>x.Translations)
+                .FirstOrDefaultAsync(x=>x.Id == input.Id);
 
             var output = new GetPlateTypeForEditOutput { PlateType = ObjectMapper.Map<CreateOrEditPlateTypeDto>(plateType) };
 
@@ -105,15 +107,23 @@ namespace TACHYON.Trucks.PlateTypes
         [AbpAuthorize(AppPermissions.Pages_PlateTypes_Edit)]
         protected virtual async Task Update(CreateOrEditPlateTypeDto input)
         {
-            var plateType = await _plateTypeRepository.FirstOrDefaultAsync((int)input.Id);
+            var plateType = await _plateTypeRepository.GetAllIncluding(x=>x.Translations)
+                .FirstOrDefaultAsync(x=>x.Id==(int)input.Id);
+            plateType.Translations.Clear();
             ObjectMapper.Map(input, plateType);
         }
         private async Task CheckIfNameExists(CreateOrEditPlateTypeDto input)
         {
-            var nameExists = await _plateTypeRepository.FirstOrDefaultAsync(x => x.DisplayName.ToLower() == input.DisplayName.ToLower());
-            if (nameExists != null)
+            foreach (var item in input.Translations)
             {
-                throw new UserFriendlyException(L("CannotCreateDuplicatedNameMessage"));
+                var nameExists = await _plateTypeRepository.FirstOrDefaultAsync(x => 
+                x.Translations.Any(x=>x.Language==item.Language &&
+                x.DisplayName.ToLower()==item.DisplayName.ToLower())&&
+                x.Id!=input.Id);
+                if (nameExists != null)
+                {
+                    throw new UserFriendlyException(L("CannotCreateDuplicatedNameMessage"));
+                }
             }
         }
 

@@ -1,6 +1,6 @@
 ﻿import { Component, Injector, ViewEncapsulation, ViewChild } from '@angular/core';
-import { ActivatedRoute , Router} from '@angular/router';
-import { PlateTypesServiceProxy, PlateTypeDto  } from '@shared/service-proxies/service-proxies';
+import { ActivatedRoute, Router } from '@angular/router';
+import { PlateTypesServiceProxy, PlateTypeDto } from '@shared/service-proxies/service-proxies';
 import { NotifyService } from 'abp-ng2-module';
 import { AppComponentBase } from '@shared/common/app-component-base';
 import { TokenAuthServiceProxy } from '@shared/service-proxies/service-proxies';
@@ -15,88 +15,73 @@ import { FileDownloadService } from '@shared/utils/file-download.service';
 import * as _ from 'lodash';
 import * as moment from 'moment';
 
-
 @Component({
-    templateUrl: './plateTypes.component.html',
-    encapsulation: ViewEncapsulation.None,
-    animations: [appModuleAnimation()]
+  templateUrl: './plateTypes.component.html',
+  encapsulation: ViewEncapsulation.None,
+  animations: [appModuleAnimation()],
 })
 export class PlateTypesComponent extends AppComponentBase {
-    
-    
-    @ViewChild('createOrEditPlateTypeModal', { static: true }) createOrEditPlateTypeModal: CreateOrEditPlateTypeModalComponent;
-    @ViewChild('viewPlateTypeModalComponent', { static: true }) viewPlateTypeModal: ViewPlateTypeModalComponent;   
-    
-    @ViewChild('dataTable', { static: true }) dataTable: Table;
-    @ViewChild('paginator', { static: true }) paginator: Paginator;
+  @ViewChild('createOrEditPlateTypeModal', { static: true }) createOrEditPlateTypeModal: CreateOrEditPlateTypeModalComponent;
+  @ViewChild('viewPlateTypeModalComponent', { static: true }) viewPlateTypeModal: ViewPlateTypeModalComponent;
 
-    advancedFiltersAreShown = false;
-    filterText = '';
-    displayNameFilter = '';
+  @ViewChild('dataTable', { static: true }) dataTable: Table;
+  @ViewChild('paginator', { static: true }) paginator: Paginator;
 
+  advancedFiltersAreShown = false;
+  filterText = '';
+  displayNameFilter = '';
 
+  constructor(
+    injector: Injector,
+    private _plateTypesServiceProxy: PlateTypesServiceProxy,
+    private _notifyService: NotifyService,
+    private _tokenAuth: TokenAuthServiceProxy,
+    private _activatedRoute: ActivatedRoute,
+    private _fileDownloadService: FileDownloadService
+  ) {
+    super(injector);
+  }
 
-
-
-
-    constructor(
-        injector: Injector,
-        private _plateTypesServiceProxy: PlateTypesServiceProxy,
-        private _notifyService: NotifyService,
-        private _tokenAuth: TokenAuthServiceProxy,
-        private _activatedRoute: ActivatedRoute,
-        private _fileDownloadService: FileDownloadService
-    ) {
-        super(injector);
+  getPlateTypes(event?: LazyLoadEvent) {
+    if (this.primengTableHelper.shouldResetPaging(event)) {
+      this.paginator.changePage(0);
+      return;
     }
 
-    getPlateTypes(event?: LazyLoadEvent) {
-        if (this.primengTableHelper.shouldResetPaging(event)) {
-            this.paginator.changePage(0);
-            return;
-        }
+    this.primengTableHelper.showLoadingIndicator();
 
-        this.primengTableHelper.showLoadingIndicator();
+    this._plateTypesServiceProxy
+      .getAll(
+        this.filterText,
+        this.displayNameFilter,
+        this.primengTableHelper.getSorting(this.dataTable),
+        this.primengTableHelper.getSkipCount(this.paginator, event),
+        this.primengTableHelper.getMaxResultCount(this.paginator, event)
+      )
+      .subscribe((result) => {
+        this.primengTableHelper.totalRecordsCount = result.totalCount;
+        this.primengTableHelper.records = result.items;
+        console.log(result);
+        this.primengTableHelper.hideLoadingIndicator();
+      });
+  }
 
-        this._plateTypesServiceProxy.getAll(
-            this.filterText,
-            this.displayNameFilter,
-            this.primengTableHelper.getSorting(this.dataTable),
-            this.primengTableHelper.getSkipCount(this.paginator, event),
-            this.primengTableHelper.getMaxResultCount(this.paginator, event)
-        ).subscribe(result => {
-            this.primengTableHelper.totalRecordsCount = result.totalCount;
-            this.primengTableHelper.records = result.items;
-            this.primengTableHelper.hideLoadingIndicator();
+  reloadPage(): void {
+    this.paginator.changePage(this.paginator.getPage());
+  }
+
+  createPlateType(): void {
+    this.createOrEditPlateTypeModal.show();
+  }
+
+  deletePlateType(plateType: PlateTypeDto): void {
+    this.message.confirm('', this.l('AreYouSure'), (isConfirmed) => {
+      if (isConfirmed) {
+        this._plateTypesServiceProxy.delete(plateType.id).subscribe(() => {
+          this.reloadPage();
+          this.notify.success(this.l('SuccessfullyDeleted'));
         });
-    }
-
-    reloadPage(): void {
-        this.paginator.changePage(this.paginator.getPage());
-    }
-
-    createPlateType(): void {
-        this.createOrEditPlateTypeModal.show();        
-    }
-
-
-    deletePlateType(plateType: PlateTypeDto): void {
-        this.message.confirm(
-            '',
-            this.l('AreYouSure'),
-            (isConfirmed) => {
-                if (isConfirmed) {
-                    this._plateTypesServiceProxy.delete(plateType.id)
-                        .subscribe(() => {
-                            this.reloadPage();
-                            this.notify.success(this.l('SuccessfullyDeleted'));
-                        });
-                }
-            }
-        );
-    }
-    
-    
-    
-    
+      }
+    });
+  }
 }

@@ -9,7 +9,7 @@ namespace TACHYON.Trucks.PlateTypes
 {
     public interface IPlateTypesAppService : IApplicationService
     {
-        Task<PagedResultDto<GetPlateTypeForViewDto>> GetAll(GetAllPlateTypesInput input);
+        Task<PagedResultDto<PlateTypeDto>> GetAll(GetAllPlateTypesInput input);
 
         Task<GetPlateTypeForViewDto> GetPlateTypeForView(int id);
 
