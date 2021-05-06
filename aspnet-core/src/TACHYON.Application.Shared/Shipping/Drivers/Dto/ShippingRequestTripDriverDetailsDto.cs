@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Text;
 using Abp.Application.Services.Dto;
+using TACHYON.Routs.RoutPoints;
 using TACHYON.Shipping.Trips;
 
 namespace TACHYON.Shipping.Drivers.Dto
@@ -23,7 +24,8 @@ namespace TACHYON.Shipping.Drivers.Dto
         public string Source { get; set; }
         public string Distination { get; set; }
 
-        public ShippingRequestTripStatus Status { get; set; }
+        public RoutePointStatus Status { get; set; }
+        public ShippingRequestTripStatus TripStatus { get; set; }
         public string StatusTitle { get; set; }
         public ShippingRequestTripDriverActionStatusDto ActionStatus { get; set; } = ShippingRequestTripDriverActionStatusDto.None;
 

@@ -19,7 +19,8 @@ namespace TACHYON.Shipping.ShippingRequestTrips
         public DateTime EndTripDate { get; set; }
         public DateTime? StartWorking { get; set; }
         public DateTime? EndWorking { get; set; }
-        public ShippingRequestTripStatus Status { get; set; } = ShippingRequestTripStatus.StandBy;
+        public ShippingRequestTripStatus Status { get; set; } 
+        public RoutePointStatus  RoutePointStatus { get; set; }
 
         public long? AssignedDriverUserId { get; set; }
         [ForeignKey("AssignedDriverUserId")]

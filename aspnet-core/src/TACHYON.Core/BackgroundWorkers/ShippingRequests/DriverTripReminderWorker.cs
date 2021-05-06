@@ -39,7 +39,7 @@ namespace TACHYON.BackgroundWorkers.ShippingRequests
                     Include(d=>d.AssignedDriverUserFk).
                     AsNoTracking().
                     Where(x => x.ShippingRequestFk.Status == Shipping.ShippingRequests.ShippingRequestStatus.PostPrice &&
-                    x.Status == Shipping.Trips.ShippingRequestTripStatus.StandBy &&
+                    x.Status == Shipping.Trips.ShippingRequestTripStatus.New &&
                     x.DriverStatus== Shipping.Trips.ShippingRequestTripDriverStatus.Accepted &&
                     EF.Functions.DateDiffDay(Clock.Now.Date, x.StartTripDate.Date) == -1).ToList();
 

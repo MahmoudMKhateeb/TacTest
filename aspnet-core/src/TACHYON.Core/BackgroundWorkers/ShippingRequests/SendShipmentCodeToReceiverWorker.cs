@@ -41,7 +41,7 @@ namespace TACHYON.BackgroundWorkers.ShippingRequests
                     Include(p=>p.RoutPoints).
                         ThenInclude(r=>r.ReceiverFk).
                     Where(x => x.ShippingRequestFk.Status == Shipping.ShippingRequests.ShippingRequestStatus.PostPrice &&
-                    x.Status == Shipping.Trips.ShippingRequestTripStatus.StandBy && 
+                    x.Status == Shipping.Trips.ShippingRequestTripStatus.New && 
                     EF.Functions.DateDiffDay(Clock.Now.Date, x.StartTripDate.Date)==-1).OrderBy(x=>x.ShippingRequestFk.TenantId).ToList();
 
 
