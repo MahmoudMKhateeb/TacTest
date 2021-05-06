@@ -1,16 +1,12 @@
 ﻿using Abp.Timing;
 using AutoMapper;
 using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Linq;
-using System.Text;
 using TACHYON.Routs.RoutPoints;
 using TACHYON.Shipping.Drivers.Dto;
 using TACHYON.Shipping.ShippingRequestTrips;
 using TACHYON.Shipping.Trips;
 using TACHYON.Shipping.Trips.Dto;
-using TACHYON.ShippingRequestTripVases;
 
 namespace TACHYON.AutoMapper.Shipping.Trips
 {
@@ -31,7 +27,7 @@ namespace TACHYON.AutoMapper.Shipping.Trips
                .ForMember(dst => dst.DestinationFacility, opt => opt.MapFrom(src => src.DestinationFacilityFk != null ? $"{src.DestinationFacilityFk.Name} - {src.DestinationFacilityFk.Address}" : ""))
                .ForMember(dst => dst.Truck, opt => opt.MapFrom(src => src.AssignedTruckFk != null ? src.AssignedTruckFk.ModelName : string.Empty))
                .ForMember(dst => dst.Driver, opt => opt.MapFrom(src => src.AssignedDriverUserFk != null ? src.AssignedDriverUserFk.Name : string.Empty))
-               .ForMember(dst => dst.Status, opt => opt.MapFrom(src => Enum.GetName(typeof(ShippingRequestTripStatus), src.Status)))
+               .ForMember(dst => dst.Status, opt => opt.MapFrom(src => Enum.GetName(typeof(RoutePointStatus), src.Status)))
                .ForMember(dst => dst.DriverStatusTitle, opt => opt.MapFrom(src => Enum.GetName(typeof(ShippingRequestTripDriverStatus), src.DriverStatus)))
                .ForMember(dst => dst.RoutPoints, opt => opt.MapFrom(src => src.RoutPoints))
                .ForMember(dst => dst.ShippingRequestTripVases, opt => opt.MapFrom(src => src.ShippingRequestTripVases))
@@ -43,7 +39,7 @@ namespace TACHYON.AutoMapper.Shipping.Trips
                 .ForMember(dst => dst.RouteTypeId, opt => opt.MapFrom(src => src.ShippingRequestFk.RouteTypeId))
                 .ForMember(dst => dst.StartDate, opt => opt.MapFrom(src => src.StartTripDate))
                 .ForMember(dst => dst.EndDate, opt => opt.MapFrom(src => src.EndTripDate))
-                .ForMember(dst => dst.StatusTitle, opt => opt.MapFrom(src => Enum.GetName(typeof(ShippingRequestTripStatus), src.Status)))
+                .ForMember(dst => dst.StatusTitle, opt => opt.MapFrom(src => Enum.GetName(typeof(RoutePointStatus), src.RoutePointStatus)))
                 .ForMember(dst => dst.DriverLoadStatus, opt => opt.MapFrom(src => GetMobileTripStatus(src)));
 
 
@@ -58,8 +54,10 @@ namespace TACHYON.AutoMapper.Shipping.Trips
                 .ForMember(dst => dst.PackingType, opt => opt.MapFrom(src => src.ShippingRequestFk.PackingTypeFk.DisplayName))
                 .ForMember(dst => dst.GoodsCategory, opt => opt.MapFrom(src => src.ShippingRequestFk.GoodCategoryFk.DisplayName))
                 .ForMember(dst => dst.RoutePoints, opt => opt.MapFrom(src => src.RoutPoints.OrderBy(x => x.PickingType)))
-                .ForMember(dst => dst.StatusTitle, opt => opt.MapFrom(src => Enum.GetName(typeof(ShippingRequestTripStatus), src.Status)))
-                .ForMember(dst => dst.ChangeStatusButtonTitle, opt => opt.MapFrom(src => GetMobileTripChangeStatusButtonTitle(src.Status)));
+                .ForMember(dst => dst.StatusTitle, opt => opt.MapFrom(src => Enum.GetName(typeof(RoutePointStatus), src.RoutePointStatus)))
+                .ForMember(dst => dst.TripStatus, opt => opt.MapFrom(src => Enum.GetName(typeof(ShippingRequestTripStatus), src.Status)))
+                .ForMember(dst => dst.Status, opt => opt.MapFrom(src => src.RoutePointStatus))
+                .ForMember(dst => dst.ChangeStatusButtonTitle, opt => opt.MapFrom(src => GetMobileTripChangeStatusButtonTitle(src.RoutePointStatus)));
 
 
 
@@ -86,24 +84,24 @@ namespace TACHYON.AutoMapper.Shipping.Trips
         }
 
 
-        private static string GetMobileTripChangeStatusButtonTitle(ShippingRequestTripStatus Status)
+        private static string GetMobileTripChangeStatusButtonTitle(RoutePointStatus Status)
         {
             switch (Status)
             {
-                case ShippingRequestTripStatus.StandBy:
-                    return Enum.GetName(typeof(ShippingRequestTripStatus), ShippingRequestTripStatus.StartedMovingToLoadingLocation);
-                case ShippingRequestTripStatus.StartedMovingToLoadingLocation:
-                    return Enum.GetName(typeof(ShippingRequestTripStatus), ShippingRequestTripStatus.ArriveToLoadingLocation);
-                case ShippingRequestTripStatus.ArriveToLoadingLocation:
-                    return Enum.GetName(typeof(ShippingRequestTripStatus), ShippingRequestTripStatus.StartLoading);
-                case ShippingRequestTripStatus.StartLoading:
-                    return Enum.GetName(typeof(ShippingRequestTripStatus), ShippingRequestTripStatus.FinishLoading);
-                case ShippingRequestTripStatus.StartedMovingToOfLoadingLocation:
-                    return Enum.GetName(typeof(ShippingRequestTripStatus), ShippingRequestTripStatus.ArrivedToDestination);
-                case ShippingRequestTripStatus.ArrivedToDestination:
-                    return Enum.GetName(typeof(ShippingRequestTripStatus), ShippingRequestTripStatus.StartOffloading);
-                case ShippingRequestTripStatus.StartOffloading:
-                    return Enum.GetName(typeof(ShippingRequestTripStatus), ShippingRequestTripStatus.FinishOffLoadShipment);
+                case RoutePointStatus.StandBy:
+                    return Enum.GetName(typeof(RoutePointStatus), RoutePointStatus.StartedMovingToLoadingLocation);
+                case RoutePointStatus.StartedMovingToLoadingLocation:
+                    return Enum.GetName(typeof(RoutePointStatus), RoutePointStatus.ArriveToLoadingLocation);
+                case RoutePointStatus.ArriveToLoadingLocation:
+                    return Enum.GetName(typeof(RoutePointStatus), RoutePointStatus.StartLoading);
+                case RoutePointStatus.StartLoading:
+                    return Enum.GetName(typeof(RoutePointStatus), RoutePointStatus.FinishLoading);
+                case RoutePointStatus.StartedMovingToOfLoadingLocation:
+                    return Enum.GetName(typeof(RoutePointStatus), RoutePointStatus.ArrivedToDestination);
+                case RoutePointStatus.ArrivedToDestination:
+                    return Enum.GetName(typeof(RoutePointStatus), RoutePointStatus.StartOffloading);
+                case RoutePointStatus.StartOffloading:
+                    return Enum.GetName(typeof(RoutePointStatus), RoutePointStatus.FinishOffLoadShipment);
                 default:
                     return "";
             }

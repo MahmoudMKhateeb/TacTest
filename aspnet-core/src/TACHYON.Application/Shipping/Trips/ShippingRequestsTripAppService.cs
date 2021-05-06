@@ -232,7 +232,7 @@ namespace TACHYON.Shipping.Trips
             var trip = await _ShippingRequestTripRepository.
                 FirstOrDefaultAsync(
                 x => x.Id == input.Id &&
-                x.Status == ShippingRequestTripStatus.StandBy);
+                x.Status == ShippingRequestTripStatus.New);
 
 
 
@@ -284,7 +284,7 @@ namespace TACHYON.Shipping.Trips
                         var request = trip.ShippingRequestFk;
                         request.HasAccident = false;
                     }
-                    trip.Status = ShippingRequestTripStatus.Cancled;
+                    trip.Status = ShippingRequestTripStatus.Canceled;
                 }
                 await _appNotifier.ShippingRequestTripCancelByAccident(UserIdentifiers, trip, GetCurrentUser());
             }
@@ -299,7 +299,7 @@ namespace TACHYON.Shipping.Trips
         private void TripCanEditOrDelete(ShippingRequestTrip trip)
         {
             // When Edit Or Delete
-            if (trip.Status != ShippingRequestTripStatus.StandBy)
+            if (trip.Status != ShippingRequestTripStatus.New)
             {
                 throw new UserFriendlyException(L("CanNotEditOrDeleteTrip"));
 

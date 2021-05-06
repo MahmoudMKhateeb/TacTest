@@ -475,6 +475,7 @@
     <text name="General">عــام</text>
     <text name="GeneralDetails">تفاصيل عامة</text>
     <text name="Generate">توليد</text>
+    <text name="GoingToPointConformation">هل انت متاكد انك تريد الذهاب الى هذه النقطة؟</text>
     <text name="GoodCategories">أصناف البضائع</text>
     <text name="GoogleAuthenticatorIsNotEnabled">لم يتم تمكين أداة مصادقة غوغل لحسابك. يجب عليك أولا تمكينه في إعداداتك.</text>
     <text name="GoogleAuthenticatorReferrerLink">ألست متأكدا مما تعنيه هذه الشاشة؟ قد تحتاج إلى التحقق من ذلك </text>
@@ -658,6 +659,7 @@
     <text name="Nationalities">الجنسيات</text>
     <text name="Nationality">الجنسية</text>
     <text name="NationalityTranslations">ترجمة الجنسيات</text>
+    <text name="NeedToSelectDropPoint">يجب عليك اختيار نقطة تنزيل</text>
     <text name="NewCapacity">فئة وزن حمولة جديدة</text>
     <text name="NewCapacityCategory">فئة وزن حمولة جديدة</text>
     <text name="NewChatMessageEmail_Subject">توجد رسالة جديدة</text>
@@ -980,7 +982,9 @@
     <text name="ShowTimeOutNotificationSecond">وقت انتظار العد التنازلي (بالثواني)</text>
     <text name="SignUp">تسجيل</text>
     <text name="Sms">SMS - رسائل قصيرة</text>
-    <text name="SMSOTP">رمز:{0}</text>
+    <text name="SMSOTP">الرجاء استخدام الرمز التالي لتسجيل الدخول:
+رمز:{0}
+</text>
     <text name="SmsSecurityCodeMessage">رمز الحماية هو: {0}</text>
     <text name="SmsVerificationEnabled">تم تمكين التحقق من رقم الهاتف (عبر الرسائل القصيرة )</text>
     <text name="SmsVerificationMessage">رمز التحقق: {0}</text>
@@ -1167,6 +1171,7 @@
     <text name="TrialSubscriptionNotification">أنت في الفترة التجريبية لنسخة {0}، {1} للشراء.</text>
     <text name="TrialWithoutEndDateErrorMessage">يجب أن يكون للحسابات التجريبية تاريخ انتهاء الاشتراك</text>
     <text name="TripEndDate">تاريح نهاية الرحلة</text>
+    <text name="TripFinishedSuccessfully">انتهت الرحلة بنجاح</text>
     <text name="TripInfo">معلومات الرحلة</text>
     <text name="TripRejectReason">أسباب رفض الرحلة</text>
     <text name="TripsStartDate">تاريخ بداية الرحلة</text>
