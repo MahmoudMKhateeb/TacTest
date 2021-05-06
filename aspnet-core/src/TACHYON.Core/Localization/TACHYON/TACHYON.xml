@@ -101,6 +101,7 @@
     <text name="ApproximateTripDuration">Approximate trip duration</text>
     <text name="AppSecret">App Secret</text>
     <text name="AreYouSure">Are you sure to take this action?</text>
+    <text name="AreYouSure?">Are you sure?</text>
     <text name="AShipmentWasAssignedForYouToReceiveOn">A shipment was assigned for you to receive on</text>
     <text name="Assign">Assign</text>
     <text name="AssignCarrier">Assign carrier</text>
@@ -129,6 +130,7 @@
     <text name="BiddingStartDate">Bidding Start Date</text>
     <text name="BidPlacedSuccessfully">Bid placed successfully</text>
     <text name="BidPrice">Bid price</text>
+    <text name="BidRequestRemoved">Bid request removed</text>
     <text name="BidsList">Bids List</text>
     <text name="BidStartDate">Bid Start Date</text>
     <text name="BidUpdatedSuccessfully">Bid updated successfully</text>
@@ -300,7 +302,7 @@
     <text name="CreateNewRole">Create New Role</text>
     <text name="CreateNewRoute">Create New Route</text>
     <text name="CreateNewRoutStep">Create New rout step</text>
-    <text name="CreateNewRoutType">Create New rout Type</text>
+    <text name="CreateNewRoutType">Create New route Type</text>
     <text name="CreateNewShippingRequest">Create New Shipping Request</text>
     <text name="CreateNewShippingRequestStatus">Create New Shipping Request Status</text>
     <text name="CreateNewShippingRequestVas">Create New Shipping Request VAS</text>
@@ -461,7 +463,7 @@
     <text name="DesiredPrice">Desired price</text>
     <text name="DestFacility">Dest Facility</text>
     <text name="Destination">Destination</text>
-    <text name="DestinationCity">Destination City</text>
+    <text name="DestinationCity">Destination</text>
     <text name="DestinationFacility">Destination Facility</text>
     <text name="Detail">Detail</text>
     <text name="DetailingSubscription">See webhook detail page</text>
@@ -673,6 +675,7 @@
     <text name="ExpirationAlertDays">Expiration Alert Days</text>
     <text name="ExpirationDate">Expiration date</text>
     <text name="ExpirationDateRange">Expiration date range</text>
+    <text name="Expired">Expired</text>
     <text name="ExpiresAt">Expires at {0}</text>
     <text name="ExpiringEdition">Expiring edition</text>
     <text name="ExpiringEditionMustBeAFreeEdition">Expiring edition must be a free edition</text>
@@ -730,6 +733,7 @@
     <text name="GeneralDetails">General details</text>
     <text name="GeneralSettings">General settings</text>
     <text name="Generate">Generate</text>
+    <text name="GoingToPointConformation">Are you sure you want to go to this point?</text>
     <text name="GoodCategories">Goods categories</text>
     <text name="GoodCategoriesHeaderInfo">Good categories header info</text>
     <text name="GoodCategory">Good category</text>
@@ -985,6 +989,7 @@
     <text name="NationalityTranslation">Nationality Translation</text>
     <text name="NationalityTranslations">Nationality Translations</text>
     <text name="NationalityTranslationsHeaderInfo">Nationality Translations header info</text>
+    <text name="NeedToSelectDropPoint">You need to select drop off point</text>
     <text name="New">New</text>
     <text name="NewCapacity">New Capacity</text>
     <text name="NewCapacityCategory">New Capacity Category</text>
@@ -1099,7 +1104,7 @@
     <text name="Origin">Origin</text>
     <text name="OriginalCity">Original city</text>
     <text name="OriginalValue">Original value</text>
-    <text name="OriginCity">Origin City</text>
+    <text name="OriginCity">Origin</text>
     <text name="OriginFacility">Origin Facility</text>
     <text name="Other">Other</text>
     <text name="OtherReason">Other reason</text>
@@ -1377,6 +1382,7 @@
     <text name="SelectAPermission">Select A Permission</text>
     <text name="SelectARole">Select a role</text>
     <text name="SelectAShippingType">Select a Shipping Type</text>
+    <text name="SelectATermAndCondition">Select aTerm and condition</text>
     <text name="SelectATheme">Select a Theme</text>
     <text name="SelectaTransportType">Select a Transport Type</text>
     <text name="SelectATransportType">Select a Transport Type</text>
@@ -1486,7 +1492,8 @@
     <text name="SignUp">Sign up</text>
     <text name="SingleDrop">Single drop</text>
     <text name="Sms">Sms</text>
-    <text name="SMSOTP">your otp code:{0}</text>
+    <text name="SMSOTP">Please use the code below to login. 
+Code:{0}</text>
     <text name="SmsSecurityCodeMessage">Your security code is: {0}</text>
     <text name="SMSSettings">SMS Settings</text>
     <text name="SmsVerificationEnabled">Phone number verification enabled (via SMS)</text>
@@ -1628,6 +1635,7 @@
     <text name="TargetUserNotFoundProbablyDeleted">Target user could not be found. It's probably deleted.</text>
     <text name="TargetValue">Target value</text>
     <text name="Tax/VatNo">Tax/VatNo</text>
+    <text name="TaxVat">Tax vat</text>
     <text name="TenancyCodeName">Tenancy code name</text>
     <text name="TenancyName">Company Unique Name</text>
     <text name="TenancyNameRequired">Tenancy name is required!</text>
@@ -1759,6 +1767,7 @@
     <text name="TrialWithoutEndDateErrorMessage">Trial accounts must have subscription end date</text>
     <text name="TripDetails">Trip Details</text>
     <text name="TripEndDate">Trip end date</text>
+    <text name="TripFinishedSuccessfully">Trip finished successfully</text>
     <text name="TripIncident">Trip incident</text>
     <text name="TripInfo">Trip Info</text>
     <text name="TripRejectReason">Trip Reject Reasons</text>

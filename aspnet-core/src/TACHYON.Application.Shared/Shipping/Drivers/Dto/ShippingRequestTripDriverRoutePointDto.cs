@@ -14,7 +14,7 @@ namespace TACHYON.Shipping.Drivers.Dto
         public string Facility { get; set; }
 
         public string Address { get; set; }
-        public string Code { get; set; }
+        //public string Code { get; set; }
 
         public double lat { get; set; }
         public double lng { get; set; }
