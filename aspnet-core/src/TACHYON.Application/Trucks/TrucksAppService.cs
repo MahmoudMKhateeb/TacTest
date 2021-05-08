@@ -33,6 +33,7 @@ using TACHYON.Trucks;
 using TACHYON.Trucks.Dtos;
 using TACHYON.Trucks.Exporting;
 using TACHYON.Trucks.PlateTypes;
+using TACHYON.Trucks.PlateTypes.Dtos;
 using TACHYON.Trucks.TruckCategories.TransportTypes;
 using TACHYON.Trucks.TruckCategories.TransportTypes.Dtos;
 using TACHYON.Trucks.TruckCategories.TransportTypes.TransportTypesTranslations;
@@ -546,14 +547,18 @@ namespace TACHYON.Trucks
             return capacityDto;
         }
 
-        public async Task<List<SelectItemDto>> GetAllPlateTypeIdForDropdown()
+        public async Task<List<PlateTypeSelectItemDto>> GetAllPlateTypeIdForDropdown()
         {
-            return await _plateTypesRepository.GetAll()
-                .Select(x => new SelectItemDto()
-                {
-                    Id = x.Id.ToString(),
-                    DisplayName = x.DisplayName
-                }).ToListAsync();
+            var plateTypes= await _plateTypesRepository.GetAllIncluding(x => x.Translations)
+                .ToListAsync();
+
+            return ObjectMapper.Map<List<PlateTypeSelectItemDto>>(plateTypes);
+            //return await _plateTypesRepository.GetAll()
+            //    .Select(x => new SelectItemDto()
+            //    {
+            //        Id = x.Id.ToString(),
+            //        DisplayName = x.DisplayName
+            //    }).ToListAsync();
         }
 
         #endregion

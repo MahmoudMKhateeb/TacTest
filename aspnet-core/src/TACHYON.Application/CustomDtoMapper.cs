@@ -161,8 +161,6 @@ namespace TACHYON
             configuration.CreateMap<CitiesTranslationDto, CitiesTranslation>().ReverseMap();
             configuration.CreateMap<CreateOrEditCountriesTranslationDto, CountriesTranslation>().ReverseMap();
             configuration.CreateMap<CountriesTranslationDto, CountriesTranslation>().ReverseMap();
-            configuration.CreateMap<CreateOrEditPlateTypeDto, PlateType>().ReverseMap();
-            configuration.CreateMap<PlateTypeDto, PlateType>().ReverseMap();
             configuration.CreateMap<CreateOrEditTruckCapacitiesTranslationDto, TruckCapacitiesTranslation>().ReverseMap();
             configuration.CreateMap<TruckCapacitiesTranslationDto, TruckCapacitiesTranslation>().ReverseMap();
             configuration.CreateMap<CreateOrEditTruckStatusesTranslationDto, TruckStatusesTranslation>().ReverseMap();
@@ -584,6 +582,11 @@ namespace TACHYON
                 CreateMultiLingualMap<ShippingRequestTripRejectReason, ShippingRequestTripRejectReasonTranslation, ShippingRequestTripRejectReasonListDto>(context);
             configuration.
                 CreateMultiLingualMap<AppLocalization, AppLocalizationTranslation, AppLocalizationListDto>(context);
+
+            configuration.
+                CreateMultiLingualMap<PlateType, PlateTypeTranslation, PlateTypeDto>(context);
+            configuration.
+                CreateMultiLingualMap<PlateType, PlateTypeTranslation, PlateTypeSelectItemDto>(context);
         }
 
         private static void AddOrUpdateShippingRequest(CreateOrEditShippingRequestDto dto, ShippingRequest Request)

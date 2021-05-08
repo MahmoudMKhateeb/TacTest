@@ -78,6 +78,8 @@ namespace TACHYON.EntityFrameworkCore
 
         public virtual DbSet<PlateType> PlateTypes { get; set; }
 
+        public virtual DbSet<PlateTypeTranslation> PlateTypeTranslations { get; set; }
+
         public virtual DbSet<TruckCapacitiesTranslation> TruckCapacitiesTranslations { get; set; }
 
         public virtual DbSet<TruckStatusesTranslation> TruckStatusesTranslations { get; set; }
