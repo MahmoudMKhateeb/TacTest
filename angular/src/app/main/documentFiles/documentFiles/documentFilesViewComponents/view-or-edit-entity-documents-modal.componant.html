@@ -144,14 +144,14 @@
                   </td>
 
                   <td style="width: 150px;">
-                    {{ record.hasNumber ? record.number : '--' }}
+                    {{ record.documentFile.number || '--' }}
                   </td>
 
                   <td style="width: 150px;">
-                    <span *ngIf="record.hasDate">
+                    <span *ngIf="record.documentType.hasExpirationDate">
                       {{ record.documentFile.expirationDate | momentFormat: 'D/M/YYYY' }}
                     </span>
-                    <span *ngIf="!record.hasDate">--</span>
+                    <span *ngIf="!record.documentType.hasExpirationDate">--</span>
                   </td>
                 </tr>
               </ng-template>
