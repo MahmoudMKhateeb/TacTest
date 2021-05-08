@@ -585,6 +585,8 @@ namespace TACHYON
 
             configuration.
                 CreateMultiLingualMap<PlateType, PlateTypeTranslation, PlateTypeDto>(context);
+            configuration.
+                CreateMultiLingualMap<PlateType, PlateTypeTranslation, PlateTypeSelectItemDto>(context);
         }
 
         private static void AddOrUpdateShippingRequest(CreateOrEditShippingRequestDto dto, ShippingRequest Request)

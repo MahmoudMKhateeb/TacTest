@@ -11,9 +11,9 @@ namespace TACHYON.Trucks.PlateTypes
     public class PlateType : FullAuditedEntity, IMultiLingualEntity<PlateTypeTranslation>
     {
 
-        [Required]
-        [StringLength(PlateTypeConsts.MaxDisplayNameLength, MinimumLength = PlateTypeConsts.MinDisplayNameLength)]
-        public virtual string DisplayName { get; set; }
+        //[Required]
+        //[StringLength(PlateTypeConsts.MaxDisplayNameLength, MinimumLength = PlateTypeConsts.MinDisplayNameLength)]
+        //public virtual string DisplayName { get; set; }
         public ICollection<PlateTypeTranslation> Translations { get; set; }
     }
 }

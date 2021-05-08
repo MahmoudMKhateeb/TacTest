@@ -31,8 +31,8 @@ namespace TACHYON.Trucks.PlateTypes
         {
 
             var filteredPlateTypes = _plateTypeRepository.GetAll()
-                        .WhereIf(!string.IsNullOrWhiteSpace(input.Filter), e => false || e.DisplayName.Contains(input.Filter))
-                        .WhereIf(!string.IsNullOrWhiteSpace(input.DisplayNameFilter), e => e.DisplayName == input.DisplayNameFilter);
+                        .WhereIf(!string.IsNullOrWhiteSpace(input.Filter), e => false || e.Translations.Any(x=>x.DisplayName.Contains(input.Filter)))
+                        .WhereIf(!string.IsNullOrWhiteSpace(input.DisplayNameFilter), e => e.Translations.Any(x => x.DisplayName == input.DisplayNameFilter));
 
             var pagedAndFilteredPlateTypes = filteredPlateTypes
                 .OrderBy(input.Sorting ?? "id asc")
