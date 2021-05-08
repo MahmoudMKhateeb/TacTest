@@ -113,7 +113,7 @@ namespace TACHYON.TachyonPriceOffers
         public async Task Delete(EntityDto entity)
         {
             var offer = await _tachyonPriceOfferRepository.FirstOrDefaultAsync(x => x.Id == entity.Id && x.OfferStatus == OfferStatus.Pending);
-            if (offer != null)
+            if (offer == null)
             {
                 throw new UserFriendlyException(L("Cannot delete accepted offer message"));
             }
