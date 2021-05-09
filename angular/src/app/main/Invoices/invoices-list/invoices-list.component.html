@@ -24,9 +24,6 @@
                         (completeMethod)="search($event)"
                         field="displayName"
                       ></p-autoComplete>
-                      <span class="input-group-btn">
-                        <button (click)="getAll()" class="btn btn-primary" type="submit"><i class="flaticon-search-1"></i></button>
-                      </span>
                     </div>
                   </div>
                 </div>
@@ -109,6 +106,7 @@
                   >
                 </div>
               </div>
+              <button (click)="getAll()" class="btn btn-primary" type="submit">{{ l('Search') }}</button>
             </div>
           </form>
 
