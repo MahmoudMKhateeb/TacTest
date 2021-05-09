@@ -49,6 +49,7 @@ export class InvoicesListComponent extends AppComponentBase implements OnInit {
   }
 
   ngOnInit() {
+    if (this.appSession.tenantId) this.advancedFiltersAreShown = true;
     this.CanMakPaid = this.appSession.tenantId ? abp.features.isEnabled('app.Shipper.CanMakeInvoicePaid') : true;
     this._CommonServ.getPeriods().subscribe((result) => {
       this.Periods = result;
