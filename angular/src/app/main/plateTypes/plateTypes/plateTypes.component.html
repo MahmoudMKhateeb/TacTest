@@ -1,4 +1,4 @@
-﻿<div [@routerTransition]>
+<div [@routerTransition]>
   <div class="content d-flex flex-column flex-column-fluid">
     <sub-header [title]="'PlateTypes' | localize" [description]="'' | localize">
       <div role="actions">
@@ -32,18 +32,7 @@
                   </div>
                 </div>
               </div>
-              <div class="row" [hidden]="!advancedFiltersAreShown">
-                <div class="col-md-12">
-                  <div class="kt-separator kt-separator--border-dashed"></div>
-                </div>
 
-                <div class="col-md-3">
-                  <div class="form-group">
-                    <label for="DisplayNameFilter">{{ l('DisplayName') }}</label>
-                    <input type="text" class="form-control" id="DisplayNameFilter" name="displayNameFilter" [(ngModel)]="displayNameFilter" />
-                  </div>
-                </div>
-              </div>
               <div class="row mb-2">
                 <div class="col-sm-12">
                   <span
