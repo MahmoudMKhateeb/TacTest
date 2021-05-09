@@ -7,7 +7,6 @@ namespace TACHYON.Trucks.PlateTypes.Dtos
     {
         public string Filter { get; set; }
 
-        public string DisplayNameFilter { get; set; }
 
     }
 }

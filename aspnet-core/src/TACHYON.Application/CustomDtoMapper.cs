@@ -179,8 +179,8 @@ namespace TACHYON
             configuration.CreateMap<CitiesTranslationDto, CitiesTranslation>().ReverseMap();
             configuration.CreateMap<CreateOrEditCountriesTranslationDto, CountriesTranslation>().ReverseMap();
             configuration.CreateMap<CountriesTranslationDto, CountriesTranslation>().ReverseMap();
-            configuration.CreateMap<CreateOrEditPlateTypeDto, PlateType>().ReverseMap();
-            configuration.CreateMap<PlateTypeDto, PlateType>().ReverseMap();
+            //configuration.CreateMap<CreateOrEditPlateTypeDto, PlateType>().ReverseMap();
+            //configuration.CreateMap<PlateTypeDto, PlateType>().ReverseMap();
             configuration.CreateMap<CreateOrEditNationalityDto, Nationality>().ReverseMap();
             configuration.CreateMap<NationalityDto, Nationality>().ReverseMap();
             configuration.CreateMap<CreateOrEditNationalityTranslationDto, NationalityTranslation>().ReverseMap();

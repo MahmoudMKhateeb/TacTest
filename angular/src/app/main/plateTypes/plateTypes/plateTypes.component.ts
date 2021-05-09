@@ -27,9 +27,7 @@ export class PlateTypesComponent extends AppComponentBase {
   @ViewChild('dataTable', { static: true }) dataTable: Table;
   @ViewChild('paginator', { static: true }) paginator: Paginator;
 
-  advancedFiltersAreShown = false;
   filterText = '';
-  displayNameFilter = '';
 
   constructor(
     injector: Injector,
@@ -53,7 +51,6 @@ export class PlateTypesComponent extends AppComponentBase {
     this._plateTypesServiceProxy
       .getAll(
         this.filterText,
-        this.displayNameFilter,
         this.primengTableHelper.getSorting(this.dataTable),
         this.primengTableHelper.getSkipCount(this.paginator, event),
         this.primengTableHelper.getMaxResultCount(this.paginator, event)

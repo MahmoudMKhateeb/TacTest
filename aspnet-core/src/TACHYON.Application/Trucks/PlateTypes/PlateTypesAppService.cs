@@ -30,9 +30,8 @@ namespace TACHYON.Trucks.PlateTypes
         public async Task<PagedResultDto<PlateTypeDto>> GetAll(GetAllPlateTypesInput input)
         {
 
-            var filteredPlateTypes = _plateTypeRepository.GetAll()
-                        .WhereIf(!string.IsNullOrWhiteSpace(input.Filter), e => false || e.Translations.Any(x=>x.DisplayName.Contains(input.Filter)))
-                        .WhereIf(!string.IsNullOrWhiteSpace(input.DisplayNameFilter), e => e.Translations.Any(x => x.DisplayName == input.DisplayNameFilter));
+            var filteredPlateTypes = _plateTypeRepository.GetAll().Include(x => x.Translations)
+                        .WhereIf(!string.IsNullOrWhiteSpace(input.Filter), e => false || e.Translations.Any(x => x.DisplayName.Contains(input.Filter)));
 
             var pagedAndFilteredPlateTypes = filteredPlateTypes
                 .OrderBy(input.Sorting ?? "id asc")
