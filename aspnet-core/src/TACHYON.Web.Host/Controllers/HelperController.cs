@@ -20,6 +20,7 @@ using TACHYON.Trucks.Importing.Dto;
 using TACHYON.Shipping.Drivers.Dto;
 using TACHYON.Shipping.Drivers;
 using TACHYON.Common;
+using TACHYON.Localization.Importing;
 
 namespace TACHYON.Web.Controllers
 {
@@ -144,6 +145,39 @@ namespace TACHYON.Web.Controllers
         }
 
 
+        [HttpPost]
+        [AbpMvcAuthorize(AppPermissions.Pages_AppLocalization_Edit)]
+        public async Task<JsonResult> ImportTerminologyFromExcel()
+        {
+            try
+            {
+                var file = Request.Form.Files.First();
+
+                if (file == null)
+                {
+                    throw new UserFriendlyException(L("File_Empty_Error"));
+                }
+
+                if (file.Length > 1048576 * 100) //100 MB
+                {
+                    throw new UserFriendlyException(L("File_SizeLimit_Error"));
+                }
+
+                byte[] fileBytes;
+                using (var stream = file.OpenReadStream())
+                {
+                    fileBytes = stream.GetAllBytes();
+                }
+
+                await BackgroundJobManager.EnqueueAsync<ImportTerminologyToExcelJob, byte[]>(fileBytes);
+
+                return Json(new AjaxResponse(new { }));
+            }
+            catch (UserFriendlyException ex)
+            {
+                return Json(new AjaxResponse(new ErrorInfo(ex.Message)));
+            }
+        }
 
         [HttpPost]
         [AbpMvcAuthorize()]
