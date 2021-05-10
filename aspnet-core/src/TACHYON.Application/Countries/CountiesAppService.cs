@@ -85,10 +85,14 @@ namespace TACHYON.Countries
 
         public async Task CreateOrEdit(CreateOrEditCountyDto input)
         {
+            if (string.IsNullOrWhiteSpace(input.DisplayName))
+            {
+                throw new UserFriendlyException(L("CannotCreateEmptyCountry"));
+            }
             if(await _countyRepository.FirstOrDefaultAsync(x => x.DisplayName.ToLower() == input.DisplayName.ToLower()
             && x.Id!=input.Id) != null)
             {
-                throw new UserFriendlyException(L("country is already exists message"));
+                throw new UserFriendlyException(L("countryIsAlreadyExistsMessage"));
             }
             if (input.Id == null)
             {
