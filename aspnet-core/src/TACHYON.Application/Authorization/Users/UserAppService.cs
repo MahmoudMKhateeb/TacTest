@@ -802,6 +802,7 @@ namespace TACHYON.Authorization.Users
         {
             if (input.User.IsDriver)
             {
+                DisableTenancyFilters();
                 var userDB = _userManager.Users.FirstOrDefault(x => x.IsDriver == true && x.PhoneNumber == input.User.PhoneNumber && x.Id != input.User.Id);
                 if (userDB != null)
                 {
