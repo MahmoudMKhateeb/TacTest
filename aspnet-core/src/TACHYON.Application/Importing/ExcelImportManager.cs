@@ -68,7 +68,7 @@ namespace TACHYON.Importing
                             ? (object)cell.DateCellValue
                             : (object)cell.NumericCellValue;
                 case CellType.String:
-                    return cell.StringCellValue.ToString();
+                    return cell.StringCellValue.ToString().Trim();
                 case CellType.Blank:
                 case CellType.Unknown:
                 default:
