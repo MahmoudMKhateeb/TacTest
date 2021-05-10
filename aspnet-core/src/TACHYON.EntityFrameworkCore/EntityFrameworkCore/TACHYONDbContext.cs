@@ -375,6 +375,10 @@ namespace TACHYON.EntityFrameworkCore
                 b.HasIndex(e => new { e.TenantId, e.TargetUserId });
             });
 
+            modelBuilder.Entity<ShippingRequestTrip>()
+            .HasIndex(e => e.WaybillNumber)
+            .IsUnique();
+
             modelBuilder.Entity<Tenant>()
             .HasIndex(b => b.AccountNumber)
             .IsUnique();
