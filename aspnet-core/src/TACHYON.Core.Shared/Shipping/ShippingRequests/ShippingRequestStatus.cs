@@ -6,11 +6,11 @@ namespace TACHYON.Shipping.ShippingRequests
 {
     public enum ShippingRequestStatus : byte
     {
-        PrePrice,
-        PostPrice,
-        Started ,//The driver start working on trips
-        Rejected,
+        New,
+        Confiremed,
+        NeedsAction ,//carriers send price
+        Expired,
         Cancled,
-        Finished
+        Completed
     }
 }

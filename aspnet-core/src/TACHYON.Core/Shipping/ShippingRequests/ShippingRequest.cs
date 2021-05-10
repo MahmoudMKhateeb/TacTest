@@ -235,6 +235,7 @@ namespace TACHYON.Shipping.ShippingRequests
         {
             BidStatus = ShippingRequestBidStatus.Closed;
             CloseBidDate = Clock.Now;
+            Status = ShippingRequestStatus.Expired;
         }
 
         public void Start()
