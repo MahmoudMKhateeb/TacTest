@@ -15,6 +15,7 @@ namespace TACHYON.Shipping.ShippingRequestTrips
     [Table("ShippingRequestTrips")]
     public class ShippingRequestTrip : FullAuditedEntity
     {
+        public long? WaybillNumber { get; set; }
         public DateTime StartTripDate { get; set; }
         public DateTime EndTripDate { get; set; }
         public DateTime? StartWorking { get; set; }
