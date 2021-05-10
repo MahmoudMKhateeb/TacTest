@@ -4,6 +4,10 @@ import { appModuleAnimation } from '@shared/animations/routerTransition';
 import { LazyLoadEvent } from 'primeng/public_api';
 import { Table } from 'primeng/table';
 import { Paginator } from 'primeng/paginator';
+import { HttpClient } from '@angular/common/http';
+import { FileUpload } from '@node_modules/primeng/fileupload';
+import { AppConsts } from '@shared/AppConsts';
+import { finalize } from '@node_modules/rxjs/operators';
 
 import * as _ from 'lodash';
 import {
@@ -21,19 +25,25 @@ import { FileDownloadService } from '@shared/utils/file-download.service';
 export class AppLocalizationComponent extends AppComponentBase implements OnInit {
   @ViewChild('dataTable', { static: true }) dataTable: Table;
   @ViewChild('paginator', { static: true }) paginator: Paginator;
+  @ViewChild('ExcelFileUpload', { static: false }) excelFileUpload: FileUpload;
+
   input: AppLocalizationFilterInput = new AppLocalizationFilterInput();
   AppLocalizations: IAppLocalizationListDto[] = [];
   editions: ComboboxItemDto[] = [];
   IsStartSearch = false;
+  uploadUrl: string;
+
   constructor(
     injector: Injector,
     private _ServiceProxy: AppLocalizationServiceProxy,
     private _editionService: EditionServiceProxy,
-    private _fileDownloadService: FileDownloadService
+    private _fileDownloadService: FileDownloadService,
+    private _httpClient: HttpClient
   ) {
     super(injector);
   }
   ngOnInit(): void {
+    this.uploadUrl = AppConsts.remoteServiceBaseUrl + '/Helper/ImportTerminologyFromExcel';
     this._editionService.getEditionComboboxItems(0, true, false).subscribe((editions) => {
       this.editions = editions;
     });
@@ -96,5 +106,26 @@ export class AppLocalizationComponent extends AppComponentBase implements OnInit
         });
       }
     });
+  }
+
+  uploadExcel(data: { files: File }): void {
+    const formData: FormData = new FormData();
+    const file = data.files[0];
+    formData.append('file', file, file.name);
+
+    this._httpClient
+      .post<any>(this.uploadUrl, formData)
+      .pipe(finalize(() => this.excelFileUpload.clear()))
+      .subscribe((response) => {
+        if (response.success) {
+          this.notify.success(this.l('ImportUsersProcessStart'));
+        } else if (response.error != null) {
+          this.notify.error(this.l('ImportUsersUploadFailed'));
+        }
+      });
+  }
+
+  onUploadExcelError(): void {
+    this.notify.error(this.l('ImportUsersUploadFailed'));
   }
 }

@@ -10,6 +10,7 @@ using System.Reflection;
 using TACHYON.Authorization;
 using TACHYON.Authorization.Permissions;
 using TACHYON.Exporting;
+using TACHYON.Importing;
 
 namespace TACHYON
 {
@@ -62,6 +63,9 @@ namespace TACHYON
                 )
             );
             IocManager.Register(typeof(IExcelExporterManager<>), typeof(ExcelExporterManager<>), DependencyLifeStyle.Transient);
+
+            IocManager.Register(typeof(IExcelImportManager<>), typeof(ExcelImportManager<>), DependencyLifeStyle.Transient);
+            
         }
         public override void PostInitialize()
         {

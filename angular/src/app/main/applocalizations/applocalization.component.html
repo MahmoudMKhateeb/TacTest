@@ -2,8 +2,6 @@
   <div class="content d-flex flex-column flex-column-fluid">
     <sub-header [title]="'AppLocalization' | localize">
       <div role="actions">
-        <button (click)="exportToExcel()" class="btn btn-outline-success"><i class="fa fa-file-excel"></i> {{ l('ExportToExcel') }}</button>
-
         <button *ngIf="isGranted('Pages.AppLocalizations.Create')" (click)="AppLocalizationModel.show(null)" class="btn btn-primary blue">
           <i class="fa fa-plus"></i> {{ l('CreateLocalization') }}
         </button>
@@ -13,6 +11,42 @@
         <button *ngIf="isGranted('Pages.AppLocalizations.Generate')" (click)="generate()" class="btn btn-outline-success">
           <i class="fas fa-file-code"></i> {{ l('Generate') }}
         </button>
+        <span> </span>
+        <div class="btn-group" dropdown>
+          <button
+            dropdownToggle
+            type="button"
+            class="btn btn-outline-success dropdown-toggle mr-1"
+            data-toggle="dropdown"
+            aria-haspopup="true"
+            aria-expanded="false"
+          >
+            <i class="far fa-file-excel"></i> {{ 'ExcelOperations' | localize }}
+          </button>
+          <div class="dropdown-menu dropdown-menu-right dropdown-excel-operations" *dropdownMenu>
+            <a class="dropdown-item" id="ExportTrucksToExcelButton" (click)="exportToExcel()" href="javascript:;">
+              <i class="fa fa-download mr-2 mt-1" style="font-size: 1rem;"></i>
+              {{ 'ExportToExcel' | localize }}
+            </a>
+            <div *ngIf="isGranted('Pages.AppLocalizations.Edit')" class="no-padding">
+              <span class="fileinput-button">
+                <p-fileUpload
+                  customUpload="true"
+                  name="ExcelFileUpload"
+                  #ExcelFileUpload
+                  maxFileSize="10000000"
+                  auto="auto"
+                  accept=".csv,.xls,.xlsx"
+                  (uploadHandler)="uploadExcel($event)"
+                  (onError)="onUploadExcelError()"
+                  chooseLabel="{{ 'ImportFromExcel' | localize }}"
+                >
+                </p-fileUpload>
+              </span>
+            </div>
+            <div class="dropdown-divider"></div>
+          </div>
+        </div>
       </div>
     </sub-header>
 
