@@ -233,7 +233,7 @@ namespace TACHYON.Shipping.ShippingRequests
 
 
                 ShippingRequest shippingRequest = await _shippingRequestRepository.FirstOrDefaultAsync(input.Id);
-                if ((shippingRequest.Status != ShippingRequestStatus.Rejected))
+                if ((shippingRequest.Status != ShippingRequestStatus.Cancled))
                 {
                     throw new UserFriendlyException(L("cant update price for rejected request"));
                 }
@@ -247,7 +247,7 @@ namespace TACHYON.Shipping.ShippingRequests
         public async Task AcceptOrRejectShippingRequestPrice(AcceptShippingRequestPriceInput input)
         {
             ShippingRequest shippingRequest = await _shippingRequestRepository.FirstOrDefaultAsync(input.Id);
-            if (shippingRequest.Status == ShippingRequestStatus.Rejected)
+            if (shippingRequest.Status == ShippingRequestStatus.Cancled)
             {
                 throw new UserFriendlyException(L("Cant accept or reject price for rejected request"));
             }
@@ -272,7 +272,7 @@ namespace TACHYON.Shipping.ShippingRequests
                     throw new UserFriendlyException(L("Cant reject accepted price request"));
                 }
 
-                shippingRequest.Status = ShippingRequestStatus.Rejected;
+                shippingRequest.Status = ShippingRequestStatus.Cancled;
 
                 await _appNotifier.RejectShippingRequest(new UserIdentifier(shippingRequest.TenantId, shippingRequest.CreatorUserId.Value), id);
             }
