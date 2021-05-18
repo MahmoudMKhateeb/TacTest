@@ -58,6 +58,7 @@ export class CreateOrEditShippingRequestComponent extends AppComponentBase imple
   truckTypeLoading: boolean;
   capacityLoading: boolean;
   selectedVasesProperties = [];
+  selectedvas: any;
   today = new Date();
   constructor(
     injector: Injector,

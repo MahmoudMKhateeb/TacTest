@@ -541,7 +541,7 @@
             <!--  start of Vas::Details-->
             <div class="row">
               <div class="col-3">
-                <p-listbox
+                <!-- <p-listbox
                   name="VasList"
                   [options]="allVases"
                   [metaKeySelection]="false"
@@ -553,8 +553,63 @@
                   [style]="{ width: '100%' }"
                   (onChange)="selectVases($event)"
                 >
-                </p-listbox>
+                </p-listbox> -->
+
+                <p-multiSelect
+                  [options]="allVases"
+                  [(ngModel)]="selectedvas"
+                  defaultLabel="Select a VASs"
+                  optionLabel="vasName"
+                  name="VasList"
+                  class="multiselect-custom"
+                  [style]="{ width: '100%' }"
+                  (onChange)="selectVases($event)"
+                  displaySelectedLabel="true"
+                >
+                  <!-- new shippingRequest -->
+                  <div *ngIf="shippingRequest.id && selectedVases; else newShippingRequest">
+                    <ng-template let-value pTemplate="selectedItems">
+                      <div *ngIf="!selectedVases || selectedVases.length === 0" class="vas-placeholder">
+                        {{ l('SelectVASs') }}
+                      </div>
+                      <div class="vas-item vas-item-value" *ngFor="let vas of selectedVases">
+                        <div>{{ vas.vasName }}</div>
+                      </div>
+                    </ng-template>
+                  </div>
+
+                  <!-- edit shippingRequest -->
+                  <ng-template #newShippingRequest>
+                    <ng-template let-value pTemplate="selectedItems">
+                      <div *ngIf="!selectedvas || selectedvas.length === 0" class="vas-placeholder">
+                        {{ l('SelectVASs') }}
+                      </div>
+                      <div class="vas-item vas-item-value" *ngFor="let vas of selectedvas">
+                        <div>{{ vas.vasName }}</div>
+                      </div>
+                    </ng-template>
+                  </ng-template>
+
+                  <!-- <ng-template let-value pTemplate="selectedItems">
+                    <div *ngIf="!selectedvas || selectedvas.length === 0" class="country-placeholder">
+                      {{ l('SelectVASs') }}
+                    </div>
+                    <div class="country-item country-item-value" *ngFor="let vas of selectedvas">
+                      <div>{{ vas.vasName }}</div>
+                    </div>
+                  </ng-template> -->
+
+                  <!-- show dorpdown items -->
+                  <div *ngFor="let vas of allVases">
+                    <ng-template pTemplate="item">
+                      <div class="vas-item">
+                        <div>{{ vas.vasName }}</div>
+                      </div>
+                    </ng-template>
+                  </div>
+                </p-multiSelect>
               </div>
+
               <div class="col-9">
                 <table *ngIf="allVases" class="table">
                   <thead>
