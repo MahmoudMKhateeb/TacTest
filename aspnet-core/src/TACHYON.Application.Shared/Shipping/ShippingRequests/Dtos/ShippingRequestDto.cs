@@ -2,6 +2,7 @@
 using Abp.Application.Services.Dto;
 using System;
 
+
 namespace TACHYON.Shipping.ShippingRequests.Dtos
 {
     public class ShippingRequestDto : EntityDto<long>
@@ -33,11 +34,15 @@ namespace TACHYON.Shipping.ShippingRequests.Dtos
         public bool HasAccident { get; set; }
         public int TotalsTripsAddByShippier { get; set; }
         public ShippingRequestStatus Status { get; set; }
+        public ShippingRequestBidStatus BidStatus { get; set; }
         public string StatusTitle  
         {
-            get { return Enum.GetName(typeof(ShippingRequestStatus), Status); }  
+            get { return Status.GetEnumDescription(); }  
         }
 
-
+        public string BidStatusTitle
+        {
+            get { return BidStatus.GetEnumDescription(); }
+        }
     }
 }

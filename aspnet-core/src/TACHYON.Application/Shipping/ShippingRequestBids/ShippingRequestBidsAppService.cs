@@ -446,6 +446,7 @@ namespace TACHYON.Shipping.ShippingRequestBids
             await _commissionManager.AddCommissionInfoAfterCarrierBid(shippingRequestBid);
             await _shippingRequestBidsRepository.InsertAndGetIdAsync(shippingRequestBid);
             shippingRequest.TotalBids += 1;
+            shippingRequest.Status = ShippingRequestStatus.NeedsAction;
             await CurrentUnitOfWork.SaveChangesAsync();
 
             await SendNotificationAfterBid(shippingRequest, shippingRequestBid,true);

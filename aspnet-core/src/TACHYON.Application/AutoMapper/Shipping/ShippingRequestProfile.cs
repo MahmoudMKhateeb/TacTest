@@ -24,7 +24,7 @@ namespace TACHYON.AutoMapper.Shipping
                 .ForMember(dest => dest.DriverName, opt => opt.MapFrom(src => src.AssignedDriverUserFk.Name))
                 .ForMember(dest => dest.GoodsCategoryName, opt => opt.MapFrom(src => src.GoodCategoryFk.DisplayName))
                 .ForMember(dest => dest.RoutTypeName, opt => opt.MapFrom(src => Enum.GetName(typeof(ShippingRequestRouteType), src.RouteTypeId)))
-                .ForMember(dest => dest.ShippingRequestStatusName, opt => opt.MapFrom(src => Enum.GetName(typeof(ShippingRequestStatus), src.Status)))
+                .ForMember(dest => dest.ShippingRequestStatusName, opt => opt.MapFrom(src => src.Status.GetEnumDescription()))
                 .ForMember(dest => dest.TruckTypeDisplayName, opt => opt.MapFrom(src => src.TrucksTypeFk.DisplayName))
                 .ForMember(dest => dest.TruckTypeFullName, opt => opt.Ignore())
                 .ForMember(dest => dest.CapacityDisplayName, opt => opt.MapFrom(src => src.CapacityFk.DisplayName))
