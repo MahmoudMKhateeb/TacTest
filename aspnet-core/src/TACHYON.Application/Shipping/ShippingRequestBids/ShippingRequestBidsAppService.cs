@@ -88,7 +88,7 @@ namespace TACHYON.Shipping.ShippingRequestBids
                 .Include(x => x.Tenant)
                 .Where(e => e.ShippingRequestId == input.ShippingRequestId)
                 .WhereIf(await IsEnabledAsync(AppFeatures.Shipper), x => x.ShippingRequestFk.TenantId == AbpSession.TenantId && !x.ShippingRequestFk.IsTachyonDeal)
-                .WhereIf(await IsEnabledAsync(AppFeatures.TachyonDealer), x => x.ShippingRequestFk.IsTachyonDeal)
+               // .WhereIf(await IsEnabledAsync(AppFeatures.TachyonDealer), x => x.ShippingRequestFk.IsTachyonDeal)
                 .WhereIf(input.MinPrice != null, e => e.price >= input.MinPrice)
                 .WhereIf(input.MaxPrice != null, e => e.price <= input.MaxPrice);
 
@@ -320,7 +320,7 @@ namespace TACHYON.Shipping.ShippingRequestBids
             }
         }
 
-        [RequiresFeature(AppFeatures.Carrier)]
+        [RequiresFeature(AppFeatures.Carrier, AppFeatures.Shipper, AppFeatures.TachyonDealer)]
         public  async Task<PagedResultDto<GetAllBidShippingRequestsForCarrierOutput>> GetAllBidShippingRequestsForCarrier(GetAllBidsShippingRequestForCarrierInput input)
         {
             DisableTenancyFilters();
@@ -328,9 +328,6 @@ namespace TACHYON.Shipping.ShippingRequestBids
                 IQueryable<ShippingRequest> filterBidShippingRequests = _shippingRequestsRepository.GetAll()
                     .Include(x => x.TrucksTypeFk)
                     .Include(x => x.GoodCategoryFk)
-                    /*.Include(x => x.ShippingRequestBids.Where(x=>x.TenantId==AbpSession.TenantId))*/
-                    /*.Include(x => x.ShippingRequestVases)
-                    .ThenInclude(x => x.VasFk)*/
                     .Include(x => x.OriginCityFk)
                     .ThenInclude(x=>x.CountyFk)
                     .Include(x => x.DestinationCityFk)
@@ -341,8 +338,8 @@ namespace TACHYON.Shipping.ShippingRequestBids
                     .WhereIf(input.TruckTypeId.HasValue, x => x.TrucksTypeId == input.TruckTypeId)
                     .WhereIf(input.TransportType.HasValue, x => x.TransportTypeId != null && x.TransportTypeId == input.TransportType)
                     .WhereIf(input.IsMyAssignedBidsOnly.HasValue && input.IsMyAssignedBidsOnly==true, x=>x.ShippingRequestBids.Any(y=>y.IsAccepted== true))
-                    //Filter
-                    .WhereIf(!string.IsNullOrWhiteSpace(input.Filter), x =>  x.CarrierTenantId==AbpSession.TenantId)
+                    .WhereIf(await IsEnabledAsync(AppFeatures.Shipper), x => x.TenantId == AbpSession.TenantId && !x.IsTachyonDeal)
+                    .WhereIf(await IsEnabledAsync(AppFeatures.Carrier), x =>  x.CarrierTenantId==AbpSession.TenantId)
 
                     //Get Shipping Requests that carrier bid to them only
                     .WhereIf(input.IsMyBidsOnly, x => x.ShippingRequestBids.Any(b => b.TenantId == AbpSession.TenantId));
@@ -368,27 +365,6 @@ namespace TACHYON.Shipping.ShippingRequestBids
                     .PageBy(input).ToListAsync();
 
           
-                //IEnumerable<GetAllBidShippingRequestsForCarrierOutput> shippingRequestBids = (await pagedAndFilteredBidShippingRequests.ToListAsync())
-                //    .Select( o  => new GetAllBidShippingRequestsForCarrierOutput
-                //    {
-                //        ShippingRequestId = o.Id,
-                //        BidStartDate = o.BidStartDate,
-                //        ShippingRequestBidStatusName =Enum.GetName(typeof(ShippingRequestBidStatus),o.BidStatus),
-                //        ShipperName = o.Tenant.Name,
-                //        TruckTypeDisplayName = o.TrucksTypeFk.DisplayName,
-                //        GoodCategoryName = o.GoodCategoryFk.DisplayName,
-                //        MyBidPrice = GetCarrirerPrice(o.Id).GetAwaiter().GetResult(),
-                //        MyBidId = o.ShippingRequestBids.FirstOrDefault()?.Id,
-                //        SourceCityName = o.OriginCityFk?.DisplayName,
-                //        DestinationCityName = o.DestinationCityFk?.DisplayName,
-                //        ShippingRequestVasesDto=o.ShippingRequestVases.Select(e=>new GetShippingRequestVasForViewDto
-                //        {
-                //            ShippingRequestVas =ObjectMapper.Map<ShippingRequestVasDto>(e),
-                //            VasName = e.VasFk.Name
-                //        }),
-                //        TotalWeight = o.TotalWeight,
-                //        NumberOfTrips = o.NumberOfTrips
-                //    });
 
             List<GetAllBidShippingRequestsForCarrierOutput> shippingRequestBids=new List<GetAllBidShippingRequestsForCarrierOutput>();
             pagedAndFilteredBidShippingRequests.ForEach(   o =>
@@ -398,7 +374,7 @@ namespace TACHYON.Shipping.ShippingRequestBids
                 {
                     ShippingRequestId = o.Id,
                     BidStartDate = o.BidStartDate,
-                    ShippingRequestBidStatusName = Enum.GetName(typeof(ShippingRequestBidStatus), o.BidStatus),
+                    ShippingRequestBidStatusName = o.BidStatus.GetEnumDescription(),
                     ShipperName = o.Tenant.Name,
                     TruckTypeDisplayName = o.TrucksTypeFk.DisplayName,
                     GoodCategoryName = o.GoodCategoryFk.DisplayName,
@@ -407,7 +383,9 @@ namespace TACHYON.Shipping.ShippingRequestBids
                     SourceCityName = o.OriginCityFk?.DisplayName,
                     DestinationCityName = o.DestinationCityFk?.DisplayName,
                     TotalWeight = o.TotalWeight,
-                    NumberOfTrips = o.NumberOfTrips
+                    NumberOfTrips = o.NumberOfTrips,
+                    IsTachyonDeal = o.IsTachyonDeal,
+                    TotalBids = o.TotalBids
                 });
             });
 
@@ -420,6 +398,7 @@ namespace TACHYON.Shipping.ShippingRequestBids
         }
         private ShippingRequestBid GetCarrirerBid(long ShippingRequestId)
         {
+            if (!IsEnabled(AppFeatures.Carrier)) return null;
             return  _shippingRequestBidsRepository.FirstOrDefault(x => x.TenantId == AbpSession.TenantId && x.ShippingRequestId == ShippingRequestId);
         }
    

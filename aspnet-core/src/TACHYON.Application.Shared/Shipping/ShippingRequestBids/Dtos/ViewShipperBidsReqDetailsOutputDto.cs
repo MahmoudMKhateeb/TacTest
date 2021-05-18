@@ -36,6 +36,8 @@ namespace TACHYON.Shipping.ShippingRequestBids.Dtos
         public string SourceCityName { get; set; }
         public string DestinationCityName { get; set; }
         public IEnumerable<GetShippingRequestVasForViewDto> ShippingRequestVasesDto { get; set; }
+        public bool IsTachyonDeal { get; set; }
+        public int TotalBids { get; set; }
 
 
     }
