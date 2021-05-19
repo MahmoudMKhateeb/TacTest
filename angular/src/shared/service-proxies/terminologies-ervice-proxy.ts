@@ -40,6 +40,7 @@ export class TerminologieServiceProxy {
   }
 
   Add(key: string): void {
+    return;
     if (key == '' || key == null || key === undefined) return;
     let PageUrl = this.router.url;
     if (_.findIndex(this.terminologie, (l) => l.Key === key && l.PageUrl === PageUrl) == -1) {
