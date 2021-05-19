@@ -1,11 +1,23 @@
 ﻿using Abp.AspNetCore.Mvc.Authorization;
 using Abp.AspNetZeroCore.Net;
+using Abp.Extensions;
+using Abp.IO.Extensions;
+using Abp.UI;
+using Abp.Web.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System;
+using System.Drawing;
+using System.Drawing.Imaging;
+using System.IO;
+using System.Linq;
 using System.Threading.Tasks;
 using TACHYON.Authorization.Users;
 using TACHYON.Authorization.Users.Profile;
+using TACHYON.Authorization.Users.Profile.Dto;
+using TACHYON.Dto;
 using TACHYON.Storage;
+using TACHYON.Web.Helpers;
 
 namespace TACHYON.Web.Controllers
 {
@@ -40,6 +52,60 @@ namespace TACHYON.Web.Controllers
             }
 
             return File(file.Bytes, MimeTypeNames.ImageJpeg);
+        }
+
+        [HttpPost]
+        [AbpMvcAuthorize()]
+        [Route("/api/services/app/profile/UploadMobileProfilePicture")]
+        public async Task<JsonResult> UploadMobileProfilePicture()
+        {
+            try
+            {
+                var profilePictureFile = Request.Form.Files.First();
+
+                //Check input
+                if (profilePictureFile == null)
+                {
+                    throw new UserFriendlyException(L("ProfilePicture_Change_Error"));
+                }
+
+                if (profilePictureFile.Length > MaxProfilePictureSize)
+                {
+                    throw new UserFriendlyException(L("ProfilePicture_Warn_SizeLimit", AppConsts.MaxProfilPictureBytesUserFriendlyValue));
+                }
+
+                byte[] fileBytes;
+                using (var stream = profilePictureFile.OpenReadStream())
+                {
+                    fileBytes = stream.GetAllBytes();
+                }
+
+                if (!ImageFormatHelper.GetRawImageFormat(fileBytes).IsIn(ImageFormat.Jpeg, ImageFormat.Png, ImageFormat.Gif))
+                {
+                    throw new Exception(L("IncorrectImageFormat"));
+                }
+
+                FileDto input = new FileDto(System.IO.Path.GetFileName(profilePictureFile.FileName), profilePictureFile.ContentType);
+                _tempFileCacheManager.SetFile(input.FileToken, fileBytes);
+
+
+                var user = await _userManager.GetUserByIdAsync(AbpSession.UserId.Value);
+
+                if (user.ProfilePictureId.HasValue)
+                {
+                    await _binaryObjectManager.DeleteAsync(user.ProfilePictureId.Value);
+                }
+
+                var storedFile = new BinaryObject(AbpSession.TenantId, fileBytes);
+                await _binaryObjectManager.SaveAsync(storedFile);
+                user.ProfilePictureId = storedFile.Id;
+
+                return Json(new AjaxResponse(new { }));
+            }
+            catch (UserFriendlyException ex)
+            {
+                return Json(new AjaxResponse(new ErrorInfo(ex.Message)));
+            }
         }
     }
 }
