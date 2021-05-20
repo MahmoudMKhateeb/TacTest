@@ -127,6 +127,7 @@
     <text name="Cancel">إلغاء</text>
     <text name="Canceled Date">تاريخ الإلغاء</text>
     <text name="CanceledDate">تاريخ الإلغاء</text>
+    <text name="Cancled">ملغي</text>
     <text name="CancledReason">سبب اللإلغاء</text>
     <text name="CanNotEditOrDeleteDefaultLanguages">لا يمكن تعديل أو حذف اللغات الافتراضية. يمكنك فقط تعديل أو حذف اللغات التي قمت بإضافتها. ولكن يمكنك تغيير نصوص جميع اللغات</text>
     <text name="CanNotUpgradeSubscriptionSinceTenantHasNoEditionAssigned">لا يمكن ترقية الاشتراك لأن العميل لم يعين نسخة.</text>
@@ -208,6 +209,7 @@
     <text name="CompanyInformation">معلومات الشركة</text>
     <text name="CompanyName">شركة</text>
     <text name="CompanyUniqueName">اسم الشركة</text>
+    <text name="Completed">مكتمل</text>
     <text name="ConfirmationMailSentPleaseClickLinkInTheEmail">تم إرسال تأكيد البريد الإلكتروني إلى  {0} الرجاء الضغط على الرابط في الرسالة لتأكيد بريدك الإلكتروني</text>
     <text name="ConsumerKey">مفتاح المستهلك</text>
     <text name="ConsumerSecret">سر المستهلك</text>
@@ -598,6 +600,7 @@
     <text name="ExperienceField">مجال الخبرة</text>
     <text name="ExpirationAlertDays">عدد أيام التنبيه قبل إنتهاء الصلاحية</text>
     <text name="ExpirationDate">تاريخ إنتهاء الصلاحية</text>
+    <text name="Expired">منتهي</text>
     <text name="ExpiresAt">تنتهي في {0}</text>
     <text name="ExpiringEdition">نوع الاشتراك المنتهي</text>
     <text name="ExpiringEditionMustBeAFreeEdition">يجب أن تكون النسخة التي تنتهي صلاحيتها نسخة مجانية</text>
@@ -861,6 +864,7 @@
     <text name="NationalityName">الجنسية</text>
     <text name="NationalityTranslation">ترجمة الجنسية</text>
     <text name="NationalityTranslations">ترجمة الجنسيات</text>
+    <text name="NeedsAction">بانتظار قرار</text>
     <text name="NeedToSelectDropPoint">يجب عليك اختيار نقطة تنزيل</text>
     <text name="New">جديد</text>
     <text name="NewCapacity">حمولة جديدة</text>
@@ -1067,6 +1071,8 @@
     <text name="Ports">الموانئ</text>
     <text name="PostedData">البيانات المنشورة</text>
     <text name="PostedValue">القيمة المنشورة</text>
+    <text name="PostPrice">معتمد</text>
+    <text name="PrePrice">جديد</text>
     <text name="Previous">السابق</text>
     <text name="Price">سعر</text>
     <text name="Pricing">التسعير</text>
@@ -1190,7 +1196,6 @@
     <text name="SelectAShippingType">اختر نوع الشحن</text>
     <text name="SelectATheme">اختر تصميم</text>
     <text name="SelectaTransportType">إختر نوع نقل</text>
-    <text name="SelectATransportType">إختر نوع نقل</text>
     <text name="SelectaTruckType">اختر نوع الشاحنة</text>
     <text name="SelectAUnitOfMeasure">اختر وحدة القياس</text>
     <text name="SelectAUser">إختر مستخدم</text>
@@ -1203,6 +1208,7 @@
     <text name="SelectTrucksTypeToOpenCapacity">إختر نوع الشحن ليتم فتح قائمة أنواع الشاحنات</text>
     <text name="SelectTwoFactorProvider">اختر مزود التوثيق ذو العاملين</text>
     <text name="SelectUsers">حدد المستخدمين</text>
+    <text name="SelectVASs">إختر الخدمة/ات الإضافية</text>
     <text name="SelfTenantRegistrationIsDisabledMessage_Detail">تم تعطيل خاصية التسجيل الذاتي للشركات يرجى الاتصال بمسؤول النظام للتسجيل</text>
     <text name="SelfUserDelegationErrorMessage">لا يمكنك تفويض نفسك!</text>
     <text name="SelfUserRegistrationIsDisabledMessage">لايمكنك التسجيل بالمنصة</text>

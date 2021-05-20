@@ -8,17 +8,17 @@ namespace TACHYON.Shipping.ShippingRequests
     public enum ShippingRequestStatus : byte
     {
         [Description("New")]
-        PrePrice,
+        PrePrice = 0,
         [Description("Confiremed")]
-        PostPrice,
+        PostPrice = 1,
         [Description("NeedsAction")]
-        NeedsAction ,//carriers send price
+        NeedsAction = 2,//carriers send price and waiting for response
         [Description("Expired")]
-        Expired,
+        Expired = 3,
         [Description("Cancled")]
-        Cancled,
+        Cancled = 4,
         [Description("Completed")]
-        Completed
+        Completed = 5
 
     }
 }

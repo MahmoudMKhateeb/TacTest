@@ -142,6 +142,7 @@ namespace TACHYON.Shipping.ShippingRequestBids
             using (CurrentUnitOfWork.DisableFilter(AbpDataFilters.MustHaveTenant))
             {
                  item = await _shippingRequestsRepository.GetAll()
+                    .Include(x=>x.ShippingRequestBids)
                .Where(x => x.BidStatus == ShippingRequestBidStatus.OnGoing)
                .FirstOrDefaultAsync(x => x.Id == input.ShippingRequestId);
             }
@@ -155,6 +156,10 @@ namespace TACHYON.Shipping.ShippingRequestBids
 
             if (input.Id == null)
             {
+                if (!item.IsTachyonDeal && item.ShippingRequestBids.Count()==0)
+                {
+                    item.Status = ShippingRequestStatus.NeedsAction;
+                }
                 return await Create(input,item);
             }
 

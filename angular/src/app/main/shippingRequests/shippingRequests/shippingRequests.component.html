@@ -201,7 +201,7 @@
                     </td>
                     <td style="width: 150px;">
                       <span class="ui-column-title"> {{ l('ShippingRequestStatusName') }}</span>
-                      {{ record.statusTitle }}
+                      {{ l(record.statusTitle) }}
                     </td>
 
                     <td *ngIf="feature.isEnabled('App.Shipper')" style="width: 150px;">
