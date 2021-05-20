@@ -88,6 +88,7 @@ namespace TACHYON.TachyonPriceOffers
 
             if (Offer == null)
             {
+                Request.Status = ShippingRequestStatus.NeedsAction;
                 await Create(input, Request);
             }
             else
