@@ -21,10 +21,10 @@ namespace TACHYON.Web.Controllers
 {
     public abstract class ProfileControllerBase : TACHYONControllerBase
     {
-        private readonly ITempFileCacheManager _tempFileCacheManager;
+        public readonly ITempFileCacheManager _tempFileCacheManager;
         private readonly IProfileAppService _profileAppService;
 
-        private const int MaxProfilePictureSize = 5242880; //5MB
+        public const int MaxProfilePictureSize = 5242880; //5MB
 
         protected ProfileControllerBase(
             ITempFileCacheManager tempFileCacheManager,
@@ -82,6 +82,7 @@ namespace TACHYON.Web.Controllers
             }
         }
 
+   
         [AllowAnonymous]
         public FileResult GetDefaultProfilePicture()
         {
