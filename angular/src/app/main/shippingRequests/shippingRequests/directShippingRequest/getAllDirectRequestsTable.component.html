@@ -101,7 +101,7 @@
                   class="btn-group dropdown"
                   dropdown
                   container="body"
-                  *ngIf="(feature.isEnabled('App.Carrier') && record.status === 0) || feature.isEnabled('App.TachyonDealer')"
+                  *ngIf="(feature.isEnabled('App.Carrier') && record.status === 0) || (feature.isEnabled('App.TachyonDealer') && record.status != 0)"
                 >
                   <div class="row ml-1">
                     <button class="dropdown-toggle btn btn-sm btn-primary" dropdownToggle>
