@@ -82,12 +82,13 @@ export class WayPointsComponent extends AppComponentBase implements OnInit, OnCh
       numberOfDrops: 3,
     },
     multiDrops: {
-      allowedPoints: this.NumberOfDrops + 1 || 20,
+      allowedPoints: this.NumberOfDrops + 1,
       numberOfPickUps: 1,
-      numberOfDrops: this.NumberOfDrops || 15,
+      numberOfDrops: this.NumberOfDrops,
     },
   };
-  activeValidator = this.wayPointValidationSets.singlePoint;
+  //TODO : to change this line when twoWay Type Become Active
+  activeValidator = this.RouteType == 1 ? this.wayPointValidationSets.singlePoint : this.wayPointValidationSets.multiDrops;
   sourceTripFacilityId: number;
   desTripFacilityId: number;
   ngOnInit() {
@@ -105,6 +106,9 @@ export class WayPointsComponent extends AppComponentBase implements OnInit, OnCh
       this.wayPointsList.length = 0;
     }
     //in case of single Drop allow only 2 points
+    // setInterval((_) => {
+    //   return console.log(this.activeValidator, this.RouteType, this.NumberOfDrops);
+    // }, 1000);
     if (this.RouteType == 1) {
       this.activeValidator = this.wayPointValidationSets.singlePoint;
     } else if (this.RouteType == 2) {

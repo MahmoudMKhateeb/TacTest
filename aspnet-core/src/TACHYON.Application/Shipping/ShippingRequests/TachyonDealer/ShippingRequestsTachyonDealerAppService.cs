@@ -80,7 +80,11 @@ namespace TACHYON.Shipping.ShippingRequests.TachyonDealer
 
             if (await _CarrierDirectPricingRepository.GetAll().AnyAsync(x => x.CarrirerTenantId == Input.TenantId && x.RequestId == Input.Id))
                 throw new UserFriendlyException(L("YouAlreadyAddThisCarrrierToThisShipping"));
-            shippingRequest.CarrierPriceType = CarrierPriceType.TachyonDirectRequest;
+            //shippingRequest.CarrierPriceType = CarrierPriceType.TachyonDirectRequest;
+            if (!shippingRequest.IsTachyonDeal)
+            {
+                shippingRequest.Status = ShippingRequestStatus.NeedsAction;
+            }
             await _CarrierDirectPricingRepository.InsertAsync(new ShippingRequestsCarrierDirectPricing(AbpSession.TenantId.Value, shippingRequest.Id,AbpSession.UserId.Value, Input.TenantId));
             await _appNotifier.SendDriectRequestForCarrier(Input.TenantId, shippingRequest);
         }
