@@ -9,7 +9,7 @@ import { LoginService } from './login/login.service';
 
 @Component({
   templateUrl: './account.component.html',
-  styleUrls: ['./account.component.less'],
+  styleUrls: ['./account.component.css'],
   encapsulation: ViewEncapsulation.None,
 })
 export class AccountComponent extends AppComponentBase implements OnInit {
