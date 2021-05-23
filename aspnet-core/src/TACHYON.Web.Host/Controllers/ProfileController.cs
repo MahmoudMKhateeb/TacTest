@@ -74,19 +74,17 @@ namespace TACHYON.Web.Controllers
                     throw new UserFriendlyException(L("ProfilePicture_Warn_SizeLimit", AppConsts.MaxProfilPictureBytesUserFriendlyValue));
                 }
 
+                var extarr = new string[] { ".jpeg", ".jpg", ".png" };
+                var ext = System.IO.Path.GetExtension(profilePictureFile.FileName).ToLower();
+                if (!extarr.Contains(ext))
+                {
+                    throw new Exception(L("IncorrectImageFormat"));
+                }
                 byte[] fileBytes;
                 using (var stream = profilePictureFile.OpenReadStream())
                 {
                     fileBytes = stream.GetAllBytes();
                 }
-
-                if (!ImageFormatHelper.GetRawImageFormat(fileBytes).IsIn(ImageFormat.Jpeg, ImageFormat.Png, ImageFormat.Gif))
-                {
-                    throw new Exception(L("IncorrectImageFormat"));
-                }
-
-                FileDto input = new FileDto(System.IO.Path.GetFileName(profilePictureFile.FileName), profilePictureFile.ContentType);
-                _tempFileCacheManager.SetFile(input.FileToken, fileBytes);
 
 
                 var user = await _userManager.GetUserByIdAsync(AbpSession.UserId.Value);
