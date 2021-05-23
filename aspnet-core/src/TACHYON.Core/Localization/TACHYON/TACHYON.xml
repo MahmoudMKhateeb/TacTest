@@ -69,7 +69,7 @@
     <text name="AdminSurname">Admin surname</text>
     <text name="AdminUserAccountInfo">Admin user Account info</text>
     <text name="Adress">Address</text>
-    <text name="AlertDaysBeforExpiration">Alert days befor expiration</text>
+    <text name="AlertDaysBeforExpiration">Alert days before expiration</text>
     <text name="All">All</text>
     <text name="AllBidsOnShippingRequest">All bids on shipping request</text>
     <text name="AllCachesSuccessfullyCleared">All caches successfully cleared.</text>
@@ -157,6 +157,7 @@
     <text name="CanceledDate">Canceled Date</text>
     <text name="CancelMyBid">Cancel my bid</text>
     <text name="CancelTrip">Cancel trip</text>
+    <text name="Cancled">Cancled</text>
     <text name="CancledReason">Cancelled reason</text>
     <text name="CanNotChangeAdminUserName">Can not change admin user name</text>
     <text name="CanNotEditOrDeleteDefaultLanguages">Can not edit or delete default languages. You can only edit or delete the languages you added. But you can change texts of all languages.</text>
@@ -246,11 +247,13 @@
     <text name="CompanyInformation">Company Information</text>
     <text name="CompanyName">Company</text>
     <text name="CompanyUniqueName">Company name</text>
+    <text name="Completed">completed</text>
     <text name="Confirm">Confirm</text>
     <text name="ConfirmationMailSentPleaseClickLinkInTheEmail">A confirmation e-mail sent to {0}. Please click link in the email in order to confirm your mail address.</text>
     <text name="ConsumerKey">Consumer Key</text>
     <text name="ConsumerSecret">Consumer Secret</text>
     <text name="Content">Content</text>
+    <text name="Contracts">Contracts</text>
     <text name="CookieConsent">Cookie consent</text>
     <text name="CookieConsent_Dismiss">Got it!</text>
     <text name="CookieConsent_Message">This website uses cookies to ensure you get the best experience on our website.</text>
@@ -607,6 +610,7 @@
     <text name="EditShippingRequest">Edit shipping request</text>
     <text name="EditShippingRequestStatus">Edit shipping request status</text>
     <text name="EditShippingRequestVas">Edit shipping request VAS</text>
+    <text name="EditShippingType">Edit shipping type</text>
     <text name="EditTenant">Edit company information</text>
     <text name="EditTermAndConditionTranslation">Edit terms and conditions translation</text>
     <text name="EditText">Edit text</text>
@@ -653,6 +657,7 @@
     <text name="EndTripDate">End trip date</text>
     <text name="EnglishLettersOnly">English letters only</text>
     <text name="Enter">Enter</text>
+    <text name="EnterCapacity">Enter capacity</text>
     <text name="EnterNumberOfPacking">Enter the QTY of packing type</text>
     <text name="EnterNumberOfTrips">Enter number of trips</text>
     <text name="EnterPackingType">Enter packing type</text>
@@ -861,6 +866,7 @@
     <text name="IsReefer">Is reefer</text>
     <text name="IsRejected">Is Rejected</text>
     <text name="IsRequired">is Required</text>
+    <text name="IsResolve">Is resolve</text>
     <text name="IsRollDoor">Is roll door</text>
     <text name="IsSessionTimeOutEnabled">Session timeout control enabled</text>
     <text name="IsSmsVerificationEnabled">Enable SMS verification.</text>
@@ -994,6 +1000,7 @@
     <text name="NationalityTranslation">Nationality translation</text>
     <text name="NationalityTranslations">Nationalities translation</text>
     <text name="NationalityTranslationsHeaderInfo">Nationality Translations header info</text>
+    <text name="NeedsAction">Needs action</text>
     <text name="NeedToSelectDropPoint">You need to select drop off point</text>
     <text name="New">New</text>
     <text name="NewCapacity">New capacity</text>
@@ -1248,6 +1255,8 @@
     <text name="PortsHeaderInfo">Ports header info</text>
     <text name="PostedData">Posted data</text>
     <text name="PostedValue">Posted value</text>
+    <text name="PostPrice">Confirmed</text>
+    <text name="PrePrice">New</text>
     <text name="Previous">Previous</text>
     <text name="Price">Price</text>
     <text name="PriceOffers">Price offers</text>
@@ -1384,7 +1393,6 @@
     <text name="SelectaDriver">Selecta driver</text>
     <text name="SelectADynamicParameter">Select A DynamicParameter</text>
     <text name="SelectaFacility">Select facility</text>
-    <text name="SelectaGoodCategory">Select a Good Category</text>
     <text name="SelectAGoodCategory">Select good category</text>
     <text name="SelectAGoodSubCategory">Select good sub category</text>
     <text name="SelectAnEntity">Select an entity</text>
@@ -1399,8 +1407,8 @@
     <text name="SelectATermAndCondition">Select aTerm and condition</text>
     <text name="SelectATheme">Select a Theme</text>
     <text name="SelectaTransportType">Select a transport type</text>
-    <text name="SelectATransportType">Select a Transport Type</text>
     <text name="Selectatruck">Selectatruck</text>
+    <text name="SelectATrucksType">Select aTrucks type</text>
     <text name="SelectaTruckType">Select a truck type</text>
     <text name="SelectAUnitOfMeasure">Select UOM</text>
     <text name="SelectAUser">Select a user</text>
@@ -1417,6 +1425,7 @@
     <text name="SelectTruckTypeByTransportSubtype">Select truck type by transport subtype</text>
     <text name="SelectTwoFactorProvider">Select two factor authentication provider</text>
     <text name="SelectUsers">Select users</text>
+    <text name="SelectVASs">Select VAS (s)</text>
     <text name="SelfTenantRegistrationIsDisabledMessage_Detail">Self company registration is disabled. Please contact the system administrator to register.</text>
     <text name="SelfUserDelegationErrorMessage">You can't delegate authorization to yourself !</text>
     <text name="SelfUserRegistrationIsDisabledMessage">You can not register to the system!</text>
@@ -1442,6 +1451,7 @@
     <text name="SessionExpireRedirectingInXSecond">Your session will expire because you have been inactive for a long time. Provide any mouse/keyboard input on the site to stop session termination. Redirecting in {0}sec.</text>
     <text name="SessionTimeOut">Session timeout control</text>
     <text name="SessionTimeOutSecond">Timeout Second.</text>
+    <text name="SetActiveForEdition">Set active for edition</text>
     <text name="SetAllAsRead">Set all as read</text>
     <text name="SetAsDefaultLanguage">Set as default language</text>
     <text name="SetAsRead">set as read</text>
@@ -1450,6 +1460,7 @@
     <text name="Settings">Settings</text>
     <text name="SettingsHeaderInfo">Show and change application settings.</text>
     <text name="Severity">Severity</text>
+    <text name="ShipmentTracking">Shipment tracking</text>
     <text name="Shipper">Shipper</text>
     <text name="ShipperName">Shipper name</text>
     <text name="ShipperNotfiyWhenCreditLimitGreaterOrEqualXPercentage">You have used more than 70% of your credit limit</text>
@@ -1506,7 +1517,7 @@
     <text name="SingleDrop">Single drop</text>
     <text name="Sms">SMS</text>
     <text name="SMSOTP">Your one-time password is
-code:{}</text>
+code:{0}</text>
     <text name="SmsSecurityCodeMessage">Your security code is: {0}</text>
     <text name="SMSSettings">SMS Settings</text>
     <text name="SmsVerificationEnabled">Phone number verification enabled (via SMS)</text>
@@ -1711,6 +1722,7 @@ code:{}</text>
     <text name="TheNameOfTheCompanyInTheCR">The name of the company in the CR.</text>
     <text name="TheNumberLengthMustBeLessThanMaxDigits">The Number Length Must Be Less Than MaxDigits</text>
     <text name="TheNumberLengthMustBeMoreThanMinDigits">The Number Length Must Be More Than MinDigits</text>
+    <text name="ThePriceMustBeGreaterThanZero">The price must be greater than zero</text>
     <text name="ThereAreNoNotifications">There are no notifications.</text>
     <text name="ThereAreTenantsSubscribedToThisEdition">There are companies subscribed to this subscription type. Please assign a different subscription type to them and then delete this subscription type.</text>
     <text name="ThereIsNoActiveUserDelegationBetweenYourUserAndCurrentUser">There is no active user delegation between your user and current user !</text>
@@ -1720,6 +1732,7 @@ code:{}</text>
     <text name="ThereIsNoSuchImageFileWithGivenToken">There is no image with given token</text>
     <text name="ThereIsNoTenantDefinedWithName{0}">There is no company defined with name {0}</text>
     <text name="ThereIsNoViewConfigurationForX">There is no view configuration for {0}</text>
+    <text name="TheShippingIsNotFound">The shipping is not found</text>
     <text name="ThisEditionIsUsedAsAnExpiringEdition">This edition is used as an expiring edition for another edition(s). If you want to make this edition paid, you should first remove it from other edition's.</text>
     <text name="ThisFieldIsRequired">This field is required.</text>
     <text name="ThisInvoiceIsNotYours">This invoice is not yours!</text>
@@ -1906,7 +1919,6 @@ code:{}</text>
     <text name="UnlockedTenandAdmin">Unlocked admin user for {0}</text>
     <text name="UnlockedTheUser">Unlocked the user {0}</text>
     <text name="Unpaid">Unpaid</text>
-    <text name="UnPaid">Un Paid</text>
     <text name="Unread">Unread</text>
     <text name="Update">Update</text>
     <text name="UpdatedSuccessfully">Updated successfully</text>
@@ -2053,6 +2065,7 @@ code:{}</text>
     <text name="Yes">Yes</text>
     <text name="Yesterday">Yesterday</text>
     <text name="You">You</text>
+    <text name="YouAlreadyAddPricingForThisShipping">You already add pricing for this shipping</text>
     <text name="YouAlreadySentAFriendshipRequestToThisUser">You already added this user</text>
     <text name="YouAreAlreadyLoggedInWithUser">You are already logged in with user</text>
     <text name="YouAreNotAuthorizedToPerformThisOperation">You are not authorized to perform this operation.</text>
@@ -2079,6 +2092,7 @@ code:{}</text>
     <text name="YourPaymentHasBeenCompleted">Your payment has been completed.</text>
     <text name="YourPhoneNumberIsNotVerified">Your mobile number is not verified</text>
     <text name="YourPhoneNumberIsVerified">Your mobile number is verified</text>
+    <text name="YourPriceAlreadyAcceptedYouCanEdit">Your price already accepted you can edit</text>
     <text name="YourSessionIsAboutToExpire">Your session is about to expire</text>
     <text name="YourSessionIsLocked">Your session is locked</text>
     <text name="جاري الحفظ...">جاري الحفظ...</text>
