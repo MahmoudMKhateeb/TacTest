@@ -183,6 +183,8 @@ import { UpdatePriceShippingRequestModalComponent } from './shippingRequests/shi
 import { AdminModule } from '@app/admin/admin.module';
 
 import { MarketplaceComponent } from '@app/main/marketPlace/marketPlace/marketPlace/marketplace.component';
+import { MarketPlaceListComponent } from '@app/main/marketplaces/marketPlacelist.component';
+
 import { ViewShippingRequestDetailsComponent } from '@app/main/marketPlace/marketPlace/ViewShippingRequestDetailsModal/ViewShippingRequestDetails.component';
 import { ViewAllCarrierBidsComponent } from '@app/main/marketPlace/marketPlace/ViewAllCarrierBidsModal/ViewAllCarrierBids.component';
 import { RejectionReasonModalComponent } from './documentFiles/documentFiles/rejectionReason-modal.component';
@@ -388,6 +390,7 @@ NgxBootstrapDatePickerConfigService.registerNgxBootstrapDatePickerLocales();
     DashboardComponent,
     UpdatePriceShippingRequestModalComponent,
     MarketplaceComponent,
+    MarketPlaceListComponent,
     ViewShippingRequestDetailsComponent,
     ViewAllCarrierBidsComponent,
     InvoicePeriodsListComponent,

@@ -223,6 +223,18 @@ namespace TACHYON.Shipping.ShippingRequests
             shippingRequestAmount.MinCommissionValueSetting = Convert.ToDecimal(_featureChecker.GetValue(request.TenantId, AppFeatures.TachyonDealerMinValueCommission));
 
         }
+
+        public void ShippingRequestPricingCalculate(ShippingRequestPricing shippingRequestPricing, ShippingRequest request)
+        {
+            if (request.IsTachyonDeal)
+            {
+
+            }
+            else
+            {
+
+            }
+        }
         private async Task<ShippingRequest> GetShippingRequest(long id)
         {
             using (CurrentUnitOfWork.DisableFilter(AbpDataFilters.MustHaveTenant))

@@ -157,6 +157,7 @@ namespace TACHYON.EntityFrameworkCore
         public virtual DbSet<DocumentType> DocumentTypes { get; set; }
 
         public virtual DbSet<ShippingRequest> ShippingRequests { get; set; }
+        public DbSet<ShippingRequestPricing> ShippingRequestPricings { get; set; }
 
         public virtual DbSet<GoodsDetail> GoodsDetails { get; set; }
 
