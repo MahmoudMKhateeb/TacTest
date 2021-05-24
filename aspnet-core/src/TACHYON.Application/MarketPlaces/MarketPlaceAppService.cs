@@ -78,7 +78,7 @@ namespace TACHYON.MarketPlaces
         public async Task CreateOrEdit(CreateOrEditMarketPlaceBidInput Input)
         {
             DisableTenancyFilters();
-            var shippingRequest = await _shippingRequestsRepository.FirstOrDefaultAsync(r=>r.Id== Input.Id && r.BidStatus == ShippingRequestBidStatus.OnGoing);
+            var shippingRequest = await _shippingRequestsRepository.FirstOrDefaultAsync(r=>r.Id== Input.ShippingRequestId && r.BidStatus == ShippingRequestBidStatus.OnGoing);
            if (shippingRequest==null) throw new UserFriendlyException(L("The Bid must be Ongoing message"));
            if (Input.IsNew)
             {

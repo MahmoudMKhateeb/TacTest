@@ -4,8 +4,9 @@ using System.ComponentModel.DataAnnotations;
 
 namespace TACHYON.MarketPlaces.Dto
 {
-    public class CreateOrEditMarketPlaceBidInput : EntityDto<long>, ICustomValidate
+    public class CreateOrEditMarketPlaceBidInput : ICustomValidate
     {
+        public long ShippingRequestId { get; set; }
         public bool IsNew { get; set; }
         public decimal TripPrice { get; set; }
 

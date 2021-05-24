@@ -14,6 +14,7 @@ namespace TACHYON.Shipping.ShippingRequests
     [Table("ShippingRequestPricings")]
     public class ShippingRequestPricing : FullAuditedEntity<long>, IMustHaveTenant
     {
+        public long? PricingNumber { get; set; }
         public long? ParentId { get; set; }
         [ForeignKey(nameof(ParentId))]
         public ShippingRequestPricing ShippingRequestPricingFK { get; set; }

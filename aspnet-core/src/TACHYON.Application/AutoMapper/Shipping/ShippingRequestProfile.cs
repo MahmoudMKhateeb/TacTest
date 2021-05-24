@@ -36,8 +36,7 @@ namespace TACHYON.AutoMapper.Shipping
                 .AfterMap(AssignTruckTypeFullName);
 
                 CreateMap<ShippingRequestPricing, ShippingRequestCarrierPricingDto>();
-                CreateMap<CreateOrEditMarketPlaceBidInput, ShippingRequestPricing>()
-                .ForMember(dest => dest.ShippingRequestId, opt => opt.MapFrom(src => src.Id));
+              CreateMap<CreateOrEditMarketPlaceBidInput, ShippingRequestPricing>();
 
         }
 
