@@ -1755,6 +1755,8 @@ code:{0}</text>
     <text name="TimeZoneSettingChangedRefreshPageNotification">Time zone setting changed. Click OK button to refresh page and changes to take effect.</text>
     <text name="Title">Title</text>
     <text name="TitleLogin">To Sign in , what is your mobile phone number </text>
+    <text name="TitleOTP">Enter the 4-digit code we send to mobile Number to verify your Acoount 
+</text>
     <text name="TMS">Transport management system</text>
     <text name="TMSSettings">TMS Settings</text>
     <text name="Today">Today</text>
