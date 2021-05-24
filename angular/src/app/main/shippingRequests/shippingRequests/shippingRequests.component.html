@@ -155,12 +155,12 @@
                       <p-sortIcon field="id"></p-sortIcon>
                     </th>
                     <th pSortableColumn="status" style="width: 150px;">
-                      {{ l('ShippingRequestStatus') }}
+                      {{ l('RequestStatus') }}
                       <p-sortIcon field="status"></p-sortIcon>
                     </th>
 
                     <th pSortableColumn="isBid" *ngIf="feature.isEnabled('App.Shipper')" style="width: 150px;">
-                      {{ l('ShippingRequestType') }}
+                      {{ l('RequestType') }}
                       <p-sortIcon field="isBid"></p-sortIcon>
                     </th>
 
@@ -185,7 +185,7 @@
                       pSortableColumn="totalBidsCount"
                       style="width: 150px;"
                     >
-                      {{ l('TotalBidsCount') }}
+                      {{ l('TotalBids') }}
                       <p-sortIcon field="totalBidsCount"></p-sortIcon>
                     </th>
                     <th [hidden]="!isGrantedAny('Pages.ShippingRequests.Edit', 'Pages.ShippingRequests.Delete')" style="width: 130px;">
