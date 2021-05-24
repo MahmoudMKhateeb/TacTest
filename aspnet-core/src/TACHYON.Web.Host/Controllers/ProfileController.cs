@@ -22,6 +22,7 @@ using TACHYON.Web.Helpers;
 namespace TACHYON.Web.Controllers
 {
     [Authorize]
+  
     public class ProfileController : ProfileControllerBase
     {
         private readonly IBinaryObjectManager _binaryObjectManager;
@@ -56,7 +57,6 @@ namespace TACHYON.Web.Controllers
 
         [HttpPost]
         [AbpMvcAuthorize()]
-        [Route("/api/services/app/profile/UploadMobileProfilePicture")]
         public async Task<JsonResult> UploadMobileProfilePicture()
         {
             try
