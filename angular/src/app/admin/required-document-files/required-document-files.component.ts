@@ -94,12 +94,13 @@ export class RequiredDocumentFilesComponent extends AppComponentBase {
       if (result.length > 0) {
         this.isFormSubmitted = true;
         this.submittedDocumentsList = result;
-        // let isAccepted = this.submittedDocumentsList.every((x) =>
-        //   x.isAccepted === true && x.expirationDate === undefined ? true : x.expirationDate >= abp.clock.now()
-        // );
-        // if (isAccepted) {
-        //   this._router.navigate(['app/main/dashboard']);
-        // }
+
+        let isAccepted = this.submittedDocumentsList.every((x) =>
+          x.isAccepted === true && x.expirationDate === undefined ? true : x.expirationDate >= moment(abp.clock.now())
+        );
+        if (isAccepted) {
+          this._router.navigate(['app/main/dashboard']);
+        }
       } else {
         this.isFormSubmitted = false;
         this.submittedDocumentsList = [];
