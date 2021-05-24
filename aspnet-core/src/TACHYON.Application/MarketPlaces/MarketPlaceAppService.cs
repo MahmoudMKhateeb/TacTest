@@ -16,6 +16,7 @@ using Abp.Authorization;
 using TACHYON.Authorization;
 using Abp.Application.Features;
 using Abp.UI;
+using Abp.Configuration;
 
 namespace TACHYON.MarketPlaces
 {
@@ -24,16 +25,19 @@ namespace TACHYON.MarketPlaces
     {
         private IRepository<ShippingRequest, long> _shippingRequestsRepository;
         private IRepository<ShippingRequestPricing, long> _shippingRequestPricingRepository;
-        private CommissionManager _commissionManager;
+        private readonly IFeatureChecker _featureChecker;
+        private readonly ISettingManager _settingManager;
 
         public MarketPlaceAppService(
             IRepository<ShippingRequest, long> shippingRequestsRepository,
             IRepository<ShippingRequestPricing, long> shippingRequestPricingRepository,
-            CommissionManager commissionManager)
+            IFeatureChecker featureChecker,
+            ISettingManager settingManager)
         {
             _shippingRequestsRepository = shippingRequestsRepository;
             _shippingRequestPricingRepository = shippingRequestPricingRepository;
-            _commissionManager = commissionManager;
+            _featureChecker = featureChecker;
+            _settingManager = settingManager;
         }
         [RequiresFeature(AppFeatures.Shipper, AppFeatures.TachyonDealer, AppFeatures.Carrier)]
         public async Task<PagedResultDto<MarketPlaceListDto>> GetAll(GetAllMarketPlaceInput Input)
@@ -57,9 +61,9 @@ namespace TACHYON.MarketPlaces
 
             if (await IsEnabledAsync(AppFeatures.Carrier))
             {
-                marketPlaceListDto.ForEach( async x =>
+                marketPlaceListDto.ForEach(  x =>
                 {
-                    x.CarrierPricing =ObjectMapper.Map<ShippingRequestCarrierPricingDto>(await GetCarrierPricingOrNull(x.Id)) ;
+                    x.CarrierPricing =ObjectMapper.Map<ShippingRequestCarrierPricingDto>( GetCarrierPricingOrNull(x.Id)) ;
                 });
             }
             var totalCount = await query.CountAsync();
@@ -98,24 +102,31 @@ namespace TACHYON.MarketPlaces
         /// </summary>
         /// <param name="requestId"></param>
         /// <returns></returns>
-        private async Task<ShippingRequestPricing> GetCarrierPricingOrNull(long requestId)
+        private ShippingRequestPricing GetCarrierPricingOrNull(long requestId)
         {
-            return await _shippingRequestPricingRepository.FirstOrDefaultAsync(x => x.ShippingRequestId == requestId && x.TenantId == AbpSession.TenantId.Value);
+            return  _shippingRequestPricingRepository.FirstOrDefault(x => x.ShippingRequestId == requestId && x.TenantId == AbpSession.TenantId.Value);
         }
 
         private async Task Create(CreateOrEditMarketPlaceBidInput Input, ShippingRequest shippingRequest)
         {
-            var Pricing = await GetCarrierPricingOrNull(shippingRequest.Id);
+            var Pricing =  GetCarrierPricingOrNull(shippingRequest.Id);
             if (Pricing !=null) throw new UserFriendlyException(L("YouAlreadyAddPricingForThisShipping"));
 
              Pricing=ObjectMapper.Map<ShippingRequestPricing>(Input);
+             Pricing.Channel = ShippingRequestPricingChannel.MarketPlace;
+             Pricing.Calculate(_featureChecker, _settingManager, shippingRequest);
+           await _shippingRequestPricingRepository.InsertAsync(Pricing);
 
         }
-        private async Task Update(CreateOrEditMarketPlaceBidInput Input, ShippingRequest shippingRequest)
+        private  Task Update(CreateOrEditMarketPlaceBidInput Input, ShippingRequest shippingRequest)
         {
-            var Pricing = await GetCarrierPricingOrNull(shippingRequest.Id);
+            var Pricing =  GetCarrierPricingOrNull(shippingRequest.Id);
             if (Pricing == null) throw new UserFriendlyException(L("TheShippingIsNotFound"));
             if (Pricing.Status== ShippingRequestPricingStatus.Accepted) throw new UserFriendlyException(L("YourPriceAlreadyAcceptedYouCanEdit"));
+            // if (Pricing.Channel  != ShippingRequestPricingChannel.MarketPlace) throw new UserFriendlyException(L("YourPriceAlreadyAcceptedYouCanEdit"));
+            Pricing.Calculate(_featureChecker,_settingManager, shippingRequest);
+            return Task.CompletedTask;
+
         }
 
         private Task SentNotification(ShippingRequest shippingRequest)
