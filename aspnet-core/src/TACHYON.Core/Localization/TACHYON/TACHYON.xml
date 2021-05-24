@@ -10,7 +10,6 @@
     <text name="AboutUs">About us</text>
     <text name="Abp.Organizations.OrganizationUnit">Organization unit</text>
     <text name="Accept">Accept</text>
-    <text name="Accept Bid">Accept price</text>
     <text name="AcceptBid">Accept price</text>
     <text name="Accepted">Accepted</text>
     <text name="AcceptedDate">Accepted date</text>
@@ -114,6 +113,8 @@
     <text name="AuditLogImpersonatedOperationInfo">Note: This operation is performed by another user on behalf of this user.</text>
     <text name="AuditLogs">Audit logs</text>
     <text name="Authority">Authority</text>
+    <text name="AutoLocationFail">We couldn\'t get your current my Location.
+        Please try again or reset my Location services.</text>
     <text name="AutomaticallyBillMyAccount">Enable recurring payments</text>
     <text name="AutomaticBilling">Automatic billing</text>
     <text name="Available">Available</text>
@@ -152,6 +153,7 @@
     <text name="Caches">Caches</text>
     <text name="CachesHeaderInfo">You can clear caches in application on this page.</text>
     <text name="CacheSuccessfullyCleared">Cache successfully cleared.</text>
+    <text name="Camera">Camera</text>
     <text name="Cancel">Cancel</text>
     <text name="Canceled Date">Canceled Date</text>
     <text name="CanceledDate">Canceled Date</text>
@@ -253,6 +255,7 @@
     <text name="ConsumerKey">Consumer Key</text>
     <text name="ConsumerSecret">Consumer Secret</text>
     <text name="Content">Content</text>
+    <text name="ContinueTrip">Continue Trip</text>
     <text name="Contracts">Contracts</text>
     <text name="CookieConsent">Cookie consent</text>
     <text name="CookieConsent_Dismiss">Got it!</text>
@@ -735,6 +738,7 @@
     <text name="FriendshipRequestAccepted">Friendship request accepted</text>
     <text name="FromTenantToHostImpersonationErrorMessage">Can not impersonate a host user from a tenant user!</text>
     <text name="FullName">Full name</text>
+    <text name="Gallery">Gallery</text>
     <text name="Gateway">Gateway</text>
     <text name="GdprDataPreparedNotificationMessage">Your data is prepared, click here to download.</text>
     <text name="GdprDataPrepareStartedNotification">We are preparing your data. You will be notified when your data is ready.</text>
@@ -742,6 +746,7 @@
     <text name="GeneralDetails">General details</text>
     <text name="GeneralSettings">General settings</text>
     <text name="Generate">Generate</text>
+    <text name="GiveLocationPermission">Give us my Location permission</text>
     <text name="GoingToPointConformation">Are you sure you want to go to this point?</text>
     <text name="GoodCategories">Goods categories</text>
     <text name="GoodCategoriesHeaderInfo">Good categories header info</text>
@@ -909,6 +914,12 @@
     <text name="LinkToCurrentPage">Link to current page</text>
     <text name="ListingSendAttempts">Listing webhook send attempt history</text>
     <text name="LoadWithThreeDot">Loading...</text>
+    <text name="LocationPermissionDenial">The app needs permission to access your current my Location.</text>
+    <text name="LocationPermissionNeeded">Location permission needed</text>
+    <text name="LocationServicesConfirm">Turn on my Location services</text>
+    <text name="LocationServicesDenial">The app needs my Location services to find out where you currently are.</text>
+    <text name="LocationServicesNeeded">Location services needed</text>
+    <text name="LocationServicesOn">Location services turned on. Fetching current location</text>
     <text name="LogIn">Log in</text>
     <text name="LoginAsThisTenant">Login as this company</text>
     <text name="LoginAsThisUser">Login as this user</text>
@@ -947,7 +958,6 @@
     <text name="MaxDigitNumberCanNotbeLessThanMinDigitNumber">Max digit number can't be less than min digit number</text>
     <text name="MaxDigitNumberCanNotbeMoreThan100">Max digit number can't be more than 100</text>
     <text name="MaxDigits">Max digits</text>
-    <text name="MaxDigits:">Max digits:</text>
     <text name="MaxFailedAccessAttemptsBeforeLockout">Maximum number of failed login attempt count before locking the account</text>
     <text name="MaximumUserCount">Maximum number of user</text>
     <text name="MaximumUserCount_Description">0 = unlimited</text>
@@ -965,7 +975,6 @@
     <text name="MinDigitNumberCanNotBeLessThan1">Min digit number can't be less than 1</text>
     <text name="MinDigitNumberShouldBeLessMaxDigitNumber">Min digit number should be less max digit number</text>
     <text name="MinDigits">Min Digits</text>
-    <text name="MinDigits:">Min digits:</text>
     <text name="MinMax">Min max</text>
     <text name="MinValue">Min</text>
     <text name="MobileNo">Mobile no</text>
@@ -1469,7 +1478,6 @@
       <a href="/app/main/shippingRequests/shippingRequests/view?id={id}">You have a shipment that has not completed its journeys</a>
     </text>
     <text name="Shipping Request Details">Shipping Request Details</text>
-    <text name="Shipping Requests">Shipping Requests</text>
     <text name="ShippingNote">Shipper notes</text>
     <text name="ShippingRequest">Shipping request</text>
     <text name="ShippingRequestAccidentsOccure">
@@ -1746,6 +1754,7 @@ code:{0}</text>
     <text name="Timezone">Time zone</text>
     <text name="TimeZoneSettingChangedRefreshPageNotification">Time zone setting changed. Click OK button to refresh page and changes to take effect.</text>
     <text name="Title">Title</text>
+    <text name="TitleLogin">To Sign in , what is your mobile phone number </text>
     <text name="TMS">Transport management system</text>
     <text name="TMSSettings">TMS Settings</text>
     <text name="Today">Today</text>
@@ -1839,6 +1848,7 @@ code:{0}</text>
     <text name="TrukType">Truck type</text>
     <text name="TryIt">Try it</text>
     <text name="Tuck">Tuck</text>
+    <text name="TurnLocationServices">Turn on my Location services so the app can find places near you.</text>
     <text name="Two weeks">Two weeks</text>
     <text name="TwoFactorLogin">Two Factor Login</text>
     <text name="TwoFactorLoginIsNotSupported">Two factor login is not currently supported!</text>

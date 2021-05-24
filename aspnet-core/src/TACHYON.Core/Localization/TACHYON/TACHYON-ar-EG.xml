@@ -10,7 +10,6 @@
     <text name="AboutUs">من نحن</text>
     <text name="Abp.Organizations.OrganizationUnit">الوحدة التنظيمية</text>
     <text name="Accept">قبول</text>
-    <text name="Accept Bid" />
     <text name="AcceptBid" />
     <text name="Accepted">مقبول</text>
     <text name="AcceptedDate">تاريخ القبول</text>
@@ -97,6 +96,7 @@
     <text name="AuditLogImpersonatedOperationInfo">ملاحظة: يتم تنفيذ هذه العملية من قبل مستخدم آخر نيابة عن هذا المستخدم.</text>
     <text name="AuditLogs">سجلات التدقيق</text>
     <text name="Authority">السلطة</text>
+    <text name="AutoLocationFail">تعذر الوصول للموثع الحالي, الرجاء المحاولة مجددا</text>
     <text name="AutomaticallyBillMyAccount">فوتر حسابي تلقائيا</text>
     <text name="AutomaticBilling">الفوترة التلقائية</text>
     <text name="Back">العودة</text>
@@ -124,6 +124,7 @@
     <text name="Caches">ذاكرة التخزين المؤقت</text>
     <text name="CachesHeaderInfo">بهذة الصفحة يمكنك مسح الذاكرة المؤقتة للنظام.</text>
     <text name="CacheSuccessfullyCleared">تم مسح ذاكرة التخزين المؤقت بنجاح.</text>
+    <text name="Camera">الكاميرا</text>
     <text name="Cancel">إلغاء</text>
     <text name="Canceled Date">تاريخ الإلغاء</text>
     <text name="CanceledDate">تاريخ الإلغاء</text>
@@ -214,6 +215,7 @@
     <text name="ConsumerKey">مفتاح المستهلك</text>
     <text name="ConsumerSecret">سر المستهلك</text>
     <text name="Content">المحتوى</text>
+    <text name="ContinueTrip">اكمال الرحلة</text>
     <text name="CookieConsent">موافقة ملفات تعريف الارتباط</text>
     <text name="CookieConsent_Dismiss">موافق!</text>
     <text name="CookieConsent_Message">يستخدم هذا الموقع ملفات تعريف الارتباط لضمان حصولك على أفضل تجربة.</text>
@@ -648,12 +650,14 @@
     <text name="FriendshipRequestAccepted">تم قبول طلب الإضافة</text>
     <text name="FromTenantToHostImpersonationErrorMessage">لا يمكن تمثيل مستخدم النظام من مستخدم العميل.</text>
     <text name="FullName">الاسم الكامل</text>
+    <text name="Gallery">الاستديو</text>
     <text name="Gateway">بوابة</text>
     <text name="GdprDataPreparedNotificationMessage">تم إعداد بياناتك ، انقر هنا للتنزيل.</text>
     <text name="GdprDataPrepareStartedNotification">نحن نعد بياناتك. سيتم إخطارك عند الإنتهاء من إعداد بياناتك.</text>
     <text name="General">عــام</text>
     <text name="GeneralDetails">تفاصيل عامة</text>
     <text name="Generate">إنشاء</text>
+    <text name="GiveLocationPermission">الرجاء تفعيل اذن الموقع</text>
     <text name="GoingToPointConformation">هل انت متاكد انك تريد الذهاب الى هذه النقطة؟</text>
     <text name="GoodCategories">أصناف البضائع</text>
     <text name="GoodCategory">صنف البضاعة</text>
@@ -790,6 +794,12 @@
     <text name="LinkToCurrentPage">رابط الصفحة الحالية</text>
     <text name="ListingSendAttempts">Listing webhook send attempt history</text>
     <text name="LoadWithThreeDot">جار التحميل...</text>
+    <text name="LocationPermissionDenial">يحتاج التطبيق اذن للوصول للموقع الحالي</text>
+    <text name="LocationPermissionNeeded">اذن الوصول للموقع ضروري</text>
+    <text name="LocationServicesConfirm">تفعيل خدمات الموقع</text>
+    <text name="LocationServicesDenial">يحتاج التطبيق للوصول للموقع الحالي</text>
+    <text name="LocationServicesNeeded">بحاجة لاذن الوصول للموقع</text>
+    <text name="LocationServicesOn">تم تفعيل خدمات الموقع, جار جلب الموقع الحالي</text>
     <text name="LogIn">تسجيل الدخول</text>
     <text name="LoginAsThisTenant">تسجيل الدخول كهذه الشركة</text>
     <text name="LoginAsThisUser">تسجيل الدخول كهذا المستخدم</text>
@@ -1556,6 +1566,7 @@
     <text name="True">صحيح</text>
     <text name="TrukType">نوع الشاحنة</text>
     <text name="TryIt">قم بالتجربة</text>
+    <text name="TurnLocationServices">الرجاء تفعيل خدمات الموقع</text>
     <text name="TwoFactorLogin">توثيق تسجيل الدخول ذو عاملين</text>
     <text name="TwoFactorLoginIsNotSupported">لا يتم اعتماد تسجيل دخول العاملين حاليا!</text>
     <text name="Type">ادخل النص...</text>
