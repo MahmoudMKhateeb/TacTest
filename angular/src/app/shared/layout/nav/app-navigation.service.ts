@@ -93,15 +93,10 @@ export class AppNavigationService {
         //TODO: the CreateNewRequest subMenu Need Permission and Route
         [
           new AppMenuItem(
-            'CreateNewRequest',
+            'ShippingRequestsWizard',
             'Pages.ShippingRequests',
             'label label-danger label-dot',
-            '/app/main/shippingRequests/shippingRequests/createOrEdit',
-            undefined,
-            undefined,
-            undefined,
-            undefined,
-            () => this._featureCheckerService.isEnabled('App.Shipper')
+            '/app/main/shippingRequests/shippingRequestWizard'
           ),
           new AppMenuItem(
             'ShippingRequests',

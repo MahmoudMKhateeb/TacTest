@@ -232,6 +232,7 @@ import { AssignDriverTruckModalComponent } from '@app/main/shippingRequests/ship
 import { AppLocalizationComponent } from '@app/main/applocalizations/applocalization.component';
 import { ApplocalizationModalComponent } from '@app/main/applocalizations/create-or-edit-applocalization-modal.component';
 import { ViewApplocalizationModalComponent } from '@app/main/applocalizations/view-applocalization-modal.component';
+import { CreateOrEditShippingRequestWizardComponent } from '@app/main/shippingRequests/shippingRequests/update-price-shipping-request-modal/shippingRequestWizard/create-or-edit-shipping-request-wizard.component';
 import { ComingSoonComponent } from '@app/main/commingSoon/comingSoon.component';
 NgxBootstrapDatePickerConfigService.registerNgxBootstrapDatePickerLocales();
 
@@ -432,6 +433,8 @@ NgxBootstrapDatePickerConfigService.registerNgxBootstrapDatePickerLocales();
     AppLocalizationComponent,
     ApplocalizationModalComponent,
     ViewApplocalizationModalComponent,
+
+    CreateOrEditShippingRequestWizardComponent,
     ShippingrequestsDetailsModelComponent,
     ComingSoonComponent,
   ],

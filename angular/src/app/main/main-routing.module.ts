@@ -59,6 +59,7 @@ import { AccidentReasonComponent } from '@app/main/accidents/reasons/reason.comp
 import { TripRejectReasonComponent } from '@app/main/shippingRequests/shippingRequests/ShippingRequestTrips/rejectreason/trip-reject-reason.component';
 import { CarrierDirectReqestPageComponent } from '@app/main/shippingRequests/shippingRequests/directShippingRequest/carrierDirectReqestPage.component';
 import { AppLocalizationComponent } from '@app/main/applocalizations/applocalization.component';
+import { CreateOrEditShippingRequestWizardComponent } from '@app/main/shippingRequests/shippingRequests/update-price-shipping-request-modal/shippingRequestWizard/create-or-edit-shipping-request-wizard.component';
 import { ComingSoonComponent } from '@app/main/commingSoon/comingSoon.component';
 
 @NgModule({
@@ -217,6 +218,12 @@ import { ComingSoonComponent } from '@app/main/commingSoon/comingSoon.component'
             component: CreateOrEditShippingRequestComponent,
             data: { permission: 'Pages.ShippingRequests.Create' },
           },
+          {
+            path: 'shippingRequests/shippingRequestWizard',
+            component: CreateOrEditShippingRequestWizardComponent,
+            data: { permission: 'Pages.ShippingRequests' },
+          },
+
           { path: 'shippingRequests/shippingRequests/view', component: ViewShippingRequestComponent, data: { permission: 'Pages.ShippingRequests' } },
           { path: 'shippingRequests/directShippingRequests', component: CarrierDirectReqestPageComponent },
           { path: 'marketPlace/marketPlace', component: MarketplaceComponent },
