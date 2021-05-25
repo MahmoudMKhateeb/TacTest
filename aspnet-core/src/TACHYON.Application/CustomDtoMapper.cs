@@ -272,7 +272,6 @@ namespace TACHYON
             configuration.CreateMap<ShippingRequestDto, ShippingRequest>().ReverseMap();
             configuration.CreateMap<CreateOrEditGoodsDetailDto, GoodsDetail>().ReverseMap();
             configuration.CreateMap<GoodsDetail,GoodsDetailDto>()
-                .ForMember(dest => dest.GoodCategory, opt => opt.MapFrom(src => src.GoodCategoryFk.DisplayName))
                 .ReverseMap();
             configuration.CreateMap<CreateOrEditOfferDto, Offer>().ReverseMap();
             configuration.CreateMap<OfferDto, Offer>().ReverseMap();
@@ -304,9 +303,6 @@ namespace TACHYON
             configuration.CreateMap<CityDto, City>().ReverseMap();
             configuration.CreateMap<CreateOrEditCountyDto, County>().ReverseMap();
             configuration.CreateMap<CountyDto, County>().ReverseMap();
-            //configuration.CreateMap<CreateOrEditRoutTypeDto, RoutType>().ReverseMap();
-            //configuration.CreateMap<RoutTypeDto, RoutType>().ReverseMap();
-            configuration.CreateMap<CreateOrEditGoodCategoryDto, GoodCategory>().ReverseMap();
             configuration.CreateMap<GoodCategoryDto, GoodCategory>().ReverseMap();
             configuration.CreateMap<CreateOrEditTrailerDto, Trailer>().ReverseMap();
             configuration.CreateMap<TrailerDto, Trailer>().ReverseMap();
@@ -587,6 +583,10 @@ namespace TACHYON
                 CreateMultiLingualMap<PlateType, PlateTypeTranslation, PlateTypeDto>(context);
             configuration.
                 CreateMultiLingualMap<PlateType, PlateTypeTranslation, PlateTypeSelectItemDto>(context);
+            configuration.
+                CreateMultiLingualMap<GoodCategory, GoodCategoryTranslation, GetAllGoodsCategoriesForDropDownOutput>(context);
+            configuration.
+                CreateMultiLingualMap<GoodCategory, GoodCategoryTranslation, GoodCategoryDto>(context);
         }
 
         private static void AddOrUpdateShippingRequest(CreateOrEditShippingRequestDto dto, ShippingRequest Request)

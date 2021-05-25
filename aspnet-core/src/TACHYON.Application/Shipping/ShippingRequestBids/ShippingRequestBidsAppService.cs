@@ -19,6 +19,7 @@ using System.Threading.Tasks;
 using TACHYON.Authorization;
 using TACHYON.Authorization.Users;
 using TACHYON.Features;
+using TACHYON.Goods.GoodCategories.Dtos;
 using TACHYON.Invoices.Balances;
 using TACHYON.MultiTenancy;
 using TACHYON.Notifications;
@@ -333,6 +334,7 @@ namespace TACHYON.Shipping.ShippingRequestBids
                 IQueryable<ShippingRequest> filterBidShippingRequests = _shippingRequestsRepository.GetAll()
                     .Include(x => x.TrucksTypeFk)
                     .Include(x => x.GoodCategoryFk)
+                    .ThenInclude(x=>x.Translations)
                     /*.Include(x => x.ShippingRequestBids.Where(x=>x.TenantId==AbpSession.TenantId))*/
                     /*.Include(x => x.ShippingRequestVases)
                     .ThenInclude(x => x.VasFk)*/
@@ -406,7 +408,7 @@ namespace TACHYON.Shipping.ShippingRequestBids
                     ShippingRequestBidStatusName = Enum.GetName(typeof(ShippingRequestBidStatus), o.BidStatus),
                     ShipperName = o.Tenant.Name,
                     TruckTypeDisplayName = o.TrucksTypeFk.DisplayName,
-                    GoodCategoryName = o.GoodCategoryFk.DisplayName,
+                    GoodCategoryName = ObjectMapper.Map<GoodCategoryDto>(o.GoodCategoryFk).DisplayName,// o.GoodCategoryFk.DisplayName,
                     MyBidPrice = bid?.BasePrice,
                     MyBidId = bid?.Id,
                     SourceCityName = o.OriginCityFk?.DisplayName,

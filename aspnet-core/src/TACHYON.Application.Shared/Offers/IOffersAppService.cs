@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using TACHYON.Dto;
+using TACHYON.Goods.GoodCategories.Dtos;
 using TACHYON.Offers.Dtos;
 
 
@@ -31,7 +32,7 @@ namespace TACHYON.Offers
 
         Task<List<OfferTrailerTypeLookupTableDto>> GetAllTrailerTypeForTableDropdown();
 
-        Task<List<OfferGoodCategoryLookupTableDto>> GetAllGoodCategoryForTableDropdown();
+        Task<List<GetAllGoodsCategoriesForDropDownOutput>> GetAllGoodCategoryForTableDropdown();
 
         Task<List<OfferRouteLookupTableDto>> GetAllRouteForTableDropdown();
 

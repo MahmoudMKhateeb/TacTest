@@ -8,10 +8,6 @@ using Abp.Linq.Extensions;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
-using System.Collections.Generic;
-using System.Collections.Generic;
-using System.Collections.Generic;
-using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Dynamic.Core;
 using System.Threading.Tasks;
@@ -19,6 +15,7 @@ using TACHYON.Authorization;
 using TACHYON.Dto;
 using TACHYON.Features;
 using TACHYON.Goods.GoodCategories;
+using TACHYON.Goods.GoodCategories.Dtos;
 using TACHYON.Offers.Dtos;
 using TACHYON.Offers.Exporting;
 using TACHYON.Routs;
@@ -72,6 +69,7 @@ namespace TACHYON.Offers
                         .Include(e => e.TrucksTypeFk)
                         .Include(e => e.TrailerTypeFk)
                         .Include(e => e.GoodCategoryFk)
+                        .ThenInclude(e=>e.Translations)
                         .Include(e => e.RouteFk)
                         .WhereIf(!string.IsNullOrWhiteSpace(input.Filter), e => false || e.DisplayName.Contains(input.Filter) || e.Description.Contains(input.Filter))
                         .WhereIf(!string.IsNullOrWhiteSpace(input.DisplayNameFilter), e => e.DisplayName == input.DisplayNameFilter)
@@ -80,21 +78,21 @@ namespace TACHYON.Offers
                         .WhereIf(input.MaxPriceFilter != null, e => e.Price <= input.MaxPriceFilter)
                         .WhereIf(!string.IsNullOrWhiteSpace(input.TrucksTypeDisplayNameFilter), e => e.TrucksTypeFk != null && e.TrucksTypeFk.DisplayName == input.TrucksTypeDisplayNameFilter)
                         .WhereIf(!string.IsNullOrWhiteSpace(input.TrailerTypeDisplayNameFilter), e => e.TrailerTypeFk != null && e.TrailerTypeFk.DisplayName == input.TrailerTypeDisplayNameFilter)
-                        .WhereIf(!string.IsNullOrWhiteSpace(input.GoodCategoryDisplayNameFilter), e => e.GoodCategoryFk != null && e.GoodCategoryFk.DisplayName == input.GoodCategoryDisplayNameFilter)
+                        .WhereIf(!string.IsNullOrWhiteSpace(input.GoodCategoryDisplayNameFilter), e => e.GoodCategoryFk != null && e.GoodCategoryFk.Translations.Any(x=>x.DisplayName.Contains(input.GoodCategoryDisplayNameFilter)))
                         .WhereIf(!string.IsNullOrWhiteSpace(input.RouteDisplayNameFilter), e => e.RouteFk != null && e.RouteFk.DisplayName == input.RouteDisplayNameFilter);
 
             var pagedAndFilteredOffers = filteredOffers
                 .OrderBy(input.Sorting ?? "id asc")
                 .PageBy(input);
 
-            var offers = from o in pagedAndFilteredOffers
+            var offers = from o in await pagedAndFilteredOffers.ToListAsync()
                          join o1 in _lookup_trucksTypeRepository.GetAll() on o.TrucksTypeId equals o1.Id into j1
                          from s1 in j1.DefaultIfEmpty()
 
                          join o2 in _lookup_trailerTypeRepository.GetAll() on o.TrailerTypeId equals o2.Id into j2
                          from s2 in j2.DefaultIfEmpty()
 
-                         join o3 in _lookup_goodCategoryRepository.GetAll() on o.GoodCategoryId equals o3.Id into j3
+                         join o3 in _lookup_goodCategoryRepository.GetAll().Include(x=>x.Translations) on o.GoodCategoryId equals o3.Id into j3
                          from s3 in j3.DefaultIfEmpty()
 
                          join o4 in _lookup_routeRepository.GetAll() on o.RouteId equals o4.Id into j4
@@ -111,7 +109,7 @@ namespace TACHYON.Offers
                              },
                              TrucksTypeDisplayName = s1 == null || s1.DisplayName == null ? "" : s1.DisplayName.ToString(),
                              TrailerTypeDisplayName = s2 == null || s2.DisplayName == null ? "" : s2.DisplayName.ToString(),
-                             GoodCategoryDisplayName = s3 == null || s3.DisplayName == null ? "" : s3.DisplayName.ToString(),
+                             GoodCategoryDisplayName = ObjectMapper.Map<GoodCategoryDto>(o.GoodCategoryFk).DisplayName,//s3 == null || s3.DisplayName == null ? "" : s3.DisplayName.ToString(),
                              RouteDisplayName = s4 == null || s4.DisplayName == null ? "" : s4.DisplayName.ToString()
                          };
 
@@ -119,7 +117,7 @@ namespace TACHYON.Offers
 
             return new PagedResultDto<GetOfferForViewDto>(
                 totalCount,
-                await offers.ToListAsync()
+                 offers.ToList()
             );
         }
 
@@ -131,7 +129,7 @@ namespace TACHYON.Offers
 
             if (output.Offer.TrucksTypeId != null)
             {
-                var _lookupTrucksType = await _lookup_trucksTypeRepository.FirstOrDefaultAsync(output.Offer.TrucksTypeId);
+                var _lookupTrucksType = await _lookup_trucksTypeRepository.FirstOrDefaultAsync(output.Offer.TrucksTypeId.Value);
                 output.TrucksTypeDisplayName = _lookupTrucksType?.DisplayName?.ToString();
             }
 
@@ -143,8 +141,8 @@ namespace TACHYON.Offers
 
             if (output.Offer.GoodCategoryId != null)
             {
-                var _lookupGoodCategory = await _lookup_goodCategoryRepository.FirstOrDefaultAsync((int)output.Offer.GoodCategoryId);
-                output.GoodCategoryDisplayName = _lookupGoodCategory?.DisplayName?.ToString();
+                var _lookupGoodCategory = await _lookup_goodCategoryRepository.GetAllIncluding(x=>x.Translations).FirstOrDefaultAsync(x=>x.Id == (int)output.Offer.GoodCategoryId);
+                output.GoodCategoryDisplayName = ObjectMapper.Map<GoodCategoryDto>(_lookupGoodCategory).DisplayName;//_lookupGoodCategory?.DisplayName?.ToString();
             }
 
             if (output.Offer.RouteId != null)
@@ -166,7 +164,7 @@ namespace TACHYON.Offers
 
             if (output.Offer.TrucksTypeId != null)
             {
-                var _lookupTrucksType = await _lookup_trucksTypeRepository.FirstOrDefaultAsync(output.Offer.TrucksTypeId);
+                var _lookupTrucksType = await _lookup_trucksTypeRepository.FirstOrDefaultAsync(output.Offer.TrucksTypeId.Value);
                 output.TrucksTypeDisplayName = _lookupTrucksType?.DisplayName?.ToString();
             }
 
@@ -178,8 +176,8 @@ namespace TACHYON.Offers
 
             if (output.Offer.GoodCategoryId != null)
             {
-                var _lookupGoodCategory = await _lookup_goodCategoryRepository.FirstOrDefaultAsync((int)output.Offer.GoodCategoryId);
-                output.GoodCategoryDisplayName = _lookupGoodCategory?.DisplayName?.ToString();
+                var _lookupGoodCategory = await _lookup_goodCategoryRepository.GetAllIncluding(x=>x.Translations).FirstOrDefaultAsync(x=>x.Id == (int)output.Offer.GoodCategoryId);
+                output.GoodCategoryDisplayName = ObjectMapper.Map<GoodCategoryDto>(_lookupGoodCategory).DisplayName ;
             }
 
             if (output.Offer.RouteId != null)
@@ -242,6 +240,7 @@ namespace TACHYON.Offers
                         .Include(e => e.TrucksTypeFk)
                         .Include(e => e.TrailerTypeFk)
                         .Include(e => e.GoodCategoryFk)
+                        .ThenInclude(e=>e.Translations)
                         .Include(e => e.RouteFk)
                         .WhereIf(!string.IsNullOrWhiteSpace(input.Filter), e => false || e.DisplayName.Contains(input.Filter) || e.Description.Contains(input.Filter))
                         .WhereIf(!string.IsNullOrWhiteSpace(input.DisplayNameFilter), e => e.DisplayName == input.DisplayNameFilter)
@@ -250,10 +249,10 @@ namespace TACHYON.Offers
                         .WhereIf(input.MaxPriceFilter != null, e => e.Price <= input.MaxPriceFilter)
                         .WhereIf(!string.IsNullOrWhiteSpace(input.TrucksTypeDisplayNameFilter), e => e.TrucksTypeFk != null && e.TrucksTypeFk.DisplayName == input.TrucksTypeDisplayNameFilter)
                         .WhereIf(!string.IsNullOrWhiteSpace(input.TrailerTypeDisplayNameFilter), e => e.TrailerTypeFk != null && e.TrailerTypeFk.DisplayName == input.TrailerTypeDisplayNameFilter)
-                        .WhereIf(!string.IsNullOrWhiteSpace(input.GoodCategoryDisplayNameFilter), e => e.GoodCategoryFk != null && e.GoodCategoryFk.DisplayName == input.GoodCategoryDisplayNameFilter)
+                        .WhereIf(!string.IsNullOrWhiteSpace(input.GoodCategoryDisplayNameFilter), e => e.GoodCategoryFk != null && e.GoodCategoryFk.Translations.Any(x=>x.DisplayName.Contains(input.GoodCategoryDisplayNameFilter)))
                         .WhereIf(!string.IsNullOrWhiteSpace(input.RouteDisplayNameFilter), e => e.RouteFk != null && e.RouteFk.DisplayName == input.RouteDisplayNameFilter);
 
-            var query = (from o in filteredOffers
+            var query = (from o in await filteredOffers.ToListAsync()
                          join o1 in _lookup_trucksTypeRepository.GetAll() on o.TrucksTypeId equals o1.Id into j1
                          from s1 in j1.DefaultIfEmpty()
 
@@ -277,14 +276,14 @@ namespace TACHYON.Offers
                              },
                              TrucksTypeDisplayName = s1 == null || s1.DisplayName == null ? "" : s1.DisplayName.ToString(),
                              TrailerTypeDisplayName = s2 == null || s2.DisplayName == null ? "" : s2.DisplayName.ToString(),
-                             GoodCategoryDisplayName = s3 == null || s3.DisplayName == null ? "" : s3.DisplayName.ToString(),
+                             GoodCategoryDisplayName = ObjectMapper.Map<GoodCategoryDto>(o.GoodCategoryFk).DisplayName, //s3 == null || s3.DisplayName == null ? "" : s3.DisplayName.ToString(),
                              RouteDisplayName = s4 == null || s4.DisplayName == null ? "" : s4.DisplayName.ToString()
                          });
 
 
-            var offerListDtos = await query.ToListAsync();
+           // var offerListDtos = await query.ToListAsync();
 
-            return _offersExcelExporter.ExportToFile(offerListDtos);
+            return _offersExcelExporter.ExportToFile(query.ToList());
         }
 
 
@@ -311,14 +310,18 @@ namespace TACHYON.Offers
         }
 
         [AbpAuthorize(AppPermissions.Pages_Offers)]
-        public async Task<List<OfferGoodCategoryLookupTableDto>> GetAllGoodCategoryForTableDropdown()
+        public async Task<List<GetAllGoodsCategoriesForDropDownOutput>> GetAllGoodCategoryForTableDropdown()
         {
-            return await _lookup_goodCategoryRepository.GetAll()
-                .Select(goodCategory => new OfferGoodCategoryLookupTableDto
-                {
-                    Id = goodCategory.Id,
-                    DisplayName = goodCategory == null || goodCategory.DisplayName == null ? "" : goodCategory.DisplayName.ToString()
-                }).ToListAsync();
+            //return await _lookup_goodCategoryRepository.GetAll()
+            //    .Select(goodCategory => new OfferGoodCategoryLookupTableDto
+            //    {
+            //        Id = goodCategory.Id,
+            //        //DisplayName = goodCategory == null || goodCategory.DisplayName == null ? "" : goodCategory.DisplayName.ToString()
+            //    }).ToListAsync();
+            var list = await _lookup_goodCategoryRepository.GetAll()
+                .Include(x => x.Translations).ToListAsync();
+
+            return ObjectMapper.Map<List<GetAllGoodsCategoriesForDropDownOutput>>(list);
         }
 
         [AbpAuthorize(AppPermissions.Pages_Offers)]

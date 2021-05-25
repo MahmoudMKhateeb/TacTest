@@ -100,9 +100,9 @@
                           <i class="fa fa-cog"></i><span class="caret"></span> {{ l('Actions') }}
                         </button>
                         <ul class="dropdown-menu" *dropdownMenu>
-                          <li>
+                          <!-- <li>
                             <a href="javascript:;" class="dropdown-item" (click)="viewGoodCategoryModal.show(record)">{{ l('View') }}</a>
-                          </li>
+                          </li> -->
                           <li>
                             <a
                               href="javascript:;"
@@ -129,7 +129,7 @@
                     </td>
                     <td style="width: 150px;">
                       <span class="ui-column-title"> {{ l('fatherId') }}</span>
-                      {{ record.goodCategory.fatherId }}
+                      {{ record.fatherCategoryName }}
                     </td>
                     <td style="width: 150px;">
                       <span class="ui-column-title"> {{ l('DisplayName') }}</span>

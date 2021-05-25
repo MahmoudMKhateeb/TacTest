@@ -6,7 +6,7 @@ import {
   FacilitiesServiceProxy,
   FacilityForDropdownDto,
   GoodsDetailDto,
-  GoodsDetailGoodCategoryLookupTableDto,
+  GetAllGoodsCategoriesForDropDownOutput,
   GoodsDetailsServiceProxy,
   PickingType,
   RoutesServiceProxy,
@@ -68,7 +68,7 @@ export class WayPointsComponent extends AppComponentBase implements OnInit, OnCh
   wayPoints = [];
   wayPointMapSource = undefined;
   wayPointMapDest = undefined;
-  allSubGoodCategorys: GoodsDetailGoodCategoryLookupTableDto[];
+  allSubGoodCategorys: GetAllGoodsCategoriesForDropDownOutput[];
   allUnitOfMeasure: SelectItemDto[];
   wayPointValidationSets = {
     singlePoint: {
