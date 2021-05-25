@@ -19,13 +19,13 @@ namespace TACHYON.Offers.Dtos
         public decimal Price { get; set; }
 
 
-        public long TrucksTypeId { get; set; }
+        public long? TrucksTypeId { get; set; }
 
-        public int TrailerTypeId { get; set; }
+        public int? TrailerTypeId { get; set; }
 
         public int? GoodCategoryId { get; set; }
 
-        public int RouteId { get; set; }
+        public int? RouteId { get; set; }
 
 
     }

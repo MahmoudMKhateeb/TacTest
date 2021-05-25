@@ -43,7 +43,8 @@
                 </select>
               </div>
             </div>
-            <div class="col-12">
+          </div>
+          <!-- <div class="col-12">
               <div class="form-group">
                 <label for="GoodCategory_DisplayName">{{ l('DisplayName') }} *</label>
                 <input
@@ -61,6 +62,29 @@
                 />
                 <div class="invalid-feedback" *ngIf="DisplayName.touched && !DisplayName.valid">{{ l('thisFieldIsRequired') }}</div>
               </div>
+            </div> -->
+          <div class="row" *ngFor="let t of Translations; let i = index">
+            <div class="form-group col-md-6">
+              <span class="symbol symbol-20 mr-3">
+                <i [class]="t.icon"></i>
+              </span>
+              <span class="navi-text">
+                {{ t.languageDisplayName }}
+              </span>
+            </div>
+
+            <div class="form-group col-md-6">
+              <label>{{ 'Name' | localize }}</label>
+              <input
+                #nameInput
+                class="form-control"
+                type="text"
+                [name]="'name' + i"
+                [(ngModel)]="t.displayName"
+                required
+                minLength="3"
+                maxlength="250"
+              />
             </div>
           </div>
         </div>

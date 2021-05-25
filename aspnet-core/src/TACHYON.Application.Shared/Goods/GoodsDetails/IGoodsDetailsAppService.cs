@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using TACHYON.Dto;
+using TACHYON.Goods.GoodCategories.Dtos;
 using TACHYON.Goods.GoodsDetails.Dtos;
 
 
@@ -23,8 +24,7 @@ namespace TACHYON.Goods.GoodsDetails
 
         Task<FileDto> GetGoodsDetailsToExcel(GetAllGoodsDetailsForExcelInput input);
 
-
-        Task<List<GoodsDetailGoodCategoryLookupTableDto>> GetAllGoodCategoryForTableDropdown(int? fatherId);
+        Task<List<GetAllGoodsCategoriesForDropDownOutput>> GetAllGoodCategoryForTableDropdown(int? fatherId);
 
     }
 }

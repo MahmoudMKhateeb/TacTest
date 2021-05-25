@@ -20,6 +20,7 @@ using TACHYON.Authorization;
 using TACHYON.Dto;
 using TACHYON.Features;
 using TACHYON.Goods.GoodCategories;
+using TACHYON.Goods.GoodCategories.Dtos;
 using TACHYON.MultiTenancy;
 using TACHYON.Notifications;
 using TACHYON.Packing.PackingTypes;
@@ -372,10 +373,13 @@ namespace TACHYON.Shipping.ShippingRequests
         //        .Select(x => new SelectItemDto { Id = x.Id.ToString(), DisplayName = x == null || x.DisplayName == null ? "" : x.DisplayName.ToString() }).ToListAsync();
         //}
 
-        public async Task<List<SelectItemDto>> GetAllGoodCategoriesForTableDropdown()
+        public async Task<List<GetAllGoodsCategoriesForDropDownOutput>> GetAllGoodCategoriesForTableDropdown()
         {
-            return await _lookup_goodCategoryRepository.GetAll()
-                .Select(x => new SelectItemDto { Id = x.Id.ToString(), DisplayName = x == null || x.DisplayName == null ? "" : x.DisplayName.ToString() }).ToListAsync();
+            var list= await _lookup_goodCategoryRepository.GetAll()
+                .Include(x => x.Translations).ToListAsync();
+
+            return ObjectMapper.Map<List<GetAllGoodsCategoriesForDropDownOutput>>(list);
+                //.Select(x => new GetAllGoodsCategoriesForDropDownOutput { Id = x.Id.ToString(), DisplayName = x == null || x.DisplayName == null ? "" : x.DisplayName.ToString() }).ToListAsync();
         }
 
         public async Task<List<SelectItemDto>> GetAllPortsForDropdown()
@@ -492,6 +496,7 @@ namespace TACHYON.Shipping.ShippingRequests
                     .Include(e => e.AssignedTruckFk)
                     .ThenInclude(e => e.TruckStatusFk)
                     .Include(e => e.GoodCategoryFk)
+                    .ThenInclude(e=>e.Translations)
                     .Include(e => e.ShippingTypeFk)
                     .Include(e => e.PackingTypeFk)
                     .Include(e=>e.CarrierTenantFk)
@@ -534,6 +539,8 @@ namespace TACHYON.Shipping.ShippingRequests
             output.ShippingRequestBidDtoList = shippingRequestBidDtoList;
             output.ShippingRequestVasDtoList = shippingRequestVasList;
 
+            //return translated good category name by default language
+            output.GoodsCategoryName = ObjectMapper.Map<GoodCategoryDto>(shippingRequest.GoodCategoryFk).DisplayName;
 
             //GetShippingRequestForViewOutput output = new GetShippingRequestForViewOutput
             //{
@@ -857,7 +864,8 @@ namespace TACHYON.Shipping.ShippingRequests
                     //: null,
                     DeliveryDate = x.EndTripDate,
                     TotalWeight = x.ShippingRequestFk.TotalWeight,
-                    GoodsCategoryDisplayName = x.ShippingRequestFk.GoodCategoryFk.DisplayName
+                    GoodCategoryTranslation=x.ShippingRequestFk.GoodCategoryFk.Translations,
+                    GoodsCategoryDisplayName =x.ShippingRequestFk.GoodCategoryFk //x.ShippingRequestFk.GoodCategoryFk.DisplayName
                 });
 
                 var pickup = GetPickupOrDropPointFacilityForTrip(shippingRequestTripId, PickingType.Pickup);
@@ -892,7 +900,7 @@ namespace TACHYON.Shipping.ShippingRequests
                         TotalWeight = x.TotalWeight,
                         ClientName = x.ClientName,
                         CarrierName = x.CarrierName,
-                        GoodsCategoryDisplayName = x.GoodsCategoryDisplayName,
+                        GoodsCategoryDisplayName = ObjectMapper.Map<GoodCategoryDto>(x.GoodsCategoryDisplayName).DisplayName,
 
                     });
 
@@ -965,7 +973,8 @@ namespace TACHYON.Shipping.ShippingRequests
                     DroppArea = routPoint.FacilityFk.Address,
                     CarrierName = x.ShippingRequestFk.CarrierTenantFk != null ? x.ShippingRequestFk.CarrierTenantFk.Name : "",
                     TotalWeight = x.ShippingRequestFk.TotalWeight,
-                    GoodsCategoryDisplayName = x.ShippingRequestFk.GoodCategoryFk.DisplayName,
+                    GoodsCategoryTranslation=x.ShippingRequestFk.GoodCategoryFk.Translations,
+                    GoodsCategoryDisplayName = x.ShippingRequestFk.GoodCategoryFk,
                     DeliveryDate = x.EndTripDate
                 });
 
@@ -992,7 +1001,7 @@ namespace TACHYON.Shipping.ShippingRequests
                         CarrierName = x.CarrierName,
                         ClientName = "Shipper",
                         TotalWeight = x.TotalWeight,
-                        GoodsCategoryDisplayName = x.GoodsCategoryDisplayName,
+                        GoodsCategoryDisplayName = ObjectMapper.Map<GoodCategoryDto>(x.GoodsCategoryDisplayName).DisplayName,// x.GoodsCategoryDisplayName,
                         DeliveryDate = x.DeliveryDate
                     });
 

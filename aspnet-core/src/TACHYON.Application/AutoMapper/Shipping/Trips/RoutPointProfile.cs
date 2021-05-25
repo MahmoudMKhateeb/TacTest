@@ -28,8 +28,8 @@ namespace TACHYON.AutoMapper.Shipping.Trips
                     .ForPath(dest => dest.ReceiverCardIdNumber, opt => opt.MapFrom(src => src.ReceiverFk != null ? src.ReceiverFk.Id.ToString() : src.ReceiverCardIdNumber));
 
             CreateMap<GoodsDetail, GoodsDetailDto>()
-            .ForPath(dest => dest.UnitOfMeasure, opt => opt.MapFrom(src => src.UnitOfMeasureFk !=null ? src.UnitOfMeasureFk.DisplayName : string.Empty))
-            .ForPath(dest => dest.GoodCategory, opt => opt.MapFrom(src => src.GoodCategoryFk != null ? src.GoodCategoryFk.DisplayName : string.Empty));
+            .ForPath(dest => dest.UnitOfMeasure, opt => opt.MapFrom(src => src.UnitOfMeasureFk != null ? src.UnitOfMeasureFk.DisplayName : string.Empty));
+            //.ForPath(dest => dest.GoodCategory, opt => opt.MapFrom(src => src.GoodCategoryFk != null ? src.GoodCategoryFk.DisplayName : string.Empty));
 
         }
     }

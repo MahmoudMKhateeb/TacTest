@@ -173,6 +173,8 @@ namespace TACHYON.EntityFrameworkCore
 
         public virtual DbSet<GoodCategory> GoodCategories { get; set; }
 
+        public virtual DbSet<GoodCategoryTranslation> GoodCategoryTranslations { get; set; }
+
         public virtual DbSet<Trailer> Trailers { get; set; }
 
         public virtual DbSet<TrailerStatus> TrailerStatuses { get; set; }

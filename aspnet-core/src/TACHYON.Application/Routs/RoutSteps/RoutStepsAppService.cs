@@ -394,7 +394,7 @@ namespace TACHYON.Routs.RoutSteps
                     .Select(goodsDetail => new SelectItemDto
                     {
                         Id = goodsDetail.Id.ToString(),
-                        DisplayName = goodsDetail == null || goodsDetail.GoodCategoryFk.DisplayName == null ? "" : goodsDetail.GoodCategoryFk.DisplayName.ToString()
+                        //DisplayName = goodsDetail == null || goodsDetail.GoodCategoryFk.DisplayName == null ? "" : goodsDetail.GoodCategoryFk.DisplayName.ToString()
                     }).ToListAsync();
             }
 

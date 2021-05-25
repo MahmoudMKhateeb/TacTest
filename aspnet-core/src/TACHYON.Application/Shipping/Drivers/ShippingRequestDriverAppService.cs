@@ -12,6 +12,7 @@ using System.Linq;
 using System.Linq.Dynamic.Core;
 using System.Threading.Tasks;
 using TACHYON.Firebases;
+using TACHYON.Goods.GoodCategories.Dtos;
 using TACHYON.Notifications;
 using TACHYON.Routs.RoutPoints;
 using TACHYON.Routs.RoutPoints.Dtos;
@@ -50,8 +51,7 @@ namespace TACHYON.Shipping.Drivers
             _shippingRequestDriverManager = shippingRequestDriverManager;
             _shippingRequestManager = shippingRequestManager;
             _appNotifier = appNotifier;
-             _firebaseNotifier= firebaseNotifier;
-
+            _firebaseNotifier = firebaseNotifier;
 
         }
         /// <summary>
@@ -108,6 +108,7 @@ namespace TACHYON.Shipping.Drivers
                    .ThenInclude(p=>p.PackingTypeFk)
                .Include(i => i.ShippingRequestFk)
                    .ThenInclude(p => p.GoodCategoryFk)
+                   .ThenInclude(p => p.Translations)
                .Include(i => i.DestinationFacilityFk)
                .Include(i => i.OriginFacilityFk)
                .Include(i=>i.RoutPoints)
@@ -133,6 +134,8 @@ namespace TACHYON.Shipping.Drivers
                     tripDto.ActionStatus = ShippingRequestTripDriverActionStatusDto.CanStartTrip;
             }
 
+            //return good category name automatic from default language
+            tripDto.GoodsCategory = ObjectMapper.Map<GoodCategoryDto>(trip.ShippingRequestFk.GoodCategoryFk).DisplayName;
             return tripDto;
 
         }
