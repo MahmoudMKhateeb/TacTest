@@ -55,6 +55,14 @@ namespace TACHYON.Notifications
         Task ShippingRequestAccidentsOccure(List<UserIdentifier> Users, Dictionary<string, object> data);
         Task ShippingRequestTripCancelByAccident(List<UserIdentifier> Users, ShippingRequestTrip trip,User UserCancel);
         #endregion
+
+        #region ShippingRequest
+        #region Offers
+         Task ShippingRequestSendOfferWhenAddPrice(ShippingRequest Request);
+         Task ShippingRequestSendOfferWhenUpdatePrice(ShippingRequest Request);
+
+        #endregion
+        #region
         #endregion
         #region TachyonDeal
         Task SendDriectRequestForCarrier(int? TenantId,ShippingRequest Request);

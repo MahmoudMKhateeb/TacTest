@@ -679,6 +679,48 @@ namespace TACHYON.Notifications
         }
 
         #endregion
+
+        #region ShippingRequest
+        #region Offers
+        public async Task ShippingRequestSendOfferWhenAddPrice(ShippingRequest Request)
+        {
+            var notificationData = new LocalizableMessageNotificationData(
+                new LocalizableString(
+                    L("ShippingRequestSendOfferWhenAddPrice"),
+                    TACHYONConsts.LocalizationSourceName
+                )
+            );
+
+            notificationData["id"] = Request.Id;
+            List<UserIdentifier> users = new List<UserIdentifier>();
+            if (!Request.IsTachyonDeal)
+            {
+                users.Add(new UserIdentifier(Request.TenantId, Request.CreatorUserId.Value));
+            }
+            await _notificationPublisher.PublishAsync(AppNotificationNames.RejectedSubmittedDocument, notificationData, userIds: users.ToArray());
+        }
+        public async Task ShippingRequestSendOfferWhenUpdatePrice(ShippingRequest Request)
+        {
+            var notificationData = new LocalizableMessageNotificationData(
+                new LocalizableString(
+                    L("ShippingRequestSendOfferWhenUpdatePrice"),
+                    TACHYONConsts.LocalizationSourceName
+                )
+            );
+
+            notificationData["id"] = Request.Id;
+            List<UserIdentifier> users = new List<UserIdentifier>();
+            {
+                users.Add(new UserIdentifier(Request.TenantId, Request.CreatorUserId.Value));
+            }
+
+            await _notificationPublisher.PublishAsync(AppNotificationNames.RejectedSubmittedDocument, notificationData, userIds: users.ToArray());
+        }
+
+
+        #endregion
+        #endregion
+
         #region Shipping Request
         public async Task ShippingRequestNotifyCarrirerWhenShipperAccepted(ShippingRequest shippingRequest)
         {

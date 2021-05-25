@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using NetTopologySuite.Geometries;
 using TACHYON.EntityFrameworkCore;
@@ -10,9 +11,10 @@ using TACHYON.EntityFrameworkCore;
 namespace TACHYON.Migrations
 {
     [DbContext(typeof(TACHYONDbContext))]
-    partial class TACHYONDbContextModelSnapshot : ModelSnapshot
+    [Migration("20210525075627_AddCommissionPercentageOrAddValue")]
+    partial class AddCommissionPercentageOrAddValue
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -4506,6 +4508,9 @@ namespace TACHYON.Migrations
                     b.Property<string>("RejectedReason")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<long?>("ShippingRequest")
+                        .HasColumnType("bigint");
+
                     b.Property<long>("ShippingRequestId")
                         .HasColumnType("bigint");
 
@@ -4564,7 +4569,7 @@ namespace TACHYON.Migrations
 
                     b.HasIndex("ParentId");
 
-                    b.HasIndex("ShippingRequestId");
+                    b.HasIndex("ShippingRequest");
 
                     b.HasIndex("TenantId");
 
@@ -6731,9 +6736,7 @@ namespace TACHYON.Migrations
 
                     b.HasOne("TACHYON.Shipping.ShippingRequests.ShippingRequest", "ShippingRequestFK")
                         .WithMany()
-                        .HasForeignKey("ShippingRequestId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("ShippingRequest");
 
                     b.HasOne("TACHYON.MultiTenancy.Tenant", "Tenant")
                         .WithMany()

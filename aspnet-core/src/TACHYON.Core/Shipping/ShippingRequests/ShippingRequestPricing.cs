@@ -3,6 +3,7 @@ using Abp.Configuration;
 using Abp.Domain.Entities;
 using Abp.Domain.Entities.Auditing;
 using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 using TACHYON.Configuration;
 using TACHYON.Features;
@@ -14,13 +15,13 @@ namespace TACHYON.Shipping.ShippingRequests
     [Table("ShippingRequestPricings")]
     public class ShippingRequestPricing : FullAuditedEntity<long>, IMustHaveTenant
     {
-        public long? PricingNumber { get; set; }
+        public long? ReferenceNumber { get; set; }
         public long? ParentId { get; set; }
         [ForeignKey(nameof(ParentId))]
         public ShippingRequestPricing ShippingRequestPricingFK { get; set; }
         public long ShippingRequestId { get; set; }
 
-        [ForeignKey(nameof(ShippingRequest))]
+        [ForeignKey(nameof(ShippingRequestId))]
         public ShippingRequest ShippingRequestFK { get; set; }
         /// <summary>
         /// Get id from source entity
@@ -60,8 +61,7 @@ namespace TACHYON.Shipping.ShippingRequests
         #region Commission
         public ShippingRequestCommissionType CommissionType { get; set; }
         public decimal TripCommissionAmount { get; set; }
-        public decimal CommissionValue { get; set; }
-        public decimal CommissionPercentage { get; set; }
+        public decimal CommissionPercentageOrAddValue { get; set; }
         public decimal CommissionAmount { get; set; }
         #endregion
 
@@ -74,6 +74,10 @@ namespace TACHYON.Shipping.ShippingRequests
         /// If the shipper or TAD view this pricing,Help us when the carrier edit the price to check if the is view sent notification to stachholder the the carrier update price else sent there new price add.
         /// </summary>
         public bool IsView { get; set; }
+
+
+        public ICollection<ShippingRequestVasPricing> ShippingRequestVasesPricing { get; set; } = new List<ShippingRequestVasPricing>();
+
         private IFeatureChecker _featureChecker;
         private ShippingRequest _shippingRequest;
         public void Calculate(IFeatureChecker featureChecker, ISettingManager settingManager, ShippingRequest shippingRequest)
@@ -82,20 +86,21 @@ namespace TACHYON.Shipping.ShippingRequests
             _shippingRequest = shippingRequest;
             TaxVat = settingManager.GetSettingValue<decimal>(AppSettings.HostManagement.TaxVat);
             SetCommissionSettings();
+            SetVasesCalculate();
             CalculateSingleTrip();
-            CalculateMultipleTrip();
+            CalculateMultipleTrips();
             CalculateSingleTripWithCommission();
-            CalculateMultipleTripWithCommission();
+            CalculateMultipleTripsWithCommission();
 
         }
         private void CalculateSingleTrip()
         {
-            TripVatAmount = CalculateVat(TripPrice, TaxVat);
-            TotalAmount = TripPrice + TripVatAmount;
+            TripVatAmount = TACHYON.Common.Calculate.CalculateVat(TripPrice, TaxVat);
+            TripTotalAmount = TripPrice + TripVatAmount;
           
         }
 
-        private void CalculateMultipleTrip()
+        private void CalculateMultipleTrips()
         {
             SubTotalAmount = TripPrice * _shippingRequest.NumberOfTrips;
             TotalAmount = TripTotalAmount * _shippingRequest.NumberOfTrips;
@@ -104,19 +109,16 @@ namespace TACHYON.Shipping.ShippingRequests
         private void CalculateSingleTripWithCommission()
         {
             TripSubTotalAmountWithCommission = TripPrice + TripCommissionAmount;
-            TripVatAmountWithCommission = CalculateVat(TripSubTotalAmountWithCommission, TaxVat);
+            TripVatAmountWithCommission = TACHYON.Common.Calculate.CalculateVat(TripSubTotalAmountWithCommission, TaxVat);
             TripTotalAmountWithCommission = TripSubTotalAmountWithCommission + TripVatAmountWithCommission;
           
         }
-        private void CalculateMultipleTripWithCommission()
+        private void CalculateMultipleTripsWithCommission()
         {
             SubTotalAmountWithCommission = TripSubTotalAmountWithCommission * _shippingRequest.NumberOfTrips;
             VatAmountWithCommission = TripVatAmountWithCommission * _shippingRequest.NumberOfTrips;
             TotalAmountWithCommission = TripTotalAmountWithCommission * _shippingRequest.NumberOfTrips;
-        }
-        private decimal CalculateVat(decimal amount, decimal vat)
-        {
-            return (amount / 100) * vat;
+            CommissionAmount = TripCommissionAmount * _shippingRequest.NumberOfTrips;
         }
 
         private void SetCommissionSettings()
@@ -127,12 +129,10 @@ namespace TACHYON.Shipping.ShippingRequests
                 switch (CommissionType)
                 {
                     case ShippingRequestCommissionType.Percentage:
-                        CommissionPercentage = Convert.ToDecimal(_featureChecker.GetValue(_shippingRequest.TenantId, AppFeatures.TachyonDealerCommissionPercentage));
-                        CommissionValue = 0;
+                        CommissionPercentageOrAddValue = Convert.ToDecimal(_featureChecker.GetValue(_shippingRequest.TenantId, AppFeatures.TachyonDealerCommissionPercentage));
                         break;
                     case ShippingRequestCommissionType.Value:
-                        CommissionValue = Convert.ToDecimal(_featureChecker.GetValue(_shippingRequest.TenantId, AppFeatures.TachyonDealerCommissionValue));
-                        CommissionPercentage = 0;
+                        CommissionPercentageOrAddValue = Convert.ToDecimal(_featureChecker.GetValue(_shippingRequest.TenantId, AppFeatures.TachyonDealerCommissionValue));
                         break;
                 }
             }
@@ -142,12 +142,10 @@ namespace TACHYON.Shipping.ShippingRequests
                 switch (CommissionType)
                 {
                     case ShippingRequestCommissionType.Percentage:
-                        CommissionPercentage = Convert.ToDecimal(_featureChecker.GetValue(_shippingRequest.TenantId, AppFeatures.BiddingCommissionPercentage));
-                        CommissionValue = 0;
+                        CommissionPercentageOrAddValue = Convert.ToDecimal(_featureChecker.GetValue(_shippingRequest.TenantId, AppFeatures.BiddingCommissionPercentage));
                         break;
                     case ShippingRequestCommissionType.Value:
-                        CommissionPercentage = 0;
-                        CommissionValue = Convert.ToDecimal(_featureChecker.GetValue(_shippingRequest.TenantId, AppFeatures.BiddingCommissionValue));
+                        CommissionPercentageOrAddValue = 0;
                         break;
                 }
             }
@@ -159,11 +157,19 @@ namespace TACHYON.Shipping.ShippingRequests
             switch (CommissionType)
             {
                 case ShippingRequestCommissionType.Percentage:
-                    TripCommissionAmount = (TripPrice * CommissionPercentage / 100);
+                    TripCommissionAmount = (TripPrice * CommissionPercentageOrAddValue / 100);
                     break;
                 case ShippingRequestCommissionType.Value:
-                    TripCommissionAmount = TripPrice + CommissionValue;
+                    TripCommissionAmount = TripPrice + CommissionPercentageOrAddValue;
                     break;
+            }
+        }
+
+        private void SetVasesCalculate()
+        {
+            foreach (var vas in ShippingRequestVasesPricing)
+            {
+                vas.CalculateVas(TaxVat, CommissionType, CommissionPercentageOrAddValue);
             }
         }
     }

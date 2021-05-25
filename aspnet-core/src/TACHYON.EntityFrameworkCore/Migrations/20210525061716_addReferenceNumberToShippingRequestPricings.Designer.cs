@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using NetTopologySuite.Geometries;
 using TACHYON.EntityFrameworkCore;
@@ -10,9 +11,10 @@ using TACHYON.EntityFrameworkCore;
 namespace TACHYON.Migrations
 {
     [DbContext(typeof(TACHYONDbContext))]
-    partial class TACHYONDbContextModelSnapshot : ModelSnapshot
+    [Migration("20210525061716_addReferenceNumberToShippingRequestPricings")]
+    partial class addReferenceNumberToShippingRequestPricings
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -4467,11 +4469,14 @@ namespace TACHYON.Migrations
                     b.Property<decimal>("CommissionAmount")
                         .HasColumnType("decimal(18,2)");
 
-                    b.Property<decimal>("CommissionPercentageOrAddValue")
+                    b.Property<decimal>("CommissionPercentage")
                         .HasColumnType("decimal(18,2)");
 
                     b.Property<byte>("CommissionType")
                         .HasColumnType("tinyint");
+
+                    b.Property<decimal>("CommissionValue")
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<DateTime>("CreationTime")
                         .HasColumnType("datetime2");
@@ -4505,6 +4510,9 @@ namespace TACHYON.Migrations
 
                     b.Property<string>("RejectedReason")
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<long?>("ShippingRequest")
+                        .HasColumnType("bigint");
 
                     b.Property<long>("ShippingRequestId")
                         .HasColumnType("bigint");
@@ -4564,75 +4572,11 @@ namespace TACHYON.Migrations
 
                     b.HasIndex("ParentId");
 
-                    b.HasIndex("ShippingRequestId");
+                    b.HasIndex("ShippingRequest");
 
                     b.HasIndex("TenantId");
 
                     b.ToTable("ShippingRequestPricings");
-                });
-
-            modelBuilder.Entity("TACHYON.Shipping.ShippingRequests.ShippingRequestVasPricing", b =>
-                {
-                    b.Property<long>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<decimal>("CommissionAmount")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<long>("ShippingRequestPricingId")
-                        .HasColumnType("bigint");
-
-                    b.Property<decimal>("SubTotalAmount")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<decimal>("SubTotalAmountWithCommission")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<decimal>("TotalAmount")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<decimal>("TotalAmountWithCommission")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<decimal>("VasCommissionAmount")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<long>("VasId")
-                        .HasColumnType("bigint");
-
-                    b.Property<decimal>("VasPrice")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<decimal>("VasSubTotalAmountWithCommission")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<decimal>("VasTotalAmount")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<decimal>("VasTotalAmountWithCommission")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<decimal>("VasVatAmount")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<decimal>("VasVatAmountWithCommission")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<decimal>("VatAmount")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<decimal>("VatAmountWithCommission")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("ShippingRequestPricingId");
-
-                    b.HasIndex("VasId");
-
-                    b.ToTable("ShippingRequestVasesPricing");
                 });
 
             modelBuilder.Entity("TACHYON.Shipping.ShippingRequests.TachyonDealer.ShippingRequestsCarrierDirectPricing", b =>
@@ -6731,28 +6675,11 @@ namespace TACHYON.Migrations
 
                     b.HasOne("TACHYON.Shipping.ShippingRequests.ShippingRequest", "ShippingRequestFK")
                         .WithMany()
-                        .HasForeignKey("ShippingRequestId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("ShippingRequest");
 
                     b.HasOne("TACHYON.MultiTenancy.Tenant", "Tenant")
                         .WithMany()
                         .HasForeignKey("TenantId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
-            modelBuilder.Entity("TACHYON.Shipping.ShippingRequests.ShippingRequestVasPricing", b =>
-                {
-                    b.HasOne("TACHYON.Shipping.ShippingRequests.ShippingRequestPricing", "ShippingRequestPricingFK")
-                        .WithMany("ShippingRequestVasesPricing")
-                        .HasForeignKey("ShippingRequestPricingId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("TACHYON.ShippingRequestVases.ShippingRequestVas", "ShippingRequestVasFK")
-                        .WithMany()
-                        .HasForeignKey("VasId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
