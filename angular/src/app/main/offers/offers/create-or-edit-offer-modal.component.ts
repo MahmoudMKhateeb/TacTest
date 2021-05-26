@@ -6,7 +6,7 @@ import {
   CreateOrEditOfferDto,
   OfferTrucksTypeLookupTableDto,
   OfferTrailerTypeLookupTableDto,
-  OfferGoodCategoryLookupTableDto,
+  GetAllGoodsCategoriesForDropDownOutput,
   OfferRouteLookupTableDto,
 } from '@shared/service-proxies/service-proxies';
 import { AppComponentBase } from '@shared/common/app-component-base';
@@ -33,7 +33,7 @@ export class CreateOrEditOfferModalComponent extends AppComponentBase {
 
   allTrucksTypes: OfferTrucksTypeLookupTableDto[];
   allTrailerTypes: OfferTrailerTypeLookupTableDto[];
-  allGoodCategorys: OfferGoodCategoryLookupTableDto[];
+  allGoodCategorys: GetAllGoodsCategoriesForDropDownOutput[];
   allRoutes: OfferRouteLookupTableDto[];
 
   constructor(injector: Injector, private _offersServiceProxy: OffersServiceProxy) {

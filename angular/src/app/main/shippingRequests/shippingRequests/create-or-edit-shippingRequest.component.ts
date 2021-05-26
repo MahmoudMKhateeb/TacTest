@@ -6,7 +6,7 @@ import {
   CreateOrEditShippingRequestDto,
   FacilitiesServiceProxy,
   FacilityForDropdownDto,
-  GoodsDetailGoodCategoryLookupTableDto,
+  GetAllGoodsCategoriesForDropDownOutput,
   GoodsDetailsServiceProxy,
   ISelectItemDto,
   RoutStepCityLookupTableDto,
@@ -39,7 +39,7 @@ export class CreateOrEditShippingRequestComponent extends AppComponentBase imple
   active = false;
   saving = false;
   shippingRequest: CreateOrEditShippingRequestDto = new CreateOrEditShippingRequestDto();
-  allGoodCategorys: GoodsDetailGoodCategoryLookupTableDto[];
+  allGoodCategorys: GetAllGoodsCategoriesForDropDownOutput[];
   allCarrierTenants: CarriersForDropDownDto[];
   allRoutTypes: any;
   allCitys: RoutStepCityLookupTableDto[];
