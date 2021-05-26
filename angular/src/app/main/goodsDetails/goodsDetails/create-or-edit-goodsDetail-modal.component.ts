@@ -1,7 +1,7 @@
 ﻿import { Component, EventEmitter, Injector, Input, Output, ViewChild } from '@angular/core';
 import { ModalDirective } from 'ngx-bootstrap/modal';
 import { finalize } from 'rxjs/operators';
-import { CreateOrEditGoodsDetailDto, GoodsDetailGoodCategoryLookupTableDto, GoodsDetailsServiceProxy } from '@shared/service-proxies/service-proxies';
+import { CreateOrEditGoodsDetailDto, GetAllGoodsCategoriesForDropDownOutput, GoodsDetailsServiceProxy } from '@shared/service-proxies/service-proxies';
 import { AppComponentBase } from '@shared/common/app-component-base';
 
 @Component({
@@ -22,7 +22,7 @@ export class CreateOrEditGoodsDetailModalComponent extends AppComponentBase {
 
   goodCategoryDisplayName = '';
 
-  allGoodCategorys: GoodsDetailGoodCategoryLookupTableDto[];
+  allGoodCategorys: GetAllGoodsCategoriesForDropDownOutput[];
   private index: number;
 
   constructor(injector: Injector, private _goodsDetailsServiceProxy: GoodsDetailsServiceProxy) {
