@@ -62,7 +62,7 @@ namespace TACHYON.Notifications
          Task ShippingRequestSendOfferWhenUpdatePrice(ShippingRequest Request);
 
         #endregion
-        #region
+        #endregion
         #endregion
         #region TachyonDeal
         Task SendDriectRequestForCarrier(int? TenantId,ShippingRequest Request);

@@ -130,7 +130,7 @@ namespace TACHYON.MarketPlaces
             Pricing.Calculate(_featureChecker, _settingManager, shippingRequest);
             await _shippingRequestPricingRepository.InsertAsync(Pricing);
 
-            await _appNotifier.ShippingRequestSendOfferWhenAddPrice(shippingRequest);
+            //await _appNotifier.ShippingRequestSendOfferWhenAddPrice(shippingRequest);
 
         }
         private async Task Update(CreateOrEditMarketPlaceBidInput Input, ShippingRequest shippingRequest)

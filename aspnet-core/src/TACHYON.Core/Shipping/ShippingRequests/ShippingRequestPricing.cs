@@ -5,6 +5,7 @@ using Abp.Domain.Entities.Auditing;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Linq;
 using TACHYON.Configuration;
 using TACHYON.Features;
 using TACHYON.MultiTenancy;
@@ -88,9 +89,9 @@ namespace TACHYON.Shipping.ShippingRequests
             SetCommissionSettings();
             SetVasesCalculate();
             CalculateSingleTrip();
-            CalculateMultipleTrips();
+            CalculateFinalPrices();
             CalculateSingleTripWithCommission();
-            CalculateMultipleTripsWithCommission();
+            CalculateMultipleFinalPricesWithCommission();
 
         }
         private void CalculateSingleTrip()
@@ -100,11 +101,11 @@ namespace TACHYON.Shipping.ShippingRequests
           
         }
 
-        private void CalculateMultipleTrips()
+        private void CalculateFinalPrices()
         {
-            SubTotalAmount = TripPrice * _shippingRequest.NumberOfTrips;
-            TotalAmount = TripTotalAmount * _shippingRequest.NumberOfTrips;
-            VatAmount = TripVatAmount * _shippingRequest.NumberOfTrips;
+            SubTotalAmount = (TripPrice * _shippingRequest.NumberOfTrips) + ShippingRequestVasesPricing.Sum(x=>x.SubTotalAmount);
+            VatAmount = (TripVatAmount * _shippingRequest.NumberOfTrips) + ShippingRequestVasesPricing.Sum(x => x.VatAmount);
+            TotalAmount = (TripTotalAmount * _shippingRequest.NumberOfTrips) + ShippingRequestVasesPricing.Sum(x => x.TotalAmount);
         }
         private void CalculateSingleTripWithCommission()
         {
@@ -113,12 +114,12 @@ namespace TACHYON.Shipping.ShippingRequests
             TripTotalAmountWithCommission = TripSubTotalAmountWithCommission + TripVatAmountWithCommission;
           
         }
-        private void CalculateMultipleTripsWithCommission()
+        private void CalculateMultipleFinalPricesWithCommission()
         {
-            SubTotalAmountWithCommission = TripSubTotalAmountWithCommission * _shippingRequest.NumberOfTrips;
-            VatAmountWithCommission = TripVatAmountWithCommission * _shippingRequest.NumberOfTrips;
-            TotalAmountWithCommission = TripTotalAmountWithCommission * _shippingRequest.NumberOfTrips;
-            CommissionAmount = TripCommissionAmount * _shippingRequest.NumberOfTrips;
+            SubTotalAmountWithCommission = (TripSubTotalAmountWithCommission * _shippingRequest.NumberOfTrips) + ShippingRequestVasesPricing.Sum(x => x.SubTotalAmountWithCommission);
+            VatAmountWithCommission = (TripVatAmountWithCommission * _shippingRequest.NumberOfTrips) + ShippingRequestVasesPricing.Sum(x => x.VatAmountWithCommission);
+            TotalAmountWithCommission = (TripTotalAmountWithCommission * _shippingRequest.NumberOfTrips) + ShippingRequestVasesPricing.Sum(x => x.TotalAmountWithCommission);
+            CommissionAmount = (TripCommissionAmount * _shippingRequest.NumberOfTrips) + ShippingRequestVasesPricing.Sum(x => x.CommissionAmount);
         }
 
         private void SetCommissionSettings()
@@ -167,6 +168,10 @@ namespace TACHYON.Shipping.ShippingRequests
 
         private void SetVasesCalculate()
         {
+            if (ShippingRequestVasesPricing==null) {
+                ShippingRequestVasesPricing = new List<ShippingRequestVasPricing>();
+                return;
+            }
             foreach (var vas in ShippingRequestVasesPricing)
             {
                 vas.CalculateVas(TaxVat, CommissionType, CommissionPercentageOrAddValue);
