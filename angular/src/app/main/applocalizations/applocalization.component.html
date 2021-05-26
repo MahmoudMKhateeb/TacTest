@@ -92,6 +92,39 @@
                     />
                   </div>
                 </div>
+                <div class="col-xl-6">
+                  <div class="form-group">
+                    <label for="PlatForm">{{ l('PlatForm') }}</label>
+                    <select name="PlatForm" [(ngModel)]="input.platForm" class="form-control">
+                      <option value="">{{ l('All') }}</option>
+                      <option [value]="code.key" *ngFor="let code of terminologyPlatForm">
+                        {{ code.value | localize }}
+                      </option>
+                    </select>
+                  </div>
+                </div>
+                <div class="col-xl-6">
+                  <div class="form-group">
+                    <label for="AppVersion">{{ l('AppVersion') }}</label>
+                    <select name="AppVersion" [(ngModel)]="input.appVersion" class="form-control">
+                      <option value="">{{ l('All') }}</option>
+                      <option [value]="code.key" *ngFor="let code of terminologyAppVersion">
+                        {{ code.value | localize }}
+                      </option>
+                    </select>
+                  </div>
+                </div>
+                <div class="col-xl-6">
+                  <div class="form-group">
+                    <label for="version">{{ l('TerminologyVersion') }}</label>
+                    <select name="version" [(ngModel)]="input.version" class="form-control">
+                      <option value="">{{ l('All') }}</option>
+                      <option [value]="code.key" *ngFor="let code of terminologyVersion">
+                        {{ code.value | localize }}
+                      </option>
+                    </select>
+                  </div>
+                </div>
               </div>
             </div>
           </form>
@@ -126,6 +159,18 @@
                     </th>
                     <th style="width: 150px;">
                       {{ l('CurrentLanguage') }}
+                    </th>
+                    <th style="width: 150px;" pSortableColumn="PlatForm">
+                      {{ l('PlatForm') }}
+                      <p-sortIcon field="PlatForm"></p-sortIcon>
+                    </th>
+                    <th style="width: 150px;" pSortableColumn="AppVersion">
+                      {{ l('AppVersion') }}
+                      <p-sortIcon field="AppVersion"></p-sortIcon>
+                    </th>
+                    <th style="width: 150px;" pSortableColumn="Version">
+                      {{ l('TerminologyVersion') }}
+                      <p-sortIcon field="Version"></p-sortIcon>
                     </th>
                   </tr>
                 </ng-template>
@@ -172,6 +217,18 @@
                     <td style="width: 150px;">
                       <span class="ui-column-title"> {{ l('CurrentLanguage') }}</span>
                       {{ record.value }}
+                    </td>
+                    <td style="width: 150px;">
+                      <span class="ui-column-title"> {{ l('PlatForm') }}</span>
+                      {{ record.platFormTitle }}
+                    </td>
+                    <td style="width: 150px;">
+                      <span class="ui-column-title"> {{ l('AppVersion') }}</span>
+                      {{ record.appVersionTitle }}
+                    </td>
+                    <td style="width: 150px;">
+                      <span class="ui-column-title"> {{ l('TerminologyVersion') }}</span>
+                      {{ record.versionTitle }}
                     </td>
                   </tr>
                 </ng-template>

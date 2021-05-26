@@ -2,6 +2,7 @@
 using Abp.Runtime.Validation;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using TACHYON.Terminologies;
 
 namespace TACHYON.Localization.Dto
 {
@@ -15,6 +16,11 @@ namespace TACHYON.Localization.Dto
         [StringLength(4000, MinimumLength = 1)]
         public string MasterValue { get; set; }
         public ICollection<AppLocalizationTranslationDto> Translations { get; set; }
+
+        public TerminologyPlatForm PlatForm { get; set; }
+        public TerminologyAppVersion AppVersion { get; set; }
+        public TerminologyVersion Version { get; set; }
+
 
     }
 }

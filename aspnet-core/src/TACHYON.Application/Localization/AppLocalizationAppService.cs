@@ -95,9 +95,8 @@ namespace TACHYON.Localization
         {
             string[] HeaderText;
             Func<AppLocalizationListDto, object>[] propertySelectors;
-            HeaderText = new string[] { "Id", "MasterKey", "MasterValue", "CurrentLanguage" };
-            propertySelectors = new Func<AppLocalizationListDto, object>[] { _ => _.Id, _ => _.MasterKey, _ => _.MasterValue, _ => _.Value };
-
+            HeaderText = new string[] { "Id", "MasterKey", "MasterValue", "CurrentLanguage", "PlatForm", "AppVersion", "TerminologyVersion" };
+            propertySelectors = new Func<AppLocalizationListDto, object>[] { _ => _.Id, _ => _.MasterKey, _ => _.MasterValue, _ => _.Value,_=> _.PlatFormTitle, _ => _.AppVersionTitle, _ => _.VersionTitle };
             var LanguageListDto = ObjectMapper.Map<List<AppLocalizationListDto>>(GetLocalization(Input));
             return _excelExporterManager.ExportToFile(LanguageListDto, "Language", HeaderText, propertySelectors);
 
@@ -118,6 +117,7 @@ namespace TACHYON.Localization
         [AbpAllowAnonymous]
         public async Task CreateOrUpdateKeyLog(TerminologieMonitorInput input)
         {
+            input.Key = input.Key.Replace(" ", "");
             if (string.IsNullOrEmpty(input.Key)) return;
             var Terminologie = await _appLocalizationRepository.FirstOrDefaultAsync(x => x.MasterKey.ToLower() == input.Key.ToLower());
             if (Terminologie == null)
@@ -136,7 +136,7 @@ namespace TACHYON.Localization
 
         private async Task Create(CreateOrEditAppLocalizationDto input)
         {
-            input.MasterKey = FirstCharToUpper(input.MasterKey);
+            input.MasterKey = FirstCharToUpper(input.MasterKey.Trim());
             var key = ObjectMapper.Map<AppLocalization>(input);
 
             await _appLocalizationRepository.InsertAsync(key);
@@ -168,13 +168,16 @@ namespace TACHYON.Localization
               .WhereIf(!string.IsNullOrWhiteSpace(Input.Filter), e => e.MasterKey.ToLower().Contains(Input.Filter) || e.MasterValue.ToLower().Contains(Input.Filter) || e.Translations.Any(x => x.Value.ToLower().Contains(Input.Filter)))
               .WhereIf(Input.EditionId.HasValue, e => e.TerminologieEditions.Any(x=>x.EditionId== Input.EditionId.Value))
               .WhereIf(!string.IsNullOrWhiteSpace(Input.Page), e => e.TerminologiePages.Any(x => x.PageUrl.ToLower().Contains(Input.Page.ToLower())))
+              .WhereIf(Input.Version.HasValue, e => e.Version== Input.Version)
+              .WhereIf(Input.PlatForm.HasValue, e => e.PlatForm == Input.PlatForm)
+              .WhereIf(Input.AppVersion.HasValue, e => e.AppVersion == Input.AppVersion)
               .OrderBy(!string.IsNullOrEmpty(Input.Sorting) ? Input.Sorting : "id asc");
         }
 
         private async Task CreateKeyLog(TerminologieMonitorInput input)
         {
             AppLocalization Terminologie = new AppLocalization();
-            Terminologie.MasterKey = FirstCharToUpper(input.Key);
+            Terminologie.MasterKey = FirstCharToUpper(input.Key.Replace(" ",""));
             Terminologie.MasterValue = Terminologie.MasterKey.ToSentenceCase();
             if (AbpSession.TenantId.HasValue) Terminologie.TerminologieEditions.Add(new TerminologieEdition { EditionId = GetCurrentTenant().EditionId.Value });
             Terminologie.TerminologiePages.Add(new TerminologiePage { PageUrl = input.PageUrl });
@@ -199,8 +202,9 @@ namespace TACHYON.Localization
             }
         }
 
-        public string FirstCharToUpper(string input) => input.First().ToString().ToUpper() + input.Substring(1);
+        private string FirstCharToUpper(string input) => input.First().ToString().ToUpper() + input.Substring(1);
 
+        
         #endregion
     }
 

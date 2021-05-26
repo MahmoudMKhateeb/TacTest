@@ -16,11 +16,16 @@ import {
   AppLocalizationFilterInput,
   ComboboxItemDto,
   EditionServiceProxy,
+  TerminologyVersion,
+  TerminologyPlatForm,
+  TerminologyAppVersion,
 } from '@shared/service-proxies/service-proxies';
 import { FileDownloadService } from '@shared/utils/file-download.service';
+import { EnumToArrayPipe } from '../../../shared/common/pipes/enum-to-array.pipe';
 @Component({
   templateUrl: './applocalization.component.html',
   animations: [appModuleAnimation()],
+  providers: [EnumToArrayPipe],
 })
 export class AppLocalizationComponent extends AppComponentBase implements OnInit {
   @ViewChild('dataTable', { static: true }) dataTable: Table;
@@ -32,13 +37,16 @@ export class AppLocalizationComponent extends AppComponentBase implements OnInit
   editions: ComboboxItemDto[] = [];
   IsStartSearch = false;
   uploadUrl: string;
-
+  terminologyVersion: any;
+  terminologyPlatForm: any;
+  terminologyAppVersion: any;
   constructor(
     injector: Injector,
     private _ServiceProxy: AppLocalizationServiceProxy,
     private _editionService: EditionServiceProxy,
     private _fileDownloadService: FileDownloadService,
-    private _httpClient: HttpClient
+    private _httpClient: HttpClient,
+    private enumToArray: EnumToArrayPipe
   ) {
     super(injector);
   }
@@ -47,6 +55,9 @@ export class AppLocalizationComponent extends AppComponentBase implements OnInit
     this._editionService.getEditionComboboxItems(0, true, false).subscribe((editions) => {
       this.editions = editions;
     });
+    this.terminologyVersion = this.enumToArray.transform(TerminologyVersion);
+    this.terminologyPlatForm = this.enumToArray.transform(TerminologyPlatForm);
+    this.terminologyAppVersion = this.enumToArray.transform(TerminologyAppVersion);
   }
   getAll(event?: LazyLoadEvent): void {
     this.primengTableHelper.showLoadingIndicator();
@@ -56,6 +67,9 @@ export class AppLocalizationComponent extends AppComponentBase implements OnInit
         this.input.filter,
         this.input.editionId,
         this.input.page,
+        this.input.platForm,
+        this.input.appVersion,
+        this.input.version,
         this.primengTableHelper.getSorting(this.dataTable),
         this.primengTableHelper.getSkipCount(this.paginator, event),
         this.primengTableHelper.getMaxResultCount(this.paginator, event)
