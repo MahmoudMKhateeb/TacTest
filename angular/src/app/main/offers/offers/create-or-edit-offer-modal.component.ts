@@ -4,7 +4,7 @@ import { finalize } from 'rxjs/operators';
 import {
   OffersServiceProxy,
   CreateOrEditOfferDto,
-  OfferTrucksTypeLookupTableDto,
+  TrucksTypeSelectItemDto,
   OfferTrailerTypeLookupTableDto,
   GetAllGoodsCategoriesForDropDownOutput,
   OfferRouteLookupTableDto,
@@ -31,7 +31,7 @@ export class CreateOrEditOfferModalComponent extends AppComponentBase {
   goodCategoryDisplayName = '';
   routeDisplayName = '';
 
-  allTrucksTypes: OfferTrucksTypeLookupTableDto[];
+  allTrucksTypes: TrucksTypeSelectItemDto[];
   allTrailerTypes: OfferTrailerTypeLookupTableDto[];
   allGoodCategorys: GetAllGoodsCategoriesForDropDownOutput[];
   allRoutes: OfferRouteLookupTableDto[];

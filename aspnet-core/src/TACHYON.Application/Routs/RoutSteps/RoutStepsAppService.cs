@@ -26,6 +26,7 @@ using NUglify.Helpers;
 using Abp.Application.Features;
 using TACHYON.Features;
 using TACHYON.AddressBook.Dtos;
+using TACHYON.Trucks.TrucksTypes.Dtos;
 
 namespace TACHYON.Routs.RoutSteps
 {
@@ -366,10 +367,11 @@ namespace TACHYON.Routs.RoutSteps
 
 
         [AbpAuthorize(AppPermissions.Pages_ShippingRequests)]
-        public async Task<List<SelectItemDto>> GetAllTrucksTypeForTableDropdown()
+        public async Task<List<TrucksTypeSelectItemDto>> GetAllTrucksTypeForTableDropdown()
         {
-            return await _lookup_trucksTypeRepository.GetAll()
-                .Select(trucksType => new SelectItemDto { Id = trucksType.Id.ToString(), DisplayName = trucksType == null || trucksType.DisplayName == null ? "" : trucksType.DisplayName.ToString() }).ToListAsync();
+            var list = await _lookup_trucksTypeRepository.GetAll()
+                .Include(x => x.Translations).ToListAsync();
+            return ObjectMapper.Map<List<TrucksTypeSelectItemDto>>(list);
         }
 
         [AbpAuthorize(AppPermissions.Pages_ShippingRequests)]

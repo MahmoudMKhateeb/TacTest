@@ -21,6 +21,7 @@ using TACHYON.Offers.Exporting;
 using TACHYON.Routs;
 using TACHYON.Trailers.TrailerTypes;
 using TACHYON.Trucks.TrucksTypes;
+using TACHYON.Trucks.TrucksTypes.Dtos;
 
 namespace TACHYON.Offers
 {
@@ -76,7 +77,7 @@ namespace TACHYON.Offers
                         .WhereIf(!string.IsNullOrWhiteSpace(input.DescriptionFilter), e => e.Description == input.DescriptionFilter)
                         .WhereIf(input.MinPriceFilter != null, e => e.Price >= input.MinPriceFilter)
                         .WhereIf(input.MaxPriceFilter != null, e => e.Price <= input.MaxPriceFilter)
-                        .WhereIf(!string.IsNullOrWhiteSpace(input.TrucksTypeDisplayNameFilter), e => e.TrucksTypeFk != null && e.TrucksTypeFk.DisplayName == input.TrucksTypeDisplayNameFilter)
+                        .WhereIf(!string.IsNullOrWhiteSpace(input.TrucksTypeDisplayNameFilter), e => e.TrucksTypeFk != null && e.TrucksTypeFk.Translations.Any(x=>x.TranslatedDisplayName.Contains(input.TrucksTypeDisplayNameFilter)))
                         .WhereIf(!string.IsNullOrWhiteSpace(input.TrailerTypeDisplayNameFilter), e => e.TrailerTypeFk != null && e.TrailerTypeFk.DisplayName == input.TrailerTypeDisplayNameFilter)
                         .WhereIf(!string.IsNullOrWhiteSpace(input.GoodCategoryDisplayNameFilter), e => e.GoodCategoryFk != null && e.GoodCategoryFk.Translations.Any(x=>x.DisplayName.Contains(input.GoodCategoryDisplayNameFilter)))
                         .WhereIf(!string.IsNullOrWhiteSpace(input.RouteDisplayNameFilter), e => e.RouteFk != null && e.RouteFk.DisplayName == input.RouteDisplayNameFilter);
@@ -107,7 +108,7 @@ namespace TACHYON.Offers
                                  Price = o.Price,
                                  Id = o.Id
                              },
-                             TrucksTypeDisplayName = s1 == null || s1.DisplayName == null ? "" : s1.DisplayName.ToString(),
+                             TrucksTypeDisplayName ="", //s1 == null || s1.DisplayName == null ? "" : s1.DisplayName.ToString(),
                              TrailerTypeDisplayName = s2 == null || s2.DisplayName == null ? "" : s2.DisplayName.ToString(),
                              GoodCategoryDisplayName = ObjectMapper.Map<GoodCategoryDto>(o.GoodCategoryFk).DisplayName,//s3 == null || s3.DisplayName == null ? "" : s3.DisplayName.ToString(),
                              RouteDisplayName = s4 == null || s4.DisplayName == null ? "" : s4.DisplayName.ToString()
@@ -130,7 +131,7 @@ namespace TACHYON.Offers
             if (output.Offer.TrucksTypeId != null)
             {
                 var _lookupTrucksType = await _lookup_trucksTypeRepository.FirstOrDefaultAsync(output.Offer.TrucksTypeId.Value);
-                output.TrucksTypeDisplayName = _lookupTrucksType?.DisplayName?.ToString();
+                output.TrucksTypeDisplayName = ObjectMapper.Map<TrucksTypeDto>(_lookupTrucksType)?.TranslatedDisplayName;//_lookupTrucksType?.DisplayName?.ToString();
             }
 
             if (output.Offer.TrailerTypeId != null)
@@ -165,7 +166,7 @@ namespace TACHYON.Offers
             if (output.Offer.TrucksTypeId != null)
             {
                 var _lookupTrucksType = await _lookup_trucksTypeRepository.FirstOrDefaultAsync(output.Offer.TrucksTypeId.Value);
-                output.TrucksTypeDisplayName = _lookupTrucksType?.DisplayName?.ToString();
+                output.TrucksTypeDisplayName = ObjectMapper.Map<TrucksTypeDto>(_lookupTrucksType)?.TranslatedDisplayName;
             }
 
             if (output.Offer.TrailerTypeId != null)
@@ -247,7 +248,7 @@ namespace TACHYON.Offers
                         .WhereIf(!string.IsNullOrWhiteSpace(input.DescriptionFilter), e => e.Description == input.DescriptionFilter)
                         .WhereIf(input.MinPriceFilter != null, e => e.Price >= input.MinPriceFilter)
                         .WhereIf(input.MaxPriceFilter != null, e => e.Price <= input.MaxPriceFilter)
-                        .WhereIf(!string.IsNullOrWhiteSpace(input.TrucksTypeDisplayNameFilter), e => e.TrucksTypeFk != null && e.TrucksTypeFk.DisplayName == input.TrucksTypeDisplayNameFilter)
+                        .WhereIf(!string.IsNullOrWhiteSpace(input.TrucksTypeDisplayNameFilter), e => e.TrucksTypeFk != null && e.TrucksTypeFk.Translations.Any(x=>x.TranslatedDisplayName.Contains(input.TrucksTypeDisplayNameFilter)))
                         .WhereIf(!string.IsNullOrWhiteSpace(input.TrailerTypeDisplayNameFilter), e => e.TrailerTypeFk != null && e.TrailerTypeFk.DisplayName == input.TrailerTypeDisplayNameFilter)
                         .WhereIf(!string.IsNullOrWhiteSpace(input.GoodCategoryDisplayNameFilter), e => e.GoodCategoryFk != null && e.GoodCategoryFk.Translations.Any(x=>x.DisplayName.Contains(input.GoodCategoryDisplayNameFilter)))
                         .WhereIf(!string.IsNullOrWhiteSpace(input.RouteDisplayNameFilter), e => e.RouteFk != null && e.RouteFk.DisplayName == input.RouteDisplayNameFilter);
@@ -274,7 +275,7 @@ namespace TACHYON.Offers
                                  Price = o.Price,
                                  Id = o.Id
                              },
-                             TrucksTypeDisplayName = s1 == null || s1.DisplayName == null ? "" : s1.DisplayName.ToString(),
+                             TrucksTypeDisplayName =ObjectMapper.Map<TrucksTypeDto>(o.TrucksTypeFk).TranslatedDisplayName, //s1 == null || s1.DisplayName == null ? "" : s1.DisplayName.ToString(),
                              TrailerTypeDisplayName = s2 == null || s2.DisplayName == null ? "" : s2.DisplayName.ToString(),
                              GoodCategoryDisplayName = ObjectMapper.Map<GoodCategoryDto>(o.GoodCategoryFk).DisplayName, //s3 == null || s3.DisplayName == null ? "" : s3.DisplayName.ToString(),
                              RouteDisplayName = s4 == null || s4.DisplayName == null ? "" : s4.DisplayName.ToString()
@@ -288,14 +289,17 @@ namespace TACHYON.Offers
 
 
         [AbpAuthorize(AppPermissions.Pages_Offers)]
-        public async Task<List<OfferTrucksTypeLookupTableDto>> GetAllTrucksTypeForTableDropdown()
+        public async Task<List<TrucksTypeSelectItemDto>> GetAllTrucksTypeForTableDropdown()
         {
-            return await _lookup_trucksTypeRepository.GetAll()
-                .Select(trucksType => new OfferTrucksTypeLookupTableDto
-                {
-                    Id = trucksType.Id.ToString(),
-                    DisplayName = trucksType == null || trucksType.DisplayName == null ? "" : trucksType.DisplayName.ToString()
-                }).ToListAsync();
+            var list = await _lookup_trucksTypeRepository.GetAll()
+                .Include(x => x.Translations).ToListAsync();
+            return ObjectMapper.Map<List<TrucksTypeSelectItemDto>>(list);
+            //.Select(trucksType => new OfferTrucksTypeLookupTableDto
+            //{
+            //    Id = trucksType.Id.ToString(),
+            //    DisplayName = trucksType == null || ObjectMapper.Map<TrucksTypeDto>(trucksType).TranslatedDisplayName==null ?"" : ""//trucksType.DisplayName == null ? "" : trucksType.DisplayName.ToString()
+            //}).ToListAsync();
+
         }
 
         [AbpAuthorize(AppPermissions.Pages_Offers)]

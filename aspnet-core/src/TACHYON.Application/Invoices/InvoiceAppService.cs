@@ -24,6 +24,7 @@ using TACHYON.Invoices.Dto;
 using TACHYON.Invoices.Periods;
 using TACHYON.Invoices.Transactions;
 using TACHYON.ShippingRequestVases;
+using TACHYON.Trucks.TrucksTypes.Dtos;
 
 namespace TACHYON.Invoices
 {
@@ -79,7 +80,7 @@ namespace TACHYON.Invoices
                 Items.Add(new InvoiceItemDto
                 {
                     Price = request.ShippingRequests.Price,
-                    TruckType = request.ShippingRequests.TrucksTypeFk.DisplayName,
+                    TruckType = ObjectMapper.Map<TrucksTypeDto>(request.ShippingRequests.TrucksTypeFk).TranslatedDisplayName, //request.ShippingRequests.TrucksTypeFk.DisplayName,
                     Source = request.ShippingRequests.OriginCityFk.DisplayName,
                     Destination = request.ShippingRequests.DestinationCityFk.DisplayName,
                     DateWork = request.ShippingRequests.StartTripDate.Value.ToString("dd MMM, yyyy"),
@@ -117,6 +118,11 @@ namespace TACHYON.Invoices
 
 
             var invoiceDto = ObjectMapper.Map<InvoiceInfoDto>(invoice);
+            invoiceDto.ShippingRequest = invoice.ShippingRequests.Select(x => new InvoiceShippingRequestDto
+            {
+                TruckType = ObjectMapper.Map<TrucksTypeDto>(x.ShippingRequests.TrucksTypeFk).TranslatedDisplayName
+            }).ToList();
+
             invoiceDto.Items = Items;
                 using (CurrentUnitOfWork.DisableFilter(AbpDataFilters.MayHaveTenant, AbpDataFilters.MayHaveTenant))
                 {
@@ -336,7 +342,7 @@ namespace TACHYON.Invoices
                             ? "Total of drops" + request.req.NumberOfDrops
                             : "",
                         OriginCityName = request.req.OriginCityFk.DisplayName,
-                        TruckType = request.req.TrucksTypeFk.DisplayName,
+                        TruckType =ObjectMapper.Map<TrucksTypeDto>(request.req.TrucksTypeFk).TranslatedDisplayName,// request.req.TrucksTypeFk.DisplayName,
                         WaybillNo = request.req.ShippingRequestTrips.FirstOrDefault()?.Id.ToString()
                     });
                 }
@@ -352,7 +358,7 @@ namespace TACHYON.Invoices
                         DestinationCityName = "-",
                         Notes = "Count:" + vas.RequestMaxCount + " Amount:" + vas.RequestMaxAmount,
                         OriginCityName = "-",
-                        TruckType = request.req.TrucksTypeFk.DisplayName,
+                        TruckType = ObjectMapper.Map<TrucksTypeDto>(request.req.TrucksTypeFk).TranslatedDisplayName, //request.req.TrucksTypeFk.DisplayName,
                         WaybillNo = request.req.ShippingRequestTrips.FirstOrDefault()?.Id.ToString() + "VAS" + vasIndex
                     });
                 }

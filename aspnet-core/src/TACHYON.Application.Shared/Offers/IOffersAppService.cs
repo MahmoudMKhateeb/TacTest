@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 using TACHYON.Dto;
 using TACHYON.Goods.GoodCategories.Dtos;
 using TACHYON.Offers.Dtos;
-
+using TACHYON.Trucks.TrucksTypes.Dtos;
 
 namespace TACHYON.Offers
 {
@@ -28,7 +28,7 @@ namespace TACHYON.Offers
         Task<FileDto> GetOffersToExcel(GetAllOffersForExcelInput input);
 
 
-        Task<List<OfferTrucksTypeLookupTableDto>> GetAllTrucksTypeForTableDropdown();
+        Task<List<TrucksTypeSelectItemDto>> GetAllTrucksTypeForTableDropdown();
 
         Task<List<OfferTrailerTypeLookupTableDto>> GetAllTrailerTypeForTableDropdown();
 

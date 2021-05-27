@@ -37,8 +37,8 @@ namespace TACHYON.Trucks.TrucksTypes.TrucksTypesTranslations
                         .Include(e => e.Core)
                         .WhereIf(!string.IsNullOrWhiteSpace(input.Filter), e => false || e.TranslatedDisplayName.Contains(input.Filter) || e.Language.Contains(input.Filter))
                         .WhereIf(!string.IsNullOrWhiteSpace(input.TranslatedDisplayNameFilter), e => e.TranslatedDisplayName == input.TranslatedDisplayNameFilter)
-                        .WhereIf(!string.IsNullOrWhiteSpace(input.LanguageFilter), e => e.Language == input.LanguageFilter)
-                        .WhereIf(!string.IsNullOrWhiteSpace(input.TrucksTypeDisplayNameFilter), e => e.Core != null && e.Core.DisplayName == input.TrucksTypeDisplayNameFilter);
+                        .WhereIf(!string.IsNullOrWhiteSpace(input.LanguageFilter), e => e.Language == input.LanguageFilter);
+                        //.WhereIf(!string.IsNullOrWhiteSpace(input.TrucksTypeDisplayNameFilter), e => e.Core != null && e.Core.DisplayName == input.TrucksTypeDisplayNameFilter);
 
             var pagedAndFilteredTrucksTypesTranslations = filteredTrucksTypesTranslations
                 .OrderBy(input.Sorting ?? "id asc")
@@ -56,7 +56,7 @@ namespace TACHYON.Trucks.TrucksTypes.TrucksTypesTranslations
                                                   Language = o.Language,
                                                   Id = o.Id
                                               },
-                                              TrucksTypeDisplayName = s1 == null || s1.DisplayName == null ? "" : s1.DisplayName.ToString()
+                                             // TrucksTypeDisplayName = s1 == null || s1.DisplayName == null ? "" : s1.DisplayName.ToString()
                                           };
 
             var totalCount = await filteredTrucksTypesTranslations.CountAsync();
@@ -73,11 +73,11 @@ namespace TACHYON.Trucks.TrucksTypes.TrucksTypesTranslations
 
             var output = new GetTrucksTypesTranslationForViewDto { TrucksTypesTranslation = ObjectMapper.Map<TrucksTypesTranslationDto>(trucksTypesTranslation) };
 
-            if (output.TrucksTypesTranslation.CoreId != null)
-            {
-                var _lookupTrucksType = await _lookup_trucksTypeRepository.FirstOrDefaultAsync((long)output.TrucksTypesTranslation.CoreId);
-                output.TrucksTypeDisplayName = _lookupTrucksType?.DisplayName?.ToString();
-            }
+            //if (output.TrucksTypesTranslation.CoreId != null)
+            //{
+            //    var _lookupTrucksType = await _lookup_trucksTypeRepository.FirstOrDefaultAsync((long)output.TrucksTypesTranslation.CoreId);
+            //    output.TrucksTypeDisplayName = _lookupTrucksType?.DisplayName?.ToString();
+            //}
 
             return output;
         }
@@ -92,7 +92,7 @@ namespace TACHYON.Trucks.TrucksTypes.TrucksTypesTranslations
             if (output.TrucksTypesTranslation.CoreId != null)
             {
                 var _lookupTrucksType = await _lookup_trucksTypeRepository.FirstOrDefaultAsync((long)output.TrucksTypesTranslation.CoreId);
-                output.TrucksTypeDisplayName = _lookupTrucksType?.DisplayName?.ToString();
+               // output.TrucksTypeDisplayName = _lookupTrucksType?.DisplayName?.ToString();
             }
 
             return output;
@@ -137,7 +137,7 @@ namespace TACHYON.Trucks.TrucksTypes.TrucksTypesTranslations
                 .Select(trucksType => new TrucksTypesTranslationTrucksTypeLookupTableDto
                 {
                     Id = trucksType.Id,
-                    DisplayName = trucksType == null || trucksType.DisplayName == null ? "" : trucksType.DisplayName.ToString()
+                  ////  DisplayName = trucksType == null || trucksType.DisplayName == null ? "" : trucksType.DisplayName.ToString()
                 }).ToListAsync();
         }
 

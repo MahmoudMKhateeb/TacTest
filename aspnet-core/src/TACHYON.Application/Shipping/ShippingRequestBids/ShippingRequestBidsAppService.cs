@@ -29,6 +29,7 @@ using TACHYON.Shipping.ShippingRequests.Dtos;
 using TACHYON.ShippingRequestVases.Dtos;
 using TACHYON.TachyonPriceOffers;
 using TACHYON.Trucks;
+using TACHYON.Trucks.TrucksTypes.Dtos;
 
 namespace TACHYON.Shipping.ShippingRequestBids
 {
@@ -333,6 +334,7 @@ namespace TACHYON.Shipping.ShippingRequestBids
       
                 IQueryable<ShippingRequest> filterBidShippingRequests = _shippingRequestsRepository.GetAll()
                     .Include(x => x.TrucksTypeFk)
+                    .ThenInclude(x=>x.Translations)
                     .Include(x => x.GoodCategoryFk)
                     .ThenInclude(x=>x.Translations)
                     /*.Include(x => x.ShippingRequestBids.Where(x=>x.TenantId==AbpSession.TenantId))*/
@@ -407,7 +409,7 @@ namespace TACHYON.Shipping.ShippingRequestBids
                     BidStartDate = o.BidStartDate,
                     ShippingRequestBidStatusName = Enum.GetName(typeof(ShippingRequestBidStatus), o.BidStatus),
                     ShipperName = o.Tenant.Name,
-                    TruckTypeDisplayName = o.TrucksTypeFk.DisplayName,
+                    TruckTypeDisplayName = ObjectMapper.Map<TrucksTypeDto>(o.TrucksTypeFk).TranslatedDisplayName,//o.TrucksTypeFk.DisplayName,
                     GoodCategoryName = ObjectMapper.Map<GoodCategoryDto>(o.GoodCategoryFk).DisplayName,// o.GoodCategoryFk.DisplayName,
                     MyBidPrice = bid?.BasePrice,
                     MyBidId = bid?.Id,

@@ -20,10 +20,12 @@ using TACHYON.Exporting;
 using TACHYON.Invoices.Balances;
 using TACHYON.Invoices.Dto;
 using TACHYON.Invoices.Groups.Dto;
+using TACHYON.Invoices.GroupsGroups.Dto;
 using TACHYON.Invoices.Periods;
 using TACHYON.Invoices.SubmitInvoices;
 using TACHYON.Notifications;
 using TACHYON.Shipping.ShippingRequests;
+using TACHYON.Trucks.TrucksTypes.Dtos;
 
 namespace TACHYON.Invoices.Groups
 {
@@ -92,8 +94,8 @@ namespace TACHYON.Invoices.Groups
                 Items.Add(new SubmitInvoiceItemDto
                 {
                     Price = request.ShippingRequests.Price,
-                    TruckType = request.ShippingRequests.TrucksTypeFk.DisplayName,
-                    Source = request.ShippingRequests.OriginCityFk.DisplayName,
+                    TruckType = ObjectMapper.Map<TrucksTypeDto>(request.ShippingRequests.TrucksTypeFk).TranslatedDisplayName,//request.ShippingRequests.TrucksTypeFk.DisplayName,
+                Source = request.ShippingRequests.OriginCityFk.DisplayName,
                     Destination = request.ShippingRequests.DestinationCityFk.DisplayName,
                     DateWork = request.ShippingRequests.StartTripDate.Value.ToString("dd MMM, yyyy"),
                     Remarks = L("TotalOfDrop", request.ShippingRequests.NumberOfDrops)
@@ -129,6 +131,11 @@ namespace TACHYON.Invoices.Groups
             });
 
             var GroupDto = ObjectMapper.Map<GroupPeriodInfoDto>(SubmitInvoice);
+            GroupDto.ShippingRequest = SubmitInvoice.ShippingRequests.Select(x => new GroupShippingRequestDto
+            {
+                TruckType=ObjectMapper.Map<TrucksTypeDto>(x.ShippingRequests.TrucksTypeFk).TranslatedDisplayName
+            }).ToList();
+
             GroupDto.Items = Items;
 
                       DisableTenancyFilters();                

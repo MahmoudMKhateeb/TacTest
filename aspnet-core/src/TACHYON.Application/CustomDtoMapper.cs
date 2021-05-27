@@ -318,10 +318,11 @@ namespace TACHYON
 
             configuration.CreateMap<Truck, GetTruckForViewOutput>()
                 .ForMember(dest => dest.Truck, opt => opt.MapFrom(src => src))
-                .ForMember(dest => dest.TruckStatusDisplayName, opt => opt.MapFrom(src => src.TruckStatusFk.DisplayName))
-                .ForMember(dest => dest.TrucksTypeDisplayName, opt => opt.MapFrom(src => src.TrucksTypeFk.DisplayName));
+                .ForMember(dest => dest.TruckStatusDisplayName, opt => opt.MapFrom(src => src.TruckStatusFk.DisplayName));
 
-            configuration.CreateMap<CreateOrEditTrucksTypeDto, TrucksType>().ReverseMap();
+            configuration.CreateMap<CreateOrEditTrucksTypeDto, TrucksType>()
+                .ForMember(dest => dest.Translations, opt => opt.MapFrom(src => src.Translations))
+                .ReverseMap();
             configuration.CreateMap<TrucksTypeDto, TrucksType>().ReverseMap();
             configuration.CreateMap<CreateOrEditTruckStatusDto, TruckStatus>().ReverseMap();
             configuration.CreateMap<TruckStatusDto, TruckStatus>().ReverseMap();
@@ -454,7 +455,6 @@ namespace TACHYON
 
             configuration.CreateMap<InvoiceShippingRequests, InvoiceShippingRequestDto>()
               .ForMember(dto => dto.Price, options => options.MapFrom(entity => entity.ShippingRequests.Price))
-              .ForMember(dto => dto.TruckType, options => options.MapFrom(entity => entity.ShippingRequests.TrucksTypeFk.DisplayName))
               .ForMember(dto => dto.CreationTime, options => options.MapFrom(entity => entity.ShippingRequests.CreationTime))
               .ForMember(dto => dto.Source, options => options.MapFrom(entity => entity.ShippingRequests.OriginCityFk.DisplayName))
               .ForMember(dto => dto.Destination, options => options.MapFrom(entity => entity.ShippingRequests.DestinationCityFk));
@@ -484,7 +484,6 @@ namespace TACHYON
 
             configuration.CreateMap<GroupShippingRequests, GroupShippingRequestDto>()
   .ForMember(dto => dto.Price, options => options.MapFrom(entity => entity.ShippingRequests.Price))
-  .ForMember(dto => dto.TruckType, options => options.MapFrom(entity => entity.ShippingRequests.TrucksTypeFk.DisplayName))
   .ForMember(dto => dto.CreationTime, options => options.MapFrom(entity => entity.ShippingRequests.CreationTime))
   .ForMember(dto => dto.Source, options => options.MapFrom(entity => entity.ShippingRequests.OriginCityFk.DisplayName))
   .ForMember(dto => dto.Destination, options => options.MapFrom(entity => entity.ShippingRequests.DestinationCityFk));

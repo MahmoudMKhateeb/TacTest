@@ -40,17 +40,18 @@ namespace TACHYON.Trucks.TruckCategories.TruckCapacities
 
             var filteredCapacities = _capacityRepository.GetAll()
                         .Include(e => e.TrucksTypeFk)
+                        .ThenInclude(x=>x.Translations)
                         .WhereIf(!string.IsNullOrWhiteSpace(input.Filter), e => false || e.DisplayName.Contains(input.Filter))
                         .WhereIf(!string.IsNullOrWhiteSpace(input.DisplayNameFilter), e => e.DisplayName == input.DisplayNameFilter)
-                        .WhereIf(!string.IsNullOrWhiteSpace(input.TruckTypeDisplayNameFilter), e => e.TrucksTypeFk != null && e.TrucksTypeFk.DisplayName == input.TruckTypeDisplayNameFilter);
+                        .WhereIf(!string.IsNullOrWhiteSpace(input.TruckTypeDisplayNameFilter), e => e.TrucksTypeFk != null && e.Translations.Any(x=>x.TranslatedDisplayName.Contains(input.TruckTypeDisplayNameFilter)));
 
             var pagedAndFilteredCapacities = filteredCapacities
                 .OrderBy(input.Sorting ?? "id asc")
                 .PageBy(input);
 
-            var capacities = from o in pagedAndFilteredCapacities
-                             join o1 in _lookup_trucktypeRepository.GetAll() on o.TrucksTypeId equals o1.Id into j1
-                             from s1 in j1.DefaultIfEmpty()
+            var capacities = from o in await pagedAndFilteredCapacities.ToListAsync()
+                             //join o1 in _lookup_trucktypeRepository.GetAll() on o.TrucksTypeId equals o1.Id into j1
+                             //from s1 in j1.DefaultIfEmpty()
 
                              select new GetCapacityForViewDto()
                              {
@@ -59,14 +60,14 @@ namespace TACHYON.Trucks.TruckCategories.TruckCapacities
                                      DisplayName = o.DisplayName,
                                      Id = o.Id
                                  },
-                                 TruckTypeDisplayName = s1 == null || s1.DisplayName == null ? "" : s1.DisplayName.ToString()
+                                 TruckTypeDisplayName = ObjectMapper.Map<TrucksTypeDto>(o.TrucksTypeFk)?.TranslatedDisplayName //s1 == null || s1.DisplayName == null ? "" : s1.DisplayName.ToString()
                              };
 
             var totalCount = await filteredCapacities.CountAsync();
 
             return new PagedResultDto<GetCapacityForViewDto>(
                 totalCount,
-                await capacities.ToListAsync()
+                capacities.ToList()
             );
         }
 
@@ -78,8 +79,8 @@ namespace TACHYON.Trucks.TruckCategories.TruckCapacities
 
             if (output.Capacity.TrucksTypeId != null)
             {
-                var _lookupTruckType = await _lookup_trucktypeRepository.FirstOrDefaultAsync((int)output.Capacity.TrucksTypeId);
-                output.TruckTypeDisplayName = _lookupTruckType?.DisplayName?.ToString();
+                var _lookupTruckType = await _lookup_trucktypeRepository.GetAllIncluding(x=>x.Translations).FirstOrDefaultAsync(x=>x.Id == (int)output.Capacity.TrucksTypeId);
+                output.TruckTypeDisplayName = _lookupTruckType!=null ? ObjectMapper.Map<TrucksTypeDto>(_lookupTruckType).TranslatedDisplayName :"";//_lookupTruckType?.DisplayName?.ToString();
             }
 
             return output;
@@ -94,8 +95,8 @@ namespace TACHYON.Trucks.TruckCategories.TruckCapacities
 
             if (output.Capacity.TrucksTypeId != null)
             {
-                var _lookupTruckType = await _lookup_trucktypeRepository.FirstOrDefaultAsync((int)output.Capacity.TrucksTypeId);
-                output.TruckTypeDisplayName = _lookupTruckType?.DisplayName?.ToString();
+                var _lookupTruckType = await _lookup_trucktypeRepository.GetAllIncluding(x => x.Translations).FirstOrDefaultAsync(x => x.Id == (int)output.Capacity.TrucksTypeId);
+                output.TruckTypeDisplayName = ObjectMapper.Map<TrucksTypeDto>(_lookupTruckType)?.TranslatedDisplayName; //_lookupTruckType?.DisplayName?.ToString();
             }
 
             return output;
