@@ -229,16 +229,16 @@ ngx-spinner .loading-text {
   background-color: #2dc401 !important;
   border-color: #2dc401 !important;
 }
-.btn {
-  color: #ffffff !important;
-}
+/*.btn {*/
+/*  color: #ffffff !important;*/
+/*}*/
 
 .fa-save:before {
   content: '\f0c7';
   color: #ffffff !important;
 }
 .btn.btn-light-primary {
-  color: #3699ff;
+  color: #ffffff;
   background-color: #df515a6e !important;
   border-color: transparent;
 }
