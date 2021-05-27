@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using TACHYON.Terminologies;
 
 namespace TACHYON.Localization
 {
@@ -16,6 +17,11 @@ namespace TACHYON.Localization
         public ICollection<AppLocalizationTranslation> Translations { get; set; }
         public List<TerminologieEdition> TerminologieEditions { get; set; } 
         public List<TerminologiePage> TerminologiePages { get; set; } 
+
+        public TerminologyPlatForm PlatForm { get; set; }
+        public TerminologyAppVersion AppVersion { get; set; }
+        public TerminologyVersion Version { get; set; }
+        public TerminologySection Section { get; set; }
         public AppLocalization()
         {
             TerminologieEditions = new List<TerminologieEdition>();

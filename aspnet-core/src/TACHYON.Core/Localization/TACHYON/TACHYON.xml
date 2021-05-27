@@ -4,8 +4,8 @@
     <text name="{0}IsInvalid">"{0}" is invalid</text>
     <text name="{0}IsRequired">{0} is required.</text>
     <text name="{0}UserCannotBeDeleted">{0} user can not be deleted.</text>
-    <text name="3rd Party Insurance coverage">3rd Party Insurance Coverage</text>
-    <text name="9digitsNumber">9 Digits Number</text>
+    <text name="3rdPartyInsurancecoverage">3rd Party Insurance Coverage</text>
+    <text name="9digitsNumber">9 Digits number</text>
     <text name="About">About</text>
     <text name="AboutUs">About us</text>
     <text name="Abp.Organizations.OrganizationUnit">Organization unit</text>
@@ -14,7 +14,7 @@
     <text name="Accepted">Accepted</text>
     <text name="AcceptedDate">Accepted date</text>
     <text name="AcceptPrice">Accept price</text>
-    <text name="Access to your applications and resources, even when you are offline">Access to your applications and resources, even when you are offline</text>
+    <text name="Accesstoyourapplicationsandresources,evenwhenyouareoffline">Access to your applications and resources, even when you are offline</text>
     <text name="AccidentReason">Incident reasons</text>
     <text name="AccidentReasonHeaderInfo">Accident ReasonHeader Info</text>
     <text name="AccidentsReason">Accidents reason</text>
@@ -44,7 +44,7 @@
     <text name="AddNew">Add new</text>
     <text name="AddNewDynamicParameter">Add A New Dynamic Parameter</text>
     <text name="AddNewEntityDynamicParameter">Assign Dynamic Parameter To Entity</text>
-    <text name="AddNewGoodDetail">Add new good detail</text>
+    <text name="AddNewGoodDetail">Add good details</text>
     <text name="AddNewGoodDetails">Add good details</text>
     <text name="AddNewTrip">Add new trip</text>
     <text name="AddNewWayPoint">Add New Way Point</text>
@@ -99,9 +99,11 @@
     <text name="ApproximateTripDistance">Approximate trip distance</text>
     <text name="ApproximateTripDuration">Approximate trip duration</text>
     <text name="AppSecret">App Secret</text>
+    <text name="AppVersion">Type</text>
     <text name="AreYouSure">Are you sure ?</text>
     <text name="AreYouSure?">Are you sure?</text>
     <text name="AShipmentWasAssignedForYouToReceiveOn">A shipment was assigned for you to receive on</text>
+    <text name="AspNetZeroPlatForm">AspNetZero</text>
     <text name="Assign">Assign</text>
     <text name="AssignCarrier">Assign carrier</text>
     <text name="AssignDriverToTruckNotificationMessage">Assign driver to truck 
@@ -155,7 +157,6 @@
     <text name="CacheSuccessfullyCleared">Cache successfully cleared.</text>
     <text name="Camera">Camera</text>
     <text name="Cancel">Cancel</text>
-    <text name="Canceled Date">Canceled Date</text>
     <text name="CanceledDate">Canceled Date</text>
     <text name="CancelMyBid">Cancel my bid</text>
     <text name="CancelTrip">Cancel trip</text>
@@ -244,10 +245,10 @@
     <text name="Code">Code</text>
     <text name="Collapse">Collapse</text>
     <text name="Company">Company</text>
-    <text name="Company Registration (CR)">Company Registration (CR)</text>
     <text name="CompanyFullLeagalName">Company legal name</text>
     <text name="CompanyInformation">Company Information</text>
     <text name="CompanyName">Company</text>
+    <text name="CompanyRegistration(CR)">Company Registration (CR)</text>
     <text name="CompanyUniqueName">Company name</text>
     <text name="Completed">completed</text>
     <text name="Confirm">Confirm</text>
@@ -263,7 +264,7 @@
     <text name="CostOfProration">Price difference during the period</text>
     <text name="CouldNotCompleteLoginOperation">The login process could not be completed ?</text>
     <text name="CouldNotValidateExternalUser">Could not validate external user login</text>
-    <text name="Count">Count</text>
+    <text name="Count">Quantity</text>
     <text name="Counties">Countries</text>
     <text name="CountiesHeaderInfo">Counties header info</text>
     <text name="Countries">Countries</text>
@@ -274,7 +275,7 @@
     <text name="County">Country</text>
     <text name="CountyDisplayName">Country</text>
     <text name="Create">Create</text>
-    <text name="CreateAccident">Create accident</text>
+    <text name="CreateAccident">Add incident</text>
     <text name="CreateAccidentReason">Create accident reason</text>
     <text name="CreateAnAccount">Create account</text>
     <text name="CreateAppLocalization">Create app localization</text>
@@ -391,7 +392,7 @@
     <text name="DeactivateSubscriptionWarningMessage">Webhook subscription will be deactivated and your endpoint will no longer get webhooks</text>
     <text name="DeactiveTenant">Deactivate company</text>
     <text name="Default">Default</text>
-    <text name="Default (all) API">Default (all) API</text>
+    <text name="Default(all)API">Default (all) API</text>
     <text name="DefaultAccountLockoutDurationAsSeconds">Account locking duration (as seconds)</text>
     <text name="DefaultFromAddress">Default from (sender) email address</text>
     <text name="DefaultFromDisplayName">Default from (sender) display name</text>
@@ -477,7 +478,7 @@
     <text name="Detail">Details</text>
     <text name="DetailingSubscription">See webhook detail page</text>
     <text name="Details">View details</text>
-    <text name="DiddingStartDate">Didding start date</text>
+    <text name="DiddingStartDate">Bidding start date</text>
     <text name="DifferentTenantImpersonationErrorMessage">Can not impersonate a user of a different tenant!</text>
     <text name="Dimentions">Dimensions</text>
     <text name="DirectRequests">Direct requests</text>
@@ -490,7 +491,6 @@
     <text name="Docapplocalizationsuments">Docapplocalizationsuments</text>
     <text name="Docuement">Docuement</text>
     <text name="Document">Document</text>
-    <text name="Document Name">Document Name</text>
     <text name="DocumentEntityName">Document Entity Name</text>
     <text name="DocumentFile">Document</text>
     <text name="DocumentFiles">Document</text>
@@ -499,7 +499,7 @@
     <text name="DocumentManagement">Documents management</text>
     <text name="DocumentName">Document name</text>
     <text name="Documents">Documents</text>
-    <text name="DocumentsEntities">Documents Entities</text>
+    <text name="DocumentsEntities">Documents entities</text>
     <text name="DocumentsEntitiesHeaderInfo">Documents Entities Header Info</text>
     <text name="DocumentsEntity">Documents Entity</text>
     <text name="DocumentType">Document type</text>
@@ -518,7 +518,7 @@
     <text name="DownloadAll">Download all</text>
     <text name="DownloadCollectedData">Download collected data</text>
     <text name="DownloadCollectedData_Description">Download data belongs to your account</text>
-    <text name="DownloadDropWaybill">Download drop waybill</text>
+    <text name="DownloadDropWaybill">Download waybill</text>
     <text name="DriectRequestCarrierRespone">
       <a href="/app/main/shippingRequests/shippingRequests/view?id={id}">The {clientname} has established a current view of the  shipment No.: {id}.</a>
     </text>
@@ -536,7 +536,7 @@
     <text name="DriversHeaderInfo">Drivers Header Info</text>
     <text name="DriverStatus">Driver status</text>
     <text name="DriverTripReminder">You have a new trip tomorrow</text>
-    <text name="Driving License">Driving License</text>
+    <text name="DrivingLicense">Driving License</text>
     <text name="Drop">Drop</text>
     <text name="DropOff">Dropoff</text>
     <text name="DropoffDetailCommodity">Commodity</text>
@@ -657,7 +657,7 @@
     <text name="EnableUserAccountLockingOnFailedLoginAttemts">Enable user account locking on failed login attempts</text>
     <text name="EndDate">End date</text>
     <text name="EndTime">End time</text>
-    <text name="EndTripDate">End trip date</text>
+    <text name="EndTripDate">Trip drop off date</text>
     <text name="EnglishLettersOnly">English letters only</text>
     <text name="Enter">Enter</text>
     <text name="EnterCapacity">Enter capacity</text>
@@ -667,7 +667,7 @@
     <text name="EnterRecipientCode">Please enter the code, with the recipient</text>
     <text name="EnterTenancyName">Enter company name...</text>
     <text name="EnterYourDetailsToLoginToYourAccount">Enter your email and password to login</text>
-    <text name="EnterYourEmailAndPassword ">Enter your email and password</text>
+    <text name="EnterYourEmailAndPassword">Enter your email and password</text>
     <text name="Entity">Entity</text>
     <text name="Entity_Name_Plural_Here">Entity_Name_Plural_Here</text>
     <text name="EntityDynamicParameter">Entity Dynamic Parameter</text>
@@ -675,7 +675,7 @@
     <text name="EntityDynamicParameterValue">Entity Dynamic Parameter Value</text>
     <text name="EntityDynamicParameterValues">Entity Dynamic Parameter Values</text>
     <text name="EntityFullName">Entity name</text>
-    <text name="EntityId">Entity Id</text>
+    <text name="EntityId">Company ID</text>
     <text name="EntityRowId">Entity Row Id</text>
     <text name="EntityType">Entity Type</text>
     <text name="Error">Error!</text>
@@ -713,6 +713,7 @@
     <text name="Fatal">Fatal</text>
     <text name="FatherId">Father id</text>
     <text name="Features">Features</text>
+    <text name="File">File</text>
     <text name="File_Empty_Error">Please select a file!</text>
     <text name="File_Invalid_Type_Error">Invalid file type!</text>
     <text name="File_SizeLimit_Error">Size of the file exceeds allowed limits!</text>
@@ -765,6 +766,7 @@
     <text name="GoogleAuthenticatorIsNotEnabled">Google Authenticator is not enabled for your account. You must first enable it in your settings.</text>
     <text name="GoogleAuthenticatorReferrerLink">Not sure what this screen means? You may need to check this </text>
     <text name="GoToApplication">Go to application</text>
+    <text name="GoToHome">Home</text>
     <text name="GoToLoginPage">Go to login page</text>
     <text name="GoToSubscription">Go To Subscription</text>
     <text name="GoToSubscriptionManagement">Go to subscription</text>
@@ -793,18 +795,18 @@
     <text name="History">History</text>
     <text name="HomePage">Home page</text>
     <text name="HostDashboardHeaderInfo">General statistics and recent activities</text>
+    <text name="HowWasFacility">How was the facility</text>
     <text name="HttpStatusCode">Http Status Code</text>
     <text name="IAgreeonTahcyon">I agree on Tachyon's</text>
     <text name="IAMA">I am a</text>
     <text name="Id">Id</text>
-    <text name="ID / Iqama">ID / Iqama</text>
+    <text name="ID/Iqama">ID / Iqama</text>
     <text name="Image">Image</text>
     <text name="ImpersonationTokenErrorMessage">Impersonation token is invalid or expired!</text>
     <text name="ImportFromExcel">Import from excel</text>
     <text name="ImportToExcelSampleFileDownloadInfo">{0} to download sample import file.</text>
     <text name="ImportUsersProcessStart">User import process has begun.</text>
     <text name="ImportUsersUploadFailed">User import process has failed.</text>
-    <text name="In Progress">In Progress</text>
     <text name="InActiveAccountExpired">InActive Account Expired</text>
     <text name="InActiveToleranceDays">InActive Tolerance Days</text>
     <text name="InCaseOfShippingRequestTypeIsBidding">In Case Of Shipping, Request Type Is Bidding</text>
@@ -815,6 +817,7 @@
     <text name="IncorrectCaptchaAnswer">Unable to determine that you are not a robot.</text>
     <text name="IncorrectImageFormat">Incorrect image format!</text>
     <text name="Info">Info</text>
+    <text name="InProgress">In progress</text>
     <text name="InputType">Input Type</text>
     <text name="InReview">In review</text>
     <text name="Interval">Interval</text>
@@ -849,7 +852,7 @@
     <text name="InvoiceVasRemarksCount">Count:{0}</text>
     <text name="InvoiceVasType">Type:{0}</text>
     <text name="IpAddress">IP address</text>
-    <text name="IsAccepted">Is Accepted</text>
+    <text name="IsAccepted">Accepted</text>
     <text name="IsActive">Is Active</text>
     <text name="IsActvie">Is actvie</text>
     <text name="IsAttachable">Is attachable</text>
@@ -878,6 +881,7 @@
     <text name="IsTachyonDeal">Is Tachyon Deal</text>
     <text name="Istimara">Istimara</text>
     <text name="IsTrialActive">Is trial active</text>
+    <text name="IsTwoFactorEnabled">Two factor authentication enabled</text>
     <text name="IsVented">Is vented</text>
     <text name="Item">Item</text>
     <text name="Jk">hujk</text>
@@ -934,7 +938,7 @@
     <text name="LookingForMpaVersion">Looking for Multi-Page Application Version?</text>
     <text name="LookingForSpaVersion">Looking for Single-Page Application Version?</text>
     <text name="MailSent">Mail sent</text>
-    <text name="MainGoodCategory">Main Good Category</text>
+    <text name="MainGoodCategory">Good category</text>
     <text name="MainMenu">Main menu</text>
     <text name="Maintenance">Maintenance</text>
     <text name="MakePaid">label as paid</text>
@@ -977,14 +981,14 @@
     <text name="MinDigits">Min Digits</text>
     <text name="MinMax">Min max</text>
     <text name="MinValue">Min</text>
-    <text name="MobileNo">Mobile no</text>
+    <text name="MobileNo">Mobile number</text>
     <text name="ModalName">Model name</text>
     <text name="ModalYear">Model year</text>
     <text name="Model">Model</text>
     <text name="ModelName">Model Name</text>
     <text name="ModelYear">Model Year</text>
     <text name="Monthly">Monthly</text>
-    <text name="Monthly date 1">Monthly date 1</text>
+    <text name="Monthlydate1">Monthly date 1</text>
     <text name="MonthlyPrice">Monthly Price</text>
     <text name="MoveTenantsOfEdition">Move tenants to another edition</text>
     <text name="MoveTenantsOfEditionDescription">{0} tenants will be moved</text>
@@ -993,6 +997,7 @@
     <text name="MultipleDrops">Multiple drops</text>
     <text name="MyBiddingHistory">My bidding history</text>
     <text name="MyBidPrice">My bid price</text>
+    <text name="Myload">My Load</text>
     <text name="MyLoadComming">Comming</text>
     <text name="MyLoadCurrent">Current</text>
     <text name="MyLoadPast">Past</text>
@@ -1022,12 +1027,14 @@
     <text name="NewDocumentType">new document type</text>
     <text name="NewDocumentTypeTranslation">New document type translation</text>
     <text name="NewGroupPerioGenerated">
-      <a href="/app/main/invoices/submitinvoices/detail/{groupid}">A new submit invoice has been generated {groupid}#</a>
+      <a href="/app/main/invoices/submitinvoices/detail/{groupid}">A new invoice has been generated {groupid}#</a>
     </text>
     <text name="NewInvoiceShipperGenerated">
       <a href="/app/main/invoices/detail/{invoiceid}">A new invoice has been generated {invoiceid}#</a>
     </text>
-    <text name="NewInvoiceShipperGeneratedEmailBody"> <a href="/app/main/invoices/detail/{invoiceid}">A new invoice has been generated {invoiceid}#</a></text>
+    <text name="NewInvoiceShipperGeneratedEmailBody">
+      <a href="/app/main/invoices/detail/{invoiceid}">A new invoice has been generated {invoiceid}#</a>
+    </text>
     <text name="NewNotifications">New notifications</text>
     <text name="NewOrganizationUnit">New organization unit</text>
     <text name="NewPage">New page</text>
@@ -1098,7 +1105,7 @@
     <text name="NumberOfTrips">Number of trips</text>
     <text name="NumbersOnly">Numbers only</text>
     <text name="Object">Object</text>
-    <text name="Occupation Card ">Occupation Card </text>
+    <text name="OccupationCard">Occupation Card</text>
     <text name="Off">Off</text>
     <text name="Offer">Offer</text>
     <text name="OfferedPrice">Offered price</text>
@@ -1106,7 +1113,7 @@
     <text name="OffersHeaderInfo">Offers header info</text>
     <text name="OfferStatus">Offer status</text>
     <text name="Offline">Offline</text>
-    <text name="Offline Access">Offline Access</text>
+    <text name="OfflineAccess">Offline Access</text>
     <text name="Ok">Ok</text>
     <text name="On">On</text>
     <text name="OneConcurrentLoginPerUser">Only one concurrent login per user</text>
@@ -1125,7 +1132,7 @@
     <text name="OrganizationUnits">Organization Units</text>
     <text name="OrganizationUnitsHeaderInfo">Use organization units to organize users and entities</text>
     <text name="Origin">From</text>
-    <text name="OriginalCity">Original city</text>
+    <text name="OriginalCity">Origin city</text>
     <text name="OriginalValue">Original value</text>
     <text name="OriginCity">Origin city</text>
     <text name="OriginFacility">Pickup facility</text>
@@ -1162,13 +1169,13 @@
     <text name="PasswordComplexityNotSatisfied">Password complexity is not satisfied.</text>
     <text name="PasswordRepeat">Confirm password</text>
     <text name="PasswordReset">Password reset</text>
-    <text name="PasswordResetEmail_ClickTheLinkBelowToResetYourPassword">Please click the link below to reset your password:</text>
+    <text name="PasswordResetEmail_ClickTheLinkBelowToResetYourPassword">If this an email, please use the
+content that we shared with you.</text>
     <text name="PasswordResetEmail_Subject">TACHYON password reset</text>
     <text name="PasswordResetEmail_SubTitle">This email is sent you to reset and re-create your password.</text>
     <text name="PasswordResetEmail_Title">TACHYON password reset.</text>
     <text name="PasswordResetMailSentMessage">A password reset link sent to your e-mail address. Please check your emails.</text>
     <text name="PasswordsDontMatch">Passwords do not match!</text>
-    <text name="Pay In Advance">Pay In Advance</text>
     <text name="PayInAdvance">Pay in advance</text>
     <text name="PayloadMaxWeight">Payload max weight</text>
     <text name="PayloadMaxWeightDisplayName">Payload max weight display name</text>
@@ -1196,7 +1203,7 @@
     <text name="PerYear">Per year</text>
     <text name="Phone">Phone</text>
     <text name="PhoneNumber">Mobile number</text>
-    <text name="PhoneNumberMustStartWith5">Phone number must start with5</text>
+    <text name="PhoneNumberMustStartWith5">Mobile number must start with5</text>
     <text name="Pick">Select</text>
     <text name="PickanEndDate">Select end date</text>
     <text name="PickaRouteType">Select route type</text>
@@ -1238,13 +1245,14 @@
     <text name="PlateTypeId">Plate type id</text>
     <text name="PlateTypes">Plated types</text>
     <text name="PlateTypesHeaderInfo">Plate Types header info</text>
+    <text name="PlatForm">Platform</text>
     <text name="PleaseAddReceiverCardIdNumber">Please Add Receiver CardId Number</text>
     <text name="PleaseAddReceiverEmailAddress">Please add receiver email address</text>
     <text name="PleaseAddReceiverFullName">Please add receiver full name</text>
     <text name="PleaseAddReceiverPhoneNumber">Please add receiver mobile number</text>
     <text name="PleaseChooseAvalidFormat">Please chose a valid format</text>
     <text name="PleaseChooseDate">Please chose date</text>
-    <text name="PleaseConfirmthisAction">Please confirmthis action</text>
+    <text name="PleaseConfirmthisAction">Please confirm this action</text>
     <text name="PleaseEnterAtLeastNCharacter">Please enter at least {0} characters.</text>
     <text name="PleaseEnterDocumentType">Please enter document type</text>
     <text name="PleaseEnterLoginInformation">Please enter login information</text>
@@ -1254,7 +1262,7 @@
     <text name="PleaseMakeSureYouProvideValidDetails!">Please make sure you provide valid details!</text>
     <text name="PleaseOnClickFollowingLinkToTrackYourShipmentAndRateTheShippingCompany">Please click the following link to track your shipment and rate your experience</text>
     <text name="PleaseSelectAPicture">Please select a picture!</text>
-    <text name="PleaseSelectASourceTripFacilityFirst">Please select aSource trip facility first</text>
+    <text name="PleaseSelectASourceTripFacilityFirst">Please select a pickup location first</text>
     <text name="PleaseSelectReason">Please select reason</text>
     <text name="PleaseWait">Please Wait</text>
     <text name="PleaseWaitToConfirmYourEmailMessage">Please wait while confirming your email address...</text>
@@ -1306,7 +1314,7 @@
     <text name="ReceivingPaymentResult">Receiving payment result.</text>
     <text name="RecentTenants">Recent companies</text>
     <text name="RecentTenantsHelpText">Last {1} customers registered in {0} days...</text>
-    <text name="RechargeAmount ">Balance management</text>
+    <text name="RechargeAmount">Balance management</text>
     <text name="RecurringSubscriptionUpgradeNote">The price difference between your current edition and the one you are upgrading will be charged from your account.</text>
     <text name="ReferenceNo">Reference No.</text>
     <text name="Refresh">Refresh</text>
@@ -1397,7 +1405,7 @@
     <text name="SelectaCapacity">Select a capacity</text>
     <text name="SelectaCity">Select city</text>
     <text name="SelectaCountry">Select country</text>
-    <text name="SelectACounty">Select aCounty</text>
+    <text name="SelectACounty">Select country</text>
     <text name="SelectaDestination">Select a destination</text>
     <text name="SelectaDriver">Selecta driver</text>
     <text name="SelectADynamicParameter">Select A DynamicParameter</text>
@@ -1416,7 +1424,7 @@
     <text name="SelectATermAndCondition">Select aTerm and condition</text>
     <text name="SelectATheme">Select a Theme</text>
     <text name="SelectaTransportType">Select a transport type</text>
-    <text name="Selectatruck">Selectatruck</text>
+    <text name="Selectatruck">Select truck</text>
     <text name="SelectATrucksType">Select aTrucks type</text>
     <text name="SelectaTruckType">Select a truck type</text>
     <text name="SelectAUnitOfMeasure">Select UOM</text>
@@ -1443,14 +1451,14 @@
     <text name="SendActivationEmail">Send activation email.</text>
     <text name="SendDirectRequest">Send direct request</text>
     <text name="SendDirectRequestOffer">Send direct request offer</text>
-    <text name="SendDirectRequests">Send direct requests</text>
+    <text name="SendDirectRequests">Send direct request</text>
     <text name="SendDriectRequestForCarrier">Please send us a quote for the shipment No.: {id}.</text>
     <text name="SendEmailActivationLink_Information">A link will be sent to your email to activate your email address. If you don't get an email within a few minutes, please re-try.</text>
     <text name="Sender">Sender</text>
     <text name="SendingWithThreeDot">Sending with three dot</text>
     <text name="SendPasswordResetLink_Information">A password reset link will be sent to your email to reset your password. If you don't get an email within a few minutes, please re-try.</text>
     <text name="SendPriceOfferToShipper">Send price offer to shipper</text>
-    <text name="SendPricingOfferToShipper">Send pricing offer to shipper</text>
+    <text name="SendPricingOfferToShipper">Send pricing offer</text>
     <text name="SendSecurityCode">Send security code.</text>
     <text name="SendSecurityCode_Information">You should verify yourself to login. Please select a verification type. A code will be sent based on selected verification type.</text>
     <text name="SendSecurityCodeErrorMessage">Security code could not be sent!</text>
@@ -1477,7 +1485,6 @@
     <text name="ShipperReminderToCompelteTrips">
       <a href="/app/main/shippingRequests/shippingRequests/view?id={id}">You have a shipment that has not completed its journeys</a>
     </text>
-    <text name="Shipping Request Details">Shipping Request Details</text>
     <text name="ShippingNote">Shipper notes</text>
     <text name="ShippingRequest">Shipping request</text>
     <text name="ShippingRequestAccidentsOccure">
@@ -1486,6 +1493,7 @@
     <text name="ShippingRequestCancelTripByAccidents">
       <a href="/app/main/shippingRequests/shippingRequests/view?id={id}">The shipment No.:{id} cancled by incident.</a>
     </text>
+    <text name="ShippingRequestDetails">Shipping request details</text>
     <text name="ShippingRequestId">Shipping request id</text>
     <text name="ShippingRequestNotifyCarrirerWhenShipperAccepted">
       <a href="/app/main/shippingRequests/shippingRequests/view?id={id}">The shipper {clientname} has been accepted your offer.</a>
@@ -1494,7 +1502,7 @@
     <text name="ShippingRequestPricingResponse">Shipping Request Pricing Response</text>
     <text name="ShippingRequestProperties">Shipping Request Properties</text>
     <text name="ShippingRequestReceiverCode">Your Shipping code is {0}</text>
-    <text name="ShippingRequests">Shipping Requests</text>
+    <text name="ShippingRequests">Shipping requests</text>
     <text name="ShippingRequestsCreate">Shipping Requests Create</text>
     <text name="ShippingRequestsEdit">Shipping Requests Edit</text>
     <text name="ShippingRequestsHeaderInfo">Shipping requests header info</text>
@@ -1504,7 +1512,7 @@
     <text name="ShippingRequestStatusName">Request status</text>
     <text name="ShippingRequestsView">Shipping Requests View</text>
     <text name="ShippingRequestTrips">Shipping request trips</text>
-    <text name="ShippingRequestType">Shipping Request Type</text>
+    <text name="ShippingRequestType">Shipping request type</text>
     <text name="ShippingRequestVas">Shipping Request VAS</text>
     <text name="ShippingRequestVases">Shipping Request vases</text>
     <text name="ShippingType">Shipping type</text>
@@ -1539,12 +1547,12 @@ code:{0}</text>
     <text name="Start">Start</text>
     <text name="StartDate">Start date</text>
     <text name="StartTime">Start time</text>
-    <text name="StartTripDate">Start trip date</text>
+    <text name="StartTripDate">Trip pickup date</text>
     <text name="StartUsingFree">Start using free</text>
     <text name="Static">Static</text>
     <text name="StaticRole_Tooltip">Static roles can not be deleted.</text>
     <text name="Status">Status</text>
-    <text name="StatusName">Status name</text>
+    <text name="StatusName">Status?</text>
     <text name="StatusTitle">Status title</text>
     <text name="StopBiddingOnthisRequest">Stop pricing on this request</text>
     <text name="StringLengthDoesntMatch">The field {0} must be a minimum length of {1} and a maximum length of {2}.</text>
@@ -1602,7 +1610,7 @@ code:{0}</text>
     <text name="SuccessfullyRemoved">Successfully removed</text>
     <text name="SuccessfullyRestore">Successfully restore</text>
     <text name="SuccessfullySaved">Successfully saved.</text>
-    <text name="SuccessfullyTripCancled">Successfully trip cancled</text>
+    <text name="SuccessfullyTripCancled">Successfully trip canceled</text>
     <text name="SuccessfullyUnlinked">Successfully unlinked</text>
     <text name="Summary">Summary</text>
     <text name="Surname">Surname</text>
@@ -1662,6 +1670,7 @@ code:{0}</text>
       <a href="/app/main/shippingRequests/shippingRequests/view?id={id}">The offer has been rejected by the shipper {clientname}.</a>
     </text>
     <text name="TachyonManageService">Tachyon Managed Services</text>
+    <text name="TachyonPlatForm">Tachyon</text>
     <text name="TakePhoto">Take a photo</text>
     <text name="TargetEdition">Target subscription type</text>
     <text name="TargetLanguage">Target language</text>
@@ -1677,6 +1686,7 @@ code:{0}</text>
     <text name="TenantDeleteWarningMessage">Company {0} will be deleted.</text>
     <text name="TenantEditionIsNotAssigned">Tenant edition is not assigned</text>
     <text name="TenantIdIsNotActive{0}">Inactive tenant id: {0}</text>
+    <text name="TenantInformations">Tenant information</text>
     <text name="TenantIsNotActive">Company {0} is not active.</text>
     <text name="TenantManagement">companies management</text>
     <text name="TenantName">Company name</text>
@@ -1703,6 +1713,8 @@ code:{0}</text>
     <text name="TermAndConditionTitle">Terms and Conditions title</text>
     <text name="TermAndConditionTranslations">Term and Condition translations</text>
     <text name="TermAndConditionTranslationsHeaderInfo">Term and Condition Translations header info</text>
+    <text name="TerminologySection">Section</text>
+    <text name="TerminologyVersion">Version</text>
     <text name="TermsAndConditions">Terms and conditions</text>
     <text name="TermsAndConditons">Terms and conditions</text>
     <text name="TestCheckFeature">Test check feature</text>
@@ -1733,6 +1745,7 @@ code:{0}</text>
     <text name="ThePriceMustBeGreaterThanZero">The price must be greater than zero</text>
     <text name="ThereAreNoNotifications">There are no notifications.</text>
     <text name="ThereAreTenantsSubscribedToThisEdition">There are companies subscribed to this subscription type. Please assign a different subscription type to them and then delete this subscription type.</text>
+    <text name="TheRecordNotFound">The record not found</text>
     <text name="ThereIsNoActiveUserDelegationBetweenYourUserAndCurrentUser">There is no active user delegation between your user and current user !</text>
     <text name="ThereIsNoEditionToUpgrade">There is no edition to upgrade</text>
     <text name="ThereIsNoLoggedInUser">There is no logged in user.</text>
@@ -1755,8 +1768,7 @@ code:{0}</text>
     <text name="TimeZoneSettingChangedRefreshPageNotification">Time zone setting changed. Click OK button to refresh page and changes to take effect.</text>
     <text name="Title">Title</text>
     <text name="TitleLogin">To Sign in , what is your mobile phone number </text>
-    <text name="TitleOTP">Enter the 4-digit code we send to mobile Number to verify your Acoount 
-</text>
+    <text name="TitleOTP">Enter the 4-digit code we send to mobile Number to verify your Account</text>
     <text name="TMS">Transport management system</text>
     <text name="TMSSettings">TMS Settings</text>
     <text name="Today">Today</text>
@@ -1809,7 +1821,6 @@ code:{0}</text>
     <text name="TripIncident">Trip incident</text>
     <text name="TripInfo">Trip Info</text>
     <text name="TripRejectReason">Trip reject reason</text>
-    <text name="Trips Start Date">Trips start date</text>
     <text name="TripsEndDate">Trip end date</text>
     <text name="TripsStartDate">Trips start date</text>
     <text name="TripStartDate">Trips start date</text>
@@ -1818,7 +1829,7 @@ code:{0}</text>
     <text name="Truck">Truck</text>
     <text name="TruckCapacities">Truck Capacity</text>
     <text name="TruckCapacitiesTranslation">Truck Capacities Translation</text>
-    <text name="TruckCapacitiesTranslations">Truck Capacities Translations</text>
+    <text name="TruckCapacitiesTranslations">Truck capacities translation</text>
     <text name="TruckCapacitiesTranslationsHeaderInfo">Truck Capacities Translations header info</text>
     <text name="TruckDetails">Truck details</text>
     <text name="TruckDocuments">Truck documents</text>
@@ -1851,10 +1862,10 @@ code:{0}</text>
     <text name="TryIt">Try it</text>
     <text name="Tuck">Tuck</text>
     <text name="TurnLocationServices">Turn on my Location services so the app can find places near you.</text>
-    <text name="Two weeks">Two weeks</text>
     <text name="TwoFactorLogin">Two Factor Login</text>
     <text name="TwoFactorLoginIsNotSupported">Two factor login is not currently supported!</text>
     <text name="TwoWay">Two way</text>
+    <text name="Twoweeks">Two weeks</text>
     <text name="Type">Type...</text>
     <text name="TypeAMessageHere">Type your message here...</text>
     <text name="UiCustomization_AllowAsideHiding">Allow aside hiding</text>
@@ -1947,7 +1958,7 @@ code:{0}</text>
     <text name="UploadedFile">Uploaded file</text>
     <text name="UploadLogo_Info">Select a JPG/JPEG/PNG/GIF file with a maximum of 30KB size and 139x35 pixel resolution.</text>
     <text name="UploadPODLbl">Upload POD</text>
-    <text name="UploadPODProofOfDelivery">Proof Of Delivery</text>
+    <text name="UploadPODProofOfDelivery">Please upload Proof Of Delivery</text>
     <text name="UsagePolicy">Usage Policy</text>
     <text name="UseArrowKeysToChooseTheYear">Use arrow keys to choose the year</text>
     <text name="UseCaptchaOnLogin">Use security image question (captcha) on login.</text>
@@ -1958,7 +1969,6 @@ code:{0}</text>
     <text name="UseHostDatabase">Use host database</text>
     <text name="UseHostDefaultEmailSettings">Use default email settings</text>
     <text name="UseHostSettings">Use host settings</text>
-    <text name="User profile">User profile</text>
     <text name="UserAccount">User account</text>
     <text name="UserAccounts">Users accounts</text>
     <text name="UserBlocked">User blocked successfully.</text>
@@ -1976,6 +1986,7 @@ code:{0}</text>
     <text name="UserManagement">User management</text>
     <text name="UserName">Username</text>
     <text name="UserNameOrEmail">User name or email</text>
+    <text name="Userprofile">User profile</text>
     <text name="Users">Users</text>
     <text name="UserSendYouAFriendshipRequest">{0} added you as a friend.</text>
     <text name="UsersHeaderInfo">Manage users and permissions.</text>
@@ -2066,7 +2077,7 @@ code:{0}</text>
     <text name="Width">Width</text>
     <text name="WillBeShownOnAllOfficialDocumentsLikeWaybillsAndInvoices">Will be shown on all official documents like waybills and invoices</text>
     <text name="WriteIncidentReport">Please write the incident report</text>
-    <text name="WriteRejectionReason">Please write the rejection reason</text>
+    <text name="WriteRejectReason">Please write the rejection reason</text>
     <text name="WrongSmsVerificationCode">Wrong verification code!</text>
     <text name="Wtrealm">Wtrealm</text>
     <text name="XCanNotBeNullOrEmpty">{0} Can not be null or empty</text>
@@ -2075,6 +2086,7 @@ code:{0}</text>
     <text name="Year">Year</text>
     <text name="Yellow">Yellow</text>
     <text name="Yes">Yes</text>
+    <text name="YesDelete">Yes, delete!</text>
     <text name="Yesterday">Yesterday</text>
     <text name="You">You</text>
     <text name="YouAlreadyAddPricingForThisShipping">You already add pricing for this shipping</text>
@@ -2092,21 +2104,21 @@ code:{0}</text>
     <text name="YouDontHaveAnyBlockedFriend">You don't have any blocked users. In order to block a friend, select a friend and select block from actions dropdown.</text>
     <text name="YouDontHaveAnyFriend">You don't have any friends. Write a username to above input box and click "Add Friend" button.</text>
     <text name="YouHaveToSubscribeToTestWebhookToReceiveTestEvent">You have to subscribe to test webhook to receive test event</text>
-    <text name="Your email address">Your email address</text>
-    <text name="Your Phone Number">Your mobile number</text>
-    <text name="Your postal address">Your postal address</text>
-    <text name="Your user identifier">Your user identifier</text>
-    <text name="Your user profile information (first name, last name, etc.)">Your user profile information (first name, last name, etc.)</text>
     <text name="YourAccountIsWaitingToBeActivatedByAdmin">Your account is waiting to be activated by system admin.</text>
     <text name="YourCode">Your code</text>
+    <text name="Youremailaddress">Your email address</text>
     <text name="YourEmailIsConfirmedMessage">Your email address is successfully confirmed.</text>
     <text name="YourPasswordHasChangedSuccessfully">Your password has changed successfully.</text>
     <text name="YourPaymentHasBeenCompleted">Your payment has been completed.</text>
+    <text name="YourPhoneNumber">Your mobile number</text>
     <text name="YourPhoneNumberIsNotVerified">Your mobile number is not verified</text>
     <text name="YourPhoneNumberIsVerified">Your mobile number is verified</text>
+    <text name="Yourpostaladdress">Your postal address</text>
     <text name="YourPriceAlreadyAcceptedYouCanEdit">Your price already accepted you can edit</text>
     <text name="YourSessionIsAboutToExpire">Your session is about to expire</text>
     <text name="YourSessionIsLocked">Your session is locked</text>
-    <text name="جاري الحفظ...">جاري الحفظ...</text>
+    <text name="Youruseridentifier">Your user identifier</text>
+    <text name="Youruserprofileinformation(firstname,lastname,etc.)">Your user profile information (first name, last name, etc.)</text>
+    <text name="جاريالحفظ...">جاري الحفظ...</text>
   </texts>
 </localizationDictionary>

@@ -34,6 +34,26 @@
             <b>{{ Terminologie.masterValue }}</b>
           </div>
         </div>
+        <div class="row">
+          <div class="form-group col-md-3">
+            <span class="navi-text">
+              {{ l('PlatForm') }}
+            </span>
+            <b>{{ l(Terminologie.platFormTitle) }}</b>
+          </div>
+          <div class="form-group col-md-3">
+            <label for="MasterKey">{{ l('AppVersion') }}:</label>
+            <b>{{ Terminologie.appVersionTitle }}</b>
+          </div>
+          <div class="form-group col-md-3">
+            <label for="MasterValue">{{ l('TerminologyVersion') }}:</label>
+            <b>{{ Terminologie.versionTitle }}</b>
+          </div>
+          <div class="form-group col-md-3">
+            <label for="MasterValue">{{ l('TerminologySection') }}:</label>
+            <b>{{ Terminologie.sectionTitle }}</b>
+          </div>
+        </div>
         <div class="row" *ngFor="let t of Translations; let i = index">
           <div class="form-group col-md-8">
             <span class="symbol symbol-20 mr-3">
