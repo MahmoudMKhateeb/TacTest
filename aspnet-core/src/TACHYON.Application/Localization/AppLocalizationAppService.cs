@@ -95,8 +95,8 @@ namespace TACHYON.Localization
         {
             string[] HeaderText;
             Func<AppLocalizationListDto, object>[] propertySelectors;
-            HeaderText = new string[] { "Id", "MasterKey", "MasterValue", "CurrentLanguage", "PlatForm", "AppVersion", "TerminologyVersion" };
-            propertySelectors = new Func<AppLocalizationListDto, object>[] { _ => _.Id, _ => _.MasterKey, _ => _.MasterValue, _ => _.Value,_=> _.PlatFormTitle, _ => _.AppVersionTitle, _ => _.VersionTitle };
+            HeaderText = new string[] { "Id", "MasterKey", "MasterValue", "CurrentLanguage", "PlatForm", "AppVersion", "TerminologyVersion", "TerminologySection" };
+            propertySelectors = new Func<AppLocalizationListDto, object>[] { _ => _.Id, _ => _.MasterKey, _ => _.MasterValue, _ => _.Value,_=> L(_.PlatFormTitle), _ => _.AppVersionTitle, _ => _.VersionTitle, _ => _.SectionTitle };
             var LanguageListDto = ObjectMapper.Map<List<AppLocalizationListDto>>(GetLocalization(Input));
             return _excelExporterManager.ExportToFile(LanguageListDto, "Language", HeaderText, propertySelectors);
 
@@ -171,6 +171,7 @@ namespace TACHYON.Localization
               .WhereIf(Input.Version.HasValue, e => e.Version== Input.Version)
               .WhereIf(Input.PlatForm.HasValue, e => e.PlatForm == Input.PlatForm)
               .WhereIf(Input.AppVersion.HasValue, e => e.AppVersion == Input.AppVersion)
+              .WhereIf(Input.Section.HasValue, e => e.Section == Input.Section)
               .OrderBy(!string.IsNullOrEmpty(Input.Sorting) ? Input.Sorting : "id asc");
         }
 

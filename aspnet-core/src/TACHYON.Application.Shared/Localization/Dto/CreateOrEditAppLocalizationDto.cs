@@ -20,6 +20,8 @@ namespace TACHYON.Localization.Dto
         public TerminologyPlatForm PlatForm { get; set; }
         public TerminologyAppVersion AppVersion { get; set; }
         public TerminologyVersion Version { get; set; }
+        public TerminologySection Section { get; set; }
+
 
 
     }

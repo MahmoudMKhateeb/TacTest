@@ -125,6 +125,17 @@
                     </select>
                   </div>
                 </div>
+                <div class="col-xl-6">
+                  <div class="form-group">
+                    <label for="section">{{ l('TerminologySection') }}</label>
+                    <select name="section" [(ngModel)]="input.section" class="form-control">
+                      <option value="">{{ l('All') }}</option>
+                      <option [value]="code.key" *ngFor="let code of terminologySection">
+                        {{ code.value | localize }}
+                      </option>
+                    </select>
+                  </div>
+                </div>
               </div>
             </div>
           </form>
@@ -171,6 +182,10 @@
                     <th style="width: 150px;" pSortableColumn="Version">
                       {{ l('TerminologyVersion') }}
                       <p-sortIcon field="Version"></p-sortIcon>
+                    </th>
+                    <th style="width: 150px;" pSortableColumn="Section">
+                      {{ l('TerminologySection') }}
+                      <p-sortIcon field="Section"></p-sortIcon>
                     </th>
                   </tr>
                 </ng-template>
@@ -220,7 +235,7 @@
                     </td>
                     <td style="width: 150px;">
                       <span class="ui-column-title"> {{ l('PlatForm') }}</span>
-                      {{ record.platFormTitle }}
+                      {{ l(record.platFormTitle) }}
                     </td>
                     <td style="width: 150px;">
                       <span class="ui-column-title"> {{ l('AppVersion') }}</span>
@@ -229,6 +244,10 @@
                     <td style="width: 150px;">
                       <span class="ui-column-title"> {{ l('TerminologyVersion') }}</span>
                       {{ record.versionTitle }}
+                    </td>
+                    <td style="width: 150px;">
+                      <span class="ui-column-title"> {{ l('TerminologySection') }}</span>
+                      {{ record.sectionTitle }}
                     </td>
                   </tr>
                 </ng-template>

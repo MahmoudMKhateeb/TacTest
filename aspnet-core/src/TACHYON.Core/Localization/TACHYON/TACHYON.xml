@@ -713,6 +713,7 @@
     <text name="Fatal">Fatal</text>
     <text name="FatherId">Father id</text>
     <text name="Features">Features</text>
+    <text name="File">File</text>
     <text name="File_Empty_Error">Please select a file!</text>
     <text name="File_Invalid_Type_Error">Invalid file type!</text>
     <text name="File_SizeLimit_Error">Size of the file exceeds allowed limits!</text>
@@ -880,6 +881,7 @@
     <text name="IsTachyonDeal">Is Tachyon Deal</text>
     <text name="Istimara">Istimara</text>
     <text name="IsTrialActive">Is trial active</text>
+    <text name="IsTwoFactorEnabled">Two factor authentication enabled</text>
     <text name="IsVented">Is vented</text>
     <text name="Item">Item</text>
     <text name="Jk">hujk</text>
@@ -1684,6 +1686,7 @@ code:{0}</text>
     <text name="TenantDeleteWarningMessage">Company {0} will be deleted.</text>
     <text name="TenantEditionIsNotAssigned">Tenant edition is not assigned</text>
     <text name="TenantIdIsNotActive{0}">Inactive tenant id: {0}</text>
+    <text name="TenantInformations">Tenant information</text>
     <text name="TenantIsNotActive">Company {0} is not active.</text>
     <text name="TenantManagement">companies management</text>
     <text name="TenantName">Company name</text>
@@ -1710,6 +1713,7 @@ code:{0}</text>
     <text name="TermAndConditionTitle">Terms and Conditions title</text>
     <text name="TermAndConditionTranslations">Term and Condition translations</text>
     <text name="TermAndConditionTranslationsHeaderInfo">Term and Condition Translations header info</text>
+    <text name="TerminologySection">Section</text>
     <text name="TerminologyVersion">Version</text>
     <text name="TermsAndConditions">Terms and conditions</text>
     <text name="TermsAndConditons">Terms and conditions</text>
@@ -2073,7 +2077,7 @@ code:{0}</text>
     <text name="Width">Width</text>
     <text name="WillBeShownOnAllOfficialDocumentsLikeWaybillsAndInvoices">Will be shown on all official documents like waybills and invoices</text>
     <text name="WriteIncidentReport">Please write the incident report</text>
-    <text name="WriteRejectionReason">Please write the rejection reason</text>
+    <text name="WriteRejectReason">Please write the rejection reason</text>
     <text name="WrongSmsVerificationCode">Wrong verification code!</text>
     <text name="Wtrealm">Wtrealm</text>
     <text name="XCanNotBeNullOrEmpty">{0} Can not be null or empty</text>
@@ -2082,6 +2086,7 @@ code:{0}</text>
     <text name="Year">Year</text>
     <text name="Yellow">Yellow</text>
     <text name="Yes">Yes</text>
+    <text name="YesDelete">Yes, delete!</text>
     <text name="Yesterday">Yesterday</text>
     <text name="You">You</text>
     <text name="YouAlreadyAddPricingForThisShipping">You already add pricing for this shipping</text>

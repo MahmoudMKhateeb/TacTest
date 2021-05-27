@@ -8,7 +8,8 @@ namespace TACHYON.Terminologies
         Angular = 1,
         Mobile = 2,
         Backend =3,
-        Both = 4,
+        BothAngularANDMobile = 4,
+        All=5
         
     }
 }

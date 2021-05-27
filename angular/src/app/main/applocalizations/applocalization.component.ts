@@ -19,6 +19,7 @@ import {
   TerminologyVersion,
   TerminologyPlatForm,
   TerminologyAppVersion,
+  TerminologySection,
 } from '@shared/service-proxies/service-proxies';
 import { FileDownloadService } from '@shared/utils/file-download.service';
 import { EnumToArrayPipe } from '../../../shared/common/pipes/enum-to-array.pipe';
@@ -40,6 +41,7 @@ export class AppLocalizationComponent extends AppComponentBase implements OnInit
   terminologyVersion: any;
   terminologyPlatForm: any;
   terminologyAppVersion: any;
+  terminologySection: any;
   constructor(
     injector: Injector,
     private _ServiceProxy: AppLocalizationServiceProxy,
@@ -58,6 +60,7 @@ export class AppLocalizationComponent extends AppComponentBase implements OnInit
     this.terminologyVersion = this.enumToArray.transform(TerminologyVersion);
     this.terminologyPlatForm = this.enumToArray.transform(TerminologyPlatForm);
     this.terminologyAppVersion = this.enumToArray.transform(TerminologyAppVersion);
+    this.terminologySection = this.enumToArray.transform(TerminologySection);
   }
   getAll(event?: LazyLoadEvent): void {
     this.primengTableHelper.showLoadingIndicator();
@@ -70,6 +73,7 @@ export class AppLocalizationComponent extends AppComponentBase implements OnInit
         this.input.platForm,
         this.input.appVersion,
         this.input.version,
+        this.input.section,
         this.primengTableHelper.getSorting(this.dataTable),
         this.primengTableHelper.getSkipCount(this.paginator, event),
         this.primengTableHelper.getMaxResultCount(this.paginator, event)
