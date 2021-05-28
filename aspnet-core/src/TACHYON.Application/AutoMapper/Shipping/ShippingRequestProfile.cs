@@ -26,22 +26,22 @@ namespace TACHYON.AutoMapper.Shipping
 
                 .ForMember(dest => dest.RoutTypeName, opt => opt.MapFrom(src => Enum.GetName(typeof(ShippingRequestRouteType), src.RouteTypeId)))
                 .ForMember(dest => dest.ShippingRequestStatusName, opt => opt.MapFrom(src => src.Status.GetEnumDescription()))
-                .ForMember(dest => dest.TruckTypeDisplayName, opt => opt.MapFrom(src => src.TrucksTypeFk.DisplayName))
+                //.ForMember(dest => dest.TruckTypeDisplayName, opt => opt.MapFrom(src => src.TrucksTypeFk.DisplayName))
                 .ForMember(dest => dest.TruckTypeFullName, opt => opt.Ignore())
                 .ForMember(dest => dest.CapacityDisplayName, opt => opt.MapFrom(src => src.CapacityFk.DisplayName))
                 .ForMember(dest => dest.TransportTypeDisplayName, opt => opt.MapFrom(src => src.TransportTypeFk.DisplayName))
                 .ForMember(dest => dest.ShippingTypeDisplayName, opt => opt.MapFrom(src => src.ShippingTypeFk.DisplayName))
                 .ForMember(dest => dest.packingTypeDisplayName, opt => opt.MapFrom(src => src.PackingTypeFk.DisplayName))
-                .ForMember(dest => dest.CarrierName, opt => opt.MapFrom(src => src.CarrierTenantFk.Name))
-                .AfterMap(AssignTruckTypeFullName);
+                .ForMember(dest => dest.CarrierName, opt => opt.MapFrom(src => src.CarrierTenantFk.Name));
+                //.AfterMap(AssignTruckTypeFullName);
 
         }
 
-        private static void AssignTruckTypeFullName(ShippingRequest shippingRequest, GetShippingRequestForViewOutput dto)
-        {
-            dto.TruckTypeFullName = shippingRequest.TransportTypeFk?.DisplayName
-                                    + "-" + shippingRequest.TrucksTypeFk?.DisplayName
-                                    + "-" + shippingRequest?.CapacityFk?.DisplayName;
-        }
+        //private static void AssignTruckTypeFullName(ShippingRequest shippingRequest, GetShippingRequestForViewOutput dto)
+        //{
+        //    dto.TruckTypeFullName = shippingRequest.TransportTypeFk?.DisplayName
+        //                            + "-" + shippingRequest.TrucksTypeFk?.DisplayName
+        //                            + "-" + shippingRequest?.CapacityFk?.DisplayName;
+        //}
     }
 }

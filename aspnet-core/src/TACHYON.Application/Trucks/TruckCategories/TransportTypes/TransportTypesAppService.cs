@@ -34,6 +34,7 @@ namespace TACHYON.Trucks.TruckCategories.TransportTypes
         {
 
             var filteredTransportTypes = _transportTypeRepository.GetAll()
+                        .Include(x=>x.Translations)
                         .WhereIf(!string.IsNullOrWhiteSpace(input.Filter), e => false || e.DisplayName.Contains(input.Filter))
                         .WhereIf(!string.IsNullOrWhiteSpace(input.DisplayNameFilter), e => e.DisplayName == input.DisplayNameFilter);
 
@@ -41,21 +42,22 @@ namespace TACHYON.Trucks.TruckCategories.TransportTypes
                 .OrderBy(input.Sorting ?? "id asc")
                 .PageBy(input);
 
-            var transportTypes = from o in pagedAndFilteredTransportTypes
+            var transportTypes = from o in await pagedAndFilteredTransportTypes.ToListAsync()
                                  select new GetTransportTypeForViewDto()
                                  {
-                                     TransportType = new TransportTypeDto
-                                     {
-                                         DisplayName = o.DisplayName,
-                                         Id = o.Id
-                                     }
+                                     TransportType =ObjectMapper.Map<TransportTypeDto>(o)
+                                     //new TransportTypeDto
+                                     //{
+                                     //    DisplayName = o.DisplayName,
+                                     //    Id = o.Id
+                                     //}
                                  };
 
             var totalCount = await filteredTransportTypes.CountAsync();
 
             return new PagedResultDto<GetTransportTypeForViewDto>(
                 totalCount,
-                await transportTypes.ToListAsync()
+                transportTypes.ToList()
             );
         }
 

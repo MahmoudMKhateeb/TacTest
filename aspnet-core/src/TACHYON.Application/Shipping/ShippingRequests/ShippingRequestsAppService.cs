@@ -40,7 +40,9 @@ using TACHYON.Trucks.Dtos;
 using TACHYON.Trucks.TruckCategories.TransportTypes;
 using TACHYON.Trucks.TruckCategories.TransportTypes.Dtos;
 using TACHYON.Trucks.TruckCategories.TruckCapacities;
+using TACHYON.Trucks.TruckCategories.TruckCapacities.Dtos;
 using TACHYON.Trucks.TrucksTypes;
+using TACHYON.Trucks.TrucksTypes.Dtos;
 using TACHYON.UnitOfMeasures;
 using TACHYON.Vases;
 using TACHYON.Vases.Dtos;
@@ -354,10 +356,11 @@ namespace TACHYON.Shipping.ShippingRequests
         }
 
         [AbpAuthorize(AppPermissions.Pages_ShippingRequests)]
-        public async Task<List<SelectItemDto>> GetAllTrucksTypeForTableDropdown()
+        public async Task<List<TrucksTypeSelectItemDto>> GetAllTrucksTypeForTableDropdown()
         {
-            return await _lookup_trucksTypeRepository.GetAll()
-                .Select(trucksType => new SelectItemDto { Id = trucksType.Id.ToString(), DisplayName = trucksType == null || trucksType.DisplayName == null ? "" : trucksType.DisplayName.ToString() }).ToListAsync();
+            var list= await _lookup_trucksTypeRepository.GetAll().Include(x => x.Translations).ToListAsync();
+            return ObjectMapper.Map<List<TrucksTypeSelectItemDto>>(list);
+                //.Select(trucksType => new SelectItemDto { Id = trucksType.Id.ToString(), DisplayName = trucksType == null || trucksType.DisplayName == null ? "" : trucksType.DisplayName.ToString() }).ToListAsync();
         }
 
         [AbpAuthorize(AppPermissions.Pages_ShippingRequests)]
@@ -491,6 +494,7 @@ namespace TACHYON.Shipping.ShippingRequests
                     .Include(e => e.AssignedTruckFk)
                     .ThenInclude(e => e.TrucksTypeFk)
                     .Include(e => e.TrucksTypeFk)
+                    .ThenInclude(e=>e.Translations)
                     .Include(e => e.TransportTypeFk)
                     .Include(e => e.CapacityFk)
                     .Include(e => e.AssignedTruckFk)
@@ -541,6 +545,12 @@ namespace TACHYON.Shipping.ShippingRequests
 
             //return translated good category name by default language
             output.GoodsCategoryName = ObjectMapper.Map<GoodCategoryDto>(shippingRequest.GoodCategoryFk).DisplayName;
+
+            //return translated truck type by default language
+            output.TruckTypeDisplayName = ObjectMapper.Map<TrucksTypeDto>(shippingRequest.TrucksTypeFk).TranslatedDisplayName;
+            output.TruckTypeFullName = ObjectMapper.Map<TransportTypeDto>(shippingRequest.TransportTypeFk).TranslatedDisplayName
+                                    + "-" + output.TruckTypeDisplayName
+                                    + "-" + ObjectMapper.Map<CapacityDto>(shippingRequest.CapacityFk).TranslatedDisplayName;
 
             //GetShippingRequestForViewOutput output = new GetShippingRequestForViewOutput
             //{
@@ -733,17 +743,19 @@ namespace TACHYON.Shipping.ShippingRequests
             return transportTypeDtos;
         }
 
-        public async Task<List<SelectItemDto>> GetAllTruckTypesByTransportTypeIdForDropdown(int transportTypeId)
+        public async Task<List<TransportTypeSelectItemDto>> GetAllTruckTypesByTransportTypeIdForDropdown(int transportTypeId)
         {
 
 
-            return await _lookup_trucksTypeRepository.GetAll()
-                .Where(x => x.TransportTypeId == transportTypeId)
-                .Select(x => new SelectItemDto()
-                {
-                    Id = x.Id.ToString(),
-                    DisplayName = x.DisplayName
-                }).ToListAsync();
+            var list= await _lookup_trucksTypeRepository.GetAll()
+                .Include(x => x.Translations)
+                .Where(x => x.TransportTypeId == transportTypeId).ToListAsync();
+            return ObjectMapper.Map<List<TransportTypeSelectItemDto>>(list);
+                //.Select(x => new SelectItemDto()
+                //{
+                //    Id = x.Id.ToString(),
+                //    DisplayName = x.DisplayName
+                //}).ToListAsync();
         }
 
         public async Task<List<SelectItemDto>> GetAllTuckCapacitiesByTuckTypeIdForDropdown(int truckTypeId)
@@ -776,14 +788,19 @@ namespace TACHYON.Shipping.ShippingRequests
                     SenderCompanyName = x.ShippingRequestFk.Tenant.companyName,
                     DriverName = x.AssignedDriverUserFk != null ? x.AssignedDriverUserFk.FullName : "",
                     DriverIqamaNo = "",
-                    TruckTypeDisplayName = x.AssignedTruckFk != null
-                       ? (x.AssignedTruckFk.TransportTypeFk != null ?
-                           x.AssignedTruckFk.TransportTypeFk.DisplayName :
-                           "" + "-" + x.AssignedTruckFk.TrucksTypeFk != null ?
-                               x.AssignedTruckFk.TrucksTypeFk.DisplayName :
-                               "" + "-" + x.AssignedTruckFk.CapacityFk != null ?
-                                   x.AssignedTruckFk.CapacityFk.DisplayName : "")
-                       : "",
+                    TruckTypeTranslationList=x.AssignedTruckFk.TrucksTypeFk.Translations,
+                    TruckTypeDisplayName =
+                    //x.AssignedTruckFk != null
+                    //   ? (x.AssignedTruckFk.TransportTypeFk != null ?
+                    //       x.AssignedTruckFk.TransportTypeFk.DisplayName :
+                    //       "" + "-" + x.AssignedTruckFk.TrucksTypeFk != null ?
+                    //           x.AssignedTruckFk.TrucksTypeFk.DisplayName :
+                    //           "" + "-" + x.AssignedTruckFk.CapacityFk != null ?
+                    //               x.AssignedTruckFk.CapacityFk.DisplayName : "")
+                    //   : "",
+                    (x.AssignedTruckFk.TransportTypeFk == null ? "" : ObjectMapper.Map<TransportTypeDto>(x.AssignedTruckFk.TransportTypeFk).TranslatedDisplayName) + "-" + //o.TransportTypeFk.DisplayName) + " - " +
+                             (x.AssignedTruckFk.TrucksTypeFk == null ? "" : ObjectMapper.Map<TrucksTypeDto>(x.AssignedTruckFk.TrucksTypeFk).TranslatedDisplayName) + " - " +
+                             (x.AssignedTruckFk.CapacityFk == null ? "" : ObjectMapper.Map<CapacityDto>(x.AssignedTruckFk.CapacityFk).DisplayName),
                     PlateNumber = x.AssignedTruckFk != null ? x.AssignedTruckFk.PlateNumber : "",
                     IsMultipDrops = x.ShippingRequestFk.NumberOfDrops > 1 ? true : false,
                     TotalDrops = x.ShippingRequestFk.NumberOfDrops,
@@ -847,14 +864,10 @@ namespace TACHYON.Shipping.ShippingRequests
                     CarrierName = x.ShippingRequestFk.CarrierTenantFk.Name,
                     DriverName = x.AssignedDriverUserFk != null ? x.AssignedDriverUserFk.FullName : "",
                     DriverIqamaNo = "",
-                    TruckTypeDisplayName = x.AssignedTruckFk != null
-                        ? (x.AssignedTruckFk.TransportTypeFk != null ?
-                            x.AssignedTruckFk.TransportTypeFk.DisplayName :
-                            "" + "-" + x.AssignedTruckFk.TrucksTypeFk != null ?
-                                x.AssignedTruckFk.TrucksTypeFk.DisplayName :
-                                "" + "-" + x.AssignedTruckFk.CapacityFk != null ?
-                                    x.AssignedTruckFk.CapacityFk.DisplayName : "")
-                        : "",
+                    TruckTypeTranslationList = x.AssignedTruckFk.TrucksTypeFk.Translations,
+                    TruckTypeDisplayName = (x.AssignedTruckFk.TransportTypeFk == null ? "" : ObjectMapper.Map<TransportTypeDto>(x.AssignedTruckFk.TransportTypeFk).TranslatedDisplayName) + "-" + //o.TransportTypeFk.DisplayName) + " - " +
+                             (x.AssignedTruckFk.TrucksTypeFk == null ? "" : ObjectMapper.Map<TrucksTypeDto>(x.AssignedTruckFk.TrucksTypeFk).TranslatedDisplayName) + " - " +
+                             (x.AssignedTruckFk.CapacityFk == null ? "" : ObjectMapper.Map<CapacityDto>(x.AssignedTruckFk.CapacityFk).DisplayName),
                     PlateNumber = x.AssignedTruckFk != null ? x.AssignedTruckFk.PlateNumber : "",
                     PackingTypeDisplayName = x.ShippingRequestFk.PackingTypeFk.DisplayName,
                     NumberOfPacking = x.ShippingRequestFk.NumberOfPacking,
@@ -953,14 +966,10 @@ namespace TACHYON.Shipping.ShippingRequests
                     ReceiverCompanyName = x.ShippingRequestFk.CarrierTenantFk != null ? x.ShippingRequestFk.CarrierTenantFk.companyName : "",
                     DriverName = x.AssignedDriverUserFk != null ? x.AssignedDriverUserFk.Name : "",
                     DriverIqamaNo = "",
-                    TruckTypeDisplayName = x.AssignedTruckFk != null
-                        ? (x.AssignedTruckFk.TransportTypeFk != null ?
-                            x.AssignedTruckFk.TransportTypeFk.DisplayName :
-                            "" + "-" + x.AssignedTruckFk.TrucksTypeFk != null ?
-                                x.AssignedTruckFk.TrucksTypeFk.DisplayName :
-                                "" + "-" + x.AssignedTruckFk.CapacityFk != null ?
-                                    x.AssignedTruckFk.CapacityFk.DisplayName : "")
-                        : "",
+                    TruckTypeTranslationList = x.AssignedTruckFk.TrucksTypeFk.Translations,
+                    TruckTypeDisplayName = (x.AssignedTruckFk.TransportTypeFk == null ? "" : ObjectMapper.Map<TransportTypeDto>(x.AssignedTruckFk.TransportTypeFk).TranslatedDisplayName) + "-" + //o.TransportTypeFk.DisplayName) + " - " +
+                             (x.AssignedTruckFk.TrucksTypeFk == null ? "" : ObjectMapper.Map<TrucksTypeDto>(x.AssignedTruckFk.TrucksTypeFk).TranslatedDisplayName) + " - " +
+                             (x.AssignedTruckFk.CapacityFk == null ? "" : ObjectMapper.Map<CapacityDto>(x.AssignedTruckFk.CapacityFk).DisplayName),
                     PlateNumber = x.AssignedTruckFk != null ? x.AssignedTruckFk.PlateNumber : "",
                     PackingTypeDisplayName = x.ShippingRequestFk.PackingTypeFk.DisplayName,
                     NumberOfPacking = x.ShippingRequestFk.NumberOfPacking,

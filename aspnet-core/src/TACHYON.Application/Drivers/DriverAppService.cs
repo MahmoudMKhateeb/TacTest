@@ -12,6 +12,7 @@ using TACHYON.Authorization.Users.Profile;
 using TACHYON.Mobile;
 using TACHYON.Mobile.Dtos;
 using TACHYON.Shipping.ShippingRequestTrips;
+using TACHYON.Trucks.TrucksTypes.Dtos;
 
 namespace TACHYON.Drivers
 {
@@ -80,7 +81,7 @@ namespace TACHYON.Drivers
                 if (trip !=null)
             {
                 driverDetail.PlateNumber = trip.AssignedTruckFk.PlateNumber;
-                driverDetail.TrucksType = trip.AssignedTruckFk.TrucksTypeFk.DisplayName ;
+                driverDetail.TrucksType = ObjectMapper.Map<TrucksTypeDto>(trip.AssignedTruckFk.TrucksTypeFk).TranslatedDisplayName;//trip.AssignedTruckFk.TrucksTypeFk.DisplayName ;
 
             }
 

@@ -17,6 +17,7 @@ using TACHYON.Dto;
 using TACHYON.Trucks.TruckCategories.TransportTypes;
 using TACHYON.Trucks.TruckCategories.TransportTypes.Dtos;
 using TACHYON.Trucks.TrucksTypes.Dtos;
+using TACHYON.Trucks.TrucksTypes.TrucksTypesTranslations;
 
 namespace TACHYON.Trucks.TrucksTypes
 {
@@ -37,31 +38,35 @@ namespace TACHYON.Trucks.TrucksTypes
         {
 
             var filteredTrucksTypes = _trucksTypeRepository.GetAll()
-                        .WhereIf(!string.IsNullOrWhiteSpace(input.Filter), e => false || e.DisplayName.Contains(input.Filter))
-                        .WhereIf(!string.IsNullOrWhiteSpace(input.DisplayNameFilter), e => e.DisplayName == input.DisplayNameFilter);
+                .Include(x=>x.Translations)
+                .Include(x=>x.TransportTypeFk)
+                .ThenInclude(x=>x.Translations)
+                        .WhereIf(!string.IsNullOrWhiteSpace(input.Filter), e => false || e.Translations.Any(x=>x.TranslatedDisplayName.Contains(input.Filter)))
+                        .WhereIf(!string.IsNullOrWhiteSpace(input.DisplayNameFilter), e => e.Translations.Any(x => x.TranslatedDisplayName.Contains(input.DisplayNameFilter)));
 
             var pagedAndFilteredTrucksTypes = filteredTrucksTypes
                 .OrderBy(input.Sorting ?? "id asc")
                 .PageBy(input);
 
-            var trucksTypes = from o in pagedAndFilteredTrucksTypes
-                              join o1 in _transportTypeRepository.GetAll() on o.TransportTypeId equals o1.Id into j1
-                              from s1 in j1.DefaultIfEmpty()
+            var trucksTypes = from o in await pagedAndFilteredTrucksTypes.ToListAsync()
+                              //join o1 in _transportTypeRepository.GetAll() on o.TransportTypeId equals o1.Id into j1
+                              //from s1 in j1.DefaultIfEmpty()
                               select new GetTrucksTypeForViewDto()
                               {
-                                  TrucksType = new TrucksTypeDto
-                                  {
-                                      DisplayName = o.DisplayName,
-                                      Id = o.Id
-                                  },
-                                  TransportTypeDisplayName = s1 == null || s1.DisplayName == null ? "" : s1.DisplayName.ToString()
+                                  TrucksType=ObjectMapper.Map<TrucksTypeDto>(o),
+                                  //TrucksType = new TrucksTypeDto
+                                  //{
+                                  //    DisplayName = o.DisplayName,
+                                  //    Id = o.Id
+                                  //},
+                                  TransportTypeDisplayName = ObjectMapper.Map<TransportTypeDto>(o.TransportTypeFk).TranslatedDisplayName//s1 == null || s1.DisplayName == null ? "" : s1.DisplayName.ToString()
                               };
 
             var totalCount = await filteredTrucksTypes.CountAsync();
 
             return new PagedResultDto<GetTrucksTypeForViewDto>(
                 totalCount,
-                await trucksTypes.ToListAsync()
+                trucksTypes.ToList()
             );
         }
 
@@ -77,7 +82,8 @@ namespace TACHYON.Trucks.TrucksTypes
         [AbpAuthorize(AppPermissions.Pages_TrucksTypes_Edit)]
         public async Task<GetTrucksTypeForEditOutput> GetTrucksTypeForEdit(EntityDto<long> input)
         {
-            var trucksType = await _trucksTypeRepository.FirstOrDefaultAsync(input.Id);
+            var trucksType = await _trucksTypeRepository.GetAllIncluding(x=>x.Translations)
+                .FirstOrDefaultAsync(x=>x.Id == input.Id);
 
             var output = new GetTrucksTypeForEditOutput { TrucksType = ObjectMapper.Map<CreateOrEditTrucksTypeDto>(trucksType) };
 
@@ -86,6 +92,17 @@ namespace TACHYON.Trucks.TrucksTypes
 
         public async Task CreateOrEdit(CreateOrEditTrucksTypeDto input)
         {
+            foreach (var transItem in input.Translations)
+            {
+                var isDuplicateUserName = await _trucksTypeRepository
+                   .FirstOrDefaultAsync(x => x.Translations.Any(x=>x.TranslatedDisplayName==transItem.TranslatedDisplayName)  && x.Id != input.Id);
+                if (isDuplicateUserName != null)
+                {
+                    throw new UserFriendlyException(string.Format(L("TrucksTypeDuplicateName"), transItem.TranslatedDisplayName));
+                }
+            }
+
+
             if (input.Id == null)
             {
                 await Create(input);
@@ -99,13 +116,6 @@ namespace TACHYON.Trucks.TrucksTypes
         [AbpAuthorize(AppPermissions.Pages_TrucksTypes_Create)]
         protected virtual async Task Create(CreateOrEditTrucksTypeDto input)
         {
-            var isDuplicateUserName = await _trucksTypeRepository.FirstOrDefaultAsync(x => (x.DisplayName).Trim().ToLower() == (input.DisplayName).Trim().ToLower());
-
-            if (isDuplicateUserName != null)
-            {
-                throw new UserFriendlyException(string.Format(L("TrucksTypeDuplicateName"), input.DisplayName));
-            }
-
             var trucksType = ObjectMapper.Map<TrucksType>(input);
             await _trucksTypeRepository.InsertAsync(trucksType);
         }
@@ -113,15 +123,9 @@ namespace TACHYON.Trucks.TrucksTypes
         [AbpAuthorize(AppPermissions.Pages_TrucksTypes_Edit)]
         protected virtual async Task Update(CreateOrEditTrucksTypeDto input)
         {
-            var isDuplicateUserName = await _trucksTypeRepository
-                .FirstOrDefaultAsync(x => x.DisplayName == input.DisplayName && x.Id != input.Id);
-
-            if (isDuplicateUserName != null)
-            {
-                throw new UserFriendlyException(string.Format(L("TrucksTypeDuplicateName"), input.DisplayName));
-            }
-
-            var trucksType = await _trucksTypeRepository.FirstOrDefaultAsync(input.Id.Value);
+            var trucksType = await _trucksTypeRepository.GetAllIncluding(x=>x.Translations)
+                .FirstOrDefaultAsync(x=>x.Id== input.Id.Value);
+            trucksType.Translations.Clear();
             ObjectMapper.Map(input, trucksType);
         }
 

@@ -301,7 +301,7 @@ namespace TACHYON.Trucks.Importing
             }
 
             // get truckType English 
-            TrucksType trucksType = _trucksTypeRepository.GetAll().FirstOrDefault(x => x.DisplayName.ToLower() == text.ToLower());
+            TrucksType trucksType = _trucksTypeRepository.GetAllIncluding(x=>x.Translations).FirstOrDefault(x => x.Translations.Any(x=>x.TranslatedDisplayName.ToLower() == text.ToLower()));
             if (trucksType == null)
             {
                 //Translated name 
