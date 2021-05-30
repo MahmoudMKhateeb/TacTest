@@ -34,5 +34,8 @@ namespace TACHYON.Shipping.Drivers.Dto
         public bool IsConfirmReceiver { get; set; }
         public long? WaybillNumber { get; set; }
 
+        public string PlateNumber { get; set; }
+        public string TruckType { get; set; }
+
     }
 }
