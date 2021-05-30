@@ -1620,6 +1620,7 @@ code:{0}</text>
     <text name="SwitchToTheHost">Switch to the host</text>
     <text name="SwitchToTheTenant">Switch to the company</text>
     <text name="SwitchToUser">Switch to user</text>
+    <text name="Tachyon">Tachyon</text>
     <text name="TACHYON.AddressBook.Facility">Facility</text>
     <text name="TACHYON.Authorization.Roles.Role">Role</text>
     <text name="TACHYON.Cities.City">City</text>
