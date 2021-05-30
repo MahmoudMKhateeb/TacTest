@@ -20,6 +20,7 @@ using TACHYON.Shipping.Drivers.Dto;
 using TACHYON.Shipping.ShippingRequests;
 using TACHYON.Shipping.ShippingRequestTrips;
 using TACHYON.Shipping.Trips;
+using TACHYON.Trucks.TrucksTypes.Dtos;
 
 namespace TACHYON.Shipping.Drivers
 {
@@ -114,11 +115,14 @@ namespace TACHYON.Shipping.Drivers
                .Include(i=>i.RoutPoints)
                 .ThenInclude(r=>r.FacilityFk)
                  .ThenInclude(r => r.CityFk)
+                 .Include(x=>x.AssignedTruckFk)
+                  .ThenInclude(t => t.TrucksTypeFk)
+                   .ThenInclude(t=>t.Translations)
                  .WhereIf(IsAccepted,t=>t.DriverStatus== ShippingRequestTripDriverStatus.Accepted)
                 .SingleOrDefaultAsync(t => t.Id == TripId && t.Status != ShippingRequestTripStatus.Canceled && t.AssignedDriverUserId == AbpSession.UserId);
             if (trip==null) throw new UserFriendlyException(L("TheTripIsNotFound"));
             var tripDto = ObjectMapper.Map<ShippingRequestTripDriverDetailsDto>(trip);
-
+            if (trip.AssignedTruckFk !=null) tripDto.TruckType = ObjectMapper.Map<TrucksTypeDto>(trip.AssignedTruckFk.TrucksTypeFk).TranslatedDisplayName;
             if (tripDto.TripStatus == ShippingRequestTripStatus.Intransit)
             {
                 tripDto.ActionStatus = ShippingRequestTripDriverActionStatusDto.ContinueTrip;
