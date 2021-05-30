@@ -104,7 +104,7 @@ namespace TACHYON.Shipping.ShippingRequests.TachyonDealer
                  .ThenInclude(t=>t.Tenant)
                 .Include(t=>t.Carrirer)
                 //.Where(x => x.Request.Status == ShippingRequestStatus.PrePrice && x.Request.IsTachyonDeal && x.Request.CarrierPriceType== CarrierPriceType.TachyonDirectRequest)
-                .WhereIf(IsEnabled(AppFeatures.Carrier), e => e.CarrirerTenantId == AbpSession.TenantId && e.Request.Status== ShippingRequestStatus.PrePrice)
+                .WhereIf(IsEnabled(AppFeatures.Carrier), e => e.CarrirerTenantId == AbpSession.TenantId && (e.Request.Status == ShippingRequestStatus.PrePrice || e.Request.Status == ShippingRequestStatus.NeedsAction))
                 .WhereIf(IsEnabled(AppFeatures.TachyonDealer), e => e.TenantId == AbpSession.TenantId)
                 .WhereIf(Input.RequestId.HasValue,e=>e.RequestId== Input.RequestId.Value)
                 .OrderBy(Input.Sorting ?? "id desc")
@@ -126,7 +126,7 @@ namespace TACHYON.Shipping.ShippingRequests.TachyonDealer
             DisableTenancyFilters();
             var Pricing = await _CarrierDirectPricingRepository.GetAllIncluding(r => r.Request,c=>c.Carrirer)
                 .FirstOrDefaultAsync(x => x.Id == Input.Id &&
-                x.Request.Status == ShippingRequestStatus.PrePrice &&
+                (x.Request.Status == ShippingRequestStatus.PrePrice || x.Request.Status == ShippingRequestStatus.NeedsAction) &&
                 x.Status == ShippingRequestsCarrierDirectPricingStatus.None &&
                 x.CarrirerTenantId == AbpSession.TenantId);
             if (Pricing == null) throw new UserFriendlyException(L("YouCanNotPriceThisRequest"));
@@ -171,7 +171,7 @@ namespace TACHYON.Shipping.ShippingRequests.TachyonDealer
                     .FirstOrDefaultAsync(x => x.Id == Input.ShippingRequestBidId.Value &&
                     x.ShippingRequestFk.IsBid &&
                     x.ShippingRequestFk.IsTachyonDeal &&
-                    x.ShippingRequestFk.Status == ShippingRequestStatus.PrePrice &&
+                    x.ShippingRequestFk.Status == ShippingRequestStatus.NeedsAction &&
                     x.ShippingRequestFk.BidStatus == ShippingRequestBidStatus.OnGoing);
                 if (bid == null)
                 {
@@ -232,7 +232,7 @@ namespace TACHYON.Shipping.ShippingRequests.TachyonDealer
         #region Heleper
         private async Task<ShippingRequest> GetShippingRequestOnPrePriceStage(long requestId)
         {
-            ShippingRequest shippingRequest = await _shippingRequestRepository.FirstOrDefaultAsync(e => e.Id == requestId && e.IsTachyonDeal && e.Status == ShippingRequestStatus.PrePrice);
+            ShippingRequest shippingRequest = await _shippingRequestRepository.FirstOrDefaultAsync(e => e.Id == requestId && e.IsTachyonDeal && (e.Status == ShippingRequestStatus.PrePrice || e.Status == ShippingRequestStatus.NeedsAction) );
             if (shippingRequest == null) throw new UserFriendlyException(L("NoShippingRequest"));
 
             return shippingRequest;
