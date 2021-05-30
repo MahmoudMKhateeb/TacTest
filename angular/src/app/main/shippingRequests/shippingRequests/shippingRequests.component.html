@@ -41,34 +41,34 @@
               <!--                </div>-->
               <!--              </div>-->
               <!--<div [hidden]="!advancedFiltersAreShown" class="row">
-                <div class="col-md-12">
-                  <div class="kt-separator kt-separator--border-dashed"></div>
-                </div>
+                              <div class="col-md-12">
+                                <div class="kt-separator kt-separator--border-dashed"></div>
+                              </div>
 
-                <div class="col-md-2">
-                  <div class="form-group">
-                    <label for="MinVasFilter">{{ l('Min') }} {{ l('Vas') }}</label>
-                    <div class="input-group">
-                      <input
-                        [(ngModel)]="minVasFilter"
-                        class="form-control"
-                        id="MinVasFilter"
-                        name="minVasFilter"
-                        placeholder="{{ l('MinValue') }}"
-                        type="number"
-                      />
-                    </div>
-                  </div>
-                </div>
-                <div class="col-md-2">
-                  <div class="form-group">
-                    <label for="MinVasFilter">{{ l('Max') }} {{ l('Vas') }}</label>
-                    <div class="input-group">
-                      <input [(ngModel)]="maxVasFilter" class="form-control" name="maxVasFilter" placeholder="{{ l('MaxValue') }}" type="number" />
-                    </div>
-                  </div>
-                </div>
-                <!--                <div class="col-md-3"> -->
+                              <div class="col-md-2">
+                                <div class="form-group">
+                                  <label for="MinVasFilter">{{ l('Min') }} {{ l('Vas') }}</label>
+                                  <div class="input-group">
+                                    <input
+                                      [(ngModel)]="minVasFilter"
+                                      class="form-control"
+                                      id="MinVasFilter"
+                                      name="minVasFilter"
+                                      placeholder="{{ l('MinValue') }}"
+                                      type="number"
+                                    />
+                                  </div>
+                                </div>
+                              </div>
+                              <div class="col-md-2">
+                                <div class="form-group">
+                                  <label for="MinVasFilter">{{ l('Max') }} {{ l('Vas') }}</label>
+                                  <div class="input-group">
+                                    <input [(ngModel)]="maxVasFilter" class="form-control" name="maxVasFilter" placeholder="{{ l('MaxValue') }}" type="number" />
+                                  </div>
+                                </div>
+                              </div>
+                              <!--                <div class="col-md-3"> -->
               <!--                  <div class="form-group">-->
               <!--                    <label for="TrucksTypeDisplayNameFilter">({{ l('TrucksType') }} ) {{ l('DisplayName') }}</label>-->
               <!--                    <input-->
@@ -118,18 +118,18 @@
               <!--                </div>-->
               <!--</div>-->
               <!--<div class="row mb-2">
-                <div class="col-sm-12">
-                  <span
-                    (click)="advancedFiltersAreShown = !advancedFiltersAreShown"
-                    *ngIf="!advancedFiltersAreShown"
-                    class="clickable-item text-muted"
-                    ><i class="fa fa-angle-down"></i> {{ l('ShowAdvancedFilters') }}</span
-                  >
-                  <span (click)="advancedFiltersAreShown = !advancedFiltersAreShown" *ngIf="advancedFiltersAreShown" class="clickable-item text-muted"
-                    ><i class="fa fa-angle-up"></i> {{ l('HideAdvancedFilters') }}</span
-                  >
-                </div>
-              </div>-->
+                              <div class="col-sm-12">
+                                <span
+                                  (click)="advancedFiltersAreShown = !advancedFiltersAreShown"
+                                  *ngIf="!advancedFiltersAreShown"
+                                  class="clickable-item text-muted"
+                                  ><i class="fa fa-angle-down"></i> {{ l('ShowAdvancedFilters') }}</span
+                                >
+                                <span (click)="advancedFiltersAreShown = !advancedFiltersAreShown" *ngIf="advancedFiltersAreShown" class="clickable-item text-muted"
+                                  ><i class="fa fa-angle-up"></i> {{ l('HideAdvancedFilters') }}</span
+                                >
+                              </div>
+                            </div>-->
             </div>
           </form>
 
@@ -150,9 +150,9 @@
               >
                 <ng-template pTemplate="header">
                   <tr>
-                    <th pSortableColumn="id" style="width: 50px;">
-                      {{ l('id') }}
-                      <p-sortIcon field="id"></p-sortIcon>
+                    <th pSortableColumn="TenantId" *ngIf="!feature.isEnabled('App.Shipper')" style="width: 150px;">
+                      {{ l('Tenants') }}
+                      <p-sortIcon field="TenantId"></p-sortIcon>
                     </th>
                     <th pSortableColumn="status" style="width: 150px;">
                       {{ l('RequestStatus') }}
@@ -195,9 +195,9 @@
                 </ng-template>
                 <ng-template let-record="$implicit" pTemplate="body">
                   <tr [ngClass]="getrowstyle(record)">
-                    <td style="width: 50px;">
-                      <span class="ui-column-title"> {{ l('id') }}</span>
-                      {{ record.id }}
+                    <td style="width: 150px;" *ngIf="!feature.isEnabled('App.Shipper')">
+                      <span class="ui-column-title"> {{ l('Tenants') }}</span>
+                      {{ record.tenant }}
                     </td>
                     <td style="width: 150px;">
                       <span class="ui-column-title"> {{ l('ShippingRequestStatusName') }}</span>
@@ -258,15 +258,15 @@
                             </a>
                           </li>
                           <li [hidden]="true" *ngIf="!feature.isEnabled('App.Carrier')">
-                            <a href="javascript:;" class="dropdown-item" (click)="UpdatePriceShippingRequestModal.show(record.id)">{{
-                              l('Response')
-                            }}</a>
+                            <a href="javascript:;" class="dropdown-item" (click)="UpdatePriceShippingRequestModal.show(record.id)">
+                              {{ l('Response') }}
+                            </a>
                           </li>
 
                           <li [hidden]="true" *ngIf="!feature.isEnabled('App.Carrier')">
-                            <a href="javascript:;" class="dropdown-item" (click)="ViewShippingRequestPriceResponseModalComponent.show(record.id)">{{
-                              l('ViewCarrierResponse')
-                            }}</a>
+                            <a href="javascript:;" class="dropdown-item" (click)="ViewShippingRequestPriceResponseModalComponent.show(record.id)">
+                              {{ l('ViewCarrierResponse') }}
+                            </a>
                           </li>
 
                           <li>

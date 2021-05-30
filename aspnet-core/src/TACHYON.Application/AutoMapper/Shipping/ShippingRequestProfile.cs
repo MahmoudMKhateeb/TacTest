@@ -7,12 +7,13 @@ namespace TACHYON.AutoMapper.Shipping
 {
     public class ShippingRequestProfile : Profile
     {
-        public ShippingRequestProfile ()
+        public ShippingRequestProfile()
         {
             CreateMap<ShippingRequest, ShippingRequestListDto>()
+                .ForMember(dst => dst.Tenant, opt => opt.MapFrom(src => src.Tenant.Name))
                 .ForMember(dst => dst.Origin, opt => opt.MapFrom(src => src.OriginCityFk.DisplayName))
                 .ForMember(dst => dst.Destination, opt => opt.MapFrom(src => src.DestinationCityFk.DisplayName))
-                .ForMember(dst => dst.RouteType, opt => opt.MapFrom(src => Enum.GetName(typeof(ShippingRequestRouteType),src.RouteTypeId)));
+                .ForMember(dst => dst.RouteType, opt => opt.MapFrom(src => Enum.GetName(typeof(ShippingRequestRouteType), src.RouteTypeId)));
 
             CreateMap<ShippingRequest, GetShippingRequestForViewOutput>()
                 .ForMember(dest => dest.ShippingRequest, opt => opt.MapFrom(src => src))
@@ -33,7 +34,7 @@ namespace TACHYON.AutoMapper.Shipping
                 .ForMember(dest => dest.ShippingTypeDisplayName, opt => opt.MapFrom(src => src.ShippingTypeFk.DisplayName))
                 .ForMember(dest => dest.packingTypeDisplayName, opt => opt.MapFrom(src => src.PackingTypeFk.DisplayName))
                 .ForMember(dest => dest.CarrierName, opt => opt.MapFrom(src => src.CarrierTenantFk.Name));
-                //.AfterMap(AssignTruckTypeFullName);
+            //.AfterMap(AssignTruckTypeFullName);
 
         }
 
