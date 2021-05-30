@@ -20,7 +20,7 @@ namespace TACHYON.TachyonPriceOffers
 {
     public class TachyonPriceOffersAppService : TACHYONAppServiceBase, ITachyonPriceOffersAppService
     {
-       
+
         private readonly IRepository<TachyonPriceOffer> _tachyonPriceOfferRepository;
         private readonly IRepository<ShippingRequest, long> _shippingRequestRepository;
         private readonly CommissionManager _commissionManager;
@@ -29,7 +29,7 @@ namespace TACHYON.TachyonPriceOffers
         private readonly IRepository<ShippingRequestBid, long> _shippingRequestBidsRepository;
         private readonly IAppNotifier _appNotifier;
         private readonly IRepository<ShippingRequestsCarrierDirectPricing> _shippingRequestsCarrierDirectPricingRepository;
-        private readonly IRepository<ShippingRequestBid,long> _shippingRequestBidRepository;
+        private readonly IRepository<ShippingRequestBid, long> _shippingRequestBidRepository;
         private readonly ShippingRequestBidManager _shippingRequestBidManager;
 
 
@@ -83,7 +83,7 @@ namespace TACHYON.TachyonPriceOffers
             DisableTenancyFilters();
             var Request = await GetShippingRequestOnPrePriceStage(input.ShippingRequestId);
             var Offer = await _tachyonPriceOfferRepository
-                .FirstOrDefaultAsync(x => x.ShippingRequestId == input.ShippingRequestId && 
+                .FirstOrDefaultAsync(x => x.ShippingRequestId == input.ShippingRequestId &&
             x.OfferStatus == OfferStatus.AcceptedAndWaitingForCarrier);
 
             if (Offer == null)
@@ -128,7 +128,7 @@ namespace TACHYON.TachyonPriceOffers
             var offer = await _tachyonPriceOfferRepository
                 .GetAll()
                 .Include(x => x.ShippingRequestFk)
-                 .ThenInclude(x=>x.Tenant)
+                 .ThenInclude(x => x.Tenant)
                 .FirstOrDefaultAsync(x => x.Id == input.Id &&
                 x.OfferStatus == OfferStatus.Pending &&
                 x.ShippingRequestFk.TenantId == AbpSession.TenantId);
@@ -169,7 +169,7 @@ namespace TACHYON.TachyonPriceOffers
             if (offer.ShippingRequestBidId != null)
             {
                 var bid = await _shippingRequestBidRepository.GetAll()
-                    .Include(x=>x.ShippingRequestFk).FirstOrDefaultAsync(x=>x.Id==offer.ShippingRequestBidId.Value);
+                    .Include(x => x.ShippingRequestFk).FirstOrDefaultAsync(x => x.Id == offer.ShippingRequestBidId.Value);
                 bid.IsAccepted = true;
                 bid.price = bid.BasePrice = offer.CarrierPrice.Value;
                 bid.ShippingRequestFk.BidStatus = ShippingRequestBidStatus.Closed;
@@ -189,12 +189,12 @@ namespace TACHYON.TachyonPriceOffers
             {
                 throw new UserFriendlyException(L("Cannot Create new offer, there is already existing offer message"));
             }
-            if (input.TotalAmount<1) throw new UserFriendlyException(L("ThePriceSholudBeNotLessThanOne"));
+            if (input.TotalAmount < 1) throw new UserFriendlyException(L("ThePriceSholudBeNotLessThanOne"));
 
             if (input.DriectRequestForCarrierId.HasValue || input.ShippingRequestBidId.HasValue)
             {
-                if (input.ActualCommissionValue<1 && input.ActualPercentCommission<1) throw new UserFriendlyException(L("TheCommissionValuevalueAndPercentCommissionMustNotBeLessThanOneAtTheSameTime"));
-                else if (input.ActualCommissionValue<0) throw new UserFriendlyException(L("TheCommissionValueSholudBeNotLessThanZero"));
+                if (input.ActualCommissionValue < 1 && input.ActualPercentCommission < 1) throw new UserFriendlyException(L("TheCommissionValuevalueAndPercentCommissionMustNotBeLessThanOneAtTheSameTime"));
+                else if (input.ActualCommissionValue < 0) throw new UserFriendlyException(L("TheCommissionValueSholudBeNotLessThanZero"));
                 else if (input.ActualPercentCommission < 0) throw new UserFriendlyException(L("ThePercentCommissionSholudBeNotLessThanZero"));
             }
 
@@ -202,7 +202,7 @@ namespace TACHYON.TachyonPriceOffers
             TachyonPriceOffer tachyonPriceOffer = ObjectMapper.Map<TachyonPriceOffer>(input);
 
             await _commissionManager.CalculateAmountByOffer(tachyonPriceOffer, shippingRequest);
-         
+
             await _tachyonPriceOfferRepository.InsertAsync(tachyonPriceOffer);
             await CurrentUnitOfWork.SaveChangesAsync();
 
@@ -210,7 +210,7 @@ namespace TACHYON.TachyonPriceOffers
 
             //send notification to shipper when create offer
             await _appNotifier.TachyonDealerOfferCreated(tachyonPriceOffer, shippingRequest);
-           
+
         }
 
         private async Task Edit(CreateOrEditTachyonPriceOfferDto input, TachyonPriceOffer offer, ShippingRequest shippingRequest)
@@ -234,7 +234,7 @@ namespace TACHYON.TachyonPriceOffers
             await _shippingRequestManager.SetToPostPrice(offer.ShippingRequestFk);
         }
 
-        private async Task OfferMappingFromDirectRequestOrBidding(CreateOrEditTachyonPriceOfferDto input,ShippingRequest request)
+        private async Task OfferMappingFromDirectRequestOrBidding(CreateOrEditTachyonPriceOfferDto input, ShippingRequest request)
         {
             if (input.DriectRequestForCarrierId.HasValue)
             {
@@ -243,7 +243,7 @@ namespace TACHYON.TachyonPriceOffers
                 input.CarrierPrice = direct.Price;
                 input.CarrirerTenantId = direct.CarrirerTenantId;
                 direct.Status = ShippingRequestsCarrierDirectPricingStatus.Accepted;
-                if (request.IsBid) 
+                if (request.IsBid)
                 {
                     request.BidStatus = ShippingRequestBidStatus.Closed;
                 }
@@ -271,7 +271,7 @@ namespace TACHYON.TachyonPriceOffers
         }
         private async Task<ShippingRequest> GetShippingRequestOnPrePriceStage(long requestId)
         {
-            ShippingRequest shippingRequest = await _shippingRequestRepository.FirstOrDefaultAsync(e => e.Id == requestId && e.IsTachyonDeal && e.Status == ShippingRequestStatus.PrePrice);
+            ShippingRequest shippingRequest = await _shippingRequestRepository.FirstOrDefaultAsync(e => e.Id == requestId && e.IsTachyonDeal && (e.Status == ShippingRequestStatus.PrePrice || e.Status == ShippingRequestStatus.NeedsAction));
             if (shippingRequest == null) throw new UserFriendlyException(L("NoShippingRequest"));
 
             return shippingRequest;

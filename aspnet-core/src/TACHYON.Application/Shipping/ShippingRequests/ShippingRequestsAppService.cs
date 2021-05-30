@@ -512,7 +512,7 @@ namespace TACHYON.Shipping.ShippingRequests
             {
                 if (shippingRequest.CarrierTenantId != AbpSession.TenantId)
                 {
-                    if (shippingRequest.CarrierPriceType == TachyonPriceOffers.CarrierPriceType.TachyonDirectRequest && shippingRequest.Status == ShippingRequestStatus.PrePrice)
+                    if ((shippingRequest.Status == ShippingRequestStatus.PrePrice || shippingRequest.Status == ShippingRequestStatus.NeedsAction))
                     {
                         if (!_carrierDirectPricingRepository.GetAll().Any(e => e.RequestId == shippingRequest.Id && e.CarrirerTenantId == AbpSession.TenantId))
                         {
