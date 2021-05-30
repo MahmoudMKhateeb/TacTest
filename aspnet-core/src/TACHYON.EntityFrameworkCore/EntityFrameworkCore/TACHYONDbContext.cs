@@ -385,6 +385,12 @@ namespace TACHYON.EntityFrameworkCore
             .HasIndex(b => b.AccountNumber)
             .IsUnique();
 
+            modelBuilder.Entity<RoutPoint>()
+            .HasIndex(e => e.WaybillNumber)
+            .IsUnique();
+            modelBuilder.Entity<User>()
+            .HasIndex(e => e.AccountNumber)
+            .IsUnique();
             modelBuilder.ConfigurePersistedGrantEntity();
         }
     }
