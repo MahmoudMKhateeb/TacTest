@@ -273,7 +273,7 @@ namespace TACHYON.Shipping.ShippingRequestBids
                     .Include(x => x.ShippingRequestFk.Tenant)
                     .Where(x => x.TenantId == AbpSession.TenantId);
 
-
+               await shippingRequestBids.ForEachAsync(x => x.price = x.BasePrice);
                 IQueryable<GetAllCarrierShippingRequestBidsOutput> list = shippingRequestBids
                     .Select(o => new GetAllCarrierShippingRequestBidsOutput
                     {
