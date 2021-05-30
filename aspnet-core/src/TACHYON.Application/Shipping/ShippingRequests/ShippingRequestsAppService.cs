@@ -746,14 +746,14 @@ namespace TACHYON.Shipping.ShippingRequests
             return transportTypeDtos;
         }
 
-        public async Task<List<TransportTypeSelectItemDto>> GetAllTruckTypesByTransportTypeIdForDropdown(int transportTypeId)
+        public async Task<List<TrucksTypeSelectItemDto>> GetAllTruckTypesByTransportTypeIdForDropdown(int transportTypeId)
         {
 
 
             var list = await _lookup_trucksTypeRepository.GetAll()
                 .Include(x => x.Translations)
                 .Where(x => x.TransportTypeId == transportTypeId).ToListAsync();
-            return ObjectMapper.Map<List<TransportTypeSelectItemDto>>(list);
+            return ObjectMapper.Map<List<TrucksTypeSelectItemDto>>(list);
             //.Select(x => new SelectItemDto()
             //{
             //    Id = x.Id.ToString(),

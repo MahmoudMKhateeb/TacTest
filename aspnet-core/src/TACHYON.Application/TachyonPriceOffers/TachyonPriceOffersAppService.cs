@@ -159,6 +159,7 @@ namespace TACHYON.TachyonPriceOffers
             {
                 offer.OfferStatus = OfferStatus.Rejected;
                 offer.RejectedReason = input.RejectedReason;
+                offer.ShippingRequestFk.Status = ShippingRequestStatus.PrePrice;
                 await _appNotifier.TachyonDealOfferRejectedByShipper(offer);
             }
 
