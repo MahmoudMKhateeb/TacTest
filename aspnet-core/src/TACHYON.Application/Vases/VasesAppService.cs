@@ -146,7 +146,7 @@ namespace TACHYON.Vases
 
         private void CheckIfEmptyOrDuplicatedVasName(CreateOrEditVasDto input)
         {
-            var item = _vasRepository.FirstOrDefaultAsync(x => x.Name.ToLower() == input.Name.ToLower());
+            var item = _vasRepository.FirstOrDefaultAsync(x => x.Name.ToLower() == input.Name.ToLower() && x.Id!=input.Id);
             if (item != null)
             {
                 throw new UserFriendlyException(L("CannotInsertDuplicatedVasNameMessage"));
