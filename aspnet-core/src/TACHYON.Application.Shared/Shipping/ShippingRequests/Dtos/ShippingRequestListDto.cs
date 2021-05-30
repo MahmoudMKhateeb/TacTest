@@ -5,6 +5,7 @@ namespace TACHYON.Shipping.ShippingRequests.Dtos
 {
     public class ShippingRequestListDto : EntityDto<long>
     {
+        public string Tenant { get; set; }
         public bool IsBid { get; set; }
         public bool IsTachyonDeal { get; set; }
         public int TotalBids { get; set; }

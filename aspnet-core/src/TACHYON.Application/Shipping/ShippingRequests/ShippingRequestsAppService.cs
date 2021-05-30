@@ -108,14 +108,14 @@ namespace TACHYON.Shipping.ShippingRequests
         private readonly IRepository<Vas, int> _lookup_vasRepository;
         private readonly IRepository<ShippingRequestVas, long> _shippingRequestVasRepository;
 
-       // private readonly IRepository<Route, int> _lookup_routeRepository;
+        // private readonly IRepository<Route, int> _lookup_routeRepository;
         private readonly IRepository<RoutStep, long> _routStepRepository;
         private readonly IRepository<RoutPoint, long> _routPointRepository;
         private readonly IAppNotifier _appNotifier;
         private readonly IRepository<Tenant> _tenantRepository;
         private readonly IRepository<TrucksType, long> _lookup_trucksTypeRepository;
         private readonly IRepository<TrailerType, int> _lookup_trailerTypeRepository;
-      //  private readonly IRepository<RoutType, int> _lookup_routTypeRepository;
+        //  private readonly IRepository<RoutType, int> _lookup_routTypeRepository;
         private readonly IRepository<GoodCategory, int> _lookup_goodCategoryRepository;
         private readonly IRepository<Port, long> _lookup_PortRepository;
         private readonly IRepository<ShippingRequestBid, long> _shippingRequestBidRepository;
@@ -131,6 +131,7 @@ namespace TACHYON.Shipping.ShippingRequests
             IQueryable<ShippingRequest> query = _shippingRequestRepository
                 .GetAll()
                 .AsNoTracking()
+                    .Include(t => t.Tenant)
                     .Include(x => x.OriginCityFk)
                     .Include(x => x.DestinationCityFk)
                 .WhereIf(Input.IsBid.HasValue, e => e.IsBid == Input.IsBid.Value)
@@ -143,14 +144,16 @@ namespace TACHYON.Shipping.ShippingRequests
 
             var ResultPage = query.PageBy(Input);
             var totalCount = await query.CountAsync();
-            return new GetAllShippingRequestsOutputDto() { 
-            Data= new PagedResultDto<ShippingRequestListDto>(
+            return new GetAllShippingRequestsOutputDto()
+            {
+                Data = new PagedResultDto<ShippingRequestListDto>(
                 totalCount,
                 ObjectMapper.Map<List<ShippingRequestListDto>>(await ResultPage.ToListAsync())
 
             )
-            ,NoOfPostPriceWithoutTrips = IsEnabled(AppFeatures.Shipper) ? _shippingRequestRepository.GetAll().Where(r => r.Status == ShippingRequestStatus.PostPrice && r.TotalsTripsAddByShippier == 0 && r.TenantId==AbpSession.TenantId).Count() : 0
-        };
+            ,
+                NoOfPostPriceWithoutTrips = IsEnabled(AppFeatures.Shipper) ? _shippingRequestRepository.GetAll().Where(r => r.Status == ShippingRequestStatus.PostPrice && r.TotalsTripsAddByShippier == 0 && r.TenantId == AbpSession.TenantId).Count() : 0
+            };
         }
         // [RequiresFeature(AppFeatures.Shipper, AppFeatures.TachyonDealer)]
         //public async Task<GetAllShippingRequestsOutput> GetAll(GetAllShippingRequestsInput input)
@@ -358,9 +361,9 @@ namespace TACHYON.Shipping.ShippingRequests
         [AbpAuthorize(AppPermissions.Pages_ShippingRequests)]
         public async Task<List<TrucksTypeSelectItemDto>> GetAllTrucksTypeForTableDropdown()
         {
-            var list= await _lookup_trucksTypeRepository.GetAll().Include(x => x.Translations).ToListAsync();
+            var list = await _lookup_trucksTypeRepository.GetAll().Include(x => x.Translations).ToListAsync();
             return ObjectMapper.Map<List<TrucksTypeSelectItemDto>>(list);
-                //.Select(trucksType => new SelectItemDto { Id = trucksType.Id.ToString(), DisplayName = trucksType == null || trucksType.DisplayName == null ? "" : trucksType.DisplayName.ToString() }).ToListAsync();
+            //.Select(trucksType => new SelectItemDto { Id = trucksType.Id.ToString(), DisplayName = trucksType == null || trucksType.DisplayName == null ? "" : trucksType.DisplayName.ToString() }).ToListAsync();
         }
 
         [AbpAuthorize(AppPermissions.Pages_ShippingRequests)]
@@ -378,11 +381,11 @@ namespace TACHYON.Shipping.ShippingRequests
 
         public async Task<List<GetAllGoodsCategoriesForDropDownOutput>> GetAllGoodCategoriesForTableDropdown()
         {
-            var list= await _lookup_goodCategoryRepository.GetAll()
+            var list = await _lookup_goodCategoryRepository.GetAll()
                 .Include(x => x.Translations).ToListAsync();
 
             return ObjectMapper.Map<List<GetAllGoodsCategoriesForDropDownOutput>>(list);
-                //.Select(x => new GetAllGoodsCategoriesForDropDownOutput { Id = x.Id.ToString(), DisplayName = x == null || x.DisplayName == null ? "" : x.DisplayName.ToString() }).ToListAsync();
+            //.Select(x => new GetAllGoodsCategoriesForDropDownOutput { Id = x.Id.ToString(), DisplayName = x == null || x.DisplayName == null ? "" : x.DisplayName.ToString() }).ToListAsync();
         }
 
         public async Task<List<SelectItemDto>> GetAllPortsForDropdown()
@@ -487,23 +490,23 @@ namespace TACHYON.Shipping.ShippingRequests
                 .Where(e => e.Id == id)
                 .WhereIf(await IsEnabledAsync(AppFeatures.Shipper), x => x.TenantId == AbpSession.TenantId)
                 .WhereIf(await IsEnabledAsync(AppFeatures.TachyonDealer), x => x.IsTachyonDeal)
-                    .Include(e=>e.ShippingRequestBids)
+                    .Include(e => e.ShippingRequestBids)
                     .Include(e => e.OriginCityFk)
                     .Include(e => e.DestinationCityFk)
                     .Include(e => e.AssignedDriverUserFk)
                     .Include(e => e.AssignedTruckFk)
                     .ThenInclude(e => e.TrucksTypeFk)
                     .Include(e => e.TrucksTypeFk)
-                    .ThenInclude(e=>e.Translations)
+                    .ThenInclude(e => e.Translations)
                     .Include(e => e.TransportTypeFk)
                     .Include(e => e.CapacityFk)
                     .Include(e => e.AssignedTruckFk)
                     .ThenInclude(e => e.TruckStatusFk)
                     .Include(e => e.GoodCategoryFk)
-                    .ThenInclude(e=>e.Translations)
+                    .ThenInclude(e => e.Translations)
                     .Include(e => e.ShippingTypeFk)
                     .Include(e => e.PackingTypeFk)
-                    .Include(e=>e.CarrierTenantFk)
+                    .Include(e => e.CarrierTenantFk)
                     .FirstOrDefaultAsync();
             if (await IsEnabledAsync(AppFeatures.Carrier))
             {
@@ -522,7 +525,7 @@ namespace TACHYON.Shipping.ShippingRequests
                     }
                 }
             }
-            
+
             var shippingRequestVasList = await _shippingRequestVasRepository.GetAll()
                 .Where(x => x.ShippingRequestId == id)
                 .Select(e =>
@@ -747,15 +750,15 @@ namespace TACHYON.Shipping.ShippingRequests
         {
 
 
-            var list= await _lookup_trucksTypeRepository.GetAll()
+            var list = await _lookup_trucksTypeRepository.GetAll()
                 .Include(x => x.Translations)
                 .Where(x => x.TransportTypeId == transportTypeId).ToListAsync();
             return ObjectMapper.Map<List<TransportTypeSelectItemDto>>(list);
-                //.Select(x => new SelectItemDto()
-                //{
-                //    Id = x.Id.ToString(),
-                //    DisplayName = x.DisplayName
-                //}).ToListAsync();
+            //.Select(x => new SelectItemDto()
+            //{
+            //    Id = x.Id.ToString(),
+            //    DisplayName = x.DisplayName
+            //}).ToListAsync();
         }
 
         public async Task<List<SelectItemDto>> GetAllTuckCapacitiesByTuckTypeIdForDropdown(int truckTypeId)
@@ -788,7 +791,7 @@ namespace TACHYON.Shipping.ShippingRequests
                     SenderCompanyName = x.ShippingRequestFk.Tenant.companyName,
                     DriverName = x.AssignedDriverUserFk != null ? x.AssignedDriverUserFk.FullName : "",
                     DriverIqamaNo = "",
-                    TruckTypeTranslationList=x.AssignedTruckFk.TrucksTypeFk.Translations,
+                    TruckTypeTranslationList = x.AssignedTruckFk.TrucksTypeFk.Translations,
                     TruckTypeDisplayName =
                     //x.AssignedTruckFk != null
                     //   ? (x.AssignedTruckFk.TransportTypeFk != null ?
@@ -877,8 +880,8 @@ namespace TACHYON.Shipping.ShippingRequests
                     //: null,
                     DeliveryDate = x.EndTripDate,
                     TotalWeight = x.ShippingRequestFk.TotalWeight,
-                    GoodCategoryTranslation=x.ShippingRequestFk.GoodCategoryFk.Translations,
-                    GoodsCategoryDisplayName =x.ShippingRequestFk.GoodCategoryFk //x.ShippingRequestFk.GoodCategoryFk.DisplayName
+                    GoodCategoryTranslation = x.ShippingRequestFk.GoodCategoryFk.Translations,
+                    GoodsCategoryDisplayName = x.ShippingRequestFk.GoodCategoryFk //x.ShippingRequestFk.GoodCategoryFk.DisplayName
                 });
 
                 var pickup = GetPickupOrDropPointFacilityForTrip(shippingRequestTripId, PickingType.Pickup);
@@ -982,7 +985,7 @@ namespace TACHYON.Shipping.ShippingRequests
                     DroppArea = routPoint.FacilityFk.Address,
                     CarrierName = x.ShippingRequestFk.CarrierTenantFk != null ? x.ShippingRequestFk.CarrierTenantFk.Name : "",
                     TotalWeight = x.ShippingRequestFk.TotalWeight,
-                    GoodsCategoryTranslation=x.ShippingRequestFk.GoodCategoryFk.Translations,
+                    GoodsCategoryTranslation = x.ShippingRequestFk.GoodCategoryFk.Translations,
                     GoodsCategoryDisplayName = x.ShippingRequestFk.GoodCategoryFk,
                     DeliveryDate = x.EndTripDate
                 });
