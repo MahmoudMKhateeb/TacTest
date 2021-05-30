@@ -171,7 +171,7 @@ namespace TACHYON.Shipping.ShippingRequests.TachyonDealer
                     .FirstOrDefaultAsync(x => x.Id == Input.ShippingRequestBidId.Value &&
                     x.ShippingRequestFk.IsBid &&
                     x.ShippingRequestFk.IsTachyonDeal &&
-                    x.ShippingRequestFk.Status == ShippingRequestStatus.NeedsAction &&
+                   ( x.ShippingRequestFk.Status == ShippingRequestStatus.NeedsAction || x.ShippingRequestFk.Status == ShippingRequestStatus.PrePrice) &&
                     x.ShippingRequestFk.BidStatus == ShippingRequestBidStatus.OnGoing);
                 if (bid == null)
                 {

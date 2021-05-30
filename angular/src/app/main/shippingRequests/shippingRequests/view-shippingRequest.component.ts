@@ -89,13 +89,13 @@ export class ViewShippingRequestComponent extends AppComponentBase implements On
     if (
       this.feature.isEnabled('App.Shipper') &&
       !this.shippingRequestforView.shippingRequest.isTachyonDeal &&
-      this.shippingRequestforView.shippingRequest.status === 0
+      (this.shippingRequestforView.shippingRequest.status === 0 || this.shippingRequestforView.shippingRequest.status === 2)
     ) {
       return true;
     } else if (
       this.feature.isEnabled('App.TachyonDealer') &&
       this.shippingRequestforView.shippingRequest.isBid &&
-      this.shippingRequestforView.shippingRequest.status === 0
+      (this.shippingRequestforView.shippingRequest.status === 0 || this.shippingRequestforView.shippingRequest.status === 2)
     ) {
       return true;
     } else {

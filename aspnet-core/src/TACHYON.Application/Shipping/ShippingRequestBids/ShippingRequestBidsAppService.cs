@@ -187,7 +187,7 @@ namespace TACHYON.Shipping.ShippingRequestBids
                         x.ShippingRequestFk.TenantId == AbpSession.TenantId &&
                         x.ShippingRequestFk.IsBid &&
                         !x.ShippingRequestFk.IsTachyonDeal &&
-                        x.ShippingRequestFk.Status == ShippingRequestStatus.PrePrice &&
+                        x.ShippingRequestFk.Status == ShippingRequestStatus.NeedsAction &&
                         x.ShippingRequestFk.BidStatus == ShippingRequestBidStatus.OnGoing
                     );
                 if (bid == null)
@@ -455,7 +455,7 @@ namespace TACHYON.Shipping.ShippingRequestBids
             await _commissionManager.AddCommissionInfoAfterCarrierBid(shippingRequestBid);
             await _shippingRequestBidsRepository.InsertAndGetIdAsync(shippingRequestBid);
             shippingRequest.TotalBids += 1;
-            shippingRequest.Status = ShippingRequestStatus.NeedsAction;
+           // shippingRequest.Status = ShippingRequestStatus.NeedsAction;
             await CurrentUnitOfWork.SaveChangesAsync();
 
             await SendNotificationAfterBid(shippingRequest, shippingRequestBid,true);

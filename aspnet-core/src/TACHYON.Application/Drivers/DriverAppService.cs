@@ -76,6 +76,7 @@ namespace TACHYON.Drivers
                 .AsTracking()
                 .Include(t => t.AssignedTruckFk)
                     .ThenInclude(t => t.TrucksTypeFk)
+                    .ThenInclude(t=>t.Translations)
                 .OrderByDescending(x => x.Id)
                 .FirstOrDefaultAsync(d => d.AssignedDriverUserId == user.Id && d.DriverStatus == Shipping.Trips.ShippingRequestTripDriverStatus.Accepted && d.AssignedTruckId != null);
                 if (trip !=null)
