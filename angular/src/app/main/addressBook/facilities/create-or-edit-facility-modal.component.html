@@ -72,7 +72,7 @@
                   [class.is-invalid]="city.touched && !city.valid"
                   [class.is-valid]="city.touched && city.valid"
                 >
-                  <option value="">{{ l('SelectACounty') }}</option>
+                  <option value="">{{ l('SelectACity') }}</option>
                   <option *ngFor="let item of allCities" value="{{ item.id }}">{{ item.displayName }}</option>
                 </select>
               </div>

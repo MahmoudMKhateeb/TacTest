@@ -142,13 +142,21 @@ namespace TACHYON.Shipping.ShippingRequests
                 .WhereIf(IsEnabled(AppFeatures.Shipper), e => e.TenantId == AbpSession.TenantId) //if the user is shipper
             .OrderBy(Input.Sorting ?? "id desc");
 
+            
+
             var ResultPage = query.PageBy(Input);
             var totalCount = await query.CountAsync();
+            
+            var output = ObjectMapper.Map<List<ShippingRequestListDto>>(await ResultPage.ToListAsync());
+            foreach (var item in output.Where(x => IsEnabled(AppFeatures.Shipper) && x.IsTachyonDeal))
+            {
+                item.TotalBids = 0;
+            }
             return new GetAllShippingRequestsOutputDto()
             {
                 Data = new PagedResultDto<ShippingRequestListDto>(
-                totalCount,
-                ObjectMapper.Map<List<ShippingRequestListDto>>(await ResultPage.ToListAsync())
+                totalCount, output
+                
 
             )
             ,
