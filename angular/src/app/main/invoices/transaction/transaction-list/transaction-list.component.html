@@ -27,19 +27,6 @@
                     </div>
                   </div>
                 </div>
-
-                <div class="col-xl-4" *ngIf="!appSession.tenantId">
-                  <div class="form-group m-form__group">
-                    <label for="ChannelType">{{ l('ChannelType') }}</label>
-                    <select name="Period.periodType" [(ngModel)]="Channel" class="form-control">
-                      <option value="">{{ l('All') }}</option>
-                      <option [value]="code.key" *ngFor="let code of ChannelType">
-                        {{ code.value | localize }}
-                      </option>
-                    </select>
-                  </div>
-                </div>
-
                 <div class="col-xl-4">
                   <div class="checkbox-list mb-2">
                     <label class="checkbox ml-2">
@@ -64,6 +51,17 @@
                     dateRangePickerMomentModifier
                     [(date)]="creationDateRange"
                   />
+                </div>
+                <div class="col-xl-4" *ngIf="!appSession.tenantId">
+                  <div class="form-group m-form__group">
+                    <label for="ChannelType">{{ l('ChannelType') }}</label>
+                    <select name="Period.periodType" [(ngModel)]="Channel" class="form-control">
+                      <option value="">{{ l('All') }}</option>
+                      <option [value]="code.key" *ngFor="let code of ChannelType">
+                        {{ code.value | localize }}
+                      </option>
+                    </select>
+                  </div>
                 </div>
               </div>
               <button (click)="getAll()" class="btn btn-primary" type="submit">{{ l('Search') }}</button>
