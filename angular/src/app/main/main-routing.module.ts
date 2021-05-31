@@ -57,6 +57,7 @@ import { AccidentReasonComponent } from '@app/main/accidents/reasons/reason.comp
 import { TripRejectReasonComponent } from '@app/main/shippingRequests/shippingRequests/ShippingRequestTrips/rejectreason/trip-reject-reason.component';
 import { CarrierDirectReqestPageComponent } from '@app/main/shippingRequests/shippingRequests/directShippingRequest/carrierDirectReqestPage.component';
 import { AppLocalizationComponent } from '@app/main/applocalizations/applocalization.component';
+import { ComingSoonComponent } from '@app/main/commingSoon/comingSoon.component';
 
 @NgModule({
   imports: [
@@ -263,6 +264,9 @@ import { AppLocalizationComponent } from '@app/main/applocalizations/applocaliza
           { path: 'lanaguages/applocalizations', component: AppLocalizationComponent, data: { permission: 'Pages.AppLocalizations' } },
 
           { path: 'dashboard', component: DashboardComponent, data: { permission: 'Pages.Tenant.Dashboard' } },
+          //TODO:// to be removed after menu Structure work is complete
+          { path: 'comingSoon/comingSoon', component: ComingSoonComponent },
+          //
           { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
           { path: '**', redirectTo: 'dashboard' },
         ],
