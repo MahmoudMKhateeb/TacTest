@@ -37,10 +37,7 @@ namespace TACHYON.Invoices.Transactions
         [AbpAuthorize(AppPermissions.Pages_Invoices_Transaction)]
         public async Task<PagedResultDto<TransactionListDto>> GetAll(TransactionFilterInput input)
         {
-            var query =  _commonManager.ExecuteMethodIfHostOrTenantUsers(() =>
-             {
-                 return GetFilterTransactions(input);
-             });
+           var query = GetFilterTransactions(input);
             var pages = query.PageBy(input);
 
             var totalCount = await pages.CountAsync();
@@ -55,19 +52,18 @@ namespace TACHYON.Invoices.Transactions
         [AbpAuthorize(AppPermissions.Pages_Invoices_Transaction)]
         public Task<FileDto> Exports(TransactionFilterInput input)
         {
-            var query = _commonManager.ExecuteMethodIfHostOrTenantUsers(() =>
-            {
-                return GetFilterTransactions(input);
-            });
+            var query = GetFilterTransactions(input);
             var data = ObjectMapper.Map<List<TransactionListDto>>(query);
             return Task.FromResult(_transactionExcelExporter.ExportToFile(data));
 
         }
         private IOrderedQueryable<Transaction> GetFilterTransactions(TransactionFilterInput input)
         {
+            DisableTenancyFilters();
             var query = _transactionRepository
                 .GetAll()
                 .Include(t=>t.Tenant)
+                .WhereIf(AbpSession.TenantId.HasValue, i => i.TenantId == AbpSession.TenantId.Value)
                 .WhereIf(input.channelType.HasValue, e => e.ChannelId == input.channelType)
                 .WhereIf(input.TenantId.HasValue, i => i.TenantId == input.TenantId)
                 .WhereIf(input.FromDate.HasValue && input.ToDate.HasValue, i => i.CreationTime >= input.FromDate && i.CreationTime < input.ToDate)
