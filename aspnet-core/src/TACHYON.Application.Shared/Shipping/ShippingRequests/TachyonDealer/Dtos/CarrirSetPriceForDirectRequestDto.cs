@@ -13,7 +13,7 @@ namespace TACHYON.Shipping.ShippingRequests.TachyonDealer.Dtos
         public decimal Price { get; set ; }
         public void AddValidationErrors(CustomValidationContext context)
         {
-           if (Price<0) context.Results.Add(new ValidationResult("The price  must be higher or equal to zero"));
+           if (Price<=0) context.Results.Add(new ValidationResult("ThePriceMustBeGreaterThanZero"));
         }
     }
 }
