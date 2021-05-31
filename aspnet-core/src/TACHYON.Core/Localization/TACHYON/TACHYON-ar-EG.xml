@@ -445,6 +445,7 @@
     <text name="Disabled">معطّل</text>
     <text name="DisableRecurringPayments">لا تفوتر حسابي تلقائيا</text>
     <text name="DisplayName">الاسم</text>
+    <text name="DisplayNameCannotBeEmpty">لا يمكن اضافة إسم فارغ</text>
     <text name="DisplayOrder">DisplayOrder</text>
     <text name="Docuement">مستند</text>
     <text name="DocumentEntityName">إسم الجهة التي يطلب منها المستندات</text>
