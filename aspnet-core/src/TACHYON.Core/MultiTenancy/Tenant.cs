@@ -44,7 +44,8 @@ namespace TACHYON.MultiTenancy
         public decimal ReservedBalance { get; set; } = 0;
         public decimal CreditBalance { get; set; } = 0;
 
-        public int AccountNumber { get; set; }
+        [StringLength(12)]
+        public string AccountNumber { get; set; }
         public SubscriptionPaymentType SubscriptionPaymentType { get; set; }
 
         protected Tenant()

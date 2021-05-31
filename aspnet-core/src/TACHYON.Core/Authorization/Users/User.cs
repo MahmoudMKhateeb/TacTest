@@ -4,6 +4,7 @@ using Abp.Extensions;
 using Abp.Timing;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using TACHYON.Nationalities;
 
@@ -14,6 +15,7 @@ namespace TACHYON.Authorization.Users
     /// </summary>
     public class User : AbpUser<User>
     {
+        [StringLength(12)]
         public string AccountNumber { get; set; }
         public virtual Guid? ProfilePictureId { get; set; }
 

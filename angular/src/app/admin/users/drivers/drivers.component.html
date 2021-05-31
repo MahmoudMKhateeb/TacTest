@@ -128,6 +128,10 @@
                       {{ 'EmailAddress' | localize }}
                       <p-sortIcon field="emailAddress"></p-sortIcon>
                     </th>
+                    <th pSortableColumn="AccountNumber">
+                      {{ 'AccountNumber' | localize }}
+                      <p-sortIcon field="AccountNumber"></p-sortIcon>
+                    </th>
                     <th pSortableColumn="name">
                       {{ 'FirstName' | localize }}
                       <p-sortIcon field="name"></p-sortIcon>
@@ -248,6 +252,10 @@
                     <td>
                       <span class="ui-column-title"> {{ 'EmailAddress' | localize }}</span>
                       {{ record.emailAddress }}
+                    </td>
+                    <td>
+                      <span class="ui-column-title"> {{ 'AccountNumber' | localize }}</span>
+                      {{ record.accountNumber }}
                     </td>
                     <td>
                       <span class="ui-column-title"> {{ 'Name' | localize }}</span>
