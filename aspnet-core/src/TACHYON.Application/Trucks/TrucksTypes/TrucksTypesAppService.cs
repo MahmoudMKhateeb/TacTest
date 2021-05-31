@@ -94,8 +94,14 @@ namespace TACHYON.Trucks.TrucksTypes
         {
             foreach (var transItem in input.Translations)
             {
+                if (string.IsNullOrWhiteSpace(transItem.TranslatedDisplayName))
+                {
+                    throw new UserFriendlyException(L("DisplayNameCannotBeEmpty"));
+                }
                 var isDuplicateUserName = await _trucksTypeRepository
-                   .FirstOrDefaultAsync(x => x.Translations.Any(x=>x.TranslatedDisplayName==transItem.TranslatedDisplayName)  && x.Id != input.Id);
+                   .FirstOrDefaultAsync(x => x.Translations.Any(x=>x.TranslatedDisplayName==transItem.TranslatedDisplayName) &&
+                   x.TransportTypeId==input.TransportTypeId &&
+                   x.Id != input.Id);
                 if (isDuplicateUserName != null)
                 {
                     throw new UserFriendlyException(string.Format(L("TrucksTypeDuplicateName"), transItem.TranslatedDisplayName));

@@ -487,6 +487,7 @@
     <text name="Disabled">Disabled</text>
     <text name="DisableRecurringPayments">Don't bill my account automatically</text>
     <text name="DisplayName">Display Name</text>
+    <text name="DisplayNameCannotBeEmpty">Cannot insert Empty Display Name</text>
     <text name="DisplayOrder">DisplayOrder</text>
     <text name="Docapplocalizationsuments">Docapplocalizationsuments</text>
     <text name="Docuement">Docuement</text>
