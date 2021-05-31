@@ -265,10 +265,11 @@ import { ComingSoonComponent } from '@app/main/commingSoon/comingSoon.component'
 
           { path: 'dashboard', component: DashboardComponent, data: { permission: 'Pages.Tenant.Dashboard' } },
           //TODO:// to be removed after menu Structure work is complete
-          { path: 'comingSoon/comingSoon', component: ComingSoonComponent },
           //
-          { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
-          { path: '**', redirectTo: 'dashboard' },
+          { path: 'page-not-found', component: ComingSoonComponent },
+          //
+          { path: '', redirectTo: 'page-not-found' },
+          { path: '**', redirectTo: 'page-not-found' },
         ],
       },
     ]),
