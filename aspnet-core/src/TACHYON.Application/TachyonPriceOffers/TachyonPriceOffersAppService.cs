@@ -272,7 +272,7 @@ namespace TACHYON.TachyonPriceOffers
         }
         private async Task<ShippingRequest> GetShippingRequestOnPrePriceStage(long requestId)
         {
-            ShippingRequest shippingRequest = await _shippingRequestRepository.FirstOrDefaultAsync(e => e.Id == requestId && e.IsTachyonDeal && (e.Status == ShippingRequestStatus.PrePrice || e.Status == ShippingRequestStatus.NeedsAction));
+            ShippingRequest shippingRequest = await _shippingRequestRepository.GetAll().Include(t => t.Tenant).FirstOrDefaultAsync(e => e.Id == requestId && e.IsTachyonDeal && (e.Status == ShippingRequestStatus.PrePrice || e.Status == ShippingRequestStatus.NeedsAction));
             if (shippingRequest == null) throw new UserFriendlyException(L("NoShippingRequest"));
 
             return shippingRequest;
