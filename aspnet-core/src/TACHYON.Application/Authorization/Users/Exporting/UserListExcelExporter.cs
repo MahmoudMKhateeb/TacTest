@@ -30,7 +30,7 @@ namespace TACHYON.Authorization.Users.Exporting
         public FileDto ExportToFile(List<UserListDto> userListDtos)
         {
             return CreateExcelPackage(
-                "DriverList.xlsx",
+                "accounts",
                 excelPackage =>
                 {
                     var sheet = excelPackage.CreateSheet(L("Users"));
