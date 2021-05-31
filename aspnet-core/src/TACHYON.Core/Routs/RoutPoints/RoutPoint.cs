@@ -14,6 +14,7 @@ namespace TACHYON.Routs.RoutPoints
     [Table("RoutPoints")]
     public class RoutPoint: FullAuditedEntity<long>
     {
+        public long? WaybillNumber { get; set; }
         public string DisplayName { get; set; }
 
         /// <summary>

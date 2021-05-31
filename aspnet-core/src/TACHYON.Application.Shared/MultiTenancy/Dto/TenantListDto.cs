@@ -11,7 +11,7 @@ namespace TACHYON.MultiTenancy.Dto
         public string TenancyName { get; set; }
 
         public string Name { get; set; }
-        public int AccountNumber { get; set; }
+        public string AccountNumber { get; set; }
 
         public string EditionDisplayName { get; set; }
 

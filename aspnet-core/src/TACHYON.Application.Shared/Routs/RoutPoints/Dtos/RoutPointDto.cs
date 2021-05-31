@@ -12,6 +12,7 @@ namespace TACHYON.Routs.RoutPoints.Dtos
 {
     public class RoutPointDto: EntityDto<long>
     {
+        public long? WaybillNumber { get; set; }
         public string DisplayName { get; set; }
 
         public PickingType PickingType { get; set; }

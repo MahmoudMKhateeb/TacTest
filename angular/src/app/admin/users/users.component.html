@@ -157,6 +157,10 @@
                       {{ 'UserName' | localize }}
                       <p-sortIcon field="username"></p-sortIcon>
                     </th>
+                    <th style="width: 150px;" pSortableColumn="AccountNumber">
+                      {{ 'AccountNumber' | localize }}
+                      <p-sortIcon field="AccountNumber"></p-sortIcon>
+                    </th>
                     <th style="width: 150px;" pSortableColumn="name">
                       {{ 'Name' | localize }}
                       <p-sortIcon field="name"></p-sortIcon>
@@ -271,6 +275,12 @@
                           <img class="img-circle" [src]="record.profilePictureUrl" />
                         </a>
                         {{ record.userName }}
+                      </span>
+                    </td>
+                    <td style="width: 150px;">
+                      <span class="ui-column-title"> {{ 'AccountNumber' | localize }}</span>
+                      <span>
+                        {{ record.accountNumber }}
                       </span>
                     </td>
                     <td style="width: 150px;">
