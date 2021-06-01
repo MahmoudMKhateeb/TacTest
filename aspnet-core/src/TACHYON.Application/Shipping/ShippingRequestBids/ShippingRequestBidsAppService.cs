@@ -385,7 +385,7 @@ namespace TACHYON.Shipping.ShippingRequestBids
                     TotalWeight = o.TotalWeight,
                     NumberOfTrips = o.NumberOfTrips,
                     IsTachyonDeal = o.IsTachyonDeal,
-                    TotalBids = o.TotalBids
+                    TotalBids = !IsEnabled(AppFeatures.Carrier) ? o.TotalBids:0
                 });
             });
 
