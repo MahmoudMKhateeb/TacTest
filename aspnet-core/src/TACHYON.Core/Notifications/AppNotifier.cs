@@ -679,6 +679,61 @@ namespace TACHYON.Notifications
         }
 
         #endregion
+
+        #region ShippingRequest
+        #region Offers
+        public async Task ShippingRequestSendOfferWhenAddPrice(ShippingRequestPricing offer,string carrier)
+        {
+            var notificationData = new LocalizableMessageNotificationData(
+                new LocalizableString(
+                    L("ShippingRequestSendOfferWhenAddPrice"),
+                    TACHYONConsts.LocalizationSourceName
+                )
+            );
+
+            notificationData["offerid"] = offer.Id;
+            notificationData["id"] = offer.ShippingRequestId;
+            notificationData["carrier"] = carrier;
+            List<UserIdentifier> users = new List<UserIdentifier>();
+            if (!offer.ShippingRequestFK.IsTachyonDeal)
+            {
+                users.Add(new UserIdentifier(offer.ShippingRequestFK.TenantId, offer.ShippingRequestFK.CreatorUserId.Value));
+            }
+            else
+            {
+                var user = await _userManager.GetAdminTachyonDealerAsync();
+                users.Add(new UserIdentifier(user.TenantId.Value, user.Id));
+            }
+            await _notificationPublisher.PublishAsync(AppNotificationNames.ShippingRequestSendOfferWhenAddPrice, notificationData, userIds: users.ToArray());
+        }
+        public async Task ShippingRequestSendOfferWhenUpdatePrice(ShippingRequestPricing offer,string carrier)
+        {
+            var notificationData = new LocalizableMessageNotificationData(
+                new LocalizableString(
+                    L("ShippingRequestSendOfferWhenUpdatePrice"),
+                    TACHYONConsts.LocalizationSourceName
+                )
+            );
+            notificationData["offerid"] = offer.Id;
+            notificationData["id"] = offer.ShippingRequestId;
+            notificationData["carrier"] = carrier;
+            List<UserIdentifier> users = new List<UserIdentifier>();
+            if (!offer.ShippingRequestFK.IsTachyonDeal)
+            {
+                users.Add(new UserIdentifier(offer.ShippingRequestFK.TenantId, offer.ShippingRequestFK.CreatorUserId.Value));
+            }
+            else
+            {
+                var user = await _userManager.GetAdminTachyonDealerAsync();
+                users.Add(new UserIdentifier(user.TenantId.Value, user.Id));
+            }
+            await _notificationPublisher.PublishAsync(AppNotificationNames.ShippingRequestSendOfferWhenUpdatePrice, notificationData, userIds: users.ToArray());
+        }
+
+
+        #endregion
+        #endregion
+
         #region Shipping Request
         public async Task ShippingRequestNotifyCarrirerWhenShipperAccepted(ShippingRequest shippingRequest)
         {

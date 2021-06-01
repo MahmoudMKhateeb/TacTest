@@ -20,6 +20,8 @@ using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using TACHYON.Authorization.Roles;
 using TACHYON.Security;
+using Abp.Application.Editions;
+using TACHYON.MultiTenancy;
 
 namespace TACHYON.Authorization.Users
 {
@@ -34,6 +36,7 @@ namespace TACHYON.Authorization.Users
         private readonly ILocalizationManager _localizationManager;
         private readonly ISettingManager _settingManager;
         private readonly IRepository<User, long> _userRepository;
+        private readonly IRepository<Tenant> _tenantsRepository;
 
         public UserManager(
             UserStore userStore,
@@ -53,7 +56,9 @@ namespace TACHYON.Authorization.Users
             IRepository<UserOrganizationUnit, long> userOrganizationUnitRepository,
             IOrganizationUnitSettings organizationUnitSettings,
             ISettingManager settingManager,
-            ILocalizationManager localizationManager, IRepository<User, long> userRepository)
+            ILocalizationManager localizationManager, 
+            IRepository<User, long> userRepository,
+            IRepository<Tenant> tenantsRepository)
             : base(
                   roleManager,
                   userStore,
@@ -77,6 +82,7 @@ namespace TACHYON.Authorization.Users
             _settingManager = settingManager;
             _localizationManager = localizationManager;
             _userRepository = userRepository;
+            _tenantsRepository = tenantsRepository;
         }
 
         [UnitOfWork]
@@ -250,5 +256,11 @@ namespace TACHYON.Authorization.Users
 
         }
 
+        public async Task<User> GetAdminTachyonDealerAsync()
+        {
+            var tenant = await _tenantsRepository.FirstOrDefaultAsync(x => x.Edition.DisplayName.ToLower() == TACHYONConsts.TachyonDealerEdtionName.ToLower());
+            return await GetAdminByTenantIdAsync(tenant.Id);
+
+        }
     }
 }

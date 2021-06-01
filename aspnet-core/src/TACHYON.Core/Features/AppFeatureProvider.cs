@@ -7,6 +7,9 @@ using TACHYON.Invoices.Periods;
 using System.Linq;
 using Abp.Dependency;
 using Abp.Domain.Uow;
+using System.Collections.Generic;
+using System;
+using TACHYON.Shipping.ShippingRequests;
 
 namespace TACHYON.Features
 {
@@ -180,23 +183,7 @@ namespace TACHYON.Features
                 inputType: new CheckboxInputType()
             );
 
-            shipperFeature.CreateChildFeature(
-                AppFeatures.TachyonDealerCommissionPercentage,
-                "false",
-                L("TachyonDealerCommissionPercentage"),
-                inputType: new SingleLineStringInputType(new NumericValueValidator(0, int.MaxValue)));
 
-            shipperFeature.CreateChildFeature(
-                AppFeatures.TachyonDealerCommissionValue,
-                "false",
-                L("TachyonDealerCommissionValue"),
-                inputType: new SingleLineStringInputType(new NumericValueValidator(0, int.MaxValue)));
-
-            shipperFeature.CreateChildFeature(
-                AppFeatures.TachyonDealerMinValueCommission,
-                "false",
-                L("TachyonDealerMinValueCommission"),
-                inputType: new SingleLineStringInputType(new NumericValueValidator(0, int.MaxValue)));
 
             var shippingRequest = context.Create(
                 AppFeatures.ShippingRequest,
@@ -242,6 +229,21 @@ namespace TACHYON.Features
 
             #region Commission
 
+            List<LocalizableComboboxItem> CommissionTypes = new List<LocalizableComboboxItem>();
+            foreach (byte i in Enum.GetValues(typeof(ShippingRequestCommissionType)))
+            {
+                CommissionTypes.Add(new LocalizableComboboxItem(i.ToString(), L(Enum.GetName(typeof(ShippingRequestCommissionType), i))));
+            }
+
+            shipperFeature.CreateChildFeature(
+                AppFeatures.CommissionType,
+                "false",
+                L("CommissionType"),
+                inputType: new ComboboxInputType(
+                                      new StaticLocalizableComboboxItemSource(CommissionTypes.ToArray())
+                                  )
+                                );
+
             shipperFeature.CreateChildFeature(
                 AppFeatures.BiddingCommissionPercentage,
                 "false",
@@ -259,6 +261,31 @@ namespace TACHYON.Features
                 L(AppFeatures.BiddingMinValueCommission),
                 inputType: new SingleLineStringInputType(new NumericValueValidator(0, int.MaxValue)));
 
+
+
+            shipperFeature.CreateChildFeature(
+                AppFeatures.TachyonDealerCommissionType,
+                "false",
+                L("TachyonDealerCommissionType"),
+                inputType: new ComboboxInputType(new StaticLocalizableComboboxItemSource(CommissionTypes.ToArray())));
+
+            shipperFeature.CreateChildFeature(
+    AppFeatures.TachyonDealerCommissionPercentage,
+    "false",
+    L("TachyonDealerCommissionPercentage"),
+    inputType: new SingleLineStringInputType(new NumericValueValidator(0, int.MaxValue)));
+
+            shipperFeature.CreateChildFeature(
+                AppFeatures.TachyonDealerCommissionValue,
+                "false",
+                L("TachyonDealerCommissionValue"),
+                inputType: new SingleLineStringInputType(new NumericValueValidator(0, int.MaxValue)));
+
+            shipperFeature.CreateChildFeature(
+                AppFeatures.TachyonDealerMinValueCommission,
+                "false",
+                L("TachyonDealerMinValueCommission"),
+                inputType: new SingleLineStringInputType(new NumericValueValidator(0, int.MaxValue)));
             #endregion
 
             var chatFeature = context.Create(

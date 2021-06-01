@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using System;
+using TACHYON.MarketPlaces.Dto;
 using TACHYON.Shipping.ShippingRequests;
 using TACHYON.Shipping.ShippingRequests.Dtos;
 
@@ -35,6 +36,9 @@ namespace TACHYON.AutoMapper.Shipping
                 .ForMember(dest => dest.packingTypeDisplayName, opt => opt.MapFrom(src => src.PackingTypeFk.DisplayName))
                 .ForMember(dest => dest.CarrierName, opt => opt.MapFrom(src => src.CarrierTenantFk.Name));
             //.AfterMap(AssignTruckTypeFullName);
+
+                CreateMap<ShippingRequestPricing, ShippingRequestCarrierPricingDto>();
+              CreateMap<CreateOrEditMarketPlaceBidInput, ShippingRequestPricing>();
 
         }
 

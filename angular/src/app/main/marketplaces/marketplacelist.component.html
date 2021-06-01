@@ -1,0 +1,45 @@
+<div [@routerTransition]>
+  <div class="content d-flex flex-column flex-column-fluid">
+    <!--begin::Subheader-->
+    <sub-header [title]="'MarketPlace' | localize" [description]="'' | localize">
+      <div role="actions">
+        <button class="btn btn-primary"><i class="flaticon2-indent-dots"></i> {{ l('MyBiddingHistory') }}</button>
+      </div>
+    </sub-header>
+    <!--end::Subheader-->
+    <!--begin::Entry-->
+    <div class="d-flex flex-column-fluid">
+      <!--begin::Container-->
+      <div class="container">
+        <h1>Events</h1>
+        <div class="row">
+          <article class="card fl-left" *ngFor="let trip of Marketplaces; let i = index">
+            <section class="date">
+              <time datetime="23th feb"> <span>23</span><span>feb</span> </time>
+            </section>
+            <section class="card-cont">
+              <small>dj khaled</small>
+              <h3>{{ trip.shipper }}</h3>
+              <div class="even-date">
+                <i class="fa fa-calendar"></i>
+                <time>
+                  <span>{{ trip.originCity }}</span>
+                  <span>08:55pm to 12:00 am</span>
+                </time>
+              </div>
+              <div class="even-info">
+                <i class="fa fa-map-marker"></i>
+                <p>
+                  {{ trip.destinationCity }}
+                </p>
+              </div>
+              <a href="#">tickets</a>
+              <a href="#">tickets</a>
+            </section>
+          </article>
+        </div>
+      </div>
+      <!--end::Entry-->
+    </div>
+  </div>
+</div>

@@ -44,6 +44,8 @@ import { TrucksComponent } from './trucks/trucks/trucks.component';
 import { TrucksTypesComponent } from './trucksTypes/trucksTypes/trucksTypes.component';
 import { DashboardComponent } from './dashboard/dashboard.component';
 import { MarketplaceComponent } from '@app/main/marketPlace/marketPlace/marketPlace/marketplace.component';
+import { MarketPlaceListComponent } from '@app/main/marketplaces/marketPlacelist.component';
+
 import { InvoiceDetailResolverService } from '@app/main/invoices/invoice-detail/Invoice-detail-resolver.service';
 import { BalancesListComponent } from '@app/main/invoices/balances/balances-list/balances-list.component';
 import { GroupPeriodsListComponent } from '@app/main/invoices/groupsPeriods/group-periods-list/group-periods-list.component';
@@ -218,6 +220,8 @@ import { ComingSoonComponent } from '@app/main/commingSoon/comingSoon.component'
           { path: 'shippingRequests/shippingRequests/view', component: ViewShippingRequestComponent, data: { permission: 'Pages.ShippingRequests' } },
           { path: 'shippingRequests/directShippingRequests', component: CarrierDirectReqestPageComponent },
           { path: 'marketPlace/marketPlace', component: MarketplaceComponent },
+          { path: 'marketplace/list', component: MarketPlaceListComponent },
+
           { path: 'offers/offers', component: OffersComponent, data: { permission: 'Pages.Offers' } },
           { path: 'routSteps/routSteps', component: RoutStepsComponent, data: { permission: 'Pages.RoutSteps' } },
           { path: 'routs/routes', component: RoutesComponent, data: { permission: 'Pages.Routes' } },

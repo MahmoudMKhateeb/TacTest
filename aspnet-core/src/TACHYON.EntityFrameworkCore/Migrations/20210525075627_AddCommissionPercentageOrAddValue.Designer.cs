@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using NetTopologySuite.Geometries;
 using TACHYON.EntityFrameworkCore;
@@ -10,9 +11,10 @@ using TACHYON.EntityFrameworkCore;
 namespace TACHYON.Migrations
 {
     [DbContext(typeof(TACHYONDbContext))]
-    partial class TACHYONDbContextModelSnapshot : ModelSnapshot
+    [Migration("20210525075627_AddCommissionPercentageOrAddValue")]
+    partial class AddCommissionPercentageOrAddValue
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -1597,9 +1599,6 @@ namespace TACHYON.Migrations
                     b.Property<int>("AccessFailedCount")
                         .HasColumnType("int");
 
-                    b.Property<string>("AccountNumber")
-                        .HasColumnType("nvarchar(450)");
-
                     b.Property<string>("Address")
                         .HasColumnType("nvarchar(max)");
 
@@ -1736,10 +1735,6 @@ namespace TACHYON.Migrations
                         .HasMaxLength(256);
 
                     b.HasKey("Id");
-
-                    b.HasIndex("AccountNumber")
-                        .IsUnique()
-                        .HasFilter("[AccountNumber] IS NOT NULL");
 
                     b.HasIndex("CreatorUserId");
 
@@ -2314,6 +2309,11 @@ namespace TACHYON.Migrations
                     b.Property<DateTime?>("DeletionTime")
                         .HasColumnType("datetime2");
 
+                    b.Property<string>("DisplayName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(256)")
+                        .HasMaxLength(256);
+
                     b.Property<int?>("FatherId")
                         .HasColumnType("int");
 
@@ -2331,29 +2331,6 @@ namespace TACHYON.Migrations
                     b.HasIndex("FatherId");
 
                     b.ToTable("GoodCategories");
-                });
-
-            modelBuilder.Entity("TACHYON.Goods.GoodCategories.GoodCategoryTranslation", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<int>("CoreId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("DisplayName")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Language")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("CoreId");
-
-                    b.ToTable("GoodsCategoryTranslations");
                 });
 
             modelBuilder.Entity("TACHYON.Goods.GoodsDetails.GoodsDetail", b =>
@@ -2808,24 +2785,12 @@ namespace TACHYON.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<int>("AppVersion")
-                        .HasColumnType("int");
-
                     b.Property<string>("MasterKey")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("MasterValue")
                         .HasColumnType("nvarchar(max)");
-
-                    b.Property<byte>("PlatForm")
-                        .HasColumnType("tinyint");
-
-                    b.Property<int>("Section")
-                        .HasColumnType("int");
-
-                    b.Property<byte>("Version")
-                        .HasColumnType("tinyint");
 
                     b.HasKey("Id");
 
@@ -3100,8 +3065,8 @@ namespace TACHYON.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<string>("AccountNumber")
-                        .HasColumnType("nvarchar(450)");
+                    b.Property<int?>("AccountNumber")
+                        .HasColumnType("int");
 
                     b.Property<string>("Address")
                         .HasColumnType("nvarchar(max)");
@@ -3553,9 +3518,6 @@ namespace TACHYON.Migrations
                     b.Property<DateTime?>("StartTime")
                         .HasColumnType("datetime2");
 
-                    b.Property<long?>("WaybillNumber")
-                        .HasColumnType("bigint");
-
                     b.HasKey("Id");
 
                     b.HasIndex("FacilityId");
@@ -3563,10 +3525,6 @@ namespace TACHYON.Migrations
                     b.HasIndex("ReceiverId");
 
                     b.HasIndex("ShippingRequestTripId");
-
-                    b.HasIndex("WaybillNumber")
-                        .IsUnique()
-                        .HasFilter("[WaybillNumber] IS NOT NULL");
 
                     b.ToTable("RoutPoints");
                 });
@@ -4550,6 +4508,9 @@ namespace TACHYON.Migrations
                     b.Property<string>("RejectedReason")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<long?>("ShippingRequest")
+                        .HasColumnType("bigint");
+
                     b.Property<long>("ShippingRequestId")
                         .HasColumnType("bigint");
 
@@ -4608,7 +4569,7 @@ namespace TACHYON.Migrations
 
                     b.HasIndex("ParentId");
 
-                    b.HasIndex("ShippingRequestId");
+                    b.HasIndex("ShippingRequest");
 
                     b.HasIndex("TenantId");
 
@@ -5710,6 +5671,11 @@ namespace TACHYON.Migrations
                     b.Property<DateTime?>("DeletionTime")
                         .HasColumnType("datetime2");
 
+                    b.Property<string>("DisplayName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(256)")
+                        .HasMaxLength(256);
+
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
 
@@ -6256,15 +6222,6 @@ namespace TACHYON.Migrations
                         .HasForeignKey("FatherId");
                 });
 
-            modelBuilder.Entity("TACHYON.Goods.GoodCategories.GoodCategoryTranslation", b =>
-                {
-                    b.HasOne("TACHYON.Goods.GoodCategories.GoodCategory", "Core")
-                        .WithMany("Translations")
-                        .HasForeignKey("CoreId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
             modelBuilder.Entity("TACHYON.Goods.GoodsDetails.GoodsDetail", b =>
                 {
                     b.HasOne("TACHYON.Goods.GoodCategories.GoodCategory", "GoodCategoryFk")
@@ -6779,9 +6736,7 @@ namespace TACHYON.Migrations
 
                     b.HasOne("TACHYON.Shipping.ShippingRequests.ShippingRequest", "ShippingRequestFK")
                         .WithMany()
-                        .HasForeignKey("ShippingRequestId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("ShippingRequest");
 
                     b.HasOne("TACHYON.MultiTenancy.Tenant", "Tenant")
                         .WithMany()
