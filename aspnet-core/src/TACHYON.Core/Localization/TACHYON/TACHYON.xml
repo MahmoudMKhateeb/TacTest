@@ -14,6 +14,7 @@
     <text name="Accepted">Accepted</text>
     <text name="AcceptedDate">Accepted date</text>
     <text name="AcceptPrice">Accept price</text>
+    <text name="AcceptShippingRequestNotificationMessage">Shipping request bid accepted</text>
     <text name="Accesstoyourapplicationsandresources,evenwhenyouareoffline">Access to your applications and resources, even when you are offline</text>
     <text name="AccidentReason">Incident reasons</text>
     <text name="AccidentReasonHeaderInfo">Accident ReasonHeader Info</text>
@@ -157,6 +158,7 @@
     <text name="CacheSuccessfullyCleared">Cache successfully cleared.</text>
     <text name="Camera">Camera</text>
     <text name="Cancel">Cancel</text>
+    <text name="CancelBidRequestNotificationMessage">Bid request canceled</text>
     <text name="CanceledDate">Canceled Date</text>
     <text name="CancelMyBid">Cancel my bid</text>
     <text name="CancelTrip">Cancel trip</text>
@@ -234,6 +236,7 @@
     <text name="ClearAll">Clear all</text>
     <text name="ClearedSuccessfully">Cleared successfully</text>
     <text name="ClickHere">Click here</text>
+    <text name="ClickToSeeInvalidTrucks">Click to see invalid trucks</text>
     <text name="ClickToSeeInvalidUsers">User import process has been completed. There are some invalid data. Click to see Invalid user imports.</text>
     <text name="Client">Client</text>
     <text name="ClientId">Client Id</text>
@@ -279,6 +282,7 @@
     <text name="CreateAccidentReason">Create accident reason</text>
     <text name="CreateAnAccount">Create account</text>
     <text name="CreateAppLocalization">Create app localization</text>
+    <text name="CreateBidRequestNotificationMessage">Bid request is created</text>
     <text name="CreatedAtByUser">Created at <b>{0}</b> by <b>{1}</b></text>
     <text name="CreatedSuccessfully">Created successfully</text>
     <text name="CreateFacilityModal">Create facility modal</text>
@@ -1325,6 +1329,7 @@ content that we shared with you.</text>
     <text name="RejectedReason">Rejected reason</text>
     <text name="RejectionReason">Rejection reason</text>
     <text name="RejectPricingOffer">Reject pricing offer</text>
+    <text name="RejectShippingRequestNotificationMessage">Shipping Request is canceled</text>
     <text name="RejectThisTrip">Reject this trip!</text>
     <text name="RemainingDay">Remaining day</text>
     <text name="RemainingTime">Remaining time</text>
@@ -1486,11 +1491,14 @@ content that we shared with you.</text>
     <text name="ShipperReminderToCompelteTrips">
       <a href="/app/main/shippingRequests/shippingRequests/view?id={id}">You have a shipment that has not completed its journeys</a>
     </text>
+    <text name="ShipperShippingRequestFinishNotificationMessage">all shippments are completed for shipping request</text>
+    <text name="Shipping Request Details">Shipping Request Details</text>
     <text name="ShippingNote">Shipper notes</text>
     <text name="ShippingRequest">Shipping request</text>
     <text name="ShippingRequestAccidentsOccure">
       <a href="/app/main/shippingRequests/shippingRequests/view?id={id}">There has been an accident for shipment No.: {id}.</a>
     </text>
+    <text name="ShippingRequestAsBidWithSameTruckNotificationMessage">Shipping request with your same trucks is created in marketplace</text>
     <text name="ShippingRequestCancelTripByAccidents">
       <a href="/app/main/shippingRequests/shippingRequests/view?id={id}">The shipment No.:{id} cancled by incident.</a>
     </text>
@@ -1547,6 +1555,7 @@ code:{0}</text>
     <text name="Standard">Standard</text>
     <text name="Start">Start</text>
     <text name="StartDate">Start date</text>
+    <text name="StartShippmentNotificationMessage">Shippment is started</text>
     <text name="StartTime">Start time</text>
     <text name="StartTripDate">Trip pickup date</text>
     <text name="StartUsingFree">Start using free</text>

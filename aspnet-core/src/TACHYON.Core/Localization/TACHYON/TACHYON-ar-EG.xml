@@ -14,6 +14,7 @@
     <text name="Accepted">مقبول</text>
     <text name="AcceptedDate">تاريخ القبول</text>
     <text name="AcceptPrice">الموافقة على السعر</text>
+    <text name="AcceptShippingRequestNotificationMessage">تم قبول طلب المناقصة</text>
     <text name="Accesstoyourapplicationsandresources,evenwhenyouareoffline">الوصول إلى التطبيقات والموارد الخاصة بك، حتى عندما لاتكون متصلا</text>
     <text name="AccidentReason">أسباب الحادثة</text>
     <text name="AccidentReasonHeaderInfo">الهيدر</text>
@@ -137,6 +138,7 @@
     <text name="CacheSuccessfullyCleared">تم مسح ذاكرة التخزين المؤقت بنجاح.</text>
     <text name="Camera">الكاميرا</text>
     <text name="Cancel">إلغاء</text>
+    <text name="CancelBidRequestNotificationMessage">تم الغاء طلب المناقصة</text>
     <text name="CanceledDate">تاريخ الإلغاء</text>
     <text name="CancelMyBid">إلغاء السعر الذي تم نشره</text>
     <text name="CancelTrip">إلغاء الرحلة</text>
@@ -209,6 +211,7 @@
     <text name="ClearAll">مسح الكل</text>
     <text name="ClearedSuccessfully">مسح بنجاح</text>
     <text name="ClickHere">إضغط هنا</text>
+    <text name="ClickToSeeInvalidTrucks">اضغط لعرض الشاحنات الغير فعالة</text>
     <text name="ClickToSeeInvalidUsers">اكتملت عملية استيراد المستخدم. هناك بعض البيانات غير الصحيحة. انقر لرؤية واردات المستخدم الغير صالحة.</text>
     <text name="Client">عميل</text>
     <text name="ClientId">معرف العميل</text>
@@ -249,6 +252,7 @@
     <text name="Create">إنشاء</text>
     <text name="CreateAccident">إضافة حادث</text>
     <text name="CreateAnAccount">إنشاء حساب</text>
+    <text name="CreateBidRequestNotificationMessage">تم إرسال طلب مناقصة</text>
     <text name="CreatedAtByUser"><![CDATA[تم الإنشاء في <b> {0} </ b> بواسطة <b> {1} </ b>]]></text>
     <text name="CreatedSuccessfully">تم الإنشاء بنجاح</text>
     <text name="CreateLocalization">إنشاء مصلح جديد</text>
@@ -1186,6 +1190,7 @@
     <text name="RejectedReason">سبب الرفض</text>
     <text name="RejectionReason">سبب رفض المستند</text>
     <text name="RejectPricingOffer">رفض عرض السعر</text>
+    <text name="RejectShippingRequestNotificationMessage">تم إلغاء طلب الشحنة</text>
     <text name="RejectThisTrip">رفض هذه الرحلة!</text>
     <text name="RemainingDay">الأيام المتبقية</text>
     <text name="RemainingTime">الوقت المتبقي</text>
@@ -1327,11 +1332,13 @@
     <text name="ShipperReminderToCompelteTrips">
       <a href="/app/main/shippingRequests/shippingRequests/view?id={id}">لديك شحنة لم تكمل الرحلات الخاصة بها</a>
     </text>
+    <text name="ShipperShippingRequestFinishNotificationMessage">تم توصيل جميه شحنات الطلب</text>
     <text name="ShippingNote">ملاحظات مرسل الشحنة</text>
     <text name="ShippingRequest" />
     <text name="ShippingRequestAccidentsOccure">
       <a href="/app/main/shippingRequests/shippingRequests/view?id={id}">لقد حدث حادث للشحنة رقم: {id}.</a>
     </text>
+    <text name="ShippingRequestAsBidWithSameTruckNotificationMessage">تم اضافة طلب شحنة جديد في المتجر يشابه مواصفات الشاحنة الخاصة بك</text>
     <text name="ShippingRequestCancelTripByAccidents">
       <a href="/app/main/shippingRequests/shippingRequests/view?id={id}">لقد تم إلغاء الشحنة رقم {id} بسبب وجود حادث</a>
     </text>
@@ -1375,6 +1382,7 @@
     <text name="SpecialConstant">رمز مميز</text>
     <text name="Start">بدء</text>
     <text name="StartDate">تاريخ البداية</text>
+    <text name="StartShippmentNotificationMessage">تم بدء الشحنة</text>
     <text name="StartTime">وقت البداية</text>
     <text name="StartTripDate">تاريخ استلام الشحنة</text>
     <text name="StartUsingFree">بدء استخدام مجاني</text>
