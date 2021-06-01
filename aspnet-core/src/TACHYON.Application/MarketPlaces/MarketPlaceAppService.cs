@@ -19,6 +19,7 @@ using Abp.UI;
 using Abp.Configuration;
 using TACHYON.Notifications;
 using Abp.Threading;
+using TACHYON.Goods.GoodCategories.Dtos;
 
 namespace TACHYON.MarketPlaces
 {
@@ -54,12 +55,22 @@ namespace TACHYON.MarketPlaces
                     .Include(oc=> oc.OriginCityFk)
                     .Include(dc => dc.DestinationCityFk)
                     .Include(c => c.GoodCategoryFk)
+                     .ThenInclude(x=>x.Translations)
                 .Where(x=>x.IsBid)
                 .WhereIf(await IsEnabledAsync(AppFeatures.Shipper), x => x.TenantId == AbpSession.TenantId && !x.IsTachyonDeal)
                 .WhereIf(await IsEnabledAsync(AppFeatures.Carrier), x => x.BidStatus == ShippingRequestBidStatus.OnGoing)
                 .OrderBy(Input.Sorting ?? "id desc");
 
             var ResultPaging = await query.PageBy(Input).ToListAsync();
+            List<Dictionary<object, string>> GoodsCategory = new List<Dictionary<object, string>>();
+            ResultPaging.ForEach(x =>
+            {
+                GoodsCategory.Add(new Dictionary<object, string>()
+                {
+                    [x.Id] = ObjectMapper.Map<GoodCategoryDto>(x.GoodCategoryFk).DisplayName
+                }
+                ) ;
+            });
             var marketPlaceListDto = ObjectMapper.Map<List<MarketPlaceListDto>>(ResultPaging);
 
 
@@ -70,6 +81,10 @@ namespace TACHYON.MarketPlaces
                     x.CarrierPricing =ObjectMapper.Map<ShippingRequestCarrierPricingDto>( GetCarrierPricingOrNull(x.Id)) ;
                 });
             }
+            marketPlaceListDto.ForEach(x =>
+            {
+                x.GoodsCategory = GoodsCategory.Where(g => g.ContainsKey(x.Id)).Select(g => g[x.Id]).FirstOrDefault();
+            });
             var totalCount = await query.CountAsync();
             return new PagedResultDto<MarketPlaceListDto>(
                 totalCount,

@@ -12,7 +12,6 @@ namespace TACHYON.AutoMapper.MarketPlaces
                  .ForMember(dst => dst.Shipper, opt => opt.MapFrom(src => src.Tenant.companyName))
                  .ForMember(dst => dst.OriginCity, opt => opt.MapFrom(src => src.OriginCityFk.DisplayName))
                  .ForMember(dst => dst.DestinationCity, opt => opt.MapFrom(src => src.DestinationCityFk.DisplayName))
-                 .ForMember(dst => dst.GoodsCategory, opt => opt.MapFrom(src => src.GoodCategoryFk.DisplayName))
                  ;
         }
     }
