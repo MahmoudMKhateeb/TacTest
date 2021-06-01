@@ -36,7 +36,7 @@ export class AppNavigationService {
             undefined,
             undefined,
             undefined,
-            () => this._featureCheckerService.isEnabled('App.TachyonDealer')
+            () => !this._featureCheckerService.isEnabled('App.Shipper') && !this._featureCheckerService.isEnabled('App.Carrier')
           ),
           new AppMenuItem('SubmittedDocuments', 'Pages.DocumentFiles', 'flaticon-file', '/app/main/documentFiles/documentFiles'),
           //TODO: the contracts subMenu Need Permission and Route
@@ -67,11 +67,16 @@ export class AppNavigationService {
         '',
         [],
         [
-          new AppMenuItem('TachyonManagedServices', 'Pages', 'label label-danger label-dot', '/app/main/comingSoon'),
+          new AppMenuItem(
+            'TachyonManagedServices',
+            'Pages.ShippingRequests',
+            'label label-danger label-dot',
+            '/app/main/shippingRequests/shippingRequests'
+          ),
           new AppMenuItem('Marketplace', 'Pages', 'label label-danger label-dot', '/app/main/marketPlace/marketPlace'),
 
           new AppMenuItem('ShipmentTracking', 'Pages', 'label label-danger label-dot', '/app/main/comingSoon'),
-          new AppMenuItem('Requests', 'Pages', 'label label-danger label-dot', '/app/main/comingSoon'),
+          new AppMenuItem('Requests', 'Pages', 'label label-danger label-dot', '/app/main/shippingRequests/shippingRequests'),
         ],
         undefined,
         undefined,
