@@ -151,7 +151,7 @@
                 <ng-template pTemplate="header">
                   <tr>
                     <th pSortableColumn="TenantId" *ngIf="!feature.isEnabled('App.Shipper')" style="width: 150px;">
-                      {{ l('Tenants') }}
+                      {{ l('Shipper') }}
                       <p-sortIcon field="TenantId"></p-sortIcon>
                     </th>
                     <th pSortableColumn="status" style="width: 150px;">
@@ -206,7 +206,7 @@
 
                     <td *ngIf="feature.isEnabled('App.Shipper')" style="width: 150px;">
                       <span class="ui-column-title"> {{ l('ShippingRequestType') }}</span>
-                      {{ record.isTachyonDeal ?  l('TachyonManageService') : (record.isBid ?l('Marketplace') :"") }}
+                      {{ record.isTachyonDeal ? l('TachyonManageService') : record.isBid ? l('Marketplace') : '' }}
                     </td>
                     <td style="width: 150px;">
                       <span class="ui-column-title"> {{ l('RouteType') }}</span>
