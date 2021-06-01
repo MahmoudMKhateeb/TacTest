@@ -339,7 +339,7 @@ namespace TACHYON.Shipping.ShippingRequestBids
                     .WhereIf(input.TransportType.HasValue, x => x.TransportTypeId != null && x.TransportTypeId == input.TransportType)
                     .WhereIf(input.IsMyAssignedBidsOnly.HasValue && input.IsMyAssignedBidsOnly==true, x=>x.ShippingRequestBids.Any(y=>y.IsAccepted== true))
                     .WhereIf(await IsEnabledAsync(AppFeatures.Shipper), x => x.TenantId == AbpSession.TenantId && !x.IsTachyonDeal)
-                    .WhereIf(await IsEnabledAsync(AppFeatures.Carrier), x =>  x.CarrierTenantId==AbpSession.TenantId)
+                    //.WhereIf(await IsEnabledAsync(AppFeatures.Carrier), x =>  x.CarrierTenantId==AbpSession.TenantId)
 
                     //Get Shipping Requests that carrier bid to them only
                     .WhereIf(input.IsMyBidsOnly, x => x.ShippingRequestBids.Any(b => b.TenantId == AbpSession.TenantId));
