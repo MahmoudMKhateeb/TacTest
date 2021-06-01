@@ -66,7 +66,11 @@ namespace TACHYON.Notifications
         #region Shipping Request
         public const string ShippingRequestNotifyCarrirerWhenShipperAccepted = "App.ShippingRequestNotifyCarrirerWhenShipperAccepted";
         public const string ShipperReminderToCompelteTrips = "App.ShipperReminderToCompelteTrips";
+        #region Offer
+        public const string ShippingRequestSendOfferWhenAddPrice = "App.ShippingRequestSendOfferWhenAddPrice";
+        public const string ShippingRequestSendOfferWhenUpdatePrice = "App.ShippingRequestSendOfferWhenUpdatePrice";
 
+        #endregion
         #endregion
         #endregion
 

@@ -18,6 +18,7 @@ using Abp.Application.Features;
 using Abp.UI;
 using Abp.Configuration;
 using TACHYON.Notifications;
+using Abp.Threading;
 
 namespace TACHYON.MarketPlaces
 {
@@ -127,10 +128,11 @@ namespace TACHYON.MarketPlaces
             Pricing = ObjectMapper.Map<ShippingRequestPricing>(Input);
             Pricing.Channel = ShippingRequestPricingChannel.MarketPlace;
             Pricing.ShippingRequestVasesPricing = await GetListOfVases(Input, shippingRequest);
+            Pricing.ShippingRequestFK = shippingRequest;
             Pricing.Calculate(_featureChecker, _settingManager, shippingRequest);
-            await _shippingRequestPricingRepository.InsertAsync(Pricing);
+            Pricing.Id= await _shippingRequestPricingRepository.InsertAndGetIdAsync(Pricing);
 
-            //await _appNotifier.ShippingRequestSendOfferWhenAddPrice(shippingRequest);
+            AsyncHelper.RunSync(() => _appNotifier.ShippingRequestSendOfferWhenAddPrice(Pricing, GetCurrentTenant().companyName));
 
         }
         private async Task Update(CreateOrEditMarketPlaceBidInput Input, ShippingRequest shippingRequest)
@@ -146,7 +148,8 @@ namespace TACHYON.MarketPlaces
             if (Pricing.IsView)
             {
                 Pricing.IsView = false;
-                await _appNotifier.ShippingRequestSendOfferWhenUpdatePrice(shippingRequest);
+                Pricing.ShippingRequestFK = shippingRequest;
+                await _appNotifier.ShippingRequestSendOfferWhenUpdatePrice(Pricing, GetCurrentTenant().companyName);
             }
         }
 
