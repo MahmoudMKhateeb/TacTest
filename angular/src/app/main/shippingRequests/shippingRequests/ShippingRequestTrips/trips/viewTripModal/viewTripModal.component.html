@@ -121,11 +121,7 @@
 
           <!--      end:Vas's      -->
           <!--  start:: RouteSteps -->
-          <wayPointsComponent
-            *ngIf="trip.routPoints"
-            #RouteSteps
-            [WayPointListFromFatherForShippingRequestEdit]="trip.routPoints"
-          ></wayPointsComponent>
+          <PointsComponent *ngIf="trip.routPoints" #RouteSteps [WayPointListFromFatherForShippingRequestEdit]="trip.routPoints"></PointsComponent>
           <!--  end:: RouteSteps -->
           <!--end::Body-->
         </div>
