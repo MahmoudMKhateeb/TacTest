@@ -190,7 +190,7 @@ import { ViewAllCarrierBidsComponent } from '@app/main/marketPlace/marketPlace/V
 import { RejectionReasonModalComponent } from './documentFiles/documentFiles/rejectionReason-modal.component';
 import { ViewShippingRequestPriceResponseModalComponent } from './shippingRequests/shippingRequests/shipping-request-Response/view-shipping-request-response-modal.component';
 import { ListboxModule, MultiSelectModule, PickListModule, SelectButtonModule, StepsModule } from '@node_modules/primeng';
-import { WayPointsComponent } from '@app/main/shippingRequests/shippingRequests/ShippingRequestTrips/wayPoints/wayPoints.component';
+import { PointsComponent } from '@app/main/shippingRequests/shippingRequests/ShippingRequestTrips/points/points.component';
 
 import { AgmDirectionModule } from '@node_modules/agm-direction';
 import { TripsForViewShippingRequestComponent } from '@app/main/shippingRequests/shippingRequests/ShippingRequestTrips/trips/tripsForViewShippingRequest.component';
@@ -405,7 +405,7 @@ NgxBootstrapDatePickerConfigService.registerNgxBootstrapDatePickerLocales();
     GroupDetailComponent,
     SubmitInvoiceRejectedModelComponent,
     TransactionListComponent,
-    WayPointsComponent,
+    PointsComponent,
     TripsForViewShippingRequestComponent,
     CreateOrEditTripComponent,
     CreateOrEditTripAccidentModalComponent,
