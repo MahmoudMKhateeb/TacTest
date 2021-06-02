@@ -39,6 +39,7 @@
         [minLength]="item.documentTypeDto.numberMinDigits"
         type="text"
         [(ngModel)]="item.number"
+        (keypress)="onlyNumberKey($event)"
         [ngClass]="{
           'is-valid': inputDocumentNumber.valid,
           'is-invalid': parentForm.submitted && !inputDocumentNumber.valid

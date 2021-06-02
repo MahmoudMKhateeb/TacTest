@@ -187,4 +187,8 @@ export class RequiredDocumentFormChildComponent extends AppComponentBase impleme
   isAllFileDuplicatePass(): boolean {
     return this.fileisDuplicateList?.length === 0;
   }
+
+  onlyNumberKey(event) {
+    return (event.charCode == 8 || event.charCode == 0) ? null : event.charCode >= 48 && event.charCode <= 57;
+}
 }
