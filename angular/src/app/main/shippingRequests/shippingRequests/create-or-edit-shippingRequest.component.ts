@@ -276,21 +276,12 @@ export class CreateOrEditShippingRequestComponent extends AppComponentBase imple
 
     if(this.shippingRequest.originCityId == this.shippingRequest.destinationCityId)
     {      
-      console.log(this.shippingRequest.originCityId);
-      console.log(this.shippingRequest.destinationCityId);
-      
+    
       this.shippingRequest.destinationCityId = null;
-      // this.validateSameCity()
-    }
+     
+}
   }
 
-  // validateSameCity()
-  // {
-  //   if(this.shippingRequest.originCityId == this.shippingRequest.destinationCityId)
-  //   {      
-  //     // this.shippingRequest.destinationCityId = null;
-  //     return this.l('CreatedSuccessfully');
-  //   }
-  // }
+ 
  
 }
