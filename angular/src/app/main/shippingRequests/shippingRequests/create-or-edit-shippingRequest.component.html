@@ -5,8 +5,8 @@
       [breadcrumbs]="breadcrumbs"
       [title]="shippingRequest.id ? ('ShippingRequestsEdit' | localize) : ('ShippingRequestsCreate' | localize)"
     >
-    </sub-header>
-
+       </sub-header>
+ 
     <div [class]="containerClass">
       <form *ngIf="active" #shippingRequestForm="ngForm" autocomplete="off">
         <div class="card card-custom gutter-b">
@@ -391,12 +391,14 @@
                               [class.is-valid]="Destination.touched && Destination.valid"
                               [disabled]="!allCitys"
                               [(ngModel)]="shippingRequest.destinationCityId"
+                              (change)="validateDuplicatedCites($event)"
                             >
                               <option value="">{{ l('selectaDestination') }}</option>
                               <option *ngFor="let item of allCitys" value="{{ item.id }}">{{ item.displayName }} </option>
                             </select>
                           </div>
-                          <span class="form-text text-muted">{{ l('SelectaCity') }}</span>
+                          <span class="form-text text-muted">{{ l('SelectaCity') }}</span>                          
+                           <span *ngIf=" shippingRequest.originCityId != null && Destination.touched && shippingRequest.destinationCityId ==  null" class="form-text text-muted text-red">{{ l('PleaseSelectDifferentDestination') }}</span> 
                         </div>
                       </div>
 

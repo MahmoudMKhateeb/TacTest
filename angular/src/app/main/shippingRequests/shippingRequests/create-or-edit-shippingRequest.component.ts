@@ -269,4 +269,28 @@ export class CreateOrEditShippingRequestComponent extends AppComponentBase imple
       this.shippingRequest.bidEndDate = undefined;
     }
   }
+
+ // check if user select same city in source and destination
+  validateDuplicatedCites(event:Event){
+    let index:number =  event.target["selectedIndex"] - 1;
+
+    if(this.shippingRequest.originCityId == this.shippingRequest.destinationCityId)
+    {      
+      console.log(this.shippingRequest.originCityId);
+      console.log(this.shippingRequest.destinationCityId);
+      
+      this.shippingRequest.destinationCityId = null;
+      // this.validateSameCity()
+    }
+  }
+
+  // validateSameCity()
+  // {
+  //   if(this.shippingRequest.originCityId == this.shippingRequest.destinationCityId)
+  //   {      
+  //     // this.shippingRequest.destinationCityId = null;
+  //     return this.l('CreatedSuccessfully');
+  //   }
+  // }
+ 
 }
