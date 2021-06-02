@@ -84,7 +84,7 @@ namespace TACHYON.Vases
 
         public async Task CreateOrEdit(CreateOrEditVasDto input)
         {
-            CheckIfEmptyOrDuplicatedVasName(input);
+            await CheckIfEmptyOrDuplicatedVasName(input);
 
             if (input.Id == null)
             {
@@ -144,9 +144,9 @@ namespace TACHYON.Vases
         }
 
 
-        private void CheckIfEmptyOrDuplicatedVasName(CreateOrEditVasDto input)
+        private async Task CheckIfEmptyOrDuplicatedVasName(CreateOrEditVasDto input)
         {
-            var item = _vasRepository.FirstOrDefaultAsync(x => x.Name.ToLower() == input.Name.ToLower() && x.Id!=input.Id);
+            var item =await _vasRepository.FirstOrDefaultAsync(x => x.Name.ToLower() == input.Name.ToLower() && x.Id!=input.Id);
             if (item != null)
             {
                 throw new UserFriendlyException(L("CannotInsertDuplicatedVasNameMessage"));
