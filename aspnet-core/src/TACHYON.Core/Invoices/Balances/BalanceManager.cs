@@ -99,6 +99,7 @@ namespace TACHYON.Invoices.Balances
         /// <param name="ShipperTenantId"></param>
         /// <param name="Price"></param>
         /// <returns></returns>
+        [Obsolete("Removed")]
         public async Task ShipperCanAcceptPrice(int TenantId,decimal Price,long shippingRequestId)
         {
            
@@ -116,11 +117,54 @@ namespace TACHYON.Invoices.Balances
                 if (!(CreditBalance > CreditLimit)) throw new UserFriendlyException(L("YouDoNoHaveEnoughCredit<nYourCreditCard"));
             }
         }
+
+        public async Task ShipperCanAcceptOffer(ShippingRequestPricing offer)
+        {
+
+            var PeriodType = (InvoicePeriodType)byte.Parse(await _featureChecker.GetValueAsync(offer.ShippingRequestFK.TenantId, AppFeatures.ShipperPeriods));
+            var Tenant = await GetTenant(offer.ShippingRequestFK.TenantId);
+            if (PeriodType == InvoicePeriodType.PayInAdvance)
+            {
+                if (!await CheckShipperCanPaidFromBalance(offer.ShippingRequestFK.TenantId, offer.TotalAmount)) throw new UserFriendlyException(L("NoEnoughBalance"));
+                await ShipperWhenCanAcceptPrice(offer, PeriodType);
+            }
+            else
+            {
+                decimal CreditLimit = decimal.Parse(await _featureChecker.GetValueAsync(offer.ShippingRequestFK.TenantId, AppFeatures.ShipperCreditLimit)) * -1;
+                decimal CreditBalance = Tenant.CreditBalance - offer.TotalAmount;
+                if (!(CreditBalance > CreditLimit)) throw new UserFriendlyException(L("YouDoNotHaveEnoughCreditInYourCreditCard"));
+            }
+        }
+
+        private async Task ShipperWhenCanAcceptPrice(ShippingRequestPricing offer, InvoicePeriodType periodType)
+        {
+            var Tenant = await GetTenant(offer.ShippingRequestFK.TenantId);
+
+            if (periodType == InvoicePeriodType.PayInAdvance)
+            {
+                await _InvoicesProformarepository.InsertAsync(new InvoiceProforma // Generate Invoice proforma when the shipper billing interval is pay in advance
+                {
+                    TenantId = Tenant.Id,
+                    Amount = offer.SubTotalAmount,
+                    TotalAmount= offer.TotalAmount,
+                    VatAmount= offer.VatAmount,
+                    TaxVat= offer.TaxVat,
+                    RequestId = offer.ShippingRequestId
+                });
+                Tenant.ReservedBalance += offer.TotalAmount;
+            }
+            else
+            {
+                Tenant.CreditBalance -= offer.TotalAmount;
+            }
+
+        }
         /// <summary>
         /// Shipper after accept price
         /// </summary>
         /// <param name="request"></param>
         /// <returns></returns>
+        [Obsolete("Removed")]
         public async Task ShipperWhenCanAcceptPrice(int TenantId, decimal Price,long shippingRequestId)
         {
             var PeriodType = (InvoicePeriodType)byte.Parse(await _featureChecker.GetValueAsync(TenantId, AppFeatures.ShipperPeriods));

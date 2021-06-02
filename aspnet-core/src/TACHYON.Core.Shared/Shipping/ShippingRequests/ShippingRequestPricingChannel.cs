@@ -2,8 +2,7 @@
 {
     public enum ShippingRequestPricingChannel : byte
     {
-
         MarketPlace = 1,
-        DriectRequest=2
+        DirectRequest=2
     }
 }

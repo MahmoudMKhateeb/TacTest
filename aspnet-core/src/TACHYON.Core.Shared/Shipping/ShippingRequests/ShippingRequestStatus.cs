@@ -18,7 +18,8 @@ namespace TACHYON.Shipping.ShippingRequests
         [Description("Cancled")]
         Cancled = 4,
         [Description("Completed")]
-        Completed = 5
+        Completed = 5,
+        AcceptedAndWaitingCarrier=6
 
     }
 }
