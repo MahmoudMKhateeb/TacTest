@@ -4,6 +4,7 @@
     {
         public int? DirectRequestId { get; set; }
         public int? ShippingRequestBidId { get; set; }
+        public int? OfferId { get; set; }
 
     }
 }

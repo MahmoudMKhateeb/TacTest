@@ -50,8 +50,8 @@ export class BiddingTableComponent extends AppComponentBase {
     this._shippingRequestBidsServiceProxy
       .getAllShippingRequestBids(
         undefined,
-        0,
-        10000,
+        undefined,
+        undefined,
         this.shippingRequestId,
         this.primengTableHelper.getSorting(this.dataTable),
         this.primengTableHelper.getSkipCount(this.paginator, event),

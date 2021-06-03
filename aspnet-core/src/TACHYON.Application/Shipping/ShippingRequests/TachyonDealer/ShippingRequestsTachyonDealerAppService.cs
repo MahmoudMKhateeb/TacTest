@@ -144,8 +144,27 @@ namespace TACHYON.Shipping.ShippingRequests.TachyonDealer
         {
             DisableTenancyFilters();
             decimal Price = 0;
+            
             ShippingRequest shippingRequest=default(ShippingRequest);
             ShippingRequestAmountDto PricingDto = new ShippingRequestAmountDto();
+
+            if (Input.OfferId != null)
+            {
+                var offerItem = await _tachyonPriceOfferRepository.FirstOrDefaultAsync(x => x.Id == Input.OfferId && x.OfferStatus == OfferStatus.AcceptedAndWaitingForCarrier || x.OfferStatus==OfferStatus.Pending);
+
+                if (offerItem != null) //offer must be pending or waiting for carrier to edit
+                {
+                    //PricingDto.SubTotalAmount = offerItem.SubTotalAmount.Value;
+                    //PricingDto.VatAmount = offerItem.VatSetting.Value;
+                    //PricingDto.TotalAmount = offerItem.TotalAmount;
+                    //PricingDto.CarrierPrice = offerItem.CarrierPrice.Value;
+                   // PricingDto.IsGuesingPrice = (offerItem.OfferStatus==OfferStatus.AcceptedAndWaitingForCarrier);
+                    //PricingDto.OfferId = offerItem.Id;
+                    //PricingDto.ShippingRequestId = offerItem.ShippingRequestId;
+                    ObjectMapper.Map(offerItem,PricingDto);
+                    return PricingDto;
+                }
+            }
             if (Input.DirectRequestId.HasValue)
             {
                 var Pricing = await _CarrierDirectPricingRepository.GetAll()
