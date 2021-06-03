@@ -24,6 +24,11 @@ namespace TACHYON.Shipping.ShippingRequests
 
         [ForeignKey(nameof(ShippingRequestId))]
         public ShippingRequest ShippingRequestFK { get; set; }
+
+        public long? ShippingRequestDirectRequestId { get; set; }
+
+        [ForeignKey(nameof(ShippingRequestDirectRequestId))]
+        public ShippingRequestDirectRequest ShippingRequestDirectRequestFK { get; set; }
         /// <summary>
         /// Get id from source entity
         /// </summary>
@@ -81,11 +86,18 @@ namespace TACHYON.Shipping.ShippingRequests
 
         private IFeatureChecker _featureChecker;
         private ShippingRequest _shippingRequest;
+        private decimal _minValueCommission;
+
+        private ShippingRequestCommissionType _vasCommissionType;
+        private decimal _vasMinValueCommission;
+        private decimal _vasCommissionPercentageOrAddValue;
+
         public void Calculate(IFeatureChecker featureChecker, ISettingManager settingManager, ShippingRequest shippingRequest)
         {
             _featureChecker = featureChecker;
             _shippingRequest = shippingRequest;
             TaxVat = settingManager.GetSettingValue<decimal>(AppSettings.HostManagement.TaxVat);
+
             SetCommissionSettings();
             SetVasesCalculate();
             CalculateSingleTrip();
@@ -126,27 +138,41 @@ namespace TACHYON.Shipping.ShippingRequests
         {
             if (_shippingRequest.IsTachyonDeal)
             {
-                CommissionType = (ShippingRequestCommissionType)Convert.ToByte(_featureChecker.GetValue(_shippingRequest.TenantId, AppFeatures.TachyonDealerCommissionType));
+                CommissionType = (ShippingRequestCommissionType)Convert.ToByte(_featureChecker.GetValue(_shippingRequest.TenantId, AppFeatures.TachyonDealerTripCommissionType));
+                _minValueCommission= Convert.ToDecimal(_featureChecker.GetValue(_shippingRequest.TenantId, AppFeatures.TachyonDealerTripMinValueCommission));
+                _vasCommissionType= (ShippingRequestCommissionType)Convert.ToByte(_featureChecker.GetValue(_shippingRequest.TenantId, AppFeatures.TachyonDealerVasCommissionType));
+                _vasMinValueCommission = Convert.ToDecimal(_featureChecker.GetValue(_shippingRequest.TenantId, AppFeatures.TachyonDealerVasMinValueCommission));
+
                 switch (CommissionType)
                 {
                     case ShippingRequestCommissionType.Percentage:
-                        CommissionPercentageOrAddValue = Convert.ToDecimal(_featureChecker.GetValue(_shippingRequest.TenantId, AppFeatures.TachyonDealerCommissionPercentage));
+                        CommissionPercentageOrAddValue = Convert.ToDecimal(_featureChecker.GetValue(_shippingRequest.TenantId, AppFeatures.TachyonDealerTripCommissionPercentage));
+                        _vasCommissionPercentageOrAddValue= Convert.ToDecimal(_featureChecker.GetValue(_shippingRequest.TenantId, AppFeatures.TachyonDealerVasCommissionPercentage));
                         break;
                     case ShippingRequestCommissionType.Value:
-                        CommissionPercentageOrAddValue = Convert.ToDecimal(_featureChecker.GetValue(_shippingRequest.TenantId, AppFeatures.TachyonDealerCommissionValue));
+                        CommissionPercentageOrAddValue = Convert.ToDecimal(_featureChecker.GetValue(_shippingRequest.TenantId, AppFeatures.TachyonDealerTripCommissionValue));
+                        _vasCommissionPercentageOrAddValue = Convert.ToDecimal(_featureChecker.GetValue(_shippingRequest.TenantId, AppFeatures.TachyonDealerVasCommissionValue));
+
                         break;
                 }
             }
             else
             {
-                CommissionType = (ShippingRequestCommissionType)Convert.ToByte(_featureChecker.GetValue(_shippingRequest.TenantId, AppFeatures.CommissionType));
+                CommissionType = (ShippingRequestCommissionType)Convert.ToByte(_featureChecker.GetValue(_shippingRequest.TenantId, AppFeatures.TripCommissionType));
+                _minValueCommission = Convert.ToDecimal(_featureChecker.GetValue(_shippingRequest.TenantId, AppFeatures.TripMinValueCommission));
+                _vasCommissionType = (ShippingRequestCommissionType)Convert.ToByte(_featureChecker.GetValue(_shippingRequest.TenantId, AppFeatures.VasCommissionType));
+                _vasMinValueCommission = Convert.ToDecimal(_featureChecker.GetValue(_shippingRequest.TenantId, AppFeatures.VasMinValueCommission));
                 switch (CommissionType)
                 {
                     case ShippingRequestCommissionType.Percentage:
-                        CommissionPercentageOrAddValue = Convert.ToDecimal(_featureChecker.GetValue(_shippingRequest.TenantId, AppFeatures.BiddingCommissionPercentage));
+                        CommissionPercentageOrAddValue = Convert.ToDecimal(_featureChecker.GetValue(_shippingRequest.TenantId, AppFeatures.TripCommissionPercentage));
+                        _vasCommissionPercentageOrAddValue = Convert.ToDecimal(_featureChecker.GetValue(_shippingRequest.TenantId, AppFeatures.VasCommissionPercentage));
+
                         break;
                     case ShippingRequestCommissionType.Value:
-                        CommissionPercentageOrAddValue = 0;
+                        CommissionPercentageOrAddValue = Convert.ToDecimal(_featureChecker.GetValue(_shippingRequest.TenantId, AppFeatures.TripCommissionValue));
+                        _vasCommissionPercentageOrAddValue = Convert.ToDecimal(_featureChecker.GetValue(_shippingRequest.TenantId, AppFeatures.VasCommissionValue));
+
                         break;
                 }
             }
@@ -159,6 +185,11 @@ namespace TACHYON.Shipping.ShippingRequests
             {
                 case ShippingRequestCommissionType.Percentage:
                     TripCommissionAmount = (TripPrice * CommissionPercentageOrAddValue / 100);
+                    if (TripCommissionAmount < _minValueCommission)
+                    {
+                        TripCommissionAmount = _minValueCommission;
+                        CommissionType = ShippingRequestCommissionType.MinValue;
+                    }
                     break;
                 case ShippingRequestCommissionType.Value:
                     TripCommissionAmount = TripPrice + CommissionPercentageOrAddValue;
@@ -174,7 +205,7 @@ namespace TACHYON.Shipping.ShippingRequests
             }
             foreach (var vas in ShippingRequestVasesPricing)
             {
-                vas.CalculateVas(TaxVat, CommissionType, CommissionPercentageOrAddValue);
+                vas.CalculateVas(TaxVat, _vasCommissionType, _vasMinValueCommission, _vasCommissionPercentageOrAddValue);
             }
         }
     }

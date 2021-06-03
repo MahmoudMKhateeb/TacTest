@@ -1,4 +1,5 @@
-﻿using Abp.Application.Features;
+﻿using Abp;
+using Abp.Application.Features;
 using Abp.Application.Services.Dto;
 using Abp.Configuration;
 using Abp.Domain.Repositories;
@@ -10,6 +11,7 @@ using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using TACHYON.Authorization.Users;
 using TACHYON.Invoices.Balances;
 using TACHYON.Notifications;
 using TACHYON.Shipping.ShippingRequests.ShippingRequestsPricing.Dto;
@@ -25,6 +27,8 @@ namespace TACHYON.Shipping.ShippingRequests
         private readonly IFeatureChecker _featureChecker;
         private readonly IAbpSession _abpSession;
         private readonly BalanceManager _balanceManager;
+        private readonly UserManager _userManager;
+
         public ShippingRequestPricingManager(IRepository<ShippingRequestPricing, long> shippingRequestPricingRepository, IAppNotifier appNotifier, ISettingManager settingManager, IFeatureChecker featureChecker, IRepository<ShippingRequest, long> shippingRequestsRepository, IAbpSession abpSession, BalanceManager balanceManager)
         {
             _shippingRequestPricingRepository = shippingRequestPricingRepository;
@@ -91,33 +95,63 @@ namespace TACHYON.Shipping.ShippingRequests
                 .FirstOrDefaultAsync(x=> x.Id== Id &&
                 x.ShippingRequestFK.TenantId == _abpSession.TenantId.Value &&
                 x.Status== ShippingRequestPricingStatus.New &&
-                x.ShippingRequestFK.Status == ShippingRequestStatus.NeedsAction);
+                x.ShippingRequestFK.Status == ShippingRequestStatus.NeedsAction &&
+                (!x.ShippingRequestFK.IsTachyonDeal || (x.ShippingRequestFK.IsTachyonDeal && x.ParentId.HasValue)));
             if (offer == null)  throw new UserFriendlyException(L("TheOfferIsNotFound"));
+           
 
-            await _balanceManager.ShipperCanAcceptOffer(offer);
-            //await CloseShippingRequest(offer);
             var request = offer.ShippingRequestFK;
-            /// check if offer has carrier from parent offer o
+            ShippingRequestPricing parentOffer = default;
+            //Check if shipper have enough balance to pay 
+            await _balanceManager.ShipperCanAcceptOffer(offer);
+
+            List<UserIdentifier> Users = new List<UserIdentifier>();
+            /// Check if offer has carrier from parent offer o
             if (offer.ParentId.HasValue || !offer.ShippingRequestFK.IsTachyonDeal)
             {
                 offer.Status = ShippingRequestPricingStatus.Accepted;
                 request.Status = ShippingRequestStatus.Completed;
-                request.CarrierTenantId = await GetCarrierTenantId(offer);
+                if (offer.ParentId.HasValue)
+                {
+                    parentOffer = await GetParentOffer(offer.ParentId.Value);
+                }
+                request.CarrierTenantId = parentOffer != null? parentOffer.TenantId : offer.TenantId;
                 if (request.IsBid) request.BidStatus=ShippingRequestBidStatus.Closed;
             }
-            else
+            else //TAD still need to find carrier ro assign to shipping request
             {
                 offer.Status = ShippingRequestPricingStatus.AcceptedAndWaitingForCarrier;
                 request.Status = ShippingRequestStatus.AcceptedAndWaitingCarrier;
+               
             }
 
             await SetShippingRequestPricing(offer);
+            await _appNotifier.ShipperAcceptedOffers(offer, parentOffer);
         }
+        /// <summary>
+        /// Get parent offer when the current offer is tachyon deal
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        private async Task<ShippingRequestPricing> GetParentOffer(long id)
+        {
+            return (await _shippingRequestPricingRepository.FirstOrDefaultAsync(x => x.Id ==id));
+        }
+        /// <summary>
+        /// Find carrier tenant id to assing to shipping request if the offer direct from carrier or by TAD
+        /// </summary>
+        /// <param name="offer"></param>
+        /// <returns></returns>
         private async Task<int> GetCarrierTenantId(ShippingRequestPricing offer)
         {
             if (!offer.ShippingRequestFK.IsTachyonDeal) return  offer.TenantId;
             return (await _shippingRequestPricingRepository.FirstOrDefaultAsync(x => x.Id == offer.ParentId)).TenantId;
         }
+        /// <summary>
+        /// Set the shipping reqquest prices
+        /// </summary>
+        /// <param name="offer"></param>
+        /// <returns></returns>
         private Task SetShippingRequestPricing(ShippingRequestPricing offer)
         {
             var request = offer.ShippingRequestFK;

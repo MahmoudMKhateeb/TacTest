@@ -8,6 +8,7 @@
         SMS=3,
         Others=4,
         Error=5,
-        Message=6
+        Message=6,
+        Technical=7
     }
 }

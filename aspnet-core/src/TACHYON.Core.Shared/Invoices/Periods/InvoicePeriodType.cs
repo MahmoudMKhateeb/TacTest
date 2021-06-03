@@ -1,11 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace TACHYON.Invoices.Periods
+﻿namespace TACHYON.Invoices.Periods
 {
-
-
     public enum InvoicePeriodType : byte
     {
         PayInAdvance = 1,

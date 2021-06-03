@@ -37,18 +37,20 @@ namespace TACHYON.Shipping.ShippingRequests
         public decimal VasCommissionAmount { get; set; }
 
         public decimal CommissionAmount { get; set; }
+        public ShippingRequestCommissionType CommissionType { get; set; }
+        public decimal CommissionPercentageOrAddValue { get; set; }
 
 
+        private decimal _minValueCommission;
         private decimal _taxVat;
-        private ShippingRequestCommissionType _commissionType;
-        private decimal _commissionPercentageOrAddValue;
         private int _totals;
-        public void CalculateVas(decimal taxVat, ShippingRequestCommissionType commissionType,decimal commissionPercentageOrAddValue)
+        public void CalculateVas(decimal taxVat, ShippingRequestCommissionType commissionType, decimal MinValueCommission, decimal commissionPercentageOrAddValue)
         {
             _taxVat = taxVat;
             _totals = ShippingRequestVasFK.RequestMaxAmount+ ShippingRequestVasFK.RequestMaxCount;
-            _commissionType = commissionType;
-            _commissionPercentageOrAddValue = commissionPercentageOrAddValue;
+            CommissionType = commissionType;
+            CommissionPercentageOrAddValue = commissionPercentageOrAddValue;
+            _minValueCommission = MinValueCommission;
             CalculateCommission();
             CalculateSingleVas();
             CalculateMultipleVases();
@@ -86,15 +88,22 @@ namespace TACHYON.Shipping.ShippingRequests
         }
         private void CalculateCommission()
         {
-            switch (_commissionType)
+            switch (CommissionType)
             {
                 case ShippingRequestCommissionType.Percentage:
-                    VasCommissionAmount = (VasPrice * _commissionPercentageOrAddValue / 100);
+                    VasCommissionAmount = (VasPrice * CommissionPercentageOrAddValue / 100);
+
+                    if (VasCommissionAmount < _minValueCommission)
+                    {
+                        VasCommissionAmount = _minValueCommission;
+                        CommissionType = ShippingRequestCommissionType.MinValue;
+                    }
                     break;
                 case ShippingRequestCommissionType.Value:
-                    VasCommissionAmount = VasPrice + _commissionPercentageOrAddValue;
+                    VasCommissionAmount = VasPrice + CommissionPercentageOrAddValue;
                     break;
             }
         }
+
     }
 }

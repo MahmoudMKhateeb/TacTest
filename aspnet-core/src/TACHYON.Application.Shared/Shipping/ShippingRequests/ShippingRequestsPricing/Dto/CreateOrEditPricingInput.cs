@@ -16,6 +16,12 @@ namespace TACHYON.Shipping.ShippingRequests.ShippingRequestsPricing.Dto
         [JsonIgnore]
         public ShippingRequestPricingChannel Channel { get; set; }
         public List<ShippingRequestVasPricingDto> ShippingRequestVasPricing;
+        [JsonIgnore]
+        public decimal? CommissionPercentageOrAddValue { get; set; }
+        [JsonIgnore]
+        public ShippingRequestCommissionType CommissionType { get; set; }
+
+        public long? ShippingRequestDirectRequestId { get; set; }
         public void AddValidationErrors(CustomValidationContext context)
         {
             if (TripPrice <= 0)
