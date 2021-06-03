@@ -52,7 +52,7 @@ namespace TACHYON.Shipping.ShippingRequests
                     .Where(u=>u.IsBid==true)
                     .Where(u => u.BidEndDate != null)
                     .Where(u => u.BidStatus == ShippingRequestBidStatus.OnGoing)
-                    .Where(u => u.BidEndDate.Value.Date <= Clock.Now.Date)
+                    .Where(u => u.BidEndDate!=null && u.BidEndDate.Value.Date <= Clock.Now.Date)
                     .ToList();
 
 

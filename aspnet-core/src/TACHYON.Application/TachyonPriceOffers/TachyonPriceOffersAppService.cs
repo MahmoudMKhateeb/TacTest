@@ -131,11 +131,15 @@ namespace TACHYON.TachyonPriceOffers
         [RequiresFeature(AppFeatures.TachyonDealer)]
         public async Task Delete(EntityDto entity)
         {
-            var offer = await _tachyonPriceOfferRepository.FirstOrDefaultAsync(x => x.Id == entity.Id && x.OfferStatus == OfferStatus.Pending);
+            var offer = await _tachyonPriceOfferRepository
+                .GetAll()
+                .Include(x=>x.ShippingRequestFk)
+                .FirstOrDefaultAsync(x => x.Id == entity.Id && x.OfferStatus == OfferStatus.Pending);
             if (offer == null)
             {
                 throw new UserFriendlyException(L("Cannot delete accepted offer message"));
             }
+            offer.ShippingRequestFk.Status = ShippingRequestStatus.PrePrice;
             await _tachyonPriceOfferRepository.DeleteAsync(offer);
         }
 
