@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using System;
 using TACHYON.Shipping.ShippingRequests;
+using TACHYON.Shipping.ShippingRequests.Dtos;
 using TACHYON.TachyonPriceOffers;
 using TACHYON.TachyonPriceOffers.dtos;
 
@@ -20,6 +21,11 @@ namespace TACHYON.AutoMapper.TachyonPriceOffers
            
 
             CreateMap<CreateOrEditTachyonPriceOfferDto, TachyonPriceOffer>()
+                .ReverseMap();
+
+            CreateMap<TachyonPriceOffer, ShippingRequestAmountDto>()
+                .ForMember(dst => dst.OfferId, opt => opt.MapFrom(src => src.Id))
+                .ForMember(dst => dst.IsGuesingPrice, opt => opt.MapFrom(src => src.OfferStatus == OfferStatus.AcceptedAndWaitingForCarrier))
                 .ReverseMap();
             //CreateMap<TachyonPriceOffer, ShippingRequest>().ForMember(dest=>dest.Id,opt=>opt.MapFrom(src=>src.Id))
             // .ForMember(dest => dest.CarrierTenantId, opt => opt.MapFrom(src => src.CarrirerTenantId))

@@ -81,21 +81,39 @@ namespace TACHYON.TachyonPriceOffers
         public async Task CreateOrEditTachyonPriceOffer(CreateOrEditTachyonPriceOfferDto input)
         {
             DisableTenancyFilters();
-            var Request = await GetShippingRequestOnPrePriceStage(input.ShippingRequestId);
             var Offer = await _tachyonPriceOfferRepository
-                .FirstOrDefaultAsync(x => x.ShippingRequestId == input.ShippingRequestId &&
-            x.OfferStatus == OfferStatus.AcceptedAndWaitingForCarrier);
+                .GetAll()
+                .WhereIf(input.Id!=null, x=>x.Id==input.Id)
+                .WhereIf(input.ShippingRequestId!=null , x=>x.ShippingRequestId==input.ShippingRequestId)
+                .FirstOrDefaultAsync();
 
-            if (Offer == null)
+            if (input.Id != null)
             {
-                Request.Status = ShippingRequestStatus.NeedsAction;
-                await Create(input, Request);
+                if (Offer.OfferStatus == OfferStatus.Pending || Offer.OfferStatus == OfferStatus.AcceptedAndWaitingForCarrier)
+                {
+                    await EditPendingOffer(input, Offer);
+                }
+                else
+                {
+                    throw new UserFriendlyException(L("OfferMustBeInPendingStatus"));
+                }
             }
             else
             {
-                if (!input.ShippingRequestBidId.HasValue && !input.DriectRequestForCarrierId.HasValue) throw new UserFriendlyException(L("ItShouldHaveCarrirer"));
-                await Edit(input, Offer, Request);
+                var Request = await GetShippingRequestOnPrePriceStage(input.ShippingRequestId.Value);
+
+                if (Offer == null)
+                {
+                    Request.Status = ShippingRequestStatus.NeedsAction;
+                    await Create(input, Request);
+                }
+                else if (Offer.OfferStatus == OfferStatus.AcceptedAndWaitingForCarrier)
+                {
+                    if (!input.ShippingRequestBidId.HasValue && !input.DriectRequestForCarrierId.HasValue) throw new UserFriendlyException(L("ItShouldHaveCarrirer"));
+                    await Edit(input, Offer, Request);
+                }
             }
+            
         }
 
 
@@ -186,7 +204,7 @@ namespace TACHYON.TachyonPriceOffers
         #region Heleper
         private async Task Create(CreateOrEditTachyonPriceOfferDto input, ShippingRequest shippingRequest)
         {
-            if (await IsExistingOffer(input.ShippingRequestId))
+            if (await IsExistingOffer(input.ShippingRequestId.Value))
             {
                 throw new UserFriendlyException(L("Cannot Create new offer, there is already existing offer message"));
             }
@@ -233,6 +251,23 @@ namespace TACHYON.TachyonPriceOffers
             offer.ShippingRequestFk.VatSetting = offer.VatSetting.Value;
             //ObjectMapper.Map(offer, offer.ShippingRequestFk);
             await _shippingRequestManager.SetToPostPrice(offer.ShippingRequestFk);
+        }
+
+        private async Task EditPendingOffer(CreateOrEditTachyonPriceOfferDto input, TachyonPriceOffer offer)
+        {
+   
+            offer.CarrierPrice = input.CarrierPrice;
+
+          //  if (offer.OfferStatus == OfferStatus.Pending)
+           // {
+                if (input.ActualCommissionValue < 1 && input.ActualPercentCommission < 1) throw new UserFriendlyException(L("TheCommissionValuevalueAndPercentCommissionMustNotBeLessThanOneAtTheSameTime"));
+                else if (input.ActualCommissionValue < 0) throw new UserFriendlyException(L("TheCommissionValueSholudBeNotLessThanZero"));
+                else if (input.ActualPercentCommission < 0) throw new UserFriendlyException(L("ThePercentCommissionSholudBeNotLessThanZero"));
+
+                offer.ActualCommissionValue = input.ActualCommissionValue;
+                offer.TotalAmount = input.TotalAmount;
+                offer.ActualPercentCommission = input.ActualPercentCommission;
+           // }
         }
 
         private async Task OfferMappingFromDirectRequestOrBidding(CreateOrEditTachyonPriceOfferDto input, ShippingRequest request)

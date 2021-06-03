@@ -21,6 +21,7 @@ export class TachyonDealerResponceModelComponent extends AppComponentBase implem
   @Output() modalsave: EventEmitter<any> = new EventEmitter<any>();
   directRequestId: number;
   bidId: number;
+  offerId: number;
 
   carrierPriceResponse: CarrirSetPriceForDirectRequestDto = new CarrirSetPriceForDirectRequestDto();
   saving = false;
@@ -39,11 +40,12 @@ export class TachyonDealerResponceModelComponent extends AppComponentBase implem
 
   ngOnInit() {}
 
-  show(directRequestId, shippingRequestId, bidId?): void {
+  show(offerId, directRequestId, shippingRequestId, bidId?): void {
     console.log(`direntRequestId ${directRequestId} shippingRequestId`);
     this.disAllowEdits = true;
     this.directRequestId = directRequestId;
     this.bidId = bidId;
+    this.offerId = offerId;
     this.shippingRequestId = shippingRequestId;
     this.getCommetion(directRequestId, bidId);
     this.modal.show();
@@ -55,7 +57,9 @@ export class TachyonDealerResponceModelComponent extends AppComponentBase implem
 
   getCommetion(directRequestid: number, bidId?: number): void {
     this.loading = true;
-    this._shippingRequestsTachyonDealer.getCarrierPricing(directRequestid, bidId).subscribe((result) => {
+    console.log(`direct request id : ${directRequestid}
+                 and bid id : ${bidId}`);
+    this._shippingRequestsTachyonDealer.getCarrierPricing(directRequestid, bidId, this.offerId).subscribe((result) => {
       this.commetionCalculations = result;
       this.loading = false;
     });
@@ -89,6 +93,7 @@ export class TachyonDealerResponceModelComponent extends AppComponentBase implem
   acceptCarrierRequest() {
     this.saving = true;
     this.createOfferInput.shippingRequestId = this.shippingRequestId;
+    this.createOfferInput.id = this.offerId;
     this.createOfferInput.shippingRequestBidId = this.bidId;
     this.createOfferInput.driectRequestForCarrierId = this.directRequestId;
     // this.createOfferInput.carrirerTenantId = this.commetionCalculations.carrirerTenantId;
@@ -97,6 +102,7 @@ export class TachyonDealerResponceModelComponent extends AppComponentBase implem
     this.createOfferInput.actualCommissionValue = this.commetionCalculations.actualCommissionValue;
     this.createOfferInput.actualPercentCommission = this.commetionCalculations.actualPercentCommission;
     this._tachyonPriceOffers
+
       .createOrEditTachyonPriceOffer(this.createOfferInput)
       .pipe(
         finalize(() => {
