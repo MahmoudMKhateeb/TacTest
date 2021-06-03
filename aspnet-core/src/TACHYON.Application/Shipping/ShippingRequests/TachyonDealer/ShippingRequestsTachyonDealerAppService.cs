@@ -58,8 +58,17 @@ namespace TACHYON.Shipping.ShippingRequests.TachyonDealer
             {
                 shippingRequest.IsBid = true;
                 shippingRequest.BidStartDate = Input.StartDate;
+                if (Input.StartDate == null)
+                {
+                    Input.StartDate = Clock.Now.Date;
+                }
                 shippingRequest.BidEndDate = Input.EndDate;
-                if (Input.StartDate.Date==Clock.Now.Date) shippingRequest.BidStatus = ShippingRequestBidStatus.OnGoing;
+                
+                if (Input.StartDate.Value.Date==Clock.Now.Date) shippingRequest.BidStatus = ShippingRequestBidStatus.OnGoing;
+            }
+            else
+            {
+                throw new UserFriendlyException(L("NoShippingRequest"));
             }
         }
 
