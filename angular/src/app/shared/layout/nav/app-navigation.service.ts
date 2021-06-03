@@ -430,8 +430,6 @@ export class AppNavigationService {
           // new AppMenuItem('TripStatuses', 'Pages.TripStatuses', 'flaticon-more', '/app/main/tripStatuses/tripStatuses'),
           // new AppMenuItem('Vases', 'Pages.Administration.Vases', 'flaticon-more', '/app/admin/vases/vases'),
 
-          // new AppMenuItem('AppLocalization', 'Pages.AppLocalizations', 'label label-danger label-dot', '/app/main/lanaguages/applocalizations'),
-
           new AppMenuItem(
             'AppLocalization',
             'Pages.AppLocalizations',
@@ -439,7 +437,12 @@ export class AppNavigationService {
             '',
             undefined,
             [
-              // new AppMenuItem('Translations', 'Pages.AppLocalizations', 'label label-danger label-dot', '/app/main/lanaguages/applocalizations'),
+              new AppMenuItem(
+                'PlatformTerminologies',
+                'Pages.AppLocalizations',
+                'label label-danger label-dot',
+                '/app/main/lanaguages/applocalizations'
+              ),
               new AppMenuItem('Translations', 'Pages.AppLocalizations', 'label label-danger label-dot', '', undefined, [
                 new AppMenuItem(
                   'NationalityTranslations',
