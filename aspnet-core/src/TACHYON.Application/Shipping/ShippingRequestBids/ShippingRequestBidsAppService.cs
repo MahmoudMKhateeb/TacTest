@@ -408,7 +408,7 @@ namespace TACHYON.Shipping.ShippingRequestBids
                     ShippingRequestId = o.Id,
                     BidStartDate = o.BidStartDate,
                     ShippingRequestBidStatusName = Enum.GetName(typeof(ShippingRequestBidStatus), o.BidStatus),
-                    ShipperName =o.IsTachyonDeal? o.Tenant.Name: L("Tachyon"),
+                    ShipperName =!o.IsTachyonDeal? o.Tenant.Name: L("Tachyon"),
                     TruckTypeDisplayName = ObjectMapper.Map<TrucksTypeDto>(o.TrucksTypeFk).TranslatedDisplayName,//o.TrucksTypeFk.DisplayName,
                     GoodCategoryName = ObjectMapper.Map<GoodCategoryDto>(o.GoodCategoryFk).DisplayName,// o.GoodCategoryFk.DisplayName,
                     MyBidPrice = bid?.BasePrice,
