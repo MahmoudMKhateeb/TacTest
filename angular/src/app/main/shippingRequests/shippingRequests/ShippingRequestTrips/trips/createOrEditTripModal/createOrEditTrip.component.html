@@ -29,7 +29,7 @@
                 class="form-control"
                 [disabled]="facilityLoading"
                 [(ngModel)]="trip.originFacilityId"
-                (change)="wayPointsComponent.sourceTripFacilityId = trip.originFacilityId"
+                (change)="PointsComponent.sourceTripFacilityId = trip.originFacilityId"
               >
                 <option value="">{{ l('SelectaFacility') }}</option>
                 <option *ngFor="let item of allFacilities" value="{{ item.id }}">{{ item.displayName }}</option>
@@ -121,13 +121,13 @@
 
           <!--      end:Vas's      -->
           <!--  start:: RouteSteps -->
-          <wayPointsComponent
-            #wayPointsComponent
+          <PointsComponent
+            #PointsComponent
             (SelectedWayPointsFromChild)="trip.routPoints = $event"
             [WayPointListFromFatherForShippingRequestEdit]="trip.routPoints"
             [MainGoodsCategory]="shippingRequest.goodCategoryId"
             [NumberOfDrops]="shippingRequest.numberOfDrops"
-          ></wayPointsComponent>
+          ></PointsComponent>
           <!--  end:: RouteSteps -->
           <!--end::Body-->
         </div>

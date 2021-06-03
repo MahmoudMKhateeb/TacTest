@@ -20,11 +20,11 @@ import Swal from 'sweetalert2';
 import { FileDownloadService } from '@shared/utils/file-download.service';
 
 @Component({
-  selector: 'wayPointsComponent',
-  templateUrl: './wayPoints.component.html',
-  styleUrls: ['./wayPoints.component.scss'],
+  selector: 'PointsComponent',
+  templateUrl: './points.component.html',
+  styleUrls: ['./points.component.scss'],
 })
-export class WayPointsComponent extends AppComponentBase implements OnInit, OnChanges {
+export class PointsComponent extends AppComponentBase implements OnInit, OnChanges {
   constructor(
     injector: Injector,
     private _goodsDetailsServiceProxy: GoodsDetailsServiceProxy,
@@ -100,7 +100,7 @@ export class WayPointsComponent extends AppComponentBase implements OnInit, OnCh
     }
   }
   ngOnChanges(changes: SimpleChanges) {
-    //if RouteType Was MultipleDrops/twoWays And Changed To SomeThing Else i want to keep the First 2 Point of the wayPoints
+    //if RouteType Was MultipleDrops/twoWays And Changed To SomeThing Else i want to keep the First 2 Point of the points
     const Route = changes.RouteType;
     if (Route?.currentValue !== Route?.previousValue) {
       this.wayPointsList.length = 0;

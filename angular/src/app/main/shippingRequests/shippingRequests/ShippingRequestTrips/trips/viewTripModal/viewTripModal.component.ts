@@ -15,7 +15,7 @@ import {
 } from '@shared/service-proxies/service-proxies';
 import { AppComponentBase } from '@shared/common/app-component-base';
 import { finalize } from '@node_modules/rxjs/operators';
-import { WayPointsComponent } from '@app/main/shippingRequests/shippingRequests/ShippingRequestTrips/wayPoints/wayPoints.component';
+import { PointsComponent } from '@app/main/shippingRequests/shippingRequests/ShippingRequestTrips/points/points.component';
 import Swal from 'sweetalert2';
 import { AssignDriverTruckModalComponent } from '@app/main/shippingRequests/shippingRequests/ShippingRequestTrips/trips/assignDriverTruckModal/assignDriverTruckModal.component';
 import { FileDownloadService } from '@shared/utils/file-download.service';
@@ -26,7 +26,7 @@ import { FileDownloadService } from '@shared/utils/file-download.service';
 })
 export class ViewTripModalComponent extends AppComponentBase implements OnInit {
   @ViewChild('viewTripDetails', { static: false }) modal: ModalDirective;
-  @ViewChild('wayPointsComponent') wayPointsComponent: WayPointsComponent;
+  // @ViewChild('wayPointsComponent') wayPointsComponent: PointsComponent;
   // @ViewChild('assignDriverTruckModal', { static: true }) assignDriverTruckModal: AssignDriverTruckModalComponent;
 
   Vases: CreateOrEditShippingRequestTripVasDto[];

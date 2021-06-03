@@ -18,7 +18,7 @@ import {
 import { AppComponentBase } from '@shared/common/app-component-base';
 import { Router } from '@angular/router';
 import { finalize } from '@node_modules/rxjs/operators';
-import { WayPointsComponent } from '@app/main/shippingRequests/shippingRequests/ShippingRequestTrips/wayPoints/wayPoints.component';
+import { PointsComponent } from '@app/main/shippingRequests/shippingRequests/ShippingRequestTrips/points/points.component';
 import Swal from 'sweetalert2';
 import { CreateOrEditFacilityModalComponent } from '@app/main/addressBook/facilities/create-or-edit-facility-modal.component';
 import { FileDownloadService } from '@shared/utils/file-download.service';
@@ -30,7 +30,7 @@ import { FileDownloadService } from '@shared/utils/file-download.service';
 })
 export class CreateOrEditTripComponent extends AppComponentBase implements OnInit {
   @ViewChild('addNewTripsModal', { static: true }) modal: ModalDirective;
-  @ViewChild('wayPointsComponent') wayPointsComponent: WayPointsComponent;
+  @ViewChild('PointsComponent') PointsComponent: PointsComponent;
   @ViewChild('createOrEditFacilityModal') createOrEditFacilityModal: CreateOrEditFacilityModalComponent;
 
   @Output() modalSave: EventEmitter<any> = new EventEmitter<any>();
@@ -75,7 +75,7 @@ export class CreateOrEditTripComponent extends AppComponentBase implements OnIni
     if (record) {
       this._shippingRequestTripsService.getShippingRequestTripForEdit(record.id).subscribe((res) => {
         this.trip = res;
-        this.wayPointsComponent.wayPointsList = this.trip.routPoints;
+        this.PointsComponent.wayPointsList = this.trip.routPoints;
         this.selectedVases = res.shippingRequestTripVases;
         this.loading = false;
         // this.Vases = this.trip.shippingRequestTripVases;
@@ -93,7 +93,7 @@ export class CreateOrEditTripComponent extends AppComponentBase implements OnIni
   }
   close(): void {
     this.trip = new CreateOrEditShippingRequestTripDto();
-    this.wayPointsComponent.wayPointsList = [];
+    this.PointsComponent.wayPointsList = [];
     this.loading = true;
     this.modal.hide();
   }
