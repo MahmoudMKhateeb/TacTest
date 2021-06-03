@@ -25,7 +25,6 @@
                   class="form-control"
                   placeholder="{{ l('BiddingstartDate') }}"
                   name="shippingrequestBidStratDate"
-                  [required]="true"
                   [(date)]="bidsSettings.startDate"
                   [minDate]="today"
                   bsDatepicker
@@ -46,7 +45,6 @@
                 class="form-control"
                 placeholder="{{ l('biddingEndDate') }}"
                 name="shippingrequestBidEndDate"
-                [required]="true"
                 [(date)]="bidsSettings.endDate"
                 [minDate]="today"
                 bsDatepicker
