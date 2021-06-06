@@ -73,7 +73,7 @@
                 <span class="text-dark-75 font-weight-bolder mr-2">{{ l('bidPrice') }}:</span>
                 <span class="text-muted font-weight-bold">{{ record.myBidPrice || 'unknown' }}</span>
               </div>
-              <div class="d-flex justify-content-between align-items-center mt-8">
+              <div class="d-flex justify-content-between align-items-center mt-8" *ngIf='feature.isEnabled("App.Carrier")'>
                 <div class="input-group">
                   <div class="input-group-prepend">
                     <span class="input-group-text">$</span>
