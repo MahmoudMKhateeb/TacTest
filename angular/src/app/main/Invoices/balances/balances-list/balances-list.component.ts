@@ -68,7 +68,7 @@ export class BalancesListComponent extends AppComponentBase {
       )
       .subscribe((result) => {
         this.IsStartSearch = true;
-        this.primengTableHelper.totalRecordsCount = result.items.length;
+        this.primengTableHelper.totalRecordsCount = result.totalCount;
         this.primengTableHelper.records = result.items;
         this.primengTableHelper.hideLoadingIndicator();
       });

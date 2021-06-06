@@ -52,7 +52,7 @@ namespace TACHYON.Invoices.Balances
                   .OrderBy(input.Sorting ?? "id desc")
                   .PageBy(input);
 
-                var totalCount = await paged.CountAsync();
+                var totalCount = await query.CountAsync();
 
                 return new PagedResultDto<BalanceRechargeListDto>(
                     totalCount,

@@ -401,7 +401,7 @@ namespace TACHYON.Invoices
                                   .OrderBy(input.Sorting ?? "IsPaid asc")
                                   .PageBy(input);
 
-            var totalCount = await pagedInvoices.CountAsync();
+            var totalCount = await query.CountAsync();
 
             return new PagedResultDto<InvoiceListDto>(
                 totalCount,

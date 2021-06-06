@@ -40,7 +40,7 @@ namespace TACHYON.Invoices.Transactions
            var query = GetFilterTransactions(input);
             var pages = query.PageBy(input);
 
-            var totalCount = await pages.CountAsync();
+            var totalCount = await query.CountAsync();
 
             return new PagedResultDto<TransactionListDto>(
                 totalCount,

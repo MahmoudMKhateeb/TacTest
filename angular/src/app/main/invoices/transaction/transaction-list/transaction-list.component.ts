@@ -73,9 +73,10 @@ export class TransactionListComponent extends AppComponentBase implements OnInit
       )
       .subscribe((result) => {
         this.IsStartSearch = true;
-        this.primengTableHelper.totalRecordsCount = result.items.length;
+        this.primengTableHelper.totalRecordsCount = result.totalCount;
         this.primengTableHelper.records = result.items;
         this.primengTableHelper.hideLoadingIndicator();
+        console.log(result);
       });
   }
 
