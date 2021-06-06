@@ -109,10 +109,7 @@ namespace TACHYON.Cities
 
         public async Task CreateOrEdit(CreateOrEditCityDto input)
         {
-            if (await _cityRepository.FirstOrDefaultAsync(x => x.DisplayName.ToLower() == input.DisplayName.ToLower() && x.CountyId==input.CountyId) != null)
-            {
-                throw new UserFriendlyException(L("City is already exists for this country message"));
-            }
+            await CheckCityValidation(input);
 
             if (input.Id == null)
             {
@@ -121,6 +118,18 @@ namespace TACHYON.Cities
             else
             {
                 await Update(input);
+            }
+        }
+
+        private async Task CheckCityValidation(CreateOrEditCityDto input)
+        {
+            if (string.IsNullOrWhiteSpace(input.DisplayName))
+            {
+                throw new UserFriendlyException(L("CannotCreateEmptyName"));
+            }
+            if (await _cityRepository.FirstOrDefaultAsync(x => x.DisplayName.ToLower() == input.DisplayName.ToLower() && x.CountyId == input.CountyId) != null)
+            {
+                throw new UserFriendlyException(L("CityIsAlreadyExistsForThisCountry"));
             }
         }
 
