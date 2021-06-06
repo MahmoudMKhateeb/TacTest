@@ -34,14 +34,6 @@
                   </div>
                 </div>
                 <div class="col-xl-4">
-                  <div class="form-group m-form__group align-items-center">
-                    <div class="input-group">
-                      <label for="ReferenceNo">{{ l('ReferenceNo') }}</label>
-                      <input type="text" name="ReferenceNo" id="ReferenceNo" [(ngModel)]="ReferenceNo" />
-                    </div>
-                  </div>
-                </div>
-                <div class="col-xl-4">
                   <div class="checkbox-list mb-2">
                     <label class="checkbox ml-2">
                       <input
@@ -65,6 +57,14 @@
                     dateRangePickerMomentModifier
                     [(date)]="creationDateRange"
                   />
+                </div>
+                <div class="col-xl-4">
+                  <div class="form-group m-form__group align-items-center">
+                    <div class="input-group">
+                      <label for="ReferenceNo">{{ l('ReferenceNo') }}</label>
+                      <input type="text" name="ReferenceNo" id="ReferenceNo" [(ngModel)]="ReferenceNo" />
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
