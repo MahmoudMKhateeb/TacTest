@@ -1,5 +1,8 @@
 <div [@routerTransition]>
   <div class="content d-flex flex-column flex-column-fluid">
+    <sub-header [title]="'pageNotFound' | localize">
+      <!-- <sub-header [title]="'Vas' | localize" [description]="'VasesHeaderInfo' | localize"> -->
+    </sub-header>
     <div class="container-fluid">
       <div class="d-flex flex-column flex-root">
         <!--begin::Error-->
@@ -8,8 +11,8 @@
           style="background-image: url(https://preview.keenthemes.com/metronic/theme/html/demo1/dist/assets/media/error/bg5.jpg); height: 750px;"
         >
           <!--begin::Content-->
-          <div class="container d-flex flex-row-fluid flex-column justify-content-md-center p-12">
-            <h1 class="error-title font-weight-boldest text-info mt-10 mt-md-0 mb-12">Oops!</h1>
+          <div class="container d-flex flex-row-fluid flex-column mt-15 p-12">
+            <h1 class="error-title font-weight-boldest text-info mt-10 mt-md-0 mb-12" style="color: #dc2434 !important;">Oops!</h1>
             <p class="font-weight-boldest display-4">Something went wrong here.</p>
             <p class="font-size-h3">This page is still under development, We're working on it and we'll get it available as soon possible.</p>
           </div>

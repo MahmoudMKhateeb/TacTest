@@ -46,7 +46,7 @@ using GetAllForLookupTableInput = TACHYON.Trucks.Dtos.GetAllForLookupTableInput;
 namespace TACHYON.Trucks
 {
     [AbpAuthorize(AppPermissions.Pages_Trucks)]
-    [RequiresFeature(AppFeatures.Carrier)]
+    [RequiresFeature(AppFeatures.Carrier, AppFeatures.TachyonDealer)]
     public class TrucksAppService : TACHYONAppServiceBase, ITrucksAppService
     {
         private const int MaxTruckPictureBytes = 5242880; //5MB

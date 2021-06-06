@@ -27,8 +27,16 @@ export class AppNavigationService {
           new AppMenuItem('DocumentManagement', 'Pages.DocumentTypes', 'flaticon2-document', '/app/main/documentTypes/documentTypes'),
           new AppMenuItem('DocumentsEntities', 'Pages.DocumentsEntities', 'flaticon-doc', '/app/main/documentsEntities/documentsEntities'),
           //TODO: the contracts subMenu Need Permission and Route
-          new AppMenuItem('NonMandatoryDocuments', 'Pages.DocumentFiles', 'flaticon-file', '', [], undefined, undefined, undefined, () =>
-            this._featureCheckerService.isEnabled('App.TachyonDealer')
+          new AppMenuItem(
+            'NonMandatoryDocuments',
+            'Pages.DocumentFiles',
+            'flaticon-file',
+            '/app/main/comingSoon',
+            [],
+            undefined,
+            undefined,
+            undefined,
+            () => !this._featureCheckerService.isEnabled('App.Shipper') && !this._featureCheckerService.isEnabled('App.Carrier')
           ),
           new AppMenuItem('SubmittedDocuments', 'Pages.DocumentFiles', 'flaticon-file', '/app/main/documentFiles/documentFiles'),
           //TODO: the contracts subMenu Need Permission and Route
@@ -36,7 +44,7 @@ export class AppNavigationService {
             'contracts',
             'Pages.DocumentFiles',
             'flaticon-file',
-            '',
+            '/app/main/comingSoon',
             [],
             undefined,
             undefined,
@@ -59,11 +67,16 @@ export class AppNavigationService {
         '',
         [],
         [
-          new AppMenuItem('TachyonManagedServices', 'Pages', 'label label-danger label-dot', '/app/main/comingSoon/comingSoon'),
+          new AppMenuItem(
+            'TachyonManagedServices',
+            'Pages.ShippingRequests',
+            'label label-danger label-dot',
+            '/app/main/shippingRequests/shippingRequests'
+          ),
           new AppMenuItem('Marketplace', 'Pages', 'label label-danger label-dot', '/app/main/marketPlace/marketPlace'),
 
-          new AppMenuItem('ShipmentTracking', 'Pages', 'label label-danger label-dot', '/app/main/comingSoon/comingSoon'),
-          new AppMenuItem('Requests', 'Pages', 'label label-danger label-dot', '/app/main/comingSoon/comingSoon'),
+          new AppMenuItem('ShipmentTracking', 'Pages', 'label label-danger label-dot', '/app/main/comingSoon'),
+          new AppMenuItem('Requests', 'Pages', 'label label-danger label-dot', '/app/main/shippingRequests/shippingRequests'),
         ],
         undefined,
         undefined,
@@ -75,7 +88,7 @@ export class AppNavigationService {
         'Requests',
         'Pages.ShippingRequests',
         'flaticon-interface-8',
-        '',
+        '/app/main/comingSoon',
         [],
         //TODO: the CreateNewRequest subMenu Need Permission and Route
         [
@@ -124,7 +137,7 @@ export class AppNavigationService {
         'shipmentTracking',
         'Pages',
         'flaticon2-document',
-        '',
+        '/app/main/comingSoon',
         undefined,
         undefined,
         undefined,
@@ -417,8 +430,6 @@ export class AppNavigationService {
           // new AppMenuItem('TripStatuses', 'Pages.TripStatuses', 'flaticon-more', '/app/main/tripStatuses/tripStatuses'),
           // new AppMenuItem('Vases', 'Pages.Administration.Vases', 'flaticon-more', '/app/admin/vases/vases'),
 
-          // new AppMenuItem('AppLocalization', 'Pages.AppLocalizations', 'label label-danger label-dot', '/app/main/lanaguages/applocalizations'),
-
           new AppMenuItem(
             'AppLocalization',
             'Pages.AppLocalizations',
@@ -426,7 +437,12 @@ export class AppNavigationService {
             '',
             undefined,
             [
-              // new AppMenuItem('Translations', 'Pages.AppLocalizations', 'label label-danger label-dot', '/app/main/lanaguages/applocalizations'),
+              new AppMenuItem(
+                'PlatformTerminologies',
+                'Pages.AppLocalizations',
+                'label label-danger label-dot',
+                '/app/main/lanaguages/applocalizations'
+              ),
               new AppMenuItem('Translations', 'Pages.AppLocalizations', 'label label-danger label-dot', '', undefined, [
                 new AppMenuItem(
                   'NationalityTranslations',

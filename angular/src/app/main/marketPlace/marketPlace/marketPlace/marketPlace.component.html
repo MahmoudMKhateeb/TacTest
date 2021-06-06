@@ -2,7 +2,7 @@
   <div class="content d-flex flex-column flex-column-fluid">
     <!--begin::Subheader-->
     <sub-header [title]="'MarketPlace' | localize" [description]="'' | localize">
-      <div role="actions">
+      <div role="actions" *ngIf="feature.isEnabled('App.Carrier')">
         <button class="btn btn-primary" (click)="ViewAllCarrierBidsModal.show()">
           <i class="flaticon2-indent-dots"></i> {{ l('MyBiddingHistory') }}
         </button>
@@ -187,7 +187,7 @@
                       <p-sortIcon field="BidStatus"></p-sortIcon>
                     </th>
 
-                    <th style="width: 150px;" pSortableColumn="BasePrice">
+                    <th style="width: 150px;" pSortableColumn="BasePrice" *ngIf="feature.isEnabled('App.Carrier')">
                       {{ l('MyBidPrice') }}
                       <p-sortIcon field="BasePrice"></p-sortIcon>
                     </th>
@@ -235,7 +235,7 @@
                       >
                     </td>
 
-                    <td style="width: 150px;">
+                    <td style="width: 150px;" *ngIf="feature.isEnabled('App.Carrier')">
                       <span class="ui-column-title"> {{ l('lastBidPrice') }}</span>
                       {{ record.myBidPrice }}
                     </td>
