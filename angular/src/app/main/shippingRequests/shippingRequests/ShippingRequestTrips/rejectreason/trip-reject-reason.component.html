@@ -5,7 +5,7 @@
         <button (click)="exportToExcel()" class="btn btn-outline-success"><i class="fa fa-file-excel"></i> {{ l('ExportToExcel') }}</button>
 
         <button *ngIf="isGranted('Pages.ShippingRequestTrips.Reject.Reason.Create')" (click)="ReasonModal.show(null)" class="btn btn-primary blue">
-          <i class="fa fa-plus"></i> {{ l('CreateReason') }}
+          <i class="fa fa-plus"></i> {{ l('Create') }}
         </button>
       </div>
     </sub-header>
