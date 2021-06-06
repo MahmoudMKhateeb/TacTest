@@ -208,7 +208,7 @@ export class AppNavigationService {
             'SubmitInvoice',
             'Pages.Invoices',
             'flaticon2-document',
-            '/app/main/invoices/submitinvoice ',
+            '/app/main/invoices/submitinvoice',
             undefined,
             undefined,
             undefined,
