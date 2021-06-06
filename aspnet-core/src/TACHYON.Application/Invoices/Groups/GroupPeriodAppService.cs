@@ -167,9 +167,13 @@ namespace TACHYON.Invoices.Groups
             await _Repository.DeleteAsync(Input.Id);       
             if (Group.Status== SubmitInvoiceStatus.Accepted)
             {
-                var Invoice = await _GroupPeriodInvoiceRepository.SingleAsync(g => g.GroupId == Group.Id);
-                await _invoiceManager.RemoveInvoiceFromRequest(Invoice.InvoiceId);
-                await _GroupPeriodInvoiceRepository.DeleteAsync(Invoice);
+                var Invoice = await _GroupPeriodInvoiceRepository.FirstOrDefaultAsync(g => g.GroupId == Group.Id);
+                if (Invoice !=null)
+                {
+                    await _invoiceManager.RemoveInvoiceFromRequest(Invoice.InvoiceId);
+                    await _GroupPeriodInvoiceRepository.DeleteAsync(Invoice);
+                }
+
                 
             }
             else if (Group.Status == SubmitInvoiceStatus.Claim)
