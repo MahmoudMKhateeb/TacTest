@@ -69,12 +69,13 @@ namespace TACHYON.Invoices.Groups
         public async Task<PagedResultDto<GroupPeriodListDto>> GetAll(GroupPeriodFilterInput input)
         {
             IQueryable<GroupPeriod> query= await _commonManager.ExecuteMethodIfHostOrTenantUsers(  () =>  GetGroupPeriods(input));
+            var pages = query.PageBy(input);
 
             var totalCount = await query.CountAsync();
 
             return new PagedResultDto<GroupPeriodListDto>(
                 totalCount,
-                ObjectMapper.Map<List<GroupPeriodListDto>>(query)
+                ObjectMapper.Map<List<GroupPeriodListDto>>(pages)
             );
 
         }
@@ -275,7 +276,7 @@ namespace TACHYON.Invoices.Groups
             });
         }
         #region Heleper
-        private Task<IQueryable<GroupPeriod>> GetGroupPeriods(GroupPeriodFilterInput input)
+        private Task<IOrderedQueryable<GroupPeriod>> GetGroupPeriods(GroupPeriodFilterInput input)
         {
             var query = _Repository
                 .GetAll()
@@ -285,8 +286,7 @@ namespace TACHYON.Invoices.Groups
                 .WhereIf(input.Status.HasValue, i => i.Status == input.Status)
                  .WhereIf(input.PeriodId.HasValue, i => i.PeriodId == input.PeriodId)
                 .WhereIf(input.FromDate.HasValue && input.ToDate.HasValue, i => i.CreationTime >= input.FromDate && i.CreationTime < input.ToDate)
-                .OrderBy(!string.IsNullOrEmpty(input.Sorting)? input.Sorting : "status asc")
-                .PageBy(input);
+                .OrderBy(!string.IsNullOrEmpty(input.Sorting) ? input.Sorting : "status asc");
             return Task.FromResult(query);
         }
         private async Task<GroupPeriod> GetGroupPeriod(long GroupId)

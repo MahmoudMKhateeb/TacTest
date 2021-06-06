@@ -37,7 +37,7 @@
                         name="CreationDateRangeActive"
                         value="true"
                       />
-                      {{ 'CreationTime' | localize }}
+                      {{ l('CreationTime') }}
                       <span class="ml-2 mt-1"></span>
                     </label>
                   </div>
@@ -58,7 +58,7 @@
                     <select name="Period.periodType" [(ngModel)]="Channel" class="form-control">
                       <option value="">{{ l('All') }}</option>
                       <option [value]="code.key" *ngFor="let code of ChannelType">
-                        {{ code.value | localize }}
+                        {{ l(code.value) }}
                       </option>
                     </select>
                   </div>
