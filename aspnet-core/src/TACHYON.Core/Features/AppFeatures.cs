@@ -26,7 +26,7 @@
         public const string ShipperCreditLimit = "App.Shipper.CreditLimit";
         public const string ShipperPeriods = "App.Shipper.Periods";
         public const string CarrierPeriods = "App.Carrier.Periods";
-        public const string CommissionType = "App.Shipper.CommissionType";
+        
         
         public const string BiddingCommissionPercentage = "App.Shipper.BiddingCommissionPercentage";
         public const string BiddingCommissionValue = "App.Shipper.BiddingCommissionValue";
@@ -37,7 +37,36 @@
         public const string TachyonDealerCommissionType = "App.Shipper.TachyonDealerCommissionType";
 
 
-
+        #region Comission
+        #region Shipper between carrier
+        #region Trip Comission
+        public const string TripCommissionPercentage = "App.Shipper.TripCommissionPercentage";
+        public const string TripCommissionValue = "App.Shipper.TripCommissionValue";
+        public const string TripMinValueCommission = "App.Shipper.TripMinValueCommission";
+        public const string TripCommissionType = "App.Shipper.TripCommissionType";
+        #endregion
+        #region Vas Comission
+        public const string VasCommissionPercentage = "App.Shipper.VasCommissionPercentage";
+        public const string VasCommissionValue = "App.Shipper.VasCommissionValue";
+        public const string VasMinValueCommission = "App.Shipper.VasMinValueCommission";
+        public const string VasCommissionType = "App.Shipper.VasCommissionType";
+        #endregion
+        #endregion
+        #region TachyonDealer
+        #region Trip Comission
+        public const string TachyonDealerTripCommissionPercentage = "App.TachyonDealer.TripCommissionPercentage";
+        public const string TachyonDealerTripCommissionValue = "App.TachyonDealer.TripCommissionValue";
+        public const string TachyonDealerTripMinValueCommission = "App.TachyonDealer.TripMinValueCommission";
+        public const string TachyonDealerTripCommissionType = "App.TachyonDealer.TripCommissionType";
+        #endregion
+        #region Vas Comission
+        public const string TachyonDealerVasCommissionPercentage = "App.TachyonDealer.VasCommissionPercentage";
+        public const string TachyonDealerVasCommissionValue = "App.TachyonDealer.VasCommissionValue";
+        public const string TachyonDealerVasMinValueCommission = "App.TachyonDealer.VasMinValueCommission";
+        public const string TachyonDealerVasCommissionType = "App.TachyonDealer.VasCommissionType";
+        #endregion
+        #endregion
+        #endregion
         #endregion
 
 

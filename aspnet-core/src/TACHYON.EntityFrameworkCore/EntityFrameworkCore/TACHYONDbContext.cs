@@ -40,6 +40,7 @@ using TACHYON.Routs;
 using TACHYON.Routs.RoutPoints;
 using TACHYON.Routs.RoutSteps;
 using TACHYON.Routs.RoutTypes;
+using TACHYON.Shipping;
 using TACHYON.Shipping.Accidents;
 using TACHYON.Shipping.RoutPoints;
 using TACHYON.Shipping.ShippingRequestBids;
@@ -158,6 +159,7 @@ namespace TACHYON.EntityFrameworkCore
 
         public virtual DbSet<ShippingRequest> ShippingRequests { get; set; }
         public DbSet<ShippingRequestPricing> ShippingRequestPricings { get; set; }
+        public DbSet<ShippingRequestDirectRequest> ShippingRequestDirectRequests { get; set; }
 
         public virtual DbSet<GoodsDetail> GoodsDetails { get; set; }
 

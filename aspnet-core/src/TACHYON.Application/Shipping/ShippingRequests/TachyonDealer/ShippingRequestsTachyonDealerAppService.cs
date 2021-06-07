@@ -111,7 +111,7 @@ namespace TACHYON.Shipping.ShippingRequests.TachyonDealer
                 .AsNoTracking()
                 .Include(r => r.Request)
                  .ThenInclude(t=>t.Tenant)
-                .Include(t=>t.Carrirer)
+                .Include(t=>t.Carrier)
                 //.Where(x => x.Request.Status == ShippingRequestStatus.PrePrice && x.Request.IsTachyonDeal && x.Request.CarrierPriceType== CarrierPriceType.TachyonDirectRequest)
                 .WhereIf(IsEnabled(AppFeatures.Carrier), e => e.CarrirerTenantId == AbpSession.TenantId && (e.Request.Status == ShippingRequestStatus.PrePrice || e.Request.Status == ShippingRequestStatus.NeedsAction))
                 .WhereIf(IsEnabled(AppFeatures.TachyonDealer), e => e.TenantId == AbpSession.TenantId)
@@ -133,7 +133,7 @@ namespace TACHYON.Shipping.ShippingRequests.TachyonDealer
         public async Task CarrierSetPriceForDirectRequest(CarrirSetPriceForDirectRequestDto Input)
         {
             DisableTenancyFilters();
-            var Pricing = await _CarrierDirectPricingRepository.GetAllIncluding(r => r.Request,c=>c.Carrirer)
+            var Pricing = await _CarrierDirectPricingRepository.GetAllIncluding(r => r.Request,c=>c.Carrier)
                 .FirstOrDefaultAsync(x => x.Id == Input.Id &&
                 (x.Request.Status == ShippingRequestStatus.PrePrice || x.Request.Status == ShippingRequestStatus.NeedsAction) &&
                 x.Status == ShippingRequestsCarrierDirectPricingStatus.None &&
@@ -177,7 +177,7 @@ namespace TACHYON.Shipping.ShippingRequests.TachyonDealer
             if (Input.DirectRequestId.HasValue)
             {
                 var Pricing = await _CarrierDirectPricingRepository.GetAll()
-                    .Include(T => T.Carrirer)
+                    .Include(T => T.Carrier)
                     .Include(r => r.Request)
                     .FirstOrDefaultAsync
                     (

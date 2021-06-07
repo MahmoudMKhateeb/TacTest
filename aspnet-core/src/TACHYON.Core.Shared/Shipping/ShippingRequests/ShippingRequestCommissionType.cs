@@ -9,6 +9,8 @@ namespace TACHYON.Shipping.ShippingRequests
         [Description("CommissionPercentage")]
         Percentage=1,
         [Description("CommissionValue")]
-        Value =2
+        Value =2,
+        [Description("CommissionMinimumValue")]
+        MinValue = 3
     }
 }

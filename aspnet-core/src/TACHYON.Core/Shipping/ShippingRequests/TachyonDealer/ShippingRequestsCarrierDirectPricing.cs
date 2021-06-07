@@ -12,8 +12,9 @@ namespace TACHYON.Shipping.ShippingRequests.TachyonDealer
         [ForeignKey("TenantId")]
         public Tenant Tenant { get; set; }
         public int CarrirerTenantId { get; set; }
-        [ForeignKey("CarrirerTenantId")]
-        public Tenant Carrirer { get; set; }
+        [ForeignKey(nameof(CarrirerTenantId))]
+
+        public Tenant Carrier { get; set; }
 
         public long RequestId { get; set; }
 

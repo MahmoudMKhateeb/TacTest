@@ -627,7 +627,7 @@ namespace TACHYON.Notifications
                 )
             );
             notificationData["id"] = Pricing.RequestId;
-            notificationData["clientname"] = Pricing.Carrirer.companyName;
+            notificationData["clientname"] = Pricing.Carrier.companyName;
             var user = new UserIdentifier(Pricing.TenantId, Pricing.CreatorUserId.Value);
             await _notificationPublisher.PublishAsync(AppNotificationNames.DriectRequestCarrierRespone, notificationData, userIds: new[] { user });
         }
@@ -706,6 +706,8 @@ namespace TACHYON.Notifications
             }
             await _notificationPublisher.PublishAsync(AppNotificationNames.ShippingRequestSendOfferWhenAddPrice, notificationData, userIds: users.ToArray());
         }
+
+
         public async Task ShippingRequestSendOfferWhenUpdatePrice(ShippingRequestPricing offer,string carrier)
         {
             var notificationData = new LocalizableMessageNotificationData(
@@ -730,7 +732,24 @@ namespace TACHYON.Notifications
             await _notificationPublisher.PublishAsync(AppNotificationNames.ShippingRequestSendOfferWhenUpdatePrice, notificationData, userIds: users.ToArray());
         }
 
+        public async Task ShipperAcceptedOffers(ShippingRequestPricing offer, ShippingRequestPricing parentOffer)
+        {
+            var notificationData = new LocalizableMessageNotificationData(
+                                    new LocalizableString(L("ShipperAcceptedOffers"),
+                                    TACHYONConsts.LocalizationSourceName));
+            notificationData["offerid"] = offer.Id;
+            notificationData["id"] = offer.ShippingRequestId;
+            notificationData["shipper"] = offer.ShippingRequestFK.Tenant.companyName;
+            List<UserIdentifier> users = new List<UserIdentifier>();
+            users.Add(new UserIdentifier(offer.TenantId, offer.CreatorUserId.Value));
+            if (parentOffer !=null)
+            {
+                users.Add(new UserIdentifier(parentOffer.TenantId, parentOffer.CreatorUserId.Value));
+            }
 
+            await _notificationPublisher.PublishAsync(AppNotificationNames.ShipperAcceptedOffers, notificationData, userIds: users.ToArray());
+
+        }
         #endregion
         #endregion
 

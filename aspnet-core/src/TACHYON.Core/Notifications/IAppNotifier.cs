@@ -61,6 +61,8 @@ namespace TACHYON.Notifications
          Task ShippingRequestSendOfferWhenAddPrice(ShippingRequestPricing offer,string carrier);
          Task ShippingRequestSendOfferWhenUpdatePrice(ShippingRequestPricing offer,string carrier);
 
+        Task ShipperAcceptedOffers(ShippingRequestPricing offer, ShippingRequestPricing parentOffer);
+
         #endregion
         #endregion
         #endregion
