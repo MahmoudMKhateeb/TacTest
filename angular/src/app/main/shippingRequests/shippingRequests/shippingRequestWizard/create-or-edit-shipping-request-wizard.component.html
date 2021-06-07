@@ -16,7 +16,6 @@
             ></div>
           </div>
         </ng-container>
-
         <div class="card-header">
           <div class="card-title">
             <h3 class="card-label">
@@ -99,7 +98,11 @@
                           <label>{{ l('BiddingStartDate') }} <span class="required-fileds">*</span></label>
                           <div class="input-group date">
                             <input
+                              #name="ngModel"
+                              [(ngModel)]="shippingRequest.bidStartDate"
                               class="form-control"
+                              [class.is-invalid]="name.touched && !name.valid"
+                              [class.is-valid]="name.touched && name.valid"
                               placeholder="{{ l('BiddingstartDate') }}"
                               name="shippingrequestBidStratDate"
                               [required]="this.shippingRequestType == 'bidding'"
