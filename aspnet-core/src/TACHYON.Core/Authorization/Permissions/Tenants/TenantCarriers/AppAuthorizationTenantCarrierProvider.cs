@@ -1,23 +1,18 @@
-﻿using Abp.Authorization;
-using Abp.MultiTenancy;
-using System;
-using System.Collections.Generic;
-using System.Text;
+﻿//using Abp.Authorization;
+//using Abp.MultiTenancy;
 
-namespace TACHYON.Authorization.Permissions.Tenants.TenantCarriers
-{
-    public class AppAuthorizationTenantCarrierProvider : AppAuthorizationBaseProvider
-    {
-        public override void SetPermissions(IPermissionDefinitionContext context)
-        {
-            var pages = context.GetPermissionOrNull(AppPermissions.Pages) ?? context.CreatePermission(AppPermissions.Pages, L("Pages"));
+//namespace TACHYON.Authorization.Permissions.Tenants.TenantCarriers
+//{
+//    public class AppAuthorizationTenantCarrierProvider : AppAuthorizationBaseProvider
+//    {
+//        public override void SetPermissions(IPermissionDefinitionContext context)
+//        {
+//            var Tenants = context.GetPermissionOrNull(AppPermissions.Pages_Tenants) ?? context.CreatePermission(AppPermissions.Pages_Tenants, L("Tenants"));
 
-            var node = pages.CreateChildPermission(AppPermissions.Pages_ShippingRequestTrips, L("ShippingRequests"), multiTenancySides: MultiTenancySides.Host);
-            shippingRequestTrips.CreateChildPermission(AppPermissions.Pages_ShippingRequestTrips_Create, L("CreateNewShippingRequestTrip"), multiTenancySides: MultiTenancySides.Tenant);
-            shippingRequestTrips.CreateChildPermission(AppPermissions.Pages_ShippingRequestTrips_Edit, L("EditShippingRequestTrip"), multiTenancySides: MultiTenancySides.Tenant);
-            shippingRequestTrips.CreateChildPermission(AppPermissions.Pages_ShippingRequestTrips_Delete, L("DeleteShippingRequestTrip"), multiTenancySides: MultiTenancySides.Tenant);
-            shippingRequestTrips.CreateChildPermission(AppPermissions.Pages_ShippingRequestTrips_Acident_Cancel, L("CancelTrip"), multiTenancySides: MultiTenancySides.Tenant);
+//            var node = Tenants.CreateChildPermission(AppPermissions.Pages_TenantCarrier, L("TenantCarrier"), multiTenancySides: MultiTenancySides.Host);
+//            node.CreateChildPermission(AppPermissions.Pages_TenantCarrier_Create, L("Create"), multiTenancySides: MultiTenancySides.Host);
+//            node.CreateChildPermission(AppPermissions.Pages_TenantCarrier_Delete, L("Delete"), multiTenancySides: MultiTenancySides.Host);
 
-        }
-    }
-}
+//        }
+//    }
+//}

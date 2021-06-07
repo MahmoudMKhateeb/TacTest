@@ -353,6 +353,10 @@ namespace TACHYON.Authorization
             tenants.CreateChildPermission(AppPermissions.Pages_Tenants_Delete, L("DeletingTenant"), multiTenancySides: MultiTenancySides.Host);
             tenants.CreateChildPermission(AppPermissions.Pages_Tenants_Impersonation, L("LoginForTenants"), multiTenancySides: MultiTenancySides.Host);
 
+            var tenantCarrier = tenants.CreateChildPermission(AppPermissions.Pages_TenantCarrier, L("TenantCarrier"), multiTenancySides: MultiTenancySides.Host);
+            tenantCarrier.CreateChildPermission(AppPermissions.Pages_TenantCarrier_Create, L("TenantCarrierCreate"), multiTenancySides: MultiTenancySides.Host);
+            tenantCarrier.CreateChildPermission(AppPermissions.Pages_TenantCarrier_Delete, L("TenantCarrierDelete"), multiTenancySides: MultiTenancySides.Host);
+
             administration.CreateChildPermission(AppPermissions.Pages_Administration_Host_Settings, L("Settings"), multiTenancySides: MultiTenancySides.Host);
             administration.CreateChildPermission(AppPermissions.Pages_Administration_Host_Languages, L("Settings"), multiTenancySides: MultiTenancySides.Host);
             administration.CreateChildPermission(AppPermissions.Pages_Administration_Host_Maintenance, L("Maintenance"), multiTenancySides: _isMultiTenancyEnabled ? MultiTenancySides.Host : MultiTenancySides.Tenant);
