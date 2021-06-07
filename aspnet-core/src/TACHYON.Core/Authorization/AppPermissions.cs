@@ -371,7 +371,11 @@
         public const string Pages_Tenants_ChangeFeatures = "Pages.Tenants.ChangeFeatures";
         public const string Pages_Tenants_Delete = "Pages.Tenants.Delete";
         public const string Pages_Tenants_Impersonation = "Pages.Tenants.Impersonation";
-
+        #region TenantCarrier
+        public const string Pages_TenantCarrier = "Pages.TenantCarrier";
+        public const string Pages_TenantCarrier_Create = "Pages.TenantCarrier.Create";
+        public const string Pages_TenantCarrier_Delete = "Pages.TenantCarrier.Delete";
+        #endregion
         public const string Pages_Administration_Host_Maintenance = "Pages.Administration.Host.Maintenance";
         public const string Pages_Administration_Host_Settings = "Pages.Administration.Host.Settings";
         public const string Pages_Administration_Host_Dashboard = "Pages.Administration.Host.Dashboard";

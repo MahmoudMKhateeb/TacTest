@@ -233,7 +233,7 @@ namespace TACHYON.EntityFrameworkCore
         public DbSet<RoutePointReceiverReceiveShipmentCode> RoutePointReceiverReceiveShipmentCodes { get; set; }
         public virtual DbSet<RoutPointStatusTransition> RoutPointStatusTransitions { get; set; }
 
-        
+        public DbSet<TenantCarrier> TenantCarriers { get; set; }
 
         protected virtual bool CurrentIsCanceled => true;
         protected virtual bool IsCanceledFilterEnabled => CurrentUnitOfWorkProvider?.Current?.IsFilterEnabled("IHasIsCanceled") == true;
