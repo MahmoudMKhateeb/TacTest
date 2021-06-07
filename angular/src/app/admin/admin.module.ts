@@ -1,4 +1,4 @@
-﻿import { CommonModule } from '@angular/common';
+import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { AppCommonModule } from '@app/shared/common/app-common.module';
@@ -84,6 +84,8 @@ import { CreateTenantModalComponent } from './tenants/create-tenant-modal.compon
 import { EditTenantModalComponent } from './tenants/edit-tenant-modal.component';
 import { TenantFeaturesModalComponent } from './tenants/tenant-features-modal.component';
 import { TenantsComponent } from './tenants/tenants.component';
+import { TenantCarriersModel } from './tenants/tenantcarriers/tenant-carriers-model.component';
+import { CreateTenantCarriersModel } from './tenants/tenantcarriers/create-tenant-carriers-model.component';
 import { UiCustomizationComponent } from './ui-customization/ui-customization.component';
 import { DefaultThemeUiSettingsComponent } from './ui-customization/default-theme-ui-settings.component';
 import { Theme2ThemeUiSettingsComponent } from './ui-customization/theme2-theme-ui-settings.component';
@@ -217,6 +219,8 @@ const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
     LanguageTextsComponent,
     CreateOrEditLanguageModalComponent,
     TenantsComponent,
+    TenantCarriersModel,
+    CreateTenantCarriersModel,
     CreateTenantModalComponent,
     EditTenantModalComponent,
     TenantFeaturesModalComponent,

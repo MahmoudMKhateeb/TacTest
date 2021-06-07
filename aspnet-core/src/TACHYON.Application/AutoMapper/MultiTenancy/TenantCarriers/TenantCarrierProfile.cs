@@ -9,9 +9,8 @@ namespace TACHYON.AutoMapper.MultiTenancy.TenantCarriers
         public TenantCarrierProfile()
         {
             CreateMap<TenantCarrier, TenantCarriersListDto>()
-                    .ForMember(dst => dst.CarrierName, opt => opt.MapFrom(src => src.CarrierShipper.companyName));
-            CreateMap<CreateTenantCarrierInput, TenantCarrier>()
-                    .ForMember(dst => dst.TenantId, opt => opt.MapFrom(src => src.Id));
+                    .ForMember(dst => dst.CarrierName, opt => opt.MapFrom(src => src.CarrierShipper.Name));
+            CreateMap<CreateTenantCarrierInput, TenantCarrier>();
             
         }
     }

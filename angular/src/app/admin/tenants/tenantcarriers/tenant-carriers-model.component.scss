@@ -1,0 +1,11 @@
+::ng-deep .modal-backdrop.fade.in {
+  z-index: 999 !important;
+}
+
+::ng-deep .modal {
+  z-index: 1000 !important;
+}
+
+::ng-deep .dropdown-menu {
+  z-index: 1005 !important;
+}

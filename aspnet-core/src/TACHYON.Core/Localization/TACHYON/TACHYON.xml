@@ -180,6 +180,7 @@
     <text name="Carrier">Carrier</text>
     <text name="CarrierName">Carrier name</text>
     <text name="CarrierPrice">Carrier price</text>
+    <text name="Carriers">Carriers</text>
     <text name="CascadeImpersonationErrorMessage">Can not make cascade impersonation. This is already an impersonated login!</text>
     <text name="Category">Category</text>
     <text name="Change">Change</text>
@@ -279,7 +280,7 @@
     <text name="CountyDisplayName">Country</text>
     <text name="Create">Create</text>
     <text name="CreateAccident">Add incident</text>
-    <text name="CreateAccidentReason">Create accident reason</text>
+    <text name="CreateAccidentReason">Create incident reason</text>
     <text name="CreateAnAccount">Create account</text>
     <text name="CreateAppLocalization">Create app localization</text>
     <text name="CreateBidRequestNotificationMessage">Bid request is created</text>
@@ -587,7 +588,7 @@
     <text name="EditingEdition">Editing subscription type</text>
     <text name="EditingEntityDynamicParameters">Editing Entity Dynamic Parameters</text>
     <text name="EditingEntityDynamicParameterValue">Editing Entity Dynamic Parameter Value</text>
-    <text name="EditingLanguage">Editing Language</text>
+    <text name="EditingLanguage">Change Language</text>
     <text name="EditingRole">Editing role</text>
     <text name="EditingTenant">Editing company information</text>
     <text name="EditingUser">Editing user information</text>
@@ -1741,6 +1742,8 @@ code:{0}</text>
     <text name="TestEmailSettingsHeader">Test Email Settings</text>
     <text name="Text">Text</text>
     <text name="ThankYou">Thank you</text>
+    <text name="TheCarrierAlreadyAddToTheSipperSelected">The carrier already add to the sipper selected</text>
+    <text name="TheCarrierSelectedIsNotFound">The carrier selected is not found</text>
     <text name="TheKeyAlreadyExists">The key already exist</text>
     <text name="Theme_Default">Default</text>
     <text name="Theme_Theme1">Theme 1</text>
@@ -1770,6 +1773,7 @@ code:{0}</text>
     <text name="ThereIsNoSuchImageFileWithGivenToken">There is no image with given token</text>
     <text name="ThereIsNoTenantDefinedWithName{0}">There is no company defined with name {0}</text>
     <text name="ThereIsNoViewConfigurationForX">There is no view configuration for {0}</text>
+    <text name="TheShipperSelectedIsNotFound">The shipper selected is not found</text>
     <text name="TheShippingIsNotFound">The shipping is not found</text>
     <text name="ThisEditionIsUsedAsAnExpiringEdition">This edition is used as an expiring edition for another edition(s). If you want to make this edition paid, you should first remove it from other edition's.</text>
     <text name="ThisFieldIsRequired">This field is required.</text>

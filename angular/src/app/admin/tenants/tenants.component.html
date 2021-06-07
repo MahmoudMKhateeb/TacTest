@@ -180,6 +180,16 @@
                             </a>
                           </li>
                           <li>
+                            <a
+                              href="javascript:;"
+                              class="dropdown-item"
+                              *ngIf="isGranted('Pages.TenantCarrier') && record.editionId == 2"
+                              (click)="TenantCarriersModel.show(record.id)"
+                            >
+                              {{ 'Carriers' | localize }}
+                            </a>
+                          </li>
+                          <li>
                             <a href="javascript:;" class="dropdown-item" (click)="unlockUser(record)">{{ 'Unlock' | localize }}</a>
                           </li>
                           <li>
@@ -251,5 +261,6 @@
     <tenantFeaturesModal #tenantFeaturesModal></tenantFeaturesModal>
     <commonLookupModal #impersonateUserLookupModal (itemSelected)="impersonateUser($event)"></commonLookupModal>
     <entityTypeHistoryModal #entityTypeHistoryModal></entityTypeHistoryModal>
+    <tenant-carriers-model #TenantCarriersModel></tenant-carriers-model>
   </div>
 </div>
