@@ -206,7 +206,7 @@
 
                     <td *ngIf="feature.isEnabled('App.Shipper')" style="width: 150px;">
                       <span class="ui-column-title"> {{ l('ShippingRequestType') }}</span>
-                      {{ record.isTachyonDeal ?  l('TachyonManageService') : (record.isBid ?l('Marketplace') :"") }}
+                      {{ record.isTachyonDeal ? l('TachyonManageService') : record.isBid ? l('Marketplace') : '' }}
                     </td>
                     <td style="width: 150px;">
                       <span class="ui-column-title"> {{ l('RouteType') }}</span>
@@ -222,7 +222,7 @@
                     </td>
                     <td style="width: 150px;">
                       <span class="ui-column-title"> {{ l('TotalsTripsAddByShippier') }}</span>
-                      {{ record.totalsTripsAddByShippier }}
+                      {{ record.numberOfTrips }}
                     </td>
                     <td style="width: 150px;" *ngIf="feature.isEnabled('App.Shipper') || feature.isEnabled('App.TachyonDealer')">
                       <span class="ui-column-title"> {{ l('TotalBidsCount') }}</span>
