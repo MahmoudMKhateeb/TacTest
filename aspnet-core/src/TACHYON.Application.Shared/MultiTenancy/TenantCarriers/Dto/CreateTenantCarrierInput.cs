@@ -1,9 +1,8 @@
-﻿using Abp.Application.Services.Dto;
-
-namespace TACHYON.MultiTenancy.TenantCarriers.Dto
+﻿namespace TACHYON.MultiTenancy.TenantCarriers.Dto
 {
-    public class CreateTenantCarrierInput:EntityDto<int>
+    public class CreateTenantCarrierInput
     {
         public int CarrierTenantId { get; set; }
+        public int TenantId { get; set; }
     }
 }

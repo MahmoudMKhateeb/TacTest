@@ -17,10 +17,13 @@ namespace TACHYON.MultiTenancy.TenantCarriers
     public class TenantCarrierAppService : TACHYONAppServiceBase,ITenantCarrierAppService
     {
         private readonly IRepository<TenantCarrier,long> _tenantCarrierRepository;
+        private readonly IRepository<Tenant> _tenantRepository;
 
-        public TenantCarrierAppService(IRepository<TenantCarrier, long> tenantCarrierRepository)
+
+        public TenantCarrierAppService(IRepository<TenantCarrier, long> tenantCarrierRepository, IRepository<Tenant> tenantRepository)
         {
             _tenantCarrierRepository = tenantCarrierRepository;
+            _tenantRepository = tenantRepository;
         }
 
         public async Task<PagedResultDto<TenantCarriersListDto>> GetAll(GetAllForTenantCarrierInput input)
@@ -43,12 +46,21 @@ namespace TACHYON.MultiTenancy.TenantCarriers
         [AbpAuthorize(AppPermissions.Pages_TenantCarrier_Create)]
         public async Task Create(CreateTenantCarrierInput input)
         {
-            if (await _tenantCarrierRepository.GetAll().AnyAsync(x => x.TenantId == input.Id && x.CarrierTenantId == input.CarrierTenantId))
+            if (!await _tenantRepository.GetAll().AnyAsync(x=>x.Id== input.CarrierTenantId && x.Edition.DisplayName.ToLower()== TACHYONConsts.CarrierEdtionName))
+            {
+                throw new UserFriendlyException(L("TheCarrierSelectedIsNotFound"));
+            }
+            if (!await _tenantRepository.GetAll().AnyAsync(x => x.Id == input.TenantId && x.Edition.DisplayName.ToLower() == TACHYONConsts.ShipperEdtionName))
+            {
+                throw new UserFriendlyException(L("TheShipperSelectedIsNotFound"));
+            }
+            if (await _tenantCarrierRepository.GetAll().AnyAsync(x => x.TenantId == input.TenantId && x.CarrierTenantId == input.CarrierTenantId))
             {
                 throw new UserFriendlyException(L("TheCarrierAlreadyAddToTheSipperSelected"));
             }
 
-          await  _tenantCarrierRepository.InsertAsync(ObjectMapper.Map<TenantCarrier>(input));
+            TenantCarrier tenantCarrier = ObjectMapper.Map<TenantCarrier>(input);
+            await  _tenantCarrierRepository.InsertAsync(tenantCarrier);
         }
         [AbpAuthorize(AppPermissions.Pages_TenantCarrier_Delete)]
         public async Task Delete(EntityDto input)

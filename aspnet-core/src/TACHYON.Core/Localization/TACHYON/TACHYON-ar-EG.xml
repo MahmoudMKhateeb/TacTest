@@ -156,6 +156,7 @@
     <text name="Captha_Hint">الرجاء إدخال الرمز الذي يظهر في الصورة أدناه</text>
     <text name="Carrier">ناقل</text>
     <text name="CarrierName">اسم الناقل</text>
+    <text name="Carriers">الناقلين</text>
     <text name="CascadeImpersonationErrorMessage">لايمكن ثمتيل شخص آخر. لان تسجيل دخولك الحالي ممثّل من قبل مستخدم آخر.</text>
     <text name="Category">التصنيف</text>
     <text name="Change">تغيير</text>
@@ -249,6 +250,7 @@
     <text name="CountyDisplayName">الدولة</text>
     <text name="Create">إنشاء</text>
     <text name="CreateAccident">إضافة حادث</text>
+    <text name="CreateAccidentReason">إضافة سبب جديد</text>
     <text name="CreateAnAccount">إنشاء حساب</text>
     <text name="CreatedAtByUser"><![CDATA[تم الإنشاء في <b> {0} </ b> بواسطة <b> {1} </ b>]]></text>
     <text name="CreatedSuccessfully">تم الانشاء بنجاح</text>
@@ -535,7 +537,7 @@
     <text name="EditingEdition">جاري تعديل نوع الاشتراك</text>
     <text name="EditingEntityDynamicParameters">تحرير المعلمات الديناميكية للكيان</text>
     <text name="EditingEntityDynamicParameterValue">تحرير قيمة المعلمة الديناميكية للكيان</text>
-    <text name="EditingLanguage">جاري تعديل اللغة</text>
+    <text name="EditingLanguage">تعديل اللغة</text>
     <text name="EditingRole">جاري تعديل الدور</text>
     <text name="EditingTenant">جاري تعديل معلومات الشركة</text>
     <text name="EditingUser">جاري تعديل معلومات المستخدم</text>
@@ -1561,6 +1563,8 @@
     <text name="TestEmailSentSuccessfully">تم إرسال بريد التجربة بنجاح.</text>
     <text name="TestEmailSettingsHeader">تجربة إعدادات البريد الإلكتروني</text>
     <text name="ThankYou">شكراَ لك</text>
+    <text name="TheCarrierAlreadyAddToTheSipperSelected">لقد تمت إضافة الناقل مع الشاحن المحدد مسبقاً</text>
+    <text name="TheCarrierSelectedIsNotFound">الناقل المحدد من القائمه غير موجود</text>
     <text name="TheKeyAlreadyExists">المفتاح مدخل مسبقاً</text>
     <text name="Theme_Default">إفتراضي</text>
     <text name="Theme_Theme1">تصميم  1</text>
@@ -1590,6 +1594,7 @@
     <text name="ThereIsNoSuchImageFileWithGivenToken">لم نعثر على صورة بالرمز المطلوب</text>
     <text name="ThereIsNoTenantDefinedWithName{0}">لا يوجد شركة  باسم {0}</text>
     <text name="ThereIsNoViewConfigurationForX">لا توجد إعدادات العرض لـ {0}</text>
+    <text name="TheShipperSelectedIsNotFound">الشاحن المحدد غير موجود</text>
     <text name="TheShippingIsNotFound">الشحنة غير متوفره</text>
     <text name="ThisEditionIsUsedAsAnExpiringEdition">يتم استخدام هذه النسخة كنسخة تنتهي صلاحيتها لنسخة أخرى. إذا كنت تريد جعل هذه النسخة مدفوعة، يجب عليك أولا إزالتها من النسخ الأخرى.</text>
     <text name="ThisFieldIsRequired">هذا الحقل مطلوب</text>
