@@ -222,7 +222,7 @@
                     </td>
                     <td style="width: 150px;">
                       <span class="ui-column-title"> {{ l('TotalsTripsAddByShippier') }}</span>
-                      {{ record.totalsTripsAddByShippier }}
+                      {{ record.numberOfTrips }}
                     </td>
                     <td style="width: 150px;" *ngIf="feature.isEnabled('App.Shipper') || feature.isEnabled('App.TachyonDealer')">
                       <span class="ui-column-title"> {{ l('TotalBidsCount') }}</span>
