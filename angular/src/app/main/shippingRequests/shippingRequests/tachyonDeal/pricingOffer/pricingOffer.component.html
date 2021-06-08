@@ -95,15 +95,16 @@
                         >{{ l('delete') }}</a
                       >
                     </li>
-                      <li>
-                          <a
-                              class="dropdown-item"
-                              *ngIf="feature.isEnabled('App.TachyonDealer') && (record.tachyonPriceOfferDto.offerStatusName == 'Pending' || record.tachyonPriceOfferDto.offerStatusName == 'AcceptedAndWaitingForCarrier')"
-                              (click)="tachyonDealerResponceModel.show(record.tachyonPriceOfferDto.id,undefined, record.tachyonPriceOfferDto.requestId, undefined)"
-                          >{{ l('edit') }}</a
-                          >
-                      </li>
-
+                    <li>
+                      <a
+                        class="dropdown-item"
+                        *ngIf="feature.isEnabled('App.TachyonDealer') && record.tachyonPriceOfferDto.offerStatusName == 'Pending'"
+                        (click)="
+                          tachyonDealerResponceModel.show(record.tachyonPriceOfferDto.id, undefined, record.tachyonPriceOfferDto.requestId, undefined)
+                        "
+                        >{{ l('edit') }}</a
+                      >
+                    </li>
                   </ul>
                 </div>
               </td>
