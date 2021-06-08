@@ -15,8 +15,8 @@ import { Table } from '@node_modules/primeng/table';
 import { filter } from '@node_modules/rxjs/internal/operators';
 import { DOCUMENT } from '@angular/common';
 import { PricingOfferComponent } from '@app/main/shippingRequests/shippingRequests/tachyonDeal/pricingOffer/pricingOffer.component';
-import { ViewCapacityModalComponent } from '@app/main/truckCapacities/capacities/view-capacity-modal.component';
 import { GetAllDirectRequestsTableComponent } from '@app/main/shippingRequests/shippingRequests/directShippingRequest/getAllDirectRequestsTable.component';
+import { SendDirectRequestModalComponent } from '@app/main/shippingRequests/shippingRequests/directShippingRequest/sendDirectRequestsModal/sendDirectRequestModal.component';
 @Component({
   templateUrl: './view-shippingRequest.component.html',
   styleUrls: ['./view-shippingRequest.component.scss'],
@@ -151,5 +151,16 @@ export class ViewShippingRequestComponent extends AppComponentBase implements On
       return false;
     }
     return true;
+  }
+
+  /**
+   * this function scrolls to a the direct Requests table and opens up the Send Direct Requests Modal for Tachyon Dealer
+   */
+  scrollToDirectRequests() {
+    let el = document.getElementById('directRequests');
+    el.scrollIntoView({ behavior: 'smooth', block: 'center', inline: 'center' });
+    setTimeout(() => {
+      this.GetAllDirectRequestsTable.sendDirectRequestsModal.show();
+    }, 1000);
   }
 }
