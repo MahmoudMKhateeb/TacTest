@@ -119,6 +119,30 @@
             </div>
           </div>
 
+          <div class="col-lg-6">
+            <div class="form-check">
+              <label class="checkbox">
+                <input type="checkbox" [(ngModel)]="trip.needsDeliveryNote" />
+                <span> </span>{{ l('NeedDeliveryNote') }}</label
+              >
+
+              <!--              <input id="NeedDeliveryNote" [(ngModel)]="trip.needsDeliveryNote" type="checkbox" class="form-check-input" />-->
+              <!--              &lt;!&ndash;              <label>{{ l('NeedDeliveryNote') }}<span class="required-fileds">*</span></label>&ndash;&gt;-->
+              <!--              <label class="form-check-label" for="NeedDeliveryNote">{{ l('NeedDeliveryNote') }}</label>-->
+            </div>
+          </div>
+
+          <div class="col-lg-6">
+            <div class="form-check">
+              <label class="checkbox">
+                <input type="checkbox" [(ngModel)]="trip.hasAttachment" name="Checkboxes4" />
+                <span> </span>{{ l('HasAttachment') }}</label
+              >
+              <!--              <input id="HasAttachment" type="checkbox" [(ngModel)]="trip.hasAttachment" class="form-check-input" />-->
+              <!--              <label class="form-check-label" for="HasAttachment">{{ l('HasAttachment') }}</label>-->
+            </div>
+          </div>
+
           <!--      end:Vas's      -->
           <!--  start:: RouteSteps -->
           <PointsComponent

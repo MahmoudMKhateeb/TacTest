@@ -16,7 +16,8 @@ namespace TACHYON.Shipping.Trips.Dto
         public string Status { get; set; }
         public long? AssignedDriverUserId { get; set; }
         public long? AssignedTruckId { get; set; }
-
+        public bool HasAttachment { get; set; }
+        public bool NeedsDeliveryNote { get; set; }
         public string Driver { get; set; }
         public string Truck { get; set; }
         public string OriginFacility { get; set; }
