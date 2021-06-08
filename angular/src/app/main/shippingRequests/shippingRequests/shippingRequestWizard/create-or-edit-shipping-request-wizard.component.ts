@@ -196,6 +196,35 @@ export class CreateOrEditShippingRequestWizardComponent extends AppComponentBase
     // });
   }
 
+  trucksTypeSelectChange(trucksTypeId?: number) {
+    if (trucksTypeId > 0) {
+      this.capacityLoading = true;
+      this._shippingRequestsServiceProxy.getAllTuckCapacitiesByTuckTypeIdForDropdown(trucksTypeId).subscribe((result) => {
+        this.allCapacities = result;
+        this.shippingRequest.capacityId = null;
+        this.capacityLoading = false;
+      });
+    } else {
+      this.shippingRequest.capacityId = null;
+      this.allCapacities = null;
+    }
+  }
+
+  transportTypeSelectChange(transportTypeId?: number) {
+    if (transportTypeId > 0) {
+      this.truckTypeLoading = true;
+      this._shippingRequestsServiceProxy.getAllTruckTypesByTransportTypeIdForDropdown(transportTypeId).subscribe((result) => {
+        this.allTrucksTypes = result;
+        this.shippingRequest.trucksTypeId = null;
+        this.truckTypeLoading = false;
+      });
+    } else {
+      this.shippingRequest.trucksTypeId = null;
+      this.allTrucksTypes = null;
+      this.allCapacities = null;
+    }
+  }
+
   /**
    * resets the bidding start and end dates
    */
