@@ -45,6 +45,7 @@ export class CreateOrEditTripComponent extends AppComponentBase implements OnIni
   facilityLoading = false;
   saving = false;
   loading = true;
+  active = false;
   routePointsFromChild: CreateOrEditRoutPointDto[];
 
   constructor(
@@ -85,16 +86,16 @@ export class CreateOrEditTripComponent extends AppComponentBase implements OnIni
       });
     } else {
       //this is a create
+      this.trip = new CreateOrEditShippingRequestTripDto();
       this.loading = false;
       this.trip.shippingRequestId = this.shippingRequest.id;
     }
-    //show
+    this.active = true;
     this.modal.show();
   }
   close(): void {
-    this.trip = new CreateOrEditShippingRequestTripDto();
-    this.PointsComponent.wayPointsList = [];
     this.loading = true;
+    this.active = false;
     this.modal.hide();
   }
 
