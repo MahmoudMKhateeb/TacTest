@@ -25,11 +25,26 @@ import { appModuleAnimation } from '@shared/animations/routerTransition';
 import { BreadcrumbItem } from '@app/shared/common/sub-header/sub-header.component';
 import { MapsAPILoader } from '@node_modules/@agm/core';
 import { EnumToArrayPipe } from '@shared/common/pipes/enum-to-array.pipe';
+import { animate, state, style, transition, trigger } from '@angular/animations';
 
 @Component({
   templateUrl: './create-or-edit-shipping-request-wizard.component.html',
   styleUrls: ['./create-or-edit-shipping-request-wizard.component.scss'],
-  animations: [appModuleAnimation()],
+  animations: [
+    appModuleAnimation(),
+    trigger('grow', [
+      // Note the trigger name
+      transition(':enter', [
+        // :enter is alias to 'void => *'
+        style({ height: '0', overflow: 'hidden' }),
+        animate(300, style({ height: '*' })),
+      ]),
+      transition(':leave', [
+        // :leave is alias to '* => void'
+        animate(200, style({ height: 0, overflow: 'hidden' })),
+      ]),
+    ]),
+  ],
   providers: [EnumToArrayPipe],
 })
 export class CreateOrEditShippingRequestWizardComponent extends AppComponentBase implements OnDestroy, AfterViewInit, OnInit {
@@ -100,6 +115,7 @@ export class CreateOrEditShippingRequestWizardComponent extends AppComponentBase
   };
   submitted = false;
   wizard: any;
+  biddingDateRangeTest: Date[];
 
   ngOnInit() {
     this.loadAllDropDownLists();
@@ -249,5 +265,9 @@ export class CreateOrEditShippingRequestWizardComponent extends AppComponentBase
     if (this.shippingRequest.endTripDate < this.shippingRequest.startTripDate) {
       this.shippingRequest.endTripDate = undefined;
     }
+  }
+
+  logDate() {
+    console.log(this.biddingDateRangeTest[0]);
   }
 }
