@@ -1,184 +1,549 @@
-@import url('https://fonts.googleapis.com/css?family=Oswald');
+/* this style for basic template */
 
-* {
-  margin: 0;
-  padding: 0;
-  border: 0;
-  box-sizing: border-box;
+html[dir='rtl'] * {
+  direction: rtl;
 }
 
-body {
-  background-color: #dadde6;
-  font-family: arial;
+.tachyon-all {
+  width: 100%;
+  height: 100vh;
+  background-color: rgb(255, 255, 255);
+  display: flex;
 }
 
-.fl-left {
-  float: left;
+.tachyon-aside {
+  flex: 0 0 265px;
+  max-width: 265px;
+  background-color: #dfdfdf;
 }
 
-.fl-right {
-  float: right;
+.tachyon-content {
+  flex: 1 0 auto;
+  max-width: calc(100% - 265px);
+  background-color: #e8e9f2;
 }
 
-.container {
-  width: 90%;
-  margin: 100px auto !important;
+.tachyon-content .tachyon-header {
+  height: 119px;
+  background-color: #d4d4d4;
 }
 
-h1 {
-  text-transform: uppercase;
-  font-weight: 900;
-  border-left: 10px solid #fec500;
-  padding-left: 10px;
-  margin-bottom: 30px;
+.tachyon-body {
+  height: calc(100% - 119px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
-.row {
-  overflow: hidden;
-}
-
-.card {
-  display: table-row;
-  width: 49%;
+.tachyon-content-body {
+  padding: 15px 0;
+  flex: 0 0 calc(100% - 50px);
+  max-width: calc(100% - 50px);
+  height: calc(100% - 50px);
   background-color: #fff;
-  color: #989898;
-  margin-bottom: 10px !important;
-  font-family: 'Oswald', sans-serif;
-  text-transform: uppercase;
+  overflow: auto;
+}
+
+@media (min-width: 0.1px) and (max-width: 991.9px) {
+  .tachyon-aside {
+    flex: 0 0 0;
+    max-width: unset;
+    background-color: #dfdfdf;
+  }
+
+  .tachyon-content {
+    max-width: 100%;
+  }
+
+  .tachyon-content .tachyon-header {
+    height: 104px;
+  }
+
+  .tachyon-body {
+    height: calc(100% - 104px);
+  }
+
+  .tachyon-content-body {
+    flex: 0 0 calc(100% - 30px);
+    max-width: calc(100% - 30px);
+    height: calc(100% - 30px);
+    background-color: #fff;
+  }
+}
+
+/* the real style start from here */
+
+.shipCard {
   border-radius: 4px;
+  -webkit-border-radius: 4px;
+  -moz-border-radius: 4px;
+  -ms-border-radius: 4px;
+  -o-border-radius: 4px;
+  border: 1px solid #e1e1e1;
+  background-color: #ffffff;
+  padding: 20px;
+}
+
+.shipCardGray {
+  background-color: #fafafa;
+}
+
+.shipCardBlue {
+  background-color: #f3f8fc;
+}
+
+.shipCard.tachyonDialer {
   position: relative;
 }
 
-.card + .card {
-  margin-left: 2%;
-}
-
-.date {
-  display: table-cell;
-  width: 25%;
-  position: relative;
-  text-align: center;
-  border-right: 2px dashed #dadde6;
-}
-
-/*.date:before,
-    .date:after {
-        content: "";
-        display: block;
-        width: 30px;
-        height: 30px;
-        background-color: #DADDE6;
-        position: absolute;
-        top: -15px;
-        right: -15px;
-        z-index: 1;
-        border-radius: 50%
-    }
-
-    .date:after {
-        top: auto;
-        bottom: -15px
-    }
-        */
-.date time {
-  display: block;
+.shipCard.tachyonDialer img.markTachyon {
   position: absolute;
-  top: 50% !important;
-  left: 50% !important;
-  -webkit-transform: translate(-50%, -50%);
-  -ms-transform: translate(-50%, -50%);
-  transform: translate(-50%, -50%);
+  right: 26px;
+  width: 26px;
+  top: -6px;
 }
 
-.date time span {
-  display: block;
+html[dir='rtl'] .shipCard.tachyonDialer img.markTachyon {
+  position: absolute;
+  right: unset;
+  left: 26px;
+  width: 26px;
+  top: -6px;
+  transform: rotateY(180deg);
 }
 
-.date time span:first-child {
-  color: #2b2b2b;
-  font-weight: 600;
-  font-size: 250%;
+.shipCard:not(.tachyonDialer) img.markTachyon {
+  display: none;
 }
 
-.date time span:last-child {
-  text-transform: uppercase;
-  font-weight: 600;
-  margin-top: -10px;
+.shipCard > div {
+  display: flex;
 }
 
-.card-cont {
-  display: table-cell;
-  width: 75%;
-  font-size: 85%;
-  padding: 10px 10px 30px 50px;
+.shipCard .infoBasic {
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
 }
 
-.card-cont h3 {
-  color: #3c3c3c;
-  font-size: 130%;
+.shipCard .infoBasic .companyName {
+  font-size: 18px;
+  color: #707070;
+  font-weight: 500;
+  margin-right: 15px;
 }
 
-.card-cont > div {
-  display: table-row;
+html[dir='rtl'] .shipCard .infoBasic .companyName {
+  margin-right: unset;
+  margin-left: 15px;
 }
 
-.card-cont .even-date i,
-.card-cont .even-info i,
-.card-cont .even-date time,
-.card-cont .even-info p {
-  display: table-cell;
+.shipCard.tachyonDialer .infoBasic .companyName {
+  color: #d82631;
 }
 
-.card-cont .even-date i,
-.card-cont .even-info i {
-  padding: 5% 5% 0 0;
+.shipCard .infoBasic .remainingTime {
+  line-height: normal;
+  color: #92a1b1;
+  font-size: 18px;
+  margin: 10px 0;
 }
 
-.card-cont .even-info p {
-  padding: 30px 50px 0 0;
-}
-
-.card-cont .even-date time span {
-  display: block;
-}
-
-.card-cont a {
-  display: block;
-  text-decoration: none;
-  width: 80px;
-  height: 30px;
-  background-color: #d8dde0;
+.shipCard .infoBasic .remainingTime b {
+  font-size: 24px;
   color: #fff;
-  text-align: center;
-  line-height: 30px;
-  border-radius: 2px;
+  background-color: #d82631;
+  display: inline-flex;
+  padding: 3px;
+  border-radius: 4px;
+  -webkit-border-radius: 4px;
+  -moz-border-radius: 4px;
+  -ms-border-radius: 4px;
+  -o-border-radius: 4px;
+}
+
+.shipCard .detailsRoad {
+  flex-wrap: wrap;
+  position: relative;
+  padding-left: 15px;
+}
+
+html[dir='rtl'] .shipCard .detailsRoad {
+  padding-left: unset;
+  padding-right: 15px;
+  text-align: right;
+}
+
+.shipCard .detailsRoad::before {
+  content: '';
   position: absolute;
-  right: 10px !important;
-  bottom: 10px !important;
+  left: -3px;
+  top: 6px;
+  width: 16px;
+  height: 100%;
+  background-repeat: no-repeat;
+  background-image: url('/assets/custom/imgs/iconRoad.png');
+  background-size: 11px calc(100% - 31px);
 }
 
-.row:last-child .card:first-child .card-cont a {
-  background-color: #037fdd;
+html[dir='rtl'] .shipCard .detailsRoad::before {
+  left: unset;
+  right: -6px;
 }
 
-.row:last-child .card:last-child .card-cont a {
-  background-color: #f8504c;
+.shipCard .detailsRoad > div {
+  flex: 0 0 100%;
+  max-width: 100%;
 }
 
-@media screen and (max-width: 860px) {
-  .card {
-    display: block;
-    float: none;
-    width: 100%;
-    margin-bottom: 10px !important;
+.shipCard .detailsRoad > div:nth-child(1) {
+  margin-bottom: 18px;
+}
+
+.shipCard .detailsRoad p {
+  margin-bottom: 0;
+  font-size: 14px;
+  color: #92a1b1;
+}
+
+.shipCard .detailsRoad p:nth-child(1) {
+  margin-bottom: 3px;
+  color: #d82631;
+}
+
+.shipCard .divirCard {
+  width: 100%;
+  margin: 15px 0;
+  height: 1px;
+  background-color: #e1e1e1;
+}
+
+.shipCard .moreDetails {
+  white-space: nowrap;
+  flex-wrap: wrap;
+  margin-bottom: 15px;
+}
+
+.shipCard .moreDetails > div {
+  margin-right: 25px;
+}
+
+html[dir='rtl'] .shipCard .moreDetails > div {
+  margin-right: unset;
+  margin-left: 25px;
+}
+
+.shipCard .moreDetails > div:last-of-type {
+  margin: 0 !important;
+}
+
+.shipCard .moreDetails > div p:nth-child(1) {
+  font-size: 12px;
+  color: #92a1b1;
+  display: flex;
+  align-items: center;
+  margin-bottom: 5px;
+}
+
+.shipCard .moreDetails > div p:nth-child(1) i {
+  font-size: 16px;
+  margin-right: 5px;
+}
+
+html[dir='rtl'] .shipCard .moreDetails > div p:nth-child(1) i {
+  margin-right: unset;
+  margin-left: 5px;
+}
+
+.shipCard .moreDetails > div p:nth-child(1) img {
+  width: 16px;
+  margin-right: 5px;
+}
+
+html[dir='rtl'] .shipCard .moreDetails > div p:nth-child(1) img {
+  margin-right: unset;
+  margin-left: 5px;
+}
+
+.shipCard .moreDetails > div p:nth-child(2) {
+  font-size: 14px;
+  font-weight: 500;
+  color: #000;
+  margin-bottom: 15px;
+}
+
+html[dir='rtl'] .shipCard .moreDetails > div p:nth-child(2) {
+  text-align: right;
+}
+
+.shipCard .driverName .userDriver {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  -webkit-border-radius: 50%;
+  -moz-border-radius: 50%;
+  -ms-border-radius: 50%;
+  -o-border-radius: 50%;
+}
+
+.shipCard .actionsShip {
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  white-space: nowrap;
+}
+
+.shipCard .infoHighLight {
+  font-size: 12px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 3px 15px;
+  border-radius: 50px;
+  -webkit-border-radius: 50px;
+  -moz-border-radius: 50px;
+  -ms-border-radius: 50px;
+  -o-border-radius: 50px;
+}
+
+.shipCard .infoHighLight:hover {
+  text-decoration: none;
+}
+
+.shipCard .infoHighLight.green {
+  background-color: #cef1cd;
+  color: #0bb805;
+}
+
+.shipCard .infoHighLight.red {
+  background-color: #f3cfd1;
+  color: #d82631;
+}
+
+.shipCard .infoHighLight.blue {
+  background-color: #c3dcf6;
+  color: #0069d9;
+}
+
+.shipCard .actionsShip > div:nth-child(1) {
+  margin-right: 15px;
+}
+
+html[dir='rtl'] .shipCard .actionsShip > div:nth-child(1) {
+  margin-right: unset;
+  margin-left: 15px;
+}
+
+.shipCard .actionsShip .actions {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.shipCard .actions a {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 8px 12px;
+  font-size: 15px;
+  font-weight: 500;
+  color: #fff;
+  border-radius: 4px;
+  -webkit-border-radius: 4px;
+  -moz-border-radius: 4px;
+  -ms-border-radius: 4px;
+  -o-border-radius: 4px;
+  margin: 10px 12px 10px 0;
+}
+
+html[dir='rtl'] .shipCard .actions a {
+  margin: 10px 0 10px 12px;
+}
+
+.shipCard .actions a:hover {
+  text-decoration: none;
+}
+
+.shipCard .actions a:last-of-type {
+  margin-right: 0;
+}
+
+html[dir='rtl'] .shipCard .actions a:last-of-type {
+  margin-right: unset;
+  margin-left: 0;
+}
+
+.shipCard .actions a.blue {
+  background-color: #0069d9;
+}
+
+.shipCard .actions a.green {
+  background-color: #218838;
+}
+
+.shipCard .actions a.red {
+  background-color: #d82631;
+}
+
+@media (min-width: 0.1) and (max-width: 575.9px) {
+  .shipCard {
+    padding: 13px;
   }
 
-  .card + .card {
-    margin-left: 0 !important;
+  .shipCard .infoBasic .companyName {
+    font-size: 16px;
   }
 
-  .card-cont .even-date,
-  .card-cont .even-info {
-    font-size: 75%;
+  .shipCard .infoBasic .remainingTime b {
+    font-size: 19px;
+  }
+
+  .shipCard .moreDetails > div p:nth-child(1) {
+    font-size: 11px;
+  }
+
+  .shipCard .moreDetails > div p:nth-child(2) {
+    font-size: 13px;
+  }
+
+  .shipCard .moreDetails {
+    margin-bottom: 10px;
+  }
+
+  .shipCard .actions a {
+    padding: 5px 8px;
+    font-size: 13px;
+    margin: 6px 6px 6px 0;
+  }
+
+  html[dir='rtl'] .shipCard .actions a {
+    margin: 6px 0 6px 6px;
+  }
+}
+
+@media (min-width: 576px) and (max-width: 767.9px) {
+  .shipCard {
+    padding: 15px;
+  }
+
+  .shipCard .infoBasic .companyName {
+    font-size: 17px;
+  }
+
+  .shipCard .infoBasic .remainingTime b {
+    font-size: 20px;
+  }
+
+  .shipCard .moreDetails > div p:nth-child(1) {
+    font-size: 11px;
+  }
+
+  .shipCard .moreDetails > div p:nth-child(2) {
+    font-size: 13px;
+  }
+
+  .shipCard .moreDetails {
+    margin-bottom: 10px;
+  }
+
+  .shipCard .actions a {
+    padding: 6px 8px;
+    font-size: 13px;
+    margin: 6px 6px 6px 0;
+  }
+
+  html[dir='rtl'] .shipCard .actions a {
+    margin: 6px 0 6px 6px;
+  }
+}
+
+@media (min-width: 768px) and (max-width: 991.9px) {
+  .shipCard {
+    padding: 15px;
+  }
+
+  .shipCard .infoBasic .remainingTime b {
+    font-size: 22px;
+  }
+
+  .shipCard .actions a {
+    padding: 6px 10px;
+    font-size: 14px;
+    margin: 6px 6px 6px 0;
+  }
+
+  html[dir='rtl'] .shipCard .actions a {
+    margin: 6px 0 6px 6px;
+  }
+}
+
+@media (min-width: 992px) and (max-width: 1199.9px) {
+  .shipCard {
+    padding: 15px;
+  }
+
+  .shipCard .actions a {
+    padding: 8px 10px;
+    font-size: 15px;
+    margin: 6px 6px 6px 0;
+  }
+
+  html[dir='rtl'] .shipCard .actions a {
+    padding: 8px 10px;
+    font-size: 15px;
+    margin: 6px 0 6px 6px;
+  }
+}
+
+/* style loading */
+
+.loadingRow > span {
+  display: inline-block;
+  border: 5px solid #e1e1e1;
+  border-radius: 50%;
+  border-top: 5px solid #d82631;
+  width: 66px;
+  height: 66px;
+  animation: spin 1.1s linear infinite;
+  -webkit-animation: spin 1.1s linear infinite;
+}
+
+html[dir='rtl'] .loadingRow > span {
+  animation: spin2 1.1s linear infinite;
+  -webkit-animation: spin2 1.1s linear infinite;
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+    -webkit-transform: rotate(0deg);
+    -moz-transform: rotate(0deg);
+    -ms-transform: rotate(0deg);
+    -o-transform: rotate(0deg);
+  }
+
+  100% {
+    transform: rotate(360deg);
+    -webkit-transform: rotate(360deg);
+    -moz-transform: rotate(360deg);
+    -ms-transform: rotate(360deg);
+    -o-transform: rotate(360deg);
+  }
+}
+
+@keyframes spin2 {
+  0% {
+    transform: rotate(360deg);
+    -webkit-transform: rotate(360deg);
+    -moz-transform: rotate(360deg);
+    -ms-transform: rotate(360deg);
+    -o-transform: rotate(360deg);
+  }
+
+  100% {
+    transform: rotate(0deg);
+    -webkit-transform: rotate(0deg);
+    -moz-transform: rotate(0deg);
+    -ms-transform: rotate(0deg);
+    -o-transform: rotate(0deg);
   }
 }

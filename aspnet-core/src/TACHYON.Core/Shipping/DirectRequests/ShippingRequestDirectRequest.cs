@@ -1,13 +1,10 @@
 ﻿using Abp.Domain.Entities;
 using Abp.Domain.Entities.Auditing;
-using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Text;
 using TACHYON.MultiTenancy;
 using TACHYON.Shipping.ShippingRequests;
 
-namespace TACHYON.Shipping
+namespace TACHYON.Shipping.DirectRequests
 {
     [Table("ShippingRequestDirectRequests")]
 
@@ -31,5 +28,6 @@ namespace TACHYON.Shipping
         public ShippingRequestDirectRequestStatus Status { get; set; }
 
         public string RejetcReason { get; set; }
+
     }
 }

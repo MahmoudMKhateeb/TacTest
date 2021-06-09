@@ -40,7 +40,7 @@ export class MarketPlaceListComponent extends AppComponentBase implements OnInit
       this.toDate = null;
     }
 
-    this._CurrentServ.getAll(undefined, 0, 2).subscribe((result) => {
+    this._CurrentServ.getAll(undefined, 0, 10).subscribe((result) => {
       this.IsStartSearch = true;
       this.Marketplaces = result.items;
       console.log(result.items);

@@ -10,6 +10,7 @@ using TACHYON.Documents.DocumentFiles;
 using TACHYON.Invoices;
 using TACHYON.Invoices.Groups;
 using TACHYON.MultiTenancy;
+using TACHYON.PriceOffers;
 using TACHYON.Shipping.ShippingRequests;
 using TACHYON.Shipping.ShippingRequests.TachyonDealer;
 using TACHYON.Shipping.ShippingRequestTrips;
@@ -682,7 +683,7 @@ namespace TACHYON.Notifications
 
         #region ShippingRequest
         #region Offers
-        public async Task ShippingRequestSendOfferWhenAddPrice(ShippingRequestPricing offer,string carrier)
+        public async Task ShippingRequestSendOfferWhenAddPrice(PriceOffer offer,string carrier)
         {
             var notificationData = new LocalizableMessageNotificationData(
                 new LocalizableString(
@@ -708,7 +709,7 @@ namespace TACHYON.Notifications
         }
 
 
-        public async Task ShippingRequestSendOfferWhenUpdatePrice(ShippingRequestPricing offer,string carrier)
+        public async Task ShippingRequestSendOfferWhenUpdatePrice(PriceOffer offer,string carrier)
         {
             var notificationData = new LocalizableMessageNotificationData(
                 new LocalizableString(
@@ -732,14 +733,14 @@ namespace TACHYON.Notifications
             await _notificationPublisher.PublishAsync(AppNotificationNames.ShippingRequestSendOfferWhenUpdatePrice, notificationData, userIds: users.ToArray());
         }
 
-        public async Task ShipperAcceptedOffers(ShippingRequestPricing offer, ShippingRequestPricing parentOffer)
+        public async Task ShipperAcceptedOffers(PriceOffer offer, PriceOffer parentOffer)
         {
             var notificationData = new LocalizableMessageNotificationData(
                                     new LocalizableString(L("ShipperAcceptedOffers"),
                                     TACHYONConsts.LocalizationSourceName));
             notificationData["offerid"] = offer.Id;
             notificationData["id"] = offer.ShippingRequestId;
-            notificationData["shipper"] = offer.ShippingRequestFK.Tenant.companyName;
+            notificationData["shipper"] = offer.ShippingRequestFK.Tenant.Name;
             List<UserIdentifier> users = new List<UserIdentifier>();
             users.Add(new UserIdentifier(offer.TenantId, offer.CreatorUserId.Value));
             if (parentOffer !=null)
@@ -749,6 +750,33 @@ namespace TACHYON.Notifications
 
             await _notificationPublisher.PublishAsync(AppNotificationNames.ShipperAcceptedOffers, notificationData, userIds: users.ToArray());
 
+        }
+
+        public async Task SendDriectRequest(string FromTenant, int? ToTenant, long ShippingRequestId)
+        {
+            var notificationData = new LocalizableMessageNotificationData(
+                new LocalizableString(
+                    L("SendDriectRequest"),
+                    TACHYONConsts.LocalizationSourceName
+                )
+            );
+            notificationData["id"] = ShippingRequestId;
+            notificationData["client"] = FromTenant;
+            await _notificationPublisher.PublishAsync(AppNotificationNames.SendDriectRequest, notificationData, userIds: new[] { await GetAdminUser(ToTenant) });
+        }
+      public async  Task RejectedOffer(PriceOffer offer,string RejectedBy)
+        {
+            var notificationData = new LocalizableMessageNotificationData(
+                                    new LocalizableString(L("RejectedOffer"),
+                                    TACHYONConsts.LocalizationSourceName));
+            notificationData["offerid"] = offer.Id;
+            notificationData["id"] = offer.ShippingRequestId;
+            notificationData["reason"] = offer.RejectedReason;
+            notificationData["rejectedby"] = RejectedBy;
+            List<UserIdentifier> users = new List<UserIdentifier>();
+            users.Add(new UserIdentifier(offer.TenantId, offer.CreatorUserId.Value));
+
+            await _notificationPublisher.PublishAsync(AppNotificationNames.RejectedOffer, notificationData, userIds: users.ToArray());
         }
         #endregion
         #endregion

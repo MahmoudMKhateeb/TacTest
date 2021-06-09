@@ -1,30 +1,44 @@
-﻿using Abp.Domain.Repositories;
+﻿using Abp.Application.Features;
+using Abp.Collections.Extensions;
+using Abp.Domain.Repositories;
+using Abp.Runtime.Session;
 using Microsoft.EntityFrameworkCore;
 using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
+using TACHYON.Features;
 using TACHYON.Net.Sms;
 using TACHYON.Notifications;
 using TACHYON.Routs.RoutPoints;
-
+using System.Linq.Dynamic.Core;
+using Abp.Linq.Extensions;
 namespace TACHYON.Shipping.ShippingRequests
 {
     public class ShippingRequestManager : TACHYONDomainServiceBase
     {
         private readonly IRepository<RoutPoint,long> _routPointRepository;
         private readonly IRepository<RoutePointReceiverReceiveShipmentCode> _receiverReceiveShipmentCodeRepository;
+        private readonly IRepository<ShippingRequest, long> _shippingRequestRepository;
+        private readonly IFeatureChecker _featureChecker;
+        private readonly IAbpSession _abpSession;
+
+
 
         private readonly ISmsSender _smsSender;
         private readonly IAppNotifier _appNotifier;
         public ShippingRequestManager(ISmsSender smsSender,
             IRepository<RoutPoint, long> routPointRepository,
             IAppNotifier appNotifier,
-            IRepository<RoutePointReceiverReceiveShipmentCode> receiverReceiveShipmentCodeRepository)
+            IRepository<RoutePointReceiverReceiveShipmentCode> receiverReceiveShipmentCodeRepository,
+            IRepository<ShippingRequest, long> shippingRequestRepository, IFeatureChecker featureChecker, IAbpSession abpSession)
         {
             _smsSender = smsSender;
             _routPointRepository = routPointRepository;
             _appNotifier = appNotifier;
             _receiverReceiveShipmentCodeRepository = receiverReceiveShipmentCodeRepository;
+            _shippingRequestRepository = shippingRequestRepository;
+            _featureChecker = featureChecker;
+            _abpSession = abpSession;
         }
 
         /// <summary>
@@ -88,6 +102,16 @@ namespace TACHYON.Shipping.ShippingRequests
                 await SendSmsToReceiver(p);
             });
 
+        }
+
+
+        public async Task<ShippingRequest> GetShippingRequestWhenNormalStatus(long ShippingRequestId)
+        {
+
+            return await _shippingRequestRepository
+                                        .GetAll()
+                                        .WhereIf(await _featureChecker.IsEnabledAsync(AppFeatures.Shipper), x => x.TenantId == _abpSession.TenantId && !x.IsTachyonDeal)
+                                        .FirstOrDefaultAsync(r => r.Id == ShippingRequestId && (r.Status == ShippingRequestStatus.NeedsAction || r.Status == ShippingRequestStatus.PrePrice));
         }
     }
 }

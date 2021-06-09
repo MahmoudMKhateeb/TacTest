@@ -25,21 +25,21 @@ namespace TACHYON.Shipping.ShippingRequests
         [ForeignKey(nameof(ShippingRequestId))]
         public ShippingRequest ShippingRequestFK { get; set; }
 
-        public long? ShippingRequestDirectRequestId { get; set; }
+       // public long? ShippingRequestDirectRequestId { get; set; }
 
-        [ForeignKey(nameof(ShippingRequestDirectRequestId))]
-        public ShippingRequestDirectRequest ShippingRequestDirectRequestFK { get; set; }
+     //   [ForeignKey(nameof(ShippingRequestDirectRequestId))]
+       // public ShippingRequestDirectRequest ShippingRequestDirectRequestFK { get; set; }
         /// <summary>
         /// Get id from source entity
         /// </summary>
-        public long SourceId { get; set; }
+        public long? SourceId { get; set; }
 
         public int TenantId { get; set; }
         [ForeignKey(nameof(TenantId))]
         public Tenant Tenant { get; set; }
 
-        public ShippingRequestPricingChannel Channel { get; set; }
-        public ShippingRequestPricingStatus Status { get; set; }
+        //public ShippingRequestPricingChannel Channel { get; set; }
+        //public ShippingRequestPricingStatus Status { get; set; }
         #region Invoice
         #region Single trip pricing for carrier
         public decimal TripPrice { get; set; }

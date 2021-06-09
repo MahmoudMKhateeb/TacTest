@@ -1,26 +1,22 @@
-﻿using Abp.Application.Services.Dto;
+﻿using Abp.Application.Features;
+using Abp.Application.Services.Dto;
+using Abp.Authorization;
 using Abp.Domain.Repositories;
-using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Threading.Tasks;
-using TACHYON.MarketPlaces.Dto;
-using TACHYON.Shipping.ShippingRequests;
+using Abp.Linq.Extensions;
 using Microsoft.EntityFrameworkCore;
+using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Dynamic.Core;
-using Abp.Linq.Extensions;
-using TACHYON.Features;
-using TACHYON.Shipping.ShippingRequests.Dtos;
-using Abp.Authorization;
+using System.Threading.Tasks;
 using TACHYON.Authorization;
-using Abp.Application.Features;
-using Abp.UI;
-using Abp.Configuration;
-using TACHYON.Notifications;
-using Abp.Threading;
+using TACHYON.Features;
 using TACHYON.Goods.GoodCategories.Dtos;
-using TACHYON.Shipping.ShippingRequests.ShippingRequestsPricing.Dto;
+using TACHYON.MarketPlaces.Dto;
+using TACHYON.PriceOffers;
+using TACHYON.PriceOffers.Dto;
+using TACHYON.Shipping.ShippingRequests;
+using TACHYON.Shipping.ShippingRequests.Dtos;
+using TACHYON.Trucks.TrucksTypes.Dtos;
 
 namespace TACHYON.MarketPlaces
 {
@@ -28,16 +24,12 @@ namespace TACHYON.MarketPlaces
     public class MarketPlaceAppService : TACHYONAppServiceBase, IMarketPlaceAppService
     {
         private IRepository<ShippingRequest, long> _shippingRequestsRepository;
-        private IRepository<ShippingRequestPricing, long> _shippingRequestPricingRepository;
-        private readonly ShippingRequestPricingManager _shippingRequestPricingManager;
+        private readonly PriceOfferManager _priceOfferManager;
         public MarketPlaceAppService(
-            IRepository<ShippingRequest, long> shippingRequestsRepository,
-            IRepository<ShippingRequestPricing, long> shippingRequestPricingRepository,
-            ShippingRequestPricingManager shippingRequestPricingManager)
+            IRepository<ShippingRequest, long> shippingRequestsRepository, PriceOfferManager priceOfferManager)
         {
             _shippingRequestsRepository = shippingRequestsRepository;
-            _shippingRequestPricingRepository = shippingRequestPricingRepository;
-            _shippingRequestPricingManager = shippingRequestPricingManager;
+            _priceOfferManager = priceOfferManager;
         }
         [RequiresFeature(AppFeatures.Shipper, AppFeatures.TachyonDealer, AppFeatures.Carrier)]
         public async Task<PagedResultDto<MarketPlaceListDto>> GetAll(GetAllMarketPlaceInput Input)
@@ -51,6 +43,8 @@ namespace TACHYON.MarketPlaces
                     .Include(dc => dc.DestinationCityFk)
                     .Include(c => c.GoodCategoryFk)
                      .ThenInclude(x=>x.Translations)
+                    .Include(t=>t.TrucksTypeFk)
+                     .ThenInclude(x => x.Translations)
                 .Where(x=>x.IsBid)
                 .WhereIf(await IsEnabledAsync(AppFeatures.Shipper), x => x.TenantId == AbpSession.TenantId && !x.IsTachyonDeal)
                 .WhereIf(await IsEnabledAsync(AppFeatures.Carrier), x => x.BidStatus == ShippingRequestBidStatus.OnGoing)
@@ -58,6 +52,7 @@ namespace TACHYON.MarketPlaces
 
             var ResultPaging = await query.PageBy(Input).ToListAsync();
             List<Dictionary<object, string>> GoodsCategory = new List<Dictionary<object, string>>();
+            List<Dictionary<object, string>> TruckTypes = new List<Dictionary<object, string>>();
             ResultPaging.ForEach(x =>
             {
                 GoodsCategory.Add(new Dictionary<object, string>()
@@ -65,6 +60,12 @@ namespace TACHYON.MarketPlaces
                     [x.Id] = ObjectMapper.Map<GoodCategoryDto>(x.GoodCategoryFk).DisplayName
                 }
                 ) ;
+
+                TruckTypes.Add(new Dictionary<object, string>()
+                {
+                    [x.Id] = ObjectMapper.Map<TrucksTypeDto>(x.TrucksTypeFk).TranslatedDisplayName
+                }
+                );
             });
             var marketPlaceListDto = ObjectMapper.Map<List<MarketPlaceListDto>>(ResultPaging);
 
@@ -73,12 +74,14 @@ namespace TACHYON.MarketPlaces
             {
                 marketPlaceListDto.ForEach(  x =>
                 {
-                    x.CarrierPricing =ObjectMapper.Map<ShippingRequestCarrierPricingDto>(_shippingRequestPricingManager.GetCarrierPricingOrNull(x.Id)) ;
+                    x.CarrierPricing =ObjectMapper.Map<ShippingRequestCarrierPricingDto>(_priceOfferManager.GetCarrierPricingOrNull(x.Id)) ;
                 });
             }
             marketPlaceListDto.ForEach(x =>
             {
                 x.GoodsCategory = GoodsCategory.Where(g => g.ContainsKey(x.Id)).Select(g => g[x.Id]).FirstOrDefault();
+                x.TrukType = TruckTypes.Where(g => g.ContainsKey(x.Id)).Select(g => g[x.Id]).FirstOrDefault();
+
             });
             var totalCount = await query.CountAsync();
             return new PagedResultDto<MarketPlaceListDto>(
@@ -88,22 +91,17 @@ namespace TACHYON.MarketPlaces
 
         }
 
-        [RequiresFeature(AppFeatures.Carrier)]
-        public async Task CreateOrEdit(CreateOrEditPricingInput Input)
+        [RequiresFeature(AppFeatures.Carrier, AppFeatures.TachyonDealer)]
+        public async Task CreateOrEdit(CreateOrEditPriceOfferInput Input)
         {
-           Input.Channel = ShippingRequestPricingChannel.MarketPlace;
-           await _shippingRequestPricingManager.CreateOrEdit(Input);
+           Input.Channel = PriceOfferChannel.MarketPlace;
+           await _priceOfferManager.CreateOrEdit(Input);
 
         }
 
         public async  Task Delete(EntityDto Input)
         {
-            await _shippingRequestPricingManager.Delete(Input);
-            // DisableTenancyFilters();
-            // var pricing = await _shippingRequestPricingRepository
-            //     .FirstOrDefaultAsync(x => x.Id == Input.Id && x.TenantId == AbpSession.TenantId.Value && x.ShippingRequestFK.BidStatus == ShippingRequestBidStatus.OnGoing);
-            // if (pricing==null) throw new UserFriendlyException(L("TheRecordNotFound"));
-            //await _shippingRequestPricingRepository.DeleteAsync(pricing);
+            await _priceOfferManager.Delete(Input);
         }
 
 

@@ -1,8 +1,6 @@
 ﻿using Abp.Application.Services.Dto;
 using Abp.Domain.Entities.Auditing;
 using System;
-using System.Collections.Generic;
-using System.Text;
 using TACHYON.Shipping.ShippingRequests;
 using TACHYON.Shipping.ShippingRequests.Dtos;
 
@@ -15,6 +13,10 @@ namespace TACHYON.MarketPlaces.Dto
         public  bool IsTachyonDeal { get; set; }
         public string OriginCity { get; set; }
         public string DestinationCity { get; set; }
+        public string TrukType { get; set; }
+
+        public string RemainingDays { get; set; }
+        public string RangeDate { get; set; }
         public int NumberOfDrops { get; set; }
         public int NumberOfTrips { get; set; }
         public string GoodsCategory { get; set; }
