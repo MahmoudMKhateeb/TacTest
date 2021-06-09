@@ -64,17 +64,36 @@
 
             <div class="form-group col-md-6">
               <label for="Receiver_PhoneNumber">{{ l('PhoneNumber') }} *</label>
+               
+              <div class="input-group">
+
+              <div class="input-group-prepend">
+                <span class="input-group-text">+966</span>
+              </div>
               <input
-                type="text"
+                type="tel"
                 #Receiver_PhoneNumber="ngModel"
+                (input)="CheckIfReciverPhoneNumberIsValid(Receiver_PhoneNumber.value, receiver.id)"
+                pattern="^\d{9}$"
+                minlength="0"
+                maxlength="9"
                 id="Receiver_PhoneNumber"
                 class="form-control"
                 [(ngModel)]="receiver.phoneNumber"
                 name="PhoneNumber"
-                minlength="0"
-                maxlength="32"
-                required
+                 required
+                 [ngClass]="{
+                  'is-valid': CheckingIfReciverPhoneNumberIsValid && isPhoneNumberAvilable && Receiver_PhoneNumber.valid,
+                  'is-invalid':
+                    receiverForm.submitted && !CheckingIfReciverPhoneNumberIsValid && (!isPhoneNumberAvilable || !Receiver_PhoneNumber.valid)
+                }"
               />
+              <div class="input-group-append">
+                <span class="input-group-text">
+                  <i [ngClass]="{ 'fa-spin': CheckingIfReciverPhoneNumberIsValid }" class="flaticon-refresh"></i>
+                </span>
+              </div>
+              </div>
               <validation-messages [formCtrl]="Receiver_PhoneNumber"></validation-messages>
             </div>
           </div>
