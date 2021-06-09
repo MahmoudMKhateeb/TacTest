@@ -223,7 +223,7 @@
                     </td>
 
                     <td>
-                      {{ record.documentFile.creationTime | momentFormat: 'D/M/YYYY' }}
+                      {{ record.documentFile.creationTime | momentFormat: 'D/M/YYYY , h:mm' }}
                     </td>
 
                     <td *ngIf="entityType == documentsEntitiesEnum.Truck" style="width: 160px;">
