@@ -143,5 +143,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Invoices\Exporting\" />
+    <Folder Include="PriceOffers\" />
   </ItemGroup>
 </Project>

@@ -35,6 +35,7 @@ using TACHYON.Nationalities;
 using TACHYON.Nationalities.NationalitiesTranslation;
 using TACHYON.Offers;
 using TACHYON.Packing.PackingTypes;
+using TACHYON.PriceOffers;
 using TACHYON.Receivers;
 using TACHYON.Routs;
 using TACHYON.Routs.RoutPoints;
@@ -42,6 +43,7 @@ using TACHYON.Routs.RoutSteps;
 using TACHYON.Routs.RoutTypes;
 using TACHYON.Shipping;
 using TACHYON.Shipping.Accidents;
+using TACHYON.Shipping.DirectRequests;
 using TACHYON.Shipping.RoutPoints;
 using TACHYON.Shipping.ShippingRequestBids;
 using TACHYON.Shipping.ShippingRequests;
@@ -158,7 +160,6 @@ namespace TACHYON.EntityFrameworkCore
         public virtual DbSet<DocumentType> DocumentTypes { get; set; }
 
         public virtual DbSet<ShippingRequest> ShippingRequests { get; set; }
-        public DbSet<ShippingRequestPricing> ShippingRequestPricings { get; set; }
         public DbSet<ShippingRequestDirectRequest> ShippingRequestDirectRequests { get; set; }
 
         public virtual DbSet<GoodsDetail> GoodsDetails { get; set; }
@@ -244,7 +245,12 @@ namespace TACHYON.EntityFrameworkCore
         public DbSet<UserDeviceToken> UserDeviceTokens { get; set; }
         public DbSet<UserOTP> UserOTPs { get; set; }
 
-        
+
+        #endregion
+        #region Price offers
+        public DbSet<PriceOffer> PriceOffers { get; set; }
+        public DbSet<PriceOfferDetail> PriceOfferDetails { get; set; }
+
         #endregion
         public TACHYONDbContext(DbContextOptions<TACHYONDbContext> options)
             : base(options)

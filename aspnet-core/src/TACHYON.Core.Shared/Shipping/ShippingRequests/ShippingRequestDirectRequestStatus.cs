@@ -2,9 +2,9 @@
 {
     public  enum ShippingRequestDirectRequestStatus:byte
     {
-        New=1,
-        Response=2,
-        Accepted=3,
-        Rejected=4
+        New=0,
+        Response=1,
+        Accepted=2,
+        Rejected=3
     }
 }

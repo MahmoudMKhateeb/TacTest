@@ -1,8 +1,8 @@
-﻿namespace TACHYON.Shipping.ShippingRequests
+﻿namespace TACHYON.PriceOffers
 {
-    public enum ShippingRequestPricingStatus
+    public  enum PriceOfferStatus:byte
     {
-        New=0,
+        New = 0,
         Accepted = 1, //accepted and there is assigned carrier
         Rejected = 2,
         AcceptedAndWaitingForCarrier = 3
