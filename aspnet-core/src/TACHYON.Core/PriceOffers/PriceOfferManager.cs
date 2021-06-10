@@ -180,16 +180,6 @@ namespace TACHYON.PriceOffers
 
 
         /// <summary>
-        /// Find carrier tenant id to assing to shipping request if the offer direct from carrier or by TAD
-        /// </summary>
-        /// <param name="offer"></param>
-        /// <returns></returns>
-        private async Task<int> GetCarrierTenantId(ShippingRequestPricing offer)
-        {
-            if (!offer.ShippingRequestFK.IsTachyonDeal) return offer.TenantId;
-            return (await _priceOfferRepository.FirstOrDefaultAsync(x => x.Id == offer.ParentId)).TenantId;
-        }
-        /// <summary>
         /// Set the shipping reqquest prices
         /// </summary>
         /// <param name="offer"></param>

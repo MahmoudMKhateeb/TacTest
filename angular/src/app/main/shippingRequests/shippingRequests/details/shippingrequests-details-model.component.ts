@@ -3,19 +3,14 @@ import { AppComponentBase } from '@shared/common/app-component-base';
 import { appModuleAnimation } from '@shared/animations/routerTransition';
 import { ModalDirective } from 'ngx-bootstrap/modal';
 
-import {
-  TenantCarrierServiceProxy,
-  CommonLookupServiceProxy,
-  ISelectItemDto,
-  CreateTenantCarrierInput,
-} from '@shared/service-proxies/service-proxies';
+import { ShippingRequestsServiceProxy, GetShippingRequestForPricingOutput } from '@shared/service-proxies/service-proxies';
 
 import * as _ from 'lodash';
 import { finalize } from 'rxjs/operators';
 @Component({
   templateUrl: './shippingrequests-details-model.component.html',
   styleUrls: ['./shippingrequests-details-model.component.scss'],
-  selector: 'shippingrequests-details-model.component',
+  selector: 'shippingrequests-details-model',
   animations: [appModuleAnimation()],
 })
 export class ShippingrequestsDetailsModelComponent extends AppComponentBase {
@@ -24,52 +19,87 @@ export class ShippingrequestsDetailsModelComponent extends AppComponentBase {
 
   active = false;
   saving = false;
-  Tenant: ISelectItemDto;
-  Tenants: ISelectItemDto[];
-  Input: CreateTenantCarrierInput = new CreateTenantCarrierInput();
-
-  constructor(injector: Injector, private _CurrentServ: TenantCarrierServiceProxy, private _CommonServ: CommonLookupServiceProxy) {
+  item: GetShippingRequestForPricingOutput = new GetShippingRequestForPricingOutput();
+  origin = { lat: null, lng: null };
+  destination = { lat: null, lng: null };
+  distance: string;
+  duration: string;
+  direction: string;
+  constructor(injector: Injector, private _CurrentServ: ShippingRequestsServiceProxy) {
     super(injector);
   }
 
   show(id: number): void {
-    this.active = true;
-    this.modal.show();
-    this.Input.tenantId = id;
-    this.Tenant = undefined;
+    this.direction = document.getElementsByTagName('html')[0].getAttribute('dir');
+    this._CurrentServ.getShippingRequestForPricing(id).subscribe((result) => {
+      this.item = result;
+      this.active = true;
+      this.getCordinatesByCityName(this.item.originCity, 'source');
+      this.getCordinatesByCityName(this.item.destinationCity, 'destanation');
+      this.modal.show();
+    });
   }
   close(): void {
     this.active = false;
     this.modal.hide();
   }
 
-  search(event) {
-    this._CommonServ.getAutoCompleteTenants(event.query, 'carrier').subscribe((result) => {
-      this.Tenants = result;
-    });
-  }
-
   save(): void {
     this.saving = true;
+  }
 
-    if (this.Tenant?.id) {
-      this.Input.carrierTenantId = parseInt(this.Tenant.id);
-    } else {
-      this.Tenant = undefined;
-      this.Input.carrierTenantId = undefined;
-    }
+  /**
+   * Get City Cordinates By Providing its name
+   * this finction is to draw the shipping Request Main Route in View SR Details in marketPlace
+   * @param cityName
+   * @param cityType   source/dest
+   */
+  getCordinatesByCityName(cityName: string, cityType: string) {
+    const geocoder = new google.maps.Geocoder();
+    geocoder.geocode(
+      {
+        address: cityName,
+      },
+      (results, status) => {
+        if (status == google.maps.GeocoderStatus.OK) {
+          const Lat = results[0].geometry.location.lat();
+          const Lng = results[0].geometry.location.lng();
+          if (cityType == 'source') {
+            this.origin = { lat: Lat, lng: Lng };
+          } else {
+            this.destination = { lat: Lat, lng: Lng };
+            this.messuareDistance(this.origin, this.destination);
+          }
+        } else {
+          console.log('Something got wrong ' + status);
+        }
+      }
+    );
+  }
 
-    this._CurrentServ
-      .create(this.Input)
-      .pipe(
-        finalize(() => {
-          this.saving = false;
-        })
-      )
-      .subscribe(() => {
-        this.notify.info(this.l('SavedSuccessfully'));
-        this.close();
-        this.modalSave.emit(null);
-      });
+  /**
+   * Measure the Distance Between 2 Points using Cordinates
+   * @param Oring { lat: null, lng: null }
+   * @param destination { lat: null, lng: null }
+   */
+
+  messuareDistance(origin, destination) {
+    origin = this.origin;
+    destination = this.destination;
+    const service = new google.maps.DistanceMatrixService();
+    service.getDistanceMatrix(
+      {
+        origins: [{ lat: origin.lat, lng: origin.lng }],
+        destinations: [{ lat: destination.lat, lng: destination.lng }],
+        travelMode: google.maps.TravelMode.DRIVING,
+        unitSystem: google.maps.UnitSystem.METRIC,
+        avoidHighways: false,
+        avoidTolls: false,
+      },
+      (response, status) => {
+        this.distance = response.rows[0].elements[0].distance.text;
+        this.duration = response.rows[0].elements[0].duration.text;
+      }
+    );
   }
 }

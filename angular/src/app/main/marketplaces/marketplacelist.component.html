@@ -1,7 +1,7 @@
 <div [@routerTransition]>
   <div class="content d-flex flex-column flex-column-fluid">
     <!--begin::Subheader-->
-    <sub-header [title]="'MarketPlace' | localize" [description]="'' | localize">
+    <sub-header [title]="'Marketplace' | localize" [description]="'' | localize">
       <div role="actions">
         <button class="btn btn-primary"><i class="flaticon2-indent-dots"></i> {{ l('MyBiddingHistory') }}</button>
       </div>
@@ -13,7 +13,7 @@
       <div class="row">
         <div class="col-12 col-lg-6 mb-4" *ngFor="let item of Marketplaces">
           <div
-            class="shipCard {{ item.isTachyonDeal ? 'tachyonDialer' : '' }} {{ dir == 'rtl' ? ' rtl' : '' }} {{
+            class="shipCard {{ item.isTachyonDeal ? 'tachyonDialer' : '' }} {{ direction == 'rtl' ? ' rtl' : '' }} {{
               item.isPriced || item.remainingDays == '0' ? ' shipCardGray' : ''
             }}"
           >
@@ -27,7 +27,7 @@
                 {{ getWordTitle(item.remainingDays, 'RemainingDay') }}
               </span>
               <b *ngIf="item.remainingDays == '0'" class="infoHighLight red stautsTruck">
-                {{ l('Expired') }}
+                {{ l(item.bidStatusTitle) }}
               </b>
             </div>
             <div class="detailsRoad">
@@ -87,7 +87,7 @@
                 <a *ngIf="item.isPricing" href="javascript:void(0)" class="infoHighLight red">{{ l('MarketPlacepriced') }}</a>
               </div>
               <div class="actions">
-                <a href="" class="red">
+                <a href="javascript:void(0)" (click)="Model.show(item.id)" class="red">
                   {{ l('More') }}
                 </a>
               </div>
@@ -102,3 +102,4 @@
     </div>
   </div>
 </div>
+<shippingrequests-details-model #Model></shippingrequests-details-model>

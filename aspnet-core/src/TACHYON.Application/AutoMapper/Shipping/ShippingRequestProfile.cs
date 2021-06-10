@@ -36,10 +36,23 @@ namespace TACHYON.AutoMapper.Shipping
                 .ForMember(dest => dest.CarrierName, opt => opt.MapFrom(src => src.CarrierTenantFk.Name));
             //.AfterMap(AssignTruckTypeFullName);
 
-             
+            CreateMap<ShippingRequest, GetShippingRequestForPricingOutput>()
+                 .ForMember(dst => dst.Shipper, opt => opt.MapFrom(src => src.Tenant.Name))
+                 .ForMember(dst => dst.OriginCity, opt => opt.MapFrom(src => src.OriginCityFk.DisplayName))
+                 .ForMember(dst => dst.DestinationCity, opt => opt.MapFrom(src => src.DestinationCityFk.DisplayName))
+                 .ForMember(dst => dst.RangeDate, opt => opt.MapFrom(src => GetDateRange(src.StartTripDate, src.EndTripDate)));
+            
 
         }
-
+        private string GetDateRange(DateTime? StartTripDate, DateTime? EndTripDate)
+        {
+            if (StartTripDate.HasValue && EndTripDate.HasValue)
+            {
+                return string.Format("{0}-{1}", StartTripDate.Value.ToString("dd/MM/yyyy"), EndTripDate.Value.ToString("dd/MM/yyyy"));
+            }
+            else if (StartTripDate.HasValue) return StartTripDate.Value.ToString("dd/MM/yyyy");
+            return "";
+        }
         //private static void AssignTruckTypeFullName(ShippingRequest shippingRequest, GetShippingRequestForViewOutput dto)
         //{
         //    dto.TruckTypeFullName = shippingRequest.TransportTypeFk?.DisplayName

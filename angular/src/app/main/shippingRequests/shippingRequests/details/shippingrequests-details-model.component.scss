@@ -9,6 +9,43 @@
   padding: 0;
 }
 
+.modalSendOffer .modal-body .closeModal {
+  position: absolute;
+  right: -11px;
+  top: -11px;
+  border-radius: 50%;
+  background: #d82631;
+  opacity: 1;
+  width: 30px;
+  height: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  -webkit-border-radius: 50%;
+  -moz-border-radius: 50%;
+  -ms-border-radius: 50%;
+  -o-border-radius: 50%;
+  z-index: 9;
+}
+
+.modalSendOffer.rtl .modal-body .closeModal {
+  right: unset;
+  left: -11px;
+}
+
+.modalSendOffer .modal-body .closeModal:hover,
+.modalSendOffer .modal-body .closeModal:focus {
+  box-shadow: none;
+  opacity: 1;
+  border: none;
+  outline: none;
+}
+
+.modalSendOffer .modal-body .closeModal i {
+  font-size: 18px;
+  color: #fff;
+}
+
 .modalSendOffer .modal-body form {
   flex: 0 0 330px;
   max-width: 330px;
@@ -33,7 +70,7 @@
   top: -6px;
 }
 
-html[dir='rtl'] .modalSendOffer.tachyonDialer img.markTachyon {
+.modalSendOffer.rtl.tachyonDialer img.markTachyon {
   position: absolute;
   right: unset;
   left: 26px;
@@ -74,7 +111,7 @@ html[dir='rtl'] .modalSendOffer.tachyonDialer img.markTachyon {
   padding-left: 15px;
 }
 
-html[dir='rtl'] .modalSendOffer form .detailsRoad {
+.modalSendOffer.rtl form .detailsRoad {
   padding-left: unset;
   padding-right: 15px;
   text-align: right;
@@ -92,7 +129,7 @@ html[dir='rtl'] .modalSendOffer form .detailsRoad {
   background-size: 11px calc(100% - 31px);
 }
 
-html[dir='rtl'] .modalSendOffer form .detailsRoad::before {
+.modalSendOffer.rtl form .detailsRoad::before {
   left: unset;
   right: -6px;
 }
@@ -221,10 +258,10 @@ html[dir='rtl'] .table-sendOffer table tr > *:last-of-type > span:nth-child(2) {
   padding: 2px 8px;
 }
 
-html[dir='rtl'] .modalSendOffer .table-sendOffer table th,
-html[dir='rtl'] .modalSendOffer .table-vas table th,
-html[dir='rtl'] .modalSendOffer .table-sendOffer table td,
-html[dir='rtl'] .modalSendOffer .table-vas table td {
+.modalSendOffer.rtl .table-sendOffer table th,
+.modalSendOffer.rtl .table-vas table th,
+.modalSendOffer.rtl .table-sendOffer table td,
+.modalSendOffer.rtl .table-vas table td {
   text-align: right;
 }
 

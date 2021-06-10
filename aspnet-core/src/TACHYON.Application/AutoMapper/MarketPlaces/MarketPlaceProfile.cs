@@ -14,20 +14,21 @@ namespace TACHYON.AutoMapper.MarketPlaces
                  .ForMember(dst => dst.Shipper, opt => opt.MapFrom(src => src.Tenant.Name))
                  .ForMember(dst => dst.OriginCity, opt => opt.MapFrom(src => src.OriginCityFk.DisplayName ))
                  .ForMember(dst => dst.DestinationCity, opt => opt.MapFrom(src => src.DestinationCityFk.DisplayName))
-                 .ForMember(dst => dst.RemainingDays, opt => opt.MapFrom(src => GetRemainingDays(src.BidEndDate)))
+                 .ForMember(dst => dst.RemainingDays, opt => opt.MapFrom(src => GetRemainingDays(src.BidEndDate, src.BidStatus)))
                  .ForMember(dst => dst.RangeDate, opt => opt.MapFrom(src => GetDateRange(src.StartTripDate,src.EndTripDate)))
                  ;
         }
-        private string GetRemainingDays(DateTime? BidEndDate)
+        private string GetRemainingDays(DateTime? BidEndDate, ShippingRequestBidStatus Status)
         {
-            if (BidEndDate.HasValue)
+
+            if (BidEndDate.HasValue && Status != ShippingRequestBidStatus.OnGoing)
             {
                 int TotalDays = (int)((BidEndDate.Value - Clock.Now).TotalDays);
                 if (TotalDays <= 0) return "0";
                 if (TotalDays<9) return $"0{TotalDays}";
                 return TotalDays.ToString();
             }
-            return "";
+            return "0";
         }
 
         private string GetDateRange(DateTime? StartTripDate, DateTime? EndTripDate)

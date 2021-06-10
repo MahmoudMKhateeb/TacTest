@@ -21,14 +21,13 @@ export class MarketPlaceListComponent extends ScrollPagnationComponentBase imple
   TenantId: number | undefined = undefined;
   creationDateRange: Date[] = [moment().startOf('day').toDate(), moment().endOf('day').toDate()];
   creationDateRangeActive: boolean = false;
-  dir = 'ltr';
+  direction = 'ltr';
   constructor(injector: Injector, private _CurrentServ: MarketPlaceServiceProxy, private _fileDownloadService: FileDownloadService) {
     super(injector);
   }
   ngOnInit(): void {
-    this.dir = document.getElementsByTagName('html')[0].getAttribute('dir');
+    this.direction = document.getElementsByTagName('html')[0].getAttribute('dir');
     this.LoadData();
-    console.log(`(${window.innerHeight} + ${window.scrollY}) >= ${document.body.offsetHeight}`);
   }
 
   LoadData() {

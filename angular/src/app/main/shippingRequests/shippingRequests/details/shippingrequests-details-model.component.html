@@ -1,51 +1,231 @@
 <div
   bsModal
   #modal="bs-modal"
-  class="modal fade"
+  class="modal fade bd-example-modal-xl modalSendOffer tachyonDialer"
   tabindex="-1"
   role="dialog"
   aria-labelledby="modal"
   aria-hidden="true"
   [config]="{ backdrop: 'static' }"
 >
-  <div class="modal-dialog modal-lg">
-    <div class="modal-content">
-      <form *ngIf="active" #balanceRechargeForm="ngForm" novalidate (ngSubmit)="save()" autocomplete="off">
-        <div class="modal-header">
-          <h4 class="modal-title">
-            <span>{{ l('Create') }}</span>
-          </h4>
-          <button type="button" class="close" (click)="close()" aria-label="Close" [disabled]="saving">
-            <span aria-hidden="true">&times;</span>
-          </button>
-        </div>
+  <div class="modal-dialog modal-xl {{ direction == 'rtl' ? ' rtl' : '' }}">
+    <div class="modal-dialog modal-xl">
+      <div class="modal-content">
         <div class="modal-body">
-          <div class="form-group m-form__group">
-            <label for="Tenant">{{ l('Carrier') }}</label>
-            <p-autoComplete
-              name="Tenant"
-              [(ngModel)]="Tenant"
-              [suggestions]="Tenants"
-              (completeMethod)="search($event)"
-              field="displayName"
-              [forceSelection]="true"
-              required
-            ></p-autoComplete>
+          <button type="button" (click)="close()" class="close closeModal" data-dismiss="modal" aria-label="Close">
+            <i class="fas fa-times"></i>
+          </button>
+          <form action="">
+            <img *ngIf="item.isTachyonDeal" src="/assets/custom/imgs/mark.svg" class="markTachyon" alt="" />
+            <div class="infoBasic">
+              <a href="javascript:void(0)" *ngIf="!feature.isEnabled('App.Shipper')" class="companyName">
+                {{ item.isTachyonDeal ? l('TachyonManageService') : item.shipper }}
+              </a>
+            </div>
+            <div class="detailsRoad">
+              <div class="from">
+                <p class="pickup">{{ l('Pickup') }}</p>
+                <p>{{ item.originCity }}</p>
+              </div>
+              <div class="to">
+                <p class="delivery">{{ l('Delivery') }}</p>
+                <p>{{ item.destinationCity }}</p>
+              </div>
+            </div>
+            <div class="divirCard"></div>
+            <div class="detailsShip">
+              <p *ngIf="item.rangeDate">
+                <span>
+                  {{ l('DateRange') }}
+                </span>
+                <span>
+                  {{ item.rangeDate }}
+                </span>
+              </p>
+              <p>
+                <span>
+                  {{ l('TruckType') }}
+                </span>
+                <span>
+                  {{ item.trukType }}
+                </span>
+              </p>
+              <p>
+                <span>
+                  {{ l('GoodCategory') }}
+                </span>
+                <span>
+                  {{ item.goodsCategory }}
+                </span>
+              </p>
+              <p>
+                <span>
+                  {{ l('NumberOfTrips') }}
+                </span>
+                <span>
+                  {{ item.numberOfTrips }}
+                </span>
+              </p>
+              <p>
+                <span>
+                  {{ l('NumberOfDrops') }}
+                </span>
+                <span>
+                  {{ item.numberOfTrips }}
+                </span>
+              </p>
+              <p>
+                <span>
+                  {{ l('approximateTripDistance') }}
+                </span>
+                <span>
+                  {{ distance }}
+                </span>
+              </p>
+              <p>
+                <span>
+                  {{ l('approximateTripDuration') }}
+                </span>
+                <span>
+                  {{ duration }}
+                </span>
+              </p>
+            </div>
+            <div class="divirCard"></div>
+            <div class="setPrice">
+              <button type="button">
+                Set Price
+              </button>
+            </div>
+            <div class="table-sendOffer">
+              <span class="titleSendOffer">
+                Send Offer
+              </span>
+              <table>
+                <thead>
+                  <tr>
+                    <th>
+                      Trip Price
+                    </th>
+                    <th>
+                      Num. Of Trips
+                    </th>
+                    <th>
+                      Total
+                    </th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>
+                      <input type="text" />
+                    </td>
+                    <td>
+                      <input type="text" />
+                    </td>
+                    <td>
+                      <span>0.0</span>
+                      <span>SAR</span>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <div class="divirCard"></div>
+            <div class="table-vas">
+              <span class="titleVas">
+                VAS
+              </span>
+              <table>
+                <thead>
+                  <tr>
+                    <th>
+                      Name
+                    </th>
+                    <th>
+                      Price
+                    </th>
+                    <th>
+                      Type
+                    </th>
+                    <th>
+                      Qty
+                    </th>
+                    <th>
+                      Total
+                    </th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>
+                      <input type="text" />
+                    </td>
+                    <td>
+                      <input type="text" />
+                    </td>
+                    <td>
+                      <input type="text" />
+                    </td>
+                    <td>
+                      <input type="text" />
+                    </td>
+                    <td>
+                      <span>0.0</span>
+                      <span>SAR</span>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <div class="divirCard"></div>
+            <div class="resultPrice">
+              <div>
+                <p>
+                  Sub Total
+                </p>
+                <p>
+                  <span>0.0</span>
+                  <span>SAR</span>
+                </p>
+              </div>
+              <div>
+                <p>
+                  VAS Amount
+                </p>
+                <p>
+                  <span>0.0</span>
+                  <span>SAR</span>
+                </p>
+              </div>
+              <div>
+                <p>
+                  Total Amount
+                </p>
+                <p>
+                  <span>0.0</span>
+                  <span>SAR</span>
+                </p>
+              </div>
+            </div>
+            <div class="sendOffer">
+              <button type="submit">
+                Send offer
+              </button>
+            </div>
+          </form>
+          <div class="map">
+            <agm-map [latitude]="24.717942" [longitude]="46.675761" [zoom]="10">
+              <agm-direction
+                *ngIf="destination.lat"
+                [origin]="{ lat: origin.lat, lng: origin.lng }"
+                [destination]="{ lat: destination.lat, lng: destination.lng }"
+                [travelMode]="'DRIVING'"
+              ></agm-direction>
+            </agm-map>
           </div>
         </div>
-        <div class="modal-footer">
-          <button [disabled]="saving" type="button" class="btn btn-default" (click)="close()">{{ l('Cancel') }}</button>
-          <button
-            type="submit"
-            class="btn btn-save blue"
-            [disabled]="!balanceRechargeForm.form.valid"
-            [buttonBusy]="saving"
-            [busyText]="l('SavingWithThreeDot')"
-          >
-            <i class="fa fa-save"></i> <span>{{ l('Save') }}</span>
-          </button>
-        </div>
-      </form>
+      </div>
     </div>
   </div>
 </div>

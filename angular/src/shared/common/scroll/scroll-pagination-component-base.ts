@@ -16,7 +16,7 @@ export abstract class ScrollPagnationComponentBase extends AppComponentBase {
   onScroll(): void {
     if (this.bottomReached() && !this.IsLoading && !this.StopLoading) {
       this.scrollY = Math.ceil(window.scrollY);
-      console.log(`(${window.innerHeight} + ${Math.ceil(window.scrollY)}) >= ${document.body.offsetHeight}+${this.scrollY}`);
+      //console.log(`(${window.innerHeight} + ${Math.ceil(window.scrollY)}) >= ${document.body.offsetHeight}+${this.scrollY}`);
       this.skipCount += this.maxResultCount;
       console.log(this.skipCount);
       this.IsLoading = true;
@@ -24,7 +24,6 @@ export abstract class ScrollPagnationComponentBase extends AppComponentBase {
     }
   }
   bottomReached(): boolean {
-    //console.log(`(${window.innerHeight} + ${Math.ceil(window.pageYOffset)}) >= ${document.body.offsetHeight}+${document.documentElement.scrollTop}`);
     return window.innerHeight + Math.ceil(window.scrollY) > document.body.offsetHeight + this.scrollY;
   }
 }

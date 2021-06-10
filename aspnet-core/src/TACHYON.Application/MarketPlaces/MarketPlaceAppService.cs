@@ -15,7 +15,6 @@ using TACHYON.MarketPlaces.Dto;
 using TACHYON.PriceOffers;
 using TACHYON.PriceOffers.Dto;
 using TACHYON.Shipping.ShippingRequests;
-using TACHYON.Shipping.ShippingRequests.Dtos;
 using TACHYON.Trucks.TrucksTypes.Dtos;
 
 namespace TACHYON.MarketPlaces

@@ -26,6 +26,7 @@ using TACHYON.Notifications;
 using TACHYON.Packing.PackingTypes;
 using TACHYON.Routs.RoutPoints;
 using TACHYON.Routs.RoutSteps;
+using TACHYON.Shipping.DirectRequests;
 using TACHYON.Shipping.ShippingRequestBids;
 using TACHYON.Shipping.ShippingRequestBids.Dtos;
 using TACHYON.Shipping.ShippingRequests.Dtos;
@@ -72,7 +73,7 @@ namespace TACHYON.Shipping.ShippingRequests
             BidDomainService bidDomainService,
             IRepository<Capacity, int> capacityRepository, IRepository<TransportType, int> transportTypeRepository, IRepository<RoutPoint, long> routPointRepository,
             IRepository<ShippingRequestsCarrierDirectPricing> carrierDirectPricingRepository,
-            CommissionManager commissionManager)
+            CommissionManager commissionManager, IRepository<ShippingRequestDirectRequest, long> shippingRequestDirectRequestRepository)
         {
             _vasPriceRepository = vasPriceRepository;
             _shippingRequestRepository = shippingRequestRepository;
@@ -97,6 +98,7 @@ namespace TACHYON.Shipping.ShippingRequests
             _routPointRepository = routPointRepository;
             _carrierDirectPricingRepository = carrierDirectPricingRepository;
             _commissionManager = commissionManager;
+            _shippingRequestDirectRequestRepository = shippingRequestDirectRequestRepository;
         }
         private readonly IRepository<ShippingRequestsCarrierDirectPricing> _carrierDirectPricingRepository;
         private readonly IRepository<VasPrice> _vasPriceRepository;
@@ -107,7 +109,7 @@ namespace TACHYON.Shipping.ShippingRequests
         private readonly IRepository<UnitOfMeasure, int> _unitOfMeasureRepository;
         private readonly IRepository<Vas, int> _lookup_vasRepository;
         private readonly IRepository<ShippingRequestVas, long> _shippingRequestVasRepository;
-
+        private readonly IRepository<ShippingRequestDirectRequest, long> _shippingRequestDirectRequestRepository;
         // private readonly IRepository<Route, int> _lookup_routeRepository;
         private readonly IRepository<RoutStep, long> _routStepRepository;
         private readonly IRepository<RoutPoint, long> _routPointRepository;
@@ -1091,7 +1093,57 @@ namespace TACHYON.Shipping.ShippingRequests
 
         #endregion
 
+        #region Pricing
+        /// <summary>
+        /// Get shipping request details for pricing
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
 
+
+        [RequiresFeature(AppFeatures.Shipper, AppFeatures.TachyonDealer, AppFeatures.Carrier)]
+        public async Task<GetShippingRequestForPricingOutput> GetShippingRequestForPricing(long id)
+        {           
+            DisableTenancyFilters();
+
+            var shippingRequest = await _shippingRequestRepository
+                            .GetAll()
+                            .AsNoTracking()
+                            .Include(t => t.Tenant)
+                            .Include(oc => oc.OriginCityFk)
+                            .Include(dc => dc.DestinationCityFk)
+                            .Include(c => c.GoodCategoryFk)
+                             .ThenInclude(x => x.Translations)
+                            .Include(t => t.TrucksTypeFk)
+                             .ThenInclude(x => x.Translations)
+                            .WhereIf(await IsEnabledAsync(AppFeatures.Shipper), x => x.TenantId == AbpSession.TenantId && !x.IsTachyonDeal)
+                            .FirstOrDefaultAsync(r => r.Id == id && (r.Status == ShippingRequestStatus.NeedsAction || r.Status == ShippingRequestStatus.PrePrice));
+            if (await IsEnabledAsync(AppFeatures.Carrier))// Applay permission for carrier if can see the shipping request details
+            {
+                if (shippingRequest.IsBid)
+                {
+                    if (shippingRequest.BidStatus != ShippingRequestBidStatus.OnGoing) throw new UserFriendlyException(L("The Bid must be Ongoing"));
+                }
+                else 
+                {
+                    var _directRequest = await _shippingRequestDirectRequestRepository.FirstOrDefaultAsync(x => x.CarrierTenantId == AbpSession.TenantId.Value && x.ShippingRequestId == id);
+                    if (_directRequest == null) throw new UserFriendlyException(L("YouDoNotHaveDirectRequest"));
+                }
+            }
+
+
+
+            var getShippingRequestForPricingOutput = ObjectMapper.Map<GetShippingRequestForPricingOutput>(shippingRequest);
+            getShippingRequestForPricingOutput.GoodsCategory = ObjectMapper.Map<GoodCategoryDto>(shippingRequest.GoodCategoryFk).DisplayName;
+            getShippingRequestForPricingOutput.TrukType = ObjectMapper.Map<TrucksTypeDto>(shippingRequest.TrucksTypeFk).TranslatedDisplayName;
+
+
+            return getShippingRequestForPricingOutput;
+
+        }
+
+   
+        #endregion
         private async Task ShippingRequestVasListValidate(CreateOrEditShippingRequestDto input)
         {
             if (input.ShippingRequestVasList.Count <= 0) return;
