@@ -89,7 +89,7 @@ namespace TACHYON.TachyonPriceOffers
 
             if (input.Id != null)
             {
-                if (Offer.OfferStatus == OfferStatus.Pending || Offer.OfferStatus == OfferStatus.AcceptedAndWaitingForCarrier)
+                if (Offer.OfferStatus == OfferStatus.Pending)
                 {
                     await EditPendingOffer(input, Offer);
                 }
@@ -131,9 +131,10 @@ namespace TACHYON.TachyonPriceOffers
         [RequiresFeature(AppFeatures.TachyonDealer)]
         public async Task Delete(EntityDto entity)
         {
+            DisableTenancyFilters();
             var offer = await _tachyonPriceOfferRepository
                 .GetAll()
-                .Include(x=>x.ShippingRequestFk)
+                .Include(x => x.ShippingRequestFk)
                 .FirstOrDefaultAsync(x => x.Id == entity.Id && x.OfferStatus == OfferStatus.Pending);
             if (offer == null)
             {

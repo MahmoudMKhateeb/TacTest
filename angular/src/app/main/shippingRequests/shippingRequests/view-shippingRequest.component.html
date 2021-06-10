@@ -29,12 +29,10 @@
             role="alert"
           >
             <div class="alert-icon"><i class="flaticon-info"></i></div>
-            <!--TODO need some work-->
-
             <div class="alert-text text-bold">
-              This Shipping Request is still in price Offering Stage Would You like To
-              <a class="mx-1">Send Direct Request</a> or
-              <a class="mx-1" (click)="tachyonDealToBiddingModal.show(activeShippingRequestId)">Start Bidding</a> on it now ?
+              This Shipping Request is still in price offering Stage you can either
+              <a class="mx-1" (click)="scrollToDirectRequests()">Send Direct Request</a> or
+              <a class="mx-1" (click)="tachyonDealToBiddingModal.show(activeShippingRequestId)">Start Bidding</a> on it now
             </div>
           </div>
           <div class="row">
@@ -322,7 +320,7 @@
       <!--   End::RouteDetails   -->
       <!--  start:: DirectOffers      -->
       <ng-template [ngIf]="canSeeDirectRequests()">
-        <GetAllDirectRequestsTable [shippingRequestId]="activeShippingRequestId"></GetAllDirectRequestsTable>
+        <GetAllDirectRequestsTable #GetAllDirectRequestsTable [shippingRequestId]="activeShippingRequestId"></GetAllDirectRequestsTable>
       </ng-template>
       <!--  end:: DirectOffers        -->
       <!--  start:: PriceOfferingSection -->
@@ -351,6 +349,6 @@
       <!--  End of the First Container      -->
     </div>
   </div>
-
+  <!--  <sendDirectRequestsModal #sendDirectRequestsModal [shippingRequestId]="activeShippingRequestId"></sendDirectRequestsModal>-->
   <tachyonDealToBiddingModal #tachyonDealToBiddingModal (modalsave)="reloadCurrentPage()"></tachyonDealToBiddingModal>
 </div>
