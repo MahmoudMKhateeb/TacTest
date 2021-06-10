@@ -45,7 +45,7 @@ namespace TACHYON.MarketPlaces
                      .ThenInclude(x=>x.Translations)
                     .Include(t=>t.TrucksTypeFk)
                      .ThenInclude(x => x.Translations)
-                .Where(x=>x.IsBid)
+                .Where(x=>x.IsBid && (x.Status == ShippingRequestStatus.NeedsAction || x.Status == ShippingRequestStatus.PrePrice))
                 .WhereIf(await IsEnabledAsync(AppFeatures.Shipper), x => x.TenantId == AbpSession.TenantId && !x.IsTachyonDeal)
                 .WhereIf(await IsEnabledAsync(AppFeatures.Carrier), x => x.BidStatus == ShippingRequestBidStatus.OnGoing)
                 .OrderBy(Input.Sorting ?? "id desc");
@@ -74,7 +74,8 @@ namespace TACHYON.MarketPlaces
             {
                 marketPlaceListDto.ForEach(  x =>
                 {
-                    x.CarrierPricing =ObjectMapper.Map<ShippingRequestCarrierPricingDto>(_priceOfferManager.GetCarrierPricingOrNull(x.Id)) ;
+                    x.IsPricing = _priceOfferManager.CheckCarrierIsPricing(x.Id);
+                   // x.CarrierPricing =ObjectMapper.Map<ShippingRequestCarrierPricingDto>(_priceOfferManager.GetCarrierPricingOrNull(x.Id)) ;
                 });
             }
             marketPlaceListDto.ForEach(x =>

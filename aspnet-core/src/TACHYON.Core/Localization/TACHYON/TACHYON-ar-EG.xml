@@ -116,10 +116,12 @@
     <text name="BalnaceRecharges">إدارة الرصيد</text>
     <text name="BaseLanguage">اللغة الأساسية</text>
     <text name="BaseValue">النص الأساسي</text>
+    <text name="Bid">مزايده</text>
     <text name="BidAmount">قيمة عرض السعر</text>
     <text name="BiddingEndDate">توقف استقبال الأسعار</text>
     <text name="BiddingStartDate">بداية استقبال الأسعار</text>
     <text name="BidPlacedSuccessfully">تم إضافة عرض السعر بنجاح</text>
+    <text name="Bids">مزايدات</text>
     <text name="BidsList">قائمة التسعيرات</text>
     <text name="BidStartDate">بداية استقبال الأسعار</text>
     <text name="BidUpdatedSuccessfully">تم تحديث عرض السعر بنجاح</text>
@@ -424,6 +426,7 @@
     <text name="DeletingRole">جاري حذف الدور</text>
     <text name="DeletingTenant">جاري حذف العميل</text>
     <text name="DeletingUser">جاري حذف المستخدم</text>
+    <text name="Delivery">توصيل</text>
     <text name="Demo_SampleChatMessage">مرحبا، هذه رسالة اختبار. الرجاء الدخول بحسابي في متصفح آخر وتحقق من كيفية عمل ميزة الدردشة .</text>
     <text name="DemoPayPalAccount">حساب بايبال التجريبي</text>
     <text name="DemoUiComponents">مكونات واجهة المستخدم التجريبية</text>
@@ -870,6 +873,7 @@
     <text name="ManagingOrganizationTree">إدارة الوحدات التنظيمية</text>
     <text name="ManagingRoles">إدارة الأدوار</text>
     <text name="Marketplace">السوق</text>
+    <text name="MarketPlacepriced">مسعره</text>
     <text name="MaxAmount">أعلى قيمة</text>
     <text name="MaxCount">أكبر عدد</text>
     <text name="MaxDigitNumberCanNotbeLessThanMinDigitNumber">الحد الأعلى من الخانات يجب أن يكون أكبر من الحد الأدني</text>
@@ -900,6 +904,7 @@
     <text name="ModelYear">سنة الصنع</text>
     <text name="Monthly">شهري</text>
     <text name="MonthlyPrice">السعر الشهري</text>
+    <text name="More">المزيد</text>
     <text name="MoveTenantsOfEdition">نقل العملاء إلى النسخه</text>
     <text name="MoveTenantsOfEditionDescription">{0} سيتم نقل العملاء</text>
     <text name="MoveTenantsToAnotherEdition">نقل العملاء إلى نسخه أخرى</text>
@@ -977,6 +982,7 @@
     <text name="None">لا شيء</text>
     <text name="NoOrganizationUnitDefinedYet">لا توجد وحدات تنظيمية.</text>
     <text name="NoPermission">ليس لديك أي صلاحيات تواصل مع مشرف حسابك</text>
+    <text name="NoRecordsFound">لا يوجد سجلات</text>
     <text name="Normal">عادي</text>
     <text name="NotAMemberYet">تسجيل جديد</text>
     <text name="NotAssigned">لم يعيّن</text>
@@ -1192,12 +1198,14 @@
     <text name="RegisterFormUserNameInvalidMessage">الرجاء عدم ادخال بريدك الإلكتروني كاسم مستخدم</text>
     <text name="Reject">رفض</text>
     <text name="Rejected">مرفوض</text>
+    <text name="RejectedOffer"><![CDATA[<a href="/app/main/shippingRequests/shippingRequests/view?id={id}&offerid={offerid}">لقد تم رفض عرضك من قبل {rejectedby}.</a>]]></text>
     <text name="RejectedReason">سبب الرفض</text>
     <text name="RejectionReason">سبب رفض المستند</text>
     <text name="RejectPricingOffer">رفض عرض السعر</text>
     <text name="RejectShippingRequestNotificationMessage">تم إلغاء طلب الشحنة</text>
     <text name="RejectThisTrip">رفض هذه الرحلة!</text>
     <text name="RemainingDay">الأيام المتبقية</text>
+    <text name="RemainingDays">الأيام المتبقيه</text>
     <text name="RemainingTime">الوقت المتبقي</text>
     <text name="RememberMe">تذكرنى</text>
     <text name="RememberMyDecision">تذكر إختياري</text>
@@ -1596,6 +1604,7 @@
     <text name="ThereIsNoViewConfigurationForX">لا توجد إعدادات العرض لـ {0}</text>
     <text name="TheShipperSelectedIsNotFound">الشاحن المحدد غير موجود</text>
     <text name="TheShippingIsNotFound">الشحنة غير متوفره</text>
+    <text name="TheShippingRequestNotFound">لا يوجد شحنة</text>
     <text name="ThisEditionIsUsedAsAnExpiringEdition">يتم استخدام هذه النسخة كنسخة تنتهي صلاحيتها لنسخة أخرى. إذا كنت تريد جعل هذه النسخة مدفوعة، يجب عليك أولا إزالتها من النسخ الأخرى.</text>
     <text name="ThisFieldIsRequired">هذا الحقل مطلوب</text>
     <text name="ThisInvoiceIsNotYours">هذه الفاتورة ليست لك!</text>
@@ -1913,12 +1922,15 @@
     <text name="YouAreNotAuthorizedToPerformThisOperation">غير مصرح لك بتنفيذ هذه العملية</text>
     <text name="YouAreNotLinkedToAnyAccount">أنت غير مرتبط بأي حساب</text>
     <text name="YouCanBackToYourAccount">يمكنك العودة لحسابك هنا</text>
+    <text name="YouCanDeleteDirectRequestOnlyWhenTheStatusIsNew">لا يمكن حذف الطلب المباشر إلا إذا كانت حالته جديده فقط.</text>
     <text name="YouCanManageUsersOrganizationUnitsFromOrganizationUnitsPage">يمكنك إدارة وحدات التنظيم من صفحة الوحدات التنظيمية</text>
+    <text name="YouCanNoCreateOrEditPriceWhenThePriceAccepted">لا يمكنك إضافة أو تحرير السعر بعد أم تم إعتماد السعر.</text>
     <text name="YouCannotBeFriendWithYourself">لا يمكنك مصادقة حسابك</text>
     <text name="YouCanNotDeleteOwnAccount">لا يمكنك حذف حسابك!</text>
     <text name="YouCannotLinkToSameAccount">لايمكنك الارتباط بنفس الحساب</text>
     <text name="YouCannotRemoveUserRolePermissionsFromAdminRole">لا يمكنك حذف أو تعديل صلاحيات المستخدم الرئيسي</text>
     <text name="YouCannotRemoveUserRolePermissionsFromAdminUser">لا يمكنك إزالة إذن التعديل للمستخدم / للدور من مستخدم مشرف</text>
+    <text name="YouCanNotSendQuoteForThisShipmentNow">لا يمكنك إرسال عرض أسعار لهذه الشحنة الآن</text>
     <text name="YouDoNotHaveEnoughCreditInYourCreditCard">ليس لديك ما يكفي من الائتمان في بطاقتك الائتمانية</text>
     <text name="YouDontHaveAnyBlockedFriend">لا يوجد لديك أي مستخدمين محظورين، في حال أنك تريد حظر الأصدقاء، اختر صديق ثم اختر حظر من قائمة الإجراءات</text>
     <text name="YouDontHaveAnyFriend">لا يوجد لديك أي أصدقاء، قم بكتابة اسم المستخدم في المكان المخصص ثم اضغط على زر "إضافة صديق"</text>

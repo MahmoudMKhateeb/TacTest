@@ -11,11 +11,12 @@ namespace TACHYON.AutoMapper.MarketPlaces
         public MarketPlaceProfile()
         {
             CreateMap<ShippingRequest, MarketPlaceListDto>()
-                 .ForMember(dst => dst.Shipper, opt => opt.MapFrom(src => src.Tenant.companyName))
+                 .ForMember(dst => dst.Shipper, opt => opt.MapFrom(src => src.Tenant.Name))
                  .ForMember(dst => dst.OriginCity, opt => opt.MapFrom(src => src.OriginCityFk.DisplayName ))
                  .ForMember(dst => dst.DestinationCity, opt => opt.MapFrom(src => src.DestinationCityFk.DisplayName))
                  .ForMember(dst => dst.RemainingDays, opt => opt.MapFrom(src => GetRemainingDays(src.BidEndDate)))
-                 .ForMember(dst => dst.RangeDate, opt => opt.MapFrom(src => GetDateRange(src.StartTripDate,src.EndTripDate)));
+                 .ForMember(dst => dst.RangeDate, opt => opt.MapFrom(src => GetDateRange(src.StartTripDate,src.EndTripDate)))
+                 ;
         }
         private string GetRemainingDays(DateTime? BidEndDate)
         {

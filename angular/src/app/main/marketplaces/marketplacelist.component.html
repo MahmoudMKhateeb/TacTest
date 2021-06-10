@@ -12,16 +12,23 @@
     <div class="container-fluid">
       <div class="row">
         <div class="col-12 col-lg-6 mb-4" *ngFor="let item of Marketplaces">
-          <div class="shipCard {{ item.isTachyonDeal ? 'tachyonDialer' : '' }}">
+          <div
+            class="shipCard {{ item.isTachyonDeal ? 'tachyonDialer' : '' }} {{ dir == 'rtl' ? ' rtl' : '' }} {{
+              item.isPriced || item.remainingDays == '0' ? ' shipCardGray' : ''
+            }}"
+          >
             <img *ngIf="item.isTachyonDeal" class="markTachyon" src="/assets/custom/imgs/mark.svg" alt="" />
             <div class="infoBasic">
-              <a href="javascript:void(0)" class="companyName">
-                {{ item.shipper }}
+              <a *ngIf="!feature.isEnabled('App.Shipper')" href="javascript:void(0)" class="companyName">
+                {{ item.isTachyonDeal ? l('TachyonManageService') : item.shipper }}
               </a>
-              <span *ngIf="item.remainingDays" class="remainingTime">
+              <span *ngIf="item.remainingDays && item.remainingDays != '0'" class="remainingTime">
                 <b>{{ item.remainingDays }}</b>
-                days remaining
+                {{ getWordTitle(item.remainingDays, 'RemainingDay') }}
               </span>
+              <b *ngIf="item.remainingDays == '0'" class="infoHighLight red stautsTruck">
+                {{ l('Expired') }}
+              </b>
             </div>
             <div class="detailsRoad">
               <div class="from">
@@ -74,360 +81,21 @@
             </div>
             <div class="actionsShip">
               <div>
-                <a href="javascript:void(0)" class="infoHighLight green"> {{ item.totalBids }} bids</a>
+                <a *ngIf="item.totalBids > 0 && !feature.isEnabled('App.Carrier')" href="javascript:void(0)" class="infoHighLight green">
+                  {{ item.totalBids }} {{ getWordTitle(item.totalBids, 'bid') }}
+                </a>
+                <a *ngIf="item.isPricing" href="javascript:void(0)" class="infoHighLight red">{{ l('MarketPlacepriced') }}</a>
               </div>
               <div class="actions">
                 <a href="" class="red">
-                  ACTION 3
+                  {{ l('More') }}
                 </a>
               </div>
             </div>
           </div>
         </div>
-        <div class="col-12 col-lg-6 mb-4">
-          <div class="shipCard shipCardGray">
-            <div class="infoBasic">
-              <a href="javascript:void(0)" class="companyName">
-                Company Name
-              </a>
-              <span class="remainingTime">
-                <b>07</b>
-                days remaining
-              </span>
-            </div>
-            <div class="detailsRoad">
-              <div class="from">
-                <p class="pickup">Pickup</p>
-                <p>City Name , Street123 St, 1234/12</p>
-              </div>
-              <div class="to">
-                <p class="delivery">Delivery</p>
-                <p>City Name , Street123 St, 1234/12</p>
-              </div>
-            </div>
-            <div class="divirCard"></div>
-            <div class="moreDetails">
-              <div class="dateRange">
-                <p>
-                  <img src="imgs/time.svg" width="16" alt="" />
-                  Date Range
-                </p>
-                <p>
-                  26/05/2021 - 29/05/2021
-                </p>
-              </div>
-              <div class="goodCategory">
-                <p>
-                  <img src="imgs/box.svg" width="16" alt="" />
-                  Good Category
-                </p>
-                <p>
-                  Good Category
-                </p>
-              </div>
-              <div class="truckType">
-                <p>
-                  <i class="fas fa-truck"></i>
-                  Truck Type
-                </p>
-                <p>
-                  Truck Type
-                </p>
-              </div>
-              <div class="numOfTrips">
-                <p>
-                  <i class="fas fa-truck-loading"></i>
-                  Num Of Trips
-                </p>
-                <p>
-                  18
-                </p>
-              </div>
-            </div>
-            <div class="actionsShip">
-              <div>
-                <a href="javascript:void(0)" class="infoHighLight green">2 bids</a>
-                <a href="javascript:void(0)" class="infoHighLight red">priced</a>
-              </div>
-              <div class="actions">
-                <a href="" class="blue">
-                  ACTION 1
-                </a>
-                <a href="" class="green">
-                  ACTION 2
-                </a>
-                <a href="" class="red">
-                  ACTION 3
-                </a>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="col-12 col-lg-6 mb-4">
-          <div class="shipCard tachyonDialer">
-            <img class="markTachyon" src="imgs/mark.svg" alt="" />
-            <div class="infoBasic">
-              <a href="javascript:void(0)" class="companyName">
-                Tachyon Dialer
-              </a>
-              <span class="remainingTime">
-                <b>07</b>
-                days remaining
-              </span>
-            </div>
-            <div class="detailsRoad">
-              <div class="from">
-                <p class="pickup">Pickup</p>
-                <p>City Name , Street123 St, 1234/12</p>
-              </div>
-              <div class="to">
-                <p class="delivery">Delivery</p>
-                <p>City Name , Street123 St, 1234/12</p>
-              </div>
-            </div>
-            <div class="divirCard"></div>
-            <div class="moreDetails">
-              <div class="dateRange">
-                <p>
-                  <img src="imgs/time.svg" width="16" alt="" />
-                  Date Range
-                </p>
-                <p>
-                  26/05/2021 - 29/05/2021
-                </p>
-              </div>
-              <div class="goodCategory">
-                <p>
-                  <img src="imgs/box.svg" width="16" alt="" />
-                  Good Category
-                </p>
-                <p>
-                  Good Category
-                </p>
-              </div>
-              <div class="truckType">
-                <p>
-                  <i class="fas fa-truck"></i>
-                  Truck Type
-                </p>
-                <p>
-                  Truck Type
-                </p>
-              </div>
-            </div>
-            <div class="actionsShip">
-              <div>
-                <a href="javascript:void(0)" class="infoHighLight green">2 bids</a>
-                <a href="javascript:void(0)" class="infoHighLight red">priced</a>
-              </div>
-              <div class="actions">
-                <a href="" class="blue">
-                  ACTION 1
-                </a>
-                <a href="" class="green">
-                  ACTION 2
-                </a>
-                <a href="" class="red">
-                  ACTION 3
-                </a>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="col-12 col-lg-6 mb-4">
-          <div class="shipCard shipCardBlue">
-            <img class="markTachyon" src="imgs/mark.svg" alt="" />
-            <div class="infoBasic">
-              <a href="javascript:void(0)" class="companyName">
-                Company Name
-              </a>
-              <span class="remainingTime">
-                <b>07</b>
-                days remaining
-              </span>
-            </div>
-            <div class="detailsRoad">
-              <div class="from">
-                <p class="pickup">Pickup</p>
-                <p>City Name , Street123 St, 1234/12</p>
-              </div>
-              <div class="to">
-                <p class="delivery">Delivery</p>
-                <p>City Name , Street123 St, 1234/12</p>
-              </div>
-            </div>
-            <div class="divirCard"></div>
-            <div class="moreDetails">
-              <div class="dateRange">
-                <p>
-                  <img src="imgs/time.svg" width="16" alt="" />
-                  Date Range
-                </p>
-                <p>
-                  26/05/2021 - 29/05/2021
-                </p>
-              </div>
-              <div class="goodCategory">
-                <p>
-                  <img src="imgs/box.svg" width="16" alt="" />
-                  Good Category
-                </p>
-                <p>
-                  Good Category
-                </p>
-              </div>
-              <div class="truckType">
-                <p>
-                  <i class="fas fa-truck"></i>
-                  Truck Type
-                </p>
-                <p>
-                  Truck Type
-                </p>
-              </div>
-            </div>
-            <div class="actionsShip">
-              <div>
-                <a href="javascript:void(0)" class="infoHighLight green">2 bids</a>
-                <a href="javascript:void(0)" class="infoHighLight blue">5 match</a>
-              </div>
-              <div class="actions">
-                <a href="" class="green">
-                  ACTION 2
-                </a>
-                <a href="" class="red">
-                  ACTION 3
-                </a>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="col-12 col-lg-6 mb-4">
-          <div class="shipCard">
-            <img class="markTachyon" src="imgs/mark.svg" alt="" />
-            <div class="infoBasic">
-              <a href="javascript:void(0)" class="companyName">
-                Company Name
-              </a>
-              <b class="infoHighLight green stautsTruck">
-                Picked Up
-              </b>
-            </div>
-            <div class="detailsRoad">
-              <div class="from">
-                <p class="pickup">Pickup</p>
-                <p>City Name , Street123 St, 1234/12</p>
-              </div>
-              <div class="to">
-                <p class="delivery">Delivery</p>
-                <p>City Name , Street123 St, 1234/12</p>
-              </div>
-            </div>
-            <div class="divirCard"></div>
-            <div class="moreDetails">
-              <div class="goodCategory">
-                <p>
-                  <img src="imgs/box.svg" width="16" alt="" />
-                  Good Category
-                </p>
-                <p>
-                  Good Category
-                </p>
-              </div>
-              <div class="driverName">
-                <p>
-                  <i class="fas fa-user"></i>
-                  Driver's Name
-                </p>
-                <p>
-                  <img class="userDriver" src="imgs/userDriver.png" alt="" />
-                  Mohammed Hassan
-                </p>
-              </div>
-              <div class="truckType">
-                <p>
-                  <i class="fas fa-truck"></i>
-                  Truck Type
-                </p>
-                <p>
-                  Truck Type
-                </p>
-              </div>
-            </div>
-            <div class="actionsShip">
-              <div></div>
-              <div class="actions">
-                <a href="" class="red">
-                  ACTION 3
-                </a>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="col-12 col-lg-6 mb-4">
-          <div class="shipCard">
-            <img class="markTachyon" src="imgs/mark.svg" alt="" />
-            <div class="infoBasic">
-              <a href="javascript:void(0)" class="companyName">
-                Company Name
-              </a>
-              <b class="infoHighLight red stautsTruck">
-                <img src="imgs/incident.svg" class="mr-1" width="16" alt="" />
-                incident
-              </b>
-            </div>
-            <div class="detailsRoad">
-              <div class="from">
-                <p class="pickup">Pickup</p>
-                <p>City Name , Street123 St, 1234/12</p>
-              </div>
-              <div class="to">
-                <p class="delivery">Delivery</p>
-                <p>City Name , Street123 St, 1234/12</p>
-              </div>
-            </div>
-            <div class="divirCard"></div>
-            <div class="moreDetails">
-              <div class="goodCategory">
-                <p>
-                  <img src="imgs/box.svg" width="16" alt="" />
-                  Good Category
-                </p>
-                <p>
-                  Good Category
-                </p>
-              </div>
-              <div class="driverName">
-                <p>
-                  <i class="fas fa-user"></i>
-                  Driver's Name
-                </p>
-                <p>
-                  <img class="userDriver" src="imgs/userDriver.png" alt="" />
-                  Mohammed Hassan
-                </p>
-              </div>
-              <div class="truckType">
-                <p>
-                  <i class="fas fa-truck"></i>
-                  Truck Type
-                </p>
-                <p>
-                  Truck Type
-                </p>
-              </div>
-            </div>
-            <div class="actionsShip">
-              <div></div>
-              <div class="actions">
-                <a href="" class="red">
-                  ACTION 3
-                </a>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="col-12 loadingRow text-center my-3">
+
+        <div *ngIf="IsLoading" class="col-12 loadingRow text-center my-3">
           <span></span>
         </div>
       </div>

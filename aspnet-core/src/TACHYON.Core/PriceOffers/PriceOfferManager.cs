@@ -214,6 +214,10 @@ namespace TACHYON.PriceOffers
         {
             return _priceOfferRepository.GetAll().Include(x => x.PriceOfferDetails).FirstOrDefault(x => x.ShippingRequestId == requestId && x.TenantId == _abpSession.TenantId.Value);
         }
+        public bool CheckCarrierIsPricing(long requestId)
+        {
+            return _priceOfferRepository.GetAll().Any(x => x.ShippingRequestId == requestId && x.TenantId == _abpSession.TenantId.Value);
+        }
         /// <summary>
         /// Check If the shipping request in market place to access to add offer
         /// </summary>

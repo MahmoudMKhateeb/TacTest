@@ -1,37 +1,37 @@
 import { Component, OnInit, Injector, ViewChild } from '@angular/core';
 import { AppComponentBase } from '@shared/common/app-component-base';
 import { appModuleAnimation } from '@shared/animations/routerTransition';
-import { Table } from 'primeng/table';
-import { Paginator } from 'primeng/paginator';
-import { LazyLoadEvent } from 'primeng/public_api';
+
 import { MarketPlaceServiceProxy, MarketPlaceListDto } from '@shared/service-proxies/service-proxies';
 import * as moment from 'moment';
 
 import * as _ from 'lodash';
 import { FileDownloadService } from '@shared/utils/file-download.service';
+import { ScrollPagnationComponentBase } from '@shared/common/scroll/scroll-pagination-component-base';
 @Component({
   templateUrl: './marketplacelist.component.html',
-  styleUrls: ['./marketplacelist.component.css'],
+  styleUrls: ['./marketplacelist.component.scss'],
   animations: [appModuleAnimation()],
 })
-export class MarketPlaceListComponent extends AppComponentBase implements OnInit {
-  @ViewChild('dataTable', { static: true }) dataTable: Table;
-  @ViewChild('paginator', { static: true }) paginator: Paginator;
+export class MarketPlaceListComponent extends ScrollPagnationComponentBase implements OnInit {
   Marketplaces: MarketPlaceListDto[] = [];
-  IsStartSearch: boolean = false;
   fromDate: moment.Moment | null | undefined;
   toDate: moment.Moment | null | undefined;
   ReferenceNo: string | null | undefined;
   TenantId: number | undefined = undefined;
   creationDateRange: Date[] = [moment().startOf('day').toDate(), moment().endOf('day').toDate()];
   creationDateRangeActive: boolean = false;
+  dir = 'ltr';
   constructor(injector: Injector, private _CurrentServ: MarketPlaceServiceProxy, private _fileDownloadService: FileDownloadService) {
     super(injector);
   }
   ngOnInit(): void {
-    this.getAll();
+    this.dir = document.getElementsByTagName('html')[0].getAttribute('dir');
+    this.LoadData();
+    console.log(`(${window.innerHeight} + ${window.scrollY}) >= ${document.body.offsetHeight}`);
   }
-  getAll(event?: LazyLoadEvent): void {
+
+  LoadData() {
     if (this.creationDateRangeActive) {
       this.fromDate = moment(this.creationDateRange[0]);
       this.toDate = moment(this.creationDateRange[1]);
@@ -40,24 +40,31 @@ export class MarketPlaceListComponent extends AppComponentBase implements OnInit
       this.toDate = null;
     }
 
-    this._CurrentServ.getAll(undefined, 0, 10).subscribe((result) => {
-      this.IsStartSearch = true;
-      this.Marketplaces = result.items;
-      console.log(result.items);
+    this._CurrentServ.getAll(undefined, this.skipCount, this.maxResultCount).subscribe((result) => {
+      this.IsLoading = false;
+      if (result.items.length == 0) {
+        this.StopLoading = true;
+        return;
+      }
+      this.Marketplaces.push(...result.items);
     });
   }
 
-  reloadPage(): void {
-    this.paginator.changePage(this.paginator.getPage());
-  }
   delete(input: MarketPlaceListDto): void {
     this.message.confirm('', this.l('AreYouSure'), (isConfirmed) => {
       if (isConfirmed) {
         this._CurrentServ.delete(input.id).subscribe(() => {
           this.notify.success(this.l('SuccessfullyDeleted'));
-          this.reloadPage();
+          //this.reloadPage();
         });
       }
     });
+  }
+
+  getWordTitle(n: any, word: string): string {
+    if (parseInt(n) == 1) {
+      return this.l(word);
+    }
+    return this.l(`${word}s`);
   }
 }

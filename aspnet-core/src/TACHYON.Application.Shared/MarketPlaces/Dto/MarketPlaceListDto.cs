@@ -14,7 +14,7 @@ namespace TACHYON.MarketPlaces.Dto
         public string OriginCity { get; set; }
         public string DestinationCity { get; set; }
         public string TrukType { get; set; }
-
+        public bool IsPricing { get; set; }
         public string RemainingDays { get; set; }
         public string RangeDate { get; set; }
         public int NumberOfDrops { get; set; }
