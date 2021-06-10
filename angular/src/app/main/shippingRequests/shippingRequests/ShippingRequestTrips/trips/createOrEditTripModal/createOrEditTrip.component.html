@@ -148,18 +148,39 @@
               </div>
             </div>
 
-            <!--      end:Vas's      -->
-            <!--  start:: RouteSteps -->
-            <PointsComponent
-              #PointsComponent
-              (SelectedWayPointsFromChild)="trip.routPoints = $event"
-              [WayPointListFromFatherForShippingRequestEdit]="trip.routPoints"
-              [MainGoodsCategory]="shippingRequest.goodCategoryId"
-              [NumberOfDrops]="shippingRequest.numberOfDrops"
-            ></PointsComponent>
-            <!--  end:: RouteSteps -->
-            <!--end::Body-->
+          <div class="col-lg-6">
+            <div class="form-group">
+              <div class="checkbox-list">
+                <label class="checkbox">
+                  <input type="checkbox" [(ngModel)]="trip.needsDeliveryNote" name="Checkboxes1" />
+                  <span></span>{{ l('NeedsDeliveryNote') }}</label
+                >
+              </div>
+            </div>
           </div>
+
+          <div class="col-lg-6">
+            <div class="form-group">
+              <div class="checkbox-list">
+                <label class="checkbox">
+                  <input type="checkbox" [(ngModel)]="trip.hasAttachment" name="Checkboxes2" />
+                  <span></span>{{ l('HasAttachment') }}</label
+                >
+              </div>
+            </div>
+          </div>
+
+          <!--      end:Vas's      -->
+          <!--  start:: RouteSteps -->
+          <PointsComponent
+            #PointsComponent
+            (SelectedWayPointsFromChild)="trip.routPoints = $event"
+            [WayPointListFromFatherForShippingRequestEdit]="trip.routPoints"
+            [MainGoodsCategory]="shippingRequest.goodCategoryId"
+            [NumberOfDrops]="shippingRequest.numberOfDrops"
+          ></PointsComponent>
+          <!--  end:: RouteSteps -->
+          <!--end::Body-->
         </div>
         <div class="modal-footer">
           <!--begin::Buttons-->
