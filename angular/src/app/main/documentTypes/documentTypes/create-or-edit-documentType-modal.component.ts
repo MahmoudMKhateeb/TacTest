@@ -55,7 +55,6 @@ export class CreateOrEditDocumentTypeModalComponent extends AppComponentBase {
     private _documentTypesServiceProxy: DocumentTypesServiceProxy,
     private _documentTypeTranslationsServiceProxy: DocumentTypeTranslationsServiceProxy,
     private _documentFilesServiceProxy: DocumentFilesServiceProxy,
-
     private _notifyService: NotifyService,
     private _tokenAuth: TokenAuthServiceProxy,
     private _activatedRoute: ActivatedRoute,
@@ -68,18 +67,15 @@ export class CreateOrEditDocumentTypeModalComponent extends AppComponentBase {
   show(documentTypeId?: number): void {
     if (!documentTypeId) {
       this.documentType = new CreateOrEditDocumentTypeDto();
-      this.documentType.documentsEntityId = -1;
-      this.documentType.editionId = -1;
+      this.documentType.documentsEntityId = null;
+      this.documentType.editionId = null;
       this.documentType.id = documentTypeId;
       this.documentType.numberMaxDigits = 2;
       this.documentType.numberMinDigits = 1;
       this.documentType.expirationAlertDays = 0;
       this.documentType.inActiveToleranceDays = 0;
-      //this.documentType.expirationDate = moment().startOf('day');
       this._documentTypesServiceProxy.getAllDocumentsEntitiesForTableDropdown().subscribe((result) => {
         this.allDocumentsEntities = result;
-        this.documentType.documentsEntityId = -1;
-        this.documentType.editionId = -1;
       });
       this.active = true;
       this.modal.show();
@@ -140,7 +136,7 @@ export class CreateOrEditDocumentTypeModalComponent extends AppComponentBase {
       this.tenantOptionSelected = true;
     } else {
       this.tenantOptionSelected = false;
-      this.documentType.editionId = undefined;
+      this.documentType.editionId = null;
     }
   }
 
@@ -172,6 +168,7 @@ export class CreateOrEditDocumentTypeModalComponent extends AppComponentBase {
     } else {
     }
   }
+
   reloadPage(): void {
     this.changeDetectorRef.detectChanges();
     this.paginator.changePage(this.paginator.getPage());
@@ -201,6 +198,7 @@ export class CreateOrEditDocumentTypeModalComponent extends AppComponentBase {
       this.documentType.inActiveToleranceDays = 0;
     }
   }
+
   numberOnly(event): boolean {
     const charCode = event.which ? event.which : event.keyCode;
     if (charCode > 31 && (charCode < 48 || charCode > 57)) {
@@ -208,11 +206,13 @@ export class CreateOrEditDocumentTypeModalComponent extends AppComponentBase {
     }
     return true;
   }
+
   isDocumentTypeNameAvaliable(name: string, id) {
     this._documentTypesServiceProxy.isDocuemntTypeNameAvaliable(name, id).subscribe((result) => {
       this.documentNameisAvaliable = result;
     });
   }
+
   numberChange(type: string) {
     if (type == 'Min') {
       if (this.documentType.numberMinDigits < 1) {
