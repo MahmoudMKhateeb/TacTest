@@ -8,7 +8,6 @@ namespace TACHYON.MarketPlaces
 {
     public interface IMarketPlaceAppService:IApplicationService
     {
-        Task<PagedResultDto<MarketPlaceListDto>> GetAll(GetAllMarketPlaceInput Input);
         Task CreateOrEdit(CreateOrEditPriceOfferInput Input);
         Task Delete(EntityDto Input);
 

@@ -24,6 +24,8 @@ using TACHYON.Goods.GoodCategories.Dtos;
 using TACHYON.MultiTenancy;
 using TACHYON.Notifications;
 using TACHYON.Packing.PackingTypes;
+using TACHYON.PriceOffers;
+using TACHYON.PriceOffers.Dto;
 using TACHYON.Routs.RoutPoints;
 using TACHYON.Routs.RoutSteps;
 using TACHYON.Shipping.DirectRequests;
@@ -633,7 +635,7 @@ namespace TACHYON.Shipping.ShippingRequests
                     shippingRequest.BidStatus = shippingRequest.BidStartDate.Value.Date == Clock.Now.Date ? ShippingRequestBidStatus.OnGoing : ShippingRequestBidStatus.StandBy;
                 }
 
-                _commissionManager.AddShippingRequestCommissionSettingInfo(shippingRequest);
+               // _commissionManager.AddShippingRequestCommissionSettingInfo(shippingRequest);
             }
 
 
@@ -1112,6 +1114,8 @@ namespace TACHYON.Shipping.ShippingRequests
                             .Include(t => t.Tenant)
                             .Include(oc => oc.OriginCityFk)
                             .Include(dc => dc.DestinationCityFk)
+                            .Include(v=>v.ShippingRequestVases)
+                             .ThenInclude(v => v.VasFk)
                             .Include(c => c.GoodCategoryFk)
                              .ThenInclude(x => x.Translations)
                             .Include(t => t.TrucksTypeFk)
@@ -1133,7 +1137,8 @@ namespace TACHYON.Shipping.ShippingRequests
 
 
 
-            var getShippingRequestForPricingOutput = ObjectMapper.Map<GetShippingRequestForPricingOutput>(shippingRequest);
+           var getShippingRequestForPricingOutput = ObjectMapper.Map<GetShippingRequestForPricingOutput>(shippingRequest);
+            getShippingRequestForPricingOutput.Items = ObjectMapper.Map<List<PriceOfferItemDto>>(shippingRequest.ShippingRequestVases);
             getShippingRequestForPricingOutput.GoodsCategory = ObjectMapper.Map<GoodCategoryDto>(shippingRequest.GoodCategoryFk).DisplayName;
             getShippingRequestForPricingOutput.TrukType = ObjectMapper.Map<TrucksTypeDto>(shippingRequest.TrucksTypeFk).TranslatedDisplayName;
 

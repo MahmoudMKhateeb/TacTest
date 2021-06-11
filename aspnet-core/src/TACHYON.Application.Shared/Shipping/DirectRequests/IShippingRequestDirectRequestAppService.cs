@@ -9,6 +9,7 @@ namespace TACHYON.Shipping.DirectRequests
     public  interface IShippingRequestDirectRequestAppService: IApplicationService
     {
         Task<PagedResultDto<ShippingRequestDirectRequestListDto>> GetAll(ShippingRequestDirectRequestGetAllInput input);
+
         Task<PagedResultDto<ShippingRequestDirectRequestGetCarrirerListDto>> GetAllCarriers(ShippingRequestDirectRequestGetAllCarrirerInput input);
 
         Task Create(CreateShippingRequestDirectRequestInput input);

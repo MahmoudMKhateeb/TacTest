@@ -50,6 +50,7 @@
     <text name="AddNewTrip">Add new trip</text>
     <text name="AddNewWayPoint">Add New Way Point</text>
     <text name="AddNewWebhookSubscription">Add New Webhook Subscription</text>
+    <text name="AddOns">Add-ons</text>
     <text name="AddPage">Add page</text>
     <text name="Address">Address</text>
     <text name="AddressBook">Facilities management</text>
@@ -259,6 +260,7 @@
     <text name="Completed">completed</text>
     <text name="Confirm">Confirm</text>
     <text name="ConfirmationMailSentPleaseClickLinkInTheEmail">A confirmation e-mail sent to {0}. Please click link in the email in order to confirm your mail address.</text>
+    <text name="Confirmed">Confirmed</text>
     <text name="ConsumerKey">Consumer Key</text>
     <text name="ConsumerSecret">Consumer Secret</text>
     <text name="Content">Content</text>
@@ -1079,6 +1081,7 @@
     <text name="NoEnoughBalance">You do not have enough balance</text>
     <text name="NoInternetConnection">You Are Currently Not Connected To Internet</text>
     <text name="None">None</text>
+    <text name="NoOfTrips">No. of trips</text>
     <text name="NoOrganizationUnitDefinedYet">No organization unit defined yet.</text>
     <text name="NoPermission">You do not have any permission. Contact your account administrator.</text>
     <text name="NoRecordsFound">No records found</text>
@@ -1291,6 +1294,7 @@ content that we shared with you.</text>
     <text name="Price">Price</text>
     <text name="PriceOffers">Price offers</text>
     <text name="Prices">Prices</text>
+    <text name="PriceSubmitted">Price submitted</text>
     <text name="Pricing">Pricing</text>
     <text name="PricingOffer">Pricing offer</text>
     <text name="Print">Print</text>
@@ -1489,6 +1493,7 @@ content that we shared with you.</text>
     <text name="SetAsDefaultLanguage">Set as default language</text>
     <text name="SetAsRead">set as read</text>
     <text name="SetBiddingStartDate">Bidding start date</text>
+    <text name="SetPriceOffer">Set price offer</text>
     <text name="SetRandomPassword">Set random password.</text>
     <text name="Settings">Settings</text>
     <text name="SettingsHeaderInfo">Show and change application settings.</text>

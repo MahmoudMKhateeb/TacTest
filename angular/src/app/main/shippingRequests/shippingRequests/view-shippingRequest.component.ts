@@ -136,7 +136,13 @@ export class ViewShippingRequestComponent extends AppComponentBase implements On
    */
   canSeeDirectRequests() {
     //if there is an active shipping Request id and the user is TachyonDealer and there still no Carrier assigned to this shipping Reqeust
-    if (this.activeShippingRequestId && this.feature.isEnabled('App.TachyonDealer') && !this.shippingRequestforView.shippingRequest.carrierTenantId) {
+    if (
+      this.activeShippingRequestId &&
+      this.feature.isEnabled('App.SendDirectRequest') &&
+      (!this.shippingRequestforView.shippingRequest.isTachyonDeal ||
+        (this.feature.isEnabled('App.TachyonDealer') && this.shippingRequestforView.shippingRequest.isTachyonDeal)) &&
+      !this.shippingRequestforView.shippingRequest.carrierTenantId
+    ) {
       return true;
     }
     return false;

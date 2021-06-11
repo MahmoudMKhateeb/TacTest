@@ -1,19 +1,20 @@
 ﻿using Abp.Application.Services.Dto;
+using Abp.Domain.Entities.Auditing;
 using System;
-using System.Collections.Generic;
-using TACHYON.PriceOffers.Dto;
+using TACHYON.Shipping.ShippingRequests;
 
-namespace TACHYON.Shipping.ShippingRequests.Dtos
+namespace TACHYON.PriceOffers.Dto
 {
-    public class GetShippingRequestForPricingOutput:EntityDto<long>
+    public class GetShippingRequestForPriceOfferListDto : EntityDto<long>, IHasCreationTime
     {
-        public string Shipper { get; set; }
+        public string Name { get; set; }
         public DateTime CreationTime { get; set; }
         public bool IsTachyonDeal { get; set; }
         public string OriginCity { get; set; }
         public string DestinationCity { get; set; }
         public string TrukType { get; set; }
-        public bool IsPricing { get; set; }
+        public bool isPriced { get; set; }
+        public string RemainingDays { get; set; }
         public string RangeDate { get; set; }
         public int NumberOfDrops { get; set; }
         public int NumberOfTrips { get; set; }
@@ -22,6 +23,12 @@ namespace TACHYON.Shipping.ShippingRequests.Dtos
         public int TotalBids { get; set; }
         public ShippingRequestBidStatus BidStatus { get; set; }
         public ShippingRequestStatus Status { get; set; }
-        public ICollection<PriceOfferItemDto> Items=new List<PriceOfferItemDto>();
+        public ShippingRequestDirectRequestStatus DirectRequestStatus;
+        public string StatusTitle { get; set; }
+        public string BidStatusTitle { get; set; }
+        public string DirectRequestStatusTitle { get; set; }
+        //public string StatusTitle { get { return BidStatus.GetEnumDescription(); } set { } }
+
     }
+ 
 }

@@ -3,10 +3,10 @@ import { appModuleAnimation } from '@shared/animations/routerTransition';
 import { AppComponentBase } from '@shared/common/app-component-base';
 
 @Component({
-  templateUrl: './marketplacelist.component.html',
+  templateUrl: './direct-request-view.component.html',
   animations: [appModuleAnimation()],
 })
-export class MarketPlaceListComponent extends AppComponentBase {
+export class DirectRequestViewComponent extends AppComponentBase {
   constructor(injector: Injector) {
     super(injector);
   }

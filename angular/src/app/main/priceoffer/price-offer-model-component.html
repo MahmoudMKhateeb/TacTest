@@ -1,0 +1,168 @@
+<div
+  bsModal
+  #modal="bs-modal"
+  class="modal fade modalSetPrice tachyonDialer {{ direction == 'rtl' ? ' rtl' : '' }}"
+  tabindex="-1"
+  role="dialog"
+  aria-labelledby="modal"
+  aria-hidden="true"
+  [config]="{ backdrop: 'static' }"
+>
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-body">
+        <button type="button" class="close closeModal" data-dismiss="modal" (click)="close()" aria-label="Close">
+          <i class="fas fa-times"></i>
+        </button>
+        <form class="contentSetPrice">
+          <img src="/assets/custom/imgs/mark.svg" class="markTachyon" alt="" />
+          <div class="infoBasic">
+            <a href="javascript:void(0)" class="companyName">
+              Company Name
+            </a>
+          </div>
+          <div class="divirCard"></div>
+          <div class="table-sendOffer">
+            <span class="titleSendOffer">
+              Send Offer
+            </span>
+            <table>
+              <thead>
+                <tr>
+                  <th>
+                    Trip Price
+                  </th>
+                  <th *ngIf="!feature.isEnabled('App.Carrier')">
+                    <select>
+                      <option value="1">Commission Type</option>
+                      <option value="1">Commission Type2</option>
+                      <option value="1">Commission Type3</option>
+                    </select>
+                  </th>
+                  <th>
+                    Num. Of Trips
+                  </th>
+                  <th>
+                    Total
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>
+                    <input type="text" />
+                    <label for="" class="error">
+                      The trip price field is required.
+                    </label>
+                  </td>
+                  <td>
+                    <input type="text" />
+                  </td>
+                  <td>
+                    <input type="text" />
+                  </td>
+                  <td>
+                    <span>0.0</span>
+                    <span>SAR</span>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="divirCard"></div>
+          <div class="table-vas">
+            <div *ngIf="!feature.isEnabled('App.Carrier')">
+              <span class="titleVas">
+                VAS
+              </span>
+              <div>
+                <select>
+                  <option value="1">Commission Type</option>
+                  <option value="1">Commission Type1</option>
+                  <option value="1">Commission Type2</option>
+                </select>
+                <input type="text" class="ml-2" placeholder="Value" />
+              </div>
+            </div>
+            <table>
+              <thead>
+                <tr>
+                  <th>
+                    Name
+                  </th>
+                  <th>
+                    Price
+                  </th>
+                  <th>
+                    Type
+                  </th>
+                  <th>
+                    Qty
+                  </th>
+                  <th>
+                    Total
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>
+                    <input type="text" />
+                  </td>
+                  <td>
+                    <input type="text" />
+                  </td>
+                  <td>
+                    <input type="text" />
+                  </td>
+                  <td>
+                    <input type="text" />
+                  </td>
+                  <td>
+                    <span>0.0</span>
+                    <span>SAR</span>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="divirCard"></div>
+          <div class="resultPrice">
+            <div>
+              <p>
+                Sub Total
+              </p>
+              <p>
+                <span>0.0</span>
+                <span>SAR</span>
+              </p>
+            </div>
+            <div>
+              <p>
+                VAS Amount
+              </p>
+              <p>
+                <span>0.0</span>
+                <span>SAR</span>
+              </p>
+            </div>
+            <div>
+              <p>
+                Total Amount
+              </p>
+              <p>
+                <span>0.0</span>
+                <span>SAR</span>
+              </p>
+            </div>
+          </div>
+          <div class="sendOffer">
+            <button type="submit">
+              Send offer
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>

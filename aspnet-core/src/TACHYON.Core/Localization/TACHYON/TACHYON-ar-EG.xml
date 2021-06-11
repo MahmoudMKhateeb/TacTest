@@ -43,6 +43,7 @@
     <text name="AddNewGoodDetails">إضافة تفاصيل البضائع</text>
     <text name="AddNewTrip">إضافة رحلة جديدة</text>
     <text name="AddNewWebhookSubscription">Add New Webhook Subscription</text>
+    <text name="AddOns">الإضافات</text>
     <text name="AddPage">إضافة صفحة</text>
     <text name="Address">العنوان</text>
     <text name="AddressBook">إدارة المنشآت</text>
@@ -231,6 +232,7 @@
     <text name="Completed">مكتمل</text>
     <text name="Confirm">تأكيد</text>
     <text name="ConfirmationMailSentPleaseClickLinkInTheEmail">تم إرسال تأكيد البريد الإلكتروني إلى  {0} الرجاء الضغط على الرابط في الرسالة لتأكيد بريدك الإلكتروني</text>
+    <text name="Confirmed">معتمد</text>
     <text name="ConsumerKey">مفتاح المستهلك</text>
     <text name="ConsumerSecret">سر المستهلك</text>
     <text name="Content">المحتوى</text>
@@ -980,6 +982,7 @@
     <text name="NoEnoughBalance">لا يوجد لديك رصيد كافي </text>
     <text name="NoInternetConnection">أنت غير متصل  بالإنترنت حالياً</text>
     <text name="None">لا شيء</text>
+    <text name="NoOfTrips">الرحلات</text>
     <text name="NoOrganizationUnitDefinedYet">لا توجد وحدات تنظيمية.</text>
     <text name="NoPermission">ليس لديك أي صلاحيات تواصل مع مشرف حسابك</text>
     <text name="NoRecordsFound">لا يوجد سجلات</text>
@@ -1158,6 +1161,7 @@
     <text name="Previous">السابق</text>
     <text name="Price">سعر</text>
     <text name="PriceOffers">عروض الأسعار</text>
+    <text name="PriceSubmitted">التسوق</text>
     <text name="Pricing">التسعير</text>
     <text name="PricingOffer">عرض التسعير</text>
     <text name="Print">طباعة</text>
@@ -1334,6 +1338,7 @@
     <text name="SetAsDefaultLanguage">تعيين اللغة الافتراضية</text>
     <text name="SetAsRead">تعيين كمقروء</text>
     <text name="SetBiddingStartDate">بداية النشر على السوق/ بداية استقبال الأسعار</text>
+    <text name="SetPriceOffer">ضع عرض السعر</text>
     <text name="SetRandomPassword">تعيين كلمة مرور عشوائية.</text>
     <text name="Settings">الإعدادات</text>
     <text name="SettingsHeaderInfo">عرض وتغيير إعدادات النظام</text>

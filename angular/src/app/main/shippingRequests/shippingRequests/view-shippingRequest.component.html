@@ -319,8 +319,12 @@
       </div>
       <!--   End::RouteDetails   -->
       <!--  start:: DirectOffers      -->
+      <!--<ng-template [ngIf]="canSeeDirectRequests()">
+      <GetAllDirectRequestsTable #GetAllDirectRequestsTable [shippingRequestId]="activeShippingRequestId"></GetAllDirectRequestsTable>
+    </ng-template>
+            -->
       <ng-template [ngIf]="canSeeDirectRequests()">
-        <GetAllDirectRequestsTable #GetAllDirectRequestsTable [shippingRequestId]="activeShippingRequestId"></GetAllDirectRequestsTable>
+        <direct-request [shippingRequestId]="activeShippingRequestId"></direct-request>
       </ng-template>
       <!--  end:: DirectOffers        -->
       <!--  start:: PriceOfferingSection -->
