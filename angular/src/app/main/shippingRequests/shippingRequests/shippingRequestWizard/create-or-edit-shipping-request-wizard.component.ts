@@ -129,7 +129,7 @@ export class CreateOrEditShippingRequestWizardComponent extends AppComponentBase
   ngAfterViewInit() {
     // Initialize form wizard
     this.wizard = new KTWizard(this.el.nativeElement, {
-      startStep: 3,
+      startStep: 1,
     });
 
     // Validation before going to next page

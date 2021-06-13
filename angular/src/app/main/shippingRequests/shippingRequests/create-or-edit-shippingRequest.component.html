@@ -400,54 +400,54 @@
                         </div>
                       </div>
 
-                      <div class="col-lg-6">
-                        <div class="form-group">
-                          <label><span class="required-fileds">*</span> {{ l('TripsStartDate') }}:</label>
-                          <div class="input-group date">
-                            <input
-                              [(date)]="shippingRequest.startTripDate"
-                              class="form-control"
-                              type="datetime"
-                              name="startdate"
-                              placeholder="{{ l('TripsStartDate') }}"
-                              [minDate]="shippingRequest.bidStartDate || today"
-                              (dateChange)="validateTripsDates()"
-                              bsDatepicker
-                              datePickerMomentModifier
-                            />
+                      <!--                      <div class="col-lg-6">-->
+                      <!--                        <div class="form-group">-->
+                      <!--                          <label><span class="required-fileds">*</span> {{ l('TripsStartDate') }}:</label>-->
+                      <!--                          <div class="input-group date">-->
+                      <!--                            <input-->
+                      <!--                              [(date)]="shippingRequest.startTripDate"-->
+                      <!--                              class="form-control"-->
+                      <!--                              type="datetime"-->
+                      <!--                              name="startdate"-->
+                      <!--                              placeholder="{{ l('TripsStartDate') }}"-->
+                      <!--                              [minDate]="shippingRequest.bidStartDate || today"-->
+                      <!--                              (dateChange)="validateTripsDates()"-->
+                      <!--                              bsDatepicker-->
+                      <!--                              datePickerMomentModifier-->
+                      <!--                            />-->
 
-                            <div class="input-group-append">
-                              <span class="input-group-text">
-                                <i class="la la-calendar-check-o"></i>
-                              </span>
-                            </div>
-                          </div>
-                          <span class="form-text text-muted">{{ l('TripsStartDate') }}</span>
-                        </div>
-                      </div>
-                      <div class="col-lg-6">
-                        <div class="form-group">
-                          <label><span class="required-fileds">*</span>{{ l('TripsEndDate') }}:</label>
-                          <div class="input-group date">
-                            <input
-                              [(date)]="shippingRequest.endTripDate"
-                              class="form-control"
-                              name="endDate"
-                              placeholder="{{ l('TripsEndDate') }}"
-                              [minDate]="shippingRequest.startTripDate || today"
-                              (dateChange)="validateTripsDates()"
-                              bsDatepicker
-                              datePickerMomentModifier
-                            />
-                            <div class="input-group-append">
-                              <span class="input-group-text">
-                                <i class="la la-calendar-check-o"></i>
-                              </span>
-                            </div>
-                          </div>
-                          <span class="form-text text-muted">{{ l('TripsEndDate') }}</span>
-                        </div>
-                      </div>
+                      <!--                            <div class="input-group-append">-->
+                      <!--                              <span class="input-group-text">-->
+                      <!--                                <i class="la la-calendar-check-o"></i>-->
+                      <!--                              </span>-->
+                      <!--                            </div>-->
+                      <!--                          </div>-->
+                      <!--                          <span class="form-text text-muted">{{ l('TripsStartDate') }}</span>-->
+                      <!--                        </div>-->
+                      <!--                      </div>-->
+                      <!--                      <div class="col-lg-6">-->
+                      <!--                        <div class="form-group">-->
+                      <!--                          <label><span class="required-fileds">*</span>{{ l('TripsEndDate') }}:</label>-->
+                      <!--                          <div class="input-group date">-->
+                      <!--                            <input-->
+                      <!--                              [(date)]="shippingRequest.endTripDate"-->
+                      <!--                              class="form-control"-->
+                      <!--                              name="endDate"-->
+                      <!--                              placeholder="{{ l('TripsEndDate') }}"-->
+                      <!--                              [minDate]="shippingRequest.startTripDate || today"-->
+                      <!--                              (dateChange)="validateTripsDates()"-->
+                      <!--                              bsDatepicker-->
+                      <!--                              datePickerMomentModifier-->
+                      <!--                            />-->
+                      <!--                            <div class="input-group-append">-->
+                      <!--                              <span class="input-group-text">-->
+                      <!--                                <i class="la la-calendar-check-o"></i>-->
+                      <!--                              </span>-->
+                      <!--                            </div>-->
+                      <!--                          </div>-->
+                      <!--                          <span class="form-text text-muted">{{ l('TripsEndDate') }}</span>-->
+                      <!--                        </div>-->
+                      <!--                      </div>-->
                       <div class="col-lg-3">
                         <label><span class="required-fileds">*</span> {{ l('RouteType') }}:</label>
                         <div [ngClass]="{ 'spinner spinner-success spinner-right mr-1 ml-1': !allRoutTypes }">
