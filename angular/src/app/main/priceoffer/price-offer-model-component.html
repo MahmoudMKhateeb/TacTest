@@ -14,113 +14,128 @@
         <button type="button" class="close closeModal" data-dismiss="modal" (click)="close()" aria-label="Close">
           <i class="fas fa-times"></i>
         </button>
-        <form class="contentSetPrice">
-          <img src="/assets/custom/imgs/mark.svg" class="markTachyon" alt="" />
-          <div class="infoBasic">
-            <a href="javascript:void(0)" class="companyName">
-              Company Name
-            </a>
-          </div>
-          <div class="divirCard"></div>
+        <form class="contentSetPrice" #Form="ngForm" novalidate (ngSubmit)="sendOffer()">
           <div class="table-sendOffer">
-            <span class="titleSendOffer">
-              Send Offer
-            </span>
             <table>
               <thead>
                 <tr>
                   <th>
-                    Trip Price
+                    {{l('Price')}}
                   </th>
                   <th *ngIf="!feature.isEnabled('App.Carrier')">
-                    <select>
-                      <option value="1">Commission Type</option>
-                      <option value="1">Commission Type2</option>
-                      <option value="1">Commission Type3</option>
+                    <select name="CommissionType" [(ngModel)]="offer.commssionSettings.tripCommissionType" (change)="changeTripComissionValue()">
+                      <option [value]="code.key" *ngFor="let code of priceOfferCommissionType">
+                        {{ l(code.value) | localize }}
+                      </option>
                     </select>
                   </th>
                   <th>
-                    Num. Of Trips
+                    {{l('NoOfTrips')}}
                   </th>
                   <th>
-                    Total
+                    {{l('Total')}}
                   </th>
                 </tr>
               </thead>
               <tbody>
                 <tr>
                   <td>
-                    <input type="text" />
-                    <label for="" class="error">
-                      The trip price field is required.
-                    </label>
+                    <input
+                      type="number"
+                      minlength="1"
+                      min="1"
+                      (keypress)="numberOnly($event)"
+                      name="itemPrice"
+                      [(ngModel)]="offer.itemPrice"
+                      (change)="calculator();"
+                    />
+                  </td>
+                  <td *ngIf="!feature.isEnabled('App.Carrier')">
+                    {{l(commissionTypeTitle)}}
+                    <input
+                      type="number"
+                      min="1"
+                      class="ml-2"
+                      placeholder="Value"
+                      name="commissionPercentageOrAddValue"
+                      [(ngModel)]="offer.commissionPercentageOrAddValue"
+                    />
                   </td>
                   <td>
-                    <input type="text" />
+                    {{offer.quantity}}
                   </td>
                   <td>
-                    <input type="text" />
-                  </td>
-                  <td>
-                    <span>0.0</span>
-                    <span>SAR</span>
+                    <ng-template [ngIf]="offer.itemTotalAmount>0">
+                      <span>{{offer.itemTotalAmount | number}}</span>
+                      <span>{{l('SAR')}}</span>
+                    </ng-template>
                   </td>
                 </tr>
               </tbody>
             </table>
           </div>
           <div class="divirCard"></div>
-          <div class="table-vas">
+          <div class="table-vas" *ngIf="Items.length">
             <div *ngIf="!feature.isEnabled('App.Carrier')">
               <span class="titleVas">
                 VAS
               </span>
               <div>
-                <select>
-                  <option value="1">Commission Type</option>
-                  <option value="1">Commission Type1</option>
-                  <option value="1">Commission Type2</option>
+                <select name="vasCommissionType" [(ngModel)]="offer.commssionSettings.vasCommissionType" (change)="changeVasComissionValue()">
+                  <option [value]="code.key" *ngFor="let code of priceOfferCommissionType">
+                    {{ l(code.value) | localize }}
+                  </option>
                 </select>
-                <input type="text" class="ml-2" placeholder="Value" />
+                <input
+                  type="number"
+                  min="1"
+                  class="ml-2"
+                  placeholder="Value"
+                  name="vasCommissionPercentageOrAddValue"
+                  [(ngModel)]="offer.vasCommissionPercentageOrAddValue"
+                />
               </div>
             </div>
             <table>
               <thead>
                 <tr>
                   <th>
-                    Name
+                    {{l('Name')}}
                   </th>
                   <th>
-                    Price
+                    {{l('Price')}}
                   </th>
                   <th>
-                    Type
+                    {{l('Qty')}}
                   </th>
                   <th>
-                    Qty
-                  </th>
-                  <th>
-                    Total
+                    {{l('Total')}}
                   </th>
                 </tr>
               </thead>
               <tbody>
-                <tr>
+                <tr *ngFor="let item of Items; let i = index">
                   <td>
-                    <input type="text" />
+                    {{item.itemName}}
                   </td>
                   <td>
-                    <input type="text" />
+                    <input
+                      type="number"
+                      [name]="'itemPrice' + i"
+                      [(ngModel)]="item.itemPrice"
+                      min="1"
+                      (change)="calculatorItem(item)"
+                      (keypress)="numberOnly($event)"
+                    />
                   </td>
                   <td>
-                    <input type="text" />
+                    {{item.quantity}}
                   </td>
                   <td>
-                    <input type="text" />
-                  </td>
-                  <td>
-                    <span>0.0</span>
-                    <span>SAR</span>
+                    <ng-template [ngIf]="item.itemTotalAmount>0">
+                      <span>{{item.itemTotalAmount | number}}</span>
+                      <span>{{l('SAR')}}</span>
+                    </ng-template>
                   </td>
                 </tr>
               </tbody>
@@ -130,35 +145,56 @@
           <div class="resultPrice">
             <div>
               <p>
-                Sub Total
+                {{l('SubTotalAmount')}}
               </p>
               <p>
-                <span>0.0</span>
-                <span>SAR</span>
-              </p>
-            </div>
-            <div>
-              <p>
-                VAS Amount
-              </p>
-              <p>
-                <span>0.0</span>
-                <span>SAR</span>
+                <ng-template [ngIf]="offer.subTotalAmount>0">
+                  <span>{{offer.subTotalAmount | number}}</span>
+                  <span>{{l('SAR')}}</span>
+                </ng-template>
               </p>
             </div>
             <div>
               <p>
-                Total Amount
+                {{l('VatAmount')}}
               </p>
               <p>
-                <span>0.0</span>
-                <span>SAR</span>
+                <ng-template [ngIf]="offer.vatAmount>0">
+                  <span>{{offer.vatAmount | number}}</span>
+                  <span>{{l('SAR')}}</span>
+                </ng-template>
+              </p>
+            </div>
+            <div>
+              <p>
+                {{l('TotalAmount')}}
+              </p>
+              <p>
+                <ng-template [ngIf]="offer.totalAmount>0">
+                  <span>{{offer.totalAmount | number}}</span>
+                  <span>{{l('SAR')}}</span>
+                </ng-template>
+              </p>
+            </div>
+            <div *ngIf="feature.isEnabled('App.TachyonDealer') || !appSession.tenantId">
+              <p>
+                {{l('CommissionAmount')}}
+              </p>
+              <p>
+                <span>{{offer.commissionAmount | number}}</span>
+                <span>{{l('SAR')}}</span>
               </p>
             </div>
           </div>
           <div class="sendOffer">
-            <button type="submit">
-              Send offer
+            <button
+              type="submit"
+              class="btn btn-primary"
+              [disabled]="!Form.form.valid"
+              [buttonBusy]="saving"
+              [busyText]="l('SavingWithThreeDot' | localize)"
+            >
+              <i class="fa fa-save"></i> <span>{{ 'SendOffer' | localize }}</span>
             </button>
           </div>
         </form>

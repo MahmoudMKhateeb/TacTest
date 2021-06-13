@@ -138,7 +138,6 @@ import { TerminologieServiceProxy } from 'shared/service-proxies/terminologies-e
     ApiServiceProxies.ShippingRequestTripRejectReasonServiceProxy,
     ApiServiceProxies.InvoiceReportServiceServiceProxy,
     ApiServiceProxies.AppLocalizationServiceProxy,
-    ApiServiceProxies.MarketPlaceServiceProxy,
     ApiServiceProxies.TenantCarrierServiceProxy,
     ApiServiceProxies.ShippingRequestDirectRequestServiceProxy,
     ApiServiceProxies.PriceOfferServiceProxy,

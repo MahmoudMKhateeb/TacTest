@@ -4,8 +4,9 @@ import { appModuleAnimation } from '@shared/animations/routerTransition';
 import { ModalDirective } from 'ngx-bootstrap/modal';
 
 import {
-  ShippingRequestsServiceProxy,
+  PriceOfferServiceProxy,
   GetShippingRequestForPricingOutput,
+  GetShippingRequestForPriceOfferListDto,
   PriceOfferItemDto,
   PriceOfferChannel,
   ShippingRequestBidStatus,
@@ -32,13 +33,16 @@ export class ShippingrequestsDetailsModelComponent extends AppComponentBase {
   duration: string;
   direction: string;
   Items: PriceOfferItemDto[] = [];
-  constructor(injector: Injector, private _CurrentServ: ShippingRequestsServiceProxy) {
+  shippingrequest: GetShippingRequestForPriceOfferListDto = new GetShippingRequestForPriceOfferListDto();
+  constructor(injector: Injector, private _CurrentServ: PriceOfferServiceProxy) {
     super(injector);
   }
 
-  show(id: number): void {
+  show(request: GetShippingRequestForPriceOfferListDto): void {
     this.direction = document.getElementsByTagName('html')[0].getAttribute('dir');
-    this._CurrentServ.getShippingRequestForPricing(id).subscribe((result) => {
+    this.shippingrequest = request;
+    //console.log(this.shippingrequest);
+    this._CurrentServ.getShippingRequestForPricing(this.Channel, this.shippingrequest.id).subscribe((result) => {
       this.request = result;
       this.Items = this.request.items;
       this.active = true;
@@ -51,12 +55,20 @@ export class ShippingrequestsDetailsModelComponent extends AppComponentBase {
     this.active = false;
     this.modal.hide();
   }
-
+  update(offerId: number) {
+    this.shippingrequest.offerId = offerId;
+    this.shippingrequest.isPriced = true;
+  }
+  delete() {
+    this.shippingrequest.offerId = undefined;
+    this.shippingrequest.isPriced = false;
+  }
   /**
    * Check the current user log in can set price or not
    */
   canSetPrice(): boolean {
     if (!this.Channel) return false;
+    if (this.shippingrequest.isPriced) return false;
     if (this.request.status != ShippingRequestStatus.NeedsAction && this.request.status != ShippingRequestStatus.PrePrice) return false;
     if (this.Channel == PriceOfferChannel.MarketPlace && this.request.bidStatus != ShippingRequestBidStatus.OnGoing) return false;
     if (this.feature.isEnabled('App.Shipper')) return false;

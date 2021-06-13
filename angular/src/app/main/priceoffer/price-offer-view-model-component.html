@@ -1,0 +1,160 @@
+<div
+  bsModal
+  #modal="bs-modal"
+  class="modal fade modalSetPrice tachyonDialer {{ direction == 'rtl' ? ' rtl' : '' }}"
+  tabindex="-1"
+  role="dialog"
+  aria-labelledby="modal"
+  aria-hidden="true"
+  [config]="{ backdrop: 'static' }"
+>
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-body">
+        <button type="button" class="close closeModal" data-dismiss="modal" (click)="close()" aria-label="Close">
+          <i class="fas fa-times"></i>
+        </button>
+        <form class="contentSetPrice">
+          <div class="infoBasic">
+            <a href="javascript:void(0)" *ngIf="!feature.isEnabled('App.Carrier')" class="companyName">
+              {{offer.name}}
+            </a>
+          </div>
+          <div class="divirCard"></div>
+          <div class="table-sendOffer">
+            <span class="titleSendOffer">
+              <a href="javascript:void(0)" class="edit" *ngIf="offer.tenantId==appSession.tenantId && offer.shippingRequestStatus==2">
+                <i class="fas fa-pen"></i>
+                {{l('Edit')}}
+              </a>
+              <a href="javascript:void(0)" (click)="delete()" class="delete" *ngIf="canDeleteOffer()">
+                <i class="far fa-trash-alt"></i>
+                {{l('Delete')}}
+              </a>
+              <a href="javascript:void(0)" class="reject" *ngIf="canAcceptOrRejectOffer()">
+                <i class="fas fa-ban"></i>
+                {{l('RejectOffer')}}
+              </a>
+              <a href="javascript:void(0)" class="accept" *ngIf="canAcceptOrRejectOffer()">
+                <i class="fas fa-check"></i>
+                {{l('AcceptPrice')}}
+              </a>
+            </span>
+            <table>
+              <thead>
+                <tr>
+                  <th>
+                    {{l('Price')}}
+                  </th>
+                  <th *ngIf="feature.isEnabled('App.TachyonDealer') || !appSession.tenantId">
+                    {{l('CommissionType')}}
+                  </th>
+                  <th>
+                    {{l('NoOfTrips')}}
+                  </th>
+                  <th>
+                    {{l('Total')}}
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>
+                    {{offer.itemPrice}}
+                  </td>
+                  <td *ngIf="feature.isEnabled('App.TachyonDealer') || !appSession.tenantId">
+                    {{l(offer.commissionTypeTitle)}}
+                  </td>
+                  <td>
+                    {{offer.quantity}}
+                  </td>
+                  <td>
+                    <span>{{(offer.itemPrice * offer.quantity) | number}}</span>
+                    <span>{{l('SAR')}}</span>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="divirCard"></div>
+          <div class="table-vas" *ngIf="Items.length">
+            <table>
+              <thead>
+                <tr>
+                  <th>
+                    {{l('Name')}}
+                  </th>
+                  <th>
+                    {{l('Price')}}
+                  </th>
+                  <th>
+                    {{l('Qty')}}
+                  </th>
+                  <th>
+                    {{l('Total')}}
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let item of Items; let i = index">
+                  <td>
+                    {{item.itemName}}
+                  </td>
+                  <td>
+                    {{item.itemPrice}}
+                  </td>
+                  <td>
+                    {{item.quantity}}
+                  </td>
+                  <td>
+                    <span>{{(item.itemPrice * item.quantity) | number}}</span>
+                    <span>{{l('SAR')}}</span>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="divirCard"></div>
+          <div class="resultPrice">
+            <div>
+              <p>
+                {{l('SubTotalAmount')}}
+              </p>
+              <p>
+                <span>{{offer.subTotalAmount | number}}</span>
+                <span>{{l('SAR')}}</span>
+              </p>
+            </div>
+            <div>
+              <p>
+                {{l('VatAmount')}}
+              </p>
+              <p>
+                <span>{{offer.vatAmount | number}}</span>
+                <span>{{l('SAR')}}</span>
+              </p>
+            </div>
+            <div>
+              <p>
+                {{l('TotalAmount')}}
+              </p>
+              <p>
+                <span>{{offer.totalAmount | number}}</span>
+                <span>{{l('SAR')}}</span>
+              </p>
+            </div>
+            <div *ngIf="feature.isEnabled('App.TachyonDealer') || !appSession.tenantId">
+              <p>
+                {{l('CommissionAmount')}}
+              </p>
+              <p>
+                <span>{{offer.commissionAmount | number}}</span>
+                <span>{{l('SAR')}}</span>
+              </p>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>

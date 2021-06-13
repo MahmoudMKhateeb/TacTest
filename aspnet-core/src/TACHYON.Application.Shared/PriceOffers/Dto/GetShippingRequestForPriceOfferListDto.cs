@@ -7,6 +7,8 @@ namespace TACHYON.PriceOffers.Dto
 {
     public class GetShippingRequestForPriceOfferListDto : EntityDto<long>, IHasCreationTime
     {
+        public long? DirectRequestId { get; set; }
+        public long? OfferId { get; set; }
         public string Name { get; set; }
         public DateTime CreationTime { get; set; }
         public bool IsTachyonDeal { get; set; }

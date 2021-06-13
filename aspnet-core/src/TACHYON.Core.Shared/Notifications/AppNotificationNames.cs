@@ -71,6 +71,7 @@ namespace TACHYON.Notifications
         public const string ShippingRequestSendOfferWhenUpdatePrice = "App.ShippingRequestSendOfferWhenUpdatePrice";
         public const string ShipperAcceptedOffers = "App.ShipperAcceptedOffers";
         public const string SendDriectRequest = "App.SendDriectRequest";
+        public const string DeclineDriectRequest = "App.DeclineDriectRequest";  
         public const string RejectedOffer = "App.RejectedOffer";
         #endregion
         #endregion

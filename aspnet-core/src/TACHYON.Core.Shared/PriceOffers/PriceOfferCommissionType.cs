@@ -4,13 +4,11 @@ namespace TACHYON.PriceOffers
 {
     public enum PriceOfferCommissionType : byte
     {
-        [Description("NoCommission")]
-        None = 0,
         [Description("CommissionPercentage")]
-        Percentage = 1,
+        CommissionPercentage = 1,
         [Description("CommissionValue")]
-        Value = 2,
+        CommissionValue = 2,
         [Description("CommissionMinimumValue")]
-        MinValue = 3
+        CommissionMinimumValue = 3
     }
 }

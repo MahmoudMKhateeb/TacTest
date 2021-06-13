@@ -408,6 +408,10 @@
 
         public const string Pages_Invoices_Transaction = "Pages.Invoices.Transaction";
 
+        #region shpping
+        public const string Pages_MarketPlace = "Pages.Marketplace";
+        public const string Pages_Tracking = "Pages.shipment.Tracking";
 
+        #endregion
     }
 }

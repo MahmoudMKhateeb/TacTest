@@ -45,8 +45,12 @@ namespace TACHYON.PriceOffers
             _shippingRequestDirectRequestRepository = shippingRequestDirectRequestRepository;
             _priceOfferRepository = priceOfferRepository;
         }
-
-        public async Task CreateOrEdit(CreateOrEditPriceOfferInput Input)
+        /// <summary>
+        /// Create Or Edit Offer
+        /// </summary>
+        /// <param name="Input"></param>
+        /// <returns></returns>
+        public async Task<long> CreateOrEdit(CreateOrEditPriceOfferInput Input)
         {
             DisableTenancyFilters();
 
@@ -65,16 +69,21 @@ namespace TACHYON.PriceOffers
                 await DirectRequestCanAccess(Input, shippingRequest);
             }
             var offer = GetCarrierPricingOrNull(Input.ShippingRequestId);
-            if (offer == null)
+            if (offer == null || offer.Status== PriceOfferStatus.Rejected)
             {
-                await Create(Input, shippingRequest);
+              return  await Create(Input, shippingRequest);
             }
             else
             {
-                await Update(Input, shippingRequest, offer);
+               return await Update(Input, shippingRequest, offer);
             }
         }
 
+        /// <summary>
+        /// Delete the offer when status the shipping request is needs action
+        /// </summary>
+        /// <param name="Input"></param>
+        /// <returns></returns>
         public async Task Delete(EntityDto Input)
         {
             DisableTenancyFilters();
@@ -202,7 +211,11 @@ namespace TACHYON.PriceOffers
         /// <returns></returns>
         public PriceOffer GetCarrierPricingOrNull(long requestId)
         {
-            return _priceOfferRepository.GetAll().Include(x => x.PriceOfferDetails).FirstOrDefault(x => x.ShippingRequestId == requestId && x.TenantId == _abpSession.TenantId.Value);
+            return _priceOfferRepository
+                .GetAll()
+                .Include(x => x.PriceOfferDetails)
+                .OrderByDescending(x=> x.Id)
+                .FirstOrDefault(x => x.ShippingRequestId == requestId && x.TenantId == _abpSession.TenantId.Value);
         }
         public bool CheckCarrierIsPricing(long requestId)
         {
@@ -233,7 +246,7 @@ namespace TACHYON.PriceOffers
             if (_directRequest.Status == ShippingRequestDirectRequestStatus.Accepted) throw new UserFriendlyException(L("YouCanNoCreateOrEditPriceWhenThePriceAccepted"));
             Input.SourceId = _directRequest.Id;
         }
-        private async Task Create(CreateOrEditPriceOfferInput Input, ShippingRequest shippingRequest)
+        private async Task<long> Create(CreateOrEditPriceOfferInput Input, ShippingRequest shippingRequest)
         {
 
             var Pricing = ObjectMapper.Map<PriceOffer>(Input);
@@ -245,12 +258,15 @@ namespace TACHYON.PriceOffers
             if (Pricing.Channel == PriceOfferChannel.MarketPlace) shippingRequest.TotalBids += 1;
             if (Pricing.Channel == PriceOfferChannel.DirectRequest) _directRequest.Status = ShippingRequestDirectRequestStatus.Response;
             await _appNotifier.ShippingRequestSendOfferWhenAddPrice(Pricing, GetCurrentTenant(_abpSession).Name);
+            return Pricing.Id;
 
         }
-        private async Task Update(CreateOrEditPriceOfferInput Input, ShippingRequest shippingRequest, PriceOffer Pricing)
+        private async Task<long> Update(CreateOrEditPriceOfferInput Input, ShippingRequest shippingRequest, PriceOffer Pricing)
         {
             if (Pricing.Status == PriceOfferStatus.Accepted) throw new UserFriendlyException(L("YourPriceAlreadyAcceptedYouCanEdit"));
+            var Channel = Pricing.Channel;
             ObjectMapper.Map(Input, Pricing);
+            Pricing.Channel = Channel;
             Pricing.PriceOfferDetails.Clear();
             Pricing.PriceOfferDetails = await GetListOfVases(Input, shippingRequest);
             Calculate(Pricing, shippingRequest);
@@ -262,6 +278,7 @@ namespace TACHYON.PriceOffers
 
             }
             await _priceOfferRepository.UpdateAsync(Pricing);
+            return Pricing.Id;
         }
         /// <summary>
         /// 
@@ -284,6 +301,7 @@ namespace TACHYON.PriceOffers
 
                 ShippingRequestVasesPricing.Add(new PriceOfferDetail()
                 {
+                    SourceId= vas.Id,
                     ItemPrice = vasdto.Price,
                     PriceType= PriceOfferType.Vas,
                     Quantity= vas.RequestMaxCount+ vas.RequestMaxAmount
@@ -319,7 +337,11 @@ namespace TACHYON.PriceOffers
             }
 
         }
-
+        /// <summary>
+        /// Set Commission Settings for trip for Calculate
+        /// </summary>
+        /// <param name="offer"></param>
+        /// <param name="shippingRequest"></param>
         private void SetCalculateTripSettings(PriceOffer offer, ShippingRequest shippingRequest)
         {
             PriceOfferCommissionType vasCommissionType;
@@ -334,11 +356,11 @@ namespace TACHYON.PriceOffers
 
                 switch (offer.CommissionType)
                 {
-                    case PriceOfferCommissionType.Percentage:
+                    case PriceOfferCommissionType.CommissionPercentage:
                         offer.CommissionPercentageOrAddValue = Convert.ToDecimal(_featureChecker.GetValue(shippingRequest.TenantId, AppFeatures.TachyonDealerTripCommissionPercentage));
                         vasCommissionPercentageOrAddValue = Convert.ToDecimal(_featureChecker.GetValue(shippingRequest.TenantId, AppFeatures.TachyonDealerVasCommissionPercentage));
                         break;
-                    case PriceOfferCommissionType.Value:
+                    case PriceOfferCommissionType.CommissionValue:
                         offer.CommissionPercentageOrAddValue = Convert.ToDecimal(_featureChecker.GetValue(shippingRequest.TenantId, AppFeatures.TachyonDealerTripCommissionValue));
                         vasCommissionPercentageOrAddValue = Convert.ToDecimal(_featureChecker.GetValue(shippingRequest.TenantId, AppFeatures.TachyonDealerVasCommissionValue));
 
@@ -353,12 +375,12 @@ namespace TACHYON.PriceOffers
                 _detailMinValueCommission = Convert.ToDecimal(_featureChecker.GetValue(shippingRequest.TenantId, AppFeatures.VasMinValueCommission));
                 switch (offer.CommissionType)
                 {
-                    case PriceOfferCommissionType.Percentage:
+                    case PriceOfferCommissionType.CommissionPercentage:
                         offer.CommissionPercentageOrAddValue = Convert.ToDecimal(_featureChecker.GetValue(shippingRequest.TenantId, AppFeatures.TripCommissionPercentage));
                         vasCommissionPercentageOrAddValue = Convert.ToDecimal(_featureChecker.GetValue(shippingRequest.TenantId, AppFeatures.VasCommissionPercentage));
 
                         break;
-                    case PriceOfferCommissionType.Value:
+                    case PriceOfferCommissionType.CommissionValue:
                         offer.CommissionPercentageOrAddValue = Convert.ToDecimal(_featureChecker.GetValue(shippingRequest.TenantId, AppFeatures.TripCommissionValue));
                         vasCommissionPercentageOrAddValue = Convert.ToDecimal(_featureChecker.GetValue(shippingRequest.TenantId, AppFeatures.VasCommissionValue));
 
@@ -375,15 +397,15 @@ namespace TACHYON.PriceOffers
         {
             switch (offer.CommissionType)
             {
-                case PriceOfferCommissionType.Percentage:
+                case PriceOfferCommissionType.CommissionPercentage:
                     offer.ItemCommissionAmount = (offer.ItemPrice * offer.CommissionPercentageOrAddValue / 100);
                     if (offer.ItemCommissionAmount < _minValueCommission)
                     {
                         offer.ItemCommissionAmount = _minValueCommission;
-                        offer.CommissionType = PriceOfferCommissionType.MinValue ;
+                        offer.CommissionType = PriceOfferCommissionType.CommissionMinimumValue ;
                     }
                     break;
-                case PriceOfferCommissionType.Value:
+                case PriceOfferCommissionType.CommissionValue:
                     offer.ItemCommissionAmount = offer.ItemPrice + offer.CommissionPercentageOrAddValue;
                     break;
             }
@@ -449,16 +471,16 @@ namespace TACHYON.PriceOffers
         {
             switch (item.CommissionType)
             {
-                case PriceOfferCommissionType.Percentage:
+                case PriceOfferCommissionType.CommissionPercentage:
                     item.ItemCommissionAmount = (item.ItemPrice * item.CommissionPercentageOrAddValue / 100);
 
                     if (item.ItemCommissionAmount < _detailMinValueCommission)
                     {
                         item.ItemCommissionAmount = _detailMinValueCommission;
-                        item.CommissionType = PriceOfferCommissionType.MinValue;
+                        item.CommissionType = PriceOfferCommissionType.CommissionMinimumValue;
                     }
                     break;
-                case PriceOfferCommissionType.Value:
+                case PriceOfferCommissionType.CommissionValue:
                     item.ItemCommissionAmount = item.ItemPrice + item.CommissionPercentageOrAddValue;
                     break;
             }

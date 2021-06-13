@@ -1,11 +1,7 @@
 <div [@routerTransition]>
   <div class="content d-flex flex-column flex-column-fluid">
     <!--begin::Subheader-->
-    <sub-header [title]="Title | localize" [description]="'' | localize">
-      <div role="actions">
-        <button class="btn btn-primary"><i class="flaticon2-indent-dots"></i> {{ l('MyBiddingHistory') }}</button>
-      </div>
-    </sub-header>
+    <sub-header [title]="Title | localize" [description]="'' | localize"> </sub-header>
     <!--end::Subheader-->
     <!--begin::Entry-->
 
@@ -19,18 +15,19 @@
           >
             <img *ngIf="item.isTachyonDeal" class="markTachyon" src="/assets/custom/imgs/mark.svg" alt="" />
             <div class="infoBasic">
-              <a *ngIf="!feature.isEnabled('App.Shipper') && Channel" href="javascript:void(0)" class="companyName">
-                {{ item.isTachyonDeal ? l('TachyonManageService') : item.name }}
+              <a href="javascript:void(0)" class="companyName">
+                {{ setTitle(item) }}
               </a>
-              <a *ngIf="feature.isEnabled('App.Shipper') && Channel == 2" href="javascript:void(0)" class="companyName">
-                {{ item.name }}
-              </a>
+
               <span *ngIf="item.remainingDays && item.remainingDays != '0'" class="remainingTime">
                 <b>{{ item.remainingDays }}</b>
                 {{ getWordTitle(item.remainingDays, 'RemainingDay') }}
               </span>
-              <b *ngIf="item.remainingDays == '0' && Channel && item.bidStatusTitle" class="infoHighLight red stautsTruck">
+              <b *ngIf="item.remainingDays == '0' && Channel == 1 && item.bidStatusTitle" class="infoHighLight red stautsTruck">
                 {{ l(item.bidStatusTitle) }}
+              </b>
+              <b *ngIf="Channel == 2" class="infoHighLight red stautsTruck">
+                {{ l(item.directRequestStatusTitle) }}
               </b>
               <b *ngIf="!feature.isEnabled('App.Carrier') && !Channel && item.statusTitle" class="infoHighLight green stautsTruck">
                 {{ l(item.statusTitle) }}
@@ -93,7 +90,18 @@
                 <a *ngIf="item.isPriced" href="javascript:void(0)" class="infoHighLight red">{{ l('MarketPlacepriced') }}</a>
               </div>
               <div class="actions">
-                <a href="javascript:void(0)" (click)="Model.show(item.id)" class="red">
+                <a *ngIf="canDeleteDirectRequest(item)" href="javascript:void(0)" (click)="delete(item)" class="red">
+                  {{ l('Delete') }}
+                </a>
+                <a
+                  *ngIf="feature.isEnabled('App.Carrier') && Channel == 2 && (item.directRequestStatus == 0 || item.directRequestStatus == 5)"
+                  href="javascript:void(0)"
+                  (click)="decline(item)"
+                  class="red"
+                >
+                  {{ l('Declined') }}
+                </a>
+                <a href="javascript:void(0)" (click)="Model.show(item)" class="red">
                   {{ l('More') }}
                 </a>
               </div>

@@ -13,7 +13,6 @@ using TACHYON.Features;
 using TACHYON.MultiTenancy;
 using TACHYON.Notifications;
 using TACHYON.PriceOffers;
-using TACHYON.PriceOffers.Dto;
 using TACHYON.Shipping.DirectRequests.Dto;
 using TACHYON.Shipping.ShippingRequests;
 
@@ -76,25 +75,20 @@ namespace TACHYON.Shipping.DirectRequests
         {
             IfCanAccessService();
             await CheckCanAddDriectRequestToCarrirer(input);
-            await _shippingRequestDirectRequestRepository.InsertAndGetIdAsync(ObjectMapper.Map<ShippingRequestDirectRequest>(input));
-            await _appNotifier.SendDriectRequest(GetCurrentTenant().Name, input.CarrierTenantId, input.ShippingRequestId);
+           var id= await _shippingRequestDirectRequestRepository.InsertAndGetIdAsync(ObjectMapper.Map<ShippingRequestDirectRequest>(input));
+            await _appNotifier.SendDriectRequest(GetCurrentTenant().Name, input.CarrierTenantId, id);
         }
 
         [RequiresFeature(AppFeatures.SendDirectRequest)]
         public async Task Delete(EntityDto<long> input)
         {
            IfCanAccessService();
-           var directRequest= await _shippingRequestDirectRequestRepository.FirstOrDefaultAsync(x => x.Id == input.Id && x.Status == ShippingRequestDirectRequestStatus.New);
+           var directRequest= await _shippingRequestDirectRequestRepository.FirstOrDefaultAsync(x => x.Id == input.Id && (x.Status == ShippingRequestDirectRequestStatus.New || x.Status == ShippingRequestDirectRequestStatus.Declined));
             if (directRequest==null) throw new UserFriendlyException(L("YouCanDeleteDirectRequestOnlyWhenTheStatusIsNew"));
            await _shippingRequestDirectRequestRepository.DeleteAsync(directRequest);
         }
 
-        [RequiresFeature(AppFeatures.Carrier)]
-        public async Task CreateOrEditOffer(CreateOrEditPriceOfferInput input)
-        {
-            input.Channel = PriceOfferChannel.DirectRequest;
-            await _priceOfferManager.CreateOrEdit(input);
-        }
+
 
 
         [RequiresFeature(AppFeatures.SendDirectRequest)]
@@ -107,6 +101,16 @@ namespace TACHYON.Shipping.DirectRequests
             directRequest.RejetcReason = input.Reason;
             DisableTenancyFilters();
            await _appNotifier.RejectedOffer(await _priceOfferManager.GetOfferBySource(directRequest.Id, PriceOfferChannel.DirectRequest), GetCurrentTenant().Name);
+        }
+
+        [RequiresFeature(AppFeatures.Carrier)]
+        public async Task Decline(long id)
+        {
+            DisableTenancyFilters();
+            var directRequest = await _shippingRequestDirectRequestRepository.FirstOrDefaultAsync(x => x.Id == id && (x.Status == ShippingRequestDirectRequestStatus.New) && x.CarrierTenantId== AbpSession.TenantId.Value);
+            if (directRequest == null) throw new UserFriendlyException(L("YouCanDeclineDirectRequestOnlyWhenTheStatusIsNew"));
+            directRequest.Status = ShippingRequestDirectRequestStatus.Declined;
+           await _appNotifier.DeclineDriectRequest(GetCurrentTenant().Name, directRequest.TenantId, id);
         }
         #region Heleper
         /// <summary>
@@ -162,7 +166,7 @@ namespace TACHYON.Shipping.DirectRequests
 
         private async Task CheckCanAddDriectRequestToCarrirer(CreateShippingRequestDirectRequestInput input)
         {
-            if (await _shippingRequestDirectRequestRepository.GetAll().AnyAsync(x => x.CarrierTenantId == input.CarrierTenantId)) throw new UserFriendlyException(L("TheCarrierHaveAlreadyDirectRequestSendBefore"));
+            if (await _shippingRequestDirectRequestRepository.GetAll().AnyAsync(x => x.CarrierTenantId == input.CarrierTenantId && x.ShippingRequestId== input.ShippingRequestId)) throw new UserFriendlyException(L("TheCarrierHaveAlreadyDirectRequestSendBefore"));
             if (IsEnabled(AppFeatures.Shipper))
             {
                 if (!await _tenantCarrierRepository.GetAll().AnyAsync(x => x.CarrierTenantId == input.CarrierTenantId)) throw new UserFriendlyException(L("TheCarrirerSelectedIsNotInYourList"));
@@ -176,6 +180,8 @@ namespace TACHYON.Shipping.DirectRequests
         {
             if ( !  IsEnabled(AppFeatures.Shipper) && !  IsEnabled(AppFeatures.TachyonDealer)) throw new UserFriendlyException(L("YouDoNoHaveAccess"));
         }
+
+
 
 
 

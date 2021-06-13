@@ -21,6 +21,9 @@
               <a href="javascript:void(0)" *ngIf="!feature.isEnabled('App.Shipper')" class="companyName">
                 {{ request.isTachyonDeal ? l('TachyonManageService') : request.shipper }}
               </a>
+              <span class="infoHighLight green" *ngIf="shippingrequest.isPriced">
+                {{ l('Priced') }}
+              </span>
             </div>
             <div class="detailsRoad">
               <div class="from">
@@ -127,6 +130,11 @@
                 {{ l('SetPriceOffer') }}
               </button>
             </div>
+            <div class="setPrice" *ngIf="shippingrequest.isPriced">
+              <button type="button" (click)="ModelViewPrice.show(request.id, shippingrequest.offerId)">
+                {{ l('PreviewOffer') }}
+              </button>
+            </div>
           </div>
           <div class="map">
             <agm-map [latitude]="24.717942" [longitude]="46.675761" [zoom]="10">
@@ -143,4 +151,5 @@
     </div>
   </div>
 </div>
-<price-offer-model #ModelPrice></price-offer-model>
+<price-offer-model #ModelPrice [Channel]="Channel" (modalSave)="update($event)"></price-offer-model>
+<price-offer-view-model #ModelViewPrice [Channel]="Channel" (modalDelete)="delete()"></price-offer-view-model>

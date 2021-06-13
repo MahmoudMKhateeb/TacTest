@@ -9,7 +9,6 @@ namespace TACHYON.PriceOffers.Dto
     {
         public long ShippingRequestId { get; set; }
         public decimal ItemPrice { get; set; }
-        [JsonIgnore]
         public PriceOfferChannel Channel { get; set; }
         [JsonIgnore]
         public PriceOfferType PriceType { get; set; } = PriceOfferType.Trip;

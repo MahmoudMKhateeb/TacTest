@@ -188,7 +188,7 @@ import { MarketplaceComponent } from '@app/main/marketPlace/marketPlace/marketPl
 import { MarketPlaceListComponent } from '@app/main/marketplaces/marketPlacelist.component';
 import { DirectRequestViewComponent } from '@app/main/directrequests/direct-request-view.component';
 import { PriceOfferModelComponent } from '@app/main/priceoffer/price-offer-model-component';
-
+import { PriceOfferViewModelComponent } from '@app/main/priceoffer/price-offer-view-model-component';
 import { ViewShippingRequestDetailsComponent } from '@app/main/marketPlace/marketPlace/ViewShippingRequestDetailsModal/ViewShippingRequestDetails.component';
 import { ViewAllCarrierBidsComponent } from '@app/main/marketPlace/marketPlace/ViewAllCarrierBidsModal/ViewAllCarrierBids.component';
 import { RejectionReasonModalComponent } from './documentFiles/documentFiles/rejectionReason-modal.component';
@@ -401,6 +401,7 @@ NgxBootstrapDatePickerConfigService.registerNgxBootstrapDatePickerLocales();
     MarketPlaceListComponent,
     DirectRequestViewComponent,
     PriceOfferModelComponent,
+    PriceOfferViewModelComponent,
     ViewShippingRequestDetailsComponent,
     ViewAllCarrierBidsComponent,
     InvoicePeriodsListComponent,

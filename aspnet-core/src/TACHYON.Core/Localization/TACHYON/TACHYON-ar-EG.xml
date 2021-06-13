@@ -223,6 +223,11 @@
     <text name="Close">إغلاق</text>
     <text name="Code">رمز</text>
     <text name="Collapse">قلّص</text>
+    <text name="CommissionAmount">مبلغ العمولة</text>
+    <text name="CommissionMinimumValue">الحد الأدنى</text>
+    <text name="CommissionPercentage">نسبه</text>
+    <text name="CommissionType">نوع العموله</text>
+    <text name="CommissionValue">إضافة قيمة</text>
     <text name="Company">شركة</text>
     <text name="CompanyFullLeagalName">اسم الشركة القانوني</text>
     <text name="CompanyInformation">معلومات الشركة</text>
@@ -361,6 +366,11 @@
     <text name="DeactivateAccountUponexpiration">قفل الحساب بعد إنتهاء الصلاحية</text>
     <text name="DeactivateSubscriptionWarningMessage">سيتم إلغاء تنشيط اشتراك Webhook ولن تتلقى نقطة النهاية الخاصة بك بعد ذلك خطافات الويب</text>
     <text name="DeactiveTenant">تعطيل الشركة</text>
+    <text name="Declined">رفض</text>
+    <text name="DeclinedOfPricing">رفض التسعير</text>
+    <text name="DeclineDriectRequest">
+      <a href="/app/main/directrequest/list?id={id}"> برفض تسعير الشحنة {client} لقد قام الناقل .</a>
+    </text>
     <text name="Default">افتراضي</text>
     <text name="Default(all)API">الافتراضي (الكل) API</text>
     <text name="DefaultAccountLockoutDurationAsSeconds">مدة قفل الحساب ( بالثواني)</text>
@@ -1158,6 +1168,7 @@
     <text name="PostedValue">القيمة المنشورة</text>
     <text name="PostPrice">معتمد</text>
     <text name="PrePrice">جديد</text>
+    <text name="PreviewOffer">معاينة العرض</text>
     <text name="Previous">السابق</text>
     <text name="Price">سعر</text>
     <text name="PriceOffers">عروض الأسعار</text>
@@ -1176,6 +1187,7 @@
     <text name="ProfilePicture_Warn_SizeLimit">يجب أن يكون حجم الصورة أصغر من {0} كيلوبايت يرجى تحديد ملف آخر</text>
     <text name="Property">Property</text>
     <text name="Purchase">شراء</text>
+    <text name="Qty">الكمية</text>
     <text name="Quantity">الكمية</text>
     <text name="QuickNav">الإنتقال السريع</text>
     <text name="QuickThemeSelection">الاختيار السريع للتصميم</text>
@@ -1202,9 +1214,12 @@
     <text name="RegisterFormUserNameInvalidMessage">الرجاء عدم ادخال بريدك الإلكتروني كاسم مستخدم</text>
     <text name="Reject">رفض</text>
     <text name="Rejected">مرفوض</text>
-    <text name="RejectedOffer"><![CDATA[<a href="/app/main/shippingRequests/shippingRequests/view?id={id}&offerid={offerid}">لقد تم رفض عرضك من قبل {rejectedby}.</a>]]></text>
+    <text name="RejectedOffer">
+      <a href="/app/main/directrequest/list?id={id}">لقد تم رفض عرضك من قبل {rejectedby}.</a>
+    </text>
     <text name="RejectedReason">سبب الرفض</text>
     <text name="RejectionReason">سبب رفض المستند</text>
+    <text name="RejectOffer">رفض</text>
     <text name="RejectPricingOffer">رفض عرض السعر</text>
     <text name="RejectShippingRequestNotificationMessage">تم إلغاء طلب الشحنة</text>
     <text name="RejectThisTrip">رفض هذه الرحلة!</text>
@@ -1258,6 +1273,7 @@
     <text name="RoutType">نوع الطريق</text>
     <text name="RoutTypeDisplayName">نوع الطريق</text>
     <text name="RoutTypes">أنواع الطرقات</text>
+    <text name="SAR">ريال سعودي</text>
     <text name="Save">حـفظ</text>
     <text name="SaveAll">إحفظ الكل</text>
     <text name="SaveAndClose">حـفظ وإغلاق</text>
@@ -1320,15 +1336,20 @@
     <text name="SendActivationEmail">إرسال رسالة تفعيل البريد الإلكتروني.</text>
     <text name="SendDirectRequest">ارسال طلب خاص</text>
     <text name="SendDirectRequests">ارسال طلب خاص</text>
+    <text name="SendDriectRequest">
+      <a href="/app/main/directrequest/list?id={id}">يرجى إرسال عرض أسعار الشحنة.</a>
+    </text>
     <text name="SendDriectRequestForCarrier">يرجى إرسال عرض أسعار الشحنة رقم.: {id}.</text>
     <text name="SendEmailActivationLink_Information">سيتم إرسال رابط تأكيد بريدك الإلكتروني. إذا لم يصلك البريد الإلكتروني في غضون بضع دقائق, الرجاء أعد المحاولة.</text>
     <text name="Sender">المرسل</text>
+    <text name="SendOffer">إرسال العرض</text>
     <text name="SendPasswordResetLink_Information">سيتم إرسال رابط إعادة تعيين كلمة المرور إلى بريدك الإلكتروني. إذا لم يصلك البريد الإلكتروني في غضون بضع دقائق, يرجى إعادة المحاولة.</text>
     <text name="SendPriceOfferToShipper">ارسال عرض سعر للشاحن</text>
     <text name="SendPricingOfferToShipper">ارسال عرض سعر</text>
     <text name="SendSecurityCode">إرسال رمز الأمان.</text>
     <text name="SendSecurityCode_Information">يجب التحقق من حسابك للدخول. الرجاء اختيار نوع التحقق. سيتم إرسال رمز على حسب نوع التحقق المحدد.</text>
     <text name="SendSecurityCodeErrorMessage">تعذر إرسال رمز الأمان!</text>
+    <text name="SendSuccessfully">تم الإرسال بنجاح</text>
     <text name="SendTestEmail">تجربة إرسال بريد</text>
     <text name="Service">خدمة</text>
     <text name="SessionExpireRedirectingInXSecond">ستنتهي مدة جلستك لأنك لم تكن نشطًا لفترة طويلة. عند أي إدخال للفأرة أو لوحة المفاتيح على الموقع سيتم إيقاف إنهاء الجلسة. إعادة التوجيه خلال {0} ثانية.</text>
@@ -1461,6 +1482,7 @@
     <text name="SuccessfullyActivated">تم التفعيل بنجاح</text>
     <text name="SuccessfullyAdded">تمت الإضافة بنجاح.</text>
     <text name="SuccessfullyDeactivated">تم إلغاء التفعيل بنجاح</text>
+    <text name="SuccessfullyDeclined">تم رفض التسعير بنجاح</text>
     <text name="SuccessfullyDeleted">تم الحذف بنجاح</text>
     <text name="SuccessfullyGenerate">تمت عملية الإنشاء بنجاح</text>
     <text name="SuccessfullyMoved">تم النقل بنجاح.</text>

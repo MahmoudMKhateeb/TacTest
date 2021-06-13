@@ -752,7 +752,7 @@ namespace TACHYON.Notifications
 
         }
 
-        public async Task SendDriectRequest(string FromTenant, int? ToTenant, long ShippingRequestId)
+        public async Task SendDriectRequest(string FromTenant, int? ToTenant, long id)
         {
             var notificationData = new LocalizableMessageNotificationData(
                 new LocalizableString(
@@ -760,11 +760,23 @@ namespace TACHYON.Notifications
                     TACHYONConsts.LocalizationSourceName
                 )
             );
-            notificationData["id"] = ShippingRequestId;
+            notificationData["id"] = id;
             notificationData["client"] = FromTenant;
             await _notificationPublisher.PublishAsync(AppNotificationNames.SendDriectRequest, notificationData, userIds: new[] { await GetAdminUser(ToTenant) });
         }
-      public async  Task RejectedOffer(PriceOffer offer,string RejectedBy)
+        public async Task DeclineDriectRequest(string FromTenant, int? ToTenant, long id)
+        {
+            var notificationData = new LocalizableMessageNotificationData(
+                new LocalizableString(
+                    L("DeclineDriectRequest"),
+                    TACHYONConsts.LocalizationSourceName
+                )
+            );
+            notificationData["id"] = id;
+            notificationData["client"] = FromTenant;
+            await _notificationPublisher.PublishAsync(AppNotificationNames.DeclineDriectRequest, notificationData, userIds: new[] { await GetAdminUser(ToTenant) });
+        }
+        public async  Task RejectedOffer(PriceOffer offer,string RejectedBy)
         {
             var notificationData = new LocalizableMessageNotificationData(
                                     new LocalizableString(L("RejectedOffer"),

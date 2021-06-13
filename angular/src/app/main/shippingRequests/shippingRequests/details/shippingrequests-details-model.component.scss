@@ -486,3 +486,82 @@ label.error::after {
     max-width: calc(100% - 310px);
   }
 }
+.modalSetPrice {
+  background-color: rgba(0, 0, 0, 0.5);
+}
+
+.modalSetPrice .table-sendOffer .titleSendOffer {
+  display: flex;
+  width: 100%;
+  justify-content: flex-end;
+  margin-bottom: 10px;
+}
+
+.modalSetPrice.rtl .table-sendOffer .titleSendOffer {
+  /* justify-content: flex-start; */
+  direction: rtl;
+}
+
+.modalSetPrice .table-sendOffer .titleSendOffer a {
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  margin-right: 8px;
+  color: #fff;
+  font-size: 16px;
+  border-radius: 4px;
+  -webkit-border-radius: 4px;
+  -moz-border-radius: 4px;
+  -ms-border-radius: 4px;
+  -o-border-radius: 4px;
+  padding: 4px 8px;
+  transition: 0.1s;
+  -webkit-transition: 0.1s;
+  -moz-transition: 0.1s;
+  -ms-transition: 0.1s;
+  -o-transition: 0.1s;
+}
+
+.modalSetPrice.rtl .table-sendOffer .titleSendOffer a {
+  margin-right: unset;
+  margin-left: 8px;
+}
+
+.modalSetPrice .table-sendOffer .titleSendOffer a:last-child {
+  margin-right: 0;
+}
+
+.modalSetPrice .table-sendOffer .titleSendOffer a:hover {
+  text-decoration: none;
+  transform: scale(1.015);
+  -webkit-transform: scale(1.015);
+  -moz-transform: scale(1.015);
+  -ms-transform: scale(1.015);
+  -o-transform: scale(1.015);
+}
+
+.modalSetPrice .table-sendOffer .titleSendOffer a i {
+  font-size: 16px;
+  margin-right: 5px;
+}
+
+.modalSetPrice.rtl .table-sendOffer .titleSendOffer a i {
+  margin-right: unset;
+  margin-left: 5px;
+}
+
+.modalSetPrice .table-sendOffer .titleSendOffer a.edit {
+  background: #1a75d2;
+}
+
+.modalSetPrice .table-sendOffer .titleSendOffer a.delete {
+  background: #b00020;
+}
+
+.modalSetPrice .table-sendOffer .titleSendOffer a.reject {
+  background: #ababab;
+}
+
+.modalSetPrice .table-sendOffer .titleSendOffer a.accept {
+  background: #00b74a;
+}

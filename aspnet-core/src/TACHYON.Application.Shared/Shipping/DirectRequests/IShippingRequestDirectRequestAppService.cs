@@ -14,9 +14,9 @@ namespace TACHYON.Shipping.DirectRequests
 
         Task Create(CreateShippingRequestDirectRequestInput input);
         Task Delete(EntityDto<long> input);
+        Task Decline(long id);
 
         Task Reject(RejectShippingRequestDirectRequestInput input);
-        Task CreateOrEditOffer(CreateOrEditPriceOfferInput input);
         
     }
 }
