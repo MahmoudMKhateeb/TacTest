@@ -77,7 +77,7 @@ namespace TACHYON.Shipping.ShippingRequests
                 {
                     item.BidStatus = ShippingRequestBidStatus.OnGoing;
                     //var users = Task.Run<UserIdentifier[]>(async () => await _bidDomainService.GetCarriersByTruckTypeArrayAsync(item.TrucksTypeId)).Result;
-                    var users = AsyncHelper.RunSync(() => _bidDomainService.GetCarriersByTruckTypeArrayAsync(item.TrucksTypeId));
+                    var users = AsyncHelper.RunSync(() => _bidDomainService.GetCarriersByTruckTypeArrayAsync(item.TrucksTypeId.Value));
                      // to carrier
                      AsyncHelper.RunSync(() => _appNotifier.ShippingRequestAsBidWithSameTruckAsync(users, item.Id));
                       //todo add notification here to shipper

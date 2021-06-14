@@ -337,7 +337,7 @@ namespace TACHYON.Features
 
 
 
-    //        #region Removed
+            //        #region Removed
 
     //        shipperFeature.CreateChildFeature(
     //            AppFeatures.BiddingCommissionPercentage,
@@ -381,7 +381,7 @@ namespace TACHYON.Features
     //            "false",
     //            L("TachyonDealerMinValueCommission"),
     //            inputType: new SingleLineStringInputType(new NumericValueValidator(0, int.MaxValue)));
-    //        #endregion
+    //        //        #endregion
             #endregion
 
             var chatFeature = context.Create(

@@ -43,6 +43,14 @@ namespace TACHYON.AutoMapper.Shipping
                  .ForMember(dst => dst.RangeDate, opt => opt.MapFrom(src => GetDateRange(src.StartTripDate, src.EndTripDate)));
             
 
+            CreateMap<CreateOrEditShippingRequestStep1Dto, ShippingRequest>().ReverseMap();
+
+            CreateMap<EditShippingRequestStep2Dto, ShippingRequest>().ReverseMap();
+
+            CreateMap<EditShippingRequestStep3Dto, ShippingRequest>().ReverseMap();
+
+            //EditShippingRequestStep4Dto in CustomDtoMapper
+
         }
         private string GetDateRange(DateTime? StartTripDate, DateTime? EndTripDate)
         {
@@ -60,4 +68,6 @@ namespace TACHYON.AutoMapper.Shipping
         //                            + "-" + shippingRequest?.CapacityFk?.DisplayName;
         //}
     }
+
+   
 }

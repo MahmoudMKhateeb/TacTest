@@ -242,6 +242,11 @@ namespace TACHYON
             .AfterMap(AddOrUpdateShippingRequest)
                 .ReverseMap();
 
+            configuration.CreateMap<EditShippingRequestStep4Dto, ShippingRequest>()
+                 .ForMember(d => d.ShippingRequestVases, opt => opt.Ignore())
+            .AfterMap(AddOrUpdateShippingRequest)
+                .ReverseMap();
+
             configuration.CreateMap<CreateOrEditShippingRequestTripDto, ShippingRequestTrip>()
                 .ForMember(d=>d.RoutPoints,opt=>opt.Ignore())
                 .ForMember(d => d.ShippingRequestTripVases, opt => opt.Ignore())
@@ -595,6 +600,24 @@ namespace TACHYON
             {
 
                 if (!vas.Id.HasValue )
+                {
+                    Request.ShippingRequestVases.Add(_Mapper.Map<ShippingRequestVas>(vas));
+                }
+                else
+                {
+                    _Mapper.Map(vas, Request.ShippingRequestVases.SingleOrDefault(c => c.Id == vas.Id));
+                }
+            }
+
+        }
+
+        private static void AddOrUpdateShippingRequest(EditShippingRequestStep4Dto dto, ShippingRequest Request)
+        {
+            if (Request.ShippingRequestVases == null) Request.ShippingRequestVases = new Collection<ShippingRequestVas>();
+            foreach (var vas in dto.ShippingRequestVasList)
+            {
+
+                if (!vas.Id.HasValue)
                 {
                     Request.ShippingRequestVases.Add(_Mapper.Map<ShippingRequestVas>(vas));
                 }

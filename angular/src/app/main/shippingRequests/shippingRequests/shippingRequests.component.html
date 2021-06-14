@@ -188,6 +188,10 @@
                       {{ l('TotalBids') }}
                       <p-sortIcon field="totalBidsCount"></p-sortIcon>
                     </th>
+                    <th pSortableColumn="isDrafted" style="width: 150px;">
+                      {{ l('IsDrafted') }}
+                      <p-sortIcon field="isDrafted"></p-sortIcon>
+                    </th>
                     <th [hidden]="!isGrantedAny('Pages.ShippingRequests.Edit', 'Pages.ShippingRequests.Delete')" style="width: 130px;">
                       {{ l('Actions') }}
                     </th>
@@ -227,6 +231,11 @@
                     <td style="width: 150px;" *ngIf="feature.isEnabled('App.Shipper') || feature.isEnabled('App.TachyonDealer')">
                       <span class="ui-column-title"> {{ l('TotalBidsCount') }}</span>
                       {{ record.totalBids }}
+                    </td>
+                    <td style="width: 150px;">
+                      <span class="ui-column-title"> {{ l('IsDrafted') }}</span>
+                      <div *ngIf="record.isDrafted" class="text-center"><i class="fa fa-check-circle text-success" title="True"></i></div>
+                      <div *ngIf="!record.isDrafted" class="text-center"><i class="fa fa-times-circle" title="False"></i></div>
                     </td>
                     <td [hidden]="!isGrantedAny('Pages.ShippingRequests.Edit', 'Pages.ShippingRequests.Delete')" style="width: 130px;">
                       <div class="btn-group dropdown" container="body" dropdown>

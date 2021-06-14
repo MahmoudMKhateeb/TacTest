@@ -22,5 +22,7 @@ namespace TACHYON.Shipping.ShippingRequests.Dtos
         public string Destination { get; set; }
 
         public string RouteType { get; set; }
+        public bool IsDrafted { get; set; }
+        public int DraftStep { get; set; }
     }
 }

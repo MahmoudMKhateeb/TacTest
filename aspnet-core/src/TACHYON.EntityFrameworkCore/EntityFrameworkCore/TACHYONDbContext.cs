@@ -239,7 +239,10 @@ namespace TACHYON.EntityFrameworkCore
         public DbSet<TenantCarrier> TenantCarriers { get; set; }
 
         protected virtual bool CurrentIsCanceled => true;
+        protected virtual bool CurrentIsDrafted => false;
         protected virtual bool IsCanceledFilterEnabled => CurrentUnitOfWorkProvider?.Current?.IsFilterEnabled("IHasIsCanceled") == true;
+
+        protected virtual bool IsDraftedFilterEnabled => CurrentUnitOfWorkProvider?.Current?.IsFilterEnabled("IHasIsDrafted") == true;
 
         #region Mobile
         public DbSet<UserDeviceToken> UserDeviceTokens { get; set; }
@@ -264,6 +267,10 @@ namespace TACHYON.EntityFrameworkCore
             {
                 return true;
             }
+            else if (typeof(IHasIsDrafted).IsAssignableFrom(typeof(TEntity)))
+            {
+                return true;
+            }
             return base.ShouldFilterEntity<TEntity>(entityType);
         }
 
@@ -273,6 +280,12 @@ namespace TACHYON.EntityFrameworkCore
             if (typeof(IHasIsCanceled).IsAssignableFrom(typeof(TEntity)))
             {
                 Expression<Func<TEntity, bool>> mayHaveOUFilter = e => ((IHasIsCanceled)e).IsCancled == CurrentIsCanceled || (((IHasIsCanceled)e).IsCancled == CurrentIsCanceled) == IsCanceledFilterEnabled;
+                expression = expression == null ? mayHaveOUFilter : CombineExpressions(expression, mayHaveOUFilter);
+            }
+
+            else if (typeof(IHasIsDrafted).IsAssignableFrom(typeof(TEntity)))
+            {
+                Expression<Func<TEntity, bool>> mayHaveOUFilter = e => ((IHasIsDrafted)e).IsDrafted == CurrentIsDrafted || (((IHasIsDrafted)e).IsDrafted == CurrentIsDrafted) == IsDraftedFilterEnabled;
                 expression = expression == null ? mayHaveOUFilter : CombineExpressions(expression, mayHaveOUFilter);
             }
 

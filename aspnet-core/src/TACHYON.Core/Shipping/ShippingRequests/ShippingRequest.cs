@@ -36,7 +36,7 @@ using TACHYON.Cities;
 namespace TACHYON.Shipping.ShippingRequests
 {
     [Table("ShippingRequests")]
-    public class ShippingRequest : FullAuditedEntity<long>, IMustHaveTenant
+    public class ShippingRequest : FullAuditedEntity<long>, IMustHaveTenant, IHasIsDrafted
     {
         public int TenantId { get; set; }
         [ForeignKey("TenantId")]
@@ -52,16 +52,16 @@ namespace TACHYON.Shipping.ShippingRequests
         /// </summary>
         public virtual bool IsTachyonDeal { get; set; }
 
-        public ShippingRequestRouteType RouteTypeId { get; set; }
+        public ShippingRequestRouteType? RouteTypeId { get; set; }
 
 
         //city
-        public virtual int OriginCityId { get; set; }
+        public virtual int? OriginCityId { get; set; }
 
         [ForeignKey("OriginCityId")]
         public City OriginCityFk { get; set; }
 
-        public virtual int DestinationCityId { get; set; }
+        public virtual int? DestinationCityId { get; set; }
 
         [ForeignKey("DestinationCityId")]
         public City DestinationCityFk { get; set; }
@@ -121,8 +121,8 @@ namespace TACHYON.Shipping.ShippingRequests
         /// <summary>
         /// goods category that will be is this shipping request, which is base category that doesn't have father category
         /// </summary>
-        [Required]
-        public int GoodCategoryId { get; set; }
+        //[Required]
+        public int? GoodCategoryId { get; set; }
 
         [ForeignKey("GoodCategoryId")]
         public GoodCategory GoodCategoryFk { get; set; }
@@ -163,7 +163,7 @@ namespace TACHYON.Shipping.ShippingRequests
 
         [ForeignKey("TransportTypeId")]
         public TransportType TransportTypeFk { get; set; }
-        public virtual long TrucksTypeId { get; set; }
+        public virtual long? TrucksTypeId { get; set; }
         [ForeignKey("TrucksTypeId")]
         public TrucksType TrucksTypeFk { get; set; }
 
@@ -172,7 +172,7 @@ namespace TACHYON.Shipping.ShippingRequests
         public Capacity CapacityFk { get; set; }
 
         #endregion
-        public int PackingTypeId { get; set; }
+        public int? PackingTypeId { get; set; }
 
         [ForeignKey("PackingTypeId")]
         public PackingType PackingTypeFk { get; set; }
@@ -184,7 +184,12 @@ namespace TACHYON.Shipping.ShippingRequests
         [ForeignKey("ShippingTypeId")]
         public ShippingType ShippingTypeFk { get; set; }
 
+        /// <summary>
+        /// This field describes if the shipping request is draft or not, draft means incomplete request
+        /// </summary>
+        public bool IsDrafted { get; set; }
 
+        public int DraftStep { get; set; }
         #region Bids Data
         public DateTime? BidStartDate { get; set; }
         public DateTime? BidEndDate { get; set; }
@@ -202,7 +207,7 @@ namespace TACHYON.Shipping.ShippingRequests
         public ICollection<ShippingRequestTrip> ShippingRequestTrips { get; set; }
         #endregion
 
-        #region Commission
+        #region Commission?
         public decimal VatSetting { get; set; }
         /// <summary>
         /// total of price after commission, before add Vat settings
