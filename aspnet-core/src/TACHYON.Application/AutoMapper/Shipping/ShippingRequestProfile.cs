@@ -1,9 +1,12 @@
 ﻿using AutoMapper;
 using System;
+using System.Collections.ObjectModel;
+using System.Linq;
 using TACHYON.MarketPlaces.Dto;
 using TACHYON.Shipping.ShippingRequests;
 using TACHYON.Shipping.ShippingRequests.Dtos;
 using TACHYON.Shipping.ShippingRequests.ShippingRequestsPricing.Dto;
+using TACHYON.ShippingRequestVases;
 
 namespace TACHYON.AutoMapper.Shipping
 {
@@ -41,13 +44,17 @@ namespace TACHYON.AutoMapper.Shipping
               CreateMap<ShippingRequestPricing, ShippingRequestCarrierPricingDto>();
               CreateMap<CreateOrEditPricingInput, ShippingRequestPricing>();
 
+            CreateMap<CreateOrEditShippingRequestStep1Dto, ShippingRequest>().ReverseMap();
+
+            CreateMap<EditShippingRequestStep2Dto, ShippingRequest>().ReverseMap();
+
+            CreateMap<EditShippingRequestStep3Dto, ShippingRequest>().ReverseMap();
+
+            //EditShippingRequestStep4Dto in CustomDtoMapper
+
         }
 
-        //private static void AssignTruckTypeFullName(ShippingRequest shippingRequest, GetShippingRequestForViewOutput dto)
-        //{
-        //    dto.TruckTypeFullName = shippingRequest.TransportTypeFk?.DisplayName
-        //                            + "-" + shippingRequest.TrucksTypeFk?.DisplayName
-        //                            + "-" + shippingRequest?.CapacityFk?.DisplayName;
-        //}
     }
+
+   
 }

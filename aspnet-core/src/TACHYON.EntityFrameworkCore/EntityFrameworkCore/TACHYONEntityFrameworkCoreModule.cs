@@ -44,6 +44,7 @@ namespace TACHYON.EntityFrameworkCore
             Configuration.EntityHistory.IsEnabled = false;
 
             Configuration.UnitOfWork.RegisterFilter("IHasIsCanceled", true);
+            Configuration.UnitOfWork.RegisterFilter("IHasIsDrafted", true);
 
             // Uncomment below line to write change logs for the entities below:
             // Configuration.EntityHistory.Selectors.Add("TACHYONEntities", EntityHistoryHelper.TrackedTypes);
