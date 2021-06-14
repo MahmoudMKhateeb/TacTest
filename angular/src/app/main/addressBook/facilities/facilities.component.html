@@ -155,11 +155,11 @@
                   <tr>
                     <th style="width: 130px;" [hidden]="!isGrantedAny('Pages.Facilities.Edit', 'Pages.Facilities.Delete')">{{ l('Actions') }}</th>
                     <th style="width: 150px;" pSortableColumn="cityFk.displayName">
-                      {{ l('DisplayName') }}
+                      {{ l('CityName') }}
                       <p-sortIcon field="cityDisplayName"></p-sortIcon>
                     </th>
                     <th style="width: 150px;" pSortableColumn="name">
-                      {{ l('Name') }}
+                      {{ l('FacilityName') }}
                       <p-sortIcon field="facility.name"></p-sortIcon>
                     </th>
                     <th style="width: 150px;" pSortableColumn="address">

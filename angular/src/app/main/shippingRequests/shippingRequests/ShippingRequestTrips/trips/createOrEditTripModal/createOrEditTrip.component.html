@@ -76,7 +76,7 @@
             <!--  begin:: Trip start&End Dates-->
             <div class="col-lg-6">
               <div class="form-group">
-                <label>{{ l('TripStartDate') }} <span class="required-fileds">*</span></label>
+                <label>{{ l('StartDate') }} <span class="required-fileds">*</span></label>
                 <div class="input-group date">
                   <input
                     #startTripDate="ngModel"
@@ -84,7 +84,7 @@
                     class="form-control"
                     [(date)]="trip.startTripDate"
                     name="tripStartDate"
-                    placeholder="{{ l('TripStartDate') }}"
+                    placeholder="{{ l('DatePlaceholder') }}"
                     [minDate]="shippingRequest.startTripDate"
                     [maxDate]="shippingRequest.endTripDate"
                     [required]="true"
@@ -105,7 +105,7 @@
             </div>
             <div class="col-lg-6">
               <div class="form-group">
-                <label>{{ l('TripEndDate') }} <span class="required-fileds">*</span></label>
+                <label>{{ l('EndDate') }} <span class="required-fileds">*</span></label>
                 <div class="input-group date">
                   <input
                     #endTripDate="ngModel"
@@ -113,7 +113,7 @@
                     [(date)]="trip.endTripDate"
                     class="form-control"
                     name="tripEndDate"
-                    placeholder="{{ l('TripEndDate') }}"
+                    placeholder="{{ l('DatePlaceholder') }}"
                     [minDate]="trip.startTripDate"
                     [maxDate]="shippingRequest.endTripDate"
                     (dateChange)="validateTripDates()"

@@ -12,7 +12,7 @@
     <div class="modal-content">
       <div class="modal-header">
         <h4 class="modal-title">
-          <span>{{ l('Details') }}</span>
+          <span>{{ l('HeaderDetails') }}</span>
         </h4>
         <button type="button" class="close" (click)="close()" aria-label="Close">
           <span aria-hidden="true">&times;</span>
@@ -21,7 +21,7 @@
       <div class="modal-body">
         <div class="row">
           <div class="col-6 mb-3">
-            <h6>{{ l('FullName') }} :</h6>
+            <h6>{{ l('FullName') }}:</h6>
             {{ item.receiver.fullName }}
           </div>
           <div class="col-6 mb-3">
@@ -29,12 +29,12 @@
             {{ item.receiver.email }}
           </div>
           <div class="col-6 mb-3">
-            <h6>{{ l('PhoneNumber') }} :</h6>
+            <h6>{{ l('PhoneNumberCreate') }}:</h6>
             {{ item.receiver.phoneNumber }}
           </div>
 
           <div class="col-6 mb-3">
-            <h6>({{ l('Facility') }}) {{ l('Name') }} :</h6>
+            <h6>({{ l('Facility') }}):</h6>
             {{ item.facilityName }}
           </div>
         </div>

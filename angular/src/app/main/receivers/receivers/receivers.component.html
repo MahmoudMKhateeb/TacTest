@@ -99,11 +99,11 @@
                   <tr>
                     <th style="width: 130px;" [hidden]="!isGrantedAny('Pages.Receivers.Edit', 'Pages.Receivers.Delete')">{{ l('Actions') }}</th>
                     <th style="width: 150px;" pSortableColumn="facilityFk.name">
-                      {{ l('Name') }}
+                      {{ l('Facility') }}
                       <p-sortIcon field="facilityName"></p-sortIcon>
                     </th>
                     <th style="width: 150px;" pSortableColumn="fullName">
-                      {{ l('FullName') }}
+                      {{ l('ReciverName') }}
                       <p-sortIcon field="receiver.fullName"></p-sortIcon>
                     </th>
                     <th style="width: 150px;" pSortableColumn="email">
