@@ -62,6 +62,10 @@
                   {{ l('tripStatus') }}
                   <p-sortIcon field="status"></p-sortIcon>
                 </th>
+                <th pSortableColumn="status" style="width: 150px;">
+                  {{ l('WaybillNumber') }}
+                  <p-sortIcon field="waybillNo"></p-sortIcon>
+                </th>
 
                 <th style="width: 150px;">
                   {{ l('Actions') }}
@@ -99,6 +103,10 @@
                   <span class="ui-column-title"> {{ l('tripStatus') }}</span>
                   {{ record.statusTitle }}
                   <a (click)="ViewTripAccidentModal.getAll(record)" *ngIf="record.hasAccident"><i class="flaticon-warning text-danger"></i></a>
+                </td>
+                <td style="width: 150px;">
+                  <span class="ui-column-title"> {{ l('waybillNumber') }}</span>
+                  {{ record.waybillNumber }}
                 </td>
 
                 <td style="width: 150px;">
