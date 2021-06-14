@@ -2,16 +2,12 @@
 using Abp.Application.Services.Dto;
 using Abp.Authorization;
 using Abp.Domain.Repositories;
-using Abp.Domain.Uow;
 using Abp.Linq.Extensions;
 using Abp.UI;
 using Microsoft.EntityFrameworkCore;
-using System;
 using System.Collections.Generic;
-using System.Globalization;
 using System.Linq;
 using System.Linq.Dynamic.Core;
-using System.Threading;
 using System.Threading.Tasks;
 using TACHYON.Authorization;
 using TACHYON.Authorization.Users;
@@ -28,8 +24,9 @@ using TACHYON.Shipping.ShippingRequestTrips;
 using TACHYON.Shipping.Trips.Accidents.Dto;
 
 namespace TACHYON.Shipping.Trips.Accidents
+
 {
-    [AbpAuthorize(AppPermissions.Pages_ShippingRequest_Accidents)]
+    [AbpAuthorize()]
     public class ShippingRequestTripAccidentAppService : TACHYONAppServiceBase, IShippingRequestTripAccidentAppService
     {
         private readonly IRepository<ShippingRequestTripAccident> _ShippingRequestTripAccidentRepository;
@@ -69,6 +66,8 @@ namespace TACHYON.Shipping.Trips.Accidents
            
 
         }
+        [AbpAuthorize(AppPermissions.Pages_ShippingRequest_Accidents)]
+
         public ListResultDto<ShippingRequestTripAccidentListDto> GetAll(GetAllForShippingRequestTripAccidentFilterInput Input)
         {
            DisableTenancyFilters();
@@ -122,6 +121,8 @@ namespace TACHYON.Shipping.Trips.Accidents
             return ObjectMapper.Map<CreateOrEditShippingRequestTripAccidentDto>(query);
 
         }
+
+        
         public async Task CreateOrEdit(CreateOrEditShippingRequestTripAccidentDto input)
         {
             DisableTenancyFilters();
@@ -285,8 +286,8 @@ namespace TACHYON.Shipping.Trips.Accidents
                 .GetAll()
                     .Include(T => T.ShippingRequestTripFk)
                      .ThenInclude(r => r.ShippingRequestFk)
-                    .Where(x => x.IsActive && x.ShippingRequestTripFk.Status != ShippingRequestTripStatus.Canceled && x.ShippingRequestTripFk.Status != ShippingRequestTripStatus.Delivered)
-                    .WhereIf(IsEnabled(AppFeatures.Carrier), x => x.ShippingRequestTripFk.ShippingRequestFk.CarrierTenantId == AbpSession.TenantId && x.ShippingRequestTripFk.Id == TripId)
+                    .Where(x => x.IsActive && x.ShippingRequestTripFk.Id == TripId && x.ShippingRequestTripFk.Status != ShippingRequestTripStatus.Canceled && x.ShippingRequestTripFk.Status != ShippingRequestTripStatus.Delivered)
+                    .WhereIf(IsEnabled(AppFeatures.Carrier) && !GetCurrentUser().IsDriver, x => x.ShippingRequestTripFk.ShippingRequestFk.CarrierTenantId == AbpSession.TenantId && x.ShippingRequestTripFk.Id == TripId)
                     .WhereIf(IsEnabled(AppFeatures.Shipper), x => x.ShippingRequestTripFk.ShippingRequestFk.TenantId == AbpSession.TenantId && x.ShippingRequestTripFk.Id == TripId)
                     .WhereIf(IsEnabled(AppFeatures.TachyonDealer), x => x.ShippingRequestTripFk.ShippingRequestFk.IsTachyonDeal && x.ShippingRequestTripFk.Id == TripId)
                     .WhereIf(GetCurrentUser().IsDriver, x => x.ShippingRequestTripFk.AssignedDriverUserId == AbpSession.UserId)
