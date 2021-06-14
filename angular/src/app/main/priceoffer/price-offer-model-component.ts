@@ -54,7 +54,7 @@ export class PriceOfferModelComponent extends AppComponentBase {
       this.input.shippingRequestId = id;
       this.input.channel = this.Channel;
       if (!this.feature.isEnabled('App.Carrier')) {
-        this.changeTripComissionValue();
+        this.changeItemComissionValue();
         this.changeVasComissionValue();
       }
       console.log(this.offer);
@@ -64,26 +64,22 @@ export class PriceOfferModelComponent extends AppComponentBase {
     this.active = false;
     this.modal.hide();
   }
-  updateCommissionTypeTitle(): void {
-    this.commissionTypeTitle = PriceOfferCommissionType[this.offer.commssionSettings.tripCommissionType];
-  }
 
-  changeTripComissionValue() {
-    switch (this.offer.commssionSettings.tripCommissionType.toString()) {
+  changeItemComissionValue() {
+    switch (this.offer.commissionType.toString()) {
       case '1':
-        this.offer.commissionPercentageOrAddValue = this.offer.commssionSettings.tripCommissionPercentage;
+        this.offer.commissionPercentageOrAddValue = this.offer.commssionSettings.itemCommissionPercentage;
         break;
       case '2':
-        this.offer.commissionPercentageOrAddValue = this.offer.commssionSettings.tripCommissionValue;
+        this.offer.commissionPercentageOrAddValue = this.offer.commssionSettings.itemCommissionValue;
         break;
       case '3':
-        this.offer.commissionPercentageOrAddValue = this.offer.commssionSettings.tripMinValueCommission;
+        this.offer.commissionPercentageOrAddValue = this.offer.commssionSettings.itemMinValueCommission;
         break;
     }
-    this.updateCommissionTypeTitle();
   }
   changeVasComissionValue() {
-    switch (this.offer.commssionSettings.vasCommissionType.toString()) {
+    switch (this.offer.vasCommissionType.toString()) {
       case '1':
         this.offer.vasCommissionPercentageOrAddValue = this.offer.commssionSettings.vasCommissionPercentage;
         break;
@@ -118,8 +114,11 @@ export class PriceOfferModelComponent extends AppComponentBase {
 
     this.saving = true;
   }
+
   calculator(): void {
     this.offer.itemTotalAmount = this.offer.itemPrice * this.offer.quantity;
+    this.offer.itemCommissionAmount = this.calculatorItemCommission(this.offer.itemPrice);
+    this.offer.itemSubTotalAmountWithCommission = this.offer.itemCommissionAmount * this.offer.quantity;
     this.calculatorAll();
   }
   calculatorItem(item: PriceOfferItem): void {
@@ -127,12 +126,39 @@ export class PriceOfferModelComponent extends AppComponentBase {
     this.calculatorAll();
   }
   calculatorAll() {
-    this.offer.subTotalAmount = this.offer.itemTotalAmount + this.Items.reduce((sum, current) => sum + current.itemTotalAmount, 0);
-    this.offer.vatAmount = (this.offer.subTotalAmount * this.offer.taxVat) / 100;
+    this.offer.subTotalAmount = this.offer.itemTotalAmount + this.getSubtotalVases();
+    this.offer.vatAmount = this.calculatorPercentage(this.offer.subTotalAmount, this.offer.taxVat);
     this.offer.totalAmount = this.offer.subTotalAmount + this.offer.vatAmount;
     if (!this.feature.isEnabled('App.Carrier')) this.calculatorCommission();
   }
-  calculatorCommission() {}
+
+  calculatorCommission() {
+    let ItemsComission = this.calculatorItemCommission(this.offer.itemTotalAmount);
+    let VasesComission = this.calculatorVasesCommission(this.getSubtotalVases());
+    this.offer.commissionAmount = ItemsComission + VasesComission;
+  }
+  calculatorItemCommission(amount) {
+    if (this.offer.commissionType == PriceOfferCommissionType.CommissionPercentage) {
+      return this.calculatorPercentage(amount, this.offer.commissionPercentageOrAddValue);
+    } else {
+      return amount + this.offer.commissionPercentageOrAddValue;
+    }
+  }
+
+  calculatorVasesCommission(amount: number) {
+    if (this.offer.vasCommissionType == PriceOfferCommissionType.CommissionPercentage) {
+      return this.calculatorPercentage(amount, this.offer.vasCommissionPercentageOrAddValue);
+    } else {
+      return amount + this.offer.vasCommissionPercentageOrAddValue;
+    }
+  }
+  getSubtotalVases() {
+    return this.Items.reduce((sum, current) => sum + current.itemTotalAmount, 0);
+  }
+
+  calculatorPercentage(amount: number, percentage: number): number {
+    return (amount * percentage) / 100;
+  }
   toCurrencyString(x): string {
     return (Math.round(x * 100) / 100).toFixed(2);
   }

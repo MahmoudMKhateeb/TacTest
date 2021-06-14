@@ -23,17 +23,24 @@
                     {{l('Price')}}
                   </th>
                   <th *ngIf="!feature.isEnabled('App.Carrier')">
-                    <select name="CommissionType" [(ngModel)]="offer.commssionSettings.tripCommissionType" (change)="changeTripComissionValue()">
+                    <select name="CommissionType" [(ngModel)]="offer.commissionType" (change)="changeItemComissionValue();calculator()">
                       <option [value]="code.key" *ngFor="let code of priceOfferCommissionType">
                         {{ l(code.value) | localize }}
                       </option>
                     </select>
                   </th>
+                  <th *ngIf="!feature.isEnabled('App.Carrier')">
+                    {{l('Commission')}}
+                  </th>
+
                   <th>
-                    {{l('NoOfTrips')}}
+                    {{l('Qty')}}
                   </th>
                   <th>
                     {{l('Total')}}
+                  </th>
+                  <th *ngIf="!feature.isEnabled('App.Carrier')">
+                    {{l('TotalCommission')}}
                   </th>
                 </tr>
               </thead>
@@ -51,15 +58,18 @@
                     />
                   </td>
                   <td *ngIf="!feature.isEnabled('App.Carrier')">
-                    {{l(commissionTypeTitle)}}
                     <input
                       type="number"
                       min="1"
                       class="ml-2"
                       placeholder="Value"
+                      (change)="calculator();"
                       name="commissionPercentageOrAddValue"
                       [(ngModel)]="offer.commissionPercentageOrAddValue"
                     />
+                  </td>
+                  <td *ngIf="!feature.isEnabled('App.Carrier')">
+                    {{offer.itemCommissionAmount}}
                   </td>
                   <td>
                     {{offer.quantity}}
@@ -67,6 +77,12 @@
                   <td>
                     <ng-template [ngIf]="offer.itemTotalAmount>0">
                       <span>{{offer.itemTotalAmount | number}}</span>
+                      <span>{{l('SAR')}}</span>
+                    </ng-template>
+                  </td>
+                  <td *ngIf="!feature.isEnabled('App.Carrier')">
+                    <ng-template [ngIf]="offer.itemSubTotalAmountWithCommission>0">
+                      <span>{{offer.itemSubTotalAmountWithCommission | number}}</span>
                       <span>{{l('SAR')}}</span>
                     </ng-template>
                   </td>
@@ -81,7 +97,7 @@
                 VAS
               </span>
               <div>
-                <select name="vasCommissionType" [(ngModel)]="offer.commssionSettings.vasCommissionType" (change)="changeVasComissionValue()">
+                <select name="vasCommissionType" [(ngModel)]="offer.vasCommissionType" (change)="changeVasComissionValue();calculator()">
                   <option [value]="code.key" *ngFor="let code of priceOfferCommissionType">
                     {{ l(code.value) | localize }}
                   </option>

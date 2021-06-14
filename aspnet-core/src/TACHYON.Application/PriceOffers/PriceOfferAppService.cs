@@ -53,14 +53,17 @@ namespace TACHYON.PriceOffers
                 .Include(x => x.ShippingRequestVases)
                   .ThenInclude(v => v.VasFk)
                 .FirstOrDefaultAsync(x => x.Id == id && (x.Status == ShippingRequestStatus.PrePrice || x.Status == ShippingRequestStatus.NeedsAction));
+
             if (shippingrequest == null) throw new UserFriendlyException(L("TheRecordIsNotFound"));
+
             var offer = await _priceOfferRepository
                 .GetAll()
                 .Include(i => i.PriceOfferDetails)
-                .FirstOrDefaultAsync(
-                x => x.ShippingRequestId == shippingrequest.Id &&
-                (x.Status == PriceOfferStatus.New || x.Status == PriceOfferStatus.Rejected) &&
-                x.TenantId == AbpSession.TenantId.Value
+                .FirstOrDefaultAsync
+                (
+                     x => x.ShippingRequestId == shippingrequest.Id &&
+                    (x.Status == PriceOfferStatus.New || x.Status == PriceOfferStatus.Rejected) &&
+                     x.TenantId == AbpSession.TenantId.Value
                 );
             PriceOfferDto priceOfferDto;
             if (offer != null)
@@ -78,7 +81,7 @@ namespace TACHYON.PriceOffers
                 {// Set Default data
                     PriceType = PriceOfferType.Trip,
                     Quantity = shippingrequest.NumberOfTrips,
-                    Items = GetItems(shippingrequest),
+                    Items = GetVases(shippingrequest),
                     TaxVat = (decimal)Convert.ChangeType(SettingManager.GetSettingValue(AppSettings.HostManagement.TaxVat), typeof(decimal))
                 };
                 SetCommssionSettingsForTachyonDealer(priceOfferDto, shippingrequest);
@@ -112,6 +115,8 @@ namespace TACHYON.PriceOffers
                 .WhereIf(AbpSession.TenantId.HasValue && await IsEnabledAsync(AppFeatures.Shipper), x => x.ShippingRequestFK.TenantId == AbpSession.TenantId.Value && !x.ShippingRequestFK.IsTachyonDeal)
                 .WhereIf(AbpSession.TenantId.HasValue && await IsEnabledAsync(AppFeatures.Carrier), x => x.TenantId == AbpSession.TenantId.Value)
                 .FirstOrDefaultAsync();
+
+
             if (offer == null) throw new UserFriendlyException(L("ThereNoOffer"));
             var priceOfferDto = ObjectMapper.Map<PriceOfferViewDto>(offer);
             foreach (var item in priceOfferDto.Items)
@@ -227,7 +232,12 @@ namespace TACHYON.PriceOffers
 
         #endregion
         #region Helper
-        private List<PriceOfferItem> GetItems(ShippingRequest shippingRequest)
+        /// <summary>
+        /// Get all vas item related with shipment
+        /// </summary>
+        /// <param name="shippingRequest"></param>
+        /// <returns></returns>
+        private List<PriceOfferItem> GetVases(ShippingRequest shippingRequest)
         {
             List<PriceOfferItem> items = new List<PriceOfferItem>();
             if (shippingRequest.ShippingRequestVases != null && shippingRequest.ShippingRequestVases.Count > 0)
@@ -244,7 +254,7 @@ namespace TACHYON.PriceOffers
                     {
                         SourceId = vas.Id,
                         PriceType = PriceOfferType.Vas,
-                        Quantity = vas.RequestMaxAmount + vas.RequestMaxCount,
+                        Quantity = vas.RequestMaxCount<=0  ?   1: vas.RequestMaxCount,
                         ItemName = vas.VasFk.Name
                     };
                     var vasDefine = Tenantvases.FirstOrDefault(x => x.VasId == vas.VasId);
@@ -260,7 +270,7 @@ namespace TACHYON.PriceOffers
             return items;
         }
         /// <summary>
-        /// Get TachyonDealer commission settings
+        /// Get TachyonDealer default commission settings for tenent
         /// </summary>
         /// <param name="offer"></param>
         /// <param name="shippingRequest"></param>
@@ -297,14 +307,14 @@ namespace TACHYON.PriceOffers
             PriceOfferTenantCommssionSettings commssionSettings=
                 new PriceOfferTenantCommssionSettings() 
                 { 
-                     TripCommissionType= (PriceOfferCommissionType)Convert.ToByte(FeatureChecker.GetValue(TenantId, AppFeatures.TachyonDealerTripCommissionType)),
-                     TripCommissionPercentage= Convert.ToDecimal(FeatureChecker.GetValue(TenantId, AppFeatures.TachyonDealerTripCommissionPercentage)),
-                     TripCommissionValue= Convert.ToDecimal(FeatureChecker.GetValue(TenantId, AppFeatures.TachyonDealerTripCommissionValue)),
-                     TripMinValueCommission= Convert.ToDecimal(FeatureChecker.GetValue(TenantId, AppFeatures.TachyonDealerTripMinValueCommission)),
-                    VasCommissionType = (PriceOfferCommissionType)Convert.ToByte(FeatureChecker.GetValue(TenantId, AppFeatures.TachyonDealerVasCommissionType)),
-                    VasCommissionPercentage = Convert.ToDecimal(FeatureChecker.GetValue(TenantId, AppFeatures.TachyonDealerVasCommissionPercentage)),
-                    VasCommissionValue = Convert.ToDecimal(FeatureChecker.GetValue(TenantId, AppFeatures.TachyonDealerVasCommissionValue)),
-                    VasMinValueCommission = Convert.ToDecimal(FeatureChecker.GetValue(TenantId, AppFeatures.TachyonDealerVasMinValueCommission))
+                     ItemCommissionType= (PriceOfferCommissionType)Convert.ToByte(FeatureChecker.GetValue(TenantId, AppFeatures.TachyonDealerTripCommissionType)),
+                     ItemCommissionPercentage= Convert.ToDecimal(FeatureChecker.GetValue(TenantId, AppFeatures.TachyonDealerTripCommissionPercentage)),
+                     ItemCommissionValue= Convert.ToDecimal(FeatureChecker.GetValue(TenantId, AppFeatures.TachyonDealerTripCommissionValue)),
+                     ItemMinValueCommission= Convert.ToDecimal(FeatureChecker.GetValue(TenantId, AppFeatures.TachyonDealerTripMinValueCommission)),
+                     VasCommissionType = (PriceOfferCommissionType)Convert.ToByte(FeatureChecker.GetValue(TenantId, AppFeatures.TachyonDealerVasCommissionType)),
+                     VasCommissionPercentage = Convert.ToDecimal(FeatureChecker.GetValue(TenantId, AppFeatures.TachyonDealerVasCommissionPercentage)),
+                     VasCommissionValue = Convert.ToDecimal(FeatureChecker.GetValue(TenantId, AppFeatures.TachyonDealerVasCommissionValue)),
+                     VasMinValueCommission = Convert.ToDecimal(FeatureChecker.GetValue(TenantId, AppFeatures.TachyonDealerVasMinValueCommission))
                 };
 
             return commssionSettings;

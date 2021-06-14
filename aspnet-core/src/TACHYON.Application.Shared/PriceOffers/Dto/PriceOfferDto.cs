@@ -54,10 +54,10 @@ namespace TACHYON.PriceOffers.Dto
     }
     public class PriceOfferTenantCommssionSettings
     {
-        public PriceOfferCommissionType TripCommissionType { get; set; }
-        public decimal TripCommissionPercentage { get; set; }
-        public decimal TripCommissionValue { get; set; }
-        public decimal TripMinValueCommission { get; set; }
+        public PriceOfferCommissionType ItemCommissionType { get; set; }
+        public decimal ItemCommissionPercentage { get; set; }
+        public decimal ItemCommissionValue { get; set; }
+        public decimal ItemMinValueCommission { get; set; }
 
         public PriceOfferCommissionType VasCommissionType { get; set; }
 
