@@ -33,6 +33,7 @@ namespace TACHYON.Shipping.Trips.Dto
         public ShippingRequestTripDriverStatus DriverStatus { get; set; }
         public string DriverStatusTitle { get; set; }
         public string RejectedReason { get; set; }
+        public long? WaybillNumber { get; set; }
 
     }
 }
