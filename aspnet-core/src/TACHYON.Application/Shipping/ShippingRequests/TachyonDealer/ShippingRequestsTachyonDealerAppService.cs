@@ -17,7 +17,6 @@ using TACHYON.Shipping.ShippingRequests.Dtos;
 using Abp.Domain.Uow;
 using TACHYON.MultiTenancy;
 using TACHYON.Shipping.ShippingRequestBids;
-
 namespace TACHYON.Shipping.ShippingRequests.TachyonDealer
 {
     public class ShippingRequestsTachyonDealerAppService : TACHYONAppServiceBase, IShippingRequestsTachyonDealerAppService

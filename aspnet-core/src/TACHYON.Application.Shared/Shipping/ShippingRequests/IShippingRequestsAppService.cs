@@ -33,6 +33,6 @@ namespace TACHYON.Shipping.ShippingRequests
         IEnumerable<GetMultipleDropWaybillOutput> GetMultipleDropWaybill(long routPointId);
         IEnumerable<GetAllShippingRequestVasesOutput> GetShippingRequestVasesForMultipleDropWaybill(long RoutPointId);
 
-
+        Task<GetShippingRequestForPricingOutput> GetShippingRequestForPricing(long id);
     }
 }

@@ -148,6 +148,28 @@
               </div>
             </div>
 
+            <div class="col-lg-6">
+              <div class="form-group">
+                <div class="checkbox-list">
+                  <label class="checkbox">
+                    <input type="checkbox" [(ngModel)]="trip.needsDeliveryNote" name="Checkboxes1" />
+                    <span></span>{{ l('NeedsDeliveryNote') }}</label
+                  >
+                </div>
+              </div>
+            </div>
+
+            <div class="col-lg-6">
+              <div class="form-group">
+                <div class="checkbox-list">
+                  <label class="checkbox">
+                    <input type="checkbox" [(ngModel)]="trip.hasAttachment" name="Checkboxes2" />
+                    <span></span>{{ l('HasAttachment') }}</label
+                  >
+                </div>
+              </div>
+            </div>
+
             <!--      end:Vas's      -->
             <!--  start:: RouteSteps -->
             <PointsComponent
@@ -160,23 +182,23 @@
             <!--  end:: RouteSteps -->
             <!--end::Body-->
           </div>
-        </div>
-        <div class="modal-footer">
-          <!--begin::Buttons-->
+          <div class="modal-footer">
+            <!--begin::Buttons-->
 
-          <button [disabled]="saving" type="button" class="btn btn-secondary font-weight-bolder btn-sm py-3 px-6 text-uppercase" (click)="close()">
-            {{ l('Close') }}
-          </button>
+            <button [disabled]="saving" type="button" class="btn btn-secondary font-weight-bolder btn-sm py-3 px-6 text-uppercase" (click)="close()">
+              {{ l('Close') }}
+            </button>
 
-          <button
-            type="submit"
-            [disabled]="saving || !shippingRequestTripsForm.form.valid"
-            class="btn btn-primary font-weight-bolder btn-sm py-3 px-6 text-uppercase"
-            (click)="createOrEditTrip()"
-          >
-            {{ trip.id ? l('UpdateTrip') : l('AddNewTrip') }}
-          </button>
-          <!--end::Buttons-->
+            <button
+              type="submit"
+              [disabled]="saving || !shippingRequestTripsForm.form.valid"
+              class="btn btn-primary font-weight-bolder btn-sm py-3 px-6 text-uppercase"
+              (click)="createOrEditTrip()"
+            >
+              {{ trip.id ? l('UpdateTrip') : l('AddNewTrip') }}
+            </button>
+            <!--end::Buttons-->
+          </div>
         </div>
       </form>
     </div>

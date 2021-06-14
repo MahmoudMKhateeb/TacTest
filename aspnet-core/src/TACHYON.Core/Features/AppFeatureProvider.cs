@@ -1,15 +1,14 @@
 ﻿using Abp.Application.Features;
 using Abp.Domain.Repositories;
+using Abp.Domain.Uow;
 using Abp.Localization;
 using Abp.Runtime.Validation;
 using Abp.UI.Inputs;
-using TACHYON.Invoices.Periods;
-using System.Linq;
-using Abp.Dependency;
-using Abp.Domain.Uow;
-using System.Collections.Generic;
 using System;
-using TACHYON.Shipping.ShippingRequests;
+using System.Collections.Generic;
+using System.Linq;
+using TACHYON.Invoices.Periods;
+using TACHYON.PriceOffers;
 
 namespace TACHYON.Features
 {
@@ -144,12 +143,6 @@ namespace TACHYON.Features
                 }
 
             }
-            shipperFeature.CreateChildFeature(
-                AppFeatures.ShipperCanMakInvoicePaid,
-                "false",
-                L("ShipperCanMakInvoicePaid"),
-                inputType: new CheckboxInputType()
-            );
 
 
 
@@ -230,11 +223,15 @@ namespace TACHYON.Features
             #region Commission
 
             List<LocalizableComboboxItem> CommissionTypes = new List<LocalizableComboboxItem>();
-            foreach (byte i in Enum.GetValues(typeof(ShippingRequestCommissionType)))
+            foreach (byte i in Enum.GetValues(typeof(PriceOfferCommissionType)))
             {
                 if (i !=1 && i!=2) continue;
-                CommissionTypes.Add(new LocalizableComboboxItem(i.ToString(), L(Enum.GetName(typeof(ShippingRequestCommissionType), i))));
+                CommissionTypes.Add(new LocalizableComboboxItem(i.ToString(), L(Enum.GetName(typeof(PriceOfferCommissionType), i))));
             }
+
+
+
+
 
             shipperFeature.CreateChildFeature(
                 AppFeatures.TripCommissionType,

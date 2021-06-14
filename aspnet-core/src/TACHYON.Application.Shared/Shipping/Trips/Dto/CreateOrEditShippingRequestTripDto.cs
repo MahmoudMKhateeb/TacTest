@@ -20,7 +20,8 @@ namespace TACHYON.Shipping.Trips.Dto
         //public long? AssignedTruckId { get; set; }
         public long ShippingRequestId { get; set; }
 
-
+        public bool HasAttachment { get; set; }
+        public bool NeedsDeliveryNote { get; set; }
         //Facility
         public virtual long? OriginFacilityId { get; set; }
 

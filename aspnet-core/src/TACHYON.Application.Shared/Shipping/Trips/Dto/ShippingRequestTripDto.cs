@@ -13,6 +13,8 @@ namespace TACHYON.Shipping.Trips.Dto
         public byte StatusId { get; set; }
         public long? AssignedDriverUserId { get; set; }
         public long? AssignedTruckId { get; set; }
+        public bool HasAttachment { get; set; }
+        public bool NeedsDeliveryNote { get; set; }
         public long ShippingRequestId { get; set; }
 
         public string Code { get; set; }

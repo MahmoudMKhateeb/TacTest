@@ -1,0 +1,469 @@
+.shipCard {
+  border-radius: 4px;
+  -webkit-border-radius: 4px;
+  -moz-border-radius: 4px;
+  -ms-border-radius: 4px;
+  -o-border-radius: 4px;
+  border: 1px solid #e1e1e1;
+  background-color: #ffffff;
+  padding: 20px;
+}
+
+.shipCardGray {
+  background-color: #fafafa;
+}
+
+.shipCardBlue {
+  background-color: #f3f8fc;
+}
+
+.shipCard.tachyonDialer {
+  position: relative;
+}
+
+.shipCard.tachyonDialer img.markTachyon {
+  position: absolute;
+  right: 26px;
+  width: 26px;
+  top: -6px;
+}
+
+.shipCard.rtl.tachyonDialer img.markTachyon {
+  position: absolute;
+  right: unset;
+  left: 26px;
+  width: 26px;
+  top: -6px;
+  transform: rotateY(180deg);
+}
+
+.shipCard:not(.tachyonDialer) img.markTachyon {
+  display: none;
+}
+
+.shipCard > div {
+  display: flex;
+}
+
+.shipCard .infoBasic {
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.shipCard .infoBasic .companyName {
+  font-size: 18px;
+  color: #707070;
+  font-weight: 500;
+  margin-right: 15px;
+}
+
+.shipCard.rtl .infoBasic .companyName {
+  margin-right: unset;
+  margin-left: 15px;
+}
+
+.shipCard.tachyonDialer .infoBasic .companyName {
+  color: #d82631;
+}
+
+.shipCard .infoBasic .remainingTime {
+  line-height: normal;
+  color: #92a1b1;
+  font-size: 18px;
+  margin: 10px 0;
+}
+
+.shipCard .infoBasic .remainingTime b {
+  font-size: 24px;
+  color: #fff;
+  background-color: #d82631;
+  display: inline-flex;
+  padding: 3px;
+  border-radius: 4px;
+  -webkit-border-radius: 4px;
+  -moz-border-radius: 4px;
+  -ms-border-radius: 4px;
+  -o-border-radius: 4px;
+}
+
+.shipCard .detailsRoad {
+  flex-wrap: wrap;
+  position: relative;
+  padding-left: 15px;
+}
+
+.shipCard.rtl .detailsRoad {
+  padding-left: unset;
+  padding-right: 15px;
+  text-align: right;
+}
+
+.shipCard .detailsRoad::before {
+  content: '';
+  position: absolute;
+  left: -3px;
+  top: 6px;
+  width: 16px;
+  height: 100%;
+  background-repeat: no-repeat;
+  background-image: url('/assets/custom/imgs/iconRoad.png');
+  background-size: 11px calc(100% - 31px);
+}
+
+.shipCard.rtl .detailsRoad::before {
+  left: unset;
+  right: -6px;
+}
+
+.shipCard .detailsRoad > div {
+  flex: 0 0 100%;
+  max-width: 100%;
+}
+
+.shipCard .detailsRoad > div:nth-child(1) {
+  margin-bottom: 18px;
+}
+
+.shipCard .detailsRoad p {
+  margin-bottom: 0;
+  font-size: 14px;
+  color: #92a1b1;
+}
+
+.shipCard .detailsRoad p:nth-child(1) {
+  margin-bottom: 3px;
+  color: #d82631;
+}
+
+.shipCard .divirCard {
+  width: 100%;
+  margin: 15px 0;
+  height: 1px;
+  background-color: #e1e1e1;
+}
+
+.shipCard .moreDetails {
+  white-space: nowrap;
+  flex-wrap: wrap;
+  margin-bottom: 15px;
+}
+
+.shipCard .moreDetails > div {
+  margin-right: 25px;
+}
+
+.shipCard.rtl .moreDetails > div {
+  margin-right: unset;
+  margin-left: 25px;
+}
+
+.shipCard .moreDetails > div:last-of-type {
+  margin: 0 !important;
+}
+
+.shipCard .moreDetails > div p:nth-child(1) {
+  font-size: 12px;
+  color: #92a1b1;
+  display: flex;
+  align-items: center;
+  margin-bottom: 5px;
+}
+
+.shipCard .moreDetails > div p:nth-child(1) i {
+  font-size: 16px;
+  margin-right: 5px;
+}
+
+.shipCard.rtl .moreDetails > div p:nth-child(1) i {
+  margin-right: unset;
+  margin-left: 5px;
+}
+
+.shipCard .moreDetails > div p:nth-child(1) img {
+  width: 16px;
+  margin-right: 5px;
+}
+
+.shipCard.rtl .moreDetails > div p:nth-child(1) img {
+  margin-right: unset;
+  margin-left: 5px;
+}
+
+.shipCard .moreDetails > div p:nth-child(2) {
+  font-size: 14px;
+  font-weight: 500;
+  color: #000;
+  margin-bottom: 15px;
+}
+
+.shipCard.rtl .moreDetails > div p:nth-child(2) {
+  text-align: right;
+}
+
+.shipCard .driverName .userDriver {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  -webkit-border-radius: 50%;
+  -moz-border-radius: 50%;
+  -ms-border-radius: 50%;
+  -o-border-radius: 50%;
+}
+
+.shipCard .actionsShip {
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  white-space: nowrap;
+}
+
+.shipCard .infoHighLight {
+  font-size: 12px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 3px 15px;
+  border-radius: 50px;
+  -webkit-border-radius: 50px;
+  -moz-border-radius: 50px;
+  -ms-border-radius: 50px;
+  -o-border-radius: 50px;
+}
+
+.shipCard .infoHighLight:hover {
+  text-decoration: none;
+}
+
+.shipCard .infoHighLight.green {
+  background-color: #cef1cd;
+  color: #0bb805;
+}
+
+.shipCard .infoHighLight.red {
+  background-color: #f3cfd1;
+  color: #d82631;
+}
+
+.shipCard .infoHighLight.blue {
+  background-color: #c3dcf6;
+  color: #0069d9;
+}
+
+.shipCard .actionsShip > div:nth-child(1) {
+  margin-right: 15px;
+}
+
+.shipCard.rtl .actionsShip > div:nth-child(1) {
+  margin-right: unset;
+  margin-left: 15px;
+}
+
+.shipCard .actionsShip .actions {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.shipCard .actions a {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 8px 12px;
+  font-size: 15px;
+  font-weight: 500;
+  color: #fff;
+  border-radius: 4px;
+  -webkit-border-radius: 4px;
+  -moz-border-radius: 4px;
+  -ms-border-radius: 4px;
+  -o-border-radius: 4px;
+  margin: 10px 12px 10px 0;
+}
+
+.shipCard.rtl .actions a {
+  margin: 10px 0 10px 12px;
+}
+
+.shipCard .actions a:hover {
+  text-decoration: none;
+}
+
+.shipCard .actions a:last-of-type {
+  margin-right: 0;
+}
+
+.shipCard.rtl .actions a:last-of-type {
+  margin-right: unset;
+  margin-left: 0;
+}
+
+.shipCard .actions a.blue {
+  background-color: #0069d9;
+}
+
+.shipCard .actions a.green {
+  background-color: #218838;
+}
+
+.shipCard .actions a.red {
+  background-color: #d82631;
+}
+
+@media (min-width: 0.1) and (max-width: 575.9px) {
+  .shipCard {
+    padding: 13px;
+  }
+
+  .shipCard .infoBasic .companyName {
+    font-size: 16px;
+  }
+
+  .shipCard .infoBasic .remainingTime b {
+    font-size: 19px;
+  }
+
+  .shipCard .moreDetails > div p:nth-child(1) {
+    font-size: 11px;
+  }
+
+  .shipCard .moreDetails > div p:nth-child(2) {
+    font-size: 13px;
+  }
+
+  .shipCard .moreDetails {
+    margin-bottom: 10px;
+  }
+
+  .shipCard .actions a {
+    padding: 5px 8px;
+    font-size: 13px;
+    margin: 6px 6px 6px 0;
+  }
+
+  .shipCard.rtl .actions a {
+    margin: 6px 0 6px 6px;
+  }
+}
+
+@media (min-width: 576px) and (max-width: 767.9px) {
+  .shipCard {
+    padding: 15px;
+  }
+
+  .shipCard .infoBasic .companyName {
+    font-size: 17px;
+  }
+
+  .shipCard .infoBasic .remainingTime b {
+    font-size: 20px;
+  }
+
+  .shipCard .moreDetails > div p:nth-child(1) {
+    font-size: 11px;
+  }
+
+  .shipCard .moreDetails > div p:nth-child(2) {
+    font-size: 13px;
+  }
+
+  .shipCard .moreDetails {
+    margin-bottom: 10px;
+  }
+
+  .shipCard .actions a {
+    padding: 6px 8px;
+    font-size: 13px;
+    margin: 6px 6px 6px 0;
+  }
+
+  .shipCard.rtl .actions a {
+    margin: 6px 0 6px 6px;
+  }
+}
+
+@media (min-width: 768px) and (max-width: 991.9px) {
+  .shipCard {
+    padding: 15px;
+  }
+
+  .shipCard .infoBasic .remainingTime b {
+    font-size: 22px;
+  }
+
+  .shipCard .actions a {
+    padding: 6px 10px;
+    font-size: 14px;
+    margin: 6px 6px 6px 0;
+  }
+
+  .shipCard.rtl .actions a {
+    margin: 6px 0 6px 6px;
+  }
+}
+
+@media (min-width: 992px) and (max-width: 1199.9px) {
+  .shipCard {
+    padding: 15px;
+  }
+
+  .shipCard .actions a {
+    padding: 8px 10px;
+    font-size: 15px;
+    margin: 6px 6px 6px 0;
+  }
+
+  .shipCard.rtl .actions a {
+    padding: 8px 10px;
+    font-size: 15px;
+    margin: 6px 0 6px 6px;
+  }
+}
+
+/* style loading */
+
+.loadingRow > span {
+  display: inline-block;
+  border: 5px solid #e1e1e1;
+  border-radius: 50%;
+  border-top: 5px solid #d82631;
+  width: 66px;
+  height: 66px;
+  animation: spin 1.1s linear infinite;
+  -webkit-animation: spin 1.1s linear infinite;
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+    -webkit-transform: rotate(0deg);
+    -moz-transform: rotate(0deg);
+    -ms-transform: rotate(0deg);
+    -o-transform: rotate(0deg);
+  }
+
+  100% {
+    transform: rotate(360deg);
+    -webkit-transform: rotate(360deg);
+    -moz-transform: rotate(360deg);
+    -ms-transform: rotate(360deg);
+    -o-transform: rotate(360deg);
+  }
+}
+
+@keyframes spin2 {
+  0% {
+    transform: rotate(360deg);
+    -webkit-transform: rotate(360deg);
+    -moz-transform: rotate(360deg);
+    -ms-transform: rotate(360deg);
+    -o-transform: rotate(360deg);
+  }
+
+  100% {
+    transform: rotate(0deg);
+    -webkit-transform: rotate(0deg);
+    -moz-transform: rotate(0deg);
+    -ms-transform: rotate(0deg);
+    -o-transform: rotate(0deg);
+  }
+}

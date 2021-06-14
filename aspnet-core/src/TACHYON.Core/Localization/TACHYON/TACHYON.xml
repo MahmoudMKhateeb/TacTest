@@ -130,6 +130,7 @@
     <text name="BalnaceRecharges">Balance management</text>
     <text name="BaseLanguage">Base language</text>
     <text name="BaseValue">Base value</text>
+    <text name="Bid">Bid</text>
     <text name="BidAmount">Bid amount</text>
     <text name="BiddingEndDate">bidding end date</text>
     <text name="BiddingHistory">Bidding history</text>
@@ -137,6 +138,7 @@
     <text name="BidPlacedSuccessfully">Bid placed successfully</text>
     <text name="BidPrice">Bid price</text>
     <text name="BidRequestRemoved">Bid request removed</text>
+    <text name="Bids">Bids</text>
     <text name="BidsList">Bids list</text>
     <text name="BidStartDate">Bid start date</text>
     <text name="BidUpdatedSuccessfully">Bid updated successfully</text>
@@ -318,7 +320,7 @@
     <text name="CreateNewRoute">Add new route</text>
     <text name="CreateNewRoutStep">Create New rout step</text>
     <text name="CreateNewRoutType">Add new route type</text>
-    <text name="CreateNewShippingRequest">Create shipping request ?</text>
+    <text name="CreateNewShippingRequest">Create shipping request </text>
     <text name="CreateNewShippingRequestStatus">Create New Shipping Request Status</text>
     <text name="CreateNewShippingRequestVas">Create New Shipping Request VAS</text>
     <text name="CreateNewShippingType">Create new shipping type</text>
@@ -465,6 +467,7 @@
     <text name="DeletingRole">Deleting role</text>
     <text name="DeletingTenant">Deleting tenant</text>
     <text name="DeletingUser">Deleting user</text>
+    <text name="Delivery">Delivery</text>
     <text name="Demand">Demand</text>
     <text name="Demo_SampleChatMessage">Hi, this is a test message. Please login with my account in a different browser and check out how chat feature works.</text>
     <text name="DemoPayPalAccount">Demo PayPal account</text>
@@ -959,6 +962,7 @@
     <text name="ManagingRoles">Managing roles</text>
     <text name="Marketplace">Marketplace</text>
     <text name="MarketPlaceHeaderInfo">Market place header info</text>
+    <text name="MarketPlacepriced">Priced</text>
     <text name="MarketPlaceSettings">Market place settings</text>
     <text name="MasterKey">Master key</text>
     <text name="MasterValue">Master value</text>
@@ -996,6 +1000,7 @@
     <text name="Monthly">Monthly</text>
     <text name="Monthlydate1">Monthly date 1</text>
     <text name="MonthlyPrice">Monthly Price</text>
+    <text name="More">More</text>
     <text name="MoveTenantsOfEdition">Move tenants to another edition</text>
     <text name="MoveTenantsOfEditionDescription">{0} tenants will be moved</text>
     <text name="MoveTenantsToAnotherEdition">Move tenants to another edition</text>
@@ -1076,6 +1081,7 @@
     <text name="None">None</text>
     <text name="NoOrganizationUnitDefinedYet">No organization unit defined yet.</text>
     <text name="NoPermission">You do not have any permission. Contact your account administrator.</text>
+    <text name="NoRecordsFound">No records found</text>
     <text name="Normal">Normal</text>
     <text name="NotAMemberYet">New Registration</text>
     <text name="NotAssigned">Not assigned</text>
@@ -1328,12 +1334,14 @@ content that we shared with you.</text>
     <text name="RegisterFormUserNameInvalidMessage">Please do not enter your email address as a username.</text>
     <text name="Reject">Reject</text>
     <text name="Rejected">Rejected</text>
+    <text name="RejectedOffer"><![CDATA[<a href="/app/main/shippingRequests/shippingRequests/view?id={id}&offerid={offerid}">You offer has been rejected by {rejectedby}.</a>]]></text>
     <text name="RejectedReason">Rejected reason</text>
     <text name="RejectionReason">Rejection reason</text>
     <text name="RejectPricingOffer">Reject pricing offer</text>
     <text name="RejectShippingRequestNotificationMessage">Shipping Request is canceled</text>
     <text name="RejectThisTrip">Reject This Trip!</text>
     <text name="RemainingDay">Remaining day</text>
+    <text name="RemainingDays">Remaining days</text>
     <text name="RemainingTime">Remaining time</text>
     <text name="Remarks">Remarks</text>
     <text name="RememberMe">Remember me</text>
@@ -1775,6 +1783,7 @@ code:{0}</text>
     <text name="ThereIsNoViewConfigurationForX">There is no view configuration for {0}</text>
     <text name="TheShipperSelectedIsNotFound">The shipper selected is not found</text>
     <text name="TheShippingIsNotFound">The shipping is not found</text>
+    <text name="TheShippingRequestNotFound">The shipping request not found</text>
     <text name="ThisEditionIsUsedAsAnExpiringEdition">This edition is used as an expiring edition for another edition(s). If you want to make this edition paid, you should first remove it from other edition's.</text>
     <text name="ThisFieldIsRequired">This field is required.</text>
     <text name="ThisInvoiceIsNotYours">This invoice is not yours!</text>
@@ -2116,12 +2125,15 @@ code:{0}</text>
     <text name="YouAreNotAuthorizedToPerformThisOperation">You are not authorized to perform this operation.</text>
     <text name="YouAreNotLinkedToAnyAccount">You are not linked to any account</text>
     <text name="YouCanBackToYourAccount">You can back to your account here</text>
+    <text name="YouCanDeleteDirectRequestOnlyWhenTheStatusIsNew">You can delete direct Request only when the status is new</text>
     <text name="YouCanManageUsersOrganizationUnitsFromOrganizationUnitsPage">You can manage user's organization units From organization units page.</text>
+    <text name="YouCanNoCreateOrEditPriceWhenThePriceAccepted">You can no create or edit price when the price accepted.</text>
     <text name="YouCannotBeFriendWithYourself">You can not be a friend with yourself.</text>
     <text name="YouCanNotDeleteOwnAccount">You can't delete your account</text>
     <text name="YouCannotLinkToSameAccount">You can not link to same account!</text>
     <text name="YouCannotRemoveUserRolePermissionsFromAdminRole">You can't delete or edit the permissions for the admin</text>
     <text name="YouCannotRemoveUserRolePermissionsFromAdminUser">You can not remove User/Role permission editing from the admin user</text>
+    <text name="YouCanNotSendQuoteForThisShipmentNow">You can not send a quote for this shipment now</text>
     <text name="YouDoNotHaveEnoughCreditInYourCreditCard">You do not Have Enough credit In Your credit card</text>
     <text name="YouDontHaveAnyBlockedFriend">You don't have any blocked users. In order to block a friend, select a friend and select block from actions dropdown.</text>
     <text name="YouDontHaveAnyFriend">You don't have any friends. Write a username to above input box and click "Add Friend" button.</text>

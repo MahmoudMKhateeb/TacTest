@@ -5,6 +5,7 @@ using System.Text;
 
 namespace TACHYON.Shipping.ShippingRequests
 {
+    [Flags]
     public enum ShippingRequestStatus : byte
     {
         [Description("New")]
@@ -19,7 +20,11 @@ namespace TACHYON.Shipping.ShippingRequests
         Cancled = 4,
         [Description("Completed")]
         Completed = 5,
-        AcceptedAndWaitingCarrier=6
+        AcceptedAndWaitingCarrier=6,
+        /// <summary>
+        /// Can accept any action when the shipping status PrePrice or NeedsAction
+        /// </summary>
+        Normal = PrePrice | NeedsAction
 
     }
 }

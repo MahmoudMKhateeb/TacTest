@@ -14,7 +14,6 @@
         #region ######## Tachyon features #########
 
         public const string Shipper = "App.Shipper";
-        public const string ShipperCanMakInvoicePaid = "app.Shipper.CanMakeInvoicePaid";
         public const string Carrier = "App.Carrier";
         public const string Broker = "App.Broker";
         public const string Receiver = "App.Receiver";
@@ -35,7 +34,6 @@
         public const string TachyonDealerCommissionValue = "TachyonDealer.TachyonDealerCommissionValue";
         public const string TachyonDealerMinValueCommission = "TachyonDealer.TachyonDealerMinValueCommission";
         public const string TachyonDealerCommissionType = "App.Shipper.TachyonDealerCommissionType";
-
 
         #region Comission
         #region Shipper between carrier

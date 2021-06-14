@@ -224,7 +224,7 @@ namespace TACHYON.Invoices
                     });
 
                     return true;
-                }, AppFeatures.ShipperCanMakInvoicePaid);
+                });
             }
             return false;
         }

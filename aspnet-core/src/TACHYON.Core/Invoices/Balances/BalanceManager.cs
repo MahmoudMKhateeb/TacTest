@@ -16,6 +16,7 @@ using System.Linq;
 using TACHYON.Shipping.ShippingRequests;
 using TACHYON.Authorization.Users;
 using Abp.UI;
+using TACHYON.PriceOffers;
 
 namespace TACHYON.Invoices.Balances
 {
@@ -118,7 +119,7 @@ namespace TACHYON.Invoices.Balances
             }
         }
 
-        public async Task ShipperCanAcceptOffer(ShippingRequestPricing offer)
+        public async Task ShipperCanAcceptOffer(PriceOffer offer)
         {
 
             var PeriodType = (InvoicePeriodType)byte.Parse(await _featureChecker.GetValueAsync(offer.ShippingRequestFK.TenantId, AppFeatures.ShipperPeriods));
@@ -136,7 +137,7 @@ namespace TACHYON.Invoices.Balances
             }
         }
 
-        private async Task ShipperWhenCanAcceptPrice(ShippingRequestPricing offer, InvoicePeriodType periodType)
+        private async Task ShipperWhenCanAcceptPrice(PriceOffer offer, InvoicePeriodType periodType)
         {
             var Tenant = await GetTenant(offer.ShippingRequestFK.TenantId);
 

@@ -9,6 +9,7 @@ using TACHYON.Documents.DocumentFiles;
 using TACHYON.Invoices;
 using TACHYON.Invoices.Groups;
 using TACHYON.MultiTenancy;
+using TACHYON.PriceOffers;
 using TACHYON.Shipping.ShippingRequests;
 using TACHYON.Shipping.ShippingRequests.TachyonDealer;
 using TACHYON.Shipping.ShippingRequestTrips;
@@ -58,11 +59,12 @@ namespace TACHYON.Notifications
 
         #region ShippingRequest
         #region Offers
-         Task ShippingRequestSendOfferWhenAddPrice(ShippingRequestPricing offer,string carrier);
-         Task ShippingRequestSendOfferWhenUpdatePrice(ShippingRequestPricing offer,string carrier);
+         Task ShippingRequestSendOfferWhenAddPrice(PriceOffer offer,string carrier);
+         Task ShippingRequestSendOfferWhenUpdatePrice(PriceOffer offer,string carrier);
 
-        Task ShipperAcceptedOffers(ShippingRequestPricing offer, ShippingRequestPricing parentOffer);
-
+        Task ShipperAcceptedOffers(PriceOffer offer, PriceOffer parentOffer);
+        Task RejectedOffer(PriceOffer offer, string RejectedBy);
+        Task SendDriectRequest(string FromTenant, int? ToTenant, long ShippingRequestId);
         #endregion
         #endregion
         #endregion

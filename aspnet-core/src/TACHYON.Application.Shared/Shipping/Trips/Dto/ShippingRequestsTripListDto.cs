@@ -13,6 +13,8 @@ namespace TACHYON.Shipping.Trips.Dto
         public DateTime? StartWorking { get; set; }
         public DateTime? EndWorking { get; set; }
         public ShippingRequestTripStatus Status { get; set; }
+        public bool HasAttachment { get; set; }
+        public bool NeedsDeliveryNote { get; set; }
 
         public string StatusTitle 
         { 

@@ -1,12 +1,13 @@
 ﻿using Abp.Application.Services.Dto;
+using TACHYON.PriceOffers;
 
 namespace TACHYON.Shipping.ShippingRequests.Dtos
 {
     public class ShippingRequestCarrierPricingDto:EntityDto<long>
     {
-        public decimal TripPrice { get; set; }
-        public decimal TripVatAmount { get; set; }
-        public decimal TripTotalAmount { get; set; }
+        public decimal ItemPrice { get; set; }
+        public decimal ItemVatAmount { get; set; }
+        public decimal ItemTotalAmount { get; set; }
 
         public decimal TotalAmount { get; set; }
         public decimal SubTotalAmount { get; set; }
@@ -14,7 +15,7 @@ namespace TACHYON.Shipping.ShippingRequests.Dtos
 
         public decimal TaxVat { get; set; }
 
-        public ShippingRequestPricingStatus Status { get; set; }
+        public PriceOfferStatus Status { get; set; }
 
         public string StatusTitle { get { return Status.GetEnumDescription(); } }
     }
