@@ -516,3 +516,7 @@ card-body {
 /*.was-validated .form-control:invalid, .form-control.is-invalid {*/
 /*    background-position: right calc(1.375em + 0.325rem) center !important;*/
 /*}*/
+
+.modal .modal-header .close span {
+  display: inline !important;
+}
