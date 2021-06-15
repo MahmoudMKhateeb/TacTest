@@ -90,6 +90,7 @@ export class AppNavigationService {
         'flaticon-interface-8',
         '/app/main/comingSoon',
         [],
+
         //TODO: the CreateNewRequest subMenu Need Permission and Route
         [
           new AppMenuItem(
@@ -130,6 +131,7 @@ export class AppNavigationService {
         undefined,
         () => this._featureCheckerService.isEnabled('App.Carrier') || this._featureCheckerService.isEnabled('App.Shipper')
       ),
+
       //end of requests
       //start of shipment tracking
       //TODO: shipmentTracking Carrier Menu item need Permission and Route(Component)

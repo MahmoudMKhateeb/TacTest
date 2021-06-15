@@ -494,7 +494,7 @@
     <text name="DifferentTenantImpersonationErrorMessage">Can not impersonate a user of a different tenant!</text>
     <text name="Dimentions">Dimensions</text>
     <text name="DirectRequests">Direct requests</text>
-    <text name="DirectShippingRequests">Direct shipping requests</text>
+    <text name="DirectShippingRequests">Direct Shipping Requests</text>
     <text name="Disable">Disable</text>
     <text name="Disabled">Disabled</text>
     <text name="DisableRecurringPayments">Don't bill my account automatically</text>
@@ -544,6 +544,7 @@
     <text name="DriverDocuments">Driver documents</text>
     <text name="DriverInformations">Driver information</text>
     <text name="DriverName">Driver name</text>
+    <text name="DriverCreationDateAndTime">Creation date and time</text>
     <text name="DriverRejectTrip">
       <a href="/app/main/shippingRequests/shippingRequests/view?id={id}">The driver {driver} has been rejected the trip from {source} to {destination}</a>
     </text>
@@ -563,7 +564,7 @@
     <text name="DropoffDetailShipperNotes">Shipper Notes</text>
     <text name="DropoffDetailUnitOfMeasure">Unit Of Measure</text>
     <text name="DropoffDetailWeight">Weight</text>
-    <text name="DueDate">Due Date</text>
+    <text name="DueDate">Due date</text>
     <text name="DuplicateDocumentTypeName">There is already Document Type with the name: {0}</text>
     <text name="DuplicateFileUploadMsg">You can not upload same document twice name: {0} , extn:{1}</text>
     <text name="Duration">Duration</text>
@@ -1006,8 +1007,8 @@
     <text name="ModalName">Model name</text>
     <text name="ModalYear">Model year</text>
     <text name="Model">Model</text>
-    <text name="ModelName">Model Name</text>
-    <text name="ModelYear">Model Year</text>
+    <text name="ModelName">Model</text>
+    <text name="ModelYear">Model year</text>
     <text name="Monthly">Monthly</text>
     <text name="Monthlydate1">Monthly date 1</text>
     <text name="MonthlyPrice">Monthly Price</text>
@@ -1075,7 +1076,7 @@
     <text name="NewTermAndCondition">New Terms and Conditions</text>
     <text name="NewTransportType">New transport type</text>
     <text name="NewTripAssign">The new trip has assign to you.</text>
-    <text name="NewTruck">New truck</text>
+    <text name="CreateNewTruck">Create new truck</text>
     <text name="NewTruckStatus">New truck status</text>
     <text name="NewTrucksType">New truck type</text>
     <text name="NewUserRegisteredNotificationDefinition">On a new user registered to the system</text>
@@ -1132,7 +1133,7 @@
     <text name="OccupationCard">Occupation Card</text>
     <text name="Off">Off</text>
     <text name="Offer">Offer</text>
-    <text name="OfferedPrice">Offered Price</text>
+    <text name="OfferedPrice">Offer</text>
     <text name="Offers">Offers</text>
     <text name="OffersHeaderInfo">Offers header info</text>
     <text name="OfferStatus">Status</text>
@@ -1265,7 +1266,7 @@ content that we shared with you.</text>
     <text name="Pin">Pin</text>
     <text name="Pink">Pink</text>
     <text name="Place">Place</text>
-    <text name="PlateNumber">Plate Number</text>
+    <text name="PlateNumber">Plate number</text>
     <text name="PlateType">Plate type</text>
     <text name="PlateTypeId">Plate type id</text>
     <text name="PlateTypes">Plate types</text>
@@ -1302,7 +1303,7 @@ content that we shared with you.</text>
     <text name="Previous">Previous</text>
     <text name="Price">Price</text>
     <text name="GoodDetails">Good Details</text>
-    <text name="PriceOffers">Price Offers</text>
+    <text name="PriceOffers">Offers</text>
     <text name="Prices">Prices</text>
     <text name="Pricing">Pricing</text>
     <text name="PricingOffer">Pricing offer</text>
@@ -1478,9 +1479,9 @@ content that we shared with you.</text>
     <text name="SelfUserRegistrationIsDisabledMessage_Detail">Self user registration is disabled. Please contact the system administrator to register.</text>
     <text name="Send">Send</text>
     <text name="SendActivationEmail">Send activation email.</text>
-    <text name="SendDirectRequest">Send direct request</text>
+    <text name="SendDirectRequest">Send Direct Request</text>
     <text name="SendDirectRequestOffer">Send direct request offer</text>
-    <text name="SendDirectRequests">Send direct request</text>
+    <text name="SendDirectRequests">Send Rirect Request</text>
     <text name="SendDriectRequestForCarrier">Please send us a quote for the shipment No.: {id}.</text>
     <text name="SendEmailActivationLink_Information">A link will be sent to your email to activate your email address. If you don't get an email within a few minutes, please re-try.</text>
     <text name="Sender">Sender</text>
@@ -1512,6 +1513,7 @@ content that we shared with you.</text>
       <a href="/app/main/shippingRequests/shippingRequests/view?id={id}">The shipper {shipper} has been accepted offer.</a>
     </text>
     <text name="ShipperName">Shipper name</text>
+    <text name="DatatableShipperName">Shipper name</text>
     <text name="ShipperNotfiyWhenCreditLimitGreaterOrEqualXPercentage">You have used more than 70% of your credit limit</text>
     <text name="ShipperOnlyUsed">Shipper only used</text>
     <text name="ShipperReminderToCompelteTrips">
@@ -1539,6 +1541,7 @@ content that we shared with you.</text>
     <text name="ShippingRequestProperties">Shipping Request Properties</text>
     <text name="ShippingRequestReceiverCode">Your Shipping code is {0}</text>
     <text name="ShippingRequests">My Shipping Requests</text>
+    <text name="CarrierShippingRequests">Shipping Requests</text>
     <text name="MyShippingRequests">My Shipping Requests</text>
     <text name="ShippingRequestsCreate">Create Shipping Request</text>
     <text name="ShippingRequestsEdit">Edit Shipping Request</text>
@@ -1593,7 +1596,7 @@ content that we shared with you.</text>
     <text name="Static">Static</text>
     <text name="StaticRole_Tooltip">Static roles can not be deleted.</text>
     <text name="Status">Status</text>
-    <text name="StatusName">Status?</text>
+    <text name="StatusName">status</text>
     <text name="StatusTitle">Status title</text>
     <text name="StopBiddingOnthisRequest">Stop pricing on this request</text>
     <text name="StringLengthDoesntMatch">The field {0} must be a minimum length of {1} and a maximum length of {2}.</text>
@@ -1816,7 +1819,7 @@ content that we shared with you.</text>
     <text name="Title">Title</text>
     <text name="TitleLogin">To Sign In , What Is Your Mobile Phone Number </text>
     <text name="TitleOTP">Enter The 4-Digit Code We Send To Mobile Number To Verify Your Account</text>
-    <text name="TMS">Transport management system</text>
+    <text name="TMS">Transport management system (TMS)</text>
     <text name="TMSSettings">TMS Settings</text>
     <text name="Today">Today</text>
     <text name="Toggle">Toggle</text>

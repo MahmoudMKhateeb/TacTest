@@ -157,12 +157,12 @@
               >
                 <ng-template pTemplate="header">
                   <tr>
-                    <th style="width: 50px;" pSortableColumn="id">
+                    <!-- <th style="width: 50px;" pSortableColumn="id">
                       {{ l('id') }}
                       <p-sortIcon field="id"></p-sortIcon>
-                    </th>
+                    </th> -->
                     <th style="width: 110px;" pSortableColumn="shipperName">
-                      {{ l('Tenants') }}
+                      {{ l('DatatableShipperName') }}
                       <p-sortIcon field="shipperName"></p-sortIcon>
                     </th>
                     <th style="width: 160px;" pSortableColumn="truckTypeDisplayName">
@@ -198,10 +198,10 @@
                 </ng-template>
                 <ng-template pTemplate="body" let-record="$implicit">
                   <tr>
-                    <td style="width: 50px;">
+                    <!-- <td style="width: 50px;">
                       <span class="ui-column-title"> {{ l('shippingRequestId') }}</span>
                       {{ record.shippingRequestId }}
-                    </td>
+                    </td> -->
                     <td style="width: 110px;">
                       <span class="ui-column-title"> {{ l('Tenants') }}</span>
                       {{ record.shipperName }}

@@ -12,7 +12,7 @@
     <div class="modal-content">
       <div class="modal-header">
         <p class="modal-title">
-          <span>{{ l('sendDirectRequest') }}</span>
+          <span>{{ l('SendDirectRequest') }}</span>
         </p>
       </div>
       <div class="modal-body">
@@ -60,11 +60,11 @@
             >
               <ng-template pTemplate="header">
                 <tr>
-                  <th style="width: 100px;">
+                  <!-- <th style="width: 100px;">
                     {{ 'id' | localize }}
-                  </th>
+                  </th> -->
                   <th style="width: 150px;" pSortableColumn="name">
-                    {{ 'name' | localize }}
+                    {{ 'CarrierName' | localize }}
                     <p-sortIcon field="name"></p-sortIcon>
                   </th>
                   <th style="width: 100px;" class="justify-content-center">
@@ -74,20 +74,20 @@
               </ng-template>
               <ng-template pTemplate="body" let-record="$implicit">
                 <tr>
-                  <td style="width: 100px;">
+                  <!-- <td style="width: 100px;">
                     <span class="ui-column-title"> {{ 'id' | localize }}</span>
                     <span>
                       {{ record.id }}
                     </span>
-                  </td>
+                  </td> -->
                   <td style="width: 150px;">
-                    <span class="ui-column-title"> {{ 'name' | localize }}</span>
+                    <span class="ui-column-title"> {{ 'CarrierName' | localize }}</span>
                     <span>
                       {{ record.name }}
                     </span>
                   </td>
                   <td style="width: 100px;" class="justify-content-center">
-                    <span class="ui-column-title"> {{ 'name' | localize }}</span>
+                    <span class="ui-column-title"> {{ 'CarrierName' | localize }}</span>
                     <span>
                       <button
                         class="btn btn-danger btn-sm"

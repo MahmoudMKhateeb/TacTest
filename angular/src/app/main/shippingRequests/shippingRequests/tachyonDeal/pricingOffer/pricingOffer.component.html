@@ -29,9 +29,9 @@
         >
           <ng-template pTemplate="header">
             <tr>
-              <th style="width: 80px;">
+              <!-- <th style="width: 80px;">
                 {{ l('id') }}
-              </th>
+              </th> -->
               <th style="width: 150px;">
                 {{ l('offeredPrice') }}
               </th>
@@ -48,10 +48,10 @@
           </ng-template>
           <ng-template let-record="$implicit" pTemplate="body">
             <tr>
-              <td style="width: 80px;">
+              <!-- <td style="width: 80px;">
                 <span class="ui-column-title"> {{ l('id') }}</span>
                 {{ record.tachyonPriceOfferDto.id }}
-              </td>
+              </td> -->
               <td style="width: 150px;">
                 <span class="ui-column-title"> {{ l('offeredPrice') }}</span>
                 {{ record.tachyonPriceOfferDto.offeredPrice }}

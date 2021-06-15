@@ -1,7 +1,7 @@
 <div class="card card-custom gutter-b" id="directRequests">
   <div class="card-header" *ngIf="feature.isEnabled('App.TachyonDealer')">
     <h3 class="card-title">
-      {{ l('DirectRequests') }}
+      {{ l('DirectShippingRequests') }}
     </h3>
     <div class="card-toolbar">
       <button class="btn btn-danger" (click)="sendDirectRequestsModal.show()">
@@ -28,9 +28,9 @@
         >
           <ng-template pTemplate="header">
             <tr>
-              <th style="width: 80px;">
+              <!-- <th style="width: 80px;">
                 {{ 'id' | localize }}
-              </th>
+              </th> -->
               <th style="width: 150px;" pSortableColumn="shipperName" *ngIf="feature.isEnabled('App.Carrier')">
                 {{ 'ShipperName' | localize }}
                 <p-sortIcon field="shipperName"></p-sortIcon>
@@ -58,12 +58,12 @@
           </ng-template>
           <ng-template pTemplate="body" let-record="$implicit">
             <tr>
-              <td style="width: 80px;">
+              <!-- <td style="width: 80px;">
                 <span class="ui-column-title"> {{ 'id' | localize }}</span>
                 <span>
                   {{ record.id }}
                 </span>
-              </td>
+              </td> -->
               <td style="width: 150px;" *ngIf="feature.isEnabled('App.Carrier')">
                 <span class="ui-column-title"> {{ 'ShipperName' | localize }}</span>
                 <span>

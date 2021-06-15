@@ -61,14 +61,14 @@
                 <span class="text-dark-75 font-weight-bolder mr-2">{{ l('numberOfTrips')}}: </span>
                 <span class="text-muted font-weight-bold">{{ record.numberOfTrips }}</span>
               </div>
-              <div class="d-flex justify-content-between align-items-center my-1">
+              <!-- <div class="d-flex justify-content-between align-items-center my-1">
                 <span class="text-dark-75 font-weight-bolder mr-2">{{ l('approximateTripDistance')}}: </span>
                 <span class="text-muted font-weight-bold">{{ distance }}</span>
               </div>
               <div class="d-flex justify-content-between align-items-center my-1">
                 <span class="text-dark-75 font-weight-bolder mr-2">{{ l('approximateTripDuration')}}: </span>
                 <span class="text-muted font-weight-bold">{{ duration }}</span>
-              </div>
+              </div> -->
               <div class="d-flex justify-content-between align-items-center my-1" *ngIf="record.myBidPrice > 0">
                 <span class="text-dark-75 font-weight-bolder mr-2">{{ l('bidPrice') }}:</span>
                 <span class="text-muted font-weight-bold">{{ record.myBidPrice || 'unknown' }}</span>
@@ -88,7 +88,7 @@
                   />
                   <div class="input-group-append">
                     <button
-                      class="btn btn-primary font-weight-bolder btn-sm py-3 px-6 text-uppercase"
+                      class="btn btn-primary font-weight-bolder btn-sm py-3 px-6"
                       type="button"
                       [disabled]="saving"
                       (click)="placeBid(record.shippingRequestId)"
@@ -107,13 +107,13 @@
         <!--begin::Buttons-->
         <button
           [disabled]="saving"
-          class="btn btn-primary font-weight-bolder btn-sm py-3 px-6 text-uppercase"
+          class="btn btn-primary font-weight-bolder btn-sm py-3 px-6"
           (click)="CancelBid(record.myBidId)"
           *ngIf="record.myBidId"
         >
           {{ l('CancelMyBid')}}
         </button>
-        <button [disabled]="saving" type="button" class="btn btn-primary font-weight-bolder btn-sm py-3 px-6 text-uppercase" (click)="close()">
+        <button [disabled]="saving" type="button" class="btn btn-primary font-weight-bolder btn-sm py-3 px-6" (click)="close()">
           {{ l('Close') }}
         </button>
         <!--end::Buttons-->

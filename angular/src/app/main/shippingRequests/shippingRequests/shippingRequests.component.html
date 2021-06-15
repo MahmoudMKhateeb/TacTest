@@ -151,11 +151,11 @@
                 <ng-template pTemplate="header">
                   <tr>
                     <th pSortableColumn="TenantId" *ngIf="!feature.isEnabled('App.Shipper')" style="width: 150px;">
-                      {{ l('Shipper') }}
+                      {{ l('DatatableShipperName') }}
                       <p-sortIcon field="TenantId"></p-sortIcon>
                     </th>
                     <th pSortableColumn="status" style="width: 150px;">
-                      {{ l('RequestStatus') }}
+                      {{ l('Status') }}
                       <p-sortIcon field="status"></p-sortIcon>
                     </th>
 

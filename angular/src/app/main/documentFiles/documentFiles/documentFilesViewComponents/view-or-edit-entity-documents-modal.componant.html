@@ -50,10 +50,10 @@
                     {{ l('DocumentName') }}
                     <p-sortIcon field="documentTypeDisplayName"></p-sortIcon>
                   </th>
-                  <th *ngIf="documentEntityFilter==documentsEntitiesEnum.Truck" style="width: 150px;" pSortableColumn="truckFk.truckId">
+                  <!-- <th *ngIf="documentEntityFilter==documentsEntitiesEnum.Truck" style="width: 150px;" pSortableColumn="truckFk.truckId">
                     {{ l('TruckID') }}
                     <p-sortIcon field="truckId"></p-sortIcon>
-                  </th>
+                  </th> -->
                   <th *ngIf="documentEntityFilter==documentsEntitiesEnum.Driver" style="width: 150px;" pSortableColumn="userFk.name">
                     {{ 'Name' | localize }}
                     <p-sortIcon field="name"></p-sortIcon>
@@ -122,10 +122,10 @@
                     <span class="ui-column-title"> {{ l('Document Name') }}</span>
                     {{ record.documentType.name }}
                   </td>
-                  <td *ngIf="documentEntityFilter==documentsEntitiesEnum.Truck" style="width: 150px;">
+                  <!-- <td *ngIf="documentEntityFilter==documentsEntitiesEnum.Truck" style="width: 150px;">
                     <span class="ui-column-title"> {{ l('TruckID') }}</span>
                     {{ record.truckId }}
-                  </td>
+                  </td> -->
                   <td *ngIf="documentEntityFilter==documentsEntitiesEnum.Driver" style="width: 150px;">
                     <span class="ui-column-title"> {{ 'Name' | localize }}</span>
                     <span>
