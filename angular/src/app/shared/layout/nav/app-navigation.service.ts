@@ -18,7 +18,7 @@ export class AppNavigationService {
       new AppMenuItem('Dashboard', '', 'flaticon-line-graph', '/app/main/dashboard'),
       //host item with shared Sub-menu
       new AppMenuItem(
-        'Documents',
+        'DocumentManagement',
         '',
         'flaticon-book',
         '',
@@ -175,7 +175,7 @@ export class AppNavigationService {
       //TODO: not all of these are visable to the TachyonDealer Need to Fix the Permisions in order for it to work
       //start of Invoices
       new AppMenuItem(
-        'InvoicesList',
+        'Invoices',
         'Pages.Invoices',
         'flaticon-interface-8',
         '',

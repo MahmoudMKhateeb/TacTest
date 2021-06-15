@@ -49,7 +49,7 @@
     <text name="AddNewGoodDetail">Add Good Details</text>
     <text name="AddNewGoodDetails">Add Good Details</text>
     <text name="AddNewTrip">Add trip</text>
-    <text name="AddNewWayPoint">Add New Way Point</text>
+    <text name="AddNewWayPoint">Add New pickup facility</text>
     <text name="AddNewWebhookSubscription">Add New Webhook Subscription</text>
     <text name="AddPage">Add page</text>
     <text name="Address">Address</text>
@@ -282,8 +282,9 @@
     <text name="County">Country</text>
     <text name="CountyDisplayName">country</text>
     <text name="Create">Create</text>
-    <text name="CreateAccident">Add incident</text>
+    <text name="CreateAccident">Add Incident</text>
     <text name="CreateAccidentReason">Create incident reason</text>
+    <text name="PleaseSelectTheIncidentReason">Please select the incident reason</text>
     <text name="CreateAnAccount">Create account</text>
     <text name="CreateAppLocalization">Create app localization</text>
     <text name="CreateBidRequestNotificationMessage">Bid request is created</text>
@@ -304,7 +305,7 @@
     <text name="CreateNewDocumentType">Add new document type</text>
     <text name="CreateNewDriver">Add new driver</text>
     <text name="CreateNewEdition">Add new subscription type</text>
-    <text name="CreateNewFacility">Add New Facility</text>
+    <text name="CreateNewFacility">Add new facility</text>
     <text name="CreateNewGoodCategory">Add new good category</text>
     <text name="CreateNewGoodsDetail">Add goods details</text>
     <text name="CreateNewLanguage">Add new language</text>
@@ -316,7 +317,7 @@
     <text name="CreateNewPickingType">Add new packing type</text>
     <text name="CreateNewPlateType">Add new plate type</text>
     <text name="CreateNewPort">Add new port</text>
-    <text name="CreateNewReceiver">Add New Receiver</text>
+    <text name="CreateNewReceiver">Add new receiver</text>
     <text name="CreateNewRole">Add new role</text>
     <text name="CreateNewRoute">Add new route</text>
     <text name="CreateNewRoutStep">Create New rout step</text>
@@ -340,7 +341,7 @@
     <text name="CreateNewTrucksType">Add new truck type</text>
     <text name="CreateNewTrucksTypesTranslation">Add new truck type translation</text>
     <text name="CreateNewUnitOfMeasure">Add new UOM</text>
-    <text name="CreateNewUser">Add New User</text>
+    <text name="CreateNewUser">Add new user</text>
     <text name="CreateNewVas">Add new VAS</text>
     <text name="CreateNewVasPrice">Add new VAS price</text>
     <text name="CreateReason">Add reason</text>
@@ -509,8 +510,9 @@
     <text name="DocumentFiles">Document</text>
     <text name="DocumentFilesHeaderInfo">DocumentFilesHeaderInfo</text>
     <text name="DocumentFileWarnSizeLimit">Document exceeds the maximum allowed limit</text>
-    <text name="DocumentManagement">Documents management</text>
+    <text name="DocumentManagement">Documents Management</text>
     <text name="DocumentName">Document name</text>
+    <text name="DatatableDocumentName">Document type</text>
     <text name="Documents">Documents</text>
     <text name="DocumentsEntities">Documents entities</text>
     <text name="DocumentsEntitiesHeaderInfo">Documents Entities Header Info</text>
@@ -654,7 +656,7 @@
     <text name="EmailActivation_SubTitle">This email is sent you to verify your email.</text>
     <text name="EmailActivation_Title">Welcome to TACHYON.</text>
     <text name="EmailAddress">Email address</text>
-    <text name="EmailConfirm">Email Confirm</text>
+    <text name="EmailConfirm">Email confirm</text>
     <text name="EmailConfirmationRequiredForLogin">Email confirmation required for login.</text>
     <text name="EmailMessage_CopyTheLinkBelowToYourBrowser">If the button above doesn't work, paste this into your browser:</text>
     <text name="EmailSecurityCodeBody">Your security code is: {0}</text>
@@ -716,7 +718,7 @@
     <text name="FacilitiesHeaderInfo">Facilities header info</text>
     <text name="FacilitiesSetup">Facilities Setup</text>
     <text name="Facility">Facility</text>
-    <text name="FacilityName">Facility Name</text>
+    <text name="FacilityName">Facility name</text>
     <text name="Failed">Failed</text>
     <text name="FailedSubscriptionTerminations_Email_Body">Subscription termination is failed for following companies {0} at {1}. You can find detailed error messages in system logs.</text>
     <text name="FailedSubscriptionTerminations_Email_Subject">Failed subscription terminations</text>
@@ -739,7 +741,7 @@
     <text name="FinalPrice">Final price</text>
     <text name="FinancialTransActionMenu">Financial Transactions History</text>
     <text name="FirstName">First name</text>
-    <text name="UserFirstName">First Name</text>
+    <text name="UserFirstName">First name</text>
     <text name="CreateUserFirstName">First name</text>
     <text name="Flag">Flag</text>
     <text name="ForgotPassword">Forgot password?</text>
@@ -754,7 +756,7 @@
     <text name="FriendshipRequestAccepted">Friendship request accepted</text>
     <text name="FromTenantToHostImpersonationErrorMessage">Can not impersonate a host user from a tenant user!</text>
     <text name="FullName">Full name</text>
-    <text name="ReciverName">Full name</text>
+    <text name="ReciverName">Reciver name</text>
     <text name="Gallery">Gallery</text>
     <text name="Gateway">Gateway</text>
     <text name="GdprDataPreparedNotificationMessage">Your data is prepared, click here to download.</text>
@@ -860,7 +862,7 @@
     <text name="InvoiceInformation">Invoice Information</text>
     <text name="InvoiceNo">Invoice No</text>
     <text name="Invoices">Invoices</text>
-    <text name="InvoicesList">Invoices</text>
+    <text name="InvoicesList">List of Invoices</text>
     <text name="InvoiceSubTotal">Invoice sub total</text>
     <text name="InvoiceTo">Invoice to</text>
     <text name="InvoiceVasRemarksAll">Count:{0}, Amount:{1}</text>
@@ -915,7 +917,7 @@
     <text name="LastModificationTime">Last modification time</text>
     <text name="LastMonth">Last month</text>
     <text name="LastName">Last name</text>
-    <text name="UserLastName">Last Name</text>
+    <text name="UserLastName">Last name</text>
     <text name="CreateUserLastName">Last name</text>
     <text name="LatestPaymentAmount">Latest payment amount</text>
     <text name="Latitude">Latitude</text>
@@ -1224,7 +1226,7 @@ content that we shared with you.</text>
     <text name="PerWeek">Per week</text>
     <text name="PerYear">Per year</text>
     <text name="Phone">Phone</text>
-    <text name="PhoneNumber">Mobile Number</text>
+    <text name="PhoneNumber">Mobile number</text>
     <text name="PhoneNumberCreate">Mobile number</text>
     <text name="PhoneNumberMustStartWith5">Mobile number must start with5</text>
     <text name="Pick">Select</text>
@@ -1397,7 +1399,7 @@ content that we shared with you.</text>
     <text name="Root">Root</text>
     <text name="Rotate">Rotate</text>
     <text name="Route">Route</text>
-    <text name="RouteDetails">Route details</text>
+    <text name="RouteDetails">Route Details</text>
     <text name="RouteDisplayName">Route type</text>
     <text name="Routes">Routes</text>
     <text name="RoutesHeaderInfo">Routes header info</text>
@@ -1862,6 +1864,8 @@ content that we shared with you.</text>
     <text name="TrialWithoutEndDateErrorMessage">Trial accounts must have subscription end date</text>
     <text name="TripDetails">Trip Details</text>
     <text name="TripEndDate">Trip end date</text>
+    <text name="NeedsDeliveryNote">Needs delivery note</text>
+    <text name="HasAttachment">Has attachment</text>
     <text name="TripFinishedSuccessfully">Trip Finished Successfully</text>
     <text name="TripIncident">Trip incident</text>
     <text name="TripInfo">Trip Info</text>

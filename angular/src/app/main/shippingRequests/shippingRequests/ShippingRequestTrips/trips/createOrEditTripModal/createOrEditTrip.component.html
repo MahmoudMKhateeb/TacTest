@@ -26,7 +26,7 @@
             <!--begin::Body-->
             <!--  begin:: Source Dest Facilitys  -->
             <div class="col-lg-6 form-group">
-              <label>{{ l('SourceFacility') }} <span class="required-fileds">*</span></label>
+              <label><span class="required-fileds">*</span>{{ l('SourceFacility') }} </label>
               <div class="input-group">
                 <select
                   #sourceFacility="ngModel"
@@ -50,7 +50,7 @@
               </div>
             </div>
             <div class="col-lg-6 form-group">
-              <label>{{ l('DestFacility') }} <span class="required-fileds">*</span></label>
+              <label> <span class="required-fileds">*</span>{{ l('DestFacility') }}</label>
               <div class="input-group">
                 <select
                   #destFacility="ngModel"
@@ -76,7 +76,7 @@
             <!--  begin:: Trip start&End Dates-->
             <div class="col-lg-6">
               <div class="form-group">
-                <label>{{ l('StartDate') }} <span class="required-fileds">*</span></label>
+                <label> <span class="required-fileds">*</span>{{ l('StartDate') }} </label>
                 <div class="input-group date">
                   <input
                     #startTripDate="ngModel"
@@ -105,7 +105,7 @@
             </div>
             <div class="col-lg-6">
               <div class="form-group">
-                <label>{{ l('EndDate') }} <span class="required-fileds">*</span></label>
+                <label> <span class="required-fileds">*</span> {{ l('EndDate') }} </label>
                 <div class="input-group date">
                   <input
                     #endTripDate="ngModel"
@@ -185,14 +185,14 @@
           <div class="modal-footer">
             <!--begin::Buttons-->
 
-            <button [disabled]="saving" type="button" class="btn btn-secondary font-weight-bolder btn-sm py-3 px-6 text-uppercase" (click)="close()">
+            <button [disabled]="saving" type="button" class="btn btn-secondary font-weight-bolder btn-sm py-3 px-6" (click)="close()">
               {{ l('Close') }}
             </button>
 
             <button
               type="submit"
               [disabled]="saving || !shippingRequestTripsForm.form.valid"
-              class="btn btn-primary font-weight-bolder btn-sm py-3 px-6 text-uppercase"
+              class="btn btn-primary font-weight-bolder btn-sm py-3 px-6"
               (click)="createOrEditTrip()"
             >
               {{ trip.id ? l('UpdateTrip') : l('AddNewTrip') }}

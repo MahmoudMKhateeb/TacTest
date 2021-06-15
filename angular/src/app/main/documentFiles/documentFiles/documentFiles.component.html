@@ -1,6 +1,6 @@
 ﻿<div [@routerTransition]>
   <div class="content d-flex flex-column flex-column-fluid">
-    <sub-header [title]="'DocumentFiles' | localize"> </sub-header>
+    <sub-header [title]="'SubmittedDocuments' | localize"> </sub-header>
     <!-- <sub-header [title]="'DocumentFiles' | localize" [description]="'DocumentFilesHeaderInfo' | localize"> </sub-header> -->
     <div [class]="containerClass">
       <div class="card card-custom gutter-b">
@@ -67,7 +67,7 @@
                       {{ l('Actions') }}
                     </th>
                     <th pSortableColumn="name">
-                      {{ l('DocumentName') }}
+                      {{ l('DatatableDocumentName') }}
                       <p-sortIcon field="name"></p-sortIcon>
                     </th>
                     <th

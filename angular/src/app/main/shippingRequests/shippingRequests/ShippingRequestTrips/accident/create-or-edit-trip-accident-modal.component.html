@@ -29,6 +29,7 @@
               </option>
               <option value="0">{{ l('Other') }}</option>
             </select>
+            <span class="form-text text-muted">{{ l('PleaseSelectTheIncidentReason') }}</span>
           </div>
           <div *ngIf="reasonId != '' && reasonId == 0" class="form-group">
             <label for="Image">{{ 'Description' | localize }}</label>
