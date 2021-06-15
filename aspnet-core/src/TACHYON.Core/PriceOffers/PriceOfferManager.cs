@@ -192,6 +192,20 @@ namespace TACHYON.PriceOffers
                   .WhereIf(!_abpSession.TenantId.HasValue || await _featureChecker.IsEnabledAsync(AppFeatures.TachyonDealer), x => x.ShippingRequestFK.IsTachyonDeal && x.Tenant.EditionId != 4)
                   .FirstOrDefaultAsync();
         }
+        private async Task<PriceOffer> CheckIfThereOfferAcceptedBefore(long id)
+        {
+            DisableTenancyFilters();
+            return await _priceOfferRepository
+                  .GetAll()
+                  .Include(r => r.ShippingRequestFK)
+                  .Where(x => x.ShippingRequestId == id)
+                  .WhereIf(_abpSession.TenantId.HasValue && await _featureChecker.IsEnabledAsync(AppFeatures.Shipper),
+                  x => x.ShippingRequestFK.TenantId == _abpSession.TenantId &&
+                  !x.ShippingRequestFK.IsTachyonDeal && (x.Status==  PriceOfferStatus.Accepted || x.Status== PriceOfferStatus.AcceptedAndWaitingForCarrier))
+                  .WhereIf(!_abpSession.TenantId.HasValue || await _featureChecker.IsEnabledAsync(AppFeatures.TachyonDealer), 
+                  x => x.ShippingRequestFK.IsTachyonDeal && x.Tenant.EditionId != 4)
+                  .FirstOrDefaultAsync();
+        }
         /// <summary>
         /// Return offer by id
         /// </summary>
