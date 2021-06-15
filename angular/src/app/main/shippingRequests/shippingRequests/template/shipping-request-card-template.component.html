@@ -84,8 +84,13 @@
             </div>
             <div class="actionsShip">
               <div>
-                <a *ngIf="item.totalBids > 0 && !feature.isEnabled('App.Carrier')" href="javascript:void(0)" class="infoHighLight green">
-                  {{ item.totalBids }} {{ getWordTitle(item.totalBids, 'bid') }}
+                <a
+                  *ngIf="item.totalOffers > 0 && !feature.isEnabled('App.Carrier')"
+                  href="javascript:void(0)"
+                  class="infoHighLight green"
+                  (click)="ModelOffer.show(item)"
+                >
+                  {{ item.totalOffers }} {{ getWordTitle(item.totalOffers, 'TotalOffer') }}
                 </a>
                 <a *ngIf="item.isPriced" href="javascript:void(0)" class="infoHighLight red">{{ l('MarketPlacepriced') }}</a>
               </div>
@@ -117,3 +122,4 @@
   </div>
 </div>
 <shippingrequests-details-model #Model [Channel]="Channel"></shippingrequests-details-model>
+<price-offer-list-model [Channel]="Channel" #ModelOffer></price-offer-list-model>

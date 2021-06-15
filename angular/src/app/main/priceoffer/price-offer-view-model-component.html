@@ -15,23 +15,34 @@
           <i class="fas fa-times"></i>
         </button>
         <form class="contentSetPrice">
-          <div class="infoBasic">
-            <a href="javascript:void(0)" *ngIf="!feature.isEnabled('App.Carrier')" class="companyName">
-              {{offer.name}}
-            </a>
-          </div>
-          <div class="divirCard"></div>
+          <ng-template [ngIf]="!feature.isEnabled('App.Carrier')">
+            <div class="infoBasic">
+              <a href="javascript:void(0)" class="companyName">
+                {{ offer.editionId!=4 ? offer.name:l('TachyonManageService')}}
+              </a>
+            </div>
+            <div class="divirCard"></div>
+          </ng-template>
+          <ng-template [ngIf]="offer.status==2 || offer.status==5">
+            <div class="infoBasic alert alert-warning">
+              <div class="alert alert-warning" role="alert">
+                {{offer.rejectedReason}}
+              </div>
+            </div>
+            <div class="divirCard"></div>
+          </ng-template>
+
           <div class="table-sendOffer">
             <span class="titleSendOffer">
-              <a href="javascript:void(0)" class="edit" *ngIf="offer.tenantId==appSession.tenantId && offer.shippingRequestStatus==2">
+              <a href="javascript:void(0)" class="edit" (click)="ModelPrice.show(input.shippingRequestId ,offer.id);close()" *ngIf="canEditOffer()">
                 <i class="fas fa-pen"></i>
-                {{l('Edit')}}
+                {{offer.status==2? l('RePricing'):l('Edit')}}
               </a>
               <a href="javascript:void(0)" (click)="delete()" class="delete" *ngIf="canDeleteOffer()">
                 <i class="far fa-trash-alt"></i>
                 {{l('Delete')}}
               </a>
-              <a href="javascript:void(0)" class="reject" *ngIf="canAcceptOrRejectOffer()">
+              <a href="javascript:void(0)" class="reject" (click)="ModelReject.show(offer.id)" *ngIf="canAcceptOrRejectOffer()">
                 <i class="fas fa-ban"></i>
                 {{l('RejectOffer')}}
               </a>
@@ -158,3 +169,5 @@
     </div>
   </div>
 </div>
+<price-offer-model #ModelPrice [Channel]="Channel"></price-offer-model>
+<price-offer-reject-model #ModelReject (modalsave)="reject()"></price-offer-reject-model>

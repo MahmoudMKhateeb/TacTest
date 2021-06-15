@@ -22,7 +22,7 @@ namespace TACHYON.PriceOffers.Dto
         public int NumberOfTrips { get; set; }
         public string GoodsCategory { get; set; }
         public double TotalWeight { get; set; }
-        public int TotalBids { get; set; }
+        public int TotalOffers { get; set; }
         public ShippingRequestBidStatus BidStatus { get; set; }
         public ShippingRequestStatus Status { get; set; }
         public ShippingRequestDirectRequestStatus DirectRequestStatus;

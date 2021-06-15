@@ -7,6 +7,8 @@ namespace TACHYON.PriceOffers.Dto
     {
         public PriceOfferStatus Status { get; set; }
         public PriceOfferType PriceType { get; set; }
+
+        public long? ParentId { get; set; }
         #region Invoice
         #region Single  pricing for carrier
         public decimal ItemPrice { get; set; }

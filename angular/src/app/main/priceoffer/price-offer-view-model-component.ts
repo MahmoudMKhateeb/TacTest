@@ -17,7 +17,7 @@ import { finalize } from 'rxjs/operators';
 
 @Component({
   templateUrl: './price-offer-view-model-component.html',
-  styleUrls: ['./price-offer-view-model-component.scss'],
+  styleUrls: ['/assets/custom/css/model.scss'],
   selector: 'price-offer-view-model',
   animations: [appModuleAnimation()],
 })
@@ -25,7 +25,7 @@ export class PriceOfferViewModelComponent extends AppComponentBase {
   @Input() Channel: PriceOfferChannel | null | undefined;
   @Output() modalSave: EventEmitter<any> = new EventEmitter<any>();
   @Output() modalDelete: EventEmitter<any> = new EventEmitter<any>();
-
+  @Output() modalRefresh: EventEmitter<any> = new EventEmitter<any>();
   @ViewChild('modal', { static: false }) modal: ModalDirective;
 
   active = false;
@@ -66,7 +66,16 @@ export class PriceOfferViewModelComponent extends AppComponentBase {
       }
     });
   }
-
+  canEditOffer() {
+    if (
+      this.offer.tenantId == this.appSession.tenantId &&
+      this.offer.shippingRequestStatus == 2 &&
+      (this.offer.status == PriceOfferStatus.New || this.offer.status == PriceOfferStatus.Rejected)
+    ) {
+      return true;
+    }
+    return false;
+  }
   canAcceptOrRejectOffer() {
     if (this.offer.shippingRequestStatus == ShippingRequestStatus.NeedsAction && this.offer.status == PriceOfferStatus.New) {
       if (this.offer.isTachyonDeal && (this.feature.isEnabled('App.TachyonDealer') || !this.appSession.tenantId) && this.offer.editionId != 4) {
@@ -86,5 +95,8 @@ export class PriceOfferViewModelComponent extends AppComponentBase {
       }
     }
     return false;
+  }
+  reject() {
+    this.modalRefresh.emit(null);
   }
 }

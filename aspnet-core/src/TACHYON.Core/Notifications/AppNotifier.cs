@@ -781,8 +781,8 @@ namespace TACHYON.Notifications
             var notificationData = new LocalizableMessageNotificationData(
                                     new LocalizableString(L("RejectedOffer"),
                                     TACHYONConsts.LocalizationSourceName));
-            notificationData["offerid"] = offer.Id;
-            notificationData["id"] = offer.ShippingRequestId;
+            notificationData["id"] = offer.Id;
+            //notificationData["id"] = offer.ShippingRequestId;
             notificationData["reason"] = offer.RejectedReason;
             notificationData["rejectedby"] = RejectedBy;
             List<UserIdentifier> users = new List<UserIdentifier>();

@@ -15,7 +15,7 @@ import {
 
 @Component({
   templateUrl: './shippingrequests-details-model.component.html',
-  styleUrls: ['./shippingrequests-details-model.component.scss'],
+  styleUrls: ['/assets/custom/css/model.scss'],
   selector: 'shippingrequests-details-model',
   animations: [appModuleAnimation()],
 })

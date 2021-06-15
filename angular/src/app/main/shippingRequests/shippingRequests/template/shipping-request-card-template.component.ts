@@ -39,6 +39,7 @@ export class ShippingRequestCardTemplateComponent extends ScrollPagnationCompone
           this.StopLoading = true;
         }
         this.Items.push(...result.items);
+        console.log(result.items);
       });
   }
   canDeleteDirectRequest(input: GetShippingRequestForPriceOfferListDto) {

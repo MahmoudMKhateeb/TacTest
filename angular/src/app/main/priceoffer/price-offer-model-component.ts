@@ -18,7 +18,7 @@ import { finalize } from 'rxjs/operators';
 
 @Component({
   templateUrl: './price-offer-model-component.html',
-  styleUrls: ['./price-offer-model-component.scss'],
+  styleUrls: ['/assets/custom/css/model.scss'],
   selector: 'price-offer-model',
   animations: [appModuleAnimation()],
   providers: [EnumToArrayPipe],
@@ -44,20 +44,20 @@ export class PriceOfferModelComponent extends AppComponentBase {
     this.priceOfferCommissionType = this.enumToArray.transform(PriceOfferCommissionType);
     this.offer.commssionSettings = new PriceOfferTenantCommssionSettings();
   }
-  show(id: number): void {
+  show(id: number, offerId: number | undefined = undefined): void {
     this.direction = document.getElementsByTagName('html')[0].getAttribute('dir');
-    this._CurrentServ.getPriceOfferForCreateOrEdit(id).subscribe((result) => {
+    this._CurrentServ.getPriceOfferForCreateOrEdit(id, offerId).subscribe((result) => {
       this.offer = result;
       this.Items = this.offer.items;
       this.active = true;
       this.modal.show();
       this.input.shippingRequestId = id;
       this.input.channel = this.Channel;
-      if (!this.feature.isEnabled('App.Carrier')) {
+      if (!this.feature.isEnabled('App.Carrier') && this.offer.id == 0) {
         this.changeItemComissionValue();
         this.changeVasComissionValue();
       }
-      console.log(this.offer);
+      //console.log(this.offer);
     });
   }
   close(): void {
@@ -95,14 +95,22 @@ export class PriceOfferModelComponent extends AppComponentBase {
   sendOffer(): void {
     this.calculatorAll();
     let itemDetails: PriceOfferDetailDto[] = [];
-    this.input.itemPrice = this.offer.itemPrice;
+
     this.Items.forEach((item) => {
       let order = new PriceOfferDetailDto();
       order.itemId = item.sourceId;
       order.price = item.itemPrice;
       itemDetails.push(order);
     });
+
+    this.input.itemPrice = this.offer.itemPrice;
+    if (this.offer.parentId) this.input.parentId = this.offer.parentId;
     this.input.itemDetails = itemDetails;
+    this.input.commissionPercentageOrAddValue = this.offer.commissionPercentageOrAddValue;
+    this.input.commissionType = this.offer.commissionType;
+    this.input.vasCommissionPercentageOrAddValue = this.offer.vasCommissionPercentageOrAddValue;
+    this.input.vasCommissionType = this.offer.vasCommissionType;
+
     this._CurrentServ
       .createOrEdit(this.input)
       .pipe(finalize(() => (this.saving = false)))
@@ -135,13 +143,13 @@ export class PriceOfferModelComponent extends AppComponentBase {
   calculatorCommission() {
     let ItemsComission = this.calculatorItemCommission(this.offer.itemTotalAmount);
     let VasesComission = this.calculatorVasesCommission(this.getSubtotalVases());
-    this.offer.commissionAmount = ItemsComission + VasesComission;
+    this.offer.commissionAmount = this.offer.itemSubTotalAmountWithCommission + VasesComission;
   }
   calculatorItemCommission(amount) {
     if (this.offer.commissionType == PriceOfferCommissionType.CommissionPercentage) {
       return this.calculatorPercentage(amount, this.offer.commissionPercentageOrAddValue);
     } else {
-      return amount + this.offer.commissionPercentageOrAddValue;
+      return this.offer.commissionPercentageOrAddValue;
     }
   }
 
@@ -149,13 +157,16 @@ export class PriceOfferModelComponent extends AppComponentBase {
     if (this.offer.vasCommissionType == PriceOfferCommissionType.CommissionPercentage) {
       return this.calculatorPercentage(amount, this.offer.vasCommissionPercentageOrAddValue);
     } else {
-      return amount + this.offer.vasCommissionPercentageOrAddValue;
+      return this.gettotalQytVases() * this.offer.vasCommissionPercentageOrAddValue;
     }
   }
   getSubtotalVases() {
     return this.Items.reduce((sum, current) => sum + current.itemTotalAmount, 0);
   }
-
+  gettotalQytVases() {
+    let total = this.Items.reduce((sum, current) => sum + current.quantity, 0);
+    return this.Items.reduce((sum, current) => sum + current.quantity, 0);
+  }
   calculatorPercentage(amount: number, percentage: number): number {
     return (amount * percentage) / 100;
   }
