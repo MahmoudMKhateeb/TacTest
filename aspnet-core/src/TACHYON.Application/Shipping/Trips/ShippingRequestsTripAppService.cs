@@ -150,6 +150,25 @@ namespace TACHYON.Shipping.Trips
             {
                 throw new UserFriendlyException(L("The number of drop points must be" + request.NumberOfDrops));
             }
+            var dropPoints = input.RoutPoints.Where(x => x.PickingType == PickingType.Dropoff);
+            foreach (var drop in dropPoints)
+            {
+                if (drop.ReceiverId == null &&
+                    (drop.ReceiverCardIdNumber == null ||
+                    string.IsNullOrWhiteSpace(drop.ReceiverEmailAddress) ||
+                    string.IsNullOrWhiteSpace(drop.ReceiverFullName) ||
+                    drop.ReceiverPhoneNumber == null))
+                {
+                    throw new UserFriendlyException(L("YouMustEnterReceiver"));
+                }
+                else if(drop.ReceiverId!= null && (drop.ReceiverCardIdNumber != null ||
+                    !string.IsNullOrWhiteSpace(drop.ReceiverEmailAddress) ||
+                    !string.IsNullOrWhiteSpace(drop.ReceiverFullName) ||
+                    drop.ReceiverPhoneNumber != null))
+                {
+                    throw new UserFriendlyException(L("YouMustEnterOneReceiver"));
+                }
+            }
 
             if (!input.Id.HasValue)
             {
