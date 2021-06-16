@@ -69,9 +69,13 @@ namespace TACHYON.Notifications
         #region Offer
         public const string ShippingRequestSendOfferWhenAddPrice = "App.ShippingRequestSendOfferWhenAddPrice";
         public const string ShippingRequestSendOfferWhenUpdatePrice = "App.ShippingRequestSendOfferWhenUpdatePrice";
-        public const string ShipperAcceptedOffers = "App.ShipperAcceptedOffers";
+        public const string ShipperAcceptedOffer = "App.ShipperAcceptedOffer";
+        public const string TMSAcceptedOffer = "App.TMSAcceptedOffer";
+        
         public const string SendDriectRequest = "App.SendDriectRequest";
+        public const string DeclineDriectRequest = "App.DeclineDriectRequest";  
         public const string RejectedOffer = "App.RejectedOffer";
+        public const string PendingOffer = "App.PendingOffer";   
         #endregion
         #endregion
         #endregion

@@ -1,45 +1,48 @@
 <div
   bsModal
   #modal="bs-modal"
-  class="modal fade bd-example-modal-xl modalSendOffer tachyonDialer"
+  class="modal fade bd-example-modal-xl modalSendOffer tachyonDialer {{ direction == 'rtl' ? ' rtl' : '' }}"
   tabindex="-1"
   role="dialog"
   aria-labelledby="modal"
   aria-hidden="true"
   [config]="{ backdrop: 'static' }"
 >
-  <div class="modal-dialog modal-xl {{ direction == 'rtl' ? ' rtl' : '' }}">
+  <div class="modal-dialog modal-xl">
     <div class="modal-dialog modal-xl">
       <div class="modal-content">
         <div class="modal-body">
           <button type="button" (click)="close()" class="close closeModal" data-dismiss="modal" aria-label="Close">
             <i class="fas fa-times"></i>
           </button>
-          <form action="">
-            <img *ngIf="item.isTachyonDeal" src="/assets/custom/imgs/mark.svg" class="markTachyon" alt="" />
+          <div class="detailsContent">
+            <img *ngIf="request.isTachyonDeal" src="/assets/custom/imgs/mark.svg" class="markTachyon" alt="" />
             <div class="infoBasic">
               <a href="javascript:void(0)" *ngIf="!feature.isEnabled('App.Shipper')" class="companyName">
-                {{ item.isTachyonDeal ? l('TachyonManageService') : item.shipper }}
+                {{ request.isTachyonDeal ? l('TachyonManageService') : request.shipper }}
               </a>
+              <span class="infoHighLight green" *ngIf="shippingrequest.isPriced">
+                {{ l('Priced') }}
+              </span>
             </div>
             <div class="detailsRoad">
               <div class="from">
                 <p class="pickup">{{ l('Pickup') }}</p>
-                <p>{{ item.originCity }}</p>
+                <p>{{ request.originCity }}</p>
               </div>
               <div class="to">
                 <p class="delivery">{{ l('Delivery') }}</p>
-                <p>{{ item.destinationCity }}</p>
+                <p>{{ request.destinationCity }}</p>
               </div>
             </div>
             <div class="divirCard"></div>
             <div class="detailsShip">
-              <p *ngIf="item.rangeDate">
+              <p *ngIf="request.rangeDate">
                 <span>
                   {{ l('DateRange') }}
                 </span>
                 <span>
-                  {{ item.rangeDate }}
+                  {{ request.rangeDate }}
                 </span>
               </p>
               <p>
@@ -47,7 +50,7 @@
                   {{ l('TruckType') }}
                 </span>
                 <span>
-                  {{ item.trukType }}
+                  {{ request.trukType }}
                 </span>
               </p>
               <p>
@@ -55,7 +58,7 @@
                   {{ l('GoodCategory') }}
                 </span>
                 <span>
-                  {{ item.goodsCategory }}
+                  {{ request.goodsCategory }}
                 </span>
               </p>
               <p>
@@ -63,7 +66,7 @@
                   {{ l('NumberOfTrips') }}
                 </span>
                 <span>
-                  {{ item.numberOfTrips }}
+                  {{ request.numberOfTrips }}
                 </span>
               </p>
               <p>
@@ -71,149 +74,60 @@
                   {{ l('NumberOfDrops') }}
                 </span>
                 <span>
-                  {{ item.numberOfTrips }}
-                </span>
-              </p>
-              <p>
-                <span>
-                  {{ l('approximateTripDistance') }}
-                </span>
-                <span>
-                  {{ distance }}
-                </span>
-              </p>
-              <p>
-                <span>
-                  {{ l('approximateTripDuration') }}
-                </span>
-                <span>
-                  {{ duration }}
+                  {{ request.numberOfTrips }}
                 </span>
               </p>
             </div>
-            <div class="divirCard"></div>
-            <div class="setPrice">
-              <button type="button">
-                Set Price
-              </button>
-            </div>
-            <div class="table-sendOffer">
-              <span class="titleSendOffer">
-                Send Offer
-              </span>
-              <table>
-                <thead>
-                  <tr>
-                    <th>
-                      Trip Price
-                    </th>
-                    <th>
-                      Num. Of Trips
-                    </th>
-                    <th>
-                      Total
-                    </th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr>
-                    <td>
-                      <input type="text" />
-                    </td>
-                    <td>
-                      <input type="text" />
-                    </td>
-                    <td>
-                      <span>0.0</span>
-                      <span>SAR</span>
-                    </td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
-            <div class="divirCard"></div>
-            <div class="table-vas">
-              <span class="titleVas">
-                VAS
-              </span>
-              <table>
-                <thead>
-                  <tr>
-                    <th>
-                      Name
-                    </th>
-                    <th>
-                      Price
-                    </th>
-                    <th>
-                      Type
-                    </th>
-                    <th>
-                      Qty
-                    </th>
-                    <th>
-                      Total
-                    </th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr>
-                    <td>
-                      <input type="text" />
-                    </td>
-                    <td>
-                      <input type="text" />
-                    </td>
-                    <td>
-                      <input type="text" />
-                    </td>
-                    <td>
-                      <input type="text" />
-                    </td>
-                    <td>
-                      <span>0.0</span>
-                      <span>SAR</span>
-                    </td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
-            <div class="divirCard"></div>
-            <div class="resultPrice">
-              <div>
-                <p>
-                  Sub Total
-                </p>
-                <p>
-                  <span>0.0</span>
-                  <span>SAR</span>
-                </p>
+            <ng-template [ngIf]="Items.length">
+              <div class="divirCard"></div>
+
+              <div class="table-vas">
+                <span class="titleVas">
+                  {{ l('AddOns') }}
+                </span>
+                <table>
+                  <thead>
+                    <tr>
+                      <th>
+                        Name
+                      </th>
+
+                      <th>
+                        Qty
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr *ngFor="let item of Items">
+                      <td>
+                        {{ item.itemName }}
+                      </td>
+
+                      <td>
+                        {{ item.quantity }}
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
               </div>
-              <div>
-                <p>
-                  VAS Amount
-                </p>
-                <p>
-                  <span>0.0</span>
-                  <span>SAR</span>
-                </p>
+            </ng-template>
+            <ng-template [ngIf]="canSetPrice()">
+              <div class="divirCard"></div>
+              <div class="setPrice">
+                <button type="button" (click)="ModelPrice.show(request.id)">
+                  {{ l('SetPriceOffer') }}
+                </button>
               </div>
-              <div>
-                <p>
-                  Total Amount
-                </p>
-                <p>
-                  <span>0.0</span>
-                  <span>SAR</span>
-                </p>
+            </ng-template>
+            <ng-template [ngIf]="shippingrequest.isPriced">
+              <div class="divirCard"></div>
+              <div class="setPrice">
+                <button type="button" (click)="ModelViewPrice.show(request.id, shippingrequest.offerId)">
+                  {{ l('PreviewOffer') }}
+                </button>
               </div>
-            </div>
-            <div class="sendOffer">
-              <button type="submit">
-                Send offer
-              </button>
-            </div>
-          </form>
+            </ng-template>
+          </div>
           <div class="map">
             <agm-map [latitude]="24.717942" [longitude]="46.675761" [zoom]="10">
               <agm-direction
@@ -229,3 +143,5 @@
     </div>
   </div>
 </div>
+<price-offer-model #ModelPrice [Channel]="Channel" (modalSave)="update($event)"></price-offer-model>
+<price-offer-view-model #ModelViewPrice [Channel]="Channel" (modalDelete)="delete()"></price-offer-view-model>

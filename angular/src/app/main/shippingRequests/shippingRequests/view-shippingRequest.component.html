@@ -319,21 +319,28 @@
       </div>
       <!--   End::RouteDetails   -->
       <!--  start:: DirectOffers      -->
+      <!--<ng-template [ngIf]="canSeeDirectRequests()">
+      <GetAllDirectRequestsTable #GetAllDirectRequestsTable [shippingRequestId]="activeShippingRequestId"></GetAllDirectRequestsTable>
+    </ng-template>
+            -->
       <ng-template [ngIf]="canSeeDirectRequests()">
-        <GetAllDirectRequestsTable #GetAllDirectRequestsTable [shippingRequestId]="activeShippingRequestId"></GetAllDirectRequestsTable>
+        <direct-request [shippingRequestId]="activeShippingRequestId"></direct-request>
       </ng-template>
       <!--  end:: DirectOffers        -->
       <!--  start:: PriceOfferingSection -->
       <ng-template [ngIf]="canSeePriceOffers()">
-        <pricingOffer #pricingOffer [shippingRequestId]="activeShippingRequestId"></pricingOffer>
+        <shipping-request-offers-list
+          [shippingRequestId]="activeShippingRequestId"
+          [isTachyonDeal]="shippingRequestforView.shippingRequest.isTachyonDeal"
+          [Channel]="shippingRequestforView.shippingRequest.isBid ? 1 : 2"
+        ></shipping-request-offers-list>
+        <!--<pricingOffer #pricingOffer [shippingRequestId]="activeShippingRequestId"></pricingOffer>-->
       </ng-template>
       <!--  end:: PricOfferingSection -->
-      <!--   Start::Bidding Section     -->
-      <biddingTableComponent
-        *ngIf="canSeeShippingRequestBids()"
-        [shippingRequestId]="activeShippingRequestId"
-        (onSave)="reloadCurrentPage()"
-      ></biddingTableComponent>
+      <!--   Start::Bidding Section
+    <biddingTableComponent *ngIf="canSeeShippingRequestBids()"
+                           [shippingRequestId]="activeShippingRequestId"
+                           (onSave)="reloadCurrentPage()"></biddingTableComponent> -->
       <!--    End::Bidding Section    -->
       <!--   Start::Trips Section     -->
       <!--        !feature.isEnabled('App.TachyonDealer') || -->

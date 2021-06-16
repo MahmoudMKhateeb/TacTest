@@ -65,5 +65,6 @@ namespace TACHYON
 
         public const String CarrierEditionName = "276f922a4a6d4f45a680acc7841a8539";
         public const string TachyonEditionName = "4b4b7016956146c480a7fbb0d4a72554";
+        public const int TachyonEditionId = 4;
     }
 }

@@ -3,39 +3,51 @@ import { AppComponentBase } from '@shared/common/app-component-base';
 import { appModuleAnimation } from '@shared/animations/routerTransition';
 import { ModalDirective } from 'ngx-bootstrap/modal';
 
-import { ShippingRequestsServiceProxy, GetShippingRequestForPricingOutput } from '@shared/service-proxies/service-proxies';
+import {
+  PriceOfferServiceProxy,
+  GetShippingRequestForPricingOutput,
+  GetShippingRequestForPriceOfferListDto,
+  PriceOfferItemDto,
+  PriceOfferChannel,
+  ShippingRequestBidStatus,
+  ShippingRequestStatus,
+} from '@shared/service-proxies/service-proxies';
 
-import * as _ from 'lodash';
-import { finalize } from 'rxjs/operators';
 @Component({
   templateUrl: './shippingrequests-details-model.component.html',
-  styleUrls: ['./shippingrequests-details-model.component.scss'],
+  styleUrls: ['/assets/custom/css/model.scss'],
   selector: 'shippingrequests-details-model',
   animations: [appModuleAnimation()],
 })
 export class ShippingrequestsDetailsModelComponent extends AppComponentBase {
+  @Input() Channel: PriceOfferChannel | null | undefined;
   @Output() modalSave: EventEmitter<any> = new EventEmitter<any>();
   @ViewChild('modal', { static: false }) modal: ModalDirective;
 
   active = false;
   saving = false;
-  item: GetShippingRequestForPricingOutput = new GetShippingRequestForPricingOutput();
+  request: GetShippingRequestForPricingOutput = new GetShippingRequestForPricingOutput();
   origin = { lat: null, lng: null };
   destination = { lat: null, lng: null };
   distance: string;
   duration: string;
   direction: string;
-  constructor(injector: Injector, private _CurrentServ: ShippingRequestsServiceProxy) {
+  Items: PriceOfferItemDto[] = [];
+  shippingrequest: GetShippingRequestForPriceOfferListDto = new GetShippingRequestForPriceOfferListDto();
+  constructor(injector: Injector, private _CurrentServ: PriceOfferServiceProxy) {
     super(injector);
   }
 
-  show(id: number): void {
+  show(request: GetShippingRequestForPriceOfferListDto): void {
     this.direction = document.getElementsByTagName('html')[0].getAttribute('dir');
-    this._CurrentServ.getShippingRequestForPricing(id).subscribe((result) => {
-      this.item = result;
+    this.shippingrequest = request;
+    //console.log(this.shippingrequest);
+    this._CurrentServ.getShippingRequestForPricing(this.Channel, this.shippingrequest.id).subscribe((result) => {
+      this.request = result;
+      this.Items = this.request.items;
       this.active = true;
-      this.getCordinatesByCityName(this.item.originCity, 'source');
-      this.getCordinatesByCityName(this.item.destinationCity, 'destanation');
+      this.getCordinatesByCityName(this.request.originCity, 'source');
+      this.getCordinatesByCityName(this.request.destinationCity, 'destanation');
       this.modal.show();
     });
   }
@@ -43,11 +55,27 @@ export class ShippingrequestsDetailsModelComponent extends AppComponentBase {
     this.active = false;
     this.modal.hide();
   }
-
-  save(): void {
-    this.saving = true;
+  update(offerId: number) {
+    this.shippingrequest.offerId = offerId;
+    this.shippingrequest.isPriced = true;
   }
-
+  delete() {
+    this.shippingrequest.offerId = undefined;
+    this.shippingrequest.isPriced = false;
+  }
+  /**
+   * Check the current user log in can set price or not
+   */
+  canSetPrice(): boolean {
+    if (!this.Channel) return false;
+    if (this.shippingrequest.isPriced) return false;
+    if (this.request.status != ShippingRequestStatus.NeedsAction && this.request.status != ShippingRequestStatus.PrePrice) return false;
+    if (this.Channel == PriceOfferChannel.MarketPlace && this.request.bidStatus != ShippingRequestBidStatus.OnGoing) return false;
+    if (this.feature.isEnabled('App.Shipper')) return false;
+    if (this.feature.isEnabled('App.Carrier')) return true;
+    if (this.feature.isEnabled('App.TachyonDealer') && !this.request.isTachyonDeal) return true;
+    return false;
+  }
   /**
    * Get City Cordinates By Providing its name
    * this finction is to draw the shipping Request Main Route in View SR Details in marketPlace

@@ -170,10 +170,10 @@ namespace TACHYON.Authorization
             goodsDetails.CreateChildPermission(AppPermissions.Pages_GoodsDetails_Edit, L("EditGoodsDetail"), multiTenancySides: MultiTenancySides.Tenant);
             goodsDetails.CreateChildPermission(AppPermissions.Pages_GoodsDetails_Delete, L("DeleteGoodsDetail"), multiTenancySides: MultiTenancySides.Tenant);
 
-            var offers = pages.CreateChildPermission(AppPermissions.Pages_Offers, L("Offers"), multiTenancySides: MultiTenancySides.Tenant);
-            offers.CreateChildPermission(AppPermissions.Pages_Offers_Create, L("CreateNewOffer"), multiTenancySides: MultiTenancySides.Tenant);
-            offers.CreateChildPermission(AppPermissions.Pages_Offers_Edit, L("EditOffer"), multiTenancySides: MultiTenancySides.Tenant);
-            offers.CreateChildPermission(AppPermissions.Pages_Offers_Delete, L("DeleteOffer"), multiTenancySides: MultiTenancySides.Tenant);
+            //var offers = pages.CreateChildPermission(AppPermissions.Pages_Offers, L("Offers"), multiTenancySides: MultiTenancySides.Tenant);
+            //offers.CreateChildPermission(AppPermissions.Pages_Offers_Create, L("CreateNewOffer"), multiTenancySides: MultiTenancySides.Tenant);
+            //offers.CreateChildPermission(AppPermissions.Pages_Offers_Edit, L("EditOffer"), multiTenancySides: MultiTenancySides.Tenant);
+            //offers.CreateChildPermission(AppPermissions.Pages_Offers_Delete, L("DeleteOffer"), multiTenancySides: MultiTenancySides.Tenant);
 
             var routSteps = pages.CreateChildPermission(AppPermissions.Pages_RoutSteps, L("RoutSteps"), multiTenancySides: MultiTenancySides.Tenant);
             routSteps.CreateChildPermission(AppPermissions.Pages_RoutSteps_Create, L("CreateNewRoutStep"), multiTenancySides: MultiTenancySides.Tenant);

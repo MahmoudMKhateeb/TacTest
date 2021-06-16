@@ -1,0 +1,105 @@
+<div [@routerTransition]>
+  <div class="content d-flex flex-column flex-column-fluid">
+    <!--begin::Subheader-->
+    <sub-header [title]="'Marketplace' | localize" [description]="'' | localize">
+      <div role="actions">
+        <button class="btn btn-primary"><i class="flaticon2-indent-dots"></i> {{ l('MyBiddingHistory') }}</button>
+      </div>
+    </sub-header>
+    <!--end::Subheader-->
+    <!--begin::Entry-->
+
+    <div class="container-fluid">
+      <div class="row">
+        <div class="col-12 col-lg-6 mb-4" *ngFor="let item of Marketplaces">
+          <div
+            class="shipCard {{ item.isTachyonDeal ? 'tachyonDialer' : '' }} {{ direction == 'rtl' ? ' rtl' : '' }} {{
+              item.isPriced || item.remainingDays == '0' ? ' shipCardGray' : ''
+            }}"
+          >
+            <img *ngIf="item.isTachyonDeal" class="markTachyon" src="/assets/custom/imgs/mark.svg" alt="" />
+            <div class="infoBasic">
+              <a *ngIf="!feature.isEnabled('App.Shipper')" href="javascript:void(0)" class="companyName">
+                {{ item.isTachyonDeal ? l('TachyonManageService') : item.shipper }}
+              </a>
+              <span *ngIf="item.remainingDays && item.remainingDays != '0'" class="remainingTime">
+                <b>{{ item.remainingDays }}</b>
+                {{ getWordTitle(item.remainingDays, 'RemainingDay') }}
+              </span>
+              <b *ngIf="item.remainingDays == '0'" class="infoHighLight red stautsTruck">
+                {{ l(item.bidStatusTitle) }}
+              </b>
+            </div>
+            <div class="detailsRoad">
+              <div class="from">
+                <p class="pickup">{{ l('Pickup') }}</p>
+                <p>{{ item.originCity }}</p>
+              </div>
+              <div class="to">
+                <p class="delivery">{{ l('Delivery') }}</p>
+                <p>{{ item.destinationCity }}</p>
+              </div>
+            </div>
+            <div class="divirCard"></div>
+            <div class="moreDetails">
+              <div *ngIf="item.rangeDate" class="dateRange">
+                <p>
+                  <img src="/assets/custom/imgs/time.svg" width="16" alt="" />
+                  {{ l('DateRange') }}
+                </p>
+                <p>
+                  {{ item.rangeDate }}
+                </p>
+              </div>
+              <div class="goodCategory">
+                <p>
+                  <img src="/assets/custom/imgs/box.svg" width="16" alt="" />
+                  {{ l('GoodCategory') }}
+                </p>
+                <p>
+                  {{ item.goodsCategory }}
+                </p>
+              </div>
+              <div class="truckType">
+                <p>
+                  <i class="fas fa-truck"></i>
+                  {{ l('TruckType') }}
+                </p>
+                <p>
+                  {{ item.trukType }}
+                </p>
+              </div>
+              <div class="numOfTrips">
+                <p>
+                  <i class="fas fa-truck-loading"></i>
+                  {{ l('NumberOfTrips') }}
+                </p>
+                <p>
+                  {{ item.numberOfTrips }}
+                </p>
+              </div>
+            </div>
+            <div class="actionsShip">
+              <div>
+                <a *ngIf="item.totalBids > 0 && !feature.isEnabled('App.Carrier')" href="javascript:void(0)" class="infoHighLight green">
+                  {{ item.totalBids }} {{ getWordTitle(item.totalBids, 'bid') }}
+                </a>
+                <a *ngIf="item.isPricing" href="javascript:void(0)" class="infoHighLight red">{{ l('MarketPlacepriced') }}</a>
+              </div>
+              <div class="actions">
+                <a href="javascript:void(0)" (click)="Model.show(item.id)" class="red">
+                  {{ l('More') }}
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div *ngIf="IsLoading" class="col-12 loadingRow text-center my-3">
+          <span></span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<shippingrequests-details-model #Model></shippingrequests-details-model>

@@ -18,7 +18,6 @@ export abstract class ScrollPagnationComponentBase extends AppComponentBase {
       this.scrollY = Math.ceil(window.scrollY);
       //console.log(`(${window.innerHeight} + ${Math.ceil(window.scrollY)}) >= ${document.body.offsetHeight}+${this.scrollY}`);
       this.skipCount += this.maxResultCount;
-      console.log(this.skipCount);
       this.IsLoading = true;
       this.LoadData();
     }

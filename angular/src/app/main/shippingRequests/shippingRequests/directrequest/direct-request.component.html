@@ -1,0 +1,104 @@
+<div class="card card-custom gutter-b" id="directRequests">
+  <div class="card-header">
+    <h3 class="card-title">
+      {{ l('DirectRequests') }}
+    </h3>
+    <div class="card-toolbar">
+      <button class="btn btn-danger" (click)="DirectRequestTenantModel.show()">
+        <i class="flaticon2-paper-plane"></i> {{ l('sendDirectRequests') }}
+      </button>
+    </div>
+  </div>
+  <div class="card-body">
+    <div class="row align-items-center">
+      <!--<Primeng-TurboTable-Start>-->
+      <div class="primeng-datatable-container" [busyIf]="primengTableHelper.isLoading">
+        <p-table
+          #dataTableForCarrier
+          sortMode="multiple"
+          (onLazyLoad)="getDirectRequests($event)"
+          [value]="primengTableHelper.records"
+          rows="{{ primengTableHelper.defaultRecordsCountPerPage }}"
+          [paginator]="false"
+          [lazy]="true"
+          [scrollable]="true"
+          ScrollWidth="100%"
+          [responsive]="primengTableHelper.isResponsive"
+          [resizableColumns]="primengTableHelper.resizableColumns"
+        >
+          <ng-template pTemplate="header">
+            <tr>
+              <th style="width: 150px;" pSortableColumn="carrierName">
+                {{ 'CarrierName' | localize }}
+                <p-sortIcon field="carrierName"></p-sortIcon>
+              </th>
+              <th style="width: 100px;" pSortableColumn="statusTitle">
+                {{ 'Status' | localize }}
+                <p-sortIcon field="statusTitle"></p-sortIcon>
+              </th>
+
+              <th style="width: 150px;">
+                {{ 'Actions' | localize }}
+              </th>
+            </tr>
+          </ng-template>
+          <ng-template pTemplate="body" let-record="$implicit">
+            <tr>
+              <td style="width: 150px;">
+                <span class="ui-column-title"> {{ 'CarrierName' | localize }}</span>
+                <span>
+                  {{ record.carrier }}
+                </span>
+              </td>
+
+              <td style="width: 100px;">
+                <span class="ui-column-title"> {{ 'StatusTitle' | localize }}</span>
+                <span>
+                  {{ l(record.statusTitle) }}
+                </span>
+              </td>
+
+              <td style="width: 150px;">
+                <div *ngIf="record.status == 0 || record.status == 5" class="btn-group dropdown" dropdown container="body">
+                  <div class="row ml-1">
+                    <button class="dropdown-toggle btn btn-sm btn-primary" dropdownToggle>
+                      <i class="fa fa-cog"></i><span class="caret"></span> {{ l('Actions') }}
+                    </button>
+                  </div>
+                  <ul class="dropdown-menu" *dropdownMenu>
+                    <li>
+                      <a class="dropdown-item" href="javascript:;" (click)="delete(record)">{{ l('Delete') }}</a>
+                    </li>
+                  </ul>
+                </div>
+              </td>
+            </tr>
+          </ng-template>
+        </p-table>
+        <div class="primeng-no-data" *ngIf="primengTableHelper.totalRecordsCount == 0">
+          {{ 'NoData' | localize }}
+        </div>
+        <div class="primeng-paging-container">
+          <p-paginator
+            [rows]="primengTableHelper.defaultRecordsCountPerPage"
+            #paginatorForCarrier
+            (onPageChange)="getDirectRequests($event)"
+            [totalRecords]="primengTableHelper.totalRecordsCount"
+            [rowsPerPageOptions]="primengTableHelper.predefinedRecordsCountPerPage"
+          >
+          </p-paginator>
+          <span class="total-records-count">
+            {{ 'TotalRecordsCount' | localize: primengTableHelper.totalRecordsCount }}
+          </span>
+        </div>
+      </div>
+      <!--<Primeng-TurboTable-End>-->
+    </div>
+  </div>
+</div>
+
+<direct-request-tenant-model
+  #DirectRequestTenantModel
+  (directRequestSent)="reloadPage()"
+  [shippingRequestId]="shippingRequestId"
+></direct-request-tenant-model>

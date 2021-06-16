@@ -258,7 +258,7 @@ namespace TACHYON.Authorization.Users
 
         public async Task<User> GetAdminTachyonDealerAsync()
         {
-            var tenant = await _tenantsRepository.FirstOrDefaultAsync(x => x.Edition.DisplayName.ToLower() == TACHYONConsts.TachyonDealerEdtionName.ToLower());
+            var tenant = await _tenantsRepository.FirstOrDefaultAsync(x => x.Edition.Name.ToLower() == AppConsts.TachyonEditionName.ToLower());
             return await GetAdminByTenantIdAsync(tenant.Id);
 
         }

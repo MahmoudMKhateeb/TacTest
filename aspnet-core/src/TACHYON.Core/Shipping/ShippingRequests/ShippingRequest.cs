@@ -198,6 +198,7 @@ namespace TACHYON.Shipping.ShippingRequests
 
         public DateTime? CloseBidDate { get; set; }
 
+        public int TotalOffers { get; set; }
         public ICollection<ShippingRequestBid> ShippingRequestBids { get; set; }
 
         //Vases for all trips 

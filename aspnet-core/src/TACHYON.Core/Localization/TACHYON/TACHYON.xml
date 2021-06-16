@@ -12,6 +12,7 @@
     <text name="Accept">Accept</text>
     <text name="AcceptBid">Accept price</text>
     <text name="Accepted">Accepted</text>
+    <text name="AcceptedAndWaitingForShipper">Waiting approve by shipper</text>
     <text name="AcceptedDate">Accepted date</text>
     <text name="AcceptPrice">Accept price</text>
     <text name="AcceptShippingRequestNotificationMessage">Shipping request bid accepted</text>
@@ -50,6 +51,7 @@
     <text name="AddNewTrip">Add new trip</text>
     <text name="AddNewWayPoint">Add New Way Point</text>
     <text name="AddNewWebhookSubscription">Add New Webhook Subscription</text>
+    <text name="AddOns">Add-ons</text>
     <text name="AddPage">Add page</text>
     <text name="Address">Address</text>
     <text name="AddressBook">Facilities management</text>
@@ -250,6 +252,12 @@
     <text name="Close">Close</text>
     <text name="Code">Code</text>
     <text name="Collapse">Collapse</text>
+    <text name="Commission">Commission</text>
+    <text name="CommissionAmount">Commission amount</text>
+    <text name="CommissionMinimumValue">Minimum value</text>
+    <text name="CommissionPercentage">Percentage</text>
+    <text name="CommissionType">Commission type</text>
+    <text name="CommissionValue">Add value</text>
     <text name="Company">Company</text>
     <text name="CompanyFullLeagalName">Company legal name</text>
     <text name="CompanyInformation">Company Information</text>
@@ -259,6 +267,7 @@
     <text name="Completed">completed</text>
     <text name="Confirm">Confirm</text>
     <text name="ConfirmationMailSentPleaseClickLinkInTheEmail">A confirmation e-mail sent to {0}. Please click link in the email in order to confirm your mail address.</text>
+    <text name="Confirmed">Confirmed</text>
     <text name="ConsumerKey">Consumer Key</text>
     <text name="ConsumerSecret">Consumer Secret</text>
     <text name="Content">Content</text>
@@ -398,6 +407,11 @@
     <text name="DeactivateAccountUponexpiration">Deactivate Account Upon expiration</text>
     <text name="DeactivateSubscriptionWarningMessage">Webhook subscription will be deactivated and your endpoint will no longer get webhooks</text>
     <text name="DeactiveTenant">Deactivate company</text>
+    <text name="Declined">Declined</text>
+    <text name="DeclinedOfPricing">Declined of pricing</text>
+    <text name="DeclineDriectRequest">
+      <a href="/app/main/directrequest/list?id={id}">The carrier {client} Declined of pricing shipment.</a>
+    </text>
     <text name="Default">Default</text>
     <text name="Default(all)API">Default (all) API</text>
     <text name="DefaultAccountLockoutDurationAsSeconds">Account locking duration (as seconds)</text>
@@ -1079,6 +1093,7 @@
     <text name="NoEnoughBalance">You do not have enough balance</text>
     <text name="NoInternetConnection">You Are Currently Not Connected To Internet</text>
     <text name="None">None</text>
+    <text name="NoOfTrips">No. of trips</text>
     <text name="NoOrganizationUnitDefinedYet">No organization unit defined yet.</text>
     <text name="NoPermission">You do not have any permission. Contact your account administrator.</text>
     <text name="NoRecordsFound">No records found</text>
@@ -1206,6 +1221,9 @@ content that we shared with you.</text>
     <text name="PaymentPeriodType_Monthly">Monthly</text>
     <text name="PaymentPeriodType_Weekly">Weekly</text>
     <text name="PayuponDelivery">Payupon delivery</text>
+    <text name="PendingOffer">
+      <a href="/app/main/offers/list?id={id}">Your offer has been received and is under review from the responsible.</a>
+    </text>
     <text name="PerDay">Per day</text>
     <text name="Period">Period</text>
     <text name="Permission">Permission</text>
@@ -1287,10 +1305,12 @@ content that we shared with you.</text>
     <text name="PostedValue">Posted value</text>
     <text name="PostPrice">Confirmed</text>
     <text name="PrePrice">New</text>
+    <text name="PreviewOffer">Preview offer</text>
     <text name="Previous">Previous</text>
     <text name="Price">Price</text>
     <text name="PriceOffers">Price offers</text>
     <text name="Prices">Prices</text>
+    <text name="PriceSubmitted">Price submitted</text>
     <text name="Pricing">Pricing</text>
     <text name="PricingOffer">Pricing offer</text>
     <text name="Print">Print</text>
@@ -1306,6 +1326,7 @@ content that we shared with you.</text>
     <text name="ProjectName">Project name</text>
     <text name="Property">Property</text>
     <text name="Purchase">Purchase</text>
+    <text name="Qty">Qty</text>
     <text name="Quantity">Quantity</text>
     <text name="QuickNav">Quick Navigation</text>
     <text name="QuickThemeSelection">Quick theme selection</text>
@@ -1334,9 +1355,12 @@ content that we shared with you.</text>
     <text name="RegisterFormUserNameInvalidMessage">Please do not enter your email address as a username.</text>
     <text name="Reject">Reject</text>
     <text name="Rejected">Rejected</text>
-    <text name="RejectedOffer"><![CDATA[<a href="/app/main/shippingRequests/shippingRequests/view?id={id}&offerid={offerid}">You offer has been rejected by {rejectedby}.</a>]]></text>
+    <text name="RejectedOffer">
+      <a href="/app/main/offers/list?id={id}">You offer has been rejected by {rejectedby}.</a>
+    </text>
     <text name="RejectedReason">Rejected reason</text>
     <text name="RejectionReason">Rejection reason</text>
+    <text name="RejectOffer">Reject</text>
     <text name="RejectPricingOffer">Reject pricing offer</text>
     <text name="RejectShippingRequestNotificationMessage">Shipping Request is canceled</text>
     <text name="RejectThisTrip">Reject This Trip!</text>
@@ -1353,6 +1377,7 @@ content that we shared with you.</text>
     <text name="RenamePage">Rename page</text>
     <text name="Reply">Reply</text>
     <text name="Reports">Reports</text>
+    <text name="RePricing">Re-pricing</text>
     <text name="RequestedFileDoesNotExists">Requested file does not exist!</text>
     <text name="RequestId">Request id</text>
     <text name="Requests">Requests</text>
@@ -1400,6 +1425,7 @@ content that we shared with you.</text>
     <text name="RoutTypeDisplayName">Route type</text>
     <text name="RoutTypes">Routes types</text>
     <text name="RoutTypesHeaderInfo">Rout Types header info</text>
+    <text name="SAR">SAR</text>
     <text name="Save">Save</text>
     <text name="SaveAll">Save all</text>
     <text name="SaveAndClose"><![CDATA[Save & Close]]></text>
@@ -1468,16 +1494,21 @@ content that we shared with you.</text>
     <text name="SendDirectRequest">Send direct request</text>
     <text name="SendDirectRequestOffer">Send direct request offer</text>
     <text name="SendDirectRequests">Send direct request</text>
+    <text name="SendDriectRequest">
+      <a href="/app/main/directrequest/list?id={id}">Please send us a quote for the shipment.</a>
+    </text>
     <text name="SendDriectRequestForCarrier">Please send us a quote for the shipment No.: {id}.</text>
     <text name="SendEmailActivationLink_Information">A link will be sent to your email to activate your email address. If you don't get an email within a few minutes, please re-try.</text>
     <text name="Sender">Sender</text>
     <text name="SendingWithThreeDot">Sending with three dot</text>
+    <text name="SendOffer">Send offer</text>
     <text name="SendPasswordResetLink_Information">A password reset link will be sent to your email to reset your password. If you don't get an email within a few minutes, please re-try.</text>
     <text name="SendPriceOfferToShipper">Send price offer to shipper</text>
     <text name="SendPricingOfferToShipper">Send pricing offer</text>
     <text name="SendSecurityCode">Send security code.</text>
     <text name="SendSecurityCode_Information">You should verify yourself to login. Please select a verification type. A code will be sent based on selected verification type.</text>
     <text name="SendSecurityCodeErrorMessage">Security code could not be sent!</text>
+    <text name="SendSuccessfully">Send successfully</text>
     <text name="SendTestEmail">Send Test Email</text>
     <text name="Seq">Seq</text>
     <text name="Service">Service</text>
@@ -1489,6 +1520,7 @@ content that we shared with you.</text>
     <text name="SetAsDefaultLanguage">Set as default language</text>
     <text name="SetAsRead">set as read</text>
     <text name="SetBiddingStartDate">Bidding start date</text>
+    <text name="SetPriceOffer">Set price offer</text>
     <text name="SetRandomPassword">Set random password.</text>
     <text name="Settings">Settings</text>
     <text name="SettingsHeaderInfo">Show and change application settings.</text>
@@ -1625,7 +1657,9 @@ code:{0}</text>
     <text name="SuccessfullyAccepted">Successfully accepted</text>
     <text name="SuccessfullyActivated">Successfully activated</text>
     <text name="SuccessfullyAdded">Successfully added</text>
+    <text name="SuccessfullyCanceled">Successfully canceled</text>
     <text name="SuccessfullyDeactivated">Successfully deactivated</text>
+    <text name="SuccessfullyDeclined">Successfully declined</text>
     <text name="SuccessfullyDeleted">Successfully deleted.</text>
     <text name="SuccessfullyGenerate">Successfully generate</text>
     <text name="SuccessfullyMoved">Successfully moved.</text>
@@ -1810,6 +1844,8 @@ code:{0}</text>
     <text name="TotalBidsCount">Total bids</text>
     <text name="TotalCommission">Total commission</text>
     <text name="TotalOfDrop">Number of drops: {0}</text>
+    <text name="TotalOffer">Offer</text>
+    <text name="TotalOffers">Offers</text>
     <text name="TotalRecordsCount">Total: {0}</text>
     <text name="TotalsTripsAddByShippier">Totals trips add by shippier</text>
     <text name="TotalWeight">Total weight</text>
@@ -2062,6 +2098,7 @@ code:{0}</text>
     <text name="VlaueMustBeGreaterThan">Value must be greater than</text>
     <text name="WaitAfterSubscriptionExpireDate">Wait after subscription expire date</text>
     <text name="WaitingDayAfterExpire">Waiting day after expire</text>
+    <text name="WaitingForResponse">Waiting for response</text>
     <text name="WaitingForReviewMsg">Please wait until we review your documents</text>
     <text name="Warning">Warning</text>
     <text name="WaybillNumber">Waybill Number</text>

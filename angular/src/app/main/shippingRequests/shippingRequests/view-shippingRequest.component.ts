@@ -136,7 +136,13 @@ export class ViewShippingRequestComponent extends AppComponentBase implements On
    */
   canSeeDirectRequests() {
     //if there is an active shipping Request id and the user is TachyonDealer and there still no Carrier assigned to this shipping Reqeust
-    if (this.activeShippingRequestId && this.feature.isEnabled('App.TachyonDealer') && !this.shippingRequestforView.shippingRequest.carrierTenantId) {
+    if (
+      this.activeShippingRequestId &&
+      this.feature.isEnabled('App.SendDirectRequest') &&
+      ((!this.shippingRequestforView.shippingRequest.isTachyonDeal && !this.shippingRequestforView.shippingRequest.isBid) ||
+        (this.feature.isEnabled('App.TachyonDealer') && this.shippingRequestforView.shippingRequest.isTachyonDeal)) &&
+      !this.shippingRequestforView.shippingRequest.carrierTenantId
+    ) {
       return true;
     }
     return false;
@@ -147,12 +153,19 @@ export class ViewShippingRequestComponent extends AppComponentBase implements On
    */
   canSeePriceOffers() {
     // if the user is carrier
+    if (this.feature.isEnabled('App.Carrier')) {
+      return false;
+    }
+    return true;
+  }
+  /* canSeePriceOffers() {
+    // if the user is carrier
     if (this.feature.isEnabled('App.Carrier') || this.shippingRequestforView.shippingRequest.price) {
       return false;
     }
     return true;
   }
-
+  */
   /**
    * this function scrolls to a the direct Requests table and opens up the Send Direct Requests Modal for Tachyon Dealer
    */

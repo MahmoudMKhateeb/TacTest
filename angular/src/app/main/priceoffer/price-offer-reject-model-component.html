@@ -1,0 +1,50 @@
+<div
+  bsModal
+  #carrierResponceModalChild="bs-modal"
+  class="modal fade"
+  role="dialog"
+  aria-labelledby="createOrEditModal"
+  aria-hidden="true"
+  [config]="{ backdrop: 'static' }"
+>
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <form #Form="ngForm" novalidate (ngSubmit)="send()" autocomplete="off">
+        <div class="modal-header">
+          <p class="modal-title">
+            <span>{{ l('RejectOffer') }}</span>
+          </p>
+        </div>
+        <div class="modal-body">
+          <div class="row">
+            <!--  begin :: Body-->
+            <!-- begin :: Source Dest Facilitys  -->
+            <div class="col-lg-12 form-group">
+              <label>{{ l('Reason') }}*</label>
+              <div class="input-group">
+                <textarea class="form-control" name="reason" [(ngModel)]="rejectInput.reason" maxlength="500" min="5" required> </textarea>
+              </div>
+            </div>
+            <!-- end::Body-->
+          </div>
+        </div>
+        <div class="modal-footer">
+          <!--begin::Buttons-->
+
+          <button type="button" class="btn btn-primary font-weight-bolder btn-sm py-3 px-6 text-uppercase" [disabled]="saving" (click)="close()">
+            {{ l('Close') }}
+          </button>
+          <button
+            type="submit"
+            class="btn btn-primary font-weight-bolder btn-sm py-3 px-6 text-uppercase"
+            [buttonBusy]="saving"
+            [disabled]="!Form.form.valid"
+          >
+            {{ l('Send') }}
+          </button>
+          <!--end::Buttons-->
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
