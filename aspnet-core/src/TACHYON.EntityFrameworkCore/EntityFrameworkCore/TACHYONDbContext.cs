@@ -25,6 +25,7 @@ using TACHYON.Goods.GoodsDetails;
 using TACHYON.Invoices;
 using TACHYON.Invoices.Balances;
 using TACHYON.Invoices.Groups;
+using TACHYON.Invoices.PaymentMethods;
 using TACHYON.Invoices.Periods;
 using TACHYON.Invoices.Transactions;
 using TACHYON.Localization;
@@ -203,8 +204,9 @@ namespace TACHYON.EntityFrameworkCore
         public virtual DbSet<GroupPeriod> GroupPeriod { get; set; }
         public virtual DbSet<GroupShippingRequests> GroupShippingRequests { get; set; }
         public virtual DbSet<GroupPeriodInvoice> GroupPeriodInvoice { get; set; }
+        public DbSet<InvoicePaymentMethod> InvoicePaymentMethods;
 
-        
+
         public virtual DbSet<BalanceRecharge> BalanceRecharge { get; set; }
 
 

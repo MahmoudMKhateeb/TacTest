@@ -4646,10 +4646,7 @@ namespace TACHYON.Migrations
                     b.Property<DateTime?>("DeletionTime")
                         .HasColumnType("datetime2");
 
-                    b.Property<int?>("DestinationCityId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("DraftStep")
+                    b.Property<int>("DestinationCityId")
                         .HasColumnType("int");
 
                     b.Property<DateTime?>("EndTripDate")
@@ -4658,7 +4655,7 @@ namespace TACHYON.Migrations
                     b.Property<long?>("FatherShippingRequestId")
                         .HasColumnType("bigint");
 
-                    b.Property<int?>("GoodCategoryId")
+                    b.Property<int>("GoodCategoryId")
                         .HasColumnType("int");
 
                     b.Property<bool>("HasAccident")
@@ -4671,9 +4668,6 @@ namespace TACHYON.Migrations
                         .HasColumnType("bit");
 
                     b.Property<bool>("IsDeleted")
-                        .HasColumnType("bit");
-
-                    b.Property<bool>("IsDrafted")
                         .HasColumnType("bit");
 
                     b.Property<bool?>("IsPrePayed")
@@ -4706,10 +4700,10 @@ namespace TACHYON.Migrations
                     b.Property<int>("NumberOfTrips")
                         .HasColumnType("int");
 
-                    b.Property<int?>("OriginCityId")
+                    b.Property<int>("OriginCityId")
                         .HasColumnType("int");
 
-                    b.Property<int?>("PackingTypeId")
+                    b.Property<int>("PackingTypeId")
                         .HasColumnType("int");
 
                     b.Property<decimal>("PercentCommissionSetting")
@@ -4718,7 +4712,7 @@ namespace TACHYON.Migrations
                     b.Property<decimal?>("Price")
                         .HasColumnType("decimal(18,2)");
 
-                    b.Property<byte?>("RouteTypeId")
+                    b.Property<byte>("RouteTypeId")
                         .HasColumnType("tinyint");
 
                     b.Property<int>("ShippingTypeId")
@@ -4754,7 +4748,7 @@ namespace TACHYON.Migrations
                     b.Property<int?>("TransportTypeId")
                         .HasColumnType("int");
 
-                    b.Property<long?>("TrucksTypeId")
+                    b.Property<long>("TrucksTypeId")
                         .HasColumnType("bigint");
 
                     b.Property<decimal>("VatAmount")
@@ -6901,7 +6895,9 @@ namespace TACHYON.Migrations
 
                     b.HasOne("TACHYON.Cities.City", "DestinationCityFk")
                         .WithMany()
-                        .HasForeignKey("DestinationCityId");
+                        .HasForeignKey("DestinationCityId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("TACHYON.Shipping.ShippingRequests.ShippingRequest", "FatherShippingRequestFk")
                         .WithMany()
@@ -6909,15 +6905,21 @@ namespace TACHYON.Migrations
 
                     b.HasOne("TACHYON.Goods.GoodCategories.GoodCategory", "GoodCategoryFk")
                         .WithMany()
-                        .HasForeignKey("GoodCategoryId");
+                        .HasForeignKey("GoodCategoryId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("TACHYON.Cities.City", "OriginCityFk")
                         .WithMany()
-                        .HasForeignKey("OriginCityId");
+                        .HasForeignKey("OriginCityId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("TACHYON.Packing.PackingTypes.PackingType", "PackingTypeFk")
                         .WithMany()
-                        .HasForeignKey("PackingTypeId");
+                        .HasForeignKey("PackingTypeId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("TACHYON.Shipping.ShippingTypes.ShippingType", "ShippingTypeFk")
                         .WithMany()
@@ -6937,7 +6939,9 @@ namespace TACHYON.Migrations
 
                     b.HasOne("TACHYON.Trucks.TrucksTypes.TrucksType", "TrucksTypeFk")
                         .WithMany()
-                        .HasForeignKey("TrucksTypeId");
+                        .HasForeignKey("TrucksTypeId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("TACHYON.Shipping.ShippingRequests.TachyonDealer.ShippingRequestsCarrierDirectPricing", b =>
