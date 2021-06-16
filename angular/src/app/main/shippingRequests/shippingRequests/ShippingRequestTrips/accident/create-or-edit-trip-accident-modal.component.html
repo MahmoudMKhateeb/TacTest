@@ -21,7 +21,7 @@
         </div>
         <div class="modal-body">
           <div class="form-group">
-            <label>{{ 'Name' | localize }}</label>
+            <label>{{ 'AccidentReasonName' | localize }}</label>
             <select name="reasonId" [(ngModel)]="reasonId" (change)="onChangeReason($event.target.value)" class="form-control" required>
               <option value="">{{ l('SelectReason') }}</option>
               <option [value]="reason.id" *ngFor="let reason of reasons">

@@ -235,7 +235,7 @@
     <text name="ConsumerSecret">سر المستهلك</text>
     <text name="Content">المحتوى</text>
     <text name="ContinueTrip">اكمال الرحلة</text>
-    <text name="Contracts">عقود</text>
+    <text name="Contracts">العقود</text>
     <text name="CookieConsent">موافقة ملفات تعريف الارتباط</text>
     <text name="CookieConsent_Dismiss">موافق!</text>
     <text name="CookieConsent_Message">يستخدم هذا الموقع ملفات تعريف الارتباط لضمان حصولك على أفضل تجربة.</text>
@@ -305,6 +305,7 @@
     <text name="CreateNewVasPrice">إضافة سعر جديد للخدمات الإضافية</text>
     <text name="CreateReason">إضافة سبب</text>
     <text name="CreateShippingRequest">طلب شحن جديد</text>
+    <text name="CreateNewRequest">إنشاء طلب شحن جديد</text>
     <text name="CreatingDynamicParameters">إنشاء معلمات ديناميكية</text>
     <text name="CreatingDynamicParameterValue">إنشاء قيمة المعلمة الديناميكية</text>
     <text name="CreatingEntityDynamicParameters">إنشاء معلمات ديناميكية للكيان</text>
@@ -447,7 +448,7 @@
     <text name="DifferentTenantImpersonationErrorMessage">لا يمكن تمثيل مستخدم من عميل آخر!</text>
     <text name="Dimentions">الأبعاد</text>
     <text name="DirectRequests">الطلبات المباشرة</text>
-    <text name="DirectShippingRequests">طلبات الشحن المباشرة</text>
+    <text name="DirectShippingRequests">طلبات الشحن الخاصة</text>
     <text name="Disable">تعطيل</text>
     <text name="Disabled">معطّل</text>
     <text name="DisableRecurringPayments">لا تفوتر حسابي تلقائيا</text>
@@ -455,6 +456,7 @@
     <text name="DisplayNameCannotBeEmpty">لا يمكن اضافة إسم فارغ</text>
     <text name="DisplayOrder">DisplayOrder</text>
     <text name="Docuement">مستند</text>
+    <text name="NonMandatoryDocuments">Non-Mandatory Documents</text>
     <text name="DocumentEntityName">إسم الجهة التي يطلب منها المستندات</text>
     <text name="DocumentFile">مستند</text>
     <text name="DocumentFiles">مستند</text>
@@ -650,7 +652,7 @@
     <text name="ExternalPaymentId">كود الدفع الخارجي</text>
     <text name="Extn">صيغة المستند</text>
     <text name="Facilities">المنشأت</text>
-    <text name="FacilitiesSetup">إدارة المنشأة</text>
+    <text name="FacilitiesSetup">إدارة المنشآت</text>
     <text name="Facility">منشأة</text>
     <text name="FacilityName">اسم المنشأة</text>
     <text name="Failed">فشل</text>
@@ -672,7 +674,7 @@
     <text name="FilterDateRangePicker">نطاق التاريخ</text>
     <text name="FilterOrAddUser">تصفية\إضافة مستخدم</text>
     <text name="FinalPrice">السعر النهائي</text>
-    <text name="FinancialTransActionMenu">التاريخ المالي</text>
+    <text name="FinancialTransActionMenu">سجل المعاملات المالية</text>
     <text name="FirstName">الإسم الأول</text>
     <text name="Flag">علم</text>
     <text name="ForgotPassword">هل نسيت كلمة المرور؟</text>
@@ -692,7 +694,7 @@
     <text name="GdprDataPrepareStartedNotification">نحن نعد بياناتك. سيتم إخطارك عند الإنتهاء من إعداد بياناتك.</text>
     <text name="General">عــام</text>
     <text name="GeneralDetails">تفاصيل عامة</text>
-    <text name="GeneralSettings">اللإعدادات</text>
+    <text name="GeneralSettings">الإعدادات العامة</text>
     <text name="Generate">إنشاء</text>
     <text name="GiveLocationPermission">الرجاء تفعيل اذن الموقع</text>
     <text name="GoingToPointConformation">هل انت متاكد انك تريد الذهاب الى هذه النقطة؟</text>
@@ -1023,7 +1025,7 @@
     <text name="OopsYouAreLost">عذرا! هل أنت ضال</text>
     <text name="OpenIdClaimsCleanListToRevertToDefaultClaimsMessage">تنظيف القائمة للعودة إلى المطالبات الافتراضية</text>
     <text name="OperationLogs">سجلات التشغيل</text>
-    <text name="Operations">عمليات</text>
+    <text name="Operations">العمليات</text>
     <text name="OrganizationTree">الهيكل التنظيمي</text>
     <text name="OrganizationUnitDeleteWarningMessage">هل أنت متأكد من حذف الوحدة التنظيمية {0} ؟</text>
     <text name="OrganizationUnitMoveConfirmMessage">هل أنت متأكد من نقل {0} الى {1} ؟</text>
@@ -1187,7 +1189,7 @@
     <text name="ReceiverFullName">الاسم الكامل للمستلم</text>
     <text name="ReceiverPhoneNumber">رقم جوال المستلم</text>
     <text name="Receivers">المستلمين</text>
-    <text name="ReceiversSetup">إدارة المستلمين؟</text>
+    <text name="ReceiversSetup">إدارة المستلمين</text>
     <text name="ReceivingPaymentResult">تلقي نتيجة الدفع.</text>
     <text name="RecentTenants">الشركات الأخيرة</text>
     <text name="RecentTenantsHelpText">آخر {1} من العملاء المسجلين في {0} يوما ...</text>
@@ -1217,7 +1219,7 @@
     <text name="Reply">رد</text>
     <text name="Reports">تقارير</text>
     <text name="RequestedFileDoesNotExists">لم نعثر على الملف المطلوب</text>
-    <text name="Requests">الطلبات</text>
+    <text name="Requests">الطلبات المغلقة</text>
     <text name="RequestTimedOut">انتهت مهلة طلبك، الرجاء إعادة المحاولة لاحقا.</text>
     <text name="Required">مطلوب</text>
     <text name="RequiredField">حقل {0} مطلوب.</text>
@@ -1338,7 +1340,7 @@
     <text name="Settings">الإعدادات</text>
     <text name="SettingsHeaderInfo">عرض وتغيير إعدادات النظام</text>
     <text name="Severity">خطورة</text>
-    <text name="ShipmentTracking">تتبع الشحنة</text>
+    <text name="ShipmentTracking">تتبع الشحنات</text>
     <text name="Shipper">شاحن</text>
     <text name="ShipperAcceptedOffers">
       <a href="/app/main/shippingRequests/shippingRequests/view?id={id}">الشاحن {shipper} تم الموافقة على العرض.</a>
@@ -1363,7 +1365,7 @@
     <text name="ShippingRequestPrice">سعر طلب الشحن</text>
     <text name="ShippingRequestProperties">خصائص طلب الشحن</text>
     <text name="ShippingRequestReceiverCode">رقم الشحنة الخاصة بك هي:{0}</text>
-    <text name="ShippingRequests">طلبات الشحن</text>
+    <text name="ShippingRequests">طلبات الشحن الخاصة بي</text>
     <text name="ShippingRequestsCreate">إنشاء طلب شحن</text>
     <text name="ShippingRequestsEdit">تعديل طلب الشحن</text>
     <text name="ShippingRequestSendOfferWhenAddPrice"><![CDATA[<a href="/app/main/shippingRequests/shippingRequests/view?id={id}&offerid={offerid}">تم إضافة عرض جديد للشحنة</a>]]></text>
@@ -1416,14 +1418,14 @@
     <text name="StringLengthDoesntMatch">يجب أن يكون {0} كحد ادنى {1} وحد اقصى {2}.</text>
     <text name="Strong">قوي</text>
     <text name="Submit">إرسال</text>
-    <text name="SubmitInvoice">فواتير الناقل</text>
+    <text name="SubmitInvoice">فواتير الناقلين</text>
     <text name="SubmitInvoiceOnAccepted">
       <a href="/app/main/invoices/submitinvoices/detail/{groupid}">The submit invoice has been Accepted</a>
     </text>
     <text name="SubmitInvoiceOnRejected">
       <a href="/app/main/invoices/submitinvoices/detail/{groupid}">لقد تم رفض الفاتورة التي تم تقديمها بسبب: {reason}</a>
     </text>
-    <text name="SubmitInvoices">فواتير الناقل</text>
+    <text name="SubmitInvoices">فواتير الناقلين</text>
     <text name="SubmittedDocuments">المستندات التي تم تسليمها</text>
     <text name="SubmitterTenant">مقدم من</text>
     <text name="SubmittingTime">تاريخ و وقت التسليم</text>
@@ -1837,7 +1839,7 @@
     <text name="Vases">الخدمات الإضافية</text>
     <text name="VasName">اسم الخدمة الإضافية</text>
     <text name="VasPrice">سعر الخدمات الإضافية</text>
-    <text name="VasPrices">أسعار الخدمات الإضافية</text>
+    <text name="VasPrices">إعدادات الخدمات الإضافية</text>
     <text name="VatAmount">قيمة الضريبة</text>
     <text name="VerificationCode">رمز التحقق</text>
     <text name="Verify">التحقق</text>

@@ -39,13 +39,13 @@
           <!--  begin:: Trip start&End Dates-->
           <div class="col-lg-6">
             <div class="form-group">
-              <label>{{ l('TripStartDate') }} *</label>
+              <label><span class="required-fileds">*</span>{{ l('DiddingStartDate') }} </label>
               <div class="input-group date">
                 <input
                   [(date)]="trip.startTripDate"
                   class="form-control"
                   name="tripStartDate"
-                  placeholder="{{ l('tripStartDate') }}"
+                  placeholder="{{ l('DatePlaceholder') }}"
                   bsDatepicker
                   datePickerMomentModifier
                   disabled
@@ -60,13 +60,13 @@
           </div>
           <div class="col-lg-6">
             <div class="form-group">
-              <label>{{ l('TripEndDate') }} *</label>
+              <label><span class="required-fileds">*</span>{{ l('BiddingEndDate') }} </label>
               <div class="input-group date">
                 <input
                   [(date)]="trip.endTripDate"
                   class="form-control"
                   name="tripEndDate"
-                  placeholder="{{ l('TripEndDate') }}"
+                  placeholder="{{ l('DatePlaceholder') }}"
                   bsDatepicker
                   datePickerMomentModifier
                   disabled
@@ -84,13 +84,13 @@
           <ng-container *ngIf="feature.isEnabled('App.Carrier')">
             <div class="col-lg-6">
               <div class="form-group">
-                <label>{{ l('Driver') }} *</label>
+                <label><span class="required-fileds">*</span>{{ l('Driver') }} </label>
                 <input class="form-control" name="trip.driver" [ngModel]="trip.driver" disabled />
               </div>
             </div>
             <div class="col-lg-5">
               <div class="form-group">
-                <label>{{ l('Truck') }} *</label>
+                <label><span class="required-fileds">*</span>{{ l('Truck') }} </label>
                 <input class="form-control" name="trip.truck" [ngModel]="trip.truck" disabled />
               </div>
             </div>

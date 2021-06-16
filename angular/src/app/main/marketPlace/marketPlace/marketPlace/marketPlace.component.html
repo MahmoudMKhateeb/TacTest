@@ -1,7 +1,7 @@
 <div [@routerTransition]>
   <div class="content d-flex flex-column flex-column-fluid">
     <!--begin::Subheader-->
-    <sub-header [title]="'MarketPlace' | localize" [description]="'' | localize">
+    <sub-header [title]="'Marketplace' | localize" [description]="'' | localize">
       <div role="actions" *ngIf="feature.isEnabled('App.Carrier')">
         <button class="btn btn-primary" (click)="ViewAllCarrierBidsModal.show()">
           <i class="flaticon2-indent-dots"></i> {{ l('MyBiddingHistory') }}

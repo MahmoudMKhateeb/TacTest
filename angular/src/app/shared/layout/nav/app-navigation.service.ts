@@ -68,7 +68,7 @@ export class AppNavigationService {
         [],
         [
           new AppMenuItem(
-            'TachyonManagedServices',
+            'TachyonManageService',
             'Pages.ShippingRequests',
             'label label-danger label-dot',
             '/app/main/shippingRequests/shippingRequests'

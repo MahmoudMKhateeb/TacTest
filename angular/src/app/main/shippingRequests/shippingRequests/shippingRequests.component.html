@@ -1,46 +1,54 @@
 <div [@routerTransition]>
   <div class="content d-flex flex-column flex-column-fluid">
-    <sub-header [description]="'' | localize" [title]="'ShippingRequests' | localize">
-      <div role="actions">
-        <button (click)="createShippingRequest()" *ngIf="feature.isEnabled('App.Shipper')" class="btn btn-primary blue">
-          <i class="fa fa-plus"></i> {{ l('CreateNewShippingRequest') }}
-        </button>
-      </div>
-    </sub-header>
+    <div>
+      <sub-header [description]="'' | localize" *ngIf="feature.isEnabled('App.TachyonDealer')" [title]="'TachyonManageService' | localize">
+      </sub-header>
 
-    <div [class]="containerClass">
-      <div class="card card-custom gutter-b">
-        <div class="card-body">
-          <div *ngIf="noOfPostPriceWithoutTrips > 0" class="alert alert-custom alert-light-warning" role="alert">
-            <div class="alert-icon"><i class="flaticon-warning"></i></div>
-            <div class="alert-text">
-              You Have {{ noOfPostPriceWithoutTrips }} Incomplete Shipping Requests Please Complete Them
-              <a class="mx-1" (click)="GetIncompleteShippingRequests()">here</a>.
+      <sub-header
+        [description]="'' | localize"
+        *ngIf="feature.isEnabled('App.Shipper') || feature.isEnabled('App.Carrier')"
+        [title]="'ShippingRequests' | localize"
+      >
+        <div role="actions">
+          <button (click)="createShippingRequest()" *ngIf="feature.isEnabled('App.Shipper')" class="btn btn-primary blue">
+            <i class="fa fa-plus"></i> {{ l('CreateNewShippingRequest') }}
+          </button>
+        </div>
+      </sub-header>
+
+      <div [class]="containerClass">
+        <div class="card card-custom gutter-b">
+          <div class="card-body">
+            <div *ngIf="noOfPostPriceWithoutTrips > 0" class="alert alert-custom alert-light-warning" role="alert">
+              <div class="alert-icon"><i class="flaticon-warning"></i></div>
+              <div class="alert-text">
+                You Have {{ noOfPostPriceWithoutTrips }} Incomplete Shipping Requests Please Complete Them
+                <a class="mx-1" (click)="GetIncompleteShippingRequests()">here</a>.
+              </div>
             </div>
-          </div>
 
-          <form autocomplete="off" class="form mb-8">
-            <div>
-              <!--              <div class="row align-items-center">-->
-              <!--                <div class="col-xl-12">-->
-              <!--                  <div class="form-group m-form__group align-items-center">-->
-              <!--                    <div class="input-group">-->
-              <!--                      <input-->
-              <!--                        [(ngModel)]="filterText"-->
-              <!--                        [placeholder]="l('SearchWithThreeDot')"-->
-              <!--                        autoFocus-->
-              <!--                        class="form-control m-input"-->
-              <!--                        name="filterText"-->
-              <!--                        type="text"-->
-              <!--                      />-->
-              <!--                      <span class="input-group-btn">-->
-              <!--                        <button (click)="getShippingRequests()" class="btn btn-primary" type="submit"><i class="flaticon-search-1"></i></button>-->
-              <!--                      </span>-->
-              <!--                    </div>-->
-              <!--                  </div>-->
-              <!--                </div>-->
-              <!--              </div>-->
-              <!--<div [hidden]="!advancedFiltersAreShown" class="row">
+            <form autocomplete="off" class="form mb-8">
+              <div>
+                <!--              <div class="row align-items-center">-->
+                <!--                <div class="col-xl-12">-->
+                <!--                  <div class="form-group m-form__group align-items-center">-->
+                <!--                    <div class="input-group">-->
+                <!--                      <input-->
+                <!--                        [(ngModel)]="filterText"-->
+                <!--                        [placeholder]="l('SearchWithThreeDot')"-->
+                <!--                        autoFocus-->
+                <!--                        class="form-control m-input"-->
+                <!--                        name="filterText"-->
+                <!--                        type="text"-->
+                <!--                      />-->
+                <!--                      <span class="input-group-btn">-->
+                <!--                        <button (click)="getShippingRequests()" class="btn btn-primary" type="submit"><i class="flaticon-search-1"></i></button>-->
+                <!--                      </span>-->
+                <!--                    </div>-->
+                <!--                  </div>-->
+                <!--                </div>-->
+                <!--              </div>-->
+                <!--<div [hidden]="!advancedFiltersAreShown" class="row">
                               <div class="col-md-12">
                                 <div class="kt-separator kt-separator--border-dashed"></div>
                               </div>
@@ -69,55 +77,55 @@
                                 </div>
                               </div>
                               <!--                <div class="col-md-3"> -->
-              <!--                  <div class="form-group">-->
-              <!--                    <label for="TrucksTypeDisplayNameFilter">({{ l('TrucksType') }} ) {{ l('DisplayName') }}</label>-->
-              <!--                    <input-->
-              <!--                      [(ngModel)]="trucksTypeDisplayNameFilter"-->
-              <!--                      class="form-control"-->
-              <!--                      id="TrucksTypeDisplayNameFilter"-->
-              <!--                      name="trucksTypeDisplayNameFilter"-->
-              <!--                      type="text"-->
-              <!--                    />-->
-              <!--                  </div>-->
-              <!--                </div>-->
-              <!--                <div class="col-md-3">-->
-              <!--                  <div class="form-group">-->
-              <!--                    <label for="TrailerTypeDisplayNameFilter">({{ l('TrailerType') }} ) {{ l('DisplayName') }}</label>-->
-              <!--                    <input-->
-              <!--                      [(ngModel)]="trailerTypeDisplayNameFilter"-->
-              <!--                      class="form-control"-->
-              <!--                      id="TrailerTypeDisplayNameFilter"-->
-              <!--                      name="trailerTypeDisplayNameFilter"-->
-              <!--                      type="text"-->
-              <!--                    />-->
-              <!--                  </div>-->
-              <!--                </div>-->
-              <!--                <div class="col-md-3">-->
-              <!--                  <div class="form-group">-->
-              <!--                    <label for="GoodsDetailNameFilter">({{ l('GoodsDetail') }}) {{ l('Name') }}</label>-->
-              <!--                    <input-->
-              <!--                      [(ngModel)]="goodsDetailNameFilter"-->
-              <!--                      class="form-control"-->
-              <!--                      id="GoodsDetailNameFilter"-->
-              <!--                      name="goodsDetailNameFilter"-->
-              <!--                      type="text"-->
-              <!--                    />-->
-              <!--                  </div>-->
-              <!--                </div>-->
-              <!--                <div class="col-md-3">-->
-              <!--                  <div class="form-group">-->
-              <!--                    <label for="RouteDisplayNameFilter">({{ l('Route') }} ) {{ l('DisplayName') }}</label>-->
-              <!--                    <input-->
-              <!--                      [(ngModel)]="routeDisplayNameFilter"-->
-              <!--                      class="form-control"-->
-              <!--                      id="RouteDisplayNameFilter"-->
-              <!--                      name="routeDisplayNameFilter"-->
-              <!--                      type="text"-->
-              <!--                    />-->
-              <!--                  </div>-->
-              <!--                </div>-->
-              <!--</div>-->
-              <!--<div class="row mb-2">
+                <!--                  <div class="form-group">-->
+                <!--                    <label for="TrucksTypeDisplayNameFilter">({{ l('TrucksType') }} ) {{ l('DisplayName') }}</label>-->
+                <!--                    <input-->
+                <!--                      [(ngModel)]="trucksTypeDisplayNameFilter"-->
+                <!--                      class="form-control"-->
+                <!--                      id="TrucksTypeDisplayNameFilter"-->
+                <!--                      name="trucksTypeDisplayNameFilter"-->
+                <!--                      type="text"-->
+                <!--                    />-->
+                <!--                  </div>-->
+                <!--                </div>-->
+                <!--                <div class="col-md-3">-->
+                <!--                  <div class="form-group">-->
+                <!--                    <label for="TrailerTypeDisplayNameFilter">({{ l('TrailerType') }} ) {{ l('DisplayName') }}</label>-->
+                <!--                    <input-->
+                <!--                      [(ngModel)]="trailerTypeDisplayNameFilter"-->
+                <!--                      class="form-control"-->
+                <!--                      id="TrailerTypeDisplayNameFilter"-->
+                <!--                      name="trailerTypeDisplayNameFilter"-->
+                <!--                      type="text"-->
+                <!--                    />-->
+                <!--                  </div>-->
+                <!--                </div>-->
+                <!--                <div class="col-md-3">-->
+                <!--                  <div class="form-group">-->
+                <!--                    <label for="GoodsDetailNameFilter">({{ l('GoodsDetail') }}) {{ l('Name') }}</label>-->
+                <!--                    <input-->
+                <!--                      [(ngModel)]="goodsDetailNameFilter"-->
+                <!--                      class="form-control"-->
+                <!--                      id="GoodsDetailNameFilter"-->
+                <!--                      name="goodsDetailNameFilter"-->
+                <!--                      type="text"-->
+                <!--                    />-->
+                <!--                  </div>-->
+                <!--                </div>-->
+                <!--                <div class="col-md-3">-->
+                <!--                  <div class="form-group">-->
+                <!--                    <label for="RouteDisplayNameFilter">({{ l('Route') }} ) {{ l('DisplayName') }}</label>-->
+                <!--                    <input-->
+                <!--                      [(ngModel)]="routeDisplayNameFilter"-->
+                <!--                      class="form-control"-->
+                <!--                      id="RouteDisplayNameFilter"-->
+                <!--                      name="routeDisplayNameFilter"-->
+                <!--                      type="text"-->
+                <!--                    />-->
+                <!--                  </div>-->
+                <!--                </div>-->
+                <!--</div>-->
+                <!--<div class="row mb-2">
                               <div class="col-sm-12">
                                 <span
                                   (click)="advancedFiltersAreShown = !advancedFiltersAreShown"
@@ -130,183 +138,185 @@
                                 >
                               </div>
                             </div>-->
-            </div>
-          </form>
-
-          <div class="row align-items-center">
-            <!--<Primeng-Datatable-Start>-->
-            <div [busyIf]="primengTableHelper.isLoading" class="primeng-datatable-container col-12">
-              <p-table
-                #dataTable
-                (onLazyLoad)="getShippingRequests($event)"
-                ScrollWidth="100%"
-                [lazy]="true"
-                [paginator]="false"
-                [resizableColumns]="primengTableHelper.resizableColumns"
-                [responsive]="primengTableHelper.isResponsive"
-                [scrollable]="true"
-                [value]="primengTableHelper.records"
-                rows="{{ primengTableHelper.defaultRecordsCountPerPage }}"
-              >
-                <ng-template pTemplate="header">
-                  <tr>
-                    <th pSortableColumn="TenantId" *ngIf="!feature.isEnabled('App.Shipper')" style="width: 150px;">
-                      {{ l('DatatableShipperName') }}
-                      <p-sortIcon field="TenantId"></p-sortIcon>
-                    </th>
-                    <th pSortableColumn="status" style="width: 150px;">
-                      {{ l('Status') }}
-                      <p-sortIcon field="status"></p-sortIcon>
-                    </th>
-
-                    <th pSortableColumn="isBid" *ngIf="feature.isEnabled('App.Shipper')" style="width: 150px;">
-                      {{ l('RequestType') }}
-                      <p-sortIcon field="isBid"></p-sortIcon>
-                    </th>
-
-                    <th pSortableColumn="routeType" style="width: 150px;">
-                      {{ l('RouteType') }}
-                      <p-sortIcon field="routeType"></p-sortIcon>
-                    </th>
-                    <th pSortableColumn="originalCityName" style="width: 150px;">
-                      {{ l('OriginCity') }}
-                      <p-sortIcon field="originalCityName"></p-sortIcon>
-                    </th>
-                    <th pSortableColumn="destinationCityName" style="width: 150px;">
-                      {{ l('DestinationCity') }}
-                      <p-sortIcon field="destinationCityName"></p-sortIcon>
-                    </th>
-                    <th pSortableColumn="numberOfTrips" style="width: 150px;">
-                      {{ l('NumberOfTrips') }}
-                      <p-sortIcon field="numberOfTrips"></p-sortIcon>
-                    </th>
-                    <th
-                      *ngIf="feature.isEnabled('App.Shipper') || feature.isEnabled('App.TachyonDealer')"
-                      pSortableColumn="totalBidsCount"
-                      style="width: 150px;"
-                    >
-                      {{ l('TotalBids') }}
-                      <p-sortIcon field="totalBidsCount"></p-sortIcon>
-                    </th>
-                    <th [hidden]="!isGrantedAny('Pages.ShippingRequests.Edit', 'Pages.ShippingRequests.Delete')" style="width: 130px;">
-                      {{ l('Actions') }}
-                    </th>
-                  </tr>
-                </ng-template>
-                <ng-template let-record="$implicit" pTemplate="body">
-                  <tr [ngClass]="getrowstyle(record)">
-                    <td style="width: 150px;" *ngIf="!feature.isEnabled('App.Shipper')">
-                      <span class="ui-column-title"> {{ l('Tenants') }}</span>
-                      {{ record.tenant }}
-                    </td>
-                    <td style="width: 150px;">
-                      <span class="ui-column-title"> {{ l('ShippingRequestStatusName') }}</span>
-                      {{ l(record.statusTitle) }}
-                    </td>
-
-                    <td *ngIf="feature.isEnabled('App.Shipper')" style="width: 150px;">
-                      <span class="ui-column-title"> {{ l('ShippingRequestType') }}</span>
-                      {{ record.isTachyonDeal ? l('TachyonManageService') : record.isBid ? l('Marketplace') : '' }}
-                    </td>
-                    <td style="width: 150px;">
-                      <span class="ui-column-title"> {{ l('RouteType') }}</span>
-                      {{ record.routeType }}
-                    </td>
-                    <td style="width: 150px;">
-                      <span class="ui-column-title"> {{ l('OriginalCity') }}</span>
-                      {{ record.origin }}
-                    </td>
-                    <td style="width: 150px;">
-                      <span class="ui-column-title"> {{ l('DestinationCity') }}</span>
-                      {{ record.destination }}
-                    </td>
-                    <td style="width: 150px;">
-                      <span class="ui-column-title"> {{ l('TotalsTripsAddByShippier') }}</span>
-                      {{ record.numberOfTrips }}
-                    </td>
-                    <td style="width: 150px;" *ngIf="feature.isEnabled('App.Shipper') || feature.isEnabled('App.TachyonDealer')">
-                      <span class="ui-column-title"> {{ l('TotalBidsCount') }}</span>
-                      {{ record.totalBids }}
-                    </td>
-                    <td [hidden]="!isGrantedAny('Pages.ShippingRequests.Edit', 'Pages.ShippingRequests.Delete')" style="width: 130px;">
-                      <div class="btn-group dropdown" container="body" dropdown>
-                        <button class="dropdown-toggle btn btn-sm btn-primary" dropdownToggle>
-                          <i class="fa fa-cog"></i><span class="caret"></span> {{ l('Actions') }}
-                        </button>
-                        <ul *dropdownMenu class="dropdown-menu">
-                          <!--                          <li *ngIf="feature.isEnabled('App.TachyonDealer')">-->
-                          <!--                            <a href="javascript:;" class="dropdown-item" (click)="pricingOfferModal.show()">{{ l('PricingOffer') }}</a>-->
-                          <!--                          </li>-->
-                          <li>
-                            <a
-                              *ngIf="permission.isGranted('Pages.ShippingRequests.Edit')"
-                              [queryParams]="{ id: record.id }"
-                              [routerLink]="['/app/main/shippingRequests/shippingRequests/view']"
-                              class="dropdown-item"
-                            >
-                              {{ l('View') }}
-                            </a>
-                          </li>
-                          <li>
-                            <a
-                              *ngIf="permission.isGranted('Pages.ShippingRequests.Edit') && feature.isEnabled('App.Shipper')"
-                              [queryParams]="{ id: record.id }"
-                              [routerLink]="['/app/main/shippingRequests/shippingRequests/createOrEdit']"
-                              class="dropdown-item"
-                            >
-                              {{ l('Edit') }}
-                            </a>
-                          </li>
-                          <li [hidden]="true" *ngIf="!feature.isEnabled('App.Carrier')">
-                            <a href="javascript:;" class="dropdown-item" (click)="UpdatePriceShippingRequestModal.show(record.id)">
-                              {{ l('Response') }}
-                            </a>
-                          </li>
-
-                          <li [hidden]="true" *ngIf="!feature.isEnabled('App.Carrier')">
-                            <a href="javascript:;" class="dropdown-item" (click)="ViewShippingRequestPriceResponseModalComponent.show(record.id)">
-                              {{ l('ViewCarrierResponse') }}
-                            </a>
-                          </li>
-
-                          <li>
-                            <a
-                              (click)="deleteShippingRequest(record.id)"
-                              *ngIf="permission.isGranted('Pages.ShippingRequests.Delete') && feature.isEnabled('App.Shipper')"
-                              class="dropdown-item"
-                              href="javascript:"
-                              >{{ l('Delete') }}</a
-                            >
-                          </li>
-                        </ul>
-                      </div>
-                    </td>
-                  </tr>
-                </ng-template>
-              </p-table>
-              <div *ngIf="primengTableHelper.totalRecordsCount == 0" class="primeng-no-data">
-                {{ l('NoData') }}
               </div>
-              <div class="primeng-paging-container">
-                <p-paginator
-                  #paginator
-                  (onPageChange)="getShippingRequests($event)"
-                  [rowsPerPageOptions]="primengTableHelper.predefinedRecordsCountPerPage"
-                  [rows]="primengTableHelper.defaultRecordsCountPerPage"
-                  [totalRecords]="primengTableHelper.totalRecordsCount"
+            </form>
+
+            <div class="row align-items-center">
+              <!--<Primeng-Datatable-Start>-->
+              <div [busyIf]="primengTableHelper.isLoading" class="primeng-datatable-container col-12">
+                <p-table
+                  #dataTable
+                  (onLazyLoad)="getShippingRequests($event)"
+                  ScrollWidth="100%"
+                  [lazy]="true"
+                  [paginator]="false"
+                  [resizableColumns]="primengTableHelper.resizableColumns"
+                  [responsive]="primengTableHelper.isResponsive"
+                  [scrollable]="true"
+                  [value]="primengTableHelper.records"
+                  rows="{{ primengTableHelper.defaultRecordsCountPerPage }}"
                 >
-                </p-paginator>
-                <span class="total-records-count">
-                  {{ l('TotalRecordsCount', primengTableHelper.totalRecordsCount) }}
-                </span>
+                  <ng-template pTemplate="header">
+                    <tr>
+                      <th pSortableColumn="TenantId" *ngIf="!feature.isEnabled('App.Shipper')" style="width: 150px;">
+                        {{ l('DatatableShipperName') }}
+                        <p-sortIcon field="TenantId"></p-sortIcon>
+                      </th>
+                      <th pSortableColumn="status" style="width: 150px;">
+                        {{ l('Status') }}
+                        <p-sortIcon field="status"></p-sortIcon>
+                      </th>
+
+                      <th pSortableColumn="isBid" *ngIf="feature.isEnabled('App.Shipper')" style="width: 150px;">
+                        {{ l('RequestType') }}
+                        <p-sortIcon field="isBid"></p-sortIcon>
+                      </th>
+
+                      <th pSortableColumn="routeType" style="width: 150px;">
+                        {{ l('RouteType') }}
+                        <p-sortIcon field="routeType"></p-sortIcon>
+                      </th>
+                      <th pSortableColumn="originalCityName" style="width: 150px;">
+                        {{ l('OriginCity') }}
+                        <p-sortIcon field="originalCityName"></p-sortIcon>
+                      </th>
+                      <th pSortableColumn="destinationCityName" style="width: 150px;">
+                        {{ l('DestinationCity') }}
+                        <p-sortIcon field="destinationCityName"></p-sortIcon>
+                      </th>
+                      <th pSortableColumn="numberOfTrips" style="width: 150px;">
+                        {{ l('NumberOfTrips') }}
+                        <p-sortIcon field="numberOfTrips"></p-sortIcon>
+                      </th>
+                      <th
+                        *ngIf="feature.isEnabled('App.Shipper') || feature.isEnabled('App.TachyonDealer')"
+                        pSortableColumn="totalBidsCount"
+                        style="width: 150px;"
+                      >
+                        {{ l('TotalBids') }}
+                        <p-sortIcon field="totalBidsCount"></p-sortIcon>
+                      </th>
+                      <th [hidden]="!isGrantedAny('Pages.ShippingRequests.Edit', 'Pages.ShippingRequests.Delete')" style="width: 130px;">
+                        {{ l('Actions') }}
+                      </th>
+                    </tr>
+                  </ng-template>
+                  <ng-template let-record="$implicit" pTemplate="body">
+                    <tr [ngClass]="getrowstyle(record)">
+                      <td style="width: 150px;" *ngIf="!feature.isEnabled('App.Shipper')">
+                        <span class="ui-column-title"> {{ l('Tenants') }}</span>
+                        {{ record.tenant }}
+                      </td>
+                      <td style="width: 150px;">
+                        <span class="ui-column-title"> {{ l('ShippingRequestStatusName') }}</span>
+                        {{ l(record.statusTitle) }}
+                      </td>
+
+                      <td *ngIf="feature.isEnabled('App.Shipper')" style="width: 150px;">
+                        <span class="ui-column-title"> {{ l('ShippingRequestType') }}</span>
+                        {{ record.isTachyonDeal ? l('TachyonManageService') : record.isBid ? l('Marketplace') : '' }}
+                      </td>
+                      <td style="width: 150px;">
+                        <span class="ui-column-title"> {{ l('RouteType') }}</span>
+                        {{ record.routeType }}
+                      </td>
+                      <td style="width: 150px;">
+                        <span class="ui-column-title"> {{ l('OriginalCity') }}</span>
+                        {{ record.origin }}
+                      </td>
+                      <td style="width: 150px;">
+                        <span class="ui-column-title"> {{ l('DestinationCity') }}</span>
+                        {{ record.destination }}
+                      </td>
+                      <td style="width: 150px;">
+                        <span class="ui-column-title"> {{ l('TotalsTripsAddByShippier') }}</span>
+                        {{ record.numberOfTrips }}
+                      </td>
+                      <td style="width: 150px;" *ngIf="feature.isEnabled('App.Shipper') || feature.isEnabled('App.TachyonDealer')">
+                        <span class="ui-column-title"> {{ l('TotalBidsCount') }}</span>
+                        {{ record.totalBids }}
+                      </td>
+                      <td [hidden]="!isGrantedAny('Pages.ShippingRequests.Edit', 'Pages.ShippingRequests.Delete')" style="width: 130px;">
+                        <div class="btn-group dropdown" container="body" dropdown>
+                          <button class="dropdown-toggle btn btn-sm btn-primary" dropdownToggle>
+                            <i class="fa fa-cog"></i><span class="caret"></span> {{ l('Actions') }}
+                          </button>
+                          <ul *dropdownMenu class="dropdown-menu">
+                            <!--                          <li *ngIf="feature.isEnabled('App.TachyonDealer')">-->
+                            <!--                            <a href="javascript:;" class="dropdown-item" (click)="pricingOfferModal.show()">{{ l('PricingOffer') }}</a>-->
+                            <!--                          </li>-->
+                            <li>
+                              <a
+                                *ngIf="permission.isGranted('Pages.ShippingRequests.Edit')"
+                                [queryParams]="{ id: record.id }"
+                                [routerLink]="['/app/main/shippingRequests/shippingRequests/view']"
+                                class="dropdown-item"
+                              >
+                                {{ l('View') }}
+                              </a>
+                            </li>
+                            <li>
+                              <a
+                                *ngIf="permission.isGranted('Pages.ShippingRequests.Edit') && feature.isEnabled('App.Shipper')"
+                                [queryParams]="{ id: record.id }"
+                                [routerLink]="['/app/main/shippingRequests/shippingRequests/createOrEdit']"
+                                class="dropdown-item"
+                              >
+                                {{ l('Edit') }}
+                              </a>
+                            </li>
+                            <li [hidden]="true" *ngIf="!feature.isEnabled('App.Carrier')">
+                              <a href="javascript:;" class="dropdown-item" (click)="UpdatePriceShippingRequestModal.show(record.id)">
+                                {{ l('Response') }}
+                              </a>
+                            </li>
+
+                            <li [hidden]="true" *ngIf="!feature.isEnabled('App.Carrier')">
+                              <a href="javascript:;" class="dropdown-item" (click)="ViewShippingRequestPriceResponseModalComponent.show(record.id)">
+                                {{ l('ViewCarrierResponse') }}
+                              </a>
+                            </li>
+
+                            <li>
+                              <a
+                                (click)="deleteShippingRequest(record.id)"
+                                *ngIf="permission.isGranted('Pages.ShippingRequests.Delete') && feature.isEnabled('App.Shipper')"
+                                class="dropdown-item"
+                                href="javascript:"
+                                >{{ l('Delete') }}</a
+                              >
+                            </li>
+                          </ul>
+                        </div>
+                      </td>
+                    </tr>
+                  </ng-template>
+                </p-table>
+                <div *ngIf="primengTableHelper.totalRecordsCount == 0" class="primeng-no-data">
+                  {{ l('NoData') }}
+                </div>
+                <div class="primeng-paging-container">
+                  <p-paginator
+                    #paginator
+                    (onPageChange)="getShippingRequests($event)"
+                    [rowsPerPageOptions]="primengTableHelper.predefinedRecordsCountPerPage"
+                    [rows]="primengTableHelper.defaultRecordsCountPerPage"
+                    [totalRecords]="primengTableHelper.totalRecordsCount"
+                  >
+                  </p-paginator>
+                  <span class="total-records-count">
+                    {{ l('TotalRecordsCount', primengTableHelper.totalRecordsCount) }}
+                  </span>
+                </div>
               </div>
+              <!--<Primeng-Datatable-End>-->
             </div>
-            <!--<Primeng-Datatable-End>-->
           </div>
         </div>
       </div>
+      <app-update-price-shipping-request-modal (modalSave)="reloadPage()" #UpdatePriceShippingRequestModal> </app-update-price-shipping-request-modal>
+      <app-view-shipping-request-price-response-modal #ViewShippingRequestPriceResponseModalComponent>
+      </app-view-shipping-request-price-response-modal>
     </div>
-    <app-update-price-shipping-request-modal (modalSave)="reloadPage()" #UpdatePriceShippingRequestModal> </app-update-price-shipping-request-modal>
-    <app-view-shipping-request-price-response-modal #ViewShippingRequestPriceResponseModalComponent> </app-view-shipping-request-price-response-modal>
   </div>
 </div>

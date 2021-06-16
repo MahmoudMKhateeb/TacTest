@@ -49,7 +49,7 @@
     <text name="AddNewGoodDetail">Add Good Details</text>
     <text name="AddNewGoodDetails">Add Good Details</text>
     <text name="AddNewTrip">Add trip</text>
-    <text name="AddNewWayPoint">Add New pickup facility</text>
+    <text name="AddNewWayPoint">Add New Drop Off Facility</text>
     <text name="AddNewWebhookSubscription">Add New Webhook Subscription</text>
     <text name="AddPage">Add page</text>
     <text name="Address">Address</text>
@@ -144,7 +144,7 @@
     <text name="BidStartDate">Bid start date</text>
     <text name="BidUpdatedSuccessfully">Bid updated successfully</text>
     <text name="Billing">Billing</text>
-    <text name="BillingInterval">Payment methods</text>
+    <text name="BillingInterval">Payment Methods</text>
     <text name="BillingIntervalHeaderInfo">Billing interval header info</text>
     <text name="BillingIntervalType">Billing interval type</text>
     <text name="BillTo">Bill to</text>
@@ -218,6 +218,7 @@
       .\admin -> for host admin <br>
       Test\admin -> for test tenant's admin <br>
       admin -> for your tenant's admin]]></text>
+    <text name="PageNotFound">Page Not Found</text>
     <text name="Check">Check</text>
     <text name="CheckoutWithPaypal">Pay using PayPal</text>
     <text name="CheckoutWithStripe">Pay using Stripe</text>
@@ -284,6 +285,7 @@
     <text name="Create">Create</text>
     <text name="CreateAccident">Add Incident</text>
     <text name="CreateAccidentReason">Create incident reason</text>
+    <text name="AccidentReasonName">Incident reason</text>
     <text name="PleaseSelectTheIncidentReason">Please select the incident reason</text>
     <text name="CreateAnAccount">Create account</text>
     <text name="CreateAppLocalization">Create app localization</text>
@@ -317,7 +319,7 @@
     <text name="CreateNewPickingType">Add new packing type</text>
     <text name="CreateNewPlateType">Add new plate type</text>
     <text name="CreateNewPort">Add new port</text>
-    <text name="CreateNewReceiver">Add new receiver</text>
+    <text name="CreateNewReceiver">Add New Receiver</text>
     <text name="CreateNewRole">Add new role</text>
     <text name="CreateNewRoute">Add new route</text>
     <text name="CreateNewRoutStep">Create New rout step</text>
@@ -334,7 +336,7 @@
     <text name="CreateNewTrailerType">Add new trailer type</text>
     <text name="CreateNewTransportType">Add new transport type</text>
     <text name="CreateNewTransportTypesTranslation">Add new transport type translation</text>
-    <text name="CreateNewTruck">Add new truck type</text>
+    <text name="CreateNewTruckType">Add new truck type</text>
     <text name="CreateNewTruckCapacitiesTranslation">Add new truck capacity translation</text>
     <text name="CreateNewTruckStatus">Add new truck status</text>
     <text name="CreateNewTruckStatusesTranslation">Add new truck statuses translation</text>
@@ -511,6 +513,7 @@
     <text name="DocumentFilesHeaderInfo">DocumentFilesHeaderInfo</text>
     <text name="DocumentFileWarnSizeLimit">Document exceeds the maximum allowed limit</text>
     <text name="DocumentManagement">Documents Management</text>
+    <text name="NonMandatoryDocuments">Non-Mandatory Documents</text>
     <text name="DocumentName">Document name</text>
     <text name="DatatableDocumentName">Document type</text>
     <text name="Documents">Documents</text>
@@ -774,7 +777,7 @@
     <text name="GoodCategoryDisplayName">Good category</text>
     <text name="GoodCategoryId">Good Category Id</text>
     <text name="GoodCategoryName">Good category</text>
-    <text name="MainGoodCategory">Good Details</text>
+    <text name="MainGoodCategory">Good category</text>
     <text name="GoodDetailsCantBeEmptyInDropPoint">Good details cant be empty in drop point</text>
     <text name="GoodsDetail">Goods Details</text>
     <text name="GoodsDetailName">Goods details</text>
@@ -877,7 +880,7 @@
     <text name="IsAttachable">Is attachable</text>
     <text name="IsBid">Is Bid</text>
     <text name="IsCookieConsentEnabled">Cookie consent enabled</text>
-    <text name="IsDangerousGood">Is dangerous good</text>
+    <text name="IsDangerousGood">Is dangerous goods</text>
     <text name="IsDisabled">Is disabled</text>
     <text name="IsEmailVerificationEnabled">Enable email verification.</text>
     <text name="IsEnabled">Is enabled</text>
@@ -1076,7 +1079,7 @@
     <text name="NewTermAndCondition">New Terms and Conditions</text>
     <text name="NewTransportType">New transport type</text>
     <text name="NewTripAssign">The new trip has assign to you.</text>
-    <text name="CreateNewTruck">Create new truck</text>
+    <text name="CreateNewTruck">Add new truck</text>
     <text name="NewTruckStatus">New truck status</text>
     <text name="NewTrucksType">New truck type</text>
     <text name="NewUserRegisteredNotificationDefinition">On a new user registered to the system</text>
@@ -1165,7 +1168,7 @@
     <text name="OtherReason">Other Reason</text>
     <text name="Others">Others</text>
     <text name="OtherSettings">Other Settings</text>
-    <text name="PackingType">Packing Type</text>
+    <text name="PackingType">Packing type</text>
     <text name="PackingTypes">Packing Type</text>
     <text name="PackingTypesHeaderInfo">Packing types header info</text>
     <text name="PageDeleteWarningMessage">Are you sure to remove "{0}" page?</text>
@@ -1244,6 +1247,7 @@ content that we shared with you.</text>
     <text name="PickGoodCategory">Select good category</text>
     <text name="PickGoodsDetail">Pick goods detail</text>
     <text name="PickingType">Packing type</text>
+    <text name="DatatablePickingType">Type</text>
     <text name="PickingTypes">Packing types</text>
     <text name="PickingTypesHeaderInfo">Picking Types header info</text>
     <text name="PickNationality">Select nationality</text>
@@ -1341,7 +1345,7 @@ content that we shared with you.</text>
     <text name="ReceivingPaymentResult">Receiving payment result.</text>
     <text name="RecentTenants">Recent companies</text>
     <text name="RecentTenantsHelpText">Last {1} customers registered in {0} days...</text>
-    <text name="RechargeAmount">Balance management</text>
+    <text name="RechargeAmount">Balance Management</text>
     <text name="RecurringSubscriptionUpgradeNote">The price difference between your current edition and the one you are upgrading will be charged from your account.</text>
     <text name="ReferenceNo">Reference No.</text>
     <text name="Refresh">Refresh</text>
@@ -1485,7 +1489,7 @@ content that we shared with you.</text>
     <text name="SendDriectRequestForCarrier">Please send us a quote for the shipment No.: {id}.</text>
     <text name="SendEmailActivationLink_Information">A link will be sent to your email to activate your email address. If you don't get an email within a few minutes, please re-try.</text>
     <text name="Sender">Sender</text>
-    <text name="SendingWithThreeDot">Sending with three dot</text>
+    <text name="SendingWithThreeDot">Sending ...</text>
     <text name="SendPasswordResetLink_Information">A password reset link will be sent to your email to reset your password. If you don't get an email within a few minutes, please re-try.</text>
     <text name="SendPriceOfferToShipper">Send price offer to shipper</text>
     <text name="SendPricingOfferToShipper">Send pricing offer</text>
@@ -1602,7 +1606,7 @@ content that we shared with you.</text>
     <text name="StringLengthDoesntMatch">The field {0} must be a minimum length of {1} and a maximum length of {2}.</text>
     <text name="Strong">Strong</text>
     <text name="Submit">Submit</text>
-    <text name="SubmitInvoice">Carrier invoices</text>
+    <text name="SubmitInvoice">Carrier Invoices</text>
     <text name="SubmitInvoiceDetail">Submit invoice detail</text>
     <text name="SubmitInvoiceOnAccepted">
       <a href="/app/main/invoices/submitinvoices/detail/{groupid}">The submit invoice has been Accepted</a>
@@ -1819,7 +1823,7 @@ content that we shared with you.</text>
     <text name="Title">Title</text>
     <text name="TitleLogin">To Sign In , What Is Your Mobile Phone Number </text>
     <text name="TitleOTP">Enter The 4-Digit Code We Send To Mobile Number To Verify Your Account</text>
-    <text name="TMS">Transport management system (TMS)</text>
+    <text name="TMS">Transport Management System (TMS)</text>
     <text name="TMSSettings">TMS Settings</text>
     <text name="Today">Today</text>
     <text name="Toggle">Toggle</text>
@@ -2053,12 +2057,12 @@ content that we shared with you.</text>
     <text name="Vas">VAS</text>
     <text name="VasAmount">Vas amount</text>
     <text name="VasCount">Vas count</text>
-    <text name="VasDetails">VAS Details</text>
+    <text name="VasDetails">VAS</text>
     <text name="Vases">VAS</text>
     <text name="VasesHeaderInfo">Vases header info</text>
     <text name="VasName">VAS name</text>
     <text name="VasPrice">VAS price</text>
-    <text name="VasPrices">VAS prices</text>
+    <text name="VasPrices">Value Added Services Setting (VAS)</text>
     <text name="VasPricesHeaderInfo">Vas prices header info</text>
     <text name="VatAmount">Vat amount</text>
     <text name="VerificationCode">Verification code</text>
@@ -2088,7 +2092,7 @@ content that we shared with you.</text>
     <text name="Warning">Warning</text>
     <text name="WaybillNumber">Waybill Number</text>
     <text name="Waybills">Waybills</text>
-    <text name="Waypoints">Way points</text>
+    <text name="Waypoints">Pickup/Drop Off Locations</text>
     <text name="Weak">Weak</text>
     <text name="WebhookEndpoint">Webhook Endpoint</text>
     <text name="WebhookEvent">Webhook Event</text>
