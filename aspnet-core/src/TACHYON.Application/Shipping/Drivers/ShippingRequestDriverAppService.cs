@@ -253,21 +253,29 @@ namespace TACHYON.Shipping.Drivers
         {
             DisableTenancyFilters();
             var CurrentPoint = await _shippingRequestDriverManager.GetActivePoint();
-            var trip = CurrentPoint.ShippingRequestTripFk;
-
-            if (CurrentPoint.PickingType == PickingType.Pickup &&  trip.RoutePointStatus != RoutePointStatus.FinishLoading) throw new UserFriendlyException(L("TheTripIsNotFound"));
-
-            if (trip.RoutePointStatus == RoutePointStatus.FinishLoading)
+            ShippingRequestTrip trip = default;
+            if (CurrentPoint !=null)
             {
-                CurrentPoint.IsActive = false;
-                CurrentPoint.IsComplete = true;
-                CurrentPoint.EndTime = Clock.Now;
+                 trip = CurrentPoint.ShippingRequestTripFk;
+
+                if (CurrentPoint.PickingType == PickingType.Pickup && trip.RoutePointStatus != RoutePointStatus.FinishLoading) throw new UserFriendlyException(L("TheTripIsNotFound"));
+
+                if (trip.RoutePointStatus == RoutePointStatus.FinishLoading)
+                {
+                    CurrentPoint.IsActive = false;
+                    CurrentPoint.IsComplete = true;
+                    CurrentPoint.EndTime = Clock.Now;
+                }
+            }
+            else
+            {
+                trip = await _shippingRequestDriverManager.GetActiveTrip();
             }
 
                var Count= await _RoutPointRepository.GetAll()
                 .Where(x=> (
-                (x.IsActive && x.PickingType == PickingType.Dropoff && x.Id != PointId) ||
-                (x.Id == PointId && ( x.IsComplete || x.IsActive))) &&
+                (x.IsActive &&  x.PickingType == PickingType.Dropoff && x.Id != PointId) ||
+(x.Id == PointId && ( x.IsComplete || x.IsActive))) &&
                 x.ShippingRequestTripId == trip.Id).CountAsync();
 
             if (Count>0) throw new UserFriendlyException(L("ThereIsAnotherActivePointStillNotClose"));

@@ -113,7 +113,7 @@ namespace TACHYON.Shipping.Drivers
         public async Task<RoutPoint> GetActivePoint()
         {
             var ActivePoint = await _RoutPointRepository.GetAll().Include(x=>x.ShippingRequestTripFk).FirstOrDefaultAsync(x => x.IsActive && x.ShippingRequestTripFk.Status != ShippingRequestTripStatus.Canceled && x.ShippingRequestTripFk.AssignedDriverUserId == _abpSession.UserId);
-            if (ActivePoint == null) throw new UserFriendlyException(L("TheTripIsNotFound"));
+            //if (ActivePoint == null) throw new UserFriendlyException(L("TheTripIsNotFound"));
 
             return ActivePoint;
         }
