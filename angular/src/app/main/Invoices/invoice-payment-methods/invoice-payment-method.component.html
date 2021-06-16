@@ -1,0 +1,138 @@
+<div [@routerTransition]>
+  <div class="content d-flex flex-column flex-column-fluid">
+    <sub-header [title]="'PaymentMethods' | localize" [description]="'' | localize">
+      <div role="actions">
+        <button *ngIf="isGranted('Pages.Administration.Host.Invoices.PaymentMethod.Create')" (click)="Modal.show(null)" class="btn btn-primary blue">
+          <i class="fa fa-plus"></i> {{ l('Create') }}
+        </button>
+      </div>
+    </sub-header>
+
+    <div [class]="containerClass">
+      <div class="card card-custom gutter-b">
+        <div class="card-body">
+          <form class="form" autocomplete="off">
+            <div>
+              <div class="row align-items-center">
+                <div class="col-xl-12">
+                  <div class="form-group m-form__group align-items-center">
+                    <div class="input-group">
+                      <input
+                        [(ngModel)]="filterText"
+                        name="filterText"
+                        autoFocus
+                        class="form-control m-input"
+                        [placeholder]="l('SearchWithThreeDot')"
+                        type="text"
+                      />
+                      <span class="input-group-btn">
+                        <button (click)="getAll()" class="btn btn-primary" type="submit"><i class="flaticon-search-1"></i></button>
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </form>
+
+          <div class="row align-items-center">
+            <!--<Primeng-Datatable-Start>-->
+            <div class="primeng-datatable-container col-12" [busyIf]="primengTableHelper.isLoading">
+              <p-table
+                #dataTable
+                (onLazyLoad)="getAll($event)"
+                [value]="primengTableHelper.records"
+                rows="{{ primengTableHelper.defaultRecordsCountPerPage }}"
+                [paginator]="false"
+                [lazy]="true"
+                [scrollable]="true"
+                ScrollWidth="100%"
+                [responsive]="primengTableHelper.isResponsive"
+                [resizableColumns]="primengTableHelper.resizableColumns"
+              >
+                <ng-template pTemplate="header">
+                  <tr>
+                    <th
+                      style="width: 130px;"
+                      [hidden]="
+                        !isGrantedAny(
+                          'Pages.Administration.Host.Invoices.PaymentMethod.Edit',
+                          'Pages.Administration.Host.Invoices.PaymentMethod.Delete'
+                        )
+                      "
+                    >
+                      {{ l('Actions') }}
+                    </th>
+
+                    <th pSortableColumn="displayName">
+                      {{ l('DisplayName') }}
+                      <p-sortIcon field="displayName"></p-sortIcon>
+                    </th>
+                    <th pSortableColumn="PaymentType">
+                      {{ l('PaymentType') }}
+                      <p-sortIcon field="PaymentType"></p-sortIcon>
+                    </th>
+                  </tr>
+                </ng-template>
+                <ng-template pTemplate="body" let-record="$implicit">
+                  <tr>
+                    <td
+                      style="width: 130px;"
+                      [hidden]="
+                        !isGrantedAny(
+                          'Pages.Administration.Host.Invoices.PaymentMethod.Edit',
+                          'Pages.Administration.Host.Invoices.PaymentMethod.Delete'
+                        )
+                      "
+                    >
+                      <div class="btn-group dropdown" dropdown container="body">
+                        <button class="dropdown-toggle btn btn-sm btn-primary" dropdownToggle>
+                          <i class="fa fa-cog"></i><span class="caret"></span> {{ l('Actions') }}
+                        </button>
+                        <ul class="dropdown-menu" *dropdownMenu>
+                          <li>
+                            <a
+                              href="javascript:;"
+                              *ngIf="permission.isGranted('Pages.Administration.Host.Invoices.PaymentMethod.Edit')"
+                              class="dropdown-item"
+                              (click)="Modal.show(record)"
+                              >{{ l('Edit') }}</a
+                            >
+                          </li>
+                          <li>
+                            <a
+                              class="dropdown-item"
+                              href="javascript:;"
+                              *ngIf="permission.isGranted('Pages.Administration.Host.Invoices.PaymentMethod.Delete')"
+                              (click)="delete(record)"
+                              >{{ l('Delete') }}</a
+                            >
+                          </li>
+                        </ul>
+                      </div>
+                    </td>
+
+                    <td>
+                      <span class="ui-column-title"> {{ l('DisplayName') }}</span>
+                      {{ record.displayName }}
+                    </td>
+                    <td>
+                      <span class="ui-column-title"> {{ l('PaymentType') }}</span>
+                      {{ DisplayPaymentTitle(record.paymentType) }} {{ record.paymentType == 3 ? record.invoiceDueDateDays : '' }}
+                    </td>
+                  </tr>
+                </ng-template>
+              </p-table>
+              <div class="primeng-no-data" *ngIf="primengTableHelper.totalRecordsCount == 0 && IsStartSearch">
+                {{ l('NoData') }}
+              </div>
+            </div>
+            <!--<Primeng-Datatable-End>-->
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <invoice-payment-method-model #Modal (modalSave)="update($event)"></invoice-payment-method-model>
+  </div>
+</div>

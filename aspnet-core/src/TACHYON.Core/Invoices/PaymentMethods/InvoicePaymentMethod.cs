@@ -10,7 +10,7 @@ namespace TACHYON.Invoices.PaymentMethods
     {
         [StringLength(250)]
         public string DisplayName { get; set; }
-        public InvoicePaymentMethodType PaymentMethodType { get; set; }
+        public InvoicePaymentType PaymentType { get; set; }
 
         public int InvoiceDueDateDays { get; set; }
 

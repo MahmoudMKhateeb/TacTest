@@ -53,6 +53,7 @@ import { GroupDetailComponent } from '@app/main/invoices/groupsPeriods/group-det
 import { InvoiceDetailComponent } from '@app/main/invoices/invoice-detail/invoice-detail.component';
 import { InvoicesListComponent } from '@app/main/invoices/invoices-list/invoices-list.component';
 import { InvoicePeriodsListComponent } from '@app/main/invoices/invoice-periods-list/invoice-periods-list.component';
+import { InvoicePaymentMethodComponent } from '@app/main/invoices/invoice-payment-methods/invoice-payment-method.component';
 import { TransactionListComponent } from '@app/main/invoices/transaction/transaction-list/transaction-list.component';
 import { GroupDetailResolverService } from '@app/main/invoices/groupsPeriods/group-detail/group-detail-resolver.service';
 import { AccidentReasonComponent } from '@app/main/accidents/reasons/reason.component';
@@ -247,6 +248,12 @@ import { ComingSoonComponent } from '@app/main/commingSoon/comingSoon.component'
             },
           },
           { path: 'invoices/periods', component: InvoicePeriodsListComponent, data: { permission: 'Pages.Administration.Host.Invoices.Periods' } },
+          {
+            path: 'invoices/paymentlist',
+            component: InvoicePaymentMethodComponent,
+            data: { permission: 'Pages.Administration.Host.Invoices.PaymentMethods' },
+          },
+
           { path: 'invoices/transaction', component: TransactionListComponent, data: { permission: 'Pages.Invoices.Transaction' } },
 
           {

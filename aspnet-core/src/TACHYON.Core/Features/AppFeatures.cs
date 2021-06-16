@@ -35,6 +35,8 @@
         public const string TachyonDealerMinValueCommission = "TachyonDealer.TachyonDealerMinValueCommission";
         public const string TachyonDealerCommissionType = "App.Shipper.TachyonDealerCommissionType";
 
+        public const string InvoicePaymentMethod = "App.Shipper.Invoice.Payment.Method";
+
         #region Comission
         #region Shipper between carrier
         #region Trip Comission

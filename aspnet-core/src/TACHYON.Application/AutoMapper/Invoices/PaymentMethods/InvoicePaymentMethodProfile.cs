@@ -9,7 +9,7 @@ namespace TACHYON.AutoMapper.Invoices.PaymentMethods
         public InvoicePaymentMethodProfile()
         {
             CreateMap<InvoicePaymentMethod, InvoicePaymentMethodListDto>();
-            CreateMap<CreateOrEditInvoicePaymentMethod, InvoicePaymentMethodListDto>().ReverseMap();
+            CreateMap<CreateOrEditInvoicePaymentMethod, InvoicePaymentMethod>();
 
         }
     }

@@ -392,6 +392,12 @@
         public const string Pages_Administration_Host_Invoices_Period_Delete = "Pages.Administration.Host.Invoices.Period.Delete";
         public const string Pages_Administration_Host_Invoices_Period_Enabled = "Pages.Administration.Host.Invoices.Period.Enbaled";
 
+        public const string Pages_Administration_Host_Invoices_PaymentMethods = "Pages.Administration.Host.Invoices.PaymentMethods";
+        public const string Pages_Administration_Host_Invoices_PaymentMethod_Create = "Pages.Administration.Host.Invoices.PaymentMethod.Create";
+        public const string Pages_Administration_Host_Invoices_PaymentMethod_Edit = "Pages.Administration.Host.Invoices.PaymentMethod.Edit";
+        public const string Pages_Administration_Host_Invoices_PaymentMethod_Delete = "Pages.Administration.Host.Invoices.PaymentMethod.Delete";
+
+        
         public const string Pages_Invoices = "Pages.Invoices";
         public const string Pages_Administration_Host_Invoices_Delete = "Pages.Administration.Host.Invoices.Invoices.Delete";
         public const string Pages_Administration_Host_Invoices_MakePaid = "Pages.Administration.Host.Invoices.MakePaid";

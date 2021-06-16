@@ -220,6 +220,8 @@ import { SubmitInvoiceRejectedModelComponent } from '@app/main/invoices/groupsPe
 
 import { InvoiceDetailComponent } from '@app/main/invoices/invoice-detail/invoice-detail.component';
 import { TransactionListComponent } from '@app/main/invoices/transaction/transaction-list/transaction-list.component';
+import { InvoicePaymentMethodComponent } from '@app/main/invoices/invoice-payment-methods/invoice-payment-method.component';
+import { InvoicePaymentMethodModelComponent } from '@app/main/invoices/invoice-payment-methods/invoice-payment-method-model.component';
 
 import { AccidentReasonComponent } from '@app/main/accidents/reasons/reason.component';
 import { AccidentReasonComponentModalComponent } from '@app/main/accidents/reasons/create-or-edit-reason-modal.component';
@@ -421,6 +423,8 @@ NgxBootstrapDatePickerConfigService.registerNgxBootstrapDatePickerLocales();
     GroupDetailComponent,
     SubmitInvoiceRejectedModelComponent,
     TransactionListComponent,
+    InvoicePaymentMethodComponent,
+    InvoicePaymentMethodModelComponent,
     PointsComponent,
     TripsForViewShippingRequestComponent,
     CreateOrEditTripComponent,

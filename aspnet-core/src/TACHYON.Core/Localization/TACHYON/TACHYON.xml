@@ -12,6 +12,7 @@
     <text name="Accept">Accept</text>
     <text name="AcceptBid">Accept price</text>
     <text name="Accepted">Accepted</text>
+    <text name="AcceptedAndWaitingForCarrier">Waiting for carrier approval</text>
     <text name="AcceptedAndWaitingForShipper">Waiting approve by shipper</text>
     <text name="AcceptedDate">Accepted date</text>
     <text name="AcceptPrice">Accept price</text>
@@ -145,7 +146,7 @@
     <text name="BidStartDate">Bid start date</text>
     <text name="BidUpdatedSuccessfully">Bid updated successfully</text>
     <text name="Billing">Billing</text>
-    <text name="BillingInterval">Payment methods</text>
+    <text name="BillingInterval">Billing Interval</text>
     <text name="BillingIntervalHeaderInfo">Billing interval header info</text>
     <text name="BillingIntervalType">Billing interval type</text>
     <text name="BillTo">Bill to</text>
@@ -1214,6 +1215,7 @@ content that we shared with you.</text>
     <text name="PaymentHistory">Payment history</text>
     <text name="PaymentId">Payment id</text>
     <text name="PaymentInfo">Payment info</text>
+    <text name="PaymentMethods">Payment methods</text>
     <text name="PaymentMightBeExpiredWarning">Your operation might be timed out, please contact us if you already made the payment.</text>
     <text name="PaymentPeriodType">Billing intervals</text>
     <text name="PaymentPeriodType_Annual">Annual</text>
@@ -1800,6 +1802,7 @@ code:{0}</text>
     <text name="Theme_Theme7">Theme 7</text>
     <text name="Theme_Theme8">Theme 8</text>
     <text name="Theme_Theme9">Theme 9</text>
+    <text name="TheNameIsRepeated">The name is repeated</text>
     <text name="TheNameOfTheCompanyInTheCR">The name of the company in the CR.</text>
     <text name="TheNumberLengthMustBeLessThanMaxDigits">The Number Length Must Be Less Than MaxDigits</text>
     <text name="TheNumberLengthMustBeMoreThanMinDigits">The Number Length Must Be More Than MinDigits</text>
@@ -1834,6 +1837,9 @@ code:{0}</text>
     <text name="TitleLogin">To Sign In , What Is Your Mobile Phone Number </text>
     <text name="TitleOTP">Enter The 4-Digit Code We Send To Mobile Number To Verify Your Account</text>
     <text name="TMS">Transport management system</text>
+    <text name="TMSAcceptedOffer">
+      <a href="/app/main/shippingRequests/shippingRequests/view?id={id}">The {name} has been accepted offer.</a>
+    </text>
     <text name="TMSSettings">TMS Settings</text>
     <text name="Today">Today</text>
     <text name="Toggle">Toggle</text>
@@ -2165,6 +2171,7 @@ code:{0}</text>
     <text name="YouCanDeleteDirectRequestOnlyWhenTheStatusIsNew">You can delete direct Request only when the status is new</text>
     <text name="YouCanManageUsersOrganizationUnitsFromOrganizationUnitsPage">You can manage user's organization units From organization units page.</text>
     <text name="YouCanNoCreateOrEditPriceWhenThePriceAccepted">You can no create or edit price when the price accepted.</text>
+    <text name="YouCannotAcceptLowerThanPriceSentToShipper">You cannot accept a price lower than the price sent to the shipper</text>
     <text name="YouCannotBeFriendWithYourself">You can not be a friend with yourself.</text>
     <text name="YouCanNotDeleteOwnAccount">You can't delete your account</text>
     <text name="YouCannotLinkToSameAccount">You can not link to same account!</text>

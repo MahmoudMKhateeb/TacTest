@@ -141,6 +141,7 @@ import { TerminologieServiceProxy } from 'shared/service-proxies/terminologies-e
     ApiServiceProxies.TenantCarrierServiceProxy,
     ApiServiceProxies.ShippingRequestDirectRequestServiceProxy,
     ApiServiceProxies.PriceOfferServiceProxy,
+    ApiServiceProxies.InvoicePaymentMethodServiceProxy,
     TerminologieServiceProxy,
     { provide: RefreshTokenService, useClass: ZeroRefreshTokenService },
     { provide: AbpHttpConfigurationService, useClass: ZeroTemplateHttpConfigurationService },
