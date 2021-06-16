@@ -211,6 +211,7 @@
         public const string Pages_Offers_Edit = "Pages.Offers.Edit";
         public const string Pages_Offers_Delete = "Pages.Offers.Delete";
         public const string Pages_Offers_Reject = "Pages.Offers.Reject";
+        public const string Pages_Offers_Cancel = "Pages.Offers.Cancel";
         public const string Pages_Offers_Accept = "Pages.Offers.Accept";
 
 

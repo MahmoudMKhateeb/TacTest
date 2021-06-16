@@ -15,6 +15,27 @@
           <button type="button" (click)="close()" class="close closeModal" data-dismiss="modal" aria-label="Close">
             <i class="fas fa-times"></i>
           </button>
+          <form class="form" autocomplete="off">
+            <div>
+              <div class="row mb-4">
+                <div class="col-xl-12">
+                  <div class="input-group">
+                    <input
+                      [(ngModel)]="filterText"
+                      name="filterText"
+                      autoFocus
+                      class="form-control m-input"
+                      [placeholder]="l('SearchWithThreeDot')"
+                      type="text"
+                    />
+                    <span class="input-group-btn">
+                      <button (click)="getDirectRequests()" class="btn btn-primary" type="submit"><i class="flaticon-search-1"></i></button>
+                    </span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </form>
           <div class="primeng-datatable-container" [busyIf]="primengTableHelper.isLoading">
             <p-table
               #dataTableForCarrier

@@ -66,6 +66,41 @@ export class PriceOfferViewModelComponent extends AppComponentBase {
       }
     });
   }
+
+  acceptoffer(): void {
+    this.message.confirm('', this.l('AreYouSure'), (isConfirmed) => {
+      if (isConfirmed) {
+        this._CurrentServ.accept(this.offer.id).subscribe((result) => {
+          this.notify.success(this.l('SuccessfullyAccepted'));
+          this.offer.status = result;
+          this.modalRefresh.emit(null);
+          //this.modalDelete.emit(null);
+          //this.close();
+        });
+      }
+    });
+  }
+  SendOffer(): void {}
+  CancelAccepted(): void {
+    this.message.confirm('', this.l('AreYouSure'), (isConfirmed) => {
+      if (isConfirmed) {
+        this._CurrentServ.cancel(this.offer.id).subscribe(() => {
+          this.notify.success(this.l('SuccessfullyCanceled'));
+          this.offer.status = PriceOfferStatus.New;
+          //this.modalDelete.emit(null);
+          //this.close();
+        });
+      }
+    });
+  }
+  canSendOfferOrCancel() {
+    if (this.offer.shippingRequestStatus == ShippingRequestStatus.NeedsAction && this.offer.status == PriceOfferStatus.Pending) {
+      if (this.feature.isEnabled('App.TachyonDealer') || !this.appSession.tenantId) {
+        return true;
+      }
+    }
+    return false;
+  }
   canEditOffer() {
     if (
       this.offer.tenantId == this.appSession.tenantId &&
@@ -76,11 +111,15 @@ export class PriceOfferViewModelComponent extends AppComponentBase {
     }
     return false;
   }
+
   canAcceptOrRejectOffer() {
-    if (this.offer.shippingRequestStatus == ShippingRequestStatus.NeedsAction && this.offer.status == PriceOfferStatus.New) {
+    if (
+      this.offer.shippingRequestStatus == ShippingRequestStatus.NeedsAction &&
+      (this.offer.status == PriceOfferStatus.New || this.offer.status == PriceOfferStatus.AcceptedAndWaitingForShipper)
+    ) {
       if (this.offer.isTachyonDeal && (this.feature.isEnabled('App.TachyonDealer') || !this.appSession.tenantId) && this.offer.editionId != 4) {
         return true;
-      } else if (!this.offer.isTachyonDeal && this.feature.isEnabled('App.Shipper')) {
+      } else if (this.feature.isEnabled('App.Shipper')) {
         return true;
       }
     }
@@ -96,7 +135,9 @@ export class PriceOfferViewModelComponent extends AppComponentBase {
     }
     return false;
   }
-  reject() {
+  reject(reason: string) {
+    this.offer.status = PriceOfferStatus.Rejected;
+    this.offer.rejectedReason = reason;
     this.modalRefresh.emit(null);
   }
 }

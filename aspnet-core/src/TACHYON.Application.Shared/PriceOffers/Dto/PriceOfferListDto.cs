@@ -12,7 +12,7 @@ namespace TACHYON.PriceOffers.Dto
         public PriceOfferChannel Channel { get; set; }
         public decimal TotalAmount { get; set; }
         public  DateTime CreationTime { get; set; }
-        public string StatusTitle { get { return Status.GetEnumDescription(); } }
+        public string StatusTitle { get; set; }
         public string PriceTypeTitle { get { return PriceType.GetEnumDescription(); } }
 
         public string ChannelTitle { get { return Channel.GetEnumDescription(); } }

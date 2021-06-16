@@ -111,7 +111,7 @@ namespace TACHYON.Shipping.ShippingRequests
             return await _shippingRequestRepository
                                         .GetAll()
                                         .WhereIf(await _featureChecker.IsEnabledAsync(AppFeatures.Shipper), x => x.TenantId == _abpSession.TenantId && !x.IsTachyonDeal)
-                                        .FirstOrDefaultAsync(r => r.Id == ShippingRequestId && (r.Status == ShippingRequestStatus.NeedsAction || r.Status == ShippingRequestStatus.PrePrice));
+                                        .FirstOrDefaultAsync(r => r.Id == ShippingRequestId && (r.Status == ShippingRequestStatus.NeedsAction || r.Status == ShippingRequestStatus.PrePrice || r.Status== ShippingRequestStatus.AcceptedAndWaitingCarrier));
         }
     }
 }

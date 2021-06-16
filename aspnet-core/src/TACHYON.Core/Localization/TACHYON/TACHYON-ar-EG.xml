@@ -12,6 +12,7 @@
     <text name="Accept">قبول</text>
     <text name="AcceptBid" />
     <text name="Accepted">مقبول</text>
+    <text name="AcceptedAndWaitingForShipper">بإنتظار موافقة الشاحن</text>
     <text name="AcceptedDate">تاريخ القبول</text>
     <text name="AcceptPrice">الموافقة على السعر</text>
     <text name="Accesstoyourapplicationsandresources,evenwhenyouareoffline">الوصول إلى التطبيقات والموارد الخاصة بك، حتى عندما لاتكون متصلا</text>
@@ -223,6 +224,7 @@
     <text name="Close">إغلاق</text>
     <text name="Code">رمز</text>
     <text name="Collapse">قلّص</text>
+    <text name="Commission">العمولة</text>
     <text name="CommissionAmount">مبلغ العمولة</text>
     <text name="CommissionMinimumValue">الحد الأدنى</text>
     <text name="CommissionPercentage">نسبه</text>
@@ -1098,6 +1100,9 @@
     <text name="PaymentPeriodType_Daily">يومي</text>
     <text name="PaymentPeriodType_Monthly">شهري</text>
     <text name="PaymentPeriodType_Weekly">اسبوعي</text>
+    <text name="PendingOffer">
+      <a href="/app/main/offers/list?id={id}">تم استلام عرضك المالي وقيد المراجعة من المسؤول.</a>
+    </text>
     <text name="PerDay">في اليوم</text>
     <text name="Period">فترة</text>
     <text name="Permission">الصلاحيات</text>
@@ -1215,7 +1220,7 @@
     <text name="Reject">رفض</text>
     <text name="Rejected">مرفوض</text>
     <text name="RejectedOffer">
-      <a href="/app/main/directrequest/list?id={id}">لقد تم رفض عرضك من قبل {rejectedby}.</a>
+      <a href="/app/main/offers/list?id={id}">لقد تم رفض عرضك من قبل {rejectedby}.</a>
     </text>
     <text name="RejectedReason">سبب الرفض</text>
     <text name="RejectionReason">سبب رفض المستند</text>
@@ -1235,6 +1240,7 @@
     <text name="RenamePage">إعادة تسمية الصفحة</text>
     <text name="Reply">رد</text>
     <text name="Reports">تقارير</text>
+    <text name="RePricing">إعادة تسعير</text>
     <text name="RequestedFileDoesNotExists">لم نعثر على الملف المطلوب</text>
     <text name="Requests">الطلبات</text>
     <text name="RequestTimedOut">انتهت مهلة طلبك، الرجاء إعادة المحاولة لاحقا.</text>
@@ -1481,6 +1487,7 @@
     <text name="Success">نجاح</text>
     <text name="SuccessfullyActivated">تم التفعيل بنجاح</text>
     <text name="SuccessfullyAdded">تمت الإضافة بنجاح.</text>
+    <text name="SuccessfullyCanceled">تم الإلغاء بنجاح</text>
     <text name="SuccessfullyDeactivated">تم إلغاء التفعيل بنجاح</text>
     <text name="SuccessfullyDeclined">تم رفض التسعير بنجاح</text>
     <text name="SuccessfullyDeleted">تم الحذف بنجاح</text>
@@ -1657,6 +1664,8 @@
     <text name="TotalAmount">المبلغ الإجمالي</text>
     <text name="TotalBidsCount">عدد عروض التسعيرات</text>
     <text name="TotalOfDrop">عدد مرات التنزيل: {0}</text>
+    <text name="TotalOffer">عرض</text>
+    <text name="TotalOffers">عروض</text>
     <text name="TotalRecordsCount">المجموع: {0}</text>
     <text name="TotalsTripsAddByShippier">عدد الشحنات التي تم إضافتها من قبل الشاحن</text>
     <text name="TotalWeight" />
@@ -1887,6 +1896,7 @@
     <text name="VlaueMustBeGreaterThan">يجب أن تكون القيمة أكبر من</text>
     <text name="WaitAfterSubscriptionExpireDate">انتظر بعد انتهاء صلاحية الاشتراك</text>
     <text name="WaitingDayAfterExpire">أيام الانتظار بعد انتهاء الصلاحية</text>
+    <text name="WaitingForResponse">بإنتظار الاستجابه</text>
     <text name="WaitingForReviewMsg">الرجاء الإنتظار حتى يتم مراجعة المستندات التي تم تقديمها</text>
     <text name="Warning">تحذير</text>
     <text name="WaybillNumber">رقم وثيقة الشحن</text>

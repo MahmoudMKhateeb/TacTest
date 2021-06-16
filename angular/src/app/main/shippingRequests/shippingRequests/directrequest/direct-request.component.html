@@ -59,14 +59,14 @@
               </td>
 
               <td style="width: 150px;">
-                <div class="btn-group dropdown" dropdown container="body">
+                <div *ngIf="record.status == 0 || record.status == 5" class="btn-group dropdown" dropdown container="body">
                   <div class="row ml-1">
                     <button class="dropdown-toggle btn btn-sm btn-primary" dropdownToggle>
                       <i class="fa fa-cog"></i><span class="caret"></span> {{ l('Actions') }}
                     </button>
                   </div>
                   <ul class="dropdown-menu" *dropdownMenu>
-                    <li *ngIf="record.status == 0 || record.status == 5">
+                    <li>
                       <a class="dropdown-item" href="javascript:;" (click)="delete(record)">{{ l('Delete') }}</a>
                     </li>
                   </ul>

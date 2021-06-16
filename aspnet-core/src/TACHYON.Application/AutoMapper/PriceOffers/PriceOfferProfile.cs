@@ -17,7 +17,8 @@ namespace TACHYON.AutoMapper.PriceOffers
             CreateMap<CreateOrEditPriceOfferInput, PriceOffer>();
             CreateMap<PriceOfferDetail, PriceOfferItem>();
             CreateMap<PriceOffer, PriceOfferListDto>()
-                .ForMember(dst => dst.Name, opt => opt.MapFrom(src => src.Tenant.Name));
+                .ForMember(dst => dst.Name, opt => opt.MapFrom(src => src.Tenant.Name))
+                .ForMember(dst => dst.StatusTitle, opt => opt.MapFrom(src => src.Status.GetEnumDescription()));
 
 
             CreateMap<PriceOffer, PriceOfferDto>()
@@ -34,7 +35,7 @@ namespace TACHYON.AutoMapper.PriceOffers
                 .ForMember(dst => dst.ParentItemId, opt => opt.MapFrom(src => src.VasId))
                 .ForMember(dst => dst.ItemName, opt => opt.MapFrom(src => src.VasFk.Name))
                 .ForMember(dst => dst.PriceType, opt => opt.MapFrom(src => PriceOfferType.Vas))
-                .ForMember(dst => dst.Quantity, opt => opt.MapFrom(src => src.RequestMaxAmount+src.RequestMaxCount));
+                .ForMember(dst => dst.Quantity, opt => opt.MapFrom(src => src.RequestMaxCount>=1?src.RequestMaxCount:1));
 
             CreateMap<ShippingRequest, GetShippingRequestForPriceOfferListDto>()
              .ForMember(dst => dst.Name, opt => opt.MapFrom(src => src.Tenant.Name))

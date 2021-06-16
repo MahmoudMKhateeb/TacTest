@@ -733,7 +733,7 @@ namespace TACHYON.Notifications
             await _notificationPublisher.PublishAsync(AppNotificationNames.ShippingRequestSendOfferWhenUpdatePrice, notificationData, userIds: users.ToArray());
         }
 
-        public async Task ShipperAcceptedOffers(PriceOffer offer, PriceOffer parentOffer)
+        public async Task ShipperAcceptedOffer(PriceOffer offer)
         {
             var notificationData = new LocalizableMessageNotificationData(
                                     new LocalizableString(L("ShipperAcceptedOffers"),
@@ -743,15 +743,26 @@ namespace TACHYON.Notifications
             notificationData["shipper"] = offer.ShippingRequestFK.Tenant.Name;
             List<UserIdentifier> users = new List<UserIdentifier>();
             users.Add(new UserIdentifier(offer.TenantId, offer.CreatorUserId.Value));
-            if (parentOffer !=null)
-            {
-                users.Add(new UserIdentifier(parentOffer.TenantId, parentOffer.CreatorUserId.Value));
-            }
 
-            await _notificationPublisher.PublishAsync(AppNotificationNames.ShipperAcceptedOffers, notificationData, userIds: users.ToArray());
+            await _notificationPublisher.PublishAsync(AppNotificationNames.ShipperAcceptedOffer, notificationData, userIds: users.ToArray());
 
         }
+        public async Task TMSAcceptedOffer(PriceOffer offer)
+        {
+            var notificationData = new LocalizableMessageNotificationData(
+                                    new LocalizableString(L("TMSAcceptedOffer"),
+                                    TACHYONConsts.LocalizationSourceName));
+            notificationData["offerid"] = offer.Id;
+            notificationData["id"] = offer.ShippingRequestId;
+            notificationData["name"] = L("TachyonManageService");
+            List<UserIdentifier> users = new List<UserIdentifier>();
+            users.Add(new UserIdentifier(offer.TenantId, offer.CreatorUserId.Value));
 
+
+            await _notificationPublisher.PublishAsync(AppNotificationNames.TMSAcceptedOffer, notificationData, userIds: users.ToArray());
+
+        }
+   
         public async Task SendDriectRequest(string FromTenant, int? ToTenant, long id)
         {
             var notificationData = new LocalizableMessageNotificationData(
@@ -790,6 +801,18 @@ namespace TACHYON.Notifications
 
             await _notificationPublisher.PublishAsync(AppNotificationNames.RejectedOffer, notificationData, userIds: users.ToArray());
         }
+        public async Task PendingOffer(PriceOffer offer)
+        {
+            var notificationData = new LocalizableMessageNotificationData(
+                                    new LocalizableString(L("PendingOffer"),
+                                    TACHYONConsts.LocalizationSourceName));
+            notificationData["id"] = offer.Id;
+            List<UserIdentifier> users = new List<UserIdentifier>();
+            users.Add(new UserIdentifier(offer.TenantId, offer.CreatorUserId.Value));
+            //L("TachyonManageService")
+            await _notificationPublisher.PublishAsync(AppNotificationNames.PendingOffer, notificationData, userIds: users.ToArray());
+        }
+
         #endregion
         #endregion
 

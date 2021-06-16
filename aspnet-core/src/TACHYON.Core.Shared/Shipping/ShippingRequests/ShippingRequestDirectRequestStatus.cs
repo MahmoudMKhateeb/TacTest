@@ -9,6 +9,7 @@ namespace TACHYON.Shipping.ShippingRequests
         Accepted=2,
         Rejected=3,
         [Description("DeclinedOfPricing")]
-        Declined=5
+        Declined=5,
+        Pending=6
     }
 }

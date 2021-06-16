@@ -14,7 +14,7 @@
         <button type="button" class="close closeModal" data-dismiss="modal" (click)="close()" aria-label="Close">
           <i class="fas fa-times"></i>
         </button>
-        <form class="contentSetPrice" #Form="ngForm" novalidate (ngSubmit)="sendOffer()">
+        <form class="contentSetPrice" #Form="ngForm" novalidate (ngSubmit)="confirmSendOffer()">
           <div class="table-sendOffer">
             <table>
               <thead>
@@ -40,7 +40,7 @@
                     {{l('Total')}}
                   </th>
                   <th *ngIf="!feature.isEnabled('App.Carrier')">
-                    {{l('TotalCommission')}}
+                    {{l('Commission')}}
                   </th>
                 </tr>
               </thead>
@@ -55,6 +55,7 @@
                       name="itemPrice"
                       [(ngModel)]="offer.itemPrice"
                       (change)="calculator();"
+                      required
                     />
                   </td>
                   <td *ngIf="!feature.isEnabled('App.Carrier')">
@@ -143,6 +144,7 @@
                       min="1"
                       (change)="calculatorItem(item)"
                       (keypress)="numberOnly($event)"
+                      required
                     />
                   </td>
                   <td>

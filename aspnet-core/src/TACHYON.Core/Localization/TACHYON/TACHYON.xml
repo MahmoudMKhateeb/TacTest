@@ -12,6 +12,7 @@
     <text name="Accept">Accept</text>
     <text name="AcceptBid">Accept price</text>
     <text name="Accepted">Accepted</text>
+    <text name="AcceptedAndWaitingForShipper">Waiting approve by shipper</text>
     <text name="AcceptedDate">Accepted date</text>
     <text name="AcceptPrice">Accept price</text>
     <text name="AcceptShippingRequestNotificationMessage">Shipping request bid accepted</text>
@@ -251,6 +252,7 @@
     <text name="Close">Close</text>
     <text name="Code">Code</text>
     <text name="Collapse">Collapse</text>
+    <text name="Commission">Commission</text>
     <text name="CommissionAmount">Commission amount</text>
     <text name="CommissionMinimumValue">Minimum value</text>
     <text name="CommissionPercentage">Percentage</text>
@@ -1219,6 +1221,9 @@ content that we shared with you.</text>
     <text name="PaymentPeriodType_Monthly">Monthly</text>
     <text name="PaymentPeriodType_Weekly">Weekly</text>
     <text name="PayuponDelivery">Payupon delivery</text>
+    <text name="PendingOffer">
+      <a href="/app/main/offers/list?id={id}">Your offer has been received and is under review from the responsible.</a>
+    </text>
     <text name="PerDay">Per day</text>
     <text name="Period">Period</text>
     <text name="Permission">Permission</text>
@@ -1351,7 +1356,7 @@ content that we shared with you.</text>
     <text name="Reject">Reject</text>
     <text name="Rejected">Rejected</text>
     <text name="RejectedOffer">
-      <a href="/app/main/directrequest/list?id={id}">You offer has been rejected by {rejectedby}.</a>
+      <a href="/app/main/offers/list?id={id}">You offer has been rejected by {rejectedby}.</a>
     </text>
     <text name="RejectedReason">Rejected reason</text>
     <text name="RejectionReason">Rejection reason</text>
@@ -1372,6 +1377,7 @@ content that we shared with you.</text>
     <text name="RenamePage">Rename page</text>
     <text name="Reply">Reply</text>
     <text name="Reports">Reports</text>
+    <text name="RePricing">Re-pricing</text>
     <text name="RequestedFileDoesNotExists">Requested file does not exist!</text>
     <text name="RequestId">Request id</text>
     <text name="Requests">Requests</text>
@@ -1651,6 +1657,7 @@ code:{0}</text>
     <text name="SuccessfullyAccepted">Successfully accepted</text>
     <text name="SuccessfullyActivated">Successfully activated</text>
     <text name="SuccessfullyAdded">Successfully added</text>
+    <text name="SuccessfullyCanceled">Successfully canceled</text>
     <text name="SuccessfullyDeactivated">Successfully deactivated</text>
     <text name="SuccessfullyDeclined">Successfully declined</text>
     <text name="SuccessfullyDeleted">Successfully deleted.</text>
@@ -1837,6 +1844,8 @@ code:{0}</text>
     <text name="TotalBidsCount">Total bids</text>
     <text name="TotalCommission">Total commission</text>
     <text name="TotalOfDrop">Number of drops: {0}</text>
+    <text name="TotalOffer">Offer</text>
+    <text name="TotalOffers">Offers</text>
     <text name="TotalRecordsCount">Total: {0}</text>
     <text name="TotalsTripsAddByShippier">Totals trips add by shippier</text>
     <text name="TotalWeight">Total weight</text>
@@ -2089,6 +2098,7 @@ code:{0}</text>
     <text name="VlaueMustBeGreaterThan">Value must be greater than</text>
     <text name="WaitAfterSubscriptionExpireDate">Wait after subscription expire date</text>
     <text name="WaitingDayAfterExpire">Waiting day after expire</text>
+    <text name="WaitingForResponse">Waiting for response</text>
     <text name="WaitingForReviewMsg">Please wait until we review your documents</text>
     <text name="Warning">Warning</text>
     <text name="WaybillNumber">Waybill Number</text>

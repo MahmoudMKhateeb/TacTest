@@ -18,9 +18,9 @@ namespace TACHYON.PriceOffers
         Task Delete(EntityDto Input);
         Task<GetShippingRequestForPricingOutput> GetShippingRequestForPricing(GetShippingRequestForPricingInput input);
 
-         Task Accept(long id);
+         Task<PriceOfferStatus> Accept(long id);
          Task Reject(RejectPriceOfferInput input);
-        //Task SendOffer(long id);
+         Task Cancel(long id);
 
     }
 }

@@ -62,8 +62,11 @@ namespace TACHYON.Notifications
          Task ShippingRequestSendOfferWhenAddPrice(PriceOffer offer,string carrier);
          Task ShippingRequestSendOfferWhenUpdatePrice(PriceOffer offer,string carrier);
 
-        Task ShipperAcceptedOffers(PriceOffer offer, PriceOffer parentOffer);
+        Task ShipperAcceptedOffer(PriceOffer offer);
+        Task TMSAcceptedOffer(PriceOffer offer);
         Task RejectedOffer(PriceOffer offer, string RejectedBy);
+        Task PendingOffer(PriceOffer offer);
+
         Task SendDriectRequest(string FromTenant, int? ToTenant, long id);
         Task DeclineDriectRequest(string FromTenant, int? ToTenant, long id);
         #endregion

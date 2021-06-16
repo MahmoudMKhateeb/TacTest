@@ -44,7 +44,7 @@ export class DirectRequestTenantModelComponent extends AppComponentBase {
     this.primengTableHelper.showLoadingIndicator();
     this._currentServ
       .getAllCarriers(
-        undefined,
+        this.filterText,
         this.shippingRequestId,
         this.primengTableHelper.getSorting(this.dataTableForCarrier),
         this.primengTableHelper.getSkipCount(this.paginatorForCarrier, event),

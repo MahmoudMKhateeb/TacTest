@@ -77,64 +77,56 @@
                   {{ request.numberOfTrips }}
                 </span>
               </p>
-              <p>
-                <span>
-                  {{ l('approximateTripDistance') }}
-                </span>
-                <span>
-                  {{ distance }}
-                </span>
-              </p>
-              <p>
-                <span>
-                  {{ l('approximateTripDuration') }}
-                </span>
-                <span>
-                  {{ duration }}
-                </span>
-              </p>
             </div>
-            <div class="divirCard"></div>
+            <ng-template [ngIf]="Items.length">
+              <div class="divirCard"></div>
 
-            <div class="table-vas" *ngIf="Items.length">
-              <span class="titleVas">
-                {{ l('AddOns') }}
-              </span>
-              <table>
-                <thead>
-                  <tr>
-                    <th>
-                      Name
-                    </th>
+              <div class="table-vas">
+                <span class="titleVas">
+                  {{ l('AddOns') }}
+                </span>
+                <table>
+                  <thead>
+                    <tr>
+                      <th>
+                        Name
+                      </th>
 
-                    <th>
-                      Qty
-                    </th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr *ngFor="let item of Items">
-                    <td>
-                      {{ item.itemName }}
-                    </td>
+                      <th>
+                        Qty
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr *ngFor="let item of Items">
+                      <td>
+                        {{ item.itemName }}
+                      </td>
 
-                    <td>
-                      {{ item.quantity }}
-                    </td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
-            <div class="setPrice" *ngIf="canSetPrice()">
-              <button type="button" (click)="ModelPrice.show(request.id)">
-                {{ l('SetPriceOffer') }}
-              </button>
-            </div>
-            <div class="setPrice" *ngIf="shippingrequest.isPriced">
-              <button type="button" (click)="ModelViewPrice.show(request.id, shippingrequest.offerId)">
-                {{ l('PreviewOffer') }}
-              </button>
-            </div>
+                      <td>
+                        {{ item.quantity }}
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </ng-template>
+            <ng-template [ngIf]="canSetPrice()">
+              <div class="divirCard"></div>
+              <div class="setPrice">
+                <button type="button" (click)="ModelPrice.show(request.id)">
+                  {{ l('SetPriceOffer') }}
+                </button>
+              </div>
+            </ng-template>
+            <ng-template [ngIf]="shippingrequest.isPriced">
+              <div class="divirCard"></div>
+              <div class="setPrice">
+                <button type="button" (click)="ModelViewPrice.show(request.id, shippingrequest.offerId)">
+                  {{ l('PreviewOffer') }}
+                </button>
+              </div>
+            </ng-template>
           </div>
           <div class="map">
             <agm-map [latitude]="24.717942" [longitude]="46.675761" [zoom]="10">

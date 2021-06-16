@@ -92,6 +92,13 @@ export class PriceOfferModelComponent extends AppComponentBase {
     }
   }
 
+  confirmSendOffer() {
+    this.message.confirm('', this.l('AreYouSure'), (isConfirmed) => {
+      if (isConfirmed) {
+        this.sendOffer();
+      }
+    });
+  }
   sendOffer(): void {
     this.calculatorAll();
     let itemDetails: PriceOfferDetailDto[] = [];
