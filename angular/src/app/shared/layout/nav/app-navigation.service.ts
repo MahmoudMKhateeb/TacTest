@@ -86,7 +86,7 @@ export class AppNavigationService {
             undefined,
             undefined,
             undefined,
-            () => this._featureCheckerService.isEnabled('App.SendDirectRequest')
+            () => this._featureCheckerService.isEnabled('App.SendDirectRequest') || !this._appSessionService.tenantId
           ),
         ],
         undefined,
