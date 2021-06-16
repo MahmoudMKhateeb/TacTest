@@ -74,8 +74,8 @@ namespace TACHYON.Shipping.Drivers
             CurrentPoint.DocumentContentType = "image/jpeg";
             CurrentPoint.DocumentName = document.DocumentName;
             CurrentPoint.DocumentId = document.DocumentId;
-            CurrentPoint.IsActive = false;
-            CurrentPoint.IsComplete = true;
+            //CurrentPoint.IsActive = false;
+            //CurrentPoint.IsComplete = true;
             await SetRoutStatusTransition(CurrentPoint, RoutePointStatus.DeliveryConfirmation);
             var trip = CurrentPoint.ShippingRequestTripFk;
             trip.RoutePointStatus = RoutePointStatus.DeliveryConfirmation;
@@ -84,6 +84,8 @@ namespace TACHYON.Shipping.Drivers
                 trip.Status = ShippingRequestTripStatus.Delivered;
                 trip.RoutePointStatus = RoutePointStatus.Delivered;
                 trip.EndTripDate = Clock.Now;
+                CurrentPoint.IsActive = false;
+                CurrentPoint.IsComplete = true;
                 await Done(trip.ShippingRequestId, trip.Id);
             }
             else
