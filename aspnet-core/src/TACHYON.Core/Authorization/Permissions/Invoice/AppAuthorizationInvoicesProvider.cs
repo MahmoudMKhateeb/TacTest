@@ -34,6 +34,12 @@ namespace TACHYON.Authorization.Permissions.Invoice
             GroupPeriods.CreateChildPermission(AppPermissions.Pages_Administration_Host_Invoices_SubmitInvoices_Rejected, L("RejectedSubmitInvoices"), multiTenancySides: MultiTenancySides.Host);
             Invoices.CreateChildPermission(AppPermissions.Pages_Invoices_Transaction, L("Transaction"));
 
+
+            var paymentMethod = Invoices.CreateChildPermission(AppPermissions.Pages_Administration_Host_Invoices_PaymentMethods, L("PaymentMethods"), multiTenancySides: MultiTenancySides.Host);
+            paymentMethod.CreateChildPermission(AppPermissions.Pages_Administration_Host_Invoices_PaymentMethod_Create, L("Create"), multiTenancySides: MultiTenancySides.Host);
+            paymentMethod.CreateChildPermission(AppPermissions.Pages_Administration_Host_Invoices_PaymentMethod_Edit, L("Edit"), multiTenancySides: MultiTenancySides.Host);
+            paymentMethod.CreateChildPermission(AppPermissions.Pages_Administration_Host_Invoices_PaymentMethod_Delete, L("Delete"), multiTenancySides: MultiTenancySides.Host);
+
         }
     }
 }

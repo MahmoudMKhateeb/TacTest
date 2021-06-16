@@ -7,6 +7,7 @@ using Abp.UI.Inputs;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using TACHYON.Invoices.PaymentMethods;
 using TACHYON.Invoices.Periods;
 using TACHYON.PriceOffers;
 
@@ -15,10 +16,12 @@ namespace TACHYON.Features
     public class AppFeatureProvider : FeatureProvider
     {
         private IRepository<InvoicePeriod> _PeriodRepository;
+        private readonly IRepository<InvoicePaymentMethod> _invoicePaymentMethodRepository;
 
-        public AppFeatureProvider(IRepository<InvoicePeriod> periodRepository)
+        public AppFeatureProvider(IRepository<InvoicePeriod> periodRepository, IRepository<InvoicePaymentMethod> invoicePaymentMethodRepository)
         {
             _PeriodRepository = periodRepository;
+            _invoicePaymentMethodRepository = invoicePaymentMethodRepository;
         }
 
         [UnitOfWork]
@@ -230,7 +233,13 @@ namespace TACHYON.Features
             }
 
 
-
+            shipperFeature.CreateChildFeature(
+                AppFeatures.InvoicePaymentMethod,
+                "false",
+                L("InvoicePaymentMethod"),
+                inputType: new ComboboxInputType(new StaticLocalizableComboboxItemSource
+                (_invoicePaymentMethodRepository.GetAll()
+                .Select(x=> new LocalizableComboboxItem(x.Id.ToString(), L(x.DisplayName))).ToArray())));
 
 
             shipperFeature.CreateChildFeature(

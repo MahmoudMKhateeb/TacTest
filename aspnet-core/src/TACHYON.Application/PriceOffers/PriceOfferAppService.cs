@@ -295,7 +295,7 @@ namespace TACHYON.PriceOffers
         /// <returns></returns>
 
 
-        [AbpAuthorize(AppPermissions.Pages_Offers)]
+     
 
         public async Task<GetShippingRequestForPricingOutput> GetShippingRequestForPricing(GetShippingRequestForPricingInput input)
         {

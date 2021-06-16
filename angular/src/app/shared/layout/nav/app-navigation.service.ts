@@ -86,12 +86,12 @@ export class AppNavigationService {
             undefined,
             undefined,
             undefined,
-            () => this._featureCheckerService.isEnabled('App.SendDirectRequest')
+            () => this._featureCheckerService.isEnabled('App.SendDirectRequest') || !this._appSessionService.tenantId
           ),
         ],
         undefined,
         undefined,
-        () => !this._featureCheckerService.isEnabled('App.Carrier') && !this._featureCheckerService.isEnabled('App.Shipper')
+        () => this._featureCheckerService.isEnabled('App.TachyonDealer') || !this._appSessionService.tenantId
       ),
       //end of operations
       //start of requests
@@ -210,7 +210,18 @@ export class AppNavigationService {
             undefined,
             undefined,
             undefined,
-            () => !this._featureCheckerService.isEnabled('App.Carrier') && !this._featureCheckerService.isEnabled('App.Shipper')
+            () => this._featureCheckerService.isEnabled('App.TachyonDealer') || !this._appSessionService.tenantId
+          ),
+          new AppMenuItem(
+            'PaymentMethods',
+            'Pages.Invoices',
+            'label label-danger label-dot',
+            '/app/main/invoices/paymentlist',
+            undefined,
+            undefined,
+            undefined,
+            undefined,
+            () => this._featureCheckerService.isEnabled('App.TachyonDealer') || !this._appSessionService.tenantId
           ),
           new AppMenuItem(
             'BalnaceRecharges',
@@ -221,7 +232,7 @@ export class AppNavigationService {
             undefined,
             undefined,
             undefined,
-            () => !this._featureCheckerService.isEnabled('App.Carrier') && !this._featureCheckerService.isEnabled('App.Shipper')
+            () => this._featureCheckerService.isEnabled('App.TachyonDealer') || !this._appSessionService.tenantId
           ),
           new AppMenuItem(
             'SubmitInvoice',
@@ -232,7 +243,7 @@ export class AppNavigationService {
             undefined,
             undefined,
             undefined,
-            () => !this._featureCheckerService.isEnabled('App.Carrier') && !this._featureCheckerService.isEnabled('App.Shipper')
+            () => this._featureCheckerService.isEnabled('App.TachyonDealer') || !this._appSessionService.tenantId
           ),
           new AppMenuItem('FinancialTransActionMenu', 'Pages.Invoices.Transaction', 'flaticon2-document', '/app/main/invoices/transaction'),
         ]

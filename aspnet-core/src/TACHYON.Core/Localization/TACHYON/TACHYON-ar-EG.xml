@@ -12,6 +12,7 @@
     <text name="Accept">قبول</text>
     <text name="AcceptBid" />
     <text name="Accepted">مقبول</text>
+    <text name="AcceptedAndWaitingForCarrier">بإنتظار الموافقة على ناقل</text>
     <text name="AcceptedAndWaitingForShipper">بإنتظار موافقة الشاحن</text>
     <text name="AcceptedDate">تاريخ القبول</text>
     <text name="AcceptPrice">الموافقة على السعر</text>
@@ -128,7 +129,7 @@
     <text name="BidStartDate">بداية استقبال الأسعار</text>
     <text name="BidUpdatedSuccessfully">تم تحديث عرض السعر بنجاح</text>
     <text name="Billing">الفواتير</text>
-    <text name="BillingInterval">طرق الدفع</text>
+    <text name="BillingInterval">فترة الفوترة</text>
     <text name="BlockedUsers">المستخدمين المحظورين</text>
     <text name="BlockUser">حظر مستخدم</text>
     <text name="Blue">أزرق</text>
@@ -1094,6 +1095,7 @@
     <text name="PaymentHistory">سجل الدفعات</text>
     <text name="PaymentId">معرف الدفع</text>
     <text name="PaymentInfo">معلومات الدفع</text>
+    <text name="PaymentMethods">طرق الدفع</text>
     <text name="PaymentMightBeExpiredWarning">من المحتمل ان وقت إتمام العملية قد نفذ, الرجاء الإتصال بنا إذا قمت بعملية الدفع.</text>
     <text name="PaymentPeriodType">فترات الدفع</text>
     <text name="PaymentPeriodType_Annual">سنوي</text>
@@ -1621,6 +1623,7 @@
     <text name="Theme_Theme7">تصميم  7</text>
     <text name="Theme_Theme8">تصميم  8</text>
     <text name="Theme_Theme9">تصميم  9</text>
+    <text name="TheNameIsRepeated">الإسم مكرر</text>
     <text name="TheNameOfTheCompanyInTheCR">اسم الشركة كما هو في السجل التجاري</text>
     <text name="TheNumberLengthMustBeLessThanMaxDigits">عدد خانات الرقم يجب أن يكون أقل من العدد الأعلى المسموح به</text>
     <text name="TheNumberLengthMustBeMoreThanMinDigits">عدد خانات الرقم يجب أن يكون أكبر من العدد الادنى المسموح به</text>
@@ -1655,6 +1658,9 @@
     <text name="TitleLogin">لتسجيل الدخول ، قم بأدخال رقم هاتفك المحمول</text>
     <text name="TitleOTP">قم بأدخال الكود المكون من 4 خانات المرسل الي رقم الهاتف</text>
     <text name="TMS">نظام إدارة النقل</text>
+    <text name="TMSAcceptedOffer">
+      <a href="/app/main/shippingRequests/shippingRequests/view?id={id}">{name} تم الموافقة على العرض.</a>
+    </text>
     <text name="TMSSettings">إعدادات نظام إدارة النقل</text>
     <text name="Today">اليوم</text>
     <text name="Toggle">تبديل</text>
@@ -1962,6 +1968,7 @@
     <text name="YouCanDeleteDirectRequestOnlyWhenTheStatusIsNew">لا يمكن حذف الطلب المباشر إلا إذا كانت حالته جديده فقط.</text>
     <text name="YouCanManageUsersOrganizationUnitsFromOrganizationUnitsPage">يمكنك إدارة وحدات التنظيم من صفحة الوحدات التنظيمية</text>
     <text name="YouCanNoCreateOrEditPriceWhenThePriceAccepted">لا يمكنك إضافة أو تحرير السعر بعد أم تم إعتماد السعر.</text>
+    <text name="YouCannotAcceptLowerThanPriceSentToShipper">لا يمكنك إعتماد سعر أقل من السعر المرسل للشاحن</text>
     <text name="YouCannotBeFriendWithYourself">لا يمكنك مصادقة حسابك</text>
     <text name="YouCanNotDeleteOwnAccount">لا يمكنك حذف حسابك!</text>
     <text name="YouCannotLinkToSameAccount">لايمكنك الارتباط بنفس الحساب</text>
