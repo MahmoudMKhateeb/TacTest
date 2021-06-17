@@ -272,24 +272,36 @@ namespace TACHYON.Shipping.ShippingRequests
         /// <returns></returns>
         public async Task EditStep4(EditShippingRequestStep4Dto input)
         {
-            var shippingRequest = await GetDraftedShippingRequest(input.Id);
-            if (shippingRequest.DraftStep < 4)
+            using (CurrentUnitOfWork.DisableFilter("IHasIsDrafted"))
             {
-                shippingRequest.DraftStep = 4;
+                var shippingRequest = await GetDraftedShippingRequest(input.Id);
+                if (shippingRequest.DraftStep < 4)
+                {
+                    shippingRequest.DraftStep = 4;
+                }
+                ObjectMapper.Map(input, shippingRequest);
             }
-            ObjectMapper.Map(input, shippingRequest);
         }
 
 
         public async Task<EditShippingRequestStep4Dto> GetStep4ForEdit(EntityDto<long> entity)
         {
-            var shippingRequest = await GetDraftedShippingRequest(entity.Id);
-            return ObjectMapper.Map<EditShippingRequestStep4Dto>(shippingRequest);
+            using (CurrentUnitOfWork.DisableFilter("IHasIsDrafted"))
+            {
+                ShippingRequest shippingRequest = await _shippingRequestRepository.GetAll()
+                .Include(x => x.ShippingRequestVases)
+                  .Where(x => x.Id == entity.Id && x.IsDrafted == true)
+                  .FirstOrDefaultAsync();
+                return ObjectMapper.Map<EditShippingRequestStep4Dto>(shippingRequest);
+            }
         }
 
         public async Task PublishShippingRequest(long id)
         {
-            var shippingRequest = await GetDraftedShippingRequest(id);
+            ShippingRequest shippingRequest = await _shippingRequestRepository.GetAll()
+                .Include(x => x.ShippingRequestVases)
+                  .Where(x => x.Id == id && x.IsDrafted == true)
+                  .FirstOrDefaultAsync();
             if (shippingRequest.DraftStep < 4)
             {
                 throw new UserFriendlyException(L("YouMustCompleteWizardStepsFirst"));

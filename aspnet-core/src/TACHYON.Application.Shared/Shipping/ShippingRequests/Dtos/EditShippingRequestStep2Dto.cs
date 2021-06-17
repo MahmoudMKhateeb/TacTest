@@ -20,6 +20,8 @@ namespace TACHYON.Shipping.ShippingRequests.Dtos
         public int NumberOfDrops { get; set; }
         [Required]
         public int NumberOfTrips { get; set; }
+        public bool IsDrafted { get; set; }
+        public int DraftStep { get; set; }
 
         public void AddValidationErrors(CustomValidationContext context)
         {
