@@ -49,7 +49,7 @@
     <text name="AddNewGoodDetail">Add Good Details</text>
     <text name="AddNewGoodDetails">Add Good Details</text>
     <text name="AddNewTrip">Add trip</text>
-    <text name="AddNewWayPoint">Add New Drop Off Facility</text>
+    <text name="AddNewWayPoint">Add New Pickup Facility</text>
     <text name="AddNewWebhookSubscription">Add New Webhook Subscription</text>
     <text name="AddPage">Add page</text>
     <text name="Address">Address</text>
@@ -293,6 +293,7 @@
     <text name="CreatedAtByUser">Created at <b>{0}</b> by <b>{1}</b></text>
     <text name="CreatedSuccessfully">Created successfully</text>
     <text name="CreateFacilityModal">Create facility modal</text>
+    <text name="FacilityDetails">Facility Details</text>
     <text name="CreateLocalization">Create new Localization terminology</text>
     <text name="CreateNewAccidentReason">Add new incident  reason</text>
     <text name="CreateNewBalanceRecharge">Add balance</text>
@@ -537,6 +538,7 @@
     <text name="DownloadCollectedData">Download collected data</text>
     <text name="DownloadCollectedData_Description">Download data belongs to your account</text>
     <text name="DownloadDropWaybill">Download waybill</text>
+    <text name="DocumentHeaderDetails">Document Details</text>
     <text name="DriectRequestCarrierRespone">
       <a href="/app/main/shippingRequests/shippingRequests/view?id={id}">The {clientname} has established a current view of the  shipment No.: {id}.</a>
     </text>
@@ -544,7 +546,7 @@
     <text name="DriverAcceptTrip">
       <a href="/app/main/shippingRequests/shippingRequests/view?id={id}">The driver {driver} has been accepted the trip from {source} to {destination}</a>
     </text>
-    <text name="DriverDocuments">Driver documents</text>
+    <text name="DriverDocuments">Driver Documents</text>
     <text name="DriverInformations">Driver information</text>
     <text name="DriverName">Driver name</text>
     <text name="DriverCreationDateAndTime">Creation date and time</text>
@@ -745,7 +747,7 @@
     <text name="FinalPrice">Final price</text>
     <text name="FinancialTransActionMenu">Financial Transactions History</text>
     <text name="FirstName">First name</text>
-    <text name="UserFirstName">First name</text>
+    <text name="UserFirstName">Name</text>
     <text name="CreateUserFirstName">First name</text>
     <text name="Flag">Flag</text>
     <text name="ForgotPassword">Forgot password?</text>
@@ -761,6 +763,7 @@
     <text name="FromTenantToHostImpersonationErrorMessage">Can not impersonate a host user from a tenant user!</text>
     <text name="FullName">Full name</text>
     <text name="ReciverName">Reciver name</text>
+    <text name="HeaderReciverDetails">Reciver Details</text>
     <text name="Gallery">Gallery</text>
     <text name="Gateway">Gateway</text>
     <text name="GdprDataPreparedNotificationMessage">Your data is prepared, click here to download.</text>
@@ -1079,6 +1082,9 @@
     <text name="NewTermAndCondition">New Terms and Conditions</text>
     <text name="NewTransportType">New transport type</text>
     <text name="NewTripAssign">The new trip has assign to you.</text>
+    
+    <text name="TrucktDocuments">Truckt Documents</text>
+     
     <text name="CreateNewTruck">Add new truck</text>
     <text name="NewTruckStatus">New truck status</text>
     <text name="NewTrucksType">New truck type</text>
@@ -1533,7 +1539,7 @@ content that we shared with you.</text>
     <text name="ShippingRequestCancelTripByAccidents">
       <a href="/app/main/shippingRequests/shippingRequests/view?id={id}">The shipment No.:{id} cancled by incident.</a>
     </text>
-    <text name="ShippingRequestDetails">Shipping request details</text>
+    <text name="ShippingRequestDetails">Shipping Request Details</text>
     <text name="ShippingRequestId">Shipping request id</text>
     <text name="ShippingRequestNotifyCarrirerWhenShipperAccepted">
       <a href="/app/main/shippingRequests/shippingRequests/view?id={id}">The shipper {clientname} has been accepted your offer.</a>
@@ -1888,7 +1894,7 @@ content that we shared with you.</text>
     <text name="TruckCapacitiesTranslations">Truck capacities translations</text>
     <text name="TruckCapacitiesTranslationsHeaderInfo">Truck Capacities Translations header info</text>
     <text name="TruckDetails">Truck Details</text>
-    <text name="TruckDocuments">Truck documents</text>
+    <text name="TruckDocuments">Truck Documents</text>
     <text name="TruckID">Truck ID</text>
     <text name="TruckPlateNumber">Plate number</text>
     <text name="Trucks">Trucks</text>
@@ -2092,7 +2098,7 @@ content that we shared with you.</text>
     <text name="Warning">Warning</text>
     <text name="WaybillNumber">Waybill Number</text>
     <text name="Waybills">Waybills</text>
-    <text name="Waypoints">Pickup/Drop Off Locations</text>
+    <text name="Waypoints">Pickup/Drop off Locations</text>
     <text name="Weak">Weak</text>
     <text name="WebhookEndpoint">Webhook Endpoint</text>
     <text name="WebhookEvent">Webhook Event</text>

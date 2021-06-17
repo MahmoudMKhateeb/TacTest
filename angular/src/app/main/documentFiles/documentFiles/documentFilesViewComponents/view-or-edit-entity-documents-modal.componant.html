@@ -12,7 +12,8 @@
     <div class="modal-content">
       <div class="modal-header">
         <h4 class="modal-title">
-          <span> {{ l(documentEntityFilterName) }} {{ l('Documents') }}</span>
+          <span *ngIf="documentEntityFilterName=='Truck'"> {{ l('TruckDocuments') }}</span>
+          <span *ngIf="documentEntityFilterName=='Driver'"> {{ l('DriverDocuments') }}</span>
         </h4>
         <button type="button" class="close" (click)="close()" aria-label="Close" [disabled]="saving">
           <span aria-hidden="true">&times;</span>

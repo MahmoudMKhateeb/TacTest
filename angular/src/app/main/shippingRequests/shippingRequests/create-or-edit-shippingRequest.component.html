@@ -166,7 +166,7 @@
                         </div>
                       </div>
                       <div class="col-lg-3">
-                        <label><span class="required-fileds">*</span> {{ l('BiddingEndDate') }}</label>
+                        <label><span class="required-fileds"></span> {{ l('BiddingEndDate') }}</label>
                         <div class="input-group date">
                           <input
                             class="form-control"
@@ -249,7 +249,7 @@
                             [class.is-invalid]="goodCategory.touched && !goodCategory.valid"
                             [class.is-valid]="goodCategory.touched && goodCategory.valid"
                           >
-                            <option [ngValue]="undefined">{{ l('SelectAGoodCategory') }}</option>
+                            <option [ngValue]="undefined">{{ l('SelectaGoodCategory') }}</option>
                             <option *ngFor="let item of allGoodCategorys" value="{{ item.id }}">{{ item.displayName }} </option>
                           </select>
                         </div>
@@ -419,7 +419,7 @@
                               </span>
                             </div>
                           </div>
-                          <span class="form-text text-muted">{{ l('TripsStartDate') }}</span>
+                          <span class="form-text text-muted">{{ l('DescriptionTripsStartDate') }}</span>
                         </div>
                       </div>
                       <div class="col-lg-6">
@@ -442,7 +442,7 @@
                               </span>
                             </div>
                           </div>
-                          <span class="form-text text-muted">{{ l('TripsEndDate') }}</span>
+                          <span class="form-text text-muted">{{ l('DescriptionTextTripsEndDate') }}</span>
                         </div>
                       </div>
                       <div class="col-lg-3">
@@ -484,7 +484,7 @@
                             [class.is-valid]="selectedRouteType == 3 && NumberOfDrops.touched && NumberOfDrops.valid"
                             [disabled]="selectedRouteType != 3"
                           />
-                          <span class="form-text text-muted">{{ l('NumberOfDrops') }} {{ l('ForMiltibleTripsRouteType') }}</span>
+                          <span class="form-text text-muted">{{ l('DescriptionNumberOfDrops') }} {{ l('ForMiltibleTripsRouteType') }}</span>
                         </div>
                       </div>
                       <div class="col-lg-6">
@@ -611,9 +611,9 @@
                 <table *ngIf="allVases" class="table">
                   <thead>
                     <tr class="table-active">
-                      <th scope="col">{{ l('Name') }}</th>
-                      <th scope="col">{{ l('Count') }}</th>
-                      <th scope="col">{{ l('Amount') }}</th>
+                      <th scope="col">{{ l('TableVasName') }}</th>
+                      <th scope="col">{{ l('Quantity') }}</th>
+                      <th scope="col">{{ l('VasAmount') }}</th>
                     </tr>
                   </thead>
                   <tbody>
