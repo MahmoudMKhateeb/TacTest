@@ -51,6 +51,10 @@ namespace TACHYON.Shipping.ShippingRequests
         /// when it is not bidding and it is Tachyon Deal
         /// </summary>
         public virtual bool IsTachyonDeal { get; set; }
+        /// <summary>
+        /// Is direct request Field
+        /// </summary>
+        public virtual bool IsDirectRequest { get; set; }
 
         public ShippingRequestRouteType? RouteTypeId { get; set; }
 

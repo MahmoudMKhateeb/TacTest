@@ -98,7 +98,8 @@ export class CreateOrEditShippingRequestComponent extends AppComponentBase imple
         )
         .subscribe((result) => {
           this.shippingRequest = result.shippingRequest;
-          this.shippingRequestType = result.shippingRequest.isBid === true ? 'bidding' : 'tachyondeal';
+          this.shippingRequestType =
+            result.shippingRequest.isBid === true ? 'bidding' : result.shippingRequest.isDirectRequest ? 'directrequest' : 'tachyondeal';
           this.selectedVases = result.shippingRequest.shippingRequestVasList;
           console.log(this.selectedVases);
           this.selectedRouteType = result.shippingRequest.routeTypeId;
@@ -114,6 +115,7 @@ export class CreateOrEditShippingRequestComponent extends AppComponentBase imple
     this.saving = true;
     this.shippingRequest.isBid = this.shippingRequestType === 'bidding' ? true : false;
     this.shippingRequest.isTachyonDeal = this.shippingRequestType === 'tachyondeal' ? true : false;
+    this.shippingRequest.isDirectRequest = this.shippingRequestType === 'directrequest' ? true : false;
     this.shippingRequest.routeTypeId = this.selectedRouteType; //milkrun / oneway ....
     this.shippingRequest.shippingRequestVasList = this.selectedVases;
     this._shippingRequestsServiceProxy
