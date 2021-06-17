@@ -1,4 +1,4 @@
-import { Component, ViewChild, Injector, Output, EventEmitter, Input, OnInit } from '@angular/core';
+import { Component, ViewChild, Injector, Output, EventEmitter, Input, OnInit, ChangeDetectorRef } from '@angular/core';
 import { ModalDirective } from 'ngx-bootstrap/modal';
 import {
   GetAllBidShippingRequestsForCarrierOutput,
@@ -53,7 +53,8 @@ export class CreateOrEditTripComponent extends AppComponentBase implements OnIni
     private _routStepsServiceProxy: RoutStepsServiceProxy,
     private _shippingRequestTripsService: ShippingRequestsTripServiceProxy,
     private _fileDownloadService: FileDownloadService,
-    private _waybillsServiceProxy: WaybillsServiceProxy
+    private _waybillsServiceProxy: WaybillsServiceProxy,
+    private cdref: ChangeDetectorRef
   ) {
     super(injector);
   }
@@ -92,11 +93,13 @@ export class CreateOrEditTripComponent extends AppComponentBase implements OnIni
     }
     this.active = true;
     this.modal.show();
+    this.cdref.detectChanges();
   }
   close(): void {
     this.loading = true;
     this.active = false;
     this.modal.hide();
+    this.trip = new CreateOrEditShippingRequestTripDto();
   }
 
   sortVases() {
@@ -184,9 +187,9 @@ export class CreateOrEditTripComponent extends AppComponentBase implements OnIni
    * validates add or Edit Trip Dates
    */
   validateTripDates() {
-    if (this.trip.endTripDate && this.trip.startTripDate > this.trip.endTripDate) {
-      this.trip.endTripDate = undefined;
-      this.notify.error(this.l('tripStartDateCantBeGretterThanTripEndDate'));
-    }
+    // if (this.trip.endTripDate && this.trip.startTripDate > this.trip.endTripDate) {
+    //   this.trip.endTripDate = undefined;
+    //   this.notify.error(this.l('tripStartDateCantBeGretterThanTripEndDate'));
+    // }
   }
 }

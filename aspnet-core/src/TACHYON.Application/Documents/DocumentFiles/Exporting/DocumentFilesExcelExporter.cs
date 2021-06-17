@@ -43,8 +43,7 @@ namespace TACHYON.Documents.DocumentFiles.Exporting
                        // (L("DocumentType")) + L("DisplayName"),
                         (L("Truck")) + L("PlateNumber"),
                         (L("Trailer")) + L("TrailerCode"),
-                        (L("User")) + L("Name"),
-                        (L("RoutStep")) + L("DisplayName")
+                        (L("User")) + L("Name")
                         );
 
                     AddObjects(
@@ -57,8 +56,7 @@ namespace TACHYON.Documents.DocumentFiles.Exporting
                        // _ => _.DocumentTypeDisplayName,
                         _ => _.TruckId,
                         _ => _.TrailerTrailerCode,
-                        _ => _.UserName,
-                        _ => _.RoutStepDisplayName
+                        _ => _.UserName
                         );
 
 

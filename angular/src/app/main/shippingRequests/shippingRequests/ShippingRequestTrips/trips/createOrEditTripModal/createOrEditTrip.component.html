@@ -84,13 +84,6 @@
                     class="form-control"
                     [(date)]="trip.startTripDate"
                     name="tripStartDate"
-                    placeholder="{{ l('TripStartDate') }}"
-                    [minDate]="shippingRequest.startTripDate"
-                    [maxDate]="shippingRequest.endTripDate"
-                    [required]="true"
-                    (dateChange)="validateTripDates()"
-                    [class.is-invalid]="startTripDate.touched && !startTripDate.valid"
-                    [class.is-valid]="startTripDate.touched && startTripDate.valid"
                     bsDatepicker
                     datePickerMomentModifier
                   />
@@ -140,6 +133,7 @@
               <div class="form-group" *ngIf="selectedVases != []">
                 <label>{{ l('vases') }}</label>
                 <p-multiSelect
+                  name="shippingRequestTripVases"
                   [options]="Vases"
                   [(ngModel)]="trip.shippingRequestTripVases"
                   [styleClass]="'form-control'"

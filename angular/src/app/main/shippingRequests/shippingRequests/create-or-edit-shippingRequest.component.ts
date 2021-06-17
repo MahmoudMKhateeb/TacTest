@@ -60,6 +60,7 @@ export class CreateOrEditShippingRequestComponent extends AppComponentBase imple
   selectedVasesProperties = [];
   selectedvas: any;
   today = new Date();
+
   constructor(
     injector: Injector,
     private _activatedRoute: ActivatedRoute,
@@ -166,17 +167,19 @@ export class CreateOrEditShippingRequestComponent extends AppComponentBase imple
     });
 
     /*this._routesServiceProxy.getAllRoutTypeForTableDropdown().subscribe((result) => {
-      this.allRoutTypes = result;
-    });*/
+          this.allRoutTypes = result;
+        });*/
 
     this._routStepsServiceProxy.getAllFacilitiesForDropdown().subscribe((result) => {
       this.allFacilities = result;
     });
     this.loadallVases();
   }
+
   cancel(): void {
     this._router.navigate(['app/main/shippingRequests/shippingRequests']);
   }
+
   loadallVases() {
     this._shippingRequestsServiceProxy.getAllShippingRequestVasesForTableDropdown().subscribe((result) => {
       this.allVases = result;
