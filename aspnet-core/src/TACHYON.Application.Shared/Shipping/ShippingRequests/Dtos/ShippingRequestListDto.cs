@@ -8,6 +8,7 @@ namespace TACHYON.Shipping.ShippingRequests.Dtos
         public string Tenant { get; set; }
         public bool IsBid { get; set; }
         public bool IsTachyonDeal { get; set; }
+        public bool IsDirectRequest { get; set; }
         public int TotalBids { get; set; }
         public int NumberOfTrips { get; set; }
         public int NumberOfDrops { get; set; }

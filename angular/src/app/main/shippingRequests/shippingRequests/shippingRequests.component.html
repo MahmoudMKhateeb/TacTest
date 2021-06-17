@@ -210,7 +210,15 @@
 
                     <td *ngIf="feature.isEnabled('App.Shipper')" style="width: 150px;">
                       <span class="ui-column-title"> {{ l('ShippingRequestType') }}</span>
-                      {{ record.isTachyonDeal ? l('TachyonManageService') : record.isBid ? l('Marketplace') : '' }}
+                      {{
+                        record.isTachyonDeal
+                          ? l('TachyonManageService')
+                          : record.isBid
+                          ? l('Marketplace')
+                          : record.isDirectRequest
+                          ? l('DirectRequest')
+                          : ''
+                      }}
                     </td>
                     <td style="width: 150px;">
                       <span class="ui-column-title"> {{ l('RouteType') }}</span>

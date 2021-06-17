@@ -20,6 +20,7 @@ namespace TACHYON.Shipping.ShippingRequests.Dtos
         public DateTime? BidEndDate { get; set; }
 
         public virtual bool IsTachyonDeal { get; set; }
+        public bool IsDirectRequest { get; set; }
 
         /// <summary>
         /// if we clone request

@@ -140,6 +140,7 @@
                           <option value="">Select</option>
                           <option value="bidding">{{ l('Marketplace') }}</option>
                           <option value="tachyondeal">{{ l('TachyonManageService') }}</option>
+                          <option *ngIf="this.feature.isEnabled('App.SendDirectRequest')" value="directrequest">{{ l('DirectRequest') }}</option>
                         </select>
                         <span class="form-text text-muted">{{ l('PickaShippingRequestType') }}</span>
                       </div>
