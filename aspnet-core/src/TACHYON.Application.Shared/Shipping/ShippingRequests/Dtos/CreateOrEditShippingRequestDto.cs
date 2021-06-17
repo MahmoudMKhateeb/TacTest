@@ -45,7 +45,8 @@ namespace TACHYON.Shipping.ShippingRequests.Dtos
         public bool StageTowFinish { get; set; }
         public bool StageThreeFinish { get; set; }
 
-        public DateTime? StartTripDate { get; set; }
+        [Required]
+        public DateTime StartTripDate { get; set; }
         public DateTime? EndTripDate { get; set; }
 
         public int NumberOfTrips { get; set; }

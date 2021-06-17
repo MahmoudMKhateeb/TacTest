@@ -428,7 +428,10 @@
                       </div>
                       <div class="col-lg-6">
                         <div class="form-group">
-                          <label><span class="required-fileds">*</span>{{ l('TripsEndDate') }}:</label>
+                          <label>
+                            <!--                              <span class="required-fileds">*</span>-->
+                            {{ l('TripsEndDate') }}:</label
+                          >
                           <div class="input-group date">
                             <input
                               [(date)]="shippingRequest.endTripDate"
