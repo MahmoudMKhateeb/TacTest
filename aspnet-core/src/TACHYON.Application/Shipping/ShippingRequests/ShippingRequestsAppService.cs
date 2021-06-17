@@ -218,6 +218,12 @@ namespace TACHYON.Shipping.ShippingRequests
             }
         }
 
+        public async Task<CreateOrEditShippingRequestStep1Dto> GetStep1ForEdit(EntityDto<long> entity)
+        {
+            var shippingRequest = await GetDraftedShippingRequest(entity.Id);
+            return ObjectMapper.Map<CreateOrEditShippingRequestStep1Dto>(shippingRequest);
+        }
+
         /// <summary>
         /// Route Details - Shipping Request Wizard
         /// </summary>
@@ -233,6 +239,11 @@ namespace TACHYON.Shipping.ShippingRequests
             ObjectMapper.Map(input, shippingRequest);
         }
 
+        public async Task<EditShippingRequestStep2Dto> GetStep2ForEdit(EntityDto<long> entity)
+        {
+            var shippingRequest = await GetDraftedShippingRequest(entity.Id);
+            return ObjectMapper.Map<EditShippingRequestStep2Dto>(shippingRequest);
+        }
         /// <summary>
         /// Goods Details - Shipping Request Wizard
         /// </summary>
@@ -248,6 +259,12 @@ namespace TACHYON.Shipping.ShippingRequests
             ObjectMapper.Map(input, shippingRequest);
         }
 
+
+        public async Task<EditShippingRequestStep3Dto> GetStep3ForEdit(EntityDto<long> entity)
+        {
+            var shippingRequest = await GetDraftedShippingRequest(entity.Id);
+            return ObjectMapper.Map<EditShippingRequestStep3Dto>(shippingRequest);
+        }
         /// <summary>
         /// Services - Shipping Request Wizard
         /// </summary>
@@ -261,6 +278,13 @@ namespace TACHYON.Shipping.ShippingRequests
                 shippingRequest.DraftStep = 4;
             }
             ObjectMapper.Map(input, shippingRequest);
+        }
+
+
+        public async Task<EditShippingRequestStep4Dto> GetStep4ForEdit(EntityDto<long> entity)
+        {
+            var shippingRequest = await GetDraftedShippingRequest(entity.Id);
+            return ObjectMapper.Map<EditShippingRequestStep4Dto>(shippingRequest);
         }
 
         public async Task PublishShippingRequest(long id)
