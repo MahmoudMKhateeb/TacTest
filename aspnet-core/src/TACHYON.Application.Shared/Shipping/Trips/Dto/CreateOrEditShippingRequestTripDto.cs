@@ -12,7 +12,7 @@ namespace TACHYON.Shipping.Trips.Dto
     {
         [Required]
         public DateTime StartTripDate { get; set; }
-        [Required]
+        
         public DateTime EndTripDate { get; set; }
 
 
