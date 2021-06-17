@@ -39,7 +39,7 @@ namespace TACHYON.Shipping.ShippingRequests.Dtos
         public virtual int? CapacityId { get; set; }
 
         public int? GoodCategoryId { get; set; }
-
+        [Range(1, 20)]
         public int? NumberOfDrops { get; set; }
         public bool StageOneFinish { get; set; }
         public bool StageTowFinish { get; set; }
@@ -48,7 +48,7 @@ namespace TACHYON.Shipping.ShippingRequests.Dtos
         [Required]
         public DateTime StartTripDate { get; set; }
         public DateTime? EndTripDate { get; set; }
-
+        [Range(1, 1000)]
         public int NumberOfTrips { get; set; }
         public int PackingTypeId { get; set; }
         public int NumberOfPacking { get; set; }
