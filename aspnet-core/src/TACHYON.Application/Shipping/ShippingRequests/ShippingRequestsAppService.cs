@@ -198,7 +198,7 @@ namespace TACHYON.Shipping.ShippingRequests
         /// Basic Details - Shipping Request Wizard
         /// </summary>
         /// <returns></returns>
-        public async Task CreateOrEditStep1(CreateOrEditShippingRequestStep1Dto input)
+        public async Task<long> CreateOrEditStep1(CreateOrEditShippingRequestStep1Dto input)
         {
             if (input.IsTachyonDeal)
             {
@@ -210,11 +210,11 @@ namespace TACHYON.Shipping.ShippingRequests
 
             if (input.Id == null)
             {
-                await CreateStep1(input);
+                return await CreateStep1(input);
             }
             else
             {
-                await UpdateStep1(input);
+               return  await UpdateStep1(input);
             }
         }
 
@@ -312,14 +312,7 @@ namespace TACHYON.Shipping.ShippingRequests
         }
 
 
-        private async Task UpdateStep1(CreateOrEditShippingRequestStep1Dto input)
-        {
-            var shippingRequest = await GetDraftedShippingRequest(input.Id.Value);
-
-            ObjectMapper.Map(input, shippingRequest);
-            // ValidateStep1(shippingRequest);
-        }
-
+       
 
         private async Task<ShippingRequest> GetDraftedShippingRequest(long id)
         {
@@ -331,7 +324,7 @@ namespace TACHYON.Shipping.ShippingRequests
                 return shippingRequest;
             }
         }
-        private async Task CreateStep1(CreateOrEditShippingRequestStep1Dto input)
+        private async Task<long> CreateStep1(CreateOrEditShippingRequestStep1Dto input)
         {
             ShippingRequest shippingRequest = ObjectMapper.Map<ShippingRequest>(input);
             //ValidateStep1(shippingRequest);
@@ -339,7 +332,18 @@ namespace TACHYON.Shipping.ShippingRequests
             shippingRequest.DraftStep = 1;
             await _shippingRequestRepository.InsertAndGetIdAsync(shippingRequest);
             await CurrentUnitOfWork.SaveChangesAsync();
+            return shippingRequest.Id;
         }
+
+        private async Task<long> UpdateStep1(CreateOrEditShippingRequestStep1Dto input)
+        {
+            var shippingRequest = await GetDraftedShippingRequest(input.Id.Value);
+
+            ObjectMapper.Map(input, shippingRequest);
+            return shippingRequest.Id;
+            // ValidateStep1(shippingRequest);
+        }
+
 
         private async Task ValidateShippingRequestBeforePublish(ShippingRequest shippingRequest)
         {
