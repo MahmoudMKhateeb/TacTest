@@ -256,6 +256,8 @@
     <text name="County">الدولة</text>
     <text name="CountyDisplayName">الدولة</text>
     <text name="Create">إنشاء</text>
+    <text name="DriverInformation">معلومات السائق</text>
+    <text name="NonMandatoryDocuments">المستندات غير الإلزامية</text>
     <text name="CreateAccident">إضافة حادث</text>
     <text name="CreateAccidentReason">إضافة سبب جديد</text>
     <text name="CreateAnAccount">إنشاء حساب</text>
@@ -661,6 +663,7 @@
     <text name="Facilities">المنشأت</text>
     <text name="FacilitiesSetup">إدارة المنشآت</text>
     <text name="Facility">المنشأة</text>
+    <text name="DatatablePickingType">النوع</text>
     <text name="FacilityName">اسم المنشأة</text>
     <text name="Failed">فشل</text>
     <text name="FailedSubscriptionTerminations_Email_Body">فشل إنهاء الاشتراك للشركات التالية {0} في {1}. يمكنك العثور على رسائل الخطأ المفصلة في سجلات النظام.</text>
@@ -832,6 +835,7 @@
     <text name="LastModificationTime">آخر وقت التعديل</text>
     <text name="LastMonth">الشهر الماضي</text>
     <text name="LastName">إسم العائلة</text>
+    <text name="DriverCreationDateAndTime">تاريخ و وقت الإنشاء</text>
     <text name="LatestPaymentAmount">قيمة آخر دفعة</text>
     <text name="Latitude">خط العرض</text>
     <text name="LdapSettings">إعدادات LDAP</text>
@@ -1255,7 +1259,7 @@
     <text name="RoleIsInheritedFromOrganizationUnit">هذا الدور موروث من إحدى الوحدات التنظيمية للمستخدم</text>
     <text name="RoleName">الدور</text>
     <text name="RoleProperties">خصائص الدور</text>
-    <text name="Roles">الدور</text>
+    <text name="Roles">الأدوار</text>
     <text name="RolesHeaderInfo">إستخدم الأدوار لإنشاء مجموعة إذونات</text>
     <text name="Root">جذر</text>
     <text name="Rotate">استدارة</text>
@@ -1691,6 +1695,7 @@
     <text name="TripsEndDate">تاريخ نهاية التحميل </text>
     <text name="DescriptionTextTripsEndDate">تاريخ بداية التحميل، يمكن تحميل البضائع أي وقت خلال التاريخ المدخل </text>
     <text name="TripsStartDate">تاريخ بداية التحميل</text>
+    <text name="Trip_StartDate">تاريخ بداية التحميل</text>
     <text name="DescriptionTripsStartDate">تاريخ بداية التحميل، يمكن تحميل البضائع أي وقت خلال التاريخ المدخل</text>
     <text name="TripStartDate">تاريخ بداية تحميل الرحلات</text>
     <text name="TripStatus">حالة الرحلة</text>
@@ -1862,7 +1867,7 @@
     <text name="Vas">الخدمات الإضافية</text>
     <text name="VasAmount">القيمة</text>
     <text name="VasCount">عدد الخدمات الإضافية</text>
-    <text name="VasDetails">تفاصيل الخدمات الإضافية</text>
+    <text name="VasDetails">الخدمات الإضافية</text>
     <text name="Vases">الخدمات الإضافية</text>
     <text name="VasName">اسم الخدمة الإضافية</text>
     <text name="TableVasName">النوع</text>
@@ -1915,6 +1920,7 @@
     <text name="Weekly">إسبوعي</text>
     <text name="WeeklyPrice">السعر الاسبوعي</text>
     <text name="Weight">الوزن</text>
+    <text name="KG">كيلوجرام</text>
     <text name="WelcomePage_Info">مرحبا بك بالنظام. يمكنك استخدام القائمة لبدء استخدام النظام. إذا كنت لا ترى أي عنصر بالقائمة ربما لم يكن لديك إذونات. يرجى مراجعة مشرف النظام للحصول على إذونات بالنظام.</text>
     <text name="WelcomePage_Title">أهلا بك!</text>
     <text name="WelcomeToTheApplicationNotificationMessage">أهلاً بك في نظام تاكيون للإشعارات. نظام الإشعارات يستخدم لإعلامك عن إشعارات من النظام أو المستخدمين . يمكنك اختيار نوع الإشعارات التي تريد أن تتلقاها من خلال إعدادات الإشعارات</text>

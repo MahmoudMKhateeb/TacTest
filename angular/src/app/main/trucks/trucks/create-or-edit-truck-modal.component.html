@@ -14,7 +14,7 @@
         <div class="modal-header">
           <h4 class="modal-title">
             <span *ngIf="truck.id">{{ l('Edit') }} {{ l('Truck') }}</span>
-            <span *ngIf="!truck.id">{{ l('Create') }} {{ l('NewTruck') }}</span>
+            <span *ngIf="!truck.id">{{ l('CreateNewTruck') }} </span>
           </h4>
           <button type="button" class="close" (click)="close()" aria-label="Close" [disabled]="saving">
             <span aria-hidden="true">&times;</span>

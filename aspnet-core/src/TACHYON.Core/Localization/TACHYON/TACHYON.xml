@@ -37,7 +37,7 @@
     <text name="ActualPercentCommission">Actual percent commission</text>
     <text name="Add">Add</text>
     <text name="AddATrip">Add trip</text>
-    <text name="AddDocument">Add Document</text>
+    <text name="AddDocument">Add document</text>
     <text name="AddDrop">Add drop off facility </text>
     <text name="AddedTime">Addition time</text>
     <text name="AddFriend">Add friend</text>
@@ -46,8 +46,8 @@
     <text name="AddNew">Add new</text>
     <text name="AddNewDynamicParameter">Add A New Dynamic Parameter</text>
     <text name="AddNewEntityDynamicParameter">Assign Dynamic Parameter To Entity</text>
-    <text name="AddNewGoodDetail">Add Good Details</text>
-    <text name="AddNewGoodDetails">Add Good Details</text>
+    <text name="AddNewGoodDetail">Add good details</text>
+    <text name="AddNewGoodDetails">Add good details</text>
     <text name="AddNewTrip">Add trip</text>
     <text name="AddNewWayPoint">Add New Pickup Facility</text>
     <text name="AddNewWebhookSubscription">Add New Webhook Subscription</text>
@@ -306,9 +306,9 @@
     <text name="CreateNewDocumentFile">Create new document</text>
     <text name="CreateNewDocumentsEntity">Create new documents entity</text>
     <text name="CreateNewDocumentType">Add new document type</text>
-    <text name="CreateNewDriver">Add new driver</text>
+    <text name="CreateNewDriver">Add New Driver</text>
     <text name="CreateNewEdition">Add new subscription type</text>
-    <text name="CreateNewFacility">Add new facility</text>
+    <text name="CreateNewFacility">Add New Facility</text>
     <text name="CreateNewGoodCategory">Add new good category</text>
     <text name="CreateNewGoodsDetail">Add goods details</text>
     <text name="CreateNewLanguage">Add new language</text>
@@ -320,7 +320,7 @@
     <text name="CreateNewPickingType">Add new packing type</text>
     <text name="CreateNewPlateType">Add new plate type</text>
     <text name="CreateNewPort">Add new port</text>
-    <text name="CreateNewReceiver">Add New Receiver</text>
+    <text name="CreateNewReceiver">Add new receiver</text>
     <text name="CreateNewRole">Add new role</text>
     <text name="CreateNewRoute">Add new route</text>
     <text name="CreateNewRoutStep">Create New rout step</text>
@@ -1275,7 +1275,7 @@ content that we shared with you.</text>
     <text name="PickVas">Select VAS</text>
     <text name="Pin">Pin</text>
     <text name="Pink">Pink</text>
-    <text name="Place">Place</text>
+    <text name="Place">Send</text>
     <text name="PlateNumber">Plate number</text>
     <text name="PlateType">Plate type</text>
     <text name="PlateTypeId">Plate type id</text>
@@ -1491,7 +1491,7 @@ content that we shared with you.</text>
     <text name="SendActivationEmail">Send activation email.</text>
     <text name="SendDirectRequest">Send Direct Request</text>
     <text name="SendDirectRequestOffer">Send direct request offer</text>
-    <text name="SendDirectRequests">Send Rirect Request</text>
+    <text name="SendDirectRequests">Send direct request</text>
     <text name="SendDriectRequestForCarrier">Please send us a quote for the shipment No.: {id}.</text>
     <text name="SendEmailActivationLink_Information">A link will be sent to your email to activate your email address. If you don't get an email within a few minutes, please re-try.</text>
     <text name="Sender">Sender</text>
@@ -1844,6 +1844,7 @@ content that we shared with you.</text>
     <text name="TotalsTripsAddByShippier">Totals trips add by shippier</text>
     <text name="TotalWeight">Total weight</text>
     <text name="TotalWeightofGoodsinKG">Total weight of shipment</text>
+    <text name="KG">KG</text>
     <text name="Trailer">Trailer</text>
     <text name="TrailerCode">Trailer Code</text>
     <text name="Trailers">Trailers</text>
@@ -1883,8 +1884,9 @@ content that we shared with you.</text>
     <text name="TripIncident">Trip incident</text>
     <text name="TripInfo">Trip Info</text>
     <text name="TripRejectReason">Trip reject reason</text>
-    <text name="TripsEndDate">Trips pickup date end</text>
+    <text name="TripsEndDate">Trip pickup date end</text>
     <text name="TripsStartDate">Trips pickup date start</text>
+    <text name="Trip_StartDate">Trip pickup date start</text>
     <text name="TripStartDate">Trips start date</text>
     <text name="TripStartDateCantBeGretterThanTripEndDate">Trip start date cant be gretter than trip end date</text>
     <text name="TripStatus">Trip status</text>
@@ -2040,6 +2042,7 @@ content that we shared with you.</text>
     <text name="UserEmailIsNotConfirmedAndCanNotLogin">Your email address is not confirmed. Please check your email and click the email confirmation link to activate your account. If you did not receive activation email, click the 'email confirmation' to request a new email.</text>
     <text name="UserInfoEndpoint">User Info Endpoint</text>
     <text name="UserInformations">User information</text>
+    <text name="DriverInformation">Driver information</text>
     <text name="UserIsAlreadyInTheOrganizationUnit">This user is already in the organization unit!</text>
     <text name="UserIsBlocked">User is blocked.</text>
     <text name="UserIsNotActiveAndCanNotLogin">User {0} is not active and can not log in.</text>
@@ -2061,7 +2064,9 @@ content that we shared with you.</text>
     <text name="Value">Value</text>
     <text name="Values">Values</text>
     <text name="Vas">VAS</text>
-    <text name="VasAmount">Vas amount</text>
+    <text name="DescriptionNumberOfDrops">Please enter number of drops</text>
+    <text name="VasAmount">Amount</text>
+    <text name="TableVasName">Type</text>
     <text name="VasCount">Vas count</text>
     <text name="VasDetails">VAS</text>
     <text name="Vases">VAS</text>

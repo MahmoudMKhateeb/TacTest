@@ -262,7 +262,7 @@
                           <div class="input-group">
                             <div class="input-group-append">
                               <span class="input-group-text">
-                                KG
+                                {{ l('KG') }}
                               </span>
                             </div>
                             <input
@@ -270,6 +270,7 @@
                               type="number"
                               name="Weight"
                               class="form-control"
+                              placeholder="{{ l('Weight') }}"
                               placeholder="Weight"
                               [(ngModel)]="shippingRequest.totalWeight"
                               (keypress)="numberOnly($event)"
@@ -484,7 +485,7 @@
                             [class.is-valid]="selectedRouteType == 3 && NumberOfDrops.touched && NumberOfDrops.valid"
                             [disabled]="selectedRouteType != 3"
                           />
-                          <span class="form-text text-muted">{{ l('DescriptionNumberOfDrops') }} {{ l('ForMiltibleTripsRouteType') }}</span>
+                          <span class="form-text text-muted">{{ l('DescriptionNumberOfDrops') }} </span>
                         </div>
                       </div>
                       <div class="col-lg-6">
