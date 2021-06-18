@@ -31,17 +31,6 @@ export class InvoiceDetailComponent extends AppComponentBase {
     // console.log('this is my invoice id --------------> ', this.Data.id);
   }
 
-  delete(): void {
-    this.message.confirm('', this.l('AreYouSure'), (isConfirmed) => {
-      if (isConfirmed) {
-        this._InvoiceServiceProxy.delete(this.Data.id).subscribe(() => {
-          this.notify.success(this.l('SuccessfullyDeleted'));
-          this.router.navigate([`/app/main/invoices/view`]);
-        });
-      }
-    });
-  }
-
   MakePaid(): void {
     this.message.confirm('', this.l('AreYouSure'), (isConfirmed) => {
       if (isConfirmed) {

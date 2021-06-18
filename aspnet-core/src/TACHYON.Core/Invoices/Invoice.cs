@@ -13,14 +13,12 @@ namespace TACHYON.Invoices
 
     public class Invoice: FullAuditedEntity<long>, IMustHaveTenant
     {
+        public long? InvoiceNumber { get; set; }
         public int TenantId { get; set; }
-
-        [ForeignKey("TenantId")]
+        [ForeignKey(nameof(TenantId))]
         public Tenant Tenant { get; set; }
-
         public int PeriodId { get; set; }
-
-        [ForeignKey("PeriodId")]
+        [ForeignKey(nameof(PeriodId))]
         public InvoicePeriod InvoicePeriod { get; set; }
         public DateTime DueDate { get; set; }
         public bool IsPaid { get; set; }
@@ -29,10 +27,12 @@ namespace TACHYON.Invoices
         public decimal TotalAmount { get; set; }
         public decimal VatAmount { get; set; }
         public decimal TaxVat { get; set; }
-
-        public bool IsAccountReceivable { get; set; }
-
-        public List<InvoiceShippingRequests> ShippingRequests { get; set; }
+        public InvoiceAccountType AccountType { get; set; }
+        public ICollection<InvoiceTrip> Trips { get; set; }
+        public Invoice()
+        {
+            Trips = new List<InvoiceTrip>();
+        }
 
     }
 }

@@ -46,6 +46,7 @@ namespace TACHYON.Invoices.Balances
                     .Include(i => i.Tenant)
                     .WhereIf(!string.IsNullOrEmpty(input.ReferenceNo), i => i.ReferenceNo == input.ReferenceNo)
                     .WhereIf(input.TenantId.HasValue, i => i.TenantId == input.TenantId)
+                    .WhereIf(input.minLongitude.HasValue && input.maxLongitude.HasValue, i => i.Amount >= input.minLongitude.Value && i.Amount <= input.maxLongitude.Value)
                     .WhereIf(input.FromDate.HasValue && input.ToDate.HasValue, i => i.CreationTime >= input.FromDate && i.CreationTime < input.ToDate);
 
                 var paged = query

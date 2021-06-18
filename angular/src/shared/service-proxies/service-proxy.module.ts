@@ -4,8 +4,6 @@ import { NgModule } from '@angular/core';
 import * as ApiServiceProxies from './service-proxies';
 import { ZeroRefreshTokenService } from '@account/auth/zero-refresh-token.service';
 import { ZeroTemplateHttpConfigurationService } from './zero-template-http-configuration.service';
-import { ShippingRequestBidsServiceProxy, WaybillsServiceProxy } from './service-proxies';
-import { ShippingRequestsTripServiceProxy } from './service-proxies';
 import { TerminologieServiceProxy } from 'shared/service-proxies/terminologies-ervice-proxy';
 
 @NgModule({
@@ -64,7 +62,6 @@ import { TerminologieServiceProxy } from 'shared/service-proxies/terminologies-e
     ApiServiceProxies.DocumentFilesServiceProxy,
     ApiServiceProxies.DocumentTypesServiceProxy,
     ApiServiceProxies.ShippingRequestsServiceProxy,
-    ApiServiceProxies.ShippingRequestBidsServiceProxy,
     ApiServiceProxies.GoodsDetailsServiceProxy,
     ApiServiceProxies.OffersServiceProxy,
     ApiServiceProxies.RoutStepsServiceProxy,
@@ -133,8 +130,6 @@ import { TerminologieServiceProxy } from 'shared/service-proxies/terminologies-e
     ApiServiceProxies.ShippingRequestsTripServiceProxy,
     ApiServiceProxies.ShippingRequestReasonAccidentServiceProxy,
     ApiServiceProxies.ShippingRequestTripAccidentServiceProxy,
-    ApiServiceProxies.ShippingRequestsTachyonDealerServiceProxy,
-    ApiServiceProxies.TachyonPriceOffersServiceProxy,
     ApiServiceProxies.ShippingRequestTripRejectReasonServiceProxy,
     ApiServiceProxies.InvoiceReportServiceServiceProxy,
     ApiServiceProxies.AppLocalizationServiceProxy,
@@ -142,6 +137,7 @@ import { TerminologieServiceProxy } from 'shared/service-proxies/terminologies-e
     ApiServiceProxies.ShippingRequestDirectRequestServiceProxy,
     ApiServiceProxies.PriceOfferServiceProxy,
     ApiServiceProxies.InvoicePaymentMethodServiceProxy,
+    ApiServiceProxies.ShippingRequestsTachyonDealerServiceProxy,
     TerminologieServiceProxy,
     { provide: RefreshTokenService, useClass: ZeroRefreshTokenService },
     { provide: AbpHttpConfigurationService, useClass: ZeroTemplateHttpConfigurationService },

@@ -1,38 +1,28 @@
 import { ChangeDetectorRef, Component, Inject, Injector, OnInit, ViewChild } from '@angular/core';
 import {
   GetShippingRequestForViewOutput,
-  ShippingRequestBidsServiceProxy,
   ShippingRequestDto,
   ShippingRequestsServiceProxy,
-  CancelBidShippingRequestInput,
+  GetShippingRequestVasForViewDto,
 } from '@shared/service-proxies/service-proxies';
 import { AppComponentBase } from '@shared/common/app-component-base';
 import { ActivatedRoute, NavigationEnd, Router, RouterEvent } from '@angular/router';
 import { appModuleAnimation } from '@shared/animations/routerTransition';
 import { BreadcrumbItem } from '@app/shared/common/sub-header/sub-header.component';
-import { Paginator } from 'primeng/paginator';
-import { Table } from '@node_modules/primeng/table';
 import { filter } from '@node_modules/rxjs/internal/operators';
 import { DOCUMENT } from '@angular/common';
-import { PricingOfferComponent } from '@app/main/shippingRequests/shippingRequests/tachyonDeal/pricingOffer/pricingOffer.component';
-import { GetAllDirectRequestsTableComponent } from '@app/main/shippingRequests/shippingRequests/directShippingRequest/getAllDirectRequestsTable.component';
-import { SendDirectRequestModalComponent } from '@app/main/shippingRequests/shippingRequests/directShippingRequest/sendDirectRequestsModal/sendDirectRequestModal.component';
+
 @Component({
   templateUrl: './view-shippingRequest.component.html',
   styleUrls: ['./view-shippingRequest.component.scss'],
   animations: [appModuleAnimation()],
 })
 export class ViewShippingRequestComponent extends AppComponentBase implements OnInit {
-  @ViewChild('pricingOffer', { static: false }) pricingOffer: PricingOfferComponent;
-  @ViewChild('GetAllDirectRequestsTable', { static: false }) GetAllDirectRequestsTable: GetAllDirectRequestsTableComponent;
-  @ViewChild('dataTableChild', { static: false })
-  dataTable: Table;
-  @ViewChild('paginatorChild', { static: false }) paginator: Paginator;
   active = false;
   saving = false;
   loading = true;
-  CancelBidShippingRequest: CancelBidShippingRequestInput = new CancelBidShippingRequestInput();
   shippingRequestforView: GetShippingRequestForViewOutput;
+  vases: GetShippingRequestVasForViewDto[];
   activeShippingRequestId: number;
   bidsloading = false;
 
@@ -46,7 +36,6 @@ export class ViewShippingRequestComponent extends AppComponentBase implements On
     private _activatedRoute: ActivatedRoute,
     private _router: Router,
     private _shippingRequestsServiceProxy: ShippingRequestsServiceProxy,
-    private _shippingRequestBidsServiceProxy: ShippingRequestBidsServiceProxy,
     private changeDetectorRef: ChangeDetectorRef,
     @Inject(DOCUMENT) private _document: Document
   ) {
@@ -60,7 +49,6 @@ export class ViewShippingRequestComponent extends AppComponentBase implements On
     this.show(this._activatedRoute.snapshot.queryParams['id']);
     this._router.events.pipe(filter((event: RouterEvent) => event instanceof NavigationEnd)).subscribe(() => {
       this.show(this._activatedRoute.snapshot.queryParams['id']);
-      this.reloadPage();
     });
     // this.GetAllDirectRequestsTable.sendDirectRequestsModal.shippingRequestId = this._activatedRoute.snapshot.queryParams['id'];
   }
@@ -68,6 +56,7 @@ export class ViewShippingRequestComponent extends AppComponentBase implements On
   show(shippingRequestId: number): void {
     this._shippingRequestsServiceProxy.getShippingRequestForView(shippingRequestId).subscribe((result) => {
       this.shippingRequestforView = result;
+      this.vases = result.shippingRequestVasDtoList;
       this.activeShippingRequestId = this.shippingRequestforView.shippingRequest.id;
       this.active = true;
       this.loading = false;
@@ -76,10 +65,6 @@ export class ViewShippingRequestComponent extends AppComponentBase implements On
 
   reloadCurrentPage() {
     this._document.defaultView.location.reload();
-  }
-
-  reloadPage(): void {
-    this.paginator.changePage(this.paginator.getPage());
   }
 
   /**
@@ -135,16 +120,12 @@ export class ViewShippingRequestComponent extends AppComponentBase implements On
    * this function validates who Can See And Access the DirectRequests List in ViewShippingRequest
    */
   canSeeDirectRequests() {
-    //if there is an active shipping Request id and the user is TachyonDealer and there still no Carrier assigned to this shipping Reqeust
-    if (
-      this.activeShippingRequestId &&
-      this.feature.isEnabled('App.SendDirectRequest') &&
-      ((!this.shippingRequestforView.shippingRequest.isTachyonDeal && !this.shippingRequestforView.shippingRequest.isBid) ||
-        (this.feature.isEnabled('App.TachyonDealer') && this.shippingRequestforView.shippingRequest.isTachyonDeal)) &&
-      !this.shippingRequestforView.shippingRequest.carrierTenantId
-    ) {
+    if (!this.feature.isEnabled('App.SendDirectRequest')) return false;
+    if (this.feature.isEnabled('App.TachyonDealer') && this.shippingRequestforView.shippingRequest.isTachyonDeal) {
       return true;
     }
+    if (this.feature.isEnabled('App.Shipper') && !this.shippingRequestforView.shippingRequest.isBid) return true;
+
     return false;
   }
 
@@ -173,7 +154,7 @@ export class ViewShippingRequestComponent extends AppComponentBase implements On
     let el = document.getElementById('directRequests');
     el.scrollIntoView({ behavior: 'smooth', block: 'center', inline: 'center' });
     setTimeout(() => {
-      this.GetAllDirectRequestsTable.sendDirectRequestsModal.show();
+      // this.GetAllDirectRequestsTable.sendDirectRequestsModal.show();
     }, 1000);
   }
 }

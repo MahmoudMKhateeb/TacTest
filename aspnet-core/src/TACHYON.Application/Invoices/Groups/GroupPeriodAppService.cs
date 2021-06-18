@@ -207,7 +207,7 @@ namespace TACHYON.Invoices.Groups
             if (Group !=null)
             {
                
-               await _invoiceManager.GenerateCarrirInvoice(Group);
+              // await _invoiceManager.GenerateCarrirInvoice(Group);
                Group.Status = SubmitInvoiceStatus.Accepted;
               await _appNotifier.SubmitInvoiceOnAccepted(new UserIdentifier(Group.TenantId, (await _userManager.GetAdminByTenantIdAsync(Group.TenantId)).Id), Group);
             }

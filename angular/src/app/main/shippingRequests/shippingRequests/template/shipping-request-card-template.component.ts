@@ -11,6 +11,7 @@ import {
 import * as _ from 'lodash';
 import { ScrollPagnationComponentBase } from '@shared/common/scroll/scroll-pagination-component-base';
 import { log } from 'util';
+import { ShippingRequestForPriceOfferGetAllInput } from '../../../../shared/common/search/ShippingRequestForPriceOfferGetAllInput';
 @Component({
   templateUrl: './shipping-request-card-template.component.html',
   styleUrls: ['/assets/custom/css/style.scss'],
@@ -19,6 +20,7 @@ import { log } from 'util';
 })
 export class ShippingRequestCardTemplateComponent extends ScrollPagnationComponentBase implements OnInit {
   Items: GetShippingRequestForPriceOfferListDto[] = [];
+  searchInput: ShippingRequestForPriceOfferGetAllInput = new ShippingRequestForPriceOfferGetAllInput();
   @Input() Channel: PriceOfferChannel | null | undefined = undefined;
   @Input() Title: string;
   @Input() ShippingRequestId: number | null | undefined = undefined;
@@ -28,18 +30,36 @@ export class ShippingRequestCardTemplateComponent extends ScrollPagnationCompone
   }
   ngOnInit(): void {
     this.direction = document.getElementsByTagName('html')[0].getAttribute('dir');
+    this.searchInput.channel = this.Channel;
+    this.searchInput.shippingRequestId = this.ShippingRequestId;
     this.LoadData();
   }
   LoadData() {
     this._currentServ
-      .getAllShippingRequest(undefined, this.ShippingRequestId, this.Channel, '', this.skipCount, this.maxResultCount)
+      .getAllShippingRequest(
+        this.searchInput.filter,
+        this.searchInput.shippingRequestId,
+        this.searchInput.channel,
+        this.searchInput.truckTypeId,
+        this.searchInput.originId,
+        this.searchInput.destinationId,
+        this.searchInput.pickupFromDate,
+        this.searchInput.pickupToDate,
+        this.searchInput.fromDate,
+        this.searchInput.toDate,
+        this.searchInput.routeTypeId,
+        this.searchInput.status,
+        this.searchInput.isTachyonDeal,
+        '',
+        this.skipCount,
+        this.maxResultCount
+      )
       .subscribe((result) => {
         this.IsLoading = false;
         if (result.items.length < this.maxResultCount) {
           this.StopLoading = true;
         }
         this.Items.push(...result.items);
-        console.log(result.items);
       });
   }
   canDeleteDirectRequest(input: GetShippingRequestForPriceOfferListDto) {
@@ -93,6 +113,14 @@ export class ShippingRequestCardTemplateComponent extends ScrollPagnationCompone
     }
     return '';
   }
+
+  search(): void {
+    this.IsLoading = true;
+    this.skipCount = 0;
+    this.Items = [];
+    this.LoadData();
+  }
+
   getWordTitle(n: any, word: string): string {
     if (parseInt(n) == 1) {
       return this.l(word);

@@ -18,7 +18,7 @@ namespace TACHYON.Shipping.Drivers
         Task ConfirmReceiverCode(string Code);
         Task SetRating(long PointId, double Rate, string Note);
         Task Accepted(int TripId);
-        Task Rejected(CreateShippingRequestTripDriverRejectDto Input);
+        //Task Rejected(CreateShippingRequestTripDriverRejectDto Input);
         Task Reset(int TripId);
         Task PushNotification(int TripId);
 

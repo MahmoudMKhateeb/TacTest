@@ -455,8 +455,7 @@ namespace TACHYON
             configuration.CreateMap<Invoice, InvoiceInfoDto>()
                 .ForMember(dto => dto.ClientName, options => options.MapFrom(entity => entity.Tenant.Name))
                 .ForMember(dto => dto.Address, options => options.MapFrom(entity => entity.Tenant.Address))
-                .ForMember(dto => dto.Period, options => options.MapFrom(entity => entity.InvoicePeriod.DisplayName))
-                 .ForMember(dto => dto.ShippingRequest, options => options.MapFrom(entity => entity.ShippingRequests));
+                .ForMember(dto => dto.Period, options => options.MapFrom(entity => entity.InvoicePeriod.DisplayName));
 
             configuration.CreateMap<InvoiceShippingRequests, InvoiceShippingRequestDto>()
               .ForMember(dto => dto.Price, options => options.MapFrom(entity => entity.ShippingRequests.Price))
@@ -496,6 +495,7 @@ namespace TACHYON
 
             configuration.CreateMap<TACHYON.Invoices.Transactions.Transaction, TransactionListDto>()
                 .ForMember(dto => dto.ClientName, options => options.MapFrom(entity => entity.Tenant.Name))
+                 .ForMember(dto => dto.Edition, options => options.MapFrom(entity => entity.Tenant.Edition.DisplayName))
                 .ForMember(dto => dto.Channel, options => options.MapFrom(entity => Enum.GetName(typeof(ChannelType), entity.ChannelId)));
             
             /* ADD YOUR OWN CUSTOM AUTOMAPPER MAPPINGS HERE */

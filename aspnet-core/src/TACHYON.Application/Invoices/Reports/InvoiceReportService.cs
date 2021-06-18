@@ -30,7 +30,7 @@ namespace TACHYON.Invoices.Reports
             data.Add(_invoiceAppService.GetInvoiceReportInfo(invoiceId));
 
             names.Add("GetInvoiceShippingRequestsReportInfoDataset");
-            data.Add(_invoiceAppService.GetInvoiceShippingRequestsReportInfo(invoiceId));
+            //data.Add(_invoiceAppService.GetInvoiceShippingRequestsReportInfo(invoiceId));
 
             return _pdfExporterBase.CreateRdlcPdfPackageFromList("Invoice", reportPath, names, data);
         }

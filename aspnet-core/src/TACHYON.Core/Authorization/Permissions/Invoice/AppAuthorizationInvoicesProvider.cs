@@ -13,8 +13,9 @@ namespace TACHYON.Authorization.Permissions.Invoice
             var pages = context.GetPermissionOrNull(AppPermissions.Pages) ?? context.CreatePermission(AppPermissions.Pages, L("Pages"));
 
             var Invoices = pages.CreateChildPermission(AppPermissions.Pages_Invoices, L("Invoices"));
-            Invoices.CreateChildPermission(AppPermissions.Pages_Administration_Host_Invoices_Delete, L("DeletingInvoice"), multiTenancySides: MultiTenancySides.Host);
-            Invoices.CreateChildPermission(AppPermissions.Pages_Administration_Host_Invoices_MakeUnPaid, L("UnPaidInvoice"), multiTenancySides: MultiTenancySides.Host);
+            //Invoices.CreateChildPermission(AppPermissions.Pages_Administration_Host_Invoices_Delete, L("DeletingInvoice"), multiTenancySides: MultiTenancySides.Tenant);
+            Invoices.CreateChildPermission(AppPermissions.Pages_Administration_Host_Invoices_MakeUnPaid, L("UnPaidInvoice"), multiTenancySides: MultiTenancySides.Tenant);
+            Invoices.CreateChildPermission(AppPermissions.Pages_Administration_Host_Invoices_MakePaid, L("PaidInvoice"), multiTenancySides: MultiTenancySides.Tenant);
 
 
             var Periods = Invoices.CreateChildPermission(AppPermissions.Pages_Administration_Host_Invoices_Periods, L("BillingInterval"), multiTenancySides: MultiTenancySides.Host);

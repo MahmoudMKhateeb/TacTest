@@ -182,9 +182,7 @@ import { ImageCropperModule } from '@node_modules/ngx-image-cropper';
 import { AgmCoreModule } from '@node_modules/@agm/core';
 import { UpdatePriceShippingRequestModalComponent } from './shippingRequests/shippingRequests/update-price-shipping-request-modal/update-price-shipping-request-modal.component';
 import { AdminModule } from '@app/admin/admin.module';
-
-import { MarketplaceComponent } from '@app/main/marketPlace/marketPlace/marketPlace/marketplace.component';
-
+import { ShippingRequestsListComponent } from '@app/main/shippingRequests/shippingRequestslist.component';
 import { MarketPlaceListComponent } from '@app/main/marketplaces/marketPlacelist.component';
 import { DirectRequestViewComponent } from '@app/main/directrequests/direct-request-view.component';
 import { PriceOfferModelComponent } from '@app/main/priceoffer/price-offer-model-component';
@@ -192,8 +190,6 @@ import { PriceOfferViewModelComponent } from '@app/main/priceoffer/price-offer-v
 import { PriceOfferListModelComponent } from '@app/main/priceoffer/price-offer-list-model-component';
 import { PriceOfferRejectModelComponent } from '@app/main/priceoffer/price-offer-reject-model-component';
 import { ShippingRequestOffersList } from '@app/main/shippingRequests/shippingRequests/offers/shipping-request-offers-list.component';
-import { ViewShippingRequestDetailsComponent } from '@app/main/marketPlace/marketPlace/ViewShippingRequestDetailsModal/ViewShippingRequestDetails.component';
-import { ViewAllCarrierBidsComponent } from '@app/main/marketPlace/marketPlace/ViewAllCarrierBidsModal/ViewAllCarrierBids.component';
 import { RejectionReasonModalComponent } from './documentFiles/documentFiles/rejectionReason-modal.component';
 import { ViewShippingRequestPriceResponseModalComponent } from './shippingRequests/shippingRequests/shipping-request-Response/view-shipping-request-response-modal.component';
 import { ListboxModule, MultiSelectModule, PickListModule, SelectButtonModule, StepsModule } from '@node_modules/primeng';
@@ -226,19 +222,11 @@ import { InvoicePaymentMethodModelComponent } from '@app/main/invoices/invoice-p
 import { AccidentReasonComponent } from '@app/main/accidents/reasons/reason.component';
 import { AccidentReasonComponentModalComponent } from '@app/main/accidents/reasons/create-or-edit-reason-modal.component';
 import { ViewTripModalComponent } from '@app/main/shippingRequests/shippingRequests/ShippingRequestTrips/trips/viewTripModal/viewTripModal.component';
-import { SendPricingOfferModalComponent } from '@app/main/shippingRequests/shippingRequests/tachyonDeal/pricingOffer/sendPricingOfferModal.component';
 import { TachyonDealToBiddingModalComponent } from '@app/main/shippingRequests/shippingRequests/tachyonDeal/tachyonDealToBiddingModal/tachyonDealToBiddingModal.component';
-import { PricingOfferComponent } from '@app/main/shippingRequests/shippingRequests/tachyonDeal/pricingOffer/pricingOffer.component';
-import { BiddingTableComponent } from '@app/main/shippingRequests/shippingRequests/bidding/biddingTable.component';
-import { RejectPricingOfferModalComponent } from '@app/main/shippingRequests/shippingRequests/tachyonDeal/pricingOffer/rejectPricingOfferModal.component';
-import { CarrierDirectReqestPageComponent } from '@app/main/shippingRequests/shippingRequests/directShippingRequest/carrierDirectReqestPage.component';
-import { CarrierResponseModalComponent } from '@app/main/shippingRequests/shippingRequests/directShippingRequest/carrierResponseModal/carrierResponseModal.component';
-import { GetAllDirectRequestsTableComponent } from '@app/main/shippingRequests/shippingRequests/directShippingRequest/getAllDirectRequestsTable.component';
-import { TachyonDealerResponceModelComponent } from '@app/main/shippingRequests/shippingRequests/directShippingRequest/tachyonDealerResponseModal/tachyonDealerResponceModel.component';
-import { SendDirectRequestModalComponent } from '@app/main/shippingRequests/shippingRequests/directShippingRequest/sendDirectRequestsModal/sendDirectRequestModal.component';
 import { DirectRequestComponent } from '@app/main/shippingRequests/shippingRequests/directrequest/direct-request.component';
 import { DirectRequestTenantModelComponent } from '@app/main/shippingRequests/shippingRequests/directrequest/direct-request-tenant-model.component';
 import { ShippingRequestCardTemplateComponent } from '@app/main/shippingRequests/shippingRequests/template/shipping-request-card-template.component';
+import { ShippingRequestCardSearchModelComponent } from '@app/main/shippingRequests/shippingRequests/template/shipping-request-card-search-model.component';
 import { AssignDriverTruckModalComponent } from '@app/main/shippingRequests/shippingRequests/ShippingRequestTrips/trips/assignDriverTruckModal/assignDriverTruckModal.component';
 import { AppLocalizationComponent } from '@app/main/applocalizations/applocalization.component';
 import { ApplocalizationModalComponent } from '@app/main/applocalizations/create-or-edit-applocalization-modal.component';
@@ -402,16 +390,14 @@ NgxBootstrapDatePickerConfigService.registerNgxBootstrapDatePickerLocales();
     CreateOrEditTrucksTypeModalComponent,
     DashboardComponent,
     UpdatePriceShippingRequestModalComponent,
-    MarketplaceComponent,
     MarketPlaceListComponent,
+    ShippingRequestsListComponent,
     DirectRequestViewComponent,
     PriceOfferModelComponent,
     PriceOfferViewModelComponent,
     PriceOfferListModelComponent,
     PriceOfferRejectModelComponent,
     ShippingRequestOffersList,
-    ViewShippingRequestDetailsComponent,
-    ViewAllCarrierBidsComponent,
     InvoicePeriodsListComponent,
     InvoicePeriodsModalComponent,
     InvoicesListComponent,
@@ -431,7 +417,6 @@ NgxBootstrapDatePickerConfigService.registerNgxBootstrapDatePickerLocales();
     CreateOrEditTripAccidentModalComponent,
     ViewTripModalComponent,
     ViewTripAccidentModelComponent,
-    BiddingTableComponent,
     CreateOrEditTripResolveAccidentModalComponent,
     AccidentReasonComponent,
     AccidentReasonComponentModalComponent,
@@ -440,17 +425,10 @@ NgxBootstrapDatePickerConfigService.registerNgxBootstrapDatePickerLocales();
     AssignDriverTruckModalComponent,
     //  tachyondealer
     TachyonDealToBiddingModalComponent,
-    CarrierDirectReqestPageComponent,
-    GetAllDirectRequestsTableComponent,
-    SendDirectRequestModalComponent,
     DirectRequestComponent,
     ShippingRequestCardTemplateComponent,
+    ShippingRequestCardSearchModelComponent,
     DirectRequestTenantModelComponent,
-    CarrierResponseModalComponent,
-    TachyonDealerResponceModelComponent,
-    RejectPricingOfferModalComponent,
-    SendPricingOfferModalComponent,
-    PricingOfferComponent,
     AppLocalizationComponent,
     ApplocalizationModalComponent,
     ViewApplocalizationModalComponent,

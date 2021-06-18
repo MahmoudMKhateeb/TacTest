@@ -43,8 +43,8 @@ import { TrailerTypesComponent } from './trailerTypes/trailerTypes/trailerTypes.
 import { TrucksComponent } from './trucks/trucks/trucks.component';
 import { TrucksTypesComponent } from './trucksTypes/trucksTypes/trucksTypes.component';
 import { DashboardComponent } from './dashboard/dashboard.component';
-import { MarketplaceComponent } from '@app/main/marketPlace/marketPlace/marketPlace/marketplace.component';
 import { MarketPlaceListComponent } from '@app/main/marketplaces/marketPlacelist.component';
+import { ShippingRequestsListComponent } from '@app/main/shippingRequests/shippingRequestslist.component';
 import { DirectRequestViewComponent } from '@app/main/directrequests/direct-request-view.component';
 import { InvoiceDetailResolverService } from '@app/main/invoices/invoice-detail/Invoice-detail-resolver.service';
 import { BalancesListComponent } from '@app/main/invoices/balances/balances-list/balances-list.component';
@@ -58,7 +58,6 @@ import { TransactionListComponent } from '@app/main/invoices/transaction/transac
 import { GroupDetailResolverService } from '@app/main/invoices/groupsPeriods/group-detail/group-detail-resolver.service';
 import { AccidentReasonComponent } from '@app/main/accidents/reasons/reason.component';
 import { TripRejectReasonComponent } from '@app/main/shippingRequests/shippingRequests/ShippingRequestTrips/rejectreason/trip-reject-reason.component';
-import { CarrierDirectReqestPageComponent } from '@app/main/shippingRequests/shippingRequests/directShippingRequest/carrierDirectReqestPage.component';
 import { AppLocalizationComponent } from '@app/main/applocalizations/applocalization.component';
 import { ComingSoonComponent } from '@app/main/commingSoon/comingSoon.component';
 
@@ -212,15 +211,13 @@ import { ComingSoonComponent } from '@app/main/commingSoon/comingSoon.component'
           { path: 'addressBook/facilities', component: FacilitiesComponent, data: { permission: 'Pages.Facilities' } },
           { path: 'documentFiles/documentFiles', component: DocumentFilesComponent, data: { permission: 'Pages.DocumentFiles' } },
           { path: 'documentTypes/documentTypes', component: DocumentTypesComponent, data: { permission: 'Pages.DocumentTypes' } },
-          { path: 'shippingRequests/shippingRequests', component: ShippingRequestsComponent, data: { permission: 'Pages.ShippingRequests' } },
+          { path: 'shippingRequests/shippingRequests', component: ShippingRequestsListComponent, data: { permission: 'Pages.ShippingRequests' } },
           {
             path: 'shippingRequests/shippingRequests/createOrEdit',
             component: CreateOrEditShippingRequestComponent,
             data: { permission: 'Pages.ShippingRequests.Create' },
           },
           { path: 'shippingRequests/shippingRequests/view', component: ViewShippingRequestComponent, data: { permission: 'Pages.ShippingRequests' } },
-          { path: 'shippingRequests/directShippingRequests', component: CarrierDirectReqestPageComponent },
-          { path: 'marketPlace/marketPlace', component: MarketplaceComponent },
           { path: 'marketplace/list', component: MarketPlaceListComponent },
           { path: 'directrequest/list', component: DirectRequestViewComponent },
           { path: 'offers/offers', component: OffersComponent, data: { permission: 'Pages.Offers' } },

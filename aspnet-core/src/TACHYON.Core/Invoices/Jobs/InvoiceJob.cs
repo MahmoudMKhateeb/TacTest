@@ -24,8 +24,9 @@ namespace TACHYON.Core.Invoices.Jobs
         public async Task Execute(IJobExecutionContext context)
         {
             JobKey key = context.JobDetail.Key;
-            JobDataMap dataMap = context.JobDetail.JobDataMap;
-            _InvoiceManager.GenerateInvoice((byte)dataMap.GetInt("PeriodId"));
+            //JobDataMap dataMap = context.JobDetail.JobDataMap;
+            JobDataMap dataMap = context.Trigger.JobDataMap;
+            _InvoiceManager.GenerateInvoice(dataMap.GetInt("PeriodId"));
             await Console.Error.WriteLineAsync("");
         }
 

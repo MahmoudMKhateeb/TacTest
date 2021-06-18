@@ -75,7 +75,7 @@ namespace TACHYON.Shipping.ShippingRequests
             BidDomainService bidDomainService,
             IRepository<Capacity, int> capacityRepository, IRepository<TransportType, int> transportTypeRepository, IRepository<RoutPoint, long> routPointRepository,
             IRepository<ShippingRequestsCarrierDirectPricing> carrierDirectPricingRepository,
-            CommissionManager commissionManager, IRepository<ShippingRequestDirectRequest, long> shippingRequestDirectRequestRepository, PriceOfferManager priceOfferManager)
+            IRepository<ShippingRequestDirectRequest, long> shippingRequestDirectRequestRepository, PriceOfferManager priceOfferManager)
         {
             _vasPriceRepository = vasPriceRepository;
             _shippingRequestRepository = shippingRequestRepository;
@@ -98,7 +98,6 @@ namespace TACHYON.Shipping.ShippingRequests
             _transportTypeRepository = transportTypeRepository;
             _routPointRepository = routPointRepository;
             _carrierDirectPricingRepository = carrierDirectPricingRepository;
-            _commissionManager = commissionManager;
             _shippingRequestDirectRequestRepository = shippingRequestDirectRequestRepository;
             _priceOfferManager = priceOfferManager;
         }
@@ -125,7 +124,6 @@ namespace TACHYON.Shipping.ShippingRequests
         private readonly BidDomainService _bidDomainService;
         private readonly IRepository<Capacity, int> _capacityRepository;
         private readonly IRepository<TransportType, int> _transportTypeRepository;
-        private readonly CommissionManager _commissionManager;
         private readonly IRepository<ShippingRequestTripVas, long> _shippingRequestTripVasRepository;
         private readonly PriceOfferManager _priceOfferManager;
         public async Task<GetAllShippingRequestsOutputDto> GetAll(GetAllShippingRequestsInput Input)
@@ -274,7 +272,6 @@ namespace TACHYON.Shipping.ShippingRequests
                 throw new UserFriendlyException(L("YouMustCompleteWizardStepsFirst"));
             }
             await ValidateShippingRequestBeforePublish(shippingRequest);
-            _commissionManager.AddShippingRequestCommissionSettingInfo(shippingRequest);
             shippingRequest.IsDrafted = false;
         }
 

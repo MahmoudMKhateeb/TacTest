@@ -45,9 +45,12 @@ export class InvoicePaymentMethodModelComponent extends AppComponentBase impleme
   }
 
   save(): void {
+    let input: CreateOrEditInvoicePaymentMethod = <CreateOrEditInvoicePaymentMethod>this.paymentMethod;
+    console.log(this.paymentMethod);
+    console.log(input);
     this.saving = true;
     this._currentSrv
-      .createOrEdit(<CreateOrEditInvoicePaymentMethod>this.paymentMethod)
+      .createOrEdit(input)
       .pipe(finalize(() => (this.saving = false)))
       .subscribe((result) => {
         this.notify.info(this.l('SavedSuccessfully'));

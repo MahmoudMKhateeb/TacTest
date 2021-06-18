@@ -1,4 +1,4 @@
-﻿<div [@routerTransition]>
+<div [@routerTransition]>
   <div class="content d-flex flex-column flex-column-fluid">
     <sub-header [title]="'Facilities' | localize" [description]="'' | localize">
       <div role="actions">
@@ -53,6 +53,33 @@
                 </div>
                 <div class="col-md-3">
                   <div class="form-group">
+                    <div class="checkbox-list mb-2">
+                      <label class="checkbox ml-2">
+                        <input
+                          type="checkbox"
+                          [(ngModel)]="creationDateRangeActive"
+                          id="TenantsTable_CreationDateRangeActive"
+                          name="CreationDateRangeActive"
+                          value="true"
+                        />
+                        {{ l('CreationTime') }}
+                        <span class="ml-2 mt-1"></span>
+                      </label>
+                    </div>
+                    <input
+                      class="form-control"
+                      name="CreationDateRange"
+                      [attr.disabled]="!creationDateRangeActive ? 'disabled' : null"
+                      #drpCreationDateRange="bsDaterangepicker"
+                      bsDaterangepicker
+                      readonly="readonly"
+                      dateRangePickerMomentModifier
+                      [(date)]="creationDateRange"
+                    />
+                  </div>
+                </div>
+                <div class="col-md-3">
+                  <div class="form-group">
                     <label for="MinLongitudeFilter">{{ l('MinMax') }} {{ l('Longitude') }}</label>
                     <div class="input-group">
                       <input
@@ -73,6 +100,7 @@
                     </div>
                   </div>
                 </div>
+
                 <div class="col-md-3">
                   <div class="form-group">
                     <label for="MinLatitudeFilter">{{ l('MinMax') }} {{ l('Latitude') }}</label>
@@ -154,6 +182,11 @@
                 <ng-template pTemplate="header">
                   <tr>
                     <th style="width: 130px;" [hidden]="!isGrantedAny('Pages.Facilities.Edit', 'Pages.Facilities.Delete')">{{ l('Actions') }}</th>
+                    <th style="width: 150px;" pSortableColumn="cityFk.CountyFk.displayName">
+                      {{ l('Country') }}
+                      <p-sortIcon field="CountryDisplayName"></p-sortIcon>
+                    </th>
+
                     <th style="width: 150px;" pSortableColumn="cityFk.displayName">
                       {{ l('DisplayName') }}
                       <p-sortIcon field="cityDisplayName"></p-sortIcon>
@@ -173,6 +206,10 @@
                     <th style="width: 150px;" pSortableColumn="latitude">
                       {{ l('Latitude') }}
                       <p-sortIcon field="facility.latitude"></p-sortIcon>
+                    </th>
+                    <th pSortableColumn="CreationTime">
+                      {{ l('CreationDate') }}
+                      <p-sortIcon field="CreationTime"></p-sortIcon>
                     </th>
                   </tr>
                 </ng-template>
@@ -209,6 +246,10 @@
                       </div>
                     </td>
                     <td style="width: 150px;">
+                      <span class="ui-column-title"> {{ l('Country') }}</span>
+                      {{ record.country }}
+                    </td>
+                    <td style="width: 150px;">
                       <span class="ui-column-title"> {{ l('DisplayName') }}</span>
                       {{ record.cityDisplayName }}
                     </td>
@@ -227,6 +268,10 @@
                     <td style="width: 150px;">
                       <span class="ui-column-title"> {{ l('Latitude') }}</span>
                       {{ record.facility.latitude }}
+                    </td>
+                    <td>
+                      <span class="ui-column-title"> {{ l('CreationDate') }}</span>
+                      {{ record.creationTime | momentFormat: 'L' }}
                     </td>
                   </tr>
                 </ng-template>

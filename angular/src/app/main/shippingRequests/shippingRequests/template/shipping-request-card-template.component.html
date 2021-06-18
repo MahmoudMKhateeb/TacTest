@@ -1,7 +1,11 @@
 <div [@routerTransition]>
   <div class="content d-flex flex-column flex-column-fluid">
     <!--begin::Subheader-->
-    <sub-header [title]="Title | localize" [description]="'' | localize"> </sub-header>
+    <sub-header [title]="Title | localize" [description]="'' | localize">
+      <div role="actions">
+        <button (click)="ModelSearch.show(searchInput)" class="btn btn-primary red"><i class="fas fa-search"></i> {{ l('Search') }}</button>
+      </div>
+    </sub-header>
     <!--end::Subheader-->
     <!--begin::Entry-->
 
@@ -123,3 +127,4 @@
 </div>
 <shippingrequests-details-model #Model [Channel]="Channel"></shippingrequests-details-model>
 <price-offer-list-model [Channel]="Channel" #ModelOffer></price-offer-list-model>
+<shipping-request-card-search-model #ModelSearch (modalsearch)="search()"></shipping-request-card-search-model>

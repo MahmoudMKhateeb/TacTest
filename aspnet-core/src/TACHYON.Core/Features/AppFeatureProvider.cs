@@ -107,40 +107,25 @@ namespace TACHYON.Features
             if (periods != null && periods.Count > 0)
             {
 
-                LocalizableComboboxItem[] Shipperitems = new LocalizableComboboxItem[periods.Count];
-
-                for (var i = 0; i < periods.Count; i++)
-                {
-                    Shipperitems[i] = new LocalizableComboboxItem(periods[i].Id.ToString(), L(periods[i].DisplayName));
-
-                }
-
-
+                LocalizableComboboxItem[] ShipperPeriods = periods.Where(x=>x.Enabled).Select(i => new LocalizableComboboxItem(i.Id.ToString(),L(i.DisplayName))).ToArray();
                 shipperFeature.CreateChildFeature(
                           AppFeatures.ShipperPeriods,
                           defaultValue: "false",
                           displayName: L(AppFeatures.ShipperPeriods),
                           inputType: new ComboboxInputType(
-                              new StaticLocalizableComboboxItemSource(Shipperitems)
+                              new StaticLocalizableComboboxItemSource(ShipperPeriods)
                           )
                         );
 
-                var Carrierperiods = periods.Where(p => p.ShipperOnlyUsed == false).ToList();
-                if (Carrierperiods != null && Carrierperiods.Count > 0)
+                var Carrierperiods = periods.Where(x => x.Enabled && !x.ShipperOnlyUsed).Select(i => new LocalizableComboboxItem(i.Id.ToString(), L(i.DisplayName))).ToArray();
+                if (Carrierperiods != null && Carrierperiods.Length > 0)
                 {
-                    LocalizableComboboxItem[] Carrieritems = new LocalizableComboboxItem[Carrierperiods.Count];
-
-                    for (var i = 0; i < Carrierperiods.Count; i++)
-                    {
-                        Carrieritems[i] = new LocalizableComboboxItem(Carrierperiods[i].Id.ToString(), L(Carrierperiods[i].DisplayName));
-
-                    }
                     carrierFeature.CreateChildFeature(
                                   AppFeatures.CarrierPeriods,
                                   defaultValue: "false",
                                   displayName: L(AppFeatures.CarrierPeriods),
                                   inputType: new ComboboxInputType(
-                                      new StaticLocalizableComboboxItemSource(Carrieritems)
+                                      new StaticLocalizableComboboxItemSource(Carrierperiods)
                                   )
                                 );
                 }

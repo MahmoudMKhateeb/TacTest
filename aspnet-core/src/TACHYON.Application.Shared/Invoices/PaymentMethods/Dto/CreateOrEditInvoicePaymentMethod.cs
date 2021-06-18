@@ -20,7 +20,7 @@ namespace TACHYON.Invoices.PaymentMethods.Dto
             {
                 context.Results.Add(new ValidationResult("TheNumberOfDaysMustBeGreatThanZero"));
             }
-            else
+            else if (PaymentType != InvoicePaymentType.Days)
                 InvoiceDueDateDays = default;
         }
     }

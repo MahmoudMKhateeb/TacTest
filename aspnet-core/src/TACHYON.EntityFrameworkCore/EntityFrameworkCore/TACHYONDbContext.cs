@@ -200,7 +200,7 @@ namespace TACHYON.EntityFrameworkCore
         public  DbSet<InvoiceProforma> InvoiceProforma { get; set; }
 
         
-        public virtual DbSet<InvoiceShippingRequests> InvoiceShippingRequests { get; set; }
+        public virtual DbSet<InvoiceTrip> InvoiceTrips { get; set; }
         public virtual DbSet<GroupPeriod> GroupPeriod { get; set; }
         public virtual DbSet<GroupShippingRequests> GroupShippingRequests { get; set; }
         public virtual DbSet<GroupPeriodInvoice> GroupPeriodInvoice { get; set; }
@@ -412,8 +412,13 @@ namespace TACHYON.EntityFrameworkCore
             modelBuilder.Entity<RoutPoint>()
             .HasIndex(e => e.WaybillNumber)
             .IsUnique();
+
             modelBuilder.Entity<User>()
             .HasIndex(e => e.AccountNumber)
+            .IsUnique();
+
+            modelBuilder.Entity<Invoice>()
+            .HasIndex(e => e.InvoiceNumber)
             .IsUnique();
             modelBuilder.ConfigurePersistedGrantEntity();
         }

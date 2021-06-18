@@ -15,5 +15,8 @@ namespace TACHYON.Receivers.Dtos
 
         public string FacilityNameFilter { get; set; }
 
+        public DateTime? FromDate { get; set; }
+        public DateTime? ToDate { get; set; }
+
     }
 }

@@ -30,7 +30,6 @@ namespace TACHYON.Invoices.Dto
         public decimal? VatAmount { get; set; }
         public decimal? TaxVat { get; set; }
         public DateTime CreationTime { get; set; }
-        public List<InvoiceShippingRequestDto> ShippingRequest { get; set; }
         public List<InvoiceItemDto> Items { get; set; }
     }
 

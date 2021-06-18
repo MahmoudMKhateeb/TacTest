@@ -279,6 +279,7 @@ namespace TACHYON.PriceOffers
             return await _priceOfferRepository
                   .GetAll()
                   .Include(r => r.ShippingRequestFK)
+                   .ThenInclude(r => r.Tenant)
                   .Include(t=>t.Tenant)
                   .Where(x => x.Id == id && (x.ShippingRequestFK.Status == ShippingRequestStatus.NeedsAction || x.ShippingRequestFK.Status == ShippingRequestStatus.AcceptedAndWaitingCarrier))
                   .WhereIf(_abpSession.TenantId.HasValue && await _featureChecker.IsEnabledAsync(AppFeatures.Shipper), x => x.ShippingRequestFK.TenantId == _abpSession.TenantId && 
@@ -309,6 +310,19 @@ namespace TACHYON.PriceOffers
         public async Task<PriceOffer> GetOfferById(long id)
         {
             return (await _priceOfferRepository.FirstOrDefaultAsync(x => x.Id == id));
+        }
+
+        /// <summary>
+        /// Return offer by id
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+
+        public async Task<PriceOffer> GetOffercceptedByShippingRequestId(long id)
+        {
+            return (await _priceOfferRepository
+                .GetAllIncluding(x=>x.PriceOfferDetails)
+                .FirstOrDefaultAsync(x => x.ShippingRequestId == id && x.Status== PriceOfferStatus.Accepted));
         }
 
         /// <summary>

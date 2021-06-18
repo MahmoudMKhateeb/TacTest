@@ -18,7 +18,7 @@ base(tempFileCacheManager)
         public FileDto ExportToFile(List<BalanceRechargeListDto> balanceRecharges)
         {
             return CreateExcelPackage(
-                "BalanceRecharges.xlsx",
+                "BalanceManagement",
                 excelPackage =>
                 {
 
@@ -26,7 +26,7 @@ base(tempFileCacheManager)
 
                     AddHeader(
                         sheet,
-                        L("ClientName"),
+                        L("ShipperName"),
                         L("Amount"),
                          L("CreationTime")
                         );

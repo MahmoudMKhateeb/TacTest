@@ -432,11 +432,9 @@ namespace TACHYON.Notifications
                 )
             );
             notificationData["invoiceid"] = invoice.Id;
-            UserIdentifier user = new UserIdentifier(invoice.TenantId, _userManager.GetAdminByTenantIdAsync(invoice.TenantId).Id);
 
             await _notificationPublisher.PublishAsync(AppNotificationNames.InvoiceShipperGenerated, notificationData,
-                userIds: new[] { user });
-
+                userIds: new[] { await GetAdminUser(invoice.TenantId) });
 
         }
 

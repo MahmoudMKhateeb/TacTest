@@ -13,6 +13,8 @@ import {
   CommonLookupServiceProxy,
   ChannelType,
   TransactionFilterInput,
+  EditionServiceProxy,
+  ComboboxItemDto,
 } from '@shared/service-proxies/service-proxies';
 import * as moment from 'moment';
 
@@ -30,23 +32,33 @@ export class TransactionListComponent extends AppComponentBase implements OnInit
   IsStartSearch: boolean = false;
   fromDate: moment.Moment | null | undefined;
   toDate: moment.Moment | null | undefined;
+  minLongitude: number | null | undefined;
+  maxLongitude: number | null | undefined;
   ChannelType: any;
   Channel: ChannelType | undefined = undefined;
   Tenant: ISelectItemDto;
   Tenants: ISelectItemDto[];
+  editions: ComboboxItemDto[] = [];
   creationDateRange: Date[] = [moment().startOf('day').toDate(), moment().endOf('day').toDate()];
   creationDateRangeActive: boolean = false;
+  editionId!: number | undefined;
   constructor(
     injector: Injector,
     private _CurrentServ: TransactionServiceProxy,
     private _CommonServ: CommonLookupServiceProxy,
     private _fileDownloadService: FileDownloadService,
-    private enumToArray: EnumToArrayPipe
+    private enumToArray: EnumToArrayPipe,
+    private _editionService: EditionServiceProxy
   ) {
     super(injector);
   }
   ngOnInit(): void {
     this.ChannelType = this.enumToArray.transform(ChannelType);
+    if (!this.appSession.tenantId || this.feature.isEnabled('App.TachyonDealer')) {
+      this._editionService.getEditionComboboxItems(0, true, false).subscribe((editions) => {
+        this.editions = editions;
+      });
+    }
   }
   getAll(event?: LazyLoadEvent): void {
     if (this.creationDateRangeActive) {
@@ -67,6 +79,9 @@ export class TransactionListComponent extends AppComponentBase implements OnInit
         this.Tenant ? parseInt(this.Tenant.id) : undefined,
         this.fromDate,
         this.toDate,
+        this.minLongitude,
+        this.maxLongitude,
+        this.editionId,
         this.primengTableHelper.getSorting(this.dataTable),
         this.primengTableHelper.getSkipCount(this.paginator, event),
         this.primengTableHelper.getMaxResultCount(this.paginator, event)
