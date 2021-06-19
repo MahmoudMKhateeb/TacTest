@@ -7,7 +7,7 @@ import { mergeMap, take } from 'rxjs/operators';
 @Injectable({
   providedIn: 'root',
 })
-export class SubmitInvoiceDetailResolverService implements Resolve<SubmitInvoiceInfoDto> {
+export class InvoiceTenantDetailsService implements Resolve<SubmitInvoiceInfoDto> {
   Result: any;
   constructor(private Serv: SubmitInvoicesServiceProxy, private router: Router) {}
 
