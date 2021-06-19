@@ -156,7 +156,7 @@
                       <FontFamily>Times New Roman</FontFamily>
                       <FontWeight>Bold</FontWeight>
                       <TextDecoration>None</TextDecoration>
-                      <Color>#000000</Color>
+                      <Color>#181818</Color>
                     </Style>
                   </TextRun>
                 </TextRuns>
@@ -173,7 +173,7 @@
                       <FontFamily>Times New Roman</FontFamily>
                       <FontWeight>Bold</FontWeight>
                       <TextDecoration>None</TextDecoration>
-                      <Color>#000000</Color>
+                      <Color>#181818</Color>
                     </Style>
                   </TextRun>
                 </TextRuns>
@@ -190,7 +190,7 @@
                       <FontFamily>Times New Roman</FontFamily>
                       <FontWeight>Bold</FontWeight>
                       <TextDecoration>None</TextDecoration>
-                      <Color>#000000</Color>
+                      <Color>#181818</Color>
                     </Style>
                   </TextRun>
                 </TextRuns>
@@ -207,7 +207,7 @@
                       <FontFamily>Times New Roman</FontFamily>
                       <FontWeight>Bold</FontWeight>
                       <TextDecoration>None</TextDecoration>
-                      <Color>#000000</Color>
+                      <Color>#181818</Color>
                     </Style>
                   </TextRun>
                 </TextRuns>
@@ -224,7 +224,7 @@
                       <FontFamily>Times New Roman</FontFamily>
                       <FontWeight>Bold</FontWeight>
                       <TextDecoration>None</TextDecoration>
-                      <Color>#000000</Color>
+                      <Color>#181818</Color>
                     </Style>
                   </TextRun>
                 </TextRuns>
@@ -241,7 +241,7 @@
                       <FontFamily>Times New Roman</FontFamily>
                       <FontWeight>Bold</FontWeight>
                       <TextDecoration>None</TextDecoration>
-                      <Color>#000000</Color>
+                      <Color>#181818</Color>
                     </Style>
                   </TextRun>
                 </TextRuns>
@@ -258,7 +258,7 @@
                       <FontFamily>Times New Roman</FontFamily>
                       <FontWeight>Bold</FontWeight>
                       <TextDecoration>None</TextDecoration>
-                      <Color>#000000</Color>
+                      <Color>#181818</Color>
                     </Style>
                   </TextRun>
                 </TextRuns>
@@ -275,7 +275,7 @@
                       <FontFamily>Times New Roman</FontFamily>
                       <FontWeight>Bold</FontWeight>
                       <TextDecoration>None</TextDecoration>
-                      <Color>#000000</Color>
+                      <Color>#181818</Color>
                     </Style>
                   </TextRun>
                 </TextRuns>
@@ -287,7 +287,7 @@
             <rd:DefaultName>Textbox3</rd:DefaultName>
             <Top>5.81503in</Top>
             <Left>3.90467in</Left>
-            <Height>2.3137in</Height>
+            <Height>2.33889in</Height>
             <Width>3.7237in</Width>
             <Style>
               <Border>
@@ -314,7 +314,7 @@
                     <Style>
                       <FontFamily>Open Sans</FontFamily>
                       <FontSize>9pt</FontSize>
-                      <Color>#282828</Color>
+                      <Color>#181818</Color>
                     </Style>
                   </TextRun>
                 </TextRuns>
@@ -324,9 +324,9 @@
               </Paragraph>
             </Paragraphs>
             <rd:DefaultName>Textbox3</rd:DefaultName>
-            <Top>0.11668in</Top>
+            <Top>0.15001in</Top>
             <Left>2.60685in</Left>
-            <Height>0.47667in</Height>
+            <Height>0.44334in</Height>
             <Width>2.47928in</Width>
             <ZIndex>1</ZIndex>
             <Style>
@@ -352,7 +352,7 @@
                     <Style>
                       <FontFamily>Open Sans</FontFamily>
                       <FontSize>9pt</FontSize>
-                      <Color>#282828</Color>
+                      <Color>#181818</Color>
                     </Style>
                   </TextRun>
                 </TextRuns>
@@ -362,10 +362,10 @@
               </Paragraph>
             </Paragraphs>
             <rd:DefaultName>Textbox3</rd:DefaultName>
-            <Top>0.11668in</Top>
+            <Top>0.15001in</Top>
             <Left>0.02394in</Left>
-            <Height>0.47667in</Height>
-            <Width>2.46285in</Width>
+            <Height>0.44334in</Height>
+            <Width>2.5295in</Width>
             <ZIndex>2</ZIndex>
             <Style>
               <Border>
@@ -390,7 +390,7 @@
                     <Style>
                       <FontFamily>Open Sans</FontFamily>
                       <FontSize>9pt</FontSize>
-                      <Color>#282828</Color>
+                      <Color>#181818</Color>
                     </Style>
                   </TextRun>
                 </TextRuns>
@@ -400,10 +400,10 @@
               </Paragraph>
             </Paragraphs>
             <rd:DefaultName>Textbox3</rd:DefaultName>
-            <Top>0.1319in</Top>
-            <Left>5.2062in</Left>
-            <Height>0.47667in</Height>
-            <Width>2.43599in</Width>
+            <Top>0.16523in</Top>
+            <Left>5.15951in</Left>
+            <Height>0.44334in</Height>
+            <Width>2.48268in</Width>
             <ZIndex>3</ZIndex>
             <Style>
               <Border>
@@ -421,77 +421,40 @@
             <TablixBody>
               <TablixColumns>
                 <TablixColumn>
-                  <Width>0.03125in</Width>
+                  <Width>0.51695in</Width>
                 </TablixColumn>
                 <TablixColumn>
-                  <Width>0.48496in</Width>
+                  <Width>0.56038in</Width>
                 </TablixColumn>
                 <TablixColumn>
-                  <Width>0.81732in</Width>
+                  <Width>0.74497in</Width>
                 </TablixColumn>
                 <TablixColumn>
-                  <Width>0.8336in</Width>
+                  <Width>0.80006in</Width>
                 </TablixColumn>
                 <TablixColumn>
-                  <Width>0.88869in</Width>
+                  <Width>0.82194in</Width>
                 </TablixColumn>
                 <TablixColumn>
-                  <Width>0.91057in</Width>
+                  <Width>1.03515in</Width>
                 </TablixColumn>
                 <TablixColumn>
-                  <Width>1.12378in</Width>
+                  <Width>0.7151in</Width>
                 </TablixColumn>
                 <TablixColumn>
-                  <Width>0.80373in</Width>
+                  <Width>0.71725in</Width>
                 </TablixColumn>
                 <TablixColumn>
-                  <Width>1.72821in</Width>
+                  <Width>0.68511in</Width>
+                </TablixColumn>
+                <TablixColumn>
+                  <Width>1.02838in</Width>
                 </TablixColumn>
               </TablixColumns>
               <TablixRows>
                 <TablixRow>
                   <Height>0.4618in</Height>
                   <TablixCells>
-                    <TablixCell>
-                      <CellContents>
-                        <Textbox Name="Textbox28">
-                          <CanGrow>true</CanGrow>
-                          <KeepTogether>true</KeepTogether>
-                          <Paragraphs>
-                            <Paragraph>
-                              <TextRuns>
-                                <TextRun>
-                                  <Value>#</Value>
-                                  <Style>
-                                    <FontStyle>Normal</FontStyle>
-                                    <FontFamily>Open Sans</FontFamily>
-                                    <FontSize>11pt</FontSize>
-                                    <FontWeight>Bold</FontWeight>
-                                    <TextDecoration>None</TextDecoration>
-                                    <Color>#404040</Color>
-                                  </Style>
-                                </TextRun>
-                              </TextRuns>
-                              <Style>
-                                <TextAlign>Center</TextAlign>
-                              </Style>
-                            </Paragraph>
-                          </Paragraphs>
-                          <rd:DefaultName>Textbox28</rd:DefaultName>
-                          <Style>
-                            <Border>
-                              <Color>LightGrey</Color>
-                              <Style>Solid</Style>
-                            </Border>
-                            <BackgroundColor>#d82631</BackgroundColor>
-                            <PaddingLeft>2pt</PaddingLeft>
-                            <PaddingRight>2pt</PaddingRight>
-                            <PaddingTop>2pt</PaddingTop>
-                            <PaddingBottom>2pt</PaddingBottom>
-                          </Style>
-                        </Textbox>
-                      </CellContents>
-                    </TablixCell>
                     <TablixCell>
                       <CellContents>
                         <Textbox Name="Textbox169">
@@ -855,11 +818,11 @@
                             <Paragraph>
                               <TextRuns>
                                 <TextRun>
-                                  <Value>Remarks</Value>
+                                  <Value>(VAT 15%)</Value>
                                   <Style>
                                     <FontStyle>Normal</FontStyle>
                                     <FontFamily>Times New Roman</FontFamily>
-                                    <FontSize>11pt</FontSize>
+                                    <FontSize>9pt</FontSize>
                                     <FontWeight>Bold</FontWeight>
                                     <TextDecoration>None</TextDecoration>
                                     <Color>White</Color>
@@ -873,11 +836,11 @@
                             <Paragraph>
                               <TextRuns>
                                 <TextRun>
-                                  <Value>ملاحظات</Value>
+                                  <Value>ضريبة القيمة المضافة</Value>
                                   <Style>
                                     <FontStyle>Normal</FontStyle>
                                     <FontFamily>Times New Roman</FontFamily>
-                                    <FontSize>11pt</FontSize>
+                                    <FontSize>9pt</FontSize>
                                     <FontWeight>Bold</FontWeight>
                                     <TextDecoration>None</TextDecoration>
                                     <Color>White</Color>
@@ -904,23 +867,41 @@
                         </Textbox>
                       </CellContents>
                     </TablixCell>
-                  </TablixCells>
-                </TablixRow>
-                <TablixRow>
-                  <Height>0.4618in</Height>
-                  <TablixCells>
                     <TablixCell>
                       <CellContents>
-                        <Textbox Name="Textbox31">
+                        <Textbox Name="Textbox11">
                           <CanGrow>true</CanGrow>
                           <KeepTogether>true</KeepTogether>
                           <Paragraphs>
                             <Paragraph>
                               <TextRuns>
                                 <TextRun>
-                                  <Value />
+                                  <Value>Total</Value>
                                   <Style>
+                                    <FontStyle>Normal</FontStyle>
+                                    <FontFamily>Times New Roman</FontFamily>
                                     <FontSize>9pt</FontSize>
+                                    <FontWeight>Bold</FontWeight>
+                                    <TextDecoration>None</TextDecoration>
+                                    <Color>White</Color>
+                                  </Style>
+                                </TextRun>
+                              </TextRuns>
+                              <Style>
+                                <TextAlign>Center</TextAlign>
+                              </Style>
+                            </Paragraph>
+                            <Paragraph>
+                              <TextRuns>
+                                <TextRun>
+                                  <Value>الإجمالي</Value>
+                                  <Style>
+                                    <FontStyle>Normal</FontStyle>
+                                    <FontFamily>Times New Roman</FontFamily>
+                                    <FontSize>9pt</FontSize>
+                                    <FontWeight>Bold</FontWeight>
+                                    <TextDecoration>None</TextDecoration>
+                                    <Color>White</Color>
                                   </Style>
                                 </TextRun>
                               </TextRuns>
@@ -929,12 +910,13 @@
                               </Style>
                             </Paragraph>
                           </Paragraphs>
-                          <rd:DefaultName>Textbox31</rd:DefaultName>
+                          <rd:DefaultName>Textbox11</rd:DefaultName>
                           <Style>
                             <Border>
                               <Color>LightGrey</Color>
                               <Style>Solid</Style>
                             </Border>
+                            <BackgroundColor>#d82631</BackgroundColor>
                             <PaddingLeft>2pt</PaddingLeft>
                             <PaddingRight>2pt</PaddingRight>
                             <PaddingTop>2pt</PaddingTop>
@@ -943,6 +925,69 @@
                         </Textbox>
                       </CellContents>
                     </TablixCell>
+                    <TablixCell>
+                      <CellContents>
+                        <Textbox Name="Textbox15">
+                          <CanGrow>true</CanGrow>
+                          <KeepTogether>true</KeepTogether>
+                          <Paragraphs>
+                            <Paragraph>
+                              <TextRuns>
+                                <TextRun>
+                                  <Value>Quantity</Value>
+                                  <Style>
+                                    <FontStyle>Normal</FontStyle>
+                                    <FontFamily>Times New Roman</FontFamily>
+                                    <FontSize>9pt</FontSize>
+                                    <FontWeight>Bold</FontWeight>
+                                    <TextDecoration>None</TextDecoration>
+                                    <Color>White</Color>
+                                  </Style>
+                                </TextRun>
+                              </TextRuns>
+                              <Style>
+                                <TextAlign>Center</TextAlign>
+                              </Style>
+                            </Paragraph>
+                            <Paragraph>
+                              <TextRuns>
+                                <TextRun>
+                                  <Value>الكمية</Value>
+                                  <Style>
+                                    <FontStyle>Normal</FontStyle>
+                                    <FontFamily>Times New Roman</FontFamily>
+                                    <FontSize>9pt</FontSize>
+                                    <FontWeight>Bold</FontWeight>
+                                    <TextDecoration>None</TextDecoration>
+                                    <Color>White</Color>
+                                  </Style>
+                                </TextRun>
+                              </TextRuns>
+                              <Style>
+                                <TextAlign>Center</TextAlign>
+                              </Style>
+                            </Paragraph>
+                          </Paragraphs>
+                          <rd:DefaultName>Textbox15</rd:DefaultName>
+                          <Style>
+                            <Border>
+                              <Color>LightGrey</Color>
+                              <Style>Solid</Style>
+                            </Border>
+                            <BackgroundColor>#d82631</BackgroundColor>
+                            <PaddingLeft>2pt</PaddingLeft>
+                            <PaddingRight>2pt</PaddingRight>
+                            <PaddingTop>2pt</PaddingTop>
+                            <PaddingBottom>2pt</PaddingBottom>
+                          </Style>
+                        </Textbox>
+                      </CellContents>
+                    </TablixCell>
+                  </TablixCells>
+                </TablixRow>
+                <TablixRow>
+                  <Height>0.4618in</Height>
+                  <TablixCells>
                     <TablixCell>
                       <CellContents>
                         <Textbox Name="Textbox170">
@@ -1212,12 +1257,75 @@
                         </Textbox>
                       </CellContents>
                     </TablixCell>
+                    <TablixCell>
+                      <CellContents>
+                        <Textbox Name="Textbox12">
+                          <CanGrow>true</CanGrow>
+                          <KeepTogether>true</KeepTogether>
+                          <Paragraphs>
+                            <Paragraph>
+                              <TextRuns>
+                                <TextRun>
+                                  <Value />
+                                  <Style>
+                                    <FontSize>9pt</FontSize>
+                                  </Style>
+                                </TextRun>
+                              </TextRuns>
+                              <Style>
+                                <TextAlign>Center</TextAlign>
+                              </Style>
+                            </Paragraph>
+                          </Paragraphs>
+                          <rd:DefaultName>Textbox12</rd:DefaultName>
+                          <Style>
+                            <Border>
+                              <Color>LightGrey</Color>
+                              <Style>Solid</Style>
+                            </Border>
+                            <PaddingTop>10pt</PaddingTop>
+                          </Style>
+                        </Textbox>
+                      </CellContents>
+                    </TablixCell>
+                    <TablixCell>
+                      <CellContents>
+                        <Textbox Name="Textbox16">
+                          <CanGrow>true</CanGrow>
+                          <KeepTogether>true</KeepTogether>
+                          <Paragraphs>
+                            <Paragraph>
+                              <TextRuns>
+                                <TextRun>
+                                  <Value />
+                                  <Style>
+                                    <FontSize>9pt</FontSize>
+                                  </Style>
+                                </TextRun>
+                              </TextRuns>
+                              <Style>
+                                <TextAlign>Center</TextAlign>
+                              </Style>
+                            </Paragraph>
+                          </Paragraphs>
+                          <rd:DefaultName>Textbox16</rd:DefaultName>
+                          <Style>
+                            <Border>
+                              <Color>LightGrey</Color>
+                              <Style>Solid</Style>
+                            </Border>
+                            <PaddingTop>10pt</PaddingTop>
+                          </Style>
+                        </Textbox>
+                      </CellContents>
+                    </TablixCell>
                   </TablixCells>
                 </TablixRow>
               </TablixRows>
             </TablixBody>
             <TablixColumnHierarchy>
               <TablixMembers>
+                <TablixMember />
                 <TablixMember />
                 <TablixMember />
                 <TablixMember />
@@ -1245,13 +1353,14 @@
             <Top>2.39291in</Top>
             <Left>0.02008in</Left>
             <Height>0.9236in</Height>
-            <Width>7.62211in</Width>
+            <Width>7.6253in</Width>
             <ZIndex>4</ZIndex>
             <Style>
               <Border>
                 <Style>None</Style>
               </Border>
               <VerticalAlign>Middle</VerticalAlign>
+              <Color>#181818</Color>
             </Style>
           </Tablix>
           <Textbox Name="Textbox119">
@@ -1267,7 +1376,7 @@
                       <FontFamily>Times New Roman</FontFamily>
                       <FontWeight>Normal</FontWeight>
                       <TextDecoration>None</TextDecoration>
-                      <Color>#000000</Color>
+                      <Color>#181818</Color>
                     </Style>
                   </TextRun>
                 </TextRuns>
@@ -1304,7 +1413,7 @@
                     <Value />
                     <Style>
                       <FontFamily>arial</FontFamily>
-                      <Color>#282828</Color>
+                      <Color>#181818</Color>
                     </Style>
                   </TextRun>
                 </TextRuns>
@@ -1341,6 +1450,7 @@
                     <Style>
                       <FontFamily>arial</FontFamily>
                       <FontSize>9pt</FontSize>
+                      <Color>#181818</Color>
                     </Style>
                   </TextRun>
                 </TextRuns>
@@ -1350,10 +1460,10 @@
               </Paragraph>
             </Paragraphs>
             <rd:DefaultName>Textbox3</rd:DefaultName>
-            <Top>0.16883in</Top>
-            <Left>7.26352in</Left>
-            <Height>0.4198in</Height>
-            <Width>0.37867in</Width>
+            <Top>0.20216in</Top>
+            <Left>7.05211in</Left>
+            <Height>0.38647in</Height>
+            <Width>0.59008in</Width>
             <ZIndex>7</ZIndex>
             <Style>
               <Border>
@@ -1381,6 +1491,7 @@
                       <FontSize>9pt</FontSize>
                       <FontWeight>Normal</FontWeight>
                       <TextDecoration>None</TextDecoration>
+                      <Color>#181818</Color>
                     </Style>
                   </TextRun>
                 </TextRuns>
@@ -1390,10 +1501,10 @@
               </Paragraph>
             </Paragraphs>
             <rd:DefaultName>Textbox3</rd:DefaultName>
-            <Top>0.14136in</Top>
-            <Left>5.24102in</Left>
-            <Height>0.42355in</Height>
-            <Width>0.58791in</Width>
+            <Top>0.17469in</Top>
+            <Left>5.19433in</Left>
+            <Height>0.39022in</Height>
+            <Width>0.6346in</Width>
             <ZIndex>8</ZIndex>
             <Style>
               <Border>
@@ -1420,7 +1531,7 @@
                       <FontFamily>Times New Roman</FontFamily>
                       <FontWeight>Bold</FontWeight>
                       <TextDecoration>None</TextDecoration>
-                      <Color>#000000</Color>
+                      <Color>#181818</Color>
                     </Style>
                   </TextRun>
                 </TextRuns>
@@ -1437,7 +1548,7 @@
                       <FontFamily>Times New Roman</FontFamily>
                       <FontWeight>Bold</FontWeight>
                       <TextDecoration>None</TextDecoration>
-                      <Color>#000000</Color>
+                      <Color>#181818</Color>
                     </Style>
                   </TextRun>
                 </TextRuns>
@@ -1454,7 +1565,7 @@
                       <FontFamily>Times New Roman</FontFamily>
                       <FontWeight>Bold</FontWeight>
                       <TextDecoration>None</TextDecoration>
-                      <Color>#000000</Color>
+                      <Color>#181818</Color>
                     </Style>
                   </TextRun>
                 </TextRuns>
@@ -1493,6 +1604,7 @@
                     <Style>
                       <FontFamily>arial</FontFamily>
                       <FontWeight>Bold</FontWeight>
+                      <Color>#181818</Color>
                     </Style>
                   </TextRun>
                 </TextRuns>
@@ -1530,6 +1642,7 @@
                     <Value>=First(Fields!InvoiceNo.Value, "GetInvoiceReportInfoDataset")</Value>
                     <Style>
                       <FontSize>9pt</FontSize>
+                      <Color>#181818</Color>
                     </Style>
                   </TextRun>
                 </TextRuns>
@@ -1539,10 +1652,10 @@
               </Paragraph>
             </Paragraphs>
             <rd:DefaultName>Textbox82</rd:DefaultName>
-            <Top>0.15173in</Top>
+            <Top>0.18506in</Top>
             <Left>5.86356in</Left>
-            <Height>0.40281in</Height>
-            <Width>1.26601in</Width>
+            <Height>0.36948in</Height>
+            <Width>1.17466in</Width>
             <ZIndex>11</ZIndex>
             <Style>
               <Border>
@@ -1565,6 +1678,7 @@
                     <Style>
                       <FontFamily>arial</FontFamily>
                       <FontSize>9pt</FontSize>
+                      <Color>#181818</Color>
                     </Style>
                   </TextRun>
                 </TextRuns>
@@ -1574,10 +1688,10 @@
               </Paragraph>
             </Paragraphs>
             <rd:DefaultName>Textbox3</rd:DefaultName>
-            <Top>0.16883in</Top>
-            <Left>4.599in</Left>
-            <Height>0.40281in</Height>
-            <Width>0.43791in</Width>
+            <Top>0.20216in</Top>
+            <Left>4.46105in</Left>
+            <Height>0.36948in</Height>
+            <Width>0.57586in</Width>
             <ZIndex>12</ZIndex>
             <Style>
               <Border>
@@ -1605,6 +1719,7 @@
                       <FontSize>9pt</FontSize>
                       <FontWeight>Normal</FontWeight>
                       <TextDecoration>None</TextDecoration>
+                      <Color>#181818</Color>
                     </Style>
                   </TextRun>
                 </TextRuns>
@@ -1614,9 +1729,9 @@
               </Paragraph>
             </Paragraphs>
             <rd:DefaultName>Textbox3</rd:DefaultName>
-            <Top>0.14788in</Top>
+            <Top>0.18121in</Top>
             <Left>2.61641in</Left>
-            <Height>0.41426in</Height>
+            <Height>0.38093in</Height>
             <Width>0.44609in</Width>
             <ZIndex>13</ZIndex>
             <Style>
@@ -1641,6 +1756,7 @@
                     <Value>=First(Fields!Phone.Value, "GetInvoiceReportInfoDataset")</Value>
                     <Style>
                       <FontSize>9pt</FontSize>
+                      <Color>#181818</Color>
                     </Style>
                   </TextRun>
                 </TextRuns>
@@ -1650,10 +1766,10 @@
               </Paragraph>
             </Paragraphs>
             <rd:DefaultName>Textbox82</rd:DefaultName>
-            <Top>0.1621in</Top>
+            <Top>0.19543in</Top>
             <Left>3.0625in</Left>
-            <Height>0.40281in</Height>
-            <Width>1.50872in</Width>
+            <Height>0.36948in</Height>
+            <Width>1.42088in</Width>
             <ZIndex>14</ZIndex>
             <Style>
               <Border>
@@ -1676,6 +1792,7 @@
                     <Style>
                       <FontFamily>arial</FontFamily>
                       <FontSize>9pt</FontSize>
+                      <Color>#181818</Color>
                     </Style>
                   </TextRun>
                 </TextRuns>
@@ -1685,10 +1802,10 @@
               </Paragraph>
             </Paragraphs>
             <rd:DefaultName>Textbox3</rd:DefaultName>
-            <Top>0.15361in</Top>
-            <Left>2.05575in</Left>
-            <Height>0.40281in</Height>
-            <Width>0.4267in</Width>
+            <Top>0.18694in</Top>
+            <Left>1.91408in</Left>
+            <Height>0.36948in</Height>
+            <Width>0.63501in</Width>
             <ZIndex>15</ZIndex>
             <Style>
               <Border>
@@ -1712,6 +1829,7 @@
                     <Value>=First(Fields!BillTo.Value, "GetInvoiceReportInfoDataset")</Value>
                     <Style>
                       <FontSize>9pt</FontSize>
+                      <Color>#181818</Color>
                     </Style>
                   </TextRun>
                 </TextRuns>
@@ -1721,10 +1839,10 @@
               </Paragraph>
             </Paragraphs>
             <rd:DefaultName>Textbox82</rd:DefaultName>
-            <Top>0.14511in</Top>
+            <Top>0.17844in</Top>
             <Left>0.51217in</Left>
-            <Height>0.4198in</Height>
-            <Width>1.48802in</Width>
+            <Height>0.38647in</Height>
+            <Width>1.46856in</Width>
             <ZIndex>16</ZIndex>
             <Style>
               <Border>
@@ -1750,6 +1868,7 @@
                       <FontSize>9pt</FontSize>
                       <FontWeight>Normal</FontWeight>
                       <TextDecoration>None</TextDecoration>
+                      <Color>#181818</Color>
                     </Style>
                   </TextRun>
                 </TextRuns>
@@ -1759,10 +1878,10 @@
               </Paragraph>
             </Paragraphs>
             <rd:DefaultName>Textbox3</rd:DefaultName>
-            <Top>0.14788in</Top>
+            <Top>0.18121in</Top>
             <Left>0.05938in</Left>
-            <Height>0.41426in</Height>
-            <Width>0.38335in</Width>
+            <Height>0.38093in</Height>
+            <Width>0.50555in</Width>
             <ZIndex>17</ZIndex>
             <Style>
               <Border>
@@ -1786,7 +1905,7 @@
                     <Value />
                     <Style>
                       <FontFamily>Open Sans</FontFamily>
-                      <Color>#282828</Color>
+                      <Color>#181818</Color>
                     </Style>
                   </TextRun>
                 </TextRuns>
@@ -1797,9 +1916,9 @@
             </Paragraphs>
             <rd:DefaultName>Textbox3</rd:DefaultName>
             <Top>0.64108in</Top>
-            <Left>5.20482in</Left>
-            <Height>0.47667in</Height>
-            <Width>2.43737in</Width>
+            <Left>5.15813in</Left>
+            <Height>0.37667in</Height>
+            <Width>2.48406in</Width>
             <ZIndex>18</ZIndex>
             <Style>
               <Border>
@@ -1823,6 +1942,7 @@
                     <Value>:تاريخ الفاتورة</Value>
                     <Style>
                       <FontFamily>arial</FontFamily>
+                      <Color>#181818</Color>
                     </Style>
                   </TextRun>
                 </TextRuns>
@@ -1833,9 +1953,9 @@
             </Paragraphs>
             <rd:DefaultName>Textbox3</rd:DefaultName>
             <Top>0.67801in</Top>
-            <Left>7.066in</Left>
-            <Height>0.4198in</Height>
-            <Width>0.59528in</Width>
+            <Left>6.9158in</Left>
+            <Height>0.3198in</Height>
+            <Width>0.74548in</Width>
             <ZIndex>19</ZIndex>
             <Style>
               <Border>
@@ -1862,6 +1982,7 @@
                       <FontFamily>Times New Roman</FontFamily>
                       <FontWeight>Normal</FontWeight>
                       <TextDecoration>None</TextDecoration>
+                      <Color>#181818</Color>
                     </Style>
                   </TextRun>
                 </TextRuns>
@@ -1872,9 +1993,9 @@
             </Paragraphs>
             <rd:DefaultName>Textbox3</rd:DefaultName>
             <Top>0.64108in</Top>
-            <Left>5.24102in</Left>
-            <Height>0.47667in</Height>
-            <Width>0.70352in</Width>
+            <Left>5.19433in</Left>
+            <Height>0.37667in</Height>
+            <Width>0.90044in</Width>
             <ZIndex>20</ZIndex>
             <Style>
               <Border>
@@ -1896,7 +2017,9 @@
                 <TextRuns>
                   <TextRun>
                     <Value>=First(Fields!InvoiceDate.Value, "GetInvoiceReportInfoDataset")</Value>
-                    <Style />
+                    <Style>
+                      <Color>#181818</Color>
+                    </Style>
                   </TextRun>
                 </TextRuns>
                 <Style>
@@ -1905,10 +2028,10 @@
               </Paragraph>
             </Paragraphs>
             <rd:DefaultName>Textbox82</rd:DefaultName>
-            <Top>0.67801in</Top>
+            <Top>0.63413in</Top>
             <Left>6.10866in</Left>
-            <Height>0.40281in</Height>
-            <Width>0.85116in</Width>
+            <Height>0.30669in</Height>
+            <Width>0.79325in</Width>
             <ZIndex>21</ZIndex>
             <Style>
               <Border>
@@ -1930,7 +2053,7 @@
                     <Value />
                     <Style>
                       <FontFamily>Open Sans</FontFamily>
-                      <Color>#282828</Color>
+                      <Color>#181818</Color>
                     </Style>
                   </TextRun>
                 </TextRuns>
@@ -1942,7 +2065,7 @@
             <rd:DefaultName>Textbox3</rd:DefaultName>
             <Top>0.64108in</Top>
             <Left>2.61079in</Left>
-            <Height>0.47667in</Height>
+            <Height>0.37667in</Height>
             <Width>2.47397in</Width>
             <ZIndex>22</ZIndex>
             <Style>
@@ -1967,6 +2090,7 @@
                     <Value>:رقم الفاكس</Value>
                     <Style>
                       <FontFamily>arial</FontFamily>
+                      <Color>#181818</Color>
                     </Style>
                   </TextRun>
                 </TextRuns>
@@ -1977,9 +2101,9 @@
             </Paragraphs>
             <rd:DefaultName>Textbox3</rd:DefaultName>
             <Top>0.67801in</Top>
-            <Left>4.51116in</Left>
-            <Height>0.40281in</Height>
-            <Width>0.52124in</Width>
+            <Left>4.37782in</Left>
+            <Height>0.30281in</Height>
+            <Width>0.65458in</Width>
             <ZIndex>23</ZIndex>
             <Style>
               <Border>
@@ -2006,6 +2130,7 @@
                       <FontFamily>Times New Roman</FontFamily>
                       <FontWeight>Normal</FontWeight>
                       <TextDecoration>None</TextDecoration>
+                      <Color>#181818</Color>
                     </Style>
                   </TextRun>
                 </TextRuns>
@@ -2017,7 +2142,7 @@
             <rd:DefaultName>Textbox3</rd:DefaultName>
             <Top>0.67229in</Top>
             <Left>2.60685in</Left>
-            <Height>0.41426in</Height>
+            <Height>0.31426in</Height>
             <Width>0.36994in</Width>
             <ZIndex>24</ZIndex>
             <Style>
@@ -2040,7 +2165,9 @@
                 <TextRuns>
                   <TextRun>
                     <Value>=First(Fields!Fax.Value, "GetInvoiceReportInfoDataset")</Value>
-                    <Style />
+                    <Style>
+                      <Color>#181818</Color>
+                    </Style>
                   </TextRun>
                 </TextRuns>
                 <Style>
@@ -2051,8 +2178,8 @@
             <rd:DefaultName>Textbox82</rd:DefaultName>
             <Top>0.67801in</Top>
             <Left>3.01845in</Left>
-            <Height>0.40281in</Height>
-            <Width>1.46493in</Width>
+            <Height>0.30281in</Height>
+            <Width>1.34549in</Width>
             <ZIndex>25</ZIndex>
             <Style>
               <Border>
@@ -2074,7 +2201,7 @@
                     <Value />
                     <Style>
                       <FontFamily>Open Sans</FontFamily>
-                      <Color>#282828</Color>
+                      <Color>#181818</Color>
                     </Style>
                   </TextRun>
                 </TextRuns>
@@ -2086,8 +2213,8 @@
             <rd:DefaultName>Textbox3</rd:DefaultName>
             <Top>0.64108in</Top>
             <Left>0.02394in</Left>
-            <Height>0.47667in</Height>
-            <Width>2.45852in</Width>
+            <Height>0.37667in</Height>
+            <Width>2.52517in</Width>
             <ZIndex>26</ZIndex>
             <Style>
               <Border>
@@ -2111,6 +2238,7 @@
                     <Value>:السجل التجاري</Value>
                     <Style>
                       <FontFamily>arial</FontFamily>
+                      <Color>#181818</Color>
                     </Style>
                   </TextRun>
                 </TextRuns>
@@ -2121,9 +2249,9 @@
             </Paragraphs>
             <rd:DefaultName>Textbox3</rd:DefaultName>
             <Top>0.67801in</Top>
-            <Left>1.69936in</Left>
-            <Height>0.40281in</Height>
-            <Width>0.71559in</Width>
+            <Left>1.52436in</Left>
+            <Height>0.30281in</Height>
+            <Width>0.95724in</Width>
             <ZIndex>27</ZIndex>
             <Style>
               <Border>
@@ -2145,7 +2273,9 @@
                 <TextRuns>
                   <TextRun>
                     <Value>=First(Fields!CR.Value, "GetInvoiceReportInfoDataset")</Value>
-                    <Style />
+                    <Style>
+                      <Color>#181818</Color>
+                    </Style>
                   </TextRun>
                 </TextRuns>
                 <Style>
@@ -2156,8 +2286,8 @@
             <rd:DefaultName>Textbox82</rd:DefaultName>
             <Top>0.66952in</Top>
             <Left>0.44176in</Left>
-            <Height>0.4198in</Height>
-            <Width>1.16532in</Width>
+            <Height>0.3198in</Height>
+            <Width>1.14925in</Width>
             <ZIndex>28</ZIndex>
             <Style>
               <Border>
@@ -2182,6 +2312,7 @@
                       <FontFamily>Times New Roman</FontFamily>
                       <FontWeight>Normal</FontWeight>
                       <TextDecoration>None</TextDecoration>
+                      <Color>#181818</Color>
                     </Style>
                   </TextRun>
                 </TextRuns>
@@ -2193,8 +2324,8 @@
             <rd:DefaultName>Textbox3</rd:DefaultName>
             <Top>0.67229in</Top>
             <Left>0.05938in</Left>
-            <Height>0.41426in</Height>
-            <Width>0.34071in</Width>
+            <Height>0.31426in</Height>
+            <Width>0.40736in</Width>
             <ZIndex>29</ZIndex>
             <Style>
               <Border>
@@ -2218,7 +2349,7 @@
                     <Value />
                     <Style>
                       <FontFamily>Open Sans</FontFamily>
-                      <Color>#282828</Color>
+                      <Color>#181818</Color>
                     </Style>
                   </TextRun>
                 </TextRuns>
@@ -2229,9 +2360,9 @@
             </Paragraphs>
             <rd:DefaultName>Textbox3</rd:DefaultName>
             <Top>1.17739in</Top>
-            <Left>5.20089in</Left>
-            <Height>0.47667in</Height>
-            <Width>2.44131in</Width>
+            <Left>5.1542in</Left>
+            <Height>0.37667in</Height>
+            <Width>2.488in</Width>
             <ZIndex>30</ZIndex>
             <Style>
               <Border>
@@ -2255,6 +2386,7 @@
                     <Value>:تاريخ الإستحقاق</Value>
                     <Style>
                       <FontFamily>arial</FontFamily>
+                      <Color>#181818</Color>
                     </Style>
                   </TextRun>
                 </TextRuns>
@@ -2265,9 +2397,9 @@
             </Paragraphs>
             <rd:DefaultName>Textbox3</rd:DefaultName>
             <Top>1.20582in</Top>
-            <Left>6.9158in</Left>
-            <Height>0.4198in</Height>
-            <Width>0.74547in</Width>
+            <Left>6.7908in</Left>
+            <Height>0.3198in</Height>
+            <Width>0.87047in</Width>
             <ZIndex>31</ZIndex>
             <Style>
               <Border>
@@ -2294,6 +2426,7 @@
                       <FontFamily>Times New Roman</FontFamily>
                       <FontWeight>Normal</FontWeight>
                       <TextDecoration>None</TextDecoration>
+                      <Color>#181818</Color>
                     </Style>
                   </TextRun>
                 </TextRuns>
@@ -2304,9 +2437,9 @@
             </Paragraphs>
             <rd:DefaultName>Textbox3</rd:DefaultName>
             <Top>1.17739in</Top>
-            <Left>5.20089in</Left>
-            <Height>0.47667in</Height>
-            <Width>0.59962in</Width>
+            <Left>5.1542in</Left>
+            <Height>0.37667in</Height>
+            <Width>0.64631in</Width>
             <ZIndex>32</ZIndex>
             <Style>
               <Border>
@@ -2328,7 +2461,9 @@
                 <TextRuns>
                   <TextRun>
                     <Value>=First(Fields!DueDate.Value, "GetInvoiceReportInfoDataset")</Value>
-                    <Style />
+                    <Style>
+                      <Color>#181818</Color>
+                    </Style>
                   </TextRun>
                 </TextRuns>
                 <Style>
@@ -2337,10 +2472,10 @@
               </Paragraph>
             </Paragraphs>
             <rd:DefaultName>Textbox82</rd:DefaultName>
-            <Top>1.21432in</Top>
+            <Top>1.15739in</Top>
             <Left>5.85606in</Left>
-            <Height>0.40281in</Height>
-            <Width>1.05974in</Width>
+            <Height>0.33974in</Height>
+            <Width>0.98474in</Width>
             <ZIndex>33</ZIndex>
             <Style>
               <Border>
@@ -2362,7 +2497,7 @@
                     <Value />
                     <Style>
                       <FontFamily>Open Sans</FontFamily>
-                      <Color>#282828</Color>
+                      <Color>#181818</Color>
                     </Style>
                   </TextRun>
                 </TextRuns>
@@ -2374,8 +2509,8 @@
             <rd:DefaultName>Textbox3</rd:DefaultName>
             <Top>1.17739in</Top>
             <Left>2.62074in</Left>
-            <Height>0.47667in</Height>
-            <Width>2.46008in</Width>
+            <Height>0.37667in</Height>
+            <Width>2.47791in</Width>
             <ZIndex>34</ZIndex>
             <Style>
               <Border>
@@ -2399,6 +2534,7 @@
                     <Value>:بريد إلكتروني</Value>
                     <Style>
                       <FontFamily>arial</FontFamily>
+                      <Color>#181818</Color>
                     </Style>
                   </TextRun>
                 </TextRuns>
@@ -2409,9 +2545,9 @@
             </Paragraphs>
             <rd:DefaultName>Textbox3</rd:DefaultName>
             <Top>1.21432in</Top>
-            <Left>4.46105in</Left>
-            <Height>0.40281in</Height>
-            <Width>0.62371in</Width>
+            <Left>4.27772in</Left>
+            <Height>0.30281in</Height>
+            <Width>0.80704in</Width>
             <ZIndex>35</ZIndex>
             <Style>
               <Border>
@@ -2438,6 +2574,7 @@
                       <FontFamily>Times New Roman</FontFamily>
                       <FontWeight>Normal</FontWeight>
                       <TextDecoration>None</TextDecoration>
+                      <Color>#181818</Color>
                     </Style>
                   </TextRun>
                 </TextRuns>
@@ -2449,8 +2586,8 @@
             <rd:DefaultName>Textbox3</rd:DefaultName>
             <Top>1.20859in</Top>
             <Left>2.62074in</Left>
-            <Height>0.41426in</Height>
-            <Width>0.60604in</Width>
+            <Height>0.31426in</Height>
+            <Width>0.55009in</Width>
             <ZIndex>36</ZIndex>
             <Style>
               <Border>
@@ -2472,7 +2609,9 @@
                 <TextRuns>
                   <TextRun>
                     <Value>=First(Fields!Email.Value, "GetInvoiceReportInfoDataset")</Value>
-                    <Style />
+                    <Style>
+                      <Color>#181818</Color>
+                    </Style>
                   </TextRun>
                 </TextRuns>
                 <Style>
@@ -2482,9 +2621,9 @@
             </Paragraphs>
             <rd:DefaultName>Textbox82</rd:DefaultName>
             <Top>1.21432in</Top>
-            <Left>3.29622in</Left>
-            <Height>0.40281in</Height>
-            <Width>1.13705in</Width>
+            <Left>3.0625in</Left>
+            <Height>0.30281in</Height>
+            <Width>1.30144in</Width>
             <ZIndex>37</ZIndex>
             <Style>
               <Border>
@@ -2506,7 +2645,7 @@
                     <Value />
                     <Style>
                       <FontFamily>Open Sans</FontFamily>
-                      <Color>#282828</Color>
+                      <Color>#181818</Color>
                     </Style>
                   </TextRun>
                 </TextRuns>
@@ -2518,8 +2657,8 @@
             <rd:DefaultName>Textbox3</rd:DefaultName>
             <Top>1.17739in</Top>
             <Left>0.02008in</Left>
-            <Height>0.47667in</Height>
-            <Width>2.48453in</Width>
+            <Height>0.37667in</Height>
+            <Width>2.55118in</Width>
             <ZIndex>38</ZIndex>
             <Style>
               <Border>
@@ -2543,6 +2682,7 @@
                     <Value>:العنوان</Value>
                     <Style>
                       <FontFamily>arial</FontFamily>
+                      <Color>#181818</Color>
                     </Style>
                   </TextRun>
                 </TextRuns>
@@ -2554,8 +2694,8 @@
             <rd:DefaultName>Textbox3</rd:DefaultName>
             <Top>1.21432in</Top>
             <Left>2.01902in</Left>
-            <Height>0.40281in</Height>
-            <Width>0.46776in</Width>
+            <Height>0.30281in</Height>
+            <Width>0.53441in</Width>
             <ZIndex>39</ZIndex>
             <Style>
               <Border>
@@ -2577,7 +2717,9 @@
                 <TextRuns>
                   <TextRun>
                     <Value>=First(Fields!Address.Value, "GetInvoiceReportInfoDataset")</Value>
-                    <Style />
+                    <Style>
+                      <Color>#181818</Color>
+                    </Style>
                   </TextRun>
                 </TextRuns>
                 <Style>
@@ -2588,8 +2730,8 @@
             <rd:DefaultName>Textbox82</rd:DefaultName>
             <Top>1.20582in</Top>
             <Left>0.65178in</Left>
-            <Height>0.4198in</Height>
-            <Width>1.31168in</Width>
+            <Height>0.3198in</Height>
+            <Width>1.37833in</Width>
             <ZIndex>40</ZIndex>
             <Style>
               <Border>
@@ -2614,6 +2756,7 @@
                       <FontFamily>Times New Roman</FontFamily>
                       <FontWeight>Normal</FontWeight>
                       <TextDecoration>None</TextDecoration>
+                      <Color>#181818</Color>
                     </Style>
                   </TextRun>
                 </TextRuns>
@@ -2625,8 +2768,8 @@
             <rd:DefaultName>Textbox3</rd:DefaultName>
             <Top>1.20859in</Top>
             <Left>0.05552in</Left>
-            <Height>0.41426in</Height>
-            <Width>0.59626in</Width>
+            <Height>0.31426in</Height>
+            <Width>0.66291in</Width>
             <ZIndex>41</ZIndex>
             <Style>
               <Border>
@@ -2650,7 +2793,7 @@
                     <Value />
                     <Style>
                       <FontFamily>Open Sans</FontFamily>
-                      <Color>#282828</Color>
+                      <Color>#181818</Color>
                     </Style>
                   </TextRun>
                 </TextRuns>
@@ -2661,9 +2804,9 @@
             </Paragraphs>
             <rd:DefaultName>Textbox3</rd:DefaultName>
             <Top>1.69248in</Top>
-            <Left>5.20482in</Left>
-            <Height>0.47667in</Height>
-            <Width>2.43737in</Width>
+            <Left>5.15813in</Left>
+            <Height>0.37667in</Height>
+            <Width>2.48406in</Width>
             <ZIndex>42</ZIndex>
             <Style>
               <Border>
@@ -2687,6 +2830,7 @@
                     <Value>:عناية</Value>
                     <Style>
                       <FontFamily>arial</FontFamily>
+                      <Color>#181818</Color>
                     </Style>
                   </TextRun>
                 </TextRuns>
@@ -2698,7 +2842,7 @@
             <rd:DefaultName>Textbox3</rd:DefaultName>
             <Top>1.7379in</Top>
             <Left>7.18512in</Left>
-            <Height>0.41131in</Height>
+            <Height>0.31131in</Height>
             <Width>0.45707in</Width>
             <ZIndex>43</ZIndex>
             <Style>
@@ -2726,6 +2870,7 @@
                       <FontFamily>Times New Roman</FontFamily>
                       <FontWeight>Normal</FontWeight>
                       <TextDecoration>None</TextDecoration>
+                      <Color>#181818</Color>
                     </Style>
                   </TextRun>
                 </TextRuns>
@@ -2736,9 +2881,9 @@
             </Paragraphs>
             <rd:DefaultName>Textbox3</rd:DefaultName>
             <Top>1.69248in</Top>
-            <Left>5.22713in</Left>
-            <Height>0.47667in</Height>
-            <Width>0.41209in</Width>
+            <Left>5.18044in</Left>
+            <Height>0.37667in</Height>
+            <Width>0.45878in</Width>
             <ZIndex>44</ZIndex>
             <Style>
               <Border>
@@ -2760,7 +2905,9 @@
                 <TextRuns>
                   <TextRun>
                     <Value>=First(Fields!Attn.Value, "GetInvoiceReportInfoDataset")</Value>
-                    <Style />
+                    <Style>
+                      <Color>#181818</Color>
+                    </Style>
                   </TextRun>
                 </TextRuns>
                 <Style>
@@ -2771,7 +2918,7 @@
             <rd:DefaultName>Textbox82</rd:DefaultName>
             <Top>1.72941in</Top>
             <Left>5.65312in</Left>
-            <Height>0.40281in</Height>
+            <Height>0.30281in</Height>
             <Width>1.47645in</Width>
             <ZIndex>45</ZIndex>
             <Style>
@@ -2794,7 +2941,7 @@
                     <Value />
                     <Style>
                       <FontFamily>Open Sans</FontFamily>
-                      <Color>#282828</Color>
+                      <Color>#181818</Color>
                     </Style>
                   </TextRun>
                 </TextRuns>
@@ -2806,8 +2953,8 @@
             <rd:DefaultName>Textbox3</rd:DefaultName>
             <Top>1.69248in</Top>
             <Left>2.61079in</Left>
-            <Height>0.47667in</Height>
-            <Width>2.46201in</Width>
+            <Height>0.37667in</Height>
+            <Width>2.48786in</Width>
             <ZIndex>46</ZIndex>
             <Style>
               <Border>
@@ -2831,6 +2978,7 @@
                     <Value>:رقم العقد</Value>
                     <Style>
                       <FontFamily>arial</FontFamily>
+                      <Color>#181818</Color>
                     </Style>
                   </TextRun>
                 </TextRuns>
@@ -2841,9 +2989,9 @@
             </Paragraphs>
             <rd:DefaultName>Textbox3</rd:DefaultName>
             <Top>1.72941in</Top>
-            <Left>4.63703in</Left>
-            <Height>0.40281in</Height>
-            <Width>0.39537in</Width>
+            <Left>4.49727in</Left>
+            <Height>0.30281in</Height>
+            <Width>0.53513in</Width>
             <ZIndex>47</ZIndex>
             <Style>
               <Border>
@@ -2870,6 +3018,7 @@
                       <FontFamily>Times New Roman</FontFamily>
                       <FontWeight>Normal</FontWeight>
                       <TextDecoration>None</TextDecoration>
+                      <Color>#181818</Color>
                     </Style>
                   </TextRun>
                 </TextRuns>
@@ -2881,7 +3030,7 @@
             <rd:DefaultName>Textbox3</rd:DefaultName>
             <Top>1.72368in</Top>
             <Left>2.61079in</Left>
-            <Height>0.41426in</Height>
+            <Height>0.31426in</Height>
             <Width>0.7251in</Width>
             <ZIndex>48</ZIndex>
             <Style>
@@ -2904,7 +3053,9 @@
                 <TextRuns>
                   <TextRun>
                     <Value>=First(Fields!ContractNo.Value, "GetInvoiceReportInfoDataset")</Value>
-                    <Style />
+                    <Style>
+                      <Color>#181818</Color>
+                    </Style>
                   </TextRun>
                 </TextRuns>
                 <Style>
@@ -2915,8 +3066,8 @@
             <rd:DefaultName>Textbox82</rd:DefaultName>
             <Top>1.72941in</Top>
             <Left>3.36366in</Left>
-            <Height>0.40281in</Height>
-            <Width>1.30419in</Width>
+            <Height>0.30281in</Height>
+            <Width>1.11972in</Width>
             <ZIndex>49</ZIndex>
             <Style>
               <Border>
@@ -2938,7 +3089,7 @@
                     <Value />
                     <Style>
                       <FontFamily>Open Sans</FontFamily>
-                      <Color>#282828</Color>
+                      <Color>#181818</Color>
                     </Style>
                   </TextRun>
                 </TextRuns>
@@ -2950,8 +3101,8 @@
             <rd:DefaultName>Textbox3</rd:DefaultName>
             <Top>1.70097in</Top>
             <Left>0.0319in</Left>
-            <Height>0.47667in</Height>
-            <Width>2.47271in</Width>
+            <Height>0.37667in</Height>
+            <Width>2.53936in</Width>
             <ZIndex>50</ZIndex>
             <Style>
               <Border>
@@ -2975,6 +3126,7 @@
                     <Value>:إسم المشروع</Value>
                     <Style>
                       <FontFamily>arial</FontFamily>
+                      <Color>#181818</Color>
                     </Style>
                   </TextRun>
                 </TextRuns>
@@ -2985,9 +3137,9 @@
             </Paragraphs>
             <rd:DefaultName>Textbox3</rd:DefaultName>
             <Top>1.7379in</Top>
-            <Left>2.01451in</Left>
-            <Height>0.40281in</Height>
-            <Width>0.4901in</Width>
+            <Left>1.73118in</Left>
+            <Height>0.30281in</Height>
+            <Width>0.84008in</Width>
             <ZIndex>51</ZIndex>
             <Style>
               <Border>
@@ -3009,7 +3161,9 @@
                 <TextRuns>
                   <TextRun>
                     <Value>=First(Fields!ProjectName.Value, "GetInvoiceReportInfoDataset")</Value>
-                    <Style />
+                    <Style>
+                      <Color>#181818</Color>
+                    </Style>
                   </TextRun>
                 </TextRuns>
                 <Style>
@@ -3019,9 +3173,9 @@
             </Paragraphs>
             <rd:DefaultName>Textbox82</rd:DefaultName>
             <Top>1.72941in</Top>
-            <Left>0.78631in</Left>
-            <Height>0.4198in</Height>
-            <Width>1.17715in</Width>
+            <Left>0.86964in</Left>
+            <Height>0.3198in</Height>
+            <Width>0.92818in</Width>
             <ZIndex>52</ZIndex>
             <Style>
               <Border>
@@ -3046,6 +3200,7 @@
                       <FontFamily>Times New Roman</FontFamily>
                       <FontWeight>Normal</FontWeight>
                       <TextDecoration>None</TextDecoration>
+                      <Color>#181818</Color>
                     </Style>
                   </TextRun>
                 </TextRuns>
@@ -3057,8 +3212,8 @@
             <rd:DefaultName>Textbox3</rd:DefaultName>
             <Top>1.73218in</Top>
             <Left>0.05938in</Left>
-            <Height>0.41426in</Height>
-            <Width>0.67138in</Width>
+            <Height>0.31426in</Height>
+            <Width>1.03803in</Width>
             <ZIndex>53</ZIndex>
             <Style>
               <Border>
@@ -3085,7 +3240,7 @@
                       <FontFamily>Times New Roman</FontFamily>
                       <FontWeight>Normal</FontWeight>
                       <TextDecoration>None</TextDecoration>
-                      <Color>#000000</Color>
+                      <Color>#181818</Color>
                     </Style>
                   </TextRun>
                 </TextRuns>
@@ -3125,7 +3280,7 @@
                       <FontFamily>Times New Roman</FontFamily>
                       <FontWeight>Normal</FontWeight>
                       <TextDecoration>None</TextDecoration>
-                      <Color>#000000</Color>
+                      <Color>#181818</Color>
                     </Style>
                   </TextRun>
                 </TextRuns>
@@ -3135,8 +3290,8 @@
               </Paragraph>
             </Paragraphs>
             <rd:DefaultName>Textbox3</rd:DefaultName>
-            <Top>3.60612in</Top>
-            <Left>0.02394in</Left>
+            <Top>3.46168in</Top>
+            <Left>0.05938in</Left>
             <Height>0.36935in</Height>
             <Width>2.93239in</Width>
             <ZIndex>55</ZIndex>
@@ -3165,7 +3320,7 @@
                       <FontFamily>Times New Roman</FontFamily>
                       <FontWeight>Normal</FontWeight>
                       <TextDecoration>None</TextDecoration>
-                      <Color>#000000</Color>
+                      <Color>#181818</Color>
                     </Style>
                   </TextRun>
                 </TextRuns>
@@ -3175,9 +3330,9 @@
               </Paragraph>
             </Paragraphs>
             <rd:DefaultName>Textbox3</rd:DefaultName>
-            <Top>3.97035in</Top>
+            <Top>4.03103in</Top>
             <Left>0.02394in</Left>
-            <Height>0.36935in</Height>
+            <Height>0.36423in</Height>
             <Width>4.42722in</Width>
             <ZIndex>56</ZIndex>
             <Style>
@@ -3203,6 +3358,7 @@
                     <Style>
                       <FontFamily>arial</FontFamily>
                       <FontWeight>Bold</FontWeight>
+                      <Color>#181818</Color>
                     </Style>
                   </TextRun>
                 </TextRuns>
@@ -3243,7 +3399,7 @@
                       <FontFamily>Times New Roman</FontFamily>
                       <FontWeight>Bold</FontWeight>
                       <TextDecoration>None</TextDecoration>
-                      <Color>#000000</Color>
+                      <Color>#181818</Color>
                     </Style>
                   </TextRun>
                 </TextRuns>
@@ -3282,6 +3438,7 @@
                     <Style>
                       <FontFamily>arial</FontFamily>
                       <FontWeight>Bold</FontWeight>
+                      <Color>#181818</Color>
                     </Style>
                   </TextRun>
                 </TextRuns>
@@ -3320,6 +3477,7 @@
                     <Style>
                       <FontFamily>arial</FontFamily>
                       <FontWeight>Bold</FontWeight>
+                      <Color>#181818</Color>
                     </Style>
                   </TextRun>
                 </TextRuns>
@@ -3360,7 +3518,7 @@
                       <FontFamily>Times New Roman</FontFamily>
                       <FontWeight>Bold</FontWeight>
                       <TextDecoration>None</TextDecoration>
-                      <Color>#000000</Color>
+                      <Color>#181818</Color>
                     </Style>
                   </TextRun>
                 </TextRuns>
@@ -3522,7 +3680,7 @@
                       <FontFamily>Times New Roman</FontFamily>
                       <FontWeight>Bold</FontWeight>
                       <TextDecoration>None</TextDecoration>
-                      <Color>#000000</Color>
+                      <Color>#181818</Color>
                     </Style>
                   </TextRun>
                 </TextRuns>
@@ -3560,7 +3718,7 @@
                     <Value />
                     <Style>
                       <FontFamily>arial</FontFamily>
-                      <Color>#282828</Color>
+                      <Color>#181818</Color>
                     </Style>
                   </TextRun>
                 </TextRuns>
@@ -3596,7 +3754,7 @@
                     <Value>الحساب</Value>
                     <Style>
                       <FontFamily>arial</FontFamily>
-                      <Color>#282828</Color>
+                      <Color>#181818</Color>
                     </Style>
                   </TextRun>
                 </TextRuns>
@@ -3632,7 +3790,7 @@
                     <Value>ايبان</Value>
                     <Style>
                       <FontFamily>arial</FontFamily>
-                      <Color>#282828</Color>
+                      <Color>#181818</Color>
                     </Style>
                   </TextRun>
                 </TextRuns>
@@ -3668,7 +3826,7 @@
                     <Value>IBAN</Value>
                     <Style>
                       <FontFamily>arial</FontFamily>
-                      <Color>#282828</Color>
+                      <Color>#181818</Color>
                     </Style>
                   </TextRun>
                 </TextRuns>
@@ -3704,7 +3862,7 @@
                     <Value>Account</Value>
                     <Style>
                       <FontFamily>arial</FontFamily>
-                      <Color>#282828</Color>
+                      <Color>#181818</Color>
                     </Style>
                   </TextRun>
                 </TextRuns>
@@ -3740,7 +3898,7 @@
                     <Value />
                     <Style>
                       <FontFamily>arial</FontFamily>
-                      <Color>#282828</Color>
+                      <Color>#181818</Color>
                     </Style>
                   </TextRun>
                 </TextRuns>
@@ -3779,7 +3937,7 @@
                       <FontFamily>Times New Roman</FontFamily>
                       <FontWeight>Bold</FontWeight>
                       <TextDecoration>None</TextDecoration>
-                      <Color>#000000</Color>
+                      <Color>#181818</Color>
                     </Style>
                   </TextRun>
                 </TextRuns>
@@ -3796,7 +3954,7 @@
                       <FontFamily>Times New Roman</FontFamily>
                       <FontWeight>Bold</FontWeight>
                       <TextDecoration>None</TextDecoration>
-                      <Color>#000000</Color>
+                      <Color>#181818</Color>
                     </Style>
                   </TextRun>
                 </TextRuns>
@@ -3813,7 +3971,7 @@
                       <FontFamily>Times New Roman</FontFamily>
                       <FontWeight>Bold</FontWeight>
                       <TextDecoration>None</TextDecoration>
-                      <Color>#000000</Color>
+                      <Color>#181818</Color>
                     </Style>
                   </TextRun>
                 </TextRuns>
@@ -3830,7 +3988,7 @@
                       <FontFamily>Times New Roman</FontFamily>
                       <FontWeight>Bold</FontWeight>
                       <TextDecoration>None</TextDecoration>
-                      <Color>#000000</Color>
+                      <Color>#181818</Color>
                     </Style>
                   </TextRun>
                 </TextRuns>
@@ -3847,7 +4005,7 @@
                       <FontFamily>Times New Roman</FontFamily>
                       <FontWeight>Bold</FontWeight>
                       <TextDecoration>None</TextDecoration>
-                      <Color>#000000</Color>
+                      <Color>#181818</Color>
                     </Style>
                   </TextRun>
                 </TextRuns>
@@ -3864,7 +4022,7 @@
                       <FontFamily>Times New Roman</FontFamily>
                       <FontWeight>Bold</FontWeight>
                       <TextDecoration>None</TextDecoration>
-                      <Color>#000000</Color>
+                      <Color>#181818</Color>
                     </Style>
                   </TextRun>
                 </TextRuns>
@@ -3881,7 +4039,7 @@
                       <FontFamily>Times New Roman</FontFamily>
                       <FontWeight>Bold</FontWeight>
                       <TextDecoration>None</TextDecoration>
-                      <Color>#000000</Color>
+                      <Color>#181818</Color>
                     </Style>
                   </TextRun>
                 </TextRuns>
@@ -3898,7 +4056,7 @@
                       <FontFamily>Times New Roman</FontFamily>
                       <FontWeight>Bold</FontWeight>
                       <TextDecoration>None</TextDecoration>
-                      <Color>#000000</Color>
+                      <Color>#181818</Color>
                     </Style>
                   </TextRun>
                 </TextRuns>
@@ -3915,7 +4073,7 @@
                       <FontFamily>Times New Roman</FontFamily>
                       <FontWeight>Bold</FontWeight>
                       <TextDecoration>None</TextDecoration>
-                      <Color>#000000</Color>
+                      <Color>#181818</Color>
                     </Style>
                   </TextRun>
                 </TextRuns>
@@ -3932,7 +4090,7 @@
                       <FontFamily>Times New Roman</FontFamily>
                       <FontWeight>Bold</FontWeight>
                       <TextDecoration>None</TextDecoration>
-                      <Color>#000000</Color>
+                      <Color>#181818</Color>
                     </Style>
                   </TextRun>
                 </TextRuns>
@@ -3990,7 +4148,7 @@
                         <FontFamily>Open Sans</FontFamily>
                         <FontSize>14pt</FontSize>
                         <TextDecoration>None</TextDecoration>
-                        <Color>#000000</Color>
+                        <Color>DimGray</Color>
                       </Style>
                     </TextRun>
                   </TextRuns>
@@ -4026,7 +4184,7 @@
                         <FontSize>13pt</FontSize>
                         <FontWeight>Normal</FontWeight>
                         <TextDecoration>None</TextDecoration>
-                        <Color>#000000</Color>
+                        <Color>#181818</Color>
                       </Style>
                     </TextRun>
                     <TextRun>
@@ -4037,7 +4195,7 @@
                         <FontSize>13pt</FontSize>
                         <FontWeight>Bold</FontWeight>
                         <TextDecoration>None</TextDecoration>
-                        <Color>#000000</Color>
+                        <Color>#181818</Color>
                       </Style>
                     </TextRun>
                     <TextRun>
@@ -4048,7 +4206,7 @@
                         <FontSize>13pt</FontSize>
                         <FontWeight>Normal</FontWeight>
                         <TextDecoration>None</TextDecoration>
-                        <Color>#000000</Color>
+                        <Color>#181818</Color>
                       </Style>
                     </TextRun>
                     <TextRun>
@@ -4059,7 +4217,7 @@
                         <FontSize>13pt</FontSize>
                         <FontWeight>Normal</FontWeight>
                         <TextDecoration>None</TextDecoration>
-                        <Color>#000000</Color>
+                        <Color>#181818</Color>
                         <Language>ar-SA</Language>
                       </Style>
                     </TextRun>
@@ -4190,7 +4348,7 @@
                         <FontFamily>Times New Roman</FontFamily>
                         <FontWeight>Normal</FontWeight>
                         <TextDecoration>None</TextDecoration>
-                        <Color>#000000</Color>
+                        <Color>#181818</Color>
                       </Style>
                     </TextRun>
                   </TextRuns>
@@ -4205,7 +4363,7 @@
                         <FontFamily>Tahoma</FontFamily>
                         <FontWeight>Normal</FontWeight>
                         <TextDecoration>None</TextDecoration>
-                        <Color>#404040</Color>
+                        <Color>#181818</Color>
                       </Style>
                     </TextRun>
                   </TextRuns>
@@ -4220,7 +4378,7 @@
                         <FontFamily>Times New Roman</FontFamily>
                         <FontWeight>Normal</FontWeight>
                         <TextDecoration>None</TextDecoration>
-                        <Color>#000000</Color>
+                        <Color>#181818</Color>
                       </Style>
                     </TextRun>
                   </TextRuns>
@@ -4286,7 +4444,7 @@
                         <FontFamily>Times New Roman</FontFamily>
                         <FontWeight>Bold</FontWeight>
                         <TextDecoration>None</TextDecoration>
-                        <Color>#000000</Color>
+                        <Color>#181818</Color>
                       </Style>
                     </TextRun>
                   </TextRuns>
@@ -4325,7 +4483,7 @@
                         <FontFamily>Times New Roman</FontFamily>
                         <FontWeight>Normal</FontWeight>
                         <TextDecoration>None</TextDecoration>
-                        <Color>#000000</Color>
+                        <Color>#181818</Color>
                       </Style>
                     </TextRun>
                   </TextRuns>
@@ -4364,7 +4522,7 @@
                         <FontFamily>Times New Roman</FontFamily>
                         <FontWeight>Bold</FontWeight>
                         <TextDecoration>None</TextDecoration>
-                        <Color>#000000</Color>
+                        <Color>#181818</Color>
                       </Style>
                     </TextRun>
                   </TextRuns>
@@ -4403,7 +4561,7 @@
                         <FontFamily>Tahoma</FontFamily>
                         <FontWeight>Normal</FontWeight>
                         <TextDecoration>None</TextDecoration>
-                        <Color>#404040</Color>
+                        <Color>#181818</Color>
                       </Style>
                     </TextRun>
                   </TextRuns>
@@ -4418,7 +4576,7 @@
                         <FontFamily>Tahoma</FontFamily>
                         <FontWeight>Normal</FontWeight>
                         <TextDecoration>None</TextDecoration>
-                        <Color>#404040</Color>
+                        <Color>#181818</Color>
                       </Style>
                     </TextRun>
                   </TextRuns>
@@ -4433,7 +4591,7 @@
                         <FontFamily>Tahoma</FontFamily>
                         <FontWeight>Normal</FontWeight>
                         <TextDecoration>None</TextDecoration>
-                        <Color>#404040</Color>
+                        <Color>#181818</Color>
                       </Style>
                     </TextRun>
                   </TextRuns>
@@ -4499,7 +4657,7 @@
                         <FontFamily>Times New Roman</FontFamily>
                         <FontWeight>Bold</FontWeight>
                         <TextDecoration>None</TextDecoration>
-                        <Color>#000000</Color>
+                        <Color>#181818</Color>
                       </Style>
                     </TextRun>
                   </TextRuns>
@@ -4538,7 +4696,7 @@
                         <FontFamily>Times New Roman</FontFamily>
                         <FontWeight>Normal</FontWeight>
                         <TextDecoration>None</TextDecoration>
-                        <Color>#000000</Color>
+                        <Color>#181818</Color>
                       </Style>
                     </TextRun>
                   </TextRuns>
@@ -4577,7 +4735,7 @@
                         <FontFamily>Times New Roman</FontFamily>
                         <FontWeight>Bold</FontWeight>
                         <TextDecoration>None</TextDecoration>
-                        <Color>#000000</Color>
+                        <Color>#181818</Color>
                       </Style>
                     </TextRun>
                   </TextRuns>
