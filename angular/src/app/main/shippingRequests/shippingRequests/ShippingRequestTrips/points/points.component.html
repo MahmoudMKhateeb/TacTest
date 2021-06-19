@@ -78,9 +78,12 @@
                               </li>
                             </ng-template>
                             <li>
-                              <a class="dropdown-item" *ngIf="record.pickingType == PickingType.Dropoff" (click)="downloadDropWayBill(record.id)">{{
-                                l('downloadDropWaybill')
-                              }}</a>
+                              <a
+                                class="dropdown-item"
+                                *ngIf="record.pickingType == PickingType.Dropoff && record.id"
+                                (click)="downloadDropWayBill(record.id)"
+                                >{{ l('downloadDropWaybill') }}</a
+                              >
                             </li>
                           </ul>
                         </div>

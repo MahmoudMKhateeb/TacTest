@@ -84,13 +84,6 @@
                     class="form-control"
                     [(date)]="trip.startTripDate"
                     name="tripStartDate"
-                    placeholder="{{ l('TripStartDate') }}"
-                    [minDate]="shippingRequest.startTripDate"
-                    [maxDate]="shippingRequest.endTripDate"
-                    [required]="true"
-                    (dateChange)="validateTripDates()"
-                    [class.is-invalid]="startTripDate.touched && !startTripDate.valid"
-                    [class.is-valid]="startTripDate.touched && startTripDate.valid"
                     bsDatepicker
                     datePickerMomentModifier
                   />
@@ -140,6 +133,7 @@
               <div class="form-group" *ngIf="selectedVases != []">
                 <label>{{ l('vases') }}</label>
                 <p-multiSelect
+                  name="shippingRequestTripVases"
                   [options]="Vases"
                   [(ngModel)]="trip.shippingRequestTripVases"
                   [styleClass]="'form-control'"
@@ -158,18 +152,30 @@
                     <input type="checkbox" [(ngModel)]="trip.needsDeliveryNote" name="Checkboxes1" />
                     <span></span>{{ l('NeedsDeliveryNote') }}</label
                   >
-                </div>
-              </div>
-            </div>
-
-            <div class="col-lg-6">
-              <div class="form-group">
-                <div class="checkbox-list">
                   <label class="checkbox">
                     <input type="checkbox" [(ngModel)]="trip.hasAttachment" name="Checkboxes2" />
                     <span></span>{{ l('HasAttachment') }}</label
                   >
                 </div>
+              </div>
+            </div>
+
+            <div *ngIf="trip.hasAttachment" class="form-group col-lg-6">
+              <label>{{ l('SelectFile') }} {{ fileToken }} </label>
+              <div class="custom-file">
+                <input
+                  (change)="DocFileChangeEvent($event, trip.createOrEditDocumentFileDto)"
+                  type="file"
+                  class="custom-file-input"
+                  accept="image/x-png,image/jpeg,application/pdf"
+                  required
+                />
+                <label class="custom-file-label text-truncate" [for]="trip.createOrEditDocumentFileDto?.name">
+                  {{ trip.createOrEditDocumentFileDto?.name ? trip.createOrEditDocumentFileDto?.name : l('SelectFile') }}</label
+                >
+              </div>
+              <div class="margin-top-5">
+                <p-progressBar [value]="docProgress" [style]="{ height: '6px', width: '100' }"></p-progressBar>
               </div>
             </div>
 

@@ -1,8 +1,10 @@
 ﻿using Abp.Application.Services.Dto;
+using Abp.Extensions;
 using Abp.Runtime.Validation;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using TACHYON.Documents.DocumentFiles.Dtos;
 using TACHYON.Routs.RoutPoints.Dtos;
 using TACHYON.ShippingRequestTripVases.Dtos;
 
@@ -12,7 +14,7 @@ namespace TACHYON.Shipping.Trips.Dto
     {
         [Required]
         public DateTime StartTripDate { get; set; }
-        
+
         public DateTime EndTripDate { get; set; }
 
 
@@ -30,11 +32,19 @@ namespace TACHYON.Shipping.Trips.Dto
         public List<CreateOrEditRoutPointDto> RoutPoints { get; set; }
         public List<CreateOrEditShippingRequestTripVasDto> ShippingRequestTripVases { get; set; }
 
+        public CreateOrEditDocumentFileDto CreateOrEditDocumentFileDto { get; set; }
+
         public void AddValidationErrors(CustomValidationContext context)
         {
-            if (StartTripDate.Date> EndTripDate.Date)
+            if (StartTripDate.Date > EndTripDate.Date)
             {
                 context.Results.Add(new ValidationResult("The start date must be or equal to end date."));
+            }
+
+            //document 
+            if (HasAttachment && CreateOrEditDocumentFileDto.UpdateDocumentFileInput.FileToken.IsNullOrEmpty())
+            {
+                context.Results.Add(new ValidationResult("document missing: " + CreateOrEditDocumentFileDto.Name));
             }
         }
     }

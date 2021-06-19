@@ -101,7 +101,6 @@ namespace TACHYON.Documents.DocumentFiles
                 .Include(e => e.TruckFk)
                 .Include(e => e.TrailerFk)
                 .Include(e => e.UserFk)
-                .Include(e => e.RoutStepFk)
                 .Include(e => e.TenantFk)
                 .WhereIf(!AbpSession.TenantId.HasValue, e => e.DocumentTypeFk.DocumentsEntityId == (int)DocumentsEntitiesEnum.Tenant)
                 .WhereIf(!string.IsNullOrWhiteSpace(input.Filter), e => false || e.Name.Contains(input.Filter)
@@ -141,11 +140,6 @@ namespace TACHYON.Documents.DocumentFiles
                                        from s3 in j3.DefaultIfEmpty()
                                        join o4 in _lookupUserRepository.GetAll() on o.UserId equals o4.Id into j4
                                        from s4 in j4.DefaultIfEmpty()
-                                       join o5 in _lookupRoutStepRepository.GetAll() on o.RoutStepId equals o5.Id into j5
-                                       from s5 in j5.DefaultIfEmpty()
-                                           // join o6 in _lookupTenantRepository.GetAll() on o.TenantId equals o6.Id into j6
-                                           // from s6 in j6.DefaultIfEmpty()
-
                                        select new
                                        {
                                            DocumentFile = o,
@@ -161,7 +155,6 @@ namespace TACHYON.Documents.DocumentFiles
                                            PlateNumber = (o.TruckFk == null ? "" : o.TruckFk.PlateNumber),
                                            TrailerTrailerCode = s3 == null || s3.TrailerCode == null ? "" : s3.TrailerCode,
                                            UserName = s4 == null || s4.Name == null ? "" : s4.UserName,
-                                           RoutStepDisplayName = s5 == null || s5.DisplayName == null ? "" : s5.DisplayName.ToString()
                                        }).ToListAsync();
 
             var result = documentFiles.Select(x => new GetDocumentFileForViewDto
@@ -180,7 +173,6 @@ namespace TACHYON.Documents.DocumentFiles
                 PlateNumber = x.PlateNumber,
                 TrailerTrailerCode = x.TrailerTrailerCode,
                 UserName = x.UserName,
-                RoutStepDisplayName = x.RoutStepDisplayName
             }).ToList();
 
             //GetDocumentFileForViewDto
@@ -232,11 +224,6 @@ namespace TACHYON.Documents.DocumentFiles
                 output.UserName = lookupUser?.Name;
             }
 
-            if (output.DocumentFile.RoutStepId != null)
-            {
-                var lookupRoutStep = await _lookupRoutStepRepository.FirstOrDefaultAsync((long)output.DocumentFile.RoutStepId);
-                output.RoutStepDisplayName = lookupRoutStep?.DisplayName;
-            }
 
             return output;
         }
