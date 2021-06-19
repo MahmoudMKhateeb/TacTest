@@ -12,6 +12,7 @@ import {
   CommonLookupServiceProxy,
   InvoiceFilterInput,
   InvoiceAccountType,
+  InvoiceReportServiceServiceProxy,
 } from '@shared/service-proxies/service-proxies';
 import * as moment from 'moment';
 import { FileDownloadService } from '@shared/utils/file-download.service';
@@ -48,6 +49,7 @@ export class InvoicesListComponent extends AppComponentBase implements OnInit {
   constructor(
     injector: Injector,
     private _InvoiceServiceProxy: InvoiceServiceProxy,
+    private _InvoiceReportServiceProxy: InvoiceReportServiceServiceProxy,
     private _CommonServ: CommonLookupServiceProxy,
     private _fileDownloadService: FileDownloadService
   ) {
@@ -154,6 +156,12 @@ export class InvoicesListComponent extends AppComponentBase implements OnInit {
     data.dueToDate = this.toDate;
     data.sorting = this.primengTableHelper.getSorting(this.dataTable);
     this._InvoiceServiceProxy.exports(data).subscribe((result) => {
+      this._fileDownloadService.downloadTempFile(result);
+    });
+  }
+
+  downloadReport(id: number) {
+    this._InvoiceReportServiceProxy.downloadInvoiceReportPdf(id).subscribe((result) => {
       this._fileDownloadService.downloadTempFile(result);
     });
   }

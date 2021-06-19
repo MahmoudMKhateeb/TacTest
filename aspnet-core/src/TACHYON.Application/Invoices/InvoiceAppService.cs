@@ -2,6 +2,7 @@
 using Abp.Authorization;
 using Abp.Domain.Repositories;
 using Abp.Linq.Extensions;
+using Abp.Threading;
 using Abp.UI;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -148,7 +149,7 @@ namespace TACHYON.Invoices
 
         }
 
-        private  async Task<Invoice> GetInvoiceInfo(int invoiceId)
+        private  async Task<Invoice> GetInvoiceInfo(long invoiceId)
         {
          return  await _invoiceRepository
                             .GetAll()
@@ -263,55 +264,155 @@ namespace TACHYON.Invoices
             await _invoiceManager.GenertateInvoiceOnDeman(tenant);
         }
         #region Reports
-
-        public IEnumerable<GetInvoiceReportInfoOutput> GetInvoiceReportInfo(long invoiceId)
+        public IEnumerable<InvoiceInfoDto>  GetInvoiceReportInfo(long invoiceId)
         {
-            //for host user
-            if(AbpSession.TenantId==null && AbpSession.UserId != null)
-            {
-                DisableTenancyFilters();
-            }
-            var invoice=_invoiceRepository.GetAll()
-                .Include(e=>e.Tenant)
-                .Where(e => e.Id == invoiceId);
-            var query = invoice.Select(x => new
-            {
-                InvoiceNo=x.Id,
-                InvoiceDate=x.CreationTime,
-                DueDate=x.DueDate,
-                Attn="",
-                Phone="",
-                Fax="",
-                Email="",
-                ContractNo="",
-                BillTo=x.Tenant.companyName,
-                CR="",
-                Address=x.Tenant.Address,
-                ProjectName="",
-                InvoiceSubTotal=x.SubTotalAmount,
-                VatAmount=x.VatAmount,
-                DueAmount=x.TotalAmount
-            });
-            var output = query.ToList().Select(x=>new GetInvoiceReportInfoOutput
-            {
-                VatAmount = x.VatAmount,
-                Address = x.Address,
-                DueDate = x.DueDate,
-                Attn = x.Attn,
-                BillTo = x.BillTo,
-                CR = x.CR,
-                ContractNo = x.ContractNo,
-                DueAmount = x.DueAmount,
-                Email = x.Email,
-                Fax = x.Fax,
-                InvoiceDate = x.InvoiceDate,
-                InvoiceNo = x.InvoiceNo,
-                InvoiceSubTotal = x.InvoiceSubTotal,
-                Phone = x.Phone,
-                ProjectName = x.ProjectName
-            });
-            return output;
+            DisableTenancyFilters();
+            var invoice = AsyncHelper.RunSync(() =>  _invoiceRepository
+                            .GetAll()
+                            .Include(i => i.InvoicePeriodsFK)
+                            .Include(i => i.Tenant)
+                            .Where(i => i.Id == invoiceId)
+                            .ToListAsync());
+
+            if (invoice == null) throw new UserFriendlyException(L("TheInvoiceNotFound"));          
+
+            var invoiceDto = ObjectMapper.Map<List<InvoiceInfoDto>>(invoice);
+            var Admin = AsyncHelper.RunSync(() => _userManager.GetAdminByTenantIdAsync(invoice.FirstOrDefault().TenantId));
+            invoiceDto.FirstOrDefault().Phone = Admin.PhoneNumber;
+            invoiceDto.FirstOrDefault().Email = Admin.EmailAddress;
+            DisableTenancyFilters();
+            var documnet = AsyncHelper.RunSync(() => _documentFileRepository.FirstOrDefaultAsync(x => x.TenantId == invoice.FirstOrDefault().TenantId && x.DocumentTypeId == 14));
+            if (documnet != null) invoiceDto.FirstOrDefault().CR = documnet.Number;
+            return invoiceDto;
         }
+
+        public IEnumerable<InvoiceItemDto> GetInvoiceShippingRequestsReportInfo(long invoiceId)
+        {
+            DisableTenancyFilters();
+            var invoice = AsyncHelper.RunSync(() => GetInvoiceInfo(invoiceId));
+
+            if (invoice == null) throw new UserFriendlyException(L("TheInvoiceNotFound"));
+            var TotalItem = invoice.Trips.Count + invoice.Trips.Select(v => v.ShippingRequestTripFK.ShippingRequestTripVases).Count();
+            int Sequence = 1;
+            List<InvoiceItemDto> Items = new List<InvoiceItemDto>();
+            invoice.Trips.ToList().ForEach(trip =>
+            {
+                int VasCounter = 0;
+                Items.Add(new InvoiceItemDto
+                {
+                    Sequence = $"{Sequence}/{TotalItem}",
+                    SubTotalAmount = AbpSession.TenantId.HasValue && IsEnabled(AppFeatures.Carrier) ? trip.ShippingRequestTripFK.SubTotalAmount.Value : trip.ShippingRequestTripFK.SubTotalAmountWithCommission.Value,
+                    VatAmount = AbpSession.TenantId.HasValue && IsEnabled(AppFeatures.Carrier) ? trip.ShippingRequestTripFK.VatAmount.Value : trip.ShippingRequestTripFK.VatAmountWithCommission.Value,
+                    TotalAmount = AbpSession.TenantId.HasValue && IsEnabled(AppFeatures.Carrier) ? trip.ShippingRequestTripFK.TotalAmount.Value : trip.ShippingRequestTripFK.TotalAmountWithCommission.Value,
+                    WayBillNumber = trip.ShippingRequestTripFK.WaybillNumber.ToString(),
+                    TruckType = ObjectMapper.Map<TrucksTypeDto>(trip.ShippingRequestTripFK.AssignedTruckFk.TrucksTypeFk).TranslatedDisplayName,
+                    Source = ObjectMapper.Map<CityDto>(trip.ShippingRequestTripFK.ShippingRequestFk.OriginCityFk)?.TranslatedDisplayName ?? trip.ShippingRequestTripFK.ShippingRequestFk.OriginCityFk.DisplayName,
+                    Destination = ObjectMapper.Map<CityDto>(trip.ShippingRequestTripFK.ShippingRequestFk.DestinationCityFk)?.TranslatedDisplayName ?? trip.ShippingRequestTripFK.ShippingRequestFk.DestinationCityFk.DisplayName,
+                    DateWork = trip.ShippingRequestTripFK.ShippingRequestFk.EndTripDate.HasValue ? trip.ShippingRequestTripFK.ShippingRequestFk.EndTripDate.Value.ToString("dd MMM, yyyy") : "",
+                    Remarks = trip.ShippingRequestTripFK.ShippingRequestFk.RouteTypeId == Shipping.ShippingRequests.ShippingRequestRouteType.MultipleDrops ?
+                    L("TotalOfDrop", trip.ShippingRequestTripFK.ShippingRequestFk.NumberOfDrops) : ""
+                });
+                Sequence++;
+                if (trip.ShippingRequestTripFK.ShippingRequestTripVases != null && trip.ShippingRequestTripFK.ShippingRequestTripVases.Count > 1)
+                {
+                    VasCounter = 1;
+                }
+                foreach (var vas in trip.ShippingRequestTripFK.ShippingRequestTripVases)
+                {
+
+                    string waybillnumber;
+                    if (VasCounter == 0)
+                    {
+                        waybillnumber = $"{trip.ShippingRequestTripFK.WaybillNumber.ToString()}VAS";
+                    }
+                    else
+                    {
+                        waybillnumber = $"{trip.ShippingRequestTripFK.WaybillNumber.ToString()}VAS{VasCounter}";
+                        VasCounter++;
+                    }
+                    trip.ShippingRequestTripFK.WaybillNumber.ToString();
+
+                    var item = new InvoiceItemDto
+                    {
+                        Sequence = $"{Sequence}/{TotalItem}",
+                        SubTotalAmount = AbpSession.TenantId.HasValue && IsEnabled(AppFeatures.Carrier) ? vas.SubTotalAmount.Value : vas.SubTotalAmountWithCommission.Value,
+                        VatAmount = AbpSession.TenantId.HasValue && IsEnabled(AppFeatures.Carrier) ? vas.VatAmount.Value : vas.VatAmountWithCommission.Value,
+                        TotalAmount = AbpSession.TenantId.HasValue && IsEnabled(AppFeatures.Carrier) ? vas.TotalAmount.Value : vas.TotalAmountWithCommission.Value,
+                        WayBillNumber = waybillnumber,
+                        TruckType = L("InvoiceVasType", vas.ShippingRequestVasFk.VasFk.Name),
+                        Source = "-",
+                        Destination = "-",
+                        DateWork = "-",
+                        Remarks = vas.Quantity > 1 ? $"{vas.Quantity}" : ""
+                    };
+                    Items.Add(item);
+
+                    Sequence++;
+                }
+
+            });
+
+
+            //var invoiceDto = ObjectMapper.Map<InvoiceInfoDto>(invoice);
+            //var Admin = AsyncHelper.RunSync(() => _userManager.GetAdminByTenantIdAsync(invoice.TenantId);
+            //invoiceDto.Items = Items;
+            //invoiceDto.Phone = Admin.PhoneNumber;
+            //invoiceDto.Email = Admin.EmailAddress;
+            //DisableTenancyFilters();
+            //var documnet = AsyncHelper.RunSync(() => _documentFileRepository.FirstOrDefaultAsync(x => x.TenantId == invoice.TenantId && x.DocumentTypeId == 14);
+            //if (documnet != null) invoiceDto.CR = documnet.Number;
+            return Items;
+        }
+
+        //public IEnumerable<GetInvoiceReportInfoOutput> GetInvoiceReportInfo(long invoiceId)
+        //{
+        //    //for host user
+        //    if(AbpSession.TenantId==null && AbpSession.UserId != null)
+        //    {
+        //        DisableTenancyFilters();
+        //    }
+        //    var invoice=_invoiceRepository.GetAll()
+        //        .Include(e=>e.Tenant)
+        //        .Where(e => e.Id == invoiceId);
+        //    var query = invoice.Select(x => new
+        //    {
+        //        InvoiceNo=x.Id,
+        //        InvoiceDate=x.CreationTime,
+        //        DueDate=x.DueDate,
+        //        Attn="",
+        //        Phone="",
+        //        Fax="",
+        //        Email="",
+        //        ContractNo="",
+        //        BillTo=x.Tenant.companyName,
+        //        CR="",
+        //        Address=x.Tenant.Address,
+        //        ProjectName="",
+        //        InvoiceSubTotal=x.SubTotalAmount,
+        //        VatAmount=x.VatAmount,
+        //        DueAmount=x.TotalAmount
+        //    });
+        //    var output = query.ToList().Select(x=>new GetInvoiceReportInfoOutput
+        //    {
+        //        VatAmount = x.VatAmount,
+        //        Address = x.Address,
+        //        DueDate = x.DueDate,
+        //        Attn = x.Attn,
+        //        BillTo = x.BillTo,
+        //        CR = x.CR,
+        //        ContractNo = x.ContractNo,
+        //        DueAmount = x.DueAmount,
+        //        Email = x.Email,
+        //        Fax = x.Fax,
+        //        InvoiceDate = x.InvoiceDate,
+        //        InvoiceNo = x.InvoiceNo,
+        //        InvoiceSubTotal = x.InvoiceSubTotal,
+        //        Phone = x.Phone,
+        //        ProjectName = x.ProjectName
+        //    });
+        //    return output;
+        //}
+
         //public IEnumerable<GetInvoiceShippingRequestsReportInfoOutput> GetInvoiceShippingRequestsReportInfo(long invoiceId)
         //{
         //    var requests = _invoiceShippingRequestRepository.GetAll()
