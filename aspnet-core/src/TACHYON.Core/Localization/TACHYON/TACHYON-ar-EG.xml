@@ -465,7 +465,6 @@
     <text name="DisplayNameCannotBeEmpty">لا يمكن اضافة إسم فارغ</text>
     <text name="DisplayOrder">DisplayOrder</text>
     <text name="Docuement">مستند</text>
-    <text name="NonMandatoryDocuments">Non-Mandatory Documents</text>
     <text name="DocumentEntityName">إسم الجهة التي يطلب منها المستندات</text>
     <text name="DocumentFile">مستند</text>
     <text name="DocumentFiles">مستند</text>
