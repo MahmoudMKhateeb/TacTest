@@ -359,7 +359,7 @@ namespace TACHYON.PriceOffers
             request.VatAmount = offer.VatAmountWithCommission;
             request.VatSetting = offer.TaxVat;
             request.TotalCommission = offer.TotalAmountWithCommission;
-
+            request.CarrierPrice = offer.TotalAmount;
             return Task.CompletedTask;
         }
         /// <summary>

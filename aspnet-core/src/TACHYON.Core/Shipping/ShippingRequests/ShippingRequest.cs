@@ -190,6 +190,8 @@ namespace TACHYON.Shipping.ShippingRequests
         public bool IsDrafted { get; set; }
 
         public int DraftStep { get; set; }
+        [StringLength(500)]
+        public string CancelReason { get; set; }
         #region Bids Data
         public DateTime? BidStartDate { get; set; }
         public DateTime? BidEndDate { get; set; }

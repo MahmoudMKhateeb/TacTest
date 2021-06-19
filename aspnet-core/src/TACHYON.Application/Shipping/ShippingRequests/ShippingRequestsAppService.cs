@@ -466,7 +466,7 @@ namespace TACHYON.Shipping.ShippingRequests
                 ShippingRequest shippingRequest = await _shippingRequestRepository.GetAll()
                     .Where(e => e.Id == id)
                     .WhereIf(await IsEnabledAsync(AppFeatures.Shipper), x => x.TenantId == AbpSession.TenantId)
-                    .WhereIf(await IsEnabledAsync(AppFeatures.TachyonDealer), x => x.IsTachyonDeal)
+                    //.WhereIf(await IsEnabledAsync(AppFeatures.TachyonDealer), x => x.IsTachyonDeal==true)
                         .Include(e => e.ShippingRequestBids)
                         .Include(e => e.OriginCityFk)
                         .Include(e => e.DestinationCityFk)

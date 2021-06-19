@@ -2,7 +2,7 @@
 {
     public  enum SubmitInvoiceStatus:byte
     {
-        None,
+        New,
         Claim,
         Accepted,
         Rejected

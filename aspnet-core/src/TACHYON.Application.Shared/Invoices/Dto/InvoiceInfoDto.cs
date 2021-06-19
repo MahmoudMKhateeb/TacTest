@@ -16,20 +16,18 @@ namespace TACHYON.Invoices.Dto
         public string Attn { get; set; }
         public string CR { get; set; }
         public string ContractNo { get; set; }
-
         public string ProjectName { get; set; }
-
         public string Period { get; set; }
         public DateTime DueDate { get; set; }
-        public bool IsPaid { get; set; }
-        public bool IsAccountReceivable { get; set; }
-
-        public string Note { get; set; }
-        public decimal? SubTotalAmount { get; set; }
-        public decimal TotalAmount { get; set; }
-        public decimal? VatAmount { get; set; }
-        public decimal? TaxVat { get; set; }
         public DateTime CreationTime { get; set; }
+        public bool IsPaid { get; set; }
+        public InvoiceAccountType AccountType { get; set; }
+        public string Note { get; set; }
+        public decimal SubTotalAmount { get; set; }
+        public decimal TotalAmount { get; set; }
+        public decimal VatAmount { get; set; }
+        public decimal TaxVat { get; set; }
+        public long InvoiceNumber { get; set; }
         public List<InvoiceItemDto> Items { get; set; }
     }
 

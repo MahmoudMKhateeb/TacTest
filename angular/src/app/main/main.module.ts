@@ -218,7 +218,7 @@ import { InvoiceDetailComponent } from '@app/main/invoices/invoice-detail/invoic
 import { TransactionListComponent } from '@app/main/invoices/transaction/transaction-list/transaction-list.component';
 import { InvoicePaymentMethodComponent } from '@app/main/invoices/invoice-payment-methods/invoice-payment-method.component';
 import { InvoicePaymentMethodModelComponent } from '@app/main/invoices/invoice-payment-methods/invoice-payment-method-model.component';
-
+import { InvoiceDemandModelComponent } from '@app/main/invoices/invoices-list/invoices-ondeman-model.component';
 import { AccidentReasonComponent } from '@app/main/accidents/reasons/reason.component';
 import { AccidentReasonComponentModalComponent } from '@app/main/accidents/reasons/create-or-edit-reason-modal.component';
 import { ViewTripModalComponent } from '@app/main/shippingRequests/shippingRequests/ShippingRequestTrips/trips/viewTripModal/viewTripModal.component';
@@ -227,6 +227,7 @@ import { DirectRequestComponent } from '@app/main/shippingRequests/shippingReque
 import { DirectRequestTenantModelComponent } from '@app/main/shippingRequests/shippingRequests/directrequest/direct-request-tenant-model.component';
 import { ShippingRequestCardTemplateComponent } from '@app/main/shippingRequests/shippingRequests/template/shipping-request-card-template.component';
 import { ShippingRequestCardSearchModelComponent } from '@app/main/shippingRequests/shippingRequests/template/shipping-request-card-search-model.component';
+import { ShippingRequestCardCancelModelComponent } from '@app/main/shippingRequests/shippingRequests/template/shipping-request-card-cancel-model.component';
 import { AssignDriverTruckModalComponent } from '@app/main/shippingRequests/shippingRequests/ShippingRequestTrips/trips/assignDriverTruckModal/assignDriverTruckModal.component';
 import { AppLocalizationComponent } from '@app/main/applocalizations/applocalization.component';
 import { ApplocalizationModalComponent } from '@app/main/applocalizations/create-or-edit-applocalization-modal.component';
@@ -411,6 +412,7 @@ NgxBootstrapDatePickerConfigService.registerNgxBootstrapDatePickerLocales();
     TransactionListComponent,
     InvoicePaymentMethodComponent,
     InvoicePaymentMethodModelComponent,
+    InvoiceDemandModelComponent,
     PointsComponent,
     TripsForViewShippingRequestComponent,
     CreateOrEditTripComponent,
@@ -428,6 +430,7 @@ NgxBootstrapDatePickerConfigService.registerNgxBootstrapDatePickerLocales();
     DirectRequestComponent,
     ShippingRequestCardTemplateComponent,
     ShippingRequestCardSearchModelComponent,
+    ShippingRequestCardCancelModelComponent,
     DirectRequestTenantModelComponent,
     AppLocalizationComponent,
     ApplocalizationModalComponent,

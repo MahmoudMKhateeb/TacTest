@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 using TACHYON.Authorization.Users;
 using TACHYON.Documents.DocumentFiles;
 using TACHYON.Invoices;
-using TACHYON.Invoices.Groups;
+using TACHYON.Invoices.SubmitInvoices;
 using TACHYON.MultiTenancy;
 using TACHYON.PriceOffers;
 using TACHYON.Shipping.ShippingRequests;
@@ -27,10 +27,10 @@ namespace TACHYON.Notifications
         Task AcceptShippingRequestPrice(long shippingRequestId, bool isAccepted);
         Task RejectShippingRequest(UserIdentifier argsUser, long shippingRequestId);
         Task NewInvoiceShipperGenerated(Invoice invoice);    
-        Task NewSubmitInvoiceGenerated(GroupPeriod groupPeriod);
-        Task SubmitInvoiceOnClaim(UserIdentifier User,GroupPeriod groupPeriod);
-        Task SubmitInvoiceOnAccepted(UserIdentifier User, GroupPeriod groupPeriod);
-        Task SubmitInvoiceOnRejected(UserIdentifier User, GroupPeriod groupPeriod);
+        Task NewSubmitInvoiceGenerated(SubmitInvoice submitInvoice);
+        Task SubmitInvoiceOnClaim(UserIdentifier User, SubmitInvoice submitInvoice);
+        Task SubmitInvoiceOnAccepted(UserIdentifier User, SubmitInvoice submitInvoice);
+        Task SubmitInvoiceOnRejected(UserIdentifier User, SubmitInvoice submitInvoice);
         Task ShipperNotfiyWhenCreditLimitGreaterOrEqualXPercentage(int? TenantId, int Percentage);
 
 
@@ -69,6 +69,8 @@ namespace TACHYON.Notifications
 
         Task SendDriectRequest(string FromTenant, int? ToTenant, long id);
         Task DeclineDriectRequest(string FromTenant, int? ToTenant, long id);
+
+        Task CancelShipment(long id, string reason, string cancelBy, UserIdentifier toUser);
         #endregion
         #endregion
         #endregion

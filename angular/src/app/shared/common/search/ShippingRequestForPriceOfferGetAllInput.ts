@@ -2,8 +2,10 @@ import { PriceOfferChannel, ShippingRequestRouteType, ShippingRequestStatus } fr
 import * as moment from 'moment';
 export class ShippingRequestForPriceOfferGetAllInput {
   filter!: string;
+  carrier!: string;
   shippingRequestId!: number;
   channel!: PriceOfferChannel;
+  requestTypeId!: PriceOfferChannel;
   truckTypeId!: number;
   originId!: number;
   destinationId!: number;

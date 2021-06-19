@@ -67,7 +67,8 @@ namespace TACHYON
         public const string TachyonEditionName = "4b4b7016956146c480a7fbb0d4a72554";
         public const string ShipperEditionName = "2d84ef198b5f433cac9fbe1690614585";
         public const int TachyonEditionId = 4;
-
+        public const int ShipperEditionId = 2;
+        public const string TMS = "TachyonManageService";
        public class Message
         {
             public const string NotFoundRecord = "TheRecordNotFound";

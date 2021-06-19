@@ -9,6 +9,7 @@ using TACHYON.Authorization.Users;
 using TACHYON.Documents.DocumentFiles;
 using TACHYON.Invoices;
 using TACHYON.Invoices.Groups;
+using TACHYON.Invoices.SubmitInvoices;
 using TACHYON.MultiTenancy;
 using TACHYON.PriceOffers;
 using TACHYON.Shipping.ShippingRequests;
@@ -441,22 +442,22 @@ namespace TACHYON.Notifications
 
 
 
-        public async Task NewSubmitInvoiceGenerated(GroupPeriod groupPeriod)
+        public async Task NewSubmitInvoiceGenerated(SubmitInvoice submitInvoice)
         {
             var notificationData = new LocalizableMessageNotificationData(
                 new LocalizableString(
-                    "NewGroupPeriodsGenerated",
+                    "SubmitInvoiceGenerated",
                     TACHYONConsts.LocalizationSourceName
                 )
             );
-            notificationData["groupid"] = groupPeriod.Id;
-            UserIdentifier user = new UserIdentifier(groupPeriod.TenantId, _userManager.GetAdminByTenantIdAsync(groupPeriod.TenantId).Id);
+            notificationData["id"] = submitInvoice.Id;
+            UserIdentifier user = new UserIdentifier(submitInvoice.TenantId, _userManager.GetAdminByTenantIdAsync(submitInvoice.TenantId).Id);
 
-            await _notificationPublisher.PublishAsync(AppNotificationNames.GroupPeriodsGenerated, notificationData,
+            await _notificationPublisher.PublishAsync(AppNotificationNames.SubmitInvoiceGenerated, notificationData,
                 userIds: new[] { user });
         }
 
-        public async Task SubmitInvoiceOnClaim(UserIdentifier User, GroupPeriod groupPeriod)
+        public async Task SubmitInvoiceOnClaim(UserIdentifier User, SubmitInvoice submitInvoice)
         {
             var notificationData = new LocalizableMessageNotificationData(
                 new LocalizableString(
@@ -464,12 +465,12 @@ namespace TACHYON.Notifications
                     TACHYONConsts.LocalizationSourceName
                 )
             );
-            notificationData["groupid"] = groupPeriod.Id;
+            notificationData["id"] = submitInvoice.Id;
 
             await _notificationPublisher.PublishAsync(AppNotificationNames.SubmitInvoiceOnClaim, notificationData, userIds: new[] { User });
         }
 
-        public async Task SubmitInvoiceOnAccepted(UserIdentifier User, GroupPeriod groupPeriod)
+        public async Task SubmitInvoiceOnAccepted(UserIdentifier User, SubmitInvoice submitInvoice)
         {
             var notificationData = new LocalizableMessageNotificationData(
                 new LocalizableString(
@@ -477,11 +478,11 @@ namespace TACHYON.Notifications
                     TACHYONConsts.LocalizationSourceName
                 )
             );
-            notificationData["groupid"] = groupPeriod.Id;
+            notificationData["id"] = submitInvoice.Id;
 
             await _notificationPublisher.PublishAsync(AppNotificationNames.SubmitInvoiceOnAccepted, notificationData, userIds: new[] { User });
         }
-        public async Task SubmitInvoiceOnRejected(UserIdentifier User, GroupPeriod groupPeriod)
+        public async Task SubmitInvoiceOnRejected(UserIdentifier User, SubmitInvoice submitInvoice)
         {
             var notificationData = new LocalizableMessageNotificationData(
                 new LocalizableString(
@@ -489,8 +490,8 @@ namespace TACHYON.Notifications
                     TACHYONConsts.LocalizationSourceName
                 )
             );
-            notificationData["groupid"] = groupPeriod.Id;
-            notificationData["reason"] = groupPeriod.RejectedReason;
+            notificationData["id"] = submitInvoice.Id;
+            notificationData["reason"] = submitInvoice.RejectedReason;
             await _notificationPublisher.PublishAsync(AppNotificationNames.SubmitInvoiceOnRejected, notificationData, userIds: new[] { User });
         }
         public async Task ShipperNotfiyWhenCreditLimitGreaterOrEqualXPercentage(int? TenantId, int Percentage)
@@ -785,6 +786,19 @@ namespace TACHYON.Notifications
             notificationData["client"] = FromTenant;
             await _notificationPublisher.PublishAsync(AppNotificationNames.DeclineDriectRequest, notificationData, userIds: new[] { await GetAdminUser(ToTenant) });
         }
+        public async Task CancelShipment(long id, string reason, string cancelBy, UserIdentifier toUser)
+        {
+            var notificationData = new LocalizableMessageNotificationData(
+                new LocalizableString(
+                    L("CancelShipment"),
+                    TACHYONConsts.LocalizationSourceName
+                )
+            );
+            notificationData["id"] = id;
+            notificationData["cancelby"] = cancelBy;
+            await _notificationPublisher.PublishAsync(AppNotificationNames.CancelShipment, notificationData, userIds: new[] { toUser });
+        }
+        
         public async  Task RejectedOffer(PriceOffer offer,string RejectedBy)
         {
             var notificationData = new LocalizableMessageNotificationData(

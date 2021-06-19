@@ -3,6 +3,14 @@
     <sub-header [title]="'Invoices' | localize" [description]="'' | localize">
       <div role="actions">
         <button (click)="exportToExcel()" class="btn btn-outline-success"><i class="fa fa-file-excel"></i> {{ l('ExportToExcel') }}</button>
+        <button
+          *ngIf="feature.isEnabled('App.TachyonDealer') || !appSession.tenantId"
+          (click)="OndemandModel.show()"
+          type="button"
+          class="btn btn-default"
+        >
+          {{ l('OnDemand') }}
+        </button>
       </div>
     </sub-header>
 
@@ -12,7 +20,7 @@
           <form class="form" autocomplete="off">
             <div>
               <div class="row align-items-center">
-                <div class="col-xl-12" *ngIf="feature.isEnabled('App.TachyonDealer') || !this.appSession.tenantId">
+                <div class="col-xl-12" *ngIf="feature.isEnabled('App.TachyonDealer') || !appSession.tenantId">
                   <div class="form-group m-form__group align-items-center">
                     <div class="input-group">
                       <p-autoComplete
@@ -283,3 +291,4 @@
     </div>
   </div>
 </div>
+<invoices-ondeman-model (modalSave)="reloadPage()" #OndemandModel></invoices-ondeman-model>

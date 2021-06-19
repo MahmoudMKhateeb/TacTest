@@ -11,7 +11,9 @@ using System.Linq.Dynamic.Core;
 using System.Threading.Tasks;
 using TACHYON.Authorization;
 using TACHYON.Authorization.Users;
+using TACHYON.Cities.Dtos;
 using TACHYON.Common;
+using TACHYON.Documents.DocumentFiles;
 using TACHYON.Dto;
 using TACHYON.Exporting;
 using TACHYON.Features;
@@ -37,6 +39,7 @@ namespace TACHYON.Invoices
         private readonly TransactionManager _transactionManager;
         private readonly IRepository<ShippingRequestVas, long> _shippingRequestVasesRepository;
         private readonly IExcelExporterManager<InvoiceListDto> _excelExporterManager;
+        private readonly IRepository<DocumentFile, Guid> _documentFileRepository;
         public InvoiceAppService(
             IRepository<Invoice, long> invoiceRepository,
             CommonManager commonManager,
@@ -44,7 +47,7 @@ namespace TACHYON.Invoices
             UserManager userManager,
             InvoiceManager invoiceManager,
             TransactionManager transactionManager,
-            IExcelExporterManager<InvoiceListDto> excelExporterManager, IRepository<ShippingRequestVas, long> shippingRequestVasesRepository)
+            IExcelExporterManager<InvoiceListDto> excelExporterManager, IRepository<ShippingRequestVas, long> shippingRequestVasesRepository, IRepository<DocumentFile, Guid> documentFileRepository)
 
         {
             _invoiceRepository = invoiceRepository;
@@ -55,77 +58,93 @@ namespace TACHYON.Invoices
             _transactionManager = transactionManager;
             _shippingRequestVasesRepository = shippingRequestVasesRepository;
             _excelExporterManager = excelExporterManager;
+            _documentFileRepository = documentFileRepository;
         }
 
 
         public async Task<PagedResultDto<InvoiceListDto>> GetAll(InvoiceFilterInput input)
 
         {
-            return  await _commonManager.ExecuteMethodIfHostOrTenantUsers(()=> GetInvoicesWithPaging(input));
+            DisableTenancyFilters();
+            var query = await GetInvoicesWithPaging(input);
+            return query;
         }
 
         public async Task<InvoiceInfoDto> GetById(EntityDto input)
         {
-            var invoice= await _commonManager.ExecuteMethodIfHostOrTenantUsers(() => GetInvoiceInfo(input.Id));
+            DisableTenancyFilters();
+            var invoice= await GetInvoiceInfo(input.Id);
+
             if (invoice==null) throw new UserFriendlyException(L("TheInvoiceNotFound"));
+            var TotalItem = invoice.Trips.Count + invoice.Trips.Select(v=>v.ShippingRequestTripFK.ShippingRequestTripVases).Count();
+            int Sequence = 1;
             List<InvoiceItemDto> Items = new List<InvoiceItemDto>();
-            //invoice.ShippingRequests.ForEach(request =>
-            //{
-            //    Items.Add(new InvoiceItemDto
-            //    {
-            //        Price = request.ShippingRequests.Price,
-            //        TruckType = ObjectMapper.Map<TrucksTypeDto>(request.ShippingRequests.TrucksTypeFk).TranslatedDisplayName, //request.ShippingRequests.TrucksTypeFk.DisplayName,
-            //        Source = request.ShippingRequests.OriginCityFk.DisplayName,
-            //        Destination = request.ShippingRequests.DestinationCityFk.DisplayName,
-            //        DateWork = request.ShippingRequests.StartTripDate.Value.ToString("dd MMM, yyyy"),
-            //        Remarks = L("TotalOfDrop", request.ShippingRequests.NumberOfDrops)
-            //    }); 
+            invoice.Trips.ToList().ForEach(trip =>
+            {
+                int VasCounter = 0;
+                Items.Add(new InvoiceItemDto
+                {
+                    Sequence=$"{Sequence}/{TotalItem}",
+                    SubTotalAmount = AbpSession.TenantId.HasValue && IsEnabled(AppFeatures.Carrier) ? trip.ShippingRequestTripFK.SubTotalAmount.Value : trip.ShippingRequestTripFK.SubTotalAmountWithCommission.Value,
+                    VatAmount = AbpSession.TenantId.HasValue &&  IsEnabled(AppFeatures.Carrier) ? trip.ShippingRequestTripFK.VatAmount.Value : trip.ShippingRequestTripFK.VatAmountWithCommission.Value,
+                    TotalAmount = AbpSession.TenantId.HasValue &&  IsEnabled(AppFeatures.Carrier) ? trip.ShippingRequestTripFK.TotalAmount.Value : trip.ShippingRequestTripFK.TotalAmountWithCommission.Value,
+                    WayBillNumber = trip.ShippingRequestTripFK.WaybillNumber.ToString(),
+                    TruckType = ObjectMapper.Map<TrucksTypeDto>(trip.ShippingRequestTripFK.AssignedTruckFk.TrucksTypeFk).TranslatedDisplayName,
+                    Source = ObjectMapper.Map<CityDto>(trip.ShippingRequestTripFK.ShippingRequestFk.OriginCityFk)?.TranslatedDisplayName ?? trip.ShippingRequestTripFK.ShippingRequestFk.OriginCityFk.DisplayName,
+                    Destination = ObjectMapper.Map<CityDto>(trip.ShippingRequestTripFK.ShippingRequestFk.DestinationCityFk)?.TranslatedDisplayName ?? trip.ShippingRequestTripFK.ShippingRequestFk.DestinationCityFk.DisplayName,
+                    DateWork = trip.ShippingRequestTripFK.ShippingRequestFk.EndTripDate.HasValue ? trip.ShippingRequestTripFK.ShippingRequestFk.EndTripDate.Value.ToString("dd MMM, yyyy"):"",
+                    Remarks = trip.ShippingRequestTripFK.ShippingRequestFk.RouteTypeId == Shipping.ShippingRequests.ShippingRequestRouteType.MultipleDrops ?
+                    L("TotalOfDrop", trip.ShippingRequestTripFK.ShippingRequestFk.NumberOfDrops) : ""
+                });
+                Sequence++;
+                if (trip.ShippingRequestTripFK.ShippingRequestTripVases != null && trip.ShippingRequestTripFK.ShippingRequestTripVases.Count > 1)
+                {
+                    VasCounter = 1;
+                }
+                foreach (var vas in trip.ShippingRequestTripFK.ShippingRequestTripVases)
+                {
 
-            //    foreach (var vas in request.ShippingRequests.ShippingRequestVases)
-            //    {
-            //        var item = new InvoiceItemDto
-            //        {
-            //            Price = (decimal?)vas.ActualPrice,
-            //            TruckType = L("InvoiceVasType", vas.VasFk.Name),
-            //            Source = "-",
-            //            Destination = "-",
-            //            DateWork = "-"
-            //        };
-            //        if (vas.RequestMaxAmount > 0 && vas.RequestMaxCount > 0)
-            //        {
-            //            item.Remarks = L("InvoiceVasRemarksAll", vas.RequestMaxCount, vas.RequestMaxAmount);
-            //        }
-            //        else if (vas.RequestMaxCount > 0)
-            //        {
-            //            item.Remarks = L("InvoiceVasRemarksCount", vas.RequestMaxCount);
+                    string waybillnumber;
+                    if (VasCounter == 0)
+                    {
+                        waybillnumber = $"{trip.ShippingRequestTripFK.WaybillNumber.ToString()}VAS";
+                    }
+                    else
+                    {
+                        waybillnumber = $"{trip.ShippingRequestTripFK.WaybillNumber.ToString()}VAS{VasCounter}";
+                        VasCounter++;
+                    }
+                    trip.ShippingRequestTripFK.WaybillNumber.ToString();
 
-            //        }
-            //        else if (vas.RequestMaxAmount > 0)
-            //        {
-            //            item.Remarks = L("InvoiceVasRemarksAmount", vas.RequestMaxAmount);
+                    var item = new InvoiceItemDto
+                    {
+                        Sequence = $"{Sequence}/{TotalItem}",
+                        SubTotalAmount =AbpSession.TenantId.HasValue && IsEnabled(AppFeatures.Carrier) ? vas.SubTotalAmount.Value : vas.SubTotalAmountWithCommission.Value,
+                        VatAmount = AbpSession.TenantId.HasValue && IsEnabled(AppFeatures.Carrier) ? vas.VatAmount.Value : vas.VatAmountWithCommission.Value,
+                        TotalAmount = AbpSession.TenantId.HasValue && IsEnabled(AppFeatures.Carrier) ? vas.TotalAmount.Value : vas.TotalAmountWithCommission.Value,
+                        WayBillNumber = waybillnumber,
+                        TruckType = L("InvoiceVasType", vas.ShippingRequestVasFk.VasFk.Name),
+                        Source = "-",
+                        Destination = "-",
+                        DateWork = "-",
+                        Remarks = vas.Quantity > 1 ? $"{vas.Quantity}" : ""
+                    };
+                    Items.Add(item);
 
-            //        }
-            //        Items.Add(item);
-            //    }
+                    Sequence++;
+                }
 
-            //});
+            });
 
 
             var invoiceDto = ObjectMapper.Map<InvoiceInfoDto>(invoice);
-            //invoiceDto.ShippingRequest = invoice.ShippingRequests.Select(x => new InvoiceShippingRequestDto
-            //{
-            //    TruckType = ObjectMapper.Map<TrucksTypeDto>(x.ShippingRequests.TrucksTypeFk).TranslatedDisplayName
-            //}).ToList();
-
-            //invoiceDto.Items = Items;
-            //    using (CurrentUnitOfWork.DisableFilter(AbpDataFilters.MayHaveTenant, AbpDataFilters.MayHaveTenant))
-            //    {
-            //        var user = await _userManager.Users.SingleAsync(u => u.TenantId == invoice.TenantId && u.UserName== AbpUserBase.AdminUserName);
-
-            //        invoiceDto.Email = user.EmailAddress;
-            //        invoiceDto.Phone = user.PhoneNumber;
-            //    }
-
+            var Admin = await _userManager.GetAdminByTenantIdAsync(invoice.TenantId);
+            invoiceDto.Items = Items;
+            invoiceDto.Phone = Admin.PhoneNumber;
+            invoiceDto.Email = Admin.EmailAddress;
+            DisableTenancyFilters();
+            var documnet = await _documentFileRepository.FirstOrDefaultAsync(x => x.TenantId == invoice.TenantId && x.DocumentTypeId== 14);
+            if (documnet != null) invoiceDto.CR = documnet.Number;
             return invoiceDto;
 
         }
@@ -134,62 +153,35 @@ namespace TACHYON.Invoices
         {
          return  await _invoiceRepository
                             .GetAll()
-                            .Include(i => i.InvoicePeriod)
+                            .Include(i => i.InvoicePeriodsFK)
                             .Include(i => i.Tenant)
                             .Include(i => i.Trips)
-                             .ThenInclude(r => r.ShippingRequestTripFK)
-                              .ThenInclude(i => i.ShippingRequestFk)
-                               .ThenInclude(r => r.OriginCityFk)
+                                 .ThenInclude(r => r.ShippingRequestTripFK)
+                                  .ThenInclude(r => r.ShippingRequestTripVases)
+                                   .ThenInclude(v => v.ShippingRequestVasFk)
+                                   .ThenInclude(v => v.VasFk)
                             .Include(i => i.Trips)
-                             .ThenInclude(r => r.ShippingRequestTripFK)
-                            .ThenInclude(i => i.ShippingRequestFk)
-                               .ThenInclude(r => r.DestinationCityFk)
+                                .ThenInclude(r => r.ShippingRequestTripFK)
+                                     .ThenInclude(i => i.ShippingRequestFk)
+                                        .ThenInclude(r => r.OriginCityFk)
+                                            .ThenInclude(r => r.Translations)
                             .Include(i => i.Trips)
-                             .ThenInclude(r => r.ShippingRequestTripFK)
-                              .ThenInclude(r=>r.AssignedTruckFk)
-                              .ThenInclude(r => r.TrucksTypeFk)
+                                 .ThenInclude(r => r.ShippingRequestTripFK)
+                                    .ThenInclude(i => i.ShippingRequestFk)
+                                        .ThenInclude(r => r.DestinationCityFk)
+                                            .ThenInclude(r => r.Translations)
                             .Include(i => i.Trips)
-                             .ThenInclude(r => r.ShippingRequestTripFK)
-                              .ThenInclude(r => r.ShippingRequestTripVases)
-                               .ThenInclude(v => v.ShippingRequestVasFk)
-                               .ThenInclude(v => v.VasFk)
+                                 .ThenInclude(r => r.ShippingRequestTripFK)
+                                     .ThenInclude(r=>r.AssignedTruckFk)
+                            .Include(i => i.Trips)
+                                 .ThenInclude(r => r.ShippingRequestTripFK)
+                                    .ThenInclude(r => r.AssignedTruckFk)
+                                        .ThenInclude(r => r.TrucksTypeFk)
+                                            .ThenInclude(r => r.Translations)
+                             .Include(i => i.Trips)
                             .FirstOrDefaultAsync(i => i.Id == invoiceId);
         }
-        //[AbpAuthorize(AppPermissions.Pages_Administration_Host_Invoices_Delete)]
 
-
-
-        //public async Task Delete(EntityDto Input)
-        //{
-        //    CheckIfCanAccessService(true, AppFeatures.TachyonDealer);
-
-
-        //    var Invoice = await GetInvoice(Input.Id);
-        //    if (Invoice != null)
-        //    {
-        //        if (Invoice.IsPaid)
-        //        {
-        //            if (!_invoiceManager.IsCarrier(Invoice.TenantId))
-        //            {
-        //                await _balanceManager.AddBalanceToShipper(Invoice.TenantId, Invoice.TotalAmount);
-        //                if ((InvoicePeriodType)Invoice.PeriodId !=InvoicePeriodType.PayInAdvance)
-        //                {
-        //                    await _balanceManager.AddCreditBalanceToShipper(Invoice.TenantId, -Invoice.TotalAmount);
-
-        //                }
-        //                await _transactionManager.Delete(Invoice.Id, ChannelType.Invoices);
-
-        //            }
-        //            else
-        //                await _balanceManager.AddBalanceToCarrier(Invoice.TenantId, +Invoice.TotalAmount);
-        //        }
-
-        //        await _invoiceRepository.DeleteAsync(Input.Id);
-        //        await _invoiceManager.RemoveInvoiceFromRequest(Input.Id);
-
-        //    }
-
-        //}
 
 
         public async Task<bool> MakePaid(long invoiceId)
@@ -262,6 +254,15 @@ namespace TACHYON.Invoices
             }
         }
 
+
+        public async Task OnDemand(int Id)
+        {
+            CheckIfCanAccessService(true, AppFeatures.TachyonDealer);
+            DisableTenancyFilters();
+            var tenant= await TenantManager.GetByIdAsync(Id);
+            if (tenant == null || tenant.Name == AppConsts.ShipperEditionName) throw new UserFriendlyException(L("TheTenantSelectedIsNotShipper"));
+            await _invoiceManager.GenertateInvoiceOnDeman(tenant);
+        }
         #region Reports
 
         public IEnumerable<GetInvoiceReportInfoOutput> GetInvoiceReportInfo(long invoiceId)
@@ -416,28 +417,33 @@ namespace TACHYON.Invoices
                 ObjectMapper.Map<List<InvoiceListDto>>(pagedInvoices)
             );
         }
-        private  Task<IQueryable<Invoice>> GetInvoices(InvoiceFilterInput input)
+        private async Task<IQueryable<Invoice>> GetInvoices(InvoiceFilterInput input)
         {
-            return Task.FromResult(
+            return 
                 _invoiceRepository
                 .GetAll()
-                    .Include(i=>i.InvoicePeriod)
+                    .Include(i=>i.InvoicePeriodsFK)
                     .Include(i => i.Tenant)
                      .ThenInclude(t=>t.Edition)
+                .WhereIf(AbpSession.TenantId.HasValue && !await IsEnabledAsync(AppFeatures.TachyonDealer), e => e.TenantId == AbpSession.TenantId.Value)
+                .WhereIf(!AbpSession.TenantId.HasValue || await IsEnabledAsync(AppFeatures.TachyonDealer), e => true)
                 .WhereIf(input.AccountType.HasValue, e => e.AccountType == input.AccountType)
                 .WhereIf(input.IsPaid.HasValue, e => e.IsPaid == input.IsPaid)
                 .WhereIf(input.TenantId.HasValue, i => i.TenantId == input.TenantId)
                 .WhereIf(input.PeriodId.HasValue, i => i.PeriodId == input.PeriodId)
                 .WhereIf(input.FromDate.HasValue && input.ToDate.HasValue, i => i.CreationTime >= input.FromDate && i.CreationTime < input.ToDate)
                 .WhereIf(input.DueFromDate.HasValue && input.DueToDate.HasValue, i => i.DueDate >= input.DueFromDate && i.DueDate < input.DueToDate)
-                .AsNoTracking()
-                );
+                .AsNoTracking();
 
         }
 
         private async Task<Invoice> GetInvoice(long  invoiceId)
         {
-          return await _invoiceRepository.SingleAsync(i => i.Id == invoiceId);
+          return await _invoiceRepository
+                .GetAll()
+                .WhereIf(AbpSession.TenantId.HasValue && !await IsEnabledAsync(AppFeatures.TachyonDealer), e => e.TenantId == AbpSession.TenantId.Value)
+                .WhereIf(!AbpSession.TenantId.HasValue || await IsEnabledAsync(AppFeatures.TachyonDealer), e => true)
+                .FirstOrDefaultAsync(i => i.Id == invoiceId);
         }
 
 

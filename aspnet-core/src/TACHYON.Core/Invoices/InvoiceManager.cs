@@ -24,6 +24,7 @@ using TACHYON.Invoices.Balances;
 using TACHYON.Invoices.Transactions;
 using TACHYON.Shipping.ShippingRequestTrips;
 using TACHYON.Invoices.PaymentMethods;
+using TACHYON.Invoices.SubmitInvoices;
 
 namespace TACHYON.Invoices
 {
@@ -41,6 +42,8 @@ namespace TACHYON.Invoices
         private readonly ISettingManager _settingManager;
         private readonly IQuartzScheduleJobManager _jobManager;
         private readonly IRepository<Invoice, long> _InvoiceRepository;
+        private readonly IRepository<SubmitInvoice, long> _submitInvoiceRepository;
+
         private readonly IRepository<GroupPeriod, long> _GroupRepository;
         private readonly IFeatureChecker _featureChecker;
         private readonly BalanceManager _BalanceManager;
@@ -60,7 +63,7 @@ namespace TACHYON.Invoices
             IRepository<Tenant> tenant,
              BalanceManager BalanceManager,
              IUnitOfWorkManager unitOfWorkManager,
-             TransactionManager transactionManager, IRepository<ShippingRequestTrip> shippingRequestTrip, IRepository<InvoicePaymentMethod> invoicePaymentMethodRepository)
+             TransactionManager transactionManager, IRepository<ShippingRequestTrip> shippingRequestTrip, IRepository<InvoicePaymentMethod> invoicePaymentMethodRepository, IRepository<SubmitInvoice, long> submitInvoiceRepository)
         {
             _periodRepository = PeriodRepository;
             _InvoiceRepository = InvoiceRepository;
@@ -77,6 +80,7 @@ namespace TACHYON.Invoices
             _transactionManager = transactionManager;
             _shippingRequestTrip = shippingRequestTrip;
             _invoicePaymentMethodRepository = invoicePaymentMethodRepository;
+            _submitInvoiceRepository = submitInvoiceRepository;
         }
 
 
@@ -161,33 +165,88 @@ namespace TACHYON.Invoices
         /// Generate invoices for shipper and submitinvoices for carrirer by period
         /// </summary>
         /// <param name="PeriodId"></param>
-        public void GenerateInvoice(int PeriodId)
+        public  async  Task GenerateInvoice(int PeriodId)
         {
-            var Period = _periodRepository.FirstOrDefault(x => x.Id == PeriodId);
+            List<Tenant> TenantsList = new List<Tenant>();
             var Tenants = _Tenant.GetAll()
                 .Where(
-                t => t.IsActive &&
-                (int.Parse(_featureChecker.GetValue(t.Id, AppFeatures.ShipperPeriods)) == PeriodId || int.Parse(_featureChecker.GetValue(t.Id, AppFeatures.CarrierPeriods)) == PeriodId) &&
-                (t.Edition.Name == AppConsts.ShipperEditionName || t.Edition.Name == AppConsts.CarrierEditionName));
+                t => t.IsActive && (t.Edition.Name == AppConsts.ShipperEditionName || t.Edition.Name == AppConsts.CarrierEditionName));
+
+            foreach (var tenant in Tenants)
+            {
+
+                int value;
+                if (tenant.EditionId == AppConsts.ShipperEditionId)
+                {
+                    value = int.Parse( await _featureChecker.GetValueAsync(tenant.Id, AppFeatures.ShipperPeriods));
+                }
+                else
+                {
+                    value = int.Parse(await _featureChecker.GetValueAsync(tenant.Id, AppFeatures.CarrierPeriods));
+                }
+
+                if (value == PeriodId)
+                {
+                    TenantsList.Add(tenant);
+                }
+            }
+
+            var Period = _periodRepository.FirstOrDefault(x => x.Id == PeriodId);
+            //(int.Parse( _featureChecker.GetValue(t.Id, AppFeatures.ShipperPeriods)) == PeriodId || int.Parse(_featureChecker.GetValue(t.Id, AppFeatures.CarrierPeriods)) == PeriodId) &&
+
+           // var Tenants =  GetTenentByFeatures(PeriodId);
+
+
+
 
             foreach (var Tenant in Tenants)
             {
-                CollectTripsForShipper(Tenant, Period);
-                //BuildCarrierSubmitInvoice(Tenant, PeriodId);
+                if (Tenant.EditionId== AppConsts.ShipperEditionId)
+                         CollectTripsForShipper(Tenant, Period);
+                else
+                          BuildCarrierSubmitInvoice(Tenant, Period);
 
             }
         }
 
+        private  List<Tenant> GetTenentByFeatures(int PeriodId)
+        {
+
+            List<Tenant> TenantsList = new List<Tenant>();
+            var Tenants = _Tenant.GetAll()
+                .Where(
+                t => t.IsActive && (t.Edition.Name == AppConsts.ShipperEditionName || t.Edition.Name == AppConsts.CarrierEditionName));
+
+            foreach (var tenant in Tenants)
+            {
+
+                int value;
+                if (tenant.EditionId == AppConsts.ShipperEditionId)
+                {
+                    value = int.Parse( _featureChecker.GetValue(tenant.Id, AppFeatures.ShipperPeriods));
+                }
+                else
+                {
+                    value = int.Parse( _featureChecker.GetValue(tenant.Id, AppFeatures.CarrierPeriods));
+                }
+                
+                if (value== PeriodId)
+                {
+                    TenantsList.Add(tenant);
+                }
+            }
+            return TenantsList;
+        }
         /// <summary>
         /// Collect all shipping request for shipper in the period interval
         /// </summary>
         /// <param name="Tenant"></param>
         /// <param name="PeriodId"></param>
-        private void CollectTripsForShipper(Tenant Tenant, InvoicePeriod period)
+        private async void CollectTripsForShipper(Tenant Tenant, InvoicePeriod period)
         {       
             var Trips = _shippingRequestTrip
-                .GetAllList(r =>r.ShippingRequestFk.TenantId== Tenant.Id && r.IsShipperHaveInvoice == false && r.Status== Shipping.Trips.ShippingRequestTripStatus.Delivered && r.ShippingRequestFk.IsPrePayed == false);
-          if (Trips.Count()>0) GenerateShipperInvoice(Tenant, Trips, period);
+                .GetAllList(r =>r.ShippingRequestFk.TenantId== Tenant.Id && r.IsShipperHaveInvoice == false && r.Status== Shipping.Trips.ShippingRequestTripStatus.Delivered);
+          if (Trips.Count()>0) await GenerateShipperInvoice(Tenant, Trips, period);
 
         }
         /// <summary>
@@ -195,56 +254,53 @@ namespace TACHYON.Invoices
         /// </summary>
         /// <param name="Tenant"></param>
         /// <param name="PeriodId"></param>
-        //private void BuildCarrierSubmitInvoice(Tenant Tenant, int PeriodId)
-        //{
+        private async void BuildCarrierSubmitInvoice(Tenant Tenant,  InvoicePeriod period)
+        {
 
-        //    var Trips = _shippingRequestTrip
-        //        .GetAllList(r => r.ShippingRequestFk.CarrierTenantId== Tenant.Id &&  r.IsCarrierHaveInvoice == false && r.Status == Shipping.Trips.ShippingRequestTripStatus.Delivered);
-        //    if (Trips.Count() == 0) return;
-        //    decimal Amount =(decimal)Requests.Sum(r => r.Price);
-        //    var GroupPeriod = new GroupPeriod
-        //    {
-        //        TenantId = Tenant.Id,
-        //        PeriodId = PeriodId,
-        //        Amount = Amount,
-        //       // TaxVat = TaxVat,
-        //       // AmountWithTaxVat = AmountWithTaxVat,
-        //       // VatAmount= VatAmount,
-        //        ShippingRequests = Requests.Select(
-        //       r => new GroupShippingRequests()
-        //       {
-        //           RequestId = r.Id
-        //       }).ToList()
-        //    };
-        //    _GroupRepository.Insert(GroupPeriod);
-        //   // Tenant.Balance +=AmountWithTaxVat;
+            var Trips = _shippingRequestTrip.GetAll().Where(x => x.ShippingRequestFk.CarrierTenantId == Tenant.Id
+              && x.Status == Shipping.Trips.ShippingRequestTripStatus.Delivered && !x.IsCarrierHaveInvoice).ToList();
+            if (Trips.Count == 0) return;
+            decimal TotalAmount = (decimal)Trips.Sum(r => r.TotalAmountWithCommission + r.ShippingRequestTripVases.Sum(v => v.TotalAmountWithCommission));
+            decimal VatAmount = (decimal)Trips.Sum(r => r.VatAmountWithCommission + r.ShippingRequestTripVases.Sum(v => v.VatAmountWithCommission));
+            decimal SubTotalAmount = (decimal)Trips.Sum(r => r.SubTotalAmountWithCommission + r.ShippingRequestTripVases.Sum(v => v.SubTotalAmountWithCommission));
+
+            var submitInvoice = new SubmitInvoice
+            {
+                TenantId = Tenant.Id,
+                PeriodId = period.Id,
+                TotalAmount = TotalAmount,
+                VatAmount = VatAmount,
+                SubTotalAmount = SubTotalAmount,
+                TaxVat = Trips.Where(x => x.TaxVat.HasValue).FirstOrDefault().TaxVat.Value,
+                Channel = InvoiceChannel.Trip,
+                Trips = Trips.Select(
+               r => new SubmitInvoiceTrip()
+               {
+                   TripId = r.Id
+               }).ToList()
+            };
+            submitInvoice.Id = await _submitInvoiceRepository.InsertAndGetIdAsync(submitInvoice);
 
 
-        //    foreach (var request in Requests)
-        //    {
-        //        request.IsCarrierHaveInvoice = true;
-        //    }
-        //    _appNotifier.NewSubmitInvoiceGenerated(GroupPeriod);
-        //    //_emailSender.Send(
-        //    //               to: user.EmailAddress,
-        //    //               subject: "You have a new notification!",
-        //    //               body: data.Message,
-        //    //               isBodyHtml: true
-        //    //           );
-
-        //    /*Update For Both account Shipper and Carrier  */
-        //}
+            foreach (var trip in Trips)
+            {
+                trip.IsCarrierHaveInvoice = true;
+            }
+          await  _appNotifier.NewSubmitInvoiceGenerated(submitInvoice);
+        }
         /// <summary>
         /// Generate invoices for shipper
         /// </summary>
         /// <param name="Tenant"></param>
         /// <param name="Requests"></param>
         /// <param name="PeriodId"></param>
-        private async Task GenerateShipperInvoice(Tenant Tenant, List<ShippingRequestTrip> Trips, InvoicePeriod period)
+        public async Task GenerateShipperInvoice(Tenant Tenant, List<ShippingRequestTrip> Trips, InvoicePeriod period)
         {
             decimal TotalAmount = (decimal)Trips.Sum(r => r.TotalAmountWithCommission + r.ShippingRequestTripVases.Sum(v=>v.TotalAmountWithCommission));
             decimal VatAmount= (decimal)Trips.Sum(r => r.VatAmountWithCommission + r.ShippingRequestTripVases.Sum(v => v.VatAmountWithCommission));
             decimal SubTotalAmount = (decimal)Trips.Sum(r => r.SubTotalAmountWithCommission + r.ShippingRequestTripVases.Sum(v => v.SubTotalAmountWithCommission));
+
+
             DateTime DueDate= Clock.Now;
 
             if (period.PeriodType != InvoicePeriodType.PayInAdvance)
@@ -267,8 +323,9 @@ namespace TACHYON.Invoices
                 TotalAmount = TotalAmount,
                 VatAmount = VatAmount,
                 SubTotalAmount = SubTotalAmount,
-                TaxVat = Trips.FirstOrDefault().TaxVat.Value,
+                TaxVat = Trips.Where(x=>x.TaxVat.HasValue).FirstOrDefault().TaxVat.Value,
                 AccountType = InvoiceAccountType.AccountReceivable,
+                Channel=InvoiceChannel.Trip,
                 Trips = Trips.Select(
                r => new InvoiceTrip()
                {
@@ -362,6 +419,23 @@ namespace TACHYON.Invoices
             }          
         }
 
+
+        public async Task GenertateInvoiceOnDeman(Tenant tenant)
+        {
+            InvoicePeriod Period = await _periodRepository.FirstOrDefaultAsync(x => x.Id == int.Parse(_featureChecker.GetValue(tenant.Id, AppFeatures.ShipperPeriods)));
+
+
+            if (Period.PeriodType != InvoicePeriodType.PayuponDelivery && Period.PeriodType != InvoicePeriodType.PayInAdvance)
+            {
+                var trips = _shippingRequestTrip.GetAll(  ).Include(x=>x.ShippingRequestTripVases).Where(x => x.ShippingRequestFk.TenantId == tenant.Id && !x.IsShipperHaveInvoice 
+                && x.Status == Shipping.Trips.ShippingRequestTripStatus.Delivered);
+                if (trips !=null && trips.Count()>0)
+                {
+                    await GenerateShipperInvoice(tenant, trips.ToList(), Period);
+
+                }
+            }
+        }
         /// <summary>
         /// remove invoice from shipping request when delete invoice
         /// </summary>

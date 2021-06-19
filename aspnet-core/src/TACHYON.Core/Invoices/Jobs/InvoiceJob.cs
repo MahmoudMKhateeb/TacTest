@@ -1,9 +1,12 @@
-﻿using Abp.Dependency;
+﻿using Abp.BackgroundJobs;
+using Abp.Dependency;
 using Abp.Domain.Repositories;
+using Abp.Threading;
 using Quartz;
 using System;
 using System.Threading.Tasks;
 using TACHYON.Invoices;
+using TACHYON.Invoices.Jobs;
 using TACHYON.Invoices.Periods;
 
 namespace TACHYON.Core.Invoices.Jobs
@@ -13,21 +16,25 @@ namespace TACHYON.Core.Invoices.Jobs
         public InvoicePeriodType PeriodType { private get; set; }
         public int PeriodId { private get; set; }
         public InvoiceManager _InvoiceManager { get; set; }
+        public readonly IBackgroundJobManager _backgroundJobManager;
 
-
-
-        public InvoiceJob(InvoiceManager InvoiceManager)
+        public InvoiceJob(InvoiceManager InvoiceManager, IBackgroundJobManager backgroundJobManager)
         {
             _InvoiceManager = InvoiceManager;
+            _backgroundJobManager = backgroundJobManager;
         }
 
-        public async Task Execute(IJobExecutionContext context)
+        public  Task Execute(IJobExecutionContext context)
         {
             JobKey key = context.JobDetail.Key;
             //JobDataMap dataMap = context.JobDetail.JobDataMap;
             JobDataMap dataMap = context.Trigger.JobDataMap;
-            _InvoiceManager.GenerateInvoice(dataMap.GetInt("PeriodId"));
-            await Console.Error.WriteLineAsync("");
+            int PeriodId = dataMap.GetInt("PeriodId");
+            // AsyncHelper.RunSync(() => _InvoiceManager.GenerateInvoice(PeriodId));
+            _backgroundJobManager.Enqueue<InvoiceBackgroundJob, int>(PeriodId);
+
+            Console.Error.WriteLineAsync("abdulllah");
+            return Task.CompletedTask;
         }
 
 

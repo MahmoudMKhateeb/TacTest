@@ -8,8 +8,10 @@ namespace TACHYON.PriceOffers.Dto
     public class ShippingRequestForPriceOfferGetAllInput: PagedAndSortedResultRequestDto, IShouldNormalize
     {
         public string Filter { get; set; }
+        public string Carrier { get; set; }
         public long? ShippingRequestId { get; set; }
         public PriceOfferChannel? Channel { get; set; }
+        public PriceOfferChannel? RequestTypeId { get; set; }
 
         public int? TruckTypeId { get; set; }
 
@@ -26,16 +28,15 @@ namespace TACHYON.PriceOffers.Dto
         public DateTime? ToDate { get; set; }
 
         public ShippingRequestRouteType? RouteTypeId { get; set; }
-        public ShippingRequestStatus? Status { get; set; }
+        public int? Status { get; set; }
         public bool IsTachyonDeal { get; set; }
 
 
         public void Normalize()
         {
-            if (!string.IsNullOrEmpty(Filter))
-            {
-                Filter = Filter.Trim().ToLower();
-            }
+            if (!string.IsNullOrEmpty(Filter)) Filter = Filter.Trim().ToLower();
+            if (!string.IsNullOrEmpty(Carrier)) Carrier = Carrier.Trim().ToLower();
+
         }
     }
 }

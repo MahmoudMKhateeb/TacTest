@@ -3,17 +3,16 @@ using Abp.Domain.Entities.Auditing;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Text;
 using TACHYON.Invoices.Periods;
 using TACHYON.MultiTenancy;
 
-namespace TACHYON.Invoices
+namespace TACHYON.Invoices.SubmitInvoices
 {
-    [Table("Invoices")]
+    [Table("SubmitInvoices")]
 
-    public class Invoice: FullAuditedEntity<long>, IMustHaveTenant
+    public class SubmitInvoice : FullAuditedEntity<long>, IMustHaveTenant
     {
-        public long? InvoiceNumber { get; set; }
+        public long? ReferencNumber { get; set; }
         public int TenantId { get; set; }
         [ForeignKey(nameof(TenantId))]
         public Tenant Tenant { get; set; }
@@ -21,18 +20,19 @@ namespace TACHYON.Invoices
         [ForeignKey(nameof(PeriodId))]
         public InvoicePeriod InvoicePeriodsFK { get; set; }
         public InvoiceChannel Channel { get; set; }
-        public DateTime DueDate { get; set; }
-        public bool IsPaid { get; set; }
-        public string Note { get; set; }
         public decimal SubTotalAmount { get; set; }
         public decimal TotalAmount { get; set; }
         public decimal VatAmount { get; set; }
         public decimal TaxVat { get; set; }
-        public InvoiceAccountType AccountType { get; set; }
-        public ICollection<InvoiceTrip> Trips { get; set; }
-        public Invoice()
+        public Guid? DocumentId { get; set; }
+        public string DocumentName { get; set; }
+        public string DocumentContentType { get; set; }
+        public ICollection<SubmitInvoiceTrip> Trips { get; set; }
+        public SubmitInvoiceStatus Status { get; set; }
+        public string RejectedReason { get; set; }
+        public SubmitInvoice()
         {
-            Trips = new List<InvoiceTrip>();
+            Trips = new List<SubmitInvoiceTrip>();
         }
 
     }

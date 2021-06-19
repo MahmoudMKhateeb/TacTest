@@ -6,6 +6,8 @@ import {
   PriceOfferServiceProxy,
   ShippingRequestDirectRequestServiceProxy,
   ShippingRequestDirectRequestStatus,
+  ShippingRequestStatus,
+  CancelShippingRequestInput,
 } from '@shared/service-proxies/service-proxies';
 
 import * as _ from 'lodash';
@@ -38,8 +40,10 @@ export class ShippingRequestCardTemplateComponent extends ScrollPagnationCompone
     this._currentServ
       .getAllShippingRequest(
         this.searchInput.filter,
+        this.searchInput.carrier,
         this.searchInput.shippingRequestId,
         this.searchInput.channel,
+        this.searchInput.requestTypeId,
         this.searchInput.truckTypeId,
         this.searchInput.originId,
         this.searchInput.destinationId,
@@ -83,6 +87,7 @@ export class ShippingRequestCardTemplateComponent extends ScrollPagnationCompone
       }
     });
   }
+
   decline(input: GetShippingRequestForPriceOfferListDto): void {
     this.message.confirm('', this.l('AreYouSure'), (isConfirmed) => {
       if (isConfirmed) {
@@ -107,8 +112,12 @@ export class ShippingRequestCardTemplateComponent extends ScrollPagnationCompone
         return item.isTachyonDeal ? this.l('TachyonManageService') : item.name;
       }
     } /*Shipping request page*/ else {
-      if (this.feature.isEnabled('App.Carrier') || this.feature.isEnabled('App.TachyonDealer') || !this.appSession.tenantId) {
-        return item.name;
+      if (this.feature.isEnabled('App.Carrier')) return item.isTachyonDeal ? this.l('TachyonManageService') : item.name;
+      if (this.feature.isEnabled('App.TachyonDealer') || !this.appSession.tenantId) {
+        if (item.status == ShippingRequestStatus.PostPrice || item.status == ShippingRequestStatus.Completed) return `${item.name} - ${item.carrier}`;
+        else {
+          return item.name;
+        }
       }
     }
     return '';

@@ -450,12 +450,14 @@ namespace TACHYON
             configuration.CreateMap<InvoicePeriod, InvoicePeriodDto>();
             configuration.CreateMap<Invoice, InvoiceListDto>()
                 .ForMember(dto => dto.TenantName, options => options.MapFrom(entity => entity.Tenant.Name))
-                .ForMember(dto => dto.Period, options => options.MapFrom(entity => entity.InvoicePeriod.DisplayName));
+                .ForMember(dto => dto.Period, options => options.MapFrom(entity => entity.InvoicePeriodsFK.DisplayName));
 
             configuration.CreateMap<Invoice, InvoiceInfoDto>()
-                .ForMember(dto => dto.ClientName, options => options.MapFrom(entity => entity.Tenant.Name))
+                .ForMember(dto => dto.ClientName, options => options.MapFrom(entity => entity.Tenant.companyName))
+                .ForMember(dto => dto.Attn, options => options.MapFrom(entity => entity.Tenant.Name))
+                .ForMember(dto => dto.ContractNo, options => options.MapFrom(entity => entity.Tenant.ContractNumber))
                 .ForMember(dto => dto.Address, options => options.MapFrom(entity => entity.Tenant.Address))
-                .ForMember(dto => dto.Period, options => options.MapFrom(entity => entity.InvoicePeriod.DisplayName));
+                .ForMember(dto => dto.Period, options => options.MapFrom(entity => entity.InvoicePeriodsFK.DisplayName));
 
             configuration.CreateMap<InvoiceShippingRequests, InvoiceShippingRequestDto>()
               .ForMember(dto => dto.Price, options => options.MapFrom(entity => entity.ShippingRequests.Price))

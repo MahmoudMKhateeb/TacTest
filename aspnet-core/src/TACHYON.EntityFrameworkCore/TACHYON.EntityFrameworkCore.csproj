@@ -25,6 +25,8 @@
     <Compile Remove="Migrations\20210430082309_allowmastervalueacceptnull.Designer.cs" />
     <Compile Remove="Migrations\20210617050250_CreateInvoiceTrip.cs" />
     <Compile Remove="Migrations\20210617050250_CreateInvoiceTrip.Designer.cs" />
+    <Compile Remove="Migrations\20210618163513_AddContractNumberToTenant.cs" />
+    <Compile Remove="Migrations\20210618163513_AddContractNumberToTenant.Designer.cs" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="3.1.5" />

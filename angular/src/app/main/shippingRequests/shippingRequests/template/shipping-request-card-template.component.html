@@ -12,10 +12,13 @@
     <div class="container-fluid">
       <div class="row">
         <div class="col-12 col-lg-6 mb-4" *ngFor="let item of Items">
+          <ng-template [ngIf]="!Channel"> </ng-template>
           <div
-            class="shipCard {{ item.isTachyonDeal ? 'tachyonDialer' : '' }}  {{
-              item.isPriced || item.remainingDays == '0' ? ' shipCardGray' : ''
-            }} {{ direction == 'rtl' ? ' rtl' : '' }}"
+            class="shipCard {{ item.isTachyonDeal ? 'tachyonDialer' : '' }}
+               {{ ((item.isPriced || item.remainingDays == '0') && Channel) || (item.status == 1 && !Channel) ? ' shipCardGray' : '' }}
+               {{ item.status == 5 && !Channel ? ' shipCardGreen' : '' }}
+                {{ (item.status == 3 || item.status == 4) && !Channel ? ' shipCardRed' : '' }}
+               {{ direction == 'rtl' ? ' rtl' : '' }}"
           >
             <img *ngIf="item.isTachyonDeal" class="markTachyon" src="/assets/custom/imgs/mark.svg" alt="" />
             <div class="infoBasic">
@@ -23,7 +26,7 @@
                 {{ setTitle(item) }}
               </a>
 
-              <span *ngIf="item.remainingDays && item.remainingDays != '0'" class="remainingTime">
+              <span *ngIf="item.remainingDays && item.remainingDays != '0' && Channel == 1" class="remainingTime">
                 <b>{{ item.remainingDays }}</b>
                 {{ getWordTitle(item.remainingDays, 'RemainingDay') }}
               </span>
@@ -33,7 +36,7 @@
               <b *ngIf="Channel == 2" class="infoHighLight red stautsTruck">
                 {{ l(item.directRequestStatusTitle) }}
               </b>
-              <b *ngIf="!feature.isEnabled('App.Carrier') && !Channel && item.statusTitle" class="infoHighLight green stautsTruck">
+              <b *ngIf="!Channel && item.statusTitle" class="infoHighLight green stautsTruck">
                 {{ l(item.statusTitle) }}
               </b>
             </div>
@@ -58,6 +61,17 @@
                   {{ item.rangeDate }}
                 </p>
               </div>
+
+              <div *ngIf="item.creationTime" class="dateRange">
+                <p>
+                  <img src="/assets/custom/imgs/time.svg" width="16" alt="" />
+                  {{ l('CreationTime') }}
+                </p>
+                <p>
+                  {{ item.creationTime | momentFormat: 'L' }}
+                </p>
+              </div>
+
               <div class="goodCategory">
                 <p>
                   <img src="/assets/custom/imgs/box.svg" width="16" alt="" />
@@ -85,11 +99,20 @@
                   {{ item.numberOfTrips }}
                 </p>
               </div>
+              <div class="routeType">
+                <p>
+                  <i class="fas fa-road"></i>
+                  {{ l('routeType') }}
+                </p>
+                <p>
+                  {{ l(item.routeType) }}
+                </p>
+              </div>
             </div>
             <div class="actionsShip">
               <div>
                 <a
-                  *ngIf="item.totalOffers > 0 && !feature.isEnabled('App.Carrier') && Channel != 2"
+                  *ngIf="item.totalOffers > 0 && !feature.isEnabled('App.Carrier') && Channel != 2 && item.status == 2"
                   href="javascript:void(0)"
                   class="infoHighLight green"
                   (click)="ModelOffer.show(item)"
@@ -97,6 +120,9 @@
                   {{ item.totalOffers }} {{ getWordTitle(item.totalOffers, 'TotalOffer') }}
                 </a>
                 <a *ngIf="item.isPriced" href="javascript:void(0)" class="infoHighLight red">{{ l('MarketPlacepriced') }}</a>
+                <a *ngIf="item.price && (item.status == 5 || item.status == 1)" href="javascript:void(0)" class="infoHighLight red"
+                  >{{ item.price | number }} {{ l('SAR') }}</a
+                >
               </div>
               <div class="actions">
                 <a *ngIf="canDeleteDirectRequest(item)" href="javascript:void(0)" (click)="delete(item)" class="red">
@@ -110,7 +136,28 @@
                 >
                   {{ l('Declined') }}
                 </a>
-                <a href="javascript:void(0)" (click)="Model.show(item)" class="red">
+                <a
+                  *ngIf="
+                    (item.status == 0 || item.status == 2) &&
+                    !Channel &&
+                    (feature.isEnabled('App.Shipper') || (item.isTachyonDeal && (feature.isEnabled('App.TachyonDealer') || !appSession.tenantId)))
+                  "
+                  href="javascript:void(0)"
+                  (click)="ModelCancel.show(item)"
+                  class="red"
+                >
+                  {{ l('Cancel') }}
+                </a>
+
+                <a href="javascript:void(0)" *ngIf="Channel" (click)="Model.show(item)" class="red">
+                  {{ l('More') }}
+                </a>
+                <a
+                  *ngIf="permission.isGranted('Pages.ShippingRequests.Edit') && !Channel"
+                  [queryParams]="{ id: item.id }"
+                  [routerLink]="['/app/main/shippingRequests/shippingRequests/view']"
+                  class="red"
+                >
                   {{ l('More') }}
                 </a>
               </div>
@@ -128,3 +175,4 @@
 <shippingrequests-details-model #Model [Channel]="Channel"></shippingrequests-details-model>
 <price-offer-list-model [Channel]="Channel" #ModelOffer></price-offer-list-model>
 <shipping-request-card-search-model #ModelSearch (modalsearch)="search()"></shipping-request-card-search-model>
+<shipping-request-card-cancel-model #ModelCancel></shipping-request-card-cancel-model>

@@ -2,7 +2,11 @@
 {
     public  class InvoiceItemDto
     {
-        public decimal? Price { get; set; }
+        public string Sequence { get; set; }
+        public string WayBillNumber { get; set; }
+        public decimal SubTotalAmount { get; set; }
+        public decimal VatAmount { get; set; }
+        public decimal TotalAmount { get; set; }
         public string TruckType { get; set; }
         public string Source { get; set; }
         public string Destination { get; set; }

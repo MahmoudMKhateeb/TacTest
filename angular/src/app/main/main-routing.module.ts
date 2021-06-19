@@ -211,7 +211,7 @@ import { ComingSoonComponent } from '@app/main/commingSoon/comingSoon.component'
           { path: 'addressBook/facilities', component: FacilitiesComponent, data: { permission: 'Pages.Facilities' } },
           { path: 'documentFiles/documentFiles', component: DocumentFilesComponent, data: { permission: 'Pages.DocumentFiles' } },
           { path: 'documentTypes/documentTypes', component: DocumentTypesComponent, data: { permission: 'Pages.DocumentTypes' } },
-          { path: 'shippingRequests/shippingRequests', component: ShippingRequestsListComponent, data: { permission: 'Pages.ShippingRequests' } },
+          { path: 'shippingRequests/shippingRequests', component: ShippingRequestsListComponent },
           {
             path: 'shippingRequests/shippingRequests/createOrEdit',
             component: CreateOrEditShippingRequestComponent,
