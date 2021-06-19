@@ -4,7 +4,9 @@
       <h3 class="card-title">
         {{ l('shippingRequestTrips') }}
       </h3>
-      <div class="card-toolbar" *ngIf="feature.isEnabled('App.Shipper')">
+      <div class="card-toolbar">
+        <!-- *ngIf="feature.isEnabled('App.Shipper')" -->
+
         <!--          *ngIf="ShippingRequest.status <= 1"-->
         <button
           class="btn btn-primary"
