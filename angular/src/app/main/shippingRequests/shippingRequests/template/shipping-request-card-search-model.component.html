@@ -11,7 +11,7 @@
   <div class="modal-dialog modal-lg">
     <div class="modal-content">
       <div class="modal-body">
-        <button type="button" class="close closeModal" (click)="close()" aria-label="Close">
+        <button type="button" class="close" style="position: relative; z-index: 99999;" (click)="close()" aria-label="Close">
           <i class="fas fa-times"></i>
         </button>
 
@@ -164,8 +164,6 @@
         </div>
 
         <div class="modal-footer">
-          <button type="button" (click)="close()" class="btn btn-primary"><i class="fas fa-times"></i>{{ l('Close') }}</button>
-
           <button type="button" (click)="search()" class="btn btn-primary">{{ l('search') }}</button>
         </div>
       </div>

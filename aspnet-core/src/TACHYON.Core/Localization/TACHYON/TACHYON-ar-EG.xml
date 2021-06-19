@@ -789,12 +789,15 @@
     <text name="InvalidUserNameOrPassword">اسم المستخدم أو كلمة المرور غير صحيحة</text>
     <text name="InvlalidLanguageCode">رمز اللغة غير صحيح</text>
     <text name="Invoice">فاتورة</text>
+    <text name="InvoiceDetail">تفاصيل الفاتوره</text>
     <text name="InvoiceId">رقم الفاتورة</text>
     <text name="InvoiceInfoIsMissingOrNotCompleted">معلومات الفاتورة غير متوفرة أو غير مكتملة</text>
     <text name="InvoiceInformation">معلومات الفاتورة</text>
     <text name="InvoiceNo">رقم الفاتورة</text>
+    <text name="InvoiceNumber">رقم الفاتوره</text>
     <text name="Invoices">الفواتير</text>
     <text name="InvoicesList">قائمة الفواتير</text>
+    <text name="InvoicesProformas">الفواتير الأولية</text>
     <text name="InvoiceTo">فاتورة</text>
     <text name="InvoiceVasRemarksAll">العدد:{0}, الكمية:{1}</text>
     <text name="InvoiceVasRemarksAmount">القيمة:{0}</text>
@@ -818,6 +821,7 @@
     <text name="IsRequired">مطلوب</text>
     <text name="IsSessionTimeOutEnabled">تمكين التحكم في مهلة الجلسة</text>
     <text name="IsSmsVerificationEnabled">تمكين التوثيق عن طريق الرسائل النصية</text>
+    <text name="IssuanceDate">تاريخ الإصدار</text>
     <text name="Istimara">الإستمارة</text>
     <text name="IsTrialActive">يمكن التجربة</text>
     <text name="IsTwoFactorEnabled">تم تمكين المصادقة الثنائية</text>
@@ -1032,6 +1036,7 @@
     <text name="OfflineAccess">الوصول دون اتصال</text>
     <text name="Ok">موافق</text>
     <text name="On">ممكّن</text>
+    <text name="OnDemand">على الطلب</text>
     <text name="OneConcurrentLoginPerUser">تسجيل دخول متزامن ,واحد فقط لكل مستخدم</text>
     <text name="OneConcurrentLoginPerUserActive">تعطيل تسجيل الدخول المتزامن للمستخدم. إذا قام المستخدم بتسجيل الدخول بجهاز ثانٍ ، يتم إغلاق الجلسة الأولى تلقائيًا.</text>
     <text name="Online">متصل</text>
@@ -1451,11 +1456,17 @@
     <text name="Strong">قوي</text>
     <text name="Submit">إرسال</text>
     <text name="SubmitInvoice">فواتير الناقل</text>
+    <text name="SubmitInvoiceGenerated">
+      <a href="/app/main/invoices/submitinvoices/detail/{id}">تم توليد الفاتوره</a>
+    </text>
     <text name="SubmitInvoiceOnAccepted">
-      <a href="/app/main/invoices/submitinvoices/detail/{groupid}">The submit invoice has been Accepted</a>
+      <a href="/app/main/invoices/submitinvoices/detail/{id}">تم اعتماد الفاتورة</a>
+    </text>
+    <text name="SubmitInvoiceOnClaim">
+      <a href="/app/main/invoices/submitinvoices/detail/{id}">تم رفع طلب تحصيل الفاتوره</a>
     </text>
     <text name="SubmitInvoiceOnRejected">
-      <a href="/app/main/invoices/submitinvoices/detail/{groupid}">لقد تم رفض الفاتورة التي تم تقديمها بسبب: {reason}</a>
+      <a href="/app/main/invoices/submitinvoices/detail/{id}">لقد تم رفض الفاتورة التي تم تقديمها بسبب: {reason}</a>
     </text>
     <text name="SubmitInvoices">فواتير الناقل</text>
     <text name="SubmittedDocuments">المستندات التي تم تسليمها</text>
@@ -1746,6 +1757,7 @@
     <text name="TwoWay">ذهاب و عودة</text>
     <text name="Type">ادخل النص...</text>
     <text name="TypeAMessageHere">اكتب رسالتك هنا...</text>
+    <text name="TypeTitle">النوع</text>
     <text name="UiCustomization_AllowAsideHiding">السماح بغلق الجانب</text>
     <text name="UiCustomization_AllowAsideMinimizing">السماح بتقليل الجانب</text>
     <text name="UiCustomization_Boxed">مربع</text>

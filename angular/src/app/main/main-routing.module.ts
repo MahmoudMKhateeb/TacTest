@@ -27,7 +27,7 @@ import { ShippingRequestsComponent } from './shippingRequests/shippingRequests/s
 import { CreateOrEditShippingRequestComponent } from './shippingRequests/shippingRequests/create-or-edit-shippingRequest.component';
 import { ViewShippingRequestComponent } from './shippingRequests/shippingRequests/view-shippingRequest.component';
 import { GoodsDetailsComponent } from './goodsDetails/goodsDetails/goodsDetails.component';
-import { OffersComponent } from './offers/offers/offers.component';
+//import { OffersComponent } from './offers/offers/offers.component';
 import { RoutStepsComponent } from './routSteps/routSteps/routSteps.component';
 import { RoutesComponent } from './routs/routes/routes.component';
 import { CreateOrEditRouteComponent } from './routs/routes/create-or-edit-route.component';
@@ -46,18 +46,17 @@ import { DashboardComponent } from './dashboard/dashboard.component';
 import { MarketPlaceListComponent } from '@app/main/marketplaces/marketPlacelist.component';
 import { ShippingRequestsListComponent } from '@app/main/shippingRequests/shippingRequestslist.component';
 import { DirectRequestViewComponent } from '@app/main/directrequests/direct-request-view.component';
+import { OffersListComponent } from '@app/main/offer/offers.component';
 import { InvoiceDetailResolverService } from '@app/main/invoices/invoice-detail/Invoice-detail-resolver.service';
 import { BalancesListComponent } from '@app/main/invoices/balances/balances-list/balances-list.component';
-import { SubmiteInvoicesComponent } from '@app/main/invoices/submitinvoices/submit-invoice.component';
-import { SubmitInvoiceDetailsComponent } from '@app/main/invoices/submitinvoices/submit-invoice-details.component';
+import { SubmitInvoiceDetailsComponent } from '@app/main/invoices/submit-invoices/submit-invoice-details.component';
 import { InvoiceDetailComponent } from '@app/main/invoices/invoice-detail/invoice-detail.component';
 import { InvoicesListComponent } from '@app/main/invoices/invoices-list/invoices-list.component';
 import { InvoicePeriodsListComponent } from '@app/main/invoices/invoice-periods-list/invoice-periods-list.component';
 import { InvoicePaymentMethodComponent } from '@app/main/invoices/invoice-payment-methods/invoice-payment-method.component';
 import { TransactionListComponent } from '@app/main/invoices/transaction/transaction-list/transaction-list.component';
-import { SubmitInvoiceDetailResolverService } from '@app/main/invoices/submitinvoices/submit-invoice-details-resolver.service';
+import { SubmitInvoiceDetailResolverService } from '@app/main/invoices/submit-invoices/submit-invoice-details-resolver.service';
 import { ProformaListComponent } from '@app/main/invoices/proformas/proforma-list.component';
-
 import { AccidentReasonComponent } from '@app/main/accidents/reasons/reason.component';
 import { TripRejectReasonComponent } from '@app/main/shippingRequests/shippingRequests/ShippingRequestTrips/rejectreason/trip-reject-reason.component';
 import { AppLocalizationComponent } from '@app/main/applocalizations/applocalization.component';
@@ -222,7 +221,7 @@ import { ComingSoonComponent } from '@app/main/commingSoon/comingSoon.component'
           { path: 'shippingRequests/shippingRequests/view', component: ViewShippingRequestComponent, data: { permission: 'Pages.ShippingRequests' } },
           { path: 'marketplace/list', component: MarketPlaceListComponent },
           { path: 'directrequest/list', component: DirectRequestViewComponent },
-          { path: 'offers/offers', component: OffersComponent, data: { permission: 'Pages.Offers' } },
+          { path: 'offers', component: OffersListComponent },
           { path: 'routSteps/routSteps', component: RoutStepsComponent, data: { permission: 'Pages.RoutSteps' } },
           { path: 'routs/routes', component: RoutesComponent, data: { permission: 'Pages.Routes' } },
           { path: 'routs/routes/createOrEdit', component: CreateOrEditRouteComponent, data: { permission: 'Pages.Routes.Create' } },
@@ -255,13 +254,12 @@ import { ComingSoonComponent } from '@app/main/commingSoon/comingSoon.component'
 
           { path: 'invoices/transaction', component: TransactionListComponent, data: { permission: 'Pages.Invoices.Transaction' } },
           { path: 'invoices/proformas', component: ProformaListComponent },
-
+          //{ path: 'invoices/carrier/invoice', component: TenantsInvoiceComponent, data: { permission: 'Pages.Invoices.SubmitInvoices' } },
           {
             path: 'invoices/balnacerecharges',
             component: BalancesListComponent,
             data: { permission: 'Pages.Administration.Host.Invoices.Balances' },
           },
-          { path: 'invoices/submitinvoice', component: SubmiteInvoicesComponent, data: { permission: 'Pages.Invoices.SubmitInvoices' } },
           {
             path: 'invoices/submitinvoices/detail/:id',
             component: SubmitInvoiceDetailsComponent,

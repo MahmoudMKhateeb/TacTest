@@ -26,7 +26,8 @@ namespace TACHYON.PriceOffers.Dto
         public int TotalOffers { get; set; }
         public ShippingRequestBidStatus BidStatus { get; set; }
         public ShippingRequestStatus Status { get; set; }
-        public ShippingRequestDirectRequestStatus DirectRequestStatus;
+        public ShippingRequestDirectRequestStatus DirectRequestStatus { get; set; }
+        public PriceOfferStatus OfferStatus { get; set; }
         public string StatusTitle { get; set; }
         public string BidStatusTitle { get; set; }
         public string DirectRequestStatusTitle { get; set; }
