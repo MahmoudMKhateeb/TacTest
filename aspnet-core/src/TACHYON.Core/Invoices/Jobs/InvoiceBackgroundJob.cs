@@ -1,6 +1,7 @@
 ﻿using Abp.BackgroundJobs;
 using Abp.Dependency;
 using Abp.Domain.Uow;
+using Abp.Threading;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -17,9 +18,12 @@ namespace TACHYON.Invoices.Jobs
         }
 
         [UnitOfWork]
-        public async override void Execute(int args)
+        public  override void Execute(int args)
         {
-           await _InvoiceManager.GenerateInvoice(args);
+           
+            AsyncHelper.RunSync(() =>  _InvoiceManager.GenerateInvoice(args));
+
+          
         }
     }
 }

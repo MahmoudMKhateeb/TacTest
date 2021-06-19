@@ -8,7 +8,6 @@ import { FileDownloadService } from '@shared/utils/file-download.service';
 
 @Component({
   animations: [appModuleAnimation()],
-  styleUrls: ['./invoice-detail.component.scss'],
   templateUrl: './invoice-detail.component.html',
 })
 export class InvoiceDetailComponent extends AppComponentBase {
@@ -58,5 +57,13 @@ export class InvoiceDetailComponent extends AppComponentBase {
       this._fileDownloadService.downloadTempFile(result);
       this.loading = false;
     });
+  }
+
+  onPrint() {
+    const printContents = document.getElementById('invoicecontent').innerHTML;
+    //const originalContents = document.body.innerHTML;
+    document.body.innerHTML = printContents;
+    window.print();
+    //document.body.innerHTML = originalContents;
   }
 }

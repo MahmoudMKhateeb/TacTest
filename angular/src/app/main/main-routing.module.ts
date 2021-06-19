@@ -48,14 +48,16 @@ import { ShippingRequestsListComponent } from '@app/main/shippingRequests/shippi
 import { DirectRequestViewComponent } from '@app/main/directrequests/direct-request-view.component';
 import { InvoiceDetailResolverService } from '@app/main/invoices/invoice-detail/Invoice-detail-resolver.service';
 import { BalancesListComponent } from '@app/main/invoices/balances/balances-list/balances-list.component';
-import { GroupPeriodsListComponent } from '@app/main/invoices/groupsPeriods/group-periods-list/group-periods-list.component';
-import { GroupDetailComponent } from '@app/main/invoices/groupsPeriods/group-detail/group-detail.component';
+import { SubmiteInvoicesComponent } from '@app/main/invoices/submitinvoices/submit-invoice.component';
+import { SubmitInvoiceDetailsComponent } from '@app/main/invoices/submitinvoices/submit-invoice-details.component';
 import { InvoiceDetailComponent } from '@app/main/invoices/invoice-detail/invoice-detail.component';
 import { InvoicesListComponent } from '@app/main/invoices/invoices-list/invoices-list.component';
 import { InvoicePeriodsListComponent } from '@app/main/invoices/invoice-periods-list/invoice-periods-list.component';
 import { InvoicePaymentMethodComponent } from '@app/main/invoices/invoice-payment-methods/invoice-payment-method.component';
 import { TransactionListComponent } from '@app/main/invoices/transaction/transaction-list/transaction-list.component';
-import { GroupDetailResolverService } from '@app/main/invoices/groupsPeriods/group-detail/group-detail-resolver.service';
+import { SubmitInvoiceDetailResolverService } from '@app/main/invoices/submitinvoices/submit-invoice-details-resolver.service';
+import { ProformaListComponent } from '@app/main/invoices/proformas/proforma-list.component';
+
 import { AccidentReasonComponent } from '@app/main/accidents/reasons/reason.component';
 import { TripRejectReasonComponent } from '@app/main/shippingRequests/shippingRequests/ShippingRequestTrips/rejectreason/trip-reject-reason.component';
 import { AppLocalizationComponent } from '@app/main/applocalizations/applocalization.component';
@@ -252,19 +254,20 @@ import { ComingSoonComponent } from '@app/main/commingSoon/comingSoon.component'
           },
 
           { path: 'invoices/transaction', component: TransactionListComponent, data: { permission: 'Pages.Invoices.Transaction' } },
+          { path: 'invoices/proformas', component: ProformaListComponent },
 
           {
             path: 'invoices/balnacerecharges',
             component: BalancesListComponent,
             data: { permission: 'Pages.Administration.Host.Invoices.Balances' },
           },
-          { path: 'invoices/submitinvoice', component: GroupPeriodsListComponent, data: { permission: 'Pages.Invoices.SubmitInvoices' } },
+          { path: 'invoices/submitinvoice', component: SubmiteInvoicesComponent, data: { permission: 'Pages.Invoices.SubmitInvoices' } },
           {
             path: 'invoices/submitinvoices/detail/:id',
-            component: GroupDetailComponent,
+            component: SubmitInvoiceDetailsComponent,
             data: { permission: 'Pages.Invoices.SubmitInvoices' },
             resolve: {
-              groupinfo: GroupDetailResolverService,
+              invoiceinfo: SubmitInvoiceDetailResolverService,
             },
           },
           { path: 'accidents/reasons', component: AccidentReasonComponent, data: { permission: 'Pages.ShippingRequestResoneAccidents' } },

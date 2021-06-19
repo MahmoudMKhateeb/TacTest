@@ -1,47 +1,48 @@
-import { Component, OnInit, Injector, ViewChild } from '@angular/core';
+import { Component, OnInit, Injector, ViewChild, ViewEncapsulation } from '@angular/core';
 import { AppComponentBase } from '@shared/common/app-component-base';
 import { appModuleAnimation } from '@shared/animations/routerTransition';
 import { Table } from 'primeng/table';
 import { Paginator } from 'primeng/paginator';
 import { LazyLoadEvent } from 'primeng/public_api';
 import * as _ from 'lodash';
-import { AutoCompleteModule } from 'primeng/autocomplete';
-import * as moment from 'moment';
 import {
-  GroupPeriodServiceProxy,
-  GroupPeriodListDto,
-  CommonLookupServiceProxy,
+  SubmitInvoicesServiceProxy,
+  SubmitInvoiceListDto,
   ISelectItemDto,
+  CommonLookupServiceProxy,
+  SubmitInvoiceFilterInput,
   SubmitInvoiceStatus,
-  GroupPeriodFilterInput,
 } from '@shared/service-proxies/service-proxies';
+import * as moment from 'moment';
 import { FileDownloadService } from '@shared/utils/file-download.service';
 import { EnumToArrayPipe } from '@shared/common/pipes/enum-to-array.pipe';
 
 @Component({
-  templateUrl: './group-periods-list.component.html',
+  templateUrl: './submit-invoice.component.html',
+  encapsulation: ViewEncapsulation.None,
   animations: [appModuleAnimation()],
   providers: [EnumToArrayPipe],
 })
-export class GroupPeriodsListComponent extends AppComponentBase implements OnInit {
+export class SubmiteInvoicesComponent extends AppComponentBase implements OnInit {
   @ViewChild('dataTable', { static: true }) dataTable: Table;
   @ViewChild('paginator', { static: true }) paginator: Paginator;
-  Groups: GroupPeriodListDto[] = [];
+  SubmitStatus: any;
+  Invoices: SubmitInvoiceListDto[] = [];
+  IsStartSearch: boolean = false;
+  advancedFiltersAreShown = false;
+  Periods: ISelectItemDto[];
   Tenant: ISelectItemDto;
   Tenants: ISelectItemDto[];
-  Periods: ISelectItemDto[];
-  TenantId: number | null | undefined;
-  periodId: number | null | undefined;
-  IsStartSearch: boolean = false;
-  creationDateRange: Date[] = [moment().startOf('day').toDate(), moment().endOf('day').toDate()];
-  creationDateRangeActive: boolean = false;
   fromDate: moment.Moment | null | undefined;
   toDate: moment.Moment | null | undefined;
-  Status: SubmitInvoiceStatus | null | undefined;
-  SubmitStatus: any;
+
+  creationDateRange: Date[] = [moment().startOf('day').toDate(), moment().endOf('day').toDate()];
+  creationDateRangeActive: boolean = false;
+
+  inputSearch: SubmitInvoiceFilterInput = new SubmitInvoiceFilterInput();
   constructor(
     injector: Injector,
-    private _CurrentService: GroupPeriodServiceProxy,
+    private _InvoiceServiceProxy: SubmitInvoicesServiceProxy,
     private _CommonServ: CommonLookupServiceProxy,
     private _fileDownloadService: FileDownloadService,
     private enumToArray: EnumToArrayPipe
@@ -49,7 +50,9 @@ export class GroupPeriodsListComponent extends AppComponentBase implements OnIni
     super(injector);
     this.SubmitStatus = this.enumToArray.transform(SubmitInvoiceStatus);
   }
+
   ngOnInit() {
+    if (this.appSession.tenantId) this.advancedFiltersAreShown = true;
     this._CommonServ.getPeriods().subscribe((result) => {
       this.Periods = result;
     });
@@ -61,34 +64,30 @@ export class GroupPeriodsListComponent extends AppComponentBase implements OnIni
     }
 
     this.primengTableHelper.showLoadingIndicator();
+
     if (this.creationDateRangeActive) {
-      this.fromDate = moment(this.creationDateRange[0]);
-      this.toDate = moment(this.creationDateRange[1]);
+      this.inputSearch.fromDate = moment(this.creationDateRange[0]);
+      this.inputSearch.toDate = moment(this.creationDateRange[1]);
     } else {
       this.fromDate = null;
       this.toDate = null;
     }
 
-    if (this.Tenant != null && this.Tenant.id != null) {
-      this.TenantId = parseInt(this.Tenant.id);
-    } else {
-      this.TenantId = undefined;
-      this.Tenant = undefined;
-    }
-    this._CurrentService
+    this.inputSearch.tenantId = this.Tenant ? parseInt(this.Tenant.id) : undefined;
+    this._InvoiceServiceProxy
       .getAll(
-        this.TenantId,
-        this.periodId,
-        this.fromDate,
-        this.toDate,
-        this.Status,
+        this.inputSearch.tenantId,
+        this.inputSearch.periodId,
+        this.inputSearch.fromDate,
+        this.inputSearch.toDate,
+        this.inputSearch.status,
         this.primengTableHelper.getSorting(this.dataTable),
         this.primengTableHelper.getSkipCount(this.paginator, event),
         this.primengTableHelper.getMaxResultCount(this.paginator, event)
       )
       .subscribe((result) => {
         this.IsStartSearch = true;
-        this.primengTableHelper.totalRecordsCount = result.items.length;
+        this.primengTableHelper.totalRecordsCount = result.totalCount;
         this.primengTableHelper.records = result.items;
         this.primengTableHelper.hideLoadingIndicator();
         console.log(result.items);
@@ -98,21 +97,17 @@ export class GroupPeriodsListComponent extends AppComponentBase implements OnIni
   reloadPage(): void {
     this.paginator.changePage(this.paginator.getPage());
   }
-  delete(Group: GroupPeriodListDto): void {
-    this.message.confirm('', this.l('AreYouSure'), (isConfirmed) => {
-      if (isConfirmed) {
-        this._CurrentService.delete(Group.id).subscribe(() => {
-          this.notify.success(this.l('SuccessfullyDeleted'));
-          this.reloadPage();
-        });
-      }
+
+  search(event) {
+    this._CommonServ.getAutoCompleteTenants(event.query, 'carrier').subscribe((result) => {
+      this.Tenants = result;
     });
   }
 
-  Accepted(Group: GroupPeriodListDto): void {
+  Accepted(Group: SubmitInvoiceListDto): void {
     this.message.confirm('', this.l('AreYouSure'), (isConfirmed) => {
       if (isConfirmed) {
-        this._CurrentService.accepted(Group.id).subscribe(() => {
+        this._InvoiceServiceProxy.accepted(Group.id).subscribe(() => {
           this.notify.success(this.l('Successfully'));
           this.reloadPage();
         });
@@ -120,16 +115,6 @@ export class GroupPeriodsListComponent extends AppComponentBase implements OnIni
     });
   }
 
-  downloadDocument(id: number): void {
-    this._CurrentService.getFileDto(id).subscribe((result) => {
-      this._fileDownloadService.downloadTempFile(result);
-    });
-  }
-  search(event) {
-    this._CommonServ.getAutoCompleteTenants(event.query, 'carrier').subscribe((result) => {
-      this.Tenants = result;
-    });
-  }
   StyleStatus(Status: SubmitInvoiceStatus): string {
     switch (Status) {
       case SubmitInvoiceStatus.Accepted:
@@ -143,15 +128,15 @@ export class GroupPeriodsListComponent extends AppComponentBase implements OnIni
     }
     return '';
   }
+  downloadDocument(id: number): void {
+    this._InvoiceServiceProxy.getFileDto(id).subscribe((result) => {
+      this._fileDownloadService.downloadTempFile(result);
+    });
+  }
   exportToExcel(): void {
-    var data = {
-      tenantId: this.Tenant ? parseInt(this.Tenant.id) : undefined,
-      periodId: this.periodId,
-      fromDate: this.fromDate,
-      toDate: this.toDate,
-      sorting: this.primengTableHelper.getSorting(this.dataTable),
-    };
-    this._CurrentService.exports(data as GroupPeriodFilterInput).subscribe((result) => {
+    this.inputSearch.tenantId = this.Tenant ? parseInt(this.Tenant.id) : undefined;
+    this.inputSearch.sorting = this.primengTableHelper.getSorting(this.dataTable);
+    this._InvoiceServiceProxy.exports(this.inputSearch).subscribe((result) => {
       this._fileDownloadService.downloadTempFile(result);
     });
   }

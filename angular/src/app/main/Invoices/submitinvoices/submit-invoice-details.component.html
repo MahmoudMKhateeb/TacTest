@@ -1,0 +1,7 @@
+<div [@routerTransition] class="container">
+  <div class="content d-flex flex-column flex-column-fluid">
+    <sub-header [title]="'InvoiceDetail' | localize" [description]="'' | localize"> </sub-header>
+
+    <invoice-template [Data]="Data" [Items]="Items"></invoice-template>
+  </div>
+</div>

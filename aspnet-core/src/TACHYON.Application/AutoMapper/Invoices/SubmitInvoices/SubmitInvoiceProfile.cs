@@ -1,19 +1,18 @@
 ﻿using AutoMapper;
-using System;
-using System.Collections.Generic;
-using System.Text;
 using TACHYON.Common;
 using TACHYON.Invoices.Groups;
-using TACHYON.Invoices.Groups.Dto;
+using TACHYON.Invoices.SubmitInvoices;
+using TACHYON.Invoices.SubmitInvoices.Dto;
 
 namespace TACHYON.AutoMapper.Invoices.SubmitInvoices
 {
-   public class SubmitInvoiceProfile:Profile
+    public class SubmitInvoiceProfile:Profile
     {
         public SubmitInvoiceProfile()
         {
-            CreateMap<GroupPeriodClaimCreateInput,DocumentUpload>();
-            CreateMap<IHasDocument, GroupPeriod>().ReverseMap();
+            CreateMap<SubmitInvoiceClaimCreateInput, DocumentUpload>();
+            CreateMap<IHasDocument, SubmitInvoice>().ReverseMap();
+
 
         }
     }

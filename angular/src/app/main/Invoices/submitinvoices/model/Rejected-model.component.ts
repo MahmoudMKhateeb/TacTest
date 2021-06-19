@@ -2,7 +2,7 @@ import { Component, ViewChild, Injector, Output, EventEmitter, OnInit, Input } f
 import { ModalDirective } from 'ngx-bootstrap/modal';
 import { finalize } from 'rxjs/operators';
 import { AppComponentBase } from '@shared/common/app-component-base';
-import { GroupPeriodServiceProxy, SubmitInvoiceRejectedInput } from '@shared/service-proxies/service-proxies';
+import { SubmitInvoicesServiceProxy, SubmitInvoiceRejectedInput } from '@shared/service-proxies/service-proxies';
 
 @Component({
   selector: 'submitinvoice-rejected-modal',
@@ -15,7 +15,7 @@ export class SubmitInvoiceRejectedModelComponent extends AppComponentBase implem
   Reason: SubmitInvoiceRejectedInput;
   active: boolean = false;
   saving: boolean = false;
-  constructor(injector: Injector, private _Service: GroupPeriodServiceProxy) {
+  constructor(injector: Injector, private _Service: SubmitInvoicesServiceProxy) {
     super(injector);
   }
   ngOnInit(): void {}

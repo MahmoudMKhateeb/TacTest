@@ -15,12 +15,10 @@ namespace TACHYON.Core.Invoices.Jobs
     {
         public InvoicePeriodType PeriodType { private get; set; }
         public int PeriodId { private get; set; }
-        public InvoiceManager _InvoiceManager { get; set; }
         public readonly IBackgroundJobManager _backgroundJobManager;
 
-        public InvoiceJob(InvoiceManager InvoiceManager, IBackgroundJobManager backgroundJobManager)
+        public InvoiceJob(IBackgroundJobManager backgroundJobManager)
         {
-            _InvoiceManager = InvoiceManager;
             _backgroundJobManager = backgroundJobManager;
         }
 

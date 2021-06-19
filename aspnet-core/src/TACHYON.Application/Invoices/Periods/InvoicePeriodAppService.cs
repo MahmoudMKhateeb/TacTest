@@ -4,6 +4,7 @@ using Abp.Collections.Extensions;
 using Abp.Domain.Repositories;
 using Abp.Extensions;
 using Abp.UI;
+using Microsoft.Extensions.Hosting;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -20,14 +21,17 @@ namespace TACHYON.Invoices.Periods
         private readonly IRepository<InvoicePeriod> _PeriodRepository;
         private readonly IInvoicePeriodExport _export;
         private readonly InvoiceManager _invoiceManager;
+        private readonly IHostApplicationLifetime _appLifetime;
         public InvoicePeriodAppService(
             IRepository<InvoicePeriod> PeriodRepository,
             IInvoicePeriodExport export,
-            InvoiceManager invoiceManager)
+            InvoiceManager invoiceManager,
+            IHostApplicationLifetime appLifetime)
         {
             _PeriodRepository = PeriodRepository;
             _export = export;
             _invoiceManager = invoiceManager;
+            _appLifetime = appLifetime;
         }
         [AbpAuthorize(AppPermissions.Pages_Administration_Host_Invoices_Periods)]
 
@@ -56,6 +60,7 @@ namespace TACHYON.Invoices.Periods
             if (!input.Id.HasValue)
             {
                 await Create(input);
+                _appLifetime.StopApplication();
             }
             else
             {

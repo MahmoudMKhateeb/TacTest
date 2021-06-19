@@ -208,17 +208,19 @@ import { InvoicePeriodsListComponent } from '@app/main/invoices/invoice-periods-
 import { InvoicePeriodsModalComponent } from '@app/main/invoices/invoice-periods-modal/invoice-periods-modal.component';
 import { InvoicesListComponent } from '@app/main/invoices/invoices-list/invoices-list.component';
 import { BalancesListComponent } from '@app/main/invoices/balances/balances-list/balances-list.component';
-import { DemanModelComponent } from '@app/main/invoices/groupsPeriods/model/deman-model.component';
+import { DemanModelComponent } from '@app/main/invoices/submitinvoices/model/deman-model.component';
 import { BalanceRechargeModelComponent } from '@app/main/invoices/balances/balance-recharge-model/balance-recharge-model.component';
-import { GroupPeriodsListComponent } from '@app/main/invoices/groupsPeriods/group-periods-list/group-periods-list.component';
-import { GroupDetailComponent } from '@app/main/invoices/groupsPeriods/group-detail/group-detail.component';
-import { SubmitInvoiceRejectedModelComponent } from '@app/main/invoices/groupsPeriods/model/Rejected-model.component';
+import { SubmiteInvoicesComponent } from '@app/main/invoices/submitinvoices/submit-invoice.component';
+import { SubmitInvoiceDetailsComponent } from '@app/main/invoices/submitinvoices/submit-invoice-details.component';
+import { SubmitInvoiceRejectedModelComponent } from '@app/main/invoices/submitinvoices/model/Rejected-model.component';
 
 import { InvoiceDetailComponent } from '@app/main/invoices/invoice-detail/invoice-detail.component';
 import { TransactionListComponent } from '@app/main/invoices/transaction/transaction-list/transaction-list.component';
 import { InvoicePaymentMethodComponent } from '@app/main/invoices/invoice-payment-methods/invoice-payment-method.component';
 import { InvoicePaymentMethodModelComponent } from '@app/main/invoices/invoice-payment-methods/invoice-payment-method-model.component';
 import { InvoiceDemandModelComponent } from '@app/main/invoices/invoices-list/invoices-ondeman-model.component';
+import { InvoiceTemplateComponent } from '@app/main/invoices/template/invoice-template.component';
+import { ProformaListComponent } from '@app/main/invoices/proformas/proforma-list.component';
 import { AccidentReasonComponent } from '@app/main/accidents/reasons/reason.component';
 import { AccidentReasonComponentModalComponent } from '@app/main/accidents/reasons/create-or-edit-reason-modal.component';
 import { ViewTripModalComponent } from '@app/main/shippingRequests/shippingRequests/ShippingRequestTrips/trips/viewTripModal/viewTripModal.component';
@@ -405,14 +407,16 @@ NgxBootstrapDatePickerConfigService.registerNgxBootstrapDatePickerLocales();
     BalancesListComponent,
     DemanModelComponent,
     BalanceRechargeModelComponent,
-    GroupPeriodsListComponent,
+    SubmiteInvoicesComponent,
     InvoiceDetailComponent,
-    GroupDetailComponent,
+    SubmitInvoiceDetailsComponent,
     SubmitInvoiceRejectedModelComponent,
     TransactionListComponent,
     InvoicePaymentMethodComponent,
     InvoicePaymentMethodModelComponent,
     InvoiceDemandModelComponent,
+    InvoiceTemplateComponent,
+    ProformaListComponent,
     PointsComponent,
     TripsForViewShippingRequestComponent,
     CreateOrEditTripComponent,

@@ -243,7 +243,24 @@ export class AppNavigationService {
             undefined,
             undefined,
             undefined,
-            () => this._featureCheckerService.isEnabled('App.TachyonDealer') || !this._appSessionService.tenantId
+            () =>
+              this._featureCheckerService.isEnabled('App.Carrier') ||
+              this._featureCheckerService.isEnabled('App.TachyonDealer') ||
+              !this._appSessionService.tenantId
+          ),
+          new AppMenuItem(
+            'InvoicesProformas',
+            'Pages.Invoices',
+            'flaticon2-document',
+            '/app/main/invoices/proformas',
+            undefined,
+            undefined,
+            undefined,
+            undefined,
+            () =>
+              this._featureCheckerService.isEnabled('App.Shipper') ||
+              this._featureCheckerService.isEnabled('App.TachyonDealer') ||
+              !this._appSessionService.tenantId
           ),
           new AppMenuItem('FinancialTransActionMenu', 'Pages.Invoices.Transaction', 'flaticon2-document', '/app/main/invoices/transaction'),
         ]
