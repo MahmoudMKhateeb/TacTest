@@ -43,7 +43,7 @@ namespace TACHYON.Documents.DocumentFiles
         public virtual bool IsRejected { get; set; }
         public string RejectionReason { get; set; }
 
-        public virtual long DocumentTypeId { get; set; }
+        public virtual long? DocumentTypeId { get; set; }
 
         [ForeignKey("DocumentTypeId")]
         public DocumentType DocumentTypeFk { get; set; }
