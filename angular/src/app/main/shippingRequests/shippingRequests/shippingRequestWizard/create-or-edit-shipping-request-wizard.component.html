@@ -1,10 +1,10 @@
 <div [@routerTransition]>
   <div class="content d-flex flex-column flex-column-fluid">
-    <sub-header [breadcrumbs]="breadcrumbs" [title]="'ShippingRequest' | localize"> </sub-header>
+    <sub-header [breadcrumbs]="breadcrumbs" [title]="l('ShippingRequest')"> </sub-header>
 
     <div class="container">
       <div class="card card-custom gutter-b">
-        <ng-container>
+        <ng-container *ngIf="saving">
           <div class="progress progress-modal">
             <div
               class="progress-bar progress-bar-striped progress-bar-animated bg-primary"
@@ -29,38 +29,38 @@
         </div>
         <div class="card-body">
           <!--begin: Wizard -->
-          <div #wizard class="wizard wizard-1" id="kt_wizard_v1" data-wizard-state="step-first" data-wizard-clickable="true">
+          <div #wizard class="wizard wizard-1" id="kt_wizard_v1" data-wizard-state="step-first" data-wizard-clickable="true" [busyIf]="loading">
             <!--begin: Form Wizard Nav -->
             <div class="wizard-nav border-bottom">
               <div class="wizard-steps p-8 p-lg-10">
                 <a class="wizard-step" href="javascript:;" data-wizard-type="step" data-wizard-state="current">
                   <div class="wizard-label">
                     <i class="wizard-icon flaticon-list"></i>
-                    <h3 class="wizard-title">1) Basic Details</h3>
+                    <h3 class="wizard-title">{{ l('BasicDetails') }}</h3>
                   </div>
                 </a>
                 <a class="wizard-step" href="javascript:;" data-wizard-type="step">
                   <div class="wizard-label">
                     <i class="wizard-icon flaticon-bus-stop"></i>
-                    <h3 class="wizard-title">2) Route Details</h3>
+                    <h3 class="wizard-title">{{ l('RouteDetails') }}</h3>
                   </div>
                 </a>
                 <a class="wizard-step" href="javascript:;" data-wizard-type="step">
                   <div class="wizard-label">
                     <i class="wizard-icon flaticon-open-box"></i>
-                    <h3 class="wizard-title">3) Good Details</h3>
+                    <h3 class="wizard-title">{{ l('GoodDetails') }}</h3>
                   </div>
                 </a>
                 <a class="wizard-step" href="javascript:;" data-wizard-type="step">
                   <div class="wizard-label">
                     <i class="wizard-icon flaticon-app"></i>
-                    <h3 class="wizard-title">4) Select Services</h3>
+                    <h3 class="wizard-title">{{ l('ValueAddedServices') }}</h3>
                   </div>
                 </a>
                 <a class="wizard-step" href="javascript:;" data-wizard-type="step">
                   <div class="wizard-label">
                     <i class="wizard-icon flaticon-globe"></i>
-                    <h3 class="wizard-title">5) Review and Submit</h3>
+                    <h3 class="wizard-title">{{ l('ReviewAndSubmit') }}</h3>
                   </div>
                 </a>
               </div>
@@ -69,46 +69,57 @@
             <div class="row justify-content-center my-10 px-8 my-lg-15 px-lg-10">
               <div class="col-xl-12 col-xxl-7">
                 <!--begin: Form Wizard Form-->
-                <form class="form" id="kt_form">
+                <div class="form" id="kt_form">
                   <!--begin: Form Wizard Step 1-->
-                  <div class="pb-5" data-wizard-type="step-content" data-wizard-state="current">
+                  <div class="pb-5" [formGroup]="step1Form" data-wizard-type="step-content" data-wizard-state="current">
                     <div class="form-group">
                       <label>{{ l('ShippingRequestType') }} <span class="required-fileds">*</span></label>
                       <select
-                        #SRType="ngModel"
                         class="form-control"
                         name="shippingRequestType"
-                        required
-                        [class.is-invalid]="SRType.touched && !SRType.valid"
-                        [class.is-valid]="SRType.touched && SRType.valid"
+                        formControlName="shippingRequestType"
                         [(ngModel)]="shippingRequestType"
                         (change)="resetBiddingDates()"
-                        [disabled]="shippingRequest.id"
+                        [class.is-valid]="
+                          step1Form.get('shippingRequestType').valid &&
+                          (step1Form.get('shippingRequestType').dirty || step1Form.get('shippingRequestType').touched)
+                        "
+                        [class.is-invalid]="
+                          step1Form.get('shippingRequestType').invalid &&
+                          (step1Form.get('shippingRequestType').dirty || step1Form.get('shippingRequestType').touched)
+                        "
+                        required
                       >
-                        <option value="">{{ 'select' | localize }}</option>
+                        <option disabled selected>{{ l('select') }}</option>
                         <option value="bidding">{{ l('Marketplace') }}</option>
                         <option value="tachyondeal">{{ l('TachyonManageService') }}</option>
                       </select>
                       <span class="form-text text-muted">{{ l('PickaShippingRequestType') }}</span>
                     </div>
 
-                    <div class="row pb-5" *ngIf="shippingRequestType == 'bidding'" [@grow]>
-                      <div class="col-lg-12">
+                    <div class="row pb-5">
+                      <div class="col-lg-12" *ngIf="shippingRequestType == 'bidding'" [@grow]>
                         <label>{{ l('BiddingRange') }} <span class="required-fileds">*</span></label>
                         <div class="input-group date">
                           <input
-                            #biddingDateRangeTestinput="ngModel"
                             class="form-control"
-                            name="SubscriptionEndDateRange"
-                            [(date)]="biddingDateRangeTest"
-                            [(ngModel)]="biddingDateRangeTest"
-                            (dateChange)="logDate()"
-                            [class.is-invalid]="biddingDateRangeTestinput.touched && !biddingDateRangeTestinput.valid"
-                            [class.is-valid]="biddingDateRangeTestinput.touched && biddingDateRangeTestinput.valid"
+                            name="biddingDateRangeTest"
+                            formControlName="biddingDateRangeTest"
+                            [(date)]="biddingDateRange"
+                            [(ngModel)]="biddingDateRange"
+                            [minDate]="today"
+                            [class.is-valid]="
+                              step1Form.get('biddingDateRangeTest').valid &&
+                              (step1Form.get('biddingDateRangeTest').dirty || step1Form.get('biddingDateRangeTest').touched)
+                            "
+                            [class.is-invalid]="
+                              step1Form.get('biddingDateRangeTest').invalid &&
+                              (step1Form.get('biddingDateRangeTest').dirty || step1Form.get('biddingDateRangeTest').touched)
+                            "
                             bsDaterangepicker
-                            readonly="readonly"
                             dateRangePickerMomentModifier
-                            required
+                            [attr.disabled]="shippingRequestType == 'bidding' ? null : true"
+                            [required]="shippingRequestType == 'bidding'"
                           />
                           <div class="input-group-append">
                             <span class="input-group-text">
@@ -128,14 +139,17 @@
                         }"
                       >
                         <select
-                          #shippingType="ngModel"
                           class="form-control"
                           name="shippingType"
+                          formControlName="shippingType"
+                          [(ngModel)]="step1Dto.shippingTypeId"
+                          [class.is-valid]="
+                            step1Form.get('shippingType').valid && (step1Form.get('shippingType').dirty || step1Form.get('shippingType').touched)
+                          "
+                          [class.is-invalid]="
+                            step1Form.get('shippingType').invalid && (step1Form.get('shippingType').dirty || step1Form.get('shippingType').touched)
+                          "
                           required
-                          [(ngModel)]="shippingRequest.shippingTypeId"
-                          [class.is-invalid]="shippingType.touched && !shippingType.valid"
-                          [class.is-valid]="shippingType.touched && shippingType.valid"
-                          [disabled]="!allShippingTypes"
                         >
                           <option [ngValue]="null">{{ l('SelectAshippingType') }}</option>
                           <option *ngFor="let item of allShippingTypes" value="{{ item.id }}">{{ item.displayName }} </option>
@@ -145,66 +159,24 @@
                     </div>
 
                     <div class="row">
-                      <!--                      <div class="col-lg-6">-->
-                      <!--                        <div class="form-group">-->
-                      <!--                          <label><span class="required-fileds">*</span> {{ l('TripsStartDate') }}:</label>-->
-                      <!--                          <div class="input-group date">-->
-                      <!--                            <input-->
-                      <!--                              [(date)]="shippingRequest.startTripDate"-->
-                      <!--                              class="form-control"-->
-                      <!--                              type="datetime"-->
-                      <!--                              name="startdate"-->
-                      <!--                              placeholder="{{ l('TripsStartDate') }}"-->
-                      <!--                              [minDate]="shippingRequest.bidStartDate || today"-->
-                      <!--                              (dateChange)="validateTripsDates()"-->
-                      <!--                              bsDatepicker-->
-                      <!--                              datePickerMomentModifier-->
-                      <!--                            />-->
-
-                      <!--                            <div class="input-group-append">-->
-                      <!--                              <span class="input-group-text">-->
-                      <!--                                <i class="la la-calendar-check-o"></i>-->
-                      <!--                              </span>-->
-                      <!--                            </div>-->
-                      <!--                          </div>-->
-                      <!--                          <span class="form-text text-muted">{{ l('TripsStartDate') }}</span>-->
-                      <!--                        </div>-->
-                      <!--                      </div>-->
-                      <!--                      <div class="col-lg-6">-->
-                      <!--                        <div class="form-group">-->
-                      <!--                          <label><span class="required-fileds">*</span>{{ l('TripsEndDate') }}:</label>-->
-                      <!--                          <div class="input-group date">-->
-                      <!--                            <input-->
-                      <!--                              [(date)]="shippingRequest.endTripDate"-->
-                      <!--                              class="form-control"-->
-                      <!--                              name="endDate"-->
-                      <!--                              placeholder="{{ l('TripsEndDate') }}"-->
-                      <!--                              [minDate]="shippingRequest.startTripDate || today"-->
-                      <!--                              (dateChange)="validateTripsDates()"-->
-                      <!--                              bsDatepicker-->
-                      <!--                              datePickerMomentModifier-->
-                      <!--                            />-->
-                      <!--                            <div class="input-group-append">-->
-                      <!--                              <span class="input-group-text">-->
-                      <!--                                <i class="la la-calendar-check-o"></i>-->
-                      <!--                              </span>-->
-                      <!--                            </div>-->
-                      <!--                          </div>-->
-                      <!--                          <span class="form-text text-muted">{{ l('TripsEndDate') }}</span>-->
-                      <!--                        </div>-->
-                      <!--                      </div>-->
                       <div class="col-lg-12">
                         <label>{{ l('TripsDateRange') }} <span class="required-fileds">*</span></label>
                         <div class="input-group date">
                           <input
-                            #biddingDateRangeTestinput="ngModel"
                             class="form-control"
-                            name="SubscriptionEndDateRange"
-                            [(date)]="biddingDateRangeTest"
-                            [(ngModel)]="biddingDateRangeTest"
-                            (dateChange)="logDate()"
-                            [class.is-invalid]="biddingDateRangeTestinput.touched && !biddingDateRangeTestinput.valid"
-                            [class.is-valid]="biddingDateRangeTestinput.touched && biddingDateRangeTestinput.valid"
+                            name="tripsDateRange"
+                            formControlName="tripsDateRange"
+                            [(date)]="tripsDateRange"
+                            [(ngModel)]="tripsDateRange"
+                            [minDate]="today"
+                            [class.is-valid]="
+                              step1Form.get('tripsDateRange').valid &&
+                              (step1Form.get('tripsDateRange').dirty || step1Form.get('tripsDateRange').touched)
+                            "
+                            [class.is-invalid]="
+                              step1Form.get('tripsDateRange').invalid &&
+                              (step1Form.get('tripsDateRange').dirty || step1Form.get('tripsDateRange').touched)
+                            "
                             bsDaterangepicker
                             readonly="readonly"
                             dateRangePickerMomentModifier
@@ -221,11 +193,10 @@
                     </div>
                   </div>
                   <!--end: Form Wizard Step 1-->
-
-                  <!--begin: Form Wizard Step 2-->
-                  <div class="pb-5" data-wizard-type="step-content">
+                  <!-- begin: Form Wizard Step 2-->
+                  <div class="pb-5" [formGroup]="step2Form" data-wizard-type="step-content">
                     <div class="mb-10 font-weight-bold text-dark">
-                      Enter the Route Details of your Shipping Request
+                      {{ l('EntertheRouteDetailsofyourShippingRequest') }}
                     </div>
                     <div class="row">
                       <!-- Start of Select Source -->
@@ -234,14 +205,16 @@
                           <label>{{ l('OriginCity') }} <span class="required-fileds">*</span> </label>
                           <div [ngClass]="{ 'spinner spinner-success spinner-right mr-1 ml-1': !allCitys }">
                             <select
-                              #Origin="ngModel"
                               class="form-control"
                               name="origin"
-                              [disabled]="!allCitys"
-                              [(ngModel)]="shippingRequest.originCityId"
+                              formControlName="origin"
+                              [attr.disabled]="allCitys ? null : true"
+                              [(ngModel)]="step2Dto.originCityId"
+                              [class.is-valid]="step2Form.get('origin').valid && (step2Form.get('origin').dirty || step2Form.get('origin').touched)"
+                              [class.is-invalid]="
+                                step2Form.get('origin').invalid && (step2Form.get('origin').dirty || step2Form.get('origin').touched)
+                              "
                               required
-                              [class.is-invalid]="Origin.touched && !Origin.valid"
-                              [class.is-valid]="Origin.touched && Origin.valid"
                             >
                               <option value="">{{ l('SelectanOriginCity') }}</option>
                               <option *ngFor="let item of allCitys" value="{{ item.id }}">{{ item.displayName }} </option>
@@ -256,14 +229,18 @@
                           <label><span class="required-fileds">*</span> {{ l('DestinationCity') }}:</label>
                           <div [ngClass]="{ 'spinner spinner-success spinner-right mr-1 ml-1': !allCitys }">
                             <select
-                              #Destination="ngModel"
                               class="form-control"
                               name="destination"
+                              formControlName="destination"
+                              [(ngModel)]="step2Dto.destinationCityId"
+                              [class.is-valid]="
+                                step2Form.get('destination').valid && (step2Form.get('destination').dirty || step2Form.get('destination').touched)
+                              "
+                              [class.is-invalid]="
+                                step2Form.get('destination').invalid && (step2Form.get('destination').dirty || step2Form.get('destination').touched)
+                              "
+                              [attr.disabled]="allCitys ? null : true"
                               required
-                              [class.is-invalid]="Destination.touched && !Destination.valid"
-                              [class.is-valid]="Destination.touched && Destination.valid"
-                              [disabled]="!allCitys"
-                              [(ngModel)]="shippingRequest.destinationCityId"
                             >
                               <option value="">{{ l('selectaDestination') }}</option>
                               <option *ngFor="let item of allCitys" value="{{ item.id }}">{{ item.displayName }} </option>
@@ -277,19 +254,23 @@
                         <label> {{ l('RouteType') }} <span class="required-fileds">*</span></label>
                         <div [ngClass]="{ 'spinner spinner-success spinner-right mr-1 ml-1': !allRoutTypes }">
                           <select
-                            #RouteType="ngModel"
                             class="form-control"
                             name="routeType"
+                            formControlName="routeType"
+                            [attr.disabled]="allRoutTypes ? null : true"
+                            [(ngModel)]="step2Dto.routeTypeId"
+                            [class.is-valid]="
+                              step2Form.get('routeType').valid && (step2Form.get('routeType').dirty || step2Form.get('routeType').touched)
+                            "
+                            [class.is-invalid]="
+                              step2Form.get('routeType').invalid && (step2Form.get('routeType').dirty || step2Form.get('routeType').touched)
+                            "
+                            (change)="step2Dto.numberOfDrops = undefined"
                             required
-                            [disabled]="!allRoutTypes"
-                            [(ngModel)]="selectedRouteType"
-                            [class.is-invalid]="RouteType.touched && !RouteType.valid"
-                            [class.is-valid]="RouteType.touched && RouteType.valid"
-                            (change)="shippingRequest.numberOfDrops = undefined"
                           >
                             <option value="">{{ l('SelectRouteType') }}</option>
                             <option [value]="code.key" *ngFor="let code of allRoutTypes">
-                              {{ code.value | localize }}
+                              {{ l(code.value) }}
                             </option>
                             <!--<option *ngFor="let item of allRoutTypes" value="{{ item.id }}">{{ item.displayName }}</option>-->
                           </select>
@@ -300,17 +281,21 @@
                         <div class="form-group">
                           <label>{{ l('NumberOfDrops') }} <span class="required-fileds">*</span></label>
                           <input
-                            #NumberOfDrops="ngModel"
                             class="form-control"
                             type="number"
                             name="numberOfDrops"
                             id="numberOfDrops"
+                            formControlName="numberOfDrops"
                             maxlength="2"
-                            [required]="selectedRouteType == 3"
-                            [(ngModel)]="shippingRequest.numberOfDrops"
-                            [class.is-invalid]="selectedRouteType == 3 && NumberOfDrops.touched && !NumberOfDrops.valid"
-                            [class.is-valid]="selectedRouteType == 3 && NumberOfDrops.touched && NumberOfDrops.valid"
-                            [disabled]="selectedRouteType != 3"
+                            [required]="step2Dto.routeTypeId == 3"
+                            [(ngModel)]="step2Dto.numberOfDrops"
+                            [class.is-invalid]="
+                              step2Dto.routeTypeId == 3 && step2Form.get('numberOfDrops').touched && !step2Form.get('numberOfDrops').valid
+                            "
+                            [class.is-valid]="
+                              step2Dto.routeTypeId == 3 && step2Form.get('numberOfDrops').touched && step2Form.get('numberOfDrops').valid
+                            "
+                            [attr.disabled]="step2Dto.routeTypeId != 3 ? true : null"
                           />
                           <span class="form-text text-muted">{{ l('NumberOfDrops') }} {{ l('ForMiltibleTripsRouteType') }}</span>
                         </div>
@@ -319,47 +304,53 @@
                         <div class="form-group">
                           <label>{{ l('NumberOfTrips') }} <span class="required-fileds">*</span></label>
                           <input
-                            #numberOfTrips="ngModel"
                             class="form-control"
                             type="number"
                             name="numberOfTrips"
                             id="numberOfTrips"
-                            [(ngModel)]="shippingRequest.numberOfTrips"
-                            required
-                            maxlength="2"
-                            [min]="1"
-                            [max]="100"
+                            formControlName="NumberOfTrips"
+                            [(ngModel)]="step2Dto.numberOfTrips"
                             (keypress)="numberOnly($event)"
-                            [class.is-invalid]="numberOfTrips.touched && !numberOfTrips.valid"
-                            [class.is-valid]="numberOfTrips.touched && numberOfTrips.valid"
+                            [class.is-valid]="
+                              step2Form.get('NumberOfTrips').valid && (step2Form.get('NumberOfTrips').dirty || step2Form.get('NumberOfTrips').touched)
+                            "
+                            [class.is-invalid]="
+                              step2Form.get('NumberOfTrips').invalid &&
+                              (step2Form.get('NumberOfTrips').dirty || step2Form.get('NumberOfTrips').touched)
+                            "
+                            required
                           />
                           <span class="form-text text-muted">{{ l('EnterNumberOfTrips') }}</span>
                         </div>
                       </div>
                     </div>
                   </div>
-                  <!--end: Form Wizard Step 2-->
+                  <!--  end: Form Wizard Step 2-->
 
                   <!--begin: Form Wizard Step 3-->
-                  <div class="pb-5" data-wizard-type="step-content">
+                  <div class="pb-5" [formGroup]="step3Form" data-wizard-type="step-content">
                     <div class="mb-10 font-weight-bold text-dark">
-                      Add Good Details info
+                      {{ l('AddGoodDetailsInfo') }}
                     </div>
                     <div class="row">
                       <div class="col-lg-6">
                         <label>{{ l('MainGoodCategory') }} <span class="required-fileds">*</span></label>
                         <div [ngClass]="{ 'spinner spinner-success spinner-right mr-1 ml-1': !allGoodCategorys }">
                           <select
-                            #goodCategory="ngModel"
                             class="form-control"
                             name="goodCategory"
+                            formControlName="goodCategory"
                             [disabled]="!allGoodCategorys"
-                            [(ngModel)]="shippingRequest.goodCategoryId"
+                            [(ngModel)]="step3Dto.goodCategoryId"
+                            [class.is-valid]="
+                              step3Form.get('goodCategory').valid && (step3Form.get('goodCategory').dirty || step3Form.get('goodCategory').touched)
+                            "
+                            [class.is-invalid]="
+                              step3Form.get('goodCategory').invalid && (step3Form.get('goodCategory').dirty || step3Form.get('goodCategory').touched)
+                            "
                             required
-                            [class.is-invalid]="goodCategory.touched && !goodCategory.valid"
-                            [class.is-valid]="goodCategory.touched && goodCategory.valid"
                           >
-                            <option [ngValue]="undefined">{{ l('SelectAGoodCategory') }}</option>
+                            <option [ngValue]="undefined" disabled selected>{{ l('SelectAGoodCategory') }}</option>
                             <option *ngFor="let item of allGoodCategorys" value="{{ item.id }}">{{ item.displayName }} </option>
                           </select>
                         </div>
@@ -376,16 +367,17 @@
                               </span>
                             </div>
                             <input
-                              #Weight="ngModel"
                               type="number"
-                              name="Weight"
+                              name="weight"
+                              formControlName="weight"
                               class="form-control"
-                              placeholder="Weight"
-                              [(ngModel)]="shippingRequest.totalWeight"
-                              (keypress)="numberOnly($event)"
+                              placeholder="weight"
+                              [(ngModel)]="step3Dto.totalWeight"
+                              [class.is-valid]="step3Form.get('weight').valid && (step3Form.get('weight').dirty || step3Form.get('weight').touched)"
+                              [class.is-invalid]="
+                                step3Form.get('weight').invalid && (step3Form.get('weight').dirty || step3Form.get('weight').touched)
+                              "
                               required
-                              [class.is-invalid]="Weight.touched && !Weight.valid"
-                              [class.is-valid]="Weight.touched && Weight.valid"
                             />
                           </div>
                         </div>
@@ -401,16 +393,20 @@
                           >
                             <label>{{ l('PackingType') }} <span class="required-fileds">*</span></label>
                             <select
-                              #packingType="ngModel"
                               class="form-control"
                               name="packingType"
-                              required
-                              [(ngModel)]="shippingRequest.packingTypeId"
-                              [class.is-invalid]="packingType.touched && !packingType.valid"
-                              [class.is-valid]="packingType.touched && packingType.valid"
+                              formControlName="packingType"
+                              [(ngModel)]="step3Dto.packingTypeId"
+                              [class.is-valid]="
+                                step3Form.get('packingType').valid && (step3Form.get('packingType').dirty || step3Form.get('packingType').touched)
+                              "
+                              [class.is-invalid]="
+                                step3Form.get('packingType').invalid && (step3Form.get('packingType').dirty || step3Form.get('packingType').touched)
+                              "
                               [disabled]="!allpackingTypes"
+                              required
                             >
-                              <option [ngValue]="null">{{ l('SelectaPackingType') }}</option>
+                              <option [ngValue]="null" disabled selected>{{ l('SelectaPackingType') }}</option>
                               <option *ngFor="let item of allpackingTypes" value="{{ item.id }}">{{ item.displayName }} </option>
                             </select>
                           </div>
@@ -421,15 +417,21 @@
                         <div class="form-group">
                           <label>{{ l('NumberOfPacking') }} <span class="required-fileds">*</span></label>
                           <input
-                            #numberOfPacking="ngModel"
                             class="form-control"
                             type="number"
                             name="numberOfPacking"
                             id="numberOfPacking"
-                            [(ngModel)]="shippingRequest.numberOfPacking"
+                            formControlName="numberOfPacking"
+                            [(ngModel)]="step3Dto.numberOfPacking"
+                            [class.is-valid]="
+                              step3Form.get('numberOfPacking').valid &&
+                              (step3Form.get('numberOfPacking').dirty || step3Form.get('numberOfPacking').touched)
+                            "
+                            [class.is-invalid]="
+                              step3Form.get('numberOfPacking').invalid &&
+                              (step3Form.get('numberOfPacking').dirty || step3Form.get('numberOfPacking').touched)
+                            "
                             required
-                            [class.is-invalid]="numberOfPacking.touched && !numberOfPacking.valid"
-                            [class.is-valid]="numberOfPacking.touched && numberOfPacking.valid"
                           />
                           <span class="form-text text-muted">{{ l('EnterNumberOfPacking') }}</span>
                         </div>
@@ -440,15 +442,20 @@
                           <select
                             class="form-control"
                             name="transportType"
-                            #TransportType="ngModel"
+                            formControlName="transportType"
                             required
-                            [disabled]="!allTransportTypes"
-                            [(ngModel)]="shippingRequest.transportTypeId"
-                            [class.is-invalid]="allTransportTypes && TransportType.touched && !TransportType.valid"
-                            [class.is-valid]="allTransportTypes && TransportType.touched && TransportType.valid"
-                            (change)="transportTypeSelectChange(shippingRequest.transportTypeId)"
+                            [attr.disabled]="allTransportTypes ? null : true"
+                            [(ngModel)]="step3Dto.transportTypeId"
+                            [class.is-valid]="
+                              step3Form.get('transportType').valid && (step3Form.get('transportType').dirty || step3Form.get('transportType').touched)
+                            "
+                            [class.is-invalid]="
+                              step3Form.get('transportType').invalid &&
+                              (step3Form.get('transportType').dirty || step3Form.get('transportType').touched)
+                            "
+                            (change)="transportTypeSelectChange(step3Dto.transportTypeId)"
                           >
-                            <option [ngValue]="null">{{ l('SelectaTransportType') }}</option>
+                            <option [ngValue]="null" disabled selected>{{ l('SelectaTransportType') }}</option>
                             <option *ngFor="let item of allTransportTypes" value="{{ item.id }}">{{ item.displayName }} </option>
                           </select>
                         </div>
@@ -463,17 +470,29 @@
                             }"
                           >
                             <select
-                              #TruckType="ngModel"
                               class="form-control"
                               name="truckType"
+                              formControlName="truckType"
+                              [attr.disabled]="
+                                step3Dto.transportTypeId == null
+                                  ? true
+                                  : null || allTransportTypes == null
+                                  ? true
+                                  : null || allTrucksTypes == null
+                                  ? true
+                                  : null
+                              "
+                              [(ngModel)]="step3Dto.trucksTypeId"
+                              [class.is-valid]="
+                                step3Form.get('truckType').valid && (step3Form.get('truckType').dirty || step3Form.get('truckType').touched)
+                              "
+                              [class.is-invalid]="
+                                step3Form.get('truckType').invalid && (step3Form.get('truckType').dirty || step3Form.get('truckType').touched)
+                              "
+                              (change)="trucksTypeSelectChange(step3Dto.trucksTypeId)"
                               required
-                              [disabled]="shippingRequest.transportTypeId == null || allTransportTypes == null || allTrucksTypes == null"
-                              [(ngModel)]="shippingRequest.trucksTypeId"
-                              [class.is-invalid]="allTrucksTypes && TruckType.touched && !TruckType.valid"
-                              [class.is-valid]="allTrucksTypes && TruckType.touched && TruckType.valid"
-                              (change)="trucksTypeSelectChange(shippingRequest.trucksTypeId)"
                             >
-                              <option [ngValue]="null">{{ l('SelectaTruckType') }}</option>
+                              <option [ngValue]="null" selected disabled>{{ l('SelectaTruckType') }}</option>
                               <option *ngFor="let item of allTrucksTypes" value="{{ item.id }}">{{ item.displayName }} </option>
                             </select>
                           </div>
@@ -489,22 +508,32 @@
                           }"
                         >
                           <select
-                            #Capacity="ngModel"
                             class="form-control"
                             name="capacity"
-                            required
-                            [disabled]="
-                              capacityLoading ||
-                              shippingRequest.trucksTypeId == null ||
-                              shippingRequest.transportTypeId == null ||
-                              allTransportTypes == null ||
-                              allTrucksTypes == null
+                            formControlName="capacity"
+                            [attr.disabled]="
+                              capacityLoading
+                                ? true
+                                : null || step3Dto.trucksTypeId == null
+                                ? true
+                                : null || step3Dto.transportTypeId == null
+                                ? true
+                                : null || allTransportTypes == null
+                                ? true
+                                : null || allTrucksTypes == null
+                                ? true
+                                : null
                             "
-                            [(ngModel)]="shippingRequest.capacityId"
-                            [class.is-invalid]="allCapacities && Capacity.touched && !Capacity.valid"
-                            [class.is-valid]="allCapacities && Capacity.touched && Capacity.valid"
+                            [(ngModel)]="step3Dto.capacityId"
+                            [class.is-valid]="
+                              step3Form.get('capacity').valid && (step3Form.get('capacity').dirty || step3Form.get('capacity').touched)
+                            "
+                            [class.is-invalid]="
+                              step3Form.get('capacity').invalid && (step3Form.get('capacity').dirty || step3Form.get('capacity').touched)
+                            "
+                            required
                           >
-                            <option [ngValue]="null">{{ l('SelectaCapacity') }}</option>
+                            <option [ngValue]="null" selected disabled>{{ l('SelectaCapacity') }}</option>
                             <option *ngFor="let item of allCapacities" value="{{ item.id }}">{{ item.displayName }} </option>
                           </select>
                         </div>
@@ -558,8 +587,121 @@
                   <!--begin: Form Wizard Step 4-->
                   <div class="pb-5" data-wizard-type="step-content">
                     <div class="mb-10 font-weight-bold text-dark">
-                      Setup Your Value Added Services
+                      {{ l('SetupYourValueAddedServices') }}
                     </div>
+                    <div class="row">
+                      <div class="col-3">
+                        <p-multiSelect
+                          [options]="allVases"
+                          [(ngModel)]="selectedvas"
+                          defaultLabel="Select a VASs"
+                          optionLabel="vasName"
+                          name="VasList"
+                          class="multiselect-custom"
+                          [style]="{ width: '100%' }"
+                          (onChange)="selectVases($event)"
+                          displaySelectedLabel="true"
+                          [showToggleAll]="false"
+                        >
+                          <!-- new shippingRequest -->
+                          <div *ngIf="activeShippingRequestId && selectedVases; else newShippingRequest">
+                            <ng-template let-value pTemplate="selectedItems">
+                              <div *ngIf="!selectedVases || selectedVases.length === 0" class="vas-placeholder">
+                                {{ l('SelectVASs') }}
+                              </div>
+                              <div class="vas-item vas-item-value" *ngFor="let vas of selectedVases">
+                                <div>{{ vas.vasName }}</div>
+                              </div>
+                            </ng-template>
+                          </div>
+
+                          <!-- edit shippingRequest -->
+                          <ng-template #newShippingRequest>
+                            <ng-template let-value pTemplate="selectedItems">
+                              <div *ngIf="!selectedvas || selectedvas.length === 0" class="vas-placeholder">
+                                {{ l('SelectVASs') }}
+                              </div>
+                              <div class="vas-item vas-item-value" *ngFor="let vas of selectedvas">
+                                <div>{{ vas.vasName }}</div>
+                              </div>
+                            </ng-template>
+                          </ng-template>
+
+                          <!-- <ng-template let-value pTemplate="selectedItems">
+                                                      <div *ngIf="!selectedvas || selectedvas.length === 0" class="country-placeholder">
+                                                        {{ l('SelectVASs') }}
+                                                      </div>
+                                                      <div class="country-item country-item-value" *ngFor="let vas of selectedvas">
+                                                        <div>{{ vas.vasName }}</div>
+                                                      </div>
+                                                    </ng-template> -->
+
+                          <!-- show dorpdown items -->
+                          <div *ngFor="let vas of allVases">
+                            <ng-template pTemplate="item">
+                              <div class="vas-item">
+                                <div>{{ vas.vasName }}</div>
+                              </div>
+                            </ng-template>
+                          </div>
+                        </p-multiSelect>
+                      </div>
+                      <div class="col-9">
+                        <table *ngIf="allVases" class="table">
+                          <thead>
+                            <tr class="table-active">
+                              <th scope="col">{{ l('Name') }}</th>
+                              <th scope="col">{{ l('Count') }}</th>
+                              <th scope="col">{{ l('Amount') }}</th>
+                              <th scope="col">{{ l('NumberOfTrips') }}</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            <tr *ngFor="let item of selectedVases; index as i">
+                              <td>
+                                {{ selectedVasesProperties[item.vasId].vasName }}
+                              </td>
+                              <td>
+                                <input
+                                  type="number"
+                                  [attr.disabled]="selectedVasesProperties[item.vasId].vasCountDisabled || null"
+                                  id="Vas-Count{{ i }}"
+                                  [(ngModel)]="item.requestMaxCount"
+                                  (keypress)="numberOnly($event)"
+                                  [required]="!selectedVasesProperties[item.vasId].vasCountDisabled"
+                                  class="form-control"
+                                  name="Vas-Count{{ i }}"
+                                />
+                              </td>
+                              <td>
+                                <input
+                                  type="number"
+                                  [attr.disabled]="selectedVasesProperties[item.vasId].vasAmountDisabled || null"
+                                  id="VasAmount2{{ i }}"
+                                  [(ngModel)]="item.requestMaxAmount"
+                                  (keypress)="numberOnly($event)"
+                                  [required]="!selectedVasesProperties[item.vasId].vasAmountDisabled"
+                                  class="form-control"
+                                  name="VasAmount2{{ i }}"
+                                />
+                              </td>
+                              <td>
+                                <input
+                                  type="number"
+                                  id="numberOfTrips{{ i }}"
+                                  [(ngModel)]="item.numberOfTrips"
+                                  (keypress)="numberOnly($event)"
+                                  class="form-control"
+                                  name="numberOfTrips{{ i }}"
+                                  required=""
+                                />
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                    </div>
+
                     <!--                    <div class="form-group">-->
                     <!--                      <label>Address Line 1</label>-->
                     <!--                      <input-->
@@ -907,44 +1049,65 @@
                   <!--begin: Form Wizard Step 5-->
                   <div class="pb-5" data-wizard-type="step-content">
                     <h4 class="mb-10 font-weight-bold text-dark">
-                      Review your Details and Submit
+                      {{ l('ReviewYourDetailsAndSubmit') }}
                     </h4>
-                    <div class="border-bottom mb-5 pb-5">
-                      <div class="font-weight-bolder mb-3">Current Address:</div>
-                      <div class="line-height-xl">
-                        Address Line 1
-                        <br />
-                        Address Line 2 <br />
-                        Melbourne 3000, VIC, Australia
+                    <div *ngIf="activeShippingRequestId && this.activeStep && shippingRequestRev.bidStartDate">
+                      <div class="border-bottom mb-5 pb-5">
+                        <div class="font-weight-bolder mb-3">{{ l('BasicDetails') }}:</div>
+                        <div class="line-height-xl">
+                          {{ l('ShippingRequestType') }} :
+                          {{ shippingRequestRev.isBid ? l('Marketplace') : l('TachyonManageService') }}
+                          <br />
+                          {{ l('BiddingRange') }} : {{ shippingRequestRev.bidStartDate | momentFormat: 'L' }} -
+                          {{ shippingRequestRev.bidEndDate | momentFormat: 'L' }}
+                          <br />
+                          {{ l('ShippingTypes') }} : {{ shippingRequestRev.shippingTypeId }}
+                          <br />
+                          {{ l('TripsDateRange') }} : {{ shippingRequestRev.startTripDate | momentFormat: 'L' }} -
+                          {{ shippingRequestRev.endTripDate | momentFormat: 'L' }}
+                        </div>
                       </div>
-                    </div>
-                    <div class="border-bottom mb-5 pb-5">
-                      <div class="font-weight-bolder mb-3">Delivery Details:</div>
-                      <div class="line-height-xl">
-                        Package: Complete Workstation (Monitor, Computer, Keyboard &amp; Mouse)
-                        <br />
-                        Weight: 25kg <br />
-                        Dimensions: 110cm (w) x 90cm (h) x 150cm (L)
+                      <div class="border-bottom mb-5 pb-5">
+                        <div class="font-weight-bolder mb-3">{{ l('RouteDetails') }}:</div>
+                        <div class="line-height-xl">
+                          {{ l('OriginCity') }} : {{ shippingRequestReview.originalCityName }}
+                          <br />
+                          {{ l('DestinationCity') }} : {{ shippingRequestReview.destinationCityName }}
+                          <br />
+                          {{ l('RouteType') }} : {{ shippingRequestReview.routTypeName }}
+                          <br />
+                          {{ l('NumberOfDrops') }} : {{ shippingRequestReview.shippingRequest.numberOfDrops }}
+                          <br />
+                          {{ l('NumberOfTrips') }} : {{ shippingRequestReview.shippingRequest.numberOfTrips }}
+                        </div>
                       </div>
-                    </div>
-                    <div class="border-bottom mb-5 pb-5">
-                      <div class="font-weight-bolder mb-3">
-                        Delivery Service Type:
+                      <div class="border-bottom mb-5 pb-5">
+                        <div class="font-weight-bolder mb-3">{{ l('GoodDetails') }}:</div>
+                        <div class="line-height-xl">
+                          {{ l('MainGoodCategory') }} : {{ shippingRequestReview.goodsCategoryName }}
+                          <br />
+                          {{ l('TotalWeight') }} : {{ shippingRequestReview.shippingRequest.totalWeight }}
+                          <br />
+                          {{ l('PackingType') }} : {{ shippingRequestReview.packingTypeDisplayName }}
+                          <br />
+                          {{ l('NumberOfPacking') }} : {{ shippingRequestReview.shippingRequest.numberOfPacking }}
+                          <br />
+                          {{ l('TransportType') }} : {{ shippingRequestReview.transportTypeDisplayName }}
+                          <br />
+                          {{ l('TruckType') }} : {{ shippingRequestReview.truckTypeDisplayName }}
+                          <br />
+                          {{ l('Capacity') }} : {{ shippingRequestReview.capacityDisplayName }}
+                        </div>
                       </div>
-                      <div class="line-height-xl">
-                        Overnight Delivery with Regular Packaging
-                        <br />
-                        Preferred Morning (8:00AM - 11:00AM) Delivery
-                      </div>
-                    </div>
-                    <div class="mb-5">
-                      <div class="font-weight-bolder mb-3">Delivery Address:</div>
-                      <div class="line-height-xl">
-                        Address Line 1
-                        <br />
-                        Address Line 2 <br />
-                        Preston 3072, VIC, Australia
-                      </div>
+                      <!--                      <div class="mb-5">-->
+                      <!--                        <div class="font-weight-bolder mb-3">{{ l('ValueAddedServices') }}:</div>-->
+                      <!--                        <div class="line-height-xl">-->
+                      <!--                          Address Line 1-->
+                      <!--                          <br />-->
+                      <!--                          Address Line 2 <br />-->
+                      <!--                          Preston 3072, VIC, Australia-->
+                      <!--                        </div>-->
+                      <!--                      </div>-->
                     </div>
                   </div>
                   <!--end: Form Wizard Step 5-->
@@ -953,20 +1116,20 @@
                   <div class="d-flex justify-content-between border-top pt-10">
                     <div class="mr-2">
                       <div class="btn btn-light-primary font-weight-bold text-uppercase px-9 py-4" data-wizard-type="action-prev">
-                        Previous
+                        {{ l('Previous') }}
                       </div>
                     </div>
                     <div>
-                      <div (click)="onSubmit()" class="btn btn-success font-weight-bold text-uppercase px-9 py-4" data-wizard-type="action-submit">
-                        Submit
-                      </div>
-                      <div class="btn btn-primary font-weight-bold text-uppercase px-9 py-4" data-wizard-type="action-next">
-                        Next Step
-                      </div>
+                      <button (click)="onSubmit()" class="btn btn-success font-weight-bold text-uppercase px-9 py-4" data-wizard-type="action-submit">
+                        {{ l('Publish') }}
+                      </button>
+                      <button class="btn btn-primary font-weight-bold text-uppercase px-9 py-4" data-wizard-type="action-next" [buttonBusy]="saving">
+                        {{ l('NextStep') }}
+                      </button>
                     </div>
                   </div>
                   <!--end: Form Actions -->
-                </form>
+                </div>
                 <!--end: Form Wizard Form-->
               </div>
             </div>

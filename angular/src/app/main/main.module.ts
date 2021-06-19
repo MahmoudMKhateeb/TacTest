@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { AppCommonModule } from '@app/shared/common/app-common.module';
 
 import { PackingTypesComponent } from './packingTypes/packingTypes/packingTypes.component';
@@ -232,8 +232,8 @@ import { AssignDriverTruckModalComponent } from '@app/main/shippingRequests/ship
 import { AppLocalizationComponent } from '@app/main/applocalizations/applocalization.component';
 import { ApplocalizationModalComponent } from '@app/main/applocalizations/create-or-edit-applocalization-modal.component';
 import { ViewApplocalizationModalComponent } from '@app/main/applocalizations/view-applocalization-modal.component';
-import { CreateOrEditShippingRequestWizardComponent } from '@app/main/shippingRequests/shippingRequests/update-price-shipping-request-modal/shippingRequestWizard/create-or-edit-shipping-request-wizard.component';
 import { ComingSoonComponent } from '@app/main/commingSoon/comingSoon.component';
+import { CreateOrEditShippingRequestWizardComponent } from '@app/main/shippingRequests/shippingRequests/shippingRequestWizard/create-or-edit-shipping-request-wizard.component';
 NgxBootstrapDatePickerConfigService.registerNgxBootstrapDatePickerLocales();
 
 @NgModule({
@@ -269,6 +269,7 @@ NgxBootstrapDatePickerConfigService.registerNgxBootstrapDatePickerLocales();
     AgmDirectionModule,
     StepsModule,
     SelectButtonModule,
+    ReactiveFormsModule,
   ],
   declarations: [
     TrucksTypesTranslationsComponent,

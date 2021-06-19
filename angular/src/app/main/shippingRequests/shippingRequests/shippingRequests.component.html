@@ -246,7 +246,7 @@
                           <!--                          <li *ngIf="feature.isEnabled('App.TachyonDealer')">-->
                           <!--                            <a href="javascript:;" class="dropdown-item" (click)="pricingOfferModal.show()">{{ l('PricingOffer') }}</a>-->
                           <!--                          </li>-->
-                          <li>
+                          <li *ngIf="!record.isDrafted">
                             <a
                               *ngIf="permission.isGranted('Pages.ShippingRequests.Edit')"
                               [queryParams]="{ id: record.id }"
@@ -254,6 +254,16 @@
                               class="dropdown-item"
                             >
                               {{ l('View') }}
+                            </a>
+                          </li>
+                          <li *ngIf="record.isDrafted">
+                            <a
+                              *ngIf="permission.isGranted('Pages.ShippingRequests.Edit')"
+                              [queryParams]="{ id: record.id, step: record.draftStep }"
+                              [routerLink]="['/app/main/shippingRequests/shippingRequestWizard']"
+                              class="dropdown-item"
+                            >
+                              {{ l('Complete') }}
                             </a>
                           </li>
                           <li>

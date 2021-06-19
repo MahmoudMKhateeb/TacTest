@@ -59,8 +59,8 @@ import { AccidentReasonComponent } from '@app/main/accidents/reasons/reason.comp
 import { TripRejectReasonComponent } from '@app/main/shippingRequests/shippingRequests/ShippingRequestTrips/rejectreason/trip-reject-reason.component';
 import { CarrierDirectReqestPageComponent } from '@app/main/shippingRequests/shippingRequests/directShippingRequest/carrierDirectReqestPage.component';
 import { AppLocalizationComponent } from '@app/main/applocalizations/applocalization.component';
-import { CreateOrEditShippingRequestWizardComponent } from '@app/main/shippingRequests/shippingRequests/update-price-shipping-request-modal/shippingRequestWizard/create-or-edit-shipping-request-wizard.component';
 import { ComingSoonComponent } from '@app/main/commingSoon/comingSoon.component';
+import { CreateOrEditShippingRequestWizardComponent } from '@app/main/shippingRequests/shippingRequests/shippingRequestWizard/create-or-edit-shipping-request-wizard.component';
 
 @NgModule({
   imports: [
