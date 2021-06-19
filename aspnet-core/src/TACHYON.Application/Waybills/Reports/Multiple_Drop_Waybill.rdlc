@@ -2,6 +2,348 @@
 <Report xmlns="http://schemas.microsoft.com/sqlserver/reporting/2008/01/reportdefinition" xmlns:rd="http://schemas.microsoft.com/SQLServer/reporting/reportdesigner">
   <Body>
     <ReportItems>
+      <Textbox Name="Textbox9">
+        <CanGrow>true</CanGrow>
+        <KeepTogether>true</KeepTogether>
+        <Paragraphs>
+          <Paragraph>
+            <TextRuns>
+              <TextRun>
+                <Value>Recipient Details</Value>
+                <Style>
+                  <FontFamily>Open Sans</FontFamily>
+                  <FontSize>13pt</FontSize>
+                  <FontWeight>Bold</FontWeight>
+                  <Color>White</Color>
+                </Style>
+              </TextRun>
+              <TextRun>
+                <Value xml:space="preserve">             </Value>
+                <Style>
+                  <FontFamily>microsoft sans Serif</FontFamily>
+                  <FontSize>13pt</FontSize>
+                  <FontWeight>Bold</FontWeight>
+                  <Color>White</Color>
+                </Style>
+              </TextRun>
+              <TextRun>
+                <Value xml:space="preserve"> </Value>
+                <Style>
+                  <FontFamily>GE Flow</FontFamily>
+                  <FontSize>13pt</FontSize>
+                  <FontWeight>Bold</FontWeight>
+                  <Color>White</Color>
+                </Style>
+              </TextRun>
+              <TextRun>
+                <Value>تفاصيل المستلم</Value>
+                <Style>
+                  <FontSize>13pt</FontSize>
+                  <FontWeight>Bold</FontWeight>
+                  <Color>White</Color>
+                </Style>
+              </TextRun>
+            </TextRuns>
+            <Style>
+              <TextAlign>Center</TextAlign>
+            </Style>
+          </Paragraph>
+        </Paragraphs>
+        <rd:DefaultName>Textbox3</rd:DefaultName>
+        <Top>2.3464in</Top>
+        <Left>3.68904in</Left>
+        <Height>0.41167in</Height>
+        <Width>3.39931in</Width>
+        <Style>
+          <Border>
+            <Style>None</Style>
+          </Border>
+          <BackgroundColor>#53555c</BackgroundColor>
+          <VerticalAlign>Middle</VerticalAlign>
+          <PaddingLeft>2pt</PaddingLeft>
+          <PaddingRight>2pt</PaddingRight>
+          <PaddingTop>2pt</PaddingTop>
+          <PaddingBottom>2pt</PaddingBottom>
+        </Style>
+      </Textbox>
+      <Textbox Name="Textbox13">
+        <CanGrow>true</CanGrow>
+        <KeepTogether>true</KeepTogether>
+        <Paragraphs>
+          <Paragraph>
+            <TextRuns>
+              <TextRun>
+                <Value />
+                <Style>
+                  <FontFamily>GE Flow</FontFamily>
+                  <FontSize>11pt</FontSize>
+                  <Color>#282828</Color>
+                </Style>
+              </TextRun>
+            </TextRuns>
+            <Style>
+              <TextAlign>Right</TextAlign>
+            </Style>
+          </Paragraph>
+        </Paragraphs>
+        <rd:DefaultName>Textbox3</rd:DefaultName>
+        <Top>1.62518in</Top>
+        <Left>0.21957in</Left>
+        <Height>0.41167in</Height>
+        <Width>3.39931in</Width>
+        <ZIndex>1</ZIndex>
+        <Style>
+          <Border>
+            <Color>#707070</Color>
+            <Style>Solid</Style>
+          </Border>
+          <VerticalAlign>Middle</VerticalAlign>
+          <PaddingLeft>2pt</PaddingLeft>
+          <PaddingRight>2pt</PaddingRight>
+          <PaddingTop>2pt</PaddingTop>
+          <PaddingBottom>2pt</PaddingBottom>
+        </Style>
+      </Textbox>
+      <Textbox Name="Textbox108">
+        <CanGrow>true</CanGrow>
+        <KeepTogether>true</KeepTogether>
+        <Paragraphs>
+          <Paragraph>
+            <TextRuns>
+              <TextRun>
+                <Value />
+                <Style>
+                  <FontFamily>GE Flow</FontFamily>
+                  <FontSize>11pt</FontSize>
+                  <Color>#282828</Color>
+                </Style>
+              </TextRun>
+            </TextRuns>
+            <Style>
+              <TextAlign>Right</TextAlign>
+            </Style>
+          </Paragraph>
+        </Paragraphs>
+        <rd:DefaultName>Textbox3</rd:DefaultName>
+        <Top>1.62518in</Top>
+        <Left>3.67736in</Left>
+        <Height>0.41167in</Height>
+        <Width>3.39931in</Width>
+        <ZIndex>2</ZIndex>
+        <Style>
+          <Border>
+            <Color>#707070</Color>
+            <Style>Solid</Style>
+          </Border>
+          <VerticalAlign>Middle</VerticalAlign>
+          <PaddingLeft>2pt</PaddingLeft>
+          <PaddingRight>2pt</PaddingRight>
+          <PaddingTop>2pt</PaddingTop>
+          <PaddingBottom>2pt</PaddingBottom>
+        </Style>
+      </Textbox>
+      <Textbox Name="Textbox80">
+        <CanGrow>true</CanGrow>
+        <KeepTogether>true</KeepTogether>
+        <Paragraphs>
+          <Paragraph>
+            <TextRuns>
+              <TextRun>
+                <Value />
+                <Style>
+                  <FontFamily>GE Flow</FontFamily>
+                  <FontSize>11pt</FontSize>
+                  <Color>#282828</Color>
+                </Style>
+              </TextRun>
+            </TextRuns>
+            <Style>
+              <TextAlign>Right</TextAlign>
+            </Style>
+          </Paragraph>
+        </Paragraphs>
+        <rd:DefaultName>Textbox3</rd:DefaultName>
+        <Top>1.13518in</Top>
+        <Left>0.21957in</Left>
+        <Height>0.41167in</Height>
+        <Width>3.39931in</Width>
+        <ZIndex>3</ZIndex>
+        <Style>
+          <Border>
+            <Color>#707070</Color>
+            <Style>Solid</Style>
+          </Border>
+          <VerticalAlign>Middle</VerticalAlign>
+          <PaddingLeft>2pt</PaddingLeft>
+          <PaddingRight>2pt</PaddingRight>
+          <PaddingTop>2pt</PaddingTop>
+          <PaddingBottom>2pt</PaddingBottom>
+        </Style>
+      </Textbox>
+      <Textbox Name="Textbox73">
+        <CanGrow>true</CanGrow>
+        <KeepTogether>true</KeepTogether>
+        <Paragraphs>
+          <Paragraph>
+            <TextRuns>
+              <TextRun>
+                <Value />
+                <Style>
+                  <FontFamily>GE Flow</FontFamily>
+                  <FontSize>11pt</FontSize>
+                  <Color>#282828</Color>
+                </Style>
+              </TextRun>
+            </TextRuns>
+            <Style>
+              <TextAlign>Right</TextAlign>
+            </Style>
+          </Paragraph>
+        </Paragraphs>
+        <rd:DefaultName>Textbox3</rd:DefaultName>
+        <Top>1.13518in</Top>
+        <Left>3.67736in</Left>
+        <Height>0.41167in</Height>
+        <Width>3.39931in</Width>
+        <ZIndex>4</ZIndex>
+        <Style>
+          <Border>
+            <Color>#707070</Color>
+            <Style>Solid</Style>
+          </Border>
+          <VerticalAlign>Middle</VerticalAlign>
+          <PaddingLeft>2pt</PaddingLeft>
+          <PaddingRight>2pt</PaddingRight>
+          <PaddingTop>2pt</PaddingTop>
+          <PaddingBottom>2pt</PaddingBottom>
+        </Style>
+      </Textbox>
+      <Textbox Name="Textbox70">
+        <CanGrow>true</CanGrow>
+        <KeepTogether>true</KeepTogether>
+        <Paragraphs>
+          <Paragraph>
+            <TextRuns>
+              <TextRun>
+                <Value />
+                <Style>
+                  <FontFamily>GE Flow</FontFamily>
+                  <FontSize>11pt</FontSize>
+                  <Color>#282828</Color>
+                </Style>
+              </TextRun>
+            </TextRuns>
+            <Style>
+              <TextAlign>Right</TextAlign>
+            </Style>
+          </Paragraph>
+        </Paragraphs>
+        <rd:DefaultName>Textbox3</rd:DefaultName>
+        <Top>0.64093in</Top>
+        <Left>0.21957in</Left>
+        <Height>0.41167in</Height>
+        <Width>3.39931in</Width>
+        <ZIndex>5</ZIndex>
+        <Style>
+          <Border>
+            <Color>#707070</Color>
+            <Style>Solid</Style>
+          </Border>
+          <VerticalAlign>Middle</VerticalAlign>
+          <PaddingLeft>2pt</PaddingLeft>
+          <PaddingRight>2pt</PaddingRight>
+          <PaddingTop>2pt</PaddingTop>
+          <PaddingBottom>2pt</PaddingBottom>
+        </Style>
+      </Textbox>
+      <Textbox Name="Textbox69">
+        <CanGrow>true</CanGrow>
+        <KeepTogether>true</KeepTogether>
+        <Paragraphs>
+          <Paragraph>
+            <TextRuns>
+              <TextRun>
+                <Value />
+                <Style>
+                  <FontFamily>GE Flow</FontFamily>
+                  <FontSize>11pt</FontSize>
+                  <Color>#282828</Color>
+                </Style>
+              </TextRun>
+            </TextRuns>
+            <Style>
+              <TextAlign>Right</TextAlign>
+            </Style>
+          </Paragraph>
+        </Paragraphs>
+        <rd:DefaultName>Textbox3</rd:DefaultName>
+        <Top>0.64093in</Top>
+        <Left>3.67736in</Left>
+        <Height>0.41167in</Height>
+        <Width>3.39931in</Width>
+        <ZIndex>6</ZIndex>
+        <Style>
+          <Border>
+            <Color>#707070</Color>
+            <Style>Solid</Style>
+          </Border>
+          <VerticalAlign>Middle</VerticalAlign>
+          <PaddingLeft>2pt</PaddingLeft>
+          <PaddingRight>2pt</PaddingRight>
+          <PaddingTop>2pt</PaddingTop>
+          <PaddingBottom>2pt</PaddingBottom>
+        </Style>
+      </Textbox>
+      <Textbox Name="Textbox68">
+        <CanGrow>true</CanGrow>
+        <KeepTogether>true</KeepTogether>
+        <Paragraphs>
+          <Paragraph>
+            <TextRuns>
+              <TextRun>
+                <Value />
+                <Style>
+                  <FontFamily>Open Sans</FontFamily>
+                  <FontSize>11pt</FontSize>
+                  <Color>#707070</Color>
+                </Style>
+              </TextRun>
+            </TextRuns>
+            <Style>
+              <TextAlign>Center</TextAlign>
+            </Style>
+          </Paragraph>
+        </Paragraphs>
+        <rd:DefaultName>Textbox3</rd:DefaultName>
+        <Top>0.15982in</Top>
+        <Left>0.21957in</Left>
+        <Height>0.41167in</Height>
+        <Width>3.39931in</Width>
+        <ZIndex>7</ZIndex>
+        <Style>
+          <Border>
+            <Color>#707070</Color>
+            <Style>Solid</Style>
+          </Border>
+          <TopBorder>
+            <Width>1pt</Width>
+          </TopBorder>
+          <BottomBorder>
+            <Width>1pt</Width>
+          </BottomBorder>
+          <LeftBorder>
+            <Width>1pt</Width>
+          </LeftBorder>
+          <RightBorder>
+            <Width>1pt</Width>
+          </RightBorder>
+          <VerticalAlign>Middle</VerticalAlign>
+          <PaddingLeft>4pt</PaddingLeft>
+          <PaddingRight>2pt</PaddingRight>
+          <PaddingTop>2pt</PaddingTop>
+          <PaddingBottom>2pt</PaddingBottom>
+        </Style>
+      </Textbox>
       <Textbox Name="Textbox6">
         <CanGrow>true</CanGrow>
         <KeepTogether>true</KeepTogether>
@@ -19,15 +361,16 @@
               </TextRun>
             </TextRuns>
             <Style>
-              <TextAlign>Right</TextAlign>
+              <TextAlign>Left</TextAlign>
             </Style>
           </Paragraph>
         </Paragraphs>
         <rd:DefaultName>Textbox3</rd:DefaultName>
-        <Top>0.72093in</Top>
-        <Left>6.29411in</Left>
-        <Height>0.47143in</Height>
-        <Width>0.74536in</Width>
+        <Top>0.6611in</Top>
+        <Left>6.25945in</Left>
+        <Height>0.34167in</Height>
+        <Width>0.78703in</Width>
+        <ZIndex>8</ZIndex>
         <Style>
           <Border>
             <Color>White</Color>
@@ -59,11 +402,11 @@
           </Paragraph>
         </Paragraphs>
         <rd:DefaultName>Textbox3</rd:DefaultName>
-        <Top>0.75069in</Top>
-        <Left>2.56087in</Left>
-        <Height>0.49167in</Height>
-        <Width>1.09336in</Width>
-        <ZIndex>1</ZIndex>
+        <Top>0.6611in</Top>
+        <Left>2.45435in</Left>
+        <Height>0.37167in</Height>
+        <Width>1.13521in</Width>
+        <ZIndex>9</ZIndex>
         <Style>
           <Border>
             <Color>White</Color>
@@ -92,16 +435,16 @@
               </TextRun>
             </TextRuns>
             <Style>
-              <TextAlign>General</TextAlign>
+              <TextAlign>Center</TextAlign>
             </Style>
           </Paragraph>
         </Paragraphs>
         <rd:DefaultName>Textbox3</rd:DefaultName>
-        <Top>11.10047in</Top>
-        <Left>5.05123in</Left>
-        <Height>0.38867in</Height>
-        <Width>2.03712in</Width>
-        <ZIndex>2</ZIndex>
+        <Top>9.58225in</Top>
+        <Left>5.08037in</Left>
+        <Height>0.41167in</Height>
+        <Width>2.01564in</Width>
+        <ZIndex>10</ZIndex>
         <Style>
           <Border>
             <Style>None</Style>
@@ -130,16 +473,16 @@
               </TextRun>
             </TextRuns>
             <Style>
-              <TextAlign>General</TextAlign>
+              <TextAlign>Center</TextAlign>
             </Style>
           </Paragraph>
         </Paragraphs>
         <rd:DefaultName>Textbox3</rd:DefaultName>
-        <Top>11.10047in</Top>
-        <Left>3.84909in</Left>
-        <Height>0.38867in</Height>
-        <Width>1.16047in</Width>
-        <ZIndex>3</ZIndex>
+        <Top>9.58225in</Top>
+        <Left>3.87823in</Left>
+        <Height>0.41167in</Height>
+        <Width>1.17436in</Width>
+        <ZIndex>11</ZIndex>
         <Style>
           <Border>
             <Style>None</Style>
@@ -168,16 +511,16 @@
               </TextRun>
             </TextRuns>
             <Style>
-              <TextAlign>General</TextAlign>
+              <TextAlign>Center</TextAlign>
             </Style>
           </Paragraph>
         </Paragraphs>
         <rd:DefaultName>Textbox3</rd:DefaultName>
-        <Top>11.10047in</Top>
-        <Left>2.45435in</Left>
-        <Height>0.38867in</Height>
-        <Width>1.36696in</Width>
-        <ZIndex>4</ZIndex>
+        <Top>9.58225in</Top>
+        <Left>2.46961in</Left>
+        <Height>0.41167in</Height>
+        <Width>1.38085in</Width>
+        <ZIndex>12</ZIndex>
         <Style>
           <Border>
             <Style>None</Style>
@@ -206,16 +549,16 @@
               </TextRun>
             </TextRuns>
             <Style>
-              <TextAlign>General</TextAlign>
+              <TextAlign>Center</TextAlign>
             </Style>
           </Paragraph>
         </Paragraphs>
         <rd:DefaultName>Textbox3</rd:DefaultName>
-        <Top>11.10047in</Top>
-        <Left>0.22653in</Left>
-        <Height>0.38867in</Height>
-        <Width>2.21394in</Width>
-        <ZIndex>5</ZIndex>
+        <Top>9.58225in</Top>
+        <Left>0.21957in</Left>
+        <Height>0.41167in</Height>
+        <Width>2.21995in</Width>
+        <ZIndex>13</ZIndex>
         <Style>
           <Border>
             <Style>None</Style>
@@ -223,51 +566,6 @@
           <BackgroundColor>#f1f1f1</BackgroundColor>
           <VerticalAlign>Middle</VerticalAlign>
           <PaddingLeft>2pt</PaddingLeft>
-          <PaddingRight>2pt</PaddingRight>
-          <PaddingTop>2pt</PaddingTop>
-          <PaddingBottom>2pt</PaddingBottom>
-        </Style>
-      </Textbox>
-      <Textbox Name="Textbox35">
-        <CanGrow>true</CanGrow>
-        <KeepTogether>true</KeepTogether>
-        <Paragraphs>
-          <Paragraph>
-            <TextRuns>
-              <TextRun>
-                <Value>Master Waybill No</Value>
-                <Style>
-                  <FontFamily>Open Sans</FontFamily>
-                  <Color>#282828</Color>
-                </Style>
-              </TextRun>
-              <TextRun>
-                <Value>:</Value>
-                <Style>
-                  <FontFamily>Open Sans</FontFamily>
-                  <FontWeight>Normal</FontWeight>
-                  <Color>#282828</Color>
-                </Style>
-              </TextRun>
-            </TextRuns>
-            <Style>
-              <TextAlign>Left</TextAlign>
-            </Style>
-          </Paragraph>
-        </Paragraphs>
-        <rd:DefaultName>Textbox3</rd:DefaultName>
-        <Top>0.15833in</Top>
-        <Left>0.22495in</Left>
-        <Height>0.47667in</Height>
-        <Width>1.86644in</Width>
-        <ZIndex>6</ZIndex>
-        <Style>
-          <Border>
-            <Color>White</Color>
-            <Style>Solid</Style>
-          </Border>
-          <VerticalAlign>Middle</VerticalAlign>
-          <PaddingLeft>4pt</PaddingLeft>
           <PaddingRight>2pt</PaddingRight>
           <PaddingTop>2pt</PaddingTop>
           <PaddingBottom>2pt</PaddingBottom>
@@ -303,11 +601,11 @@
           </Paragraph>
         </Paragraphs>
         <rd:DefaultName>Textbox3</rd:DefaultName>
-        <Top>0.74167in</Top>
+        <Top>0.6611in</Top>
         <Left>0.26485in</Left>
-        <Height>0.49167in</Height>
+        <Height>0.37167in</Height>
         <Width>1.23219in</Width>
-        <ZIndex>7</ZIndex>
+        <ZIndex>14</ZIndex>
         <Style>
           <Border>
             <Color>White</Color>
@@ -351,86 +649,17 @@
           </Paragraph>
         </Paragraphs>
         <rd:DefaultName>Textbox3</rd:DefaultName>
-        <Top>0.70547in</Top>
+        <Top>0.6611in</Top>
         <Left>3.72782in</Left>
-        <Height>0.47143in</Height>
+        <Height>0.37167in</Height>
         <Width>1.35118in</Width>
-        <ZIndex>8</ZIndex>
+        <ZIndex>15</ZIndex>
         <Style>
           <Border>
             <Color>White</Color>
             <Style>Solid</Style>
           </Border>
           <VerticalAlign>Middle</VerticalAlign>
-          <PaddingTop>2pt</PaddingTop>
-          <PaddingBottom>2pt</PaddingBottom>
-        </Style>
-      </Textbox>
-      <Textbox Name="Textbox83">
-        <CanGrow>true</CanGrow>
-        <KeepTogether>true</KeepTogether>
-        <Paragraphs>
-          <Paragraph>
-            <TextRuns>
-              <TextRun>
-                <Value>=First(Fields!MasterWaybillNo.Value, "MultipleDropDataSet")</Value>
-                <Style />
-              </TextRun>
-            </TextRuns>
-            <Style>
-              <TextAlign>Center</TextAlign>
-            </Style>
-          </Paragraph>
-        </Paragraphs>
-        <rd:DefaultName>Textbox82</rd:DefaultName>
-        <Top>0.20065in</Top>
-        <Left>1.58607in</Left>
-        <Height>0.36935in</Height>
-        <Width>0.95804in</Width>
-        <ZIndex>9</ZIndex>
-        <Style>
-          <Border>
-            <Style>None</Style>
-          </Border>
-          <PaddingLeft>2pt</PaddingLeft>
-          <PaddingRight>2pt</PaddingRight>
-          <PaddingTop>8pt</PaddingTop>
-          <PaddingBottom>2pt</PaddingBottom>
-        </Style>
-      </Textbox>
-      <Textbox Name="Textbox69">
-        <CanGrow>true</CanGrow>
-        <KeepTogether>true</KeepTogether>
-        <Paragraphs>
-          <Paragraph>
-            <TextRuns>
-              <TextRun>
-                <Value />
-                <Style>
-                  <FontFamily>GE Flow</FontFamily>
-                  <FontSize>11pt</FontSize>
-                  <Color>#282828</Color>
-                </Style>
-              </TextRun>
-            </TextRuns>
-            <Style>
-              <TextAlign>Right</TextAlign>
-            </Style>
-          </Paragraph>
-        </Paragraphs>
-        <rd:DefaultName>Textbox3</rd:DefaultName>
-        <Top>0.69158in</Top>
-        <Left>3.66812in</Left>
-        <Height>0.49167in</Height>
-        <Width>3.42023in</Width>
-        <ZIndex>10</ZIndex>
-        <Style>
-          <Border>
-            <Style>Solid</Style>
-          </Border>
-          <VerticalAlign>Middle</VerticalAlign>
-          <PaddingLeft>2pt</PaddingLeft>
-          <PaddingRight>2pt</PaddingRight>
           <PaddingTop>2pt</PaddingTop>
           <PaddingBottom>2pt</PaddingBottom>
         </Style>
@@ -454,11 +683,11 @@
           </Paragraph>
         </Paragraphs>
         <rd:DefaultName>Textbox88</rd:DefaultName>
-        <Top>0.75069in</Top>
-        <Left>5.10678in</Left>
-        <Height>0.37404in</Height>
+        <Top>0.6611in</Top>
+        <Left>5.11378in</Left>
+        <Height>0.37167in</Height>
         <Width>1.14567in</Width>
-        <ZIndex>11</ZIndex>
+        <ZIndex>16</ZIndex>
         <Style>
           <Border>
             <Style>None</Style>
@@ -466,43 +695,6 @@
           <PaddingLeft>2pt</PaddingLeft>
           <PaddingRight>2pt</PaddingRight>
           <PaddingTop>8pt</PaddingTop>
-          <PaddingBottom>2pt</PaddingBottom>
-        </Style>
-      </Textbox>
-      <Textbox Name="Textbox70">
-        <CanGrow>true</CanGrow>
-        <KeepTogether>true</KeepTogether>
-        <Paragraphs>
-          <Paragraph>
-            <TextRuns>
-              <TextRun>
-                <Value />
-                <Style>
-                  <FontFamily>GE Flow</FontFamily>
-                  <FontSize>11pt</FontSize>
-                  <Color>#282828</Color>
-                </Style>
-              </TextRun>
-            </TextRuns>
-            <Style>
-              <TextAlign>Right</TextAlign>
-            </Style>
-          </Paragraph>
-        </Paragraphs>
-        <rd:DefaultName>Textbox3</rd:DefaultName>
-        <Top>0.69158in</Top>
-        <Left>0.242in</Left>
-        <Height>0.49167in</Height>
-        <Width>3.39506in</Width>
-        <ZIndex>12</ZIndex>
-        <Style>
-          <Border>
-            <Style>Solid</Style>
-          </Border>
-          <VerticalAlign>Middle</VerticalAlign>
-          <PaddingLeft>2pt</PaddingLeft>
-          <PaddingRight>2pt</PaddingRight>
-          <PaddingTop>2pt</PaddingTop>
           <PaddingBottom>2pt</PaddingBottom>
         </Style>
       </Textbox>
@@ -525,11 +717,11 @@
           </Paragraph>
         </Paragraphs>
         <rd:DefaultName>Textbox82</rd:DefaultName>
-        <Top>0.75069in</Top>
+        <Top>0.6611in</Top>
         <Left>1.43129in</Left>
-        <Height>0.36935in</Height>
-        <Width>1.13272in</Width>
-        <ZIndex>13</ZIndex>
+        <Height>0.37167in</Height>
+        <Width>1.02306in</Width>
+        <ZIndex>17</ZIndex>
         <Style>
           <Border>
             <Style>None</Style>
@@ -557,16 +749,16 @@
               </TextRun>
             </TextRuns>
             <Style>
-              <TextAlign>Right</TextAlign>
+              <TextAlign>Center</TextAlign>
             </Style>
           </Paragraph>
         </Paragraphs>
         <rd:DefaultName>Textbox3</rd:DefaultName>
-        <Top>1.32302in</Top>
-        <Left>6.06249in</Left>
-        <Height>0.32299in</Height>
-        <Width>0.97698in</Width>
-        <ZIndex>14</ZIndex>
+        <Top>1.17in</Top>
+        <Left>6.51513in</Left>
+        <Height>0.34167in</Height>
+        <Width>0.52434in</Width>
+        <ZIndex>18</ZIndex>
         <Style>
           <Border>
             <Color>White</Color>
@@ -608,54 +800,17 @@
           </Paragraph>
         </Paragraphs>
         <rd:DefaultName>Textbox3</rd:DefaultName>
-        <Top>1.32302in</Top>
+        <Top>1.17in</Top>
         <Left>3.7065in</Left>
-        <Height>0.33036in</Height>
+        <Height>0.34167in</Height>
         <Width>0.79052in</Width>
-        <ZIndex>15</ZIndex>
+        <ZIndex>19</ZIndex>
         <Style>
           <Border>
             <Color>White</Color>
             <Style>Solid</Style>
           </Border>
           <VerticalAlign>Middle</VerticalAlign>
-          <PaddingTop>2pt</PaddingTop>
-          <PaddingBottom>2pt</PaddingBottom>
-        </Style>
-      </Textbox>
-      <Textbox Name="Textbox73">
-        <CanGrow>true</CanGrow>
-        <KeepTogether>true</KeepTogether>
-        <Paragraphs>
-          <Paragraph>
-            <TextRuns>
-              <TextRun>
-                <Value />
-                <Style>
-                  <FontFamily>GE Flow</FontFamily>
-                  <FontSize>11pt</FontSize>
-                  <Color>#282828</Color>
-                </Style>
-              </TextRun>
-            </TextRuns>
-            <Style>
-              <TextAlign>Right</TextAlign>
-            </Style>
-          </Paragraph>
-        </Paragraphs>
-        <rd:DefaultName>Textbox3</rd:DefaultName>
-        <Top>1.23245in</Top>
-        <Left>3.67444in</Left>
-        <Height>0.49167in</Height>
-        <Width>3.41099in</Width>
-        <ZIndex>16</ZIndex>
-        <Style>
-          <Border>
-            <Style>Solid</Style>
-          </Border>
-          <VerticalAlign>Middle</VerticalAlign>
-          <PaddingLeft>2pt</PaddingLeft>
-          <PaddingRight>2pt</PaddingRight>
           <PaddingTop>2pt</PaddingTop>
           <PaddingBottom>2pt</PaddingBottom>
         </Style>
@@ -679,11 +834,11 @@
           </Paragraph>
         </Paragraphs>
         <rd:DefaultName>Textbox88</rd:DefaultName>
-        <Top>1.32302in</Top>
-        <Left>4.23051in</Left>
-        <Height>0.37404in</Height>
-        <Width>2.40832in</Width>
-        <ZIndex>17</ZIndex>
+        <Top>1.17in</Top>
+        <Left>4.31472in</Left>
+        <Height>0.34167in</Height>
+        <Width>2.09166in</Width>
+        <ZIndex>20</ZIndex>
         <Style>
           <Border>
             <Style>None</Style>
@@ -715,11 +870,11 @@
           </Paragraph>
         </Paragraphs>
         <rd:DefaultName>Textbox3</rd:DefaultName>
-        <Top>1.33039in</Top>
+        <Top>1.17in</Top>
         <Left>3.04777in</Left>
-        <Height>0.36667in</Height>
-        <Width>0.57111in</Width>
-        <ZIndex>18</ZIndex>
+        <Height>0.34167in</Height>
+        <Width>0.54179in</Width>
+        <ZIndex>21</ZIndex>
         <Style>
           <Border>
             <Color>White</Color>
@@ -754,51 +909,14 @@
           </Paragraph>
         </Paragraphs>
         <rd:DefaultName>Textbox3</rd:DefaultName>
-        <Top>1.32302in</Top>
+        <Top>1.17in</Top>
         <Left>0.27465in</Left>
-        <Height>0.37404in</Height>
+        <Height>0.34167in</Height>
         <Width>0.62947in</Width>
-        <ZIndex>19</ZIndex>
+        <ZIndex>22</ZIndex>
         <Style>
           <Border>
             <Color>White</Color>
-            <Style>Solid</Style>
-          </Border>
-          <VerticalAlign>Middle</VerticalAlign>
-          <PaddingLeft>2pt</PaddingLeft>
-          <PaddingRight>2pt</PaddingRight>
-          <PaddingTop>2pt</PaddingTop>
-          <PaddingBottom>2pt</PaddingBottom>
-        </Style>
-      </Textbox>
-      <Textbox Name="Textbox80">
-        <CanGrow>true</CanGrow>
-        <KeepTogether>true</KeepTogether>
-        <Paragraphs>
-          <Paragraph>
-            <TextRuns>
-              <TextRun>
-                <Value />
-                <Style>
-                  <FontFamily>GE Flow</FontFamily>
-                  <FontSize>11pt</FontSize>
-                  <Color>#282828</Color>
-                </Style>
-              </TextRun>
-            </TextRuns>
-            <Style>
-              <TextAlign>Right</TextAlign>
-            </Style>
-          </Paragraph>
-        </Paragraphs>
-        <rd:DefaultName>Textbox3</rd:DefaultName>
-        <Top>1.22492in</Top>
-        <Left>0.242in</Left>
-        <Height>0.49167in</Height>
-        <Width>3.39834in</Width>
-        <ZIndex>20</ZIndex>
-        <Style>
-          <Border>
             <Style>Solid</Style>
           </Border>
           <VerticalAlign>Middle</VerticalAlign>
@@ -827,11 +945,11 @@
           </Paragraph>
         </Paragraphs>
         <rd:DefaultName>Textbox82</rd:DefaultName>
-        <Top>1.28403in</Top>
+        <Top>1.17in</Top>
         <Left>0.70764in</Left>
-        <Height>0.36935in</Height>
-        <Width>2.41983in</Width>
-        <ZIndex>21</ZIndex>
+        <Height>0.34167in</Height>
+        <Width>2.27069in</Width>
+        <ZIndex>23</ZIndex>
         <Style>
           <Border>
             <Style>None</Style>
@@ -839,71 +957,6 @@
           <PaddingLeft>2pt</PaddingLeft>
           <PaddingRight>2pt</PaddingRight>
           <PaddingTop>8pt</PaddingTop>
-          <PaddingBottom>2pt</PaddingBottom>
-        </Style>
-      </Textbox>
-      <Textbox Name="Textbox9">
-        <CanGrow>true</CanGrow>
-        <KeepTogether>true</KeepTogether>
-        <Paragraphs>
-          <Paragraph>
-            <TextRuns>
-              <TextRun>
-                <Value>Recipient Details</Value>
-                <Style>
-                  <FontFamily>Open Sans</FontFamily>
-                  <FontSize>13pt</FontSize>
-                  <FontWeight>Bold</FontWeight>
-                  <Color>White</Color>
-                </Style>
-              </TextRun>
-              <TextRun>
-                <Value xml:space="preserve">            </Value>
-                <Style>
-                  <FontFamily>microsoft sans Serif</FontFamily>
-                  <FontSize>13pt</FontSize>
-                  <FontWeight>Bold</FontWeight>
-                  <Color>White</Color>
-                </Style>
-              </TextRun>
-              <TextRun>
-                <Value xml:space="preserve"> </Value>
-                <Style>
-                  <FontFamily>GE Flow</FontFamily>
-                  <FontSize>13pt</FontSize>
-                  <FontWeight>Bold</FontWeight>
-                  <Color>White</Color>
-                </Style>
-              </TextRun>
-              <TextRun>
-                <Value>تفاصيل المستلم</Value>
-                <Style>
-                  <FontSize>13pt</FontSize>
-                  <FontWeight>Bold</FontWeight>
-                  <Color>White</Color>
-                </Style>
-              </TextRun>
-            </TextRuns>
-            <Style>
-              <TextAlign>Center</TextAlign>
-            </Style>
-          </Paragraph>
-        </Paragraphs>
-        <rd:DefaultName>Textbox3</rd:DefaultName>
-        <Top>2.6051in</Top>
-        <Left>3.6918in</Left>
-        <Height>0.49167in</Height>
-        <Width>3.39655in</Width>
-        <ZIndex>22</ZIndex>
-        <Style>
-          <Border>
-            <Style>None</Style>
-          </Border>
-          <BackgroundColor>#53555c</BackgroundColor>
-          <VerticalAlign>Middle</VerticalAlign>
-          <PaddingLeft>2pt</PaddingLeft>
-          <PaddingRight>2pt</PaddingRight>
-          <PaddingTop>2pt</PaddingTop>
           <PaddingBottom>2pt</PaddingBottom>
         </Style>
       </Textbox>
@@ -923,7 +976,7 @@
                 </Style>
               </TextRun>
               <TextRun>
-                <Value xml:space="preserve">                </Value>
+                <Value xml:space="preserve">                  </Value>
                 <Style>
                   <FontFamily>microsoft sans Serif</FontFamily>
                   <FontSize>13pt</FontSize>
@@ -946,11 +999,11 @@
           </Paragraph>
         </Paragraphs>
         <rd:DefaultName>Textbox3</rd:DefaultName>
-        <Top>2.61723in</Top>
-        <Left>0.2248in</Left>
-        <Height>0.49167in</Height>
-        <Width>3.41554in</Width>
-        <ZIndex>23</ZIndex>
+        <Top>2.3464in</Top>
+        <Left>0.21957in</Left>
+        <Height>0.41167in</Height>
+        <Width>3.42551in</Width>
+        <ZIndex>24</ZIndex>
         <Style>
           <Border>
             <Style>None</Style>
@@ -984,54 +1037,16 @@
           </Paragraph>
         </Paragraphs>
         <rd:DefaultName>Textbox3</rd:DefaultName>
-        <Top>3.65612in</Top>
-        <Left>0.2248in</Left>
-        <Height>0.49167in</Height>
+        <Top>3.16641in</Top>
+        <Left>0.21957in</Left>
+        <Height>0.41167in</Height>
         <Width>3.42943in</Width>
-        <ZIndex>24</ZIndex>
+        <ZIndex>25</ZIndex>
         <Style>
           <Border>
             <Style>None</Style>
           </Border>
           <BackgroundColor>#f1f1f1</BackgroundColor>
-          <VerticalAlign>Middle</VerticalAlign>
-          <PaddingLeft>2pt</PaddingLeft>
-          <PaddingRight>2pt</PaddingRight>
-          <PaddingTop>2pt</PaddingTop>
-          <PaddingBottom>2pt</PaddingBottom>
-        </Style>
-      </Textbox>
-      <Textbox Name="Textbox5">
-        <CanGrow>true</CanGrow>
-        <KeepTogether>true</KeepTogether>
-        <Paragraphs>
-          <Paragraph>
-            <TextRuns>
-              <TextRun>
-                <Value />
-                <Style>
-                  <FontFamily>GE Flow</FontFamily>
-                  <FontSize>11pt</FontSize>
-                  <Color>#282828</Color>
-                </Style>
-              </TextRun>
-            </TextRuns>
-            <Style>
-              <TextAlign>Right</TextAlign>
-            </Style>
-          </Paragraph>
-        </Paragraphs>
-        <rd:DefaultName>Textbox3</rd:DefaultName>
-        <Top>3.12279in</Top>
-        <Left>3.68612in</Left>
-        <Height>0.47667in</Height>
-        <Width>3.42023in</Width>
-        <ZIndex>25</ZIndex>
-        <Style>
-          <Border>
-            <Color>White</Color>
-            <Style>Solid</Style>
-          </Border>
           <VerticalAlign>Middle</VerticalAlign>
           <PaddingLeft>2pt</PaddingLeft>
           <PaddingRight>2pt</PaddingRight>
@@ -1077,10 +1092,10 @@
           </Paragraph>
         </Paragraphs>
         <rd:DefaultName>Textbox3</rd:DefaultName>
-        <Top>3.17834in</Top>
-        <Left>6.40029in</Left>
+        <Top>2.80334in</Top>
+        <Left>6.28176in</Left>
         <Height>0.36935in</Height>
-        <Width>0.68806in</Width>
+        <Width>0.69871in</Width>
         <ZIndex>26</ZIndex>
         <Style>
           <Border>
@@ -1127,7 +1142,7 @@
           </Paragraph>
         </Paragraphs>
         <rd:DefaultName>Textbox3</rd:DefaultName>
-        <Top>3.16511in</Top>
+        <Top>2.79011in</Top>
         <Left>3.72782in</Left>
         <Height>0.36935in</Height>
         <Width>1.2687in</Width>
@@ -1163,10 +1178,10 @@
           </Paragraph>
         </Paragraphs>
         <rd:DefaultName>Textbox82</rd:DefaultName>
-        <Top>3.17834in</Top>
+        <Top>2.80334in</Top>
         <Left>4.96443in</Left>
-        <Height>0.36935in</Height>
-        <Width>1.35774in</Width>
+        <Height>0.35612in</Height>
+        <Width>1.30345in</Width>
         <ZIndex>28</ZIndex>
         <Style>
           <Border>
@@ -1175,44 +1190,6 @@
           <PaddingLeft>2pt</PaddingLeft>
           <PaddingRight>2pt</PaddingRight>
           <PaddingTop>8pt</PaddingTop>
-          <PaddingBottom>2pt</PaddingBottom>
-        </Style>
-      </Textbox>
-      <Textbox Name="Textbox11">
-        <CanGrow>true</CanGrow>
-        <KeepTogether>true</KeepTogether>
-        <Paragraphs>
-          <Paragraph>
-            <TextRuns>
-              <TextRun>
-                <Value />
-                <Style>
-                  <FontFamily>GE Flow</FontFamily>
-                  <FontSize>11pt</FontSize>
-                  <Color>#282828</Color>
-                </Style>
-              </TextRun>
-            </TextRuns>
-            <Style>
-              <TextAlign>Right</TextAlign>
-            </Style>
-          </Paragraph>
-        </Paragraphs>
-        <rd:DefaultName>Textbox3</rd:DefaultName>
-        <Top>3.12279in</Top>
-        <Left>0.27292in</Left>
-        <Height>0.47667in</Height>
-        <Width>3.36742in</Width>
-        <ZIndex>29</ZIndex>
-        <Style>
-          <Border>
-            <Color>White</Color>
-            <Style>Solid</Style>
-          </Border>
-          <VerticalAlign>Middle</VerticalAlign>
-          <PaddingLeft>2pt</PaddingLeft>
-          <PaddingRight>2pt</PaddingRight>
-          <PaddingTop>2pt</PaddingTop>
           <PaddingBottom>2pt</PaddingBottom>
         </Style>
       </Textbox>
@@ -1254,11 +1231,11 @@
           </Paragraph>
         </Paragraphs>
         <rd:DefaultName>Textbox3</rd:DefaultName>
-        <Top>3.17834in</Top>
-        <Left>2.96712in</Left>
-        <Height>0.36935in</Height>
-        <Width>0.68711in</Width>
-        <ZIndex>30</ZIndex>
+        <Top>2.80334in</Top>
+        <Left>2.87855in</Left>
+        <Height>0.30751in</Height>
+        <Width>0.77568in</Width>
+        <ZIndex>29</ZIndex>
         <Style>
           <Border>
             <Color>White</Color>
@@ -1304,11 +1281,11 @@
           </Paragraph>
         </Paragraphs>
         <rd:DefaultName>Textbox3</rd:DefaultName>
-        <Top>3.16511in</Top>
+        <Top>2.79011in</Top>
         <Left>0.27292in</Left>
         <Height>0.36935in</Height>
-        <Width>1.31315in</Width>
-        <ZIndex>31</ZIndex>
+        <Width>1.18472in</Width>
+        <ZIndex>30</ZIndex>
         <Style>
           <Border>
             <Color>White</Color>
@@ -1340,11 +1317,11 @@
           </Paragraph>
         </Paragraphs>
         <rd:DefaultName>Textbox82</rd:DefaultName>
-        <Top>3.17834in</Top>
+        <Top>2.80334in</Top>
         <Left>1.48542in</Left>
         <Height>0.36935in</Height>
-        <Width>1.4817in</Width>
-        <ZIndex>32</ZIndex>
+        <Width>1.36535in</Width>
+        <ZIndex>31</ZIndex>
         <Style>
           <Border>
             <Style>None</Style>
@@ -1389,11 +1366,11 @@
           </Paragraph>
         </Paragraphs>
         <rd:DefaultName>Textbox3</rd:DefaultName>
-        <Top>3.72278in</Top>
+        <Top>3.21436in</Top>
         <Left>2.88992in</Left>
-        <Height>0.36935in</Height>
+        <Height>0.3214in</Height>
         <Width>0.73711in</Width>
-        <ZIndex>33</ZIndex>
+        <ZIndex>32</ZIndex>
         <Style>
           <Border>
             <Color>#f1f1f1</Color>
@@ -1440,11 +1417,11 @@
           </Paragraph>
         </Paragraphs>
         <rd:DefaultName>Textbox3</rd:DefaultName>
-        <Top>3.72278in</Top>
+        <Top>3.21436in</Top>
         <Left>0.27292in</Left>
-        <Height>0.36935in</Height>
+        <Height>0.3214in</Height>
         <Width>1.22412in</Width>
-        <ZIndex>34</ZIndex>
+        <ZIndex>33</ZIndex>
         <Style>
           <Border>
             <Color>#f1f1f1</Color>
@@ -1476,11 +1453,11 @@
           </Paragraph>
         </Paragraphs>
         <rd:DefaultName>Textbox82</rd:DefaultName>
-        <Top>3.72278in</Top>
+        <Top>3.21436in</Top>
         <Left>1.34325in</Left>
-        <Height>0.36935in</Height>
+        <Height>0.3214in</Height>
         <Width>1.49111in</Width>
-        <ZIndex>35</ZIndex>
+        <ZIndex>34</ZIndex>
         <Style>
           <Border>
             <Style>None</Style>
@@ -1512,11 +1489,11 @@
           </Paragraph>
         </Paragraphs>
         <rd:DefaultName>Textbox3</rd:DefaultName>
-        <Top>3.6429in</Top>
-        <Left>3.69647in</Left>
-        <Height>0.49167in</Height>
-        <Width>3.3668in</Width>
-        <ZIndex>36</ZIndex>
+        <Top>3.16641in</Top>
+        <Left>3.7065in</Left>
+        <Height>0.41167in</Height>
+        <Width>3.38185in</Width>
+        <ZIndex>35</ZIndex>
         <Style>
           <Border>
             <Style>None</Style>
@@ -1563,11 +1540,11 @@
           </Paragraph>
         </Paragraphs>
         <rd:DefaultName>Textbox3</rd:DefaultName>
-        <Top>3.72278in</Top>
+        <Top>3.21436in</Top>
         <Left>6.2357in</Left>
-        <Height>0.36935in</Height>
-        <Width>0.80377in</Width>
-        <ZIndex>37</ZIndex>
+        <Height>0.3214in</Height>
+        <Width>0.74477in</Width>
+        <ZIndex>36</ZIndex>
         <Style>
           <Border>
             <Color>#f1f1f1</Color>
@@ -1614,11 +1591,11 @@
           </Paragraph>
         </Paragraphs>
         <rd:DefaultName>Textbox3</rd:DefaultName>
-        <Top>3.72278in</Top>
+        <Top>3.21436in</Top>
         <Left>3.72782in</Left>
-        <Height>0.36935in</Height>
+        <Height>0.3214in</Height>
         <Width>1.1712in</Width>
-        <ZIndex>38</ZIndex>
+        <ZIndex>37</ZIndex>
         <Style>
           <Border>
             <Color>#f1f1f1</Color>
@@ -1650,11 +1627,11 @@
           </Paragraph>
         </Paragraphs>
         <rd:DefaultName>Textbox82</rd:DefaultName>
-        <Top>3.72278in</Top>
+        <Top>3.21436in</Top>
         <Left>4.89914in</Left>
-        <Height>0.36935in</Height>
+        <Height>0.3214in</Height>
         <Width>1.32552in</Width>
-        <ZIndex>39</ZIndex>
+        <ZIndex>38</ZIndex>
         <Style>
           <Border>
             <Style>None</Style>
@@ -1694,11 +1671,11 @@
           </Paragraph>
         </Paragraphs>
         <rd:DefaultName>Textbox3</rd:DefaultName>
-        <Top>4.21724in</Top>
+        <Top>3.59224in</Top>
         <Left>3.08485in</Left>
         <Height>0.32768in</Height>
         <Width>0.56938in</Width>
-        <ZIndex>40</ZIndex>
+        <ZIndex>39</ZIndex>
         <Style>
           <Border>
             <Color>White</Color>
@@ -1730,11 +1707,11 @@
           </Paragraph>
         </Paragraphs>
         <rd:DefaultName>Textbox82</rd:DefaultName>
-        <Top>4.17557in</Top>
+        <Top>3.59224in</Top>
         <Left>1.04725in</Left>
-        <Height>0.36935in</Height>
+        <Height>0.32768in</Height>
         <Width>1.66921in</Width>
-        <ZIndex>41</ZIndex>
+        <ZIndex>40</ZIndex>
         <Style>
           <Border>
             <Style>None</Style>
@@ -1769,11 +1746,11 @@
           </Paragraph>
         </Paragraphs>
         <rd:DefaultName>Textbox3</rd:DefaultName>
-        <Top>4.16168in</Top>
+        <Top>3.59224in</Top>
         <Left>0.27292in</Left>
-        <Height>0.36935in</Height>
+        <Height>0.32768in</Height>
         <Width>0.60305in</Width>
-        <ZIndex>42</ZIndex>
+        <ZIndex>41</ZIndex>
         <Style>
           <Border>
             <Color>White</Color>
@@ -1815,11 +1792,11 @@
           </Paragraph>
         </Paragraphs>
         <rd:DefaultName>Textbox3</rd:DefaultName>
-        <Top>4.21724in</Top>
-        <Left>6.44805in</Left>
-        <Height>0.36935in</Height>
+        <Top>3.59224in</Top>
+        <Left>6.44806in</Left>
+        <Height>0.32768in</Height>
         <Width>0.56938in</Width>
-        <ZIndex>43</ZIndex>
+        <ZIndex>42</ZIndex>
         <Style>
           <Border>
             <Color>White</Color>
@@ -1851,11 +1828,11 @@
           </Paragraph>
         </Paragraphs>
         <rd:DefaultName>Textbox82</rd:DefaultName>
-        <Top>4.21724in</Top>
+        <Top>3.59224in</Top>
         <Left>4.32863in</Left>
-        <Height>0.36935in</Height>
+        <Height>0.32768in</Height>
         <Width>2.07775in</Width>
-        <ZIndex>44</ZIndex>
+        <ZIndex>43</ZIndex>
         <Style>
           <Border>
             <Style>None</Style>
@@ -1890,11 +1867,11 @@
           </Paragraph>
         </Paragraphs>
         <rd:DefaultName>Textbox3</rd:DefaultName>
-        <Top>4.21724in</Top>
+        <Top>3.59224in</Top>
         <Left>3.78559in</Left>
-        <Height>0.36935in</Height>
-        <Width>0.74655in</Width>
-        <ZIndex>45</ZIndex>
+        <Height>0.32768in</Height>
+        <Width>0.59304in</Width>
+        <ZIndex>44</ZIndex>
         <Style>
           <Border>
             <Color>White</Color>
@@ -1931,11 +1908,11 @@
           </Paragraph>
         </Paragraphs>
         <rd:DefaultName>Textbox3</rd:DefaultName>
-        <Top>6.71299in</Top>
-        <Left>0.21949in</Left>
-        <Height>0.49167in</Height>
+        <Top>5.72346in</Top>
+        <Left>0.21957in</Left>
+        <Height>0.41167in</Height>
         <Width>6.88686in</Width>
-        <ZIndex>46</ZIndex>
+        <ZIndex>45</ZIndex>
         <Style>
           <Border>
             <Style>None</Style>
@@ -1952,65 +1929,22 @@
         <TablixBody>
           <TablixColumns>
             <TablixColumn>
-              <Width>0.03125in</Width>
+              <Width>0.86717in</Width>
             </TablixColumn>
             <TablixColumn>
-              <Width>0.85659in</Width>
+              <Width>2.95146in</Width>
             </TablixColumn>
             <TablixColumn>
-              <Width>2.94088in</Width>
+              <Width>1.4912in</Width>
             </TablixColumn>
             <TablixColumn>
-              <Width>1.48062in</Width>
-            </TablixColumn>
-            <TablixColumn>
-              <Width>1.57752in</Width>
+              <Width>1.5881in</Width>
             </TablixColumn>
           </TablixColumns>
           <TablixRows>
             <TablixRow>
-              <Height>0.4618in</Height>
+              <Height>0.41167in</Height>
               <TablixCells>
-                <TablixCell>
-                  <CellContents>
-                    <Textbox Name="Textbox28">
-                      <CanGrow>true</CanGrow>
-                      <KeepTogether>true</KeepTogether>
-                      <Paragraphs>
-                        <Paragraph>
-                          <TextRuns>
-                            <TextRun>
-                              <Value>#</Value>
-                              <Style>
-                                <FontStyle>Normal</FontStyle>
-                                <FontFamily>Open Sans</FontFamily>
-                                <FontSize>13pt</FontSize>
-                                <FontWeight>Bold</FontWeight>
-                                <TextDecoration>None</TextDecoration>
-                                <Color>#404040</Color>
-                              </Style>
-                            </TextRun>
-                          </TextRuns>
-                          <Style>
-                            <TextAlign>Center</TextAlign>
-                          </Style>
-                        </Paragraph>
-                      </Paragraphs>
-                      <rd:DefaultName>Textbox28</rd:DefaultName>
-                      <Style>
-                        <Border>
-                          <Color>LightGrey</Color>
-                          <Style>Solid</Style>
-                        </Border>
-                        <BackgroundColor>#f1f1f1</BackgroundColor>
-                        <PaddingLeft>2pt</PaddingLeft>
-                        <PaddingRight>2pt</PaddingRight>
-                        <PaddingTop>2pt</PaddingTop>
-                        <PaddingBottom>2pt</PaddingBottom>
-                      </Style>
-                    </Textbox>
-                  </CellContents>
-                </TablixCell>
                 <TablixCell>
                   <CellContents>
                     <Textbox Name="Textbox151">
@@ -2120,7 +2054,7 @@
                         <Paragraph>
                           <TextRuns>
                             <TextRun>
-                              <Value>QTY                </Value>
+                              <Value>QTY          </Value>
                               <Style>
                                 <FontStyle>Normal</FontStyle>
                                 <FontFamily>Open Sans</FontFamily>
@@ -2217,40 +2151,6 @@
             <TablixRow>
               <Height>0.4618in</Height>
               <TablixCells>
-                <TablixCell>
-                  <CellContents>
-                    <Textbox Name="Textbox31">
-                      <CanGrow>true</CanGrow>
-                      <KeepTogether>true</KeepTogether>
-                      <Paragraphs>
-                        <Paragraph>
-                          <TextRuns>
-                            <TextRun>
-                              <Value />
-                              <Style>
-                                <FontSize>11pt</FontSize>
-                              </Style>
-                            </TextRun>
-                          </TextRuns>
-                          <Style>
-                            <TextAlign>Center</TextAlign>
-                          </Style>
-                        </Paragraph>
-                      </Paragraphs>
-                      <rd:DefaultName>Textbox31</rd:DefaultName>
-                      <Style>
-                        <Border>
-                          <Color>LightGrey</Color>
-                          <Style>Solid</Style>
-                        </Border>
-                        <PaddingLeft>2pt</PaddingLeft>
-                        <PaddingRight>2pt</PaddingRight>
-                        <PaddingTop>2pt</PaddingTop>
-                        <PaddingBottom>2pt</PaddingBottom>
-                      </Style>
-                    </Textbox>
-                  </CellContents>
-                </TablixCell>
                 <TablixCell>
                   <CellContents>
                     <Textbox Name="Textbox152">
@@ -2394,7 +2294,6 @@
             <TablixMember />
             <TablixMember />
             <TablixMember />
-            <TablixMember />
           </TablixMembers>
         </TablixColumnHierarchy>
         <TablixRowHierarchy>
@@ -2410,11 +2309,11 @@
         <RepeatColumnHeaders>true</RepeatColumnHeaders>
         <RepeatRowHeaders>true</RepeatRowHeaders>
         <DataSetName>MultipleDropsGoodsDetailsDataSet</DataSetName>
-        <Top>7.21061in</Top>
-        <Left>0.21949in</Left>
-        <Height>0.9236in</Height>
-        <Width>6.88686in</Width>
-        <ZIndex>47</ZIndex>
+        <Top>6.14902in</Top>
+        <Left>0.21957in</Left>
+        <Height>0.87347in</Height>
+        <Width>6.89793in</Width>
+        <ZIndex>46</ZIndex>
         <Style>
           <Border>
             <Style>None</Style>
@@ -2443,11 +2342,11 @@
           </Paragraph>
         </Paragraphs>
         <rd:DefaultName>Textbox3</rd:DefaultName>
-        <Top>5.49354in</Top>
-        <Left>6.33328in</Left>
+        <Top>4.70424in</Top>
+        <Left>6.33859in</Left>
         <Height>0.36935in</Height>
         <Width>0.74188in</Width>
-        <ZIndex>48</ZIndex>
+        <ZIndex>47</ZIndex>
         <Style>
           <Border>
             <Color>White</Color>
@@ -2479,11 +2378,11 @@
           </Paragraph>
         </Paragraphs>
         <rd:DefaultName>Textbox82</rd:DefaultName>
-        <Top>5.47698in</Top>
-        <Left>4.80506in</Left>
+        <Top>4.70424in</Top>
+        <Left>4.81037in</Left>
         <Height>0.36935in</Height>
         <Width>1.52822in</Width>
-        <ZIndex>49</ZIndex>
+        <ZIndex>48</ZIndex>
         <Style>
           <Border>
             <Style>None</Style>
@@ -2501,7 +2400,7 @@
           <Paragraph>
             <TextRuns>
               <TextRun>
-                <Value>Driver Name</Value>
+                <Value>Truck Type</Value>
                 <Style>
                   <FontStyle>Normal</FontStyle>
                   <FontFamily>Open Sans</FontFamily>
@@ -2528,11 +2427,11 @@
           </Paragraph>
         </Paragraphs>
         <rd:DefaultName>Textbox3</rd:DefaultName>
-        <Top>5.47698in</Top>
-        <Left>3.72782in</Left>
+        <Top>4.70424in</Top>
+        <Left>3.73313in</Left>
         <Height>0.36935in</Height>
         <Width>1.04946in</Width>
-        <ZIndex>50</ZIndex>
+        <ZIndex>49</ZIndex>
         <Style>
           <Border>
             <Color>White</Color>
@@ -2575,11 +2474,11 @@
           </Paragraph>
         </Paragraphs>
         <rd:DefaultName>Textbox3</rd:DefaultName>
-        <Top>5.47698in</Top>
-        <Left>2.89922in</Left>
+        <Top>4.70424in</Top>
+        <Left>2.90453in</Left>
         <Height>0.36935in</Height>
         <Width>0.71966in</Width>
-        <ZIndex>51</ZIndex>
+        <ZIndex>50</ZIndex>
         <Style>
           <Border>
             <Color>White</Color>
@@ -2611,11 +2510,11 @@
           </Paragraph>
         </Paragraphs>
         <rd:DefaultName>Textbox82</rd:DefaultName>
-        <Top>5.49354in</Top>
-        <Left>1.26027in</Left>
+        <Top>4.70424in</Top>
+        <Left>1.26558in</Left>
         <Height>0.36935in</Height>
         <Width>1.63895in</Width>
-        <ZIndex>52</ZIndex>
+        <ZIndex>51</ZIndex>
         <Style>
           <Border>
             <Style>None</Style>
@@ -2647,11 +2546,11 @@
           </Paragraph>
         </Paragraphs>
         <rd:DefaultName>Textbox3</rd:DefaultName>
-        <Top>5.98532in</Top>
-        <Left>3.7065in</Left>
-        <Height>0.49167in</Height>
+        <Top>5.14303in</Top>
+        <Left>3.72341in</Left>
+        <Height>0.41167in</Height>
         <Width>3.39985in</Width>
-        <ZIndex>53</ZIndex>
+        <ZIndex>52</ZIndex>
         <Style>
           <Border>
             <Style>None</Style>
@@ -2687,11 +2586,11 @@
           </Paragraph>
         </Paragraphs>
         <rd:DefaultName>Textbox3</rd:DefaultName>
-        <Top>6.05198in</Top>
-        <Left>6.08004in</Left>
+        <Top>5.16419in</Top>
+        <Left>6.09695in</Left>
         <Height>0.36935in</Height>
         <Width>0.96342in</Width>
-        <ZIndex>54</ZIndex>
+        <ZIndex>53</ZIndex>
         <Style>
           <Border>
             <Color>#f8f4f4</Color>
@@ -2728,11 +2627,11 @@
           </Paragraph>
         </Paragraphs>
         <rd:DefaultName>Textbox3</rd:DefaultName>
-        <Top>6.05198in</Top>
-        <Left>3.72782in</Left>
+        <Top>5.16419in</Top>
+        <Left>3.74473in</Left>
         <Height>0.36935in</Height>
-        <Width>1.47824in</Width>
-        <ZIndex>55</ZIndex>
+        <Width>1.10902in</Width>
+        <ZIndex>54</ZIndex>
         <Style>
           <Border>
             <Color>#f8f4f4</Color>
@@ -2764,11 +2663,11 @@
           </Paragraph>
         </Paragraphs>
         <rd:DefaultName>Textbox82</rd:DefaultName>
-        <Top>6.05198in</Top>
-        <Left>4.80506in</Left>
+        <Top>5.16419in</Top>
+        <Left>4.84214in</Left>
         <Height>0.36935in</Height>
         <Width>1.19925in</Width>
-        <ZIndex>56</ZIndex>
+        <ZIndex>55</ZIndex>
         <Style>
           <Border>
             <Style>None</Style>
@@ -2813,11 +2712,11 @@
           </Paragraph>
         </Paragraphs>
         <rd:DefaultName>Textbox3</rd:DefaultName>
-        <Top>5.49087in</Top>
-        <Left>0.26761in</Left>
+        <Top>4.70424in</Top>
+        <Left>0.27292in</Left>
         <Height>0.36935in</Height>
         <Width>0.99266in</Width>
-        <ZIndex>57</ZIndex>
+        <ZIndex>56</ZIndex>
         <Style>
           <Border>
             <Color>White</Color>
@@ -2850,11 +2749,11 @@
           </Paragraph>
         </Paragraphs>
         <rd:DefaultName>Textbox3</rd:DefaultName>
-        <Top>8.46271in</Top>
+        <Top>7.13056in</Top>
         <Left>6.2401in</Left>
         <Height>0.36935in</Height>
         <Width>0.86625in</Width>
-        <ZIndex>58</ZIndex>
+        <ZIndex>57</ZIndex>
         <Style>
           <Border>
             <Color>White</Color>
@@ -2886,11 +2785,11 @@
           </Paragraph>
         </Paragraphs>
         <rd:DefaultName>Textbox82</rd:DefaultName>
-        <Top>8.46271in</Top>
-        <Left>4.96443in</Left>
+        <Top>7.13056in</Top>
+        <Left>4.76158in</Left>
         <Height>0.36935in</Height>
-        <Width>1.24789in</Width>
-        <ZIndex>59</ZIndex>
+        <Width>1.45074in</Width>
+        <ZIndex>58</ZIndex>
         <Style>
           <Border>
             <Style>None</Style>
@@ -2923,11 +2822,11 @@
           </Paragraph>
         </Paragraphs>
         <rd:DefaultName>Textbox3</rd:DefaultName>
-        <Top>8.44882in</Top>
-        <Left>4.00002in</Left>
+        <Top>7.11733in</Top>
+        <Left>3.72341in</Left>
         <Height>0.36935in</Height>
         <Width>0.9965in</Width>
-        <ZIndex>60</ZIndex>
+        <ZIndex>59</ZIndex>
         <Style>
           <Border>
             <Color>White</Color>
@@ -2960,11 +2859,11 @@
           </Paragraph>
         </Paragraphs>
         <rd:DefaultName>Textbox3</rd:DefaultName>
-        <Top>8.46271in</Top>
-        <Left>3.16914in</Left>
+        <Top>7.13056in</Top>
+        <Left>2.75015in</Left>
         <Height>0.36935in</Height>
         <Width>0.86873in</Width>
-        <ZIndex>61</ZIndex>
+        <ZIndex>60</ZIndex>
         <Style>
           <Border>
             <Style>None</Style>
@@ -2995,11 +2894,11 @@
           </Paragraph>
         </Paragraphs>
         <rd:DefaultName>Textbox82</rd:DefaultName>
-        <Top>8.44882in</Top>
+        <Top>7.13056in</Top>
         <Left>1.36133in</Left>
         <Height>0.36935in</Height>
-        <Width>1.76614in</Width>
-        <ZIndex>62</ZIndex>
+        <Width>1.36104in</Width>
+        <ZIndex>61</ZIndex>
         <Style>
           <Border>
             <Style>None</Style>
@@ -3041,11 +2940,11 @@
           </Paragraph>
         </Paragraphs>
         <rd:DefaultName>Textbox3</rd:DefaultName>
-        <Top>8.43493in</Top>
-        <Left>0.23496in</Left>
+        <Top>7.13056in</Top>
+        <Left>0.21957in</Left>
         <Height>0.36935in</Height>
         <Width>1.09859in</Width>
-        <ZIndex>63</ZIndex>
+        <ZIndex>62</ZIndex>
         <Style>
           <Border>
             <Style>None</Style>
@@ -3077,11 +2976,11 @@
           </Paragraph>
         </Paragraphs>
         <rd:DefaultName>Textbox3</rd:DefaultName>
-        <Top>9.5016in</Top>
-        <Left>2.97816in</Left>
+        <Top>7.98103in</Top>
+        <Left>2.87027in</Left>
         <Height>0.36935in</Height>
         <Width>0.74861in</Width>
-        <ZIndex>64</ZIndex>
+        <ZIndex>63</ZIndex>
         <Style>
           <Border>
             <Style>None</Style>
@@ -3112,11 +3011,11 @@
           </Paragraph>
         </Paragraphs>
         <rd:DefaultName>Textbox82</rd:DefaultName>
-        <Top>9.0016in</Top>
+        <Top>7.55612in</Top>
         <Left>5.05123in</Left>
         <Height>0.36935in</Height>
         <Width>1.26378in</Width>
-        <ZIndex>65</ZIndex>
+        <ZIndex>64</ZIndex>
         <Style>
           <Border>
             <Style>None</Style>
@@ -3149,11 +3048,11 @@
           </Paragraph>
         </Paragraphs>
         <rd:DefaultName>Textbox3</rd:DefaultName>
-        <Top>9.5016in</Top>
-        <Left>0.23496in</Left>
+        <Top>7.97113in</Top>
+        <Left>0.21957in</Left>
         <Height>0.36935in</Height>
-        <Width>1.68564in</Width>
-        <ZIndex>66</ZIndex>
+        <Width>1.48523in</Width>
+        <ZIndex>65</ZIndex>
         <Style>
           <Border>
             <Style>None</Style>
@@ -3185,11 +3084,11 @@
           </Paragraph>
         </Paragraphs>
         <rd:DefaultName>Textbox3</rd:DefaultName>
-        <Top>9.00854in</Top>
-        <Left>2.73035in</Left>
+        <Top>7.55612in</Top>
+        <Left>2.63377in</Left>
         <Height>0.36935in</Height>
         <Width>0.98511in</Width>
-        <ZIndex>67</ZIndex>
+        <ZIndex>66</ZIndex>
         <Style>
           <Border>
             <Style>None</Style>
@@ -3220,11 +3119,11 @@
           </Paragraph>
         </Paragraphs>
         <rd:DefaultName>Textbox82</rd:DefaultName>
-        <Top>9.00854in</Top>
-        <Left>1.73501in</Left>
+        <Top>7.55612in</Top>
+        <Left>1.62308in</Left>
         <Height>0.36935in</Height>
         <Width>0.98145in</Width>
-        <ZIndex>68</ZIndex>
+        <ZIndex>67</ZIndex>
         <Style>
           <Border>
             <Style>None</Style>
@@ -3257,11 +3156,11 @@
           </Paragraph>
         </Paragraphs>
         <rd:DefaultName>Textbox3</rd:DefaultName>
-        <Top>9.0016in</Top>
-        <Left>0.25073in</Left>
+        <Top>7.55612in</Top>
+        <Left>0.21957in</Left>
         <Height>0.36935in</Height>
-        <Width>1.47849in</Width>
-        <ZIndex>69</ZIndex>
+        <Width>1.38962in</Width>
+        <ZIndex>68</ZIndex>
         <Style>
           <Border>
             <Style>None</Style>
@@ -3301,11 +3200,11 @@
           </Paragraph>
         </Paragraphs>
         <rd:DefaultName>Textbox3</rd:DefaultName>
-        <Top>9.0016in</Top>
+        <Top>7.55612in</Top>
         <Left>6.31501in</Left>
         <Height>0.36935in</Height>
         <Width>0.77334in</Width>
-        <ZIndex>70</ZIndex>
+        <ZIndex>69</ZIndex>
         <Style>
           <Border>
             <Style>None</Style>
@@ -3336,11 +3235,11 @@
           </Paragraph>
         </Paragraphs>
         <rd:DefaultName>Textbox82</rd:DefaultName>
-        <Top>9.49466in</Top>
-        <Left>1.95942in</Left>
+        <Top>7.97113in</Top>
+        <Left>1.74613in</Left>
         <Height>0.36935in</Height>
-        <Width>0.99096in</Width>
-        <ZIndex>71</ZIndex>
+        <Width>1.06858in</Width>
+        <ZIndex>70</ZIndex>
         <Style>
           <Border>
             <Style>None</Style>
@@ -3373,11 +3272,11 @@
           </Paragraph>
         </Paragraphs>
         <rd:DefaultName>Textbox3</rd:DefaultName>
-        <Top>9.0016in</Top>
-        <Left>3.7065in</Left>
+        <Top>7.55612in</Top>
+        <Left>3.72341in</Left>
         <Height>0.36935in</Height>
         <Width>1.31695in</Width>
-        <ZIndex>72</ZIndex>
+        <ZIndex>71</ZIndex>
         <Style>
           <Border>
             <Style>None</Style>
@@ -3410,11 +3309,11 @@
           </Paragraph>
         </Paragraphs>
         <rd:DefaultName>Textbox3</rd:DefaultName>
-        <Top>15.17948in</Top>
+        <Top>13.05448in</Top>
         <Left>2.87855in</Left>
         <Height>0.36935in</Height>
         <Width>1.15932in</Width>
-        <ZIndex>73</ZIndex>
+        <ZIndex>72</ZIndex>
         <Style>
           <Border>
             <Style>None</Style>
@@ -3445,11 +3344,11 @@
           </Paragraph>
         </Paragraphs>
         <rd:DefaultName>Textbox82</rd:DefaultName>
-        <Top>15.17948in</Top>
+        <Top>13.05448in</Top>
         <Left>1.40603in</Left>
         <Height>0.36935in</Height>
         <Width>1.40307in</Width>
-        <ZIndex>74</ZIndex>
+        <ZIndex>73</ZIndex>
         <Style>
           <Border>
             <Style>None</Style>
@@ -3493,11 +3392,11 @@
           </Paragraph>
         </Paragraphs>
         <rd:DefaultName>Textbox3</rd:DefaultName>
-        <Top>15.17948in</Top>
-        <Left>0.21in</Left>
+        <Top>13.05448in</Top>
+        <Left>0.21957in</Left>
         <Height>0.36935in</Height>
         <Width>1.12659in</Width>
-        <ZIndex>75</ZIndex>
+        <ZIndex>74</ZIndex>
         <Style>
           <Border>
             <Style>None</Style>
@@ -3530,11 +3429,11 @@
           </Paragraph>
         </Paragraphs>
         <rd:DefaultName>Textbox3</rd:DefaultName>
-        <Top>11.65289in</Top>
+        <Top>10.27789in</Top>
         <Left>3.7065in</Left>
         <Height>0.36935in</Height>
         <Width>1.15932in</Width>
-        <ZIndex>76</ZIndex>
+        <ZIndex>75</ZIndex>
         <Style>
           <Border>
             <Style>None</Style>
@@ -3565,11 +3464,11 @@
           </Paragraph>
         </Paragraphs>
         <rd:DefaultName>Textbox82</rd:DefaultName>
-        <Top>11.65289in</Top>
+        <Top>10.27789in</Top>
         <Left>1.78477in</Left>
         <Height>0.36935in</Height>
         <Width>1.85229in</Width>
-        <ZIndex>77</ZIndex>
+        <ZIndex>76</ZIndex>
         <Style>
           <Border>
             <Style>None</Style>
@@ -3613,11 +3512,11 @@
           </Paragraph>
         </Paragraphs>
         <rd:DefaultName>Textbox3</rd:DefaultName>
-        <Top>11.65289in</Top>
-        <Left>0.24399in</Left>
+        <Top>10.27789in</Top>
+        <Left>0.21957in</Left>
         <Height>0.36935in</Height>
         <Width>1.48523in</Width>
-        <ZIndex>78</ZIndex>
+        <ZIndex>77</ZIndex>
         <Style>
           <Border>
             <Style>None</Style>
@@ -3651,11 +3550,11 @@
           </Paragraph>
         </Paragraphs>
         <rd:DefaultName>Textbox3</rd:DefaultName>
-        <Top>6.78571in</Top>
-        <Left>5.63115in</Left>
-        <Height>0.36935in</Height>
+        <Top>5.75179in</Top>
+        <Left>5.57215in</Left>
+        <Height>0.34167in</Height>
         <Width>1.40832in</Width>
-        <ZIndex>79</ZIndex>
+        <ZIndex>78</ZIndex>
         <Style>
           <Border>
             <Color>White</Color>
@@ -3699,11 +3598,11 @@
           </Paragraph>
         </Paragraphs>
         <rd:DefaultName>Textbox14</rd:DefaultName>
-        <Top>6.76339in</Top>
-        <Left>0.27292in</Left>
-        <Height>0.39167in</Height>
+        <Top>5.76179in</Top>
+        <Left>0.33713in</Left>
+        <Height>0.32778in</Height>
         <Width>2.03206in</Width>
-        <ZIndex>80</ZIndex>
+        <ZIndex>79</ZIndex>
         <Style>
           <Border>
             <Style>None</Style>
@@ -3738,11 +3637,11 @@
           </Paragraph>
         </Paragraphs>
         <rd:DefaultName>Textbox3</rd:DefaultName>
-        <Top>10.11752in</Top>
-        <Left>0.23526in</Left>
-        <Height>0.49167in</Height>
+        <Top>8.71851in</Top>
+        <Left>0.21957in</Left>
+        <Height>0.41167in</Height>
         <Width>6.87109in</Width>
-        <ZIndex>81</ZIndex>
+        <ZIndex>80</ZIndex>
         <Style>
           <Border>
             <Style>None</Style>
@@ -3777,11 +3676,11 @@
           </Paragraph>
         </Paragraphs>
         <rd:DefaultName>Textbox22</rd:DefaultName>
-        <Top>10.15729in</Top>
+        <Top>8.77851in</Top>
         <Left>0.33713in</Left>
-        <Height>0.425in</Height>
-        <Width>2.20627in</Width>
-        <ZIndex>82</ZIndex>
+        <Height>0.36935in</Height>
+        <Width>1.82791in</Width>
+        <ZIndex>81</ZIndex>
         <Style>
           <Border>
             <Style>None</Style>
@@ -3814,52 +3713,15 @@
           </Paragraph>
         </Paragraphs>
         <rd:DefaultName>Textbox3</rd:DefaultName>
-        <Top>10.23984in</Top>
+        <Top>8.73851in</Top>
         <Left>5.66684in</Left>
         <Height>0.36935in</Height>
-        <Width>1.40832in</Width>
-        <ZIndex>83</ZIndex>
+        <Width>1.31363in</Width>
+        <ZIndex>82</ZIndex>
         <Style>
           <Border>
             <Color>White</Color>
             <Style>None</Style>
-          </Border>
-          <VerticalAlign>Middle</VerticalAlign>
-          <PaddingLeft>2pt</PaddingLeft>
-          <PaddingRight>2pt</PaddingRight>
-          <PaddingTop>2pt</PaddingTop>
-          <PaddingBottom>2pt</PaddingBottom>
-        </Style>
-      </Textbox>
-      <Textbox Name="Textbox13">
-        <CanGrow>true</CanGrow>
-        <KeepTogether>true</KeepTogether>
-        <Paragraphs>
-          <Paragraph>
-            <TextRuns>
-              <TextRun>
-                <Value />
-                <Style>
-                  <FontFamily>GE Flow</FontFamily>
-                  <FontSize>11pt</FontSize>
-                  <Color>#282828</Color>
-                </Style>
-              </TextRun>
-            </TextRuns>
-            <Style>
-              <TextAlign>Right</TextAlign>
-            </Style>
-          </Paragraph>
-        </Paragraphs>
-        <rd:DefaultName>Textbox3</rd:DefaultName>
-        <Top>1.7665in</Top>
-        <Left>0.24399in</Left>
-        <Height>0.47667in</Height>
-        <Width>3.39307in</Width>
-        <ZIndex>84</ZIndex>
-        <Style>
-          <Border>
-            <Style>Solid</Style>
           </Border>
           <VerticalAlign>Middle</VerticalAlign>
           <PaddingLeft>2pt</PaddingLeft>
@@ -3884,16 +3746,16 @@
               </TextRun>
             </TextRuns>
             <Style>
-              <TextAlign>Right</TextAlign>
+              <TextAlign>Center</TextAlign>
             </Style>
           </Paragraph>
         </Paragraphs>
         <rd:DefaultName>Textbox3</rd:DefaultName>
-        <Top>1.89048in</Top>
-        <Left>6.44805in</Left>
-        <Height>0.35269in</Height>
+        <Top>1.66518in</Top>
+        <Left>6.44406in</Left>
+        <Height>0.34167in</Height>
         <Width>0.59541in</Width>
-        <ZIndex>85</ZIndex>
+        <ZIndex>83</ZIndex>
         <Style>
           <Border>
             <Color>White</Color>
@@ -3926,11 +3788,11 @@
           </Paragraph>
         </Paragraphs>
         <rd:DefaultName>Textbox3</rd:DefaultName>
-        <Top>1.85159in</Top>
+        <Top>1.66518in</Top>
         <Left>3.78559in</Left>
-        <Height>0.35269in</Height>
+        <Height>0.34167in</Height>
         <Width>1.10626in</Width>
-        <ZIndex>86</ZIndex>
+        <ZIndex>84</ZIndex>
         <Style>
           <Border>
             <Color>White</Color>
@@ -3963,11 +3825,11 @@
           </Paragraph>
         </Paragraphs>
         <rd:DefaultName>Textbox3</rd:DefaultName>
-        <Top>1.85159in</Top>
+        <Top>1.66518in</Top>
         <Left>2.83984in</Left>
-        <Height>0.36935in</Height>
+        <Height>0.34167in</Height>
         <Width>0.66994in</Width>
-        <ZIndex>87</ZIndex>
+        <ZIndex>85</ZIndex>
         <Style>
           <Border>
             <Color>White</Color>
@@ -4011,11 +3873,11 @@
           </Paragraph>
         </Paragraphs>
         <rd:DefaultName>Textbox3</rd:DefaultName>
-        <Top>1.80882in</Top>
+        <Top>1.66518in</Top>
         <Left>0.27664in</Left>
-        <Height>0.36935in</Height>
+        <Height>0.34167in</Height>
         <Width>1.2204in</Width>
-        <ZIndex>88</ZIndex>
+        <ZIndex>86</ZIndex>
         <Style>
           <Border>
             <Color>White</Color>
@@ -4047,11 +3909,11 @@
           </Paragraph>
         </Paragraphs>
         <rd:DefaultName>Textbox82</rd:DefaultName>
-        <Top>1.80882in</Top>
+        <Top>1.66518in</Top>
         <Left>1.20695in</Left>
-        <Height>0.36935in</Height>
+        <Height>0.34167in</Height>
         <Width>1.62741in</Width>
-        <ZIndex>89</ZIndex>
+        <ZIndex>87</ZIndex>
         <Style>
           <Border>
             <Style>None</Style>
@@ -4059,43 +3921,6 @@
           <PaddingLeft>2pt</PaddingLeft>
           <PaddingRight>2pt</PaddingRight>
           <PaddingTop>8pt</PaddingTop>
-          <PaddingBottom>2pt</PaddingBottom>
-        </Style>
-      </Textbox>
-      <Textbox Name="Textbox108">
-        <CanGrow>true</CanGrow>
-        <KeepTogether>true</KeepTogether>
-        <Paragraphs>
-          <Paragraph>
-            <TextRuns>
-              <TextRun>
-                <Value />
-                <Style>
-                  <FontFamily>GE Flow</FontFamily>
-                  <FontSize>11pt</FontSize>
-                  <Color>#282828</Color>
-                </Style>
-              </TextRun>
-            </TextRuns>
-            <Style>
-              <TextAlign>Right</TextAlign>
-            </Style>
-          </Paragraph>
-        </Paragraphs>
-        <rd:DefaultName>Textbox3</rd:DefaultName>
-        <Top>1.7665in</Top>
-        <Left>3.66484in</Left>
-        <Height>0.49167in</Height>
-        <Width>3.42059in</Width>
-        <ZIndex>90</ZIndex>
-        <Style>
-          <Border>
-            <Style>Solid</Style>
-          </Border>
-          <VerticalAlign>Middle</VerticalAlign>
-          <PaddingLeft>2pt</PaddingLeft>
-          <PaddingRight>2pt</PaddingRight>
-          <PaddingTop>2pt</PaddingTop>
           <PaddingBottom>2pt</PaddingBottom>
         </Style>
       </Textbox>
@@ -4118,11 +3943,11 @@
           </Paragraph>
         </Paragraphs>
         <rd:DefaultName>Textbox88</rd:DefaultName>
-        <Top>1.82548in</Top>
+        <Top>1.66518in</Top>
         <Left>4.77728in</Left>
-        <Height>0.37404in</Height>
+        <Height>0.34167in</Height>
         <Width>1.70319in</Width>
-        <ZIndex>91</ZIndex>
+        <ZIndex>88</ZIndex>
         <Style>
           <Border>
             <Style>None</Style>
@@ -4152,11 +3977,11 @@
           </Paragraph>
         </Paragraphs>
         <rd:DefaultName>Textbox82</rd:DefaultName>
-        <Top>9.48772in</Top>
+        <Top>7.97113in</Top>
         <Left>5.10013in</Left>
         <Height>0.36935in</Height>
         <Width>1.20537in</Width>
-        <ZIndex>92</ZIndex>
+        <ZIndex>89</ZIndex>
         <Style>
           <Border>
             <Style>None</Style>
@@ -4195,11 +4020,11 @@
           </Paragraph>
         </Paragraphs>
         <rd:DefaultName>Textbox3</rd:DefaultName>
-        <Top>9.5016in</Top>
+        <Top>7.97113in</Top>
         <Left>6.35774in</Left>
         <Height>0.36935in</Height>
         <Width>0.74861in</Width>
-        <ZIndex>93</ZIndex>
+        <ZIndex>90</ZIndex>
         <Style>
           <Border>
             <Style>None</Style>
@@ -4233,11 +4058,11 @@
           </Paragraph>
         </Paragraphs>
         <rd:DefaultName>Textbox3</rd:DefaultName>
-        <Top>9.49466in</Top>
-        <Left>3.78232in</Left>
+        <Top>7.97113in</Top>
+        <Left>3.72341in</Left>
         <Height>0.36935in</Height>
         <Width>1.29003in</Width>
-        <ZIndex>94</ZIndex>
+        <ZIndex>91</ZIndex>
         <Style>
           <Border>
             <Style>None</Style>
@@ -4270,11 +4095,11 @@
           </Paragraph>
         </Paragraphs>
         <rd:DefaultName>Textbox3</rd:DefaultName>
-        <Top>5.98532in</Top>
-        <Left>0.22296in</Left>
-        <Height>0.49167in</Height>
+        <Top>5.14303in</Top>
+        <Left>0.21957in</Left>
+        <Height>0.41167in</Height>
         <Width>3.43127in</Width>
-        <ZIndex>95</ZIndex>
+        <ZIndex>92</ZIndex>
         <Style>
           <Border>
             <Style>None</Style>
@@ -4310,11 +4135,11 @@
           </Paragraph>
         </Paragraphs>
         <rd:DefaultName>Textbox3</rd:DefaultName>
-        <Top>6.05198in</Top>
-        <Left>2.44047in</Left>
+        <Top>5.16419in</Top>
+        <Left>2.35071in</Left>
         <Height>0.36935in</Height>
-        <Width>1.18656in</Width>
-        <ZIndex>96</ZIndex>
+        <Width>1.29323in</Width>
+        <ZIndex>93</ZIndex>
         <Style>
           <Border>
             <Color>#f8f4f4</Color>
@@ -4351,11 +4176,11 @@
           </Paragraph>
         </Paragraphs>
         <rd:DefaultName>Textbox3</rd:DefaultName>
-        <Top>6.05198in</Top>
-        <Left>0.25073in</Left>
+        <Top>5.16419in</Top>
+        <Left>0.26764in</Left>
         <Height>0.36935in</Height>
         <Width>1.47849in</Width>
-        <ZIndex>97</ZIndex>
+        <ZIndex>94</ZIndex>
         <Style>
           <Border>
             <Color>#f8f4f4</Color>
@@ -4387,11 +4212,11 @@
           </Paragraph>
         </Paragraphs>
         <rd:DefaultName>Textbox82</rd:DefaultName>
-        <Top>6.05198in</Top>
-        <Left>1.72922in</Left>
+        <Top>5.16419in</Top>
+        <Left>1.62308in</Left>
         <Height>0.36935in</Height>
-        <Width>0.71125in</Width>
-        <ZIndex>98</ZIndex>
+        <Width>0.8343in</Width>
+        <ZIndex>95</ZIndex>
         <Style>
           <Border>
             <Style>None</Style>
@@ -4424,12 +4249,13 @@
         </Paragraphs>
         <rd:DefaultName>Textbox3</rd:DefaultName>
         <Top>0.15982in</Top>
-        <Left>3.68612in</Left>
-        <Height>0.49167in</Height>
+        <Left>3.68904in</Left>
+        <Height>0.41167in</Height>
         <Width>3.39931in</Width>
-        <ZIndex>99</ZIndex>
+        <ZIndex>96</ZIndex>
         <Style>
           <Border>
+            <Color>#707070</Color>
             <Style>Solid</Style>
           </Border>
           <VerticalAlign>Middle</VerticalAlign>
@@ -4451,7 +4277,7 @@
                   <FontFamily>Open Sans</FontFamily>
                   <FontSize>11pt</FontSize>
                   <FontWeight>Normal</FontWeight>
-                  <Color>#282828</Color>
+                  <Color>#404040</Color>
                 </Style>
               </TextRun>
               <TextRun>
@@ -4460,7 +4286,7 @@
                   <FontFamily>microsoft sans Serif</FontFamily>
                   <FontSize>11pt</FontSize>
                   <FontWeight>Normal</FontWeight>
-                  <Color>#282828</Color>
+                  <Color>#404040</Color>
                 </Style>
               </TextRun>
             </TextRuns>
@@ -4472,9 +4298,9 @@
         <rd:DefaultName>Textbox3</rd:DefaultName>
         <Top>0.18713in</Top>
         <Left>3.72782in</Left>
-        <Height>0.47667in</Height>
+        <Height>0.34204in</Height>
         <Width>1.34453in</Width>
-        <ZIndex>100</ZIndex>
+        <ZIndex>97</ZIndex>
         <Style>
           <Border>
             <Color>White</Color>
@@ -4510,9 +4336,9 @@
         <rd:DefaultName>Textbox3</rd:DefaultName>
         <Top>0.20065in</Top>
         <Left>6.35774in</Left>
-        <Height>0.36935in</Height>
-        <Width>0.70553in</Width>
-        <ZIndex>101</ZIndex>
+        <Height>0.32852in</Height>
+        <Width>0.68173in</Width>
+        <ZIndex>98</ZIndex>
         <Style>
           <Border>
             <Color>White</Color>
@@ -4521,173 +4347,6 @@
           <VerticalAlign>Middle</VerticalAlign>
           <PaddingLeft>2pt</PaddingLeft>
           <PaddingRight>4pt</PaddingRight>
-          <PaddingTop>2pt</PaddingTop>
-          <PaddingBottom>2pt</PaddingBottom>
-        </Style>
-      </Textbox>
-      <Textbox Name="Textbox111">
-        <CanGrow>true</CanGrow>
-        <KeepTogether>true</KeepTogether>
-        <Paragraphs>
-          <Paragraph>
-            <TextRuns>
-              <TextRun>
-                <Value />
-                <Style>
-                  <FontFamily>Open Sans</FontFamily>
-                  <FontSize>11pt</FontSize>
-                  <Color>#282828</Color>
-                </Style>
-              </TextRun>
-            </TextRuns>
-            <Style>
-              <TextAlign>Center</TextAlign>
-            </Style>
-          </Paragraph>
-        </Paragraphs>
-        <rd:DefaultName>Textbox3</rd:DefaultName>
-        <Top>0.15982in</Top>
-        <Left>0.25073in</Left>
-        <Height>0.49167in</Height>
-        <Width>3.39931in</Width>
-        <ZIndex>102</ZIndex>
-        <Style>
-          <Border>
-            <Style>Solid</Style>
-          </Border>
-          <VerticalAlign>Middle</VerticalAlign>
-          <PaddingLeft>4pt</PaddingLeft>
-          <PaddingRight>2pt</PaddingRight>
-          <PaddingTop>2pt</PaddingTop>
-          <PaddingBottom>2pt</PaddingBottom>
-        </Style>
-      </Textbox>
-      <Textbox Name="Textbox19">
-        <CanGrow>true</CanGrow>
-        <KeepTogether>true</KeepTogether>
-        <Paragraphs>
-          <Paragraph>
-            <TextRuns>
-              <TextRun>
-                <Value>Truck Details</Value>
-                <Style>
-                  <FontStyle>Normal</FontStyle>
-                  <FontFamily>Open Sans</FontFamily>
-                  <FontSize>13pt</FontSize>
-                  <FontWeight>Bold</FontWeight>
-                  <TextDecoration>None</TextDecoration>
-                  <Color>White</Color>
-                </Style>
-              </TextRun>
-              <TextRun>
-                <Value xml:space="preserve">                   </Value>
-                <Style>
-                  <FontFamily>microsoft sans Serif</FontFamily>
-                  <FontSize>13pt</FontSize>
-                  <FontWeight>Bold</FontWeight>
-                  <Color>White</Color>
-                </Style>
-              </TextRun>
-              <TextRun>
-                <Value>ﺗﻔﺎﺻﻴﻞ</Value>
-                <Style>
-                  <FontStyle>Normal</FontStyle>
-                  <FontSize>13pt</FontSize>
-                  <FontWeight>Bold</FontWeight>
-                  <TextDecoration>None</TextDecoration>
-                  <Color>White</Color>
-                </Style>
-              </TextRun>
-              <TextRun>
-                <Value xml:space="preserve"> </Value>
-                <Style>
-                  <FontFamily>microsoft sans Serif</FontFamily>
-                  <FontSize>13pt</FontSize>
-                  <FontWeight>Bold</FontWeight>
-                  <Color>White</Color>
-                </Style>
-              </TextRun>
-              <TextRun>
-                <Value>اﻟﺸﺎﺣﻨﺔ</Value>
-                <Style>
-                  <FontStyle>Normal</FontStyle>
-                  <FontSize>13pt</FontSize>
-                  <FontWeight>Bold</FontWeight>
-                  <TextDecoration>None</TextDecoration>
-                  <Color>White</Color>
-                </Style>
-              </TextRun>
-            </TextRuns>
-            <Style>
-              <TextAlign>Center</TextAlign>
-            </Style>
-          </Paragraph>
-        </Paragraphs>
-        <rd:DefaultName>Textbox3</rd:DefaultName>
-        <Top>4.79119in</Top>
-        <Left>3.6918in</Left>
-        <Height>0.49167in</Height>
-        <Width>3.39363in</Width>
-        <ZIndex>103</ZIndex>
-        <Style>
-          <Border>
-            <Style>None</Style>
-          </Border>
-          <BackgroundColor>#d82631</BackgroundColor>
-          <VerticalAlign>Middle</VerticalAlign>
-          <PaddingLeft>2pt</PaddingLeft>
-          <PaddingRight>2pt</PaddingRight>
-          <PaddingTop>2pt</PaddingTop>
-          <PaddingBottom>2pt</PaddingBottom>
-        </Style>
-      </Textbox>
-      <Textbox Name="Textbox20">
-        <CanGrow>true</CanGrow>
-        <KeepTogether>true</KeepTogether>
-        <Paragraphs>
-          <Paragraph>
-            <TextRuns>
-              <TextRun>
-                <Value>Driver Details</Value>
-                <Style>
-                  <FontStyle>Normal</FontStyle>
-                  <FontFamily>Open Sans</FontFamily>
-                  <FontSize>13pt</FontSize>
-                  <FontWeight>Bold</FontWeight>
-                  <TextDecoration>None</TextDecoration>
-                  <Color>White</Color>
-                </Style>
-              </TextRun>
-              <TextRun>
-                <Value>                       ﺗﻔﺎﺻﻴﻞ اﻟﺴﺎﺋﻖ</Value>
-                <Style>
-                  <FontStyle>Normal</FontStyle>
-                  <FontSize>13pt</FontSize>
-                  <FontWeight>Bold</FontWeight>
-                  <TextDecoration>None</TextDecoration>
-                  <Color>White</Color>
-                </Style>
-              </TextRun>
-            </TextRuns>
-            <Style>
-              <TextAlign>Center</TextAlign>
-            </Style>
-          </Paragraph>
-        </Paragraphs>
-        <rd:DefaultName>Textbox3</rd:DefaultName>
-        <Top>4.79386in</Top>
-        <Left>0.21378in</Left>
-        <Height>0.49167in</Height>
-        <Width>3.44045in</Width>
-        <ZIndex>104</ZIndex>
-        <Style>
-          <Border>
-            <Style>None</Style>
-          </Border>
-          <BackgroundColor>#d82631</BackgroundColor>
-          <VerticalAlign>Middle</VerticalAlign>
-          <PaddingLeft>2pt</PaddingLeft>
-          <PaddingRight>2pt</PaddingRight>
           <PaddingTop>2pt</PaddingTop>
           <PaddingBottom>2pt</PaddingBottom>
         </Style>
@@ -4731,11 +4390,11 @@
           </Paragraph>
         </Paragraphs>
         <rd:DefaultName>Textbox3</rd:DefaultName>
-        <Top>10.6088in</Top>
-        <Left>5.06536in</Left>
-        <Height>0.49167in</Height>
+        <Top>9.1428in</Top>
+        <Left>5.08037in</Left>
+        <Height>0.41167in</Height>
         <Width>2.01564in</Width>
-        <ZIndex>105</ZIndex>
+        <ZIndex>99</ZIndex>
         <Style>
           <Border>
             <Style>None</Style>
@@ -4787,11 +4446,11 @@
           </Paragraph>
         </Paragraphs>
         <rd:DefaultName>Textbox3</rd:DefaultName>
-        <Top>10.6088in</Top>
-        <Left>3.84909in</Left>
-        <Height>0.47778in</Height>
+        <Top>9.1428in</Top>
+        <Left>3.86596in</Left>
+        <Height>0.41167in</Height>
         <Width>1.18849in</Width>
-        <ZIndex>106</ZIndex>
+        <ZIndex>100</ZIndex>
         <Style>
           <Border>
             <Style>None</Style>
@@ -4843,11 +4502,11 @@
           </Paragraph>
         </Paragraphs>
         <rd:DefaultName>Textbox3</rd:DefaultName>
-        <Top>10.61007in</Top>
-        <Left>2.45435in</Left>
-        <Height>0.49167in</Height>
+        <Top>9.17185in</Top>
+        <Left>2.47122in</Left>
+        <Height>0.38262in</Height>
         <Width>1.38476in</Width>
-        <ZIndex>107</ZIndex>
+        <ZIndex>101</ZIndex>
         <Style>
           <Border>
             <Style>None</Style>
@@ -4907,11 +4566,11 @@
           </Paragraph>
         </Paragraphs>
         <rd:DefaultName>Textbox3</rd:DefaultName>
-        <Top>10.59491in</Top>
-        <Left>0.21378in</Left>
-        <Height>0.49167in</Height>
+        <Top>9.1428in</Top>
+        <Left>0.23065in</Left>
+        <Height>0.41167in</Height>
         <Width>2.20887in</Width>
-        <ZIndex>108</ZIndex>
+        <ZIndex>102</ZIndex>
         <Style>
           <Border>
             <Style>None</Style>
@@ -4972,11 +4631,11 @@
           </Paragraph>
         </Paragraphs>
         <rd:DefaultName>Textbox3</rd:DefaultName>
-        <Top>12.35292in</Top>
-        <Left>0.1843in</Left>
+        <Top>10.72792in</Top>
+        <Left>0.21957in</Left>
         <Height>0.5104in</Height>
         <Width>6.85917in</Width>
-        <ZIndex>109</ZIndex>
+        <ZIndex>103</ZIndex>
         <Style>
           <Border>
             <Style>None</Style>
@@ -5013,14 +4672,15 @@
           </Paragraph>
         </Paragraphs>
         <rd:DefaultName>Textbox3</rd:DefaultName>
-        <Top>12.8772in</Top>
-        <Left>0.1843in</Left>
-        <Height>0.99729in</Height>
+        <Top>11.2522in</Top>
+        <Left>0.21957in</Left>
+        <Height>0.69729in</Height>
         <Width>6.85917in</Width>
-        <ZIndex>110</ZIndex>
+        <ZIndex>104</ZIndex>
         <Style>
           <Border>
-            <Style>None</Style>
+            <Color>#707070</Color>
+            <Style>Solid</Style>
           </Border>
           <BackgroundColor>White</BackgroundColor>
           <VerticalAlign>Middle</VerticalAlign>
@@ -5078,16 +4738,263 @@
           </Paragraph>
         </Paragraphs>
         <rd:DefaultName>Textbox3</rd:DefaultName>
-        <Top>13.87449in</Top>
-        <Left>0.19128in</Left>
-        <Height>0.5104in</Height>
+        <Top>11.99116in</Top>
+        <Left>0.21957in</Left>
+        <Height>0.44096in</Height>
         <Width>6.85219in</Width>
-        <ZIndex>111</ZIndex>
+        <ZIndex>105</ZIndex>
         <Style>
           <Border>
             <Style>None</Style>
           </Border>
           <BackgroundColor>White</BackgroundColor>
+          <VerticalAlign>Middle</VerticalAlign>
+          <PaddingLeft>2pt</PaddingLeft>
+          <PaddingRight>2pt</PaddingRight>
+          <PaddingTop>2pt</PaddingTop>
+          <PaddingBottom>2pt</PaddingBottom>
+        </Style>
+      </Textbox>
+      <Textbox Name="Textbox4">
+        <CanGrow>true</CanGrow>
+        <KeepTogether>true</KeepTogether>
+        <Paragraphs>
+          <Paragraph>
+            <TextRuns>
+              <TextRun>
+                <Value>: وثيقة الشحن الرئيسية</Value>
+                <Style>
+                  <FontFamily>arial</FontFamily>
+                  <FontSize>11pt</FontSize>
+                  <Color>#404040</Color>
+                </Style>
+              </TextRun>
+            </TextRuns>
+            <Style>
+              <TextAlign>Right</TextAlign>
+            </Style>
+          </Paragraph>
+        </Paragraphs>
+        <rd:DefaultName>Textbox3</rd:DefaultName>
+        <Top>0.20065in</Top>
+        <Left>2.35071in</Left>
+        <Height>0.32852in</Height>
+        <Width>1.23885in</Width>
+        <ZIndex>106</ZIndex>
+        <Style>
+          <Border>
+            <Color>White</Color>
+            <Style>Solid</Style>
+          </Border>
+          <VerticalAlign>Middle</VerticalAlign>
+          <PaddingLeft>2pt</PaddingLeft>
+          <PaddingRight>4pt</PaddingRight>
+          <PaddingTop>2pt</PaddingTop>
+          <PaddingBottom>2pt</PaddingBottom>
+        </Style>
+      </Textbox>
+      <Textbox Name="Textbox35">
+        <CanGrow>true</CanGrow>
+        <KeepTogether>true</KeepTogether>
+        <Paragraphs>
+          <Paragraph>
+            <TextRuns>
+              <TextRun>
+                <Value>Master Waybill No</Value>
+                <Style>
+                  <FontFamily>Open Sans</FontFamily>
+                  <Color>#404040</Color>
+                </Style>
+              </TextRun>
+              <TextRun>
+                <Value>:</Value>
+                <Style>
+                  <FontFamily>Open Sans</FontFamily>
+                  <FontWeight>Normal</FontWeight>
+                  <Color>#404040</Color>
+                </Style>
+              </TextRun>
+            </TextRuns>
+            <Style>
+              <TextAlign>Left</TextAlign>
+            </Style>
+          </Paragraph>
+        </Paragraphs>
+        <rd:DefaultName>Textbox3</rd:DefaultName>
+        <Top>0.18564in</Top>
+        <Left>0.26466in</Left>
+        <Height>0.34353in</Height>
+        <Width>1.34453in</Width>
+        <ZIndex>107</ZIndex>
+        <Style>
+          <Border>
+            <Color>White</Color>
+            <Style>Solid</Style>
+          </Border>
+          <VerticalAlign>Middle</VerticalAlign>
+          <PaddingLeft>4pt</PaddingLeft>
+          <PaddingRight>2pt</PaddingRight>
+          <PaddingTop>2pt</PaddingTop>
+          <PaddingBottom>2pt</PaddingBottom>
+        </Style>
+      </Textbox>
+      <Textbox Name="Textbox83">
+        <CanGrow>true</CanGrow>
+        <KeepTogether>true</KeepTogether>
+        <Paragraphs>
+          <Paragraph>
+            <TextRuns>
+              <TextRun>
+                <Value>=First(Fields!MasterWaybillNo.Value, "MultipleDropDataSet")</Value>
+                <Style>
+                  <Color>#404040</Color>
+                </Style>
+              </TextRun>
+            </TextRuns>
+            <Style>
+              <TextAlign>Center</TextAlign>
+            </Style>
+          </Paragraph>
+        </Paragraphs>
+        <rd:DefaultName>Textbox82</rd:DefaultName>
+        <Top>0.15982in</Top>
+        <Left>1.48148in</Left>
+        <Height>0.36935in</Height>
+        <Width>0.95804in</Width>
+        <ZIndex>108</ZIndex>
+        <Style>
+          <Border>
+            <Style>None</Style>
+          </Border>
+          <PaddingLeft>2pt</PaddingLeft>
+          <PaddingRight>2pt</PaddingRight>
+          <PaddingTop>8pt</PaddingTop>
+          <PaddingBottom>2pt</PaddingBottom>
+        </Style>
+      </Textbox>
+      <Textbox Name="Textbox19">
+        <CanGrow>true</CanGrow>
+        <KeepTogether>true</KeepTogether>
+        <Paragraphs>
+          <Paragraph>
+            <TextRuns>
+              <TextRun>
+                <Value>Truck Details</Value>
+                <Style>
+                  <FontStyle>Normal</FontStyle>
+                  <FontFamily>Open Sans</FontFamily>
+                  <FontSize>13pt</FontSize>
+                  <FontWeight>Bold</FontWeight>
+                  <TextDecoration>None</TextDecoration>
+                  <Color>White</Color>
+                </Style>
+              </TextRun>
+              <TextRun>
+                <Value xml:space="preserve">                     </Value>
+                <Style>
+                  <FontFamily>microsoft sans Serif</FontFamily>
+                  <FontSize>13pt</FontSize>
+                  <FontWeight>Bold</FontWeight>
+                  <Color>White</Color>
+                </Style>
+              </TextRun>
+              <TextRun>
+                <Value>ﺗﻔﺎﺻﻴﻞ</Value>
+                <Style>
+                  <FontStyle>Normal</FontStyle>
+                  <FontSize>13pt</FontSize>
+                  <FontWeight>Bold</FontWeight>
+                  <TextDecoration>None</TextDecoration>
+                  <Color>White</Color>
+                </Style>
+              </TextRun>
+              <TextRun>
+                <Value xml:space="preserve"> </Value>
+                <Style>
+                  <FontFamily>microsoft sans Serif</FontFamily>
+                  <FontSize>13pt</FontSize>
+                  <FontWeight>Bold</FontWeight>
+                  <Color>White</Color>
+                </Style>
+              </TextRun>
+              <TextRun>
+                <Value>اﻟﺸﺎﺣﻨﺔ</Value>
+                <Style>
+                  <FontStyle>Normal</FontStyle>
+                  <FontSize>13pt</FontSize>
+                  <FontWeight>Bold</FontWeight>
+                  <TextDecoration>None</TextDecoration>
+                  <Color>White</Color>
+                </Style>
+              </TextRun>
+            </TextRuns>
+            <Style>
+              <TextAlign>Center</TextAlign>
+            </Style>
+          </Paragraph>
+        </Paragraphs>
+        <rd:DefaultName>Textbox3</rd:DefaultName>
+        <Top>4.26479in</Top>
+        <Left>3.65363in</Left>
+        <Height>0.41167in</Height>
+        <Width>3.4202in</Width>
+        <ZIndex>109</ZIndex>
+        <Style>
+          <Border>
+            <Style>None</Style>
+          </Border>
+          <BackgroundColor>#d82631</BackgroundColor>
+          <VerticalAlign>Middle</VerticalAlign>
+          <PaddingLeft>2pt</PaddingLeft>
+          <PaddingRight>2pt</PaddingRight>
+          <PaddingTop>2pt</PaddingTop>
+          <PaddingBottom>2pt</PaddingBottom>
+        </Style>
+      </Textbox>
+      <Textbox Name="Textbox20">
+        <CanGrow>true</CanGrow>
+        <KeepTogether>true</KeepTogether>
+        <Paragraphs>
+          <Paragraph>
+            <TextRuns>
+              <TextRun>
+                <Value>Driver Details</Value>
+                <Style>
+                  <FontStyle>Normal</FontStyle>
+                  <FontFamily>Open Sans</FontFamily>
+                  <FontSize>13pt</FontSize>
+                  <FontWeight>Bold</FontWeight>
+                  <TextDecoration>None</TextDecoration>
+                  <Color>White</Color>
+                </Style>
+              </TextRun>
+              <TextRun>
+                <Value>                        ﺗﻔﺎﺻﻴﻞ اﻟﺴﺎﺋﻖ</Value>
+                <Style>
+                  <FontStyle>Normal</FontStyle>
+                  <FontSize>13pt</FontSize>
+                  <FontWeight>Bold</FontWeight>
+                  <TextDecoration>None</TextDecoration>
+                  <Color>White</Color>
+                </Style>
+              </TextRun>
+            </TextRuns>
+            <Style>
+              <TextAlign>Center</TextAlign>
+            </Style>
+          </Paragraph>
+        </Paragraphs>
+        <rd:DefaultName>Textbox3</rd:DefaultName>
+        <Top>4.26746in</Top>
+        <Left>0.23883in</Left>
+        <Height>0.41167in</Height>
+        <Width>3.42943in</Width>
+        <ZIndex>110</ZIndex>
+        <Style>
+          <Border>
+            <Style>None</Style>
+          </Border>
+          <BackgroundColor>#d82631</BackgroundColor>
           <VerticalAlign>Middle</VerticalAlign>
           <PaddingLeft>2pt</PaddingLeft>
           <PaddingRight>2pt</PaddingRight>
@@ -5143,14 +5050,15 @@
           </Paragraph>
         </Paragraphs>
         <rd:DefaultName>Textbox3</rd:DefaultName>
-        <Top>14.42656in</Top>
-        <Left>4.78781in</Left>
-        <Height>0.49167in</Height>
+        <Top>12.47378in</Top>
+        <Left>4.81611in</Left>
+        <Height>0.41167in</Height>
         <Width>2.25565in</Width>
-        <ZIndex>112</ZIndex>
+        <ZIndex>111</ZIndex>
         <Style>
           <Border>
-            <Style>None</Style>
+            <Color>#707070</Color>
+            <Style>Solid</Style>
           </Border>
           <BackgroundColor>White</BackgroundColor>
           <VerticalAlign>Middle</VerticalAlign>
@@ -5208,14 +5116,15 @@
           </Paragraph>
         </Paragraphs>
         <rd:DefaultName>Textbox3</rd:DefaultName>
-        <Top>14.42656in</Top>
-        <Left>2.43485in</Left>
-        <Height>0.49167in</Height>
-        <Width>2.37888in</Width>
-        <ZIndex>113</ZIndex>
+        <Top>12.47378in</Top>
+        <Left>2.46315in</Left>
+        <Height>0.41167in</Height>
+        <Width>2.31129in</Width>
+        <ZIndex>112</ZIndex>
         <Style>
           <Border>
-            <Style>None</Style>
+            <Color>#707070</Color>
+            <Style>Solid</Style>
           </Border>
           <BackgroundColor>White</BackgroundColor>
           <VerticalAlign>Middle</VerticalAlign>
@@ -5243,7 +5152,7 @@
                 </Style>
               </TextRun>
               <TextRun>
-                <Value>              :</Value>
+                <Value>                         :</Value>
                 <Style>
                   <FontFamily>microsoft sans Serif</FontFamily>
                   <FontSize>11pt</FontSize>
@@ -5265,14 +5174,15 @@
           </Paragraph>
         </Paragraphs>
         <rd:DefaultName>Textbox3</rd:DefaultName>
-        <Top>14.41267in</Top>
-        <Left>0.19128in</Left>
-        <Height>0.49167in</Height>
-        <Width>2.18801in</Width>
-        <ZIndex>114</ZIndex>
+        <Top>12.47835in</Top>
+        <Left>0.21957in</Left>
+        <Height>0.41167in</Height>
+        <Width>2.19455in</Width>
+        <ZIndex>113</ZIndex>
         <Style>
           <Border>
-            <Style>None</Style>
+            <Color>#707070</Color>
+            <Style>Solid</Style>
           </Border>
           <BackgroundColor>White</BackgroundColor>
           <VerticalAlign>Middle</VerticalAlign>
@@ -5282,46 +5192,8 @@
           <PaddingBottom>2pt</PaddingBottom>
         </Style>
       </Textbox>
-      <Textbox Name="Textbox17">
-        <CanGrow>true</CanGrow>
-        <KeepTogether>true</KeepTogether>
-        <Paragraphs>
-          <Paragraph>
-            <TextRuns>
-              <TextRun>
-                <Value>:وثيقة الشحن الرئيسية</Value>
-                <Style>
-                  <FontFamily>arial</FontFamily>
-                  <FontSize>11pt</FontSize>
-                  <Color>#282828</Color>
-                </Style>
-              </TextRun>
-            </TextRuns>
-            <Style>
-              <TextAlign>Right</TextAlign>
-            </Style>
-          </Paragraph>
-        </Paragraphs>
-        <rd:DefaultName>Textbox3</rd:DefaultName>
-        <Top>0.20065in</Top>
-        <Left>2.51633in</Left>
-        <Height>0.36935in</Height>
-        <Width>1.15593in</Width>
-        <ZIndex>115</ZIndex>
-        <Style>
-          <Border>
-            <Color>White</Color>
-            <Style>Solid</Style>
-          </Border>
-          <VerticalAlign>Middle</VerticalAlign>
-          <PaddingLeft>2pt</PaddingLeft>
-          <PaddingRight>4pt</PaddingRight>
-          <PaddingTop>2pt</PaddingTop>
-          <PaddingBottom>2pt</PaddingBottom>
-        </Style>
-      </Textbox>
     </ReportItems>
-    <Height>40.30568cm</Height>
+    <Height>39.35319cm</Height>
     <Style>
       <Border>
         <Style>None</Style>
@@ -5329,63 +5201,13 @@
       <BackgroundColor>White</BackgroundColor>
     </Style>
   </Body>
-  <Width>19.43097cm</Width>
+  <Width>18.56156cm</Width>
   <Page>
     <PageHeader>
-      <Height>3.49598cm</Height>
+      <Height>3.0988cm</Height>
       <PrintOnFirstPage>true</PrintOnFirstPage>
       <PrintOnLastPage>true</PrintOnLastPage>
       <ReportItems>
-        <Image Name="Image1">
-          <Source>Embedded</Source>
-          <Value>ID1</Value>
-          <Sizing>FitProportional</Sizing>
-          <Top>0.07867in</Top>
-          <Left>0.19667in</Left>
-          <Height>0.49133in</Height>
-          <Width>2.36734in</Width>
-          <Style>
-            <Border>
-              <Style>None</Style>
-            </Border>
-          </Style>
-        </Image>
-        <Textbox Name="Textbox1">
-          <CanGrow>true</CanGrow>
-          <KeepTogether>true</KeepTogether>
-          <Paragraphs>
-            <Paragraph>
-              <TextRuns>
-                <TextRun>
-                  <Value>R e d e f i n i n g  L o g i s t i c s</Value>
-                  <Style>
-                    <FontStyle>Normal</FontStyle>
-                    <FontFamily>Open Sans</FontFamily>
-                    <FontSize>12pt</FontSize>
-                    <TextDecoration>None</TextDecoration>
-                    <Color>#000000</Color>
-                  </Style>
-                </TextRun>
-              </TextRuns>
-              <Style>
-                <TextAlign>Center</TextAlign>
-              </Style>
-            </Paragraph>
-          </Paragraphs>
-          <rd:DefaultName>Textbox1</rd:DefaultName>
-          <Top>0.56094in</Top>
-          <Left>0.19667in</Left>
-          <Height>0.43055in</Height>
-          <Width>2.36734in</Width>
-          <ZIndex>1</ZIndex>
-          <Style>
-            <Border />
-            <PaddingLeft>2pt</PaddingLeft>
-            <PaddingRight>2pt</PaddingRight>
-            <PaddingTop>2pt</PaddingTop>
-            <PaddingBottom>2pt</PaddingBottom>
-          </Style>
-        </Textbox>
         <Textbox Name="Textbox2">
           <CanGrow>true</CanGrow>
           <KeepTogether>true</KeepTogether>
@@ -5444,11 +5266,10 @@
             </Paragraph>
           </Paragraphs>
           <rd:DefaultName>Textbox2</rd:DefaultName>
-          <Top>0.13484in</Top>
-          <Left>2.91673in</Left>
+          <Top>0.17167in</Top>
+          <Left>2.88687in</Left>
           <Height>0.48333in</Height>
           <Width>2.59727in</Width>
-          <ZIndex>2</ZIndex>
           <Style>
             <Border>
               <Style>None</Style>
@@ -5481,14 +5302,65 @@
           </Paragraphs>
           <rd:DefaultName>Textbox3</rd:DefaultName>
           <Top>0.07867in</Top>
-          <Left>5.81891in</Left>
-          <Height>0.45033in</Height>
+          <Left>5.8144in</Left>
+          <Height>0.49133in</Height>
           <Width>1.26209in</Width>
-          <ZIndex>3</ZIndex>
+          <ZIndex>1</ZIndex>
           <Style>
             <Border />
             <VerticalAlign>Middle</VerticalAlign>
             <PaddingLeft>4pt</PaddingLeft>
+            <PaddingRight>2pt</PaddingRight>
+            <PaddingTop>2pt</PaddingTop>
+            <PaddingBottom>2pt</PaddingBottom>
+          </Style>
+        </Textbox>
+        <Image Name="Image2">
+          <Source>Embedded</Source>
+          <Value>ID1</Value>
+          <Sizing>FitProportional</Sizing>
+          <Top>0.07867in</Top>
+          <Left>0.19667in</Left>
+          <Height>0.49133in</Height>
+          <Width>2.21299in</Width>
+          <ZIndex>2</ZIndex>
+          <Style>
+            <Border>
+              <Style>None</Style>
+            </Border>
+          </Style>
+        </Image>
+        <Textbox Name="Textbox3">
+          <CanGrow>true</CanGrow>
+          <KeepTogether>true</KeepTogether>
+          <Paragraphs>
+            <Paragraph>
+              <TextRuns>
+                <TextRun>
+                  <Value>R e d e f i n i n g  L o g i s t i c s</Value>
+                  <Style>
+                    <FontStyle>Normal</FontStyle>
+                    <FontFamily>Open Sans</FontFamily>
+                    <FontSize>11pt</FontSize>
+                    <TextDecoration>None</TextDecoration>
+                    <Color>#000000</Color>
+                  </Style>
+                </TextRun>
+              </TextRuns>
+              <Style>
+                <TextAlign>Center</TextAlign>
+              </Style>
+            </Paragraph>
+          </Paragraphs>
+          <rd:DefaultName>Textbox1</rd:DefaultName>
+          <Top>0.59778in</Top>
+          <Left>0.18279in</Left>
+          <Height>0.26388in</Height>
+          <Width>2.22687in</Width>
+          <ZIndex>3</ZIndex>
+          <Style>
+            <Border />
+            <PaddingLeft>2pt</PaddingLeft>
             <PaddingRight>2pt</PaddingRight>
             <PaddingTop>2pt</PaddingTop>
             <PaddingBottom>2pt</PaddingBottom>
@@ -5590,9 +5462,9 @@
             </Paragraph>
           </Paragraphs>
           <rd:DefaultName>Textbox75</rd:DefaultName>
-          <Top>0.53153in</Top>
-          <Left>0.23007in</Left>
-          <Height>0.71667in</Height>
+          <Top>0.34082in</Top>
+          <Left>0.22653in</Left>
+          <Height>0.67669in</Height>
           <Width>2.62626in</Width>
           <ZIndex>1</ZIndex>
           <Style>
@@ -5659,9 +5531,9 @@
             </Paragraph>
           </Paragraphs>
           <rd:DefaultName>Textbox75</rd:DefaultName>
-          <Top>0.58238in</Top>
-          <Left>4.84795in</Left>
-          <Height>0.71667in</Height>
+          <Top>0.34082in</Top>
+          <Left>4.84441in</Left>
+          <Height>0.67669in</Height>
           <Width>1.63252in</Width>
           <ZIndex>2</ZIndex>
           <Style>
@@ -5678,10 +5550,10 @@
           <Source>Embedded</Source>
           <Value>MaskGroup3</Value>
           <Sizing>FitProportional</Sizing>
-          <Top>0.58238in</Top>
-          <Left>4.63684in</Left>
-          <Height>0.23084in</Height>
-          <Width>0.18333in</Width>
+          <Top>0.39167in</Top>
+          <Left>4.6333in</Left>
+          <Height>0.16168in</Height>
+          <Width>0.2in</Width>
           <ZIndex>3</ZIndex>
           <Style>
             <Border>
@@ -5723,8 +5595,8 @@
             </Paragraph>
           </Paragraphs>
           <rd:DefaultName>Textbox79</rd:DefaultName>
-          <Top>0.67319in</Top>
-          <Left>6.53603in</Left>
+          <Top>0.48248in</Top>
+          <Left>6.64099in</Left>
           <Height>0.35in</Height>
           <Width>0.44444in</Width>
           <ZIndex>4</ZIndex>
@@ -5793,9 +5665,9 @@
             </Paragraph>
           </Paragraphs>
           <rd:DefaultName>Textbox75</rd:DefaultName>
-          <Top>0.57155in</Top>
-          <Left>3.15073in</Left>
-          <Height>0.71667in</Height>
+          <Top>0.36083in</Top>
+          <Left>3.14719in</Left>
+          <Height>0.65668in</Height>
           <Width>1.45083in</Width>
           <ZIndex>5</ZIndex>
           <Style>
@@ -5810,12 +5682,12 @@
         </Textbox>
         <Image Name="Image3">
           <Source>Embedded</Source>
-          <Value>MaskGroup4</Value>
+          <Value>MaskGroup41</Value>
           <Sizing>FitProportional</Sizing>
-          <Top>0.55154in</Top>
-          <Left>2.91188in</Left>
-          <Height>0.26168in</Height>
-          <Width>0.25274in</Width>
+          <Top>0.39167in</Top>
+          <Left>2.93691in</Left>
+          <Height>0.16168in</Height>
+          <Width>0.2in</Width>
           <ZIndex>6</ZIndex>
           <Style>
             <Border>
@@ -5827,9 +5699,9 @@
           <Source>Embedded</Source>
           <Value>MaskGroup5</Value>
           <Sizing>FitProportional</Sizing>
-          <Top>0.94654in</Top>
-          <Left>2.91188in</Left>
-          <Height>0.26168in</Height>
+          <Top>0.75583in</Top>
+          <Left>2.93691in</Left>
+          <Height>0.16168in</Height>
           <Width>0.2in</Width>
           <ZIndex>7</ZIndex>
           <Style>
@@ -5842,9 +5714,9 @@
           <Source>Embedded</Source>
           <Value>MaskGroup1</Value>
           <Sizing>FitProportional</Sizing>
-          <Top>0.94654in</Top>
-          <Left>4.63684in</Left>
-          <Height>0.26168in</Height>
+          <Top>0.75583in</Top>
+          <Left>4.6333in</Left>
+          <Height>0.16168in</Height>
           <Width>0.2in</Width>
           <ZIndex>8</ZIndex>
           <Style>
@@ -6364,6 +6236,10 @@ Mhggf1ijspwTpannADNIaXfnGSw0x3KR/Sim/YnEh5HDqiiNSYUmINbkA4YRpixYYFWbUkWWI0hhEePc
       <MIMEType>image/png</MIMEType>
       <ImageData>iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAABHNCSVQICAgIfAhkiAAAAsBJREFUWEftlz1oE2EYx/9PkzQ58BOkDg4tLgoOOqilzcc9XsAtUMXBRWwHBwW1DnYTFNws6CCCOFicdKsoFkuxz92QwanuDoKbUxwcasy98oT3zjMkaUrTdOk73r25/+/9P19vCDu8aIf1sQvQdICZTwFwARwYYEjeisgaMbOKLlqAAepjRkQW4hxg5gUAVwdE0BRXLXJdt+L7/jsbiu2G+AlgVsUnJiac4eHhRQ1BHcAVEXm9zRAqzhp3Zt5jjPkI4LQCGF1ENCci8xZiFsDjPoYjFh8fH9+Xy+VWiOiMMeZ3EyAhNC8idy3ENICXfYD4T9xxHB+AVh3aAejDF0R0Q0T+MPNWIWLxQqFwMJ1Of4rEOwLYE793HOfS0tLSOjNPAdDk3L9JN5IxPwRAAJxIfqOtA9EGY8xqNputLC8v/7KNSj/QK0QsXi6XDzcaDbX9WOsBugJYiz7X6/VKtVr9sQmILwCmROSb53lHGo1GQERH27m3IYD90dcwDL0gCL73AKHiWmo1z/NGwzDUk492Cl2vAJqYc77vP7LVoa1bw3Gy5cOxuD53Xfc6ET3bIG/WW8uw3f4HInI/EtfT2fmRhIjFmXlM7bcQ1wA8J6K2Y78XB5LiWpLanM7ZbhY50WSzYFrfqzrcRGRGX5RKpYtDQ0NvAKQ3m4T3RORhm6ZUa4FAi3g00rV07+i7Uql0nogWicjptQxvisjTLh1RIXSi6RiP7hN68tb7xJqFrRWLxbOpVEr7f7ynUwiS4k8A3O6SSDozdOm+TiuGYObjxhifiEZsmf+bBXYg3UqcvJ+jOQkxZvNkLHagOQ6NmQ6C4JW1tJ/ikTNaGRc0gScnJ0cymcyKdke9kIQDEI8g4gTO5/N7M5nMB+0DlwdwGUnmR7KKcjt1J1QIDYdE13ItjSijN+iefXutzWpt
 95/RrgN/AVHxl1M1/sHkAAAAAElFTkSuQmCC</ImageData>
+    </EmbeddedImage>
+    <EmbeddedImage Name="MaskGroup41">
+      <MIMEType>image/png</MIMEType>
+      <ImageData>iVBORw0KGgoAAAANSUhEUgAAACEAAAAhCAYAAABX5MJvAAAABHNCSVQICAgIfAhkiAAAAh9JREFUWEetV4ExBEEQbBEgAj4CLwIjAkLwEXgRIAJEgAgQgRaBl8F/BIiAarWqzt3O7O69qbqiamdne7tnZuc30GhmZgCOAEzTtwXgA8Aiffck9X+1bdR6psPPAQhEyQjgkqT+Fq0KhJldAzgtRhs6XJM8K+0rgjCzx0R/KZa3fkdyFm0OQazBQP/MG5JzD4gLIuXA89jrZ/YdejkSgVBSHQQgVgAklSpDFXIMYCfwF4bD3HoWhJmp/F6DgFl6K+Tbz5WvByKqhieSunXWComcBe+BiKTYJikJPBCS5t1ZfiE56DMeiKWjbzZI/0Az8y6xJDnp+3sgvpybhFL87okkITk40wMhujczQBYk90tla2Z6O/YyfiuSu7VMRDmRzfAOC1FlNeXEBQA9VjkL2QhYUKwzkqq8Pza2T4juWbfmU2+5Tc+7p9iEpJK+DEIeZuZVSDeAfPRJ54HWvbPeSEqqgUVtWw/OVSkJG9bF3F0rCDUd3TJXJQ1n/7h+klS8rJWe8ihBW4BoylKsUSD+gw29ttOo1ddMVuuy4ebCLy01IMSGSjKaFTym3YrobiiCSOWqp/uhJQmSrztNNYNIQFoH3nCuHAtCzUiy1JRsMRlHgUhsnABQay5ZlQzVidk/reJ3SLUM64CIekeTDKNBJFk0J+Z+k4SzxqiOGQlvZv0mlp0VSsmj9ao+4QXq5EfV7PnvTCRZlB+alObR21Bi4xsVM94ip2aWSgAAAABJRU5ErkJggg==</ImageData>
     </EmbeddedImage>
   </EmbeddedImages>
   <Language>ar-SA</Language>
