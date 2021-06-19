@@ -23,7 +23,7 @@ import { ShippingRequestForPriceOfferGetAllInput } from '../../../../shared/comm
 export class ShippingRequestCardTemplateComponent extends ScrollPagnationComponentBase implements OnInit {
   Items: GetShippingRequestForPriceOfferListDto[] = [];
   searchInput: ShippingRequestForPriceOfferGetAllInput = new ShippingRequestForPriceOfferGetAllInput();
-  @Input() Channel: PriceOfferChannel | null | undefined = undefined;
+  @Input() Channel: PriceOfferChannel | number | null | undefined = undefined;
   @Input() Title: string;
   @Input() ShippingRequestId: number | null | undefined = undefined;
   direction = 'ltr';
@@ -108,6 +108,10 @@ export class ShippingRequestCardTemplateComponent extends ScrollPagnationCompone
         return item.name;
       }
     } else if (this.Channel == PriceOfferChannel.MarketPlace) {
+      if (this.feature.isEnabled('App.Carrier') || this.feature.isEnabled('App.TachyonDealer') || !this.appSession.tenantId) {
+        return item.isTachyonDeal ? this.l('TachyonManageService') : item.name;
+      }
+    } else if (this.Channel == PriceOfferChannel.Offers) {
       if (this.feature.isEnabled('App.Carrier') || this.feature.isEnabled('App.TachyonDealer') || !this.appSession.tenantId) {
         return item.isTachyonDeal ? this.l('TachyonManageService') : item.name;
       }

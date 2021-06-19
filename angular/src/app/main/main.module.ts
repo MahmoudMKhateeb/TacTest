@@ -185,6 +185,7 @@ import { AdminModule } from '@app/admin/admin.module';
 import { ShippingRequestsListComponent } from '@app/main/shippingRequests/shippingRequestslist.component';
 import { MarketPlaceListComponent } from '@app/main/marketplaces/marketPlacelist.component';
 import { DirectRequestViewComponent } from '@app/main/directrequests/direct-request-view.component';
+import { OffersListComponent } from '@app/main/offer/offers.component';
 import { PriceOfferModelComponent } from '@app/main/priceoffer/price-offer-model-component';
 import { PriceOfferViewModelComponent } from '@app/main/priceoffer/price-offer-view-model-component';
 import { PriceOfferListModelComponent } from '@app/main/priceoffer/price-offer-list-model-component';
@@ -208,11 +209,10 @@ import { InvoicePeriodsListComponent } from '@app/main/invoices/invoice-periods-
 import { InvoicePeriodsModalComponent } from '@app/main/invoices/invoice-periods-modal/invoice-periods-modal.component';
 import { InvoicesListComponent } from '@app/main/invoices/invoices-list/invoices-list.component';
 import { BalancesListComponent } from '@app/main/invoices/balances/balances-list/balances-list.component';
-import { DemanModelComponent } from '@app/main/invoices/submitinvoices/model/deman-model.component';
+import { DemanModelComponent } from '@app/main/invoices/submit-invoices/model/deman-model.component';
 import { BalanceRechargeModelComponent } from '@app/main/invoices/balances/balance-recharge-model/balance-recharge-model.component';
-import { SubmiteInvoicesComponent } from '@app/main/invoices/submitinvoices/submit-invoice.component';
-import { SubmitInvoiceDetailsComponent } from '@app/main/invoices/submitinvoices/submit-invoice-details.component';
-import { SubmitInvoiceRejectedModelComponent } from '@app/main/invoices/submitinvoices/model/Rejected-model.component';
+import { SubmitInvoiceDetailsComponent } from '@app/main/invoices/submit-invoices/submit-invoice-details.component';
+import { SubmitInvoiceRejectedModelComponent } from '@app/main/invoices/submit-invoices/model/Rejected-model.component';
 
 import { InvoiceDetailComponent } from '@app/main/invoices/invoice-detail/invoice-detail.component';
 import { TransactionListComponent } from '@app/main/invoices/transaction/transaction-list/transaction-list.component';
@@ -396,6 +396,7 @@ NgxBootstrapDatePickerConfigService.registerNgxBootstrapDatePickerLocales();
     MarketPlaceListComponent,
     ShippingRequestsListComponent,
     DirectRequestViewComponent,
+    OffersListComponent,
     PriceOfferModelComponent,
     PriceOfferViewModelComponent,
     PriceOfferListModelComponent,
@@ -407,7 +408,6 @@ NgxBootstrapDatePickerConfigService.registerNgxBootstrapDatePickerLocales();
     BalancesListComponent,
     DemanModelComponent,
     BalanceRechargeModelComponent,
-    SubmiteInvoicesComponent,
     InvoiceDetailComponent,
     SubmitInvoiceDetailsComponent,
     SubmitInvoiceRejectedModelComponent,

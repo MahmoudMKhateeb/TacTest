@@ -74,7 +74,7 @@ export class AppNavigationService {
             '/app/main/shippingRequests/shippingRequests'
           ),
           new AppMenuItem('Marketplace', 'Pages', 'label label-danger label-dot', '/app/main/marketplace/list'),
-
+          new AppMenuItem('Offers', 'Pages', 'label label-danger label-dot', '/app/main/offers'),
           new AppMenuItem('ShipmentTracking', 'Pages', 'label label-danger label-dot', '/app/main/comingSoon'),
           new AppMenuItem('Requests', 'Pages', 'label label-danger label-dot', '/app/main/shippingRequests/shippingRequests'),
           new AppMenuItem(
@@ -125,6 +125,17 @@ export class AppNavigationService {
             '',
             'flaticon-more',
             '/app/main/marketplace/list',
+            undefined,
+            undefined,
+            undefined,
+            undefined,
+            () => this._featureCheckerService.isEnabled('App.Carrier') || this._featureCheckerService.isEnabled('App.Shipper')
+          ),
+          new AppMenuItem(
+            'Offers',
+            '',
+            'flaticon-more',
+            '/app/main/Offers',
             undefined,
             undefined,
             undefined,

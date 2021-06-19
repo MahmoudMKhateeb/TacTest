@@ -863,12 +863,15 @@
     <text name="InvalidUserNameOrPassword">Invalid user name or password</text>
     <text name="InvlalidLanguageCode">Invalid language code.</text>
     <text name="Invoice">Invoice</text>
+    <text name="InvoiceDetail">Invoice Details</text>
     <text name="InvoiceId">Invoice No.</text>
     <text name="InvoiceInfoIsMissingOrNotCompleted">Invoice info is missing or not completed</text>
     <text name="InvoiceInformation">Invoice Information</text>
     <text name="InvoiceNo">Invoice No</text>
+    <text name="InvoiceNumber">Invoice No.</text>
     <text name="Invoices">Invoices</text>
     <text name="InvoicesList">List of Invoices</text>
+    <text name="InvoicesProformas">Invoices proformas</text>
     <text name="InvoiceSubTotal">Invoice sub total</text>
     <text name="InvoiceTo">Invoice to</text>
     <text name="InvoiceVasRemarksAll">Count:{0}, Amount:{1}</text>
@@ -902,6 +905,7 @@
     <text name="IsRollDoor">Is roll door</text>
     <text name="IsSessionTimeOutEnabled">Session timeout control enabled</text>
     <text name="IsSmsVerificationEnabled">Enable SMS verification.</text>
+    <text name="IssuanceDate">Issuance date </text>
     <text name="IsTachyonDeal">Is Tachyon Deal</text>
     <text name="Istimara">Istimara</text>
     <text name="IsTrialActive">Is trial active</text>
@@ -1145,6 +1149,7 @@
     <text name="OfflineAccess">Offline Access</text>
     <text name="Ok">Ok</text>
     <text name="On">On</text>
+    <text name="OnDemand">On demand</text>
     <text name="OneConcurrentLoginPerUser">Only one concurrent login per user</text>
     <text name="OneConcurrentLoginPerUserActive">Disable concurrent login for a user. If a user logins with a second device, the first session is automatically closed.</text>
     <text name="Online">Online</text>
@@ -1618,11 +1623,17 @@ code:{0}</text>
     <text name="Submit">Submit</text>
     <text name="SubmitInvoice">Carrier invoices</text>
     <text name="SubmitInvoiceDetail">Submit invoice detail</text>
+    <text name="SubmitInvoiceGenerated">
+      <a href="/app/main/invoices/submitinvoices/detail/{id}">The submit invoice has been generated.</a>
+    </text>
     <text name="SubmitInvoiceOnAccepted">
-      <a href="/app/main/invoices/submitinvoices/detail/{groupid}">The submit invoice has been Accepted</a>
+      <a href="/app/main/invoices/submitinvoices/detail/{id}">The submit invoice has been Accepted</a>
+    </text>
+    <text name="SubmitInvoiceOnClaim">
+      <a href="/app/main/invoices/submitinvoices/detail/{id}">The submit invoice has been claimed.</a>
     </text>
     <text name="SubmitInvoiceOnRejected">
-      <a href="/app/main/invoices/submitinvoices/detail/{groupid}">The submit invoice has been Rejected because {reason}</a>
+      <a href="/app/main/invoices/submitinvoices/detail/{id}">The submit invoice has been Rejected because {reason}</a>
     </text>
     <text name="SubmitInvoices">Carrier invoices</text>
     <text name="SubmitInvoicesHeaderInfo">Submit invoices header info</text>
@@ -1940,6 +1951,7 @@ code:{0}</text>
     <text name="Twoweeks">Two weeks</text>
     <text name="Type">Type...</text>
     <text name="TypeAMessageHere">Type your message here...</text>
+    <text name="TypeTitle">Type</text>
     <text name="UiCustomization_AllowAsideHiding">Allow aside hiding</text>
     <text name="UiCustomization_AllowAsideMinimizing">Allow aside minimizing</text>
     <text name="UiCustomization_Boxed">Boxed</text>
