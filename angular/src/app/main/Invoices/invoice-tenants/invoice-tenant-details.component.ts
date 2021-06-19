@@ -6,9 +6,9 @@ import { SubmitInvoiceInfoDto, InvoiceItemDto } from '@shared/service-proxies/se
 
 @Component({
   animations: [appModuleAnimation()],
-  templateUrl: './submit-invoice-details.component.html',
+  templateUrl: './invoice-tenant-details.component.html',
 })
-export class SubmitInvoiceDetailsComponent extends AppComponentBase {
+export class InvoiceTenantDetailsComponent extends AppComponentBase {
   Data: SubmitInvoiceInfoDto;
   Items: InvoiceItemDto[];
   loading = false;

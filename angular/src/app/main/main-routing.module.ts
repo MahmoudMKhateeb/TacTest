@@ -49,13 +49,14 @@ import { DirectRequestViewComponent } from '@app/main/directrequests/direct-requ
 import { OffersListComponent } from '@app/main/offer/offers.component';
 import { InvoiceDetailResolverService } from '@app/main/invoices/invoice-detail/Invoice-detail-resolver.service';
 import { BalancesListComponent } from '@app/main/invoices/balances/balances-list/balances-list.component';
-import { SubmitInvoiceDetailsComponent } from '@app/main/invoices/submit-invoices/submit-invoice-details.component';
+import { InvoiceTenantComponent } from '@app/main/invoices/invoice-tenants/invoice-tenant.component';
+import { InvoiceTenantDetailsComponent } from '@app/main/invoices/invoice-tenants/invoice-tenant-details.component';
 import { InvoiceDetailComponent } from '@app/main/invoices/invoice-detail/invoice-detail.component';
 import { InvoicesListComponent } from '@app/main/invoices/invoices-list/invoices-list.component';
 import { InvoicePeriodsListComponent } from '@app/main/invoices/invoice-periods-list/invoice-periods-list.component';
 import { InvoicePaymentMethodComponent } from '@app/main/invoices/invoice-payment-methods/invoice-payment-method.component';
 import { TransactionListComponent } from '@app/main/invoices/transaction/transaction-list/transaction-list.component';
-import { SubmitInvoiceDetailResolverService } from '@app/main/invoices/submit-invoices/submit-invoice-details-resolver.service';
+import { InvoiceTenantDetailsService } from '@app/main/invoices/invoice-tenants/invoice-tenant-details.service';
 import { ProformaListComponent } from '@app/main/invoices/proformas/proforma-list.component';
 import { AccidentReasonComponent } from '@app/main/accidents/reasons/reason.component';
 import { TripRejectReasonComponent } from '@app/main/shippingRequests/shippingRequests/ShippingRequestTrips/rejectreason/trip-reject-reason.component';
@@ -254,7 +255,7 @@ import { ComingSoonComponent } from '@app/main/commingSoon/comingSoon.component'
 
           { path: 'invoices/transaction', component: TransactionListComponent, data: { permission: 'Pages.Invoices.Transaction' } },
           { path: 'invoices/proformas', component: ProformaListComponent },
-          //{ path: 'invoices/carrier/invoice', component: TenantsInvoiceComponent, data: { permission: 'Pages.Invoices.SubmitInvoices' } },
+          { path: 'invoices/submitinvoice', component: InvoiceTenantComponent, data: { permission: 'Pages.Invoices.SubmitInvoices' } },
           {
             path: 'invoices/balnacerecharges',
             component: BalancesListComponent,
@@ -262,10 +263,10 @@ import { ComingSoonComponent } from '@app/main/commingSoon/comingSoon.component'
           },
           {
             path: 'invoices/submitinvoices/detail/:id',
-            component: SubmitInvoiceDetailsComponent,
+            component: InvoiceTenantDetailsComponent,
             data: { permission: 'Pages.Invoices.SubmitInvoices' },
             resolve: {
-              invoiceinfo: SubmitInvoiceDetailResolverService,
+              invoiceinfo: InvoiceTenantDetailsService,
             },
           },
           { path: 'accidents/reasons', component: AccidentReasonComponent, data: { permission: 'Pages.ShippingRequestResoneAccidents' } },

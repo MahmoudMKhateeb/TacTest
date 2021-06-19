@@ -135,7 +135,7 @@ export class AppNavigationService {
             'Offers',
             '',
             'flaticon-more',
-            '/app/main/Offers',
+            '/app/main/offers',
             undefined,
             undefined,
             undefined,
