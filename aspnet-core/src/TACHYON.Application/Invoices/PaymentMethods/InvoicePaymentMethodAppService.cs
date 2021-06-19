@@ -4,6 +4,7 @@ using Abp.Collections.Extensions;
 using Abp.Domain.Repositories;
 using Abp.Linq.Extensions;
 using Abp.UI;
+using Microsoft.Extensions.Hosting;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Dynamic.Core;
@@ -18,10 +19,12 @@ namespace TACHYON.Invoices.PaymentMethods
     public class InvoicePaymentMethodAppService :TACHYONAppServiceBase, IInvoicePaymentMethodAppService
     {
         private readonly IRepository<InvoicePaymentMethod> _invoicePaymentMethodRepository;
+        private readonly IHostApplicationLifetime _appLifetime;
 
-        public InvoicePaymentMethodAppService(IRepository<InvoicePaymentMethod> invoicePaymentMethodRepository)
+        public InvoicePaymentMethodAppService(IRepository<InvoicePaymentMethod> invoicePaymentMethodRepository, IHostApplicationLifetime appLifetime)
         {
             _invoicePaymentMethodRepository = invoicePaymentMethodRepository;
+            _appLifetime = appLifetime;
         }
 
 

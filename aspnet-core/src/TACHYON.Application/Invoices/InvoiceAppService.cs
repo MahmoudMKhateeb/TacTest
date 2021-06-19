@@ -69,7 +69,6 @@ namespace TACHYON.Invoices
             var query = await GetInvoicesWithPaging(input);
             return query;
         }
-
         public async Task<InvoiceInfoDto> GetById(EntityDto input)
         {
             DisableTenancyFilters();

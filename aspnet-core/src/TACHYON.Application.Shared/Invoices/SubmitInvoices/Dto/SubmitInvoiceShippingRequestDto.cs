@@ -1,11 +1,9 @@
 ﻿using Abp.Domain.Entities.Auditing;
 using System;
-using System.Collections.Generic;
-using System.Text;
 
-namespace TACHYON.Invoices.GroupsGroups.Dto
+namespace TACHYON.Invoices.SubmitInvoices.Dto
 {
-   public class GroupShippingRequestDto: IHasCreationTime
+    public class SubmitInvoiceShippingRequestDto: IHasCreationTime
     {
         public decimal Price { get; set; }
         public string TruckType { get; set; }

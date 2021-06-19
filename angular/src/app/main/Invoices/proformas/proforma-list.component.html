@@ -1,10 +1,6 @@
 <div [@routerTransition]>
   <div class="content d-flex flex-column flex-column-fluid">
-    <sub-header [title]="'FinancialTransActionMenu' | localize">
-      <div role="actions">
-        <button (click)="exportToExcel()" class="btn btn-outline-success"><i class="fa fa-file-excel"></i> {{ l('ExportToExcel') }}</button>
-      </div>
-    </sub-header>
+    <sub-header [title]="'InvoicesProformas' | localize"> </sub-header>
 
     <div [class]="containerClass">
       <div class="card card-custom gutter-b">
@@ -53,41 +49,23 @@
                     [(date)]="creationDateRange"
                   />
                 </div>
+
                 <div class="col-xl-4">
-                  <div class="form-group m-form__group">
-                    <label for="ChannelType">{{ l('TypeTitle') }}</label>
-                    <select name="Period.periodType" [(ngModel)]="Channel" class="form-control">
-                      <option value="">{{ l('All') }}</option>
-                      <option [value]="code.key" *ngFor="let code of ChannelType">
-                        {{ l(code.value) }}
-                      </option>
-                    </select>
-                  </div>
-                </div>
-                <ng-template [ngIf]="feature.isEnabled('App.TachyonDealer') || !appSession.tenantId">
-                  <div class="col-xl-4">
-                    <div class="form-group">
-                      <label for="MinLongitudeFilter">{{ l('Amount') }}</label>
-                      <div class="input-group">
-                        <input
-                          type="number"
-                          class="form-control"
-                          id="minLongitude"
-                          [(ngModel)]="minLongitude"
-                          placeholder="{{ l('MinValue') }}"
-                          name="minLongitude"
-                        />
-                        <input type="number" class="form-control" [(ngModel)]="maxLongitude" placeholder="{{ l('MaxValue') }}" name="maxLongitude" />
-                      </div>
+                  <div class="form-group">
+                    <label for="MinLongitudeFilter">{{ l('Amount') }}</label>
+                    <div class="input-group">
+                      <input
+                        type="number"
+                        class="form-control"
+                        id="minAmount"
+                        [(ngModel)]="minAmount"
+                        placeholder="{{ l('MinValue') }}"
+                        name="minAmount"
+                      />
+                      <input type="number" class="form-control" [(ngModel)]="maxAmount" placeholder="{{ l('MaxValue') }}" name="maxAmount" />
                     </div>
                   </div>
-                  <div class="col-xl-4">
-                    <label for="EditionDropdown">{{ 'Edition' | localize }}</label>
-                    <select class="form-control" name="editionId" [(ngModel)]="editionId">
-                      <option *ngFor="let edition of editions" [value]="edition.value">{{ edition.displayText }}</option>
-                    </select>
-                  </div>
-                </ng-template>
+                </div>
               </div>
               <button (click)="getAll()" class="btn btn-primary" type="submit">{{ l('Search') }}</button>
             </div>
@@ -114,14 +92,6 @@
                       {{ l('CompanyName') }}
                       <p-sortIcon field="TenantId"></p-sortIcon>
                     </th>
-                    <th *ngIf="feature.isEnabled('App.TachyonDealer') || !appSession.tenantId" pSortableColumn="Tenant.EditionId">
-                      {{ l('Edition') }}
-                      <p-sortIcon field="Tenant.EditionId"></p-sortIcon>
-                    </th>
-                    <th pSortableColumn="ChannelId">
-                      {{ l('TypeTitle') }}
-                      <p-sortIcon field="ChannelId"></p-sortIcon>
-                    </th>
                     <th pSortableColumn="Amount">
                       {{ l('Amount') }}
                       <p-sortIcon field="Amount"></p-sortIcon>
@@ -139,17 +109,10 @@
                       <span class="ui-column-title"> {{ l('ClientName') }}</span>
                       {{ record.clientName }}
                     </td>
-                    <td *ngIf="feature.isEnabled('App.TachyonDealer') || !appSession.tenantId">
-                      <span class="ui-column-title"> {{ l('Edition') }}</span>
-                      {{ record.edition }}
-                    </td>
-                    <td>
-                      <span class="ui-column-title"> {{ l('Channel') }}</span>
-                      {{ l(record.channel) }}
-                    </td>
+
                     <td>
                       <span class="ui-column-title"> {{ l('Amount') }}</span>
-                      {{ record.amount | number }}
+                      {{ record.totalAmount | number }}
                     </td>
                     <td>
                       <span class="ui-column-title"> {{ l('CreationDate') }}</span>

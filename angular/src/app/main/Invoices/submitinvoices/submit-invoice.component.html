@@ -1,6 +1,6 @@
 <div [@routerTransition]>
   <div class="content d-flex flex-column flex-column-fluid">
-    <sub-header [title]="'SubmitInvoices' | localize" [description]="'' | localize">
+    <sub-header [title]="'Invoices' | localize" [description]="'' | localize">
       <div role="actions">
         <button (click)="exportToExcel()" class="btn btn-outline-success"><i class="fa fa-file-excel"></i> {{ l('ExportToExcel') }}</button>
       </div>
@@ -12,7 +12,7 @@
           <form class="form" autocomplete="off">
             <div>
               <div class="row align-items-center">
-                <div class="col-xl-6" *ngIf="!appSession.tenantId">
+                <div class="col-xl-12" *ngIf="feature.isEnabled('App.TachyonDealer') || !appSession.tenantId">
                   <div class="form-group m-form__group align-items-center">
                     <div class="input-group">
                       <p-autoComplete
@@ -27,17 +27,22 @@
                     </div>
                   </div>
                 </div>
+              </div>
+              <div class="row" [hidden]="!advancedFiltersAreShown">
+                <div class="col-md-12">
+                  <div class="kt-separator kt-separator--border-dashed"></div>
+                </div>
                 <div class="col-xl-6">
                   <div class="checkbox-list mb-2">
                     <label class="checkbox ml-2">
                       <input
                         type="checkbox"
                         [(ngModel)]="creationDateRangeActive"
-                        id="TenantsTable_CreationDateRangeActive"
+                        id="CreationDateRangeActive"
                         name="CreationDateRangeActive"
                         value="true"
                       />
-                      {{ 'CreationTime' | localize }}
+                      {{ 'IssuanceDate' | localize }}
                       <span class="ml-2 mt-1"></span>
                     </label>
                   </div>
@@ -52,10 +57,35 @@
                     [(date)]="creationDateRange"
                   />
                 </div>
+
+                <ng-container *ngIf="!appSession.tenantId || feature.isEnabled('App.TachyonDealer')">
+                  <div class="col-md-3">
+                    <div class="form-group">
+                      <label for="Period">{{ l('Period') }}</label>
+                      <select name="inputSearch.periodId" [(ngModel)]="inputSearch.periodId" class="form-control" required>
+                        <option value="">{{ l('All') }}</option>
+                        <option [value]="period.id" *ngFor="let period of Periods">
+                          {{ period.displayName | localize }}
+                        </option>
+                      </select>
+                    </div>
+                  </div>
+                  <div class="col-md-3">
+                    <div class="form-group">
+                      <label for="PaidStatus">{{ l('AccountType') }}</label>
+                      <select name="accountType" [(ngModel)]="accountType" class="form-control">
+                        <option value="">{{ l('All') }}</option>
+                        <option value="1">{{ l('Shipper') }}</option>
+                        <option value="2">{{ l('Carrier') }}</option>
+                      </select>
+                    </div>
+                  </div>
+                </ng-container>
+
                 <div class="col-md-6">
                   <div class="form-group">
                     <label for="Status">{{ l('Status') }}</label>
-                    <select name="Status" [(ngModel)]="Status" class="form-control">
+                    <select name="inputSearch.status" [(ngModel)]="inputSearch.status" class="form-control">
                       <option value="">{{ l('All') }}</option>
                       <option [value]="code.key" *ngFor="let code of SubmitStatus">
                         {{ code.value | localize }}
@@ -63,20 +93,20 @@
                     </select>
                   </div>
                 </div>
-
-                <div *ngIf="!appSession.tenantId" class="col-md-6">
-                  <div class="form-group">
-                    <label for="DemandStatus">{{ l('BillingInterval') }}</label>
-                    <select name="periodId" [(ngModel)]="periodId" class="form-control" required>
-                      <option value="">{{ l('All') }}</option>
-                      <option [value]="period.id" *ngFor="let period of Periods">
-                        {{ period.displayName | localize }}
-                      </option>
-                    </select>
-                  </div>
+              </div>
+              <div class="row mb-2">
+                <div class="col-sm-12">
+                  <span
+                    class="clickable-item text-muted"
+                    *ngIf="!advancedFiltersAreShown"
+                    (click)="advancedFiltersAreShown = !advancedFiltersAreShown"
+                    ><i class="fa fa-angle-down"></i> {{ l('ShowAdvancedFilters') }}</span
+                  >
+                  <span class="clickable-item text-muted" *ngIf="advancedFiltersAreShown" (click)="advancedFiltersAreShown = !advancedFiltersAreShown"
+                    ><i class="fa fa-angle-up"></i> {{ l('HideAdvancedFilters') }}</span
+                  >
                 </div>
               </div>
-
               <button (click)="getAll()" class="btn btn-primary" type="submit">{{ l('Search') }}</button>
             </div>
           </form>
@@ -102,21 +132,26 @@
                       {{ l('Actions') }}
                     </th>
 
-                    <th *ngIf="!appSession.tenantId" pSortableColumn="TenantId">
+                    <th pSortableColumn="ReferenceNumber">
+                      {{ l('InvoiceNumber') }}
+                      <p-sortIcon field="ReferenceNumber"></p-sortIcon>
+                    </th>
+                    <th *ngIf="!appSession.tenantId || feature.isEnabled('App.TachyonDealer')" pSortableColumn="tenantId">
                       {{ l('CompanyName') }}
-                      <p-sortIcon field="TenantId"></p-sortIcon>
+                      <p-sortIcon field="tenantId"></p-sortIcon>
                     </th>
                     <th pSortableColumn="PeriodId">
                       {{ l('Interval') }}
                       <p-sortIcon field="PeriodId"></p-sortIcon>
                     </th>
 
-                    <th pSortableColumn="amountWithTaxVat">
+                    <th pSortableColumn="TotalAmount">
                       {{ l('TotalAmount') }}
-                      <p-sortIcon field="amountWithTaxVat"></p-sortIcon>
+                      <p-sortIcon field="TotalAmount"></p-sortIcon>
                     </th>
+
                     <th pSortableColumn="CreationTime">
-                      {{ l('CreationTime') }}
+                      {{ l('IssuanceDate') }}
                       <p-sortIcon field="CreationTime"></p-sortIcon>
                     </th>
                     <th pSortableColumn="Status">
@@ -126,7 +161,7 @@
                   </tr>
                 </ng-template>
                 <ng-template pTemplate="body" let-record="$implicit">
-                  <tr [class]="record.isDemand ? 'table-success' : 'table-danger'">
+                  <tr [class]="record.isPaid ? 'table-success' : 'table-danger'">
                     <td style="width: 130px;">
                       <div class="btn-group dropdown" dropdown container="body">
                         <button class="dropdown-toggle btn btn-sm btn-primary" dropdownToggle>
@@ -136,37 +171,17 @@
                           <li>
                             <a class="dropdown-item" [routerLink]="['/app/main/invoices/submitinvoices/detail', record.id]">{{ l('Detail') }}</a>
                           </li>
-                          <li>
-                            <a *ngIf="record.demandFileName" class="dropdown-item" href="javascript:;" (click)="downloadDocument(record.id)">
+                          <li *ngIf="record.documentName">
+                            <a class="dropdown-item" href="javascript:;" (click)="downloadDocument(record.id)">
                               {{ l('Download') }}
                             </a>
                           </li>
-                          <li>
-                            <a
-                              class="dropdown-item"
-                              href="javascript:;"
-                              *ngIf="permission.isGranted('Pages.Administration.Host.Invoices.SubmitInvoices.Delete')"
-                              (click)="delete(record)"
-                              >{{ l('Delete') }}</a
-                            >
+
+                          <li *ngIf="(record.status == 0 || record.status == 3) && permission.isGranted('Pages.Invoices.SubmitInvoices.Claim')">
+                            <a class="dropdown-item" href="javascript:;" (click)="ClaimModel.show(record.id)">{{ l('Claim') }}</a>
                           </li>
-                          <li *ngIf="record.status == 0 || record.status == 3">
-                            <a
-                              class="dropdown-item"
-                              href="javascript:;"
-                              *ngIf="permission.isGranted('Pages.Invoices.SubmitInvoices.Claim')"
-                              (click)="GroupPeriodDemanModel.show(record.id)"
-                              >{{ l('Claim') }}</a
-                            >
-                          </li>
-                          <li *ngIf="record.status == 1">
-                            <a
-                              class="dropdown-item"
-                              href="javascript:;"
-                              *ngIf="permission.isGranted('Pages.Administration.Host.Invoices.SubmitInvoices.Accepted')"
-                              (click)="Accepted(record)"
-                              >{{ l('Accpeted') }}</a
-                            >
+                          <li *ngIf="(record.status == 1 && !appSession.tenantId) || feature.isEnabled('App.TachyonDealer')">
+                            <a class="dropdown-item" href="javascript:;" (click)="Accepted(record)">{{ l('Accpeted') }}</a>
                           </li>
                           <li *ngIf="record.status == 1">
                             <a
@@ -181,20 +196,30 @@
                       </div>
                     </td>
 
-                    <td *ngIf="!appSession.tenantId">
+                    <td>
+                      <span class="ui-column-title"> {{ l('InvoiceNumber') }}</span>
+                      {{ record.referenceNumber }}
+                    </td>
+                    <td *ngIf="!appSession.tenantId || feature.isEnabled('App.TachyonDealer')">
                       <span class="ui-column-title"> {{ l('CompanyName') }}</span>
                       {{ record.tenantName }}
                     </td>
                     <td>
-                      <span class="ui-column-title"> {{ l('Interval') }}</span>
+                      <span class="ui-column-title"> {{ l('Period') }}</span>
                       {{ record.period }}
                     </td>
+                    <td *ngIf="!appSession.tenantId || feature.isEnabled('App.TachyonDealer')">
+                      <span class="ui-column-title"> {{ l('AccountType') }}</span>
+                      {{ l(record.accountTypeTitle) }}
+                    </td>
+
                     <td>
                       <span class="ui-column-title"> {{ l('TotalAmount') }}</span>
-                      {{ record.amountWithTaxVat }}
+                      {{ record.totalAmount | number }} {{ l('SAR') }}
                     </td>
+
                     <td>
-                      <span class="ui-column-title"> {{ l('CreationTime') }}</span>
+                      <span class="ui-column-title"> {{ l('IssuanceDate') }}</span>
                       {{ record.creationTime | momentFormat: 'L' }}
                     </td>
                     <td>
@@ -228,7 +253,7 @@
         </div>
       </div>
     </div>
-    <deman-model #GroupPeriodDemanModel (modalSave)="getAll()"></deman-model>
-    <submitinvoice-rejected-modal #RejectedModel (modalSave)="getAll()"></submitinvoice-rejected-modal>
   </div>
 </div>
+<deman-model (modalSave)="reloadPage()" #ClaimModel></deman-model>
+<submitinvoice-rejected-modal #RejectedModel (modalSave)="getAll()"></submitinvoice-rejected-modal>

@@ -64,11 +64,10 @@ using TACHYON.Invoices.Balances;
 using TACHYON.Invoices.Balances.Dto;
 using TACHYON.Invoices.Dto;
 using TACHYON.Invoices.Groups;
-using TACHYON.Invoices.Groups.Dto;
-using TACHYON.Invoices.GroupsGroups.Dto;
 using TACHYON.Invoices.Periods;
 using TACHYON.Invoices.Periods.Dto;
 using TACHYON.Invoices.SubmitInvoices;
+using TACHYON.Invoices.SubmitInvoices.Dto;
 using TACHYON.Invoices.Transactions;
 using TACHYON.Invoices.Transactions.Dto;
 using TACHYON.Localization;
@@ -476,19 +475,20 @@ namespace TACHYON
                .ForMember(dto => dto.DisplayName, options => options.MapFrom(entity => entity.Name))
                .ForMember(dto => dto.Group, options => options.MapFrom(entity => entity.Edition.Name));
 
-            configuration.CreateMap<GroupPeriod, GroupPeriodListDto>()
+            configuration.CreateMap<SubmitInvoice, SubmitInvoiceListDto>()
                 .ForMember(dto => dto.TenantName, options => options.MapFrom(entity => entity.Tenant.Name))
-                .ForMember(dto => dto.Period, options => options.MapFrom(entity => entity.InvoicePeriod.DisplayName))
-                .ForMember(dto => dto.StatusTitle, e => e.MapFrom(e => Enum.GetName(typeof(SubmitInvoiceStatus),e.Status)));
+                .ForMember(dto => dto.Period, options => options.MapFrom(entity => entity.InvoicePeriodsFK.DisplayName));
 
-            configuration.CreateMap<GroupPeriod, GroupPeriodInfoDto>()
+            configuration.CreateMap<SubmitInvoice, SubmitInvoiceInfoDto>()
                 .ForMember(dto => dto.ClientName, options => options.MapFrom(entity => entity.Tenant.Name))
+                .ForMember(dto => dto.InvoiceNumber, options => options.MapFrom(entity => entity.ReferencNumber))
+                .ForMember(dto => dto.Attn, options => options.MapFrom(entity => entity.Tenant.Name))
+                .ForMember(dto => dto.ContractNo, options => options.MapFrom(entity => entity.Tenant.ContractNumber))
                 .ForMember(dto => dto.Address, options => options.MapFrom(entity => entity.Tenant.Address))
-                  .ForMember(dto => dto.ShippingRequest, options => options.MapFrom(entity => entity.ShippingRequests))
-                .ForMember(dto => dto.Period, options => options.MapFrom(entity => entity.InvoicePeriod.DisplayName));
+                .ForMember(dto => dto.Period, options => options.MapFrom(entity => entity.InvoicePeriodsFK.DisplayName));
 
 
-            configuration.CreateMap<GroupShippingRequests, GroupShippingRequestDto>()
+            configuration.CreateMap<GroupShippingRequests, SubmitInvoiceShippingRequestDto>()
   .ForMember(dto => dto.Price, options => options.MapFrom(entity => entity.ShippingRequests.Price))
   .ForMember(dto => dto.CreationTime, options => options.MapFrom(entity => entity.ShippingRequests.CreationTime))
   .ForMember(dto => dto.Source, options => options.MapFrom(entity => entity.ShippingRequests.OriginCityFk.DisplayName))

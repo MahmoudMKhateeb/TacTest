@@ -3,7 +3,7 @@ import { ModalDirective } from 'ngx-bootstrap/modal';
 import { finalize } from 'rxjs/operators';
 import { AppComponentBase } from '@shared/common/app-component-base';
 
-import { GroupPeriodServiceProxy, GroupPeriodClaimCreateInput } from '@shared/service-proxies/service-proxies';
+import { SubmitInvoicesServiceProxy, SubmitInvoiceClaimCreateInput } from '@shared/service-proxies/service-proxies';
 
 @Component({
   selector: 'deman-model',
@@ -14,13 +14,13 @@ export class DemanModelComponent extends AppComponentBase {
   @ViewChild('modal', { static: false }) modal: ModalDirective;
   active = false;
   saving = false;
-  File: GroupPeriodClaimCreateInput;
-  constructor(injector: Injector, private _GroupService: GroupPeriodServiceProxy) {
+  File: SubmitInvoiceClaimCreateInput;
+  constructor(injector: Injector, private _Service: SubmitInvoicesServiceProxy) {
     super(injector);
   }
 
   show(groupid: number): void {
-    this.File = new GroupPeriodClaimCreateInput();
+    this.File = new SubmitInvoiceClaimCreateInput();
     this.File.id = groupid;
     this.active = true;
     this.modal.show();
@@ -28,8 +28,7 @@ export class DemanModelComponent extends AppComponentBase {
 
   save(): void {
     this.saving = true;
-    console.log(this.File);
-    this._GroupService
+    this._Service
       .claim(this.File)
       .pipe(
         finalize(() => {
