@@ -202,7 +202,9 @@
                           <li>
                             <a class="dropdown-item" [routerLink]="['/app/main/invoices/detail', record.id]">{{ l('Detail') }}</a>
                           </li>
-
+                          <li>
+                            <a class="dropdown-item" (click)="downloadReport(record.id)">{{ l('downloadInvoice') }}</a>
+                          </li>
                           <li *ngIf="!record.isPaid">
                             <a
                               class="dropdown-item"

@@ -24,12 +24,12 @@
         <CommandText>/* Local Query */</CommandText>
       </Query>
       <Fields>
-        <Field Name="InvoiceNo">
-          <DataField>InvoiceNo</DataField>
+        <Field Name="InvoiceNumber">
+          <DataField>InvoiceNumber</DataField>
           <rd:TypeName>System.String</rd:TypeName>
         </Field>
-        <Field Name="InvoiceDate">
-          <DataField>InvoiceDate</DataField>
+        <Field Name="CreationTime">
+          <DataField>CreationTime</DataField>
           <rd:TypeName>System.String</rd:TypeName>
         </Field>
         <Field Name="DueDate">
@@ -44,8 +44,8 @@
           <DataField>Phone</DataField>
           <rd:TypeName>System.String</rd:TypeName>
         </Field>
-        <Field Name="Fax">
-          <DataField>Fax</DataField>
+        <Field Name="FaxNo">
+          <DataField>FaxNo</DataField>
           <rd:TypeName>System.String</rd:TypeName>
         </Field>
         <Field Name="Email">
@@ -72,8 +72,8 @@
           <DataField>ProjectName</DataField>
           <rd:TypeName>System.String</rd:TypeName>
         </Field>
-        <Field Name="InvoiceSubTotal">
-          <DataField>InvoiceSubTotal</DataField>
+        <Field Name="SubTotalAmount">
+          <DataField>SubTotalAmount</DataField>
           <rd:TypeName>System.String</rd:TypeName>
         </Field>
         <Field Name="DueAmount">
@@ -84,10 +84,38 @@
           <DataField>VatAmount</DataField>
           <rd:TypeName>System.String</rd:TypeName>
         </Field>
+        <Field Name="ClientName">
+          <DataField>ClientName</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="Period">
+          <DataField>Period</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="IsPaid">
+          <DataField>IsPaid</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="AccountType">
+          <DataField>AccountType</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="Note">
+          <DataField>Note</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="TotalAmount">
+          <DataField>TotalAmount</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="TaxVat">
+          <DataField>TaxVat</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
       </Fields>
       <rd:DataSetInfo>
         <rd:DataSetName>GetInvoiceReportInfoDataset</rd:DataSetName>
-        <rd:SchemaPath>C:\Users\tasneem\source\repos\tachyonhub\tachyon-core\aspnet-core\src\TACHYON.Application\Invoices\Reports\Datasets\GetInvoiceReportInfoDataset.xsd</rd:SchemaPath>
+        <rd:SchemaPath>C:\Users\DELL\source\repos\tachyon-core\aspnet-core\src\TACHYON.Application\Invoices\Reports\Datasets\GetInvoiceReportInfoDataset.xsd</rd:SchemaPath>
         <rd:TableName>DataTable1</rd:TableName>
         <rd:TableAdapterFillMethod />
         <rd:TableAdapterGetDataMethod />
@@ -100,20 +128,16 @@
         <CommandText>/* Local Query */</CommandText>
       </Query>
       <Fields>
-        <Field Name="Date">
-          <DataField>Date</DataField>
+        <Field Name="DateWork">
+          <DataField>DateWork</DataField>
           <rd:TypeName>System.String</rd:TypeName>
         </Field>
-        <Field Name="WaybillNo">
-          <DataField>WaybillNo</DataField>
+        <Field Name="Source">
+          <DataField>Source</DataField>
           <rd:TypeName>System.String</rd:TypeName>
         </Field>
-        <Field Name="OriginCityName">
-          <DataField>OriginCityName</DataField>
-          <rd:TypeName>System.String</rd:TypeName>
-        </Field>
-        <Field Name="DestinationCityName">
-          <DataField>DestinationCityName</DataField>
+        <Field Name="Destination">
+          <DataField>Destination</DataField>
           <rd:TypeName>System.String</rd:TypeName>
         </Field>
         <Field Name="TruckType">
@@ -128,10 +152,34 @@
           <DataField>Notes</DataField>
           <rd:TypeName>System.String</rd:TypeName>
         </Field>
+        <Field Name="Sequence">
+          <DataField>Sequence</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="WayBillNumber">
+          <DataField>WayBillNumber</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="SubTotalAmount">
+          <DataField>SubTotalAmount</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="VatAmount">
+          <DataField>VatAmount</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="TotalAmount">
+          <DataField>TotalAmount</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="Remarks">
+          <DataField>Remarks</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
       </Fields>
       <rd:DataSetInfo>
         <rd:DataSetName>GetInvoiceShippingRequestsReportInfoDataset</rd:DataSetName>
-        <rd:SchemaPath>C:\Users\tasneem\source\repos\tachyonhub\tachyon-core\aspnet-core\src\TACHYON.Application\Invoices\Reports\Datasets\GetInvoiceShippingRequestsReportInfoDataset.xsd</rd:SchemaPath>
+        <rd:SchemaPath>C:\Users\DELL\source\repos\tachyon-core\aspnet-core\src\TACHYON.Application\Invoices\Reports\Datasets\GetInvoiceShippingRequestsReportInfoDataset.xsd</rd:SchemaPath>
         <rd:TableName>DataTable1</rd:TableName>
         <rd:TableAdapterFillMethod />
         <rd:TableAdapterGetDataMethod />
@@ -818,7 +866,7 @@
                             <Paragraph>
                               <TextRuns>
                                 <TextRun>
-                                  <Value>(VAT 15%)</Value>
+                                  <Value>(VAT %)</Value>
                                   <Style>
                                     <FontStyle>Normal</FontStyle>
                                     <FontFamily>Times New Roman</FontFamily>
@@ -990,14 +1038,14 @@
                   <TablixCells>
                     <TablixCell>
                       <CellContents>
-                        <Textbox Name="Textbox170">
+                        <Textbox Name="Sequence">
                           <CanGrow>true</CanGrow>
                           <KeepTogether>true</KeepTogether>
                           <Paragraphs>
                             <Paragraph>
                               <TextRuns>
                                 <TextRun>
-                                  <Value>=RowNumber(nothing)</Value>
+                                  <Value>=Fields!Sequence.Value</Value>
                                   <Style>
                                     <FontSize>9pt</FontSize>
                                   </Style>
@@ -1008,7 +1056,7 @@
                               </Style>
                             </Paragraph>
                           </Paragraphs>
-                          <rd:DefaultName>Textbox170</rd:DefaultName>
+                          <rd:DefaultName>Sequence</rd:DefaultName>
                           <Style>
                             <Border>
                               <Color>LightGrey</Color>
@@ -1024,14 +1072,14 @@
                     </TablixCell>
                     <TablixCell>
                       <CellContents>
-                        <Textbox Name="Date">
+                        <Textbox Name="DateWork">
                           <CanGrow>true</CanGrow>
                           <KeepTogether>true</KeepTogether>
                           <Paragraphs>
                             <Paragraph>
                               <TextRuns>
                                 <TextRun>
-                                  <Value>=Fields!Date.Value</Value>
+                                  <Value>=Fields!DateWork.Value</Value>
                                   <Style>
                                     <FontSize>9pt</FontSize>
                                   </Style>
@@ -1042,7 +1090,7 @@
                               </Style>
                             </Paragraph>
                           </Paragraphs>
-                          <rd:DefaultName>Date</rd:DefaultName>
+                          <rd:DefaultName>DateWork</rd:DefaultName>
                           <Style>
                             <Border>
                               <Color>LightGrey</Color>
@@ -1058,14 +1106,14 @@
                     </TablixCell>
                     <TablixCell>
                       <CellContents>
-                        <Textbox Name="WaybillNo">
+                        <Textbox Name="WayBillNumber">
                           <CanGrow>true</CanGrow>
                           <KeepTogether>true</KeepTogether>
                           <Paragraphs>
                             <Paragraph>
                               <TextRuns>
                                 <TextRun>
-                                  <Value>=Fields!WaybillNo.Value</Value>
+                                  <Value>=Fields!WayBillNumber.Value</Value>
                                   <Style>
                                     <FontSize>9pt</FontSize>
                                   </Style>
@@ -1076,7 +1124,7 @@
                               </Style>
                             </Paragraph>
                           </Paragraphs>
-                          <rd:DefaultName>WaybillNo</rd:DefaultName>
+                          <rd:DefaultName>WayBillNumber</rd:DefaultName>
                           <Style>
                             <Border>
                               <Color>LightGrey</Color>
@@ -1092,14 +1140,14 @@
                     </TablixCell>
                     <TablixCell>
                       <CellContents>
-                        <Textbox Name="OriginCityName">
+                        <Textbox Name="Source">
                           <CanGrow>true</CanGrow>
                           <KeepTogether>true</KeepTogether>
                           <Paragraphs>
                             <Paragraph>
                               <TextRuns>
                                 <TextRun>
-                                  <Value>=Fields!OriginCityName.Value</Value>
+                                  <Value>=Fields!Source.Value</Value>
                                   <Style>
                                     <FontSize>9pt</FontSize>
                                   </Style>
@@ -1110,7 +1158,7 @@
                               </Style>
                             </Paragraph>
                           </Paragraphs>
-                          <rd:DefaultName>OriginCityName</rd:DefaultName>
+                          <rd:DefaultName>Source</rd:DefaultName>
                           <Style>
                             <Border>
                               <Color>LightGrey</Color>
@@ -1126,14 +1174,14 @@
                     </TablixCell>
                     <TablixCell>
                       <CellContents>
-                        <Textbox Name="DestinationCityName">
+                        <Textbox Name="Destination">
                           <CanGrow>true</CanGrow>
                           <KeepTogether>true</KeepTogether>
                           <Paragraphs>
                             <Paragraph>
                               <TextRuns>
                                 <TextRun>
-                                  <Value>=Fields!DestinationCityName.Value</Value>
+                                  <Value>=Fields!Destination.Value</Value>
                                   <Style>
                                     <FontSize>9pt</FontSize>
                                   </Style>
@@ -1144,7 +1192,7 @@
                               </Style>
                             </Paragraph>
                           </Paragraphs>
-                          <rd:DefaultName>DestinationCityName</rd:DefaultName>
+                          <rd:DefaultName>Destination</rd:DefaultName>
                           <Style>
                             <Border>
                               <Color>LightGrey</Color>
@@ -1194,14 +1242,14 @@
                     </TablixCell>
                     <TablixCell>
                       <CellContents>
-                        <Textbox Name="Price">
+                        <Textbox Name="SubTotalAmount">
                           <CanGrow>true</CanGrow>
                           <KeepTogether>true</KeepTogether>
                           <Paragraphs>
                             <Paragraph>
                               <TextRuns>
                                 <TextRun>
-                                  <Value>=Fields!Price.Value</Value>
+                                  <Value>=Fields!SubTotalAmount.Value</Value>
                                   <Style>
                                     <FontSize>9pt</FontSize>
                                   </Style>
@@ -1212,7 +1260,7 @@
                               </Style>
                             </Paragraph>
                           </Paragraphs>
-                          <rd:DefaultName>Price</rd:DefaultName>
+                          <rd:DefaultName>SubTotalAmount</rd:DefaultName>
                           <Style>
                             <Border>
                               <Color>LightGrey</Color>
@@ -1228,14 +1276,14 @@
                     </TablixCell>
                     <TablixCell>
                       <CellContents>
-                        <Textbox Name="Notes">
+                        <Textbox Name="VatAmount">
                           <CanGrow>true</CanGrow>
                           <KeepTogether>true</KeepTogether>
                           <Paragraphs>
                             <Paragraph>
                               <TextRuns>
                                 <TextRun>
-                                  <Value>=Fields!Notes.Value</Value>
+                                  <Value>=Fields!VatAmount.Value</Value>
                                   <Style>
                                     <FontSize>9pt</FontSize>
                                   </Style>
@@ -1246,7 +1294,7 @@
                               </Style>
                             </Paragraph>
                           </Paragraphs>
-                          <rd:DefaultName>Notes</rd:DefaultName>
+                          <rd:DefaultName>VatAmount</rd:DefaultName>
                           <Style>
                             <Border>
                               <Color>LightGrey</Color>
@@ -1259,14 +1307,14 @@
                     </TablixCell>
                     <TablixCell>
                       <CellContents>
-                        <Textbox Name="Textbox12">
+                        <Textbox Name="TotalAmount">
                           <CanGrow>true</CanGrow>
                           <KeepTogether>true</KeepTogether>
                           <Paragraphs>
                             <Paragraph>
                               <TextRuns>
                                 <TextRun>
-                                  <Value />
+                                  <Value>=Fields!TotalAmount.Value</Value>
                                   <Style>
                                     <FontSize>9pt</FontSize>
                                   </Style>
@@ -1277,7 +1325,7 @@
                               </Style>
                             </Paragraph>
                           </Paragraphs>
-                          <rd:DefaultName>Textbox12</rd:DefaultName>
+                          <rd:DefaultName>TotalAmount</rd:DefaultName>
                           <Style>
                             <Border>
                               <Color>LightGrey</Color>
@@ -1290,14 +1338,14 @@
                     </TablixCell>
                     <TablixCell>
                       <CellContents>
-                        <Textbox Name="Textbox16">
+                        <Textbox Name="Remarks">
                           <CanGrow>true</CanGrow>
                           <KeepTogether>true</KeepTogether>
                           <Paragraphs>
                             <Paragraph>
                               <TextRuns>
                                 <TextRun>
-                                  <Value />
+                                  <Value>=Fields!Remarks.Value</Value>
                                   <Style>
                                     <FontSize>9pt</FontSize>
                                   </Style>
@@ -1308,7 +1356,7 @@
                               </Style>
                             </Paragraph>
                           </Paragraphs>
-                          <rd:DefaultName>Textbox16</rd:DefaultName>
+                          <rd:DefaultName>Remarks</rd:DefaultName>
                           <Style>
                             <Border>
                               <Color>LightGrey</Color>
@@ -1353,7 +1401,7 @@
             <Top>2.39291in</Top>
             <Left>0.02008in</Left>
             <Height>0.9236in</Height>
-            <Width>7.6253in</Width>
+            <Width>7.62529in</Width>
             <ZIndex>4</ZIndex>
             <Style>
               <Border>
@@ -1639,7 +1687,7 @@
               <Paragraph>
                 <TextRuns>
                   <TextRun>
-                    <Value>=First(Fields!InvoiceNo.Value, "GetInvoiceReportInfoDataset")</Value>
+                    <Value>=First(Fields!InvoiceNumber.Value, "GetInvoiceReportInfoDataset")</Value>
                     <Style>
                       <FontSize>9pt</FontSize>
                       <Color>#181818</Color>
@@ -1826,7 +1874,7 @@
               <Paragraph>
                 <TextRuns>
                   <TextRun>
-                    <Value>=First(Fields!BillTo.Value, "GetInvoiceReportInfoDataset")</Value>
+                    <Value>=First(Fields!ClientName.Value, "GetInvoiceReportInfoDataset")</Value>
                     <Style>
                       <FontSize>9pt</FontSize>
                       <Color>#181818</Color>
@@ -2016,7 +2064,7 @@
               <Paragraph>
                 <TextRuns>
                   <TextRun>
-                    <Value>=First(Fields!InvoiceDate.Value, "GetInvoiceReportInfoDataset")</Value>
+                    <Value>=First(Fields!CreationTime.Value, "GetInvoiceReportInfoDataset")</Value>
                     <Style>
                       <Color>#181818</Color>
                     </Style>
@@ -2164,7 +2212,7 @@
               <Paragraph>
                 <TextRuns>
                   <TextRun>
-                    <Value>=First(Fields!Fax.Value, "GetInvoiceReportInfoDataset")</Value>
+                    <Value>=First(Fields!FaxNo.Value, "GetInvoiceReportInfoDataset")</Value>
                     <Style>
                       <Color>#181818</Color>
                     </Style>
@@ -3354,7 +3402,7 @@
               <Paragraph>
                 <TextRuns>
                   <TextRun>
-                    <Value>=First(Fields!InvoiceSubTotal.Value, "GetInvoiceReportInfoDataset")</Value>
+                    <Value>=First(Fields!SubTotalAmount.Value, "GetInvoiceReportInfoDataset")</Value>
                     <Style>
                       <FontFamily>arial</FontFamily>
                       <FontWeight>Bold</FontWeight>
@@ -3434,7 +3482,7 @@
               <Paragraph>
                 <TextRuns>
                   <TextRun>
-                    <Value>(%15) المضافة الضريبة قيمة</Value>
+                    <Value>(%) المضافة الضريبة قيمة</Value>
                     <Style>
                       <FontFamily>arial</FontFamily>
                       <FontWeight>Bold</FontWeight>
@@ -3512,7 +3560,7 @@
               <Paragraph>
                 <TextRuns>
                   <TextRun>
-                    <Value>VAT Amount (15%)</Value>
+                    <Value>VAT Amount (%)</Value>
                     <Style>
                       <FontStyle>Normal</FontStyle>
                       <FontFamily>Times New Roman</FontFamily>
@@ -4250,7 +4298,7 @@
                 <Paragraph>
                   <TextRuns>
                     <TextRun>
-                      <Value>=First(Fields!InvoiceNo.Value, "GetInvoiceReportInfoDataset")</Value>
+                      <Value>=First(Fields!InvoiceNumber.Value, "GetInvoiceReportInfoDataset")</Value>
                       <Style>
                         <FontFamily>Free 3 of 9</FontFamily>
                         <FontSize>22pt</FontSize>

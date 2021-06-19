@@ -279,19 +279,29 @@ namespace TACHYON.Invoices.Reports.Datasets {
         [global::System.Xml.Serialization.XmlSchemaProviderAttribute("GetTypedTableSchema")]
         public partial class DataTable1DataTable : global::System.Data.TypedTableBase<DataTable1Row> {
             
-            private global::System.Data.DataColumn columnDate;
+            private global::System.Data.DataColumn columnDateWork;
             
-            private global::System.Data.DataColumn columnWaybillNo;
+            private global::System.Data.DataColumn columnSource;
             
-            private global::System.Data.DataColumn columnOriginCityName;
-            
-            private global::System.Data.DataColumn columnDestinationCityName;
+            private global::System.Data.DataColumn columnDestination;
             
             private global::System.Data.DataColumn columnTruckType;
             
             private global::System.Data.DataColumn columnPrice;
             
             private global::System.Data.DataColumn columnNotes;
+            
+            private global::System.Data.DataColumn columnSequence;
+            
+            private global::System.Data.DataColumn columnWayBillNumber;
+            
+            private global::System.Data.DataColumn columnSubTotalAmount;
+            
+            private global::System.Data.DataColumn columnVatAmount;
+            
+            private global::System.Data.DataColumn columnTotalAmount;
+            
+            private global::System.Data.DataColumn columnRemarks;
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
@@ -328,33 +338,25 @@ namespace TACHYON.Invoices.Reports.Datasets {
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
-            public global::System.Data.DataColumn DateColumn {
+            public global::System.Data.DataColumn DateWorkColumn {
                 get {
-                    return this.columnDate;
+                    return this.columnDateWork;
                 }
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
-            public global::System.Data.DataColumn WaybillNoColumn {
+            public global::System.Data.DataColumn SourceColumn {
                 get {
-                    return this.columnWaybillNo;
+                    return this.columnSource;
                 }
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
-            public global::System.Data.DataColumn OriginCityNameColumn {
+            public global::System.Data.DataColumn DestinationColumn {
                 get {
-                    return this.columnOriginCityName;
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
-            public global::System.Data.DataColumn DestinationCityNameColumn {
-                get {
-                    return this.columnDestinationCityName;
+                    return this.columnDestination;
                 }
             }
             
@@ -379,6 +381,54 @@ namespace TACHYON.Invoices.Reports.Datasets {
             public global::System.Data.DataColumn NotesColumn {
                 get {
                     return this.columnNotes;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public global::System.Data.DataColumn SequenceColumn {
+                get {
+                    return this.columnSequence;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public global::System.Data.DataColumn WayBillNumberColumn {
+                get {
+                    return this.columnWayBillNumber;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public global::System.Data.DataColumn SubTotalAmountColumn {
+                get {
+                    return this.columnSubTotalAmount;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public global::System.Data.DataColumn VatAmountColumn {
+                get {
+                    return this.columnVatAmount;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public global::System.Data.DataColumn TotalAmountColumn {
+                get {
+                    return this.columnTotalAmount;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public global::System.Data.DataColumn RemarksColumn {
+                get {
+                    return this.columnRemarks;
                 }
             }
             
@@ -419,16 +469,21 @@ namespace TACHYON.Invoices.Reports.Datasets {
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
-            public DataTable1Row AddDataTable1Row(string Date, string WaybillNo, string OriginCityName, string DestinationCityName, string TruckType, string Price, string Notes) {
+            public DataTable1Row AddDataTable1Row(string DateWork, string Source, string Destination, string TruckType, string Price, string Notes, string Sequence, string WayBillNumber, string SubTotalAmount, string VatAmount, string TotalAmount, string Remarks) {
                 DataTable1Row rowDataTable1Row = ((DataTable1Row)(this.NewRow()));
                 object[] columnValuesArray = new object[] {
-                        Date,
-                        WaybillNo,
-                        OriginCityName,
-                        DestinationCityName,
+                        DateWork,
+                        Source,
+                        Destination,
                         TruckType,
                         Price,
-                        Notes};
+                        Notes,
+                        Sequence,
+                        WayBillNumber,
+                        SubTotalAmount,
+                        VatAmount,
+                        TotalAmount,
+                        Remarks};
                 rowDataTable1Row.ItemArray = columnValuesArray;
                 this.Rows.Add(rowDataTable1Row);
                 return rowDataTable1Row;
@@ -451,32 +506,47 @@ namespace TACHYON.Invoices.Reports.Datasets {
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
             internal void InitVars() {
-                this.columnDate = base.Columns["Date"];
-                this.columnWaybillNo = base.Columns["WaybillNo"];
-                this.columnOriginCityName = base.Columns["OriginCityName"];
-                this.columnDestinationCityName = base.Columns["DestinationCityName"];
+                this.columnDateWork = base.Columns["DateWork"];
+                this.columnSource = base.Columns["Source"];
+                this.columnDestination = base.Columns["Destination"];
                 this.columnTruckType = base.Columns["TruckType"];
                 this.columnPrice = base.Columns["Price"];
                 this.columnNotes = base.Columns["Notes"];
+                this.columnSequence = base.Columns["Sequence"];
+                this.columnWayBillNumber = base.Columns["WayBillNumber"];
+                this.columnSubTotalAmount = base.Columns["SubTotalAmount"];
+                this.columnVatAmount = base.Columns["VatAmount"];
+                this.columnTotalAmount = base.Columns["TotalAmount"];
+                this.columnRemarks = base.Columns["Remarks"];
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
             private void InitClass() {
-                this.columnDate = new global::System.Data.DataColumn("Date", typeof(string), null, global::System.Data.MappingType.Element);
-                base.Columns.Add(this.columnDate);
-                this.columnWaybillNo = new global::System.Data.DataColumn("WaybillNo", typeof(string), null, global::System.Data.MappingType.Element);
-                base.Columns.Add(this.columnWaybillNo);
-                this.columnOriginCityName = new global::System.Data.DataColumn("OriginCityName", typeof(string), null, global::System.Data.MappingType.Element);
-                base.Columns.Add(this.columnOriginCityName);
-                this.columnDestinationCityName = new global::System.Data.DataColumn("DestinationCityName", typeof(string), null, global::System.Data.MappingType.Element);
-                base.Columns.Add(this.columnDestinationCityName);
+                this.columnDateWork = new global::System.Data.DataColumn("DateWork", typeof(string), null, global::System.Data.MappingType.Element);
+                base.Columns.Add(this.columnDateWork);
+                this.columnSource = new global::System.Data.DataColumn("Source", typeof(string), null, global::System.Data.MappingType.Element);
+                base.Columns.Add(this.columnSource);
+                this.columnDestination = new global::System.Data.DataColumn("Destination", typeof(string), null, global::System.Data.MappingType.Element);
+                base.Columns.Add(this.columnDestination);
                 this.columnTruckType = new global::System.Data.DataColumn("TruckType", typeof(string), null, global::System.Data.MappingType.Element);
                 base.Columns.Add(this.columnTruckType);
                 this.columnPrice = new global::System.Data.DataColumn("Price", typeof(string), null, global::System.Data.MappingType.Element);
                 base.Columns.Add(this.columnPrice);
                 this.columnNotes = new global::System.Data.DataColumn("Notes", typeof(string), null, global::System.Data.MappingType.Element);
                 base.Columns.Add(this.columnNotes);
+                this.columnSequence = new global::System.Data.DataColumn("Sequence", typeof(string), null, global::System.Data.MappingType.Element);
+                base.Columns.Add(this.columnSequence);
+                this.columnWayBillNumber = new global::System.Data.DataColumn("WayBillNumber", typeof(string), null, global::System.Data.MappingType.Element);
+                base.Columns.Add(this.columnWayBillNumber);
+                this.columnSubTotalAmount = new global::System.Data.DataColumn("SubTotalAmount", typeof(string), null, global::System.Data.MappingType.Element);
+                base.Columns.Add(this.columnSubTotalAmount);
+                this.columnVatAmount = new global::System.Data.DataColumn("VatAmount", typeof(string), null, global::System.Data.MappingType.Element);
+                base.Columns.Add(this.columnVatAmount);
+                this.columnTotalAmount = new global::System.Data.DataColumn("TotalAmount", typeof(string), null, global::System.Data.MappingType.Element);
+                base.Columns.Add(this.columnTotalAmount);
+                this.columnRemarks = new global::System.Data.DataColumn("Remarks", typeof(string), null, global::System.Data.MappingType.Element);
+                base.Columns.Add(this.columnRemarks);
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
@@ -619,65 +689,49 @@ namespace TACHYON.Invoices.Reports.Datasets {
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
-            public string Date {
+            public string DateWork {
                 get {
                     try {
-                        return ((string)(this[this.tableDataTable1.DateColumn]));
+                        return ((string)(this[this.tableDataTable1.DateWorkColumn]));
                     }
                     catch (global::System.InvalidCastException e) {
-                        throw new global::System.Data.StrongTypingException("The value for column \'Date\' in table \'DataTable1\' is DBNull.", e);
+                        throw new global::System.Data.StrongTypingException("The value for column \'DateWork\' in table \'DataTable1\' is DBNull.", e);
                     }
                 }
                 set {
-                    this[this.tableDataTable1.DateColumn] = value;
+                    this[this.tableDataTable1.DateWorkColumn] = value;
                 }
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
-            public string WaybillNo {
+            public string Source {
                 get {
                     try {
-                        return ((string)(this[this.tableDataTable1.WaybillNoColumn]));
+                        return ((string)(this[this.tableDataTable1.SourceColumn]));
                     }
                     catch (global::System.InvalidCastException e) {
-                        throw new global::System.Data.StrongTypingException("The value for column \'WaybillNo\' in table \'DataTable1\' is DBNull.", e);
+                        throw new global::System.Data.StrongTypingException("The value for column \'Source\' in table \'DataTable1\' is DBNull.", e);
                     }
                 }
                 set {
-                    this[this.tableDataTable1.WaybillNoColumn] = value;
+                    this[this.tableDataTable1.SourceColumn] = value;
                 }
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
-            public string OriginCityName {
+            public string Destination {
                 get {
                     try {
-                        return ((string)(this[this.tableDataTable1.OriginCityNameColumn]));
+                        return ((string)(this[this.tableDataTable1.DestinationColumn]));
                     }
                     catch (global::System.InvalidCastException e) {
-                        throw new global::System.Data.StrongTypingException("The value for column \'OriginCityName\' in table \'DataTable1\' is DBNull.", e);
+                        throw new global::System.Data.StrongTypingException("The value for column \'Destination\' in table \'DataTable1\' is DBNull.", e);
                     }
                 }
                 set {
-                    this[this.tableDataTable1.OriginCityNameColumn] = value;
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
-            public string DestinationCityName {
-                get {
-                    try {
-                        return ((string)(this[this.tableDataTable1.DestinationCityNameColumn]));
-                    }
-                    catch (global::System.InvalidCastException e) {
-                        throw new global::System.Data.StrongTypingException("The value for column \'DestinationCityName\' in table \'DataTable1\' is DBNull.", e);
-                    }
-                }
-                set {
-                    this[this.tableDataTable1.DestinationCityNameColumn] = value;
+                    this[this.tableDataTable1.DestinationColumn] = value;
                 }
             }
             
@@ -731,50 +785,134 @@ namespace TACHYON.Invoices.Reports.Datasets {
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
-            public bool IsDateNull() {
-                return this.IsNull(this.tableDataTable1.DateColumn);
+            public string Sequence {
+                get {
+                    try {
+                        return ((string)(this[this.tableDataTable1.SequenceColumn]));
+                    }
+                    catch (global::System.InvalidCastException e) {
+                        throw new global::System.Data.StrongTypingException("The value for column \'Sequence\' in table \'DataTable1\' is DBNull.", e);
+                    }
+                }
+                set {
+                    this[this.tableDataTable1.SequenceColumn] = value;
+                }
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
-            public void SetDateNull() {
-                this[this.tableDataTable1.DateColumn] = global::System.Convert.DBNull;
+            public string WayBillNumber {
+                get {
+                    try {
+                        return ((string)(this[this.tableDataTable1.WayBillNumberColumn]));
+                    }
+                    catch (global::System.InvalidCastException e) {
+                        throw new global::System.Data.StrongTypingException("The value for column \'WayBillNumber\' in table \'DataTable1\' is DBNull.", e);
+                    }
+                }
+                set {
+                    this[this.tableDataTable1.WayBillNumberColumn] = value;
+                }
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
-            public bool IsWaybillNoNull() {
-                return this.IsNull(this.tableDataTable1.WaybillNoColumn);
+            public string SubTotalAmount {
+                get {
+                    try {
+                        return ((string)(this[this.tableDataTable1.SubTotalAmountColumn]));
+                    }
+                    catch (global::System.InvalidCastException e) {
+                        throw new global::System.Data.StrongTypingException("The value for column \'SubTotalAmount\' in table \'DataTable1\' is DBNull.", e);
+                    }
+                }
+                set {
+                    this[this.tableDataTable1.SubTotalAmountColumn] = value;
+                }
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
-            public void SetWaybillNoNull() {
-                this[this.tableDataTable1.WaybillNoColumn] = global::System.Convert.DBNull;
+            public string VatAmount {
+                get {
+                    try {
+                        return ((string)(this[this.tableDataTable1.VatAmountColumn]));
+                    }
+                    catch (global::System.InvalidCastException e) {
+                        throw new global::System.Data.StrongTypingException("The value for column \'VatAmount\' in table \'DataTable1\' is DBNull.", e);
+                    }
+                }
+                set {
+                    this[this.tableDataTable1.VatAmountColumn] = value;
+                }
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
-            public bool IsOriginCityNameNull() {
-                return this.IsNull(this.tableDataTable1.OriginCityNameColumn);
+            public string TotalAmount {
+                get {
+                    try {
+                        return ((string)(this[this.tableDataTable1.TotalAmountColumn]));
+                    }
+                    catch (global::System.InvalidCastException e) {
+                        throw new global::System.Data.StrongTypingException("The value for column \'TotalAmount\' in table \'DataTable1\' is DBNull.", e);
+                    }
+                }
+                set {
+                    this[this.tableDataTable1.TotalAmountColumn] = value;
+                }
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
-            public void SetOriginCityNameNull() {
-                this[this.tableDataTable1.OriginCityNameColumn] = global::System.Convert.DBNull;
+            public string Remarks {
+                get {
+                    try {
+                        return ((string)(this[this.tableDataTable1.RemarksColumn]));
+                    }
+                    catch (global::System.InvalidCastException e) {
+                        throw new global::System.Data.StrongTypingException("The value for column \'Remarks\' in table \'DataTable1\' is DBNull.", e);
+                    }
+                }
+                set {
+                    this[this.tableDataTable1.RemarksColumn] = value;
+                }
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
-            public bool IsDestinationCityNameNull() {
-                return this.IsNull(this.tableDataTable1.DestinationCityNameColumn);
+            public bool IsDateWorkNull() {
+                return this.IsNull(this.tableDataTable1.DateWorkColumn);
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
-            public void SetDestinationCityNameNull() {
-                this[this.tableDataTable1.DestinationCityNameColumn] = global::System.Convert.DBNull;
+            public void SetDateWorkNull() {
+                this[this.tableDataTable1.DateWorkColumn] = global::System.Convert.DBNull;
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public bool IsSourceNull() {
+                return this.IsNull(this.tableDataTable1.SourceColumn);
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public void SetSourceNull() {
+                this[this.tableDataTable1.SourceColumn] = global::System.Convert.DBNull;
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public bool IsDestinationNull() {
+                return this.IsNull(this.tableDataTable1.DestinationColumn);
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public void SetDestinationNull() {
+                this[this.tableDataTable1.DestinationColumn] = global::System.Convert.DBNull;
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
@@ -811,6 +949,78 @@ namespace TACHYON.Invoices.Reports.Datasets {
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
             public void SetNotesNull() {
                 this[this.tableDataTable1.NotesColumn] = global::System.Convert.DBNull;
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public bool IsSequenceNull() {
+                return this.IsNull(this.tableDataTable1.SequenceColumn);
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public void SetSequenceNull() {
+                this[this.tableDataTable1.SequenceColumn] = global::System.Convert.DBNull;
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public bool IsWayBillNumberNull() {
+                return this.IsNull(this.tableDataTable1.WayBillNumberColumn);
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public void SetWayBillNumberNull() {
+                this[this.tableDataTable1.WayBillNumberColumn] = global::System.Convert.DBNull;
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public bool IsSubTotalAmountNull() {
+                return this.IsNull(this.tableDataTable1.SubTotalAmountColumn);
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public void SetSubTotalAmountNull() {
+                this[this.tableDataTable1.SubTotalAmountColumn] = global::System.Convert.DBNull;
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public bool IsVatAmountNull() {
+                return this.IsNull(this.tableDataTable1.VatAmountColumn);
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public void SetVatAmountNull() {
+                this[this.tableDataTable1.VatAmountColumn] = global::System.Convert.DBNull;
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public bool IsTotalAmountNull() {
+                return this.IsNull(this.tableDataTable1.TotalAmountColumn);
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public void SetTotalAmountNull() {
+                this[this.tableDataTable1.TotalAmountColumn] = global::System.Convert.DBNull;
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public bool IsRemarksNull() {
+                return this.IsNull(this.tableDataTable1.RemarksColumn);
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public void SetRemarksNull() {
+                this[this.tableDataTable1.RemarksColumn] = global::System.Convert.DBNull;
             }
         }
         
