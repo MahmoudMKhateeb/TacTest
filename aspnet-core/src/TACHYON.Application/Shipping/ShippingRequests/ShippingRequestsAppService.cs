@@ -298,17 +298,14 @@ namespace TACHYON.Shipping.ShippingRequests
 
         public async Task PublishShippingRequest(long id)
         {
-            ShippingRequest shippingRequest = await _shippingRequestRepository.GetAll()
-                .Include(x => x.ShippingRequestVases)
-                  .Where(x => x.Id == id && x.IsDrafted == true)
-                  .FirstOrDefaultAsync();
-            if (shippingRequest.DraftStep < 4)
-            {
-                throw new UserFriendlyException(L("YouMustCompleteWizardStepsFirst"));
-            }
-            await ValidateShippingRequestBeforePublish(shippingRequest);
-            _commissionManager.AddShippingRequestCommissionSettingInfo(shippingRequest);
-            shippingRequest.IsDrafted = false;
+                ShippingRequest shippingRequest =await GetDraftedShippingRequest(id);
+                if (shippingRequest.DraftStep < 4)
+                {
+                    throw new UserFriendlyException(L("YouMustCompleteWizardStepsFirst"));
+                }
+                await ValidateShippingRequestBeforePublish(shippingRequest);
+                _commissionManager.AddShippingRequestCommissionSettingInfo(shippingRequest);
+                shippingRequest.IsDrafted = false;
         }
 
 
