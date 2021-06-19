@@ -304,7 +304,7 @@ namespace TACHYON.Shipping.ShippingRequests
                     throw new UserFriendlyException(L("YouMustCompleteWizardStepsFirst"));
                 }
                 await ValidateShippingRequestBeforePublish(shippingRequest);
-                _commissionManager.AddShippingRequestCommissionSettingInfo(shippingRequest);
+               // _commissionManager.AddShippingRequestCommissionSettingInfo(shippingRequest);
                 shippingRequest.IsDrafted = false;
         }
 
