@@ -626,16 +626,16 @@
                   <tbody>
                     <tr *ngFor="let item of selectedVases; index as i">
                       <td>
-                        {{ selectedVasesProperties[item.vasId].vasName }}
+                        {{ selectedVasesProperties[item.vasId]?.vasName }}
                       </td>
                       <td>
                         <input
                           type="number"
-                          [attr.disabled]="selectedVasesProperties[item.vasId].vasCountDisabled || null"
+                          [attr.disabled]="selectedVasesProperties[item.vasId]?.vasCountDisabled || null"
                           id="Vas-Count{{ i }}"
                           [(ngModel)]="item.requestMaxCount"
                           (keypress)="numberOnly($event)"
-                          [required]="!selectedVasesProperties[item.vasId].vasCountDisabled"
+                          [required]="!selectedVasesProperties[item.vasId]?.vasCountDisabled"
                           class="form-control"
                           name="Vas-Count{{ i }}"
                         />
@@ -643,11 +643,11 @@
                       <td>
                         <input
                           type="number"
-                          [attr.disabled]="selectedVasesProperties[item.vasId].vasAmountDisabled || null"
+                          [attr.disabled]="selectedVasesProperties[item.vasId]?.vasAmountDisabled || null"
                           id="VasAmount2{{ i }}"
                           [(ngModel)]="item.requestMaxAmount"
                           (keypress)="numberOnly($event)"
-                          [required]="!selectedVasesProperties[item.vasId].vasAmountDisabled"
+                          [required]="!selectedVasesProperties[item.vasId]?.vasAmountDisabled"
                           class="form-control"
                           name="VasAmount2{{ i }}"
                         />

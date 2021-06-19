@@ -26,7 +26,6 @@ namespace TACHYON.Documents.DocumentFiles.Dtos
 
         public long? UserId { get; set; }
 
-        public long? RoutStepId { get; set; }
 
         public string Number { get; set; }
         public string Notes { get; set; }

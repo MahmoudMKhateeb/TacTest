@@ -144,8 +144,8 @@
             <p-paginator
               #paginatorchild
               (onPageChange)="getShippingRequestsTrips($event)"
-              [rows]="primengTableHelper.defaultRecordsCountPerPage"
-              [totalRecords]="primengTableHelper.totalRecordsCount"
+              [rows]="primengTableHelper?.defaultRecordsCountPerPage"
+              [totalRecords]="primengTableHelper?.totalRecordsCount"
             >
             </p-paginator>
             <span class="total-records-count">

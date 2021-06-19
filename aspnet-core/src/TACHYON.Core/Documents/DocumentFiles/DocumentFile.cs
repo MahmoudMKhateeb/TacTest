@@ -12,6 +12,7 @@ using TACHYON.Routs.RoutSteps;
 using TACHYON.Trailers;
 using TACHYON.Trucks;
 using TACHYON.MultiTenancy;
+using TACHYON.Shipping.ShippingRequestTrips;
 
 namespace TACHYON.Documents.DocumentFiles
 {
@@ -42,7 +43,7 @@ namespace TACHYON.Documents.DocumentFiles
         public virtual bool IsRejected { get; set; }
         public string RejectionReason { get; set; }
 
-        public virtual long DocumentTypeId { get; set; }
+        public virtual long? DocumentTypeId { get; set; }
 
         [ForeignKey("DocumentTypeId")]
         public DocumentType DocumentTypeFk { get; set; }
@@ -66,6 +67,12 @@ namespace TACHYON.Documents.DocumentFiles
 
         [ForeignKey("RoutStepId")]
         public RoutStep RoutStepFk { get; set; }
+
+        public virtual int? ShippingRequestTripId { get; set; }
+
+        [ForeignKey("ShippingRequestTripId")]
+        public ShippingRequestTrip ShippingRequestTripFk { get; set; }
+
 
         public string Number { get; set; }
 

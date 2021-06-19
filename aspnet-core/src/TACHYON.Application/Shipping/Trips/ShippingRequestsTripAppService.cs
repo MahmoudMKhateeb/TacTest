@@ -4,6 +4,7 @@ using Abp.Authorization;
 using Abp.Collections.Extensions;
 using Abp.Domain.Repositories;
 using Abp.Domain.Uow;
+using Abp.Extensions;
 using Abp.Linq.Extensions;
 using Abp.UI;
 using Microsoft.EntityFrameworkCore;
@@ -13,6 +14,7 @@ using System.Linq.Dynamic.Core;
 using System.Threading.Tasks;
 using TACHYON.Authorization;
 using TACHYON.Authorization.Users;
+using TACHYON.Documents.DocumentFiles;
 using TACHYON.Features;
 using TACHYON.Firebases;
 using TACHYON.Goods.GoodsDetails;
@@ -37,6 +39,8 @@ namespace TACHYON.Shipping.Trips
         private readonly IAppNotifier _appNotifier;
         private readonly IFirebaseNotifier _firebase;
         private readonly ShippingRequestManager _shippingRequestManager;
+        private readonly DocumentFilesAppService _documentFilesAppService;
+
         public ShippingRequestsTripAppService(
             IRepository<ShippingRequestTrip> ShippingRequestTripRepository,
             IRepository<ShippingRequest, long> ShippingRequestRepository,
@@ -46,7 +50,7 @@ namespace TACHYON.Shipping.Trips
             UserManager userManager,
             IAppNotifier appNotifier,
             IFirebaseNotifier firebase,
-            ShippingRequestManager shippingRequestManager)
+            ShippingRequestManager shippingRequestManager, DocumentFilesAppService documentFilesAppService)
         {
             _ShippingRequestTripRepository = ShippingRequestTripRepository;
             _ShippingRequestRepository = ShippingRequestRepository;
@@ -57,7 +61,7 @@ namespace TACHYON.Shipping.Trips
             _appNotifier = appNotifier;
             _firebase = firebase;
             _shippingRequestManager = shippingRequestManager;
-
+            _documentFilesAppService = documentFilesAppService;
         }
 
 
@@ -157,7 +161,7 @@ namespace TACHYON.Shipping.Trips
             var trip = await _ShippingRequestTripRepository.
                 GetAll().
                 Include(e => e.ShippingRequestFk)
-                .Include(d=>d.AssignedDriverUserFk)
+                .Include(d => d.AssignedDriverUserFk)
                 .Where(e => e.Id == input.Id)
                 .Where(e => e.ShippingRequestFk.CarrierTenantId == AbpSession.TenantId && e.DriverStatus != ShippingRequestTripDriverStatus.Accepted)
                 .FirstOrDefaultAsync();
@@ -183,13 +187,24 @@ namespace TACHYON.Shipping.Trips
         }
 
         [AbpAuthorize(AppPermissions.Pages_ShippingRequestTrips_Create)]
-        private async Task Create(CreateOrEditShippingRequestTripDto input,ShippingRequest request)
+        private async Task Create(CreateOrEditShippingRequestTripDto input, ShippingRequest request)
         {
             var RoutePoint = input.RoutPoints.OrderBy(x => x.PickingType);
             ShippingRequestTrip trip = ObjectMapper.Map<ShippingRequestTrip>(input);
 
-            await _ShippingRequestTripRepository.InsertAsync(trip);
 
+            //insert trip 
+            var shippingRequestTripId = await _ShippingRequestTripRepository.InsertAndGetIdAsync(trip);
+
+            // add document file
+            var docFileDto = input.CreateOrEditDocumentFileDto;
+            if (!docFileDto.UpdateDocumentFileInput.FileToken.IsNullOrEmpty())
+            {
+                docFileDto.ShippingRequestTripId = shippingRequestTripId;
+                docFileDto.Name = docFileDto.Name + "_" + shippingRequestTripId.ToString();
+                await _documentFilesAppService.CreateOrEdit(docFileDto);
+            }
+          
         }
 
         [AbpAuthorize(AppPermissions.Pages_ShippingRequestTrips_Edit)]
