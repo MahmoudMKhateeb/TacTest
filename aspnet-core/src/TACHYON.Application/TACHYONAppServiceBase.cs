@@ -10,6 +10,8 @@ using Abp.Domain.Uow;
 using TACHYON.Authorization.Users;
 using TACHYON.MultiTenancy;
 using System.Globalization;
+using System.Linq;
+using Abp.UI;
 
 namespace TACHYON
 {
@@ -79,5 +81,19 @@ namespace TACHYON
             CurrentUnitOfWork.DisableFilter(AbpDataFilters.MustHaveTenant, AbpDataFilters.MayHaveTenant);
 
         }
+
+        /// <summary>
+        /// Because host need to access the service by services
+        /// </summary>
+        /// <param name="IsHostEnabled"></param>
+        /// <param name="features"></param>
+        protected void CheckIfCanAccessService(bool IsHostEnabled, params string[] features)
+        {
+            if ((IsHostEnabled && !AbpSession.TenantId.HasValue) || features.Any(feature => IsEnabled(feature))) return;
+            features.Any(feature => IsEnabled(feature));
+
+            throw new UserFriendlyException("YouDoNotHavePermissionToAccessThePage");
+        }
+
     }
 }

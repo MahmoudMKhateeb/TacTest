@@ -9,12 +9,5 @@ namespace TACHYON.Shipping.ShippingRequests.TachyonDealer
     public interface IShippingRequestsTachyonDealerAppService: IApplicationService
     {
         Task StartBid(TachyonDealerBidDtoInupt Input);
-        //Task SendOfferToShipper(TachyonDealerDirectOfferToShipperInputDto Input);
-        Task SendDriectRequestForCarrier(TachyonDealerCreateDirectOfferToCarrirerInuptDto Input);
-        Task<PagedResultDto<ShippingRequestsCarrierDirectPricingListDto>> GetDriectRequestForAllCarriers(TachyonDealerCreateDirectOfferToCarrirerFilterInput Input);
-        Task<PagedResultDto<TachyonDealerGetCarrirerDto>> GetAllCarriers(TachyonDealerGetCarrirerFilterInputDto Input);
-
-        Task CarrierSetPriceForDirectRequest(CarrirSetPriceForDirectRequestDto Input);
-        Task<ShippingRequestAmountDto> GetCarrierPricing(GetCarrierPricingInputDto Input);
     }
 }

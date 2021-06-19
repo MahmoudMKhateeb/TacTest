@@ -11,6 +11,7 @@ import {
   ISelectItemDto,
   CommonLookupServiceProxy,
   InvoiceFilterInput,
+  InvoiceAccountType,
 } from '@shared/service-proxies/service-proxies';
 import * as moment from 'moment';
 import { FileDownloadService } from '@shared/utils/file-download.service';
@@ -28,7 +29,6 @@ export class InvoicesListComponent extends AppComponentBase implements OnInit {
   Invoices: InvoiceListDto[] = [];
   IsStartSearch: boolean = false;
   PaidStatus: boolean | null | undefined;
-  AccountStatus: boolean | null | undefined;
   advancedFiltersAreShown = false;
   periodId: number | null | undefined;
   Periods: ISelectItemDto[];
@@ -36,9 +36,15 @@ export class InvoicesListComponent extends AppComponentBase implements OnInit {
   Tenants: ISelectItemDto[];
   fromDate: moment.Moment | null | undefined;
   toDate: moment.Moment | null | undefined;
+  dueFromDate: moment.Moment | null | undefined;
+  dueToDate: moment.Moment | null | undefined;
+
   creationDateRange: Date[] = [moment().startOf('day').toDate(), moment().endOf('day').toDate()];
   creationDateRangeActive: boolean = false;
-  CanMakPaid: boolean;
+
+  dueDateRange: Date[] = [moment().startOf('day').toDate(), moment().endOf('day').toDate()];
+  duteDateRangeActive: boolean = false;
+  accountType: InvoiceAccountType | undefined = undefined;
   constructor(
     injector: Injector,
     private _InvoiceServiceProxy: InvoiceServiceProxy,
@@ -50,7 +56,6 @@ export class InvoicesListComponent extends AppComponentBase implements OnInit {
 
   ngOnInit() {
     if (this.appSession.tenantId) this.advancedFiltersAreShown = true;
-    this.CanMakPaid = this.appSession.tenantId ? abp.features.isEnabled('app.Shipper.CanMakeInvoicePaid') : true;
     this._CommonServ.getPeriods().subscribe((result) => {
       this.Periods = result;
     });
@@ -70,14 +75,24 @@ export class InvoicesListComponent extends AppComponentBase implements OnInit {
       this.fromDate = null;
       this.toDate = null;
     }
+
+    if (this.duteDateRangeActive) {
+      this.dueFromDate = moment(this.dueDateRange[0]);
+      this.dueToDate = moment(this.dueDateRange[1]);
+    } else {
+      this.dueFromDate = null;
+      this.dueToDate = null;
+    }
     this._InvoiceServiceProxy
       .getAll(
         this.Tenant ? parseInt(this.Tenant.id) : undefined,
         this.periodId,
         this.PaidStatus,
-        this.AccountStatus,
+        this.accountType,
         this.fromDate,
         this.toDate,
+        this.dueFromDate,
+        this.dueToDate,
         this.primengTableHelper.getSorting(this.dataTable),
         this.primengTableHelper.getSkipCount(this.paginator, event),
         this.primengTableHelper.getMaxResultCount(this.paginator, event)
@@ -87,21 +102,12 @@ export class InvoicesListComponent extends AppComponentBase implements OnInit {
         this.primengTableHelper.totalRecordsCount = result.totalCount;
         this.primengTableHelper.records = result.items;
         this.primengTableHelper.hideLoadingIndicator();
+        console.log(result.items);
       });
   }
 
   reloadPage(): void {
     this.paginator.changePage(this.paginator.getPage());
-  }
-  delete(invoice: InvoiceListDto): void {
-    this.message.confirm('', this.l('AreYouSure'), (isConfirmed) => {
-      if (isConfirmed) {
-        this._InvoiceServiceProxy.delete(invoice.id).subscribe(() => {
-          this.notify.success(this.l('SuccessfullyDeleted'));
-          this.reloadPage();
-        });
-      }
-    });
   }
 
   MakePaid(invoice: InvoiceListDto): void {
@@ -134,20 +140,20 @@ export class InvoicesListComponent extends AppComponentBase implements OnInit {
       this.Tenants = result;
     });
   }
-  AccountType(AccountType: boolean): string {
-    return AccountType ? 'AccountReceivable' : 'AccountPayable';
-  }
+
   exportToExcel(): void {
-    var data = {
-      tenantId: this.Tenant ? parseInt(this.Tenant.id) : undefined,
-      periodId: this.periodId,
-      isPaid: this.PaidStatus,
-      isAccountReceivable: this.AccountStatus,
-      fromDate: this.fromDate,
-      toDate: this.toDate,
-      sorting: this.primengTableHelper.getSorting(this.dataTable),
-    };
-    this._InvoiceServiceProxy.exports(data as InvoiceFilterInput).subscribe((result) => {
+    let data: InvoiceFilterInput = new InvoiceFilterInput();
+    console.log(this.accountType);
+    data.tenantId = this.Tenant ? parseInt(this.Tenant.id) : undefined;
+    data.periodId = this.periodId;
+    data.isPaid = this.PaidStatus;
+    data.accountType = this.accountType;
+    data.fromDate = this.fromDate;
+    data.toDate = this.toDate;
+    data.dueFromDate = this.fromDate;
+    data.dueToDate = this.toDate;
+    data.sorting = this.primengTableHelper.getSorting(this.dataTable);
+    this._InvoiceServiceProxy.exports(data).subscribe((result) => {
       this._fileDownloadService.downloadTempFile(result);
     });
   }

@@ -12,6 +12,9 @@ namespace TACHYON.PriceOffers
         Task<PagedResultDto<PriceOfferListDto>> GetAll(PriceOfferGetAllInput input);
 
         Task<ListResultDto<GetShippingRequestForPriceOfferListDto>> GetAllShippingRequest(ShippingRequestForPriceOfferGetAllInput input);
+
+        GetShippingRequestSearchListDto GetAllListForSearch();
+   
         Task<long> CreateOrEdit(CreateOrEditPriceOfferInput Input);
         Task<PriceOfferDto> GetPriceOfferForCreateOrEdit(long id, long? OfferId);
         Task<PriceOfferViewDto> GetPriceOfferForView(long OfferId);
@@ -21,6 +24,7 @@ namespace TACHYON.PriceOffers
          Task<PriceOfferStatus> Accept(long id);
          Task Reject(RejectPriceOfferInput input);
          Task Cancel(long id);
+        Task CancelShipment(CancelShippingRequestInput input);
 
     }
 }

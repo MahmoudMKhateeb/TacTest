@@ -33,6 +33,8 @@ export class BalancesListComponent extends AppComponentBase {
   TenantId: number | undefined = undefined;
   creationDateRange: Date[] = [moment().startOf('day').toDate(), moment().endOf('day').toDate()];
   creationDateRangeActive: boolean = false;
+  minLongitude: number | null | undefined;
+  maxLongitude: number | null | undefined;
   constructor(
     injector: Injector,
     private _CurrentServ: BalanceRechargeServiceProxy,
@@ -62,6 +64,8 @@ export class BalancesListComponent extends AppComponentBase {
         this.fromDate,
         this.toDate,
         this.ReferenceNo,
+        this.minLongitude,
+        this.maxLongitude,
         this.primengTableHelper.getSorting(this.dataTable),
         this.primengTableHelper.getSkipCount(this.paginator, event),
         this.primengTableHelper.getMaxResultCount(this.paginator, event)

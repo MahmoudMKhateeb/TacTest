@@ -15,9 +15,11 @@ namespace TACHYON.Invoices
         Task<bool> MakePaid(long InvoiceId);
         Task MakeUnPaid(long InvoiceId);
 
-        Task Delete(EntityDto Input);
+        Task OnDemand(int Id);
         
         Task<FileDto> Exports(InvoiceFilterInput input);
+
+
 
 
     }

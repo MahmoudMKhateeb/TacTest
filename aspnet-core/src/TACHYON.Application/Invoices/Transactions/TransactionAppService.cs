@@ -63,10 +63,13 @@ namespace TACHYON.Invoices.Transactions
             var query = _transactionRepository
                 .GetAll()
                 .Include(t=>t.Tenant)
+                 .ThenInclude(e=>e.Edition)
                 .WhereIf(AbpSession.TenantId.HasValue, i => i.TenantId == AbpSession.TenantId.Value)
                 .WhereIf(input.channelType.HasValue, e => e.ChannelId == input.channelType)
                 .WhereIf(input.TenantId.HasValue, i => i.TenantId == input.TenantId)
-                .WhereIf(input.FromDate.HasValue && input.ToDate.HasValue, i => i.CreationTime >= input.FromDate && i.CreationTime < input.ToDate)
+                .WhereIf(input.FromDate.HasValue && input.ToDate.HasValue, i => i.CreationTime >= input.FromDate.Value && i.CreationTime <= input.ToDate.Value)
+                .WhereIf(input.minLongitude.HasValue && input.maxLongitude.HasValue, i => i.Amount >= input.minLongitude.Value && i.Amount <= input.maxLongitude.Value)
+                .WhereIf(input.EditionId.HasValue,e=>e.Tenant.EditionId== input.EditionId.Value)
                 .AsNoTracking()
                 .OrderBy(!string.IsNullOrEmpty(input.Sorting)? input.Sorting : "CreationTime desc");
 

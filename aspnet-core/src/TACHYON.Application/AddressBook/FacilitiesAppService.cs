@@ -20,6 +20,7 @@ using Abp.Extensions;
 using Abp.Authorization;
 using Microsoft.EntityFrameworkCore;
 using NetTopologySuite.Geometries;
+using TACHYON.Countries.Dtos;
 
 namespace TACHYON.AddressBook
 {
@@ -44,10 +45,13 @@ namespace TACHYON.AddressBook
 
             var filteredFacilities = _facilityRepository.GetAll()
                         .Include(e => e.CityFk)
+                         .ThenInclude(c=>c.CountyFk)
+                          .ThenInclude(t=>t.Translations)
+                        .WhereIf(input.FromDate.HasValue && input.ToDate.HasValue, i => i.CreationTime >= input.FromDate && i.CreationTime <= input.ToDate)
                         .WhereIf(!string.IsNullOrWhiteSpace(input.Filter), e => false || e.Name.Contains(input.Filter) || e.Address.Contains(input.Filter))
                         .WhereIf(!string.IsNullOrWhiteSpace(input.NameFilter), e => e.Name == input.NameFilter)
                         .WhereIf(!string.IsNullOrWhiteSpace(input.AdressFilter), e => e.Address == input.AdressFilter)
-                       .WhereIf(!string.IsNullOrWhiteSpace(input.CityDisplayNameFilter), e => e.CityFk != null && e.CityFk.DisplayName == input.CityDisplayNameFilter);
+                        .WhereIf(!string.IsNullOrWhiteSpace(input.CityDisplayNameFilter), e => e.CityFk != null && e.CityFk.DisplayName == input.CityDisplayNameFilter);
 
             var pagedAndFilteredFacilities = filteredFacilities
                 .OrderBy(input.Sorting ?? "id asc")
@@ -65,8 +69,11 @@ namespace TACHYON.AddressBook
                                      Address = o.Address,
                                      Longitude= o.Location.X,
                                      Latitude= o.Location.Y,
-                                     Id = o.Id                                 },
-                                 CityDisplayName = s2 == null || s2.DisplayName == null ? "" : s2.DisplayName.ToString()
+                                     Id = o.Id                                 
+                                 },
+                                 CityDisplayName = s2 == null || s2.DisplayName == null ? "" : s2.DisplayName.ToString(),
+                                 Country = o.CityFk.CountyFk.DisplayName?? "",
+                                 CreationTime=o.CreationTime
                              };
 
             var totalCount = await filteredFacilities.CountAsync();

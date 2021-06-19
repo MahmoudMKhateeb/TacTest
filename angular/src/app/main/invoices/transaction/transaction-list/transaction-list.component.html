@@ -15,9 +15,10 @@
                 <div class="col-xl-4" *ngIf="!appSession.tenantId">
                   <div class="form-group m-form__group align-items-center">
                     <div class="input-group">
+                      <label for="ChannelType">{{ l('CompanyName') }}</label>
                       <p-autoComplete
                         [inputStyleClass]="'form-control'"
-                        [placeholder]="l('ClientName')"
+                        [placeholder]="l('CompanyName')"
                         name="Tenant"
                         [(ngModel)]="Tenant"
                         [suggestions]="Tenants"
@@ -52,9 +53,9 @@
                     [(date)]="creationDateRange"
                   />
                 </div>
-                <div class="col-xl-4" *ngIf="!appSession.tenantId">
+                <div class="col-xl-4">
                   <div class="form-group m-form__group">
-                    <label for="ChannelType">{{ l('ChannelType') }}</label>
+                    <label for="ChannelType">{{ l('TypeTitle') }}</label>
                     <select name="Period.periodType" [(ngModel)]="Channel" class="form-control">
                       <option value="">{{ l('All') }}</option>
                       <option [value]="code.key" *ngFor="let code of ChannelType">
@@ -63,6 +64,30 @@
                     </select>
                   </div>
                 </div>
+                <ng-template [ngIf]="!appSession.tenantId">
+                  <div class="col-xl-4">
+                    <div class="form-group">
+                      <label for="MinLongitudeFilter">{{ l('Amount') }}</label>
+                      <div class="input-group">
+                        <input
+                          type="number"
+                          class="form-control"
+                          id="minLongitude"
+                          [(ngModel)]="minLongitude"
+                          placeholder="{{ l('MinValue') }}"
+                          name="minLongitude"
+                        />
+                        <input type="number" class="form-control" [(ngModel)]="maxLongitude" placeholder="{{ l('MaxValue') }}" name="maxLongitude" />
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-xl-4">
+                    <label for="EditionDropdown">{{ 'Edition' | localize }}</label>
+                    <select class="form-control" name="editionId" [(ngModel)]="editionId">
+                      <option *ngFor="let edition of editions" [value]="edition.value">{{ edition.displayText }}</option>
+                    </select>
+                  </div>
+                </ng-template>
               </div>
               <button (click)="getAll()" class="btn btn-primary" type="submit">{{ l('Search') }}</button>
             </div>
@@ -86,11 +111,15 @@
                 <ng-template pTemplate="header">
                   <tr>
                     <th *ngIf="!appSession.tenantId" pSortableColumn="TenantId">
-                      {{ l('ClientName') }}
+                      {{ l('CompanyName') }}
                       <p-sortIcon field="TenantId"></p-sortIcon>
                     </th>
+                    <th *ngIf="!appSession.tenantId" pSortableColumn="Tenant.EditionId">
+                      {{ l('Edition') }}
+                      <p-sortIcon field="Tenant.EditionId"></p-sortIcon>
+                    </th>
                     <th pSortableColumn="ChannelId">
-                      {{ l('Channel') }}
+                      {{ l('TypeTitle') }}
                       <p-sortIcon field="ChannelId"></p-sortIcon>
                     </th>
                     <th pSortableColumn="Amount">
@@ -110,7 +139,10 @@
                       <span class="ui-column-title"> {{ l('ClientName') }}</span>
                       {{ record.clientName }}
                     </td>
-
+                    <td *ngIf="!appSession.tenantId">
+                      <span class="ui-column-title"> {{ l('Edition') }}</span>
+                      {{ record.edition }}
+                    </td>
                     <td>
                       <span class="ui-column-title"> {{ l('Channel') }}</span>
                       {{ l(record.channel) }}

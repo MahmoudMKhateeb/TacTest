@@ -2,10 +2,8 @@ import { Component, ViewChild, Injector, OnInit, Input, Output, EventEmitter } f
 import { ModalDirective } from 'ngx-bootstrap/modal';
 import {
   AssignDriverAndTruckToShippmentByCarrierInput,
-  CreateOrEditTachyonPriceOfferDto,
   SelectItemDto,
   ShippingRequestsTripServiceProxy,
-  TachyonPriceOffersServiceProxy,
   TrucksServiceProxy,
 } from '@shared/service-proxies/service-proxies';
 import { AppComponentBase } from '@shared/common/app-component-base';

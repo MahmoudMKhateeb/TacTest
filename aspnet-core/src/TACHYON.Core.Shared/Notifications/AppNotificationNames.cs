@@ -33,7 +33,7 @@ namespace TACHYON.Notifications
         public const string AcceptedSubmittedDocument = "App.AcceptedSubmittedDocument";
         public const string RejectedSubmittedDocument = "App.RejectedSubmittedDocument";
         public const string InvoiceShipperGenerated = "App.InvoiceShipperGenerated";
-        public const string GroupPeriodsGenerated = "App.GroupPeriodsGenerated";
+        public const string SubmitInvoiceGenerated = "App.SubmitInvoiceGenerated";
 
         public const string SubmitInvoiceOnClaim = "App.SubmitInvoiceOnClaim";
         public const string SubmitInvoiceOnAccepted = "App.SubmitInvoiceOnAccepted";
@@ -73,7 +73,10 @@ namespace TACHYON.Notifications
         public const string TMSAcceptedOffer = "App.TMSAcceptedOffer";
         
         public const string SendDriectRequest = "App.SendDriectRequest";
-        public const string DeclineDriectRequest = "App.DeclineDriectRequest";  
+        public const string DeclineDriectRequest = "App.DeclineDriectRequest";
+
+        public const string CancelShipment = "App.CancelShipment";
+        
         public const string RejectedOffer = "App.RejectedOffer";
         public const string PendingOffer = "App.PendingOffer";   
         #endregion

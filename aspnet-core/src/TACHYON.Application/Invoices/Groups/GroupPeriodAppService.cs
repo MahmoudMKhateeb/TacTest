@@ -195,7 +195,7 @@ namespace TACHYON.Invoices.Groups
             ObjectMapper.Map(document, Group);
 
             var admin = await _userManager.GetAdminHostAsync();
-            await  _appNotifier.SubmitInvoiceOnClaim(new Abp.UserIdentifier(admin.TenantId, admin.Id) ,Group);
+          //  await  _appNotifier.SubmitInvoiceOnClaim(new Abp.UserIdentifier(admin.TenantId, admin.Id) ,Group);
         }
 
 
@@ -207,9 +207,9 @@ namespace TACHYON.Invoices.Groups
             if (Group !=null)
             {
                
-               await _invoiceManager.GenerateCarrirInvoice(Group);
+              // await _invoiceManager.GenerateCarrirInvoice(Group);
                Group.Status = SubmitInvoiceStatus.Accepted;
-              await _appNotifier.SubmitInvoiceOnAccepted(new UserIdentifier(Group.TenantId, (await _userManager.GetAdminByTenantIdAsync(Group.TenantId)).Id), Group);
+           //   await _appNotifier.SubmitInvoiceOnAccepted(new UserIdentifier(Group.TenantId, (await _userManager.GetAdminByTenantIdAsync(Group.TenantId)).Id), Group);
             }
         }
 
@@ -229,7 +229,7 @@ namespace TACHYON.Invoices.Groups
                 } 
                 Group.Status = SubmitInvoiceStatus.Rejected;
                 Group.RejectedReason = Input.Reason;
-                await _appNotifier.SubmitInvoiceOnRejected(new UserIdentifier(Group.TenantId, (await _userManager.GetAdminByTenantIdAsync(Group.TenantId)).Id), Group);
+             //   await _appNotifier.SubmitInvoiceOnRejected(new UserIdentifier(Group.TenantId, (await _userManager.GetAdminByTenantIdAsync(Group.TenantId)).Id), Group);
 
             }
         }
@@ -240,7 +240,7 @@ namespace TACHYON.Invoices.Groups
 
         {
             DisableTenancyFiltersIfHost();
-            var documentFile = await _Repository.SingleAsync(g => g.Id == GroupId && g.Status != SubmitInvoices.SubmitInvoiceStatus.None );
+            var documentFile = await _Repository.SingleAsync(g => g.Id == GroupId && g.Status != SubmitInvoices.SubmitInvoiceStatus.New );
             if (documentFile == null)
             {
                 throw new UserFriendlyException(L("TheRequestNotFound"));

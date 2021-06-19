@@ -1,8 +1,5 @@
 ﻿using Abp.Application.Services.Dto;
-using Abp.Domain.Entities.Auditing;
 using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace TACHYON.Invoices.Transactions.Dto
 {
@@ -14,6 +11,12 @@ namespace TACHYON.Invoices.Transactions.Dto
         public DateTime? FromDate { get; set; }
 
         public DateTime? ToDate { get; set; }
+
+        public decimal? minLongitude { get; set; }
+
+        public decimal? maxLongitude { get; set; }
+
+        public int? EditionId { get; set; }
 
 
     }

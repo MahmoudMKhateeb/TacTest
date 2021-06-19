@@ -1,4 +1,4 @@
-﻿import { Component, Injector, ViewEncapsulation, ViewChild } from '@angular/core';
+import { Component, Injector, ViewEncapsulation, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ReceiversServiceProxy, ReceiverDto } from '@shared/service-proxies/service-proxies';
 import { NotifyService } from 'abp-ng2-module';
@@ -39,6 +39,10 @@ export class ReceiversComponent extends AppComponentBase {
   _entityTypeFullName = 'TACHYON.Receivers.Receiver';
   entityHistoryEnabled = false;
 
+  fromDate: moment.Moment | null | undefined;
+  toDate: moment.Moment | null | undefined;
+  creationDateRange: Date[] = [moment().startOf('day').toDate(), moment().endOf('day').toDate()];
+  creationDateRangeActive: boolean = false;
   constructor(
     injector: Injector,
     private _receiversServiceProxy: ReceiversServiceProxy,
@@ -72,6 +76,14 @@ export class ReceiversComponent extends AppComponentBase {
 
     this.primengTableHelper.showLoadingIndicator();
 
+    if (this.creationDateRangeActive) {
+      this.fromDate = moment(this.creationDateRange[0]);
+      this.toDate = moment(this.creationDateRange[1]);
+    } else {
+      this.fromDate = null;
+      this.toDate = null;
+    }
+
     this._receiversServiceProxy
       .getAll(
         this.filterText,
@@ -79,6 +91,8 @@ export class ReceiversComponent extends AppComponentBase {
         this.emailFilter,
         this.phoneNumberFilter,
         this.facilityNameFilter,
+        this.fromDate,
+        this.toDate,
         this.primengTableHelper.getSorting(this.dataTable),
         this.primengTableHelper.getSkipCount(this.paginator, event),
         this.primengTableHelper.getMaxResultCount(this.paginator, event)

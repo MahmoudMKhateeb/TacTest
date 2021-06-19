@@ -27,6 +27,7 @@ using TACHYON.Invoices.Balances;
 using TACHYON.Invoices.Groups;
 using TACHYON.Invoices.PaymentMethods;
 using TACHYON.Invoices.Periods;
+using TACHYON.Invoices.SubmitInvoices;
 using TACHYON.Invoices.Transactions;
 using TACHYON.Localization;
 using TACHYON.Mobile;
@@ -200,13 +201,14 @@ namespace TACHYON.EntityFrameworkCore
         public  DbSet<InvoiceProforma> InvoiceProforma { get; set; }
 
         
-        public virtual DbSet<InvoiceShippingRequests> InvoiceShippingRequests { get; set; }
+        public virtual DbSet<InvoiceTrip> InvoiceTrips { get; set; }
         public virtual DbSet<GroupPeriod> GroupPeriod { get; set; }
         public virtual DbSet<GroupShippingRequests> GroupShippingRequests { get; set; }
         public virtual DbSet<GroupPeriodInvoice> GroupPeriodInvoice { get; set; }
         public DbSet<InvoicePaymentMethod> InvoicePaymentMethods { get; set; }
 
-
+        public DbSet<SubmitInvoice> SubmitInvoices { get; set; }
+        public DbSet<SubmitInvoiceTrip> SubmitInvoiceTrips { get; set; }
         public virtual DbSet<BalanceRecharge> BalanceRecharge { get; set; }
 
 
@@ -405,15 +407,22 @@ namespace TACHYON.EntityFrameworkCore
             .HasIndex(e => e.WaybillNumber)
             .IsUnique();
 
-            modelBuilder.Entity<Tenant>()
-            .HasIndex(b => b.AccountNumber)
-            .IsUnique();
+            modelBuilder.Entity<Tenant>(b => {
+            b.HasIndex(a => a.AccountNumber).IsUnique();
+            b.HasIndex(a => a.ContractNumber).IsUnique();
+            });
+
 
             modelBuilder.Entity<RoutPoint>()
             .HasIndex(e => e.WaybillNumber)
             .IsUnique();
+
             modelBuilder.Entity<User>()
             .HasIndex(e => e.AccountNumber)
+            .IsUnique();
+
+            modelBuilder.Entity<Invoice>()
+            .HasIndex(e => e.InvoiceNumber)
             .IsUnique();
             modelBuilder.ConfigurePersistedGrantEntity();
         }

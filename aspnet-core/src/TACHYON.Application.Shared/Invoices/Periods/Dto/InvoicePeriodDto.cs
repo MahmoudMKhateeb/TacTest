@@ -43,7 +43,7 @@ namespace TACHYON.Invoices.Periods.Dto
                         FreqRelativeInterval = 0;
                         FreqRecurrence = null;
                         if (FreqInterval < 1) context.Results.Add(new ValidationResult("	The field FreqInterval value must greater than or equal to 1."));
-                        Cronexpression = $"0 59 23 {Clock.Now.Day}/{FreqInterval} * ?";
+                        Cronexpression = $"0 0 9 {Clock.Now.Day}/{FreqInterval} * ?";
                         break;
 
                     case InvoicePeriodType.Weekly:

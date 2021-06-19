@@ -41,6 +41,7 @@ namespace TACHYON.Receivers
 
             var filteredReceivers = _receiverRepository.GetAll()
                         .Include(e => e.FacilityFk)
+                        .WhereIf(input.FromDate.HasValue && input.ToDate.HasValue, i => i.CreationTime >= input.FromDate && i.CreationTime <= input.ToDate)
                         .WhereIf(!string.IsNullOrWhiteSpace(input.Filter), e => false || e.FullName.Contains(input.Filter) || e.Email.Contains(input.Filter) || e.PhoneNumber.Contains(input.Filter))
                         .WhereIf(!string.IsNullOrWhiteSpace(input.FullNameFilter), e => e.FullName == input.FullNameFilter)
                         .WhereIf(!string.IsNullOrWhiteSpace(input.EmailFilter), e => e.Email == input.EmailFilter)
@@ -64,7 +65,8 @@ namespace TACHYON.Receivers
                                     PhoneNumber = o.PhoneNumber,
                                     Id = o.Id
                                 },
-                                FacilityName = s1 == null || s1.Name == null ? "" : s1.Name.ToString()
+                                FacilityName = s1 == null || s1.Name == null ? "" : s1.Name.ToString(),
+                                CreationTime=o.CreationTime
                             };
 
             var totalCount = await filteredReceivers.CountAsync();

@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 using TACHYON.AddressBook;
 using TACHYON.Authorization.Users;
+using TACHYON.PriceOffers;
 using TACHYON.Routs.RoutPoints;
 using TACHYON.Shipping.ShippingRequests;
 using TACHYON.Shipping.Trips;
@@ -65,6 +66,19 @@ namespace TACHYON.Shipping.ShippingRequestTrips
         /// </summary>
         public string TotalValue { get; set; }
 
-
-    }
+    #region Prices
+        public bool IsShipperHaveInvoice { get; set; }
+        public bool IsCarrierHaveInvoice { get; set; }
+        public decimal? TotalAmount { get; set; }
+        public decimal? SubTotalAmount { get; set; }
+        public decimal? VatAmount { get; set; }
+        public decimal? TotalAmountWithCommission { get; set; }
+        public decimal? SubTotalAmountWithCommission { get; set; }
+        public decimal? VatAmountWithCommission { get; set; }
+        public decimal? TaxVat { get; set; }
+        public PriceOfferCommissionType? CommissionType { get; set; }
+        public decimal? CommissionPercentageOrAddValue { get; set; }
+        public decimal? CommissionAmount { get; set; }
+    #endregion
+}
 }

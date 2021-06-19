@@ -12,7 +12,7 @@ namespace TACHYON.Invoices
 {
     [Table("InvoicesProforma")]
 
-    public class InvoiceProforma : Entity<long>, IMustHaveTenant, ICreationAudited, IHasCreationTime
+    public class InvoiceProforma : CreationAuditedEntity<long>, IMustHaveTenant
     {
         public int TenantId { get ; set ; }
         [ForeignKey("TenantId")]
@@ -24,7 +24,5 @@ namespace TACHYON.Invoices
         public decimal Amount { get; set; }
         public decimal VatAmount { get; set; }
         public decimal TaxVat { get; set; }
-        public long? CreatorUserId { get; set; }
-        public DateTime CreationTime { get; set; } = Clock.Now;
     }
 }

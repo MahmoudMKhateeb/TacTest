@@ -1,10 +1,7 @@
 <div [@routerTransition] class="container">
   <div class="content d-flex flex-column flex-column-fluid">
-    <sub-header [title]="'InvoiceDetail' | localize" [description]="'InvoiceDetailHeaderInfo' | localize">
+    <sub-header [title]="'InvoiceDetail' | localize" [description]="'' | localize">
       <div role="actions">
-        <button (click)="delete()" *ngIf="permission.isGranted('Pages.Administration.Host.Invoices.Invoices.Delete')" class="btn btn-danger">
-          <i class="fa fa-trash"></i> {{ l('Delete') }}
-        </button>
         <button
           (click)="MakePaid()"
           *ngIf="!Data.isPaid && permission.isGranted('Pages.Administration.Host.Invoices.MakePaid')"
@@ -23,153 +20,431 @@
     </sub-header>
 
     <div [class]="containerClass">
-      <!--
+      <div class="contentInvoice container">
+        <div class="headerInvoice">
+          <a href="" class="logoTachyon">
+            <img src="/assets/custom/imgs/logoTachyon.svg" alt="" />
+            <span>الحلول المتكاملة للخدمات اللوجستية</span>
+          </a>
+          <h2 class="titleInvoice">
+            <span class="en">
+              Invoice
+            </span>
+            |
+            <span class="ar">
+              فاتورة
+            </span>
+          </h2>
+          <span class="barCode">
+            <img src="/assets/custom/imgs/barcode.png" alt="" />
+          </span>
+        </div>
 
-                           <div class="card card-custom gutter-b">
-                    <div class="card-body">
-                        <div class="row align-items-center">
-                            <div class="row">
+        <div class="infoBasicInvoice">
+          <p>
+            <span class="en">
+              Bill To
+            </span>
+            <span class="value">
+              {{ Data.clientName }}
+            </span>
+            <span class="ar">
+              اسم العميل
+            </span>
+          </p>
+          <p>
+            <span class="en">
+              Phone
+            </span>
+            <span class="value">
+              {{ Data.phone }}
+            </span>
+            <span class="ar">
+              رقم الهاتف
+            </span>
+          </p>
+          <p>
+            <span class="en">
+              Invoice #
+            </span>
+            <span class="value">
+              {{ Data.invoiceNumber }}
+            </span>
+            <span class="ar">
+              رقم الفاتورة
+            </span>
+          </p>
+          <p>
+            <span class="en">
+              CR
+            </span>
+            <span class="value">
+              {{ Data.cr }}
+            </span>
+            <span class="ar">
+              السجل التجاري
+            </span>
+          </p>
+          <p>
+            <span class="en">
+              Fax
+            </span>
+            <span class="value">
+              {{ Data.faxNo }}
+            </span>
+            <span class="ar">
+              رقم الفاكس
+            </span>
+          </p>
+          <p>
+            <span class="en">
+              Invoice Date
+            </span>
+            <span class="value">
+              {{ Data.creationTime | momentFormat: 'L' }}
+            </span>
+            <span class="ar">
+              تاريخ الفاتورة
+            </span>
+          </p>
+          <p>
+            <span class="en">
+              Address
+            </span>
+            <span class="value">
+              {{ Data.address }}
+            </span>
+            <span class="ar">
+              العنوان
+            </span>
+          </p>
+          <p>
+            <span class="en">
+              Email
+            </span>
+            <span class="value">
+              {{ Data.email }}
+            </span>
+            <span class="ar">
+              البريد الإلكتروني
+            </span>
+          </p>
+          <p>
+            <span class="en">
+              Due Date
+            </span>
+            <span class="value">
+              {{ Data.dueDate | momentFormat: 'L' }}
+            </span>
+            <span class="ar">
+              تاريخ الاستحقاق
+            </span>
+          </p>
+          <p>
+            <span class="en">
+              Project Name
+            </span>
+            <span class="value">
+              {{ Data.projectName }}
+            </span>
+            <span class="ar">
+              اسم المشروع
+            </span>
+          </p>
+          <p>
+            <span class="en">
+              Contract #
+            </span>
+            <span class="value">
+              {{ Data.contractNo }}
+            </span>
+            <span class="ar">
+              رقم العقد
+            </span>
+          </p>
+          <p>
+            <span class="en">
+              Attn
+            </span>
+            <span class="value">
+              {{ Data.attn }}
+            </span>
+            <span class="ar">
+              عناية
+            </span>
+          </p>
+        </div>
 
-                                <div class="col-md-4">
-                                    <div class="form-group">
-                                        <label>{{ l('FaxNo') }}:</label>
-                                        {{ Data.faxNo }}
-                                    </div>
-                                </div>
+        <div class="table-responsive tableDetailsInvoice">
+          <table class="table">
+            <thead>
+              <tr>
+                <th>
+                  <span class="en">Seq</span>
+                  <span class="ar">التسلسل</span>
+                </th>
+                <th>
+                  <span class="en">Date *</span>
+                  <span class="ar">التاريخ</span>
+                </th>
+                <th>
+                  <span class="en">Way bill *</span>
+                  <span class="ar">وثيقة الشحن</span>
+                </th>
+                <th>
+                  <span class="en">Origin</span>
+                  <span class="ar">مكان التحميل</span>
+                </th>
+                <th>
+                  <span class="en">Destination</span>
+                  <span class="ar">التنزيل</span>
+                </th>
+                <th>
+                  <span class="en">Truck Type</span>
+                  <span class="ar">نوع الشاحنة</span>
+                </th>
+                <th>
+                  <span class="en">Price SAR</span>
+                  <span class="ar">السعر ر.س</span>
+                </th>
+                <th>
+                  <span class="en">(VAT {{ Data.taxVat }}%)</span>
+                  <span class="ar">ضريبة القيمة المضافة</span>
+                </th>
+                <th>
+                  <span class="en">Total</span>
+                  <span class="ar">الإجمالي</span>
+                </th>
+                <th>
+                  <span class="en">Quantity</span>
+                  <span class="ar">الكمية</span>
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let item of Items">
+                <td>
+                  {{ item.sequence }}
+                </td>
+                <td>
+                  {{ item.dateWork }}
+                </td>
+                <td>
+                  {{ item.wayBillNumber }}
+                </td>
+                <td>
+                  {{ item.source }}
+                </td>
+                <td>
+                  {{ item.destination }}
+                </td>
+                <td>
+                  {{ item.truckType }}
+                </td>
+                <td>
+                  {{ item.subTotalAmount | number }}
+                </td>
+                <td>
+                  {{ item.vatAmount | number }}
+                </td>
+                <td>
+                  {{ item.totalAmount | number }}
+                </td>
+                <td>
+                  {{ item.remarks }}
+                </td>
+              </tr>
+            </tbody>
+          </table>
+          <p>
+            <span class="en">
+              * Date is the start date for the trucks rental period
+            </span>
+            <span class="ar">
+              * التاريخ هو تاريخ بدء فترة التأجير
+            </span>
+          </p>
+          <p>
+            <span class="en">
+              ** In case there is VAS, then VAS will be added to the plate NO as a reference
+            </span>
+            <span class="ar">
+              ** في حالة الخدمات الاضافية ستضاف إلى رقم اللوحة كمرجع
+            </span>
+          </p>
+        </div>
 
-                                <div class="col-md-4">
-                                    <div class="form-group">
-                                        <label>{{ l('Email') }}:</label>
-                                        {{ Data.email }}
-                                    </div>
-                                </div>
-                                <div class="col-md-4">
-                                    <div class="form-group">
-                                        <label>{{ l('Address') }}:</label>
-                                        {{ Data.address }}
-                                    </div>
-                                </div>
-                                <div class="col-md-4">
-                                    <div class="form-group">
-                                        <label>{{ l('ATTN') }}:</label>
-                                        {{ Data.attn }}
-                                    </div>
-                                </div>
-                                <div class="col-md-4">
-                                    <div class="form-group">
-                                        <label>{{ l('ContractNo') }}:</label>
-                                        {{ Data.contractNo }}
-                                    </div>
-                                </div>
+        <div class="finishPrice">
+          <div class="signature">
+            <p>
+              <span class="en">
+                For Integrated Solutions for Logistics Services
+              </span>
+              <span class="ar">
+                الحلول المتكاملة للخدمات اللوجستية
+              </span>
+            </p>
+            <p>
+              <span class="en">
+                Authorized Signature
+              </span>
+              <span class="value"> </span>
+              <span class="ar">
+                التوقيع
+              </span>
+            </p>
+          </div>
+          <div class="table-responsive prices">
+            <table class="table">
+              <tbody>
+                <tr>
+                  <td class="en">
+                    Invoice Subtotal
+                  </td>
+                  <td class="value">{{ Data.subTotalAmount | number }} SAR</td>
+                  <td class="ar">
+                    مجموع الفاتورة
+                  </td>
+                </tr>
+                <tr>
+                  <td class="en">VAT Amount ({{ Data.taxVat }}%)</td>
+                  <td class="value">{{ Data.vatAmount | number }} SAR</td>
+                  <td class="ar">
+                    قيمة الضريبة المضافة (15%)
+                  </td>
+                </tr>
+              </tbody>
+              <tfoot>
+                <tr>
+                  <td class="en">
+                    Due Amount
+                  </td>
+                  <td class="value">{{ Data.totalAmount | number }} SAR</td>
+                  <td class="ar">
+                    المبلغ المستحق
+                  </td>
+                </tr>
+              </tfoot>
+            </table>
+          </div>
+        </div>
 
-                            </div>
-
-
-                        </div>
-                    </div>
-                </div>
-    -->
-
-      <div class="card card-custom overflow-hidden">
-        <div class="card-body p-0">
-          <!-- begin: Invoice-->
-          <!-- begin: Invoice header-->
-          <div class="row justify-content-center py-8 px-8 py-md-27 px-md-0">
-            <div class="col-md-9">
-              <div class="d-flex justify-content-between pb-10 pb-md-20 flex-column flex-md-row">
-                <h1 class="display-4 font-weight-boldest mb-10">{{ l('Invoice') }}</h1>
-              </div>
-              <div class="border-bottom w-100"></div>
-              <div class="d-flex justify-content-between pt-6">
-                <div class="d-flex flex-column flex-root">
-                  <span class="font-weight-bolder mb-2">{{ l('DueDate') }}</span>
-                  <span class="opacity-70">{{ Data.dueDate | momentFormat: 'L' }}</span>
-                </div>
-                <div class="d-flex flex-column flex-root">
-                  <span class="font-weight-bolder mb-2">{{ l('InvoiceNo') }}.</span>
-                  <span class="opacity-70">{{ Data.id }}</span>
-                </div>
-                <div class="d-flex flex-column flex-root">
-                  <span class="font-weight-bolder mb-2">{{ l('BillTo') }}.</span>
-                  <span class="opacity-70">
-                    {{ Data.clientName }}, {{ Data.address }} <br />{{ l('Email') }}:{{ Data.email }},{{ l('Phone') }}:{{ Data.phone }}
-                  </span>
-                </div>
-              </div>
+        <div class="banking mb-4">
+          <div class="option1">
+            <p class="en">
+              Please send local cheques in favor of
+            </p>
+            <p class="en">
+              <b>
+                Integrated Solutions for Logistics Services
+              </b>
+            </p>
+            <p>
+              يرجى ارسال الشيك لصالح شركة
+              <b>
+                الحلول المتكاملة للخدمات اللوجستية
+              </b>
+            </p>
+          </div>
+          <div class="option2">
+            <p class="en">
+              <b>
+                Or transfer directly to our bank accounts as detailed below:
+              </b>
+            </p>
+            <p class="ar">
+              <b>
+                :أو التحويل مباشرة إلى حسابنا البنكي
+              </b>
+            </p>
+            <div class="d-flex justify-content-between align-items-center">
+              <p class="text-center">
+                <b class="en">
+                  Riyadh Bank
+                </b>
+                <br />
+                <b>
+                  بنك الرياض
+                </b>
+              </p>
+              <p>
+                <span class="d-flex justify-content-between mb-2">
+                  <b class="en">
+                    Account:
+                  </b>
+                  <b class="en px-3">
+                    1391708819940
+                  </b>
+                  <b class="ar">
+                    الحساب:
+                  </b>
+                </span>
+                <span class="d-flex justify-content-between">
+                  <b class="en">
+                    IBAN:
+                  </b>
+                  <b class="en px-3">
+                    SA6420000001391708819940
+                  </b>
+                  <b class="ar">
+                    أيبان:
+                  </b>
+                </span>
+              </p>
             </div>
           </div>
-          <!-- end: Invoice header-->
-          <!-- begin: Invoice body-->
-          <div class="row justify-content-center py-8 px-8 py-md-10 px-md-0">
-            <div class="col-md-9">
-              <div class="table-responsive">
-                <table class="table">
-                  <thead>
-                    <tr>
-                      <th class="pl-0 font-weight-bold text-muted text-uppercase">{{ l('Seq') }}</th>
-                      <th class="text-right font-weight-bold text-muted text-uppercase">{{ l('Date') }}</th>
-                      <th class="text-right pr-0 font-weight-bold text-muted text-uppercase">{{ l('Origin') }}</th>
-                      <th class="text-right pr-0 font-weight-bold text-muted text-uppercase">{{ l('Destination') }}</th>
-                      <th class="text-right pr-0 font-weight-bold text-muted text-uppercase">{{ l('TrukType') }}</th>
-                      <th class="text-right pr-0 font-weight-bold text-muted text-uppercase">{{ l('Prices') }}</th>
-                      <th class="text-right pr-0 font-weight-bold text-muted text-uppercase">{{ l('Remarks') }}</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <tr class="font-weight-boldest" *ngFor="let item of Items; let i = index">
-                      <td class="pl-0 pt-7">{{ i + 1 }}/{{ TotalItems }}</td>
-                      <td class="text-right pt-7">{{ item.dateWork }}</td>
-                      <td class="pr-0 pt-7 text-right">{{ item.source }}</td>
-                      <td class="pr-0 pt-7 text-right">{{ item.destination }}</td>
-                      <td class="pr-0 pt-7 text-right">{{ item.truckType }}</td>
-                      <td class="pr-0 pt-7 text-right">{{ item.price }}</td>
-                      <td class="pr-0 pt-7 text-right">{{ item.remarks }}</td>
-                    </tr>
-                  </tbody>
-                </table>
-              </div>
-            </div>
-          </div>
-          <!-- end: Invoice body-->
-          <!-- begin: Invoice footer-->
-          <div class="row justify-content-center bg-gray-100 py-8 px-8 py-md-10 px-md-0">
-            <div class="col-md-9">
-              <div class="table-responsive">
-                <table class="table">
-                  <thead>
-                    <tr>
-                      <th class="font-weight-bold text-muted text-uppercase">{{ l('ProjectName') }}</th>
-                      <th class="font-weight-bold text-muted text-uppercase">{{ l('InvoiceSubTotal') }}</th>
-                      <th class="font-weight-bold text-muted text-uppercase">{{ l('VatAmount') }}</th>
-                      <th class="font-weight-bold text-muted text-uppercase">{{ l('TotalAmount') }}</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <tr class="font-weight-bolder">
-                      <td>{{ Data.projectName }}</td>
-                      <td>{{ Data.subTotalAmount }}</td>
-                      <td>{{ Data.vatAmount }}</td>
-                      <td class="text-danger font-size-h3 font-weight-boldest">{{ Data.totalAmount }}</td>
-                    </tr>
-                  </tbody>
-                </table>
-              </div>
-            </div>
-          </div>
-          <!-- end: Invoice footer-->
-          <!-- begin: Invoice action-->
-          <div class="row justify-content-center py-8 px-8 py-md-10 px-md-0">
-            <div class="col-md-9">
-              <div class="d-flex justify-content-between">
-                <button type="button" class="btn btn-primary font-weight-bold" onclick="window.print();">{{ l('PrintInvoice') }}</button>
-              </div>
-            </div>
-            <div class="col-md-3">
-              <button class="btn btn-danger float-right" (click)="downloadInvoice()" [buttonBusy]="loading">{{ l('downloadInvoice') }}</button>
-            </div>
-          </div>
-          <!-- end: Invoice action-->
-          <!-- end: Invoice-->
+        </div>
+
+        <div class="footerInvoice d-flex justify-content-between align-items-center flex-wrap">
+          <p class="en">
+            <span class="icon">
+              <i class="fas fa-map-marker-alt"></i>
+            </span>
+            Riyadh, Almuroj 12281
+          </p>
+          <p class="en">
+            <span class="icon">
+              <i class="fas fa-envelope"></i>
+            </span>
+            billing@tachyonhub.com
+          </p>
+          <p class="d-flex justify-content-between align-items-center">
+            <b class="en">
+              VAT:
+            </b>
+            <span class="value en px-3">
+              310496565400003
+            </span>
+            <span class="ar">
+              رقم السجل الضريبي:
+            </span>
+          </p>
+          <p class="en">
+            <span class="icon">
+              <i class="fas fa-phone-alt"></i>
+            </span>
+            +966 920 035 543
+          </p>
+          <p class="en">
+            <span class="icon">
+              <i class="fas fa-globe"></i>
+            </span>
+            www.tachyonhub.com
+          </p>
+          <p class="d-flex justify-content-between align-items-center">
+            <b class="en">
+              CR:
+            </b>
+            <span class="value en px-3">
+              1010621994
+            </span>
+            <span class="ar">
+              السجل التجاري:
+            </span>
+          </p>
+          <b class="en mt-3">
+            Please Feel Free To Connect With Us In Case Of Queries
+          </b>
         </div>
       </div>
     </div>

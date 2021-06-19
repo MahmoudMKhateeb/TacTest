@@ -64,7 +64,12 @@ namespace TACHYON.Shipping.Drivers
         public async Task<bool> SetPointToDelivery(IHasDocument document)
         {
             DisableTenancyFilters();
-            var CurrentPoint = await _RoutPointRepository.GetAll().Include(x=>x.ShippingRequestTripFk)
+            var CurrentPoint = await _RoutPointRepository.GetAll().
+                Include(x=>x.ShippingRequestTripFk)
+                    .ThenInclude(x=>x.ShippingRequestTripVases)
+                .Include(x => x.ShippingRequestTripFk)
+                    .ThenInclude(x=>x.ShippingRequestFk)
+                     .ThenInclude(x=>x.Tenant)
                 .FirstOrDefaultAsync(x => x.IsActive &&
                 x.ShippingRequestTripFk.RoutePointStatus == RoutePointStatus.ReceiverConfirmed &&
                 x.ShippingRequestTripFk.AssignedDriverUserId == _abpSession.UserId);
@@ -84,6 +89,8 @@ namespace TACHYON.Shipping.Drivers
                 trip.Status = ShippingRequestTripStatus.Delivered;
                 trip.RoutePointStatus = RoutePointStatus.Delivered;
                 trip.EndTripDate = Clock.Now;
+                await _invoiceManager.GenertateInvoiceWhenShipmintDelivery(trip);
+
                 await Done(trip.ShippingRequestId, trip.Id);
             }
             else
@@ -177,7 +184,6 @@ namespace TACHYON.Shipping.Drivers
             {
                 var Request = await _ShippingRequestRepository.SingleAsync(x => x.Id == RequestId);
                 Request.Status = ShippingRequestStatus.Completed;
-                await _invoiceManager.GenertateInvoiceWhenShipmintDelivery(Request);
                 await _appNotifier.ShipperShippingRequestFinish(new UserIdentifier(Request.TenantId, _userManager.GetAdminByTenantIdAsync(Request.TenantId).Id), Request);
             }
         }
@@ -188,6 +194,7 @@ namespace TACHYON.Shipping.Drivers
         {
             var trip= await _ShippingRequestTrip
                 .GetAllIncluding(o=>o.OriginFacilityFk,d=>d.DestinationFacilityFk,x=>x.ShippingRequestFk)
+                .Include(x=>x.ShippingRequestTripVases)
                                 .FirstOrDefaultAsync(t => t.Id == id &&
                                 t.DriverStatus == ShippingRequestTripDriverStatus.None &&
                                 t.Status == ShippingRequestTripStatus.New &&
@@ -199,6 +206,7 @@ namespace TACHYON.Shipping.Drivers
 
         public async Task SetRoutStatusTransition(RoutPoint routPoint, RoutePointStatus Status)
         {
+           //await _invoiceManager.GenertateInvoiceWhenShipmintDelivery(routPoint.ShippingRequestTripFk);
            await _routPointStatusTransitionRepository.InsertAsync(new RoutPointStatusTransition 
            { 
            PointId= routPoint.Id,

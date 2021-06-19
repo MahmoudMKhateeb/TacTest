@@ -1,4 +1,4 @@
-﻿import { Component, Injector, ViewEncapsulation, ViewChild } from '@angular/core';
+import { Component, Injector, ViewEncapsulation, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { FacilitiesServiceProxy, FacilityDto } from '@shared/service-proxies/service-proxies';
 import { NotifyService } from 'abp-ng2-module';
@@ -42,6 +42,10 @@ export class FacilitiesComponent extends AppComponentBase {
   countyDisplayNameFilter = '';
   cityDisplayNameFilter = '';
 
+  fromDate: moment.Moment | null | undefined;
+  toDate: moment.Moment | null | undefined;
+  creationDateRange: Date[] = [moment().startOf('day').toDate(), moment().endOf('day').toDate()];
+  creationDateRangeActive: boolean = false;
   constructor(
     injector: Injector,
     private _facilitiesServiceProxy: FacilitiesServiceProxy,
@@ -58,6 +62,13 @@ export class FacilitiesComponent extends AppComponentBase {
       this.paginator.changePage(0);
       return;
     }
+    if (this.creationDateRangeActive) {
+      this.fromDate = moment(this.creationDateRange[0]);
+      this.toDate = moment(this.creationDateRange[1]);
+    } else {
+      this.fromDate = null;
+      this.toDate = null;
+    }
 
     this.primengTableHelper.showLoadingIndicator();
 
@@ -71,6 +82,8 @@ export class FacilitiesComponent extends AppComponentBase {
         this.maxLatitudeFilter == null ? this.maxLatitudeFilterEmpty : this.maxLatitudeFilter,
         this.minLatitudeFilter == null ? this.minLatitudeFilterEmpty : this.minLatitudeFilter,
         this.cityDisplayNameFilter,
+        this.fromDate,
+        this.toDate,
         this.primengTableHelper.getSorting(this.dataTable),
         this.primengTableHelper.getSkipCount(this.paginator, event),
         this.primengTableHelper.getMaxResultCount(this.paginator, event)

@@ -159,18 +159,7 @@ namespace TACHYON.Notifications
                     )
                 );
             #endregion
-            #region Carrier 
-            context.Manager.Add(
-          new NotificationDefinition(
-              AppNotificationNames.GroupPeriodsGenerated,
-              displayName: L("NewGroupPeriodsGenerated"),
-               permissionDependency: new SimplePermissionDependency(AppFeatures.Carrier)
-          )
 
-      );
-
-
-            #endregion
             #region Host
 
             #endregion

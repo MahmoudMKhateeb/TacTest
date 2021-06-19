@@ -8,12 +8,12 @@ import { FileDownloadService } from '@shared/utils/file-download.service';
 
 @Component({
   animations: [appModuleAnimation()],
+  styleUrls: ['./invoice-detail.component.scss'],
   templateUrl: './invoice-detail.component.html',
 })
 export class InvoiceDetailComponent extends AppComponentBase {
   Data: InvoiceInfoDto;
   Items: InvoiceItemDto[];
-  TotalItems: number;
   loading = false;
   constructor(
     injector: Injector,
@@ -26,20 +26,8 @@ export class InvoiceDetailComponent extends AppComponentBase {
     super(injector);
     this.Data = this.route.snapshot.data.invoiceinfo;
     this.Items = this.Data.items;
-    this.TotalItems = this.Items.length;
 
-    // console.log('this is my invoice id --------------> ', this.Data.id);
-  }
-
-  delete(): void {
-    this.message.confirm('', this.l('AreYouSure'), (isConfirmed) => {
-      if (isConfirmed) {
-        this._InvoiceServiceProxy.delete(this.Data.id).subscribe(() => {
-          this.notify.success(this.l('SuccessfullyDeleted'));
-          this.router.navigate([`/app/main/invoices/view`]);
-        });
-      }
-    });
+    console.log(this.Items);
   }
 
   MakePaid(): void {

@@ -35,6 +35,7 @@ namespace TACHYON.Shipping.Drivers
         private readonly ShippingRequestManager _shippingRequestManager;
         private readonly IAppNotifier _appNotifier;
         private readonly IFirebaseNotifier _firebaseNotifier;
+        private readonly ShippingRequestsTripManager _shippingRequestsTripManager;
 
 
         public ShippingRequestDriverAppService(
@@ -44,7 +45,8 @@ namespace TACHYON.Shipping.Drivers
             ShippingRequestDriverManager shippingRequestDriverManager,
             ShippingRequestManager shippingRequestManager,
             IAppNotifier appNotifier,
-            IFirebaseNotifier firebaseNotifier)
+            IFirebaseNotifier firebaseNotifier,
+            ShippingRequestsTripManager shippingRequestsTripManager)
         {
             _ShippingRequestTrip = ShippingRequestTrip;
             _RoutPointRepository = RoutPointRepository;
@@ -53,6 +55,7 @@ namespace TACHYON.Shipping.Drivers
             _shippingRequestManager = shippingRequestManager;
             _appNotifier = appNotifier;
             _firebaseNotifier = firebaseNotifier;
+            _shippingRequestsTripManager = shippingRequestsTripManager;
 
         }
         /// <summary>
@@ -299,7 +302,12 @@ namespace TACHYON.Shipping.Drivers
         public async Task ConfirmReceiverCode(string Code)
         {
             DisableTenancyFilters();
-            var CurrentPoint = await _RoutPointRepository.GetAll().Include(t=>t.ShippingRequestTripFk)
+            var CurrentPoint = await _RoutPointRepository.GetAll()
+                .Include(t=>t.ShippingRequestTripFk)
+                    .ThenInclude(x => x.ShippingRequestTripVases)
+                .Include(x => x.ShippingRequestTripFk)
+                    .ThenInclude(x => x.ShippingRequestFk)
+                     .ThenInclude(x => x.Tenant)
                 .FirstOrDefaultAsync(
                                     x => x.IsActive && x.ShippingRequestTripFk.RoutePointStatus == RoutePointStatus.FinishOffLoadShipment &&
                                     x.Code == Code &&
@@ -331,16 +339,17 @@ namespace TACHYON.Shipping.Drivers
             var trip = await _shippingRequestDriverManager.GetTripWhenAccepedOrRejectedByDriver(TripId, AbpSession.UserId.Value);
             await _appNotifier.DriverAcceptTrip(trip, GetCurrentUser().FullName);
             trip.DriverStatus = ShippingRequestTripDriverStatus.Accepted;
+            await _shippingRequestsTripManager.GeneratePrices(trip);
         }
-        public async Task Rejected(CreateShippingRequestTripDriverRejectDto Input)
-        {
-            DisableTenancyFilters();
-            var trip = await _shippingRequestDriverManager.GetTripWhenAccepedOrRejectedByDriver(Input.Id, AbpSession.UserId.Value);
-            trip.DriverStatus = ShippingRequestTripDriverStatus.Rejected;
-            trip.RejectReasonId = !Input.ReasoneId.HasValue || Input.ReasoneId == 0 ? default(int?) : Input.ReasoneId.Value;
-            trip.RejectedReason = Input.Description;
-            await _appNotifier.DriverRejectTrip(trip,GetCurrentUser().FullName);
-        }
+        //public async Task Rejected(CreateShippingRequestTripDriverRejectDto Input)
+        //{
+        //    DisableTenancyFilters();
+        //    var trip = await _shippingRequestDriverManager.GetTripWhenAccepedOrRejectedByDriver(Input.Id, AbpSession.UserId.Value);
+        //    trip.DriverStatus = ShippingRequestTripDriverStatus.Rejected;
+        //    trip.RejectReasonId = !Input.ReasoneId.HasValue || Input.ReasoneId == 0 ? default(int?) : Input.ReasoneId.Value;
+        //    trip.RejectedReason = Input.Description;
+        //    await _appNotifier.DriverRejectTrip(trip,GetCurrentUser().FullName);
+        //}
         [AbpAllowAnonymous]
         public async Task Reset(int TripId)
         {

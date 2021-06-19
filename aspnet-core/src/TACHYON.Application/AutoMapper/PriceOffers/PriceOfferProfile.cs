@@ -39,6 +39,7 @@ namespace TACHYON.AutoMapper.PriceOffers
 
             CreateMap<ShippingRequest, GetShippingRequestForPriceOfferListDto>()
              .ForMember(dst => dst.Name, opt => opt.MapFrom(src => src.Tenant.Name))
+             .ForMember(dst => dst.Carrier, opt => opt.MapFrom(src => src.CarrierTenantFk.Name))
              .ForMember(dst => dst.OriginCity, opt => opt.MapFrom(src => src.OriginCityFk.DisplayName))
              .ForMember(dst => dst.DestinationCity, opt => opt.MapFrom(src => src.DestinationCityFk.DisplayName))
              .ForMember(dst => dst.BidStatusTitle, opt => opt.MapFrom(src => src.BidStatus.GetEnumDescription()))
@@ -46,6 +47,7 @@ namespace TACHYON.AutoMapper.PriceOffers
              .ForMember(dst => dst.RemainingDays, opt => opt.MapFrom(src => "0"))
              .ForMember(dst => dst.RangeDate, opt => opt.MapFrom(src => GetDateRange(src.StartTripDate, src.EndTripDate)))
              .ForMember(dst => dst.RemainingDays, opt => opt.MapFrom(src => GetRemainingDays(src.BidEndDate, src.BidStatus)))
+             .ForMember(dst => dst.Price, opt => opt.MapFrom(src => src.Price))
      ;
 
 

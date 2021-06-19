@@ -1,0 +1,174 @@
+<div
+  bsModal
+  #modal="bs-modal"
+  class="modal fade tachyonDialer   {{ direction == 'rtl' ? ' rtl' : '' }} "
+  tabindex="-1"
+  role="dialog"
+  aria-labelledby="modal"
+  aria-hidden="true"
+  [config]="{ backdrop: 'static' }"
+>
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-body">
+        <button type="button" class="close closeModal" (click)="close()" aria-label="Close">
+          <i class="fas fa-times"></i>
+        </button>
+
+        <div class="form-body">
+          <div class="row">
+            <div class="row mb-4">
+              <div class="col-xl-6">
+                <label for="Shipper">{{ 'Shipper' | localize }}</label>
+                <div class="input-group">
+                  <input
+                    id="Shipper"
+                    [(ngModel)]="input.filter"
+                    name="input.filter"
+                    class="form-control"
+                    placeholder="{{ 'SearchWithThreeDot' | localize }}"
+                    type="text"
+                  />
+                </div>
+              </div>
+              <div class="col-xl-6" *ngIf="input.channel != 1 && (feature.isEnabled('App.TachyonDealer') || !appSession.tenantId)">
+                <label for="Carrier">{{ 'Carrier' | localize }}</label>
+                <div class="input-group">
+                  <input
+                    id="Carrier"
+                    [(ngModel)]="input.carrier"
+                    name="input.carrier"
+                    class="form-control"
+                    placeholder="{{ 'SearchWithThreeDot' | localize }}"
+                    type="text"
+                  />
+                </div>
+              </div>
+              <div class="col-xl-6">
+                <label for="OriginCity">{{ 'TruckType' | localize }}</label>
+                <div class="input-group">
+                  <select name="input.truckTypeId" [(ngModel)]="input.truckTypeId" class="form-control" required>
+                    <option value="">{{ l('All') }}</option>
+                    <option [value]="t.value" *ngFor="let t of truckTypes">
+                      {{ t.displayText | localize }}
+                    </option>
+                  </select>
+                </div>
+              </div>
+
+              <div class="col-xl-6">
+                <div class="checkbox-list mb-2">
+                  <label class="checkbox">
+                    <input type="checkbox" [(ngModel)]="pickupDateRangeActive" id="pickupDateRangeActive" name="pickupDateRangeActive" value="true" />
+                    {{ 'PickupDate' | localize }}
+                    <span class="ml-2 mt-1"></span>
+                  </label>
+                </div>
+                <input
+                  class="form-control"
+                  name="pickupDateRange"
+                  [attr.disabled]="!pickupDateRangeActive ? 'disabled' : null"
+                  #drpSubscriptionEndDateRange="bsDaterangepicker"
+                  bsDaterangepicker
+                  readonly="readonly"
+                  dateRangePickerMomentModifier
+                  [(date)]="pickupDateRange"
+                />
+              </div>
+              <div class="col-xl-6">
+                <div class="checkbox-list mb-2">
+                  <label class="checkbox ml-2">
+                    <input
+                      type="checkbox"
+                      [(ngModel)]="creationDateRangeActive"
+                      id="creationDateRangeActive"
+                      name="CreationDateRangeActive"
+                      value="true"
+                    />
+                    {{ 'CreationTime' | localize }}
+                    <span class="ml-2 mt-1"></span>
+                  </label>
+                </div>
+                <input
+                  class="form-control"
+                  name="CreationDateRange"
+                  [attr.disabled]="!creationDateRangeActive ? 'disabled' : null"
+                  #drpCreationDateRange="bsDaterangepicker"
+                  bsDaterangepicker
+                  readonly="readonly"
+                  dateRangePickerMomentModifier
+                  [(date)]="creationDateRange"
+                />
+              </div>
+
+              <div class="col-xl-6">
+                <label for="OriginCity">{{ 'Origin' | localize }}</label>
+                <div class="input-group">
+                  <select name="input.originId" [(ngModel)]="input.originId" class="form-control" required>
+                    <option value="">{{ l('All') }}</option>
+                    <option [value]="c.value" *ngFor="let c of cites">
+                      {{ c.displayText | localize }}
+                    </option>
+                  </select>
+                </div>
+              </div>
+              <div class="col-xl-6">
+                <label for="OriginCity">{{ 'Destination' | localize }}</label>
+                <div class="input-group">
+                  <select name="input.destinationId" [(ngModel)]="input.destinationId" class="form-control" required>
+                    <option value="">{{ l('All') }}</option>
+                    <option [value]="c.value" *ngFor="let c of cites">
+                      {{ c.displayText | localize }}
+                    </option>
+                  </select>
+                </div>
+              </div>
+
+              <div class="col-xl-6">
+                <label for="RouteType">{{ 'RouteType' | localize }}</label>
+                <div class="input-group">
+                  <select name="input.routeTypeId" [(ngModel)]="input.routeTypeId" class="form-control" required>
+                    <option value="">{{ l('All') }}</option>
+                    <option [value]="r.key" *ngFor="let r of routeTypes">
+                      {{ l(r.value) | localize }}
+                    </option>
+                  </select>
+                </div>
+              </div>
+              <ng-template [ngIf]="!input.channel">
+                <div class="col-xl-6">
+                  <label for="RequestType">{{ 'RequestType' | localize }}</label>
+                  <div class="input-group">
+                    <select name="input.requestTypeId" [(ngModel)]="input.requestTypeId" class="form-control" required>
+                      <option value="">{{ l('All') }}</option>
+                      <option [value]="r.key" *ngFor="let r of requestTypes">
+                        {{ l(r.value) | localize }}
+                      </option>
+                    </select>
+                  </div>
+                </div>
+              </ng-template>
+              <div class="col-xl-6">
+                <label for="RequestType">{{ 'RequestStatus' | localize }}</label>
+                <div class="input-group">
+                  <select name="input.status" [(ngModel)]="input.status" class="form-control" required>
+                    <option value="">{{ l('All') }}</option>
+                    <option [value]="s.value" *ngFor="let s of statusData">
+                      {{ l(s.displayText) | localize }}
+                    </option>
+                  </select>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="modal-footer">
+          <button type="button" (click)="close()" class="btn btn-primary"><i class="fas fa-times"></i>{{ l('Close') }}</button>
+
+          <button type="button" (click)="search()" class="btn btn-primary">{{ l('search') }}</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

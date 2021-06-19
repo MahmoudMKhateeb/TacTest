@@ -1,7 +1,6 @@
 import { Component, ViewChild, Injector, Output, EventEmitter, Input, OnInit } from '@angular/core';
 import { ModalDirective } from 'ngx-bootstrap/modal';
 import {
-  GetAllBidShippingRequestsForCarrierOutput,
   FacilityForDropdownDto,
   RoutStepsServiceProxy,
   ShippingRequestsTripServiceProxy,
