@@ -1,0 +1,86 @@
+<div [@routerTransition]>
+  <div class="content d-flex flex-column flex-column-fluid">
+    <!--begin::Subheader-->
+    <sub-header [title]="'Tracking' | localize" [description]="'' | localize">
+      <div role="actions">
+        <button (click)="ModelSearch.show(searchInput)" class="btn btn-primary red"><i class="fas fa-search"></i> {{ l('Search') }}</button>
+      </div>
+    </sub-header>
+    <!--end::Subheader-->
+    <!--begin::Entry-->
+
+    <div class="container-fluid">
+      <div class="row">
+        <div class="col-12 col-lg-6 mb-4" *ngFor="let item of Items">
+          <div class="shipCard {{ direction == 'rtl' ? ' rtl' : '' }}">
+            <img class="markTachyon" src="/assets/custom/imgs/mark.svg" alt="" />
+            <div class="infoBasic">
+              <a href="javascript:void(0)" class="companyName">
+                {{ item.name }}
+              </a>
+              <b class="infoHighLight green stautsTruck">
+                {{ item.statusTitle }}
+              </b>
+            </div>
+            <div class="detailsRoad">
+              <div class="from">
+                <p class="pickup">{{ l('Pickup') }}</p>
+                <p>{{ item.origin }}</p>
+              </div>
+              <div class="to">
+                <p class="delivery">{{ l('Delivery') }}</p>
+                <p>{{ item.destination }}</p>
+              </div>
+            </div>
+            <div class="divirCard"></div>
+            <div class="moreDetails">
+              <div class="goodCategory">
+                <p>
+                  <img src="/assets/custom/imgs/box.svg" width="16" alt="" />
+                  {{ l('GoodCategory') }}
+                </p>
+                <p>
+                  {{ item.goodsCategory }}
+                </p>
+              </div>
+              <div class="driverName">
+                <p>
+                  <i class="fas fa-user"></i>
+                  {{ l('DriverName') }}
+                </p>
+                <p>
+                  <img class="userDriver" src="{{ item.profilePictureUrl }}" alt="" />
+                  {{ item.driver }}
+                </p>
+              </div>
+              <div class="truckType">
+                <p>
+                  <i class="fas fa-truck"></i>
+                  {{ l('TruckType') }}
+                </p>
+                <p>
+                  {{ item.truckType }}
+                </p>
+              </div>
+              <div class="routeType">
+                <p>
+                  <i class="fas fa-road"></i>
+                  {{ l('routeType') }}
+                </p>
+                <p>
+                  {{ l(item.routeType) }}
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div *ngIf="IsLoading" class="col-12 loadingRow text-center my-3">
+          <span></span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<tacking-search-model #ModelSearch (modalsearch)="search()"></tacking-search-model>

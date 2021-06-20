@@ -70,7 +70,10 @@ namespace TACHYON.Shipping.ShippingRequests
         [ForeignKey("DestinationCityId")]
         public City DestinationCityFk { get; set; }
 
-
+        /// <summary>
+        /// The type of shipping request
+        /// </summary>
+        public ShippingRequestType RequestType { get; set; }
         /// <summary>
         /// assigned price after commission
         /// </summary>

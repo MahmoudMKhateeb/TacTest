@@ -62,6 +62,7 @@ import { AccidentReasonComponent } from '@app/main/accidents/reasons/reason.comp
 import { TripRejectReasonComponent } from '@app/main/shippingRequests/shippingRequests/ShippingRequestTrips/rejectreason/trip-reject-reason.component';
 import { AppLocalizationComponent } from '@app/main/applocalizations/applocalization.component';
 import { ComingSoonComponent } from '@app/main/commingSoon/comingSoon.component';
+import { TrackingComponent } from '@app/main/shippingRequests/shippingRequests/tracking/tacking.component';
 
 @NgModule({
   imports: [
@@ -221,6 +222,7 @@ import { ComingSoonComponent } from '@app/main/commingSoon/comingSoon.component'
           },
           { path: 'shippingRequests/shippingRequests/view', component: ViewShippingRequestComponent, data: { permission: 'Pages.ShippingRequests' } },
           { path: 'marketplace/list', component: MarketPlaceListComponent },
+          { path: 'tracking', component: TrackingComponent },
           { path: 'directrequest/list', component: DirectRequestViewComponent },
           { path: 'offers', component: OffersListComponent },
           { path: 'routSteps/routSteps', component: RoutStepsComponent, data: { permission: 'Pages.RoutSteps' } },

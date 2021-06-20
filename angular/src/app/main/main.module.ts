@@ -236,6 +236,8 @@ import { AppLocalizationComponent } from '@app/main/applocalizations/applocaliza
 import { ApplocalizationModalComponent } from '@app/main/applocalizations/create-or-edit-applocalization-modal.component';
 import { ViewApplocalizationModalComponent } from '@app/main/applocalizations/view-applocalization-modal.component';
 import { ComingSoonComponent } from '@app/main/commingSoon/comingSoon.component';
+import { TrackingComponent } from '@app/main/shippingRequests/shippingRequests/tracking/tacking.component';
+import { TrackinSearchModelComponent } from '@app/main/shippingRequests/shippingRequests/tracking/tacking-search-model.component';
 NgxBootstrapDatePickerConfigService.registerNgxBootstrapDatePickerLocales();
 
 @NgModule({
@@ -443,6 +445,8 @@ NgxBootstrapDatePickerConfigService.registerNgxBootstrapDatePickerLocales();
     ViewApplocalizationModalComponent,
     ShippingrequestsDetailsModelComponent,
     ComingSoonComponent,
+    TrackingComponent,
+    TrackinSearchModelComponent,
   ],
   providers: [
     { provide: BsDatepickerConfig, useFactory: NgxBootstrapDatePickerConfigService.getDatepickerConfig },

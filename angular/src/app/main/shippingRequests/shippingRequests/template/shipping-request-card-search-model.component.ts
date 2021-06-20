@@ -10,6 +10,7 @@ import {
   ComboboxItemDto,
   ShippingRequestRouteType,
   PriceOfferChannel,
+  ShippingRequestType,
 } from '@shared/service-proxies/service-proxies';
 import { EnumToArrayPipe } from '@shared/common/pipes/enum-to-array.pipe';
 
@@ -44,7 +45,7 @@ export class ShippingRequestCardSearchModelComponent extends AppComponentBase im
   }
   ngOnInit(): void {
     this.routeTypes = this.enumToArray.transform(ShippingRequestRouteType);
-    this.requestTypes = this.enumToArray.transform(PriceOfferChannel);
+    this.requestTypes = this.enumToArray.transform(ShippingRequestType);
   }
 
   getData() {
@@ -63,16 +64,13 @@ export class ShippingRequestCardSearchModelComponent extends AppComponentBase im
         item.value = x.id.toString();
         return item;
       });
-
-      console.log(this.cites);
-      console.log(this.truckTypes);
     });
   }
   show(Input: ShippingRequestForPriceOfferGetAllInput): void {
+    this.input = Input;
     this.getData();
     this.getRequestStatus();
     this.direction = document.getElementsByTagName('html')[0].getAttribute('dir');
-    this.input = Input;
     this.active = true;
     this.modal.show();
   }
@@ -137,6 +135,21 @@ export class ShippingRequestCardSearchModelComponent extends AppComponentBase im
           { displayText: this.l('DeclinedOfPricing'), value: '4' },
           { displayText: this.l('Pending'), value: '5' }
         );
+      }
+    } else if (this.input.channel == PriceOfferChannel.Offers) {
+      this.statusData.push(
+        { displayText: this.l('New'), value: '0' },
+        { displayText: this.l('Accepted'), value: '1' },
+        { displayText: this.l('Rejected'), value: '2' }
+      );
+      if (this.feature.isEnabled('App.TachyonDealer') || !this.appSession.tenantId) {
+        this.statusData.push(
+          { displayText: this.l('AcceptedAndWaitingForCarrier'), value: '3' },
+          { displayText: this.l('AcceptedAndWaitingForShipper'), value: '4' },
+          { displayText: this.l('Pending'), value: '6' }
+        );
+      } else if (this.feature.isEnabled('App.Carrier')) {
+        this.statusData.push({ displayText: this.l('Pending'), value: '6' });
       }
     } else if (!this.input.channel) {
       if (this.feature.isEnabled('App.Shipper') || this.feature.isEnabled('App.TachyonDealer') || !this.appSession.tenantId) {

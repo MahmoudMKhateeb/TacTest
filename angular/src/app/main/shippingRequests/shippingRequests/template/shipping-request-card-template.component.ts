@@ -43,7 +43,7 @@ export class ShippingRequestCardTemplateComponent extends ScrollPagnationCompone
         this.searchInput.carrier,
         this.searchInput.shippingRequestId,
         this.searchInput.channel,
-        this.searchInput.requestTypeId,
+        this.searchInput.requestType,
         this.searchInput.truckTypeId,
         this.searchInput.originId,
         this.searchInput.destinationId,

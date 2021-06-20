@@ -252,12 +252,12 @@ namespace TACHYON.Invoices.Groups
             if (!AbpSession.TenantId.HasValue || await IsEnabledAsync(AppFeatures.TachyonDealer) )
             {
                 HeaderText = new string[] { "SubmitInvoiceNo", "CompanyName", "Interval",  "TotalAmount", "CreationTime", "Status" };
-                propertySelectors = new Func<SubmitInvoiceListDto, object>[] { _ => _.ReferenceNumber, _ => _.TenantName, _ => _.Period,  _ => _.TotalAmount, _ => _.CreationTime.ToShortDateString(), _ => _.StatusTitle};
+                propertySelectors = new Func<SubmitInvoiceListDto, object>[] { _ => _.ReferencNumber, _ => _.TenantName, _ => _.Period,  _ => _.TotalAmount, _ => _.CreationTime.ToShortDateString(), _ => _.StatusTitle};
             }
             else
             {
                 HeaderText = new string[] { "SubmitInvoiceNo", "CompanyName", "Interval", "TotalAmount", "CreationTime", "Status" };
-                propertySelectors = new Func<SubmitInvoiceListDto, object>[] { _ => _.ReferenceNumber, _ => _.Period, _ => _.TotalAmount, _ => _.CreationTime.ToShortDateString(), _ => _.StatusTitle };
+                propertySelectors = new Func<SubmitInvoiceListDto, object>[] { _ => _.ReferencNumber, _ => _.Period, _ => _.TotalAmount, _ => _.CreationTime.ToShortDateString(), _ => _.StatusTitle };
 
             }
 
