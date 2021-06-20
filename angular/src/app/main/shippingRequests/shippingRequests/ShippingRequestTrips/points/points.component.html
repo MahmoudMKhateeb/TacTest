@@ -196,7 +196,7 @@
                     />
                   </div>
                   <validation-messages [formCtrl]="userPhoneInput"></validation-messages>
-                  <span *ngIf="userPhoneInput.value.length == 9 && userPhoneInput.invalid" class="form-text text-danger">{{
+                  <span *ngIf="userPhoneInput.value?.length == 9 && userPhoneInput.invalid" class="form-text text-danger">{{
                     l('PhoneNumberMustStartWith5')
                   }}</span>
                 </div>
