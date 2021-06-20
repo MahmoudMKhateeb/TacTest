@@ -84,7 +84,9 @@ export class AppNavigationService {
             '/app/main/shippingRequests/shippingRequests'
           ),
           new AppMenuItem('Marketplace', 'Pages', 'label label-danger label-dot', '/app/main/marketPlace/marketPlace'),
-
+          new AppMenuItem(
+            'DirectShippingRequests',
+            'Pages',
             'flaticon2-send-1',
             '/app/main/directrequest/list',
             undefined,

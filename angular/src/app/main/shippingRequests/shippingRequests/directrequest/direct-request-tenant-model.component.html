@@ -17,102 +17,100 @@
       </div>
       <div class="modal-body">
         <form autocomplete="off" class="form">
-          <div>
-            <div class="row align-items-center">
-              <div class="col-xl-12">
-                <div class="form-group m-form__group align-items-center">
-                  <div class="input-group">
-                    <input
-                      [(ngModel)]="filterText"
-                      name="filterText"
-                      autoFocus
-                      class="form-control m-input"
-                      [placeholder]="l('SearchWithThreeDot')"
-                      type="text"
-                    />
-                    <span class="input-group-btn">
-                      <button (click)="getDirectRequests()" class="btn btn-primary" type="submit"><i class="flaticon-search-1"></i></button>
-                    </span>
-                  </div>
+          <div class="row align-items-center">
+            <div class="col-xl-12">
+              <div class="form-group m-form__group align-items-center">
+                <div class="input-group">
+                  <input
+                    [(ngModel)]="filterText"
+                    name="filterText"
+                    autoFocus
+                    class="form-control m-input"
+                    [placeholder]="l('SearchWithThreeDot')"
+                    type="text"
+                  />
+                  <span class="input-group-btn">
+                    <button (click)="getDirectRequests()" class="btn btn-primary" type="submit"><i class="flaticon-search-1"></i></button>
+                  </span>
                 </div>
               </div>
             </div>
-          </form>
-          <div class="primeng-datatable-container" [busyIf]="primengTableHelper.isLoading">
-            <p-table
-              #dataTableForCarrier
-              sortMode="multiple"
-              (onLazyLoad)="getDirectRequests($event)"
-              [value]="primengTableHelper.records"
-              rows="{{ primengTableHelper.defaultRecordsCountPerPage }}"
-              [paginator]="false"
-              [lazy]="true"
-              [scrollable]="true"
-              ScrollWidth="100%"
-              [responsive]="primengTableHelper.isResponsive"
-              [resizableColumns]="primengTableHelper.resizableColumns"
-            >
-              <ng-template pTemplate="header">
-                <tr>
-                  <!-- <th style="width: 100px;">
+          </div>
+        </form>
+        <div class="primeng-datatable-container" [busyIf]="primengTableHelper.isLoading">
+          <p-table
+            #dataTableForCarrier
+            sortMode="multiple"
+            (onLazyLoad)="getDirectRequests($event)"
+            [value]="primengTableHelper.records"
+            rows="{{ primengTableHelper.defaultRecordsCountPerPage }}"
+            [paginator]="false"
+            [lazy]="true"
+            [scrollable]="true"
+            ScrollWidth="100%"
+            [responsive]="primengTableHelper.isResponsive"
+            [resizableColumns]="primengTableHelper.resizableColumns"
+          >
+            <ng-template pTemplate="header">
+              <tr>
+                <!-- <th style="width: 100px;">
                     {{ 'id' | localize }}
                   </th> -->
-                  <th style="width: 150px;" pSortableColumn="name">
-                    {{ 'CarrierName' | localize }}
-                    <p-sortIcon field="name"></p-sortIcon>
-                  </th>
+                <th style="width: 150px;" pSortableColumn="name">
+                  {{ 'CarrierName' | localize }}
+                  <p-sortIcon field="name"></p-sortIcon>
+                </th>
 
-                  <th>
-                    {{ 'Actions' | localize }}
-                  </th>
-                </tr>
-              </ng-template>
-              <ng-template pTemplate="body" let-record="$implicit">
-                <tr>
-                  <!-- <td style="width: 100px;">
+                <th>
+                  {{ 'Actions' | localize }}
+                </th>
+              </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-record="$implicit">
+              <tr>
+                <!-- <td style="width: 100px;">
                     <span class="ui-column-title"> {{ 'id' | localize }}</span>
                     <span>
                       {{ record.id }}
                     </span>
                   </td> -->
-                  <td style="width: 150px;">
-                    <span class="ui-column-title"> {{ 'CarrierName' | localize }}</span>
-                    <span>
-                      {{ record.name }}
-                    </span>
-                  </td>
-                  <td style="width: 100px;" class="justify-content-center">
-                    <span class="ui-column-title"> {{ 'CarrierName' | localize }}</span>
-                    <span>
-                      <button
-                        class="btn btn-danger btn-sm"
-                        [id]="record.id"
-                        [disabled]="record.isRequestSent"
-                        (click)="sendDirectRequestToCarrier(record)"
-                      >
-                        {{ l('sendDirectRequestOffer') }}
-                      </button>
-                    </span>
-                  </td>
-                </tr>
-              </ng-template>
-            </p-table>
-            <div class="primeng-no-data" *ngIf="primengTableHelper.totalRecordsCount == 0">
-              {{ 'NoData' | localize }}
-            </div>
-            <div class="primeng-paging-container">
-              <p-paginator
-                [rows]="primengTableHelper.defaultRecordsCountPerPage"
-                #paginatorForCarrier
-                (onPageChange)="getDirectRequests($event)"
-                [totalRecords]="primengTableHelper.totalRecordsCount"
-                [rowsPerPageOptions]="primengTableHelper.predefinedRecordsCountPerPage"
-              >
-              </p-paginator>
-              <span class="total-records-count">
-                {{ 'TotalRecordsCount' | localize: primengTableHelper.totalRecordsCount }}
-              </span>
-            </div>
+                <td style="width: 150px;">
+                  <span class="ui-column-title"> {{ 'CarrierName' | localize }}</span>
+                  <span>
+                    {{ record.name }}
+                  </span>
+                </td>
+                <td style="width: 100px;" class="justify-content-center">
+                  <span class="ui-column-title"> {{ 'CarrierName' | localize }}</span>
+                  <span>
+                    <button
+                      class="btn btn-danger btn-sm"
+                      [id]="record.id"
+                      [disabled]="record.isRequestSent"
+                      (click)="sendDirectRequestToCarrier(record)"
+                    >
+                      {{ l('sendDirectRequestOffer') }}
+                    </button>
+                  </span>
+                </td>
+              </tr>
+            </ng-template>
+          </p-table>
+          <div class="primeng-no-data" *ngIf="primengTableHelper.totalRecordsCount == 0">
+            {{ 'NoData' | localize }}
+          </div>
+          <div class="primeng-paging-container">
+            <p-paginator
+              [rows]="primengTableHelper.defaultRecordsCountPerPage"
+              #paginatorForCarrier
+              (onPageChange)="getDirectRequests($event)"
+              [totalRecords]="primengTableHelper.totalRecordsCount"
+              [rowsPerPageOptions]="primengTableHelper.predefinedRecordsCountPerPage"
+            >
+            </p-paginator>
+            <span class="total-records-count">
+              {{ 'TotalRecordsCount' | localize: primengTableHelper.totalRecordsCount }}
+            </span>
           </div>
         </div>
       </div>
