@@ -140,6 +140,12 @@ namespace TACHYON.Receivers
             ObjectMapper.Map(input, receiver);
         }
 
+        public async Task<bool> CheckIfPhoneNumberValid(string phoneNumber, long? reciverId)
+        {
+            var result = await _receiverRepository.FirstOrDefaultAsync(x => x.PhoneNumber == phoneNumber && x.Id != reciverId);
+            return (result == null);
+        }
+
         [AbpAuthorize(AppPermissions.Pages_Receivers_Delete)]
         public async Task Delete(EntityDto input)
         {

@@ -16,6 +16,8 @@ export class CreateOrEditReceiverModalComponent extends AppComponentBase {
 
   active = false;
   saving = false;
+  CheckingIfReciverPhoneNumberIsValid = false;
+  isPhoneNumberAvilable = true;
 
   receiver: CreateOrEditReceiverDto = new CreateOrEditReceiverDto();
 
@@ -71,4 +73,15 @@ export class CreateOrEditReceiverModalComponent extends AppComponentBase {
     this.active = false;
     this.modal.hide();
   }
+
+  CheckIfReciverPhoneNumberIsValid(phoneNumber: string, id: number) {
+    if (phoneNumber.trim().length === 9) {
+      this.CheckingIfReciverPhoneNumberIsValid = true;
+      this._receiversServiceProxy.checkIfPhoneNumberValid(phoneNumber, id == null ? 0 : id).subscribe((res) => {
+        this.isPhoneNumberAvilable = res;
+        this.CheckingIfReciverPhoneNumberIsValid = false;
+      });
+    }
+  }
+
 }
