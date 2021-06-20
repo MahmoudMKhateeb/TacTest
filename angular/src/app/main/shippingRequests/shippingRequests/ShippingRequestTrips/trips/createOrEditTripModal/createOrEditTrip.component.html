@@ -130,16 +130,17 @@
             <!--  end:: Trip start&End Dates-->
             <!-- begin::Vas's  -->
             <div class="col-lg-6" *ngIf="VasListFromFather?.length > 0">
-              <div class="form-group" *ngIf="selectedVases != []">
+              <div class="form-group">
                 <label>{{ l('vases') }}</label>
                 <p-multiSelect
                   name="shippingRequestTripVases"
-                  [options]="Vases"
+                  [options]="cleanVasesList"
                   [(ngModel)]="trip.shippingRequestTripVases"
                   [styleClass]="'form-control'"
                   [filter]="false"
                   [showHeader]="false"
-                  [defaultLabel]="''"
+                  [defaultLabel]="l('SelectTripVases')"
+                  (onChange)="logSelectedVases()"
                   optionLabel="name"
                 ></p-multiSelect>
               </div>

@@ -17,6 +17,7 @@ import {
   UpdateDocumentFileInput,
   DocumentFilesServiceProxy,
   DocumentTypeDto,
+  ShippingRequestTripVasDto,
 } from '@shared/service-proxies/service-proxies';
 import { AppComponentBase } from '@shared/common/app-component-base';
 import { Router } from '@angular/router';
@@ -43,7 +44,7 @@ export class CreateOrEditTripComponent extends AppComponentBase implements OnIni
   @Input() shippingRequest: ShippingRequestDto;
   @Input() VasListFromFather: GetShippingRequestVasForViewDto[];
 
-  Vases: CreateOrEditShippingRequestTripVasDto[];
+  Vases: GetShippingRequestVasForViewDto[];
   selectedVases: CreateOrEditShippingRequestTripVasDto[];
 
   allFacilities: FacilityForDropdownDto[];
@@ -68,6 +69,10 @@ export class CreateOrEditTripComponent extends AppComponentBase implements OnIni
    */
   docProgressFileName: any;
 
+  //newly created By Mahmoud
+  vasesDTOFromServicesFile = new CreateOrEditShippingRequestTripVasDto();
+  //Cleand Vas List
+  cleanVasesList: CreateOrEditShippingRequestTripVasDto[] = [];
   constructor(
     injector: Injector,
     private _routStepsServiceProxy: RoutStepsServiceProxy,
@@ -79,6 +84,7 @@ export class CreateOrEditTripComponent extends AppComponentBase implements OnIni
     private _tokenService: TokenService
   ) {
     super(injector);
+    this.vasesDTOFromServicesFile.shippingRequestVasId = 230;
   }
 
   ngOnInit() {
@@ -92,20 +98,37 @@ export class CreateOrEditTripComponent extends AppComponentBase implements OnIni
     // });
     //load the Facilites
     this.refreshOrGetFacilities();
-    this.sortVases();
+    //this.sortVases();
+    console.log(`vases List From Father ..`, this.VasListFromFather);
+    this.VasListFromFather.forEach((x) => {
+      //Get the Vase List From Father And Attach Them to new Array
+      //vas id regarding to the shipping Request for example vas #1 / #2
+      //console.log(`vas ID`, x.shippingRequestVas.vasId);
+      let i = 32;
+      console.log(`vas ID`, x.shippingRequestVas.id);
+      const vas: CreateOrEditShippingRequestTripVasDto = new CreateOrEditShippingRequestTripVasDto();
+      vas.id = 32;
+      i = i + 1;
+      vas.shippingRequestVasId = x.shippingRequestVas.id;
+      vas.name = x.vasName;
+      this.cleanVasesList.push(vas);
+    });
+    console.log(`my Clean List`, this.cleanVasesList);
   }
 
   show(record?: CreateOrEditShippingRequestTripDto): void {
+    console.log(`Vases From Father`, this.VasListFromFather);
+    this.Vases = this.VasListFromFather;
     if (record) {
       this._shippingRequestTripsService.getShippingRequestTripForEdit(record.id).subscribe((res) => {
         this.trip = res;
         this.PointsComponent.wayPointsList = this.trip.routPoints;
-        this.selectedVases = res.shippingRequestTripVases;
         this.loading = false;
         // this.Vases = this.trip.shippingRequestTripVases;
-        console.log('Vas From Father ', this.VasListFromFather);
-        console.log('vases ', this.Vases);
+        //console.log('Vas From Father ', this.VasListFromFather);
+        //  console.log('vases ', this.Vases);
         console.log('tripVases ', this.trip.shippingRequestTripVases);
+        console.log('cleaned Vases', this.cleanVasesList);
       });
     } else {
       //this is a create
@@ -131,29 +154,10 @@ export class CreateOrEditTripComponent extends AppComponentBase implements OnIni
     this.trip = new CreateOrEditShippingRequestTripDto();
   }
 
-  sortVases() {
-    //console.log('Vases List ', this.Vases);
-    // console.log('selected vases list ', this.selectedVases);
-    // console.log('Shipping Request Trip Vases before loop', this.trip.shippingRequestTripVases);
-    // //if edit get the Vases From select and Assighn them into Selected Vases
-    // this.trip.shippingRequestTripVases.forEach((singleVas) => {
-    //   const selectd = new GetShippingRequestVasForViewDto();
-    //   selectd.shippingRequestVas.vasId = singleVas.shippingRequestVasId;
-    //   this.selectedVases.push(selectd);
-    // });
-    // this.selectedVases.forEach((y) => {
-    //   const z = new CreateOrEditShippingRequestTripVasDto();
-    //   console.log('selected Vas  single', y);
-    //   z.shippingRequestVasId = y.shippingRequestVas.vasId;
-    //   console.log('vasId ', y.shippingRequestVas.vasId);
-    //   this.trip.shippingRequestTripVases.push(z);
-    //   console.log('Shipping Request Trip Vases ', this.trip.shippingRequestTripVases);
-    // });
-  }
   createOrEditTrip() {
     this.saving = true;
     console.log(this.trip);
-    //this.sortVases();
+    //  this.trip.shippingRequestTripVases = this.cleanVasesList;
     this._shippingRequestTripsService
       .createOrEdit(this.trip)
       .pipe(
@@ -315,5 +319,9 @@ export class CreateOrEditTripComponent extends AppComponentBase implements OnIni
     }
 
     return s4() + s4() + '-' + s4() + '-' + s4() + '-' + s4() + '-' + s4() + s4() + s4();
+  }
+
+  logSelectedVases() {
+    console.log(this.trip.shippingRequestTripVases);
   }
 }
