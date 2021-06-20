@@ -109,8 +109,12 @@ export class CreateOrEditTripComponent extends AppComponentBase implements OnIni
       });
     } else {
       //this is a create
+
+      //init file document
       this.trip = new CreateOrEditShippingRequestTripDto();
       this.trip.createOrEditDocumentFileDto = new CreateOrEditDocumentFileDto();
+      this.trip.createOrEditDocumentFileDto.extn = '_';
+      this.trip.createOrEditDocumentFileDto.name = '_';
       this.trip.createOrEditDocumentFileDto.documentTypeDto = new DocumentTypeDto();
       this.loading = false;
       this.trip.shippingRequestId = this.shippingRequest.id;
