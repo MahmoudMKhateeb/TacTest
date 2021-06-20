@@ -3,7 +3,6 @@
     <sub-header [title]="'GoodCategories' | localize" [description]="'' | localize">
       <div role="actions">
         <button (click)="exportToExcel()" class="btn btn-outline-success"><i class="fa fa-file-excel"></i> {{ l('ExportToExcel') }}</button>
-
         <button *ngIf="isGranted('Pages.GoodCategories.Create')" (click)="createGoodCategory()" class="btn btn-primary blue">
           <i class="fa fa-plus"></i> {{ l('CreateNewGoodCategory') }}
         </button>
@@ -83,11 +82,11 @@
                       {{ l('Actions') }}
                     </th>
                     <th style="width: 150px;" pSortableColumn="fatherId">
-                      {{ l('fatherId') }}
+                      {{ l('Category') }}
                       <p-sortIcon field="goodCategory.fatherId"></p-sortIcon>
                     </th>
                     <th style="width: 150px;" pSortableColumn="displayName">
-                      {{ l('DisplayName') }}
+                      {{ l('SubCategory') }}
                       <p-sortIcon field="goodCategory.displayName"></p-sortIcon>
                     </th>
                   </tr>
@@ -128,12 +127,12 @@
                       </div>
                     </td>
                     <td style="width: 150px;">
-                      <span class="ui-column-title"> {{ l('fatherId') }}</span>
-                      {{ record.fatherCategoryName }}
+                      <span class="ui-column-title"> {{ l('Category') }}</span>
+                      {{ record.fatherCategoryName || record.goodCategory.displayName }}
                     </td>
                     <td style="width: 150px;">
-                      <span class="ui-column-title"> {{ l('DisplayName') }}</span>
-                      {{ record.goodCategory.displayName }}
+                      <span class="ui-column-title"> {{ l('SubCategory') }}</span>
+                      {{ record.fatherCategoryName ? record.goodCategory.displayName : '' }}
                     </td>
                   </tr>
                 </ng-template>
