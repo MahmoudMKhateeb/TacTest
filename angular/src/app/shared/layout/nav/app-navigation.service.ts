@@ -75,7 +75,7 @@ export class AppNavigationService {
           new AppMenuItem('TachyonManagedServices', 'Pages.ShippingRequests', 'flaticon-delete-2', '/app/main/shippingRequests/shippingRequests'),
           new AppMenuItem('Marketplace', 'Pages', 'flaticon2-shopping-cart-1', '/app/main/marketplace/list'),
           new AppMenuItem('Offers', 'Pages', 'label label-danger label-dot', '/app/main/offers'),
-          new AppMenuItem('ShipmentTracking', 'Pages', 'label label-danger label-dot', '/app/main/tracking'),
+          new AppMenuItem('ShipmentTracking', 'Pages', 'flaticon-interface-9', '/app/main/tracking'),
           new AppMenuItem('Requests', 'Pages', 'label label-danger label-dot', '/app/main/shippingRequests/shippingRequests'),
           new AppMenuItem(
             'DirectShippingRequests',
@@ -162,7 +162,7 @@ export class AppNavigationService {
       new AppMenuItem(
         'shipmentTracking',
         'Pages',
-        'flaticon2-document',
+        'flaticon-map-location',
         '/app/main/tracking',
         undefined,
         undefined,
