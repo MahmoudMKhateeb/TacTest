@@ -57,7 +57,7 @@
                         {{ l('Facility') }}
                       </th>
                       <th pSortableColumn="goodCategoryFk.displayName" style="width: 150px;">
-                        {{ l('pickingType') }}
+                        {{ l('DatatablePickingType') }}
                       </th>
                     </tr>
                   </ng-template>
@@ -359,7 +359,7 @@
                 <div class="form-group row fv-plugins-icon-container">
                   <div class="col-lg-6">
                     <div class="form-group">
-                      <label>* {{ l('GoodSubCategory') }}:</label>
+                      <label><span class="required-fileds">*</span> {{ l('GoodSubCategory') }}</label>
                       <div [ngClass]="{ 'spinner spinner-success spinner-right mr-1 ml-1': !allSubGoodCategorys }">
                         <select
                           #subgoodsDetail="ngModel"
@@ -375,7 +375,7 @@
                           <option *ngFor="let item of allSubGoodCategorys" value="{{ item.id }}">{{ item.displayName }} </option>
                         </select>
                       </div>
-                      <span class="form-text text-muted">{{ l('selectaGoodCategory') }}</span>
+                      <span class="form-text text-muted">{{ l('SelectaGoodCategory') }}</span>
                     </div>
                   </div>
                   <div class="col-lg-6">
@@ -416,7 +416,7 @@
                   </div>
                   <div class="col-lg-6">
                     <div class="form-group">
-                      <label>* {{ l('UnitOfMeasure') }}:</label>
+                      <label><span class="required-fileds">*</span> {{ l('UnitOfMeasure') }}</label>
                       <div [ngClass]="{ 'spinner spinner-success spinner-right mr-1 ml-1': !allUnitOfMeasure }">
                         <select
                           #GoodsUnitOfMeasure="ngModel"

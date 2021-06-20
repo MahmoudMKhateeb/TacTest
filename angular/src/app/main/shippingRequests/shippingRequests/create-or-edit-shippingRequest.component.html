@@ -1,12 +1,9 @@
 <!--suppress XmlInvalidId -->
 <div [@routerTransition]>
   <div class="content d-flex flex-column flex-column-fluid">
-    <sub-header
-      [breadcrumbs]="breadcrumbs"
-      [title]="shippingRequest.id ? ('ShippingRequestsEdit' | localize) : ('ShippingRequestsCreate' | localize)"
-    >
-       </sub-header>
- 
+    <!-- [breadcrumbs]="breadcrumbs" -->
+    <sub-header [title]="shippingRequest.id ? ('ShippingRequestsEdit' | localize) : ('ShippingRequestsCreate' | localize)"> </sub-header>
+
     <div [class]="containerClass">
       <form *ngIf="active" #shippingRequestForm="ngForm" autocomplete="off">
         <div class="card card-custom gutter-b">
@@ -25,7 +22,7 @@
                       <div class="col-lg-6">
                         <label>
                           <span class="required-fileds">*</span>
-                          {{ l('TransportType') }}:</label
+                          {{ l('TransportType') }}</label
                         >
                         <div [ngClass]="{ 'spinner spinner-success spinner-right mr-1 ml-1': !allTransportTypes }">
                           <select
@@ -46,7 +43,7 @@
                         <span class="form-text text-muted">{{ l('SelectaTransportType') }}</span>
                       </div>
                       <div class="col-lg-6 mb-3">
-                        <label><span class="required-fileds">*</span> {{ l('TruckType') }}:</label>
+                        <label><span class="required-fileds">*</span> {{ l('TruckType') }}</label>
                         <div>
                           <div
                             [ngClass]="{
@@ -73,7 +70,7 @@
                         <span class="form-text text-muted">{{ l('SelectaTruckType') }}</span>
                       </div>
                       <div class="col-lg-6">
-                        <label><span class="required-fileds">*</span> {{ l('Capacity') }}:</label>
+                        <label><span class="required-fileds">*</span> {{ l('Capacity') }}</label>
                         <div
                           [ngClass]="{
                             'spinner spinner-success spinner-right mr-1 ml-1': capacityLoading
@@ -125,7 +122,7 @@
                   <div class="mb-2">
                     <div class="form-group row fv-plugins-icon-container">
                       <div class="col-lg-6">
-                        <label><span class="required-fileds">*</span> {{ l('ShippingRequestType') }}:</label>
+                        <label><span class="required-fileds">*</span> {{ l('ShippingRequestType') }}</label>
                         <select
                           #SRType="ngModel"
                           class="form-control"
@@ -146,11 +143,11 @@
                       </div>
                       <div class="col-lg-3">
                         <div class="form-group">
-                          <label><span class="required-fileds">*</span> {{ l('BiddingStartDate') }}:</label>
+                          <label><span class="required-fileds">*</span> {{ l('BiddingStartDate') }}</label>
                           <div class="input-group date">
                             <input
                               class="form-control"
-                              placeholder="{{ l('BiddingstartDate') }}"
+                              placeholder="{{ l('BiddingstartDatePlaceholder') }}"
                               name="shippingrequestBidStratDate"
                               [required]="this.shippingRequestType == 'bidding'"
                               [(date)]="shippingRequest.bidStartDate"
@@ -170,11 +167,11 @@
                         </div>
                       </div>
                       <div class="col-lg-3">
-                        <label><span class="required-fileds">*</span> {{ l('BiddingEndDate') }}:</label>
+                        <label><span class="required-fileds"></span> {{ l('BiddingEndDate') }}</label>
                         <div class="input-group date">
                           <input
                             class="form-control"
-                            placeholder="{{ l('BiddingEndDate') }}"
+                            placeholder="{{ l('BiddingstartDatePlaceholder') }}"
                             name="shippingrequestBidEndDate"
                             [required]="this.shippingRequestType == 'bidding'"
                             [(date)]="shippingRequest.bidEndDate"
@@ -194,7 +191,7 @@
                       </div>
                       <!--       Start Of Shipping Type                 -->
                       <div class="col-lg-6">
-                        <label><span class="required-fileds">*</span> {{ l('ShippingType') }}:</label>
+                        <label><span class="required-fileds">*</span> {{ l('ShippingType') }}</label>
                         <div
                           [ngClass]="{
                             'spinner spinner-success spinner-right mr-1 ml-1': !allShippingTypes
@@ -241,7 +238,7 @@
                   <div class="mb-2">
                     <div class="row">
                       <div class="col-lg-6">
-                        <label><span class="required-fileds">*</span> {{ l('MainGoodCategory') }}:</label>
+                        <label><span class="required-fileds">*</span> {{ l('MainGoodCategory') }}</label>
                         <div [ngClass]="{ 'spinner spinner-success spinner-right mr-1 ml-1': !allGoodCategorys }">
                           <select
                             #goodCategory="ngModel"
@@ -253,7 +250,7 @@
                             [class.is-invalid]="goodCategory.touched && !goodCategory.valid"
                             [class.is-valid]="goodCategory.touched && goodCategory.valid"
                           >
-                            <option [ngValue]="undefined">{{ l('SelectAGoodCategory') }}</option>
+                            <option [ngValue]="undefined">{{ l('SelectaGoodCategory') }}</option>
                             <option *ngFor="let item of allGoodCategorys" value="{{ item.id }}">{{ item.displayName }} </option>
                           </select>
                         </div>
@@ -261,12 +258,12 @@
                         <span class="form-text text-muted">{{ l('SelectaGoodCategory') }}</span>
                       </div>
                       <div class="col-lg-6">
-                        <label><span class="required-fileds">*</span> {{ l('TotalWeight') }}:</label>
+                        <label><span class="required-fileds">*</span> {{ l('TotalWeight') }}</label>
                         <div>
                           <div class="input-group">
                             <div class="input-group-append">
                               <span class="input-group-text">
-                                KG
+                                {{ l('KG') }}
                               </span>
                             </div>
                             <input
@@ -274,6 +271,7 @@
                               type="number"
                               name="Weight"
                               class="form-control"
+                              placeholder="{{ l('Weight') }}"
                               placeholder="Weight"
                               [(ngModel)]="shippingRequest.totalWeight"
                               (keypress)="numberOnly($event)"
@@ -293,7 +291,7 @@
                               'spinner spinner-success spinner-right mr-1 ml-1': !allpackingTypes
                             }"
                           >
-                            <label><span class="required-fileds">*</span> {{ l('PackingType') }}:</label>
+                            <label><span class="required-fileds">*</span> {{ l('PackingType') }}</label>
                             <select
                               #packingType="ngModel"
                               class="form-control"
@@ -313,7 +311,7 @@
                       </div>
                       <div class="col-lg-6 mt-4">
                         <div class="form-group">
-                          <label><span class="required-fileds">*</span> {{ l('NumberOfPacking') }}:</label>
+                          <label><span class="required-fileds">*</span> {{ l('NumberOfPacking') }}</label>
                           <input
                             #numberOfPacking="ngModel"
                             class="form-control"
@@ -359,7 +357,7 @@
                       <!-- Start of Select Source -->
                       <div class="col-lg-6">
                         <div class="form-group">
-                          <label><span class="required-fileds">*</span> {{ l('OriginCity') }}:</label>
+                          <label><span class="required-fileds">*</span> {{ l('OriginCity') }}</label>
                           <div [ngClass]="{ 'spinner spinner-success spinner-right mr-1 ml-1': !allCitys }">
                             <select
                               #Origin="ngModel"
@@ -381,7 +379,7 @@
                       </div>
                       <div class="col-lg-6">
                         <div class="form-group">
-                          <label><span class="required-fileds">*</span> {{ l('DestinationCity') }}:</label>
+                          <label><span class="required-fileds">*</span> {{ l('DestinationCity') }}</label>
                           <div [ngClass]="{ 'spinner spinner-success spinner-right mr-1 ml-1': !allCitys }">
                             <select
                               #Destination="ngModel"
@@ -398,21 +396,25 @@
                               <option *ngFor="let item of allCitys" value="{{ item.id }}">{{ item.displayName }} </option>
                             </select>
                           </div>
-                          <span class="form-text text-muted">{{ l('SelectaCity') }}</span>                          
-                           <span *ngIf=" shippingRequest.originCityId != null && Destination.touched && shippingRequest.destinationCityId ==  null" class="form-text text-muted text-red">{{ l('PleaseSelectDifferentDestination') }}</span> 
+                          <span class="form-text text-muted">{{ l('SelectaCity') }}</span>
+                          <span
+                            *ngIf="shippingRequest.originCityId != null && Destination.touched && shippingRequest.destinationCityId == null"
+                            class="form-text text-muted text-red"
+                            >{{ l('PleaseSelectDifferentDestination') }}</span
+                          >
                         </div>
                       </div>
 
                       <div class="col-lg-6">
                         <div class="form-group">
-                          <label><span class="required-fileds">*</span> {{ l('TripsStartDate') }}:</label>
+                          <label><span class="required-fileds">*</span> {{ l('TripsStartDate') }}</label>
                           <div class="input-group date">
                             <input
                               [(date)]="shippingRequest.startTripDate"
                               class="form-control"
                               type="datetime"
                               name="startdate"
-                              placeholder="{{ l('TripsStartDate') }}"
+                              placeholder="{{ l('BiddingstartDatePlaceholder') }}"
                               [minDate]="shippingRequest.bidStartDate || today"
                               (dateChange)="validateTripsDates()"
                               bsDatepicker
@@ -425,21 +427,18 @@
                               </span>
                             </div>
                           </div>
-                          <span class="form-text text-muted">{{ l('TripsStartDate') }}</span>
+                          <span class="form-text text-muted">{{ l('DescriptionTripsStartDate') }}</span>
                         </div>
                       </div>
                       <div class="col-lg-6">
                         <div class="form-group">
-                          <label>
-                            <!--                              <span class="required-fileds">*</span>-->
-                            {{ l('TripsEndDate') }}:</label
-                          >
+                          <label><span class="required-fileds">*</span>{{ l('TripsEndDate') }}</label>
                           <div class="input-group date">
                             <input
                               [(date)]="shippingRequest.endTripDate"
                               class="form-control"
                               name="endDate"
-                              placeholder="{{ l('TripsEndDate') }}"
+                              placeholder="{{ l('BiddingstartDatePlaceholder') }}"
                               [minDate]="shippingRequest.startTripDate || today"
                               (dateChange)="validateTripsDates()"
                               bsDatepicker
@@ -451,11 +450,11 @@
                               </span>
                             </div>
                           </div>
-                          <span class="form-text text-muted">{{ l('TripsEndDate') }}</span>
+                          <span class="form-text text-muted">{{ l('DescriptionTextTripsEndDate') }}</span>
                         </div>
                       </div>
                       <div class="col-lg-3">
-                        <label><span class="required-fileds">*</span> {{ l('RouteType') }}:</label>
+                        <label><span class="required-fileds">*</span> {{ l('RouteType') }}</label>
                         <div [ngClass]="{ 'spinner spinner-success spinner-right mr-1 ml-1': !allRoutTypes }">
                           <select
                             #RouteType="ngModel"
@@ -479,7 +478,7 @@
                       </div>
                       <div class="col-lg-3">
                         <div class="form-group">
-                          <label><span class="required-fileds">*</span>{{ l('NumberOfDrops') }}:</label>
+                          <label><span class="required-fileds">*</span>{{ l('NumberOfDrops') }}</label>
                           <input
                             #NumberOfDrops="ngModel"
                             class="form-control"
@@ -493,12 +492,12 @@
                             [class.is-valid]="selectedRouteType == 3 && NumberOfDrops.touched && NumberOfDrops.valid"
                             [disabled]="selectedRouteType != 3"
                           />
-                          <span class="form-text text-muted">{{ l('NumberOfDrops') }} {{ l('ForMiltibleTripsRouteType') }}</span>
+                          <span class="form-text text-muted">{{ l('DescriptionNumberOfDrops') }} </span>
                         </div>
                       </div>
                       <div class="col-lg-6">
                         <div class="form-group">
-                          <label><span class="required-fileds">*</span> {{ l('NumberOfTrips') }}:</label>
+                          <label><span class="required-fileds">*</span> {{ l('NumberOfTrips') }}</label>
                           <input
                             #numberOfTrips="ngModel"
                             class="form-control"
@@ -620,9 +619,9 @@
                 <table *ngIf="allVases" class="table">
                   <thead>
                     <tr class="table-active">
-                      <th scope="col">{{ l('Name') }}</th>
-                      <th scope="col">{{ l('Count') }}</th>
-                      <th scope="col">{{ l('Amount') }}</th>
+                      <th scope="col">{{ l('TableVasName') }}</th>
+                      <th scope="col">{{ l('Quantity') }}</th>
+                      <th scope="col">{{ l('VasAmount') }}</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -670,7 +669,7 @@
               [buttonBusy]="saving"
               [disabled]="!shippingRequestForm.form.valid"
             >
-              <span> {{ shippingRequest.id ? l('UpdateSippingRequest') : l('CreateShippingRequest') }}</span>
+              <span> {{ shippingRequest.id ? l('Update') : l('Create') }}</span>
             </button>
             <button type="reset" class="btn btn-light-primary font-weight-bold" (click)="cancel()">
               {{ l('Cancel') }}

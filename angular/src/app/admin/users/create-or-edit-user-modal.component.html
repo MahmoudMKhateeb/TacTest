@@ -34,7 +34,7 @@
                 </div>
                 <div class="col-sm-9">
                   <div class="form-group">
-                    <label for="Name">{{ 'Name' | localize }} <span class="required-fileds"> *</span></label>
+                    <label for="Name"><span class="required-fileds"> *</span>{{ 'CreateUserFirstName' | localize }} </label>
                     <input
                       id="Name"
                       #nameInput="ngModel"
@@ -49,7 +49,7 @@
                   </div>
 
                   <div class="form-group">
-                    <label for="Surname">{{ 'Surname' | localize }}<span class="required-fileds"> *</span></label>
+                    <label for="Surname"><span class="required-fileds"> *</span>{{ 'CreateUserLastName' | localize }}</label>
                     <input
                       id="Surname"
                       #surnameInput="ngModel"
@@ -65,7 +65,7 @@
                 </div>
               </div>
               <div class="form-group">
-                <label for="EmailAddress">{{ 'EmailAddress' | localize }} <span class="required-fileds"> *</span></label>
+                <label for="EmailAddress"><span class="required-fileds"> *</span>{{ 'EmailAddress' | localize }} </label>
                 <input
                   id="EmailAddress"
                   #emailAddressInput="ngModel"
@@ -109,7 +109,7 @@
               </div>
               <div class="form-group">
                 <div class="form-group">
-                  <label for="Nationality">{{ 'Nationality' | localize }}<span class="required-fileds"> *</span></label>
+                  <label for="Nationality"><span class="required-fileds"> *</span>{{ 'Nationality' | localize }}</label>
                   <select name="Nationality" [(ngModel)]="user.nationalityId" required class="form-control form-control-lg custom-select mr-sm-2">
                     <option *ngFor="let nationality of nationalities" [value]="Number(nationality.id)">{{ nationality.displayName }}</option>
                   </select>
@@ -117,7 +117,7 @@
                 </div>
               </div>
               <div class="form-group">
-                <label for="UserName">{{ 'UserName' | localize }}<span class="required-fileds"> *</span></label>
+                <label for="UserName"><span class="required-fileds"> *</span>{{ 'UserName' | localize }}</label>
                 <input
                   id="UserName"
                   #userNameInput="ngModel"
@@ -146,7 +146,7 @@
               </div>
               <div class="form-group" *ngIf="!setRandomPassword">
                 <div class="right">
-                  <label for="Password">{{ 'Password' | localize }} <span class="required-fileds"> *</span></label>
+                  <label for="Password"><span class="required-fileds"> *</span>{{ 'Password' | localize }} </label>
                   <input
                     id="Password"
                     type="password"
@@ -189,7 +189,7 @@
               </div>
               <div class="form-group" *ngIf="!setRandomPassword">
                 <div class="right">
-                  <label for="PasswordRepeat">{{ 'PasswordRepeat' | localize }} <span class="required-fileds"> *</span></label>
+                  <label for="PasswordRepeat"><span class="required-fileds"> *</span>{{ 'PasswordRepeat' | localize }} </label>
                   <input
                     id="PasswordRepeat"
                     type="password"

@@ -40,7 +40,7 @@
             <div class="col-12">
               <div class="row">
                 <div class="col-lg-6">
-                  <label>{{ l('TransportType') }}:</label>
+                  <label>{{ l('TransportType') }}</label>
                   <input
                     class="form-control"
                     type="text"
@@ -51,11 +51,11 @@
                 </div>
 
                 <div class="col-lg-6">
-                  <label>{{ l('TruckType') }}:</label>
+                  <label>{{ l('TruckType') }}</label>
                   <input class="form-control" type="text" name="numberOfDrops" value="{{ shippingRequestforView.truckTypeDisplayName }}" disabled />
                 </div>
                 <div class="col-lg-6 mt-5">
-                  <label>{{ l('Capacity') }}:</label>
+                  <label>{{ l('Capacity') }}</label>
                   <input class="form-control" type="text" name="numberOfDrops" value="{{ shippingRequestforView.capacityDisplayName }}" disabled />
                 </div>
               </div>
@@ -78,15 +78,16 @@
                 <div class="mb-2">
                   <div class="form-group row fv-plugins-icon-container">
                     <div class="col-lg-6">
-                      <label><span class="required-fileds">*</span> {{ l('ShippingRequestType') }}:</label>
+                      <label><span class="required-fileds"></span> {{ l('ShippingRequestType') }}</label>
                       <input class="form-control" type="text" name="ShippingRequestType" [value]="shipppingRequestType()" disabled />
                     </div>
                     <div *ngIf="shippingRequestforView.shippingRequest.isBid" class="col-lg-3">
                       <div class="form-group">
-                        <label><span class="required-fileds">*</span>{{ l('DiddingStartDate') }}:</label>
+                        <label>{{ l('DiddingStartDate') }}</label>
                         <div class="input-group date">
                           <input
                             class="form-control"
+                            placeholder="{{ l('DatePlaceholder') }}"
                             name="shippingrequestBidStratDate"
                             [(date)]="shippingRequestforView.shippingRequest.bidStartDate"
                             [disabled]="true"
@@ -102,11 +103,11 @@
                       </div>
                     </div>
                     <div *ngIf="shippingRequestforView.shippingRequest.isBid" class="col-lg-3">
-                      <label><span class="required-fileds">*</span> {{ l('BiddingEndDate') }}:</label>
+                      <label> {{ l('BiddingEndDate') }}</label>
                       <div class="input-group date">
                         <input
                           class="form-control"
-                          placeholder="{{ l('BiddingEndDate') }}"
+                          placeholder="{{ l('DatePlaceholder') }}"
                           name="shippingrequestBidEndDate"
                           [(date)]="shippingRequestforView.shippingRequest.bidEndDate"
                           [disabled]="true"
@@ -122,7 +123,7 @@
                     </div>
                     <!--  Start::Shipping Type                 -->
                     <div class="col-lg-6">
-                      <label><span class="required-fileds">*</span> {{ l('ShippingType') }}:</label>
+                      <label><span class="required-fileds"></span> {{ l('ShippingType') }}</label>
                       <input class="form-control" type="text" name="ShippingType" [value]="shippingRequestforView.shippingTypeDisplayName" disabled />
                     </div>
                     <!-- End::Shipping Type-->
@@ -150,11 +151,11 @@
                 <div class="mb-2">
                   <div class="row">
                     <div class="col-lg-6">
-                      <label><span class="required-fileds">*</span> {{ l('MainGoodCategory') }}:</label>
+                      <label><span class="required-fileds"></span> {{ l('MainGoodCategory') }}</label>
                       <input class="form-control" type="text" name="MainGoodCategory" [value]="shippingRequestforView.goodsCategoryName" disabled />
                     </div>
                     <div class="col-lg-6">
-                      <label><span class="required-fileds">*</span> {{ l('TotalWeight') }}:</label>
+                      <label><span class="required-fileds"></span> {{ l('TotalWeight') }}</label>
                       <div>
                         <div class="input-group">
                           <div class="input-group-append">
@@ -175,13 +176,13 @@
 
                     <div class="col-lg-6 mt-4">
                       <div class="form-group">
-                        <label> {{ l('PackingType') }}:</label>
+                        <label> {{ l('PackingType') }}</label>
                         <input class="form-control" type="text" name="packingType" [value]="shippingRequestforView.packingTypeDisplayName" disabled />
                       </div>
                     </div>
                     <div class="col-lg-6 mt-4">
                       <div class="form-group">
-                        <label> {{ l('NumberOfPacking') }}:</label>
+                        <label> {{ l('NumberOfPacking') }}</label>
                         <input
                           class="form-control"
                           type="text"
@@ -221,13 +222,13 @@
                     <!-- Start of Select Source -->
                     <div class="col-lg-6">
                       <div class="form-group">
-                        <label> {{ l('OriginCity') }}:</label>
+                        <label> {{ l('OriginCity') }}</label>
                         <input class="form-control" type="text" name="originCity" [value]="shippingRequestforView.originalCityName" disabled />
                       </div>
                     </div>
                     <div class="col-lg-6">
                       <div class="form-group">
-                        <label> {{ l('DestinationCity') }}:</label>
+                        <label> {{ l('DestinationCity') }}</label>
                         <input
                           class="form-control"
                           type="text"
@@ -240,12 +241,13 @@
 
                     <div class="col-lg-6">
                       <div class="form-group">
-                        <label><span class="required-fileds">*</span> {{ l('TripsStartDate') }}:</label>
+                        <label> {{ l('TripsStartDate') }}</label>
                         <div class="input-group date">
                           <input
                             [(date)]="shippingRequestforView.shippingRequest.startTripDate"
                             class="form-control"
                             type="datetime"
+                            placeholder="{{ l('DatePlaceholder') }}"
                             name="startdate"
                             bsDatepicker
                             datePickerMomentModifier
@@ -262,11 +264,12 @@
                     </div>
                     <div class="col-lg-6">
                       <div class="form-group">
-                        <label><span class="required-fileds">*</span> {{ l('TripsEndDate') }}:</label>
+                        <label> {{ l('TripsEndDate') }}</label>
                         <div class="input-group date">
                           <input
                             [(date)]="shippingRequestforView.shippingRequest.endTripDate"
                             class="form-control"
+                            placeholder="{{ l('DatePlaceholder') }}"
                             name="endDate"
                             bsDatepicker
                             datePickerMomentModifier
@@ -281,12 +284,12 @@
                       </div>
                     </div>
                     <div class="col-lg-3">
-                      <label>{{ l('RouteType') }}:</label>
+                      <label>{{ l('RouteType') }}</label>
                       <input class="form-control" type="text" name="routeType" [value]="shippingRequestforView.routTypeName" disabled />
                     </div>
                     <div class="col-lg-3">
                       <div class="form-group">
-                        <label><span class="required-fileds">*</span> {{ l('NumberOfDrops') }}:</label>
+                        <label><span class="required-fileds"></span> {{ l('NumberOfDrops') }}</label>
                         <input
                           class="form-control"
                           type="number"
@@ -298,7 +301,7 @@
                     </div>
                     <div class="col-lg-6">
                       <div class="form-group">
-                        <label> {{ l('NumberOfTrips') }}:</label>
+                        <label> {{ l('NumberOfTrips') }}</label>
                         <input
                           class="form-control"
                           type="number"

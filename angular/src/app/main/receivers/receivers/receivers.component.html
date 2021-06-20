@@ -1,6 +1,6 @@
 <div [@routerTransition]>
   <div class="content d-flex flex-column flex-column-fluid">
-    <sub-header [title]="'Receivers' | localize" [description]="'' | localize">
+    <sub-header [title]="'ReceiversSetup' | localize" [description]="'' | localize">
       <div role="actions">
         <button (click)="exportToExcel()" class="btn btn-outline-success"><i class="fa fa-file-excel"></i> {{ l('ExportToExcel') }}</button>
 
@@ -126,11 +126,11 @@
                   <tr>
                     <th style="width: 130px;" [hidden]="!isGrantedAny('Pages.Receivers.Edit', 'Pages.Receivers.Delete')">{{ l('Actions') }}</th>
                     <th style="width: 150px;" pSortableColumn="facilityFk.name">
-                      {{ l('Name') }}
+                      {{ l('Facility') }}
                       <p-sortIcon field="facilityName"></p-sortIcon>
                     </th>
                     <th style="width: 150px;" pSortableColumn="fullName">
-                      {{ l('FullName') }}
+                      {{ l('ReciverName') }}
                       <p-sortIcon field="receiver.fullName"></p-sortIcon>
                     </th>
                     <th style="width: 150px;" pSortableColumn="email">

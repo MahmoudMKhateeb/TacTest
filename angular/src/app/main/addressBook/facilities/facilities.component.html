@@ -1,6 +1,6 @@
 <div [@routerTransition]>
   <div class="content d-flex flex-column flex-column-fluid">
-    <sub-header [title]="'Facilities' | localize" [description]="'' | localize">
+    <sub-header [title]="'FacilitiesSetup' | localize" [description]="'' | localize">
       <div role="actions">
         <button (click)="exportToExcel()" class="btn btn-outline-success"><i class="fa fa-file-excel"></i> {{ l('ExportToExcel') }}</button>
 
@@ -188,11 +188,11 @@
                     </th>
 
                     <th style="width: 150px;" pSortableColumn="cityFk.displayName">
-                      {{ l('DisplayName') }}
+                      {{ l('CityName') }}
                       <p-sortIcon field="cityDisplayName"></p-sortIcon>
                     </th>
                     <th style="width: 150px;" pSortableColumn="name">
-                      {{ l('Name') }}
+                      {{ l('FacilityName') }}
                       <p-sortIcon field="facility.name"></p-sortIcon>
                     </th>
                     <th style="width: 150px;" pSortableColumn="address">

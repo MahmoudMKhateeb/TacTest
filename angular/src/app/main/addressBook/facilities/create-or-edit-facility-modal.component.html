@@ -25,7 +25,7 @@
         <div class="modal-body">
           <div class="row">
             <div class="form-group col-md-12">
-              <label>{{ l('FacilityName') }} <span class="required-fileds"> *</span></label>
+              <label><span class="required-fileds"> *</span>{{ l('FacilityName') }} <span class="required-fileds"> </span></label>
               <input
                 #FacilityName="ngModel"
                 type="text"
@@ -41,7 +41,7 @@
             </div>
 
             <div class="form-group col-md-2">
-              <label>{{ l('selectaCountry') }} <span class="required-fileds"> *</span></label>
+              <label><span class="required-fileds"> *</span>{{ l('selectaCountry') }} <span class="required-fileds"> </span></label>
               <div [ngClass]="{ 'spinner spinner-success spinner-right mr-1 ml-1': countriesLoading }">
                 <select
                   #country="ngModel"
@@ -60,7 +60,7 @@
               </div>
             </div>
             <div class="form-group col-md-2">
-              <label>{{ l('SelectaCity') }}<span class="required-fileds"> *</span></label>
+              <label><span class="required-fileds">*</span>{{ l('SelectaCity') }}</label>
               <div [ngClass]="{ 'spinner spinner-success spinner-right mr-1 ml-1': citiesLoading }">
                 <select
                   #city="ngModel"
@@ -78,7 +78,7 @@
               </div>
             </div>
             <div class="form-group col-md-8">
-              <label>{{ l('Address') }} <span class="required-fileds"> *</span></label>
+              <label><span class="required-fileds"> *</span>{{ l('Address') }} <span class="required-fileds"> </span></label>
               <input
                 #search
                 type="text"

@@ -18,7 +18,7 @@ export class AppNavigationService {
       new AppMenuItem('Dashboard', '', 'flaticon-line-graph', '/app/main/dashboard'),
       //host item with shared Sub-menu
       new AppMenuItem(
-        'Documents',
+        'DocumentManagement',
         '',
         'flaticon2-document',
         '',
@@ -78,8 +78,12 @@ export class AppNavigationService {
           new AppMenuItem('ShipmentTracking', 'Pages', 'flaticon-interface-9', '/app/main/tracking'),
           new AppMenuItem('Requests', 'Pages', 'label label-danger label-dot', '/app/main/shippingRequests/shippingRequests'),
           new AppMenuItem(
-            'DirectShippingRequests',
-            '',
+            'TachyonManageService',
+            'Pages.ShippingRequests',
+            'label label-danger label-dot',
+            '/app/main/shippingRequests/shippingRequests'
+          ),
+          new AppMenuItem('Marketplace', 'Pages', 'label label-danger label-dot', '/app/main/marketPlace/marketPlace'),
 
             'flaticon2-send-1',
             '/app/main/directrequest/list',
@@ -102,6 +106,7 @@ export class AppNavigationService {
         'flaticon-interface-8',
         '/app/main/comingSoon',
         [],
+
         //TODO: the CreateNewRequest subMenu Need Permission and Route
         [
           new AppMenuItem(
@@ -156,6 +161,7 @@ export class AppNavigationService {
         undefined,
         () => this._featureCheckerService.isEnabled('App.Carrier') || this._featureCheckerService.isEnabled('App.Shipper')
       ),
+
       //end of requests
       //start of shipment tracking
       //TODO: shipmentTracking Carrier Menu item need Permission and Route(Component)
@@ -201,7 +207,7 @@ export class AppNavigationService {
       //TODO: not all of these are visable to the TachyonDealer Need to Fix the Permisions in order for it to work
       //start of Invoices
       new AppMenuItem(
-        'InvoicesList',
+        'Invoices',
         'Pages.Invoices',
         'fas fa-file-invoice-dollar',
         '',

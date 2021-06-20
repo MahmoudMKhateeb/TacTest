@@ -12,7 +12,7 @@
     <div class="modal-content">
       <div class="modal-header">
         <h4 class="modal-title">
-          <span>{{ l('Details') }}</span>
+          <span>{{ l('FacilityDetails') }}</span>
         </h4>
         <button type="button" class="close" (click)="close()" aria-label="Close">
           <span aria-hidden="true">&times;</span>
@@ -21,11 +21,11 @@
       <div class="modal-body">
         <div class="row">
           <div class="col-6 mb-3">
-            <h6>{{ l('Name') }} :</h6>
+            <h6>{{ l('FacilityName') }}:</h6>
             {{ item.facility.name }}
           </div>
           <div class="col-6 mb-3">
-            <h6>{{ l('Adress') }} :</h6>
+            <h6>{{ l('Adress') }}:</h6>
             {{ item.facility.address }}
           </div>
           <!--          <div class="col-6 mb-3">-->
@@ -38,7 +38,7 @@
           <!--          </div>-->
 
           <div class="col-6 mb-3">
-            <h6>({{ l('City') }}) {{ l('DisplayName') }} :</h6>
+            <h6>{{ l('CityName') }}:</h6>
             {{ item.cityDisplayName }}
           </div>
         </div>
