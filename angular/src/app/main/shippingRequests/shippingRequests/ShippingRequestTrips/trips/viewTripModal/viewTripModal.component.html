@@ -82,19 +82,25 @@
 
           <!-- StartOf::Driver&Truck -->
           <ng-container *ngIf="feature.isEnabled('App.Carrier')">
-            <div class="col-lg-6">
+            <div class="col-lg-3">
               <div class="form-group">
                 <label>{{ l('Driver') }} *</label>
                 <input class="form-control" name="trip.driver" [ngModel]="trip.driver" disabled />
               </div>
             </div>
-            <div class="col-lg-5">
+            <div class="col-lg-3">
               <div class="form-group">
                 <label>{{ l('Truck') }} *</label>
                 <input class="form-control" name="trip.truck" [ngModel]="trip.truck" disabled />
               </div>
             </div>
-            <div class="col-lg-1 mt-7 align-content-center">
+            <div class="col-lg-{{ trip.driverStatus == 0 ? 5 : 6 }}">
+              <div class="form-group">
+                <label>{{ l('DriverStatus') }}</label>
+                <input class="form-control" name="trip.DriverStatus" [ngModel]="trip.driverStatusTitle" disabled />
+              </div>
+            </div>
+            <div class="col-lg-1 mt-7 justify-content-end" *ngIf="trip.driverStatus == 0">
               <a class="btn font-weight-bold btn-danger btn-icon" (click)="assignDriverTruckModal.show(currentTripId)">
                 <i class="fas fa-edit"></i>
               </a>
