@@ -1,4 +1,4 @@
-﻿using Abp;
+using Abp;
 using Abp.Application.Services.Dto;
 using Abp.Authorization;
 using Abp.Collections.Extensions;
@@ -198,7 +198,7 @@ namespace TACHYON.Shipping.Trips
 
             // add document file
             var docFileDto = input.CreateOrEditDocumentFileDto;
-            if (!docFileDto.UpdateDocumentFileInput.FileToken.IsNullOrEmpty())
+            if (docFileDto.UpdateDocumentFileInput != null && !docFileDto.UpdateDocumentFileInput.FileToken.IsNullOrEmpty())
             {
                 docFileDto.ShippingRequestTripId = shippingRequestTripId;
                 docFileDto.Name = docFileDto.Name + "_" + shippingRequestTripId.ToString();
