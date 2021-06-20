@@ -12,6 +12,7 @@ namespace TACHYON.Shipping.ShippingRequests.Dtos
         public  bool IsBid { get; set; }
         public  bool IsTachyonDeal { get; set; }
         public bool IsDirectRequest { get; set; }
+        public ShippingRequestType RequestType { get; set; }
         public decimal? Price { get; set; }
         public bool? IsPriceAccepted { get; set; }
         public int? CarrierTenantId { get; set; }

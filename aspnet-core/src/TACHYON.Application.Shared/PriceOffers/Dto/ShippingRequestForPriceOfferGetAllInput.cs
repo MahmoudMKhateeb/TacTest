@@ -11,7 +11,7 @@ namespace TACHYON.PriceOffers.Dto
         public string Carrier { get; set; }
         public long? ShippingRequestId { get; set; }
         public PriceOfferChannel? Channel { get; set; }
-        public PriceOfferChannel? RequestTypeId { get; set; }
+        public ShippingRequestType? RequestType { get; set; }
 
         public int? TruckTypeId { get; set; }
 

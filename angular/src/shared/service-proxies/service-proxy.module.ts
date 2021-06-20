@@ -139,6 +139,7 @@ import { TerminologieServiceProxy } from 'shared/service-proxies/terminologies-e
     ApiServiceProxies.InvoicePaymentMethodServiceProxy,
     ApiServiceProxies.ShippingRequestsTachyonDealerServiceProxy,
     ApiServiceProxies.InvoicesProformaServiceProxy,
+    ApiServiceProxies.TrackingServiceProxy,
     TerminologieServiceProxy,
     { provide: RefreshTokenService, useClass: ZeroRefreshTokenService },
     { provide: AbpHttpConfigurationService, useClass: ZeroTemplateHttpConfigurationService },

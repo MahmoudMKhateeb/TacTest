@@ -75,7 +75,7 @@ export class AppNavigationService {
           ),
           new AppMenuItem('Marketplace', 'Pages', 'label label-danger label-dot', '/app/main/marketplace/list'),
           new AppMenuItem('Offers', 'Pages', 'label label-danger label-dot', '/app/main/offers'),
-          new AppMenuItem('ShipmentTracking', 'Pages', 'label label-danger label-dot', '/app/main/comingSoon'),
+          new AppMenuItem('ShipmentTracking', 'Pages', 'label label-danger label-dot', '/app/main/tracking'),
           new AppMenuItem('Requests', 'Pages', 'label label-danger label-dot', '/app/main/shippingRequests/shippingRequests'),
           new AppMenuItem(
             'DirectShippingRequests',
@@ -167,7 +167,7 @@ export class AppNavigationService {
         'shipmentTracking',
         'Pages',
         'flaticon2-document',
-        '/app/main/comingSoon',
+        '/app/main/tracking',
         undefined,
         undefined,
         undefined,

@@ -122,9 +122,9 @@
                       {{ l('Actions') }}
                     </th>
 
-                    <th pSortableColumn="ReferenceNumber">
+                    <th pSortableColumn="ReferencNumber">
                       {{ l('InvoiceNumber') }}
-                      <p-sortIcon field="ReferenceNumber"></p-sortIcon>
+                      <p-sortIcon field="ReferencNumber"></p-sortIcon>
                     </th>
                     <th *ngIf="!appSession.tenantId || feature.isEnabled('App.TachyonDealer')" pSortableColumn="tenantId">
                       {{ l('CompanyName') }}
@@ -188,7 +188,7 @@
 
                     <td>
                       <span class="ui-column-title"> {{ l('InvoiceNumber') }}</span>
-                      {{ record.referenceNumber }}
+                      {{ record.referencNumber }}
                     </td>
                     <td *ngIf="!appSession.tenantId || feature.isEnabled('App.TachyonDealer')">
                       <span class="ui-column-title"> {{ l('CompanyName') }}</span>

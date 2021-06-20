@@ -6,7 +6,7 @@ namespace TACHYON.Invoices.SubmitInvoices.Dto
 {
     public class SubmitInvoiceListDto: EntityDto<long>, IHasCreationTime
     {
-        public long? ReferenceNumber { get; set; }
+        public long? ReferencNumber { get; set; }
         public string TenantName { get; set; }
         public string Period { get; set; }
         public SubmitInvoiceStatus Status { get; set; }

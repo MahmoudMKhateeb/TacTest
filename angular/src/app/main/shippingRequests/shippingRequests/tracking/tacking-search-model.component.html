@@ -18,12 +18,12 @@
         <div class="form-body">
           <div class="row">
             <div class="row mb-4">
-              <div class="col-xl-6">
+              <div class="col-xl-6" *ngIf="!feature.isEnabled('App.Shipper')">
                 <label for="Shipper">{{ 'Shipper' | localize }}</label>
                 <div class="input-group">
                   <input
                     id="Shipper"
-                    [(ngModel)]="input.filter"
+                    [(ngModel)]="input.shipper"
                     name="input.filter"
                     class="form-control"
                     placeholder="{{ 'SearchWithThreeDot' | localize }}"
@@ -31,7 +31,7 @@
                   />
                 </div>
               </div>
-              <div class="col-xl-6" *ngIf="input.channel != 1 && (feature.isEnabled('App.TachyonDealer') || !appSession.tenantId)">
+              <div class="col-xl-6" *ngIf="!feature.isEnabled('App.Carrier')">
                 <label for="Carrier">{{ 'Carrier' | localize }}</label>
                 <div class="input-group">
                   <input
@@ -135,19 +135,7 @@
                   </select>
                 </div>
               </div>
-              <ng-template [ngIf]="!input.channel">
-                <div class="col-xl-6">
-                  <label for="RequestType">{{ 'ShippingRequestType' | localize }}</label>
-                  <div class="input-group">
-                    <select name="input.requestType" [(ngModel)]="input.requestType" class="form-control" required>
-                      <option value="">{{ l('All') }}</option>
-                      <option [value]="r.key" *ngFor="let r of requestTypes">
-                        {{ l(r.value) | localize }}
-                      </option>
-                    </select>
-                  </div>
-                </div>
-              </ng-template>
+
               <div class="col-xl-6">
                 <label for="RequestType">{{ 'ShippingRequestStatusName' | localize }}</label>
                 <div class="input-group">

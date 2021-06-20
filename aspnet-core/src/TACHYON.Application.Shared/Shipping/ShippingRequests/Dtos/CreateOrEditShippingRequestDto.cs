@@ -1,6 +1,7 @@
 ﻿
 using Abp.Application.Services.Dto;
 using Abp.Runtime.Validation;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -21,6 +22,8 @@ namespace TACHYON.Shipping.ShippingRequests.Dtos
 
         public virtual bool IsTachyonDeal { get; set; }
         public bool IsDirectRequest { get; set; }
+        [JsonIgnore]
+        public ShippingRequestType RequestType { get; set; }
 
         /// <summary>
         /// if we clone request
@@ -60,6 +63,8 @@ namespace TACHYON.Shipping.ShippingRequests.Dtos
 
         public ShippingRequestRouteType RouteTypeId { get; set; }
 
+
+
         [Required]
         public virtual int OriginCityId { get; set; }
         [Required]
@@ -83,6 +88,19 @@ namespace TACHYON.Shipping.ShippingRequests.Dtos
                     if (this.NumberOfDrops<2)
                         context.Results.Add(new ValidationResult("TheNumberOfDropsMustHigerOrEqualTwo"));
                     break;
+            }
+
+            if (IsBid)
+            {
+                RequestType = ShippingRequestType.Marketplace;
+            }
+            else if (IsTachyonDeal)
+            {
+                RequestType = ShippingRequestType.TachyonManageService;
+            }
+            else
+            {
+                RequestType = ShippingRequestType.DirectRequest;
             }
 
         }

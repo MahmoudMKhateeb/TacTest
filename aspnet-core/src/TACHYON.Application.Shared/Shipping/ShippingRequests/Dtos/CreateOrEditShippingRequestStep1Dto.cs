@@ -1,6 +1,7 @@
 ﻿using Abp.Application.Services.Dto;
 using Abp.Runtime.Validation;
 using Abp.Timing;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -20,7 +21,8 @@ namespace TACHYON.Shipping.ShippingRequests.Dtos
         [Required]
         public DateTime StartTripDate { get; set; }
         public DateTime? EndTripDate { get; set; }
-
+        [JsonIgnore]
+        public ShippingRequestType RequestType { get; set; }
         public void AddValidationErrors(CustomValidationContext context)
         {
             if(this.StartTripDate.Date < Clock.Now.Date)
@@ -30,6 +32,18 @@ namespace TACHYON.Shipping.ShippingRequests.Dtos
             if (EndTripDate.HasValue && StartTripDate.Date > EndTripDate.Value.Date)
             {
                 context.Results.Add(new ValidationResult("The start date must be or equal to end date."));
+            }
+            if (IsBid)
+            {
+                RequestType = ShippingRequestType.Marketplace;
+            }
+            else if (IsTachyonDeal)
+            {
+                RequestType = ShippingRequestType.TachyonManageService;
+            }
+            else
+            {
+                RequestType = ShippingRequestType.DirectRequest;
             }
         }
     }

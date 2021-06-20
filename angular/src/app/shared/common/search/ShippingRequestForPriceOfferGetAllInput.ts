@@ -1,11 +1,11 @@
-import { PriceOfferChannel, ShippingRequestRouteType, ShippingRequestStatus } from '@shared/service-proxies/service-proxies';
+import { PriceOfferChannel, ShippingRequestRouteType, ShippingRequestStatus, ShippingRequestType } from '@shared/service-proxies/service-proxies';
 import * as moment from 'moment';
 export class ShippingRequestForPriceOfferGetAllInput {
   filter!: string;
   carrier!: string;
   shippingRequestId!: number;
   channel!: PriceOfferChannel;
-  requestTypeId!: PriceOfferChannel;
+  requestType!: ShippingRequestType;
   truckTypeId!: number;
   originId!: number;
   destinationId!: number;
