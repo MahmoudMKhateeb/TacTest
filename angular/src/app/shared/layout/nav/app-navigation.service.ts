@@ -20,17 +20,22 @@ export class AppNavigationService {
       new AppMenuItem(
         'Documents',
         '',
-        'flaticon-book',
+        'flaticon2-document',
         '',
         [],
         [
-          new AppMenuItem('DocumentManagement', 'Pages.DocumentTypes', 'flaticon2-document', '/app/main/documentTypes/documentTypes'),
-          new AppMenuItem('DocumentsEntities', 'Pages.DocumentsEntities', 'flaticon-doc', '/app/main/documentsEntities/documentsEntities'),
+          new AppMenuItem('DocumentManagement', 'Pages.DocumentTypes', 'flaticon2-medical-records-1', '/app/main/documentTypes/documentTypes'),
+          new AppMenuItem(
+            'DocumentsEntities',
+            'Pages.DocumentsEntities',
+            'flaticon2-medical-records-1',
+            '/app/main/documentsEntities/documentsEntities'
+          ),
           //TODO: the contracts subMenu Need Permission and Route
           new AppMenuItem(
             'NonMandatoryDocuments',
             'Pages.DocumentFiles',
-            'flaticon-file',
+            'flaticon2-crisp-icons',
             '/app/main/comingSoon',
             [],
             undefined,
@@ -42,7 +47,7 @@ export class AppNavigationService {
           //TODO: the contracts subMenu Need Permission and Route
           new AppMenuItem(
             'contracts',
-            'Pages.DocumentFiles',
+            'flaticon2-sheet',
             'flaticon-file',
             '/app/main/comingSoon',
             [],
@@ -67,20 +72,16 @@ export class AppNavigationService {
         '',
         [],
         [
-          new AppMenuItem(
-            'TachyonManagedServices',
-            'Pages.ShippingRequests',
-            'label label-danger label-dot',
-            '/app/main/shippingRequests/shippingRequests'
-          ),
-          new AppMenuItem('Marketplace', 'Pages', 'label label-danger label-dot', '/app/main/marketplace/list'),
+          new AppMenuItem('TachyonManagedServices', 'Pages.ShippingRequests', 'flaticon-delete-2', '/app/main/shippingRequests/shippingRequests'),
+          new AppMenuItem('Marketplace', 'Pages', 'flaticon2-shopping-cart-1', '/app/main/marketplace/list'),
           new AppMenuItem('Offers', 'Pages', 'label label-danger label-dot', '/app/main/offers'),
-          new AppMenuItem('ShipmentTracking', 'Pages', 'label label-danger label-dot', '/app/main/comingSoon'),
-          new AppMenuItem('Requests', 'Pages', 'label label-danger label-dot', '/app/main/shippingRequests/shippingRequests'),
+          new AppMenuItem('ShipmentTracking', 'Pages', 'flaticon-placeholder-3', '/app/main/comingSoon'),
+          new AppMenuItem('Requests', 'Pages', 'flaticon-interface-9', '/app/main/shippingRequests/shippingRequests'),
           new AppMenuItem(
             'DirectShippingRequests',
             '',
-            'flaticon-more',
+
+            'flaticon2-send-1',
             '/app/main/directrequest/list',
             undefined,
             undefined,
@@ -106,7 +107,7 @@ export class AppNavigationService {
           new AppMenuItem(
             'CreateNewRequest',
             'Pages.ShippingRequests',
-            'label label-danger label-dot',
+            'flaticon2-add',
             '/app/main/shippingRequests/shippingRequests/createOrEdit',
             undefined,
             undefined,
@@ -114,16 +115,11 @@ export class AppNavigationService {
             undefined,
             () => this._featureCheckerService.isEnabled('App.Shipper')
           ),
-          new AppMenuItem(
-            'ShippingRequests',
-            'Pages.ShippingRequests',
-            'label label-danger label-dot',
-            '/app/main/shippingRequests/shippingRequests'
-          ),
+          new AppMenuItem('ShippingRequests', 'Pages.ShippingRequests', 'flaticon2-cube', '/app/main/shippingRequests/shippingRequests'),
           new AppMenuItem(
             'Marketplace',
             '',
-            'flaticon-more',
+            'flaticon2-shopping-cart-1',
             '/app/main/marketplace/list',
             undefined,
             undefined,
@@ -145,7 +141,7 @@ export class AppNavigationService {
           new AppMenuItem(
             'DirectShippingRequests',
             '',
-            'flaticon-more',
+            'flaticon2-rocket-1',
             '/app/main/directrequest/list',
             undefined,
             undefined,
@@ -166,7 +162,7 @@ export class AppNavigationService {
       new AppMenuItem(
         'shipmentTracking',
         'Pages',
-        'flaticon2-document',
+        'flaticon-map-location',
         '/app/main/comingSoon',
         undefined,
         undefined,
@@ -207,7 +203,7 @@ export class AppNavigationService {
       new AppMenuItem(
         'InvoicesList',
         'Pages.Invoices',
-        'flaticon-interface-8',
+        'fas fa-file-invoice-dollar',
         '',
         [],
         [
@@ -215,7 +211,7 @@ export class AppNavigationService {
           new AppMenuItem(
             'BillingInterval',
             'Pages.Invoices',
-            'label label-danger label-dot',
+            'flaticon2-list-2',
             '/app/main/invoices/periods',
             undefined,
             undefined,
@@ -226,7 +222,7 @@ export class AppNavigationService {
           new AppMenuItem(
             'PaymentMethods',
             'Pages.Invoices',
-            'label label-danger label-dot',
+            'flaticon-coins',
             '/app/main/invoices/paymentlist',
             undefined,
             undefined,
@@ -237,7 +233,7 @@ export class AppNavigationService {
           new AppMenuItem(
             'BalnaceRecharges',
             'Pages.Invoices',
-            'flaticon2-document',
+            'fas fa-dollar-sign',
             '/app/main/invoices/balnacerecharges',
             undefined,
             undefined,
@@ -248,7 +244,8 @@ export class AppNavigationService {
           new AppMenuItem(
             'SubmitInvoice',
             'Pages.Invoices',
-            'flaticon2-document',
+
+            'flaticon-tool',
             '/app/main/invoices/submitinvoice',
             undefined,
             undefined,
@@ -273,7 +270,7 @@ export class AppNavigationService {
               this._featureCheckerService.isEnabled('App.TachyonDealer') ||
               !this._appSessionService.tenantId
           ),
-          new AppMenuItem('FinancialTransActionMenu', 'Pages.Invoices.Transaction', 'flaticon2-document', '/app/main/invoices/transaction'),
+          new AppMenuItem('FinancialTransActionMenu', 'Pages.Invoices.Transaction', 'flaticon-arrows', '/app/main/invoices/transaction'),
         ]
         // undefined,
         // undefined,
@@ -287,17 +284,13 @@ export class AppNavigationService {
       new AppMenuItem(
         'reports',
         'Pages.Administration.Host.Dashboard',
-        'flaticon-interface-8',
+
+        'flaticon2-files-and-folders',
         '',
         [],
         [
-          new AppMenuItem('AccidentReason', 'Pages.ShippingRequestResoneAccidents', 'label label-danger label-dot', '/app/main/accidents/reasons'),
-          new AppMenuItem(
-            'TripRejectReason',
-            'Pages.ShippingRequestTrips.Reject.Reason',
-            'label label-danger label-dot',
-            '/app/main/trip/reject/reasons'
-          ),
+          new AppMenuItem('AccidentReason', 'Pages.ShippingRequestResoneAccidents', 'flaticon-exclamation', '/app/main/accidents/reasons'),
+          new AppMenuItem('TripRejectReason', 'Pages.ShippingRequestTrips.Reject.Reason', 'flaticon-info', '/app/main/trip/reject/reasons'),
         ]
         // undefined,
         // undefined,
@@ -314,11 +307,11 @@ export class AppNavigationService {
         '',
         [],
         [
-          new AppMenuItem('TransportTypes', 'Pages.TransportTypes', 'label label-danger label-dot', '/app/main/transportTypes/transportTypes'),
-          new AppMenuItem('TrucksTypes', 'Pages.TrucksTypes', 'label label-danger label-dot', '/app/main/trucksTypes/trucksTypes'),
-          new AppMenuItem('CapacityCategories', 'Pages.Capacities', 'label label-danger label-dot', '/app/main/truckCapacities/capacities'),
-          new AppMenuItem('PlateTypes', 'Pages.Capacities', 'label label-danger label-dot', '/app/main/plateTypes/plateTypes'),
-          new AppMenuItem('TruckStatuses', 'Pages.Administration.TruckStatuses', 'label label-danger label-dot', '/app/admin/trucks/truckStatuses'),
+          new AppMenuItem('TransportTypes', 'Pages.TransportTypes', 'flaticon2-delivery-truck', '/app/main/transportTypes/transportTypes'),
+          new AppMenuItem('TrucksTypes', 'Pages.TrucksTypes', 'flaticon2-lorry', '/app/main/trucksTypes/trucksTypes'),
+          new AppMenuItem('CapacityCategories', 'Pages.Capacities', 'flaticon2-open-box', '/app/main/truckCapacities/capacities'),
+          new AppMenuItem('PlateTypes', 'Pages.Capacities', 'flaticon2-browser', '/app/main/plateTypes/plateTypes'),
+          new AppMenuItem('TruckStatuses', 'Pages.Administration.TruckStatuses', 'flaticon2-analytics-1', '/app/admin/trucks/truckStatuses'),
 
           //   new AppMenuItem(
           //     'TruckTypes',
@@ -379,21 +372,21 @@ export class AppNavigationService {
       new AppMenuItem(
         'ShippingSettings',
         '',
-        'flaticon-cogwheel',
+        'flaticon2-delivery-truck',
         '',
         [],
         [
-          new AppMenuItem('ShippingTypes', 'Pages.ShippingTypes', 'flaticon-more', '/app/main/shippingTypes/shippingTypes'),
+          new AppMenuItem('ShippingTypes', 'Pages.ShippingTypes', 'flaticon2-lorry', '/app/main/shippingTypes/shippingTypes'),
           new AppMenuItem('Routes', 'Pages.RoutTypes', 'flaticon-map-location', '/app/main/routs/routes'),
-          new AppMenuItem('GoodCategories', 'Pages.GoodCategories', 'flaticon-interface-9', '/app/main/goodCategories/goodCategories'),
-          new AppMenuItem('PackingTypes', 'Pages.PackingTypes', 'flaticon-more', '/app/main/packingTypes/packingTypes'),
+          new AppMenuItem('GoodCategories', 'Pages.GoodCategories', 'flaticon-bag', '/app/main/goodCategories/goodCategories'),
+          new AppMenuItem('PackingTypes', 'Pages.PackingTypes', 'flaticon-layers', '/app/main/packingTypes/packingTypes'),
           new AppMenuItem(
             'UnitOfMeasures',
             'Pages.Administration.UnitOfMeasures',
             'flaticon-pie-chart-1',
             '/app/admin/unitOfMeasures/unitOfMeasures'
           ),
-          new AppMenuItem('Vas', 'Pages.Administration.Vases', 'label label-danger label-dot', '/app/admin/vases/vases'),
+          new AppMenuItem('Vas', 'Pages.Administration.Vases', 'flaticon-app', '/app/admin/vases/vases'),
         ]
       ),
       //end of shippmentsettings
@@ -420,16 +413,16 @@ export class AppNavigationService {
       new AppMenuItem(
         'AddressBook',
         '',
-        'flaticon-book',
+        'flaticon-map-location',
         '',
         [],
         [
-          new AppMenuItem('FacilitiesSetup', 'Pages.Facilities', 'flaticon-more', '/app/main/addressBook/facilities'),
+          new AppMenuItem('FacilitiesSetup', 'Pages.Facilities', 'flaticon-map-location', '/app/main/addressBook/facilities'),
           //TODO: Missing permission need to give host this permission Pages.Receivers
           new AppMenuItem(
             'ReceiversSetup',
             'Pages.Facilities',
-            'flaticon-more',
+            'flaticon-users',
             '/app/main/receivers/receivers',
             undefined,
             undefined,
@@ -463,7 +456,7 @@ export class AppNavigationService {
       new AppMenuItem(
         'Settings',
         'Pages.Administration',
-        'flaticon-interface-8',
+        'flaticon-settings-1',
         '',
         [],
         [
@@ -475,56 +468,46 @@ export class AppNavigationService {
           //    '/app/admin/shippingRequestStatuses/shippingRequestStatuses'
           //  ),
           //Host
-          new AppMenuItem('Countries', 'Pages.Counties', 'label label-danger label-dot', '/app/main/countries/counties'),
-          new AppMenuItem('Cities', 'Pages.Cities', 'label label-danger label-dot', '/app/main/cities/cities'),
-          new AppMenuItem('Nationalities', 'Pages.Nationalities', 'label label-danger label-dot', '/app/main/nationalities/nationalities'),
+          new AppMenuItem('Countries', 'Pages.Counties', 'flaticon-map-location', '/app/main/countries/counties'),
+          new AppMenuItem('Cities', 'Pages.Cities', 'flaticon-map-location', '/app/main/cities/cities'),
+          new AppMenuItem('Nationalities', 'Pages.Nationalities', 'flaticon-notes', '/app/main/nationalities/nationalities'),
 
-          new AppMenuItem(
-            'TermAndConditions',
-            'Pages.TermAndConditions',
-            'label label-danger label-dot',
-            '/app/main/termsAndConditions/termAndConditions'
-          ),
+          new AppMenuItem('TermAndConditions', 'Pages.TermAndConditions', 'flaticon-interface-10', '/app/main/termsAndConditions/termAndConditions'),
           // new AppMenuItem('TripStatuses', 'Pages.TripStatuses', 'flaticon-more', '/app/main/tripStatuses/tripStatuses'),
           // new AppMenuItem('Vases', 'Pages.Administration.Vases', 'flaticon-more', '/app/admin/vases/vases'),
 
           new AppMenuItem(
             'AppLocalization',
             'Pages.AppLocalizations',
-            'label label-danger label-dot',
+            'flaticon2-edit',
             '',
             undefined,
             [
-              new AppMenuItem(
-                'PlatformTerminologies',
-                'Pages.AppLocalizations',
-                'label label-danger label-dot',
-                '/app/main/lanaguages/applocalizations'
-              ),
-              new AppMenuItem('Translations', 'Pages.AppLocalizations', 'label label-danger label-dot', '', undefined, [
+              new AppMenuItem('PlatformTerminologies', 'Pages.AppLocalizations', 'flaticon-clipboard', '/app/main/lanaguages/applocalizations'),
+              new AppMenuItem('Translations', 'Pages.AppLocalizations', 'flaticon2-edit', '', undefined, [
                 new AppMenuItem(
                   'NationalityTranslations',
                   'Pages.NationalityTranslations',
-                  'label label-danger label-dot',
+                  'flaticon-clipboard',
                   '/app/main/nationalitiesTranslation/nationalityTranslations'
                 ),
 
                 new AppMenuItem(
                   'CountriesTranslations',
                   'Pages.CountriesTranslations',
-                  'label label-danger label-dot',
+                  'flaticon2-list-2',
                   '/app/main/countriesTranslations/countriesTranslations'
                 ),
                 new AppMenuItem(
                   'CitiesTranslations',
                   'Pages.CitiesTranslations',
-                  'label label-danger label-dot',
+                  'flaticon2-list-2',
                   '/app/main/citiesTranslations/citiesTranslations'
                 ),
                 new AppMenuItem(
                   'TermAndConditionTranslations',
                   'Pages.Administration.TermAndConditionTranslations',
-                  'label label-danger label-dot',
+                  'flaticon2-list-2',
                   '/app/admin/termsAndConditions/termAndConditionTranslations'
                 ),
                 new AppMenuItem(
@@ -578,7 +561,7 @@ export class AppNavigationService {
       new AppMenuItem(
         'Administration',
         '',
-        'flaticon-interface-8',
+        'flaticon-map',
         '',
         [],
         [
@@ -620,7 +603,7 @@ export class AppNavigationService {
               new AppMenuItem(
                 'VasPrices',
                 'Pages.VasPrices',
-                'flaticon-more',
+                'flaticon-interface-9',
                 '/app/main/vases/vasPrices',
                 undefined,
                 undefined,
