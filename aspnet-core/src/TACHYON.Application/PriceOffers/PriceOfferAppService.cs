@@ -594,7 +594,19 @@ namespace TACHYON.PriceOffers
                     {
                         dto.OfferId = offer.Id;
                         dto.isPriced = true;
+                        if (offer.Status== PriceOfferStatus.Accepted || offer.Status == PriceOfferStatus.AcceptedAndWaitingForShipper)
+                        {
+                            dto.BidStatusTitle = "Confirmed";
+                        }
+                        else
+                        {
+                            dto.BidStatusTitle = "PriceSubmitted";
 
+                        }
+                    }
+                    else
+                    {
+                        dto.BidStatusTitle = "News";
                     }
                     dto.StatusTitle = "";
                 }
