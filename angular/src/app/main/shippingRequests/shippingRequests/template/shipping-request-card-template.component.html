@@ -161,6 +161,14 @@
                 >
                   {{ l('More') }}
                 </a>
+                <a
+                  *ngIf="permission.isGranted('Pages.ShippingRequests.Edit') && !Channel && feature.isEnabled('App.Shipper')"
+                  [queryParams]="{ id: item.id }"
+                  [routerLink]="['/app/main/shippingRequests/shippingRequests/createOrEdit']"
+                  class="red"
+                >
+                  {{ l('Edit') }}
+                </a>
               </div>
             </div>
           </div>
