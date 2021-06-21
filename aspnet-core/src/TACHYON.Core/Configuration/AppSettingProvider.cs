@@ -105,7 +105,16 @@ namespace TACHYON.Configuration
                     GetFromAppSettings(AppSettings.UiManagement.Theme, "default"), isVisibleToClients: true,
                     scopes: SettingScopes.All),
                 new SettingDefinition(AppSettings.Sms.UnifonicAppSid,
-                    GetFromAppSettings(AppSettings.Sms.UnifonicAppSid, "9BfjQjfShbdGyuy_5i5xj_FZ1yM7f"), isVisibleToClients: true,
+                    GetFromAppSettings(AppSettings.Sms.UnifonicAppSid, "D3vqp9VLePqA4NTXhz95h8VrfHyLWx"), isVisibleToClients: true,
+                    scopes: SettingScopes.Application),
+                new SettingDefinition(AppSettings.Sms.UnifonicSenderId,
+                    GetFromAppSettings(AppSettings.Sms.UnifonicSenderId, "TACHYON"), isVisibleToClients: true,
+                    scopes: SettingScopes.Application),
+                new SettingDefinition(AppSettings.Sms.UnifonicAdvertisingSenderId,
+                    GetFromAppSettings(AppSettings.Sms.UnifonicAdvertisingSenderId, "TACHYON-AD"), isVisibleToClients: true,
+                    scopes: SettingScopes.Application),
+                new SettingDefinition(AppSettings.Sms.UnifonicNotificationSenderId,
+                    GetFromAppSettings(AppSettings.Sms.UnifonicNotificationSenderId, "TACHYON"), isVisibleToClients: true,
                     scopes: SettingScopes.Application),
             };
         }

@@ -137,6 +137,9 @@ namespace TACHYON.Configuration
         public static class Sms
         {
             public const string UnifonicAppSid = "App.Sms.UnifonicAppSid";
+            public const string UnifonicSenderId = "App.Sms.UnifonicSenderId";
+            public const string UnifonicAdvertisingSenderId = "App.Sms.UnifonicAdvertisingSenderId";
+            public const string UnifonicNotificationSenderId = "App.Sms.UnifonicNotificationSenderId";
         }
 
     }

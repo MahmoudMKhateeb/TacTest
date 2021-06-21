@@ -1,3 +1,4 @@
+using RestSharp;
 using System;
 using System.Threading.Tasks;
 
@@ -7,7 +8,8 @@ namespace TACHYON.Net.Sms
     {
         Task<bool> SendAsync(string number, string message);
 
-        Task SendReceiverSmsAsync(string number, DateTime date, string shipperName, string driverName, string driverPhone, string waybillNumber, string code, string link);
+        Task<bool> SendReceiverSmsAsync(string number, DateTime date, string shipperName, string driverName,
+            string driverPhone, string waybillNumber, string code, string link);
 
     }
 }

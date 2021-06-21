@@ -7,6 +7,7 @@ using Abp.Net.Mail;
 using Abp.Runtime.Security;
 using Abp.Timing;
 using Abp.Zero.Configuration;
+using RestSharp;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
@@ -16,11 +17,20 @@ using TACHYON.Authorization;
 using TACHYON.Configuration.Dto;
 using TACHYON.Configuration.Host.Dto;
 using TACHYON.Editions;
+using TACHYON.Net.Sms;
 using TACHYON.Security;
 using TACHYON.Timing;
 
 namespace TACHYON.Configuration.Host
 {
+    public class TestUnifonicSmsInput
+    {
+        public string Text { get; set; }
+        public string Number { get; set; }
+
+
+    }
+
     [AbpAuthorize(AppPermissions.Pages_Administration_Host_Settings)]
     public class HostSettingsAppService : SettingsAppServiceBase, IHostSettingsAppService
     {
@@ -29,19 +39,21 @@ namespace TACHYON.Configuration.Host
         private readonly EditionManager _editionManager;
         private readonly ITimeZoneService _timeZoneService;
         readonly ISettingDefinitionManager _settingDefinitionManager;
+        private readonly UnifonicSmsClient _unifonicSmsClient;
 
         public HostSettingsAppService(
             IEmailSender emailSender,
             EditionManager editionManager,
             ITimeZoneService timeZoneService,
             ISettingDefinitionManager settingDefinitionManager,
-            IAppConfigurationAccessor configurationAccessor) : base(emailSender, configurationAccessor)
+            IAppConfigurationAccessor configurationAccessor, UnifonicSmsClient unifonicSmsClient) : base(emailSender, configurationAccessor)
         {
             ExternalLoginOptionsCacheManager = NullExternalLoginOptionsCacheManager.Instance;
 
             _editionManager = editionManager;
             _timeZoneService = timeZoneService;
             _settingDefinitionManager = settingDefinitionManager;
+            _unifonicSmsClient = unifonicSmsClient;
         }
 
         #region Get Settings
@@ -220,7 +232,7 @@ namespace TACHYON.Configuration.Host
             {
                 LegalName = await SettingManager.GetSettingValueAsync(AppSettings.HostManagement.BillingLegalName),
                 Address = await SettingManager.GetSettingValueAsync(AppSettings.HostManagement.BillingAddress),
-                TaxVat= await SettingManager.GetSettingValueAsync(AppSettings.HostManagement.TaxVat)
+                TaxVat = await SettingManager.GetSettingValueAsync(AppSettings.HostManagement.TaxVat)
             };
         }
 
@@ -341,8 +353,14 @@ namespace TACHYON.Configuration.Host
         {
             var settings = new SmsSettingsEditDto
             {
-                UnifonicAppSid = 
-                    await SettingManager.GetSettingValueAsync(AppSettings.Sms.UnifonicAppSid)
+                UnifonicAppSid =
+                    await SettingManager.GetSettingValueAsync(AppSettings.Sms.UnifonicAppSid),
+                UnifonicSenderId =
+                    await SettingManager.GetSettingValueAsync(AppSettings.Sms.UnifonicSenderId),
+                UnifonicAdvertisingSenderId =
+                    await SettingManager.GetSettingValueAsync(AppSettings.Sms.UnifonicAdvertisingSenderId),
+                UnifonicNotificationSenderId =
+                    await SettingManager.GetSettingValueAsync(AppSettings.Sms.UnifonicNotificationSenderId)
             };
             return settings;
         }
@@ -380,8 +398,8 @@ namespace TACHYON.Configuration.Host
                 input.LegalName);
             await SettingManager.ChangeSettingForApplicationAsync(AppSettings.HostManagement.BillingAddress,
                 input.Address);
-            
-            await SettingManager.ChangeSettingForApplicationAsync(AppSettings.HostManagement.TaxVat,input.TaxVat);
+
+            await SettingManager.ChangeSettingForApplicationAsync(AppSettings.HostManagement.TaxVat, input.TaxVat);
 
         }
 
@@ -658,6 +676,28 @@ namespace TACHYON.Configuration.Host
                 AppSettings.Sms.UnifonicAppSid,
                 input.UnifonicAppSid
             );
+
+            await SettingManager.ChangeSettingForApplicationAsync(
+                AppSettings.Sms.UnifonicSenderId,
+                input.UnifonicSenderId
+            );
+
+            await SettingManager.ChangeSettingForApplicationAsync(
+                AppSettings.Sms.UnifonicAdvertisingSenderId,
+                input.UnifonicAdvertisingSenderId
+            );
+
+            await SettingManager.ChangeSettingForApplicationAsync(
+                AppSettings.Sms.UnifonicNotificationSenderId,
+                input.UnifonicNotificationSenderId
+            );
+
+        }
+
+        public async Task<UnifonicResponseRoot> TestUnifonicSms(TestUnifonicSmsInput testUnifonicSmsInput)
+        {
+            var result = await _unifonicSmsClient.SendSmsAsync(testUnifonicSmsInput.Number, testUnifonicSmsInput.Text);
+            return result.Data;
         }
 
         #endregion

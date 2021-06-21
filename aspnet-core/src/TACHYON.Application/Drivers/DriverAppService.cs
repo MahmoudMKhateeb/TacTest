@@ -11,6 +11,7 @@ using System.Threading.Tasks;
 using TACHYON.Authorization.Users.Profile;
 using TACHYON.Mobile;
 using TACHYON.Mobile.Dtos;
+using TACHYON.Net.Sms;
 using TACHYON.Shipping.ShippingRequestTrips;
 using TACHYON.Trucks.TrucksTypes.Dtos;
 
@@ -41,24 +42,23 @@ namespace TACHYON.Drivers
         public DriverAppService(
             IRepository<ShippingRequestTrip> shippingRequestTripRepository,
             ProfileImageServiceFactory profileImageServiceFactory,
-            UserDeviceTokenManager userDeviceTokenManager)
+            UserDeviceTokenManager userDeviceTokenManager, SmsSender smsSender)
         {
             _shippingRequestTripRepository = shippingRequestTripRepository;
             _profileImageServiceFactory = profileImageServiceFactory;
             _userDeviceTokenManager = userDeviceTokenManager;
-
         }
 
         public async Task<DriverDetailDto> GetDriverDetails()
         {
             var user = await GetCurrentUserAsync();
-            DriverDetailDto driverDetail = new DriverDetailDto() 
+            DriverDetailDto driverDetail = new DriverDetailDto()
             {
-                FullName= user.FullName,
-                PhoneNumber=user.PhoneNumber,
-                EmailAddress=user.EmailAddress,
+                FullName = user.FullName,
+                PhoneNumber = user.PhoneNumber,
+                EmailAddress = user.EmailAddress,
                 LangaugeCode = CultureInfo.CurrentCulture.Name,
-                LangaugeName= CultureInfo.CurrentCulture.DisplayName,
+                LangaugeName = CultureInfo.CurrentCulture.DisplayName,
                 LangaugeNative = CultureInfo.CurrentCulture.NativeName
             };
 
@@ -76,10 +76,10 @@ namespace TACHYON.Drivers
                 .AsTracking()
                 .Include(t => t.AssignedTruckFk)
                     .ThenInclude(t => t.TrucksTypeFk)
-                    .ThenInclude(t=>t.Translations)
+                    .ThenInclude(t => t.Translations)
                 .OrderByDescending(x => x.Id)
                 .FirstOrDefaultAsync(d => d.AssignedDriverUserId == user.Id && d.DriverStatus == Shipping.Trips.ShippingRequestTripDriverStatus.Accepted && d.AssignedTruckId != null);
-                if (trip !=null)
+            if (trip != null)
             {
                 driverDetail.PlateNumber = trip.AssignedTruckFk.PlateNumber;
                 driverDetail.TrucksType = ObjectMapper.Map<TrucksTypeDto>(trip.AssignedTruckFk.TrucksTypeFk).TranslatedDisplayName;//trip.AssignedTruckFk.TrucksTypeFk.DisplayName ;
@@ -94,6 +94,7 @@ namespace TACHYON.Drivers
             Input.UserId = AbpSession.UserId.Value;
             await _userDeviceTokenManager.CreateOrEdit(Input);
         }
+
 
     }
 }

@@ -541,6 +541,64 @@
                   [(ngModel)]="hostSettings.smsSettings.unifonicAppSid"
                 />
               </div>
+              <div class="form-group">
+                <label for="unifonicSenderId">{{ 'unifonicSenderId' | localize }}</label>
+                <input
+                  id="unifonicSenderId"
+                  type="text"
+                  name="unifonicSenderId"
+                  class="form-control"
+                  [(ngModel)]="hostSettings.smsSettings.unifonicSenderId"
+                />
+              </div>
+
+              <div class="form-group">
+                <label for="unifonicAdvertisingSenderId">{{ 'unifonicAdvertisingSenderId' | localize }}</label>
+                <input
+                  id="unifonicAdvertisingSenderId"
+                  type="text"
+                  name="unifonicAdvertisingSenderId"
+                  class="form-control"
+                  [(ngModel)]="hostSettings.smsSettings.unifonicAdvertisingSenderId"
+                />
+              </div>
+              <div class="form-group">
+                <label for="unifonicNotificationSenderId">{{ 'unifonicNotificationSenderId' | localize }}</label>
+                <input
+                  id="unifonicNotificationSenderId"
+                  type="text"
+                  name="unifonicNotificationSenderId"
+                  class="form-control"
+                  [(ngModel)]="hostSettings.smsSettings.unifonicNotificationSenderId"
+                />
+              </div>
+
+              <h5>{{ 'TestUnifonicSms' | localize }}</h5>
+
+              <div class="form-group">
+                <label for="testUnifonicSmsInput.number">{{ 'mobile' | localize }}</label>
+                <input
+                  id="testUnifonicSmsInput.number"
+                  type="text"
+                  name="testUnifonicSmsInput.number"
+                  class="form-control"
+                  [(ngModel)]="testUnifonicSmsInput.number"
+                />
+              </div>
+              <div class="form-group">
+                <label for="testUnifonicSmsInput.text">{{ 'text' | localize }}</label>
+                <input
+                  id="testUnifonicSmsInput.text"
+                  type="text"
+                  name="testUnifonicSmsInput.text"
+                  class="form-control"
+                  value="Test Unifonic Sms text"
+                  [(ngModel)]="testUnifonicSmsInput.text"
+                />
+              </div>
+              <div class="form-group col-md-2">
+                <button class="btn btn-primary" type="button" (click)="TestUnifonicSms()">{{ 'SendTestUnifonicSmsInput' | localize }}</button>
+              </div>
             </tab>
             <tab class="p-5" *ngIf="true" heading="{{ 'Invoice' | localize }}">
               <!-- *ngIf="true" is a workaround for https://github.com/valor-software/ng2-bootstrap/issues/823 -->

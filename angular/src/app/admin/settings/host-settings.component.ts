@@ -9,6 +9,7 @@ import {
   HostSettingsServiceProxy,
   SendTestEmailInput,
   JsonClaimMapDto,
+  TestUnifonicSmsInput,
 } from '@shared/service-proxies/service-proxies';
 import { KeyValueListManagerComponent } from '@app/shared/common/key-value-list-manager/key-value-list-manager.component';
 
@@ -34,6 +35,8 @@ export class HostSettingsComponent extends AppComponentBase implements OnInit {
 
   wsFederationClaimMappings: { key: string; value: string }[];
   openIdConnectClaimMappings: { key: string; value: string }[];
+
+  testUnifonicSmsInput: TestUnifonicSmsInput = new TestUnifonicSmsInput();
 
   constructor(injector: Injector, private _hostSettingService: HostSettingsServiceProxy, private _commonLookupService: CommonLookupServiceProxy) {
     super(injector);
@@ -142,6 +145,13 @@ export class HostSettingsComponent extends AppComponentBase implements OnInit {
     const self = this;
     this._hostSettingService.getEnabledSocialLoginSettings().subscribe((setting) => {
       self.enabledSocialLoginSettings = setting.enabledSocialLoginSettings;
+    });
+  }
+
+  TestUnifonicSms(): void {
+    this._hostSettingService.testUnifonicSms(this.testUnifonicSmsInput).subscribe((result) => {
+      this.notify.info(this.l('TestUnifonicSmsSentSuccessfully'));
+      console.log('Test Unifonic Sms Result', result);
     });
   }
 }
