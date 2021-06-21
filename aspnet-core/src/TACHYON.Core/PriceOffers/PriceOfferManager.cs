@@ -384,6 +384,17 @@ namespace TACHYON.PriceOffers
         {
             return _priceOfferRepository.GetAll().Any(x => x.ShippingRequestId == requestId && x.TenantId == _abpSession.TenantId.Value);
         }
+
+        /// <summary>
+        /// Get the total offers add by TMS when shipper view the shipping list
+        /// </summary>
+        /// <param name="requestId"></param>
+        /// <returns></returns>
+        public int GetTotalOffersByTMS(long requestId)
+        {
+            return _priceOfferRepository.GetAll().Where(x => x.ShippingRequestId == requestId && x.Tenant.EditionId== AppConsts.TachyonEditionId ).Count();
+        }
+
         /// <summary>
         /// Check If the shipping request in market place to access to add offer
         /// </summary>

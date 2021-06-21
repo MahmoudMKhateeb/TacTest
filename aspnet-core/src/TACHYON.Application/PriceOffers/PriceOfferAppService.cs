@@ -345,21 +345,25 @@ namespace TACHYON.PriceOffers
                             .Include(t => t.TrucksTypeFk)
                              .ThenInclude(x => x.Translations)
                             .WhereIf(AbpSession.TenantId.HasValue && await IsEnabledAsync(AppFeatures.Shipper), x => x.TenantId == AbpSession.TenantId && !x.IsTachyonDeal)
-                            .FirstOrDefaultAsync(r => r.Id == input.Id && (r.Status == ShippingRequestStatus.NeedsAction || r.Status == ShippingRequestStatus.PrePrice || r.Status == ShippingRequestStatus.AcceptedAndWaitingCarrier));
+                            .FirstOrDefaultAsync(r => r.Id == input.Id/* && (r.Status == ShippingRequestStatus.NeedsAction || r.Status == ShippingRequestStatus.PrePrice || r.Status == ShippingRequestStatus.AcceptedAndWaitingCarrier)*/);
 
             if (shippingRequest == null) throw new UserFriendlyException(L("TheRecordIsNotFound"));
 
             if (AbpSession.TenantId.HasValue && await IsEnabledAsync(AppFeatures.Carrier))// Applay permission for carrier if can see the shipping request details
             {
-                if (shippingRequest.IsBid && input.Channel == PriceOfferChannel.MarketPlace)
+                if (!_priceOfferManager.CheckCarrierIsPricing(input.Id))
                 {
-                    if (shippingRequest.BidStatus != ShippingRequestBidStatus.OnGoing) throw new UserFriendlyException(L("The Bid must be Ongoing"));
+                    if (shippingRequest.IsBid && input.Channel == PriceOfferChannel.MarketPlace)
+                    {
+                        if (shippingRequest.BidStatus != ShippingRequestBidStatus.OnGoing) throw new UserFriendlyException(L("The Bid must be Ongoing"));
+                    }
+                    else
+                    {
+                        var _directRequest = await _shippingRequestDirectRequestRepository.FirstOrDefaultAsync(x => x.CarrierTenantId == AbpSession.TenantId.Value && x.ShippingRequestId == input.Id && x.Status != ShippingRequestDirectRequestStatus.Declined);
+                        if (_directRequest == null) throw new UserFriendlyException(L("YouDoNotHaveDirectRequest"));
+                    }
                 }
-                else
-                {
-                    var _directRequest = await _shippingRequestDirectRequestRepository.FirstOrDefaultAsync(x => x.CarrierTenantId == AbpSession.TenantId.Value && x.ShippingRequestId == input.Id && x.Status != ShippingRequestDirectRequestStatus.Declined);
-                    if (_directRequest == null) throw new UserFriendlyException(L("YouDoNotHaveDirectRequest"));
-                }
+
 
             }
 
@@ -391,7 +395,7 @@ namespace TACHYON.PriceOffers
                 var Tenantvases = _vasPriceRepository
                     .GetAll()
                     .Include(v => v.VasFk)
-                    .Where(x => x.TenantId == AbpSession.TenantId.Value && !vasIds.Contains(x.VasId)).ToList();
+                    .Where(x => x.TenantId == AbpSession.TenantId.Value && vasIds.Contains(x.VasId)).ToList();
 
                 foreach (var vas in shippingRequest.ShippingRequestVases)
                 {
@@ -590,7 +594,19 @@ namespace TACHYON.PriceOffers
                     {
                         dto.OfferId = offer.Id;
                         dto.isPriced = true;
+                        if (offer.Status== PriceOfferStatus.Accepted || offer.Status == PriceOfferStatus.AcceptedAndWaitingForShipper)
+                        {
+                            dto.BidStatusTitle = "Confirmed";
+                        }
+                        else
+                        {
+                            dto.BidStatusTitle = "PriceSubmitted";
 
+                        }
+                    }
+                    else
+                    {
+                        dto.BidStatusTitle = "News";
                     }
                     dto.StatusTitle = "";
                 }
@@ -648,8 +664,15 @@ namespace TACHYON.PriceOffers
 
                     dto.Price = request.CarrierPrice;
                 }
+                else if (AbpSession.TenantId.HasValue && (IsEnabled(AppFeatures.Shipper)))
+                {
+                    if (request.IsTachyonDeal)
+                    {
+                     dto.TotalOffers=   _priceOfferManager.GetTotalOffersByTMS(request.Id);               
+                    }
+                }
 
-                ShippingRequestForPriceOfferList.Add(dto);
+                    ShippingRequestForPriceOfferList.Add(dto);
 
             }
 
@@ -699,6 +722,7 @@ namespace TACHYON.PriceOffers
             {
                 var dto = ObjectMapper.Map<GetShippingRequestForPriceOfferListDto>(request.ShippingRequestFK);
                 dto.DirectRequestStatusTitle = request.Status.GetEnumDescription();
+                dto.OfferStatus = request.Status;
 
                 if (!AbpSession.TenantId.HasValue || IsEnabled(AppFeatures.TachyonDealer) || IsEnabled(AppFeatures.Shipper))
                 {
@@ -719,6 +743,7 @@ namespace TACHYON.PriceOffers
                     dto.DirectRequestStatusTitle = PriceOfferStatus.Accepted.GetEnumDescription();
 
                 }
+             
                 dto.isPriced = true;
                 dto.OfferId = request.Id;
                 dto.DirectRequestId = request.Id;
