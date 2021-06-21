@@ -395,7 +395,7 @@ namespace TACHYON.PriceOffers
                 var Tenantvases = _vasPriceRepository
                     .GetAll()
                     .Include(v => v.VasFk)
-                    .Where(x => x.TenantId == AbpSession.TenantId.Value && !vasIds.Contains(x.VasId)).ToList();
+                    .Where(x => x.TenantId == AbpSession.TenantId.Value && vasIds.Contains(x.VasId)).ToList();
 
                 foreach (var vas in shippingRequest.ShippingRequestVases)
                 {
