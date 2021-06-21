@@ -45,20 +45,14 @@
                           >
                             {{ l('Actions') }}
                           </th>
-                          <th pSortableColumn="pickingType">
-                            {{ l('pickingType') }}
-                            <p-sortIcon field="pickingType"></p-sortIcon>
-                          </th>
-                          <th>
-                            {{ l('Address') }}
-                          </th>
+
                           <th pSortableColumn="ReasonId">
                             {{ l('Reason') }}
                             <p-sortIcon field="ReasonId"></p-sortIcon>
                           </th>
-                          <th pSortableColumn="IsResolve">
-                            {{ l('ResolveStatus') }}
-                            <p-sortIcon field="IsResolve"></p-sortIcon>
+                          <th pSortableColumn="CreationTime">
+                            {{ l('CreationTime') }}
+                            <p-sortIcon field="CreationTime"></p-sortIcon>
                           </th>
                         </tr>
                       </ng-template>
@@ -98,14 +92,6 @@
                           </td>
 
                           <td>
-                            <span class="ui-column-title"> {{ l('pickingType') }}</span>
-                            {{ record.pickingType }}
-                          </td>
-                          <td>
-                            <span class="ui-column-title"> {{ l('Address') }}</span>
-                            {{ record.address }}
-                          </td>
-                          <td>
                             <span class="ui-column-title"> {{ l('Reason') }}</span>
                             {{ record.reason }}
                             <a *ngIf="record.documentName" (click)="downloadDocument(record.id)">
@@ -113,15 +99,8 @@
                             </a>
                           </td>
                           <td>
-                            <span class="ui-column-title"> {{ l('ResolveStatus') }}</span>
-                            <span
-                              [class]="
-                                record.isResolve
-                                  ? 'label label-xl label-inline font-weight-bold label-light-success'
-                                  : 'label label-xl label-inline font-weight-bold label-light-danger'
-                              "
-                              >{{ record.isResolve ? l('IsResolve') : l('NotResolve') }}</span
-                            >
+                            <span class="ui-column-title"> {{ l('CreationTime') }}</span>
+                            <span>{{ record.creationTime | momentFormat: 'L' }}</span>
                           </td>
                         </tr>
                       </ng-template>
