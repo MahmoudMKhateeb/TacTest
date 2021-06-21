@@ -652,8 +652,15 @@ namespace TACHYON.PriceOffers
 
                     dto.Price = request.CarrierPrice;
                 }
+                else if (AbpSession.TenantId.HasValue && (IsEnabled(AppFeatures.Shipper)))
+                {
+                    if (request.IsTachyonDeal)
+                    {
+                     dto.TotalOffers=   _priceOfferManager.GetTotalOffersByTMS(request.Id);               
+                    }
+                }
 
-                ShippingRequestForPriceOfferList.Add(dto);
+                    ShippingRequestForPriceOfferList.Add(dto);
 
             }
 
