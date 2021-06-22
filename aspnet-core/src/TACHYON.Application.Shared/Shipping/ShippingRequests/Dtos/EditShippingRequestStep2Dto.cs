@@ -16,7 +16,7 @@ namespace TACHYON.Shipping.ShippingRequests.Dtos
         public int OriginCityId { get; set; }
         [Required]
         public int DestinationCityId { get; set; }
-        [Required]
+        [Range(1, 20)]
         public int NumberOfDrops { get; set; }
         [Required]
         public int NumberOfTrips { get; set; }
