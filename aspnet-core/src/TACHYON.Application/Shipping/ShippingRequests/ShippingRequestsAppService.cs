@@ -455,7 +455,11 @@ namespace TACHYON.Shipping.ShippingRequests
         [RequiresFeature(AppFeatures.ShippingRequest)]
         public async Task Delete(EntityDto<long> input)
         {
-            await _shippingRequestRepository.DeleteAsync(input.Id);
+            using (CurrentUnitOfWork.DisableFilter("IHasIsDrafted"))
+            {
+                var shippingRequest=await _shippingRequestRepository.GetAll().Where(x => x.IsDrafted == true).FirstOrDefaultAsync();
+                await _shippingRequestRepository.DeleteAsync(shippingRequest);
+            }
         }
 
         public async Task<List<CarriersForDropDownDto>> GetAllCarriersForDropDownAsync()
