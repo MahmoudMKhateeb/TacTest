@@ -102,6 +102,7 @@ export class AppNavigationService {
       ),
       //end of operations
       //start of requests
+      //start shipper menu
       new AppMenuItem(
         'Requests',
         'Pages.ShippingRequests',
@@ -161,8 +162,72 @@ export class AppNavigationService {
         ],
         undefined,
         undefined,
-        () => this._featureCheckerService.isEnabled('App.Carrier') || this._featureCheckerService.isEnabled('App.Shipper')
+        () => this._featureCheckerService.isEnabled('App.Shipper')
       ),
+      // end shipper menu
+      //start carrier menu
+      new AppMenuItem(
+        'CarrierShippingRequests',
+        'Pages.ShippingRequests',
+        'flaticon-interface-8',
+        '/app/main/comingSoon',
+        [],
+
+        //TODO: the CreateNewRequest subMenu Need Permission and Route
+        [
+          new AppMenuItem(
+            'CreateNewRequest',
+            'Pages.ShippingRequests',
+            'flaticon2-add',
+            '/app/main/shippingRequests/shippingRequests/createOrEdit',
+            undefined,
+            undefined,
+            undefined,
+            undefined,
+            () => this._featureCheckerService.isEnabled('App.Shipper')
+          ),
+          new AppMenuItem('ShippingRequests', 'Pages.ShippingRequests', 'flaticon2-cube', '/app/main/shippingRequests/shippingRequests'),
+          new AppMenuItem(
+            'Marketplace',
+            '',
+            'flaticon2-shopping-cart-1',
+            '/app/main/marketplace/list',
+            undefined,
+            undefined,
+            undefined,
+            undefined,
+            () => this._featureCheckerService.isEnabled('App.Carrier') || this._featureCheckerService.isEnabled('App.Shipper')
+          ),
+          new AppMenuItem(
+            'Offers',
+            '',
+            'flaticon-more',
+            '/app/main/offers',
+            undefined,
+            undefined,
+            undefined,
+            undefined,
+            () => this._featureCheckerService.isEnabled('App.Carrier') || this._featureCheckerService.isEnabled('App.Shipper')
+          ),
+          new AppMenuItem(
+            'DirectShippingRequests',
+            '',
+            'flaticon2-rocket-1',
+            '/app/main/directrequest/list',
+            undefined,
+            undefined,
+            undefined,
+            undefined,
+            () => this._featureCheckerService.isEnabled('App.Carrier') || this._featureCheckerService.isEnabled('App.SendDirectRequest')
+          ),
+          // TODO this Hole Component need To be removed Later
+          // new AppMenuItem('waybills', undefined, 'flaticon-more', '/app/admin/waybills/waybills'),
+        ],
+        undefined,
+        undefined,
+        () => this._featureCheckerService.isEnabled('App.Carrier')
+      ),
+      // end carrier menu
 
       //end of requests
       //start of shipment tracking
