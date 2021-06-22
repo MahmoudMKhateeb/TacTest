@@ -259,7 +259,7 @@ export class CreateOrEditShippingRequestWizardComponent extends AppComponentBase
   }
 
   createOrEditStep1() {
-    this.saving = true;
+    // this.saving = true;
     this.step1Dto.id = this.activeShippingRequestId || undefined;
     this.shippingRequestType == 'bidding' ? (this.step1Dto.isBid = true) : (this.step1Dto.isBid = false);
     this.shippingRequestType == 'tachyondeal' ? (this.step1Dto.isTachyonDeal = true) : (this.step1Dto.isTachyonDeal = false);
@@ -271,7 +271,7 @@ export class CreateOrEditShippingRequestWizardComponent extends AppComponentBase
       .createOrEditStep1(this.step1Dto)
       .pipe(
         finalize(() => {
-          this.saving = false;
+          // this.saving = false;
         })
       )
       .subscribe((res) => {
@@ -279,7 +279,6 @@ export class CreateOrEditShippingRequestWizardComponent extends AppComponentBase
         this.activeShippingRequestId = res;
         this.notify.info(this.l('SavedSuccessfully'));
         this.updateRoutingQueries(res, 1);
-
         // this._router.navigate(['/app/main/shippingRequests/shippingRequests']);
       });
   }
@@ -551,13 +550,40 @@ export class CreateOrEditShippingRequestWizardComponent extends AppComponentBase
     });
   }
 
+  /**
+   * Updates Router Query Parameters
+   * @param shippingRequestId
+   * @param Step
+   */
   updateRoutingQueries(shippingRequestId, Step?) {
     this._router.navigate([], {
       queryParams: {
         id: shippingRequestId,
-        step: Step || 1,
+        completedSteps: Step || 1,
       },
     });
     this.activeStep = Step;
+  }
+
+  /**
+   * Resets Shipping Request Wizard
+   */
+  resetWizard() {
+    this.message.confirm('', this.l('AreYouSure'), (isConfirmed) => {
+      if (isConfirmed) {
+        this.saving = true;
+        this._shippingRequestsServiceProxy
+          .delete(this.activeShippingRequestId)
+          .pipe(
+            finalize(() => {
+              this.saving = false;
+            })
+          )
+          .subscribe((res) => {
+            this.notify.success(this.l('Success'));
+            this._router.navigate(['/app/main/shippingRequests/shippingRequests']);
+          });
+      }
+    });
   }
 }

@@ -19,12 +19,16 @@
         <div class="card-header">
           <div class="card-title">
             <h3 class="card-label">
-              <ng-container *ngIf="true"> {{ false ? 'Edit' : 'New' }} Shipping Request </ng-container>
+              <ng-container>{{ l('ShippingRequest') }} </ng-container>
             </h3>
           </div>
           <div class="card-toolbar">
-            <a type="button" class="btn btn-light" routerLink="/ecommerce/products"> <i class="fa fa-arrow-left"></i>Back </a>
-            <button class="btn btn-secondary ml-2" (click)="(true)"><i class="fa fa-redo"></i>Reset</button>
+            <a type="button" class="btn btn-light" routerLink="/app/main/shippingRequests/shippingRequests">
+              <i class="fa fa-arrow-left"></i> {{ l('Back') }}</a
+            >
+            <button class="btn btn-secondary ml-2" (click)="resetWizard()" [disabled]="!activeShippingRequestId">
+              <i class="fa fa-redo"></i>{{ l('Reset') }}
+            </button>
           </div>
         </div>
         <div class="card-body">
@@ -1051,64 +1055,64 @@
                     <h4 class="mb-10 font-weight-bold text-dark">
                       {{ l('ReviewYourDetailsAndSubmit') }}
                     </h4>
-                    <div *ngIf="activeShippingRequestId && this.activeStep && shippingRequestRev.bidStartDate">
-                      <div class="border-bottom mb-5 pb-5">
-                        <div class="font-weight-bolder mb-3">{{ l('BasicDetails') }}:</div>
-                        <div class="line-height-xl">
-                          {{ l('ShippingRequestType') }} :
-                          {{ shippingRequestRev.isBid ? l('Marketplace') : l('TachyonManageService') }}
-                          <br />
-                          {{ l('BiddingRange') }} : {{ shippingRequestRev.bidStartDate | momentFormat: 'L' }} -
-                          {{ shippingRequestRev.bidEndDate | momentFormat: 'L' }}
-                          <br />
-                          {{ l('ShippingTypes') }} : {{ shippingRequestRev.shippingTypeId }}
-                          <br />
-                          {{ l('TripsDateRange') }} : {{ shippingRequestRev.startTripDate | momentFormat: 'L' }} -
-                          {{ shippingRequestRev.endTripDate | momentFormat: 'L' }}
-                        </div>
-                      </div>
-                      <div class="border-bottom mb-5 pb-5">
-                        <div class="font-weight-bolder mb-3">{{ l('RouteDetails') }}:</div>
-                        <div class="line-height-xl">
-                          {{ l('OriginCity') }} : {{ shippingRequestReview.originalCityName }}
-                          <br />
-                          {{ l('DestinationCity') }} : {{ shippingRequestReview.destinationCityName }}
-                          <br />
-                          {{ l('RouteType') }} : {{ shippingRequestReview.routTypeName }}
-                          <br />
-                          {{ l('NumberOfDrops') }} : {{ shippingRequestReview.shippingRequest.numberOfDrops }}
-                          <br />
-                          {{ l('NumberOfTrips') }} : {{ shippingRequestReview.shippingRequest.numberOfTrips }}
-                        </div>
-                      </div>
-                      <div class="border-bottom mb-5 pb-5">
-                        <div class="font-weight-bolder mb-3">{{ l('GoodDetails') }}:</div>
-                        <div class="line-height-xl">
-                          {{ l('MainGoodCategory') }} : {{ shippingRequestReview.goodsCategoryName }}
-                          <br />
-                          {{ l('TotalWeight') }} : {{ shippingRequestReview.shippingRequest.totalWeight }}
-                          <br />
-                          {{ l('PackingType') }} : {{ shippingRequestReview.packingTypeDisplayName }}
-                          <br />
-                          {{ l('NumberOfPacking') }} : {{ shippingRequestReview.shippingRequest.numberOfPacking }}
-                          <br />
-                          {{ l('TransportType') }} : {{ shippingRequestReview.transportTypeDisplayName }}
-                          <br />
-                          {{ l('TruckType') }} : {{ shippingRequestReview.truckTypeDisplayName }}
-                          <br />
-                          {{ l('Capacity') }} : {{ shippingRequestReview.capacityDisplayName }}
-                        </div>
-                      </div>
-                      <!--                      <div class="mb-5">-->
-                      <!--                        <div class="font-weight-bolder mb-3">{{ l('ValueAddedServices') }}:</div>-->
-                      <!--                        <div class="line-height-xl">-->
-                      <!--                          Address Line 1-->
-                      <!--                          <br />-->
-                      <!--                          Address Line 2 <br />-->
-                      <!--                          Preston 3072, VIC, Australia-->
-                      <!--                        </div>-->
-                      <!--                      </div>-->
-                    </div>
+                    <!--                    <div *ngIf="activeShippingRequestId && this.activeStep && shippingRequestRev.bidStartDate">-->
+                    <!--                      <div class="border-bottom mb-5 pb-5">-->
+                    <!--                        <div class="font-weight-bolder mb-3">{{ l('BasicDetails') }}:</div>-->
+                    <!--                        <div class="line-height-xl">-->
+                    <!--                          {{ l('ShippingRequestType') }} :-->
+                    <!--                          {{ shippingRequestRev.isBid ? l('Marketplace') : l('TachyonManageService') }}-->
+                    <!--                          <br />-->
+                    <!--                          {{ l('BiddingRange') }} : {{ shippingRequestRev.bidStartDate | momentFormat: 'L' }} - -->
+                    <!--                          {{ shippingRequestRev.bidEndDate | momentFormat: 'L' }}-->
+                    <!--                          <br />-->
+                    <!--                          {{ l('ShippingTypes') }} : {{ shippingRequestRev.shippingTypeId }}-->
+                    <!--                          <br />-->
+                    <!--                          {{ l('TripsDateRange') }} : {{ shippingRequestRev.startTripDate | momentFormat: 'L' }} - -->
+                    <!--                          {{ shippingRequestRev.endTripDate | momentFormat: 'L' }}-->
+                    <!--                        </div>-->
+                    <!--                      </div>-->
+                    <!--                      <div class="border-bottom mb-5 pb-5">-->
+                    <!--                        <div class="font-weight-bolder mb-3">{{ l('RouteDetails') }}:</div>-->
+                    <!--                        <div class="line-height-xl">-->
+                    <!--                          {{ l('OriginCity') }} : {{ shippingRequestReview.originalCityName }}-->
+                    <!--                          <br />-->
+                    <!--                          {{ l('DestinationCity') }} : {{ shippingRequestReview.destinationCityName }}-->
+                    <!--                          <br />-->
+                    <!--                          {{ l('RouteType') }} : {{ shippingRequestReview.routTypeName }}-->
+                    <!--                          <br />-->
+                    <!--                          {{ l('NumberOfDrops') }} : {{ shippingRequestReview.shippingRequest.numberOfDrops }}-->
+                    <!--                          <br />-->
+                    <!--                          {{ l('NumberOfTrips') }} : {{ shippingRequestReview.shippingRequest.numberOfTrips }}-->
+                    <!--                        </div>-->
+                    <!--                      </div>-->
+                    <!--                      <div class="border-bottom mb-5 pb-5">-->
+                    <!--                        <div class="font-weight-bolder mb-3">{{ l('GoodDetails') }}:</div>-->
+                    <!--                        <div class="line-height-xl">-->
+                    <!--                          {{ l('MainGoodCategory') }} : {{ shippingRequestReview.goodsCategoryName }}-->
+                    <!--                          <br />-->
+                    <!--                          {{ l('TotalWeight') }} : {{ shippingRequestReview.shippingRequest.totalWeight }}-->
+                    <!--                          <br />-->
+                    <!--                          {{ l('PackingType') }} : {{ shippingRequestReview.packingTypeDisplayName }}-->
+                    <!--                          <br />-->
+                    <!--                          {{ l('NumberOfPacking') }} : {{ shippingRequestReview.shippingRequest.numberOfPacking }}-->
+                    <!--                          <br />-->
+                    <!--                          {{ l('TransportType') }} : {{ shippingRequestReview.transportTypeDisplayName }}-->
+                    <!--                          <br />-->
+                    <!--                          {{ l('TruckType') }} : {{ shippingRequestReview.truckTypeDisplayName }}-->
+                    <!--                          <br />-->
+                    <!--                          {{ l('Capacity') }} : {{ shippingRequestReview.capacityDisplayName }}-->
+                    <!--                        </div>-->
+                    <!--                      </div>-->
+                    <!--                      &lt;!&ndash;                      <div class="mb-5">&ndash;&gt;-->
+                    <!--                      &lt;!&ndash;                        <div class="font-weight-bolder mb-3">{{ l('ValueAddedServices') }}:</div>&ndash;&gt;-->
+                    <!--                      &lt;!&ndash;                        <div class="line-height-xl">&ndash;&gt;-->
+                    <!--                      &lt;!&ndash;                          Address Line 1&ndash;&gt;-->
+                    <!--                      &lt;!&ndash;                          <br />&ndash;&gt;-->
+                    <!--                      &lt;!&ndash;                          Address Line 2 <br />&ndash;&gt;-->
+                    <!--                      &lt;!&ndash;                          Preston 3072, VIC, Australia&ndash;&gt;-->
+                    <!--                      &lt;!&ndash;                        </div>&ndash;&gt;-->
+                    <!--                      &lt;!&ndash;                      </div>&ndash;&gt;-->
+                    <!--                    </div>-->
                   </div>
                   <!--end: Form Wizard Step 5-->
 
