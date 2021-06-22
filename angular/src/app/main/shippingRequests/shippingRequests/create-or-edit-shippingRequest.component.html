@@ -205,6 +205,7 @@
                             [(ngModel)]="shippingRequest.shippingTypeId"
                             [class.is-invalid]="shippingType.touched && !shippingType.valid"
                             [class.is-valid]="shippingType.touched && shippingType.valid"
+                            (change)="shippingRequest.destinationCityId = undefined"
                             [disabled]="!allShippingTypes"
                           >
                             <option [ngValue]="null">{{ l('SelectAshippingType') }}</option>
@@ -388,20 +389,19 @@
                               required
                               [class.is-invalid]="Destination.touched && !Destination.valid"
                               [class.is-valid]="Destination.touched && Destination.valid"
-                              [disabled]="!allCitys"
+                              [disabled]="!shippingRequest.shippingTypeId"
                               [(ngModel)]="shippingRequest.destinationCityId"
-                              (change)="validateDuplicatedCites($event)"
                             >
                               <option value="">{{ l('selectaDestination') }}</option>
-                              <option *ngFor="let item of allCitys" value="{{ item.id }}">{{ item.displayName }} </option>
+                              <option
+                                *ngFor="let item of allCitys"
+                                value="{{ item.id }}"
+                                [disabled]="shippingRequest.shippingTypeId == 1 && item.id == shippingRequest.originCityId"
+                                >{{ item.displayName }}
+                              </option>
                             </select>
                           </div>
                           <span class="form-text text-muted">{{ l('SelectaCity') }}</span>
-                          <span
-                            *ngIf="shippingRequest.originCityId != null && Destination.touched && shippingRequest.destinationCityId == null"
-                            class="form-text text-muted text-red"
-                            >{{ l('PleaseSelectDifferentDestination') }}</span
-                          >
                         </div>
                       </div>
 
