@@ -21,6 +21,7 @@
     <text name="AccidentReason">Incident reasons</text>
     <text name="AccidentReasonHeaderInfo">Accident ReasonHeader Info</text>
     <text name="AccidentsReason">Accidents reason</text>
+    <text name="Account">Account</text>
     <text name="AccountInvoiceType">Account type</text>
     <text name="AccountNumber">Account number</text>
     <text name="AccountPayable">Account payable</text>
@@ -104,6 +105,7 @@
     <text name="ApproximateTripDuration">Approximate trip duration</text>
     <text name="AppSecret">App Secret</text>
     <text name="AppVersion">Type</text>
+    <text name="Arabic">Arabic</text>
     <text name="AreYouSure">Are you sure ?</text>
     <text name="AreYouSure?">Are you sure?</text>
     <text name="AShipmentWasAssignedForYouToReceiveOn">A shipment was assigned for you to receive on</text>
@@ -112,6 +114,7 @@
     <text name="AssignCarrier">Assign carrier</text>
     <text name="AssignDriverToTruckNotificationMessage">Assign driver to truck 
  notification message</text>
+    <text name="AssignedTruck">Truck details </text>
     <text name="AssignToAnotherEdition">Assign to another edition</text>
     <text name="AtLeastOneOfThesePermissionsMustBeGranted">Required permissions are not granted. At least one of these permissions must be granted: {0}</text>
     <text name="Attach">Attach</text>
@@ -237,6 +240,7 @@
     <text name="CitiesTranslationsHeaderInfo">Cities Translations header info</text>
     <text name="City">City</text>
     <text name="CityDisplayName">City</text>
+    <text name="CityOrigin">Origin</text>
     <text name="Claim">Claim</text>
     <text name="ClaimKey">Claim Key</text>
     <text name="ClaimsMapping">Claims Mapping</text>
@@ -280,6 +284,7 @@
     <text name="CookieConsent">Cookie consent</text>
     <text name="CookieConsent_Dismiss">Got it!</text>
     <text name="CookieConsent_Message">This website uses cookies to ensure you get the best experience on our website.</text>
+    <text name="CorrectlyTypingYourNameMakesTheProcessEasyForSystemUsers">सही ढंग से अपना नाम टाइप करने से सिस्टम उपयोगकर्ताओं के लिए प्रक्रिया आसान हो जाती है</text>
     <text name="CostOfProration">Price difference during the period</text>
     <text name="CouldNotCompleteLoginOperation">The login process could not be completed ?</text>
     <text name="CouldNotValidateExternalUser">Could not validate external user login</text>
@@ -369,6 +374,7 @@
     <text name="CreatingWebhooks">Creating new webhook</text>
     <text name="CreationDate">Creation date</text>
     <text name="CreationTime">Creation date</text>
+    <text name="Current">Current</text>
     <text name="CurrentLanguage">Current language</text>
     <text name="CurrentPassword">Current password</text>
     <text name="CurrentTenant">Current tenant</text>
@@ -500,6 +506,7 @@
     <text name="DestFacility">Drop off facility</text>
     <text name="Destination">Destination</text>
     <text name="DestinationCity">To</text>
+    <text name="DestinationDelivery">Destination</text>
     <text name="DestinationFacility">Drop off facility</text>
     <text name="Detail">Details</text>
     <text name="DetailingSubscription">See webhook detail page</text>
@@ -512,7 +519,7 @@
     <text name="Disable">Disable</text>
     <text name="Disabled">Disabled</text>
     <text name="DisableRecurringPayments">Don't bill my account automatically</text>
-    <text name="DisplayName">Display Name</text>
+    <text name="DisplayName">Name</text>
     <text name="DisplayNameCannotBeEmpty">Cannot insert Empty Display Name</text>
     <text name="DisplayOrder">DisplayOrder</text>
     <text name="Docapplocalizationsuments">Docapplocalizationsuments</text>
@@ -546,6 +553,7 @@
     <text name="DownloadCollectedData">Download collected data</text>
     <text name="DownloadCollectedData_Description">Download data belongs to your account</text>
     <text name="DownloadDropWaybill">Download waybill</text>
+    <text name="DownloadInvoice">Download invoice</text>
     <text name="DriectRequestCarrierRespone">
       <a href="/app/main/shippingRequests/shippingRequests/view?id={id}">The {clientname} has established a current view of the  shipment No.: {id}.</a>
     </text>
@@ -566,8 +574,8 @@
     <text name="DrivingLicense">Driving License</text>
     <text name="Drop">Drop</text>
     <text name="DropOff">Drop off</text>
-    <text name="DropoffDetailCommodity">Commodity</text>
-    <text name="DropoffDetailDropoff">Dropoff </text>
+    <text name="DropoffDetailCommodity">Goods</text>
+    <text name="DropoffDetailDropoff">Drop Off </text>
     <text name="DropoffDetailID">id</text>
     <text name="DropoffDetailMobile">phone No.</text>
     <text name="DropoffDetailPackagingType">Packaging Type </text>
@@ -661,6 +669,7 @@
     <text name="EditVas">Edit VAS</text>
     <text name="EditVasPrice">Edit VAS price</text>
     <text name="EditWebhookSubscription">Edit Webhook Subscription</text>
+    <text name="EditYourName">Edit your name </text>
     <text name="Email">Email</text>
     <text name="EmailActivation">Email activation</text>
     <text name="EmailActivation_ClickTheLinkBelowToVerifyYourEmail">Please click the link below to verify your email address:</text>
@@ -685,6 +694,7 @@
     <text name="EndDate">End date</text>
     <text name="EndTime">End time</text>
     <text name="EndTripDate">Delivery date</text>
+    <text name="English">English</text>
     <text name="EnglishLettersOnly">English letters only</text>
     <text name="Enter">Enter</text>
     <text name="EnterCapacity">Enter capacity</text>
@@ -770,7 +780,7 @@
     <text name="Gateway">Gateway</text>
     <text name="GdprDataPreparedNotificationMessage">Your data is prepared, click here to download.</text>
     <text name="GdprDataPrepareStartedNotification">We are preparing your data. You will be notified when your data is ready.</text>
-    <text name="General">General</text>
+    <text name="General">Settings</text>
     <text name="GeneralDetails">General details</text>
     <text name="GeneralSettings">General settings</text>
     <text name="Generate">Generate</text>
@@ -819,6 +829,7 @@
     <text name="Hide">Hide</text>
     <text name="HideAdvancedFilters">Hide advanced filters</text>
     <text name="Hijri">Hijri</text>
+    <text name="Hindi">Hindi</text>
     <text name="History">History</text>
     <text name="HomePage">Home Page</text>
     <text name="HostDashboardHeaderInfo">General statistics and recent activities</text>
@@ -917,6 +928,7 @@
     <text name="Item">Item</text>
     <text name="Jk">hujk</text>
     <text name="Key">Key</text>
+    <text name="Kg">kg</text>
     <text name="Language">Language</text>
     <text name="LanguageDeleteWarningMessage">Are you sure to delete the language {0}?</text>
     <text name="Languages">Languages</text>
@@ -1013,7 +1025,16 @@
     <text name="MinDigits">Min Digits</text>
     <text name="MinMax">Min max</text>
     <text name="MinValue">Min</text>
+    <text name="MobileAbout">About</text>
+    <text name="MobileLanguage">Language</text>
+    <text name="MobilelogOut">log out</text>
     <text name="MobileNo">Mobile number</text>
+    <text name="MobileNumber">Mobile Number</text>
+    <text name="MobileTermsAndConditions">Terms and Conditions</text>
+    <text name="MobileUpdate">Update</text>
+    <text name="MobileUsagePolicy">Usage Policy</text>
+    <text name="MobileUserEmail">E-mail</text>
+    <text name="MobileUserProfile">Profile</text>
     <text name="ModalName">Model name</text>
     <text name="ModalYear">Model year</text>
     <text name="Model">Model</text>
@@ -1034,6 +1055,7 @@
     <text name="MyLoadComming">Comming</text>
     <text name="MyLoadCurrent">Current</text>
     <text name="MyLoadPast">Past</text>
+    <text name="MyLoads">My loads</text>
     <text name="MySettings">My settings</text>
     <text name="MySettings_Description">Change your account settings</text>
     <text name="MyShippingRequests">My shipping requests</text>
@@ -1177,6 +1199,7 @@
     <text name="OtherReason">Other Reason</text>
     <text name="Others">Others</text>
     <text name="OtherSettings">Other Settings</text>
+    <text name="PackagingType">Packaging type</text>
     <text name="PackingType">Packing type</text>
     <text name="PackingTypes">Packing Type</text>
     <text name="PackingTypesHeaderInfo">Packing types header info</text>
@@ -1300,6 +1323,7 @@ content that we shared with you.</text>
     <text name="PleaseEnterDocumentType">Please enter document type</text>
     <text name="PleaseEnterLoginInformation">Please enter login information</text>
     <text name="PleaseEnterNoMoreThanNCharacter">Please enter no more than {0} characters.</text>
+    <text name="PleaseEnterYourMobileNumber">Please enter your mobile number</text>
     <text name="PleaseEnterYourNewPassword">Please enter the new password</text>
     <text name="Pleasemakesureyouchoosethecountryandthecity!">Please make sure you choose the country and the city!</text>
     <text name="PleaseMakeSureYouProvideValidDetails!">Please make sure you provide valid details!</text>
@@ -1309,6 +1333,7 @@ content that we shared with you.</text>
     <text name="PleaseSelectReason">Please Select Reason</text>
     <text name="PleaseWait">Please Wait</text>
     <text name="PleaseWaitToConfirmYourEmailMessage">Please wait while confirming your email address...</text>
+    <text name="PleaseWriteYourFullName">Please write your full name</text>
     <text name="PointsLimitReached">Points limit reached</text>
     <text name="Port">Port</text>
     <text name="Ports">Ports</text>
@@ -1400,6 +1425,8 @@ content that we shared with you.</text>
     <text name="RequiresPasswordChange">Requires password change</text>
     <text name="RequiresTwoFactorAuth">Requires two factor authentication</text>
     <text name="Resend">Resend</text>
+    <text name="ReSendAfter">Re Send After</text>
+    <text name="ReSendAfterSeconds">Re-send after 35 seconds</text>
     <text name="ResendingWebhook">Resending a webhook</text>
     <text name="Reset">Reset</text>
     <text name="ResetCode">Reset code</text>
@@ -1450,6 +1477,7 @@ content that we shared with you.</text>
     <text name="Search">Search</text>
     <text name="SearchForNearestLocation">Search for nearest location</text>
     <text name="SearchWithThreeDot">Search...</text>
+    <text name="Second">Second</text>
     <text name="SecondShort{0}">{0} sec</text>
     <text name="Security">Security</text>
     <text name="SeeAllNotifications">See all notifications</text>
@@ -1497,6 +1525,7 @@ content that we shared with you.</text>
     <text name="SelectTwoFactorProvider">Select two factor authentication provider</text>
     <text name="SelectUsers">Select users</text>
     <text name="SelectVASs">Select VAS (s)</text>
+    <text name="SelectYourLanguage">Select Your Language</text>
     <text name="SelfTenantRegistrationIsDisabledMessage_Detail">Self company registration is disabled. Please contact the system administrator to register.</text>
     <text name="SelfUserDelegationErrorMessage">You can't delegate authorization to yourself !</text>
     <text name="SelfUserRegistrationIsDisabledMessage">You can not register to the system!</text>
@@ -1865,6 +1894,7 @@ code:{0}</text>
     <text name="TotalAmount">Total amount</text>
     <text name="TotalBidsCount">Total bids</text>
     <text name="TotalCommission">Total commission</text>
+    <text name="TotalDistance">Total distance </text>
     <text name="TotalOfDrop">Number of drops: {0}</text>
     <text name="TotalOffer">Offer</text>
     <text name="TotalOffers">Offers</text>
@@ -1897,7 +1927,7 @@ code:{0}</text>
     <text name="TransportTypesTranslation">Transport types translation</text>
     <text name="TransportTypesTranslations">Transport types translation</text>
     <text name="TransportTypesTranslationsHeaderInfo">Transport Types Translations header info</text>
-    <text name="Traveltime">Travel Time</text>
+    <text name="Traveltime">Trip time</text>
     <text name="Trial">Trial</text>
     <text name="TrialDayCount">Trial day count</text>
     <text name="TrialExpireNotification">Your trial period will expire in {0} day(s).</text>
@@ -2032,6 +2062,7 @@ code:{0}</text>
     <text name="UnlockedTheUser">Unlocked the user {0}</text>
     <text name="Unpaid">Unpaid</text>
     <text name="Unread">Unread</text>
+    <text name="UpComingLoad">Up coming load</text>
     <text name="Update">Update</text>
     <text name="UpdatedSuccessfully">Updated successfully</text>
     <text name="UpdateSippingRequest">Update shipping request</text>
@@ -2048,6 +2079,7 @@ code:{0}</text>
     <text name="UploadLogo_Info">Select a JPG/JPEG/PNG/GIF file with a maximum of 30KB size and 139x35 pixel resolution.</text>
     <text name="UploadPODLbl">Upload POD</text>
     <text name="UploadPODProofOfDelivery">Please Upload Proof Of Delivery</text>
+    <text name="Urdu">Urdu</text>
     <text name="UsagePolicy">Usage Policy</text>
     <text name="UseArrowKeysToChooseTheYear">Use arrow keys to choose the year</text>
     <text name="UseCaptchaOnLogin">Use security image question (captcha) on login.</text>
@@ -2104,6 +2136,7 @@ code:{0}</text>
     <text name="VerifySecurityCode_Information">Please enter the verification code sent to you.</text>
     <text name="VerifySecurityCodeNotLoggedInErrorMessage">You should be logged in first, in order to verify yourself! Probably, your login has been timed out. Please go to the login page and re-try it.</text>
     <text name="VerifyYourCode">Verify Your Code</text>
+    <text name="VerifyYourPhoneNumber">Please enter the 4-digit code we send to ( +966 512 345 678 ) to verify your phone number </text>
     <text name="Version">Version</text>
     <text name="VeryStrong">Very Strong</text>
     <text name="VeryWeak">Very Weak</text>
