@@ -16,7 +16,7 @@ namespace TACHYON.Shipping.ShippingRequests.Dtos
         public int OriginCityId { get; set; }
         [Required]
         public int DestinationCityId { get; set; }
-        [Range(1, 20)]
+        //[Range(1, 20)]
         public int NumberOfDrops { get; set; }
         [Required]
         public int NumberOfTrips { get; set; }
@@ -36,8 +36,13 @@ namespace TACHYON.Shipping.ShippingRequests.Dtos
                 default:
                     if (this.NumberOfDrops < 2)
                         context.Results.Add(new ValidationResult("TheNumberOfDropsMustHigerOrEqualTwo"));
+                    else if(this.NumberOfDrops>20)
+                        context.Results.Add(new ValidationResult("TheNumberOfDropsMustBeLessThan20"));
                     break;
             }
+
         }
+
+        
     }
 }
