@@ -261,6 +261,11 @@ namespace TACHYON.Web.Startup
                         Predicate = _ => true,
                         ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse
                     });
+
+                    endpoints.MapHealthChecksUI(setup =>
+                    {
+                        setup.AddCustomStylesheet("HealthChecksCustomStyle.css");
+                    });
                 }
             });
 
