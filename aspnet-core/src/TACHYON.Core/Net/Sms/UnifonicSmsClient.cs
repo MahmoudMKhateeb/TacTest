@@ -41,24 +41,6 @@ namespace TACHYON.Net.Sms
 
             return response;
         }
-        public
-        async Task<IRestResponse> GetScheduledMessages()
-        {
-            string appSid = await _settingManager.GetSettingValueAsync(AppSettings.Sms.UnifonicAppSid);
-            var client = new RestClient($"http://basic.unifonic.com/rest/SMS/messages/scheduledmessages?AppSid={appSid}");
-            client.Timeout = -1;
-            var request = new RestRequest(Method.GET);
-            request.AddHeader("Accept", "application/json");
-            request.AddHeader("Authorization", "Basic Og==");
-            var response = client.Execute(request);
-            if (response.ErrorException != null)
-            {
-                const string message = "Error retrieving response from Unifonic sms API GetScheduledMessages.  Check inner details for more info.";
-                var exception = new Exception(message, response.ErrorException);
-                throw exception;
-            }
-            return response;
-        }
 
     }
     public class UnifonicResponseRootData
