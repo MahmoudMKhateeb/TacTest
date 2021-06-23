@@ -131,7 +131,7 @@ export class CreateOrEditShippingRequestWizardComponent extends AppComponentBase
     destination: ['', Validators.required],
     routeType: ['', Validators.required],
     numberOfDrops: ['', [Validators.minLength(1), Validators.maxLength(3), Validators.min(1), Validators.max(100)]],
-    NumberOfTrips: ['', [Validators.required, Validators.minLength(1), Validators.maxLength(3), Validators.min(1), Validators.max(100)]],
+    NumberOfTrips: ['', [Validators.required, Validators.minLength(1), Validators.maxLength(2), Validators.min(1), Validators.max(20)]],
   });
   step3Form = this.fb.group({
     goodCategory: ['', Validators.required],
@@ -404,6 +404,7 @@ export class CreateOrEditShippingRequestWizardComponent extends AppComponentBase
         this.step4Dto = res;
       });
   }
+
   //get all steps for Edit
   loadAllStepsForEdit(step: number) {
     //this.saving = true;
