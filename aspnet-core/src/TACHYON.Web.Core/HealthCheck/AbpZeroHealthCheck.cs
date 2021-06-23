@@ -14,7 +14,6 @@ namespace TACHYON.Web.HealthCheck
 
             // add your custom health checks here
             // builder.AddCheck<MyCustomHealthCheck>("my health check");
-            builder.AddCheck<UnifonicSmsHealthCheck>("Unifonic Sms  check");
 
             return builder;
         }
