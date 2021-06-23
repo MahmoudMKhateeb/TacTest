@@ -94,6 +94,7 @@ namespace TACHYON.Goods.GoodCategories
 
         public async Task CreateOrEdit(CreateOrEditGoodCategoryDto input)
         {
+            await ValidateDuplicatedDisplayName(input);
             if (input.Id == null)
             {
                 await Create(input);
@@ -101,6 +102,25 @@ namespace TACHYON.Goods.GoodCategories
             else
             {
                 await Update(input);
+            }
+        }
+
+        private async Task ValidateDuplicatedDisplayName(CreateOrEditGoodCategoryDto input)
+        {
+            foreach (var transItem in input.Translations)
+            {
+                if (string.IsNullOrWhiteSpace(transItem.DisplayName))
+                {
+                    throw new UserFriendlyException(L("DisplayNameCannotBeEmpty"));
+                }
+                var isDuplicateUserName = await _goodCategoryRepository
+                   .FirstOrDefaultAsync(x => x.Translations.Any(x => x.DisplayName == transItem.DisplayName) &&
+                   x.FatherId == input.FatherId &&
+                   x.Id != input.Id);
+                if (isDuplicateUserName != null)
+                {
+                    throw new UserFriendlyException(string.Format(L("GoodsCategoryDuplicateName"), transItem.DisplayName));
+                }
             }
         }
 

@@ -2,6 +2,7 @@
 using Abp.Authorization;
 using Abp.Domain.Repositories;
 using Abp.Linq.Extensions;
+using Abp.UI;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -43,6 +44,7 @@ namespace TACHYON.Shipping.Trips.RejectReasons
         }
         public async Task CreateOrEdit(CreateOrEditShippingRequestTripRejectReasonDto input)
         {
+            await ValidateDuplicateNameAsync(input);
             if (input.Id == 0)
             {
                 await Create(input);
@@ -50,6 +52,24 @@ namespace TACHYON.Shipping.Trips.RejectReasons
             else
             {
                 await Update(input);
+            }
+        }
+
+        private async Task ValidateDuplicateNameAsync(CreateOrEditShippingRequestTripRejectReasonDto input)
+        {
+            foreach (var transItem in input.Translations)
+            {
+                if (string.IsNullOrWhiteSpace(transItem.Name))
+                {
+                    throw new UserFriendlyException(L("DisplayNameCannotBeEmpty"));
+                }
+                var isDuplicateUserName = await _shippingRequestTripRejectReasonRepository
+                   .FirstOrDefaultAsync(x => x.Translations.Any(x => x.Name == transItem.Name) &&
+                   x.Id != input.Id);
+                if (isDuplicateUserName != null)
+                {
+                    throw new UserFriendlyException(string.Format(L("TripRejectReasonDuplicateName"), transItem.Name));
+                }
             }
         }
 

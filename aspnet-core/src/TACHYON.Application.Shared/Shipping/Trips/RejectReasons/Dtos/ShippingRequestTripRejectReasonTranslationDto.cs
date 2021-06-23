@@ -6,7 +6,6 @@ namespace TACHYON.Shipping.Trips.RejectReasons.Dtos
     {
         [Required]
         [StringLength(60, MinimumLength = 3)]
-
         public string Name { get; set; }
         [Required]
         public string Language { get; set; }
