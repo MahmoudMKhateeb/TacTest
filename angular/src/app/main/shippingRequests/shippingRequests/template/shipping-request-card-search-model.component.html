@@ -135,7 +135,7 @@
                   </select>
                 </div>
               </div>
-              <ng-template [ngIf]="!input.channel">
+              <ng-template [ngIf]="!input.channel && !input.isTMS">
                 <div class="col-xl-6">
                   <label for="RequestType">{{ 'ShippingRequestType' | localize }}</label>
                   <div class="input-group">

@@ -606,7 +606,7 @@ namespace TACHYON.PriceOffers
                     }
                     else
                     {
-                        dto.BidStatusTitle = "News";
+                        dto.BidStatusTitle = "New";
                     }
                     dto.StatusTitle = "";
                 }

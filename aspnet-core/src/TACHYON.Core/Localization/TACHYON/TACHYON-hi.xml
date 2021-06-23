@@ -1,0 +1,52 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<localizationDictionary culture="hi">
+  <texts>
+    <text name="Account">खाता</text>
+    <text name="Arabic">अरबी</text>
+    <text name="AssignedTruck">ट्रक का विवरण</text>
+    <text name="CorrectlyTypingYourNameMakesTheProcessEasyForSystemUsers">सही ढंग से अपना नाम टाइप करने से सिस्टम उपयोगकर्ताओं के लिए प्रक्रिया आसान हो जाती है</text>
+    <text name="Current">वर्तमान</text>
+    <text name="DisplayName">नाम</text>
+    <text name="DropoffDetailCommodity">माल</text>
+    <text name="DropoffDetailDropoff">बाहर निकलना</text>
+    <text name="DropoffDetailShipperNotes">शिपर नोट्स</text>
+    <text name="EditingLanguage">भाषा बदलें</text>
+    <text name="EditYourName">अपना नाम संपादित करें</text>
+    <text name="English">अंग्रेज़ी</text>
+    <text name="General">सेटिंग्स</text>
+    <text name="Hindi">हिन्दी</text>
+    <text name="HomePage">होम</text>
+    <text name="Kg">किलोग्राम</text>
+    <text name="MobileAbout">के बारे में</text>
+    <text name="MobileLanguage">भाषा</text>
+    <text name="MobilelogOut">लॉग आउट</text>
+    <text name="MobileNumber">मोबाइल नंबर</text>
+    <text name="MobileTermsAndConditions">नियम और शर्तें</text>
+    <text name="MobileUpdate">अपडेट करें</text>
+    <text name="MobileUsagePolicy">उपयोग नीति</text>
+    <text name="MobileUserEmail">ई-मेल</text>
+    <text name="MobileUserProfile">प्रोफ़ाइल</text>
+    <text name="MyLoadPast">अतीत</text>
+    <text name="MyLoads">मेरा लोड</text>
+    <text name="Notifications">सूचनाएं</text>
+    <text name="PackagingType">पैकिंग प्रकार</text>
+    <text name="PhoneNumber">मोबाइल फोन नंबर</text>
+    <text name="Pickup">उठाना</text>
+    <text name="PlateNumber">प्लेट नंबर</text>
+    <text name="PleaseEnterYourMobileNumber">अपना मोबाइल नंबर दर्ज करें</text>
+    <text name="PleaseWriteYourFullName">कृपया अपना पूरा नाम लिखें</text>
+    <text name="Quantity">मात्रा</text>
+    <text name="ReSendAfterSeconds">35 सेकंड के बाद फिर से भेजें</text>
+    <text name="SelectYourLanguage">अपनी भाषा का चयन करें</text>
+    <text name="TitleLogin">साइन इन करें</text>
+    <text name="TotalDistance">कुल दूरी</text>
+    <text name="Traveltime">सैर समय</text>
+    <text name="TripDetails">सैर का विवरण</text>
+    <text name="TruckType">ट्रक का प्रकार</text>
+    <text name="UnitOfMeasure">माप की इकाई</text>
+    <text name="UpComingLoad">आगामी लोड</text>
+    <text name="Urdu">उर्दू</text>
+    <text name="VerifyYourPhoneNumber">कृपया अपना फ़ोन नंबर सत्यापित करने के लिए हमारे द्वारा (+966 512 345 678) पर भेजा गया 4-अंकीय कोड दर्ज करें</text>
+    <text name="Weight">वजन</text>
+  </texts>
+</localizationDictionary>

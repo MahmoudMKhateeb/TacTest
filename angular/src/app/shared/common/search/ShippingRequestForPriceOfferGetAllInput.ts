@@ -16,4 +16,5 @@ export class ShippingRequestForPriceOfferGetAllInput {
   routeTypeId!: ShippingRequestRouteType;
   status!: ShippingRequestStatus;
   isTachyonDeal: boolean;
+  isTMS: boolean = false;
 }

@@ -7,7 +7,7 @@ import {
   ShippingRequestDirectRequestServiceProxy,
   ShippingRequestDirectRequestStatus,
   ShippingRequestStatus,
-  CancelShippingRequestInput,
+  ShippingRequestType,
 } from '@shared/service-proxies/service-proxies';
 
 import * as _ from 'lodash';
@@ -24,6 +24,7 @@ export class ShippingRequestCardTemplateComponent extends ScrollPagnationCompone
   Items: GetShippingRequestForPriceOfferListDto[] = [];
   searchInput: ShippingRequestForPriceOfferGetAllInput = new ShippingRequestForPriceOfferGetAllInput();
   @Input() Channel: PriceOfferChannel | number | null | undefined = undefined;
+  @Input() isTMS: boolean = false;
   @Input() Title: string;
   @Input() ShippingRequestId: number | null | undefined = undefined;
   direction = 'ltr';
@@ -34,6 +35,10 @@ export class ShippingRequestCardTemplateComponent extends ScrollPagnationCompone
     this.direction = document.getElementsByTagName('html')[0].getAttribute('dir');
     this.searchInput.channel = this.Channel;
     this.searchInput.shippingRequestId = this.ShippingRequestId;
+    if (this.isTMS) {
+      this.searchInput.requestType = ShippingRequestType.TachyonManageService;
+      this.searchInput.isTMS = true;
+    }
     this.LoadData();
   }
   LoadData() {
