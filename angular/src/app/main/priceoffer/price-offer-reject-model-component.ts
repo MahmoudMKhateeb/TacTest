@@ -43,7 +43,7 @@ export class PriceOfferRejectModelComponent extends AppComponentBase implements 
       .subscribe(() => {
         this.modalsave.emit(this.rejectInput.reason);
         this.close();
-        this.notify.success('priceOfferSentSuccessfully');
+        this.notify.success('SuccessfullyRejected');
       });
   }
 }
