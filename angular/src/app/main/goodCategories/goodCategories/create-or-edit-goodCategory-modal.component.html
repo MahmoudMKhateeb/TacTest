@@ -32,7 +32,7 @@
                   [(ngModel)]="goodCategory.fatherId"
                   [disabled]="!AllGoodsCategoriesForDropDown"
                 >
-                  <option [ngValue]="0"></option>
+                  <option [ngValue]="null">{{ l('SelectGoodCategory') }}</option>
                   <option
                     *ngFor="let item of AllGoodsCategoriesForDropDown"
                     [ngValue]="item.id"
