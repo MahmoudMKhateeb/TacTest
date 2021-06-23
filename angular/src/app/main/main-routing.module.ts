@@ -63,6 +63,7 @@ import { TripRejectReasonComponent } from '@app/main/shippingRequests/shippingRe
 import { AppLocalizationComponent } from '@app/main/applocalizations/applocalization.component';
 import { ComingSoonComponent } from '@app/main/commingSoon/comingSoon.component';
 import { TrackingComponent } from '@app/main/shippingRequests/shippingRequests/tracking/tacking.component';
+import { TMSRequestListComponent } from '@app/main/tms/tms-request-list.component';
 
 @NgModule({
   imports: [
@@ -215,6 +216,7 @@ import { TrackingComponent } from '@app/main/shippingRequests/shippingRequests/t
           { path: 'documentFiles/documentFiles', component: DocumentFilesComponent, data: { permission: 'Pages.DocumentFiles' } },
           { path: 'documentTypes/documentTypes', component: DocumentTypesComponent, data: { permission: 'Pages.DocumentTypes' } },
           { path: 'shippingRequests/shippingRequests', component: ShippingRequestsListComponent },
+          { path: 'tms/shippingRequests', component: TMSRequestListComponent },
           {
             path: 'shippingRequests/shippingRequests/createOrEdit',
             component: CreateOrEditShippingRequestComponent,
