@@ -13,6 +13,7 @@ using System.Linq.Dynamic.Core;
 using System.Threading.Tasks;
 using TACHYON.Firebases;
 using TACHYON.Goods.GoodCategories.Dtos;
+using TACHYON.Mobile;
 using TACHYON.Notifications;
 using TACHYON.Routs.RoutPoints;
 using TACHYON.Routs.RoutPoints.Dtos;
@@ -36,6 +37,7 @@ namespace TACHYON.Shipping.Drivers
         private readonly IAppNotifier _appNotifier;
         private readonly IFirebaseNotifier _firebaseNotifier;
         private readonly ShippingRequestsTripManager _shippingRequestsTripManager;
+        private readonly IRepository<UserOTP> _userOtpRepository;
 
 
         public ShippingRequestDriverAppService(
@@ -46,7 +48,7 @@ namespace TACHYON.Shipping.Drivers
             ShippingRequestManager shippingRequestManager,
             IAppNotifier appNotifier,
             IFirebaseNotifier firebaseNotifier,
-            ShippingRequestsTripManager shippingRequestsTripManager)
+            ShippingRequestsTripManager shippingRequestsTripManager,IRepository<UserOTP> userOtpRepository)
         {
             _ShippingRequestTrip = ShippingRequestTrip;
             _RoutPointRepository = RoutPointRepository;
@@ -56,7 +58,7 @@ namespace TACHYON.Shipping.Drivers
             _appNotifier = appNotifier;
             _firebaseNotifier = firebaseNotifier;
             _shippingRequestsTripManager = shippingRequestsTripManager;
-
+            _userOtpRepository = userOtpRepository;
         }
         /// <summary>
         /// list all trips realted with drivers
@@ -94,7 +96,37 @@ namespace TACHYON.Shipping.Drivers
 
 
         }
+        /// <summary>
+        /// This api is for mobile deveopment team
+        /// </summary>
+        /// <param name="tripId"></param>
+        /// <returns></returns>
+        public async Task<DropOffPointDto> GetReceiverCode(int PointId)
+        {
+            DisableTenancyFilters();
 
+            var Point = await _RoutPointRepository.GetAll()
+                .Include(t => t.ShippingRequestTripFk)
+                 .ThenInclude(r => r.ShippingRequestFk)
+                    .ThenInclude(p => p.PackingTypeFk)
+            .Include(i => i.FacilityFk)
+               .ThenInclude(c => c.CityFk)
+           .Include(i => i.ReceiverFk)
+           .Include(i => i.GoodsDetails)
+            .ThenInclude(i => i.UnitOfMeasureFk)
+            .SingleOrDefaultAsync(t => t.Id == PointId && t.ShippingRequestTripFk.Status != ShippingRequestTripStatus.Canceled && t.ShippingRequestTripFk.AssignedDriverUserId == AbpSession.UserId && t.ShippingRequestTripFk.DriverStatus != ShippingRequestTripDriverStatus.Rejected);
+            if (Point == null) throw new UserFriendlyException(L("TheTripIsNotFound"));
+            var DropOff = ObjectMapper.Map<DropOffPointDto>(Point);
+
+            return DropOff;
+        }
+
+
+        public async Task<List<UserOtpDto>> GetUserOtps(long userId)
+        {
+            var otps=await _userOtpRepository.GetAll().Where(x => x.UserId == userId).ToListAsync();
+            return ObjectMapper.Map<List<UserOtpDto>>(otps);
+        }
         /// <summary>
         /// Get trip details rleated with drivers
         /// </summary>
