@@ -82,22 +82,36 @@
 
           <!-- StartOf::Driver&Truck -->
           <ng-container *ngIf="feature.isEnabled('App.Carrier')">
-            <div class="col-lg-6">
-              <div class="form-group">
-                <label><span class="required-fileds">*</span>{{ l('Driver') }} </label>
-                <input class="form-control" name="trip.driver" [ngModel]="trip.driver" disabled />
-              </div>
+            <div class="form-group col-lg-6">
+              <label>{{ l('driver') }}</label>
+              <select
+                name="driver"
+                type="text"
+                [(ngModel)]="assignDriverAndTruck.assignedDriverUserId"
+                class="form-control"
+                [disabled]="saving || trip.driverStatus !== 0"
+              >
+                <option [ngValue]="null">{{ l('selectaDriver') }}</option>
+                <option *ngFor="let item of allDrivers" [value]="item.id">{{ item.displayName }}</option>
+              </select>
             </div>
-            <div class="col-lg-5">
-              <div class="form-group">
-                <label><span class="required-fileds">*</span>{{ l('Truck') }} </label>
-                <input class="form-control" name="trip.truck" [ngModel]="trip.truck" disabled />
-              </div>
+            <div class="form-group col-lg-{{ trip.driverStatus == 0 ? 5 : 6 }}">
+              <label>{{ l('tuck') }}</label>
+              <select
+                name="truck"
+                type="text"
+                [(ngModel)]="assignDriverAndTruck.assignedTruckId"
+                class="form-control"
+                [disabled]="saving || trip.driverStatus !== 0"
+              >
+                <option [ngValue]="null">{{ l('selectatruck') }}</option>
+                <option *ngFor="let item of allTrucks" [value]="item.id">{{ item.displayName }}</option>
+              </select>
             </div>
-            <div class="col-lg-1 mt-7 align-content-center">
-              <a class="btn font-weight-bold btn-danger btn-icon" (click)="assignDriverTruckModal.show(currentTripId)">
-                <i class="fas fa-edit"></i>
-              </a>
+            <div class="form-group col-lg-1 mt-7 align-items-end" *ngIf="trip.driverStatus == 0">
+              <button class="btn btn-danger btn-shadow-hover font-weight-bold mr-2" (click)="assignDriverandTruck()" [disabled]="saving">
+                {{ l('Save') }}
+              </button>
             </div>
           </ng-container>
 
@@ -137,5 +151,3 @@
     </div>
   </div>
 </div>
-
-<assignDriverTruckModal #assignDriverTruckModal (modalsave)="show(this.currentTripId)"></assignDriverTruckModal>
