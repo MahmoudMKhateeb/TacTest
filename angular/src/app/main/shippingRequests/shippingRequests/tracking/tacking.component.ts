@@ -30,6 +30,7 @@ export class TrackingComponent extends ScrollPagnationComponentBase implements O
         this.searchInput.status,
         this.searchInput.shipper,
         this.searchInput.carrier,
+        this.searchInput.WaybillNumber,
         this.searchInput.truckTypeId,
         this.searchInput.originId,
         this.searchInput.destinationId,

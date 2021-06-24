@@ -24,7 +24,7 @@
                   <input
                     id="Shipper"
                     [(ngModel)]="input.shipper"
-                    name="input.filter"
+                    name="input.shipper"
                     class="form-control"
                     placeholder="{{ 'SearchWithThreeDot' | localize }}"
                     type="text"
@@ -38,6 +38,20 @@
                     id="Carrier"
                     [(ngModel)]="input.carrier"
                     name="input.carrier"
+                    class="form-control"
+                    placeholder="{{ 'SearchWithThreeDot' | localize }}"
+                    type="text"
+                  />
+                </div>
+              </div>
+              <div class="col-xl-6">
+                <label for="Shipper">{{ 'WaybillNumber' | localize }}</label>
+                <div class="input-group">
+                  <input
+                    id="Shipper"
+                    (keypress)="numberOnly($event)"
+                    [(ngModel)]="input.WaybillNumber"
+                    name="input.WaybillNumber"
                     class="form-control"
                     placeholder="{{ 'SearchWithThreeDot' | localize }}"
                     type="text"
