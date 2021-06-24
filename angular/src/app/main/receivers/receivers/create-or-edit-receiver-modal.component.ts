@@ -13,18 +13,14 @@ export class CreateOrEditReceiverModalComponent extends AppComponentBase {
   @ViewChild('createOrEditModal', { static: true }) modal: ModalDirective;
 
   @Output() modalSave: EventEmitter<any> = new EventEmitter<any>();
-
   active = false;
   saving = false;
   CheckingIfReciverPhoneNumberIsValid = false;
   isPhoneNumberAvilable = true;
 
   receiver: CreateOrEditReceiverDto = new CreateOrEditReceiverDto();
-
   facilityName = '';
-
   allFacilitys: ReceiverFacilityLookupTableDto[];
-
   constructor(injector: Injector, private _receiversServiceProxy: ReceiversServiceProxy) {
     super(injector);
   }
@@ -83,5 +79,4 @@ export class CreateOrEditReceiverModalComponent extends AppComponentBase {
       });
     }
   }
-
 }
