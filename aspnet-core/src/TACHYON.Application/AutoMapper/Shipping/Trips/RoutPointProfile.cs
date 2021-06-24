@@ -5,8 +5,10 @@ using System.Linq;
 using System.Text;
 using TACHYON.Goods.GoodsDetails;
 using TACHYON.Goods.GoodsDetails.Dtos;
+using TACHYON.Mobile;
 using TACHYON.Routs.RoutPoints;
 using TACHYON.Routs.RoutPoints.Dtos;
+using TACHYON.Shipping.Drivers.Dto;
 
 namespace TACHYON.AutoMapper.Shipping.Trips
 {
@@ -27,6 +29,8 @@ namespace TACHYON.AutoMapper.Shipping.Trips
                     .ForPath(dest => dest.ReceiverPhoneNumber, opt => opt.MapFrom(src => src.ReceiverFk != null ? src.ReceiverFk.PhoneNumber : src.ReceiverPhoneNumber))
                     .ForPath(dest => dest.ReceiverCardIdNumber, opt => opt.MapFrom(src => src.ReceiverFk != null ? src.ReceiverFk.Id.ToString() : src.ReceiverCardIdNumber));
 
+            CreateMap<RoutPoint, DropOffPointDto>();
+            CreateMap<UserOTP, UserOtpDto>();
             CreateMap<GoodsDetail, GoodsDetailDto>()
             .ForPath(dest => dest.UnitOfMeasure, opt => opt.MapFrom(src => src.UnitOfMeasureFk != null ? src.UnitOfMeasureFk.DisplayName : string.Empty));
             //.ForPath(dest => dest.GoodCategory, opt => opt.MapFrom(src => src.GoodCategoryFk != null ? src.GoodCategoryFk.DisplayName : string.Empty));
