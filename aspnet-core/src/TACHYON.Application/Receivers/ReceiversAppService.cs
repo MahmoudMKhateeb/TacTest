@@ -46,7 +46,8 @@ namespace TACHYON.Receivers
                         .WhereIf(!string.IsNullOrWhiteSpace(input.FullNameFilter), e => e.FullName == input.FullNameFilter)
                         .WhereIf(!string.IsNullOrWhiteSpace(input.EmailFilter), e => e.Email == input.EmailFilter)
                         .WhereIf(!string.IsNullOrWhiteSpace(input.PhoneNumberFilter), e => e.PhoneNumber == input.PhoneNumberFilter)
-                        .WhereIf(!string.IsNullOrWhiteSpace(input.FacilityNameFilter), e => e.FacilityFk != null && e.FacilityFk.Name == input.FacilityNameFilter);
+                        .WhereIf(!string.IsNullOrWhiteSpace(input.FacilityNameFilter), e => e.FacilityFk != null && e.FacilityFk.Name == input.FacilityNameFilter)
+                        .WhereIf(input.FacilityId != null, e => e.FacilityId == input.FacilityId);
 
             var pagedAndFilteredReceivers = filteredReceivers
                 .OrderBy(input.Sorting ?? "id asc")
