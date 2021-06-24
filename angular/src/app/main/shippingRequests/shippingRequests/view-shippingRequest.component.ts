@@ -105,7 +105,7 @@ export class ViewShippingRequestComponent extends AppComponentBase implements On
       return this.l('TachyonManageService');
     } else if (this.shippingRequestforView.shippingRequest.isBid) {
       return this.l('Marketplace');
-    } else if(this.shippingRequestforView.shippingRequest.isDirectRequest){
+    } else if (this.shippingRequestforView.shippingRequest.isDirectRequest) {
       return this.l('DirectRequest');
     }
   }
@@ -126,6 +126,8 @@ export class ViewShippingRequestComponent extends AppComponentBase implements On
    * this function validates who Can See And Access the DirectRequests List in ViewShippingRequest
    */
   canSeeDirectRequests() {
+    console.log(this.shippingRequestforView.shippingRequest);
+    console.log(this.feature.isEnabled('App.SendDirectRequest'));
     if (!this.feature.isEnabled('App.SendDirectRequest')) return false;
     if (this.feature.isEnabled('App.TachyonDealer') && this.shippingRequestforView.shippingRequest.isTachyonDeal) {
       return true;
