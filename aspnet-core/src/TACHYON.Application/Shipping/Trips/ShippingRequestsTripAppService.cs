@@ -90,7 +90,18 @@ namespace TACHYON.Shipping.Trips
                 if (r.ShippingRequestTripRejectReason != null)
                 {
                     var reasone = ObjectMapper.Map<ShippingRequestTripRejectReasonListDto>(r.ShippingRequestTripRejectReason);
-                    r.RejectedReason = reasone.Name;
+                   if (reasone !=null)
+                    {
+                        if (!string.IsNullOrEmpty(r.RejectedReason))
+                        {
+                            r.RejectedReason = $"{reasone.Name}-{r.RejectedReason}";
+                        }
+                        else
+                        {
+                            r.RejectedReason = reasone.Name;
+                        }
+                    }
+
                 }
 
             });

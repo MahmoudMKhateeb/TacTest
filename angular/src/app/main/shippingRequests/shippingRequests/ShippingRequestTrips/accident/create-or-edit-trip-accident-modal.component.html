@@ -31,7 +31,7 @@
             </select>
             <span class="form-text text-muted">{{ l('PleaseSelectTheIncidentReason') }}</span>
           </div>
-          <div *ngIf="reasonId != '' && reasonId == 0" class="form-group">
+          <div class="form-group">
             <label for="Image">{{ 'Description' | localize }}</label>
             <textarea name="accident.description" [(ngModel)]="accident.description" class="form-control"></textarea>
           </div>
