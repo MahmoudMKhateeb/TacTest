@@ -76,7 +76,7 @@ namespace TACHYON.Invoices
             var invoice= await GetInvoiceInfo(input.Id);
 
             if (invoice==null) throw new UserFriendlyException(L("TheInvoiceNotFound"));
-            var TotalItem = invoice.Trips.Count + invoice.Trips.Select(v=>v.ShippingRequestTripFK.ShippingRequestTripVases).Count();
+            var TotalItem = invoice.Trips.Count + invoice.Trips.Sum(v => v.ShippingRequestTripFK.ShippingRequestTripVases.Count);
             int Sequence = 1;
             List<InvoiceItemDto> Items = new List<InvoiceItemDto>();
             invoice.Trips.ToList().ForEach(trip =>
