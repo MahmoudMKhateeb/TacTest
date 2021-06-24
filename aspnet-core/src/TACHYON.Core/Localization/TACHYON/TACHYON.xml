@@ -108,6 +108,8 @@
     <text name="Arabic">Arabic</text>
     <text name="AreYouSure">Are you sure ?</text>
     <text name="AreYouSure?">Are you sure?</text>
+    <text name="ArrivedToDestination">Arrived to Destination</text>
+    <text name="ArriveToLoadingLocation">Arrive to loading location </text>
     <text name="AShipmentWasAssignedForYouToReceiveOn">A shipment was assigned for you to receive on</text>
     <text name="AspNetZeroPlatForm">AspNetZero</text>
     <text name="Assign">Assign</text>
@@ -230,6 +232,7 @@
     <text name="CheckoutWithPaypal">Pay using PayPal</text>
     <text name="CheckoutWithStripe">Pay using Stripe</text>
     <text name="CheckRecipient">Check The Recipient</text>
+    <text name="CheckTheRecipient">Check the recipient</text>
     <text name="Choose">Choose</text>
     <text name="ChooseNationality">Choose nationality</text>
     <text name="ChooseWhatIncidentIs">Please Choose What The Incident Is</text>
@@ -692,6 +695,7 @@
     <text name="EnableTwoFactorLogin">Enable two factor user login.</text>
     <text name="EnableUserAccountLockingOnFailedLoginAttemts">Enable user account locking on failed login attempts</text>
     <text name="EndDate">End date</text>
+    <text name="EndOffloadingShipment">End offloading shipment </text>
     <text name="EndTime">End time</text>
     <text name="EndTripDate">Delivery date</text>
     <text name="English">English</text>
@@ -762,6 +766,7 @@
     <text name="FilterOrAddUser">Filter/Add user</text>
     <text name="FinalPrice">Final price</text>
     <text name="FinancialTransActionMenu">Financial History</text>
+    <text name="FinishLoading">Finish loading</text>
     <text name="FirstName">First name</text>
     <text name="Flag">Flag</text>
     <text name="ForgotPassword">Forgot password?</text>
@@ -837,7 +842,7 @@
     <text name="HttpStatusCode">Http Status Code</text>
     <text name="IAgreeonTahcyon">I agree on Tachyon's</text>
     <text name="IAMA">I am a</text>
-    <text name="Id">Id</text>
+    <text name="Id">ID</text>
     <text name="ID/Iqama">ID / Iqama</text>
     <text name="Image">Image</text>
     <text name="ImpersonationTokenErrorMessage">Impersonation token is invalid or expired!</text>
@@ -1026,10 +1031,15 @@
     <text name="MinMax">Min max</text>
     <text name="MinValue">Min</text>
     <text name="MobileAbout">About</text>
+    <text name="MobileAccept">Accept</text>
+    <text name="MobileEmailAddress">Email Address</text>
+    <text name="MobileEndTrip">End trip</text>
     <text name="MobileLanguage">Language</text>
     <text name="MobilelogOut">log out</text>
     <text name="MobileNo">Mobile number</text>
     <text name="MobileNumber">Mobile Number</text>
+    <text name="MobilePleaseEnterTheCodeSentToRecipient">Please enter the code sent to recipient </text>
+    <text name="MobileReject">Reject </text>
     <text name="MobileTermsAndConditions">Terms and Conditions</text>
     <text name="MobileUpdate">Update</text>
     <text name="MobileUsagePolicy">Usage Policy</text>
@@ -1123,6 +1133,7 @@
     <text name="NoEnoughBalance">You do not have enough balance</text>
     <text name="NoInternetConnection">You Are Currently Not Connected To Internet</text>
     <text name="None">None</text>
+    <text name="NoNotificationsYet">No notifications yet</text>
     <text name="NoOfTrips">No. of trips</text>
     <text name="NoOrganizationUnitDefinedYet">No organization unit defined yet.</text>
     <text name="NoPermission">You do not have any permission. Contact your account administrator.</text>
@@ -1323,17 +1334,22 @@ content that we shared with you.</text>
     <text name="PleaseEnterDocumentType">Please enter document type</text>
     <text name="PleaseEnterLoginInformation">Please enter login information</text>
     <text name="PleaseEnterNoMoreThanNCharacter">Please enter no more than {0} characters.</text>
+    <text name="PleaseEnterTheCodeSentToRecipient">Please enter the code sent to recipient </text>
     <text name="PleaseEnterYourMobileNumber">Please enter your mobile number</text>
     <text name="PleaseEnterYourNewPassword">Please enter the new password</text>
     <text name="Pleasemakesureyouchoosethecountryandthecity!">Please make sure you choose the country and the city!</text>
     <text name="PleaseMakeSureYouProvideValidDetails!">Please make sure you provide valid details!</text>
     <text name="PleaseOnClickFollowingLinkToTrackYourShipmentAndRateTheShippingCompany">Please click the following link to track your shipment and rate your experience</text>
     <text name="PleaseSelectAPicture">Please select a picture!</text>
+    <text name="PleaseSelectAReason">Please select a reason</text>
     <text name="PleaseSelectASourceTripFacilityFirst">Please select a pickup location first</text>
     <text name="PleaseSelectReason">Please Select Reason</text>
+    <text name="PleaseUploadPOD">Please upload POD </text>
     <text name="PleaseWait">Please Wait</text>
     <text name="PleaseWaitToConfirmYourEmailMessage">Please wait while confirming your email address...</text>
+    <text name="PleaseWriteTheRejectionReason">Please write the rejection reason</text>
     <text name="PleaseWriteYourFullName">Please write your full name</text>
+    <text name="PODProofOfDelivery">POD Proof of delivery</text>
     <text name="PointsLimitReached">Points limit reached</text>
     <text name="Port">Port</text>
     <text name="Ports">Ports</text>
@@ -1367,10 +1383,13 @@ content that we shared with you.</text>
     <text name="Quantity">Quantity</text>
     <text name="QuickNav">Quick Navigation</text>
     <text name="QuickThemeSelection">Quick theme selection</text>
+    <text name="RateLoadingFacility">Rate loading facility</text>
     <text name="RateOffloadingAdditionalNote">AdditionalNote</text>
     <text name="RateOffloadingRateFacility">Rate Facility</text>
     <text name="Read">Read</text>
     <text name="ReadState">Read state</text>
+    <text name="ReadyForLoading">Ready for loading</text>
+    <text name="ReadyToOffloading">Ready to offloading</text>
     <text name="Reason">Reason</text>
     <text name="ReceiveNotifications">Receive notifications</text>
     <text name="ReceiveNotifications_Definition">This option can be used to completely enable/disable receiving notifications.</text>
@@ -1400,6 +1419,7 @@ content that we shared with you.</text>
     <text name="RejectOffer">Reject</text>
     <text name="RejectPricingOffer">Reject pricing offer</text>
     <text name="RejectShippingRequestNotificationMessage">Shipping Request is canceled</text>
+    <text name="RejectTheTrip">Reject the trip</text>
     <text name="RejectThisTrip">Reject This Trip!</text>
     <text name="RemainingDay">Remaining day</text>
     <text name="RemainingDays">Remaining days</text>
@@ -1566,6 +1586,7 @@ content that we shared with you.</text>
     <text name="Settings">Settings</text>
     <text name="SettingsHeaderInfo">Show and change application settings.</text>
     <text name="Severity">Severity</text>
+    <text name="ShipmentDetails">Shipment details</text>
     <text name="ShipmentTracking">Shipment tracking</text>
     <text name="Shipper">Shipper</text>
     <text name="ShipperAcceptedOffers">
@@ -1642,6 +1663,9 @@ code:{0}</text>
     <text name="Standard">Standard</text>
     <text name="Start">Start</text>
     <text name="StartDate">Start date</text>
+    <text name="StartLoading">Start loading</text>
+    <text name="StartMovingToDestination">Start moving to destination</text>
+    <text name="StartMovingToLoadingLocation">Start Moving To Loading Location</text>
     <text name="StartShippmentNotificationMessage">Shippment is started</text>
     <text name="StartTime">Start time</text>
     <text name="StartTripDate">Pickup date</text>
@@ -2065,6 +2089,7 @@ code:{0}</text>
     <text name="UpComingLoad">Up coming load</text>
     <text name="Update">Update</text>
     <text name="UpdatedSuccessfully">Updated successfully</text>
+    <text name="UpdatePhoneNumber">Update mobile number</text>
     <text name="UpdateSippingRequest">Update shipping request</text>
     <text name="UpdateTrip">Update trip</text>
     <text name="Upgrade">Upgrade</text>
@@ -2077,6 +2102,7 @@ code:{0}</text>
     <text name="UploadDocumentMsg">Please upload the following documents in order to finalize your registration process.</text>
     <text name="UploadedFile">Uploaded File</text>
     <text name="UploadLogo_Info">Select a JPG/JPEG/PNG/GIF file with a maximum of 30KB size and 139x35 pixel resolution.</text>
+    <text name="UploadPOD">Upload POD</text>
     <text name="UploadPODLbl">Upload POD</text>
     <text name="UploadPODProofOfDelivery">Please Upload Proof Of Delivery</text>
     <text name="Urdu">Urdu</text>
@@ -2157,7 +2183,7 @@ code:{0}</text>
     <text name="WaitingForResponse">Waiting for response</text>
     <text name="WaitingForReviewMsg">Please wait until we review your documents</text>
     <text name="Warning">Warning</text>
-    <text name="WaybillNumber">Waybill Number</text>
+    <text name="WaybillNumber">Waybill number</text>
     <text name="Waybills">Waybills</text>
     <text name="Waypoints">Way points</text>
     <text name="Weak">Weak</text>
@@ -2184,6 +2210,7 @@ code:{0}</text>
     <text name="WelcomePage_Info">Welcome to the application. You can use the menu to start using the application. If you don't see any menu item, probably you don't have permission to see any page. Consider asking a system administrator for permissions.</text>
     <text name="WelcomePage_Title">Welcome!</text>
     <text name="WelcomeToTheApplicationNotificationMessage">Welcome to TACHYON! Notification system is used to inform you for intended events. You can select which type of notifications you want to receive from the notification settings.</text>
+    <text name="WeWillSendYouCodeToVerfiyYourEmailPleaseCheckYourInbox">We will send you code to verify your e-mail, please check your Inbox</text>
     <text name="WhatWillDoneAfterSubscriptionExpiry">What will be done after subscription expiry</text>
     <text name="WidgetDailySales">Daily Sales</text>
     <text name="WidgetDeleteWarningMessage">Are you sure to remove "{0}" widget from "{1}" page?</text>

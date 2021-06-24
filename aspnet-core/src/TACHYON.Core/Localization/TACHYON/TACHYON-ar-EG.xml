@@ -98,6 +98,7 @@
     <text name="Arabic">العربية</text>
     <text name="AreYouSure">هل أنت متأكد؟</text>
     <text name="AreYouSure?">هل أنت متأكد</text>
+    <text name="ArrivedToDestination">الوصول لموقع التسليم</text>
     <text name="Assign">تعيين</text>
     <text name="AssignCarrier">تعيين الناقل</text>
     <text name="AssignDriverToTruckNotificationMessage">رسالة تعيين سائق لشاحنة</text>
@@ -203,6 +204,7 @@
     <text name="CheckoutWithPaypal">ادفع باستعمال باي بال</text>
     <text name="CheckoutWithStripe">ادفع باستعمال سترايب</text>
     <text name="CheckRecipient">تأكيد المستلم</text>
+    <text name="CheckTheRecipient">تحقق من المستلم</text>
     <text name="Choose">إختر</text>
     <text name="ChooseNationality">اختر الجنسية</text>
     <text name="ChooseWhatIncidentIs">الرجاء اختيار ما هو الحادث</text>
@@ -633,6 +635,7 @@
     <text name="EnableTwoFactorLogin">تمكين توثيق تسجيل الدخول ذو عاملين.</text>
     <text name="EnableUserAccountLockingOnFailedLoginAttemts">تمكين تأمين محاولات الدخول الفاشلة</text>
     <text name="EndDate">تاريخ النهاية</text>
+    <text name="EndOffloadingShipment">الانتهاء من تنزيل االحمولة</text>
     <text name="EndTime">وقت النهاية</text>
     <text name="EndTripDate">تاريخ التسليم</text>
     <text name="English">الانجليزية</text>
@@ -698,6 +701,7 @@
     <text name="FilterOrAddUser">تصفية\إضافة مستخدم</text>
     <text name="FinalPrice">السعر النهائي</text>
     <text name="FinancialTransActionMenu">التاريخ المالي</text>
+    <text name="FinishLoading">الانتهاء من تحميل االحمولة</text>
     <text name="FirstName">الإسم الأول</text>
     <text name="Flag">علم</text>
     <text name="ForgotPassword">هل نسيت كلمة المرور؟</text>
@@ -765,6 +769,7 @@
     <text name="HttpStatusCode">Http Status Code</text>
     <text name="IAgreeonTahcyon">أنا أوافق على</text>
     <text name="IAMA">أنا</text>
+    <text name="Id">الهوية الوطنية / الإقامة</text>
     <text name="ID/Iqama">الهوية الوطنية / الإقامة</text>
     <text name="Image">صورة</text>
     <text name="ImpersonationTokenErrorMessage">رمز التمثيل غير صالح أو منتهية صلاحيتة!</text>
@@ -928,10 +933,15 @@
     <text name="MinDigits">أقل عدد من الخانات</text>
     <text name="MinValue">أقل قيمة</text>
     <text name="MobileAbout">عن التطبيق</text>
+    <text name="MobileAccept">قبول</text>
+    <text name="MobileEmailAddress">عنوان البريد الالكتروني</text>
+    <text name="MobileEndTrip">الانتهاء من توصيل و تسليم الحمولة</text>
     <text name="MobileLanguage">اللغة</text>
     <text name="MobilelogOut">تسجيل خروج</text>
     <text name="MobileNo">رقم الجوال</text>
     <text name="MobileNumber">رقم الجوال</text>
+    <text name="MobilePleaseEnterTheCodeSentToRecipient">الرجاء إدخال الرمز، المرسل الى المستلم</text>
+    <text name="MobileReject">رفض</text>
     <text name="MobileTermsAndConditions">الشروط و الأحكام</text>
     <text name="MobileUpdate">تحديث</text>
     <text name="MobileUsagePolicy">سياسة الاستخدام</text>
@@ -1021,6 +1031,7 @@
     <text name="NoEnoughBalance">لا يوجد لديك رصيد كافي </text>
     <text name="NoInternetConnection">أنت غير متصل  بالإنترنت حالياً</text>
     <text name="None">لا شيء</text>
+    <text name="NoNotificationsYet">لا يوجد اشعارات بعد</text>
     <text name="NoOfTrips">الرحلات</text>
     <text name="NoOrganizationUnitDefinedYet">لا توجد وحدات تنظيمية.</text>
     <text name="NoPermission">ليس لديك أي صلاحيات تواصل مع مشرف حسابك</text>
@@ -1189,17 +1200,22 @@
     <text name="PleaseEnterDocumentType">الرجاء ادخال نوع المستند</text>
     <text name="PleaseEnterLoginInformation">الرجاء إدخال معلومات تسجيل الدخول</text>
     <text name="PleaseEnterNoMoreThanNCharacter">الرجاء إدخال أكثر من {0} حرفا.</text>
+    <text name="PleaseEnterTheCodeSentToRecipient">الرجاء إدخال الرمز، المرسل الى المستلم</text>
     <text name="PleaseEnterYourMobileNumber">الرجاء ادخال رقم الجوال</text>
     <text name="PleaseEnterYourNewPassword">الرجاء ادخال كلمة السر الجديدة</text>
     <text name="Pleasemakesureyouchoosethecountryandthecity!">الرجاء التأكد من أنك اخترت الدولة و المدينة</text>
     <text name="PleaseMakeSureYouProvideValidDetails!">الرجاء التأكد من أن جميع البيانات صحيحة</text>
     <text name="PleaseOnClickFollowingLinkToTrackYourShipmentAndRateTheShippingCompany">الرجاء الضغط على الرابط التالي لتتبع شحنتك و تقييم تجربتك</text>
     <text name="PleaseSelectAPicture">يرجى تحديد صورة!</text>
+    <text name="PleaseSelectAReason">الرجاء اختيار سبب الرفض </text>
     <text name="PleaseSelectASourceTripFacilityFirst">الرجاء اختيار منشأة التحميل أولاً</text>
     <text name="PleaseSelectReason">الرجاء اختيار سبب</text>
+    <text name="PleaseUploadPOD">يرجى تحميل إثبات التسليم POD</text>
     <text name="PleaseWait">الرجاء الإنتظار</text>
     <text name="PleaseWaitToConfirmYourEmailMessage">الرجاء الانتظار لحين تأكيد عنوان البريد الإلكتروني...</text>
+    <text name="PleaseWriteTheRejectionReason">الرجاء كتابة سبب الرفض </text>
     <text name="PleaseWriteYourFullName">الرجاء كتابة اسمك بالكامل</text>
+    <text name="PODProofOfDelivery">إثبات التسليم</text>
     <text name="Port">الميناء</text>
     <text name="Ports">الموانئ</text>
     <text name="PostedData">البيانات المنشورة</text>
@@ -1229,10 +1245,13 @@
     <text name="Quantity">الكمية</text>
     <text name="QuickNav">الإنتقال السريع</text>
     <text name="QuickThemeSelection">الاختيار السريع للتصميم</text>
+    <text name="RateLoadingFacility">تقييم إجراءات  تحميل الحمولة </text>
     <text name="RateOffloadingAdditionalNote">ملاحظات اضافية</text>
     <text name="RateOffloadingRateFacility">حفظ التقيم</text>
     <text name="Read">مقروء</text>
     <text name="ReadState">مقروء</text>
+    <text name="ReadyForLoading">تأكيد الجهوزية لتحميل الحمولة </text>
+    <text name="ReadyToOffloading">تأكيد الجهوزية لتنزيل الحمولة </text>
     <text name="Reason">سبب</text>
     <text name="ReceiveNotifications">تلقي الإشعارات</text>
     <text name="ReceiveNotifications_Definition">هذا الخيار يمكن استخدامه لتمكين / تعطيل الإخطارات.</text>
@@ -1260,6 +1279,7 @@
     <text name="RejectOffer">رفض</text>
     <text name="RejectPricingOffer">رفض عرض السعر</text>
     <text name="RejectShippingRequestNotificationMessage">تم إلغاء طلب الشحنة</text>
+    <text name="RejectTheTrip">رفض الرحلة</text>
     <text name="RejectThisTrip">رفض هذه الرحلة!</text>
     <text name="RemainingDay">الأيام المتبقية</text>
     <text name="RemainingDays">الأيام المتبقيه</text>
@@ -1407,6 +1427,7 @@
     <text name="Settings">الإعدادات</text>
     <text name="SettingsHeaderInfo">عرض وتغيير إعدادات النظام</text>
     <text name="Severity">خطورة</text>
+    <text name="ShipmentDetails">تفاصيل الحمولة</text>
     <text name="ShipmentTracking">تتبع الشحنة</text>
     <text name="Shipper">شاحن</text>
     <text name="ShipperAcceptedOffers">
@@ -1473,6 +1494,9 @@
     <text name="SpecialConstant">رمز مميز</text>
     <text name="Start">بدء</text>
     <text name="StartDate">تاريخ البداية</text>
+    <text name="StartLoading">بدء تحميل الحمولة</text>
+    <text name="StartMovingToDestination">بدء التحرك باتِّجاه موقع التسليم </text>
+    <text name="StartMovingToLoadingLocation">الذهاب الى موقع تحميل الحمولة</text>
     <text name="StartShippmentNotificationMessage">تم بدء الشحنة</text>
     <text name="StartTime">وقت البداية</text>
     <text name="StartTripDate">تاريخ الاستلام</text>
@@ -1864,6 +1888,7 @@
     <text name="UpComingLoad">الحمولة القادمة</text>
     <text name="Update">تحديث</text>
     <text name="UpdatedSuccessfully">تم التحديث بنجاح</text>
+    <text name="UpdatePhoneNumber">تحديث رقم الهاتف</text>
     <text name="UpdateSippingRequest">تحديث طلب الشحن</text>
     <text name="UpdateTrip">تحديث الرحلة</text>
     <text name="Upgrade">ترقية</text>
@@ -1876,6 +1901,7 @@
     <text name="UploadDocumentMsg">الرجاء تقديم الملفات التالية حتى يتم إكمال عملية إنشاء الحساب</text>
     <text name="UploadedFile">الملف الذي تم رفعه</text>
     <text name="UploadLogo_Info">إختر ملف JPG / JPEG / PNG / GIF  بحجم 30 KB  كحد أقصى و 139X35  بكسل.</text>
+    <text name="UploadPOD">فع ملف اثبات التسليم</text>
     <text name="UploadPODLbl">رفع اثبات الاستلام</text>
     <text name="UploadPODProofOfDelivery">الرجاء رفع ملف إثبات التسليم</text>
     <text name="Urdu">اردو</text>
@@ -1978,6 +2004,7 @@
     <text name="WelcomePage_Info">مرحبا بك بالنظام. يمكنك استخدام القائمة لبدء استخدام النظام. إذا كنت لا ترى أي عنصر بالقائمة ربما لم يكن لديك إذونات. يرجى مراجعة مشرف النظام للحصول على إذونات بالنظام.</text>
     <text name="WelcomePage_Title">أهلا بك!</text>
     <text name="WelcomeToTheApplicationNotificationMessage">أهلاً بك في نظام تاكيون للإشعارات. نظام الإشعارات يستخدم لإعلامك عن إشعارات من النظام أو المستخدمين . يمكنك اختيار نوع الإشعارات التي تريد أن تتلقاها من خلال إعدادات الإشعارات</text>
+    <text name="WeWillSendYouCodeToVerfiyYourEmailPleaseCheckYourInbox">سنرسل لك رمزًا للتحقق الى بريدك الإلكتروني ، يرجى التحقق من صندوق الوارد الخاص بك</text>
     <text name="WhatWillDoneAfterSubscriptionExpiry">ما الذي سيحدث بعد انتهاء صلاحية الاشتراك</text>
     <text name="WidgetDailySales">المبيعات اليومية</text>
     <text name="WidgetDeleteWarningMessage">هل أنت متأكد من إزالة القطعة "{0}" من صفحة "{1}"؟</text>
