@@ -53,6 +53,7 @@ export class CreateOrEditTripComponent extends AppComponentBase implements OnIni
   saving = false;
   loading = true;
   active = false;
+  activeTripId: number = undefined;
   routePointsFromChild: CreateOrEditRoutPointDto[];
 
   //documentFile: CreateOrEditDocumentFileDto = new CreateOrEditDocumentFileDto();
@@ -104,11 +105,10 @@ export class CreateOrEditTripComponent extends AppComponentBase implements OnIni
       //Get the Vase List From Father And Attach Them to new Array
       //vas id regarding to the shipping Request for example vas #1 / #2
       //console.log(`vas ID`, x.shippingRequestVas.vasId);
-      let i = 32;
-      console.log(`vas ID`, x.shippingRequestVas.id);
       const vas: CreateOrEditShippingRequestTripVasDto = new CreateOrEditShippingRequestTripVasDto();
-      vas.id = 32;
-      i = i + 1;
+      //for Create
+      vas.id = undefined;
+      vas.shippingRequestTripId = this.activeTripId || undefined;
       vas.shippingRequestVasId = x.shippingRequestVas.id;
       vas.name = x.vasName;
       this.cleanVasesList.push(vas);
@@ -117,9 +117,9 @@ export class CreateOrEditTripComponent extends AppComponentBase implements OnIni
   }
 
   show(record?: CreateOrEditShippingRequestTripDto): void {
-    console.log(`Vases From Father`, this.VasListFromFather);
     this.Vases = this.VasListFromFather;
     if (record) {
+      this.activeTripId = record.id;
       this._shippingRequestTripsService.getShippingRequestTripForEdit(record.id).subscribe((res) => {
         this.trip = res;
         this.PointsComponent.wayPointsList = this.trip.routPoints;
