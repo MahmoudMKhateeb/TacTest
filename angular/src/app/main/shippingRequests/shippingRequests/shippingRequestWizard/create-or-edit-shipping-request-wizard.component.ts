@@ -1,6 +1,8 @@
 import {
+  AfterViewChecked,
   AfterViewInit,
   ChangeDetectionStrategy,
+  ChangeDetectorRef,
   Component,
   ElementRef,
   Inject,
@@ -69,7 +71,7 @@ import * as moment from '@node_modules/moment';
   ],
   providers: [EnumToArrayPipe],
 })
-export class CreateOrEditShippingRequestWizardComponent extends AppComponentBase implements OnDestroy, AfterViewInit, OnInit, OnChanges {
+export class CreateOrEditShippingRequestWizardComponent extends AppComponentBase implements OnDestroy, AfterViewInit, OnInit, AfterViewChecked {
   active = false;
   saving = false;
   allGoodCategorys: GetAllGoodsCategoriesForDropDownOutput[];
@@ -89,10 +91,9 @@ export class CreateOrEditShippingRequestWizardComponent extends AppComponentBase
   allpackingTypes: SelectItemDto[];
   truckTypeLoading: boolean;
   capacityLoading: boolean;
-  // selectedVasesProperties = [];
   today = new Date();
   activeShippingRequestId: number = this._activatedRoute.snapshot.queryParams['id'];
-  stepToCompleteFrom: number = this._activatedRoute.snapshot.queryParams['step'];
+  stepToCompleteFrom: number = this._activatedRoute.snapshot.queryParams['completedSteps'];
 
   step1Dto = new CreateOrEditShippingRequestStep1Dto();
   step2Dto = new EditShippingRequestStep2Dto();
@@ -103,6 +104,9 @@ export class CreateOrEditShippingRequestWizardComponent extends AppComponentBase
 
   shippingRequestReview: GetShippingRequestForViewOutput = new GetShippingRequestForViewOutput();
   shippingRequestRev: ShippingRequestDto = this.shippingRequestReview.shippingRequest;
+  cleanedVases: CreateOrEditShippingRequestVasListDto[] = [];
+  selectedVasesProperties = [];
+
   constructor(
     injector: Injector,
     private _activatedRoute: ActivatedRoute,
@@ -114,7 +118,8 @@ export class CreateOrEditShippingRequestWizardComponent extends AppComponentBase
     private _facilitiesServiceProxy: FacilitiesServiceProxy,
     private _routStepsServiceProxy: RoutStepsServiceProxy,
     private enumToArray: EnumToArrayPipe,
-    private fb: FormBuilder
+    private fb: FormBuilder,
+    private cdr: ChangeDetectorRef
   ) {
     super(injector);
   }
@@ -124,7 +129,7 @@ export class CreateOrEditShippingRequestWizardComponent extends AppComponentBase
     shippingRequestType: [{ value: '', disabled: false }, Validators.required],
     shippingType: [{ value: '', disabled: false }, Validators.required],
     tripsDateRange: ['', Validators.required],
-    biddingDateRangeTest: [{ value: '', disabled: false }],
+    biddingDateRangeTest: [{ value: '', disabled: false }, Validators.required],
   });
   step2Form = this.fb.group({
     origin: ['', Validators.required],
@@ -148,14 +153,11 @@ export class CreateOrEditShippingRequestWizardComponent extends AppComponentBase
   wizard: any;
   biddingDateRange: Date[];
   tripsDateRange: Date[];
-  selectedVasesProperties = [];
   selectedvas: any;
-  ngOnChanges(changes: SimpleChanges) {
-    console.log(`Changes ------------------------------- `);
-    console.log(changes);
-  }
 
   ngOnInit() {
+    //this.loadallVases();
+
     this.loadAllDropDownLists();
     this.allRoutTypes = this.enumToArray.transform(ShippingRequestRouteType);
     //to be removed later
@@ -164,6 +166,8 @@ export class CreateOrEditShippingRequestWizardComponent extends AppComponentBase
     // });
     //this.activeShippingRequestId && this.activeStep > 3 ?  : 0;
     //this.reviewAndSubmit();
+
+    // this.cleanedVases = [...this.allVases, ...this.selectedvas];
   }
 
   ngOnDestroy() {
@@ -181,7 +185,7 @@ export class CreateOrEditShippingRequestWizardComponent extends AppComponentBase
 
     //if the step is last one get the all submited Details for Review
     this.activeStep == 5 ? this.reviewAndSubmit() : 0;
-    console.log(`current Active Step , `, this.activeStep);
+    //console.log(`current Active Step , `, this.activeStep);
     // Validation before going to next page
     this.wizard.on('beforeNext', (wizardObj) => {
       //console.log('beforeNext', wizardObj);
@@ -234,6 +238,10 @@ export class CreateOrEditShippingRequestWizardComponent extends AppComponentBase
       }
     });
   }
+  ngAfterViewChecked() {
+    this.cdr.detectChanges();
+  }
+
   //publish
   onSubmit() {
     // console.log('Submited');
@@ -402,6 +410,9 @@ export class CreateOrEditShippingRequestWizardComponent extends AppComponentBase
       )
       .subscribe((res) => {
         this.step4Dto = res;
+        this.selectedVases = res.shippingRequestVasList;
+        // console.log(`selected Vases`, res.shippingRequestVasList);
+        // console.log(`all vases `, this.allVases);
       });
   }
 
@@ -510,36 +521,47 @@ export class CreateOrEditShippingRequestWizardComponent extends AppComponentBase
    * resets the bidding start and end dates
    */
   resetBiddingDates(): void {
-    this.biddingDateRange = undefined;
+    //this.biddingDateRange = undefined;
+    this.step1Form.controls.biddingDateRangeTest.setValidators(null);
+    this.step1Form.controls.biddingDateRangeTest.updateValueAndValidity();
   }
   //select a vas and move it to Selected Vases
-  selectVases($event: any) {
-    //if deSelectAll emptyTheSelectedItemsArray
-    if ($event.value.length === 0) {
-      return (this.selectedVases = []);
-    }
-    // if item exist do nothing  ;
-    // if item exist in this and not exist in selected remove it
-    this.selectedVases.forEach((item, index) => {
-      const listItem = $event.value.find((x) => x.id == item.vasId);
-      if (!listItem) {
-        this.selectedVases.splice(index, 1);
-      }
-    });
-    // if item not exist add it
-    $event.value.forEach((e) => {
-      const selectedItem = this.selectedVases.find((x) => x.vasId == e.id);
-      if (!selectedItem) {
-        const singleVas = new CreateOrEditShippingRequestVasListDto();
-        singleVas.vasId = e.id;
-        this.selectedVases.push(singleVas);
-      }
-    });
-  }
+  // selectVases($event: any) {
+  //   //if deSelectAll emptyTheSelectedItemsArray
+  //   if ($event.value.length === 0) {
+  //     return (this.selectedVases = []);
+  //   }
+  //   // if item exist do nothing  ;
+  //   // if item exist in this and not exist in selected remove it
+  //   this.selectedVases.forEach((item, index) => {
+  //     const listItem = $event.value.find((x) => x.id == item.vasId);
+  //     if (!listItem) {
+  //       this.selectedVases.splice(index, 1);
+  //     }
+  //   });
+  //   // if item not exist add it
+  //   $event.value.forEach((e) => {
+  //     const selectedItem = this.selectedVases.find((x) => x.vasId == e.id);
+  //     if (!selectedItem) {
+  //       const singleVas = new CreateOrEditShippingRequestVasListDto();
+  //       singleVas.vasId = e.id;
+  //       this.selectedVases.push(singleVas);
+  //     }
+  //   });
+  // }
   loadallVases() {
     this._shippingRequestsServiceProxy.getAllShippingRequestVasesForTableDropdown().subscribe((result) => {
-      this.allVases = result;
-      this.allVases.forEach((item) => {
+      result.forEach((x) => {
+        const cleanVas = new CreateOrEditShippingRequestVasListDto();
+        cleanVas.id = undefined;
+        cleanVas.vasId = x.id; //get the vas id from All Vases
+        cleanVas.numberOfTrips = undefined;
+        cleanVas.requestMaxAmount = x.maxAmount;
+        cleanVas.requestMaxCount = x.maxCount;
+        cleanVas.vasName = x.vasName;
+        this.cleanedVases.push(cleanVas);
+      });
+      result.forEach((item) => {
         this.selectedVasesProperties[item.id] = {
           vasId: item.id,
           vasName: item.vasName,
@@ -547,7 +569,7 @@ export class CreateOrEditShippingRequestWizardComponent extends AppComponentBase
           vasAmountDisabled: item.hasAmount ? false : true,
         };
       });
-      //console.log(this.selectedVasesProperties);
+      //console.log(this.cleanedVases);
     });
   }
 
