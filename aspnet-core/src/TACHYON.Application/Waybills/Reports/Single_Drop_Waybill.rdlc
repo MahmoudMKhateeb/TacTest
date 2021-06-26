@@ -2,6 +2,44 @@
 <Report xmlns="http://schemas.microsoft.com/sqlserver/reporting/2008/01/reportdefinition" xmlns:rd="http://schemas.microsoft.com/SQLServer/reporting/reportdesigner">
   <Body>
     <ReportItems>
+      <Textbox Name="Textbox162">
+        <CanGrow>true</CanGrow>
+        <KeepTogether>true</KeepTogether>
+        <Paragraphs>
+          <Paragraph>
+            <TextRuns>
+              <TextRun>
+                <Value />
+                <Style>
+                  <FontFamily>Open Sans</FontFamily>
+                  <FontSize>9pt</FontSize>
+                  <FontWeight>SemiBold</FontWeight>
+                  <Color>#181818</Color>
+                </Style>
+              </TextRun>
+            </TextRuns>
+            <Style>
+              <TextAlign>Center</TextAlign>
+            </Style>
+          </Paragraph>
+        </Paragraphs>
+        <rd:DefaultName>Textbox3</rd:DefaultName>
+        <Top>0.17222in</Top>
+        <Left>0.25073in</Left>
+        <Height>0.40427in</Height>
+        <Width>3.39372in</Width>
+        <Style>
+          <Border>
+            <Color>Gray</Color>
+            <Style>Solid</Style>
+          </Border>
+          <VerticalAlign>Middle</VerticalAlign>
+          <PaddingLeft>4pt</PaddingLeft>
+          <PaddingRight>2pt</PaddingRight>
+          <PaddingTop>2pt</PaddingTop>
+          <PaddingBottom>2pt</PaddingBottom>
+        </Style>
+      </Textbox>
       <Textbox Name="Textbox123">
         <CanGrow>true</CanGrow>
         <KeepTogether>true</KeepTogether>
@@ -27,6 +65,7 @@
         <Left>3.6216in</Left>
         <Height>0.41667in</Height>
         <Width>3.46228in</Width>
+        <ZIndex>1</ZIndex>
         <Style>
           <Border>
             <Style>None</Style>
@@ -64,7 +103,7 @@
         <Left>3.64798in</Left>
         <Height>0.47667in</Height>
         <Width>3.4359in</Width>
-        <ZIndex>1</ZIndex>
+        <ZIndex>2</ZIndex>
         <Style>
           <Border>
             <Color>White</Color>
@@ -102,7 +141,7 @@
         <Left>0.24621in</Left>
         <Height>0.41667in</Height>
         <Width>6.83922in</Width>
-        <ZIndex>2</ZIndex>
+        <ZIndex>3</ZIndex>
         <Style>
           <Border>
             <Color>Gray</Color>
@@ -140,7 +179,7 @@
         <Left>3.69777in</Left>
         <Height>0.41667in</Height>
         <Width>3.39058in</Width>
-        <ZIndex>3</ZIndex>
+        <ZIndex>4</ZIndex>
         <Style>
           <Border>
             <Color>Gray</Color>
@@ -178,7 +217,7 @@
         <Left>0.242in</Left>
         <Height>0.41667in</Height>
         <Width>3.4141in</Width>
-        <ZIndex>4</ZIndex>
+        <ZIndex>5</ZIndex>
         <Style>
           <Border>
             <Color>Gray</Color>
@@ -216,7 +255,7 @@
         <Left>3.68904in</Left>
         <Height>0.41667in</Height>
         <Width>3.39639in</Width>
-        <ZIndex>5</ZIndex>
+        <ZIndex>6</ZIndex>
         <Style>
           <Border>
             <Color>Gray</Color>
@@ -254,44 +293,6 @@
         <Left>0.242in</Left>
         <Height>0.40167in</Height>
         <Width>3.40452in</Width>
-        <ZIndex>6</ZIndex>
-        <Style>
-          <Border>
-            <Color>Gray</Color>
-            <Style>Solid</Style>
-          </Border>
-          <VerticalAlign>Middle</VerticalAlign>
-          <PaddingLeft>2pt</PaddingLeft>
-          <PaddingRight>2pt</PaddingRight>
-          <PaddingTop>2pt</PaddingTop>
-          <PaddingBottom>2pt</PaddingBottom>
-        </Style>
-      </Textbox>
-      <Textbox Name="Textbox161">
-        <CanGrow>true</CanGrow>
-        <KeepTogether>true</KeepTogether>
-        <Paragraphs>
-          <Paragraph>
-            <TextRuns>
-              <TextRun>
-                <Value />
-                <Style>
-                  <FontFamily>Open Sans</FontFamily>
-                  <FontSize>11pt</FontSize>
-                  <Color>#181818</Color>
-                </Style>
-              </TextRun>
-            </TextRuns>
-            <Style>
-              <TextAlign>Center</TextAlign>
-            </Style>
-          </Paragraph>
-        </Paragraphs>
-        <rd:DefaultName>Textbox3</rd:DefaultName>
-        <Top>0.15982in</Top>
-        <Left>3.68612in</Left>
-        <Height>0.41667in</Height>
-        <Width>3.39931in</Width>
         <ZIndex>7</ZIndex>
         <Style>
           <Border>
@@ -299,7 +300,7 @@
             <Style>Solid</Style>
           </Border>
           <VerticalAlign>Middle</VerticalAlign>
-          <PaddingLeft>4pt</PaddingLeft>
+          <PaddingLeft>2pt</PaddingLeft>
           <PaddingRight>2pt</PaddingRight>
           <PaddingTop>2pt</PaddingTop>
           <PaddingBottom>2pt</PaddingBottom>
@@ -314,8 +315,9 @@
               <TextRun>
                 <Value>:وثيقة الشحن</Value>
                 <Style>
-                  <FontFamily>arial</FontFamily>
-                  <FontSize>11pt</FontSize>
+                  <FontFamily>GE Flow</FontFamily>
+                  <FontSize>9pt</FontSize>
+                  <FontWeight>SemiBold</FontWeight>
                   <Color>#181818</Color>
                 </Style>
               </TextRun>
@@ -352,8 +354,9 @@
               <TextRun>
                 <Value>:مرجع المرسل</Value>
                 <Style>
-                  <FontSize>11pt</FontSize>
-                  <FontWeight>Normal</FontWeight>
+                  <FontFamily>GE Flow</FontFamily>
+                  <FontSize>9pt</FontSize>
+                  <FontWeight>SemiBold</FontWeight>
                   <Color>#181818</Color>
                 </Style>
               </TextRun>
@@ -427,8 +430,8 @@
               <TextRun>
                 <Value>=First(Fields!Area.Value, "SingleDropDataSet")</Value>
                 <Style>
-                  <FontFamily>microsoft sans Serif</FontFamily>
-                  <FontSize>14pt</FontSize>
+                  <FontFamily>open sans</FontFamily>
+                  <FontSize>9pt</FontSize>
                   <Color>#181818</Color>
                 </Style>
               </TextRun>
@@ -465,8 +468,8 @@
               <TextRun>
                 <Value>=First(Fields!CityName.Value, "SingleDropDataSet")</Value>
                 <Style>
-                  <FontFamily>microsoft sans Serif</FontFamily>
-                  <FontSize>14pt</FontSize>
+                  <FontFamily>open sans</FontFamily>
+                  <FontSize>9pt</FontSize>
                   <Color>#181818</Color>
                 </Style>
               </TextRun>
@@ -503,8 +506,8 @@
               <TextRun>
                 <Value>=First(Fields!CountryName.Value, "SingleDropDataSet")</Value>
                 <Style>
-                  <FontFamily>microsoft sans Serif</FontFamily>
-                  <FontSize>14pt</FontSize>
+                  <FontFamily>open sans</FontFamily>
+                  <FontSize>9pt</FontSize>
                   <Color>#181818</Color>
                 </Style>
               </TextRun>
@@ -541,8 +544,8 @@
               <TextRun>
                 <Value>=First(Fields!FacilityName.Value, "SingleDropDataSet")</Value>
                 <Style>
-                  <FontFamily>microsoft sans Serif</FontFamily>
-                  <FontSize>14pt</FontSize>
+                  <FontFamily>open sans</FontFamily>
+                  <FontSize>9pt</FontSize>
                   <Color>#181818</Color>
                 </Style>
               </TextRun>
@@ -581,12 +584,12 @@
                 <Style>
                   <FontFamily>Open Sans</FontFamily>
                   <FontSize>13pt</FontSize>
-                  <FontWeight>Bold</FontWeight>
+                  <FontWeight>SemiBold</FontWeight>
                   <Color>White</Color>
                 </Style>
               </TextRun>
               <TextRun>
-                <Value xml:space="preserve">              </Value>
+                <Value xml:space="preserve">        </Value>
                 <Style>
                   <FontFamily>microsoft sans Serif</FontFamily>
                   <FontSize>13pt</FontSize>
@@ -595,17 +598,9 @@
                 </Style>
               </TextRun>
               <TextRun>
-                <Value xml:space="preserve"> </Value>
+                <Value> تفاصيل المستلم</Value>
                 <Style>
                   <FontFamily>GE Flow</FontFamily>
-                  <FontSize>13pt</FontSize>
-                  <FontWeight>Bold</FontWeight>
-                  <Color>White</Color>
-                </Style>
-              </TextRun>
-              <TextRun>
-                <Value>تفاصيل المستلم</Value>
-                <Style>
                   <FontSize>13pt</FontSize>
                   <FontWeight>Bold</FontWeight>
                   <Color>White</Color>
@@ -644,14 +639,14 @@
               <TextRun>
                 <Value>Sender Details</Value>
                 <Style>
-                  <FontFamily>open sans</FontFamily>
+                  <FontFamily>Open Sans</FontFamily>
                   <FontSize>13pt</FontSize>
                   <FontWeight>Bold</FontWeight>
                   <Color>White</Color>
                 </Style>
               </TextRun>
               <TextRun>
-                <Value xml:space="preserve">                </Value>
+                <Value xml:space="preserve">            </Value>
                 <Style>
                   <FontFamily>microsoft sans Serif</FontFamily>
                   <FontSize>13pt</FontSize>
@@ -662,8 +657,9 @@
               <TextRun>
                 <Value>تفاصيل المرسل</Value>
                 <Style>
+                  <FontFamily>GE Flow</FontFamily>
                   <FontSize>13pt</FontSize>
-                  <FontWeight>Bold</FontWeight>
+                  <FontWeight>SemiBold</FontWeight>
                   <Color>White</Color>
                 </Style>
               </TextRun>
@@ -700,16 +696,15 @@
               <TextRun>
                 <Value>Truck Details</Value>
                 <Style>
-                  <FontStyle>Normal</FontStyle>
                   <FontFamily>Open Sans</FontFamily>
                   <FontSize>13pt</FontSize>
-                  <FontWeight>Bold</FontWeight>
+                  <FontWeight>SemiBold</FontWeight>
                   <TextDecoration>None</TextDecoration>
                   <Color>White</Color>
                 </Style>
               </TextRun>
               <TextRun>
-                <Value xml:space="preserve">                     </Value>
+                <Value xml:space="preserve">               </Value>
                 <Style>
                   <FontFamily>microsoft sans Serif</FontFamily>
                   <FontSize>13pt</FontSize>
@@ -721,6 +716,7 @@
                 <Value>ﺗﻔﺎﺻﻴﻞ</Value>
                 <Style>
                   <FontStyle>Normal</FontStyle>
+                  <FontFamily>GE Flow</FontFamily>
                   <FontSize>13pt</FontSize>
                   <FontWeight>Bold</FontWeight>
                   <TextDecoration>None</TextDecoration>
@@ -740,6 +736,7 @@
                 <Value>اﻟﺸﺎﺣﻨﺔ</Value>
                 <Style>
                   <FontStyle>Normal</FontStyle>
+                  <FontFamily>GE Flow</FontFamily>
                   <FontSize>13pt</FontSize>
                   <FontWeight>Bold</FontWeight>
                   <TextDecoration>None</TextDecoration>
@@ -779,8 +776,17 @@
               <TextRun>
                 <Value>Driver Details</Value>
                 <Style>
-                  <FontStyle>Normal</FontStyle>
                   <FontFamily>Open Sans</FontFamily>
+                  <FontSize>13pt</FontSize>
+                  <FontWeight>SemiBold</FontWeight>
+                  <TextDecoration>None</TextDecoration>
+                  <Color>White</Color>
+                </Style>
+              </TextRun>
+              <TextRun>
+                <Value xml:space="preserve">               </Value>
+                <Style>
+                  <FontStyle>Normal</FontStyle>
                   <FontSize>13pt</FontSize>
                   <FontWeight>Bold</FontWeight>
                   <TextDecoration>None</TextDecoration>
@@ -788,9 +794,10 @@
                 </Style>
               </TextRun>
               <TextRun>
-                <Value>                    ﺗﻔﺎﺻﻴﻞ اﻟﺴﺎﺋﻖ</Value>
+                <Value> ﺗﻔﺎﺻﻴﻞ اﻟﺴﺎﺋﻖ</Value>
                 <Style>
                   <FontStyle>Normal</FontStyle>
+                  <FontFamily>GE Flow</FontFamily>
                   <FontSize>13pt</FontSize>
                   <FontWeight>Bold</FontWeight>
                   <TextDecoration>None</TextDecoration>
@@ -852,10 +859,9 @@
                             <TextRun>
                               <Value>#</Value>
                               <Style>
-                                <FontStyle>Normal</FontStyle>
                                 <FontFamily>Open Sans</FontFamily>
-                                <FontSize>12pt</FontSize>
-                                <FontWeight>Normal</FontWeight>
+                                <FontSize>9pt</FontSize>
+                                <FontWeight>SemiBold</FontWeight>
                                 <TextDecoration>None</TextDecoration>
                                 <Color>#404040</Color>
                               </Style>
@@ -891,10 +897,9 @@
                             <TextRun>
                               <Value>Item Description</Value>
                               <Style>
-                                <FontStyle>Normal</FontStyle>
                                 <FontFamily>Open Sans</FontFamily>
-                                <FontSize>12pt</FontSize>
-                                <FontWeight>Normal</FontWeight>
+                                <FontSize>9pt</FontSize>
+                                <FontWeight>SemiBold</FontWeight>
                                 <TextDecoration>None</TextDecoration>
                                 <Color>#404040</Color>
                               </Style>
@@ -913,8 +918,8 @@
                               <Value>وﺻﻒ اﻟﻤﻨﺘﺞ</Value>
                               <Style>
                                 <FontStyle>Normal</FontStyle>
-                                <FontSize>12pt</FontSize>
-                                <FontWeight>Normal</FontWeight>
+                                <FontFamily>GE Flow</FontFamily>
+                                <FontWeight>SemiBold</FontWeight>
                                 <TextDecoration>None</TextDecoration>
                                 <Color>#404040</Color>
                               </Style>
@@ -950,10 +955,9 @@
                             <TextRun>
                               <Value>QTY                </Value>
                               <Style>
-                                <FontStyle>Normal</FontStyle>
                                 <FontFamily>Open Sans</FontFamily>
-                                <FontSize>12pt</FontSize>
-                                <FontWeight>Normal</FontWeight>
+                                <FontSize>9pt</FontSize>
+                                <FontWeight>SemiBold</FontWeight>
                                 <TextDecoration>None</TextDecoration>
                                 <Color>#404040</Color>
                               </Style>
@@ -961,10 +965,8 @@
                             <TextRun>
                               <Value>الكمية</Value>
                               <Style>
-                                <FontStyle>Normal</FontStyle>
-                                <FontFamily>arial</FontFamily>
-                                <FontSize>12pt</FontSize>
-                                <FontWeight>Normal</FontWeight>
+                                <FontFamily>GE Flow</FontFamily>
+                                <FontWeight>SemiBold</FontWeight>
                                 <TextDecoration>None</TextDecoration>
                                 <Color>#404040</Color>
                               </Style>
@@ -1000,10 +1002,9 @@
                             <TextRun>
                               <Value>UOM           </Value>
                               <Style>
-                                <FontStyle>Normal</FontStyle>
                                 <FontFamily>Open Sans</FontFamily>
-                                <FontSize>12pt</FontSize>
-                                <FontWeight>Normal</FontWeight>
+                                <FontSize>9pt</FontSize>
+                                <FontWeight>SemiBold</FontWeight>
                                 <TextDecoration>None</TextDecoration>
                                 <Color>#404040</Color>
                               </Style>
@@ -1012,8 +1013,8 @@
                               <Value>وﺣﺪة اﻟﻘﻴﺎس</Value>
                               <Style>
                                 <FontStyle>Normal</FontStyle>
-                                <FontSize>12pt</FontSize>
-                                <FontWeight>Normal</FontWeight>
+                                <FontFamily>GE Flow</FontFamily>
+                                <FontWeight>SemiBold</FontWeight>
                                 <TextDecoration>None</TextDecoration>
                                 <Color>#404040</Color>
                               </Style>
@@ -1263,7 +1264,8 @@
                 <Value>Waybill No</Value>
                 <Style>
                   <FontFamily>Open Sans</FontFamily>
-                  <FontSize>11pt</FontSize>
+                  <FontSize>9pt</FontSize>
+                  <FontWeight>SemiBold</FontWeight>
                   <Color>#181818</Color>
                 </Style>
               </TextRun>
@@ -1271,8 +1273,8 @@
                 <Value>:</Value>
                 <Style>
                   <FontFamily>Open Sans</FontFamily>
-                  <FontSize>11pt</FontSize>
-                  <FontWeight>Normal</FontWeight>
+                  <FontSize>9pt</FontSize>
+                  <FontWeight>SemiBold</FontWeight>
                   <Color>#181818</Color>
                 </Style>
               </TextRun>
@@ -1310,8 +1312,8 @@
                 <Value>Shipper Reference</Value>
                 <Style>
                   <FontFamily>Open Sans</FontFamily>
-                  <FontSize>11pt</FontSize>
-                  <FontWeight>Normal</FontWeight>
+                  <FontSize>9pt</FontSize>
+                  <FontWeight>SemiBold</FontWeight>
                   <Color>#181818</Color>
                 </Style>
               </TextRun>
@@ -1372,8 +1374,9 @@
               <TextRun>
                 <Value>رقم الفاتورة</Value>
                 <Style>
-                  <FontSize>11pt</FontSize>
-                  <Color>#181818</Color>
+                  <FontFamily>GE Flow</FontFamily>
+                  <FontSize>9pt</FontSize>
+                  <FontWeight>SemiBold</FontWeight>
                   <Language>ar-SA</Language>
                 </Style>
               </TextRun>
@@ -1411,8 +1414,8 @@
                 <Value>Invoice NO</Value>
                 <Style>
                   <FontFamily>Open Sans</FontFamily>
-                  <FontSize>11pt</FontSize>
-                  <FontWeight>Normal</FontWeight>
+                  <FontSize>9pt</FontSize>
+                  <FontWeight>SemiBold</FontWeight>
                   <Color>#282828</Color>
                 </Style>
               </TextRun>
@@ -1563,8 +1566,9 @@
               <TextRun>
                 <Value>: الحالة</Value>
                 <Style>
-                  <FontSize>11pt</FontSize>
-                  <FontWeight>Normal</FontWeight>
+                  <FontFamily>GE Flow</FontFamily>
+                  <FontSize>9pt</FontSize>
+                  <FontWeight>SemiBold</FontWeight>
                   <Color>#181818</Color>
                 </Style>
               </TextRun>
@@ -1600,8 +1604,8 @@
                 <Value> Status</Value>
                 <Style>
                   <FontFamily>Open Sans</FontFamily>
-                  <FontSize>11pt</FontSize>
-                  <FontWeight>Normal</FontWeight>
+                  <FontSize>9pt</FontSize>
+                  <FontWeight>SemiBold</FontWeight>
                   <Color>#3b3a3c</Color>
                 </Style>
               </TextRun>
@@ -1680,8 +1684,9 @@
               <TextRun>
                 <Value>: التاريخ</Value>
                 <Style>
-                  <FontFamily>arial</FontFamily>
-                  <FontSize>11pt</FontSize>
+                  <FontFamily>GE Flow</FontFamily>
+                  <FontSize>9pt</FontSize>
+                  <FontWeight>SemiBold</FontWeight>
                   <Color>#181818</Color>
                 </Style>
               </TextRun>
@@ -1692,9 +1697,9 @@
           </Paragraph>
         </Paragraphs>
         <rd:DefaultName>Textbox3</rd:DefaultName>
-        <Top>0.14596in</Top>
+        <Top>0.21587in</Top>
         <Left>3.00421in</Left>
-        <Height>0.41667in</Height>
+        <Height>0.34676in</Height>
         <Width>0.5729in</Width>
         <ZIndex>31</ZIndex>
         <Style>
@@ -1716,11 +1721,20 @@
           <Paragraph>
             <TextRuns>
               <TextRun>
-                <Value>Date: </Value>
+                <Value>Date</Value>
                 <Style>
                   <FontFamily>Open Sans</FontFamily>
-                  <FontSize>11pt</FontSize>
-                  <FontWeight>Normal</FontWeight>
+                  <FontSize>9pt</FontSize>
+                  <FontWeight>SemiBold</FontWeight>
+                  <Color>#282828</Color>
+                </Style>
+              </TextRun>
+              <TextRun>
+                <Value>: </Value>
+                <Style>
+                  <FontFamily>Open Sans</FontFamily>
+                  <FontSize>9pt</FontSize>
+                  <FontWeight>SemiBold</FontWeight>
                   <Color>#282828</Color>
                 </Style>
               </TextRun>
@@ -1731,9 +1745,9 @@
           </Paragraph>
         </Paragraphs>
         <rd:DefaultName>Textbox3</rd:DefaultName>
-        <Top>0.14596in</Top>
+        <Top>0.21587in</Top>
         <Left>0.27817in</Left>
-        <Height>0.41667in</Height>
+        <Height>0.27913in</Height>
         <Width>0.62947in</Width>
         <ZIndex>32</ZIndex>
         <Style>
@@ -1809,7 +1823,9 @@
               <TextRun>
                 <Value>إسم الشركة</Value>
                 <Style>
-                  <FontSize>11pt</FontSize>
+                  <FontFamily>GE Flow</FontFamily>
+                  <FontSize>9pt</FontSize>
+                  <FontWeight>SemiBold</FontWeight>
                   <Color>#282828</Color>
                   <Language>ar-SA</Language>
                 </Style>
@@ -1822,9 +1838,9 @@
         </Paragraphs>
         <rd:DefaultName>Textbox3</rd:DefaultName>
         <Top>2.95787in</Top>
-        <Left>6.37467in</Left>
+        <Left>6.27776in</Left>
         <Height>0.36935in</Height>
-        <Width>0.70921in</Width>
+        <Width>0.80612in</Width>
         <ZIndex>34</ZIndex>
         <Style>
           <Border>
@@ -1847,10 +1863,9 @@
               <TextRun>
                 <Value>Company Name</Value>
                 <Style>
-                  <FontStyle>Normal</FontStyle>
                   <FontFamily>Open Sans</FontFamily>
-                  <FontSize>11pt</FontSize>
-                  <FontWeight>Normal</FontWeight>
+                  <FontSize>9pt</FontSize>
+                  <FontWeight>SemiBold</FontWeight>
                   <TextDecoration>None</TextDecoration>
                   <Color>#404040</Color>
                 </Style>
@@ -1858,9 +1873,9 @@
               <TextRun>
                 <Value>:</Value>
                 <Style>
-                  <FontFamily>microsoft sans Serif</FontFamily>
-                  <FontSize>11pt</FontSize>
-                  <FontWeight>Normal</FontWeight>
+                  <FontFamily>Open Sans</FontFamily>
+                  <FontSize>9pt</FontSize>
+                  <FontWeight>SemiBold</FontWeight>
                   <Color>#282828</Color>
                 </Style>
               </TextRun>
@@ -1874,7 +1889,7 @@
         <Top>2.95787in</Top>
         <Left>3.60489in</Left>
         <Height>0.36935in</Height>
-        <Width>1.66707in</Width>
+        <Width>1.44524in</Width>
         <ZIndex>35</ZIndex>
         <Style>
           <Border>
@@ -1969,9 +1984,9 @@
               <TextRun>
                 <Value xml:space="preserve"> </Value>
                 <Style>
-                  <FontFamily>microsoft sans Serif</FontFamily>
-                  <FontSize>11pt</FontSize>
-                  <FontWeight>Bold</FontWeight>
+                  <FontFamily>Open Sans</FontFamily>
+                  <FontSize>9pt</FontSize>
+                  <FontWeight>SemiBold</FontWeight>
                   <Color>#282828</Color>
                 </Style>
               </TextRun>
@@ -1986,8 +2001,9 @@
               <TextRun>
                 <Value>إسم الشركة</Value>
                 <Style>
-                  <FontSize>11pt</FontSize>
-                  <Color>#282828</Color>
+                  <FontFamily>GE Flow</FontFamily>
+                  <FontSize>9pt</FontSize>
+                  <FontWeight>SemiBold</FontWeight>
                   <Language>ar-SA</Language>
                 </Style>
               </TextRun>
@@ -1999,9 +2015,9 @@
         </Paragraphs>
         <rd:DefaultName>Textbox3</rd:DefaultName>
         <Top>2.91888in</Top>
-        <Left>2.87744in</Left>
+        <Left>2.84053in</Left>
         <Height>0.36935in</Height>
-        <Width>0.69967in</Width>
+        <Width>0.73658in</Width>
         <ZIndex>38</ZIndex>
         <Style>
           <Border>
@@ -2024,10 +2040,9 @@
               <TextRun>
                 <Value>Company Name</Value>
                 <Style>
-                  <FontStyle>Normal</FontStyle>
                   <FontFamily>Open Sans</FontFamily>
-                  <FontSize>11pt</FontSize>
-                  <FontWeight>Normal</FontWeight>
+                  <FontSize>9pt</FontSize>
+                  <FontWeight>SemiBold</FontWeight>
                   <TextDecoration>None</TextDecoration>
                   <Color>#404040</Color>
                 </Style>
@@ -2035,9 +2050,9 @@
               <TextRun>
                 <Value>:</Value>
                 <Style>
-                  <FontFamily>microsoft sans Serif</FontFamily>
-                  <FontSize>11pt</FontSize>
-                  <FontWeight>Normal</FontWeight>
+                  <FontFamily>Open Sans</FontFamily>
+                  <FontSize>9pt</FontSize>
+                  <FontWeight>SemiBold</FontWeight>
                   <Color>#282828</Color>
                 </Style>
               </TextRun>
@@ -2159,10 +2174,9 @@
               <TextRun>
                 <Value>Contact Name</Value>
                 <Style>
-                  <FontStyle>Normal</FontStyle>
                   <FontFamily>Open Sans</FontFamily>
-                  <FontSize>11pt</FontSize>
-                  <FontWeight>Normal</FontWeight>
+                  <FontSize>9pt</FontSize>
+                  <FontWeight>SemiBold</FontWeight>
                   <TextDecoration>None</TextDecoration>
                   <Color>#404040</Color>
                 </Style>
@@ -2283,7 +2297,7 @@
                 <Value>:</Value>
                 <Style>
                   <FontStyle>Normal</FontStyle>
-                  <FontFamily>Microsoft Sans Serif</FontFamily>
+                  <FontFamily>GE Flow</FontFamily>
                   <FontSize>11pt</FontSize>
                   <FontWeight>Normal</FontWeight>
                   <TextDecoration>None</TextDecoration>
@@ -2294,8 +2308,9 @@
                 <Value>ﺟﻬﺔ اﻻﺗﺼﺎل</Value>
                 <Style>
                   <FontStyle>Normal</FontStyle>
-                  <FontSize>11pt</FontSize>
-                  <FontWeight>Normal</FontWeight>
+                  <FontFamily>GE Flow</FontFamily>
+                  <FontSize>9pt</FontSize>
+                  <FontWeight>SemiBold</FontWeight>
                   <TextDecoration>None</TextDecoration>
                   <Color>#404040</Color>
                 </Style>
@@ -2427,7 +2442,9 @@
               <TextRun>
                 <Value>الجوال</Value>
                 <Style>
-                  <FontSize>11pt</FontSize>
+                  <FontFamily>GE Flow</FontFamily>
+                  <FontSize>9pt</FontSize>
+                  <FontWeight>SemiBold</FontWeight>
                   <Color>#282828</Color>
                 </Style>
               </TextRun>
@@ -2498,10 +2515,9 @@
               <TextRun>
                 <Value>Mobile:</Value>
                 <Style>
-                  <FontStyle>Normal</FontStyle>
                   <FontFamily>Open Sans</FontFamily>
-                  <FontSize>11pt</FontSize>
-                  <FontWeight>Normal</FontWeight>
+                  <FontSize>9pt</FontSize>
+                  <FontWeight>SemiBold</FontWeight>
                   <TextDecoration>None</TextDecoration>
                   <Color>#404040</Color>
                 </Style>
@@ -2548,7 +2564,9 @@
               <TextRun>
                 <Value>الجوال</Value>
                 <Style>
-                  <FontSize>11pt</FontSize>
+                  <FontFamily>GE Flow</FontFamily>
+                  <FontSize>9pt</FontSize>
+                  <FontWeight>SemiBold</FontWeight>
                   <Color>#282828</Color>
                 </Style>
               </TextRun>
@@ -2619,10 +2637,9 @@
               <TextRun>
                 <Value>Mobile:</Value>
                 <Style>
-                  <FontStyle>Normal</FontStyle>
                   <FontFamily>Open Sans</FontFamily>
-                  <FontSize>11pt</FontSize>
-                  <FontWeight>Normal</FontWeight>
+                  <FontSize>9pt</FontSize>
+                  <FontWeight>SemiBold</FontWeight>
                   <TextDecoration>None</TextDecoration>
                   <Color>#404040</Color>
                 </Style>
@@ -2660,7 +2677,9 @@
               <TextRun>
                 <Value>: نوع الشاحنة</Value>
                 <Style>
-                  <FontSize>11pt</FontSize>
+                  <FontFamily>GE Flow</FontFamily>
+                  <FontSize>9pt</FontSize>
+                  <FontWeight>SemiBold</FontWeight>
                   <Color>#282828</Color>
                 </Style>
               </TextRun>
@@ -2697,10 +2716,9 @@
               <TextRun>
                 <Value>Truck Type:</Value>
                 <Style>
-                  <FontStyle>Normal</FontStyle>
                   <FontFamily>Open Sans</FontFamily>
-                  <FontSize>11pt</FontSize>
-                  <FontWeight>Normal</FontWeight>
+                  <FontSize>9pt</FontSize>
+                  <FontWeight>SemiBold</FontWeight>
                   <TextDecoration>None</TextDecoration>
                   <Color>#404040</Color>
                 </Style>
@@ -2780,8 +2798,9 @@
                 <Value>إﺳﻢ اﻟﺴﺎﺋﻖ</Value>
                 <Style>
                   <FontStyle>Normal</FontStyle>
-                  <FontSize>11pt</FontSize>
-                  <FontWeight>Normal</FontWeight>
+                  <FontFamily>GE Flow</FontFamily>
+                  <FontSize>9pt</FontSize>
+                  <FontWeight>SemiBold</FontWeight>
                   <TextDecoration>None</TextDecoration>
                   <Color>#404040</Color>
                 </Style>
@@ -2794,9 +2813,9 @@
         </Paragraphs>
         <rd:DefaultName>Textbox3</rd:DefaultName>
         <Top>5.28716in</Top>
-        <Left>2.98111in</Left>
+        <Left>2.89133in</Left>
         <Height>0.30248in</Height>
-        <Width>0.61132in</Width>
+        <Width>0.7011in</Width>
         <ZIndex>57</ZIndex>
         <Style>
           <Border>
@@ -2854,8 +2873,9 @@
                 <Value>:رﻗﻢ ﻟﻮﺣﺔ اﻟﺸﺎﺣﻨﺔ</Value>
                 <Style>
                   <FontStyle>Normal</FontStyle>
-                  <FontSize>11pt</FontSize>
-                  <FontWeight>Normal</FontWeight>
+                  <FontFamily>GE Flow</FontFamily>
+                  <FontSize>9pt</FontSize>
+                  <FontWeight>SemiBold</FontWeight>
                   <TextDecoration>None</TextDecoration>
                   <Color>#404040</Color>
                 </Style>
@@ -2893,10 +2913,9 @@
               <TextRun>
                 <Value>Truck Plate No:</Value>
                 <Style>
-                  <FontStyle>Normal</FontStyle>
                   <FontFamily>Open Sans</FontFamily>
-                  <FontSize>11pt</FontSize>
-                  <FontWeight>Normal</FontWeight>
+                  <FontSize>9pt</FontSize>
+                  <FontWeight>SemiBold</FontWeight>
                   <TextDecoration>None</TextDecoration>
                   <Color>#404040</Color>
                 </Style>
@@ -2968,10 +2987,9 @@
               <TextRun>
                 <Value>Driver Name</Value>
                 <Style>
-                  <FontStyle>Normal</FontStyle>
                   <FontFamily>Open Sans</FontFamily>
-                  <FontSize>11pt</FontSize>
-                  <FontWeight>Normal</FontWeight>
+                  <FontSize>9pt</FontSize>
+                  <FontWeight>SemiBold</FontWeight>
                   <TextDecoration>None</TextDecoration>
                   <Color>#404040</Color>
                 </Style>
@@ -3019,7 +3037,9 @@
               <TextRun>
                 <Value>:تاريخ و وقت الإستلام</Value>
                 <Style>
-                  <FontSize>11pt</FontSize>
+                  <FontFamily>GE Flow</FontFamily>
+                  <FontSize>9pt</FontSize>
+                  <FontWeight>SemiBold</FontWeight>
                   <Color>#282828</Color>
                 </Style>
               </TextRun>
@@ -3089,10 +3109,9 @@
               <TextRun>
                 <Value>Pickup Date &amp; Time</Value>
                 <Style>
-                  <FontStyle>Normal</FontStyle>
                   <FontFamily>Open Sans</FontFamily>
-                  <FontSize>11pt</FontSize>
-                  <FontWeight>Normal</FontWeight>
+                  <FontSize>9pt</FontSize>
+                  <FontWeight>SemiBold</FontWeight>
                   <TextDecoration>None</TextDecoration>
                   <Color>#404040</Color>
                 </Style>
@@ -3101,8 +3120,8 @@
                 <Value>:</Value>
                 <Style>
                   <FontFamily>Open Sans</FontFamily>
-                  <FontSize>11pt</FontSize>
-                  <FontWeight>Normal</FontWeight>
+                  <FontSize>9pt</FontSize>
+                  <FontWeight>SemiBold</FontWeight>
                   <Color>#282828</Color>
                 </Style>
               </TextRun>
@@ -3138,8 +3157,9 @@
               <TextRun>
                 <Value>:تاريخ الطباعة</Value>
                 <Style>
-                  <FontFamily>arial</FontFamily>
-                  <FontSize>11pt</FontSize>
+                  <FontFamily>GE Flow</FontFamily>
+                  <FontSize>9pt</FontSize>
+                  <FontWeight>SemiBold</FontWeight>
                   <Color>#282828</Color>
                 </Style>
               </TextRun>
@@ -3209,10 +3229,9 @@
               <TextRun>
                 <Value>Print Date</Value>
                 <Style>
-                  <FontStyle>Normal</FontStyle>
                   <FontFamily>Open Sans</FontFamily>
-                  <FontSize>11pt</FontSize>
-                  <FontWeight>Normal</FontWeight>
+                  <FontSize>9pt</FontSize>
+                  <FontWeight>SemiBold</FontWeight>
                   <TextDecoration>None</TextDecoration>
                   <Color>#404040</Color>
                 </Style>
@@ -3221,8 +3240,8 @@
                 <Value>:</Value>
                 <Style>
                   <FontFamily>Open Sans</FontFamily>
-                  <FontSize>11pt</FontSize>
-                  <FontWeight>Normal</FontWeight>
+                  <FontSize>9pt</FontSize>
+                  <FontWeight>SemiBold</FontWeight>
                   <Color>#282828</Color>
                 </Style>
               </TextRun>
@@ -3258,11 +3277,9 @@
               <TextRun>
                 <Value />
                 <Style>
-                  <FontStyle>Normal</FontStyle>
                   <FontFamily>Open Sans</FontFamily>
-                  <FontSize>13pt</FontSize>
-                  <FontWeight>Bold</FontWeight>
-                  <TextDecoration>None</TextDecoration>
+                  <FontSize>9pt</FontSize>
+                  <FontWeight>SemiBold</FontWeight>
                   <Color>White</Color>
                 </Style>
               </TextRun>
@@ -3375,8 +3392,8 @@
               <TextRun>
                 <Value>:تاريخ  و وقت التسليم</Value>
                 <Style>
-                  <FontFamily>arial</FontFamily>
-                  <FontSize>11pt</FontSize>
+                  <FontFamily>GE Flow</FontFamily>
+                  <FontWeight>SemiBold</FontWeight>
                   <Color>#282828</Color>
                 </Style>
               </TextRun>
@@ -3390,7 +3407,7 @@
         <Top>14.91731in</Top>
         <Left>3.69777in</Left>
         <Height>0.36935in</Height>
-        <Width>1.15932in</Width>
+        <Width>1.49265in</Width>
         <ZIndex>72</ZIndex>
         <Style>
           <Border>
@@ -3446,10 +3463,9 @@
               <TextRun>
                 <Value>Delivery Date &amp; Tiem</Value>
                 <Style>
-                  <FontStyle>Normal</FontStyle>
                   <FontFamily>Open Sans</FontFamily>
-                  <FontSize>11pt</FontSize>
-                  <FontWeight>Normal</FontWeight>
+                  <FontSize>9pt</FontSize>
+                  <FontWeight>SemiBold</FontWeight>
                   <TextDecoration>None</TextDecoration>
                   <Color>#404040</Color>
                 </Style>
@@ -3458,8 +3474,8 @@
                 <Value>:</Value>
                 <Style>
                   <FontFamily>Open Sans</FontFamily>
-                  <FontSize>11pt</FontSize>
-                  <FontWeight>Normal</FontWeight>
+                  <FontSize>9pt</FontSize>
+                  <FontWeight>SemiBold</FontWeight>
                   <Color>#282828</Color>
                 </Style>
               </TextRun>
@@ -3571,10 +3587,9 @@
               <TextRun>
                 <Value />
                 <Style>
-                  <FontStyle>Normal</FontStyle>
                   <FontFamily>Open Sans</FontFamily>
-                  <FontSize>13pt</FontSize>
-                  <FontWeight>ExtraBold</FontWeight>
+                  <FontSize>9pt</FontSize>
+                  <FontWeight>SemiBold</FontWeight>
                   <TextDecoration>None</TextDecoration>
                   <Color>White</Color>
                 </Style>
@@ -3612,9 +3627,9 @@
               <TextRun>
                 <Value>تفاصيل البضاعة</Value>
                 <Style>
-                  <FontFamily>arial</FontFamily>
+                  <FontFamily>GE Flow</FontFamily>
                   <FontSize>13pt</FontSize>
-                  <FontWeight>Bold</FontWeight>
+                  <FontWeight>SemiBold</FontWeight>
                   <Color>White</Color>
                 </Style>
               </TextRun>
@@ -3651,10 +3666,9 @@
               <TextRun>
                 <Value>Goods </Value>
                 <Style>
-                  <FontStyle>Normal</FontStyle>
                   <FontFamily>Open Sans</FontFamily>
                   <FontSize>13pt</FontSize>
-                  <FontWeight>ExtraBold</FontWeight>
+                  <FontWeight>SemiBold</FontWeight>
                   <TextDecoration>None</TextDecoration>
                   <Color>White</Color>
                 </Style>
@@ -3664,7 +3678,7 @@
                 <Style>
                   <FontFamily>Open Sans</FontFamily>
                   <FontSize>13pt</FontSize>
-                  <FontWeight>Bold</FontWeight>
+                  <FontWeight>SemiBold</FontWeight>
                   <Color>White</Color>
                 </Style>
               </TextRun>
@@ -3697,9 +3711,9 @@
               <TextRun>
                 <Value>موقع الإستلام</Value>
                 <Style>
-                  <FontFamily>arial</FontFamily>
+                  <FontFamily>GE Flow</FontFamily>
                   <FontSize>13pt</FontSize>
-                  <FontWeight>Bold</FontWeight>
+                  <FontWeight>SemiBold</FontWeight>
                   <Color>White</Color>
                 </Style>
               </TextRun>
@@ -3739,7 +3753,7 @@
                   <FontStyle>Normal</FontStyle>
                   <FontFamily>Open Sans</FontFamily>
                   <FontSize>13pt</FontSize>
-                  <FontWeight>Bold</FontWeight>
+                  <FontWeight>SemiBold</FontWeight>
                   <TextDecoration>None</TextDecoration>
                   <Color>White</Color>
                 </Style>
@@ -3773,10 +3787,9 @@
               <TextRun>
                 <Value>Delivery Location</Value>
                 <Style>
-                  <FontStyle>Normal</FontStyle>
                   <FontFamily>Open Sans</FontFamily>
-                  <FontSize>13pt</FontSize>
-                  <FontWeight>Bold</FontWeight>
+                  <FontSize>9pt</FontSize>
+                  <FontWeight>SemiBold</FontWeight>
                   <TextDecoration>None</TextDecoration>
                   <Color>White</Color>
                 </Style>
@@ -3810,9 +3823,9 @@
               <TextRun>
                 <Value>موقع التسليم</Value>
                 <Style>
-                  <FontFamily>arial</FontFamily>
+                  <FontFamily>GE Flow</FontFamily>
                   <FontSize>13pt</FontSize>
-                  <FontWeight>Bold</FontWeight>
+                  <FontWeight>SemiBold</FontWeight>
                   <Color>White</Color>
                 </Style>
               </TextRun>
@@ -3849,8 +3862,9 @@
               <TextRun>
                 <Value>إسم الناقل</Value>
                 <Style>
-                  <FontSize>11pt</FontSize>
-                  <FontWeight>Normal</FontWeight>
+                  <FontFamily>GE Flow</FontFamily>
+                  <FontSize>9pt</FontSize>
+                  <FontWeight>SemiBold</FontWeight>
                   <Color>#181818</Color>
                 </Style>
               </TextRun>
@@ -3886,8 +3900,8 @@
                 <Value>Carrier Name:</Value>
                 <Style>
                   <FontFamily>Open Sans</FontFamily>
-                  <FontSize>11pt</FontSize>
-                  <FontWeight>Normal</FontWeight>
+                  <FontSize>9pt</FontSize>
+                  <FontWeight>SemiBold</FontWeight>
                   <Color>#181818</Color>
                 </Style>
               </TextRun>
@@ -3922,9 +3936,9 @@
               <TextRun>
                 <Value>إسم العميل</Value>
                 <Style>
-                  <FontFamily>microsoft sans Serif</FontFamily>
-                  <FontSize>11pt</FontSize>
-                  <FontWeight>Normal</FontWeight>
+                  <FontFamily>GE Flow</FontFamily>
+                  <FontSize>9pt</FontSize>
+                  <FontWeight>SemiBold</FontWeight>
                   <Color>#181818</Color>
                 </Style>
               </TextRun>
@@ -3962,8 +3976,8 @@
                 <Value>Client Name</Value>
                 <Style>
                   <FontFamily>Open Sans</FontFamily>
-                  <FontSize>11pt</FontSize>
-                  <FontWeight>Normal</FontWeight>
+                  <FontSize>9pt</FontSize>
+                  <FontWeight>SemiBold</FontWeight>
                   <Color>#181818</Color>
                 </Style>
               </TextRun>
@@ -4115,11 +4129,22 @@
           <Paragraph>
             <TextRuns>
               <TextRun>
-                <Value>:رﻗﻢ إﻗﺎﻣﺔ/ هوية اﻟﺴﺎﺋﻖ</Value>
+                <Value>:</Value>
                 <Style>
                   <FontStyle>Normal</FontStyle>
                   <FontSize>11pt</FontSize>
                   <FontWeight>Normal</FontWeight>
+                  <TextDecoration>None</TextDecoration>
+                  <Color>#404040</Color>
+                </Style>
+              </TextRun>
+              <TextRun>
+                <Value>رﻗﻢ إﻗﺎﻣﺔ/ هوية اﻟﺴﺎﺋﻖ</Value>
+                <Style>
+                  <FontStyle>Normal</FontStyle>
+                  <FontFamily>GE Flow</FontFamily>
+                  <FontSize>9pt</FontSize>
+                  <FontWeight>SemiBold</FontWeight>
                   <TextDecoration>None</TextDecoration>
                   <Color>#404040</Color>
                 </Style>
@@ -4132,9 +4157,9 @@
         </Paragraphs>
         <rd:DefaultName>Textbox3</rd:DefaultName>
         <Top>5.72595in</Top>
-        <Left>2.43838in</Left>
+        <Left>2.43873in</Left>
         <Height>0.41667in</Height>
-        <Width>1.13873in</Width>
+        <Width>1.13838in</Width>
         <ZIndex>91</ZIndex>
         <Style>
           <Border>
@@ -4157,10 +4182,9 @@
               <TextRun>
                 <Value>Driver ID/Iqama No:</Value>
                 <Style>
-                  <FontStyle>Normal</FontStyle>
                   <FontFamily>Open Sans</FontFamily>
-                  <FontSize>11pt</FontSize>
-                  <FontWeight>Normal</FontWeight>
+                  <FontSize>9pt</FontSize>
+                  <FontWeight>SemiBold</FontWeight>
                   <TextDecoration>None</TextDecoration>
                   <Color>#404040</Color>
                 </Style>
@@ -4198,7 +4222,9 @@
               <TextRun>
                 <Value>:الوزن الإجمالي</Value>
                 <Style>
-                  <FontSize>11pt</FontSize>
+                  <FontFamily>GE Flow</FontFamily>
+                  <FontSize>9pt</FontSize>
+                  <FontWeight>SemiBold</FontWeight>
                   <Color>#282828</Color>
                 </Style>
               </TextRun>
@@ -4245,10 +4271,10 @@
           </Paragraph>
         </Paragraphs>
         <rd:DefaultName>Textbox82</rd:DefaultName>
-        <Top>5.79261in</Top>
-        <Left>1.46477in</Left>
+        <Top>5.77327in</Top>
+        <Left>1.43725in</Left>
         <Height>0.36935in</Height>
-        <Width>1.13318in</Width>
+        <Width>1.00148in</Width>
         <ZIndex>94</ZIndex>
         <Style>
           <Border>
@@ -4304,8 +4330,8 @@
                 <Value>Total Weight:</Value>
                 <Style>
                   <FontFamily>Open Sans</FontFamily>
-                  <FontSize>11pt</FontSize>
-                  <FontWeight>Normal</FontWeight>
+                  <FontSize>9pt</FontSize>
+                  <FontWeight>SemiBold</FontWeight>
                   <Color>#282828</Color>
                 </Style>
               </TextRun>
@@ -4342,7 +4368,9 @@
               <TextRun>
                 <Value>:نوع التعبئة</Value>
                 <Style>
-                  <FontSize>11pt</FontSize>
+                  <FontFamily>GE Flow</FontFamily>
+                  <FontSize>9pt</FontSize>
+                  <FontWeight>SemiBold</FontWeight>
                   <Color>#282828</Color>
                 </Style>
               </TextRun>
@@ -4413,8 +4441,8 @@
                 <Value>Packing Type</Value>
                 <Style>
                   <FontFamily>Open Sans</FontFamily>
-                  <FontSize>11pt</FontSize>
-                  <FontWeight>Normal</FontWeight>
+                  <FontSize>9pt</FontSize>
+                  <FontWeight>SemiBold</FontWeight>
                   <Color>#282828</Color>
                 </Style>
               </TextRun>
@@ -4459,7 +4487,9 @@
               <TextRun>
                 <Value>:مذكرة التسليم</Value>
                 <Style>
-                  <FontSize>11pt</FontSize>
+                  <FontFamily>GE Flow</FontFamily>
+                  <FontSize>9pt</FontSize>
+                  <FontWeight>SemiBold</FontWeight>
                   <Color>#282828</Color>
                 </Style>
               </TextRun>
@@ -4530,8 +4560,8 @@
                 <Value>Need Delivery Note:</Value>
                 <Style>
                   <FontFamily>Open Sans</FontFamily>
-                  <FontSize>11pt</FontSize>
-                  <FontWeight>Normal</FontWeight>
+                  <FontSize>9pt</FontSize>
+                  <FontWeight>SemiBold</FontWeight>
                   <Color>#282828</Color>
                 </Style>
               </TextRun>
@@ -4567,7 +4597,9 @@
               <TextRun>
                 <Value>:عدد أنوع التعبئة</Value>
                 <Style>
-                  <FontSize>11pt</FontSize>
+                  <FontFamily>GE Flow</FontFamily>
+                  <FontSize>9pt</FontSize>
+                  <FontWeight>SemiBold</FontWeight>
                   <Color>#282828</Color>
                 </Style>
               </TextRun>
@@ -4638,8 +4670,8 @@
                 <Value># Of</Value>
                 <Style>
                   <FontFamily>Open Sans</FontFamily>
-                  <FontSize>11pt</FontSize>
-                  <FontWeight>Normal</FontWeight>
+                  <FontSize>9pt</FontSize>
+                  <FontWeight>SemiBold</FontWeight>
                   <Color>#282828</Color>
                 </Style>
               </TextRun>
@@ -4683,7 +4715,9 @@
               <TextRun>
                 <Value>المرفقات</Value>
                 <Style>
-                  <FontSize>11pt</FontSize>
+                  <FontFamily>GE Flow</FontFamily>
+                  <FontSize>9pt</FontSize>
+                  <FontWeight>SemiBold</FontWeight>
                   <Color>#282828</Color>
                 </Style>
               </TextRun>
@@ -4754,8 +4788,8 @@
                 <Value>Has Attachments:</Value>
                 <Style>
                   <FontFamily>Open Sans</FontFamily>
-                  <FontSize>11pt</FontSize>
-                  <FontWeight>Normal</FontWeight>
+                  <FontSize>9pt</FontSize>
+                  <FontWeight>SemiBold</FontWeight>
                   <Color>#282828</Color>
                 </Style>
               </TextRun>
@@ -4833,7 +4867,9 @@
               <TextRun>
                 <Value>نوع البضاعة</Value>
                 <Style>
-                  <FontSize>11pt</FontSize>
+                  <FontFamily>GE Flow</FontFamily>
+                  <FontSize>9pt</FontSize>
+                  <FontWeight>SemiBold</FontWeight>
                   <Color>#282828</Color>
                 </Style>
               </TextRun>
@@ -4870,8 +4906,8 @@
                 <Value>Good Category:</Value>
                 <Style>
                   <FontFamily>Open Sans</FontFamily>
-                  <FontSize>11pt</FontSize>
-                  <FontWeight>Normal</FontWeight>
+                  <FontSize>9pt</FontSize>
+                  <FontWeight>SemiBold</FontWeight>
                   <Color>#282828</Color>
                 </Style>
               </TextRun>
@@ -4907,10 +4943,9 @@
               <TextRun>
                 <Value />
                 <Style>
-                  <FontStyle>Normal</FontStyle>
                   <FontFamily>Open Sans</FontFamily>
-                  <FontSize>13pt</FontSize>
-                  <FontWeight>ExtraBold</FontWeight>
+                  <FontSize>9pt</FontSize>
+                  <FontWeight>SemiBold</FontWeight>
                   <TextDecoration>None</TextDecoration>
                   <Color>White</Color>
                 </Style>
@@ -4967,10 +5002,9 @@
                             <TextRun>
                               <Value>#</Value>
                               <Style>
-                                <FontStyle>Normal</FontStyle>
                                 <FontFamily>Open Sans</FontFamily>
-                                <FontSize>13pt</FontSize>
-                                <FontWeight>Normal</FontWeight>
+                                <FontSize>9pt</FontSize>
+                                <FontWeight>SemiBold</FontWeight>
                                 <Color>#404040</Color>
                               </Style>
                             </TextRun>
@@ -5006,10 +5040,8 @@
                             <TextRun>
                               <Value>VAS Type</Value>
                               <Style>
-                                <FontStyle>Normal</FontStyle>
                                 <FontFamily>Open Sans</FontFamily>
-                                <FontSize>13pt</FontSize>
-                                <FontWeight>Normal</FontWeight>
+                                <FontWeight>SemiBold</FontWeight>
                                 <TextDecoration>None</TextDecoration>
                                 <Color>#404040</Color>
                               </Style>
@@ -5045,9 +5077,8 @@
                             <TextRun>
                               <Value>نوع الخدمة</Value>
                               <Style>
-                                <FontStyle>Normal</FontStyle>
-                                <FontSize>13pt</FontSize>
-                                <FontWeight>Normal</FontWeight>
+                                <FontFamily>GE Flow</FontFamily>
+                                <FontWeight>SemiBold</FontWeight>
                                 <TextDecoration>None</TextDecoration>
                                 <Color>#404040</Color>
                               </Style>
@@ -5084,10 +5115,9 @@
                             <TextRun>
                               <Value>QTY         </Value>
                               <Style>
-                                <FontStyle>Normal</FontStyle>
                                 <FontFamily>Open Sans</FontFamily>
-                                <FontSize>13pt</FontSize>
-                                <FontWeight>Normal</FontWeight>
+                                <FontSize>9pt</FontSize>
+                                <FontWeight>SemiBold</FontWeight>
                                 <TextDecoration>None</TextDecoration>
                                 <Color>#404040</Color>
                               </Style>
@@ -5095,9 +5125,8 @@
                             <TextRun>
                               <Value>الكمية</Value>
                               <Style>
-                                <FontStyle>Normal</FontStyle>
-                                <FontSize>13pt</FontSize>
-                                <FontWeight>Normal</FontWeight>
+                                <FontFamily>GE Flow</FontFamily>
+                                <FontWeight>SemiBold</FontWeight>
                                 <TextDecoration>None</TextDecoration>
                                 <Color>#404040</Color>
                               </Style>
@@ -5138,7 +5167,9 @@
                           <TextRuns>
                             <TextRun>
                               <Value>=RowNumber(nothing)</Value>
-                              <Style />
+                              <Style>
+                                <FontFamily>open sans</FontFamily>
+                              </Style>
                             </TextRun>
                           </TextRuns>
                           <Style>
@@ -5171,7 +5202,9 @@
                           <TextRuns>
                             <TextRun>
                               <Value>=Fields!VasName.Value</Value>
-                              <Style />
+                              <Style>
+                                <FontFamily>open sans</FontFamily>
+                              </Style>
                             </TextRun>
                           </TextRuns>
                           <Style>
@@ -5204,7 +5237,9 @@
                           <TextRuns>
                             <TextRun>
                               <Value>=Fields!Amount.Value</Value>
-                              <Style />
+                              <Style>
+                                <FontFamily>open sans</FontFamily>
+                              </Style>
                             </TextRun>
                           </TextRuns>
                           <Style>
@@ -5278,9 +5313,9 @@
               <TextRun>
                 <Value>الخدمات الإضافية</Value>
                 <Style>
-                  <FontFamily>arial</FontFamily>
+                  <FontFamily>GE Flow</FontFamily>
                   <FontSize>13pt</FontSize>
-                  <FontWeight>Bold</FontWeight>
+                  <FontWeight>SemiBold</FontWeight>
                   <Color>White</Color>
                 </Style>
               </TextRun>
@@ -5317,9 +5352,9 @@
               <TextRun>
                 <Value>VAS</Value>
                 <Style>
-                  <FontFamily>open Sans</FontFamily>
+                  <FontFamily>Open Sans</FontFamily>
                   <FontSize>13pt</FontSize>
-                  <FontWeight>Bold</FontWeight>
+                  <FontWeight>SemiBold</FontWeight>
                   <Color>White</Color>
                 </Style>
               </TextRun>
@@ -5347,44 +5382,6 @@
           <PaddingBottom>2pt</PaddingBottom>
         </Style>
       </Textbox>
-      <Textbox Name="Textbox162">
-        <CanGrow>true</CanGrow>
-        <KeepTogether>true</KeepTogether>
-        <Paragraphs>
-          <Paragraph>
-            <TextRuns>
-              <TextRun>
-                <Value />
-                <Style>
-                  <FontFamily>Open Sans</FontFamily>
-                  <FontSize>11pt</FontSize>
-                  <Color>#181818</Color>
-                </Style>
-              </TextRun>
-            </TextRuns>
-            <Style>
-              <TextAlign>Center</TextAlign>
-            </Style>
-          </Paragraph>
-        </Paragraphs>
-        <rd:DefaultName>Textbox3</rd:DefaultName>
-        <Top>0.17222in</Top>
-        <Left>0.25073in</Left>
-        <Height>0.40427in</Height>
-        <Width>3.39372in</Width>
-        <ZIndex>116</ZIndex>
-        <Style>
-          <Border>
-            <Color>Gray</Color>
-            <Style>Solid</Style>
-          </Border>
-          <VerticalAlign>Middle</VerticalAlign>
-          <PaddingLeft>4pt</PaddingLeft>
-          <PaddingRight>2pt</PaddingRight>
-          <PaddingTop>2pt</PaddingTop>
-          <PaddingBottom>2pt</PaddingBottom>
-        </Style>
-      </Textbox>
       <Textbox Name="Textbox53">
         <CanGrow>true</CanGrow>
         <KeepTogether>true</KeepTogether>
@@ -5394,10 +5391,9 @@
               <TextRun>
                 <Value>Area</Value>
                 <Style>
-                  <FontStyle>Normal</FontStyle>
                   <FontFamily>Open Sans</FontFamily>
-                  <FontSize>11pt</FontSize>
-                  <FontWeight>Normal</FontWeight>
+                  <FontSize>9pt</FontSize>
+                  <FontWeight>SemiBold</FontWeight>
                   <TextDecoration>None</TextDecoration>
                   <Color>#404040</Color>
                 </Style>
@@ -5413,7 +5409,9 @@
               <TextRun>
                 <Value>المنطقة</Value>
                 <Style>
-                  <FontSize>11pt</FontSize>
+                  <FontFamily>GE Flow</FontFamily>
+                  <FontSize>9pt</FontSize>
+                  <FontWeight>SemiBold</FontWeight>
                   <Color>#282828</Color>
                 </Style>
               </TextRun>
@@ -5428,7 +5426,7 @@
         <Left>5.08144in</Left>
         <Height>0.41667in</Height>
         <Width>2.01564in</Width>
-        <ZIndex>117</ZIndex>
+        <ZIndex>116</ZIndex>
         <Style>
           <Border>
             <Style>None</Style>
@@ -5450,10 +5448,9 @@
               <TextRun>
                 <Value>City</Value>
                 <Style>
-                  <FontStyle>Normal</FontStyle>
                   <FontFamily>Open Sans</FontFamily>
-                  <FontSize>11pt</FontSize>
-                  <FontWeight>Normal</FontWeight>
+                  <FontSize>9pt</FontSize>
+                  <FontWeight>SemiBold</FontWeight>
                   <TextDecoration>None</TextDecoration>
                   <Color>#404040</Color>
                 </Style>
@@ -5469,7 +5466,9 @@
               <TextRun>
                 <Value>المدينة</Value>
                 <Style>
-                  <FontSize>11pt</FontSize>
+                  <FontFamily>GE Flow</FontFamily>
+                  <FontSize>9pt</FontSize>
+                  <FontWeight>SemiBold</FontWeight>
                   <Color>#282828</Color>
                 </Style>
               </TextRun>
@@ -5484,7 +5483,7 @@
         <Left>3.86517in</Left>
         <Height>0.41667in</Height>
         <Width>1.18849in</Width>
-        <ZIndex>118</ZIndex>
+        <ZIndex>117</ZIndex>
         <Style>
           <Border>
             <Style>None</Style>
@@ -5504,12 +5503,11 @@
           <Paragraph>
             <TextRuns>
               <TextRun>
-                <Value>Country  </Value>
+                <Value>Country    </Value>
                 <Style>
-                  <FontStyle>Normal</FontStyle>
                   <FontFamily>Open Sans</FontFamily>
-                  <FontSize>11pt</FontSize>
-                  <FontWeight>Normal</FontWeight>
+                  <FontSize>9pt</FontSize>
+                  <FontWeight>SemiBold</FontWeight>
                   <TextDecoration>None</TextDecoration>
                   <Color>#404040</Color>
                 </Style>
@@ -5525,7 +5523,9 @@
               <TextRun>
                 <Value>الدولة</Value>
                 <Style>
-                  <FontSize>11pt</FontSize>
+                  <FontFamily>GE Flow</FontFamily>
+                  <FontSize>9pt</FontSize>
+                  <FontWeight>SemiBold</FontWeight>
                   <Color>#282828</Color>
                 </Style>
               </TextRun>
@@ -5540,7 +5540,7 @@
         <Left>2.47043in</Left>
         <Height>0.41667in</Height>
         <Width>1.38476in</Width>
-        <ZIndex>119</ZIndex>
+        <ZIndex>118</ZIndex>
         <Style>
           <Border>
             <Style>None</Style>
@@ -5562,10 +5562,9 @@
               <TextRun>
                 <Value> Facility Name </Value>
                 <Style>
-                  <FontStyle>Normal</FontStyle>
                   <FontFamily>Open Sans</FontFamily>
-                  <FontSize>11pt</FontSize>
-                  <FontWeight>Normal</FontWeight>
+                  <FontSize>9pt</FontSize>
+                  <FontWeight>SemiBold</FontWeight>
                   <TextDecoration>None</TextDecoration>
                   <Color>#404040</Color>
                 </Style>
@@ -5589,7 +5588,9 @@
               <TextRun>
                 <Value>اسم المنشأة</Value>
                 <Style>
-                  <FontSize>11pt</FontSize>
+                  <FontFamily>GE Flow</FontFamily>
+                  <FontSize>9pt</FontSize>
+                  <FontWeight>SemiBold</FontWeight>
                   <Color>#282828</Color>
                 </Style>
               </TextRun>
@@ -5604,7 +5605,7 @@
         <Left>0.22986in</Left>
         <Height>0.41667in</Height>
         <Width>2.20887in</Width>
-        <ZIndex>120</ZIndex>
+        <ZIndex>119</ZIndex>
         <Style>
           <Border>
             <Style>None</Style>
@@ -5626,10 +5627,9 @@
               <TextRun>
                 <Value>Area</Value>
                 <Style>
-                  <FontStyle>Normal</FontStyle>
                   <FontFamily>Open Sans</FontFamily>
-                  <FontSize>11pt</FontSize>
-                  <FontWeight>Normal</FontWeight>
+                  <FontSize>9pt</FontSize>
+                  <FontWeight>SemiBold</FontWeight>
                   <TextDecoration>None</TextDecoration>
                   <Color>#404040</Color>
                 </Style>
@@ -5645,7 +5645,9 @@
               <TextRun>
                 <Value>المنطقة</Value>
                 <Style>
-                  <FontSize>11pt</FontSize>
+                  <FontFamily>GE Flow</FontFamily>
+                  <FontSize>9pt</FontSize>
+                  <FontWeight>SemiBold</FontWeight>
                   <Color>#282828</Color>
                 </Style>
               </TextRun>
@@ -5660,7 +5662,7 @@
         <Left>5.08144in</Left>
         <Height>0.49167in</Height>
         <Width>2.01564in</Width>
-        <ZIndex>121</ZIndex>
+        <ZIndex>120</ZIndex>
         <Style>
           <Border>
             <Style>None</Style>
@@ -5682,10 +5684,9 @@
               <TextRun>
                 <Value>City</Value>
                 <Style>
-                  <FontStyle>Normal</FontStyle>
                   <FontFamily>Open Sans</FontFamily>
-                  <FontSize>11pt</FontSize>
-                  <FontWeight>Normal</FontWeight>
+                  <FontSize>9pt</FontSize>
+                  <FontWeight>SemiBold</FontWeight>
                   <TextDecoration>None</TextDecoration>
                   <Color>#404040</Color>
                 </Style>
@@ -5701,7 +5702,9 @@
               <TextRun>
                 <Value>المدينة</Value>
                 <Style>
-                  <FontSize>11pt</FontSize>
+                  <FontFamily>GE Flow</FontFamily>
+                  <FontSize>9pt</FontSize>
+                  <FontWeight>SemiBold</FontWeight>
                   <Color>#282828</Color>
                 </Style>
               </TextRun>
@@ -5716,7 +5719,7 @@
         <Left>3.86517in</Left>
         <Height>0.47778in</Height>
         <Width>1.18849in</Width>
-        <ZIndex>122</ZIndex>
+        <ZIndex>121</ZIndex>
         <Style>
           <Border>
             <Style>None</Style>
@@ -5738,10 +5741,9 @@
               <TextRun>
                 <Value>Country  </Value>
                 <Style>
-                  <FontStyle>Normal</FontStyle>
                   <FontFamily>Open Sans</FontFamily>
-                  <FontSize>11pt</FontSize>
-                  <FontWeight>Normal</FontWeight>
+                  <FontSize>9pt</FontSize>
+                  <FontWeight>SemiBold</FontWeight>
                   <TextDecoration>None</TextDecoration>
                   <Color>#404040</Color>
                 </Style>
@@ -5757,7 +5759,9 @@
               <TextRun>
                 <Value>الدولة</Value>
                 <Style>
-                  <FontSize>11pt</FontSize>
+                  <FontFamily>GE Flow</FontFamily>
+                  <FontSize>9pt</FontSize>
+                  <FontWeight>SemiBold</FontWeight>
                   <Color>#282828</Color>
                 </Style>
               </TextRun>
@@ -5772,7 +5776,7 @@
         <Left>2.47043in</Left>
         <Height>0.49167in</Height>
         <Width>1.38476in</Width>
-        <ZIndex>123</ZIndex>
+        <ZIndex>122</ZIndex>
         <Style>
           <Border>
             <Style>None</Style>
@@ -5794,10 +5798,9 @@
               <TextRun>
                 <Value> Facility Name </Value>
                 <Style>
-                  <FontStyle>Normal</FontStyle>
                   <FontFamily>Open Sans</FontFamily>
-                  <FontSize>11pt</FontSize>
-                  <FontWeight>Normal</FontWeight>
+                  <FontSize>9pt</FontSize>
+                  <FontWeight>SemiBold</FontWeight>
                   <TextDecoration>None</TextDecoration>
                   <Color>#404040</Color>
                 </Style>
@@ -5821,7 +5824,9 @@
               <TextRun>
                 <Value>اسم المنشأة</Value>
                 <Style>
-                  <FontSize>11pt</FontSize>
+                  <FontFamily>GE Flow</FontFamily>
+                  <FontSize>9pt</FontSize>
+                  <FontWeight>SemiBold</FontWeight>
                   <Color>#282828</Color>
                 </Style>
               </TextRun>
@@ -5836,7 +5841,7 @@
         <Left>0.22986in</Left>
         <Height>0.49167in</Height>
         <Width>2.20887in</Width>
-        <ZIndex>124</ZIndex>
+        <ZIndex>123</ZIndex>
         <Style>
           <Border>
             <Style>None</Style>
@@ -5858,16 +5863,15 @@
               <TextRun>
                 <Value>Remarks </Value>
                 <Style>
-                  <FontStyle>Normal</FontStyle>
                   <FontFamily>Open Sans</FontFamily>
-                  <FontSize>11pt</FontSize>
-                  <FontWeight>Normal</FontWeight>
+                  <FontSize>9pt</FontSize>
+                  <FontWeight>SemiBold</FontWeight>
                   <TextDecoration>None</TextDecoration>
                   <Color>#404040</Color>
                 </Style>
               </TextRun>
               <TextRun>
-                <Value xml:space="preserve">                                                                                                                                        </Value>
+                <Value xml:space="preserve">                                                                                                                                   </Value>
                 <Style>
                   <FontFamily>microsoft sans Serif</FontFamily>
                   <FontSize>11pt</FontSize>
@@ -5885,8 +5889,9 @@
               <TextRun>
                 <Value>ملاحظات</Value>
                 <Style>
-                  <FontFamily>arial</FontFamily>
+                  <FontFamily>GE Flow</FontFamily>
                   <FontSize>11pt</FontSize>
+                  <FontWeight>SemiBold</FontWeight>
                   <Color>#282828</Color>
                 </Style>
               </TextRun>
@@ -5901,7 +5906,7 @@
         <Left>0.23502in</Left>
         <Height>0.5104in</Height>
         <Width>6.85917in</Width>
-        <ZIndex>125</ZIndex>
+        <ZIndex>124</ZIndex>
         <Style>
           <Border>
             <Style>None</Style>
@@ -5923,10 +5928,9 @@
               <TextRun>
                 <Value xml:space="preserve"> </Value>
                 <Style>
-                  <FontStyle>Normal</FontStyle>
                   <FontFamily>Open Sans</FontFamily>
-                  <FontSize>11pt</FontSize>
-                  <FontWeight>Normal</FontWeight>
+                  <FontSize>9pt</FontSize>
+                  <FontWeight>SemiBold</FontWeight>
                   <TextDecoration>None</TextDecoration>
                   <Color>#404040</Color>
                 </Style>
@@ -5942,7 +5946,7 @@
         <Left>0.23502in</Left>
         <Height>0.99729in</Height>
         <Width>6.85917in</Width>
-        <ZIndex>126</ZIndex>
+        <ZIndex>125</ZIndex>
         <Style>
           <Border>
             <Color>Gray</Color>
@@ -5965,16 +5969,15 @@
               <TextRun>
                 <Value>Signatures </Value>
                 <Style>
-                  <FontStyle>Normal</FontStyle>
                   <FontFamily>Open Sans</FontFamily>
-                  <FontSize>11pt</FontSize>
-                  <FontWeight>Normal</FontWeight>
+                  <FontSize>9pt</FontSize>
+                  <FontWeight>SemiBold</FontWeight>
                   <TextDecoration>None</TextDecoration>
                   <Color>#404040</Color>
                 </Style>
               </TextRun>
               <TextRun>
-                <Value xml:space="preserve">                                                                                                                                       </Value>
+                <Value xml:space="preserve">                                                                                                                                 </Value>
                 <Style>
                   <FontFamily>microsoft sans Serif</FontFamily>
                   <FontSize>11pt</FontSize>
@@ -5992,8 +5995,9 @@
               <TextRun>
                 <Value>التواقيع</Value>
                 <Style>
-                  <FontFamily>arial</FontFamily>
+                  <FontFamily>GE Flow</FontFamily>
                   <FontSize>11pt</FontSize>
+                  <FontWeight>SemiBold</FontWeight>
                   <Color>#282828</Color>
                 </Style>
               </TextRun>
@@ -6008,7 +6012,7 @@
         <Left>0.242in</Left>
         <Height>0.5104in</Height>
         <Width>6.85219in</Width>
-        <ZIndex>127</ZIndex>
+        <ZIndex>126</ZIndex>
         <Style>
           <Border>
             <Style>None</Style>
@@ -6030,16 +6034,15 @@
               <TextRun>
                 <Value> Driver:</Value>
                 <Style>
-                  <FontStyle>Normal</FontStyle>
                   <FontFamily>Open Sans</FontFamily>
-                  <FontSize>11pt</FontSize>
-                  <FontWeight>Normal</FontWeight>
+                  <FontSize>9pt</FontSize>
+                  <FontWeight>SemiBold</FontWeight>
                   <TextDecoration>None</TextDecoration>
                   <Color>#404040</Color>
                 </Style>
               </TextRun>
               <TextRun>
-                <Value>                              :</Value>
+                <Value>                           :</Value>
                 <Style>
                   <FontFamily>microsoft sans Serif</FontFamily>
                   <FontSize>11pt</FontSize>
@@ -6057,8 +6060,9 @@
               <TextRun>
                 <Value>السائق </Value>
                 <Style>
-                  <FontFamily>arial</FontFamily>
+                  <FontFamily>GE Flow</FontFamily>
                   <FontSize>11pt</FontSize>
+                  <FontWeight>SemiBold</FontWeight>
                   <Color>#282828</Color>
                 </Style>
               </TextRun>
@@ -6073,7 +6077,7 @@
         <Left>4.83853in</Left>
         <Height>0.41667in</Height>
         <Width>2.25565in</Width>
-        <ZIndex>128</ZIndex>
+        <ZIndex>127</ZIndex>
         <Style>
           <Border>
             <Color>Gray</Color>
@@ -6096,16 +6100,15 @@
               <TextRun>
                 <Value> Recipient :</Value>
                 <Style>
-                  <FontStyle>Normal</FontStyle>
                   <FontFamily>Open Sans</FontFamily>
-                  <FontSize>11pt</FontSize>
-                  <FontWeight>Normal</FontWeight>
+                  <FontSize>9pt</FontSize>
+                  <FontWeight>SemiBold</FontWeight>
                   <TextDecoration>None</TextDecoration>
                   <Color>#404040</Color>
                 </Style>
               </TextRun>
               <TextRun>
-                <Value>                          :</Value>
+                <Value>                 :</Value>
                 <Style>
                   <FontFamily>microsoft sans Serif</FontFamily>
                   <FontSize>11pt</FontSize>
@@ -6123,8 +6126,9 @@
               <TextRun>
                 <Value>المستلم</Value>
                 <Style>
-                  <FontFamily>arial</FontFamily>
+                  <FontFamily>GE Flow</FontFamily>
                   <FontSize>11pt</FontSize>
+                  <FontWeight>SemiBold</FontWeight>
                   <Color>#282828</Color>
                 </Style>
               </TextRun>
@@ -6139,7 +6143,7 @@
         <Left>2.48557in</Left>
         <Height>0.41667in</Height>
         <Width>2.31129in</Width>
-        <ZIndex>129</ZIndex>
+        <ZIndex>128</ZIndex>
         <Style>
           <Border>
             <Color>Gray</Color>
@@ -6162,10 +6166,9 @@
               <TextRun>
                 <Value>Sender:</Value>
                 <Style>
-                  <FontStyle>Normal</FontStyle>
                   <FontFamily>Open Sans</FontFamily>
-                  <FontSize>11pt</FontSize>
-                  <FontWeight>Normal</FontWeight>
+                  <FontSize>9pt</FontSize>
+                  <FontWeight>SemiBold</FontWeight>
                   <TextDecoration>None</TextDecoration>
                   <Color>#404040</Color>
                 </Style>
@@ -6181,8 +6184,9 @@
               <TextRun>
                 <Value>المرسل</Value>
                 <Style>
-                  <FontFamily>arial</FontFamily>
+                  <FontFamily>GE Flow</FontFamily>
                   <FontSize>11pt</FontSize>
+                  <FontWeight>SemiBold</FontWeight>
                   <Color>#282828</Color>
                 </Style>
               </TextRun>
@@ -6197,7 +6201,7 @@
         <Left>0.242in</Left>
         <Height>0.41667in</Height>
         <Width>2.18801in</Width>
-        <ZIndex>130</ZIndex>
+        <ZIndex>129</ZIndex>
         <Style>
           <Border>
             <Color>Gray</Color>
@@ -6206,6 +6210,45 @@
           <BackgroundColor>White</BackgroundColor>
           <VerticalAlign>Middle</VerticalAlign>
           <PaddingLeft>2pt</PaddingLeft>
+          <PaddingRight>2pt</PaddingRight>
+          <PaddingTop>2pt</PaddingTop>
+          <PaddingBottom>2pt</PaddingBottom>
+        </Style>
+      </Textbox>
+      <Textbox Name="Textbox161">
+        <CanGrow>true</CanGrow>
+        <KeepTogether>true</KeepTogether>
+        <Paragraphs>
+          <Paragraph>
+            <TextRuns>
+              <TextRun>
+                <Value />
+                <Style>
+                  <FontFamily>Open Sans</FontFamily>
+                  <FontSize>9pt</FontSize>
+                  <FontWeight>SemiBold</FontWeight>
+                  <Color>#181818</Color>
+                </Style>
+              </TextRun>
+            </TextRuns>
+            <Style>
+              <TextAlign>Center</TextAlign>
+            </Style>
+          </Paragraph>
+        </Paragraphs>
+        <rd:DefaultName>Textbox3</rd:DefaultName>
+        <Top>0.17222in</Top>
+        <Left>3.69777in</Left>
+        <Height>0.40427in</Height>
+        <Width>3.38766in</Width>
+        <ZIndex>130</ZIndex>
+        <Style>
+          <Border>
+            <Color>Gray</Color>
+            <Style>Solid</Style>
+          </Border>
+          <VerticalAlign>Middle</VerticalAlign>
+          <PaddingLeft>4pt</PaddingLeft>
           <PaddingRight>2pt</PaddingRight>
           <PaddingTop>2pt</PaddingTop>
           <PaddingBottom>2pt</PaddingBottom>
@@ -6236,32 +6279,19 @@
                 <TextRun>
                   <Value>Shipment Waybill</Value>
                   <Style>
-                    <FontStyle>Normal</FontStyle>
-                    <FontFamily>Open Sans Semibold</FontFamily>
+                    <FontFamily>Open Sans</FontFamily>
                     <FontSize>13pt</FontSize>
-                    <FontWeight>Normal</FontWeight>
+                    <FontWeight>SemiBold</FontWeight>
                     <TextDecoration>None</TextDecoration>
                     <Color>#000000</Color>
                   </Style>
                 </TextRun>
                 <TextRun>
-                  <Value xml:space="preserve"> </Value>
+                  <Value> | </Value>
                   <Style>
-                    <FontStyle>Normal</FontStyle>
-                    <FontFamily>arial</FontFamily>
-                    <FontSize>13pt</FontSize>
-                    <FontWeight>Bold</FontWeight>
-                    <TextDecoration>None</TextDecoration>
-                    <Color>#000000</Color>
-                  </Style>
-                </TextRun>
-                <TextRun>
-                  <Value>| </Value>
-                  <Style>
-                    <FontStyle>Normal</FontStyle>
-                    <FontFamily>arial</FontFamily>
-                    <FontSize>13pt</FontSize>
-                    <FontWeight>Normal</FontWeight>
+                    <FontFamily>GE Flow</FontFamily>
+                    <FontSize>11pt</FontSize>
+                    <FontWeight>SemiBold</FontWeight>
                     <TextDecoration>None</TextDecoration>
                     <Color>#000000</Color>
                   </Style>
@@ -6269,10 +6299,9 @@
                 <TextRun>
                   <Value>وثيقة شحن</Value>
                   <Style>
-                    <FontStyle>Normal</FontStyle>
-                    <FontFamily>arial</FontFamily>
-                    <FontSize>13pt</FontSize>
-                    <FontWeight>Normal</FontWeight>
+                    <FontFamily>GE Flow</FontFamily>
+                    <FontSize>11pt</FontSize>
+                    <FontWeight>SemiBold</FontWeight>
                     <TextDecoration>None</TextDecoration>
                     <Color>#000000</Color>
                     <Language>ar-SA</Language>
@@ -6436,10 +6465,9 @@
                 <TextRun>
                   <Value>Integrated Solution for Logistics services</Value>
                   <Style>
-                    <FontStyle>Normal</FontStyle>
                     <FontFamily>Open Sans</FontFamily>
                     <FontSize>9pt</FontSize>
-                    <FontWeight>Normal</FontWeight>
+                    <FontWeight>SemiBold</FontWeight>
                     <TextDecoration>None</TextDecoration>
                     <Color>#404040</Color>
                   </Style>
@@ -6452,10 +6480,9 @@
                 <TextRun>
                   <Value />
                   <Style>
-                    <FontStyle>Normal</FontStyle>
                     <FontFamily>Open Sans</FontFamily>
-                    <FontSize>12pt</FontSize>
-                    <FontWeight>Bold</FontWeight>
+                    <FontSize>9pt</FontSize>
+                    <FontWeight>SemiBold</FontWeight>
                     <TextDecoration>None</TextDecoration>
                     <Color>#404040</Color>
                   </Style>
@@ -6469,8 +6496,8 @@
                   <Value>Kingdom of Saudi Arabia</Value>
                   <Style>
                     <FontStyle>Normal</FontStyle>
-                    <FontFamily>Tahoma</FontFamily>
-                    <FontSize>8pt</FontSize>
+                    <FontFamily>open sans</FontFamily>
+                    <FontSize>9pt</FontSize>
                     <FontWeight>Normal</FontWeight>
                     <TextDecoration>None</TextDecoration>
                     <Color>#404040</Color>
@@ -6506,8 +6533,8 @@
                   <Value>tachyonhub.com</Value>
                   <Style>
                     <FontStyle>Normal</FontStyle>
-                    <FontFamily>Tahoma</FontFamily>
-                    <FontSize>10.5pt</FontSize>
+                    <FontFamily>open sans</FontFamily>
+                    <FontSize>9pt</FontSize>
                     <FontWeight>Normal</FontWeight>
                     <TextDecoration>None</TextDecoration>
                     <Color>#404040</Color>
@@ -6538,8 +6565,8 @@
                   <Value>info@tachyonhub.com</Value>
                   <Style>
                     <FontStyle>Normal</FontStyle>
-                    <FontFamily>Tahoma</FontFamily>
-                    <FontSize>10.5pt</FontSize>
+                    <FontFamily>open sans</FontFamily>
+                    <FontSize>9pt</FontSize>
                     <FontWeight>Normal</FontWeight>
                     <TextDecoration>None</TextDecoration>
                     <Color>#404040</Color>
@@ -6641,7 +6668,8 @@
                   <Value>Riyadh, Almuroj 12281</Value>
                   <Style>
                     <FontStyle>Normal</FontStyle>
-                    <FontFamily>Times New Roman</FontFamily>
+                    <FontFamily>open sans</FontFamily>
+                    <FontSize>9pt</FontSize>
                     <FontWeight>Normal</FontWeight>
                     <TextDecoration>None</TextDecoration>
                     <Color>#000000</Color>
@@ -6672,8 +6700,8 @@
                   <Value>+966 920 035 543</Value>
                   <Style>
                     <FontStyle>Normal</FontStyle>
-                    <FontFamily>Times New Roman</FontFamily>
-                    <FontSize>12pt</FontSize>
+                    <FontFamily>open sans</FontFamily>
+                    <FontSize>9pt</FontSize>
                     <FontWeight>Normal</FontWeight>
                     <TextDecoration>None</TextDecoration>
                     <Color>#000000</Color>
