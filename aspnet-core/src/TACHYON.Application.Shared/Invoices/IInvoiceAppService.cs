@@ -18,9 +18,6 @@ namespace TACHYON.Invoices
         Task OnDemand(int Id);
         
         Task<FileDto> Exports(InvoiceFilterInput input);
-
-
-
-
+        Task<FileDto> ExportItems(long id);
     }
 }

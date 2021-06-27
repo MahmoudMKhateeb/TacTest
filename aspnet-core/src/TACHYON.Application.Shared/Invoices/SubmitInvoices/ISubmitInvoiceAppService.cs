@@ -19,6 +19,6 @@ namespace TACHYON.Invoices.SubmitInvoices
         Task<FileDto> GetFileDto(long id);
         Task<FileDto> Exports(SubmitInvoiceFilterInput input);
 
-
+        Task<FileDto> ExportItems(long id);
     }
 }

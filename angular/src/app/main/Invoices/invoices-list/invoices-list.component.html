@@ -200,9 +200,9 @@
                         </button>
                         <ul class="dropdown-menu" *dropdownMenu>
                           <li>
-                            <a class="dropdown-item" [routerLink]="['/app/main/invoices/detail', record.id]">{{ l('Detail') }}</a>
+                            <a class="dropdown-item" (click)="details(record)">{{ l('Detail') }}</a>
                           </li>
-                          <li>
+                          <li *ngIf="record.accountType == 1">
                             <a class="dropdown-item" (click)="downloadReport(record.id)">{{ l('downloadInvoice') }}</a>
                           </li>
                           <li *ngIf="!record.isPaid">
@@ -294,3 +294,4 @@
   </div>
 </div>
 <invoices-ondeman-model (modalSave)="reloadPage()" #OndemandModel></invoices-ondeman-model>
+<invoice-tenant-items-details #InvoiceDetailsModel></invoice-tenant-items-details>
