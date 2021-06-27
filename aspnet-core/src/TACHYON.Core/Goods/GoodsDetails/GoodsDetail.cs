@@ -49,6 +49,7 @@ namespace TACHYON.Goods.GoodsDetails
 
         [ForeignKey("GoodCategoryId")]
         public GoodCategory GoodCategoryFk { get; set; }
+        public string OthersGoodsCategory { get; set; }
 
         /// <summary>
         /// unit of measure for the total amount, ex: litre
@@ -58,6 +59,10 @@ namespace TACHYON.Goods.GoodsDetails
 
         [ForeignKey("UnitOfMeasureId")]
         public UnitOfMeasure UnitOfMeasureFk { get; set; }
+        /// <summary>
+        /// IF Goods category refers to others, this field should be filled
+        /// </summary>
+        public string OthersUnitOfMeasure { get; set; }
 
         [Required]
         public long RoutPointId { get; set; }

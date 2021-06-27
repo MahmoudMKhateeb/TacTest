@@ -29,6 +29,7 @@ namespace TACHYON.Documents.DocumentFiles.Dtos
         }
 
         public DocumentTypeDto DocumentTypeDto { get; set; }
+        public string OthersDocumentType { get; set; }
         public UpdateDocumentFileInput UpdateDocumentFileInput { get; set; }
 
         [Required]

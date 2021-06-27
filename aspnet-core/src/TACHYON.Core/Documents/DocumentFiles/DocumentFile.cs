@@ -47,6 +47,10 @@ namespace TACHYON.Documents.DocumentFiles
 
         [ForeignKey("DocumentTypeId")]
         public DocumentType DocumentTypeFk { get; set; }
+        /// <summary>
+        /// in trip entity case, user select attachment type "document type", when the option selected to others, this field must be filled
+        /// </summary>
+        public string OthersDocumentType { get; set; }
 
         public virtual long? TruckId { get; set; }
 
