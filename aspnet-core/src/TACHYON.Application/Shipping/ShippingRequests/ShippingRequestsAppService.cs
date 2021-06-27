@@ -274,7 +274,10 @@ namespace TACHYON.Shipping.ShippingRequests
         {
             using (CurrentUnitOfWork.DisableFilter("IHasIsDrafted"))
             {
-                var shippingRequest = await GetDraftedShippingRequest(input.Id);
+                ShippingRequest shippingRequest = await _shippingRequestRepository.GetAll()
+               .Include(x => x.ShippingRequestVases)
+                 .Where(x => x.Id == input.Id && x.IsDrafted == true)
+                 .FirstOrDefaultAsync();
 
                 //delete vases
                 foreach (var vas in shippingRequest.ShippingRequestVases)
