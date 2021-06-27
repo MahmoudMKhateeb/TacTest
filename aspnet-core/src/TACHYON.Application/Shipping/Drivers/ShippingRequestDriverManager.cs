@@ -89,9 +89,10 @@ namespace TACHYON.Shipping.Drivers
                 trip.Status = ShippingRequestTripStatus.Delivered;
                 trip.RoutePointStatus = RoutePointStatus.Delivered;
                 trip.EndTripDate = Clock.Now;
-                await _invoiceManager.GenertateInvoiceWhenShipmintDelivery(trip);
 
                 await Done(trip.ShippingRequestId, trip.Id);
+                await _invoiceManager.GenertateInvoiceWhenShipmintDelivery(trip);
+
             }
             else
             {

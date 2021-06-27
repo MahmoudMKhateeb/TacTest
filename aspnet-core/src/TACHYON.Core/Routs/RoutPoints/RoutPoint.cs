@@ -40,7 +40,7 @@ namespace TACHYON.Routs.RoutPoints
         public ICollection<GoodsDetail> GoodsDetails { get; set; }
 
         public string Code { get; set; }
-        public RoutePointStatus Status { get; set; }
+        //public RoutePointStatus Status { get; set; }
         public DateTime? StartTime { get; set; }
         public DateTime? EndTime { get; set; }
         public bool IsActive { get; set; } 
