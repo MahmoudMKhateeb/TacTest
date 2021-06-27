@@ -196,5 +196,16 @@ namespace TACHYON.Receivers
                 }).ToListAsync();
         }
 
+        public async Task<List<ReceiverFacilityLookupTableDto>> GetAllReceiversByFacilityForTableDropdown(long facilityId)
+        {
+            return await _receiverRepository.GetAll()
+                .Where(x => x.FacilityId == facilityId)
+                .Select(r => new ReceiverFacilityLookupTableDto
+                {
+                    Id = r.Id,
+                    DisplayName = r.FullName
+                }).ToListAsync();
+        }
+
     }
 }
