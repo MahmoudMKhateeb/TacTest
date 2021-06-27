@@ -2441,6 +2441,9 @@
                         <TopBorder>
                           <Style>None</Style>
                         </TopBorder>
+                        <BottomBorder>
+                          <Style>None</Style>
+                        </BottomBorder>
                         <RightBorder>
                           <Style>None</Style>
                         </RightBorder>
@@ -5381,71 +5384,6 @@
           <PaddingBottom>2pt</PaddingBottom>
         </Style>
       </Textbox>
-      <Textbox Name="Textbox53">
-        <CanGrow>true</CanGrow>
-        <KeepTogether>true</KeepTogether>
-        <Paragraphs>
-          <Paragraph>
-            <TextRuns>
-              <TextRun>
-                <Value>Remarks </Value>
-                <Style>
-                  <FontFamily>Open Sans</FontFamily>
-                  <FontSize>9pt</FontSize>
-                  <FontWeight>SemiBold</FontWeight>
-                  <TextDecoration>None</TextDecoration>
-                  <Color>#404040</Color>
-                </Style>
-              </TextRun>
-              <TextRun>
-                <Value xml:space="preserve">                                                                                                                                       </Value>
-                <Style>
-                  <FontFamily>microsoft sans Serif</FontFamily>
-                  <FontSize>11pt</FontSize>
-                  <Color>#282828</Color>
-                </Style>
-              </TextRun>
-              <TextRun>
-                <Value xml:space="preserve"> </Value>
-                <Style>
-                  <FontFamily>GE Flow</FontFamily>
-                  <FontSize>11pt</FontSize>
-                  <Color>#282828</Color>
-                </Style>
-              </TextRun>
-              <TextRun>
-                <Value>ملاحظات</Value>
-                <Style>
-                  <FontFamily>GE Flow</FontFamily>
-                  <FontSize>11pt</FontSize>
-                  <FontWeight>SemiBold</FontWeight>
-                  <Color>#282828</Color>
-                </Style>
-              </TextRun>
-            </TextRuns>
-            <Style>
-              <TextAlign>Center</TextAlign>
-            </Style>
-          </Paragraph>
-        </Paragraphs>
-        <rd:DefaultName>Textbox3</rd:DefaultName>
-        <Top>8.43729in</Top>
-        <Left>0.21529in</Left>
-        <Height>0.79844cm</Height>
-        <Width>6.86163in</Width>
-        <ZIndex>51</ZIndex>
-        <Style>
-          <Border>
-            <Style>None</Style>
-          </Border>
-          <BackgroundColor>White</BackgroundColor>
-          <VerticalAlign>Middle</VerticalAlign>
-          <PaddingLeft>2pt</PaddingLeft>
-          <PaddingRight>2pt</PaddingRight>
-          <PaddingTop>2pt</PaddingTop>
-          <PaddingBottom>2pt</PaddingBottom>
-        </Style>
-      </Textbox>
       <Textbox Name="Textbox57">
         <CanGrow>true</CanGrow>
         <KeepTogether>true</KeepTogether>
@@ -5473,76 +5411,11 @@
         <Left>0.21529in</Left>
         <Height>0.55722in</Height>
         <Width>6.85917in</Width>
-        <ZIndex>52</ZIndex>
+        <ZIndex>51</ZIndex>
         <Style>
           <Border>
             <Color>Gray</Color>
             <Style>Solid</Style>
-          </Border>
-          <BackgroundColor>White</BackgroundColor>
-          <VerticalAlign>Middle</VerticalAlign>
-          <PaddingLeft>2pt</PaddingLeft>
-          <PaddingRight>2pt</PaddingRight>
-          <PaddingTop>2pt</PaddingTop>
-          <PaddingBottom>2pt</PaddingBottom>
-        </Style>
-      </Textbox>
-      <Textbox Name="Textbox58">
-        <CanGrow>true</CanGrow>
-        <KeepTogether>true</KeepTogether>
-        <Paragraphs>
-          <Paragraph>
-            <TextRuns>
-              <TextRun>
-                <Value>Signatures </Value>
-                <Style>
-                  <FontFamily>Open Sans</FontFamily>
-                  <FontSize>9pt</FontSize>
-                  <FontWeight>SemiBold</FontWeight>
-                  <TextDecoration>None</TextDecoration>
-                  <Color>#404040</Color>
-                </Style>
-              </TextRun>
-              <TextRun>
-                <Value xml:space="preserve">                                                                                                                                     </Value>
-                <Style>
-                  <FontFamily>microsoft sans Serif</FontFamily>
-                  <FontSize>11pt</FontSize>
-                  <Color>#282828</Color>
-                </Style>
-              </TextRun>
-              <TextRun>
-                <Value xml:space="preserve"> </Value>
-                <Style>
-                  <FontFamily>GE Flow</FontFamily>
-                  <FontSize>11pt</FontSize>
-                  <Color>#282828</Color>
-                </Style>
-              </TextRun>
-              <TextRun>
-                <Value>التواقيع</Value>
-                <Style>
-                  <FontFamily>GE Flow</FontFamily>
-                  <FontSize>11pt</FontSize>
-                  <FontWeight>SemiBold</FontWeight>
-                  <Color>#282828</Color>
-                </Style>
-              </TextRun>
-            </TextRuns>
-            <Style>
-              <TextAlign>Center</TextAlign>
-            </Style>
-          </Paragraph>
-        </Paragraphs>
-        <rd:DefaultName>Textbox3</rd:DefaultName>
-        <Top>9.45886in</Top>
-        <Left>0.21529in</Left>
-        <Height>0.79844cm</Height>
-        <Width>6.85219in</Width>
-        <ZIndex>53</ZIndex>
-        <Style>
-          <Border>
-            <Style>None</Style>
           </Border>
           <BackgroundColor>White</BackgroundColor>
           <VerticalAlign>Middle</VerticalAlign>
@@ -5603,8 +5476,8 @@
         <Top>9.76093in</Top>
         <Left>4.82102in</Left>
         <Height>0.79844cm</Height>
-        <Width>2.25565in</Width>
-        <ZIndex>54</ZIndex>
+        <Width>2.24306in</Width>
+        <ZIndex>52</ZIndex>
         <Style>
           <Border>
             <Color>Gray</Color>
@@ -5670,7 +5543,7 @@
         <Left>2.47906in</Left>
         <Height>0.79844cm</Height>
         <Width>2.2974in</Width>
-        <ZIndex>55</ZIndex>
+        <ZIndex>53</ZIndex>
         <Style>
           <Border>
             <Color>Gray</Color>
@@ -5727,14 +5600,168 @@
         <Top>9.76093in</Top>
         <Left>0.21529in</Left>
         <Height>0.79844cm</Height>
-        <Width>2.18801in</Width>
-        <ZIndex>56</ZIndex>
+        <Width>2.20822in</Width>
+        <ZIndex>54</ZIndex>
         <Style>
           <Border>
             <Color>Gray</Color>
             <Style>Solid</Style>
           </Border>
           <BackgroundColor>White</BackgroundColor>
+          <VerticalAlign>Middle</VerticalAlign>
+          <PaddingLeft>2pt</PaddingLeft>
+          <PaddingRight>2pt</PaddingRight>
+          <PaddingTop>2pt</PaddingTop>
+          <PaddingBottom>2pt</PaddingBottom>
+        </Style>
+      </Textbox>
+      <Textbox Name="Textbox145">
+        <CanGrow>true</CanGrow>
+        <KeepTogether>true</KeepTogether>
+        <Paragraphs>
+          <Paragraph>
+            <TextRuns>
+              <TextRun>
+                <Value>:ملاحظات</Value>
+                <Style>
+                  <FontFamily>GE Flow</FontFamily>
+                  <FontSize>9pt</FontSize>
+                  <FontWeight>SemiBold</FontWeight>
+                  <Color>#282828</Color>
+                </Style>
+              </TextRun>
+            </TextRuns>
+            <Style>
+              <TextAlign>Right</TextAlign>
+            </Style>
+          </Paragraph>
+        </Paragraphs>
+        <rd:DefaultName>Textbox3</rd:DefaultName>
+        <Top>8.40951in</Top>
+        <Left>5.92467in</Left>
+        <Height>0.79844cm</Height>
+        <Width>1.14961in</Width>
+        <ZIndex>55</ZIndex>
+        <Style>
+          <Border>
+            <Style>None</Style>
+          </Border>
+          <VerticalAlign>Middle</VerticalAlign>
+          <PaddingLeft>2pt</PaddingLeft>
+          <PaddingRight>2pt</PaddingRight>
+          <PaddingTop>2pt</PaddingTop>
+          <PaddingBottom>2pt</PaddingBottom>
+        </Style>
+      </Textbox>
+      <Textbox Name="Textbox146">
+        <CanGrow>true</CanGrow>
+        <KeepTogether>true</KeepTogether>
+        <Paragraphs>
+          <Paragraph>
+            <TextRuns>
+              <TextRun>
+                <Value>Remarks:</Value>
+                <Style>
+                  <FontFamily>Open Sans</FontFamily>
+                  <FontSize>9pt</FontSize>
+                  <FontWeight>SemiBold</FontWeight>
+                  <TextDecoration>None</TextDecoration>
+                  <Color>#404040</Color>
+                </Style>
+              </TextRun>
+            </TextRuns>
+            <Style>
+              <TextAlign>Left</TextAlign>
+            </Style>
+          </Paragraph>
+        </Paragraphs>
+        <rd:DefaultName>Textbox3</rd:DefaultName>
+        <Top>8.43729in</Top>
+        <Left>0.19667in</Left>
+        <Height>0.79844cm</Height>
+        <Width>1.18222in</Width>
+        <ZIndex>56</ZIndex>
+        <Style>
+          <Border>
+            <Style>None</Style>
+          </Border>
+          <VerticalAlign>Middle</VerticalAlign>
+          <PaddingLeft>2pt</PaddingLeft>
+          <PaddingRight>2pt</PaddingRight>
+          <PaddingTop>2pt</PaddingTop>
+          <PaddingBottom>2pt</PaddingBottom>
+        </Style>
+      </Textbox>
+      <Textbox Name="Textbox147">
+        <CanGrow>true</CanGrow>
+        <KeepTogether>true</KeepTogether>
+        <Paragraphs>
+          <Paragraph>
+            <TextRuns>
+              <TextRun>
+                <Value>:التواقيع</Value>
+                <Style>
+                  <FontFamily>GE Flow</FontFamily>
+                  <FontSize>9pt</FontSize>
+                  <FontWeight>SemiBold</FontWeight>
+                  <Color>#282828</Color>
+                </Style>
+              </TextRun>
+            </TextRuns>
+            <Style>
+              <TextAlign>Right</TextAlign>
+            </Style>
+          </Paragraph>
+        </Paragraphs>
+        <rd:DefaultName>Textbox3</rd:DefaultName>
+        <Top>9.45886in</Top>
+        <Left>5.9354in</Left>
+        <Height>0.79844cm</Height>
+        <Width>1.14961in</Width>
+        <ZIndex>57</ZIndex>
+        <Style>
+          <Border>
+            <Style>None</Style>
+          </Border>
+          <VerticalAlign>Middle</VerticalAlign>
+          <PaddingLeft>2pt</PaddingLeft>
+          <PaddingRight>2pt</PaddingRight>
+          <PaddingTop>2pt</PaddingTop>
+          <PaddingBottom>2pt</PaddingBottom>
+        </Style>
+      </Textbox>
+      <Textbox Name="Textbox155">
+        <CanGrow>true</CanGrow>
+        <KeepTogether>true</KeepTogether>
+        <Paragraphs>
+          <Paragraph>
+            <TextRuns>
+              <TextRun>
+                <Value>Signature:</Value>
+                <Style>
+                  <FontFamily>Open Sans</FontFamily>
+                  <FontSize>9pt</FontSize>
+                  <FontWeight>SemiBold</FontWeight>
+                  <TextDecoration>None</TextDecoration>
+                  <Color>#404040</Color>
+                </Style>
+              </TextRun>
+            </TextRuns>
+            <Style>
+              <TextAlign>Left</TextAlign>
+            </Style>
+          </Paragraph>
+        </Paragraphs>
+        <rd:DefaultName>Textbox3</rd:DefaultName>
+        <Top>9.44658in</Top>
+        <Left>0.21529in</Left>
+        <Height>0.79844cm</Height>
+        <Width>1.14961in</Width>
+        <ZIndex>58</ZIndex>
+        <Style>
+          <Border>
+            <Style>None</Style>
+          </Border>
           <VerticalAlign>Middle</VerticalAlign>
           <PaddingLeft>2pt</PaddingLeft>
           <PaddingRight>2pt</PaddingRight>
