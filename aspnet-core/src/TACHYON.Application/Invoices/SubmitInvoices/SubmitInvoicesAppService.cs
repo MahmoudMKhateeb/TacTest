@@ -287,9 +287,9 @@ namespace TACHYON.Invoices.Groups
                 Items.Add(new InvoiceItemDto
                 {
                     Sequence = $"{Sequence}/{TotalItem}",
-                    SubTotalAmount = AbpSession.TenantId.HasValue && IsEnabled(AppFeatures.Carrier) ? trip.ShippingRequestTripFK.SubTotalAmount.Value : trip.ShippingRequestTripFK.SubTotalAmountWithCommission.Value,
-                    VatAmount = AbpSession.TenantId.HasValue && IsEnabled(AppFeatures.Carrier) ? trip.ShippingRequestTripFK.VatAmount.Value : trip.ShippingRequestTripFK.VatAmountWithCommission.Value,
-                    TotalAmount = AbpSession.TenantId.HasValue && IsEnabled(AppFeatures.Carrier) ? trip.ShippingRequestTripFK.TotalAmount.Value : trip.ShippingRequestTripFK.TotalAmountWithCommission.Value,
+                    SubTotalAmount = trip.ShippingRequestTripFK.SubTotalAmount.Value,
+                    VatAmount = trip.ShippingRequestTripFK.VatAmount.Value,
+                    TotalAmount = trip.ShippingRequestTripFK.TotalAmount.Value,
                     WayBillNumber = trip.ShippingRequestTripFK.WaybillNumber.ToString(),
                     TruckType = ObjectMapper.Map<TrucksTypeDto>(trip.ShippingRequestTripFK.AssignedTruckFk.TrucksTypeFk).TranslatedDisplayName,
                     Source = ObjectMapper.Map<CityDto>(trip.ShippingRequestTripFK.ShippingRequestFk.OriginCityFk)?.TranslatedDisplayName ?? trip.ShippingRequestTripFK.ShippingRequestFk.OriginCityFk.DisplayName,
@@ -321,9 +321,9 @@ namespace TACHYON.Invoices.Groups
                     var item = new InvoiceItemDto
                     {
                         Sequence = $"{Sequence}/{TotalItem}",
-                        SubTotalAmount = AbpSession.TenantId.HasValue && IsEnabled(AppFeatures.Carrier) ? vas.SubTotalAmount.Value : vas.SubTotalAmountWithCommission.Value,
-                        VatAmount = AbpSession.TenantId.HasValue && IsEnabled(AppFeatures.Carrier) ? vas.VatAmount.Value : vas.VatAmountWithCommission.Value,
-                        TotalAmount = AbpSession.TenantId.HasValue && IsEnabled(AppFeatures.Carrier) ? vas.TotalAmount.Value : vas.TotalAmountWithCommission.Value,
+                        SubTotalAmount = vas.SubTotalAmount.Value,
+                        VatAmount = vas.VatAmount.Value,
+                        TotalAmount = vas.TotalAmount.Value,
                         WayBillNumber = waybillnumber,
                         TruckType = L("InvoiceVasType", vas.ShippingRequestVasFk.VasFk.Name),
                         Source = "-",
