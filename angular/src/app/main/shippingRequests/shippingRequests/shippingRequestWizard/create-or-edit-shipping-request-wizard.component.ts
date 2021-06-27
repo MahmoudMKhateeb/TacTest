@@ -101,9 +101,7 @@ export class CreateOrEditShippingRequestWizardComponent extends AppComponentBase
   step4Dto = new EditShippingRequestStep4Dto();
   activeStep: number;
   loading = false;
-
   shippingRequestReview: GetShippingRequestForViewOutput = new GetShippingRequestForViewOutput();
-  shippingRequestRev: ShippingRequestDto = this.shippingRequestReview.shippingRequest;
   cleanedVases: CreateOrEditShippingRequestVasListDto[] = [];
   selectedVasesProperties = [];
 
@@ -168,6 +166,7 @@ export class CreateOrEditShippingRequestWizardComponent extends AppComponentBase
     //this.reviewAndSubmit();
 
     // this.cleanedVases = [...this.allVases, ...this.selectedvas];
+    this.activeShippingRequestId ? this.getShippingRequestForView() : 0;
   }
 
   ngOnDestroy() {
@@ -346,7 +345,6 @@ export class CreateOrEditShippingRequestWizardComponent extends AppComponentBase
     this.updateRoutingQueries(this.activeShippingRequestId, 5);
     this._shippingRequestsServiceProxy.getShippingRequestForView(this.activeShippingRequestId).subscribe((res) => {
       this.shippingRequestReview = res;
-      this.shippingRequestRev = res.shippingRequest;
       console.log(this.shippingRequestReview);
       this.loading = false;
     });
@@ -608,5 +606,10 @@ export class CreateOrEditShippingRequestWizardComponent extends AppComponentBase
           });
       }
     });
+  }
+
+  getShippingRequestForView() {
+    this.active = true;
+    this._shippingRequestsServiceProxy.getShippingRequestForView(this.activeShippingRequestId).subscribe((x) => console.log(x));
   }
 }

@@ -259,7 +259,7 @@
                           <li *ngIf="record.isDrafted">
                             <a
                               *ngIf="permission.isGranted('Pages.ShippingRequests.Edit')"
-                              [queryParams]="{ id: record.id, step: record.draftStep }"
+                              [queryParams]="{ id: record.id, completedSteps: record.draftStep }"
                               [routerLink]="['/app/main/shippingRequests/shippingRequestWizard']"
                               class="dropdown-item"
                             >
