@@ -212,7 +212,9 @@ import { BalancesListComponent } from '@app/main/invoices/balances/balances-list
 import { DemanModelComponent } from '@app/main/invoices/invoice-tenants/model/deman-model.component';
 import { BalanceRechargeModelComponent } from '@app/main/invoices/balances/balance-recharge-model/balance-recharge-model.component';
 import { InvoiceTenantComponent } from '@app/main/invoices/invoice-tenants/invoice-tenant.component';
+
 import { InvoiceTenantDetailsComponent } from '@app/main/invoices/invoice-tenants/invoice-tenant-details.component';
+import { InvoiceTenantItemsDetailsComponent } from '@app/main/invoices/invoice-tenants/model/invoice-tenant-items-details.component';
 import { SubmitInvoiceRejectedModelComponent } from '@app/main/invoices/invoice-tenants/model/Rejected-model.component';
 
 import { InvoiceDetailComponent } from '@app/main/invoices/invoice-detail/invoice-detail.component';
@@ -414,9 +416,11 @@ NgxBootstrapDatePickerConfigService.registerNgxBootstrapDatePickerLocales();
     DemanModelComponent,
     BalanceRechargeModelComponent,
     InvoiceDetailComponent,
+    InvoiceTenantItemsDetailsComponent,
     SubmitInvoiceRejectedModelComponent,
     InvoiceTenantComponent,
     InvoiceTenantDetailsComponent,
+    InvoiceTenantItemsDetailsComponent,
     TransactionListComponent,
     InvoicePaymentMethodComponent,
     InvoicePaymentMethodModelComponent,

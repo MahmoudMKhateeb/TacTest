@@ -327,7 +327,7 @@ namespace TACHYON.Invoices
 
 
             await _BalanceManager.CheckShipperOverLimit(Tenant);
-            await _appNotifier.NewInvoiceShipperGenerated(Invoice);
+            //await _appNotifier.NewInvoiceShipperGenerated(Invoice);
         }
         /// <summary>
         /// Generate invoice for carrirer after the host accepted the submit invoice

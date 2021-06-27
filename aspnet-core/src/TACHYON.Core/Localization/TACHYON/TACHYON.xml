@@ -1572,6 +1572,7 @@ content that we shared with you.</text>
     <text name="SendSuccessfully">Send successfully</text>
     <text name="SendTestEmail">Send Test Email</text>
     <text name="Seq">Seq</text>
+    <text name="Sequence">Seq</text>
     <text name="Service">Service</text>
     <text name="SessionExpireRedirectingInXSecond">Your session will expire because you have been inactive for a long time. Provide any mouse/keyboard input on the site to stop session termination. Redirecting in {0}sec.</text>
     <text name="SessionTimeOut">Session timeout control</text>
@@ -2155,6 +2156,7 @@ code:{0}</text>
     <text name="VasPrice">VAS price</text>
     <text name="VasPrices">VAS prices</text>
     <text name="VasPricesHeaderInfo">Vas prices header info</text>
+    <text name="Vat">Vat</text>
     <text name="VatAmount">Vat amount</text>
     <text name="VerificationCode">Verification code</text>
     <text name="Verify">Verify</text>

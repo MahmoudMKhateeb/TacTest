@@ -2,6 +2,127 @@
   <div class="content d-flex flex-column flex-column-fluid">
     <sub-header [title]="'InvoiceDetail' | localize" [description]="'' | localize"> </sub-header>
 
-    <invoice-template [Data]="Data" [Items]="Items"></invoice-template>
+    <div [class]="containerClass">
+      <div id="invoicecontent" class="contentInvoice container">
+        <div class="table-responsive tableDetailsInvoice">
+          <table class="table">
+            <thead>
+              <tr>
+                <th>
+                  <span class="en">Seq</span>
+                  <span class="ar">التسلسل</span>
+                </th>
+                <th>
+                  <span class="en">Date *</span>
+                  <span class="ar">التاريخ</span>
+                </th>
+                <th>
+                  <span class="en">Way bill *</span>
+                  <span class="ar">وثيقة الشحن</span>
+                </th>
+                <th>
+                  <span class="en">Origin</span>
+                  <span class="ar">مكان التحميل</span>
+                </th>
+                <th>
+                  <span class="en">Destination</span>
+                  <span class="ar">التنزيل</span>
+                </th>
+                <th>
+                  <span class="en">Truck Type</span>
+                  <span class="ar">نوع الشاحنة</span>
+                </th>
+                <th>
+                  <span class="en">Price SAR</span>
+                  <span class="ar">السعر ر.س</span>
+                </th>
+                <th>
+                  <span class="en">(VAT {{ Data.taxVat }}%)</span>
+                  <span class="ar">ضريبة القيمة المضافة</span>
+                </th>
+                <th>
+                  <span class="en">Total</span>
+                  <span class="ar">الإجمالي</span>
+                </th>
+                <th>
+                  <span class="en">Quantity</span>
+                  <span class="ar">الكمية</span>
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let item of Items">
+                <td>
+                  {{ item.sequence }}
+                </td>
+                <td>
+                  {{ item.dateWork }}
+                </td>
+                <td>
+                  {{ item.wayBillNumber }}
+                </td>
+                <td>
+                  {{ item.source }}
+                </td>
+                <td>
+                  {{ item.destination }}
+                </td>
+                <td>
+                  {{ item.truckType }}
+                </td>
+                <td>
+                  {{ item.subTotalAmount | number }}
+                </td>
+                <td>
+                  {{ item.vatAmount | number }}
+                </td>
+                <td>
+                  {{ item.totalAmount | number }}
+                </td>
+                <td>
+                  {{ item.remarks }}
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="finishPrice">
+          <div class="table-responsive prices">
+            <table class="table">
+              <tbody>
+                <tr>
+                  <td class="en">
+                    Invoice Subtotal
+                  </td>
+                  <td class="value">{{ Data.subTotalAmount | number }} SAR</td>
+                  <td class="ar">
+                    مجموع الفاتورة
+                  </td>
+                </tr>
+                <tr>
+                  <td class="en">VAT Amount ({{ Data.taxVat }}%)</td>
+                  <td class="value">{{ Data.vatAmount | number }} SAR</td>
+                  <td class="ar">
+                    قيمة الضريبة المضافة (15%)
+                  </td>
+                </tr>
+              </tbody>
+              <tfoot>
+                <tr>
+                  <td class="en">
+                    Due Amount
+                  </td>
+                  <td class="value">{{ Data.totalAmount | number }} SAR</td>
+                  <td class="ar">
+                    المبلغ المستحق
+                  </td>
+                </tr>
+              </tfoot>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 </div>

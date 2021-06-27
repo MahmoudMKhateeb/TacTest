@@ -159,7 +159,7 @@
                         </button>
                         <ul class="dropdown-menu" *dropdownMenu>
                           <li>
-                            <a class="dropdown-item" [routerLink]="['/app/main/invoices/submitinvoices/detail', record.id]">{{ l('Detail') }}</a>
+                            <a class="dropdown-item" (click)="details(record)">{{ l('Detail') }}</a>
                           </li>
                           <li *ngIf="record.documentName">
                             <a class="dropdown-item" href="javascript:;" (click)="downloadDocument(record.id)">
@@ -247,3 +247,4 @@
 </div>
 <deman-model (modalSave)="reloadPage()" #ClaimModel></deman-model>
 <submitinvoice-rejected-modal #RejectedModel (modalSave)="getAll()"></submitinvoice-rejected-modal>
+<invoice-tenant-items-details #InvoiceDetailsModel></invoice-tenant-items-details>

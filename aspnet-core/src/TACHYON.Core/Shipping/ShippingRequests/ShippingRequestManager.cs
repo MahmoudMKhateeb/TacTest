@@ -17,7 +17,6 @@ namespace TACHYON.Shipping.ShippingRequests
     public class ShippingRequestManager : TACHYONDomainServiceBase
     {
         private readonly IRepository<RoutPoint,long> _routPointRepository;
-        private readonly IRepository<RoutePointReceiverReceiveShipmentCode> _receiverReceiveShipmentCodeRepository;
         private readonly IRepository<ShippingRequest, long> _shippingRequestRepository;
         private readonly IFeatureChecker _featureChecker;
         private readonly IAbpSession _abpSession;
@@ -29,13 +28,11 @@ namespace TACHYON.Shipping.ShippingRequests
         public ShippingRequestManager(ISmsSender smsSender,
             IRepository<RoutPoint, long> routPointRepository,
             IAppNotifier appNotifier,
-            IRepository<RoutePointReceiverReceiveShipmentCode> receiverReceiveShipmentCodeRepository,
             IRepository<ShippingRequest, long> shippingRequestRepository, IFeatureChecker featureChecker, IAbpSession abpSession)
         {
             _smsSender = smsSender;
             _routPointRepository = routPointRepository;
             _appNotifier = appNotifier;
-            _receiverReceiveShipmentCodeRepository = receiverReceiveShipmentCodeRepository;
             _shippingRequestRepository = shippingRequestRepository;
             _featureChecker = featureChecker;
             _abpSession = abpSession;

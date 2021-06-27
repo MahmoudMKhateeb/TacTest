@@ -1334,7 +1334,7 @@
     <text name="RoutType">نوع الطريق</text>
     <text name="RoutTypeDisplayName">نوع الطريق</text>
     <text name="RoutTypes">أنواع الطرقات</text>
-    <text name="SAR">ريال سعودي</text>
+    <text name="SAR">ر.س</text>
     <text name="Save">حـفظ</text>
     <text name="SaveAll">إحفظ الكل</text>
     <text name="SaveAndClose">حـفظ وإغلاق</text>
@@ -1414,6 +1414,7 @@
     <text name="SendSecurityCodeErrorMessage">تعذر إرسال رمز الأمان!</text>
     <text name="SendSuccessfully">تم الإرسال بنجاح</text>
     <text name="SendTestEmail">تجربة إرسال بريد</text>
+    <text name="Sequence">التسلسل</text>
     <text name="Service">خدمة</text>
     <text name="SessionExpireRedirectingInXSecond">ستنتهي مدة جلستك لأنك لم تكن نشطًا لفترة طويلة. عند أي إدخال للفأرة أو لوحة المفاتيح على الموقع سيتم إيقاف إنهاء الجلسة. إعادة التوجيه خلال {0} ثانية.</text>
     <text name="SessionTimeOut">التحكم في مهلة الجلسة</text>
@@ -1551,6 +1552,7 @@
     <text name="SubscriptionPrice">سعر الإشتراك</text>
     <text name="Subscriptions">الاشتراكات</text>
     <text name="SubscriptionStartDate">تاريخ بداية الاشتراك</text>
+    <text name="SubTotalAmount">المبلغ الاجمالي</text>
     <text name="Success">نجاح</text>
     <text name="SuccessfullyActivated">تم التفعيل بنجاح</text>
     <text name="SuccessfullyAdded">تمت الإضافة بنجاح.</text>
@@ -1952,6 +1954,7 @@
     <text name="VasName">اسم الخدمة الإضافية</text>
     <text name="VasPrice">سعر الخدمات الإضافية</text>
     <text name="VasPrices">أسعار الخدمات الإضافية</text>
+    <text name="Vat">ضريبة القيمة المضافة</text>
     <text name="VatAmount">قيمة الضريبة</text>
     <text name="VerificationCode">رمز التحقق</text>
     <text name="Verify">التحقق</text>
