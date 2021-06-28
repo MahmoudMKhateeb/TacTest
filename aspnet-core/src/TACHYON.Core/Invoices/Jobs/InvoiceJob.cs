@@ -31,7 +31,7 @@ namespace TACHYON.Core.Invoices.Jobs
             // AsyncHelper.RunSync(() => _InvoiceManager.GenerateInvoice(PeriodId));
             _backgroundJobManager.Enqueue<InvoiceBackgroundJob, int>(PeriodId);
 
-            Console.Error.WriteLineAsync("abdulllah");
+           // Console.Error.WriteLineAsync("abdulllah");
             return Task.CompletedTask;
         }
 

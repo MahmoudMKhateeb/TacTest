@@ -20,7 +20,7 @@ namespace TACHYON.Shipping.Drivers
         Task Accepted(int TripId);
         //Task Rejected(CreateShippingRequestTripDriverRejectDto Input);
         Task Reset(int TripId);
-        Task PushNotification(int TripId);
+       // Task PushNotification(int TripId);
 
 
 

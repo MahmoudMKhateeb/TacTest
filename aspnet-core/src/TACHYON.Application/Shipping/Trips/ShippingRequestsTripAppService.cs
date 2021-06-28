@@ -6,6 +6,7 @@ using Abp.Domain.Repositories;
 using Abp.Domain.Uow;
 using Abp.Extensions;
 using Abp.Linq.Extensions;
+using Abp.Timing;
 using Abp.UI;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
@@ -198,8 +199,9 @@ namespace TACHYON.Shipping.Trips
 
             if (oldAssignedDriverUserId != trip.AssignedDriverUserId)
             {
+                trip.AssignedDriverTime = Clock.Now;
                 await _appNotifier.NotifyDriverWhenAssignToTrip(trip);
-                await _firebase.PushNotificationToDriverWhenAssignTrip(new UserIdentifier(trip.AssignedDriverUserFk.TenantId, trip.AssignedDriverUserId.Value), trip.Id.ToString());
+                await _firebase.PushNotificationToDriverWhenAssignTrip(new UserIdentifier(trip.AssignedDriverUserFk.TenantId, trip.AssignedDriverUserId.Value), trip.Id.ToString(), trip.WaybillNumber.ToString());
             }
             await _appNotifier.ShipperShippingRequestTripNotifyDriverWhenAssignTrip(new UserIdentifier(AbpSession.TenantId, trip.AssignedDriverUserId.Value), trip);
         }

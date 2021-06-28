@@ -13,7 +13,9 @@ using TACHYON.Firebases;
 using TACHYON.Shipping.ShippingRequestTrips;
 
 namespace TACHYON.BackgroundWorkers.ShippingRequests
-{
+{/// <summary>
+/// Reminder the driver You have a new trip tomorrow
+/// </summary>
     public class DriverTripReminderWorker : PeriodicBackgroundWorkerBase, ISingletonDependency
     {
         private const int runEvery =  1 * 60 * 60 * 1000 * 24; //1 day
