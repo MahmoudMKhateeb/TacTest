@@ -15,6 +15,7 @@ import {
   SelectItemDto,
   ShippingRequestsServiceProxy,
   WaybillsServiceProxy,
+  ReceiversServiceProxy,
 } from '@shared/service-proxies/service-proxies';
 import Swal from 'sweetalert2';
 import { FileDownloadService } from '@shared/utils/file-download.service';
@@ -33,7 +34,8 @@ export class PointsComponent extends AppComponentBase implements OnInit, OnChang
     private _routStepsServiceProxy: RoutStepsServiceProxy,
     private _shippingRequestsServiceProxy: ShippingRequestsServiceProxy,
     private _fileDownloadService: FileDownloadService,
-    private _waybillsServiceProxy: WaybillsServiceProxy
+    private _waybillsServiceProxy: WaybillsServiceProxy,
+    private _receiversServiceProxy: ReceiversServiceProxy
   ) {
     super(injector);
   }
@@ -53,6 +55,8 @@ export class PointsComponent extends AppComponentBase implements OnInit, OnChang
   singleWayPoint: CreateOrEditRoutPointDto = new CreateOrEditRoutPointDto();
   goodsDetail: GoodsDetailDto = new GoodsDetailDto();
   allFacilities: FacilityForDropdownDto[];
+  allReceivers: any;
+
   PickingType = PickingType;
 
   active = false;
@@ -94,6 +98,8 @@ export class PointsComponent extends AppComponentBase implements OnInit, OnChang
   activeValidator = this.RouteType == 1 ? this.wayPointValidationSets.singlePoint : this.wayPointValidationSets.multiDrops;
   sourceTripFacilityId: number;
   desTripFacilityId: number;
+  isAdditionalReceiverEnabled = false;
+
   ngOnInit() {
     this.loadDropDowns();
     //check if ShippingRequest is in Edit Mode
@@ -167,6 +173,8 @@ export class PointsComponent extends AppComponentBase implements OnInit, OnChang
     //if there is an id for the RouteStep then update the Record Don't Create A new one
     this.RouteStepCordSetter();
     this.wayPointsList[id] = this.singleWayPoint;
+    //if there is additional Receiver Phone Number that means that the Additional Receiver CheckObx Should Be Checked
+    this.isAdditionalReceiverEnabled = this.singleWayPoint.receiverPhoneNumber ? true : false;
     this.createRouteStepModal.hide();
     this.notify.info(this.l('UpdatedSuccessfully'));
     this.EmitToFather();
@@ -238,11 +246,16 @@ export class PointsComponent extends AppComponentBase implements OnInit, OnChang
       this.facilityLoading = false;
     });
   }
-  loadReceivers() {
+
+  /**
+   * loads a list of Receivers by facility Id
+   * @param facilityId
+   */
+  loadReceivers(facilityId) {
     this.receiversLoading = true;
     //to be Changed
-    this._routStepsServiceProxy.getAllFacilitiesForDropdown().subscribe((result) => {
-      this.allFacilities = result;
+    this._receiversServiceProxy.getAllReceiversByFacilityForTableDropdown(facilityId).subscribe((result) => {
+      this.allReceivers = result;
       this.receiversLoading = false;
     });
   }
