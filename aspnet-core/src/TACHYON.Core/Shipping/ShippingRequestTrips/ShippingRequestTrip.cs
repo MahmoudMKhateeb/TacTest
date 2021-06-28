@@ -27,6 +27,10 @@ namespace TACHYON.Shipping.ShippingRequestTrips
         public RoutePointStatus  RoutePointStatus { get; set; }
 
         public long? AssignedDriverUserId { get; set; }
+        /// <summary>
+        /// Used for worker to reminder the driver to accept trip
+        /// </summary>
+        public DateTime? AssignedDriverTime { get; set; }
         [ForeignKey("AssignedDriverUserId")]
         public User AssignedDriverUserFk { get; set; }
         /// <summary>

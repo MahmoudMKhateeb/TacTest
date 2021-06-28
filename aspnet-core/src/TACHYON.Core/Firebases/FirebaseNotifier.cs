@@ -46,9 +46,9 @@ namespace TACHYON.Firebases
             await SendMessage(user.UserId, message, clickAction);
         }
 
-        public async Task PushNotificationToDriverWhenAssignTrip(UserIdentifier user, string TripId)
+        public async Task PushNotificationToDriverWhenAssignTrip(UserIdentifier user, string TripId,string wayBillNumber)
         {
-            string Title = L("NewTripAssign", GetCulture(user));
+            string Title = L("NewTripAssign", GetCulture(user), wayBillNumber);
             var message = new Message()
             {
                 Notification = new Notification

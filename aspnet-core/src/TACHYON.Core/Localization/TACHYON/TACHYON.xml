@@ -194,6 +194,7 @@
     <text name="CarrierName">Carrier name</text>
     <text name="CarrierPrice">Carrier price</text>
     <text name="Carriers">Carriers</text>
+    <text name="CarrierTripNeedAccept">You have a driver {driver} who did not approve shipment waybill number {waybillnumber}.</text>
     <text name="CascadeImpersonationErrorMessage">Can not make cascade impersonation. This is already an impersonated login!</text>
     <text name="Category">Category</text>
     <text name="Change">Change</text>
@@ -972,7 +973,7 @@
     <text name="LocationServicesDenial">The App Needs My Location Services To Find Out Where You Currently Are.</text>
     <text name="LocationServicesNeeded">Location Services Needed</text>
     <text name="LocationServicesOn">Location services turned on. Fetching current location</text>
-    <text name="LogIn">Log In</text>
+    <text name="LogIn">Sign in</text>
     <text name="LoginAsThisTenant">Login as this company</text>
     <text name="LoginAsThisUser">Login as this user</text>
     <text name="LoginAttempts">Login attempts</text>
@@ -1118,7 +1119,7 @@
     <text name="NewTenants">New companies</text>
     <text name="NewTermAndCondition">New Terms and Conditions</text>
     <text name="NewTransportType">New transport type</text>
-    <text name="NewTripAssign">The new trip has assign to you.</text>
+    <text name="NewTripAssign">The new trip has assign to you waybill number {0}.</text>
     <text name="NewTruck">New truck</text>
     <text name="NewTruckStatus">New truck status</text>
     <text name="NewTrucksType">New truck type</text>
@@ -1912,6 +1913,8 @@ code:{0}</text>
       <a href="/app/main/shippingRequests/shippingRequests/view?id={id}">The {name} has been accepted offer.</a>
     </text>
     <text name="TMSSettings">TMS Settings</text>
+    <text name="TMSTripNeedAccept">
+You have a carrier {carrier} who did not approve shipment waybill number {waybillnumber}.</text>
     <text name="Today">Today</text>
     <text name="Toggle">Toggle</text>
     <text name="ToleranceDaysBeforeDeactivateAfterExpiration">Tolerance days before deactivate after expiration</text>

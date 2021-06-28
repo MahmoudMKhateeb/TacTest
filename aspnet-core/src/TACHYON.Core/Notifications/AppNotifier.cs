@@ -573,6 +573,39 @@ namespace TACHYON.Notifications
             notificationData["destination"] = Trip.DestinationFacilityFk.Address;
             await _notificationPublisher.PublishAsync(AppNotificationNames.DriverAcceptTrip, notificationData, userIds: new[] { await GetAdminUser(Trip.ShippingRequestFk.CarrierTenantId) });
         }
+        public async Task CarrierTripNeedAccept(ShippingRequestTrip Trip)
+        {
+            var notificationData = new LocalizableMessageNotificationData(
+                new LocalizableString(
+                    L("CarrierTripNeedAccept"),
+                    TACHYONConsts.LocalizationSourceName
+                )
+            );
+
+            notificationData["waybillnumber"] = Trip.WaybillNumber;
+            notificationData["driver"] = Trip.AssignedDriverUserFk.FullName;
+            //notificationData["source"] = Trip.OriginFacilityFk.Address;
+           // notificationData["destination"] = Trip.DestinationFacilityFk.Address;
+            await _notificationPublisher.PublishAsync(AppNotificationNames.CarrierTripNeedAccept, notificationData, userIds: new[] { await GetAdminUser(Trip.AssignedDriverUserFk.TenantId) });
+        }
+        public async Task TMSTripNeedAccept(ShippingRequestTrip Trip)
+        {
+            var notificationData = new LocalizableMessageNotificationData(
+                new LocalizableString(
+                    L("TMSTripNeedAccept"),
+                    TACHYONConsts.LocalizationSourceName
+                )
+            );
+
+            notificationData["waybillnumber"] = Trip.WaybillNumber;
+            notificationData["driver"] = Trip.AssignedDriverUserFk.FullName;
+            notificationData["carrier"] = Trip.ShippingRequestFk.CarrierTenantFk.Name;
+            // notificationData["source"] = Trip.OriginFacilityFk.Address;
+            //notificationData["destination"] = Trip.DestinationFacilityFk.Address;
+            var tmsUser = await _userManager.GetAdminTachyonDealerAsync();
+            await _notificationPublisher.PublishAsync(AppNotificationNames.TMSTripNeedAccept, notificationData, userIds: new[] { new UserIdentifier(tmsUser.TenantId, tmsUser.Id) });
+        }
+
         #endregion
         #region Accident
         public async Task ShippingRequestAccidentsOccure(List<UserIdentifier> Users, Dictionary<string, object> data)

@@ -50,6 +50,8 @@ namespace TACHYON.Notifications
         public const string NotifyDriverWhenAssignToTrip = "App.NotifyDriverWhenAssignToTrip";
         public const string DriverRejectTrip = "App.DriverRejectTrip";
         public const string DriverAcceptTrip = "App.DriverAcceptTrip";
+        public const string CarrierTripNeedAccept = "App.CarrierTripNeedAccept";
+        public const string TMSTripNeedAccept = "App.TMSTripNeedAccept";
         #endregion
         #region Accident
         public const string ShippingRequestAccidents = "App.ShippingRequest.Accident";

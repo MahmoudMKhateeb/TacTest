@@ -166,6 +166,7 @@
     <text name="Carrier">ناقل</text>
     <text name="CarrierName">اسم الناقل</text>
     <text name="Carriers">الناقلين</text>
+    <text name="CarrierTripNeedAccept">يوجد لديك السائق {driver} لم يوافق الشحنة رقم وثيقة الشحن {waybillnumber}</text>
     <text name="CascadeImpersonationErrorMessage">لايمكن ثمتيل شخص آخر. لان تسجيل دخولك الحالي ممثّل من قبل مستخدم آخر.</text>
     <text name="Category">التصنيف</text>
     <text name="Change">تغيير</text>
@@ -1017,7 +1018,7 @@
     <text name="NewTenants">شركات جديدة</text>
     <text name="NewTermAndCondition">شروط  وأحكام جديدة</text>
     <text name="NewTransportType">نوع نقل جديد</text>
-    <text name="NewTripAssign">تم اسناد رحلة جديدة لك</text>
+    <text name="NewTripAssign">تم اسناد رحلة جديدة لك، رقم وثيقة الشحن {0}</text>
     <text name="NewTruck">شاحنة جديدة</text>
     <text name="NewTruckStatus">حالة شاحنة جديدة</text>
     <text name="NewTrucksType">نوع شاحنة جديد</text>
@@ -1731,6 +1732,7 @@
       <a href="/app/main/shippingRequests/shippingRequests/view?id={id}">{name} تم الموافقة على العرض.</a>
     </text>
     <text name="TMSSettings">إعدادات نظام إدارة النقل</text>
+    <text name="TMSTripNeedAccept">يوجد لديك الناقل {carrier} لم يوافق الشحنة رقم وثيقة الشحن {waybillnumber}</text>
     <text name="Today">اليوم</text>
     <text name="Toggle">تبديل</text>
     <text name="ToleranceDaysBeforeDeactivateAfterExpiration">عدد أيام السماح بعد تاريخ إنتهاء الصلاحية</text>
