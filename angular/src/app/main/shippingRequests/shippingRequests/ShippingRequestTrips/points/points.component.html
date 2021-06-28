@@ -532,6 +532,6 @@
 <createOrEditFacilityModal
   #createOrEditFacilityModal
   *ngIf="feature.isEnabled('App.Shipper')"
-  (modalSave)="refreshFacilities()"
+  (modalSave)="refreshFacilities($event)"
 ></createOrEditFacilityModal>
 <!-- End::CreateOrEditFacilityModal -->

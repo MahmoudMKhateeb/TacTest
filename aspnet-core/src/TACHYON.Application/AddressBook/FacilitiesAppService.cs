@@ -1,26 +1,18 @@
-﻿using TACHYON.Countries;
-using System.Collections.Generic;
-using TACHYON.Cities;
-using System.Collections.Generic;
-
-
-using System;
-using System.Linq;
-using System.Linq.Dynamic.Core;
-using Abp.Linq.Extensions;
-using System.Collections.Generic;
-using System.Threading.Tasks;
-using Abp.Domain.Repositories;
-using TACHYON.AddressBook.Exporting;
-using TACHYON.AddressBook.Dtos;
-using TACHYON.Dto;
-using Abp.Application.Services.Dto;
-using TACHYON.Authorization;
-using Abp.Extensions;
+﻿using Abp.Application.Services.Dto;
 using Abp.Authorization;
+using Abp.Domain.Repositories;
+using Abp.Linq.Extensions;
 using Microsoft.EntityFrameworkCore;
 using NetTopologySuite.Geometries;
-using TACHYON.Countries.Dtos;
+using System.Collections.Generic;
+using System.Linq;
+using System.Linq.Dynamic.Core;
+using System.Threading.Tasks;
+using TACHYON.AddressBook.Dtos;
+using TACHYON.AddressBook.Exporting;
+using TACHYON.Authorization;
+using TACHYON.Cities;
+using TACHYON.Dto;
 
 namespace TACHYON.AddressBook
 {
@@ -117,20 +109,20 @@ namespace TACHYON.AddressBook
             return output;
         }
 
-        public async Task CreateOrEdit(CreateOrEditFacilityDto input)
+        public async Task<long> CreateOrEdit(CreateOrEditFacilityDto input)
         {
             if (input.Id == null)
             {
-                await Create(input);
+              return  await Create(input);
             }
             else
             {
-                await Update(input);
+              return  await Update(input);
             }
         }
 
         [AbpAuthorize(AppPermissions.Pages_Facilities_Create)]
-        protected virtual async Task Create(CreateOrEditFacilityDto input)
+        protected virtual async Task<long> Create(CreateOrEditFacilityDto input)
         {
             var point = new Point
                 (input.Longitude, input.Latitude)
@@ -147,14 +139,15 @@ namespace TACHYON.AddressBook
             }
 
 
-            await _facilityRepository.InsertAsync(facility);
+          return  await _facilityRepository.InsertAndGetIdAsync(facility);
         }
 
         [AbpAuthorize(AppPermissions.Pages_Facilities_Edit)]
-        protected virtual async Task Update(CreateOrEditFacilityDto input)
+        protected virtual async Task<long> Update(CreateOrEditFacilityDto input)
         {
             var facility = await _facilityRepository.FirstOrDefaultAsync((long)input.Id);
             ObjectMapper.Map(input, facility);
+            return facility.Id;
         }
 
         [AbpAuthorize(AppPermissions.Pages_Facilities_Delete)]

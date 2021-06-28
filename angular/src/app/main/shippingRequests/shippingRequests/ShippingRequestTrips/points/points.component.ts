@@ -47,7 +47,7 @@ export class PointsComponent extends AppComponentBase implements OnInit, OnChang
   @Input() WayPointListFromFatherForShippingRequestEdit: [];
   @Output() SelectedWayPointsFromChild: EventEmitter<CreateOrEditRoutPointDto[]> = new EventEmitter<CreateOrEditRoutPointDto[]>();
 
-  wayPointsList: CreateOrEditRoutPointDto[] = this.WayPointListFromFatherForShippingRequestEdit || [];
+  wayPointsList: CreateOrEditRoutPointDto[] = [];
   singleWayPoint: CreateOrEditRoutPointDto = new CreateOrEditRoutPointDto();
   goodsDetail: GoodsDetailDto = new GoodsDetailDto();
   allFacilities: FacilityForDropdownDto[];
@@ -82,16 +82,19 @@ export class PointsComponent extends AppComponentBase implements OnInit, OnChang
       numberOfDrops: 3,
     },
     multiDrops: {
-      allowedPoints: this.NumberOfDrops + 1,
+      allowedPoints: 1,
       numberOfPickUps: 1,
-      numberOfDrops: this.NumberOfDrops,
+      numberOfDrops: 1,
     },
   };
   //TODO : to change this line when twoWay Type Become Active
-  activeValidator = this.RouteType == 1 ? this.wayPointValidationSets.singlePoint : this.wayPointValidationSets.multiDrops;
+  activeValidator: any;
   sourceTripFacilityId: number;
   desTripFacilityId: number;
   ngOnInit() {
+    this.wayPointValidationSets.multiDrops.allowedPoints = this.NumberOfDrops + 1;
+    this.wayPointValidationSets.multiDrops.numberOfDrops = this.NumberOfDrops + 1;
+    this.activeValidator = this.RouteType == 1 ? this.wayPointValidationSets.singlePoint : this.wayPointValidationSets.multiDrops;
     this.loadDropDowns();
     //check if ShippingRequest is in Edit Mode
     if (this.WayPointListFromFatherForShippingRequestEdit) {
@@ -128,7 +131,7 @@ export class PointsComponent extends AppComponentBase implements OnInit, OnChang
       this._shippingRequestsServiceProxy.getAllUnitOfMeasuresForDropdown().subscribe((result) => {
         this.allUnitOfMeasure = result;
       });
-      this.refreshFacilities();
+      this.refreshFacilities(undefined);
     }
   }
   //to Select PickUp Point
@@ -142,14 +145,14 @@ export class PointsComponent extends AppComponentBase implements OnInit, OnChang
     this.singleWayPoint = new CreateOrEditRoutPointDto();
     this.singleWayPoint.pickingType = PickingType.Pickup;
     this.createRouteStepModal.show();
-    this.refreshFacilities();
+    this.refreshFacilities(undefined);
   }
   //to Select DropDown point
   showDropPointUpModal() {
     this.singleWayPoint = new CreateOrEditRoutPointDto();
     this.singleWayPoint.pickingType = PickingType.Dropoff;
     this.createRouteStepModal.show();
-    this.refreshFacilities();
+    this.refreshFacilities(undefined);
   }
 
   openCreateFacilityModal() {
@@ -227,12 +230,17 @@ export class PointsComponent extends AppComponentBase implements OnInit, OnChang
     this.wayPointsSetter();
     this.singleWayPoint = new CreateOrEditRoutPointDto();
   }
-  refreshFacilities() {
-    this.facilityLoading = true;
-    this._routStepsServiceProxy.getAllFacilitiesForDropdown().subscribe((result) => {
-      this.allFacilities = result;
-      this.facilityLoading = false;
-    });
+  refreshFacilities(facility: FacilityForDropdownDto | undefined) {
+    if (facility) {
+      this.allFacilities.push(facility);
+      this.singleWayPoint.facilityId = facility.id;
+    } else {
+      this.facilityLoading = true;
+      this._routStepsServiceProxy.getAllFacilitiesForDropdown().subscribe((result) => {
+        this.allFacilities = result;
+        this.facilityLoading = false;
+      });
+    }
   }
   getFacilityNameByid(id: number) {
     return this.allFacilities?.find((x) => x.id == id)?.displayName;

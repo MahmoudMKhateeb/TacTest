@@ -91,7 +91,7 @@ export class CreateOrEditTripComponent extends AppComponentBase implements OnIni
     //   this.Vases.push(vas);
     // });
     //load the Facilites
-    this.refreshOrGetFacilities();
+    this.refreshOrGetFacilities(undefined);
     this.sortVases();
   }
 
@@ -197,13 +197,17 @@ export class CreateOrEditTripComponent extends AppComponentBase implements OnIni
       } //end of if
     });
   }
-  refreshOrGetFacilities() {
-    console.log('facilities should be loaded ');
-    this.facilityLoading = true;
-    this._routStepsServiceProxy.getAllFacilitiesForDropdown().subscribe((result) => {
-      this.allFacilities = result;
-      this.facilityLoading = false;
-    });
+  refreshOrGetFacilities(facility: FacilityForDropdownDto | undefined) {
+    if (facility) {
+      this.allFacilities.push(facility);
+      this.trip.originFacilityId = facility.id;
+    } else {
+      this.facilityLoading = true;
+      this._routStepsServiceProxy.getAllFacilitiesForDropdown().subscribe((result) => {
+        this.allFacilities = result;
+        this.facilityLoading = false;
+      });
+    }
   }
 
   DownloadSingleDropWaybillPdf(id: number): void {
