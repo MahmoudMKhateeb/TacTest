@@ -1,11 +1,9 @@
-﻿using System;
-using System.Threading.Tasks;
-using Abp.Application.Services;
+﻿using Abp.Application.Services;
 using Abp.Application.Services.Dto;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 using TACHYON.AddressBook.Dtos;
 using TACHYON.Dto;
-using System.Collections.Generic;
-using System.Collections.Generic;
 
 
 namespace TACHYON.AddressBook
@@ -18,7 +16,7 @@ namespace TACHYON.AddressBook
 
 		Task<GetFacilityForEditOutput> GetFacilityForEdit(EntityDto<long> input);
 
-		Task CreateOrEdit(CreateOrEditFacilityDto input);
+		Task<long> CreateOrEdit(CreateOrEditFacilityDto input);
 
 		Task Delete(EntityDto<long> input);
 
