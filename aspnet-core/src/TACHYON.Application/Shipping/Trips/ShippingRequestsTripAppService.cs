@@ -150,7 +150,14 @@ namespace TACHYON.Shipping.Trips
             {
                 throw new UserFriendlyException(L("The number of drop points must be" + request.NumberOfDrops));
             }
-
+            if (request.TotalWeight>0)
+            {
+                var TotalWeight = input.RoutPoints.Sum(x => x.GoodsDetailListDto.Sum(g => g.Weight));
+                if (TotalWeight> request.TotalWeight)
+                {
+                    throw new UserFriendlyException(L("TheTotalWeightOfGoodsDetailsshouldNotBeGreaterThanShippingRequestWeight", request.TotalWeight));
+                }
+            }
             if (!input.Id.HasValue)
             {
                 int requestNumberOfTripsAdd = await _ShippingRequestTripRepository.GetAll().Where(x => x.ShippingRequestId == input.ShippingRequestId).CountAsync() + 1;

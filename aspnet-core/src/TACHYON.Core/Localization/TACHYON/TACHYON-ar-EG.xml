@@ -1710,6 +1710,7 @@
     <text name="TheShipperSelectedIsNotFound">الشاحن المحدد غير موجود</text>
     <text name="TheShippingIsNotFound">الشحنة غير متوفره</text>
     <text name="TheShippingRequestNotFound">لا يوجد شحنة</text>
+    <text name="TheTotalWeightOfGoodsDetailsshouldNotBeGreaterThanShippingRequestWeight">مجموع الأوزان للبضائع يجب أن لا تكون أكبر من وزن الشحنة {0}</text>
     <text name="ThisEditionIsUsedAsAnExpiringEdition">يتم استخدام هذه النسخة كنسخة تنتهي صلاحيتها لنسخة أخرى. إذا كنت تريد جعل هذه النسخة مدفوعة، يجب عليك أولا إزالتها من النسخ الأخرى.</text>
     <text name="ThisFieldIsRequired">هذا الحقل مطلوب</text>
     <text name="ThisInvoiceIsNotYours">هذه الفاتورة ليست لك!</text>
