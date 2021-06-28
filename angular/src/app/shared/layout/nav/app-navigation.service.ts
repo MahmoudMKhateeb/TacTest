@@ -93,12 +93,6 @@ export class AppNavigationService {
         //TODO: the CreateNewRequest subMenu Need Permission and Route
         [
           new AppMenuItem(
-            'ShippingRequestsWizard',
-            'Pages.ShippingRequests',
-            'label label-danger label-dot',
-            '/app/main/shippingRequests/shippingRequestWizard'
-          ),
-          new AppMenuItem(
             'ShippingRequests',
             'Pages.ShippingRequests',
             'label label-danger label-dot',
