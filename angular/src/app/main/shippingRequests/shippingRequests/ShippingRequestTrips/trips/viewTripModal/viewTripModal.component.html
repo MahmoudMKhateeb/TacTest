@@ -102,6 +102,29 @@
           </ng-container>
 
           <!--   EndOf::Driver&Truck -->
+          <!--  begin::Trip Goods Approximate Value -->
+          <div class="col-lg-6">
+            <div class="form-group">
+              <label>{{ l('ApproximateTripGoodsValue') }} *</label>
+              <div class="input-group date">
+                <input
+                  type="text"
+                  class="form-control"
+                  name="approximateGoodsTotalValue"
+                  (keypress)="numberOnly($event)"
+                  [(ngModel)]="trip.totalValue"
+                  placeholder="{{ l('ApproximateTripGoodsValue') }}"
+                  disabled
+                />
+                <div class="input-group-append">
+                  <span class="input-group-text">
+                    <i class="la la-dollar"></i>
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
+          <!--  end::Trip Goods Approximate Value -->
           <!--  end:: Trip start&End Dates-->
           <!-- begin::Vas's  -->
           <!--          <div class="col-lg-6" *ngIf="VasListFromFather.length > 0">-->
