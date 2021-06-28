@@ -544,47 +544,6 @@
                         <span class="form-text text-muted">{{ l('SelectaCapacity') }}</span>
                       </div>
                     </div>
-
-                    <!--                    <div class="form-group">-->
-                    <!--                      <label>Delivery Type</label>-->
-                    <!--                      <select name="delivery" [(ngModel)]="model.delivery" class="form-control">-->
-                    <!--                        <option value="">Select a Service Type Option</option>-->
-                    <!--                        <option value="overnight" selected>-->
-                    <!--                          Overnight Delivery (within 48 hours)-->
-                    <!--                        </option>-->
-                    <!--                        <option value="express">-->
-                    <!--                          Express Delivery (within 5 working days)-->
-                    <!--                        </option>-->
-                    <!--                        <option value="basic">-->
-                    <!--                          Basic Delivery (within 5 - 10 working days)-->
-                    <!--                        </option>-->
-                    <!--                      </select>-->
-                    <!--                    </div>-->
-                    <!--                    <div class="form-group">-->
-                    <!--                      <label>Packaging Type</label>-->
-                    <!--                      <select name="packaging" [(ngModel)]="model.packaging" class="form-control">-->
-                    <!--                        <option value="">Select a Packaging Type Option</option>-->
-                    <!--                        <option value="regular" selected>Regular Packaging</option>-->
-                    <!--                        <option value="oversized">Oversized Packaging</option>-->
-                    <!--                        <option value="fragile">Fragile Packaging</option>-->
-                    <!--                        <option value="frozen">Frozen Packaging</option>-->
-                    <!--                      </select>-->
-                    <!--                    </div>-->
-                    <!--                    <div class="form-group">-->
-                    <!--                      <label>Preferred Delivery Window</label>-->
-                    <!--                      <select name="preferreddelivery" [(ngModel)]="model.preferreddelivery" class="form-control">-->
-                    <!--                        <option value="">Select a Preferred Delivery Option</option>-->
-                    <!--                        <option value="morning" selected>-->
-                    <!--                          Morning Delivery (8:00AM - 11:00AM)-->
-                    <!--                        </option>-->
-                    <!--                        <option value="afternoon">-->
-                    <!--                          Afternoon Delivery (11:00AM - 3:00PM)-->
-                    <!--                        </option>-->
-                    <!--                        <option value="evening">-->
-                    <!--                          Evening Delivery (3:00PM - 7:00PM)-->
-                    <!--                        </option>-->
-                    <!--                      </select>-->
-                    <!--                    </div>-->
                   </div>
                   <!--end: Form Wizard Step 3-->
 
@@ -668,7 +627,7 @@
                     <h4 class="mb-10 font-weight-bold text-dark">
                       {{ l('ReviewYourDetailsAndSubmit') }}
                     </h4>
-                    <div *ngIf="active">
+                    <div>
                       <div class="border-bottom mb-5 pb-5">
                         <div class="font-weight-bolder mb-3">{{ l('BasicDetails') }}:</div>
                         <div class="line-height-xl">
@@ -678,7 +637,7 @@
                           {{ l('BiddingRange') }} : {{ shippingRequestReview?.shippingRequest?.bidStartDate | momentFormat: 'L' }} -
                           {{ shippingRequestReview?.shippingRequest?.bidEndDate | momentFormat: 'L' }}
                           <br />
-                          {{ l('ShippingTypes') }} : {{ shippingRequestReview?.shippingRequest?.shippingTypeId }}
+                          {{ l('ShippingTypes') }} : {{ shippingRequestReview?.shippingTypeDisplayName }}
                           <br />
                           {{ l('TripsDateRange') }} : {{ shippingRequestReview?.shippingRequest?.startTripDate | momentFormat: 'L' }} -
                           {{ shippingRequestReview?.shippingRequest?.endTripDate | momentFormat: 'L' }}
@@ -714,6 +673,12 @@
                           {{ l('TruckType') }} : {{ shippingRequestReview?.truckTypeDisplayName }}
                           <br />
                           {{ l('Capacity') }} : {{ shippingRequestReview?.capacityDisplayName }}
+                        </div>
+                      </div>
+                      <div class="mb-5 pb-5">
+                        <div class="font-weight-bolder mb-3">{{ l('ValueAddedServices') }}:</div>
+                        <div class="line-height-xl">
+                          <span *ngFor="let vas of shippingRequestReview?.shippingRequestVasDtoList"> {{ vas.vasName }} , </span>
                         </div>
                       </div>
                     </div>

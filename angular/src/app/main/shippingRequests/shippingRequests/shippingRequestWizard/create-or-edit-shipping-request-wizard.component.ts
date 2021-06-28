@@ -5,22 +5,17 @@ import {
   ChangeDetectorRef,
   Component,
   ElementRef,
-  Inject,
   Injector,
   NgZone,
-  OnChanges,
   OnDestroy,
   OnInit,
-  SimpleChanges,
   ViewChild,
 } from '@angular/core';
 import { finalize } from 'rxjs/operators';
 import KTWizard from '@metronic/common/js/components/wizard';
-import { KTUtil } from '@metronic/common/js/components/util';
 
 import {
   CarriersForDropDownDto,
-  CreateOrEditShippingRequestDto,
   FacilitiesServiceProxy,
   FacilityForDropdownDto,
   GetAllGoodsCategoriesForDropDownOutput,
@@ -38,7 +33,6 @@ import {
   EditShippingRequestStep3Dto,
   EditShippingRequestStep4Dto,
   GetShippingRequestForViewOutput,
-  ShippingRequestDto,
 } from '@shared/service-proxies/service-proxies';
 import { AppComponentBase } from '@shared/common/app-component-base';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -46,7 +40,7 @@ import { appModuleAnimation } from '@shared/animations/routerTransition';
 import { BreadcrumbItem } from '@app/shared/common/sub-header/sub-header.component';
 import { MapsAPILoader } from '@node_modules/@agm/core';
 import { EnumToArrayPipe } from '@shared/common/pipes/enum-to-array.pipe';
-import { animate, state, style, transition, trigger } from '@angular/animations';
+import { animate, style, transition, trigger } from '@angular/animations';
 import { FormBuilder, Validators } from '@angular/forms';
 import * as moment from '@node_modules/moment';
 
@@ -57,16 +51,8 @@ import * as moment from '@node_modules/moment';
   animations: [
     appModuleAnimation(),
     trigger('grow', [
-      // Note the trigger name
-      transition(':enter', [
-        // :enter is alias to 'void => *'
-        style({ height: '0', overflow: 'hidden' }),
-        animate(300, style({ height: '*' })),
-      ]),
-      transition(':leave', [
-        // :leave is alias to '* => void'
-        animate(200, style({ height: 0, overflow: 'hidden' })),
-      ]),
+      transition(':enter', [style({ height: '0', overflow: 'hidden' }), animate(300, style({ height: '*' }))]),
+      transition(':leave', [animate(200, style({ height: 0, overflow: 'hidden' }))]),
     ]),
   ],
   providers: [EnumToArrayPipe],
@@ -154,19 +140,8 @@ export class CreateOrEditShippingRequestWizardComponent extends AppComponentBase
   selectedvas: any;
 
   ngOnInit() {
-    //this.loadallVases();
-
     this.loadAllDropDownLists();
     this.allRoutTypes = this.enumToArray.transform(ShippingRequestRouteType);
-    //to be removed later
-    // this._shippingRequestsServiceProxy.publishShippingRequest(this.activeShippingRequestId).subscribe((res) => {
-    //   console.log(`get step 2 for Edit `, res);
-    // });
-    //this.activeShippingRequestId && this.activeStep > 3 ?  : 0;
-    //this.reviewAndSubmit();
-
-    // this.cleanedVases = [...this.allVases, ...this.selectedvas];
-    this.activeShippingRequestId ? this.getShippingRequestForView() : 0;
   }
 
   ngOnDestroy() {
@@ -181,13 +156,8 @@ export class CreateOrEditShippingRequestWizardComponent extends AppComponentBase
     this.activeStep = this.wizard.getStep();
     //if there is no shipping Request ID go to Step 1
     this.activeShippingRequestId ? this.loadAllStepsForEdit(this.stepToCompleteFrom) : this.wizard.goTo(1);
-
-    //if the step is last one get the all submited Details for Review
-    this.activeStep == 5 ? this.reviewAndSubmit() : 0;
-    //console.log(`current Active Step , `, this.activeStep);
     // Validation before going to next page
     this.wizard.on('beforeNext', (wizardObj) => {
-      //console.log('beforeNext', wizardObj);
       switch (this.wizard.getStep()) {
         case 1: {
           if (this.step1Form.invalid) {
@@ -230,7 +200,7 @@ export class CreateOrEditShippingRequestWizardComponent extends AppComponentBase
           this.createOrEditStep4();
           wizardObj.goNext();
           //statements;
-          console.log('review And Publish Should Be loaded');
+          //if step 4 passed load the review&submit
           this.reviewAndSubmit();
           break;
         }
@@ -243,7 +213,6 @@ export class CreateOrEditShippingRequestWizardComponent extends AppComponentBase
 
   //publish
   onSubmit() {
-    // console.log('Submited');
     this.message.confirm('', this.l('AreYouSure'), (isConfirmed) => {
       if (isConfirmed) {
         this.saving = true;
@@ -260,13 +229,11 @@ export class CreateOrEditShippingRequestWizardComponent extends AppComponentBase
           });
       }
     });
-
     this.submitted = true;
-    // console.log(`current Step`, this.wizard.getStep);
   }
 
   createOrEditStep1() {
-    // this.saving = true;
+    this.saving = true;
     this.step1Dto.id = this.activeShippingRequestId || undefined;
     this.shippingRequestType == 'bidding' ? (this.step1Dto.isBid = true) : (this.step1Dto.isBid = false);
     this.shippingRequestType == 'tachyondeal' ? (this.step1Dto.isTachyonDeal = true) : (this.step1Dto.isTachyonDeal = false);
@@ -278,7 +245,7 @@ export class CreateOrEditShippingRequestWizardComponent extends AppComponentBase
       .createOrEditStep1(this.step1Dto)
       .pipe(
         finalize(() => {
-          // this.saving = false;
+          this.saving = false;
         })
       )
       .subscribe((res) => {
@@ -339,13 +306,12 @@ export class CreateOrEditShippingRequestWizardComponent extends AppComponentBase
   }
   //get the summary and displays it for user
   reviewAndSubmit() {
+    console.log('Review And Submit Lanched');
     this.saving = true;
     this.loading = true;
-    console.log(`review And Submit Function Fired`);
     this.updateRoutingQueries(this.activeShippingRequestId, 5);
     this._shippingRequestsServiceProxy.getShippingRequestForView(this.activeShippingRequestId).subscribe((res) => {
       this.shippingRequestReview = res;
-      console.log(this.shippingRequestReview);
       this.loading = false;
     });
   }
@@ -409,8 +375,6 @@ export class CreateOrEditShippingRequestWizardComponent extends AppComponentBase
       .subscribe((res) => {
         this.step4Dto = res;
         this.selectedVases = res.shippingRequestVasList;
-        // console.log(`selected Vases`, res.shippingRequestVasList);
-        // console.log(`all vases `, this.allVases);
       });
   }
 
@@ -420,7 +384,6 @@ export class CreateOrEditShippingRequestWizardComponent extends AppComponentBase
     // console.log('this is the step 11', step);
     if (step == 1) {
       this.loadStep1ForEdit();
-      console.log(`step 1 For Edit`);
     } else if (step == 2) {
       this.loadStep1ForEdit();
       this.loadStep2ForEdit();
@@ -523,30 +486,10 @@ export class CreateOrEditShippingRequestWizardComponent extends AppComponentBase
     this.step1Form.controls.biddingDateRangeTest.setValidators(null);
     this.step1Form.controls.biddingDateRangeTest.updateValueAndValidity();
   }
-  //select a vas and move it to Selected Vases
-  // selectVases($event: any) {
-  //   //if deSelectAll emptyTheSelectedItemsArray
-  //   if ($event.value.length === 0) {
-  //     return (this.selectedVases = []);
-  //   }
-  //   // if item exist do nothing  ;
-  //   // if item exist in this and not exist in selected remove it
-  //   this.selectedVases.forEach((item, index) => {
-  //     const listItem = $event.value.find((x) => x.id == item.vasId);
-  //     if (!listItem) {
-  //       this.selectedVases.splice(index, 1);
-  //     }
-  //   });
-  //   // if item not exist add it
-  //   $event.value.forEach((e) => {
-  //     const selectedItem = this.selectedVases.find((x) => x.vasId == e.id);
-  //     if (!selectedItem) {
-  //       const singleVas = new CreateOrEditShippingRequestVasListDto();
-  //       singleVas.vasId = e.id;
-  //       this.selectedVases.push(singleVas);
-  //     }
-  //   });
-  // }
+
+  /**
+   * loads the vases list and Cleans Them out
+   */
   loadallVases() {
     this._shippingRequestsServiceProxy.getAllShippingRequestVasesForTableDropdown().subscribe((result) => {
       result.forEach((x) => {
@@ -559,6 +502,7 @@ export class CreateOrEditShippingRequestWizardComponent extends AppComponentBase
         cleanVas.vasName = x.vasName;
         this.cleanedVases.push(cleanVas);
       });
+      //array the contains each vases and its Properties like hascount and hasAmount -- helpful for the vases table
       result.forEach((item) => {
         this.selectedVasesProperties[item.id] = {
           vasId: item.id,
@@ -567,7 +511,6 @@ export class CreateOrEditShippingRequestWizardComponent extends AppComponentBase
           vasAmountDisabled: item.hasAmount ? false : true,
         };
       });
-      //console.log(this.cleanedVases);
     });
   }
 
@@ -606,10 +549,5 @@ export class CreateOrEditShippingRequestWizardComponent extends AppComponentBase
           });
       }
     });
-  }
-
-  getShippingRequestForView() {
-    this.active = true;
-    this._shippingRequestsServiceProxy.getShippingRequestForView(this.activeShippingRequestId).subscribe((x) => console.log(x));
   }
 }
