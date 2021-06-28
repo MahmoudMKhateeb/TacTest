@@ -1891,6 +1891,7 @@ code:{0}</text>
     <text name="TheShipperSelectedIsNotFound">The shipper selected is not found</text>
     <text name="TheShippingIsNotFound">The shipping is not found</text>
     <text name="TheShippingRequestNotFound">The shipping request not found</text>
+    <text name="TheTotalWeightOfGoodsDetailsshouldNotBeGreaterThanShippingRequestWeight">The total weight of goods details shouldn't be greater than shipping request weight {0}.</text>
     <text name="ThisEditionIsUsedAsAnExpiringEdition">This edition is used as an expiring edition for another edition(s). If you want to make this edition paid, you should first remove it from other edition's.</text>
     <text name="ThisFieldIsRequired">This field is required.</text>
     <text name="ThisInvoiceIsNotYours">This invoice is not yours!</text>
