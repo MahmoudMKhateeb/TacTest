@@ -1,5 +1,6 @@
 using Abp.AspNetCore.Mvc.Controllers;
 using Abp.Configuration.Startup;
+using Abp.Domain.Uow;
 using Abp.IdentityFramework;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
@@ -32,6 +33,11 @@ namespace TACHYON.Web.Controllers
                     Path = "/"
                 }
             );
+        }
+        protected virtual void DisableTenancyFilters()
+        {
+            CurrentUnitOfWork.DisableFilter(AbpDataFilters.MustHaveTenant, AbpDataFilters.MayHaveTenant);
+
         }
     }
 }
