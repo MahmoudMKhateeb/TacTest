@@ -217,6 +217,22 @@
                     />
                   </div>
                 </div>
+                <div class="form-group col-lg-4">
+                  <label>{{ l('receiverAddress') }}</label>
+                  <div class="input-group">
+                    <div class="input-group-prepend input-group-solid">
+                      <span class="input-group-text">
+                        <i class="fa fa-address-book"></i>
+                      </span>
+                    </div>
+                    <input
+                      type="text"
+                      name="receiverAddress"
+                      class="form-control"
+                      [(ngModel)]="singleWayPoint.receiverAddress"
+                    />
+                  </div>
+                </div>
                 <div class="form-group col-lg-12">
                   <label>{{ l('Notes') }}</label>
                   <div class="input-group">
