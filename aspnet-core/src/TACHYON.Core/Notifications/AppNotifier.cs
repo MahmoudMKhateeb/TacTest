@@ -606,6 +606,40 @@ namespace TACHYON.Notifications
             await _notificationPublisher.PublishAsync(AppNotificationNames.TMSTripNeedAccept, notificationData, userIds: new[] { new UserIdentifier(tmsUser.TenantId, tmsUser.Id) });
         }
 
+        public async Task NotifyCarrierWhenTripHasAttachment(int tripId,int? carrierTenantId)
+        {
+            var notificationData = new LocalizableMessageNotificationData(
+                new LocalizableString(
+                    L("TripHasAttachment"),
+                    TACHYONConsts.LocalizationSourceName
+                )
+            );
+
+            notificationData["TripId"] = tripId;
+            if (carrierTenantId != null)
+            {
+                var user =await _userManager.GetAdminByTenantIdAsync(carrierTenantId.Value);
+                await _notificationPublisher.PublishAsync(AppNotificationNames.TripHasAttachment, notificationData, userIds: new[] { new UserIdentifier(carrierTenantId, user.Id) });
+            }
+        }
+
+        public async Task NotifyCarrierWhenTripNeedsDeliverNote(int tripId, int? carrierTenantId)
+        {
+            var notificationData = new LocalizableMessageNotificationData(
+                new LocalizableString(
+                    L("TripNeedsDeliveryNote"),
+                    TACHYONConsts.LocalizationSourceName
+                )
+            );
+
+            notificationData["TripId"] = tripId;
+            if (carrierTenantId != null)
+            {
+                var user = await _userManager.GetAdminByTenantIdAsync(carrierTenantId.Value);
+                await _notificationPublisher.PublishAsync(AppNotificationNames.TripNeedsDeliveryNote, notificationData, userIds: new[] { new UserIdentifier(carrierTenantId, user.Id) });
+            }
+        }
+
         #endregion
         #region Accident
         public async Task ShippingRequestAccidentsOccure(List<UserIdentifier> Users, Dictionary<string, object> data)

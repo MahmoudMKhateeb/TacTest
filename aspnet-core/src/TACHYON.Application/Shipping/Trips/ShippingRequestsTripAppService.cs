@@ -155,7 +155,7 @@ namespace TACHYON.Shipping.Trips
             }
             if (request.TotalWeight>0)
             {
-                var TotalWeight = input.RoutPoints.Sum(x => x.GoodsDetailListDto.Sum(g => g.Weight));
+                var TotalWeight = input.RoutPoints.Where(x=>x.GoodsDetailListDto!=null).Sum(x => x.GoodsDetailListDto.Sum(g => g.Weight));
                 if (TotalWeight> request.TotalWeight)
                 {
                     throw new UserFriendlyException(L("TheTotalWeightOfGoodsDetailsshouldNotBeGreaterThanShippingRequestWeight", request.TotalWeight));
@@ -171,8 +171,9 @@ namespace TACHYON.Shipping.Trips
             else
             {
 
-                await Update(input, request);
+               await Update(input, request);
             }
+            
 
         }
 
@@ -226,7 +227,10 @@ namespace TACHYON.Shipping.Trips
                 docFileDto.Name = docFileDto.Name + "_" + shippingRequestTripId.ToString();
                 await _documentFilesAppService.CreateOrEdit(docFileDto);
             }
-          
+
+            //Notify Carrier with trip details
+            await NotifyCarrierWithTripDetails(trip, request.CarrierTenantId,true ,true);
+
         }
 
         [AbpAuthorize(AppPermissions.Pages_ShippingRequestTrips_Edit)]
@@ -258,8 +262,33 @@ namespace TACHYON.Shipping.Trips
                     await _ShippingRequestTripVasRepository.DeleteAsync(vas);
                 }
             }
-
+            var HasAttachmentOldValue = trip.HasAttachment;
+            var NeedseliveryNoteOldValue = trip.NeedsDeliveryNote;
             ObjectMapper.Map(input, trip);
+
+            if (HasAttachmentOldValue != input.HasAttachment)
+            {
+                //Notify Carrier with trip details
+                await NotifyCarrierWithTripDetails(trip, request.CarrierTenantId,true,false);
+            }
+            else if (NeedseliveryNoteOldValue != input.NeedsDeliveryNote)
+            {
+                //Notify Carrier with trip details
+                await NotifyCarrierWithTripDetails(trip, request.CarrierTenantId, false, true);
+            }
+        }
+
+        private async Task NotifyCarrierWithTripDetails(ShippingRequestTrip trip, int? carrierTenantId,bool HasAttachmentNotification,bool NeedseliverNoteNotification )
+        {
+            //Notify carrier when trip has attachment or needs delivery note
+            if (trip.ShippingRequestFk.CarrierTenantId != null && trip.HasAttachment && HasAttachmentNotification)
+            {
+                await _appNotifier.NotifyCarrierWhenTripHasAttachment(trip.Id,carrierTenantId);
+            }
+            else if (trip.ShippingRequestFk.CarrierTenantId != null && trip.NeedsDeliveryNote && NeedseliverNoteNotification)
+            {
+                await _appNotifier.NotifyCarrierWhenTripNeedsDeliverNote(trip.Id,carrierTenantId);
+            }
         }
 
         [AbpAuthorize(AppPermissions.Pages_ShippingRequestTrips_Delete)]
