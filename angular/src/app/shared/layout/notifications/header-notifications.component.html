@@ -43,10 +43,7 @@
             [ngClass]="{ 'user-notification-item-clickable': notification.url, 'user-notification-item-unread': notification.isUnread }"
             class="navi-item"
           >
-            <div
-              class="navi-link"
-              (click)="notification.data.properties.shippingRequestId ? GotoRequest(notification.data.properties.shippingRequestId) : 0"
-            >
+            <div class="navi-link">
               <div class="navi-icon mr-2">
                 <i class="{{ notification.icon }} {{ notification.iconFontClass }}"></i>
               </div>
