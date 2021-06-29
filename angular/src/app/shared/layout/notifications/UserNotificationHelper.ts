@@ -74,6 +74,18 @@ export class UserNotificationHelper extends AppComponentBase {
 
       case 'App.DriverAcceptTrip':
         return '/app/main/shippingRequests/shippingRequests/view?id={ShipimentNo}';
+
+      //New Offer Redirection
+      case 'App.ShippingRequestSendOfferWhenAddPrice':
+        return (
+          '/app/main/shippingRequests/shippingRequests/view?id=' +
+          userNotification.notification.data.properties.id +
+          '&offerid=' +
+          userNotification.notification.data.properties.offerid
+        );
+      //Redirect Invoice Notification
+      case 'App.InvoiceShipperGenerated':
+        return '/app/main/invoices/detail/' + userNotification.notification.data.properties.invoiceid;
     }
 
     //No url for this notification
