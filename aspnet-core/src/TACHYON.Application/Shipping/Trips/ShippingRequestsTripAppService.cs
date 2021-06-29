@@ -138,8 +138,8 @@ namespace TACHYON.Shipping.Trips
             if (
                 input.StartTripDate.Date > request.EndTripDate?.Date ||
                 input.StartTripDate.Date < request.StartTripDate?.Date ||
-                input.EndTripDate.Date > request.EndTripDate?.Date ||
-                input.EndTripDate.Date < request.StartTripDate?.Date
+                (input.EndTripDate!=null && input.EndTripDate.Value.Date > request.EndTripDate?.Date) ||
+                (input.EndTripDate != null && input.EndTripDate.Value.Date < request.StartTripDate?.Date)
                 )
             {
 

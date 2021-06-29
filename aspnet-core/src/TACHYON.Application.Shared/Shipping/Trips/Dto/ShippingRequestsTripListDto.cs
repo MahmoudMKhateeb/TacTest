@@ -9,7 +9,7 @@ namespace TACHYON.Shipping.Trips.Dto
     public class ShippingRequestsTripListDto: EntityDto<long>
     {
         public DateTime StartTripDate { get; set; }
-        public DateTime EndTripDate { get; set; }
+        public DateTime? EndTripDate { get; set; }
         public DateTime? StartWorking { get; set; }
         public DateTime? EndWorking { get; set; }
         public ShippingRequestTripStatus Status { get; set; }
