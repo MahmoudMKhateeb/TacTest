@@ -14,6 +14,10 @@ namespace TACHYON.Trucks.PlateTypes
         //[Required]
         //[StringLength(PlateTypeConsts.MaxDisplayNameLength, MinimumLength = PlateTypeConsts.MinDisplayNameLength)]
         //public virtual string DisplayName { get; set; }
+        /// <summary>
+        /// This field is for Bayan Integration system
+        /// </summary>
+        public int? BayanPlatetypeId { get; set; }
         public ICollection<PlateTypeTranslation> Translations { get; set; }
     }
 }
