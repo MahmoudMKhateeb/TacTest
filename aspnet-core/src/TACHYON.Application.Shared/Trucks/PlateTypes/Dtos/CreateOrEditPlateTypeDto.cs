@@ -11,7 +11,7 @@ namespace TACHYON.Trucks.PlateTypes.Dtos
         //[Required]
         //[StringLength(PlateTypeConsts.MaxDisplayNameLength, MinimumLength = PlateTypeConsts.MinDisplayNameLength)]
         //public string DisplayName { get; set; }
-
+        public int? BayanPlatetypeId { get; set; }
         public ICollection<PlateTypeTranslationDto> Translations { get; set; }
     }
 }
