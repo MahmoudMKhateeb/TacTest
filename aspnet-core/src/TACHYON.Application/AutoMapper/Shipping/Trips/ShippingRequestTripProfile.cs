@@ -16,8 +16,8 @@ namespace TACHYON.AutoMapper.Shipping.Trips
         public ShippingRequestTripProfile()
         {
             CreateMap<ShippingRequestTrip, ShippingRequestsTripListDto>()
-                 .ForMember(dst => dst.OriginFacility, opt => opt.MapFrom(src => src.OriginFacilityFk != null ? $"{src.OriginFacilityFk.Name} - {src.OriginFacilityFk.Address}" : ""))
-                 .ForMember(dst => dst.DestinationFacility, opt => opt.MapFrom(src => src.DestinationFacilityFk != null ? $"{src.DestinationFacilityFk.Name} - {src.DestinationFacilityFk.Address}" : ""))
+                 .ForMember(dst => dst.OriginCity, opt => opt.MapFrom(src => src.OriginFacilityFk != null ? src.OriginFacilityFk.CityFk.DisplayName : ""))
+                 .ForMember(dst => dst.DestinationCity, opt => opt.MapFrom(src => src.DestinationFacilityFk != null ? src.DestinationFacilityFk.CityFk.DisplayName : ""))
                  .ForMember(dst => dst.Truck, opt => opt.MapFrom(src => src.AssignedTruckFk != null ? src.AssignedTruckFk.ModelName : string.Empty))
                  .ForMember(dst => dst.Driver, opt => opt.MapFrom(src => src.AssignedDriverUserFk != null ? src.AssignedDriverUserFk.Name : string.Empty))
                  .ForMember(dst => dst.DriverStatusTitle, opt => opt.MapFrom(src => Enum.GetName(typeof(ShippingRequestTripDriverStatus), src.DriverStatus)));

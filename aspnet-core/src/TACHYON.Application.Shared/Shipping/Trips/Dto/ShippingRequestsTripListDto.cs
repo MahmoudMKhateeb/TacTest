@@ -24,8 +24,8 @@ namespace TACHYON.Shipping.Trips.Dto
         }
         public string Driver { get; set; }
         public string Truck { get; set; }
-        public string OriginFacility { get; set; }
-        public string DestinationFacility { get; set; }
+        public string OriginCity { get; set; }
+        public string DestinationCity { get; set; }
         public bool HasAccident { get; set; }
         public bool IsApproveCancledByShipper { get; set; }
         public bool IsApproveCancledByCarrier { get; set; }

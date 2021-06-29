@@ -89,12 +89,12 @@
                   {{ record.endTripDate | momentFormat: 'L' }}
                 </td>
                 <td style="width: 150px;">
-                  <span class="ui-column-title"> {{ l('originFacility') }}</span>
-                  {{ record.originFacility }}
+                  <span class="ui-column-title"> {{ l('originCity') }}</span>
+                  {{ record.originCity }}
                 </td>
                 <td style="width: 150px;">
-                  <span class="ui-column-title"> {{ l('destinationFacility') }}</span>
-                  {{ record.destinationFacility }}
+                  <span class="ui-column-title"> {{ l('destinationCity') }}</span>
+                  {{ record.destinationCity }}
                 </td>
                 <td *ngIf="feature.isEnabled('App.Carrier')" style="width: 150px;">
                   <span class="ui-column-title"> {{ l('driverStatus') }}</span>
