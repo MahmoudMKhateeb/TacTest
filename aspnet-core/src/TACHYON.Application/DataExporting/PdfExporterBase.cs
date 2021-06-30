@@ -45,6 +45,19 @@ namespace TACHYON.DataExporting
             return file;
         }
 
+        public byte[] GetRdlcPdfPackageAsBinaryData(string fileName, string reportPath, ArrayList dsNameArray, ArrayList DTArray)
+        {
+            reportPath = Path.GetDirectoryName(Assembly.GetEntryAssembly().Location) + reportPath;
 
+            LocalReport localReport = new LocalReport(reportPath);
+
+            for (int i = 0; i < dsNameArray.Count; i++)
+            {
+                localReport.AddDataSource((string)dsNameArray[i], (IEnumerable)DTArray[i]);
+            }
+
+            return localReport.Execute(RenderType.Pdf).MainStream;
+
+        }
     }
 }
