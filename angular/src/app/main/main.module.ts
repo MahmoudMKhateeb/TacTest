@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { AppCommonModule } from '@app/shared/common/app-common.module';
 
 import { PackingTypesComponent } from './packingTypes/packingTypes/packingTypes.component';
@@ -237,6 +237,7 @@ import { AppLocalizationComponent } from '@app/main/applocalizations/applocaliza
 import { ApplocalizationModalComponent } from '@app/main/applocalizations/create-or-edit-applocalization-modal.component';
 import { ViewApplocalizationModalComponent } from '@app/main/applocalizations/view-applocalization-modal.component';
 import { ComingSoonComponent } from '@app/main/commingSoon/comingSoon.component';
+import { CreateOrEditShippingRequestWizardComponent } from '@app/main/shippingRequests/shippingRequests/shippingRequestWizard/create-or-edit-shipping-request-wizard.component';
 import { TrackingComponent } from '@app/main/shippingRequests/shippingRequests/tracking/tacking.component';
 import { TrackinSearchModelComponent } from '@app/main/shippingRequests/shippingRequests/tracking/tacking-search-model.component';
 import { TMSRequestListComponent } from '@app/main/tms/tms-request-list.component';
@@ -276,6 +277,7 @@ NgxBootstrapDatePickerConfigService.registerNgxBootstrapDatePickerLocales();
     AgmDirectionModule,
     StepsModule,
     SelectButtonModule,
+    ReactiveFormsModule,
   ],
   declarations: [
     TrucksTypesTranslationsComponent,
@@ -447,6 +449,8 @@ NgxBootstrapDatePickerConfigService.registerNgxBootstrapDatePickerLocales();
     AppLocalizationComponent,
     ApplocalizationModalComponent,
     ViewApplocalizationModalComponent,
+
+    CreateOrEditShippingRequestWizardComponent,
     ShippingrequestsDetailsModelComponent,
     ComingSoonComponent,
     TrackingComponent,

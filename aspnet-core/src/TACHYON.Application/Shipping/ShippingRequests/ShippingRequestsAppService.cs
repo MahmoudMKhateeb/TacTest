@@ -199,7 +199,7 @@ namespace TACHYON.Shipping.ShippingRequests
         /// Basic Details - Shipping Request Wizard
         /// </summary>
         /// <returns></returns>
-        public async Task CreateOrEditStep1(CreateOrEditShippingRequestStep1Dto input)
+        public async Task<long> CreateOrEditStep1(CreateOrEditShippingRequestStep1Dto input)
         {
             if (input.IsTachyonDeal)
             {
@@ -211,12 +211,18 @@ namespace TACHYON.Shipping.ShippingRequests
 
             if (input.Id == null)
             {
-                await CreateStep1(input);
+                return await CreateStep1(input);
             }
             else
             {
-                await UpdateStep1(input);
+               return  await UpdateStep1(input);
             }
+        }
+
+        public async Task<CreateOrEditShippingRequestStep1Dto> GetStep1ForEdit(EntityDto<long> entity)
+        {
+            var shippingRequest = await GetDraftedShippingRequest(entity.Id);
+            return ObjectMapper.Map<CreateOrEditShippingRequestStep1Dto>(shippingRequest);
         }
 
         /// <summary>
@@ -234,6 +240,11 @@ namespace TACHYON.Shipping.ShippingRequests
             ObjectMapper.Map(input, shippingRequest);
         }
 
+        public async Task<EditShippingRequestStep2Dto> GetStep2ForEdit(EntityDto<long> entity)
+        {
+            var shippingRequest = await GetDraftedShippingRequest(entity.Id);
+            return ObjectMapper.Map<EditShippingRequestStep2Dto>(shippingRequest);
+        }
         /// <summary>
         /// Goods Details - Shipping Request Wizard
         /// </summary>
@@ -249,6 +260,12 @@ namespace TACHYON.Shipping.ShippingRequests
             ObjectMapper.Map(input, shippingRequest);
         }
 
+
+        public async Task<EditShippingRequestStep3Dto> GetStep3ForEdit(EntityDto<long> entity)
+        {
+            var shippingRequest = await GetDraftedShippingRequest(entity.Id);
+            return ObjectMapper.Map<EditShippingRequestStep3Dto>(shippingRequest);
+        }
         /// <summary>
         /// Services - Shipping Request Wizard
         /// </summary>
@@ -256,34 +273,58 @@ namespace TACHYON.Shipping.ShippingRequests
         /// <returns></returns>
         public async Task EditStep4(EditShippingRequestStep4Dto input)
         {
-            var shippingRequest = await GetDraftedShippingRequest(input.Id);
-            if (shippingRequest.DraftStep < 4)
+            using (CurrentUnitOfWork.DisableFilter("IHasIsDrafted"))
             {
-                shippingRequest.DraftStep = 4;
+                ShippingRequest shippingRequest = await _shippingRequestRepository.GetAll()
+               .Include(x => x.ShippingRequestVases)
+                 .Where(x => x.Id == input.Id && x.IsDrafted == true)
+                 .FirstOrDefaultAsync();
+
+                //delete vases
+                foreach (var vas in shippingRequest.ShippingRequestVases)
+                {
+                    if (!input.ShippingRequestVasList.Any(x => x.Id == vas.Id))
+                    {
+                        await _shippingRequestVasRepository.DeleteAsync(vas);
+                    }
+                }
+                if (shippingRequest.DraftStep < 4)
+                {
+                    shippingRequest.DraftStep = 4;
+                }
+                ObjectMapper.Map(input, shippingRequest);
             }
-            ObjectMapper.Map(input, shippingRequest);
         }
 
-        public async Task PublishShippingRequest(long id)
+
+        public async Task<EditShippingRequestStep4Dto> GetStep4ForEdit(EntityDto<long> entity)
         {
-            var shippingRequest = await GetDraftedShippingRequest(id);
-            if (shippingRequest.DraftStep < 4)
+            using (CurrentUnitOfWork.DisableFilter("IHasIsDrafted"))
             {
-                throw new UserFriendlyException(L("YouMustCompleteWizardStepsFirst"));
+                ShippingRequest shippingRequest = await _shippingRequestRepository.GetAll()
+                .Include(x => x.ShippingRequestVases)
+                  .Where(x => x.Id == entity.Id && x.IsDrafted == true)
+                  .FirstOrDefaultAsync();
+                return ObjectMapper.Map<EditShippingRequestStep4Dto>(shippingRequest);
             }
             await ValidateShippingRequestBeforePublish(shippingRequest);
             shippingRequest.IsDrafted = false;
         }
 
-
-        private async Task UpdateStep1(CreateOrEditShippingRequestStep1Dto input)
+        public async Task PublishShippingRequest(long id)
         {
-            var shippingRequest = await GetDraftedShippingRequest(input.Id.Value);
-
-            ObjectMapper.Map(input, shippingRequest);
-            // ValidateStep1(shippingRequest);
+                ShippingRequest shippingRequest =await GetDraftedShippingRequest(id);
+                if (shippingRequest.DraftStep < 4)
+                {
+                    throw new UserFriendlyException(L("YouMustCompleteWizardStepsFirst"));
+                }
+                await ValidateShippingRequestBeforePublish(shippingRequest);
+               // _commissionManager.AddShippingRequestCommissionSettingInfo(shippingRequest);
+                shippingRequest.IsDrafted = false;
         }
 
+
+       
 
         private async Task<ShippingRequest> GetDraftedShippingRequest(long id)
         {
@@ -295,7 +336,7 @@ namespace TACHYON.Shipping.ShippingRequests
                 return shippingRequest;
             }
         }
-        private async Task CreateStep1(CreateOrEditShippingRequestStep1Dto input)
+        private async Task<long> CreateStep1(CreateOrEditShippingRequestStep1Dto input)
         {
             ShippingRequest shippingRequest = ObjectMapper.Map<ShippingRequest>(input);
             //ValidateStep1(shippingRequest);
@@ -303,7 +344,18 @@ namespace TACHYON.Shipping.ShippingRequests
             shippingRequest.DraftStep = 1;
             await _shippingRequestRepository.InsertAndGetIdAsync(shippingRequest);
             await CurrentUnitOfWork.SaveChangesAsync();
+            return shippingRequest.Id;
         }
+
+        private async Task<long> UpdateStep1(CreateOrEditShippingRequestStep1Dto input)
+        {
+            var shippingRequest = await GetDraftedShippingRequest(input.Id.Value);
+
+            ObjectMapper.Map(input, shippingRequest);
+            return shippingRequest.Id;
+            // ValidateStep1(shippingRequest);
+        }
+
 
         private async Task ValidateShippingRequestBeforePublish(ShippingRequest shippingRequest)
         {
@@ -425,7 +477,11 @@ namespace TACHYON.Shipping.ShippingRequests
         [RequiresFeature(AppFeatures.ShippingRequest)]
         public async Task Delete(EntityDto<long> input)
         {
-            await _shippingRequestRepository.DeleteAsync(input.Id);
+            using (CurrentUnitOfWork.DisableFilter("IHasIsDrafted"))
+            {
+                var shippingRequest=await _shippingRequestRepository.GetAll().Where(x => x.IsDrafted == true).FirstOrDefaultAsync();
+                await _shippingRequestRepository.DeleteAsync(shippingRequest);
+            }
         }
 
         public async Task<List<CarriersForDropDownDto>> GetAllCarriersForDropDownAsync()
