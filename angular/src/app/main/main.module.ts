@@ -233,7 +233,6 @@ import { DirectRequestTenantModelComponent } from '@app/main/shippingRequests/sh
 import { ShippingRequestCardTemplateComponent } from '@app/main/shippingRequests/shippingRequests/template/shipping-request-card-template.component';
 import { ShippingRequestCardSearchModelComponent } from '@app/main/shippingRequests/shippingRequests/template/shipping-request-card-search-model.component';
 import { ShippingRequestCardCancelModelComponent } from '@app/main/shippingRequests/shippingRequests/template/shipping-request-card-cancel-model.component';
-import { AssignDriverTruckModalComponent } from '@app/main/shippingRequests/shippingRequests/ShippingRequestTrips/trips/assignDriverTruckModal/assignDriverTruckModal.component';
 import { AppLocalizationComponent } from '@app/main/applocalizations/applocalization.component';
 import { ApplocalizationModalComponent } from '@app/main/applocalizations/create-or-edit-applocalization-modal.component';
 import { ViewApplocalizationModalComponent } from '@app/main/applocalizations/view-applocalization-modal.component';
@@ -438,7 +437,6 @@ NgxBootstrapDatePickerConfigService.registerNgxBootstrapDatePickerLocales();
     AccidentReasonComponentModalComponent,
     TripRejectReasonComponent,
     TripRejectReasonModalComponent,
-    AssignDriverTruckModalComponent,
     //  tachyondealer
     TachyonDealToBiddingModalComponent,
     DirectRequestComponent,
