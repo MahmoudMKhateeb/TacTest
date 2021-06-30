@@ -47,6 +47,7 @@
                         (change)="removeWhiteSpacesFromEmail()"
                         maxlength="256"
                         email
+                        autofocus
                       />
                       <span *ngIf="!isEmailValid" class="form-text text-danger">{{ l('NotValid') }}</span>
                       <span *ngIf="!isEmailAvailable" class="form-text text-danger">{{ l('AlreadyTaken') }}</span>
