@@ -40,6 +40,8 @@ export class PointsComponent extends AppComponentBase implements OnInit, OnChang
   @ViewChild('createOrEditFacilityModal') public createOrEditFacilityModal: ModalDirective;
   @ViewChild('createRouteStepModal') public createRouteStepModal: ModalDirective;
   @ViewChild('createOrEditGoodDetail', { static: false }) public createOrEditGoodDetail: ModalDirective;
+  @ViewChild('createOrEditReceiverModal', { static: false }) public CreateOrEditReceiver: ModalDirective;
+
   @Input() MainGoodsCategory: number;
   @Input() RouteType: number;
   @Input() NumberOfDrops: number;
@@ -57,6 +59,7 @@ export class PointsComponent extends AppComponentBase implements OnInit, OnChang
   saving = false;
   allCitys: RoutStepCityLookupTableDto[];
   facilityLoading = false;
+  receiversLoading = false;
   editRouteId: number = undefined;
 
   routeStepIdForEdit: number = undefined;
@@ -128,7 +131,8 @@ export class PointsComponent extends AppComponentBase implements OnInit, OnChang
       this._shippingRequestsServiceProxy.getAllUnitOfMeasuresForDropdown().subscribe((result) => {
         this.allUnitOfMeasure = result;
       });
-      this.refreshFacilities();
+
+      this.loadFacilities();
     }
   }
   //to Select PickUp Point
@@ -142,14 +146,14 @@ export class PointsComponent extends AppComponentBase implements OnInit, OnChang
     this.singleWayPoint = new CreateOrEditRoutPointDto();
     this.singleWayPoint.pickingType = PickingType.Pickup;
     this.createRouteStepModal.show();
-    this.refreshFacilities();
+    this.loadFacilities();
   }
   //to Select DropDown point
   showDropPointUpModal() {
     this.singleWayPoint = new CreateOrEditRoutPointDto();
     this.singleWayPoint.pickingType = PickingType.Dropoff;
     this.createRouteStepModal.show();
-    this.refreshFacilities();
+    this.loadFacilities();
   }
 
   openCreateFacilityModal() {
@@ -227,11 +231,19 @@ export class PointsComponent extends AppComponentBase implements OnInit, OnChang
     this.wayPointsSetter();
     this.singleWayPoint = new CreateOrEditRoutPointDto();
   }
-  refreshFacilities() {
+  loadFacilities() {
     this.facilityLoading = true;
     this._routStepsServiceProxy.getAllFacilitiesForDropdown().subscribe((result) => {
       this.allFacilities = result;
       this.facilityLoading = false;
+    });
+  }
+  loadReceivers() {
+    this.receiversLoading = true;
+    //to be Changed
+    this._routStepsServiceProxy.getAllFacilitiesForDropdown().subscribe((result) => {
+      this.allFacilities = result;
+      this.receiversLoading = false;
     });
   }
   getFacilityNameByid(id: number) {
