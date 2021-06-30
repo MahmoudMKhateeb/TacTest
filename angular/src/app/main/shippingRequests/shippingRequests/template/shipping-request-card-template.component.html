@@ -22,6 +22,9 @@
           >
             <img *ngIf="item.isTachyonDeal" class="markTachyon" src="/assets/custom/imgs/mark.svg" alt="" />
             <div class="infoBasic">
+              <div class="serialNumber">
+                <a href="javascript:void(0)">{{ item.referenceNumber }}</a>
+              </div>
               <a href="javascript:void(0)" class="companyName">
                 {{ setTitle(item) }}
               </a>
@@ -111,6 +114,9 @@
             </div>
             <div class="actionsShip">
               <div>
+                <a *ngIf="feature.isEnabled('App.Shipper')" href="javascript:void(0)" class="infoHighLight blue" (click)="ModelOffer.show(item)">
+                  {{ l(item.requestTypeTitle) }}
+                </a>
                 <a *ngIf="canSeeTotalOffers(item)" href="javascript:void(0)" class="infoHighLight green" (click)="ModelOffer.show(item)">
                   {{ item.totalOffers }} {{ getWordTitle(item.totalOffers, 'TotalOffer') }}
                 </a>

@@ -38,6 +38,7 @@ namespace TACHYON.Shipping.ShippingRequests
     [Table("ShippingRequests")]
     public class ShippingRequest : FullAuditedEntity<long>, IMustHaveTenant, IHasIsDrafted
     {
+        public string ReferenceNumber { get; set; }
         public int TenantId { get; set; }
         [ForeignKey("TenantId")]
         public Tenant Tenant { get; set; }

@@ -35,6 +35,11 @@ namespace TACHYON.PriceOffers.Dto
         public string RouteType { get { return RouteTypeId.GetEnumDescription(); }}
         public decimal? Price { get; set; }
 
+        public string ReferenceNumber { get; set; }
+
+        public ShippingRequestType requestType { get; set; }
+        public string requestTypeTitle { get { return requestType.GetEnumDescription(); } }
+
     }
  
 }

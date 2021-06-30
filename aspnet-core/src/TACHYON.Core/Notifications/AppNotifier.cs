@@ -177,6 +177,8 @@ namespace TACHYON.Notifications
         }
 
 
+        
+
         public async Task UpdateShippingRequestPrice(UserIdentifier argsUser, long shippingRequestId, decimal price)
         {
             var notificationData = new LocalizableMessageNotificationData(
@@ -605,6 +607,34 @@ namespace TACHYON.Notifications
             var tmsUser = await _userManager.GetAdminTachyonDealerAsync();
             await _notificationPublisher.PublishAsync(AppNotificationNames.TMSTripNeedAccept, notificationData, userIds: new[] { new UserIdentifier(tmsUser.TenantId, tmsUser.Id) });
         }
+        public async Task NotificationWhenTripDetailsChanged(ShippingRequestTrip trip,User currentuser)
+        {
+            var notificationData = new LocalizableMessageNotificationData(
+                new LocalizableString(
+                    L("NotificationWhenTripDetailsChanged"),
+                    TACHYONConsts.LocalizationSourceName
+                )
+            );
+            notificationData["waybillnumber"] = trip.WaybillNumber;
+
+            List<UserIdentifier> users = new List<UserIdentifier>();
+
+
+            if (trip.ShippingRequestFk.CreatorUserId != currentuser.Id)
+            {
+                users.Add(new UserIdentifier(trip.ShippingRequestFk.TenantId, trip.ShippingRequestFk.CreatorUserId.Value));
+            }
+            if (trip.ShippingRequestFk.CarrierTenantId.HasValue && trip.ShippingRequestFk.CarrierTenantId != currentuser.TenantId)
+            {
+                var carrier= await UserManager.GetAdminByTenantIdAsync(trip.ShippingRequestFk.CarrierTenantId.Value);
+                users.Add(new UserIdentifier(carrier.TenantId, carrier.Id));
+            }
+            else if (trip.ShippingRequestFk.IsTachyonDeal)
+            {
+                var tms = await _userManager.GetAdminTachyonDealerAsync();
+                if (tms.Id != currentuser.Id)
+                users.Add(new UserIdentifier(tms.TenantId.Value, tms.Id));
+            }
 
         public async Task NotifyCarrierWhenTripHasAttachment(int tripId,int? carrierTenantId)
         {

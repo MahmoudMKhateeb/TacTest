@@ -16,6 +16,7 @@ import { NotificationSettingsModalComponent } from '@app/shared/layout/notificat
 import { UserNotificationHelper } from '@app/shared/layout/notifications/UserNotificationHelper';
 import { NgbDateParserFormatter } from '@node_modules/@ng-bootstrap/ng-bootstrap';
 import { CustomNgbDateParserFormatter } from '@app/shared/common/hijri-gregorian-datepicker/CustomNgbDateParserFormatter';
+import { TrackingSignalrService } from './main/shippingRequests/shippingRequests/tracking/tacking-signalr.service';
 
 @Component({
   templateUrl: './app.component.html',
@@ -38,7 +39,12 @@ export class AppComponent extends AppComponentBase implements OnInit {
   isQuickThemeSelectEnabled: boolean = this.setting.getBoolean('App.UserManagement.IsQuickThemeSelectEnabled');
   IsSessionTimeOutEnabled: boolean = this.setting.getBoolean('App.UserManagement.SessionTimeOut.IsEnabled') && this.appSession.userId != null;
 
-  public constructor(injector: Injector, private _chatSignalrService: ChatSignalrService, private _userNotificationHelper: UserNotificationHelper) {
+  public constructor(
+    injector: Injector,
+    private _trackingSignalrService: TrackingSignalrService,
+    private _chatSignalrService: ChatSignalrService,
+    private _userNotificationHelper: UserNotificationHelper
+  ) {
     super(injector);
   }
 
@@ -52,6 +58,7 @@ export class AppComponent extends AppComponentBase implements OnInit {
     if (this.appSession.application) {
       SignalRHelper.initSignalR(() => {
         this._chatSignalrService.init();
+        this._trackingSignalrService.init();
       });
     }
   }

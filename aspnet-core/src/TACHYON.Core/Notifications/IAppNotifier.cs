@@ -54,6 +54,7 @@ namespace TACHYON.Notifications
         Task TMSTripNeedAccept(ShippingRequestTrip Trip);
         Task NotifyCarrierWhenTripHasAttachment(int tripId, int? carrierTenantId);
         Task NotifyCarrierWhenTripNeedsDeliverNote(int tripId, int? carrierTenantId);
+        Task NotificationWhenTripDetailsChanged(ShippingRequestTrip trip, User currentuser);
         #endregion
 
         #region Accident

@@ -39,7 +39,6 @@ namespace TACHYON.Shipping.Drivers
         private readonly ShippingRequestsTripManager _shippingRequestsTripManager;
         private readonly IRepository<UserOTP> _userOtpRepository;
 
-
         public ShippingRequestDriverAppService(
             IRepository<ShippingRequestTrip> ShippingRequestTrip,
             IRepository<RoutPoint, long> RoutPointRepository,
@@ -269,9 +268,11 @@ namespace TACHYON.Shipping.Drivers
                     break;
                 case RoutePointStatus.ArrivedToDestination:
                     trip.RoutePointStatus = RoutePointStatus.StartOffloading;
+
                     break;
                 case RoutePointStatus.StartOffloading:
                     trip.RoutePointStatus = RoutePointStatus.FinishOffLoadShipment;
+
                     break;
             }
            await  _shippingRequestDriverManager.SetRoutStatusTransition(Point,trip.RoutePointStatus);
@@ -399,6 +400,7 @@ namespace TACHYON.Shipping.Drivers
                 {
                     item.IsActive = false;
                     item.IsComplete = false;
+                    item.Status = RoutePointStatus.StandBy;
                 });
                 var request = trip.ShippingRequestFk;
                 request.Status = ShippingRequestStatus.PostPrice;

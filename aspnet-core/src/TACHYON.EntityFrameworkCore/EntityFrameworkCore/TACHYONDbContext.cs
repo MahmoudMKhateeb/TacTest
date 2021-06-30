@@ -423,6 +423,10 @@ namespace TACHYON.EntityFrameworkCore
             modelBuilder.Entity<Invoice>()
             .HasIndex(e => e.InvoiceNumber)
             .IsUnique();
+
+            modelBuilder.Entity<ShippingRequest>()
+            .HasIndex(e => e.ReferenceNumber)
+            .IsUnique();
             modelBuilder.ConfigurePersistedGrantEntity();
         }
     }

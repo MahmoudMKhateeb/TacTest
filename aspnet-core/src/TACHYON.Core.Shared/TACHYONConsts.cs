@@ -83,6 +83,13 @@
         public const string SMSOTP = "SMSOTP";
         public const string SMSShippingRequestReceiverCode = "ShippingRequestReceiverCode";
         #endregion
+        #region Signalr triggers
+        #region Tracking
+        public const string TriggerTrackingAccepted="app.tracking.accepted";
+        public const string TriggerTrackingStarted = "app.tracking.started";
+        public const string TriggerTrackingChanged = "app.tracking.changed";
+        #endregion
+        #endregion
         #endregion
 
     }

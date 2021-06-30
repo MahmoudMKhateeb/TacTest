@@ -126,7 +126,7 @@ export class AppNavigationService {
             undefined,
             undefined,
             undefined,
-            () => this._featureCheckerService.isEnabled('App.Carrier') || this._featureCheckerService.isEnabled('App.Shipper')
+            () => this._featureCheckerService.isEnabled('App.Carrier')
           ),
           new AppMenuItem(
             'Offers',
@@ -148,7 +148,7 @@ export class AppNavigationService {
             undefined,
             undefined,
             undefined,
-            () => this._featureCheckerService.isEnabled('App.Carrier') || this._featureCheckerService.isEnabled('App.SendDirectRequest')
+            () => this._featureCheckerService.isEnabled('App.Carrier')
           ),
           // TODO this Hole Component need To be removed Later
           // new AppMenuItem('waybills', undefined, 'flaticon-more', '/app/admin/waybills/waybills'),

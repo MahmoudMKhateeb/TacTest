@@ -64,10 +64,11 @@ namespace TACHYON.AutoMapper.Shipping.Trips
 
 
             CreateMap<RoutPoint, ShippingRequestTripDriverRoutePointDto>()
-                .ForMember(dst => dst.Address, opt => opt.MapFrom(src => $"{src.FacilityFk.CityFk.DisplayName} - {src.FacilityFk.Address}"))
+                .ForMember(dst => dst.Address, opt => opt.MapFrom(src => src.FacilityFk.Address))
                 .ForMember(dst => dst.Facility, opt => opt.MapFrom(src => src.FacilityFk.Name))
                 .ForMember(dst => dst.lat, opt => opt.MapFrom(src => src.FacilityFk.Location.Y))
-                .ForMember(dst => dst.lng, opt => opt.MapFrom(src => src.FacilityFk.Location.X));
+                .ForMember(dst => dst.lng, opt => opt.MapFrom(src => src.FacilityFk.Location.X))
+                .ForMember(dst => dst.NextStatus, opt => opt.MapFrom(src => GetMobileTripChangeStatusButtonTitle(src.Status)));
 
             CreateMap<ShippingRequestTrip, CreateOrEditShippingRequestTripDto>()
                 .ForMember(dest => dest.RoutPoints, opt => opt.MapFrom(src => src.RoutPoints))
@@ -102,6 +103,10 @@ namespace TACHYON.AutoMapper.Shipping.Trips
                     return Enum.GetName(typeof(RoutePointStatus), RoutePointStatus.StartOffloading);
                 case RoutePointStatus.StartOffloading:
                     return Enum.GetName(typeof(RoutePointStatus), RoutePointStatus.FinishOffLoadShipment);
+                case RoutePointStatus.FinishOffLoadShipment:
+                    return Enum.GetName(typeof(RoutePointStatus), RoutePointStatus.ReceiverConfirmed);
+                case RoutePointStatus.ReceiverConfirmed:
+                    return Enum.GetName(typeof(RoutePointStatus), RoutePointStatus.DeliveryConfirmation);
                 default:
                     return "";
             }

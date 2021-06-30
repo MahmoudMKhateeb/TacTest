@@ -190,7 +190,7 @@ namespace TACHYON.Shipping.Trips
             if (trip == null) throw new UserFriendlyException(L("NoTripToAssignDriver"));
 
             long? oldAssignedDriverUserId = trip.AssignedDriverUserId;
-
+            long? OldAssignedTruckId = input.AssignedTruckId;
             trip.AssignedDriverUserId = input.AssignedDriverUserId;
             trip.AssignedTruckId = input.AssignedTruckId;
             if (trip.DriverStatus != ShippingRequestTripDriverStatus.None)
@@ -205,8 +205,16 @@ namespace TACHYON.Shipping.Trips
                 trip.AssignedDriverTime = Clock.Now;
                 await _appNotifier.NotifyDriverWhenAssignToTrip(trip);
                 await _firebase.PushNotificationToDriverWhenAssignTrip(new UserIdentifier(trip.AssignedDriverUserFk.TenantId, trip.AssignedDriverUserId.Value), trip.Id.ToString(), trip.WaybillNumber.ToString());
+            if (oldAssignedDriverUserId.HasValue)
+                    await _firebase.TripChanged(new UserIdentifier(trip.AssignedDriverUserFk.TenantId, oldAssignedDriverUserId.Value), trip.Id.ToString());
+
+            } else if (OldAssignedTruckId != trip.AssignedTruckId)
+            {
+                await _firebase.TripChanged(new UserIdentifier(trip.AssignedDriverUserFk.TenantId, trip.AssignedDriverUserId.Value), trip.Id.ToString());
             }
             await _appNotifier.ShipperShippingRequestTripNotifyDriverWhenAssignTrip(new UserIdentifier(AbpSession.TenantId, trip.AssignedDriverUserId.Value), trip);
+            await _appNotifier.NotificationWhenTripDetailsChanged(trip,GetCurrentUser());
+
         }
 
         [AbpAuthorize(AppPermissions.Pages_ShippingRequestTrips_Create)]
@@ -379,6 +387,7 @@ namespace TACHYON.Shipping.Trips
             {
                 var trip = await _ShippingRequestTripRepository
                 .GetAll()
+                .Include(x=>x.ShippingRequestFk)
                 .Include(x => x.OriginFacilityFk)
                 .Include(x => x.DestinationFacilityFk)
                 .Include(x => x.AssignedTruckFk)

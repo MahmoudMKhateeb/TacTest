@@ -240,8 +240,9 @@ import { ComingSoonComponent } from '@app/main/commingSoon/comingSoon.component'
 import { CreateOrEditShippingRequestWizardComponent } from '@app/main/shippingRequests/shippingRequests/shippingRequestWizard/create-or-edit-shipping-request-wizard.component';
 import { TrackingComponent } from '@app/main/shippingRequests/shippingRequests/tracking/tacking.component';
 import { TrackinSearchModelComponent } from '@app/main/shippingRequests/shippingRequests/tracking/tacking-search-model.component';
+import { TrackingModelComponent } from '@app/main/shippingRequests/shippingRequests/tracking/tacking-model.component';
+import { TrackingConfirmModalComponent } from '@app/main/shippingRequests/shippingRequests/tracking/tacking-confirm-code-model.component';
 import { TMSRequestListComponent } from '@app/main/tms/tms-request-list.component';
-
 NgxBootstrapDatePickerConfigService.registerNgxBootstrapDatePickerLocales();
 
 @NgModule({
@@ -455,6 +456,8 @@ NgxBootstrapDatePickerConfigService.registerNgxBootstrapDatePickerLocales();
     ComingSoonComponent,
     TrackingComponent,
     TrackinSearchModelComponent,
+    TrackingModelComponent,
+    TrackingConfirmModalComponent,
     TMSRequestListComponent,
   ],
   providers: [

@@ -37,6 +37,7 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
+    <PackageReference Include="Abp.AspNetCore.SignalR" Version="5.10.1" />
     <PackageReference Include="Abp.EntityFrameworkCore.EFPlus" Version="5.10.1" />
     <PackageReference Include="AspNetCore.Reporting" Version="2.1.0" />
     <PackageReference Include="NPOI" Version="2.5.1" />

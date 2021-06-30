@@ -87,6 +87,7 @@ import { MenuSearchBarComponent } from './shared/layout/nav/menu-search-bar/menu
 import { NgxSpinnerModule, NgxSpinnerComponent } from 'ngx-spinner';
 import { ScrollTopComponent } from './shared/layout/scroll-top.component';
 import { AppBsModalModule } from '@shared/common/appBsModal/app-bs-modal.module';
+import { TrackingSignalrService } from './main/shippingRequests/shippingRequests/tracking/tacking-signalr.service';
 
 @NgModule({
   declarations: [
@@ -177,6 +178,7 @@ import { AppBsModalModule } from '@shared/common/appBsModal/app-bs-modal.module'
     LinkedAccountService,
     UserNotificationHelper,
     ChatSignalrService,
+    TrackingSignalrService,
     {
       provide: PERFECT_SCROLLBAR_CONFIG,
       useValue: DEFAULT_PERFECT_SCROLLBAR_CONFIG,

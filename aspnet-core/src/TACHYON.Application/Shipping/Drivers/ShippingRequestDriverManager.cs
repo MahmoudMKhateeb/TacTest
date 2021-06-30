@@ -207,8 +207,9 @@ namespace TACHYON.Shipping.Drivers
 
         public async Task SetRoutStatusTransition(RoutPoint routPoint, RoutePointStatus Status)
         {
-           //await _invoiceManager.GenertateInvoiceWhenShipmintDelivery(routPoint.ShippingRequestTripFk);
-           await _routPointStatusTransitionRepository.InsertAsync(new RoutPointStatusTransition 
+            //await _invoiceManager.GenertateInvoiceWhenShipmintDelivery(routPoint.ShippingRequestTripFk);
+            routPoint.Status = Status;
+            await _routPointStatusTransitionRepository.InsertAsync(new RoutPointStatusTransition 
            { 
            PointId= routPoint.Id,
            Status= Status

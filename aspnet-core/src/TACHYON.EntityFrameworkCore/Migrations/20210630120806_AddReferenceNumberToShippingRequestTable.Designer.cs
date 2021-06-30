@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using NetTopologySuite.Geometries;
 using TACHYON.EntityFrameworkCore;
@@ -10,9 +11,10 @@ using TACHYON.EntityFrameworkCore;
 namespace TACHYON.Migrations
 {
     [DbContext(typeof(TACHYONDbContext))]
-    partial class TACHYONDbContextModelSnapshot : ModelSnapshot
+    [Migration("20210630120806_AddReferenceNumberToShippingRequestTable")]
+    partial class AddReferenceNumberToShippingRequestTable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -4460,7 +4462,7 @@ namespace TACHYON.Migrations
                     b.Property<int>("DriverStatus")
                         .HasColumnType("int");
 
-                    b.Property<DateTime?>("EndTripDate")
+                    b.Property<DateTime>("EndTripDate")
                         .HasColumnType("datetime2");
 
                     b.Property<DateTime?>("EndWorking")
@@ -4914,8 +4916,8 @@ namespace TACHYON.Migrations
                     b.Property<decimal?>("Price")
                         .HasColumnType("decimal(18,2)");
 
-                    b.Property<string>("ReferenceNumber")
-                        .HasColumnType("nvarchar(450)");
+                    b.Property<long?>("ReferenceNumber")
+                        .HasColumnType("bigint");
 
                     b.Property<byte>("RequestType")
                         .HasColumnType("tinyint");
@@ -5635,9 +5637,6 @@ namespace TACHYON.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<int?>("BayanPlatetypeId")
-                        .HasColumnType("int");
 
                     b.Property<DateTime>("CreationTime")
                         .HasColumnType("datetime2");

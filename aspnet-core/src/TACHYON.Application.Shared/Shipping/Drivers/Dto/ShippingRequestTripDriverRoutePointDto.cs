@@ -11,10 +11,15 @@ namespace TACHYON.Shipping.Drivers.Dto
     {
         public string DisplayName { get; set; }
         public PickingType PickingType { get; set; }
+
+        public RoutePointStatus Status { get; set; }
+        public string StatusTitle { get { return Status.GetEnumDescription(); } set { } }
+        public string NextStatus { get; set; }
+        public string ReceiverFullName { get; set; }
         public string Facility { get; set; }
 
         public string Address { get; set; }
-        //public string Code { get; set; }
+        public string Note { get; set; }
 
         public double lat { get; set; }
         public double lng { get; set; }
@@ -24,6 +29,26 @@ namespace TACHYON.Shipping.Drivers.Dto
         public bool IsComplete { get; set; }
 
         public double? Rating { get; set; }
+
+        public bool IsShow
+        {
+            get
+            {
+
+                if (PickingType == PickingType.Pickup)
+                {
+                    if (Status == RoutePointStatus.StandBy) return true;
+                }
+                else if (PickingType == PickingType.Dropoff)
+                {
+                    if (Status != RoutePointStatus.StandBy && Status != RoutePointStatus.DeliveryConfirmation) return true;
+                }
+                return false;
+
+            }
+            set { }
+        }
+
 
     }
 }

@@ -1,12 +1,13 @@
-import { Component, OnInit, Injector } from '@angular/core';
+import { Component, OnInit, Injector, NgZone } from '@angular/core';
 import { appModuleAnimation } from '@shared/animations/routerTransition';
-import { TrackingListDto, TrackingServiceProxy } from '@shared/service-proxies/service-proxies';
+import { TrackingListDto, TrackingServiceProxy, ShippingRequestTripStatus } from '@shared/service-proxies/service-proxies';
 
 import * as _ from 'lodash';
 import { ScrollPagnationComponentBase } from '@shared/common/scroll/scroll-pagination-component-base';
 import { TrackingSearchInput } from '../../../../shared/common/search/TrackingSearchInput';
 import { LocalStorageService } from '@shared/utils/local-storage.service';
 import { AppConsts } from '@shared/AppConsts';
+import { TrackingSignalrService } from './tacking-signalr.service';
 
 @Component({
   templateUrl: './tracking.component.html',
@@ -16,13 +17,20 @@ import { AppConsts } from '@shared/AppConsts';
 export class TrackingComponent extends ScrollPagnationComponentBase implements OnInit {
   Items: TrackingListDto[] = [];
   direction = 'ltr';
+  _zone: NgZone;
   searchInput: TrackingSearchInput = new TrackingSearchInput();
-  constructor(injector: Injector, private _currentServ: TrackingServiceProxy, private _localStorageService: LocalStorageService) {
+  constructor(
+    injector: Injector,
+    private _currentServ: TrackingServiceProxy,
+    private _localStorageService: LocalStorageService,
+    private _trackingSignalrService: TrackingSignalrService
+  ) {
     super(injector);
   }
   ngOnInit(): void {
     this.direction = document.getElementsByTagName('html')[0].getAttribute('dir');
     this.LoadData();
+    this.registerToEvents();
   }
   LoadData() {
     this._currentServ
@@ -75,5 +83,25 @@ export class TrackingComponent extends ScrollPagnationComponentBase implements O
         (user as any).profilePictureUrl = profilePictureUrl;
       });
     }
+  }
+
+  registerToEvents() {
+    abp.event.on('app.tracking.accepted', (data) => {
+      let item: TrackingListDto = <TrackingListDto>data.data;
+      let currentitem = this.Items.find((x) => x.id == item.id);
+      if (currentitem) {
+        currentitem.driverStatus = item.driverStatus;
+        currentitem.driverStatusTitle = item.driverStatusTitle;
+      }
+    });
+
+    abp.event.on('app.tracking.started', (data) => {
+      let item: TrackingListDto = <TrackingListDto>data.data;
+      let currentitem = this.Items.find((x) => x.id == item.id);
+      if (currentitem) {
+        currentitem.status = ShippingRequestTripStatus.Intransit;
+        currentitem.statusTitle = ShippingRequestTripStatus[ShippingRequestTripStatus.Intransit];
+      }
+    });
   }
 }
