@@ -76,6 +76,10 @@
           <DataField>SubTotalAmount</DataField>
           <rd:TypeName>System.String</rd:TypeName>
         </Field>
+        <Field Name="DueAmount">
+          <DataField>DueAmount</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
         <Field Name="VatAmount">
           <DataField>VatAmount</DataField>
           <rd:TypeName>System.String</rd:TypeName>

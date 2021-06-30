@@ -307,8 +307,8 @@ namespace TACHYON.Shipping.ShippingRequests
                   .FirstOrDefaultAsync();
                 return ObjectMapper.Map<EditShippingRequestStep4Dto>(shippingRequest);
             }
-            await ValidateShippingRequestBeforePublish(shippingRequest);
-            shippingRequest.IsDrafted = false;
+            //await ValidateShippingRequestBeforePublish(shippingRequest);
+            //shippingRequest.IsDrafted = false;
         }
 
         public async Task PublishShippingRequest(long id)
