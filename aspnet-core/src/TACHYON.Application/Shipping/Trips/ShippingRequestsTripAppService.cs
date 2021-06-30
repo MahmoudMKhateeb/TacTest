@@ -284,6 +284,7 @@ namespace TACHYON.Shipping.Trips
                 //Notify Carrier with trip details
                 await NotifyCarrierWithTripDetails(trip, request.CarrierTenantId, false, true);
             }
+            await _appNotifier.NotificationWhenTripDetailsChanged(trip, GetCurrentUser());
         }
 
         private async Task NotifyCarrierWithTripDetails(ShippingRequestTrip trip, int? carrierTenantId,bool HasAttachmentNotification,bool NeedseliverNoteNotification )

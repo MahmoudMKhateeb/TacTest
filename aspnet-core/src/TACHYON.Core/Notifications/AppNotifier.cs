@@ -607,7 +607,7 @@ namespace TACHYON.Notifications
             var tmsUser = await _userManager.GetAdminTachyonDealerAsync();
             await _notificationPublisher.PublishAsync(AppNotificationNames.TMSTripNeedAccept, notificationData, userIds: new[] { new UserIdentifier(tmsUser.TenantId, tmsUser.Id) });
         }
-        public async Task NotificationWhenTripDetailsChanged(ShippingRequestTrip trip,User currentuser)
+        public async Task NotificationWhenTripDetailsChanged(ShippingRequestTrip trip, User currentuser)
         {
             var notificationData = new LocalizableMessageNotificationData(
                 new LocalizableString(
@@ -626,15 +626,18 @@ namespace TACHYON.Notifications
             }
             if (trip.ShippingRequestFk.CarrierTenantId.HasValue && trip.ShippingRequestFk.CarrierTenantId != currentuser.TenantId)
             {
-                var carrier= await UserManager.GetAdminByTenantIdAsync(trip.ShippingRequestFk.CarrierTenantId.Value);
+                var carrier = await UserManager.GetAdminByTenantIdAsync(trip.ShippingRequestFk.CarrierTenantId.Value);
                 users.Add(new UserIdentifier(carrier.TenantId, carrier.Id));
             }
             else if (trip.ShippingRequestFk.IsTachyonDeal)
             {
                 var tms = await _userManager.GetAdminTachyonDealerAsync();
                 if (tms.Id != currentuser.Id)
-                users.Add(new UserIdentifier(tms.TenantId.Value, tms.Id));
+                    users.Add(new UserIdentifier(tms.TenantId.Value, tms.Id));
             }
+
+            await _notificationPublisher.PublishAsync(AppNotificationNames.NotificationWhenTripDetailsChanged, notificationData, userIds: users.ToArray());
+        }
 
         public async Task NotifyCarrierWhenTripHasAttachment(int tripId,int? carrierTenantId)
         {
