@@ -21,6 +21,7 @@ using TACHYON.Shipping.Drivers.Dto;
 using TACHYON.Shipping.Drivers;
 using TACHYON.Common;
 using TACHYON.Localization.Importing;
+using TACHYON.Shipping.Trips;
 
 namespace TACHYON.Web.Controllers
 {
@@ -35,10 +36,11 @@ namespace TACHYON.Web.Controllers
         private const int MaxDocumentFilePictureSize = 5242880; //5MB
 
         private ShippingRequestDriverManager _shippingRequestDriverManager;
+        private ShippingRequestsTripManager _shippingRequestTripManger;
         private CommonManager _commonManager;
         public HelperController(TrucksAppService trucksAppService, ITempFileCacheManager tempFileCacheManager, IBinaryObjectManager binaryObjectManager, IBackgroundJobManager backgroundJobManager,
             ShippingRequestDriverManager shippingRequestDriverManager,
-            CommonManager commonManager)
+            CommonManager commonManager, ShippingRequestsTripManager shippingRequestTripManger)
         {
             _trucksAppService = trucksAppService;
             _tempFileCacheManager = tempFileCacheManager;
@@ -46,6 +48,7 @@ namespace TACHYON.Web.Controllers
             BackgroundJobManager = backgroundJobManager;
             _shippingRequestDriverManager = shippingRequestDriverManager;
             _commonManager = commonManager;
+            _shippingRequestTripManger = shippingRequestTripManger;
         }
 
         public async Task<FileResult> GetTruckPictureByTruckId(long truckId)
@@ -202,6 +205,37 @@ namespace TACHYON.Web.Controllers
               var document=  await  _commonManager.UploadDocument(file, AbpSession.TenantId);
 
                 await _shippingRequestDriverManager.SetPointToDelivery(document);
+                return Json(new AjaxResponse(new { }));
+            }
+            catch (UserFriendlyException ex)
+            {
+                return Json(new AjaxResponse(new ErrorInfo(ex.Message)));
+            }
+        }
+
+
+        [HttpPost]
+        [AbpMvcAuthorize()]
+        // [Produces("application/json")]
+        [Route("/api/services/app/DropOffPointToDelivery")]
+        public async Task<JsonResult> DropOffPointToDelivery(long id)
+        {
+            try
+            {
+                var file = Request.Form.Files.First();
+                //Input.Document = file;
+                if (file.Length == 0)
+                {
+                    throw new UserFriendlyException(L("File_Empty_Error"));
+                }
+
+                if (file.Length > 1048576 * 100) //100 MB
+                {
+                    throw new UserFriendlyException(L("File_SizeLimit_Error"));
+                }
+
+                var document = await _commonManager.UploadDocument(file, AbpSession.TenantId);
+                await _shippingRequestTripManger.ConfirmPointToDelivery(document, id);
                 return Json(new AjaxResponse(new { }));
             }
             catch (UserFriendlyException ex)

@@ -4,6 +4,7 @@ import { appModuleAnimation } from '@shared/animations/routerTransition';
 import { ModalDirective } from 'ngx-bootstrap/modal';
 import { TrackingConfirmModalComponent } from '@app/main/shippingRequests/shippingRequests/tracking/tacking-confirm-code-model.component';
 import { TrackingPODModalComponent } from '@app/main/shippingRequests/shippingRequests/tracking/tacking-pod-model.component';
+import { FileDownloadService } from '@shared/utils/file-download.service';
 
 import {
   TrackingServiceProxy,
@@ -39,7 +40,7 @@ export class TrackingModelComponent extends AppComponentBase implements OnInit {
   distance: string;
   duration: string;
   direction: string;
-  constructor(injector: Injector, private _CurrentServ: TrackingServiceProxy) {
+  constructor(injector: Injector, private _CurrentServ: TrackingServiceProxy, private _fileDownloadService: FileDownloadService) {
     super(injector);
   }
   ngOnInit(): void {
@@ -57,6 +58,7 @@ export class TrackingModelComponent extends AppComponentBase implements OnInit {
       this.getDrops();
       this.active = true;
       this.modal.show();
+      console.log(this.routePoints);
     });
   }
   close(): void {
@@ -64,7 +66,12 @@ export class TrackingModelComponent extends AppComponentBase implements OnInit {
     this.modal.hide();
   }
   canChangeDropStatus(drop: ShippingRequestTripDriverRoutePointDto) {
-    if (this.pickup.status == RoutePointStatus.FinishLoading && this.item.status == ShippingRequestTripStatus.Intransit && !this.saving) {
+    if (
+      this.pickup.status == RoutePointStatus.FinishLoading &&
+      this.item.status == ShippingRequestTripStatus.Intransit &&
+      !this.saving &&
+      this.item.isAssign
+    ) {
       if (this.drops.findIndex((x) => x.isActive && x.id != drop.id) == -1) {
         return true;
       }
@@ -170,7 +177,10 @@ export class TrackingModelComponent extends AppComponentBase implements OnInit {
     abp.event.on('app.tracking.Shipment.Delivered', (data) => {
       let point = <ShippingRequestTripDriverRoutePointDto>data.data;
       this.updatePoint(point);
-      if (this.item.id == point.shippingRequestTripId) this.item.status = ShippingRequestTripStatus.Delivered;
+      if (this.item.id == point.shippingRequestTripId) {
+        this.item.status = ShippingRequestTripStatus.Delivered;
+        this.item.statusTitle = ShippingRequestTripStatus[ShippingRequestTripStatus.Delivered];
+      }
     });
   }
   updatePoint(point: ShippingRequestTripDriverRoutePointDto): void {
@@ -193,43 +203,9 @@ export class TrackingModelComponent extends AppComponentBase implements OnInit {
       }
     }
   }
-  /**
-  getNextStatus(status: RoutePointStatus, type: PickingType) {
-    switch (status) {
-      case RoutePointStatus.StandBy:
-        if (type == PickingType.Pickup)
-          return {
-            status: RoutePointStatus.StartedMovingToLoadingLocation,
-            title: RoutePointStatus[RoutePointStatus.StartedMovingToLoadingLocation],
-          };
-        else
-          return {
-            status: RoutePointStatus.StartedMovingToOfLoadingLocation,
-            title: RoutePointStatus[RoutePointStatus.StartedMovingToOfLoadingLocation],
-          };
-
-      case RoutePointStatus.StartedMovingToLoadingLocation:
-        return { status: RoutePointStatus.ArriveToLoadingLocation, title: RoutePointStatus[RoutePointStatus.ArriveToLoadingLocation] };
-      case RoutePointStatus.ArriveToLoadingLocation:
-        return { status: RoutePointStatus.StartLoading, title: RoutePointStatus[RoutePointStatus.StartLoading] };
-      case RoutePointStatus.StartLoading:
-        return { status: RoutePointStatus.FinishLoading, title: RoutePointStatus[RoutePointStatus.FinishLoading] };
-      case RoutePointStatus.StartedMovingToOfLoadingLocation:
-        return { status: RoutePointStatus.ArrivedToDestination, title: RoutePointStatus[RoutePointStatus.ArrivedToDestination] };
-      case RoutePointStatus.ArrivedToDestination:
-        return { status: RoutePointStatus.StartOffloading, title: RoutePointStatus[RoutePointStatus.StartOffloading] };
-      case RoutePointStatus.StartOffloading:
-        return { status: RoutePointStatus.FinishOffLoadShipment, title: RoutePointStatus[RoutePointStatus.FinishOffLoadShipment] };
-      case RoutePointStatus.FinishOffLoadShipment:
-        return { status: RoutePointStatus.ReceiverConfirmed, title: RoutePointStatus[RoutePointStatus.ReceiverConfirmed] };
-      case RoutePointStatus.ReceiverConfirmed:
-        return { status: RoutePointStatus.DeliveryConfirmation, title: RoutePointStatus[RoutePointStatus.DeliveryConfirmation] };
-      default:
-        return { status: 0, title: '' };
-    }
-  }*/
 
   dropOffStep(point: ShippingRequestTripDriverRoutePointDto): number {
+    if (point.status == RoutePointStatus.DeliveryConfirmation) return 7;
     if (!this.canChangeDropStatus(point)) return 0;
     switch (point.status) {
       case RoutePointStatus.StandBy:
@@ -247,6 +223,11 @@ export class TrackingModelComponent extends AppComponentBase implements OnInit {
       default:
         return 7;
     }
+  }
+  downloadPOD(id: number): void {
+    this._CurrentServ.pOD(id).subscribe((result) => {
+      this._fileDownloadService.downloadTempFile(result);
+    });
   }
   /**
    * Get City Cordinates By Providing its name

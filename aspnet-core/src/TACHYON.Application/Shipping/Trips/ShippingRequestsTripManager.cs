@@ -30,6 +30,7 @@ using TACHYON.Common;
 using TACHYON.Invoices;
 using TACHYON.Shipping.ShippingRequests;
 using Abp;
+using TACHYON.Dto;
 
 namespace TACHYON.Shipping.Trips
 {
@@ -48,8 +49,9 @@ namespace TACHYON.Shipping.Trips
         private readonly FirebaseNotifier _firebaseNotifier;
         private readonly ISmsSender _smsSender;
         private readonly InvoiceManager _invoiceManager;
+        private readonly CommonManager _commonManager;
 
-        public ShippingRequestsTripManager(IRepository<ShippingRequestTrip> shippingRequestTrip, PriceOfferManager priceOfferManager, IAppNotifier appNotifier, ISettingManager settingManager, IFeatureChecker featureChecker, IAbpSession abpSession, IHubContext<AbpCommonHub> hubContext, IRepository<RoutPoint, long> routPointRepository, IRepository<ShippingRequestTripTransition> shippingRequestTripTransitionRepository, IRepository<RoutPointStatusTransition> routPointStatusTransitionRepository, FirebaseNotifier firebaseNotifier, ISmsSender smsSender, InvoiceManager invoiceManager)
+        public ShippingRequestsTripManager(IRepository<ShippingRequestTrip> shippingRequestTrip, PriceOfferManager priceOfferManager, IAppNotifier appNotifier, ISettingManager settingManager, IFeatureChecker featureChecker, IAbpSession abpSession, IHubContext<AbpCommonHub> hubContext, IRepository<RoutPoint, long> routPointRepository, IRepository<ShippingRequestTripTransition> shippingRequestTripTransitionRepository, IRepository<RoutPointStatusTransition> routPointStatusTransitionRepository, FirebaseNotifier firebaseNotifier, ISmsSender smsSender, InvoiceManager invoiceManager, CommonManager commonManager)
         {
             _shippingRequestTrip = shippingRequestTrip;
             _priceOfferManager = priceOfferManager;
@@ -64,6 +66,7 @@ namespace TACHYON.Shipping.Trips
             _firebaseNotifier = firebaseNotifier;
             _smsSender = smsSender;
             _invoiceManager = invoiceManager;
+            _commonManager = commonManager;
         }
 
         /// <summary>
@@ -346,6 +349,26 @@ namespace TACHYON.Shipping.Trips
 
 
         }
+
+        public async Task<FileDto> GetPOD(long id)
+        {
+            DisableTenancyFilters();
+            var currentUser = await GetCurrentUserAsync(_abpSession);
+
+            var CurrentPoint = await _routPointRepository.GetAll()
+                .Where(x =>x.Id == id && x.Status == RoutePointStatus.DeliveryConfirmation)
+                .WhereIf(!currentUser.TenantId.HasValue || await _featureChecker.IsEnabledAsync(AppFeatures.TachyonDealer), x => x.ShippingRequestTripFk.ShippingRequestFk.IsTachyonDeal)
+                .WhereIf(currentUser.TenantId.HasValue && await _featureChecker.IsEnabledAsync(AppFeatures.Carrier), x => x.ShippingRequestTripFk.ShippingRequestFk.CarrierTenantId == currentUser.TenantId.Value)
+                .WhereIf(currentUser.IsDriver, x => x.ShippingRequestTripFk.AssignedDriverUserId == currentUser.Id)
+                .FirstOrDefaultAsync();
+            if (CurrentPoint == null) throw new UserFriendlyException(L("TheRoutePointIsNotFound"));
+
+
+
+            return await _commonManager.GetDocument(ObjectMapper.Map<IHasDocument>(CurrentPoint));
+
+
+        }
         #region Helper
         /// <summary>
         /// Get list of users can send notification by SignalR to update the data if any of users tracking the trip
@@ -551,7 +574,7 @@ namespace TACHYON.Shipping.Trips
         /// <param name="point"></param>
         /// <param name="currentUser"></param>
         /// <returns></returns>
-        private async Task NotificationWhenPointChanged(RoutPoint point,User currentUser)
+        public async Task NotificationWhenPointChanged(RoutPoint point,User currentUser)
         {
             var trip = point.ShippingRequestTripFk;
             await _hubContext.Clients.Users(await GetUsersHubNotification(trip, currentUser)).SendAsync("tracking", TACHYONConsts.TriggerTrackingChanged, ObjectMapper.Map<ShippingRequestTripDriverRoutePointDto>(point));
@@ -564,7 +587,7 @@ namespace TACHYON.Shipping.Trips
         /// <param name="point"></param>
         /// <param name="currentUser"></param>
         /// <returns></returns>
-        private async Task NotificationWhenShipmentDelivered(RoutPoint point, User currentUser)
+        public async Task NotificationWhenShipmentDelivered(RoutPoint point, User currentUser)
         {
             var trip = point.ShippingRequestTripFk;
             await _hubContext.Clients.Users(await GetUsersHubNotification(trip, currentUser)).SendAsync("tracking", TACHYONConsts.TriggerTrackingShipmentDelivered,ObjectMapper.Map<ShippingRequestTripDriverRoutePointDto>(point));

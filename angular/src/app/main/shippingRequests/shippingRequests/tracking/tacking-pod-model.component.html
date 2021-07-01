@@ -27,26 +27,13 @@
               name="FileUpload"
               #FileUpload
               maxFileSize="10000000"
-              accept=".jpeg,.jpg,.pdf"
+              accept=".jpeg,.jpg,.pdf,.png"
               (uploadHandler)="upload($event)"
               (onError)="onUploadError()"
               chooseLabel="{{ 'ImportFile' | localize }}"
             >
             </p-fileUpload>
           </div>
-        </div>
-
-        <div class="modal-footer">
-          <button [disabled]="saving" type="button" class="btn btn-secondary" (click)="close()">{{ 'Cancel' | localize }}</button>
-          <button
-            type="submit"
-            class="btn btn-primary"
-            [disabled]="!Form.form.valid"
-            [buttonBusy]="saving"
-            [busyText]="l('SavingWithThreeDot' | localize)"
-          >
-            <i class="fa fa-save"></i> <span>{{ 'Confirm' | localize }}</span>
-          </button>
         </div>
       </form>
     </div>

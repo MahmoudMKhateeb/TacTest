@@ -250,7 +250,7 @@ namespace TACHYON.Shipping.Drivers
             DisableTenancyFilters();
             var trip = await _shippingRequestDriverManager.GetActiveTrip();
             if (trip.RoutePointStatus == RoutePointStatus.FinishOffLoadShipment) throw new UserFriendlyException(L("TripNotFound"));
-            var Point = await _RoutPointRepository.FirstOrDefaultAsync(x => x.ShippingRequestTripId == trip.Id && x.IsActive==true );
+            var Point = await _RoutPointRepository.GetAll().Include(t=>t.ShippingRequestTripFk).ThenInclude(r=>r.ShippingRequestFk).FirstOrDefaultAsync(x => x.ShippingRequestTripId == trip.Id && x.IsActive==true );
             switch (trip.RoutePointStatus)
             {
                 case RoutePointStatus.StartedMovingToLoadingLocation:
@@ -275,7 +275,9 @@ namespace TACHYON.Shipping.Drivers
 
                     break;
             }
+
            await  _shippingRequestDriverManager.SetRoutStatusTransition(Point,trip.RoutePointStatus);
+           await _shippingRequestsTripManager.NotificationWhenPointChanged(Point, GetCurrentUser());
 
 
         }
@@ -324,6 +326,8 @@ namespace TACHYON.Shipping.Drivers
                 trip.RoutePointStatus = RoutePointStatus.StartedMovingToOfLoadingLocation;
 
             await _shippingRequestDriverManager.ChangeTransition(Newpoint, RoutePointStatus.StartedMovingToOfLoadingLocation);
+            await _shippingRequestsTripManager.NotificationWhenPointChanged(Newpoint, GetCurrentUser());
+
 
         }
         /// <summary>
@@ -350,6 +354,7 @@ namespace TACHYON.Shipping.Drivers
 
             CurrentPoint.ShippingRequestTripFk.RoutePointStatus = RoutePointStatus.ReceiverConfirmed;
            await _shippingRequestDriverManager.SetRoutStatusTransition(CurrentPoint, RoutePointStatus.ReceiverConfirmed);
+            await _shippingRequestsTripManager.NotificationWhenPointChanged(CurrentPoint, GetCurrentUser());
         }
 
         /// <summary>

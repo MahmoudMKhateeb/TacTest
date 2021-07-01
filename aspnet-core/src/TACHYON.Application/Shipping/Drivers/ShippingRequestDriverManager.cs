@@ -97,6 +97,7 @@ namespace TACHYON.Shipping.Drivers
             else
             {
                 trip.RoutePointStatus = RoutePointStatus.DeliveryConfirmation;
+
             }
             return true;
 
@@ -120,7 +121,7 @@ namespace TACHYON.Shipping.Drivers
         /// <returns></returns>
         public async Task<RoutPoint> GetActivePoint()
         {
-            var ActivePoint = await _RoutPointRepository.GetAll().Include(x=>x.ShippingRequestTripFk).FirstOrDefaultAsync(x => x.IsActive && x.ShippingRequestTripFk.Status != ShippingRequestTripStatus.Canceled && x.ShippingRequestTripFk.AssignedDriverUserId == _abpSession.UserId);
+            var ActivePoint = await _RoutPointRepository.GetAll().Include(x=>x.ShippingRequestTripFk).ThenInclude(r=>r.ShippingRequestFk).FirstOrDefaultAsync(x => x.IsActive && x.ShippingRequestTripFk.Status != ShippingRequestTripStatus.Canceled && x.ShippingRequestTripFk.AssignedDriverUserId == _abpSession.UserId);
             //if (ActivePoint == null) throw new UserFriendlyException(L("TheTripIsNotFound"));
 
             return ActivePoint;

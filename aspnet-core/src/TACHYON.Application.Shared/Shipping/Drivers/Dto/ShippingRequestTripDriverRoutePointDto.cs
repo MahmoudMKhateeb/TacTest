@@ -38,7 +38,7 @@ namespace TACHYON.Shipping.Drivers.Dto
 
                 if (PickingType == PickingType.Pickup)
                 {
-                    if (Status == RoutePointStatus.StandBy) return true;
+                    if (Status != RoutePointStatus.FinishLoading) return true;
                 }
                 else if (PickingType == PickingType.Dropoff)
                 {
