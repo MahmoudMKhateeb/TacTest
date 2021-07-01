@@ -23,6 +23,13 @@ namespace TACHYON.Authorization.Users
         /// <returns></returns>
         Task SendAllApprovedDocumentsAsyn(Tenant tenant);
         /// <summary>
+        /// Send Email to admin tenant user when all documents approved by host
+        /// </summary>
+        /// <param name="tenant"></param>
+        /// <param name="documentFileName"></param>
+        /// <returns></returns>
+        Task SendExpiredDateDocumentsAsyn(Tenant tenant, string documentFileName);
+        /// <summary>
         /// Sends a password reset link to user's email.
         /// </summary>
         /// <param name="user">User</param>
