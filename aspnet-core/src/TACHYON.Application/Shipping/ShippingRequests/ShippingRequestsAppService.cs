@@ -818,7 +818,7 @@ namespace TACHYON.Shipping.ShippingRequests
                 var query = info.Select(x => new
                 {
                     MasterWaybillNo = x.WaybillNumber.Value,
-                    ShippingRequestStatus = "Draft",
+                    ShippingRequestStatus = (x.AssignedDriverUserId!=null && x.AssignedTruckId!=null) ?"Final" :"Draft",
                     SenderCompanyName = x.ShippingRequestFk.Tenant.companyName,
                     DriverName = x.AssignedDriverUserFk != null ? x.AssignedDriverUserFk.FullName : "",
                     DriverIqamaNo = "",
@@ -847,7 +847,7 @@ namespace TACHYON.Shipping.ShippingRequests
                     {
                         MasterWaybillNo = x.MasterWaybillNo,
                         Date = Clock.Now.ToShortDateString(),
-                        ShippingRequestStatus = "Draft",
+                        ShippingRequestStatus =x.ShippingRequestStatus,
                         CompanyName = x.SenderCompanyName,
                         DriverName = x.DriverName,
                         DriverIqamaNo = "",
@@ -883,7 +883,7 @@ namespace TACHYON.Shipping.ShippingRequests
                 var query = info.Select(x => new
                 {
                     MasterWaybillNo = x.WaybillNumber.Value,
-                    ShippingRequestStatus = "Draft",
+                    ShippingRequestStatus = (x.AssignedDriverUserId != null && x.AssignedTruckId != null) ? "Final" : "Draft",
                     SenderCompanyName = x.ShippingRequestFk.Tenant.companyName,
                     ClientName = x.ShippingRequestFk.Tenant.Name,
                     ReceiverCompanyName = x.ShippingRequestFk.CarrierTenantFk != null ? x.ShippingRequestFk.CarrierTenantFk.companyName : "",
@@ -914,7 +914,7 @@ namespace TACHYON.Shipping.ShippingRequests
                     {
                         MasterWaybillNo = x.MasterWaybillNo,
                         Date = Clock.Now.ToShortDateString(),
-                        ShippingRequestStatus = "Draft",
+                        ShippingRequestStatus = x.ShippingRequestStatus,
                         SenderCompanyName = x.SenderCompanyName,
                         ReceiverCompanyName = x.ReceiverCompanyName,
                         DriverName = x.DriverName,
@@ -984,7 +984,7 @@ namespace TACHYON.Shipping.ShippingRequests
                 {
                     MasterWaybillNo = x.WaybillNumber.Value,
                     SubWaybillNo = routPoint.WaybillNumber.Value,
-                    ShippingRequestStatus = "Draft",
+                    ShippingRequestStatus = (x.AssignedDriverUserId != null && x.AssignedTruckId != null) ? "Final" : "Draft",
                     SenderCompanyName = x.ShippingRequestFk.Tenant.companyName,
                     ReceiverCompanyName = x.ShippingRequestFk.CarrierTenantFk != null ? x.ShippingRequestFk.CarrierTenantFk.companyName : "",
                     DriverName = x.AssignedDriverUserFk != null ? x.AssignedDriverUserFk.Name : "",
@@ -1016,7 +1016,7 @@ namespace TACHYON.Shipping.ShippingRequests
                         MasterWaybillNo = x.MasterWaybillNo,
                         SubWaybillNo = x.SubWaybillNo,
                         Date = Clock.Now.ToShortDateString(),
-                        ShippingRequestStatus = "Draft",
+                        ShippingRequestStatus = x.ShippingRequestStatus,
                         SenderCompanyName = x.SenderCompanyName,
                         ReceiverCompanyName = x.ReceiverCompanyName,
                         DriverName = x.DriverName,
