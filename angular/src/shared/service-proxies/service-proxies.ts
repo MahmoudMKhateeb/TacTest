@@ -12422,7 +12422,7 @@ export class FacilitiesServiceProxy {
    * @param body (optional)
    * @return Success
    */
-  createOrEdit(body: CreateOrEditFacilityDto | undefined): Observable<void> {
+  createOrEdit(body: CreateOrEditFacilityDto | undefined): Observable<number> {
     let url_ = this.baseUrl + '/api/services/app/Facilities/CreateOrEdit';
     url_ = url_.replace(/[?&]$/, '');
 
@@ -12434,6 +12434,7 @@ export class FacilitiesServiceProxy {
       responseType: 'blob',
       headers: new HttpHeaders({
         'Content-Type': 'application/json-patch+json',
+        Accept: 'text/plain',
       }),
     };
 
@@ -12450,14 +12451,14 @@ export class FacilitiesServiceProxy {
             try {
               return this.processCreateOrEdit(<any>response_);
             } catch (e) {
-              return <Observable<void>>(<any>_observableThrow(e));
+              return <Observable<number>>(<any>_observableThrow(e));
             }
-          } else return <Observable<void>>(<any>_observableThrow(response_));
+          } else return <Observable<number>>(<any>_observableThrow(response_));
         })
       );
   }
 
-  protected processCreateOrEdit(response: HttpResponseBase): Observable<void> {
+  protected processCreateOrEdit(response: HttpResponseBase): Observable<number> {
     const status = response.status;
     const responseBlob = response instanceof HttpResponse ? response.body : (<any>response).error instanceof Blob ? (<any>response).error : undefined;
 
@@ -12470,7 +12471,10 @@ export class FacilitiesServiceProxy {
     if (status === 200) {
       return blobToText(responseBlob).pipe(
         _observableMergeMap((_responseText) => {
-          return _observableOf<void>(<any>null);
+          let result200: any = null;
+          let resultData200 = _responseText === '' ? null : JSON.parse(_responseText, this.jsonParseReviver);
+          result200 = resultData200 !== undefined ? resultData200 : <any>null;
+          return _observableOf(result200);
         })
       );
     } else if (status !== 200 && status !== 204) {
@@ -12480,7 +12484,7 @@ export class FacilitiesServiceProxy {
         })
       );
     }
-    return _observableOf<void>(<any>null);
+    return _observableOf<number>(<any>null);
   }
 
   /**
@@ -14375,6 +14379,143 @@ export class ShippingRequestDriverServiceProxy {
   }
 
   /**
+   * @param pointId (optional)
+   * @return Success
+   */
+  getReceiverCode(pointId: number | undefined): Observable<DropOffPointDto> {
+    let url_ = this.baseUrl + '/api/services/app/ShippingRequestDriver/GetReceiverCode?';
+    if (pointId === null) throw new Error("The parameter 'pointId' cannot be null.");
+    else if (pointId !== undefined) url_ += 'PointId=' + encodeURIComponent('' + pointId) + '&';
+    url_ = url_.replace(/[?&]$/, '');
+
+    let options_: any = {
+      observe: 'response',
+      responseType: 'blob',
+      headers: new HttpHeaders({
+        Accept: 'text/plain',
+      }),
+    };
+
+    return this.http
+      .request('get', url_, options_)
+      .pipe(
+        _observableMergeMap((response_: any) => {
+          return this.processGetReceiverCode(response_);
+        })
+      )
+      .pipe(
+        _observableCatch((response_: any) => {
+          if (response_ instanceof HttpResponseBase) {
+            try {
+              return this.processGetReceiverCode(<any>response_);
+            } catch (e) {
+              return <Observable<DropOffPointDto>>(<any>_observableThrow(e));
+            }
+          } else return <Observable<DropOffPointDto>>(<any>_observableThrow(response_));
+        })
+      );
+  }
+
+  protected processGetReceiverCode(response: HttpResponseBase): Observable<DropOffPointDto> {
+    const status = response.status;
+    const responseBlob = response instanceof HttpResponse ? response.body : (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+    let _headers: any = {};
+    if (response.headers) {
+      for (let key of response.headers.keys()) {
+        _headers[key] = response.headers.get(key);
+      }
+    }
+    if (status === 200) {
+      return blobToText(responseBlob).pipe(
+        _observableMergeMap((_responseText) => {
+          let result200: any = null;
+          let resultData200 = _responseText === '' ? null : JSON.parse(_responseText, this.jsonParseReviver);
+          result200 = DropOffPointDto.fromJS(resultData200);
+          return _observableOf(result200);
+        })
+      );
+    } else if (status !== 200 && status !== 204) {
+      return blobToText(responseBlob).pipe(
+        _observableMergeMap((_responseText) => {
+          return throwException('An unexpected server error occurred.', status, _responseText, _headers);
+        })
+      );
+    }
+    return _observableOf<DropOffPointDto>(<any>null);
+  }
+
+  /**
+   * @param userId (optional)
+   * @return Success
+   */
+  getUserOtps(userId: number | undefined): Observable<UserOtpDto[]> {
+    let url_ = this.baseUrl + '/api/services/app/ShippingRequestDriver/GetUserOtps?';
+    if (userId === null) throw new Error("The parameter 'userId' cannot be null.");
+    else if (userId !== undefined) url_ += 'userId=' + encodeURIComponent('' + userId) + '&';
+    url_ = url_.replace(/[?&]$/, '');
+
+    let options_: any = {
+      observe: 'response',
+      responseType: 'blob',
+      headers: new HttpHeaders({
+        Accept: 'text/plain',
+      }),
+    };
+
+    return this.http
+      .request('get', url_, options_)
+      .pipe(
+        _observableMergeMap((response_: any) => {
+          return this.processGetUserOtps(response_);
+        })
+      )
+      .pipe(
+        _observableCatch((response_: any) => {
+          if (response_ instanceof HttpResponseBase) {
+            try {
+              return this.processGetUserOtps(<any>response_);
+            } catch (e) {
+              return <Observable<UserOtpDto[]>>(<any>_observableThrow(e));
+            }
+          } else return <Observable<UserOtpDto[]>>(<any>_observableThrow(response_));
+        })
+      );
+  }
+
+  protected processGetUserOtps(response: HttpResponseBase): Observable<UserOtpDto[]> {
+    const status = response.status;
+    const responseBlob = response instanceof HttpResponse ? response.body : (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+    let _headers: any = {};
+    if (response.headers) {
+      for (let key of response.headers.keys()) {
+        _headers[key] = response.headers.get(key);
+      }
+    }
+    if (status === 200) {
+      return blobToText(responseBlob).pipe(
+        _observableMergeMap((_responseText) => {
+          let result200: any = null;
+          let resultData200 = _responseText === '' ? null : JSON.parse(_responseText, this.jsonParseReviver);
+          if (Array.isArray(resultData200)) {
+            result200 = [] as any;
+            for (let item of resultData200) result200!.push(UserOtpDto.fromJS(item));
+          }
+          return _observableOf(result200);
+        })
+      );
+    } else if (status !== 200 && status !== 204) {
+      return blobToText(responseBlob).pipe(
+        _observableMergeMap((_responseText) => {
+          return throwException('An unexpected server error occurred.', status, _responseText, _headers);
+        })
+      );
+    }
+    return _observableOf<UserOtpDto[]>(<any>null);
+  }
+
+  /**
    * @param tripId (optional)
    * @param isAccepted (optional)
    * @return Success
@@ -14948,15 +15089,27 @@ export class ShippingRequestDriverServiceProxy {
     }
     return _observableOf<void>(<any>null);
   }
+}
+
+@Injectable()
+export class AppServiceProxy {
+  private http: HttpClient;
+  private baseUrl: string;
+  protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
+
+  constructor(@Inject(HttpClient) http: HttpClient, @Optional() @Inject(API_BASE_URL) baseUrl?: string) {
+    this.http = http;
+    this.baseUrl = baseUrl ? baseUrl : '';
+  }
 
   /**
-   * @param tripId (optional)
+   * @param id (optional)
    * @return Success
    */
-  pushNotification(tripId: number | undefined): Observable<void> {
-    let url_ = this.baseUrl + '/api/services/app/ShippingRequestDriver/PushNotification?';
-    if (tripId === null) throw new Error("The parameter 'tripId' cannot be null.");
-    else if (tripId !== undefined) url_ += 'TripId=' + encodeURIComponent('' + tripId) + '&';
+  dropOffPointToDelivery(id: number | undefined): Observable<void> {
+    let url_ = this.baseUrl + '/api/services/app/DropOffPointToDelivery?';
+    if (id === null) throw new Error("The parameter 'id' cannot be null.");
+    else if (id !== undefined) url_ += 'id=' + encodeURIComponent('' + id) + '&';
     url_ = url_.replace(/[?&]$/, '');
 
     let options_: any = {
@@ -14969,14 +15122,14 @@ export class ShippingRequestDriverServiceProxy {
       .request('post', url_, options_)
       .pipe(
         _observableMergeMap((response_: any) => {
-          return this.processPushNotification(response_);
+          return this.processDropOffPointToDelivery(response_);
         })
       )
       .pipe(
         _observableCatch((response_: any) => {
           if (response_ instanceof HttpResponseBase) {
             try {
-              return this.processPushNotification(<any>response_);
+              return this.processDropOffPointToDelivery(<any>response_);
             } catch (e) {
               return <Observable<void>>(<any>_observableThrow(e));
             }
@@ -14985,7 +15138,7 @@ export class ShippingRequestDriverServiceProxy {
       );
   }
 
-  protected processPushNotification(response: HttpResponseBase): Observable<void> {
+  protected processDropOffPointToDelivery(response: HttpResponseBase): Observable<void> {
     const status = response.status;
     const responseBlob = response instanceof HttpResponse ? response.body : (<any>response).error instanceof Blob ? (<any>response).error : undefined;
 
@@ -16596,6 +16749,73 @@ export class InvoiceServiceProxy {
   }
 
   protected processExports(response: HttpResponseBase): Observable<FileDto> {
+    const status = response.status;
+    const responseBlob = response instanceof HttpResponse ? response.body : (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+    let _headers: any = {};
+    if (response.headers) {
+      for (let key of response.headers.keys()) {
+        _headers[key] = response.headers.get(key);
+      }
+    }
+    if (status === 200) {
+      return blobToText(responseBlob).pipe(
+        _observableMergeMap((_responseText) => {
+          let result200: any = null;
+          let resultData200 = _responseText === '' ? null : JSON.parse(_responseText, this.jsonParseReviver);
+          result200 = FileDto.fromJS(resultData200);
+          return _observableOf(result200);
+        })
+      );
+    } else if (status !== 200 && status !== 204) {
+      return blobToText(responseBlob).pipe(
+        _observableMergeMap((_responseText) => {
+          return throwException('An unexpected server error occurred.', status, _responseText, _headers);
+        })
+      );
+    }
+    return _observableOf<FileDto>(<any>null);
+  }
+
+  /**
+   * @param id (optional)
+   * @return Success
+   */
+  exportItems(id: number | undefined): Observable<FileDto> {
+    let url_ = this.baseUrl + '/api/services/app/Invoice/ExportItems?';
+    if (id === null) throw new Error("The parameter 'id' cannot be null.");
+    else if (id !== undefined) url_ += 'id=' + encodeURIComponent('' + id) + '&';
+    url_ = url_.replace(/[?&]$/, '');
+
+    let options_: any = {
+      observe: 'response',
+      responseType: 'blob',
+      headers: new HttpHeaders({
+        Accept: 'text/plain',
+      }),
+    };
+
+    return this.http
+      .request('post', url_, options_)
+      .pipe(
+        _observableMergeMap((response_: any) => {
+          return this.processExportItems(response_);
+        })
+      )
+      .pipe(
+        _observableCatch((response_: any) => {
+          if (response_ instanceof HttpResponseBase) {
+            try {
+              return this.processExportItems(<any>response_);
+            } catch (e) {
+              return <Observable<FileDto>>(<any>_observableThrow(e));
+            }
+          } else return <Observable<FileDto>>(<any>_observableThrow(response_));
+        })
+      );
+  }
+
+  protected processExportItems(response: HttpResponseBase): Observable<FileDto> {
     const status = response.status;
     const responseBlob = response instanceof HttpResponse ? response.body : (<any>response).error instanceof Blob ? (<any>response).error : undefined;
 
@@ -26061,6 +26281,7 @@ export class ReceiversServiceProxy {
    * @param emailFilter (optional)
    * @param phoneNumberFilter (optional)
    * @param facilityNameFilter (optional)
+   * @param facilityId (optional)
    * @param fromDate (optional)
    * @param toDate (optional)
    * @param sorting (optional)
@@ -26074,6 +26295,7 @@ export class ReceiversServiceProxy {
     emailFilter: string | null | undefined,
     phoneNumberFilter: string | null | undefined,
     facilityNameFilter: string | null | undefined,
+    facilityId: number | null | undefined,
     fromDate: moment.Moment | null | undefined,
     toDate: moment.Moment | null | undefined,
     sorting: string | null | undefined,
@@ -26086,6 +26308,7 @@ export class ReceiversServiceProxy {
     if (emailFilter !== undefined) url_ += 'EmailFilter=' + encodeURIComponent('' + emailFilter) + '&';
     if (phoneNumberFilter !== undefined) url_ += 'PhoneNumberFilter=' + encodeURIComponent('' + phoneNumberFilter) + '&';
     if (facilityNameFilter !== undefined) url_ += 'FacilityNameFilter=' + encodeURIComponent('' + facilityNameFilter) + '&';
+    if (facilityId !== undefined) url_ += 'FacilityId=' + encodeURIComponent('' + facilityId) + '&';
     if (fromDate !== undefined) url_ += 'FromDate=' + encodeURIComponent(fromDate ? '' + fromDate.toJSON() : '') + '&';
     if (toDate !== undefined) url_ += 'ToDate=' + encodeURIComponent(toDate ? '' + toDate.toJSON() : '') + '&';
     if (sorting !== undefined) url_ += 'Sorting=' + encodeURIComponent('' + sorting) + '&';
@@ -26597,6 +26820,76 @@ export class ReceiversServiceProxy {
   }
 
   protected processGetAllFacilityForTableDropdown(response: HttpResponseBase): Observable<ReceiverFacilityLookupTableDto[]> {
+    const status = response.status;
+    const responseBlob = response instanceof HttpResponse ? response.body : (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+    let _headers: any = {};
+    if (response.headers) {
+      for (let key of response.headers.keys()) {
+        _headers[key] = response.headers.get(key);
+      }
+    }
+    if (status === 200) {
+      return blobToText(responseBlob).pipe(
+        _observableMergeMap((_responseText) => {
+          let result200: any = null;
+          let resultData200 = _responseText === '' ? null : JSON.parse(_responseText, this.jsonParseReviver);
+          if (Array.isArray(resultData200)) {
+            result200 = [] as any;
+            for (let item of resultData200) result200!.push(ReceiverFacilityLookupTableDto.fromJS(item));
+          }
+          return _observableOf(result200);
+        })
+      );
+    } else if (status !== 200 && status !== 204) {
+      return blobToText(responseBlob).pipe(
+        _observableMergeMap((_responseText) => {
+          return throwException('An unexpected server error occurred.', status, _responseText, _headers);
+        })
+      );
+    }
+    return _observableOf<ReceiverFacilityLookupTableDto[]>(<any>null);
+  }
+
+  /**
+   * @param facilityId (optional)
+   * @return Success
+   */
+  getAllReceiversByFacilityForTableDropdown(facilityId: number | undefined): Observable<ReceiverFacilityLookupTableDto[]> {
+    let url_ = this.baseUrl + '/api/services/app/Receivers/GetAllReceiversByFacilityForTableDropdown?';
+    if (facilityId === null) throw new Error("The parameter 'facilityId' cannot be null.");
+    else if (facilityId !== undefined) url_ += 'facilityId=' + encodeURIComponent('' + facilityId) + '&';
+    url_ = url_.replace(/[?&]$/, '');
+
+    let options_: any = {
+      observe: 'response',
+      responseType: 'blob',
+      headers: new HttpHeaders({
+        Accept: 'text/plain',
+      }),
+    };
+
+    return this.http
+      .request('get', url_, options_)
+      .pipe(
+        _observableMergeMap((response_: any) => {
+          return this.processGetAllReceiversByFacilityForTableDropdown(response_);
+        })
+      )
+      .pipe(
+        _observableCatch((response_: any) => {
+          if (response_ instanceof HttpResponseBase) {
+            try {
+              return this.processGetAllReceiversByFacilityForTableDropdown(<any>response_);
+            } catch (e) {
+              return <Observable<ReceiverFacilityLookupTableDto[]>>(<any>_observableThrow(e));
+            }
+          } else return <Observable<ReceiverFacilityLookupTableDto[]>>(<any>_observableThrow(response_));
+        })
+      );
+  }
+
+  protected processGetAllReceiversByFacilityForTableDropdown(response: HttpResponseBase): Observable<ReceiverFacilityLookupTableDto[]> {
     const status = response.status;
     const responseBlob = response instanceof HttpResponse ? response.body : (<any>response).error instanceof Blob ? (<any>response).error : undefined;
 
@@ -30071,7 +30364,7 @@ export class ShippingRequestsServiceProxy {
    * @param body (optional)
    * @return Success
    */
-  createOrEditStep1(body: CreateOrEditShippingRequestStep1Dto | undefined): Observable<void> {
+  createOrEditStep1(body: CreateOrEditShippingRequestStep1Dto | undefined): Observable<number> {
     let url_ = this.baseUrl + '/api/services/app/ShippingRequests/CreateOrEditStep1';
     url_ = url_.replace(/[?&]$/, '');
 
@@ -30083,6 +30376,7 @@ export class ShippingRequestsServiceProxy {
       responseType: 'blob',
       headers: new HttpHeaders({
         'Content-Type': 'application/json-patch+json',
+        Accept: 'text/plain',
       }),
     };
 
@@ -30099,14 +30393,14 @@ export class ShippingRequestsServiceProxy {
             try {
               return this.processCreateOrEditStep1(<any>response_);
             } catch (e) {
-              return <Observable<void>>(<any>_observableThrow(e));
+              return <Observable<number>>(<any>_observableThrow(e));
             }
-          } else return <Observable<void>>(<any>_observableThrow(response_));
+          } else return <Observable<number>>(<any>_observableThrow(response_));
         })
       );
   }
 
-  protected processCreateOrEditStep1(response: HttpResponseBase): Observable<void> {
+  protected processCreateOrEditStep1(response: HttpResponseBase): Observable<number> {
     const status = response.status;
     const responseBlob = response instanceof HttpResponse ? response.body : (<any>response).error instanceof Blob ? (<any>response).error : undefined;
 
@@ -30119,7 +30413,10 @@ export class ShippingRequestsServiceProxy {
     if (status === 200) {
       return blobToText(responseBlob).pipe(
         _observableMergeMap((_responseText) => {
-          return _observableOf<void>(<any>null);
+          let result200: any = null;
+          let resultData200 = _responseText === '' ? null : JSON.parse(_responseText, this.jsonParseReviver);
+          result200 = resultData200 !== undefined ? resultData200 : <any>null;
+          return _observableOf(result200);
         })
       );
     } else if (status !== 200 && status !== 204) {
@@ -30129,7 +30426,74 @@ export class ShippingRequestsServiceProxy {
         })
       );
     }
-    return _observableOf<void>(<any>null);
+    return _observableOf<number>(<any>null);
+  }
+
+  /**
+   * @param id (optional)
+   * @return Success
+   */
+  getStep1ForEdit(id: number | undefined): Observable<CreateOrEditShippingRequestStep1Dto> {
+    let url_ = this.baseUrl + '/api/services/app/ShippingRequests/GetStep1ForEdit?';
+    if (id === null) throw new Error("The parameter 'id' cannot be null.");
+    else if (id !== undefined) url_ += 'Id=' + encodeURIComponent('' + id) + '&';
+    url_ = url_.replace(/[?&]$/, '');
+
+    let options_: any = {
+      observe: 'response',
+      responseType: 'blob',
+      headers: new HttpHeaders({
+        Accept: 'text/plain',
+      }),
+    };
+
+    return this.http
+      .request('get', url_, options_)
+      .pipe(
+        _observableMergeMap((response_: any) => {
+          return this.processGetStep1ForEdit(response_);
+        })
+      )
+      .pipe(
+        _observableCatch((response_: any) => {
+          if (response_ instanceof HttpResponseBase) {
+            try {
+              return this.processGetStep1ForEdit(<any>response_);
+            } catch (e) {
+              return <Observable<CreateOrEditShippingRequestStep1Dto>>(<any>_observableThrow(e));
+            }
+          } else return <Observable<CreateOrEditShippingRequestStep1Dto>>(<any>_observableThrow(response_));
+        })
+      );
+  }
+
+  protected processGetStep1ForEdit(response: HttpResponseBase): Observable<CreateOrEditShippingRequestStep1Dto> {
+    const status = response.status;
+    const responseBlob = response instanceof HttpResponse ? response.body : (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+    let _headers: any = {};
+    if (response.headers) {
+      for (let key of response.headers.keys()) {
+        _headers[key] = response.headers.get(key);
+      }
+    }
+    if (status === 200) {
+      return blobToText(responseBlob).pipe(
+        _observableMergeMap((_responseText) => {
+          let result200: any = null;
+          let resultData200 = _responseText === '' ? null : JSON.parse(_responseText, this.jsonParseReviver);
+          result200 = CreateOrEditShippingRequestStep1Dto.fromJS(resultData200);
+          return _observableOf(result200);
+        })
+      );
+    } else if (status !== 200 && status !== 204) {
+      return blobToText(responseBlob).pipe(
+        _observableMergeMap((_responseText) => {
+          return throwException('An unexpected server error occurred.', status, _responseText, _headers);
+        })
+      );
+    }
+    return _observableOf<CreateOrEditShippingRequestStep1Dto>(<any>null);
   }
 
   /**
@@ -30198,6 +30562,73 @@ export class ShippingRequestsServiceProxy {
   }
 
   /**
+   * @param id (optional)
+   * @return Success
+   */
+  getStep2ForEdit(id: number | undefined): Observable<EditShippingRequestStep2Dto> {
+    let url_ = this.baseUrl + '/api/services/app/ShippingRequests/GetStep2ForEdit?';
+    if (id === null) throw new Error("The parameter 'id' cannot be null.");
+    else if (id !== undefined) url_ += 'Id=' + encodeURIComponent('' + id) + '&';
+    url_ = url_.replace(/[?&]$/, '');
+
+    let options_: any = {
+      observe: 'response',
+      responseType: 'blob',
+      headers: new HttpHeaders({
+        Accept: 'text/plain',
+      }),
+    };
+
+    return this.http
+      .request('get', url_, options_)
+      .pipe(
+        _observableMergeMap((response_: any) => {
+          return this.processGetStep2ForEdit(response_);
+        })
+      )
+      .pipe(
+        _observableCatch((response_: any) => {
+          if (response_ instanceof HttpResponseBase) {
+            try {
+              return this.processGetStep2ForEdit(<any>response_);
+            } catch (e) {
+              return <Observable<EditShippingRequestStep2Dto>>(<any>_observableThrow(e));
+            }
+          } else return <Observable<EditShippingRequestStep2Dto>>(<any>_observableThrow(response_));
+        })
+      );
+  }
+
+  protected processGetStep2ForEdit(response: HttpResponseBase): Observable<EditShippingRequestStep2Dto> {
+    const status = response.status;
+    const responseBlob = response instanceof HttpResponse ? response.body : (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+    let _headers: any = {};
+    if (response.headers) {
+      for (let key of response.headers.keys()) {
+        _headers[key] = response.headers.get(key);
+      }
+    }
+    if (status === 200) {
+      return blobToText(responseBlob).pipe(
+        _observableMergeMap((_responseText) => {
+          let result200: any = null;
+          let resultData200 = _responseText === '' ? null : JSON.parse(_responseText, this.jsonParseReviver);
+          result200 = EditShippingRequestStep2Dto.fromJS(resultData200);
+          return _observableOf(result200);
+        })
+      );
+    } else if (status !== 200 && status !== 204) {
+      return blobToText(responseBlob).pipe(
+        _observableMergeMap((_responseText) => {
+          return throwException('An unexpected server error occurred.', status, _responseText, _headers);
+        })
+      );
+    }
+    return _observableOf<EditShippingRequestStep2Dto>(<any>null);
+  }
+
+  /**
    * @param body (optional)
    * @return Success
    */
@@ -30263,6 +30694,73 @@ export class ShippingRequestsServiceProxy {
   }
 
   /**
+   * @param id (optional)
+   * @return Success
+   */
+  getStep3ForEdit(id: number | undefined): Observable<EditShippingRequestStep3Dto> {
+    let url_ = this.baseUrl + '/api/services/app/ShippingRequests/GetStep3ForEdit?';
+    if (id === null) throw new Error("The parameter 'id' cannot be null.");
+    else if (id !== undefined) url_ += 'Id=' + encodeURIComponent('' + id) + '&';
+    url_ = url_.replace(/[?&]$/, '');
+
+    let options_: any = {
+      observe: 'response',
+      responseType: 'blob',
+      headers: new HttpHeaders({
+        Accept: 'text/plain',
+      }),
+    };
+
+    return this.http
+      .request('get', url_, options_)
+      .pipe(
+        _observableMergeMap((response_: any) => {
+          return this.processGetStep3ForEdit(response_);
+        })
+      )
+      .pipe(
+        _observableCatch((response_: any) => {
+          if (response_ instanceof HttpResponseBase) {
+            try {
+              return this.processGetStep3ForEdit(<any>response_);
+            } catch (e) {
+              return <Observable<EditShippingRequestStep3Dto>>(<any>_observableThrow(e));
+            }
+          } else return <Observable<EditShippingRequestStep3Dto>>(<any>_observableThrow(response_));
+        })
+      );
+  }
+
+  protected processGetStep3ForEdit(response: HttpResponseBase): Observable<EditShippingRequestStep3Dto> {
+    const status = response.status;
+    const responseBlob = response instanceof HttpResponse ? response.body : (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+    let _headers: any = {};
+    if (response.headers) {
+      for (let key of response.headers.keys()) {
+        _headers[key] = response.headers.get(key);
+      }
+    }
+    if (status === 200) {
+      return blobToText(responseBlob).pipe(
+        _observableMergeMap((_responseText) => {
+          let result200: any = null;
+          let resultData200 = _responseText === '' ? null : JSON.parse(_responseText, this.jsonParseReviver);
+          result200 = EditShippingRequestStep3Dto.fromJS(resultData200);
+          return _observableOf(result200);
+        })
+      );
+    } else if (status !== 200 && status !== 204) {
+      return blobToText(responseBlob).pipe(
+        _observableMergeMap((_responseText) => {
+          return throwException('An unexpected server error occurred.', status, _responseText, _headers);
+        })
+      );
+    }
+    return _observableOf<EditShippingRequestStep3Dto>(<any>null);
+  }
+
+  /**
    * @param body (optional)
    * @return Success
    */
@@ -30325,6 +30823,73 @@ export class ShippingRequestsServiceProxy {
       );
     }
     return _observableOf<void>(<any>null);
+  }
+
+  /**
+   * @param id (optional)
+   * @return Success
+   */
+  getStep4ForEdit(id: number | undefined): Observable<EditShippingRequestStep4Dto> {
+    let url_ = this.baseUrl + '/api/services/app/ShippingRequests/GetStep4ForEdit?';
+    if (id === null) throw new Error("The parameter 'id' cannot be null.");
+    else if (id !== undefined) url_ += 'Id=' + encodeURIComponent('' + id) + '&';
+    url_ = url_.replace(/[?&]$/, '');
+
+    let options_: any = {
+      observe: 'response',
+      responseType: 'blob',
+      headers: new HttpHeaders({
+        Accept: 'text/plain',
+      }),
+    };
+
+    return this.http
+      .request('get', url_, options_)
+      .pipe(
+        _observableMergeMap((response_: any) => {
+          return this.processGetStep4ForEdit(response_);
+        })
+      )
+      .pipe(
+        _observableCatch((response_: any) => {
+          if (response_ instanceof HttpResponseBase) {
+            try {
+              return this.processGetStep4ForEdit(<any>response_);
+            } catch (e) {
+              return <Observable<EditShippingRequestStep4Dto>>(<any>_observableThrow(e));
+            }
+          } else return <Observable<EditShippingRequestStep4Dto>>(<any>_observableThrow(response_));
+        })
+      );
+  }
+
+  protected processGetStep4ForEdit(response: HttpResponseBase): Observable<EditShippingRequestStep4Dto> {
+    const status = response.status;
+    const responseBlob = response instanceof HttpResponse ? response.body : (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+    let _headers: any = {};
+    if (response.headers) {
+      for (let key of response.headers.keys()) {
+        _headers[key] = response.headers.get(key);
+      }
+    }
+    if (status === 200) {
+      return blobToText(responseBlob).pipe(
+        _observableMergeMap((_responseText) => {
+          let result200: any = null;
+          let resultData200 = _responseText === '' ? null : JSON.parse(_responseText, this.jsonParseReviver);
+          result200 = EditShippingRequestStep4Dto.fromJS(resultData200);
+          return _observableOf(result200);
+        })
+      );
+    } else if (status !== 200 && status !== 204) {
+      return blobToText(responseBlob).pipe(
+        _observableMergeMap((_responseText) => {
+          return throwException('An unexpected server error occurred.', status, _responseText, _headers);
+        })
+      );
+    }
+    return _observableOf<EditShippingRequestStep4Dto>(<any>null);
   }
 
   /**
@@ -35244,6 +35809,73 @@ export class SubmitInvoicesServiceProxy {
     }
     return _observableOf<FileDto>(<any>null);
   }
+
+  /**
+   * @param id (optional)
+   * @return Success
+   */
+  exportItems(id: number | undefined): Observable<FileDto> {
+    let url_ = this.baseUrl + '/api/services/app/SubmitInvoices/ExportItems?';
+    if (id === null) throw new Error("The parameter 'id' cannot be null.");
+    else if (id !== undefined) url_ += 'id=' + encodeURIComponent('' + id) + '&';
+    url_ = url_.replace(/[?&]$/, '');
+
+    let options_: any = {
+      observe: 'response',
+      responseType: 'blob',
+      headers: new HttpHeaders({
+        Accept: 'text/plain',
+      }),
+    };
+
+    return this.http
+      .request('post', url_, options_)
+      .pipe(
+        _observableMergeMap((response_: any) => {
+          return this.processExportItems(response_);
+        })
+      )
+      .pipe(
+        _observableCatch((response_: any) => {
+          if (response_ instanceof HttpResponseBase) {
+            try {
+              return this.processExportItems(<any>response_);
+            } catch (e) {
+              return <Observable<FileDto>>(<any>_observableThrow(e));
+            }
+          } else return <Observable<FileDto>>(<any>_observableThrow(response_));
+        })
+      );
+  }
+
+  protected processExportItems(response: HttpResponseBase): Observable<FileDto> {
+    const status = response.status;
+    const responseBlob = response instanceof HttpResponse ? response.body : (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+    let _headers: any = {};
+    if (response.headers) {
+      for (let key of response.headers.keys()) {
+        _headers[key] = response.headers.get(key);
+      }
+    }
+    if (status === 200) {
+      return blobToText(responseBlob).pipe(
+        _observableMergeMap((_responseText) => {
+          let result200: any = null;
+          let resultData200 = _responseText === '' ? null : JSON.parse(_responseText, this.jsonParseReviver);
+          result200 = FileDto.fromJS(resultData200);
+          return _observableOf(result200);
+        })
+      );
+    } else if (status !== 200 && status !== 204) {
+      return blobToText(responseBlob).pipe(
+        _observableMergeMap((_responseText) => {
+          return throwException('An unexpected server error occurred.', status, _responseText, _headers);
+        })
+      );
+    }
+    return _observableOf<FileDto>(<any>null);
+  }
 }
 
 @Injectable()
@@ -39794,6 +40426,7 @@ export class TrackingServiceProxy {
    * @param status (optional)
    * @param shipper (optional)
    * @param carrier (optional)
+   * @param waybillNumber (optional)
    * @param truckTypeId (optional)
    * @param originId (optional)
    * @param destinationId (optional)
@@ -39811,6 +40444,7 @@ export class TrackingServiceProxy {
     status: ShippingRequestTripStatus | undefined,
     shipper: string | null | undefined,
     carrier: string | null | undefined,
+    waybillNumber: number | null | undefined,
     truckTypeId: number | null | undefined,
     originId: number | null | undefined,
     destinationId: number | null | undefined,
@@ -39828,6 +40462,7 @@ export class TrackingServiceProxy {
     else if (status !== undefined) url_ += 'Status=' + encodeURIComponent('' + status) + '&';
     if (shipper !== undefined) url_ += 'Shipper=' + encodeURIComponent('' + shipper) + '&';
     if (carrier !== undefined) url_ += 'Carrier=' + encodeURIComponent('' + carrier) + '&';
+    if (waybillNumber !== undefined) url_ += 'WaybillNumber=' + encodeURIComponent('' + waybillNumber) + '&';
     if (truckTypeId !== undefined) url_ += 'TruckTypeId=' + encodeURIComponent('' + truckTypeId) + '&';
     if (originId !== undefined) url_ += 'OriginId=' + encodeURIComponent('' + originId) + '&';
     if (destinationId !== undefined) url_ += 'DestinationId=' + encodeURIComponent('' + destinationId) + '&';
@@ -39899,6 +40534,453 @@ export class TrackingServiceProxy {
       );
     }
     return _observableOf<PagedResultDtoOfTrackingListDto>(<any>null);
+  }
+
+  /**
+   * @param id (optional)
+   * @return Success
+   */
+  getForView(id: number | undefined): Observable<ListResultDtoOfShippingRequestTripDriverRoutePointDto> {
+    let url_ = this.baseUrl + '/api/services/app/Tracking/GetForView?';
+    if (id === null) throw new Error("The parameter 'id' cannot be null.");
+    else if (id !== undefined) url_ += 'id=' + encodeURIComponent('' + id) + '&';
+    url_ = url_.replace(/[?&]$/, '');
+
+    let options_: any = {
+      observe: 'response',
+      responseType: 'blob',
+      headers: new HttpHeaders({
+        Accept: 'text/plain',
+      }),
+    };
+
+    return this.http
+      .request('get', url_, options_)
+      .pipe(
+        _observableMergeMap((response_: any) => {
+          return this.processGetForView(response_);
+        })
+      )
+      .pipe(
+        _observableCatch((response_: any) => {
+          if (response_ instanceof HttpResponseBase) {
+            try {
+              return this.processGetForView(<any>response_);
+            } catch (e) {
+              return <Observable<ListResultDtoOfShippingRequestTripDriverRoutePointDto>>(<any>_observableThrow(e));
+            }
+          } else return <Observable<ListResultDtoOfShippingRequestTripDriverRoutePointDto>>(<any>_observableThrow(response_));
+        })
+      );
+  }
+
+  protected processGetForView(response: HttpResponseBase): Observable<ListResultDtoOfShippingRequestTripDriverRoutePointDto> {
+    const status = response.status;
+    const responseBlob = response instanceof HttpResponse ? response.body : (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+    let _headers: any = {};
+    if (response.headers) {
+      for (let key of response.headers.keys()) {
+        _headers[key] = response.headers.get(key);
+      }
+    }
+    if (status === 200) {
+      return blobToText(responseBlob).pipe(
+        _observableMergeMap((_responseText) => {
+          let result200: any = null;
+          let resultData200 = _responseText === '' ? null : JSON.parse(_responseText, this.jsonParseReviver);
+          result200 = ListResultDtoOfShippingRequestTripDriverRoutePointDto.fromJS(resultData200);
+          return _observableOf(result200);
+        })
+      );
+    } else if (status !== 200 && status !== 204) {
+      return blobToText(responseBlob).pipe(
+        _observableMergeMap((_responseText) => {
+          return throwException('An unexpected server error occurred.', status, _responseText, _headers);
+        })
+      );
+    }
+    return _observableOf<ListResultDtoOfShippingRequestTripDriverRoutePointDto>(<any>null);
+  }
+
+  /**
+   * @param id (optional)
+   * @return Success
+   */
+  accept(id: number | undefined): Observable<void> {
+    let url_ = this.baseUrl + '/api/services/app/Tracking/Accept?';
+    if (id === null) throw new Error("The parameter 'id' cannot be null.");
+    else if (id !== undefined) url_ += 'id=' + encodeURIComponent('' + id) + '&';
+    url_ = url_.replace(/[?&]$/, '');
+
+    let options_: any = {
+      observe: 'response',
+      responseType: 'blob',
+      headers: new HttpHeaders({}),
+    };
+
+    return this.http
+      .request('post', url_, options_)
+      .pipe(
+        _observableMergeMap((response_: any) => {
+          return this.processAccept(response_);
+        })
+      )
+      .pipe(
+        _observableCatch((response_: any) => {
+          if (response_ instanceof HttpResponseBase) {
+            try {
+              return this.processAccept(<any>response_);
+            } catch (e) {
+              return <Observable<void>>(<any>_observableThrow(e));
+            }
+          } else return <Observable<void>>(<any>_observableThrow(response_));
+        })
+      );
+  }
+
+  protected processAccept(response: HttpResponseBase): Observable<void> {
+    const status = response.status;
+    const responseBlob = response instanceof HttpResponse ? response.body : (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+    let _headers: any = {};
+    if (response.headers) {
+      for (let key of response.headers.keys()) {
+        _headers[key] = response.headers.get(key);
+      }
+    }
+    if (status === 200) {
+      return blobToText(responseBlob).pipe(
+        _observableMergeMap((_responseText) => {
+          return _observableOf<void>(<any>null);
+        })
+      );
+    } else if (status !== 200 && status !== 204) {
+      return blobToText(responseBlob).pipe(
+        _observableMergeMap((_responseText) => {
+          return throwException('An unexpected server error occurred.', status, _responseText, _headers);
+        })
+      );
+    }
+    return _observableOf<void>(<any>null);
+  }
+
+  /**
+   * @param id (optional)
+   * @return Success
+   */
+  start(id: number | undefined): Observable<void> {
+    let url_ = this.baseUrl + '/api/services/app/Tracking/Start?';
+    if (id === null) throw new Error("The parameter 'id' cannot be null.");
+    else if (id !== undefined) url_ += 'id=' + encodeURIComponent('' + id) + '&';
+    url_ = url_.replace(/[?&]$/, '');
+
+    let options_: any = {
+      observe: 'response',
+      responseType: 'blob',
+      headers: new HttpHeaders({}),
+    };
+
+    return this.http
+      .request('post', url_, options_)
+      .pipe(
+        _observableMergeMap((response_: any) => {
+          return this.processStart(response_);
+        })
+      )
+      .pipe(
+        _observableCatch((response_: any) => {
+          if (response_ instanceof HttpResponseBase) {
+            try {
+              return this.processStart(<any>response_);
+            } catch (e) {
+              return <Observable<void>>(<any>_observableThrow(e));
+            }
+          } else return <Observable<void>>(<any>_observableThrow(response_));
+        })
+      );
+  }
+
+  protected processStart(response: HttpResponseBase): Observable<void> {
+    const status = response.status;
+    const responseBlob = response instanceof HttpResponse ? response.body : (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+    let _headers: any = {};
+    if (response.headers) {
+      for (let key of response.headers.keys()) {
+        _headers[key] = response.headers.get(key);
+      }
+    }
+    if (status === 200) {
+      return blobToText(responseBlob).pipe(
+        _observableMergeMap((_responseText) => {
+          return _observableOf<void>(<any>null);
+        })
+      );
+    } else if (status !== 200 && status !== 204) {
+      return blobToText(responseBlob).pipe(
+        _observableMergeMap((_responseText) => {
+          return throwException('An unexpected server error occurred.', status, _responseText, _headers);
+        })
+      );
+    }
+    return _observableOf<void>(<any>null);
+  }
+
+  /**
+   * @param id (optional)
+   * @return Success
+   */
+  changeStatus(id: number | undefined): Observable<void> {
+    let url_ = this.baseUrl + '/api/services/app/Tracking/ChangeStatus?';
+    if (id === null) throw new Error("The parameter 'id' cannot be null.");
+    else if (id !== undefined) url_ += 'id=' + encodeURIComponent('' + id) + '&';
+    url_ = url_.replace(/[?&]$/, '');
+
+    let options_: any = {
+      observe: 'response',
+      responseType: 'blob',
+      headers: new HttpHeaders({}),
+    };
+
+    return this.http
+      .request('post', url_, options_)
+      .pipe(
+        _observableMergeMap((response_: any) => {
+          return this.processChangeStatus(response_);
+        })
+      )
+      .pipe(
+        _observableCatch((response_: any) => {
+          if (response_ instanceof HttpResponseBase) {
+            try {
+              return this.processChangeStatus(<any>response_);
+            } catch (e) {
+              return <Observable<void>>(<any>_observableThrow(e));
+            }
+          } else return <Observable<void>>(<any>_observableThrow(response_));
+        })
+      );
+  }
+
+  protected processChangeStatus(response: HttpResponseBase): Observable<void> {
+    const status = response.status;
+    const responseBlob = response instanceof HttpResponse ? response.body : (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+    let _headers: any = {};
+    if (response.headers) {
+      for (let key of response.headers.keys()) {
+        _headers[key] = response.headers.get(key);
+      }
+    }
+    if (status === 200) {
+      return blobToText(responseBlob).pipe(
+        _observableMergeMap((_responseText) => {
+          return _observableOf<void>(<any>null);
+        })
+      );
+    } else if (status !== 200 && status !== 204) {
+      return blobToText(responseBlob).pipe(
+        _observableMergeMap((_responseText) => {
+          return throwException('An unexpected server error occurred.', status, _responseText, _headers);
+        })
+      );
+    }
+    return _observableOf<void>(<any>null);
+  }
+
+  /**
+   * @param id (optional)
+   * @return Success
+   */
+  nextLocation(id: number | undefined): Observable<void> {
+    let url_ = this.baseUrl + '/api/services/app/Tracking/NextLocation?';
+    if (id === null) throw new Error("The parameter 'id' cannot be null.");
+    else if (id !== undefined) url_ += 'id=' + encodeURIComponent('' + id) + '&';
+    url_ = url_.replace(/[?&]$/, '');
+
+    let options_: any = {
+      observe: 'response',
+      responseType: 'blob',
+      headers: new HttpHeaders({}),
+    };
+
+    return this.http
+      .request('post', url_, options_)
+      .pipe(
+        _observableMergeMap((response_: any) => {
+          return this.processNextLocation(response_);
+        })
+      )
+      .pipe(
+        _observableCatch((response_: any) => {
+          if (response_ instanceof HttpResponseBase) {
+            try {
+              return this.processNextLocation(<any>response_);
+            } catch (e) {
+              return <Observable<void>>(<any>_observableThrow(e));
+            }
+          } else return <Observable<void>>(<any>_observableThrow(response_));
+        })
+      );
+  }
+
+  protected processNextLocation(response: HttpResponseBase): Observable<void> {
+    const status = response.status;
+    const responseBlob = response instanceof HttpResponse ? response.body : (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+    let _headers: any = {};
+    if (response.headers) {
+      for (let key of response.headers.keys()) {
+        _headers[key] = response.headers.get(key);
+      }
+    }
+    if (status === 200) {
+      return blobToText(responseBlob).pipe(
+        _observableMergeMap((_responseText) => {
+          return _observableOf<void>(<any>null);
+        })
+      );
+    } else if (status !== 200 && status !== 204) {
+      return blobToText(responseBlob).pipe(
+        _observableMergeMap((_responseText) => {
+          return throwException('An unexpected server error occurred.', status, _responseText, _headers);
+        })
+      );
+    }
+    return _observableOf<void>(<any>null);
+  }
+
+  /**
+   * @param body (optional)
+   * @return Success
+   */
+  confirmReceiverCode(body: ConfirmReceiverCodeInput | undefined): Observable<void> {
+    let url_ = this.baseUrl + '/api/services/app/Tracking/ConfirmReceiverCode';
+    url_ = url_.replace(/[?&]$/, '');
+
+    const content_ = JSON.stringify(body);
+
+    let options_: any = {
+      body: content_,
+      observe: 'response',
+      responseType: 'blob',
+      headers: new HttpHeaders({
+        'Content-Type': 'application/json-patch+json',
+      }),
+    };
+
+    return this.http
+      .request('post', url_, options_)
+      .pipe(
+        _observableMergeMap((response_: any) => {
+          return this.processConfirmReceiverCode(response_);
+        })
+      )
+      .pipe(
+        _observableCatch((response_: any) => {
+          if (response_ instanceof HttpResponseBase) {
+            try {
+              return this.processConfirmReceiverCode(<any>response_);
+            } catch (e) {
+              return <Observable<void>>(<any>_observableThrow(e));
+            }
+          } else return <Observable<void>>(<any>_observableThrow(response_));
+        })
+      );
+  }
+
+  protected processConfirmReceiverCode(response: HttpResponseBase): Observable<void> {
+    const status = response.status;
+    const responseBlob = response instanceof HttpResponse ? response.body : (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+    let _headers: any = {};
+    if (response.headers) {
+      for (let key of response.headers.keys()) {
+        _headers[key] = response.headers.get(key);
+      }
+    }
+    if (status === 200) {
+      return blobToText(responseBlob).pipe(
+        _observableMergeMap((_responseText) => {
+          return _observableOf<void>(<any>null);
+        })
+      );
+    } else if (status !== 200 && status !== 204) {
+      return blobToText(responseBlob).pipe(
+        _observableMergeMap((_responseText) => {
+          return throwException('An unexpected server error occurred.', status, _responseText, _headers);
+        })
+      );
+    }
+    return _observableOf<void>(<any>null);
+  }
+
+  /**
+   * @param id (optional)
+   * @return Success
+   */
+  pOD(id: number | undefined): Observable<FileDto> {
+    let url_ = this.baseUrl + '/api/services/app/Tracking/POD?';
+    if (id === null) throw new Error("The parameter 'id' cannot be null.");
+    else if (id !== undefined) url_ += 'id=' + encodeURIComponent('' + id) + '&';
+    url_ = url_.replace(/[?&]$/, '');
+
+    let options_: any = {
+      observe: 'response',
+      responseType: 'blob',
+      headers: new HttpHeaders({
+        Accept: 'text/plain',
+      }),
+    };
+
+    return this.http
+      .request('post', url_, options_)
+      .pipe(
+        _observableMergeMap((response_: any) => {
+          return this.processPOD(response_);
+        })
+      )
+      .pipe(
+        _observableCatch((response_: any) => {
+          if (response_ instanceof HttpResponseBase) {
+            try {
+              return this.processPOD(<any>response_);
+            } catch (e) {
+              return <Observable<FileDto>>(<any>_observableThrow(e));
+            }
+          } else return <Observable<FileDto>>(<any>_observableThrow(response_));
+        })
+      );
+  }
+
+  protected processPOD(response: HttpResponseBase): Observable<FileDto> {
+    const status = response.status;
+    const responseBlob = response instanceof HttpResponse ? response.body : (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+    let _headers: any = {};
+    if (response.headers) {
+      for (let key of response.headers.keys()) {
+        _headers[key] = response.headers.get(key);
+      }
+    }
+    if (status === 200) {
+      return blobToText(responseBlob).pipe(
+        _observableMergeMap((_responseText) => {
+          let result200: any = null;
+          let resultData200 = _responseText === '' ? null : JSON.parse(_responseText, this.jsonParseReviver);
+          result200 = FileDto.fromJS(resultData200);
+          return _observableOf(result200);
+        })
+      );
+    } else if (status !== 200 && status !== 204) {
+      return blobToText(responseBlob).pipe(
+        _observableMergeMap((_responseText) => {
+          return throwException('An unexpected server error occurred.', status, _responseText, _headers);
+        })
+      );
+    }
+    return _observableOf<FileDto>(<any>null);
   }
 }
 
@@ -54671,6 +55753,7 @@ export class DocumentFileDto implements IDocumentFileDto {
   isRejected!: boolean;
   rejectionReason!: string | undefined;
   documentTypeId!: number;
+  otherDocumentTypeName!: string | undefined;
   truckId!: number | undefined;
   trailerId!: number | undefined;
   userId!: number | undefined;
@@ -54698,6 +55781,7 @@ export class DocumentFileDto implements IDocumentFileDto {
       this.isRejected = _data['isRejected'];
       this.rejectionReason = _data['rejectionReason'];
       this.documentTypeId = _data['documentTypeId'];
+      this.otherDocumentTypeName = _data['otherDocumentTypeName'];
       this.truckId = _data['truckId'];
       this.trailerId = _data['trailerId'];
       this.userId = _data['userId'];
@@ -54726,6 +55810,7 @@ export class DocumentFileDto implements IDocumentFileDto {
     data['isRejected'] = this.isRejected;
     data['rejectionReason'] = this.rejectionReason;
     data['documentTypeId'] = this.documentTypeId;
+    data['otherDocumentTypeName'] = this.otherDocumentTypeName;
     data['truckId'] = this.truckId;
     data['trailerId'] = this.trailerId;
     data['userId'] = this.userId;
@@ -54747,6 +55832,7 @@ export interface IDocumentFileDto {
   isRejected: boolean;
   rejectionReason: string | undefined;
   documentTypeId: number;
+  otherDocumentTypeName: string | undefined;
   truckId: number | undefined;
   trailerId: number | undefined;
   userId: number | undefined;
@@ -55068,6 +56154,7 @@ export interface IUpdateDocumentFileInput {
 
 export class CreateOrEditDocumentFileDto implements ICreateOrEditDocumentFileDto {
   documentTypeDto!: DocumentTypeDto;
+  otherDocumentTypeName!: string | undefined;
   updateDocumentFileInput!: UpdateDocumentFileInput;
   name!: string;
   extn!: string;
@@ -55099,6 +56186,7 @@ export class CreateOrEditDocumentFileDto implements ICreateOrEditDocumentFileDto
   init(_data?: any) {
     if (_data) {
       this.documentTypeDto = _data['documentTypeDto'] ? DocumentTypeDto.fromJS(_data['documentTypeDto']) : <any>undefined;
+      this.otherDocumentTypeName = _data['otherDocumentTypeName'];
       this.updateDocumentFileInput = _data['updateDocumentFileInput']
         ? UpdateDocumentFileInput.fromJS(_data['updateDocumentFileInput'])
         : <any>undefined;
@@ -55133,6 +56221,7 @@ export class CreateOrEditDocumentFileDto implements ICreateOrEditDocumentFileDto
   toJSON(data?: any) {
     data = typeof data === 'object' ? data : {};
     data['documentTypeDto'] = this.documentTypeDto ? this.documentTypeDto.toJSON() : <any>undefined;
+    data['otherDocumentTypeName'] = this.otherDocumentTypeName;
     data['updateDocumentFileInput'] = this.updateDocumentFileInput ? this.updateDocumentFileInput.toJSON() : <any>undefined;
     data['name'] = this.name;
     data['extn'] = this.extn;
@@ -55158,6 +56247,7 @@ export class CreateOrEditDocumentFileDto implements ICreateOrEditDocumentFileDto
 
 export interface ICreateOrEditDocumentFileDto {
   documentTypeDto: DocumentTypeDto;
+  otherDocumentTypeName: string | undefined;
   updateDocumentFileInput: UpdateDocumentFileInput;
   name: string;
   extn: string;
@@ -58389,6 +59479,7 @@ export class GoodsDetailDto implements IGoodsDetailDto {
   routPointId!: number;
   unitOfMeasureId!: number;
   unitOfMeasure!: string | undefined;
+  otherUnitOfMeasureName!: string | undefined;
   id!: number;
 
   constructor(data?: IGoodsDetailDto) {
@@ -58412,6 +59503,7 @@ export class GoodsDetailDto implements IGoodsDetailDto {
       this.routPointId = _data['routPointId'];
       this.unitOfMeasureId = _data['unitOfMeasureId'];
       this.unitOfMeasure = _data['unitOfMeasure'];
+      this.otherUnitOfMeasureName = _data['otherUnitOfMeasureName'];
       this.id = _data['id'];
     }
   }
@@ -58436,6 +59528,7 @@ export class GoodsDetailDto implements IGoodsDetailDto {
     data['routPointId'] = this.routPointId;
     data['unitOfMeasureId'] = this.unitOfMeasureId;
     data['unitOfMeasure'] = this.unitOfMeasure;
+    data['otherUnitOfMeasureName'] = this.otherUnitOfMeasureName;
     data['id'] = this.id;
     return data;
   }
@@ -58453,6 +59546,7 @@ export interface IGoodsDetailDto {
   routPointId: number;
   unitOfMeasureId: number;
   unitOfMeasure: string | undefined;
+  otherUnitOfMeasureName: string | undefined;
   id: number;
 }
 
@@ -58557,6 +59651,7 @@ export class CreateOrEditGoodsDetailDto implements ICreateOrEditGoodsDetailDto {
   dangerousGoodsCode!: string | undefined;
   goodCategoryId!: number | undefined;
   unitOfMeasureId!: number;
+  otherUnitOfMeasureName!: string | undefined;
   routPointId!: number | undefined;
   id!: number | undefined;
 
@@ -58578,6 +59673,7 @@ export class CreateOrEditGoodsDetailDto implements ICreateOrEditGoodsDetailDto {
       this.dangerousGoodsCode = _data['dangerousGoodsCode'];
       this.goodCategoryId = _data['goodCategoryId'];
       this.unitOfMeasureId = _data['unitOfMeasureId'];
+      this.otherUnitOfMeasureName = _data['otherUnitOfMeasureName'];
       this.routPointId = _data['routPointId'];
       this.id = _data['id'];
     }
@@ -58600,6 +59696,7 @@ export class CreateOrEditGoodsDetailDto implements ICreateOrEditGoodsDetailDto {
     data['dangerousGoodsCode'] = this.dangerousGoodsCode;
     data['goodCategoryId'] = this.goodCategoryId;
     data['unitOfMeasureId'] = this.unitOfMeasureId;
+    data['otherUnitOfMeasureName'] = this.otherUnitOfMeasureName;
     data['routPointId'] = this.routPointId;
     data['id'] = this.id;
     return data;
@@ -58615,6 +59712,7 @@ export interface ICreateOrEditGoodsDetailDto {
   dangerousGoodsCode: string | undefined;
   goodCategoryId: number | undefined;
   unitOfMeasureId: number;
+  otherUnitOfMeasureName: string | undefined;
   routPointId: number | undefined;
   id: number | undefined;
 }
@@ -65246,6 +66344,7 @@ export interface IGetPickingTypeForEditOutput {
 }
 
 export class PlateTypeDto implements IPlateTypeDto {
+  bayanPlatetypeId!: number | undefined;
   displayName!: string | undefined;
   id!: number;
 
@@ -65259,6 +66358,7 @@ export class PlateTypeDto implements IPlateTypeDto {
 
   init(_data?: any) {
     if (_data) {
+      this.bayanPlatetypeId = _data['bayanPlatetypeId'];
       this.displayName = _data['displayName'];
       this.id = _data['id'];
     }
@@ -65273,6 +66373,7 @@ export class PlateTypeDto implements IPlateTypeDto {
 
   toJSON(data?: any) {
     data = typeof data === 'object' ? data : {};
+    data['bayanPlatetypeId'] = this.bayanPlatetypeId;
     data['displayName'] = this.displayName;
     data['id'] = this.id;
     return data;
@@ -65280,6 +66381,7 @@ export class PlateTypeDto implements IPlateTypeDto {
 }
 
 export interface IPlateTypeDto {
+  bayanPlatetypeId: number | undefined;
   displayName: string | undefined;
   id: number;
 }
@@ -65412,6 +66514,7 @@ export interface IPlateTypeTranslationDto {
 }
 
 export class CreateOrEditPlateTypeDto implements ICreateOrEditPlateTypeDto {
+  bayanPlatetypeId!: number | undefined;
   translations!: PlateTypeTranslationDto[] | undefined;
   id!: number | undefined;
 
@@ -65425,6 +66528,7 @@ export class CreateOrEditPlateTypeDto implements ICreateOrEditPlateTypeDto {
 
   init(_data?: any) {
     if (_data) {
+      this.bayanPlatetypeId = _data['bayanPlatetypeId'];
       if (Array.isArray(_data['translations'])) {
         this.translations = [] as any;
         for (let item of _data['translations']) this.translations!.push(PlateTypeTranslationDto.fromJS(item));
@@ -65442,6 +66546,7 @@ export class CreateOrEditPlateTypeDto implements ICreateOrEditPlateTypeDto {
 
   toJSON(data?: any) {
     data = typeof data === 'object' ? data : {};
+    data['bayanPlatetypeId'] = this.bayanPlatetypeId;
     if (Array.isArray(this.translations)) {
       data['translations'] = [];
       for (let item of this.translations) data['translations'].push(item.toJSON());
@@ -65452,6 +66557,7 @@ export class CreateOrEditPlateTypeDto implements ICreateOrEditPlateTypeDto {
 }
 
 export interface ICreateOrEditPlateTypeDto {
+  bayanPlatetypeId: number | undefined;
   translations: PlateTypeTranslationDto[] | undefined;
   id: number | undefined;
 }
@@ -67343,6 +68449,9 @@ export class GetShippingRequestForPriceOfferListDto implements IGetShippingReque
   routeTypeId!: ShippingRequestRouteType;
   readonly routeType!: string | undefined;
   price!: number | undefined;
+  referenceNumber!: string | undefined;
+  requestType!: ShippingRequestType;
+  readonly requestTypeTitle!: string | undefined;
   id!: number;
 
   constructor(data?: IGetShippingRequestForPriceOfferListDto) {
@@ -67382,6 +68491,9 @@ export class GetShippingRequestForPriceOfferListDto implements IGetShippingReque
       this.routeTypeId = _data['routeTypeId'];
       (<any>this).routeType = _data['routeType'];
       this.price = _data['price'];
+      this.referenceNumber = _data['referenceNumber'];
+      this.requestType = _data['requestType'];
+      (<any>this).requestTypeTitle = _data['requestTypeTitle'];
       this.id = _data['id'];
     }
   }
@@ -67422,6 +68534,9 @@ export class GetShippingRequestForPriceOfferListDto implements IGetShippingReque
     data['routeTypeId'] = this.routeTypeId;
     data['routeType'] = this.routeType;
     data['price'] = this.price;
+    data['referenceNumber'] = this.referenceNumber;
+    data['requestType'] = this.requestType;
+    data['requestTypeTitle'] = this.requestTypeTitle;
     data['id'] = this.id;
     return data;
   }
@@ -67455,6 +68570,9 @@ export interface IGetShippingRequestForPriceOfferListDto {
   routeTypeId: ShippingRequestRouteType;
   routeType: string | undefined;
   price: number | undefined;
+  referenceNumber: string | undefined;
+  requestType: ShippingRequestType;
+  requestTypeTitle: string | undefined;
   id: number;
 }
 
@@ -68985,6 +70103,7 @@ export class RoutPointDto implements IRoutPointDto {
   receiverPhoneNumber!: string | undefined;
   receiverEmailAddress!: string | undefined;
   receiverCardIdNumber!: string | undefined;
+  receiverAddress!: string | undefined;
   goodsDetailListDto!: GoodsDetailDto[] | undefined;
   note!: string | undefined;
   id!: number;
@@ -69020,6 +70139,7 @@ export class RoutPointDto implements IRoutPointDto {
       this.receiverPhoneNumber = _data['receiverPhoneNumber'];
       this.receiverEmailAddress = _data['receiverEmailAddress'];
       this.receiverCardIdNumber = _data['receiverCardIdNumber'];
+      this.receiverAddress = _data['receiverAddress'];
       if (Array.isArray(_data['goodsDetailListDto'])) {
         this.goodsDetailListDto = [] as any;
         for (let item of _data['goodsDetailListDto']) this.goodsDetailListDto!.push(GoodsDetailDto.fromJS(item));
@@ -69059,6 +70179,7 @@ export class RoutPointDto implements IRoutPointDto {
     data['receiverPhoneNumber'] = this.receiverPhoneNumber;
     data['receiverEmailAddress'] = this.receiverEmailAddress;
     data['receiverCardIdNumber'] = this.receiverCardIdNumber;
+    data['receiverAddress'] = this.receiverAddress;
     if (Array.isArray(this.goodsDetailListDto)) {
       data['goodsDetailListDto'] = [];
       for (let item of this.goodsDetailListDto) data['goodsDetailListDto'].push(item.toJSON());
@@ -69091,6 +70212,7 @@ export interface IRoutPointDto {
   receiverPhoneNumber: string | undefined;
   receiverEmailAddress: string | undefined;
   receiverCardIdNumber: string | undefined;
+  receiverAddress: string | undefined;
   goodsDetailListDto: GoodsDetailDto[] | undefined;
   note: string | undefined;
   id: number;
@@ -69205,6 +70327,7 @@ export class CreateOrEditRoutPointDto implements ICreateOrEditRoutPointDto {
   receiverPhoneNumber!: string | undefined;
   receiverEmailAddress!: string | undefined;
   receiverCardIdNumber!: string | undefined;
+  receiverAddress!: string | undefined;
   note!: string | undefined;
   goodsDetailListDto!: CreateOrEditGoodsDetailDto[] | undefined;
   id!: number | undefined;
@@ -69229,6 +70352,7 @@ export class CreateOrEditRoutPointDto implements ICreateOrEditRoutPointDto {
       this.receiverPhoneNumber = _data['receiverPhoneNumber'];
       this.receiverEmailAddress = _data['receiverEmailAddress'];
       this.receiverCardIdNumber = _data['receiverCardIdNumber'];
+      this.receiverAddress = _data['receiverAddress'];
       this.note = _data['note'];
       if (Array.isArray(_data['goodsDetailListDto'])) {
         this.goodsDetailListDto = [] as any;
@@ -69257,6 +70381,7 @@ export class CreateOrEditRoutPointDto implements ICreateOrEditRoutPointDto {
     data['receiverPhoneNumber'] = this.receiverPhoneNumber;
     data['receiverEmailAddress'] = this.receiverEmailAddress;
     data['receiverCardIdNumber'] = this.receiverCardIdNumber;
+    data['receiverAddress'] = this.receiverAddress;
     data['note'] = this.note;
     if (Array.isArray(this.goodsDetailListDto)) {
       data['goodsDetailListDto'] = [];
@@ -69278,6 +70403,7 @@ export interface ICreateOrEditRoutPointDto {
   receiverPhoneNumber: string | undefined;
   receiverEmailAddress: string | undefined;
   receiverCardIdNumber: string | undefined;
+  receiverAddress: string | undefined;
   note: string | undefined;
   goodsDetailListDto: CreateOrEditGoodsDetailDto[] | undefined;
   id: number | undefined;
@@ -71120,21 +72246,11 @@ export interface IPagedResultDtoOfShippingRequestTripDriverListDto {
   items: ShippingRequestTripDriverListDto[] | undefined;
 }
 
-export class ShippingRequestTripDriverRoutePointDto implements IShippingRequestTripDriverRoutePointDto {
-  displayName!: string | undefined;
-  pickingType!: PickingType;
-  facility!: string | undefined;
-  address!: string | undefined;
-  lat!: number;
-  lng!: number;
-  startTime!: moment.Moment | undefined;
-  endTime!: moment.Moment | undefined;
-  isActive!: boolean;
-  isComplete!: boolean;
-  rating!: number | undefined;
+export class DropOffPointDto implements IDropOffPointDto {
+  code!: string | undefined;
   id!: number;
 
-  constructor(data?: IShippingRequestTripDriverRoutePointDto) {
+  constructor(data?: IDropOffPointDto) {
     if (data) {
       for (var property in data) {
         if (data.hasOwnProperty(property)) (<any>this)[property] = (<any>data)[property];
@@ -71144,58 +72260,67 @@ export class ShippingRequestTripDriverRoutePointDto implements IShippingRequestT
 
   init(_data?: any) {
     if (_data) {
-      this.displayName = _data['displayName'];
-      this.pickingType = _data['pickingType'];
-      this.facility = _data['facility'];
-      this.address = _data['address'];
-      this.lat = _data['lat'];
-      this.lng = _data['lng'];
-      this.startTime = _data['startTime'] ? moment(_data['startTime'].toString()) : <any>undefined;
-      this.endTime = _data['endTime'] ? moment(_data['endTime'].toString()) : <any>undefined;
-      this.isActive = _data['isActive'];
-      this.isComplete = _data['isComplete'];
-      this.rating = _data['rating'];
+      this.code = _data['code'];
       this.id = _data['id'];
     }
   }
 
-  static fromJS(data: any): ShippingRequestTripDriverRoutePointDto {
+  static fromJS(data: any): DropOffPointDto {
     data = typeof data === 'object' ? data : {};
-    let result = new ShippingRequestTripDriverRoutePointDto();
+    let result = new DropOffPointDto();
     result.init(data);
     return result;
   }
 
   toJSON(data?: any) {
     data = typeof data === 'object' ? data : {};
-    data['displayName'] = this.displayName;
-    data['pickingType'] = this.pickingType;
-    data['facility'] = this.facility;
-    data['address'] = this.address;
-    data['lat'] = this.lat;
-    data['lng'] = this.lng;
-    data['startTime'] = this.startTime ? this.startTime.toISOString() : <any>undefined;
-    data['endTime'] = this.endTime ? this.endTime.toISOString() : <any>undefined;
-    data['isActive'] = this.isActive;
-    data['isComplete'] = this.isComplete;
-    data['rating'] = this.rating;
+    data['code'] = this.code;
     data['id'] = this.id;
     return data;
   }
 }
 
-export interface IShippingRequestTripDriverRoutePointDto {
-  displayName: string | undefined;
-  pickingType: PickingType;
-  facility: string | undefined;
-  address: string | undefined;
-  lat: number;
-  lng: number;
-  startTime: moment.Moment | undefined;
-  endTime: moment.Moment | undefined;
-  isActive: boolean;
-  isComplete: boolean;
-  rating: number | undefined;
+export interface IDropOffPointDto {
+  code: string | undefined;
+  id: number;
+}
+
+export class UserOtpDto implements IUserOtpDto {
+  otp!: string | undefined;
+  id!: number;
+
+  constructor(data?: IUserOtpDto) {
+    if (data) {
+      for (var property in data) {
+        if (data.hasOwnProperty(property)) (<any>this)[property] = (<any>data)[property];
+      }
+    }
+  }
+
+  init(_data?: any) {
+    if (_data) {
+      this.otp = _data['otp'];
+      this.id = _data['id'];
+    }
+  }
+
+  static fromJS(data: any): UserOtpDto {
+    data = typeof data === 'object' ? data : {};
+    let result = new UserOtpDto();
+    result.init(data);
+    return result;
+  }
+
+  toJSON(data?: any) {
+    data = typeof data === 'object' ? data : {};
+    data['otp'] = this.otp;
+    data['id'] = this.id;
+    return data;
+  }
+}
+
+export interface IUserOtpDto {
+  otp: string | undefined;
   id: number;
 }
 
@@ -71213,6 +72338,109 @@ export enum RoutePointStatus {
   DeliveryConfirmation = 10,
   Delivered = 11,
   Issue = 12,
+}
+
+export class ShippingRequestTripDriverRoutePointDto implements IShippingRequestTripDriverRoutePointDto {
+  shippingRequestTripId!: number;
+  pickingType!: PickingType;
+  status!: RoutePointStatus;
+  statusTitle!: string | undefined;
+  nextStatus!: string | undefined;
+  receiverFullName!: string | undefined;
+  facility!: string | undefined;
+  address!: string | undefined;
+  note!: string | undefined;
+  lat!: number;
+  lng!: number;
+  startTime!: moment.Moment | undefined;
+  endTime!: moment.Moment | undefined;
+  isActive!: boolean;
+  isComplete!: boolean;
+  rating!: number | undefined;
+  isShow!: boolean;
+  id!: number;
+
+  constructor(data?: IShippingRequestTripDriverRoutePointDto) {
+    if (data) {
+      for (var property in data) {
+        if (data.hasOwnProperty(property)) (<any>this)[property] = (<any>data)[property];
+      }
+    }
+  }
+
+  init(_data?: any) {
+    if (_data) {
+      this.shippingRequestTripId = _data['shippingRequestTripId'];
+      this.pickingType = _data['pickingType'];
+      this.status = _data['status'];
+      this.statusTitle = _data['statusTitle'];
+      this.nextStatus = _data['nextStatus'];
+      this.receiverFullName = _data['receiverFullName'];
+      this.facility = _data['facility'];
+      this.address = _data['address'];
+      this.note = _data['note'];
+      this.lat = _data['lat'];
+      this.lng = _data['lng'];
+      this.startTime = _data['startTime'] ? moment(_data['startTime'].toString()) : <any>undefined;
+      this.endTime = _data['endTime'] ? moment(_data['endTime'].toString()) : <any>undefined;
+      this.isActive = _data['isActive'];
+      this.isComplete = _data['isComplete'];
+      this.rating = _data['rating'];
+      this.isShow = _data['isShow'];
+      this.id = _data['id'];
+    }
+  }
+
+  static fromJS(data: any): ShippingRequestTripDriverRoutePointDto {
+    data = typeof data === 'object' ? data : {};
+    let result = new ShippingRequestTripDriverRoutePointDto();
+    result.init(data);
+    return result;
+  }
+
+  toJSON(data?: any) {
+    data = typeof data === 'object' ? data : {};
+    data['shippingRequestTripId'] = this.shippingRequestTripId;
+    data['pickingType'] = this.pickingType;
+    data['status'] = this.status;
+    data['statusTitle'] = this.statusTitle;
+    data['nextStatus'] = this.nextStatus;
+    data['receiverFullName'] = this.receiverFullName;
+    data['facility'] = this.facility;
+    data['address'] = this.address;
+    data['note'] = this.note;
+    data['lat'] = this.lat;
+    data['lng'] = this.lng;
+    data['startTime'] = this.startTime ? this.startTime.toISOString() : <any>undefined;
+    data['endTime'] = this.endTime ? this.endTime.toISOString() : <any>undefined;
+    data['isActive'] = this.isActive;
+    data['isComplete'] = this.isComplete;
+    data['rating'] = this.rating;
+    data['isShow'] = this.isShow;
+    data['id'] = this.id;
+    return data;
+  }
+}
+
+export interface IShippingRequestTripDriverRoutePointDto {
+  shippingRequestTripId: number;
+  pickingType: PickingType;
+  status: RoutePointStatus;
+  statusTitle: string | undefined;
+  nextStatus: string | undefined;
+  receiverFullName: string | undefined;
+  facility: string | undefined;
+  address: string | undefined;
+  note: string | undefined;
+  lat: number;
+  lng: number;
+  startTime: moment.Moment | undefined;
+  endTime: moment.Moment | undefined;
+  isActive: boolean;
+  isComplete: boolean;
+  rating: number | undefined;
+  isShow: boolean;
+  id: number;
 }
 
 export enum ShippingRequestTripDriverActionStatusDto {
@@ -71689,6 +72917,9 @@ export class ShippingRequestListDto implements IShippingRequestListDto {
   hasAccident!: boolean;
   totalsTripsAddByShippier!: number;
   status!: ShippingRequestStatus;
+  othersGoodsCategory!: string | undefined;
+  othersTransportType!: string | undefined;
+  othersTrucksType!: string | undefined;
   readonly statusTitle!: string | undefined;
   origin!: string | undefined;
   destination!: string | undefined;
@@ -71717,6 +72948,9 @@ export class ShippingRequestListDto implements IShippingRequestListDto {
       this.hasAccident = _data['hasAccident'];
       this.totalsTripsAddByShippier = _data['totalsTripsAddByShippier'];
       this.status = _data['status'];
+      this.othersGoodsCategory = _data['othersGoodsCategory'];
+      this.othersTransportType = _data['othersTransportType'];
+      this.othersTrucksType = _data['othersTrucksType'];
       (<any>this).statusTitle = _data['statusTitle'];
       this.origin = _data['origin'];
       this.destination = _data['destination'];
@@ -71746,6 +72980,9 @@ export class ShippingRequestListDto implements IShippingRequestListDto {
     data['hasAccident'] = this.hasAccident;
     data['totalsTripsAddByShippier'] = this.totalsTripsAddByShippier;
     data['status'] = this.status;
+    data['othersGoodsCategory'] = this.othersGoodsCategory;
+    data['othersTransportType'] = this.othersTransportType;
+    data['othersTrucksType'] = this.othersTrucksType;
     data['statusTitle'] = this.statusTitle;
     data['origin'] = this.origin;
     data['destination'] = this.destination;
@@ -71768,6 +73005,9 @@ export interface IShippingRequestListDto {
   hasAccident: boolean;
   totalsTripsAddByShippier: number;
   status: ShippingRequestStatus;
+  othersGoodsCategory: string | undefined;
+  othersTransportType: string | undefined;
+  othersTrucksType: string | undefined;
   statusTitle: string | undefined;
   origin: string | undefined;
   destination: string | undefined;
@@ -71886,6 +73126,9 @@ export class ShippingRequestDto implements IShippingRequestDto {
   totalsTripsAddByShippier!: number;
   status!: ShippingRequestStatus;
   bidStatus!: ShippingRequestBidStatus;
+  otherGoodsCategoryName!: string | undefined;
+  otherTransportTypeName!: string | undefined;
+  otherTrucksTypeName!: string | undefined;
   readonly statusTitle!: string | undefined;
   readonly bidStatusTitle!: string | undefined;
   id!: number;
@@ -71924,6 +73167,9 @@ export class ShippingRequestDto implements IShippingRequestDto {
       this.totalsTripsAddByShippier = _data['totalsTripsAddByShippier'];
       this.status = _data['status'];
       this.bidStatus = _data['bidStatus'];
+      this.otherGoodsCategoryName = _data['otherGoodsCategoryName'];
+      this.otherTransportTypeName = _data['otherTransportTypeName'];
+      this.otherTrucksTypeName = _data['otherTrucksTypeName'];
       (<any>this).statusTitle = _data['statusTitle'];
       (<any>this).bidStatusTitle = _data['bidStatusTitle'];
       this.id = _data['id'];
@@ -71963,6 +73209,9 @@ export class ShippingRequestDto implements IShippingRequestDto {
     data['totalsTripsAddByShippier'] = this.totalsTripsAddByShippier;
     data['status'] = this.status;
     data['bidStatus'] = this.bidStatus;
+    data['otherGoodsCategoryName'] = this.otherGoodsCategoryName;
+    data['otherTransportTypeName'] = this.otherTransportTypeName;
+    data['otherTrucksTypeName'] = this.otherTrucksTypeName;
     data['statusTitle'] = this.statusTitle;
     data['bidStatusTitle'] = this.bidStatusTitle;
     data['id'] = this.id;
@@ -71995,6 +73244,9 @@ export interface IShippingRequestDto {
   totalsTripsAddByShippier: number;
   status: ShippingRequestStatus;
   bidStatus: ShippingRequestBidStatus;
+  otherGoodsCategoryName: string | undefined;
+  otherTransportTypeName: string | undefined;
+  otherTrucksTypeName: string | undefined;
   statusTitle: string | undefined;
   bidStatusTitle: string | undefined;
   id: number;
@@ -72072,11 +73324,12 @@ export interface IShippingRequestBidDto {
 }
 
 export class ShippingRequestVasDto implements IShippingRequestVasDto {
-  id!: number | undefined;
   requestMaxAmount!: number;
   requestMaxCount!: number;
   vasId!: number;
   shippingRequestId!: number | undefined;
+  otherVasName!: string | undefined;
+  id!: number | undefined;
 
   constructor(data?: IShippingRequestVasDto) {
     if (data) {
@@ -72088,11 +73341,12 @@ export class ShippingRequestVasDto implements IShippingRequestVasDto {
 
   init(_data?: any) {
     if (_data) {
-      this.id = _data['id'];
       this.requestMaxAmount = _data['requestMaxAmount'];
       this.requestMaxCount = _data['requestMaxCount'];
       this.vasId = _data['vasId'];
       this.shippingRequestId = _data['shippingRequestId'];
+      this.otherVasName = _data['otherVasName'];
+      this.id = _data['id'];
     }
   }
 
@@ -72105,21 +73359,23 @@ export class ShippingRequestVasDto implements IShippingRequestVasDto {
 
   toJSON(data?: any) {
     data = typeof data === 'object' ? data : {};
-    data['id'] = this.id;
     data['requestMaxAmount'] = this.requestMaxAmount;
     data['requestMaxCount'] = this.requestMaxCount;
     data['vasId'] = this.vasId;
     data['shippingRequestId'] = this.shippingRequestId;
+    data['otherVasName'] = this.otherVasName;
+    data['id'] = this.id;
     return data;
   }
 }
 
 export interface IShippingRequestVasDto {
-  id: number | undefined;
   requestMaxAmount: number;
   requestMaxCount: number;
   vasId: number;
   shippingRequestId: number | undefined;
+  otherVasName: string | undefined;
+  id: number | undefined;
 }
 
 export class GetShippingRequestVasForViewDto implements IGetShippingRequestVasForViewDto {
@@ -72409,6 +73665,7 @@ export class CreateOrEditShippingRequestVasListDto implements ICreateOrEditShipp
   vasId!: number;
   shippingRequestId!: number | undefined;
   numberOfTrips!: number;
+  vasName!: string | undefined;
 
   constructor(data?: ICreateOrEditShippingRequestVasListDto) {
     if (data) {
@@ -72426,6 +73683,7 @@ export class CreateOrEditShippingRequestVasListDto implements ICreateOrEditShipp
       this.vasId = _data['vasId'];
       this.shippingRequestId = _data['shippingRequestId'];
       this.numberOfTrips = _data['numberOfTrips'];
+      this.vasName = _data['vasName'];
     }
   }
 
@@ -72444,6 +73702,7 @@ export class CreateOrEditShippingRequestVasListDto implements ICreateOrEditShipp
     data['vasId'] = this.vasId;
     data['shippingRequestId'] = this.shippingRequestId;
     data['numberOfTrips'] = this.numberOfTrips;
+    data['vasName'] = this.vasName;
     return data;
   }
 }
@@ -72455,6 +73714,7 @@ export interface ICreateOrEditShippingRequestVasListDto {
   vasId: number;
   shippingRequestId: number | undefined;
   numberOfTrips: number;
+  vasName: string | undefined;
 }
 
 export class CreateOrEditShippingRequestDto implements ICreateOrEditShippingRequestDto {
@@ -72483,6 +73743,9 @@ export class CreateOrEditShippingRequestDto implements ICreateOrEditShippingRequ
   routeTypeId!: ShippingRequestRouteType;
   originCityId!: number;
   destinationCityId!: number;
+  otherGoodsCategoryName!: string | undefined;
+  otherTransportTypeName!: string | undefined;
+  otherTrucksTypeName!: string | undefined;
   shippingRequestVasList!: CreateOrEditShippingRequestVasListDto[] | undefined;
   id!: number | undefined;
 
@@ -72521,6 +73784,9 @@ export class CreateOrEditShippingRequestDto implements ICreateOrEditShippingRequ
       this.routeTypeId = _data['routeTypeId'];
       this.originCityId = _data['originCityId'];
       this.destinationCityId = _data['destinationCityId'];
+      this.otherGoodsCategoryName = _data['otherGoodsCategoryName'];
+      this.otherTransportTypeName = _data['otherTransportTypeName'];
+      this.otherTrucksTypeName = _data['otherTrucksTypeName'];
       if (Array.isArray(_data['shippingRequestVasList'])) {
         this.shippingRequestVasList = [] as any;
         for (let item of _data['shippingRequestVasList']) this.shippingRequestVasList!.push(CreateOrEditShippingRequestVasListDto.fromJS(item));
@@ -72563,6 +73829,9 @@ export class CreateOrEditShippingRequestDto implements ICreateOrEditShippingRequ
     data['routeTypeId'] = this.routeTypeId;
     data['originCityId'] = this.originCityId;
     data['destinationCityId'] = this.destinationCityId;
+    data['otherGoodsCategoryName'] = this.otherGoodsCategoryName;
+    data['otherTransportTypeName'] = this.otherTransportTypeName;
+    data['otherTrucksTypeName'] = this.otherTrucksTypeName;
     if (Array.isArray(this.shippingRequestVasList)) {
       data['shippingRequestVasList'] = [];
       for (let item of this.shippingRequestVasList) data['shippingRequestVasList'].push(item.toJSON());
@@ -72598,6 +73867,9 @@ export interface ICreateOrEditShippingRequestDto {
   routeTypeId: ShippingRequestRouteType;
   originCityId: number;
   destinationCityId: number;
+  otherGoodsCategoryName: string | undefined;
+  otherTransportTypeName: string | undefined;
+  otherTrucksTypeName: string | undefined;
   shippingRequestVasList: CreateOrEditShippingRequestVasListDto[] | undefined;
   id: number | undefined;
 }
@@ -72645,6 +73917,8 @@ export class CreateOrEditShippingRequestStep1Dto implements ICreateOrEditShippin
   shippingTypeId!: number;
   startTripDate!: moment.Moment;
   endTripDate!: moment.Moment | undefined;
+  isDrafted!: boolean;
+  draftStep!: number;
   id!: number | undefined;
 
   constructor(data?: ICreateOrEditShippingRequestStep1Dto) {
@@ -72664,6 +73938,8 @@ export class CreateOrEditShippingRequestStep1Dto implements ICreateOrEditShippin
       this.shippingTypeId = _data['shippingTypeId'];
       this.startTripDate = _data['startTripDate'] ? moment(_data['startTripDate'].toString()) : <any>undefined;
       this.endTripDate = _data['endTripDate'] ? moment(_data['endTripDate'].toString()) : <any>undefined;
+      this.isDrafted = _data['isDrafted'];
+      this.draftStep = _data['draftStep'];
       this.id = _data['id'];
     }
   }
@@ -72684,6 +73960,8 @@ export class CreateOrEditShippingRequestStep1Dto implements ICreateOrEditShippin
     data['shippingTypeId'] = this.shippingTypeId;
     data['startTripDate'] = this.startTripDate ? this.startTripDate.toISOString() : <any>undefined;
     data['endTripDate'] = this.endTripDate ? this.endTripDate.toISOString() : <any>undefined;
+    data['isDrafted'] = this.isDrafted;
+    data['draftStep'] = this.draftStep;
     data['id'] = this.id;
     return data;
   }
@@ -72697,6 +73975,8 @@ export interface ICreateOrEditShippingRequestStep1Dto {
   shippingTypeId: number;
   startTripDate: moment.Moment;
   endTripDate: moment.Moment | undefined;
+  isDrafted: boolean;
+  draftStep: number;
   id: number | undefined;
 }
 
@@ -72706,6 +73986,8 @@ export class EditShippingRequestStep2Dto implements IEditShippingRequestStep2Dto
   destinationCityId!: number;
   numberOfDrops!: number;
   numberOfTrips!: number;
+  isDrafted!: boolean;
+  draftStep!: number;
   id!: number;
 
   constructor(data?: IEditShippingRequestStep2Dto) {
@@ -72723,6 +74005,8 @@ export class EditShippingRequestStep2Dto implements IEditShippingRequestStep2Dto
       this.destinationCityId = _data['destinationCityId'];
       this.numberOfDrops = _data['numberOfDrops'];
       this.numberOfTrips = _data['numberOfTrips'];
+      this.isDrafted = _data['isDrafted'];
+      this.draftStep = _data['draftStep'];
       this.id = _data['id'];
     }
   }
@@ -72741,6 +74025,8 @@ export class EditShippingRequestStep2Dto implements IEditShippingRequestStep2Dto
     data['destinationCityId'] = this.destinationCityId;
     data['numberOfDrops'] = this.numberOfDrops;
     data['numberOfTrips'] = this.numberOfTrips;
+    data['isDrafted'] = this.isDrafted;
+    data['draftStep'] = this.draftStep;
     data['id'] = this.id;
     return data;
   }
@@ -72752,6 +74038,8 @@ export interface IEditShippingRequestStep2Dto {
   destinationCityId: number;
   numberOfDrops: number;
   numberOfTrips: number;
+  isDrafted: boolean;
+  draftStep: number;
   id: number;
 }
 
@@ -72763,6 +74051,11 @@ export class EditShippingRequestStep3Dto implements IEditShippingRequestStep3Dto
   transportTypeId!: number | undefined;
   trucksTypeId!: number;
   capacityId!: number | undefined;
+  isDrafted!: boolean;
+  draftStep!: number;
+  otherGoodsCategoryName!: string | undefined;
+  otherTransportTypeName!: string | undefined;
+  otherTrucksTypeName!: string | undefined;
   id!: number;
 
   constructor(data?: IEditShippingRequestStep3Dto) {
@@ -72782,6 +74075,11 @@ export class EditShippingRequestStep3Dto implements IEditShippingRequestStep3Dto
       this.transportTypeId = _data['transportTypeId'];
       this.trucksTypeId = _data['trucksTypeId'];
       this.capacityId = _data['capacityId'];
+      this.isDrafted = _data['isDrafted'];
+      this.draftStep = _data['draftStep'];
+      this.otherGoodsCategoryName = _data['otherGoodsCategoryName'];
+      this.otherTransportTypeName = _data['otherTransportTypeName'];
+      this.otherTrucksTypeName = _data['otherTrucksTypeName'];
       this.id = _data['id'];
     }
   }
@@ -72802,6 +74100,11 @@ export class EditShippingRequestStep3Dto implements IEditShippingRequestStep3Dto
     data['transportTypeId'] = this.transportTypeId;
     data['trucksTypeId'] = this.trucksTypeId;
     data['capacityId'] = this.capacityId;
+    data['isDrafted'] = this.isDrafted;
+    data['draftStep'] = this.draftStep;
+    data['otherGoodsCategoryName'] = this.otherGoodsCategoryName;
+    data['otherTransportTypeName'] = this.otherTransportTypeName;
+    data['otherTrucksTypeName'] = this.otherTrucksTypeName;
     data['id'] = this.id;
     return data;
   }
@@ -72815,11 +74118,18 @@ export interface IEditShippingRequestStep3Dto {
   transportTypeId: number | undefined;
   trucksTypeId: number;
   capacityId: number | undefined;
+  isDrafted: boolean;
+  draftStep: number;
+  otherGoodsCategoryName: string | undefined;
+  otherTransportTypeName: string | undefined;
+  otherTrucksTypeName: string | undefined;
   id: number;
 }
 
 export class EditShippingRequestStep4Dto implements IEditShippingRequestStep4Dto {
   shippingRequestVasList!: CreateOrEditShippingRequestVasListDto[] | undefined;
+  isDrafted!: boolean;
+  draftStep!: number;
   id!: number;
 
   constructor(data?: IEditShippingRequestStep4Dto) {
@@ -72836,6 +74146,8 @@ export class EditShippingRequestStep4Dto implements IEditShippingRequestStep4Dto
         this.shippingRequestVasList = [] as any;
         for (let item of _data['shippingRequestVasList']) this.shippingRequestVasList!.push(CreateOrEditShippingRequestVasListDto.fromJS(item));
       }
+      this.isDrafted = _data['isDrafted'];
+      this.draftStep = _data['draftStep'];
       this.id = _data['id'];
     }
   }
@@ -72853,6 +74165,8 @@ export class EditShippingRequestStep4Dto implements IEditShippingRequestStep4Dto
       data['shippingRequestVasList'] = [];
       for (let item of this.shippingRequestVasList) data['shippingRequestVasList'].push(item.toJSON());
     }
+    data['isDrafted'] = this.isDrafted;
+    data['draftStep'] = this.draftStep;
     data['id'] = this.id;
     return data;
   }
@@ -72860,6 +74174,8 @@ export class EditShippingRequestStep4Dto implements IEditShippingRequestStep4Dto
 
 export interface IEditShippingRequestStep4Dto {
   shippingRequestVasList: CreateOrEditShippingRequestVasListDto[] | undefined;
+  isDrafted: boolean;
+  draftStep: number;
   id: number;
 }
 
@@ -73267,7 +74583,7 @@ export class GetSingleDropWaybillOutput implements IGetSingleDropWaybillOutput {
   invoiceNumber!: number;
   shipperReference!: string | undefined;
   startTripDate!: moment.Moment;
-  deliveryDate!: moment.Moment;
+  deliveryDate!: moment.Moment | undefined;
   totalWeight!: number;
   goodsCategoryDisplayName!: string | undefined;
   senderCompanyName!: string | undefined;
@@ -73388,7 +74704,7 @@ export interface IGetSingleDropWaybillOutput {
   invoiceNumber: number;
   shipperReference: string | undefined;
   startTripDate: moment.Moment;
-  deliveryDate: moment.Moment;
+  deliveryDate: moment.Moment | undefined;
   totalWeight: number;
   goodsCategoryDisplayName: string | undefined;
   senderCompanyName: string | undefined;
@@ -73466,7 +74782,7 @@ export class GetMultipleDropWaybillOutput implements IGetMultipleDropWaybillOutp
   invoiceNumber!: number;
   shipperReference!: string | undefined;
   startTripDate!: string | undefined;
-  deliveryDate!: moment.Moment;
+  deliveryDate!: moment.Moment | undefined;
   carrierName!: string | undefined;
   clientName!: string | undefined;
   totalWeight!: number;
@@ -73578,7 +74894,7 @@ export interface IGetMultipleDropWaybillOutput {
   invoiceNumber: number;
   shipperReference: string | undefined;
   startTripDate: string | undefined;
-  deliveryDate: moment.Moment;
+  deliveryDate: moment.Moment | undefined;
   carrierName: string | undefined;
   clientName: string | undefined;
   totalWeight: number;
@@ -73841,7 +75157,7 @@ export interface IGetShippingRequestStatusForEditOutput {
 
 export class ShippingRequestsTripListDto implements IShippingRequestsTripListDto {
   startTripDate!: moment.Moment;
-  endTripDate!: moment.Moment;
+  endTripDate!: moment.Moment | undefined;
   startWorking!: moment.Moment | undefined;
   endWorking!: moment.Moment | undefined;
   status!: ShippingRequestTripStatus;
@@ -73850,8 +75166,8 @@ export class ShippingRequestsTripListDto implements IShippingRequestsTripListDto
   readonly statusTitle!: string | undefined;
   driver!: string | undefined;
   truck!: string | undefined;
-  originFacility!: string | undefined;
-  destinationFacility!: string | undefined;
+  originCity!: string | undefined;
+  destinationCity!: string | undefined;
   hasAccident!: boolean;
   isApproveCancledByShipper!: boolean;
   isApproveCancledByCarrier!: boolean;
@@ -73881,8 +75197,8 @@ export class ShippingRequestsTripListDto implements IShippingRequestsTripListDto
       (<any>this).statusTitle = _data['statusTitle'];
       this.driver = _data['driver'];
       this.truck = _data['truck'];
-      this.originFacility = _data['originFacility'];
-      this.destinationFacility = _data['destinationFacility'];
+      this.originCity = _data['originCity'];
+      this.destinationCity = _data['destinationCity'];
       this.hasAccident = _data['hasAccident'];
       this.isApproveCancledByShipper = _data['isApproveCancledByShipper'];
       this.isApproveCancledByCarrier = _data['isApproveCancledByCarrier'];
@@ -73913,8 +75229,8 @@ export class ShippingRequestsTripListDto implements IShippingRequestsTripListDto
     data['statusTitle'] = this.statusTitle;
     data['driver'] = this.driver;
     data['truck'] = this.truck;
-    data['originFacility'] = this.originFacility;
-    data['destinationFacility'] = this.destinationFacility;
+    data['originCity'] = this.originCity;
+    data['destinationCity'] = this.destinationCity;
     data['hasAccident'] = this.hasAccident;
     data['isApproveCancledByShipper'] = this.isApproveCancledByShipper;
     data['isApproveCancledByCarrier'] = this.isApproveCancledByCarrier;
@@ -73929,7 +75245,7 @@ export class ShippingRequestsTripListDto implements IShippingRequestsTripListDto
 
 export interface IShippingRequestsTripListDto {
   startTripDate: moment.Moment;
-  endTripDate: moment.Moment;
+  endTripDate: moment.Moment | undefined;
   startWorking: moment.Moment | undefined;
   endWorking: moment.Moment | undefined;
   status: ShippingRequestTripStatus;
@@ -73938,8 +75254,8 @@ export interface IShippingRequestsTripListDto {
   statusTitle: string | undefined;
   driver: string | undefined;
   truck: string | undefined;
-  originFacility: string | undefined;
-  destinationFacility: string | undefined;
+  originCity: string | undefined;
+  destinationCity: string | undefined;
   hasAccident: boolean;
   isApproveCancledByShipper: boolean;
   isApproveCancledByCarrier: boolean;
@@ -74198,7 +75514,7 @@ export interface ICreateOrEditShippingRequestTripVasDto {
 
 export class CreateOrEditShippingRequestTripDto implements ICreateOrEditShippingRequestTripDto {
   startTripDate!: moment.Moment;
-  endTripDate!: moment.Moment;
+  endTripDate!: moment.Moment | undefined;
   shippingRequestId!: number;
   hasAttachment!: boolean;
   needsDeliveryNote!: boolean;
@@ -74276,7 +75592,7 @@ export class CreateOrEditShippingRequestTripDto implements ICreateOrEditShipping
 
 export interface ICreateOrEditShippingRequestTripDto {
   startTripDate: moment.Moment;
-  endTripDate: moment.Moment;
+  endTripDate: moment.Moment | undefined;
   shippingRequestId: number;
   hasAttachment: boolean;
   needsDeliveryNote: boolean;
@@ -74337,6 +75653,7 @@ export class ShippingRequestTripAccidentListDto implements IShippingRequestTripA
   pickingType!: string | undefined;
   address!: string | undefined;
   reason!: string | undefined;
+  otherReasonName!: string | undefined;
   description!: string | undefined;
   isResolve!: boolean;
   documentId!: string | undefined;
@@ -74359,6 +75676,7 @@ export class ShippingRequestTripAccidentListDto implements IShippingRequestTripA
       this.pickingType = _data['pickingType'];
       this.address = _data['address'];
       this.reason = _data['reason'];
+      this.otherReasonName = _data['otherReasonName'];
       this.description = _data['description'];
       this.isResolve = _data['isResolve'];
       this.documentId = _data['documentId'];
@@ -74382,6 +75700,7 @@ export class ShippingRequestTripAccidentListDto implements IShippingRequestTripA
     data['pickingType'] = this.pickingType;
     data['address'] = this.address;
     data['reason'] = this.reason;
+    data['otherReasonName'] = this.otherReasonName;
     data['description'] = this.description;
     data['isResolve'] = this.isResolve;
     data['documentId'] = this.documentId;
@@ -74398,6 +75717,7 @@ export interface IShippingRequestTripAccidentListDto {
   pickingType: string | undefined;
   address: string | undefined;
   reason: string | undefined;
+  otherReasonName: string | undefined;
   description: string | undefined;
   isResolve: boolean;
   documentId: string | undefined;
@@ -74451,6 +75771,7 @@ export interface IListResultDtoOfShippingRequestTripAccidentListDto {
 export class CreateOrEditShippingRequestTripAccidentDto implements ICreateOrEditShippingRequestTripAccidentDto {
   tripId!: number | undefined;
   reasoneId!: number | undefined;
+  otherReasonName!: string | undefined;
   description!: string | undefined;
   documentId!: string | undefined;
   documentName!: string | undefined;
@@ -74472,6 +75793,7 @@ export class CreateOrEditShippingRequestTripAccidentDto implements ICreateOrEdit
     if (_data) {
       this.tripId = _data['tripId'];
       this.reasoneId = _data['reasoneId'];
+      this.otherReasonName = _data['otherReasonName'];
       this.description = _data['description'];
       this.documentId = _data['documentId'];
       this.documentName = _data['documentName'];
@@ -74494,6 +75816,7 @@ export class CreateOrEditShippingRequestTripAccidentDto implements ICreateOrEdit
     data = typeof data === 'object' ? data : {};
     data['tripId'] = this.tripId;
     data['reasoneId'] = this.reasoneId;
+    data['otherReasonName'] = this.otherReasonName;
     data['description'] = this.description;
     data['documentId'] = this.documentId;
     data['documentName'] = this.documentName;
@@ -74509,6 +75832,7 @@ export class CreateOrEditShippingRequestTripAccidentDto implements ICreateOrEdit
 export interface ICreateOrEditShippingRequestTripAccidentDto {
   tripId: number | undefined;
   reasoneId: number | undefined;
+  otherReasonName: string | undefined;
   description: string | undefined;
   documentId: string | undefined;
   documentName: string | undefined;
@@ -74800,6 +76124,7 @@ export class CreateOrEditShippingRequestVasDto implements ICreateOrEditShippingR
   requestMaxAmount!: number;
   requestMaxCount!: number;
   numberOfTrips!: number;
+  otherVasName!: string | undefined;
   id!: number | undefined;
 
   constructor(data?: ICreateOrEditShippingRequestVasDto) {
@@ -74816,6 +76141,7 @@ export class CreateOrEditShippingRequestVasDto implements ICreateOrEditShippingR
       this.requestMaxAmount = _data['requestMaxAmount'];
       this.requestMaxCount = _data['requestMaxCount'];
       this.numberOfTrips = _data['numberOfTrips'];
+      this.otherVasName = _data['otherVasName'];
       this.id = _data['id'];
     }
   }
@@ -74833,6 +76159,7 @@ export class CreateOrEditShippingRequestVasDto implements ICreateOrEditShippingR
     data['requestMaxAmount'] = this.requestMaxAmount;
     data['requestMaxCount'] = this.requestMaxCount;
     data['numberOfTrips'] = this.numberOfTrips;
+    data['otherVasName'] = this.otherVasName;
     data['id'] = this.id;
     return data;
   }
@@ -74843,6 +76170,7 @@ export interface ICreateOrEditShippingRequestVasDto {
   requestMaxAmount: number;
   requestMaxCount: number;
   numberOfTrips: number;
+  otherVasName: string | undefined;
   id: number | undefined;
 }
 
@@ -78578,8 +79906,10 @@ export interface IExternalAuthenticateResultModel {
 export class TrackingListDto implements ITrackingListDto {
   name!: string | undefined;
   status!: ShippingRequestTripStatus;
-  readonly statusTitle!: string | undefined;
+  statusTitle!: string | undefined;
   driver!: string | undefined;
+  driverStatus!: ShippingRequestTripDriverStatus;
+  driverStatusTitle!: string | undefined;
   assignedDriverUserId!: number | undefined;
   profilePictureUrl!: string | undefined;
   driverImageProfile!: string | undefined;
@@ -78588,8 +79918,11 @@ export class TrackingListDto implements ITrackingListDto {
   truckType!: string | undefined;
   goodsCategory!: string | undefined;
   routeTypeId!: ShippingRequestRouteType;
-  readonly routeType!: string | undefined;
+  routeType!: string | undefined;
   reason!: string | undefined;
+  isAssign!: boolean;
+  canStartTrip!: boolean;
+  id!: number;
 
   constructor(data?: ITrackingListDto) {
     if (data) {
@@ -78603,8 +79936,10 @@ export class TrackingListDto implements ITrackingListDto {
     if (_data) {
       this.name = _data['name'];
       this.status = _data['status'];
-      (<any>this).statusTitle = _data['statusTitle'];
+      this.statusTitle = _data['statusTitle'];
       this.driver = _data['driver'];
+      this.driverStatus = _data['driverStatus'];
+      this.driverStatusTitle = _data['driverStatusTitle'];
       this.assignedDriverUserId = _data['assignedDriverUserId'];
       this.profilePictureUrl = _data['profilePictureUrl'];
       this.driverImageProfile = _data['driverImageProfile'];
@@ -78613,8 +79948,11 @@ export class TrackingListDto implements ITrackingListDto {
       this.truckType = _data['truckType'];
       this.goodsCategory = _data['goodsCategory'];
       this.routeTypeId = _data['routeTypeId'];
-      (<any>this).routeType = _data['routeType'];
+      this.routeType = _data['routeType'];
       this.reason = _data['reason'];
+      this.isAssign = _data['isAssign'];
+      this.canStartTrip = _data['canStartTrip'];
+      this.id = _data['id'];
     }
   }
 
@@ -78631,6 +79969,8 @@ export class TrackingListDto implements ITrackingListDto {
     data['status'] = this.status;
     data['statusTitle'] = this.statusTitle;
     data['driver'] = this.driver;
+    data['driverStatus'] = this.driverStatus;
+    data['driverStatusTitle'] = this.driverStatusTitle;
     data['assignedDriverUserId'] = this.assignedDriverUserId;
     data['profilePictureUrl'] = this.profilePictureUrl;
     data['driverImageProfile'] = this.driverImageProfile;
@@ -78641,6 +79981,9 @@ export class TrackingListDto implements ITrackingListDto {
     data['routeTypeId'] = this.routeTypeId;
     data['routeType'] = this.routeType;
     data['reason'] = this.reason;
+    data['isAssign'] = this.isAssign;
+    data['canStartTrip'] = this.canStartTrip;
+    data['id'] = this.id;
     return data;
   }
 }
@@ -78650,6 +79993,8 @@ export interface ITrackingListDto {
   status: ShippingRequestTripStatus;
   statusTitle: string | undefined;
   driver: string | undefined;
+  driverStatus: ShippingRequestTripDriverStatus;
+  driverStatusTitle: string | undefined;
   assignedDriverUserId: number | undefined;
   profilePictureUrl: string | undefined;
   driverImageProfile: string | undefined;
@@ -78660,6 +80005,9 @@ export interface ITrackingListDto {
   routeTypeId: ShippingRequestRouteType;
   routeType: string | undefined;
   reason: string | undefined;
+  isAssign: boolean;
+  canStartTrip: boolean;
+  id: number;
 }
 
 export class PagedResultDtoOfTrackingListDto implements IPagedResultDtoOfTrackingListDto {
@@ -78705,6 +80053,86 @@ export class PagedResultDtoOfTrackingListDto implements IPagedResultDtoOfTrackin
 export interface IPagedResultDtoOfTrackingListDto {
   totalCount: number;
   items: TrackingListDto[] | undefined;
+}
+
+export class ListResultDtoOfShippingRequestTripDriverRoutePointDto implements IListResultDtoOfShippingRequestTripDriverRoutePointDto {
+  items!: ShippingRequestTripDriverRoutePointDto[] | undefined;
+
+  constructor(data?: IListResultDtoOfShippingRequestTripDriverRoutePointDto) {
+    if (data) {
+      for (var property in data) {
+        if (data.hasOwnProperty(property)) (<any>this)[property] = (<any>data)[property];
+      }
+    }
+  }
+
+  init(_data?: any) {
+    if (_data) {
+      if (Array.isArray(_data['items'])) {
+        this.items = [] as any;
+        for (let item of _data['items']) this.items!.push(ShippingRequestTripDriverRoutePointDto.fromJS(item));
+      }
+    }
+  }
+
+  static fromJS(data: any): ListResultDtoOfShippingRequestTripDriverRoutePointDto {
+    data = typeof data === 'object' ? data : {};
+    let result = new ListResultDtoOfShippingRequestTripDriverRoutePointDto();
+    result.init(data);
+    return result;
+  }
+
+  toJSON(data?: any) {
+    data = typeof data === 'object' ? data : {};
+    if (Array.isArray(this.items)) {
+      data['items'] = [];
+      for (let item of this.items) data['items'].push(item.toJSON());
+    }
+    return data;
+  }
+}
+
+export interface IListResultDtoOfShippingRequestTripDriverRoutePointDto {
+  items: ShippingRequestTripDriverRoutePointDto[] | undefined;
+}
+
+export class ConfirmReceiverCodeInput implements IConfirmReceiverCodeInput {
+  code!: string;
+  id!: number;
+
+  constructor(data?: IConfirmReceiverCodeInput) {
+    if (data) {
+      for (var property in data) {
+        if (data.hasOwnProperty(property)) (<any>this)[property] = (<any>data)[property];
+      }
+    }
+  }
+
+  init(_data?: any) {
+    if (_data) {
+      this.code = _data['code'];
+      this.id = _data['id'];
+    }
+  }
+
+  static fromJS(data: any): ConfirmReceiverCodeInput {
+    data = typeof data === 'object' ? data : {};
+    let result = new ConfirmReceiverCodeInput();
+    result.init(data);
+    return result;
+  }
+
+  toJSON(data?: any) {
+    data = typeof data === 'object' ? data : {};
+    data['code'] = this.code;
+    data['id'] = this.id;
+    return data;
+  }
+}
+
+export interface IConfirmReceiverCodeInput {
+  code: string;
+  id: number;
 }
 
 export class TrailerDto implements ITrailerDto {
