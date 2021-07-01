@@ -140,11 +140,10 @@
                   name="shippingRequestTripVases"
                   [options]="cleanVasesList"
                   [(ngModel)]="trip.shippingRequestTripVases"
-                  [styleClass]="'form-control'"
+                  [style]="{ width: '100%' }"
                   [filter]="false"
                   [showHeader]="false"
                   [defaultLabel]="l('SelectTripVases')"
-                  (onChange)="logSelectedVases()"
                   [dataKey]="'shippingRequestVasId'"
                   optionLabel="name"
                 ></p-multiSelect>
