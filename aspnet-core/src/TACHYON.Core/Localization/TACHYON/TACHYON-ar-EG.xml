@@ -24,6 +24,8 @@
     <text name="AccountNumber">رقم الحساب</text>
     <text name="AccountSettings">إعدادات الحساب</text>
     <text name="AccountStatus">حالة الحساب</text>
+    <text name="Acknowledge">قبول</text>
+    <text name="AcknowledgeSuccessfully">تم القبول بنجاح</text>
     <text name="Action">إجراء</text>
     <text name="ActionInformations">معلومات العمل</text>
     <text name="Actions">الخيارات</text>
@@ -518,21 +520,15 @@
     <text name="DownloadCollectedData_Description">تحميل إعدادات حسابك</text>
     <text name="DownloadDropWaybill">تحميل وثيقة الشحن</text>
     <text name="DownloadInvoice">تحميل الفاتورة</text>
-    <text name="DriectRequestCarrierRespone">
-      <a href="/app/main/shippingRequests/shippingRequests/view?id={id}">{clientname} قام بوضع عرض مالي للشحنة رقم: {ShipimentNo}.</a>
-    </text>
+    <text name="DriectRequestCarrierRespone">{clientname} قام بوضع عرض مالي للشحنة رقم: {id}.</text>
     <text name="Driver">سائق</text>
-    <text name="DriverAcceptTrip">
-      <a href="/app/main/shippingRequests/shippingRequests/view?id={id}">السائق {driver} وافق على الرحلة من {source} إلى {destination}</a>
-    </text>
+    <text name="DriverAcceptTrip">السائق {driver} وافق على الرحلة من {source} إلى {destination}</text>
     <text name="DriverCreationDateAndTime">تاريخ و وقت الإنشاء</text>
     <text name="DriverDocuments">مستندات السائق</text>
     <text name="DriverInformation">معلومات السائق</text>
     <text name="DriverInformations">معلومات السائق</text>
     <text name="DriverName" />
-    <text name="DriverRejectTrip">
-      <a href="/app/main/shippingRequests/shippingRequests/view?id={id}">السائق {driver} لقد رفض الرحلة من {source} إلى {destination}</a>
-    </text>
+    <text name="DriverRejectTrip">السائق {driver} لقد رفض الرحلة من {source} إلى {destination}</text>
     <text name="Drivers">السائقين</text>
     <text name="DriversHeaderInfo">Drivers Header Info</text>
     <text name="DriverStatus">حالة السائق</text>
@@ -1009,9 +1005,7 @@
     <text name="NewGroupPerioGenerated">
       <a href="/app/main/invoices/submitinvoices/detail/{groupid}">تم إنشاء فاتورة جديدة {groupid}#</a>
     </text>
-    <text name="NewInvoiceShipperGenerated">
-      <a href="/app/main/invoices/detail/{invoiceid}">تم إنشاء فاتورة جديدة {invoiceid}#</a>
-    </text>
+    <text name="NewInvoiceShipperGenerated">تم إنشاء فاتورة جديدة {invoiceid}#</text>
     <text name="NewInvoiceShipperGeneratedEmailBody">
       <a href="/app/main/invoices/detail/{invoiceid}">تم إنشاء الفاتورة رقم {invoiceid}#</a>
     </text>
@@ -1065,6 +1059,7 @@
     <text name="Notifications">الإشعارات</text>
     <text name="NotificationSettings">إعدادات الإشعارات</text>
     <text name="NotificationTypes">أنواع الإشعارات</text>
+    <text name="NotificationWhenTripDetailsChanged">تم تحديث بيانات الشحنة {waybillnumber}.</text>
     <text name="NotifyDriverWhenAssignToTrip">تم إسناد رحلة جديدة إليك</text>
     <text name="NotImpersonatedLoginErrorMessage">هذا ليس تسجيل دخول ممثّل</text>
     <text name="NotIsRequired">غير مطلوب</text>
@@ -1275,6 +1270,7 @@
     <text name="ReceiveNotifications_Definition">هذا الخيار يمكن استخدامه لتمكين / تعطيل الإخطارات.</text>
     <text name="ReceiveNotifications_DisableInfo">لقد قمت بتعطيل خاصية تلقي الإشعارات. يمكنك تفعيلها و اختيار نوع الاشعارات التي ترغب باستقبالها</text>
     <text name="Receiver">المستلم</text>
+    <text name="ReceiverCode">كود المستلم</text>
     <text name="ReceiverFullName">الاسم الكامل للمستلم</text>
     <text name="ReceiverPhoneNumber">رقم جوال المستلم</text>
     <text name="Receivers">المستلمين</text>
@@ -1457,17 +1453,11 @@
     </text>
     <text name="ShipperName">اسم الشاحن</text>
     <text name="ShipperNotfiyWhenCreditLimitGreaterOrEqualXPercentage">لقد استخدمت أكثر من 70% من حدك الإئتماني</text>
-    <text name="ShipperReminderToCompelteTrips">
-      <a href="/app/main/shippingRequests/shippingRequests/view?id={id}">لديك شحنة لم تكمل الرحلات الخاصة بها</a>
-    </text>
+    <text name="ShipperReminderToCompelteTrips">لديك شحنة لم تكمل الرحلات الخاصة بها</text>
     <text name="ShippingNote">ملاحظات مرسل الشحنة</text>
     <text name="ShippingRequest" />
-    <text name="ShippingRequestAccidentsOccure">
-      <a href="/app/main/shippingRequests/shippingRequests/view?id={id}">لقد حدث حادث للشحنة رقم: {id}.</a>
-    </text>
-    <text name="ShippingRequestCancelTripByAccidents">
-      <a href="/app/main/shippingRequests/shippingRequests/view?id={id}">لقد تم إلغاء الشحنة رقم {id} بسبب وجود حادث</a>
-    </text>
+    <text name="ShippingRequestAccidentsOccure">لقد حدث حادث للشحنة رقم: {id}.</text>
+    <text name="ShippingRequestCancelTripByAccidents">لقد تم إلغاء الشحنة رقم {id} بسبب وجود حادث</text>
     <text name="ShippingRequestDetails">تفاصيل طلب الشحن</text>
     <text name="ShippingRequestNotifyCarrirerWhenShipperAccepted">
       <a href="/app/main/shippingRequests/shippingRequests/view?id={id}">لقد قام الشاحن {clientname} بقبول عرضك المالي للشحنة.</a>
@@ -1478,7 +1468,7 @@
     <text name="ShippingRequests">طلبات الشحن</text>
     <text name="ShippingRequestsCreate">إنشاء طلب شحن</text>
     <text name="ShippingRequestsEdit">تعديل طلب الشحن</text>
-    <text name="ShippingRequestSendOfferWhenAddPrice"><![CDATA[<a href="/app/main/shippingRequests/shippingRequests/view?id={id}&offerid={offerid}">تم إضافة عرض جديد للشحنة</a>]]></text>
+    <text name="ShippingRequestSendOfferWhenAddPrice">تم إضافة عرض جديد للشحنة</text>
     <text name="ShippingRequestSendOfferWhenUpdatePrice"><![CDATA[<a href="/app/main/shippingRequests/shippingRequests/view?id={id}&offerid={offerid}">تم تحديث العرض المالي للشحنة من قبل الناقل {carrier}.</a>]]></text>
     <text name="ShippingRequestStatus">حالة طلب الشحن</text>
     <text name="ShippingRequestStatuses">حالات طلب الشحن</text>
@@ -1578,6 +1568,8 @@
     <text name="SuccessfullyActivated">تم التفعيل بنجاح</text>
     <text name="SuccessfullyAdded">تمت الإضافة بنجاح.</text>
     <text name="SuccessfullyCanceled">تم الإلغاء بنجاح</text>
+    <text name="SuccessfullyChanged">تم التغيير بنجاح</text>
+    <text name="SuccessfullyConfirmed">تم التأكيد بنجاح</text>
     <text name="SuccessfullyDeactivated">تم إلغاء التفعيل بنجاح</text>
     <text name="SuccessfullyDeclined">تم رفض التسعير بنجاح</text>
     <text name="SuccessfullyDeleted">تم الحذف بنجاح</text>
@@ -1588,6 +1580,7 @@
     <text name="SuccessfullyRemoved">تمت الإزالة بنجاح.</text>
     <text name="SuccessfullyRestore">تمت عملية الإسترجاع بنجاح</text>
     <text name="SuccessfullySaved">تم الحـفظ بنجاح</text>
+    <text name="SuccessfullyStarted">تم البدأ بنجاح</text>
     <text name="SuccessfullyTripCancled">تم إلغاء الرحلة بنجاح</text>
     <text name="SuccessfullyUnlinked">تم إزالة الربط بنجاح.</text>
     <text name="Summary">ملخص</text>
@@ -1642,9 +1635,7 @@
     <text name="TachyonDealOfferAcceptedByShipper">
       <a href="/app/main/shippingRequests/shippingRequests/view?id={id}">تم قبول العرض المالي من قبل الشاحن {clientname}.</a>
     </text>
-    <text name="TachyonDealOfferRejectedByShipper">
-      <a href="/app/main/shippingRequests/shippingRequests/view?id={id}">تم رفض العرض المالي من قبل الشاحن {clientname}.</a>
-    </text>
+    <text name="TachyonDealOfferRejectedByShipper">تم رفض العرض المالي من قبل الشاحن {clientname}.</text>
     <text name="TachyonManageService">إدارة خدمات تاكيون</text>
     <text name="TachyonPlatForm">تاكيون</text>
     <text name="TakePhoto">التقاط صورة</text>
