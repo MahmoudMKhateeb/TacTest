@@ -37,6 +37,10 @@ namespace TACHYON.Shipping.ShippingRequests.Dtos
         public int TotalsTripsAddByShippier { get; set; }
         public ShippingRequestStatus Status { get; set; }
         public ShippingRequestBidStatus BidStatus { get; set; }
+
+        public string OtherGoodsCategoryName { get; set; }
+        public string OtherTransportTypeName { get; set; }
+        public string OtherTrucksTypeName { get; set; }
         public string StatusTitle  
         {
             get { return Status.GetEnumDescription(); }  

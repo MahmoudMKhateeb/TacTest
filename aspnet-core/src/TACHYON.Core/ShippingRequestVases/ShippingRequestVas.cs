@@ -25,6 +25,8 @@ namespace TACHYON.ShippingRequestVases
         [ForeignKey("VasId")]
         public Vas VasFk { get; set; }
 
+        public string OtherVasName { get; set; }
+
         public virtual long ShippingRequestId { get; set; }
         [ForeignKey("ShippingRequestId")]  
         public ShippingRequest ShippingRequestFk { get; set; }

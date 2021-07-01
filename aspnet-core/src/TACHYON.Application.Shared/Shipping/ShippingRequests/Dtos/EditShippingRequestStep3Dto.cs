@@ -18,6 +18,9 @@ namespace TACHYON.Shipping.ShippingRequests.Dtos
         public virtual int? CapacityId { get; set; }
         public bool IsDrafted { get; set; }
         public int DraftStep { get; set; }
+        public string OtherGoodsCategoryName { get; set; }
+        public string OtherTransportTypeName { get; set; }
+        public string OtherTrucksTypeName { get; set; }
 
     }
 }

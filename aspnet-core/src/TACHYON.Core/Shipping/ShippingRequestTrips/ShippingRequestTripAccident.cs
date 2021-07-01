@@ -20,6 +20,10 @@ namespace TACHYON.Shipping.ShippingRequestTrips
         public int? ReasoneId { get; set; }
         [ForeignKey("ReasoneId")]
         public ShippingRequestReasonAccident ResoneFK { get; set; }
+        /// <summary>
+        /// when reason refers to others, this field should be filled
+        /// </summary>
+        public string OtherReasonName { get; set; }
 
         [StringLength(500,MinimumLength =10)]
         public string Description {get;set; }

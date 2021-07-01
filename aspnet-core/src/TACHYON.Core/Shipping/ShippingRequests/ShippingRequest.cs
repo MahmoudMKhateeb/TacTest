@@ -135,6 +135,10 @@ namespace TACHYON.Shipping.ShippingRequests
         [ForeignKey("GoodCategoryId")]
         public GoodCategory GoodCategoryFk { get; set; }
         /// <summary>
+        /// when GoodsCategory selected to other, this field must be filled
+        /// </summary>
+        public string OtherGoodsCategoryName { get; set; }
+        /// <summary>
         /// Status of shipping request
         /// </summary>
         public ShippingRequestStatus Status { get; set; }
@@ -171,9 +175,11 @@ namespace TACHYON.Shipping.ShippingRequests
 
         [ForeignKey("TransportTypeId")]
         public TransportType TransportTypeFk { get; set; }
+        public string OtherTransportTypeName { get; set; }
         public virtual long? TrucksTypeId { get; set; }
         [ForeignKey("TrucksTypeId")]
         public TrucksType TrucksTypeFk { get; set; }
+        public string OtherTrucksTypeName { get; set; }
 
         public virtual int? CapacityId { get; set; }
         [ForeignKey("CapacityId")]
@@ -184,6 +190,8 @@ namespace TACHYON.Shipping.ShippingRequests
 
         [ForeignKey("PackingTypeId")]
         public PackingType PackingTypeFk { get; set; }
+
+        public string OtherPackingTypeName { get; set; }
 
         public int NumberOfPacking { get; set; }
 
