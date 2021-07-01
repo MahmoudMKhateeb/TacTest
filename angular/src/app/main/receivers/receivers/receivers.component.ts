@@ -35,6 +35,7 @@ export class ReceiversComponent extends AppComponentBase {
   emailFilter = '';
   phoneNumberFilter = '';
   facilityNameFilter = '';
+  facilityId = undefined;
 
   _entityTypeFullName = 'TACHYON.Receivers.Receiver';
   entityHistoryEnabled = false;
@@ -91,6 +92,7 @@ export class ReceiversComponent extends AppComponentBase {
         this.emailFilter,
         this.phoneNumberFilter,
         this.facilityNameFilter,
+        this.facilityId,
         this.fromDate,
         this.toDate,
         this.primengTableHelper.getSorting(this.dataTable),

@@ -153,14 +153,26 @@ namespace TACHYON.Shipping.Trips
             {
                 throw new UserFriendlyException(L("The number of drop points must be" + request.NumberOfDrops));
             }
-            if (request.TotalWeight>0)
+            var dropPoints = input.RoutPoints.Where(x => x.PickingType == PickingType.Dropoff);
+            foreach (var drop in dropPoints)
             {
-                var TotalWeight = input.RoutPoints.Where(x=>x.GoodsDetailListDto!=null).Sum(x => x.GoodsDetailListDto.Sum(g => g.Weight));
-                if (TotalWeight> request.TotalWeight)
+                if (drop.ReceiverId == null &&
+                    (drop.ReceiverCardIdNumber == null ||
+                    string.IsNullOrWhiteSpace(drop.ReceiverEmailAddress) ||
+                    string.IsNullOrWhiteSpace(drop.ReceiverFullName) ||
+                    drop.ReceiverPhoneNumber == null))
                 {
-                    throw new UserFriendlyException(L("TheTotalWeightOfGoodsDetailsshouldNotBeGreaterThanShippingRequestWeight", request.TotalWeight));
+                    throw new UserFriendlyException(L("YouMustEnterReceiver"));
+                }
+                else if(drop.ReceiverId!= null && (drop.ReceiverCardIdNumber != null ||
+                    !string.IsNullOrWhiteSpace(drop.ReceiverEmailAddress) ||
+                    !string.IsNullOrWhiteSpace(drop.ReceiverFullName) ||
+                    drop.ReceiverPhoneNumber != null))
+                {
+                    throw new UserFriendlyException(L("YouMustEnterOneReceiver"));
                 }
             }
+
             if (!input.Id.HasValue)
             {
                 int requestNumberOfTripsAdd = await _ShippingRequestTripRepository.GetAll().Where(x => x.ShippingRequestId == input.ShippingRequestId).CountAsync() + 1;

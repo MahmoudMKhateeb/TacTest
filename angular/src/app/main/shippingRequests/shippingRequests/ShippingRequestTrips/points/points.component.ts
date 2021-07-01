@@ -15,6 +15,7 @@ import {
   SelectItemDto,
   ShippingRequestsServiceProxy,
   WaybillsServiceProxy,
+  ReceiversServiceProxy,
 } from '@shared/service-proxies/service-proxies';
 import Swal from 'sweetalert2';
 import { FileDownloadService } from '@shared/utils/file-download.service';
@@ -33,13 +34,16 @@ export class PointsComponent extends AppComponentBase implements OnInit, OnChang
     private _routStepsServiceProxy: RoutStepsServiceProxy,
     private _shippingRequestsServiceProxy: ShippingRequestsServiceProxy,
     private _fileDownloadService: FileDownloadService,
-    private _waybillsServiceProxy: WaybillsServiceProxy
+    private _waybillsServiceProxy: WaybillsServiceProxy,
+    private _receiversServiceProxy: ReceiversServiceProxy
   ) {
     super(injector);
   }
   @ViewChild('createOrEditFacilityModal') public createOrEditFacilityModal: ModalDirective;
   @ViewChild('createRouteStepModal') public createRouteStepModal: ModalDirective;
   @ViewChild('createOrEditGoodDetail', { static: false }) public createOrEditGoodDetail: ModalDirective;
+  @ViewChild('createOrEditReceiverModal', { static: false }) public CreateOrEditReceiver: ModalDirective;
+
   @Input() MainGoodsCategory: number;
   @Input() RouteType: number;
   @Input() NumberOfDrops: number;
@@ -51,12 +55,15 @@ export class PointsComponent extends AppComponentBase implements OnInit, OnChang
   singleWayPoint: CreateOrEditRoutPointDto = new CreateOrEditRoutPointDto();
   goodsDetail: GoodsDetailDto = new GoodsDetailDto();
   allFacilities: FacilityForDropdownDto[];
+  allReceivers: any;
+
   PickingType = PickingType;
 
   active = false;
   saving = false;
   allCitys: RoutStepCityLookupTableDto[];
   facilityLoading = false;
+  receiversLoading = false;
   editRouteId: number = undefined;
 
   routeStepIdForEdit: number = undefined;
@@ -91,6 +98,8 @@ export class PointsComponent extends AppComponentBase implements OnInit, OnChang
   activeValidator: any;
   sourceTripFacilityId: number;
   desTripFacilityId: number;
+  isAdditionalReceiverEnabled = false;
+
   ngOnInit() {
     this.wayPointValidationSets.multiDrops.allowedPoints = this.NumberOfDrops + 1;
     this.wayPointValidationSets.multiDrops.numberOfDrops = this.NumberOfDrops + 1;
@@ -131,7 +140,8 @@ export class PointsComponent extends AppComponentBase implements OnInit, OnChang
       this._shippingRequestsServiceProxy.getAllUnitOfMeasuresForDropdown().subscribe((result) => {
         this.allUnitOfMeasure = result;
       });
-      this.refreshFacilities(undefined);
+
+      this.loadFacilities();
     }
   }
   //to Select PickUp Point
@@ -145,14 +155,14 @@ export class PointsComponent extends AppComponentBase implements OnInit, OnChang
     this.singleWayPoint = new CreateOrEditRoutPointDto();
     this.singleWayPoint.pickingType = PickingType.Pickup;
     this.createRouteStepModal.show();
-    this.refreshFacilities(undefined);
+    this.loadFacilities();
   }
   //to Select DropDown point
   showDropPointUpModal() {
     this.singleWayPoint = new CreateOrEditRoutPointDto();
     this.singleWayPoint.pickingType = PickingType.Dropoff;
     this.createRouteStepModal.show();
-    this.refreshFacilities(undefined);
+    this.loadFacilities();
   }
 
   openCreateFacilityModal() {
@@ -166,6 +176,8 @@ export class PointsComponent extends AppComponentBase implements OnInit, OnChang
     //if there is an id for the RouteStep then update the Record Don't Create A new one
     this.RouteStepCordSetter();
     this.wayPointsList[id] = this.singleWayPoint;
+    //if there is additional Receiver Phone Number that means that the Additional Receiver CheckObx Should Be Checked
+    this.isAdditionalReceiverEnabled = this.singleWayPoint.receiverPhoneNumber ? true : false;
     this.createRouteStepModal.hide();
     this.notify.info(this.l('UpdatedSuccessfully'));
     this.EmitToFather();
@@ -230,17 +242,25 @@ export class PointsComponent extends AppComponentBase implements OnInit, OnChang
     this.wayPointsSetter();
     this.singleWayPoint = new CreateOrEditRoutPointDto();
   }
-  refreshFacilities(facility: FacilityForDropdownDto | undefined) {
-    if (facility) {
-      this.allFacilities.push(facility);
-      this.singleWayPoint.facilityId = facility.id;
-    } else {
-      this.facilityLoading = true;
-      this._routStepsServiceProxy.getAllFacilitiesForDropdown().subscribe((result) => {
-        this.allFacilities = result;
-        this.facilityLoading = false;
-      });
-    }
+  loadFacilities() {
+    this.facilityLoading = true;
+    this._routStepsServiceProxy.getAllFacilitiesForDropdown().subscribe((result) => {
+      this.allFacilities = result;
+      this.facilityLoading = false;
+    });
+  }
+
+  /**
+   * loads a list of Receivers by facility Id
+   * @param facilityId
+   */
+  loadReceivers(facilityId) {
+    this.receiversLoading = true;
+    //to be Changed
+    this._receiversServiceProxy.getAllReceiversByFacilityForTableDropdown(facilityId).subscribe((result) => {
+      this.allReceivers = result;
+      this.receiversLoading = false;
+    });
   }
   getFacilityNameByid(id: number) {
     return this.allFacilities?.find((x) => x.id == id)?.displayName;
