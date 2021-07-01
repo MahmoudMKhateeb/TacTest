@@ -1,4 +1,5 @@
 ﻿using Abp.Domain.Repositories;
+using Abp.UI;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections;
@@ -40,6 +41,30 @@ namespace TACHYON.Waybills
             {
                 return GetMasterWaybillPdf(shippingRequestTripId);
             }
+        }
+
+        public byte[] GetMultipleDropWaybillPdf(long id)
+        {
+            DisableTenancyFilters();
+            if (IsSingleDropShippingRequest(id))
+            {
+                throw new UserFriendlyException(L("Cannot download drop waybill for single drop shipping request"));
+            }
+            var reportPath = "/Waybills/Reports/Multiple_Drop_Waybill.rdlc";
+
+            ArrayList names = new ArrayList();
+            ArrayList data = new ArrayList();
+
+            names.Add("MultipleDropDataSet");
+            data.Add(_shippingRequestAppService.GetMultipleDropWaybill(id));
+
+            names.Add("MultipleDropsGoodsDetailsDataSet");
+            data.Add(_goodsDetailsAppService.GetShippingrequestGoodsDetailsForMultipleDropWaybill(id));
+
+            names.Add("MultipleDropsVasDataSet");
+            data.Add(_shippingRequestAppService.GetShippingRequestVasesForMultipleDropWaybill(id));
+
+            return _pdfExporterBase.GetRdlcPdfPackageAsBinaryData("Multiple_Drop_Waybill", reportPath, names, data);
         }
 
         private byte[] GetMasterWaybillPdf(int shippingRequestTripId)
@@ -88,6 +113,17 @@ namespace TACHYON.Waybills
                 .GetAll()
                 .Include(e => e.ShippingRequestFk)
                 .FirstOrDefault(e => e.Id == shippingRequestTripId);
+            return item.ShippingRequestFk.RouteTypeId == ShippingRequestRouteType.SingleDrop;
+        }
+
+        private bool IsSingleDropShippingRequest(long routPointId)
+        {
+            var item = _shippingRequestTripRepository
+                .GetAll()
+                .Include(e => e.ShippingRequestFk)
+                .Include(e => e.RoutPoints)
+                .FirstOrDefault(e => e.RoutPoints.Any(x => x.Id == routPointId));
+
             return item.ShippingRequestFk.RouteTypeId == ShippingRequestRouteType.SingleDrop;
         }
 

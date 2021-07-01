@@ -91,5 +91,15 @@ namespace TACHYON.Web.Controllers
 
             return File(bytes, "application/pdf", "waybill.pdf");
         }
+
+        [AbpMvcAuthorize()]
+        public ActionResult DropWaybill(int id)
+        {
+            var bytes = _waybillsManager.GetMultipleDropWaybillPdf(id);
+
+            MimeTypes.TryGetExtension("application/pdf", out var exten);
+
+            return File(bytes, "application/pdf", "DropWaybill.pdf");
+        }
     }
 }

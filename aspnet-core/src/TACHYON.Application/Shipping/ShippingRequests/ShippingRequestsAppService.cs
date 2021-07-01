@@ -809,7 +809,7 @@ namespace TACHYON.Shipping.ShippingRequests
         //Master Waybill
         public IEnumerable<GetMasterWaybillOutput> GetMasterWaybill(int shippingRequestTripId)
         {
-            using (CurrentUnitOfWork.DisableFilter(AbpDataFilters.MustHaveTenant, AbpDataFilters.MayHaveTenant))
+            using (CurrentUnitOfWork.DisableFilter(AbpDataFilters.MustHaveTenant, AbpDataFilters.MayHaveTenant, nameof(IHasIsDrafted)))
             {
                 var info = _shippingRequestTripRepository.GetAll()
                     .Include(e => e.ShippingRequestFk)
@@ -817,21 +817,13 @@ namespace TACHYON.Shipping.ShippingRequests
 
                 var query = info.Select(x => new
                 {
-                    MasterWaybillNo = x.Id,
-                    ShippingRequestStatus = "Draft",
+                    MasterWaybillNo = x.WaybillNumber.Value,
+                    ShippingRequestStatus = (x.AssignedDriverUserId!=null && x.AssignedTruckId!=null) ?"Final" :"Draft",
                     SenderCompanyName = x.ShippingRequestFk.Tenant.companyName,
                     DriverName = x.AssignedDriverUserFk != null ? x.AssignedDriverUserFk.FullName : "",
                     DriverIqamaNo = "",
                     TruckTypeTranslationList = x.AssignedTruckFk.TrucksTypeFk.Translations,
                     TruckTypeDisplayName =
-                    //x.AssignedTruckFk != null
-                    //   ? (x.AssignedTruckFk.TransportTypeFk != null ?
-                    //       x.AssignedTruckFk.TransportTypeFk.DisplayName :
-                    //       "" + "-" + x.AssignedTruckFk.TrucksTypeFk != null ?
-                    //           x.AssignedTruckFk.TrucksTypeFk.DisplayName :
-                    //           "" + "-" + x.AssignedTruckFk.CapacityFk != null ?
-                    //               x.AssignedTruckFk.CapacityFk.DisplayName : "")
-                    //   : "",
                     (x.AssignedTruckFk.TransportTypeFk == null ? "" : ObjectMapper.Map<TransportTypeDto>(x.AssignedTruckFk.TransportTypeFk).TranslatedDisplayName) + "-" + //o.TransportTypeFk.DisplayName) + " - " +
                              (x.AssignedTruckFk.TrucksTypeFk == null ? "" : ObjectMapper.Map<TrucksTypeDto>(x.AssignedTruckFk.TrucksTypeFk).TranslatedDisplayName) + " - " +
                              (x.AssignedTruckFk.CapacityFk == null ? "" : ObjectMapper.Map<CapacityDto>(x.AssignedTruckFk.CapacityFk).DisplayName),
@@ -855,7 +847,7 @@ namespace TACHYON.Shipping.ShippingRequests
                     {
                         MasterWaybillNo = x.MasterWaybillNo,
                         Date = Clock.Now.ToShortDateString(),
-                        ShippingRequestStatus = "Draft",
+                        ShippingRequestStatus =x.ShippingRequestStatus,
                         CompanyName = x.SenderCompanyName,
                         DriverName = x.DriverName,
                         DriverIqamaNo = "",
@@ -890,8 +882,8 @@ namespace TACHYON.Shipping.ShippingRequests
 
                 var query = info.Select(x => new
                 {
-                    MasterWaybillNo = x.Id,
-                    ShippingRequestStatus = "Draft",
+                    MasterWaybillNo = x.WaybillNumber.Value,
+                    ShippingRequestStatus = (x.AssignedDriverUserId != null && x.AssignedTruckId != null) ? "Final" : "Draft",
                     SenderCompanyName = x.ShippingRequestFk.Tenant.companyName,
                     ClientName = x.ShippingRequestFk.Tenant.Name,
                     ReceiverCompanyName = x.ShippingRequestFk.CarrierTenantFk != null ? x.ShippingRequestFk.CarrierTenantFk.companyName : "",
@@ -906,9 +898,6 @@ namespace TACHYON.Shipping.ShippingRequests
                     PackingTypeDisplayName = x.ShippingRequestFk.PackingTypeFk.DisplayName,
                     NumberOfPacking = x.ShippingRequestFk.NumberOfPacking,
                     StartTripDate = x.StartTripDate,
-                    //( x.StartTripDate.Year > 1)
-                    //? x.StartTripDate
-                    //: null,
                     DeliveryDate = x.EndTripDate,
                     TotalWeight = x.ShippingRequestFk.TotalWeight,
                     GoodCategoryTranslation = x.ShippingRequestFk.GoodCategoryFk.Translations,
@@ -925,7 +914,7 @@ namespace TACHYON.Shipping.ShippingRequests
                     {
                         MasterWaybillNo = x.MasterWaybillNo,
                         Date = Clock.Now.ToShortDateString(),
-                        ShippingRequestStatus = "Draft",
+                        ShippingRequestStatus = x.ShippingRequestStatus,
                         SenderCompanyName = x.SenderCompanyName,
                         ReceiverCompanyName = x.ReceiverCompanyName,
                         DriverName = x.DriverName,
@@ -993,9 +982,9 @@ namespace TACHYON.Shipping.ShippingRequests
 
                 var query = info.Select(x => new
                 {
-                    MasterWaybillNo = x.Id,
-                    SubWaybillNo = routPoint.Id,
-                    ShippingRequestStatus = "Draft",
+                    MasterWaybillNo = x.WaybillNumber.Value,
+                    SubWaybillNo = routPoint.WaybillNumber.Value,
+                    ShippingRequestStatus = (x.AssignedDriverUserId != null && x.AssignedTruckId != null) ? "Final" : "Draft",
                     SenderCompanyName = x.ShippingRequestFk.Tenant.companyName,
                     ReceiverCompanyName = x.ShippingRequestFk.CarrierTenantFk != null ? x.ShippingRequestFk.CarrierTenantFk.companyName : "",
                     DriverName = x.AssignedDriverUserFk != null ? x.AssignedDriverUserFk.Name : "",
@@ -1027,7 +1016,7 @@ namespace TACHYON.Shipping.ShippingRequests
                         MasterWaybillNo = x.MasterWaybillNo,
                         SubWaybillNo = x.SubWaybillNo,
                         Date = Clock.Now.ToShortDateString(),
-                        ShippingRequestStatus = "Draft",
+                        ShippingRequestStatus = x.ShippingRequestStatus,
                         SenderCompanyName = x.SenderCompanyName,
                         ReceiverCompanyName = x.ReceiverCompanyName,
                         DriverName = x.DriverName,
