@@ -55,18 +55,19 @@ export class TrackingPODModalComponent extends AppComponentBase {
     formData.append('file', file, file.name);
     formData.append('id', this.id.toString());
     this._httpClient
-      .post<any>(AppConsts.remoteServiceBaseUrl + '/Helper/UploadPOD', formData)
+      .post<any>(AppConsts.remoteServiceBaseUrl + '/api/services/app/DropOffPointToDelivery', formData)
       .pipe(finalize(() => this.fileUpload.clear()))
       .subscribe((response) => {
         if (response.success) {
-          this.notify.success(this.l('ImportUsersProcessStart'));
+          this.notify.success(this.l('SuccessfullyUpload'));
+          this.close();
         } else if (response.error != null) {
-          this.notify.error(this.l('ImportUsersUploadFailed'));
+          this.notify.error(this.l('UploadFailed'));
         }
       });
   }
 
   onUploadError(): void {
-    this.notify.error(this.l('ImportUsersUploadFailed'));
+    this.notify.error(this.l('UploadFailed'));
   }
 }

@@ -1,6 +1,7 @@
 ﻿using Abp.Application.Services;
 using Abp.Application.Services.Dto;
 using System.Threading.Tasks;
+using TACHYON.Dto;
 using TACHYON.Shipping.Drivers.Dto;
 using TACHYON.Tracking.Dto;
 
@@ -15,5 +16,6 @@ namespace TACHYON.Tracking
         Task ChangeStatus(long id);
         Task NextLocation(long id);
         Task ConfirmReceiverCode(ConfirmReceiverCodeInput input);
+        Task<FileDto> POD(long id);
     }
 }

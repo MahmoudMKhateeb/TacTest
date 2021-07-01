@@ -9,7 +9,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Dynamic.Core;
 using System.Threading.Tasks;
-using TACHYON.Cities.Dtos;
+using TACHYON.Dto;
 using TACHYON.Features;
 using TACHYON.Goods.GoodCategories.Dtos;
 using TACHYON.Routs.RoutPoints;
@@ -26,13 +26,16 @@ namespace TACHYON.Tracking
     {
         private readonly IRepository<ShippingRequestTrip> _ShippingRequestTripRepository;
         private readonly IRepository<RoutPoint,long> _routPointRepository;
+        private readonly IRepository<ShippingRequestTrip> _shippingRequestTrip;
+
         private readonly ShippingRequestsTripManager _shippingRequestsTripManager;
 
-        public TrackingAppService(IRepository<ShippingRequestTrip> shippingRequestTripRepository, IRepository<RoutPoint, long> routPointRepository, ShippingRequestsTripManager shippingRequestsTripManager)
+        public TrackingAppService(IRepository<ShippingRequestTrip> shippingRequestTripRepository, IRepository<RoutPoint, long> routPointRepository, ShippingRequestsTripManager shippingRequestsTripManager, IRepository<ShippingRequestTrip> shippingRequestTrip)
         {
             _ShippingRequestTripRepository = shippingRequestTripRepository;
             _routPointRepository = routPointRepository;
             _shippingRequestsTripManager = shippingRequestsTripManager;
+            _shippingRequestTrip = shippingRequestTrip;
         }
 
         public async Task<PagedResultDto<TrackingListDto>> GetAll(TrackingSearchInputDto input)
@@ -132,7 +135,12 @@ namespace TACHYON.Tracking
             CheckIfCanAccessService(true, AppFeatures.TachyonDealer, AppFeatures.Carrier);
             await _shippingRequestsTripManager.ConfirmReceiverCode(input);
         }
-       
+
+        public async Task<FileDto> POD(long id)
+        {
+            CheckIfCanAccessService(true, AppFeatures.TachyonDealer, AppFeatures.Carrier, AppFeatures.Shipper);
+            return await _shippingRequestsTripManager.GetPOD(id);
+        }
         #region Helper
         private TrackingListDto GetMap(ShippingRequestTrip trip)
         {
@@ -148,16 +156,39 @@ namespace TACHYON.Tracking
                 if (!IsEnabled(AppFeatures.Shipper))
                 {
                     dto.Name = trip.ShippingRequestFk.Tenant.Name;
+                    dto.IsAssign = true;
+                    dto.CanStartTrip = CanStartTrip(trip);
                 }
 
             }
             else
             {
+                if (trip.ShippingRequestFk.IsTachyonDeal) {
+                    dto.CanStartTrip = CanStartTrip(trip);
+                    dto.IsAssign = true;
+                } 
                 dto.Name = $"{trip.ShippingRequestFk.Tenant.Name}-{trip.ShippingRequestFk.CarrierTenantFk.Name}";
             }
             return dto;
         }
         #endregion
+        private bool CanStartTrip(ShippingRequestTrip trip)
+        {
+            if (trip.Status == ShippingRequestTripStatus.Intransit)
+            {
+                return false;
+            }
+            else if (trip.StartTripDate.Date <= Clock.Now.Date && trip.Status == ShippingRequestTripStatus.New )
+            {
 
+                //Check there any trip the driver still working on or not
+                var Count =  _shippingRequestTrip.GetAll()
+                    .Where(x => x.AssignedDriverUserId == trip.AssignedDriverUserId && x.Status == ShippingRequestTripStatus.Intransit).Count();
+                if (Count == 0)
+                    return true;
+            }
+
+            return false;
+        }
     }
 }

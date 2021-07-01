@@ -23,5 +23,7 @@ namespace TACHYON.Tracking.Dto
         public ShippingRequestRouteType RouteTypeId { get; set; }
         public string RouteType { get { return RouteTypeId.GetEnumDescription(); } set { } }
         public string Reason { get; set; } 
+        public bool IsAssign { get; set; }
+        public bool CanStartTrip { get; set; }
     }
 }

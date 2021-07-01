@@ -2,6 +2,8 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
+using TACHYON.Common;
+using TACHYON.Routs.RoutPoints;
 using TACHYON.Shipping.ShippingRequestTrips;
 using TACHYON.Tracking.Dto;
 
@@ -20,6 +22,8 @@ namespace TACHYON.AutoMapper.Tracking
             .ForMember(dst => dst.Origin, opt => opt.MapFrom(src => src.OriginFacilityFk.Address))
             .ForMember(dst => dst.Destination, opt => opt.MapFrom(src => src.DestinationFacilityFk.Address))
             ;
+
+            CreateMap<IHasDocument, RoutPoint>().ReverseMap();
         }
     }
 }
