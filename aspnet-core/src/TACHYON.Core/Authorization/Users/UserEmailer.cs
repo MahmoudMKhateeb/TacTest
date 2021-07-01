@@ -138,12 +138,36 @@ namespace TACHYON.Authorization.Users
 
             await ReplaceBodyAndSend(adminUser.EmailAddress, L("DocumentsApproved"), emailTemplate, mailMessage);
         }
+
         /// <summary>
-        /// Sends a password reset link to user's email.
+        /// Send Email to tenant when approve all documents and eligible to use platform
         /// </summary>
-        /// <param name="user">User</param>
-        /// <param name="link">Reset link</param>
-        public async Task SendPasswordResetLinkAsync(User user, string link = null)
+        /// <param name="hostAdminEmailAddresses"></param>
+        /// <param name="tenant"></param>
+        /// <returns></returns>
+        [UnitOfWork]
+        public virtual async Task SendExpiredDateDocumentsAsyn(Tenant tenant,string documentFileName)
+        {
+            var adminUser = await _userManager.GetAdminByTenantIdAsync(tenant.Id);
+            var mailMessage = new StringBuilder();
+            var tenantItem = await _tenantRepository.GetAsync(tenant.Id);
+            var emailTemplate = GetTitleAndSubTitle(tenant.Id, L("ExpiredDateDocuments_Title"), L("ExpiredDateDocuments_SubTitle"));
+
+            mailMessage.AppendLine("<b>" + L("TenancyName") + "</b>:" + tenantItem.TenancyName);
+            mailMessage.AppendLine("<b>" + L("CompanyName") + "</b>:" + tenantItem.companyName);
+            mailMessage.AppendLine("<b>" + L("Address") + "</b>:" + tenantItem.Address);
+
+            mailMessage.AppendLine(L(String.Format("Document File: {0} has been expired message", documentFileName)));
+
+            await ReplaceBodyAndSend(adminUser.EmailAddress, L("ExpiredDocument"), emailTemplate, mailMessage);
+        }
+
+            /// <summary>
+            /// Sends a password reset link to user's email.
+            /// </summary>
+            /// <param name="user">User</param>
+            /// <param name="link">Reset link</param>
+            public async Task SendPasswordResetLinkAsync(User user, string link = null)
         {
             if (user.PasswordResetCode.IsNullOrEmpty())
             {
