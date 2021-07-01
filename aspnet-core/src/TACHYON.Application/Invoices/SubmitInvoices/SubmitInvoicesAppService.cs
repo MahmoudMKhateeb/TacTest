@@ -45,6 +45,7 @@ namespace TACHYON.Invoices.Groups
         private readonly InvoiceManager _invoiceManager;
         private readonly IExcelExporterManager<SubmitInvoiceListDto> _excelExporterManager;
         private readonly IRepository<DocumentFile, Guid> _documentFileRepository;
+        private readonly IExcelExporterManager<InvoiceItemDto> _excelExporterInvoiceItemManager;
 
 
         public SubmitInvoicesAppService(
@@ -57,7 +58,7 @@ namespace TACHYON.Invoices.Groups
             IAppNotifier appNotifier,
             InvoiceManager invoiceManager,
             IExcelExporterManager<SubmitInvoiceListDto> excelExporterManager,
-            IRepository<DocumentFile, Guid> documentFileRepository)
+            IRepository<DocumentFile, Guid> documentFileRepository, IExcelExporterManager<InvoiceItemDto> excelExporterInvoiceItemManager)
         {
             _PeriodRepository = PeriodRepository;
             _SubmitInvoiceRepository = SubmitInvoiceRepository;
@@ -68,6 +69,7 @@ namespace TACHYON.Invoices.Groups
             _invoiceManager = invoiceManager;
             _excelExporterManager = excelExporterManager;
             _documentFileRepository = documentFileRepository;
+            _excelExporterInvoiceItemManager = excelExporterInvoiceItemManager;
         }
 
 
@@ -89,80 +91,14 @@ namespace TACHYON.Invoices.Groups
 
         public async Task<SubmitInvoiceInfoDto> GetById(EntityDto input)
         {
-            DisableTenancyFilters();
             var SubmitInvoice = await GetSubmitInvoiceInfo(input.Id);
-
-
-            if (SubmitInvoice == null) throw new UserFriendlyException(L("TheSubmitInvoiceNotFound"));
-
-            var TotalItem = SubmitInvoice.Trips.Count + SubmitInvoice.Trips.Select(v => v.ShippingRequestTripFK.ShippingRequestTripVases).Count();
-            int Sequence = 1;
-            List<InvoiceItemDto> Items = new List<InvoiceItemDto>();
-            SubmitInvoice.Trips.ToList().ForEach(trip =>
-            {
-                int VasCounter = 0;
-                Items.Add(new InvoiceItemDto
-                {
-                    Sequence = $"{Sequence}/{TotalItem}",
-                    SubTotalAmount = AbpSession.TenantId.HasValue && IsEnabled(AppFeatures.Carrier) ? trip.ShippingRequestTripFK.SubTotalAmount.Value : trip.ShippingRequestTripFK.SubTotalAmountWithCommission.Value,
-                    VatAmount = AbpSession.TenantId.HasValue && IsEnabled(AppFeatures.Carrier) ? trip.ShippingRequestTripFK.VatAmount.Value : trip.ShippingRequestTripFK.VatAmountWithCommission.Value,
-                    TotalAmount = AbpSession.TenantId.HasValue && IsEnabled(AppFeatures.Carrier) ? trip.ShippingRequestTripFK.TotalAmount.Value : trip.ShippingRequestTripFK.TotalAmountWithCommission.Value,
-                    WayBillNumber = trip.ShippingRequestTripFK.WaybillNumber.ToString(),
-                    TruckType = ObjectMapper.Map<TrucksTypeDto>(trip.ShippingRequestTripFK.AssignedTruckFk.TrucksTypeFk).TranslatedDisplayName,
-                    Source = ObjectMapper.Map<CityDto>(trip.ShippingRequestTripFK.ShippingRequestFk.OriginCityFk)?.TranslatedDisplayName ?? trip.ShippingRequestTripFK.ShippingRequestFk.OriginCityFk.DisplayName,
-                    Destination = ObjectMapper.Map<CityDto>(trip.ShippingRequestTripFK.ShippingRequestFk.DestinationCityFk)?.TranslatedDisplayName ?? trip.ShippingRequestTripFK.ShippingRequestFk.DestinationCityFk.DisplayName,
-                    DateWork = trip.ShippingRequestTripFK.ShippingRequestFk.EndTripDate.HasValue ? trip.ShippingRequestTripFK.ShippingRequestFk.EndTripDate.Value.ToString("dd MMM, yyyy") : "",
-                    Remarks = trip.ShippingRequestTripFK.ShippingRequestFk.RouteTypeId == Shipping.ShippingRequests.ShippingRequestRouteType.MultipleDrops ?
-                    L("TotalOfDrop", trip.ShippingRequestTripFK.ShippingRequestFk.NumberOfDrops) : ""
-                });
-                Sequence++;
-                if (trip.ShippingRequestTripFK.ShippingRequestTripVases != null && trip.ShippingRequestTripFK.ShippingRequestTripVases.Count > 1)
-                {
-                    VasCounter = 1;
-                }
-                foreach (var vas in trip.ShippingRequestTripFK.ShippingRequestTripVases)
-                {
-
-                    string waybillnumber;
-                    if (VasCounter == 0)
-                    {
-                        waybillnumber = $"{trip.ShippingRequestTripFK.WaybillNumber.ToString()}VAS";
-                    }
-                    else
-                    {
-                        waybillnumber = $"{trip.ShippingRequestTripFK.WaybillNumber.ToString()}VAS{VasCounter}";
-                        VasCounter++;
-                    }
-                    trip.ShippingRequestTripFK.WaybillNumber.ToString();
-
-                    var item = new InvoiceItemDto
-                    {
-                        Sequence = $"{Sequence}/{TotalItem}",
-                        SubTotalAmount = AbpSession.TenantId.HasValue && IsEnabled(AppFeatures.Carrier) ? vas.SubTotalAmount.Value : vas.SubTotalAmountWithCommission.Value,
-                        VatAmount = AbpSession.TenantId.HasValue && IsEnabled(AppFeatures.Carrier) ? vas.VatAmount.Value : vas.VatAmountWithCommission.Value,
-                        TotalAmount = AbpSession.TenantId.HasValue && IsEnabled(AppFeatures.Carrier) ? vas.TotalAmount.Value : vas.TotalAmountWithCommission.Value,
-                        WayBillNumber = waybillnumber,
-                        TruckType = L("InvoiceVasType", vas.ShippingRequestVasFk.VasFk.Name),
-                        Source = "-",
-                        Destination = "-",
-                        DateWork = "-",
-                        Remarks = vas.Quantity > 1 ? $"{vas.Quantity}" : ""
-                    };
-                    Items.Add(item);
-
-                    Sequence++;
-                }
-
-            });
-
-
+            List<InvoiceItemDto> Items = GetInvoiceItems(SubmitInvoice);
             var invoiceDto = ObjectMapper.Map<SubmitInvoiceInfoDto>(SubmitInvoice);
             var Admin = await _userManager.GetAdminByTenantIdAsync(SubmitInvoice.TenantId);
             invoiceDto.Items = Items;
             invoiceDto.Phone = Admin.PhoneNumber;
             invoiceDto.Email = Admin.EmailAddress;
             invoiceDto.DueDate = invoiceDto.CreationTime;
-            DisableTenancyFilters();
             var documnet = await _documentFileRepository.FirstOrDefaultAsync(x => x.TenantId == SubmitInvoice.TenantId && x.DocumentTypeId == 14);
             if (documnet != null) invoiceDto.CR = documnet.Number;
             return invoiceDto;
@@ -176,8 +112,6 @@ namespace TACHYON.Invoices.Groups
         [AbpAuthorize(AppPermissions.Pages_Invoices_SubmitInvoices_Claim)]
         public async Task Claim(SubmitInvoiceClaimCreateInput Input)
         {
-            //CheckIfCanAccessService(true, AppFeatures.Carrier);
-           // DisableTenancyFilters();
             var submit = await GetSubmitInvoice(Input.Id);
             if (submit.Status == SubmitInvoiceStatus.Claim || submit.Status == SubmitInvoiceStatus.Accepted) return;
             var document = await _commonManager.UploadDocumentAsBase64(ObjectMapper.Map<DocumentUpload>(Input), AbpSession.TenantId);
@@ -190,7 +124,6 @@ namespace TACHYON.Invoices.Groups
         }
 
 
-        //[AbpAuthorize(AppPermissions.Pages_Administration_Host_Invoices_SubmitInvoices_Accepted)]
         public async Task Accepted(long id)
         {
             CheckIfCanAccessService(true, AppFeatures.TachyonDealer);
@@ -211,7 +144,6 @@ namespace TACHYON.Invoices.Groups
         }
 
 
-        //[AbpAuthorize(AppPermissions.Pages_Administration_Host_Invoices_SubmitInvoices_Rejected)]
         public async Task Rejected(SubmitInvoiceRejectedInput Input)
         {
             CheckIfCanAccessService(true, AppFeatures.TachyonDealer);
@@ -269,6 +201,21 @@ namespace TACHYON.Invoices.Groups
                 return _excelExporterManager.ExportToFile(InvoiceListDto, "SubmitInvoices", HeaderText, propertySelectors);
             });
         }
+
+
+        [AbpAuthorize(AppPermissions.Pages_Invoices_SubmitInvoices)]
+
+        public async Task<FileDto> ExportItems(long id)
+        {
+            var SubmitInvoice = await GetSubmitInvoiceInfo(id);
+            List<InvoiceItemDto> Items = GetInvoiceItems(SubmitInvoice);
+
+          var  HeaderText = new string[] { "Sequence", "Date", "WaybillNumber", "CityOrigin", "DestinationDelivery", "TruckType", "Price", "Vat", "Total", "Quantity" };
+          var  propertySelectors = new Func<InvoiceItemDto, object>[] { _ => _.Sequence, _ => _.DateWork, _ => _.WayBillNumber, _ => _.Source, _ => _.Destination, _ => _.TruckType
+          ,_=> _.SubTotalAmount,_=> _.VatAmount,_=> _.TotalAmount,_=> _.Remarks };
+
+            return _excelExporterInvoiceItemManager.ExportToFile(Items, "SubmitInvoices", HeaderText, propertySelectors);
+        }
         #region Heleper
         private async Task<IOrderedQueryable<SubmitInvoice>> GetSubmitInvoices(SubmitInvoiceFilterInput input)
         {
@@ -293,7 +240,9 @@ namespace TACHYON.Invoices.Groups
 
         private async Task<SubmitInvoice> GetSubmitInvoiceInfo(long id)
         {
-           return await _SubmitInvoiceRepository
+            DisableTenancyFilters();
+
+            var SubmitInvoice = await _SubmitInvoiceRepository
                             .GetAll()
                               .AsNoTracking()
                             .Include(i => i.Tenant)
@@ -324,7 +273,73 @@ namespace TACHYON.Invoices.Groups
                     .WhereIf(AbpSession.TenantId.HasValue && !await IsEnabledAsync(AppFeatures.TachyonDealer), i => i.TenantId == AbpSession.TenantId.Value)
                     .WhereIf(!AbpSession.TenantId.HasValue || await IsEnabledAsync(AppFeatures.TachyonDealer), i => true)
                             .FirstOrDefaultAsync(i => i.Id == id);
+            if (SubmitInvoice == null) throw new UserFriendlyException(L("TheSubmitInvoiceNotFound"));
+            return SubmitInvoice;
         }
+        private  List<InvoiceItemDto> GetInvoiceItems(SubmitInvoice SubmitInvoice)
+        {
+            var TotalItem = SubmitInvoice.Trips.Count + SubmitInvoice.Trips.Sum(v => v.ShippingRequestTripFK.ShippingRequestTripVases.Count);
+            int Sequence = 1;
+            List<InvoiceItemDto> Items = new List<InvoiceItemDto>();
+            SubmitInvoice.Trips.ToList().ForEach(trip =>
+            {
+                int VasCounter = 0;
+                Items.Add(new InvoiceItemDto
+                {
+                    Sequence = $"{Sequence}/{TotalItem}",
+                    SubTotalAmount = trip.ShippingRequestTripFK.SubTotalAmount.Value,
+                    VatAmount = trip.ShippingRequestTripFK.VatAmount.Value,
+                    TotalAmount = trip.ShippingRequestTripFK.TotalAmount.Value,
+                    WayBillNumber = trip.ShippingRequestTripFK.WaybillNumber.ToString(),
+                    TruckType = ObjectMapper.Map<TrucksTypeDto>(trip.ShippingRequestTripFK.AssignedTruckFk.TrucksTypeFk).TranslatedDisplayName,
+                    Source = ObjectMapper.Map<CityDto>(trip.ShippingRequestTripFK.ShippingRequestFk.OriginCityFk)?.TranslatedDisplayName ?? trip.ShippingRequestTripFK.ShippingRequestFk.OriginCityFk.DisplayName,
+                    Destination = ObjectMapper.Map<CityDto>(trip.ShippingRequestTripFK.ShippingRequestFk.DestinationCityFk)?.TranslatedDisplayName ?? trip.ShippingRequestTripFK.ShippingRequestFk.DestinationCityFk.DisplayName,
+                    DateWork = trip.ShippingRequestTripFK.ShippingRequestFk.EndTripDate.HasValue ? trip.ShippingRequestTripFK.ShippingRequestFk.EndTripDate.Value.ToString("dd MMM, yyyy") : "",
+                    Remarks = trip.ShippingRequestTripFK.ShippingRequestFk.RouteTypeId == Shipping.ShippingRequests.ShippingRequestRouteType.MultipleDrops ?
+                    L("TotalOfDrop", trip.ShippingRequestTripFK.ShippingRequestFk.NumberOfDrops) : ""
+                });
+                Sequence++;
+                if (trip.ShippingRequestTripFK.ShippingRequestTripVases != null && trip.ShippingRequestTripFK.ShippingRequestTripVases.Count > 1)
+                {
+                    VasCounter = 1;
+                }
+                foreach (var vas in trip.ShippingRequestTripFK.ShippingRequestTripVases)
+                {
+
+                    string waybillnumber;
+                    if (VasCounter == 0)
+                    {
+                        waybillnumber = $"{trip.ShippingRequestTripFK.WaybillNumber.ToString()}VAS";
+                    }
+                    else
+                    {
+                        waybillnumber = $"{trip.ShippingRequestTripFK.WaybillNumber.ToString()}VAS{VasCounter}";
+                        VasCounter++;
+                    }
+                    trip.ShippingRequestTripFK.WaybillNumber.ToString();
+
+                    var item = new InvoiceItemDto
+                    {
+                        Sequence = $"{Sequence}/{TotalItem}",
+                        SubTotalAmount = vas.SubTotalAmount.Value,
+                        VatAmount = vas.VatAmount.Value,
+                        TotalAmount = vas.TotalAmount.Value,
+                        WayBillNumber = waybillnumber,
+                        TruckType = L("InvoiceVasType", vas.ShippingRequestVasFk.VasFk.Name),
+                        Source = "-",
+                        Destination = "-",
+                        DateWork = "-",
+                        Remarks = vas.Quantity > 1 ? $"{vas.Quantity}" : ""
+                    };
+                    Items.Add(item);
+
+                    Sequence++;
+                }
+
+            });
+            return Items;
+        }
+
 
 
         #endregion

@@ -105,7 +105,7 @@ export class ViewShippingRequestComponent extends AppComponentBase implements On
       return this.l('TachyonManageService');
     } else if (this.shippingRequestforView.shippingRequest.isBid) {
       return this.l('Marketplace');
-    } else if(this.shippingRequestforView.shippingRequest.isDirectRequest){
+    } else if (this.shippingRequestforView.shippingRequest.isDirectRequest) {
       return this.l('DirectRequest');
     }
   }

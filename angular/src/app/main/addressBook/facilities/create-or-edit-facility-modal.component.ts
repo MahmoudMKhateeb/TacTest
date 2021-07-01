@@ -1,4 +1,4 @@
-﻿import { Component, ViewChild, Injector, Output, EventEmitter, NgZone, ElementRef, OnInit, AfterViewInit } from '@angular/core';
+import { Component, ViewChild, Injector, Output, EventEmitter, NgZone, ElementRef, OnInit, AfterViewInit } from '@angular/core';
 import { ModalDirective } from 'ngx-bootstrap/modal';
 import { finalize } from 'rxjs/operators';
 import {
@@ -8,6 +8,7 @@ import {
   CountiesServiceProxy,
   TenantRegistrationServiceProxy,
   TenantCityLookupTableDto,
+  FacilityForDropdownDto,
 } from '@shared/service-proxies/service-proxies';
 import { AppComponentBase } from '@shared/common/app-component-base';
 import { MapsAPILoader } from '@node_modules/@agm/core';
@@ -81,10 +82,17 @@ export class CreateOrEditFacilityModalComponent extends AppComponentBase impleme
           this.saving = false;
         })
       )
-      .subscribe(() => {
+      .subscribe((id) => {
+        console.log(id);
+        let facilitycallback: FacilityForDropdownDto = new FacilityForDropdownDto();
+        facilitycallback.id = id;
+        facilitycallback.displayName = this.facility.name;
+        facilitycallback.lat = this.facility.latitude;
+        facilitycallback.long = this.facility.longitude;
+
         this.notify.info(this.l('SavedSuccessfully'));
         this.close();
-        this.modalSave.emit(null);
+        this.modalSave.emit(facilitycallback);
       });
   }
 

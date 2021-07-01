@@ -45,10 +45,16 @@ namespace TACHYON.Firebases
             };
             await SendMessage(user.UserId, message, clickAction);
         }
-
-        public async Task PushNotificationToDriverWhenAssignTrip(UserIdentifier user, string TripId)
+        /// <summary>
+        /// Send notification to driver when the carrier assign new trip
+        /// </summary>
+        /// <param name="user"></param>
+        /// <param name="TripId"></param>
+        /// <param name="wayBillNumber"></param>
+        /// <returns></returns>
+        public async Task PushNotificationToDriverWhenAssignTrip(UserIdentifier user, string TripId,string wayBillNumber)
         {
-            string Title = L("NewTripAssign", GetCulture(user));
+            string Title = L("NewTripAssign", GetCulture(user), wayBillNumber);
             var message = new Message()
             {
                 Notification = new Notification
@@ -63,7 +69,12 @@ namespace TACHYON.Firebases
             };
             await SendMessage(user.UserId, message, "ViewComingLoadInfoActivity");
         }
-
+        /// <summary>
+        /// Reminder the driver before one day 
+        /// </summary>
+        /// <param name="user"></param>
+        /// <param name="TripId"></param>
+        /// <returns></returns>
         public async Task ReminderDriverForTrip(UserIdentifier user, string TripId)
         {
             string Title = L("DriverTripReminder", GetCulture(user));
@@ -82,7 +93,29 @@ namespace TACHYON.Firebases
             await SendMessage(user.UserId, message, "ViewComingLoadInfoActivity");
         }
 
-
+        /// <summary>
+        /// Reminder the driver before one day 
+        /// </summary>
+        /// <param name="user"></param>
+        /// <param name="TripId"></param>
+        /// <returns></returns>
+        public async Task TripChanged(UserIdentifier user, string TripId)
+        {
+            string Title = L("TripDataChanged");
+            var message = new Message()
+            {
+                Notification = new Notification
+                {
+                    Title = Title,
+                },
+                Data = new Dictionary<string, string>()
+                {
+                    ["id"] = TripId,
+                    ["changed"] = "true"
+                }
+            };
+            await SendMessage(user.UserId, message, "ViewtripchangedActivity");
+        }
 
         #region Helper
         private async Task SendMessage(long UserId, Message message,string ClickAction)

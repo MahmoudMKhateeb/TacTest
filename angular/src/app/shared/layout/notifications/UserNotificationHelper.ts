@@ -60,20 +60,35 @@ export class UserNotificationHelper extends AppComponentBase {
         return '/app/main/documentFiles/documentFiles';
 
       // Shipping request module
-      case 'App.ShippingRequestAccidentsOccure ':
-        return '/app/main/shippingRequests/shippingRequests/view?id={ShipimentNo}';
-
+      case 'App.ShippingRequestAccidentsOccure':
+        return `/app/main/shippingRequests/shippingRequests/view?id=${userNotification.notification.data.properties.id}`;
+      case 'App.TachyonDealOfferRejectedByShipper':
+        return `/app/main/shippingRequests/shippingRequests/view?id=${userNotification.notification.data.properties.id}`;
       case 'App.SendDriectRequestForCarrier':
-        return '/app/main/shippingRequests/shippingRequests/view?id={ShipimentNo}';
+        return `/app/main/shippingRequests/shippingRequests/view?id=${userNotification.notification.data.properties.id}`;
 
       case 'App.DriectRequestCarrierRespone':
-        return '/app/main/shippingRequests/shippingRequests/view?id={ShipimentNo}';
-
+        return `/app/main/shippingRequests/shippingRequests/view?id=${userNotification.notification.data.properties.id}`;
+      case 'App.ShippingRequest.trip.Accident.Cancel':
+        return `/app/main/shippingRequests/shippingRequests/view?id=${userNotification.notification.data.properties.id}`;
       case 'App.DriverRejectTrip':
-        return '/app/main/shippingRequests/shippingRequests/view?id={ShipimentNo}';
+        return `/app/main/shippingRequests/shippingRequests/view?id=${userNotification.notification.data.properties.id}`;
 
       case 'App.DriverAcceptTrip':
-        return '/app/main/shippingRequests/shippingRequests/view?id={ShipimentNo}';
+        return `/app/main/shippingRequests/shippingRequests/view?id=${userNotification.notification.data.properties.id}`;
+      case 'App.App.ShipperReminderToCompelteTrips':
+        return `/app/main/shippingRequests/shippingRequests/view?id=${userNotification.notification.data.properties.id}`;
+      //New Offer Redirection
+      case 'App.ShippingRequestSendOfferWhenAddPrice':
+        return (
+          '/app/main/shippingRequests/shippingRequests/view?id=' +
+          userNotification.notification.data.properties.id +
+          '&offerid=' +
+          userNotification.notification.data.properties.offerid
+        );
+      //Redirect Invoice Notification
+      case 'App.InvoiceShipperGenerated':
+        return '/app/main/invoices/detail/' + userNotification.notification.data.properties.invoiceid;
     }
 
     //No url for this notification

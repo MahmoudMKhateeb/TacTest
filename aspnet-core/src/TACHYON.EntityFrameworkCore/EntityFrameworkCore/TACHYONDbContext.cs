@@ -237,7 +237,6 @@ namespace TACHYON.EntityFrameworkCore
         public virtual DbSet<ShippingRequestBid> ShippingRequestBids { get; set; }
 
         public virtual DbSet<RoutPoint> RoutPoints { get; set; }
-        public DbSet<RoutePointReceiverReceiveShipmentCode> RoutePointReceiverReceiveShipmentCodes { get; set; }
         public virtual DbSet<RoutPointStatusTransition> RoutPointStatusTransitions { get; set; }
 
         public DbSet<TenantCarrier> TenantCarriers { get; set; }
@@ -423,6 +422,10 @@ namespace TACHYON.EntityFrameworkCore
 
             modelBuilder.Entity<Invoice>()
             .HasIndex(e => e.InvoiceNumber)
+            .IsUnique();
+
+            modelBuilder.Entity<ShippingRequest>()
+            .HasIndex(e => e.ReferenceNumber)
             .IsUnique();
             modelBuilder.ConfigurePersistedGrantEntity();
         }

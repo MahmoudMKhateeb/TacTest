@@ -40,7 +40,7 @@ namespace TACHYON.Routs.RoutPoints
         public ICollection<GoodsDetail> GoodsDetails { get; set; }
 
         public string Code { get; set; }
-
+        public RoutePointStatus Status { get; set; }
         public DateTime? StartTime { get; set; }
         public DateTime? EndTime { get; set; }
         public bool IsActive { get; set; } 
@@ -63,6 +63,7 @@ namespace TACHYON.Routs.RoutPoints
         [DataType(DataType.PhoneNumber)] [CanBeNull] public string ReceiverPhoneNumber { get; set; }
         [CanBeNull] public string ReceiverEmailAddress { get; set; }
         [CanBeNull] public string ReceiverCardIdNumber { get; set; }
+        [CanBeNull] public string ReceiverAddress { get; set; }
 
         //Shipper Note
         [CanBeNull] public string Note { get; set; }

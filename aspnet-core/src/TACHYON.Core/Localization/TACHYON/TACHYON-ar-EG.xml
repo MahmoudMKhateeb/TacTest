@@ -19,10 +19,13 @@
     <text name="Accesstoyourapplicationsandresources,evenwhenyouareoffline">الوصول إلى التطبيقات والموارد الخاصة بك، حتى عندما لاتكون متصلا</text>
     <text name="AccidentReason">أسباب الحادثة</text>
     <text name="AccidentReasonHeaderInfo">الهيدر</text>
+    <text name="Account">الحساب</text>
     <text name="AccountInvoiceType">نوع الحساب</text>
     <text name="AccountNumber">رقم الحساب</text>
     <text name="AccountSettings">إعدادات الحساب</text>
     <text name="AccountStatus">حالة الحساب</text>
+    <text name="Acknowledge">قبول</text>
+    <text name="AcknowledgeSuccessfully">تم القبول بنجاح</text>
     <text name="Action">إجراء</text>
     <text name="ActionInformations">معلومات العمل</text>
     <text name="Actions">الخيارات</text>
@@ -94,11 +97,14 @@
     <text name="ApproximateTripDuration">المدة التقريبية للرحلة</text>
     <text name="AppSecret">سر التطبيق</text>
     <text name="AppVersion">النوع</text>
+    <text name="Arabic">العربية</text>
     <text name="AreYouSure">هل أنت متأكد؟</text>
     <text name="AreYouSure?">هل أنت متأكد</text>
+    <text name="ArrivedToDestination">الوصول لموقع التسليم</text>
     <text name="Assign">تعيين</text>
     <text name="AssignCarrier">تعيين الناقل</text>
     <text name="AssignDriverToTruckNotificationMessage">رسالة تعيين سائق لشاحنة</text>
+    <text name="AssignedTruck">بيانات الشاحنة</text>
     <text name="AssignToAnotherEdition">تعيين إلى نسخة اخرى</text>
     <text name="AtLeastOneOfThesePermissionsMustBeGranted">لم يتم منح الصلاحيات  المطلوبة. يجب منح واحدة على الأقل من هذه الصلاحيات: {0}</text>
     <text name="Attach">إرفاق</text>
@@ -162,6 +168,7 @@
     <text name="Carrier">ناقل</text>
     <text name="CarrierName">اسم الناقل</text>
     <text name="Carriers">الناقلين</text>
+    <text name="CarrierTripNeedAccept">يوجد لديك السائق {driver} لم يوافق الشحنة رقم وثيقة الشحن {waybillnumber}</text>
     <text name="CascadeImpersonationErrorMessage">لايمكن ثمتيل شخص آخر. لان تسجيل دخولك الحالي ممثّل من قبل مستخدم آخر.</text>
     <text name="Category">التصنيف</text>
     <text name="Change">تغيير</text>
@@ -200,6 +207,7 @@
     <text name="CheckoutWithPaypal">ادفع باستعمال باي بال</text>
     <text name="CheckoutWithStripe">ادفع باستعمال سترايب</text>
     <text name="CheckRecipient">تأكيد المستلم</text>
+    <text name="CheckTheRecipient">تحقق من المستلم</text>
     <text name="Choose">إختر</text>
     <text name="ChooseNationality">اختر الجنسية</text>
     <text name="ChooseWhatIncidentIs">الرجاء اختيار ما هو الحادث</text>
@@ -208,6 +216,8 @@
     <text name="CitiesTranslations">ترجمة المدينة</text>
     <text name="City">المدينة</text>
     <text name="CityDisplayName">المدينة</text>
+    <text name="CityName">المدينة</text>
+    <text name="CityOrigin">مدينة الانطلاق</text>
     <text name="Claim" />
     <text name="ClaimKey">مفتاح المطالبة</text>
     <text name="ClaimsMapping">تخطيط المطالبات</text>
@@ -249,6 +259,7 @@
     <text name="CookieConsent">موافقة ملفات تعريف الارتباط</text>
     <text name="CookieConsent_Dismiss">موافق!</text>
     <text name="CookieConsent_Message">يستخدم هذا الموقع ملفات تعريف الارتباط لضمان حصولك على أفضل تجربة.</text>
+    <text name="CorrectlyTypingYourNameMakesTheProcessEasyForSystemUsers">كتابة اسمك بشكل صحيح تجعل العملية سهلة لمستخدمي النظام</text>
     <text name="CostOfProration">فرق السعر خلال هذه الفترة</text>
     <text name="CouldNotCompleteLoginOperation">تعذر إكمال عملية تسجيل الدخول</text>
     <text name="CouldNotValidateExternalUser">لم نتمكن من التحقق من صحة تسجيل دخول المستخدم الخارجي</text>
@@ -292,6 +303,7 @@
     <text name="CreateNewPlateType">إضافة نوع لوحة جديد</text>
     <text name="CreateNewPort">إضافة ميناء جديد</text>
     <text name="CreateNewReceiver">إضافة مستلم جديد</text>
+    <text name="CreateNewRequest">إنشاء طلب شحن جديد</text>
     <text name="CreateNewRole">إضافة دور جديد</text>
     <text name="CreateNewRoute">إضافة طريق جديد</text>
     <text name="CreateNewRoutType">إضافة نوع طريق جديد</text>
@@ -315,6 +327,8 @@
     <text name="CreateNewVasPrice">إضافة سعر جديد للخدمات الإضافية</text>
     <text name="CreateReason">إضافة سبب</text>
     <text name="CreateShippingRequest">طلب شحن جديد</text>
+    <text name="CreateUserFirstName">الإسم</text>
+    <text name="CreateUserLastName">اسم العائلة</text>
     <text name="CreatingDynamicParameters">إنشاء معلمات ديناميكية</text>
     <text name="CreatingDynamicParameterValue">إنشاء قيمة المعلمة الديناميكية</text>
     <text name="CreatingEntityDynamicParameters">إنشاء معلمات ديناميكية للكيان</text>
@@ -327,6 +341,7 @@
     <text name="CreatingWebhooks">Creating new webhook</text>
     <text name="CreationDate">تاريخ الإنشاء</text>
     <text name="CreationTime">تاريخ الإنشاء</text>
+    <text name="Current">الحمولة الحالية</text>
     <text name="CurrentLanguage">اللغة الحالية</text>
     <text name="CurrentPassword">كلمة المرور الحالية</text>
     <text name="CurrentTenant">الشركة الحالية</text>
@@ -358,6 +373,9 @@
     <text name="DashboardSampleStatisticsHelpText">التقدم</text>
     <text name="Data">البيانات</text>
     <text name="DatabaseConnectionString">Database connection string</text>
+    <text name="DatatableDocumentName">نوع المستند</text>
+    <text name="DatatablePickingType">النوع</text>
+    <text name="DatatableShipperName">اسم الشاحن</text>
     <text name="Date">التاريخ</text>
     <text name="DateAndTimePickers">إختيار التاريخ و الوقت</text>
     <text name="DateFormatShort">يوم/ شهر / سنة</text>
@@ -451,9 +469,11 @@
     </text>
     <text name="DemoUiComponents_Info_Metronic_Link_Text">Check Metronic theme for more UI components</text>
     <text name="Description">الوصف</text>
+    <text name="DescriptionNumberOfDrops">يتم تطبيقها على كل شحنة،، على مستوى كل شحنة</text>
     <text name="DestFacility">منطقة التنزيل</text>
     <text name="Destination">الوجهة</text>
     <text name="DestinationCity">إلى</text>
+    <text name="DestinationDelivery">مدينة الوصول</text>
     <text name="DestinationFacility">منطقة التنزيل</text>
     <text name="Detail">تفاصيل</text>
     <text name="DetailingSubscription">See webhook detail page</text>
@@ -475,6 +495,7 @@
     <text name="DocumentFiles">مستند</text>
     <text name="DocumentFilesHeaderInfo">DocumentFilesHeaderInfo</text>
     <text name="DocumentFileWarnSizeLimit">حجم الملف يفوق الحد المسموح</text>
+    <text name="DocumentHeaderDetails">تفاصيل المستند</text>
     <text name="DocumentManagement">إدارة المستندات</text>
     <text name="DocumentName">إسم المستند</text>
     <text name="Documents">المستندات</text>
@@ -499,19 +520,15 @@
     <text name="DownloadCollectedData_Description">تحميل إعدادات حسابك</text>
     <text name="DownloadDropWaybill">تحميل وثيقة الشحن</text>
     <text name="DownloadInvoice">تحميل الفاتورة</text>
-    <text name="DriectRequestCarrierRespone">
-      <a href="/app/main/shippingRequests/shippingRequests/view?id={id}">{clientname} قام بوضع عرض مالي للشحنة رقم: {ShipimentNo}.</a>
-    </text>
+    <text name="DriectRequestCarrierRespone">{clientname} قام بوضع عرض مالي للشحنة رقم: {id}.</text>
     <text name="Driver">سائق</text>
-    <text name="DriverAcceptTrip">
-      <a href="/app/main/shippingRequests/shippingRequests/view?id={id}">السائق {driver} وافق على الرحلة من {source} إلى {destination}</a>
-    </text>
+    <text name="DriverAcceptTrip">السائق {driver} وافق على الرحلة من {source} إلى {destination}</text>
+    <text name="DriverCreationDateAndTime">تاريخ و وقت الإنشاء</text>
     <text name="DriverDocuments">مستندات السائق</text>
+    <text name="DriverInformation">معلومات السائق</text>
     <text name="DriverInformations">معلومات السائق</text>
     <text name="DriverName" />
-    <text name="DriverRejectTrip">
-      <a href="/app/main/shippingRequests/shippingRequests/view?id={id}">السائق {driver} لقد رفض الرحلة من {source} إلى {destination}</a>
-    </text>
+    <text name="DriverRejectTrip">السائق {driver} لقد رفض الرحلة من {source} إلى {destination}</text>
     <text name="Drivers">السائقين</text>
     <text name="DriversHeaderInfo">Drivers Header Info</text>
     <text name="DriverStatus">حالة السائق</text>
@@ -519,12 +536,12 @@
     <text name="DrivingLicense">رخصة القيادة</text>
     <text name="DropOff">تنزيل</text>
     <text name="DropoffDetailCommodity">البضاعة</text>
-    <text name="DropoffDetailDropoff">نقطة التنزيل</text>
+    <text name="DropoffDetailDropoff">موقع التنزيل</text>
     <text name="DropoffDetailID">رقم الهوية</text>
     <text name="DropoffDetailMobile">رقم الموبايل</text>
     <text name="DropoffDetailPackagingType">نوع التغليف</text>
     <text name="DropoffDetailQuantity">الكمية</text>
-    <text name="DropoffDetailShipperNotes">ملاحظات </text>
+    <text name="DropoffDetailShipperNotes">ملاحظات الشاحن</text>
     <text name="DropoffDetailUnitOfMeasure">وحدة القياس</text>
     <text name="DropoffDetailWeight">الوزن</text>
     <text name="DueDate">تاريخ الاستحقاق</text>
@@ -556,7 +573,7 @@
     <text name="EditingEdition">جاري تعديل نوع الاشتراك</text>
     <text name="EditingEntityDynamicParameters">تحرير المعلمات الديناميكية للكيان</text>
     <text name="EditingEntityDynamicParameterValue">تحرير قيمة المعلمة الديناميكية للكيان</text>
-    <text name="EditingLanguage">تعديل اللغة</text>
+    <text name="EditingLanguage">تغيير اللغة</text>
     <text name="EditingRole">جاري تعديل الدور</text>
     <text name="EditingTenant">جاري تعديل معلومات الشركة</text>
     <text name="EditingUser">جاري تعديل معلومات المستخدم</text>
@@ -604,6 +621,7 @@
     <text name="EditVas">تعديل الخدمات الإضافية</text>
     <text name="EditVasPrice">تعديل سعر الخدمات الإضافية</text>
     <text name="EditWebhookSubscription">Edit Webhook Subscription</text>
+    <text name="EditYourName">تعديل الاسم</text>
     <text name="Email">البريد الإلكتروني</text>
     <text name="EmailActivation">تفعيل البريد الإلكتروني</text>
     <text name="EmailActivation_ClickTheLinkBelowToVerifyYourEmail">يرجى الضغط على الرابط أدناه لتأكيد البريد الإلكتروني:</text>
@@ -625,8 +643,10 @@
     <text name="EnableTwoFactorLogin">تمكين توثيق تسجيل الدخول ذو عاملين.</text>
     <text name="EnableUserAccountLockingOnFailedLoginAttemts">تمكين تأمين محاولات الدخول الفاشلة</text>
     <text name="EndDate">تاريخ النهاية</text>
+    <text name="EndOffloadingShipment">الانتهاء من تنزيل االحمولة</text>
     <text name="EndTime">وقت النهاية</text>
     <text name="EndTripDate">تاريخ التسليم</text>
+    <text name="English">الانجليزية</text>
     <text name="EnglishLettersOnly">حروف انجليزية فقط</text>
     <text name="Enter">أدخل</text>
     <text name="EnterNumberOfPacking">ادخل كمية نوع التعبئة</text>
@@ -668,6 +688,7 @@
     <text name="Facilities">المنشأت</text>
     <text name="FacilitiesSetup">إدارة المنشأة</text>
     <text name="Facility">منشأة</text>
+    <text name="FacilityDetails">تفاصيل المنشأة</text>
     <text name="FacilityName">اسم المنشأة</text>
     <text name="Failed">فشل</text>
     <text name="FailedSubscriptionTerminations_Email_Body">فشل إنهاء الاشتراك للشركات التالية {0} في {1}. يمكنك العثور على رسائل الخطأ المفصلة في سجلات النظام.</text>
@@ -689,6 +710,7 @@
     <text name="FilterOrAddUser">تصفية\إضافة مستخدم</text>
     <text name="FinalPrice">السعر النهائي</text>
     <text name="FinancialTransActionMenu">التاريخ المالي</text>
+    <text name="FinishLoading">الانتهاء من تحميل االحمولة</text>
     <text name="FirstName">الإسم الأول</text>
     <text name="Flag">علم</text>
     <text name="ForgotPassword">هل نسيت كلمة المرور؟</text>
@@ -706,7 +728,7 @@
     <text name="Gateway">بوابة</text>
     <text name="GdprDataPreparedNotificationMessage">تم إعداد بياناتك ، انقر هنا للتنزيل.</text>
     <text name="GdprDataPrepareStartedNotification">نحن نعد بياناتك. سيتم إخطارك عند الإنتهاء من إعداد بياناتك.</text>
-    <text name="General">عــام</text>
+    <text name="General">الاعدادات العامة</text>
     <text name="GeneralDetails">تفاصيل عامة</text>
     <text name="GeneralSettings">اللإعدادات</text>
     <text name="Generate">إنشاء</text>
@@ -733,6 +755,7 @@
     <text name="Gregorian">ميلادي</text>
     <text name="HangfireDashboard">Hangfire dashboard</text>
     <text name="HasAmount">له قيمة</text>
+    <text name="HasAttachment">لديها مرفق</text>
     <text name="HasCount">له عدد</text>
     <text name="HasError">يوجد خطأ</text>
     <text name="HasExpirationDate">له تاريخ انتهاء صلاحية</text>
@@ -743,11 +766,13 @@
     <text name="HeaderKey">Header Key</text>
     <text name="HeaderKeyAndValueCanNotBeNull">Header key and value can not be null</text>
     <text name="HeaderKeysMustBeUnique">Header keys must be unique</text>
+    <text name="HeaderReciverDetails">تفاصيل المستلم</text>
     <text name="HeaderValue">Header Value</text>
     <text name="Height">الإرتفاع</text>
     <text name="Hide">إخفاء</text>
     <text name="HideAdvancedFilters">إخفاء الفلاتر المتقدمة</text>
     <text name="Hijri">هجري</text>
+    <text name="Hindi">الهندية</text>
     <text name="History">تاريخ</text>
     <text name="HomePage">الصفحة الرئيسية</text>
     <text name="HostDashboardHeaderInfo">الإحصاءات العامة والأنشطة الأخيرة</text>
@@ -755,6 +780,7 @@
     <text name="HttpStatusCode">Http Status Code</text>
     <text name="IAgreeonTahcyon">أنا أوافق على</text>
     <text name="IAMA">أنا</text>
+    <text name="Id">الهوية الوطنية / الإقامة</text>
     <text name="ID/Iqama">الهوية الوطنية / الإقامة</text>
     <text name="Image">صورة</text>
     <text name="ImpersonationTokenErrorMessage">رمز التمثيل غير صالح أو منتهية صلاحيتة!</text>
@@ -828,6 +854,7 @@
     <text name="IsTwoFactorEnabled">تم تمكين المصادقة الثنائية</text>
     <text name="Item">مادة</text>
     <text name="Key">مفتاح</text>
+    <text name="Kg">كجم</text>
     <text name="Language">لغة</text>
     <text name="LanguageDeleteWarningMessage">هل أنت متأكد من حذف اللغة {0}</text>
     <text name="Languages">اللغات</text>
@@ -916,7 +943,21 @@
     <text name="MinDigitNumberShouldBeLessMaxDigitNumber">الحد الأدني من الخانات من المفترض أن يكون أقل من الحد الأعلى</text>
     <text name="MinDigits">أقل عدد من الخانات</text>
     <text name="MinValue">أقل قيمة</text>
+    <text name="MobileAbout">عن التطبيق</text>
+    <text name="MobileAccept">قبول</text>
+    <text name="MobileEmailAddress">عنوان البريد الالكتروني</text>
+    <text name="MobileEndTrip">الانتهاء من توصيل و تسليم الحمولة</text>
+    <text name="MobileLanguage">اللغة</text>
+    <text name="MobilelogOut">تسجيل خروج</text>
     <text name="MobileNo">رقم الجوال</text>
+    <text name="MobileNumber">رقم الجوال</text>
+    <text name="MobilePleaseEnterTheCodeSentToRecipient">الرجاء إدخال الرمز، المرسل الى المستلم</text>
+    <text name="MobileReject">رفض</text>
+    <text name="MobileTermsAndConditions">الشروط و الأحكام</text>
+    <text name="MobileUpdate">تحديث</text>
+    <text name="MobileUsagePolicy">سياسة الاستخدام</text>
+    <text name="MobileUserEmail">البريد الالكتروني </text>
+    <text name="MobileUserProfile">الملف الشخصي</text>
     <text name="ModalName">النوع</text>
     <text name="ModalYear">سنة الصنع</text>
     <text name="Model">نوع</text>
@@ -935,7 +976,8 @@
     <text name="Myload">طلباتي</text>
     <text name="MyLoadComming">القادمة</text>
     <text name="MyLoadCurrent">الحالية</text>
-    <text name="MyLoadPast">المكتملة</text>
+    <text name="MyLoadPast">الحمولة السابقة</text>
+    <text name="MyLoads">الحمولات </text>
     <text name="MySettings">إعداداتي</text>
     <text name="MySettings_Description">تغيير إعدادات حسابك</text>
     <text name="MyShippingRequests">شحناتي</text>
@@ -948,6 +990,7 @@
     <text name="NationalityTranslation">ترجمة الجنسية</text>
     <text name="NationalityTranslations">ترجمة الجنسيات</text>
     <text name="NeedsAction">بانتظار قرار</text>
+    <text name="NeedsDeliveryNote">بحاجة إلى مذكرة تسليم</text>
     <text name="NeedToSelectDropPoint">يجب عليك اختيار نقطة تنزيل</text>
     <text name="New">جديد</text>
     <text name="NewCapacity">حمولة جديدة</text>
@@ -962,9 +1005,7 @@
     <text name="NewGroupPerioGenerated">
       <a href="/app/main/invoices/submitinvoices/detail/{groupid}">تم إنشاء فاتورة جديدة {groupid}#</a>
     </text>
-    <text name="NewInvoiceShipperGenerated">
-      <a href="/app/main/invoices/detail/{invoiceid}">تم إنشاء فاتورة جديدة {invoiceid}#</a>
-    </text>
+    <text name="NewInvoiceShipperGenerated">تم إنشاء فاتورة جديدة {invoiceid}#</text>
     <text name="NewInvoiceShipperGeneratedEmailBody">
       <a href="/app/main/invoices/detail/{invoiceid}">تم إنشاء الفاتورة رقم {invoiceid}#</a>
     </text>
@@ -986,7 +1027,7 @@
     <text name="NewTenants">شركات جديدة</text>
     <text name="NewTermAndCondition">شروط  وأحكام جديدة</text>
     <text name="NewTransportType">نوع نقل جديد</text>
-    <text name="NewTripAssign">تم اسناد رحلة جديدة لك</text>
+    <text name="NewTripAssign">تم اسناد رحلة جديدة لك، رقم وثيقة الشحن {0}</text>
     <text name="NewTruck">شاحنة جديدة</text>
     <text name="NewTruckStatus">حالة شاحنة جديدة</text>
     <text name="NewTrucksType">نوع شاحنة جديد</text>
@@ -1000,6 +1041,8 @@
     <text name="NoEnoughBalance">لا يوجد لديك رصيد كافي </text>
     <text name="NoInternetConnection">أنت غير متصل  بالإنترنت حالياً</text>
     <text name="None">لا شيء</text>
+    <text name="NonMandatoryDocuments">المستندات غير الإلزامية</text>
+    <text name="NoNotificationsYet">لا يوجد اشعارات بعد</text>
     <text name="NoOfTrips">الرحلات</text>
     <text name="NoOrganizationUnitDefinedYet">لا توجد وحدات تنظيمية.</text>
     <text name="NoPermission">ليس لديك أي صلاحيات تواصل مع مشرف حسابك</text>
@@ -1016,6 +1059,7 @@
     <text name="Notifications">الإشعارات</text>
     <text name="NotificationSettings">إعدادات الإشعارات</text>
     <text name="NotificationTypes">أنواع الإشعارات</text>
+    <text name="NotificationWhenTripDetailsChanged">تم تحديث بيانات الشحنة {waybillnumber}.</text>
     <text name="NotifyDriverWhenAssignToTrip">تم إسناد رحلة جديدة إليك</text>
     <text name="NotImpersonatedLoginErrorMessage">هذا ليس تسجيل دخول ممثّل</text>
     <text name="NotIsRequired">غير مطلوب</text>
@@ -1061,6 +1105,7 @@
     <text name="OtherReason">اسباب اخرى</text>
     <text name="Others">أخرى</text>
     <text name="OtherSettings">إعدادات اخرى</text>
+    <text name="PackagingType">نوع التغليف</text>
     <text name="PackingType">نوع التعبئة</text>
     <text name="PackingTypes">أنواع التعبئة</text>
     <text name="PageDeleteWarningMessage">هل أنت متأكد من إزالة صفحة "{0}"؟</text>
@@ -1120,6 +1165,7 @@
     <text name="PerWeek">في الاسبوع</text>
     <text name="PerYear">كل سنة</text>
     <text name="PhoneNumber">رقم الجوال</text>
+    <text name="PhoneNumberCreate">رقم الجوال</text>
     <text name="PhoneNumberMustStartWith5">رقم الجوال يجب أن يبدأ ب 5</text>
     <text name="Pick">اختر</text>
     <text name="PickanEndDate">اختر تاريخ النهاية</text>
@@ -1146,7 +1192,7 @@
     <text name="PickTruck">اختر الشاحنة</text>
     <text name="PickTruckStatus">اختر حالة الشاحنة</text>
     <text name="PickTrucksType">اختر نوع الشاحنة</text>
-    <text name="Pickup">تحميل</text>
+    <text name="Pickup">موقع التحميل </text>
     <text name="PickupDate">تاريخ التحميل</text>
     <text name="PickUser">اختر المستخدم</text>
     <text name="PickVas">اختر الخدمات الإضافية</text>
@@ -1167,15 +1213,22 @@
     <text name="PleaseEnterDocumentType">الرجاء ادخال نوع المستند</text>
     <text name="PleaseEnterLoginInformation">الرجاء إدخال معلومات تسجيل الدخول</text>
     <text name="PleaseEnterNoMoreThanNCharacter">الرجاء إدخال أكثر من {0} حرفا.</text>
+    <text name="PleaseEnterTheCodeSentToRecipient">الرجاء إدخال الرمز، المرسل الى المستلم</text>
+    <text name="PleaseEnterYourMobileNumber">الرجاء ادخال رقم الجوال</text>
     <text name="PleaseEnterYourNewPassword">الرجاء ادخال كلمة السر الجديدة</text>
     <text name="Pleasemakesureyouchoosethecountryandthecity!">الرجاء التأكد من أنك اخترت الدولة و المدينة</text>
     <text name="PleaseMakeSureYouProvideValidDetails!">الرجاء التأكد من أن جميع البيانات صحيحة</text>
     <text name="PleaseOnClickFollowingLinkToTrackYourShipmentAndRateTheShippingCompany">الرجاء الضغط على الرابط التالي لتتبع شحنتك و تقييم تجربتك</text>
     <text name="PleaseSelectAPicture">يرجى تحديد صورة!</text>
+    <text name="PleaseSelectAReason">الرجاء اختيار سبب الرفض </text>
     <text name="PleaseSelectASourceTripFacilityFirst">الرجاء اختيار منشأة التحميل أولاً</text>
     <text name="PleaseSelectReason">الرجاء اختيار سبب</text>
+    <text name="PleaseUploadPOD">يرجى تحميل إثبات التسليم POD</text>
     <text name="PleaseWait">الرجاء الإنتظار</text>
     <text name="PleaseWaitToConfirmYourEmailMessage">الرجاء الانتظار لحين تأكيد عنوان البريد الإلكتروني...</text>
+    <text name="PleaseWriteTheRejectionReason">الرجاء كتابة سبب الرفض </text>
+    <text name="PleaseWriteYourFullName">الرجاء كتابة اسمك بالكامل</text>
+    <text name="PODProofOfDelivery">إثبات التسليم</text>
     <text name="Port">الميناء</text>
     <text name="Ports">الموانئ</text>
     <text name="PostedData">البيانات المنشورة</text>
@@ -1205,15 +1258,19 @@
     <text name="Quantity">الكمية</text>
     <text name="QuickNav">الإنتقال السريع</text>
     <text name="QuickThemeSelection">الاختيار السريع للتصميم</text>
+    <text name="RateLoadingFacility">تقييم إجراءات  تحميل الحمولة </text>
     <text name="RateOffloadingAdditionalNote">ملاحظات اضافية</text>
     <text name="RateOffloadingRateFacility">حفظ التقيم</text>
     <text name="Read">مقروء</text>
     <text name="ReadState">مقروء</text>
+    <text name="ReadyForLoading">تأكيد الجهوزية لتحميل الحمولة </text>
+    <text name="ReadyToOffloading">تأكيد الجهوزية لتنزيل الحمولة </text>
     <text name="Reason">سبب</text>
     <text name="ReceiveNotifications">تلقي الإشعارات</text>
     <text name="ReceiveNotifications_Definition">هذا الخيار يمكن استخدامه لتمكين / تعطيل الإخطارات.</text>
     <text name="ReceiveNotifications_DisableInfo">لقد قمت بتعطيل خاصية تلقي الإشعارات. يمكنك تفعيلها و اختيار نوع الاشعارات التي ترغب باستقبالها</text>
     <text name="Receiver">المستلم</text>
+    <text name="ReceiverCode">كود المستلم</text>
     <text name="ReceiverFullName">الاسم الكامل للمستلم</text>
     <text name="ReceiverPhoneNumber">رقم جوال المستلم</text>
     <text name="Receivers">المستلمين</text>
@@ -1222,6 +1279,7 @@
     <text name="RecentTenants">الشركات الأخيرة</text>
     <text name="RecentTenantsHelpText">آخر {1} من العملاء المسجلين في {0} يوما ...</text>
     <text name="RechargeAmount">إدارة الرصيد</text>
+    <text name="ReciverName">اسم المستلم</text>
     <text name="RecurringSubscriptionUpgradeNote">سيتم فرض رسوم على فرق السعر بين نسختك الحالية والنسخه المرتقى لها.</text>
     <text name="ReferenceNo" />
     <text name="Refresh">تحديث</text>
@@ -1236,6 +1294,7 @@
     <text name="RejectOffer">رفض</text>
     <text name="RejectPricingOffer">رفض عرض السعر</text>
     <text name="RejectShippingRequestNotificationMessage">تم إلغاء طلب الشحنة</text>
+    <text name="RejectTheTrip">رفض الرحلة</text>
     <text name="RejectThisTrip">رفض هذه الرحلة!</text>
     <text name="RemainingDay">الأيام المتبقية</text>
     <text name="RemainingDays">الأيام المتبقيه</text>
@@ -1252,13 +1311,17 @@
     <text name="RePricing">إعادة تسعير</text>
     <text name="RequestedFileDoesNotExists">لم نعثر على الملف المطلوب</text>
     <text name="Requests">الطلبات</text>
+    <text name="RequestStatus">حالة الطلب</text>
     <text name="RequestTimedOut">انتهت مهلة طلبك، الرجاء إعادة المحاولة لاحقا.</text>
+    <text name="RequestType">نوع الطلب</text>
     <text name="Required">مطلوب</text>
     <text name="RequiredField">حقل {0} مطلوب.</text>
     <text name="RequiredFrom">مطلوب من</text>
     <text name="RequiresPasswordChange">يتطلب تغيير كلمة المرور</text>
     <text name="RequiresTwoFactorAuth">يتطلب  التوثيق ذو عاملين</text>
     <text name="Resend">إعادة إرسال</text>
+    <text name="ReSendAfter">إعادة إرسال بعد</text>
+    <text name="ReSendAfterSeconds">إعادة الارسال بعد ٣٥ ديقية</text>
     <text name="ResendingWebhook">Resending a webhook</text>
     <text name="Reset">إعادة تعيين</text>
     <text name="ResetCode">رمز إعادة تعيين</text>
@@ -1288,7 +1351,7 @@
     <text name="RoutType">نوع الطريق</text>
     <text name="RoutTypeDisplayName">نوع الطريق</text>
     <text name="RoutTypes">أنواع الطرقات</text>
-    <text name="SAR">ريال سعودي</text>
+    <text name="SAR">ر.س</text>
     <text name="Save">حـفظ</text>
     <text name="SaveAll">إحفظ الكل</text>
     <text name="SaveAndClose">حـفظ وإغلاق</text>
@@ -1301,6 +1364,7 @@
     <text name="Search">بحث</text>
     <text name="SearchForNearestLocation">البحث عن أقرب موقع</text>
     <text name="SearchWithThreeDot">بـحث...</text>
+    <text name="Second">ثانية</text>
     <text name="SecondShort{0}">{0} ث</text>
     <text name="Security">الأمن</text>
     <text name="SeeAllNotifications">عرض جميع الإشعارات</text>
@@ -1343,6 +1407,7 @@
     <text name="SelectTwoFactorProvider">اختر مزود التوثيق ذو العاملين</text>
     <text name="SelectUsers">حدد المستخدمين</text>
     <text name="SelectVASs">اختر الخدمات الإضافية</text>
+    <text name="SelectYourLanguage">الرجاء اختيار اللغة</text>
     <text name="SelfTenantRegistrationIsDisabledMessage_Detail">تم تعطيل خاصية التسجيل الذاتي للشركات يرجى الاتصال بمسؤول النظام للتسجيل</text>
     <text name="SelfUserDelegationErrorMessage">لا يمكنك تفويض نفسك!</text>
     <text name="SelfUserRegistrationIsDisabledMessage">لايمكنك التسجيل بالمنصة</text>
@@ -1366,6 +1431,7 @@
     <text name="SendSecurityCodeErrorMessage">تعذر إرسال رمز الأمان!</text>
     <text name="SendSuccessfully">تم الإرسال بنجاح</text>
     <text name="SendTestEmail">تجربة إرسال بريد</text>
+    <text name="Sequence">التسلسل</text>
     <text name="Service">خدمة</text>
     <text name="SessionExpireRedirectingInXSecond">ستنتهي مدة جلستك لأنك لم تكن نشطًا لفترة طويلة. عند أي إدخال للفأرة أو لوحة المفاتيح على الموقع سيتم إيقاف إنهاء الجلسة. إعادة التوجيه خلال {0} ثانية.</text>
     <text name="SessionTimeOut">التحكم في مهلة الجلسة</text>
@@ -1379,6 +1445,7 @@
     <text name="Settings">الإعدادات</text>
     <text name="SettingsHeaderInfo">عرض وتغيير إعدادات النظام</text>
     <text name="Severity">خطورة</text>
+    <text name="ShipmentDetails">تفاصيل الحمولة</text>
     <text name="ShipmentTracking">تتبع الشحنة</text>
     <text name="Shipper">شاحن</text>
     <text name="ShipperAcceptedOffers">
@@ -1386,17 +1453,11 @@
     </text>
     <text name="ShipperName">اسم الشاحن</text>
     <text name="ShipperNotfiyWhenCreditLimitGreaterOrEqualXPercentage">لقد استخدمت أكثر من 70% من حدك الإئتماني</text>
-    <text name="ShipperReminderToCompelteTrips">
-      <a href="/app/main/shippingRequests/shippingRequests/view?id={id}">لديك شحنة لم تكمل الرحلات الخاصة بها</a>
-    </text>
+    <text name="ShipperReminderToCompelteTrips">لديك شحنة لم تكمل الرحلات الخاصة بها</text>
     <text name="ShippingNote">ملاحظات مرسل الشحنة</text>
     <text name="ShippingRequest" />
-    <text name="ShippingRequestAccidentsOccure">
-      <a href="/app/main/shippingRequests/shippingRequests/view?id={id}">لقد حدث حادث للشحنة رقم: {id}.</a>
-    </text>
-    <text name="ShippingRequestCancelTripByAccidents">
-      <a href="/app/main/shippingRequests/shippingRequests/view?id={id}">لقد تم إلغاء الشحنة رقم {id} بسبب وجود حادث</a>
-    </text>
+    <text name="ShippingRequestAccidentsOccure">لقد حدث حادث للشحنة رقم: {id}.</text>
+    <text name="ShippingRequestCancelTripByAccidents">لقد تم إلغاء الشحنة رقم {id} بسبب وجود حادث</text>
     <text name="ShippingRequestDetails">تفاصيل طلب الشحن</text>
     <text name="ShippingRequestNotifyCarrirerWhenShipperAccepted">
       <a href="/app/main/shippingRequests/shippingRequests/view?id={id}">لقد قام الشاحن {clientname} بقبول عرضك المالي للشحنة.</a>
@@ -1407,7 +1468,7 @@
     <text name="ShippingRequests">طلبات الشحن</text>
     <text name="ShippingRequestsCreate">إنشاء طلب شحن</text>
     <text name="ShippingRequestsEdit">تعديل طلب الشحن</text>
-    <text name="ShippingRequestSendOfferWhenAddPrice"><![CDATA[<a href="/app/main/shippingRequests/shippingRequests/view?id={id}&offerid={offerid}">تم إضافة عرض جديد للشحنة</a>]]></text>
+    <text name="ShippingRequestSendOfferWhenAddPrice">تم إضافة عرض جديد للشحنة</text>
     <text name="ShippingRequestSendOfferWhenUpdatePrice"><![CDATA[<a href="/app/main/shippingRequests/shippingRequests/view?id={id}&offerid={offerid}">تم تحديث العرض المالي للشحنة من قبل الناقل {carrier}.</a>]]></text>
     <text name="ShippingRequestStatus">حالة طلب الشحن</text>
     <text name="ShippingRequestStatuses">حالات طلب الشحن</text>
@@ -1445,6 +1506,9 @@
     <text name="SpecialConstant">رمز مميز</text>
     <text name="Start">بدء</text>
     <text name="StartDate">تاريخ البداية</text>
+    <text name="StartLoading">بدء تحميل الحمولة</text>
+    <text name="StartMovingToDestination">بدء التحرك باتِّجاه موقع التسليم </text>
+    <text name="StartMovingToLoadingLocation">الذهاب الى موقع تحميل الحمولة</text>
     <text name="StartShippmentNotificationMessage">تم بدء الشحنة</text>
     <text name="StartTime">وقت البداية</text>
     <text name="StartTripDate">تاريخ الاستلام</text>
@@ -1499,19 +1563,24 @@
     <text name="SubscriptionPrice">سعر الإشتراك</text>
     <text name="Subscriptions">الاشتراكات</text>
     <text name="SubscriptionStartDate">تاريخ بداية الاشتراك</text>
+    <text name="SubTotalAmount">المبلغ الاجمالي</text>
     <text name="Success">نجاح</text>
     <text name="SuccessfullyActivated">تم التفعيل بنجاح</text>
     <text name="SuccessfullyAdded">تمت الإضافة بنجاح.</text>
     <text name="SuccessfullyCanceled">تم الإلغاء بنجاح</text>
+    <text name="SuccessfullyChanged">تم التغيير بنجاح</text>
+    <text name="SuccessfullyConfirmed">تم التأكيد بنجاح</text>
     <text name="SuccessfullyDeactivated">تم إلغاء التفعيل بنجاح</text>
     <text name="SuccessfullyDeclined">تم رفض التسعير بنجاح</text>
     <text name="SuccessfullyDeleted">تم الحذف بنجاح</text>
     <text name="SuccessfullyGenerate">تمت عملية الإنشاء بنجاح</text>
     <text name="SuccessfullyMoved">تم النقل بنجاح.</text>
     <text name="SuccessfullyRegistered">تم التسجيل بنجاح</text>
+    <text name="SuccessfullyRejected">تمت عملية الرفض بنجاح</text>
     <text name="SuccessfullyRemoved">تمت الإزالة بنجاح.</text>
     <text name="SuccessfullyRestore">تمت عملية الإسترجاع بنجاح</text>
     <text name="SuccessfullySaved">تم الحـفظ بنجاح</text>
+    <text name="SuccessfullyStarted">تم البدأ بنجاح</text>
     <text name="SuccessfullyTripCancled">تم إلغاء الرحلة بنجاح</text>
     <text name="SuccessfullyUnlinked">تم إزالة الربط بنجاح.</text>
     <text name="Summary">ملخص</text>
@@ -1522,6 +1591,7 @@
     <text name="SwitchToTheHost">التبديل إلى مشرف النظام</text>
     <text name="SwitchToTheTenant">التبديل إلى الشركة</text>
     <text name="SwitchToUser">التبديل إلى المستخدم</text>
+    <text name="TableVasName">النوع</text>
     <text name="Tachyon">تاكيون</text>
     <text name="TACHYON.AddressBook.Facility">منشأة</text>
     <text name="TACHYON.Authorization.Roles.Role">دور</text>
@@ -1565,9 +1635,7 @@
     <text name="TachyonDealOfferAcceptedByShipper">
       <a href="/app/main/shippingRequests/shippingRequests/view?id={id}">تم قبول العرض المالي من قبل الشاحن {clientname}.</a>
     </text>
-    <text name="TachyonDealOfferRejectedByShipper">
-      <a href="/app/main/shippingRequests/shippingRequests/view?id={id}">تم رفض العرض المالي من قبل الشاحن {clientname}.</a>
-    </text>
+    <text name="TachyonDealOfferRejectedByShipper">تم رفض العرض المالي من قبل الشاحن {clientname}.</text>
     <text name="TachyonManageService">إدارة خدمات تاكيون</text>
     <text name="TachyonPlatForm">تاكيون</text>
     <text name="TakePhoto">التقاط صورة</text>
@@ -1655,6 +1723,7 @@
     <text name="TheShipperSelectedIsNotFound">الشاحن المحدد غير موجود</text>
     <text name="TheShippingIsNotFound">الشحنة غير متوفره</text>
     <text name="TheShippingRequestNotFound">لا يوجد شحنة</text>
+    <text name="TheTotalWeightOfGoodsDetailsshouldNotBeGreaterThanShippingRequestWeight">مجموع الأوزان للبضائع يجب أن لا تكون أكبر من وزن الشحنة {0}</text>
     <text name="ThisEditionIsUsedAsAnExpiringEdition">يتم استخدام هذه النسخة كنسخة تنتهي صلاحيتها لنسخة أخرى. إذا كنت تريد جعل هذه النسخة مدفوعة، يجب عليك أولا إزالتها من النسخ الأخرى.</text>
     <text name="ThisFieldIsRequired">هذا الحقل مطلوب</text>
     <text name="ThisInvoiceIsNotYours">هذه الفاتورة ليست لك!</text>
@@ -1675,13 +1744,16 @@
       <a href="/app/main/shippingRequests/shippingRequests/view?id={id}">{name} تم الموافقة على العرض.</a>
     </text>
     <text name="TMSSettings">إعدادات نظام إدارة النقل</text>
+    <text name="TMSTripNeedAccept">يوجد لديك الناقل {carrier} لم يوافق الشحنة رقم وثيقة الشحن {waybillnumber}</text>
     <text name="Today">اليوم</text>
     <text name="Toggle">تبديل</text>
     <text name="ToleranceDaysBeforeDeactivateAfterExpiration">عدد أيام السماح بعد تاريخ إنتهاء الصلاحية</text>
     <text name="TopMenu">القائمة العلوية</text>
     <text name="Total">المجموع</text>
     <text name="TotalAmount">المبلغ الإجمالي</text>
+    <text name="TotalBids">عدد العروض</text>
     <text name="TotalBidsCount">عدد عروض التسعيرات</text>
+    <text name="TotalDistance">إجمالي وجهة الرحلة</text>
     <text name="TotalOfDrop">عدد مرات التنزيل: {0}</text>
     <text name="TotalOffer">عرض</text>
     <text name="TotalOffers">عروض</text>
@@ -1707,12 +1779,13 @@
     <text name="TransportTypesHeaderInfo">TransportTypesHeaderInfo</text>
     <text name="TransportTypesTranslation">ترجمة أنواع النقل</text>
     <text name="TransportTypesTranslations">ترجمة أنواع النقل</text>
-    <text name="Traveltime">زمن الرحلة</text>
+    <text name="Traveltime">وقت الرحلة</text>
     <text name="Trial">تجربة</text>
     <text name="TrialDayCount">عدد أيام التجربة</text>
     <text name="TrialExpireNotification">ستنتهي الفترة التجريبية خلال {0} أيام.</text>
     <text name="TrialSubscriptionNotification">أنت في الفترة التجريبية لنسخة {0}، {1} للشراء.</text>
     <text name="TrialWithoutEndDateErrorMessage">يجب أن يكون للحسابات التجريبية تاريخ انتهاء الاشتراك</text>
+    <text name="Trip_StartDate">تاريخ بداية التحميل</text>
     <text name="TripDetails">تفاصيل الرحلة</text>
     <text name="TripEndDate">تاريح نهاية الرحلة</text>
     <text name="TripFinishedSuccessfully">انتهت الرحلة بنجاح</text>
@@ -1745,6 +1818,7 @@
     <text name="TrucksTypesTranslation" />
     <text name="TrucksTypesTranslations" />
     <text name="TrucktDetails">تفاصيل الشاحنة</text>
+    <text name="TrucktDocuments">تفاصيل الشاحنة</text>
     <text name="TruckType">نوع الشاحنة</text>
     <text name="TruckTypeDetails">تفاصيل نوع الشاحنة</text>
     <text name="TruckTypeDisplayName">نوع الشاحنة</text>
@@ -1831,8 +1905,10 @@
     <text name="UnlockedTheUser">فتح قفل المستخدم {0}</text>
     <text name="Unpaid">غير مدفوع</text>
     <text name="Unread">غير مقروء</text>
+    <text name="UpComingLoad">الحمولة القادمة</text>
     <text name="Update">تحديث</text>
     <text name="UpdatedSuccessfully">تم التحديث بنجاح</text>
+    <text name="UpdatePhoneNumber">تحديث رقم الهاتف</text>
     <text name="UpdateSippingRequest">تحديث طلب الشحن</text>
     <text name="UpdateTrip">تحديث الرحلة</text>
     <text name="Upgrade">ترقية</text>
@@ -1845,8 +1921,10 @@
     <text name="UploadDocumentMsg">الرجاء تقديم الملفات التالية حتى يتم إكمال عملية إنشاء الحساب</text>
     <text name="UploadedFile">الملف الذي تم رفعه</text>
     <text name="UploadLogo_Info">إختر ملف JPG / JPEG / PNG / GIF  بحجم 30 KB  كحد أقصى و 139X35  بكسل.</text>
+    <text name="UploadPOD">فع ملف اثبات التسليم</text>
     <text name="UploadPODLbl">رفع اثبات الاستلام</text>
     <text name="UploadPODProofOfDelivery">الرجاء رفع ملف إثبات التسليم</text>
+    <text name="Urdu">اردو</text>
     <text name="UsagePolicy">السياية و الأحكام</text>
     <text name="UseArrowKeysToChooseTheYear">إستخدم أزرار الأسهم لإختيار السنة</text>
     <text name="UseCaptchaOnLogin">استخدم سؤال صورة الأمان (captcha) عند تسجيل الدخول.</text>
@@ -1858,17 +1936,20 @@
     <text name="UseHostDefaultEmailSettings">استخدم إعدادات البريد الإلكتروني الافتراضية</text>
     <text name="UseHostSettings">استخدام اعدادات مدير النظام</text>
     <text name="UserAccount">حساب المستخدم</text>
+    <text name="UserAccountNumber">رقم الحساب</text>
     <text name="UserAccounts">حسابات المستخدمين</text>
     <text name="UserBlocked">تم حظر المستخدم بنجاح.</text>
     <text name="UserDelegationDeleteWarningMessage">سيتم حذف تفويض المستخدم {0}.</text>
     <text name="UserDelegations">تفويضات المستخدم</text>
     <text name="UserDeleteWarningMessage">سيتم حذف المستخدم {0}.</text>
     <text name="UserEmailIsNotConfirmedAndCanNotLogin">لم يتم تأكيد عنوان بريدك الإلكتروني. يرجى التحقق من بريدك الالكتروني والضغط على رابط تأكيد البريد الإلكتروني لتفعيل حسابك. إذا لم تستلم الرسالة إضغط على "تاكيد البريد الإلكتروني" لإرسال الطلب مره اخرى</text>
+    <text name="UserFirstName">الإسم</text>
     <text name="UserInfoEndpoint">نقطة نهاية معلومات المستخدم</text>
     <text name="UserInformations">معلومات المستخدم</text>
     <text name="UserIsAlreadyInTheOrganizationUnit">هذا المستخدم موجود في الوحدة التنظيمية !</text>
     <text name="UserIsBlocked">المستخدم محظور.</text>
     <text name="UserIsNotActiveAndCanNotLogin">العضو {0} غير نشط ولا يمكن تسجيل الدخول</text>
+    <text name="UserLastName">الإسم الأخير</text>
     <text name="UserLockedOutMessage">تم قفل حساب المستخدم. الرجاء معاودة المحاولة في وقت لاحق.</text>
     <text name="UserLockOut">قفل المستخدم</text>
     <text name="UserManagement">إدارة المستخدمين</text>
@@ -1894,6 +1975,7 @@
     <text name="VasName">اسم الخدمة الإضافية</text>
     <text name="VasPrice">سعر الخدمات الإضافية</text>
     <text name="VasPrices">أسعار الخدمات الإضافية</text>
+    <text name="Vat">ضريبة القيمة المضافة</text>
     <text name="VatAmount">قيمة الضريبة</text>
     <text name="VerificationCode">رمز التحقق</text>
     <text name="Verify">التحقق</text>
@@ -1901,6 +1983,7 @@
     <text name="VerifySecurityCode_Information">الرجاء إدخال رمز التحقق المرسل إليك.</text>
     <text name="VerifySecurityCodeNotLoggedInErrorMessage">يجب عليك تسجيل الدخول أولا، من أجل التحقق من حسابك! على الأرجح، تم تسجيل الخروج التلقائي. يرجى التوجه إلى صفحة تسجيل الدخول وإعادة المحاولة.</text>
     <text name="VerifyYourCode">تحقق من الرمز</text>
+    <text name="VerifyYourPhoneNumber">الرجاء ادخال الرمز المكون من ٤ ارقام المرسل للرقم (+96600000) لتأكيد تسجيلك</text>
     <text name="Version">الإصدار</text>
     <text name="VeryStrong">قوي جدا</text>
     <text name="VeryWeak">ضعيف جدا</text>
@@ -1945,6 +2028,7 @@
     <text name="WelcomePage_Info">مرحبا بك بالنظام. يمكنك استخدام القائمة لبدء استخدام النظام. إذا كنت لا ترى أي عنصر بالقائمة ربما لم يكن لديك إذونات. يرجى مراجعة مشرف النظام للحصول على إذونات بالنظام.</text>
     <text name="WelcomePage_Title">أهلا بك!</text>
     <text name="WelcomeToTheApplicationNotificationMessage">أهلاً بك في نظام تاكيون للإشعارات. نظام الإشعارات يستخدم لإعلامك عن إشعارات من النظام أو المستخدمين . يمكنك اختيار نوع الإشعارات التي تريد أن تتلقاها من خلال إعدادات الإشعارات</text>
+    <text name="WeWillSendYouCodeToVerfiyYourEmailPleaseCheckYourInbox">سنرسل لك رمزًا للتحقق الى بريدك الإلكتروني ، يرجى التحقق من صندوق الوارد الخاص بك</text>
     <text name="WhatWillDoneAfterSubscriptionExpiry">ما الذي سيحدث بعد انتهاء صلاحية الاشتراك</text>
     <text name="WidgetDailySales">المبيعات اليومية</text>
     <text name="WidgetDeleteWarningMessage">هل أنت متأكد من إزالة القطعة "{0}" من صفحة "{1}"؟</text>

@@ -493,9 +493,9 @@ namespace TACHYON.PriceOffers
                                     .ThenInclude(x => x.Translations)
                             .Where(r => /*r.Status != ShippingRequestDirectRequestStatus.Accepted &&*/ (r.ShippingRequestFK.Status == ShippingRequestStatus.NeedsAction || r.ShippingRequestFK.Status == ShippingRequestStatus.PrePrice || r.ShippingRequestFK.Status == ShippingRequestStatus.AcceptedAndWaitingCarrier))
                             .WhereIf(input.ShippingRequestId.HasValue, x => x.ShippingRequestId == input.ShippingRequestId)
-                            .WhereIf(AbpSession.TenantId.HasValue && await IsEnabledAsync(AppFeatures.Shipper), x => x.ShippingRequestFK.TenantId == AbpSession.TenantId && !x.ShippingRequestFK.IsTachyonDeal)
+                            .WhereIf(AbpSession.TenantId.HasValue && await IsEnabledAsync(AppFeatures.Shipper), x => x.ShippingRequestFK.TenantId == AbpSession.TenantId && !x.ShippingRequestFK.IsTachyonDeal /*&& x.ShippingRequestFK.RequestType == ShippingRequestType.DirectRequest*/)
                             .WhereIf(!AbpSession.TenantId.HasValue || await IsEnabledAsync(AppFeatures.TachyonDealer), x => x.ShippingRequestFK.IsTachyonDeal)
-                            .WhereIf(AbpSession.TenantId.HasValue && await IsEnabledAsync(AppFeatures.Carrier), x => x.CarrierTenantId == AbpSession.TenantId && x.Status != ShippingRequestDirectRequestStatus.Declined)
+                            .WhereIf(AbpSession.TenantId.HasValue && await IsEnabledAsync(AppFeatures.Carrier), x => x.CarrierTenantId == AbpSession.TenantId && x.Status != ShippingRequestDirectRequestStatus.Declined && x.ShippingRequestFK.RequestType == ShippingRequestType.DirectRequest)
                             .WhereIf(input.PickupFromDate.HasValue && input.PickupToDate.HasValue, x => x.ShippingRequestFK.StartTripDate >= input.PickupFromDate.Value && x.ShippingRequestFK.StartTripDate <= input.PickupToDate.Value)
                             .WhereIf(input.FromDate.HasValue && input.ToDate.HasValue, x => x.CreationTime >= input.FromDate.Value && x.CreationTime <= input.ToDate.Value)
                             .WhereIf(input.OriginId.HasValue, x => x.ShippingRequestFK.OriginCityId==input.OriginId)
@@ -606,7 +606,7 @@ namespace TACHYON.PriceOffers
                     }
                     else
                     {
-                        dto.BidStatusTitle = "News";
+                        dto.BidStatusTitle = "New";
                     }
                     dto.StatusTitle = "";
                 }
@@ -771,7 +771,7 @@ namespace TACHYON.PriceOffers
                 .FirstOrDefaultAsync(x => x.Id == input.Id);
             if (request == null) throw new UserFriendlyException(L("YouCanNotCancelThisShipment"));
                 request.CancelReason = input.CancelReason;
-
+                request.Status = ShippingRequestStatus.Cancled;
             if (!AbpSession.TenantId.HasValue || await IsEnabledAsync(AppFeatures.TachyonDealer))
             {
               var user = await UserManager.GetAdminTachyonDealerAsync();

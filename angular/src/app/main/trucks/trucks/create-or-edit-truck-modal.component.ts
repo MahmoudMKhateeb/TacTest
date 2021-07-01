@@ -96,8 +96,8 @@ export class CreateOrEditTruckModalComponent extends AppComponentBase {
 
   allPlateTypes: SelectItemDto[];
 
-  truckModelMaxYear = new Date('2021');
-  truckModelMinYear = new Date('2000');
+  truckModelMaxYear = new Date();
+  //truckModelMinYear = new Date();
 
   constructor(
     injector: Injector,

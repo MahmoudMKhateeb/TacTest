@@ -102,8 +102,4 @@ export class HeaderNotificationsComponent extends AppComponentBase implements On
       location.href = url;
     }
   }
-
-  GotoRequest(id: number): void {
-    this._router.navigate(['/app/main/shippingRequests/shippingRequests/view'], { queryParams: { id: id } });
-  }
 }

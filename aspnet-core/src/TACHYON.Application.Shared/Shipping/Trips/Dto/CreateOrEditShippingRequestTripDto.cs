@@ -15,7 +15,7 @@ namespace TACHYON.Shipping.Trips.Dto
         [Required]
         public DateTime StartTripDate { get; set; }
 
-        public DateTime EndTripDate { get; set; }
+        public DateTime? EndTripDate { get; set; }
 
 
         //public long? AssignedDriverUserId { get; set; }
@@ -36,7 +36,7 @@ namespace TACHYON.Shipping.Trips.Dto
 
         public void AddValidationErrors(CustomValidationContext context)
         {
-            if (StartTripDate.Date > EndTripDate.Date)
+            if (EndTripDate!=null && StartTripDate.Date > EndTripDate.Value.Date)
             {
                 context.Results.Add(new ValidationResult("The start date must be or equal to end date."));
             }

@@ -16,6 +16,8 @@ import {
 } from '@shared/service-proxies/service-proxies';
 import * as moment from 'moment';
 import { FileDownloadService } from '@shared/utils/file-download.service';
+import { InvoiceTenantItemsDetailsComponent } from 'app/main/invoices/invoice-tenants/model/invoice-tenant-items-details.component';
+import { Router } from '@angular/router';
 
 @Component({
   templateUrl: './invoices-list.component.html',
@@ -26,6 +28,7 @@ import { FileDownloadService } from '@shared/utils/file-download.service';
 export class InvoicesListComponent extends AppComponentBase implements OnInit {
   @ViewChild('dataTable', { static: true }) dataTable: Table;
   @ViewChild('paginator', { static: true }) paginator: Paginator;
+  @ViewChild('InvoiceDetailsModel', { static: true }) InvoiceDetailsModel: InvoiceTenantItemsDetailsComponent;
 
   Invoices: InvoiceListDto[] = [];
   IsStartSearch: boolean = false;
@@ -51,7 +54,8 @@ export class InvoicesListComponent extends AppComponentBase implements OnInit {
     private _InvoiceServiceProxy: InvoiceServiceProxy,
     private _InvoiceReportServiceProxy: InvoiceReportServiceServiceProxy,
     private _CommonServ: CommonLookupServiceProxy,
-    private _fileDownloadService: FileDownloadService
+    private _fileDownloadService: FileDownloadService,
+    private router: Router
   ) {
     super(injector);
   }
@@ -164,5 +168,14 @@ export class InvoicesListComponent extends AppComponentBase implements OnInit {
     this._InvoiceReportServiceProxy.downloadInvoiceReportPdf(id).subscribe((result) => {
       this._fileDownloadService.downloadTempFile(result);
     });
+  }
+  details(invoice: InvoiceListDto): void {
+    if (invoice.accountType == InvoiceAccountType.AccountReceivable) {
+      this.router.navigate([`/app/main/invoices/detail/${invoice.id}`]);
+    } else {
+      this._InvoiceServiceProxy.getById(invoice.id).subscribe((result) => {
+        this.InvoiceDetailsModel.show(result);
+      });
+    }
   }
 }

@@ -89,13 +89,15 @@ namespace TACHYON.Shipping.Drivers
                 trip.Status = ShippingRequestTripStatus.Delivered;
                 trip.RoutePointStatus = RoutePointStatus.Delivered;
                 trip.EndTripDate = Clock.Now;
-                await _invoiceManager.GenertateInvoiceWhenShipmintDelivery(trip);
 
                 await Done(trip.ShippingRequestId, trip.Id);
+                await _invoiceManager.GenertateInvoiceWhenShipmintDelivery(trip);
+
             }
             else
             {
                 trip.RoutePointStatus = RoutePointStatus.DeliveryConfirmation;
+
             }
             return true;
 
@@ -119,7 +121,7 @@ namespace TACHYON.Shipping.Drivers
         /// <returns></returns>
         public async Task<RoutPoint> GetActivePoint()
         {
-            var ActivePoint = await _RoutPointRepository.GetAll().Include(x=>x.ShippingRequestTripFk).FirstOrDefaultAsync(x => x.IsActive && x.ShippingRequestTripFk.Status != ShippingRequestTripStatus.Canceled && x.ShippingRequestTripFk.AssignedDriverUserId == _abpSession.UserId);
+            var ActivePoint = await _RoutPointRepository.GetAll().Include(x=>x.ShippingRequestTripFk).ThenInclude(r=>r.ShippingRequestFk).FirstOrDefaultAsync(x => x.IsActive && x.ShippingRequestTripFk.Status != ShippingRequestTripStatus.Canceled && x.ShippingRequestTripFk.AssignedDriverUserId == _abpSession.UserId);
             //if (ActivePoint == null) throw new UserFriendlyException(L("TheTripIsNotFound"));
 
             return ActivePoint;
@@ -206,8 +208,9 @@ namespace TACHYON.Shipping.Drivers
 
         public async Task SetRoutStatusTransition(RoutPoint routPoint, RoutePointStatus Status)
         {
-           //await _invoiceManager.GenertateInvoiceWhenShipmintDelivery(routPoint.ShippingRequestTripFk);
-           await _routPointStatusTransitionRepository.InsertAsync(new RoutPointStatusTransition 
+            //await _invoiceManager.GenertateInvoiceWhenShipmintDelivery(routPoint.ShippingRequestTripFk);
+            routPoint.Status = Status;
+            await _routPointStatusTransitionRepository.InsertAsync(new RoutPointStatusTransition 
            { 
            PointId= routPoint.Id,
            Status= Status

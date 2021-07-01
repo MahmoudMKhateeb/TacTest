@@ -134,21 +134,44 @@
             <!--  end:: Trip start&End Dates-->
             <!-- begin::Vas's  -->
             <div class="col-lg-6" *ngIf="VasListFromFather?.length > 0">
-              <div class="form-group" *ngIf="selectedVases != []">
+              <div class="form-group">
                 <label>{{ l('vases') }}</label>
                 <p-multiSelect
                   name="shippingRequestTripVases"
-                  [options]="Vases"
+                  [options]="cleanVasesList"
                   [(ngModel)]="trip.shippingRequestTripVases"
-                  [styleClass]="'form-control'"
+                  [style]="{ width: '100%' }"
                   [filter]="false"
                   [showHeader]="false"
-                  [defaultLabel]="''"
+                  [defaultLabel]="l('SelectTripVases')"
+                  [dataKey]="'shippingRequestVasId'"
                   optionLabel="name"
                 ></p-multiSelect>
               </div>
             </div>
-
+            <!--  begin::Trip Goods Approximate Value -->
+            <div class="col-lg-6">
+              <div class="form-group">
+                <label>{{ l('ApproximateTripGoodsValue') }} *</label>
+                <div class="input-group date">
+                  <input
+                    type="text"
+                    class="form-control"
+                    name="approximateGoodsTotalValue"
+                    (keypress)="numberOnly($event)"
+                    [(ngModel)]="trip.totalValue"
+                    placeholder="{{ l('ApproximateTripGoodsValue') }}"
+                    required
+                  />
+                  <div class="input-group-append">
+                    <span class="input-group-text">
+                      <i class="la la-dollar"></i>
+                    </span>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <!--  end::Trip Goods Approximate Value -->
             <div class="col-lg-6">
               <div class="form-group">
                 <div class="checkbox-list">
@@ -217,4 +240,4 @@
     </div>
   </div>
 </div>
-<createOrEditFacilityModal #createOrEditFacilityModal (modalSave)="refreshOrGetFacilities()"> </createOrEditFacilityModal>
+<createOrEditFacilityModal #createOrEditFacilityModal (modalSave)="refreshOrGetFacilities($event)"> </createOrEditFacilityModal>

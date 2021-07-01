@@ -56,7 +56,6 @@ export class CreateOrEditTripAccidentModalComponent extends AppComponentBase imp
     this.saving = true;
 
     this.accident.reasoneId = this.reasonId == 0 ? null : this.reasonId;
-    if (!this.accident.reasoneId) this.accident.description = '';
     this._Service
       .createOrEdit(this.accident)
       .pipe(finalize(() => (this.saving = false)))

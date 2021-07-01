@@ -70,6 +70,10 @@ namespace TACHYON.Shipping.ShippingRequests.Dtos
         [Required]
         public virtual int DestinationCityId { get; set; }
 
+        public string OtherGoodsCategoryName { get; set; }
+        public string OtherTransportTypeName { get; set; }
+        public string OtherTrucksTypeName { get; set; }
+
 
         //VasList
         public List<CreateOrEditShippingRequestVasListDto> ShippingRequestVasList { get; set; }

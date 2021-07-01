@@ -199,7 +199,7 @@ namespace TACHYON.Shipping.ShippingRequests
         /// Basic Details - Shipping Request Wizard
         /// </summary>
         /// <returns></returns>
-        public async Task CreateOrEditStep1(CreateOrEditShippingRequestStep1Dto input)
+        public async Task<long> CreateOrEditStep1(CreateOrEditShippingRequestStep1Dto input)
         {
             if (input.IsTachyonDeal)
             {
@@ -211,12 +211,18 @@ namespace TACHYON.Shipping.ShippingRequests
 
             if (input.Id == null)
             {
-                await CreateStep1(input);
+                return await CreateStep1(input);
             }
             else
             {
-                await UpdateStep1(input);
+               return  await UpdateStep1(input);
             }
+        }
+
+        public async Task<CreateOrEditShippingRequestStep1Dto> GetStep1ForEdit(EntityDto<long> entity)
+        {
+            var shippingRequest = await GetDraftedShippingRequest(entity.Id);
+            return ObjectMapper.Map<CreateOrEditShippingRequestStep1Dto>(shippingRequest);
         }
 
         /// <summary>
@@ -234,6 +240,11 @@ namespace TACHYON.Shipping.ShippingRequests
             ObjectMapper.Map(input, shippingRequest);
         }
 
+        public async Task<EditShippingRequestStep2Dto> GetStep2ForEdit(EntityDto<long> entity)
+        {
+            var shippingRequest = await GetDraftedShippingRequest(entity.Id);
+            return ObjectMapper.Map<EditShippingRequestStep2Dto>(shippingRequest);
+        }
         /// <summary>
         /// Goods Details - Shipping Request Wizard
         /// </summary>
@@ -249,6 +260,12 @@ namespace TACHYON.Shipping.ShippingRequests
             ObjectMapper.Map(input, shippingRequest);
         }
 
+
+        public async Task<EditShippingRequestStep3Dto> GetStep3ForEdit(EntityDto<long> entity)
+        {
+            var shippingRequest = await GetDraftedShippingRequest(entity.Id);
+            return ObjectMapper.Map<EditShippingRequestStep3Dto>(shippingRequest);
+        }
         /// <summary>
         /// Services - Shipping Request Wizard
         /// </summary>
@@ -256,34 +273,58 @@ namespace TACHYON.Shipping.ShippingRequests
         /// <returns></returns>
         public async Task EditStep4(EditShippingRequestStep4Dto input)
         {
-            var shippingRequest = await GetDraftedShippingRequest(input.Id);
-            if (shippingRequest.DraftStep < 4)
+            using (CurrentUnitOfWork.DisableFilter("IHasIsDrafted"))
             {
-                shippingRequest.DraftStep = 4;
+                ShippingRequest shippingRequest = await _shippingRequestRepository.GetAll()
+               .Include(x => x.ShippingRequestVases)
+                 .Where(x => x.Id == input.Id && x.IsDrafted == true)
+                 .FirstOrDefaultAsync();
+
+                //delete vases
+                foreach (var vas in shippingRequest.ShippingRequestVases)
+                {
+                    if (!input.ShippingRequestVasList.Any(x => x.Id == vas.Id))
+                    {
+                        await _shippingRequestVasRepository.DeleteAsync(vas);
+                    }
+                }
+                if (shippingRequest.DraftStep < 4)
+                {
+                    shippingRequest.DraftStep = 4;
+                }
+                ObjectMapper.Map(input, shippingRequest);
             }
-            ObjectMapper.Map(input, shippingRequest);
+        }
+
+
+        public async Task<EditShippingRequestStep4Dto> GetStep4ForEdit(EntityDto<long> entity)
+        {
+            using (CurrentUnitOfWork.DisableFilter("IHasIsDrafted"))
+            {
+                ShippingRequest shippingRequest = await _shippingRequestRepository.GetAll()
+                .Include(x => x.ShippingRequestVases)
+                  .Where(x => x.Id == entity.Id && x.IsDrafted == true)
+                  .FirstOrDefaultAsync();
+                return ObjectMapper.Map<EditShippingRequestStep4Dto>(shippingRequest);
+            }
+            //await ValidateShippingRequestBeforePublish(shippingRequest);
+            //shippingRequest.IsDrafted = false;
         }
 
         public async Task PublishShippingRequest(long id)
         {
-            var shippingRequest = await GetDraftedShippingRequest(id);
-            if (shippingRequest.DraftStep < 4)
-            {
-                throw new UserFriendlyException(L("YouMustCompleteWizardStepsFirst"));
-            }
-            await ValidateShippingRequestBeforePublish(shippingRequest);
-            shippingRequest.IsDrafted = false;
+                ShippingRequest shippingRequest =await GetDraftedShippingRequest(id);
+                if (shippingRequest.DraftStep < 4)
+                {
+                    throw new UserFriendlyException(L("YouMustCompleteWizardStepsFirst"));
+                }
+                await ValidateShippingRequestBeforePublish(shippingRequest);
+               // _commissionManager.AddShippingRequestCommissionSettingInfo(shippingRequest);
+                shippingRequest.IsDrafted = false;
         }
 
 
-        private async Task UpdateStep1(CreateOrEditShippingRequestStep1Dto input)
-        {
-            var shippingRequest = await GetDraftedShippingRequest(input.Id.Value);
-
-            ObjectMapper.Map(input, shippingRequest);
-            // ValidateStep1(shippingRequest);
-        }
-
+       
 
         private async Task<ShippingRequest> GetDraftedShippingRequest(long id)
         {
@@ -295,7 +336,7 @@ namespace TACHYON.Shipping.ShippingRequests
                 return shippingRequest;
             }
         }
-        private async Task CreateStep1(CreateOrEditShippingRequestStep1Dto input)
+        private async Task<long> CreateStep1(CreateOrEditShippingRequestStep1Dto input)
         {
             ShippingRequest shippingRequest = ObjectMapper.Map<ShippingRequest>(input);
             //ValidateStep1(shippingRequest);
@@ -303,7 +344,18 @@ namespace TACHYON.Shipping.ShippingRequests
             shippingRequest.DraftStep = 1;
             await _shippingRequestRepository.InsertAndGetIdAsync(shippingRequest);
             await CurrentUnitOfWork.SaveChangesAsync();
+            return shippingRequest.Id;
         }
+
+        private async Task<long> UpdateStep1(CreateOrEditShippingRequestStep1Dto input)
+        {
+            var shippingRequest = await GetDraftedShippingRequest(input.Id.Value);
+
+            ObjectMapper.Map(input, shippingRequest);
+            return shippingRequest.Id;
+            // ValidateStep1(shippingRequest);
+        }
+
 
         private async Task ValidateShippingRequestBeforePublish(ShippingRequest shippingRequest)
         {
@@ -425,7 +477,11 @@ namespace TACHYON.Shipping.ShippingRequests
         [RequiresFeature(AppFeatures.ShippingRequest)]
         public async Task Delete(EntityDto<long> input)
         {
-            await _shippingRequestRepository.DeleteAsync(input.Id);
+            using (CurrentUnitOfWork.DisableFilter("IHasIsDrafted"))
+            {
+                var shippingRequest=await _shippingRequestRepository.GetAll().Where(x => x.IsDrafted == true).FirstOrDefaultAsync();
+                await _shippingRequestRepository.DeleteAsync(shippingRequest);
+            }
         }
 
         public async Task<List<CarriersForDropDownDto>> GetAllCarriersForDropDownAsync()
@@ -753,7 +809,7 @@ namespace TACHYON.Shipping.ShippingRequests
         //Master Waybill
         public IEnumerable<GetMasterWaybillOutput> GetMasterWaybill(int shippingRequestTripId)
         {
-            using (CurrentUnitOfWork.DisableFilter(AbpDataFilters.MustHaveTenant, AbpDataFilters.MayHaveTenant))
+            using (CurrentUnitOfWork.DisableFilter(AbpDataFilters.MustHaveTenant, AbpDataFilters.MayHaveTenant, nameof(IHasIsDrafted)))
             {
                 var info = _shippingRequestTripRepository.GetAll()
                     .Include(e => e.ShippingRequestFk)
@@ -761,21 +817,13 @@ namespace TACHYON.Shipping.ShippingRequests
 
                 var query = info.Select(x => new
                 {
-                    MasterWaybillNo = x.Id,
-                    ShippingRequestStatus = "Draft",
+                    MasterWaybillNo = x.WaybillNumber.Value,
+                    ShippingRequestStatus = (x.AssignedDriverUserId!=null && x.AssignedTruckId!=null) ?"Final" :"Draft",
                     SenderCompanyName = x.ShippingRequestFk.Tenant.companyName,
                     DriverName = x.AssignedDriverUserFk != null ? x.AssignedDriverUserFk.FullName : "",
                     DriverIqamaNo = "",
                     TruckTypeTranslationList = x.AssignedTruckFk.TrucksTypeFk.Translations,
                     TruckTypeDisplayName =
-                    //x.AssignedTruckFk != null
-                    //   ? (x.AssignedTruckFk.TransportTypeFk != null ?
-                    //       x.AssignedTruckFk.TransportTypeFk.DisplayName :
-                    //       "" + "-" + x.AssignedTruckFk.TrucksTypeFk != null ?
-                    //           x.AssignedTruckFk.TrucksTypeFk.DisplayName :
-                    //           "" + "-" + x.AssignedTruckFk.CapacityFk != null ?
-                    //               x.AssignedTruckFk.CapacityFk.DisplayName : "")
-                    //   : "",
                     (x.AssignedTruckFk.TransportTypeFk == null ? "" : ObjectMapper.Map<TransportTypeDto>(x.AssignedTruckFk.TransportTypeFk).TranslatedDisplayName) + "-" + //o.TransportTypeFk.DisplayName) + " - " +
                              (x.AssignedTruckFk.TrucksTypeFk == null ? "" : ObjectMapper.Map<TrucksTypeDto>(x.AssignedTruckFk.TrucksTypeFk).TranslatedDisplayName) + " - " +
                              (x.AssignedTruckFk.CapacityFk == null ? "" : ObjectMapper.Map<CapacityDto>(x.AssignedTruckFk.CapacityFk).DisplayName),
@@ -799,7 +847,7 @@ namespace TACHYON.Shipping.ShippingRequests
                     {
                         MasterWaybillNo = x.MasterWaybillNo,
                         Date = Clock.Now.ToShortDateString(),
-                        ShippingRequestStatus = "Draft",
+                        ShippingRequestStatus =x.ShippingRequestStatus,
                         CompanyName = x.SenderCompanyName,
                         DriverName = x.DriverName,
                         DriverIqamaNo = "",
@@ -834,8 +882,8 @@ namespace TACHYON.Shipping.ShippingRequests
 
                 var query = info.Select(x => new
                 {
-                    MasterWaybillNo = x.Id,
-                    ShippingRequestStatus = "Draft",
+                    MasterWaybillNo = x.WaybillNumber.Value,
+                    ShippingRequestStatus = (x.AssignedDriverUserId != null && x.AssignedTruckId != null) ? "Final" : "Draft",
                     SenderCompanyName = x.ShippingRequestFk.Tenant.companyName,
                     ClientName = x.ShippingRequestFk.Tenant.Name,
                     ReceiverCompanyName = x.ShippingRequestFk.CarrierTenantFk != null ? x.ShippingRequestFk.CarrierTenantFk.companyName : "",
@@ -850,9 +898,6 @@ namespace TACHYON.Shipping.ShippingRequests
                     PackingTypeDisplayName = x.ShippingRequestFk.PackingTypeFk.DisplayName,
                     NumberOfPacking = x.ShippingRequestFk.NumberOfPacking,
                     StartTripDate = x.StartTripDate,
-                    //( x.StartTripDate.Year > 1)
-                    //? x.StartTripDate
-                    //: null,
                     DeliveryDate = x.EndTripDate,
                     TotalWeight = x.ShippingRequestFk.TotalWeight,
                     GoodCategoryTranslation = x.ShippingRequestFk.GoodCategoryFk.Translations,
@@ -869,7 +914,7 @@ namespace TACHYON.Shipping.ShippingRequests
                     {
                         MasterWaybillNo = x.MasterWaybillNo,
                         Date = Clock.Now.ToShortDateString(),
-                        ShippingRequestStatus = "Draft",
+                        ShippingRequestStatus = x.ShippingRequestStatus,
                         SenderCompanyName = x.SenderCompanyName,
                         ReceiverCompanyName = x.ReceiverCompanyName,
                         DriverName = x.DriverName,
@@ -937,9 +982,9 @@ namespace TACHYON.Shipping.ShippingRequests
 
                 var query = info.Select(x => new
                 {
-                    MasterWaybillNo = x.Id,
-                    SubWaybillNo = routPoint.Id,
-                    ShippingRequestStatus = "Draft",
+                    MasterWaybillNo = x.WaybillNumber.Value,
+                    SubWaybillNo = routPoint.WaybillNumber.Value,
+                    ShippingRequestStatus = (x.AssignedDriverUserId != null && x.AssignedTruckId != null) ? "Final" : "Draft",
                     SenderCompanyName = x.ShippingRequestFk.Tenant.companyName,
                     ReceiverCompanyName = x.ShippingRequestFk.CarrierTenantFk != null ? x.ShippingRequestFk.CarrierTenantFk.companyName : "",
                     DriverName = x.AssignedDriverUserFk != null ? x.AssignedDriverUserFk.Name : "",
@@ -971,7 +1016,7 @@ namespace TACHYON.Shipping.ShippingRequests
                         MasterWaybillNo = x.MasterWaybillNo,
                         SubWaybillNo = x.SubWaybillNo,
                         Date = Clock.Now.ToShortDateString(),
-                        ShippingRequestStatus = "Draft",
+                        ShippingRequestStatus = x.ShippingRequestStatus,
                         SenderCompanyName = x.SenderCompanyName,
                         ReceiverCompanyName = x.ReceiverCompanyName,
                         DriverName = x.DriverName,

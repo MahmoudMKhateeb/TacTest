@@ -2064,6 +2064,9 @@ namespace TACHYON.Migrations
                     b.Property<string>("Number")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("OtherDocumentTypeName")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("RejectionReason")
                         .HasColumnType("nvarchar(max)");
 
@@ -2410,6 +2413,12 @@ namespace TACHYON.Migrations
 
                     b.Property<long?>("LastModifierUserId")
                         .HasColumnType("bigint");
+
+                    b.Property<string>("OtherGoodsCategoryName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("OtherUnitOfMeasureName")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<long>("RoutPointId")
                         .HasColumnType("bigint");
@@ -3920,6 +3929,9 @@ namespace TACHYON.Migrations
                     b.Property<double?>("Rating")
                         .HasColumnType("float");
 
+                    b.Property<string>("ReceiverAddress")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("ReceiverCardIdNumber")
                         .HasColumnType("nvarchar(max)");
 
@@ -3944,6 +3956,9 @@ namespace TACHYON.Migrations
                     b.Property<DateTime?>("StartTime")
                         .HasColumnType("datetime2");
 
+                    b.Property<byte>("Status")
+                        .HasColumnType("tinyint");
+
                     b.Property<long?>("WaybillNumber")
                         .HasColumnType("bigint");
 
@@ -3960,26 +3975,6 @@ namespace TACHYON.Migrations
                         .HasFilter("[WaybillNumber] IS NOT NULL");
 
                     b.ToTable("RoutPoints");
-                });
-
-            modelBuilder.Entity("TACHYON.Routs.RoutPoints.RoutePointReceiverReceiveShipmentCode", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<long?>("PointId")
-                        .HasColumnType("bigint");
-
-                    b.Property<string>("ReceiverPhone")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("PointId");
-
-                    b.ToTable("RoutePointReceiverReceiveShipmentCodes");
                 });
 
             modelBuilder.Entity("TACHYON.Routs.RoutSteps.RoutStep", b =>
@@ -4438,6 +4433,9 @@ namespace TACHYON.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
+                    b.Property<DateTime?>("AssignedDriverTime")
+                        .HasColumnType("datetime2");
+
                     b.Property<long?>("AssignedDriverUserId")
                         .HasColumnType("bigint");
 
@@ -4471,7 +4469,7 @@ namespace TACHYON.Migrations
                     b.Property<int>("DriverStatus")
                         .HasColumnType("int");
 
-                    b.Property<DateTime>("EndTripDate")
+                    b.Property<DateTime?>("EndTripDate")
                         .HasColumnType("datetime2");
 
                     b.Property<DateTime?>("EndWorking")
@@ -4625,6 +4623,9 @@ namespace TACHYON.Migrations
 
                     b.Property<Point>("Location")
                         .HasColumnType("geography");
+
+                    b.Property<string>("OtherReasonName")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<long>("PointId")
                         .HasColumnType("bigint");
@@ -4916,6 +4917,18 @@ namespace TACHYON.Migrations
                     b.Property<int?>("OriginCityId")
                         .HasColumnType("int");
 
+                    b.Property<string>("OtherGoodsCategoryName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("OtherPackingTypeName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("OtherTransportTypeName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("OtherTrucksTypeName")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<int?>("PackingTypeId")
                         .HasColumnType("int");
 
@@ -4924,6 +4937,9 @@ namespace TACHYON.Migrations
 
                     b.Property<decimal?>("Price")
                         .HasColumnType("decimal(18,2)");
+
+                    b.Property<string>("ReferenceNumber")
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<byte>("RequestType")
                         .HasColumnType("tinyint");
@@ -4992,6 +5008,10 @@ namespace TACHYON.Migrations
                     b.HasIndex("OriginCityId");
 
                     b.HasIndex("PackingTypeId");
+
+                    b.HasIndex("ReferenceNumber")
+                        .IsUnique()
+                        .HasFilter("[ReferenceNumber] IS NOT NULL");
 
                     b.HasIndex("ShippingTypeId");
 
@@ -5212,6 +5232,9 @@ namespace TACHYON.Migrations
 
                     b.Property<int>("NumberOfTrips")
                         .HasColumnType("int");
+
+                    b.Property<string>("OtherVasName")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("RequestMaxAmount")
                         .HasColumnType("int");
@@ -5639,6 +5662,9 @@ namespace TACHYON.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<int?>("BayanPlatetypeId")
+                        .HasColumnType("int");
 
                     b.Property<DateTime>("CreationTime")
                         .HasColumnType("datetime2");
@@ -6961,13 +6987,6 @@ namespace TACHYON.Migrations
                         .HasForeignKey("ShippingRequestTripId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-                });
-
-            modelBuilder.Entity("TACHYON.Routs.RoutPoints.RoutePointReceiverReceiveShipmentCode", b =>
-                {
-                    b.HasOne("TACHYON.Routs.RoutPoints.RoutPoint", "Point")
-                        .WithMany()
-                        .HasForeignKey("PointId");
                 });
 
             modelBuilder.Entity("TACHYON.Routs.RoutSteps.RoutStep", b =>

@@ -19,6 +19,8 @@ namespace TACHYON.Notifications
         #region Tychon notifications
 
         public const string AssignDriverToTruck = "App.AssignDriverToTruck";
+
+        
         public const string UpdateShippingRequestPrice = "App.UpdateShippingRequestPrice";
         public const string AcceptShippingRequestPrice = "App.AcceptShippingRequestPrice";
         public const string RejectShippingRequest = "App.RejectShippingRequest";
@@ -50,6 +52,12 @@ namespace TACHYON.Notifications
         public const string NotifyDriverWhenAssignToTrip = "App.NotifyDriverWhenAssignToTrip";
         public const string DriverRejectTrip = "App.DriverRejectTrip";
         public const string DriverAcceptTrip = "App.DriverAcceptTrip";
+        public const string CarrierTripNeedAccept = "App.CarrierTripNeedAccept";
+        public const string TMSTripNeedAccept = "App.TMSTripNeedAccept";
+        public const string TripHasAttachment = "App.TripHasAttachment";
+        public const string TripNeedsDeliveryNote = "App.NeedsDeliveryNote";
+        public const string NotificationWhenTripDetailsChanged = "App.NotificationWhenTripDetailsChanged";
+
         #endregion
         #region Accident
         public const string ShippingRequestAccidents = "App.ShippingRequest.Accident";

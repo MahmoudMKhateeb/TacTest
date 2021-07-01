@@ -24,11 +24,11 @@
             </div>
             <div class="detailsRoad">
               <div class="from">
-                <p class="pickup">{{ l('Pickup') }}</p>
+                <p class="pickup">{{ l('CityOrigin') }}</p>
                 <p>{{ item.origin }}</p>
               </div>
               <div class="to">
-                <p class="delivery">{{ l('Delivery') }}</p>
+                <p class="delivery">{{ l('DestinationDelivery') }}</p>
                 <p>{{ item.destination }}</p>
               </div>
             </div>
@@ -72,6 +72,14 @@
                 </p>
               </div>
             </div>
+            <div class="actionsShip">
+              <div></div>
+              <div class="actions">
+                <a href="javascript:void(0)" (click)="Model.show(item)" class="red">
+                  {{ l('More') }}
+                </a>
+              </div>
+            </div>
           </div>
         </div>
 
@@ -84,3 +92,4 @@
 </div>
 
 <tacking-search-model #ModelSearch (modalsearch)="search()"></tacking-search-model>
+<tacking-model #Model></tacking-model>

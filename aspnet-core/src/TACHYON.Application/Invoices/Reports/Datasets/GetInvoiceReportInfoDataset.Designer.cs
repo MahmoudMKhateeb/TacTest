@@ -305,8 +305,6 @@ namespace TACHYON.Invoices.Reports.Datasets {
             
             private global::System.Data.DataColumn columnSubTotalAmount;
             
-            private global::System.Data.DataColumn columnDueAmount;
-            
             private global::System.Data.DataColumn columnVatAmount;
             
             private global::System.Data.DataColumn columnClientName;
@@ -462,14 +460,6 @@ namespace TACHYON.Invoices.Reports.Datasets {
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
-            public global::System.Data.DataColumn DueAmountColumn {
-                get {
-                    return this.columnDueAmount;
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
             public global::System.Data.DataColumn VatAmountColumn {
                 get {
                     return this.columnVatAmount;
@@ -583,7 +573,6 @@ namespace TACHYON.Invoices.Reports.Datasets {
                         string Address, 
                         string ProjectName, 
                         string SubTotalAmount, 
-                        string DueAmount, 
                         string VatAmount, 
                         string ClientName, 
                         string Period, 
@@ -607,7 +596,6 @@ namespace TACHYON.Invoices.Reports.Datasets {
                         Address,
                         ProjectName,
                         SubTotalAmount,
-                        DueAmount,
                         VatAmount,
                         ClientName,
                         Period,
@@ -651,7 +639,6 @@ namespace TACHYON.Invoices.Reports.Datasets {
                 this.columnAddress = base.Columns["Address"];
                 this.columnProjectName = base.Columns["ProjectName"];
                 this.columnSubTotalAmount = base.Columns["SubTotalAmount"];
-                this.columnDueAmount = base.Columns["DueAmount"];
                 this.columnVatAmount = base.Columns["VatAmount"];
                 this.columnClientName = base.Columns["ClientName"];
                 this.columnPeriod = base.Columns["Period"];
@@ -691,8 +678,6 @@ namespace TACHYON.Invoices.Reports.Datasets {
                 base.Columns.Add(this.columnProjectName);
                 this.columnSubTotalAmount = new global::System.Data.DataColumn("SubTotalAmount", typeof(string), null, global::System.Data.MappingType.Element);
                 base.Columns.Add(this.columnSubTotalAmount);
-                this.columnDueAmount = new global::System.Data.DataColumn("DueAmount", typeof(string), null, global::System.Data.MappingType.Element);
-                base.Columns.Add(this.columnDueAmount);
                 this.columnVatAmount = new global::System.Data.DataColumn("VatAmount", typeof(string), null, global::System.Data.MappingType.Element);
                 base.Columns.Add(this.columnVatAmount);
                 this.columnClientName = new global::System.Data.DataColumn("ClientName", typeof(string), null, global::System.Data.MappingType.Element);
@@ -1059,22 +1044,6 @@ namespace TACHYON.Invoices.Reports.Datasets {
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
-            public string DueAmount {
-                get {
-                    try {
-                        return ((string)(this[this.tableDataTable1.DueAmountColumn]));
-                    }
-                    catch (global::System.InvalidCastException e) {
-                        throw new global::System.Data.StrongTypingException("The value for column \'DueAmount\' in table \'DataTable1\' is DBNull.", e);
-                    }
-                }
-                set {
-                    this[this.tableDataTable1.DueAmountColumn] = value;
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
             public string VatAmount {
                 get {
                     try {
@@ -1355,18 +1324,6 @@ namespace TACHYON.Invoices.Reports.Datasets {
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
             public void SetSubTotalAmountNull() {
                 this[this.tableDataTable1.SubTotalAmountColumn] = global::System.Convert.DBNull;
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
-            public bool IsDueAmountNull() {
-                return this.IsNull(this.tableDataTable1.DueAmountColumn);
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
-            public void SetDueAmountNull() {
-                this[this.tableDataTable1.DueAmountColumn] = global::System.Convert.DBNull;
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]

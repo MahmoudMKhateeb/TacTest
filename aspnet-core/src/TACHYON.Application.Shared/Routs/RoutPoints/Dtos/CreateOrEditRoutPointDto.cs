@@ -35,6 +35,7 @@ namespace TACHYON.Routs.RoutPoints.Dtos
 
         [DataType(DataType.EmailAddress)] [CanBeNull] public string ReceiverEmailAddress { get; set; }
         [CanBeNull] public string ReceiverCardIdNumber { get; set; }
+        [CanBeNull] public string ReceiverAddress { get; set; }
 
         [CanBeNull] public string Note { get; set; }
 

@@ -4,20 +4,15 @@ import {
   FacilityForDropdownDto,
   RoutStepsServiceProxy,
   ShippingRequestsTripServiceProxy,
-  CreateOrEditRoutPointDto,
   CreateOrEditShippingRequestTripVasDto,
   ShippingRequestsTripForViewDto,
   TrucksServiceProxy,
-  AssignDriverAndTruckToShippmentByCarrierInput,
-  ISelectItemDto,
-  SelectItemDto,
   WaybillsServiceProxy,
+  SelectItemDto,
+  AssignDriverAndTruckToShippmentByCarrierInput,
 } from '@shared/service-proxies/service-proxies';
 import { AppComponentBase } from '@shared/common/app-component-base';
 import { finalize } from '@node_modules/rxjs/operators';
-import { PointsComponent } from '@app/main/shippingRequests/shippingRequests/ShippingRequestTrips/points/points.component';
-import Swal from 'sweetalert2';
-import { AssignDriverTruckModalComponent } from '@app/main/shippingRequests/shippingRequests/ShippingRequestTrips/trips/assignDriverTruckModal/assignDriverTruckModal.component';
 import { FileDownloadService } from '@shared/utils/file-download.service';
 
 @Component({
@@ -27,17 +22,16 @@ import { FileDownloadService } from '@shared/utils/file-download.service';
 export class ViewTripModalComponent extends AppComponentBase implements OnInit {
   @ViewChild('viewTripDetails', { static: false }) modal: ModalDirective;
   // @ViewChild('wayPointsComponent') wayPointsComponent: PointsComponent;
-  // @ViewChild('assignDriverTruckModal', { static: true }) assignDriverTruckModal: AssignDriverTruckModalComponent;
-
   Vases: CreateOrEditShippingRequestTripVasDto[];
   selectedVases: CreateOrEditShippingRequestTripVasDto[];
   allFacilities: FacilityForDropdownDto[];
   trip: ShippingRequestsTripForViewDto = new ShippingRequestsTripForViewDto();
-
+  assignDriverAndTruck: AssignDriverAndTruckToShippmentByCarrierInput = new AssignDriverAndTruckToShippmentByCarrierInput();
   facilityLoading = false;
+  allDrivers: SelectItemDto[] = [];
+  allTrucks: SelectItemDto[] = [];
   saving = false;
   loading = true;
-
   currentTripId: number;
   wayBillIsDownloading = false;
   constructor(
@@ -45,12 +39,18 @@ export class ViewTripModalComponent extends AppComponentBase implements OnInit {
     private _routStepsServiceProxy: RoutStepsServiceProxy,
     private _shippingRequestTripsService: ShippingRequestsTripServiceProxy,
     private _fileDownloadService: FileDownloadService,
-    private _waybillsServiceProxy: WaybillsServiceProxy
+    private _waybillsServiceProxy: WaybillsServiceProxy,
+    private _trucksServiceProxy: TrucksServiceProxy
   ) {
     super(injector);
   }
 
-  ngOnInit() {}
+  ngOnInit() {
+    if (this.feature.isEnabled('App.Carrier')) {
+      this.getAllTrucks();
+      this.getAllDrivers();
+    }
+  }
 
   show(id): void {
     this.loading = true;
@@ -64,6 +64,8 @@ export class ViewTripModalComponent extends AppComponentBase implements OnInit {
       )
       .subscribe((res) => {
         this.trip = res;
+        this.assignDriverAndTruck.assignedTruckId = this.trip.assignedTruckId;
+        this.assignDriverAndTruck.assignedDriverUserId = this.trip.assignedDriverUserId;
       });
 
     this.modal.show();
@@ -82,5 +84,46 @@ export class ViewTripModalComponent extends AppComponentBase implements OnInit {
       this._fileDownloadService.downloadTempFile(result);
       this.wayBillIsDownloading = false;
     });
+  }
+
+  /**
+   * Driver Assignation Section
+   * this method is for Getting All Carriers Drivers For DD
+   */
+  getAllDrivers() {
+    if (this.feature.isEnabled('App.Carrier')) {
+      this._trucksServiceProxy.getAllDriversForDropDown().subscribe((res) => {
+        this.allDrivers = res;
+      });
+    }
+  }
+
+  /**
+   * this method is for Getting All Carriers Trucks For DD
+   */
+  getAllTrucks() {
+    if (this.feature.isEnabled('App.Carrier')) {
+      this._trucksServiceProxy.getAllCarrierTrucksForDropDown().subscribe((res) => {
+        this.allTrucks = res;
+      });
+    }
+  }
+
+  /**
+   * this function is to assign Driver And Truck To shipping Request Trip
+   */
+  assignDriverandTruck() {
+    this.saving = true;
+    this.assignDriverAndTruck.id = this.currentTripId;
+    this._shippingRequestTripsService
+      .assignDriverAndTruckToShippmentByCarrier(this.assignDriverAndTruck)
+      .pipe(
+        finalize(() => {
+          this.saving = false;
+        })
+      )
+      .subscribe(() => {
+        this.notify.success('driverandTrucksAssignedSuccessfully');
+      });
   }
 }

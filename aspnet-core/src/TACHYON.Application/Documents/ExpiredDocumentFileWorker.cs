@@ -7,6 +7,7 @@ using Abp;
 using Abp.Dependency;
 using Abp.Domain.Repositories;
 using Abp.Domain.Uow;
+using Abp.Net.Mail;
 using Abp.Threading;
 using Abp.Threading.BackgroundWorkers;
 using Abp.Threading.Timers;
@@ -24,13 +25,14 @@ namespace TACHYON.Documents
 
         private readonly IRepository<DocumentFile, Guid> _documentFileRepository;
         private readonly IAppNotifier _appNotifier;
+        private readonly IUserEmailer _userEmailer;
 
-
-        public ExpiredDocumentFileWorker(AbpTimer timer, IRepository<DocumentFile, Guid> documentFileRepository, IAppNotifier appNotifier) : base(timer)
+        public ExpiredDocumentFileWorker(AbpTimer timer, IRepository<DocumentFile, Guid> documentFileRepository, IAppNotifier appNotifier, IUserEmailer userEmailer) : base(timer)
         {
             _documentFileRepository = documentFileRepository;
             _appNotifier = appNotifier;
             Timer.Period = CheckPeriodAsMilliseconds;
+            _userEmailer = userEmailer;
         }
 
         [UnitOfWork]
@@ -41,6 +43,7 @@ namespace TACHYON.Documents
 
                 var docs = _documentFileRepository.GetAll()
                     .Include(x => x.DocumentTypeFk)
+                    .Include(x=>x.TenantFk)
                     .Where(x => x.DocumentTypeFk.HasExpirationDate)
                     .Where(x => x.IsAccepted)
                     .ToList();
@@ -75,6 +78,9 @@ namespace TACHYON.Documents
                         var user = new UserIdentifier(documentFile.TenantId, documentFile.CreatorUserId.Value);
                         AsyncHelper.RunSync(() => _appNotifier.DocumentFileExpiration(user, documentFile.Id));
                         Logger.Info(documentFile + "ExpiredDocumentFileWorker logger.");
+
+                        //Send email with expired documents
+                        AsyncHelper.RunSync(() => _userEmailer.SendExpiredDateDocumentsAsyn(documentFile.TenantFk, documentFile.Name));
                     }
 
                 }

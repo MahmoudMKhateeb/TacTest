@@ -10,7 +10,7 @@ namespace TACHYON.Shipping.ShippingRequests
     {
         [Description("New")]
         PrePrice = 0,
-        [Description("Confiremed")]
+        [Description("Confirmed")]
         PostPrice = 1,
         [Description("NeedsAction")]
         NeedsAction = 2,//carriers send price and waiting for response

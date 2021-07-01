@@ -16,6 +16,7 @@ import {
 import * as moment from 'moment';
 import { FileDownloadService } from '@shared/utils/file-download.service';
 import { EnumToArrayPipe } from '@shared/common/pipes/enum-to-array.pipe';
+import { InvoiceTenantItemsDetailsComponent } from './model/invoice-tenant-items-details.component';
 
 @Component({
   templateUrl: './invoice-tenant.component.html',
@@ -26,6 +27,8 @@ import { EnumToArrayPipe } from '@shared/common/pipes/enum-to-array.pipe';
 export class InvoiceTenantComponent extends AppComponentBase implements OnInit {
   @ViewChild('dataTable', { static: true }) dataTable: Table;
   @ViewChild('paginator', { static: true }) paginator: Paginator;
+  @ViewChild('InvoiceDetailsModel', { static: true }) InvoiceDetailsModel: InvoiceTenantItemsDetailsComponent;
+
   SubmitStatus: any;
   Invoices: SubmitInvoiceListDto[] = [];
   IsStartSearch: boolean = false;
@@ -138,6 +141,12 @@ export class InvoiceTenantComponent extends AppComponentBase implements OnInit {
     this.inputSearch.sorting = this.primengTableHelper.getSorting(this.dataTable);
     this._InvoiceServiceProxy.exports(this.inputSearch).subscribe((result) => {
       this._fileDownloadService.downloadTempFile(result);
+    });
+  }
+
+  details(invoice: SubmitInvoiceListDto): void {
+    this._InvoiceServiceProxy.getById(invoice.id).subscribe((result) => {
+      this.InvoiceDetailsModel.show(result);
     });
   }
 }

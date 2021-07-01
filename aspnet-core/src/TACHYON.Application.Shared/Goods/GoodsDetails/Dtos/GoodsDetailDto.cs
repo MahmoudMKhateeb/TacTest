@@ -24,6 +24,7 @@ namespace TACHYON.Goods.GoodsDetails.Dtos
         public long RoutPointId { get; set; }
         public int UnitOfMeasureId { get; set; }
         public string UnitOfMeasure { get; set; }
+        public string OtherUnitOfMeasureName { get; set; }
 
     }
 }

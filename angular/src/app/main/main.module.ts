@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { AppCommonModule } from '@app/shared/common/app-common.module';
 
 import { PackingTypesComponent } from './packingTypes/packingTypes/packingTypes.component';
@@ -212,7 +212,9 @@ import { BalancesListComponent } from '@app/main/invoices/balances/balances-list
 import { DemanModelComponent } from '@app/main/invoices/invoice-tenants/model/deman-model.component';
 import { BalanceRechargeModelComponent } from '@app/main/invoices/balances/balance-recharge-model/balance-recharge-model.component';
 import { InvoiceTenantComponent } from '@app/main/invoices/invoice-tenants/invoice-tenant.component';
+
 import { InvoiceTenantDetailsComponent } from '@app/main/invoices/invoice-tenants/invoice-tenant-details.component';
+import { InvoiceTenantItemsDetailsComponent } from '@app/main/invoices/invoice-tenants/model/invoice-tenant-items-details.component';
 import { SubmitInvoiceRejectedModelComponent } from '@app/main/invoices/invoice-tenants/model/Rejected-model.component';
 
 import { InvoiceDetailComponent } from '@app/main/invoices/invoice-detail/invoice-detail.component';
@@ -231,13 +233,17 @@ import { DirectRequestTenantModelComponent } from '@app/main/shippingRequests/sh
 import { ShippingRequestCardTemplateComponent } from '@app/main/shippingRequests/shippingRequests/template/shipping-request-card-template.component';
 import { ShippingRequestCardSearchModelComponent } from '@app/main/shippingRequests/shippingRequests/template/shipping-request-card-search-model.component';
 import { ShippingRequestCardCancelModelComponent } from '@app/main/shippingRequests/shippingRequests/template/shipping-request-card-cancel-model.component';
-import { AssignDriverTruckModalComponent } from '@app/main/shippingRequests/shippingRequests/ShippingRequestTrips/trips/assignDriverTruckModal/assignDriverTruckModal.component';
 import { AppLocalizationComponent } from '@app/main/applocalizations/applocalization.component';
 import { ApplocalizationModalComponent } from '@app/main/applocalizations/create-or-edit-applocalization-modal.component';
 import { ViewApplocalizationModalComponent } from '@app/main/applocalizations/view-applocalization-modal.component';
 import { ComingSoonComponent } from '@app/main/commingSoon/comingSoon.component';
+import { CreateOrEditShippingRequestWizardComponent } from '@app/main/shippingRequests/shippingRequests/shippingRequestWizard/create-or-edit-shipping-request-wizard.component';
 import { TrackingComponent } from '@app/main/shippingRequests/shippingRequests/tracking/tacking.component';
 import { TrackinSearchModelComponent } from '@app/main/shippingRequests/shippingRequests/tracking/tacking-search-model.component';
+import { TrackingModelComponent } from '@app/main/shippingRequests/shippingRequests/tracking/tacking-model.component';
+import { TrackingConfirmModalComponent } from '@app/main/shippingRequests/shippingRequests/tracking/tacking-confirm-code-model.component';
+import { TrackingPODModalComponent } from '@app/main/shippingRequests/shippingRequests/tracking/tacking-pod-model.component';
+import { TMSRequestListComponent } from '@app/main/tms/tms-request-list.component';
 NgxBootstrapDatePickerConfigService.registerNgxBootstrapDatePickerLocales();
 
 @NgModule({
@@ -273,6 +279,7 @@ NgxBootstrapDatePickerConfigService.registerNgxBootstrapDatePickerLocales();
     AgmDirectionModule,
     StepsModule,
     SelectButtonModule,
+    ReactiveFormsModule,
   ],
   declarations: [
     TrucksTypesTranslationsComponent,
@@ -412,9 +419,11 @@ NgxBootstrapDatePickerConfigService.registerNgxBootstrapDatePickerLocales();
     DemanModelComponent,
     BalanceRechargeModelComponent,
     InvoiceDetailComponent,
+    InvoiceTenantItemsDetailsComponent,
     SubmitInvoiceRejectedModelComponent,
     InvoiceTenantComponent,
     InvoiceTenantDetailsComponent,
+    InvoiceTenantItemsDetailsComponent,
     TransactionListComponent,
     InvoicePaymentMethodComponent,
     InvoicePaymentMethodModelComponent,
@@ -432,7 +441,6 @@ NgxBootstrapDatePickerConfigService.registerNgxBootstrapDatePickerLocales();
     AccidentReasonComponentModalComponent,
     TripRejectReasonComponent,
     TripRejectReasonModalComponent,
-    AssignDriverTruckModalComponent,
     //  tachyondealer
     TachyonDealToBiddingModalComponent,
     DirectRequestComponent,
@@ -443,10 +451,16 @@ NgxBootstrapDatePickerConfigService.registerNgxBootstrapDatePickerLocales();
     AppLocalizationComponent,
     ApplocalizationModalComponent,
     ViewApplocalizationModalComponent,
+
+    CreateOrEditShippingRequestWizardComponent,
     ShippingrequestsDetailsModelComponent,
     ComingSoonComponent,
     TrackingComponent,
     TrackinSearchModelComponent,
+    TrackingModelComponent,
+    TrackingConfirmModalComponent,
+    TrackingPODModalComponent,
+    TMSRequestListComponent,
   ],
   providers: [
     { provide: BsDatepickerConfig, useFactory: NgxBootstrapDatePickerConfigService.getDatepickerConfig },

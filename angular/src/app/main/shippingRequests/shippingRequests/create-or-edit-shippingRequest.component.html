@@ -484,6 +484,7 @@
                             class="form-control"
                             type="number"
                             name="numberOfDrops"
+                            pattern="^([2-9]|1[0-9])$"
                             id="numberOfDrops"
                             maxlength="2"
                             [required]="selectedRouteType == 3"
@@ -491,6 +492,7 @@
                             [class.is-invalid]="selectedRouteType == 3 && NumberOfDrops.touched && !NumberOfDrops.valid"
                             [class.is-valid]="selectedRouteType == 3 && NumberOfDrops.touched && NumberOfDrops.valid"
                             [disabled]="selectedRouteType != 3"
+                            (keypress)="numberOnly($event)"
                           />
                           <span class="form-text text-muted">{{ l('DescriptionNumberOfDrops') }} </span>
                         </div>

@@ -1,17 +1,10 @@
-import { Component, Injector, ViewChild, ChangeDetectorRef, Input } from '@angular/core';
+import { AfterViewInit, ChangeDetectorRef, Component, Injector, Input, ViewChild, ViewEncapsulation } from '@angular/core';
 import { AppComponentBase } from '@shared/common/app-component-base';
 import { Table } from '@node_modules/primeng/table';
 import { Paginator } from '@node_modules/primeng/paginator';
 import { LazyLoadEvent } from '@node_modules/primeng/public_api';
-import {
-  CreateOrEditShippingRequestVasListDto,
-  GetShippingRequestForViewOutput,
-  GetShippingRequestVasForViewDto,
-  ShippingRequestDto,
-  ShippingRequestsTripServiceProxy,
-} from '@shared/service-proxies/service-proxies';
+import { GetShippingRequestVasForViewDto, ShippingRequestDto, ShippingRequestsTripServiceProxy } from '@shared/service-proxies/service-proxies';
 import { CreateOrEditTripComponent } from '@app/main/shippingRequests/shippingRequests/ShippingRequestTrips/trips/createOrEditTripModal/createOrEditTrip.component';
-import { CreateOrEditFacilityModalComponent } from '@app/main/addressBook/facilities/create-or-edit-facility-modal.component';
 import { ViewTripModalComponent } from '@app/main/shippingRequests/shippingRequests/ShippingRequestTrips/trips/viewTripModal/viewTripModal.component';
 
 @Component({
@@ -19,7 +12,7 @@ import { ViewTripModalComponent } from '@app/main/shippingRequests/shippingReque
   templateUrl: './tripsForViewShippingRequest.component.html',
   styleUrls: ['./tripsForViewShippingRequest.component.scss'],
 })
-export class TripsForViewShippingRequestComponent extends AppComponentBase {
+export class TripsForViewShippingRequestComponent extends AppComponentBase implements AfterViewInit {
   @ViewChild('dataTablechild', { static: false }) dataTable: Table;
   @ViewChild('paginatorchild', { static: false }) paginator: Paginator;
   @ViewChild('AddNewTripModal', { static: false }) AddNewTripModal: CreateOrEditTripComponent;
@@ -58,5 +51,8 @@ export class TripsForViewShippingRequestComponent extends AppComponentBase {
 
   reloadPage(): void {
     this.paginator.changePage(this.paginator.getPage());
+  }
+  ngAfterViewInit(): void {
+    this.primengTableHelper.adjustScroll(this.dataTable);
   }
 }

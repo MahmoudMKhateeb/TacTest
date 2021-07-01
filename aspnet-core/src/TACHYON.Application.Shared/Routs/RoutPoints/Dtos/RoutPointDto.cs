@@ -40,6 +40,7 @@ namespace TACHYON.Routs.RoutPoints.Dtos
         [CanBeNull] public string ReceiverEmailAddress { get; set; }
         [CanBeNull] public string ReceiverCardIdNumber { get; set; }
 
+        public string ReceiverAddress { get; set; }
         public List<GoodsDetailDto> GoodsDetailListDto { get; set; }
         [CanBeNull] public string Note { get; set; }
 

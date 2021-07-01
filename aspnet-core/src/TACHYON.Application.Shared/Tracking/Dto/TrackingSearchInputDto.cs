@@ -10,6 +10,7 @@ namespace TACHYON.Tracking.Dto
         public ShippingRequestTripStatus? Status { get; set; }
         public string Shipper { get; set; }
         public string Carrier { get; set; }
+        public long? WaybillNumber { get; set; }
         public int? TruckTypeId { get; set; }
 
         public int? OriginId { get; set; }

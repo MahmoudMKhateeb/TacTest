@@ -233,7 +233,7 @@ namespace TACHYON
             //    .ReverseMap();
 
             
-            configuration.CreateMap<CreateOrEditShippingRequestVasListDto, ShippingRequestVas>().ReverseMap();
+           // configuration.CreateMap<CreateOrEditShippingRequestVasListDto, ShippingRequestVas>().ReverseMap();
             //configuration.CreateMap<CreateOrEditRouteDto, Route>().ReverseMap();
 
             configuration.CreateMap<CreateOrEditShippingRequestDto, ShippingRequest>()
@@ -242,9 +242,13 @@ namespace TACHYON
                 .ReverseMap();
 
             configuration.CreateMap<EditShippingRequestStep4Dto, ShippingRequest>()
-                 .ForMember(d => d.ShippingRequestVases, opt => opt.Ignore())
-            .AfterMap(AddOrUpdateShippingRequest)
-                .ReverseMap();
+                .ForMember(dest => dest.IsDrafted, opt => opt.Ignore())
+                .ForMember(dest => dest.DraftStep, opt => opt.Ignore())
+                .ForMember(d => d.ShippingRequestVases, opt => opt.Ignore())
+            .AfterMap(AddOrUpdateShippingRequest);
+
+            configuration.CreateMap<ShippingRequest, EditShippingRequestStep4Dto>()
+                .ForMember(dest => dest.ShippingRequestVasList, opt => opt.MapFrom(src=>src.ShippingRequestVases));
 
             configuration.CreateMap<CreateOrEditShippingRequestTripDto, ShippingRequestTrip>()
                 .ForMember(d=>d.RoutPoints,opt=>opt.Ignore())
@@ -266,8 +270,7 @@ namespace TACHYON
                 .ReverseMap();
             configuration.CreateMap<CreateOrEditShippingRequestVasListDto, ShippingRequestVas>()
                 .ReverseMap();
-            configuration.CreateMap<CreateOrEditShippingRequestVasListDto, ShippingRequestVas>()
-                .ReverseMap();
+          
             
             configuration.CreateMap<ShippingRequestBidDto, ShippingRequestBid>()
                 .ForPath(dst => dst.Tenant.Name, opt => opt.MapFrom(src => src.CarrierName))

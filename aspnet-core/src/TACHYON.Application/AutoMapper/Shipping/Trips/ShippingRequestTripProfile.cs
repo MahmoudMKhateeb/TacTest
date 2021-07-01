@@ -16,8 +16,8 @@ namespace TACHYON.AutoMapper.Shipping.Trips
         public ShippingRequestTripProfile()
         {
             CreateMap<ShippingRequestTrip, ShippingRequestsTripListDto>()
-                 .ForMember(dst => dst.OriginFacility, opt => opt.MapFrom(src => src.OriginFacilityFk != null ? $"{src.OriginFacilityFk.Name} - {src.OriginFacilityFk.Address}" : ""))
-                 .ForMember(dst => dst.DestinationFacility, opt => opt.MapFrom(src => src.DestinationFacilityFk != null ? $"{src.DestinationFacilityFk.Name} - {src.DestinationFacilityFk.Address}" : ""))
+                 .ForMember(dst => dst.OriginCity, opt => opt.MapFrom(src => src.OriginFacilityFk != null ? src.OriginFacilityFk.CityFk.DisplayName : ""))
+                 .ForMember(dst => dst.DestinationCity, opt => opt.MapFrom(src => src.DestinationFacilityFk != null ? src.DestinationFacilityFk.CityFk.DisplayName : ""))
                  .ForMember(dst => dst.Truck, opt => opt.MapFrom(src => src.AssignedTruckFk != null ? src.AssignedTruckFk.ModelName : string.Empty))
                  .ForMember(dst => dst.Driver, opt => opt.MapFrom(src => src.AssignedDriverUserFk != null ? src.AssignedDriverUserFk.Name : string.Empty))
                  .ForMember(dst => dst.DriverStatusTitle, opt => opt.MapFrom(src => Enum.GetName(typeof(ShippingRequestTripDriverStatus), src.DriverStatus)));
@@ -48,7 +48,7 @@ namespace TACHYON.AutoMapper.Shipping.Trips
                 .ForMember(dst => dst.Source, opt => opt.MapFrom(src => $"{src.ShippingRequestFk.OriginCityFk.DisplayName} - {src.OriginFacilityFk.Address}"))
                 .ForMember(dst => dst.Distination, opt => opt.MapFrom(src => $"{src.ShippingRequestFk.DestinationCityFk.DisplayName} - {src.DestinationFacilityFk.Address}"))
                 .ForMember(dst => dst.StartTripDate, opt => opt.MapFrom(src => src.StartTripDate == null ? "" : src.StartTripDate.ToString("dd,MMM,yyyy")))
-                .ForMember(dst => dst.EndTripDate, opt => opt.MapFrom(src => src.EndTripDate == null ? "" : src.EndTripDate.ToString("dd,MMM,yyyy")))
+                .ForMember(dst => dst.EndTripDate, opt => opt.MapFrom(src => src.EndTripDate == null ? "" : src.EndTripDate!=null ?src.EndTripDate.Value.ToString("dd,MMM,yyyy") :""))
                 .ForMember(dst => dst.TravelTime, opt => opt.MapFrom(src => src.StartWorking == null ? "" : ((DateTime)src.StartWorking).ToString("hh:mm")))
                 .ForMember(dst => dst.TotalWeight, opt => opt.MapFrom(src => src.ShippingRequestFk.TotalWeight))
                 .ForMember(dst => dst.PackingType, opt => opt.MapFrom(src => src.ShippingRequestFk.PackingTypeFk.DisplayName))
@@ -64,10 +64,11 @@ namespace TACHYON.AutoMapper.Shipping.Trips
 
 
             CreateMap<RoutPoint, ShippingRequestTripDriverRoutePointDto>()
-                .ForMember(dst => dst.Address, opt => opt.MapFrom(src => $"{src.FacilityFk.CityFk.DisplayName} - {src.FacilityFk.Address}"))
+                .ForMember(dst => dst.Address, opt => opt.MapFrom(src => src.FacilityFk.Address))
                 .ForMember(dst => dst.Facility, opt => opt.MapFrom(src => src.FacilityFk.Name))
                 .ForMember(dst => dst.lat, opt => opt.MapFrom(src => src.FacilityFk.Location.Y))
-                .ForMember(dst => dst.lng, opt => opt.MapFrom(src => src.FacilityFk.Location.X));
+                .ForMember(dst => dst.lng, opt => opt.MapFrom(src => src.FacilityFk.Location.X))
+                .ForMember(dst => dst.NextStatus, opt => opt.MapFrom(src => GetMobileTripChangeStatusButtonTitle(src.Status)));
 
             CreateMap<ShippingRequestTrip, CreateOrEditShippingRequestTripDto>()
                 .ForMember(dest => dest.RoutPoints, opt => opt.MapFrom(src => src.RoutPoints))
@@ -102,6 +103,10 @@ namespace TACHYON.AutoMapper.Shipping.Trips
                     return Enum.GetName(typeof(RoutePointStatus), RoutePointStatus.StartOffloading);
                 case RoutePointStatus.StartOffloading:
                     return Enum.GetName(typeof(RoutePointStatus), RoutePointStatus.FinishOffLoadShipment);
+                case RoutePointStatus.FinishOffLoadShipment:
+                    return Enum.GetName(typeof(RoutePointStatus), RoutePointStatus.ReceiverConfirmed);
+                case RoutePointStatus.ReceiverConfirmed:
+                    return Enum.GetName(typeof(RoutePointStatus), RoutePointStatus.DeliveryConfirmation);
                 default:
                     return "";
             }

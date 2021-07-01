@@ -17,6 +17,7 @@ import {
   UpdateDocumentFileInput,
   DocumentFilesServiceProxy,
   DocumentTypeDto,
+  ShippingRequestTripVasDto,
 } from '@shared/service-proxies/service-proxies';
 import { AppComponentBase } from '@shared/common/app-component-base';
 import { Router } from '@angular/router';
@@ -43,16 +44,14 @@ export class CreateOrEditTripComponent extends AppComponentBase implements OnIni
   @Input() shippingRequest: ShippingRequestDto;
   @Input() VasListFromFather: GetShippingRequestVasForViewDto[];
 
-  Vases: CreateOrEditShippingRequestTripVasDto[];
-  selectedVases: CreateOrEditShippingRequestTripVasDto[];
-
   allFacilities: FacilityForDropdownDto[];
   trip = new CreateOrEditShippingRequestTripDto();
   facilityLoading = false;
   saving = false;
   loading = true;
   active = false;
-  routePointsFromChild: CreateOrEditRoutPointDto[];
+  activeTripId: number = undefined;
+  cleanVasesList: CreateOrEditShippingRequestTripVasDto[] = [];
 
   //documentFile: CreateOrEditDocumentFileDto = new CreateOrEditDocumentFileDto();
   alldocumentsValid = false;
@@ -82,30 +81,33 @@ export class CreateOrEditTripComponent extends AppComponentBase implements OnIni
   }
 
   ngOnInit() {
-    this.Vases = [];
-    this.selectedVases = [];
-    // this.VasListFromFather.forEach((x) => {
-    //   const vas = new CreateOrEditShippingRequestTripVasDto();
-    //   vas.shippingRequestVasId = x.shippingRequestVas.id;
-    //   vas.name = x.vasName;
-    //   this.Vases.push(vas);
-    // });
     //load the Facilites
-    this.refreshOrGetFacilities();
-    this.sortVases();
+    this.refreshOrGetFacilities(null);
+    this.vasesHandler();
+  }
+
+  /**
+   * takes the Vas List From the Shipping Request And Cleans them to use them in Trips Modal
+   */
+  vasesHandler() {
+    this.VasListFromFather.forEach((x) => {
+      //Get the Vase List From Father And Attach Them to new Array
+      const vas: CreateOrEditShippingRequestTripVasDto = new CreateOrEditShippingRequestTripVasDto();
+      vas.id = undefined; // vas id in shipping Request trip (Required for edit trip)
+      vas.shippingRequestTripId = this.activeTripId || undefined; //the trip id
+      vas.shippingRequestVasId = x.shippingRequestVas.id; //vas id in shipping request
+      vas.name = x.vasName; //vas Name
+      this.cleanVasesList.push(vas);
+    });
   }
 
   show(record?: CreateOrEditShippingRequestTripDto): void {
     if (record) {
+      this.activeTripId = record.id;
       this._shippingRequestTripsService.getShippingRequestTripForEdit(record.id).subscribe((res) => {
         this.trip = res;
         this.PointsComponent.wayPointsList = this.trip.routPoints;
-        this.selectedVases = res.shippingRequestTripVases;
         this.loading = false;
-        // this.Vases = this.trip.shippingRequestTripVases;
-        console.log('Vas From Father ', this.VasListFromFather);
-        console.log('vases ', this.Vases);
-        console.log('tripVases ', this.trip.shippingRequestTripVases);
       });
     } else {
       //this is a create
@@ -131,29 +133,8 @@ export class CreateOrEditTripComponent extends AppComponentBase implements OnIni
     this.trip = new CreateOrEditShippingRequestTripDto();
   }
 
-  sortVases() {
-    //console.log('Vases List ', this.Vases);
-    // console.log('selected vases list ', this.selectedVases);
-    // console.log('Shipping Request Trip Vases before loop', this.trip.shippingRequestTripVases);
-    // //if edit get the Vases From select and Assighn them into Selected Vases
-    // this.trip.shippingRequestTripVases.forEach((singleVas) => {
-    //   const selectd = new GetShippingRequestVasForViewDto();
-    //   selectd.shippingRequestVas.vasId = singleVas.shippingRequestVasId;
-    //   this.selectedVases.push(selectd);
-    // });
-    // this.selectedVases.forEach((y) => {
-    //   const z = new CreateOrEditShippingRequestTripVasDto();
-    //   console.log('selected Vas  single', y);
-    //   z.shippingRequestVasId = y.shippingRequestVas.vasId;
-    //   console.log('vasId ', y.shippingRequestVas.vasId);
-    //   this.trip.shippingRequestTripVases.push(z);
-    //   console.log('Shipping Request Trip Vases ', this.trip.shippingRequestTripVases);
-    // });
-  }
   createOrEditTrip() {
     this.saving = true;
-    console.log(this.trip);
-    //this.sortVases();
     this._shippingRequestTripsService
       .createOrEdit(this.trip)
       .pipe(
@@ -167,18 +148,6 @@ export class CreateOrEditTripComponent extends AppComponentBase implements OnIni
         this.notify.info(this.l('SuccessfullySaved'));
       });
   }
-  // viewTrip(id: number) {
-  //   this._shippingRequestTripsService
-  //     .getShippingRequestTripForView(id)
-  //     .pipe(
-  //       finalize(() => {
-  //         this.saving = false;
-  //       })
-  //     )
-  //     .subscribe((res) => {
-  //       this.trip = res;
-  //     });
-  // }
 
   deleteTrip(tripid: number) {
     Swal.fire({
@@ -197,13 +166,17 @@ export class CreateOrEditTripComponent extends AppComponentBase implements OnIni
       } //end of if
     });
   }
-  refreshOrGetFacilities() {
-    console.log('facilities should be loaded ');
-    this.facilityLoading = true;
-    this._routStepsServiceProxy.getAllFacilitiesForDropdown().subscribe((result) => {
-      this.allFacilities = result;
-      this.facilityLoading = false;
-    });
+  refreshOrGetFacilities(facility: FacilityForDropdownDto | undefined) {
+    if (facility) {
+      this.allFacilities.push(facility);
+      this.trip.originFacilityId = facility.id;
+    } else {
+      this.facilityLoading = true;
+      this._routStepsServiceProxy.getAllFacilitiesForDropdown().subscribe((result) => {
+        this.allFacilities = result;
+        this.facilityLoading = false;
+      });
+    }
   }
 
   DownloadSingleDropWaybillPdf(id: number): void {

@@ -21,6 +21,9 @@ namespace TACHYON.Shipping.ShippingRequests.Dtos
         [Required]
         public DateTime StartTripDate { get; set; }
         public DateTime? EndTripDate { get; set; }
+        public bool IsDrafted { get; set; }
+        public int DraftStep { get; set; }
+
         [JsonIgnore]
         public ShippingRequestType RequestType { get; set; }
         public void AddValidationErrors(CustomValidationContext context)

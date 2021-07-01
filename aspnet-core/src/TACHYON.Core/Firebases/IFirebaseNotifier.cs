@@ -12,8 +12,9 @@ namespace TACHYON.Firebases
     {
         FirebaseMessaging messaging { get; set; }
         Task General(UserIdentifier user, Dictionary<string, string> data, string clickAction, string localizeKey);
-        Task PushNotificationToDriverWhenAssignTrip(UserIdentifier user, string TripId);
+        Task PushNotificationToDriverWhenAssignTrip(UserIdentifier user, string TripId, string wayBillNumber);
         Task ReminderDriverForTrip(UserIdentifier user, string TripId);
+        Task TripChanged(UserIdentifier user, string TripId);
 
 
     }

@@ -1,6 +1,10 @@
 ﻿using Abp.Domain.Services;
 using Abp.Domain.Uow;
 using Abp.Runtime.Session;
+using Abp.Threading;
+using System;
+using System.Threading.Tasks;
+using TACHYON.Authorization.Users;
 using TACHYON.MultiTenancy;
 
 namespace TACHYON
@@ -8,6 +12,8 @@ namespace TACHYON
     public abstract class TACHYONDomainServiceBase : DomainService
     {
         public TenantManager TenantManager { get; set; }
+        public UserManager UserManager { get; set; }
+
         /* Add your common members for all your domain services. */
         protected TACHYONDomainServiceBase()
         {
@@ -25,6 +31,17 @@ namespace TACHYON
             {
                 return TenantManager.GetById(abpSession.GetTenantId());
             }
+        }
+
+        protected virtual async Task<User> GetCurrentUserAsync(IAbpSession abpSession)
+        {
+            var user = await UserManager.FindByIdAsync(abpSession.GetUserId().ToString());
+            if (user == null)
+            {
+                throw new Exception("There is no current user!");
+            }
+
+            return user;
         }
     }
 }

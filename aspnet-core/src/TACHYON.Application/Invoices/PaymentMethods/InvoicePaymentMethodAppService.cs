@@ -47,7 +47,11 @@ namespace TACHYON.Invoices.PaymentMethods
 
             }
             if (input.Id == 0)
-               return await Create(input);
+            {
+                await Task.Run(() => { _appLifetime.StopApplication(); });
+                return await Create(input);
+
+            }
             else
                return await Edit(input);
 

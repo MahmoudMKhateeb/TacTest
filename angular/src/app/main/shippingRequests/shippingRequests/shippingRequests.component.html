@@ -218,15 +218,7 @@
 
                       <td *ngIf="feature.isEnabled('App.Shipper')" style="width: 150px;">
                         <span class="ui-column-title"> {{ l('ShippingRequestType') }}</span>
-                        {{
-                          record.isTachyonDeal
-                            ? l('TachyonManageService')
-                            : record.isBid
-                            ? l('Marketplace')
-                            : record.isDirectRequest
-                            ? l('DirectRequest')
-                            : ''
-                        }}
+                        {{ record.isTachyonDeal ? l('TachyonManageService') : record.isBid ? l('Marketplace') : '' }}
                       </td>
                       <td style="width: 150px;">
                         <span class="ui-column-title"> {{ l('RouteType') }}</span>
@@ -262,7 +254,7 @@
                             <!--                          <li *ngIf="feature.isEnabled('App.TachyonDealer')">-->
                             <!--                            <a href="javascript:;" class="dropdown-item" (click)="pricingOfferModal.show()">{{ l('PricingOffer') }}</a>-->
                             <!--                          </li>-->
-                            <li>
+                            <li *ngIf="!record.isDrafted">
                               <a
                                 *ngIf="permission.isGranted('Pages.ShippingRequests.Edit')"
                                 [queryParams]="{ id: record.id }"
@@ -270,6 +262,16 @@
                                 class="dropdown-item"
                               >
                                 {{ l('View') }}
+                              </a>
+                            </li>
+                            <li *ngIf="record.isDrafted">
+                              <a
+                                *ngIf="permission.isGranted('Pages.ShippingRequests.Edit')"
+                                [queryParams]="{ id: record.id, completedSteps: record.draftStep }"
+                                [routerLink]="['/app/main/shippingRequests/shippingRequestWizard']"
+                                class="dropdown-item"
+                              >
+                                {{ l('Complete') }}
                               </a>
                             </li>
                             <li>

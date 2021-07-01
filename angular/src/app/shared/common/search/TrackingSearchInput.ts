@@ -3,6 +3,7 @@ import * as moment from 'moment';
 export class TrackingSearchInput {
   shipper!: string;
   carrier!: string;
+  WaybillNumber!: number;
   truckTypeId!: number;
   originId!: number;
   destinationId!: number;

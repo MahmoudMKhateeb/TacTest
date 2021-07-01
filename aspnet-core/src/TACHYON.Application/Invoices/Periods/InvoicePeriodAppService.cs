@@ -3,6 +3,7 @@ using Abp.Authorization;
 using Abp.Collections.Extensions;
 using Abp.Domain.Repositories;
 using Abp.Extensions;
+using Abp.Threading;
 using Abp.UI;
 using Microsoft.Extensions.Hosting;
 using System.Collections.Generic;
@@ -60,7 +61,8 @@ namespace TACHYON.Invoices.Periods
             if (!input.Id.HasValue)
             {
                 await Create(input);
-                _appLifetime.StopApplication();
+
+                await Task.Run(() => {_appLifetime.StopApplication();});
             }
             else
             {

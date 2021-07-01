@@ -19,6 +19,7 @@ namespace TACHYON.Documents.DocumentFiles.Dtos
         public string RejectionReason { get; set; }
 
         public long DocumentTypeId { get; set; }
+        public string OtherDocumentTypeName { get; set; }
 
         public long? TruckId { get; set; }
 

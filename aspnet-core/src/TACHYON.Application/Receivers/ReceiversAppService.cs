@@ -46,7 +46,8 @@ namespace TACHYON.Receivers
                         .WhereIf(!string.IsNullOrWhiteSpace(input.FullNameFilter), e => e.FullName == input.FullNameFilter)
                         .WhereIf(!string.IsNullOrWhiteSpace(input.EmailFilter), e => e.Email == input.EmailFilter)
                         .WhereIf(!string.IsNullOrWhiteSpace(input.PhoneNumberFilter), e => e.PhoneNumber == input.PhoneNumberFilter)
-                        .WhereIf(!string.IsNullOrWhiteSpace(input.FacilityNameFilter), e => e.FacilityFk != null && e.FacilityFk.Name == input.FacilityNameFilter);
+                        .WhereIf(!string.IsNullOrWhiteSpace(input.FacilityNameFilter), e => e.FacilityFk != null && e.FacilityFk.Name == input.FacilityNameFilter)
+                        .WhereIf(input.FacilityId != null, e => e.FacilityId == input.FacilityId);
 
             var pagedAndFilteredReceivers = filteredReceivers
                 .OrderBy(input.Sorting ?? "id asc")
@@ -192,6 +193,17 @@ namespace TACHYON.Receivers
                 {
                     Id = facility.Id,
                     DisplayName = facility == null || facility.Name == null ? "" : facility.Name.ToString()
+                }).ToListAsync();
+        }
+
+        public async Task<List<ReceiverFacilityLookupTableDto>> GetAllReceiversByFacilityForTableDropdown(long facilityId)
+        {
+            return await _receiverRepository.GetAll()
+                .Where(x => x.FacilityId == facilityId)
+                .Select(r => new ReceiverFacilityLookupTableDto
+                {
+                    Id = r.Id,
+                    DisplayName = r.FullName
                 }).ToListAsync();
         }
 

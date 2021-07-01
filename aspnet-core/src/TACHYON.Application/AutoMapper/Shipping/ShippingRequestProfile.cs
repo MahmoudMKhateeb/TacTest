@@ -43,11 +43,23 @@ namespace TACHYON.AutoMapper.Shipping
                  .ForMember(dst => dst.RangeDate, opt => opt.MapFrom(src => GetDateRange(src.StartTripDate, src.EndTripDate)));
             
 
-            CreateMap<CreateOrEditShippingRequestStep1Dto, ShippingRequest>().ReverseMap();
+            CreateMap<CreateOrEditShippingRequestStep1Dto, ShippingRequest>()
+                .ForMember(dest => dest.IsDrafted, opt => opt.Ignore())
+                .ForMember(dest => dest.DraftStep, opt => opt.Ignore());
 
-            CreateMap<EditShippingRequestStep2Dto, ShippingRequest>().ReverseMap();
+            CreateMap<ShippingRequest,CreateOrEditShippingRequestStep1Dto>();
 
-            CreateMap<EditShippingRequestStep3Dto, ShippingRequest>().ReverseMap();
+            CreateMap<EditShippingRequestStep2Dto, ShippingRequest>()
+                .ForMember(dest => dest.IsDrafted, opt => opt.Ignore())
+                .ForMember(dest => dest.DraftStep, opt => opt.Ignore());
+
+            CreateMap<ShippingRequest, EditShippingRequestStep2Dto>();
+
+            CreateMap<EditShippingRequestStep3Dto, ShippingRequest>()
+                .ForMember(dest => dest.IsDrafted, opt => opt.Ignore())
+                .ForMember(dest => dest.DraftStep, opt => opt.Ignore());
+
+            CreateMap<ShippingRequest, EditShippingRequestStep3Dto>();
 
             //EditShippingRequestStep4Dto in CustomDtoMapper
 

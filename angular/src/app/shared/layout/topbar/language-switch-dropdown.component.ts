@@ -19,7 +19,8 @@ export class LanguageSwitchDropdownComponent extends ThemesLayoutBaseComponent i
   }
 
   ngOnInit(): void {
-    this.languages = _.filter(this.localization.languages, (l) => l.isDisabled === false);
+    let languageallow: string[] = ['en', 'ar-EG'];
+    this.languages = _.filter(this.localization.languages, (l) => l.isDisabled === false && languageallow.includes(l.name));
     this.currentLanguage = this.localization.currentLanguage;
   }
 
