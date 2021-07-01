@@ -82,7 +82,7 @@ export class CreateOrEditTripComponent extends AppComponentBase implements OnIni
 
   ngOnInit() {
     //load the Facilites
-    this.refreshOrGetFacilities();
+    this.refreshOrGetFacilities(null);
     this.vasesHandler();
   }
 
