@@ -242,6 +242,7 @@ import { TrackingComponent } from '@app/main/shippingRequests/shippingRequests/t
 import { TrackinSearchModelComponent } from '@app/main/shippingRequests/shippingRequests/tracking/tacking-search-model.component';
 import { TrackingModelComponent } from '@app/main/shippingRequests/shippingRequests/tracking/tacking-model.component';
 import { TrackingConfirmModalComponent } from '@app/main/shippingRequests/shippingRequests/tracking/tacking-confirm-code-model.component';
+import { TrackingPODModalComponent } from '@app/main/shippingRequests/shippingRequests/tracking/tacking-pod-model.component';
 import { TMSRequestListComponent } from '@app/main/tms/tms-request-list.component';
 NgxBootstrapDatePickerConfigService.registerNgxBootstrapDatePickerLocales();
 
@@ -458,6 +459,7 @@ NgxBootstrapDatePickerConfigService.registerNgxBootstrapDatePickerLocales();
     TrackinSearchModelComponent,
     TrackingModelComponent,
     TrackingConfirmModalComponent,
+    TrackingPODModalComponent,
     TMSRequestListComponent,
   ],
   providers: [

@@ -771,7 +771,7 @@ namespace TACHYON.PriceOffers
                 .FirstOrDefaultAsync(x => x.Id == input.Id);
             if (request == null) throw new UserFriendlyException(L("YouCanNotCancelThisShipment"));
                 request.CancelReason = input.CancelReason;
-
+                request.Status = ShippingRequestStatus.Cancled;
             if (!AbpSession.TenantId.HasValue || await IsEnabledAsync(AppFeatures.TachyonDealer))
             {
               var user = await UserManager.GetAdminTachyonDealerAsync();

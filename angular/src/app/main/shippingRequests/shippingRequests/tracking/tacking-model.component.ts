@@ -3,6 +3,7 @@ import { AppComponentBase } from '@shared/common/app-component-base';
 import { appModuleAnimation } from '@shared/animations/routerTransition';
 import { ModalDirective } from 'ngx-bootstrap/modal';
 import { TrackingConfirmModalComponent } from '@app/main/shippingRequests/shippingRequests/tracking/tacking-confirm-code-model.component';
+import { TrackingPODModalComponent } from '@app/main/shippingRequests/shippingRequests/tracking/tacking-pod-model.component';
 
 import {
   TrackingServiceProxy,
@@ -24,6 +25,8 @@ import { finalize } from 'rxjs/operators';
 export class TrackingModelComponent extends AppComponentBase implements OnInit {
   @ViewChild('modal', { static: false }) modal: ModalDirective;
   @ViewChild('modelconfirm', { static: false }) modelConfirm: TrackingConfirmModalComponent;
+  @ViewChild('modelpod', { static: false }) modelpod: TrackingPODModalComponent;
+
   _zone: NgZone;
   item: TrackingListDto = new TrackingListDto();
   routePoints: ShippingRequestTripDriverRoutePointDto[] = [];
@@ -93,6 +96,9 @@ export class TrackingModelComponent extends AppComponentBase implements OnInit {
     if (point.status == RoutePointStatus.FinishOffLoadShipment) {
       this.modelConfirm.show(point.id);
       return;
+    } else if (point.status == RoutePointStatus.ReceiverConfirmed) {
+      this.modelpod.show(point.id);
+      return;
     }
 
     this.message.confirm('', this.l('AreYouSure'), (isConfirmed) => {
@@ -158,29 +164,35 @@ export class TrackingModelComponent extends AppComponentBase implements OnInit {
     });
 
     abp.event.on('app.tracking.changed', (data) => {
-      let point: ShippingRequestTripDriverRoutePointDto = <ShippingRequestTripDriverRoutePointDto>data.data;
-      let currentpoint = this.routePoints.find((x) => x.id == point.id);
-      if (currentpoint) {
-        if (currentpoint.pickingType == PickingType.Pickup) {
-          this.pickup.isActive = point.isActive;
-          this.pickup.isComplete = point.isComplete;
-          this.pickup.endTime = point.endTime;
-          this.pickup.status = point.status;
-          this.pickup.statusTitle = point.statusTitle;
-          this.pickup.nextStatus = point.nextStatus;
-        } else {
-          currentpoint.isActive = point.isActive;
-          currentpoint.isComplete = point.isComplete;
-          currentpoint.endTime = point.endTime;
-          currentpoint.status = point.status;
-          currentpoint.statusTitle = point.statusTitle;
-          currentpoint.nextStatus = point.nextStatus;
-          console.log(this.routePoints);
-        }
-      }
+      this.updatePoint(<ShippingRequestTripDriverRoutePointDto>data.data);
+    });
+
+    abp.event.on('app.tracking.Shipment.Delivered', (data) => {
+      let point = <ShippingRequestTripDriverRoutePointDto>data.data;
+      this.updatePoint(point);
+      if (this.item.id == point.shippingRequestTripId) this.item.status = ShippingRequestTripStatus.Delivered;
     });
   }
-
+  updatePoint(point: ShippingRequestTripDriverRoutePointDto): void {
+    let currentpoint = this.routePoints.find((x) => x.id == point.id);
+    if (currentpoint) {
+      if (currentpoint.pickingType == PickingType.Pickup) {
+        this.pickup.isActive = point.isActive;
+        this.pickup.isComplete = point.isComplete;
+        this.pickup.endTime = point.endTime;
+        this.pickup.status = point.status;
+        this.pickup.statusTitle = point.statusTitle;
+        this.pickup.nextStatus = point.nextStatus;
+      } else {
+        currentpoint.isActive = point.isActive;
+        currentpoint.isComplete = point.isComplete;
+        currentpoint.endTime = point.endTime;
+        currentpoint.status = point.status;
+        currentpoint.statusTitle = point.statusTitle;
+        currentpoint.nextStatus = point.nextStatus;
+      }
+    }
+  }
   /**
   getNextStatus(status: RoutePointStatus, type: PickingType) {
     switch (status) {

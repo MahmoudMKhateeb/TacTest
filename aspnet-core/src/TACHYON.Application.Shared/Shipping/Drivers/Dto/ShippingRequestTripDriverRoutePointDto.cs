@@ -9,7 +9,8 @@ namespace TACHYON.Shipping.Drivers.Dto
 {
    public class ShippingRequestTripDriverRoutePointDto:EntityDto<long>
     {
-        public string DisplayName { get; set; }
+
+        public int ShippingRequestTripId { get; set; }
         public PickingType PickingType { get; set; }
 
         public RoutePointStatus Status { get; set; }
