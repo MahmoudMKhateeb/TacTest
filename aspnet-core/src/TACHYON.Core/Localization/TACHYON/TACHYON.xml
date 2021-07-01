@@ -29,6 +29,8 @@
     <text name="AccountReceivable">Account receivable</text>
     <text name="AccountSettings">Account settings</text>
     <text name="AccountStatus">Account status</text>
+    <text name="Acknowledge">Acknowledge</text>
+    <text name="AcknowledgeSuccessfully">Successfully acknowledged</text>
     <text name="Action">Action</text>
     <text name="ActionInformations">Action information</text>
     <text name="Actions">Actions</text>
@@ -572,21 +574,15 @@
     <text name="DownloadCollectedData_Description">Download data belongs to your account</text>
     <text name="DownloadDropWaybill">Download waybill</text>
     <text name="DownloadInvoice">Download invoice</text>
-    <text name="DriectRequestCarrierRespone">
-      <a href="/app/main/shippingRequests/shippingRequests/view?id={id}">The {clientname} has established a current view of the  shipment No.: {id}.</a>
-    </text>
+    <text name="DriectRequestCarrierRespone">The {clientname} has established a current view of the  shipment No.: {id}.</text>
     <text name="Driver">Driver</text>
-    <text name="DriverAcceptTrip">
-      <a href="/app/main/shippingRequests/shippingRequests/view?id={id}">The driver {driver} has been accepted the trip from {source} to {destination}</a>
-    </text>
+    <text name="DriverAcceptTrip">The driver {driver} has been accepted the trip from {source} to {destination}</text>
     <text name="DriverCreationDateAndTime">Creation date and time</text>
     <text name="DriverDocuments">Driver documents</text>
     <text name="DriverInformation">Driver information</text>
     <text name="DriverInformations">Driver information</text>
     <text name="DriverName">Driver name</text>
-    <text name="DriverRejectTrip">
-      <a href="/app/main/shippingRequests/shippingRequests/view?id={id}">The driver {driver} has been rejected the trip from {source} to {destination}</a>
-    </text>
+    <text name="DriverRejectTrip">The driver {driver} has been rejected the trip from {source} to {destination}</text>
     <text name="Drivers">Drivers</text>
     <text name="DriversHeaderInfo">Drivers Header Info</text>
     <text name="DriverStatus">Driver status</text>
@@ -1116,9 +1112,7 @@
     <text name="NewGroupPerioGenerated">
       <a href="/app/main/invoices/submitinvoices/detail/{groupid}">A new invoice has been generated {groupid}#</a>
     </text>
-    <text name="NewInvoiceShipperGenerated">
-      <a href="/app/main/invoices/detail/{invoiceid}">A new invoice has been generated {invoiceid}#</a>
-    </text>
+    <text name="NewInvoiceShipperGenerated">A new invoice has been generated {invoiceid}#</text>
     <text name="NewInvoiceShipperGeneratedEmailBody">
       <a href="/app/main/invoices/detail/{invoiceid}">A new invoice has been generated {invoiceid}#</a>
     </text>
@@ -1175,6 +1169,7 @@
     <text name="Notifications">Notifications</text>
     <text name="NotificationSettings">Notification settings</text>
     <text name="NotificationTypes">Notifications type</text>
+    <text name="NotificationWhenTripDetailsChanged">The shipment {waybillnumber} information has been changed.</text>
     <text name="NotifyDriverWhenAssignToTrip">You have new trip assign to you</text>
     <text name="NotImpersonatedLoginErrorMessage">This is not an impersonated login!</text>
     <text name="NotIsAttachable">Not is attachable</text>
@@ -1421,6 +1416,7 @@ content that we shared with you.</text>
     <text name="ReceiveNotifications_Definition">This option can be used to completely enable/disable receiving notifications.</text>
     <text name="ReceiveNotifications_DisableInfo">You completely disabled receiving notifications, you can enable it and select notification types you want to receive.</text>
     <text name="Receiver">Receiver</text>
+    <text name="ReceiverCode">Receiver code</text>
     <text name="ReceiverFullName">Receiver full name</text>
     <text name="ReceiverId">Receiver id</text>
     <text name="ReceiverPhoneNumber">Receiver phone number</text>
@@ -1625,19 +1621,13 @@ content that we shared with you.</text>
     <text name="ShipperName">Shipper name</text>
     <text name="ShipperNotfiyWhenCreditLimitGreaterOrEqualXPercentage">You have used more than 70% of your credit limit</text>
     <text name="ShipperOnlyUsed">Shipper only used</text>
-    <text name="ShipperReminderToCompelteTrips">
-      <a href="/app/main/shippingRequests/shippingRequests/view?id={id}">You have a shipment that has not completed its journeys</a>
-    </text>
+    <text name="ShipperReminderToCompelteTrips">You have a shipment that has not completed its journeys</text>
     <text name="ShipperShippingRequestFinishNotificationMessage">all shippments are completed for shipping request</text>
     <text name="ShippingNote">Shipper notes</text>
     <text name="ShippingRequest">Shipping request</text>
-    <text name="ShippingRequestAccidentsOccure">
-      <a href="/app/main/shippingRequests/shippingRequests/view?id={id}">There has been an accident for shipment No.: {id}.</a>
-    </text>
+    <text name="ShippingRequestAccidentsOccure">There has been an accident for shipment No.: {id}.</text>
     <text name="ShippingRequestAsBidWithSameTruckNotificationMessage">Shipping request with your same trucks is created in marketplace</text>
-    <text name="ShippingRequestCancelTripByAccidents">
-      <a href="/app/main/shippingRequests/shippingRequests/view?id={id}">The shipment No.:{id} cancled by incident.</a>
-    </text>
+    <text name="ShippingRequestCancelTripByAccidents">The shipment No.:{id} cancled by incident.</text>
     <text name="ShippingRequestDetails">Shipping request details</text>
     <text name="ShippingRequestId">Shipping request id</text>
     <text name="ShippingRequestNotifyCarrirerWhenShipperAccepted">
@@ -1650,7 +1640,7 @@ content that we shared with you.</text>
     <text name="ShippingRequests">Shipping Requests</text>
     <text name="ShippingRequestsCreate">Create Shipping Request</text>
     <text name="ShippingRequestsEdit">Edit Shipping Request</text>
-    <text name="ShippingRequestSendOfferWhenAddPrice"><![CDATA[<a href="/app/main/shippingRequests/shippingRequests/view?id={id}&offerid={offerid}">A new offer has been added to the shipment.</a>]]></text>
+    <text name="ShippingRequestSendOfferWhenAddPrice">A new offer has been added to the shipment.</text>
     <text name="ShippingRequestSendOfferWhenUpdatePrice"><![CDATA[<a href="/app/main/shippingRequests/shippingRequests/view?id={id}&offerid={offerid}">The price has been updated by the carrier {carrier} of the shipment</a>]]></text>
     <text name="ShippingRequestsHeaderInfo">Shipping requests header info</text>
     <text name="ShippingRequestStatus">Shipping request status</text>
@@ -1759,6 +1749,8 @@ code:{0}</text>
     <text name="SuccessfullyActivated">Successfully activated</text>
     <text name="SuccessfullyAdded">Successfully added</text>
     <text name="SuccessfullyCanceled">Successfully canceled</text>
+    <text name="SuccessfullyChanged">Successfully changed</text>
+    <text name="SuccessfullyConfirmed">Successfully Confirmed</text>
     <text name="SuccessfullyDeactivated">Successfully deactivated</text>
     <text name="SuccessfullyDeclined">Successfully declined</text>
     <text name="SuccessfullyDeleted">Successfully deleted.</text>
@@ -1769,6 +1761,7 @@ code:{0}</text>
     <text name="SuccessfullyRemoved">Successfully removed</text>
     <text name="SuccessfullyRestore">Successfully restore</text>
     <text name="SuccessfullySaved">Successfully saved.</text>
+    <text name="SuccessfullyStarted">Successfully started</text>
     <text name="SuccessfullyTripCancled">Successfully trip canceled</text>
     <text name="SuccessfullyUnlinked">Successfully unlinked</text>
     <text name="Summary">Summary</text>
@@ -1827,9 +1820,7 @@ code:{0}</text>
     <text name="TachyonDealOfferAcceptedByShipper">
       <a href="/app/main/shippingRequests/shippingRequests/view?id={id}">The offer has been accepted by shipper {clientname}.</a>
     </text>
-    <text name="TachyonDealOfferRejectedByShipper">
-      <a href="/app/main/shippingRequests/shippingRequests/view?id={id}">The offer has been rejected by the shipper {clientname}.</a>
-    </text>
+    <text name="TachyonDealOfferRejectedByShipper">The offer has been rejected by the shipper {clientname}.</text>
     <text name="TachyonManageService">Tachyon Managed Services</text>
     <text name="TachyonPlatForm">Tachyon</text>
     <text name="TakePhoto">Take a photo</text>
