@@ -31,7 +31,6 @@ namespace TACHYON.Waybills
         }
         public byte[] GetSingleDropOrMasterWaybillPdf(int shippingRequestTripId)
         {
-            DisableTenancyFilters();
             if (IsSingleDropShippingRequest(shippingRequestTripId))
             {
                 return GetSingleDropWaybillPdf(shippingRequestTripId);
