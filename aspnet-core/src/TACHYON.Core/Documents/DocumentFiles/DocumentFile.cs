@@ -50,7 +50,7 @@ namespace TACHYON.Documents.DocumentFiles
         /// <summary>
         /// in trip entity case, user select attachment type "document type", when the option selected to others, this field must be filled
         /// </summary>
-        public string OthersDocumentType { get; set; }
+        public string OtherDocumentTypeName { get; set; }
 
         public virtual long? TruckId { get; set; }
 

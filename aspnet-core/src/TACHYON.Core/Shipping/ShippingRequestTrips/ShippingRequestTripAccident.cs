@@ -23,7 +23,7 @@ namespace TACHYON.Shipping.ShippingRequestTrips
         /// <summary>
         /// when reason refers to others, this field should be filled
         /// </summary>
-        public string OtherReason { get; set; }
+        public string OtherReasonName { get; set; }
 
         [StringLength(500,MinimumLength =10)]
         public string Description {get;set; }

@@ -12,7 +12,7 @@ namespace TACHYON.Shipping.Trips.Accidents.Dto
     {
         public int? TripId { get; set; }
         public int? ReasoneId { get; set; }
-        public string OtherReason { get; set; }
+        public string OtherReasonName { get; set; }
         [StringLength(500)]
         public string Description { get; set; }
         public Guid? DocumentId { get; set; }

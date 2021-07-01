@@ -70,9 +70,9 @@ namespace TACHYON.Shipping.ShippingRequests.Dtos
         [Required]
         public virtual int DestinationCityId { get; set; }
 
-        public string OthersGoodsCategory { get; set; }
-        public string OthersTransportType { get; set; }
-        public string OthersTrucksType { get; set; }
+        public string OtherGoodsCategoryName { get; set; }
+        public string OtherTransportTypeName { get; set; }
+        public string OtherTrucksTypeName { get; set; }
 
 
         //VasList
