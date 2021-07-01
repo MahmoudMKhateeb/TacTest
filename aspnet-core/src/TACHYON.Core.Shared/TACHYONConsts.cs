@@ -88,6 +88,9 @@
         public const string TriggerTrackingAccepted="app.tracking.accepted";
         public const string TriggerTrackingStarted = "app.tracking.started";
         public const string TriggerTrackingChanged = "app.tracking.changed";
+        public const string TriggerTrackingShipmentDelivered = "app.tracking.Shipment.Delivered";
+
+        
         #endregion
         #endregion
         #endregion

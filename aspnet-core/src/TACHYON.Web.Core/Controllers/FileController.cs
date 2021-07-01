@@ -10,6 +10,7 @@ using System.Threading.Tasks;
 using TACHYON.Dto;
 using TACHYON.Routs.RoutPoints;
 using TACHYON.Storage;
+using TACHYON.Waybills;
 
 namespace TACHYON.Web.Controllers
 {
@@ -18,16 +19,17 @@ namespace TACHYON.Web.Controllers
         private readonly ITempFileCacheManager _tempFileCacheManager;
         private readonly IBinaryObjectManager _binaryObjectManager;
         private readonly IRepository<RoutPoint, long> _routPointRepository;
-
+        private readonly WaybillsManager _waybillsManager;
 
         public FileController(
             ITempFileCacheManager tempFileCacheManager,
             IBinaryObjectManager binaryObjectManager
-, IRepository<RoutPoint, long> routPointRepository)
+, IRepository<RoutPoint, long> routPointRepository, WaybillsManager waybillsManager)
         {
             _tempFileCacheManager = tempFileCacheManager;
             _binaryObjectManager = binaryObjectManager;
             _routPointRepository = routPointRepository;
+            _waybillsManager = waybillsManager;
         }
 
         [DisableAuditing]
@@ -77,6 +79,17 @@ namespace TACHYON.Web.Controllers
 
             file.FileName = file.FileName + "." + exten;
             return File(binaryObject.Bytes, file.FileType, file.FileName);
+        }
+
+        [AbpMvcAuthorize()]
+        public ActionResult waybill(int id)
+        {
+
+           var bytes = _waybillsManager.GetSingleDropOrMasterWaybillPdf(id);
+
+            MimeTypes.TryGetExtension("application/pdf", out var exten);
+
+            return File(bytes, "application/pdf", "waybill.pdf");
         }
     }
 }
