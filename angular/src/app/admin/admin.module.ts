@@ -136,6 +136,7 @@ import { CreateOrEditDocumentFileModalComponent } from '@app/main/documentFiles/
 import { CustomNgbDateParserFormatter } from '@app/shared/common/hijri-gregorian-datepicker/CustomNgbDateParserFormatter';
 import { ViewRejectionReasonModalComponent } from './required-document-files/view-rejection-reason-modal.component';
 import { waybillsComponent } from './waybills/waybills';
+import { NotRequiredDocumentFilesComponent } from '@app/admin/not-required-document-files/not-required-document-files.component';
 const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
   // suppressScrollX: true
 };
@@ -272,6 +273,7 @@ const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
     ManageEntityDynamicParameterValuesModalComponent,
     EntityDynamicParameterValueManagerComponent,
     RequiredDocumentFilesComponent,
+    NotRequiredDocumentFilesComponent,
     DriversComponent,
     CreateOrEditDriverModalComponent,
   ],

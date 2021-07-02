@@ -20,11 +20,11 @@ import { NgForm } from '@angular/forms';
 
 @Component({
   selector: 'app-required-document-files',
-  templateUrl: './required-document-files.component.html',
+  templateUrl: './not-required-document-files.component.html',
   animations: [appModuleAnimation()],
   providers: [DateFormatterService],
 })
-export class RequiredDocumentFilesComponent extends AppComponentBase {
+export class NotRequiredDocumentFilesComponent extends AppComponentBase {
   @ViewChild('dataTable', { static: true }) dataTable: Table;
   @ViewChild('requiredDocumentFormChildComponent', { static: false }) requiredDocumentFormChildComponent: RequiredDocumentFormChildComponent;
   @ViewChild('TenantRequiredDocumentsForm', { static: false }) TenantRequiredDocumentsForm: NgForm;
@@ -49,7 +49,7 @@ export class RequiredDocumentFilesComponent extends AppComponentBase {
   ) {
     super(injector);
 
-    this.getTenantRrquiredDocuments();
+    this.getTenantNotRrquiredDocuments();
     this.getAllsubmittedDocumentsStatusList();
     this.createOrEditDocumentFileDtos = [];
   }
@@ -90,7 +90,7 @@ export class RequiredDocumentFilesComponent extends AppComponentBase {
   }
 
   getAllsubmittedDocumentsStatusList() {
-    this._documentFilesServiceProxy.getAllTenantSubmittedDocumentsWithStatuses(true).subscribe((result) => {
+    this._documentFilesServiceProxy.getAllTenantSubmittedDocumentsWithStatuses(false).subscribe((result) => {
       if (result.length > 0) {
         this.isFormSubmitted = true;
         this.submittedDocumentsList = result;
@@ -99,7 +99,7 @@ export class RequiredDocumentFilesComponent extends AppComponentBase {
           x.isAccepted === true && x.expirationDate === undefined ? true : x.expirationDate >= moment(abp.clock.now())
         );
         if (isAccepted) {
-          this._router.navigate(['app/main/dashboard']);
+          //  this._router.navigate(['app/main/dashboard']);
         }
       } else {
         this.isFormSubmitted = false;
@@ -108,8 +108,8 @@ export class RequiredDocumentFilesComponent extends AppComponentBase {
     });
   }
 
-  getTenantRrquiredDocuments() {
-    this._documentFilesServiceProxy.getTenentMissingDocuments(true).subscribe((result) => {
+  getTenantNotRrquiredDocuments() {
+    this._documentFilesServiceProxy.getTenentMissingDocuments(false).subscribe((result) => {
       result.forEach((x) => (x.expirationDate = null));
       this.createOrEditDocumentFileDtos = result;
 
@@ -121,7 +121,7 @@ export class RequiredDocumentFilesComponent extends AppComponentBase {
   }
 
   reload() {
-    this.getTenantRrquiredDocuments();
+    this.getTenantNotRrquiredDocuments();
     this.getAllsubmittedDocumentsStatusList();
   }
 
