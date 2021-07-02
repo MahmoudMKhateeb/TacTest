@@ -26,7 +26,7 @@
             <!--begin::Body-->
             <!--  begin:: Source Dest Facilitys  -->
             <div class="col-lg-6 form-group">
-              <label><span class="required-fileds">*</span>{{ l('SourceFacility') }} </label>
+              <label>{{ l('SourceFacility') }} <span class="required-fileds">*</span></label>
               <div class="input-group">
                 <select
                   #sourceFacility="ngModel"
@@ -50,7 +50,7 @@
               </div>
             </div>
             <div class="col-lg-6 form-group">
-              <label> <span class="required-fileds">*</span>{{ l('DestFacility') }}</label>
+              <label> {{ l('DestFacility') }} <span class="required-fileds">*</span></label>
               <div class="input-group">
                 <select
                   #destFacility="ngModel"
@@ -76,7 +76,7 @@
             <!--  begin:: Trip start&End Dates-->
             <div class="col-lg-6">
               <div class="form-group">
-                <label> <span class="required-fileds">*</span>{{ l('TripsStartDate') }} </label>
+                <label>{{ l('TripsStartDate') }} <span class="required-fileds">*</span> </label>
                 <div class="input-group date">
                   <input
                     #startTripDate="ngModel"
@@ -140,6 +140,7 @@
                   name="shippingRequestTripVases"
                   [options]="cleanVasesList"
                   [(ngModel)]="trip.shippingRequestTripVases"
+                  (ngModelChange)="isSelectedVasesHasinsurance($event)"
                   [style]="{ width: '100%' }"
                   [filter]="false"
                   [showHeader]="false"
@@ -152,16 +153,20 @@
             <!--  begin::Trip Goods Approximate Value -->
             <div class="col-lg-6">
               <div class="form-group">
-                <label>{{ l('ApproximateTripGoodsValue') }} *</label>
+                <label>{{ l('ApproximateTripGoodsValue') }} <span class="required-fileds" *ngIf="isApproximateValueRequired">*</span></label>
                 <div class="input-group date">
                   <input
-                    type="text"
+                    #approximateGoodsTotalValue="ngModel"
+                    type="number"
                     class="form-control"
                     name="approximateGoodsTotalValue"
                     (keypress)="numberOnly($event)"
                     [(ngModel)]="trip.totalValue"
+                    [min]="1"
+                    [class.is-invalid]="isApproximateValueRequired && approximateGoodsTotalValue.touched && !approximateGoodsTotalValue.valid"
+                    [class.is-valid]="isApproximateValueRequired && approximateGoodsTotalValue.touched && approximateGoodsTotalValue.valid"
                     placeholder="{{ l('ApproximateTripGoodsValue') }}"
-                    required
+                    [required]="isApproximateValueRequired"
                   />
                   <div class="input-group-append">
                     <span class="input-group-text">
