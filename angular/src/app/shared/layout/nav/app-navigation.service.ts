@@ -35,8 +35,8 @@ export class AppNavigationService {
           new AppMenuItem(
             'NonMandatoryDocuments',
             'Pages.DocumentFiles',
-            '/tenantNotRequiredDocuments/tenantNotRequiredDocuments',
             'flaticon2-crisp-icons',
+            '/tenantNotRequiredDocuments/tenantNotRequiredDocuments',
             [],
             undefined,
             undefined,
