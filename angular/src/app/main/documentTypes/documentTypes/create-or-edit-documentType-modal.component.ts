@@ -15,7 +15,8 @@ import {
 import { AppComponentBase } from '@shared/common/app-component-base';
 import * as moment from 'moment';
 import { CreateOrEditDocumentTypeTranslationModalComponent } from '@app/main/documentTypeTranslations/documentTypeTranslations/create-or-edit-documentTypeTranslation-modal.component';
-import { LazyLoadEvent } from '@node_modules/primeng/public_api';
+import { LazyLoadEvent } from 'primeng/api';
+
 import { Paginator } from '@node_modules/primeng/paginator';
 import { Table } from '@node_modules/primeng/table';
 import { NotifyService } from '@node_modules/abp-ng2-module';

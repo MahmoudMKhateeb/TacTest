@@ -193,7 +193,7 @@ import { PriceOfferRejectModelComponent } from '@app/main/priceoffer/price-offer
 import { ShippingRequestOffersList } from '@app/main/shippingRequests/shippingRequests/offers/shipping-request-offers-list.component';
 import { RejectionReasonModalComponent } from './documentFiles/documentFiles/rejectionReason-modal.component';
 import { ViewShippingRequestPriceResponseModalComponent } from './shippingRequests/shippingRequests/shipping-request-Response/view-shipping-request-response-modal.component';
-import { ListboxModule, MultiSelectModule, PickListModule, SelectButtonModule, StepsModule } from '@node_modules/primeng';
+// import { ListboxModule, MultiSelectModule, PickListModule, SelectButtonModule, StepsModule } from '@node_modules/primeng';
 import { PointsComponent } from '@app/main/shippingRequests/shippingRequests/ShippingRequestTrips/points/points.component';
 
 import { AgmDirectionModule } from '@node_modules/agm-direction';
@@ -244,6 +244,8 @@ import { TrackingModelComponent } from '@app/main/shippingRequests/shippingReque
 import { TrackingConfirmModalComponent } from '@app/main/shippingRequests/shippingRequests/tracking/tacking-confirm-code-model.component';
 import { TrackingPODModalComponent } from '@app/main/shippingRequests/shippingRequests/tracking/tacking-pod-model.component';
 import { TMSRequestListComponent } from '@app/main/tms/tms-request-list.component';
+import { MultiSelectModule } from '@node_modules/primeng/multiselect';
+import { ListboxModule } from '@node_modules/primeng/listbox';
 NgxBootstrapDatePickerConfigService.registerNgxBootstrapDatePickerLocales();
 
 @NgModule({
@@ -273,13 +275,15 @@ NgxBootstrapDatePickerConfigService.registerNgxBootstrapDatePickerLocales();
       libraries: ['places'],
     }),
     AdminModule,
-    MultiSelectModule,
-    PickListModule,
-    ListboxModule,
+    // MultiSelectModule,
+    // PickListModule,
+    // ListboxModule,
     AgmDirectionModule,
-    StepsModule,
-    SelectButtonModule,
+    // StepsModule,
+    // SelectButtonModule,
     ReactiveFormsModule,
+    MultiSelectModule,
+    ListboxModule,
   ],
   declarations: [
     TrucksTypesTranslationsComponent,

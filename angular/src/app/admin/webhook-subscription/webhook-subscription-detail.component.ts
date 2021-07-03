@@ -11,6 +11,7 @@ import { appModuleAnimation } from '@shared/animations/routerTransition';
 import { Router, ActivatedRoute } from '@angular/router';
 import { Paginator } from 'primeng/paginator';
 import { LazyLoadEvent } from 'primeng/api';
+
 import { ModalDirective } from 'ngx-bootstrap/modal';
 import { BreadcrumbItem } from '@app/shared/common/sub-header/sub-header.component';
 

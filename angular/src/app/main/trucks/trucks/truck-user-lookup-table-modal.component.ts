@@ -4,7 +4,7 @@ import { TrucksServiceProxy, TruckUserLookupTableDto } from '@shared/service-pro
 import { AppComponentBase } from '@shared/common/app-component-base';
 import { Table } from 'primeng/table';
 import { Paginator } from 'primeng/paginator';
-import { LazyLoadEvent } from 'primeng/public_api';
+import { LazyLoadEvent } from 'primeng/api';
 @Component({
   selector: 'truckUserLookupTableModal',
   styleUrls: ['./truck-user-lookup-table-modal.component.less'],

@@ -2,7 +2,8 @@ import { AfterViewInit, ChangeDetectorRef, Component, Injector, Input, ViewChild
 import { AppComponentBase } from '@shared/common/app-component-base';
 import { Table } from '@node_modules/primeng/table';
 import { Paginator } from '@node_modules/primeng/paginator';
-import { LazyLoadEvent } from '@node_modules/primeng/public_api';
+import { LazyLoadEvent } from 'primeng/api';
+
 import { GetShippingRequestVasForViewDto, ShippingRequestDto, ShippingRequestsTripServiceProxy } from '@shared/service-proxies/service-proxies';
 import { CreateOrEditTripComponent } from '@app/main/shippingRequests/shippingRequests/ShippingRequestTrips/trips/createOrEditTripModal/createOrEditTrip.component';
 import { ViewTripModalComponent } from '@app/main/shippingRequests/shippingRequests/ShippingRequestTrips/trips/viewTripModal/viewTripModal.component';

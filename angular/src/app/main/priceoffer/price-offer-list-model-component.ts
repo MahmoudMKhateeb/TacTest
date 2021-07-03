@@ -4,7 +4,7 @@ import { appModuleAnimation } from '@shared/animations/routerTransition';
 import { ModalDirective } from 'ngx-bootstrap/modal';
 import { Table } from 'primeng/table';
 import { Paginator } from 'primeng/paginator';
-import { LazyLoadEvent } from 'primeng/public_api';
+import { LazyLoadEvent } from 'primeng/api';
 import { PriceOfferServiceProxy, PriceOfferChannel, GetShippingRequestForPriceOfferListDto } from '@shared/service-proxies/service-proxies';
 
 @Component({

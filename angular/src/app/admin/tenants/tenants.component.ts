@@ -13,7 +13,7 @@ import {
   TenantServiceProxy,
 } from '@shared/service-proxies/service-proxies';
 import * as moment from 'moment';
-import { LazyLoadEvent } from 'primeng/public_api';
+import { LazyLoadEvent } from 'primeng/api';
 import { Paginator } from 'primeng/paginator';
 import { Table } from 'primeng/table';
 import { CreateTenantModalComponent } from './create-tenant-modal.component';
