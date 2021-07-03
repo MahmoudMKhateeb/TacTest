@@ -32,7 +32,7 @@ import { IAjaxResponse, TokenService } from '@node_modules/abp-ng2-module';
 
 @Component({
   selector: 'AddNewTripModal',
-  styleUrls: ['./createOrEditTrip.component.scss'],
+  styleUrls: ['./createOrEditTrip.component.css'],
   templateUrl: './createOrEditTrip.component.html',
 })
 export class CreateOrEditTripComponent extends AppComponentBase implements OnInit {

@@ -13,7 +13,8 @@ import { FileDownloadService } from '@shared/utils/file-download.service';
 
 @Component({
   templateUrl: './invoice-tenant-items-details.component.html',
-  styleUrls: ['/assets/custom/css/model.scss'],
+  // styleUrls: ['/assets/custom/css/model.scss'],
+
   selector: 'invoice-tenant-items-details',
   animations: [appModuleAnimation()],
 })
