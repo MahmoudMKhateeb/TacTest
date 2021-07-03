@@ -246,6 +246,7 @@ import { TrackingPODModalComponent } from '@app/main/shippingRequests/shippingRe
 import { TMSRequestListComponent } from '@app/main/tms/tms-request-list.component';
 import { MultiSelectModule } from '@node_modules/primeng/multiselect';
 import { ListboxModule } from '@node_modules/primeng/listbox';
+import { DevExtremeModule, DxButtonModule } from '@node_modules/devextreme-angular';
 NgxBootstrapDatePickerConfigService.registerNgxBootstrapDatePickerLocales();
 
 @NgModule({
@@ -284,6 +285,8 @@ NgxBootstrapDatePickerConfigService.registerNgxBootstrapDatePickerLocales();
     ReactiveFormsModule,
     MultiSelectModule,
     ListboxModule,
+    DxButtonModule,
+    DevExtremeModule,
   ],
   declarations: [
     TrucksTypesTranslationsComponent,

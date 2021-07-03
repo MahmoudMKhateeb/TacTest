@@ -88,6 +88,7 @@ import { NgxSpinnerModule, NgxSpinnerComponent } from 'ngx-spinner';
 import { ScrollTopComponent } from './shared/layout/scroll-top.component';
 import { AppBsModalModule } from '@shared/common/appBsModal/app-bs-modal.module';
 import { TrackingSignalrService } from './main/shippingRequests/shippingRequests/tracking/tacking-signalr.service';
+import { DxButtonModule } from '@node_modules/devextreme-angular';
 
 @NgModule({
   declarations: [
@@ -172,6 +173,7 @@ import { TrackingSignalrService } from './main/shippingRequests/shippingRequests
     AutoCompleteModule,
     NgxSpinnerModule,
     AppBsModalModule,
+    DxButtonModule,
   ],
   providers: [
     ImpersonationService,
