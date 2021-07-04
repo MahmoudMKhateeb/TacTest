@@ -7599,10 +7599,13 @@ export class DocumentFilesServiceProxy {
   }
 
   /**
+   * @param isMandatory (optional)
    * @return Success
    */
-  getAllTenantSubmittedRequiredDocumentsWithStatuses(): Observable<GetTenantSubmittedDocumnetForView[]> {
-    let url_ = this.baseUrl + '/api/services/app/DocumentFiles/GetAllTenantSubmittedRequiredDocumentsWithStatuses';
+  getAllTenantSubmittedDocumentsWithStatuses(isMandatory: boolean | undefined): Observable<GetTenantSubmittedDocumnetForView[]> {
+    let url_ = this.baseUrl + '/api/services/app/DocumentFiles/GetAllTenantSubmittedDocumentsWithStatuses?';
+    if (isMandatory === null) throw new Error("The parameter 'isMandatory' cannot be null.");
+    else if (isMandatory !== undefined) url_ += 'isMandatory=' + encodeURIComponent('' + isMandatory) + '&';
     url_ = url_.replace(/[?&]$/, '');
 
     let options_: any = {
@@ -7617,14 +7620,14 @@ export class DocumentFilesServiceProxy {
       .request('get', url_, options_)
       .pipe(
         _observableMergeMap((response_: any) => {
-          return this.processGetAllTenantSubmittedRequiredDocumentsWithStatuses(response_);
+          return this.processGetAllTenantSubmittedDocumentsWithStatuses(response_);
         })
       )
       .pipe(
         _observableCatch((response_: any) => {
           if (response_ instanceof HttpResponseBase) {
             try {
-              return this.processGetAllTenantSubmittedRequiredDocumentsWithStatuses(<any>response_);
+              return this.processGetAllTenantSubmittedDocumentsWithStatuses(<any>response_);
             } catch (e) {
               return <Observable<GetTenantSubmittedDocumnetForView[]>>(<any>_observableThrow(e));
             }
@@ -7633,7 +7636,7 @@ export class DocumentFilesServiceProxy {
       );
   }
 
-  protected processGetAllTenantSubmittedRequiredDocumentsWithStatuses(response: HttpResponseBase): Observable<GetTenantSubmittedDocumnetForView[]> {
+  protected processGetAllTenantSubmittedDocumentsWithStatuses(response: HttpResponseBase): Observable<GetTenantSubmittedDocumnetForView[]> {
     const status = response.status;
     const responseBlob = response instanceof HttpResponse ? response.body : (<any>response).error instanceof Blob ? (<any>response).error : undefined;
 
@@ -7873,10 +7876,13 @@ export class DocumentFilesServiceProxy {
   }
 
   /**
+   * @param isMandatory (optional)
    * @return Success
    */
-  getTenentMissingDocuments(): Observable<CreateOrEditDocumentFileDto[]> {
-    let url_ = this.baseUrl + '/api/services/app/DocumentFiles/GetTenentMissingDocuments';
+  getTenentMissingDocuments(isMandatory: boolean | undefined): Observable<CreateOrEditDocumentFileDto[]> {
+    let url_ = this.baseUrl + '/api/services/app/DocumentFiles/GetTenentMissingDocuments?';
+    if (isMandatory === null) throw new Error("The parameter 'isMandatory' cannot be null.");
+    else if (isMandatory !== undefined) url_ += 'isMandatory=' + encodeURIComponent('' + isMandatory) + '&';
     url_ = url_.replace(/[?&]$/, '');
 
     let options_: any = {
@@ -15065,6 +15071,68 @@ export class ShippingRequestDriverServiceProxy {
   }
 
   protected processReset(response: HttpResponseBase): Observable<void> {
+    const status = response.status;
+    const responseBlob = response instanceof HttpResponse ? response.body : (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+    let _headers: any = {};
+    if (response.headers) {
+      for (let key of response.headers.keys()) {
+        _headers[key] = response.headers.get(key);
+      }
+    }
+    if (status === 200) {
+      return blobToText(responseBlob).pipe(
+        _observableMergeMap((_responseText) => {
+          return _observableOf<void>(<any>null);
+        })
+      );
+    } else if (status !== 200 && status !== 204) {
+      return blobToText(responseBlob).pipe(
+        _observableMergeMap((_responseText) => {
+          return throwException('An unexpected server error occurred.', status, _responseText, _headers);
+        })
+      );
+    }
+    return _observableOf<void>(<any>null);
+  }
+
+  /**
+   * @param id (optional)
+   * @return Success
+   */
+  pushNotification(id: number | undefined): Observable<void> {
+    let url_ = this.baseUrl + '/api/services/app/ShippingRequestDriver/PushNotification?';
+    if (id === null) throw new Error("The parameter 'id' cannot be null.");
+    else if (id !== undefined) url_ += 'id=' + encodeURIComponent('' + id) + '&';
+    url_ = url_.replace(/[?&]$/, '');
+
+    let options_: any = {
+      observe: 'response',
+      responseType: 'blob',
+      headers: new HttpHeaders({}),
+    };
+
+    return this.http
+      .request('post', url_, options_)
+      .pipe(
+        _observableMergeMap((response_: any) => {
+          return this.processPushNotification(response_);
+        })
+      )
+      .pipe(
+        _observableCatch((response_: any) => {
+          if (response_ instanceof HttpResponseBase) {
+            try {
+              return this.processPushNotification(<any>response_);
+            } catch (e) {
+              return <Observable<void>>(<any>_observableThrow(e));
+            }
+          } else return <Observable<void>>(<any>_observableThrow(response_));
+        })
+      );
+  }
+
+  protected processPushNotification(response: HttpResponseBase): Observable<void> {
     const status = response.status;
     const responseBlob = response instanceof HttpResponse ? response.body : (<any>response).error instanceof Blob ? (<any>response).error : undefined;
 
@@ -72357,6 +72425,7 @@ export class ShippingRequestTripDriverRoutePointDto implements IShippingRequestT
   isActive!: boolean;
   isComplete!: boolean;
   rating!: number | undefined;
+  goodsDetails!: GoodsDetailDto[] | undefined;
   isShow!: boolean;
   id!: number;
 
@@ -72386,6 +72455,10 @@ export class ShippingRequestTripDriverRoutePointDto implements IShippingRequestT
       this.isActive = _data['isActive'];
       this.isComplete = _data['isComplete'];
       this.rating = _data['rating'];
+      if (Array.isArray(_data['goodsDetails'])) {
+        this.goodsDetails = [] as any;
+        for (let item of _data['goodsDetails']) this.goodsDetails!.push(GoodsDetailDto.fromJS(item));
+      }
       this.isShow = _data['isShow'];
       this.id = _data['id'];
     }
@@ -72416,6 +72489,10 @@ export class ShippingRequestTripDriverRoutePointDto implements IShippingRequestT
     data['isActive'] = this.isActive;
     data['isComplete'] = this.isComplete;
     data['rating'] = this.rating;
+    if (Array.isArray(this.goodsDetails)) {
+      data['goodsDetails'] = [];
+      for (let item of this.goodsDetails) data['goodsDetails'].push(item.toJSON());
+    }
     data['isShow'] = this.isShow;
     data['id'] = this.id;
     return data;
@@ -72439,6 +72516,7 @@ export interface IShippingRequestTripDriverRoutePointDto {
   isActive: boolean;
   isComplete: boolean;
   rating: number | undefined;
+  goodsDetails: GoodsDetailDto[] | undefined;
   isShow: boolean;
   id: number;
 }
