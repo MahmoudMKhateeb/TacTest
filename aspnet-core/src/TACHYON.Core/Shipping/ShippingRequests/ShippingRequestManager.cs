@@ -80,9 +80,9 @@ namespace TACHYON.Shipping.ShippingRequests
             string message = L(TACHYONConsts.SMSShippingRequestReceiverCode, point.Code);
             if (point.ReceiverFk != null)
             {
-                number = point.ReceiverFk.PhoneNumber;
+                await _smsSender.SendAsync(point.ReceiverFk.PhoneNumber, message);
             }
-            await _smsSender.SendAsync(number, message);
+              if (!string.IsNullOrEmpty(number)) await _smsSender.SendAsync(number, message);
 
         }
 
@@ -93,7 +93,7 @@ namespace TACHYON.Shipping.ShippingRequests
         /// <returns></returns>
         public async Task SendSmsToReceivers(int tripId)
         {
-            var RoutePoints = await _routPointRepository.GetAll().Where(x => x.ShippingRequestTripId == tripId && x.PickingType == PickingType.Dropoff).ToListAsync();
+            var RoutePoints = await _routPointRepository.GetAll().Include(r=>r.ReceiverFk).Where(x => x.ShippingRequestTripId == tripId && x.PickingType == PickingType.Dropoff).ToListAsync();
             RoutePoints.ForEach(async p =>
             {
                 await SendSmsToReceiver(p);

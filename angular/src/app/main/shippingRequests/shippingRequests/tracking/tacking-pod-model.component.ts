@@ -32,15 +32,6 @@ export class TrackingPODModalComponent extends AppComponentBase {
 
   save(): void {
     this.saving = true;
-
-    //this._Service
-    //    .confirmReceiverCode(this.input)
-    //    .pipe(finalize(() => (this.saving = false)))
-    //    .subscribe(() => {
-    //        this.notify.info(this.l('SuccessfullyConfirmed'));
-    //        this.modalConfirm.emit(null);
-    //        this.close();
-    //    });
   }
 
   close(): void {
