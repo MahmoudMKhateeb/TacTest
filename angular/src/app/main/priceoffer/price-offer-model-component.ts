@@ -18,7 +18,7 @@ import { finalize } from 'rxjs/operators';
 
 @Component({
   templateUrl: './price-offer-model-component.html',
-  // styleUrls: ['/assets/custom/css/model.scss'],
+  styleUrls: ['./model.scss'],
   selector: 'price-offer-model',
   animations: [appModuleAnimation()],
   providers: [EnumToArrayPipe],

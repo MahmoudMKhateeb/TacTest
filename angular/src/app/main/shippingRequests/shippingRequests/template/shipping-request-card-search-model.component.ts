@@ -16,7 +16,7 @@ import { EnumToArrayPipe } from '@shared/common/pipes/enum-to-array.pipe';
 
 @Component({
   templateUrl: './shipping-request-card-search-model.component.html',
-  // styleUrls: ['/assets/custom/css/model.scss'],
+  styleUrls: ['../../../../../assets/custom/css/model.scss'],
   selector: 'shipping-request-card-search-model',
   animations: [appModuleAnimation()],
   providers: [EnumToArrayPipe],

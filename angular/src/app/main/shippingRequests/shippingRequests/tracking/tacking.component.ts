@@ -11,7 +11,7 @@ import { TrackingSignalrService } from './tacking-signalr.service';
 
 @Component({
   templateUrl: './tracking.component.html',
-  // styleUrls: ['/assets/custom/css/style.scss'],
+  styleUrls: ['../../../../../assets/custom/css/style.scss'],
   animations: [appModuleAnimation()],
 })
 export class TrackingComponent extends ScrollPagnationComponentBase implements OnInit {

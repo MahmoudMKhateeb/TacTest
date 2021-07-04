@@ -9,7 +9,7 @@ import { PriceOfferServiceProxy, PriceOfferChannel, GetShippingRequestForPriceOf
 
 @Component({
   templateUrl: './price-offer-list-model-component.html',
-  /*styleUrls: ['/assets/custom/css/model.scss'],*/
+  styleUrls: ['./model.scss'],
   selector: 'price-offer-list-model',
   animations: [appModuleAnimation()],
 })
