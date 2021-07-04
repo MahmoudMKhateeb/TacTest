@@ -4,17 +4,15 @@ import { finalize } from 'rxjs/operators';
 import { AppComponentBase } from '@shared/common/app-component-base';
 import { TrackingServiceProxy } from '@shared/service-proxies/service-proxies';
 import { HttpClient } from '@angular/common/http';
-import { FileUpload } from '@node_modules/primeng/fileupload';
 import { AppConsts } from '@shared/AppConsts';
 
 @Component({
-  selector: 'tacking-pod-model',
-  templateUrl: './tacking-pod-model.component.html',
+  selector: 'tacking-drop-goods-model',
+  templateUrl: './tacking-drop-goods-model.component.html',
 })
-export class TrackingPODModalComponent extends AppComponentBase {
+export class TackingDropGoodsModelComponent extends AppComponentBase {
   @Output() modalConfirm: EventEmitter<any> = new EventEmitter<any>();
   @ViewChild('modal', { static: false }) modal: ModalDirective;
-  @ViewChild('FileUpload', { static: false }) fileUpload: FileUpload;
 
   active: boolean = false;
   saving: boolean = false;
@@ -38,27 +36,5 @@ export class TrackingPODModalComponent extends AppComponentBase {
     this.modal.hide();
     this.modalConfirm.emit(null);
     this.active = false;
-  }
-
-  upload(data: { files: File }): void {
-    const formData: FormData = new FormData();
-    const file = data.files[0];
-    formData.append('file', file, file.name);
-    formData.append('id', this.id.toString());
-    this._httpClient
-      .post<any>(AppConsts.remoteServiceBaseUrl + '/api/services/app/DropOffPointToDelivery', formData)
-      .pipe(finalize(() => this.fileUpload.clear()))
-      .subscribe((response) => {
-        if (response.success) {
-          this.notify.success(this.l('SuccessfullyUpload'));
-          this.close();
-        } else if (response.error != null) {
-          this.notify.error(this.l('UploadFailed'));
-        }
-      });
-  }
-
-  onUploadError(): void {
-    this.notify.error(this.l('UploadFailed'));
   }
 }

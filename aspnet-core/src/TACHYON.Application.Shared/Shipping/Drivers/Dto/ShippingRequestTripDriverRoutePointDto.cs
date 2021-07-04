@@ -3,6 +3,7 @@ using NetTopologySuite.Geometries;
 using System;
 using System.Collections.Generic;
 using System.Text;
+using TACHYON.Goods.GoodsDetails.Dtos;
 using TACHYON.Routs.RoutPoints;
 
 namespace TACHYON.Shipping.Drivers.Dto
@@ -30,7 +31,7 @@ namespace TACHYON.Shipping.Drivers.Dto
         public bool IsComplete { get; set; }
 
         public double? Rating { get; set; }
-
+        public List<GoodsDetailDto> GoodsDetails { get; set; }
         public bool IsShow
         {
             get

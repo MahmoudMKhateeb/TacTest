@@ -415,11 +415,12 @@ namespace TACHYON.Shipping.Drivers
             }
 
         }
-        //[AbpAllowAnonymous]
-        //public async Task PushNotification(int TripId)
-        //{
-        //    await _firebaseNotifier.PushNotificationToDriverWhenAssignTrip(new Abp.UserIdentifier(5,7), TripId.ToString());
-        //}
+      
+        public async Task PushNotification(int id)
+        {
+            
+            await _firebaseNotifier.TripChanged(new Abp.UserIdentifier(AbpSession.TenantId, AbpSession.UserId.Value), id.ToString());
+        }
 
 
     }
