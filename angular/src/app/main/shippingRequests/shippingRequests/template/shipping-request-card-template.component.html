@@ -114,7 +114,7 @@
             </div>
             <div class="actionsShip">
               <div>
-                <a *ngIf="feature.isEnabled('App.Shipper')" href="javascript:void(0)" class="infoHighLight blue" (click)="ModelOffer.show(item)">
+                <a *ngIf="feature.isEnabled('App.Shipper')" href="javascript:void(0)" class="infoHighLight blue">
                   {{ l(item.requestTypeTitle) }}
                 </a>
                 <a *ngIf="canSeeTotalOffers(item)" href="javascript:void(0)" class="infoHighLight green" (click)="ModelOffer.show(item)">
