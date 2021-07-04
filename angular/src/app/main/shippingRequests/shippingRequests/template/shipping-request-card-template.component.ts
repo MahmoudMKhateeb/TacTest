@@ -16,7 +16,7 @@ import { log } from 'util';
 import { ShippingRequestForPriceOfferGetAllInput } from '../../../../shared/common/search/ShippingRequestForPriceOfferGetAllInput';
 @Component({
   templateUrl: './shipping-request-card-template.component.html',
-  styleUrls: ['/assets/custom/css/style.scss'],
+  styleUrls: ['../../../../../assets/custom/css/style.scss'],
   selector: 'shipping-request-card-template',
   animations: [appModuleAnimation()],
 })

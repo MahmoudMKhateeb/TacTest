@@ -1,7 +1,6 @@
 {
   "compilerOptions": {
     "declaration": false,
-    "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
     "lib": ["es6", "dom"],
     "mapRoot": "./",
@@ -19,7 +18,8 @@
       "@shared/*": ["./shared/*"],
       "@node_modules/*": ["../node_modules/*"],
       "@angular/*": ["../node_modules/@angular/*"],
-      "@metronic/*": ["./assets/metronic/*"]
+      "@metronic/*": ["./assets/metronic/*"],
+      "jszip": ["node_modules/jszip/dist/jszip.min.js"]
     },
     "types": ["googlemaps"]
   },

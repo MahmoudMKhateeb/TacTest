@@ -36,12 +36,11 @@ export class AppNavigationService {
             'NonMandatoryDocuments',
             'Pages.DocumentFiles',
             'flaticon2-crisp-icons',
-            '/app/main/comingSoon',
+            '/tenantNotRequiredDocuments/tenantNotRequiredDocuments',
             [],
             undefined,
             undefined,
-            undefined,
-            () => !this._featureCheckerService.isEnabled('App.Shipper') && !this._featureCheckerService.isEnabled('App.Carrier')
+            undefined
           ),
           new AppMenuItem('SubmittedDocuments', 'Pages.DocumentFiles', 'flaticon-file', '/app/main/documentFiles/documentFiles'),
           //TODO: the contracts subMenu Need Permission and Route

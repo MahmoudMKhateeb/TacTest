@@ -1,6 +1,7 @@
-import { HostListener, Injector } from '@angular/core';
+import { HostListener, Injector, Directive } from '@angular/core';
 import { AppComponentBase } from '../app-component-base';
 
+@Directive()
 export abstract class ScrollPagnationComponentBase extends AppComponentBase {
   skipCount = 0;
   maxResultCount = 6;

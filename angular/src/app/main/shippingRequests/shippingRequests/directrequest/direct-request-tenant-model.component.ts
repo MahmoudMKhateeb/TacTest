@@ -5,7 +5,8 @@ import {
   ShippingRequestDirectRequestGetCarrirerListDto,
 } from '@shared/service-proxies/service-proxies';
 import { AppComponentBase } from '@shared/common/app-component-base';
-import { LazyLoadEvent } from '@node_modules/primeng/public_api';
+import { LazyLoadEvent } from 'primeng/api';
+
 import { Table } from '@node_modules/primeng/table';
 import { Paginator } from '@node_modules/primeng/paginator';
 import { Router } from '@angular/router';

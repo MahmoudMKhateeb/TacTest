@@ -10,7 +10,7 @@ import { ViewPackingTypeModalComponent } from './view-packingType-modal.componen
 import { appModuleAnimation } from '@shared/animations/routerTransition';
 import { Table } from 'primeng/table';
 import { Paginator } from 'primeng/paginator';
-import { LazyLoadEvent } from 'primeng/public_api';
+import { LazyLoadEvent } from 'primeng/api';
 import { FileDownloadService } from '@shared/utils/file-download.service';
 import * as _ from 'lodash';
 import * as moment from 'moment';

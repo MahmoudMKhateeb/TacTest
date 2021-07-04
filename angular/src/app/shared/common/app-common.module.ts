@@ -55,7 +55,8 @@ import { HijriDatepickerComponent } from '@app/shared/common/hijri-gregorian-dat
 import { NgbDateParserFormatter, NgbModule } from '@node_modules/@ng-bootstrap/ng-bootstrap';
 import { CustomNgbDateParserFormatter } from '@app/shared/common/hijri-gregorian-datepicker/CustomNgbDateParserFormatter';
 import { RequiredDocumentFormChildComponent } from './required-document-form-child/required-document-form-child.component';
-import { FileUploadModule } from '@node_modules/primeng';
+import { FileUploadModule } from 'primeng/fileupload';
+// import { FileUploadModule } from '@node_modules/primeng';
 
 @NgModule({
   imports: [

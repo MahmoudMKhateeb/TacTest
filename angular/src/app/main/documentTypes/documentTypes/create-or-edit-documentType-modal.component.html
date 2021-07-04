@@ -49,7 +49,7 @@
                 required
                 (change)="documentsEntityDropDownOnChange($event)"
               >
-                <option value="{{ -1 }}">{{ l('Select') }} {{ l('DocumentsEntity') }}</option>
+                <option [ngValue]="null">{{ l('Select') }} {{ l('DocumentsEntity') }}</option>
                 <option *ngFor="let item of allDocumentsEntities" value="{{ item.id }}">{{ item.displayName }}</option>
               </select>
             </div>
@@ -235,7 +235,7 @@
               [(ngModel)]="documentType.editionId"
               class="form-control form-control-lg custom-select mr-sm-2"
             >
-              <option value="{{ -1 }}">{{ l('Select') }} {{ l('Edition') }}</option>
+              <option [ngValue]="null">{{ l('Select') }} {{ l('Edition') }}</option>
               <option *ngFor="let item of editions" value="{{ item.id }}">{{ item.displayName }}</option>
             </select>
           </div>

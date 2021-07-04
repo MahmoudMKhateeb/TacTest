@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 
 import { BalanceRechargeModelComponent } from './balance-recharge-model.component';
 
@@ -6,11 +6,13 @@ describe('BalanceRechargeModelComponent', () => {
   let component: BalanceRechargeModelComponent;
   let fixture: ComponentFixture<BalanceRechargeModelComponent>;
 
-  beforeEach(async(() => {
-    TestBed.configureTestingModule({
-      declarations: [BalanceRechargeModelComponent],
-    }).compileComponents();
-  }));
+  beforeEach(
+    waitForAsync(() => {
+      TestBed.configureTestingModule({
+        declarations: [BalanceRechargeModelComponent],
+      }).compileComponents();
+    })
+  );
 
   beforeEach(() => {
     fixture = TestBed.createComponent(BalanceRechargeModelComponent);

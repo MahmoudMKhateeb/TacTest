@@ -32,7 +32,7 @@ import { IAjaxResponse, TokenService } from '@node_modules/abp-ng2-module';
 
 @Component({
   selector: 'AddNewTripModal',
-  styleUrls: ['./createOrEditTrip.component.scss'],
+  styleUrls: ['./createOrEditTrip.component.css'],
   templateUrl: './createOrEditTrip.component.html',
 })
 export class CreateOrEditTripComponent extends AppComponentBase implements OnInit {
@@ -52,6 +52,7 @@ export class CreateOrEditTripComponent extends AppComponentBase implements OnIni
   active = false;
   activeTripId: number = undefined;
   cleanVasesList: CreateOrEditShippingRequestTripVasDto[] = [];
+  isApproximateValueRequired = false;
 
   //documentFile: CreateOrEditDocumentFileDto = new CreateOrEditDocumentFileDto();
   alldocumentsValid = false;
@@ -288,5 +289,14 @@ export class CreateOrEditTripComponent extends AppComponentBase implements OnIni
     }
 
     return s4() + s4() + '-' + s4() + '-' + s4() + '-' + s4() + '-' + s4() + s4() + s4();
+  }
+
+  /**
+   * checks if Selected Vases in trip section has Insurance selected
+   * because the Goods Approximate Value input is only required if the Selected vases has insurance
+   * @param $event
+   */
+  isSelectedVasesHasinsurance($event: CreateOrEditShippingRequestTripVasDto[]) {
+    $event.find((x) => x.name == 'Insurance') ? (this.isApproximateValueRequired = true) : (this.isApproximateValueRequired = false);
   }
 }

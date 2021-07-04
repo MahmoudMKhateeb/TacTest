@@ -97,6 +97,11 @@ namespace TACHYON.Tracking
             DisableTenancyFilters();
             var routes =  _routPointRepository.GetAll()
             .Include(r => r.FacilityFk)
+            .Include(r => r.GoodsDetails)
+             .ThenInclude(c=>c.GoodCategoryFk)
+              .ThenInclude(t =>t.Translations)
+            .Include(g => g.GoodsDetails)
+             .ThenInclude(u => u.UnitOfMeasureFk)
                             .Where(x => x.ShippingRequestTripFk.Id == id &&  x.ShippingRequestTripFk.ShippingRequestFk.CarrierTenantId.HasValue)
                             .WhereIf(AbpSession.TenantId.HasValue && await IsEnabledAsync(AppFeatures.Shipper), x => x.ShippingRequestTripFk.ShippingRequestFk.TenantId == AbpSession.TenantId)
                             .WhereIf(!AbpSession.TenantId.HasValue || await IsEnabledAsync(AppFeatures.TachyonDealer), x => true)
@@ -174,7 +179,7 @@ namespace TACHYON.Tracking
         #endregion
         private bool CanStartTrip(ShippingRequestTrip trip)
         {
-            if (trip.Status == ShippingRequestTripStatus.Intransit)
+            if (trip.Status == ShippingRequestTripStatus.Intransit || !trip.AssignedDriverUserId.HasValue)
             {
                 return false;
             }

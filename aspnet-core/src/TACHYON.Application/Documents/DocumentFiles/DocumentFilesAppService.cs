@@ -414,7 +414,7 @@ namespace TACHYON.Documents.DocumentFiles
 
         public async Task AddTenantRequiredDocumentFiles(List<CreateOrEditDocumentFileDto> input)
         {
-            var requiredDocumentTypes = await GetTenentMissingDocuments();
+            var requiredDocumentTypes = await GetTenentMissingDocuments(true);
             if (requiredDocumentTypes.Count > 0)
             {
                 foreach (var documentType in requiredDocumentTypes)
@@ -661,13 +661,14 @@ namespace TACHYON.Documents.DocumentFiles
         /// is for ...
         /// </summary>
         /// <returns></returns>
-        public async Task<List<GetTenantSubmittedDocumnetForView>> GetAllTenantSubmittedRequiredDocumentsWithStatuses()
+        public async Task<List<GetTenantSubmittedDocumnetForView>> GetAllTenantSubmittedDocumentsWithStatuses(bool isMandatory = true)
         {
 
             var docs = await _documentFileRepository.GetAll()
                      .Include(doc => doc.DocumentTypeFk)
                      .ThenInclude(doc => doc.Translations)
                      .Where(x => x.DocumentTypeFk.DocumentsEntityId == (int)DocumentsEntitiesEnum.Tenant)
+                     .Where(x=> x.DocumentTypeFk.IsRequired == isMandatory)
                      //.Where(d => d.TenantId == AbpSession.GetTenantId())
                      .ToListAsync();
 
@@ -743,7 +744,7 @@ namespace TACHYON.Documents.DocumentFiles
             }).ToList();
         }
 
-        public async Task<List<CreateOrEditDocumentFileDto>> GetTenentMissingDocuments()
+        public async Task<List<CreateOrEditDocumentFileDto>> GetTenentMissingDocuments(bool isMandatory = true)
         {
             if (!AbpSession.TenantId.HasValue)
             {
@@ -754,13 +755,13 @@ namespace TACHYON.Documents.DocumentFiles
             var documentFiles = await _documentFileRepository.GetAll()
                     .Include(doc => doc.DocumentTypeFk)
                     .ThenInclude(doc => doc.DocumentsEntityFk)
-                    .Where(x => x.DocumentTypeFk.IsRequired)
+                    .Where(x => x.DocumentTypeFk.IsRequired == isMandatory)
                     .ToListAsync();
 
             var documentTypes = await _documentTypeRepository.GetAll()
                  .Include(x => x.Translations)
                  .Where(x => x.EditionId == tenant.EditionId)
-                 .Where(x => x.IsRequired)
+                 .Where(x => x.IsRequired == isMandatory)
                  .ToListAsync();
 
 

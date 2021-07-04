@@ -4,7 +4,7 @@ import { appModuleAnimation } from '@shared/animations/routerTransition';
 import { AppComponentBase } from '@shared/common/app-component-base';
 import { LanguageServiceProxy } from '@shared/service-proxies/service-proxies';
 import * as _ from 'lodash';
-import { LazyLoadEvent } from 'primeng/public_api';
+import { LazyLoadEvent } from 'primeng/api';
 import { Paginator } from 'primeng/paginator';
 import { Table } from 'primeng/table';
 import { EditTextModalComponent } from './edit-text-modal.component';

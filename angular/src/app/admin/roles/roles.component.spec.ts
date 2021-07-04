@@ -20,7 +20,16 @@ describe('RolesComponent', () => {
 
   beforeEach(async () => {
     TestBed.configureTestingModule({
-      imports: [AppModule, UtilsModule, AppRoutingModule, RouterModule.forRoot([]), RootModule, ServiceProxyModule, ModalModule, AppBsModalModule],
+      imports: [
+        AppModule,
+        UtilsModule,
+        AppRoutingModule,
+        RouterModule.forRoot([], { relativeLinkResolution: 'legacy' }),
+        RootModule,
+        ServiceProxyModule,
+        ModalModule,
+        AppBsModalModule,
+      ],
       declarations: [RolesComponent, PermissionTreeModalComponent],
       schemas: [NO_ERRORS_SCHEMA],
       providers: [{ provide: LOCALE_ID, useValue: 'en' }],

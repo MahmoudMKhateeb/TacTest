@@ -4,12 +4,12 @@ import { appModuleAnimation } from '@shared/animations/routerTransition';
 import { ModalDirective } from 'ngx-bootstrap/modal';
 import { Table } from 'primeng/table';
 import { Paginator } from 'primeng/paginator';
-import { LazyLoadEvent } from 'primeng/public_api';
+import { LazyLoadEvent } from 'primeng/api';
 import { PriceOfferServiceProxy, PriceOfferChannel, GetShippingRequestForPriceOfferListDto } from '@shared/service-proxies/service-proxies';
 
 @Component({
   templateUrl: './price-offer-list-model-component.html',
-  /*styleUrls: ['/assets/custom/css/model.scss'],*/
+  styleUrls: ['./model.scss'],
   selector: 'price-offer-list-model',
   animations: [appModuleAnimation()],
 })

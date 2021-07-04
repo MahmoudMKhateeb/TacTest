@@ -5,7 +5,7 @@ import { appModuleAnimation } from '@shared/animations/routerTransition';
 import { AppComponentBase } from '@shared/common/app-component-base';
 import { EntityDtoOfInt64, UserListDto, UserServiceProxy, PermissionServiceProxy, FlatPermissionDto } from '@shared/service-proxies/service-proxies';
 import { FileDownloadService } from '@shared/utils/file-download.service';
-import { LazyLoadEvent } from 'primeng/public_api';
+import { LazyLoadEvent } from 'primeng/api';
 import { Paginator } from 'primeng/paginator';
 import { Table } from 'primeng/table';
 import { CreateOrEditUserModalComponent } from './create-or-edit-user-modal.component';

@@ -25,7 +25,7 @@ import * as localForage from 'localforage';
 import * as _ from 'lodash';
 import * as moment from 'moment';
 import { AppPreBootstrap } from './AppPreBootstrap';
-import { AppModule } from './app/app.module';
+import { AppModule } from '@app/app.module';
 import { RootRoutingModule } from './root-routing.module';
 import { RootComponent } from './root.component';
 import { DomHelper } from '@shared/helpers/DomHelper';

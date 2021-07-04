@@ -10,11 +10,11 @@ import { ViewPayloadMaxWeightModalComponent } from './view-payloadMaxWeight-moda
 import { appModuleAnimation } from '@shared/animations/routerTransition';
 import { Table } from 'primeng/table';
 import { Paginator } from 'primeng/paginator';
-import { LazyLoadEvent } from 'primeng/public_api';
 import { FileDownloadService } from '@shared/utils/file-download.service';
 import { EntityTypeHistoryModalComponent } from '@app/shared/common/entityHistory/entity-type-history-modal.component';
 import * as _ from 'lodash';
 import * as moment from 'moment';
+import { LazyLoadEvent } from 'primeng/api';
 
 @Component({
   templateUrl: './payloadMaxWeights.component.html',

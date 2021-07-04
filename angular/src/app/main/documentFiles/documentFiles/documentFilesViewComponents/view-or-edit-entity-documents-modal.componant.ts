@@ -16,7 +16,8 @@ import { LocalStorageService } from '@shared/utils/local-storage.service';
 import { DateType } from '@app/shared/common/hijri-gregorian-datepicker/consts';
 import { DateFormatterService } from '@app/shared/common/hijri-gregorian-datepicker/date-formatter.service';
 import * as _ from 'lodash';
-import { LazyLoadEvent } from '@node_modules/primeng/public_api';
+import { LazyLoadEvent } from 'primeng/api';
+
 import { Paginator } from '@node_modules/primeng/paginator';
 import { Table } from '@node_modules/primeng/table';
 import { CreateOrEditDocumentFileModalComponent } from '@app/main/documentFiles/documentFiles/create-or-edit-documentFile-modal.component';
