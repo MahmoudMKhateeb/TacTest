@@ -50,7 +50,9 @@
               "src/app/shared/core.less",
               "src/app/shared/layout/layout.less",
               "node_modules/devextreme/dist/css/dx.light.css",
-              "src/styles.css"
+              "src/styles.css",
+              "src/assets/custom/css/style.scss",
+              "src/assets/custom/css/model.scss"
             ],
             "scripts": [
               "node_modules/@microsoft/signalr/dist/browser/signalr.min.js",
@@ -168,7 +170,9 @@
               "src/assets/metronic/vendors/global/vendors.bundle.css",
               "src/app/shared/core.less",
               "src/app/shared/layout/layout.less",
-              "src/styles.css"
+              "src/styles.css",
+              "src/assets/custom/css/style.scss",
+              "src/assets/custom/css/model.scss"
             ],
             "scripts": [
               "node_modules/@microsoft/signalr/dist/browser/signalr.min.js",
