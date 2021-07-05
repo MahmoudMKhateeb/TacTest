@@ -34,6 +34,49 @@
                 </div>
                 <div class="col-sm-9">
                   <div class="row">
+                    <div class="col-6">
+                      <div class="form-group">
+                        <label for="Name"><span class="text-danger">*</span> {{ 'FirstName' | localize }}</label>
+                        <input
+                          id="Name"
+                          #nameInput="ngModel"
+                          class="form-control"
+                          type="text"
+                          name="Name"
+                          [(ngModel)]="user.name"
+                          required
+                          maxlength="64"
+                          [ngClass]="{
+                            'is-valid': userForm.submitted && nameInput.valid,
+                            'is-invalid': userForm.submitted && !nameInput.valid
+                          }"
+                        />
+                        <validation-messages [formCtrl]="nameInput"></validation-messages>
+                      </div>
+                    </div>
+                    <div class="col-6">
+                      <div class="form-group">
+                        <label for="Surname"><span class="text-danger">*</span> {{ 'LastName' | localize }}</label>
+                        <input
+                          id="Surname"
+                          #surnameInput="ngModel"
+                          type="text"
+                          name="Surname"
+                          class="form-control"
+                          [(ngModel)]="user.surname"
+                          required
+                          maxlength="64"
+                          [ngClass]="{
+                            'is-valid': userForm.submitted && surnameInput.valid,
+                            'is-invalid': userForm.submitted && !surnameInput.valid
+                          }"
+                        />
+                        <validation-messages [formCtrl]="surnameInput"></validation-messages>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="row">
                     <div class="form-group col-6">
                       <label for="EmailAddress">{{ 'EmailAddress' | localize }} <span class="required-fileds"> *</span></label>
                       <input
@@ -47,7 +90,6 @@
                         (change)="removeWhiteSpacesFromEmail()"
                         maxlength="256"
                         email
-                        autofocus
                       />
                       <span *ngIf="!isEmailValid" class="form-text text-danger">{{ l('NotValid') }}</span>
                       <span *ngIf="!isEmailAvailable" class="form-text text-danger">{{ l('AlreadyTaken') }}</span>
@@ -98,49 +140,6 @@
                         >{{ l('Available') }}</span
                       >
                       <span class="help-block" *ngIf="!canChangeUserName">{{ 'CanNotChangeAdminUserName' | localize }}</span>
-                    </div>
-                  </div>
-
-                  <div class="row">
-                    <div class="col-6">
-                      <div class="form-group">
-                        <label for="Name"><span class="text-danger">*</span> {{ 'FirstName' | localize }}</label>
-                        <input
-                          id="Name"
-                          #nameInput="ngModel"
-                          class="form-control"
-                          type="text"
-                          name="Name"
-                          [(ngModel)]="user.name"
-                          required
-                          maxlength="64"
-                          [ngClass]="{
-                            'is-valid': userForm.submitted && nameInput.valid,
-                            'is-invalid': userForm.submitted && !nameInput.valid
-                          }"
-                        />
-                        <validation-messages [formCtrl]="nameInput"></validation-messages>
-                      </div>
-                    </div>
-                    <div class="col-6">
-                      <div class="form-group">
-                        <label for="Surname"><span class="text-danger">*</span> {{ 'LastName' | localize }}</label>
-                        <input
-                          id="Surname"
-                          #surnameInput="ngModel"
-                          type="text"
-                          name="Surname"
-                          class="form-control"
-                          [(ngModel)]="user.surname"
-                          required
-                          maxlength="64"
-                          [ngClass]="{
-                            'is-valid': userForm.submitted && surnameInput.valid,
-                            'is-invalid': userForm.submitted && !surnameInput.valid
-                          }"
-                        />
-                        <validation-messages [formCtrl]="surnameInput"></validation-messages>
-                      </div>
                     </div>
                   </div>
                 </div>
