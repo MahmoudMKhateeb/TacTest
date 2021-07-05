@@ -22,7 +22,9 @@ namespace TACHYON.Shipping.ShippingRequests.TachyonDealer
         {
             DisableTenancyFilters();
             ShippingRequest shippingRequest = await _shippingRequestRepository.
-                FirstOrDefaultAsync(e => e.Id == Input.Id && e.IsTachyonDeal && !e.IsBid && e.Status == ShippingRequestStatus.PrePrice);
+                FirstOrDefaultAsync(e => e.Id == Input.Id && e.IsTachyonDeal &&
+                !e.IsBid && 
+                (e.Status == ShippingRequestStatus.PrePrice || e.Status == ShippingRequestStatus.NeedsAction));
             if (shippingRequest != null)
             {
                 shippingRequest.IsBid = true;
