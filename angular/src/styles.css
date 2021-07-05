@@ -520,3 +520,9 @@ card-body {
 .modal .modal-header .close span {
   display: inline !important;
 }
+
+/* prime ng table TD span .ui-column-title hide */
+
+.ui-column-title {
+  display: none;
+}
