@@ -222,15 +222,13 @@ namespace TACHYON.Goods.GoodsDetails
         [AbpAuthorize(AppPermissions.Pages_GoodsDetails)]
         public async Task<List<GetAllGoodsCategoriesForDropDownOutput>> GetAllGoodCategoryForTableDropdown(int? fatherId)
         {
-            //return await _lookup_goodCategoryRepository.GetAll()
-            //    .Where(x=>x.FatherId==fatherId)
-            //    .Select(goodCategory => new GoodsDetailGoodCategoryLookupTableDto
-            //    {
-            //        Id = goodCategory.Id,
-            //       // DisplayName = goodCategory == null || goodCategory.DisplayName == null ? "" : goodCategory.DisplayName.ToString()
-            //    }).ToListAsync();
+
             var list = await _lookup_goodCategoryRepository.GetAll()
-                .Include(x => x.Translations).ToListAsync();
+                .Include(x => x.Translations)
+                .WhereIf(fatherId == null,x=> x.FatherId == null)
+                .WhereIf(fatherId !=null,
+                    x=> x.FatherId.Value == fatherId)
+                .ToListAsync();
 
             return ObjectMapper.Map<List<GetAllGoodsCategoriesForDropDownOutput>>(list);
         }

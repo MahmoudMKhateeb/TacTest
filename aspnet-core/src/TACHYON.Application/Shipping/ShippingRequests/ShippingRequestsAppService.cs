@@ -652,6 +652,21 @@ namespace TACHYON.Shipping.ShippingRequests
                // _commissionManager.AddShippingRequestCommissionSettingInfo(shippingRequest);
             }
 
+            // todo Add this Validation in Update Shipping Request
+
+            #region Check Goods Category it's Main Category Or Not
+
+            if (shippingRequest.GoodCategoryId != null)
+            {
+                var goodCategory = await _lookup_goodCategoryRepository.GetAsync(shippingRequest.GoodCategoryId.Value);
+                if (goodCategory.FatherFk != null)
+                    throw new UserFriendlyException("Can't Create Shipping Request With Sub Category of Goods ");
+            }
+            else
+                throw new UserFriendlyException("Goods Category ID is Required");
+
+            #endregion
+
 
             await _shippingRequestRepository.InsertAndGetIdAsync(shippingRequest);
 
