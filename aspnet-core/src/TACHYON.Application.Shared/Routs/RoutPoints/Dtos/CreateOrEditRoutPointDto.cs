@@ -46,12 +46,14 @@ namespace TACHYON.Routs.RoutPoints.Dtos
             if (PickingType == PickingType.Pickup) return;
             if (!ReceiverId.HasValue)
             {
-                if (string.IsNullOrEmpty(ReceiverFullName)) context.Results.Add(new ValidationResult("PleaseAddReceiverFullName"));
-                if (string.IsNullOrEmpty(ReceiverPhoneNumber)) context.Results.Add(new ValidationResult("PleaseAddReceiverPhoneNumber"));
-                else if (!isValidMobileNumber(ReceiverPhoneNumber)) context.Results.Add(new ValidationResult("InvalidMobileNumber"));
+                if (string.IsNullOrEmpty(ReceiverFullName)) context.Results.Add(new ValidationResult("PleaseAddAdditionalReceiverFullName"));
+                if (string.IsNullOrEmpty(ReceiverPhoneNumber)) context.Results.Add(new ValidationResult("PleaseAddAdditionalReceiverPhoneNumber"));
+                if (string.IsNullOrEmpty(ReceiverEmailAddress)) context.Results.Add(new ValidationResult("PleaseAddAdditionalReceiverEmailAddress"));
+                if (string.IsNullOrEmpty(ReceiverAddress)) context.Results.Add(new ValidationResult("PleaseAddAdditionalReceiverAddress"));
+                else if (!isValidMobileNumber(ReceiverPhoneNumber)) context.Results.Add(new ValidationResult("InvalidAdditionalReceiverMobileNumber"));
                 //if (string.IsNullOrEmpty(ReceiverCardIdNumber)) context.Results.Add(new ValidationResult("PleaseAddReceiverCardIdNumber"));
-
             }
+
         }
 
         private static bool isValidMobileNumber(string inputMobileNumber)
