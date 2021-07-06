@@ -17,6 +17,17 @@
             "tsConfig": "src/tsconfig.app.json",
             "polyfills": "src/polyfills.ts",
             "preserveSymlinks": true,
+            "allowedCommonJsDependencies": [
+              "moment-timezone",
+              "@angularclass/hmr",
+              "rtl-detect",
+              "object-path",
+              "lodash",
+              "angular2-text-mask",
+              "angular2-counto",
+              "moment/min/locales.min",
+              "rxjs/internal/observable/throwError"
+            ],
             "assets": [
               "src/assets",
               "src/metronic",
