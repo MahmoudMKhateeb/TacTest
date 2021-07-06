@@ -20,6 +20,8 @@ import { NgbDateStruct } from '@node_modules/@ng-bootstrap/ng-bootstrap';
 import { DateFormatterService } from '@app/shared/common/hijri-gregorian-datepicker/date-formatter.service';
 import { isNumeric } from '@node_modules/rxjs/internal/util/isNumeric';
 import { TerminologieServiceProxy } from 'shared/service-proxies/terminologies-ervice-proxy';
+import { HttpClient } from '@angular/common/http';
+import { map } from '@node_modules/rxjs/internal/operators';
 
 const capitalize = (s) => {
   if (typeof s !== 'string') return '';
@@ -44,6 +46,7 @@ export abstract class AppComponentBase {
   private terminologieServiceProxy: TerminologieServiceProxy;
   private ngxSpinnerTextService: NgxSpinnerTextService;
   dateFormatterService: DateFormatterService;
+  http: HttpClient;
   /**
    * max file size that  user can upload
    */
@@ -64,6 +67,7 @@ export abstract class AppComponentBase {
     this.ngxSpinnerTextService = injector.get(NgxSpinnerTextService);
     this.dateFormatterService = injector.get(DateFormatterService);
     this.terminologieServiceProxy = injector.get(TerminologieServiceProxy);
+    this.http = injector.get(HttpClient);
   }
 
   flattenDeep(array) {
@@ -177,4 +181,12 @@ export abstract class AppComponentBase {
       reader.onload = () => resolve(reader.result);
       reader.onerror = (error) => reject(error);
     });
+
+  downloadFile(url: string): any {
+    return this.http.get(url, { responseType: 'blob' }).pipe(
+      map((result: any) => {
+        return result;
+      })
+    );
+  }
 }
