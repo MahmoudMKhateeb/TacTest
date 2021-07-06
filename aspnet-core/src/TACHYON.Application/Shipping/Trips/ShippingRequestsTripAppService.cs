@@ -157,20 +157,20 @@ namespace TACHYON.Shipping.Trips
             foreach (var drop in dropPoints)
             {
                 if (drop.ReceiverId == null &&
-                    (drop.ReceiverCardIdNumber == null ||
+                    (string.IsNullOrWhiteSpace(drop.ReceiverCardIdNumber) ||
                     string.IsNullOrWhiteSpace(drop.ReceiverEmailAddress) ||
                     string.IsNullOrWhiteSpace(drop.ReceiverFullName) ||
-                    drop.ReceiverPhoneNumber == null))
+                    string.IsNullOrWhiteSpace(drop.ReceiverPhoneNumber)))
                 {
                     throw new UserFriendlyException(L("YouMustEnterReceiver"));
                 }
-                else if(drop.ReceiverId!= null && (drop.ReceiverCardIdNumber != null ||
-                    !string.IsNullOrWhiteSpace(drop.ReceiverEmailAddress) ||
-                    !string.IsNullOrWhiteSpace(drop.ReceiverFullName) ||
-                    drop.ReceiverPhoneNumber != null))
-                {
-                    throw new UserFriendlyException(L("YouMustEnterOneReceiver"));
-                }
+                //else if(drop.ReceiverId!= null && (drop.ReceiverCardIdNumber != null ||
+                //    !string.IsNullOrWhiteSpace(drop.ReceiverEmailAddress) ||
+                //    !string.IsNullOrWhiteSpace(drop.ReceiverFullName) ||
+                //    drop.ReceiverPhoneNumber != null))
+                //{
+                //    throw new UserFriendlyException(L("YouMustEnterOneReceiver"));
+                //}
             }
 
             if (!input.Id.HasValue)
