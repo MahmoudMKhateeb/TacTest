@@ -18,6 +18,9 @@
         </button>
       </div>
     </sub-header>
-    <invoice-template [Data]="Data" [Items]="Items"></invoice-template>
+    <!--    <invoice-template [Data]="Data" [Items]="Items"></invoice-template>-->
+    <div style="height: 80vh;">
+      <ng2-pdfjs-viewer #pdfViewerAutoLoad></ng2-pdfjs-viewer>
+    </div>
   </div>
 </div>
