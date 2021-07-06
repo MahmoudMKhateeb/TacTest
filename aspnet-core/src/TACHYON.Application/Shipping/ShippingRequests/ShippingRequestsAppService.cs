@@ -659,7 +659,7 @@ namespace TACHYON.Shipping.ShippingRequests
             if (shippingRequest.GoodCategoryId != null)
             {
                 var goodCategory = await _lookup_goodCategoryRepository.GetAsync(shippingRequest.GoodCategoryId.Value);
-                if (goodCategory.FatherFk != null)
+                if (goodCategory.FatherId != null)
                     throw new UserFriendlyException("Can't Create Shipping Request With Sub Category of Goods ");
             }
             else

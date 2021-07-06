@@ -235,6 +235,13 @@ namespace TACHYON.Shipping.Trips
             var RoutePoint = input.RoutPoints.OrderBy(x => x.PickingType);
             ShippingRequestTrip trip = ObjectMapper.Map<ShippingRequestTrip>(input);
 
+            // validate Goods Details 
+
+            if (trip.RoutPoints.Any(r => r.GoodsDetails.Any(g => g.GoodCategoryFk.FatherId == null)))
+                throw new UserFriendlyException("Goods Category Can't Be Main Category");
+            else if (trip.RoutPoints.Any(r => r.GoodsDetails.Any(g => g.GoodCategoryFk.FatherId != request.GoodCategoryId)))
+                throw new UserFriendlyException("Goods Category is not Sub of Shipping Request Goods Category");
+
 
             //insert trip 
             var shippingRequestTripId = await _ShippingRequestTripRepository.InsertAndGetIdAsync(trip);
@@ -259,6 +266,11 @@ namespace TACHYON.Shipping.Trips
             var trip = await GetTrip((int)input.Id, input.ShippingRequestId);
             TripCanEditOrDelete(trip);
 
+
+            if (trip.RoutPoints.Any(r => r.GoodsDetails.Any(g => g.GoodCategoryFk.FatherId == null)))
+                throw new UserFriendlyException("Goods Category Can't Be Main Category");
+            else if (trip.RoutPoints.Any(r => r.GoodsDetails.Any(g => g.GoodCategoryFk.FatherId != request.GoodCategoryId)))
+                throw new UserFriendlyException("Goods Category is not Sub of Shipping Request Goods Category");
 
             foreach (var point in trip.RoutPoints)
             {
