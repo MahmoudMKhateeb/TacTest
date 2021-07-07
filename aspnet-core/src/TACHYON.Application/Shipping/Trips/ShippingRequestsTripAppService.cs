@@ -18,9 +18,11 @@ using TACHYON.Authorization.Users;
 using TACHYON.Documents.DocumentFiles;
 using TACHYON.Features;
 using TACHYON.Firebases;
+using TACHYON.Goods.GoodCategories;
 using TACHYON.Goods.GoodsDetails;
 using TACHYON.Notifications;
 using TACHYON.Routs.RoutPoints;
+using TACHYON.Routs.RoutPoints.Dtos;
 using TACHYON.Shipping.ShippingRequests;
 using TACHYON.Shipping.ShippingRequestTrips;
 using TACHYON.Shipping.Trips.Dto;
@@ -36,6 +38,7 @@ namespace TACHYON.Shipping.Trips
         private readonly IRepository<RoutPoint, long> _RoutPointRepository;
         private readonly IRepository<ShippingRequestTripVas, long> _ShippingRequestTripVasRepository;
         private readonly IRepository<GoodsDetail, long> _GoodsDetailRepository;
+        private readonly IRepository<GoodCategory> _GoodCategoryRepository;
         private readonly UserManager _userManager;
         private readonly IAppNotifier _appNotifier;
         private readonly IFirebaseNotifier _firebase;
@@ -51,7 +54,7 @@ namespace TACHYON.Shipping.Trips
             UserManager userManager,
             IAppNotifier appNotifier,
             IFirebaseNotifier firebase,
-            ShippingRequestManager shippingRequestManager, DocumentFilesAppService documentFilesAppService)
+            ShippingRequestManager shippingRequestManager, DocumentFilesAppService documentFilesAppService, IRepository<GoodCategory> goodCategoryRepository)
         {
             _ShippingRequestTripRepository = ShippingRequestTripRepository;
             _ShippingRequestRepository = ShippingRequestRepository;
@@ -63,6 +66,7 @@ namespace TACHYON.Shipping.Trips
             _firebase = firebase;
             _shippingRequestManager = shippingRequestManager;
             _documentFilesAppService = documentFilesAppService;
+            _GoodCategoryRepository = goodCategoryRepository;
         }
 
 
@@ -233,15 +237,10 @@ namespace TACHYON.Shipping.Trips
         private async Task Create(CreateOrEditShippingRequestTripDto input, ShippingRequest request)
         {
             var RoutePoint = input.RoutPoints.OrderBy(x => x.PickingType);
+
+            await ValidateGoodsCategory(input.RoutPoints, request.GoodCategoryId);
+
             ShippingRequestTrip trip = ObjectMapper.Map<ShippingRequestTrip>(input);
-
-            // validate Goods Details 
-
-            if (trip.RoutPoints.Any(r => r.GoodsDetails.Any(g => g.GoodCategoryFk.FatherId == null)))
-                throw new UserFriendlyException("Goods Category Can't Be Main Category");
-            else if (trip.RoutPoints.Any(r => r.GoodsDetails.Any(g => g.GoodCategoryFk.FatherId != request.GoodCategoryId)))
-                throw new UserFriendlyException("Goods Category is not Sub of Shipping Request Goods Category");
-
 
             //insert trip 
             var shippingRequestTripId = await _ShippingRequestTripRepository.InsertAndGetIdAsync(trip);
@@ -267,10 +266,7 @@ namespace TACHYON.Shipping.Trips
             TripCanEditOrDelete(trip);
 
 
-            if (trip.RoutPoints.Any(r => r.GoodsDetails.Any(g => g.GoodCategoryFk.FatherId == null)))
-                throw new UserFriendlyException("Goods Category Can't Be Main Category");
-            else if (trip.RoutPoints.Any(r => r.GoodsDetails.Any(g => g.GoodCategoryFk.FatherId != request.GoodCategoryId)))
-                throw new UserFriendlyException("Goods Category is not Sub of Shipping Request Goods Category");
+            await ValidateGoodsCategory(input.RoutPoints, request.GoodCategoryId);
 
             foreach (var point in trip.RoutPoints)
             {
@@ -474,6 +470,34 @@ namespace TACHYON.Shipping.Trips
         {
             return new UserIdentifier(TenantId, (await _userManager.GetAdminByTenantIdAsync(TenantId)).Id);
         }
+
+        private async Task ValidateGoodsCategory(IEnumerable<CreateOrEditRoutPointDto> routPoints , int? shippingRequestGoodCategoryId)
+        {
+            // todo Add Localized String Here
+            foreach (var goodsDetail in routPoints.SelectMany(routPoint => routPoint.GoodsDetailListDto))
+            {
+
+
+                if (goodsDetail.GoodCategoryId != null)
+                {
+                    if (shippingRequestGoodCategoryId == null) 
+                        throw new UserFriendlyException(L("ErrorWhenCreateTrip")); // Need Review
+
+                    var goodCategory = await _GoodCategoryRepository
+                        .GetAsync(goodsDetail.GoodCategoryId.Value);
+
+                    if (goodCategory.FatherId == null)
+                        throw new UserFriendlyException(L("GoodsCategoryMustBeSubCategoryNotMainCategory"));
+
+                    if (goodCategory.FatherId != shippingRequestGoodCategoryId)
+                        throw new UserFriendlyException(L("GoodsCategoryMustBeSubOfShippingRequestGoodCategory"));
+
+
+                }
+                else throw new UserFriendlyException(L("GoodsCategoryIsRequired"));
+            }
+        }
+
         #endregion
     }
 }
