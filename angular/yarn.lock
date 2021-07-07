@@ -6940,6 +6940,11 @@ ng2-file-upload@^1.4.0:
   dependencies:
     tslib "^1.9.0"
 
+ng2-pdfjs-viewer@^6.0.1:
+  version "6.0.1"
+  resolved "https://registry.yarnpkg.com/ng2-pdfjs-viewer/-/ng2-pdfjs-viewer-6.0.1.tgz#1a7a9f41c3e45197bdd374ede4b239a307b0f589"
+  integrity sha512-Mf4ZzCzhLi5fLJFi034TcywtolRTKARHfkqX/ovXQyIuT6R9L2wPGJdeFG0fOJ58mWt6KUNWhTsa0Kbd8Oe7JA==
+
 ngx-bootstrap@^5.6.1:
   version "5.6.2"
   resolved "https://registry.yarnpkg.com/ngx-bootstrap/-/ngx-bootstrap-5.6.2.tgz#e648f826d303c29255c16772676efd30695740d1"
