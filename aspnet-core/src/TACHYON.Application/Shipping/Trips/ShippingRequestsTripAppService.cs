@@ -473,6 +473,9 @@ namespace TACHYON.Shipping.Trips
 
         private async Task ValidateGoodsCategory(IEnumerable<CreateOrEditRoutPointDto> routPoints , int? shippingRequestGoodCategoryId)
         {
+
+            var goodsCategories = await _GoodCategoryRepository.GetAllListAsync();
+
             // todo Add Localized String Here
             foreach (var goodsDetail in routPoints.SelectMany(routPoint => routPoint.GoodsDetailListDto))
             {
@@ -483,8 +486,8 @@ namespace TACHYON.Shipping.Trips
                     if (shippingRequestGoodCategoryId == null) 
                         throw new UserFriendlyException(L("ErrorWhenCreateTrip")); // Need Review
 
-                    var goodCategory = await _GoodCategoryRepository
-                        .GetAsync(goodsDetail.GoodCategoryId.Value);
+                    var goodCategory = goodsCategories
+                        .FirstOrDefault(x=> x.Id == goodsDetail.GoodCategoryId.Value);
 
                     if (goodCategory.FatherId == null)
                         throw new UserFriendlyException(L("GoodsCategoryMustBeSubCategoryNotMainCategory"));
