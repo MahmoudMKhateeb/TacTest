@@ -430,7 +430,8 @@ namespace TACHYON.Trucks
         public async Task<List<SelectItemDto>> GetAllDriversForDropDown()
         {
             return await _lookup_userRepository.GetAll().Where(e => e.IsDriver == true)
-                .Select(x => new SelectItemDto {Id = x.Id.ToString(), DisplayName = x.Name}).ToListAsync();
+                .Select(x => new SelectItemDto {Id = x.Id.ToString(), DisplayName = $"{x.Name} {x.Surname}"})
+                .ToListAsync();
         }
 
         [AbpAuthorize(AppPermissions.Pages_Trucks)]
