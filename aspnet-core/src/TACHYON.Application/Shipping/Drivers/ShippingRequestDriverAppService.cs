@@ -153,21 +153,32 @@ namespace TACHYON.Shipping.Drivers
                    .ThenInclude(t=>t.Translations)
                  .WhereIf(IsAccepted,t=>t.DriverStatus== ShippingRequestTripDriverStatus.Accepted)
                 .SingleOrDefaultAsync(t => t.Id == TripId && t.Status != ShippingRequestTripStatus.Canceled && t.AssignedDriverUserId == AbpSession.UserId);
+
+            
             if (trip==null) throw new UserFriendlyException(L("TheTripIsNotFound"));
             var tripDto = ObjectMapper.Map<ShippingRequestTripDriverDetailsDto>(trip);
+
+            // return current driver trip
+            var CurrentTrip = await _ShippingRequestTrip.GetAll()
+                    .Where(x => x.AssignedDriverUserId == AbpSession.UserId && x.Status == ShippingRequestTripStatus.Intransit).FirstOrDefaultAsync();
+
+            if (CurrentTrip != null)
+            {
+                tripDto.CurrentTripId = CurrentTrip.Id;
+            }
+
             if (trip.AssignedTruckFk !=null) tripDto.TruckType = ObjectMapper.Map<TrucksTypeDto>(trip.AssignedTruckFk.TrucksTypeFk).TranslatedDisplayName;
             if (tripDto.TripStatus == ShippingRequestTripStatus.Intransit)
             {
                 tripDto.ActionStatus = ShippingRequestTripDriverActionStatusDto.ContinueTrip;
             }
+
+
             else if (trip.StartTripDate.Date <= Clock.Now.Date && trip.Status == ShippingRequestTripStatus.New && trip.DriverStatus== ShippingRequestTripDriverStatus.Accepted)
             {
-
                 //Check there any trip the driver still working on or not
-                var Count = await _ShippingRequestTrip.GetAll()
-                    .Where(x => x.AssignedDriverUserId == AbpSession.UserId && x.Status == ShippingRequestTripStatus.Intransit).CountAsync();
                     await _RoutPointRepository.GetAll().Where(x => x.IsActive && x.ShippingRequestTripFk.AssignedDriverUserId == AbpSession.UserId).CountAsync();
-                if (Count == 0)
+                if (CurrentTrip == null)
                     tripDto.ActionStatus = ShippingRequestTripDriverActionStatusDto.CanStartTrip;
             }
 
