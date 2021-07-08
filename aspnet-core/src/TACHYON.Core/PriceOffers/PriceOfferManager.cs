@@ -152,6 +152,7 @@ namespace TACHYON.PriceOffers
                 request.BidStartDate = default;
                 request.BidEndDate = default;
                 request.IsTachyonDeal = true;
+                request.RequestType = ShippingRequestType.TachyonManageService;
 
             }
             /// Check if offer has carrier from parent offer coming
