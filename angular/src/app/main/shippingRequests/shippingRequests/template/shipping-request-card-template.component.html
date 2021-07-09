@@ -20,7 +20,7 @@
                 {{ (item.status == 3 || item.status == 4) && !Channel ? ' shipCardRed' : '' }}
                {{ direction == 'rtl' ? ' rtl' : '' }}"
           >
-            <img *ngIf="item.isTachyonDeal" class="markTachyon" src="/assets/custom/imgs/mark.svg" alt="" />
+            <img class="markTachyon" src="/assets/custom/imgs/mark.svg" alt="" />
             <div class="infoBasic">
               <div class="serialNumber">
                 <a href="javascript:void(0)">{{ item.referenceNumber }}</a>
@@ -151,15 +151,7 @@
                   {{ l('Cancel') }}
                 </a>
 
-                <a href="javascript:void(0)" *ngIf="Channel" (click)="Model.show(item)" class="red">
-                  {{ l('More') }}
-                </a>
-                <a
-                  *ngIf="permission.isGranted('Pages.ShippingRequests.Edit') && !Channel"
-                  [queryParams]="{ id: item.id }"
-                  [routerLink]="['/app/main/shippingRequests/shippingRequests/view']"
-                  class="red"
-                >
+                <a href="javascript:void(0)" (click)="moreRedirectTo(item)" class="red">
                   {{ l('More') }}
                 </a>
                 <a
