@@ -1,6 +1,11 @@
-import { Component, OnInit, Injector, NgZone } from '@angular/core';
+import { Component, OnInit, Injector, NgZone, ViewChild } from '@angular/core';
 import { appModuleAnimation } from '@shared/animations/routerTransition';
-import { TrackingListDto, TrackingServiceProxy, ShippingRequestTripStatus } from '@shared/service-proxies/service-proxies';
+import {
+  TrackingListDto,
+  TrackingServiceProxy,
+  ShippingRequestTripStatus,
+  ShippingRequestsTripListDto,
+} from '@shared/service-proxies/service-proxies';
 
 import * as _ from 'lodash';
 import { ScrollPagnationComponentBase } from '@shared/common/scroll/scroll-pagination-component-base';
@@ -8,6 +13,7 @@ import { TrackingSearchInput } from '../../../../shared/common/search/TrackingSe
 import { LocalStorageService } from '@shared/utils/local-storage.service';
 import { AppConsts } from '@shared/AppConsts';
 import { TrackingSignalrService } from './tacking-signalr.service';
+import { ViewTripAccidentModelComponent } from '../ShippingRequestTrips/accident/View-trip-accident-modal.component';
 
 @Component({
   templateUrl: './tracking.component.html',
@@ -15,6 +21,8 @@ import { TrackingSignalrService } from './tacking-signalr.service';
   animations: [appModuleAnimation()],
 })
 export class TrackingComponent extends ScrollPagnationComponentBase implements OnInit {
+  @ViewChild('ModelIncident', { static: false }) modelIncident: ViewTripAccidentModelComponent;
+
   Items: TrackingListDto[] = [];
   direction = 'ltr';
   _zone: NgZone;
@@ -68,6 +76,16 @@ export class TrackingComponent extends ScrollPagnationComponentBase implements O
     this.LoadData();
   }
 
+  showIncident(item: TrackingListDto): void {
+    if (item.hasAccident) {
+      let trip: ShippingRequestsTripListDto = new ShippingRequestsTripListDto();
+      trip.id = item.id;
+      trip.isApproveCancledByCarrier = item.isApproveCancledByCarrier;
+      trip.isApproveCancledByShipper = item.isApproveCancledByShipper;
+      trip.status = item.status;
+      this.modelIncident.getAll(trip);
+    }
+  }
   setUsersProfilePictureUrl(drivers: TrackingListDto[]): void {
     for (let i = 0; i < drivers.length; i++) {
       let user = drivers[i];

@@ -25,5 +25,10 @@ namespace TACHYON.Tracking.Dto
         public string Reason { get; set; } 
         public bool IsAssign { get; set; }
         public bool CanStartTrip { get; set; }
+        public ShippingRequestType  RequestType { get; set; }
+        public bool HasAccident { get; set; }
+
+        public bool isApproveCancledByCarrier { get; set; }
+        public bool isApproveCancledByShipper { get; set; }
     }
 }

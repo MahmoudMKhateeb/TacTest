@@ -14,8 +14,10 @@ import {
   RoutePointStatus,
   ShippingRequestTripStatus,
   ShippingRequestTripDriverStatus,
+  ShippingRequestsTripListDto,
 } from '@shared/service-proxies/service-proxies';
 import { finalize } from 'rxjs/operators';
+import { ViewTripAccidentModelComponent } from '../ShippingRequestTrips/accident/View-trip-accident-modal.component';
 
 @Component({
   templateUrl: './tacking-model.component.html',
@@ -27,6 +29,7 @@ export class TrackingModelComponent extends AppComponentBase implements OnInit {
   @ViewChild('modal', { static: false }) modal: ModalDirective;
   @ViewChild('modelconfirm', { static: false }) modelConfirm: TrackingConfirmModalComponent;
   @ViewChild('modelpod', { static: false }) modelpod: TrackingPODModalComponent;
+  @ViewChild('ModelIncident', { static: false }) modelIncident: ViewTripAccidentModelComponent;
 
   _zone: NgZone;
   item: TrackingListDto = new TrackingListDto();
@@ -228,6 +231,29 @@ export class TrackingModelComponent extends AppComponentBase implements OnInit {
     this._CurrentServ.pOD(id).subscribe((result) => {
       this._fileDownloadService.downloadTempFile(result);
     });
+  }
+  showIncident(): void {
+    if (this.item.hasAccident) {
+      let trip: ShippingRequestsTripListDto = new ShippingRequestsTripListDto();
+      trip.id = this.item.id;
+      trip.isApproveCancledByCarrier = this.item.isApproveCancledByCarrier;
+      trip.isApproveCancledByShipper = this.item.isApproveCancledByShipper;
+      trip.status = this.item.status;
+      this.modelIncident.getAll(trip);
+    }
+  }
+  canCreateAccident() {
+    if (this.item.status == ShippingRequestTripStatus.Intransit) {
+      if (!this.appSession.tenantId || this.feature.isEnabled('App.TachyonDealer')) {
+        return this.item.isAssign;
+      }
+
+      return true;
+    }
+    return false;
+  }
+  accidentCallBack(): void {
+    this.item.hasAccident = true;
   }
   /**
    * Get City Cordinates By Providing its name

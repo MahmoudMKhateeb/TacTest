@@ -12,15 +12,20 @@
     <div class="container-fluid">
       <div class="row">
         <div class="col-12 col-lg-6 mb-4" *ngFor="let item of Items">
-          <div class="shipCard {{ direction == 'rtl' ? ' rtl' : '' }}">
+          <div class="shipCard {{ item.requestType ? 'tachyonDialer' : '' }} {{ direction == 'rtl' ? ' rtl' : '' }}">
             <img class="markTachyon" src="/assets/custom/imgs/mark.svg" alt="" />
             <div class="infoBasic">
               <a href="javascript:void(0)" class="companyName">
                 {{ item.name }}
               </a>
-              <b class="infoHighLight green stautsTruck">
+              <a
+                href="javascript:void(0)"
+                (click)="showIncident(item)"
+                class="infoHighLight {{ item.hasAccident ? ' red ' : ' green ' }}  stautsTruck"
+              >
+                <img *ngIf="item.hasAccident" src="/assets/custom/imgs/incident.svg" class="mr-1" width="16" alt="" />
                 {{ item.statusTitle }}
-              </b>
+              </a>
             </div>
             <div class="detailsRoad">
               <div class="from">
@@ -93,3 +98,4 @@
 
 <tacking-search-model #ModelSearch (modalsearch)="search()"></tacking-search-model>
 <tacking-model #Model></tacking-model>
+<view-trip-accident-modal #ModelIncident></view-trip-accident-modal>
