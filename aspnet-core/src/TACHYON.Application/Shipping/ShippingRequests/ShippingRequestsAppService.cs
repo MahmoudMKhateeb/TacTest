@@ -633,6 +633,8 @@ namespace TACHYON.Shipping.ShippingRequests
         {
             var vasList = input.ShippingRequestVasList;
 
+            await ValidateGoodsCategory(input);
+
             ShippingRequest shippingRequest = ObjectMapper.Map<ShippingRequest>(input);
             if (AbpSession.TenantId != null)
             {
@@ -649,10 +651,12 @@ namespace TACHYON.Shipping.ShippingRequests
                     shippingRequest.BidStatus = shippingRequest.BidStartDate.Value.Date == Clock.Now.Date ? ShippingRequestBidStatus.OnGoing : ShippingRequestBidStatus.StandBy;
                 }
 
-               // _commissionManager.AddShippingRequestCommissionSettingInfo(shippingRequest);
+                // _commissionManager.AddShippingRequestCommissionSettingInfo(shippingRequest);
             }
 
+            // todo Add this Validation in Update Shipping Request
 
+           
             await _shippingRequestRepository.InsertAndGetIdAsync(shippingRequest);
 
 
@@ -661,6 +665,16 @@ namespace TACHYON.Shipping.ShippingRequests
             {
                 //Notify Carrier with the same Truck type
                 await SendNotificationToCarriersWithTheSameTrucks(shippingRequest);
+            }
+        }
+
+        private async Task ValidateGoodsCategory(CreateOrEditShippingRequestDto input)
+        {
+            if (input.GoodCategoryId != null)
+            {
+                var goodCategory = await _lookup_goodCategoryRepository.GetAsync(input.GoodCategoryId.Value);
+                if (goodCategory.FatherId != null)
+                    throw new UserFriendlyException(L("GoodsCategoryMustBeMainNotSub"));
             }
         }
 
@@ -693,6 +707,9 @@ namespace TACHYON.Shipping.ShippingRequests
                     await _shippingRequestVasRepository.DeleteAsync(vas);
                 }
             }
+
+            await ValidateGoodsCategory(input);
+
             ObjectMapper.Map(input, shippingRequest);
         }
 
