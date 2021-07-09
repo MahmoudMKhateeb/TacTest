@@ -20,9 +20,10 @@
               <a href="javascript:void(0)" class="companyName">
                 {{ item.name }}
               </a>
-              <b class="infoHighLight green stautsTruck">
+              <a href="javascript:void(0)" (click)="showIncident()" class="infoHighLight {{ item.hasAccident ? ' red ' : ' green ' }}  stautsTruck">
+                <img *ngIf="item.hasAccident" src="/assets/custom/imgs/incident.svg" class="mr-1" width="16" alt="" />
                 {{ item.statusTitle }}
-              </b>
+              </a>
             </div>
             <div class="detailsRoad">
               <div class="from">
@@ -83,6 +84,9 @@
                 [buttonBusy]="saving"
               >
                 {{ l('Acknowledge') }}
+              </a>
+              <a href="javascript:void(0)" class="red" (click)="TripAccidentModal.show(item.id, null)" *ngIf="canCreateAccident()">
+                {{ l('CreateAccident') }}
               </a>
             </div>
           </div>
@@ -272,3 +276,5 @@
 
 <tacking-confirm-code-model #modelconfirm (modalConfirm)="confimred()"></tacking-confirm-code-model>
 <tacking-pod-model #modelpod></tacking-pod-model>
+<view-trip-accident-modal #ModelIncident></view-trip-accident-modal>
+<trip-accident-modal #TripAccidentModal (modalSave)="accidentCallBack()"></trip-accident-modal>

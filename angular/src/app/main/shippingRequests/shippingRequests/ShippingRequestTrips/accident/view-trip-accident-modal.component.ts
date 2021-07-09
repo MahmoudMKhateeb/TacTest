@@ -9,6 +9,7 @@ import {
   IShippingRequestTripAccidentListDto,
   ShippingRequestsTripServiceProxy,
   ShippingRequestsTripListDto,
+  ShippingRequestTripStatus,
 } from '@shared/service-proxies/service-proxies';
 import { FileDownloadService } from '@shared/utils/file-download.service';
 @Component({
@@ -21,10 +22,9 @@ export class ViewTripAccidentModelComponent extends AppComponentBase {
   @ViewChild('modal', { static: false }) modal: ModalDirective;
   @Output() modalcanceltrip: EventEmitter<any> = new EventEmitter<any>();
   Accident: IShippingRequestTripAccidentListDto[] = [];
-  Trip: ShippingRequestsTripListDto;
+  Trip: ShippingRequestsTripListDto = new ShippingRequestsTripListDto();
   active: boolean = false;
   IsStartSearch = false;
-  ShowCancelButton = true;
 
   constructor(
     injector: Injector,
@@ -46,15 +46,19 @@ export class ViewTripAccidentModelComponent extends AppComponentBase {
       this.primengTableHelper.hideLoadingIndicator();
       this.active = true;
       this.modal.show();
-
-      if (this.feature.isEnabled('App.Shipper')) {
-        this.ShowCancelButton = !this.Trip.isApproveCancledByShipper;
-      } else if (this.feature.isEnabled('App.Carrier')) {
-        this.ShowCancelButton = !this.Trip.isApproveCancledByCarrier;
-      } else if (this.Trip.isApproveCancledByCarrier && this.Trip.isApproveCancledByShipper) {
-        this.ShowCancelButton = false;
-      }
+      console.log(this.Trip);
     });
+  }
+  canShowCancelButton(): boolean {
+    if (this.Trip.status == ShippingRequestTripStatus.Delivered) {
+      return false;
+    } else if (this.feature.isEnabled('App.Shipper')) {
+      return !this.Trip.isApproveCancledByShipper;
+    } else if (this.feature.isEnabled('App.Carrier')) {
+      return !this.Trip.isApproveCancledByCarrier;
+    } else if (this.Trip.isApproveCancledByCarrier && this.Trip.isApproveCancledByShipper) {
+      return false;
+    }
   }
   downloadDocument(id: number): void {
     this._ServiceProxy.getFile(id).subscribe((result) => {

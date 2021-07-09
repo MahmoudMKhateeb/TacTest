@@ -35,10 +35,10 @@ export class CreateOrEditTripAccidentModalComponent extends AppComponentBase imp
     });
   }
 
-  public show(trip: CreateOrEditShippingRequestTripDto, accidentId: number | null): void {
+  public show(tripid: number, accidentId: number | null): void {
     if (accidentId == null) {
       this.accident = new CreateOrEditShippingRequestTripAccidentDto();
-      this.accident.tripId = trip.id;
+      this.accident.tripId = tripid;
       this.reasonId = null;
       this.active = true;
       this.modal.show();
