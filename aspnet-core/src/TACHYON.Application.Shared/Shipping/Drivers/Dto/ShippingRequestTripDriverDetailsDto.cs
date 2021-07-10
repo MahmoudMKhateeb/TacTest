@@ -36,6 +36,7 @@ namespace TACHYON.Shipping.Drivers.Dto
 
         public string PlateNumber { get; set; }
         public string TruckType { get; set; }
+        public int? CurrentTripId { get; set; }
 
     }
 }

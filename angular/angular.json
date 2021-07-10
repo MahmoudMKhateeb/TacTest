@@ -17,6 +17,17 @@
             "tsConfig": "src/tsconfig.app.json",
             "polyfills": "src/polyfills.ts",
             "preserveSymlinks": true,
+            "allowedCommonJsDependencies": [
+              "moment-timezone",
+              "@angularclass/hmr",
+              "rtl-detect",
+              "object-path",
+              "lodash",
+              "angular2-text-mask",
+              "angular2-counto",
+              "moment/min/locales.min",
+              "rxjs/internal/observable/throwError"
+            ],
             "assets": [
               "src/assets",
               "src/metronic",
@@ -25,7 +36,8 @@
                 "glob": "abp.signalr-client.js",
                 "input": "node_modules/abp-web-resources/Abp/Framework/scripts/libs",
                 "output": "/assets/abp"
-              }
+              },
+              { "glob": "**/*", "input": "node_modules/ng2-pdfjs-viewer/pdfjs", "output": "/assets/pdfjs" }
             ],
             "styles": [
               "node_modules/bootstrap/dist/css/bootstrap.min.css",
@@ -50,7 +62,9 @@
               "src/app/shared/core.less",
               "src/app/shared/layout/layout.less",
               "node_modules/devextreme/dist/css/dx.light.css",
-              "src/styles.css"
+              "src/styles.css",
+              "src/assets/custom/css/style.scss",
+              "src/assets/custom/css/model.scss"
             ],
             "scripts": [
               "node_modules/@microsoft/signalr/dist/browser/signalr.min.js",
@@ -168,7 +182,9 @@
               "src/assets/metronic/vendors/global/vendors.bundle.css",
               "src/app/shared/core.less",
               "src/app/shared/layout/layout.less",
-              "src/styles.css"
+              "src/styles.css",
+              "src/assets/custom/css/style.scss",
+              "src/assets/custom/css/model.scss"
             ],
             "scripts": [
               "node_modules/@microsoft/signalr/dist/browser/signalr.min.js",

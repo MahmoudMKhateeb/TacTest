@@ -31,6 +31,7 @@ using TACHYON.Invoices;
 using TACHYON.Shipping.ShippingRequests;
 using Abp;
 using TACHYON.Dto;
+using TACHYON.Shipping.Trips.Dto;
 
 namespace TACHYON.Shipping.Trips
 {
@@ -350,6 +351,18 @@ namespace TACHYON.Shipping.Trips
 
         }
 
+        /// <summary>
+        /// Get Currrent driver trip dto
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        public async Task<ShippingRequestTripDto> GetCurrentDriverTrip(long UserId)
+        {
+            var CurrentTrip = await _shippingRequestTrip.GetAll()
+                    .Where(x => x.AssignedDriverUserId == UserId && x.Status == ShippingRequestTripStatus.Intransit).FirstOrDefaultAsync();
+            return ObjectMapper.Map<ShippingRequestTripDto>(CurrentTrip);
+
+        }
         public async Task<FileDto> GetPOD(long id)
         {
             DisableTenancyFilters();

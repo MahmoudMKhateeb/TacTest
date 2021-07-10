@@ -15,4 +15,16 @@ export class FileDownloadService {
       file.fileName;
     location.href = url; //TODO: This causes reloading of same page in Firefox
   }
+
+  GetTempFileUrl(file: FileDto): string {
+    return (
+      AppConsts.remoteServiceBaseUrl +
+      '/File/DownloadTempFile?fileType=' +
+      file.fileType +
+      '&fileToken=' +
+      file.fileToken +
+      '&fileName=' +
+      file.fileName
+    );
+  }
 }

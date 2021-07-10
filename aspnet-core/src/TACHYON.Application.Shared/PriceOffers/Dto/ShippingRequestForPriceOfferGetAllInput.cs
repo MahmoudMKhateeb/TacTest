@@ -30,7 +30,7 @@ namespace TACHYON.PriceOffers.Dto
         public ShippingRequestRouteType? RouteTypeId { get; set; }
         public int? Status { get; set; }
         public bool IsTachyonDeal { get; set; }
-
+        public bool isTMSRequest { get; set; }
 
         public void Normalize()
         {

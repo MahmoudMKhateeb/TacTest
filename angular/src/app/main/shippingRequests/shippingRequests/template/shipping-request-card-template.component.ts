@@ -1,4 +1,4 @@
-import { Component, OnInit, Injector, Input } from '@angular/core';
+import { Component, OnInit, Injector, Input, ViewChild } from '@angular/core';
 import { appModuleAnimation } from '@shared/animations/routerTransition';
 import {
   GetShippingRequestForPriceOfferListDto,
@@ -14,13 +14,17 @@ import * as _ from 'lodash';
 import { ScrollPagnationComponentBase } from '@shared/common/scroll/scroll-pagination-component-base';
 import { log } from 'util';
 import { ShippingRequestForPriceOfferGetAllInput } from '../../../../shared/common/search/ShippingRequestForPriceOfferGetAllInput';
+import { Router } from '@angular/router';
+import { ShippingrequestsDetailsModelComponent } from '../details/shippingrequests-details-model.component';
 @Component({
   templateUrl: './shipping-request-card-template.component.html',
-  styleUrls: ['../../../../../assets/custom/css/style.scss'],
+  // styleUrls: ['/assets/custom/css/style.scss'],
   selector: 'shipping-request-card-template',
   animations: [appModuleAnimation()],
 })
 export class ShippingRequestCardTemplateComponent extends ScrollPagnationComponentBase implements OnInit {
+  @ViewChild('Model', { static: false }) modalMore: ShippingrequestsDetailsModelComponent;
+
   Items: GetShippingRequestForPriceOfferListDto[] = [];
   searchInput: ShippingRequestForPriceOfferGetAllInput = new ShippingRequestForPriceOfferGetAllInput();
   @Input() Channel: PriceOfferChannel | number | null | undefined = undefined;
@@ -28,7 +32,12 @@ export class ShippingRequestCardTemplateComponent extends ScrollPagnationCompone
   @Input() Title: string;
   @Input() ShippingRequestId: number | null | undefined = undefined;
   direction = 'ltr';
-  constructor(injector: Injector, private _currentServ: PriceOfferServiceProxy, private _directRequestSrv: ShippingRequestDirectRequestServiceProxy) {
+  constructor(
+    injector: Injector,
+    private _currentServ: PriceOfferServiceProxy,
+    private _directRequestSrv: ShippingRequestDirectRequestServiceProxy,
+    private router: Router
+  ) {
     super(injector);
   }
   ngOnInit(): void {
@@ -59,6 +68,7 @@ export class ShippingRequestCardTemplateComponent extends ScrollPagnationCompone
         this.searchInput.routeTypeId,
         this.searchInput.status,
         this.searchInput.isTachyonDeal,
+        this.searchInput.isTMS,
         '',
         this.skipCount,
         this.maxResultCount
@@ -152,5 +162,18 @@ export class ShippingRequestCardTemplateComponent extends ScrollPagnationCompone
       return this.l(word);
     }
     return this.l(`${word}s`);
+  }
+
+  moreRedirectTo(item: GetShippingRequestForPriceOfferListDto): void {
+    if (!this.Channel && this.appSession.tenantId) {
+      if (
+        !this.feature.isEnabled('App.TachyonDealer') ||
+        (this.feature.isEnabled('App.TachyonDealer') && item.requestType == ShippingRequestType.TachyonManageService)
+      ) {
+        this.router.navigateByUrl(`/app/main/shippingRequests/shippingRequests/view?id=${item.id}`);
+        return;
+      }
+    }
+    this.modalMore.show(item);
   }
 }

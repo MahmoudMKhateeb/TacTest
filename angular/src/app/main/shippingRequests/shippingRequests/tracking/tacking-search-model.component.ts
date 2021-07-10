@@ -16,7 +16,7 @@ import { EnumToArrayPipe } from '@shared/common/pipes/enum-to-array.pipe';
 
 @Component({
   templateUrl: './tacking-search-model.component.html',
-  styleUrls: ['../../../../../assets/custom/css/model.scss'],
+  // styleUrls: ['/assets/custom/css/model.scss'],
   selector: 'tacking-search-model',
   animations: [appModuleAnimation()],
   providers: [EnumToArrayPipe],

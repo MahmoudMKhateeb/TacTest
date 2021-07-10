@@ -410,6 +410,8 @@
                           <label><span class="required-fileds">*</span> {{ l('TripsStartDate') }}</label>
                           <div class="input-group date">
                             <input
+                              bsDatepicker
+                              datePickerMomentModifier
                               [(date)]="shippingRequest.startTripDate"
                               class="form-control"
                               type="datetime"
@@ -417,8 +419,7 @@
                               placeholder="{{ l('BiddingstartDatePlaceholder') }}"
                               [minDate]="shippingRequest.bidStartDate || today"
                               (dateChange)="validateTripsDates()"
-                              bsDatepicker
-                              datePickerMomentModifier
+                              readonly="readonly"
                             />
 
                             <div class="input-group-append">
@@ -443,6 +444,7 @@
                               (dateChange)="validateTripsDates()"
                               bsDatepicker
                               datePickerMomentModifier
+                              readonly="readonly"
                             />
                             <div class="input-group-append">
                               <span class="input-group-text">
@@ -508,10 +510,9 @@
                             id="numberOfTrips"
                             [(ngModel)]="shippingRequest.numberOfTrips"
                             required
-                            maxlength="2"
                             [min]="1"
                             [max]="100"
-                            (keypress)="numberOnly($event)"
+                            pattern="^(?:[1-9]|\d\d\d*)$"
                             [class.is-invalid]="numberOfTrips.touched && !numberOfTrips.valid"
                             [class.is-valid]="numberOfTrips.touched && numberOfTrips.valid"
                           />

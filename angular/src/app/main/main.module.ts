@@ -247,6 +247,7 @@ import { TMSRequestListComponent } from '@app/main/tms/tms-request-list.componen
 import { MultiSelectModule } from '@node_modules/primeng/multiselect';
 import { ListboxModule } from '@node_modules/primeng/listbox';
 import { DevExtremeModule, DxButtonModule } from '@node_modules/devextreme-angular';
+import { PdfJsViewerModule } from '@node_modules/ng2-pdfjs-viewer';
 NgxBootstrapDatePickerConfigService.registerNgxBootstrapDatePickerLocales();
 
 @NgModule({
@@ -287,6 +288,7 @@ NgxBootstrapDatePickerConfigService.registerNgxBootstrapDatePickerLocales();
     ListboxModule,
     DxButtonModule,
     DevExtremeModule,
+    PdfJsViewerModule,
   ],
   declarations: [
     TrucksTypesTranslationsComponent,

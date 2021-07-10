@@ -41,7 +41,10 @@
                         <tr>
                           <th
                             style="width: 130px;"
-                            [hidden]="!isGrantedAny('Pages.ShippingRequest.Accidents.Edit', 'Pages.ShippingRequest.Accidents.Resolve.Create')"
+                            [hidden]="
+                              !isGrantedAny('Pages.ShippingRequest.Accidents.Edit', 'Pages.ShippingRequest.Accidents.Resolve.Create') ||
+                              this.Trip.status == 3
+                            "
                           >
                             {{ l('Actions') }}
                           </th>
@@ -60,7 +63,10 @@
                         <tr>
                           <td
                             style="width: 130px;"
-                            [hidden]="!isGrantedAny('Pages.ShippingRequest.Accidents.Edit', 'Pages.ShippingRequest.Accidents.Resolve.Create')"
+                            [hidden]="
+                              !isGrantedAny('Pages.ShippingRequest.Accidents.Edit', 'Pages.ShippingRequest.Accidents.Resolve.Create') ||
+                              this.Trip.status == 3
+                            "
                           >
                             <div class="btn-group dropdown" dropdown container="body">
                               <button class="dropdown-toggle btn btn-sm btn-primary" dropdownToggle>
@@ -70,7 +76,7 @@
                                 <li>
                                   <a
                                     href="javascript:;"
-                                    *ngIf="permission.isGranted('Pages.ShippingRequest.Accidents.Edit')"
+                                    *ngIf="permission.isGranted('Pages.ShippingRequest.Accidents.Edit') && this.Trip.status != 3"
                                     class="dropdown-item"
                                     (click)="EditTripAccidentModal.show(record.TripId, record.id)"
                                     >{{ l('Edit') }}</a
@@ -118,7 +124,7 @@
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" (click)="close()">{{ 'Cancel' | localize }}</button>
-        <button *ngIf="ShowCancelButton" type="button" (click)="CancelTrip()" class="btn btn-primary">
+        <button *ngIf="canShowCancelButton()" type="button" (click)="CancelTrip()" class="btn btn-primary">
           <i class="flaticon-cancel"></i> <span>{{ 'CancelTrip' | localize }}</span>
         </button>
       </div>

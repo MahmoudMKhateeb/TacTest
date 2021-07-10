@@ -8,7 +8,7 @@ import {
   OrganizationUnitServiceProxy,
 } from '@shared/service-proxies/service-proxies';
 import * as _ from 'lodash';
-import { Observable } from 'rxjs';
+import { Observable, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { IBasicOrganizationUnitInfo } from './basic-organization-unit-info';
 import { CreateOrEditUnitModalComponent } from './create-or-edit-unit-modal.component';
@@ -103,7 +103,7 @@ export class OrganizationTreeComponent extends AppComponentBase implements OnIni
             .pipe(
               catchError((error) => {
                 this.revertDragDrop();
-                return Observable.throw(error);
+                return throwError(error);
               })
             )
             .subscribe(() => {
