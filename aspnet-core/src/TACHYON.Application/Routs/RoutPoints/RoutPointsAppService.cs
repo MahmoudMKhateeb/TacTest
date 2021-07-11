@@ -81,7 +81,7 @@ namespace TACHYON.Routs.RoutPoints
                 .Where(e => e.ShippingRequestTripId == shippingRequestTripId)
                 .Where(e => e.PickingType == PickingType.Dropoff);
 
-            var query = points.Select(x => new {Id = x.Id, ReceiverName = x.ReceiverFk!=null ?x.ReceiverFk.FullName :""});
+            var query = points.Select(x => new {Id = x.WaybillNumber, ReceiverName = x.ReceiverFk!=null ?x.ReceiverFk.FullName :""});
             return query.ToList().Select(x => new GetDropsDetailsForMasterWaybillOutput
             {
                 Code = x.Id.ToString(), ReceiverDisplayName = x.ReceiverName
