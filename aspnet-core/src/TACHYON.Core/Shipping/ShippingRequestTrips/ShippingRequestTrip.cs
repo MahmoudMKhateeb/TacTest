@@ -1,6 +1,7 @@
 ﻿using Abp.Domain.Entities.Auditing;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using TACHYON.AddressBook;
 using TACHYON.Authorization.Users;
@@ -69,6 +70,14 @@ namespace TACHYON.Shipping.ShippingRequestTrips
         /// approximate total value of goods
         /// </summary>
         public string TotalValue { get; set; }
+
+        /// <summary>
+        /// This is a Trip Note Added By Shipper
+        /// </summary>
+        // Entity Validation Not Required But Best Practice
+        [StringLength(ShippingRequestTripConsts.MaxTripNoteLength,
+            MinimumLength = ShippingRequestTripConsts.MinTripNoteLength)]
+        public string TripNote { get; set; }
 
     #region Prices
         public bool IsShipperHaveInvoice { get; set; }

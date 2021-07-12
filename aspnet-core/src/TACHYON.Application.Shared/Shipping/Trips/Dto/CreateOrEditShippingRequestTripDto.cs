@@ -29,6 +29,10 @@ namespace TACHYON.Shipping.Trips.Dto
 
         public virtual long? DestinationFacilityId { get; set; }
         public string TotalValue { get; set; }
+
+        [StringLength(ShippingRequestTripConsts.MaxTripNoteLength,
+            MinimumLength = ShippingRequestTripConsts.MinTripNoteLength)]
+        public string TripNote { get; set; }
         public List<CreateOrEditRoutPointDto> RoutPoints { get; set; }
         public List<CreateOrEditShippingRequestTripVasDto> ShippingRequestTripVases { get; set; }
 

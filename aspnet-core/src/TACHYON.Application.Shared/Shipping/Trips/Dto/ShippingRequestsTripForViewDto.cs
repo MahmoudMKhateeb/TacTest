@@ -30,5 +30,6 @@ namespace TACHYON.Shipping.Trips.Dto
         public string DriverStatusTitle { get; set; }
         public string RejectedReason { get; set; }
         public string TotalValue { get; set; }
+        public string TripNote { get; set; }
     }
 }
