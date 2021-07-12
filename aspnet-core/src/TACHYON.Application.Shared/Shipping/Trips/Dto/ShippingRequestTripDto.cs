@@ -1,10 +1,11 @@
-﻿using System;
+﻿using Abp.Application.Services.Dto;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
 namespace TACHYON.Shipping.Trips.Dto
 {
-    public  class ShippingRequestTripDto
+    public  class ShippingRequestTripDto : EntityDto
     {
         public DateTime StartTripDate { get; set; }
         public DateTime? EndTripDate { get; set; }
