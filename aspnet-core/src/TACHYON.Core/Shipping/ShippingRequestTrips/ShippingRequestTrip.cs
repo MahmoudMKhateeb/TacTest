@@ -75,9 +75,9 @@ namespace TACHYON.Shipping.ShippingRequestTrips
         /// This is a Trip Note Added By Shipper
         /// </summary>
         // Entity Validation Not Required But Best Practice
-        [StringLength(ShippingRequestTripConsts.MaxTripNoteLength,
-            MinimumLength = ShippingRequestTripConsts.MinTripNoteLength)]
-        public string TripNote { get; set; }
+        [StringLength(ShippingRequestTripConsts.MaxNoteLength,
+            MinimumLength = ShippingRequestTripConsts.MinNoteLength)]
+        public string Note { get; set; }
 
     #region Prices
         public bool IsShipperHaveInvoice { get; set; }
