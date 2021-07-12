@@ -179,9 +179,7 @@
 		<text name="CancelBidRequestNotificationMessage">Bid request canceled</text>
 		<text name="CanceledDate">Canceled Date</text>
 		<text name="CancelMyBid">Cancel my bid</text>
-		<text name="CancelShipment">
-			<a href="/app/main/shippingRequests/shippingRequests/view?id={id}">The shipment has been canceled by {cancelby}.</a>
-		</text>
+		<text name="CancelShipment">The shipment has been canceled by {cancelby}</text>
 		<text name="CancelTrip">Cancel trip</text>
 		<text name="Cancled">Cancled</text>
 		<text name="CancledReason">Cancelled reason</text>
@@ -447,9 +445,7 @@
 		<text name="DeactiveTenant">Deactivate company</text>
 		<text name="Declined">Declined</text>
 		<text name="DeclinedOfPricing">Declined of pricing</text>
-		<text name="DeclineDriectRequest">
-			<a href="/app/main/directrequest/list?id={id}">The carrier {client} Declined of pricing shipment.</a>
-		</text>
+		<text name="DeclineDriectRequest">The carrier {client} Declined of pricing shipment.</text>
 		<text name="Default">Default</text>
 		<text name="Default(all)API">Default (all) API</text>
 		<text name="DefaultAccountLockoutDurationAsSeconds">Account locking duration (as seconds)</text>
@@ -840,9 +836,7 @@
 		<text name="GoToSubscriptionManagement">Go to subscription</text>
 		<text name="Green">Green</text>
 		<text name="Gregorian">Gregorian</text>
-		<text name="GroupPeriodOnClaim">
-			<a href="/app/main/invoices/submitinvoices/detail/{groupid}">The submit invoice has been claimed</a>
-		</text>
+		<text name="GroupPeriodOnClaim">The submit invoice has been claimed</text>
 		<text name="HangfireDashboard">Hangfire dashboard</text>
 		<text name="HasAmount">Has amount</text>
 		<text name="HasAttachment">Has attachment</text>
@@ -1119,12 +1113,8 @@
 		<text name="NewDocumentsEntity">New document required from</text>
 		<text name="NewDocumentType">new document type</text>
 		<text name="NewDocumentTypeTranslation">New document type translation</text>
-		<text name="NewGroupPerioGenerated">
-			<a href="/app/main/invoices/submitinvoices/detail/{groupid}">A new invoice has been generated {groupid}#</a>
-		</text>
-		<text name="NewInvoiceShipperGenerated">
-			<a href="/app/main/invoices/detail/{invoiceid}">A new invoice has been generated {invoiceid}#</a>
-		</text>
+		<text name="NewGroupPerioGenerated">A new invoice has been generated {groupid}#</text>
+		<text name="NewInvoiceShipperGenerated">A new invoice has been generated {invoiceid}#</text>
 		<text name="NewInvoiceShipperGeneratedEmailBody"></text>
 		<text name="NewNotifications">New notifications</text>
 		<text name="NewOrganizationUnit">New organization unit</text>
@@ -1298,9 +1288,7 @@
 		<text name="PaymentPeriodType_Monthly">Monthly</text>
 		<text name="PaymentPeriodType_Weekly">Weekly</text>
 		<text name="PayuponDelivery">Payupon delivery</text>
-		<text name="PendingOffer">
-			<a href="/app/main/offers/list?id={id}">Your offer has been received and is under review from the responsible.</a>
-		</text>
+		<text name="PendingOffer">Your offer has been received and is under review from the responsible.</text>
 		<text name="PerDay">Per day</text>
 		<text name="Period">Period</text>
 		<text name="Permission">Permission</text>
@@ -1448,7 +1436,7 @@
 		<text name="RegisterFormUserNameInvalidMessage">Please do not enter your email address as a username.</text>
 		<text name="Reject">Reject</text>
 		<text name="Rejected">Rejected</text>
-		<text name="RejectedOffer"><![CDATA[<a href="/app/main/shippingRequests/shippingRequests/view?id={id}&offerid={offerid}">You offer has been rejected by {rejectedby}.</a>]]></text>
+		<text name="RejectedOffer"><![CDATA[You offer has been rejected by {rejectedby}]]></text>
 		<text name="RejectedReason">Rejected reason</text>
 		<text name="RejectionReason">Rejection reason</text>
 		<text name="RejectOffer">Reject</text>
@@ -1592,9 +1580,7 @@
 		<text name="SendDirectRequest">Send Direct Request</text>
 		<text name="SendDirectRequestOffer">Send direct request offer</text>
 		<text name="SendDirectRequests">Send direct request</text>
-		<text name="SendDriectRequest">
-			<a href="/app/main/directrequest/list?id={id}">Please send us a quote for the shipment.</a>
-		</text>
+		<text name="SendDirectRequest">Please send us a quote for the shipment.</text>
 		<text name="SendDriectRequestForCarrier">Please send us a quote for the shipment No.: {id}.</text>
 		<text name="SendEmailActivationLink_Information">A link will be sent to your email to activate your email address. If you don't get an email within a few minutes, please re-try.</text>
 		<text name="Sender">Sender</text>
@@ -1625,15 +1611,11 @@
 		<text name="Severity">Severity</text>
 		<text name="ShipmentTracking">Shipment Tracking</text>
 		<text name="Shipper">Shipper</text>
-		<text name="ShipperAcceptedOffers">
-			<a href="/app/main/shippingRequests/shippingRequests/view?id={id}">The shipper {shipper} has been accepted offer.</a>
-		</text>
+		<text name="ShipperAcceptedOffers">The shipper {shipper} has been accepted offer.</text>
 		<text name="ShipperName">Shipper name</text>
 		<text name="ShipperNotfiyWhenCreditLimitGreaterOrEqualXPercentage">You have used more than 70% of your credit limit</text>
 		<text name="ShipperOnlyUsed">Shipper only used</text>
-		<text name="ShipperReminderToCompelteTrips">
-			<a href="/app/main/shippingRequests/shippingRequests/view?id={id}">You have a shipment that has not completed its journeys</a>
-		</text>
+		<text name="ShipperReminderToCompelteTrips">You have a shipment that has not completed its journeys</text>
 		<text name="ShipperShippingRequestFinishNotificationMessage">all shippments are completed for shipping request</text>
 		<text name="ShippingNote">Shipper notes</text>
 		<text name="ShippingRequest">Shipping request</text>
@@ -1642,9 +1624,7 @@
 		<text name="ShippingRequestCancelTripByAccidents">The shipment No.:{id} cancled by incident.</text>
 		<text name="ShippingRequestDetails">Shipping request details</text>
 		<text name="ShippingRequestId">Shipping request id</text>
-		<text name="ShippingRequestNotifyCarrirerWhenShipperAccepted">
-			<a href="/app/main/shippingRequests/shippingRequests/view?id={id}">The shipper {clientname} has been accepted your offer.</a>
-		</text>
+		<text name="ShippingRequestNotifyCarrirerWhenShipperAccepted">The shipper {clientname} has been accepted your offer.</text>
 		<text name="ShippingRequestPrice">Shipping request price</text>
 		<text name="ShippingRequestPricingResponse">Shipping Request Pricing Response</text>
 		<text name="ShippingRequestProperties">Shipping Request Properties</text>
@@ -1654,7 +1634,7 @@
 		<text name="ShippingRequestsCreate">Create Shipping Request</text>
 		<text name="ShippingRequestsEdit">Edit Shipping Request</text>
 		<text name="ShippingRequestSendOfferWhenAddPrice">A new offer has been added to the shipment.</text>
-		<text name="ShippingRequestSendOfferWhenUpdatePrice"><![CDATA[<a href="/app/main/shippingRequests/shippingRequests/view?id={id}&offerid={offerid}">The price has been updated by the carrier {carrier} of the shipment</a>]]></text>
+		<text name="ShippingRequestSendOfferWhenUpdatePrice"><![CDATA[The price has been updated by the carrier {carrier} of the shipment]]></text>
 		<text name="ShippingRequestsHeaderInfo">Shipping requests header info</text>
 		<text name="ShippingRequestStatus">Shipping request status</text>
 		<text name="ShippingRequestStatuses">Shipping request statuses</text>
@@ -1714,18 +1694,10 @@
 		<text name="Submit">Submit</text>
 		<text name="SubmitInvoice">Carrier Invoices</text>
 		<text name="SubmitInvoiceDetail">Submit invoice detail</text>
-		<text name="SubmitInvoiceGenerated">
-			<a href="/app/main/invoices/submitinvoices/detail/{id}">The submit invoice has been generated.</a>
-		</text>
-		<text name="SubmitInvoiceOnAccepted">
-			<a href="/app/main/invoices/submitinvoices/detail/{id}">The submit invoice has been Accepted</a>
-		</text>
-		<text name="SubmitInvoiceOnClaim">
-			<a href="/app/main/invoices/submitinvoices/detail/{id}">The submit invoice has been claimed.</a>
-		</text>
-		<text name="SubmitInvoiceOnRejected">
-			<a href="/app/main/invoices/submitinvoices/detail/{id}">The submit invoice has been Rejected because {reason}</a>
-		</text>
+		<text name="SubmitInvoiceGenerated">The submit invoice has been generated.</text>
+		<text name="SubmitInvoiceOnAccepted">The submit invoice has been Accepted</text>
+		<text name="SubmitInvoiceOnClaim">The submit invoice has been claimed.</text>
+		<text name="SubmitInvoiceOnRejected">The submit invoice has been Rejected because {reason}</text>
 		<text name="SubmitInvoices">Carrier invoices</text>
 		<text name="SubmitInvoicesHeaderInfo">Submit invoices header info</text>
 		<text name="SubmittedDocuments">Submitted Documents</text>
@@ -1830,9 +1802,7 @@
 		<text name="TACHYON.Vases.Vas">VAS</text>
 		<text name="TACHYON.Vases.VasPrice">VAS price</text>
 		<text name="TachyonDealOfferAccepByShipper">The offer has been accepted by {clientname}.</text>
-		<text name="TachyonDealOfferAcceptedByShipper">
-			<a href="/app/main/shippingRequests/shippingRequests/view?id={id}">The offer has been accepted by shipper {clientname}.</a>
-		</text>
+		<text name="TachyonDealOfferAcceptedByShipper">The offer has been accepted by shipper {clientname}.</text>
 		<text name="TachyonDealOfferRejectedByShipper">The offer has been rejected by the shipper {clientname}.</text>
 		<text name="TachyonManageService">Tachyon Managed Services</text>
 		<text name="TachyonPlatForm">Tachyon</text>
@@ -1942,13 +1912,9 @@
 		<text name="TitleLogin">To Sign In , What Is Your Mobile Phone Number </text>
 		<text name="TitleOTP">Enter The 4-Digit Code We Send To Mobile Number To Verify Your Account</text>
 		<text name="TMS">Transport Management System (TMS)</text>
-		<text name="TMSAcceptedOffer">
-			<a href="/app/main/shippingRequests/shippingRequests/view?id={id}">The {name} has been accepted offer.</a>
-		</text>
+		<text name="TMSAcceptedOffer">The {name} has been accepted offer.</text>
 		<text name="TMSSettings">TMS Settings</text>
-		<text name="TMSTripNeedAccept">
-			You have a carrier {carrier} who did not approve shipment waybill number {waybillnumber}.
-		</text>
+		<text name="TMSTripNeedAccept">You have a carrier {carrier} who did not approve shipment waybill number {waybillnumber}.</text>
 		<text name="Today">Today</text>
 		<text name="Toggle">Toggle</text>
 		<text name="ToleranceDaysBeforeDeactivateAfterExpiration">Tolerance days before deactivate after expiration</text>

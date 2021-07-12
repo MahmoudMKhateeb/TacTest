@@ -866,7 +866,7 @@ namespace TACHYON.Notifications
         {
             var notificationData = new LocalizableMessageNotificationData(
                 new LocalizableString(
-                    L("SendDriectRequest"),
+                    L("SendDirectRequest"),
                     TACHYONConsts.LocalizationSourceName
                 )
             );
