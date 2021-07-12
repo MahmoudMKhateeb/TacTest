@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Abp.Collections.Extensions;
 using Abp.Domain.Repositories;
 using Abp.UI;
 using Microsoft.EntityFrameworkCore;
@@ -61,7 +62,7 @@ namespace TACHYON.Waybills
              data.Add(_shippingRequestAppService.GetShippingRequestVasesForMultipleDropWaybill(RoutPointId));
 
 
-            return _pdfExporterBase.CreateRdlcPdfPackageFromList("Multiple_Drop_Waybill", reportPath, names, data);
+            return _pdfExporterBase.CreateRdlcPdfPackageFromList(GetTripWaybilNo(null,RoutPointId), reportPath, names, data);
         }
 
         
@@ -116,7 +117,7 @@ namespace TACHYON.Waybills
 
             names.Add("SingleDropVasDataSet");
             data.Add(_shippingRequestAppService.GetShippingRequestVasesForSingleDropWaybill(shippingRequestTripId));
-            return _pdfExporterBase.CreateRdlcPdfPackageFromList("Master_Waybill", reportPath, names, data);
+            return _pdfExporterBase.CreateRdlcPdfPackageFromList(GetTripWaybilNo(shippingRequestTripId,null), reportPath, names, data);
         }
 
         /// <summary>
@@ -141,7 +142,19 @@ namespace TACHYON.Waybills
             names.Add("SingleDropVasDataSet");
             data.Add(_shippingRequestAppService.GetShippingRequestVasesForSingleDropWaybill(shippingRequestTripId));
 
-            return _pdfExporterBase.CreateRdlcPdfPackageFromList("Single_Drop_Waybill", reportPath, names, data);
+            return _pdfExporterBase.CreateRdlcPdfPackageFromList(GetTripWaybilNo(shippingRequestTripId,null), reportPath, names, data);
+        }
+
+        private string GetTripWaybilNo(int? tripId, long? pointId)
+        {
+            var item = _shippingRequestTripRepository
+               .GetAll()
+               .Include(x=>x.RoutPoints)
+               .WhereIf(tripId!=null,e => e.Id==tripId)
+               .WhereIf(pointId!=null, e=> e.RoutPoints.Any(x => x.Id == pointId))
+               .FirstOrDefault();
+
+            return item.WaybillNumber?.ToString();
         }
 
 
