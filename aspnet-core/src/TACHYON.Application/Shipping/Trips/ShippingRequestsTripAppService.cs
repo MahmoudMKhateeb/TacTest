@@ -477,7 +477,7 @@ namespace TACHYON.Shipping.Trips
             var goodsCategories = await _GoodCategoryRepository.GetAllListAsync();
 
             // todo Add Localized String Here
-            foreach (var goodsDetail in routPoints.SelectMany(routPoint => routPoint.GoodsDetailListDto))
+            foreach (var goodsDetail in routPoints.Where(x=>x.GoodsDetailListDto!=null).SelectMany(routPoint => routPoint.GoodsDetailListDto))
             {
 
 
