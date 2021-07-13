@@ -36,7 +36,7 @@
                   [(ngModel)]="trip.originFacilityId"
                   [class.is-invalid]="sourceFacility.touched && !sourceFacility.valid"
                   [class.is-valid]="sourceFacility.touched && sourceFacility.valid"
-                  (change)="PointsComponent.sourceTripFacilityId = trip.originFacilityId"
+                  (change)="UpdateServiceTrip()"
                   required
                 >
                   <option [ngValue]="null" selected disabled>{{ l('SelectaFacility') }}</option>
@@ -60,6 +60,7 @@
                   [(ngModel)]="trip.destinationFacilityId"
                   [class.is-invalid]="destFacility.touched && !destFacility.valid"
                   [class.is-valid]="destFacility.touched && destFacility.valid"
+                  (change)="UpdateServiceTrip()"
                   required
                 >
                   <option [ngValue]="null" selected disabled>{{ l('SelectaFacility') }}</option>
@@ -88,7 +89,6 @@
                     [minDate]="shippingRequest.startTripDate"
                     [maxDate]="shippingRequest.endTripDate"
                     [required]="true"
-                    (dateChange)="validateTripDates()"
                     [class.is-invalid]="startTripDate.touched && !startTripDate.valid"
                     [class.is-valid]="startTripDate.touched && startTripDate.valid"
                     bsDatepicker
@@ -116,7 +116,6 @@
                     placeholder="{{ l('DatePlaceholder') }}"
                     [minDate]="trip.startTripDate"
                     [maxDate]="shippingRequest.endTripDate"
-                    (dateChange)="validateTripDates()"
                     [class.is-invalid]="endTripDate.touched && !endTripDate.valid"
                     [class.is-valid]="endTripDate.touched && endTripDate.valid"
                     required
@@ -213,13 +212,7 @@
 
             <!--      end:Vas's      -->
             <!--  start:: RouteSteps -->
-            <PointsComponent
-              #PointsComponent
-              (SelectedWayPointsFromChild)="trip.routPoints = $event"
-              [WayPointListFromFatherForShippingRequestEdit]="trip.routPoints"
-              [MainGoodsCategory]="shippingRequest.goodCategoryId"
-              [NumberOfDrops]="shippingRequest.numberOfDrops"
-            ></PointsComponent>
+            <PointsComponent #PointsComponent (SelectedWayPointsFromChild)="trip.routPoints = $event"></PointsComponent>
             <!--  end:: RouteSteps -->
             <!--end::Body-->
           </div>

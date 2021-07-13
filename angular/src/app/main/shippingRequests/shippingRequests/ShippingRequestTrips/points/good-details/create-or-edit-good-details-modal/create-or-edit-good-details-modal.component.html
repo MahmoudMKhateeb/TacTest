@@ -1,0 +1,189 @@
+<!-- begin::CreateNewGoodModal   -->
+<div
+  #createOrEditGoodDetail="bs-modal"
+  [config]="{ backdrop: 'static' }"
+  aria-hidden="true"
+  aria-labelledby="createOrEditGoodDetail"
+  bsModal
+  class="modal fade"
+  role="dialog"
+  tabindex="-10000"
+>
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <form *ngIf="active" #goodsDetailForm="ngForm" (ngSubmit)="AddGoodDetail()" autocomplete="off" novalidate>
+        <div class="modal-header">
+          <h4 class="modal-title">
+            <span>{{ l('AddNewGoodDetail') }}</span>
+          </h4>
+          <button (click)="close()" aria-label="Close" class="close" type="button">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <div class="row">
+            <!--<div class="form-group m-form__group">-->
+            <div class="col-12">
+              <div class="form-group row fv-plugins-icon-container">
+                <div class="col-lg-6">
+                  <div class="form-group">
+                    <label><span class="required-fileds">*</span> {{ l('GoodSubCategory') }} </label>
+                    <div [ngClass]="{ 'spinner spinner-success spinner-right mr-1 ml-1': !allSubGoodCategorys }">
+                      <select
+                        #subgoodsDetail="ngModel"
+                        [(ngModel)]="goodsDetail.goodCategoryId"
+                        class="form-control"
+                        name="goodsDetail.goodCategoryId"
+                        [disabled]="!allSubGoodCategorys"
+                        required
+                        [class.is-invalid]="subgoodsDetail.touched && !subgoodsDetail.valid"
+                        [class.is-valid]="subgoodsDetail.touched && subgoodsDetail.valid"
+                      >
+                        <option value="">{{ l('SelectAGoodSubCategory') }}</option>
+                        <option *ngFor="let item of allSubGoodCategorys" value="{{ item.id }}">{{ item.displayName }}</option>
+                      </select>
+                    </div>
+                    <span class="form-text text-muted">{{ l('SelectaGoodCategory') }}</span>
+                  </div>
+                </div>
+                <div class="col-lg-6">
+                  <div class="form-group">
+                    <label for="GoodsDetail_Quantity">{{ l('Amount') }}</label>
+                    <input
+                      #GoodsAmount="ngModel"
+                      [(ngModel)]="goodsDetail.amount"
+                      class="form-control"
+                      id="GoodsDetail_Quantity"
+                      maxlength="128"
+                      minlength="0"
+                      name="Quantity"
+                      type="text"
+                      required
+                      [class.is-invalid]="GoodsAmount.touched && !GoodsAmount.valid"
+                      [class.is-valid]="GoodsAmount.touched && GoodsAmount.valid"
+                    />
+                  </div>
+                </div>
+                <div class="col-lg-6">
+                  <div class="form-group">
+                    <label for="GoodsDetail_Weight">{{ l('Weight') }}</label>
+                    <input
+                      #GoodsWeight="ngModel"
+                      [(ngModel)]="goodsDetail.weight"
+                      class="form-control"
+                      id="GoodsDetail_Weight"
+                      maxlength="64"
+                      minlength="0"
+                      name="Weight"
+                      type="text"
+                      [class.is-invalid]="GoodsWeight.touched && !GoodsWeight.valid"
+                      [class.is-valid]="GoodsWeight.touched && GoodsWeight.valid"
+                    />
+                  </div>
+                </div>
+                <div class="col-lg-6">
+                  <div class="form-group">
+                    <label><span class="required-fileds">*</span> {{ l('UnitOfMeasure') }} </label>
+                    <div [ngClass]="{ 'spinner spinner-success spinner-right mr-1 ml-1': !allUnitOfMeasure }">
+                      <select
+                        #GoodsUnitOfMeasure="ngModel"
+                        [(ngModel)]="goodsDetail.unitOfMeasureId"
+                        class="form-control"
+                        name="goodsDetail.unitOfMeasureId"
+                        [disabled]="!allUnitOfMeasure"
+                        [class.is-valid]="GoodsUnitOfMeasure.touched && GoodsUnitOfMeasure.valid"
+                      >
+                        <option value="">{{ l('selectAUnitOfMeasure') }}</option>
+                        <option *ngFor="let item of allUnitOfMeasure" value="{{ item.id }}">{{ item.displayName }}</option>
+                      </select>
+                    </div>
+                    <span class="form-text text-muted">{{ l('selectAUnitOfMeasure') }}</span>
+                  </div>
+                </div>
+
+                <div class="col-lg-6">
+                  <div class="form-group">
+                    <label for="GoodsDetail_Description">{{ l('Description') }}</label>
+                    <input
+                      #DescGoods="ngModel"
+                      [(ngModel)]="goodsDetail.description"
+                      class="form-control"
+                      id="GoodsDetail_Description"
+                      maxlength="256"
+                      minlength="0"
+                      name="Description"
+                      type="text"
+                      required
+                      [class.is-invalid]="DescGoods.touched && !DescGoods.valid"
+                      [class.is-valid]="DescGoods.touched && DescGoods.valid"
+                    />
+                  </div>
+                </div>
+                <div class="col-lg-6">
+                  <div class="form-group">
+                    <label for="GoodsDetail_Dimentions">{{ l('Dimentions') }}</label>
+                    <input
+                      #DimentionGoods="ngModel"
+                      [(ngModel)]="goodsDetail.dimentions"
+                      class="form-control"
+                      id="GoodsDetail_Dimentions"
+                      maxlength="128"
+                      minlength="0"
+                      name="Dimentions"
+                      type="text"
+                      [class.is-valid]="DimentionGoods.touched && DimentionGoods.valid"
+                    />
+                  </div>
+                </div>
+                <div class="col-lg-6 mt-10">
+                  <div class="form-group checkbox-inline">
+                    <label class="checkbox checkbox-danger">
+                      <input
+                        #CheckDan="ngModel"
+                        [(ngModel)]="goodsDetail.isDangerousGood"
+                        id="GoodsDetail_IsDangerousGood"
+                        name="IsDangerousGood"
+                        type="checkbox"
+                        [class.is-valid]="CheckDan.touched && CheckDan.valid"
+                      />
+                      <span></span>
+
+                      {{ l('IsDangerousGood') }}
+                    </label>
+                  </div>
+                </div>
+
+                <div class="col-lg-6">
+                  <div class="form-group" [hidden]="!goodsDetail.isDangerousGood">
+                    <label for="GoodsDetail_DangerousGoodsCode">{{ l('DangerousGoodsCode') }}</label>
+                    <input
+                      #DangerousGoods="ngModel"
+                      [(ngModel)]="goodsDetail.dangerousGoodsCode"
+                      class="form-control"
+                      id="GoodsDetail_DangerousGoodsCode"
+                      maxlength="64"
+                      minlength="0"
+                      name="DangerousGoodsCode"
+                      type="text"
+                      [required]="goodsDetail.isDangerousGood"
+                      [class.is-invalid]="DangerousGoods.touched && !DangerousGoods.valid"
+                      [class.is-valid]="DangerousGoods.touched && DangerousGoods.valid"
+                    />
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="modal-footer">
+          <button (click)="close()" class="btn btn-default" type="button">{{ l('Cancel') }}</button>
+          <button [disabled]="!goodsDetailForm.form.valid" class="btn btn-save blue" type="submit">
+            <i class="fa fa-save"></i> <span>{{ l('Save') }}</span>
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+<!-- End::CreateNewGoodModal   -->

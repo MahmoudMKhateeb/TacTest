@@ -1,0 +1,88 @@
+<!--    StartOF::GoodDetailsSection       -->
+<div>
+  <div class="card card-custom gutter-b">
+    <div class="card-header">
+      <h3 class="card-title">
+        {{ l('GoodsDetails') }}
+      </h3>
+      <div class="card-toolbar">
+        <!--          openAddNewGoodDetailModal()-->
+        <button type="button" class="btn btn-primary blue" (click)="createOrEditGoodDetail.show()" [disabled]="!MainGoodsCategory">
+          <i class="fa fa-plus"></i>
+          {{ l('AddNewGoodDetails') }}
+        </button>
+      </div>
+    </div>
+    <div class="card-body">
+      <div class="row">
+        <div class="col-lg-6"></div>
+        <div class="col-lg-12 mt-4">
+          <div class="row align-items-center">
+            <!--<Primeng-Datatable-Start>-->
+            <div [busyIf]="primengTableHelper.isLoading" class="primeng-datatable-container col-12">
+              <p-table
+                ScrollWidth="100%"
+                [paginator]="false"
+                [resizableColumns]="primengTableHelper.resizableColumns"
+                [responsive]="primengTableHelper.isResponsive"
+                [scrollable]="true"
+                [value]="singleWayPoint.goodsDetailListDto"
+                rows="{{ primengTableHelper.defaultRecordsCountPerPage }}"
+              >
+                <ng-template pTemplate="header">
+                  <tr>
+                    <th>
+                      {{ l('Actions') }}
+                    </th>
+                    <th>
+                      {{ l('GoodsName') }}
+                      <p-sortIcon field="goodCategoryDisplayName"></p-sortIcon>
+                    </th>
+                    <th>
+                      {{ l('Amount') }}
+                      <p-sortIcon field="goodCategoryDisplayName"></p-sortIcon>
+                    </th>
+                    <th>
+                      {{ l('Weight') }}
+                      <p-sortIcon field="goodCategoryDisplayName"></p-sortIcon>
+                    </th>
+                  </tr>
+                </ng-template>
+                <ng-template let-record="$implicit" pTemplate="body" let-i="rowIndex">
+                  <tr>
+                    <td>
+                      <div class="btn-group dropdown">
+                        <button class="btn font-weight-bold btn-danger btn-icon float-right" (click)="DeleteGoodDetail(i)">
+                          <i class="la la-trash float-right"></i>
+                        </button>
+                      </div>
+                    </td>
+                    <td>
+                      <span class="ui-column-title"> {{ l('GoodCategoryId') }}</span>
+                      {{ record.goodCategory ? record.goodCategory : getGoodSubDisplayname(record.goodCategoryId) }}
+                    </td>
+                    <td>
+                      <span class="ui-column-title"> {{ l('TotalAmount') }}</span>
+                      {{ record.amount }}
+                    </td>
+                    <td>
+                      <span class="ui-column-title"> {{ l('Weight') }}</span>
+                      {{ record.weight }}
+                    </td>
+                  </tr>
+                </ng-template>
+              </p-table>
+              <!--                singleWayPoint?.goodsDetailListDto?.length == 0-->
+              <div *ngIf="false" class="primeng-no-data">
+                {{ l('NoData') }}
+              </div>
+            </div>
+            <!--<Primeng-Datatable-End>-->
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<!--     Endof::GoodDetailsSection           -->
+<createOrEditGoodDetailsModal #createOrEditGoodDetail></createOrEditGoodDetailsModal>

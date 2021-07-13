@@ -1,4 +1,16 @@
-import { Component, ViewChild, Injector, Output, EventEmitter, Input, OnInit, ChangeDetectorRef } from '@angular/core';
+import {
+  Component,
+  ViewChild,
+  Injector,
+  Output,
+  EventEmitter,
+  Input,
+  OnInit,
+  ChangeDetectorRef,
+  OnChanges,
+  SimpleChanges,
+  OnDestroy,
+} from '@angular/core';
 import { ModalDirective } from 'ngx-bootstrap/modal';
 import {
   FacilityForDropdownDto,
@@ -29,13 +41,15 @@ import { FileDownloadService } from '@shared/utils/file-download.service';
 import { FileItem, FileUploader, FileUploaderOptions } from '@node_modules/ng2-file-upload';
 import { AppConsts } from '@shared/AppConsts';
 import { IAjaxResponse, TokenService } from '@node_modules/abp-ng2-module';
+import { TripService } from '@app/main/shippingRequests/shippingRequests/ShippingRequestTrips/trip.service';
+import { PointsService } from '@app/main/shippingRequests/shippingRequests/ShippingRequestTrips/points/points.service';
 
 @Component({
   selector: 'AddNewTripModal',
   styleUrls: ['./createOrEditTrip.component.css'],
   templateUrl: './createOrEditTrip.component.html',
 })
-export class CreateOrEditTripComponent extends AppComponentBase implements OnInit {
+export class CreateOrEditTripComponent extends AppComponentBase implements OnInit, OnDestroy {
   @ViewChild('addNewTripsModal', { static: true }) modal: ModalDirective;
   @ViewChild('PointsComponent') PointsComponent: PointsComponent;
   @ViewChild('createOrEditFacilityModal') createOrEditFacilityModal: CreateOrEditFacilityModalComponent;
@@ -76,15 +90,31 @@ export class CreateOrEditTripComponent extends AppComponentBase implements OnIni
     private _waybillsServiceProxy: WaybillsServiceProxy,
     private cdref: ChangeDetectorRef,
     private _documentFilesServiceProxy: DocumentFilesServiceProxy,
+    private _TripService: TripService,
+    private _PointsService: PointsService,
     private _tokenService: TokenService
   ) {
     super(injector);
   }
 
+  TripsServiceSubscription: any;
+  PointsServiceSubscription: any;
   ngOnInit() {
+    //link the trip from the shared service to the this component
+    this.TripsServiceSubscription = this._TripService.currentActiveTrip.subscribe((res) => (this.trip = res));
+    //Take The Points List From the Points Shared Service
+    this.PointsServiceSubscription = this._PointsService.currentWayPointsList.subscribe((res) => (this.trip.routPoints = res));
     //load the Facilites
     this.refreshOrGetFacilities(null);
     this.vasesHandler();
+  }
+
+  /**
+   * update Shared Service Trip
+   */
+  UpdateServiceTrip() {
+    console.log('log trip from create or edit trip after facility change', this.trip);
+    this._TripService.activeTrip.next(this.trip);
   }
 
   /**
@@ -105,16 +135,20 @@ export class CreateOrEditTripComponent extends AppComponentBase implements OnIni
   show(record?: CreateOrEditShippingRequestTripDto): void {
     if (record) {
       this.activeTripId = record.id;
+      this._TripService.updateActiveTripId(this.activeTripId);
       this._shippingRequestTripsService.getShippingRequestTripForEdit(record.id).subscribe((res) => {
         this.trip = res;
-        this.PointsComponent.wayPointsList = this.trip.routPoints;
+        //this.PointsComponent.wayPointsList = this.trip.routPoints;
+        this._PointsService.updateWayPoints(this.trip.routPoints);
         this.loading = false;
       });
     } else {
       //this is a create
-
       //init file document
       this.trip = new CreateOrEditShippingRequestTripDto();
+      this._TripService.updateActiveTripId(undefined);
+      this._PointsService.updateSinglePoint(new CreateOrEditRoutPointDto());
+      this._PointsService.updateWayPoints([]);
       this.trip.createOrEditDocumentFileDto = new CreateOrEditDocumentFileDto();
       this.trip.createOrEditDocumentFileDto.extn = '_';
       this.trip.createOrEditDocumentFileDto.name = '_';
@@ -125,7 +159,7 @@ export class CreateOrEditTripComponent extends AppComponentBase implements OnIni
     this.active = true;
     this.modal.show();
     this.initDocsUploader();
-    this.cdref.detectChanges();
+    //this.cdref.detectChanges();
   }
   close(): void {
     this.loading = true;
@@ -184,16 +218,6 @@ export class CreateOrEditTripComponent extends AppComponentBase implements OnIni
     this._waybillsServiceProxy.getSingleDropOrMasterWaybillPdf(id).subscribe((result) => {
       this._fileDownloadService.downloadTempFile(result);
     });
-  }
-
-  /**
-   * validates add or Edit Trip Dates
-   */
-  validateTripDates() {
-    // if (this.trip.endTripDate && this.trip.startTripDate > this.trip.endTripDate) {
-    //   this.trip.endTripDate = undefined;
-    //   this.notify.error(this.l('tripStartDateCantBeGretterThanTripEndDate'));
-    // }
   }
 
   /**
@@ -298,5 +322,11 @@ export class CreateOrEditTripComponent extends AppComponentBase implements OnIni
    */
   isSelectedVasesHasinsurance($event: CreateOrEditShippingRequestTripVasDto[]) {
     $event.find((x) => x.name == 'Insurance') ? (this.isApproximateValueRequired = true) : (this.isApproximateValueRequired = false);
+  }
+
+  ngOnDestroy() {
+    this.trip = undefined;
+    this.TripsServiceSubscription.unsubscribe();
+    this.PointsServiceSubscription.unsubscribe();
   }
 }
