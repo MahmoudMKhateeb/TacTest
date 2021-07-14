@@ -217,6 +217,9 @@ namespace TACHYON
             configuration.CreateMap<CreateOrEditUnitOfMeasureDto, UnitOfMeasure>().ReverseMap();
             configuration.CreateMap<UnitOfMeasureDto, UnitOfMeasure>().ReverseMap();
             configuration.CreateMap<CreateOrEditFacilityDto, Facility>().ReverseMap();
+            configuration.CreateMap<Facility, CreateOrEditFacilityDto>()
+                .ForMember(dst => dst.Longitude, opt => opt.MapFrom(src => src.Location.X))
+                 .ForMember(dst => dst.Latitude, opt => opt.MapFrom(src => src.Location.Y));
             configuration.CreateMap<FacilityDto, Facility>()
                  .ForPath(dst => dst.Location.X, opt => opt.MapFrom(src => src.Longitude))
                  .ForPath(dst => dst.Location.Y, opt => opt.MapFrom(src => src.Latitude))
