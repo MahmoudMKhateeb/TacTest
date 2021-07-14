@@ -46,6 +46,19 @@ namespace TACHYON.Shipping.Trips.Dto
             {
                 context.Results.Add(new ValidationResult("document missing: " + CreateOrEditDocumentFileDto.Name));
             }
-        }
+
+            var dropPoints = RoutPoints.Where(x => x.PickingType == PickingType.Dropoff);
+            foreach (var drop in dropPoints)
+            {
+                if (drop.ReceiverId == null &&
+                    (string.IsNullOrWhiteSpace(drop.ReceiverCardIdNumber) ||
+                    string.IsNullOrWhiteSpace(drop.ReceiverEmailAddress) ||
+                    string.IsNullOrWhiteSpace(drop.ReceiverFullName) ||
+                    string.IsNullOrWhiteSpace(drop.ReceiverPhoneNumber)))
+                {
+                    throw new UserFriendlyException(L("YouMustEnterReceiver"));
+                }
+            }
+            }
     }
 }
