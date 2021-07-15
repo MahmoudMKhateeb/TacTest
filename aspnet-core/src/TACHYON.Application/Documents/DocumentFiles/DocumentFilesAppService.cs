@@ -38,18 +38,18 @@ namespace TACHYON.Documents.DocumentFiles
 
 
         public DocumentFilesAppService(TenantManager tenantManager,
-            IRepository<DocumentFile, Guid> documentFileRepository, 
-            IDocumentFilesExcelExporter documentFilesExcelExporter, 
+            IRepository<DocumentFile, Guid> documentFileRepository,
+            IDocumentFilesExcelExporter documentFilesExcelExporter,
             IRepository<DocumentType, long> lookupDocumentTypeRepository,
             IRepository<Truck, long> lookupTruckRepository,
-            IRepository<Trailer, long> lookupTrailerRepository, 
-            IRepository<User, long> lookupUserRepository, 
+            IRepository<Trailer, long> lookupTrailerRepository,
+            IRepository<User, long> lookupUserRepository,
             IRepository<RoutStep, long> lookupRoutStepRepository,
             ITempFileCacheManager tempFileCacheManager,
-            IBinaryObjectManager binaryObjectManager, 
+            IBinaryObjectManager binaryObjectManager,
             IRepository<Edition, int> editionRepository,
             IRepository<DocumentType, long> documentTypeRepository,
-            DocumentFilesManager documentFilesManager, 
+            DocumentFilesManager documentFilesManager,
             IRepository<Tenant, int> lookupTenantRepository,
             IRepository<DocumentsEntity, int> documentEntityRepository,
             IAppNotifier appNotifier,
@@ -102,7 +102,7 @@ namespace TACHYON.Documents.DocumentFiles
                 .Include(e => e.TrailerFk)
                 .Include(e => e.UserFk)
                 .Include(e => e.TenantFk)
-                .WhereIf(!AbpSession.TenantId.HasValue, e => e.DocumentTypeFk.DocumentsEntityId == (int)DocumentsEntitiesEnum.Tenant)
+                .WhereIf(!AbpSession.TenantId.HasValue, e => e.DocumentTypeFk.DocumentsEntityId == (int)DocumentsEntitiesEnum.Tenant && (e.DocumentTypeFk.DocumentRelatedWithId.HasValue == false || e.DocumentTypeFk.DocumentRelatedWithId == AbpSession.TenantId))
                 .WhereIf(!string.IsNullOrWhiteSpace(input.Filter), e => false || e.Name.Contains(input.Filter)
                 || e.Extn.Contains(input.Filter) || e.Number.Contains(input.Filter) ||
                 //If the filter related to tenant name, the rows that contains not null tenant Id should be returned and contain tenancy name
@@ -123,7 +123,7 @@ namespace TACHYON.Documents.DocumentFiles
 
                 //.WhereIf(!string.IsNullOrWhiteSpace(input.TruckIdFilter), e => e.TruckFk != null && e.TruckFk.Id == input.TruckIdFilter)
                 .WhereIf(!string.IsNullOrWhiteSpace(input.TrailerTrailerCodeFilter), e => e.TrailerFk != null && e.TrailerFk.TrailerCode == input.TrailerTrailerCodeFilter)
-                .WhereIf(input.DocumentEntityFilter.HasValue, e =>  e.DocumentTypeFk.DocumentsEntityId == (int)input.DocumentEntityFilter)
+                .WhereIf(input.DocumentEntityFilter.HasValue, e => e.DocumentTypeFk.DocumentsEntityId == (int)input.DocumentEntityFilter)
                 .WhereIf(!string.IsNullOrWhiteSpace(input.UserNameFilter), e => e.UserFk != null && e.UserFk.Name == input.UserNameFilter);
             //.WhereIf(!string.IsNullOrWhiteSpace(input.RoutStepDisplayNameFilter), e => e.RoutStepFk != null && e.RoutStepFk.DisplayName == input.RoutStepDisplayNameFilter);
 
@@ -387,9 +387,9 @@ namespace TACHYON.Documents.DocumentFiles
             var documentFile = await _documentFileRepository.GetAsync(documentFileId);
 
             var binaryObject = await _binaryObjectManager.GetOrNullAsync(documentFile.BinaryObjectId.Value);
-            if (binaryObject==null) throw new UserFriendlyException(L("TheFileDoesNotExists"));
+            if (binaryObject == null) throw new UserFriendlyException(L("TheFileDoesNotExists"));
             var file = new FileDto(documentFile.Name, documentFile.Extn);
-            
+
             _tempFileCacheManager.SetFile(file.FileToken, binaryObject.Bytes);
 
             return file;
@@ -621,8 +621,8 @@ namespace TACHYON.Documents.DocumentFiles
             DisableTenancyFiltersIfHost();
 
             var documentFile = await _documentFileRepository.GetAll()
-                .Include(x=>x.TenantFk)
-                .FirstOrDefaultAsync(x=>x.Id==id);
+                .Include(x => x.TenantFk)
+                .FirstOrDefaultAsync(x => x.Id == id);
             documentFile.IsAccepted = true;
             documentFile.IsRejected = false;
             documentFile.RejectionReason = "";
@@ -667,8 +667,8 @@ namespace TACHYON.Documents.DocumentFiles
             var docs = await _documentFileRepository.GetAll()
                      .Include(doc => doc.DocumentTypeFk)
                      .ThenInclude(doc => doc.Translations)
-                     .Where(x => x.DocumentTypeFk.DocumentsEntityId == (int)DocumentsEntitiesEnum.Tenant)
-                     .Where(x=> x.DocumentTypeFk.IsRequired == isMandatory)
+                     .Where(x => x.DocumentTypeFk.DocumentsEntityId == (int)DocumentsEntitiesEnum.Tenant && (x.DocumentTypeFk.DocumentRelatedWithId.HasValue == false || x.DocumentTypeFk.DocumentRelatedWithId == AbpSession.TenantId))
+                     .Where(x => x.DocumentTypeFk.IsRequired == isMandatory)
                      //.Where(d => d.TenantId == AbpSession.GetTenantId())
                      .ToListAsync();
 
@@ -760,7 +760,7 @@ namespace TACHYON.Documents.DocumentFiles
 
             var documentTypes = await _documentTypeRepository.GetAll()
                  .Include(x => x.Translations)
-                 .Where(x => x.EditionId == tenant.EditionId)
+                 .Where(x => (x.EditionId == tenant.EditionId && x.DocumentRelatedWithId == null) || x.DocumentRelatedWithId == AbpSession.TenantId)
                  .Where(x => x.IsRequired == isMandatory)
                  .ToListAsync();
 
@@ -789,8 +789,8 @@ namespace TACHYON.Documents.DocumentFiles
             var tenant = _tenantManager.GetById(tenantId);
 
             var documentFiles = await _documentFileRepository.GetAll()
-                    .Where(x=>x.TenantId== tenantId)
-                    .Where(x=>x.IsAccepted==true)
+                    .Where(x => x.TenantId == tenantId)
+                    .Where(x => x.IsAccepted == true)
                     .Include(doc => doc.DocumentTypeFk)
                     .ThenInclude(doc => doc.DocumentsEntityFk)
                     .Where(x => x.DocumentTypeFk.IsRequired)

@@ -1,6 +1,7 @@
 ﻿using Abp.Application.Services;
 using Abp.Application.Services.Dto;
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using TACHYON.Documents.DocumentTypes.Dtos;
 using TACHYON.Dto;
@@ -19,9 +20,10 @@ namespace TACHYON.Documents.DocumentTypes
         Task CreateOrEdit(CreateOrEditDocumentTypeDto input);
 
         Task Delete(EntityDto<long> input);
+        Task DeleteTemplate(long Id);
 
         Task<FileDto> GetDocumentTypesToExcel(GetAllDocumentTypesForExcelInput input);
-
+        Task<FileDto> GetFileDto(long Id);
 
     }
 }

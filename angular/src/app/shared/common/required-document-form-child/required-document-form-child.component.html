@@ -27,6 +27,35 @@
         <span class="form-text text-danger text-left">{{ 'DuplicateFileUploadMsg' | localize }}</span>
       </div>
     </div>
+    <div class="form-group col-6">
+      <label>{{ l('FileTemplate') }}</label>
+
+      <div *ngIf="item.documentTypeDto?.templateName">
+        <div class="d-flex align-items-center flex-wrap mb-8">
+          <!--begin::Symbol-->
+          <div class="symbol symbol-50 symbol-light mr-3 ml-3">
+            <span class="symbol-label">
+              <i class="{{ getFileExtension(item.documentTypeDto?.templateName) }} fa-2x" style="color: #5cb85c" aria-hidden="true"></i>
+            </span>
+          </div>
+          <!--end::Symbol-->
+          <!--begin::Text-->
+          <div class="d-flex flex-column flex-grow-1 mr-2">
+            <a href="#" class="font-weight-bold text-dark-75 text-hover-primary font-size-lg mb-1"> {{ item.documentTypeDto?.templateName }}</a>
+            <span class="text-muted font-weight-bold">{{ item.documentTypeDto?.templateContentType }}</span>
+          </div>
+          <!--end::Text-->
+
+          <a
+            *ngIf="item.documentTypeDto?.templateId"
+            (click)="downloadTemplate(item.documentTypeDto?.id)"
+            class="btn btn-sm btn-icon btn-bg-light btn-icon-primary btn-hover-primary"
+          >
+            <i class="flaticon2-download"></i>
+          </a>
+        </div>
+      </div>
+    </div>
     <div *ngIf="item.documentTypeDto.hasNumber" class="form-group col-6">
       <label><span class="required-fileds"> *</span> {{ l('Number') }} </label>
       <input
@@ -81,7 +110,7 @@
         class="form-control m-input"
         type="text"
         rows="1"
-        style="resize: none;"
+        style="resize: none"
         [(ngModel)]="item.notes"
       ></textarea>
     </div>
