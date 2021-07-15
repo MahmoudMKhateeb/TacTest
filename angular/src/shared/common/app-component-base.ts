@@ -51,6 +51,14 @@ export abstract class AppComponentBase {
    * max file size that  user can upload
    */
   public maxDocumentFileBytesUserFriendlyValue = 4;
+
+  iconList = [
+    // array of icon class list based on type
+    { type: 'xlsx', icon: 'fas fa-file-excel' },
+    { type: 'pdf', icon: 'fas fa-file-pdf' },
+    { type: 'jpg', icon: 'fas fa-file-image' },
+  ];
+
   constructor(injector: Injector) {
     this.localization = injector.get(LocalizationService);
     this.permission = injector.get(PermissionCheckerService);
@@ -188,5 +196,34 @@ export abstract class AppComponentBase {
         return result;
       })
     );
+  }
+
+  getFileExtension(filename: string) {
+    if (!filename) {
+      return '';
+    }
+    // this will give you icon class name
+    let ext = filename.split('.').pop();
+    let obj = this.iconList.filter((row) => {
+      if (row.type === ext) {
+        return true;
+      }
+    });
+    if (obj.length > 0) {
+      let icon = obj[0].icon;
+      return icon;
+    } else {
+      return '';
+    }
+  }
+
+  guid(): string {
+    function s4() {
+      return Math.floor((1 + Math.random()) * 0x10000)
+        .toString(16)
+        .substring(1);
+    }
+
+    return s4() + s4() + '-' + s4() + '-' + s4() + '-' + s4() + '-' + s4() + s4() + s4();
   }
 }

@@ -37,7 +37,6 @@ export class DocumentTypesComponent extends AppComponentBase implements OnInit, 
   hasExpirationDateFilter = -1;
   requiredFromFilter: DocumentsEntitiesEnum;
   entityList: SelectItemDto[] = [];
-
   constructor(
     injector: Injector,
     private _documentTypesServiceProxy: DocumentTypesServiceProxy,
@@ -113,6 +112,13 @@ export class DocumentTypesComponent extends AppComponentBase implements OnInit, 
   getDocumentsEntityLookUp() {
     this._documentTypesServiceProxy.getDocumentEntitiesForTableDropdown().subscribe((result) => {
       this.entityList = result;
+    });
+  }
+
+  downloadTemplate(id: number): void {
+    this.notify.info(this.l('downloading'));
+    this._documentTypesServiceProxy.getFileDto(id).subscribe((result) => {
+      this._fileDownloadService.downloadTempFile(result);
     });
   }
 }
