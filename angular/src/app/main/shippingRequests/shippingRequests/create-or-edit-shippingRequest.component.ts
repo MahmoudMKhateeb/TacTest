@@ -278,13 +278,11 @@ export class CreateOrEditShippingRequestComponent extends AppComponentBase imple
     }
   }
 
- // check if user select same city in source and destination
-  validateDuplicatedCites(event:Event){
-    let index:number =  event.target["selectedIndex"] - 1;
+  // check if user select same city in source and destination
+  validateDuplicatedCites(event: Event) {
+    let index: number = event.target['selectedIndex'] - 1;
 
-    if(this.shippingRequest.originCityId == this.shippingRequest.destinationCityId)
-      this.shippingRequest.destinationCityId = null;
-}
+    if (this.shippingRequest.originCityId == this.shippingRequest.destinationCityId) this.shippingRequest.destinationCityId = null;
   }
 
   /**
