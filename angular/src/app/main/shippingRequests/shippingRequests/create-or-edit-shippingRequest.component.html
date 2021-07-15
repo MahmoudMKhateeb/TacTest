@@ -5,7 +5,7 @@
     <sub-header [title]="shippingRequest.id ? ('ShippingRequestsEdit' | localize) : ('ShippingRequestsCreate' | localize)"> </sub-header>
 
     <div [class]="containerClass">
-      <form *ngIf="active" #shippingRequestForm="ngForm" autocomplete="off">
+      <form *ngIf="active" #shippingRequestForm="ngForm" autocomplete="off" novalidate>
         <div class="card card-custom gutter-b">
           <!--  start of card::form-->
           <div class="card-header">
@@ -37,7 +37,7 @@
                             (change)="transportTypeSelectChange(shippingRequest.transportTypeId)"
                           >
                             <option [ngValue]="null">{{ l('SelectaTransportType') }}</option>
-                            <option *ngFor="let item of allTransportTypes" value="{{ item.id }}">{{ item.displayName }} </option>
+                            <option *ngFor="let item of allTransportTypes" value="{{ item.id }}">{{ item.displayName }}</option>
                           </select>
                         </div>
                         <span class="form-text text-muted">{{ l('SelectaTransportType') }}</span>
@@ -369,6 +369,7 @@
                               required
                               [class.is-invalid]="Origin.touched && !Origin.valid"
                               [class.is-valid]="Origin.touched && Origin.valid"
+                              (ngModelChange)="validateShippingRequestType()"
                             >
                               <option value="">{{ l('SelectanOriginCity') }}</option>
                               <option *ngFor="let item of allCitys" value="{{ item.id }}">{{ item.displayName }} </option>
@@ -389,15 +390,17 @@
                               required
                               [class.is-invalid]="Destination.touched && !Destination.valid"
                               [class.is-valid]="Destination.touched && Destination.valid"
-                              [disabled]="!shippingRequest.shippingTypeId"
+                              [disabled]="!shippingRequest.shippingTypeId || shippingRequest.shippingTypeId == 1"
                               [(ngModel)]="shippingRequest.destinationCityId"
+                              (ngModelChange)="validateShippingRequestType()"
                             >
                               <option value="">{{ l('selectaDestination') }}</option>
                               <option
                                 *ngFor="let item of allCitys"
                                 value="{{ item.id }}"
                                 [disabled]="shippingRequest.shippingTypeId == 1 && item.id == shippingRequest.originCityId"
-                                >{{ item.displayName }}
+                              >
+                                {{ item.displayName }}
                               </option>
                             </select>
                           </div>
