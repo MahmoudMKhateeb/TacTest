@@ -36,7 +36,8 @@
                   [(ngModel)]="trip.originFacilityId"
                   [class.is-invalid]="sourceFacility.touched && !sourceFacility.valid"
                   [class.is-valid]="sourceFacility.touched && sourceFacility.valid"
-                  (change)="UpdateServiceTrip()"
+                  (ngModelChange)="ValidateTripFacilities()"
+                  (change)="SyncFacilitiesWithService()"
                   required
                 >
                   <option [ngValue]="null" selected disabled>{{ l('SelectaFacility') }}</option>
@@ -60,7 +61,8 @@
                   [(ngModel)]="trip.destinationFacilityId"
                   [class.is-invalid]="destFacility.touched && !destFacility.valid"
                   [class.is-valid]="destFacility.touched && destFacility.valid"
-                  (change)="UpdateServiceTrip()"
+                  (ngModelChange)="ValidateTripFacilities()"
+                  (change)="SyncFacilitiesWithService()"
                   required
                 >
                   <option [ngValue]="null" selected disabled>{{ l('SelectaFacility') }}</option>
@@ -80,21 +82,19 @@
                 <label>{{ l('TripsStartDate') }} <span class="required-fileds">*</span> </label>
                 <div class="input-group date">
                   <input
-                    #startTripDate="ngModel"
-                    [(ngModel)]="trip.startTripDate"
+                    id="tripStartDate"
+                    type="text"
                     class="form-control"
-                    [(date)]="trip.startTripDate"
                     name="tripStartDate"
-                    placeholder="{{ l('DatePlaceholder') }}"
-                    [minDate]="shippingRequest.startTripDate"
-                    [maxDate]="shippingRequest.endTripDate"
-                    [required]="true"
-                    [class.is-invalid]="startTripDate.touched && !startTripDate.valid"
-                    [class.is-valid]="startTripDate.touched && startTripDate.valid"
+                    class="form-control"
                     bsDatepicker
                     datePickerMomentModifier
+                    [(date)]="trip.startTripDate"
+                    [minDate]="shippingRequest.startTripDate"
+                    [maxDate]="shippingRequest.endTripDate"
+                    [bsConfig]="{ adaptivePosition: true }"
+                    required
                   />
-
                   <div class="input-group-append">
                     <span class="input-group-text">
                       <i class="la la-calendar-check-o"></i>
@@ -108,19 +108,18 @@
                 <label> <span class="required-fileds"></span> {{ l('TripsEndDate') }} </label>
                 <div class="input-group date">
                   <input
-                    #endTripDate="ngModel"
-                    [(ngModel)]="trip.endTripDate"
-                    [(date)]="trip.endTripDate"
+                    id="endTripDate"
+                    type="text"
                     class="form-control"
-                    name="tripEndDate"
-                    placeholder="{{ l('DatePlaceholder') }}"
-                    [minDate]="trip.startTripDate"
-                    [maxDate]="shippingRequest.endTripDate"
-                    [class.is-invalid]="endTripDate.touched && !endTripDate.valid"
-                    [class.is-valid]="endTripDate.touched && endTripDate.valid"
-                    required
+                    name="endTripDate"
+                    class="form-control"
                     bsDatepicker
                     datePickerMomentModifier
+                    [(date)]="trip.endTripDate"
+                    [minDate]="trip.startTripDate"
+                    [maxDate]="shippingRequest.endTripDate"
+                    [bsConfig]="{ adaptivePosition: true }"
+                    required
                   />
                   <div class="input-group-append">
                     <span class="input-group-text">

@@ -29,6 +29,7 @@ import {
   UpdateDocumentFileInput,
   DocumentFilesServiceProxy,
   DocumentTypeDto,
+  ShippingRequestRouteType,
   ShippingRequestTripVasDto,
 } from '@shared/service-proxies/service-proxies';
 import { AppComponentBase } from '@shared/common/app-component-base';
@@ -43,6 +44,7 @@ import { AppConsts } from '@shared/AppConsts';
 import { IAjaxResponse, TokenService } from '@node_modules/abp-ng2-module';
 import { TripService } from '@app/main/shippingRequests/shippingRequests/ShippingRequestTrips/trip.service';
 import { PointsService } from '@app/main/shippingRequests/shippingRequests/ShippingRequestTrips/points/points.service';
+import { NgForm } from '@angular/forms';
 
 @Component({
   selector: 'AddNewTripModal',
@@ -50,6 +52,8 @@ import { PointsService } from '@app/main/shippingRequests/shippingRequests/Shipp
   templateUrl: './createOrEditTrip.component.html',
 })
 export class CreateOrEditTripComponent extends AppComponentBase implements OnInit, OnDestroy {
+  @ViewChild('shippingRequestTripsForm') shippingRequestTripsForm: NgForm;
+
   @ViewChild('addNewTripsModal', { static: true }) modal: ModalDirective;
   @ViewChild('PointsComponent') PointsComponent: PointsComponent;
   @ViewChild('createOrEditFacilityModal') createOrEditFacilityModal: CreateOrEditFacilityModalComponent;
@@ -67,6 +71,7 @@ export class CreateOrEditTripComponent extends AppComponentBase implements OnIni
   activeTripId: number = undefined;
   cleanVasesList: CreateOrEditShippingRequestTripVasDto[] = [];
   isApproximateValueRequired = false;
+  RouteTypes = ShippingRequestRouteType;
 
   //documentFile: CreateOrEditDocumentFileDto = new CreateOrEditDocumentFileDto();
   alldocumentsValid = false;
@@ -110,11 +115,25 @@ export class CreateOrEditTripComponent extends AppComponentBase implements OnIni
   }
 
   /**
-   * update Shared Service Trip
+   * Validate Trip Facilitites
    */
-  UpdateServiceTrip() {
-    console.log('log trip from create or edit trip after facility change', this.trip);
-    this._TripService.activeTrip.next(this.trip);
+  ValidateTripFacilities() {
+    //prevent the user from selecting same facilty
+    if (this.trip.originFacilityId == this.trip.destinationFacilityId) {
+      this.shippingRequestTripsForm.controls['sourceFacility'].setErrors({ invalid: true });
+      this.shippingRequestTripsForm.controls['destFacility'].setErrors({ invalid: true });
+      this.notify.error(this.l('OriginFacilityAndDestinationFacilityCantBeTheSame'));
+    } else {
+      this.shippingRequestTripsForm.controls['sourceFacility'].setErrors(null);
+      this.shippingRequestTripsForm.controls['destFacility'].setErrors(null);
+    }
+  }
+  /**
+   * update Shared Service Trip and SingleDrop Validation
+   */
+  SyncFacilitiesWithService() {
+    this._TripService.updateSourceFacility(this.trip.originFacilityId);
+    this._TripService.updateDestFacility(this.trip.destinationFacilityId);
   }
 
   /**
@@ -146,7 +165,7 @@ export class CreateOrEditTripComponent extends AppComponentBase implements OnIni
       //this is a create
       //init file document
       this.trip = new CreateOrEditShippingRequestTripDto();
-      this._TripService.updateActiveTripId(undefined);
+      this._TripService.updateActiveTripId(null);
       this._PointsService.updateSinglePoint(new CreateOrEditRoutPointDto());
       this._PointsService.updateWayPoints([]);
       this.trip.createOrEditDocumentFileDto = new CreateOrEditDocumentFileDto();
@@ -169,6 +188,10 @@ export class CreateOrEditTripComponent extends AppComponentBase implements OnIni
   }
 
   createOrEditTrip() {
+    if (this.trip.routPoints.length !== this.shippingRequest.numberOfDrops + 1) {
+      Swal.fire(this.l('IncompleteTripPoint'), this.l('PleaseAddAllTheDropPoints'), 'info');
+      return;
+    }
     this.saving = true;
     this._shippingRequestTripsService
       .createOrEdit(this.trip)
