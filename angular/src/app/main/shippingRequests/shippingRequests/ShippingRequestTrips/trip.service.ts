@@ -11,32 +11,37 @@ import {
 @Injectable({
   providedIn: 'root',
 })
-export class TripService implements OnInit {
-  //Shared Facilities to be Used in Multible Components insted Of requesting Them Multible Times
-  allFacilities: FacilityForDropdownDto[];
-  facilityLoading: boolean;
-
+export class TripService {
   //shippingRequest RouteType
-  shippingRequest = new BehaviorSubject<GetShippingRequestForViewOutput>(new GetShippingRequestForViewOutput());
+  private shippingRequest = new BehaviorSubject<GetShippingRequestForViewOutput>(new GetShippingRequestForViewOutput());
   currentShippingRequest = this.shippingRequest.asObservable();
-  activeTrip = new BehaviorSubject<CreateOrEditShippingRequestTripDto>(new CreateOrEditShippingRequestTripDto());
+  private activeTrip = new BehaviorSubject<CreateOrEditShippingRequestTripDto>(new CreateOrEditShippingRequestTripDto());
   currentActiveTrip = this.activeTrip.asObservable();
-
-  activeTripId = new BehaviorSubject<number>(null);
+  private activeTripId = new BehaviorSubject<number>(null);
   currentActiveTripId = this.activeTripId.asObservable();
-  constructor(private _routStepsServiceProxy: RoutStepsServiceProxy) {}
-  ngOnInit() {
-    //let's load facilities
-    this._routStepsServiceProxy.getAllFacilitiesForDropdown().subscribe((result) => {
-      this.allFacilities = result;
-      this.facilityLoading = false;
-    });
-  }
+  //Source And Dest Facility
+  private sourceFacility = new BehaviorSubject<number>(null);
+  currentSourceFacility = this.sourceFacility.asObservable();
+  private destFacility = new BehaviorSubject<number>(null);
+  currentDestFacility = this.destFacility.asObservable();
+
+  constructor() {}
 
   updateShippingRequest(shippingRequest: GetShippingRequestForViewOutput) {
     this.shippingRequest.next(shippingRequest);
   }
   updateActiveTripId(TripId: number) {
     this.activeTripId.next(TripId);
+  }
+  updateActiveTrip(Trip: CreateOrEditShippingRequestTripDto) {
+    this.activeTrip.next(Trip);
+  }
+
+  //Source And Dest Facility
+  updateSourceFacility(id: number) {
+    this.sourceFacility.next(id);
+  }
+  updateDestFacility(id: number) {
+    this.destFacility.next(id);
   }
 }

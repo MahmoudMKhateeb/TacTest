@@ -1,6 +1,12 @@
 import { Injectable, OnInit } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
-import { CreateOrEditRoutPointDto, GetAllGoodsCategoriesForDropDownOutput, GoodsDetailsServiceProxy } from '@shared/service-proxies/service-proxies';
+import {
+  CreateOrEditGoodsDetailDto,
+  CreateOrEditRoutPointDto,
+  GetAllGoodsCategoriesForDropDownOutput,
+  GoodsDetailDto,
+  GoodsDetailsServiceProxy,
+} from '@shared/service-proxies/service-proxies';
 import { TripService } from '@app/main/shippingRequests/shippingRequests/ShippingRequestTrips/trip.service';
 
 @Injectable({
@@ -13,6 +19,11 @@ export class PointsService {
   currentSingleWayPoint = this.singleWayPoint.asObservable();
   private wayPointsList = new BehaviorSubject<CreateOrEditRoutPointDto[]>([]);
   currentWayPointsList = this.wayPointsList.asObservable();
+  private goodDetail = new BehaviorSubject<GoodsDetailDto>(new GoodsDetailDto());
+  CurrentGoodDetail = this.goodDetail.asObservable();
+
+  private goodDetailsList = new BehaviorSubject<CreateOrEditGoodsDetailDto[]>([]);
+  currentGoodDetailsList = this.goodDetailsList.asObservable();
 
   /**
    * Takes the single point as an input and updates it
@@ -29,5 +40,13 @@ export class PointsService {
    */
   updateWayPoints(incomingWayPointsList: CreateOrEditRoutPointDto[]) {
     this.wayPointsList.next(incomingWayPointsList);
+  }
+
+  /**
+   * updates the Goods List From Outside
+   * @param newList
+   */
+  updateGoodDetailsList(newList: CreateOrEditGoodsDetailDto[]) {
+    this.goodDetailsList.next(newList);
   }
 }
