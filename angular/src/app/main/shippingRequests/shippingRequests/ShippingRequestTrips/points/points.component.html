@@ -11,9 +11,9 @@
           class="btn btn-primary blue"
           [disabled]="RouteType == 1 && wayPointsList.length < 2"
           [hidden]="activeTripId"
-          (click)="createOrEditPointModal.show()"
+          (click)="createOrEditPointModal.show(RouteType == 1 ? 1 : undefined)"
         >
-          <i class="fa {{ RouteType == 1 ? 'fa-pen' : 'fa-plus' }}"></i>
+          <i class="fa {{ RouteType == 1 ? 'flaticon-delete-2' : 'fa-plus' }}"></i>
           {{ RouteType == 1 ? l('CompleteDropPointSetup') : l('AddDrop') }}
         </button>
       </div>
@@ -75,7 +75,7 @@
                             <ng-template [ngIf]="feature.isEnabled('App.Shipper') && record.pickingType == PickingType.Dropoff">
                               <li>
                                 <!--                                  AddRouteStep(i)-->
-                                <a class="dropdown-item" (click)="createOrEditPointModal.show(record.id)">{{ l('Edit') }}</a>
+                                <a class="dropdown-item" (click)="createOrEditPointModal.show(i)">{{ l('Edit') }}</a>
                               </li>
                               <li>
                                 <a class="dropdown-item" (click)="delete(i)" *ngIf="record.pickingType == PickingType.Dropoff && !activeTripId">{{
