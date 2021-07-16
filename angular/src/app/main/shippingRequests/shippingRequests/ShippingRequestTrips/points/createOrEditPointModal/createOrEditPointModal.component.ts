@@ -2,14 +2,18 @@ import { Component, Injector, OnChanges, OnDestroy, OnInit, ViewChild } from '@a
 import {
   CreateOrEditRoutPointDto,
   FacilityForDropdownDto,
+  GoodsDetailDto,
   PickingType,
   ReceiverFacilityLookupTableDto,
   ReceiversServiceProxy,
+  RoutStepsServiceProxy,
+  ShippingRequestRouteType,
 } from '@shared/service-proxies/service-proxies';
 import { TripService } from '@app/main/shippingRequests/shippingRequests/ShippingRequestTrips/trip.service';
 import { AppComponentBase } from '@shared/common/app-component-base';
 import { ModalDirective } from '@node_modules/ngx-bootstrap/modal';
 import { PointsService } from '@app/main/shippingRequests/shippingRequests/ShippingRequestTrips/points/points.service';
+import { GoodDetailsComponent } from '@app/main/shippingRequests/shippingRequests/ShippingRequestTrips/points/good-details/good-details.component';
 
 @Component({
   selector: 'createOrEditPointModal',
@@ -21,65 +25,98 @@ export class CreateOrEditPointModalComponent extends AppComponentBase implements
     injector: Injector,
     private _tripService: TripService,
     private _PointService: PointsService,
-    private _receiversServiceProxy: ReceiversServiceProxy
+    private _receiversServiceProxy: ReceiversServiceProxy,
+    private _routStepsServiceProxy: RoutStepsServiceProxy
   ) {
     super(injector);
   }
   @ViewChild('createRouteStepModal', { static: true }) modal: ModalDirective;
   @ViewChild('createOrEditFacilityModal') public createOrEditFacilityModal: ModalDirective;
+  @ViewChild('PointGoodDetailsComponent') public PointGoodDetailsComponent: GoodDetailsComponent;
 
   allFacilities: FacilityForDropdownDto[];
   allReceivers: ReceiverFacilityLookupTableDto[];
 
   RouteType: number; //filled in onInit from the Trip Shared Service
   PickingType = PickingType;
+  RouteTypes = ShippingRequestRouteType;
+
   zoom: Number = 13; //map zoom
   lat: Number = 24.717942;
   lng: Number = 46.675761;
-  wayPointsList: CreateOrEditRoutPointDto[] = [];
-  singleWayPoint: CreateOrEditRoutPointDto = new CreateOrEditRoutPointDto();
+  wayPointsList: CreateOrEditRoutPointDto[];
+  Point: CreateOrEditRoutPointDto;
 
+  wayPointVariableForTesting: any;
   active = false;
   facilityLoading = false;
   receiversLoading = false;
   isAdditionalReceiverEnabled: boolean;
+  pointIdForEdit = null;
 
-  currentShippingRequestSubscription: any;
-  currentWayPointsListSubscription: any;
-  currentActiveTripSubscription: any;
   ngOnInit(): void {
+    this.loadFacilities();
+
     //take the Route Type From the Shared Service
-    this.currentShippingRequestSubscription = this._tripService.currentShippingRequest.subscribe((res) => (this.RouteType = 1));
+    this._tripService.currentShippingRequest.subscribe((res) => (this.RouteType = res.shippingRequest.routeTypeId));
     //take the PointsList From The Shared Service
-    this.currentWayPointsListSubscription = this._PointService.currentWayPointsList.subscribe((res) => {
+    this._PointService.currentWayPointsList.subscribe((res) => {
       this.wayPointsList = res;
     });
-    //if Route Type is Single Drop Make the Single Drop Point Facility Same as in the Trip
-    this.currentActiveTripSubscription = this._tripService.currentActiveTrip.subscribe((res) => {
-      this.singleWayPoint.facilityId = res.destinationFacilityId;
-      this.loadReceivers(res.destinationFacilityId);
+
+    this._PointService.currentSingleWayPoint.subscribe((res) => {
+      this.Point = res;
+      this.wayPointVariableForTesting = res;
     });
 
-    setInterval(() => {
-      console.log('current Single Point', this.singleWayPoint);
-      console.log('way point length:', this.wayPointsList.length);
-      console.log('Current Way Points ', this.wayPointsList);
-    }, 3000);
-
-    //take the facilites from the Shared Service Insted Of Loading Them Again
-    this.allFacilities = this._tripService.allFacilities;
+    // setInterval(() => {
+    //   console.log('current Point', this.Point);
+    //   console.log('current way Point', this.wayPointVariableForTesting);
+    //   console.log('way point length:', this.wayPointsList.length);
+    //   console.log('Current Way Points ', this.wayPointsList);
+    // }, 5000);
   }
 
   show(id?) {
-    if (id) {
-      //this is edit point action
-      this.singleWayPoint = this.wayPointsList[id];
-    }
     this.active = true;
+    //this.singleWayPoint = new CreateOrEditRoutPointDto();
+    if (id) {
+      this.pointIdForEdit = id;
+      //this is edit point action
+      this.Point = this.wayPointsList[id];
+    }
+    //tell the service that i have this SinglePoint Active Right Now
+    this._PointService.updateSinglePoint(this.Point);
+    this.loadReceivers(this.Point.facilityId);
     this.modal.show();
   }
 
+  /**
+   * Add Route Step
+   */
+  AddRouteStep() {
+    //this is edit
+    if (this.pointIdForEdit) {
+      this.wayPointsList[this.pointIdForEdit] = this.Point;
+      //in case of edit add GoodDetails List
+      this.PointGoodDetailsComponent.goodsDetailList = this.Point.goodsDetailListDto;
+    } else {
+      if (this.RouteType == this.RouteTypes.MultipleDrops) {
+        this.Point.pickingType = PickingType.Dropoff;
+        this.Point.goodsDetailListDto = this.PointGoodDetailsComponent.goodsDetailList;
+        this.wayPointsList.push(this.Point);
+      }
+    }
+    //Route Type Single Drop ? dont add new point Edit the index 1 directly
+    this._PointService.updateWayPoints(this.wayPointsList);
+    // this._PointService.currentWayPointsList
+    this.close();
+  }
+
   close() {
+    this.Point = new CreateOrEditRoutPointDto();
+    this._PointService.updateSinglePoint(this.Point);
+    this.pointIdForEdit = null;
     this.active = false;
     this.modal.hide();
   }
@@ -88,20 +125,8 @@ export class CreateOrEditPointModalComponent extends AppComponentBase implements
    * Extracts Facility Coordinates for single Point (Map Drawing)
    */
   RouteStepCordSetter() {
-    this.singleWayPoint.latitude = this.allFacilities.find((x) => x.id == this.singleWayPoint.facilityId)?.lat;
-    this.singleWayPoint.longitude = this.allFacilities.find((x) => x.id == this.singleWayPoint.facilityId)?.long;
-  }
-
-  /**
-   * Add Route Step
-   */
-  AddRouteStep() {
-    this._PointService.updateSinglePoint(this.singleWayPoint);
-    //Route Type Single Drop ?
-    this.wayPointsList[1] = this.singleWayPoint;
-    this._PointService.updateWayPoints(this.wayPointsList);
-    // this._PointService.currentWayPointsList
-    this.close();
+    this.Point.latitude = this.allFacilities.find((x) => x.id == this.Point.facilityId)?.lat;
+    this.Point.longitude = this.allFacilities.find((x) => x.id == this.Point.facilityId)?.long;
   }
 
   /**
@@ -109,11 +134,24 @@ export class CreateOrEditPointModalComponent extends AppComponentBase implements
    * @param facilityId
    */
   loadReceivers(facilityId) {
-    this.receiversLoading = true;
-    //to be Changed
-    this._receiversServiceProxy.getAllReceiversByFacilityForTableDropdown(facilityId).subscribe((result) => {
-      this.allReceivers = result;
-      this.receiversLoading = false;
+    if (facilityId) {
+      this.receiversLoading = true;
+      //to be Changed
+      this._receiversServiceProxy.getAllReceiversByFacilityForTableDropdown(facilityId).subscribe((result) => {
+        this.allReceivers = result;
+        this.receiversLoading = false;
+      });
+    }
+  }
+
+  /**
+   * loads Facilities
+   */
+  loadFacilities() {
+    this.facilityLoading = true;
+    this._routStepsServiceProxy.getAllFacilitiesForDropdown().subscribe((result) => {
+      this.allFacilities = result;
+      this.facilityLoading = false;
     });
   }
 
@@ -121,10 +159,12 @@ export class CreateOrEditPointModalComponent extends AppComponentBase implements
    * resets Additional Receiver if the Additional Receiver checkbox is not selected
    */
   resetAdditionalReviverFields() {
-    this.singleWayPoint.receiverAddress = undefined;
-    this.singleWayPoint.receiverCardIdNumber = undefined;
-    this.singleWayPoint.receiverEmailAddress = undefined;
-    this.singleWayPoint.receiverPhoneNumber = undefined;
-    this.singleWayPoint.receiverFullName = undefined;
+    if (!this.isAdditionalReceiverEnabled) {
+      this.Point.receiverAddress = undefined;
+      this.Point.receiverCardIdNumber = undefined;
+      this.Point.receiverEmailAddress = undefined;
+      this.Point.receiverPhoneNumber = undefined;
+      this.Point.receiverFullName = undefined;
+    }
   }
 }

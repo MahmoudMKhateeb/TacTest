@@ -11,29 +11,29 @@
         <div class="row mb-4">
           <!-- start:: map that draws the RouteStep::Route in CreateOrEditRouteStep-->
           <div class="col-lg-12">
-            <agm-map [latitude]="singleWayPoint.latitude || lat" [longitude]="singleWayPoint.longitude || lng" [zoom]="zoom">
-              <agm-marker [latitude]="singleWayPoint.latitude" [longitude]="singleWayPoint.longitude"></agm-marker>
+            <agm-map [latitude]="Point.latitude || lat" [longitude]="Point.longitude || lng" [zoom]="zoom">
+              <agm-marker [latitude]="Point.latitude" [longitude]="Point.longitude"></agm-marker>
             </agm-map>
           </div>
           <!-- END::map that draws the RouteStep::Route in CreateOrEditRouteStep-->
         </div>
         <div class="row p-0 mt-4">
           <div class="col-lg-12 row">
-            <div class="form-group col-lg-{{ singleWayPoint.pickingType == PickingType.Dropoff ? 6 : 12 }}" *ngIf="this.RouteType !== 1">
+            <div class="form-group col-lg-{{ this.RouteType == RouteTypes.SingleDrop ? 12 : 6 }}" *ngIf="RouteType !== RouteTypes.SingleDrop">
               <label>{{ l('facility') }}</label>
               <div [ngClass]="{ 'spinner spinner-success spinner-right mr-1 ml-1': facilityLoading }">
                 <div class="input-group">
                   <select
                     name="facility"
                     class="form-control"
-                    [(ngModel)]="singleWayPoint.facilityId"
-                    [disabled]="facilityLoading || this.RouteType == 1"
-                    (change)="RouteStepCordSetter(); loadReceivers(singleWayPoint.facilityId)"
+                    [(ngModel)]="Point.facilityId"
+                    [disabled]="facilityLoading || this.RouteType == RouteTypes.SingleDrop"
+                    (change)="RouteStepCordSetter(); loadReceivers(Point.facilityId)"
                   >
                     <option value="">{{ l('SelectAFacility') }}</option>
                     <option *ngFor="let item of allFacilities" value="{{ item.id }}">{{ item.displayName }}</option>
                   </select>
-                  <div class="input-group-btn" *ngif="this.RouteType !== 1">
+                  <div class="input-group-btn" *ngIf="this.RouteType !== RouteTypes.SingleDrop">
                     <button class="btn btn-primary" [disabled]="facilityLoading" (click)="createOrEditFacilityModal.show()">
                       <i class="flaticon-plus"></i>{{ l('New') }}
                     </button>
@@ -42,16 +42,11 @@
               </div>
             </div>
             <!-- StartOf::Receiver -->
-            <div class="form-group col-lg-{{ this.RouteType == 1 ? 12 : 6 }}">
+            <div class="form-group col-lg-{{ this.RouteType == RouteTypes.SingleDrop ? 12 : 6 }}">
               <label>{{ l('Receiver') }}</label>
               <div [ngClass]="{ 'spinner spinner-success spinner-right mr-1 ml-1': receiversLoading }">
                 <div class="input-group">
-                  <select
-                    name="facility"
-                    class="form-control"
-                    [(ngModel)]="singleWayPoint.receiverId"
-                    [disabled]="receiversLoading || !singleWayPoint.facilityId"
-                  >
+                  <select name="facility" class="form-control" [(ngModel)]="Point.receiverId" [disabled]="receiversLoading || !Point.facilityId">
                     <option [value]="" disabled selected>{{ l('PickAReceiver') }}</option>
                     <option *ngFor="let item of allReceivers" [value]="item.id">{{ item.displayName }}</option>
                   </select>
@@ -66,7 +61,12 @@
             <div class="form-group col-lg-12">
               <div class="checkbox-inline">
                 <label class="checkbox checkbox-danger">
-                  <input type="checkbox" name="isAdditionalReceiverEnabled" [(ngModel)]="isAdditionalReceiverEnabled" />
+                  <input
+                    type="checkbox"
+                    name="isAdditionalReceiverEnabled"
+                    [(ngModel)]="isAdditionalReceiverEnabled"
+                    (ngModelChange)="resetAdditionalReviverFields()"
+                  />
                   <span></span>
                   {{ l('SetUpAdditionalReceiver') }}
                 </label>
@@ -79,7 +79,7 @@
                   #receiverFullName="ngModel"
                   name="receiverFullName"
                   type="text"
-                  [(ngModel)]="singleWayPoint.receiverFullName"
+                  [(ngModel)]="Point.receiverFullName"
                   class="form-control"
                   minlength="3"
                   [required]="isAdditionalReceiverEnabled"
@@ -106,7 +106,7 @@
                     placeholder="{{ '5XXXXXXXX' | localize }}"
                     type="tel"
                     class="form-control"
-                    [(ngModel)]="singleWayPoint.receiverPhoneNumber"
+                    [(ngModel)]="Point.receiverPhoneNumber"
                     [required]="isAdditionalReceiverEnabled"
                     [ngClass]="{
                       'is-valid': userPhoneInput.valid,
@@ -132,7 +132,7 @@
                     #receiverId="ngModel"
                     name="receiverId"
                     class="form-control"
-                    [(ngModel)]="singleWayPoint.receiverCardIdNumber"
+                    [(ngModel)]="Point.receiverCardIdNumber"
                     (keypress)="numberOnly($event)"
                     [ngClass]="{
                       'is-valid': receiverId.valid,
@@ -155,7 +155,7 @@
                   maxlength="30"
                   type="email"
                   class="form-control"
-                  [(ngModel)]="singleWayPoint.receiverEmailAddress"
+                  [(ngModel)]="Point.receiverEmailAddress"
                   [required]="isAdditionalReceiverEnabled"
                   [ngClass]="{
                     'is-valid': ReceiverEmailAddress.valid,
@@ -171,7 +171,7 @@
                   type="text"
                   name="receiverId"
                   class="form-control"
-                  [(ngModel)]="singleWayPoint.receiverAddress"
+                  [(ngModel)]="Point.receiverAddress"
                   [ngClass]="{
                     'is-valid': ReceiverAddress.valid,
                     'is-invalid': ReceiverAddress.value && !ReceiverAddress.valid
@@ -185,12 +185,12 @@
             <div class="form-group col-lg-12">
               <label>{{ l('Notes') }}</label>
               <div class="input-group">
-                <textarea name="notes" class="form-control" [(ngModel)]="singleWayPoint.note"></textarea>
+                <textarea name="notes" class="form-control" [(ngModel)]="Point.note"></textarea>
               </div>
             </div>
             <!--   EndOf::receiver -->
             <!--   Start::GoodDetails           -->
-            <PointGoodDetailsComponent></PointGoodDetailsComponent>
+            <PointGoodDetailsComponent #PointGoodDetailsComponent></PointGoodDetailsComponent>
             <!--   End::GoodDetails           -->
           </div>
         </div>
@@ -210,10 +210,6 @@
 <!--<createOrEditFacilityModal (modalSave)="(true)"></createOrEditFacilityModal>-->
 <!-- End::CreateOrEditFacilityModal -->
 <!-- begin::CreateOrEditReceiver -->
-<createOrEditReceiverModal
-  #createOrEditReceiverModal
-  [facilityIdFromTrips]="singleWayPoint.facilityId"
-  (modalSave)="loadReceivers(singleWayPoint.facilityId)"
->
+<createOrEditReceiverModal #createOrEditReceiverModal [facilityIdFromTrips]="Point.facilityId" (modalSave)="loadReceivers(Point.facilityId)">
 </createOrEditReceiverModal>
 <!--End::CreateOrEditReceiver-->
