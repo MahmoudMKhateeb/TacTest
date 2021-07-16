@@ -44,7 +44,7 @@ import { AppConsts } from '@shared/AppConsts';
 import { IAjaxResponse, TokenService } from '@node_modules/abp-ng2-module';
 import { TripService } from '@app/main/shippingRequests/shippingRequests/ShippingRequestTrips/trip.service';
 import { PointsService } from '@app/main/shippingRequests/shippingRequests/ShippingRequestTrips/points/points.service';
-import { NgForm } from '@angular/forms';
+import { FormControl, NgForm, Validators } from '@angular/forms';
 
 @Component({
   selector: 'AddNewTripModal',
@@ -61,6 +61,9 @@ export class CreateOrEditTripComponent extends AppComponentBase implements OnIni
   @Output() modalSave: EventEmitter<any> = new EventEmitter<any>();
   @Input() shippingRequest: ShippingRequestDto;
   @Input() VasListFromFather: GetShippingRequestVasForViewDto[];
+
+  tripStartDate = new FormControl('', Validators.required);
+  endTripDate = new FormControl('');
 
   allFacilities: FacilityForDropdownDto[];
   trip = new CreateOrEditShippingRequestTripDto();

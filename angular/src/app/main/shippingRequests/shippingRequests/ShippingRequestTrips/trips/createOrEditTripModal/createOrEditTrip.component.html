@@ -83,12 +83,15 @@
                 <div class="input-group date">
                   <input
                     id="tripStartDate"
+                    [formControl]="tripStartDate"
                     type="text"
                     class="form-control"
                     name="tripStartDate"
                     class="form-control"
                     bsDatepicker
                     datePickerMomentModifier
+                    [class.is-invalid]="tripStartDate.touched && !tripStartDate.valid"
+                    [class.is-valid]="tripStartDate.touched && tripStartDate.valid"
                     [(date)]="trip.startTripDate"
                     [minDate]="shippingRequest.startTripDate"
                     [maxDate]="shippingRequest.endTripDate"
@@ -109,17 +112,19 @@
                 <div class="input-group date">
                   <input
                     id="endTripDate"
+                    [formControl]="endTripDate"
                     type="text"
                     class="form-control"
                     name="endTripDate"
                     class="form-control"
                     bsDatepicker
                     datePickerMomentModifier
+                    [class.is-invalid]="endTripDate.touched && !endTripDate.valid"
+                    [class.is-valid]="endTripDate.touched && endTripDate.valid"
                     [(date)]="trip.endTripDate"
                     [minDate]="trip.startTripDate"
                     [maxDate]="shippingRequest.endTripDate"
                     [bsConfig]="{ adaptivePosition: true }"
-                    required
                   />
                   <div class="input-group-append">
                     <span class="input-group-text">
@@ -224,7 +229,7 @@
 
             <button
               type="submit"
-              [disabled]="saving || !shippingRequestTripsForm.form.valid"
+              [disabled]="saving || !shippingRequestTripsForm.form.valid || tripStartDate.invalid || endTripDate.invalid"
               class="btn btn-primary font-weight-bolder btn-sm py-3 px-6"
               (click)="createOrEditTrip()"
             >
