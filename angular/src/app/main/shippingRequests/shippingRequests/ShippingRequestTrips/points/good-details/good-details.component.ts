@@ -1,5 +1,5 @@
 import { Component, OnInit, Injector, ViewChild, OnDestroy } from '@angular/core';
-import { CreateOrEditRoutPointDto, GoodsDetailsServiceProxy } from '@shared/service-proxies/service-proxies';
+import { CreateOrEditGoodsDetailDto, CreateOrEditRoutPointDto, GoodsDetailsServiceProxy } from '@shared/service-proxies/service-proxies';
 import { TripService } from '@app/main/shippingRequests/shippingRequests/ShippingRequestTrips/trip.service';
 import { AppComponentBase } from '@shared/common/app-component-base';
 import { PointsService } from '@app/main/shippingRequests/shippingRequests/ShippingRequestTrips/points/points.service';
@@ -9,7 +9,7 @@ import { PointsService } from '@app/main/shippingRequests/shippingRequests/Shipp
   templateUrl: './good-details.component.html',
   styleUrls: ['./good-details.component.css'],
 })
-export class GoodDetailsComponent extends AppComponentBase implements OnInit, OnDestroy {
+export class GoodDetailsComponent extends AppComponentBase implements OnInit {
   constructor(
     injector: Injector,
     private _TripService: TripService,
@@ -18,19 +18,20 @@ export class GoodDetailsComponent extends AppComponentBase implements OnInit, On
   ) {
     super(injector);
   }
-  singleWayPoint: CreateOrEditRoutPointDto;
+  Point: CreateOrEditRoutPointDto;
+  goodsDetailList: CreateOrEditGoodsDetailDto[];
   MainGoodsCategory: number;
   allSubGoodCategorys: any;
+  allSubGoodCategorysLoading = true;
 
-  currentShippingRequestSubscription: any;
-  currentSingleWayPointSubscription: any;
   ngOnInit(): void {
     //take the Good Category From the Shared Service and bind it
-    this.currentShippingRequestSubscription = this._TripService.currentShippingRequest.subscribe(
-      (res) => (this.MainGoodsCategory = res.shippingRequest.goodCategoryId)
-    );
+    this._TripService.currentShippingRequest.subscribe((res) => (this.MainGoodsCategory = res.shippingRequest.goodCategoryId));
     //get the value of the single way point fron the Shared Service
-    this.currentSingleWayPointSubscription = this._PointsService.currentSingleWayPoint.subscribe((res) => (this.singleWayPoint = res));
+    this._PointsService.currentSingleWayPoint.subscribe((res) => {
+      this.Point = res;
+      this.goodsDetailList = res.goodsDetailListDto || [];
+    });
     this.loadGoodSubCategory(this.MainGoodsCategory);
   }
 
@@ -38,8 +39,13 @@ export class GoodDetailsComponent extends AppComponentBase implements OnInit, On
     return this.allSubGoodCategorys ? this.allSubGoodCategorys.find((x) => x.id == id)?.displayName : 0;
   }
 
+  /**
+   * Detele Good Detail by id
+   * @param id
+   */
   DeleteGoodDetail(id) {
-    this.singleWayPoint.goodsDetailListDto.splice(id, 1);
+    this.goodsDetailList.splice(id, 1);
+    console.log('goods Detail List : ', this.goodsDetailList);
   }
 
   /**
@@ -49,14 +55,11 @@ export class GoodDetailsComponent extends AppComponentBase implements OnInit, On
   loadGoodSubCategory(FatherID) {
     //Get All Sub-Good Category
     if (FatherID) {
+      this.allSubGoodCategorysLoading = true;
       this._goodsDetailsServiceProxy.getAllGoodCategoryForTableDropdown(FatherID).subscribe((result) => {
         this.allSubGoodCategorys = result;
+        this.allSubGoodCategorysLoading = false;
       });
     }
-  }
-
-  ngOnDestroy() {
-    this.currentShippingRequestSubscription.unsubscribe();
-    this.currentSingleWayPointSubscription.unsubscribe();
   }
 }

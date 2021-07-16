@@ -1,7 +1,8 @@
-import { Component, Injector, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { Component, EventEmitter, Injector, Input, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
 import { ModalDirective } from '@node_modules/ngx-bootstrap/modal';
 import { PointsService } from '@app/main/shippingRequests/shippingRequests/ShippingRequestTrips/points/points.service';
 import {
+  CreateOrEditGoodsDetailDto,
   CreateOrEditRoutPointDto,
   GetAllGoodsCategoriesForDropDownOutput,
   GoodsDetailDto,
@@ -11,6 +12,8 @@ import {
 } from '@shared/service-proxies/service-proxies';
 import { AppComponentBase } from '@shared/common/app-component-base';
 import { TripService } from '@app/main/shippingRequests/shippingRequests/ShippingRequestTrips/trip.service';
+import { CreateOrEditFacilityModalComponent } from '@app/main/addressBook/facilities/create-or-edit-facility-modal.component';
+import { GoodDetailsComponent } from '@app/main/shippingRequests/shippingRequests/ShippingRequestTrips/points/good-details/good-details.component';
 
 @Component({
   selector: 'createOrEditGoodDetailsModal',
@@ -23,6 +26,8 @@ export class CreateOrEditGoodDetailsModalComponent extends AppComponentBase impl
   active = false;
   singleWayPoint: CreateOrEditRoutPointDto;
   goodsDetail: GoodsDetailDto = new GoodsDetailDto();
+  goodsDetailList: CreateOrEditGoodsDetailDto[] = [];
+
   allUnitOfMeasure: SelectItemDto[];
   GoodCategory: number;
   allSubGoodCategorys: GetAllGoodsCategoriesForDropDownOutput[];
@@ -36,14 +41,15 @@ export class CreateOrEditGoodDetailsModalComponent extends AppComponentBase impl
   ) {
     super(injector);
   }
-  currentSingleWayPointSubscription: any;
-  currentShippingRequestSubscription: any;
+  @Input() GoodDetailsListInput: CreateOrEditGoodsDetailDto[];
+  @Output() modalSave: EventEmitter<any> = new EventEmitter<any>();
+
   ngOnInit(): void {
+    this.goodsDetailList = this.GoodDetailsListInput || [];
     //take the current Active WayPoint From the Shared Service
-    this.currentSingleWayPointSubscription = this._PointsService.currentSingleWayPoint.subscribe((res) => (this.singleWayPoint = res));
-    this.currentShippingRequestSubscription = this._TripService.currentShippingRequest.subscribe(
-      (res) => (this.GoodCategory = res.shippingRequest.goodCategoryId)
-    );
+    this._TripService.currentShippingRequest.subscribe((res) => (this.GoodCategory = res.shippingRequest.goodCategoryId));
+    //sync the singleWayPoint From the Service
+    this._PointsService.currentSingleWayPoint.subscribe((res) => (this.singleWayPoint = res));
     this.loadAllDropDowns();
   }
   /**
@@ -67,11 +73,8 @@ export class CreateOrEditGoodDetailsModalComponent extends AppComponentBase impl
   }
 
   AddGoodDetail() {
-    if (!this.singleWayPoint.goodsDetailListDto) {
-      this.singleWayPoint.goodsDetailListDto = [];
-    }
-    this.singleWayPoint.goodsDetailListDto.push(this.goodsDetail);
-    //this._PointsService.updateSinglePoint(this.singleWayPoint);
+    this.goodsDetailList.push(this.goodsDetail);
+    this.modalSave.emit(this.goodsDetailList);
     this.close();
   }
 

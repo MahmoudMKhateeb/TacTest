@@ -19,14 +19,15 @@
         <div class="col-lg-12 mt-4">
           <div class="row align-items-center">
             <!--<Primeng-Datatable-Start>-->
-            <div [busyIf]="primengTableHelper.isLoading" class="primeng-datatable-container col-12">
+            <div [busyIf]="allSubGoodCategorysLoading" class="primeng-datatable-container col-12">
               <p-table
                 ScrollWidth="100%"
                 [paginator]="false"
                 [resizableColumns]="primengTableHelper.resizableColumns"
+                [resizableColumns]="primengTableHelper.resizableColumns"
                 [responsive]="primengTableHelper.isResponsive"
                 [scrollable]="true"
-                [value]="singleWayPoint.goodsDetailListDto"
+                [value]="goodsDetailList"
                 rows="{{ primengTableHelper.defaultRecordsCountPerPage }}"
               >
                 <ng-template pTemplate="header">
@@ -85,4 +86,8 @@
   </div>
 </div>
 <!--     Endof::GoodDetailsSection           -->
-<createOrEditGoodDetailsModal #createOrEditGoodDetail></createOrEditGoodDetailsModal>
+<createOrEditGoodDetailsModal
+  #createOrEditGoodDetail
+  (modalSave)="Point.goodsDetailListDto = goodsDetailList = $event"
+  [GoodDetailsListInput]="goodsDetailList"
+></createOrEditGoodDetailsModal>
