@@ -181,20 +181,27 @@
             </div>
             <!--  end::Trip Goods Approximate Value -->
             <div class="col-lg-6">
-              <div class="form-group">
-                <div class="checkbox-list">
-                  <label class="checkbox">
-                    <input type="checkbox" [(ngModel)]="trip.needsDeliveryNote" name="Checkboxes1" />
-                    <span></span>{{ l('NeedsDeliveryNote') }}</label
-                  >
-                  <label class="checkbox">
-                    <input type="checkbox" [(ngModel)]="trip.hasAttachment" name="Checkboxes2" />
-                    <span></span>{{ l('HasAttachment') }}</label
-                  >
+              <div class="form-group row">
+                <div class="col-6 col-form-label">
+                  <div class="checkbox-inline">
+                    <label class="checkbox checkbox-danger">
+                      <input type="checkbox" name="trip.needsDeliveryNote" [(ngModel)]="trip.needsDeliveryNote" />
+                      <span></span>
+                      {{ l('NeedsDeliveryNote') }}
+                    </label>
+                  </div>
+                </div>
+                <div class="col-6 col-form-label">
+                  <div class="checkbox-inline float-right">
+                    <label class="checkbox checkbox-danger">
+                      <input type="checkbox" name="trip.hasAttachment" [(ngModel)]="trip.hasAttachment" />
+                      <span></span>
+                      {{ l('HasAttachment') }}
+                    </label>
+                  </div>
                 </div>
               </div>
             </div>
-
             <div *ngIf="trip.hasAttachment" class="form-group col-lg-6">
               <label>{{ l('SelectFile') }} {{ fileToken }} </label>
               <div class="custom-file">
