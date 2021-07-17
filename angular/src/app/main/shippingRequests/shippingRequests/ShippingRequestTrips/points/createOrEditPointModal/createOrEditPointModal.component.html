@@ -197,7 +197,7 @@
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-default" (click)="close()">{{ l('Cancel') }}</button>
-        <button type="submit" class="btn btn-primary blue" (click)="AddRouteStep()">
+        <button type="submit" class="btn btn-primary blue" (click)="AddRouteStep()" [disabled]="!Point.goodsDetailListDto">
           <!--            routeStepIdForEdit === undefined ? AddRouteStep() : EditRouteStep(routeStepIdForEdit)-->
           <i class="fa fa-save"></i> <span>{{ l('Save') }}</span>
         </button>
