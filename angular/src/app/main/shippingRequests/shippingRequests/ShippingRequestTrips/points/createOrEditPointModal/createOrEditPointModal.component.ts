@@ -31,7 +31,6 @@ export class CreateOrEditPointModalComponent extends AppComponentBase implements
     super(injector);
   }
   @ViewChild('createRouteStepModal', { static: true }) modal: ModalDirective;
-  @ViewChild('createOrEditFacilityModal') public createOrEditFacilityModal: ModalDirective;
   @ViewChild('PointGoodDetailsComponent') public PointGoodDetailsComponent: GoodDetailsComponent;
 
   allFacilities: FacilityForDropdownDto[];

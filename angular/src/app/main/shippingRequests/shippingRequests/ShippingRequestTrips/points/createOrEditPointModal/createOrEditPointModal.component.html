@@ -206,9 +206,9 @@
   </div>
 </div>
 <!--end::Create::RouteStepModal-->
-<!--begin::CreateOrEditFacilityModal -->
-<!--<createOrEditFacilityModal (modalSave)="(true)"></createOrEditFacilityModal>-->
-<!-- End::CreateOrEditFacilityModal -->
+<!--begin::CreateOrEditFacilityModal-->
+<createOrEditFacilityModal #createOrEditFacilityModal (modalSave)="loadFacilities(); Point.receiverId = null"></createOrEditFacilityModal>
+<!--End::CreateOrEditFacilityModal-->
 <!-- begin::CreateOrEditReceiver -->
 <createOrEditReceiverModal #createOrEditReceiverModal [facilityIdFromTrips]="Point.facilityId" (modalSave)="loadReceivers(Point.facilityId)">
 </createOrEditReceiverModal>
