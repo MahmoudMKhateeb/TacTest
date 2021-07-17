@@ -86,35 +86,29 @@ export class CreateOrEditDocumentTypeModalComponent extends AppComponentBase {
     private _tokenService: TokenService
   ) {
     super(injector);
+    this.authorizationToken = 'Bearer ' + this._tokenService.getToken();
+    this.uploadUrl = AppConsts.remoteServiceBaseUrl + '/Helper/UploadDocumentFile';
   }
 
   show(documentTypeId?: number): void {
-    this.authorizationToken = 'Bearer ' + this._tokenService.getToken();
-    this.uploadUrl = AppConsts.remoteServiceBaseUrl + '/Helper/UploadDocumentFile';
     this._documentTypesServiceProxy.getAllDocumentsEntitiesForTableDropdown().subscribe((result) => {
       this.allDocumentsEntities = result;
     });
 
-    this.Tenant = null;
     if (!documentTypeId) {
       this.documentType = new CreateOrEditDocumentTypeDto();
       this.active = true;
     } else if (documentTypeId) {
       this._documentTypesServiceProxy.getDocumentTypeForEdit(documentTypeId).subscribe((result) => {
         this.documentType = result.documentType;
-
-        if (this.documentType.documentRelatedWith) {
-          console.log(this.documentType);
-          this.Tenant = this.documentType.documentRelatedWith;
-        }
-        this.active = true;
       });
-      this.modal.show();
     }
 
     this._documentFilesServiceProxy.getAllEditionsForDropdown().subscribe((result) => {
       this.editions = result;
     });
+    this.active = true;
+    this.modal.show();
   }
 
   save(): void {
