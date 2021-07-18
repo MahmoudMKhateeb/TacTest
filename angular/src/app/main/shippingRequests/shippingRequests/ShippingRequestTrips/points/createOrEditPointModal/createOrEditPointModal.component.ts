@@ -14,6 +14,7 @@ import { AppComponentBase } from '@shared/common/app-component-base';
 import { ModalDirective } from '@node_modules/ngx-bootstrap/modal';
 import { PointsService } from '@app/main/shippingRequests/shippingRequests/ShippingRequestTrips/points/points.service';
 import { GoodDetailsComponent } from '@app/main/shippingRequests/shippingRequests/ShippingRequestTrips/points/good-details/good-details.component';
+import { NgForm } from '@angular/forms';
 
 @Component({
   selector: 'createOrEditPointModal',
@@ -31,7 +32,8 @@ export class CreateOrEditPointModalComponent extends AppComponentBase implements
     super(injector);
   }
   @ViewChild('createRouteStepModal', { static: true }) modal: ModalDirective;
-  @ViewChild('PointGoodDetailsComponent') public PointGoodDetailsComponent: GoodDetailsComponent;
+  // @ViewChild('PointGoodDetailsComponent') public PointGoodDetailsComponent: GoodDetailsComponent;
+  @ViewChild('createOrEditPintForm') public createOrEditPintForm: NgForm;
 
   allFacilities: FacilityForDropdownDto[];
   allReceivers: ReceiverFacilityLookupTableDto[];
@@ -98,11 +100,11 @@ export class CreateOrEditPointModalComponent extends AppComponentBase implements
     if (this.pointIdForEdit) {
       this.wayPointsList[this.pointIdForEdit] = this.Point;
       //in case of edit add GoodDetails List
-      this.PointGoodDetailsComponent.goodsDetailList = this.Point.goodsDetailListDto;
+      // this.PointGoodDetailsComponent.goodsDetailList = this.Point.goodsDetailListDto;
     } else {
       if (this.RouteType == this.RouteTypes.MultipleDrops) {
         this.Point.pickingType = PickingType.Dropoff;
-        this.Point.goodsDetailListDto = this.PointGoodDetailsComponent.goodsDetailList;
+        // this.Point.goodsDetailListDto = this.PointGoodDetailsComponent.goodsDetailList;
         this.wayPointsList.push(this.Point);
       }
     }
@@ -116,6 +118,7 @@ export class CreateOrEditPointModalComponent extends AppComponentBase implements
     this.Point = new CreateOrEditRoutPointDto();
     this._PointService.updateSinglePoint(this.Point);
     this.pointIdForEdit = null;
+    this.isAdditionalReceiverEnabled = false;
     this.active = false;
     this.modal.hide();
   }

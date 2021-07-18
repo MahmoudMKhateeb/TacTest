@@ -7,201 +7,223 @@
           {{ l('SetupNewDropLocation') }}
         </h4>
       </div>
-      <div class="modal-body" *ngIf="active">
-        <div class="row mb-4">
-          <!-- start:: map that draws the RouteStep::Route in CreateOrEditRouteStep-->
-          <div class="col-lg-12">
-            <agm-map [latitude]="Point.latitude || lat" [longitude]="Point.longitude || lng" [zoom]="zoom">
-              <agm-marker [latitude]="Point.latitude" [longitude]="Point.longitude"></agm-marker>
-            </agm-map>
+      <form *ngIf="active" #createOrEditPintForm="ngForm" novalidate autocomplete="off">
+        <div class="modal-body">
+          <div class="row mb-4">
+            <!-- start:: map that draws the RouteStep::Route in CreateOrEditRouteStep-->
+            <div class="col-lg-12">
+              <agm-map [latitude]="Point.latitude || lat" [longitude]="Point.longitude || lng" [zoom]="zoom">
+                <agm-marker [latitude]="Point.latitude" [longitude]="Point.longitude"></agm-marker>
+              </agm-map>
+            </div>
+            <!-- END::map that draws the RouteStep::Route in CreateOrEditRouteStep-->
           </div>
-          <!-- END::map that draws the RouteStep::Route in CreateOrEditRouteStep-->
-        </div>
-        <div class="row p-0 mt-4">
-          <div class="col-lg-12 row">
-            <div class="form-group col-lg-{{ this.RouteType == RouteTypes.SingleDrop ? 12 : 6 }}" *ngIf="RouteType !== RouteTypes.SingleDrop">
-              <label>{{ l('facility') }}</label>
-              <div [ngClass]="{ 'spinner spinner-success spinner-right mr-1 ml-1': facilityLoading }">
-                <div class="input-group">
-                  <select
-                    name="facility"
-                    class="form-control"
-                    [(ngModel)]="Point.facilityId"
-                    [disabled]="facilityLoading || this.RouteType == RouteTypes.SingleDrop"
-                    (change)="RouteStepCordSetter(); loadReceivers(Point.facilityId)"
-                  >
-                    <option value="">{{ l('SelectAFacility') }}</option>
-                    <option *ngFor="let item of allFacilities" value="{{ item.id }}">{{ item.displayName }}</option>
-                  </select>
-                  <div class="input-group-btn" *ngIf="this.RouteType !== RouteTypes.SingleDrop">
-                    <button class="btn btn-primary" [disabled]="facilityLoading" (click)="createOrEditFacilityModal.show()">
-                      <i class="flaticon-plus"></i>{{ l('New') }}
-                    </button>
+          <div class="row p-0 mt-4">
+            <div class="col-lg-12 row">
+              <div class="form-group col-lg-{{ this.RouteType == RouteTypes.SingleDrop ? 12 : 6 }}" *ngIf="RouteType !== RouteTypes.SingleDrop">
+                <label>{{ l('facility') }}</label>
+                <div [ngClass]="{ 'spinner spinner-success spinner-right mr-1 ml-1': facilityLoading }">
+                  <div class="input-group">
+                    <select
+                      #pointFacility="ngModel"
+                      name="facility"
+                      class="form-control"
+                      [(ngModel)]="Point.facilityId"
+                      [disabled]="facilityLoading || this.RouteType == RouteTypes.SingleDrop"
+                      (change)="RouteStepCordSetter(); loadReceivers(Point.facilityId)"
+                      [class.is-valid]="pointFacility.touched && pointFacility.valid"
+                      [class.is-invalid]="pointFacility.touched && !pointFacility.valid"
+                      [required]="RouteType == RouteTypes.MultipleDrops"
+                    >
+                      <option [value]="" disabled selected>{{ l('SelectAFacility') }}</option>
+                      <option *ngFor="let item of allFacilities" [value]="item.id">{{ item.displayName }}</option>
+                    </select>
+                    <div class="input-group-btn">
+                      <button class="btn btn-primary" [disabled]="facilityLoading" (click)="createOrEditFacilityModal.show()">
+                        <i class="flaticon-plus"></i>{{ l('New') }}
+                      </button>
+                    </div>
                   </div>
                 </div>
               </div>
-            </div>
-            <!-- StartOf::Receiver -->
-            <div class="form-group col-lg-{{ this.RouteType == RouteTypes.SingleDrop ? 12 : 6 }}">
-              <label>{{ l('Receiver') }}</label>
-              <div [ngClass]="{ 'spinner spinner-success spinner-right mr-1 ml-1': receiversLoading }">
-                <div class="input-group">
-                  <select name="facility" class="form-control" [(ngModel)]="Point.receiverId" [disabled]="receiversLoading || !Point.facilityId">
-                    <option [value]="" disabled selected>{{ l('PickAReceiver') }}</option>
-                    <option *ngFor="let item of allReceivers" [value]="item.id">{{ item.displayName }}</option>
-                  </select>
-                  <div class="input-group-btn">
-                    <button class="btn btn-primary" [disabled]="receiversLoading" (click)="createOrEditReceiverModal.show()">
-                      <i class="flaticon-plus"></i>{{ l('New') }}
-                    </button>
+              <!-- StartOf::Receiver -->
+              <div class="form-group col-lg-{{ this.RouteType == RouteTypes.SingleDrop ? 12 : 6 }}">
+                <label>{{ l('Receiver') }}</label>
+                <div [ngClass]="{ 'spinner spinner-success spinner-right mr-1 ml-1': receiversLoading }">
+                  <div class="input-group">
+                    <select
+                      #receiver="ngModel"
+                      name="receiverId"
+                      class="form-control"
+                      [(ngModel)]="Point.receiverId"
+                      [class.is-valid]="receiver.touched && receiver.valid"
+                      [class.is-invalid]="receiver.touched && !isAdditionalReceiverEnabled && !receiver.valid"
+                      [disabled]="receiversLoading || !Point.facilityId"
+                      [required]="!isAdditionalReceiverEnabled"
+                    >
+                      <option [value]="" disabled selected>{{ l('PickAReceiver') }}</option>
+                      <option *ngFor="let item of allReceivers" [value]="item.id">{{ item.displayName }}</option>
+                    </select>
+                    <div class="input-group-btn">
+                      <button class="btn btn-primary" [disabled]="receiversLoading" (click)="createOrEditReceiverModal.show()">
+                        <i class="flaticon-plus"></i>{{ l('New') }}
+                      </button>
+                    </div>
                   </div>
                 </div>
               </div>
-            </div>
-            <div class="form-group col-lg-12">
-              <div class="checkbox-inline">
-                <label class="checkbox checkbox-danger">
+              <div class="form-group col-lg-12">
+                <div class="checkbox-inline">
+                  <label class="checkbox checkbox-danger">
+                    <input
+                      type="checkbox"
+                      name="isAdditionalReceiverEnabled"
+                      [(ngModel)]="isAdditionalReceiverEnabled"
+                      (ngModelChange)="resetAdditionalReviverFields()"
+                    />
+                    <span></span>
+                    {{ l('SetUpAdditionalReceiver') }}
+                  </label>
+                </div>
+              </div>
+              <ng-template [ngIf]="isAdditionalReceiverEnabled">
+                <div class="form-group col-lg-6">
+                  <label>{{ l('ReceiverFullName') }}</label>
                   <input
-                    type="checkbox"
-                    name="isAdditionalReceiverEnabled"
-                    [(ngModel)]="isAdditionalReceiverEnabled"
-                    (ngModelChange)="resetAdditionalReviverFields()"
+                    #receiverFullName="ngModel"
+                    name="receiverFullName"
+                    type="text"
+                    [(ngModel)]="Point.receiverFullName"
+                    class="form-control"
+                    minlength="3"
+                    [required]="isAdditionalReceiverEnabled"
+                    [ngClass]="{
+                      'is-valid': receiverFullName.touched && receiverFullName.valid,
+                      'is-invalid': receiverFullName.touched && receiverFullName.value && !receiverFullName.valid
+                    }"
                   />
-                  <span></span>
-                  {{ l('SetUpAdditionalReceiver') }}
-                </label>
-              </div>
-            </div>
-            <ng-template [ngIf]="isAdditionalReceiverEnabled">
-              <div class="form-group col-lg-4">
-                <label>{{ l('ReceiverFullName') }}</label>
-                <input
-                  #receiverFullName="ngModel"
-                  name="receiverFullName"
-                  type="text"
-                  [(ngModel)]="Point.receiverFullName"
-                  class="form-control"
-                  minlength="3"
-                  [required]="isAdditionalReceiverEnabled"
-                  [ngClass]="{
-                    'is-valid': receiverFullName.valid,
-                    'is-invalid': receiverFullName.value && !receiverFullName.valid
-                  }"
-                />
-                <validation-messages [formCtrl]="receiverFullName"></validation-messages>
-              </div>
-              <div class="form-group col-4">
-                <label for="userPhone"> {{ 'ReceiverPhoneNumber' | localize }}</label>
-                <div class="input-group">
-                  <div class="input-group-prepend">
-                    <span class="input-group-text">+966</span>
-                  </div>
+                </div>
+                <div class="form-group col-lg-6">
+                  <label for="userPhone"> {{ 'ReceiverEmailAddress' | localize }}</label>
                   <input
                     style="text-align: left !important"
-                    id="userPhone"
-                    #userPhoneInput="ngModel"
-                    name="userPhone"
-                    pattern="\b5\d{8}\b"
-                    maxlength="9"
-                    placeholder="{{ '5XXXXXXXX' | localize }}"
-                    type="tel"
+                    id="ReceiverEmailAddress"
+                    #ReceiverEmailAddress="ngModel"
+                    name="ReceiverEmailAddress"
+                    pattern="^\S+@\S+$"
+                    maxlength="30"
+                    type="email"
                     class="form-control"
-                    [(ngModel)]="Point.receiverPhoneNumber"
+                    [(ngModel)]="Point.receiverEmailAddress"
                     [required]="isAdditionalReceiverEnabled"
                     [ngClass]="{
-                      'is-valid': userPhoneInput.valid,
-                      'is-invalid': userPhoneInput.value && !userPhoneInput.valid
+                      'is-valid': ReceiverEmailAddress.touched && ReceiverEmailAddress.valid,
+                      'is-invalid': ReceiverEmailAddress.touched && ReceiverEmailAddress.value && !ReceiverEmailAddress.valid
                     }"
                   />
                 </div>
-                <validation-messages [formCtrl]="userPhoneInput"></validation-messages>
-                <span *ngIf="userPhoneInput.value?.length == 9 && userPhoneInput.invalid" class="form-text text-danger">{{
-                  l('PhoneNumberMustStartWith5')
-                }}</span>
-              </div>
-              <div class="form-group col-lg-4">
-                <label>{{ l('ReceiverId') }}</label>
-                <div class="input-group">
-                  <div class="input-group-prepend input-group-solid">
-                    <span class="input-group-text">
-                      <i class="fa fa-id-card"></i>
-                    </span>
+
+                <div class="form-group col-lg-6">
+                  <label for="userPhone"> {{ 'ReceiverPhoneNumber' | localize }}</label>
+                  <div class="input-group">
+                    <div class="input-group-prepend">
+                      <span class="input-group-text">+966</span>
+                    </div>
+                    <input
+                      style="text-align: left !important"
+                      id="userPhone"
+                      #userPhoneInput="ngModel"
+                      name="userPhone"
+                      pattern="\b5\d{8}\b"
+                      maxlength="9"
+                      placeholder="{{ '5XXXXXXXX' | localize }}"
+                      type="tel"
+                      class="form-control"
+                      [(ngModel)]="Point.receiverPhoneNumber"
+                      [required]="isAdditionalReceiverEnabled"
+                      [ngClass]="{
+                        'is-valid': userPhoneInput.touched && userPhoneInput.valid,
+                        'is-invalid': userPhoneInput.touched && userPhoneInput.value && !userPhoneInput.valid
+                      }"
+                    />
                   </div>
+                  <validation-messages [formCtrl]="userPhoneInput"></validation-messages>
+                  <span *ngIf="userPhoneInput.value?.length == 9 && userPhoneInput.invalid" class="form-text text-danger">{{
+                    l('PhoneNumberMustStartWith5')
+                  }}</span>
+                </div>
+                <div class="form-group col-lg-6">
+                  <label>{{ l('ReceiverId') }}</label>
+                  <div class="input-group">
+                    <div class="input-group-prepend input-group-solid">
+                      <span class="input-group-text">
+                        <i class="fa fa-id-card"></i>
+                      </span>
+                    </div>
+                    <input
+                      type="text"
+                      #receiverId="ngModel"
+                      name="receiverId"
+                      class="form-control"
+                      [(ngModel)]="Point.receiverCardIdNumber"
+                      (keypress)="numberOnly($event)"
+                      [ngClass]="{
+                        'is-valid': receiverId.touched && receiverId.valid,
+                        'is-invalid': receiverId.touched && receiverId.value && !receiverId.valid
+                      }"
+                      [required]="isAdditionalReceiverEnabled"
+                    />
+                  </div>
+                </div>
+
+                <div class="form-group col-lg-12">
+                  <label>{{ l('ReceiverAddress') }}</label>
                   <input
+                    #ReceiverAddress="ngModel"
                     type="text"
-                    #receiverId="ngModel"
-                    name="receiverId"
+                    name="ReceiverAddress"
                     class="form-control"
-                    [(ngModel)]="Point.receiverCardIdNumber"
-                    (keypress)="numberOnly($event)"
+                    [(ngModel)]="Point.receiverAddress"
                     [ngClass]="{
-                      'is-valid': receiverId.valid,
-                      'is-invalid': receiverId.value && !receiverId.valid
+                      'is-valid': ReceiverAddress.touched && ReceiverAddress.valid,
+                      'is-invalid': ReceiverAddress.touched && ReceiverAddress.value && !ReceiverAddress.valid
                     }"
                     [required]="isAdditionalReceiverEnabled"
                   />
                 </div>
-                <validation-messages [formCtrl]="receiverId"></validation-messages>
-              </div>
+              </ng-template>
 
-              <div class="form-group col-lg-6">
-                <label for="userPhone"> {{ 'ReceiverEmailAddress' | localize }}</label>
-                <input
-                  style="text-align: left !important"
-                  id="ReceiverEmailAddress"
-                  #ReceiverEmailAddress="ngModel"
-                  name="userPhone"
-                  pattern="^\S+@\S+$"
-                  maxlength="30"
-                  type="email"
-                  class="form-control"
-                  [(ngModel)]="Point.receiverEmailAddress"
-                  [required]="isAdditionalReceiverEnabled"
-                  [ngClass]="{
-                    'is-valid': ReceiverEmailAddress.valid,
-                    'is-invalid': ReceiverEmailAddress.value && !ReceiverEmailAddress.valid
-                  }"
-                />
-                <validation-messages [formCtrl]="ReceiverEmailAddress"></validation-messages>
+              <div class="form-group col-lg-12">
+                <label>{{ l('Notes') }}</label>
+                <div class="input-group">
+                  <textarea
+                    #notes="ngModel"
+                    name="notes"
+                    class="form-control"
+                    [(ngModel)]="Point.note"
+                    [class.is-valid]="notes.touched && notes.value && !notes.valid"
+                  ></textarea>
+                </div>
               </div>
-              <div class="form-group col-lg-6">
-                <label>{{ l('ReceiverAddress') }}</label>
-                <input
-                  #ReceiverAddress="ngModel"
-                  type="text"
-                  name="receiverId"
-                  class="form-control"
-                  [(ngModel)]="Point.receiverAddress"
-                  [ngClass]="{
-                    'is-valid': ReceiverAddress.valid,
-                    'is-invalid': ReceiverAddress.value && !ReceiverAddress.valid
-                  }"
-                  [required]="isAdditionalReceiverEnabled"
-                />
-                <validation-messages [formCtrl]="ReceiverAddress"></validation-messages>
-              </div>
-            </ng-template>
-
-            <div class="form-group col-lg-12">
-              <label>{{ l('Notes') }}</label>
-              <div class="input-group">
-                <textarea name="notes" class="form-control" [(ngModel)]="Point.note"></textarea>
-              </div>
+              <!--   EndOf::receiver -->
+              <!--   Start::GoodDetails           -->
+              <PointGoodDetailsComponent #PointGoodDetailsComponent></PointGoodDetailsComponent>
+              <!--   End::GoodDetails           -->
             </div>
-            <!--   EndOf::receiver -->
-            <!--   Start::GoodDetails           -->
-            <PointGoodDetailsComponent #PointGoodDetailsComponent></PointGoodDetailsComponent>
-            <!--   End::GoodDetails           -->
           </div>
         </div>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-default" (click)="close()">{{ l('Cancel') }}</button>
-        <button type="submit" class="btn btn-primary blue" (click)="AddRouteStep()" [disabled]="!Point.goodsDetailListDto">
-          <!--            routeStepIdForEdit === undefined ? AddRouteStep() : EditRouteStep(routeStepIdForEdit)-->
-          <i class="fa fa-save"></i> <span>{{ l('Save') }}</span>
-        </button>
-      </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default" (click)="close()">{{ l('Cancel') }}</button>
+          <button
+            type="submit"
+            class="btn btn-primary blue"
+            (click)="AddRouteStep()"
+            [disabled]="!Point.goodsDetailListDto || Point.goodsDetailListDto?.length == 0 || !createOrEditPintForm.valid"
+          >
+            <i class="fa fa-save"></i> <span>{{ l('Save') }}</span>
+          </button>
+        </div>
+      </form>
     </div>
   </div>
 </div>
