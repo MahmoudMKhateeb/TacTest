@@ -191,23 +191,22 @@ export class CreateOrEditTripComponent extends AppComponentBase implements OnIni
   }
 
   createOrEditTrip() {
-    if (this.trip.routPoints.length !== this.shippingRequest.numberOfDrops + 1) {
-      Swal.fire(this.l('IncompleteTripPoint'), this.l('PleaseAddAllTheDropPoints'), 'info');
-      return;
+    //if there is a Validation issue in the Points do Not Proceed
+    if (this.validatePointsBeforeAddTrip()) {
+      this.saving = true;
+      this._shippingRequestTripsService
+        .createOrEdit(this.trip)
+        .pipe(
+          finalize(() => {
+            this.saving = false;
+          })
+        )
+        .subscribe(() => {
+          this.close();
+          this.modalSave.emit(null);
+          this.notify.info(this.l('SuccessfullySaved'));
+        });
     }
-    this.saving = true;
-    this._shippingRequestTripsService
-      .createOrEdit(this.trip)
-      .pipe(
-        finalize(() => {
-          this.saving = false;
-        })
-      )
-      .subscribe(() => {
-        this.close();
-        this.modalSave.emit(null);
-        this.notify.info(this.l('SuccessfullySaved'));
-      });
   }
 
   deleteTrip(tripid: number) {
@@ -354,5 +353,22 @@ export class CreateOrEditTripComponent extends AppComponentBase implements OnIni
     this.trip = undefined;
     this.TripsServiceSubscription.unsubscribe();
     this.PointsServiceSubscription.unsubscribe();
+    console.log('Detsroid From Create/Edit Trip');
+  }
+
+  private validatePointsBeforeAddTrip() {
+    //if trip Drop Points is less than number of drops Prevent Adding Trip
+    if (this.trip.routPoints.length !== this.shippingRequest.numberOfDrops + 1) {
+      console.log('first Condition Fired');
+      Swal.fire(this.l('IncompleteTripPoint'), this.l('PleaseAddAllTheDropPoints'), 'warning');
+      return false;
+      //if the routetype is single drop and the Drop point setup is not completed prevent adding trip
+    } else if (this.shippingRequest.routeTypeId === this.RouteTypes.SingleDrop && !this.trip.routPoints[1].goodsDetailListDto) {
+      console.log('Secound Condition Fired');
+      Swal.fire(this.l('IncompleteTripPoint'), this.l('PleaseCompleteTheDropPointSetup'), 'warning');
+      return false;
+    } else {
+      return true;
+    }
   }
 }
