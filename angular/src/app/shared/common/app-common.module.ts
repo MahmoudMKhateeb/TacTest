@@ -56,6 +56,13 @@ import { NgbDateParserFormatter, NgbModule } from '@node_modules/@ng-bootstrap/n
 import { CustomNgbDateParserFormatter } from '@app/shared/common/hijri-gregorian-datepicker/CustomNgbDateParserFormatter';
 import { RequiredDocumentFormChildComponent } from './required-document-form-child/required-document-form-child.component';
 import { FileUploadModule } from 'primeng/fileupload';
+import { DriverSubmitedDocumentsListComponent } from '@app/main/documentFiles/documentFiles/drivers-submitted-documents/driver-submited-documents-list/driver-submited-documents-list.component';
+import { DevExtremeModule } from '@node_modules/devextreme-angular';
+import { CreateOrEditDocumentFileModalComponent } from '@app/main/documentFiles/documentFiles/create-or-edit-documentFile-modal.component';
+import { ViewDocumentFileModalComponent } from '@app/main/documentFiles/documentFiles/view-documentFile-modal.component';
+import { RejectionReasonModalComponent } from '@app/main/documentFiles/documentFiles/rejectionReason-modal.component';
+import { ViewRejectionReasonModalComponent } from '@app/admin/required-document-files/view-rejection-reason-modal.component';
+import { TruckSubmitedDocumentsListComponent } from '@app/main/documentFiles/documentFiles/trucks-submitted-documents/truck-submited-documents-list/truck-submited-documents-list.component';
 // import { FileUploadModule } from '@node_modules/primeng';
 
 @NgModule({
@@ -79,6 +86,7 @@ import { FileUploadModule } from 'primeng/fileupload';
     AutoCompleteModule,
     NgbModule,
     FileUploadModule,
+    DevExtremeModule,
   ],
   declarations: [
     TimeZoneComboComponent,
@@ -112,6 +120,12 @@ import { FileUploadModule } from 'primeng/fileupload';
     HijriGregorianDatepickerComponent,
     HijriDatepickerComponent,
     RequiredDocumentFormChildComponent,
+    DriverSubmitedDocumentsListComponent,
+    CreateOrEditDocumentFileModalComponent,
+    ViewDocumentFileModalComponent,
+    RejectionReasonModalComponent,
+    ViewRejectionReasonModalComponent,
+    TruckSubmitedDocumentsListComponent,
   ],
   exports: [
     TimeZoneComboComponent,
@@ -127,6 +141,12 @@ import { FileUploadModule } from 'primeng/fileupload';
     SubHeaderComponent,
     HijriGregorianDatepickerComponent,
     RequiredDocumentFormChildComponent,
+    DriverSubmitedDocumentsListComponent,
+    CreateOrEditDocumentFileModalComponent,
+    ViewDocumentFileModalComponent,
+    RejectionReasonModalComponent,
+    ViewRejectionReasonModalComponent,
+    TruckSubmitedDocumentsListComponent,
   ],
   providers: [
     DateTimeService,

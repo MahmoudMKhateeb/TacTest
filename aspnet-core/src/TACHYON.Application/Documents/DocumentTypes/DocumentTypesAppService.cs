@@ -1,6 +1,4 @@
-﻿
-
-using Abp.Application.Services.Dto;
+﻿using Abp.Application.Services.Dto;
 using Abp.Authorization;
 using Abp.Domain.Repositories;
 using Abp.Extensions;
@@ -10,14 +8,11 @@ using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Linq.Dynamic.Core;
 using System.Threading.Tasks;
 using Abp.Application.Editions;
-using Abp.Collections.Extensions;
 using Microsoft.Rest;
 using TACHYON.Authorization;
 using TACHYON.Documents.DocumentsEntities;
-using TACHYON.Documents.DocumentsEntities.Dtos;
 using TACHYON.Documents.DocumentTypes.Dtos;
 using TACHYON.Documents.DocumentTypes.Exporting;
 using TACHYON.Documents.DocumentTypeTranslations;
@@ -25,7 +20,7 @@ using TACHYON.Documents.DocumentTypeTranslations.Dtos;
 using TACHYON.Dto;
 using TACHYON.Storage;
 using Abp.Domain.Uow;
-using Castle.DynamicProxy.Generators.Emitters.SimpleAST;
+using AutoMapper.QueryableExtensions;
 using TACHYON.MultiTenancy;
 
 namespace TACHYON.Documents.DocumentTypes
@@ -45,6 +40,7 @@ namespace TACHYON.Documents.DocumentTypes
         private readonly IUnitOfWorkManager _unitOfWorkManager;
         private readonly DocumentFilesManager _documentFilesManager;
 
+
         public DocumentTypesAppService(IRepository<DocumentsEntity, int> documentEntityRepository, IRepository<DocumentType, long> documentTypeRepository, IDocumentTypesExcelExporter documentTypesExcelExporter, IRepository<DocumentsEntity, int> documentsEntityRepository, IRepository<DocumentTypeTranslation> documentTypeTranslationRepository, IRepository<Edition, int> editionRepository,
             IBinaryObjectManager BinaryObjectManager,
             ITempFileCacheManager tempFileCacheManager,
@@ -62,39 +58,20 @@ namespace TACHYON.Documents.DocumentTypes
             _unitOfWorkManager = unitOfWorkManager;
             _Tenant = Tenant;
             _documentFilesManager = documentFilesManager;
+
         }
 
-        public async Task<PagedResultDto<GetDocumentTypeForViewDto>> GetAll(GetAllDocumentTypesInput input)
+        public async Task<PagedResultDto<DocumentTypeDto>> GetAll(GetAllDocumentTypesInput input)
         {
+            var filteredDocumentFiles = _documentTypeRepository
+                .GetAll()
+                .ProjectTo<DocumentTypeDto>(AutoMapperConfigurationProvider); // goto:#Mapper_DocumentType_DocumentTypeDto
 
-            var filteredDocumentTypes = _documentTypeRepository.GetAll()
-                        .Include(e => e.Translations)
-                        .Include(x => x.DocumentsEntityFk)
-                        .Include(x => x.EditionFk)
-                        .WhereIf(!string.IsNullOrWhiteSpace(input.Filter), e => false || e.DisplayName.Contains(input.Filter) || e.DocumentsEntityFk.DisplayName.Contains(input.Filter))
-                        .WhereIf(!string.IsNullOrWhiteSpace(input.DisplayNameFilter), e => e.DisplayName == input.DisplayNameFilter)
-                        .WhereIf(input.IsRequiredFilter > -1, e => (input.IsRequiredFilter == 1 && e.IsRequired) || (input.IsRequiredFilter == 0 && !e.IsRequired))
-                        .WhereIf(input.HasExpirationDateFilter > -1, e => (input.HasExpirationDateFilter == 1 && e.HasExpirationDate) || (input.HasExpirationDateFilter == 0 && !e.HasExpirationDate))
-                        .WhereIf(input.RequiredFromFilter.HasValue, e => e.DocumentsEntityId == (int)input.RequiredFromFilter);
-
-            var pagedAndFilteredDocumentTypes = filteredDocumentTypes
-                .OrderBy(input.Sorting ?? "id asc")
-                .PageBy(input);
-
-            var documentTypeList = await pagedAndFilteredDocumentTypes.ToListAsync();
-
-
-            var documentTypes = from o in documentTypeList
-                                select new GetDocumentTypeForViewDto()
-                                {
-                                    DocumentType = ObjectMapper.Map<DocumentTypeDto>(o)
-                                };
-
-
-            var totalCount = await filteredDocumentTypes.CountAsync();
-
-            return new PagedResultDto<GetDocumentTypeForViewDto>(totalCount, documentTypes.ToList());
+            return await LoadResultAsync(filteredDocumentFiles, input.Filter);
         }
+
+
+
 
         public async Task<GetDocumentTypeForViewDto> GetDocumentTypeForView(long id)
         {
@@ -194,7 +171,7 @@ namespace TACHYON.Documents.DocumentTypes
                 documentType.TemplateId = null;
                 documentType.TemplateContentType = null;
                 documentType.TemplateName = null;
-                
+
             }
         }
         public async Task<FileDto> GetDocumentTypesToExcel(GetAllDocumentTypesForExcelInput input)
@@ -271,25 +248,26 @@ namespace TACHYON.Documents.DocumentTypes
 
         public async Task<List<SelectItemDto>> GetDocumentEntitiesForTableDropdown()
         {
-            var editions = await _editionRepository.GetAll()
-                .Select(x => new SelectItemDto
-                {
-                    Id = x.Id.ToString(),
-                    DisplayName = x.DisplayName
-                }).ToListAsync();
-
-            var entities = await _documentEntityRepository
+            return await _documentEntityRepository
                 .GetAll()
-                .Where(x => x.Id != 1)
                 .Select(x => new SelectItemDto
                 {
                     DisplayName = x.DisplayName,
                     Id = x.Id.ToString()
                 }
             ).ToListAsync();
-
-            return entities.Concat(editions).ToList();
         }
+
+        public async Task<List<SelectItemDto>> GetEditionsForTableDropdown()
+        {
+            return await _editionRepository.GetAll()
+                .Select(x => new SelectItemDto
+                {
+                    Id = x.Id.ToString(),
+                    DisplayName = x.DisplayName
+                }).ToListAsync();
+        }
+
 
         private bool ValidateDisplayNameDuplication(string documentTypeName, long? id)
         {
@@ -328,7 +306,5 @@ namespace TACHYON.Documents.DocumentTypes
 
         }
 
-        #region Heleper
-        #endregion
     }
 }
