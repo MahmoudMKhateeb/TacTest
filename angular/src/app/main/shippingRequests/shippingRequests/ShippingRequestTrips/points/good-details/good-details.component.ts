@@ -3,13 +3,14 @@ import { CreateOrEditGoodsDetailDto, CreateOrEditRoutPointDto, GoodsDetailsServi
 import { TripService } from '@app/main/shippingRequests/shippingRequests/ShippingRequestTrips/trip.service';
 import { AppComponentBase } from '@shared/common/app-component-base';
 import { PointsService } from '@app/main/shippingRequests/shippingRequests/ShippingRequestTrips/points/points.service';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'PointGoodDetailsComponent',
   templateUrl: './good-details.component.html',
   styleUrls: ['./good-details.component.css'],
 })
-export class GoodDetailsComponent extends AppComponentBase implements OnInit {
+export class GoodDetailsComponent extends AppComponentBase implements OnInit, OnDestroy {
   constructor(
     injector: Injector,
     private _TripService: TripService,
@@ -24,11 +25,21 @@ export class GoodDetailsComponent extends AppComponentBase implements OnInit {
   allSubGoodCategorys: any;
   allSubGoodCategorysLoading = true;
 
+  tripServiceSubs$: Subscription;
+  pointServiceSubs$: Subscription;
+  ngOnDestroy() {
+    this.tripServiceSubs$.unsubscribe();
+    this.pointServiceSubs$.unsubscribe();
+    console.log('Destroy From Good Details Component');
+  }
+
   ngOnInit(): void {
     //take the Good Category From the Shared Service and bind it
-    this._TripService.currentShippingRequest.subscribe((res) => (this.MainGoodsCategory = res.shippingRequest.goodCategoryId));
+    this.tripServiceSubs$ = this._TripService.currentShippingRequest.subscribe(
+      (res) => (this.MainGoodsCategory = res.shippingRequest.goodCategoryId)
+    );
     //get the value of the single way point fron the Shared Service
-    this._PointsService.currentSingleWayPoint.subscribe((res) => {
+    this.pointServiceSubs$ = this._PointsService.currentSingleWayPoint.subscribe((res) => {
       this.Point = res;
       this.goodsDetailList = res.goodsDetailListDto || [];
     });

@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Injector, OnInit, Output, ViewChild } from '@angular/core';
+import { Component, EventEmitter, Injector, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
 import { AppComponentBase } from '@shared/common/app-component-base';
 import { ModalDirective } from 'ngx-bootstrap/modal';
 import {
@@ -16,13 +16,14 @@ import { FileDownloadService } from '@shared/utils/file-download.service';
 import { TripService } from '@app/main/shippingRequests/shippingRequests/ShippingRequestTrips/trip.service';
 import { PointsService } from '@app/main/shippingRequests/shippingRequests/ShippingRequestTrips/points/points.service';
 import { GoodDetailsComponent } from '@app/main/shippingRequests/shippingRequests/ShippingRequestTrips/points/good-details/good-details.component';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'PointsComponent',
   templateUrl: './points.component.html',
   styleUrls: ['./points.component.scss'],
 })
-export class PointsComponent extends AppComponentBase implements OnInit {
+export class PointsComponent extends AppComponentBase implements OnInit, OnDestroy {
   constructor(
     injector: Injector,
     private _routesServiceProxy: RoutesServiceProxy,
@@ -62,6 +63,18 @@ export class PointsComponent extends AppComponentBase implements OnInit {
   wayPointMapSource = undefined;
   wayPointMapDest = undefined;
   Point: CreateOrEditRoutPointDto;
+  private pointsServiceSubscription$: Subscription;
+  private tripDestFacilitySub$: Subscription;
+  private tripSourceFacilitySub$: Subscription;
+  private currentActiveTripSubs$: Subscription;
+
+  ngOnDestroy() {
+    this.pointsServiceSubscription$.unsubscribe();
+    this.tripDestFacilitySub$.unsubscribe();
+    this.tripSourceFacilitySub$.unsubscribe();
+    this.currentActiveTripSubs$.unsubscribe();
+    console.log('Unsubscribed/Destroid from  Point Component');
+  }
 
   ngOnInit() {
     this.loadDropDowns();
@@ -69,7 +82,7 @@ export class PointsComponent extends AppComponentBase implements OnInit {
     //and found that already there is a way point
     //and the way Points count is greater than 0
     //Draw on map wayPointsSetter()
-    this._PointsService.currentWayPointsList.subscribe((res) => {
+    this.pointsServiceSubscription$ = this._PointsService.currentWayPointsList.subscribe((res) => {
       this.wayPointsList = res;
       if (res.length > 0) {
         this.wayPointsSetter();
@@ -80,15 +93,15 @@ export class PointsComponent extends AppComponentBase implements OnInit {
       }
     });
     //if action is edit trip get active Trip id
-    this._tripService.currentActiveTripId.subscribe((res) => (this.activeTripId = res));
+    this.currentActiveTripSubs$ = this._tripService.currentActiveTripId.subscribe((res) => (this.activeTripId = res));
     //get some Stuff from ShippingRequest Dto
-    this._tripService.currentShippingRequest.subscribe((res) => {
+    this.tripSourceFacilitySub$ = this._tripService.currentShippingRequest.subscribe((res) => {
       this.RouteType = res.shippingRequest.routeTypeId;
       this.NumberOfDrops = res.shippingRequest.numberOfDrops;
       this.MainGoodsCategory = res.shippingRequest.goodCategoryId;
     });
     //Take Trip Source Facility From Trip Service
-    this._tripService.currentSourceFacility.subscribe((res) => {
+    this.tripSourceFacilitySub$ = this._tripService.currentSourceFacility.subscribe((res) => {
       this.sourceFacility = res;
       if (this.sourceFacility) {
         this.drawPointForSingleDropTrip('pickup');
@@ -97,7 +110,7 @@ export class PointsComponent extends AppComponentBase implements OnInit {
     //in case of the Shipping Request Route Type is Single Drop -- Create the Drop Point From Dest Trip Facility
     if (this.RouteType == ShippingRequestRouteType.SingleDrop) {
       //Take Trip Dest Facility From Trip Service
-      this._tripService.currentDestFacility.subscribe((res) => {
+      this.tripDestFacilitySub$ = this._tripService.currentDestFacility.subscribe((res) => {
         this.destFacility = res;
         if (this.destFacility) {
           this.drawPointForSingleDropTrip('drop');
@@ -117,7 +130,7 @@ export class PointsComponent extends AppComponentBase implements OnInit {
   //for SingleDrop Trip Only
   //draws the points and sets them
   drawPointForSingleDropTrip(pointType: 'pickup' | 'drop') {
-    console.log('Before:', this.wayPointsList);
+    console.log('Before From the Points Component:', this.wayPointsList);
     //if create Make New Dto
     if (!this.activeTripId) {
       //this is for create Trip

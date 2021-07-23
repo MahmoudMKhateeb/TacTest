@@ -14,13 +14,14 @@ import { AppComponentBase } from '@shared/common/app-component-base';
 import { TripService } from '@app/main/shippingRequests/shippingRequests/ShippingRequestTrips/trip.service';
 import { CreateOrEditFacilityModalComponent } from '@app/main/addressBook/facilities/create-or-edit-facility-modal.component';
 import { GoodDetailsComponent } from '@app/main/shippingRequests/shippingRequests/ShippingRequestTrips/points/good-details/good-details.component';
+import { Subscription } from '@node_modules/rxjs';
 
 @Component({
   selector: 'createOrEditGoodDetailsModal',
   templateUrl: './create-or-edit-good-details-modal.component.html',
   styleUrls: ['./create-or-edit-good-details-modal.component.css'],
 })
-export class CreateOrEditGoodDetailsModalComponent extends AppComponentBase implements OnInit {
+export class CreateOrEditGoodDetailsModalComponent extends AppComponentBase implements OnInit, OnDestroy {
   @ViewChild('createOrEditGoodDetail', { static: false }) public createOrEditGoodDetail: ModalDirective;
 
   active = false;
@@ -43,13 +44,19 @@ export class CreateOrEditGoodDetailsModalComponent extends AppComponentBase impl
   }
   @Input() GoodDetailsListInput: CreateOrEditGoodsDetailDto[];
   @Output() modalSave: EventEmitter<any> = new EventEmitter<any>();
-
+  tripServiceSubs$: Subscription;
+  pointServiceSubs$: Subscription;
+  ngOnDestroy() {
+    this.tripServiceSubs$.unsubscribe();
+    this.pointServiceSubs$.unsubscribe();
+    console.log('Destroy From Create/Edit Good Details Component');
+  }
   ngOnInit(): void {
     this.goodsDetailList = this.GoodDetailsListInput || [];
     //take the current Active WayPoint From the Shared Service
-    this._TripService.currentShippingRequest.subscribe((res) => (this.GoodCategory = res.shippingRequest.goodCategoryId));
+    this.tripServiceSubs$ = this._TripService.currentShippingRequest.subscribe((res) => (this.GoodCategory = res.shippingRequest.goodCategoryId));
     //sync the singleWayPoint From the Service
-    this._PointsService.currentSingleWayPoint.subscribe((res) => (this.singleWayPoint = res));
+    this.pointServiceSubs$ = this._PointsService.currentSingleWayPoint.subscribe((res) => (this.singleWayPoint = res));
     this.loadAllDropDowns();
   }
   /**

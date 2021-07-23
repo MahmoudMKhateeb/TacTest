@@ -21,7 +21,7 @@ import { NgForm } from '@angular/forms';
   styleUrls: ['./createOrEditPointModal.component.css'],
   templateUrl: './createOrEditPointModal.component.html',
 })
-export class CreateOrEditPointModalComponent extends AppComponentBase implements OnInit {
+export class CreateOrEditPointModalComponent extends AppComponentBase implements OnInit, OnDestroy {
   constructor(
     injector: Injector,
     private _tripService: TripService,
@@ -55,13 +55,21 @@ export class CreateOrEditPointModalComponent extends AppComponentBase implements
   isAdditionalReceiverEnabled: boolean;
   pointIdForEdit = null;
 
+  tripServiceSubscription$: any;
+  pointsServiceSubscription$: any;
+  ngOnDestroy() {
+    this.tripServiceSubscription$.unsubscribe();
+    this.pointsServiceSubscription$.unsubscribe();
+    console.log('Unsubscribed/Destroid from CreateOrEdit Point Modal');
+  }
+
   ngOnInit(): void {
     this.loadFacilities();
 
     //take the Route Type From the Shared Service
-    this._tripService.currentShippingRequest.subscribe((res) => (this.RouteType = res.shippingRequest.routeTypeId));
+    this.tripServiceSubscription$ = this._tripService.currentShippingRequest.subscribe((res) => (this.RouteType = res.shippingRequest.routeTypeId));
     //take the PointsList From The Shared Service
-    this._PointService.currentWayPointsList.subscribe((res) => {
+    this.pointsServiceSubscription$ = this._PointService.currentWayPointsList.subscribe((res) => {
       this.wayPointsList = res;
     });
 
