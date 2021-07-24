@@ -89,8 +89,8 @@
                     name="tripStartDate"
                     bsDatepicker
                     datePickerMomentModifier
-                    [class.is-invalid]="tripStartDate.touched && !tripStartDate.valid"
-                    [class.is-valid]="tripStartDate.touched && tripStartDate.valid"
+                    [class.is-invalid]="trip.startTripDate && tripStartDate.touched && !tripStartDate.valid"
+                    [class.is-valid]="trip.startTripDate && tripStartDate.touched && tripStartDate.valid"
                     [(date)]="trip.startTripDate"
                     [minDate]="shippingRequest.startTripDate"
                     [maxDate]="shippingRequest.endTripDate"
@@ -117,8 +117,8 @@
                     name="endTripDate"
                     bsDatepicker
                     datePickerMomentModifier
-                    [class.is-invalid]="endTripDate.touched && !endTripDate.valid"
-                    [class.is-valid]="endTripDate.touched && endTripDate.valid"
+                    [class.is-invalid]="trip.endTripDate && endTripDate.touched && !endTripDate.valid"
+                    [class.is-valid]="trip.endTripDate && endTripDate.touched && endTripDate.valid"
                     [(date)]="trip.endTripDate"
                     [minDate]="trip.startTripDate"
                     [maxDate]="shippingRequest.endTripDate"
