@@ -27,7 +27,7 @@
               <div class="form-group row fv-plugins-icon-container">
                 <div class="col-lg-6">
                   <div class="form-group">
-                    <label><span class="required-fileds">*</span> {{ l('GoodSubCategory') }} </label>
+                    <label> {{ l('GoodSubCategory') }} <span class="required-fileds">*</span> </label>
                     <div [ngClass]="{ 'spinner spinner-success spinner-right mr-1 ml-1': !allSubGoodCategorys }">
                       <select
                         #subgoodsDetail="ngModel"
@@ -39,8 +39,8 @@
                         [class.is-invalid]="subgoodsDetail.touched && !subgoodsDetail.valid"
                         [class.is-valid]="subgoodsDetail.touched && subgoodsDetail.valid"
                       >
-                        <option value="">{{ l('SelectAGoodSubCategory') }}</option>
-                        <option *ngFor="let item of allSubGoodCategorys" value="{{ item.id }}">{{ item.displayName }}</option>
+                        <option [value]="">{{ l('SelectAGoodSubCategory') }}</option>
+                        <option *ngFor="let item of allSubGoodCategorys" [value]="item.id">{{ item.displayName }}</option>
                       </select>
                     </div>
                     <span class="form-text text-muted">{{ l('SelectaGoodCategory') }}</span>
@@ -48,42 +48,47 @@
                 </div>
                 <div class="col-lg-6">
                   <div class="form-group">
-                    <label for="GoodsDetail_Quantity">{{ l('Amount') }}</label>
-                    <input
-                      #GoodsAmount="ngModel"
-                      [(ngModel)]="goodsDetail.amount"
-                      class="form-control"
-                      id="GoodsDetail_Quantity"
-                      maxlength="128"
-                      minlength="0"
-                      name="Quantity"
-                      type="text"
-                      required
-                      [class.is-invalid]="GoodsAmount.touched && !GoodsAmount.valid"
-                      [class.is-valid]="GoodsAmount.touched && GoodsAmount.valid"
-                    />
-                  </div>
-                </div>
-                <div class="col-lg-6">
-                  <div class="form-group">
-                    <label for="GoodsDetail_Weight">{{ l('Weight') }}</label>
+                    <label for="GoodsDetail_Weight">{{ l('Weight') }} <span class="required-fileds">*</span> </label>
                     <input
                       #GoodsWeight="ngModel"
                       [(ngModel)]="goodsDetail.weight"
                       class="form-control"
                       id="GoodsDetail_Weight"
-                      maxlength="64"
-                      minlength="0"
+                      [maxLength]="7"
+                      [minLength]="1"
+                      (keypress)="numberOnly($event)"
                       name="Weight"
-                      type="text"
+                      type="number"
                       [class.is-invalid]="GoodsWeight.touched && !GoodsWeight.valid"
                       [class.is-valid]="GoodsWeight.touched && GoodsWeight.valid"
+                      required
                     />
                   </div>
                 </div>
+
                 <div class="col-lg-6">
                   <div class="form-group">
-                    <label><span class="required-fileds">*</span> {{ l('UnitOfMeasure') }} </label>
+                    <label for="goodsDetail.amount">{{ l('Amount') }} <span class="required-fileds">*</span> </label>
+                    <input
+                      #GoodsAmount="ngModel"
+                      [(ngModel)]="goodsDetail.amount"
+                      class="form-control"
+                      id="goodsDetail.amount"
+                      name="goodsDetail.amount"
+                      type="number"
+                      (keypress)="numberOnly($event)"
+                      [maxLength]="6"
+                      [minLength]="1"
+                      [class.is-invalid]="GoodsAmount.touched && !GoodsAmount.valid"
+                      [class.is-valid]="GoodsAmount.touched && GoodsAmount.valid"
+                      required
+                    />
+                  </div>
+                </div>
+
+                <div class="col-lg-6">
+                  <div class="form-group">
+                    <label>{{ l('UnitOfMeasure') }} <span class="required-fileds">*</span> </label>
                     <div [ngClass]="{ 'spinner spinner-success spinner-right mr-1 ml-1': !allUnitOfMeasure }">
                       <select
                         #GoodsUnitOfMeasure="ngModel"
@@ -93,8 +98,8 @@
                         [disabled]="!allUnitOfMeasure"
                         [class.is-valid]="GoodsUnitOfMeasure.touched && GoodsUnitOfMeasure.valid"
                       >
-                        <option value="">{{ l('selectAUnitOfMeasure') }}</option>
-                        <option *ngFor="let item of allUnitOfMeasure" value="{{ item.id }}">{{ item.displayName }}</option>
+                        <option [value]="">{{ l('selectAUnitOfMeasure') }}</option>
+                        <option *ngFor="let item of allUnitOfMeasure" [value]="item.id">{{ item.displayName }}</option>
                       </select>
                     </div>
                     <span class="form-text text-muted">{{ l('selectAUnitOfMeasure') }}</span>
@@ -109,11 +114,9 @@
                       [(ngModel)]="goodsDetail.description"
                       class="form-control"
                       id="GoodsDetail_Description"
-                      maxlength="256"
-                      minlength="0"
+                      [minLength]="1"
                       name="Description"
                       type="text"
-                      required
                       [class.is-invalid]="DescGoods.touched && !DescGoods.valid"
                       [class.is-valid]="DescGoods.touched && DescGoods.valid"
                     />
@@ -127,8 +130,6 @@
                       [(ngModel)]="goodsDetail.dimentions"
                       class="form-control"
                       id="GoodsDetail_Dimentions"
-                      maxlength="128"
-                      minlength="0"
                       name="Dimentions"
                       type="text"
                       [class.is-valid]="DimentionGoods.touched && DimentionGoods.valid"
@@ -155,14 +156,12 @@
 
                 <div class="col-lg-6">
                   <div class="form-group" [hidden]="!goodsDetail.isDangerousGood">
-                    <label for="GoodsDetail_DangerousGoodsCode">{{ l('DangerousGoodsCode') }}</label>
+                    <label for="GoodsDetail_DangerousGoodsCode">{{ l('DangerousGoodsCode') }} <span class="required-fileds">*</span> </label>
                     <input
                       #DangerousGoods="ngModel"
                       [(ngModel)]="goodsDetail.dangerousGoodsCode"
                       class="form-control"
                       id="GoodsDetail_DangerousGoodsCode"
-                      maxlength="64"
-                      minlength="0"
                       name="DangerousGoodsCode"
                       type="text"
                       [required]="goodsDetail.isDangerousGood"
@@ -178,7 +177,7 @@
 
         <div class="modal-footer">
           <button (click)="close()" class="btn btn-default" type="button">{{ l('Cancel') }}</button>
-          <button [disabled]="!goodsDetailForm.form.valid" class="btn btn-save blue" type="submit">
+          <button [disabled]="!goodsDetailForm.form.valid" class="btn btn-primary blue" type="submit">
             <i class="fa fa-save"></i> <span>{{ l('Save') }}</span>
           </button>
         </div>
