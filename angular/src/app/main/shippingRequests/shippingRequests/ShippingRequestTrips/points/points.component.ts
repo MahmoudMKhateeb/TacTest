@@ -70,7 +70,7 @@ export class PointsComponent extends AppComponentBase implements OnInit, OnDestr
 
   ngOnDestroy() {
     this.pointsServiceSubscription$.unsubscribe();
-    this.tripDestFacilitySub$.unsubscribe();
+    this.tripDestFacilitySub$?.unsubscribe();
     this.tripSourceFacilitySub$.unsubscribe();
     this.currentActiveTripSubs$.unsubscribe();
     console.log('Unsubscribed/Destroid from  Point Component');
