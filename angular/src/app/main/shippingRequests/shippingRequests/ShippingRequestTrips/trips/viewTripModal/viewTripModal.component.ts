@@ -14,6 +14,7 @@ import {
 import { AppComponentBase } from '@shared/common/app-component-base';
 import { finalize } from '@node_modules/rxjs/operators';
 import { FileDownloadService } from '@shared/utils/file-download.service';
+import { PointsService } from '@app/main/shippingRequests/shippingRequests/ShippingRequestTrips/points/points.service';
 
 @Component({
   selector: 'viewTripModal',
@@ -40,7 +41,8 @@ export class ViewTripModalComponent extends AppComponentBase implements OnInit {
     private _shippingRequestTripsService: ShippingRequestsTripServiceProxy,
     private _fileDownloadService: FileDownloadService,
     private _waybillsServiceProxy: WaybillsServiceProxy,
-    private _trucksServiceProxy: TrucksServiceProxy
+    private _trucksServiceProxy: TrucksServiceProxy,
+    private _PointsService: PointsService
   ) {
     super(injector);
   }
@@ -64,6 +66,8 @@ export class ViewTripModalComponent extends AppComponentBase implements OnInit {
       )
       .subscribe((res) => {
         this.trip = res;
+        //Get The Points From The View Service and send them to the Points Service To Draw Them
+        this._PointsService.updateWayPoints(this.trip.routPoints);
         this.assignDriverAndTruck.assignedTruckId = this.trip.assignedTruckId;
         this.assignDriverAndTruck.assignedDriverUserId = this.trip.assignedDriverUserId;
       });

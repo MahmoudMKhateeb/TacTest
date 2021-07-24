@@ -125,7 +125,7 @@ export class PointsComponent extends AppComponentBase implements OnInit, OnDestr
 
   //Load DropDowns For Shipper Only
   loadDropDowns() {
-    this.loadFacilities();
+    this.feature.isEnabled('App.Shipper') ? this.loadFacilities() : 0;
   }
   //for SingleDrop Trip Only
   //draws the points and sets them
