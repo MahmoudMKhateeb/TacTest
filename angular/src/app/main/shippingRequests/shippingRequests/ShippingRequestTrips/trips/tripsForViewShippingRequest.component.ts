@@ -16,7 +16,7 @@ import { ViewTripModalComponent } from '@app/main/shippingRequests/shippingReque
 export class TripsForViewShippingRequestComponent extends AppComponentBase implements AfterViewInit {
   @ViewChild('dataTablechild', { static: false }) dataTable: Table;
   @ViewChild('paginatorchild', { static: false }) paginator: Paginator;
-  @ViewChild('AddNewTripModal', { static: true }) AddNewTripModal: CreateOrEditTripComponent;
+  @ViewChild('AddNewTripModal', { static: false }) AddNewTripModal: CreateOrEditTripComponent;
   @ViewChild('ViewTripModal', { static: false }) ViewTripModal: ViewTripModalComponent;
   @Input() ShippingRequest: ShippingRequestDto;
   @Input() VasListFromFather: GetShippingRequestVasForViewDto[];
