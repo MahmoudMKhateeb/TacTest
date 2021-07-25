@@ -314,6 +314,8 @@ namespace TACHYON.Shipping.Drivers
                     CurrentPoint.IsActive = false;
                     CurrentPoint.IsComplete = true;
                     CurrentPoint.EndTime = Clock.Now;
+
+                    await CurrentUnitOfWork.SaveChangesAsync();
                 }
             }
             else
@@ -323,14 +325,17 @@ namespace TACHYON.Shipping.Drivers
 
                var Count= await _RoutPointRepository.GetAll()
                 .Where(x=> (
-                (x.IsActive &&  x.Id != CurrentPoint.Id &&  x.PickingType == PickingType.Dropoff && x.Id != PointId) ||
+                (x.IsActive &&  x.PickingType == PickingType.Dropoff && x.Id != PointId) ||
 (x.Id == PointId && ( x.IsComplete || x.IsActive))) &&
                 x.ShippingRequestTripId == trip.Id).CountAsync();
 
             if (Count>0) throw new UserFriendlyException(L("ThereIsAnotherActivePointStillNotClose"));
 
 
-            var Newpoint = await _RoutPointRepository.GetAll().Include(x=>x.FacilityFk).FirstOrDefaultAsync(x => x.Id == PointId);
+            var Newpoint = await _RoutPointRepository.GetAll().Include(x=>x.FacilityFk)
+                .Include(x=>x.ShippingRequestTripFk)
+                .ThenInclude(x=>x.ShippingRequestFk)
+                .FirstOrDefaultAsync(x => x.Id == PointId);
                 if (Newpoint == null) throw new UserFriendlyException(L("the trip is not exists"));
                 Newpoint.StartTime = Clock.Now;
                 Newpoint.IsActive = true;
