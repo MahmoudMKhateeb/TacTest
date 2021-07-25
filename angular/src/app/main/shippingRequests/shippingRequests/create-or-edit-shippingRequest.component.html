@@ -489,16 +489,17 @@
                             class="form-control"
                             type="number"
                             name="numberOfDrops"
-                            pattern="^[-]?[0-9]+[\.]?[0-9]+$"
                             [min]="1"
+                            [max]="100"
+                            pattern="^[0-9]*[1-9][0-9]*$"
                             id="numberOfDrops"
                             maxlength="2"
-                            [required]="selectedRouteType == 3"
                             [(ngModel)]="shippingRequest.numberOfDrops"
                             [class.is-invalid]="selectedRouteType == 3 && NumberOfDrops.touched && !NumberOfDrops.valid"
                             [class.is-valid]="selectedRouteType == 3 && NumberOfDrops.touched && NumberOfDrops.valid"
                             [disabled]="selectedRouteType != 3"
                             (keypress)="numberOnly($event)"
+                            [required]="selectedRouteType == 3"
                           />
                           <span class="form-text text-muted">{{ l('DescriptionNumberOfDrops') }} </span>
                         </div>
