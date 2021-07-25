@@ -8,7 +8,7 @@ namespace TACHYON.Invoices
 {
     public interface IInvoiceAppService : IApplicationService
     {
-        Task<PagedResultDto<InvoiceListDto>> GetAll(InvoiceFilterInput input);
+        Task<PagedResultDto<InvoiceListDto>> GetAll(string filter);
 
         Task<InvoiceInfoDto> GetById(EntityDto input);
 

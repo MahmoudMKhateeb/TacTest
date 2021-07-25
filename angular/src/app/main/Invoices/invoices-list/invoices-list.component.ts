@@ -18,6 +18,8 @@ import * as moment from 'moment';
 import { FileDownloadService } from '@shared/utils/file-download.service';
 import { InvoiceTenantItemsDetailsComponent } from 'app/main/invoices/invoice-tenants/model/invoice-tenant-items-details.component';
 import { Router } from '@angular/router';
+import CustomStore from '@node_modules/devextreme/data/custom_store';
+import { LoadOptions } from '@node_modules/devextreme/data/load_options';
 
 @Component({
   templateUrl: './invoices-list.component.html',
@@ -49,6 +51,7 @@ export class InvoicesListComponent extends AppComponentBase implements OnInit {
   dueDateRange: Date[] = [moment().startOf('day').toDate(), moment().endOf('day').toDate()];
   duteDateRangeActive: boolean = false;
   accountType: InvoiceAccountType | undefined = undefined;
+  dataSource: any = {};
   constructor(
     injector: Injector,
     private _InvoiceServiceProxy: InvoiceServiceProxy,
@@ -65,51 +68,52 @@ export class InvoicesListComponent extends AppComponentBase implements OnInit {
     this._CommonServ.getPeriods().subscribe((result) => {
       this.Periods = result;
     });
+    this.getAllInvoices();
   }
   getAll(event?: LazyLoadEvent): void {
-    if (this.primengTableHelper.shouldResetPaging(event)) {
-      this.paginator.changePage(0);
-      return;
-    }
-
-    this.primengTableHelper.showLoadingIndicator();
-
-    if (this.creationDateRangeActive) {
-      this.fromDate = moment(this.creationDateRange[0]);
-      this.toDate = moment(this.creationDateRange[1]);
-    } else {
-      this.fromDate = null;
-      this.toDate = null;
-    }
-
-    if (this.duteDateRangeActive) {
-      this.dueFromDate = moment(this.dueDateRange[0]);
-      this.dueToDate = moment(this.dueDateRange[1]);
-    } else {
-      this.dueFromDate = null;
-      this.dueToDate = null;
-    }
-    this._InvoiceServiceProxy
-      .getAll(
-        this.Tenant ? parseInt(this.Tenant.id) : undefined,
-        this.periodId,
-        this.PaidStatus,
-        this.accountType,
-        this.fromDate,
-        this.toDate,
-        this.dueFromDate,
-        this.dueToDate,
-        this.primengTableHelper.getSorting(this.dataTable),
-        this.primengTableHelper.getSkipCount(this.paginator, event),
-        this.primengTableHelper.getMaxResultCount(this.paginator, event)
-      )
-      .subscribe((result) => {
-        this.IsStartSearch = true;
-        this.primengTableHelper.totalRecordsCount = result.totalCount;
-        this.primengTableHelper.records = result.items;
-        this.primengTableHelper.hideLoadingIndicator();
-        console.log(result.items);
-      });
+    // if (this.primengTableHelper.shouldResetPaging(event)) {
+    //   this.paginator.changePage(0);
+    //   return;
+    // }
+    //
+    // this.primengTableHelper.showLoadingIndicator();
+    //
+    // if (this.creationDateRangeActive) {
+    //   this.fromDate = moment(this.creationDateRange[0]);
+    //   this.toDate = moment(this.creationDateRange[1]);
+    // } else {
+    //   this.fromDate = null;
+    //   this.toDate = null;
+    // }
+    //
+    // if (this.duteDateRangeActive) {
+    //   this.dueFromDate = moment(this.dueDateRange[0]);
+    //   this.dueToDate = moment(this.dueDateRange[1]);
+    // } else {
+    //   this.dueFromDate = null;
+    //   this.dueToDate = null;
+    // }
+    // this._InvoiceServiceProxy
+    //   .getAll(
+    //     this.Tenant ? parseInt(this.Tenant.id) : undefined,
+    //     this.periodId,
+    //     this.PaidStatus,
+    //     this.accountType,
+    //     this.fromDate,
+    //     this.toDate,
+    //     this.dueFromDate,
+    //     this.dueToDate,
+    //     this.primengTableHelper.getSorting(this.dataTable),
+    //     this.primengTableHelper.getSkipCount(this.paginator, event),
+    //     this.primengTableHelper.getMaxResultCount(this.paginator, event)
+    //   )
+    //   .subscribe((result) => {
+    //     this.IsStartSearch = true;
+    //     this.primengTableHelper.totalRecordsCount = result.totalCount;
+    //     this.primengTableHelper.records = result.items;
+    //     this.primengTableHelper.hideLoadingIndicator();
+    //     console.log(result.items);
+    //   });
   }
 
   reloadPage(): void {
@@ -177,5 +181,29 @@ export class InvoicesListComponent extends AppComponentBase implements OnInit {
         this.InvoiceDetailsModel.show(result);
       });
     }
+  }
+
+  getAllInvoices() {
+    let self = this;
+
+    this.dataSource = {};
+    this.dataSource.store = new CustomStore({
+      load(loadOptions: LoadOptions) {
+        console.log(JSON.stringify(loadOptions));
+        return self._InvoiceServiceProxy
+          .getAll(JSON.stringify(loadOptions))
+          .toPromise()
+          .then((response) => {
+            return {
+              data: response.items,
+              totalCount: response.totalCount,
+            };
+          })
+          .catch((error) => {
+            console.log(error);
+            throw new Error('Data Loading Error');
+          });
+      },
+    });
   }
 }
