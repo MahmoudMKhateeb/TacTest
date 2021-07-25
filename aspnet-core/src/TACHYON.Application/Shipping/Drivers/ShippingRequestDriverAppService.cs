@@ -309,7 +309,7 @@ namespace TACHYON.Shipping.Drivers
 
                 if (CurrentPoint.PickingType == PickingType.Pickup && trip.RoutePointStatus != RoutePointStatus.FinishLoading) throw new UserFriendlyException(L("TheTripIsNotFound"));
 
-                if (trip.RoutePointStatus == RoutePointStatus.FinishLoading)
+                if (trip.RoutePointStatus == RoutePointStatus.FinishLoading || trip.RoutePointStatus == RoutePointStatus.DeliveryConfirmation)
                 {
                     CurrentPoint.IsActive = false;
                     CurrentPoint.IsComplete = true;
