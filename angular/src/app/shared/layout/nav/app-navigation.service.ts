@@ -43,6 +43,8 @@ export class AppNavigationService {
             undefined
           ),
           new AppMenuItem('SubmittedDocuments', 'Pages.DocumentFiles', 'flaticon-file', '/app/main/documentFiles/documentFiles'),
+          new AppMenuItem('TrucksSubmittedDocuments', 'Pages.DocumentFiles', 'flaticon-file', '/app/main/documentFiles/TrucksSubmittedDocuments'),
+          new AppMenuItem('DriversSubmittedDocuments', 'Pages.DocumentFiles', 'flaticon-file', '/app/main/documentFiles/DriversSubmittedDocuments'),
           //TODO: the contracts subMenu Need Permission and Route
           new AppMenuItem(
             'contracts',

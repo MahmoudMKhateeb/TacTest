@@ -12,7 +12,6 @@ namespace TACHYON.Documents.DocumentFiles
 {
     public interface IDocumentFilesAppService : IApplicationService
     {
-        Task<PagedResultDto<GetDocumentFileForViewDto>> GetAll(GetAllDocumentFilesInput input);
 
         Task<GetDocumentFileForViewDto> GetDocumentFileForView(Guid id);
 

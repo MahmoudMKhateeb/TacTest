@@ -93,7 +93,6 @@ import { CreateOrEditFacilityModalComponent } from './addressBook/facilities/cre
 import { FileUploadModule } from 'primeng/fileupload';
 
 import { DocumentFilesComponent } from './documentFiles/documentFiles/documentFiles.component';
-import { ViewDocumentFileModalComponent } from './documentFiles/documentFiles/view-documentFile-modal.component';
 
 import { DocumentTypesComponent } from './documentTypes/documentTypes/documentTypes.component';
 import { ViewDocumentTypeModalComponent } from './documentTypes/documentTypes/view-documentType-modal.component';
@@ -191,7 +190,6 @@ import { PriceOfferViewModelComponent } from '@app/main/priceoffer/price-offer-v
 import { PriceOfferListModelComponent } from '@app/main/priceoffer/price-offer-list-model-component';
 import { PriceOfferRejectModelComponent } from '@app/main/priceoffer/price-offer-reject-model-component';
 import { ShippingRequestOffersList } from '@app/main/shippingRequests/shippingRequests/offers/shipping-request-offers-list.component';
-import { RejectionReasonModalComponent } from './documentFiles/documentFiles/rejectionReason-modal.component';
 import { ViewShippingRequestPriceResponseModalComponent } from './shippingRequests/shippingRequests/shipping-request-Response/view-shipping-request-response-modal.component';
 // import { ListboxModule, MultiSelectModule, PickListModule, SelectButtonModule, StepsModule } from '@node_modules/primeng';
 import { PointsComponent } from '@app/main/shippingRequests/shippingRequests/ShippingRequestTrips/points/points.component';
@@ -248,6 +246,10 @@ import { MultiSelectModule } from '@node_modules/primeng/multiselect';
 import { ListboxModule } from '@node_modules/primeng/listbox';
 import { DevExtremeModule, DxButtonModule } from '@node_modules/devextreme-angular';
 import { PdfJsViewerModule } from '@node_modules/ng2-pdfjs-viewer';
+import { InputNumberModule } from '@node_modules/primeng/inputnumber';
+import { TrucksSubmittedDocumentsComponent } from './documentFiles/documentFiles/trucks-submitted-documents/trucks-submitted-documents.component';
+import { DriversSubmittedDocumentsComponent } from './documentFiles/documentFiles/drivers-submitted-documents/drivers-submitted-documents.component';
+import { ViweTruckDocumentsModalComponent } from './trucks/trucks/viwe-truck-documents-modal/viwe-truck-documents-modal.component';
 NgxBootstrapDatePickerConfigService.registerNgxBootstrapDatePickerLocales();
 
 @NgModule({
@@ -289,6 +291,7 @@ NgxBootstrapDatePickerConfigService.registerNgxBootstrapDatePickerLocales();
     DxButtonModule,
     DevExtremeModule,
     PdfJsViewerModule,
+    InputNumberModule,
   ],
   declarations: [
     TrucksTypesTranslationsComponent,
@@ -338,7 +341,6 @@ NgxBootstrapDatePickerConfigService.registerNgxBootstrapDatePickerLocales();
     ViewTermAndConditionModalComponent,
     CreateOrEditTermAndConditionModalComponent,
     CapacitiesComponent,
-    RejectionReasonModalComponent,
     ViewCapacityModalComponent,
     CreateOrEditCapacityModalComponent,
     TransportTypesComponent,
@@ -360,7 +362,6 @@ NgxBootstrapDatePickerConfigService.registerNgxBootstrapDatePickerLocales();
     ViewFacilityModalComponent,
     CreateOrEditFacilityModalComponent,
     DocumentFilesComponent,
-    ViewDocumentFileModalComponent,
     DocumentTypesComponent,
     ViewDocumentTypeModalComponent,
     CreateOrEditDocumentTypeModalComponent,
@@ -470,6 +471,10 @@ NgxBootstrapDatePickerConfigService.registerNgxBootstrapDatePickerLocales();
     TrackingConfirmModalComponent,
     TrackingPODModalComponent,
     TMSRequestListComponent,
+    TrucksSubmittedDocumentsComponent,
+    DriversSubmittedDocumentsComponent,
+    ViweTruckDocumentsModalComponent,
+    ViweTruckDocumentsModalComponent,
   ],
   providers: [
     { provide: BsDatepickerConfig, useFactory: NgxBootstrapDatePickerConfigService.getDatepickerConfig },

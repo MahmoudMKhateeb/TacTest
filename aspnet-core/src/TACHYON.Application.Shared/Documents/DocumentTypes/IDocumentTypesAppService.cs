@@ -11,7 +11,7 @@ namespace TACHYON.Documents.DocumentTypes
 {
     public interface IDocumentTypesAppService : IApplicationService
     {
-        Task<PagedResultDto<GetDocumentTypeForViewDto>> GetAll(GetAllDocumentTypesInput input);
+        Task<PagedResultDto<DocumentTypeDto>> GetAll(GetAllDocumentTypesInput input);
 
         Task<GetDocumentTypeForViewDto> GetDocumentTypeForView(long id);
 

@@ -12,7 +12,7 @@
     <div class="modal-content">
       <form *ngIf="active" #documentFileForm="ngForm" (ngSubmit)="save()" novalidate autocomplete="off">
         <div class="modal-header">
-          <h4 class="modal-title">
+          <h4 class="hnbjukmodal-title">
             <span *ngIf="documentFile.id">{{ l('Edit') }} {{ l('DocumentFile') }}</span>
             <span *ngIf="!documentFile.id">{{ l('Create') }} {{ l('NewDocumentFile') }}</span>
           </h4>
@@ -21,13 +21,6 @@
           </button>
         </div>
         <div class="modal-body">
-          <!--          <div *ngIf="!documentFile.id && CreateOrEditDocumentFileDtoList.length == 1" style="width: 200px;">-->
-          <!--            <label-->
-          <!--              >Create Document:-->
-          <!--              <h3>{{ CreateOrEditDocumentFileDtoList[0].documentTypeDto.displayName }}</h3></label-->
-          <!--            >-->
-          <!--          </div>-->
-
           <div class="row">
             <div *ngIf="!documentFile.id" class="form-group col-md-6">
               <div>
@@ -117,7 +110,7 @@
                 placeholder="{{ l('Note') }}"
                 cols="12"
                 rows="4"
-                style="resize: none;"
+                style="resize: none"
                 class="form-control"
                 id="Note"
                 [maxLength]="500"
