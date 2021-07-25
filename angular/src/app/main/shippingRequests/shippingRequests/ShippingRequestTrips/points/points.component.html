@@ -86,7 +86,7 @@
                             <li>
                               <a
                                 class="dropdown-item"
-                                *ngIf="record.pickingType == PickingType.Dropoff && record.id"
+                                *ngIf="RouteType !== RouteTypes.SingleDrop && record.pickingType == PickingType.Dropoff && record.id"
                                 (click)="downloadDropWayBill(record.id)"
                                 >{{ l('downloadDropWaybill') }}</a
                               >

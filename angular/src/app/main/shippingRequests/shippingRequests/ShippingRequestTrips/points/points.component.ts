@@ -47,6 +47,7 @@ export class PointsComponent extends AppComponentBase implements OnInit, OnDestr
   activeTripId: number;
   @Output() SelectedWayPointsFromChild: EventEmitter<CreateOrEditRoutPointDto[]> = new EventEmitter<CreateOrEditRoutPointDto[]>();
   RouteType: number;
+  RouteTypes = ShippingRequestRouteType;
   wayPointsList: CreateOrEditRoutPointDto[] = [];
 
   allFacilities: FacilityForDropdownDto[];
