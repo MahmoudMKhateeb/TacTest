@@ -37,7 +37,7 @@
             <div class="row">
               <div class="col-xl-12 text-right">
                 <div class="form-group">
-                  <button class="btn btn-danger" (click)="deleteNotifications()">
+                  <button class="btn btn-danger" [disabled]="this.primengTableHelper.totalRecordsCount == 0" (click)="deleteNotifications()">
                     <i class="la la-times"></i>{{ 'DeleteListedNotifications' | localize }}
                   </button>
                   <button class="btn btn-primary" (click)="getNotifications()"><i class="fa fa-sync"></i> {{ 'Refresh' | localize }}</button>
@@ -59,21 +59,21 @@
               >
                 <ng-template pTemplate="header">
                   <tr>
-                    <th style="width: 100px; text-align: center;">
+                    <th style="width: 100px; text-align: center">
                       {{ 'Actions' | localize }}
                     </th>
-                    <th style="width: 80px; text-align: center;">{{ 'Severity' | localize }}</th>
+                    <th style="width: 80px; text-align: center">{{ 'Severity' | localize }}</th>
                     <th>
                       {{ 'Notification' | localize }}
                     </th>
-                    <th style="width: 200px; text-align: center;">
+                    <th style="width: 200px; text-align: center">
                       {{ 'CreationTime' | localize }}
                     </th>
                   </tr>
                 </ng-template>
                 <ng-template pTemplate="body" let-record="$implicit">
                   <tr>
-                    <td style="width: 130px;">
+                    <td style="width: 130px">
                       <button
                         class="btn btn-sm btn-icon btn-primary"
                         [attr.title]="!isRead(record) ? l('SetAsRead') : ''"
@@ -87,7 +87,7 @@
                         <i class="fa fa-times" [attr.aria-label]="l('Delete')"></i>
                       </button>
                     </td>
-                    <td style="text-align: center;">
+                    <td style="text-align: center">
                       <i class="{{ record.formattedNotification.icon }} {{ record.formattedNotification.iconFontClass }} fa-2x"></i>
                       <br />
                       {{ getNotificationTextBySeverity(record.formattedNotification.severity) }}
@@ -104,7 +104,7 @@
                         >{{ truncateString(record.formattedNotification.text, 120) }}</span
                       >
                     </td>
-                    <td style="text-align: center;">
+                    <td style="text-align: center">
                       <span title="{{ record.notification.creationTime | momentFormat: 'llll' }}" class="{{ getRowClass(record) }}">
                         {{ fromNow(record.notification.creationTime) }}
                       </span>
