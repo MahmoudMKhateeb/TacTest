@@ -323,7 +323,7 @@ namespace TACHYON.Shipping.Drivers
 
                var Count= await _RoutPointRepository.GetAll()
                 .Where(x=> (
-                (x.IsActive &&  x.PickingType == PickingType.Dropoff && x.Id != PointId) ||
+                (x.IsActive &&  x.Id != CurrentPoint.Id &&  x.PickingType == PickingType.Dropoff && x.Id != PointId) ||
 (x.Id == PointId && ( x.IsComplete || x.IsActive))) &&
                 x.ShippingRequestTripId == trip.Id).CountAsync();
 
