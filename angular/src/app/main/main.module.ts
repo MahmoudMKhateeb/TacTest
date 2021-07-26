@@ -250,6 +250,7 @@ import { InputNumberModule } from '@node_modules/primeng/inputnumber';
 import { TrucksSubmittedDocumentsComponent } from './documentFiles/documentFiles/trucks-submitted-documents/trucks-submitted-documents.component';
 import { DriversSubmittedDocumentsComponent } from './documentFiles/documentFiles/drivers-submitted-documents/drivers-submitted-documents.component';
 import { ViweTruckDocumentsModalComponent } from './trucks/trucks/viwe-truck-documents-modal/viwe-truck-documents-modal.component';
+import { InvoiceTenantItemComponent } from './Invoices/invoice-tenants/invoice-tenant-item/invoice-tenant-item.component';
 NgxBootstrapDatePickerConfigService.registerNgxBootstrapDatePickerLocales();
 
 @NgModule({
@@ -475,6 +476,8 @@ NgxBootstrapDatePickerConfigService.registerNgxBootstrapDatePickerLocales();
     DriversSubmittedDocumentsComponent,
     ViweTruckDocumentsModalComponent,
     ViweTruckDocumentsModalComponent,
+    InvoiceTenantItemComponent,
+    InvoiceTenantItemComponent,
   ],
   providers: [
     { provide: BsDatepickerConfig, useFactory: NgxBootstrapDatePickerConfigService.getDatepickerConfig },

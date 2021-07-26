@@ -6,6 +6,7 @@ using Abp.Collections.Extensions;
 using Abp.Domain.Repositories;
 using Abp.Linq.Extensions;
 using Abp.UI;
+using AutoMapper.QueryableExtensions;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -34,7 +35,7 @@ namespace TACHYON.Invoices.Groups
 {
     [AbpAuthorize(AppPermissions.Pages_Invoices_SubmitInvoices)]
 
-    public class SubmitInvoicesAppService : TACHYONAppServiceBase,ISubmitInvoiceAppService
+    public class SubmitInvoicesAppService : TACHYONAppServiceBase, ISubmitInvoiceAppService
     {
         private readonly IRepository<InvoicePeriod> _PeriodRepository;
         private readonly IRepository<SubmitInvoice, long> _SubmitInvoiceRepository;
@@ -73,18 +74,18 @@ namespace TACHYON.Invoices.Groups
         }
 
 
-        public async Task<PagedResultDto<SubmitInvoiceListDto>> GetAll(SubmitInvoiceFilterInput input)
+        public async Task<PagedResultDto<SubmitInvoiceListDto>> GetAllSubmitInvoices(GetAllSubmitInvoicesInput input)
         {
             DisableTenancyFilters();
-            var query = await GetSubmitInvoices(input);
-            var pages = query.PageBy(input);
 
-            var totalCount = await query.CountAsync();
+            var query = _SubmitInvoiceRepository
+                .GetAll()
+                .AsNoTracking()
+                .WhereIf(AbpSession.TenantId.HasValue && !await IsEnabledAsync(AppFeatures.TachyonDealer), i => i.TenantId == AbpSession.TenantId.Value)
+                .WhereIf(!AbpSession.TenantId.HasValue || await IsEnabledAsync(AppFeatures.TachyonDealer), i => true)
+                .ProjectTo<SubmitInvoiceListDto>(AutoMapperConfigurationProvider);
 
-            return new PagedResultDto<SubmitInvoiceListDto>(
-                totalCount,
-                ObjectMapper.Map<List<SubmitInvoiceListDto>>(pages)
-            );
+            return await LoadResultAsync(query, input.LoadData);
 
         }
 
@@ -120,7 +121,7 @@ namespace TACHYON.Invoices.Groups
             ObjectMapper.Map(document, submit);
 
             var admin = await _userManager.GetAdminHostAsync();
-            await  _appNotifier.SubmitInvoiceOnClaim(new Abp.UserIdentifier(admin.TenantId, admin.Id) , submit);
+            await _appNotifier.SubmitInvoiceOnClaim(new Abp.UserIdentifier(admin.TenantId, admin.Id), submit);
         }
 
 
@@ -132,12 +133,12 @@ namespace TACHYON.Invoices.Groups
                 .GetAll()
                 .Include(g => g.Tenant)
                 .Include(g => g.Trips)
-                 .ThenInclude (x=>x.ShippingRequestTripFK)
-                .FirstOrDefaultAsync(g => g.Id == id && g.Status== SubmitInvoiceStatus.Claim);            
+                 .ThenInclude(x => x.ShippingRequestTripFK)
+                .FirstOrDefaultAsync(g => g.Id == id && g.Status == SubmitInvoiceStatus.Claim);
             if (invoice != null)
             {
 
-                 await _invoiceManager.GenerateCarrirInvoice(invoice);
+                await _invoiceManager.GenerateCarrirInvoice(invoice);
                 invoice.Status = SubmitInvoiceStatus.Accepted;
                 await _appNotifier.SubmitInvoiceOnAccepted(new UserIdentifier(invoice.TenantId, (await _userManager.GetAdminByTenantIdAsync(invoice.TenantId)).Id), invoice);
             }
@@ -166,7 +167,7 @@ namespace TACHYON.Invoices.Groups
 
         {
             DisableTenancyFiltersIfHost();
-            var documentFile = await _SubmitInvoiceRepository.FirstOrDefaultAsync(g => g.Id == GroupId && g.Status != SubmitInvoices.SubmitInvoiceStatus.New );
+            var documentFile = await _SubmitInvoiceRepository.FirstOrDefaultAsync(g => g.Id == GroupId && g.Status != SubmitInvoices.SubmitInvoiceStatus.New);
             if (documentFile == null)
             {
                 throw new UserFriendlyException(L("TheRequestNotFound"));
@@ -181,10 +182,10 @@ namespace TACHYON.Invoices.Groups
         {
             string[] HeaderText;
             Func<SubmitInvoiceListDto, object>[] propertySelectors;
-            if (!AbpSession.TenantId.HasValue || await IsEnabledAsync(AppFeatures.TachyonDealer) )
+            if (!AbpSession.TenantId.HasValue || await IsEnabledAsync(AppFeatures.TachyonDealer))
             {
-                HeaderText = new string[] { "SubmitInvoiceNo", "CompanyName", "Interval",  "TotalAmount", "CreationTime", "Status" };
-                propertySelectors = new Func<SubmitInvoiceListDto, object>[] { _ => _.ReferencNumber, _ => _.TenantName, _ => _.Period,  _ => _.TotalAmount, _ => _.CreationTime.ToShortDateString(), _ => _.StatusTitle};
+                HeaderText = new string[] { "SubmitInvoiceNo", "CompanyName", "Interval", "TotalAmount", "CreationTime", "Status" };
+                propertySelectors = new Func<SubmitInvoiceListDto, object>[] { _ => _.ReferencNumber, _ => _.TenantName, _ => _.Period, _ => _.TotalAmount, _ => _.CreationTime.ToShortDateString(), _ => _.StatusTitle };
             }
             else
             {
@@ -210,8 +211,8 @@ namespace TACHYON.Invoices.Groups
             var SubmitInvoice = await GetSubmitInvoiceInfo(id);
             List<InvoiceItemDto> Items = GetInvoiceItems(SubmitInvoice);
 
-          var  HeaderText = new string[] { "Sequence", "Date", "WaybillNumber", "CityOrigin", "DestinationDelivery", "TruckType", "Price", "Vat", "Total", "Quantity" };
-          var  propertySelectors = new Func<InvoiceItemDto, object>[] { _ => _.Sequence, _ => _.DateWork, _ => _.WayBillNumber, _ => _.Source, _ => _.Destination, _ => _.TruckType
+            var HeaderText = new string[] { "Sequence", "Date", "WaybillNumber", "CityOrigin", "DestinationDelivery", "TruckType", "Price", "Vat", "Total", "Quantity" };
+            var propertySelectors = new Func<InvoiceItemDto, object>[] { _ => _.Sequence, _ => _.DateWork, _ => _.WayBillNumber, _ => _.Source, _ => _.Destination, _ => _.TruckType
           ,_=> _.SubTotalAmount,_=> _.VatAmount,_=> _.TotalAmount,_=> _.Remarks };
 
             return _excelExporterInvoiceItemManager.ExportToFile(Items, "SubmitInvoices", HeaderText, propertySelectors);
@@ -276,7 +277,7 @@ namespace TACHYON.Invoices.Groups
             if (SubmitInvoice == null) throw new UserFriendlyException(L("TheSubmitInvoiceNotFound"));
             return SubmitInvoice;
         }
-        private  List<InvoiceItemDto> GetInvoiceItems(SubmitInvoice SubmitInvoice)
+        private List<InvoiceItemDto> GetInvoiceItems(SubmitInvoice SubmitInvoice)
         {
             var TotalItem = SubmitInvoice.Trips.Count + SubmitInvoice.Trips.Sum(v => v.ShippingRequestTripFK.ShippingRequestTripVases.Count);
             int Sequence = 1;
