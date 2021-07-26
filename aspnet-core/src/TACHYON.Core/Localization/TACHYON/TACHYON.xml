@@ -545,6 +545,7 @@
 		<text name="DifferentTenantImpersonationErrorMessage">Can not impersonate a user of a different tenant!</text>
 		<text name="Dimentions">Dimensions</text>
 		<text name="DirectRequests">Direct requests</text>
+		<text name="DirectRequest">Direct request</text>
 		<text name="DirectShippingRequests">Direct Shipping Requests</text>
 		<text name="Disable">Disable</text>
 		<text name="Disabled">Disabled</text>
