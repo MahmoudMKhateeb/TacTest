@@ -523,6 +523,7 @@
 		<text name="DownloadCollectedData_Description">تحميل إعدادات حسابك</text>
 		<text name="DownloadDropWaybill">تحميل وثيقة الشحن</text>
 		<text name="DownloadInvoice">تحميل الفاتورة</text>
+		<text name="UploadInvoiceDocument">تحميل مستند الفاتورة</text>
 		<text name="DriectRequestCarrierRespone">
 			<a href="/app/main/shippingRequests/shippingRequests/view?id={id}">{clientname} قام بوضع عرض مالي للشحنة رقم: {ShipimentNo}.</a>
 		</text>

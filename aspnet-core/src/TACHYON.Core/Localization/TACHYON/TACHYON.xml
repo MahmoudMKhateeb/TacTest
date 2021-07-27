@@ -586,6 +586,7 @@
 		<text name="DownloadDropWaybill">Download waybill</text>
 		<text name="DocumentHeaderDetails">Document Details</text>
 		<text name="DownloadInvoice">Download invoice</text>
+		<text name="UploadInvoiceDocument">Upload invoice document</text>
 		<text name="DriectRequestCarrierRespone">The {clientname} has established a current view of the  shipment No.: {id}.</text>
 		<text name="Driver">Driver</text>
 		<text name="DriverAcceptTrip">The driver {driver} has been accepted the trip from {source} to {destination}</text>
