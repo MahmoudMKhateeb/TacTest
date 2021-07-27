@@ -1,4 +1,4 @@
-<div class="login-form" style="width: 500px !important;" [@routerTransition]>
+<div class="login-form" style="width: 500px !important" [@routerTransition]>
   <div class="text-left label-text">
     <h3 class="font-weight-bolder text-dark font-size-h4 font-size-h1-lg text-red">
       {{ 'SignUp' | localize }}
@@ -9,7 +9,7 @@
   <hr />
 
   <form #registerForm="ngForm" role="form" novalidate (submit)="save(registerForm)" class="login-form form mt-2 text-red">
-    <h5 style="text-align: center;">
+    <h5 style="text-align: center">
       {{ 'CompanyInformation' | localize }}
       <br />
       <br />
@@ -28,7 +28,7 @@
             [(ngModel)]="model.companyName"
             name="tenancyName"
             required
-            style="width: 100% !important;"
+            style="width: 100% !important"
             maxlength="64"
             pattern="^[a-zA-Z][ a-zA-Z0-9_-]{1,}$"
           />
@@ -91,26 +91,7 @@
       </div>
     </div>
 
-    <div class="row text-left">
-      <div class="col-12">
-        <div class="form-group">
-          <label>{{ 'MobileNo' | localize }}</label>
-          <input
-            #mobileNo="ngModel"
-            class="form-control"
-            type="number"
-            onkeypress="numberOnly($event)"
-            [(ngModel)]="model.mobileNo"
-            name="MobileNo"
-            required
-            maxlength="128"
-          />
-          <div>
-            <validation-messages [formCtrl]="mobileNo"></validation-messages>
-          </div>
-        </div>
-      </div>
-    </div>
+    <div class="row text-left"></div>
 
     <div class="row text-left">
       <div class="col-12">
@@ -133,7 +114,7 @@
       </div>
     </div>
 
-    <h5 style="text-align: center;" class="mt-2">
+    <h5 style="text-align: center" class="mt-2">
       {{ 'AdminUserAccountInfo' | localize }}
     </h5>
     <br />
@@ -148,7 +129,7 @@
             [(ngModel)]="model.userAdminFirstName"
             name="userAdminFirstName"
             required
-            style="width: 100% !important;"
+            style="width: 100% !important"
             maxlength="64"
           />
           <div>
@@ -167,7 +148,7 @@
             [(ngModel)]="model.userAdminSurname"
             name="userAdminSurname"
             required
-            style="width: 100% !important;"
+            style="width: 100% !important"
             maxlength="64"
           />
           <div>
@@ -196,6 +177,24 @@
             <!-- <span class="form-text text-muted"> {{ l('Enter') }} {{ l('AdminEmailAddress') }}</span> -->
             <span *ngIf="!isEmailValid" class="form-text text-danger">{{ l('AdminEmailAddress') }} {{ l('NotValid') }}</span>
             <span *ngIf="!isEmailAvailable" class="form-text text-danger">{{ l('AdminEmailAddress') }} {{ 'AlreadyTaken' | localize }}</span>
+          </div>
+        </div>
+      </div>
+      <div class="col-12">
+        <div class="form-group">
+          <label>{{ 'MobileNo' | localize }}</label>
+          <input
+            #mobileNo="ngModel"
+            class="form-control"
+            type="number"
+            onkeypress="numberOnly($event)"
+            [(ngModel)]="model.mobileNo"
+            name="MobileNo"
+            required
+            maxlength="128"
+          />
+          <div>
+            <validation-messages [formCtrl]="mobileNo"></validation-messages>
           </div>
         </div>
       </div>
@@ -293,15 +292,15 @@
       </div>
     </div>
 
-    <div *ngIf="isAvailableTermsAndConditons" style="align-items: baseline;" class="row">
+    <div *ngIf="isAvailableTermsAndConditons" style="align-items: baseline" class="row">
       <div class="col-1">
         <label class="checkbox checkbox-danger">
           <input #TermsAndCondition_Host type="checkbox" [(ngModel)]="approvedHostTerms" name="Checkboxes12" />
           <span></span>
         </label>
       </div>
-      <div style="display: contents;" class="col-8">
-        <div style="width: max-content; padding-left: 0px; padding-right: 3px;" class="alert alert-white" role="alert">
+      <div style="display: contents" class="col-8">
+        <div style="width: max-content; padding-left: 0px; padding-right: 3px" class="alert alert-white" role="alert">
           {{ l('IAgreeonTahcyon') }}
         </div>
         <div>
@@ -322,7 +321,7 @@
     </div>
 
     <button
-      style="margin-top: 0px !important; height: 35px;"
+      style="margin-top: 0px !important; height: 35px"
       [disabled]="saving"
       routerLink="/account/login"
       type="button"
@@ -331,7 +330,7 @@
       <i class="fa fa-arrow-left"></i> {{ 'Back' | localize }}
     </button>
     <button
-      style="margin-top: 0px !important; height: 35px;"
+      style="margin-top: 0px !important; height: 35px"
       type="submit"
       class="btn btn-primary"
       [disabled]="
