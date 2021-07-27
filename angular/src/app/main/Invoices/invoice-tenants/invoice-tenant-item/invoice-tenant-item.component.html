@@ -1,0 +1,37 @@
+<div class="contentSetPrice">
+  <div class="table-sendOffer">
+    <dx-data-grid [dataSource]="itemsDataSource" [showBorders]="true" [columnAutoWidth]="true">
+      <dxi-column dataField="sequence" caption="{{ l('Sequence') }}"></dxi-column>
+      <dxi-column dataField="dateWork" caption="{{ l('Date') }}"></dxi-column>
+      <dxi-column dataField="wayBillNumber" caption="{{ l('WaybillNumber') }}"></dxi-column>
+      <dxi-column dataField="source" caption="{{ l('CityOrigin') }}"></dxi-column>
+      <dxi-column dataField="destination" caption="{{ l('DestinationDelivery') }}"></dxi-column>
+      <dxi-column dataField="truckType" caption="{{ l('TruckType') }}"></dxi-column>
+      <dxi-column dataField="subTotalAmount" caption="{{ l('Price') }} {{ l('SAR') }}"></dxi-column>
+      <dxi-column dataField="vatAmount" caption="{{ l('Vat') }} {{ Data?.taxVat }}%"></dxi-column>
+      <dxi-column dataField="totalAmount" caption="{{ l('Total') }}"></dxi-column>
+      <dxi-column dataField="remarks" caption="{{ l('Quantity') }}"></dxi-column>
+    </dx-data-grid>
+  </div>
+
+  <div class="divirCard"></div>
+
+  <table class="table">
+    <tbody>
+      <tr>
+        <td>
+          {{ l('SubTotalAmount') }} &nbsp;<span>{{ Data?.subTotalAmount | number }}</span> &nbsp;<span>{{ l('SAR') }}</span>
+        </td>
+        <td>
+          {{ l('VatAmount') }} &nbsp;<span>{{ Data?.vatAmount | number }}</span> &nbsp;<span>{{ l('SAR') }}</span>
+        </td>
+        <td>
+          {{ l('TotalAmount') }} &nbsp; <span>{{ Data?.totalAmount | number }}</span> &nbsp;<span>{{ l('SAR') }}</span>
+        </td>
+        <td>
+          <button (click)="exportToExcel()" class="btn btn-outline-danger"><i class="fa fa-file-excel"></i> {{ l('ExportToExcel') }}</button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>

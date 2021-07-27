@@ -1,4 +1,6 @@
 ﻿using Abp.Application.Services.Dto;
+using System;
+using TACHYON.Dto;
 
 namespace TACHYON.Documents.DocumentTypes.Dtos
 {
@@ -22,7 +24,10 @@ namespace TACHYON.Documents.DocumentTypes.Dtos
         public bool HasExpirationDate { get; set; }
 
         public string RequiredFrom { get; set; }
+        public int DocumentsEntityId { get; set; }
+
         public string Edition { get; set; }
+        public int? EditionId { get; set; }
 
 
         public bool HasNumber { get; set; }
@@ -39,6 +44,13 @@ namespace TACHYON.Documents.DocumentTypes.Dtos
         public int? InActiveToleranceDays { get; set; }
 
         public bool HasHijriExpirationDate { get; set; }
+
+
+        public string TemplateName { get; set; }
+        public string TemplateContentType { get; set; }
+        public Guid? TemplateId { get; set; }
+        public int? DocumentRelatedWithId { get; set; }
+        public string DocumentRelatedWithName { get; set; }
 
     }
 }

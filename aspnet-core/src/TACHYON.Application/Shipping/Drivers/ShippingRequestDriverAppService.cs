@@ -11,6 +11,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Dynamic.Core;
 using System.Threading.Tasks;
+using TACHYON.Features;
 using TACHYON.Firebases;
 using TACHYON.Goods.GoodCategories.Dtos;
 using TACHYON.Mobile;
@@ -153,21 +154,32 @@ namespace TACHYON.Shipping.Drivers
                    .ThenInclude(t=>t.Translations)
                  .WhereIf(IsAccepted,t=>t.DriverStatus== ShippingRequestTripDriverStatus.Accepted)
                 .SingleOrDefaultAsync(t => t.Id == TripId && t.Status != ShippingRequestTripStatus.Canceled && t.AssignedDriverUserId == AbpSession.UserId);
+
+            
             if (trip==null) throw new UserFriendlyException(L("TheTripIsNotFound"));
             var tripDto = ObjectMapper.Map<ShippingRequestTripDriverDetailsDto>(trip);
+
+            // return current driver trip
+            var CurrentTrip = await _ShippingRequestTrip.GetAll()
+                    .Where(x => x.AssignedDriverUserId == AbpSession.UserId && x.Status == ShippingRequestTripStatus.Intransit).FirstOrDefaultAsync();
+
+            if (CurrentTrip != null)
+            {
+                tripDto.CurrentTripId = CurrentTrip.Id;
+            }
+
             if (trip.AssignedTruckFk !=null) tripDto.TruckType = ObjectMapper.Map<TrucksTypeDto>(trip.AssignedTruckFk.TrucksTypeFk).TranslatedDisplayName;
             if (tripDto.TripStatus == ShippingRequestTripStatus.Intransit)
             {
                 tripDto.ActionStatus = ShippingRequestTripDriverActionStatusDto.ContinueTrip;
             }
+
+
             else if (trip.StartTripDate.Date <= Clock.Now.Date && trip.Status == ShippingRequestTripStatus.New && trip.DriverStatus== ShippingRequestTripDriverStatus.Accepted)
             {
-
                 //Check there any trip the driver still working on or not
-                var Count = await _ShippingRequestTrip.GetAll()
-                    .Where(x => x.AssignedDriverUserId == AbpSession.UserId && x.Status == ShippingRequestTripStatus.Intransit).CountAsync();
                     await _RoutPointRepository.GetAll().Where(x => x.IsActive && x.ShippingRequestTripFk.AssignedDriverUserId == AbpSession.UserId).CountAsync();
-                if (Count == 0)
+                if (CurrentTrip == null)
                     tripDto.ActionStatus = ShippingRequestTripDriverActionStatusDto.CanStartTrip;
             }
 
@@ -415,7 +427,43 @@ namespace TACHYON.Shipping.Drivers
             }
 
         }
-      
+
+
+        public async Task ResetTrip(int TripId)
+        {
+            DisableTenancyFilters();
+
+            var trip = await _ShippingRequestTrip.GetAll()
+                .WhereIf(IsEnabled(AppFeatures.Carrier), x=>x.ShippingRequestFk.CarrierTenantId==AbpSession.TenantId)
+                .WhereIf(IsEnabled(AppFeatures.TachyonDealer), x=>x.ShippingRequestFk.IsTachyonDeal==true)
+                .Include(x => x.ShippingRequestFk)
+                .Include(x => x.RoutPoints)
+                .FirstOrDefaultAsync(x => x.Id == TripId);
+            if (trip != null)
+            {
+                trip.Status = ShippingRequestTripStatus.New;
+                trip.RoutePointStatus = RoutePointStatus.StandBy;
+                trip.DriverStatus = ShippingRequestTripDriverStatus.None;
+                trip.RejectedReason = string.Empty;
+                trip.RejectReasonId = default(int?);
+                trip.RoutPoints.ToList().ForEach(item =>
+                {
+                    item.IsActive = false;
+                    item.IsComplete = false;
+                    item.Status = RoutePointStatus.StandBy;
+                });
+                var request = trip.ShippingRequestFk;
+                request.Status = ShippingRequestStatus.PostPrice;
+
+                await _shippingRequestTripTransitionRepository.DeleteAsync(x => x.ToPoint.ShippingRequestTripId == TripId);
+            }
+            else
+            {
+                throw new UserFriendlyException(L("TripCannotFound"));
+            }
+
+        }
+
         public async Task PushNotification(int id)
         {
             

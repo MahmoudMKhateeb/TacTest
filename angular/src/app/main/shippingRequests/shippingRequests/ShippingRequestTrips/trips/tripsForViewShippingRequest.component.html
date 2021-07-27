@@ -120,7 +120,7 @@
                       <a class="dropdown-item" (click)="ViewTripModal.ResetTrip(record.id)">{{ l('ResetTrip') }}</a>
                     </li>
                     <li *ngIf="record.status != 0 && record.status != 6 && record.status != 7">
-                      <a class="dropdown-item" (click)="TripAccidentModal.show(record, null)">{{ l('CreateAccident') }}</a>
+                      <a class="dropdown-item" (click)="TripAccidentModal.show(record.id, null)">{{ l('CreateAccident') }}</a>
                     </li>
                     <li *ngIf="permission.isGranted('Pages.ShippingRequestTrips.Delete') && feature.isEnabled('App.Shipper')">
                       <a class="dropdown-item" (click)="AddNewTripModal.deleteTrip(record.id)">{{ l('Delete') }}</a>

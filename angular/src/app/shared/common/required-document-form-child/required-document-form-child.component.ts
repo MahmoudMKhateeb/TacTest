@@ -2,6 +2,7 @@ import { AfterViewInit, ChangeDetectorRef, Component, EventEmitter, Injector, In
 import {
   CreateOrEditDocumentFileDto,
   DocumentFilesServiceProxy,
+  DocumentTypesServiceProxy,
   UpdateDocumentFileInput,
   UserEditDto,
 } from '@shared/service-proxies/service-proxies';
@@ -12,6 +13,7 @@ import { AppConsts } from '@shared/AppConsts';
 import { IAjaxResponse, TokenService } from '@node_modules/abp-ng2-module';
 import { ControlContainer, NgForm } from '@angular/forms';
 import { NgbDateStruct } from '@node_modules/@ng-bootstrap/ng-bootstrap';
+import { FileDownloadService } from '@shared/utils/file-download.service';
 
 @Component({
   selector: 'app-required-document-form-child',
@@ -51,7 +53,13 @@ export class RequiredDocumentFormChildComponent extends AppComponentBase impleme
   private _DocsUploaderOptions: FileUploaderOptions = {};
   selectedDate: any;
 
-  constructor(injector: Injector, private cdr: ChangeDetectorRef, private _tokenService: TokenService) {
+  constructor(
+    injector: Injector,
+    private cdr: ChangeDetectorRef,
+    private _tokenService: TokenService,
+    private _fileDownloadService: FileDownloadService,
+    public _documentTypesServiceProxy: DocumentTypesServiceProxy
+  ) {
     super(injector);
   }
 
@@ -128,9 +136,8 @@ export class RequiredDocumentFormChildComponent extends AppComponentBase impleme
       if (resp.success) {
         //attach each fileToken to his CreateOrEditDocumentFileDto
 
-        this.createOrEditDocumentFileDtos.find(
-          (x) => x.name === item.file.name && x.extn === item.file.type
-        ).updateDocumentFileInput = new UpdateDocumentFileInput({ fileToken: resp.result.fileToken });
+        this.createOrEditDocumentFileDtos.find((x) => x.name === item.file.name && x.extn === item.file.type).updateDocumentFileInput =
+          new UpdateDocumentFileInput({ fileToken: resp.result.fileToken });
       } else {
         this.message.error(resp.error.message);
       }
@@ -189,6 +196,11 @@ export class RequiredDocumentFormChildComponent extends AppComponentBase impleme
   }
 
   onlyNumberKey(event) {
-    return (event.charCode == 8 || event.charCode == 0) ? null : event.charCode >= 48 && event.charCode <= 57;
-}
+    return event.charCode == 8 || event.charCode == 0 ? null : event.charCode >= 48 && event.charCode <= 57;
+  }
+  downloadTemplate(id: number): void {
+    this._documentTypesServiceProxy.getFileDto(id).subscribe((result) => {
+      this._fileDownloadService.downloadTempFile(result);
+    });
+  }
 }

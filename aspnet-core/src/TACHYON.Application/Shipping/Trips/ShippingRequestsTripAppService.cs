@@ -18,9 +18,11 @@ using TACHYON.Authorization.Users;
 using TACHYON.Documents.DocumentFiles;
 using TACHYON.Features;
 using TACHYON.Firebases;
+using TACHYON.Goods.GoodCategories;
 using TACHYON.Goods.GoodsDetails;
 using TACHYON.Notifications;
 using TACHYON.Routs.RoutPoints;
+using TACHYON.Routs.RoutPoints.Dtos;
 using TACHYON.Shipping.ShippingRequests;
 using TACHYON.Shipping.ShippingRequestTrips;
 using TACHYON.Shipping.Trips.Dto;
@@ -36,6 +38,7 @@ namespace TACHYON.Shipping.Trips
         private readonly IRepository<RoutPoint, long> _RoutPointRepository;
         private readonly IRepository<ShippingRequestTripVas, long> _ShippingRequestTripVasRepository;
         private readonly IRepository<GoodsDetail, long> _GoodsDetailRepository;
+        private readonly IRepository<GoodCategory> _GoodCategoryRepository;
         private readonly UserManager _userManager;
         private readonly IAppNotifier _appNotifier;
         private readonly IFirebaseNotifier _firebase;
@@ -51,7 +54,7 @@ namespace TACHYON.Shipping.Trips
             UserManager userManager,
             IAppNotifier appNotifier,
             IFirebaseNotifier firebase,
-            ShippingRequestManager shippingRequestManager, DocumentFilesAppService documentFilesAppService)
+            ShippingRequestManager shippingRequestManager, DocumentFilesAppService documentFilesAppService, IRepository<GoodCategory> goodCategoryRepository)
         {
             _ShippingRequestTripRepository = ShippingRequestTripRepository;
             _ShippingRequestRepository = ShippingRequestRepository;
@@ -63,6 +66,7 @@ namespace TACHYON.Shipping.Trips
             _firebase = firebase;
             _shippingRequestManager = shippingRequestManager;
             _documentFilesAppService = documentFilesAppService;
+            _GoodCategoryRepository = goodCategoryRepository;
         }
 
 
@@ -153,25 +157,34 @@ namespace TACHYON.Shipping.Trips
             {
                 throw new UserFriendlyException(L("The number of drop points must be" + request.NumberOfDrops));
             }
-            var dropPoints = input.RoutPoints.Where(x => x.PickingType == PickingType.Dropoff);
-            foreach (var drop in dropPoints)
+            //Total weight validation
+            if (request.TotalWeight > 0)
             {
-                if (drop.ReceiverId == null &&
-                    (drop.ReceiverCardIdNumber == null ||
-                    string.IsNullOrWhiteSpace(drop.ReceiverEmailAddress) ||
-                    string.IsNullOrWhiteSpace(drop.ReceiverFullName) ||
-                    drop.ReceiverPhoneNumber == null))
+                var TotalWeight = input.RoutPoints.Where(x => x.GoodsDetailListDto != null).Sum(x => x.GoodsDetailListDto.Sum(g => g.Weight));
+                if (TotalWeight > request.TotalWeight)
                 {
-                    throw new UserFriendlyException(L("YouMustEnterReceiver"));
-                }
-                else if(drop.ReceiverId!= null && (drop.ReceiverCardIdNumber != null ||
-                    !string.IsNullOrWhiteSpace(drop.ReceiverEmailAddress) ||
-                    !string.IsNullOrWhiteSpace(drop.ReceiverFullName) ||
-                    drop.ReceiverPhoneNumber != null))
-                {
-                    throw new UserFriendlyException(L("YouMustEnterOneReceiver"));
+                    throw new UserFriendlyException(L("TheTotalWeightOfGoodsDetailsshouldNotBeGreaterThanShippingRequestWeight", request.TotalWeight));
                 }
             }
+            //var dropPoints = input.RoutPoints.Where(x => x.PickingType == PickingType.Dropoff);
+            //foreach (var drop in dropPoints)
+            //{
+            //    if (drop.ReceiverId == null &&
+            //        (string.IsNullOrWhiteSpace(drop.ReceiverCardIdNumber) ||
+            //        string.IsNullOrWhiteSpace(drop.ReceiverEmailAddress) ||
+            //        string.IsNullOrWhiteSpace(drop.ReceiverFullName) ||
+            //        string.IsNullOrWhiteSpace(drop.ReceiverPhoneNumber)))
+            //    {
+            //        throw new UserFriendlyException(L("YouMustEnterReceiver"));
+            //    }
+            //else if(drop.ReceiverId!= null && (drop.ReceiverCardIdNumber != null ||
+            //    !string.IsNullOrWhiteSpace(drop.ReceiverEmailAddress) ||
+            //    !string.IsNullOrWhiteSpace(drop.ReceiverFullName) ||
+            //    drop.ReceiverPhoneNumber != null))
+            //{
+            //    throw new UserFriendlyException(L("YouMustEnterOneReceiver"));
+            //}
+            //}
 
             if (!input.Id.HasValue)
             {
@@ -233,8 +246,10 @@ namespace TACHYON.Shipping.Trips
         private async Task Create(CreateOrEditShippingRequestTripDto input, ShippingRequest request)
         {
             var RoutePoint = input.RoutPoints.OrderBy(x => x.PickingType);
-            ShippingRequestTrip trip = ObjectMapper.Map<ShippingRequestTrip>(input);
 
+            await ValidateGoodsCategory(input.RoutPoints, request.GoodCategoryId);
+
+            ShippingRequestTrip trip = ObjectMapper.Map<ShippingRequestTrip>(input);
 
             //insert trip 
             var shippingRequestTripId = await _ShippingRequestTripRepository.InsertAndGetIdAsync(trip);
@@ -259,6 +274,8 @@ namespace TACHYON.Shipping.Trips
             var trip = await GetTrip((int)input.Id, input.ShippingRequestId);
             TripCanEditOrDelete(trip);
 
+
+            await ValidateGoodsCategory(input.RoutPoints, request.GoodCategoryId);
 
             foreach (var point in trip.RoutPoints)
             {
@@ -462,6 +479,37 @@ namespace TACHYON.Shipping.Trips
         {
             return new UserIdentifier(TenantId, (await _userManager.GetAdminByTenantIdAsync(TenantId)).Id);
         }
+
+        private async Task ValidateGoodsCategory(IEnumerable<CreateOrEditRoutPointDto> routPoints , int? shippingRequestGoodCategoryId)
+        {
+
+            var goodsCategories = await _GoodCategoryRepository.GetAllListAsync();
+
+            // todo Add Localized String Here
+            foreach (var goodsDetail in routPoints.Where(x=>x.GoodsDetailListDto!=null).SelectMany(routPoint => routPoint.GoodsDetailListDto))
+            {
+
+
+                if (goodsDetail.GoodCategoryId != null)
+                {
+                    if (shippingRequestGoodCategoryId == null) 
+                        throw new UserFriendlyException(L("ErrorWhenCreateTrip")); // Need Review
+
+                    var goodCategory = goodsCategories
+                        .FirstOrDefault(x=> x.Id == goodsDetail.GoodCategoryId.Value);
+
+                    if (goodCategory.FatherId == null)
+                        throw new UserFriendlyException(L("GoodsCategoryMustBeSubCategoryNotMainCategory"));
+
+                    if (goodCategory.FatherId != shippingRequestGoodCategoryId)
+                        throw new UserFriendlyException(L("GoodsCategoryMustBeSubOfShippingRequestGoodCategory"));
+
+
+                }
+                else throw new UserFriendlyException(L("GoodsCategoryIsRequired"));
+            }
+        }
+
         #endregion
     }
 }

@@ -1,0 +1,15 @@
+<div [@routerTransition]>
+  <div class="content d-flex flex-column flex-column-fluid">
+    <sub-header [title]="'TrucksSubmittedDocuments' | localize"> </sub-header>
+    <!-- <sub-header [title]="'DocumentFiles' | localize" [description]="'DocumentFilesHeaderInfo' | localize"> </sub-header> -->
+    <div [class]="containerClass">
+      <div class="card card-custom gutter-b">
+        <div class="card-body">
+          <div class="row align-items-center">
+            <app-truck-submited-documents-list #truckSubmitedDocumentsListComponent></app-truck-submited-documents-list>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

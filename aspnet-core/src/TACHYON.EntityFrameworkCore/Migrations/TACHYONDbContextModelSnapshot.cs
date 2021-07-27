@@ -2157,6 +2157,9 @@ namespace TACHYON.Migrations
                         .HasColumnType("nvarchar(256)")
                         .HasMaxLength(256);
 
+                    b.Property<int?>("DocumentRelatedWithId")
+                        .HasColumnType("int");
+
                     b.Property<int>("DocumentsEntityId")
                         .HasColumnType("int");
 
@@ -2206,6 +2209,15 @@ namespace TACHYON.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("SpecialConstant")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("TemplateContentType")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<Guid?>("TemplateId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("TemplateName")
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");

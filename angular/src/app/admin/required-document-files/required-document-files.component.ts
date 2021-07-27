@@ -7,6 +7,7 @@ import {
   DocumentFilesServiceProxy,
   DocumentsEntitiesEnum,
   GetTenantSubmittedDocumnetForView,
+  DocumentTypesServiceProxy,
 } from '@shared/service-proxies/service-proxies';
 import { finalize } from '@node_modules/rxjs/operators';
 import { appModuleAnimation } from '@shared/animations/routerTransition';
@@ -43,6 +44,7 @@ export class RequiredDocumentFilesComponent extends AppComponentBase {
   constructor(
     injector: Injector,
     private _documentFilesServiceProxy: DocumentFilesServiceProxy,
+    private _documentType: DocumentTypesServiceProxy,
     private _tokenService: TokenService,
     private _fileDownloadService: FileDownloadService,
     private _router: Router
@@ -162,7 +164,11 @@ export class RequiredDocumentFilesComponent extends AppComponentBase {
       behavior: 'smooth',
     });
   }
-
+  downloadTemplate(documentFile: DocumentFileDto): void {
+    this._documentType.getFileDto(parseInt(documentFile.id)).subscribe((result) => {
+      this._fileDownloadService.downloadTempFile(result);
+    });
+  }
   // dateSelected() {
   //   for (let index = 0; index < this.createOrEditDocumentFileDtos.length; index++) {
   //     const element = this.createOrEditDocumentFileDtos[index];

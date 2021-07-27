@@ -1,4 +1,4 @@
-﻿<div [@routerTransition]>
+<div [@routerTransition]>
   <!-- [description]="'DocumentTypesHeaderInfo' | localize" -->
   <div class="content d-flex flex-column flex-column-fluid">
     <sub-header [title]="'DocumentTypes' | localize">
@@ -14,332 +14,106 @@
     <div [class]="containerClass">
       <div class="card card-custom gutter-b">
         <div class="card-body">
-          <form class="form" autocomplete="off">
-            <div>
-              <div class="row align-items-center">
-                <div class="col-xl-12">
-                  <div class="form-group m-form__group align-items-center">
-                    <div class="input-group">
-                      <input
-                        [(ngModel)]="filterText"
-                        name="filterText"
-                        autoFocus
-                        class="form-control m-input"
-                        [placeholder]="l('SearchWithThreeDot')"
-                        type="text"
-                      />
-                      <span class="input-group-btn">
-                        <button (click)="getDocumentTypes()" class="btn btn-primary" type="submit"><i class="flaticon-search-1"></i></button>
-                      </span>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div class="row" [hidden]="!advancedFiltersAreShown">
-                <div class="col-md-12">
-                  <div class="kt-separator kt-separator--border-dashed"></div>
-                </div>
-
-                <!-- <div class="col-md-3">
-                  <div class="form-group">
-                    <label for="DisplayNameFilter">{{ l('DisplayName') }}</label>
-                    <input type="text" class="form-control" id="DisplayNameFilter" name="displayNameFilter" [(ngModel)]="displayNameFilter" />
-                  </div>
-                </div> -->
-                <div class="col-md-3">
-                  <label for="IsRequiredFilterSelect">{{ l('IsRequired') }}</label>
-                  <select
-                    class="form-control form-control-lg custom-select mr-sm-2"
-                    name="IsRequiredFilter"
-                    id="IsRequiredFilterSelect"
-                    [(ngModel)]="isRequiredFilter"
-                  >
-                    <option value="-1">{{ l('All') }}</option>
-                    <option value="0">{{ l('False') }}</option>
-                    <option value="1">{{ l('True') }}</option>
-                  </select>
-                </div>
-                <div class="col-md-3">
-                  <label for="HasExpirationDateFilterSelect">{{ l('HasExpirationDate') }}</label>
-                  <select
-                    class="form-control form-control-lg custom-select mr-sm-2"
-                    name="HasExpirationDateFilter"
-                    id="HasExpirationDateFilterSelect"
-                    [(ngModel)]="hasExpirationDateFilter"
-                  >
-                    <option value="-1">{{ l('All') }}</option>
-                    <option value="0">{{ l('False') }}</option>
-                    <option value="1">{{ l('True') }}</option>
-                  </select>
-                </div>
-                <div class="col-md-3">
-                  <div class="form-group">
-                    <label for="RequiredFromFilter">{{ l('RequiredFrom') }}</label>
-                    <select
-                      class="form-control form-control-lg custom-select mr-sm-2"
-                      name="requiredFromFilter"
-                      id="RequiredFromFilter"
-                      [(ngModel)]="requiredFromFilter"
-                    >
-                      <option value="">{{ l('All') }}</option>
-                      <option *ngFor="let entity of entityList" [value]="entity.displayName">{{
-                        entity.displayName == 'Tenant' ? 'Companies(General)' : entity.displayName
-                      }}</option>
-                    </select>
-                    <!-- <label for="RequiredFromFilter">{{ l('RequiredFrom') }}</label>
-                    <input type="text" class="form-control" id="RequiredFromFilter" name="requiredFromFilter" [(ngModel)]="requiredFromFilter" /> -->
-                  </div>
-                </div>
-              </div>
-              <!--      M. Start Of extra filters-->
-              <!--              <div class="row" [hidden]="!advancedFiltersAreShown">-->
-              <!--                <div class="col-md-3">-->
-              <!--                  <div class="form-group">-->
-              <!--                    <label for="documentsEntityFilter">{{ l('documentsEntity') }}</label>-->
-              <!--                    <input-->
-              <!--                      type="text"-->
-              <!--                      class="form-control"-->
-              <!--                      id="documentsEntityFilter"-->
-              <!--                      name="documentsEntityFilter"-->
-              <!--                      [(ngModel)]="documentsEntityFilter"-->
-              <!--                    />-->
-              <!--                  </div>-->
-              <!--                </div>-->
-              <!--              </div>-->
-              <!--      M. end Of extra filters-->
-
-              <div class="row mb-2">
-                <div class="col-sm-12">
-                  <span
-                    class="clickable-item text-muted"
-                    *ngIf="!advancedFiltersAreShown"
-                    (click)="advancedFiltersAreShown = !advancedFiltersAreShown"
-                    ><i class="fa fa-angle-down"></i> {{ l('ShowAdvancedFilters') }}</span
-                  >
-                  <span class="clickable-item text-muted" *ngIf="advancedFiltersAreShown" (click)="advancedFiltersAreShown = !advancedFiltersAreShown"
-                    ><i class="fa fa-angle-up"></i> {{ l('HideAdvancedFilters') }}</span
-                  >
-                </div>
-              </div>
-            </div>
-          </form>
-
           <div class="row align-items-center">
-            <!--<Primeng-Datatable-Start>-->
-            <div class="primeng-datatable-container col-12" [busyIf]="primengTableHelper.isLoading">
-              <p-table
-                #dataTable
-                (onLazyLoad)="getDocumentTypes($event)"
-                [value]="primengTableHelper.records"
-                rows="{{ primengTableHelper.defaultRecordsCountPerPage }}"
-                [paginator]="false"
-                [lazy]="true"
-                [scrollable]="true"
-                ScrollWidth="100%"
-                [responsive]="primengTableHelper.isResponsive"
-                [resizableColumns]="primengTableHelper.resizableColumns"
-              >
-                <ng-template pTemplate="header">
-                  <tr>
-                    <th style="width: 130px;" [hidden]="!isGrantedAny('Pages.DocumentTypes.Edit', 'Pages.DocumentTypes.Delete')">
-                      {{ l('Actions') }}
-                    </th>
-                    <th style="width: 150px;" pSortableColumn="displayName">
-                      {{ l('Name') }}
-                      <p-sortIcon field="documentType.displayName"></p-sortIcon>
-                    </th>
-                    <th style="width: 150px;" pSortableColumn="isRequired">
-                      {{ l('IsRequired') }}
-                      <p-sortIcon field="documentType.isRequired"></p-sortIcon>
-                    </th>
-                    <th style="width: 150px;" pSortableColumn="documentsEntityId">
-                      {{ l('RequiredFrom') }}
-                      <p-sortIcon field="documentType.requiredFrom"></p-sortIcon>
-                    </th>
-                    <th style="width: 150px;" pSortableColumn="specialConstant">
-                      {{ l('SpecialConstant') }}
-                      <p-sortIcon field="documentType.specialConstant"></p-sortIcon>
-                    </th>
-                    <th style="width: 200px;" pSortableColumn="hasExpirationDate">
-                      {{ l('HasExpirationDate') }}
-                      <p-sortIcon field="documentType.hasExpirationDate"></p-sortIcon>
-                    </th>
-                    <th style="width: 200px;" pSortableColumn="expirationAlertDays">
-                      {{ l('ExpirationAlertDays') }}
-                      <p-sortIcon field="documentType.expirationAlertDays"></p-sortIcon>
-                    </th>
-                    <th style="width: 200px;" pSortableColumn="inActiveToleranceDays ">
-                      {{ l('InActiveToleranceDays') }}
-                      <p-sortIcon field="documentType.inActiveToleranceDays"></p-sortIcon>
-                    </th>
-                    <th style="width: 200px;" pSortableColumn="inActiveAccountExpired">
-                      {{ l('InActiveAccountExpired') }}
-                      <p-sortIcon field="documentType.inActiveAccountExpired"></p-sortIcon>
-                    </th>
-                    <th style="width: 150px;" pSortableColumn="hasNumber">
-                      {{ l('HasNumber') }}
-                      <p-sortIcon field="documentType.hasNumber"></p-sortIcon>
-                    </th>
-                    <th style="width: 150px;" pSortableColumn="isNumberUnique">
-                      {{ l('IsNumberUnique') }}
-                      <p-sortIcon field="documentType.isNumberUnique"></p-sortIcon>
-                    </th>
-                    <th style="width: 190px;" pSortableColumn="hasHijriExpirationDate">
-                      {{ l('HasHijriExpirationDate') }}
-                      <p-sortIcon field="documentType.hasHijriExpirationDate"></p-sortIcon>
-                    </th>
-                    <th style="width: 150px;" pSortableColumn="hasNotes">
-                      {{ l('HasNotes') }}
-                      <p-sortIcon field="documentType.hasNotes"></p-sortIcon>
-                    </th>
-                  </tr>
-                </ng-template>
-                <ng-template pTemplate="body" let-record="$implicit">
-                  <tr>
-                    <td style="width: 130px;" [hidden]="!isGrantedAny('Pages.DocumentTypes.Edit', 'Pages.DocumentTypes.Delete')">
-                      <div class="btn-group dropdown" dropdown container="body">
-                        <button class="dropdown-toggle btn btn-sm btn-primary" dropdownToggle>
-                          <i class="fa fa-cog"></i><span class="caret"></span> {{ l('Actions') }}
-                        </button>
-                        <ul class="dropdown-menu" *dropdownMenu>
-                          <!-- <li>
-                            <a href="javascript:;" class="dropdown-item" (click)="viewDocumentTypeModal.show(record)">{{ l('View') }}</a>
-                          </li> -->
-                          <li>
-                            <a
-                              href="javascript:;"
-                              *ngIf="permission.isGranted('Pages.DocumentTypes.Edit')"
-                              class="dropdown-item"
-                              (click)="createOrEditDocumentTypeModal.show(record.documentType.id)"
-                              >{{ l('Edit') }}</a
-                            >
-                          </li>
-                          <li>
-                            <a
-                              class="dropdown-item"
-                              href="javascript:;"
-                              *ngIf="permission.isGranted('Pages.DocumentTypes.Delete')"
-                              (click)="deleteDocumentType(record.documentType)"
-                              >{{ l('Delete') }}</a
-                            >
-                          </li>
-                        </ul>
-                      </div>
-                    </td>
-                    <td style="width: 150px; text-align: center;">
-                      <span class="ui-column-title"> {{ l('Name') }}</span>
-                      {{ record.documentType.displayName }}
-                    </td>
-                    <td style="width: 150px; text-align: center;">
-                      <span class="ui-column-title"> {{ l('IsRequired') }}</span>
-                      <div *ngIf="record.documentType.isRequired" class="text-center">
-                        <i class="fa fa-check-circle text-success" title="True"></i>
-                      </div>
-                      <div *ngIf="!record.documentType.isRequired" class="text-center">
-                        <i class="fa fa-times-circle" title="False"></i>
-                      </div>
-                    </td>
-                    <td style="width: 150px; text-align: center;">
-                      <span class="ui-column-title"> {{ l('RequiredFrom') }}</span>
-                      {{
-                        record.documentType.requiredFrom == 'Tenant'
-                          ? ('Company' | localize) + '/ ' + record.documentType.edition
-                          : record.documentType.requiredFrom
-                      }}
-                    </td>
+            <dx-data-grid
+              #grid
+              id="dataGrid"
+              [dataSource]="dataSource"
+              [remoteOperations]="true"
+              [showColumnLines]="true"
+              [showRowLines]="false"
+              [showBorders]="true"
+              [rowAlternationEnabled]="true"
+              keyExpr="id"
+              (onEditingStart)="onEditingStart($event)"
+            >
+              <dxo-filter-row [visible]="true"></dxo-filter-row>
+              <dxo-search-panel [visible]="true"></dxo-search-panel>
+              <dxo-filter-panel [visible]="true"></dxo-filter-panel>
+              <dxo-filter-builder-popup [position]="popupPosition"></dxo-filter-builder-popup>
 
-                    <td *ngIf="record.documentType.specialConstant != ''" style="width: 150px; text-align: center;">
-                      <span class="ui-column-title"> {{ l('SpecialConstant') }}</span>
-                      {{ record.documentType.specialConstant }}
-                    </td>
-                    <td *ngIf="record.documentType.specialConstant == ''" style="width: 150px; text-align: center;">
-                      <span style="color: blue;" class="ui-column-title"> {{ l('SpecialConstant') }}</span>
-                      {{ l('None') }}
-                    </td>
-                    <td style="width: 200px; text-align: center;">
-                      <span class="ui-column-title"> {{ l('HasExpirationDate') }}</span>
-                      <div *ngIf="record.documentType.hasExpirationDate" class="text-center">
-                        <i class="fa fa-check-circle text-success" title="True"></i>
-                      </div>
-                      <div *ngIf="!record.documentType.hasExpirationDate" class="text-center"><i class="fa fa-times-circle" title="False"></i></div>
-                    </td>
-                    <td style="width: 200px; text-align: center;">
-                      <span class="ui-column-title"> {{ l('ExpirationAlertDays') }}</span>
-                      {{ record.documentType.expirationAlertDays == null ? '-' : record.documentType.expirationAlertDays }}
-                    </td>
+              <dxi-column
+                cellTemplate="cellTemplateActions"
+                [allowFiltering]="false"
+                [allowSorting]="false"
+                [allowEditing]="false"
+                [editorOptions]="{ visible: false }"
+                [width]="50"
+              ></dxi-column>
+              <dxi-column dataField="displayName"> </dxi-column>
+              <dxi-column dataField="name" [allowEditing]="false"></dxi-column>
+              <dxi-column dataField="isRequired"></dxi-column>
+              <dxi-column dataField="documentsEntityId" caption="requiredFrom">
+                <dxo-lookup [dataSource]="entityList" displayExpr="displayName" valueExpr="id"> </dxo-lookup>
+              </dxi-column>
+              <dxi-column dataField="editionId" caption="edition">
+                <dxo-lookup [dataSource]="editions" displayExpr="displayName" valueExpr="id"> </dxo-lookup>
+              </dxi-column>
+              <dxi-column dataField="hasExpirationDate"></dxi-column>
+              <dxi-column dataField="hasNumber"></dxi-column>
+              <dxi-column dataField="hasNotes"></dxi-column>
+              <dxi-column dataField="templateName"></dxi-column>
+              <dxi-column dataField="documentRelatedWithName" caption="RelatedWith"></dxi-column>
 
-                    <td style="width: 200px; text-align: center;">
-                      <span class="ui-column-title"> {{ l('InActiveToleranceDays') }}</span>
-                      {{ record.documentType.inActiveToleranceDays == null ? '-' : record.documentType.inActiveToleranceDays }}
-                    </td>
-                    <td style="width: 200px; text-align: center;">
-                      <span class="ui-column-title"> {{ l('InActiveAccountExpired') }}</span>
-                      <div *ngIf="record.documentType.inActiveAccountExpired" class="text-center">
-                        <i class="fa fa-check-circle text-success" title="True"></i>
-                      </div>
-                      <div *ngIf="!record.documentType.inActiveAccountExpired" class="text-center">
-                        <i class="fa fa-times-circle" title="False"></i>
-                      </div>
-                    </td>
-                    <td style="width: 150px; text-align: center;">
-                      <span class="ui-column-title"> {{ l('HasNumber') }}</span>
-                      <div *ngIf="record.documentType.hasNumber" class="text-center">
-                        <i class="fa fa-check-circle text-success" title="True"></i>
-                      </div>
-                      <div *ngIf="!record.documentType.hasNumber" class="text-center">
-                        <i class="fa fa-times-circle" title="False"></i>
-                      </div>
-                    </td>
-                    <td style="width: 150px; text-align: center;">
-                      <span class="ui-column-title"> {{ l('IsNumberUnique') }}</span>
-                      <div *ngIf="record.documentType.isNumberUnique" class="text-center">
-                        <i class="fa fa-check-circle text-success" title="True"></i>
-                      </div>
-                      <div *ngIf="!record.documentType.isNumberUnique" class="text-center">
-                        <i class="fa fa-times-circle" title="False"></i>
-                      </div>
-                    </td>
+              <dxo-remote-operations [sorting]="true" [paging]="true" [filtering]="true"> </dxo-remote-operations>
+              <dxo-paging [pageSize]="10"></dxo-paging>
+              <dxo-pager [showPageSizeSelector]="true" [allowedPageSizes]="[5, 10, 20, 50, 200]"></dxo-pager>
 
-                    <td style="width: 190px; text-align: center;">
-                      <span class="ui-column-title"> {{ l('HasHijriExpirationDate') }}</span>
-                      <div *ngIf="record.documentType.hasHijriExpirationDate" class="text-center">
-                        <i class="fa fa-check-circle text-success" title="True"></i>
-                      </div>
-                      <div *ngIf="!record.documentType.hasHijriExpirationDate" class="text-center">
-                        <i class="fa fa-times-circle" title="False"></i>
-                      </div>
-                    </td>
+              <div *dxTemplate="let options of 'cellTemplateActions'">
+                <div class="btn-group dropdown" dropdown container="body">
+                  <a href="javascript:;" class="btn btn-sm btn-clean btn-icon mr-2" dropdownToggle>
+                    <span class="svg-icon svg-icon-md">
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        xmlns:xlink="http://www.w3.org/1999/xlink"
+                        width="24px"
+                        height="24px"
+                        viewBox="0 0 24 24"
+                        version="1.1"
+                      >
+                        <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+                          <rect x="0" y="0" width="24" height="24"></rect>
+                          <path
+                            d="M5,8.6862915 L5,5 L8.6862915,5 L11.5857864,2.10050506 L14.4852814,5 L19,5 L19,9.51471863 L21.4852814,12 L19,14.4852814 L19,19 L14.4852814,19 L11.5857864,21.8994949 L8.6862915,19 L5,19 L5,15.3137085 L1.6862915,12 L5,8.6862915 Z M12,15 C13.6568542,15 15,13.6568542 15,12 C15,10.3431458 13.6568542,9 12,9 C10.3431458,9 9,10.3431458 9,12 C9,13.6568542 10.3431458,15 12,15 Z"
+                            fill="#000000"
+                          ></path>
+                        </g>
+                      </svg>
+                    </span>
+                  </a>
 
-                    <td style="width: 150px; text-align: center;">
-                      <span class="ui-column-title"> {{ l('HasNotes') }}</span>
-                      <div *ngIf="record.documentType.hasNotes" class="text-center">
-                        <i class="fa fa-check-circle text-success" title="True"></i>
-                      </div>
-                      <div *ngIf="!record.documentType.hasNotes" class="text-center">
-                        <i class="fa fa-times-circle" title="False"></i>
-                      </div>
-                    </td>
-                  </tr>
-                </ng-template>
-              </p-table>
-              <div class="primeng-no-data" *ngIf="primengTableHelper.totalRecordsCount == 0">
-                {{ l('NoData') }}
+                  <ul class="dropdown-menu" *dropdownMenu>
+                    <li>
+                      <a
+                        href="javascript:;"
+                        *ngIf="permission.isGranted('Pages.DocumentTypes.Edit')"
+                        class="dropdown-item"
+                        (click)="createOrEditDocumentTypeModal.show(options.data.id)"
+                        >{{ l('Edit') }}</a
+                      >
+                    </li>
+                    <li>
+                      <a
+                        class="dropdown-item"
+                        href="javascript:;"
+                        *ngIf="permission.isGranted('Pages.DocumentTypes.Delete')"
+                        (click)="deleteDocumentType(options.data)"
+                        >{{ l('Delete') }}</a
+                      >
+                    </li>
+                    <li>
+                      <a
+                        class="dropdown-item"
+                        href="javascript:;"
+                        *ngIf="options.data.templateName != null"
+                        (click)="downloadTemplate(options.data.id)"
+                        >{{ l('DownloadTemplate') }}</a
+                      >
+                    </li>
+                  </ul>
+                </div>
               </div>
-              <div class="primeng-paging-container">
-                <p-paginator
-                  [rows]="primengTableHelper.defaultRecordsCountPerPage"
-                  #paginator
-                  (onPageChange)="getDocumentTypes($event)"
-                  [totalRecords]="primengTableHelper.totalRecordsCount"
-                  [rowsPerPageOptions]="primengTableHelper.predefinedRecordsCountPerPage"
-                >
-                </p-paginator>
-                <span class="total-records-count">
-                  {{ l('TotalRecordsCount', primengTableHelper.totalRecordsCount) }}
-                </span>
-              </div>
-            </div>
-            <!--<Primeng-Datatable-End>-->
+            </dx-data-grid>
           </div>
         </div>
       </div>

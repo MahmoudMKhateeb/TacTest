@@ -93,7 +93,6 @@ import { CreateOrEditFacilityModalComponent } from './addressBook/facilities/cre
 import { FileUploadModule } from 'primeng/fileupload';
 
 import { DocumentFilesComponent } from './documentFiles/documentFiles/documentFiles.component';
-import { ViewDocumentFileModalComponent } from './documentFiles/documentFiles/view-documentFile-modal.component';
 
 import { DocumentTypesComponent } from './documentTypes/documentTypes/documentTypes.component';
 import { ViewDocumentTypeModalComponent } from './documentTypes/documentTypes/view-documentType-modal.component';
@@ -191,7 +190,6 @@ import { PriceOfferViewModelComponent } from '@app/main/priceoffer/price-offer-v
 import { PriceOfferListModelComponent } from '@app/main/priceoffer/price-offer-list-model-component';
 import { PriceOfferRejectModelComponent } from '@app/main/priceoffer/price-offer-reject-model-component';
 import { ShippingRequestOffersList } from '@app/main/shippingRequests/shippingRequests/offers/shipping-request-offers-list.component';
-import { RejectionReasonModalComponent } from './documentFiles/documentFiles/rejectionReason-modal.component';
 import { ViewShippingRequestPriceResponseModalComponent } from './shippingRequests/shippingRequests/shipping-request-Response/view-shipping-request-response-modal.component';
 // import { ListboxModule, MultiSelectModule, PickListModule, SelectButtonModule, StepsModule } from '@node_modules/primeng';
 import { PointsComponent } from '@app/main/shippingRequests/shippingRequests/ShippingRequestTrips/points/points.component';
@@ -292,6 +290,7 @@ NgxBootstrapDatePickerConfigService.registerNgxBootstrapDatePickerLocales();
     DxButtonModule,
     DevExtremeModule,
     PdfJsViewerModule,
+    InputNumberModule,
   ],
   declarations: [
     TrucksTypesTranslationsComponent,
@@ -341,7 +340,6 @@ NgxBootstrapDatePickerConfigService.registerNgxBootstrapDatePickerLocales();
     ViewTermAndConditionModalComponent,
     CreateOrEditTermAndConditionModalComponent,
     CapacitiesComponent,
-    RejectionReasonModalComponent,
     ViewCapacityModalComponent,
     CreateOrEditCapacityModalComponent,
     TransportTypesComponent,
@@ -363,7 +361,6 @@ NgxBootstrapDatePickerConfigService.registerNgxBootstrapDatePickerLocales();
     ViewFacilityModalComponent,
     CreateOrEditFacilityModalComponent,
     DocumentFilesComponent,
-    ViewDocumentFileModalComponent,
     DocumentTypesComponent,
     ViewDocumentTypeModalComponent,
     CreateOrEditDocumentTypeModalComponent,

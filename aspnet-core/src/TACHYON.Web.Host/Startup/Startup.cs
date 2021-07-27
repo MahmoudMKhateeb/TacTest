@@ -7,6 +7,7 @@ using Abp.Extensions;
 using Abp.Hangfire;
 using Abp.PlugIns;
 using Castle.Facilities.Logging;
+using CrystalQuartz.AspNetCore;
 using FirebaseAdmin;
 using Google.Apis.Auth.OAuth2;
 using GraphQL.Server;
@@ -25,6 +26,7 @@ using Microsoft.OpenApi.Models;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
 using Owl.reCAPTCHA;
+using Quartz.Impl;
 using Stripe;
 using Swashbuckle.AspNetCore.Swagger;
 using System;
@@ -185,7 +187,7 @@ namespace TACHYON.Web.Startup
             app.UseAbp(options =>
             {
                 options.UseAbpRequestLocalization = false; //used below: UseAbpRequestLocalization
-    });
+            });
 
             if (env.IsDevelopment())
             {
@@ -203,6 +205,7 @@ namespace TACHYON.Web.Startup
             app.UseCors(DefaultCorsPolicyName); //Enable CORS!
 
             app.UseAuthentication();
+
             app.UseJwtTokenMiddleware();
 
             if (bool.Parse(_appConfiguration["IdentityServer:IsEnabled"]))
@@ -246,6 +249,7 @@ namespace TACHYON.Web.Startup
                 }
             }
 
+
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapHub<AbpCommonHub>("/signalr");
@@ -286,6 +290,11 @@ namespace TACHYON.Web.Startup
                     options.InjectBaseUrl(_appConfiguration["App:ServerRootAddress"]);
                 }); //URL: /swagger
             }
+
+
+
+            app.UseCrystalQuartz(() => StdSchedulerFactory.GetDefaultScheduler().Result);
+
         }
 
         private void ConfigureKestrel(IServiceCollection services)

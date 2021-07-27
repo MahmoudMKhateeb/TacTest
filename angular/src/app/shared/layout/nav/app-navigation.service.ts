@@ -43,6 +43,8 @@ export class AppNavigationService {
             undefined
           ),
           new AppMenuItem('SubmittedDocuments', 'Pages.DocumentFiles', 'flaticon-file', '/app/main/documentFiles/documentFiles'),
+          new AppMenuItem('TrucksSubmittedDocuments', 'Pages.DocumentFiles', 'flaticon-file', '/app/main/documentFiles/TrucksSubmittedDocuments'),
+          new AppMenuItem('DriversSubmittedDocuments', 'Pages.DocumentFiles', 'flaticon-file', '/app/main/documentFiles/DriversSubmittedDocuments'),
           //TODO: the contracts subMenu Need Permission and Route
           new AppMenuItem(
             'contracts',
@@ -108,7 +110,7 @@ export class AppNavigationService {
             'CreateNewRequest',
             'Pages.ShippingRequests',
             'flaticon2-add',
-            '/app/main/shippingRequests/shippingRequests/createOrEdit',
+            '/app/main/shippingRequests/shippingRequestWizard',
             undefined,
             undefined,
             undefined,
@@ -592,8 +594,8 @@ export class AppNavigationService {
             undefined
           ),
 
-          // new AppMenuItem('AuditLogs', 'Pages.Administration.AuditLogs', 'flaticon-folder-1', '/app/admin/auditLogs'),
-          // new AppMenuItem('Maintenance', 'Pages.Administration.Host.Maintenance', 'flaticon-lock', '/app/admin/maintenance'),
+          new AppMenuItem('AuditLogs', 'Pages.Administration.AuditLogs', 'flaticon-folder-1', '/app/admin/auditLogs'),
+          new AppMenuItem('Maintenance', 'Pages.Administration.Host.Maintenance', 'flaticon-lock', '/app/admin/maintenance'),
           // new AppMenuItem(
           //   'Subscription',
           //   'Pages.Administration.Tenant.SubscriptionManagement',
@@ -601,7 +603,7 @@ export class AppNavigationService {
           //   '/app/admin/subscription-management'
           // ),
           // new AppMenuItem('VisualSettings', 'Pages.Administration.UiCustomization', 'flaticon-medical', '/app/admin/ui-customization'),
-          // new AppMenuItem('WebhookSubscriptions', 'Pages.Administration.WebhookSubscription', 'flaticon2-world', '/app/admin/webhook-subscriptions'),
+          new AppMenuItem('WebhookSubscriptions', 'Pages.Administration.WebhookSubscription', 'flaticon2-world', '/app/admin/webhook-subscriptions'),
           //  new AppMenuItem(
           //    'DynamicParameters',
           //    '',

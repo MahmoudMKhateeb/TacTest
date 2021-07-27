@@ -5,6 +5,7 @@ using Abp.AspNetZeroCore.Web.Authentication.External.Google;
 using Abp.AspNetZeroCore.Web.Authentication.External.Microsoft;
 using Abp.AspNetZeroCore.Web.Authentication.External.OpenIdConnect;
 using Abp.AspNetZeroCore.Web.Authentication.External.WsFederation;
+using Abp.Auditing;
 using Abp.Configuration.Startup;
 using Abp.Dependency;
 using Abp.Modules;
@@ -12,6 +13,7 @@ using Abp.Reflection.Extensions;
 using Abp.Threading.BackgroundWorkers;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Hosting;
 using System.Collections.Generic;
 using TACHYON.Auditing;
 using TACHYON.Configuration;
@@ -69,6 +71,14 @@ namespace TACHYON.Web.Startup
             if (Configuration.Auditing.IsEnabled && ExpiredAuditLogDeleterWorker.IsEnabled)
             {
                 workManager.Add(IocManager.Resolve<ExpiredAuditLogDeleterWorker>());
+            }
+
+            if (bool.Parse(_appConfiguration["Jira:CreateIssues"]))
+            {
+                //implement IAuditingStore 
+                Configuration.ReplaceService<IAuditingStore, TachyonLogAuditingStore>();
+                //Used to enable/disable to save return values. Default: false.
+                Configuration.Auditing.SaveReturnValues = false;
             }
 
             //register worker start, end Bids requests

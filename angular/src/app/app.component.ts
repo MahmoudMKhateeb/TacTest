@@ -108,4 +108,8 @@ export class AppComponent extends AppComponentBase implements OnInit {
   onMySettingsModalSaved(): void {
     abp.event.trigger('app.onMySettingsModalSaved');
   }
+
+  isRightToLeft() {
+    return abp.localization.currentLanguage.isRightToLeft;
+  }
 }

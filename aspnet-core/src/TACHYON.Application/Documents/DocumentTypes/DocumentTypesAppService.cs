@@ -1,6 +1,4 @@
-﻿
-
-using Abp.Application.Services.Dto;
+﻿using Abp.Application.Services.Dto;
 using Abp.Authorization;
 using Abp.Domain.Repositories;
 using Abp.Extensions;
@@ -10,17 +8,20 @@ using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Linq.Dynamic.Core;
 using System.Threading.Tasks;
 using Abp.Application.Editions;
+using Microsoft.Rest;
 using TACHYON.Authorization;
 using TACHYON.Documents.DocumentsEntities;
-using TACHYON.Documents.DocumentsEntities.Dtos;
 using TACHYON.Documents.DocumentTypes.Dtos;
 using TACHYON.Documents.DocumentTypes.Exporting;
 using TACHYON.Documents.DocumentTypeTranslations;
 using TACHYON.Documents.DocumentTypeTranslations.Dtos;
 using TACHYON.Dto;
+using TACHYON.Storage;
+using Abp.Domain.Uow;
+using AutoMapper.QueryableExtensions;
+using TACHYON.MultiTenancy;
 
 namespace TACHYON.Documents.DocumentTypes
 {
@@ -32,11 +33,19 @@ namespace TACHYON.Documents.DocumentTypes
         private readonly IRepository<DocumentsEntity, int> _documentsEntityRepository;
         private readonly IRepository<DocumentTypeTranslation> _documentTypeTranslationRepository;
         private readonly IRepository<DocumentsEntity, int> _documentEntityRepository;
+        private readonly IRepository<Tenant> _Tenant;
         private readonly IRepository<Edition, int> _editionRepository;
+        private readonly IBinaryObjectManager _binaryObjectManager;
+        private readonly ITempFileCacheManager _tempFileCacheManager;
+        private readonly IUnitOfWorkManager _unitOfWorkManager;
+        private readonly DocumentFilesManager _documentFilesManager;
 
 
-
-        public DocumentTypesAppService(IRepository<DocumentsEntity, int> documentEntityRepository, IRepository<DocumentType, long> documentTypeRepository, IDocumentTypesExcelExporter documentTypesExcelExporter, IRepository<DocumentsEntity, int> documentsEntityRepository, IRepository<DocumentTypeTranslation> documentTypeTranslationRepository, IRepository<Edition, int> editionRepository)
+        public DocumentTypesAppService(IRepository<DocumentsEntity, int> documentEntityRepository, IRepository<DocumentType, long> documentTypeRepository, IDocumentTypesExcelExporter documentTypesExcelExporter, IRepository<DocumentsEntity, int> documentsEntityRepository, IRepository<DocumentTypeTranslation> documentTypeTranslationRepository, IRepository<Edition, int> editionRepository,
+            IBinaryObjectManager BinaryObjectManager,
+            ITempFileCacheManager tempFileCacheManager,
+            IUnitOfWorkManager unitOfWorkManager,
+            IRepository<Tenant> Tenant, DocumentFilesManager documentFilesManager)
         {
             _documentTypeRepository = documentTypeRepository;
             _documentTypesExcelExporter = documentTypesExcelExporter;
@@ -44,43 +53,30 @@ namespace TACHYON.Documents.DocumentTypes
             _documentTypeTranslationRepository = documentTypeTranslationRepository;
             _editionRepository = editionRepository;
             _documentEntityRepository = documentEntityRepository;
+            _binaryObjectManager = BinaryObjectManager;
+            _tempFileCacheManager = tempFileCacheManager;
+            _unitOfWorkManager = unitOfWorkManager;
+            _Tenant = Tenant;
+            _documentFilesManager = documentFilesManager;
+
         }
 
-        public async Task<PagedResultDto<GetDocumentTypeForViewDto>> GetAll(GetAllDocumentTypesInput input)
+        public async Task<PagedResultDto<DocumentTypeDto>> GetAll(GetAllDocumentTypesInput input)
         {
+            var filteredDocumentFiles = _documentTypeRepository
+                .GetAll()
+                .ProjectTo<DocumentTypeDto>(AutoMapperConfigurationProvider); // goto:#Mapper_DocumentType_DocumentTypeDto
 
-            var filteredDocumentTypes = _documentTypeRepository.GetAll()
-                        .Include(e => e.Translations)
-                        .Include(x => x.DocumentsEntityFk)
-                        .Include(x => x.EditionFk)
-                        .WhereIf(!string.IsNullOrWhiteSpace(input.Filter), e => false || e.DisplayName.Contains(input.Filter) || e.DocumentsEntityFk.DisplayName.Contains(input.Filter))
-                        .WhereIf(!string.IsNullOrWhiteSpace(input.DisplayNameFilter), e => e.DisplayName == input.DisplayNameFilter)
-                        .WhereIf(input.IsRequiredFilter > -1, e => (input.IsRequiredFilter == 1 && e.IsRequired) || (input.IsRequiredFilter == 0 && !e.IsRequired))
-                        .WhereIf(input.HasExpirationDateFilter > -1, e => (input.HasExpirationDateFilter == 1 && e.HasExpirationDate) || (input.HasExpirationDateFilter == 0 && !e.HasExpirationDate))
-                        .WhereIf(input.RequiredFromFilter.HasValue, e => e.DocumentsEntityId == (int)input.RequiredFromFilter);
-
-            var pagedAndFilteredDocumentTypes = filteredDocumentTypes
-                .OrderBy(input.Sorting ?? "id asc")
-                .PageBy(input);
-
-            var documentTypeList = await pagedAndFilteredDocumentTypes.ToListAsync();
-
-
-            var documentTypes = from o in documentTypeList
-                                select new GetDocumentTypeForViewDto()
-                                {
-                                    DocumentType = ObjectMapper.Map<DocumentTypeDto>(o)
-                                };
-
-
-            var totalCount = await filteredDocumentTypes.CountAsync();
-
-            return new PagedResultDto<GetDocumentTypeForViewDto>(totalCount, documentTypes.ToList());
+            return await LoadResultAsync(filteredDocumentFiles, input.Filter);
         }
+
+
+
 
         public async Task<GetDocumentTypeForViewDto> GetDocumentTypeForView(long id)
         {
             var documentType = await _documentTypeRepository.GetAsync(id);
+
 
             var output = new GetDocumentTypeForViewDto { DocumentType = ObjectMapper.Map<DocumentTypeDto>(documentType) };
 
@@ -91,20 +87,22 @@ namespace TACHYON.Documents.DocumentTypes
         public async Task<GetDocumentTypeForEditOutput> GetDocumentTypeForEdit(EntityDto<long> input)
         {
             var documentType = await _documentTypeRepository.FirstOrDefaultAsync(input.Id);
+            var documentTypeDto = ObjectMapper.Map<CreateOrEditDocumentTypeDto>(documentType);
 
-            var output = new GetDocumentTypeForEditOutput { DocumentType = ObjectMapper.Map<CreateOrEditDocumentTypeDto>(documentType) };
+
+            if (documentType.DocumentRelatedWithId.HasValue)
+            {
+                documentTypeDto.DocumentRelatedWith = new SelectItemDto(documentType.DocumentRelatedWithId.ToString(), (await _Tenant.SingleAsync(t => t.Id == documentType.DocumentRelatedWithId)).Name);
+            }
+
+            var output = new GetDocumentTypeForEditOutput { DocumentType = documentTypeDto };
 
             return output;
         }
 
         public async Task CreateOrEdit(CreateOrEditDocumentTypeDto input)
         {
-            var IsDuplicateDocumentType = await _documentTypeRepository.FirstOrDefaultAsync(x => (x.DisplayName).Trim().ToLower() == (input.DisplayName).Trim().ToLower()
-            && x.Id != input.Id);
-            if (IsDuplicateDocumentType != null)
-            {
-                throw new UserFriendlyException(string.Format(L("DuplicateDocumentTypeName"), input.DisplayName));
-            }
+            ValidateDisplayNameDuplication(input.DisplayName, input.Id);
 
             if (input.Id == null)
             {
@@ -121,7 +119,10 @@ namespace TACHYON.Documents.DocumentTypes
         {
             var documentType = ObjectMapper.Map<DocumentType>(input);
 
-
+            if (!input.FileToken.IsNullOrEmpty())
+            {
+                documentType.TemplateId = await _documentFilesManager.SaveDocumentFileBinaryObject(input.FileToken, AbpSession.TenantId);
+            }
 
             await _documentTypeRepository.InsertAsync(documentType);
         }
@@ -130,15 +131,49 @@ namespace TACHYON.Documents.DocumentTypes
         protected virtual async Task Update(CreateOrEditDocumentTypeDto input)
         {
             var documentType = await _documentTypeRepository.FirstOrDefaultAsync((long)input.Id);
+
+            if (!input.FileToken.IsNullOrEmpty())
+            {
+                if (input.TemplateId != null)
+                {
+                    await _binaryObjectManager.DeleteAsync(input.TemplateId.Value);
+                }
+
+                input.TemplateId = await _documentFilesManager.SaveDocumentFileBinaryObject(input.FileToken, AbpSession.TenantId);
+            }
+
             ObjectMapper.Map(input, documentType);
+
+
+
         }
 
         [AbpAuthorize(AppPermissions.Pages_DocumentTypes_Delete)]
         public async Task Delete(EntityDto<long> input)
         {
+            var documentType = await _documentTypeRepository.FirstOrDefaultAsync(input.Id);
+
+            if (documentType.TemplateId != null)
+            {
+                await _binaryObjectManager.DeleteAsync(documentType.TemplateId.Value);
+            }
+
             await _documentTypeRepository.DeleteAsync(input.Id);
         }
+        [AbpAuthorize(AppPermissions.Pages_DocumentTypes_Edit)]
+        public async Task DeleteTemplate(long Id)
+        {
+            var documentType = await _documentTypeRepository.FirstOrDefaultAsync(Id);
+            if (documentType != null)
+            {
+                await _binaryObjectManager.DeleteAsync((Guid)documentType.TemplateId);
 
+                documentType.TemplateId = null;
+                documentType.TemplateContentType = null;
+                documentType.TemplateName = null;
+
+            }
+        }
         public async Task<FileDto> GetDocumentTypesToExcel(GetAllDocumentTypesForExcelInput input)
         {
 
@@ -198,43 +233,78 @@ namespace TACHYON.Documents.DocumentTypes
         }
 
 
+        public IEnumerable<ISelectItemDto> GetAutoCompleteTenants(int editionId, string name = null)
+        {
+            name = name?.ToLower().Trim();
+            var result =
+                _Tenant.GetAll()
+                    .Where(x => x.IsActive)
+                    .WhereIf(!name.IsNullOrEmpty(), t => t.Name.ToLower().Contains(name) || t.TenancyName.ToLower().Contains(name))
+                    .Where(t => t.Edition.Id == editionId)
+                    .Select(t => new SelectItemDto { DisplayName = t.Name, Id = t.Id.ToString() }).ToList();
 
+            return result;
+        }
 
         public async Task<List<SelectItemDto>> GetDocumentEntitiesForTableDropdown()
         {
-            var editions = await _editionRepository.GetAll()
-                .Select(x => new SelectItemDto
-                {
-                    Id = x.Id.ToString(),
-                    DisplayName = x.DisplayName
-                }).ToListAsync();
-
-            var entities = await _documentEntityRepository
+            return await _documentEntityRepository
                 .GetAll()
-                .Where(x => x.Id != 1)
                 .Select(x => new SelectItemDto
                 {
                     DisplayName = x.DisplayName,
                     Id = x.Id.ToString()
                 }
             ).ToListAsync();
-
-            return entities.Concat(editions).ToList();
         }
 
-        public bool IsDocuemntTypeNameAvaliable(string documentTypeName, int? id)
+        public async Task<List<SelectItemDto>> GetEditionsForTableDropdown()
         {
-            var result = _documentTypeRepository.FirstOrDefault(x => (x.DisplayName).Trim().ToLower() == (documentTypeName).Trim().ToLower()
-            && x.Id != id);
+            return await _editionRepository.GetAll()
+                .Select(x => new SelectItemDto
+                {
+                    Id = x.Id.ToString(),
+                    DisplayName = x.DisplayName
+                }).ToListAsync();
+        }
+
+
+        private bool ValidateDisplayNameDuplication(string documentTypeName, long? id)
+        {
+            var result = _documentTypeRepository
+                .FirstOrDefault(x => x.DisplayName.Trim().ToLower() == documentTypeName.Trim().ToLower() && x.Id != id);
 
             if (result == null)
             {
                 return true;
             }
-            else
-            {
-                return false;
-            }
+
+            throw new ValidationException(L("DuplicateDocumentTypeName"));
         }
+
+        [AbpAllowAnonymous]
+        public async Task<FileDto> GetFileDto(long Id)
+
+        {
+            using (_unitOfWorkManager.Current.DisableFilter(AbpDataFilters.MustHaveTenant, AbpDataFilters.MayHaveTenant))
+            {
+                var document = await _documentTypeRepository.SingleAsync(t => t.Id == Id);
+                if (document == null)
+                {
+                    throw new UserFriendlyException(L("TheRequestNotFound"));
+
+                }
+
+                var binaryObject = await _binaryObjectManager.GetOrNullAsync(document.TemplateId.Value);
+
+                var file = new FileDto(document.TemplateName, document.TemplateContentType);
+
+                _tempFileCacheManager.SetFile(file.FileToken, binaryObject.Bytes);
+
+                return file;
+            }
+
+        }
+
     }
 }
