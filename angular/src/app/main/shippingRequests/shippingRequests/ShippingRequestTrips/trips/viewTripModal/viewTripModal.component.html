@@ -14,7 +14,18 @@
           <span>{{ l('TripDetails') }}</span>
         </p>
         <div class="card-toolbar">
+          <button
+            *ngIf="feature.isEnabled('App.Carrier') || feature.isEnabled('App.TachyonDealer')"
+            type="button"
+            class="btn btn-primary blue"
+            (click)="ResetTrip(currentTripId)"
+            [buttonBusy]="isResetTripLoading"
+          >
+            <i class="fa flaticon2-reload-1"></i>
+            {{ l('ResetTrip') }}
+          </button>
           <button class="btn btn-primary" (click)="DownloadSingleDropWaybillPdf(currentTripId)" [buttonBusy]="wayBillIsDownloading">
+            <i class="fa flaticon2-print"></i>
             {{ l('PrintWaybill') }}
           </button>
         </div>

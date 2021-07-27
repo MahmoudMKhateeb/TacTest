@@ -1,4 +1,4 @@
-import { Component, ViewChild, Injector, OnInit } from '@angular/core';
+import { Component, ViewChild, Injector, OnInit, Output, EventEmitter } from '@angular/core';
 import { ModalDirective } from 'ngx-bootstrap/modal';
 import {
   FacilityForDropdownDto,
@@ -10,11 +10,13 @@ import {
   WaybillsServiceProxy,
   SelectItemDto,
   AssignDriverAndTruckToShippmentByCarrierInput,
+  ShippingRequestDriverServiceProxy,
 } from '@shared/service-proxies/service-proxies';
 import { AppComponentBase } from '@shared/common/app-component-base';
 import { finalize } from '@node_modules/rxjs/operators';
 import { FileDownloadService } from '@shared/utils/file-download.service';
 import { PointsService } from '@app/main/shippingRequests/shippingRequests/ShippingRequestTrips/points/points.service';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'viewTripModal',
@@ -23,6 +25,7 @@ import { PointsService } from '@app/main/shippingRequests/shippingRequests/Shipp
 export class ViewTripModalComponent extends AppComponentBase implements OnInit {
   @ViewChild('viewTripDetails', { static: false }) modal: ModalDirective;
   // @ViewChild('wayPointsComponent') wayPointsComponent: PointsComponent;
+  @Output() modalSave: EventEmitter<any> = new EventEmitter();
   Vases: CreateOrEditShippingRequestTripVasDto[];
   selectedVases: CreateOrEditShippingRequestTripVasDto[];
   allFacilities: FacilityForDropdownDto[];
@@ -35,6 +38,7 @@ export class ViewTripModalComponent extends AppComponentBase implements OnInit {
   loading = true;
   currentTripId: number;
   wayBillIsDownloading = false;
+  isResetTripLoading = false;
   constructor(
     injector: Injector,
     private _routStepsServiceProxy: RoutStepsServiceProxy,
@@ -42,6 +46,7 @@ export class ViewTripModalComponent extends AppComponentBase implements OnInit {
     private _fileDownloadService: FileDownloadService,
     private _waybillsServiceProxy: WaybillsServiceProxy,
     private _trucksServiceProxy: TrucksServiceProxy,
+    private _shippingRequestDriverServiceProxy: ShippingRequestDriverServiceProxy,
     private _PointsService: PointsService
   ) {
     super(injector);
@@ -129,5 +134,28 @@ export class ViewTripModalComponent extends AppComponentBase implements OnInit {
       .subscribe(() => {
         this.notify.success('driverandTrucksAssignedSuccessfully');
       });
+  }
+
+  /**
+   * Resets Shipping Request Trip
+   * @param tripId
+   */
+  ResetTrip(tripId: number) {
+    Swal.fire({
+      title: this.l('areYouSure'),
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonText: this.l('Yes'),
+      cancelButtonText: this.l('No'),
+    }).then((result) => {
+      if (result.value) {
+        this.isResetTripLoading = true;
+        this._shippingRequestDriverServiceProxy.reset(tripId).subscribe(() => {
+          this.isResetTripLoading = false;
+          this.notify.info(this.l('SuccessfullyReseated'));
+          this.modalSave.emit('');
+        });
+      } //end of if
+    });
   }
 }
