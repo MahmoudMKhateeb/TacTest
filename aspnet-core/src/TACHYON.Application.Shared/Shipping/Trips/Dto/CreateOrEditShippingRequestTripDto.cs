@@ -1,10 +1,13 @@
 ﻿using Abp.Application.Services.Dto;
 using Abp.Extensions;
 using Abp.Runtime.Validation;
+using Abp.UI;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Linq;
 using TACHYON.Documents.DocumentFiles.Dtos;
+using TACHYON.Routs.RoutPoints;
 using TACHYON.Routs.RoutPoints.Dtos;
 using TACHYON.ShippingRequestTripVases.Dtos;
 
@@ -36,7 +39,7 @@ namespace TACHYON.Shipping.Trips.Dto
 
         public void AddValidationErrors(CustomValidationContext context)
         {
-            if (EndTripDate!=null && StartTripDate.Date > EndTripDate.Value.Date)
+            if (EndTripDate != null && StartTripDate.Date > EndTripDate.Value.Date)
             {
                 context.Results.Add(new ValidationResult("The start date must be or equal to end date."));
             }
@@ -56,9 +59,10 @@ namespace TACHYON.Shipping.Trips.Dto
                     string.IsNullOrWhiteSpace(drop.ReceiverFullName) ||
                     string.IsNullOrWhiteSpace(drop.ReceiverPhoneNumber)))
                 {
-                    throw new UserFriendlyException(L("YouMustEnterReceiver"));
+                    //throw new UserFriendlyException(L("YouMustEnterReceiver"));
+                    throw new UserFriendlyException("YouMustEnterReceiver");
                 }
             }
-            }
+        }
     }
 }
