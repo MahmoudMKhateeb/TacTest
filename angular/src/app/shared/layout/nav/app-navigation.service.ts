@@ -110,7 +110,7 @@ export class AppNavigationService {
             'CreateNewRequest',
             'Pages.ShippingRequests',
             'flaticon2-add',
-            '/app/main/shippingRequests/shippingRequests/createOrEdit',
+            '/app/main/shippingRequests/shippingRequestWizard',
             undefined,
             undefined,
             undefined,
