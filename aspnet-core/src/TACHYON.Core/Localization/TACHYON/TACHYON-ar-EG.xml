@@ -484,6 +484,7 @@
 		<text name="DifferentTenantImpersonationErrorMessage">لا يمكن تمثيل مستخدم من عميل آخر!</text>
 		<text name="Dimentions">الأبعاد</text>
 		<text name="DirectRequests">الطلبات المباشرة</text>
+		<text name="DirectRequest">طلب شحن مباشر</text>
 		<text name="DirectShippingRequests">طلبات الشحن الخاصة</text>
 		<text name="Disable">تعطيل</text>
 		<text name="Disabled">معطّل</text>
