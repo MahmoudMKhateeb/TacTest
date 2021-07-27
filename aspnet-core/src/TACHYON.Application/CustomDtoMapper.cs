@@ -296,7 +296,7 @@ namespace TACHYON
 
 
             configuration.CreateMap<ShippingRequestTripVas, CreateOrEditShippingRequestTripVasDto>()
-                   .ForMember(dst => dst.Name, opt => opt.MapFrom(src => src.ShippingRequestVasFk.VasFk.DisplayName));
+                   .ForMember(dst => dst.Name, opt => opt.MapFrom(src => src.ShippingRequestVasFk.VasFk.Name));
             configuration.CreateMap<CreateOrEditShippingRequestTripVasDto, ShippingRequestTripVas>();
 
 
