@@ -1555,7 +1555,7 @@
 		<text name="SelectAnItem">Select an item</text>
 		<text name="SelectAnOrganizationUnitToSeeMembers">Select an organization unit to see members.</text>
 		<text name="SelectAnOrganizationUnitToSeeRoles">Select an organization unit to see roles</text>
-		<text name="SelectanOriginCity">Selectan origin city</text>
+		<text name="SelectanOriginCity">Select an origin city</text>
 		<text name="SelectaPackingType">Select a packing type</text>
 		<text name="SelectAPermission">Select A Permission</text>
 		<text name="SelectARole">Select a role</text>
@@ -2005,7 +2005,7 @@
 		<text name="TripInfo">Trip Info</text>
 		<text name="TripRejectReason">Trip reject reason</text>
 		<text name="TripsEndDate">Trip pickup date end</text>
-		<text name="TripsStartDate">Trips pickup date start</text>
+		<text name="TripsStartDate">Trip pickup date start</text>
 		<text name="TripStartDate">Trips start date</text>
 		<text name="TripStartDateCantBeGretterThanTripEndDate">Trip start date cant be gretter than trip end date</text>
 		<text name="TripStatus">Trip status</text>

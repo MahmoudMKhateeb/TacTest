@@ -85,5 +85,8 @@ namespace TACHYON.Documents.DocumentTypes
         public Guid? TemplateId { get; set; }
         public int? DocumentRelatedWithId { get; set; }
 
+        [ForeignKey("DocumentRelatedWithId")]
+        public Tenant DocumentRelatedWithFk { get; set; }
+
     }
 }

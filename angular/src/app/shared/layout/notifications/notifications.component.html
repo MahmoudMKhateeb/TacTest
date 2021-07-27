@@ -37,7 +37,7 @@
             <div class="row">
               <div class="col-xl-12 text-right">
                 <div class="form-group">
-                  <button class="btn btn-danger" (click)="deleteNotifications()">
+                  <button class="btn btn-danger" [disabled]="this.primengTableHelper.totalRecordsCount == 0" (click)="deleteNotifications()">
                     <i class="la la-times"></i>{{ 'DeleteListedNotifications' | localize }}
                   </button>
                   <button class="btn btn-primary" (click)="getNotifications()"><i class="fa fa-sync"></i> {{ 'Refresh' | localize }}</button>

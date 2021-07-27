@@ -1,0 +1,41 @@
+<div
+  bsModal
+  #viewOrEditModal="bs-modal"
+  class="modal fade"
+  tabindex="-1"
+  role="dialog"
+  aria-labelledby="createOrEditModal"
+  aria-hidden="true"
+  [config]="{ backdrop: 'static' }"
+>
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title">
+          <!--          <span *ngIf="documentEntityFilterName=='Truck'"> {{ l('TruckDocuments') }}</span>-->
+          <!--          <span *ngIf="documentEntityFilterName=='Driver'"> {{ l('DriverDocuments') }}</span>-->
+        </h4>
+        <button type="button" class="close" (click)="close()" aria-label="Close" [disabled]="saving">
+          <span aria-hidden="true">&times;</span>
+        </button>
+
+        <button
+          *ngIf="isMissingDocumentFiles"
+          (click)="createOrEditDocumentFileModal.show(entityIdFilter, documentEntityFilter, null)"
+          class="btn btn-primary blue"
+        >
+          <i class="fa fa-plus"></i> {{ l('AddDocument') }}
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="row align-items-center">
+          <app-truck-submited-documents-list #truckSubmitedDocumentsListComponent></app-truck-submited-documents-list>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button [disabled]="saving" type="button" class="btn btn-default" (click)="close()">{{ l('Cancel') }}</button>
+      </div>
+    </div>
+  </div>
+  <createOrEditDocumentFileModal #createOrEditDocumentFileModal (modalSave)="getDocumentFiles()"></createOrEditDocumentFileModal>
+</div>

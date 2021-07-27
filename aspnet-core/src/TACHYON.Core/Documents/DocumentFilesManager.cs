@@ -131,7 +131,51 @@ namespace TACHYON.Documents
             return storedFile.Id;
         }
 
+        /// <summary>
+        /// For Driver and truck
+        /// </summary>
+        /// <param name="entityId"></param>
+        /// <param name="documentsEntityId"></param>
+        /// <returns></returns>
+        public async Task<bool> CheckIfMissingDocumentFiles(string entityId, DocumentsEntitiesEnum documentsEntityId)
+        {
+            var result = false;
+            switch (documentsEntityId)
+            {
+                case DocumentsEntitiesEnum.Driver:
+                    {
+                        var documentTypes = await _documentTypeRepository.GetAll()
+                            .Where(doc => doc.DocumentsEntityId == (int)DocumentsEntitiesEnum.Driver)
+                            .Where(x => x.IsRequired)
+                            .CountAsync();
 
+                        var submittedDocuments = await _documentFileRepository.GetAll()
+                            .Where(t => t.UserId == long.Parse(entityId))
+                            .Where(x => x.DocumentTypeFk.IsRequired)
+                            .CountAsync();
+                        result = documentTypes != submittedDocuments;
+                        break;
+                    }
+                case DocumentsEntitiesEnum.Truck:
+                    {
+                        var documentTypes = await _documentTypeRepository.GetAll()
+                            .Where(doc => doc.DocumentsEntityId == (int)DocumentsEntitiesEnum.Truck)
+                            .Where(x => x.IsRequired)
+                            .CountAsync();
+
+                        var submittedDocuments = await _documentFileRepository.GetAll()
+                            .Where(t => t.TruckId == long.Parse(entityId))
+                            .Where(x => x.DocumentTypeFk.IsRequired)
+                            .CountAsync();
+                        result = documentTypes != submittedDocuments;
+                        break;
+                    }
+            }
+
+
+
+            return result;
+        }
 
     }
 }

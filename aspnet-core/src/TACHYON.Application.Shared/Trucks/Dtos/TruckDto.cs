@@ -1,6 +1,6 @@
 ﻿
 using Abp.Application.Services.Dto;
-using System;
+
 
 namespace TACHYON.Trucks.Dtos
 {
@@ -15,10 +15,24 @@ namespace TACHYON.Trucks.Dtos
         public string Note { get; set; }
 
         public virtual string Capacity { get; set; }
-        public long TrucksTypeId { get; set; }
 
-        public long TruckStatusId { get; set; }
         public int? Length { get; set; }
+
+        public string TruckStatusDisplayName { get; set; }
+
+        #region Truck Categories
+
+        public virtual int? TransportTypeId { get; set; }
+        public string TransportTypeDisplayName { get; set; }
+        public virtual long? TrucksTypeId { get; set; }
+        public string TrucksTypeDisplayName { get; set; }
+        public virtual int? CapacityId { get; set; }
+        public string CapacityDisplayName { get; set; }
+
+        #endregion
+
+        public bool IsMissingDocumentFiles { get; set; }
+
 
     }
 }
