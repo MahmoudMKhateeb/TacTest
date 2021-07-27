@@ -207,6 +207,13 @@ namespace TACHYON.Shipping.ShippingRequests
                     throw new UserFriendlyException(L("feature SendTachyonDealShippingRequest not enabled"));
                 }
             }
+            else if (input.IsDirectRequest)
+            {
+                if (!await IsEnabledAsync(AppFeatures.SendDirectRequest))
+                {
+                    throw new UserFriendlyException(L("feature SendDirectRequest not enabled"));
+                }
+            }
 
             if (input.Id == null)
             {
